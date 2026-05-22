@@ -68,6 +68,39 @@ export type Database = {
           },
         ]
       }
+      badges: {
+        Row: {
+          code: string
+          created_at: string
+          description: string | null
+          icon_name: string | null
+          id: string
+          name: string
+          rarity: string
+          rule_key: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          description?: string | null
+          icon_name?: string | null
+          id?: string
+          name: string
+          rarity?: string
+          rule_key?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          description?: string | null
+          icon_name?: string | null
+          id?: string
+          name?: string
+          rarity?: string
+          rule_key?: string | null
+        }
+        Relationships: []
+      }
       chapters: {
         Row: {
           description: string | null
@@ -96,6 +129,41 @@ export type Database = {
             columns: ["subject_id"]
             isOneToOne: false
             referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      exercise_sessions: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          exercise_id: string
+          id: string
+          started_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          exercise_id: string
+          id?: string
+          started_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          exercise_id?: string
+          id?: string
+          started_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exercise_sessions_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
             referencedColumns: ["id"]
           },
         ]
@@ -145,8 +213,44 @@ export type Database = {
           },
         ]
       }
+      inventory_items: {
+        Row: {
+          acquired_at: string
+          id: string
+          is_equipped: boolean
+          quantity: number
+          shop_item_id: string
+          student_user_id: string
+        }
+        Insert: {
+          acquired_at?: string
+          id?: string
+          is_equipped?: boolean
+          quantity?: number
+          shop_item_id: string
+          student_user_id: string
+        }
+        Update: {
+          acquired_at?: string
+          id?: string
+          is_equipped?: boolean
+          quantity?: number
+          shop_item_id?: string
+          student_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inventory_items_shop_item_id_fkey"
+            columns: ["shop_item_id"]
+            isOneToOne: false
+            referencedRelation: "shop_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
+          avatar_slug: string | null
           avatar_tier: number
           created_at: string
           current_streak: number
@@ -157,8 +261,10 @@ export type Database = {
           level: number
           longest_streak: number
           xp: number
+          yahia_coins: number
         }
         Insert: {
+          avatar_slug?: string | null
           avatar_tier?: number
           created_at?: string
           current_streak?: number
@@ -169,8 +275,10 @@ export type Database = {
           level?: number
           longest_streak?: number
           xp?: number
+          yahia_coins?: number
         }
         Update: {
+          avatar_slug?: string | null
           avatar_tier?: number
           created_at?: string
           current_streak?: number
@@ -181,6 +289,7 @@ export type Database = {
           level?: number
           longest_streak?: number
           xp?: number
+          yahia_coins?: number
         }
         Relationships: []
       }
@@ -251,6 +360,77 @@ export type Database = {
           name_fr?: string
         }
         Relationships: []
+      }
+      shop_items: {
+        Row: {
+          code: string
+          created_at: string
+          description: string | null
+          effect_payload: Json
+          id: string
+          is_active: boolean
+          item_type: string
+          name: string
+          price_coins: number
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          description?: string | null
+          effect_payload?: Json
+          id?: string
+          is_active?: boolean
+          item_type: string
+          name: string
+          price_coins: number
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          description?: string | null
+          effect_payload?: Json
+          id?: string
+          is_active?: boolean
+          item_type?: string
+          name?: string
+          price_coins?: number
+        }
+        Relationships: []
+      }
+      student_badges: {
+        Row: {
+          awarded_at: string
+          awarded_by: string | null
+          awarded_reason: string | null
+          badge_id: string
+          id: string
+          student_user_id: string
+        }
+        Insert: {
+          awarded_at?: string
+          awarded_by?: string | null
+          awarded_reason?: string | null
+          badge_id: string
+          id?: string
+          student_user_id: string
+        }
+        Update: {
+          awarded_at?: string
+          awarded_by?: string | null
+          awarded_reason?: string | null
+          badge_id?: string
+          id?: string
+          student_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_badges_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "badges"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

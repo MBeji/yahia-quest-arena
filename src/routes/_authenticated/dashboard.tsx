@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion } from "motion/react";
-import { Flame, Zap, Trophy, Swords, Sword, BookOpen, Scroll, Leaf, Globe, ChevronRight, Sparkles } from "lucide-react";
+import { Flame, Zap, Trophy, Swords, Sword, BookOpen, Scroll, Leaf, Globe, ChevronRight, Sparkles, Shield, Backpack, ShoppingBag } from "lucide-react";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from "recharts";
-import { getDashboard } from "@/lib/gamification.functions";
+import { toast } from "sonner";
+import { equipInventorySkin, getDashboard, purchaseShopItem } from "@/lib/gamification.functions";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: "Hall des héros · YahiaAcademy" }] }),
@@ -16,14 +17,35 @@ const ICONS: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> 
 } as never;
 
 function Dashboard() {
+  const queryClient = useQueryClient();
   const fetchDashboard = useServerFn(getDashboard);
+  const purchaseItem = useServerFn(purchaseShopItem);
+  const equipSkin = useServerFn(equipInventorySkin);
   const { data, isLoading } = useQuery({ queryKey: ["dashboard"], queryFn: () => fetchDashboard() });
+
+  const purchaseMutation = useMutation({
+    mutationFn: (payload: { itemCode: string }) => purchaseItem({ data: payload }),
+    onSuccess: (res) => {
+      toast.success(`${res.purchasedItemName} ajouté à l'inventaire.`);
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+    },
+    onError: (error) => toast.error(error instanceof Error ? error.message : "Achat impossible"),
+  });
+
+  const equipMutation = useMutation({
+    mutationFn: (payload: { itemCode: string }) => equipSkin({ data: payload }),
+    onSuccess: (res) => {
+      toast.success(`${res.itemName} équipé.`);
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+    },
+    onError: (error) => toast.error(error instanceof Error ? error.message : "Équipement impossible"),
+  });
 
   if (isLoading || !data) {
     return <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">Chargement de ton héros…</div>;
   }
 
-  const { profile, subjects, stats } = data;
+  const { profile, subjects, stats, badges, inventory, shopItems } = data;
   if (!profile) return <div className="p-8 text-center text-muted-foreground">Profil introuvable.</div>;
 
   const xpInLevel = profile.xp % 200;
@@ -57,6 +79,9 @@ function Dashboard() {
               </div>
               <div className="flex items-center gap-1 rounded-full bg-[color:var(--neon-gold)]/20 px-3 py-1 text-sm font-bold text-[color:var(--neon-gold)]">
                 <Zap className="h-4 w-4" /> {profile.xp} XP
+              </div>
+              <div className="flex items-center gap-1 rounded-full border border-[color:var(--neon-cyan)]/30 bg-[color:var(--neon-cyan)]/10 px-3 py-1 text-sm font-bold text-[color:var(--neon-cyan)]">
+                <Sparkles className="h-4 w-4" /> {profile.yahia_coins ?? 0} YC
               </div>
             </div>
             <div className="mt-4">
@@ -146,8 +171,114 @@ function Dashboard() {
             </div>
             <p className="px-2 pb-2 text-center text-xs text-muted-foreground">Tes scores moyens par attribut.</p>
           </div>
+
+          <div className="mt-6 rounded-2xl border border-border/50 bg-card/60 p-4 backdrop-blur-md">
+            <h3 className="mb-3 flex items-center gap-2 font-display text-lg font-bold">
+              <Backpack className="h-4 w-4 text-[color:var(--neon-cyan)]" /> Inventaire
+            </h3>
+            <div className="space-y-3">
+              {inventory.length > 0 ? inventory.slice(0, 4).map((item) => (
+                <div key={item.code} className="rounded-xl bg-background/40 p-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <div className="font-semibold">{item.name}</div>
+                      <div className="text-xs uppercase tracking-widest text-muted-foreground">{item.itemType}</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-display text-lg font-bold text-[color:var(--neon-cyan)]">x{item.quantity}</div>
+                      {item.isEquipped && <div className="text-xs uppercase tracking-widest text-[color:var(--success)]">Équipé</div>}
+                    </div>
+                  </div>
+                </div>
+              )) : (
+                <div className="rounded-xl bg-background/30 p-4 text-sm text-muted-foreground">Ton inventaire est encore vide.</div>
+              )}
+            </div>
+          </div>
         </section>
       </div>
+
+      <section className="mt-8">
+        <h2 className="mb-4 flex items-center gap-2 font-display text-xl font-bold">
+          <Shield className="h-5 w-5 text-[color:var(--neon-gold)]" /> Badges du héros
+        </h2>
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {badges.length > 0 ? badges.map((badge) => (
+            <div key={`${badge.code}-${badge.awardedAt}`} className="rounded-2xl border border-border/50 bg-card/60 p-5 backdrop-blur-md">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <div className="font-display text-lg font-bold">{badge.name}</div>
+                  <div className="text-xs uppercase tracking-widest text-[color:var(--neon-gold)]">{badge.rarity}</div>
+                </div>
+                <div className="rounded-full bg-[color:var(--neon-gold)]/15 px-3 py-1 text-xs font-bold text-[color:var(--neon-gold)]">
+                  Badge
+                </div>
+              </div>
+              <div className="mt-3 text-sm text-muted-foreground">{badge.awardedReason ?? "Récompense débloquée."}</div>
+              <div className="mt-3 text-xs uppercase tracking-widest text-muted-foreground">
+                Obtenu · {new Date(badge.awardedAt).toLocaleDateString("fr-FR")}
+              </div>
+            </div>
+          )) : (
+            <div className="rounded-2xl border border-dashed border-border/50 bg-card/40 p-6 text-sm text-muted-foreground">
+              Aucun badge débloqué pour le moment. Continue tes quêtes pour remplir ta collection.
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className="mt-8">
+        <h2 className="mb-4 flex items-center gap-2 font-display text-xl font-bold">
+          <ShoppingBag className="h-5 w-5 text-[color:var(--neon-cyan)]" /> Boutique de l'académie
+        </h2>
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {shopItems.map((item) => {
+            const canEquip = item.itemType === "skin" && item.isOwned && !item.isEquipped;
+            const canBuy = !item.isOwned || item.itemType !== "skin";
+            const isBusy = purchaseMutation.isPending || equipMutation.isPending;
+
+            return (
+              <div key={item.code} className="rounded-2xl border border-border/50 bg-card/60 p-5 backdrop-blur-md">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="font-display text-lg font-bold">{item.name}</div>
+                    <div className="text-xs uppercase tracking-widest text-[color:var(--neon-cyan)]">{item.itemType}</div>
+                  </div>
+                  <div className="rounded-full bg-[color:var(--neon-cyan)]/10 px-3 py-1 text-xs font-bold text-[color:var(--neon-cyan)]">
+                    {item.priceCoins} YC
+                  </div>
+                </div>
+                <p className="mt-3 text-sm text-muted-foreground">{item.description ?? "Item de l'académie."}</p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {item.isOwned && (
+                    <div className="rounded-full bg-[color:var(--success)]/15 px-3 py-1 text-xs font-bold text-[color:var(--success)]">
+                      {item.itemType === "skin" ? (item.isEquipped ? "Équipé" : "Possédé") : `En stock x${item.quantity}`}
+                    </div>
+                  )}
+                </div>
+                <div className="mt-4 flex gap-2">
+                  <button
+                    disabled={!canBuy || isBusy || (profile.yahia_coins ?? 0) < item.priceCoins}
+                    onClick={() => purchaseMutation.mutate({ itemCode: item.code })}
+                    className="flex-1 rounded-lg border border-border bg-background/50 px-4 py-2.5 text-sm font-semibold disabled:opacity-40"
+                  >
+                    Acheter
+                  </button>
+                  {canEquip && (
+                    <button
+                      disabled={isBusy}
+                      onClick={() => equipMutation.mutate({ itemCode: item.code })}
+                      className="flex-1 rounded-lg bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] px-4 py-2.5 text-sm font-bold text-primary-foreground shadow-neon disabled:opacity-40"
+                    >
+                      Équiper
+                    </button>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
     </div>
   );
 }

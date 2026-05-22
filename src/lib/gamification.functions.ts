@@ -2,13 +2,31 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
+type UnlockedBadge = {
+  code: string;
+  name: string;
+  rarity: string;
+  iconName: string | null;
+};
+
+type DashboardShopItem = {
+  code: string;
+  name: string;
+  itemType: string;
+  description: string | null;
+  priceCoins: number;
+  isOwned: boolean;
+  isEquipped: boolean;
+  quantity: number;
+};
+
 // ---------- Get dashboard ----------
 export const getDashboard = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
 
-    const [profileRes, subjectsRes, attemptsRes] = await Promise.all([
+    const [profileRes, subjectsRes, attemptsRes, badgesRes, inventoryRes, shopRes] = await Promise.all([
       supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
       supabase.from("subjects").select("*").order("display_order"),
       supabase
@@ -17,11 +35,29 @@ export const getDashboard = createServerFn({ method: "GET" })
         .eq("user_id", userId)
         .order("completed_at", { ascending: false })
         .limit(50),
+      supabase
+        .from("student_badges")
+        .select("awarded_at, awarded_reason, badge:badges(code,name,rarity,icon_name)")
+        .eq("student_user_id", userId)
+        .order("awarded_at", { ascending: false }),
+      supabase
+        .from("inventory_items")
+        .select("quantity, is_equipped, acquired_at, item:shop_items(id,code,name,item_type,description,price_coins)")
+        .eq("student_user_id", userId)
+        .order("acquired_at", { ascending: false }),
+      supabase
+        .from("shop_items")
+        .select("id,code,name,item_type,description,price_coins,is_active")
+        .eq("is_active", true)
+        .order("price_coins", { ascending: true }),
     ]);
 
     if (profileRes.error) throw new Error(profileRes.error.message);
     if (subjectsRes.error) throw new Error(subjectsRes.error.message);
     if (attemptsRes.error) throw new Error(attemptsRes.error.message);
+    if (badgesRes.error) throw new Error(badgesRes.error.message);
+    if (inventoryRes.error) throw new Error(inventoryRes.error.message);
+    if (shopRes.error) throw new Error(shopRes.error.message);
 
     // build per-subject avg score
     const bySubject: Record<string, { count: number; avg: number; xp: number }> = {};
@@ -32,11 +68,185 @@ export const getDashboard = createServerFn({ method: "GET" })
       s.xp += a.xp_earned;
     }
 
+    const badges = (badgesRes.data ?? []).flatMap((row: any) => {
+      if (!row.badge) return [];
+
+      return [{
+        code: row.badge.code,
+        name: row.badge.name,
+        rarity: row.badge.rarity,
+        iconName: row.badge.icon_name,
+        awardedAt: row.awarded_at,
+        awardedReason: row.awarded_reason,
+      }];
+    });
+
+    const inventory = (inventoryRes.data ?? []).flatMap((row: any) => {
+      if (!row.item) return [];
+
+      return [{
+        code: row.item.code,
+        name: row.item.name,
+        itemType: row.item.item_type,
+        description: row.item.description,
+        priceCoins: row.item.price_coins,
+        quantity: row.quantity,
+        isEquipped: row.is_equipped,
+        acquiredAt: row.acquired_at,
+      }];
+    });
+
+    const inventoryByCode = new Map(inventory.map((item) => [item.code, item]));
+    const shopItems: DashboardShopItem[] = (shopRes.data ?? []).map((item) => {
+      const owned = inventoryByCode.get(item.code);
+
+      return {
+        code: item.code,
+        name: item.name,
+        itemType: item.item_type,
+        description: item.description,
+        priceCoins: item.price_coins,
+        isOwned: Boolean(owned),
+        isEquipped: owned?.isEquipped ?? false,
+        quantity: owned?.quantity ?? 0,
+      };
+    });
+
     return {
       profile: profileRes.data,
       subjects: subjectsRes.data ?? [],
       stats: bySubject,
       recent: attemptsRes.data ?? [],
+      badges,
+      inventory,
+      shopItems,
+    };
+  });
+
+// ---------- Buy a shop item ----------
+export const purchaseShopItem = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ itemCode: z.string().min(1) }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+
+    const [profileRes, shopItemRes] = await Promise.all([
+      supabase.from("profiles").select("id,yahia_coins").eq("id", userId).single(),
+      supabase
+        .from("shop_items")
+        .select("id,code,name,item_type,description,price_coins,is_active")
+        .eq("code", data.itemCode)
+        .eq("is_active", true)
+        .single(),
+    ]);
+
+    if (profileRes.error) throw new Error(profileRes.error.message);
+    if (shopItemRes.error) throw new Error(shopItemRes.error.message);
+
+    const profile = profileRes.data;
+    const shopItem = shopItemRes.data;
+
+    if ((profile.yahia_coins ?? 0) < shopItem.price_coins) {
+      throw new Error("YahiaCoins insuffisants.");
+    }
+
+    const existingInventoryRes = await supabase
+      .from("inventory_items")
+      .select("id,quantity")
+      .eq("student_user_id", userId)
+      .eq("shop_item_id", shopItem.id)
+      .maybeSingle();
+    if (existingInventoryRes.error) throw new Error(existingInventoryRes.error.message);
+
+    if (shopItem.item_type === "skin" && existingInventoryRes.data) {
+      throw new Error("Ce skin est déjà dans ton inventaire.");
+    }
+
+    const newCoins = (profile.yahia_coins ?? 0) - shopItem.price_coins;
+    const profileUpdateRes = await supabase
+      .from("profiles")
+      .update({ yahia_coins: newCoins })
+      .eq("id", userId);
+    if (profileUpdateRes.error) throw new Error(profileUpdateRes.error.message);
+
+    if (existingInventoryRes.data) {
+      const inventoryUpdateRes = await supabase
+        .from("inventory_items")
+        .update({ quantity: existingInventoryRes.data.quantity + 1 })
+        .eq("id", existingInventoryRes.data.id)
+        .eq("student_user_id", userId);
+      if (inventoryUpdateRes.error) throw new Error(inventoryUpdateRes.error.message);
+    } else {
+      const inventoryInsertRes = await supabase
+        .from("inventory_items")
+        .insert({
+          student_user_id: userId,
+          shop_item_id: shopItem.id,
+          quantity: 1,
+          is_equipped: false,
+        });
+      if (inventoryInsertRes.error) throw new Error(inventoryInsertRes.error.message);
+    }
+
+    return {
+      itemCode: shopItem.code,
+      remainingCoins: newCoins,
+      purchasedItemName: shopItem.name,
+    };
+  });
+
+// ---------- Equip a skin from inventory ----------
+export const equipInventorySkin = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ itemCode: z.string().min(1) }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+
+    const inventoryRes = await supabase
+      .from("inventory_items")
+      .select("id,shop_item_id,item:shop_items(code,name,item_type,effect_payload)")
+      .eq("student_user_id", userId);
+
+    if (inventoryRes.error) throw new Error(inventoryRes.error.message);
+    const inventoryItem = (inventoryRes.data ?? []).find((row: any) => row.item?.code === data.itemCode);
+
+    if (!inventoryItem?.item) throw new Error("Item introuvable dans l'inventaire.");
+    if (inventoryItem.item.item_type !== "skin") throw new Error("Seuls les skins peuvent être équipés.");
+
+    const skinRows = (inventoryRes.data ?? []).filter((row: any) => row.item?.item_type === "skin");
+    if (skinRows.length > 0) {
+      const resetRes = await supabase
+        .from("inventory_items")
+        .update({ is_equipped: false })
+        .in("id", skinRows.map((row: any) => row.id));
+      if (resetRes.error) throw new Error(resetRes.error.message);
+    }
+
+    const equipRes = await supabase
+      .from("inventory_items")
+      .update({ is_equipped: true })
+      .eq("id", inventoryItem.id)
+      .eq("student_user_id", userId);
+    if (equipRes.error) throw new Error(equipRes.error.message);
+
+    const avatarSlug = typeof inventoryItem.item.effect_payload === "object"
+      && inventoryItem.item.effect_payload !== null
+      && "avatarSlug" in inventoryItem.item.effect_payload
+      ? inventoryItem.item.effect_payload.avatarSlug
+      : null;
+
+    if (typeof avatarSlug === "string") {
+      const profileRes = await supabase
+        .from("profiles")
+        .update({ avatar_slug: avatarSlug })
+        .eq("id", userId);
+      if (profileRes.error) throw new Error(profileRes.error.message);
+    }
+
+    return {
+      itemCode: inventoryItem.item.code,
+      itemName: inventoryItem.item.name,
+      avatarSlug: typeof avatarSlug === "string" ? avatarSlug : null,
     };
   });
 
@@ -77,7 +287,7 @@ export const getExercise = createServerFn({ method: "GET" })
       supabase.from("exercises").select("*, subjects(*), chapters(*)").eq("id", data.exerciseId).single(),
       supabase
         .from("questions")
-        .select("id,prompt,options,correct_option,explanation,display_order")
+        .select("id,prompt,options,explanation,display_order")
         .eq("exercise_id", data.exerciseId)
         .order("display_order"),
     ]);
@@ -85,37 +295,94 @@ export const getExercise = createServerFn({ method: "GET" })
     return { exercise: ex.data, questions: qs.data ?? [] };
   });
 
+// ---------- Start a secure exercise session ----------
+export const startExerciseSession = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ exerciseId: z.string().uuid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+
+    const { data: session, error } = await supabase
+      .from("exercise_sessions")
+      .insert({ user_id: userId, exercise_id: data.exerciseId })
+      .select("id,started_at")
+      .single();
+
+    if (error) throw new Error(error.message);
+
+    return {
+      sessionId: session.id,
+      startedAt: session.started_at,
+    };
+  });
+
 // ---------- Submit attempt ----------
 export const submitAttempt = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) =>
     z.object({
+      sessionId: z.string().uuid(),
       exerciseId: z.string().uuid(),
       answers: z.array(z.object({ questionId: z.string().uuid(), choice: z.string() })).min(1).max(100),
-      durationSeconds: z.number().int().min(0).max(7200),
     }).parse(d),
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
-    const [exRes, qsRes] = await Promise.all([
+    const [sessionRes, exRes, qsRes] = await Promise.all([
+      supabase
+        .from("exercise_sessions")
+        .select("id,exercise_id,started_at,completed_at")
+        .eq("id", data.sessionId)
+        .eq("user_id", userId)
+        .single(),
       supabase.from("exercises").select("id,subject_id,xp_reward,difficulty").eq("id", data.exerciseId).single(),
-      supabase.from("questions").select("id,correct_option").eq("exercise_id", data.exerciseId),
+      supabase
+        .from("questions")
+        .select("id,prompt,correct_option,explanation")
+        .eq("exercise_id", data.exerciseId),
     ]);
+    if (sessionRes.error) throw new Error(sessionRes.error.message);
     if (exRes.error) throw new Error(exRes.error.message);
     if (qsRes.error) throw new Error(qsRes.error.message);
 
-    const correctMap = new Map(qsRes.data.map((q) => [q.id, q.correct_option]));
+    if (sessionRes.data.exercise_id !== data.exerciseId) {
+      throw new Error("Session de quête invalide.");
+    }
+
+    if (sessionRes.data.completed_at) {
+      throw new Error("Cette session de quête est déjà terminée.");
+    }
+
+    const questionMap = new Map(qsRes.data.map((q) => [q.id, q]));
     let correct = 0;
     for (const a of data.answers) {
-      if (correctMap.get(a.questionId) === a.choice) correct += 1;
+      if (questionMap.get(a.questionId)?.correct_option === a.choice) correct += 1;
     }
     const total = qsRes.data.length;
     const pct = total > 0 ? (correct / total) * 100 : 0;
 
+    const review = data.answers.map((answer) => {
+      const question = questionMap.get(answer.questionId);
+
+      return {
+        questionId: answer.questionId,
+        prompt: question?.prompt ?? "Question",
+        selectedChoice: answer.choice,
+        correctChoice: question?.correct_option ?? "",
+        isCorrect: question?.correct_option === answer.choice,
+        explanation: question?.explanation ?? null,
+      };
+    });
+
+    const durationSeconds = Math.max(
+      1,
+      Math.round((Date.now() - new Date(sessionRes.data.started_at).getTime()) / 1000),
+    );
+
     // Scoring: base + speed bonus
     const idealTime = total * 30; // 30s per Q
-    const speedFactor = Math.max(0.5, Math.min(1.4, idealTime / Math.max(15, data.durationSeconds)));
+    const speedFactor = Math.max(0.5, Math.min(1.4, idealTime / Math.max(15, durationSeconds)));
     const xpEarned = Math.round(exRes.data.xp_reward * (pct / 100) * speedFactor);
 
     // Insert attempt
@@ -126,18 +393,62 @@ export const submitAttempt = createServerFn({ method: "POST" })
       correct_count: correct,
       total_count: total,
       score_pct: pct,
-      duration_seconds: data.durationSeconds,
+      duration_seconds: durationSeconds,
       xp_earned: xpEarned,
     });
     if (insRes.error) throw new Error(insRes.error.message);
+
+    const sessionUpdate = await supabase
+      .from("exercise_sessions")
+      .update({ completed_at: new Date().toISOString() })
+      .eq("id", data.sessionId)
+      .eq("user_id", userId);
+    if (sessionUpdate.error) throw new Error(sessionUpdate.error.message);
 
     // Award XP via DB function (security definer)
     const { data: newProfile, error: rpcErr } = await supabase.rpc("award_xp", { p_user: userId, p_xp: xpEarned });
     if (rpcErr) throw new Error(rpcErr.message);
 
+    const profile = Array.isArray(newProfile) ? newProfile[0] : newProfile;
+    const unlockedBadges: UnlockedBadge[] = [];
+
+    if (profile?.current_streak >= 7) {
+      const { data: streakBadge, error: badgeErr } = await supabase
+        .from("badges")
+        .select("id,code,name,rarity,icon_name")
+        .eq("code", "streak_7")
+        .maybeSingle();
+
+      if (badgeErr) throw new Error(badgeErr.message);
+
+      if (streakBadge) {
+        const { error: insertBadgeErr } = await supabase
+          .from("student_badges")
+          .insert({
+            student_user_id: userId,
+            badge_id: streakBadge.id,
+            awarded_reason: "7 jours consécutifs de révision",
+          });
+
+        if (insertBadgeErr && insertBadgeErr.code !== "23505") {
+          throw new Error(insertBadgeErr.message);
+        }
+
+        if (!insertBadgeErr) {
+          unlockedBadges.push({
+            code: streakBadge.code,
+            name: streakBadge.name,
+            rarity: streakBadge.rarity,
+            iconName: streakBadge.icon_name,
+          });
+        }
+      }
+    }
+
     return {
-      correct, total, scorePct: pct, xpEarned,
-      profile: Array.isArray(newProfile) ? newProfile[0] : newProfile,
-      correctMap: Object.fromEntries(correctMap),
+      correct, total, scorePct: pct, xpEarned, durationSeconds,
+      profile,
+      review,
+      unlockedBadges,
     };
   });

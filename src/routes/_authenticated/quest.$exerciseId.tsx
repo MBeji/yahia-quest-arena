@@ -1,11 +1,11 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion, AnimatePresence } from "motion/react";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, Check, X, Zap, Flame, Sparkles, Loader2, Trophy } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { ArrowLeft, Zap, Flame, Sparkles, Loader2, Trophy } from "lucide-react";
 import { toast } from "sonner";
-import { getExercise, submitAttempt } from "@/lib/gamification.functions";
+import { getExercise, startExerciseSession, submitAttempt } from "@/lib/gamification.functions";
 
 export const Route = createFileRoute("/_authenticated/quest/$exerciseId")({
   head: () => ({ meta: [{ title: "Quête · YahiaAcademy" }] }),
@@ -16,9 +16,9 @@ type Answer = { questionId: string; choice: string };
 
 function QuestPage() {
   const { exerciseId } = Route.useParams();
-  const navigate = useNavigate();
   const qc = useQueryClient();
   const fetchExercise = useServerFn(getExercise);
+  const startSession = useServerFn(startExerciseSession);
   const submit = useServerFn(submitAttempt);
 
   const { data, isLoading } = useQuery({
@@ -29,14 +29,17 @@ function QuestPage() {
   const [idx, setIdx] = useState(0);
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
-  const [reveal, setReveal] = useState(false);
-  const startRef = useRef<number>(Date.now());
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const [result, setResult] = useState<Awaited<ReturnType<typeof submitAttempt>> | null>(null);
 
-  useEffect(() => { startRef.current = Date.now(); }, [exerciseId]);
+  const sessionMutation = useMutation({
+    mutationFn: (payload: { exerciseId: string }) => startSession({ data: payload }),
+    onSuccess: (res) => setSessionId(res.sessionId),
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Impossible de démarrer la quête"),
+  });
 
   const mutation = useMutation({
-    mutationFn: (payload: { exerciseId: string; answers: Answer[]; durationSeconds: number }) => submit({ data: payload }),
+    mutationFn: (payload: { sessionId: string; exerciseId: string; answers: Answer[] }) => submit({ data: payload }),
     onSuccess: (res) => {
       setResult(res);
       qc.invalidateQueries({ queryKey: ["dashboard"] });
@@ -49,6 +52,11 @@ function QuestPage() {
   const total = questions.length;
   const current = questions[idx];
   const progress = useMemo(() => (total > 0 ? ((idx) / total) * 100 : 0), [idx, total]);
+
+  useEffect(() => {
+    if (!data?.exercise?.id || sessionId || sessionMutation.isPending || result) return;
+    sessionMutation.mutate({ exerciseId: data.exercise.id });
+  }, [data?.exercise?.id, result, sessionId, sessionMutation]);
 
   if (isLoading || !data) {
     return <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">Préparation de l'arène…</div>;
@@ -72,6 +80,9 @@ function QuestPage() {
             <p className="mt-1 text-muted-foreground">
               {result.correct} / {result.total} bonnes réponses · {Math.round(result.scorePct)}%
             </p>
+            <p className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">
+              Temps validé côté serveur · {result.durationSeconds}s
+            </p>
             <div className="mt-6 grid grid-cols-3 gap-3">
               <div className="rounded-xl bg-[color:var(--neon-gold)]/15 p-4">
                 <Zap className="mx-auto h-5 w-5 text-[color:var(--neon-gold)]" />
@@ -92,14 +103,65 @@ function QuestPage() {
             <div className="mt-6 text-xs uppercase tracking-widest text-[color:var(--neon-cyan)]">
               {result.profile?.hero_class}
             </div>
+            {result.unlockedBadges.length > 0 && (
+              <div className="mt-6 rounded-2xl border border-[color:var(--neon-gold)]/30 bg-[color:var(--neon-gold)]/10 p-4 text-left">
+                <div className="text-xs uppercase tracking-widest text-[color:var(--neon-gold)]">Badges débloqués</div>
+                <div className="mt-3 flex flex-wrap gap-3">
+                  {result.unlockedBadges.map((badge) => (
+                    <div key={badge.code} className="rounded-xl bg-card/70 px-4 py-3">
+                      <div className="font-display text-sm font-bold">{badge.name}</div>
+                      <div className="text-xs uppercase tracking-widest text-muted-foreground">{badge.rarity}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <Link to="/dashboard" className="rounded-lg border border-border bg-background/50 px-5 py-2.5 text-sm font-semibold hover:bg-background/80">Retour au hall</Link>
               <button
-                onClick={() => { setResult(null); setIdx(0); setAnswers([]); setSelected(null); setReveal(false); startRef.current = Date.now(); }}
+                onClick={() => {
+                  setResult(null);
+                  setIdx(0);
+                  setAnswers([]);
+                  setSelected(null);
+                  setSessionId(null);
+                }}
                 className="rounded-lg bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-neon hover:scale-105"
               >
                 Rejouer la quête
               </button>
+            </div>
+
+            <div className="mt-8 text-left">
+              <h2 className="font-display text-xl font-bold">Revue de la quête</h2>
+              <div className="mt-4 space-y-3">
+                {result.review.map((item, reviewIndex) => (
+                  <div key={item.questionId} className="rounded-2xl border border-border/50 bg-background/30 p-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <div className="text-xs uppercase tracking-widest text-muted-foreground">Question {reviewIndex + 1}</div>
+                        <div className="mt-1 font-semibold">{item.prompt}</div>
+                      </div>
+                      <div className={`rounded-full px-3 py-1 text-xs font-bold ${item.isCorrect ? "bg-[color:var(--success)]/15 text-[color:var(--success)]" : "bg-destructive/15 text-destructive"}`}>
+                        {item.isCorrect ? "Réussie" : "À retravailler"}
+                      </div>
+                    </div>
+                    <div className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
+                      <div className="rounded-xl bg-card/60 p-3">
+                        <div className="text-xs uppercase tracking-widest text-muted-foreground">Ta réponse</div>
+                        <div className="mt-1 font-mono uppercase">{item.selectedChoice}</div>
+                      </div>
+                      <div className="rounded-xl bg-card/60 p-3">
+                        <div className="text-xs uppercase tracking-widest text-muted-foreground">Bonne réponse</div>
+                        <div className="mt-1 font-mono uppercase">{item.correctChoice}</div>
+                      </div>
+                    </div>
+                    {item.explanation && (
+                      <p className="mt-3 text-sm text-muted-foreground">{item.explanation}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </motion.div>
@@ -108,26 +170,25 @@ function QuestPage() {
   }
 
   function handleSelect(optId: string) {
-    if (reveal) return;
     setSelected(optId);
-    setReveal(true);
-    const newAns: Answer = { questionId: current.id, choice: optId };
-    setAnswers((prev) => [...prev, newAns]);
   }
 
   function next() {
-    setSelected(null);
-    setReveal(false);
+    if (!selected || !sessionId) return;
+
+    const nextAnswer: Answer = { questionId: current.id, choice: selected };
+    const nextAnswers = [...answers, nextAnswer];
+
     if (idx + 1 >= total) {
-      const duration = Math.round((Date.now() - startRef.current) / 1000);
-      mutation.mutate({ exerciseId, answers, durationSeconds: duration });
+      mutation.mutate({ sessionId, exerciseId, answers: nextAnswers });
     } else {
+      setAnswers(nextAnswers);
       setIdx((i) => i + 1);
+      setSelected(null);
     }
   }
 
   const options = (current.options as { id: string; text: string }[]) ?? [];
-  const isCorrect = selected === current.correct_option;
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-8">
@@ -156,18 +217,15 @@ function QuestPage() {
           className="rounded-3xl border border-border/50 bg-card/60 p-6 backdrop-blur-xl sm:p-8"
         >
           <h2 className="font-display text-xl font-semibold sm:text-2xl">{current.prompt}</h2>
+          <p className="mt-2 text-sm text-muted-foreground">La correction est conservée côté serveur jusqu'à la fin de la quête.</p>
           <div className="mt-6 space-y-3">
             {options.map((opt) => {
               const isSel = selected === opt.id;
-              const isAns = current.correct_option === opt.id;
               let cls = "border-border bg-background/40 hover:border-[color:var(--neon-violet)]/60 hover:bg-background/70";
-              if (reveal && isAns) cls = "border-[color:var(--success)] bg-[color:var(--success)]/15 text-[color:var(--success)]";
-              else if (reveal && isSel && !isAns) cls = "border-destructive bg-destructive/15 text-destructive";
-              else if (isSel) cls = "border-[color:var(--neon-violet)] bg-[color:var(--neon-violet)]/15";
+              if (isSel) cls = "border-[color:var(--neon-violet)] bg-[color:var(--neon-violet)]/15";
               return (
                 <button
                   key={opt.id}
-                  disabled={reveal}
                   onClick={() => handleSelect(opt.id)}
                   className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left text-sm transition ${cls}`}
                 >
@@ -175,30 +233,18 @@ function QuestPage() {
                     <span className="grid h-7 w-7 place-items-center rounded-md border border-current font-mono text-xs uppercase">{opt.id}</span>
                     <span>{opt.text}</span>
                   </span>
-                  {reveal && isAns && <Check className="h-5 w-5" />}
-                  {reveal && isSel && !isAns && <X className="h-5 w-5" />}
                 </button>
               );
             })}
           </div>
 
-          {reveal && (
-            <motion.div
-              initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-              className={`mt-5 rounded-xl border p-4 text-sm ${isCorrect ? "border-[color:var(--success)]/40 bg-[color:var(--success)]/10" : "border-destructive/40 bg-destructive/10"}`}
-            >
-              <div className="font-bold">{isCorrect ? "Coup parfait." : "Esquive ratée."}</div>
-              {current.explanation && <p className="mt-1 text-muted-foreground">{current.explanation}</p>}
-            </motion.div>
-          )}
-
           <div className="mt-6 flex justify-end">
             <button
-              disabled={!reveal || mutation.isPending}
+              disabled={!selected || !sessionId || mutation.isPending || sessionMutation.isPending}
               onClick={next}
               className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] px-6 py-2.5 text-sm font-bold text-primary-foreground shadow-neon transition disabled:opacity-40"
             >
-              {mutation.isPending && <Loader2 className="h-4 w-4 animate-spin" />}
+              {(mutation.isPending || sessionMutation.isPending) && <Loader2 className="h-4 w-4 animate-spin" />}
               {idx + 1 >= total ? "Terminer la quête" : "Question suivante"}
             </button>
           </div>
