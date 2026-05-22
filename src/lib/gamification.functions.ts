@@ -336,7 +336,7 @@ export const submitAttempt = createServerFn({ method: "POST" })
         .eq("id", data.sessionId)
         .eq("user_id", userId)
         .single(),
-      supabase.from("exercises").select("id,subject_id,xp_reward,difficulty").eq("id", data.exerciseId).single(),
+      supabase.from("exercises").select("id,subject_id,xp_reward,reward_coins,difficulty").eq("id", data.exerciseId).single(),
       supabase
         .from("questions")
         .select("id,prompt,correct_option,explanation")
@@ -385,6 +385,10 @@ export const submitAttempt = createServerFn({ method: "POST" })
     const speedFactor = Math.max(0.5, Math.min(1.4, idealTime / Math.max(15, durationSeconds)));
     const xpEarned = Math.round(exRes.data.xp_reward * (pct / 100) * speedFactor);
 
+    // Coin reward: full coins if score >= 60%, half if >= 40%, zero otherwise
+    const rewardCoins = exRes.data.reward_coins ?? 0;
+    const coinsEarned = pct >= 60 ? rewardCoins : pct >= 40 ? Math.round(rewardCoins / 2) : 0;
+
     // Insert attempt
     const insRes = await supabase.from("attempts").insert({
       user_id: userId,
@@ -410,8 +414,76 @@ export const submitAttempt = createServerFn({ method: "POST" })
     if (rpcErr) throw new Error(rpcErr.message);
 
     const profile = Array.isArray(newProfile) ? newProfile[0] : newProfile;
+
+    // Award coins
+    if (coinsEarned > 0 && profile) {
+      const newCoins = (profile.yahia_coins ?? 0) + coinsEarned;
+      const { error: coinErr } = await supabase
+        .from("profiles")
+        .update({ yahia_coins: newCoins })
+        .eq("id", userId);
+      if (coinErr) throw new Error(coinErr.message);
+      profile.yahia_coins = newCoins;
+    }
+
     const unlockedBadges: UnlockedBadge[] = [];
 
+    // Badge: first_quest (first attempt ever)
+    const { count: attemptCount } = await supabase
+      .from("attempts")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", userId);
+    if (attemptCount === 1) {
+      const { data: firstBadge } = await supabase
+        .from("badges")
+        .select("id,code,name,rarity,icon_name")
+        .eq("code", "first_quest")
+        .maybeSingle();
+      if (firstBadge) {
+        const { error: fbErr } = await supabase
+          .from("student_badges")
+          .insert({ student_user_id: userId, badge_id: firstBadge.id, awarded_reason: "Première quête terminée" });
+        if (!fbErr) {
+          unlockedBadges.push({ code: firstBadge.code, name: firstBadge.name, rarity: firstBadge.rarity, iconName: firstBadge.icon_name });
+        }
+      }
+    }
+
+    // Badge: perfect_score
+    if (pct === 100) {
+      const { data: perfectBadge } = await supabase
+        .from("badges")
+        .select("id,code,name,rarity,icon_name")
+        .eq("code", "perfect_score")
+        .maybeSingle();
+      if (perfectBadge) {
+        const { error: psErr } = await supabase
+          .from("student_badges")
+          .insert({ student_user_id: userId, badge_id: perfectBadge.id, awarded_reason: "Score parfait: 100%" });
+        if (!psErr) {
+          unlockedBadges.push({ code: perfectBadge.code, name: perfectBadge.name, rarity: perfectBadge.rarity, iconName: perfectBadge.icon_name });
+        }
+      }
+    }
+
+    // Badge: speed_demon (under 60s)
+    if (durationSeconds < 60 && pct >= 60) {
+      const { data: speedBadge } = await supabase
+        .from("badges")
+        .select("id,code,name,rarity,icon_name")
+        .eq("code", "speed_demon")
+        .maybeSingle();
+      if (speedBadge) {
+        const { error: sdErr } = await supabase
+          .from("student_badges")
+          .insert({ student_user_id: userId, badge_id: speedBadge.id, awarded_reason: "Quête terminée en moins de 60s" });
+        if (!sdErr) {
+          unlockedBadges.push({ code: speedBadge.code, name: speedBadge.name, rarity: speedBadge.rarity, iconName: speedBadge.icon_name });
+        }
+      }
+    }
+
+    // Badge: streak_7
     if (profile?.current_streak >= 7) {
       const { data: streakBadge, error: badgeErr } = await supabase
         .from("badges")
@@ -446,7 +518,7 @@ export const submitAttempt = createServerFn({ method: "POST" })
     }
 
     return {
-      correct, total, scorePct: pct, xpEarned, durationSeconds,
+      correct, total, scorePct: pct, xpEarned, coinsEarned, durationSeconds,
       profile,
       review,
       unlockedBadges,
