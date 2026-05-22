@@ -11,9 +11,9 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
 });
 
-const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+const ICONS: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
   Sword, BookOpen, Scroll, Leaf, Globe,
-};
+} as never;
 
 function Dashboard() {
   const fetchDashboard = useServerFn(getDashboard);
