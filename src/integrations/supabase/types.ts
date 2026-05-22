@@ -14,13 +14,270 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      attempts: {
+        Row: {
+          completed_at: string
+          correct_count: number
+          duration_seconds: number
+          exercise_id: string
+          id: string
+          score_pct: number
+          subject_id: string
+          total_count: number
+          user_id: string
+          xp_earned: number
+        }
+        Insert: {
+          completed_at?: string
+          correct_count: number
+          duration_seconds: number
+          exercise_id: string
+          id?: string
+          score_pct: number
+          subject_id: string
+          total_count: number
+          user_id: string
+          xp_earned: number
+        }
+        Update: {
+          completed_at?: string
+          correct_count?: number
+          duration_seconds?: number
+          exercise_id?: string
+          id?: string
+          score_pct?: number
+          subject_id?: string
+          total_count?: number
+          user_id?: string
+          xp_earned?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attempts_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attempts_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chapters: {
+        Row: {
+          description: string | null
+          display_order: number
+          id: string
+          subject_id: string
+          title: string
+        }
+        Insert: {
+          description?: string | null
+          display_order?: number
+          id?: string
+          subject_id: string
+          title: string
+        }
+        Update: {
+          description?: string | null
+          display_order?: number
+          id?: string
+          subject_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chapters_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      exercises: {
+        Row: {
+          chapter_id: string
+          difficulty: number
+          display_order: number
+          id: string
+          subject_id: string
+          title: string
+          xp_reward: number
+        }
+        Insert: {
+          chapter_id: string
+          difficulty?: number
+          display_order?: number
+          id?: string
+          subject_id: string
+          title: string
+          xp_reward?: number
+        }
+        Update: {
+          chapter_id?: string
+          difficulty?: number
+          display_order?: number
+          id?: string
+          subject_id?: string
+          title?: string
+          xp_reward?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exercises_chapter_id_fkey"
+            columns: ["chapter_id"]
+            isOneToOne: false
+            referencedRelation: "chapters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exercises_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_tier: number
+          created_at: string
+          current_streak: number
+          display_name: string
+          hero_class: string
+          id: string
+          last_active_date: string | null
+          level: number
+          longest_streak: number
+          xp: number
+        }
+        Insert: {
+          avatar_tier?: number
+          created_at?: string
+          current_streak?: number
+          display_name?: string
+          hero_class?: string
+          id: string
+          last_active_date?: string | null
+          level?: number
+          longest_streak?: number
+          xp?: number
+        }
+        Update: {
+          avatar_tier?: number
+          created_at?: string
+          current_streak?: number
+          display_name?: string
+          hero_class?: string
+          id?: string
+          last_active_date?: string | null
+          level?: number
+          longest_streak?: number
+          xp?: number
+        }
+        Relationships: []
+      }
+      questions: {
+        Row: {
+          correct_option: string
+          display_order: number
+          exercise_id: string
+          explanation: string | null
+          id: string
+          options: Json
+          prompt: string
+        }
+        Insert: {
+          correct_option: string
+          display_order?: number
+          exercise_id: string
+          explanation?: string | null
+          id?: string
+          options: Json
+          prompt: string
+        }
+        Update: {
+          correct_option?: string
+          display_order?: number
+          exercise_id?: string
+          explanation?: string | null
+          id?: string
+          options?: Json
+          prompt?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "questions_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subjects: {
+        Row: {
+          attribute: string
+          color_token: string
+          description: string | null
+          display_order: number
+          icon: string
+          id: string
+          name_fr: string
+        }
+        Insert: {
+          attribute: string
+          color_token: string
+          description?: string | null
+          display_order?: number
+          icon: string
+          id: string
+          name_fr: string
+        }
+        Update: {
+          attribute?: string
+          color_token?: string
+          description?: string | null
+          display_order?: number
+          icon?: string
+          id?: string
+          name_fr?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      award_xp: {
+        Args: { p_user: string; p_xp: number }
+        Returns: {
+          avatar_tier: number
+          created_at: string
+          current_streak: number
+          display_name: string
+          hero_class: string
+          id: string
+          last_active_date: string | null
+          level: number
+          longest_streak: number
+          xp: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
     }
     Enums: {
       [_ in never]: never
