@@ -2,8 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion, AnimatePresence } from "motion/react";
-import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, Zap, Flame, Sparkles, Loader2, Trophy } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ArrowLeft, Zap, Flame, Sparkles, Loader2, Trophy, Skull, Heart, Timer } from "lucide-react";
 import { toast } from "sonner";
 import { getExercise, startExerciseSession, submitAttempt } from "@/lib/gamification.functions";
 
@@ -52,6 +52,46 @@ function QuestPage() {
   const total = questions.length;
   const current = questions[idx];
   const progress = useMemo(() => (total > 0 ? ((idx) / total) * 100 : 0), [idx, total]);
+  const isBoss = data?.exercise?.mode === "boss";
+
+  // Boss mode: timer (20s per question)
+  const BOSS_TIME_PER_Q = 20;
+  const [bossTimer, setBossTimer] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    if (!isBoss || !sessionId || result) return;
+    setBossTimer(BOSS_TIME_PER_Q);
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setBossTimer((t) => {
+        if (t <= 1) {
+          // Auto-submit with no answer if time runs out
+          if (!selected) {
+            const autoAnswer: Answer = { questionId: current?.id ?? "", choice: "__timeout__" };
+            const nextAnswers = [...answers, autoAnswer];
+            if (idx + 1 >= total) {
+              mutation.mutate({ sessionId: sessionId!, exerciseId, answers: nextAnswers });
+            } else {
+              setAnswers(nextAnswers);
+              setIdx((i) => i + 1);
+              setSelected(null);
+            }
+          }
+          return BOSS_TIME_PER_Q;
+        }
+        return t - 1;
+      });
+    }, 1000);
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isBoss, sessionId, idx, result]);
+
+  // Boss HP: starts at 100%, decreases per answered question
+  const bossHp = useMemo(() => {
+    if (!isBoss || total === 0) return 100;
+    return Math.max(0, Math.round(((total - idx) / total) * 100));
+  }, [isBoss, total, idx]);
 
   useEffect(() => {
     if (!data?.exercise?.id || sessionId || sessionMutation.isPending || result) return;
@@ -83,11 +123,16 @@ function QuestPage() {
             <p className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">
               Temps validé côté serveur · {result.durationSeconds}s
             </p>
-            <div className="mt-6 grid grid-cols-3 gap-3">
+            <div className="mt-6 grid grid-cols-4 gap-3">
               <div className="rounded-xl bg-[color:var(--neon-gold)]/15 p-4">
                 <Zap className="mx-auto h-5 w-5 text-[color:var(--neon-gold)]" />
                 <div className="mt-1 font-display text-2xl font-bold text-[color:var(--neon-gold)]">+{result.xpEarned}</div>
                 <div className="text-xs uppercase tracking-wider text-muted-foreground">XP</div>
+              </div>
+              <div className="rounded-xl bg-[color:var(--neon-cyan)]/15 p-4">
+                <Sparkles className="mx-auto h-5 w-5 text-[color:var(--neon-cyan)]" />
+                <div className="mt-1 font-display text-2xl font-bold text-[color:var(--neon-cyan)]">+{result.coinsEarned ?? 0}</div>
+                <div className="text-xs uppercase tracking-wider text-muted-foreground">Coins</div>
               </div>
               <div className="rounded-xl bg-[color:var(--neon-violet)]/15 p-4">
                 <Sparkles className="mx-auto h-5 w-5 text-[color:var(--neon-violet)]" />
@@ -196,14 +241,57 @@ function QuestPage() {
         <ArrowLeft className="h-4 w-4" /> Quitter la quête
       </Link>
 
+      {/* Boss Mode Header */}
+      {isBoss && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+          className="mb-6 rounded-2xl border border-destructive/40 bg-destructive/10 p-4 backdrop-blur-md"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-destructive to-[color:var(--neon-magenta)] shadow-lg animate-pulse">
+                <Skull className="h-5 w-5 text-primary-foreground" />
+              </div>
+              <div>
+                <div className="text-xs uppercase tracking-[0.3em] text-destructive font-bold">⚔️ Combat de Boss</div>
+                <div className="font-display text-lg font-bold">{data.exercise.title}</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 rounded-full bg-background/60 px-3 py-1.5 text-sm font-bold">
+              <Timer className="h-4 w-4 text-destructive" />
+              <span className={bossTimer <= 5 ? "text-destructive animate-pulse" : "text-[color:var(--neon-cyan)]"}>
+                {bossTimer}s
+              </span>
+            </div>
+          </div>
+          {/* Boss HP Bar */}
+          <div className="mt-4">
+            <div className="mb-1 flex items-center justify-between text-xs">
+              <span className="flex items-center gap-1 font-bold text-destructive">
+                <Heart className="h-3 w-3" /> HP du Boss
+              </span>
+              <span className="text-muted-foreground">{bossHp}%</span>
+            </div>
+            <div className="h-3 overflow-hidden rounded-full bg-secondary/80">
+              <motion.div
+                className="h-full rounded-full bg-gradient-to-r from-destructive to-[color:var(--neon-magenta)]"
+                initial={{ width: "100%" }}
+                animate={{ width: `${bossHp}%` }}
+                transition={{ duration: 0.5 }}
+              />
+            </div>
+          </div>
+        </motion.div>
+      )}
+
       <div className="mb-6">
         <div className="mb-2 flex items-center justify-between text-xs uppercase tracking-widest text-muted-foreground">
           <span>Question {idx + 1} / {total}</span>
-          <span className="text-[color:var(--neon-cyan)]">{data.exercise.title}</span>
+          {!isBoss && <span className="text-[color:var(--neon-cyan)]">{data.exercise.title}</span>}
         </div>
         <div className="h-2 overflow-hidden rounded-full bg-secondary">
           <motion.div
-            className="h-full rounded-full bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] shadow-neon"
+            className={`h-full rounded-full shadow-neon ${isBoss ? "bg-gradient-to-r from-destructive to-[color:var(--neon-magenta)]" : "bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)]"}`}
             initial={{ width: 0 }} animate={{ width: `${progress}%` }} transition={{ duration: 0.4 }}
           />
         </div>
@@ -214,15 +302,21 @@ function QuestPage() {
           key={current.id}
           initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}
           transition={{ duration: 0.3 }}
-          className="rounded-3xl border border-border/50 bg-card/60 p-6 backdrop-blur-xl sm:p-8"
+          className={`rounded-3xl border p-6 backdrop-blur-xl sm:p-8 ${isBoss ? "border-destructive/30 bg-destructive/5" : "border-border/50 bg-card/60"}`}
         >
           <h2 className="font-display text-xl font-semibold sm:text-2xl">{current.prompt}</h2>
-          <p className="mt-2 text-sm text-muted-foreground">La correction est conservée côté serveur jusqu'à la fin de la quête.</p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            {isBoss ? "Frappe vite et juste pour infliger des dégâts au Boss !" : "La correction est conservée côté serveur jusqu'à la fin de la quête."}
+          </p>
           <div className="mt-6 space-y-3">
             {options.map((opt) => {
               const isSel = selected === opt.id;
-              let cls = "border-border bg-background/40 hover:border-[color:var(--neon-violet)]/60 hover:bg-background/70";
-              if (isSel) cls = "border-[color:var(--neon-violet)] bg-[color:var(--neon-violet)]/15";
+              let cls = isBoss
+                ? "border-destructive/20 bg-background/40 hover:border-destructive/60 hover:bg-destructive/10"
+                : "border-border bg-background/40 hover:border-[color:var(--neon-violet)]/60 hover:bg-background/70";
+              if (isSel) cls = isBoss
+                ? "border-destructive bg-destructive/20"
+                : "border-[color:var(--neon-violet)] bg-[color:var(--neon-violet)]/15";
               return (
                 <button
                   key={opt.id}
@@ -242,10 +336,17 @@ function QuestPage() {
             <button
               disabled={!selected || !sessionId || mutation.isPending || sessionMutation.isPending}
               onClick={next}
-              className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] px-6 py-2.5 text-sm font-bold text-primary-foreground shadow-neon transition disabled:opacity-40"
+              className={`inline-flex items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-bold text-primary-foreground shadow-neon transition disabled:opacity-40 ${
+                isBoss
+                  ? "bg-gradient-to-r from-destructive to-[color:var(--neon-magenta)]"
+                  : "bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)]"
+              }`}
             >
               {(mutation.isPending || sessionMutation.isPending) && <Loader2 className="h-4 w-4 animate-spin" />}
-              {idx + 1 >= total ? "Terminer la quête" : "Question suivante"}
+              {isBoss
+                ? (idx + 1 >= total ? "⚔️ Coup final !" : "⚔️ Attaquer !")
+                : (idx + 1 >= total ? "Terminer la quête" : "Question suivante")
+              }
             </button>
           </div>
         </motion.div>

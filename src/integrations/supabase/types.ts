@@ -12,6 +12,31 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
       attempts: {
@@ -133,6 +158,47 @@ export type Database = {
           },
         ]
       }
+      exercise_assignments: {
+        Row: {
+          assigned_by_user_id: string
+          completed_at: string | null
+          created_at: string
+          due_at: string | null
+          exercise_id: string
+          id: string
+          status: string
+          student_user_id: string
+        }
+        Insert: {
+          assigned_by_user_id: string
+          completed_at?: string | null
+          created_at?: string
+          due_at?: string | null
+          exercise_id: string
+          id?: string
+          status?: string
+          student_user_id: string
+        }
+        Update: {
+          assigned_by_user_id?: string
+          completed_at?: string | null
+          created_at?: string
+          due_at?: string | null
+          exercise_id?: string
+          id?: string
+          status?: string
+          student_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exercise_assignments_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       exercise_sessions: {
         Row: {
           completed_at: string | null
@@ -171,28 +237,43 @@ export type Database = {
       exercises: {
         Row: {
           chapter_id: string
+          created_by: string | null
           difficulty: number
           display_order: number
           id: string
+          mode: string
+          reward_coins: number
+          source: string
           subject_id: string
+          target_student_id: string | null
           title: string
           xp_reward: number
         }
         Insert: {
           chapter_id: string
+          created_by?: string | null
           difficulty?: number
           display_order?: number
           id?: string
+          mode?: string
+          reward_coins?: number
+          source?: string
           subject_id: string
+          target_student_id?: string | null
           title: string
           xp_reward?: number
         }
         Update: {
           chapter_id?: string
+          created_by?: string | null
           difficulty?: number
           display_order?: number
           id?: string
+          mode?: string
+          reward_coins?: number
+          source?: string
           subject_id?: string
+          target_student_id?: string | null
           title?: string
           xp_reward?: number
         }
@@ -248,6 +329,33 @@ export type Database = {
           },
         ]
       }
+      parent_student_links: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          parent_user_id: string
+          relation_label: string
+          student_user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          parent_user_id: string
+          relation_label?: string
+          student_user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          parent_user_id?: string
+          relation_label?: string
+          student_user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_slug: string | null
@@ -260,6 +368,7 @@ export type Database = {
           last_active_date: string | null
           level: number
           longest_streak: number
+          role: string
           xp: number
           yahia_coins: number
         }
@@ -274,6 +383,7 @@ export type Database = {
           last_active_date?: string | null
           level?: number
           longest_streak?: number
+          role?: string
           xp?: number
           yahia_coins?: number
         }
@@ -288,6 +398,7 @@ export type Database = {
           last_active_date?: string | null
           level?: number
           longest_streak?: number
+          role?: string
           xp?: number
           yahia_coins?: number
         }
@@ -330,36 +441,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      subjects: {
-        Row: {
-          attribute: string
-          color_token: string
-          description: string | null
-          display_order: number
-          icon: string
-          id: string
-          name_fr: string
-        }
-        Insert: {
-          attribute: string
-          color_token: string
-          description?: string | null
-          display_order?: number
-          icon: string
-          id: string
-          name_fr: string
-        }
-        Update: {
-          attribute?: string
-          color_token?: string
-          description?: string | null
-          display_order?: number
-          icon?: string
-          id?: string
-          name_fr?: string
-        }
-        Relationships: []
       }
       shop_items: {
         Row: {
@@ -432,6 +513,96 @@ export type Database = {
           },
         ]
       }
+      subjects: {
+        Row: {
+          attribute: string
+          color_token: string
+          description: string | null
+          display_order: number
+          icon: string
+          id: string
+          name_fr: string
+        }
+        Insert: {
+          attribute: string
+          color_token: string
+          description?: string | null
+          display_order?: number
+          icon: string
+          id: string
+          name_fr: string
+        }
+        Update: {
+          attribute?: string
+          color_token?: string
+          description?: string | null
+          display_order?: number
+          icon?: string
+          id?: string
+          name_fr?: string
+        }
+        Relationships: []
+      }
+      theory_scrolls: {
+        Row: {
+          body_md: string
+          chapter_id: string
+          created_at: string
+          created_by: string | null
+          display_order: number
+          estimated_minutes: number
+          id: string
+          source: string
+          subject_id: string
+          summary: string | null
+          target_student_id: string | null
+          title: string
+        }
+        Insert: {
+          body_md: string
+          chapter_id: string
+          created_at?: string
+          created_by?: string | null
+          display_order?: number
+          estimated_minutes?: number
+          id?: string
+          source?: string
+          subject_id: string
+          summary?: string | null
+          target_student_id?: string | null
+          title: string
+        }
+        Update: {
+          body_md?: string
+          chapter_id?: string
+          created_at?: string
+          created_by?: string | null
+          display_order?: number
+          estimated_minutes?: number
+          id?: string
+          source?: string
+          subject_id?: string
+          summary?: string | null
+          target_student_id?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "theory_scrolls_chapter_id_fkey"
+            columns: ["chapter_id"]
+            isOneToOne: false
+            referencedRelation: "chapters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "theory_scrolls_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -440,6 +611,7 @@ export type Database = {
       award_xp: {
         Args: { p_user: string; p_xp: number }
         Returns: {
+          avatar_slug: string | null
           avatar_tier: number
           created_at: string
           current_streak: number
@@ -449,7 +621,9 @@ export type Database = {
           last_active_date: string | null
           level: number
           longest_streak: number
+          role: string
           xp: number
+          yahia_coins: number
         }
         SetofOptions: {
           from: "*"
@@ -457,6 +631,10 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      is_parent_of_student: {
+        Args: { p_parent: string; p_student: string }
+        Returns: boolean
       }
     }
     Enums: {
@@ -586,6 +764,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {},
   },

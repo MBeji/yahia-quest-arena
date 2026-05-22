@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion } from "motion/react";
-import { ArrowLeft, Swords, Zap, ChevronRight, Star } from "lucide-react";
+import { ArrowLeft, Swords, Zap, ChevronRight, Star, Skull } from "lucide-react";
 import { getSubject } from "@/lib/gamification.functions";
 
 export const Route = createFileRoute("/_authenticated/subject/$subjectId")({
@@ -55,18 +55,26 @@ function SubjectPage() {
                 {chapEx.map((ex) => {
                   const best = bestByExercise[ex.id];
                   const stars = best == null ? 0 : best >= 90 ? 3 : best >= 70 ? 2 : best >= 40 ? 1 : 0;
+                  const isBoss = ex.mode === "boss";
                   return (
                     <Link
                       key={ex.id}
                       to="/quest/$exerciseId" params={{ exerciseId: ex.id }}
-                      className="group flex items-center justify-between gap-3 rounded-xl border border-border/50 bg-card/60 p-4 backdrop-blur-md transition hover:-translate-y-0.5 hover:border-[color:var(--neon-violet)]/50"
+                      className={`group flex items-center justify-between gap-3 rounded-xl border p-4 backdrop-blur-md transition hover:-translate-y-0.5 ${
+                        isBoss
+                          ? "border-destructive/40 bg-destructive/5 hover:border-destructive/70"
+                          : "border-border/50 bg-card/60 hover:border-[color:var(--neon-violet)]/50"
+                      }`}
                     >
                       <div className="flex items-center gap-3">
-                        <div className="grid h-10 w-10 place-items-center rounded-lg" style={{ background: `color-mix(in oklab, ${color} 25%, transparent)`, color }}>
-                          <Swords className="h-5 w-5" />
+                        <div className={`grid h-10 w-10 place-items-center rounded-lg ${isBoss ? "bg-gradient-to-br from-destructive/30 to-[color:var(--neon-magenta)]/20" : ""}`} style={!isBoss ? { background: `color-mix(in oklab, ${color} 25%, transparent)`, color } : undefined}>
+                          {isBoss ? <Skull className="h-5 w-5 text-destructive" /> : <Swords className="h-5 w-5" />}
                         </div>
                         <div>
-                          <div className="font-semibold">{ex.title}</div>
+                          <div className="flex items-center gap-2 font-semibold">
+                            {ex.title}
+                            {isBoss && <span className="rounded-full bg-destructive/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-destructive">Boss</span>}
+                          </div>
                           <div className="flex items-center gap-2 text-xs text-muted-foreground">
                             <span>Difficulté {ex.difficulty}/3</span>
                             <span className="flex items-center gap-0.5 text-[color:var(--neon-gold)]"><Zap className="h-3 w-3" />{ex.xp_reward}</span>

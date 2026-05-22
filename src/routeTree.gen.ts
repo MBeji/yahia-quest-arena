@@ -14,6 +14,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedSubjectSubjectIdRouteImport } from './routes/_authenticated/subject.$subjectId'
 import { Route as AuthenticatedQuestExerciseIdRouteImport } from './routes/_authenticated/quest.$exerciseId'
@@ -42,6 +43,12 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedLeaderboardRoute =
+  AuthenticatedLeaderboardRouteImport.update({
+    id: '/leaderboard',
+    path: '/leaderboard',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -66,6 +73,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
 }
@@ -75,6 +83,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
 }
@@ -86,6 +95,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/_authenticated/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/_authenticated/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
 }
@@ -97,6 +107,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/dashboard'
+    | '/leaderboard'
     | '/quest/$exerciseId'
     | '/subject/$subjectId'
   fileRoutesByTo: FileRoutesByTo
@@ -106,6 +117,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/dashboard'
+    | '/leaderboard'
     | '/quest/$exerciseId'
     | '/subject/$subjectId'
   id:
@@ -116,6 +128,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/_authenticated/dashboard'
+    | '/_authenticated/leaderboard'
     | '/_authenticated/quest/$exerciseId'
     | '/_authenticated/subject/$subjectId'
   fileRoutesById: FileRoutesById
@@ -165,6 +178,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/leaderboard': {
+      id: '/_authenticated/leaderboard'
+      path: '/leaderboard'
+      fullPath: '/leaderboard'
+      preLoaderRoute: typeof AuthenticatedLeaderboardRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -191,12 +211,14 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedLeaderboardRoute: typeof AuthenticatedLeaderboardRoute
   AuthenticatedQuestExerciseIdRoute: typeof AuthenticatedQuestExerciseIdRoute
   AuthenticatedSubjectSubjectIdRoute: typeof AuthenticatedSubjectSubjectIdRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedLeaderboardRoute: AuthenticatedLeaderboardRoute,
   AuthenticatedQuestExerciseIdRoute: AuthenticatedQuestExerciseIdRoute,
   AuthenticatedSubjectSubjectIdRoute: AuthenticatedSubjectSubjectIdRoute,
 }

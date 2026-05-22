@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion } from "motion/react";
-import { Flame, Zap, Trophy, Swords, Sword, BookOpen, Scroll, Leaf, Globe, ChevronRight, Sparkles, Shield, Backpack, ShoppingBag } from "lucide-react";
+import { Flame, Zap, Trophy, Swords, Sword, BookOpen, Scroll, Leaf, Globe, ChevronRight, Sparkles, Shield, Backpack, ShoppingBag, Crown } from "lucide-react";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from "recharts";
 import { toast } from "sonner";
 import { equipInventorySkin, getDashboard, purchaseShopItem } from "@/lib/gamification.functions";
@@ -106,9 +106,17 @@ function Dashboard() {
       <div className="mt-8 grid gap-6 lg:grid-cols-[1fr,360px]">
         {/* SUBJECTS GRID */}
         <section>
-          <h2 className="mb-4 flex items-center gap-2 font-display text-xl font-bold">
-            <Swords className="h-5 w-5 text-[color:var(--neon-violet)]" /> Les voies à conquérir
-          </h2>
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="flex items-center gap-2 font-display text-xl font-bold">
+              <Swords className="h-5 w-5 text-[color:var(--neon-violet)]" /> Les voies à conquérir
+            </h2>
+            <Link
+              to="/leaderboard"
+              className="flex items-center gap-1.5 rounded-lg border border-[color:var(--neon-gold)]/30 bg-[color:var(--neon-gold)]/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[color:var(--neon-gold)] transition hover:bg-[color:var(--neon-gold)]/20"
+            >
+              <Crown className="h-3.5 w-3.5" /> Classement
+            </Link>
+          </div>
           <div className="grid gap-4 sm:grid-cols-2">
             {subjects.map((s, i) => {
               const Icon = ICONS[s.icon] ?? Sword;

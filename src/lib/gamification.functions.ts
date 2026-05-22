@@ -524,3 +524,35 @@ export const submitAttempt = createServerFn({ method: "POST" })
       unlockedBadges,
     };
   });
+
+// ---------- Leaderboard ----------
+export const getLeaderboard = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+
+    const { data: topPlayers, error } = await supabase
+      .from("profiles")
+      .select("id,display_name,hero_class,level,xp,current_streak,avatar_tier")
+      .eq("role", "student")
+      .order("xp", { ascending: false })
+      .limit(50);
+
+    if (error) throw new Error(error.message);
+
+    const ranked = (topPlayers ?? []).map((p, i) => ({
+      rank: i + 1,
+      id: p.id,
+      displayName: p.display_name,
+      heroClass: p.hero_class,
+      level: p.level,
+      xp: p.xp,
+      streak: p.current_streak,
+      avatarTier: p.avatar_tier,
+      isMe: p.id === userId,
+    }));
+
+    const myRank = ranked.find((r) => r.isMe);
+
+    return { leaderboard: ranked, myRank };
+  });
