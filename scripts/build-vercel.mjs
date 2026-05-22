@@ -34,6 +34,12 @@ cpSync(join(ROOT, "dist", "client"), STATIC_DIR, { recursive: true });
 // Step 4 — Copy server bundle → Edge Function directory
 cpSync(join(ROOT, "dist", "server"), FUNC_DIR, { recursive: true });
 
+// Step 4b — Ensure ESM resolution in the function directory
+writeFileSync(
+  join(FUNC_DIR, "package.json"),
+  JSON.stringify({ type: "module" }, null, 2)
+);
+
 // Step 5 — Adapt Worker entry to Vercel Edge Function format
 // Cloudflare Workers export { fetch(req, env, ctx) }
 // Vercel Edge Functions export default function(request, context)
