@@ -55,13 +55,17 @@ export default async function handler(request, context) {
 `
 );
 
-// Step 6 — Write Edge Function config (.vc-config.json)
+// Step 6 — Write Serverless Function config (.vc-config.json)
+// Use Node.js runtime (not Edge) because the Worker bundle uses node:stream, node:events
 writeFileSync(
   join(FUNC_DIR, ".vc-config.json"),
   JSON.stringify(
     {
-      runtime: "edge",
-      entrypoint: "index.js",
+      runtime: "nodejs22.x",
+      handler: "index.js",
+      launcherType: "Nodejs",
+      supportsResponseStreaming: true,
+      maxDuration: 30,
     },
     null,
     2
