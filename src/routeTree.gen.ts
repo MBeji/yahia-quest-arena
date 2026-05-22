@@ -12,7 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedSubjectSubjectIdRouteImport } from './routes/_authenticated/subject.$subjectId'
+import { Route as AuthenticatedQuestExerciseIdRouteImport } from './routes/_authenticated/quest.$exerciseId'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -29,41 +33,96 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedSubjectSubjectIdRoute =
+  AuthenticatedSubjectSubjectIdRouteImport.update({
+    id: '/subject/$subjectId',
+    path: '/subject/$subjectId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedQuestExerciseIdRoute =
+  AuthenticatedQuestExerciseIdRouteImport.update({
+    id: '/quest/$exerciseId',
+    path: '/quest/$exerciseId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
+  '/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
+  '/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/auth': typeof AuthRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
+  '/_authenticated/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/login' | '/signup'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/login'
+    | '/signup'
+    | '/dashboard'
+    | '/quest/$exerciseId'
+    | '/subject/$subjectId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/login' | '/signup'
-  id: '__root__' | '/' | '/auth' | '/login' | '/signup'
+  to:
+    | '/'
+    | '/auth'
+    | '/login'
+    | '/signup'
+    | '/dashboard'
+    | '/quest/$exerciseId'
+    | '/subject/$subjectId'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/login'
+    | '/signup'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/quest/$exerciseId'
+    | '/_authenticated/subject/$subjectId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AuthRoute: typeof AuthRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
@@ -92,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -99,11 +165,49 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/subject/$subjectId': {
+      id: '/_authenticated/subject/$subjectId'
+      path: '/subject/$subjectId'
+      fullPath: '/subject/$subjectId'
+      preLoaderRoute: typeof AuthenticatedSubjectSubjectIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/quest/$exerciseId': {
+      id: '/_authenticated/quest/$exerciseId'
+      path: '/quest/$exerciseId'
+      fullPath: '/quest/$exerciseId'
+      preLoaderRoute: typeof AuthenticatedQuestExerciseIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedQuestExerciseIdRoute: typeof AuthenticatedQuestExerciseIdRoute
+  AuthenticatedSubjectSubjectIdRoute: typeof AuthenticatedSubjectSubjectIdRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedQuestExerciseIdRoute: AuthenticatedQuestExerciseIdRoute,
+  AuthenticatedSubjectSubjectIdRoute: AuthenticatedSubjectSubjectIdRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AuthRoute: AuthRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
