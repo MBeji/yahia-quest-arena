@@ -40,29 +40,69 @@ writeFileSync(
   JSON.stringify({ type: "module" }, null, 2)
 );
 
-// Step 5 — Adapt Worker entry to Vercel Edge Function format
-// Cloudflare Workers export { fetch(req, env, ctx) }
-// Vercel Edge Functions export default function(request, context)
+// Step 5 — Adapt Worker entry to Vercel Node.js Serverless Function format
+// Cloudflare Workers export { fetch(req, env, ctx) } returning a Response
+// Vercel Node.js functions use (req, res) IncomingMessage/ServerResponse
 import { readFileSync } from "node:fs";
 const originalEntry = readFileSync(join(FUNC_DIR, "index.js"), "utf8");
 // Rename original to _worker.js
 writeFileSync(join(FUNC_DIR, "_worker.js"), originalEntry);
-// Create adapter entry
+// Create Node.js adapter entry
 writeFileSync(
   join(FUNC_DIR, "index.js"),
   `import worker from "./_worker.js";
-export default async function handler(request, context) {
-  // Cloudflare Worker interface: worker.fetch(request, env, ctx)
-  if (typeof worker === "function") return worker(request, context);
-  if (typeof worker.fetch === "function") return worker.fetch(request, {}, { waitUntil: () => {} });
-  // If default export is already a Response-returning function
-  return new Response("Internal Server Error", { status: 500 });
+
+export default async function handler(req, res) {
+  try {
+    // Build a standard Request from Node.js IncomingMessage
+    const proto = req.headers["x-forwarded-proto"] || "https";
+    const host = req.headers["x-forwarded-host"] || req.headers.host || "localhost";
+    const url = new URL(req.url, proto + "://" + host);
+
+    const headers = new Headers();
+    for (const [key, value] of Object.entries(req.headers)) {
+      if (value) headers.set(key, Array.isArray(value) ? value.join(", ") : value);
+    }
+
+    const hasBody = req.method !== "GET" && req.method !== "HEAD";
+    const body = hasBody ? req : undefined;
+
+    const request = new Request(url.href, {
+      method: req.method,
+      headers,
+      body,
+      duplex: hasBody ? "half" : undefined,
+    });
+
+    // Call the Cloudflare Worker handler
+    const response = await worker.fetch(request, {}, { waitUntil: () => {} });
+
+    // Write the Response back to Node.js ServerResponse
+    res.statusCode = response.status;
+    response.headers.forEach((value, key) => {
+      res.setHeader(key, value);
+    });
+
+    if (response.body) {
+      const reader = response.body.getReader();
+      while (true) {
+        const { done, value: chunk } = await reader.read();
+        if (done) break;
+        res.write(chunk);
+      }
+    }
+    res.end();
+  } catch (error) {
+    console.error("[Vercel Function Error]", error);
+    res.statusCode = 500;
+    res.setHeader("content-type", "text/plain");
+    res.end("Internal Server Error");
+  }
 }
 `
 );
 
 // Step 6 — Write Serverless Function config (.vc-config.json)
-// Use Node.js runtime (not Edge) because the Worker bundle uses node:stream, node:events
 writeFileSync(
   join(FUNC_DIR, ".vc-config.json"),
   JSON.stringify(
@@ -70,7 +110,6 @@ writeFileSync(
       runtime: "nodejs22.x",
       handler: "index.js",
       launcherType: "Nodejs",
-      supportsResponseStreaming: true,
       maxDuration: 30,
     },
     null,
