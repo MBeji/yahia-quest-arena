@@ -5,7 +5,7 @@ import { Sparkles, Mail, Lock, User as UserIcon, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
-import { GUEST_ACCESS_COPY, PUBLIC_GUEST_ACCESS_ENABLED } from "@/lib/guest-access";
+import { GUEST_ACCESS_COPY, PUBLIC_GUEST_ACCESS_ENABLED, signInGuestUser } from "@/lib/guest-access";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -76,8 +76,8 @@ function AuthPage() {
   async function handleGuestAccess() {
     setBusy(true);
 
-    const { error } = await supabase.auth.signInAnonymously();
-    if (error) {
+    const res = await signInGuestUser(supabase);
+    if (!res.ok) {
       toast.error(GUEST_ACCESS_COPY.signInError);
       setBusy(false);
       return;
