@@ -5,7 +5,11 @@ import { Sparkles, Mail, Lock, User as UserIcon, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
-import { GUEST_ACCESS_COPY, PUBLIC_GUEST_ACCESS_ENABLED, signInGuestUser } from "@/lib/guest-access";
+import {
+  getGuestSignInErrorMessage,
+  PUBLIC_GUEST_ACCESS_ENABLED,
+  signInGuestUser,
+} from "@/lib/guest-access";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -78,7 +82,7 @@ function AuthPage() {
 
     const res = await signInGuestUser(supabase);
     if (!res.ok) {
-      toast.error(GUEST_ACCESS_COPY.signInError);
+      toast.error(getGuestSignInErrorMessage(res));
       setBusy(false);
       return;
     }

@@ -4,7 +4,12 @@ import { useAuth } from "@/hooks/use-auth";
 import { Sparkles, LayoutDashboard, LogOut, Swords } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { GUEST_ACCESS_COPY, PUBLIC_GUEST_ACCESS_ENABLED, signInGuestUser } from "@/lib/guest-access";
+import {
+  getGuestSignInErrorMessage,
+  GUEST_ACCESS_COPY,
+  PUBLIC_GUEST_ACCESS_ENABLED,
+  signInGuestUser,
+} from "@/lib/guest-access";
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthenticatedLayout,
@@ -27,7 +32,7 @@ function AuthenticatedLayout() {
       if (!active) return;
 
       if (!res.ok) {
-        toast.error(GUEST_ACCESS_COPY.signInError);
+        toast.error(getGuestSignInErrorMessage(res));
         navigate({ to: "/auth", search: { mode: "login" } });
       }
     }).finally(() => {

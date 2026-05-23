@@ -10,6 +10,43 @@ export const GUEST_ACCESS_COPY = {
   signOutToast: "Guest session ended.",
 };
 
+type GuestSignInResult =
+  | { ok: true }
+  | { ok: false; errorMessage: string; errorCode?: string };
+
+function normalizeErrorMessage(value: unknown, fallback: string): string {
+  if (typeof value === "string" && value.trim().length > 0) {
+    return value.trim();
+  }
+
+  return fallback;
+}
+
+export function getGuestSignInErrorMessage(result: GuestSignInResult): string {
+  if (result.ok) return "";
+
+  const message = result.errorMessage.toLowerCase();
+  const code = (result.errorCode ?? "").toLowerCase();
+
+  if (message.includes("anonymous") && message.includes("disabled")) {
+    return "Guest mode disabled in Supabase. Enable Auth > Providers > Anonymous.";
+  }
+
+  if (message.includes("signups not allowed")) {
+    return "Signups are disabled in Supabase. Enable Email signup or Anonymous provider.";
+  }
+
+  if (message.includes("captcha")) {
+    return "Auth blocked by CAPTCHA policy. Configure CAPTCHA for guest flow or disable it for testing.";
+  }
+
+  if (code) {
+    return `${GUEST_ACCESS_COPY.signInError} (${code})`;
+  }
+
+  return `${GUEST_ACCESS_COPY.signInError} (${result.errorMessage})`;
+}
+
 function randomToken() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
     return crypto.randomUUID().replace(/-/g, "");
@@ -18,7 +55,7 @@ function randomToken() {
   return `${Date.now()}${Math.random().toString(36).slice(2, 10)}`;
 }
 
-export async function signInGuestUser(supabase: SupabaseClient) {
+export async function signInGuestUser(supabase: SupabaseClient): Promise<GuestSignInResult> {
   const anonymousRes = await supabase.auth.signInAnonymously();
   if (!anonymousRes.error) return { ok: true as const };
 
@@ -36,12 +73,24 @@ export async function signInGuestUser(supabase: SupabaseClient) {
     },
   });
 
-  if (signUpRes.error) return { ok: false as const, error: signUpRes.error };
+  if (signUpRes.error) {
+    return {
+      ok: false,
+      errorCode: signUpRes.error.code,
+      errorMessage: normalizeErrorMessage(signUpRes.error.message, "Guest signup failed."),
+    };
+  }
 
   if (signUpRes.data.session) return { ok: true as const };
 
   const signInRes = await supabase.auth.signInWithPassword({ email, password });
-  if (signInRes.error) return { ok: false as const, error: signInRes.error };
+  if (signInRes.error) {
+    return {
+      ok: false,
+      errorCode: signInRes.error.code,
+      errorMessage: normalizeErrorMessage(signInRes.error.message, "Guest sign-in failed."),
+    };
+  }
 
   return { ok: true as const };
 }

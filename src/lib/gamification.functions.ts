@@ -20,11 +20,25 @@ type DashboardShopItem = {
   quantity: number;
 };
 
+function resolveFallbackDisplayName(claims: Record<string, unknown>): string {
+  const userMetadata = claims.user_metadata;
+  if (userMetadata && typeof userMetadata === "object") {
+    const displayName = (userMetadata as Record<string, unknown>).display_name;
+    if (typeof displayName === "string" && displayName.trim().length > 0) {
+      return displayName.trim();
+    }
+  }
+
+  return claims.is_anonymous === true ? "Guest Hero" : "Aspirant";
+}
+
 // ---------- Get dashboard ----------
 export const getDashboard = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
+    const claims = (context.claims ?? {}) as Record<string, unknown>;
+    const fallbackDisplayName = resolveFallbackDisplayName(claims);
 
     const [profileRes, subjectsRes, attemptsRes, badgesRes, inventoryRes, shopRes] = await Promise.all([
       supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
@@ -58,6 +72,27 @@ export const getDashboard = createServerFn({ method: "GET" })
     if (badgesRes.error) throw new Error(badgesRes.error.message);
     if (inventoryRes.error) throw new Error(inventoryRes.error.message);
     if (shopRes.error) throw new Error(shopRes.error.message);
+
+    let profile = profileRes.data;
+
+    if (!profile) {
+      const { error: profileInsertError } = await supabase
+        .from("profiles")
+        .insert({ id: userId, display_name: fallbackDisplayName });
+
+      if (profileInsertError && profileInsertError.code !== "23505") {
+        throw new Error(profileInsertError.message);
+      }
+
+      const { data: profileData, error: profileReloadError } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .maybeSingle();
+
+      if (profileReloadError) throw new Error(profileReloadError.message);
+      profile = profileData;
+    }
 
     // build per-subject avg score
     const bySubject: Record<string, { count: number; avg: number; xp: number }> = {};
@@ -113,7 +148,7 @@ export const getDashboard = createServerFn({ method: "GET" })
     });
 
     return {
-      profile: profileRes.data,
+      profile,
       subjects: subjectsRes.data ?? [],
       stats: bySubject,
       recent: attemptsRes.data ?? [],
