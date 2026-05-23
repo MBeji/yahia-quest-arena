@@ -32,6 +32,10 @@ export function getGuestSignInErrorMessage(result: GuestSignInResult): string {
     return "Guest mode disabled in Supabase. Enable Auth > Providers > Anonymous.";
   }
 
+  if (code.includes("rate_limit") || message.includes("rate_limit") || message.includes("rate limit")) {
+    return "Too many attempts. Please enable Anonymous sign-ins in Supabase Auth settings.";
+  }
+
   if (message.includes("signups not allowed")) {
     return "Signups are disabled in Supabase. Enable Email signup or Anonymous provider.";
   }
@@ -47,50 +51,14 @@ export function getGuestSignInErrorMessage(result: GuestSignInResult): string {
   return `${GUEST_ACCESS_COPY.signInError} (${result.errorMessage})`;
 }
 
-function randomToken() {
-  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
-    return crypto.randomUUID().replace(/-/g, "");
-  }
-
-  return `${Date.now()}${Math.random().toString(36).slice(2, 10)}`;
-}
-
 export async function signInGuestUser(supabase: SupabaseClient): Promise<GuestSignInResult> {
-  const anonymousRes = await supabase.auth.signInAnonymously();
-  if (!anonymousRes.error) return { ok: true as const };
+  const { error } = await supabase.auth.signInAnonymously();
 
-  const token = randomToken();
-  const email = `guest_${token}@yahiaacademy.local`;
-  const password = `Guest#${token.slice(0, 16)}aA1`;
+  if (!error) return { ok: true };
 
-  const signUpRes = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: {
-        display_name: `Guest ${token.slice(0, 6)}`,
-      },
-    },
-  });
-
-  if (signUpRes.error) {
-    return {
-      ok: false,
-      errorCode: signUpRes.error.code,
-      errorMessage: normalizeErrorMessage(signUpRes.error.message, "Guest signup failed."),
-    };
-  }
-
-  if (signUpRes.data.session) return { ok: true as const };
-
-  const signInRes = await supabase.auth.signInWithPassword({ email, password });
-  if (signInRes.error) {
-    return {
-      ok: false,
-      errorCode: signInRes.error.code,
-      errorMessage: normalizeErrorMessage(signInRes.error.message, "Guest sign-in failed."),
-    };
-  }
-
-  return { ok: true as const };
+  return {
+    ok: false,
+    errorCode: error.code,
+    errorMessage: normalizeErrorMessage(error.message, "Anonymous sign-in failed."),
+  };
 }
