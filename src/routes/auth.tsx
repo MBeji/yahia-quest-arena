@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import {
+  GUEST_ACCESS_COPY,
   getGuestSignInErrorMessage,
   PUBLIC_GUEST_ACCESS_ENABLED,
   signInGuestUser,
