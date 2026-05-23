@@ -1,8 +1,10 @@
 import { createFileRoute, Outlet, redirect, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { Sparkles, LayoutDashboard, LogOut, Swords } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { GUEST_ACCESS_COPY, PUBLIC_GUEST_ACCESS_ENABLED } from "@/lib/guest-access";
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthenticatedLayout,
@@ -11,11 +13,38 @@ export const Route = createFileRoute("/_authenticated")({
 function AuthenticatedLayout() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const [bootstrappingGuest, setBootstrappingGuest] = useState(false);
+  const [guestAttempted, setGuestAttempted] = useState(false);
 
-  if (loading) {
+  useEffect(() => {
+    if (!PUBLIC_GUEST_ACCESS_ENABLED || loading || user || guestAttempted) return;
+
+    let active = true;
+    setGuestAttempted(true);
+    setBootstrappingGuest(true);
+
+    supabase.auth.signInAnonymously().then(({ error }) => {
+      if (!active) return;
+
+      if (error) {
+        toast.error(GUEST_ACCESS_COPY.signInError);
+        navigate({ to: "/auth", search: { mode: "login" } });
+      }
+    }).finally(() => {
+      if (active) setBootstrappingGuest(false);
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [guestAttempted, loading, navigate, user]);
+
+  if (loading || bootstrappingGuest) {
     return (
       <div className="grid min-h-screen place-items-center bg-hero">
-        <div className="font-display text-sm uppercase tracking-widest text-muted-foreground">Loading…</div>
+        <div className="font-display text-sm uppercase tracking-widest text-muted-foreground">
+          {bootstrappingGuest ? GUEST_ACCESS_COPY.loading : "Loading…"}
+        </div>
       </div>
     );
   }
@@ -26,7 +55,7 @@ function AuthenticatedLayout() {
 
   async function signOut() {
     await supabase.auth.signOut();
-    toast.success("See you soon, warrior.");
+    toast.success(PUBLIC_GUEST_ACCESS_ENABLED ? GUEST_ACCESS_COPY.signOutToast : "See you soon, warrior.");
     navigate({ to: "/" });
   }
 
