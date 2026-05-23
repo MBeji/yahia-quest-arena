@@ -6,7 +6,7 @@ import { ArrowLeft, Swords, Zap, ChevronRight, Star, Skull } from "lucide-react"
 import { getSubject } from "@/lib/gamification.functions";
 
 export const Route = createFileRoute("/_authenticated/subject/$subjectId")({
-  head: () => ({ meta: [{ title: "Quêtes · YahiaAcademy" }] }),
+  head: () => ({ meta: [{ title: "Quests · YahiaAcademy" }] }),
   component: SubjectPage,
 });
 
@@ -19,7 +19,7 @@ function SubjectPage() {
   });
 
   if (isLoading || !data) {
-    return <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">Chargement…</div>;
+    return <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">Loading…</div>;
   }
   const { subject, chapters, exercises, bestByExercise } = data;
   const color = `var(--subject-${subject.color_token})`;
@@ -27,13 +27,13 @@ function SubjectPage() {
   return (
     <div className="mx-auto max-w-5xl px-6 py-8">
       <Link to="/dashboard" className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="h-4 w-4" /> Hall des héros
+        <ArrowLeft className="h-4 w-4" /> Heroes Hall
       </Link>
 
       <div className="relative overflow-hidden rounded-3xl border border-border/50 bg-card/60 p-8 backdrop-blur-xl">
         <div className="absolute -right-10 -top-10 h-52 w-52 rounded-full blur-3xl opacity-50" style={{ background: color }} />
         <div className="relative">
-          <div className="text-xs uppercase tracking-[0.3em]" style={{ color }}>Attribut · {subject.attribute}</div>
+          <div className="text-xs uppercase tracking-[0.3em]" style={{ color }}>Attribute · {subject.attribute}</div>
           <h1 className="mt-1 font-display text-4xl font-bold sm:text-5xl">{subject.name_fr}</h1>
           {subject.description && <p className="mt-2 text-muted-foreground">{subject.description}</p>}
         </div>
@@ -76,7 +76,7 @@ function SubjectPage() {
                             {isBoss && <span className="rounded-full bg-destructive/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-destructive">Boss</span>}
                           </div>
                           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                            <span>Difficulté {ex.difficulty}/3</span>
+                            <span>Difficulty {ex.difficulty}/3</span>
                             <span className="flex items-center gap-0.5 text-[color:var(--neon-gold)]"><Zap className="h-3 w-3" />{ex.xp_reward}</span>
                           </div>
                         </div>
@@ -92,7 +92,7 @@ function SubjectPage() {
                     </Link>
                   );
                 })}
-                {chapEx.length === 0 && <div className="text-xs italic text-muted-foreground">Aucune quête encore.</div>}
+                {chapEx.length === 0 && <div className="text-xs italic text-muted-foreground">No quests yet.</div>}
               </div>
             </motion.section>
           );

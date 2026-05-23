@@ -6,7 +6,7 @@ import { ArrowLeft, Crown, Flame, Medal, Zap } from "lucide-react";
 import { getLeaderboard } from "@/lib/gamification.functions";
 
 export const Route = createFileRoute("/_authenticated/leaderboard")({
-  head: () => ({ meta: [{ title: "Classement · YahiaAcademy" }] }),
+  head: () => ({ meta: [{ title: "Leaderboard · YahiaAcademy" }] }),
   component: LeaderboardPage,
 });
 
@@ -18,7 +18,7 @@ function LeaderboardPage() {
   });
 
   if (isLoading || !data) {
-    return <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">Chargement du classement…</div>;
+    return <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">Loading leaderboard…</div>;
   }
 
   const { leaderboard, myRank } = data;
@@ -26,14 +26,14 @@ function LeaderboardPage() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-8">
       <Link to="/dashboard" className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="h-4 w-4" /> Retour au hall
+        <ArrowLeft className="h-4 w-4" /> Back to hall
       </Link>
 
       <div className="mb-8 text-center">
         <h1 className="font-display text-4xl font-bold">
-          <span className="text-gradient-primary">Classement</span> de l'Académie
+          <span className="text-gradient-primary">Academy</span> Leaderboard
         </h1>
-        <p className="mt-2 text-muted-foreground">Les héros les plus puissants du concours</p>
+        <p className="mt-2 text-muted-foreground">The most powerful heroes of the exam</p>
       </div>
 
       {/* My rank card */}
@@ -120,7 +120,7 @@ function LeaderboardPage() {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <span className="font-semibold truncate">{player.displayName}</span>
-                {player.isMe && <span className="rounded-full bg-[color:var(--neon-violet)]/20 px-2 py-0.5 text-[10px] font-bold uppercase text-[color:var(--neon-violet)]">Toi</span>}
+                {player.isMe && <span className="rounded-full bg-[color:var(--neon-violet)]/20 px-2 py-0.5 text-[10px] font-bold uppercase text-[color:var(--neon-violet)]">You</span>}
               </div>
               <div className="text-xs text-muted-foreground">{player.heroClass} · Lvl {player.level}</div>
             </div>
@@ -138,7 +138,7 @@ function LeaderboardPage() {
       </div>
 
       {leaderboard.length === 0 && (
-        <div className="mt-12 text-center text-muted-foreground">Aucun héros inscrit pour le moment.</div>
+        <div className="mt-12 text-center text-muted-foreground">No heroes registered yet.</div>
       )}
     </div>
   );

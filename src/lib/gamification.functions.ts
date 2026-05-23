@@ -147,7 +147,7 @@ export const purchaseShopItem = createServerFn({ method: "POST" })
     const shopItem = shopItemRes.data;
 
     if ((profile.yahia_coins ?? 0) < shopItem.price_coins) {
-      throw new Error("YahiaCoins insuffisants.");
+      throw new Error("Insufficient YahiaCoins.");
     }
 
     const existingInventoryRes = await supabase
@@ -159,7 +159,7 @@ export const purchaseShopItem = createServerFn({ method: "POST" })
     if (existingInventoryRes.error) throw new Error(existingInventoryRes.error.message);
 
     if (shopItem.item_type === "skin" && existingInventoryRes.data) {
-      throw new Error("Ce skin est déjà dans ton inventaire.");
+      throw new Error("This skin is already in your inventory.");
     }
 
     const newCoins = (profile.yahia_coins ?? 0) - shopItem.price_coins;
@@ -210,8 +210,8 @@ export const equipInventorySkin = createServerFn({ method: "POST" })
     if (inventoryRes.error) throw new Error(inventoryRes.error.message);
     const inventoryItem = (inventoryRes.data ?? []).find((row: any) => row.item?.code === data.itemCode);
 
-    if (!inventoryItem?.item) throw new Error("Item introuvable dans l'inventaire.");
-    if (inventoryItem.item.item_type !== "skin") throw new Error("Seuls les skins peuvent être équipés.");
+    if (!inventoryItem?.item) throw new Error("Item not found in inventory.");
+    if (inventoryItem.item.item_type !== "skin") throw new Error("Only skins can be equipped.");
 
     const skinRows = (inventoryRes.data ?? []).filter((row: any) => row.item?.item_type === "skin");
     if (skinRows.length > 0) {
@@ -347,11 +347,11 @@ export const submitAttempt = createServerFn({ method: "POST" })
     if (qsRes.error) throw new Error(qsRes.error.message);
 
     if (sessionRes.data.exercise_id !== data.exerciseId) {
-      throw new Error("Session de quête invalide.");
+      throw new Error("Invalid quest session.");
     }
 
     if (sessionRes.data.completed_at) {
-      throw new Error("Cette session de quête est déjà terminée.");
+      throw new Error("This quest session is already completed.");
     }
 
     const questionMap = new Map(qsRes.data.map((q) => [q.id, q]));
@@ -442,7 +442,7 @@ export const submitAttempt = createServerFn({ method: "POST" })
       if (firstBadge) {
         const { error: fbErr } = await supabase
           .from("student_badges")
-          .insert({ student_user_id: userId, badge_id: firstBadge.id, awarded_reason: "Première quête terminée" });
+          .insert({ student_user_id: userId, badge_id: firstBadge.id, awarded_reason: "First quest completed" });
         if (!fbErr) {
           unlockedBadges.push({ code: firstBadge.code, name: firstBadge.name, rarity: firstBadge.rarity, iconName: firstBadge.icon_name });
         }
@@ -459,7 +459,7 @@ export const submitAttempt = createServerFn({ method: "POST" })
       if (perfectBadge) {
         const { error: psErr } = await supabase
           .from("student_badges")
-          .insert({ student_user_id: userId, badge_id: perfectBadge.id, awarded_reason: "Score parfait: 100%" });
+          .insert({ student_user_id: userId, badge_id: perfectBadge.id, awarded_reason: "Perfect score: 100%" });
         if (!psErr) {
           unlockedBadges.push({ code: perfectBadge.code, name: perfectBadge.name, rarity: perfectBadge.rarity, iconName: perfectBadge.icon_name });
         }
@@ -476,7 +476,7 @@ export const submitAttempt = createServerFn({ method: "POST" })
       if (speedBadge) {
         const { error: sdErr } = await supabase
           .from("student_badges")
-          .insert({ student_user_id: userId, badge_id: speedBadge.id, awarded_reason: "Quête terminée en moins de 60s" });
+          .insert({ student_user_id: userId, badge_id: speedBadge.id, awarded_reason: "Quest completed in under 60s" });
         if (!sdErr) {
           unlockedBadges.push({ code: speedBadge.code, name: speedBadge.name, rarity: speedBadge.rarity, iconName: speedBadge.icon_name });
         }
@@ -499,7 +499,7 @@ export const submitAttempt = createServerFn({ method: "POST" })
           .insert({
             student_user_id: userId,
             badge_id: streakBadge.id,
-            awarded_reason: "7 jours consécutifs de révision",
+            awarded_reason: "7 consecutive days of studying",
           });
 
         if (insertBadgeErr && insertBadgeErr.code !== "23505") {

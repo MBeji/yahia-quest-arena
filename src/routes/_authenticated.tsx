@@ -15,7 +15,7 @@ function AuthenticatedLayout() {
   if (loading) {
     return (
       <div className="grid min-h-screen place-items-center bg-hero">
-        <div className="font-display text-sm uppercase tracking-widest text-muted-foreground">Chargement…</div>
+        <div className="font-display text-sm uppercase tracking-widest text-muted-foreground">Loading…</div>
       </div>
     );
   }
@@ -26,7 +26,7 @@ function AuthenticatedLayout() {
 
   async function signOut() {
     await supabase.auth.signOut();
-    toast.success("À bientôt, guerrier.");
+    toast.success("See you soon, warrior.");
     navigate({ to: "/" });
   }
 
@@ -43,10 +43,10 @@ function AuthenticatedLayout() {
           </Link>
           <nav className="flex items-center gap-2 text-sm">
             <Link to="/dashboard" className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground" activeProps={{ className: "text-foreground bg-card" }}>
-              <LayoutDashboard className="h-4 w-4" /> Hall des héros
+              <LayoutDashboard className="h-4 w-4" /> Heroes Hall
             </Link>
             <button onClick={signOut} className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground">
-              <LogOut className="h-4 w-4" /> Sortir
+              <LogOut className="h-4 w-4" /> Sign out
             </button>
           </nav>
         </div>

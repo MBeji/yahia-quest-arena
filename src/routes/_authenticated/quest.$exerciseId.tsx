@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { getExercise, startExerciseSession, submitAttempt } from "@/lib/gamification.functions";
 
 export const Route = createFileRoute("/_authenticated/quest/$exerciseId")({
-  head: () => ({ meta: [{ title: "Quête · YahiaAcademy" }] }),
+  head: () => ({ meta: [{ title: "Quest · YahiaAcademy" }] }),
   component: QuestPage,
 });
 
@@ -35,7 +35,7 @@ function QuestPage() {
   const sessionMutation = useMutation({
     mutationFn: (payload: { exerciseId: string }) => startSession({ data: payload }),
     onSuccess: (res) => setSessionId(res.sessionId),
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Impossible de démarrer la quête"),
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Unable to start the quest"),
   });
 
   const mutation = useMutation({
@@ -45,7 +45,7 @@ function QuestPage() {
       qc.invalidateQueries({ queryKey: ["dashboard"] });
       qc.invalidateQueries({ queryKey: ["subject"] });
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Erreur"),
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Error"),
   });
 
   const questions = data?.questions ?? [];
@@ -99,7 +99,7 @@ function QuestPage() {
   }, [data?.exercise?.id, result, sessionId, sessionMutation]);
 
   if (isLoading || !data) {
-    return <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">Préparation de l'arène…</div>;
+    return <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">Preparing the arena…</div>;
   }
 
   // RESULTS SCREEN
@@ -116,12 +116,12 @@ function QuestPage() {
             <div className="mx-auto grid h-20 w-20 place-items-center rounded-2xl bg-gradient-to-br from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] shadow-neon animate-pulse-neon">
               <Trophy className="h-10 w-10 text-primary-foreground" />
             </div>
-            <h1 className="mt-5 font-display text-3xl font-bold">{passed ? "Victoire !" : "Bien tenté, guerrier"}</h1>
+            <h1 className="mt-5 font-display text-3xl font-bold">{passed ? "Victory!" : "Nice try, warrior"}</h1>
             <p className="mt-1 text-muted-foreground">
-              {result.correct} / {result.total} bonnes réponses · {Math.round(result.scorePct)}%
+              {result.correct} / {result.total} correct answers · {Math.round(result.scorePct)}%
             </p>
             <p className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">
-              Temps validé côté serveur · {result.durationSeconds}s
+              Server-validated time · {result.durationSeconds}s
             </p>
             <div className="mt-6 grid grid-cols-4 gap-3">
               <div className="rounded-xl bg-[color:var(--neon-gold)]/15 p-4">
@@ -137,12 +137,12 @@ function QuestPage() {
               <div className="rounded-xl bg-[color:var(--neon-violet)]/15 p-4">
                 <Sparkles className="mx-auto h-5 w-5 text-[color:var(--neon-violet)]" />
                 <div className="mt-1 font-display text-2xl font-bold text-[color:var(--neon-violet)]">{result.profile?.level ?? "?"}</div>
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">Niveau</div>
+                <div className="text-xs uppercase tracking-wider text-muted-foreground">Level</div>
               </div>
               <div className="rounded-xl bg-[color:var(--flame)]/15 p-4">
                 <Flame className="mx-auto h-5 w-5 text-[color:var(--flame)] animate-flame" />
                 <div className="mt-1 font-display text-2xl font-bold text-[color:var(--flame)]">{result.profile?.current_streak ?? 0}</div>
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">Flamme</div>
+                <div className="text-xs uppercase tracking-wider text-muted-foreground">Streak</div>
               </div>
             </div>
             <div className="mt-6 text-xs uppercase tracking-widest text-[color:var(--neon-cyan)]">
@@ -150,7 +150,7 @@ function QuestPage() {
             </div>
             {result.unlockedBadges.length > 0 && (
               <div className="mt-6 rounded-2xl border border-[color:var(--neon-gold)]/30 bg-[color:var(--neon-gold)]/10 p-4 text-left">
-                <div className="text-xs uppercase tracking-widest text-[color:var(--neon-gold)]">Badges débloqués</div>
+                <div className="text-xs uppercase tracking-widest text-[color:var(--neon-gold)]">Badges unlocked</div>
                 <div className="mt-3 flex flex-wrap gap-3">
                   {result.unlockedBadges.map((badge) => (
                     <div key={badge.code} className="rounded-xl bg-card/70 px-4 py-3">
@@ -162,7 +162,7 @@ function QuestPage() {
               </div>
             )}
             <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Link to="/dashboard" className="rounded-lg border border-border bg-background/50 px-5 py-2.5 text-sm font-semibold hover:bg-background/80">Retour au hall</Link>
+              <Link to="/dashboard" className="rounded-lg border border-border bg-background/50 px-5 py-2.5 text-sm font-semibold hover:bg-background/80">Back to hall</Link>
               <button
                 onClick={() => {
                   setResult(null);
@@ -173,12 +173,12 @@ function QuestPage() {
                 }}
                 className="rounded-lg bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-neon hover:scale-105"
               >
-                Rejouer la quête
+                Replay quest
               </button>
             </div>
 
             <div className="mt-8 text-left">
-              <h2 className="font-display text-xl font-bold">Revue de la quête</h2>
+              <h2 className="font-display text-xl font-bold">Quest Review</h2>
               <div className="mt-4 space-y-3">
                 {result.review.map((item, reviewIndex) => (
                   <div key={item.questionId} className="rounded-2xl border border-border/50 bg-background/30 p-4">
@@ -188,16 +188,16 @@ function QuestPage() {
                         <div className="mt-1 font-semibold">{item.prompt}</div>
                       </div>
                       <div className={`rounded-full px-3 py-1 text-xs font-bold ${item.isCorrect ? "bg-[color:var(--success)]/15 text-[color:var(--success)]" : "bg-destructive/15 text-destructive"}`}>
-                        {item.isCorrect ? "Réussie" : "À retravailler"}
+                        {item.isCorrect ? "Passed" : "Needs work"}
                       </div>
                     </div>
                     <div className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
                       <div className="rounded-xl bg-card/60 p-3">
-                        <div className="text-xs uppercase tracking-widest text-muted-foreground">Ta réponse</div>
+                        <div className="text-xs uppercase tracking-widest text-muted-foreground">Your answer</div>
                         <div className="mt-1 font-mono uppercase">{item.selectedChoice}</div>
                       </div>
                       <div className="rounded-xl bg-card/60 p-3">
-                        <div className="text-xs uppercase tracking-widest text-muted-foreground">Bonne réponse</div>
+                        <div className="text-xs uppercase tracking-widest text-muted-foreground">Correct answer</div>
                         <div className="mt-1 font-mono uppercase">{item.correctChoice}</div>
                       </div>
                     </div>
@@ -238,7 +238,7 @@ function QuestPage() {
   return (
     <div className="mx-auto max-w-2xl px-6 py-8">
       <Link to=".." className="mb-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="h-4 w-4" /> Quitter la quête
+        <ArrowLeft className="h-4 w-4" /> Leave quest
       </Link>
 
       {/* Boss Mode Header */}
@@ -253,7 +253,7 @@ function QuestPage() {
                 <Skull className="h-5 w-5 text-primary-foreground" />
               </div>
               <div>
-                <div className="text-xs uppercase tracking-[0.3em] text-destructive font-bold">⚔️ Combat de Boss</div>
+                <div className="text-xs uppercase tracking-[0.3em] text-destructive font-bold">⚔️ Boss Fight</div>
                 <div className="font-display text-lg font-bold">{data.exercise.title}</div>
               </div>
             </div>
@@ -268,7 +268,7 @@ function QuestPage() {
           <div className="mt-4">
             <div className="mb-1 flex items-center justify-between text-xs">
               <span className="flex items-center gap-1 font-bold text-destructive">
-                <Heart className="h-3 w-3" /> HP du Boss
+                <Heart className="h-3 w-3" /> Boss HP
               </span>
               <span className="text-muted-foreground">{bossHp}%</span>
             </div>
@@ -306,7 +306,7 @@ function QuestPage() {
         >
           <h2 className="font-display text-xl font-semibold sm:text-2xl">{current.prompt}</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            {isBoss ? "Frappe vite et juste pour infliger des dégâts au Boss !" : "La correction est conservée côté serveur jusqu'à la fin de la quête."}
+            {isBoss ? "Strike fast and true to deal damage to the Boss!" : "Correction is stored server-side until the quest ends."}
           </p>
           <div className="mt-6 space-y-3">
             {options.map((opt) => {
@@ -344,8 +344,8 @@ function QuestPage() {
             >
               {(mutation.isPending || sessionMutation.isPending) && <Loader2 className="h-4 w-4 animate-spin" />}
               {isBoss
-                ? (idx + 1 >= total ? "⚔️ Coup final !" : "⚔️ Attaquer !")
-                : (idx + 1 >= total ? "Terminer la quête" : "Question suivante")
+                ? (idx + 1 >= total ? "⚔️ Final blow!" : "⚔️ Attack!")
+                : (idx + 1 >= total ? "Finish quest" : "Next question")
               }
             </button>
           </div>

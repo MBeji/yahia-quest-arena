@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { equipInventorySkin, getDashboard, purchaseShopItem } from "@/lib/gamification.functions";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  head: () => ({ meta: [{ title: "Hall des héros · YahiaAcademy" }] }),
+  head: () => ({ meta: [{ title: "Heroes Hall · YahiaAcademy" }] }),
   component: Dashboard,
 });
 
@@ -26,27 +26,27 @@ function Dashboard() {
   const purchaseMutation = useMutation({
     mutationFn: (payload: { itemCode: string }) => purchaseItem({ data: payload }),
     onSuccess: (res) => {
-      toast.success(`${res.purchasedItemName} ajouté à l'inventaire.`);
+      toast.success(`${res.purchasedItemName} added to inventory.`);
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
-    onError: (error) => toast.error(error instanceof Error ? error.message : "Achat impossible"),
+    onError: (error) => toast.error(error instanceof Error ? error.message : "Purchase failed"),
   });
 
   const equipMutation = useMutation({
     mutationFn: (payload: { itemCode: string }) => equipSkin({ data: payload }),
     onSuccess: (res) => {
-      toast.success(`${res.itemName} équipé.`);
+      toast.success(`${res.itemName} equipped.`);
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
-    onError: (error) => toast.error(error instanceof Error ? error.message : "Équipement impossible"),
+    onError: (error) => toast.error(error instanceof Error ? error.message : "Equip failed"),
   });
 
   if (isLoading || !data) {
-    return <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">Chargement de ton héros…</div>;
+    return <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">Loading your hero…</div>;
   }
 
   const { profile, subjects, stats, badges, inventory, shopItems } = data;
-  if (!profile) return <div className="p-8 text-center text-muted-foreground">Profil introuvable.</div>;
+  if (!profile) return <div className="p-8 text-center text-muted-foreground">Profile not found.</div>;
 
   const xpInLevel = profile.xp % 200;
   const xpPct = (xpInLevel / 200) * 100;
@@ -75,7 +75,7 @@ function Dashboard() {
             <div className="mt-3 flex flex-wrap items-center gap-3">
               <div className="rounded-full bg-[color:var(--neon-violet)]/20 px-3 py-1 text-sm font-bold text-[color:var(--neon-violet)]">Lvl {profile.level}</div>
               <div className="flex items-center gap-1 rounded-full bg-[color:var(--flame)]/20 px-3 py-1 text-sm font-bold text-[color:var(--flame)]">
-                <Flame className="h-4 w-4 animate-flame" /> {profile.current_streak} {profile.current_streak > 1 ? "jours" : "jour"}
+                <Flame className="h-4 w-4 animate-flame" /> {profile.current_streak} {profile.current_streak > 1 ? "days" : "day"}
               </div>
               <div className="flex items-center gap-1 rounded-full bg-[color:var(--neon-gold)]/20 px-3 py-1 text-sm font-bold text-[color:var(--neon-gold)]">
                 <Zap className="h-4 w-4" /> {profile.xp} XP
@@ -86,7 +86,7 @@ function Dashboard() {
             </div>
             <div className="mt-4">
               <div className="mb-1 flex justify-between text-xs text-muted-foreground">
-                <span>Niveau {profile.level}</span><span>{xpInLevel} / 200 XP</span>
+                <span>Level {profile.level}</span><span>{xpInLevel} / 200 XP</span>
               </div>
               <div className="h-2.5 overflow-hidden rounded-full bg-secondary">
                 <div
@@ -97,8 +97,8 @@ function Dashboard() {
             </div>
           </div>
           <div className="hidden sm:block">
-            <div className="text-right text-xs uppercase tracking-widest text-muted-foreground">Plus longue flamme</div>
-            <div className="text-right font-display text-2xl font-bold text-[color:var(--flame)]">{profile.longest_streak}j</div>
+            <div className="text-right text-xs uppercase tracking-widest text-muted-foreground">Longest streak</div>
+            <div className="text-right font-display text-2xl font-bold text-[color:var(--flame)]">{profile.longest_streak}d</div>
           </div>
         </div>
       </motion.div>
@@ -108,13 +108,13 @@ function Dashboard() {
         <section>
           <div className="mb-4 flex items-center justify-between">
             <h2 className="flex items-center gap-2 font-display text-xl font-bold">
-              <Swords className="h-5 w-5 text-[color:var(--neon-violet)]" /> Les voies à conquérir
+              <Swords className="h-5 w-5 text-[color:var(--neon-violet)]" /> Paths to conquer
             </h2>
             <Link
               to="/leaderboard"
               className="flex items-center gap-1.5 rounded-lg border border-[color:var(--neon-gold)]/30 bg-[color:var(--neon-gold)]/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[color:var(--neon-gold)] transition hover:bg-[color:var(--neon-gold)]/20"
             >
-              <Crown className="h-3.5 w-3.5" /> Classement
+              <Crown className="h-3.5 w-3.5" /> Leaderboard
             </Link>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -141,10 +141,10 @@ function Dashboard() {
                     </div>
                     <div className="relative mt-4">
                       <div className="font-display text-lg font-bold">{s.name_fr}</div>
-                      <div className="text-xs uppercase tracking-wider text-muted-foreground">Attribut · {s.attribute}</div>
+                      <div className="text-xs uppercase tracking-wider text-muted-foreground">Attribute · {s.attribute}</div>
                     </div>
                     <div className="relative mt-4 flex items-center justify-between text-xs">
-                      <span className="text-muted-foreground">{st ? `${st.count} quête${st.count > 1 ? "s" : ""}` : "Pas encore tentée"}</span>
+                      <span className="text-muted-foreground">{st ? `${st.count} quest${st.count > 1 ? "s" : ""}` : "Not attempted yet"}</span>
                       <span className="font-bold" style={{ color: `var(--subject-${s.color_token})` }}>
                         {st ? `${Math.round(st.avg)}%` : "—"}
                       </span>
@@ -159,7 +159,7 @@ function Dashboard() {
         {/* RADAR */}
         <section>
           <h2 className="mb-4 flex items-center gap-2 font-display text-xl font-bold">
-            <Trophy className="h-5 w-5 text-[color:var(--neon-gold)]" /> Radar du succès
+            <Trophy className="h-5 w-5 text-[color:var(--neon-gold)]" /> Success Radar
           </h2>
           <div className="rounded-2xl border border-border/50 bg-card/60 p-4 backdrop-blur-md">
             <div className="h-72 w-full">
@@ -168,7 +168,7 @@ function Dashboard() {
                   <PolarGrid stroke="oklch(0.66 0.27 295 / 0.25)" />
                   <PolarAngleAxis dataKey="subject" tick={{ fill: "oklch(0.72 0.04 270)", fontSize: 11 }} />
                   <Radar
-                    name="Maîtrise"
+                    name="Mastery"
                     dataKey="value"
                     stroke="oklch(0.66 0.27 295)"
                     fill="oklch(0.66 0.27 295)"
@@ -177,12 +177,12 @@ function Dashboard() {
                 </RadarChart>
               </ResponsiveContainer>
             </div>
-            <p className="px-2 pb-2 text-center text-xs text-muted-foreground">Tes scores moyens par attribut.</p>
+            <p className="px-2 pb-2 text-center text-xs text-muted-foreground">Your average scores by attribute.</p>
           </div>
 
           <div className="mt-6 rounded-2xl border border-border/50 bg-card/60 p-4 backdrop-blur-md">
             <h3 className="mb-3 flex items-center gap-2 font-display text-lg font-bold">
-              <Backpack className="h-4 w-4 text-[color:var(--neon-cyan)]" /> Inventaire
+              <Backpack className="h-4 w-4 text-[color:var(--neon-cyan)]" /> Inventory
             </h3>
             <div className="space-y-3">
               {inventory.length > 0 ? inventory.slice(0, 4).map((item) => (
@@ -194,12 +194,12 @@ function Dashboard() {
                     </div>
                     <div className="text-right">
                       <div className="font-display text-lg font-bold text-[color:var(--neon-cyan)]">x{item.quantity}</div>
-                      {item.isEquipped && <div className="text-xs uppercase tracking-widest text-[color:var(--success)]">Équipé</div>}
+                      {item.isEquipped && <div className="text-xs uppercase tracking-widest text-[color:var(--success)]">Equipped</div>}
                     </div>
                   </div>
                 </div>
               )) : (
-                <div className="rounded-xl bg-background/30 p-4 text-sm text-muted-foreground">Ton inventaire est encore vide.</div>
+                <div className="rounded-xl bg-background/30 p-4 text-sm text-muted-foreground">Your inventory is still empty.</div>
               )}
             </div>
           </div>
@@ -208,7 +208,7 @@ function Dashboard() {
 
       <section className="mt-8">
         <h2 className="mb-4 flex items-center gap-2 font-display text-xl font-bold">
-          <Shield className="h-5 w-5 text-[color:var(--neon-gold)]" /> Badges du héros
+          <Shield className="h-5 w-5 text-[color:var(--neon-gold)]" /> Hero Badges
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {badges.length > 0 ? badges.map((badge) => (
@@ -222,14 +222,14 @@ function Dashboard() {
                   Badge
                 </div>
               </div>
-              <div className="mt-3 text-sm text-muted-foreground">{badge.awardedReason ?? "Récompense débloquée."}</div>
+              <div className="mt-3 text-sm text-muted-foreground">{badge.awardedReason ?? "Reward unlocked."}</div>
               <div className="mt-3 text-xs uppercase tracking-widest text-muted-foreground">
-                Obtenu · {new Date(badge.awardedAt).toLocaleDateString("fr-FR")}
+                Earned · {new Date(badge.awardedAt).toLocaleDateString("en-US")}
               </div>
             </div>
           )) : (
             <div className="rounded-2xl border border-dashed border-border/50 bg-card/40 p-6 text-sm text-muted-foreground">
-              Aucun badge débloqué pour le moment. Continue tes quêtes pour remplir ta collection.
+              No badges unlocked yet. Keep completing quests to fill your collection.
             </div>
           )}
         </div>
@@ -237,7 +237,7 @@ function Dashboard() {
 
       <section className="mt-8">
         <h2 className="mb-4 flex items-center gap-2 font-display text-xl font-bold">
-          <ShoppingBag className="h-5 w-5 text-[color:var(--neon-cyan)]" /> Boutique de l'académie
+          <ShoppingBag className="h-5 w-5 text-[color:var(--neon-cyan)]" /> Academy Shop
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {shopItems.map((item) => {
@@ -256,11 +256,11 @@ function Dashboard() {
                     {item.priceCoins} YC
                   </div>
                 </div>
-                <p className="mt-3 text-sm text-muted-foreground">{item.description ?? "Item de l'académie."}</p>
+                <p className="mt-3 text-sm text-muted-foreground">{item.description ?? "Academy item."}</p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {item.isOwned && (
                     <div className="rounded-full bg-[color:var(--success)]/15 px-3 py-1 text-xs font-bold text-[color:var(--success)]">
-                      {item.itemType === "skin" ? (item.isEquipped ? "Équipé" : "Possédé") : `En stock x${item.quantity}`}
+                      {item.itemType === "skin" ? (item.isEquipped ? "Equipped" : "Owned") : `In stock x${item.quantity}`}
                     </div>
                   )}
                 </div>
@@ -270,7 +270,7 @@ function Dashboard() {
                     onClick={() => purchaseMutation.mutate({ itemCode: item.code })}
                     className="flex-1 rounded-lg border border-border bg-background/50 px-4 py-2.5 text-sm font-semibold disabled:opacity-40"
                   >
-                    Acheter
+                    Buy
                   </button>
                   {canEquip && (
                     <button
@@ -278,7 +278,7 @@ function Dashboard() {
                       onClick={() => equipMutation.mutate({ itemCode: item.code })}
                       className="flex-1 rounded-lg bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] px-4 py-2.5 text-sm font-bold text-primary-foreground shadow-neon disabled:opacity-40"
                     >
-                      Équiper
+                      Equip
                     </button>
                   )}
                 </div>
