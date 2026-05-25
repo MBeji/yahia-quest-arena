@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { equipInventorySkin, getDashboard, purchaseShopItem } from "@/lib/gamification.functions";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  head: () => ({ meta: [{ title: "Heroes Hall · YahiaAcademy" }] }),
+  head: () => ({ meta: [{ title: "Heroes Hall · XP Scholars" }] }),
   component: Dashboard,
 });
 
@@ -81,7 +81,7 @@ function Dashboard() {
                 <Zap className="h-4 w-4" /> {profile.xp} XP
               </div>
               <div className="flex items-center gap-1 rounded-full border border-[color:var(--neon-cyan)]/30 bg-[color:var(--neon-cyan)]/10 px-3 py-1 text-sm font-bold text-[color:var(--neon-cyan)]">
-                <Sparkles className="h-4 w-4" /> {profile.yahia_coins ?? 0} YC
+                <Sparkles className="h-4 w-4" /> {profile.yahia_coins ?? 0} XP Coins
               </div>
             </div>
             <div className="mt-4">
@@ -253,7 +253,7 @@ function Dashboard() {
                     <div className="text-xs uppercase tracking-widest text-[color:var(--neon-cyan)]">{item.itemType}</div>
                   </div>
                   <div className="rounded-full bg-[color:var(--neon-cyan)]/10 px-3 py-1 text-xs font-bold text-[color:var(--neon-cyan)]">
-                    {item.priceCoins} YC
+                    {item.priceCoins} XP Coins
                   </div>
                 </div>
                 <p className="mt-3 text-sm text-muted-foreground">{item.description ?? "Academy item."}</p>

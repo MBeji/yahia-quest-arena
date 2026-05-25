@@ -5,8 +5,8 @@
 @custom-variant dark (&:is(.dark *));
 
 /* =====================================================
-   YahiaAcademy — Shonen Neon Arena design system
-   ===================================================== */
+  XP Scholars — Shonen Neon Arena design system
+  ===================================================== */
 
 @theme inline {
   --font-display: "Orbitron", "Space Grotesk", system-ui, sans-serif;

@@ -6,7 +6,7 @@ import { ArrowLeft, Crown, Flame, Medal, Zap } from "lucide-react";
 import { getLeaderboard } from "@/lib/gamification.functions";
 
 export const Route = createFileRoute("/_authenticated/leaderboard")({
-  head: () => ({ meta: [{ title: "Leaderboard · YahiaAcademy" }] }),
+  head: () => ({ meta: [{ title: "Leaderboard · XP Scholars" }] }),
   component: LeaderboardPage,
 });
 

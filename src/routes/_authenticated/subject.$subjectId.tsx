@@ -6,7 +6,7 @@ import { ArrowLeft, Swords, Zap, ChevronRight, Star, Skull } from "lucide-react"
 import { getSubject } from "@/lib/gamification.functions";
 
 export const Route = createFileRoute("/_authenticated/subject/$subjectId")({
-  head: () => ({ meta: [{ title: "Quests · YahiaAcademy" }] }),
+  head: () => ({ meta: [{ title: "Quests · XP Scholars" }] }),
   component: SubjectPage,
 });
 

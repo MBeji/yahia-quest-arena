@@ -73,7 +73,7 @@ function AuthenticatedLayout() {
             <div className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] shadow-neon">
               <Sparkles className="h-4 w-4 text-primary-foreground" />
             </div>
-            <span className="font-display text-base font-bold tracking-wider">YAHIA<span className="text-gradient-cyan">ACADEMY</span></span>
+            <span className="font-display text-base font-bold tracking-wider">XP <span className="text-gradient-cyan">SCHOLARS</span></span>
           </Link>
           <nav className="flex items-center gap-2 text-sm">
             <Link to="/dashboard" className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground" activeProps={{ className: "text-foreground bg-card" }}>

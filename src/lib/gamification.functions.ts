@@ -182,7 +182,7 @@ export const purchaseShopItem = createServerFn({ method: "POST" })
     const shopItem = shopItemRes.data;
 
     if ((profile.yahia_coins ?? 0) < shopItem.price_coins) {
-      throw new Error("Insufficient YahiaCoins.");
+      throw new Error("Insufficient XP Coins.");
     }
 
     const existingInventoryRes = await supabase

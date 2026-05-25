@@ -15,7 +15,7 @@ import {
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Join the Academy · YahiaAcademy" },
+      { title: "Join the Academy · XP Scholars" },
       { name: "description", content: "Create your hero and start preparing for the 9th grade exam." },
     ],
   }),
@@ -99,7 +99,7 @@ function AuthPage() {
           <div className="grid h-10 w-10 place-items-center rounded-lg bg-gradient-to-br from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] shadow-neon">
             <Sparkles className="h-5 w-5 text-primary-foreground" />
           </div>
-          <span className="font-display text-xl font-bold tracking-wider">YAHIA<span className="text-gradient-cyan">ACADEMY</span></span>
+          <span className="font-display text-xl font-bold tracking-wider">XP <span className="text-gradient-cyan">SCHOLARS</span></span>
         </Link>
 
         <motion.div

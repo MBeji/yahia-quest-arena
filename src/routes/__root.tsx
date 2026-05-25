@@ -60,10 +60,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "YahiaAcademy — 9th Grade Exam RPG" },
+      { title: "XP Scholars — 9th Grade Exam RPG" },
       { name: "description", content: "Prepare for the Tunisian 9th grade exam like a manga hero. XP, streaks, quests, and bosses to beat." },
-      { name: "author", content: "YahiaAcademy" },
-      { property: "og:title", content: "YahiaAcademy — 9th Grade Exam RPG" },
+      { name: "author", content: "XP Scholars" },
+      { property: "og:title", content: "XP Scholars — 9th Grade Exam RPG" },
       { property: "og:description", content: "The shonen academy to dominate the 9th grade exam." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

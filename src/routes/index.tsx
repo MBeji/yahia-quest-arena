@@ -6,9 +6,9 @@ import heroImg from "@/assets/hero-warrior.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "YahiaAcademy — The Shonen Academy for the 9th Grade Exam" },
+      { title: "XP Scholars — The Shonen Academy for the 9th Grade Exam" },
       { name: "description", content: "Turn your study sessions into epic quests. XP, streaks, duels and bosses to prepare for the 9th grade exam." },
-      { property: "og:title", content: "YahiaAcademy" },
+      { property: "og:title", content: "XP Scholars" },
       { property: "og:description", content: "9th Grade Exam in RPG mode." },
     ],
   }),
@@ -42,7 +42,7 @@ function Landing() {
             <div className="relative grid h-10 w-10 place-items-center rounded-lg bg-gradient-to-br from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] shadow-neon">
               <Sparkles className="h-5 w-5 text-primary-foreground" />
             </div>
-            <span className="font-display text-xl font-bold tracking-wider">YAHIA<span className="text-gradient-cyan">ACADEMY</span></span>
+            <span className="font-display text-xl font-bold tracking-wider">XP <span className="text-gradient-cyan">SCHOLARS</span></span>
           </Link>
           <nav className="hidden items-center gap-8 text-sm text-muted-foreground md:flex">
             <a href="#features" className="hover:text-foreground">System</a>
@@ -76,7 +76,7 @@ function Landing() {
               of the <span className="text-gradient-cyan">9th Grade</span> Exam
             </h1>
             <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-              YahiaAcademy turns your study sessions into manga quests. Earn XP, ignite your streak,
+              XP Scholars turns your study sessions into manga quests. Earn XP, ignite your streak,
               rank up and defeat Chapter Bosses to ace the exam.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
@@ -125,7 +125,7 @@ function Landing() {
               <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-gradient-to-t from-background via-background/70 to-transparent p-5">
                 <div>
                   <div className="text-xs uppercase tracking-widest text-[color:var(--neon-cyan)]">Lvl 42 · Equation Warrior</div>
-                  <div className="font-display text-lg">Yahia "The Blade"</div>
+                  <div className="font-display text-lg">XP "The Blade"</div>
                 </div>
                 <div className="flex items-center gap-1.5 rounded-full bg-[color:var(--flame)]/20 px-3 py-1.5 text-sm font-bold text-[color:var(--flame)]">
                   <Flame className="h-4 w-4 animate-flame" /> 27
@@ -224,7 +224,7 @@ function Landing() {
       </section>
 
       <footer className="border-t border-border/40 py-8 text-center text-xs text-muted-foreground">
-                © {new Date().getFullYear()} YahiaAcademy · 9th Grade Exam · Tunisia
+                © {new Date().getFullYear()} XP Scholars · 9th Grade Exam · Tunisia
       </footer>
     </main>
   );

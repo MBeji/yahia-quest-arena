@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { getExercise, startExerciseSession, submitAttempt } from "@/lib/gamification.functions";
 
 export const Route = createFileRoute("/_authenticated/quest/$exerciseId")({
-  head: () => ({ meta: [{ title: "Quest · YahiaAcademy" }] }),
+  head: () => ({ meta: [{ title: "Quest · XP Scholars" }] }),
   component: QuestPage,
 });
 
