@@ -1,7 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion } from "motion/react";
+import { useEffect } from "react";
 import { Flame, Zap, Trophy, Swords, Sword, BookOpen, Scroll, Leaf, Globe, ChevronRight, Sparkles, Shield, Backpack, ShoppingBag, Crown, Play } from "lucide-react";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from "recharts";
 import { toast } from "sonner";
@@ -17,11 +18,20 @@ const ICONS: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> 
 } as never;
 
 function Dashboard() {
+  const router = useRouter();
   const queryClient = useQueryClient();
   const fetchDashboard = useServerFn(getDashboard);
   const purchaseItem = useServerFn(purchaseShopItem);
   const equipSkin = useServerFn(equipInventorySkin);
   const { data, isLoading } = useQuery({ queryKey: ["dashboard"], queryFn: () => fetchDashboard() });
+
+  // Redirect first-time users to onboarding
+  useEffect(() => {
+    if (data && data.recent && data.recent.length === 0) {
+      // No attempts = first-time user
+      router.navigate({ to: "/onboarding" });
+    }
+  }, [data, router]);
 
   const purchaseMutation = useMutation({
     mutationFn: (payload: { itemCode: string }) => purchaseItem({ data: payload }),

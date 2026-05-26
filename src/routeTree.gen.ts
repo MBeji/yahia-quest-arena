@@ -14,6 +14,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedSubjectSubjectIdRouteImport } from './routes/_authenticated/subject.$subjectId'
@@ -43,6 +44,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedLeaderboardRoute =
   AuthenticatedLeaderboardRouteImport.update({
@@ -81,6 +87,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
+  '/onboarding': typeof AuthenticatedOnboardingRoute
   '/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
   '/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
@@ -92,6 +99,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
+  '/onboarding': typeof AuthenticatedOnboardingRoute
   '/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
   '/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
@@ -105,6 +113,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
+  '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
   '/_authenticated/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/_authenticated/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
@@ -118,6 +127,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/dashboard'
     | '/leaderboard'
+    | '/onboarding'
     | '/lesson/$chapterId'
     | '/quest/$exerciseId'
     | '/subject/$subjectId'
@@ -129,6 +139,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/dashboard'
     | '/leaderboard'
+    | '/onboarding'
     | '/lesson/$chapterId'
     | '/quest/$exerciseId'
     | '/subject/$subjectId'
@@ -141,6 +152,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/_authenticated/dashboard'
     | '/_authenticated/leaderboard'
+    | '/_authenticated/onboarding'
     | '/_authenticated/lesson/$chapterId'
     | '/_authenticated/quest/$exerciseId'
     | '/_authenticated/subject/$subjectId'
@@ -191,6 +203,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/onboarding': {
+      id: '/_authenticated/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof AuthenticatedOnboardingRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/leaderboard': {
       id: '/_authenticated/leaderboard'
       path: '/leaderboard'
@@ -232,6 +251,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedLeaderboardRoute: typeof AuthenticatedLeaderboardRoute
+  AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedLessonChapterIdRoute: typeof AuthenticatedLessonChapterIdRoute
   AuthenticatedQuestExerciseIdRoute: typeof AuthenticatedQuestExerciseIdRoute
   AuthenticatedSubjectSubjectIdRoute: typeof AuthenticatedSubjectSubjectIdRoute
@@ -240,6 +260,7 @@ interface AuthenticatedRouteChildren {
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedLeaderboardRoute: AuthenticatedLeaderboardRoute,
+  AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedLessonChapterIdRoute: AuthenticatedLessonChapterIdRoute,
   AuthenticatedQuestExerciseIdRoute: AuthenticatedQuestExerciseIdRoute,
   AuthenticatedSubjectSubjectIdRoute: AuthenticatedSubjectSubjectIdRoute,
