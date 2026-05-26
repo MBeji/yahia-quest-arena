@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion } from "motion/react";
 import { ArrowLeft, BookOpen, Scroll, Sparkles, ChevronLeft, ChevronRight, List, CheckCircle2 } from "lucide-react";
-import { getChapterLesson } from "@/lib/gamification.functions";
+import { getChapterLesson } from "@/lib/gamification.quest";
 import { isRtlText } from "@/lib/utils";
 import { useState } from "react";
 

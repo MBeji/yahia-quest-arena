@@ -3,10 +3,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion } from "motion/react";
 import { useEffect } from "react";
-import { Flame, Zap, Trophy, Swords, Sword, BookOpen, Scroll, Leaf, Globe, ChevronRight, Sparkles, Shield, Backpack, ShoppingBag, Crown, Play } from "lucide-react";
+import { Flame, Zap, Trophy, Swords, Sword, BookOpen, Scroll, Leaf, Globe, ChevronRight, Sparkles, Shield, Backpack, ShoppingBag, Crown, Play, Skull } from "lucide-react";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from "recharts";
 import { toast } from "sonner";
-import { equipInventorySkin, getDashboard, purchaseShopItem } from "@/lib/gamification.functions";
+import { getDashboard } from "@/lib/gamification.dashboard";
+import { purchaseShopItem, equipInventorySkin } from "@/lib/gamification.shop";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: "Heroes Hall · XP Scholars" }] }),
@@ -155,6 +156,22 @@ function Dashboard() {
             <ChevronRight className="h-6 w-6 text-[color:var(--neon-cyan)] transition group-hover:translate-x-1" />
           </Link>
         )}
+        {/* Dungeon mode - infinite survival */}
+        <Link
+          to="/dungeon"
+          className="group flex items-center justify-between gap-4 rounded-2xl border border-[color:var(--neon-magenta)]/30 bg-[color:var(--neon-magenta)]/5 p-4 backdrop-blur-md transition hover:border-[color:var(--neon-magenta)]/60 hover:bg-[color:var(--neon-magenta)]/10 sm:p-5"
+        >
+          <div className="flex items-center gap-3">
+            <div className="grid h-12 w-12 place-items-center rounded-xl bg-[color:var(--neon-magenta)]/20">
+              <Skull className="h-6 w-6 text-[color:var(--neon-magenta)]" />
+            </div>
+            <div>
+              <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--neon-magenta)] font-bold">Infinite Dungeon</div>
+              <div className="font-display text-lg font-bold">Toutes matières mélangées</div>
+            </div>
+          </div>
+          <ChevronRight className="h-6 w-6 text-[color:var(--neon-magenta)] transition group-hover:translate-x-1" />
+        </Link>
       </motion.div>
 
       {/* DAILY OBJECTIVES & WEEKLY QUESTS SECTION */}

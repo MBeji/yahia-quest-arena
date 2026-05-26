@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Zap, Flame, Sparkles, Loader2, Trophy, Skull, Heart, Timer, CheckCircle2, XCircle } from "lucide-react";
 import { toast } from "sonner";
-import { getExercise, startExerciseSession, submitAttempt } from "@/lib/gamification.functions";
+import { getExercise, startExerciseSession, submitAttempt } from "@/lib/gamification.quest";
+import { BOSS_TIME_PER_QUESTION_S, PASS_THRESHOLD_PCT } from "@/lib/gamification.constants";
 import { isRtlText } from "@/lib/utils";
 
 // Confetti component for victory
@@ -71,7 +72,7 @@ function QuestPage() {
     mutationFn: (payload: { sessionId: string; exerciseId: string; answers: Answer[] }) => submit({ data: payload }),
     onSuccess: (res) => {
       setResult(res);
-      if (res.scorePct >= 60) setShowConfetti(true);
+      if (res.scorePct >= PASS_THRESHOLD_PCT) setShowConfetti(true);
       qc.invalidateQueries({ queryKey: ["dashboard"] });
       qc.invalidateQueries({ queryKey: ["subject"] });
     },
@@ -84,14 +85,13 @@ function QuestPage() {
   const progress = useMemo(() => (total > 0 ? ((idx) / total) * 100 : 0), [idx, total]);
   const isBoss = data?.exercise?.mode === "boss";
 
-  // Boss mode: timer (20s per question)
-  const BOSS_TIME_PER_Q = 20;
+  // Boss mode: timer
   const [bossTimer, setBossTimer] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     if (!isBoss || !sessionId || result) return;
-    setBossTimer(BOSS_TIME_PER_Q);
+    setBossTimer(BOSS_TIME_PER_QUESTION_S);
     if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
       setBossTimer((t) => {
@@ -108,7 +108,7 @@ function QuestPage() {
               setSelected(null);
             }
           }
-          return BOSS_TIME_PER_Q;
+          return BOSS_TIME_PER_QUESTION_S;
         }
         return t - 1;
       });
@@ -134,7 +134,7 @@ function QuestPage() {
 
   // RESULTS SCREEN
   if (result) {
-    const passed = result.scorePct >= 60;
+    const passed = result.scorePct >= PASS_THRESHOLD_PCT;
     return (
       <div className="mx-auto max-w-2xl px-6 py-12">
         {showConfetti && <Confetti />}

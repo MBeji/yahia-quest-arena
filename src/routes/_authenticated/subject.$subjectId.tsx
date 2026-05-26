@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion } from "motion/react";
 import { ArrowLeft, Swords, Zap, ChevronRight, Star, Skull, BookOpen } from "lucide-react";
-import { getSubject } from "@/lib/gamification.functions";
+import { getSubject } from "@/lib/gamification.quest";
 import { isRtlText } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/subject/$subjectId")({

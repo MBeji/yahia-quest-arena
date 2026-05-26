@@ -6,7 +6,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ChevronRight, ChevronLeft, Play, Award, Brain, Flame } from "lucide-react";
-import { getDashboard } from "@/lib/gamification.functions";
+import { getDashboard } from "@/lib/gamification.dashboard";
 
 interface SubjectCardProps {
   id: string;

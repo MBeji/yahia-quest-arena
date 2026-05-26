@@ -19,6 +19,7 @@ import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenti
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedSubjectSubjectIdRouteImport } from './routes/_authenticated/subject.$subjectId'
 import { Route as AuthenticatedQuestExerciseIdRouteImport } from './routes/_authenticated/quest.$exerciseId'
+import { Route as AuthenticatedDungeonRouteImport } from './routes/_authenticated/dungeon'
 import { Route as AuthenticatedLessonChapterIdRouteImport } from './routes/_authenticated/lesson.$chapterId'
 
 const SignupRoute = SignupRouteImport.update({
@@ -61,6 +62,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedDungeonRoute = AuthenticatedDungeonRouteImport.update({
+  id: '/dungeon',
+  path: '/dungeon',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedSubjectSubjectIdRoute =
   AuthenticatedSubjectSubjectIdRouteImport.update({
     id: '/subject/$subjectId',
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/dungeon': typeof AuthenticatedDungeonRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
@@ -98,6 +105,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/dungeon': typeof AuthenticatedDungeonRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
@@ -112,6 +120,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/dungeon': typeof AuthenticatedDungeonRoute
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
@@ -126,6 +135,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/dashboard'
+    | '/dungeon'
     | '/leaderboard'
     | '/onboarding'
     | '/lesson/$chapterId'
@@ -138,6 +148,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/dashboard'
+    | '/dungeon'
     | '/leaderboard'
     | '/onboarding'
     | '/lesson/$chapterId'
@@ -151,6 +162,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/_authenticated/dashboard'
+    | '/_authenticated/dungeon'
     | '/_authenticated/leaderboard'
     | '/_authenticated/onboarding'
     | '/_authenticated/lesson/$chapterId'
@@ -224,6 +236,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/dungeon': {
+      id: '/_authenticated/dungeon'
+      path: '/dungeon'
+      fullPath: '/dungeon'
+      preLoaderRoute: typeof AuthenticatedDungeonRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/subject/$subjectId': {
       id: '/_authenticated/subject/$subjectId'
       path: '/subject/$subjectId'
@@ -250,6 +269,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedDungeonRoute: typeof AuthenticatedDungeonRoute
   AuthenticatedLeaderboardRoute: typeof AuthenticatedLeaderboardRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedLessonChapterIdRoute: typeof AuthenticatedLessonChapterIdRoute
@@ -259,6 +279,7 @@ interface AuthenticatedRouteChildren {
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedDungeonRoute: AuthenticatedDungeonRoute,
   AuthenticatedLeaderboardRoute: AuthenticatedLeaderboardRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedLessonChapterIdRoute: AuthenticatedLessonChapterIdRoute,

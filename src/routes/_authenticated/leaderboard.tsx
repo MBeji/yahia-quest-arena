@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion } from "motion/react";
 import { ArrowLeft, Crown, Flame, Medal, Zap } from "lucide-react";
-import { getLeaderboard } from "@/lib/gamification.functions";
+import { getLeaderboard } from "@/lib/gamification.dashboard";
 
 export const Route = createFileRoute("/_authenticated/leaderboard")({
   head: () => ({ meta: [{ title: "Leaderboard · XP Scholars" }] }),
