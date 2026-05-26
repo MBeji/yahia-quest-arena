@@ -2,11 +2,37 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion, AnimatePresence } from "motion/react";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, Zap, Flame, Sparkles, Loader2, Trophy, Skull, Heart, Timer } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ArrowLeft, Zap, Flame, Sparkles, Loader2, Trophy, Skull, Heart, Timer, CheckCircle2, XCircle } from "lucide-react";
 import { toast } from "sonner";
 import { getExercise, startExerciseSession, submitAttempt } from "@/lib/gamification.functions";
 import { isRtlText } from "@/lib/utils";
+
+// Confetti component for victory
+function Confetti() {
+  const particles = useMemo(() => Array.from({ length: 50 }, (_, i) => ({
+    id: i,
+    x: Math.random() * 100,
+    delay: Math.random() * 0.5,
+    duration: 1.5 + Math.random() * 2,
+    color: ['#a855f7', '#06b6d4', '#f59e0b', '#ec4899', '#10b981'][Math.floor(Math.random() * 5)],
+    size: 6 + Math.random() * 8,
+  })), []);
+  return (
+    <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
+      {particles.map((p) => (
+        <motion.div
+          key={p.id}
+          className="absolute rounded-sm"
+          style={{ left: `${p.x}%`, width: p.size, height: p.size, backgroundColor: p.color }}
+          initial={{ y: -20, opacity: 1, rotate: 0 }}
+          animate={{ y: '100vh', opacity: 0, rotate: 360 + Math.random() * 360 }}
+          transition={{ duration: p.duration, delay: p.delay, ease: 'easeIn' }}
+        />
+      ))}
+    </div>
+  );
+}
 
 export const Route = createFileRoute("/_authenticated/quest/$exerciseId")({
   head: () => ({ meta: [{ title: "Quest · XP Scholars" }] }),
@@ -30,6 +56,8 @@ function QuestPage() {
   const [idx, setIdx] = useState(0);
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [result, setResult] = useState<Awaited<ReturnType<typeof submitAttempt>> | null>(null);
 
@@ -43,6 +71,7 @@ function QuestPage() {
     mutationFn: (payload: { sessionId: string; exerciseId: string; answers: Answer[] }) => submit({ data: payload }),
     onSuccess: (res) => {
       setResult(res);
+      if (res.scorePct >= 60) setShowConfetti(true);
       qc.invalidateQueries({ queryKey: ["dashboard"] });
       qc.invalidateQueries({ queryKey: ["subject"] });
     },
@@ -108,6 +137,7 @@ function QuestPage() {
     const passed = result.scorePct >= 60;
     return (
       <div className="mx-auto max-w-2xl px-6 py-12">
+        {showConfetti && <Confetti />}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
           className="relative overflow-hidden rounded-3xl border border-[color:var(--neon-violet)]/40 bg-card/60 p-8 text-center backdrop-blur-xl shadow-neon"
@@ -170,6 +200,8 @@ function QuestPage() {
                   setIdx(0);
                   setAnswers([]);
                   setSelected(null);
+                  setShowFeedback(false);
+                  setShowConfetti(false);
                   setSessionId(null);
                 }}
                 className="rounded-lg bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-neon hover:scale-105"
@@ -216,25 +248,42 @@ function QuestPage() {
   }
 
   function handleSelect(optId: string) {
+    if (showFeedback) return; // prevent changing during feedback
     setSelected(optId);
+    setShowFeedback(true);
+    // Auto-advance after showing feedback
+    setTimeout(() => {
+      const nextAnswer: Answer = { questionId: current.id, choice: optId };
+      const nextAnswers = [...answers, nextAnswer];
+      if (idx + 1 >= total) {
+        mutation.mutate({ sessionId: sessionId!, exerciseId, answers: nextAnswers });
+      } else {
+        setAnswers(nextAnswers);
+        setIdx((i) => i + 1);
+        setSelected(null);
+        setShowFeedback(false);
+      }
+    }, 1800);
   }
 
-  function next() {
-    if (!selected || !sessionId) return;
-
+  const advanceNow = useCallback(() => {
+    if (!selected || !sessionId || !showFeedback) return;
     const nextAnswer: Answer = { questionId: current.id, choice: selected };
     const nextAnswers = [...answers, nextAnswer];
-
     if (idx + 1 >= total) {
-      mutation.mutate({ sessionId, exerciseId, answers: nextAnswers });
+      mutation.mutate({ sessionId: sessionId!, exerciseId, answers: nextAnswers });
     } else {
       setAnswers(nextAnswers);
       setIdx((i) => i + 1);
       setSelected(null);
+      setShowFeedback(false);
     }
-  }
+  }, [selected, sessionId, showFeedback, current, answers, idx, total, mutation, exerciseId]);
 
   const options = (current.options as { id: string; text: string }[]) ?? [];
+  const correctOpt = (current as { correct_option?: string }).correct_option;
+  const isCorrectAnswer = showFeedback && selected === correctOpt;
+  const isWrongAnswer = showFeedback && selected !== correctOpt;
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-8">
@@ -312,31 +361,65 @@ function QuestPage() {
           <div className="mt-6 space-y-3">
             {options.map((opt) => {
               const isSel = selected === opt.id;
+              const isCorrect = showFeedback && opt.id === correctOpt;
+              const isWrong = showFeedback && isSel && opt.id !== correctOpt;
               let cls = isBoss
                 ? "border-destructive/20 bg-background/40 hover:border-destructive/60 hover:bg-destructive/10"
                 : "border-border bg-background/40 hover:border-[color:var(--neon-violet)]/60 hover:bg-background/70";
-              if (isSel) cls = isBoss
-                ? "border-destructive bg-destructive/20"
-                : "border-[color:var(--neon-violet)] bg-[color:var(--neon-violet)]/15";
+              if (showFeedback) {
+                if (isCorrect) cls = "border-emerald-500 bg-emerald-500/15";
+                else if (isWrong) cls = "border-destructive bg-destructive/15";
+                else cls = "border-border/30 bg-background/20 opacity-50";
+              } else if (isSel) {
+                cls = isBoss
+                  ? "border-destructive bg-destructive/20"
+                  : "border-[color:var(--neon-violet)] bg-[color:var(--neon-violet)]/15";
+              }
               return (
                 <button
                   key={opt.id}
                   onClick={() => handleSelect(opt.id)}
-                  className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left text-sm transition ${cls}`}
+                  disabled={showFeedback}
+                  className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left text-sm transition ${cls} ${showFeedback ? "cursor-default" : ""}`}
                 >
                   <span className="flex items-center gap-3" dir={isRtlText(opt.text) ? "rtl" : undefined}>
                     <span className="grid h-7 w-7 place-items-center rounded-md border border-current font-mono text-xs uppercase">{opt.id}</span>
                     <span>{opt.text}</span>
                   </span>
+                  {showFeedback && isCorrect && <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0" />}
+                  {showFeedback && isWrong && <XCircle className="h-5 w-5 text-destructive shrink-0" />}
                 </button>
               );
             })}
           </div>
 
+          {/* Feedback: explanation */}
+          {showFeedback && current.explanation && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+              className={`mt-4 rounded-xl border p-4 text-sm ${isCorrectAnswer ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-200" : "border-destructive/30 bg-destructive/10 text-orange-200"}`}
+            >
+              <div className="mb-1 flex items-center gap-2 text-xs font-bold uppercase tracking-widest">
+                {isCorrectAnswer ? <CheckCircle2 className="h-3.5 w-3.5" /> : <XCircle className="h-3.5 w-3.5" />}
+                {isCorrectAnswer ? "Correct !" : "Pas tout à fait…"}
+              </div>
+              <p dir={isRtlText(current.explanation) ? "rtl" : undefined}>{current.explanation}</p>
+            </motion.div>
+          )}
+
+          {showFeedback && !current.explanation && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+              className={`mt-4 rounded-xl border p-3 text-sm font-semibold ${isCorrectAnswer ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300" : "border-destructive/30 bg-destructive/10 text-destructive"}`}
+            >
+              {isCorrectAnswer ? "✓ Bonne réponse !" : `✗ La bonne réponse était : ${correctOpt?.toUpperCase()}`}
+            </motion.div>
+          )}
+
           <div className="mt-6 flex justify-end">
             <button
-              disabled={!selected || !sessionId || mutation.isPending || sessionMutation.isPending}
-              onClick={next}
+              disabled={!showFeedback || mutation.isPending || sessionMutation.isPending}
+              onClick={advanceNow}
               className={`inline-flex items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-bold text-primary-foreground shadow-neon transition disabled:opacity-40 ${
                 isBoss
                   ? "bg-gradient-to-r from-destructive to-[color:var(--neon-magenta)]"

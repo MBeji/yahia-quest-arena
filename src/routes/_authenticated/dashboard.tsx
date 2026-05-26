@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion } from "motion/react";
-import { Flame, Zap, Trophy, Swords, Sword, BookOpen, Scroll, Leaf, Globe, ChevronRight, Sparkles, Shield, Backpack, ShoppingBag, Crown } from "lucide-react";
+import { Flame, Zap, Trophy, Swords, Sword, BookOpen, Scroll, Leaf, Globe, ChevronRight, Sparkles, Shield, Backpack, ShoppingBag, Crown, Play } from "lucide-react";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from "recharts";
 import { toast } from "sonner";
 import { equipInventorySkin, getDashboard, purchaseShopItem } from "@/lib/gamification.functions";
@@ -50,6 +50,10 @@ function Dashboard() {
 
   const xpInLevel = profile.xp % 200;
   const xpPct = (xpInLevel / 200) * 100;
+
+  // Find the best "continue" target: last attempted subject or first subject with no attempts
+  const lastSubjectId = data.recent?.[0]?.subject_id;
+  const continueSubject = subjects.find((s) => s.id === lastSubjectId) ?? subjects.find((s) => !stats[s.id]) ?? subjects[0];
 
   const radarData = subjects.map((s) => ({
     subject: s.attribute,
@@ -102,6 +106,27 @@ function Dashboard() {
           </div>
         </div>
       </motion.div>
+
+      {/* CONTINUE BUTTON */}
+      {continueSubject && (
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="mt-6">
+          <Link
+            to="/subject/$subjectId" params={{ subjectId: continueSubject.id }}
+            className="group flex items-center justify-between gap-4 rounded-2xl border border-[color:var(--neon-cyan)]/30 bg-[color:var(--neon-cyan)]/5 p-4 backdrop-blur-md transition hover:border-[color:var(--neon-cyan)]/60 hover:bg-[color:var(--neon-cyan)]/10 sm:p-5"
+          >
+            <div className="flex items-center gap-3">
+              <div className="grid h-12 w-12 place-items-center rounded-xl bg-[color:var(--neon-cyan)]/20">
+                <Play className="h-6 w-6 text-[color:var(--neon-cyan)]" />
+              </div>
+              <div>
+                <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--neon-cyan)]">Continuer</div>
+                <div className="font-display text-lg font-bold">{continueSubject.name_fr}</div>
+              </div>
+            </div>
+            <ChevronRight className="h-6 w-6 text-[color:var(--neon-cyan)] transition group-hover:translate-x-1" />
+          </Link>
+        </motion.div>
+      )}
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[1fr,360px]">
         {/* SUBJECTS GRID */}

@@ -43,19 +43,34 @@ function SubjectPage() {
       <div className="mt-8 space-y-8">
         {chapters.map((c, ci) => {
           const chapEx = exercises.filter((e) => e.chapter_id === c.id);
+          const completed = chapEx.filter((e) => (bestByExercise[e.id] ?? 0) >= 40).length;
+          const progressPct = chapEx.length > 0 ? (completed / chapEx.length) * 100 : 0;
           return (
             <motion.section
               key={c.id}
               initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: ci * 0.05 }}
             >
               <div className="mb-3">
-                <h2 className="font-display text-xl font-bold" dir={isRtlText(c.title) ? "rtl" : undefined}>{c.title}</h2>
-                {c.description && <p className="text-sm text-muted-foreground" dir={isRtlText(c.description) ? "rtl" : undefined}>{c.description}</p>}
+                <div className="flex items-center justify-between gap-3">
+                  <h2 className="font-display text-xl font-bold" dir={isRtlText(c.title) ? "rtl" : undefined}>{c.title}</h2>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <span>{completed}/{chapEx.length}</span>
+                    {progressPct === 100 && <span className="text-emerald-400">✓</span>}
+                  </div>
+                </div>
+                {/* Progress bar */}
+                <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-secondary/60">
+                  <div
+                    className="h-full rounded-full transition-all duration-500"
+                    style={{ width: `${progressPct}%`, background: progressPct === 100 ? 'var(--success, #10b981)' : color }}
+                  />
+                </div>
+                {c.description && <p className="mt-2 text-sm text-muted-foreground" dir={isRtlText(c.description) ? "rtl" : undefined}>{c.description}</p>}
                 <Link
                   to="/lesson/$chapterId" params={{ chapterId: c.id }}
                   className="mt-2 inline-flex items-center gap-1.5 rounded-lg border border-[color:var(--neon-cyan)]/30 bg-[color:var(--neon-cyan)]/10 px-3 py-1.5 text-xs font-semibold text-[color:var(--neon-cyan)] transition hover:bg-[color:var(--neon-cyan)]/20"
                 >
-                  <BookOpen className="h-3.5 w-3.5" /> 📖 ملخص الدرس
+                  <BookOpen className="h-3.5 w-3.5" /> {subject.color_token === 'arabic' ? '📖 ملخص الدرس' : '📖 Résumé du cours'}
                 </Link>
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
