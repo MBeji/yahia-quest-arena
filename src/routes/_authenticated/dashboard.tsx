@@ -157,6 +157,67 @@ function Dashboard() {
         )}
       </motion.div>
 
+      {/* DAILY OBJECTIVES & WEEKLY QUESTS SECTION */}
+      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mt-8 grid gap-6 sm:grid-cols-2">
+        {/* Daily Objectives */}
+        <div className="rounded-2xl border border-[color:var(--neon-cyan)]/30 bg-[color:var(--neon-cyan)]/5 p-5 backdrop-blur-md">
+          <div className="mb-4 flex items-center gap-2 font-display text-lg font-bold">
+            <Trophy className="h-5 w-5 text-[color:var(--neon-cyan)]" /> Daily Quests
+          </div>
+          <div className="space-y-3">
+            <div className="rounded-xl bg-background/40 p-3">
+              <div className="flex items-center justify-between">
+                <div className="text-sm font-semibold">3 exercises</div>
+                <div className="text-xs text-[color:var(--neon-cyan)]">50 XP</div>
+              </div>
+              <div className="mt-2 h-2 overflow-hidden rounded-full bg-secondary">
+                <div className="h-full w-1/3 bg-gradient-to-r from-[color:var(--neon-cyan)] to-[color:var(--neon-magenta)]" />
+              </div>
+              <div className="mt-1 text-xs text-muted-foreground">1/3 completed</div>
+            </div>
+            <div className="rounded-xl bg-background/40 p-3 opacity-50">
+              <div className="flex items-center justify-between">
+                <div className="text-sm font-semibold">15 min study</div>
+                <div className="text-xs text-[color:var(--neon-gold)]">75 XP</div>
+              </div>
+              <div className="mt-2 h-2 overflow-hidden rounded-full bg-secondary">
+                <div className="h-full w-1/4 bg-gradient-to-r from-[color:var(--neon-gold)] to-[color:var(--neon-magenta)]" />
+              </div>
+              <div className="mt-1 text-xs text-muted-foreground">5/15 minutes</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Weekly Quests */}
+        <div className="rounded-2xl border border-[color:var(--neon-gold)]/30 bg-[color:var(--neon-gold)]/5 p-5 backdrop-blur-md">
+          <div className="mb-4 flex items-center gap-2 font-display text-lg font-bold">
+            <Flame className="h-5 w-5 text-[color:var(--neon-gold)]" /> Weekly Quests
+          </div>
+          <div className="space-y-3">
+            <div className="rounded-xl bg-background/40 p-3">
+              <div className="flex items-center justify-between">
+                <div className="text-sm font-semibold">Maintain 5-day streak</div>
+                <div className="text-xs text-[color:var(--neon-gold)]">150 XP</div>
+              </div>
+              <div className="mt-2 h-2 overflow-hidden rounded-full bg-secondary">
+                <div className="h-full w-3/5 bg-gradient-to-r from-[color:var(--neon-gold)] to-[color:var(--neon-magenta)]" />
+              </div>
+              <div className="mt-1 text-xs text-muted-foreground">3/5 days</div>
+            </div>
+            <div className="rounded-xl bg-background/40 p-3 opacity-50">
+              <div className="flex items-center justify-between">
+                <div className="text-sm font-semibold">Beat 2 boss exercises</div>
+                <div className="text-xs text-[color:var(--neon-violet)]">200 XP</div>
+              </div>
+              <div className="mt-2 h-2 overflow-hidden rounded-full bg-secondary">
+                <div className="h-full w-0 bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)]" />
+              </div>
+              <div className="mt-1 text-xs text-muted-foreground">0/2 bosses defeated</div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
       <div className="mt-8 grid gap-6 lg:grid-cols-[1fr,360px]">
         {/* SUBJECTS GRID */}
         <section>

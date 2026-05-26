@@ -592,6 +592,139 @@ export const submitAttempt = createServerFn({ method: "POST" })
       }
     }
 
+    // ========== SPRINT 2: Update daily objectives, weekly quests, spaced repetition ==========
+    
+    // Try to get the attempt ID we just inserted (for spaced repetition scheduling)
+    const { data: justInserted } = await supabase
+      .from("attempts")
+      .select("id")
+      .eq("user_id", userId)
+      .eq("exercise_id", data.exerciseId)
+      .order("completed_at", { ascending: false })
+      .limit(1)
+      .single();
+
+    const attemptId = justInserted?.id ?? "";
+
+    // Schedule spaced repetition if score < 60%
+    if (pct < 60 && attemptId) {
+      await supabase.from("spaced_repetition_schedule").insert({
+        user_id: userId,
+        exercise_id: data.exerciseId,
+        subject_id: exRes.data.subject_id,
+        failed_attempt_id: attemptId,
+        retry_level: 1,
+        scheduled_for: new Date(Date.now() + 86400000).toISOString(), // 1 day from now
+        status: "pending",
+      }).catch(() => {
+        // Ignore errors, don't break the flow
+      });
+
+      // Also schedule 3-day and 7-day retries
+      await supabase.from("spaced_repetition_schedule").insert({
+        user_id: userId,
+        exercise_id: data.exerciseId,
+        subject_id: exRes.data.subject_id,
+        failed_attempt_id: attemptId,
+        retry_level: 2,
+        scheduled_for: new Date(Date.now() + 259200000).toISOString(), // 3 days
+        status: "pending",
+      }).catch(() => {
+        // Ignore errors
+      });
+
+      await supabase.from("spaced_repetition_schedule").insert({
+        user_id: userId,
+        exercise_id: data.exerciseId,
+        subject_id: exRes.data.subject_id,
+        failed_attempt_id: attemptId,
+        retry_level: 3,
+        scheduled_for: new Date(Date.now() + 604800000).toISOString(), // 7 days
+        status: "pending",
+      }).catch(() => {
+        // Ignore errors
+      });
+    }
+
+    // Adapt difficulty based on performance
+    await supabase
+      .from("difficulty_adaptation")
+      .upsert({
+        user_id: userId,
+        subject_id: exRes.data.subject_id,
+        avg_score: Math.max(0, pct),
+        current_difficulty_level: 1,
+      }, { onConflict: "user_id,subject_id" })
+      .catch(() => {
+        // Ignore errors
+      });
+
+    // Update daily objective: 3 exercises (increment by 1)
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+    const todayStr = today.toISOString().split("T")[0];
+
+    const { data: dailyObj } = await supabase
+      .from("daily_objectives")
+      .select("id,current_value,target_value")
+      .eq("user_id", userId)
+      .eq("objective_type", "3_exercises")
+      .eq("objective_date", todayStr)
+      .maybeSingle()
+      .catch(() => ({ data: null }));
+
+    if (dailyObj) {
+      const newValue = dailyObj.current_value + 1;
+      const isCompleted = newValue >= dailyObj.target_value;
+      await supabase
+        .from("daily_objectives")
+        .update({
+          current_value: newValue,
+          status: isCompleted ? "completed" : "active",
+          completed_at: isCompleted ? new Date().toISOString() : null,
+        })
+        .eq("id", dailyObj.id)
+        .catch(() => {
+          // Ignore errors
+        });
+    }
+
+    // Update weekly quest: maintain streak or beat bosses (if this is a "boss" mode exercise)
+    const exerciseMode = exRes.data.mode;
+    if (pct >= 60 && exerciseMode === "boss") {
+      const dayOfWeek = new Date().getUTCDay();
+      const diff = new Date().getUTCDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+      const monday = new Date();
+      monday.setUTCDate(diff);
+      monday.setUTCHours(0, 0, 0, 0);
+      const mondayStr = monday.toISOString().split("T")[0];
+
+      const { data: bossQuest } = await supabase
+        .from("weekly_quests")
+        .select("id,current_value,target_value")
+        .eq("user_id", userId)
+        .eq("quest_type", "beat_2_bosses")
+        .eq("week_start_date", mondayStr)
+        .maybeSingle()
+        .catch(() => ({ data: null }));
+
+      if (bossQuest) {
+        const newValue = bossQuest.current_value + 1;
+        const isCompleted = newValue >= bossQuest.target_value;
+        await supabase
+          .from("weekly_quests")
+          .update({
+            current_value: newValue,
+            status: isCompleted ? "completed" : "active",
+            completed_at: isCompleted ? new Date().toISOString() : null,
+          })
+          .eq("id", bossQuest.id)
+          .catch(() => {
+            // Ignore errors
+          });
+      }
+    }
+
     return {
       correct, total, scorePct: pct, xpEarned, coinsEarned, durationSeconds,
       profile,
@@ -630,4 +763,420 @@ export const getLeaderboard = createServerFn({ method: "GET" })
     const myRank = ranked.find((r) => r.isMe);
 
     return { leaderboard: ranked, myRank };
+  });
+
+// ========== SPRINT 2: SPACED REPETITION, DAILY OBJECTIVES, WEEKLY QUESTS ==========
+
+// ---------- Schedule spaced repetition after failed attempt ----------
+export const scheduleSpacedRepetition = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) =>
+    z.object({
+      exerciseId: z.string().uuid(),
+      subjectId: z.string().uuid(),
+      attemptId: z.string().uuid(),
+      scorePct: z.number(),
+    }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+
+    // Only schedule if score < 60% (failed attempt)
+    if (data.scorePct >= 60) {
+      return { scheduled: false, reason: "Score >= 60%, no need for spaced repetition" };
+    }
+
+    // Schedule retry levels: 1d, 3d, 7d
+    const schedules = [
+      { retryLevel: 1, daysOffset: 1 },
+      { retryLevel: 2, daysOffset: 3 },
+      { retryLevel: 3, daysOffset: 7 },
+    ];
+
+    const now = new Date();
+    const scheduledForDates = schedules.map((s) => {
+      const d = new Date(now);
+      d.setDate(d.getDate() + s.daysOffset);
+      return {
+        retryLevel: s.retryLevel,
+        scheduledFor: d.toISOString(),
+      };
+    });
+
+    for (const schedule of scheduledForDates) {
+      const { error } = await supabase.from("spaced_repetition_schedule").insert({
+        user_id: userId,
+        exercise_id: data.exerciseId,
+        subject_id: data.subjectId,
+        failed_attempt_id: data.attemptId,
+        retry_level: schedule.retryLevel,
+        scheduled_for: schedule.scheduledFor,
+        status: "pending",
+      });
+
+      if (error && error.code !== "23505") {
+        // Ignore duplicate key errors
+        throw new Error(error.message);
+      }
+    }
+
+    return { scheduled: true, levels: 3 };
+  });
+
+// ---------- Get pending spaced repetition exercises ----------
+export const getPendingSpacedRepetition = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+
+    const { data: pending, error } = await supabase
+      .from("spaced_repetition_schedule")
+      .select(
+        `id,exercise_id,subject_id,retry_level,scheduled_for,
+        exercises(id,title,chapter_id,subject_id,subjects(name_fr)),
+        subjects(name_fr,color_token)`
+      )
+      .eq("user_id", userId)
+      .eq("status", "pending")
+      .lte("scheduled_for", new Date().toISOString())
+      .order("scheduled_for");
+
+    if (error) throw new Error(error.message);
+
+    return pending ?? [];
+  });
+
+// ---------- Get today's daily objectives ----------
+export const getDailyObjectives = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+    const todayStr = today.toISOString().split("T")[0];
+
+    let { data: objectives, error } = await supabase
+      .from("daily_objectives")
+      .select("id,objective_type,target_value,current_value,xp_reward,coin_reward,status,completed_at")
+      .eq("user_id", userId)
+      .eq("objective_date", todayStr);
+
+    if (error) throw new Error(error.message);
+
+    // If no objectives for today, auto-create them
+    if (!objectives || objectives.length === 0) {
+      const objectiveTypes = [
+        { type: "10_min", target: 10, xp: 50, coins: 10 },
+        { type: "3_exercises", target: 3, xp: 75, coins: 15 },
+      ];
+
+      for (const obj of objectiveTypes) {
+        const { error: insertErr } = await supabase.from("daily_objectives").insert({
+          user_id: userId,
+          objective_type: obj.type,
+          target_value: obj.target,
+          current_value: 0,
+          objective_date: todayStr,
+          xp_reward: obj.xp,
+          coin_reward: obj.coins,
+          status: "active",
+        });
+
+        if (insertErr && insertErr.code !== "23505") {
+          throw new Error(insertErr.message);
+        }
+      }
+
+      // Fetch again
+      const { data: newObjs, error: fetchErr } = await supabase
+        .from("daily_objectives")
+        .select("id,objective_type,target_value,current_value,xp_reward,coin_reward,status,completed_at")
+        .eq("user_id", userId)
+        .eq("objective_date", todayStr);
+
+      if (fetchErr) throw new Error(fetchErr.message);
+      objectives = newObjs;
+    }
+
+    return objectives ?? [];
+  });
+
+// ---------- Update daily objective progress ----------
+export const updateDailyObjectiveProgress = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) =>
+    z.object({
+      objectiveType: z.enum(["10_min", "15_min", "3_exercises"]),
+      incrementValue: z.number().positive(),
+    }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+    const todayStr = today.toISOString().split("T")[0];
+
+    const { data: objective, error: fetchErr } = await supabase
+      .from("daily_objectives")
+      .select("id,objective_type,target_value,current_value,status")
+      .eq("user_id", userId)
+      .eq("objective_type", data.objectiveType)
+      .eq("objective_date", todayStr)
+      .maybeSingle();
+
+    if (fetchErr) throw new Error(fetchErr.message);
+    if (!objective) return { completed: false, progress: 0 };
+
+    const newValue = objective.current_value + data.incrementValue;
+    const isCompleted = newValue >= objective.target_value;
+
+    const { error: updateErr } = await supabase
+      .from("daily_objectives")
+      .update({
+        current_value: newValue,
+        status: isCompleted ? "completed" : "active",
+        completed_at: isCompleted ? new Date().toISOString() : null,
+      })
+      .eq("id", objective.id);
+
+    if (updateErr) throw new Error(updateErr.message);
+
+    return {
+      completed: isCompleted,
+      progress: Math.min(newValue, objective.target_value),
+      target: objective.target_value,
+    };
+  });
+
+// ---------- Get this week's quests ----------
+export const getWeeklyQuests = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+
+    const today = new Date();
+    const dayOfWeek = today.getUTCDay();
+    const diff = today.getUTCDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // Monday start
+    const monday = new Date(today.setUTCDate(diff));
+    monday.setUTCHours(0, 0, 0, 0);
+    const mondayStr = monday.toISOString().split("T")[0];
+
+    let { data: quests, error } = await supabase
+      .from("weekly_quests")
+      .select("id,quest_type,subject_id,target_value,current_value,xp_reward,coin_reward,status,completed_at")
+      .eq("user_id", userId)
+      .eq("week_start_date", mondayStr);
+
+    if (error) throw new Error(error.message);
+
+    // If no quests for this week, auto-create them
+    if (!quests || quests.length === 0) {
+      const questTypes = [
+        { type: "maintain_streak_5", target: 5, xp: 150, coins: 30 },
+        { type: "beat_2_bosses", target: 2, xp: 200, coins: 50 },
+      ];
+
+      for (const q of questTypes) {
+        const { error: insertErr } = await supabase.from("weekly_quests").insert({
+          user_id: userId,
+          quest_type: q.type,
+          target_value: q.target,
+          current_value: 0,
+          week_start_date: mondayStr,
+          xp_reward: q.xp,
+          coin_reward: q.coins,
+          status: "active",
+        });
+
+        if (insertErr && insertErr.code !== "23505") {
+          throw new Error(insertErr.message);
+        }
+      }
+
+      // Fetch again
+      const { data: newQuests, error: fetchErr } = await supabase
+        .from("weekly_quests")
+        .select("id,quest_type,subject_id,target_value,current_value,xp_reward,coin_reward,status,completed_at")
+        .eq("user_id", userId)
+        .eq("week_start_date", mondayStr);
+
+      if (fetchErr) throw new Error(fetchErr.message);
+      quests = newQuests;
+    }
+
+    return quests ?? [];
+  });
+
+// ---------- Update weekly quest progress ----------
+export const updateWeeklyQuestProgress = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) =>
+    z.object({
+      questType: z.string().min(1),
+      incrementValue: z.number().positive(),
+    }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+
+    const today = new Date();
+    const dayOfWeek = today.getUTCDay();
+    const diff = today.getUTCDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+    const monday = new Date(today.setUTCDate(diff));
+    monday.setUTCHours(0, 0, 0, 0);
+    const mondayStr = monday.toISOString().split("T")[0];
+
+    const { data: quest, error: fetchErr } = await supabase
+      .from("weekly_quests")
+      .select("id,quest_type,target_value,current_value,status")
+      .eq("user_id", userId)
+      .eq("quest_type", data.questType)
+      .eq("week_start_date", mondayStr)
+      .maybeSingle();
+
+    if (fetchErr) throw new Error(fetchErr.message);
+    if (!quest) return { completed: false, progress: 0 };
+
+    const newValue = quest.current_value + data.incrementValue;
+    const isCompleted = newValue >= quest.target_value;
+
+    const { error: updateErr } = await supabase
+      .from("weekly_quests")
+      .update({
+        current_value: newValue,
+        status: isCompleted ? "completed" : "active",
+        completed_at: isCompleted ? new Date().toISOString() : null,
+      })
+      .eq("id", quest.id);
+
+    if (updateErr) throw new Error(updateErr.message);
+
+    return {
+      completed: isCompleted,
+      progress: Math.min(newValue, quest.target_value),
+      target: quest.target_value,
+    };
+  });
+
+// ---------- Adapt difficulty based on performance ----------
+export const adaptDifficulty = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) =>
+    z.object({
+      subjectId: z.string().uuid(),
+      newScore: z.number().min(0).max(100),
+    }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+
+    // Get or create difficulty adaptation record
+    let { data: adaptation, error: fetchErr } = await supabase
+      .from("difficulty_adaptation")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("subject_id", data.subjectId)
+      .maybeSingle();
+
+    if (fetchErr) throw new Error(fetchErr.message);
+
+    if (!adaptation) {
+      // Create new record
+      const { data: newAdapt, error: createErr } = await supabase
+        .from("difficulty_adaptation")
+        .insert({
+          user_id: userId,
+          subject_id: data.subjectId,
+          avg_score: data.newScore,
+          recent_avg_score: data.newScore,
+          total_attempts: 1,
+          current_difficulty_level: 1,
+        })
+        .select()
+        .single();
+
+      if (createErr) throw new Error(createErr.message);
+      adaptation = newAdapt;
+    } else {
+      // Update existing record
+      const totalAttempts = adaptation.total_attempts + 1;
+      
+      // Recalculate average from last 10 attempts
+      const { data: recentAttempts } = await supabase
+        .from("attempts")
+        .select("score_pct")
+        .eq("user_id", userId)
+        .eq("subject_id", data.subjectId)
+        .order("completed_at", { ascending: false })
+        .limit(10);
+
+      const recentScores = [data.newScore, ...(recentAttempts ?? []).map((a) => a.score_pct as number)];
+      const recentAvg = Math.round(recentScores.slice(0, 10).reduce((a, b) => a + b, 0) / Math.min(recentScores.length, 10));
+
+      const overallAvg = Math.round(((adaptation.avg_score * adaptation.total_attempts) + data.newScore) / totalAttempts);
+
+      let newDifficulty = adaptation.current_difficulty_level;
+      
+      // Increase difficulty if recent avg > 75%
+      if (recentAvg > 75 && newDifficulty < 4) {
+        newDifficulty = newDifficulty + 1;
+      }
+      // Decrease difficulty if recent avg < 40%
+      else if (recentAvg < 40 && newDifficulty > 1) {
+        newDifficulty = newDifficulty - 1;
+      }
+
+      const { error: updateErr } = await supabase
+        .from("difficulty_adaptation")
+        .update({
+          avg_score: overallAvg,
+          recent_avg_score: recentAvg,
+          total_attempts: totalAttempts,
+          current_difficulty_level: newDifficulty,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", adaptation.id);
+
+      if (updateErr) throw new Error(updateErr.message);
+
+      adaptation.avg_score = overallAvg;
+      adaptation.recent_avg_score = recentAvg;
+      adaptation.current_difficulty_level = newDifficulty;
+    }
+
+    return adaptation;
+  });
+
+// ---------- Get Sprint 2 dashboard data (daily objectives + weekly quests + spaced rep) ----------
+export const getSprint2Dashboard = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+
+    const [dailyObjs, weeklyQs, spacedRep] = await Promise.all([
+      supabase
+        .from("daily_objectives")
+        .select("id,objective_type,target_value,current_value,xp_reward,coin_reward,status,completed_at")
+        .eq("user_id", userId)
+        .gte("objective_date", new Date(Date.now() - 86400000).toISOString().split("T")[0]),
+      supabase
+        .from("weekly_quests")
+        .select("id,quest_type,target_value,current_value,xp_reward,coin_reward,status,completed_at")
+        .eq("user_id", userId),
+      supabase
+        .from("spaced_repetition_schedule")
+        .select("id,retry_level,scheduled_for,exercises(id,title)")
+        .eq("user_id", userId)
+        .eq("status", "pending")
+        .lte("scheduled_for", new Date().toISOString())
+        .limit(3),
+    ]);
+
+    return {
+      dailyObjectives: dailyObjs.data ?? [],
+      weeklyQuests: weeklyQs.data ?? [],
+      pendingSpacedReps: spacedRep.data ?? [],
+    };
   });
