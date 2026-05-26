@@ -88,6 +88,17 @@ function QuestPage() {
   // Boss mode: timer
   const [bossTimer, setBossTimer] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  // Refs to avoid stale closures in setInterval
+  const selectedRef = useRef(selected);
+  const answersRef = useRef(answers);
+  const idxRef = useRef(idx);
+  const totalRef = useRef(total);
+  const currentRef = useRef(current);
+  selectedRef.current = selected;
+  answersRef.current = answers;
+  idxRef.current = idx;
+  totalRef.current = total;
+  currentRef.current = current;
 
   useEffect(() => {
     if (!isBoss || !sessionId || result) return;
@@ -97,10 +108,10 @@ function QuestPage() {
       setBossTimer((t) => {
         if (t <= 1) {
           // Auto-submit with no answer if time runs out
-          if (!selected) {
-            const autoAnswer: Answer = { questionId: current?.id ?? "", choice: "__timeout__" };
-            const nextAnswers = [...answers, autoAnswer];
-            if (idx + 1 >= total) {
+          if (!selectedRef.current) {
+            const autoAnswer: Answer = { questionId: currentRef.current?.id ?? "", choice: "__timeout__" };
+            const nextAnswers = [...answersRef.current, autoAnswer];
+            if (idxRef.current + 1 >= totalRef.current) {
               mutation.mutate({ sessionId: sessionId!, exerciseId, answers: nextAnswers });
             } else {
               setAnswers(nextAnswers);

@@ -44,6 +44,13 @@ function AuthenticatedLayout() {
     };
   }, [guestAttempted, loading, navigate, user]);
 
+  // Redirect unauthenticated users via effect (not during render)
+  useEffect(() => {
+    if (!loading && !bootstrappingGuest && !user) {
+      navigate({ to: "/auth", search: { mode: "login" } });
+    }
+  }, [loading, bootstrappingGuest, user, navigate]);
+
   if (loading || bootstrappingGuest) {
     return (
       <div className="grid min-h-screen place-items-center bg-hero">
@@ -54,7 +61,6 @@ function AuthenticatedLayout() {
     );
   }
   if (!user) {
-    navigate({ to: "/auth", search: { mode: "login" } });
     return null;
   }
 

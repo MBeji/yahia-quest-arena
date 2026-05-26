@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 import { Flame, Zap, Trophy, Swords, Sword, BookOpen, Scroll, Leaf, Globe, ChevronRight, Sparkles, Shield, Backpack, ShoppingBag, Crown, Play, Skull, Loader2 } from "lucide-react";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from "recharts";
 import { toast } from "sonner";
-import { getDashboard } from "@/lib/gamification.dashboard";
+import { getDashboard, getSprint2Dashboard } from "@/lib/gamification.dashboard";
 import { purchaseShopItem, equipInventorySkin } from "@/lib/gamification.shop";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
@@ -17,12 +17,33 @@ const ICONS: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> 
   Sword, BookOpen, Scroll, Leaf, Globe,
 } as never;
 
+function formatObjectiveType(type: string): string {
+  const map: Record<string, string> = {
+    "3_exercises": "Complete 3 exercises",
+    "15_min_study": "15 min study time",
+    "perfect_score": "Get a perfect score",
+  };
+  return map[type] ?? type.replace(/_/g, " ");
+}
+
+function formatQuestType(type: string): string {
+  const map: Record<string, string> = {
+    "5_day_streak": "Maintain 5-day streak",
+    "2_boss_exercises": "Beat 2 boss exercises",
+    "10_exercises": "Complete 10 exercises",
+    "all_subjects": "Practice all subjects",
+  };
+  return map[type] ?? type.replace(/_/g, " ");
+}
+
 function Dashboard() {
   const queryClient = useQueryClient();
   const fetchDashboard = useServerFn(getDashboard);
+  const fetchSprint2 = useServerFn(getSprint2Dashboard);
   const purchaseItem = useServerFn(purchaseShopItem);
   const equipSkin = useServerFn(equipInventorySkin);
   const { data, isLoading, isError } = useQuery({ queryKey: ["dashboard"], queryFn: () => fetchDashboard() });
+  const { data: sprint2 } = useQuery({ queryKey: ["sprint2"], queryFn: () => fetchSprint2() });
 
   const purchaseMutation = useMutation({
     mutationFn: (payload: { itemCode: string }) => purchaseItem({ data: payload }),
@@ -198,26 +219,25 @@ function Dashboard() {
             <Trophy className="h-5 w-5 text-[color:var(--neon-cyan)]" /> Daily Quests
           </div>
           <div className="space-y-3">
-            <div className="rounded-xl bg-background/40 p-3">
-              <div className="flex items-center justify-between">
-                <div className="text-sm font-semibold">3 exercises</div>
-                <div className="text-xs text-[color:var(--neon-cyan)]">50 XP</div>
-              </div>
-              <div className="mt-2 h-2 overflow-hidden rounded-full bg-secondary">
-                <div className="h-full w-1/3 bg-gradient-to-r from-[color:var(--neon-cyan)] to-[color:var(--neon-magenta)]" />
-              </div>
-              <div className="mt-1 text-xs text-muted-foreground">1/3 completed</div>
-            </div>
-            <div className="rounded-xl bg-background/40 p-3 opacity-50">
-              <div className="flex items-center justify-between">
-                <div className="text-sm font-semibold">15 min study</div>
-                <div className="text-xs text-[color:var(--neon-gold)]">75 XP</div>
-              </div>
-              <div className="mt-2 h-2 overflow-hidden rounded-full bg-secondary">
-                <div className="h-full w-1/4 bg-gradient-to-r from-[color:var(--neon-gold)] to-[color:var(--neon-magenta)]" />
-              </div>
-              <div className="mt-1 text-xs text-muted-foreground">5/15 minutes</div>
-            </div>
+            {(sprint2?.dailyObjectives ?? []).length === 0 && (
+              <p className="text-xs text-muted-foreground">Complete exercises to unlock daily objectives.</p>
+            )}
+            {(sprint2?.dailyObjectives ?? []).map((obj) => {
+              const pct = obj.target_value > 0 ? Math.min(100, Math.round((obj.current_value / obj.target_value) * 100)) : 0;
+              const done = obj.status === "completed";
+              return (
+                <div key={obj.id} className={`rounded-xl bg-background/40 p-3 ${done ? "opacity-60" : ""}`}>
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm font-semibold">{formatObjectiveType(obj.objective_type)}</div>
+                    <div className="text-xs text-[color:var(--neon-cyan)]">{obj.xp_reward} XP</div>
+                  </div>
+                  <div className="mt-2 h-2 overflow-hidden rounded-full bg-secondary">
+                    <div className="h-full bg-gradient-to-r from-[color:var(--neon-cyan)] to-[color:var(--neon-magenta)] transition-all" style={{ width: `${pct}%` }} />
+                  </div>
+                  <div className="mt-1 text-xs text-muted-foreground">{obj.current_value}/{obj.target_value} {done ? "✓" : ""}</div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
@@ -227,26 +247,25 @@ function Dashboard() {
             <Flame className="h-5 w-5 text-[color:var(--neon-gold)]" /> Weekly Quests
           </div>
           <div className="space-y-3">
-            <div className="rounded-xl bg-background/40 p-3">
-              <div className="flex items-center justify-between">
-                <div className="text-sm font-semibold">Maintain 5-day streak</div>
-                <div className="text-xs text-[color:var(--neon-gold)]">150 XP</div>
-              </div>
-              <div className="mt-2 h-2 overflow-hidden rounded-full bg-secondary">
-                <div className="h-full w-3/5 bg-gradient-to-r from-[color:var(--neon-gold)] to-[color:var(--neon-magenta)]" />
-              </div>
-              <div className="mt-1 text-xs text-muted-foreground">3/5 days</div>
-            </div>
-            <div className="rounded-xl bg-background/40 p-3 opacity-50">
-              <div className="flex items-center justify-between">
-                <div className="text-sm font-semibold">Beat 2 boss exercises</div>
-                <div className="text-xs text-[color:var(--neon-violet)]">200 XP</div>
-              </div>
-              <div className="mt-2 h-2 overflow-hidden rounded-full bg-secondary">
-                <div className="h-full w-0 bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)]" />
-              </div>
-              <div className="mt-1 text-xs text-muted-foreground">0/2 bosses defeated</div>
-            </div>
+            {(sprint2?.weeklyQuests ?? []).length === 0 && (
+              <p className="text-xs text-muted-foreground">Weekly quests appear as you progress.</p>
+            )}
+            {(sprint2?.weeklyQuests ?? []).map((q) => {
+              const pct = q.target_value > 0 ? Math.min(100, Math.round((q.current_value / q.target_value) * 100)) : 0;
+              const done = q.status === "completed";
+              return (
+                <div key={q.id} className={`rounded-xl bg-background/40 p-3 ${done ? "opacity-60" : ""}`}>
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm font-semibold">{formatQuestType(q.quest_type)}</div>
+                    <div className="text-xs text-[color:var(--neon-gold)]">{q.xp_reward} XP</div>
+                  </div>
+                  <div className="mt-2 h-2 overflow-hidden rounded-full bg-secondary">
+                    <div className="h-full bg-gradient-to-r from-[color:var(--neon-gold)] to-[color:var(--neon-magenta)] transition-all" style={{ width: `${pct}%` }} />
+                  </div>
+                  <div className="mt-1 text-xs text-muted-foreground">{q.current_value}/{q.target_value} {done ? "✓" : ""}</div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </motion.div>

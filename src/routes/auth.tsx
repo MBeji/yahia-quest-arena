@@ -38,8 +38,23 @@ function AuthPage() {
     });
   }, [navigate]);
 
+  function friendlyAuthError(err: unknown): string {
+    const msg = err instanceof Error ? err.message.toLowerCase() : "";
+    if (msg.includes("invalid login")) return "Email ou mot de passe incorrect.";
+    if (msg.includes("email not confirmed")) return "Vérifie ta boîte mail pour confirmer ton compte.";
+    if (msg.includes("user already registered")) return "Ce compte existe déjà. Connecte-toi.";
+    if (msg.includes("rate limit") || msg.includes("too many")) return "Trop de tentatives. Réessaie dans quelques minutes.";
+    if (msg.includes("password")) return "Le mot de passe doit contenir au moins 8 caractères.";
+    if (msg.includes("signup_disabled")) return "L'inscription est temporairement désactivée.";
+    return "Erreur d'authentification. Réessaie.";
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (password.length < 8) {
+      toast.error("Le mot de passe doit contenir au moins 8 caractères.");
+      return;
+    }
     setBusy(true);
     try {
       if (isSignup) {
@@ -60,7 +75,7 @@ function AuthPage() {
         navigate({ to: "/dashboard" });
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Authentication error");
+      toast.error(friendlyAuthError(err));
     } finally {
       setBusy(false);
     }
@@ -166,8 +181,8 @@ function AuthPage() {
             <div className="relative">
               <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <input
-                type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Password"
+                type="password" required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password (min 8 characters)"
                 className="w-full rounded-lg border border-input bg-background/50 py-2.5 pl-10 pr-3 text-sm focus:border-[color:var(--neon-violet)] focus:outline-none"
               />
             </div>
