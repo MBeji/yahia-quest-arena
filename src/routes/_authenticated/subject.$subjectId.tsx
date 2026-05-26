@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { motion } from "motion/react";
 import { ArrowLeft, Swords, Zap, ChevronRight, Star, Skull } from "lucide-react";
 import { getSubject } from "@/lib/gamification.functions";
+import { isRtlText } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/subject/$subjectId")({
   head: () => ({ meta: [{ title: "Quests · XP Scholars" }] }),
@@ -48,8 +49,8 @@ function SubjectPage() {
               initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: ci * 0.05 }}
             >
               <div className="mb-3">
-                <h2 className="font-display text-xl font-bold">{c.title}</h2>
-                {c.description && <p className="text-sm text-muted-foreground">{c.description}</p>}
+                <h2 className="font-display text-xl font-bold" dir={isRtlText(c.title) ? "rtl" : undefined}>{c.title}</h2>
+                {c.description && <p className="text-sm text-muted-foreground" dir={isRtlText(c.description) ? "rtl" : undefined}>{c.description}</p>}
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
                 {chapEx.map((ex) => {
@@ -71,7 +72,7 @@ function SubjectPage() {
                           {isBoss ? <Skull className="h-5 w-5 text-destructive" /> : <Swords className="h-5 w-5" />}
                         </div>
                         <div>
-                          <div className="flex items-center gap-2 font-semibold">
+                          <div className="flex items-center gap-2 font-semibold" dir={isRtlText(ex.title) ? "rtl" : undefined}>
                             {ex.title}
                             {isBoss && <span className="rounded-full bg-destructive/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-destructive">Boss</span>}
                           </div>

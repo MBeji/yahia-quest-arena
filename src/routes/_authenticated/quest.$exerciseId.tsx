@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Zap, Flame, Sparkles, Loader2, Trophy, Skull, Heart, Timer } from "lucide-react";
 import { toast } from "sonner";
 import { getExercise, startExerciseSession, submitAttempt } from "@/lib/gamification.functions";
+import { isRtlText } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/quest/$exerciseId")({
   head: () => ({ meta: [{ title: "Quest · XP Scholars" }] }),
@@ -185,7 +186,7 @@ function QuestPage() {
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         <div className="text-xs uppercase tracking-widest text-muted-foreground">Question {reviewIndex + 1}</div>
-                        <div className="mt-1 font-semibold">{item.prompt}</div>
+                        <div className="mt-1 font-semibold" dir={isRtlText(item.prompt) ? "rtl" : undefined}>{item.prompt}</div>
                       </div>
                       <div className={`rounded-full px-3 py-1 text-xs font-bold ${item.isCorrect ? "bg-[color:var(--success)]/15 text-[color:var(--success)]" : "bg-destructive/15 text-destructive"}`}>
                         {item.isCorrect ? "Passed" : "Needs work"}
@@ -202,7 +203,7 @@ function QuestPage() {
                       </div>
                     </div>
                     {item.explanation && (
-                      <p className="mt-3 text-sm text-muted-foreground">{item.explanation}</p>
+                      <p className="mt-3 text-sm text-muted-foreground" dir={isRtlText(item.explanation) ? "rtl" : undefined}>{item.explanation}</p>
                     )}
                   </div>
                 ))}
@@ -304,7 +305,7 @@ function QuestPage() {
           transition={{ duration: 0.3 }}
           className={`rounded-3xl border p-6 backdrop-blur-xl sm:p-8 ${isBoss ? "border-destructive/30 bg-destructive/5" : "border-border/50 bg-card/60"}`}
         >
-          <h2 className="font-display text-xl font-semibold sm:text-2xl">{current.prompt}</h2>
+          <h2 className="font-display text-xl font-semibold sm:text-2xl" dir={isRtlText(current.prompt) ? "rtl" : undefined}>{current.prompt}</h2>
           <p className="mt-2 text-sm text-muted-foreground">
             {isBoss ? "Strike fast and true to deal damage to the Boss!" : "Correction is stored server-side until the quest ends."}
           </p>
@@ -323,7 +324,7 @@ function QuestPage() {
                   onClick={() => handleSelect(opt.id)}
                   className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left text-sm transition ${cls}`}
                 >
-                  <span className="flex items-center gap-3">
+                  <span className="flex items-center gap-3" dir={isRtlText(opt.text) ? "rtl" : undefined}>
                     <span className="grid h-7 w-7 place-items-center rounded-md border border-current font-mono text-xs uppercase">{opt.id}</span>
                     <span>{opt.text}</span>
                   </span>
