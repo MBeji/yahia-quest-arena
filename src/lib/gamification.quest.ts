@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { isRateLimited } from "./rate-limit";
 import type { UnlockedBadge } from "./gamification.types";
 import {
   HALF_COIN_THRESHOLD_PCT,
@@ -123,6 +124,11 @@ export const submitAttempt = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
+    // Rate limit: max 5 submissions per 10 seconds
+    if (isRateLimited(`submit_${userId}`, 5, 10_000)) {
+      throw new Error("Too many submissions. Please slow down.");
+    }
+
     const [sessionRes, exRes, qsRes] = await Promise.all([
       supabase
         .from("exercise_sessions")
@@ -209,15 +215,10 @@ export const submitAttempt = createServerFn({ method: "POST" })
 
     const profile = Array.isArray(newProfile) ? newProfile[0] : newProfile;
 
-    // Award coins
+    // Award coins atomically
     if (coinsEarned > 0 && profile) {
-      const newCoins = (profile.yahia_coins ?? 0) + coinsEarned;
-      const { error: coinErr } = await supabase
-        .from("profiles")
-        .update({ yahia_coins: newCoins })
-        .eq("id", userId);
-      if (coinErr) throw new Error(coinErr.message);
-      profile.yahia_coins = newCoins;
+      await supabase.rpc("award_coins", { p_user: userId, p_coins: coinsEarned }).catch(() => {});
+      profile.yahia_coins = (profile.yahia_coins ?? 0) + coinsEarned;
     }
 
     const unlockedBadges: UnlockedBadge[] = [];
@@ -325,35 +326,79 @@ export const submitAttempt = createServerFn({ method: "POST" })
 
     const attemptId = justInserted?.id ?? "";
 
-    // Schedule spaced repetition if score < pass threshold
+    // Schedule spaced repetition if score < pass threshold (with dedup)
     if (pct < PASS_THRESHOLD_PCT && attemptId) {
-      for (const [i, intervalMs] of SPACED_REPETITION_INTERVALS_MS.entries()) {
-        await supabase.from("spaced_repetition_schedule").insert({
-          user_id: userId,
-          exercise_id: data.exerciseId,
-          subject_id: exRes.data.subject_id,
-          failed_attempt_id: attemptId,
-          retry_level: i + 1,
-          scheduled_for: new Date(Date.now() + intervalMs).toISOString(),
-          status: "pending",
-        }).catch(() => {
-          // Ignore errors, don't break the flow
-        });
+      // Check if there's already a pending schedule for this exercise
+      const { data: existingSchedule } = await supabase
+        .from("spaced_repetition_schedule")
+        .select("id")
+        .eq("user_id", userId)
+        .eq("exercise_id", data.exerciseId)
+        .eq("status", "pending")
+        .limit(1)
+        .maybeSingle()
+        .catch(() => ({ data: null }));
+
+      if (!existingSchedule) {
+        for (const [i, intervalMs] of SPACED_REPETITION_INTERVALS_MS.entries()) {
+          await supabase.from("spaced_repetition_schedule").insert({
+            user_id: userId,
+            exercise_id: data.exerciseId,
+            subject_id: exRes.data.subject_id,
+            failed_attempt_id: attemptId,
+            retry_level: i + 1,
+            scheduled_for: new Date(Date.now() + intervalMs).toISOString(),
+            status: "pending",
+          }).catch(() => {});
+        }
       }
     }
 
-    // Adapt difficulty based on performance
-    await supabase
-      .from("difficulty_adaptation")
-      .upsert({
-        user_id: userId,
-        subject_id: exRes.data.subject_id,
-        avg_score: Math.max(0, pct),
-        current_difficulty_level: 1,
-      }, { onConflict: "user_id,subject_id" })
-      .catch(() => {
-        // Ignore errors
-      });
+    // Adapt difficulty based on recent performance (windowed average)
+    {
+      const { data: adaptation } = await supabase
+        .from("difficulty_adaptation")
+        .select("*")
+        .eq("user_id", userId)
+        .eq("subject_id", exRes.data.subject_id)
+        .maybeSingle();
+
+      if (!adaptation) {
+        await supabase.from("difficulty_adaptation").insert({
+          user_id: userId,
+          subject_id: exRes.data.subject_id,
+          avg_score: pct,
+          recent_avg_score: pct,
+          total_attempts: 1,
+          current_difficulty_level: 1,
+        }).catch(() => {});
+      } else {
+        const { data: recentAtts } = await supabase
+          .from("attempts")
+          .select("score_pct")
+          .eq("user_id", userId)
+          .eq("subject_id", exRes.data.subject_id)
+          .order("completed_at", { ascending: false })
+          .limit(10);
+
+        const scores = (recentAtts ?? []).map((a) => a.score_pct as number);
+        const recentAvg = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : pct;
+        const totalAttempts = adaptation.total_attempts + 1;
+        const overallAvg = Math.round(((adaptation.avg_score * adaptation.total_attempts) + pct) / totalAttempts);
+
+        let newDiff = adaptation.current_difficulty_level;
+        if (recentAvg > 75 && newDiff < 4) newDiff++;
+        else if (recentAvg < 40 && newDiff > 1) newDiff--;
+
+        await supabase.from("difficulty_adaptation").update({
+          avg_score: overallAvg,
+          recent_avg_score: recentAvg,
+          total_attempts: totalAttempts,
+          current_difficulty_level: newDiff,
+          updated_at: new Date().toISOString(),
+        }).eq("id", adaptation.id).catch(() => {});
+      }
+    }
 
     // Update daily objective: 3 exercises (increment by 1)
     const today = new Date();
