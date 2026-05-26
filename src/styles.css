@@ -187,6 +187,7 @@
   font-size: 1.05rem;
   line-height: 1.9;
   color: var(--foreground);
+  scroll-behavior: smooth;
 }
 .lesson-content .lesson-h1 {
   font-family: var(--font-display);
@@ -206,6 +207,7 @@
   color: var(--neon-cyan);
   border-bottom: 1px solid color-mix(in oklab, var(--neon-cyan) 30%, transparent);
   padding-bottom: 0.5rem;
+  scroll-margin-top: 5rem;
 }
 .lesson-content .lesson-h3 {
   font-size: 1.15rem;

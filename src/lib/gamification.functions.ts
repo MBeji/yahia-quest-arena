@@ -320,11 +320,26 @@ export const getChapterLesson = createServerFn({ method: "GET" })
     const { supabase } = context;
     const { data: chapter, error } = await supabase
       .from("chapters")
-      .select("id, title, description, lesson_content, subject_id, subjects(name_fr, color_token, icon)")
+      .select("id, title, description, lesson_content, subject_id, display_order, subjects(id, name_fr, color_token, icon)")
       .eq("id", data.chapterId)
       .single();
     if (error) throw new Error(error.message);
-    return { chapter };
+
+    // Fetch all sibling chapters for navigation
+    const { data: siblings } = await supabase
+      .from("chapters")
+      .select("id, title, display_order, lesson_content")
+      .eq("subject_id", chapter.subject_id)
+      .order("display_order");
+
+    const allChapters = (siblings ?? []).map((s) => ({
+      id: s.id,
+      title: s.title,
+      display_order: s.display_order,
+      hasLesson: !!s.lesson_content,
+    }));
+
+    return { chapter, allChapters };
   });
 
 // ---------- Get exercise + questions ----------
