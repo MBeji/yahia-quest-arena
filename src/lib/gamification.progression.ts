@@ -31,6 +31,19 @@ export const scheduleSpacedRepetition = createServerFn({ method: "POST" })
       return { scheduled: false, reason: `Score >= ${PASS_THRESHOLD_PCT}%, no need for spaced repetition` };
     }
 
+    // Check if pending schedules already exist for this exercise
+    const { data: existing } = await supabase
+      .from("spaced_repetition_schedule")
+      .select("id")
+      .eq("user_id", userId)
+      .eq("exercise_id", data.exerciseId)
+      .eq("status", "pending")
+      .limit(1);
+
+    if (existing && existing.length > 0) {
+      return { scheduled: false, reason: "Exercise already scheduled for retry" };
+    }
+
     const now = new Date();
 
     for (const [i, intervalMs] of SPACED_REPETITION_INTERVALS_MS.entries()) {
