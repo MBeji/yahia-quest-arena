@@ -147,6 +147,15 @@ export const getDashboard = createServerFn({ method: "GET" })
       };
     });
 
+    // Find next incomplete exercise (score < 60%)
+    let nextExerciseId: string | null = null;
+    if (attemptsRes.data && attemptsRes.data.length > 0) {
+      const lastAttempt = attemptsRes.data[0];
+      if (lastAttempt.score_pct < 60) {
+        nextExerciseId = lastAttempt.exercise_id;
+      }
+    }
+
     return {
       profile,
       subjects: subjectsRes.data ?? [],
@@ -155,6 +164,7 @@ export const getDashboard = createServerFn({ method: "GET" })
       badges,
       inventory,
       shopItems,
+      nextExerciseId,
     };
   });
 

@@ -45,7 +45,7 @@ function Dashboard() {
     return <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">Loading your hero…</div>;
   }
 
-  const { profile, subjects, stats, badges, inventory, shopItems } = data;
+  const { profile, subjects, stats, badges, inventory, shopItems, nextExerciseId } = data;
   if (!profile) return <div className="p-8 text-center text-muted-foreground">Profile not found.</div>;
 
   const xpInLevel = profile.xp % 200;
@@ -107,9 +107,28 @@ function Dashboard() {
         </div>
       </motion.div>
 
-      {/* CONTINUE BUTTON */}
-      {continueSubject && (
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="mt-6">
+      {/* QUICK START SECTION */}
+      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="mt-6 space-y-3">
+        {/* Retry incomplete button - highest priority */}
+        {nextExerciseId && (
+          <Link
+            to="/quest/$exerciseId" params={{ exerciseId: nextExerciseId }}
+            className="group flex items-center justify-between gap-4 rounded-2xl border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/8 p-4 backdrop-blur-md transition hover:border-[color:var(--neon-gold)]/70 hover:bg-[color:var(--neon-gold)]/12 sm:p-5"
+          >
+            <div className="flex items-center gap-3">
+              <div className="grid h-12 w-12 place-items-center rounded-xl bg-[color:var(--neon-gold)]/25">
+                <Zap className="h-6 w-6 text-[color:var(--neon-gold)]" />
+              </div>
+              <div>
+                <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--neon-gold)] font-bold">⚡ Retenter</div>
+                <div className="font-display text-lg font-bold">Ton dernier exercice</div>
+              </div>
+            </div>
+            <ChevronRight className="h-6 w-6 text-[color:var(--neon-gold)] transition group-hover:translate-x-1" />
+          </Link>
+        )}
+        {/* Continue subject button - secondary */}
+        {continueSubject && (
           <Link
             to="/subject/$subjectId" params={{ subjectId: continueSubject.id }}
             className="group flex items-center justify-between gap-4 rounded-2xl border border-[color:var(--neon-cyan)]/30 bg-[color:var(--neon-cyan)]/5 p-4 backdrop-blur-md transition hover:border-[color:var(--neon-cyan)]/60 hover:bg-[color:var(--neon-cyan)]/10 sm:p-5"
@@ -125,8 +144,8 @@ function Dashboard() {
             </div>
             <ChevronRight className="h-6 w-6 text-[color:var(--neon-cyan)] transition group-hover:translate-x-1" />
           </Link>
-        </motion.div>
-      )}
+        )}
+      </motion.div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[1fr,360px]">
         {/* SUBJECTS GRID */}
