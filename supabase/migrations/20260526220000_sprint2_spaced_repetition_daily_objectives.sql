@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS public.spaced_repetition_schedule (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   exercise_id UUID NOT NULL REFERENCES public.exercises(id) ON DELETE CASCADE,
-  subject_id UUID NOT NULL REFERENCES public.subjects(id) ON DELETE CASCADE,
+  subject_id TEXT NOT NULL REFERENCES public.subjects(id) ON DELETE CASCADE,
   failed_attempt_id UUID REFERENCES public.attempts(id) ON DELETE SET NULL,
   
   -- Retry levels: 0 = initial, 1 = 1 day, 2 = 3 days, 3 = 7 days
@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS public.weekly_quests (
   quest_type TEXT NOT NULL,
   
   -- Associated subject (for chapter completion quests)
-  subject_id UUID REFERENCES public.subjects(id) ON DELETE SET NULL,
+  subject_id TEXT REFERENCES public.subjects(id) ON DELETE SET NULL,
   
   -- Target value (e.g., 2 for beat_2_bosses)
   target_value INT NOT NULL,
@@ -135,7 +135,7 @@ CREATE INDEX idx_weekly_quests_user_week ON public.weekly_quests(user_id, week_s
 CREATE TABLE IF NOT EXISTS public.difficulty_adaptation (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  subject_id UUID NOT NULL REFERENCES public.subjects(id) ON DELETE CASCADE,
+  subject_id TEXT NOT NULL REFERENCES public.subjects(id) ON DELETE CASCADE,
   
   -- Average score for this subject (0-100)
   avg_score INT NOT NULL DEFAULT 0,
