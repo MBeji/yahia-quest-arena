@@ -18,6 +18,7 @@ import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenti
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedSubjectSubjectIdRouteImport } from './routes/_authenticated/subject.$subjectId'
 import { Route as AuthenticatedQuestExerciseIdRouteImport } from './routes/_authenticated/quest.$exerciseId'
+import { Route as AuthenticatedLessonChapterIdRouteImport } from './routes/_authenticated/lesson.$chapterId'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -66,6 +67,12 @@ const AuthenticatedQuestExerciseIdRoute =
     path: '/quest/$exerciseId',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedLessonChapterIdRoute =
+  AuthenticatedLessonChapterIdRouteImport.update({
+    id: '/lesson/$chapterId',
+    path: '/lesson/$chapterId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -74,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
+  '/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
   '/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
 }
@@ -84,6 +92,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
+  '/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
   '/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
 }
@@ -96,6 +105,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
+  '/_authenticated/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
   '/_authenticated/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/_authenticated/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
 }
@@ -108,6 +118,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/dashboard'
     | '/leaderboard'
+    | '/lesson/$chapterId'
     | '/quest/$exerciseId'
     | '/subject/$subjectId'
   fileRoutesByTo: FileRoutesByTo
@@ -118,6 +129,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/dashboard'
     | '/leaderboard'
+    | '/lesson/$chapterId'
     | '/quest/$exerciseId'
     | '/subject/$subjectId'
   id:
@@ -129,6 +141,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/_authenticated/dashboard'
     | '/_authenticated/leaderboard'
+    | '/_authenticated/lesson/$chapterId'
     | '/_authenticated/quest/$exerciseId'
     | '/_authenticated/subject/$subjectId'
   fileRoutesById: FileRoutesById
@@ -206,12 +219,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedQuestExerciseIdRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/lesson/$chapterId': {
+      id: '/_authenticated/lesson/$chapterId'
+      path: '/lesson/$chapterId'
+      fullPath: '/lesson/$chapterId'
+      preLoaderRoute: typeof AuthenticatedLessonChapterIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
 interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedLeaderboardRoute: typeof AuthenticatedLeaderboardRoute
+  AuthenticatedLessonChapterIdRoute: typeof AuthenticatedLessonChapterIdRoute
   AuthenticatedQuestExerciseIdRoute: typeof AuthenticatedQuestExerciseIdRoute
   AuthenticatedSubjectSubjectIdRoute: typeof AuthenticatedSubjectSubjectIdRoute
 }
@@ -219,6 +240,7 @@ interface AuthenticatedRouteChildren {
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedLeaderboardRoute: AuthenticatedLeaderboardRoute,
+  AuthenticatedLessonChapterIdRoute: AuthenticatedLessonChapterIdRoute,
   AuthenticatedQuestExerciseIdRoute: AuthenticatedQuestExerciseIdRoute,
   AuthenticatedSubjectSubjectIdRoute: AuthenticatedSubjectSubjectIdRoute,
 }

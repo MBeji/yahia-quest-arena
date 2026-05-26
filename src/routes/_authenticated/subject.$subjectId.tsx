@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion } from "motion/react";
-import { ArrowLeft, Swords, Zap, ChevronRight, Star, Skull } from "lucide-react";
+import { ArrowLeft, Swords, Zap, ChevronRight, Star, Skull, BookOpen } from "lucide-react";
 import { getSubject } from "@/lib/gamification.functions";
 import { isRtlText } from "@/lib/utils";
 
@@ -51,6 +51,12 @@ function SubjectPage() {
               <div className="mb-3">
                 <h2 className="font-display text-xl font-bold" dir={isRtlText(c.title) ? "rtl" : undefined}>{c.title}</h2>
                 {c.description && <p className="text-sm text-muted-foreground" dir={isRtlText(c.description) ? "rtl" : undefined}>{c.description}</p>}
+                <Link
+                  to="/lesson/$chapterId" params={{ chapterId: c.id }}
+                  className="mt-2 inline-flex items-center gap-1.5 rounded-lg border border-[color:var(--neon-cyan)]/30 bg-[color:var(--neon-cyan)]/10 px-3 py-1.5 text-xs font-semibold text-[color:var(--neon-cyan)] transition hover:bg-[color:var(--neon-cyan)]/20"
+                >
+                  <BookOpen className="h-3.5 w-3.5" /> 📖 ملخص الدرس
+                </Link>
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
                 {chapEx.map((ex) => {

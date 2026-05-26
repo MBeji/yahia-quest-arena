@@ -179,3 +179,100 @@
   50%      { transform: translateY(-10px); }
 }
 .animate-float { animation: float-y 6s ease-in-out infinite; }
+
+/* =====================================================
+  Lesson content styling (RPG-themed Arabic lessons)
+  ===================================================== */
+.lesson-content {
+  font-size: 1.05rem;
+  line-height: 1.9;
+  color: var(--foreground);
+}
+.lesson-content .lesson-h1 {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 2rem 0 1rem;
+  background: linear-gradient(135deg, var(--neon-violet), var(--neon-magenta));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.lesson-content .lesson-h2 {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 1.5rem 0 0.75rem;
+  color: var(--neon-cyan);
+  border-bottom: 1px solid color-mix(in oklab, var(--neon-cyan) 30%, transparent);
+  padding-bottom: 0.5rem;
+}
+.lesson-content .lesson-h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 1.25rem 0 0.5rem;
+  color: var(--neon-gold);
+}
+.lesson-content .lesson-quote {
+  border-inline-start: 4px solid var(--neon-violet);
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+  background: color-mix(in oklab, var(--neon-violet) 8%, transparent);
+  border-radius: 0 0.75rem 0.75rem 0;
+  font-style: italic;
+}
+.lesson-content .lesson-hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--neon-violet), var(--neon-cyan), transparent);
+  margin: 2rem 0;
+}
+.lesson-content .lesson-ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0;
+}
+.lesson-content .lesson-li {
+  position: relative;
+  padding-inline-start: 1.5rem;
+  margin: 0.4rem 0;
+}
+.lesson-content .lesson-li::before {
+  content: "⚡";
+  position: absolute;
+  inset-inline-start: 0;
+}
+.lesson-content .lesson-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+.lesson-content .lesson-table td {
+  border: 1px solid color-mix(in oklab, var(--border) 60%, transparent);
+  padding: 0.5rem 0.75rem;
+}
+.lesson-content .lesson-table tr:first-child td {
+  background: color-mix(in oklab, var(--neon-violet) 12%, transparent);
+  font-weight: 600;
+}
+.lesson-content .lesson-math {
+  display: block;
+  text-align: center;
+  font-size: 1.15rem;
+  font-family: "KaTeX_Math", serif;
+  margin: 1rem 0;
+  padding: 0.75rem;
+  background: color-mix(in oklab, var(--neon-cyan) 6%, transparent);
+  border-radius: 0.75rem;
+  border: 1px solid color-mix(in oklab, var(--neon-cyan) 20%, transparent);
+}
+.lesson-content strong {
+  color: var(--neon-gold);
+}
+.lesson-content em {
+  color: color-mix(in oklab, var(--foreground) 80%, var(--neon-violet));
+}
+.lesson-content p {
+  margin: 0.5rem 0;
+}

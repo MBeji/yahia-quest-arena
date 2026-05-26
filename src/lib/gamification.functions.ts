@@ -312,6 +312,21 @@ export const getSubject = createServerFn({ method: "GET" })
     };
   });
 
+// ---------- Get chapter lesson content ----------
+export const getChapterLesson = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ chapterId: z.string().uuid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    const { data: chapter, error } = await supabase
+      .from("chapters")
+      .select("id, title, description, lesson_content, subject_id, subjects(name_fr, color_token, icon)")
+      .eq("id", data.chapterId)
+      .single();
+    if (error) throw new Error(error.message);
+    return { chapter };
+  });
+
 // ---------- Get exercise + questions ----------
 export const getExercise = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
