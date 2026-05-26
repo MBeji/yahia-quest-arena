@@ -42,12 +42,9 @@ export const purchaseShopItem = createServerFn({ method: "POST" })
       throw new Error("This skin is already in your inventory.");
     }
 
-    const newCoins = (profile.yahia_coins ?? 0) - shopItem.price_coins;
-    const profileUpdateRes = await supabase
-      .from("profiles")
-      .update({ yahia_coins: newCoins })
-      .eq("id", userId);
-    if (profileUpdateRes.error) throw new Error(profileUpdateRes.error.message);
+    // Atomic coin deduction — fails if insufficient funds (race-safe)
+    const { error: spendErr } = await supabase.rpc("spend_coins", { p_user: userId, p_coins: shopItem.price_coins });
+    if (spendErr) throw new Error(spendErr.message);
 
     if (existingInventoryRes.data) {
       const inventoryUpdateRes = await supabase
@@ -70,7 +67,7 @@ export const purchaseShopItem = createServerFn({ method: "POST" })
 
     return {
       itemCode: shopItem.code,
-      remainingCoins: newCoins,
+      remainingCoins: (profile.yahia_coins ?? 0) - shopItem.price_coins,
       purchasedItemName: shopItem.name,
     };
   });

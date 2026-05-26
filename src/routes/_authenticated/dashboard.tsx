@@ -24,7 +24,7 @@ function Dashboard() {
   const fetchDashboard = useServerFn(getDashboard);
   const purchaseItem = useServerFn(purchaseShopItem);
   const equipSkin = useServerFn(equipInventorySkin);
-  const { data, isLoading } = useQuery({ queryKey: ["dashboard"], queryFn: () => fetchDashboard() });
+  const { data, isLoading, isError } = useQuery({ queryKey: ["dashboard"], queryFn: () => fetchDashboard() });
 
   // Redirect first-time users to onboarding
   useEffect(() => {
@@ -51,6 +51,21 @@ function Dashboard() {
     },
     onError: (error) => toast.error(error instanceof Error ? error.message : "Equip failed"),
   });
+
+  if (isError) {
+    return (
+      <div className="mx-auto max-w-md px-6 py-20 text-center">
+        <div className="rounded-2xl border border-destructive/30 bg-destructive/5 p-8">
+          <Skull className="mx-auto h-10 w-10 text-destructive" />
+          <h2 className="mt-4 font-display text-xl font-bold">Failed to load dashboard</h2>
+          <p className="mt-2 text-sm text-muted-foreground">Something went wrong. Please try again.</p>
+          <button onClick={() => queryClient.invalidateQueries({ queryKey: ["dashboard"] })} className="mt-4 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (isLoading || !data) {
     return <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">Loading your hero…</div>;
@@ -103,7 +118,7 @@ function Dashboard() {
               <div className="mb-1 flex justify-between text-xs text-muted-foreground">
                 <span>Level {profile.level}</span><span>{xpInLevel} / 200 XP</span>
               </div>
-              <div className="h-2.5 overflow-hidden rounded-full bg-secondary">
+              <div className="h-2.5 overflow-hidden rounded-full bg-secondary" role="progressbar" aria-label="XP Progress" aria-valuenow={Math.round(xpPct)} aria-valuemin={0} aria-valuemax={100}>
                 <div
                   className="h-full rounded-full bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] shadow-neon transition-all"
                   style={{ width: `${xpPct}%` }}

@@ -35,7 +35,7 @@ export const getDungeonQuestions = createServerFn({ method: "GET" })
 
     // Exclude already-seen questions
     if (data.excludeIds.length > 0) {
-      query = query.not("id", "in", `(${data.excludeIds.join(",")})`);
+      query = query.not("id", "in", `(${data.excludeIds.map((id) => `"${id}"`).join(",")})`);
     }
 
     const { data: questions, error } = await query;
@@ -84,20 +84,9 @@ export const submitDungeonRun = createServerFn({ method: "POST" })
       if (rpcErr) throw new Error(rpcErr.message);
     }
 
-    // Award coins
+    // Award coins atomically
     if (coinsEarned > 0) {
-      const { data: profile, error: profileErr } = await supabase
-        .from("profiles")
-        .select("yahia_coins")
-        .eq("id", userId)
-        .single();
-      if (profileErr) throw new Error(profileErr.message);
-
-      const newCoins = (profile.yahia_coins ?? 0) + coinsEarned;
-      const { error: coinErr } = await supabase
-        .from("profiles")
-        .update({ yahia_coins: newCoins })
-        .eq("id", userId);
+      const { error: coinErr } = await supabase.rpc("award_coins", { p_user: userId, p_coins: coinsEarned });
       if (coinErr) throw new Error(coinErr.message);
     }
 
