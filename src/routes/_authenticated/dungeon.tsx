@@ -188,6 +188,7 @@ function DungeonPage() {
 
             <button
               onClick={startDungeon}
+              aria-label="Enter the infinite dungeon mode"
               className="mt-8 inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[color:var(--neon-magenta)] to-[color:var(--neon-violet)] px-8 py-3.5 text-base font-bold text-primary-foreground shadow-neon transition-transform hover:scale-105"
             >
               <Skull className="h-5 w-5" /> Enter the Dungeon
@@ -396,7 +397,7 @@ function DungeonPage() {
       {/* Floor progress bar (visual flair) */}
       <div className="mt-6 flex items-center gap-3">
         <div className="text-xs uppercase tracking-widest text-muted-foreground">Depth</div>
-        <div className="flex-1 h-2 overflow-hidden rounded-full bg-secondary/60">
+        <div className="flex-1 h-2 overflow-hidden rounded-full bg-secondary/60" role="progressbar" aria-label="Dungeon depth" aria-valuenow={floor} aria-valuemin={0} aria-valuemax={50}>
           <motion.div
             className="h-full rounded-full bg-gradient-to-r from-[color:var(--neon-magenta)] to-[color:var(--neon-violet)]"
             animate={{ width: `${Math.min(100, (floor / 50) * 100)}%` }}

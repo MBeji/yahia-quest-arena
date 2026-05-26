@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion } from "motion/react";
-import { Flame, Zap, Trophy, Swords, Sword, BookOpen, Scroll, Leaf, Globe, ChevronRight, Sparkles, Shield, Backpack, ShoppingBag, Crown, Play, Skull } from "lucide-react";
+import { Flame, Zap, Trophy, Swords, Sword, BookOpen, Scroll, Leaf, Globe, ChevronRight, Sparkles, Shield, Backpack, ShoppingBag, Crown, Play, Skull, Loader2 } from "lucide-react";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from "recharts";
 import { toast } from "sonner";
 import { getDashboard } from "@/lib/gamification.dashboard";
@@ -58,7 +58,18 @@ function Dashboard() {
   }
 
   if (isLoading || !data) {
-    return <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">Loading your hero…</div>;
+    return (
+      <div className="mx-auto max-w-7xl px-6 py-8 space-y-6">
+        <div className="h-48 animate-pulse rounded-3xl bg-card/40" />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="h-20 animate-pulse rounded-2xl bg-card/30" />
+          <div className="h-20 animate-pulse rounded-2xl bg-card/30" />
+        </div>
+        <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-5">
+          {[1,2,3,4,5].map(i => <div key={i} className="h-28 animate-pulse rounded-2xl bg-card/30" />)}
+        </div>
+      </div>
+    );
   }
 
   const { profile, subjects, stats, badges, inventory, shopItems, nextExerciseId } = data;
@@ -405,17 +416,19 @@ function Dashboard() {
                   <button
                     disabled={!canBuy || isBusy || (profile.yahia_coins ?? 0) < item.priceCoins}
                     onClick={() => purchaseMutation.mutate({ itemCode: item.code })}
+                    aria-label={`Buy ${item.name}`}
                     className="flex-1 rounded-lg border border-border bg-background/50 px-4 py-2.5 text-sm font-semibold disabled:opacity-40"
                   >
-                    Buy
+                    {purchaseMutation.isPending ? <Loader2 className="mx-auto h-4 w-4 animate-spin" /> : "Buy"}
                   </button>
                   {canEquip && (
                     <button
                       disabled={isBusy}
                       onClick={() => equipMutation.mutate({ itemCode: item.code })}
+                      aria-label={`Equip ${item.name}`}
                       className="flex-1 rounded-lg bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] px-4 py-2.5 text-sm font-bold text-primary-foreground shadow-neon disabled:opacity-40"
                     >
-                      Equip
+                      {equipMutation.isPending ? <Loader2 className="mx-auto h-4 w-4 animate-spin" /> : "Equip"}
                     </button>
                   )}
                 </div>
