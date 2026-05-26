@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, redirect, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { Sparkles, LayoutDashboard, LogOut, Swords } from "lucide-react";
+import { Sparkles, LayoutDashboard, LogOut, Swords, Crown } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import {
@@ -84,6 +84,12 @@ function AuthenticatedLayout() {
           <nav className="flex items-center gap-2 text-sm">
             <Link to="/dashboard" className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground" activeProps={{ className: "text-foreground bg-card" }}>
               <LayoutDashboard className="h-4 w-4" /> Heroes Hall
+            </Link>
+            <Link to="/dungeon" className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground" activeProps={{ className: "text-foreground bg-card" }}>
+              <Swords className="h-4 w-4" /> Dungeon
+            </Link>
+            <Link to="/leaderboard" className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground" activeProps={{ className: "text-foreground bg-card" }}>
+              <Crown className="h-4 w-4" /> Ranking
             </Link>
             <button onClick={signOut} className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground">
               <LogOut className="h-4 w-4" /> Sign out
