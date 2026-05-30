@@ -149,6 +149,36 @@ function QuestPage() {
     sessionMutation.mutate({ exerciseId: data.exercise.id });
   }, [data?.exercise?.id, result, sessionId, sessionMutation]);
 
+  const advanceWithChoice = useCallback((choice: string) => {
+    if (!sessionId || !current?.id) return;
+
+    // Prevent duplicate processing when auto-advance and manual button race.
+    if (answeredQuestionRef.current === current.id) return;
+    answeredQuestionRef.current = current.id;
+
+    const nextAnswer: Answer = { questionId: current.id, choice };
+    const nextAnswers = [...answers, nextAnswer];
+    if (idx + 1 >= total) {
+      mutation.mutate({ sessionId, exerciseId, answers: nextAnswers });
+      return;
+    }
+
+    setAnswers(nextAnswers);
+    setIdx((i) => i + 1);
+    setSelected(null);
+    setShowFeedback(false);
+    answeredQuestionRef.current = null;
+  }, [answers, current?.id, exerciseId, idx, mutation, sessionId, total]);
+
+  const advanceNow = useCallback(() => {
+    if (!selected || !sessionId || !showFeedback) return;
+    if (feedbackTimeoutRef.current) {
+      clearTimeout(feedbackTimeoutRef.current);
+      feedbackTimeoutRef.current = null;
+    }
+    advanceWithChoice(selected);
+  }, [advanceWithChoice, selected, sessionId, showFeedback]);
+
   if (isLoading || !data) {
     return <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">Preparing the arena…</div>;
   }
@@ -273,27 +303,6 @@ function QuestPage() {
     );
   }
 
-  const advanceWithChoice = useCallback((choice: string) => {
-    if (!sessionId || !current?.id) return;
-
-    // Prevent duplicate processing when auto-advance and manual button race.
-    if (answeredQuestionRef.current === current.id) return;
-    answeredQuestionRef.current = current.id;
-
-    const nextAnswer: Answer = { questionId: current.id, choice };
-    const nextAnswers = [...answers, nextAnswer];
-    if (idx + 1 >= total) {
-      mutation.mutate({ sessionId, exerciseId, answers: nextAnswers });
-      return;
-    }
-
-    setAnswers(nextAnswers);
-    setIdx((i) => i + 1);
-    setSelected(null);
-    setShowFeedback(false);
-    answeredQuestionRef.current = null;
-  }, [answers, current?.id, exerciseId, idx, mutation, sessionId, total]);
-
   function handleSelect(optId: string) {
     if (showFeedback) return; // prevent changing during feedback
     setSelected(optId);
@@ -306,15 +315,6 @@ function QuestPage() {
       advanceWithChoice(optId);
     }, 1800);
   }
-
-  const advanceNow = useCallback(() => {
-    if (!selected || !sessionId || !showFeedback) return;
-    if (feedbackTimeoutRef.current) {
-      clearTimeout(feedbackTimeoutRef.current);
-      feedbackTimeoutRef.current = null;
-    }
-    advanceWithChoice(selected);
-  }, [advanceWithChoice, selected, sessionId, showFeedback]);
 
   const options = (current.options as { id: string; text: string }[]) ?? [];
   const correctOpt = (current as { correct_option?: string }).correct_option;
