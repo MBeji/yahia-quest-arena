@@ -37,6 +37,18 @@ function formatQuestType(type: string): string {
   return map[type] ?? type.replace(/_/g, " ");
 }
 
+function resolveDailyAction(type: string): "retry" | "subject" | "dungeon" {
+  if (type === "perfect_score") return "retry";
+  if (type === "15_min_study") return "subject";
+  return "subject";
+}
+
+function resolveWeeklyAction(type: string): "retry" | "subject" | "dungeon" {
+  if (type === "beat_2_bosses" || type === "2_boss_exercises") return "dungeon";
+  if (type === "all_subjects") return "subject";
+  return "subject";
+}
+
 function Dashboard() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -116,6 +128,25 @@ function Dashboard() {
     subject: s.attribute,
     value: Math.round(stats[s.id]?.avg ?? 0),
   }));
+
+  function runQuestAction(action: "retry" | "subject" | "dungeon") {
+    if (action === "dungeon") {
+      navigate({ to: "/dungeon" });
+      return;
+    }
+
+    if (action === "retry" && nextExerciseId) {
+      navigate({ to: "/quest/$exerciseId", params: { exerciseId: nextExerciseId } });
+      return;
+    }
+
+    if (continueSubject) {
+      navigate({ to: "/subject/$subjectId", params: { subjectId: continueSubject.id } });
+      return;
+    }
+
+    toast.info("No quest target available yet. Complete one subject quest first.");
+  }
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-8">
@@ -234,6 +265,7 @@ function Dashboard() {
             {(sprint2?.dailyObjectives ?? []).map((obj) => {
               const pct = obj.target_value > 0 ? Math.min(100, Math.round((obj.current_value / obj.target_value) * 100)) : 0;
               const done = obj.status === "completed";
+              const action = resolveDailyAction(obj.objective_type);
               return (
                 <div key={obj.id} className={`rounded-xl bg-background/40 p-3 ${done ? "opacity-60" : ""}`}>
                   <div className="flex items-center justify-between">
@@ -244,6 +276,14 @@ function Dashboard() {
                     <div className="h-full bg-gradient-to-r from-[color:var(--neon-cyan)] to-[color:var(--neon-magenta)] transition-all" style={{ width: `${pct}%` }} />
                   </div>
                   <div className="mt-1 text-xs text-muted-foreground">{obj.current_value}/{obj.target_value} {done ? "✓" : ""}</div>
+                  <button
+                    type="button"
+                    disabled={done}
+                    onClick={() => runQuestAction(action)}
+                    className="mt-2 rounded-md border border-[color:var(--neon-cyan)]/40 bg-[color:var(--neon-cyan)]/15 px-2.5 py-1 text-xs font-semibold text-[color:var(--neon-cyan)] transition hover:bg-[color:var(--neon-cyan)]/25 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {done ? "Completed" : "Continue"}
+                  </button>
                 </div>
               );
             })}
@@ -262,6 +302,7 @@ function Dashboard() {
             {(sprint2?.weeklyQuests ?? []).map((q) => {
               const pct = q.target_value > 0 ? Math.min(100, Math.round((q.current_value / q.target_value) * 100)) : 0;
               const done = q.status === "completed";
+              const action = resolveWeeklyAction(q.quest_type);
               return (
                 <div key={q.id} className={`rounded-xl bg-background/40 p-3 ${done ? "opacity-60" : ""}`}>
                   <div className="flex items-center justify-between">
@@ -272,6 +313,14 @@ function Dashboard() {
                     <div className="h-full bg-gradient-to-r from-[color:var(--neon-gold)] to-[color:var(--neon-magenta)] transition-all" style={{ width: `${pct}%` }} />
                   </div>
                   <div className="mt-1 text-xs text-muted-foreground">{q.current_value}/{q.target_value} {done ? "✓" : ""}</div>
+                  <button
+                    type="button"
+                    disabled={done}
+                    onClick={() => runQuestAction(action)}
+                    className="mt-2 rounded-md border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/15 px-2.5 py-1 text-xs font-semibold text-[color:var(--neon-gold)] transition hover:bg-[color:var(--neon-gold)]/25 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {done ? "Completed" : "Continue"}
+                  </button>
                 </div>
               );
             })}
