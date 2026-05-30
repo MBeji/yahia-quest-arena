@@ -217,7 +217,11 @@ export const submitAttempt = createServerFn({ method: "POST" })
 
     // Award coins atomically
     if (coinsEarned > 0 && profile) {
-      await supabase.rpc("award_coins", { p_user: userId, p_coins: coinsEarned }).catch(() => {});
+      try {
+        await supabase.rpc("award_coins", { p_user: userId, p_coins: coinsEarned });
+      } catch {
+        // Keep quest completion successful even if coin award side effect fails.
+      }
       profile.yahia_coins = (profile.yahia_coins ?? 0) + coinsEarned;
     }
 
