@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
-import { Sparkles, Mail, Lock, User as UserIcon, Loader2 } from "lucide-react";
+import { Sparkles, Mail, Lock, User as UserIcon, Loader2, MailCheck } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useServerFn } from "@tanstack/react-start";
@@ -28,6 +28,8 @@ function AuthPage() {
   const [role, setRole] = useState<"student" | "parent">("student");
   const [allianceCode, setAllianceCode] = useState("");
   const [busy, setBusy] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+  const [sentTo, setSentTo] = useState("");
   const linkByCode = useServerFn(linkStudentByCode);
 
   useEffect(() => {
@@ -83,6 +85,12 @@ function AuthPage() {
           }
         }
 
+        // If session is null, Supabase requires email confirmation before login
+        if (!data.session) {
+          setSentTo(email);
+          setEmailSent(true);
+          return;
+        }
         toast.success("Hero created! Welcome to the academy.");
         navigate({ to: "/dashboard" });
       } else {
@@ -121,6 +129,41 @@ function AuthPage() {
       return;
     }
     // Supabase redirects the browser to Google; no local navigation needed here.
+  }
+
+  if (emailSent) {
+    return (
+      <main className="relative min-h-screen overflow-hidden bg-hero">
+        <div className="absolute inset-0 bg-grid opacity-50" />
+        <div className="relative mx-auto flex min-h-screen max-w-md flex-col items-center justify-center px-6 py-12">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="w-full glass rounded-2xl p-8 shadow-neon text-center"
+          >
+            <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-2xl bg-[color:var(--neon-cyan)]/20 border border-[color:var(--neon-cyan)]/40">
+              <MailCheck className="h-8 w-8 text-[color:var(--neon-cyan)]" />
+            </div>
+            <h1 className="font-display text-2xl font-bold">Confirme ton email</h1>
+            <p className="mt-3 text-sm text-muted-foreground">
+              Un lien d&apos;activation a été envoyé à{" "}
+              <span className="font-semibold text-foreground">{sentTo}</span>.<br />
+              Clique sur le lien pour activer ton compte et accéder à l&apos;arène.
+            </p>
+            <div className="mt-6 rounded-xl border border-[color:var(--neon-violet)]/30 bg-[color:var(--neon-violet)]/5 p-4 text-xs text-muted-foreground">
+              📬 Vérifie aussi tes spams si tu ne vois pas l&apos;email dans ta boîte principale.
+            </div>
+            <button
+              type="button"
+              onClick={() => { setEmailSent(false); setSentTo(""); }}
+              className="mt-6 text-xs text-[color:var(--neon-cyan)] hover:underline"
+            >
+              ← Modifier l&apos;adresse email
+            </button>
+          </motion.div>
+        </div>
+      </main>
+    );
   }
 
   return (

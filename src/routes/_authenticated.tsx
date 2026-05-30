@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { Sparkles, LayoutDashboard, LogOut, Swords, Crown, ClipboardList } from "lucide-react";
+import { Sparkles, LayoutDashboard, LogOut, Swords, Crown, ClipboardList, MailCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -45,6 +45,39 @@ function AuthenticatedLayout() {
   }
   if (!user) {
     return null;
+  }
+
+  // Block access if email is not yet confirmed
+  if (!user.email_confirmed_at) {
+    return (
+      <div className="grid min-h-screen place-items-center bg-hero px-6">
+        <div className="absolute inset-0 bg-grid opacity-40 pointer-events-none" />
+        <div className="relative w-full max-w-sm rounded-2xl border border-[color:var(--neon-cyan)]/40 bg-card/60 p-8 text-center backdrop-blur-xl shadow-neon">
+          <div className="mx-auto mb-4 grid h-14 w-14 place-items-center rounded-xl bg-[color:var(--neon-cyan)]/15">
+            <MailCheck className="h-7 w-7 text-[color:var(--neon-cyan)]" />
+          </div>
+          <h2 className="font-display text-xl font-bold">Confirme ton email</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Un lien d&apos;activation a été envoyé à{" "}
+            <span className="font-semibold text-foreground">{user.email}</span>.
+            <br />Clique dessus pour accéder à l&apos;arène.
+          </p>
+          <div className="mt-4 rounded-lg border border-border/50 bg-background/30 p-3 text-xs text-muted-foreground">
+            📧 Vérifie aussi tes spams.
+          </div>
+          <button
+            type="button"
+            onClick={async () => {
+              await supabase.auth.signOut();
+              navigate({ to: "/auth", search: { mode: "login" } });
+            }}
+            className="mt-5 text-xs text-muted-foreground hover:text-foreground underline underline-offset-2"
+          >
+            Se déconnecter
+          </button>
+        </div>
+      </div>
+    );
   }
 
   async function signOut() {
