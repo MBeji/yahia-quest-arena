@@ -4,7 +4,6 @@ import { motion } from "motion/react";
 import { Sparkles, Mail, Lock, User as UserIcon, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -77,14 +76,27 @@ function AuthPage() {
 
   async function handleGoogle() {
     setBusy(true);
-    const res = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin + "/dashboard" });
-    if (res.error) {
-      toast.error("Google error");
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/auth`,
+        queryParams: {
+          prompt: "select_account",
+        },
+      },
+    });
+
+    if (error) {
+      const message = error.message.toLowerCase();
+      if (message.includes("provider") || message.includes("oauth")) {
+        toast.error("Google provider n'est pas configuré dans Supabase Auth.");
+      } else {
+        toast.error(`Google sign-in failed: ${error.message}`);
+      }
       setBusy(false);
       return;
     }
-    if (res.redirected) return;
-    navigate({ to: "/dashboard" });
+    // Supabase redirects the browser to Google; no local navigation needed here.
   }
 
   return (
