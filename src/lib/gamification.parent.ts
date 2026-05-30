@@ -259,7 +259,7 @@ export const getStudentReport = createServerFn({ method: "GET" })
  */
 export const linkStudentByCode = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .validator((d: unknown) =>
+  .inputValidator((d: unknown) =>
     z.object({
       studentCode: z.string().min(8).max(64),
       relationLabel: z.string().min(2).max(40).default("parent"),
