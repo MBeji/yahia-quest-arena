@@ -268,6 +268,8 @@
   background: color-mix(in oklab, var(--neon-cyan) 6%, transparent);
   border-radius: 0.75rem;
   border: 1px solid color-mix(in oklab, var(--neon-cyan) 20%, transparent);
+  direction: ltr;
+  unicode-bidi: isolate;
 }
 .lesson-content strong {
   color: var(--neon-gold);
@@ -277,4 +279,16 @@
 }
 .lesson-content p {
   margin: 0.5rem 0;
+}
+
+/* RTL subject pages (Math & Arabic): keep equations and numbers LTR */
+[dir="rtl"] .lesson-math,
+[dir="rtl"] .math-equation {
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: center;
+}
+[dir="rtl"] .lesson-table {
+  direction: ltr;
+  unicode-bidi: isolate;
 }

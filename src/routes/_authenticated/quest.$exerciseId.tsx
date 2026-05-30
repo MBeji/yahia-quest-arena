@@ -7,7 +7,7 @@ import { ArrowLeft, Zap, Flame, Sparkles, Loader2, Trophy, Skull, Heart, Timer, 
 import { toast } from "sonner";
 import { getExercise, startExerciseSession, submitAttempt } from "@/lib/gamification.quest";
 import { BOSS_TIME_PER_QUESTION_S, PASS_THRESHOLD_PCT } from "@/lib/gamification.constants";
-import { isRtlText } from "@/lib/utils";
+import { isRtlText, isMathExpression } from "@/lib/utils";
 
 // Confetti component for victory
 function Confetti() {
@@ -84,10 +84,14 @@ function QuestPage() {
   const current = questions[idx];
   const progress = useMemo(() => (total > 0 ? ((idx) / total) * 100 : 0), [idx, total]);
   const isBoss = data?.exercise?.mode === "boss";
+  const subjectInfo = data?.exercise?.subjects as { color_token?: string } | null;
+  const isRtlSubject = subjectInfo?.color_token === "math" || subjectInfo?.color_token === "arabic";
 
   // Boss mode: timer
   const [bossTimer, setBossTimer] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const feedbackTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const answeredQuestionRef = useRef<string | null>(null);
   // Refs to avoid stale closures in setInterval
   const selectedRef = useRef(selected);
   const answersRef = useRef(answers);
@@ -128,6 +132,12 @@ function QuestPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isBoss, sessionId, idx, result]);
 
+  useEffect(() => {
+    return () => {
+      if (feedbackTimeoutRef.current) clearTimeout(feedbackTimeoutRef.current);
+    };
+  }, []);
+
   // Boss HP: starts at 100%, decreases per answered question
   const bossHp = useMemo(() => {
     if (!isBoss || total === 0) return 100;
@@ -147,7 +157,7 @@ function QuestPage() {
   if (result) {
     const passed = result.scorePct >= PASS_THRESHOLD_PCT;
     return (
-      <div className="mx-auto max-w-2xl px-6 py-12">
+      <div className="mx-auto max-w-2xl px-6 py-12" dir={isRtlSubject ? "rtl" : undefined}>
         {showConfetti && <Confetti />}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
@@ -207,6 +217,11 @@ function QuestPage() {
               <Link to="/dashboard" className="rounded-lg border border-border bg-background/50 px-5 py-2.5 text-sm font-semibold hover:bg-background/80">Back to hall</Link>
               <button
                 onClick={() => {
+                  if (feedbackTimeoutRef.current) {
+                    clearTimeout(feedbackTimeoutRef.current);
+                    feedbackTimeoutRef.current = null;
+                  }
+                  answeredQuestionRef.current = null;
                   setResult(null);
                   setIdx(0);
                   setAnswers([]);
@@ -258,38 +273,48 @@ function QuestPage() {
     );
   }
 
+  const advanceWithChoice = useCallback((choice: string) => {
+    if (!sessionId || !current?.id) return;
+
+    // Prevent duplicate processing when auto-advance and manual button race.
+    if (answeredQuestionRef.current === current.id) return;
+    answeredQuestionRef.current = current.id;
+
+    const nextAnswer: Answer = { questionId: current.id, choice };
+    const nextAnswers = [...answers, nextAnswer];
+    if (idx + 1 >= total) {
+      mutation.mutate({ sessionId, exerciseId, answers: nextAnswers });
+      return;
+    }
+
+    setAnswers(nextAnswers);
+    setIdx((i) => i + 1);
+    setSelected(null);
+    setShowFeedback(false);
+    answeredQuestionRef.current = null;
+  }, [answers, current?.id, exerciseId, idx, mutation, sessionId, total]);
+
   function handleSelect(optId: string) {
     if (showFeedback) return; // prevent changing during feedback
     setSelected(optId);
     setShowFeedback(true);
+
+    if (feedbackTimeoutRef.current) clearTimeout(feedbackTimeoutRef.current);
+
     // Auto-advance after showing feedback
-    setTimeout(() => {
-      const nextAnswer: Answer = { questionId: current.id, choice: optId };
-      const nextAnswers = [...answers, nextAnswer];
-      if (idx + 1 >= total) {
-        mutation.mutate({ sessionId: sessionId!, exerciseId, answers: nextAnswers });
-      } else {
-        setAnswers(nextAnswers);
-        setIdx((i) => i + 1);
-        setSelected(null);
-        setShowFeedback(false);
-      }
+    feedbackTimeoutRef.current = setTimeout(() => {
+      advanceWithChoice(optId);
     }, 1800);
   }
 
   const advanceNow = useCallback(() => {
     if (!selected || !sessionId || !showFeedback) return;
-    const nextAnswer: Answer = { questionId: current.id, choice: selected };
-    const nextAnswers = [...answers, nextAnswer];
-    if (idx + 1 >= total) {
-      mutation.mutate({ sessionId: sessionId!, exerciseId, answers: nextAnswers });
-    } else {
-      setAnswers(nextAnswers);
-      setIdx((i) => i + 1);
-      setSelected(null);
-      setShowFeedback(false);
+    if (feedbackTimeoutRef.current) {
+      clearTimeout(feedbackTimeoutRef.current);
+      feedbackTimeoutRef.current = null;
     }
-  }, [selected, sessionId, showFeedback, current, answers, idx, total, mutation, exerciseId]);
+    advanceWithChoice(selected);
+  }, [advanceWithChoice, selected, sessionId, showFeedback]);
 
   const options = (current.options as { id: string; text: string }[]) ?? [];
   const correctOpt = (current as { correct_option?: string }).correct_option;
@@ -297,7 +322,7 @@ function QuestPage() {
   const isWrongAnswer = showFeedback && selected !== correctOpt;
 
   return (
-    <div className="mx-auto max-w-2xl px-6 py-8">
+    <div className="mx-auto max-w-2xl px-6 py-8" dir={isRtlSubject ? "rtl" : undefined}>
       <Link to=".." className="mb-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="h-4 w-4" /> Leave quest
       </Link>
@@ -393,7 +418,7 @@ function QuestPage() {
                   disabled={showFeedback}
                   className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left text-sm transition ${cls} ${showFeedback ? "cursor-default" : ""}`}
                 >
-                  <span className="flex items-center gap-3" dir={isRtlText(opt.text) ? "rtl" : undefined}>
+                  <span className="flex items-center gap-3" dir={isMathExpression(opt.text) ? "ltr" : isRtlText(opt.text) ? "rtl" : undefined}>
                     <span className="grid h-7 w-7 place-items-center rounded-md border border-current font-mono text-xs uppercase">{opt.id}</span>
                     <span>{opt.text}</span>
                   </span>

@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, redirect, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { Sparkles, LayoutDashboard, LogOut, Swords, Crown } from "lucide-react";
+import { Sparkles, LayoutDashboard, LogOut, Swords, Crown, ClipboardList } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import {
@@ -20,6 +20,20 @@ function AuthenticatedLayout() {
   const navigate = useNavigate();
   const [bootstrappingGuest, setBootstrappingGuest] = useState(false);
   const [guestAttempted, setGuestAttempted] = useState(false);
+  const [userRole, setUserRole] = useState<string | null>(null);
+
+  // Fetch user role for conditional nav
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single()
+      .then(({ data }) => {
+        if (data) setUserRole(data.role);
+      });
+  }, [user]);
 
   useEffect(() => {
     if (!PUBLIC_GUEST_ACCESS_ENABLED || loading || user || guestAttempted) return;
@@ -91,6 +105,16 @@ function AuthenticatedLayout() {
             <Link to="/leaderboard" className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground" activeProps={{ className: "text-foreground bg-card" }}>
               <Crown className="h-4 w-4" /> Ranking
             </Link>
+            {userRole === "parent" && (
+              <Link to="/parent-report" className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground" activeProps={{ className: "text-foreground bg-card" }}>
+                <ClipboardList className="h-4 w-4" /> Suivi
+              </Link>
+            )}
+            {userRole === "admin" && (
+              <Link to="/parent-report" className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground" activeProps={{ className: "text-foreground bg-card" }}>
+                <ClipboardList className="h-4 w-4" /> Admin
+              </Link>
+            )}
             <button onClick={signOut} className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground">
               <LogOut className="h-4 w-4" /> Sign out
             </button>

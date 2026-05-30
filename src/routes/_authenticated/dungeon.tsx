@@ -6,7 +6,7 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Zap, Sparkles, Flame, Skull, Shield, Layers, CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { getDungeonQuestions, submitDungeonRun, DUNGEON_XP_PER_FLOOR, DUNGEON_COINS_PER_5_FLOORS } from "@/lib/gamification.dungeon";
-import { isRtlText } from "@/lib/utils";
+import { isRtlText, isMathExpression } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/dungeon")({
   head: () => ({ meta: [{ title: "Dungeon · XP Scholars" }] }),
@@ -337,6 +337,7 @@ function DungeonPage() {
           initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}
           transition={{ duration: 0.25 }}
           className="rounded-3xl border border-[color:var(--neon-magenta)]/30 bg-card/60 p-6 backdrop-blur-xl sm:p-8"
+          dir={subjectInfo && (subjectInfo.color_token === "math" || subjectInfo.color_token === "arabic") ? "rtl" : undefined}
         >
           <h2 className="font-display text-xl font-semibold sm:text-2xl" dir={isRtlText(currentQuestion.prompt) ? "rtl" : undefined}>
             {currentQuestion.prompt}
@@ -367,7 +368,7 @@ function DungeonPage() {
                   disabled={showFeedback}
                   className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left text-sm transition ${cls} ${showFeedback ? "cursor-default" : ""}`}
                 >
-                  <span className="flex items-center gap-3" dir={isRtlText(opt.text) ? "rtl" : undefined}>
+                  <span className="flex items-center gap-3" dir={isMathExpression(opt.text) ? "ltr" : isRtlText(opt.text) ? "rtl" : undefined}>
                     <span className="grid h-7 w-7 place-items-center rounded-md border border-current font-mono text-xs uppercase">{opt.id}</span>
                     <span>{opt.text}</span>
                   </span>

@@ -1,6 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import { useEffect } from "react";
 import { motion } from "motion/react";
 import { Flame, Zap, Trophy, Swords, Sword, BookOpen, Scroll, Leaf, Globe, ChevronRight, Sparkles, Shield, Backpack, ShoppingBag, Crown, Play, Skull, Loader2 } from "lucide-react";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from "recharts";
@@ -38,12 +39,20 @@ function formatQuestType(type: string): string {
 
 function Dashboard() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const fetchDashboard = useServerFn(getDashboard);
   const fetchSprint2 = useServerFn(getSprint2Dashboard);
   const purchaseItem = useServerFn(purchaseShopItem);
   const equipSkin = useServerFn(equipInventorySkin);
   const { data, isLoading, isError } = useQuery({ queryKey: ["dashboard"], queryFn: () => fetchDashboard() });
   const { data: sprint2 } = useQuery({ queryKey: ["sprint2"], queryFn: () => fetchSprint2() });
+
+  // Redirect admin/parent users to their report page
+  useEffect(() => {
+    if (data?.profile?.role === "admin" || data?.profile?.role === "parent") {
+      navigate({ to: "/parent-report" });
+    }
+  }, [data?.profile?.role, navigate]);
 
   const purchaseMutation = useMutation({
     mutationFn: (payload: { itemCode: string }) => purchaseItem({ data: payload }),

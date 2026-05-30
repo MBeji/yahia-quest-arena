@@ -24,9 +24,10 @@ function SubjectPage() {
   }
   const { subject, chapters, exercises, bestByExercise } = data;
   const color = `var(--subject-${subject.color_token})`;
+  const isRtlSubject = subject.color_token === "math" || subject.color_token === "arabic";
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-8">
+    <div className="mx-auto max-w-5xl px-6 py-8" dir={isRtlSubject ? "rtl" : undefined}>
       <Link to="/dashboard" className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="h-4 w-4" /> Heroes Hall
       </Link>
@@ -70,7 +71,7 @@ function SubjectPage() {
                   to="/lesson/$chapterId" params={{ chapterId: c.id }}
                   className="mt-2 inline-flex items-center gap-1.5 rounded-lg border border-[color:var(--neon-cyan)]/30 bg-[color:var(--neon-cyan)]/10 px-3 py-1.5 text-xs font-semibold text-[color:var(--neon-cyan)] transition hover:bg-[color:var(--neon-cyan)]/20"
                 >
-                  <BookOpen className="h-3.5 w-3.5" /> {subject.color_token === 'arabic' ? '📖 ملخص الدرس' : '📖 Résumé du cours'}
+                  <BookOpen className="h-3.5 w-3.5" /> {(subject.color_token === 'arabic' || subject.color_token === 'math') ? '📖 ملخص الدرس' : '📖 Résumé du cours'}
                 </Link>
               </div>
               <div className="grid gap-3 sm:grid-cols-2">

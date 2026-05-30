@@ -14,6 +14,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedParentReportRouteImport } from './routes/_authenticated/parent-report'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
 import { Route as AuthenticatedDungeonRouteImport } from './routes/_authenticated/dungeon'
@@ -46,6 +47,12 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedParentReportRoute =
+  AuthenticatedParentReportRouteImport.update({
+    id: '/parent-report',
+    path: '/parent-report',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
@@ -95,6 +102,7 @@ export interface FileRoutesByFullPath {
   '/dungeon': typeof AuthenticatedDungeonRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/parent-report': typeof AuthenticatedParentReportRoute
   '/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
   '/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
@@ -108,6 +116,7 @@ export interface FileRoutesByTo {
   '/dungeon': typeof AuthenticatedDungeonRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/parent-report': typeof AuthenticatedParentReportRoute
   '/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
   '/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
@@ -123,6 +132,7 @@ export interface FileRoutesById {
   '/_authenticated/dungeon': typeof AuthenticatedDungeonRoute
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
+  '/_authenticated/parent-report': typeof AuthenticatedParentReportRoute
   '/_authenticated/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
   '/_authenticated/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/_authenticated/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
@@ -138,6 +148,7 @@ export interface FileRouteTypes {
     | '/dungeon'
     | '/leaderboard'
     | '/onboarding'
+    | '/parent-report'
     | '/lesson/$chapterId'
     | '/quest/$exerciseId'
     | '/subject/$subjectId'
@@ -151,6 +162,7 @@ export interface FileRouteTypes {
     | '/dungeon'
     | '/leaderboard'
     | '/onboarding'
+    | '/parent-report'
     | '/lesson/$chapterId'
     | '/quest/$exerciseId'
     | '/subject/$subjectId'
@@ -165,6 +177,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dungeon'
     | '/_authenticated/leaderboard'
     | '/_authenticated/onboarding'
+    | '/_authenticated/parent-report'
     | '/_authenticated/lesson/$chapterId'
     | '/_authenticated/quest/$exerciseId'
     | '/_authenticated/subject/$subjectId'
@@ -214,6 +227,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/parent-report': {
+      id: '/_authenticated/parent-report'
+      path: '/parent-report'
+      fullPath: '/parent-report'
+      preLoaderRoute: typeof AuthenticatedParentReportRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/onboarding': {
       id: '/_authenticated/onboarding'
@@ -272,6 +292,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedDungeonRoute: typeof AuthenticatedDungeonRoute
   AuthenticatedLeaderboardRoute: typeof AuthenticatedLeaderboardRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
+  AuthenticatedParentReportRoute: typeof AuthenticatedParentReportRoute
   AuthenticatedLessonChapterIdRoute: typeof AuthenticatedLessonChapterIdRoute
   AuthenticatedQuestExerciseIdRoute: typeof AuthenticatedQuestExerciseIdRoute
   AuthenticatedSubjectSubjectIdRoute: typeof AuthenticatedSubjectSubjectIdRoute
@@ -282,6 +303,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDungeonRoute: AuthenticatedDungeonRoute,
   AuthenticatedLeaderboardRoute: AuthenticatedLeaderboardRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
+  AuthenticatedParentReportRoute: AuthenticatedParentReportRoute,
   AuthenticatedLessonChapterIdRoute: AuthenticatedLessonChapterIdRoute,
   AuthenticatedQuestExerciseIdRoute: AuthenticatedQuestExerciseIdRoute,
   AuthenticatedSubjectSubjectIdRoute: AuthenticatedSubjectSubjectIdRoute,
