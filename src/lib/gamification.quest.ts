@@ -333,27 +333,36 @@ export const submitAttempt = createServerFn({ method: "POST" })
     // Schedule spaced repetition if score < pass threshold (with dedup)
     if (pct < PASS_THRESHOLD_PCT && attemptId) {
       // Check if there's already a pending schedule for this exercise
-      const { data: existingSchedule } = await supabase
-        .from("spaced_repetition_schedule")
-        .select("id")
-        .eq("user_id", userId)
-        .eq("exercise_id", data.exerciseId)
-        .eq("status", "pending")
-        .limit(1)
-        .maybeSingle()
-        .catch(() => ({ data: null }));
+      let existingSchedule: { id: string } | null = null;
+      try {
+        const { data: pendingSchedule } = await supabase
+          .from("spaced_repetition_schedule")
+          .select("id")
+          .eq("user_id", userId)
+          .eq("exercise_id", data.exerciseId)
+          .eq("status", "pending")
+          .limit(1)
+          .maybeSingle();
+        existingSchedule = pendingSchedule;
+      } catch {
+        existingSchedule = null;
+      }
 
       if (!existingSchedule) {
         for (const [i, intervalMs] of SPACED_REPETITION_INTERVALS_MS.entries()) {
-          await supabase.from("spaced_repetition_schedule").insert({
-            user_id: userId,
-            exercise_id: data.exerciseId,
-            subject_id: exRes.data.subject_id,
-            failed_attempt_id: attemptId,
-            retry_level: i + 1,
-            scheduled_for: new Date(Date.now() + intervalMs).toISOString(),
-            status: "pending",
-          }).catch(() => {});
+          try {
+            await supabase.from("spaced_repetition_schedule").insert({
+              user_id: userId,
+              exercise_id: data.exerciseId,
+              subject_id: exRes.data.subject_id,
+              failed_attempt_id: attemptId,
+              retry_level: i + 1,
+              scheduled_for: new Date(Date.now() + intervalMs).toISOString(),
+              status: "pending",
+            });
+          } catch {
+            // Ignore errors
+          }
         }
       }
     }
@@ -368,14 +377,18 @@ export const submitAttempt = createServerFn({ method: "POST" })
         .maybeSingle();
 
       if (!adaptation) {
-        await supabase.from("difficulty_adaptation").insert({
-          user_id: userId,
-          subject_id: exRes.data.subject_id,
-          avg_score: pct,
-          recent_avg_score: pct,
-          total_attempts: 1,
-          current_difficulty_level: 1,
-        }).catch(() => {});
+        try {
+          await supabase.from("difficulty_adaptation").insert({
+            user_id: userId,
+            subject_id: exRes.data.subject_id,
+            avg_score: pct,
+            recent_avg_score: pct,
+            total_attempts: 1,
+            current_difficulty_level: 1,
+          });
+        } catch {
+          // Ignore errors
+        }
       } else {
         const { data: recentAtts } = await supabase
           .from("attempts")
@@ -394,13 +407,17 @@ export const submitAttempt = createServerFn({ method: "POST" })
         if (recentAvg > 75 && newDiff < 4) newDiff++;
         else if (recentAvg < 40 && newDiff > 1) newDiff--;
 
-        await supabase.from("difficulty_adaptation").update({
-          avg_score: overallAvg,
-          recent_avg_score: recentAvg,
-          total_attempts: totalAttempts,
-          current_difficulty_level: newDiff,
-          updated_at: new Date().toISOString(),
-        }).eq("id", adaptation.id).catch(() => {});
+        try {
+          await supabase.from("difficulty_adaptation").update({
+            avg_score: overallAvg,
+            recent_avg_score: recentAvg,
+            total_attempts: totalAttempts,
+            current_difficulty_level: newDiff,
+            updated_at: new Date().toISOString(),
+          }).eq("id", adaptation.id);
+        } catch {
+          // Ignore errors
+        }
       }
     }
 
@@ -409,29 +426,35 @@ export const submitAttempt = createServerFn({ method: "POST" })
     today.setUTCHours(0, 0, 0, 0);
     const todayStr = today.toISOString().split("T")[0];
 
-    const { data: dailyObj } = await supabase
-      .from("daily_objectives")
-      .select("id,current_value,target_value")
-      .eq("user_id", userId)
-      .eq("objective_type", "3_exercises")
-      .eq("objective_date", todayStr)
-      .maybeSingle()
-      .catch(() => ({ data: null }));
+    let dailyObj: { id: string; current_value: number; target_value: number } | null = null;
+    try {
+      const { data: dailyObjective } = await supabase
+        .from("daily_objectives")
+        .select("id,current_value,target_value")
+        .eq("user_id", userId)
+        .eq("objective_type", "3_exercises")
+        .eq("objective_date", todayStr)
+        .maybeSingle();
+      dailyObj = dailyObjective;
+    } catch {
+      dailyObj = null;
+    }
 
     if (dailyObj) {
       const newValue = dailyObj.current_value + 1;
       const isCompleted = newValue >= dailyObj.target_value;
-      await supabase
-        .from("daily_objectives")
-        .update({
-          current_value: newValue,
-          status: isCompleted ? "completed" : "active",
-          completed_at: isCompleted ? new Date().toISOString() : null,
-        })
-        .eq("id", dailyObj.id)
-        .catch(() => {
-          // Ignore errors
-        });
+      try {
+        await supabase
+          .from("daily_objectives")
+          .update({
+            current_value: newValue,
+            status: isCompleted ? "completed" : "active",
+            completed_at: isCompleted ? new Date().toISOString() : null,
+          })
+          .eq("id", dailyObj.id);
+      } catch {
+        // Ignore errors
+      }
     }
 
     // Update weekly quest: beat bosses (if this is a "boss" mode exercise)
@@ -444,29 +467,35 @@ export const submitAttempt = createServerFn({ method: "POST" })
       monday.setUTCHours(0, 0, 0, 0);
       const mondayStr = monday.toISOString().split("T")[0];
 
-      const { data: bossQuest } = await supabase
-        .from("weekly_quests")
-        .select("id,current_value,target_value")
-        .eq("user_id", userId)
-        .eq("quest_type", "beat_2_bosses")
-        .eq("week_start_date", mondayStr)
-        .maybeSingle()
-        .catch(() => ({ data: null }));
+      let bossQuest: { id: string; current_value: number; target_value: number } | null = null;
+      try {
+        const { data: weeklyBossQuest } = await supabase
+          .from("weekly_quests")
+          .select("id,current_value,target_value")
+          .eq("user_id", userId)
+          .eq("quest_type", "beat_2_bosses")
+          .eq("week_start_date", mondayStr)
+          .maybeSingle();
+        bossQuest = weeklyBossQuest;
+      } catch {
+        bossQuest = null;
+      }
 
       if (bossQuest) {
         const newValue = bossQuest.current_value + 1;
         const isCompleted = newValue >= bossQuest.target_value;
-        await supabase
-          .from("weekly_quests")
-          .update({
-            current_value: newValue,
-            status: isCompleted ? "completed" : "active",
-            completed_at: isCompleted ? new Date().toISOString() : null,
-          })
-          .eq("id", bossQuest.id)
-          .catch(() => {
-            // Ignore errors
-          });
+        try {
+          await supabase
+            .from("weekly_quests")
+            .update({
+              current_value: newValue,
+              status: isCompleted ? "completed" : "active",
+              completed_at: isCompleted ? new Date().toISOString() : null,
+            })
+            .eq("id", bossQuest.id);
+        } catch {
+          // Ignore errors
+        }
       }
     }
 
