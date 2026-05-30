@@ -1,15 +1,9 @@
-import { createFileRoute, Outlet, redirect, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Outlet, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { Sparkles, LayoutDashboard, LogOut, Swords, Crown, ClipboardList } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import {
-  getGuestSignInErrorMessage,
-  GUEST_ACCESS_COPY,
-  PUBLIC_GUEST_ACCESS_ENABLED,
-  signInGuestUser,
-} from "@/lib/guest-access";
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthenticatedLayout,
@@ -18,8 +12,6 @@ export const Route = createFileRoute("/_authenticated")({
 function AuthenticatedLayout() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
-  const [bootstrappingGuest, setBootstrappingGuest] = useState(false);
-  const [guestAttempted, setGuestAttempted] = useState(false);
   const [userRole, setUserRole] = useState<string | null>(null);
 
   // Fetch user role for conditional nav
@@ -35,41 +27,18 @@ function AuthenticatedLayout() {
       });
   }, [user]);
 
-  useEffect(() => {
-    if (!PUBLIC_GUEST_ACCESS_ENABLED || loading || user || guestAttempted) return;
-
-    let active = true;
-    setGuestAttempted(true);
-    setBootstrappingGuest(true);
-
-    signInGuestUser(supabase).then((res) => {
-      if (!active) return;
-
-      if (!res.ok) {
-        toast.error(getGuestSignInErrorMessage(res));
-        navigate({ to: "/auth", search: { mode: "login" } });
-      }
-    }).finally(() => {
-      if (active) setBootstrappingGuest(false);
-    });
-
-    return () => {
-      active = false;
-    };
-  }, [guestAttempted, loading, navigate, user]);
-
   // Redirect unauthenticated users via effect (not during render)
   useEffect(() => {
-    if (!loading && !bootstrappingGuest && !user) {
+    if (!loading && !user) {
       navigate({ to: "/auth", search: { mode: "login" } });
     }
-  }, [loading, bootstrappingGuest, user, navigate]);
+  }, [loading, user, navigate]);
 
-  if (loading || bootstrappingGuest) {
+  if (loading) {
     return (
       <div className="grid min-h-screen place-items-center bg-hero">
         <div className="font-display text-sm uppercase tracking-widest text-muted-foreground">
-          {bootstrappingGuest ? GUEST_ACCESS_COPY.loading : "Loading…"}
+          Loading…
         </div>
       </div>
     );
@@ -80,7 +49,7 @@ function AuthenticatedLayout() {
 
   async function signOut() {
     await supabase.auth.signOut();
-    toast.success(PUBLIC_GUEST_ACCESS_ENABLED ? GUEST_ACCESS_COPY.signOutToast : "See you soon, warrior.");
+    toast.success("See you soon, warrior.");
     navigate({ to: "/" });
   }
 

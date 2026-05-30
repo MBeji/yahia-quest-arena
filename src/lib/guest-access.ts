@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-export const PUBLIC_GUEST_ACCESS_ENABLED = true;
+export const PUBLIC_GUEST_ACCESS_ENABLED = false;
 
 export const GUEST_ACCESS_COPY = {
   authButton: "Continue as guest (free test)",

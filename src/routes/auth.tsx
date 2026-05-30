@@ -5,12 +5,6 @@ import { Sparkles, Mail, Lock, User as UserIcon, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
-import {
-  GUEST_ACCESS_COPY,
-  getGuestSignInErrorMessage,
-  PUBLIC_GUEST_ACCESS_ENABLED,
-  signInGuestUser,
-} from "@/lib/guest-access";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -93,19 +87,6 @@ function AuthPage() {
     navigate({ to: "/dashboard" });
   }
 
-  async function handleGuestAccess() {
-    setBusy(true);
-
-    const res = await signInGuestUser(supabase);
-    if (!res.ok) {
-      toast.error(getGuestSignInErrorMessage(res));
-      setBusy(false);
-      return;
-    }
-
-    navigate({ to: "/dashboard" });
-  }
-
   return (
     <main className="relative min-h-screen overflow-hidden bg-hero">
       <div className="absolute inset-0 bg-grid opacity-50" />
@@ -140,20 +121,9 @@ function AuthPage() {
             Continue with Google
           </button>
 
-          {PUBLIC_GUEST_ACCESS_ENABLED && (
-            <button
-              type="button"
-              disabled={busy}
-              onClick={handleGuestAccess}
-              className="mt-3 w-full rounded-lg border border-dashed border-[color:var(--neon-cyan)]/40 bg-[color:var(--neon-cyan)]/10 px-4 py-2.5 text-sm font-semibold text-[color:var(--neon-cyan)] transition hover:bg-[color:var(--neon-cyan)]/20 disabled:opacity-50"
-            >
-              {GUEST_ACCESS_COPY.authButton}
-            </button>
-          )}
-
-          {PUBLIC_GUEST_ACCESS_ENABLED && (
-            <p className="mt-2 text-center text-xs text-muted-foreground">{GUEST_ACCESS_COPY.authHint}</p>
-          )}
+          <p className="mt-2 text-center text-xs text-muted-foreground">
+            Session remembered on this browser so you don&apos;t re-enter credentials every time.
+          </p>
 
           <div className="my-5 flex items-center gap-3 text-xs uppercase tracking-widest text-muted-foreground">
             <span className="h-px flex-1 bg-border" /> or <span className="h-px flex-1 bg-border" />

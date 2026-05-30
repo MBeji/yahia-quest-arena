@@ -16,7 +16,7 @@ function resolveFallbackDisplayName(claims: Record<string, unknown>): string {
     }
   }
 
-  return claims.is_anonymous === true ? "Guest Hero" : "Aspirant";
+  return "Aspirant";
 }
 
 // ---------- Get dashboard ----------
