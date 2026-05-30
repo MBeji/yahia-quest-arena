@@ -41,6 +41,23 @@ export const Route = createFileRoute("/_authenticated/quest/$exerciseId")({
 });
 
 type Answer = { questionId: string; choice: string };
+type BaseOption = { id: string; text: string };
+type DisplayOption = BaseOption & { displayId: string };
+
+const DISPLAY_LABELS = ["A", "B", "C", "D", "E", "F"] as const;
+
+function shuffleOptions(options: BaseOption[]): DisplayOption[] {
+  const shuffled = [...options];
+  for (let i = shuffled.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  return shuffled.map((opt, index) => ({
+    ...opt,
+    displayId: DISPLAY_LABELS[index] ?? String(index + 1),
+  }));
+}
 
 function QuestPage() {
   const { exerciseId } = Route.useParams();
@@ -80,6 +97,15 @@ function QuestPage() {
   });
 
   const questions = data?.questions ?? [];
+  const shuffledOptionsByQuestionId = useMemo(() => {
+    return new Map(
+      questions.map((q) => {
+        const sourceOptions = (q.options as BaseOption[]) ?? [];
+        return [q.id, shuffleOptions(sourceOptions)] as const;
+      }),
+    );
+  }, [questions]);
+
   const total = questions.length;
   const current = questions[idx];
   const progress = useMemo(() => (total > 0 ? ((idx) / total) * 100 : 0), [idx, total]);
@@ -316,7 +342,7 @@ function QuestPage() {
     }, 1800);
   }
 
-  const options = (current.options as { id: string; text: string }[]) ?? [];
+  const options = current ? (shuffledOptionsByQuestionId.get(current.id) ?? []) : [];
   const correctOpt = (current as { correct_option?: string }).correct_option;
   const isCorrectAnswer = showFeedback && selected === correctOpt;
   const isWrongAnswer = showFeedback && selected !== correctOpt;
@@ -419,7 +445,7 @@ function QuestPage() {
                   className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left text-sm transition ${cls} ${showFeedback ? "cursor-default" : ""}`}
                 >
                   <span className="flex items-center gap-3" dir={isMathExpression(opt.text) ? "ltr" : isRtlText(opt.text) ? "rtl" : undefined}>
-                    <span className="grid h-7 w-7 place-items-center rounded-md border border-current font-mono text-xs uppercase">{opt.id}</span>
+                    <span className="grid h-7 w-7 place-items-center rounded-md border border-current font-mono text-xs uppercase">{opt.displayId}</span>
                     <span>{opt.text}</span>
                   </span>
                   {showFeedback && isCorrect && <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0" />}
