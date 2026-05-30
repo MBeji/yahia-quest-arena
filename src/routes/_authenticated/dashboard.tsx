@@ -1,13 +1,14 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "motion/react";
-import { Flame, Zap, Trophy, Swords, Sword, BookOpen, Scroll, Leaf, Globe, ChevronRight, Sparkles, Shield, Backpack, ShoppingBag, Crown, Play, Skull, Loader2 } from "lucide-react";
+import { Flame, Zap, Trophy, Swords, Sword, BookOpen, Scroll, Leaf, Globe, ChevronRight, Sparkles, Shield, Backpack, ShoppingBag, Crown, Play, Skull, Loader2, Copy, Check } from "lucide-react";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from "recharts";
 import { toast } from "sonner";
 import { getDashboard, getSprint2Dashboard } from "@/lib/gamification.dashboard";
 import { purchaseShopItem, equipInventorySkin } from "@/lib/gamification.shop";
+import { formatStudentAllianceCode } from "@/lib/family-link";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: "Heroes Hall · XP Scholars" }] }),
@@ -58,6 +59,7 @@ function Dashboard() {
   const equipSkin = useServerFn(equipInventorySkin);
   const { data, isLoading, isError } = useQuery({ queryKey: ["dashboard"], queryFn: () => fetchDashboard() });
   const { data: sprint2 } = useQuery({ queryKey: ["sprint2"], queryFn: () => fetchSprint2() });
+  const [copiedCode, setCopiedCode] = useState(false);
 
   // Redirect admin/parent users to their report page
   useEffect(() => {
@@ -116,6 +118,7 @@ function Dashboard() {
 
   const { profile, subjects, stats, badges, inventory, shopItems, nextExerciseId } = data;
   if (!profile) return <div className="p-8 text-center text-muted-foreground">Profile not found.</div>;
+  const studentAllianceCode = profile.role === "student" ? formatStudentAllianceCode(profile.id) : "";
 
   const xpInLevel = profile.xp % 200;
   const xpPct = (xpInLevel / 200) * 100;
@@ -187,6 +190,27 @@ function Dashboard() {
                 />
               </div>
             </div>
+            {studentAllianceCode && (
+              <div className="mt-4 rounded-xl border border-[color:var(--neon-cyan)]/35 bg-[color:var(--neon-cyan)]/8 p-3">
+                <div className="text-[11px] uppercase tracking-[0.2em] text-[color:var(--neon-cyan)]">Alliance Code</div>
+                <div className="mt-1 flex items-center justify-between gap-2">
+                  <div className="font-mono text-xs sm:text-sm text-foreground/90">{studentAllianceCode}</div>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      await navigator.clipboard.writeText(studentAllianceCode);
+                      setCopiedCode(true);
+                      setTimeout(() => setCopiedCode(false), 1200);
+                    }}
+                    className="inline-flex items-center gap-1 rounded-md border border-[color:var(--neon-cyan)]/40 px-2 py-1 text-xs text-[color:var(--neon-cyan)] hover:bg-[color:var(--neon-cyan)]/10"
+                  >
+                    {copiedCode ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                    {copiedCode ? "Copied" : "Copy"}
+                  </button>
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground">Share this code with your parent to unlock mentor tracking.</p>
+              </div>
+            )}
           </div>
           <div className="hidden sm:block">
             <div className="text-right text-xs uppercase tracking-widest text-muted-foreground">Longest streak</div>

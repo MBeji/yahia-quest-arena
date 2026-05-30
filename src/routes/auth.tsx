@@ -4,6 +4,8 @@ import { motion } from "motion/react";
 import { Sparkles, Mail, Lock, User as UserIcon, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { useServerFn } from "@tanstack/react-start";
+import { linkStudentByCode } from "@/lib/gamification.parent";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -23,7 +25,10 @@ function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [role, setRole] = useState<"student" | "parent">("student");
+  const [allianceCode, setAllianceCode] = useState("");
   const [busy, setBusy] = useState(false);
+  const linkByCode = useServerFn(linkStudentByCode);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -51,7 +56,7 @@ function AuthPage() {
     setBusy(true);
     try {
       if (isSignup) {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email, password,
           options: {
             emailRedirectTo: `${window.location.origin}/dashboard`,
@@ -59,6 +64,25 @@ function AuthPage() {
           },
         });
         if (error) throw error;
+
+        if (data.user) {
+          const { error: profileErr } = await supabase
+            .from("profiles")
+            .upsert({
+              id: data.user.id,
+              display_name: name || email.split("@")[0],
+              role,
+            }, { onConflict: "id" });
+          if (profileErr) throw profileErr;
+
+          if (role === "parent" && allianceCode.trim().length > 0) {
+            const linkRes = await linkByCode({ data: { studentCode: allianceCode.trim(), relationLabel: "parent" } });
+            if (linkRes.linked) {
+              toast.success(`Linked with ${linkRes.student.displayName ?? "student"}.`);
+            }
+          }
+        }
+
         toast.success("Hero created! Welcome to the academy.");
         navigate({ to: "/dashboard" });
       } else {
@@ -143,6 +167,28 @@ function AuthPage() {
 
           <form onSubmit={handleSubmit} className="space-y-3">
             {isSignup && (
+              <div className="rounded-xl border border-border/60 bg-background/30 p-3">
+                <div className="mb-2 text-xs uppercase tracking-wider text-muted-foreground">Choose your Guild Role</div>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setRole("student")}
+                    className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${role === "student" ? "bg-[color:var(--neon-violet)]/20 text-[color:var(--neon-violet)] border border-[color:var(--neon-violet)]/40" : "bg-background/40 text-muted-foreground border border-border/50 hover:text-foreground"}`}
+                  >
+                    Eleve · Hero
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setRole("parent")}
+                    className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${role === "parent" ? "bg-[color:var(--neon-cyan)]/20 text-[color:var(--neon-cyan)] border border-[color:var(--neon-cyan)]/40" : "bg-background/40 text-muted-foreground border border-border/50 hover:text-foreground"}`}
+                  >
+                    Parent · Mentor
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {isSignup && (
               <div className="relative">
                 <UserIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <input
@@ -150,6 +196,19 @@ function AuthPage() {
                   placeholder="Hero name"
                   className="w-full rounded-lg border border-input bg-background/50 py-2.5 pl-10 pr-3 text-sm focus:border-[color:var(--neon-violet)] focus:outline-none"
                 />
+              </div>
+            )}
+
+            {isSignup && role === "parent" && (
+              <div className="relative">
+                <input
+                  type="text"
+                  value={allianceCode}
+                  onChange={(e) => setAllianceCode(e.target.value)}
+                  placeholder="Alliance Code eleve (optionnel)"
+                  className="w-full rounded-lg border border-input bg-background/50 py-2.5 px-3 text-sm focus:border-[color:var(--neon-cyan)] focus:outline-none"
+                />
+                <p className="mt-1 text-xs text-muted-foreground">Entre le code de ton enfant pour lier les comptes maintenant.</p>
               </div>
             )}
             <div className="relative">

@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { parseStudentAllianceCode } from "@/lib/family-link";
 
 /**
  * Get the list of students visible to the current user (parent sees linked, admin sees all).
@@ -250,5 +251,67 @@ export const getStudentReport = createServerFn({ method: "GET" })
       },
       subjectStats,
       dailyActivity,
+    };
+  });
+
+/**
+ * Link a parent account to a student account using the student's alliance code.
+ */
+export const linkStudentByCode = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((d: unknown) =>
+    z.object({
+      studentCode: z.string().min(8).max(64),
+      relationLabel: z.string().min(2).max(40).default("parent"),
+    }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", userId)
+      .single();
+
+    if (profileError) throw new Error(profileError.message);
+    if (!profile || (profile.role !== "parent" && profile.role !== "admin")) {
+      throw new Error("Parent account required to link a student.");
+    }
+
+    const studentId = parseStudentAllianceCode(data.studentCode);
+    if (!studentId) throw new Error("Invalid student alliance code.");
+
+    const { data: studentProfile, error: studentError } = await supabase
+      .from("profiles")
+      .select("id,display_name,role")
+      .eq("id", studentId)
+      .maybeSingle();
+
+    if (studentError) throw new Error(studentError.message);
+    if (!studentProfile) throw new Error("Student not found.");
+    if (studentProfile.role !== "student") throw new Error("This code does not belong to a student account.");
+    if (studentProfile.id === userId) throw new Error("You cannot link your own account.");
+
+    const { error: linkError } = await supabase
+      .from("parent_student_links")
+      .upsert(
+        {
+          parent_user_id: userId,
+          student_user_id: studentProfile.id,
+          relation_label: data.relationLabel,
+          is_active: true,
+        },
+        { onConflict: "parent_user_id,student_user_id" },
+      );
+
+    if (linkError) throw new Error(linkError.message);
+
+    return {
+      linked: true,
+      student: {
+        id: studentProfile.id,
+        displayName: studentProfile.display_name,
+      },
     };
   });

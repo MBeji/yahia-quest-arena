@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion } from "motion/react";
 import {
@@ -17,9 +17,11 @@ import {
   AlertTriangle,
   CheckCircle,
   Star,
+  Link as LinkIcon,
 } from "lucide-react";
-import { getLinkedStudents, getStudentReport } from "@/lib/gamification.parent";
-import { useState } from "react";
+import { getLinkedStudents, getStudentReport, linkStudentByCode } from "@/lib/gamification.parent";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/parent-report")({
   head: () => ({ meta: [{ title: "Parent Report · XP Scholars" }] }),
@@ -27,9 +29,13 @@ export const Route = createFileRoute("/_authenticated/parent-report")({
 });
 
 function ParentReport() {
+  const queryClient = useQueryClient();
   const getStudentsFn = useServerFn(getLinkedStudents);
   const getReportFn = useServerFn(getStudentReport);
+  const linkByCodeFn = useServerFn(linkStudentByCode);
   const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
+  const [studentCode, setStudentCode] = useState("");
+  const [relationLabel, setRelationLabel] = useState("parent");
 
   const { data: studentsData, isLoading: loadingStudents } = useQuery({
     queryKey: ["parent-students"],
@@ -53,26 +59,38 @@ function ParentReport() {
   const students = studentsData?.students ?? [];
   const isAdmin = studentsData?.role === "admin";
 
-  if (students.length === 0) {
+  const linkMutation = useMutation({
+    mutationFn: () => linkByCodeFn({ data: { studentCode, relationLabel } }),
+    onSuccess: (res) => {
+      toast.success(`Alliance reussie avec ${res.student.displayName ?? "l'eleve"}.`);
+      setStudentCode("");
+      queryClient.invalidateQueries({ queryKey: ["parent-students"] });
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "Link failed");
+    },
+  });
+
+  if (students.length === 0 && isAdmin) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center">
         <Users className="w-16 h-16 text-gray-400 mb-4" />
         <h2 className="text-xl font-bold text-white mb-2">
-          {isAdmin ? "Aucun élève inscrit" : "Aucun élève lié"}
+          Aucun eleve inscrit
         </h2>
         <p className="text-gray-400 max-w-md">
-          {isAdmin
-            ? "Aucun compte élève n'existe encore dans la plateforme."
-            : "Votre compte parent n'est pas encore lié à un élève. Contactez l'administrateur pour associer un élève à votre compte."}
+          Aucun compte eleve n'existe encore dans la plateforme.
         </p>
       </div>
     );
   }
 
   // Auto-select first student
-  if (!selectedStudent && students.length > 0) {
-    setSelectedStudent(students[0].id);
-  }
+  useEffect(() => {
+    if (!selectedStudent && students.length > 0) {
+      setSelectedStudent(students[0].id);
+    }
+  }, [selectedStudent, students]);
 
   return (
     <div className="min-h-screen p-4 md:p-8 max-w-6xl mx-auto">
@@ -92,6 +110,38 @@ function ParentReport() {
         </p>
       </motion.div>
 
+      {!isAdmin && (
+        <div className="mb-6 rounded-xl border border-indigo-700/40 bg-indigo-950/30 p-4">
+          <div className="mb-3 flex items-center gap-2 text-indigo-200">
+            <LinkIcon className="h-4 w-4" />
+            <span className="font-semibold">Associer un eleve via Alliance Code</span>
+          </div>
+          <div className="grid gap-2 md:grid-cols-[1fr,180px,auto]">
+            <input
+              value={studentCode}
+              onChange={(e) => setStudentCode(e.target.value)}
+              placeholder="Code eleve"
+              className="rounded-lg border border-gray-700 bg-gray-900/70 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:border-indigo-500 focus:outline-none"
+            />
+            <input
+              value={relationLabel}
+              onChange={(e) => setRelationLabel(e.target.value)}
+              placeholder="Relation (parent)"
+              className="rounded-lg border border-gray-700 bg-gray-900/70 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:border-indigo-500 focus:outline-none"
+            />
+            <button
+              type="button"
+              disabled={studentCode.trim().length < 8 || linkMutation.isPending}
+              onClick={() => linkMutation.mutate()}
+              className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50"
+            >
+              {linkMutation.isPending ? "Liaison..." : "Associer"}
+            </button>
+          </div>
+          <p className="mt-2 text-xs text-gray-400">L'eleve trouve son code dans son dashboard.</p>
+        </div>
+      )}
+
       {/* Student selector */}
       {(students.length > 1 || isAdmin) && (
         <div className="mb-6 flex gap-2 flex-wrap">
@@ -108,6 +158,12 @@ function ParentReport() {
               {s.display_name ?? "Élève"}
             </button>
           ))}
+        </div>
+      )}
+
+      {!isAdmin && students.length === 0 && (
+        <div className="rounded-xl border border-gray-700/50 bg-gray-900/50 p-8 text-center text-gray-300">
+          Associez votre premier eleve avec son Alliance Code pour debloquer le suivi.
         </div>
       )}
 
