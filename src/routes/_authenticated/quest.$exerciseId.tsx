@@ -106,6 +106,13 @@ function QuestPage() {
     );
   }, [questions]);
 
+  const getDisplayChoice = useCallback((questionId: string, choice: string) => {
+    if (!choice) return "-";
+    const questionOptions = shuffledOptionsByQuestionId.get(questionId) ?? [];
+    const matchedOption = questionOptions.find((opt) => opt.id === choice);
+    return matchedOption?.displayId ?? choice.toUpperCase();
+  }, [shuffledOptionsByQuestionId]);
+
   const total = questions.length;
   const current = questions[idx];
   const progress = useMemo(() => (total > 0 ? ((idx) / total) * 100 : 0), [idx, total]);
@@ -309,11 +316,11 @@ function QuestPage() {
                     <div className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
                       <div className="rounded-xl bg-card/60 p-3">
                         <div className="text-xs uppercase tracking-widest text-muted-foreground">Your answer</div>
-                        <div className="mt-1 font-mono uppercase">{item.selectedChoice}</div>
+                        <div className="mt-1 font-mono uppercase">{getDisplayChoice(item.questionId, item.selectedChoice)}</div>
                       </div>
                       <div className="rounded-xl bg-card/60 p-3">
                         <div className="text-xs uppercase tracking-widest text-muted-foreground">Correct answer</div>
-                        <div className="mt-1 font-mono uppercase">{item.correctChoice}</div>
+                        <div className="mt-1 font-mono uppercase">{getDisplayChoice(item.questionId, item.correctChoice)}</div>
                       </div>
                     </div>
                     {item.explanation && (
@@ -344,6 +351,7 @@ function QuestPage() {
 
   const options = current ? (shuffledOptionsByQuestionId.get(current.id) ?? []) : [];
   const correctOpt = (current as { correct_option?: string }).correct_option;
+  const correctDisplayOpt = current && correctOpt ? getDisplayChoice(current.id, correctOpt) : null;
   const isCorrectAnswer = showFeedback && selected === correctOpt;
   const isWrongAnswer = showFeedback && selected !== correctOpt;
 
@@ -474,7 +482,7 @@ function QuestPage() {
               initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
               className={`mt-4 rounded-xl border p-3 text-sm font-semibold ${isCorrectAnswer ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300" : "border-destructive/30 bg-destructive/10 text-destructive"}`}
             >
-              {isCorrectAnswer ? "✓ Bonne réponse !" : `✗ La bonne réponse était : ${correctOpt?.toUpperCase()}`}
+              {isCorrectAnswer ? "✓ Bonne réponse !" : `✗ La bonne réponse était : ${correctDisplayOpt}`}
             </motion.div>
           )}
 

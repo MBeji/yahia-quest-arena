@@ -16,7 +16,7 @@ export const Route = createFileRoute("/_authenticated/dungeon")({
 type DungeonQuestion = {
   id: string;
   prompt: string;
-  options: { id: string; text: string }[];
+  options: DisplayOption[];
   correct_option: string;
   explanation: string | null;
   exercises: {
@@ -27,6 +27,24 @@ type DungeonQuestion = {
 };
 
 type GameState = "lobby" | "playing" | "gameover";
+
+type BaseOption = { id: string; text: string };
+type DisplayOption = BaseOption & { displayId: string };
+
+const DISPLAY_LABELS = ["A", "B", "C", "D", "E", "F"] as const;
+
+function shuffleOptions(options: BaseOption[]): DisplayOption[] {
+  const shuffled = [...options];
+  for (let i = shuffled.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  return shuffled.map((opt, index) => ({
+    ...opt,
+    displayId: DISPLAY_LABELS[index] ?? String(index + 1),
+  }));
+}
 
 function DungeonPage() {
   const qc = useQueryClient();
@@ -63,17 +81,22 @@ function DungeonPage() {
     setLoading(true);
     try {
       const res = await fetchQuestions({ data: { floor: currentFloor, batchSize: 5, excludeIds: currentSeenIds.slice(-300) } });
-      const newQuestions = (res.questions ?? []) as unknown as DungeonQuestion[];
+      const newQuestions = (res.questions ?? []) as unknown as (Omit<DungeonQuestion, "options"> & { options: BaseOption[] })[];
       if (newQuestions.length === 0) {
         toast.error("No more questions available in the dungeon!");
         return false;
       }
-      setQuestions(newQuestions);
+      const shuffledQuestions: DungeonQuestion[] = newQuestions.map((question) => ({
+        ...question,
+        options: shuffleOptions((question.options ?? []) as BaseOption[]),
+      }));
+
+      setQuestions(shuffledQuestions);
       setCurrentIdx(0);
       if (res.resetExclusions) {
-        setSeenIds(newQuestions.map((q) => q.id));
+        setSeenIds(shuffledQuestions.map((q) => q.id));
       } else {
-        setSeenIds((prev) => [...prev, ...newQuestions.map((q) => q.id)]);
+        setSeenIds((prev) => [...prev, ...shuffledQuestions.map((q) => q.id)]);
       }
       return true;
     } catch {
@@ -98,6 +121,8 @@ function DungeonPage() {
 
   function handleSelect(optId: string) {
     if (showFeedback || !currentQuestion) return;
+    const selectedOption = currentQuestion.options.find((opt) => opt.id === optId);
+    const correctOption = currentQuestion.options.find((opt) => opt.id === currentQuestion.correct_option);
     setSelected(optId);
     setShowFeedback(true);
     setTotalAnswered((n) => n + 1);
@@ -112,8 +137,8 @@ function DungeonPage() {
       // Wrong answer — game over after showing feedback
       setLastWrongAnswer({
         prompt: currentQuestion.prompt,
-        selected: optId,
-        correct: currentQuestion.correct_option,
+        selected: selectedOption?.displayId ?? optId.toUpperCase(),
+        correct: correctOption?.displayId ?? currentQuestion.correct_option.toUpperCase(),
         explanation: currentQuestion.explanation,
       });
       setTimeout(() => endRun(), 2000);
@@ -292,7 +317,7 @@ function DungeonPage() {
     );
   }
 
-  const options = (currentQuestion.options as { id: string; text: string }[]) ?? [];
+  const options = (currentQuestion.options as DisplayOption[]) ?? [];
   const correctOpt = currentQuestion.correct_option;
   const subjectInfo = currentQuestion.exercises?.subjects;
   const difficulty = currentQuestion.exercises?.difficulty ?? 1;
@@ -369,7 +394,7 @@ function DungeonPage() {
                   className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left text-sm transition ${cls} ${showFeedback ? "cursor-default" : ""}`}
                 >
                   <span className="flex items-center gap-3" dir={isMathExpression(opt.text) ? "ltr" : isRtlText(opt.text) ? "rtl" : undefined}>
-                    <span className="grid h-7 w-7 place-items-center rounded-md border border-current font-mono text-xs uppercase">{opt.id}</span>
+                    <span className="grid h-7 w-7 place-items-center rounded-md border border-current font-mono text-xs uppercase">{opt.displayId}</span>
                     <span>{opt.text}</span>
                   </span>
                   {showFeedback && isCorrect && <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0" />}
