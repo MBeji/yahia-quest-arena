@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion, AnimatePresence } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, Zap, Flame, Sparkles, Loader2, Trophy, Skull, Heart, Timer, CheckCircle2, XCircle } from "lucide-react";
+import { ArrowLeft, Zap, Flame, Sparkles, Loader2, Trophy, Skull, Heart, Timer } from "lucide-react";
 import { toast } from "sonner";
 import { getExercise, startExerciseSession, submitAttempt } from "@/lib/gamification.quest";
 import { BOSS_TIME_PER_QUESTION_S, PASS_THRESHOLD_PCT } from "@/lib/gamification.constants";
@@ -350,10 +350,6 @@ function QuestPage() {
   }
 
   const options = current ? (shuffledOptionsByQuestionId.get(current.id) ?? []) : [];
-  const correctOpt = (current as { correct_option?: string }).correct_option;
-  const correctDisplayOpt = current && correctOpt ? getDisplayChoice(current.id, correctOpt) : null;
-  const isCorrectAnswer = showFeedback && selected === correctOpt;
-  const isWrongAnswer = showFeedback && selected !== correctOpt;
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-8" dir={isRtlSubject ? "rtl" : undefined}>
@@ -431,14 +427,15 @@ function QuestPage() {
           <div className="mt-6 space-y-3">
             {options.map((opt) => {
               const isSel = selected === opt.id;
-              const isCorrect = showFeedback && opt.id === correctOpt;
-              const isWrong = showFeedback && isSel && opt.id !== correctOpt;
               let cls = isBoss
                 ? "border-destructive/20 bg-background/40 hover:border-destructive/60 hover:bg-destructive/10"
                 : "border-border bg-background/40 hover:border-[color:var(--neon-violet)]/60 hover:bg-background/70";
               if (showFeedback) {
-                if (isCorrect) cls = "border-emerald-500 bg-emerald-500/15";
-                else if (isWrong) cls = "border-destructive bg-destructive/15";
+                if (isSel) {
+                  cls = isBoss
+                    ? "border-destructive bg-destructive/20"
+                    : "border-[color:var(--neon-violet)] bg-[color:var(--neon-violet)]/15";
+                }
                 else cls = "border-border/30 bg-background/20 opacity-50";
               } else if (isSel) {
                 cls = isBoss
@@ -456,33 +453,17 @@ function QuestPage() {
                     <span className="grid h-7 w-7 place-items-center rounded-md border border-current font-mono text-xs uppercase">{opt.displayId}</span>
                     <span>{opt.text}</span>
                   </span>
-                  {showFeedback && isCorrect && <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0" />}
-                  {showFeedback && isWrong && <XCircle className="h-5 w-5 text-destructive shrink-0" />}
                 </button>
               );
             })}
           </div>
 
-          {/* Feedback: explanation */}
-          {showFeedback && current.explanation && (
+          {showFeedback && (
             <motion.div
               initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-              className={`mt-4 rounded-xl border p-4 text-sm ${isCorrectAnswer ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-200" : "border-destructive/30 bg-destructive/10 text-orange-200"}`}
+              className="mt-4 rounded-xl border border-[color:var(--neon-cyan)]/30 bg-[color:var(--neon-cyan)]/10 p-4 text-sm text-[color:var(--neon-cyan)]"
             >
-              <div className="mb-1 flex items-center gap-2 text-xs font-bold uppercase tracking-widest">
-                {isCorrectAnswer ? <CheckCircle2 className="h-3.5 w-3.5" /> : <XCircle className="h-3.5 w-3.5" />}
-                {isCorrectAnswer ? "Correct !" : "Pas tout à fait…"}
-              </div>
-              <p dir={isRtlText(current.explanation) ? "rtl" : undefined}>{current.explanation}</p>
-            </motion.div>
-          )}
-
-          {showFeedback && !current.explanation && (
-            <motion.div
-              initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-              className={`mt-4 rounded-xl border p-3 text-sm font-semibold ${isCorrectAnswer ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300" : "border-destructive/30 bg-destructive/10 text-destructive"}`}
-            >
-              {isCorrectAnswer ? "✓ Bonne réponse !" : `✗ La bonne réponse était : ${correctDisplayOpt}`}
+              <p>Reponse enregistree. La correction detaillee apparait a la fin du quest.</p>
             </motion.div>
           )}
 
