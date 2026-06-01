@@ -5,7 +5,14 @@ import { motion, AnimatePresence } from "motion/react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Zap, Sparkles, Flame, Skull, Shield, Layers, CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { getDungeonQuestions, submitDungeonRun, DUNGEON_XP_PER_FLOOR, DUNGEON_COINS_PER_5_FLOORS } from "@/lib/gamification.dungeon";
+import {
+  getDungeonQuestions,
+  startDungeonRun,
+  submitDungeonAnswer,
+  submitDungeonRun,
+  DUNGEON_XP_PER_FLOOR,
+  DUNGEON_COINS_PER_5_FLOORS,
+} from "@/lib/gamification.dungeon";
 import { isRtlText, isMathExpression } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/dungeon")({
@@ -17,7 +24,6 @@ type DungeonQuestion = {
   id: string;
   prompt: string;
   options: DisplayOption[];
-  correct_option: string;
   explanation: string | null;
   exercises: {
     difficulty: number;
@@ -48,42 +54,52 @@ function shuffleOptions(options: BaseOption[]): DisplayOption[] {
 
 function DungeonPage() {
   const qc = useQueryClient();
+  const startRun = useServerFn(startDungeonRun);
   const fetchQuestions = useServerFn(getDungeonQuestions);
+  const submitAnswer = useServerFn(submitDungeonAnswer);
   const submitRun = useServerFn(submitDungeonRun);
 
   const [state, setState] = useState<GameState>("lobby");
+  const [runId, setRunId] = useState<string | null>(null);
   const [floor, setFloor] = useState(0);
   const [questions, setQuestions] = useState<DungeonQuestion[]>([]);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
+  const [answerWasCorrect, setAnswerWasCorrect] = useState<boolean | null>(null);
   const [totalCorrect, setTotalCorrect] = useState(0);
   const [totalAnswered, setTotalAnswered] = useState(0);
-  const [seenIds, setSeenIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  const [runResult, setRunResult] = useState<{ xpEarned: number; coinsEarned: number; floorsCleared: number } | null>(null);
+  const [runResult, setRunResult] = useState<{ xpEarned: number; coinsEarned: number; floorsCleared: number; totalCorrect: number; totalAnswered: number } | null>(null);
   const [lastWrongAnswer, setLastWrongAnswer] = useState<{ prompt: string; selected: string; correct: string; explanation: string | null } | null>(null);
   const startTimeRef = useRef<number>(0);
 
   const submitMutation = useMutation({
-    mutationFn: (payload: { floorsCleared: number; totalCorrect: number; totalAnswered: number; durationSeconds: number }) =>
+    mutationFn: (payload: { runId: string; durationSeconds: number }) =>
       submitRun({ data: payload }),
     onSuccess: (res) => {
       setRunResult(res);
+      setTotalCorrect(res.totalCorrect);
+      setTotalAnswered(res.totalAnswered);
       qc.invalidateQueries({ queryKey: ["dashboard"] });
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : "Error saving run"),
   });
 
+  const answerMutation = useMutation({
+    mutationFn: (payload: { runId: string; questionId: string; choice: string }) => submitAnswer({ data: payload }),
+  });
+
   const currentQuestion = questions[currentIdx] as DungeonQuestion | undefined;
 
-  const loadBatch = useCallback(async (currentFloor: number, currentSeenIds: string[]) => {
+  const loadBatch = useCallback(async (activeRunId: string) => {
     setLoading(true);
     try {
-      const res = await fetchQuestions({ data: { floor: currentFloor, batchSize: 5, excludeIds: currentSeenIds.slice(-300) } });
+      const res = await fetchQuestions({ data: { runId: activeRunId, batchSize: 5 } });
+      setFloor(res.currentFloor);
       const newQuestions = (res.questions ?? []) as unknown as (Omit<DungeonQuestion, "options"> & { options: BaseOption[] })[];
       if (newQuestions.length === 0) {
-        toast.error("No more questions available in the dungeon!");
+        toast.error("No more questions available in the dungeon. Finalizing your run...");
         return false;
       }
       const shuffledQuestions: DungeonQuestion[] = newQuestions.map((question) => ({
@@ -93,11 +109,6 @@ function DungeonPage() {
 
       setQuestions(shuffledQuestions);
       setCurrentIdx(0);
-      if (res.resetExclusions) {
-        setSeenIds(shuffledQuestions.map((q) => q.id));
-      } else {
-        setSeenIds((prev) => [...prev, ...shuffledQuestions.map((q) => q.id)]);
-      }
       return true;
     } catch {
       toast.error("Failed to load dungeon questions");
@@ -109,65 +120,96 @@ function DungeonPage() {
 
   async function startDungeon() {
     setState("playing");
+    setRunId(null);
     setFloor(1);
     setTotalCorrect(0);
     setTotalAnswered(0);
-    setSeenIds([]);
     setRunResult(null);
     setLastWrongAnswer(null);
+    setAnswerWasCorrect(null);
+    setSelected(null);
+    setShowFeedback(false);
+    setQuestions([]);
+    setCurrentIdx(0);
     startTimeRef.current = Date.now();
-    await loadBatch(1, []);
-  }
 
-  function handleSelect(optId: string) {
-    if (showFeedback || !currentQuestion) return;
-    const selectedOption = currentQuestion.options.find((opt) => opt.id === optId);
-    const correctOption = currentQuestion.options.find((opt) => opt.id === currentQuestion.correct_option);
-    setSelected(optId);
-    setShowFeedback(true);
-    setTotalAnswered((n) => n + 1);
-
-    const isCorrect = optId === currentQuestion.correct_option;
-
-    if (isCorrect) {
-      setTotalCorrect((n) => n + 1);
-      // Advance after feedback delay
-      setTimeout(() => advanceOrEnd(true), 1200);
-    } else {
-      // Wrong answer — game over after showing feedback
-      setLastWrongAnswer({
-        prompt: currentQuestion.prompt,
-        selected: selectedOption?.displayId ?? optId.toUpperCase(),
-        correct: correctOption?.displayId ?? currentQuestion.correct_option.toUpperCase(),
-        explanation: currentQuestion.explanation,
-      });
-      setTimeout(() => endRun(), 2000);
+    try {
+      const run = await startRun();
+      setRunId(run.runId);
+      const ok = await loadBatch(run.runId);
+      if (!ok) {
+        setState("gameover");
+        const durationSeconds = Math.round((Date.now() - startTimeRef.current) / 1000);
+        submitMutation.mutate({ runId: run.runId, durationSeconds });
+      }
+    } catch (error) {
+      setState("lobby");
+      toast.error(error instanceof Error ? error.message : "Failed to start dungeon run");
     }
   }
 
-  async function advanceOrEnd(wasCorrect: boolean) {
-    if (!wasCorrect) return;
+  async function handleSelect(optId: string) {
+    if (showFeedback || answerMutation.isPending || !currentQuestion || !runId) return;
+    const selectedOption = currentQuestion.options.find((opt) => opt.id === optId);
 
-    const nextFloor = floor + 1;
+    setSelected(optId);
+    setShowFeedback(true);
+    setAnswerWasCorrect(null);
+
+    try {
+      const result = await answerMutation.mutateAsync({
+        runId,
+        questionId: currentQuestion.id,
+        choice: optId,
+      });
+
+      setAnswerWasCorrect(result.isCorrect);
+      setTotalCorrect(result.totalCorrect);
+      setTotalAnswered(result.totalAnswered);
+
+      if (result.isCorrect) {
+        setTimeout(() => advanceOrEnd(result.nextFloor), 1200);
+      } else {
+        const correctOption = currentQuestion.options.find((opt) => opt.id === result.correctChoice);
+        setLastWrongAnswer({
+          prompt: result.prompt,
+          selected: selectedOption?.displayId ?? optId.toUpperCase(),
+          correct: correctOption?.displayId ?? (result.correctChoice ?? "-").toUpperCase(),
+          explanation: result.explanation,
+        });
+        setFloor(result.nextFloor);
+        setTimeout(() => endRun(), 2000);
+      }
+    } catch (error) {
+      setShowFeedback(false);
+      setSelected(null);
+      setAnswerWasCorrect(null);
+      toast.error(error instanceof Error ? error.message : "Failed to validate answer");
+    }
+  }
+
+  async function advanceOrEnd(nextFloor: number) {
     setFloor(nextFloor);
     setSelected(null);
     setShowFeedback(false);
+    setAnswerWasCorrect(null);
 
-    // If we have more questions in current batch
     if (currentIdx + 1 < questions.length) {
       setCurrentIdx((i) => i + 1);
-    } else {
-      // Need new batch
-      const ok = await loadBatch(nextFloor, seenIds);
-      if (!ok) endRun();
+    } else if (runId) {
+      const ok = await loadBatch(runId);
+      if (!ok) {
+        endRun();
+      }
     }
   }
 
   function endRun() {
     setState("gameover");
+    if (!runId) return;
+
     const durationSeconds = Math.round((Date.now() - startTimeRef.current) / 1000);
-    const floorsCleared = Math.max(0, floor - 1); // current floor wasn't cleared
-    submitMutation.mutate({ floorsCleared, totalCorrect, totalAnswered, durationSeconds });
+    submitMutation.mutate({ runId, durationSeconds });
   }
 
   // ========== LOBBY ==========
@@ -226,7 +268,7 @@ function DungeonPage() {
 
   // ========== GAME OVER ==========
   if (state === "gameover") {
-    const floorsCleared = Math.max(0, floor - 1);
+    const floorsCleared = runResult?.floorsCleared ?? Math.max(0, floor - 1);
     return (
       <div className="mx-auto max-w-2xl px-6 py-12">
         <motion.div
@@ -283,7 +325,7 @@ function DungeonPage() {
               </div>
               <div className="rounded-xl bg-[color:var(--flame)]/15 p-3">
                 <Shield className="mx-auto h-4 w-4 text-[color:var(--flame)]" />
-                <div className="mt-1 font-display text-xl font-bold text-[color:var(--flame)]">{totalCorrect}/{totalAnswered}</div>
+                <div className="mt-1 font-display text-xl font-bold text-[color:var(--flame)]">{runResult?.totalCorrect ?? totalCorrect}/{runResult?.totalAnswered ?? totalAnswered}</div>
                 <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Correct</div>
               </div>
             </div>
@@ -318,10 +360,9 @@ function DungeonPage() {
   }
 
   const options = (currentQuestion.options as DisplayOption[]) ?? [];
-  const correctOpt = currentQuestion.correct_option;
   const subjectInfo = currentQuestion.exercises?.subjects;
   const difficulty = currentQuestion.exercises?.difficulty ?? 1;
-  const isCorrectAnswer = showFeedback && selected === correctOpt;
+  const isCorrectAnswer = showFeedback && answerWasCorrect === true;
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-8">
@@ -374,8 +415,8 @@ function DungeonPage() {
           <div className="mt-6 space-y-3">
             {options.map((opt) => {
               const isSel = selected === opt.id;
-              const isCorrect = showFeedback && opt.id === correctOpt;
-              const isWrong = showFeedback && isSel && opt.id !== correctOpt;
+              const isCorrect = showFeedback && isSel && answerWasCorrect === true;
+              const isWrong = showFeedback && isSel && answerWasCorrect === false;
 
               let cls = "border-[color:var(--neon-magenta)]/20 bg-background/40 hover:border-[color:var(--neon-magenta)]/60 hover:bg-[color:var(--neon-magenta)]/5";
               if (showFeedback) {
@@ -390,7 +431,7 @@ function DungeonPage() {
                 <button
                   key={opt.id}
                   onClick={() => handleSelect(opt.id)}
-                  disabled={showFeedback}
+                  disabled={showFeedback || answerMutation.isPending}
                   className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left text-sm transition ${cls} ${showFeedback ? "cursor-default" : ""}`}
                 >
                   <span className="flex items-center gap-3" dir={isMathExpression(opt.text) ? "ltr" : isRtlText(opt.text) ? "rtl" : undefined}>
