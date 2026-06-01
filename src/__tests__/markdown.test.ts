@@ -13,6 +13,25 @@ describe("renderMarkdown", () => {
       const result = renderMarkdown("A & B");
       expect(result).toContain("&amp;");
     });
+
+    it("escapes event handler attributes", () => {
+      const result = renderMarkdown('<img src=x onerror="alert(1)" />');
+      expect(result).not.toContain("<img");
+      expect(result).toContain('&lt;img src=x onerror="alert(1)" /&gt;');
+    });
+
+    it("escapes javascript URLs", () => {
+      const result = renderMarkdown("[x](javascript:alert(1))");
+      expect(result).toContain("javascript:alert(1)");
+      expect(result).not.toContain("<a href=");
+    });
+
+    it("escapes quotes in raw html blocks", () => {
+      const result = renderMarkdown('<div title="x"y">ok</div>');
+      expect(result).not.toContain("<div");
+      expect(result).toContain("&lt;div title=");
+      expect(result).toContain("&gt;ok&lt;/div&gt;");
+    });
   });
 
   describe("Headings", () => {

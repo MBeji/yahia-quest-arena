@@ -7,11 +7,15 @@
     "dev": "vite dev",
     "build": "vite build",
     "build:dev": "vite build --mode development",
+    "build:check": "npm run build && node scripts/check-bundle-budget.mjs",
     "preview": "vite preview",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "test:watch": "vitest",
-    "lint": "eslint .",
-    "format": "prettier --write ."
+    "lint": "eslint src --max-warnings=0",
+    "format": "prettier --write .",
+    "audit:deps": "npm audit --omit=dev --audit-level=high --registry=https://registry.npmjs.org",
+    "ci:verify": "npm run lint && npm run test:coverage && npm run build:check && npm run audit:deps"
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.25.5",
@@ -80,6 +84,7 @@
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^5.0.4",
+    "@vitest/coverage-v8": "^4.1.7",
     "eslint": "^9.32.0",
     "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-prettier": "^5.2.6",
