@@ -3,17 +3,62 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { isRateLimited } from "./rate-limit";
 import type { UnlockedBadge } from "./gamification.types";
-import {
-  HALF_COIN_THRESHOLD_PCT,
-  IDEAL_TIME_PER_QUESTION_S,
-  MIN_DURATION_FLOOR_S,
-  PASS_THRESHOLD_PCT,
-  SPACED_REPETITION_INTERVALS_MS,
-  SPEED_DEMON_THRESHOLD_S,
-  SPEED_FACTOR_MAX,
-  SPEED_FACTOR_MIN,
-  STREAK_BADGE_THRESHOLD,
-} from "./gamification.constants";
+
+type AtomicSubmitResponse = {
+  correct: number;
+  total: number;
+  scorePct: number;
+  xpEarned: number;
+  coinsEarned: number;
+  durationSeconds: number;
+  profile: Record<string, unknown> | null;
+  unlockedBadges: UnlockedBadge[];
+};
+
+function toUnlockedBadges(value: unknown): UnlockedBadge[] {
+  if (!Array.isArray(value)) return [];
+
+  return value
+    .map((entry) => {
+      if (!entry || typeof entry !== "object") return null;
+
+      const row = entry as Record<string, unknown>;
+      if (
+        typeof row.code !== "string"
+        || typeof row.name !== "string"
+        || typeof row.rarity !== "string"
+      ) {
+        return null;
+      }
+
+      return {
+        code: row.code,
+        name: row.name,
+        rarity: row.rarity,
+        iconName: typeof row.iconName === "string" || row.iconName === null ? row.iconName : null,
+      };
+    })
+    .filter((badge): badge is UnlockedBadge => badge !== null);
+}
+
+function parseAtomicSubmitResponse(payload: unknown): AtomicSubmitResponse {
+  if (!payload || typeof payload !== "object") {
+    throw new Error("Unexpected quest submission response.");
+  }
+
+  const row = payload as Record<string, unknown>;
+
+  return {
+    correct: Number(row.correct ?? 0),
+    total: Number(row.total ?? 0),
+    scorePct: Number(row.scorePct ?? 0),
+    xpEarned: Number(row.xpEarned ?? 0),
+    coinsEarned: Number(row.coinsEarned ?? 0),
+    durationSeconds: Number(row.durationSeconds ?? 0),
+    profile: row.profile && typeof row.profile === "object" ? (row.profile as Record<string, unknown>) : null,
+    unlockedBadges: toUnlockedBadges(row.unlockedBadges),
+  };
+}
 
 // ---------- Get a subject with chapters & exercises ----------
 export const getSubject = createServerFn({ method: "GET" })
@@ -125,42 +170,17 @@ export const submitAttempt = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
 
     // Rate limit: max 5 submissions per 10 seconds
-    if (isRateLimited(`submit_${userId}`, 5, 10_000)) {
+    if (await isRateLimited(supabase, `submit_${userId}`, 5, 10_000)) {
       throw new Error("Too many submissions. Please slow down.");
     }
 
-    const [sessionRes, exRes, qsRes] = await Promise.all([
-      supabase
-        .from("exercise_sessions")
-        .select("id,exercise_id,started_at,completed_at")
-        .eq("id", data.sessionId)
-        .eq("user_id", userId)
-        .single(),
-      supabase.from("exercises").select("id,subject_id,xp_reward,reward_coins,difficulty,mode").eq("id", data.exerciseId).single(),
-      supabase
-        .from("questions")
-        .select("id,prompt,correct_option,explanation")
-        .eq("exercise_id", data.exerciseId),
-    ]);
-    if (sessionRes.error) throw new Error(sessionRes.error.message);
-    if (exRes.error) throw new Error(exRes.error.message);
-    if (qsRes.error) throw new Error(qsRes.error.message);
+    const { data: questions, error: questionErr } = await supabase
+      .from("questions")
+      .select("id,prompt,correct_option,explanation")
+      .eq("exercise_id", data.exerciseId);
+    if (questionErr) throw new Error(questionErr.message);
 
-    if (sessionRes.data.exercise_id !== data.exerciseId) {
-      throw new Error("Invalid quest session.");
-    }
-
-    if (sessionRes.data.completed_at) {
-      throw new Error("This quest session is already completed.");
-    }
-
-    const questionMap = new Map(qsRes.data.map((q) => [q.id, q]));
-    let correct = 0;
-    for (const a of data.answers) {
-      if (questionMap.get(a.questionId)?.correct_option === a.choice) correct += 1;
-    }
-    const total = qsRes.data.length;
-    const pct = total > 0 ? (correct / total) * 100 : 0;
+    const questionMap = new Map((questions ?? []).map((q) => [q.id, q]));
 
     const review = data.answers.map((answer) => {
       const question = questionMap.get(answer.questionId);
@@ -174,335 +194,24 @@ export const submitAttempt = createServerFn({ method: "POST" })
         explanation: question?.explanation ?? null,
       };
     });
-
-    const durationSeconds = Math.max(
-      1,
-      Math.round((Date.now() - new Date(sessionRes.data.started_at).getTime()) / 1000),
-    );
-
-    // Scoring: base + speed bonus
-    const idealTime = total * IDEAL_TIME_PER_QUESTION_S;
-    const speedFactor = Math.max(SPEED_FACTOR_MIN, Math.min(SPEED_FACTOR_MAX, idealTime / Math.max(MIN_DURATION_FLOOR_S, durationSeconds)));
-    const xpEarned = Math.round(exRes.data.xp_reward * (pct / 100) * speedFactor);
-
-    // Coin reward: full coins if score >= pass threshold, half if >= half threshold, zero otherwise
-    const rewardCoins = exRes.data.reward_coins ?? 0;
-    const coinsEarned = pct >= PASS_THRESHOLD_PCT ? rewardCoins : pct >= HALF_COIN_THRESHOLD_PCT ? Math.round(rewardCoins / 2) : 0;
-
-    // Insert attempt
-    const insRes = await supabase.from("attempts").insert({
-      user_id: userId,
-      exercise_id: data.exerciseId,
-      subject_id: exRes.data.subject_id,
-      correct_count: correct,
-      total_count: total,
-      score_pct: pct,
-      duration_seconds: durationSeconds,
-      xp_earned: xpEarned,
+    const { data: submitData, error: submitErr } = await supabase.rpc("submit_exercise_attempt", {
+      p_session_id: data.sessionId,
+      p_exercise_id: data.exerciseId,
+      p_answers: data.answers,
     });
-    if (insRes.error) throw new Error(insRes.error.message);
+    if (submitErr) throw new Error(submitErr.message);
 
-    const sessionUpdate = await supabase
-      .from("exercise_sessions")
-      .update({ completed_at: new Date().toISOString() })
-      .eq("id", data.sessionId)
-      .eq("user_id", userId);
-    if (sessionUpdate.error) throw new Error(sessionUpdate.error.message);
-
-    // Award XP via DB function (security definer)
-    const { data: newProfile, error: rpcErr } = await supabase.rpc("award_xp", { p_user: userId, p_xp: xpEarned });
-    if (rpcErr) throw new Error(rpcErr.message);
-
-    const profile = Array.isArray(newProfile) ? newProfile[0] : newProfile;
-
-    // Award coins atomically
-    if (coinsEarned > 0 && profile) {
-      try {
-        await supabase.rpc("award_coins", { p_user: userId, p_coins: coinsEarned });
-      } catch {
-        // Keep quest completion successful even if coin award side effect fails.
-      }
-      profile.yahia_coins = (profile.yahia_coins ?? 0) + coinsEarned;
-    }
-
-    const unlockedBadges: UnlockedBadge[] = [];
-
-    // Badge: first_quest (first attempt ever)
-    const { count: attemptCount } = await supabase
-      .from("attempts")
-      .select("id", { count: "exact", head: true })
-      .eq("user_id", userId);
-    if (attemptCount === 1) {
-      const { data: firstBadge } = await supabase
-        .from("badges")
-        .select("id,code,name,rarity,icon_name")
-        .eq("code", "first_quest")
-        .maybeSingle();
-      if (firstBadge) {
-        const { error: fbErr } = await supabase
-          .from("student_badges")
-          .insert({ student_user_id: userId, badge_id: firstBadge.id, awarded_reason: "First quest completed" });
-        if (!fbErr) {
-          unlockedBadges.push({ code: firstBadge.code, name: firstBadge.name, rarity: firstBadge.rarity, iconName: firstBadge.icon_name });
-        }
-      }
-    }
-
-    // Badge: perfect_score
-    if (pct === 100) {
-      const { data: perfectBadge } = await supabase
-        .from("badges")
-        .select("id,code,name,rarity,icon_name")
-        .eq("code", "perfect_score")
-        .maybeSingle();
-      if (perfectBadge) {
-        const { error: psErr } = await supabase
-          .from("student_badges")
-          .insert({ student_user_id: userId, badge_id: perfectBadge.id, awarded_reason: "Perfect score: 100%" });
-        if (!psErr) {
-          unlockedBadges.push({ code: perfectBadge.code, name: perfectBadge.name, rarity: perfectBadge.rarity, iconName: perfectBadge.icon_name });
-        }
-      }
-    }
-
-    // Badge: speed_demon
-    if (durationSeconds < SPEED_DEMON_THRESHOLD_S && pct >= PASS_THRESHOLD_PCT) {
-      const { data: speedBadge } = await supabase
-        .from("badges")
-        .select("id,code,name,rarity,icon_name")
-        .eq("code", "speed_demon")
-        .maybeSingle();
-      if (speedBadge) {
-        const { error: sdErr } = await supabase
-          .from("student_badges")
-          .insert({ student_user_id: userId, badge_id: speedBadge.id, awarded_reason: "Quest completed in under 60s" });
-        if (!sdErr) {
-          unlockedBadges.push({ code: speedBadge.code, name: speedBadge.name, rarity: speedBadge.rarity, iconName: speedBadge.icon_name });
-        }
-      }
-    }
-
-    // Badge: streak_7
-    if (profile?.current_streak >= STREAK_BADGE_THRESHOLD) {
-      const { data: streakBadge, error: badgeErr } = await supabase
-        .from("badges")
-        .select("id,code,name,rarity,icon_name")
-        .eq("code", "streak_7")
-        .maybeSingle();
-
-      if (badgeErr) throw new Error(badgeErr.message);
-
-      if (streakBadge) {
-        const { error: insertBadgeErr } = await supabase
-          .from("student_badges")
-          .insert({
-            student_user_id: userId,
-            badge_id: streakBadge.id,
-            awarded_reason: "7 consecutive days of studying",
-          });
-
-        if (insertBadgeErr && insertBadgeErr.code !== "23505") {
-          throw new Error(insertBadgeErr.message);
-        }
-
-        if (!insertBadgeErr) {
-          unlockedBadges.push({
-            code: streakBadge.code,
-            name: streakBadge.name,
-            rarity: streakBadge.rarity,
-            iconName: streakBadge.icon_name,
-          });
-        }
-      }
-    }
-
-    // ========== Post-attempt side effects: spaced repetition, daily objectives, weekly quests ==========
-
-    // Get the attempt ID we just inserted (for spaced repetition scheduling)
-    const { data: justInserted } = await supabase
-      .from("attempts")
-      .select("id")
-      .eq("user_id", userId)
-      .eq("exercise_id", data.exerciseId)
-      .order("completed_at", { ascending: false })
-      .limit(1)
-      .single();
-
-    const attemptId = justInserted?.id ?? "";
-
-    // Schedule spaced repetition if score < pass threshold (with dedup)
-    if (pct < PASS_THRESHOLD_PCT && attemptId) {
-      // Check if there's already a pending schedule for this exercise
-      let existingSchedule: { id: string } | null = null;
-      try {
-        const { data: pendingSchedule } = await supabase
-          .from("spaced_repetition_schedule")
-          .select("id")
-          .eq("user_id", userId)
-          .eq("exercise_id", data.exerciseId)
-          .eq("status", "pending")
-          .limit(1)
-          .maybeSingle();
-        existingSchedule = pendingSchedule;
-      } catch {
-        existingSchedule = null;
-      }
-
-      if (!existingSchedule) {
-        for (const [i, intervalMs] of SPACED_REPETITION_INTERVALS_MS.entries()) {
-          try {
-            await supabase.from("spaced_repetition_schedule").insert({
-              user_id: userId,
-              exercise_id: data.exerciseId,
-              subject_id: exRes.data.subject_id,
-              failed_attempt_id: attemptId,
-              retry_level: i + 1,
-              scheduled_for: new Date(Date.now() + intervalMs).toISOString(),
-              status: "pending",
-            });
-          } catch {
-            // Ignore errors
-          }
-        }
-      }
-    }
-
-    // Adapt difficulty based on recent performance (windowed average)
-    {
-      const { data: adaptation } = await supabase
-        .from("difficulty_adaptation")
-        .select("*")
-        .eq("user_id", userId)
-        .eq("subject_id", exRes.data.subject_id)
-        .maybeSingle();
-
-      if (!adaptation) {
-        try {
-          await supabase.from("difficulty_adaptation").insert({
-            user_id: userId,
-            subject_id: exRes.data.subject_id,
-            avg_score: pct,
-            recent_avg_score: pct,
-            total_attempts: 1,
-            current_difficulty_level: 1,
-          });
-        } catch {
-          // Ignore errors
-        }
-      } else {
-        const { data: recentAtts } = await supabase
-          .from("attempts")
-          .select("score_pct")
-          .eq("user_id", userId)
-          .eq("subject_id", exRes.data.subject_id)
-          .order("completed_at", { ascending: false })
-          .limit(10);
-
-        const scores = (recentAtts ?? []).map((a) => a.score_pct as number);
-        const recentAvg = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : pct;
-        const totalAttempts = adaptation.total_attempts + 1;
-        const overallAvg = Math.round(((adaptation.avg_score * adaptation.total_attempts) + pct) / totalAttempts);
-
-        let newDiff = adaptation.current_difficulty_level;
-        if (recentAvg > 75 && newDiff < 4) newDiff++;
-        else if (recentAvg < 40 && newDiff > 1) newDiff--;
-
-        try {
-          await supabase.from("difficulty_adaptation").update({
-            avg_score: overallAvg,
-            recent_avg_score: recentAvg,
-            total_attempts: totalAttempts,
-            current_difficulty_level: newDiff,
-            updated_at: new Date().toISOString(),
-          }).eq("id", adaptation.id);
-        } catch {
-          // Ignore errors
-        }
-      }
-    }
-
-    // Update daily objective: 3 exercises (increment by 1)
-    const today = new Date();
-    today.setUTCHours(0, 0, 0, 0);
-    const todayStr = today.toISOString().split("T")[0];
-
-    let dailyObj: { id: string; current_value: number; target_value: number } | null = null;
-    try {
-      const { data: dailyObjective } = await supabase
-        .from("daily_objectives")
-        .select("id,current_value,target_value")
-        .eq("user_id", userId)
-        .eq("objective_type", "3_exercises")
-        .eq("objective_date", todayStr)
-        .maybeSingle();
-      dailyObj = dailyObjective;
-    } catch {
-      dailyObj = null;
-    }
-
-    if (dailyObj) {
-      const newValue = dailyObj.current_value + 1;
-      const isCompleted = newValue >= dailyObj.target_value;
-      try {
-        await supabase
-          .from("daily_objectives")
-          .update({
-            current_value: newValue,
-            status: isCompleted ? "completed" : "active",
-            completed_at: isCompleted ? new Date().toISOString() : null,
-          })
-          .eq("id", dailyObj.id);
-      } catch {
-        // Ignore errors
-      }
-    }
-
-    // Update weekly quest: beat bosses (if this is a "boss" mode exercise)
-    const exerciseMode = exRes.data.mode;
-    if (pct >= PASS_THRESHOLD_PCT && exerciseMode === "boss") {
-      const dayOfWeek = new Date().getUTCDay();
-      const diff = new Date().getUTCDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
-      const monday = new Date();
-      monday.setUTCDate(diff);
-      monday.setUTCHours(0, 0, 0, 0);
-      const mondayStr = monday.toISOString().split("T")[0];
-
-      let bossQuest: { id: string; current_value: number; target_value: number } | null = null;
-      try {
-        const { data: weeklyBossQuest } = await supabase
-          .from("weekly_quests")
-          .select("id,current_value,target_value")
-          .eq("user_id", userId)
-          .eq("quest_type", "beat_2_bosses")
-          .eq("week_start_date", mondayStr)
-          .maybeSingle();
-        bossQuest = weeklyBossQuest;
-      } catch {
-        bossQuest = null;
-      }
-
-      if (bossQuest) {
-        const newValue = bossQuest.current_value + 1;
-        const isCompleted = newValue >= bossQuest.target_value;
-        try {
-          await supabase
-            .from("weekly_quests")
-            .update({
-              current_value: newValue,
-              status: isCompleted ? "completed" : "active",
-              completed_at: isCompleted ? new Date().toISOString() : null,
-            })
-            .eq("id", bossQuest.id);
-        } catch {
-          // Ignore errors
-        }
-      }
-    }
+    const atomic = parseAtomicSubmitResponse(submitData);
 
     return {
-      correct, total, scorePct: pct, xpEarned, coinsEarned, durationSeconds,
-      profile,
+      correct: atomic.correct,
+      total: atomic.total,
+      scorePct: atomic.scorePct,
+      xpEarned: atomic.xpEarned,
+      coinsEarned: atomic.coinsEarned,
+      durationSeconds: atomic.durationSeconds,
+      profile: atomic.profile,
       review,
-      unlockedBadges,
+      unlockedBadges: atomic.unlockedBadges,
     };
   });

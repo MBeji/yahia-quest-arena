@@ -25,7 +25,7 @@ export const getDungeonQuestions = createServerFn({ method: "GET" })
     const { supabase, userId } = context;
 
     // Rate limit: max 10 requests per 10 seconds per user
-    if (isRateLimited(`dungeon_q_${userId}`, 10, 10_000)) {
+    if (await isRateLimited(supabase, `dungeon_q_${userId}`, 10, 10_000)) {
       throw new Error("Too many requests. Please slow down.");
     }
 
@@ -82,7 +82,7 @@ export const submitDungeonRun = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
 
     // Rate limit: max 3 run submissions per 30 seconds
-    if (isRateLimited(`dungeon_run_${userId}`, 3, 30_000)) {
+    if (await isRateLimited(supabase, `dungeon_run_${userId}`, 3, 30_000)) {
       throw new Error("Too many submissions. Please wait.");
     }
 
