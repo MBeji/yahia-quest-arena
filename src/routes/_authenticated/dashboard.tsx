@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { motion } from "motion/react";
-import { Flame, Zap, Trophy, Swords, Sword, BookOpen, Scroll, Leaf, Globe, ChevronRight, Sparkles, Shield, ShoppingBag, Crown, Play, Skull, Loader2, Copy, Check } from "lucide-react";
+import { Flame, Zap, Trophy, Swords, Sword, BookOpen, Scroll, Leaf, Globe, ChevronRight, Sparkles, Crown, Play, Skull, Copy, Check } from "lucide-react";
 import { toast } from "sonner";
 import { getDashboard, getSprint2Dashboard } from "@/lib/gamification.dashboard";
 import { purchaseShopItem, equipInventorySkin } from "@/lib/gamification.shop";
@@ -12,6 +12,12 @@ import { formatStudentAllianceCode } from "@/lib/family-link";
 const DashboardRadarInventory = lazy(() =>
   import("@/components/dashboard/dashboard-radar-inventory").then((mod) => ({
     default: mod.DashboardRadarInventory,
+  }))
+);
+
+const DashboardBadgesShop = lazy(() =>
+  import("@/components/dashboard/dashboard-badges-shop").then((mod) => ({
+    default: mod.DashboardBadgesShop,
   }))
 );
 
@@ -426,89 +432,30 @@ function Dashboard() {
         </section>
       </div>
 
-      <section className="mt-8">
-        <h2 className="mb-4 flex items-center gap-2 font-display text-xl font-bold">
-          <Shield className="h-5 w-5 text-[color:var(--neon-gold)]" /> Hero Badges
-        </h2>
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {badges.length > 0 ? badges.map((badge) => (
-            <div key={`${badge.code}-${badge.awardedAt}`} className="rounded-2xl border border-border/50 bg-card/60 p-5 backdrop-blur-md">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <div className="font-display text-lg font-bold">{badge.name}</div>
-                  <div className="text-xs uppercase tracking-widest text-[color:var(--neon-gold)]">{badge.rarity}</div>
-                </div>
-                <div className="rounded-full bg-[color:var(--neon-gold)]/15 px-3 py-1 text-xs font-bold text-[color:var(--neon-gold)]">
-                  Badge
-                </div>
-              </div>
-              <div className="mt-3 text-sm text-muted-foreground">{badge.awardedReason ?? "Reward unlocked."}</div>
-              <div className="mt-3 text-xs uppercase tracking-widest text-muted-foreground">
-                Earned · {new Date(badge.awardedAt).toLocaleDateString("en-US")}
-              </div>
+      <Suspense
+        fallback={
+          <div className="mt-8 space-y-6">
+            <div className="h-8 w-48 animate-pulse rounded bg-card/40" />
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              {[1, 2, 3].map((item) => <div key={`badges-skeleton-${item}`} className="h-44 animate-pulse rounded-2xl bg-card/40" />)}
             </div>
-          )) : (
-            <div className="rounded-2xl border border-dashed border-border/50 bg-card/40 p-6 text-sm text-muted-foreground">
-              No badges unlocked yet. Keep completing quests to fill your collection.
+            <div className="h-8 w-48 animate-pulse rounded bg-card/40" />
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              {[1, 2, 3].map((item) => <div key={`shop-skeleton-${item}`} className="h-52 animate-pulse rounded-2xl bg-card/40" />)}
             </div>
-          )}
-        </div>
-      </section>
-
-      <section className="mt-8">
-        <h2 className="mb-4 flex items-center gap-2 font-display text-xl font-bold">
-          <ShoppingBag className="h-5 w-5 text-[color:var(--neon-cyan)]" /> Academy Shop
-        </h2>
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {shopItems.map((item) => {
-            const canEquip = item.itemType === "skin" && item.isOwned && !item.isEquipped;
-            const canBuy = !item.isOwned || item.itemType !== "skin";
-            const isBusy = purchaseMutation.isPending || equipMutation.isPending;
-
-            return (
-              <div key={item.code} className="rounded-2xl border border-border/50 bg-card/60 p-5 backdrop-blur-md">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <div className="font-display text-lg font-bold">{item.name}</div>
-                    <div className="text-xs uppercase tracking-widest text-[color:var(--neon-cyan)]">{item.itemType}</div>
-                  </div>
-                  <div className="rounded-full bg-[color:var(--neon-cyan)]/10 px-3 py-1 text-xs font-bold text-[color:var(--neon-cyan)]">
-                    {item.priceCoins} XP Coins
-                  </div>
-                </div>
-                <p className="mt-3 text-sm text-muted-foreground">{item.description ?? "Academy item."}</p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {item.isOwned && (
-                    <div className="rounded-full bg-[color:var(--success)]/15 px-3 py-1 text-xs font-bold text-[color:var(--success)]">
-                      {item.itemType === "skin" ? (item.isEquipped ? "Equipped" : "Owned") : `In stock x${item.quantity}`}
-                    </div>
-                  )}
-                </div>
-                <div className="mt-4 flex gap-2">
-                  <button
-                    disabled={!canBuy || isBusy || (profile.yahia_coins ?? 0) < item.priceCoins}
-                    onClick={() => purchaseMutation.mutate({ itemCode: item.code })}
-                    aria-label={`Buy ${item.name}`}
-                    className="flex-1 rounded-lg border border-border bg-background/50 px-4 py-2.5 text-sm font-semibold disabled:opacity-40"
-                  >
-                    {purchaseMutation.isPending ? <Loader2 className="mx-auto h-4 w-4 animate-spin" /> : "Buy"}
-                  </button>
-                  {canEquip && (
-                    <button
-                      disabled={isBusy}
-                      onClick={() => equipMutation.mutate({ itemCode: item.code })}
-                      aria-label={`Equip ${item.name}`}
-                      className="flex-1 rounded-lg bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] px-4 py-2.5 text-sm font-bold text-primary-foreground shadow-neon disabled:opacity-40"
-                    >
-                      {equipMutation.isPending ? <Loader2 className="mx-auto h-4 w-4 animate-spin" /> : "Equip"}
-                    </button>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
+          </div>
+        }
+      >
+        <DashboardBadgesShop
+          badges={badges}
+          shopItems={shopItems}
+          availableCoins={profile.yahia_coins ?? 0}
+          isPurchasePending={purchaseMutation.isPending}
+          isEquipPending={equipMutation.isPending}
+          onPurchase={(itemCode) => purchaseMutation.mutate({ itemCode })}
+          onEquip={(itemCode) => equipMutation.mutate({ itemCode })}
+        />
+      </Suspense>
     </div>
   );
 }
