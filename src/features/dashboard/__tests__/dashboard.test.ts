@@ -6,6 +6,7 @@ const mockRpc = vi.fn();
 const mockSupabase = { from: mockFrom, rpc: mockRpc };
 
 vi.mock("@tanstack/react-start", () => ({
+  createMiddleware: () => ({ server: (fn: unknown) => fn }),
   createServerFn: () => {
     let handlerFn: (opts: unknown) => unknown;
     let validatorFn: ((d: unknown) => unknown) | undefined;

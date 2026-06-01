@@ -56,7 +56,7 @@ vi.mock("sonner", () => ({
   toast: { error: vi.fn(), success: vi.fn() },
 }));
 
-import { shuffleOptions, type DisplayOption } from "@/lib/question-utils";
+import { shuffleOptions, type DisplayOption } from "@/shared/lib/question-utils";
 
 // --- Dungeon Test Harness ---
 // Tests the 3 game states: lobby, playing, gameover

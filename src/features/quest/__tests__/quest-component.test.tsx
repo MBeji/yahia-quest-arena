@@ -59,8 +59,8 @@ vi.mock("sonner", () => ({
   toast: { error: vi.fn(), success: vi.fn() },
 }));
 
-import { shuffleOptions, type BaseOption } from "@/lib/question-utils";
-import { PASS_THRESHOLD_PCT } from "@/lib/gamification.constants";
+import { shuffleOptions, type BaseOption } from "@/shared/lib/question-utils";
+import { PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
 
 // --- Build a minimal QuestPage for testing ---
 // (re-implements key rendering logic without TanStack Router internals)

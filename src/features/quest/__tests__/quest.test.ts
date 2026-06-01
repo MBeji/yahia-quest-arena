@@ -8,6 +8,7 @@ const mockSupabase = { from: mockFrom, rpc: mockRpc };
 let capturedHandlers: Record<string, (...args: unknown[]) => unknown> = {};
 
 vi.mock("@tanstack/react-start", () => ({
+  createMiddleware: () => ({ server: (fn: unknown) => fn }),
   createServerFn: ({ method }: { method: string }) => {
     let handlerFn: (opts: unknown) => unknown;
     let validatorFn: ((d: unknown) => unknown) | undefined;
@@ -39,7 +40,7 @@ vi.mock("@/integrations/supabase/auth-middleware", () => ({
   requireSupabaseAuth: "mock-middleware",
 }));
 
-vi.mock("@/lib/rate-limit", () => ({
+vi.mock("@/shared/lib/rate-limit", () => ({
   isRateLimited: vi.fn().mockResolvedValue(false),
 }));
 
@@ -254,7 +255,7 @@ describe("gamification.quest — submitAttempt", () => {
   });
 
   it("throws when rate limited", async () => {
-    const { isRateLimited } = await import("@/lib/rate-limit");
+    const { isRateLimited } = await import("@/shared/lib/rate-limit");
     vi.mocked(isRateLimited).mockResolvedValueOnce(true);
 
     const { submitAttempt } = await import("@/lib/gamification.quest");

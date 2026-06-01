@@ -13,7 +13,7 @@ import {
   DIFFICULTY_DECREASE_THRESHOLD,
   SPACED_REPETITION_INTERVALS_MS,
   DEFAULT_DAILY_OBJECTIVES,
-} from "@/lib/gamification.constants";
+} from "@/shared/constants/gamification";
 
 describe("Gamification Constants", () => {
   describe("Pass/Fail thresholds", () => {

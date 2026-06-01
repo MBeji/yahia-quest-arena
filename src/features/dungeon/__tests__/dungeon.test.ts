@@ -3,7 +3,7 @@ import {
   DUNGEON_XP_PER_FLOOR,
   DUNGEON_COINS_PER_5_FLOORS,
   DUNGEON_DIFFICULTY_STEP,
-} from "@/lib/gamification.dungeon";
+} from "@/features/dungeon/dungeon.server";
 
 describe("Dungeon constants", () => {
   it("XP per floor is positive", () => {

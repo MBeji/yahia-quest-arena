@@ -4,7 +4,7 @@ import {
   formatQuestType,
   resolveDailyAction,
   resolveWeeklyAction,
-} from "@/lib/dashboard-helpers";
+} from "@/features/dashboard/dashboard-helpers";
 
 describe("formatObjectiveType", () => {
   it("maps known types", () => {

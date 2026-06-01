@@ -1,25 +1,10 @@
-// Barrel re-export for backward compatibility.
-// Prefer importing directly from the domain-specific modules:
-//   @/lib/gamification.dashboard
-//   @/lib/gamification.shop
-//   @/lib/gamification.quest
-//   @/lib/gamification.progression
-
-export { getDashboard, getLeaderboard, getSprint2Dashboard } from "./gamification.dashboard";
-export { purchaseShopItem, equipInventorySkin } from "./gamification.shop";
-export {
-  getSubject,
-  getChapterLesson,
-  getExercise,
-  startExerciseSession,
-  submitAttempt,
-} from "./gamification.quest";
-export {
-  scheduleSpacedRepetition,
-  getPendingSpacedRepetition,
-  getDailyObjectives,
-  updateDailyObjectiveProgress,
-  getWeeklyQuests,
-  updateWeeklyQuestProgress,
-  adaptDifficulty,
-} from "./gamification.progression";
+// BACKWARD COMPAT — barrel re-export for all gamification features.
+// New code should import from specific features:
+//   @/features/dashboard
+//   @/features/shop
+//   @/features/quest
+//   @/features/progression
+export * from "@/features/dashboard/dashboard.server";
+export * from "@/features/shop/shop.server";
+export * from "@/features/quest/quest.server";
+export * from "@/features/progression/progression.server";

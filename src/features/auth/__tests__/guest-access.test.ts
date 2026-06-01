@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getGuestSignInErrorMessage, GUEST_ACCESS_COPY } from "@/lib/guest-access";
+import { getGuestSignInErrorMessage, GUEST_ACCESS_COPY } from "@/features/auth/guest-access";
 
 describe("getGuestSignInErrorMessage", () => {
   it("returns empty string for successful result", () => {

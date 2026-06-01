@@ -6,6 +6,7 @@ const mockRpc = vi.fn();
 const mockSupabase = { from: mockFrom, rpc: mockRpc };
 
 vi.mock("@tanstack/react-start", () => ({
+  createMiddleware: () => ({ server: (fn: unknown) => fn }),
   createServerFn: () => {
     let handlerFn: (opts: unknown) => unknown;
     let validatorFn: ((d: unknown) => unknown) | undefined;
@@ -35,7 +36,7 @@ vi.mock("@/integrations/supabase/auth-middleware", () => ({
   requireSupabaseAuth: "mock-middleware",
 }));
 
-vi.mock("@/lib/rate-limit", () => ({
+vi.mock("@/shared/lib/rate-limit", () => ({
   isRateLimited: vi.fn().mockResolvedValue(false),
 }));
 
@@ -276,7 +277,7 @@ describe("gamification.progression — updateDailyObjectiveProgress", () => {
   });
 
   it("throws when rate limited", async () => {
-    const { isRateLimited } = await import("@/lib/rate-limit");
+    const { isRateLimited } = await import("@/shared/lib/rate-limit");
     vi.mocked(isRateLimited).mockResolvedValueOnce(true);
 
     const { updateDailyObjectiveProgress } = await import("@/lib/gamification.progression");
