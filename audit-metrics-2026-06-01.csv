@@ -1,0 +1,22 @@
+metric,category,value,notes
+commit_count,version_control,74,git rev-list --count HEAD
+branches,version_control,1,main only (local + origin)
+release_tags,version_control,0,git tag returned none
+ci_workflows,version_control,0,.github/workflows not found
+source_files_ts_tsx,codebase,100,find src -name *.ts/*.tsx
+test_files,testing,9,find src/__tests__ -name *.test.ts
+tests_total,testing,120,vitest run output
+tests_status,testing,pass,9/9 files passing
+npm_audit_runtime_high,security,0,found 0 vulnerabilities
+lint_problems_total,code_quality,11919,npx eslint src --max-warnings=0
+lint_errors,code_quality,11910,mostly prettier/prettier
+lint_warnings,code_quality,9,eslint warnings
+todo_fixme_hack_markers,code_quality,0,grep TODO|FIXME|HACK in src
+largest_file_lines,maintainability,773,src/integrations/supabase/types.ts
+large_files_over_300_lines,maintainability,9,from wc -l scan
+dashboard_chunk_before_kb,performance,22.45,observed build output before extra split
+dashboard_chunk_after_split_kb,performance,18.61,after badges+shop lazy split
+dashboard_chunk_after_defer_kb,performance,19.50,after defer logic added
+client_index_chunk_kb,performance,404.63,observed in current build output
+vendor_charts_chunk_kb,performance,363.39,observed in current build output
+vendor_supabase_chunk_kb,performance,207.68,observed in current build output
