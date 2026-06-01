@@ -12,6 +12,7 @@ import {
   RECENT_ATTEMPTS_WINDOW,
   SPACED_REPETITION_INTERVALS_MS,
 } from "./gamification.constants";
+import { isRateLimited } from "./rate-limit";
 
 // ---------- Schedule spaced repetition after failed attempt ----------
 export const scheduleSpacedRepetition = createServerFn({ method: "POST" })
@@ -147,11 +148,19 @@ export const updateDailyObjectiveProgress = createServerFn({ method: "POST" })
   .inputValidator((d) =>
     z.object({
       objectiveType: z.enum(["10_min", "15_min", "3_exercises"]),
-      incrementValue: z.number().positive(),
+      incrementValue: z.number().int().min(1).max(5),
     }).parse(d),
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
+
+    if (await isRateLimited(supabase, `daily_objective_${userId}`, 20, 60_000)) {
+      throw new Error("Too many objective updates. Please slow down.");
+    }
+
+    if (data.objectiveType === "3_exercises" && data.incrementValue !== 1) {
+      throw new Error("Invalid increment for exercise objective.");
+    }
 
     const today = new Date();
     today.setUTCHours(0, 0, 0, 0);
@@ -248,12 +257,16 @@ export const updateWeeklyQuestProgress = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) =>
     z.object({
-      questType: z.string().min(1),
-      incrementValue: z.number().positive(),
+      questType: z.enum(["maintain_streak_5", "beat_2_bosses"]),
+      incrementValue: z.literal(1),
     }).parse(d),
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
+
+    if (await isRateLimited(supabase, `weekly_quest_${userId}`, 20, 60_000)) {
+      throw new Error("Too many quest updates. Please slow down.");
+    }
 
     const today = new Date();
     const dayOfWeek = today.getUTCDay();
