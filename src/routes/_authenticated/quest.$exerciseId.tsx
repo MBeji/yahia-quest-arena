@@ -113,7 +113,7 @@ function QuestPage() {
     onError: (e) => toast.error(e instanceof Error ? e.message : "Error"),
   });
 
-  const questions = data?.questions ?? [];
+  const questions = useMemo(() => data?.questions ?? [], [data?.questions]);
   const shuffledOptionsByQuestionId = useMemo(() => {
     return new Map(
       questions.map((q) => {
