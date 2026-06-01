@@ -32,6 +32,8 @@ import {
   resolveDailyAction,
   resolveWeeklyAction,
 } from "@/lib/dashboard-helpers";
+import { useT } from "@/lib/i18n";
+import { LanguageSwitcher } from "@/components/ui/language-switcher";
 
 const DashboardRadarInventory = lazy(() =>
   import("@/components/dashboard/dashboard-radar-inventory").then((mod) => ({
@@ -58,17 +60,8 @@ const ICONS: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> 
   Globe,
 } as never;
 
-const MOTIVATIONAL_QUOTES = [
-  { text: "Le guerrier qui s'entraîne chaque jour devient invincible.", author: "Sensei XP" },
-  { text: "Chaque bonne réponse est un coup porté à l'ignorance.", author: "L'Académie" },
-  { text: "Le talent sans travail n'est qu'une flamme sans bois.", author: "Proverbe shinobi" },
-  { text: "Ta progression ne ment jamais. Continue.", author: "Le Système" },
-  { text: "Un S-Rank n'est qu'un Candidat Civil qui n'a jamais abandonné.", author: "Légende" },
-  { text: "La connaissance est la plus puissante des armes.", author: "L'Oracle" },
-  { text: "1% de mieux chaque jour = 37x plus fort en un an.", author: "Les Maths" },
-];
-
 function DailyXpWidget({ xpToday, dailyGoal, streak }: { xpToday: number; dailyGoal: number; streak: number }) {
+  const t = useT();
   const pct = Math.min(100, Math.round((xpToday / dailyGoal) * 100));
   const circumference = 2 * Math.PI * 40;
   const dashOffset = circumference - (pct / 100) * circumference;
@@ -94,23 +87,23 @@ function DailyXpWidget({ xpToday, dailyGoal, streak }: { xpToday: number; dailyG
       </div>
       <div>
         <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--neon-violet)]">
-          Objectif du jour
+          {t.dashboard.dailyGoalLabel}
         </div>
         <div className="mt-1 font-display text-2xl font-bold">
           {xpToday} <span className="text-base text-muted-foreground">/ {dailyGoal} XP</span>
         </div>
         {isComplete ? (
           <div className="mt-1 text-sm font-semibold text-[color:var(--neon-gold)]">
-            ✨ Objectif atteint !
+            {t.dashboard.dailyGoalReached}
           </div>
         ) : (
           <div className="mt-1 text-sm text-muted-foreground">
-            Plus que {dailyGoal - xpToday} XP pour aujourd'hui
+            {dailyGoal - xpToday} {t.dashboard.dailyGoalRemaining}
           </div>
         )}
         {streak > 0 && (
           <div className="mt-2 flex items-center gap-1 text-xs text-[color:var(--flame)]">
-            <Flame className="h-3 w-3 animate-flame" /> {streak} jours consécutifs
+            <Flame className="h-3 w-3 animate-flame" /> {streak} {t.dashboard.consecutiveDays}
           </div>
         )}
       </div>
@@ -119,13 +112,14 @@ function DailyXpWidget({ xpToday, dailyGoal, streak }: { xpToday: number; dailyG
 }
 
 function MotivationalQuote() {
-  const dayIndex = new Date().getDate() % MOTIVATIONAL_QUOTES.length;
-  const quote = MOTIVATIONAL_QUOTES[dayIndex];
+  const t = useT();
+  const dayIndex = new Date().getDate() % t.quotes.length;
+  const quote = t.quotes[dayIndex];
 
   return (
     <div className="flex flex-col justify-center rounded-2xl border border-[color:var(--neon-cyan)]/20 bg-card/40 p-5 backdrop-blur-md">
       <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--neon-cyan)] mb-3">
-        Parole du jour
+        {t.dashboard.quoteLabel}
       </div>
       <blockquote className="font-display text-base font-medium italic leading-relaxed">
         «&nbsp;{quote.text}&nbsp;»
@@ -136,6 +130,7 @@ function MotivationalQuote() {
 }
 
 function Dashboard() {
+  const t = useT();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const fetchDashboard = useServerFn(getDashboard);
@@ -184,10 +179,10 @@ function Dashboard() {
   const streakRecoveryMutation = useMutation({
     mutationFn: () => recoverStreakFn(),
     onSuccess: (res) => {
-      toast.success(`🔥 Streak récupéré ! Tu as maintenant ${res.newStreak} jour.`);
+      toast.success(`🔥 Streak recovered! You now have ${res.newStreak} ${res.newStreak > 1 ? t.dashboard.days : t.dashboard.day}.`);
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
-    onError: (error) => toast.error(error instanceof Error ? error.message : "Échec de la récupération"),
+    onError: (error) => toast.error(error instanceof Error ? error.message : "Recovery failed"),
   });
 
   if (isError) {
@@ -195,15 +190,15 @@ function Dashboard() {
       <div className="mx-auto max-w-md px-6 py-20 text-center">
         <div className="rounded-2xl border border-destructive/30 bg-destructive/5 p-8">
           <Skull className="mx-auto h-10 w-10 text-destructive" />
-          <h2 className="mt-4 font-display text-xl font-bold">Failed to load dashboard</h2>
+          <h2 className="mt-4 font-display text-xl font-bold">{t.dashboard.failedLoad}</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            Something went wrong. Please try again.
+            {t.dashboard.failedLoadDesc}
           </p>
           <button
             onClick={() => queryClient.invalidateQueries({ queryKey: ["dashboard"] })}
             className="mt-4 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
           >
-            Retry
+            {t.common.retry}
           </button>
         </div>
       </div>
@@ -292,7 +287,7 @@ function Dashboard() {
               </div>
               <div className="flex items-center gap-1 rounded-full bg-[color:var(--flame)]/20 px-3 py-1 text-sm font-bold text-[color:var(--flame)]">
                 <Flame className="h-4 w-4 animate-flame" /> {profile.current_streak}{" "}
-                {profile.current_streak > 1 ? "days" : "day"}
+                {profile.current_streak > 1 ? t.dashboard.days : t.dashboard.day}
               </div>
               <div className="flex items-center gap-1 rounded-full bg-[color:var(--neon-gold)]/20 px-3 py-1 text-sm font-bold text-[color:var(--neon-gold)]">
                 <Zap className="h-4 w-4" /> {profile.xp} XP
@@ -323,7 +318,7 @@ function Dashboard() {
             {studentAllianceCode && (
               <div className="mt-4 rounded-xl border border-[color:var(--neon-cyan)]/35 bg-[color:var(--neon-cyan)]/8 p-3">
                 <div className="text-[11px] uppercase tracking-[0.2em] text-[color:var(--neon-cyan)]">
-                  Alliance Code
+                  {t.dashboard.allianceCode}
                 </div>
                 <div className="mt-1 flex items-center justify-between gap-2">
                   <div className="font-mono text-xs sm:text-sm text-foreground/90">
@@ -343,18 +338,18 @@ function Dashboard() {
                     ) : (
                       <Copy className="h-3.5 w-3.5" />
                     )}
-                    {copiedCode ? "Copied" : "Copy"}
+                    {copiedCode ? t.dashboard.allianceCopied : t.dashboard.allianceCopy}
                   </button>
                 </div>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  Share this code with your parent to unlock mentor tracking.
+                  {t.dashboard.allianceHint}
                 </p>
               </div>
             )}
           </div>
           <div className="hidden sm:block">
             <div className="text-right text-xs uppercase tracking-widest text-muted-foreground">
-              Longest streak
+              {t.dashboard.longestStreak}
             </div>
             <div className="text-right font-display text-2xl font-bold text-[color:var(--flame)]">
               {profile.longest_streak}d
@@ -393,9 +388,9 @@ function Dashboard() {
               <Flame className="h-5 w-5 text-[color:var(--flame)]" />
             </div>
             <div>
-              <div className="font-display text-sm font-bold">Streak perdu !</div>
+              <div className="font-display text-sm font-bold">{t.dashboard.streakLostTitle}</div>
               <div className="text-xs text-muted-foreground">
-                Récupère ton streak pour 15 XP Coins (tu avais {profile.longest_streak} jours)
+                {t.dashboard.streakLostDesc.replace("{n}", String(profile.longest_streak))}
               </div>
             </div>
           </div>
@@ -405,7 +400,7 @@ function Dashboard() {
             onClick={() => streakRecoveryMutation.mutate()}
             className="shrink-0 rounded-lg bg-[color:var(--flame)] px-4 py-2 text-sm font-bold text-primary-foreground transition hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {streakRecoveryMutation.isPending ? "..." : "🔥 Récupérer"}
+            {streakRecoveryMutation.isPending ? "..." : t.dashboard.streakRecover}
           </button>
         </motion.div>
       )}
@@ -430,9 +425,9 @@ function Dashboard() {
               </div>
               <div>
                 <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--neon-gold)] font-bold">
-                  ⚡ Retenter
+                  {t.dashboard.retryLabel}
                 </div>
-                <div className="font-display text-lg font-bold">Ton dernier exercice</div>
+                <div className="font-display text-lg font-bold">{t.dashboard.retryTitle}</div>
               </div>
             </div>
             <ChevronRight className="h-6 w-6 text-[color:var(--neon-gold)] transition group-hover:translate-x-1" />
@@ -451,7 +446,7 @@ function Dashboard() {
               </div>
               <div>
                 <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--neon-cyan)]">
-                  Continuer
+                  {t.dashboard.continueLabel}
                 </div>
                 <div className="font-display text-lg font-bold">{continueSubject.name_fr}</div>
               </div>
@@ -470,9 +465,9 @@ function Dashboard() {
             </div>
             <div>
               <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--neon-magenta)] font-bold">
-                Infinite Dungeon
+                {t.dashboard.dungeonLabel}
               </div>
-              <div className="font-display text-lg font-bold">Toutes matières mélangées</div>
+              <div className="font-display text-lg font-bold">{t.dashboard.dungeonDesc}</div>
             </div>
           </div>
           <ChevronRight className="h-6 w-6 text-[color:var(--neon-magenta)] transition group-hover:translate-x-1" />
@@ -489,12 +484,12 @@ function Dashboard() {
         {/* Daily Objectives */}
         <div className="rounded-2xl border border-[color:var(--neon-cyan)]/30 bg-[color:var(--neon-cyan)]/5 p-5 backdrop-blur-md">
           <div className="mb-4 flex items-center gap-2 font-display text-lg font-bold">
-            <Trophy className="h-5 w-5 text-[color:var(--neon-cyan)]" /> Daily Quests
+            <Trophy className="h-5 w-5 text-[color:var(--neon-cyan)]" /> {t.dashboard.dailyQuests}
           </div>
           <div className="space-y-3">
             {(sprint2?.dailyObjectives ?? []).length === 0 && (
               <p className="text-xs text-muted-foreground">
-                Complete exercises to unlock daily objectives.
+                {t.dashboard.dailyEmpty}
               </p>
             )}
             {(sprint2?.dailyObjectives ?? []).map((obj) => {
@@ -530,7 +525,7 @@ function Dashboard() {
                     onClick={() => runQuestAction(action)}
                     className="mt-2 rounded-md border border-[color:var(--neon-cyan)]/40 bg-[color:var(--neon-cyan)]/15 px-2.5 py-1 text-xs font-semibold text-[color:var(--neon-cyan)] transition hover:bg-[color:var(--neon-cyan)]/25 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    {done ? "Completed" : "Continue"}
+                    {done ? t.common.completed : t.common.continue}
                   </button>
                 </div>
               );
@@ -541,11 +536,11 @@ function Dashboard() {
         {/* Weekly Quests */}
         <div className="rounded-2xl border border-[color:var(--neon-gold)]/30 bg-[color:var(--neon-gold)]/5 p-5 backdrop-blur-md">
           <div className="mb-4 flex items-center gap-2 font-display text-lg font-bold">
-            <Flame className="h-5 w-5 text-[color:var(--neon-gold)]" /> Weekly Quests
+            <Flame className="h-5 w-5 text-[color:var(--neon-gold)]" /> {t.dashboard.weeklyQuests}
           </div>
           <div className="space-y-3">
             {(sprint2?.weeklyQuests ?? []).length === 0 && (
-              <p className="text-xs text-muted-foreground">Weekly quests appear as you progress.</p>
+              <p className="text-xs text-muted-foreground">{t.dashboard.weeklyEmpty}</p>
             )}
             {(sprint2?.weeklyQuests ?? []).map((q) => {
               const pct =
@@ -578,7 +573,7 @@ function Dashboard() {
                     onClick={() => runQuestAction(action)}
                     className="mt-2 rounded-md border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/15 px-2.5 py-1 text-xs font-semibold text-[color:var(--neon-gold)] transition hover:bg-[color:var(--neon-gold)]/25 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    {done ? "Completed" : "Continue"}
+                    {done ? t.common.completed : t.common.continue}
                   </button>
                 </div>
               );
@@ -592,13 +587,13 @@ function Dashboard() {
         <section>
           <div className="mb-4 flex items-center justify-between">
             <h2 className="flex items-center gap-2 font-display text-xl font-bold">
-              <Swords className="h-5 w-5 text-[color:var(--neon-violet)]" /> Paths to conquer
+              <Swords className="h-5 w-5 text-[color:var(--neon-violet)]" /> {t.dashboard.pathsTitle}
             </h2>
             <Link
               to="/leaderboard"
               className="flex items-center gap-1.5 rounded-lg border border-[color:var(--neon-gold)]/30 bg-[color:var(--neon-gold)]/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[color:var(--neon-gold)] transition hover:bg-[color:var(--neon-gold)]/20"
             >
-              <Crown className="h-3.5 w-3.5" /> Leaderboard
+              <Crown className="h-3.5 w-3.5" /> {t.common.leaderboard}
             </Link>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -638,7 +633,7 @@ function Dashboard() {
                     </div>
                     <div className="relative mt-4 flex items-center justify-between text-xs">
                       <span className="text-muted-foreground">
-                        {st ? `${st.count} quest${st.count > 1 ? "s" : ""}` : "Not attempted yet"}
+                        {st ? `${st.count} quest${st.count > 1 ? "s" : ""}` : t.dashboard.notAttempted}
                       </span>
                       <span
                         className="font-bold"

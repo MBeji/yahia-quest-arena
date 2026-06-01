@@ -20,6 +20,7 @@ import { BOSS_TIME_PER_QUESTION_S, PASS_THRESHOLD_PCT } from "@/lib/gamification
 import { isRtlText, isMathExpression } from "@/lib/utils";
 import { shuffleOptions, type BaseOption, type DisplayOption } from "@/lib/question-utils";
 import { LevelUpCelebration } from "@/components/ui/level-up-celebration";
+import { useT } from "@/lib/i18n";
 
 // Confetti component for victory
 function Confetti() {
@@ -62,6 +63,7 @@ type Answer = { questionId: string; choice: string };
 
 function QuestPage() {
   const { exerciseId } = Route.useParams();
+  const t = useT();
   const qc = useQueryClient();
   const fetchExercise = useServerFn(getExercise);
   const startSession = useServerFn(startExerciseSession);
@@ -267,7 +269,7 @@ function QuestPage() {
   if (isLoading || !data) {
     return (
       <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">
-        Preparing the arena…
+        {t.quest.preparing}
       </div>
     );
   }
@@ -296,7 +298,7 @@ function QuestPage() {
               <Trophy className="h-10 w-10 text-primary-foreground" />
             </div>
             <h1 className="mt-5 font-display text-3xl font-bold">
-              {passed ? "Victory!" : "Nice try, warrior"}
+              {passed ? t.quest.victoryTitle : t.quest.niceTriTitle}
             </h1>
             <p className="mt-1 text-muted-foreground">
               {result.correct} / {result.total} correct answers · {Math.round(result.scorePct)}%
@@ -310,28 +312,28 @@ function QuestPage() {
                 <div className="mt-1 font-display text-2xl font-bold text-neon-gold">
                   +{result.xpEarned}
                 </div>
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">XP</div>
+                <div className="text-xs uppercase tracking-wider text-muted-foreground">{t.quest.xpLabel}</div>
               </div>
               <div className="rounded-xl bg-(--neon-cyan)/15 p-4">
                 <Sparkles className="mx-auto h-5 w-5 text-neon-cyan" />
                 <div className="mt-1 font-display text-2xl font-bold text-neon-cyan">
                   +{result.coinsEarned ?? 0}
                 </div>
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">Coins</div>
+                <div className="text-xs uppercase tracking-wider text-muted-foreground">{t.quest.coinsLabel}</div>
               </div>
               <div className="rounded-xl bg-(--neon-violet)/15 p-4">
                 <Sparkles className="mx-auto h-5 w-5 text-neon-violet" />
                 <div className="mt-1 font-display text-2xl font-bold text-neon-violet">
                   {result.profile?.level ?? "?"}
                 </div>
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">Level</div>
+                <div className="text-xs uppercase tracking-wider text-muted-foreground">{t.quest.levelLabel}</div>
               </div>
               <div className="rounded-xl bg-(--flame)/15 p-4">
                 <Flame className="mx-auto h-5 w-5 text-flame animate-flame" />
                 <div className="mt-1 font-display text-2xl font-bold text-flame">
                   {result.profile?.current_streak ?? 0}
                 </div>
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">Streak</div>
+                <div className="text-xs uppercase tracking-wider text-muted-foreground">{t.quest.streakLabel}</div>
               </div>
             </div>
             <div className="mt-6 text-xs uppercase tracking-widest text-neon-cyan">
@@ -340,7 +342,7 @@ function QuestPage() {
             {result.unlockedBadges.length > 0 && (
               <div className="mt-6 rounded-2xl border border-(--neon-gold)/30 bg-(--neon-gold)/10 p-4 text-left">
                 <div className="text-xs uppercase tracking-widest text-neon-gold">
-                  Badges unlocked
+                  {t.quest.badgesUnlocked}
                 </div>
                 <div className="mt-3 flex flex-wrap gap-3">
                   {result.unlockedBadges.map((badge) => (
@@ -359,7 +361,7 @@ function QuestPage() {
                 to="/dashboard"
                 className="rounded-lg border border-border bg-background/50 px-5 py-2.5 text-sm font-semibold hover:bg-background/80"
               >
-                Back to hall
+                {t.common.backToHall}
               </Link>
               <button
                 onClick={() => {
@@ -378,12 +380,12 @@ function QuestPage() {
                 }}
                 className="rounded-lg bg-linear-to-r from-neon-violet to-neon-magenta px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-neon hover:scale-105"
               >
-                Replay quest
+                {t.quest.replayQuest}
               </button>
             </div>
 
             <div className="mt-8 text-left">
-              <h2 className="font-display text-xl font-bold">Quest Review</h2>
+              <h2 className="font-display text-xl font-bold">{t.quest.questReview}</h2>
               <div className="mt-4 space-y-3">
                 {result.review.map((item, reviewIndex) => (
                   <div
@@ -405,13 +407,13 @@ function QuestPage() {
                       <div
                         className={`rounded-full px-3 py-1 text-xs font-bold ${item.isCorrect ? "bg-(--success)/15 text-success" : "bg-destructive/15 text-destructive"}`}
                       >
-                        {item.isCorrect ? "Passed" : "Needs work"}
+                        {item.isCorrect ? t.quest.passed : t.quest.needsWork}
                       </div>
                     </div>
                     <div className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
                       <div className="rounded-xl bg-card/60 p-3">
                         <div className="text-xs uppercase tracking-widest text-muted-foreground">
-                          Your answer
+                          {t.quest.yourAnswer}
                         </div>
                         <div className="mt-1 font-mono uppercase">
                           {getDisplayChoice(item.questionId, item.selectedChoice)}
@@ -419,7 +421,7 @@ function QuestPage() {
                       </div>
                       <div className="rounded-xl bg-card/60 p-3">
                         <div className="text-xs uppercase tracking-widest text-muted-foreground">
-                          Correct answer
+                          {t.quest.correctAnswer}
                         </div>
                         <div className="mt-1 font-mono uppercase">
                           {getDisplayChoice(item.questionId, item.correctChoice)}
@@ -465,7 +467,7 @@ function QuestPage() {
         to=".."
         className="mb-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
       >
-        <ArrowLeft className="h-4 w-4" /> Leave quest
+        <ArrowLeft className="h-4 w-4" /> {t.quest.leaveQuest}
       </Link>
 
       {/* Boss Mode Header */}
@@ -482,7 +484,7 @@ function QuestPage() {
               </div>
               <div>
                 <div className="text-xs uppercase tracking-[0.3em] text-destructive font-bold">
-                  ⚔️ Boss Fight
+                  {t.quest.bossFight}
                 </div>
                 <div className="font-display text-lg font-bold">{data.exercise.title}</div>
               </div>
@@ -500,7 +502,7 @@ function QuestPage() {
           <div className="mt-4">
             <div className="mb-1 flex items-center justify-between text-xs">
               <span className="flex items-center gap-1 font-bold text-destructive">
-                <Heart className="h-3 w-3" /> Boss HP
+                <Heart className="h-3 w-3" /> {t.quest.bossHp}
               </span>
               <span className="text-muted-foreground">{bossHp}%</span>
             </div>
@@ -550,8 +552,8 @@ function QuestPage() {
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">
             {isBoss
-              ? "Strike fast and true to deal damage to the Boss!"
-              : "Correction is stored server-side until the quest ends."}
+              ? t.quest.bossStrike
+              : t.quest.feedbackMsg}
           </p>
           <div className="mt-6 space-y-3">
             {options.map((opt) => {
@@ -595,7 +597,7 @@ function QuestPage() {
 
           {!showFeedback && (
             <div className="mt-3 text-center text-xs text-muted-foreground/60 hidden sm:block">
-              Raccourcis : <kbd className="rounded border border-border/60 px-1.5 py-0.5 font-mono text-[10px]">1</kbd>-<kbd className="rounded border border-border/60 px-1.5 py-0.5 font-mono text-[10px]">4</kbd> ou <kbd className="rounded border border-border/60 px-1.5 py-0.5 font-mono text-[10px]">A</kbd>-<kbd className="rounded border border-border/60 px-1.5 py-0.5 font-mono text-[10px]">D</kbd> pour répondre
+              {t.quest.keyboardHint.replace("{keys1}", "1-4").replace("{keys2}", "A-D")}
             </div>
           )}
 
@@ -605,7 +607,7 @@ function QuestPage() {
               animate={{ opacity: 1, y: 0 }}
               className="mt-4 rounded-xl border border-(--neon-cyan)/30 bg-(--neon-cyan)/10 p-4 text-sm text-neon-cyan"
             >
-              <p>Reponse enregistree. La correction detaillee apparait a la fin du quest.</p>
+              <p>{t.quest.feedbackMsg}</p>
             </motion.div>
           )}
 
@@ -624,11 +626,11 @@ function QuestPage() {
               )}
               {isBoss
                 ? idx + 1 >= total
-                  ? "⚔️ Final blow!"
-                  : "⚔️ Attack!"
+                  ? t.quest.bossFinalBlow
+                  : t.quest.bossAttack
                 : idx + 1 >= total
-                  ? "Finish quest"
-                  : "Next question"}
+                  ? t.quest.finishQuest
+                  : t.quest.nextQuestion}
             </button>
           </div>
         </motion.div>

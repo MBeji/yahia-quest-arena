@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useMemo } from "react";
 import { Crown, Zap } from "lucide-react";
+import { useT } from "@/lib/i18n";
 
 interface LevelUpCelebrationProps {
   show: boolean;
@@ -54,6 +55,7 @@ function CelebrationParticles() {
 }
 
 export function LevelUpCelebration({ show, newLevel, xpGained, onComplete }: LevelUpCelebrationProps) {
+  const t = useT();
   return (
     <AnimatePresence>
       {show && (
@@ -89,7 +91,7 @@ export function LevelUpCelebration({ show, newLevel, xpGained, onComplete }: Lev
               className="text-center"
             >
               <div className="text-xs uppercase tracking-[0.3em] text-[color:var(--neon-gold)]">
-                Niveau supérieur !
+                {t.levelUp.title}
               </div>
               <div className="mt-2 font-display text-5xl font-black text-gradient-primary">
                 Lvl {newLevel}
@@ -114,7 +116,7 @@ export function LevelUpCelebration({ show, newLevel, xpGained, onComplete }: Lev
               transition={{ delay: 0.8 }}
               className="text-sm text-muted-foreground"
             >
-              Touche pour continuer
+              {t.levelUp.tapContinue}
             </motion.p>
           </motion.div>
         </motion.div>

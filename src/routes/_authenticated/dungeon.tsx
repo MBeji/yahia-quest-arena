@@ -26,6 +26,7 @@ import {
 } from "@/lib/gamification.dungeon";
 import { isRtlText, isMathExpression } from "@/lib/utils";
 import { shuffleOptions, type DisplayOption } from "@/lib/question-utils";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/dungeon")({
   head: () => ({ meta: [{ title: "Dungeon · XP Scholars" }] }),
@@ -48,6 +49,7 @@ type GameState = "lobby" | "playing" | "gameover";
 
 function DungeonPage() {
   const qc = useQueryClient();
+  const t = useT();
   const startRun = useServerFn(startDungeonRun);
   const fetchQuestions = useServerFn(getDungeonQuestions);
   const submitAnswer = useServerFn(submitDungeonAnswer);
@@ -234,7 +236,7 @@ function DungeonPage() {
           to="/dashboard"
           className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
         >
-          <ArrowLeft className="h-4 w-4" /> Heroes Hall
+          <ArrowLeft className="h-4 w-4" /> {t.dungeon.heroesHall}
         </Link>
 
         <motion.div
@@ -247,10 +249,9 @@ function DungeonPage() {
             <div className="mx-auto grid h-20 w-20 place-items-center rounded-2xl bg-linear-to-br from-neon-magenta to-neon-violet shadow-neon animate-pulse-neon">
               <Skull className="h-10 w-10 text-primary-foreground" />
             </div>
-            <h1 className="mt-5 font-display text-4xl font-bold">The Infinite Dungeon</h1>
+            <h1 className="mt-5 font-display text-4xl font-bold">{t.dungeon.title}</h1>
             <p className="mt-3 text-muted-foreground max-w-md mx-auto">
-              Descends floor by floor. Questions from all subjects, increasingly difficult. One
-              wrong answer and it's over. How deep can you go?
+              {t.dungeon.desc}
             </p>
 
             <div className="mt-8 grid grid-cols-3 gap-4 max-w-sm mx-auto">
@@ -260,7 +261,7 @@ function DungeonPage() {
                   {DUNGEON_XP_PER_FLOOR}
                 </div>
                 <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                  XP / floor
+                  {t.dungeon.xpPerFloor}
                 </div>
               </div>
               <div className="rounded-xl bg-(--neon-cyan)/10 p-3">
@@ -269,14 +270,14 @@ function DungeonPage() {
                   {DUNGEON_COINS_PER_5_FLOORS}
                 </div>
                 <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                  Coins / 5 floors
+                  {t.dungeon.coinsPerFloors}
                 </div>
               </div>
               <div className="rounded-xl bg-destructive/10 p-3">
                 <Skull className="mx-auto h-5 w-5 text-destructive" />
                 <div className="mt-1 font-display text-lg font-bold text-destructive">1</div>
                 <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                  Life
+                  {t.dungeon.life}
                 </div>
               </div>
             </div>
@@ -286,7 +287,7 @@ function DungeonPage() {
               aria-label="Enter the infinite dungeon mode"
               className="mt-8 inline-flex items-center gap-2 rounded-lg bg-linear-to-r from-neon-magenta to-neon-violet px-8 py-3.5 text-base font-bold text-primary-foreground shadow-neon transition-transform hover:scale-105"
             >
-              <Skull className="h-5 w-5" /> Enter the Dungeon
+              <Skull className="h-5 w-5" /> {t.dungeon.enterDungeon}
             </button>
           </div>
         </motion.div>
@@ -309,14 +310,14 @@ function DungeonPage() {
             <div className="mx-auto grid h-20 w-20 place-items-center rounded-2xl bg-linear-to-br from-destructive to-neon-magenta shadow-lg">
               <Skull className="h-10 w-10 text-primary-foreground" />
             </div>
-            <h1 className="mt-5 font-display text-3xl font-bold">Dungeon Collapsed</h1>
-            <p className="mt-2 text-muted-foreground">You fell at floor {floor}.</p>
+            <h1 className="mt-5 font-display text-3xl font-bold">{t.dungeon.collapsed}</h1>
+            <p className="mt-2 text-muted-foreground">{t.dungeon.fellAt.replace("{n}", String(floor))}</p>
 
             {/* Last wrong answer */}
             {lastWrongAnswer && (
               <div className="mt-4 rounded-2xl border border-destructive/30 bg-destructive/5 p-4 text-left">
                 <div className="text-xs uppercase tracking-widest text-destructive font-bold mb-2">
-                  Fatal question
+                  {t.dungeon.fatalQuestion}
                 </div>
                 <p
                   className="font-semibold"
@@ -327,7 +328,7 @@ function DungeonPage() {
                 <div className="mt-2 grid gap-2 sm:grid-cols-2 text-sm">
                   <div className="rounded-lg bg-destructive/10 p-2">
                     <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
-                      Your answer
+                      {t.dungeon.yourAnswer}
                     </div>
                     <div className="font-mono uppercase text-destructive">
                       {lastWrongAnswer.selected}
@@ -335,7 +336,7 @@ function DungeonPage() {
                   </div>
                   <div className="rounded-lg bg-emerald-500/10 p-2">
                     <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
-                      Correct answer
+                      {t.dungeon.correctAnswer}
                     </div>
                     <div className="font-mono uppercase text-emerald-400">
                       {lastWrongAnswer.correct}
@@ -361,7 +362,7 @@ function DungeonPage() {
                   {floorsCleared}
                 </div>
                 <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                  Floors
+                  {t.dungeon.floors}
                 </div>
               </div>
               <div className="rounded-xl bg-(--neon-gold)/15 p-3">
@@ -369,7 +370,7 @@ function DungeonPage() {
                 <div className="mt-1 font-display text-xl font-bold text-neon-gold">
                   +{runResult?.xpEarned ?? "..."}
                 </div>
-                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">XP</div>
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{t.dungeon.xp}</div>
               </div>
               <div className="rounded-xl bg-(--neon-cyan)/15 p-3">
                 <Sparkles className="mx-auto h-4 w-4 text-neon-cyan" />
@@ -377,7 +378,7 @@ function DungeonPage() {
                   +{runResult?.coinsEarned ?? "..."}
                 </div>
                 <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                  Coins
+                  {t.dungeon.coins}
                 </div>
               </div>
               <div className="rounded-xl bg-(--flame)/15 p-3">
@@ -387,7 +388,7 @@ function DungeonPage() {
                   {runResult?.totalAnswered ?? totalAnswered}
                 </div>
                 <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                  Correct
+                  {t.dungeon.correct}
                 </div>
               </div>
             </div>
@@ -397,13 +398,13 @@ function DungeonPage() {
                 to="/dashboard"
                 className="rounded-lg border border-border bg-background/50 px-5 py-2.5 text-sm font-semibold hover:bg-background/80"
               >
-                Back to hall
+                {t.dungeon.backToHall}
               </Link>
               <button
                 onClick={startDungeon}
                 className="rounded-lg bg-linear-to-r from-neon-magenta to-neon-violet px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-neon hover:scale-105"
               >
-                Retry dungeon
+                {t.dungeon.retryDungeon}
               </button>
             </div>
           </div>
@@ -419,7 +420,7 @@ function DungeonPage() {
         <div className="flex flex-col items-center gap-3">
           <Loader2 className="h-8 w-8 animate-spin text-neon-magenta" />
           <div className="font-display text-sm uppercase tracking-widest text-muted-foreground">
-            Descending to floor {floor}…
+            {t.dungeon.descending.replace("{n}", String(floor))}
           </div>
         </div>
       </div>
@@ -438,14 +439,14 @@ function DungeonPage() {
           to="/dashboard"
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
         >
-          <ArrowLeft className="h-4 w-4" /> Leave dungeon
+          <ArrowLeft className="h-4 w-4" /> {t.dungeon.leaveDungeon}
         </Link>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5 rounded-full bg-(--neon-magenta)/20 px-3 py-1 text-sm font-bold text-neon-magenta">
-            <Layers className="h-3.5 w-3.5" /> Floor {floor}
+            <Layers className="h-3.5 w-3.5" /> {t.dungeon.floor.replace("{n}", String(floor))}
           </div>
           <div className="flex items-center gap-1.5 rounded-full bg-destructive/20 px-3 py-1 text-sm font-bold text-destructive">
-            <Skull className="h-3.5 w-3.5" /> 1 HP
+            <Skull className="h-3.5 w-3.5" /> {t.dungeon.oneHp}
           </div>
         </div>
       </div>
@@ -495,7 +496,7 @@ function DungeonPage() {
             {currentQuestion.prompt}
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            One wrong answer ends the run. Choose wisely.
+            {t.dungeon.warning}
           </p>
 
           <div className="mt-6 space-y-3">
@@ -552,11 +553,11 @@ function DungeonPage() {
             >
               {isCorrectAnswer ? (
                 <span className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4" /> Correct! Descending deeper…
+                  <CheckCircle2 className="h-4 w-4" /> {t.dungeon.correctMsg}
                 </span>
               ) : (
                 <span className="flex items-center gap-2">
-                  <XCircle className="h-4 w-4" /> Wrong! The dungeon collapses…
+                  <XCircle className="h-4 w-4" /> {t.dungeon.wrongMsg}
                 </span>
               )}
             </motion.div>
@@ -566,7 +567,7 @@ function DungeonPage() {
 
       {/* Floor progress bar (visual flair) */}
       <div className="mt-6 flex items-center gap-3">
-        <div className="text-xs uppercase tracking-widest text-muted-foreground">Depth</div>
+        <div className="text-xs uppercase tracking-widest text-muted-foreground">{t.dungeon.depth}</div>
         <div
           className="flex-1 h-2 overflow-hidden rounded-full bg-secondary/60"
           role="progressbar"

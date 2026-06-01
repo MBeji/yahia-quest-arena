@@ -15,71 +15,59 @@ import {
   Leaf,
 } from "lucide-react";
 import heroImg from "@/assets/hero-warrior.jpg";
+import { useT } from "@/lib/i18n";
+import { LanguageSwitcher } from "@/components/ui/language-switcher";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "XP Scholars — L'Académie Shonen pour le Concours 9ème" },
+      { title: "XP Scholars — The Shonen Academy for the 9th Grade Exam" },
       {
         name: "description",
         content:
-          "Transforme tes révisions en quêtes épiques. XP, streaks, duels et boss pour préparer le concours 9ème année.",
+          "Turn your study sessions into epic quests. XP, streaks, duels and bosses to prepare for the 9th grade exam.",
       },
       { property: "og:title", content: "XP Scholars" },
-      { property: "og:description", content: "Concours 9ème en mode RPG." },
+      { property: "og:description", content: "9th Grade Exam in RPG mode." },
     ],
   }),
   component: Landing,
 });
 
-const features = [
-  {
-    icon: Zap,
-    title: "XP & Niveaux",
-    desc: "Chaque bonne réponse te rapporte de l'expérience. Passe de Candidat Civil à Légende S-Rank.",
-    color: "neon-violet",
-  },
-  {
-    icon: Flame,
-    title: "Streak Quotidien",
-    desc: "Révise chaque jour pour garder ta flamme. 7 jours d'affilée = bonus guerrier.",
-    color: "flame",
-  },
-  {
-    icon: Target,
-    title: "Radar de Réussite",
-    desc: "Force, Esprit, Observation, Agilité, Sagesse : visualise tes vraies forces.",
-    color: "neon-cyan",
-  },
-  {
-    icon: Swords,
-    title: "Quest Arena",
-    desc: "QCM chronométrés. Plus tu es rapide et précis, plus tu scores.",
-    color: "neon-magenta",
-  },
-  {
-    icon: Trophy,
-    title: "Boss de Chapitre",
-    desc: "Termine un chapitre en battant son Boss. Barre de HP, dégâts à chaque réponse.",
-    color: "neon-gold",
-  },
-  {
-    icon: Shield,
-    title: "Programme Officiel",
-    desc: "Maths, Français, Arabe, Sciences, Anglais. Aligné au concours 9ème.",
-    color: "success",
-  },
-];
-
-const subjects = [
-  { icon: Sword, name: "Mathématiques", attr: "Force", color: "subject-math" },
-  { icon: BookOpen, name: "Français", attr: "Esprit", color: "subject-french" },
-  { icon: Scroll, name: "العربية", attr: "Sagesse", color: "subject-arabic" },
-  { icon: Leaf, name: "Sciences", attr: "Observation", color: "subject-svt" },
-  { icon: Globe, name: "Anglais", attr: "Agilité", color: "subject-english" },
-];
+const featureIcons = [Zap, Flame, Target, Swords, Trophy, Shield];
+const featureColors = ["neon-violet", "flame", "neon-cyan", "neon-magenta", "neon-gold", "success"];
+const subjectIcons = [Sword, BookOpen, Scroll, Leaf, Globe];
+const subjectColors = ["subject-math", "subject-french", "subject-arabic", "subject-svt", "subject-english"];
 
 function Landing() {
+  const t = useT();
+
+  const features = [
+    { icon: featureIcons[0], title: t.landing.featureXpTitle, desc: t.landing.featureXpDesc, color: featureColors[0] },
+    { icon: featureIcons[1], title: t.landing.featureStreakTitle, desc: t.landing.featureStreakDesc, color: featureColors[1] },
+    { icon: featureIcons[2], title: t.landing.featureRadarTitle, desc: t.landing.featureRadarDesc, color: featureColors[2] },
+    { icon: featureIcons[3], title: t.landing.featureArenaTitle, desc: t.landing.featureArenaDesc, color: featureColors[3] },
+    { icon: featureIcons[4], title: t.landing.featureBossTitle, desc: t.landing.featureBossDesc, color: featureColors[4] },
+    { icon: featureIcons[5], title: t.landing.featureCurriculumTitle, desc: t.landing.featureCurriculumDesc, color: featureColors[5] },
+  ];
+
+  const subjects = [
+    { icon: subjectIcons[0], name: t.landing.subjectMath, attr: t.landing.attrStrength, color: subjectColors[0] },
+    { icon: subjectIcons[1], name: t.landing.subjectFrench, attr: t.landing.attrSpirit, color: subjectColors[1] },
+    { icon: subjectIcons[2], name: t.landing.subjectArabic, attr: t.landing.attrWisdom, color: subjectColors[2] },
+    { icon: subjectIcons[3], name: t.landing.subjectScience, attr: t.landing.attrObservation, color: subjectColors[3] },
+    { icon: subjectIcons[4], name: t.landing.subjectEnglish, attr: t.landing.attrAgility, color: subjectColors[4] },
+  ];
+
+  const ranks = [
+    ["Lvl 1-5", t.landing.rankCivilian, "neon-cyan"],
+    ["Lvl 6-10", t.landing.rankAspirant, "neon-cyan"],
+    ["Lvl 11-20", t.landing.rankWarrior, "neon-violet"],
+    ["Lvl 21-30", t.landing.rankMaster, "neon-violet"],
+    ["Lvl 31-45", t.landing.rankElite, "neon-magenta"],
+    ["Lvl 50+", t.landing.rankLegend, "neon-gold"],
+  ];
+
   return (
     <main className="min-h-screen overflow-hidden">
       {/* NAV */}
@@ -95,27 +83,28 @@ function Landing() {
           </Link>
           <nav className="hidden items-center gap-8 text-sm text-muted-foreground md:flex">
             <a href="#features" className="hover:text-foreground">
-              Système
+              {t.landing.navSystem}
             </a>
             <a href="#subjects" className="hover:text-foreground">
-              Matières
+              {t.landing.navSubjects}
             </a>
             <a href="#ranks" className="hover:text-foreground">
-              Rangs
+              {t.landing.navRanks}
             </a>
           </nav>
           <div className="flex items-center gap-2">
+            <LanguageSwitcher />
             <Link
               to="/login"
               className="rounded-md px-4 py-2 text-sm text-muted-foreground hover:text-foreground"
             >
-              Connexion
+              {t.landing.signIn}
             </Link>
             <Link
               to="/signup"
               className="rounded-md bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] px-4 py-2 text-sm font-semibold text-primary-foreground shadow-neon"
             >
-              Rejoindre l'Académie
+              {t.landing.joinAcademy}
             </Link>
           </div>
         </div>
@@ -134,37 +123,36 @@ function Landing() {
           >
             <div className="mb-6 inline-flex items-center gap-2 rounded-full glass px-4 py-1.5 text-xs uppercase tracking-widest text-[color:var(--neon-cyan)]">
               <Flame className="h-3.5 w-3.5 animate-flame text-[color:var(--flame)]" />
-              Concours 9ème · Mode RPG
+              {t.landing.badge}
             </div>
             <h1 className="font-display text-5xl font-black leading-[1.05] sm:text-6xl lg:text-7xl">
-              Deviens la <span className="text-gradient-primary">Légende</span>
+              {t.landing.heroTitle1} <span className="text-gradient-primary">{t.landing.heroTitle2}</span>
               <br />
-              du <span className="text-gradient-cyan">Concours</span> 9ème
+              <span className="text-gradient-cyan">{t.landing.heroTitle3}</span>
             </h1>
             <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-              XP Scholars transforme tes révisions en quêtes manga. Gagne de l'XP, enflamme ton streak,
-              monte en rang et bats les Boss de chapitre pour réussir le concours.
+              {t.landing.heroDesc}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 to="/signup"
                 className="group inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] px-7 py-3.5 text-base font-bold text-primary-foreground shadow-neon transition-transform hover:scale-105"
               >
-                Commencer ma quête{" "}
+                {t.landing.ctaStart}{" "}
                 <Swords className="h-5 w-5 transition-transform group-hover:rotate-12" />
               </Link>
               <Link
                 to="/login"
                 className="inline-flex items-center gap-2 rounded-lg border border-[color:var(--neon-cyan)]/40 bg-background/40 px-7 py-3.5 text-base font-semibold text-[color:var(--neon-cyan)] backdrop-blur-md hover:bg-[color:var(--neon-cyan)]/10"
               >
-                J'ai déjà un héros
+                {t.landing.ctaLogin}
               </Link>
             </div>
             <div className="mt-10 grid max-w-md grid-cols-3 gap-4 text-center">
               {[
-                { v: "5", l: "Matières" },
-                { v: "200+", l: "Quêtes" },
-                { v: "∞", l: "Streak" },
+                { v: "5", l: t.landing.statSubjects },
+                { v: "200+", l: t.landing.statQuests },
+                { v: "∞", l: t.landing.statStreak },
               ].map((s) => (
                 <div key={s.l} className="glass rounded-xl px-2 py-3">
                   <div className="font-display text-2xl font-bold text-gradient-primary">{s.v}</div>
@@ -194,9 +182,9 @@ function Landing() {
               <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-gradient-to-t from-background via-background/70 to-transparent p-5">
                 <div>
                   <div className="text-xs uppercase tracking-widest text-[color:var(--neon-cyan)]">
-                    Lvl 42 · Guerrier des Équations
+                    {t.landing.heroOverlayLevel}
                   </div>
-                  <div className="font-display text-lg">XP «La Lame»</div>
+                  <div className="font-display text-lg">{t.landing.heroOverlayName}</div>
                 </div>
                 <div className="flex items-center gap-1.5 rounded-full bg-[color:var(--flame)]/20 px-3 py-1.5 text-sm font-bold text-[color:var(--flame)]">
                   <Flame className="h-4 w-4 animate-flame" /> 27
@@ -211,10 +199,10 @@ function Landing() {
       <section id="features" className="relative mx-auto max-w-7xl px-6 py-24">
         <div className="mb-14 text-center">
           <div className="mb-3 text-xs uppercase tracking-[0.3em] text-[color:var(--neon-cyan)]">
-            Le Système
+            {t.landing.featuresLabel}
           </div>
           <h2 className="font-display text-4xl font-bold sm:text-5xl">
-            Pas une app. <span className="text-gradient-primary">Une arène.</span>
+            {t.landing.featuresTitle1} <span className="text-gradient-primary">{t.landing.featuresTitle2}</span>
           </h2>
         </div>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -248,10 +236,10 @@ function Landing() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-12 text-center">
             <div className="mb-3 text-xs uppercase tracking-[0.3em] text-[color:var(--neon-cyan)]">
-              Les 5 Voies
+              {t.landing.subjectsLabel}
             </div>
             <h2 className="font-display text-4xl font-bold sm:text-5xl">
-              Choisis ta <span className="text-gradient-cyan">voie de héros</span>
+              {t.landing.subjectsTitle1} <span className="text-gradient-cyan">{t.landing.subjectsTitle2}</span>
             </h2>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
@@ -272,7 +260,7 @@ function Landing() {
                 <s.icon className="h-8 w-8" style={{ color: `var(--${s.color})` }} />
                 <div className="mt-4 font-display text-lg font-bold">{s.name}</div>
                 <div className="text-xs uppercase tracking-wider text-muted-foreground">
-                  Attribut · {s.attr}
+                  {t.landing.attributePrefix} · {s.attr}
                 </div>
               </motion.div>
             ))}
@@ -283,20 +271,13 @@ function Landing() {
       {/* RANKS */}
       <section id="ranks" className="mx-auto max-w-5xl px-6 py-24 text-center">
         <div className="mb-3 text-xs uppercase tracking-[0.3em] text-[color:var(--neon-cyan)]">
-          Progression
+          {t.landing.ranksLabel}
         </div>
         <h2 className="font-display text-4xl font-bold sm:text-5xl">
-          De Civil à <span className="text-gradient-primary">Légende S-Rank</span>
+          {t.landing.ranksTitle1} <span className="text-gradient-primary">{t.landing.ranksTitle2}</span>
         </h2>
         <div className="mt-12 space-y-3">
-          {[
-            ["Lvl 1-5", "Candidat Civil", "neon-cyan"],
-            ["Lvl 6-10", "Aspirant Académie", "neon-cyan"],
-            ["Lvl 11-20", "Guerrier des Équations", "neon-violet"],
-            ["Lvl 21-30", "Maître des Langues", "neon-violet"],
-            ["Lvl 31-45", "Élite du Concours", "neon-magenta"],
-            ["Lvl 50+", "Légende S-Rank", "neon-gold"],
-          ].map(([range, name, color]) => (
+          {ranks.map(([range, name, color]) => (
             <div
               key={name}
               className="glass flex items-center justify-between rounded-xl px-5 py-4 text-left"
@@ -314,12 +295,12 @@ function Landing() {
           to="/signup"
           className="mt-14 inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] px-8 py-4 text-base font-bold text-primary-foreground shadow-neon transition-transform hover:scale-105"
         >
-          Forger mon héros <Sparkles className="h-5 w-5" />
+          {t.landing.ranksCta} <Sparkles className="h-5 w-5" />
         </Link>
       </section>
 
       <footer className="border-t border-border/40 py-8 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} XP Scholars · Concours 9ème · Tunisie
+        © {new Date().getFullYear()} XP Scholars · {t.landing.footer}
       </footer>
     </main>
   );

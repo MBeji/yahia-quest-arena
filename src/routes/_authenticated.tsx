@@ -4,6 +4,8 @@ import { useAuth } from "@/hooks/use-auth";
 import { Sparkles, LayoutDashboard, LogOut, Swords, Crown, ClipboardList } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useT } from "@/lib/i18n";
+import { LanguageSwitcher } from "@/components/ui/language-switcher";
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthenticatedLayout,
@@ -12,6 +14,7 @@ export const Route = createFileRoute("/_authenticated")({
 function AuthenticatedLayout() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const t = useT();
   const [userRole, setUserRole] = useState<string | null>(null);
 
   // Fetch user role for conditional nav
@@ -49,7 +52,7 @@ function AuthenticatedLayout() {
 
   async function signOut() {
     await supabase.auth.signOut();
-    toast.success("See you soon, warrior.");
+    toast.success(t.layout.logoutToast);
     navigate({ to: "/" });
   }
 
@@ -72,21 +75,21 @@ function AuthenticatedLayout() {
               className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground"
               activeProps={{ className: "text-foreground bg-card" }}
             >
-              <LayoutDashboard className="h-4 w-4" /> Heroes Hall
+              <LayoutDashboard className="h-4 w-4" /> {t.layout.heroesHall}
             </Link>
             <Link
               to="/dungeon"
               className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground"
               activeProps={{ className: "text-foreground bg-card" }}
             >
-              <Swords className="h-4 w-4" /> Dungeon
+              <Swords className="h-4 w-4" /> {t.layout.dungeon}
             </Link>
             <Link
               to="/leaderboard"
               className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground"
               activeProps={{ className: "text-foreground bg-card" }}
             >
-              <Crown className="h-4 w-4" /> Ranking
+              <Crown className="h-4 w-4" /> {t.layout.ranking}
             </Link>
             {userRole === "parent" && (
               <Link
@@ -94,7 +97,7 @@ function AuthenticatedLayout() {
                 className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground"
                 activeProps={{ className: "text-foreground bg-card" }}
               >
-                <ClipboardList className="h-4 w-4" /> Suivi
+                <ClipboardList className="h-4 w-4" /> {t.layout.parentReport}
               </Link>
             )}
             {userRole === "admin" && (
@@ -103,14 +106,15 @@ function AuthenticatedLayout() {
                 className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground"
                 activeProps={{ className: "text-foreground bg-card" }}
               >
-                <ClipboardList className="h-4 w-4" /> Admin
+                <ClipboardList className="h-4 w-4" /> {t.layout.admin}
               </Link>
             )}
+            <LanguageSwitcher />
             <button
               onClick={signOut}
               className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground"
             >
-              <LogOut className="h-4 w-4" /> Sign out
+              <LogOut className="h-4 w-4" /> {t.layout.signOut}
             </button>
           </nav>
         </div>
