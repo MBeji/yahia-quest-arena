@@ -71,6 +71,12 @@ function Dashboard() {
   const { data, isLoading, isError } = useQuery({ queryKey: ["dashboard"], queryFn: () => fetchDashboard() });
   const { data: sprint2 } = useQuery({ queryKey: ["sprint2"], queryFn: () => fetchSprint2() });
   const [copiedCode, setCopiedCode] = useState(false);
+  const [deferSecondarySections, setDeferSecondarySections] = useState(false);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setDeferSecondarySections(true), 350);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   // Redirect admin/parent users to their report page
   useEffect(() => {
@@ -418,44 +424,65 @@ function Dashboard() {
 
         {/* RADAR */}
         <section>
-          <Suspense
-            fallback={
-              <div className="space-y-4">
-                <div className="h-8 w-40 animate-pulse rounded bg-card/40" />
-                <div className="h-80 animate-pulse rounded-2xl bg-card/40" />
-                <div className="h-52 animate-pulse rounded-2xl bg-card/40" />
-              </div>
-            }
-          >
-            <DashboardRadarInventory radarData={radarData} inventory={inventory} />
-          </Suspense>
+          {deferSecondarySections ? (
+            <Suspense
+              fallback={
+                <div className="space-y-4">
+                  <div className="h-8 w-40 animate-pulse rounded bg-card/40" />
+                  <div className="h-80 animate-pulse rounded-2xl bg-card/40" />
+                  <div className="h-52 animate-pulse rounded-2xl bg-card/40" />
+                </div>
+              }
+            >
+              <DashboardRadarInventory radarData={radarData} inventory={inventory} />
+            </Suspense>
+          ) : (
+            <div className="space-y-4">
+              <div className="h-8 w-40 animate-pulse rounded bg-card/40" />
+              <div className="h-80 rounded-2xl bg-card/40" />
+              <div className="h-52 rounded-2xl bg-card/40" />
+            </div>
+          )}
         </section>
       </div>
 
-      <Suspense
-        fallback={
-          <div className="mt-8 space-y-6">
-            <div className="h-8 w-48 animate-pulse rounded bg-card/40" />
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {[1, 2, 3].map((item) => <div key={`badges-skeleton-${item}`} className="h-44 animate-pulse rounded-2xl bg-card/40" />)}
+      {deferSecondarySections ? (
+        <Suspense
+          fallback={
+            <div className="mt-8 space-y-6">
+              <div className="h-8 w-48 animate-pulse rounded bg-card/40" />
+              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                {[1, 2, 3].map((item) => <div key={`badges-skeleton-${item}`} className="h-44 animate-pulse rounded-2xl bg-card/40" />)}
+              </div>
+              <div className="h-8 w-48 animate-pulse rounded bg-card/40" />
+              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                {[1, 2, 3].map((item) => <div key={`shop-skeleton-${item}`} className="h-52 animate-pulse rounded-2xl bg-card/40" />)}
+              </div>
             </div>
-            <div className="h-8 w-48 animate-pulse rounded bg-card/40" />
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {[1, 2, 3].map((item) => <div key={`shop-skeleton-${item}`} className="h-52 animate-pulse rounded-2xl bg-card/40" />)}
-            </div>
+          }
+        >
+          <DashboardBadgesShop
+            badges={badges}
+            shopItems={shopItems}
+            availableCoins={profile.yahia_coins ?? 0}
+            isPurchasePending={purchaseMutation.isPending}
+            isEquipPending={equipMutation.isPending}
+            onPurchase={(itemCode) => purchaseMutation.mutate({ itemCode })}
+            onEquip={(itemCode) => equipMutation.mutate({ itemCode })}
+          />
+        </Suspense>
+      ) : (
+        <div className="mt-8 space-y-6">
+          <div className="h-8 w-48 rounded bg-card/40" />
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {[1, 2, 3].map((item) => <div key={`initial-badges-skeleton-${item}`} className="h-44 rounded-2xl bg-card/40" />)}
           </div>
-        }
-      >
-        <DashboardBadgesShop
-          badges={badges}
-          shopItems={shopItems}
-          availableCoins={profile.yahia_coins ?? 0}
-          isPurchasePending={purchaseMutation.isPending}
-          isEquipPending={equipMutation.isPending}
-          onPurchase={(itemCode) => purchaseMutation.mutate({ itemCode })}
-          onEquip={(itemCode) => equipMutation.mutate({ itemCode })}
-        />
-      </Suspense>
+          <div className="h-8 w-48 rounded bg-card/40" />
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {[1, 2, 3].map((item) => <div key={`initial-shop-skeleton-${item}`} className="h-52 rounded-2xl bg-card/40" />)}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
