@@ -65,18 +65,20 @@ export const getSubject = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) => z.object({ subjectId: z.string() }).parse(d))
   .handler(async ({ data, context }) => {
-    const { supabase, userId } = context;
-    const [subj, chaps, exs, atts] = await Promise.all([
+    const { supabase } = context;
+    const [subj, chaps, exs, bestScores] = await Promise.all([
       supabase.from("subjects").select("*").eq("id", data.subjectId).single(),
       supabase.from("chapters").select("*").eq("subject_id", data.subjectId).order("display_order"),
       supabase.from("exercises").select("*").eq("subject_id", data.subjectId).order("display_order"),
-      supabase.from("attempts").select("exercise_id,score_pct").eq("user_id", userId).eq("subject_id", data.subjectId),
+      supabase.rpc("get_best_scores_by_exercise", { p_subject: data.subjectId }),
     ]);
     if (subj.error) throw new Error(subj.error.message);
+    if (bestScores.error) throw new Error(bestScores.error.message);
 
     const best: Record<string, number> = {};
-    for (const a of atts.data ?? []) {
-      best[a.exercise_id] = Math.max(best[a.exercise_id] ?? 0, Number(a.score_pct));
+    for (const row of bestScores.data ?? []) {
+      if (typeof row.exercise_id !== "string") continue;
+      best[row.exercise_id] = Number(row.best_score ?? 0);
     }
 
     return {
