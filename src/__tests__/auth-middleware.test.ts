@@ -1,0 +1,181 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+const { mockGetRequest, mockCreateClient, mockGetClaims, mockLoggerError } = vi.hoisted(() => {
+  return {
+    mockGetRequest: vi.fn(),
+    mockCreateClient: vi.fn(),
+    mockGetClaims: vi.fn(),
+    mockLoggerError: vi.fn(),
+  };
+});
+
+vi.mock("@tanstack/react-start", () => ({
+  createMiddleware: () => ({
+    server: (handler: unknown) => handler,
+  }),
+}));
+
+vi.mock("@tanstack/react-start/server", () => ({
+  getRequest: mockGetRequest,
+}));
+
+vi.mock("@supabase/supabase-js", () => ({
+  createClient: mockCreateClient,
+}));
+
+vi.mock("@/lib/logger", () => ({
+  logger: {
+    error: mockLoggerError,
+  },
+}));
+
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+
+describe("requireSupabaseAuth", () => {
+  const originalUrl = process.env.SUPABASE_URL;
+  const originalKey = process.env.SUPABASE_PUBLISHABLE_KEY;
+
+  beforeEach(() => {
+    process.env.SUPABASE_URL = "https://example.supabase.co";
+    process.env.SUPABASE_PUBLISHABLE_KEY = "public-key";
+
+    mockGetRequest.mockReset();
+    mockCreateClient.mockReset();
+    mockGetClaims.mockReset();
+    mockLoggerError.mockReset();
+
+    mockCreateClient.mockReturnValue({
+      auth: {
+        getClaims: mockGetClaims,
+      },
+    });
+  });
+
+  afterEach(() => {
+    if (originalUrl === undefined) {
+      delete process.env.SUPABASE_URL;
+    } else {
+      process.env.SUPABASE_URL = originalUrl;
+    }
+
+    if (originalKey === undefined) {
+      delete process.env.SUPABASE_PUBLISHABLE_KEY;
+    } else {
+      process.env.SUPABASE_PUBLISHABLE_KEY = originalKey;
+    }
+  });
+
+  it("throws and logs when required env vars are missing", async () => {
+    delete process.env.SUPABASE_URL;
+    delete process.env.SUPABASE_PUBLISHABLE_KEY;
+
+    await expect(requireSupabaseAuth({ next: vi.fn() } as never)).rejects.toThrow(
+      "Missing Supabase environment variable(s)",
+    );
+
+    expect(mockLoggerError).toHaveBeenCalledTimes(1);
+    expect(mockLoggerError).toHaveBeenCalledWith("Supabase auth middleware misconfiguration", {
+      missing: ["SUPABASE_URL", "SUPABASE_PUBLISHABLE_KEY"],
+    });
+  });
+
+  it("throws when request headers are unavailable", async () => {
+    mockGetRequest.mockReturnValue(undefined);
+
+    await expect(requireSupabaseAuth({ next: vi.fn() } as never)).rejects.toThrow(
+      "Unauthorized: No request headers available",
+    );
+  });
+
+  it("throws when authorization header is missing", async () => {
+    mockGetRequest.mockReturnValue({ headers: new Headers() });
+
+    await expect(requireSupabaseAuth({ next: vi.fn() } as never)).rejects.toThrow(
+      "Unauthorized: No authorization header provided",
+    );
+  });
+
+  it("throws when auth scheme is not Bearer", async () => {
+    mockGetRequest.mockReturnValue({
+      headers: new Headers({ authorization: "Basic abc" }),
+    });
+
+    await expect(requireSupabaseAuth({ next: vi.fn() } as never)).rejects.toThrow(
+      "Unauthorized: Only Bearer tokens are supported",
+    );
+  });
+
+  it("throws when bearer token is empty", async () => {
+    mockGetRequest.mockReturnValue({
+      headers: {
+        get: vi.fn().mockReturnValue("Bearer "),
+      },
+    });
+
+    await expect(requireSupabaseAuth({ next: vi.fn() } as never)).rejects.toThrow(
+      "Unauthorized: No token provided",
+    );
+  });
+
+  it("throws when token claims are invalid", async () => {
+    mockGetRequest.mockReturnValue({
+      headers: new Headers({ authorization: "Bearer token-123" }),
+    });
+    mockGetClaims.mockResolvedValue({ data: null, error: { message: "invalid" } });
+
+    await expect(requireSupabaseAuth({ next: vi.fn() } as never)).rejects.toThrow(
+      "Unauthorized: Invalid token",
+    );
+  });
+
+  it("throws when token has no subject", async () => {
+    mockGetRequest.mockReturnValue({
+      headers: new Headers({ authorization: "Bearer token-123" }),
+    });
+    mockGetClaims.mockResolvedValue({ data: { claims: {} }, error: null });
+
+    await expect(requireSupabaseAuth({ next: vi.fn() } as never)).rejects.toThrow(
+      "Unauthorized: No user ID found in token",
+    );
+  });
+
+  it("forwards context to next() when token is valid", async () => {
+    mockGetRequest.mockReturnValue({
+      headers: new Headers({ authorization: "Bearer token-123" }),
+    });
+
+    const claims = {
+      sub: "user-1",
+      role: "authenticated",
+    };
+
+    mockGetClaims.mockResolvedValue({ data: { claims }, error: null });
+
+    const next = vi.fn().mockResolvedValue("ok");
+
+    const result = await requireSupabaseAuth({ next } as never);
+
+    expect(result).toBe("ok");
+    expect(mockCreateClient).toHaveBeenCalledTimes(1);
+    expect(mockCreateClient).toHaveBeenCalledWith(
+      "https://example.supabase.co",
+      "public-key",
+      expect.objectContaining({
+        global: {
+          headers: {
+            Authorization: "Bearer token-123",
+          },
+        },
+      }),
+    );
+
+    expect(next).toHaveBeenCalledWith(
+      expect.objectContaining({
+        context: expect.objectContaining({
+          userId: "user-1",
+          claims,
+        }),
+      }),
+    );
+  });
+});
