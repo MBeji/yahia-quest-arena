@@ -25,6 +25,7 @@ import {
   DUNGEON_COINS_PER_5_FLOORS,
 } from "@/lib/gamification.dungeon";
 import { isRtlText, isMathExpression } from "@/lib/utils";
+import { shuffleOptions, type DisplayOption } from "@/lib/question-utils";
 
 export const Route = createFileRoute("/_authenticated/dungeon")({
   head: () => ({ meta: [{ title: "Dungeon · XP Scholars" }] }),
@@ -44,24 +45,6 @@ type DungeonQuestion = {
 };
 
 type GameState = "lobby" | "playing" | "gameover";
-
-type BaseOption = { id: string; text: string };
-type DisplayOption = BaseOption & { displayId: string };
-
-const DISPLAY_LABELS = ["A", "B", "C", "D", "E", "F"] as const;
-
-function shuffleOptions(options: BaseOption[]): DisplayOption[] {
-  const shuffled = [...options];
-  for (let i = shuffled.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-
-  return shuffled.map((opt, index) => ({
-    ...opt,
-    displayId: DISPLAY_LABELS[index] ?? String(index + 1),
-  }));
-}
 
 function DungeonPage() {
   const qc = useQueryClient();

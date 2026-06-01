@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { getExercise, startExerciseSession, submitAttempt } from "@/lib/gamification.quest";
 import { BOSS_TIME_PER_QUESTION_S, PASS_THRESHOLD_PCT } from "@/lib/gamification.constants";
 import { isRtlText, isMathExpression } from "@/lib/utils";
+import { shuffleOptions, type BaseOption, type DisplayOption } from "@/lib/question-utils";
 
 // Confetti component for victory
 function Confetti() {
@@ -57,23 +58,6 @@ export const Route = createFileRoute("/_authenticated/quest/$exerciseId")({
 });
 
 type Answer = { questionId: string; choice: string };
-type BaseOption = { id: string; text: string };
-type DisplayOption = BaseOption & { displayId: string };
-
-const DISPLAY_LABELS = ["A", "B", "C", "D", "E", "F"] as const;
-
-function shuffleOptions(options: BaseOption[]): DisplayOption[] {
-  const shuffled = [...options];
-  for (let i = shuffled.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-
-  return shuffled.map((opt, index) => ({
-    ...opt,
-    displayId: DISPLAY_LABELS[index] ?? String(index + 1),
-  }));
-}
 
 function QuestPage() {
   const { exerciseId } = Route.useParams();

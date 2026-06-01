@@ -25,6 +25,12 @@ import { toast } from "sonner";
 import { getDashboard, getSprint2Dashboard } from "@/lib/gamification.dashboard";
 import { purchaseShopItem, equipInventorySkin } from "@/lib/gamification.shop";
 import { formatStudentAllianceCode } from "@/lib/family-link";
+import {
+  formatObjectiveType,
+  formatQuestType,
+  resolveDailyAction,
+  resolveWeeklyAction,
+} from "@/lib/dashboard-helpers";
 
 const DashboardRadarInventory = lazy(() =>
   import("@/components/dashboard/dashboard-radar-inventory").then((mod) => ({
@@ -50,37 +56,6 @@ const ICONS: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> 
   Leaf,
   Globe,
 } as never;
-
-function formatObjectiveType(type: string): string {
-  const map: Record<string, string> = {
-    "3_exercises": "Complete 3 exercises",
-    "15_min_study": "15 min study time",
-    perfect_score: "Get a perfect score",
-  };
-  return map[type] ?? type.replace(/_/g, " ");
-}
-
-function formatQuestType(type: string): string {
-  const map: Record<string, string> = {
-    "5_day_streak": "Maintain 5-day streak",
-    "2_boss_exercises": "Beat 2 boss exercises",
-    "10_exercises": "Complete 10 exercises",
-    all_subjects: "Practice all subjects",
-  };
-  return map[type] ?? type.replace(/_/g, " ");
-}
-
-function resolveDailyAction(type: string): "retry" | "subject" | "dungeon" {
-  if (type === "perfect_score") return "retry";
-  if (type === "15_min_study") return "subject";
-  return "subject";
-}
-
-function resolveWeeklyAction(type: string): "retry" | "subject" | "dungeon" {
-  if (type === "beat_2_bosses" || type === "2_boss_exercises") return "dungeon";
-  if (type === "all_subjects") return "subject";
-  return "subject";
-}
 
 function Dashboard() {
   const queryClient = useQueryClient();

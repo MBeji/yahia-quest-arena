@@ -1,3 +1,5 @@
+import DOMPurify from "dompurify";
+
 /** Simple markdown-to-HTML renderer for lesson content */
 export function renderMarkdown(md: string): string {
   let h2Counter = 0;
@@ -54,5 +56,25 @@ export function renderMarkdown(md: string): string {
     })
     .join("\n");
 
-  return html;
+  return DOMPurify.sanitize(html, {
+    ALLOWED_TAGS: [
+      "h1",
+      "h2",
+      "h3",
+      "p",
+      "strong",
+      "em",
+      "blockquote",
+      "div",
+      "hr",
+      "table",
+      "tr",
+      "td",
+      "th",
+      "ul",
+      "ol",
+      "li",
+    ],
+    ALLOWED_ATTR: ["class", "id", "dir"],
+  });
 }

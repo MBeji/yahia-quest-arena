@@ -87,7 +87,7 @@ describe("renderMarkdown", () => {
   describe("Horizontal rules", () => {
     it("renders --- as hr", () => {
       const result = renderMarkdown("---");
-      expect(result).toContain('<hr class="lesson-hr" />');
+      expect(result).toContain('<hr class="lesson-hr"');
     });
   });
 
