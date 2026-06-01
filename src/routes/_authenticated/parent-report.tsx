@@ -36,10 +36,12 @@ function ParentReport() {
   const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
   const [studentCode, setStudentCode] = useState("");
   const [relationLabel, setRelationLabel] = useState("parent");
+  const [adminPage, setAdminPage] = useState(1);
+  const ADMIN_PAGE_SIZE = 100;
 
   const { data: studentsData, isLoading: loadingStudents } = useQuery({
-    queryKey: ["parent-students"],
-    queryFn: () => getStudentsFn(),
+    queryKey: ["parent-students", adminPage],
+    queryFn: () => getStudentsFn({ data: { page: adminPage, pageSize: ADMIN_PAGE_SIZE } }),
   });
 
   const { data: report, isLoading: loadingReport } = useQuery({
@@ -58,6 +60,7 @@ function ParentReport() {
 
   const students = studentsData?.students ?? [];
   const isAdmin = studentsData?.role === "admin";
+  const pagination = studentsData?.pagination;
 
   const linkMutation = useMutation({
     mutationFn: () => linkByCodeFn({ data: { studentCode, relationLabel } }),
@@ -91,6 +94,15 @@ function ParentReport() {
       setSelectedStudent(students[0].id);
     }
   }, [selectedStudent, students]);
+
+  useEffect(() => {
+    if (students.length === 0) return;
+
+    const existsInPage = selectedStudent ? students.some((s) => s.id === selectedStudent) : false;
+    if (!existsInPage) {
+      setSelectedStudent(students[0].id);
+    }
+  }, [students, selectedStudent]);
 
   return (
     <div className="min-h-screen p-4 md:p-8 max-w-6xl mx-auto">
@@ -158,6 +170,30 @@ function ParentReport() {
               {s.display_name ?? "Élève"}
             </button>
           ))}
+
+          {isAdmin && pagination && pagination.total > pagination.pageSize && (
+            <div className="ml-auto flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setAdminPage((p) => Math.max(1, p - 1))}
+                disabled={pagination.page <= 1}
+                className="rounded-md border border-gray-700 bg-gray-900/70 px-3 py-1.5 text-xs font-semibold text-gray-200 disabled:opacity-40"
+              >
+                Prec
+              </button>
+              <span className="text-xs text-gray-400">
+                Page {pagination.page} / {Math.max(1, Math.ceil(pagination.total / pagination.pageSize))}
+              </span>
+              <button
+                type="button"
+                onClick={() => setAdminPage((p) => p + 1)}
+                disabled={!pagination.hasMore}
+                className="rounded-md border border-gray-700 bg-gray-900/70 px-3 py-1.5 text-xs font-semibold text-gray-200 disabled:opacity-40"
+              >
+                Suiv
+              </button>
+            </div>
+          )}
         </div>
       )}
 
