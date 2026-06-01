@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { parseStudentAllianceCode } from "@/lib/family-link";
+import { isRateLimited } from "./rate-limit";
 
 type ParentStudent = {
   id: string;
@@ -201,11 +202,15 @@ export const linkStudentByCode = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) =>
     z.object({
       studentCode: z.string().min(8).max(64),
-      relationLabel: z.string().min(2).max(40).default("parent"),
+      relationLabel: z.string().trim().min(2).max(40).regex(/^[\p{L}\p{N} _-]+$/u).default("parent"),
     }).parse(d),
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
+
+    if (await isRateLimited(supabase, `parent_link_${userId}`, 20, 60_000)) {
+      throw new Error("Too many link attempts. Please slow down.");
+    }
 
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
