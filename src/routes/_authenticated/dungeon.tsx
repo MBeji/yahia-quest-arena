@@ -3,7 +3,18 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion, AnimatePresence } from "motion/react";
 import { useCallback, useMemo, useRef, useState } from "react";
-import { ArrowLeft, Zap, Sparkles, Flame, Skull, Shield, Layers, CheckCircle2, XCircle, Loader2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Zap,
+  Sparkles,
+  Flame,
+  Skull,
+  Shield,
+  Layers,
+  CheckCircle2,
+  XCircle,
+  Loader2,
+} from "lucide-react";
 import { toast } from "sonner";
 import {
   getDungeonQuestions,
@@ -70,8 +81,19 @@ function DungeonPage() {
   const [totalCorrect, setTotalCorrect] = useState(0);
   const [totalAnswered, setTotalAnswered] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [runResult, setRunResult] = useState<{ xpEarned: number; coinsEarned: number; floorsCleared: number; totalCorrect: number; totalAnswered: number } | null>(null);
-  const [lastWrongAnswer, setLastWrongAnswer] = useState<{ prompt: string; selected: string; correct: string; explanation: string | null } | null>(null);
+  const [runResult, setRunResult] = useState<{
+    xpEarned: number;
+    coinsEarned: number;
+    floorsCleared: number;
+    totalCorrect: number;
+    totalAnswered: number;
+  } | null>(null);
+  const [lastWrongAnswer, setLastWrongAnswer] = useState<{
+    prompt: string;
+    selected: string;
+    correct: string;
+    explanation: string | null;
+  } | null>(null);
   const startTimeRef = useRef<number>(0);
 
   const submitMutation = useMutation({
@@ -87,36 +109,43 @@ function DungeonPage() {
   });
 
   const answerMutation = useMutation({
-    mutationFn: (payload: { runId: string; questionId: string; choice: string }) => submitAnswer({ data: payload }),
+    mutationFn: (payload: { runId: string; questionId: string; choice: string }) =>
+      submitAnswer({ data: payload }),
   });
 
   const currentQuestion = questions[currentIdx] as DungeonQuestion | undefined;
 
-  const loadBatch = useCallback(async (activeRunId: string) => {
-    setLoading(true);
-    try {
-      const res = await fetchQuestions({ data: { runId: activeRunId, batchSize: 5 } });
-      setFloor(res.currentFloor);
-      const newQuestions = (res.questions ?? []) as unknown as (Omit<DungeonQuestion, "options"> & { options: BaseOption[] })[];
-      if (newQuestions.length === 0) {
-        toast.error("No more questions available in the dungeon. Finalizing your run...");
-        return false;
-      }
-      const shuffledQuestions: DungeonQuestion[] = newQuestions.map((question) => ({
-        ...question,
-        options: shuffleOptions((question.options ?? []) as BaseOption[]),
-      }));
+  const loadBatch = useCallback(
+    async (activeRunId: string) => {
+      setLoading(true);
+      try {
+        const res = await fetchQuestions({ data: { runId: activeRunId, batchSize: 5 } });
+        setFloor(res.currentFloor);
+        const newQuestions = (res.questions ?? []) as unknown as (Omit<
+          DungeonQuestion,
+          "options"
+        > & { options: BaseOption[] })[];
+        if (newQuestions.length === 0) {
+          toast.error("No more questions available in the dungeon. Finalizing your run...");
+          return false;
+        }
+        const shuffledQuestions: DungeonQuestion[] = newQuestions.map((question) => ({
+          ...question,
+          options: shuffleOptions((question.options ?? []) as BaseOption[]),
+        }));
 
-      setQuestions(shuffledQuestions);
-      setCurrentIdx(0);
-      return true;
-    } catch {
-      toast.error("Failed to load dungeon questions");
-      return false;
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchQuestions]);
+        setQuestions(shuffledQuestions);
+        setCurrentIdx(0);
+        return true;
+      } catch {
+        toast.error("Failed to load dungeon questions");
+        return false;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [fetchQuestions],
+  );
 
   async function startDungeon() {
     setState("playing");
@@ -170,7 +199,9 @@ function DungeonPage() {
       if (result.isCorrect) {
         setTimeout(() => advanceOrEnd(result.nextFloor), 1200);
       } else {
-        const correctOption = currentQuestion.options.find((opt) => opt.id === result.correctChoice);
+        const correctOption = currentQuestion.options.find(
+          (opt) => opt.id === result.correctChoice,
+        );
         setLastWrongAnswer({
           prompt: result.prompt,
           selected: selectedOption?.displayId ?? optId.toUpperCase(),
@@ -216,12 +247,16 @@ function DungeonPage() {
   if (state === "lobby") {
     return (
       <div className="mx-auto max-w-2xl px-6 py-12">
-        <Link to="/dashboard" className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+        <Link
+          to="/dashboard"
+          className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+        >
           <ArrowLeft className="h-4 w-4" /> Heroes Hall
         </Link>
 
         <motion.div
-          initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
           className="relative overflow-hidden rounded-3xl border border-[color:var(--neon-magenta)]/40 bg-card/60 p-8 text-center backdrop-blur-xl"
         >
           <div className="absolute -top-16 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-[color:var(--neon-magenta)]/30 blur-3xl" />
@@ -231,25 +266,35 @@ function DungeonPage() {
             </div>
             <h1 className="mt-5 font-display text-4xl font-bold">The Infinite Dungeon</h1>
             <p className="mt-3 text-muted-foreground max-w-md mx-auto">
-              Descends floor by floor. Questions from all subjects, increasingly difficult.
-              One wrong answer and it's over. How deep can you go?
+              Descends floor by floor. Questions from all subjects, increasingly difficult. One
+              wrong answer and it's over. How deep can you go?
             </p>
 
             <div className="mt-8 grid grid-cols-3 gap-4 max-w-sm mx-auto">
               <div className="rounded-xl bg-[color:var(--neon-gold)]/10 p-3">
                 <Zap className="mx-auto h-5 w-5 text-[color:var(--neon-gold)]" />
-                <div className="mt-1 font-display text-lg font-bold text-[color:var(--neon-gold)]">{DUNGEON_XP_PER_FLOOR}</div>
-                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">XP / floor</div>
+                <div className="mt-1 font-display text-lg font-bold text-[color:var(--neon-gold)]">
+                  {DUNGEON_XP_PER_FLOOR}
+                </div>
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                  XP / floor
+                </div>
               </div>
               <div className="rounded-xl bg-[color:var(--neon-cyan)]/10 p-3">
                 <Sparkles className="mx-auto h-5 w-5 text-[color:var(--neon-cyan)]" />
-                <div className="mt-1 font-display text-lg font-bold text-[color:var(--neon-cyan)]">{DUNGEON_COINS_PER_5_FLOORS}</div>
-                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Coins / 5 floors</div>
+                <div className="mt-1 font-display text-lg font-bold text-[color:var(--neon-cyan)]">
+                  {DUNGEON_COINS_PER_5_FLOORS}
+                </div>
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                  Coins / 5 floors
+                </div>
               </div>
               <div className="rounded-xl bg-destructive/10 p-3">
                 <Skull className="mx-auto h-5 w-5 text-destructive" />
                 <div className="mt-1 font-display text-lg font-bold text-destructive">1</div>
-                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Life</div>
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                  Life
+                </div>
               </div>
             </div>
 
@@ -272,7 +317,8 @@ function DungeonPage() {
     return (
       <div className="mx-auto max-w-2xl px-6 py-12">
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
           className="relative overflow-hidden rounded-3xl border border-destructive/40 bg-card/60 p-8 text-center backdrop-blur-xl"
         >
           <div className="absolute -top-16 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-destructive/30 blur-3xl" />
@@ -286,20 +332,38 @@ function DungeonPage() {
             {/* Last wrong answer */}
             {lastWrongAnswer && (
               <div className="mt-4 rounded-2xl border border-destructive/30 bg-destructive/5 p-4 text-left">
-                <div className="text-xs uppercase tracking-widest text-destructive font-bold mb-2">Fatal question</div>
-                <p className="font-semibold" dir={isRtlText(lastWrongAnswer.prompt) ? "rtl" : undefined}>{lastWrongAnswer.prompt}</p>
+                <div className="text-xs uppercase tracking-widest text-destructive font-bold mb-2">
+                  Fatal question
+                </div>
+                <p
+                  className="font-semibold"
+                  dir={isRtlText(lastWrongAnswer.prompt) ? "rtl" : undefined}
+                >
+                  {lastWrongAnswer.prompt}
+                </p>
                 <div className="mt-2 grid gap-2 sm:grid-cols-2 text-sm">
                   <div className="rounded-lg bg-destructive/10 p-2">
-                    <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Your answer</div>
-                    <div className="font-mono uppercase text-destructive">{lastWrongAnswer.selected}</div>
+                    <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                      Your answer
+                    </div>
+                    <div className="font-mono uppercase text-destructive">
+                      {lastWrongAnswer.selected}
+                    </div>
                   </div>
                   <div className="rounded-lg bg-emerald-500/10 p-2">
-                    <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Correct answer</div>
-                    <div className="font-mono uppercase text-emerald-400">{lastWrongAnswer.correct}</div>
+                    <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                      Correct answer
+                    </div>
+                    <div className="font-mono uppercase text-emerald-400">
+                      {lastWrongAnswer.correct}
+                    </div>
                   </div>
                 </div>
                 {lastWrongAnswer.explanation && (
-                  <p className="mt-2 text-sm text-muted-foreground" dir={isRtlText(lastWrongAnswer.explanation) ? "rtl" : undefined}>
+                  <p
+                    className="mt-2 text-sm text-muted-foreground"
+                    dir={isRtlText(lastWrongAnswer.explanation) ? "rtl" : undefined}
+                  >
                     {lastWrongAnswer.explanation}
                   </p>
                 )}
@@ -310,28 +374,46 @@ function DungeonPage() {
             <div className="mt-6 grid grid-cols-4 gap-3">
               <div className="rounded-xl bg-[color:var(--neon-violet)]/15 p-3">
                 <Layers className="mx-auto h-4 w-4 text-[color:var(--neon-violet)]" />
-                <div className="mt-1 font-display text-xl font-bold text-[color:var(--neon-violet)]">{floorsCleared}</div>
-                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Floors</div>
+                <div className="mt-1 font-display text-xl font-bold text-[color:var(--neon-violet)]">
+                  {floorsCleared}
+                </div>
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                  Floors
+                </div>
               </div>
               <div className="rounded-xl bg-[color:var(--neon-gold)]/15 p-3">
                 <Zap className="mx-auto h-4 w-4 text-[color:var(--neon-gold)]" />
-                <div className="mt-1 font-display text-xl font-bold text-[color:var(--neon-gold)]">+{runResult?.xpEarned ?? "..."}</div>
+                <div className="mt-1 font-display text-xl font-bold text-[color:var(--neon-gold)]">
+                  +{runResult?.xpEarned ?? "..."}
+                </div>
                 <div className="text-[10px] uppercase tracking-wider text-muted-foreground">XP</div>
               </div>
               <div className="rounded-xl bg-[color:var(--neon-cyan)]/15 p-3">
                 <Sparkles className="mx-auto h-4 w-4 text-[color:var(--neon-cyan)]" />
-                <div className="mt-1 font-display text-xl font-bold text-[color:var(--neon-cyan)]">+{runResult?.coinsEarned ?? "..."}</div>
-                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Coins</div>
+                <div className="mt-1 font-display text-xl font-bold text-[color:var(--neon-cyan)]">
+                  +{runResult?.coinsEarned ?? "..."}
+                </div>
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                  Coins
+                </div>
               </div>
               <div className="rounded-xl bg-[color:var(--flame)]/15 p-3">
                 <Shield className="mx-auto h-4 w-4 text-[color:var(--flame)]" />
-                <div className="mt-1 font-display text-xl font-bold text-[color:var(--flame)]">{runResult?.totalCorrect ?? totalCorrect}/{runResult?.totalAnswered ?? totalAnswered}</div>
-                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Correct</div>
+                <div className="mt-1 font-display text-xl font-bold text-[color:var(--flame)]">
+                  {runResult?.totalCorrect ?? totalCorrect}/
+                  {runResult?.totalAnswered ?? totalAnswered}
+                </div>
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                  Correct
+                </div>
               </div>
             </div>
 
             <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Link to="/dashboard" className="rounded-lg border border-border bg-background/50 px-5 py-2.5 text-sm font-semibold hover:bg-background/80">
+              <Link
+                to="/dashboard"
+                className="rounded-lg border border-border bg-background/50 px-5 py-2.5 text-sm font-semibold hover:bg-background/80"
+              >
                 Back to hall
               </Link>
               <button
@@ -353,7 +435,9 @@ function DungeonPage() {
       <div className="grid min-h-[60vh] place-items-center">
         <div className="flex flex-col items-center gap-3">
           <Loader2 className="h-8 w-8 animate-spin text-[color:var(--neon-magenta)]" />
-          <div className="font-display text-sm uppercase tracking-widest text-muted-foreground">Descending to floor {floor}…</div>
+          <div className="font-display text-sm uppercase tracking-widest text-muted-foreground">
+            Descending to floor {floor}…
+          </div>
         </div>
       </div>
     );
@@ -367,7 +451,10 @@ function DungeonPage() {
   return (
     <div className="mx-auto max-w-2xl px-6 py-8">
       <div className="mb-4 flex items-center justify-between">
-        <Link to="/dashboard" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+        <Link
+          to="/dashboard"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+        >
           <ArrowLeft className="h-4 w-4" /> Leave dungeon
         </Link>
         <div className="flex items-center gap-3">
@@ -383,7 +470,13 @@ function DungeonPage() {
       {/* Subject & difficulty indicator */}
       <div className="mb-4 flex items-center justify-between">
         {subjectInfo && (
-          <div className="rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider" style={{ color: `var(--subject-${subjectInfo.color_token})`, background: `color-mix(in oklab, var(--subject-${subjectInfo.color_token}) 15%, transparent)` }}>
+          <div
+            className="rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider"
+            style={{
+              color: `var(--subject-${subjectInfo.color_token})`,
+              background: `color-mix(in oklab, var(--subject-${subjectInfo.color_token}) 15%, transparent)`,
+            }}
+          >
             {subjectInfo.name_fr}
           </div>
         )}
@@ -400,12 +493,22 @@ function DungeonPage() {
       <AnimatePresence mode="wait">
         <motion.div
           key={currentQuestion.id}
-          initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -30 }}
           transition={{ duration: 0.25 }}
           className="rounded-3xl border border-[color:var(--neon-magenta)]/30 bg-card/60 p-6 backdrop-blur-xl sm:p-8"
-          dir={subjectInfo && (subjectInfo.color_token === "math" || subjectInfo.color_token === "arabic") ? "rtl" : undefined}
+          dir={
+            subjectInfo &&
+            (subjectInfo.color_token === "math" || subjectInfo.color_token === "arabic")
+              ? "rtl"
+              : undefined
+          }
         >
-          <h2 className="font-display text-xl font-semibold sm:text-2xl" dir={isRtlText(currentQuestion.prompt) ? "rtl" : undefined}>
+          <h2
+            className="font-display text-xl font-semibold sm:text-2xl"
+            dir={isRtlText(currentQuestion.prompt) ? "rtl" : undefined}
+          >
             {currentQuestion.prompt}
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">
@@ -418,7 +521,8 @@ function DungeonPage() {
               const isCorrect = showFeedback && isSel && answerWasCorrect === true;
               const isWrong = showFeedback && isSel && answerWasCorrect === false;
 
-              let cls = "border-[color:var(--neon-magenta)]/20 bg-background/40 hover:border-[color:var(--neon-magenta)]/60 hover:bg-[color:var(--neon-magenta)]/5";
+              let cls =
+                "border-[color:var(--neon-magenta)]/20 bg-background/40 hover:border-[color:var(--neon-magenta)]/60 hover:bg-[color:var(--neon-magenta)]/5";
               if (showFeedback) {
                 if (isCorrect) cls = "border-emerald-500 bg-emerald-500/15";
                 else if (isWrong) cls = "border-destructive bg-destructive/15";
@@ -434,12 +538,23 @@ function DungeonPage() {
                   disabled={showFeedback || answerMutation.isPending}
                   className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left text-sm transition ${cls} ${showFeedback ? "cursor-default" : ""}`}
                 >
-                  <span className="flex items-center gap-3" dir={isMathExpression(opt.text) ? "ltr" : isRtlText(opt.text) ? "rtl" : undefined}>
-                    <span className="grid h-7 w-7 place-items-center rounded-md border border-current font-mono text-xs uppercase">{opt.displayId}</span>
+                  <span
+                    className="flex items-center gap-3"
+                    dir={
+                      isMathExpression(opt.text) ? "ltr" : isRtlText(opt.text) ? "rtl" : undefined
+                    }
+                  >
+                    <span className="grid h-7 w-7 place-items-center rounded-md border border-current font-mono text-xs uppercase">
+                      {opt.displayId}
+                    </span>
                     <span>{opt.text}</span>
                   </span>
-                  {showFeedback && isCorrect && <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0" />}
-                  {showFeedback && isWrong && <XCircle className="h-5 w-5 text-destructive shrink-0" />}
+                  {showFeedback && isCorrect && (
+                    <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0" />
+                  )}
+                  {showFeedback && isWrong && (
+                    <XCircle className="h-5 w-5 text-destructive shrink-0" />
+                  )}
                 </button>
               );
             })}
@@ -448,13 +563,18 @@ function DungeonPage() {
           {/* Feedback */}
           {showFeedback && (
             <motion.div
-              initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
               className={`mt-4 rounded-xl border p-3 text-sm font-semibold ${isCorrectAnswer ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300" : "border-destructive/30 bg-destructive/10 text-destructive"}`}
             >
               {isCorrectAnswer ? (
-                <span className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4" /> Correct! Descending deeper…</span>
+                <span className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4" /> Correct! Descending deeper…
+                </span>
               ) : (
-                <span className="flex items-center gap-2"><XCircle className="h-4 w-4" /> Wrong! The dungeon collapses…</span>
+                <span className="flex items-center gap-2">
+                  <XCircle className="h-4 w-4" /> Wrong! The dungeon collapses…
+                </span>
               )}
             </motion.div>
           )}
@@ -464,7 +584,14 @@ function DungeonPage() {
       {/* Floor progress bar (visual flair) */}
       <div className="mt-6 flex items-center gap-3">
         <div className="text-xs uppercase tracking-widest text-muted-foreground">Depth</div>
-        <div className="flex-1 h-2 overflow-hidden rounded-full bg-secondary/60" role="progressbar" aria-label="Dungeon depth" aria-valuenow={floor} aria-valuemin={0} aria-valuemax={50}>
+        <div
+          className="flex-1 h-2 overflow-hidden rounded-full bg-secondary/60"
+          role="progressbar"
+          aria-label="Dungeon depth"
+          aria-valuenow={floor}
+          aria-valuemin={0}
+          aria-valuemax={50}
+        >
           <motion.div
             className="h-full rounded-full bg-gradient-to-r from-[color:var(--neon-magenta)] to-[color:var(--neon-violet)]"
             animate={{ width: `${Math.min(100, (floor / 50) * 100)}%` }}

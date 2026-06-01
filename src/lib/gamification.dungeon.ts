@@ -60,9 +60,10 @@ function parseDungeonQuestionsPayload(value: unknown): DungeonQuestionsResponse 
       prompt: typeof q.prompt === "string" ? q.prompt : "",
       options: q.options,
       explanation: typeof q.explanation === "string" ? q.explanation : null,
-      exercises: q.exercises && typeof q.exercises === "object"
-        ? (q.exercises as DungeonQuestionPayload["exercises"])
-        : undefined,
+      exercises:
+        q.exercises && typeof q.exercises === "object"
+          ? (q.exercises as DungeonQuestionPayload["exercises"])
+          : undefined,
     }))
     .filter((q) => q.id.length > 0 && q.prompt.length > 0);
 
@@ -135,10 +136,12 @@ export const startDungeonRun = createServerFn({ method: "POST" })
 export const getDungeonQuestions = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) =>
-    z.object({
-      runId: z.string().uuid(),
-      batchSize: z.number().min(1).max(20).default(5),
-    }).parse(d),
+    z
+      .object({
+        runId: z.string().uuid(),
+        batchSize: z.number().min(1).max(20).default(5),
+      })
+      .parse(d),
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
@@ -160,11 +163,13 @@ export const getDungeonQuestions = createServerFn({ method: "GET" })
 export const submitDungeonAnswer = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) =>
-    z.object({
-      runId: z.string().uuid(),
-      questionId: z.string().uuid(),
-      choice: z.string().min(1).max(32),
-    }).parse(d),
+    z
+      .object({
+        runId: z.string().uuid(),
+        questionId: z.string().uuid(),
+        choice: z.string().min(1).max(32),
+      })
+      .parse(d),
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
@@ -189,10 +194,12 @@ export const submitDungeonAnswer = createServerFn({ method: "POST" })
 export const submitDungeonRun = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) =>
-    z.object({
-      runId: z.string().uuid(),
-      durationSeconds: z.number().min(0),
-    }).parse(d),
+    z
+      .object({
+        runId: z.string().uuid(),
+        durationSeconds: z.number().min(0),
+      })
+      .parse(d),
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;

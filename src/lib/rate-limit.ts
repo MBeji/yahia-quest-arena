@@ -1,5 +1,8 @@
 type RateLimitRpcClient = {
-  rpc: (fn: string, args?: Record<string, unknown>) => Promise<{ data: unknown; error: { message: string } | null }>;
+  rpc: (
+    fn: string,
+    args?: Record<string, unknown>,
+  ) => Promise<{ data: unknown; error: { message: string } | null }>;
 };
 
 // Local fallback used when DB rate-limit RPC is unavailable.

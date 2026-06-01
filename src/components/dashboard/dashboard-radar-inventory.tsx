@@ -30,7 +30,10 @@ export function DashboardRadarInventory({ radarData, inventory }: DashboardRadar
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart data={radarData}>
               <PolarGrid stroke="oklch(0.66 0.27 295 / 0.25)" />
-              <PolarAngleAxis dataKey="subject" tick={{ fill: "oklch(0.72 0.04 270)", fontSize: 11 }} />
+              <PolarAngleAxis
+                dataKey="subject"
+                tick={{ fill: "oklch(0.72 0.04 270)", fontSize: 11 }}
+              />
               <Radar
                 name="Mastery"
                 dataKey="value"
@@ -41,7 +44,9 @@ export function DashboardRadarInventory({ radarData, inventory }: DashboardRadar
             </RadarChart>
           </ResponsiveContainer>
         </div>
-        <p className="px-2 pb-2 text-center text-xs text-muted-foreground">Your average scores by attribute.</p>
+        <p className="px-2 pb-2 text-center text-xs text-muted-foreground">
+          Your average scores by attribute.
+        </p>
       </div>
 
       <div className="mt-6 rounded-2xl border border-border/50 bg-card/60 p-4 backdrop-blur-md">
@@ -49,21 +54,33 @@ export function DashboardRadarInventory({ radarData, inventory }: DashboardRadar
           <Backpack className="h-4 w-4 text-[color:var(--neon-cyan)]" /> Inventory
         </h3>
         <div className="space-y-3">
-          {inventory.length > 0 ? inventory.slice(0, 4).map((item) => (
-            <div key={item.code} className="rounded-xl bg-background/40 p-3">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <div className="font-semibold">{item.name}</div>
-                  <div className="text-xs uppercase tracking-widest text-muted-foreground">{item.itemType}</div>
-                </div>
-                <div className="text-right">
-                  <div className="font-display text-lg font-bold text-[color:var(--neon-cyan)]">x{item.quantity}</div>
-                  {item.isEquipped && <div className="text-xs uppercase tracking-widest text-[color:var(--success)]">Equipped</div>}
+          {inventory.length > 0 ? (
+            inventory.slice(0, 4).map((item) => (
+              <div key={item.code} className="rounded-xl bg-background/40 p-3">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <div className="font-semibold">{item.name}</div>
+                    <div className="text-xs uppercase tracking-widest text-muted-foreground">
+                      {item.itemType}
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-display text-lg font-bold text-[color:var(--neon-cyan)]">
+                      x{item.quantity}
+                    </div>
+                    {item.isEquipped && (
+                      <div className="text-xs uppercase tracking-widest text-[color:var(--success)]">
+                        Equipped
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
+            ))
+          ) : (
+            <div className="rounded-xl bg-background/30 p-4 text-sm text-muted-foreground">
+              Your inventory is still empty.
             </div>
-          )) : (
-            <div className="rounded-xl bg-background/30 p-4 text-sm text-muted-foreground">Your inventory is still empty.</div>
           )}
         </div>
       </div>

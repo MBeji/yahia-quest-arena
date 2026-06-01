@@ -24,9 +24,9 @@ function toUnlockedBadges(value: unknown): UnlockedBadge[] {
 
       const row = entry as Record<string, unknown>;
       if (
-        typeof row.code !== "string"
-        || typeof row.name !== "string"
-        || typeof row.rarity !== "string"
+        typeof row.code !== "string" ||
+        typeof row.name !== "string" ||
+        typeof row.rarity !== "string"
       ) {
         return null;
       }
@@ -55,7 +55,10 @@ function parseAtomicSubmitResponse(payload: unknown): AtomicSubmitResponse {
     xpEarned: Number(row.xpEarned ?? 0),
     coinsEarned: Number(row.coinsEarned ?? 0),
     durationSeconds: Number(row.durationSeconds ?? 0),
-    profile: row.profile && typeof row.profile === "object" ? (row.profile as Record<string, unknown>) : null,
+    profile:
+      row.profile && typeof row.profile === "object"
+        ? (row.profile as Record<string, unknown>)
+        : null,
     unlockedBadges: toUnlockedBadges(row.unlockedBadges),
   };
 }
@@ -69,7 +72,11 @@ export const getSubject = createServerFn({ method: "GET" })
     const [subj, chaps, exs, bestScores] = await Promise.all([
       supabase.from("subjects").select("*").eq("id", data.subjectId).single(),
       supabase.from("chapters").select("*").eq("subject_id", data.subjectId).order("display_order"),
-      supabase.from("exercises").select("*").eq("subject_id", data.subjectId).order("display_order"),
+      supabase
+        .from("exercises")
+        .select("*")
+        .eq("subject_id", data.subjectId)
+        .order("display_order"),
       supabase.rpc("get_best_scores_by_exercise", { p_subject: data.subjectId }),
     ]);
     if (subj.error) throw new Error(subj.error.message);
@@ -97,7 +104,9 @@ export const getChapterLesson = createServerFn({ method: "GET" })
     const { supabase } = context;
     const { data: chapter, error } = await supabase
       .from("chapters")
-      .select("id, title, description, lesson_content, subject_id, display_order, subjects(id, name_fr, color_token, icon)")
+      .select(
+        "id, title, description, lesson_content, subject_id, display_order, subjects(id, name_fr, color_token, icon)",
+      )
       .eq("id", data.chapterId)
       .single();
     if (error) throw new Error(error.message);
@@ -126,7 +135,11 @@ export const getExercise = createServerFn({ method: "GET" })
   .handler(async ({ data, context }) => {
     const { supabase } = context;
     const [ex, qs] = await Promise.all([
-      supabase.from("exercises").select("*, subjects(*), chapters(*)").eq("id", data.exerciseId).single(),
+      supabase
+        .from("exercises")
+        .select("*, subjects(*), chapters(*)")
+        .eq("id", data.exerciseId)
+        .single(),
       supabase
         .from("questions")
         .select("id,prompt,options,display_order")
@@ -162,11 +175,16 @@ export const startExerciseSession = createServerFn({ method: "POST" })
 export const submitAttempt = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) =>
-    z.object({
-      sessionId: z.string().uuid(),
-      exerciseId: z.string().uuid(),
-      answers: z.array(z.object({ questionId: z.string().uuid(), choice: z.string() })).min(1).max(100),
-    }).parse(d),
+    z
+      .object({
+        sessionId: z.string().uuid(),
+        exerciseId: z.string().uuid(),
+        answers: z
+          .array(z.object({ questionId: z.string().uuid(), choice: z.string() }))
+          .min(1)
+          .max(100),
+      })
+      .parse(d),
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;

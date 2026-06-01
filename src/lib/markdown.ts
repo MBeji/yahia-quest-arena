@@ -25,7 +25,10 @@ export function renderMarkdown(md: string): string {
     .replace(/^---$/gm, '<hr class="lesson-hr" />')
     // Tables
     .replace(/^\|(.+)\|$/gm, (match) => {
-      const cells = match.split("|").filter(Boolean).map((c) => c.trim());
+      const cells = match
+        .split("|")
+        .filter(Boolean)
+        .map((c) => c.trim());
       if (cells.every((c) => /^[-:]+$/.test(c))) return "<!--table-sep-->";
       const tag = "td";
       return `<tr>${cells.map((c) => `<${tag}>${c}</${tag}>`).join("")}</tr>`;

@@ -65,13 +65,13 @@
   --popover-foreground: oklch(0.97 0.02 270);
 
   /* Brand */
-  --primary: oklch(0.66 0.27 295);              /* electric violet */
+  --primary: oklch(0.66 0.27 295); /* electric violet */
   --primary-foreground: oklch(0.99 0 0);
   --secondary: oklch(0.24 0.06 275);
   --secondary-foreground: oklch(0.97 0.02 270);
   --muted: oklch(0.22 0.04 275);
   --muted-foreground: oklch(0.72 0.04 270);
-  --accent: oklch(0.78 0.18 200);               /* cyan */
+  --accent: oklch(0.78 0.18 200); /* cyan */
   --accent-foreground: oklch(0.14 0.04 275);
 
   --destructive: oklch(0.65 0.26 25);
@@ -83,24 +83,25 @@
 
   /* Neon accent palette */
   --neon-violet: oklch(0.66 0.27 295);
-  --neon-cyan:   oklch(0.82 0.17 200);
-  --neon-magenta:oklch(0.7 0.27 335);
-  --neon-gold:   oklch(0.85 0.16 90);
-  --flame:       oklch(0.74 0.22 45);
-  --success:     oklch(0.78 0.21 150);
+  --neon-cyan: oklch(0.82 0.17 200);
+  --neon-magenta: oklch(0.7 0.27 335);
+  --neon-gold: oklch(0.85 0.16 90);
+  --flame: oklch(0.74 0.22 45);
+  --success: oklch(0.78 0.21 150);
 
   /* Subject colors */
-  --subject-math:    oklch(0.7 0.24 25);
-  --subject-french:  oklch(0.72 0.18 250);
-  --subject-arabic:  oklch(0.78 0.18 150);
-  --subject-svt:     oklch(0.78 0.2 130);
+  --subject-math: oklch(0.7 0.24 25);
+  --subject-french: oklch(0.72 0.18 250);
+  --subject-arabic: oklch(0.78 0.18 150);
+  --subject-svt: oklch(0.78 0.2 130);
   --subject-english: oklch(0.78 0.17 200);
 
   /* Gradients */
-  --gradient-hero: radial-gradient(at 20% 20%, oklch(0.66 0.27 295 / 0.55), transparent 55%),
-                   radial-gradient(at 80% 30%, oklch(0.78 0.18 200 / 0.45), transparent 55%),
-                   radial-gradient(at 50% 90%, oklch(0.7 0.27 335 / 0.3), transparent 60%),
-                   linear-gradient(180deg, oklch(0.1 0.04 275), oklch(0.16 0.05 280));
+  --gradient-hero:
+    radial-gradient(at 20% 20%, oklch(0.66 0.27 295 / 0.55), transparent 55%),
+    radial-gradient(at 80% 30%, oklch(0.78 0.18 200 / 0.45), transparent 55%),
+    radial-gradient(at 50% 90%, oklch(0.7 0.27 335 / 0.3), transparent 60%),
+    linear-gradient(180deg, oklch(0.1 0.04 275), oklch(0.16 0.05 280));
   --gradient-primary: linear-gradient(135deg, var(--neon-violet), var(--neon-magenta));
   --gradient-cyan: linear-gradient(135deg, var(--neon-cyan), var(--neon-violet));
   --gradient-flame: linear-gradient(135deg, var(--flame), var(--neon-magenta));
@@ -112,8 +113,14 @@
 }
 
 @layer base {
-  * { border-color: var(--color-border); }
-  html, body { background-color: var(--color-background); color: var(--color-foreground); }
+  * {
+    border-color: var(--color-border);
+  }
+  html,
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
   body {
     font-family: var(--font-sans);
     background-image:
@@ -121,7 +128,13 @@
       radial-gradient(at 100% 100%, oklch(0.78 0.18 200 / 0.12), transparent 50%);
     background-attachment: fixed;
   }
-  h1, h2, h3, .font-display { font-family: var(--font-display); letter-spacing: -0.01em; }
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
 }
 
 /* Utility classes */
@@ -133,7 +146,9 @@
     background-size: 48px 48px;
     mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
   }
-  .bg-hero { background: var(--gradient-hero); }
+  .bg-hero {
+    background: var(--gradient-hero);
+  }
   .text-gradient-primary {
     background: var(--gradient-primary);
     -webkit-background-clip: text;
@@ -146,9 +161,15 @@
     background-clip: text;
     color: transparent;
   }
-  .shadow-neon { box-shadow: var(--shadow-neon); }
-  .shadow-cyan-neon { box-shadow: var(--shadow-cyan); }
-  .border-neon { border: 1px solid oklch(0.66 0.27 295 / 0.5); }
+  .shadow-neon {
+    box-shadow: var(--shadow-neon);
+  }
+  .shadow-cyan-neon {
+    box-shadow: var(--shadow-cyan);
+  }
+  .border-neon {
+    border: 1px solid oklch(0.66 0.27 295 / 0.5);
+  }
   .glass {
     background: oklch(0.18 0.05 275 / 0.55);
     backdrop-filter: blur(16px);
@@ -156,29 +177,55 @@
   }
   .scanline::after {
     content: "";
-    position: absolute; inset: 0;
+    position: absolute;
+    inset: 0;
     background: repeating-linear-gradient(0deg, transparent 0 3px, oklch(1 0 0 / 0.025) 3px 4px);
     pointer-events: none;
   }
 }
 
 @keyframes pulse-neon {
-  0%, 100% { box-shadow: 0 0 20px oklch(0.66 0.27 295 / 0.45); }
-  50%      { box-shadow: 0 0 40px oklch(0.66 0.27 295 / 0.8), 0 0 80px oklch(0.7 0.27 335 / 0.4); }
+  0%,
+  100% {
+    box-shadow: 0 0 20px oklch(0.66 0.27 295 / 0.45);
+  }
+  50% {
+    box-shadow:
+      0 0 40px oklch(0.66 0.27 295 / 0.8),
+      0 0 80px oklch(0.7 0.27 335 / 0.4);
+  }
 }
-.animate-pulse-neon { animation: pulse-neon 2.4s ease-in-out infinite; }
+.animate-pulse-neon {
+  animation: pulse-neon 2.4s ease-in-out infinite;
+}
 
 @keyframes flame-flicker {
-  0%, 100% { transform: scale(1) rotate(-1deg); opacity: 1; }
-  50%      { transform: scale(1.08) rotate(2deg); opacity: 0.92; }
+  0%,
+  100% {
+    transform: scale(1) rotate(-1deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.08) rotate(2deg);
+    opacity: 0.92;
+  }
 }
-.animate-flame { animation: flame-flicker 1.6s ease-in-out infinite; }
+.animate-flame {
+  animation: flame-flicker 1.6s ease-in-out infinite;
+}
 
 @keyframes float-y {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
-.animate-float { animation: float-y 6s ease-in-out infinite; }
+.animate-float {
+  animation: float-y 6s ease-in-out infinite;
+}
 
 /* =====================================================
   Lesson content styling (RPG-themed Arabic lessons)
@@ -226,7 +273,13 @@
 .lesson-content .lesson-hr {
   border: none;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--neon-violet), var(--neon-cyan), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--neon-violet),
+    var(--neon-cyan),
+    transparent
+  );
   margin: 2rem 0;
 }
 .lesson-content .lesson-ul {

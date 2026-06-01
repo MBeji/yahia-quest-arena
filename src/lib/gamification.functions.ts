@@ -7,7 +7,13 @@
 
 export { getDashboard, getLeaderboard, getSprint2Dashboard } from "./gamification.dashboard";
 export { purchaseShopItem, equipInventorySkin } from "./gamification.shop";
-export { getSubject, getChapterLesson, getExercise, startExerciseSession, submitAttempt } from "./gamification.quest";
+export {
+  getSubject,
+  getChapterLesson,
+  getExercise,
+  startExerciseSession,
+  submitAttempt,
+} from "./gamification.quest";
 export {
   scheduleSpacedRepetition,
   getPendingSpacedRepetition,

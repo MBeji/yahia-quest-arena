@@ -78,9 +78,7 @@ function ParentReport() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center">
         <Users className="w-16 h-16 text-gray-400 mb-4" />
-        <h2 className="text-xl font-bold text-white mb-2">
-          Aucun eleve inscrit
-        </h2>
+        <h2 className="text-xl font-bold text-white mb-2">Aucun eleve inscrit</h2>
         <p className="text-gray-400 max-w-md">
           Aucun compte eleve n'existe encore dans la plateforme.
         </p>
@@ -106,11 +104,7 @@ function ParentReport() {
 
   return (
     <div className="min-h-screen p-4 md:p-8 max-w-6xl mx-auto">
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-8"
-      >
+      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
         <h1 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
           <Activity className="w-7 h-7 text-indigo-400" />
           {isAdmin ? "Admin — Suivi des élèves" : "Rapport de suivi"}
@@ -182,7 +176,8 @@ function ParentReport() {
                 Prec
               </button>
               <span className="text-xs text-gray-400">
-                Page {pagination.page} / {Math.max(1, Math.ceil(pagination.total / pagination.pageSize))}
+                Page {pagination.page} /{" "}
+                {Math.max(1, Math.ceil(pagination.total / pagination.pageSize))}
               </span>
               <button
                 type="button"
@@ -237,7 +232,11 @@ function ReportContent({ report }: { report: ReportData }) {
           </div>
           <div className="flex items-center gap-4">
             <StatBadge icon={<Trophy className="w-4 h-4" />} label="Niveau" value={student.level} />
-            <StatBadge icon={<Flame className="w-4 h-4" />} label="Streak" value={`${student.currentStreak}j`} />
+            <StatBadge
+              icon={<Flame className="w-4 h-4" />}
+              label="Streak"
+              value={`${student.currentStreak}j`}
+            />
           </div>
         </div>
       </motion.div>
@@ -285,8 +284,8 @@ function ReportContent({ report }: { report: ReportData }) {
               summary.scoreTrend > 0
                 ? "text-green-400"
                 : summary.scoreTrend < 0
-                ? "text-red-400"
-                : "text-gray-400"
+                  ? "text-red-400"
+                  : "text-gray-400"
             }
           >
             {summary.scoreTrend > 0 ? "+" : ""}
@@ -438,7 +437,9 @@ function VerdictCard({ score, verdict }: { score: number; verdict: string }) {
             className={c.color}
           />
         </svg>
-        <span className={`absolute inset-0 flex items-center justify-center text-sm font-bold ${c.color}`}>
+        <span
+          className={`absolute inset-0 flex items-center justify-center text-sm font-bold ${c.color}`}
+        >
           {score}
         </span>
       </div>

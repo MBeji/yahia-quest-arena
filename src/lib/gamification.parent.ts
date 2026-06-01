@@ -68,10 +68,12 @@ function parseStudentReportPayload(payload: unknown): StudentReportShape {
 export const getLinkedStudents = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) =>
-    z.object({
-      page: z.number().int().min(1).default(1),
-      pageSize: z.number().int().min(1).max(200).default(100),
-    }).parse((d ?? {}) as Record<string, unknown>),
+    z
+      .object({
+        page: z.number().int().min(1).default(1),
+        pageSize: z.number().int().min(1).max(200).default(100),
+      })
+      .parse((d ?? {}) as Record<string, unknown>),
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
@@ -96,7 +98,9 @@ export const getLinkedStudents = createServerFn({ method: "GET" })
       const [studentsRes, countRes] = await Promise.all([
         supabase
           .from("profiles")
-          .select("id, display_name, hero_class, level, xp, current_streak, longest_streak, last_active_date, created_at, role")
+          .select(
+            "id, display_name, hero_class, level, xp, current_streak, longest_streak, last_active_date, created_at, role",
+          )
           .eq("role", "student")
           .order("created_at", { ascending: true })
           .range(from, to),
@@ -153,7 +157,9 @@ export const getLinkedStudents = createServerFn({ method: "GET" })
 
     const { data: students, error: studentsErr } = await supabase
       .from("profiles")
-      .select("id, display_name, hero_class, level, xp, current_streak, longest_streak, last_active_date, created_at")
+      .select(
+        "id, display_name, hero_class, level, xp, current_streak, longest_streak, last_active_date, created_at",
+      )
       .in("id", studentIds);
     if (studentsErr) throw new Error(studentsErr.message);
 
@@ -179,9 +185,7 @@ export const getLinkedStudents = createServerFn({ method: "GET" })
  */
 export const getStudentReport = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
-    z.object({ studentId: z.string().uuid() }).parse(d),
-  )
+  .inputValidator((d: unknown) => z.object({ studentId: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
 
@@ -200,10 +204,18 @@ export const getStudentReport = createServerFn({ method: "GET" })
 export const linkStudentByCode = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) =>
-    z.object({
-      studentCode: z.string().min(8).max(64),
-      relationLabel: z.string().trim().min(2).max(40).regex(/^[\p{L}\p{N} _-]+$/u).default("parent"),
-    }).parse(d),
+    z
+      .object({
+        studentCode: z.string().min(8).max(64),
+        relationLabel: z
+          .string()
+          .trim()
+          .min(2)
+          .max(40)
+          .regex(/^[\p{L}\p{N} _-]+$/u)
+          .default("parent"),
+      })
+      .parse(d),
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
@@ -234,20 +246,19 @@ export const linkStudentByCode = createServerFn({ method: "POST" })
 
     if (studentError) throw new Error(studentError.message);
     if (!studentProfile) throw new Error("Student not found.");
-    if (studentProfile.role !== "student") throw new Error("This code does not belong to a student account.");
+    if (studentProfile.role !== "student")
+      throw new Error("This code does not belong to a student account.");
     if (studentProfile.id === userId) throw new Error("You cannot link your own account.");
 
-    const { error: linkError } = await supabase
-      .from("parent_student_links")
-      .upsert(
-        {
-          parent_user_id: userId,
-          student_user_id: studentProfile.id,
-          relation_label: data.relationLabel,
-          is_active: true,
-        },
-        { onConflict: "parent_user_id,student_user_id" },
-      );
+    const { error: linkError } = await supabase.from("parent_student_links").upsert(
+      {
+        parent_user_id: userId,
+        student_user_id: studentProfile.id,
+        relation_label: data.relationLabel,
+        is_active: true,
+      },
+      { onConflict: "parent_user_id,student_user_id" },
+    );
 
     if (linkError) throw new Error(linkError.message);
 

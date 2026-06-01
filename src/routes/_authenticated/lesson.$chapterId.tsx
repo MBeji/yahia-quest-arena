@@ -2,7 +2,16 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion } from "motion/react";
-import { ArrowLeft, BookOpen, Scroll, Sparkles, ChevronLeft, ChevronRight, List, CheckCircle2 } from "lucide-react";
+import {
+  ArrowLeft,
+  BookOpen,
+  Scroll,
+  Sparkles,
+  ChevronLeft,
+  ChevronRight,
+  List,
+  CheckCircle2,
+} from "lucide-react";
 import { getChapterLesson } from "@/lib/gamification.quest";
 import { isRtlText } from "@/lib/utils";
 import { renderMarkdown } from "@/lib/markdown";
@@ -36,7 +45,12 @@ function LessonPage() {
 
   const { chapter, allChapters } = data;
   const content = chapter.lesson_content;
-  const subjectData = chapter.subjects as { id: string; name_fr: string; color_token: string; icon: string } | null;
+  const subjectData = chapter.subjects as {
+    id: string;
+    name_fr: string;
+    color_token: string;
+    icon: string;
+  } | null;
   const isRtlSubject = subjectData?.color_token === "math" || subjectData?.color_token === "arabic";
   const isRtl = isRtlSubject || (content ? isRtlText(content) : false);
 
@@ -49,7 +63,9 @@ function LessonPage() {
       <div className="mx-auto max-w-3xl px-6 py-12 text-center">
         <Scroll className="mx-auto h-16 w-16 text-muted-foreground/40" />
         <h1 className="mt-4 font-display text-2xl font-bold">Lesson coming soon</h1>
-        <p className="mt-2 text-muted-foreground">This chapter's lesson is being prepared by the scholars.</p>
+        <p className="mt-2 text-muted-foreground">
+          This chapter's lesson is being prepared by the scholars.
+        </p>
         <Link
           to="/subject/$subjectId"
           params={{ subjectId: chapter.subject_id }}
@@ -108,7 +124,8 @@ function LessonPage() {
       {/* Table of Contents dropdown */}
       {tocOpen && headings.length > 0 && (
         <motion.div
-          initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
           className="mb-4 rounded-2xl border border-[color:var(--neon-violet)]/30 bg-card/80 p-4 backdrop-blur-xl"
           dir="rtl"
         >
@@ -139,7 +156,8 @@ function LessonPage() {
       </div>
 
       <motion.div
-        initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
         className="relative overflow-hidden rounded-3xl border border-border/50 bg-card/60 backdrop-blur-xl"
       >
         {/* Header */}
@@ -154,9 +172,14 @@ function LessonPage() {
                 <Sparkles className="h-3 w-3" />
                 {subjectData?.name_fr ?? "Lesson"}
                 <span className="text-muted-foreground">·</span>
-                <span className="text-muted-foreground">Ch. {currentIdx + 1}/{allChapters.length}</span>
+                <span className="text-muted-foreground">
+                  Ch. {currentIdx + 1}/{allChapters.length}
+                </span>
               </div>
-              <h1 className="font-display text-2xl font-bold sm:text-3xl" dir={isRtlText(chapter.title) ? "rtl" : undefined}>
+              <h1
+                className="font-display text-2xl font-bold sm:text-3xl"
+                dir={isRtlText(chapter.title) ? "rtl" : undefined}
+              >
                 📖 {chapter.title}
               </h1>
             </div>
@@ -181,11 +204,15 @@ function LessonPage() {
               >
                 <ChevronLeft className="h-4 w-4 transition group-hover:-translate-x-0.5" />
                 <div className="text-right" dir={isRtlText(prevChapter.title) ? "rtl" : undefined}>
-                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground">السابق</div>
+                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                    السابق
+                  </div>
                   <div className="font-semibold line-clamp-1">{prevChapter.title}</div>
                 </div>
               </Link>
-            ) : <div />}
+            ) : (
+              <div />
+            )}
 
             <Link
               to="/subject/$subjectId"
@@ -202,7 +229,9 @@ function LessonPage() {
                 className="group flex items-center gap-2 rounded-xl border border-border/50 bg-card/60 px-4 py-3 text-sm transition hover:border-[color:var(--neon-violet)]/50 hover:bg-[color:var(--neon-violet)]/10"
               >
                 <div dir={isRtlText(nextChapter.title) ? "rtl" : undefined}>
-                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground">التالي</div>
+                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                    التالي
+                  </div>
                   <div className="font-semibold line-clamp-1">{nextChapter.title}</div>
                 </div>
                 <ChevronRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
@@ -222,7 +251,9 @@ function LessonPage() {
 
       {/* Chapters sidebar on large screens */}
       <motion.div
-        initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
         className="mt-6 rounded-2xl border border-border/50 bg-card/60 p-5 backdrop-blur-xl"
         dir="rtl"
       >
@@ -243,9 +274,11 @@ function LessonPage() {
                     : "border-border/30 text-muted-foreground/50 pointer-events-none"
               }`}
             >
-              <span className={`grid h-6 w-6 shrink-0 place-items-center rounded-lg text-xs font-bold ${
-                c.id === chapterId ? "bg-[color:var(--neon-cyan)]/20" : "bg-muted-foreground/10"
-              }`}>
+              <span
+                className={`grid h-6 w-6 shrink-0 place-items-center rounded-lg text-xs font-bold ${
+                  c.id === chapterId ? "bg-[color:var(--neon-cyan)]/20" : "bg-muted-foreground/10"
+                }`}
+              >
                 {i + 1}
               </span>
               <span className="line-clamp-1">{c.title}</span>
@@ -256,4 +289,3 @@ function LessonPage() {
     </div>
   );
 }
-

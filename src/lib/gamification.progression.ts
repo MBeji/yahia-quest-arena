@@ -18,18 +18,23 @@ import { isRateLimited } from "./rate-limit";
 export const scheduleSpacedRepetition = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) =>
-    z.object({
-      exerciseId: z.string().uuid(),
-      subjectId: z.string().uuid(),
-      attemptId: z.string().uuid(),
-      scorePct: z.number(),
-    }).parse(d),
+    z
+      .object({
+        exerciseId: z.string().uuid(),
+        subjectId: z.string().uuid(),
+        attemptId: z.string().uuid(),
+        scorePct: z.number(),
+      })
+      .parse(d),
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
     if (data.scorePct >= PASS_THRESHOLD_PCT) {
-      return { scheduled: false, reason: `Score >= ${PASS_THRESHOLD_PCT}%, no need for spaced repetition` };
+      return {
+        scheduled: false,
+        reason: `Score >= ${PASS_THRESHOLD_PCT}%, no need for spaced repetition`,
+      };
     }
 
     // Check if pending schedules already exist for this exercise
@@ -79,7 +84,7 @@ export const getPendingSpacedRepetition = createServerFn({ method: "GET" })
       .select(
         `id,exercise_id,subject_id,retry_level,scheduled_for,
         exercises(id,title,chapter_id,subject_id,subjects(name_fr)),
-        subjects(name_fr,color_token)`
+        subjects(name_fr,color_token)`,
       )
       .eq("user_id", userId)
       .eq("status", "pending")
@@ -103,7 +108,9 @@ export const getDailyObjectives = createServerFn({ method: "GET" })
 
     let { data: objectives, error } = await supabase
       .from("daily_objectives")
-      .select("id,objective_type,target_value,current_value,xp_reward,coin_reward,status,completed_at")
+      .select(
+        "id,objective_type,target_value,current_value,xp_reward,coin_reward,status,completed_at",
+      )
       .eq("user_id", userId)
       .eq("objective_date", todayStr);
 
@@ -131,7 +138,9 @@ export const getDailyObjectives = createServerFn({ method: "GET" })
       // Fetch again
       const { data: newObjs, error: fetchErr } = await supabase
         .from("daily_objectives")
-        .select("id,objective_type,target_value,current_value,xp_reward,coin_reward,status,completed_at")
+        .select(
+          "id,objective_type,target_value,current_value,xp_reward,coin_reward,status,completed_at",
+        )
         .eq("user_id", userId)
         .eq("objective_date", todayStr);
 
@@ -146,10 +155,12 @@ export const getDailyObjectives = createServerFn({ method: "GET" })
 export const updateDailyObjectiveProgress = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) =>
-    z.object({
-      objectiveType: z.enum(["10_min", "15_min", "3_exercises"]),
-      incrementValue: z.number().int().min(1).max(5),
-    }).parse(d),
+    z
+      .object({
+        objectiveType: z.enum(["10_min", "15_min", "3_exercises"]),
+        incrementValue: z.number().int().min(1).max(5),
+      })
+      .parse(d),
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
@@ -213,7 +224,9 @@ export const getWeeklyQuests = createServerFn({ method: "GET" })
 
     let { data: quests, error } = await supabase
       .from("weekly_quests")
-      .select("id,quest_type,subject_id,target_value,current_value,xp_reward,coin_reward,status,completed_at")
+      .select(
+        "id,quest_type,subject_id,target_value,current_value,xp_reward,coin_reward,status,completed_at",
+      )
       .eq("user_id", userId)
       .eq("week_start_date", mondayStr);
 
@@ -241,7 +254,9 @@ export const getWeeklyQuests = createServerFn({ method: "GET" })
       // Fetch again
       const { data: newQuests, error: fetchErr } = await supabase
         .from("weekly_quests")
-        .select("id,quest_type,subject_id,target_value,current_value,xp_reward,coin_reward,status,completed_at")
+        .select(
+          "id,quest_type,subject_id,target_value,current_value,xp_reward,coin_reward,status,completed_at",
+        )
         .eq("user_id", userId)
         .eq("week_start_date", mondayStr);
 
@@ -256,10 +271,12 @@ export const getWeeklyQuests = createServerFn({ method: "GET" })
 export const updateWeeklyQuestProgress = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) =>
-    z.object({
-      questType: z.enum(["maintain_streak_5", "beat_2_bosses"]),
-      incrementValue: z.literal(1),
-    }).parse(d),
+    z
+      .object({
+        questType: z.enum(["maintain_streak_5", "beat_2_bosses"]),
+        incrementValue: z.literal(1),
+      })
+      .parse(d),
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
@@ -311,10 +328,12 @@ export const updateWeeklyQuestProgress = createServerFn({ method: "POST" })
 export const adaptDifficulty = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) =>
-    z.object({
-      subjectId: z.string().uuid(),
-      newScore: z.number().min(0).max(100),
-    }).parse(d),
+    z
+      .object({
+        subjectId: z.string().uuid(),
+        newScore: z.number().min(0).max(100),
+      })
+      .parse(d),
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
@@ -356,17 +375,27 @@ export const adaptDifficulty = createServerFn({ method: "POST" })
         .order("completed_at", { ascending: false })
         .limit(RECENT_ATTEMPTS_WINDOW);
 
-      const recentScores = [data.newScore, ...(recentAttempts ?? []).map((a) => a.score_pct as number)];
+      const recentScores = [
+        data.newScore,
+        ...(recentAttempts ?? []).map((a) => a.score_pct as number),
+      ];
       const windowSize = Math.min(recentScores.length, RECENT_ATTEMPTS_WINDOW);
-      const recentAvg = Math.round(recentScores.slice(0, windowSize).reduce((a, b) => a + b, 0) / windowSize);
+      const recentAvg = Math.round(
+        recentScores.slice(0, windowSize).reduce((a, b) => a + b, 0) / windowSize,
+      );
 
-      const overallAvg = Math.round(((adaptation.avg_score * adaptation.total_attempts) + data.newScore) / totalAttempts);
+      const overallAvg = Math.round(
+        (adaptation.avg_score * adaptation.total_attempts + data.newScore) / totalAttempts,
+      );
 
       let newDifficulty = adaptation.current_difficulty_level;
 
       if (recentAvg > DIFFICULTY_INCREASE_THRESHOLD && newDifficulty < MAX_DIFFICULTY_LEVEL) {
         newDifficulty = newDifficulty + 1;
-      } else if (recentAvg < DIFFICULTY_DECREASE_THRESHOLD && newDifficulty > MIN_DIFFICULTY_LEVEL) {
+      } else if (
+        recentAvg < DIFFICULTY_DECREASE_THRESHOLD &&
+        newDifficulty > MIN_DIFFICULTY_LEVEL
+      ) {
         newDifficulty = newDifficulty - 1;
       }
 

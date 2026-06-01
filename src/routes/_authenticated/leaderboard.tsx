@@ -18,14 +18,21 @@ function LeaderboardPage() {
   });
 
   if (isLoading || !data) {
-    return <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">Loading leaderboard…</div>;
+    return (
+      <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">
+        Loading leaderboard…
+      </div>
+    );
   }
 
   const { leaderboard, myRank } = data;
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-8">
-      <Link to="/dashboard" className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+      <Link
+        to="/dashboard"
+        className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+      >
         <ArrowLeft className="h-4 w-4" /> Back to hall
       </Link>
 
@@ -39,7 +46,8 @@ function LeaderboardPage() {
       {/* My rank card */}
       {myRank && (
         <motion.div
-          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
           className="mb-6 rounded-2xl border border-[color:var(--neon-violet)]/40 bg-card/60 p-5 backdrop-blur-xl shadow-neon"
         >
           <div className="flex items-center justify-between">
@@ -49,7 +57,9 @@ function LeaderboardPage() {
               </div>
               <div>
                 <div className="font-display text-lg font-bold">{myRank.displayName}</div>
-                <div className="text-xs uppercase tracking-widest text-[color:var(--neon-cyan)]">{myRank.heroClass}</div>
+                <div className="text-xs uppercase tracking-widest text-[color:var(--neon-cyan)]">
+                  {myRank.heroClass}
+                </div>
               </div>
             </div>
             <div className="text-right">
@@ -77,19 +87,28 @@ function LeaderboardPage() {
             return (
               <motion.div
                 key={player.id}
-                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
                 className="flex flex-col items-center"
               >
-                <div className={`mb-2 grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br ${colors[i]} text-sm font-bold text-white shadow-lg`}>
+                <div
+                  className={`mb-2 grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br ${colors[i]} text-sm font-bold text-white shadow-lg`}
+                >
                   {rank === 1 ? <Crown className="h-5 w-5" /> : <Medal className="h-4 w-4" />}
                 </div>
                 <div className="text-center">
-                  <div className="text-sm font-bold truncate max-w-[100px]">{player.displayName}</div>
+                  <div className="text-sm font-bold truncate max-w-[100px]">
+                    {player.displayName}
+                  </div>
                   <div className="text-xs text-muted-foreground">Lvl {player.level}</div>
                 </div>
-                <div className={`mt-2 w-full ${heights[i]} rounded-t-xl bg-gradient-to-t ${colors[i]} opacity-30`} />
-                <div className="mt-1 text-xs font-bold text-[color:var(--neon-gold)]">{player.xp} XP</div>
+                <div
+                  className={`mt-2 w-full ${heights[i]} rounded-t-xl bg-gradient-to-t ${colors[i]} opacity-30`}
+                />
+                <div className="mt-1 text-xs font-bold text-[color:var(--neon-gold)]">
+                  {player.xp} XP
+                </div>
               </motion.div>
             );
           })}
@@ -101,7 +120,8 @@ function LeaderboardPage() {
         {leaderboard.map((player, i) => (
           <motion.div
             key={player.id}
-            initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ delay: i * 0.02 }}
             className={`flex items-center gap-4 rounded-xl border p-4 transition ${
               player.isMe
@@ -109,20 +129,28 @@ function LeaderboardPage() {
                 : "border-border/50 bg-card/40 hover:bg-card/60"
             }`}
           >
-            <div className={`grid h-9 w-9 place-items-center rounded-lg text-sm font-bold ${
-              player.rank <= 3
-                ? "bg-gradient-to-br from-[color:var(--neon-gold)] to-amber-600 text-white"
-                : "bg-secondary text-muted-foreground"
-            }`}>
+            <div
+              className={`grid h-9 w-9 place-items-center rounded-lg text-sm font-bold ${
+                player.rank <= 3
+                  ? "bg-gradient-to-br from-[color:var(--neon-gold)] to-amber-600 text-white"
+                  : "bg-secondary text-muted-foreground"
+              }`}
+            >
               {player.rank}
             </div>
 
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <span className="font-semibold truncate">{player.displayName}</span>
-                {player.isMe && <span className="rounded-full bg-[color:var(--neon-violet)]/20 px-2 py-0.5 text-[10px] font-bold uppercase text-[color:var(--neon-violet)]">You</span>}
+                {player.isMe && (
+                  <span className="rounded-full bg-[color:var(--neon-violet)]/20 px-2 py-0.5 text-[10px] font-bold uppercase text-[color:var(--neon-violet)]">
+                    You
+                  </span>
+                )}
               </div>
-              <div className="text-xs text-muted-foreground">{player.heroClass} · Lvl {player.level}</div>
+              <div className="text-xs text-muted-foreground">
+                {player.heroClass} · Lvl {player.level}
+              </div>
             </div>
 
             <div className="flex items-center gap-3">
@@ -131,7 +159,9 @@ function LeaderboardPage() {
                   <Flame className="h-3.5 w-3.5 animate-flame" /> {player.streak}
                 </div>
               )}
-              <div className="font-display text-sm font-bold text-[color:var(--neon-gold)]">{player.xp} XP</div>
+              <div className="font-display text-sm font-bold text-[color:var(--neon-gold)]">
+                {player.xp} XP
+              </div>
             </div>
           </motion.div>
         ))}

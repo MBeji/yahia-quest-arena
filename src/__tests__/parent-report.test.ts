@@ -59,36 +59,81 @@ describe("Seriousness Score", () => {
   });
 
   it("caps streak factor at 25 (7+ days)", () => {
-    const s7 = computeSeriousnessScore({ currentStreak: 7, daysActiveThisWeek: 0, avgScore: 0, totalTimeMinutes: 0 });
-    const s14 = computeSeriousnessScore({ currentStreak: 14, daysActiveThisWeek: 0, avgScore: 0, totalTimeMinutes: 0 });
+    const s7 = computeSeriousnessScore({
+      currentStreak: 7,
+      daysActiveThisWeek: 0,
+      avgScore: 0,
+      totalTimeMinutes: 0,
+    });
+    const s14 = computeSeriousnessScore({
+      currentStreak: 14,
+      daysActiveThisWeek: 0,
+      avgScore: 0,
+      totalTimeMinutes: 0,
+    });
     expect(s7).toBe(s14); // both capped at 25
     expect(s7).toBe(25);
   });
 
   it("caps frequency factor at 25 (5+ days)", () => {
-    const s5 = computeSeriousnessScore({ currentStreak: 0, daysActiveThisWeek: 5, avgScore: 0, totalTimeMinutes: 0 });
-    const s7 = computeSeriousnessScore({ currentStreak: 0, daysActiveThisWeek: 7, avgScore: 0, totalTimeMinutes: 0 });
+    const s5 = computeSeriousnessScore({
+      currentStreak: 0,
+      daysActiveThisWeek: 5,
+      avgScore: 0,
+      totalTimeMinutes: 0,
+    });
+    const s7 = computeSeriousnessScore({
+      currentStreak: 0,
+      daysActiveThisWeek: 7,
+      avgScore: 0,
+      totalTimeMinutes: 0,
+    });
     expect(s5).toBe(s7);
     expect(s5).toBe(25);
   });
 
   it("caps score factor at 25 (80%+ average)", () => {
-    const s80 = computeSeriousnessScore({ currentStreak: 0, daysActiveThisWeek: 0, avgScore: 80, totalTimeMinutes: 0 });
-    const s100 = computeSeriousnessScore({ currentStreak: 0, daysActiveThisWeek: 0, avgScore: 100, totalTimeMinutes: 0 });
+    const s80 = computeSeriousnessScore({
+      currentStreak: 0,
+      daysActiveThisWeek: 0,
+      avgScore: 80,
+      totalTimeMinutes: 0,
+    });
+    const s100 = computeSeriousnessScore({
+      currentStreak: 0,
+      daysActiveThisWeek: 0,
+      avgScore: 100,
+      totalTimeMinutes: 0,
+    });
     expect(s80).toBe(s100);
     expect(s80).toBe(25);
   });
 
   it("caps time factor at 25 (120+ minutes)", () => {
-    const t120 = computeSeriousnessScore({ currentStreak: 0, daysActiveThisWeek: 0, avgScore: 0, totalTimeMinutes: 120 });
-    const t300 = computeSeriousnessScore({ currentStreak: 0, daysActiveThisWeek: 0, avgScore: 0, totalTimeMinutes: 300 });
+    const t120 = computeSeriousnessScore({
+      currentStreak: 0,
+      daysActiveThisWeek: 0,
+      avgScore: 0,
+      totalTimeMinutes: 120,
+    });
+    const t300 = computeSeriousnessScore({
+      currentStreak: 0,
+      daysActiveThisWeek: 0,
+      avgScore: 0,
+      totalTimeMinutes: 300,
+    });
     expect(t120).toBe(t300);
     expect(t120).toBe(25);
   });
 
   it("each factor contributes proportionally", () => {
     // Only streak: 3/7 * 25 ≈ 11
-    const score = computeSeriousnessScore({ currentStreak: 3, daysActiveThisWeek: 0, avgScore: 0, totalTimeMinutes: 0 });
+    const score = computeSeriousnessScore({
+      currentStreak: 3,
+      daysActiveThisWeek: 0,
+      avgScore: 0,
+      totalTimeMinutes: 0,
+    });
     expect(score).toBe(11);
   });
 });

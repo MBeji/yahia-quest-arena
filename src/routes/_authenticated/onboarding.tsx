@@ -18,7 +18,15 @@ interface SubjectCardProps {
   isSelected: boolean;
 }
 
-function SubjectCard({ id, name, description, color, icon, onClick, isSelected }: SubjectCardProps) {
+function SubjectCard({
+  id,
+  name,
+  description,
+  color,
+  icon,
+  onClick,
+  isSelected,
+}: SubjectCardProps) {
   return (
     <motion.button
       onClick={onClick}
@@ -51,7 +59,12 @@ function SubjectCard({ id, name, description, color, icon, onClick, isSelected }
 
 function OnboardingStep1({ subjects, selectedId, onSelect, onNext }: any) {
   return (
-    <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -20 }}
+      className="space-y-6"
+    >
       <div>
         <h2 className="font-display text-3xl font-bold">Choisis ta matière préférée</h2>
         <p className="mt-2 text-slate-400">Commence par ce qui t'intéresse le plus!</p>
@@ -109,7 +122,12 @@ function OnboardingStep2({ selectedSubject, onPrev, onNext }: any) {
   ];
 
   return (
-    <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -20 }}
+      className="space-y-6"
+    >
       <div>
         <h2 className="font-display text-3xl font-bold">Quel est ton niveau?</h2>
         <p className="mt-2 text-slate-400">Tu peux toujours changer après!</p>
@@ -153,7 +171,12 @@ function OnboardingStep2({ selectedSubject, onPrev, onNext }: any) {
 
 function OnboardingStep3({ selectedSubject, difficulty, onPrev, onComplete }: any) {
   return (
-    <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -20 }}
+      className="space-y-6"
+    >
       <div>
         <h2 className="font-display text-3xl font-bold">Prêt à commencer?</h2>
         <p className="mt-2 text-slate-400">Ton premier exercice t'attend!</p>
@@ -164,7 +187,10 @@ function OnboardingStep3({ selectedSubject, difficulty, onPrev, onComplete }: an
           <div className="text-4xl">🚀</div>
           <div>
             <h3 className="font-display text-xl font-bold">{selectedSubject?.name_fr}</h3>
-            <p className="mt-1 text-sm text-slate-400">Niveau: {difficulty === "easy" ? "Facile" : difficulty === "hard" ? "Difficile" : "Extrême"}</p>
+            <p className="mt-1 text-sm text-slate-400">
+              Niveau:{" "}
+              {difficulty === "easy" ? "Facile" : difficulty === "hard" ? "Difficile" : "Extrême"}
+            </p>
           </div>
         </div>
       </Card>
@@ -249,7 +275,12 @@ function OnboardingComponent() {
             />
           )}
           {step === 2 && (
-            <OnboardingStep2 key="step2" selectedSubject={selectedSubject} onPrev={handlePrev} onNext={handleNext} />
+            <OnboardingStep2
+              key="step2"
+              selectedSubject={selectedSubject}
+              onPrev={handlePrev}
+              onNext={handleNext}
+            />
           )}
           {step === 3 && (
             <OnboardingStep3

@@ -36,31 +36,34 @@ export const getDashboard = createServerFn({ method: "GET" })
     const claims = (context.claims ?? {}) as Record<string, unknown>;
     const fallbackDisplayName = resolveFallbackDisplayName(claims);
 
-    const [profileRes, subjectsRes, attemptsRes, badgesRes, inventoryRes, shopRes] = await Promise.all([
-      supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
-      supabase.from("subjects").select("*").order("display_order"),
-      supabase
-        .from("attempts")
-        .select("subject_id,score_pct,xp_earned,completed_at,exercise_id")
-        .eq("user_id", userId)
-        .order("completed_at", { ascending: false })
-        .limit(DASHBOARD_RECENT_LIMIT),
-      supabase
-        .from("student_badges")
-        .select("awarded_at, awarded_reason, badge:badges(code,name,rarity,icon_name)")
-        .eq("student_user_id", userId)
-        .order("awarded_at", { ascending: false }),
-      supabase
-        .from("inventory_items")
-        .select("quantity, is_equipped, acquired_at, item:shop_items(id,code,name,item_type,description,price_coins)")
-        .eq("student_user_id", userId)
-        .order("acquired_at", { ascending: false }),
-      supabase
-        .from("shop_items")
-        .select("id,code,name,item_type,description,price_coins,is_active")
-        .eq("is_active", true)
-        .order("price_coins", { ascending: true }),
-    ]);
+    const [profileRes, subjectsRes, attemptsRes, badgesRes, inventoryRes, shopRes] =
+      await Promise.all([
+        supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
+        supabase.from("subjects").select("*").order("display_order"),
+        supabase
+          .from("attempts")
+          .select("subject_id,score_pct,xp_earned,completed_at,exercise_id")
+          .eq("user_id", userId)
+          .order("completed_at", { ascending: false })
+          .limit(DASHBOARD_RECENT_LIMIT),
+        supabase
+          .from("student_badges")
+          .select("awarded_at, awarded_reason, badge:badges(code,name,rarity,icon_name)")
+          .eq("student_user_id", userId)
+          .order("awarded_at", { ascending: false }),
+        supabase
+          .from("inventory_items")
+          .select(
+            "quantity, is_equipped, acquired_at, item:shop_items(id,code,name,item_type,description,price_coins)",
+          )
+          .eq("student_user_id", userId)
+          .order("acquired_at", { ascending: false }),
+        supabase
+          .from("shop_items")
+          .select("id,code,name,item_type,description,price_coins,is_active")
+          .eq("is_active", true)
+          .order("price_coins", { ascending: true }),
+      ]);
 
     if (profileRes.error) throw new Error(profileRes.error.message);
     if (subjectsRes.error) throw new Error(subjectsRes.error.message);
@@ -102,29 +105,33 @@ export const getDashboard = createServerFn({ method: "GET" })
     const badges = (badgesRes.data ?? []).flatMap((row: BadgeRow) => {
       if (!row.badge) return [];
 
-      return [{
-        code: row.badge.code,
-        name: row.badge.name,
-        rarity: row.badge.rarity,
-        iconName: row.badge.icon_name,
-        awardedAt: row.awarded_at,
-        awardedReason: row.awarded_reason,
-      }];
+      return [
+        {
+          code: row.badge.code,
+          name: row.badge.name,
+          rarity: row.badge.rarity,
+          iconName: row.badge.icon_name,
+          awardedAt: row.awarded_at,
+          awardedReason: row.awarded_reason,
+        },
+      ];
     });
 
     const inventory = (inventoryRes.data ?? []).flatMap((row: InventoryRow) => {
       if (!row.item) return [];
 
-      return [{
-        code: row.item.code,
-        name: row.item.name,
-        itemType: row.item.item_type,
-        description: row.item.description,
-        priceCoins: row.item.price_coins,
-        quantity: row.quantity,
-        isEquipped: row.is_equipped,
-        acquiredAt: row.acquired_at,
-      }];
+      return [
+        {
+          code: row.item.code,
+          name: row.item.name,
+          itemType: row.item.item_type,
+          description: row.item.description,
+          priceCoins: row.item.price_coins,
+          quantity: row.quantity,
+          isEquipped: row.is_equipped,
+          acquiredAt: row.acquired_at,
+        },
+      ];
     });
 
     const inventoryByCode = new Map(inventory.map((item) => [item.code, item]));
@@ -238,12 +245,16 @@ export const getSprint2Dashboard = createServerFn({ method: "GET" })
     const [dailyObjs, weeklyQs, spacedRep] = await Promise.all([
       supabase
         .from("daily_objectives")
-        .select("id,objective_type,target_value,current_value,xp_reward,coin_reward,status,completed_at")
+        .select(
+          "id,objective_type,target_value,current_value,xp_reward,coin_reward,status,completed_at",
+        )
         .eq("user_id", userId)
         .gte("objective_date", new Date(Date.now() - 86400000).toISOString().split("T")[0]),
       supabase
         .from("weekly_quests")
-        .select("id,quest_type,target_value,current_value,xp_reward,coin_reward,status,completed_at")
+        .select(
+          "id,quest_type,target_value,current_value,xp_reward,coin_reward,status,completed_at",
+        )
         .eq("user_id", userId)
         .eq("week_start_date", currentWeekStart),
       supabase

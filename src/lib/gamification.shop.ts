@@ -43,7 +43,10 @@ export const purchaseShopItem = createServerFn({ method: "POST" })
     }
 
     // Atomic coin deduction — fails if insufficient funds (race-safe)
-    const { error: spendErr } = await supabase.rpc("spend_coins", { p_user: userId, p_coins: shopItem.price_coins });
+    const { error: spendErr } = await supabase.rpc("spend_coins", {
+      p_user: userId,
+      p_coins: shopItem.price_coins,
+    });
     if (spendErr) throw new Error(spendErr.message);
 
     if (existingInventoryRes.data) {
@@ -54,14 +57,12 @@ export const purchaseShopItem = createServerFn({ method: "POST" })
         .eq("student_user_id", userId);
       if (inventoryUpdateRes.error) throw new Error(inventoryUpdateRes.error.message);
     } else {
-      const inventoryInsertRes = await supabase
-        .from("inventory_items")
-        .insert({
-          student_user_id: userId,
-          shop_item_id: shopItem.id,
-          quantity: 1,
-          is_equipped: false,
-        });
+      const inventoryInsertRes = await supabase.from("inventory_items").insert({
+        student_user_id: userId,
+        shop_item_id: shopItem.id,
+        quantity: 1,
+        is_equipped: false,
+      });
       if (inventoryInsertRes.error) throw new Error(inventoryInsertRes.error.message);
     }
 
@@ -97,7 +98,10 @@ export const equipInventorySkin = createServerFn({ method: "POST" })
       const resetRes = await supabase
         .from("inventory_items")
         .update({ is_equipped: false })
-        .in("id", skinRows.map((row) => row.id));
+        .in(
+          "id",
+          skinRows.map((row) => row.id),
+        );
       if (resetRes.error) throw new Error(resetRes.error.message);
     }
 
@@ -109,11 +113,10 @@ export const equipInventorySkin = createServerFn({ method: "POST" })
     if (equipRes.error) throw new Error(equipRes.error.message);
 
     const effectPayload = inventoryItem.item.effect_payload;
-    const avatarSlug = effectPayload !== null
-      && typeof effectPayload === "object"
-      && "avatarSlug" in effectPayload
-      ? effectPayload.avatarSlug
-      : null;
+    const avatarSlug =
+      effectPayload !== null && typeof effectPayload === "object" && "avatarSlug" in effectPayload
+        ? effectPayload.avatarSlug
+        : null;
 
     if (typeof avatarSlug === "string") {
       const profileRes = await supabase

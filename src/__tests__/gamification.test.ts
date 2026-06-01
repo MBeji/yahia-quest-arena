@@ -86,7 +86,7 @@ describe("Gamification Constants", () => {
     it("intervals are in ascending order", () => {
       for (let i = 1; i < SPACED_REPETITION_INTERVALS_MS.length; i++) {
         expect(SPACED_REPETITION_INTERVALS_MS[i]).toBeGreaterThan(
-          SPACED_REPETITION_INTERVALS_MS[i - 1]
+          SPACED_REPETITION_INTERVALS_MS[i - 1],
         );
       }
     });

@@ -10,9 +10,7 @@ export const GUEST_ACCESS_COPY = {
   signOutToast: "Guest session ended.",
 };
 
-type GuestSignInResult =
-  | { ok: true }
-  | { ok: false; errorMessage: string; errorCode?: string };
+type GuestSignInResult = { ok: true } | { ok: false; errorMessage: string; errorCode?: string };
 
 function normalizeErrorMessage(value: unknown, fallback: string): string {
   if (typeof value === "string" && value.trim().length > 0) {
@@ -32,7 +30,11 @@ export function getGuestSignInErrorMessage(result: GuestSignInResult): string {
     return "Guest mode disabled in Supabase. Enable Auth > Providers > Anonymous.";
   }
 
-  if (code.includes("rate_limit") || message.includes("rate_limit") || message.includes("rate limit")) {
+  if (
+    code.includes("rate_limit") ||
+    message.includes("rate_limit") ||
+    message.includes("rate limit")
+  ) {
     return "Too many attempts. Please enable Anonymous sign-ins in Supabase Auth settings.";
   }
 
