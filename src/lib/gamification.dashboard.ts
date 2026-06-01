@@ -19,6 +19,15 @@ function resolveFallbackDisplayName(claims: Record<string, unknown>): string {
   return "Aspirant";
 }
 
+function getCurrentWeekStartUtc(): string {
+  const now = new Date();
+  const day = now.getUTCDay();
+  const mondayDelta = day === 0 ? -6 : 1 - day;
+  now.setUTCDate(now.getUTCDate() + mondayDelta);
+  now.setUTCHours(0, 0, 0, 0);
+  return now.toISOString().split("T")[0];
+}
+
 // ---------- Get dashboard ----------
 export const getDashboard = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -161,16 +170,26 @@ export const getLeaderboard = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
 
-    const { data: topPlayers, error } = await supabase
-      .from("profiles")
-      .select("id,display_name,hero_class,level,xp,current_streak,avatar_tier")
-      .eq("role", "student")
-      .order("xp", { ascending: false })
-      .limit(LEADERBOARD_LIMIT);
+    const [topPlayersRes, meRes] = await Promise.all([
+      supabase
+        .from("profiles")
+        .select("id,display_name,hero_class,level,xp,current_streak,avatar_tier")
+        .eq("role", "student")
+        .order("xp", { ascending: false })
+        .limit(LEADERBOARD_LIMIT),
+      supabase
+        .from("profiles")
+        .select("id,xp,display_name,hero_class,level,current_streak,avatar_tier")
+        .eq("id", userId)
+        .maybeSingle(),
+    ]);
 
-    if (error) throw new Error(error.message);
+    if (topPlayersRes.error) throw new Error(topPlayersRes.error.message);
+    if (meRes.error) throw new Error(meRes.error.message);
 
-    const ranked = (topPlayers ?? []).map((p, i) => ({
+    const topPlayers = topPlayersRes.data ?? [];
+
+    const ranked = topPlayers.map((p, i) => ({
       rank: i + 1,
       id: p.id,
       displayName: p.display_name,
@@ -182,7 +201,29 @@ export const getLeaderboard = createServerFn({ method: "GET" })
       isMe: p.id === userId,
     }));
 
-    const myRank = ranked.find((r) => r.isMe);
+    let myRank = ranked.find((r) => r.isMe);
+
+    if (!myRank && meRes.data && typeof meRes.data.xp === "number") {
+      const { count, error: rankErr } = await supabase
+        .from("profiles")
+        .select("id", { head: true, count: "exact" })
+        .eq("role", "student")
+        .gt("xp", meRes.data.xp);
+
+      if (rankErr) throw new Error(rankErr.message);
+
+      myRank = {
+        rank: (count ?? 0) + 1,
+        id: meRes.data.id,
+        displayName: meRes.data.display_name,
+        heroClass: meRes.data.hero_class,
+        level: meRes.data.level,
+        xp: meRes.data.xp,
+        streak: meRes.data.current_streak,
+        avatarTier: meRes.data.avatar_tier,
+        isMe: true,
+      };
+    }
 
     return { leaderboard: ranked, myRank };
   });
@@ -192,6 +233,7 @@ export const getSprint2Dashboard = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
+    const currentWeekStart = getCurrentWeekStartUtc();
 
     const [dailyObjs, weeklyQs, spacedRep] = await Promise.all([
       supabase
@@ -202,7 +244,8 @@ export const getSprint2Dashboard = createServerFn({ method: "GET" })
       supabase
         .from("weekly_quests")
         .select("id,quest_type,target_value,current_value,xp_reward,coin_reward,status,completed_at")
-        .eq("user_id", userId),
+        .eq("user_id", userId)
+        .eq("week_start_date", currentWeekStart),
       supabase
         .from("spaced_repetition_schedule")
         .select("id,retry_level,scheduled_for,exercises(id,title)")
@@ -211,6 +254,10 @@ export const getSprint2Dashboard = createServerFn({ method: "GET" })
         .lte("scheduled_for", new Date().toISOString())
         .limit(3),
     ]);
+
+    if (dailyObjs.error) throw new Error(dailyObjs.error.message);
+    if (weeklyQs.error) throw new Error(weeklyQs.error.message);
+    if (spacedRep.error) throw new Error(spacedRep.error.message);
 
     return {
       dailyObjectives: dailyObjs.data ?? [],
