@@ -257,11 +257,11 @@ function QuestPage() {
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="relative overflow-hidden rounded-3xl border border-[color:var(--neon-violet)]/40 bg-card/60 p-8 text-center backdrop-blur-xl shadow-neon"
+          className="relative overflow-hidden rounded-3xl border border-(--neon-violet)/40 bg-card/60 p-8 text-center backdrop-blur-xl shadow-neon"
         >
-          <div className="absolute -top-20 left-1/2 h-48 w-48 -translate-x-1/2 rounded-full bg-[color:var(--neon-violet)]/40 blur-3xl" />
+          <div className="absolute -top-20 left-1/2 h-48 w-48 -translate-x-1/2 rounded-full bg-(--neon-violet)/40 blur-3xl" />
           <div className="relative">
-            <div className="mx-auto grid h-20 w-20 place-items-center rounded-2xl bg-gradient-to-br from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] shadow-neon animate-pulse-neon">
+            <div className="mx-auto grid h-20 w-20 place-items-center rounded-2xl bg-linear-to-br from-neon-violet to-neon-magenta shadow-neon animate-pulse-neon">
               <Trophy className="h-10 w-10 text-primary-foreground" />
             </div>
             <h1 className="mt-5 font-display text-3xl font-bold">
@@ -274,41 +274,41 @@ function QuestPage() {
               Server-validated time · {result.durationSeconds}s
             </p>
             <div className="mt-6 grid grid-cols-4 gap-3">
-              <div className="rounded-xl bg-[color:var(--neon-gold)]/15 p-4">
-                <Zap className="mx-auto h-5 w-5 text-[color:var(--neon-gold)]" />
-                <div className="mt-1 font-display text-2xl font-bold text-[color:var(--neon-gold)]">
+              <div className="rounded-xl bg-(--neon-gold)/15 p-4">
+                <Zap className="mx-auto h-5 w-5 text-neon-gold" />
+                <div className="mt-1 font-display text-2xl font-bold text-neon-gold">
                   +{result.xpEarned}
                 </div>
                 <div className="text-xs uppercase tracking-wider text-muted-foreground">XP</div>
               </div>
-              <div className="rounded-xl bg-[color:var(--neon-cyan)]/15 p-4">
-                <Sparkles className="mx-auto h-5 w-5 text-[color:var(--neon-cyan)]" />
-                <div className="mt-1 font-display text-2xl font-bold text-[color:var(--neon-cyan)]">
+              <div className="rounded-xl bg-(--neon-cyan)/15 p-4">
+                <Sparkles className="mx-auto h-5 w-5 text-neon-cyan" />
+                <div className="mt-1 font-display text-2xl font-bold text-neon-cyan">
                   +{result.coinsEarned ?? 0}
                 </div>
                 <div className="text-xs uppercase tracking-wider text-muted-foreground">Coins</div>
               </div>
-              <div className="rounded-xl bg-[color:var(--neon-violet)]/15 p-4">
-                <Sparkles className="mx-auto h-5 w-5 text-[color:var(--neon-violet)]" />
-                <div className="mt-1 font-display text-2xl font-bold text-[color:var(--neon-violet)]">
+              <div className="rounded-xl bg-(--neon-violet)/15 p-4">
+                <Sparkles className="mx-auto h-5 w-5 text-neon-violet" />
+                <div className="mt-1 font-display text-2xl font-bold text-neon-violet">
                   {result.profile?.level ?? "?"}
                 </div>
                 <div className="text-xs uppercase tracking-wider text-muted-foreground">Level</div>
               </div>
-              <div className="rounded-xl bg-[color:var(--flame)]/15 p-4">
-                <Flame className="mx-auto h-5 w-5 text-[color:var(--flame)] animate-flame" />
-                <div className="mt-1 font-display text-2xl font-bold text-[color:var(--flame)]">
+              <div className="rounded-xl bg-(--flame)/15 p-4">
+                <Flame className="mx-auto h-5 w-5 text-flame animate-flame" />
+                <div className="mt-1 font-display text-2xl font-bold text-flame">
                   {result.profile?.current_streak ?? 0}
                 </div>
                 <div className="text-xs uppercase tracking-wider text-muted-foreground">Streak</div>
               </div>
             </div>
-            <div className="mt-6 text-xs uppercase tracking-widest text-[color:var(--neon-cyan)]">
+            <div className="mt-6 text-xs uppercase tracking-widest text-neon-cyan">
               {result.profile?.hero_class}
             </div>
             {result.unlockedBadges.length > 0 && (
-              <div className="mt-6 rounded-2xl border border-[color:var(--neon-gold)]/30 bg-[color:var(--neon-gold)]/10 p-4 text-left">
-                <div className="text-xs uppercase tracking-widest text-[color:var(--neon-gold)]">
+              <div className="mt-6 rounded-2xl border border-(--neon-gold)/30 bg-(--neon-gold)/10 p-4 text-left">
+                <div className="text-xs uppercase tracking-widest text-neon-gold">
                   Badges unlocked
                 </div>
                 <div className="mt-3 flex flex-wrap gap-3">
@@ -345,7 +345,7 @@ function QuestPage() {
                   setShowConfetti(false);
                   setSessionId(null);
                 }}
-                className="rounded-lg bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-neon hover:scale-105"
+                className="rounded-lg bg-linear-to-r from-neon-violet to-neon-magenta px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-neon hover:scale-105"
               >
                 Replay quest
               </button>
@@ -372,7 +372,7 @@ function QuestPage() {
                         </div>
                       </div>
                       <div
-                        className={`rounded-full px-3 py-1 text-xs font-bold ${item.isCorrect ? "bg-[color:var(--success)]/15 text-[color:var(--success)]" : "bg-destructive/15 text-destructive"}`}
+                        className={`rounded-full px-3 py-1 text-xs font-bold ${item.isCorrect ? "bg-(--success)/15 text-success" : "bg-destructive/15 text-destructive"}`}
                       >
                         {item.isCorrect ? "Passed" : "Needs work"}
                       </div>
@@ -446,7 +446,7 @@ function QuestPage() {
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-destructive to-[color:var(--neon-magenta)] shadow-lg animate-pulse">
+              <div className="grid h-10 w-10 place-items-center rounded-xl bg-linear-to-br from-destructive to-neon-magenta shadow-lg animate-pulse">
                 <Skull className="h-5 w-5 text-primary-foreground" />
               </div>
               <div>
@@ -459,11 +459,7 @@ function QuestPage() {
             <div className="flex items-center gap-2 rounded-full bg-background/60 px-3 py-1.5 text-sm font-bold">
               <Timer className="h-4 w-4 text-destructive" />
               <span
-                className={
-                  bossTimer <= 5
-                    ? "text-destructive animate-pulse"
-                    : "text-[color:var(--neon-cyan)]"
-                }
+                className={bossTimer <= 5 ? "text-destructive animate-pulse" : "text-neon-cyan"}
               >
                 {bossTimer}s
               </span>
@@ -479,7 +475,7 @@ function QuestPage() {
             </div>
             <div className="h-3 overflow-hidden rounded-full bg-secondary/80">
               <motion.div
-                className="h-full rounded-full bg-gradient-to-r from-destructive to-[color:var(--neon-magenta)]"
+                className="h-full rounded-full bg-linear-to-r from-destructive to-neon-magenta"
                 initial={{ width: "100%" }}
                 animate={{ width: `${bossHp}%` }}
                 transition={{ duration: 0.5 }}
@@ -494,11 +490,11 @@ function QuestPage() {
           <span>
             Question {idx + 1} / {total}
           </span>
-          {!isBoss && <span className="text-[color:var(--neon-cyan)]">{data.exercise.title}</span>}
+          {!isBoss && <span className="text-neon-cyan">{data.exercise.title}</span>}
         </div>
         <div className="h-2 overflow-hidden rounded-full bg-secondary">
           <motion.div
-            className={`h-full rounded-full shadow-neon ${isBoss ? "bg-gradient-to-r from-destructive to-[color:var(--neon-magenta)]" : "bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)]"}`}
+            className={`h-full rounded-full shadow-neon ${isBoss ? "bg-linear-to-r from-destructive to-neon-magenta" : "bg-linear-to-r from-neon-violet to-neon-magenta"}`}
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
             transition={{ duration: 0.4 }}
@@ -531,17 +527,17 @@ function QuestPage() {
               const isSel = selected === opt.id;
               let cls = isBoss
                 ? "border-destructive/20 bg-background/40 hover:border-destructive/60 hover:bg-destructive/10"
-                : "border-border bg-background/40 hover:border-[color:var(--neon-violet)]/60 hover:bg-background/70";
+                : "border-border bg-background/40 hover:border-(--neon-violet)/60 hover:bg-background/70";
               if (showFeedback) {
                 if (isSel) {
                   cls = isBoss
                     ? "border-destructive bg-destructive/20"
-                    : "border-[color:var(--neon-violet)] bg-[color:var(--neon-violet)]/15";
+                    : "border-(--neon-violet) bg-(--neon-violet)/15";
                 } else cls = "border-border/30 bg-background/20 opacity-50";
               } else if (isSel) {
                 cls = isBoss
                   ? "border-destructive bg-destructive/20"
-                  : "border-[color:var(--neon-violet)] bg-[color:var(--neon-violet)]/15";
+                  : "border-(--neon-violet) bg-(--neon-violet)/15";
               }
               return (
                 <button
@@ -570,7 +566,7 @@ function QuestPage() {
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-4 rounded-xl border border-[color:var(--neon-cyan)]/30 bg-[color:var(--neon-cyan)]/10 p-4 text-sm text-[color:var(--neon-cyan)]"
+              className="mt-4 rounded-xl border border-(--neon-cyan)/30 bg-(--neon-cyan)/10 p-4 text-sm text-neon-cyan"
             >
               <p>Reponse enregistree. La correction detaillee apparait a la fin du quest.</p>
             </motion.div>
@@ -582,8 +578,8 @@ function QuestPage() {
               onClick={advanceNow}
               className={`inline-flex items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-bold text-primary-foreground shadow-neon transition disabled:opacity-40 ${
                 isBoss
-                  ? "bg-gradient-to-r from-destructive to-[color:var(--neon-magenta)]"
-                  : "bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)]"
+                  ? "bg-linear-to-r from-destructive to-neon-magenta"
+                  : "bg-linear-to-r from-neon-violet to-neon-magenta"
               }`}
             >
               {(mutation.isPending || sessionMutation.isPending) && (
