@@ -1,14 +1,19 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { motion } from "motion/react";
-import { Flame, Zap, Trophy, Swords, Sword, BookOpen, Scroll, Leaf, Globe, ChevronRight, Sparkles, Shield, Backpack, ShoppingBag, Crown, Play, Skull, Loader2, Copy, Check } from "lucide-react";
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from "recharts";
+import { Flame, Zap, Trophy, Swords, Sword, BookOpen, Scroll, Leaf, Globe, ChevronRight, Sparkles, Shield, ShoppingBag, Crown, Play, Skull, Loader2, Copy, Check } from "lucide-react";
 import { toast } from "sonner";
 import { getDashboard, getSprint2Dashboard } from "@/lib/gamification.dashboard";
 import { purchaseShopItem, equipInventorySkin } from "@/lib/gamification.shop";
 import { formatStudentAllianceCode } from "@/lib/family-link";
+
+const DashboardRadarInventory = lazy(() =>
+  import("@/components/dashboard/dashboard-radar-inventory").then((mod) => ({
+    default: mod.DashboardRadarInventory,
+  }))
+);
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: "Heroes Hall · XP Scholars" }] }),
@@ -407,51 +412,17 @@ function Dashboard() {
 
         {/* RADAR */}
         <section>
-          <h2 className="mb-4 flex items-center gap-2 font-display text-xl font-bold">
-            <Trophy className="h-5 w-5 text-[color:var(--neon-gold)]" /> Success Radar
-          </h2>
-          <div className="rounded-2xl border border-border/50 bg-card/60 p-4 backdrop-blur-md">
-            <div className="h-72 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <RadarChart data={radarData}>
-                  <PolarGrid stroke="oklch(0.66 0.27 295 / 0.25)" />
-                  <PolarAngleAxis dataKey="subject" tick={{ fill: "oklch(0.72 0.04 270)", fontSize: 11 }} />
-                  <Radar
-                    name="Mastery"
-                    dataKey="value"
-                    stroke="oklch(0.66 0.27 295)"
-                    fill="oklch(0.66 0.27 295)"
-                    fillOpacity={0.4}
-                  />
-                </RadarChart>
-              </ResponsiveContainer>
-            </div>
-            <p className="px-2 pb-2 text-center text-xs text-muted-foreground">Your average scores by attribute.</p>
-          </div>
-
-          <div className="mt-6 rounded-2xl border border-border/50 bg-card/60 p-4 backdrop-blur-md">
-            <h3 className="mb-3 flex items-center gap-2 font-display text-lg font-bold">
-              <Backpack className="h-4 w-4 text-[color:var(--neon-cyan)]" /> Inventory
-            </h3>
-            <div className="space-y-3">
-              {inventory.length > 0 ? inventory.slice(0, 4).map((item) => (
-                <div key={item.code} className="rounded-xl bg-background/40 p-3">
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <div className="font-semibold">{item.name}</div>
-                      <div className="text-xs uppercase tracking-widest text-muted-foreground">{item.itemType}</div>
-                    </div>
-                    <div className="text-right">
-                      <div className="font-display text-lg font-bold text-[color:var(--neon-cyan)]">x{item.quantity}</div>
-                      {item.isEquipped && <div className="text-xs uppercase tracking-widest text-[color:var(--success)]">Equipped</div>}
-                    </div>
-                  </div>
-                </div>
-              )) : (
-                <div className="rounded-xl bg-background/30 p-4 text-sm text-muted-foreground">Your inventory is still empty.</div>
-              )}
-            </div>
-          </div>
+          <Suspense
+            fallback={
+              <div className="space-y-4">
+                <div className="h-8 w-40 animate-pulse rounded bg-card/40" />
+                <div className="h-80 animate-pulse rounded-2xl bg-card/40" />
+                <div className="h-52 animate-pulse rounded-2xl bg-card/40" />
+              </div>
+            }
+          >
+            <DashboardRadarInventory radarData={radarData} inventory={inventory} />
+          </Suspense>
         </section>
       </div>
 
