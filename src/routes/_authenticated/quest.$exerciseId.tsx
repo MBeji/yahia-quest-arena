@@ -19,6 +19,7 @@ import { getExercise, startExerciseSession, submitAttempt } from "@/lib/gamifica
 import { BOSS_TIME_PER_QUESTION_S, PASS_THRESHOLD_PCT } from "@/lib/gamification.constants";
 import { isRtlText, isMathExpression } from "@/lib/utils";
 import { shuffleOptions, type BaseOption, type DisplayOption } from "@/lib/question-utils";
+import { LevelUpCelebration } from "@/components/ui/level-up-celebration";
 
 // Confetti component for victory
 function Confetti() {
@@ -76,6 +77,7 @@ function QuestPage() {
   const [selected, setSelected] = useState<string | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [showLevelUp, setShowLevelUp] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [result, setResult] = useState<Awaited<ReturnType<typeof submitAttempt>> | null>(null);
 
@@ -91,6 +93,14 @@ function QuestPage() {
     onSuccess: (res) => {
       setResult(res);
       if (res.scorePct >= PASS_THRESHOLD_PCT) setShowConfetti(true);
+      // Detect level-up: if XP earned caused a level boundary crossing
+      const profileLevel = Number((res.profile as Record<string, unknown>)?.level ?? 0);
+      const profileXp = Number((res.profile as Record<string, unknown>)?.xp ?? 0);
+      const prevXp = profileXp - res.xpEarned;
+      const prevLevel = Math.floor(prevXp / 200) + 1;
+      if (profileLevel > prevLevel && res.xpEarned > 0) {
+        setTimeout(() => setShowLevelUp(true), 1200);
+      }
       qc.invalidateQueries({ queryKey: ["dashboard"] });
       qc.invalidateQueries({ queryKey: ["subject"] });
     },
@@ -224,6 +234,36 @@ function QuestPage() {
     advanceWithChoice(selected);
   }, [advanceWithChoice, selected, sessionId, showFeedback]);
 
+  // Keyboard shortcuts: 1-4 to select answer, Enter/Space to advance
+  useEffect(() => {
+    if (result) return;
+    function handleKeyDown(e: KeyboardEvent) {
+      // Prevent if focus is on an input or button (unless it's the body)
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+
+      const optionsList = current ? (shuffledOptionsByQuestionId.get(current.id) ?? []) : [];
+
+      if (!showFeedback) {
+        const num = parseInt(e.key, 10);
+        if (num >= 1 && num <= optionsList.length) {
+          e.preventDefault();
+          handleSelect(optionsList[num - 1].id);
+        }
+        // A, B, C, D keys
+        const letterIdx = "abcd".indexOf(e.key.toLowerCase());
+        if (letterIdx >= 0 && letterIdx < optionsList.length) {
+          e.preventDefault();
+          handleSelect(optionsList[letterIdx].id);
+        }
+      } else if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        advanceNow();
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  });
+
   if (isLoading || !data) {
     return (
       <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">
@@ -235,9 +275,16 @@ function QuestPage() {
   // RESULTS SCREEN
   if (result) {
     const passed = result.scorePct >= PASS_THRESHOLD_PCT;
+    const resultLevel = Number((result.profile as Record<string, unknown>)?.level ?? 1);
     return (
       <div className="mx-auto max-w-2xl px-6 py-12" dir={isRtlSubject ? "rtl" : undefined}>
         {showConfetti && <Confetti />}
+        <LevelUpCelebration
+          show={showLevelUp}
+          newLevel={resultLevel}
+          xpGained={result.xpEarned}
+          onComplete={() => setShowLevelUp(false)}
+        />
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -528,7 +575,7 @@ function QuestPage() {
                   key={opt.id}
                   onClick={() => handleSelect(opt.id)}
                   disabled={showFeedback}
-                  className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left text-sm transition ${cls} ${showFeedback ? "cursor-default" : ""}`}
+                  className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left text-sm transition-all duration-200 ${cls} ${showFeedback ? "cursor-default" : "active:scale-[0.97]"}`}
                 >
                   <span
                     className="flex items-center gap-3"
@@ -545,6 +592,12 @@ function QuestPage() {
               );
             })}
           </div>
+
+          {!showFeedback && (
+            <div className="mt-3 text-center text-xs text-muted-foreground/60 hidden sm:block">
+              Raccourcis : <kbd className="rounded border border-border/60 px-1.5 py-0.5 font-mono text-[10px]">1</kbd>-<kbd className="rounded border border-border/60 px-1.5 py-0.5 font-mono text-[10px]">4</kbd> ou <kbd className="rounded border border-border/60 px-1.5 py-0.5 font-mono text-[10px]">A</kbd>-<kbd className="rounded border border-border/60 px-1.5 py-0.5 font-mono text-[10px]">D</kbd> pour répondre
+            </div>
+          )}
 
           {showFeedback && (
             <motion.div

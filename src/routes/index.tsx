@@ -19,14 +19,14 @@ import heroImg from "@/assets/hero-warrior.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "XP Scholars — The Shonen Academy for the 9th Grade Exam" },
+      { title: "XP Scholars — L'Académie Shonen pour le Concours 9ème" },
       {
         name: "description",
         content:
-          "Turn your study sessions into epic quests. XP, streaks, duels and bosses to prepare for the 9th grade exam.",
+          "Transforme tes révisions en quêtes épiques. XP, streaks, duels et boss pour préparer le concours 9ème année.",
       },
       { property: "og:title", content: "XP Scholars" },
-      { property: "og:description", content: "9th Grade Exam in RPG mode." },
+      { property: "og:description", content: "Concours 9ème en mode RPG." },
     ],
   }),
   component: Landing,
@@ -35,48 +35,48 @@ export const Route = createFileRoute("/")({
 const features = [
   {
     icon: Zap,
-    title: "XP & Levels",
-    desc: "Every correct answer earns you experience. Rise from Civilian Candidate to S-Rank Legend.",
+    title: "XP & Niveaux",
+    desc: "Chaque bonne réponse te rapporte de l'expérience. Passe de Candidat Civil à Légende S-Rank.",
     color: "neon-violet",
   },
   {
     icon: Flame,
-    title: "Daily Streak",
-    desc: "Study every day to keep your flame alive. 7 days in a row = warrior bonus.",
+    title: "Streak Quotidien",
+    desc: "Révise chaque jour pour garder ta flamme. 7 jours d'affilée = bonus guerrier.",
     color: "flame",
   },
   {
     icon: Target,
-    title: "Success Radar",
-    desc: "Strength, Spirit, Observation, Agility, Wisdom: visualize your true strengths.",
+    title: "Radar de Réussite",
+    desc: "Force, Esprit, Observation, Agilité, Sagesse : visualise tes vraies forces.",
     color: "neon-cyan",
   },
   {
     icon: Swords,
     title: "Quest Arena",
-    desc: "Timed MCQs. The faster and more accurate you are, the more points you score.",
+    desc: "QCM chronométrés. Plus tu es rapide et précis, plus tu scores.",
     color: "neon-magenta",
   },
   {
     icon: Trophy,
-    title: "Chapter Boss",
-    desc: "Complete a chapter by defeating its Boss. HP bar, damage with every answer.",
+    title: "Boss de Chapitre",
+    desc: "Termine un chapitre en battant son Boss. Barre de HP, dégâts à chaque réponse.",
     color: "neon-gold",
   },
   {
     icon: Shield,
-    title: "Official Curriculum",
-    desc: "Math, French, Arabic, Science, English. Aligned with the 9th grade exam.",
+    title: "Programme Officiel",
+    desc: "Maths, Français, Arabe, Sciences, Anglais. Aligné au concours 9ème.",
     color: "success",
   },
 ];
 
 const subjects = [
-  { icon: Sword, name: "Mathematics", attr: "Strength", color: "subject-math" },
-  { icon: BookOpen, name: "French", attr: "Spirit", color: "subject-french" },
-  { icon: Scroll, name: "العربية", attr: "Wisdom", color: "subject-arabic" },
-  { icon: Leaf, name: "Science", attr: "Observation", color: "subject-svt" },
-  { icon: Globe, name: "English", attr: "Agility", color: "subject-english" },
+  { icon: Sword, name: "Mathématiques", attr: "Force", color: "subject-math" },
+  { icon: BookOpen, name: "Français", attr: "Esprit", color: "subject-french" },
+  { icon: Scroll, name: "العربية", attr: "Sagesse", color: "subject-arabic" },
+  { icon: Leaf, name: "Sciences", attr: "Observation", color: "subject-svt" },
+  { icon: Globe, name: "Anglais", attr: "Agilité", color: "subject-english" },
 ];
 
 function Landing() {
@@ -95,13 +95,13 @@ function Landing() {
           </Link>
           <nav className="hidden items-center gap-8 text-sm text-muted-foreground md:flex">
             <a href="#features" className="hover:text-foreground">
-              System
+              Système
             </a>
             <a href="#subjects" className="hover:text-foreground">
-              Subjects
+              Matières
             </a>
             <a href="#ranks" className="hover:text-foreground">
-              Ranks
+              Rangs
             </a>
           </nav>
           <div className="flex items-center gap-2">
@@ -109,13 +109,13 @@ function Landing() {
               to="/login"
               className="rounded-md px-4 py-2 text-sm text-muted-foreground hover:text-foreground"
             >
-              Sign in
+              Connexion
             </Link>
             <Link
               to="/signup"
               className="rounded-md bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] px-4 py-2 text-sm font-semibold text-primary-foreground shadow-neon"
             >
-              Join the Academy
+              Rejoindre l'Académie
             </Link>
           </div>
         </div>
@@ -134,36 +134,36 @@ function Landing() {
           >
             <div className="mb-6 inline-flex items-center gap-2 rounded-full glass px-4 py-1.5 text-xs uppercase tracking-widest text-[color:var(--neon-cyan)]">
               <Flame className="h-3.5 w-3.5 animate-flame text-[color:var(--flame)]" />
-              9th Grade Exam · RPG Mode
+              Concours 9ème · Mode RPG
             </div>
             <h1 className="font-display text-5xl font-black leading-[1.05] sm:text-6xl lg:text-7xl">
-              Become the <span className="text-gradient-primary">Legend</span>
+              Deviens la <span className="text-gradient-primary">Légende</span>
               <br />
-              of the <span className="text-gradient-cyan">9th Grade</span> Exam
+              du <span className="text-gradient-cyan">Concours</span> 9ème
             </h1>
             <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-              XP Scholars turns your study sessions into manga quests. Earn XP, ignite your streak,
-              rank up and defeat Chapter Bosses to ace the exam.
+              XP Scholars transforme tes révisions en quêtes manga. Gagne de l'XP, enflamme ton streak,
+              monte en rang et bats les Boss de chapitre pour réussir le concours.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 to="/signup"
                 className="group inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] px-7 py-3.5 text-base font-bold text-primary-foreground shadow-neon transition-transform hover:scale-105"
               >
-                Start my quest{" "}
+                Commencer ma quête{" "}
                 <Swords className="h-5 w-5 transition-transform group-hover:rotate-12" />
               </Link>
               <Link
                 to="/login"
                 className="inline-flex items-center gap-2 rounded-lg border border-[color:var(--neon-cyan)]/40 bg-background/40 px-7 py-3.5 text-base font-semibold text-[color:var(--neon-cyan)] backdrop-blur-md hover:bg-[color:var(--neon-cyan)]/10"
               >
-                I already have a hero
+                J'ai déjà un héros
               </Link>
             </div>
             <div className="mt-10 grid max-w-md grid-cols-3 gap-4 text-center">
               {[
-                { v: "5", l: "Subjects" },
-                { v: "200+", l: "Quests" },
+                { v: "5", l: "Matières" },
+                { v: "200+", l: "Quêtes" },
                 { v: "∞", l: "Streak" },
               ].map((s) => (
                 <div key={s.l} className="glass rounded-xl px-2 py-3">
@@ -194,9 +194,9 @@ function Landing() {
               <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-gradient-to-t from-background via-background/70 to-transparent p-5">
                 <div>
                   <div className="text-xs uppercase tracking-widest text-[color:var(--neon-cyan)]">
-                    Lvl 42 · Equation Warrior
+                    Lvl 42 · Guerrier des Équations
                   </div>
-                  <div className="font-display text-lg">XP "The Blade"</div>
+                  <div className="font-display text-lg">XP «La Lame»</div>
                 </div>
                 <div className="flex items-center gap-1.5 rounded-full bg-[color:var(--flame)]/20 px-3 py-1.5 text-sm font-bold text-[color:var(--flame)]">
                   <Flame className="h-4 w-4 animate-flame" /> 27
@@ -211,10 +211,10 @@ function Landing() {
       <section id="features" className="relative mx-auto max-w-7xl px-6 py-24">
         <div className="mb-14 text-center">
           <div className="mb-3 text-xs uppercase tracking-[0.3em] text-[color:var(--neon-cyan)]">
-            The System
+            Le Système
           </div>
           <h2 className="font-display text-4xl font-bold sm:text-5xl">
-            Not an app. <span className="text-gradient-primary">An arena.</span>
+            Pas une app. <span className="text-gradient-primary">Une arène.</span>
           </h2>
         </div>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -248,10 +248,10 @@ function Landing() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-12 text-center">
             <div className="mb-3 text-xs uppercase tracking-[0.3em] text-[color:var(--neon-cyan)]">
-              The 5 Paths
+              Les 5 Voies
             </div>
             <h2 className="font-display text-4xl font-bold sm:text-5xl">
-              Choose your <span className="text-gradient-cyan">hero's path</span>
+              Choisis ta <span className="text-gradient-cyan">voie de héros</span>
             </h2>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
@@ -272,7 +272,7 @@ function Landing() {
                 <s.icon className="h-8 w-8" style={{ color: `var(--${s.color})` }} />
                 <div className="mt-4 font-display text-lg font-bold">{s.name}</div>
                 <div className="text-xs uppercase tracking-wider text-muted-foreground">
-                  Attribute · {s.attr}
+                  Attribut · {s.attr}
                 </div>
               </motion.div>
             ))}
@@ -286,16 +286,16 @@ function Landing() {
           Progression
         </div>
         <h2 className="font-display text-4xl font-bold sm:text-5xl">
-          From Civilian to <span className="text-gradient-primary">S-Rank Legend</span>
+          De Civil à <span className="text-gradient-primary">Légende S-Rank</span>
         </h2>
         <div className="mt-12 space-y-3">
           {[
-            ["Lvl 1-5", "Civilian Candidate", "neon-cyan"],
-            ["Lvl 6-10", "Academy Aspirant", "neon-cyan"],
-            ["Lvl 11-20", "Equation Warrior", "neon-violet"],
-            ["Lvl 21-30", "Language Master", "neon-violet"],
-            ["Lvl 31-45", "Exam Elite", "neon-magenta"],
-            ["Lvl 50+", "S-Rank Legend", "neon-gold"],
+            ["Lvl 1-5", "Candidat Civil", "neon-cyan"],
+            ["Lvl 6-10", "Aspirant Académie", "neon-cyan"],
+            ["Lvl 11-20", "Guerrier des Équations", "neon-violet"],
+            ["Lvl 21-30", "Maître des Langues", "neon-violet"],
+            ["Lvl 31-45", "Élite du Concours", "neon-magenta"],
+            ["Lvl 50+", "Légende S-Rank", "neon-gold"],
           ].map(([range, name, color]) => (
             <div
               key={name}
@@ -314,12 +314,12 @@ function Landing() {
           to="/signup"
           className="mt-14 inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] px-8 py-4 text-base font-bold text-primary-foreground shadow-neon transition-transform hover:scale-105"
         >
-          Forge my hero <Sparkles className="h-5 w-5" />
+          Forger mon héros <Sparkles className="h-5 w-5" />
         </Link>
       </section>
 
       <footer className="border-t border-border/40 py-8 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} XP Scholars · 9th Grade Exam · Tunisia
+        © {new Date().getFullYear()} XP Scholars · Concours 9ème · Tunisie
       </footer>
     </main>
   );

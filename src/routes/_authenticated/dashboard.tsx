@@ -24,6 +24,7 @@ import {
 import { toast } from "sonner";
 import { getDashboard, getSprint2Dashboard } from "@/lib/gamification.dashboard";
 import { purchaseShopItem, equipInventorySkin } from "@/lib/gamification.shop";
+import { recoverStreak } from "@/lib/gamification.progression";
 import { formatStudentAllianceCode } from "@/lib/family-link";
 import {
   formatObjectiveType,
@@ -56,6 +57,83 @@ const ICONS: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> 
   Leaf,
   Globe,
 } as never;
+
+const MOTIVATIONAL_QUOTES = [
+  { text: "Le guerrier qui s'entraîne chaque jour devient invincible.", author: "Sensei XP" },
+  { text: "Chaque bonne réponse est un coup porté à l'ignorance.", author: "L'Académie" },
+  { text: "Le talent sans travail n'est qu'une flamme sans bois.", author: "Proverbe shinobi" },
+  { text: "Ta progression ne ment jamais. Continue.", author: "Le Système" },
+  { text: "Un S-Rank n'est qu'un Candidat Civil qui n'a jamais abandonné.", author: "Légende" },
+  { text: "La connaissance est la plus puissante des armes.", author: "L'Oracle" },
+  { text: "1% de mieux chaque jour = 37x plus fort en un an.", author: "Les Maths" },
+];
+
+function DailyXpWidget({ xpToday, dailyGoal, streak }: { xpToday: number; dailyGoal: number; streak: number }) {
+  const pct = Math.min(100, Math.round((xpToday / dailyGoal) * 100));
+  const circumference = 2 * Math.PI * 40;
+  const dashOffset = circumference - (pct / 100) * circumference;
+  const isComplete = pct >= 100;
+
+  return (
+    <div className="flex items-center gap-5 rounded-2xl border border-[color:var(--neon-violet)]/30 bg-card/40 p-5 backdrop-blur-md">
+      <div className="relative h-24 w-24 shrink-0">
+        <svg className="h-full w-full -rotate-90" viewBox="0 0 96 96">
+          <circle cx="48" cy="48" r="40" fill="none" stroke="currentColor" strokeWidth="6" className="text-secondary" />
+          <circle
+            cx="48" cy="48" r="40" fill="none"
+            strokeWidth="6" strokeLinecap="round"
+            stroke={isComplete ? "var(--neon-gold)" : "var(--neon-violet)"}
+            strokeDasharray={circumference}
+            strokeDashoffset={dashOffset}
+            className="transition-all duration-700"
+          />
+        </svg>
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <span className="font-display text-lg font-bold">{pct}%</span>
+        </div>
+      </div>
+      <div>
+        <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--neon-violet)]">
+          Objectif du jour
+        </div>
+        <div className="mt-1 font-display text-2xl font-bold">
+          {xpToday} <span className="text-base text-muted-foreground">/ {dailyGoal} XP</span>
+        </div>
+        {isComplete ? (
+          <div className="mt-1 text-sm font-semibold text-[color:var(--neon-gold)]">
+            ✨ Objectif atteint !
+          </div>
+        ) : (
+          <div className="mt-1 text-sm text-muted-foreground">
+            Plus que {dailyGoal - xpToday} XP pour aujourd'hui
+          </div>
+        )}
+        {streak > 0 && (
+          <div className="mt-2 flex items-center gap-1 text-xs text-[color:var(--flame)]">
+            <Flame className="h-3 w-3 animate-flame" /> {streak} jours consécutifs
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function MotivationalQuote() {
+  const dayIndex = new Date().getDate() % MOTIVATIONAL_QUOTES.length;
+  const quote = MOTIVATIONAL_QUOTES[dayIndex];
+
+  return (
+    <div className="flex flex-col justify-center rounded-2xl border border-[color:var(--neon-cyan)]/20 bg-card/40 p-5 backdrop-blur-md">
+      <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--neon-cyan)] mb-3">
+        Parole du jour
+      </div>
+      <blockquote className="font-display text-base font-medium italic leading-relaxed">
+        «&nbsp;{quote.text}&nbsp;»
+      </blockquote>
+      <cite className="mt-2 text-xs not-italic text-muted-foreground">— {quote.author}</cite>
+    </div>
+  );
+}
 
 function Dashboard() {
   const queryClient = useQueryClient();
@@ -100,6 +178,16 @@ function Dashboard() {
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
     onError: (error) => toast.error(error instanceof Error ? error.message : "Equip failed"),
+  });
+
+  const recoverStreakFn = useServerFn(recoverStreak);
+  const streakRecoveryMutation = useMutation({
+    mutationFn: () => recoverStreakFn(),
+    onSuccess: (res) => {
+      toast.success(`🔥 Streak récupéré ! Tu as maintenant ${res.newStreak} jour.`);
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+    },
+    onError: (error) => toast.error(error instanceof Error ? error.message : "Échec de la récupération"),
   });
 
   if (isError) {
@@ -274,6 +362,53 @@ function Dashboard() {
           </div>
         </div>
       </motion.div>
+
+      {/* TODAY'S PROGRESS + MOTIVATION */}
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="mt-6 grid gap-4 sm:grid-cols-2"
+      >
+        <DailyXpWidget
+          xpToday={(sprint2?.dailyObjectives ?? [])
+            .filter((o) => o.status === "completed")
+            .reduce((sum, o) => sum + (o.xp_reward ?? 0), 0)}
+          dailyGoal={100}
+          streak={profile.current_streak}
+        />
+        <MotivationalQuote />
+      </motion.div>
+
+      {/* STREAK RECOVERY BANNER */}
+      {profile.current_streak === 0 && (profile.longest_streak ?? 0) > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.12 }}
+          className="mt-4 flex items-center justify-between gap-4 rounded-2xl border border-[color:var(--flame)]/40 bg-[color:var(--flame)]/8 p-4 backdrop-blur-md"
+        >
+          <div className="flex items-center gap-3">
+            <div className="grid h-10 w-10 place-items-center rounded-xl bg-[color:var(--flame)]/25">
+              <Flame className="h-5 w-5 text-[color:var(--flame)]" />
+            </div>
+            <div>
+              <div className="font-display text-sm font-bold">Streak perdu !</div>
+              <div className="text-xs text-muted-foreground">
+                Récupère ton streak pour 15 XP Coins (tu avais {profile.longest_streak} jours)
+              </div>
+            </div>
+          </div>
+          <button
+            type="button"
+            disabled={streakRecoveryMutation.isPending || (profile.yahia_coins ?? 0) < 15}
+            onClick={() => streakRecoveryMutation.mutate()}
+            className="shrink-0 rounded-lg bg-[color:var(--flame)] px-4 py-2 text-sm font-bold text-primary-foreground transition hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {streakRecoveryMutation.isPending ? "..." : "🔥 Récupérer"}
+          </button>
+        </motion.div>
+      )}
 
       {/* QUICK START SECTION */}
       <motion.div
