@@ -8,6 +8,15 @@ import { Card } from "@/components/ui/card";
 import { ChevronRight, ChevronLeft, Play, Award, Brain, Flame } from "lucide-react";
 import { getDashboard } from "@/lib/gamification.dashboard";
 
+type DifficultyLevel = "easy" | "hard" | "challenge";
+
+type OnboardingSubject = {
+  id: string;
+  name_fr: string;
+  description: string;
+  color_token: string;
+};
+
 interface SubjectCardProps {
   id: string;
   name: string;
@@ -57,7 +66,17 @@ function SubjectCard({
   );
 }
 
-function OnboardingStep1({ subjects, selectedId, onSelect, onNext }: any) {
+function OnboardingStep1({
+  subjects,
+  selectedId,
+  onSelect,
+  onNext,
+}: {
+  subjects: OnboardingSubject[];
+  selectedId: string | null;
+  onSelect: (id: string) => void;
+  onNext: () => void;
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}
@@ -71,7 +90,7 @@ function OnboardingStep1({ subjects, selectedId, onSelect, onNext }: any) {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        {subjects.map((subject: any) => (
+        {subjects.map((subject) => (
           <SubjectCard
             key={subject.id}
             id={subject.id}
@@ -94,8 +113,14 @@ function OnboardingStep1({ subjects, selectedId, onSelect, onNext }: any) {
   );
 }
 
-function OnboardingStep2({ selectedSubject, onPrev, onNext }: any) {
-  const [difficulty, setDifficulty] = useState<"easy" | "hard" | "challenge" | null>(null);
+function OnboardingStep2({
+  onPrev,
+  onNext,
+}: {
+  onPrev: () => void;
+  onNext: (difficulty: DifficultyLevel) => void;
+}) {
+  const [difficulty, setDifficulty] = useState<DifficultyLevel | null>(null);
 
   const difficulties = [
     {
@@ -134,7 +159,7 @@ function OnboardingStep2({ selectedSubject, onPrev, onNext }: any) {
       </div>
 
       <div className="grid gap-4">
-        {difficulties.map((diff: any) => (
+        {difficulties.map((diff) => (
           <motion.button
             key={diff.id}
             onClick={() => setDifficulty(diff.id)}
@@ -169,7 +194,15 @@ function OnboardingStep2({ selectedSubject, onPrev, onNext }: any) {
   );
 }
 
-function OnboardingStep3({ selectedSubject, difficulty, onPrev, onComplete }: any) {
+function OnboardingStep3({
+  selectedSubject,
+  difficulty,
+  onPrev,
+}: {
+  selectedSubject?: OnboardingSubject;
+  difficulty: DifficultyLevel | null;
+  onPrev: () => void;
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}
@@ -222,7 +255,7 @@ function OnboardingComponent() {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
-  const [difficulty, setDifficulty] = useState<"easy" | "hard" | "challenge" | null>(null);
+  const [difficulty, setDifficulty] = useState<DifficultyLevel | null>(null);
 
   // Fetch subjects for step 1
   const fetchDashboard = useServerFn(getDashboard);
@@ -231,9 +264,9 @@ function OnboardingComponent() {
     queryFn: () => fetchDashboard(),
   });
 
-  const subjects = dashboardData?.subjects ?? [];
+  const subjects: OnboardingSubject[] = (dashboardData?.subjects as OnboardingSubject[]) ?? [];
 
-  const handleNext = (val?: any) => {
+  const handleNext = (val?: DifficultyLevel) => {
     if (step === 1) {
       setStep(2);
     } else if (step === 2) {
@@ -274,18 +307,11 @@ function OnboardingComponent() {
               onNext={handleNext}
             />
           )}
-          {step === 2 && (
-            <OnboardingStep2
-              key="step2"
-              selectedSubject={selectedSubject}
-              onPrev={handlePrev}
-              onNext={handleNext}
-            />
-          )}
+          {step === 2 && <OnboardingStep2 key="step2" onPrev={handlePrev} onNext={handleNext} />}
           {step === 3 && (
             <OnboardingStep3
               key="step3"
-              selectedSubject={subjects.find((s: any) => s.id === selectedSubject)}
+              selectedSubject={subjects.find((s) => s.id === selectedSubject)}
               difficulty={difficulty}
               onPrev={handlePrev}
             />

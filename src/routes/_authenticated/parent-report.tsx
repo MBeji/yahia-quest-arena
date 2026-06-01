@@ -20,7 +20,7 @@ import {
   Link as LinkIcon,
 } from "lucide-react";
 import { getLinkedStudents, getStudentReport, linkStudentByCode } from "@/lib/gamification.parent";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/parent-report")({
@@ -50,15 +50,7 @@ function ParentReport() {
     enabled: !!selectedStudent,
   });
 
-  if (loadingStudents) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-indigo-400 border-t-transparent rounded-full" />
-      </div>
-    );
-  }
-
-  const students = studentsData?.students ?? [];
+  const students = useMemo(() => studentsData?.students ?? [], [studentsData?.students]);
   const isAdmin = studentsData?.role === "admin";
   const pagination = studentsData?.pagination;
 
@@ -73,18 +65,6 @@ function ParentReport() {
       toast.error(error instanceof Error ? error.message : "Link failed");
     },
   });
-
-  if (students.length === 0 && isAdmin) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center">
-        <Users className="w-16 h-16 text-gray-400 mb-4" />
-        <h2 className="text-xl font-bold text-white mb-2">Aucun eleve inscrit</h2>
-        <p className="text-gray-400 max-w-md">
-          Aucun compte eleve n'existe encore dans la plateforme.
-        </p>
-      </div>
-    );
-  }
 
   // Auto-select first student
   useEffect(() => {
@@ -101,6 +81,26 @@ function ParentReport() {
       setSelectedStudent(students[0].id);
     }
   }, [students, selectedStudent]);
+
+  if (loadingStudents) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin w-8 h-8 border-4 border-indigo-400 border-t-transparent rounded-full" />
+      </div>
+    );
+  }
+
+  if (students.length === 0 && isAdmin) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center">
+        <Users className="w-16 h-16 text-gray-400 mb-4" />
+        <h2 className="text-xl font-bold text-white mb-2">Aucun eleve inscrit</h2>
+        <p className="text-gray-400 max-w-md">
+          Aucun compte eleve n'existe encore dans la plateforme.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen p-4 md:p-8 max-w-6xl mx-auto">

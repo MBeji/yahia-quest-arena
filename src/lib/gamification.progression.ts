@@ -106,7 +106,7 @@ export const getDailyObjectives = createServerFn({ method: "GET" })
     today.setUTCHours(0, 0, 0, 0);
     const todayStr = today.toISOString().split("T")[0];
 
-    let { data: objectives, error } = await supabase
+    const { data: objectivesData, error: fetchError } = await supabase
       .from("daily_objectives")
       .select(
         "id,objective_type,target_value,current_value,xp_reward,coin_reward,status,completed_at",
@@ -114,7 +114,9 @@ export const getDailyObjectives = createServerFn({ method: "GET" })
       .eq("user_id", userId)
       .eq("objective_date", todayStr);
 
-    if (error) throw new Error(error.message);
+    if (fetchError) throw new Error(fetchError.message);
+
+    let objectives = objectivesData;
 
     // If no objectives for today, auto-create them
     if (!objectives || objectives.length === 0) {
@@ -136,7 +138,7 @@ export const getDailyObjectives = createServerFn({ method: "GET" })
       }
 
       // Fetch again
-      const { data: newObjs, error: fetchErr } = await supabase
+      const { data: newObjs, error: refetchErr } = await supabase
         .from("daily_objectives")
         .select(
           "id,objective_type,target_value,current_value,xp_reward,coin_reward,status,completed_at",
@@ -144,7 +146,7 @@ export const getDailyObjectives = createServerFn({ method: "GET" })
         .eq("user_id", userId)
         .eq("objective_date", todayStr);
 
-      if (fetchErr) throw new Error(fetchErr.message);
+      if (refetchErr) throw new Error(refetchErr.message);
       objectives = newObjs;
     }
 
@@ -222,7 +224,7 @@ export const getWeeklyQuests = createServerFn({ method: "GET" })
     monday.setUTCHours(0, 0, 0, 0);
     const mondayStr = monday.toISOString().split("T")[0];
 
-    let { data: quests, error } = await supabase
+    const { data: questsData, error: fetchError } = await supabase
       .from("weekly_quests")
       .select(
         "id,quest_type,subject_id,target_value,current_value,xp_reward,coin_reward,status,completed_at",
@@ -230,7 +232,9 @@ export const getWeeklyQuests = createServerFn({ method: "GET" })
       .eq("user_id", userId)
       .eq("week_start_date", mondayStr);
 
-    if (error) throw new Error(error.message);
+    if (fetchError) throw new Error(fetchError.message);
+
+    let quests = questsData;
 
     // If no quests for this week, auto-create them
     if (!quests || quests.length === 0) {
@@ -252,7 +256,7 @@ export const getWeeklyQuests = createServerFn({ method: "GET" })
       }
 
       // Fetch again
-      const { data: newQuests, error: fetchErr } = await supabase
+      const { data: newQuests, error: refetchErr } = await supabase
         .from("weekly_quests")
         .select(
           "id,quest_type,subject_id,target_value,current_value,xp_reward,coin_reward,status,completed_at",
@@ -260,7 +264,7 @@ export const getWeeklyQuests = createServerFn({ method: "GET" })
         .eq("user_id", userId)
         .eq("week_start_date", mondayStr);
 
-      if (fetchErr) throw new Error(fetchErr.message);
+      if (refetchErr) throw new Error(refetchErr.message);
       quests = newQuests;
     }
 
@@ -338,7 +342,7 @@ export const adaptDifficulty = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
-    let { data: adaptation, error: fetchErr } = await supabase
+    const { data: adaptationData, error: fetchErr } = await supabase
       .from("difficulty_adaptation")
       .select("*")
       .eq("user_id", userId)
@@ -346,6 +350,8 @@ export const adaptDifficulty = createServerFn({ method: "POST" })
       .maybeSingle();
 
     if (fetchErr) throw new Error(fetchErr.message);
+
+    let adaptation = adaptationData;
 
     if (!adaptation) {
       const { data: newAdapt, error: createErr } = await supabase

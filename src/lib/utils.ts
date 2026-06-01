@@ -7,9 +7,8 @@ export function cn(...inputs: ClassValue[]) {
 
 /** Detect if text starts with Arabic/RTL characters */
 export function isRtlText(text: string): boolean {
-  return /^[\s\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF⚔️💀🗡️🎯🔮⚡🛡️💡🏆📊🔥]/.test(
-    text,
-  );
+  const normalized = text.trimStart().replace(/^[^\p{Script=Arabic}\p{Number}\p{Letter}]*/u, "");
+  return /^\p{Script=Arabic}/u.test(normalized);
 }
 
 /** Detect if text is a math equation (numbers, operators, variables — should stay LTR) */

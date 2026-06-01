@@ -11,7 +11,8 @@ describe("cn (class names merge)", () => {
   });
 
   it("handles conditional classes", () => {
-    expect(cn("base", false && "hidden", "text-sm")).toBe("base text-sm");
+    const isHidden = false;
+    expect(cn("base", isHidden ? "hidden" : undefined, "text-sm")).toBe("base text-sm");
   });
 
   it("handles undefined and null", () => {
