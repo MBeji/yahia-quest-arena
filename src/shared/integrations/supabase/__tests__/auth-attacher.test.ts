@@ -10,7 +10,7 @@ vi.mock("@tanstack/react-start", () => ({
   }),
 }));
 
-vi.mock("@/integrations/supabase/client", () => ({
+vi.mock("@/shared/integrations/supabase/client", () => ({
   supabase: {
     auth: {
       getSession: mockGetSession,
@@ -18,7 +18,7 @@ vi.mock("@/integrations/supabase/client", () => ({
   },
 }));
 
-import { attachSupabaseAuth } from "@/integrations/supabase/auth-attacher";
+import { attachSupabaseAuth } from "@/shared/integrations/supabase/auth-attacher";
 
 describe("attachSupabaseAuth", () => {
   beforeEach(() => {
