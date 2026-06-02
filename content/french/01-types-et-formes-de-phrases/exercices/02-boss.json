@@ -1,0 +1,76 @@
+{
+  "title": "⚔️ Boss : transformer les phrases",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Transforme à la voix passive : « Le maître corrige les copies. »",
+      "options": [
+        { "id": "a", "text": "Les copies sont corrigées par le maître." },
+        { "id": "b", "text": "Les copies corrigent le maître." },
+        { "id": "c", "text": "Le maître est corrigé par les copies." },
+        { "id": "d", "text": "Les copies ont été corrigées par le maître." }
+      ],
+      "correctOption": "a",
+      "explanation": "Le COD « les copies » devient sujet, et on garde le présent : « sont corrigées par le maître »."
+    },
+    {
+      "prompt": "Mets à la forme négative : « Il voit quelqu'un. »",
+      "options": [
+        { "id": "a", "text": "Il ne voit personne." },
+        { "id": "b", "text": "Il ne voit pas quelqu'un." },
+        { "id": "c", "text": "Il ne voit rien." },
+        { "id": "d", "text": "Il voit personne." }
+      ],
+      "correctOption": "a",
+      "explanation": "Le contraire de « quelqu'un » (une personne) est « ne… personne ». « ne… rien » s'emploie pour une chose."
+    },
+    {
+      "prompt": "Quelle phrase est une interrogation partielle ?",
+      "options": [
+        { "id": "a", "text": "Quand pars-tu ?" },
+        { "id": "b", "text": "Pars-tu ?" },
+        { "id": "c", "text": "Est-ce que tu pars ?" },
+        { "id": "d", "text": "Tu pars ?" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'interrogation porte sur un élément précis (le moment) grâce au mot interrogatif « quand » : elle est partielle."
+    },
+    {
+      "prompt": "Mets à la voix active : « La ville fut détruite par l'armée. »",
+      "options": [
+        { "id": "a", "text": "L'armée détruisit la ville." },
+        { "id": "b", "text": "L'armée détruit la ville." },
+        { "id": "c", "text": "La ville détruisit l'armée." },
+        { "id": "d", "text": "La ville a détruit l'armée." }
+      ],
+      "correctOption": "a",
+      "explanation": "Le complément d'agent « l'armée » devient sujet et on conserve le passé simple : « détruisit »."
+    },
+    {
+      "prompt": "Dans « Le dragon ne dort plus. », la négation « ne… plus » exprime :",
+      "options": [
+        { "id": "a", "text": "L'arrêt d'une action qui durait" },
+        { "id": "b", "text": "Une quantité nulle" },
+        { "id": "c", "text": "Une question" },
+        { "id": "d", "text": "Une exclamation" }
+      ],
+      "correctOption": "a",
+      "explanation": "« ne… plus » indique qu'une action a cessé : le dragon dormait, mais ce n'est plus le cas."
+    },
+    {
+      "prompt": "Mets le sujet en relief : « Le héros sauve le village. »",
+      "options": [
+        { "id": "a", "text": "C'est le héros qui sauve le village." },
+        { "id": "b", "text": "C'est le village que le héros sauve." },
+        { "id": "c", "text": "Le village est sauvé par le héros." },
+        { "id": "d", "text": "Le héros sauve-t-il le village ?" }
+      ],
+      "correctOption": "a",
+      "explanation": "Pour mettre le SUJET en relief, on emploie « c'est… qui » : « C'est le héros qui… ». L'option b met en relief le complément."
+    }
+  ]
+}

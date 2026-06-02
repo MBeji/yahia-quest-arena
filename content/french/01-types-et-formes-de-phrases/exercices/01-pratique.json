@@ -1,0 +1,76 @@
+{
+  "title": "Exercice : reconnaître types et formes",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Quel est le type de la phrase : « Quelle aventure extraordinaire ! »",
+      "options": [
+        { "id": "a", "text": "Exclamatif" },
+        { "id": "b", "text": "Déclaratif" },
+        { "id": "c", "text": "Interrogatif" },
+        { "id": "d", "text": "Impératif" }
+      ],
+      "correctOption": "a",
+      "explanation": "La phrase exprime une émotion et se termine par un point d'exclamation : elle est exclamative."
+    },
+    {
+      "prompt": "« Ferme la porte. » est une phrase de type :",
+      "options": [
+        { "id": "a", "text": "Impératif" },
+        { "id": "b", "text": "Déclaratif" },
+        { "id": "c", "text": "Exclamatif" },
+        { "id": "d", "text": "Interrogatif" }
+      ],
+      "correctOption": "a",
+      "explanation": "Elle donne un ordre, le verbe est à l'impératif et le sujet n'est pas exprimé : phrase impérative."
+    },
+    {
+      "prompt": "Quelle phrase est à la forme négative ?",
+      "options": [
+        { "id": "a", "text": "Il ne comprend rien." },
+        { "id": "b", "text": "Il comprend tout." },
+        { "id": "c", "text": "Comprend-il la leçon ?" },
+        { "id": "d", "text": "Quelle compréhension !" }
+      ],
+      "correctOption": "a",
+      "explanation": "La négation « ne… rien » encadre le verbe : la phrase est à la forme négative."
+    },
+    {
+      "prompt": "L'interrogation « Est-ce que tu viens ? » est une interrogation :",
+      "options": [
+        { "id": "a", "text": "Totale (réponse oui/non)" },
+        { "id": "b", "text": "Partielle" },
+        { "id": "c", "text": "Exclamative" },
+        { "id": "d", "text": "Emphatique" }
+      ],
+      "correctOption": "a",
+      "explanation": "On peut répondre par oui ou non : c'est une interrogation totale."
+    },
+    {
+      "prompt": "Quelle phrase est à la forme passive ?",
+      "options": [
+        { "id": "a", "text": "La porte est ouverte par le gardien." },
+        { "id": "b", "text": "Le gardien ouvre la porte." },
+        { "id": "c", "text": "Ouvre la porte !" },
+        { "id": "d", "text": "Le gardien ouvrira la porte." }
+      ],
+      "correctOption": "a",
+      "explanation": "Le sujet subit l'action : « être + participe passé + par (complément d'agent) » = voix passive."
+    },
+    {
+      "prompt": "Dans « C'est le chevalier qui gagne. », la phrase est à la forme :",
+      "options": [
+        { "id": "a", "text": "Emphatique" },
+        { "id": "b", "text": "Négative" },
+        { "id": "c", "text": "Passive" },
+        { "id": "d", "text": "Interrogative" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le présentatif « c'est… qui » met le sujet en relief : c'est la forme emphatique."
+    }
+  ]
+}
