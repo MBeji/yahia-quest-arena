@@ -1,0 +1,76 @@
+{
+  "title": "⚔️ Boss: master the present",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Choose the correct form: \"Water ___ at 100 degrees.\"",
+      "options": [
+        { "id": "a", "text": "is boiling" },
+        { "id": "b", "text": "boils" },
+        { "id": "c", "text": "boil" },
+        { "id": "d", "text": "are boiling" }
+      ],
+      "correctOption": "b",
+      "explanation": "This is a general truth, so we use the present simple: water boils at 100 degrees."
+    },
+    {
+      "prompt": "Complete: \"I can't talk now, I ___ dinner.\"",
+      "options": [
+        { "id": "a", "text": "cook" },
+        { "id": "b", "text": "cooks" },
+        { "id": "c", "text": "am cooking" },
+        { "id": "d", "text": "cooked" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"now\" signals an action in progress, so we use the present continuous: I am cooking dinner."
+    },
+    {
+      "prompt": "Choose the correct negative: \"She ___ coffee.\"",
+      "options": [
+        { "id": "a", "text": "don't drink" },
+        { "id": "b", "text": "doesn't drink" },
+        { "id": "c", "text": "isn't drink" },
+        { "id": "d", "text": "not drinks" }
+      ],
+      "correctOption": "b",
+      "explanation": "Present simple negative for he/she/it uses doesn't + base verb: she doesn't drink coffee."
+    },
+    {
+      "prompt": "Complete the question: \"___ they live in Tunis?\"",
+      "options": [
+        { "id": "a", "text": "Do" },
+        { "id": "b", "text": "Does" },
+        { "id": "c", "text": "Are" },
+        { "id": "d", "text": "Is" }
+      ],
+      "correctOption": "a",
+      "explanation": "Present simple questions with \"they\" use Do + subject + base verb: Do they live...?"
+    },
+    {
+      "prompt": "Choose the correct sentence:",
+      "options": [
+        { "id": "a", "text": "This cake is tasting delicious." },
+        { "id": "b", "text": "This cake tastes delicious." },
+        { "id": "c", "text": "This cake taste delicious." },
+        { "id": "d", "text": "This cake are tasting delicious." }
+      ],
+      "correctOption": "b",
+      "explanation": "\"taste\" (= have a flavour) is stative here, so we use the present simple: the cake tastes delicious."
+    },
+    {
+      "prompt": "Complete: \"Be quiet! The students ___ a test right now.\"",
+      "options": [
+        { "id": "a", "text": "take" },
+        { "id": "b", "text": "takes" },
+        { "id": "c", "text": "are taking" },
+        { "id": "d", "text": "is taking" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"right now\" signals an action in progress; with the plural subject students we use are + taking."
+    }
+  ]
+}

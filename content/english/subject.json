@@ -1,0 +1,10 @@
+{
+  "id": "english",
+  "nameFr": "Anglais",
+  "description": "Grammar, tenses, modals, vocabulary, reading & writing — Tunisian 9th-grade syllabus",
+  "attribute": "Agilite",
+  "colorToken": "subject-english",
+  "icon": "Globe",
+  "displayOrder": 5,
+  "contentLanguage": "en"
+}
