@@ -1,0 +1,10 @@
+{
+  "id": "arabic",
+  "nameFr": "العربية",
+  "description": "النحو والصرف والبلاغة والإنتاج الكتابي وفق برنامج السنة التاسعة أساسي",
+  "attribute": "Esprit",
+  "colorToken": "subject-arabic",
+  "icon": "Languages",
+  "displayOrder": 3,
+  "contentLanguage": "ar"
+}
