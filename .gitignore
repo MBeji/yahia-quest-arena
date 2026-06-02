@@ -38,3 +38,11 @@ supabase/.temp/
 *.sln
 *.sw?
 .vercel
+
+# Coverage reports
+coverage/
+
+# Audit reports (generated)
+AUDIT_REPORT*
+audit-actions-checklist*
+audit-metrics*
