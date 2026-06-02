@@ -1,0 +1,76 @@
+{
+  "title": "Exercice : vocabulaire et figures de style",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Dans le mot « impossible », quel est le rôle du préfixe « im- » ?",
+      "options": [
+        { "id": "a", "text": "Il exprime le contraire (sens privatif)." },
+        { "id": "b", "text": "Il exprime la répétition." },
+        { "id": "c", "text": "Il indique une action passée." },
+        { "id": "d", "text": "Il transforme le mot en adverbe." }
+      ],
+      "correctOption": "a",
+      "explanation": "Le préfixe « im- » (variante de « in- » devant p/b/m) est privatif : il donne le sens contraire, ici « non possible »."
+    },
+    {
+      "prompt": "Lequel de ces mots n'appartient PAS à la famille du mot « terre » ?",
+      "options": [
+        { "id": "a", "text": "terrible" },
+        { "id": "b", "text": "terrestre" },
+        { "id": "c", "text": "enterrer" },
+        { "id": "d", "text": "territoire" }
+      ],
+      "correctOption": "a",
+      "explanation": "« terrible » vient du latin « terrere » (effrayer) et n'a pas le même radical que « terre ». Les trois autres partagent le radical « terr- » lié à la terre."
+    },
+    {
+      "prompt": "« Verre » (récipient) et « ver » (animal) sont des :",
+      "options": [
+        { "id": "a", "text": "Homonymes" },
+        { "id": "b", "text": "Synonymes" },
+        { "id": "c", "text": "Antonymes" },
+        { "id": "d", "text": "Paronymes" }
+      ],
+      "correctOption": "a",
+      "explanation": "Ces mots se prononcent de manière identique mais ont des sens et des orthographes différents : ce sont des homonymes."
+    },
+    {
+      "prompt": "Dans « La peur dévorait le guerrier », le mot « dévorait » est employé au :",
+      "options": [
+        { "id": "a", "text": "Sens figuré" },
+        { "id": "b", "text": "Sens propre" },
+        { "id": "c", "text": "Sens technique" },
+        { "id": "d", "text": "Sens dénotatif uniquement" }
+      ],
+      "correctOption": "a",
+      "explanation": "La peur ne peut pas manger au sens propre : « dévorait » est ici employé au sens figuré pour exprimer l'intensité de la peur qui ronge le guerrier."
+    },
+    {
+      "prompt": "Identifie la figure de style dans : « Il tremblait, frissonnait, grelottait de terreur. »",
+      "options": [
+        { "id": "a", "text": "Gradation" },
+        { "id": "b", "text": "Métaphore" },
+        { "id": "c", "text": "Hyperbole" },
+        { "id": "d", "text": "Personnification" }
+      ],
+      "correctOption": "a",
+      "explanation": "Les trois verbes expriment le même état (le froid/la peur) avec une intensité croissante : c'est une gradation (ascendante)."
+    },
+    {
+      "prompt": "Dans « Le vent **hurlait** entre les ruines », quelle figure de style reconnaît-on ?",
+      "options": [
+        { "id": "a", "text": "Personnification" },
+        { "id": "b", "text": "Comparaison" },
+        { "id": "c", "text": "Hyperbole" },
+        { "id": "d", "text": "Énumération" }
+      ],
+      "correctOption": "a",
+      "explanation": "Attribuer au vent l'action « hurler » (cri humain) lui confère une caractéristique humaine : c'est une personnification."
+    }
+  ]
+}
