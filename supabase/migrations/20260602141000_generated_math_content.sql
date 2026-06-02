@@ -2852,7 +2852,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('fefd1013-760f-55a5-8301-3bfdf0fc0411', 'e50af184-82cf-5fed-a75c-5fe103b19bd8', 'لتكن f(x) = 3x − 1. ما هي سابقة العدد 8 بالدالة f ؟', '[{"id":"a","text":"x = 2"},{"id":"b","text":"x = 9"},{"id":"c","text":"x = 4"},{"id":"d","text":"x = 3"}]'::jsonb, 'd', 'السابقة هي قيمة x التي تُعطي f(x) = 8. نحلّ: 3x − 1 = 8، إذن 3x = 9، x = 3. التحقّق: f(3) = 3(3) − 1 = 9 − 1 = 8 ✓.', 3)
+  ('fefd1013-760f-55a5-8301-3bfdf0fc0411', 'e50af184-82cf-5fed-a75c-5fe103b19bd8', 'لتكن f(x) = 3x − 1. ما هي سابقة العدد 8 بالدالة f ؟', '[{"id":"a","text":"x = 3"},{"id":"b","text":"x = 9"},{"id":"c","text":"x = 4"},{"id":"d","text":"x = 2"}]'::jsonb, 'a', 'السابقة هي قيمة x التي تُعطي f(x) = 8. نحلّ: 3x − 1 = 8، إذن 3x = 9، x = 3. التحقّق: f(3) = 3(3) − 1 = 9 − 1 = 8 ✓.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2872,7 +2872,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('2aa385d0-e81e-5531-a04b-fd0aefb421b6', 'e50af184-82cf-5fed-a75c-5fe103b19bd8', 'الدالة الخطية g تُمثَّل بيانيًّا بمستقيم يمرّ بنقطة الأصل و بالنقطة (2 ; −6). ما هي قيمة معامل التناسب a ؟', '[{"id":"a","text":"a = 3"},{"id":"b","text":"a = −2"},{"id":"c","text":"a = 2"},{"id":"d","text":"a = −3"}]'::jsonb, 'd', 'الدالة الخطية هي g(x) = a·x. المستقيم يمرّ بـ (2 ; −6)، إذن g(2) = 2a = −6، فنحصل على a = −3. التحقّق: g(2) = −3 × 2 = −6 ✓. المستقيم نازل لأنّ a < 0.', 5)
+  ('2aa385d0-e81e-5531-a04b-fd0aefb421b6', 'e50af184-82cf-5fed-a75c-5fe103b19bd8', 'الدالة الخطية g تُمثَّل بيانيًّا بمستقيم يمرّ بنقطة الأصل و بالنقطة (2 ; −6). ما هي قيمة معامل التناسب a ؟', '[{"id":"a","text":"a = −3"},{"id":"b","text":"a = −2"},{"id":"c","text":"a = 2"},{"id":"d","text":"a = 3"}]'::jsonb, 'a', 'الدالة الخطية هي g(x) = a·x. المستقيم يمرّ بـ (2 ; −6)، إذن g(2) = 2a = −6، فنحصل على a = −3. التحقّق: g(2) = −3 × 2 = −6 ✓. المستقيم نازل لأنّ a < 0.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3068,7 +3068,7 @@ INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, 
 |---------|---|----|----|----|----|  
 | التكرار | 2 | 4  | 6  | 5  | 3  |
 
-ما هو منوال هذه السلسلة؟', '[{"id":"a","text":"10"},{"id":"b","text":"14"},{"id":"c","text":"16"},{"id":"d","text":"12"}]'::jsonb, 'd', 'المنوال هو القيمة ذات أعلى تكرار. من الجدول: تكرار 8 هو 2، تكرار 10 هو 4، تكرار 12 هو 6، تكرار 14 هو 5، تكرار 16 هو 3. أعلى تكرار هو 6 يقابله العلامة 12. إذن المنوال = 12.', 2)
+ما هو منوال هذه السلسلة؟', '[{"id":"a","text":"12"},{"id":"b","text":"14"},{"id":"c","text":"16"},{"id":"d","text":"10"}]'::jsonb, 'a', 'المنوال هو القيمة ذات أعلى تكرار. من الجدول: تكرار 8 هو 2، تكرار 10 هو 4، تكرار 12 هو 6، تكرار 14 هو 5، تكرار 16 هو 3. أعلى تكرار هو 6 يقابله العلامة 12. إذن المنوال = 12.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3098,7 +3098,7 @@ INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, 
 |---------|---|----|----|----|----|  
 | التكرار | 2 | 4  | 6  | 5  | 3  |
 
-ما هو تواتر (نسبة) العلامة 14 بالمائة؟', '[{"id":"a","text":"20%"},{"id":"b","text":"30%"},{"id":"c","text":"15%"},{"id":"d","text":"25%"}]'::jsonb, 'd', 'التواتر = التكرار ÷ التكرار الكلّي = 5 ÷ 20 = 0{,}25. التواتر بالمائة = 0{,}25 × 100 = 25%. التحقّق: مجموع جميع التكرارات = 20 ✓، ومجموع التواترات بالمائة: 10%+20%+30%+25%+15% = 100% ✓.', 4)
+ما هو تواتر (نسبة) العلامة 14 بالمائة؟', '[{"id":"a","text":"15%"},{"id":"b","text":"30%"},{"id":"c","text":"20%"},{"id":"d","text":"25%"}]'::jsonb, 'd', 'التواتر = التكرار ÷ التكرار الكلّي = 5 ÷ 20 = 0{,}25. التواتر بالمائة = 0{,}25 × 100 = 25%. التحقّق: مجموع جميع التكرارات = 20 ✓، ومجموع التواترات بالمائة: 10%+20%+30%+25%+15% = 100% ✓.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
