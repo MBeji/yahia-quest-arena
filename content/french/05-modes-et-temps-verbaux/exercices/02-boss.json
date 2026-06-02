@@ -1,0 +1,76 @@
+{
+  "title": "⚔️ Boss : identifier et manier modes et temps",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Identifie le temps et le mode du verbe souligné :\n« À peine avait-il franchi la porte qu'une flèche siffla. »\n(verbe : avait franchi)",
+      "options": [
+        { "id": "a", "text": "Plus-que-parfait de l'indicatif" },
+        { "id": "b", "text": "Passé composé de l'indicatif" },
+        { "id": "c", "text": "Passé antérieur de l'indicatif" },
+        { "id": "d", "text": "Imparfait de l'indicatif" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Avait franchi » = auxiliaire avoir à l'imparfait + participe passé → c'est le plus-que-parfait de l'indicatif. Il exprime une action antérieure à une autre action passée (« siffla », passé simple). Le passé antérieur utiliserait « eut franchi » (auxiliaire au passé simple)."
+    },
+    {
+      "prompt": "Conjugue correctement au subjonctif présent (3e personne du singulier) :\n« Il est indispensable que le groupe ___ à l'heure. »\n(verbe : venir)",
+      "options": [
+        { "id": "a", "text": "vienne" },
+        { "id": "b", "text": "vient" },
+        { "id": "c", "text": "viendra" },
+        { "id": "d", "text": "venait" }
+      ],
+      "correctOption": "a",
+      "explanation": "Après « il est indispensable que », on emploie le subjonctif présent. Le radical de la 3e personne du pluriel du présent de l'indicatif est « vienn- » (ils viennent) → qu'il vienne. L'option b est le présent de l'indicatif, c le futur, d l'imparfait."
+    },
+    {
+      "prompt": "Quelle phrase illustre correctement l'emploi du conditionnel de politesse ?",
+      "options": [
+        { "id": "a", "text": "Je voudrais un renseignement, s'il vous plaît." },
+        { "id": "b", "text": "Je veux un renseignement, s'il vous plaît." },
+        { "id": "c", "text": "Je voulus un renseignement, s'il vous plaît." },
+        { "id": "d", "text": "Je veuille un renseignement, s'il vous plaît." }
+      ],
+      "correctOption": "a",
+      "explanation": "« Je voudrais » est le conditionnel présent de « vouloir » : il adoucit la demande et exprime la politesse. L'option b (présent de l'indicatif) est plus directe et moins polie ; c (passé simple) est inapproprié ici ; d utilise incorrectement le subjonctif « veuille » dans un contexte où le conditionnel s'impose."
+    },
+    {
+      "prompt": "Dans le récit suivant, quel temps manque-t-il pour exprimer l'action qui fait avancer l'histoire ?\n« Le guerrier ___ son épée, ___ un cri et ___ sur l'ennemi. » (actions ponctuelles et successives, style littéraire)",
+      "options": [
+        { "id": "a", "text": "Le passé simple" },
+        { "id": "b", "text": "L'imparfait" },
+        { "id": "c", "text": "Le présent" },
+        { "id": "d", "text": "Le plus-que-parfait" }
+      ],
+      "correctOption": "a",
+      "explanation": "Les actions ponctuelles et successives qui font avancer le récit en style littéraire sont exprimées au passé simple : « saisit, poussa, se rua ». L'imparfait décrit le fond ou les habitudes ; le présent s'emploie dans un récit oral courant ou pour un présent de narration ; le plus-que-parfait exprime l'antériorité."
+    },
+    {
+      "prompt": "Laquelle de ces formes verbales est au conditionnel présent ?",
+      "options": [
+        { "id": "a", "text": "Elle partirait" },
+        { "id": "b", "text": "Elle partait" },
+        { "id": "c", "text": "Elle est partie" },
+        { "id": "d", "text": "Elle parte" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Partirait » = radical du futur (partir-) + terminaison de l'imparfait (-ait) → conditionnel présent. « Partait » est l'imparfait de l'indicatif ; « est partie » est le passé composé ; « parte » est le subjonctif présent."
+    },
+    {
+      "prompt": "Complète avec la forme correcte :\n« Il faut que vous ___ la vérité. » (verbe : dire)",
+      "options": [
+        { "id": "a", "text": "disiez" },
+        { "id": "b", "text": "direz" },
+        { "id": "c", "text": "dites" },
+        { "id": "d", "text": "diriez" }
+      ],
+      "correctOption": "a",
+      "explanation": "Après « il faut que », on emploie le subjonctif présent. Pour « dire » à la 2e personne du pluriel, le radical est « dis- » (ils disent → dis-) et la terminaison est « -iez » → disiez. L'option b est le futur de l'indicatif ; c est le présent de l'indicatif ou l'impératif ; d est le conditionnel présent."
+    }
+  ]
+}
