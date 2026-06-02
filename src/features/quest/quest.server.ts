@@ -118,7 +118,7 @@ export const getChapterLesson = createServerFn({ method: "GET" })
     const { data: chapter, error } = await supabase
       .from("chapters")
       .select(
-        "id, title, description, lesson_content, subject_id, display_order, subjects(id, name_fr, color_token, icon)",
+        "id, title, description, lesson_content, summary, subject_id, display_order, subjects(id, name_fr, color_token, icon, content_language)",
       )
       .eq("id", data.chapterId)
       .single();
