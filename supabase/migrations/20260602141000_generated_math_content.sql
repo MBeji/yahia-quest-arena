@@ -3108,7 +3108,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('c0709b4d-2cb5-56ad-a4df-a88d8e7bf9c7', '31f9bc81-3462-51c0-a42a-4bc1079be296', 'سجّل تلميذ العلامات التالية في الفصل الأوّل: 10، 12، 14، 8، 16. ما هو معدّله في هذا الفصل؟', '[{"id":"a","text":"11"},{"id":"b","text":"13"},{"id":"c","text":"14"},{"id":"d","text":"12"}]'::jsonb, 'd', 'المعدّل = مجموع العلامات ÷ عددها = (10 + 12 + 14 + 8 + 16) ÷ 5 = 60 ÷ 5 = 12. التحقّق: 10+12=22، 22+14=36، 36+8=44، 44+16=60. 60÷5=12 ✓.', 5)
+  ('c0709b4d-2cb5-56ad-a4df-a88d8e7bf9c7', '31f9bc81-3462-51c0-a42a-4bc1079be296', 'سجّل تلميذ العلامات التالية في الفصل الأوّل: 10، 12، 14، 8، 16. ما هو معدّله في هذا الفصل؟', '[{"id":"a","text":"13"},{"id":"b","text":"12"},{"id":"c","text":"14"},{"id":"d","text":"11"}]'::jsonb, 'b', 'المعدّل = مجموع العلامات ÷ عددها = (10 + 12 + 14 + 8 + 16) ÷ 5 = 60 ÷ 5 = 12. التحقّق: 10+12=22، 22+14=36، 36+8=44، 44+16=60. 60÷5=12 ✓.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
