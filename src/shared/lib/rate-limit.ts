@@ -1,3 +1,5 @@
+import { logger } from "./logger";
+
 // Minimal structural shape the rate limiter needs from a Supabase client.
 // Narrowed to the exact RPC it calls so the real typed client (and test mocks)
 // are both assignable.
@@ -47,7 +49,9 @@ export async function isRateLimited(
     });
 
     if (error) {
-      console.warn("[rate-limit] Falling back to local limiter:", error.message);
+      logger.warn("Rate-limit RPC unavailable, falling back to local limiter", {
+        reason: error.message,
+      });
       return isRateLimitedLocal(key, maxRequests, windowMs);
     }
 
