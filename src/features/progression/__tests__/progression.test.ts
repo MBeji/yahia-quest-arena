@@ -487,3 +487,201 @@ describe("gamification.progression — input validation", () => {
     ).rejects.toThrow();
   });
 });
+
+// =============================================================================
+// getWeeklyQuests
+// =============================================================================
+describe("gamification.progression — getWeeklyQuests", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    mockFrom.mockReset();
+    mockRpc.mockReset();
+  });
+
+  it("returns existing weekly quests", async () => {
+    const quests = [
+      { id: "wq1", quest_type: "maintain_streak_5", target_value: 5, current_value: 2, status: "active" },
+    ];
+    mockFrom.mockImplementation(() => mockQuery(quests));
+
+    const { getWeeklyQuests } = await import("@/lib/gamification.progression");
+    const result = await (getWeeklyQuests as unknown as () => Promise<unknown>)();
+    expect(result).toEqual(quests);
+  });
+
+  it("auto-creates quests when none exist for this week", async () => {
+    let callIndex = 0;
+    mockFrom.mockImplementation(() => {
+      callIndex++;
+      if (callIndex === 1) return mockQuery([]); // First fetch: empty
+      // Insert calls return OK
+      if (callIndex >= 2 && callIndex <= 5) return mockQuery(null);
+      // Re-fetch returns created quests
+      return mockQuery([{ id: "wq1", quest_type: "maintain_streak_5", status: "active" }]);
+    });
+
+    const { getWeeklyQuests } = await import("@/lib/gamification.progression");
+    const result = await (getWeeklyQuests as unknown as () => Promise<unknown>)();
+    expect(Array.isArray(result)).toBe(true);
+  });
+
+  it("throws on fetch error", async () => {
+    mockFrom.mockImplementation(() => mockQuery(null, { message: "DB error" }));
+
+    const { getWeeklyQuests } = await import("@/lib/gamification.progression");
+    await expect(
+      (getWeeklyQuests as unknown as () => Promise<unknown>)(),
+    ).rejects.toThrow("DB error");
+  });
+});
+
+// =============================================================================
+// updateWeeklyQuestProgress
+// =============================================================================
+describe("gamification.progression — updateWeeklyQuestProgress", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    mockFrom.mockReset();
+    mockRpc.mockReset();
+  });
+
+  it("increments and completes a weekly quest", async () => {
+    mockFrom.mockImplementation(() => {
+      const chain = mockQuery({ id: "wq1", quest_type: "maintain_streak_5", target_value: 5, current_value: 4, status: "active" });
+      chain.update = vi.fn().mockReturnValue(mockQuery(null));
+      return chain;
+    });
+
+    const { updateWeeklyQuestProgress } = await import("@/lib/gamification.progression");
+    const result = await (updateWeeklyQuestProgress as unknown as (d: unknown) => Promise<unknown>)({
+      questType: "maintain_streak_5",
+      incrementValue: 1,
+    });
+
+    const r = result as Record<string, unknown>;
+    expect(r.completed).toBe(true);
+    expect(r.progress).toBe(5);
+    expect(r.target).toBe(5);
+  });
+
+  it("returns not completed when below target", async () => {
+    mockFrom.mockImplementation(() => {
+      const chain = mockQuery({ id: "wq1", quest_type: "beat_2_bosses", target_value: 2, current_value: 0, status: "active" });
+      chain.update = vi.fn().mockReturnValue(mockQuery(null));
+      return chain;
+    });
+
+    const { updateWeeklyQuestProgress } = await import("@/lib/gamification.progression");
+    const result = await (updateWeeklyQuestProgress as unknown as (d: unknown) => Promise<unknown>)({
+      questType: "beat_2_bosses",
+      incrementValue: 1,
+    });
+
+    const r = result as Record<string, unknown>;
+    expect(r.completed).toBe(false);
+    expect(r.progress).toBe(1);
+  });
+
+  it("returns no progress when quest not found", async () => {
+    mockFrom.mockImplementation(() => {
+      const chain = mockQuery(null);
+      chain.maybeSingle = vi.fn().mockReturnValue({ data: null, error: null });
+      Object.assign(chain, { data: null, error: null });
+      return chain;
+    });
+
+    const { updateWeeklyQuestProgress } = await import("@/lib/gamification.progression");
+    const result = await (updateWeeklyQuestProgress as unknown as (d: unknown) => Promise<unknown>)({
+      questType: "maintain_streak_5",
+      incrementValue: 1,
+    });
+
+    const r = result as Record<string, unknown>;
+    expect(r.completed).toBe(false);
+    expect(r.progress).toBe(0);
+  });
+
+  it("rejects invalid questType", async () => {
+    const { updateWeeklyQuestProgress } = await import("@/lib/gamification.progression");
+    await expect(
+      (updateWeeklyQuestProgress as unknown as (d: unknown) => Promise<unknown>)({
+        questType: "invalid_type",
+        incrementValue: 1,
+      }),
+    ).rejects.toThrow();
+  });
+});
+
+// =============================================================================
+// recoverStreak
+// =============================================================================
+describe("gamification.progression — recoverStreak", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    mockFrom.mockReset();
+    mockRpc.mockReset();
+  });
+
+  it("recovers streak for 15 coins", async () => {
+    mockFrom.mockImplementation(() => {
+      const chain = mockQuery({ id: "user-123", yahia_coins: 50, current_streak: 0, longest_streak: 7, last_active_date: "2026-05-30" });
+      chain.update = vi.fn().mockReturnValue(mockQuery(null));
+      return chain;
+    });
+    mockRpc.mockResolvedValue({ data: null, error: null });
+
+    const { recoverStreak } = await import("@/lib/gamification.progression");
+    const result = await (recoverStreak as unknown as () => Promise<unknown>)();
+
+    const r = result as Record<string, unknown>;
+    expect(r.success).toBe(true);
+    expect(r.newStreak).toBe(1);
+    expect(r.coinsSpent).toBe(15);
+    expect(r.remainingCoins).toBe(35);
+  });
+
+  it("rejects when streak is already active", async () => {
+    mockFrom.mockImplementation(() =>
+      mockQuery({ id: "user-123", yahia_coins: 50, current_streak: 3, longest_streak: 7, last_active_date: "2026-06-01" }),
+    );
+
+    const { recoverStreak } = await import("@/lib/gamification.progression");
+    await expect(
+      (recoverStreak as unknown as () => Promise<unknown>)(),
+    ).rejects.toThrow("streak est actif");
+  });
+
+  it("rejects when no previous streak exists", async () => {
+    mockFrom.mockImplementation(() =>
+      mockQuery({ id: "user-123", yahia_coins: 50, current_streak: 0, longest_streak: 0, last_active_date: null }),
+    );
+
+    const { recoverStreak } = await import("@/lib/gamification.progression");
+    await expect(
+      (recoverStreak as unknown as () => Promise<unknown>)(),
+    ).rejects.toThrow("pas encore eu de streak");
+  });
+
+  it("rejects when insufficient coins", async () => {
+    mockFrom.mockImplementation(() =>
+      mockQuery({ id: "user-123", yahia_coins: 5, current_streak: 0, longest_streak: 7, last_active_date: "2026-05-30" }),
+    );
+
+    const { recoverStreak } = await import("@/lib/gamification.progression");
+    await expect(
+      (recoverStreak as unknown as () => Promise<unknown>)(),
+    ).rejects.toThrow("15 XP Coins");
+  });
+
+  it("throws on spend_coins RPC error", async () => {
+    mockFrom.mockImplementation(() =>
+      mockQuery({ id: "user-123", yahia_coins: 50, current_streak: 0, longest_streak: 7, last_active_date: "2026-05-30" }),
+    );
+    mockRpc.mockResolvedValue({ data: null, error: { message: "Insufficient funds" } });
+
+    const { recoverStreak } = await import("@/lib/gamification.progression");
+    await expect(
+      (recoverStreak as unknown as () => Promise<unknown>)(),
+    ).rejects.toThrow("Insufficient funds");
+  });
+});
