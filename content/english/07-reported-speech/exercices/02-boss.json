@@ -1,0 +1,148 @@
+{
+  "title": "⚔️ Boss: reported speech mastery",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Direct: \"We have already finished the project,\" they said. Choose the correct reported form:",
+      "options": [
+        {
+          "id": "a",
+          "text": "They said they had already finished the project."
+        },
+        {
+          "id": "b",
+          "text": "They said they have already finished the project."
+        },
+        {
+          "id": "c",
+          "text": "They told they had already finished the project."
+        },
+        {
+          "id": "d",
+          "text": "They said they finished already the project."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Present perfect ('have finished') backshifts to past perfect ('had finished'). 'We' changes to 'they'. We use 'say (that)', not 'told (that)'."
+    },
+    {
+      "prompt": "Direct: \"Where does she live?\" he asked. Choose the correct reported question:",
+      "options": [
+        {
+          "id": "a",
+          "text": "He asked where does she live."
+        },
+        {
+          "id": "b",
+          "text": "He asked where she lives."
+        },
+        {
+          "id": "c",
+          "text": "He asked where did she live."
+        },
+        {
+          "id": "d",
+          "text": "He asked where she lived."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Reported wh-questions use normal word order (no inversion, no auxiliary) and apply backshift: 'does she live' → 'she lived'. No question mark in reported speech."
+    },
+    {
+      "prompt": "Direct: \"I studied here yesterday,\" she told me. Identify all the changes in the reported form: 'She told me she had studied there the day before.'",
+      "options": [
+        {
+          "id": "a",
+          "text": "Only the tense changed."
+        },
+        {
+          "id": "b",
+          "text": "Only the pronoun and time word changed."
+        },
+        {
+          "id": "c",
+          "text": "The pronoun, tense, place word, and time word all changed."
+        },
+        {
+          "id": "d",
+          "text": "The tense, place word, and time word all changed."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "'I' → 'she' (pronoun); past simple 'studied' → past perfect 'had studied' (tense backshift); 'here' → 'there' (place word); 'yesterday' → 'the day before' (time word). All four elements changed."
+    },
+    {
+      "prompt": "Direct: \"Can you open the window?\" she asked him. Choose the correct reported form:",
+      "options": [
+        {
+          "id": "a",
+          "text": "She asked him if he can open the window."
+        },
+        {
+          "id": "b",
+          "text": "She told him if he could open the window."
+        },
+        {
+          "id": "c",
+          "text": "She asked him if he could open the window."
+        },
+        {
+          "id": "d",
+          "text": "She asked him could he open the window."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "A yes/no question is reported with 'if/whether'. 'can' backshifts to 'could'. Normal word order: 'he could open'. The pronoun 'you' changes to 'he'."
+    },
+    {
+      "prompt": "Direct: \"Come back tomorrow!\" he told her. Choose the correct reported command:",
+      "options": [
+        {
+          "id": "a",
+          "text": "He told her to come back the next day."
+        },
+        {
+          "id": "b",
+          "text": "He told her to come back tomorrow."
+        },
+        {
+          "id": "c",
+          "text": "He said her to come back the next day."
+        },
+        {
+          "id": "d",
+          "text": "He told to come back the next day."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Commands use 'tell + person + to + infinitive'. The time word 'tomorrow' shifts to 'the next day' in reported speech. 'said her' is wrong — 'say' never takes a direct person object."
+    },
+    {
+      "prompt": "Which sentence applies the WRONG backshift?",
+      "options": [
+        {
+          "id": "a",
+          "text": "He said he would call me. (will → would)"
+        },
+        {
+          "id": "b",
+          "text": "They said they can finish. (can → no change)"
+        },
+        {
+          "id": "c",
+          "text": "She said she had left early. (past simple → past perfect)"
+        },
+        {
+          "id": "d",
+          "text": "He said he was studying. (present continuous → past continuous)"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "When the reporting verb is in the past, 'can' must backshift to 'could'. Saying 'they can finish' is incorrect — it should be 'they could finish'."
+    }
+  ]
+}

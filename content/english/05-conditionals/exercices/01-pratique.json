@@ -1,0 +1,148 @@
+{
+  "title": "Practice: zero, first and second conditionals",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complete the zero conditional: \"If you mix red and blue, you ___ purple.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "will get"
+        },
+        {
+          "id": "b",
+          "text": "would get"
+        },
+        {
+          "id": "c",
+          "text": "got"
+        },
+        {
+          "id": "d",
+          "text": "get"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "The zero conditional uses present simple in both clauses for general truths: if you mix red and blue, you get purple."
+    },
+    {
+      "prompt": "Complete the first conditional: \"If she ___ harder, she will pass the baccalaureate.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "studied"
+        },
+        {
+          "id": "b",
+          "text": "will study"
+        },
+        {
+          "id": "c",
+          "text": "studies"
+        },
+        {
+          "id": "d",
+          "text": "would study"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "The first conditional uses present simple in the if-clause (not will): if she studies harder, she will pass."
+    },
+    {
+      "prompt": "Complete the second conditional: \"If I ___ a superhero, I would fly to school.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "am"
+        },
+        {
+          "id": "b",
+          "text": "will be"
+        },
+        {
+          "id": "c",
+          "text": "were"
+        },
+        {
+          "id": "d",
+          "text": "would be"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "The second conditional uses past simple (or \"were\" for be) in the if-clause: if I were a superhero. This is an imaginary situation."
+    },
+    {
+      "prompt": "Which sentence correctly uses a comma?",
+      "options": [
+        {
+          "id": "a",
+          "text": "I will help you, if you ask me."
+        },
+        {
+          "id": "b",
+          "text": "If you ask me I will help you."
+        },
+        {
+          "id": "c",
+          "text": "If, you ask me I will help you."
+        },
+        {
+          "id": "d",
+          "text": "If you ask me, I will help you."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "When the if-clause comes first, place a comma after it: \"If you ask me, I will help you.\" No comma is used when the main clause comes first."
+    },
+    {
+      "prompt": "Rewrite using \"unless\": \"If you don't eat breakfast, you will feel weak.\" Choose the correct version:",
+      "options": [
+        {
+          "id": "a",
+          "text": "Unless you don't eat breakfast, you will feel weak."
+        },
+        {
+          "id": "b",
+          "text": "Unless you ate breakfast, you would feel weak."
+        },
+        {
+          "id": "c",
+          "text": "Unless you eat breakfast, you would feel weak."
+        },
+        {
+          "id": "d",
+          "text": "Unless you eat breakfast, you will feel weak."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "\"Unless\" already means \"if ... not\", so the verb stays positive: unless you eat breakfast, you will feel weak. Using \"don't\" after \"unless\" creates a double negative."
+    },
+    {
+      "prompt": "Identify the conditional type: \"If animals could talk, the world would be very different.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "Zero conditional"
+        },
+        {
+          "id": "b",
+          "text": "First conditional"
+        },
+        {
+          "id": "c",
+          "text": "No conditional"
+        },
+        {
+          "id": "d",
+          "text": "Second conditional"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "If + past simple (could talk) + would + base verb (would be) = second conditional. Animals cannot really talk — it is a hypothetical, unreal situation."
+    }
+  ]
+}

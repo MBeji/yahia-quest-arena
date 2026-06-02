@@ -1,0 +1,148 @@
+{
+  "title": "⚔️ Boss: command the future",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "A friend is cold. You spontaneously decide to help. Choose the best sentence:",
+      "options": [
+        {
+          "id": "a",
+          "text": "I am going to close the window."
+        },
+        {
+          "id": "b",
+          "text": "I close the window."
+        },
+        {
+          "id": "c",
+          "text": "I'll close the window."
+        },
+        {
+          "id": "d",
+          "text": "I am closing the window."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "A spontaneous decision (offer made in the moment) uses will (I'll). \"Going to\" would be used if you had planned it beforehand."
+    },
+    {
+      "prompt": "Complete: \"As soon as she ___, we will start eating.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "arrives"
+        },
+        {
+          "id": "b",
+          "text": "will arrive"
+        },
+        {
+          "id": "c",
+          "text": "is arriving"
+        },
+        {
+          "id": "d",
+          "text": "arrived"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "After \"as soon as\" in a future sentence, use the present simple (not will): as soon as she arrives."
+    },
+    {
+      "prompt": "Choose the correct form: \"Look at that cyclist — he ___ fall!\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "will"
+        },
+        {
+          "id": "b",
+          "text": "is going to"
+        },
+        {
+          "id": "c",
+          "text": "would"
+        },
+        {
+          "id": "d",
+          "text": "falls"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "The cyclist is visibly about to fall (present evidence), so use \"be going to\": he is going to fall."
+    },
+    {
+      "prompt": "Which sentence correctly uses the present continuous for a future arrangement?",
+      "options": [
+        {
+          "id": "a",
+          "text": "They will flying to Paris next Friday."
+        },
+        {
+          "id": "b",
+          "text": "They are flying to Paris next Friday. (tickets booked)"
+        },
+        {
+          "id": "c",
+          "text": "They fly to Paris next Friday."
+        },
+        {
+          "id": "d",
+          "text": "They going to fly to Paris next Friday."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "A confirmed, fixed arrangement uses the present continuous: they are flying to Paris next Friday. Option b is ungrammatical (will + -ing), c is present simple with a future marker (possible but less natural for a fixed plan), d is missing the auxiliary \"are\"."
+    },
+    {
+      "prompt": "Complete: \"I think robots ___ do most jobs in the future.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "will"
+        },
+        {
+          "id": "b",
+          "text": "are going to"
+        },
+        {
+          "id": "c",
+          "text": "are"
+        },
+        {
+          "id": "d",
+          "text": "would"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "\"I think\" signals a personal opinion about the future (no visible evidence). Use will: robots will do most jobs."
+    },
+    {
+      "prompt": "Complete both blanks: \"She ___ not work tomorrow because she ___ to see a doctor.\" (arrangement already made)",
+      "options": [
+        {
+          "id": "a",
+          "text": "is ... will go"
+        },
+        {
+          "id": "b",
+          "text": "won't ... will"
+        },
+        {
+          "id": "c",
+          "text": "would ... goes"
+        },
+        {
+          "id": "d",
+          "text": "will ... is going"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "\"will not work\" (won't work) is a prediction/decision; \"is going to see\" reflects a pre-made plan. \"will ... is going\" correctly uses will for the first blank and be going to for the second."
+    }
+  ]
+}
