@@ -51,7 +51,7 @@ vi.mock("@tanstack/react-start", () => ({
   },
 }));
 
-vi.mock("@/integrations/supabase/auth-middleware", () => ({
+vi.mock("@/shared/integrations/supabase/auth-middleware", () => ({
   requireSupabaseAuth: "mock-middleware",
 }));
 
@@ -63,7 +63,7 @@ vi.mock("@/shared/lib/rate-limit", () => ({
   isRateLimited: vi.fn().mockResolvedValue(false),
 }));
 
-vi.mock("@/lib/rate-limit", () => ({
+vi.mock("@/shared/lib/rate-limit", () => ({
   isRateLimited: vi.fn().mockResolvedValue(false),
 }));
 
@@ -128,7 +128,7 @@ describe("NON-REGRESSION: Quest Server Functions", () => {
       });
       mockRpc.mockResolvedValue({ data: [{ exercise_id: "ex1", best_score: 90 }], error: null });
 
-      const { getSubject } = await import("@/lib/gamification.quest");
+      const { getSubject } = await import("@/features/quest");
       const result = await withTimeout(
         (getSubject as unknown as (d: unknown) => Promise<unknown>)({ subjectId: "s1" }),
         1000,
@@ -150,7 +150,7 @@ describe("NON-REGRESSION: Quest Server Functions", () => {
       // Simulate RPC not existing (rejected promise)
       mockRpc.mockRejectedValue(new Error("function get_best_scores_by_exercise does not exist"));
 
-      const { getSubject } = await import("@/lib/gamification.quest");
+      const { getSubject } = await import("@/features/quest");
       const result = await withTimeout(
         (getSubject as unknown as (d: unknown) => Promise<unknown>)({ subjectId: "s1" }),
         1000,
@@ -171,7 +171,7 @@ describe("NON-REGRESSION: Quest Server Functions", () => {
       });
       mockRpc.mockResolvedValue({ data: null, error: { message: "permission denied" } });
 
-      const { getSubject } = await import("@/lib/gamification.quest");
+      const { getSubject } = await import("@/features/quest");
       const result = await withTimeout(
         (getSubject as unknown as (d: unknown) => Promise<unknown>)({ subjectId: "s1" }),
         1000,
@@ -188,7 +188,7 @@ describe("NON-REGRESSION: Quest Server Functions", () => {
       });
       mockRpc.mockResolvedValue({ data: [], error: null });
 
-      const { getSubject } = await import("@/lib/gamification.quest");
+      const { getSubject } = await import("@/features/quest");
 
       await expect(
         withTimeout(
@@ -208,7 +208,7 @@ describe("NON-REGRESSION: Quest Server Functions", () => {
         return mockQuery([]);
       });
 
-      const { getExercise } = await import("@/lib/gamification.quest");
+      const { getExercise } = await import("@/features/quest");
       const result = await withTimeout(
         (getExercise as unknown as (d: unknown) => Promise<unknown>)({
           exerciseId: "11111111-1111-1111-1111-111111111111",
@@ -227,7 +227,7 @@ describe("NON-REGRESSION: Quest Server Functions", () => {
         return mockQuery([]);
       });
 
-      const { getExercise } = await import("@/lib/gamification.quest");
+      const { getExercise } = await import("@/features/quest");
 
       await expect(
         withTimeout(
@@ -265,7 +265,7 @@ describe("NON-REGRESSION: Quest Server Functions", () => {
         error: null,
       });
 
-      const { submitAttempt } = await import("@/lib/gamification.quest");
+      const { submitAttempt } = await import("@/features/quest");
       const result = await withTimeout(
         (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
           sessionId: "11111111-1111-1111-1111-111111111111",
@@ -291,7 +291,7 @@ describe("NON-REGRESSION: Quest Server Functions", () => {
         error: { message: "submit_exercise_attempt failed" },
       });
 
-      const { submitAttempt } = await import("@/lib/gamification.quest");
+      const { submitAttempt } = await import("@/features/quest");
 
       await expect(
         withTimeout(
@@ -338,7 +338,7 @@ describe("NON-REGRESSION: Dashboard Server Functions", () => {
         return mockQuery([]);
       });
 
-      const { getDashboard } = await import("@/lib/gamification.dashboard");
+      const { getDashboard } = await import("@/features/dashboard");
       const result = await withTimeout((getDashboard as unknown as () => Promise<unknown>)(), 1000);
 
       const r = result as Record<string, unknown>;
@@ -367,7 +367,7 @@ describe("NON-REGRESSION: Dashboard Server Functions", () => {
         return mockQuery([]);
       });
 
-      const { getDashboard } = await import("@/lib/gamification.dashboard");
+      const { getDashboard } = await import("@/features/dashboard");
       const result = await withTimeout((getDashboard as unknown as () => Promise<unknown>)(), 1000);
 
       // Must resolve, not hang or throw
@@ -379,7 +379,7 @@ describe("NON-REGRESSION: Dashboard Server Functions", () => {
         return mockQuery(null, { message: "connection refused" });
       });
 
-      const { getDashboard } = await import("@/lib/gamification.dashboard");
+      const { getDashboard } = await import("@/features/dashboard");
 
       await expect(
         withTimeout((getDashboard as unknown as () => Promise<unknown>)(), 1000),
@@ -420,7 +420,7 @@ describe("NON-REGRESSION: Dashboard Server Functions", () => {
         return mockQuery([]);
       });
 
-      const { getLeaderboard } = await import("@/lib/gamification.dashboard");
+      const { getLeaderboard } = await import("@/features/dashboard");
       const result = await withTimeout(
         (getLeaderboard as unknown as () => Promise<unknown>)(),
         1000,
@@ -449,7 +449,7 @@ describe("NON-REGRESSION: Dungeon Server Functions", () => {
         error: null,
       });
 
-      const { startDungeonRun } = await import("@/lib/gamification.dungeon");
+      const { startDungeonRun } = await import("@/features/dungeon");
       const result = await withTimeout(
         (startDungeonRun as unknown as () => Promise<unknown>)(),
         1000,
@@ -461,7 +461,7 @@ describe("NON-REGRESSION: Dungeon Server Functions", () => {
     it("throws on RPC error (not hang)", async () => {
       mockRpc.mockResolvedValue({ data: null, error: { message: "dungeon unavailable" } });
 
-      const { startDungeonRun } = await import("@/lib/gamification.dungeon");
+      const { startDungeonRun } = await import("@/features/dungeon");
 
       await expect(
         withTimeout((startDungeonRun as unknown as () => Promise<unknown>)(), 1000),
@@ -479,7 +479,7 @@ describe("NON-REGRESSION: Dungeon Server Functions", () => {
         error: null,
       });
 
-      const { getDungeonQuestions } = await import("@/lib/gamification.dungeon");
+      const { getDungeonQuestions } = await import("@/features/dungeon");
       const result = await withTimeout(
         (getDungeonQuestions as unknown as (d: unknown) => Promise<unknown>)({
           runId: "11111111-1111-1111-1111-111111111111",
@@ -517,7 +517,7 @@ describe("NON-REGRESSION: Promise resolution patterns", () => {
     });
     mockRpc.mockResolvedValue({ data: [], error: null });
 
-    const { getSubject } = await import("@/lib/gamification.quest");
+    const { getSubject } = await import("@/features/quest");
 
     // Must reject (not hang forever)
     await expect(
@@ -539,7 +539,7 @@ describe("NON-REGRESSION: Promise resolution patterns", () => {
     // Simulate the CORRECT mock pattern (mockResolvedValue, not mockReturnValue)
     mockRpc.mockResolvedValue({ data: [], error: null });
 
-    const { getSubject } = await import("@/lib/gamification.quest");
+    const { getSubject } = await import("@/features/quest");
     const result = await withTimeout(
       (getSubject as unknown as (d: unknown) => Promise<unknown>)({ subjectId: "s1" }),
       1000,
@@ -570,7 +570,7 @@ describe("NON-REGRESSION: Data shape contracts", () => {
     });
     mockRpc.mockResolvedValue({ data: [], error: null });
 
-    const { getSubject } = await import("@/lib/gamification.quest");
+    const { getSubject } = await import("@/features/quest");
     const result = (await (getSubject as unknown as (d: unknown) => Promise<unknown>)({
       subjectId: "s1",
     })) as Record<string, unknown>;
@@ -594,7 +594,7 @@ describe("NON-REGRESSION: Data shape contracts", () => {
       return mockQuery([]);
     });
 
-    const { getExercise } = await import("@/lib/gamification.quest");
+    const { getExercise } = await import("@/features/quest");
     const result = (await (getExercise as unknown as (d: unknown) => Promise<unknown>)({
       exerciseId: "11111111-1111-1111-1111-111111111111",
     })) as Record<string, unknown>;
@@ -626,7 +626,7 @@ describe("NON-REGRESSION: Data shape contracts", () => {
       error: null,
     });
 
-    const { submitAttempt } = await import("@/lib/gamification.quest");
+    const { submitAttempt } = await import("@/features/quest");
     const result = (await (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
       sessionId: "11111111-1111-1111-1111-111111111111",
       exerciseId: "22222222-2222-2222-2222-222222222222",

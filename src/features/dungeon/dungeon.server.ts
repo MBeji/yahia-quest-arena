@@ -8,10 +8,12 @@ export const DUNGEON_XP_PER_FLOOR = 15;
 export const DUNGEON_COINS_PER_5_FLOORS = 5;
 export const DUNGEON_DIFFICULTY_STEP = 5; // Every N floors, difficulty increases
 
+type DungeonQuestionOption = { id: string; text: string };
+
 type DungeonQuestionPayload = {
   id: string;
   prompt: string;
-  options: unknown;
+  options: DungeonQuestionOption[];
   explanation: string | null;
   exercises?: {
     difficulty?: number;
@@ -58,7 +60,7 @@ function parseDungeonQuestionsPayload(value: unknown): DungeonQuestionsResponse 
     .map((q) => ({
       id: typeof q.id === "string" ? q.id : "",
       prompt: typeof q.prompt === "string" ? q.prompt : "",
-      options: q.options,
+      options: Array.isArray(q.options) ? (q.options as DungeonQuestionOption[]) : [],
       explanation: typeof q.explanation === "string" ? q.explanation : null,
       exercises:
         q.exercises && typeof q.exercises === "object"

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { shuffleOptions, type BaseOption } from "@/lib/question-utils";
+import { shuffleOptions, type BaseOption } from "@/shared/lib/question-utils";
 
 describe("shuffleOptions", () => {
   const options: BaseOption[] = [

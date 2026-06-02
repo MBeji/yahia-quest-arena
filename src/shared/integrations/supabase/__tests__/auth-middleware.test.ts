@@ -23,13 +23,17 @@ vi.mock("@supabase/supabase-js", () => ({
   createClient: mockCreateClient,
 }));
 
-vi.mock("@/lib/logger", () => ({
+vi.mock("@/shared/lib/logger", () => ({
   logger: {
     error: mockLoggerError,
   },
 }));
 
-import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
+
+// The mock above makes `.server(handler)` return the handler, so at runtime the
+// middleware is directly callable. Cast to a callable for type-checking the tests.
+const callMiddleware = requireSupabaseAuth as unknown as (ctx: never) => Promise<unknown>;
 
 describe("requireSupabaseAuth", () => {
   const originalUrl = process.env.SUPABASE_URL;
@@ -69,7 +73,7 @@ describe("requireSupabaseAuth", () => {
     delete process.env.SUPABASE_URL;
     delete process.env.SUPABASE_PUBLISHABLE_KEY;
 
-    await expect(requireSupabaseAuth({ next: vi.fn() } as never)).rejects.toThrow(
+    await expect(callMiddleware({ next: vi.fn() } as never)).rejects.toThrow(
       "Missing Supabase environment variable(s)",
     );
 
@@ -82,7 +86,7 @@ describe("requireSupabaseAuth", () => {
   it("throws when request headers are unavailable", async () => {
     mockGetRequest.mockReturnValue(undefined);
 
-    await expect(requireSupabaseAuth({ next: vi.fn() } as never)).rejects.toThrow(
+    await expect(callMiddleware({ next: vi.fn() } as never)).rejects.toThrow(
       "Unauthorized: No request headers available",
     );
   });
@@ -90,7 +94,7 @@ describe("requireSupabaseAuth", () => {
   it("throws when authorization header is missing", async () => {
     mockGetRequest.mockReturnValue({ headers: new Headers() });
 
-    await expect(requireSupabaseAuth({ next: vi.fn() } as never)).rejects.toThrow(
+    await expect(callMiddleware({ next: vi.fn() } as never)).rejects.toThrow(
       "Unauthorized: No authorization header provided",
     );
   });
@@ -100,7 +104,7 @@ describe("requireSupabaseAuth", () => {
       headers: new Headers({ authorization: "Basic abc" }),
     });
 
-    await expect(requireSupabaseAuth({ next: vi.fn() } as never)).rejects.toThrow(
+    await expect(callMiddleware({ next: vi.fn() } as never)).rejects.toThrow(
       "Unauthorized: Only Bearer tokens are supported",
     );
   });
@@ -112,7 +116,7 @@ describe("requireSupabaseAuth", () => {
       },
     });
 
-    await expect(requireSupabaseAuth({ next: vi.fn() } as never)).rejects.toThrow(
+    await expect(callMiddleware({ next: vi.fn() } as never)).rejects.toThrow(
       "Unauthorized: No token provided",
     );
   });
@@ -123,7 +127,7 @@ describe("requireSupabaseAuth", () => {
     });
     mockGetClaims.mockResolvedValue({ data: null, error: { message: "invalid" } });
 
-    await expect(requireSupabaseAuth({ next: vi.fn() } as never)).rejects.toThrow(
+    await expect(callMiddleware({ next: vi.fn() } as never)).rejects.toThrow(
       "Unauthorized: Invalid token",
     );
   });
@@ -134,7 +138,7 @@ describe("requireSupabaseAuth", () => {
     });
     mockGetClaims.mockResolvedValue({ data: { claims: {} }, error: null });
 
-    await expect(requireSupabaseAuth({ next: vi.fn() } as never)).rejects.toThrow(
+    await expect(callMiddleware({ next: vi.fn() } as never)).rejects.toThrow(
       "Unauthorized: No user ID found in token",
     );
   });
@@ -153,7 +157,7 @@ describe("requireSupabaseAuth", () => {
 
     const next = vi.fn().mockResolvedValue("ok");
 
-    const result = await requireSupabaseAuth({ next } as never);
+    const result = await callMiddleware({ next } as never);
 
     expect(result).toBe("ok");
     expect(mockCreateClient).toHaveBeenCalledTimes(1);

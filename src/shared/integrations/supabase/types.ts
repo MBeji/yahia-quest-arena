@@ -33,6 +33,215 @@ export type Database = {
   };
   public: {
     Tables: {
+      daily_objectives: {
+        Row: {
+          coin_reward: number;
+          completed_at: string | null;
+          created_at: string;
+          current_value: number;
+          id: string;
+          objective_date: string;
+          objective_type: string;
+          status: string;
+          target_value: number;
+          user_id: string;
+          xp_reward: number;
+        };
+        Insert: {
+          coin_reward?: number;
+          completed_at?: string | null;
+          created_at?: string;
+          current_value?: number;
+          id?: string;
+          objective_date: string;
+          objective_type: string;
+          status?: string;
+          target_value: number;
+          user_id: string;
+          xp_reward?: number;
+        };
+        Update: {
+          coin_reward?: number;
+          completed_at?: string | null;
+          created_at?: string;
+          current_value?: number;
+          id?: string;
+          objective_date?: string;
+          objective_type?: string;
+          status?: string;
+          target_value?: number;
+          user_id?: string;
+          xp_reward?: number;
+        };
+        Relationships: [];
+      };
+      difficulty_adaptation: {
+        Row: {
+          avg_score: number;
+          created_at: string;
+          current_difficulty_level: number;
+          id: string;
+          last_adjusted_at: string | null;
+          recent_avg_score: number;
+          subject_id: string;
+          total_attempts: number;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          avg_score?: number;
+          created_at?: string;
+          current_difficulty_level?: number;
+          id?: string;
+          last_adjusted_at?: string | null;
+          recent_avg_score?: number;
+          subject_id: string;
+          total_attempts?: number;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          avg_score?: number;
+          created_at?: string;
+          current_difficulty_level?: number;
+          id?: string;
+          last_adjusted_at?: string | null;
+          recent_avg_score?: number;
+          subject_id?: string;
+          total_attempts?: number;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "difficulty_adaptation_subject_id_fkey";
+            columns: ["subject_id"];
+            isOneToOne: false;
+            referencedRelation: "subjects";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      spaced_repetition_schedule: {
+        Row: {
+          completed_at: string | null;
+          created_at: string;
+          exercise_id: string;
+          failed_attempt_id: string | null;
+          id: string;
+          retry_level: number;
+          retry_score_pct: number | null;
+          scheduled_for: string;
+          status: string;
+          subject_id: string;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          completed_at?: string | null;
+          created_at?: string;
+          exercise_id: string;
+          failed_attempt_id?: string | null;
+          id?: string;
+          retry_level?: number;
+          retry_score_pct?: number | null;
+          scheduled_for: string;
+          status?: string;
+          subject_id: string;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          completed_at?: string | null;
+          created_at?: string;
+          exercise_id?: string;
+          failed_attempt_id?: string | null;
+          id?: string;
+          retry_level?: number;
+          retry_score_pct?: number | null;
+          scheduled_for?: string;
+          status?: string;
+          subject_id?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "spaced_repetition_schedule_exercise_id_fkey";
+            columns: ["exercise_id"];
+            isOneToOne: false;
+            referencedRelation: "exercises";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "spaced_repetition_schedule_failed_attempt_id_fkey";
+            columns: ["failed_attempt_id"];
+            isOneToOne: false;
+            referencedRelation: "attempts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "spaced_repetition_schedule_subject_id_fkey";
+            columns: ["subject_id"];
+            isOneToOne: false;
+            referencedRelation: "subjects";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      weekly_quests: {
+        Row: {
+          coin_reward: number;
+          completed_at: string | null;
+          created_at: string;
+          current_value: number;
+          id: string;
+          quest_type: string;
+          status: string;
+          subject_id: string | null;
+          target_value: number;
+          user_id: string;
+          week_start_date: string;
+          xp_reward: number;
+        };
+        Insert: {
+          coin_reward?: number;
+          completed_at?: string | null;
+          created_at?: string;
+          current_value?: number;
+          id?: string;
+          quest_type: string;
+          status?: string;
+          subject_id?: string | null;
+          target_value: number;
+          user_id: string;
+          week_start_date: string;
+          xp_reward?: number;
+        };
+        Update: {
+          coin_reward?: number;
+          completed_at?: string | null;
+          created_at?: string;
+          current_value?: number;
+          id?: string;
+          quest_type?: string;
+          status?: string;
+          subject_id?: string | null;
+          target_value?: number;
+          user_id?: string;
+          week_start_date?: string;
+          xp_reward?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "weekly_quests_subject_id_fkey";
+            columns: ["subject_id"];
+            isOneToOne: false;
+            referencedRelation: "subjects";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       attempts: {
         Row: {
           completed_at: string;
@@ -125,6 +334,7 @@ export type Database = {
           description: string | null;
           display_order: number;
           id: string;
+          lesson_content: string | null;
           subject_id: string;
           title: string;
         };
@@ -132,6 +342,7 @@ export type Database = {
           description?: string | null;
           display_order?: number;
           id?: string;
+          lesson_content?: string | null;
           subject_id: string;
           title: string;
         };
@@ -139,6 +350,7 @@ export type Database = {
           description?: string | null;
           display_order?: number;
           id?: string;
+          lesson_content?: string | null;
           subject_id?: string;
           title?: string;
         };
@@ -602,6 +814,30 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      award_coins: {
+        Args: { p_user: string; p_coins: number };
+        Returns: {
+          avatar_slug: string | null;
+          avatar_tier: number;
+          created_at: string;
+          current_streak: number;
+          display_name: string;
+          hero_class: string;
+          id: string;
+          last_active_date: string | null;
+          level: number;
+          longest_streak: number;
+          role: string;
+          xp: number;
+          yahia_coins: number;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "profiles";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       award_xp: {
         Args: { p_user: string; p_xp: number };
         Returns: {
@@ -625,6 +861,62 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      check_rate_limit: {
+        Args: { p_key: string; p_max_requests: number; p_window_ms: number };
+        Returns: boolean;
+      };
+      finalize_dungeon_run: {
+        Args: { p_run_id: string; p_duration_seconds: number };
+        Returns: Json;
+      };
+      get_best_scores_by_exercise: {
+        Args: { p_subject: string };
+        Returns: { exercise_id: string; best_score: number }[];
+      };
+      get_dungeon_questions: {
+        Args: { p_run_id: string; p_batch_size?: number };
+        Returns: Json;
+      };
+      get_student_report: {
+        Args: { p_student: string };
+        Returns: Json;
+      };
+      spend_coins: {
+        Args: { p_user: string; p_coins: number };
+        Returns: {
+          avatar_slug: string | null;
+          avatar_tier: number;
+          created_at: string;
+          current_streak: number;
+          display_name: string;
+          hero_class: string;
+          id: string;
+          last_active_date: string | null;
+          level: number;
+          longest_streak: number;
+          role: string;
+          xp: number;
+          yahia_coins: number;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "profiles";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      start_dungeon_run: {
+        Args: Record<PropertyKey, never>;
+        Returns: string;
+      };
+      submit_dungeon_answer: {
+        Args: { p_run_id: string; p_question_id: string; p_choice: string };
+        Returns: Json;
+      };
+      submit_exercise_attempt: {
+        Args: { p_session_id: string; p_exercise_id: string; p_answers: Json };
+        Returns: Json;
       };
       is_parent_of_student: {
         Args: { p_parent: string; p_student: string };

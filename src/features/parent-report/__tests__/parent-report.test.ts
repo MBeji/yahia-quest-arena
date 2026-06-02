@@ -36,7 +36,7 @@ vi.mock("@tanstack/react-start", () => ({
   },
 }));
 
-vi.mock("@/integrations/supabase/auth-middleware", () => ({
+vi.mock("@/shared/integrations/supabase/auth-middleware", () => ({
   requireSupabaseAuth: "mock-middleware",
 }));
 

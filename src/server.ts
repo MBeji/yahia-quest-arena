@@ -1,8 +1,8 @@
-import "./lib/error-capture";
+import "@/shared/lib/error-capture";
 
-import { consumeLastCapturedError } from "./lib/error-capture";
-import { renderErrorPage } from "./lib/error-page";
-import { logger } from "./lib/logger";
+import { consumeLastCapturedError } from "@/shared/lib/error-capture";
+import { renderErrorPage } from "@/shared/lib/error-page";
+import { logger } from "@/shared/lib/logger";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;

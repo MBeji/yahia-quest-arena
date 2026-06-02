@@ -12,9 +12,9 @@ import {
   List,
   CheckCircle2,
 } from "lucide-react";
-import { getChapterLesson } from "@/lib/gamification.quest";
-import { isRtlText } from "@/lib/utils";
-import { renderMarkdown } from "@/lib/markdown";
+import { getChapterLesson } from "@/features/quest";
+import { isRtlText } from "@/shared/lib/utils";
+import { renderMarkdown } from "@/shared/lib/markdown";
 import { useState } from "react";
 
 export const Route = createFileRoute("/_authenticated/lesson/$chapterId")({

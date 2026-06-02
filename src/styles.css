@@ -352,9 +352,15 @@
 
 /* Smooth press effect for interactive elements */
 @keyframes tap-bounce {
-  0% { transform: scale(1); }
-  50% { transform: scale(0.96); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.96);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .tap-bounce:active {
@@ -370,23 +376,24 @@
 
 /* Shimmer loading effect */
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 .animate-shimmer {
-  background: linear-gradient(
-    90deg,
-    transparent 25%,
-    oklch(1 0 0 / 0.06) 50%,
-    transparent 75%
-  );
+  background: linear-gradient(90deg, transparent 25%, oklch(1 0 0 / 0.06) 50%, transparent 75%);
   background-size: 200% 100%;
   animation: shimmer 2s ease-in-out infinite;
 }
 
 /* Smooth scale on hover for cards */
 .card-hover {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 .card-hover:hover {
   transform: translateY(-2px) scale(1.01);
@@ -395,7 +402,9 @@
 
 /* Glow on hover for links/buttons */
 .glow-hover {
-  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.2s ease;
 }
 .glow-hover:hover {
   box-shadow: 0 0 20px oklch(0.66 0.27 295 / 0.4);
@@ -437,7 +446,8 @@
 
 /* Subtle background particles */
 @keyframes drift {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate(0, 0) rotate(0deg);
     opacity: 0.3;
   }

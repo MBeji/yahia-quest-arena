@@ -7,7 +7,7 @@ const { mockOnAuthStateChange, mockGetSession, mockUnsubscribe } = vi.hoisted(()
   mockUnsubscribe: vi.fn(),
 }));
 
-vi.mock("@/integrations/supabase/client", () => ({
+vi.mock("@/shared/integrations/supabase/client", () => ({
   supabase: {
     auth: {
       onAuthStateChange: mockOnAuthStateChange,
@@ -16,7 +16,7 @@ vi.mock("@/integrations/supabase/client", () => ({
   },
 }));
 
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from "@/features/auth";
 
 describe("useAuth", () => {
   beforeEach(() => {

@@ -36,7 +36,7 @@ vi.mock("@tanstack/react-start", () => ({
   },
 }));
 
-vi.mock("@/integrations/supabase/auth-middleware", () => ({
+vi.mock("@/shared/integrations/supabase/auth-middleware", () => ({
   requireSupabaseAuth: "mock-middleware",
 }));
 
@@ -121,7 +121,7 @@ describe("gamification.dashboard — getDashboard", () => {
       return mockQuery([]);
     });
 
-    const { getDashboard } = await import("@/lib/gamification.dashboard");
+    const { getDashboard } = await import("@/features/dashboard");
     const result = await (getDashboard as unknown as (d?: unknown) => Promise<unknown>)();
 
     const res = result as Record<string, unknown>;
@@ -152,7 +152,7 @@ describe("gamification.dashboard — getDashboard", () => {
       return mockQuery([]);
     });
 
-    const { getDashboard } = await import("@/lib/gamification.dashboard");
+    const { getDashboard } = await import("@/features/dashboard");
     const result = await (getDashboard as unknown as (d?: unknown) => Promise<unknown>)();
 
     const res = result as Record<string, unknown>;
@@ -165,7 +165,7 @@ describe("gamification.dashboard — getDashboard", () => {
       return mockQuery([]);
     });
 
-    const { getDashboard } = await import("@/lib/gamification.dashboard");
+    const { getDashboard } = await import("@/features/dashboard");
 
     await expect((getDashboard as unknown as (d?: unknown) => Promise<unknown>)()).rejects.toThrow(
       "DB error",
@@ -179,7 +179,7 @@ describe("gamification.dashboard — getDashboard", () => {
       return mockQuery([]);
     });
 
-    const { getDashboard } = await import("@/lib/gamification.dashboard");
+    const { getDashboard } = await import("@/features/dashboard");
 
     await expect((getDashboard as unknown as (d?: unknown) => Promise<unknown>)()).rejects.toThrow(
       "Subjects error",
@@ -215,7 +215,7 @@ describe("gamification.dashboard — getDashboard", () => {
       return mockQuery([]);
     });
 
-    const { getDashboard } = await import("@/lib/gamification.dashboard");
+    const { getDashboard } = await import("@/features/dashboard");
     const result = await (getDashboard as unknown as (d?: unknown) => Promise<unknown>)();
 
     const res = result as { stats: Record<string, { count: number; avg: number; xp: number }> };
@@ -246,7 +246,7 @@ describe("gamification.dashboard — getDashboard", () => {
       return mockQuery([]);
     });
 
-    const { getDashboard } = await import("@/lib/gamification.dashboard");
+    const { getDashboard } = await import("@/features/dashboard");
     const result = await (getDashboard as unknown as (d?: unknown) => Promise<unknown>)();
 
     const res = result as { nextExerciseId: string | null };
@@ -285,7 +285,7 @@ describe("gamification.dashboard — getLeaderboard", () => {
 
     mockFrom.mockImplementation(() => mockQuery(topPlayers));
 
-    const { getLeaderboard } = await import("@/lib/gamification.dashboard");
+    const { getLeaderboard } = await import("@/features/dashboard");
     const result = await (getLeaderboard as unknown as (d?: unknown) => Promise<unknown>)();
 
     const res = result as { leaderboard: unknown[]; myRank: unknown };
@@ -296,7 +296,7 @@ describe("gamification.dashboard — getLeaderboard", () => {
   it("throws on fetch error", async () => {
     mockFrom.mockImplementation(() => mockQuery(null, { message: "Leaderboard error" }));
 
-    const { getLeaderboard } = await import("@/lib/gamification.dashboard");
+    const { getLeaderboard } = await import("@/features/dashboard");
 
     await expect(
       (getLeaderboard as unknown as (d?: unknown) => Promise<unknown>)(),
@@ -325,7 +325,7 @@ describe("gamification.dashboard — getSprint2Dashboard", () => {
       return mockQuery([]);
     });
 
-    const { getSprint2Dashboard } = await import("@/lib/gamification.dashboard");
+    const { getSprint2Dashboard } = await import("@/features/dashboard");
     const result = await (getSprint2Dashboard as unknown as (d?: unknown) => Promise<unknown>)();
 
     const res = result as Record<string, unknown>;
@@ -336,7 +336,7 @@ describe("gamification.dashboard — getSprint2Dashboard", () => {
   it("throws on daily objectives error", async () => {
     mockFrom.mockImplementation(() => mockQuery(null, { message: "Daily error" }));
 
-    const { getSprint2Dashboard } = await import("@/lib/gamification.dashboard");
+    const { getSprint2Dashboard } = await import("@/features/dashboard");
 
     await expect(
       (getSprint2Dashboard as unknown as (d?: unknown) => Promise<unknown>)(),

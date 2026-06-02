@@ -3,6 +3,9 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { isRateLimited } from "@/shared/lib/rate-limit";
 import type { UnlockedBadge } from "@/shared/types/gamification";
+import type { Database } from "@/shared/integrations/supabase/types";
+
+type ProfileSnapshot = Database["public"]["Tables"]["profiles"]["Row"];
 
 type AtomicSubmitResponse = {
   correct: number;
@@ -11,7 +14,7 @@ type AtomicSubmitResponse = {
   xpEarned: number;
   coinsEarned: number;
   durationSeconds: number;
-  profile: Record<string, unknown> | null;
+  profile: ProfileSnapshot | null;
   unlockedBadges: UnlockedBadge[];
 };
 
@@ -56,9 +59,7 @@ function parseAtomicSubmitResponse(payload: unknown): AtomicSubmitResponse {
     coinsEarned: Number(row.coinsEarned ?? 0),
     durationSeconds: Number(row.durationSeconds ?? 0),
     profile:
-      row.profile && typeof row.profile === "object"
-        ? (row.profile as Record<string, unknown>)
-        : null,
+      row.profile && typeof row.profile === "object" ? (row.profile as ProfileSnapshot) : null,
     unlockedBadges: toUnlockedBadges(row.unlockedBadges),
   };
 }
@@ -83,7 +84,7 @@ export const getSubject = createServerFn({ method: "GET" })
     // Best scores RPC - graceful fallback if function doesn't exist yet
     let bestScoresData: unknown[] = [];
     try {
-      const bestScores = await supabase.rpc("get_best_scores_by_exercise" as never, {
+      const bestScores = await supabase.rpc("get_best_scores_by_exercise", {
         p_subject: data.subjectId,
       });
       if (!bestScores.error && Array.isArray(bestScores.data)) {

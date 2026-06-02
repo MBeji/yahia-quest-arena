@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { cn, isRtlText, isMathExpression, rtlProps } from "@/lib/utils";
+import { cn, isRtlText, isMathExpression, rtlProps } from "@/shared/lib/utils";
 
 describe("cn (class names merge)", () => {
   it("merges simple classes", () => {

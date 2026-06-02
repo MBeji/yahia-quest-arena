@@ -32,7 +32,7 @@ vi.mock("@tanstack/react-start", () => ({
   },
 }));
 
-vi.mock("@/integrations/supabase/auth-middleware", () => ({
+vi.mock("@/shared/integrations/supabase/auth-middleware", () => ({
   requireSupabaseAuth: "mock-middleware",
 }));
 
@@ -84,7 +84,7 @@ describe("gamification.shop — purchaseShopItem", () => {
     });
     mockRpc.mockReturnValue({ data: null, error: null }); // spend_coins
 
-    const { purchaseShopItem } = await import("@/lib/gamification.shop");
+    const { purchaseShopItem } = await import("@/features/shop");
     const result = await (purchaseShopItem as unknown as (d: unknown) => Promise<unknown>)({
       itemCode: "potion_hp",
     });
@@ -113,7 +113,7 @@ describe("gamification.shop — purchaseShopItem", () => {
       return mockQuery(null);
     });
 
-    const { purchaseShopItem } = await import("@/lib/gamification.shop");
+    const { purchaseShopItem } = await import("@/features/shop");
 
     await expect(
       (purchaseShopItem as unknown as (d: unknown) => Promise<unknown>)({ itemCode: "skin_gold" }),
@@ -140,7 +140,7 @@ describe("gamification.shop — purchaseShopItem", () => {
       return mockQuery(null);
     });
 
-    const { purchaseShopItem } = await import("@/lib/gamification.shop");
+    const { purchaseShopItem } = await import("@/features/shop");
 
     await expect(
       (purchaseShopItem as unknown as (d: unknown) => Promise<unknown>)({ itemCode: "skin_gold" }),
@@ -153,7 +153,7 @@ describe("gamification.shop — purchaseShopItem", () => {
       return mockQuery(null);
     });
 
-    const { purchaseShopItem } = await import("@/lib/gamification.shop");
+    const { purchaseShopItem } = await import("@/features/shop");
 
     await expect(
       (purchaseShopItem as unknown as (d: unknown) => Promise<unknown>)({ itemCode: "test" }),
@@ -180,7 +180,7 @@ describe("gamification.shop — purchaseShopItem", () => {
     });
     mockRpc.mockReturnValue({ data: null, error: { message: "Insufficient funds" } });
 
-    const { purchaseShopItem } = await import("@/lib/gamification.shop");
+    const { purchaseShopItem } = await import("@/features/shop");
 
     await expect(
       (purchaseShopItem as unknown as (d: unknown) => Promise<unknown>)({ itemCode: "potion" }),
@@ -198,7 +198,7 @@ describe("gamification.shop — equipInventorySkin", () => {
   it("throws when item not in inventory", async () => {
     mockFrom.mockImplementation(() => mockQuery([])); // empty inventory
 
-    const { equipInventorySkin } = await import("@/lib/gamification.shop");
+    const { equipInventorySkin } = await import("@/features/shop");
 
     await expect(
       (equipInventorySkin as unknown as (d: unknown) => Promise<unknown>)({
@@ -217,7 +217,7 @@ describe("gamification.shop — equipInventorySkin", () => {
     ];
     mockFrom.mockImplementation(() => mockQuery(inventoryRows));
 
-    const { equipInventorySkin } = await import("@/lib/gamification.shop");
+    const { equipInventorySkin } = await import("@/features/shop");
 
     await expect(
       (equipInventorySkin as unknown as (d: unknown) => Promise<unknown>)({ itemCode: "potion" }),
@@ -253,7 +253,7 @@ describe("gamification.shop — equipInventorySkin", () => {
 
     mockFrom.mockImplementation(() => chainMock);
 
-    const { equipInventorySkin } = await import("@/lib/gamification.shop");
+    const { equipInventorySkin } = await import("@/features/shop");
     const result = await (equipInventorySkin as unknown as (d: unknown) => Promise<unknown>)({
       itemCode: "skin_dragon",
     });
@@ -272,7 +272,7 @@ describe("gamification.shop — input validation", () => {
   });
 
   it("rejects empty itemCode for purchaseShopItem", async () => {
-    const { purchaseShopItem } = await import("@/lib/gamification.shop");
+    const { purchaseShopItem } = await import("@/features/shop");
 
     await expect(
       (purchaseShopItem as unknown as (d: unknown) => Promise<unknown>)({ itemCode: "" }),
@@ -280,7 +280,7 @@ describe("gamification.shop — input validation", () => {
   });
 
   it("rejects empty itemCode for equipInventorySkin", async () => {
-    const { equipInventorySkin } = await import("@/lib/gamification.shop");
+    const { equipInventorySkin } = await import("@/features/shop");
 
     await expect(
       (equipInventorySkin as unknown as (d: unknown) => Promise<unknown>)({ itemCode: "" }),

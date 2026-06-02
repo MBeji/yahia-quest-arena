@@ -37,26 +37,87 @@ export const Route = createFileRoute("/")({
 const featureIcons = [Zap, Flame, Target, Swords, Trophy, Shield];
 const featureColors = ["neon-violet", "flame", "neon-cyan", "neon-magenta", "neon-gold", "success"];
 const subjectIcons = [Sword, BookOpen, Scroll, Leaf, Globe];
-const subjectColors = ["subject-math", "subject-french", "subject-arabic", "subject-svt", "subject-english"];
+const subjectColors = [
+  "subject-math",
+  "subject-french",
+  "subject-arabic",
+  "subject-svt",
+  "subject-english",
+];
 
 function Landing() {
   const t = useT();
 
   const features = [
-    { icon: featureIcons[0], title: t.landing.featureXpTitle, desc: t.landing.featureXpDesc, color: featureColors[0] },
-    { icon: featureIcons[1], title: t.landing.featureStreakTitle, desc: t.landing.featureStreakDesc, color: featureColors[1] },
-    { icon: featureIcons[2], title: t.landing.featureRadarTitle, desc: t.landing.featureRadarDesc, color: featureColors[2] },
-    { icon: featureIcons[3], title: t.landing.featureArenaTitle, desc: t.landing.featureArenaDesc, color: featureColors[3] },
-    { icon: featureIcons[4], title: t.landing.featureBossTitle, desc: t.landing.featureBossDesc, color: featureColors[4] },
-    { icon: featureIcons[5], title: t.landing.featureCurriculumTitle, desc: t.landing.featureCurriculumDesc, color: featureColors[5] },
+    {
+      icon: featureIcons[0],
+      title: t.landing.featureXpTitle,
+      desc: t.landing.featureXpDesc,
+      color: featureColors[0],
+    },
+    {
+      icon: featureIcons[1],
+      title: t.landing.featureStreakTitle,
+      desc: t.landing.featureStreakDesc,
+      color: featureColors[1],
+    },
+    {
+      icon: featureIcons[2],
+      title: t.landing.featureRadarTitle,
+      desc: t.landing.featureRadarDesc,
+      color: featureColors[2],
+    },
+    {
+      icon: featureIcons[3],
+      title: t.landing.featureArenaTitle,
+      desc: t.landing.featureArenaDesc,
+      color: featureColors[3],
+    },
+    {
+      icon: featureIcons[4],
+      title: t.landing.featureBossTitle,
+      desc: t.landing.featureBossDesc,
+      color: featureColors[4],
+    },
+    {
+      icon: featureIcons[5],
+      title: t.landing.featureCurriculumTitle,
+      desc: t.landing.featureCurriculumDesc,
+      color: featureColors[5],
+    },
   ];
 
   const subjects = [
-    { icon: subjectIcons[0], name: t.landing.subjectMath, attr: t.landing.attrStrength, color: subjectColors[0] },
-    { icon: subjectIcons[1], name: t.landing.subjectFrench, attr: t.landing.attrSpirit, color: subjectColors[1] },
-    { icon: subjectIcons[2], name: t.landing.subjectArabic, attr: t.landing.attrWisdom, color: subjectColors[2] },
-    { icon: subjectIcons[3], name: t.landing.subjectScience, attr: t.landing.attrObservation, color: subjectColors[3] },
-    { icon: subjectIcons[4], name: t.landing.subjectEnglish, attr: t.landing.attrAgility, color: subjectColors[4] },
+    {
+      icon: subjectIcons[0],
+      name: t.landing.subjectMath,
+      attr: t.landing.attrStrength,
+      color: subjectColors[0],
+    },
+    {
+      icon: subjectIcons[1],
+      name: t.landing.subjectFrench,
+      attr: t.landing.attrSpirit,
+      color: subjectColors[1],
+    },
+    {
+      icon: subjectIcons[2],
+      name: t.landing.subjectArabic,
+      attr: t.landing.attrWisdom,
+      color: subjectColors[2],
+    },
+    {
+      icon: subjectIcons[3],
+      name: t.landing.subjectScience,
+      attr: t.landing.attrObservation,
+      color: subjectColors[3],
+    },
+    {
+      icon: subjectIcons[4],
+      name: t.landing.subjectEnglish,
+      attr: t.landing.attrAgility,
+      color: subjectColors[4],
+    },
   ];
 
   const ranks = [
@@ -126,13 +187,12 @@ function Landing() {
               {t.landing.badge}
             </div>
             <h1 className="font-display text-5xl font-black leading-[1.05] sm:text-6xl lg:text-7xl">
-              {t.landing.heroTitle1} <span className="text-gradient-primary">{t.landing.heroTitle2}</span>
+              {t.landing.heroTitle1}{" "}
+              <span className="text-gradient-primary">{t.landing.heroTitle2}</span>
               <br />
               <span className="text-gradient-cyan">{t.landing.heroTitle3}</span>
             </h1>
-            <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-              {t.landing.heroDesc}
-            </p>
+            <p className="mt-6 max-w-xl text-lg text-muted-foreground">{t.landing.heroDesc}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 to="/signup"
@@ -202,7 +262,8 @@ function Landing() {
             {t.landing.featuresLabel}
           </div>
           <h2 className="font-display text-4xl font-bold sm:text-5xl">
-            {t.landing.featuresTitle1} <span className="text-gradient-primary">{t.landing.featuresTitle2}</span>
+            {t.landing.featuresTitle1}{" "}
+            <span className="text-gradient-primary">{t.landing.featuresTitle2}</span>
           </h2>
         </div>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -239,7 +300,8 @@ function Landing() {
               {t.landing.subjectsLabel}
             </div>
             <h2 className="font-display text-4xl font-bold sm:text-5xl">
-              {t.landing.subjectsTitle1} <span className="text-gradient-cyan">{t.landing.subjectsTitle2}</span>
+              {t.landing.subjectsTitle1}{" "}
+              <span className="text-gradient-cyan">{t.landing.subjectsTitle2}</span>
             </h2>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
@@ -274,7 +336,8 @@ function Landing() {
           {t.landing.ranksLabel}
         </div>
         <h2 className="font-display text-4xl font-bold sm:text-5xl">
-          {t.landing.ranksTitle1} <span className="text-gradient-primary">{t.landing.ranksTitle2}</span>
+          {t.landing.ranksTitle1}{" "}
+          <span className="text-gradient-primary">{t.landing.ranksTitle2}</span>
         </h2>
         <div className="mt-12 space-y-3">
           {ranks.map(([range, name, color]) => (

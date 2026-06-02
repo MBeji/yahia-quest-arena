@@ -23,9 +23,9 @@ import {
   submitDungeonRun,
   DUNGEON_XP_PER_FLOOR,
   DUNGEON_COINS_PER_5_FLOORS,
-} from "@/lib/gamification.dungeon";
-import { isRtlText, isMathExpression } from "@/lib/utils";
-import { shuffleOptions, type DisplayOption } from "@/lib/question-utils";
+} from "@/features/dungeon";
+import { isRtlText, isMathExpression } from "@/shared/lib/utils";
+import { shuffleOptions, type BaseOption, type DisplayOption } from "@/shared/lib/question-utils";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/dungeon")({
@@ -250,9 +250,7 @@ function DungeonPage() {
               <Skull className="h-10 w-10 text-primary-foreground" />
             </div>
             <h1 className="mt-5 font-display text-4xl font-bold">{t.dungeon.title}</h1>
-            <p className="mt-3 text-muted-foreground max-w-md mx-auto">
-              {t.dungeon.desc}
-            </p>
+            <p className="mt-3 text-muted-foreground max-w-md mx-auto">{t.dungeon.desc}</p>
 
             <div className="mt-8 grid grid-cols-3 gap-4 max-w-sm mx-auto">
               <div className="rounded-xl bg-(--neon-gold)/10 p-3">
@@ -311,7 +309,9 @@ function DungeonPage() {
               <Skull className="h-10 w-10 text-primary-foreground" />
             </div>
             <h1 className="mt-5 font-display text-3xl font-bold">{t.dungeon.collapsed}</h1>
-            <p className="mt-2 text-muted-foreground">{t.dungeon.fellAt.replace("{n}", String(floor))}</p>
+            <p className="mt-2 text-muted-foreground">
+              {t.dungeon.fellAt.replace("{n}", String(floor))}
+            </p>
 
             {/* Last wrong answer */}
             {lastWrongAnswer && (
@@ -370,7 +370,9 @@ function DungeonPage() {
                 <div className="mt-1 font-display text-xl font-bold text-neon-gold">
                   +{runResult?.xpEarned ?? "..."}
                 </div>
-                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{t.dungeon.xp}</div>
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                  {t.dungeon.xp}
+                </div>
               </div>
               <div className="rounded-xl bg-(--neon-cyan)/15 p-3">
                 <Sparkles className="mx-auto h-4 w-4 text-neon-cyan" />
@@ -495,9 +497,7 @@ function DungeonPage() {
           >
             {currentQuestion.prompt}
           </h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            {t.dungeon.warning}
-          </p>
+          <p className="mt-2 text-sm text-muted-foreground">{t.dungeon.warning}</p>
 
           <div className="mt-6 space-y-3">
             {options.map((opt) => {
@@ -567,7 +567,9 @@ function DungeonPage() {
 
       {/* Floor progress bar (visual flair) */}
       <div className="mt-6 flex items-center gap-3">
-        <div className="text-xs uppercase tracking-widest text-muted-foreground">{t.dungeon.depth}</div>
+        <div className="text-xs uppercase tracking-widest text-muted-foreground">
+          {t.dungeon.depth}
+        </div>
         <div
           className="flex-1 h-2 overflow-hidden rounded-full bg-secondary/60"
           role="progressbar"

@@ -20,6 +20,10 @@ vi.mock("@/shared/integrations/supabase/client", () => ({
 
 import { attachSupabaseAuth } from "@/shared/integrations/supabase/auth-attacher";
 
+// The mock above makes `.client(handler)` return the handler, so at runtime the
+// middleware is directly callable. Cast to a callable for type-checking the tests.
+const callMiddleware = attachSupabaseAuth as unknown as (ctx: never) => Promise<unknown>;
+
 describe("attachSupabaseAuth", () => {
   beforeEach(() => {
     mockGetSession.mockReset();
@@ -36,7 +40,7 @@ describe("attachSupabaseAuth", () => {
 
     const next = vi.fn().mockResolvedValue("ok");
 
-    const result = await attachSupabaseAuth({ next } as never);
+    const result = await callMiddleware({ next } as never);
 
     expect(result).toBe("ok");
     expect(next).toHaveBeenCalledWith({
@@ -55,7 +59,7 @@ describe("attachSupabaseAuth", () => {
 
     const next = vi.fn().mockResolvedValue("ok");
 
-    await attachSupabaseAuth({ next } as never);
+    await callMiddleware({ next } as never);
 
     expect(next).toHaveBeenCalledWith({ headers: {} });
   });

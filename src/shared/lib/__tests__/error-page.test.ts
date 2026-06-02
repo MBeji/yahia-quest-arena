@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { renderErrorPage } from "@/lib/error-page";
+import { renderErrorPage } from "@/shared/lib/error-page";
 
 describe("renderErrorPage", () => {
   it("returns valid HTML string", () => {

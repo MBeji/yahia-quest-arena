@@ -36,7 +36,7 @@ vi.mock("@tanstack/react-start", () => ({
   },
 }));
 
-vi.mock("@/integrations/supabase/auth-middleware", () => ({
+vi.mock("@/shared/integrations/supabase/auth-middleware", () => ({
   requireSupabaseAuth: "mock-middleware",
 }));
 
@@ -84,7 +84,7 @@ describe("gamification.quest — getSubject", () => {
     });
     mockRpc.mockReturnValue({ data: bestScoresData, error: null });
 
-    const { getSubject } = await import("@/lib/gamification.quest");
+    const { getSubject } = await import("@/features/quest");
     const result = await (getSubject as unknown as (d: unknown) => Promise<unknown>)({
       subjectId: "subj-1",
     });
@@ -104,7 +104,7 @@ describe("gamification.quest — getSubject", () => {
     });
     mockRpc.mockReturnValue({ data: [], error: null });
 
-    const { getSubject } = await import("@/lib/gamification.quest");
+    const { getSubject } = await import("@/features/quest");
 
     await expect(
       (getSubject as unknown as (d: unknown) => Promise<unknown>)({ subjectId: "bad-id" }),
@@ -120,9 +120,11 @@ describe("gamification.quest — getSubject", () => {
     });
     mockRpc.mockReturnValue({ data: null, error: { message: "RPC fail" } });
 
-    const { getSubject } = await import("@/lib/gamification.quest");
+    const { getSubject } = await import("@/features/quest");
 
-    const result = await (getSubject as unknown as (d: unknown) => Promise<unknown>)({ subjectId: "s1" });
+    const result = await (getSubject as unknown as (d: unknown) => Promise<unknown>)({
+      subjectId: "s1",
+    });
     expect((result as Record<string, unknown>).bestByExercise).toEqual({});
   });
 });
@@ -145,7 +147,7 @@ describe("gamification.quest — getExercise", () => {
       return mockQuery([]);
     });
 
-    const { getExercise } = await import("@/lib/gamification.quest");
+    const { getExercise } = await import("@/features/quest");
     const result = await (getExercise as unknown as (d: unknown) => Promise<unknown>)({
       exerciseId: "11111111-1111-1111-1111-111111111111",
     });
@@ -159,7 +161,7 @@ describe("gamification.quest — getExercise", () => {
       return mockQuery([]);
     });
 
-    const { getExercise } = await import("@/lib/gamification.quest");
+    const { getExercise } = await import("@/features/quest");
 
     await expect(
       (getExercise as unknown as (d: unknown) => Promise<unknown>)({
@@ -181,7 +183,7 @@ describe("gamification.quest — startExerciseSession", () => {
     const sessionData = { id: "sess-1", started_at: "2026-06-01T12:00:00Z" };
     mockFrom.mockImplementation(() => mockQuery(sessionData));
 
-    const { startExerciseSession } = await import("@/lib/gamification.quest");
+    const { startExerciseSession } = await import("@/features/quest");
     const result = await (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
       exerciseId: "11111111-1111-1111-1111-111111111111",
     });
@@ -192,7 +194,7 @@ describe("gamification.quest — startExerciseSession", () => {
   it("throws on insert error", async () => {
     mockFrom.mockImplementation(() => mockQuery(null, { message: "Insert failed" }));
 
-    const { startExerciseSession } = await import("@/lib/gamification.quest");
+    const { startExerciseSession } = await import("@/features/quest");
 
     await expect(
       (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
@@ -238,7 +240,7 @@ describe("gamification.quest — submitAttempt", () => {
       error: null,
     });
 
-    const { submitAttempt } = await import("@/lib/gamification.quest");
+    const { submitAttempt } = await import("@/features/quest");
     const result = await (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
       sessionId: SESSION_ID,
       exerciseId: EXERCISE_ID,
@@ -262,7 +264,7 @@ describe("gamification.quest — submitAttempt", () => {
     const { isRateLimited } = await import("@/shared/lib/rate-limit");
     vi.mocked(isRateLimited).mockResolvedValueOnce(true);
 
-    const { submitAttempt } = await import("@/lib/gamification.quest");
+    const { submitAttempt } = await import("@/features/quest");
 
     await expect(
       (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
@@ -276,7 +278,7 @@ describe("gamification.quest — submitAttempt", () => {
   it("throws on questions fetch error", async () => {
     mockFrom.mockImplementation(() => mockQuery(null, { message: "Questions DB error" }));
 
-    const { submitAttempt } = await import("@/lib/gamification.quest");
+    const { submitAttempt } = await import("@/features/quest");
 
     await expect(
       (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
@@ -293,7 +295,7 @@ describe("gamification.quest — submitAttempt", () => {
     );
     mockRpc.mockReturnValue({ data: null, error: { message: "RPC submit fail" } });
 
-    const { submitAttempt } = await import("@/lib/gamification.quest");
+    const { submitAttempt } = await import("@/features/quest");
 
     await expect(
       (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
@@ -314,7 +316,7 @@ describe("gamification.quest — input validation", () => {
   });
 
   it("rejects invalid exerciseId format for getExercise", async () => {
-    const { getExercise } = await import("@/lib/gamification.quest");
+    const { getExercise } = await import("@/features/quest");
 
     await expect(
       (getExercise as unknown as (d: unknown) => Promise<unknown>)({ exerciseId: "not-a-uuid" }),
@@ -322,7 +324,7 @@ describe("gamification.quest — input validation", () => {
   });
 
   it("rejects empty answers array for submitAttempt", async () => {
-    const { submitAttempt } = await import("@/lib/gamification.quest");
+    const { submitAttempt } = await import("@/features/quest");
 
     await expect(
       (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
@@ -334,7 +336,7 @@ describe("gamification.quest — input validation", () => {
   });
 
   it("rejects missing sessionId for submitAttempt", async () => {
-    const { submitAttempt } = await import("@/lib/gamification.quest");
+    const { submitAttempt } = await import("@/features/quest");
 
     await expect(
       (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({

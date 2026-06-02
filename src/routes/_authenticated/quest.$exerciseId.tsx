@@ -15,10 +15,10 @@ import {
   Timer,
 } from "lucide-react";
 import { toast } from "sonner";
-import { getExercise, startExerciseSession, submitAttempt } from "@/lib/gamification.quest";
-import { BOSS_TIME_PER_QUESTION_S, PASS_THRESHOLD_PCT } from "@/lib/gamification.constants";
-import { isRtlText, isMathExpression } from "@/lib/utils";
-import { shuffleOptions, type BaseOption, type DisplayOption } from "@/lib/question-utils";
+import { getExercise, startExerciseSession, submitAttempt } from "@/features/quest";
+import { BOSS_TIME_PER_QUESTION_S, PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
+import { isRtlText, isMathExpression } from "@/shared/lib/utils";
+import { shuffleOptions, type BaseOption, type DisplayOption } from "@/shared/lib/question-utils";
 import { LevelUpCelebration } from "@/components/ui/level-up-celebration";
 import { useT } from "@/lib/i18n";
 
@@ -312,28 +312,36 @@ function QuestPage() {
                 <div className="mt-1 font-display text-2xl font-bold text-neon-gold">
                   +{result.xpEarned}
                 </div>
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">{t.quest.xpLabel}</div>
+                <div className="text-xs uppercase tracking-wider text-muted-foreground">
+                  {t.quest.xpLabel}
+                </div>
               </div>
               <div className="rounded-xl bg-(--neon-cyan)/15 p-4">
                 <Sparkles className="mx-auto h-5 w-5 text-neon-cyan" />
                 <div className="mt-1 font-display text-2xl font-bold text-neon-cyan">
                   +{result.coinsEarned ?? 0}
                 </div>
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">{t.quest.coinsLabel}</div>
+                <div className="text-xs uppercase tracking-wider text-muted-foreground">
+                  {t.quest.coinsLabel}
+                </div>
               </div>
               <div className="rounded-xl bg-(--neon-violet)/15 p-4">
                 <Sparkles className="mx-auto h-5 w-5 text-neon-violet" />
                 <div className="mt-1 font-display text-2xl font-bold text-neon-violet">
                   {result.profile?.level ?? "?"}
                 </div>
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">{t.quest.levelLabel}</div>
+                <div className="text-xs uppercase tracking-wider text-muted-foreground">
+                  {t.quest.levelLabel}
+                </div>
               </div>
               <div className="rounded-xl bg-(--flame)/15 p-4">
                 <Flame className="mx-auto h-5 w-5 text-flame animate-flame" />
                 <div className="mt-1 font-display text-2xl font-bold text-flame">
                   {result.profile?.current_streak ?? 0}
                 </div>
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">{t.quest.streakLabel}</div>
+                <div className="text-xs uppercase tracking-wider text-muted-foreground">
+                  {t.quest.streakLabel}
+                </div>
               </div>
             </div>
             <div className="mt-6 text-xs uppercase tracking-widest text-neon-cyan">
@@ -551,9 +559,7 @@ function QuestPage() {
             {current.prompt}
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            {isBoss
-              ? t.quest.bossStrike
-              : t.quest.feedbackMsg}
+            {isBoss ? t.quest.bossStrike : t.quest.feedbackMsg}
           </p>
           <div className="mt-6 space-y-3">
             {options.map((opt) => {

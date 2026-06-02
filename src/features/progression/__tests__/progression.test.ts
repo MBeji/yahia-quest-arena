@@ -32,7 +32,7 @@ vi.mock("@tanstack/react-start", () => ({
   },
 }));
 
-vi.mock("@/integrations/supabase/auth-middleware", () => ({
+vi.mock("@/shared/integrations/supabase/auth-middleware", () => ({
   requireSupabaseAuth: "mock-middleware",
 }));
 
@@ -69,7 +69,7 @@ describe("gamification.progression — scheduleSpacedRepetition", () => {
   });
 
   it("skips scheduling when score is above pass threshold", async () => {
-    const { scheduleSpacedRepetition } = await import("@/lib/gamification.progression");
+    const { scheduleSpacedRepetition } = await import("@/features/progression");
     const result = await (scheduleSpacedRepetition as unknown as (d: unknown) => Promise<unknown>)({
       exerciseId: EXERCISE_ID,
       subjectId: SUBJECT_ID,
@@ -84,7 +84,7 @@ describe("gamification.progression — scheduleSpacedRepetition", () => {
   it("skips if already scheduled", async () => {
     mockFrom.mockImplementation(() => mockQuery([{ id: "existing" }]));
 
-    const { scheduleSpacedRepetition } = await import("@/lib/gamification.progression");
+    const { scheduleSpacedRepetition } = await import("@/features/progression");
     const result = await (scheduleSpacedRepetition as unknown as (d: unknown) => Promise<unknown>)({
       exerciseId: EXERCISE_ID,
       subjectId: SUBJECT_ID,
@@ -100,7 +100,7 @@ describe("gamification.progression — scheduleSpacedRepetition", () => {
   it("schedules 3 repetition intervals on failure", async () => {
     mockFrom.mockImplementation(() => mockQuery([]));
 
-    const { scheduleSpacedRepetition } = await import("@/lib/gamification.progression");
+    const { scheduleSpacedRepetition } = await import("@/features/progression");
     const result = await (scheduleSpacedRepetition as unknown as (d: unknown) => Promise<unknown>)({
       exerciseId: EXERCISE_ID,
       subjectId: SUBJECT_ID,
@@ -127,7 +127,7 @@ describe("gamification.progression — getPendingSpacedRepetition", () => {
     ];
     mockFrom.mockImplementation(() => mockQuery(pendingData));
 
-    const { getPendingSpacedRepetition } = await import("@/lib/gamification.progression");
+    const { getPendingSpacedRepetition } = await import("@/features/progression");
     const result = await (
       getPendingSpacedRepetition as unknown as (d?: unknown) => Promise<unknown>
     )();
@@ -138,7 +138,7 @@ describe("gamification.progression — getPendingSpacedRepetition", () => {
   it("throws on DB error", async () => {
     mockFrom.mockImplementation(() => mockQuery(null, { message: "DB error" }));
 
-    const { getPendingSpacedRepetition } = await import("@/lib/gamification.progression");
+    const { getPendingSpacedRepetition } = await import("@/features/progression");
 
     await expect(
       (getPendingSpacedRepetition as unknown as (d?: unknown) => Promise<unknown>)(),
@@ -159,7 +159,7 @@ describe("gamification.progression — getDailyObjectives", () => {
     ];
     mockFrom.mockImplementation(() => mockQuery(objectivesData));
 
-    const { getDailyObjectives } = await import("@/lib/gamification.progression");
+    const { getDailyObjectives } = await import("@/features/progression");
     const result = await (getDailyObjectives as unknown as (d?: unknown) => Promise<unknown>)();
 
     expect(result).toEqual(objectivesData);
@@ -178,7 +178,7 @@ describe("gamification.progression — getDailyObjectives", () => {
       return mockQuery(newObjectives);
     });
 
-    const { getDailyObjectives } = await import("@/lib/gamification.progression");
+    const { getDailyObjectives } = await import("@/features/progression");
     const result = await (getDailyObjectives as unknown as (d?: unknown) => Promise<unknown>)();
 
     expect(result).toEqual(newObjectives);
@@ -187,7 +187,7 @@ describe("gamification.progression — getDailyObjectives", () => {
   it("throws on fetch error", async () => {
     mockFrom.mockImplementation(() => mockQuery(null, { message: "Fetch error" }));
 
-    const { getDailyObjectives } = await import("@/lib/gamification.progression");
+    const { getDailyObjectives } = await import("@/features/progression");
 
     await expect(
       (getDailyObjectives as unknown as (d?: unknown) => Promise<unknown>)(),
@@ -212,7 +212,7 @@ describe("gamification.progression — updateDailyObjectiveProgress", () => {
     };
     mockFrom.mockImplementation(() => mockQuery(objective));
 
-    const { updateDailyObjectiveProgress } = await import("@/lib/gamification.progression");
+    const { updateDailyObjectiveProgress } = await import("@/features/progression");
     const result = await (
       updateDailyObjectiveProgress as unknown as (d: unknown) => Promise<unknown>
     )({
@@ -236,7 +236,7 @@ describe("gamification.progression — updateDailyObjectiveProgress", () => {
     };
     mockFrom.mockImplementation(() => mockQuery(objective));
 
-    const { updateDailyObjectiveProgress } = await import("@/lib/gamification.progression");
+    const { updateDailyObjectiveProgress } = await import("@/features/progression");
     const result = await (
       updateDailyObjectiveProgress as unknown as (d: unknown) => Promise<unknown>
     )({
@@ -252,7 +252,7 @@ describe("gamification.progression — updateDailyObjectiveProgress", () => {
   it("returns no progress when objective not found", async () => {
     mockFrom.mockImplementation(() => mockQuery(null));
 
-    const { updateDailyObjectiveProgress } = await import("@/lib/gamification.progression");
+    const { updateDailyObjectiveProgress } = await import("@/features/progression");
     const result = await (
       updateDailyObjectiveProgress as unknown as (d: unknown) => Promise<unknown>
     )({
@@ -266,7 +266,7 @@ describe("gamification.progression — updateDailyObjectiveProgress", () => {
   });
 
   it("throws invalid increment for 3_exercises objective", async () => {
-    const { updateDailyObjectiveProgress } = await import("@/lib/gamification.progression");
+    const { updateDailyObjectiveProgress } = await import("@/features/progression");
 
     await expect(
       (updateDailyObjectiveProgress as unknown as (d: unknown) => Promise<unknown>)({
@@ -280,7 +280,7 @@ describe("gamification.progression — updateDailyObjectiveProgress", () => {
     const { isRateLimited } = await import("@/shared/lib/rate-limit");
     vi.mocked(isRateLimited).mockResolvedValueOnce(true);
 
-    const { updateDailyObjectiveProgress } = await import("@/lib/gamification.progression");
+    const { updateDailyObjectiveProgress } = await import("@/features/progression");
 
     await expect(
       (updateDailyObjectiveProgress as unknown as (d: unknown) => Promise<unknown>)({
@@ -314,7 +314,7 @@ describe("gamification.progression — adaptDifficulty", () => {
       return mockQuery(newAdaptation); // insert returns new record
     });
 
-    const { adaptDifficulty } = await import("@/lib/gamification.progression");
+    const { adaptDifficulty } = await import("@/features/progression");
     const result = await (adaptDifficulty as unknown as (d: unknown) => Promise<unknown>)({
       subjectId: SUBJECT_ID,
       newScore: 70,
@@ -342,7 +342,7 @@ describe("gamification.progression — adaptDifficulty", () => {
       return mockQuery(null); // update
     });
 
-    const { adaptDifficulty } = await import("@/lib/gamification.progression");
+    const { adaptDifficulty } = await import("@/features/progression");
     const result = await (adaptDifficulty as unknown as (d: unknown) => Promise<unknown>)({
       subjectId: SUBJECT_ID,
       newScore: 90,
@@ -370,7 +370,7 @@ describe("gamification.progression — adaptDifficulty", () => {
       return mockQuery(null);
     });
 
-    const { adaptDifficulty } = await import("@/lib/gamification.progression");
+    const { adaptDifficulty } = await import("@/features/progression");
     const result = await (adaptDifficulty as unknown as (d: unknown) => Promise<unknown>)({
       subjectId: SUBJECT_ID,
       newScore: 20,
@@ -398,7 +398,7 @@ describe("gamification.progression — adaptDifficulty", () => {
       return mockQuery(null);
     });
 
-    const { adaptDifficulty } = await import("@/lib/gamification.progression");
+    const { adaptDifficulty } = await import("@/features/progression");
     const result = await (adaptDifficulty as unknown as (d: unknown) => Promise<unknown>)({
       subjectId: SUBJECT_ID,
       newScore: 95,
@@ -426,7 +426,7 @@ describe("gamification.progression — adaptDifficulty", () => {
       return mockQuery(null);
     });
 
-    const { adaptDifficulty } = await import("@/lib/gamification.progression");
+    const { adaptDifficulty } = await import("@/features/progression");
     const result = await (adaptDifficulty as unknown as (d: unknown) => Promise<unknown>)({
       subjectId: SUBJECT_ID,
       newScore: 10,
@@ -444,7 +444,7 @@ describe("gamification.progression — input validation", () => {
   });
 
   it("rejects invalid objectiveType", async () => {
-    const { updateDailyObjectiveProgress } = await import("@/lib/gamification.progression");
+    const { updateDailyObjectiveProgress } = await import("@/features/progression");
 
     await expect(
       (updateDailyObjectiveProgress as unknown as (d: unknown) => Promise<unknown>)({
@@ -455,7 +455,7 @@ describe("gamification.progression — input validation", () => {
   });
 
   it("rejects incrementValue > 5", async () => {
-    const { updateDailyObjectiveProgress } = await import("@/lib/gamification.progression");
+    const { updateDailyObjectiveProgress } = await import("@/features/progression");
 
     await expect(
       (updateDailyObjectiveProgress as unknown as (d: unknown) => Promise<unknown>)({
@@ -466,7 +466,7 @@ describe("gamification.progression — input validation", () => {
   });
 
   it("rejects non-uuid subjectId for adaptDifficulty", async () => {
-    const { adaptDifficulty } = await import("@/lib/gamification.progression");
+    const { adaptDifficulty } = await import("@/features/progression");
 
     await expect(
       (adaptDifficulty as unknown as (d: unknown) => Promise<unknown>)({
@@ -477,7 +477,7 @@ describe("gamification.progression — input validation", () => {
   });
 
   it("rejects score > 100 for adaptDifficulty", async () => {
-    const { adaptDifficulty } = await import("@/lib/gamification.progression");
+    const { adaptDifficulty } = await import("@/features/progression");
 
     await expect(
       (adaptDifficulty as unknown as (d: unknown) => Promise<unknown>)({
@@ -500,11 +500,17 @@ describe("gamification.progression — getWeeklyQuests", () => {
 
   it("returns existing weekly quests", async () => {
     const quests = [
-      { id: "wq1", quest_type: "maintain_streak_5", target_value: 5, current_value: 2, status: "active" },
+      {
+        id: "wq1",
+        quest_type: "maintain_streak_5",
+        target_value: 5,
+        current_value: 2,
+        status: "active",
+      },
     ];
     mockFrom.mockImplementation(() => mockQuery(quests));
 
-    const { getWeeklyQuests } = await import("@/lib/gamification.progression");
+    const { getWeeklyQuests } = await import("@/features/progression");
     const result = await (getWeeklyQuests as unknown as () => Promise<unknown>)();
     expect(result).toEqual(quests);
   });
@@ -520,7 +526,7 @@ describe("gamification.progression — getWeeklyQuests", () => {
       return mockQuery([{ id: "wq1", quest_type: "maintain_streak_5", status: "active" }]);
     });
 
-    const { getWeeklyQuests } = await import("@/lib/gamification.progression");
+    const { getWeeklyQuests } = await import("@/features/progression");
     const result = await (getWeeklyQuests as unknown as () => Promise<unknown>)();
     expect(Array.isArray(result)).toBe(true);
   });
@@ -528,10 +534,10 @@ describe("gamification.progression — getWeeklyQuests", () => {
   it("throws on fetch error", async () => {
     mockFrom.mockImplementation(() => mockQuery(null, { message: "DB error" }));
 
-    const { getWeeklyQuests } = await import("@/lib/gamification.progression");
-    await expect(
-      (getWeeklyQuests as unknown as () => Promise<unknown>)(),
-    ).rejects.toThrow("DB error");
+    const { getWeeklyQuests } = await import("@/features/progression");
+    await expect((getWeeklyQuests as unknown as () => Promise<unknown>)()).rejects.toThrow(
+      "DB error",
+    );
   });
 });
 
@@ -547,16 +553,24 @@ describe("gamification.progression — updateWeeklyQuestProgress", () => {
 
   it("increments and completes a weekly quest", async () => {
     mockFrom.mockImplementation(() => {
-      const chain = mockQuery({ id: "wq1", quest_type: "maintain_streak_5", target_value: 5, current_value: 4, status: "active" });
+      const chain = mockQuery({
+        id: "wq1",
+        quest_type: "maintain_streak_5",
+        target_value: 5,
+        current_value: 4,
+        status: "active",
+      });
       chain.update = vi.fn().mockReturnValue(mockQuery(null));
       return chain;
     });
 
-    const { updateWeeklyQuestProgress } = await import("@/lib/gamification.progression");
-    const result = await (updateWeeklyQuestProgress as unknown as (d: unknown) => Promise<unknown>)({
-      questType: "maintain_streak_5",
-      incrementValue: 1,
-    });
+    const { updateWeeklyQuestProgress } = await import("@/features/progression");
+    const result = await (updateWeeklyQuestProgress as unknown as (d: unknown) => Promise<unknown>)(
+      {
+        questType: "maintain_streak_5",
+        incrementValue: 1,
+      },
+    );
 
     const r = result as Record<string, unknown>;
     expect(r.completed).toBe(true);
@@ -566,16 +580,24 @@ describe("gamification.progression — updateWeeklyQuestProgress", () => {
 
   it("returns not completed when below target", async () => {
     mockFrom.mockImplementation(() => {
-      const chain = mockQuery({ id: "wq1", quest_type: "beat_2_bosses", target_value: 2, current_value: 0, status: "active" });
+      const chain = mockQuery({
+        id: "wq1",
+        quest_type: "beat_2_bosses",
+        target_value: 2,
+        current_value: 0,
+        status: "active",
+      });
       chain.update = vi.fn().mockReturnValue(mockQuery(null));
       return chain;
     });
 
-    const { updateWeeklyQuestProgress } = await import("@/lib/gamification.progression");
-    const result = await (updateWeeklyQuestProgress as unknown as (d: unknown) => Promise<unknown>)({
-      questType: "beat_2_bosses",
-      incrementValue: 1,
-    });
+    const { updateWeeklyQuestProgress } = await import("@/features/progression");
+    const result = await (updateWeeklyQuestProgress as unknown as (d: unknown) => Promise<unknown>)(
+      {
+        questType: "beat_2_bosses",
+        incrementValue: 1,
+      },
+    );
 
     const r = result as Record<string, unknown>;
     expect(r.completed).toBe(false);
@@ -590,11 +612,13 @@ describe("gamification.progression — updateWeeklyQuestProgress", () => {
       return chain;
     });
 
-    const { updateWeeklyQuestProgress } = await import("@/lib/gamification.progression");
-    const result = await (updateWeeklyQuestProgress as unknown as (d: unknown) => Promise<unknown>)({
-      questType: "maintain_streak_5",
-      incrementValue: 1,
-    });
+    const { updateWeeklyQuestProgress } = await import("@/features/progression");
+    const result = await (updateWeeklyQuestProgress as unknown as (d: unknown) => Promise<unknown>)(
+      {
+        questType: "maintain_streak_5",
+        incrementValue: 1,
+      },
+    );
 
     const r = result as Record<string, unknown>;
     expect(r.completed).toBe(false);
@@ -602,7 +626,7 @@ describe("gamification.progression — updateWeeklyQuestProgress", () => {
   });
 
   it("rejects invalid questType", async () => {
-    const { updateWeeklyQuestProgress } = await import("@/lib/gamification.progression");
+    const { updateWeeklyQuestProgress } = await import("@/features/progression");
     await expect(
       (updateWeeklyQuestProgress as unknown as (d: unknown) => Promise<unknown>)({
         questType: "invalid_type",
@@ -624,13 +648,19 @@ describe("gamification.progression — recoverStreak", () => {
 
   it("recovers streak for 15 coins", async () => {
     mockFrom.mockImplementation(() => {
-      const chain = mockQuery({ id: "user-123", yahia_coins: 50, current_streak: 0, longest_streak: 7, last_active_date: "2026-05-30" });
+      const chain = mockQuery({
+        id: "user-123",
+        yahia_coins: 50,
+        current_streak: 0,
+        longest_streak: 7,
+        last_active_date: "2026-05-30",
+      });
       chain.update = vi.fn().mockReturnValue(mockQuery(null));
       return chain;
     });
     mockRpc.mockResolvedValue({ data: null, error: null });
 
-    const { recoverStreak } = await import("@/lib/gamification.progression");
+    const { recoverStreak } = await import("@/features/progression");
     const result = await (recoverStreak as unknown as () => Promise<unknown>)();
 
     const r = result as Record<string, unknown>;
@@ -642,46 +672,70 @@ describe("gamification.progression — recoverStreak", () => {
 
   it("rejects when streak is already active", async () => {
     mockFrom.mockImplementation(() =>
-      mockQuery({ id: "user-123", yahia_coins: 50, current_streak: 3, longest_streak: 7, last_active_date: "2026-06-01" }),
+      mockQuery({
+        id: "user-123",
+        yahia_coins: 50,
+        current_streak: 3,
+        longest_streak: 7,
+        last_active_date: "2026-06-01",
+      }),
     );
 
-    const { recoverStreak } = await import("@/lib/gamification.progression");
-    await expect(
-      (recoverStreak as unknown as () => Promise<unknown>)(),
-    ).rejects.toThrow("streak est actif");
+    const { recoverStreak } = await import("@/features/progression");
+    await expect((recoverStreak as unknown as () => Promise<unknown>)()).rejects.toThrow(
+      "streak est actif",
+    );
   });
 
   it("rejects when no previous streak exists", async () => {
     mockFrom.mockImplementation(() =>
-      mockQuery({ id: "user-123", yahia_coins: 50, current_streak: 0, longest_streak: 0, last_active_date: null }),
+      mockQuery({
+        id: "user-123",
+        yahia_coins: 50,
+        current_streak: 0,
+        longest_streak: 0,
+        last_active_date: null,
+      }),
     );
 
-    const { recoverStreak } = await import("@/lib/gamification.progression");
-    await expect(
-      (recoverStreak as unknown as () => Promise<unknown>)(),
-    ).rejects.toThrow("pas encore eu de streak");
+    const { recoverStreak } = await import("@/features/progression");
+    await expect((recoverStreak as unknown as () => Promise<unknown>)()).rejects.toThrow(
+      "pas encore eu de streak",
+    );
   });
 
   it("rejects when insufficient coins", async () => {
     mockFrom.mockImplementation(() =>
-      mockQuery({ id: "user-123", yahia_coins: 5, current_streak: 0, longest_streak: 7, last_active_date: "2026-05-30" }),
+      mockQuery({
+        id: "user-123",
+        yahia_coins: 5,
+        current_streak: 0,
+        longest_streak: 7,
+        last_active_date: "2026-05-30",
+      }),
     );
 
-    const { recoverStreak } = await import("@/lib/gamification.progression");
-    await expect(
-      (recoverStreak as unknown as () => Promise<unknown>)(),
-    ).rejects.toThrow("15 XP Coins");
+    const { recoverStreak } = await import("@/features/progression");
+    await expect((recoverStreak as unknown as () => Promise<unknown>)()).rejects.toThrow(
+      "15 XP Coins",
+    );
   });
 
   it("throws on spend_coins RPC error", async () => {
     mockFrom.mockImplementation(() =>
-      mockQuery({ id: "user-123", yahia_coins: 50, current_streak: 0, longest_streak: 7, last_active_date: "2026-05-30" }),
+      mockQuery({
+        id: "user-123",
+        yahia_coins: 50,
+        current_streak: 0,
+        longest_streak: 7,
+        last_active_date: "2026-05-30",
+      }),
     );
     mockRpc.mockResolvedValue({ data: null, error: { message: "Insufficient funds" } });
 
-    const { recoverStreak } = await import("@/lib/gamification.progression");
-    await expect(
-      (recoverStreak as unknown as () => Promise<unknown>)(),
-    ).rejects.toThrow("Insufficient funds");
+    const { recoverStreak } = await import("@/features/progression");
+    await expect((recoverStreak as unknown as () => Promise<unknown>)()).rejects.toThrow(
+      "Insufficient funds",
+    );
   });
 });

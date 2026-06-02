@@ -6,7 +6,7 @@ import React from "react";
 // Mock supabase client
 const mockFrom = vi.fn();
 const mockSignOut = vi.fn();
-vi.mock("@/integrations/supabase/client", () => ({
+vi.mock("@/shared/integrations/supabase/client", () => ({
   supabase: {
     auth: {
       onAuthStateChange: vi.fn(() => ({
@@ -21,7 +21,7 @@ vi.mock("@/integrations/supabase/client", () => ({
 
 // Mock useAuth hook
 const mockUseAuth = vi.fn();
-vi.mock("@/hooks/use-auth", () => ({
+vi.mock("@/features/auth", () => ({
   useAuth: () => mockUseAuth(),
 }));
 
@@ -36,7 +36,7 @@ vi.mock("@tanstack/react-router", () => ({
 }));
 
 // Import after mocks
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from "@/features/auth";
 
 // We need to test the AuthenticatedLayout function directly
 // since the route wrapper makes it hard to test via Route component

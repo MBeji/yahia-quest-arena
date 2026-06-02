@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { Sparkles, Mail, Lock, User as UserIcon, Loader2, MailCheck } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/shared/integrations/supabase/client";
 import { useServerFn } from "@tanstack/react-start";
-import { linkStudentByCode } from "@/lib/gamification.parent";
+import { linkStudentByCode } from "@/features/parent-report";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({

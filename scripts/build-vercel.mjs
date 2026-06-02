@@ -35,10 +35,7 @@ cpSync(join(ROOT, "dist", "client"), STATIC_DIR, { recursive: true });
 cpSync(join(ROOT, "dist", "server"), FUNC_DIR, { recursive: true });
 
 // Step 4b — Ensure ESM resolution in the function directory
-writeFileSync(
-  join(FUNC_DIR, "package.json"),
-  JSON.stringify({ type: "module" }, null, 2)
-);
+writeFileSync(join(FUNC_DIR, "package.json"), JSON.stringify({ type: "module" }, null, 2));
 
 // Step 5 — Adapt Worker entry to Vercel Node.js Serverless Function format
 // Cloudflare Workers export { fetch(req, env, ctx) } returning a Response
@@ -99,7 +96,7 @@ export default async function handler(req, res) {
     res.end("Internal Server Error");
   }
 }
-`
+`,
 );
 
 // Step 6 — Write Serverless Function config (.vc-config.json)
@@ -113,8 +110,8 @@ writeFileSync(
       maxDuration: 30,
     },
     null,
-    2
-  )
+    2,
+  ),
 );
 
 // Step 6 — Write global routing config
@@ -137,8 +134,8 @@ writeFileSync(
       ],
     },
     null,
-    2
-  )
+    2,
+  ),
 );
 
 console.log("✅ Vercel Build Output API v3 ready at .vercel/output/");

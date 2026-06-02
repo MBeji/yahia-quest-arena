@@ -66,6 +66,7 @@ features/{name}/
 ```
 
 ### Rules:
+
 1. **Features NEVER import from other features** — use shared/ instead.
 2. **Routes are thin** — they import from features and compose UI; no business logic in routes.
 3. **Barrel exports define the public API** — only export what other modules need.
@@ -75,31 +76,31 @@ features/{name}/
 
 ## 4. Import path conventions
 
-| What you need | Import from |
-|---|---|
-| Feature server function | `@/features/{name}` |
-| Feature component | `@/features/{name}/components/{Component}` |
-| UI primitive (Button, Card…) | `@/shared/ui/{component}` |
-| Utility (cn, logger…) | `@/shared/lib/{module}` |
-| Gameplay constants | `@/shared/constants/gamification` |
-| Shared types | `@/shared/types/{module}` |
-| Supabase client/middleware | `@/shared/integrations/supabase/{module}` |
-| React hook | `@/hooks/{hook}` |
+| What you need                | Import from                                |
+| ---------------------------- | ------------------------------------------ |
+| Feature server function      | `@/features/{name}`                        |
+| Feature component            | `@/features/{name}/components/{Component}` |
+| UI primitive (Button, Card…) | `@/shared/ui/{component}`                  |
+| Utility (cn, logger…)        | `@/shared/lib/{module}`                    |
+| Gameplay constants           | `@/shared/constants/gamification`          |
+| Shared types                 | `@/shared/types/{module}`                  |
+| Supabase client/middleware   | `@/shared/integrations/supabase/{module}`  |
+| React hook                   | `@/hooks/{hook}`                           |
 
 ---
 
 ## 5. Tech stack details
 
-| Layer | Technology | Notes |
-|---|---|---|
-| Framework | TanStack Start 1.x | File-based routing, SSR, server functions |
-| UI | React 19 + Radix/shadcn | Tailwind CSS 4, motion (Framer Motion) |
-| State | TanStack Query 5 | Server state; no client global store |
-| Auth | Supabase Auth | JWT passed via cookie → server middleware |
-| DB | Supabase Postgres | Row-level security, SQL RPCs for complex ops |
-| Deploy | Cloudflare Workers | Via @cloudflare/vite-plugin |
-| Tests | Vitest 4 + Testing Library | Unit + integration; mocked Supabase |
-| Lint | ESLint 9 + Prettier | Zero-warning policy |
+| Layer     | Technology                 | Notes                                        |
+| --------- | -------------------------- | -------------------------------------------- |
+| Framework | TanStack Start 1.x         | File-based routing, SSR, server functions    |
+| UI        | React 19 + Radix/shadcn    | Tailwind CSS 4, motion (Framer Motion)       |
+| State     | TanStack Query 5           | Server state; no client global store         |
+| Auth      | Supabase Auth              | JWT passed via cookie → server middleware    |
+| DB        | Supabase Postgres          | Row-level security, SQL RPCs for complex ops |
+| Deploy    | Cloudflare Workers         | Via @cloudflare/vite-plugin                  |
+| Tests     | Vitest 4 + Testing Library | Unit + integration; mocked Supabase          |
+| Lint      | ESLint 9 + Prettier        | Zero-warning policy                          |
 
 ---
 
@@ -138,22 +139,22 @@ Run with coverage: `npm run test:coverage`
 
 ## 8. Key data model (Supabase tables)
 
-| Table | Purpose |
-|---|---|
-| profiles | Student profile (XP, level, streak, coins, hero_class) |
-| subjects | Math, Science, etc. |
-| chapters | Chapters within a subject |
-| exercises | Exercises within a chapter |
-| questions | Multiple-choice questions within an exercise |
-| attempts | Student exercise attempt results |
-| student_badges | Awarded badges |
-| shop_items | Purchasable items |
-| inventory_items | Student-owned items |
-| daily_objectives | Daily goals (auto-created) |
-| weekly_quests | Weekly challenges |
-| spaced_repetition_schedule | SM-2 style review schedule |
-| dungeon_runs | Boss mode run state |
-| family_links | Parent-student linking |
+| Table                      | Purpose                                                |
+| -------------------------- | ------------------------------------------------------ |
+| profiles                   | Student profile (XP, level, streak, coins, hero_class) |
+| subjects                   | Math, Science, etc.                                    |
+| chapters                   | Chapters within a subject                              |
+| exercises                  | Exercises within a chapter                             |
+| questions                  | Multiple-choice questions within an exercise           |
+| attempts                   | Student exercise attempt results                       |
+| student_badges             | Awarded badges                                         |
+| shop_items                 | Purchasable items                                      |
+| inventory_items            | Student-owned items                                    |
+| daily_objectives           | Daily goals (auto-created)                             |
+| weekly_quests              | Weekly challenges                                      |
+| spaced_repetition_schedule | SM-2 style review schedule                             |
+| dungeon_runs               | Boss mode run state                                    |
+| family_links               | Parent-student linking                                 |
 
 ---
 
@@ -192,6 +193,11 @@ npm run ci:verify    # Full CI pipeline (lint + test + build + audit)
 
 ## 12. Backward compatibility
 
-During the migration to feature-based structure, old import paths (`@/lib/gamification.*`)
-are preserved as thin re-export shims. These will be removed in a future cleanup pass.
-New code should always import from `@/features/{name}` or `@/shared/`.
+The feature-based migration is complete. The old `@/lib/gamification.*` re-export shims and
+the duplicated `@/lib/*`, `@/integrations/supabase/*`, `@/hooks/use-auth`, and
+`@/components/dashboard/*` copies have been removed. Always import from `@/features/{name}`
+or `@/shared/`.
+
+Still living outside `shared/` (real code with no `shared`/`feature` home, not shims):
+`@/lib/i18n`, `@/hooks/use-mobile`, `@/components/ui/*` (shadcn primitives — the `@/shared/ui`
+location in §4 is aspirational and not yet adopted), and `@/integrations/lovable`.

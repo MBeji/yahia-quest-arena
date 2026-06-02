@@ -31,6 +31,10 @@ vi.mock("@/shared/lib/logger", () => ({
 
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 
+// The mock above makes `.server(handler)` return the handler, so at runtime the
+// middleware is directly callable. Cast to a callable for type-checking the tests.
+const callMiddleware = requireSupabaseAuth as unknown as (ctx: never) => Promise<unknown>;
+
 describe("requireSupabaseAuth (shared)", () => {
   const originalUrl = process.env.SUPABASE_URL;
   const originalKey = process.env.SUPABASE_PUBLISHABLE_KEY;
@@ -69,7 +73,7 @@ describe("requireSupabaseAuth (shared)", () => {
     delete process.env.SUPABASE_URL;
     delete process.env.SUPABASE_PUBLISHABLE_KEY;
 
-    await expect(requireSupabaseAuth({ next: vi.fn() } as never)).rejects.toThrow(
+    await expect(callMiddleware({ next: vi.fn() } as never)).rejects.toThrow(
       "Missing Supabase environment variable(s)",
     );
 
@@ -82,7 +86,7 @@ describe("requireSupabaseAuth (shared)", () => {
   it("throws when authorization header is missing", async () => {
     mockGetRequest.mockReturnValue({ headers: new Headers() });
 
-    await expect(requireSupabaseAuth({ next: vi.fn() } as never)).rejects.toThrow(
+    await expect(callMiddleware({ next: vi.fn() } as never)).rejects.toThrow(
       "Unauthorized: No authorization header provided",
     );
   });
@@ -92,7 +96,7 @@ describe("requireSupabaseAuth (shared)", () => {
       headers: new Headers({ authorization: "Basic abc" }),
     });
 
-    await expect(requireSupabaseAuth({ next: vi.fn() } as never)).rejects.toThrow(
+    await expect(callMiddleware({ next: vi.fn() } as never)).rejects.toThrow(
       "Unauthorized: Only Bearer tokens are supported",
     );
   });
@@ -103,7 +107,7 @@ describe("requireSupabaseAuth (shared)", () => {
     });
     mockGetClaims.mockResolvedValue({ data: null, error: { message: "invalid" } });
 
-    await expect(requireSupabaseAuth({ next: vi.fn() } as never)).rejects.toThrow(
+    await expect(callMiddleware({ next: vi.fn() } as never)).rejects.toThrow(
       "Unauthorized: Invalid token",
     );
   });
@@ -122,7 +126,7 @@ describe("requireSupabaseAuth (shared)", () => {
 
     const next = vi.fn().mockResolvedValue("ok");
 
-    const result = await requireSupabaseAuth({ next } as never);
+    const result = await callMiddleware({ next } as never);
 
     expect(result).toBe("ok");
     expect(next).toHaveBeenCalledWith(

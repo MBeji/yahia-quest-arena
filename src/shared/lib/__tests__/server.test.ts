@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const { mockRenderErrorPage, mockConsumeLastCapturedError, mockLoggerError, mockServerFetch } =
   vi.hoisted(() => ({
     mockRenderErrorPage: vi.fn(() => "<html>fallback</html>"),
-    mockConsumeLastCapturedError: vi.fn(() => undefined),
+    mockConsumeLastCapturedError: vi.fn((): unknown => undefined),
     mockLoggerError: vi.fn(),
     mockServerFetch: vi.fn(),
   }));
@@ -14,15 +14,15 @@ vi.mock("@tanstack/react-start/server-entry", () => ({
   },
 }));
 
-vi.mock("@/lib/error-page", () => ({
+vi.mock("@/shared/lib/error-page", () => ({
   renderErrorPage: mockRenderErrorPage,
 }));
 
-vi.mock("@/lib/error-capture", () => ({
+vi.mock("@/shared/lib/error-capture", () => ({
   consumeLastCapturedError: mockConsumeLastCapturedError,
 }));
 
-vi.mock("@/lib/logger", () => ({
+vi.mock("@/shared/lib/logger", () => ({
   logger: {
     error: mockLoggerError,
   },

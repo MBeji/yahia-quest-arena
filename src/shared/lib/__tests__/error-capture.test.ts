@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { consumeLastCapturedError } from "@/lib/error-capture";
+import { consumeLastCapturedError } from "@/shared/lib/error-capture";
 
 describe("consumeLastCapturedError", () => {
   beforeEach(() => {

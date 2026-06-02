@@ -1,6 +1,6 @@
 import { createStart, createMiddleware, createCsrfMiddleware } from "@tanstack/react-start";
-import { attachSupabaseAuth } from "@/integrations/supabase/auth-attacher";
-import { renderErrorPage } from "./lib/error-page";
+import { attachSupabaseAuth } from "@/shared/integrations/supabase/auth-attacher";
+import { renderErrorPage } from "@/shared/lib/error-page";
 
 const csrfMiddleware = createCsrfMiddleware({
   filter: (ctx) => ctx.handlerType === "serverFn",

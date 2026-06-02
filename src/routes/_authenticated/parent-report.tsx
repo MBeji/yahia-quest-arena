@@ -19,7 +19,7 @@ import {
   Star,
   Link as LinkIcon,
 } from "lucide-react";
-import { getLinkedStudents, getStudentReport, linkStudentByCode } from "@/lib/gamification.parent";
+import { getLinkedStudents, getStudentReport, linkStudentByCode } from "@/features/parent-report";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 

@@ -1,13 +1,11 @@
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { Locale, TranslationKeys } from "./types";
 import { en } from "./en";
 import { fr } from "./fr";
 import { ar } from "./ar";
+import { DEFAULT_LOCALE, I18nContext, STORAGE_KEY } from "./context";
 
 const translations: Record<Locale, TranslationKeys> = { en, fr, ar };
-
-const STORAGE_KEY = "xp-scholars-locale";
-const DEFAULT_LOCALE: Locale = "en";
 
 function getInitialLocale(): Locale {
   if (typeof window === "undefined") return DEFAULT_LOCALE;
@@ -17,20 +15,6 @@ function getInitialLocale(): Locale {
   }
   return DEFAULT_LOCALE;
 }
-
-type I18nContextValue = {
-  locale: Locale;
-  t: TranslationKeys;
-  setLocale: (locale: Locale) => void;
-  dir: "ltr" | "rtl";
-};
-
-const I18nContext = createContext<I18nContextValue>({
-  locale: DEFAULT_LOCALE,
-  t: en,
-  setLocale: () => {},
-  dir: "ltr",
-});
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>(DEFAULT_LOCALE);
@@ -57,18 +41,6 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   const dir = locale === "ar" ? "rtl" : "ltr";
 
   return (
-    <I18nContext.Provider value={{ locale, t, setLocale, dir }}>
-      {children}
-    </I18nContext.Provider>
+    <I18nContext.Provider value={{ locale, t, setLocale, dir }}>{children}</I18nContext.Provider>
   );
 }
-
-export function useI18n() {
-  return useContext(I18nContext);
-}
-
-export function useT() {
-  return useContext(I18nContext).t;
-}
-
-export { type Locale, type TranslationKeys };

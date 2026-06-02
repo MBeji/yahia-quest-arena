@@ -23,6 +23,10 @@ dist-ssr
 # Environment (secrets)
 .env
 .env.*
+.sbtoken
+
+# Claude Code — share settings.json, hooks & skills; keep personal overrides local
+.claude/settings.local.json
 
 # Supabase local
 supabase/.temp/

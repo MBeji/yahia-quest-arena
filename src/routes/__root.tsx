@@ -19,9 +19,7 @@ function NotFoundComponent() {
       <div className="max-w-md text-center">
         <h1 className="font-display text-8xl text-gradient-primary">404</h1>
         <h2 className="mt-4 text-xl font-semibold">{t.errors.notFoundTitle}</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          {t.errors.notFoundDesc}
-        </p>
+        <p className="mt-2 text-sm text-muted-foreground">{t.errors.notFoundDesc}</p>
         <div className="mt-6">
           <Link
             to="/"

@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
 
 // Mock modules
-vi.mock("@/integrations/supabase/client", () => ({
+vi.mock("@/shared/integrations/supabase/client", () => ({
   supabase: {
     auth: {
       onAuthStateChange: vi.fn(() => ({
@@ -25,7 +25,7 @@ vi.mock("@tanstack/react-start", () => ({
   useServerFn: (fn: unknown) => fn,
 }));
 
-vi.mock("@/lib/gamification.dungeon", () => ({
+vi.mock("@/features/dungeon", () => ({
   getDungeonQuestions: vi.fn(),
   startDungeonRun: vi.fn(),
   submitDungeonAnswer: vi.fn(),
@@ -34,7 +34,7 @@ vi.mock("@/lib/gamification.dungeon", () => ({
   DUNGEON_COINS_PER_5_FLOORS: 10,
 }));
 
-vi.mock("@/lib/utils", () => ({
+vi.mock("@/shared/lib/utils", () => ({
   isRtlText: () => false,
   isMathExpression: () => false,
 }));

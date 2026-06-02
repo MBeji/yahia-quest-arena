@@ -22,27 +22,28 @@ import {
   Check,
 } from "lucide-react";
 import { toast } from "sonner";
-import { getDashboard, getSprint2Dashboard } from "@/lib/gamification.dashboard";
-import { purchaseShopItem, equipInventorySkin } from "@/lib/gamification.shop";
-import { recoverStreak } from "@/lib/gamification.progression";
-import { formatStudentAllianceCode } from "@/lib/family-link";
 import {
+  getDashboard,
+  getSprint2Dashboard,
   formatObjectiveType,
   formatQuestType,
   resolveDailyAction,
   resolveWeeklyAction,
-} from "@/lib/dashboard-helpers";
+} from "@/features/dashboard";
+import { purchaseShopItem, equipInventorySkin } from "@/features/shop";
+import { recoverStreak } from "@/features/progression";
+import { formatStudentAllianceCode } from "@/features/parent-report";
 import { useT } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 
 const DashboardRadarInventory = lazy(() =>
-  import("@/components/dashboard/dashboard-radar-inventory").then((mod) => ({
+  import("@/features/dashboard/components/dashboard-radar-inventory").then((mod) => ({
     default: mod.DashboardRadarInventory,
   })),
 );
 
 const DashboardBadgesShop = lazy(() =>
-  import("@/components/dashboard/dashboard-badges-shop").then((mod) => ({
+  import("@/features/dashboard/components/dashboard-badges-shop").then((mod) => ({
     default: mod.DashboardBadgesShop,
   })),
 );
@@ -60,7 +61,15 @@ const ICONS: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> 
   Globe,
 } as never;
 
-function DailyXpWidget({ xpToday, dailyGoal, streak }: { xpToday: number; dailyGoal: number; streak: number }) {
+function DailyXpWidget({
+  xpToday,
+  dailyGoal,
+  streak,
+}: {
+  xpToday: number;
+  dailyGoal: number;
+  streak: number;
+}) {
   const t = useT();
   const pct = Math.min(100, Math.round((xpToday / dailyGoal) * 100));
   const circumference = 2 * Math.PI * 40;
@@ -71,10 +80,22 @@ function DailyXpWidget({ xpToday, dailyGoal, streak }: { xpToday: number; dailyG
     <div className="flex items-center gap-5 rounded-2xl border border-[color:var(--neon-violet)]/30 bg-card/40 p-5 backdrop-blur-md">
       <div className="relative h-24 w-24 shrink-0">
         <svg className="h-full w-full -rotate-90" viewBox="0 0 96 96">
-          <circle cx="48" cy="48" r="40" fill="none" stroke="currentColor" strokeWidth="6" className="text-secondary" />
           <circle
-            cx="48" cy="48" r="40" fill="none"
-            strokeWidth="6" strokeLinecap="round"
+            cx="48"
+            cy="48"
+            r="40"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="6"
+            className="text-secondary"
+          />
+          <circle
+            cx="48"
+            cy="48"
+            r="40"
+            fill="none"
+            strokeWidth="6"
+            strokeLinecap="round"
             stroke={isComplete ? "var(--neon-gold)" : "var(--neon-violet)"}
             strokeDasharray={circumference}
             strokeDashoffset={dashOffset}
@@ -179,7 +200,9 @@ function Dashboard() {
   const streakRecoveryMutation = useMutation({
     mutationFn: () => recoverStreakFn(),
     onSuccess: (res) => {
-      toast.success(`🔥 Streak recovered! You now have ${res.newStreak} ${res.newStreak > 1 ? t.dashboard.days : t.dashboard.day}.`);
+      toast.success(
+        `🔥 Streak recovered! You now have ${res.newStreak} ${res.newStreak > 1 ? t.dashboard.days : t.dashboard.day}.`,
+      );
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
     onError: (error) => toast.error(error instanceof Error ? error.message : "Recovery failed"),
@@ -191,9 +214,7 @@ function Dashboard() {
         <div className="rounded-2xl border border-destructive/30 bg-destructive/5 p-8">
           <Skull className="mx-auto h-10 w-10 text-destructive" />
           <h2 className="mt-4 font-display text-xl font-bold">{t.dashboard.failedLoad}</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            {t.dashboard.failedLoadDesc}
-          </p>
+          <p className="mt-2 text-sm text-muted-foreground">{t.dashboard.failedLoadDesc}</p>
           <button
             onClick={() => queryClient.invalidateQueries({ queryKey: ["dashboard"] })}
             className="mt-4 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
@@ -341,9 +362,7 @@ function Dashboard() {
                     {copiedCode ? t.dashboard.allianceCopied : t.dashboard.allianceCopy}
                   </button>
                 </div>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  {t.dashboard.allianceHint}
-                </p>
+                <p className="mt-1 text-xs text-muted-foreground">{t.dashboard.allianceHint}</p>
               </div>
             )}
           </div>
@@ -488,9 +507,7 @@ function Dashboard() {
           </div>
           <div className="space-y-3">
             {(sprint2?.dailyObjectives ?? []).length === 0 && (
-              <p className="text-xs text-muted-foreground">
-                {t.dashboard.dailyEmpty}
-              </p>
+              <p className="text-xs text-muted-foreground">{t.dashboard.dailyEmpty}</p>
             )}
             {(sprint2?.dailyObjectives ?? []).map((obj) => {
               const pct =
@@ -587,7 +604,8 @@ function Dashboard() {
         <section>
           <div className="mb-4 flex items-center justify-between">
             <h2 className="flex items-center gap-2 font-display text-xl font-bold">
-              <Swords className="h-5 w-5 text-[color:var(--neon-violet)]" /> {t.dashboard.pathsTitle}
+              <Swords className="h-5 w-5 text-[color:var(--neon-violet)]" />{" "}
+              {t.dashboard.pathsTitle}
             </h2>
             <Link
               to="/leaderboard"
@@ -633,7 +651,9 @@ function Dashboard() {
                     </div>
                     <div className="relative mt-4 flex items-center justify-between text-xs">
                       <span className="text-muted-foreground">
-                        {st ? `${st.count} quest${st.count > 1 ? "s" : ""}` : t.dashboard.notAttempted}
+                        {st
+                          ? `${st.count} quest${st.count > 1 ? "s" : ""}`
+                          : t.dashboard.notAttempted}
                       </span>
                       <span
                         className="font-bold"

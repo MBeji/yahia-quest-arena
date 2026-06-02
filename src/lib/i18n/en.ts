@@ -61,8 +61,7 @@ export const en: TranslationKeys = {
     featureXpDesc:
       "Every correct answer earns you experience. Rise from Civilian Candidate to S-Rank Legend.",
     featureStreakTitle: "Daily Streak",
-    featureStreakDesc:
-      "Study every day to keep your flame alive. 7 days in a row = warrior bonus.",
+    featureStreakDesc: "Study every day to keep your flame alive. 7 days in a row = warrior bonus.",
     featureRadarTitle: "Success Radar",
     featureRadarDesc:
       "Strength, Spirit, Observation, Agility, Wisdom: visualize your true strengths.",
@@ -70,8 +69,7 @@ export const en: TranslationKeys = {
     featureArenaDesc:
       "Timed MCQs. The faster and more accurate you are, the more points you score.",
     featureBossTitle: "Chapter Boss",
-    featureBossDesc:
-      "Complete a chapter by defeating its Boss. HP bar, damage with every answer.",
+    featureBossDesc: "Complete a chapter by defeating its Boss. HP bar, damage with every answer.",
     featureCurriculumTitle: "Official Curriculum",
     featureCurriculumDesc:
       "Math, French, Arabic, Science, English. Aligned with the 9th grade exam.",

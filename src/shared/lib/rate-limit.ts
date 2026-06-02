@@ -1,8 +1,11 @@
+// Minimal structural shape the rate limiter needs from a Supabase client.
+// Narrowed to the exact RPC it calls so the real typed client (and test mocks)
+// are both assignable.
 type RateLimitRpcClient = {
   rpc: (
-    fn: string,
-    args?: Record<string, unknown>,
-  ) => Promise<{ data: unknown; error: { message: string } | null }>;
+    fn: "check_rate_limit",
+    args: { p_key: string; p_max_requests: number; p_window_ms: number },
+  ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
 };
 
 // Local fallback used when DB rate-limit RPC is unavailable.

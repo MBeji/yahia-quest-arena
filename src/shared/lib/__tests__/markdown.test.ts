@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { renderMarkdown } from "@/lib/markdown";
+import { renderMarkdown } from "@/shared/lib/markdown";
 
 describe("renderMarkdown", () => {
   describe("HTML escaping", () => {

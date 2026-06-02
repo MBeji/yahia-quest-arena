@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { isRateLimitedLocal } from "@/lib/rate-limit";
+import { isRateLimitedLocal } from "@/shared/lib/rate-limit";
 
 describe("isRateLimitedLocal", () => {
   beforeEach(() => {

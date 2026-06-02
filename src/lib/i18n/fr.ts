@@ -64,16 +64,14 @@ export const fr: TranslationKeys = {
     featureStreakDesc:
       "Révise chaque jour pour garder ta flamme. 7 jours d'affilée = bonus guerrier.",
     featureRadarTitle: "Radar de Réussite",
-    featureRadarDesc:
-      "Force, Esprit, Observation, Agilité, Sagesse : visualise tes vraies forces.",
+    featureRadarDesc: "Force, Esprit, Observation, Agilité, Sagesse : visualise tes vraies forces.",
     featureArenaTitle: "Quest Arena",
     featureArenaDesc: "QCM chronométrés. Plus tu es rapide et précis, plus tu scores.",
     featureBossTitle: "Boss de Chapitre",
     featureBossDesc:
       "Termine un chapitre en battant son Boss. Barre de HP, dégâts à chaque réponse.",
     featureCurriculumTitle: "Programme Officiel",
-    featureCurriculumDesc:
-      "Maths, Français, Arabe, Sciences, Anglais. Aligné au concours 9ème.",
+    featureCurriculumDesc: "Maths, Français, Arabe, Sciences, Anglais. Aligné au concours 9ème.",
     subjectMath: "Mathématiques",
     subjectFrench: "Français",
     subjectArabic: "العربية",

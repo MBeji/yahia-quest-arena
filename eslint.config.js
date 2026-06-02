@@ -12,7 +12,7 @@ export default tseslint.config(
       ".output",
       ".vinxi",
       "src/routeTree.gen.ts",
-      "src/integrations/supabase/types.ts",
+      "src/shared/integrations/supabase/types.ts",
     ],
   },
   {

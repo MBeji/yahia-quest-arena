@@ -6,7 +6,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ChevronRight, ChevronLeft, Play, Award, Brain, Flame } from "lucide-react";
-import { getDashboard } from "@/lib/gamification.dashboard";
+import { getDashboard } from "@/features/dashboard";
 
 type DifficultyLevel = "easy" | "hard" | "challenge";
 
@@ -144,7 +144,7 @@ function OnboardingStep2({
       icon: <Award className="h-8 w-8" />,
       color: "var(--neon-violet)",
     },
-  ];
+  ] as const;
 
   return (
     <motion.div
@@ -186,7 +186,11 @@ function OnboardingStep2({
         <Button onClick={onPrev} variant="outline" className="gap-2">
           <ChevronLeft className="h-4 w-4" /> Retour
         </Button>
-        <Button onClick={() => onNext(difficulty)} disabled={!difficulty} className="ml-auto gap-2">
+        <Button
+          onClick={() => difficulty && onNext(difficulty)}
+          disabled={!difficulty}
+          className="ml-auto gap-2"
+        >
           Suivant <ChevronRight className="h-4 w-4" />
         </Button>
       </div>
@@ -270,7 +274,7 @@ function OnboardingComponent() {
     if (step === 1) {
       setStep(2);
     } else if (step === 2) {
-      setDifficulty(val);
+      setDifficulty(val ?? null);
       setStep(3);
     }
   };
