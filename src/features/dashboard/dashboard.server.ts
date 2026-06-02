@@ -6,6 +6,10 @@ import {
   PASS_THRESHOLD_PCT,
 } from "@/shared/constants/gamification";
 import type { BadgeRow, DashboardShopItem, InventoryRow } from "@/shared/types/gamification";
+import { getCurrentWeekStartUtc, getTodayUtc } from "@/shared/lib/dates";
+import { failWithClientError } from "@/shared/lib/safe-error";
+
+const DASHBOARD_ERROR_FR = "Impossible de charger le tableau de bord. Veuillez réessayer.";
 
 function resolveFallbackDisplayName(claims: Record<string, unknown>): string {
   const userMetadata = claims.user_metadata;
@@ -19,15 +23,6 @@ function resolveFallbackDisplayName(claims: Record<string, unknown>): string {
   return "Aspirant";
 }
 
-function getCurrentWeekStartUtc(): string {
-  const now = new Date();
-  const day = now.getUTCDay();
-  const mondayDelta = day === 0 ? -6 : 1 - day;
-  now.setUTCDate(now.getUTCDate() + mondayDelta);
-  now.setUTCHours(0, 0, 0, 0);
-  return now.toISOString().split("T")[0];
-}
-
 // ---------- Get dashboard ----------
 export const getDashboard = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -36,41 +31,31 @@ export const getDashboard = createServerFn({ method: "GET" })
     const claims = (context.claims ?? {}) as Record<string, unknown>;
     const fallbackDisplayName = resolveFallbackDisplayName(claims);
 
-    const [profileRes, subjectsRes, attemptsRes, badgesRes, inventoryRes, shopRes] =
-      await Promise.all([
-        supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
-        supabase.from("subjects").select("*").order("display_order"),
-        supabase
-          .from("attempts")
-          .select("subject_id,score_pct,xp_earned,completed_at,exercise_id")
-          .eq("user_id", userId)
-          .order("completed_at", { ascending: false })
-          .limit(DASHBOARD_RECENT_LIMIT),
-        supabase
-          .from("student_badges")
-          .select("awarded_at, awarded_reason, badge:badges(code,name,rarity,icon_name)")
-          .eq("student_user_id", userId)
-          .order("awarded_at", { ascending: false }),
-        supabase
-          .from("inventory_items")
-          .select(
-            "quantity, is_equipped, acquired_at, item:shop_items(id,code,name,item_type,description,price_coins)",
-          )
-          .eq("student_user_id", userId)
-          .order("acquired_at", { ascending: false }),
-        supabase
-          .from("shop_items")
-          .select("id,code,name,item_type,description,price_coins,is_active")
-          .eq("is_active", true)
-          .order("price_coins", { ascending: true }),
-      ]);
+    // Per-subject aggregates (#18) must be computed over ALL of the user's attempts,
+    // not just the recent window — otherwise active users get truncated counts/averages.
+    // We fetch a lightweight projection (3 columns) of every attempt for the user.
+    // TODO(review #18): a `subject_stats` SQL view or RPC (GROUP BY subject_id) would be
+    // the ideal aggregate source; implement once a DB migration is in scope.
+    const [profileRes, subjectsRes, recentRes, statsRes] = await Promise.all([
+      supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
+      supabase.from("subjects").select("*").order("display_order"),
+      supabase
+        .from("attempts")
+        .select("subject_id,score_pct,xp_earned,completed_at,exercise_id")
+        .eq("user_id", userId)
+        .order("completed_at", { ascending: false })
+        .limit(DASHBOARD_RECENT_LIMIT),
+      supabase.from("attempts").select("subject_id,score_pct,xp_earned").eq("user_id", userId),
+    ]);
 
-    if (profileRes.error) throw new Error(profileRes.error.message);
-    if (subjectsRes.error) throw new Error(subjectsRes.error.message);
-    if (attemptsRes.error) throw new Error(attemptsRes.error.message);
-    if (badgesRes.error) throw new Error(badgesRes.error.message);
-    if (inventoryRes.error) throw new Error(inventoryRes.error.message);
-    if (shopRes.error) throw new Error(shopRes.error.message);
+    if (profileRes.error)
+      failWithClientError("getDashboard.profile", profileRes.error, DASHBOARD_ERROR_FR);
+    if (subjectsRes.error)
+      failWithClientError("getDashboard.subjects", subjectsRes.error, DASHBOARD_ERROR_FR);
+    if (recentRes.error)
+      failWithClientError("getDashboard.recent", recentRes.error, DASHBOARD_ERROR_FR);
+    if (statsRes.error)
+      failWithClientError("getDashboard.stats", statsRes.error, DASHBOARD_ERROR_FR);
 
     let profile = profileRes.data;
 
@@ -80,7 +65,7 @@ export const getDashboard = createServerFn({ method: "GET" })
         .insert({ id: userId, display_name: fallbackDisplayName });
 
       if (profileInsertError && profileInsertError.code !== "23505") {
-        throw new Error(profileInsertError.message);
+        failWithClientError("getDashboard.profileInsert", profileInsertError, DASHBOARD_ERROR_FR);
       }
 
       const { data: profileData, error: profileReloadError } = await supabase
@@ -89,18 +74,77 @@ export const getDashboard = createServerFn({ method: "GET" })
         .eq("id", userId)
         .maybeSingle();
 
-      if (profileReloadError) throw new Error(profileReloadError.message);
+      if (profileReloadError)
+        failWithClientError("getDashboard.profileReload", profileReloadError, DASHBOARD_ERROR_FR);
       profile = profileData;
     }
 
-    // build per-subject avg score
+    // Build per-subject count/avg/xp over the FULL attempt set (#18).
     const bySubject: Record<string, { count: number; avg: number; xp: number }> = {};
-    for (const a of attemptsRes.data ?? []) {
+    for (const a of statsRes.data ?? []) {
       const s = (bySubject[a.subject_id] ??= { count: 0, avg: 0, xp: 0 });
       s.avg = (s.avg * s.count + Number(a.score_pct)) / (s.count + 1);
       s.count += 1;
       s.xp += a.xp_earned;
     }
+
+    // Find next incomplete exercise (score < pass threshold)
+    let nextExerciseId: string | null = null;
+    if (recentRes.data && recentRes.data.length > 0) {
+      const lastAttempt = recentRes.data[0];
+      if (lastAttempt.score_pct < PASS_THRESHOLD_PCT) {
+        nextExerciseId = lastAttempt.exercise_id;
+      }
+    }
+
+    return {
+      profile,
+      subjects: subjectsRes.data ?? [],
+      stats: bySubject,
+      recent: recentRes.data ?? [],
+      nextExerciseId,
+    };
+  });
+
+// ---------- Get dashboard secondary sections (badges + inventory + shop) ----------
+// Split out of getDashboard (#15): these heavy joins back the lazy/deferred
+// radar/inventory and badges/shop sections, so they load via their own query
+// once the primary dashboard has rendered.
+export const getDashboardSecondary = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+
+    const [badgesRes, inventoryRes, shopRes] = await Promise.all([
+      supabase
+        .from("student_badges")
+        .select("awarded_at, awarded_reason, badge:badges(code,name,rarity,icon_name)")
+        .eq("student_user_id", userId)
+        .order("awarded_at", { ascending: false }),
+      supabase
+        .from("inventory_items")
+        .select(
+          "quantity, is_equipped, acquired_at, item:shop_items(id,code,name,item_type,description,price_coins)",
+        )
+        .eq("student_user_id", userId)
+        .order("acquired_at", { ascending: false }),
+      supabase
+        .from("shop_items")
+        .select("id,code,name,item_type,description,price_coins,is_active")
+        .eq("is_active", true)
+        .order("price_coins", { ascending: true }),
+    ]);
+
+    if (badgesRes.error)
+      failWithClientError("getDashboardSecondary.badges", badgesRes.error, DASHBOARD_ERROR_FR);
+    if (inventoryRes.error)
+      failWithClientError(
+        "getDashboardSecondary.inventory",
+        inventoryRes.error,
+        DASHBOARD_ERROR_FR,
+      );
+    if (shopRes.error)
+      failWithClientError("getDashboardSecondary.shop", shopRes.error, DASHBOARD_ERROR_FR);
 
     const badges = (badgesRes.data ?? []).flatMap((row: BadgeRow) => {
       if (!row.badge) return [];
@@ -150,25 +194,7 @@ export const getDashboard = createServerFn({ method: "GET" })
       };
     });
 
-    // Find next incomplete exercise (score < pass threshold)
-    let nextExerciseId: string | null = null;
-    if (attemptsRes.data && attemptsRes.data.length > 0) {
-      const lastAttempt = attemptsRes.data[0];
-      if (lastAttempt.score_pct < PASS_THRESHOLD_PCT) {
-        nextExerciseId = lastAttempt.exercise_id;
-      }
-    }
-
-    return {
-      profile,
-      subjects: subjectsRes.data ?? [],
-      stats: bySubject,
-      recent: attemptsRes.data ?? [],
-      badges,
-      inventory,
-      shopItems,
-      nextExerciseId,
-    };
+    return { badges, inventory, shopItems };
   });
 
 // ---------- Leaderboard ----------
@@ -191,8 +217,9 @@ export const getLeaderboard = createServerFn({ method: "GET" })
         .maybeSingle(),
     ]);
 
-    if (topPlayersRes.error) throw new Error(topPlayersRes.error.message);
-    if (meRes.error) throw new Error(meRes.error.message);
+    if (topPlayersRes.error)
+      failWithClientError("getLeaderboard.topPlayers", topPlayersRes.error, DASHBOARD_ERROR_FR);
+    if (meRes.error) failWithClientError("getLeaderboard.me", meRes.error, DASHBOARD_ERROR_FR);
 
     const topPlayers = topPlayersRes.data ?? [];
 
@@ -217,7 +244,7 @@ export const getLeaderboard = createServerFn({ method: "GET" })
         .eq("role", "student")
         .gt("xp", meRes.data.xp);
 
-      if (rankErr) throw new Error(rankErr.message);
+      if (rankErr) failWithClientError("getLeaderboard.rank", rankErr, DASHBOARD_ERROR_FR);
 
       myRank = {
         rank: (count ?? 0) + 1,
@@ -241,6 +268,7 @@ export const getSprint2Dashboard = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
     const currentWeekStart = getCurrentWeekStartUtc();
+    const today = getTodayUtc();
 
     const [dailyObjs, weeklyQs, spacedRep] = await Promise.all([
       supabase
@@ -249,7 +277,9 @@ export const getSprint2Dashboard = createServerFn({ method: "GET" })
           "id,objective_type,target_value,current_value,xp_reward,coin_reward,status,completed_at",
         )
         .eq("user_id", userId)
-        .gte("objective_date", new Date(Date.now() - 86400000).toISOString().split("T")[0]),
+        // #2: only today's objectives (UTC). A 24h-ago lower bound returned
+        // yesterday + today, inflating daily XP and producing duplicate rows.
+        .eq("objective_date", today),
       supabase
         .from("weekly_quests")
         .select(
@@ -266,9 +296,16 @@ export const getSprint2Dashboard = createServerFn({ method: "GET" })
         .limit(3),
     ]);
 
-    if (dailyObjs.error) throw new Error(dailyObjs.error.message);
-    if (weeklyQs.error) throw new Error(weeklyQs.error.message);
-    if (spacedRep.error) throw new Error(spacedRep.error.message);
+    if (dailyObjs.error)
+      failWithClientError(
+        "getSprint2Dashboard.dailyObjectives",
+        dailyObjs.error,
+        DASHBOARD_ERROR_FR,
+      );
+    if (weeklyQs.error)
+      failWithClientError("getSprint2Dashboard.weeklyQuests", weeklyQs.error, DASHBOARD_ERROR_FR);
+    if (spacedRep.error)
+      failWithClientError("getSprint2Dashboard.spacedRep", spacedRep.error, DASHBOARD_ERROR_FR);
 
     return {
       dailyObjectives: dailyObjs.data ?? [],

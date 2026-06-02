@@ -59,8 +59,10 @@ functions are `REVOKE`d from anon/authenticated. Gameplay thresholds are central
 
 ## Conventions
 
-- Feature-based: `src/features/{auth,dashboard,quest,dungeon,shop,progression,leaderboard,parent-report,onboarding}/`.
+- Feature-based: `src/features/{auth,dashboard,quest,dungeon,shop,progression,parent-report}/`.
   Each has `index.ts` (public barrel), `{name}.server.ts`, optional `components/`, `__tests__/`.
+  (Leaderboard has no feature folder — `getLeaderboard` lives in `dashboard.server.ts`.
+  Onboarding has no feature folder — it is an inline route at `routes/_authenticated/onboarding.tsx`.)
 - **Features never import other features** — share via `src/shared/`. Routes stay thin (no business logic).
 - Import aliases: `@/features/{name}`, `@/shared/lib|constants|types|integrations/...`. UI primitives live at `@/components/ui/*`, i18n at `@/lib/i18n`, the mobile hook at `@/hooks/use-mobile`.
 - Input validation with **zod** on every server fn (`.inputValidator`). Sanitize HTML with DOMPurify (`src/shared/lib/markdown.ts`).
@@ -107,9 +109,10 @@ When unsure about scope or a destructive action, ask before proceeding.
   `src/components/dashboard/*` copies have been removed. Canonical homes:
   server fns + helpers → `@/features/{name}`; utils/logger/supabase/types → `@/shared/*`.
 - **Not yet relocated to `shared/` (still real code, not shims):** i18n lives at `@/lib/i18n`,
-  the mobile hook at `@/hooks/use-mobile`, shadcn UI primitives at `@/components/ui/*`,
-  and the Lovable integration at `@/integrations/lovable`. ARCHITECTURE.md aspirationally
-  lists `@/shared/ui` — that move hasn't happened; use `@/components/ui` in practice.
+  the mobile hook at `@/hooks/use-mobile`, and shadcn UI primitives at `@/components/ui/*`.
+  There is no `src/integrations/` directory; the Supabase client/middleware live at
+  `@/shared/integrations/supabase/*`. ARCHITECTURE.md aspirationally lists `@/shared/ui` —
+  that move hasn't happened; use `@/components/ui` in practice.
 - `src/routeTree.gen.ts` is auto-generated — never edit by hand.
 - `src/shared/integrations/supabase/auth-middleware.ts` is marked "automatically generated";
   edit with care.

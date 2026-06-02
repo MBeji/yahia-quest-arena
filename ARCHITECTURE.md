@@ -26,9 +26,11 @@ src/
 │   ├── dungeon/        ← Boss/dungeon mode: timed floor-by-floor challenge
 │   ├── shop/           ← In-game shop: purchase & equip skins
 │   ├── progression/    ← Spaced repetition, daily objectives, weekly quests, difficulty
-│   ├── leaderboard/    ← XP leaderboard
-│   ├── parent-report/  ← Family link + parent progress report
-│   └── onboarding/     ← First-time user onboarding flow
+│   └── parent-report/  ← Family link + parent progress report
+│
+│   (Leaderboard has no feature folder — `getLeaderboard` lives in dashboard.server.ts.
+│    Onboarding has no feature folder — it is an inline route at
+│    routes/_authenticated/onboarding.tsx.)
 │
 ├── shared/             ← Cross-cutting code shared by multiple features
 │   ├── ui/             ← Reusable UI components (shadcn/Radix primitives)
@@ -199,5 +201,7 @@ the duplicated `@/lib/*`, `@/integrations/supabase/*`, `@/hooks/use-auth`, and
 or `@/shared/`.
 
 Still living outside `shared/` (real code with no `shared`/`feature` home, not shims):
-`@/lib/i18n`, `@/hooks/use-mobile`, `@/components/ui/*` (shadcn primitives — the `@/shared/ui`
-location in §4 is aspirational and not yet adopted), and `@/integrations/lovable`.
+`@/lib/i18n`, `@/hooks/use-mobile`, and `@/components/ui/*` (shadcn primitives — the
+`@/shared/ui` location in §4 is aspirational and not yet adopted). There is no
+`src/integrations/` directory; the Supabase client/middleware live at
+`@/shared/integrations/supabase/*`.

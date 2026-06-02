@@ -44,6 +44,10 @@ vi.mock("@/shared/lib/rate-limit", () => ({
   isRateLimited: vi.fn().mockResolvedValue(false),
 }));
 
+vi.mock("@/shared/lib/logger", () => ({
+  logger: { error: vi.fn(), warn: vi.fn(), info: vi.fn(), debug: vi.fn() },
+}));
+
 // ---- Helpers ----
 function mockQuery(data: unknown, error: unknown = null) {
   const chain: Record<string, unknown> = {};
@@ -108,7 +112,7 @@ describe("gamification.quest — getSubject", () => {
 
     await expect(
       (getSubject as unknown as (d: unknown) => Promise<unknown>)({ subjectId: "bad-id" }),
-    ).rejects.toThrow("Not found");
+    ).rejects.toThrow("Impossible de charger la matière.");
   });
 
   it("returns empty bestByExercise on bestScores RPC error", async () => {
@@ -167,7 +171,7 @@ describe("gamification.quest — getExercise", () => {
       (getExercise as unknown as (d: unknown) => Promise<unknown>)({
         exerciseId: "11111111-1111-1111-1111-111111111111",
       }),
-    ).rejects.toThrow("DB error");
+    ).rejects.toThrow("Impossible de charger l'exercice.");
   });
 });
 
@@ -200,7 +204,7 @@ describe("gamification.quest — startExerciseSession", () => {
       (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
         exerciseId: "11111111-1111-1111-1111-111111111111",
       }),
-    ).rejects.toThrow("Insert failed");
+    ).rejects.toThrow("Impossible de démarrer la session.");
   });
 });
 
@@ -286,7 +290,7 @@ describe("gamification.quest — submitAttempt", () => {
         exerciseId: EXERCISE_ID,
         answers: [{ questionId: Q1_ID, choice: "4" }],
       }),
-    ).rejects.toThrow("Questions DB error");
+    ).rejects.toThrow("Impossible de charger les questions.");
   });
 
   it("throws on submit RPC error", async () => {
@@ -303,7 +307,7 @@ describe("gamification.quest — submitAttempt", () => {
         exerciseId: EXERCISE_ID,
         answers: [{ questionId: Q1_ID, choice: "a" }],
       }),
-    ).rejects.toThrow("RPC submit fail");
+    ).rejects.toThrow("Impossible d'enregistrer votre tentative.");
   });
 });
 

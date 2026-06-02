@@ -19,15 +19,26 @@ function TestConsumer() {
   );
 }
 
+/** jsdom persists document.cookie across tests; clear it so cookie-based locale
+ *  fallback in one test doesn't leak into the next. */
+function clearCookies() {
+  for (const part of document.cookie.split(";")) {
+    const name = part.split("=")[0]?.trim();
+    if (name) document.cookie = `${name}=; path=/; max-age=0`;
+  }
+}
+
 describe("i18n system", () => {
   beforeEach(() => {
     localStorage.clear();
+    clearCookies();
     document.documentElement.dir = "ltr";
     document.documentElement.lang = "en";
   });
 
   afterEach(() => {
     localStorage.clear();
+    clearCookies();
     document.documentElement.dir = "ltr";
     document.documentElement.lang = "en";
   });

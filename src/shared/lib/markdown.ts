@@ -43,7 +43,12 @@ export function renderMarkdown(md: string): string {
   html = html.replace(/((?:<tr>.*<\/tr>\n?)+)/g, '<table class="lesson-table">$1</table>');
   html = html.replace(/<!--table-sep-->\n?/g, "");
 
-  // Wrap consecutive <li> in <ul>
+  // Wrap consecutive ordered <li> (class includes "lesson-oli") in <ol>
+  html = html.replace(
+    /((?:<li class="lesson-li lesson-oli">.*<\/li>\n?)+)/g,
+    '<ol class="lesson-ol">$1</ol>',
+  );
+  // Wrap consecutive unordered <li> (exact "lesson-li") in <ul>
   html = html.replace(/((?:<li class="lesson-li">.*<\/li>\n?)+)/g, '<ul class="lesson-ul">$1</ul>');
 
   // Paragraphs: lines not starting with HTML tags

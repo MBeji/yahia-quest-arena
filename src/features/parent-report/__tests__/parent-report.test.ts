@@ -40,12 +40,12 @@ vi.mock("@/shared/integrations/supabase/auth-middleware", () => ({
   requireSupabaseAuth: "mock-middleware",
 }));
 
-vi.mock("@/shared/integrations/supabase/auth-middleware", () => ({
-  requireSupabaseAuth: "mock-middleware",
-}));
-
 vi.mock("@/shared/lib/rate-limit", () => ({
   isRateLimited: vi.fn().mockResolvedValue(false),
+}));
+
+vi.mock("@/shared/lib/logger", () => ({
+  logger: { error: vi.fn(), warn: vi.fn(), info: vi.fn(), debug: vi.fn() },
 }));
 
 // ---- Query chain helper ----
@@ -206,7 +206,7 @@ describe("parent-report — getLinkedStudents", () => {
         page: 1,
         pageSize: 100,
       }),
-    ).rejects.toThrow("DB down");
+    ).rejects.toThrow("Impossible de charger votre profil.");
   });
 });
 
@@ -275,7 +275,52 @@ describe("parent-report — getStudentReport", () => {
       (getStudentReport as unknown as (d: unknown) => Promise<unknown>)({
         studentId: "11111111-1111-1111-1111-111111111111",
       }),
-    ).rejects.toThrow("Student not found");
+    ).rejects.toThrow("Impossible de charger le rapport de l'élève.");
+  });
+
+  it("coerces numbers, defaults arrays, and falls back the verdict", async () => {
+    // Loosely-typed RPC payload: numeric strings, an unknown verdict, and
+    // missing array fields. The parser must normalise rather than crash.
+    const looselyTypedPayload = {
+      student: {
+        displayName: "Yahia",
+        heroClass: null,
+        level: "5",
+        xp: "500",
+        currentStreak: "7",
+        longestStreak: "14",
+        lastActiveDate: null,
+        createdAt: "2026-01-01",
+      },
+      summary: {
+        totalTimeMinutes: "120",
+        totalExercises: "30",
+        avgScore: "85",
+        daysActiveThisWeek: "5",
+        seriousnessScore: "90",
+        verdict: "totally_unknown",
+        scoreTrend: "5",
+      },
+      // subjectStats and dailyActivity intentionally omitted
+    };
+    mockRpc.mockResolvedValue({ data: looselyTypedPayload, error: null });
+
+    const { getStudentReport } = await import("@/features/parent-report/parent-report.server");
+    const result = (await (getStudentReport as unknown as (d: unknown) => Promise<unknown>)({
+      studentId: "11111111-1111-1111-1111-111111111111",
+    })) as {
+      student: { level: number; xp: number };
+      summary: { totalTimeMinutes: number; verdict: string };
+      subjectStats: unknown[];
+      dailyActivity: unknown[];
+    };
+
+    expect(result.student.level).toBe(5);
+    expect(result.student.xp).toBe(500);
+    expect(result.summary.totalTimeMinutes).toBe(120);
+    expect(result.summary.verdict).toBe("average");
+    expect(result.subjectStats).toEqual([]);
+    expect(result.dailyActivity).toEqual([]);
   });
 
   it("throws on invalid payload (null)", async () => {
@@ -343,7 +388,7 @@ describe("parent-report — linkStudentByCode", () => {
         studentCode: "AABB-CCDD-1122-3344-5566-7788-9900-1122",
         relationLabel: "parent",
       }),
-    ).rejects.toThrow("Parent account required");
+    ).rejects.toThrow("Impossible d'associer cet élève. Vérifiez le code et réessayez.");
   });
 
   it("surfaces the RPC error for an invalid alliance code", async () => {
@@ -358,7 +403,7 @@ describe("parent-report — linkStudentByCode", () => {
         studentCode: "AABB-CCDD-1122-3344-5566-7788-9900-1122",
         relationLabel: "parent",
       }),
-    ).rejects.toThrow("Invalid student alliance code");
+    ).rejects.toThrow("Impossible d'associer cet élève. Vérifiez le code et réessayez.");
   });
 
   it("rejects short student codes", async () => {

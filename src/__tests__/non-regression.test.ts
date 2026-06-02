@@ -67,6 +67,10 @@ vi.mock("@/shared/lib/rate-limit", () => ({
   isRateLimited: vi.fn().mockResolvedValue(false),
 }));
 
+vi.mock("@/shared/lib/logger", () => ({
+  logger: { error: vi.fn(), warn: vi.fn(), info: vi.fn(), debug: vi.fn() },
+}));
+
 // ---- Chainable query mock helper ----
 function mockQuery(data: unknown, error: unknown = null) {
   const chain: Record<string, unknown> = {};
@@ -195,7 +199,7 @@ describe("NON-REGRESSION: Quest Server Functions", () => {
           (getSubject as unknown as (d: unknown) => Promise<unknown>)({ subjectId: "s1" }),
           1000,
         ),
-      ).rejects.toThrow("relation does not exist");
+      ).rejects.toThrow("Impossible de charger la matière.");
     });
   });
 
@@ -236,7 +240,7 @@ describe("NON-REGRESSION: Quest Server Functions", () => {
           }),
           1000,
         ),
-      ).rejects.toThrow("Row not found");
+      ).rejects.toThrow("Impossible de charger l'exercice.");
     });
   });
 
@@ -302,7 +306,7 @@ describe("NON-REGRESSION: Quest Server Functions", () => {
           }),
           1000,
         ),
-      ).rejects.toThrow("submit_exercise_attempt failed");
+      ).rejects.toThrow("Impossible d'enregistrer votre tentative.");
     });
   });
 });

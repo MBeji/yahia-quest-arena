@@ -33,7 +33,7 @@ function LeaderboardPage() {
         to="/dashboard"
         className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
       >
-        <ArrowLeft className="h-4 w-4" /> Back to hall
+        <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> Back to hall
       </Link>
 
       <div className="mb-8 text-center">

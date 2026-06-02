@@ -2,4 +2,5 @@
 // Public API — import from "@/features/auth"
 
 export { useAuth } from "./use-auth";
-export { getGuestSignInErrorMessage, GUEST_ACCESS_COPY } from "./guest-access";
+export { getGuestSignInErrorMessage, signInGuestUser, GUEST_ACCESS_COPY } from "./guest-access";
+export { bootstrapProfile } from "./auth.server";

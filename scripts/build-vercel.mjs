@@ -132,6 +132,14 @@ writeFileSync(
             "Permissions-Policy": "camera=(), microphone=(), geolocation=(), browsing-topics=()",
             "Content-Security-Policy": [
               "default-src 'self'",
+              // TODO(review #6): replace with nonce-based CSP. TanStack Start emits
+              // inline hydration scripts (serialized router + query state), so a
+              // per-request nonce must be generated in the SSR handler AND echoed in
+              // both the <script nonce> tags and this CSP header. Vercel's Build
+              // Output config.json headers are STATIC (not per-request), so the nonce
+              // cannot live here — it would have to be injected from src/server.ts on
+              // each response. Until that is wired without breaking hydration, keep
+              // 'unsafe-inline' so the app stays functional.
               "script-src 'self' 'unsafe-inline'",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: https:",

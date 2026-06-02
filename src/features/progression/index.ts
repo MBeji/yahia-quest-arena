@@ -1,13 +1,4 @@
-// Feature: Progression (spaced repetition, daily/weekly objectives, difficulty)
+// Feature: Progression (streak recovery)
 // Public API — import from "@/features/progression"
 
-export {
-  scheduleSpacedRepetition,
-  getPendingSpacedRepetition,
-  getDailyObjectives,
-  updateDailyObjectiveProgress,
-  getWeeklyQuests,
-  updateWeeklyQuestProgress,
-  adaptDifficulty,
-  recoverStreak,
-} from "./progression.server";
+export { recoverStreak } from "./progression.server";

@@ -6,6 +6,8 @@ import { toast } from "sonner";
 import { supabase } from "@/shared/integrations/supabase/client";
 import { useServerFn } from "@tanstack/react-start";
 import { linkStudentByCode } from "@/features/parent-report";
+import { bootstrapProfile } from "@/features/auth";
+import { Label } from "@/components/ui/label";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -33,7 +35,12 @@ function AuthPage() {
   const [busy, setBusy] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [sentTo, setSentTo] = useState("");
+  // Inline, screen-reader-announced form error (see #23). `passwordError` is the
+  // specific min-length validation surfaced on the password field.
+  const [formError, setFormError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const linkByCode = useServerFn(linkStudentByCode);
+  const runBootstrapProfile = useServerFn(bootstrapProfile);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -56,39 +63,45 @@ function AuthPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setFormError("");
     if (password.length < 8) {
-      toast.error("Le mot de passe doit contenir au moins 8 caractères.");
+      const msg = "Le mot de passe doit contenir au moins 8 caractères.";
+      setPasswordError(msg);
+      setFormError(msg);
+      // TODO(review #32): route toast/inline auth strings through useT() once an
+      // `auth` i18n namespace with these keys exists (no keys today; do not edit i18n files).
+      toast.error(msg);
       return;
     }
+    setPasswordError("");
     setBusy(true);
     try {
       if (isSignup) {
+        const displayName = name || email.split("@")[0];
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
             emailRedirectTo: `${window.location.origin}/dashboard`,
-            data: { display_name: name || email.split("@")[0] },
+            data: { display_name: displayName },
           },
         });
         if (error) throw error;
 
-        if (data.user) {
-          const { error: profileErr } = await supabase.from("profiles").upsert(
-            {
-              id: data.user.id,
-              display_name: name || email.split("@")[0],
-              role,
-            },
-            { onConflict: "id" },
-          );
-          if (profileErr) throw profileErr;
+        // Profile bootstrap (display name + role) is extracted to the
+        // `bootstrapProfile` server fn (review #19). It is authenticated, so it can
+        // only run once a session exists (signup auto-login). When email
+        // confirmation is required there is no session yet — the `handle_new_user`
+        // trigger + signUp metadata already seed the profile, so we skip it.
+        if (data.user && data.session) {
+          await runBootstrapProfile({ data: { displayName, role } });
 
           if (role === "parent" && allianceCode.trim().length > 0) {
             const linkRes = await linkByCode({
               data: { studentCode: allianceCode.trim(), relationLabel: "parent" },
             });
             if (linkRes.linked) {
+              // TODO(review #32): use useT() once an `auth` i18n key exists.
               toast.success(`Linked with ${linkRes.student.displayName ?? "student"}.`);
             }
           }
@@ -100,22 +113,27 @@ function AuthPage() {
           setEmailSent(true);
           return;
         }
+        // TODO(review #32): use useT() once an `auth` i18n key exists.
         toast.success("Hero created! Welcome to the academy.");
         navigate({ to: "/dashboard" });
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
+        // TODO(review #32): use useT() once an `auth` i18n key exists.
         toast.success("Welcome back, warrior.");
         navigate({ to: "/dashboard" });
       }
     } catch (err) {
-      toast.error(friendlyAuthError(err));
+      const message = friendlyAuthError(err);
+      setFormError(message);
+      toast.error(message);
     } finally {
       setBusy(false);
     }
   }
 
   async function handleGoogle() {
+    setFormError("");
     setBusy(true);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -129,11 +147,14 @@ function AuthPage() {
 
     if (error) {
       const message = error.message.toLowerCase();
-      if (message.includes("provider") || message.includes("oauth")) {
-        toast.error("Google provider n'est pas configuré dans Supabase Auth.");
-      } else {
-        toast.error(`Google sign-in failed: ${error.message}`);
-      }
+      // TODO(review #32): route these strings through useT() once an `auth` i18n
+      // namespace with matching keys exists (none today; do not edit i18n files).
+      const friendly =
+        message.includes("provider") || message.includes("oauth")
+          ? "Google provider n'est pas configuré dans Supabase Auth."
+          : `Google sign-in failed: ${error.message}`;
+      setFormError(friendly);
+      toast.error(friendly);
       setBusy(false);
       return;
     }
@@ -268,8 +289,12 @@ function AuthPage() {
 
             {isSignup && (
               <div className="relative">
+                <Label htmlFor="auth-name" className="sr-only">
+                  Hero name
+                </Label>
                 <UserIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <input
+                  id="auth-name"
                   type="text"
                   required
                   value={name}
@@ -282,21 +307,30 @@ function AuthPage() {
 
             {isSignup && role === "parent" && (
               <div className="relative">
+                <Label htmlFor="auth-alliance-code" className="sr-only">
+                  Alliance Code eleve (optionnel)
+                </Label>
                 <input
+                  id="auth-alliance-code"
                   type="text"
                   value={allianceCode}
                   onChange={(e) => setAllianceCode(e.target.value)}
                   placeholder="Alliance Code eleve (optionnel)"
+                  aria-describedby="auth-alliance-code-hint"
                   className="w-full rounded-lg border border-input bg-background/50 py-2.5 px-3 text-sm focus:border-[color:var(--neon-cyan)] focus:outline-none"
                 />
-                <p className="mt-1 text-xs text-muted-foreground">
+                <p id="auth-alliance-code-hint" className="mt-1 text-xs text-muted-foreground">
                   Entre le code de ton enfant pour lier les comptes maintenant.
                 </p>
               </div>
             )}
             <div className="relative">
+              <Label htmlFor="auth-email" className="sr-only">
+                Email
+              </Label>
               <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <input
+                id="auth-email"
                 type="email"
                 required
                 value={email}
@@ -306,16 +340,43 @@ function AuthPage() {
               />
             </div>
             <div className="relative">
+              <Label htmlFor="auth-password" className="sr-only">
+                Password (min 8 characters)
+              </Label>
               <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <input
+                id="auth-password"
                 type="password"
                 required
                 minLength={8}
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (passwordError) setPasswordError("");
+                }}
                 placeholder="Password (min 8 characters)"
+                aria-invalid={passwordError ? true : undefined}
+                aria-describedby={passwordError ? "auth-password-error" : undefined}
                 className="w-full rounded-lg border border-input bg-background/50 py-2.5 pl-10 pr-3 text-sm focus:border-[color:var(--neon-violet)] focus:outline-none"
               />
+              {passwordError && (
+                <p
+                  id="auth-password-error"
+                  className="mt-1 text-xs text-[color:var(--neon-magenta)]"
+                >
+                  {passwordError}
+                </p>
+              )}
+            </div>
+
+            {/* Always-mounted live region so screen readers announce errors
+                reliably when `formError` changes (see #23). */}
+            <div role="alert" aria-live="polite">
+              {formError && (
+                <p className="rounded-lg border border-[color:var(--neon-magenta)]/40 bg-[color:var(--neon-magenta)]/10 px-3 py-2 text-xs text-[color:var(--neon-magenta)]">
+                  {formError}
+                </p>
+              )}
             </div>
             <button
               type="submit"
