@@ -9,43 +9,91 @@
     {
       "prompt": "Transforme au discours indirect : « Le général cria : ‹ Avancez sans tarder ! › »",
       "options": [
-        { "id": "a", "text": "Le général cria à ses soldats d'avancer sans tarder." },
-        { "id": "b", "text": "Le général cria que ses soldats avançaient sans tarder." },
-        { "id": "c", "text": "Le général cria qu'ils avanceraient sans tarder." },
-        { "id": "d", "text": "Le général cria que ses soldats avancèrent sans tarder." }
+        {
+          "id": "a",
+          "text": "Le général cria que ses soldats avançaient sans tarder."
+        },
+        {
+          "id": "b",
+          "text": "Le général cria à ses soldats d'avancer sans tarder."
+        },
+        {
+          "id": "c",
+          "text": "Le général cria qu'ils avanceraient sans tarder."
+        },
+        {
+          "id": "d",
+          "text": "Le général cria que ses soldats avancèrent sans tarder."
+        }
       ],
-      "correctOption": "a",
+      "correctOption": "b",
       "explanation": "L'impératif du discours direct devient un infinitif introduit par « de » au discours indirect : « cria de + infinitif »."
     },
     {
       "prompt": "Complète : « Dès qu'il _____ son discours, les guerriers s'élancèrent. » (action antérieure immédiate)",
       "options": [
-        { "id": "a", "text": "eut terminé" },
-        { "id": "b", "text": "avait terminé" },
-        { "id": "c", "text": "termina" },
-        { "id": "d", "text": "terminait" }
+        {
+          "id": "a",
+          "text": "avait terminé"
+        },
+        {
+          "id": "b",
+          "text": "termina"
+        },
+        {
+          "id": "c",
+          "text": "terminait"
+        },
+        {
+          "id": "d",
+          "text": "eut terminé"
+        }
       ],
-      "correctOption": "a",
+      "correctOption": "d",
       "explanation": "Après « dès que » suivi d'un verbe au passé simple, l'action antérieure immédiate s'exprime au passé antérieur (auxiliaire au passé simple + participe passé) : « eut terminé »."
     },
     {
       "prompt": "Quelle phrase respecte la concordance des temps dans le récit au passé ?",
       "options": [
-        { "id": "a", "text": "Le village était calme : les habitants avaient fui la veille." },
-        { "id": "b", "text": "Le village est calme : les habitants avaient fui la veille." },
-        { "id": "c", "text": "Le village était calme : les habitants fuiront la veille." },
-        { "id": "d", "text": "Le village était calme : les habitants fuyaient la veille avant." }
+        {
+          "id": "a",
+          "text": "Le village est calme : les habitants avaient fui la veille."
+        },
+        {
+          "id": "b",
+          "text": "Le village était calme : les habitants avaient fui la veille."
+        },
+        {
+          "id": "c",
+          "text": "Le village était calme : les habitants fuiront la veille."
+        },
+        {
+          "id": "d",
+          "text": "Le village était calme : les habitants fuyaient la veille avant."
+        }
       ],
-      "correctOption": "a",
+      "correctOption": "b",
       "explanation": "L'imparfait « était » décrit l'état de fond ; le plus-que-parfait « avaient fui » exprime correctement l'antériorité par rapport à l'état présent du village."
     },
     {
       "prompt": "Transforme au discours indirect (verbe introducteur au passé) : « Il murmura : ‹ Je reviendrai demain. › »",
       "options": [
-        { "id": "a", "text": "Il murmura qu'il reviendrait le lendemain." },
-        { "id": "b", "text": "Il murmura qu'il reviendra demain." },
-        { "id": "c", "text": "Il murmura qu'il était revenu le lendemain." },
-        { "id": "d", "text": "Il murmura qu'il revenait demain." }
+        {
+          "id": "a",
+          "text": "Il murmura qu'il reviendrait le lendemain."
+        },
+        {
+          "id": "b",
+          "text": "Il murmura qu'il reviendra demain."
+        },
+        {
+          "id": "c",
+          "text": "Il murmura qu'il était revenu le lendemain."
+        },
+        {
+          "id": "d",
+          "text": "Il murmura qu'il revenait demain."
+        }
       ],
       "correctOption": "a",
       "explanation": "Le futur simple du discours direct devient conditionnel présent (« reviendrait ») et « demain » devient « le lendemain » au discours indirect avec verbe introducteur au passé."
@@ -53,10 +101,22 @@
     {
       "prompt": "Dans « Il voulait que le héros _____ la quête avant la nuit. », quel temps convient au registre soutenu ?",
       "options": [
-        { "id": "a", "text": "accomplît" },
-        { "id": "b", "text": "accomplisse" },
-        { "id": "c", "text": "accomplit" },
-        { "id": "d", "text": "accomplissait" }
+        {
+          "id": "a",
+          "text": "accomplît"
+        },
+        {
+          "id": "b",
+          "text": "accomplisse"
+        },
+        {
+          "id": "c",
+          "text": "accomplit"
+        },
+        {
+          "id": "d",
+          "text": "accomplissait"
+        }
       ],
       "correctOption": "a",
       "explanation": "Quand la principale est au passé (« voulait »), la subordonnée au subjonctif se met au subjonctif imparfait en registre soutenu : « accomplît » (3e pers. sing. du subjonctif imparfait d'« accomplir »)."
@@ -64,12 +124,24 @@
     {
       "prompt": "Transforme au discours indirect : « La sorcière avoua : ‹ J'ai caché la clé hier. › »",
       "options": [
-        { "id": "a", "text": "La sorcière avoua qu'elle avait caché la clé la veille." },
-        { "id": "b", "text": "La sorcière avoua qu'elle cachait la clé la veille." },
-        { "id": "c", "text": "La sorcière avoua qu'elle a caché la clé hier." },
-        { "id": "d", "text": "La sorcière avoua qu'elle cacherait la clé la veille." }
+        {
+          "id": "a",
+          "text": "La sorcière avoua qu'elle cachait la clé la veille."
+        },
+        {
+          "id": "b",
+          "text": "La sorcière avoua qu'elle avait caché la clé la veille."
+        },
+        {
+          "id": "c",
+          "text": "La sorcière avoua qu'elle a caché la clé hier."
+        },
+        {
+          "id": "d",
+          "text": "La sorcière avoua qu'elle cacherait la clé la veille."
+        }
       ],
-      "correctOption": "a",
+      "correctOption": "b",
       "explanation": "Le passé composé « ai caché » devient plus-que-parfait « avait caché » au discours indirect (verbe introducteur au passé), et « hier » devient « la veille »."
     }
   ]

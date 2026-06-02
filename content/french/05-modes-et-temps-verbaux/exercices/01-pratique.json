@@ -9,10 +9,22 @@
     {
       "prompt": "Quel mode exprime un fait soumis à une condition ou une hypothèse ?",
       "options": [
-        { "id": "a", "text": "Le conditionnel" },
-        { "id": "b", "text": "L'impératif" },
-        { "id": "c", "text": "Le subjonctif" },
-        { "id": "d", "text": "L'indicatif" }
+        {
+          "id": "a",
+          "text": "Le conditionnel"
+        },
+        {
+          "id": "b",
+          "text": "L'impératif"
+        },
+        {
+          "id": "c",
+          "text": "Le subjonctif"
+        },
+        {
+          "id": "d",
+          "text": "L'indicatif"
+        }
       ],
       "correctOption": "a",
       "explanation": "Le conditionnel exprime un fait soumis à une condition (hypothèse), la politesse ou une information non confirmée. L'impératif donne des ordres ; le subjonctif exprime le souhaité ou le douteux ; l'indicatif énonce un fait réel ou certain."
@@ -20,10 +32,22 @@
     {
       "prompt": "Dans la phrase « Il lisait quand le tonnerre éclata. », les deux temps utilisés sont :",
       "options": [
-        { "id": "a", "text": "L'imparfait (lisait) et le passé simple (éclata)" },
-        { "id": "b", "text": "Le passé composé (lisait) et l'imparfait (éclata)" },
-        { "id": "c", "text": "Le passé simple (lisait) et le passé simple (éclata)" },
-        { "id": "d", "text": "Le présent (lisait) et le futur (éclata)" }
+        {
+          "id": "a",
+          "text": "L'imparfait (lisait) et le passé simple (éclata)"
+        },
+        {
+          "id": "b",
+          "text": "Le passé composé (lisait) et l'imparfait (éclata)"
+        },
+        {
+          "id": "c",
+          "text": "Le passé simple (lisait) et le passé simple (éclata)"
+        },
+        {
+          "id": "d",
+          "text": "Le présent (lisait) et le futur (éclata)"
+        }
       ],
       "correctOption": "a",
       "explanation": "« Lisait » est à l'imparfait (action de fond, en cours) et « éclata » est au passé simple (action soudaine et ponctuelle). Ce couple imparfait/passé simple est la structure narrative fondamentale du récit littéraire."
@@ -31,10 +55,22 @@
     {
       "prompt": "Laquelle de ces phrases contient un verbe au subjonctif présent ?",
       "options": [
-        { "id": "a", "text": "Il faut que tu finisses cet exercice." },
-        { "id": "b", "text": "Tu finiras cet exercice." },
-        { "id": "c", "text": "Tu finissais cet exercice." },
-        { "id": "d", "text": "Tu as fini cet exercice." }
+        {
+          "id": "a",
+          "text": "Il faut que tu finisses cet exercice."
+        },
+        {
+          "id": "b",
+          "text": "Tu finiras cet exercice."
+        },
+        {
+          "id": "c",
+          "text": "Tu finissais cet exercice."
+        },
+        {
+          "id": "d",
+          "text": "Tu as fini cet exercice."
+        }
       ],
       "correctOption": "a",
       "explanation": "Après « il faut que », le verbe est obligatoirement au subjonctif : « finisses » est bien le subjonctif présent de « finir » (2e personne du singulier). Les options b (futur), c (imparfait) et d (passé composé) sont à l'indicatif."
@@ -42,34 +78,70 @@
     {
       "prompt": "Quel est le temps composé correspondant à l'imparfait ?",
       "options": [
-        { "id": "a", "text": "Le plus-que-parfait" },
-        { "id": "b", "text": "Le passé composé" },
-        { "id": "c", "text": "Le futur antérieur" },
-        { "id": "d", "text": "Le passé antérieur" }
+        {
+          "id": "a",
+          "text": "Le passé composé"
+        },
+        {
+          "id": "b",
+          "text": "Le futur antérieur"
+        },
+        {
+          "id": "c",
+          "text": "Le passé antérieur"
+        },
+        {
+          "id": "d",
+          "text": "Le plus-que-parfait"
+        }
       ],
-      "correctOption": "a",
+      "correctOption": "d",
       "explanation": "Le plus-que-parfait (ex. : « avait chanté ») est le temps composé qui correspond à l'imparfait (même série temporelle passée). Il exprime une action antérieure et accomplie par rapport à une action à l'imparfait ou au passé simple."
     },
     {
       "prompt": "Quelle forme verbale est correcte dans : « Si tu ___ davantage, tu réussirais. » ?",
       "options": [
-        { "id": "a", "text": "travaillais" },
-        { "id": "b", "text": "travaillerais" },
-        { "id": "c", "text": "travailleras" },
-        { "id": "d", "text": "travailles" }
+        {
+          "id": "a",
+          "text": "travaillerais"
+        },
+        {
+          "id": "b",
+          "text": "travaillais"
+        },
+        {
+          "id": "c",
+          "text": "travailleras"
+        },
+        {
+          "id": "d",
+          "text": "travailles"
+        }
       ],
-      "correctOption": "a",
+      "correctOption": "b",
       "explanation": "Après « si » dans une hypothèse, on emploie l'imparfait (jamais le conditionnel) : « si tu travaillais → tu réussirais ». La structure est : si + imparfait → conditionnel présent. Les options b (conditionnel), c (futur) et d (présent) sont toutes incorrectes après « si » dans ce contexte."
     },
     {
       "prompt": "Quel emploi de l'impératif est illustré dans : « Prends soin de toi. » ?",
       "options": [
-        { "id": "a", "text": "Un conseil" },
-        { "id": "b", "text": "Un fait réel" },
-        { "id": "c", "text": "Une hypothèse" },
-        { "id": "d", "text": "Un doute" }
+        {
+          "id": "a",
+          "text": "Un fait réel"
+        },
+        {
+          "id": "b",
+          "text": "Une hypothèse"
+        },
+        {
+          "id": "c",
+          "text": "Un conseil"
+        },
+        {
+          "id": "d",
+          "text": "Un doute"
+        }
       ],
-      "correctOption": "a",
+      "correctOption": "c",
       "explanation": "Le ton de « Prends soin de toi » est bienveillant : c'est un conseil, pas un ordre autoritaire. L'impératif peut exprimer un ordre, un conseil ou une prière. Les options b, c, d correspondent à l'indicatif, au conditionnel et au subjonctif, pas à l'impératif."
     }
   ]

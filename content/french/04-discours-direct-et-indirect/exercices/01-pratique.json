@@ -9,21 +9,45 @@
     {
       "prompt": "Laquelle de ces phrases est au discours direct ?",
       "options": [
-        { "id": "a", "text": "Le professeur dit : « Ouvrez vos cahiers. »" },
-        { "id": "b", "text": "Le professeur dit qu'ils ouvrent leurs cahiers." },
-        { "id": "c", "text": "Le professeur leur ordonne d'ouvrir leurs cahiers." },
-        { "id": "d", "text": "Le professeur demande si les cahiers sont ouverts." }
+        {
+          "id": "a",
+          "text": "Le professeur dit qu'ils ouvrent leurs cahiers."
+        },
+        {
+          "id": "b",
+          "text": "Le professeur leur ordonne d'ouvrir leurs cahiers."
+        },
+        {
+          "id": "c",
+          "text": "Le professeur dit : « Ouvrez vos cahiers. »"
+        },
+        {
+          "id": "d",
+          "text": "Le professeur demande si les cahiers sont ouverts."
+        }
       ],
-      "correctOption": "a",
+      "correctOption": "c",
       "explanation": "Le discours direct reproduit les paroles telles quelles, annoncées par les deux-points et encadrées par des guillemets. Les options b, c et d intègrent les paroles dans une subordonnée : ce sont des discours indirects."
     },
     {
       "prompt": "Transforme au discours indirect : Le héros cria : « Je reviendrai demain ! »\nLe héros cria qu'il ___.",
       "options": [
-        { "id": "a", "text": "reviendrait le lendemain" },
-        { "id": "b", "text": "reviendra demain" },
-        { "id": "c", "text": "revient le lendemain" },
-        { "id": "d", "text": "reviendrait demain" }
+        {
+          "id": "a",
+          "text": "reviendrait le lendemain"
+        },
+        {
+          "id": "b",
+          "text": "reviendra demain"
+        },
+        {
+          "id": "c",
+          "text": "revient le lendemain"
+        },
+        {
+          "id": "d",
+          "text": "reviendrait demain"
+        }
       ],
       "correctOption": "a",
       "explanation": "Le verbe introducteur « cria » est au passé : le futur simple « reviendrai » devient conditionnel présent « reviendrait ». De plus, l'indicateur de temps « demain » se transforme en « le lendemain » au discours indirect."
@@ -31,45 +55,93 @@
     {
       "prompt": "Quel outil de subordination utilise-t-on pour rapporter une question totale (réponse oui/non) au discours indirect ?",
       "options": [
-        { "id": "a", "text": "si" },
-        { "id": "b", "text": "que" },
-        { "id": "c", "text": "ce que" },
-        { "id": "d", "text": "de" }
+        {
+          "id": "a",
+          "text": "que"
+        },
+        {
+          "id": "b",
+          "text": "ce que"
+        },
+        {
+          "id": "c",
+          "text": "si"
+        },
+        {
+          "id": "d",
+          "text": "de"
+        }
       ],
-      "correctOption": "a",
+      "correctOption": "c",
       "explanation": "Une question totale (à laquelle on répond par oui ou non) se rapporte au discours indirect avec « si » : « Viens-tu ? » → Il demande si tu viens. On n'utilise « que » que pour les phrases déclaratives, « ce que » pour les questions partielles portant sur le COD, et « de » pour rapporter un ordre."
     },
     {
       "prompt": "Au discours indirect, « Qu'est-ce que tu cherches ? » devient :",
       "options": [
-        { "id": "a", "text": "Il demande ce que tu cherches." },
-        { "id": "b", "text": "Il demande qu'est-ce que tu cherches." },
-        { "id": "c", "text": "Il demande si tu cherches." },
-        { "id": "d", "text": "Il demande ce qui cherche." }
+        {
+          "id": "a",
+          "text": "Il demande qu'est-ce que tu cherches."
+        },
+        {
+          "id": "b",
+          "text": "Il demande si tu cherches."
+        },
+        {
+          "id": "c",
+          "text": "Il demande ce que tu cherches."
+        },
+        {
+          "id": "d",
+          "text": "Il demande ce qui cherche."
+        }
       ],
-      "correctOption": "a",
+      "correctOption": "c",
       "explanation": "Au discours indirect, « qu'est-ce que » se transforme en « ce que » (jamais « qu'est-ce que », qui est réservé au discours direct). La phrase perd le point d'interrogation et il n'y a pas d'inversion du sujet."
     },
     {
       "prompt": "Dans la phrase : « Elle annonça qu'elle avait réussi son examen. », quel était le temps verbal dans le discours direct d'origine ?",
       "options": [
-        { "id": "a", "text": "Le passé composé : « J'ai réussi... »" },
-        { "id": "b", "text": "Le présent : « Je réussis... »" },
-        { "id": "c", "text": "L'imparfait : « Je réussissais... »" },
-        { "id": "d", "text": "Le futur simple : « Je réussirai... »" }
+        {
+          "id": "a",
+          "text": "Le présent : « Je réussis... »"
+        },
+        {
+          "id": "b",
+          "text": "L'imparfait : « Je réussissais... »"
+        },
+        {
+          "id": "c",
+          "text": "Le futur simple : « Je réussirai... »"
+        },
+        {
+          "id": "d",
+          "text": "Le passé composé : « J'ai réussi... »"
+        }
       ],
-      "correctOption": "a",
+      "correctOption": "d",
       "explanation": "Au discours indirect avec un verbe introducteur au passé (« annonça »), le plus-que-parfait « avait réussi » correspond à un passé composé dans le discours direct d'origine : « J'ai réussi mon examen. »"
     },
     {
       "prompt": "Quelle transformation de l'indicateur de lieu est correcte au passage au discours indirect ?",
       "options": [
-        { "id": "a", "text": "« ici » → « là »" },
-        { "id": "b", "text": "« ici » → « aujourd'hui »" },
-        { "id": "c", "text": "« demain » → « ici »" },
-        { "id": "d", "text": "« hier » → « demain »" }
+        {
+          "id": "a",
+          "text": "« ici » → « aujourd'hui »"
+        },
+        {
+          "id": "b",
+          "text": "« demain » → « ici »"
+        },
+        {
+          "id": "c",
+          "text": "« ici » → « là »"
+        },
+        {
+          "id": "d",
+          "text": "« hier » → « demain »"
+        }
       ],
-      "correctOption": "a",
+      "correctOption": "c",
       "explanation": "L'indicateur de lieu « ici » (point de vue du locuteur au moment où il parle) devient « là » au discours indirect (point de vue du narrateur). Les autres options mélangent indicateurs de temps et de lieu, ou inversent le sens."
     }
   ]
