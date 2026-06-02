@@ -17,8 +17,8 @@ ON CONFLICT (id) DO UPDATE SET
   content_language = EXCLUDED.content_language;
 
 -- Prune admin-authored content that is no longer in the source tree.
-DELETE FROM public.exercises WHERE subject_id = 'math' AND source = 'admin' AND id NOT IN ('81ff9da1-548c-50cf-9f91-8ef7d971cab6', 'ec9248c4-9408-548f-aee3-046aa660c54d', '5680c5e9-d223-542e-9db3-4c3e770da622', '2d3109e8-a00c-5619-8905-d768c68c00b9', '78d50116-f2e7-55df-8c02-20811ed38ef2', 'ab49794e-9915-51a9-aaa0-c4a4eec3bf53', '3175611f-46ae-53ca-8b70-580d3231f54c', 'd8d89bf8-2b16-583f-85bd-beb3818b9e4d', 'b3698968-9bdd-5a04-87a8-d5f872fa3268', '93b0884f-f1fa-5677-ba0c-45682a394f86', '19994972-418b-5eeb-90e0-8db612ea6855', '6344760c-5d13-5ace-be92-9275a52c654a', 'b6fdc318-4fb8-5cdf-a865-2ffd1468c8b7', '7880a5ae-03cb-524b-aef9-ff8c1bb9b85b', 'f326e9ff-8f5d-59a0-bc33-b53615d43f3d', '24ddb42f-96f9-5d15-bda7-fadbd675c804', '3b45c6b0-a990-57dc-9859-74a56930d2e2', '80e5983d-9550-5c46-b8da-75359679e18f', '93dfdc12-2b72-5865-99a2-cbfa62c0ded0', '873efa4f-bd3f-5abb-be22-b8b08bd96d7f', 'd5ed3185-e602-5baa-a49f-a68b1191ac7f', '93d7ec3c-499d-5401-afbd-44d801bd6165', '8a45a71b-b2f9-5c7c-ad4d-674eab139c61', '244944cd-952e-56c0-91ae-7dde1326a5d6', 'c0f4caab-6fe4-5cc1-9698-141918f14e73', '00789172-89dd-5cc2-8af9-730645c3c113');
-DELETE FROM public.questions WHERE exercise_id IN ('81ff9da1-548c-50cf-9f91-8ef7d971cab6', 'ec9248c4-9408-548f-aee3-046aa660c54d', '5680c5e9-d223-542e-9db3-4c3e770da622', '2d3109e8-a00c-5619-8905-d768c68c00b9', '78d50116-f2e7-55df-8c02-20811ed38ef2', 'ab49794e-9915-51a9-aaa0-c4a4eec3bf53', '3175611f-46ae-53ca-8b70-580d3231f54c', 'd8d89bf8-2b16-583f-85bd-beb3818b9e4d', 'b3698968-9bdd-5a04-87a8-d5f872fa3268', '93b0884f-f1fa-5677-ba0c-45682a394f86', '19994972-418b-5eeb-90e0-8db612ea6855', '6344760c-5d13-5ace-be92-9275a52c654a', 'b6fdc318-4fb8-5cdf-a865-2ffd1468c8b7', '7880a5ae-03cb-524b-aef9-ff8c1bb9b85b', 'f326e9ff-8f5d-59a0-bc33-b53615d43f3d', '24ddb42f-96f9-5d15-bda7-fadbd675c804', '3b45c6b0-a990-57dc-9859-74a56930d2e2', '80e5983d-9550-5c46-b8da-75359679e18f', '93dfdc12-2b72-5865-99a2-cbfa62c0ded0', '873efa4f-bd3f-5abb-be22-b8b08bd96d7f', 'd5ed3185-e602-5baa-a49f-a68b1191ac7f', '93d7ec3c-499d-5401-afbd-44d801bd6165', '8a45a71b-b2f9-5c7c-ad4d-674eab139c61', '244944cd-952e-56c0-91ae-7dde1326a5d6', 'c0f4caab-6fe4-5cc1-9698-141918f14e73', '00789172-89dd-5cc2-8af9-730645c3c113') AND id NOT IN ('0719fda4-03b6-567e-9f9a-d815e092ee3c', '013fee50-06fc-50c2-b122-8b3c405c5207', '662a60a9-fd63-5b72-821d-6a92416ab006', '41910abe-54ea-5267-899e-74bda7340373', 'b27e6980-2917-582a-8525-701d27cd5267', '084b1839-663a-5ed8-9c9e-00e8101d9357', 'efaec4e2-82a1-50d5-8bdd-e27f7df31aa9', 'c909b9e4-f805-575c-ba4e-6b4800bf2a41', '80ed71ca-cc0f-5995-9f36-1fe1985c5718', 'a676994a-03af-59e7-958d-6b596ce844df', 'd973b1a3-d43a-5ec5-82a7-962400b33d6e', 'c30e96b9-1170-508b-a5fe-aad6aa0cc992', '1bc63cf6-4649-5021-927c-19dbd169687b', '0bdd605d-7fc4-52b3-b597-cc8547afb8b4', 'd73efe27-cd2b-5ade-b536-f505689746d4', '0e1a8e5a-8a8b-5f8d-abb9-846f550be28f', 'f6a118a4-cd9d-5c70-895e-0cff5a81a44c', 'd0d46468-66ac-57b8-87c8-6c3ccdd6f77c', 'd4fcdcbc-54d2-512f-a801-a980e162361a', '761705b3-5632-50c3-8e89-1fcbb1a293ee', '47c48b5a-49d9-5a04-b022-4ec57adf2a3b', '8a7b4344-7720-59ed-8bc9-4d67d9ad42c9', 'b21df867-d9c0-598c-9283-8d39d3f729a3', '07e290b9-dd4c-578c-b221-a26ee2844bd3', 'a4d103ce-914f-5a57-980d-5aee80393d48', 'b9264716-e6ab-5a0b-b8c3-16c2a745b57a', '5a133e38-f94c-5d96-8a74-b324e96f5e6f', 'd268c130-6caa-58cf-bd28-b1414ea396d1', 'cb71b2cd-02b3-56a7-b18e-953f747ecbf0', '7beabd0d-1bda-5e00-b65f-7337a970cc9a', '574d83f6-8a4e-5cbf-af16-601319f31805', '41274feb-9105-5e32-a1b5-63850f1aaf87', 'e441f276-3a03-5903-b23e-822a4e85f453', '5316a068-a6c0-5dff-9898-ad76dbe03c69', '49205de3-502a-5a5a-a531-46e04f49c300', 'ab929c9e-dff5-5f71-b345-192a20805337', '0e6ba6e9-7942-50bb-aa6d-a02b7db41896', '9e93e18f-2506-5266-ad9c-20f07a3f62f8', '5e26e1dd-9b7a-5ab0-bcfa-99b3444b94bd', 'fdaee331-c544-58cb-b422-713545919793', 'ee94d79a-122d-5a3b-a069-70875fc80fb8', '301a0982-c6e8-59be-ba6d-a0e4b5a327f5', 'af7b55a2-91be-5ac0-a5a5-0fbb6f2b329e', '558b377a-59a5-5b6e-933d-7ab376b87274', '95a41b39-5c67-5234-996c-47e30d4d3838', '6e370c06-3a42-5e35-bf68-9e28afccbb7b', '86310bba-8d13-59fb-b8d6-4cd4a80b4bd1', '91c39910-2b8b-5da9-b47c-4163d1cc84f6', 'c4b38cf9-26ed-5b98-8b28-4def152bce4a', '5d62ca7c-3ebd-5751-adcc-1afa88307b2f', '413fd85d-1622-563e-bba9-e69551afcd63', 'bb25f0a5-ff1b-5bcd-b0ac-5c61293424cf', '3cb586ae-b2fd-53f6-bd68-5c6937b09d6b', '6672c828-0d0f-597d-859b-009023eda5d1', '19e2b6d3-e5db-594a-87b0-53d0499742a1', '84de1a4f-6204-5ed3-b409-98b15de489c5', '074173e5-a5fb-57e5-a01d-d884a549b9fb', '18e02832-28c9-512d-a7d5-70066a0f6c2a', 'e0115bb4-ea6e-5564-8c32-74edcd629b45', 'a3da51fe-f3f0-58c9-89a8-d6bbeebf688f', '57f85ba0-c2d2-571b-b686-73e29445f52a', 'f830ff4c-84fe-5bc7-aa13-3c7505a5978b', '5d1f9b78-da86-566d-9b23-ea9bd72d2d40', '69267cbe-128b-5be3-b5da-b818fbeb0ed7', '78519b47-13d4-53ba-bd75-2d99d988b1c6', '8f583e61-7fad-526b-a7dc-62f7ad6a37af', 'b8fcc3a8-f3fa-5ac4-afdd-4f0e52096877', 'bbfa171e-f4a6-5a57-944d-e09c2712a7cb', 'c2beedac-d602-58bc-a393-3fc7d75c20ee', 'f8536003-53a7-52de-bb8c-0affc30f3c66', '13d3926a-0976-5989-9f7c-1cd036bcd326', '9778e81d-5484-5cc2-ae1d-0b4b62056bbd', '391b11ae-2629-5088-a119-feaed0ba274b', '99dd9b8d-c6cf-551f-b96d-97c7cdbddb7f', '70c72520-1938-5ed8-9f18-589953b27100', '4184f2c6-ccca-5eb3-bae9-701caea1e475', '4c206254-1a5d-5f89-9405-19436cb62a41', 'da2cdf7b-de2a-5a15-af0f-ba0384fae853', 'd1f27784-df99-5e5e-99c5-db6baa9da9ed', 'ac35bf2e-668e-5f5f-9d8f-b2c572a3747a', '4b10c460-3768-5fcb-8dcf-906f9469fdb8', 'a3a4174f-3449-5d04-b13b-ba858351fcca', '0d59856b-0025-5edf-9712-df204c8cf43d', '532e4f79-a180-595e-bad6-4db7449b7e9a', '0afcd18c-829f-593d-8c89-713cffedf56f', '07a1a81e-a0e8-5920-8870-56226919bf79', 'ef9b12ce-7730-5e36-9549-eb0e6275914f', '9920c496-e34b-56ca-ab36-d83a11a11bb2', '2ceb13be-7d1a-5b30-857e-272159ecb34a', 'e16c95ae-301f-5611-a556-0bc68fb575f7', 'f9dec898-598b-54a1-bc6e-ec5cb998972e', '71d49b34-8c27-56e3-8e48-96ee2353f19b', 'cd9c01fe-fddb-523e-b8e5-0d67dbd39857', '1cd6a70c-c45e-5409-b6c4-048771ff3fc0', '2b891195-d929-59b5-9f39-4d2a0a8a7b58', '570ce82b-9da4-5ec0-9ba0-f0d30d87db7c', '2614767c-0baf-5c37-8612-11f6ae986ff8', 'f6c48408-d32a-5952-bef9-58ac1091a3bb', '51bd4869-6785-596b-a9f8-ec026d774363', 'd20f096e-13e3-5f7c-aa12-9a58fb391cdb', 'eca425d1-2139-5def-96d3-cc196a9f4ec3', '7756d42f-d6b8-597e-9ac8-561228ef119c', '3be61ed8-9dad-5bd8-96bd-658b7bf37cdb', 'e58b813c-6f19-5dc1-8956-6fd01e9b3f54', 'c2b81dea-f750-5535-8070-b2ff6fb7cc6e', 'cbd6cbe7-2f11-59c5-b6be-0ba8bd2f84f3', 'db4df78b-fd69-5434-bbb1-30a96a17ddd7', '1d026040-efc2-5bee-ad33-605d9be079ed', '22d3cc36-de6f-5ee6-93b8-0045bcf36590', 'aef4d95c-4d0f-5861-80fb-c68afa8d3389', 'a48c2144-ae3e-556c-b104-d2a82f35721c', 'b483eb17-bcae-50fb-8596-e9366cd2b5db', '9fb18edd-29f6-5550-9dee-b73269be157c', 'ae3c1d6a-9a72-5eab-a89c-c82382f6b662', 'b7c8161d-6c86-5f6f-9e2c-da87f6a61832', '1f8279b5-8479-5070-9d46-ff30e896b74d', '20dafbd3-0c09-52ce-9a14-7c00cc3af209', 'ba79d051-2cff-575e-bfc7-acfca8574f01', 'b4642479-04db-524b-8493-07275599ab8a', 'c9c8d407-2396-539e-864e-40d48e430134', '5d31b6e9-d3c9-5b12-8a64-9b080894d622', 'fa1aa792-ea33-5d2e-b34f-db59004f7bef', '59416d62-ddd9-569b-93cf-947e49de5bbb', '7ffa1eaa-9c2c-592c-8187-09ebaa1a178d', '4609e772-5f83-5574-8c5e-b07651940b89', '1029d23d-c758-50bc-b5ba-adcdadbe99a5', '0f58c292-0423-585e-8b48-f312610e77c9', 'f1e2bc92-9483-533f-bad1-ea11b4139ae1', 'fd7385bc-2ffb-56eb-b657-793013a9961b', '9dd95e83-07c3-5549-80c2-14c2faecbfe6', '4cda659f-9474-5298-9483-cd9a342fab45', '407ecc53-5aaa-5a28-903e-69bc33e312e0', '6de356e5-710a-5e65-a741-1ee618d4f5ac', '47507fa8-dabb-56f1-b1d6-944470824cef', 'b7c5cade-1693-5c8c-91c9-b41aa36e44e5', '092c32a9-516a-5bb5-982e-63f573d04e0f', '48cb8baf-edce-5753-8d55-cbb25021aa96', '76e96ca3-6af2-53b7-a308-fac16e21ce20', '7a0d2297-0ecc-5787-ac5a-94aa07e50e80', 'a7359118-a246-5e74-affa-d0f61216527d', '3c8e5bbe-7712-5a11-8da7-b237b1b6b03c', 'fd648144-7179-5365-9d15-3babfef30bf3', 'f938f51c-9d1e-5da4-b531-8b543a4792c2', '223302f2-2f16-52d3-bbbc-10faa71ed40a', 'cd3dc54f-1c0c-598c-8515-f4773e66e73f', '750dd55f-9959-5972-9ca2-885a2342710f', '546ec25e-87b5-5290-bf81-399849944cf6', 'bc3acdeb-df34-5d99-827b-46cad1675a03', 'eca58638-841d-588b-9108-5ed680a14f01', 'cfca19fb-620b-5f95-9212-1b6ef4bfafcf', '04e02825-43bc-5b75-a62d-875aa956e3da', '1d3df261-f148-5b0b-84a6-74ef0aa0e9c4', '03d725a0-aedc-5bd2-a40d-fa740eee3cba', 'ce97f02a-d74c-52b0-b0e1-7239b8e55545');
+DELETE FROM public.exercises WHERE subject_id = 'math' AND source = 'admin' AND id NOT IN ('81ff9da1-548c-50cf-9f91-8ef7d971cab6', 'ec9248c4-9408-548f-aee3-046aa660c54d', '172edea9-3107-5d1a-a5b3-b8d55d3b96db', '5680c5e9-d223-542e-9db3-4c3e770da622', '2d3109e8-a00c-5619-8905-d768c68c00b9', 'c8957fdb-6fc2-5637-aef7-b904288394bb', '78d50116-f2e7-55df-8c02-20811ed38ef2', 'ab49794e-9915-51a9-aaa0-c4a4eec3bf53', '5060d30c-a963-5fa0-9a94-22276e9e2aa5', '3175611f-46ae-53ca-8b70-580d3231f54c', 'd8d89bf8-2b16-583f-85bd-beb3818b9e4d', 'ec6351c9-f945-5e92-a049-63e7ef8fc361', 'b3698968-9bdd-5a04-87a8-d5f872fa3268', '93b0884f-f1fa-5677-ba0c-45682a394f86', 'f2e9adfd-e915-5fd1-89e9-3cc24f005f51', '19994972-418b-5eeb-90e0-8db612ea6855', '6344760c-5d13-5ace-be92-9275a52c654a', 'e50af184-82cf-5fed-a75c-5fe103b19bd8', 'b6fdc318-4fb8-5cdf-a865-2ffd1468c8b7', '7880a5ae-03cb-524b-aef9-ff8c1bb9b85b', '31f9bc81-3462-51c0-a42a-4bc1079be296', 'f326e9ff-8f5d-59a0-bc33-b53615d43f3d', '24ddb42f-96f9-5d15-bda7-fadbd675c804', 'f33ee550-688a-5f83-8b1c-f714109898ed', '3b45c6b0-a990-57dc-9859-74a56930d2e2', '80e5983d-9550-5c46-b8da-75359679e18f', '45ea24b7-4622-54df-a97f-ccfa0ea12ad5', '93dfdc12-2b72-5865-99a2-cbfa62c0ded0', '873efa4f-bd3f-5abb-be22-b8b08bd96d7f', '1723a195-8a7d-58a9-aca8-4e9271a11138', 'd5ed3185-e602-5baa-a49f-a68b1191ac7f', '93d7ec3c-499d-5401-afbd-44d801bd6165', '3f4fdade-ea1f-5e7e-8045-6e0c9acaa369', '8a45a71b-b2f9-5c7c-ad4d-674eab139c61', '244944cd-952e-56c0-91ae-7dde1326a5d6', '64f5f198-b1d7-59c2-9dfd-288814c2030a', 'c0f4caab-6fe4-5cc1-9698-141918f14e73', '00789172-89dd-5cc2-8af9-730645c3c113', '3baad67a-a282-5810-90d2-589f56042a87');
+DELETE FROM public.questions WHERE exercise_id IN ('81ff9da1-548c-50cf-9f91-8ef7d971cab6', 'ec9248c4-9408-548f-aee3-046aa660c54d', '172edea9-3107-5d1a-a5b3-b8d55d3b96db', '5680c5e9-d223-542e-9db3-4c3e770da622', '2d3109e8-a00c-5619-8905-d768c68c00b9', 'c8957fdb-6fc2-5637-aef7-b904288394bb', '78d50116-f2e7-55df-8c02-20811ed38ef2', 'ab49794e-9915-51a9-aaa0-c4a4eec3bf53', '5060d30c-a963-5fa0-9a94-22276e9e2aa5', '3175611f-46ae-53ca-8b70-580d3231f54c', 'd8d89bf8-2b16-583f-85bd-beb3818b9e4d', 'ec6351c9-f945-5e92-a049-63e7ef8fc361', 'b3698968-9bdd-5a04-87a8-d5f872fa3268', '93b0884f-f1fa-5677-ba0c-45682a394f86', 'f2e9adfd-e915-5fd1-89e9-3cc24f005f51', '19994972-418b-5eeb-90e0-8db612ea6855', '6344760c-5d13-5ace-be92-9275a52c654a', 'e50af184-82cf-5fed-a75c-5fe103b19bd8', 'b6fdc318-4fb8-5cdf-a865-2ffd1468c8b7', '7880a5ae-03cb-524b-aef9-ff8c1bb9b85b', '31f9bc81-3462-51c0-a42a-4bc1079be296', 'f326e9ff-8f5d-59a0-bc33-b53615d43f3d', '24ddb42f-96f9-5d15-bda7-fadbd675c804', 'f33ee550-688a-5f83-8b1c-f714109898ed', '3b45c6b0-a990-57dc-9859-74a56930d2e2', '80e5983d-9550-5c46-b8da-75359679e18f', '45ea24b7-4622-54df-a97f-ccfa0ea12ad5', '93dfdc12-2b72-5865-99a2-cbfa62c0ded0', '873efa4f-bd3f-5abb-be22-b8b08bd96d7f', '1723a195-8a7d-58a9-aca8-4e9271a11138', 'd5ed3185-e602-5baa-a49f-a68b1191ac7f', '93d7ec3c-499d-5401-afbd-44d801bd6165', '3f4fdade-ea1f-5e7e-8045-6e0c9acaa369', '8a45a71b-b2f9-5c7c-ad4d-674eab139c61', '244944cd-952e-56c0-91ae-7dde1326a5d6', '64f5f198-b1d7-59c2-9dfd-288814c2030a', 'c0f4caab-6fe4-5cc1-9698-141918f14e73', '00789172-89dd-5cc2-8af9-730645c3c113', '3baad67a-a282-5810-90d2-589f56042a87') AND id NOT IN ('0719fda4-03b6-567e-9f9a-d815e092ee3c', '013fee50-06fc-50c2-b122-8b3c405c5207', '662a60a9-fd63-5b72-821d-6a92416ab006', '41910abe-54ea-5267-899e-74bda7340373', 'b27e6980-2917-582a-8525-701d27cd5267', '084b1839-663a-5ed8-9c9e-00e8101d9357', 'efaec4e2-82a1-50d5-8bdd-e27f7df31aa9', 'c909b9e4-f805-575c-ba4e-6b4800bf2a41', '80ed71ca-cc0f-5995-9f36-1fe1985c5718', 'a676994a-03af-59e7-958d-6b596ce844df', 'd973b1a3-d43a-5ec5-82a7-962400b33d6e', 'c30e96b9-1170-508b-a5fe-aad6aa0cc992', '44cffaaf-830a-5ca5-81de-17bd3737cbf6', 'c9845284-c085-5b00-9764-2c8eb3d446f2', '7425c2e9-e237-5e54-9bd0-e80dbaf0b8c5', 'e836ab7e-a4ce-5624-886a-ec90a31280ef', '909783ed-8c93-5595-b2c0-bc221c6af843', '1c95a370-18dc-5351-bcfc-33836e75b1df', '1bc63cf6-4649-5021-927c-19dbd169687b', '0bdd605d-7fc4-52b3-b597-cc8547afb8b4', 'd73efe27-cd2b-5ade-b536-f505689746d4', '0e1a8e5a-8a8b-5f8d-abb9-846f550be28f', 'f6a118a4-cd9d-5c70-895e-0cff5a81a44c', 'd0d46468-66ac-57b8-87c8-6c3ccdd6f77c', 'd4fcdcbc-54d2-512f-a801-a980e162361a', '761705b3-5632-50c3-8e89-1fcbb1a293ee', '47c48b5a-49d9-5a04-b022-4ec57adf2a3b', '8a7b4344-7720-59ed-8bc9-4d67d9ad42c9', 'f7d366dd-abc3-5d2a-98ea-4f5fa30c73c5', '56474803-dffb-5178-8a2d-7eb12de808e0', 'ac62fe45-0997-55a0-af87-65d914832ea9', '523c2f5e-e991-5b1e-8011-1f219b3c0338', 'a562a03d-fbbd-54c0-a28d-29d30385474d', 'bd7ca0a1-fb2b-5744-ad6e-36c4ca721219', 'b21df867-d9c0-598c-9283-8d39d3f729a3', '07e290b9-dd4c-578c-b221-a26ee2844bd3', 'a4d103ce-914f-5a57-980d-5aee80393d48', 'b9264716-e6ab-5a0b-b8c3-16c2a745b57a', '5a133e38-f94c-5d96-8a74-b324e96f5e6f', 'd268c130-6caa-58cf-bd28-b1414ea396d1', 'cb71b2cd-02b3-56a7-b18e-953f747ecbf0', '7beabd0d-1bda-5e00-b65f-7337a970cc9a', '574d83f6-8a4e-5cbf-af16-601319f31805', '41274feb-9105-5e32-a1b5-63850f1aaf87', 'e441f276-3a03-5903-b23e-822a4e85f453', '5316a068-a6c0-5dff-9898-ad76dbe03c69', '0a59a28a-5532-5ca1-8d89-06950c66e39a', '3b714f25-0ac6-5d4a-94bc-c57f6464b0cc', '01baab24-4c96-5db7-b164-7c011024ba17', '43e1e077-42f6-58a8-8b60-53699a200ec6', 'b338f59a-2a9c-5da0-a39a-323a77b349f1', '823530d0-e752-5f06-895a-c4128ba33edd', '49205de3-502a-5a5a-a531-46e04f49c300', 'ab929c9e-dff5-5f71-b345-192a20805337', '0e6ba6e9-7942-50bb-aa6d-a02b7db41896', '9e93e18f-2506-5266-ad9c-20f07a3f62f8', '5e26e1dd-9b7a-5ab0-bcfa-99b3444b94bd', 'fdaee331-c544-58cb-b422-713545919793', 'ee94d79a-122d-5a3b-a069-70875fc80fb8', '301a0982-c6e8-59be-ba6d-a0e4b5a327f5', 'af7b55a2-91be-5ac0-a5a5-0fbb6f2b329e', '558b377a-59a5-5b6e-933d-7ab376b87274', '95a41b39-5c67-5234-996c-47e30d4d3838', '6e370c06-3a42-5e35-bf68-9e28afccbb7b', '1003cd5b-33ef-50a8-a5a0-de63f029f7de', 'd6a1c117-1596-5121-8277-92cd7a7570cd', 'd2c73317-f59c-53e8-b54a-1ae8a4e18434', '340f0056-37f0-57a2-b63c-36810c7977cb', 'cc0e95d3-8aac-5a04-a61b-b5dff4c9bee1', '88a2297f-a028-5f5d-8a94-3e63c6138a9e', '86310bba-8d13-59fb-b8d6-4cd4a80b4bd1', '91c39910-2b8b-5da9-b47c-4163d1cc84f6', 'c4b38cf9-26ed-5b98-8b28-4def152bce4a', '5d62ca7c-3ebd-5751-adcc-1afa88307b2f', '413fd85d-1622-563e-bba9-e69551afcd63', 'bb25f0a5-ff1b-5bcd-b0ac-5c61293424cf', '3cb586ae-b2fd-53f6-bd68-5c6937b09d6b', '6672c828-0d0f-597d-859b-009023eda5d1', '19e2b6d3-e5db-594a-87b0-53d0499742a1', '84de1a4f-6204-5ed3-b409-98b15de489c5', '074173e5-a5fb-57e5-a01d-d884a549b9fb', '18e02832-28c9-512d-a7d5-70066a0f6c2a', 'd741efb8-605f-5b1d-9111-8e6877639813', 'c1aa8e1f-392c-5a10-9f18-c53b4ed30240', '4a321ae6-ca1d-5400-ada2-4901e6421f4f', 'ee569973-6173-5d85-8bc4-5fc55cae4455', '64c15d45-547c-5292-aa95-b0f54942988f', '28aa1e42-8121-55b2-81c1-2707775827fa', 'e0115bb4-ea6e-5564-8c32-74edcd629b45', 'a3da51fe-f3f0-58c9-89a8-d6bbeebf688f', '57f85ba0-c2d2-571b-b686-73e29445f52a', 'f830ff4c-84fe-5bc7-aa13-3c7505a5978b', '5d1f9b78-da86-566d-9b23-ea9bd72d2d40', '69267cbe-128b-5be3-b5da-b818fbeb0ed7', '78519b47-13d4-53ba-bd75-2d99d988b1c6', '8f583e61-7fad-526b-a7dc-62f7ad6a37af', 'b8fcc3a8-f3fa-5ac4-afdd-4f0e52096877', 'bbfa171e-f4a6-5a57-944d-e09c2712a7cb', 'c2beedac-d602-58bc-a393-3fc7d75c20ee', 'f8536003-53a7-52de-bb8c-0affc30f3c66', '3a028e6b-35c9-5756-8671-d6e48073c9c1', 'f89cf4ff-ebab-5eb3-84e3-8350eb35163e', 'fefd1013-760f-55a5-8301-3bfdf0fc0411', 'eb98e9dd-57f4-58f4-a0d3-8a77f5224c3d', '2aa385d0-e81e-5531-a04b-fd0aefb421b6', '3f729bcb-ccf8-5167-a100-d128aef14565', '13d3926a-0976-5989-9f7c-1cd036bcd326', '9778e81d-5484-5cc2-ae1d-0b4b62056bbd', '391b11ae-2629-5088-a119-feaed0ba274b', '99dd9b8d-c6cf-551f-b96d-97c7cdbddb7f', '70c72520-1938-5ed8-9f18-589953b27100', '4184f2c6-ccca-5eb3-bae9-701caea1e475', '4c206254-1a5d-5f89-9405-19436cb62a41', 'da2cdf7b-de2a-5a15-af0f-ba0384fae853', 'd1f27784-df99-5e5e-99c5-db6baa9da9ed', 'ac35bf2e-668e-5f5f-9d8f-b2c572a3747a', '4b10c460-3768-5fcb-8dcf-906f9469fdb8', 'a3a4174f-3449-5d04-b13b-ba858351fcca', '7044e06a-b01a-5567-8a50-18d770f599db', '63f5da1a-18c9-51da-9482-16616c888864', 'f59c1983-2f5e-5726-91c7-7bfc2407e5e9', '27d53fa5-4c6e-5cff-8a50-dcac20918fc5', 'c0709b4d-2cb5-56ad-a4df-a88d8e7bf9c7', 'c559b2d7-c451-5335-a937-abac270def61', '0d59856b-0025-5edf-9712-df204c8cf43d', '532e4f79-a180-595e-bad6-4db7449b7e9a', '0afcd18c-829f-593d-8c89-713cffedf56f', '07a1a81e-a0e8-5920-8870-56226919bf79', 'ef9b12ce-7730-5e36-9549-eb0e6275914f', '9920c496-e34b-56ca-ab36-d83a11a11bb2', '2ceb13be-7d1a-5b30-857e-272159ecb34a', 'e16c95ae-301f-5611-a556-0bc68fb575f7', 'f9dec898-598b-54a1-bc6e-ec5cb998972e', '71d49b34-8c27-56e3-8e48-96ee2353f19b', 'cd9c01fe-fddb-523e-b8e5-0d67dbd39857', '1cd6a70c-c45e-5409-b6c4-048771ff3fc0', '56bbce3f-5120-5770-9ccf-de1c08edbcef', '9c198ec7-be2b-5c8d-ad88-51ed81b5d46c', 'cca2fb5e-9ee4-5c71-89c0-cdba4e2b52f8', '9e409479-42b0-5460-b5e0-2f31d6f2dba6', 'b4e7423e-350d-507a-8190-fd0f52071315', 'cda3fe59-386a-5a33-9fca-650b899f6654', '2b891195-d929-59b5-9f39-4d2a0a8a7b58', '570ce82b-9da4-5ec0-9ba0-f0d30d87db7c', '2614767c-0baf-5c37-8612-11f6ae986ff8', 'f6c48408-d32a-5952-bef9-58ac1091a3bb', '51bd4869-6785-596b-a9f8-ec026d774363', 'd20f096e-13e3-5f7c-aa12-9a58fb391cdb', 'eca425d1-2139-5def-96d3-cc196a9f4ec3', '7756d42f-d6b8-597e-9ac8-561228ef119c', '3be61ed8-9dad-5bd8-96bd-658b7bf37cdb', 'e58b813c-6f19-5dc1-8956-6fd01e9b3f54', 'c2b81dea-f750-5535-8070-b2ff6fb7cc6e', 'cbd6cbe7-2f11-59c5-b6be-0ba8bd2f84f3', '62b743c1-f651-569a-a772-66e5937c98c9', '0fcda9a1-fa34-5768-8c5c-e1850330d1d2', '3fab56a3-4d34-5074-84da-a46a457be4dc', 'f53e2aa0-860e-5353-bd2f-01e50007afa6', '3d31d49f-8079-543b-b628-3aa0bc442b2d', '7e82d4cb-c9ef-5832-be9f-84c2f258b709', 'db4df78b-fd69-5434-bbb1-30a96a17ddd7', '1d026040-efc2-5bee-ad33-605d9be079ed', '22d3cc36-de6f-5ee6-93b8-0045bcf36590', 'aef4d95c-4d0f-5861-80fb-c68afa8d3389', 'a48c2144-ae3e-556c-b104-d2a82f35721c', 'b483eb17-bcae-50fb-8596-e9366cd2b5db', '9fb18edd-29f6-5550-9dee-b73269be157c', 'ae3c1d6a-9a72-5eab-a89c-c82382f6b662', 'b7c8161d-6c86-5f6f-9e2c-da87f6a61832', '1f8279b5-8479-5070-9d46-ff30e896b74d', '20dafbd3-0c09-52ce-9a14-7c00cc3af209', 'ba79d051-2cff-575e-bfc7-acfca8574f01', '796d0d63-c384-51f3-8d91-4122e08a62f4', 'f87fb1de-6040-55a9-884b-8166d6f6a0ff', '6b7fa255-8ccf-594f-a969-4b1a864e2901', 'a81341fd-e00e-5771-8372-84d54917f7a5', '1d3e65af-6ac2-573e-806e-333c73ba31ee', 'bef76b66-7e0a-534f-a565-358ea8541c18', 'b4642479-04db-524b-8493-07275599ab8a', 'c9c8d407-2396-539e-864e-40d48e430134', '5d31b6e9-d3c9-5b12-8a64-9b080894d622', 'fa1aa792-ea33-5d2e-b34f-db59004f7bef', '59416d62-ddd9-569b-93cf-947e49de5bbb', '7ffa1eaa-9c2c-592c-8187-09ebaa1a178d', '4609e772-5f83-5574-8c5e-b07651940b89', '1029d23d-c758-50bc-b5ba-adcdadbe99a5', '0f58c292-0423-585e-8b48-f312610e77c9', 'f1e2bc92-9483-533f-bad1-ea11b4139ae1', 'fd7385bc-2ffb-56eb-b657-793013a9961b', '9dd95e83-07c3-5549-80c2-14c2faecbfe6', '1a4a428a-aab2-59a3-b224-8000dced190c', 'e6b41809-6203-570a-b2d9-4782a36702c4', 'c995f255-e02a-52f9-9003-3b04f4b3c64c', 'd7ef7b66-5e08-58fe-973c-147c56ee9e9b', 'c63e54a0-7b36-546c-925b-5dff53d2bb59', '30b4278a-9635-5f41-a8ac-c0408817170a', '4cda659f-9474-5298-9483-cd9a342fab45', '407ecc53-5aaa-5a28-903e-69bc33e312e0', '6de356e5-710a-5e65-a741-1ee618d4f5ac', '47507fa8-dabb-56f1-b1d6-944470824cef', 'b7c5cade-1693-5c8c-91c9-b41aa36e44e5', '092c32a9-516a-5bb5-982e-63f573d04e0f', '48cb8baf-edce-5753-8d55-cbb25021aa96', '76e96ca3-6af2-53b7-a308-fac16e21ce20', '7a0d2297-0ecc-5787-ac5a-94aa07e50e80', 'a7359118-a246-5e74-affa-d0f61216527d', '3c8e5bbe-7712-5a11-8da7-b237b1b6b03c', 'fd648144-7179-5365-9d15-3babfef30bf3', '1568e6ec-a611-52ce-8d7b-38e16af2592e', 'a4cd8ac5-ef31-5a95-acf7-5a4d19cd083e', 'f95b203a-045b-5942-9dd9-c3548cb363c7', '0e3aa295-fdcd-5246-8df6-db9226c80367', '27a6be4d-a962-5679-8ff5-496ff0036083', '6769452a-dee4-5955-98b1-a5bba6570cf5', 'f938f51c-9d1e-5da4-b531-8b543a4792c2', '223302f2-2f16-52d3-bbbc-10faa71ed40a', 'cd3dc54f-1c0c-598c-8515-f4773e66e73f', '750dd55f-9959-5972-9ca2-885a2342710f', '546ec25e-87b5-5290-bf81-399849944cf6', 'bc3acdeb-df34-5d99-827b-46cad1675a03', 'eca58638-841d-588b-9108-5ed680a14f01', 'cfca19fb-620b-5f95-9212-1b6ef4bfafcf', '04e02825-43bc-5b75-a62d-875aa956e3da', '1d3df261-f148-5b0b-84a6-74ef0aa0e9c4', '03d725a0-aedc-5bd2-a40d-fa740eee3cba', 'ce97f02a-d74c-52b0-b0e1-7239b8e55545', 'b4b74883-fa9b-534d-af23-d0f23f600417', 'd0411eb3-f2e1-58fe-b6b0-3921da7f87df', '3f98b05b-c8bb-55bc-8b73-a18a556d7258', 'd459fcab-1737-56cb-a40c-a7c8cf4981bb', 'f9f4b96c-9e1b-5c77-9a00-08d4fdde4565', 'e9c55a8c-88c9-5368-a0cd-075e6be633de');
 DELETE FROM public.chapters c WHERE c.subject_id = 'math' AND c.id NOT IN ('ed9bf3b9-7306-587f-b615-6a98b0f855a5', '65871a90-e921-55ff-b1fe-5483ab510aad', 'ddbe302b-6317-5fa9-a93d-9eddd64651fe', 'b9d33015-226b-5d6f-8109-8f164dfe2e07', 'e9b1fb37-38ae-5b12-a38b-c6f536ff90a7', 'a1dc4ef0-cc8f-54bd-a3f4-9d4f4e1dc851', '02eb650b-9f63-52d8-af00-acd3d01b6c4d', '4d3cea13-a54f-55f1-ad8d-853c7c9ef05d', 'fa8e46c4-235e-5b70-a34b-17b1a9a1920b', '069523c8-c228-5326-bbc1-31ad25257541', '2ed2e3ac-7b29-5351-abd6-b9343cc9a4f9', '67e1970d-7e67-5193-acd3-1729b90b0cb2', '0c844ff1-0195-5d0c-a7ab-f03a2bc2863e') AND NOT EXISTS (SELECT 1 FROM public.exercises e WHERE e.chapter_id = c.id);
 
 INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order) VALUES
@@ -1735,6 +1735,78 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('172edea9-3107-5d1a-a5b3-b8d55d3b96db', 'ed9bf3b9-7306-587f-b615-6a98b0f855a5', 'math', 'تمرين مراجعة: الأعداد الحقيقية (نمط امتحان)', 2, 70, 15, 'practice', 'admin', 3)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('44cffaaf-830a-5ca5-81de-17bd3737cbf6', '172edea9-3107-5d1a-a5b3-b8d55d3b96db', 'ما الكتابة العلمية الصحيحة للعدد 2500؟', '[{"id":"a","text":"25 × 10²"},{"id":"b","text":"0.25 × 10⁴"},{"id":"c","text":"2.5 × 10³"},{"id":"d","text":"2.5 × 10⁻³"}]'::jsonb, 'c', 'الكتابة العلمية تشترط أن يكون المعامل بين 1 و10 (غير مشمول). 2500 = 2.5 × 1000 = 2.5 × 10³. الخيار (a) معامله 25 ≥ 10 فلا يُقبل، والخيار (b) معامله أقلّ من 1، والخيار (d) يعطي عددًا أقلّ من 1.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('c9845284-c085-5b00-9764-2c8eb3d446f2', '172edea9-3107-5d1a-a5b3-b8d55d3b96db', 'ما قيم x الحقيقية التي تحقّق |2x − 3| = 5؟', '[{"id":"a","text":"x = 4 فقط"},{"id":"b","text":"x = 4 أو x = −1"},{"id":"c","text":"x = 1 أو x = −4"},{"id":"d","text":"لا يوجد حلّ"}]'::jsonb, 'b', '|2x − 3| = 5 يعني: إمّا 2x − 3 = 5 فنجد 2x = 8 أي x = 4، وإمّا 2x − 3 = −5 فنجد 2x = −2 أي x = −1. التحقّق: |2(4)−3| = |5| = 5 ✓ و |2(−1)−3| = |−5| = 5 ✓.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('7425c2e9-e237-5e54-9bd0-e80dbaf0b8c5', '172edea9-3107-5d1a-a5b3-b8d55d3b96db', 'أيّ من الأعداد التالية ينتمي إلى المجال ]3 ، 7] ؟', '[{"id":"a","text":"3"},{"id":"b","text":"7"},{"id":"c","text":"8"},{"id":"d","text":"2"}]'::jsonb, 'b', 'المجال ]3 ، 7] يعني 3 < x ≤ 7: الحدّ 3 غير مشمول (قوس متّجه)، أمّا الحدّ 7 فمشمول (قوس مربّع). إذن 7 ينتمي إلى المجال، بينما 3 و8 و2 لا ينتمون إليه.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('e836ab7e-a4ce-5624-886a-ec90a31280ef', '172edea9-3107-5d1a-a5b3-b8d55d3b96db', 'رتّب الأعداد التالية تصاعديًا وحدّد الأكبر: 2.2 ، √5 ، 9/4 ، 2.3', '[{"id":"a","text":"2.3"},{"id":"b","text":"√5"},{"id":"c","text":"9/4"},{"id":"d","text":"2.2"}]'::jsonb, 'a', 'نُقارن القيم: 2.2 = 2.2 ، √5 ≈ 2.236 ، 9/4 = 2.25 ، 2.3 = 2.3. الترتيب التصاعدي: 2.2 < √5 < 9/4 < 2.3. إذن الأكبر هو 2.3.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('909783ed-8c93-5595-b2c0-bc221c6af843', '172edea9-3107-5d1a-a5b3-b8d55d3b96db', 'كانت درجة الحرارة عند الفجر −3°م، ثمّ ارتفعت بمقدار 8 درجات. ما درجة الحرارة الجديدة؟', '[{"id":"a","text":"11°م"},{"id":"b","text":"−11°م"},{"id":"c","text":"5°م"},{"id":"d","text":"−5°م"}]'::jsonb, 'c', 'درجة الحرارة الجديدة = −3 + 8 = 5°م. الارتفاع بمقدار 8 يعني إضافة 8 إلى القيمة السالبة: −3 + 8 = 5.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('1c95a370-18dc-5351-bcfc-33836e75b1df', '172edea9-3107-5d1a-a5b3-b8d55d3b96db', 'إذا كان x ∈ ℝ وكان x² = 16، فما مجموعة الحلول؟', '[{"id":"a","text":"{4}"},{"id":"b","text":"{−4 ، 4}"},{"id":"c","text":"{−16 ، 16}"},{"id":"d","text":"{8 ، −8}"}]'::jsonb, 'b', 'x² = 16 يعني x = 4 أو x = −4، لأنّ (4)² = 16 و(−4)² = 16. لا تنسَ الحلّ السالب! مجموعة الحلول هي {−4 ، 4}.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('5680c5e9-d223-542e-9db3-4c3e770da622', '65871a90-e921-55ff-b1fe-5483ab510aad', 'math', 'تمرين: حساب وتبسيط الجذور', 1, 55, 12, 'practice', 'admin', 1)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -1850,6 +1922,78 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('8a7b4344-7720-59ed-8bc9-4d67d9ad42c9', '2d3109e8-a00c-5619-8905-d768c68c00b9', 'هل يمكن جمع √2 + √3 في عدد واحد على شكل k√n ؟', '[{"id":"a","text":"لا، لأنّ الجذرين غير متشابهين"},{"id":"b","text":"نعم، يساوي √5"},{"id":"c","text":"نعم، يساوي √6"},{"id":"d","text":"نعم، يساوي 2√3"}]'::jsonb, 'a', '√2 + √3 لا يمكن دمجهما لأنّهما غير متشابهين، و √(a+b) ≠ √a + √b.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('c8957fdb-6fc2-5637-aef7-b904288394bb', '65871a90-e921-55ff-b1fe-5483ab510aad', 'math', 'تمرين مراجعة: الجذور التربيعية (نمط امتحان)', 2, 70, 15, 'practice', 'admin', 3)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('f7d366dd-abc3-5d2a-98ea-4f5fa30c73c5', 'c8957fdb-6fc2-5637-aef7-b904288394bb', 'أبسّط √75 :', '[{"id":"a","text":"3√5"},{"id":"b","text":"25√3"},{"id":"c","text":"15√3"},{"id":"d","text":"5√3"}]'::jsonb, 'd', 'نحلّل 75 إلى جداء مربّع كامل: 75 = 25 × 3. إذن √75 = √(25 × 3) = √25 × √3 = 5√3. الخيار (c) و(b) خاطئان حسابيًا، و(a) يخطئ العامل.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('56474803-dffb-5178-8a2d-7eb12de808e0', 'c8957fdb-6fc2-5637-aef7-b904288394bb', 'اُنطق مقام الكسر 3/√3 (أي اكتبه بدون جذر في المقام):', '[{"id":"a","text":"√3"},{"id":"b","text":"3√3"},{"id":"c","text":"√3/3"},{"id":"d","text":"9/√3"}]'::jsonb, 'a', 'نضرب البسط والمقام في √3: (3 × √3) / (√3 × √3) = 3√3 / 3 = √3. إذن 3/√3 = √3.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('ac62fe45-0997-55a0-af87-65d914832ea9', 'c8957fdb-6fc2-5637-aef7-b904288394bb', 'ما قيمة √8 + √18 ؟', '[{"id":"a","text":"√26"},{"id":"b","text":"3√6"},{"id":"c","text":"5√2"},{"id":"d","text":"2√26"}]'::jsonb, 'c', 'نبسّط كلّ جذر: √8 = √(4×2) = 2√2 ، و√18 = √(9×2) = 3√2. إذن √8 + √18 = 2√2 + 3√2 = 5√2. الخيار (a) خاطئ لأنّ √(a)+√(b) ≠ √(a+b).', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('523c2f5e-e991-5b1e-8011-1f219b3c0338', 'c8957fdb-6fc2-5637-aef7-b904288394bb', 'ما قيمة √((−5)²) ؟', '[{"id":"a","text":"−5"},{"id":"b","text":"5"},{"id":"c","text":"25"},{"id":"d","text":"−25"}]'::jsonb, 'b', '(−5)² = 25، ثمّ √25 = 5. وبصفة عامّة √(a²) = |a|، وبما أنّ |−5| = 5 فالجواب هو 5. الجذر التربيعي لا يُعطي أبدًا قيمة سالبة.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('a562a03d-fbbd-54c0-a28d-29d30385474d', 'c8957fdb-6fc2-5637-aef7-b904288394bb', 'في مثلّث قائم الزاوية، ضلعاه القائمان يساويان 6 سم و8 سم. ما طول الوتر؟', '[{"id":"a","text":"√14 سم"},{"id":"b","text":"7 سم"},{"id":"c","text":"√48 سم"},{"id":"d","text":"10 سم"}]'::jsonb, 'd', 'بتطبيق نظريّة فيثاغورس: وتر² = 6² + 8² = 36 + 64 = 100، إذن الوتر = √100 = 10 سم. تذكّر المثلث 6-8-10 وهو من مضاعفات المثلث 3-4-5.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('bd7ca0a1-fb2b-5744-ad6e-36c4ca721219', 'c8957fdb-6fc2-5637-aef7-b904288394bb', 'اُنطق مقام الكسر 6/√2 :', '[{"id":"a","text":"3√2"},{"id":"b","text":"6√2"},{"id":"c","text":"√2/3"},{"id":"d","text":"3/√2"}]'::jsonb, 'a', 'نضرب في √2/√2: (6 × √2) / (√2 × √2) = 6√2 / 2 = 3√2. الخيار (b) نسي القسمة على 2، و(c) و(d) خاطئان في العملية.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2003,6 +2147,78 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('5060d30c-a963-5fa0-9a94-22276e9e2aa5', 'ddbe302b-6317-5fa9-a93d-9eddd64651fe', 'math', 'تمرين مراجعة: الحساب الحرفي (نمط امتحان)', 2, 70, 15, 'practice', 'admin', 3)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('0a59a28a-5532-5ca1-8d89-06950c66e39a', '5060d30c-a963-5fa0-9a94-22276e9e2aa5', 'انشر وبسّط: (x + 3)²', '[{"id":"a","text":"x² + 9"},{"id":"b","text":"x² + 6x + 9"},{"id":"c","text":"x² + 3x + 9"},{"id":"d","text":"x² − 6x + 9"}]'::jsonb, 'b', 'باستعمال المتطابقة الأولى: (a + b)² = a² + 2ab + b². هنا a = x وb = 3، إذن (x+3)² = x² + 2(x)(3) + 3² = x² + 6x + 9. الخطأ الشائع (a) هو نسيان الحدّ الأوسط 2ab.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('3b714f25-0ac6-5d4a-94bc-c57f6464b0cc', '5060d30c-a963-5fa0-9a94-22276e9e2aa5', 'عمّل (حلّل): 4x² − 9', '[{"id":"a","text":"(2x − 9)(2x + 1)"},{"id":"b","text":"(2x − 3)²"},{"id":"c","text":"(2x − 3)(2x + 3)"},{"id":"d","text":"4(x² − 9)"}]'::jsonb, 'c', '4x² − 9 = (2x)² − 3² هو فرق مربّعين. بتطبيق المتطابقة الثالثة (a−b)(a+b) = a²−b² مع a = 2x وb = 3: 4x² − 9 = (2x − 3)(2x + 3). التحقّق بالنشر: (2x−3)(2x+3) = 4x² + 6x − 6x − 9 = 4x² − 9 ✓.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('01baab24-4c96-5db7-b164-7c011024ba17', '5060d30c-a963-5fa0-9a94-22276e9e2aa5', 'بسّط العبارة: 3(x − 2) + 5(x + 1)', '[{"id":"a","text":"8x − 1"},{"id":"b","text":"8x + 7"},{"id":"c","text":"8x − 7"},{"id":"d","text":"8x + 1"}]'::jsonb, 'a', 'نوزّع أوّلًا: 3(x−2) = 3x − 6 و5(x+1) = 5x + 5. ثمّ نجمع الحدود المتشابهة: (3x + 5x) + (−6 + 5) = 8x + (−1) = 8x − 1.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('43e1e077-42f6-58a8-8b60-53699a200ec6', '5060d30c-a963-5fa0-9a94-22276e9e2aa5', 'انشر وبسّط: (3x − 1)²', '[{"id":"a","text":"9x² + 1"},{"id":"b","text":"9x² − 1"},{"id":"c","text":"9x² + 6x + 1"},{"id":"d","text":"9x² − 6x + 1"}]'::jsonb, 'd', 'باستعمال المتطابقة الثانية: (a − b)² = a² − 2ab + b². هنا a = 3x وb = 1، إذن (3x−1)² = (3x)² − 2(3x)(1) + 1² = 9x² − 6x + 1. الخطأ (a) و(b) ينسيان الحدّ الأوسط.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('b338f59a-2a9c-5da0-a39a-323a77b349f1', '5060d30c-a963-5fa0-9a94-22276e9e2aa5', 'مستطيل طوله (x + 5) سم وعرضه (x − 2) سم. ما مساحته؟', '[{"id":"a","text":"x² + 3x − 10 سم²"},{"id":"b","text":"x² + 3x − 10 سم²"},{"id":"c","text":"x² − 3x + 10 سم²"},{"id":"d","text":"2x + 3 سم²"}]'::jsonb, 'a', 'المساحة = الطول × العرض = (x+5)(x−2). نوسّع: x(x−2) + 5(x−2) = x² − 2x + 5x − 10 = x² + 3x − 10 سم². الخيار (d) خاطئ لأنّه يجمع الطول والعرض عوضًا عن ضربهما.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('823530d0-e752-5f06-895a-c4128ba33edd', '5060d30c-a963-5fa0-9a94-22276e9e2aa5', 'أيّ من العبارات التالية يمثّل تعميلًا (تحليلًا) للعبارة x² + 10x + 25 ؟', '[{"id":"a","text":"(x + 5)(x − 5)"},{"id":"b","text":"(x + 10)(x + 25)"},{"id":"c","text":"(x + 5)²"},{"id":"d","text":"(x − 5)²"}]'::jsonb, 'c', 'x² + 10x + 25 = x² + 2(x)(5) + 5² هو مربّع المجموع (a+b)² مع a = x وb = 5. إذن x² + 10x + 25 = (x + 5)². الخيار (a) هو فرق مربّعين ينتج x²−25، و(d) ينتج x²−10x+25.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('3175611f-46ae-53ca-8b70-580d3231f54c', 'b9d33015-226b-5d6f-8109-8f164dfe2e07', 'math', 'تمرين: حلّ المعادلات والمتراجحات', 2, 75, 15, 'practice', 'admin', 1)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -2138,6 +2354,78 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('6e370c06-3a42-5e35-bf68-9e28afccbb7b', 'd8d89bf8-2b16-583f-85bd-beb3818b9e4d', 'ما الحلّ الصحيح للمتراجحة: 5 − 2x > 11 ؟', '[{"id":"a","text":"x > −3"},{"id":"b","text":"x < −3"},{"id":"c","text":"x > 3"},{"id":"d","text":"x < 3"}]'::jsonb, 'b', '5 − 2x > 11 → −2x > 11 − 5 → −2x > 6 → نقسم على −2 مع قلب الإشارة → x < −3. الحلّ: x ∈ ]−∞ ، −3[.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('ec6351c9-f945-5e92-a049-63e7ef8fc361', 'b9d33015-226b-5d6f-8109-8f164dfe2e07', 'math', 'تمرين مراجعة: المعادلات والمتراجحات (نمط امتحان)', 2, 70, 15, 'practice', 'admin', 3)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('1003cd5b-33ef-50a8-a5a0-de63f029f7de', 'ec6351c9-f945-5e92-a049-63e7ef8fc361', 'ما حلّ المعادلة: 2(3x − 1) + 4 = 3(x + 2) ؟', '[{"id":"a","text":"x = 2"},{"id":"b","text":"x = 1"},{"id":"c","text":"x = 4/3"},{"id":"d","text":"x = −4/3"}]'::jsonb, 'c', 'نوسّع الأقواس: 6x − 2 + 4 = 3x + 6، أي 6x + 2 = 3x + 6. ننقل الحدود: 6x − 3x = 6 − 2، فنجد 3x = 4، إذن x = 4/3. التحقّق: 2(3 × 4/3 − 1) + 4 = 2(4 − 1) + 4 = 6 + 4 = 10، و 3(4/3 + 2) = 3(10/3) = 10 ✓', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d6a1c117-1596-5121-8277-92cd7a7570cd', 'ec6351c9-f945-5e92-a049-63e7ef8fc361', 'بتطبيق مبدأ الجداء المعدوم، ما مجموعة حلول المعادلة: (2x − 6)(x + 4) = 0 ؟', '[{"id":"a","text":"{ 6 ، −4 }"},{"id":"b","text":"{ −3 ، 4 }"},{"id":"c","text":"{ −6 ، 4 }"},{"id":"d","text":"{ 3 ، −4 }"}]'::jsonb, 'd', 'جداء عددين يساوي الصفر يعني أنّ أحدهما صفر. إمّا 2x − 6 = 0 فنجد 2x = 6 أي x = 3، وإمّا x + 4 = 0 فنجد x = −4. مجموعة الحلول هي {3 ، −4}. التحقّق: (2×3−6)(3+4) = 0×7 = 0 ✓ و (2×(−4)−6)(−4+4) = (−14)×0 = 0 ✓', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d2c73317-f59c-53e8-b54a-1ae8a4e18434', 'ec6351c9-f945-5e92-a049-63e7ef8fc361', 'ما حلّ المتراجحة: 4x + 3 < 2x − 5 ؟', '[{"id":"a","text":"x < 4"},{"id":"b","text":"x < −4"},{"id":"c","text":"x > −4"},{"id":"d","text":"x > 4"}]'::jsonb, 'b', 'ننقل الحدود: 4x − 2x < −5 − 3، فنجد 2x < −8، ونقسم على 2 (عدد موجب لا قلب في الإشارة): x < −4. الحلّ هو x ∈ ]−∞ ، −4[. تحقّق بقيمة مثلًا x = −5: 4(−5)+3 = −17 و 2(−5)−5 = −15، وفعلًا −17 < −15 ✓', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('340f0056-37f0-57a2-b63c-36810c7977cb', 'ec6351c9-f945-5e92-a049-63e7ef8fc361', 'عمر أحمد ضعف عمر أخته سلمى، وبعد 4 سنوات يصبح مجموع عمريهما 41 سنة. ما عمر أحمد الآن؟', '[{"id":"a","text":"22 سنة"},{"id":"b","text":"18 سنة"},{"id":"c","text":"30 سنة"},{"id":"d","text":"20 سنة"}]'::jsonb, 'a', 'لتكن x عمر سلمى الآن، فعمر أحمد الآن 2x. بعد 4 سنوات: (2x + 4) + (x + 4) = 41، أي 3x + 8 = 41، فـ 3x = 33، إذن x = 11. عمر أحمد = 2 × 11 = 22 سنة. التحقّق: بعد 4 سنوات يكون 26 + 15 = 41 ✓', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('cc0e95d3-8aac-5a04-a61b-b5dff4c9bee1', 'ec6351c9-f945-5e92-a049-63e7ef8fc361', 'محيط مستطيل يساوي 46 سم، وطوله يزيد على عرضه بـ 7 سم. ما طول هذا المستطيل؟', '[{"id":"a","text":"8 سم"},{"id":"b","text":"12 سم"},{"id":"c","text":"14 سم"},{"id":"d","text":"15 سم"}]'::jsonb, 'd', 'لتكن l الطول وw العرض. الطول يزيد على العرض بـ 7: l = w + 7. المحيط: 2(l + w) = 46 أي l + w = 23. بالتعويض: (w + 7) + w = 23، فـ 2w = 16، إذن w = 8 سم والطول l = 8 + 7 = 15 سم. التحقّق: 2(15 + 8) = 2 × 23 = 46 ✓', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('88a2297f-a028-5f5d-8a94-3e63c6138a9e', 'ec6351c9-f945-5e92-a049-63e7ef8fc361', 'ما مجموعة حلول المتراجحة: −5x + 3 < 2x − 11 ؟', '[{"id":"a","text":"x < −2"},{"id":"b","text":"x > 2"},{"id":"c","text":"x < 2"},{"id":"d","text":"x > −2"}]'::jsonb, 'b', 'ننقل الحدود: −5x − 2x < −11 − 3، فـ −7x < −14. نقسم على −7 (عدد سالب → نقلب الإشارة!): x > 2. الحلّ هو x ∈ ]2 ، +∞[. تحقّق بـ x = 3: −5(3)+3 = −12 و 2(3)−11 = −5، وفعلًا −12 < −5 ✓', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2309,6 +2597,85 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('f2e9adfd-e915-5fd1-89e9-3cc24f005f51', 'e9b1fb37-38ae-5b12-a38b-c6f536ff90a7', 'math', 'تمرين مراجعة: جُمل المعادلتَين بمجهولَين (نمط امتحان)', 2, 70, 15, 'practice', 'admin', 3)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d741efb8-605f-5b1d-9111-8e6877639813', 'f2e9adfd-e915-5fd1-89e9-3cc24f005f51', 'احلل الجملة بطريقة التأليف:
+$$\begin{cases} 2x + y = 7 \\ x + 2y = 5 \end{cases}$$
+ما هو الحلّ؟', '[{"id":"a","text":"(2 ; 3)"},{"id":"b","text":"(3 ; 1)"},{"id":"c","text":"(1 ; 2)"},{"id":"d","text":"(4 ; 1)"}]'::jsonb, 'b', 'نضرب المعادلة الأولى في 2: 4x + 2y = 14. نطرح منها المعادلة الثانية: (4x+2y) − (x+2y) = 14−5، إذن 3x = 9، x = 3. نعوّض في المعادلة الأولى: 2(3) + y = 7، y = 1. الحلّ (3 ; 1). التحقّق: 6+1=7 ✓، 3+2=5 ✓.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('c1aa8e1f-392c-5a10-9f18-c53b4ed30240', 'f2e9adfd-e915-5fd1-89e9-3cc24f005f51', 'احلل الجملة بطريقة التعويض:
+$$\begin{cases} y = 2x - 1 \\ x + y = 8 \end{cases}$$
+ما هو الحلّ؟', '[{"id":"a","text":"(3 ; 5)"},{"id":"b","text":"(4 ; 4)"},{"id":"c","text":"(2 ; 6)"},{"id":"d","text":"(3 ; 7)"}]'::jsonb, 'a', 'نعوّض y = 2x−1 في المعادلة الثانية: x + (2x−1) = 8، إذن 3x−1 = 8، 3x = 9، x = 3. نحسب y: y = 2(3)−1 = 5. الحلّ (3 ; 5). التحقّق: 5 = 2(3)−1 ✓، 3+5=8 ✓.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('4a321ae6-ca1d-5400-ada2-4901e6421f4f', 'f2e9adfd-e915-5fd1-89e9-3cc24f005f51', 'أيٌّ من الثنائيات التالية هي حلّ الجملة:
+$$\begin{cases} 3x - y = 5 \\ x + y = 7 \end{cases}$$', '[{"id":"a","text":"(2 ; 1)"},{"id":"b","text":"(1 ; 6)"},{"id":"c","text":"(4 ; 2)"},{"id":"d","text":"(3 ; 4)"}]'::jsonb, 'd', 'نتحقّق من الثنائية (3 ; 4) في المعادلتَين: المعادلة الأولى: 3(3)−4 = 9−4 = 5 ✓. المعادلة الثانية: 3+4 = 7 ✓. كلتا المعادلتَين محقَّقتان، إذن الحلّ هو (3 ; 4). للتأكّد: نحلّ الجملة بجمع المعادلتَين: (3x−y)+(x+y) = 5+7، إذن 4x = 12، x = 3. نعوّض: 3+y = 7، y = 4.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('ee569973-6173-5d85-8bc4-5fc55cae4455', 'f2e9adfd-e915-5fd1-89e9-3cc24f005f51', 'احلل الجملة:
+$$\begin{cases} 2x + 3y = 16 \\ 2x - y = 8 \end{cases}$$
+ما قيمة y ؟', '[{"id":"a","text":"y = 1"},{"id":"b","text":"y = 4"},{"id":"c","text":"y = 2"},{"id":"d","text":"y = 3"}]'::jsonb, 'c', 'نطرح المعادلة الثانية من الأولى: (2x+3y) − (2x−y) = 16−8، إذن 4y = 8، y = 2. نعوّض في الثانية: 2x−2 = 8، 2x = 10، x = 5. التحقّق: 2(5)+3(2)=10+6=16 ✓، 2(5)−2=8 ✓.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('64c15d45-547c-5292-aa95-b0f54942988f', 'f2e9adfd-e915-5fd1-89e9-3cc24f005f51', 'في محلّ قرطاسية، ثمن قلم حبر يساوي ثلاثة أمثال ثمن قلم رصاص. اشترى أحمد قلم حبر وقلم رصاص فدفع 8 دنانير. ما ثمن كلٍّ منهما؟', '[{"id":"a","text":"قلم الحبر 5 د، قلم الرصاص 3 د"},{"id":"b","text":"قلم الحبر 4 د، قلم الرصاص 4 د"},{"id":"c","text":"قلم الحبر 6 د، قلم الرصاص 2 د"},{"id":"d","text":"قلم الحبر 3 د، قلم الرصاص 5 د"}]'::jsonb, 'c', 'نُسمّي ثمن قلم الرصاص x وثمن قلم الحبر y. الشرطان: y = 3x (قلم الحبر = ثلاثة أمثال قلم الرصاص) و x + y = 8. بالتعويض: x + 3x = 8، إذن 4x = 8، x = 2. إذن ثمن قلم الرصاص 2 دنانير وثمن قلم الحبر y = 3(2) = 6 دنانير. التحقّق: 2+6=8 ✓، 6=3×2 ✓.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('28aa1e42-8121-55b2-81c1-2707775827fa', 'f2e9adfd-e915-5fd1-89e9-3cc24f005f51', 'محيط مستطيل يساوي 34 سم، وطوله يزيد عن عرضه بـ 5 سم. ما مساحة هذا المستطيل؟', '[{"id":"a","text":"66 سم²"},{"id":"b","text":"72 سم²"},{"id":"c","text":"60 سم²"},{"id":"d","text":"56 سم²"}]'::jsonb, 'a', 'نُسمّي الطول l والعرض w. الشرطان: 2(l+w) = 34، إذن l+w = 17، وكذلك l = w+5. بالتعويض: (w+5)+w = 17، 2w = 12، w = 6 سم. إذن l = 6+5 = 11 سم. المساحة = l×w = 11×6 = 66 سم². التحقّق: 2(11+6)=34 ✓، 11−6=5 ✓.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('19994972-418b-5eeb-90e0-8db612ea6855', 'a1dc4ef0-cc8f-54bd-a3f4-9d4f4e1dc851', 'math', 'تمرين: الدوال الخطية والتآلفية — الصور والسوابق والتمثيل', 1, 50, 10, 'practice', 'admin', 1)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -2444,6 +2811,78 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('f8536003-53a7-52de-bb8c-0affc30f3c66', '6344760c-5d13-5ace-be92-9275a52c654a', 'الدالة f خطية وتحقّق f(2) = 10؛ الدالة g تآلفية وتحقّق g(0) = 4 و g(2) = 8. أيّ الدالتَين تعطي القيمة الأكبر عند x = 3 ؟', '[{"id":"a","text":"f، لأنّ f(3) = 15 و g(3) = 10"},{"id":"b","text":"g، لأنّ g(3) = 15 و f(3) = 10"},{"id":"c","text":"كلتاهما تعطيان نفس القيمة"},{"id":"d","text":"f، لأنّ f(3) = 12 و g(3) = 10"}]'::jsonb, 'a', 'الدالة f: f(x) = ax، من f(2) = 10 نجد a = 5، إذن f(3) = 15. الدالة g: g(x) = bx + c، من g(0) = 4 نجد c = 4؛ من g(2) = 8 نجد 2b + 4 = 8، b = 2. إذن g(3) = 2(3) + 4 = 10. f(3) = 15 > g(3) = 10، فـ f تعطي القيمة الأكبر.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('e50af184-82cf-5fed-a75c-5fe103b19bd8', 'a1dc4ef0-cc8f-54bd-a3f4-9d4f4e1dc851', 'math', 'تمرين مراجعة: الدوال الخطية والتآلفية (نمط امتحان)', 2, 70, 15, 'practice', 'admin', 3)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('3a028e6b-35c9-5756-8671-d6e48073c9c1', 'e50af184-82cf-5fed-a75c-5fe103b19bd8', 'لتكن الدالة f(x) = 2x + 3. ما هي صورة العدد 4 بالدالة f ؟', '[{"id":"a","text":"9"},{"id":"b","text":"10"},{"id":"c","text":"11"},{"id":"d","text":"8"}]'::jsonb, 'c', 'نحسب f(4) = 2 × 4 + 3 = 8 + 3 = 11. التحقّق: نعوّض x = 4 في التعبير 2x + 3 فنحصل على 11.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('f89cf4ff-ebab-5eb3-84e3-8350eb35163e', 'e50af184-82cf-5fed-a75c-5fe103b19bd8', 'الدالة الخطية f تحقّق f(5) = 15. ما هو معامل التناسب a ؟', '[{"id":"a","text":"a = 5"},{"id":"b","text":"a = 2"},{"id":"c","text":"a = 10"},{"id":"d","text":"a = 3"}]'::jsonb, 'd', 'الدالة الخطية هي f(x) = a·x. إذن f(5) = 5a = 15، فنقسم الطرفَين على 5: a = 3. نتحقّق: f(5) = 3 × 5 = 15 ✓.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('fefd1013-760f-55a5-8301-3bfdf0fc0411', 'e50af184-82cf-5fed-a75c-5fe103b19bd8', 'لتكن f(x) = 3x − 1. ما هي سابقة العدد 8 بالدالة f ؟', '[{"id":"a","text":"x = 2"},{"id":"b","text":"x = 9"},{"id":"c","text":"x = 4"},{"id":"d","text":"x = 3"}]'::jsonb, 'd', 'السابقة هي قيمة x التي تُعطي f(x) = 8. نحلّ: 3x − 1 = 8، إذن 3x = 9، x = 3. التحقّق: f(3) = 3(3) − 1 = 9 − 1 = 8 ✓.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('eb98e9dd-57f4-58f4-a0d3-8a77f5224c3d', 'e50af184-82cf-5fed-a75c-5fe103b19bd8', 'مستقيم يمرّ بالنقطتَين A(0 ; 2) و B(3 ; 8). ما هي الدالة التآلفية f التي يمثّلها؟', '[{"id":"a","text":"f(x) = 3x + 2"},{"id":"b","text":"f(x) = 2x + 2"},{"id":"c","text":"f(x) = 2x + 3"},{"id":"d","text":"f(x) = x + 2"}]'::jsonb, 'b', 'معامل التوجيه: a = (8 − 2) / (3 − 0) = 6 / 3 = 2. القطع مع محور التراتيب: b = f(0) = 2. إذن f(x) = 2x + 2. التحقّق: f(0) = 2 ✓، f(3) = 6 + 2 = 8 ✓.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('2aa385d0-e81e-5531-a04b-fd0aefb421b6', 'e50af184-82cf-5fed-a75c-5fe103b19bd8', 'الدالة الخطية g تُمثَّل بيانيًّا بمستقيم يمرّ بنقطة الأصل و بالنقطة (2 ; −6). ما هي قيمة معامل التناسب a ؟', '[{"id":"a","text":"a = 3"},{"id":"b","text":"a = −2"},{"id":"c","text":"a = 2"},{"id":"d","text":"a = −3"}]'::jsonb, 'd', 'الدالة الخطية هي g(x) = a·x. المستقيم يمرّ بـ (2 ; −6)، إذن g(2) = 2a = −6، فنحصل على a = −3. التحقّق: g(2) = −3 × 2 = −6 ✓. المستقيم نازل لأنّ a < 0.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('3f729bcb-ccf8-5167-a100-d128aef14565', 'e50af184-82cf-5fed-a75c-5fe103b19bd8', 'تحسب أجرة سيارة أجرة (تاكسي) وفق الصيغة f(x) = ax + b، حيث x هو عدد الكيلومترات. لرحلة 5 كم تكون الأجرة 9 دنانير، ولرحلة 10 كم تكون 14 دينارًا. ما تكلفة رحلة 20 كم؟', '[{"id":"a","text":"20 دينارًا"},{"id":"b","text":"22 دينارًا"},{"id":"c","text":"24 دينارًا"},{"id":"d","text":"28 دينارًا"}]'::jsonb, 'c', 'من المعطيَين: 5a + b = 9 و 10a + b = 14. نطرح المعادلة الأولى من الثانية: 5a = 5، إذن a = 1. نعوّض في الأولى: 5 + b = 9، b = 4. إذن f(x) = x + 4. تكلفة 20 كم: f(20) = 20 + 4 = 24 دينارًا. التحقّق: f(5) = 9 ✓، f(10) = 14 ✓.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2597,6 +3036,98 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('31f9bc81-3462-51c0-a42a-4bc1079be296', '02eb650b-9f63-52d8-af00-acd3d01b6c4d', 'math', 'تمرين مراجعة: الإحصاء (نمط امتحان)', 2, 70, 15, 'practice', 'admin', 3)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('7044e06a-b01a-5567-8a50-18d770f599db', '31f9bc81-3462-51c0-a42a-4bc1079be296', 'يُعطى الجدول الإحصائي التالي لعلامات 20 تلميذًا:
+| العلامة | 8 | 10 | 12 | 14 | 16 |
+|---------|---|----|----|----|----|  
+| التكرار | 2 | 4  | 6  | 5  | 3  |
+
+ما هو المعدّل الحسابي لهذه السلسلة؟', '[{"id":"a","text":"12"},{"id":"b","text":"12.3"},{"id":"c","text":"12.5"},{"id":"d","text":"11.5"}]'::jsonb, 'b', 'المعدّل = (8×2 + 10×4 + 12×6 + 14×5 + 16×3) ÷ 20 = (16 + 40 + 72 + 70 + 48) ÷ 20 = 246 ÷ 20 = 12{,}3. التحقّق: مجموع التكرارات = 2+4+6+5+3 = 20 ✓.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('63f5da1a-18c9-51da-9482-16616c888864', '31f9bc81-3462-51c0-a42a-4bc1079be296', 'بالرجوع إلى الجدول الإحصائي السابق (علامات 20 تلميذًا):
+| العلامة | 8 | 10 | 12 | 14 | 16 |
+|---------|---|----|----|----|----|  
+| التكرار | 2 | 4  | 6  | 5  | 3  |
+
+ما هو منوال هذه السلسلة؟', '[{"id":"a","text":"10"},{"id":"b","text":"14"},{"id":"c","text":"16"},{"id":"d","text":"12"}]'::jsonb, 'd', 'المنوال هو القيمة ذات أعلى تكرار. من الجدول: تكرار 8 هو 2، تكرار 10 هو 4، تكرار 12 هو 6، تكرار 14 هو 5، تكرار 16 هو 3. أعلى تكرار هو 6 يقابله العلامة 12. إذن المنوال = 12.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('f59c1983-2f5e-5726-91c7-7bfc2407e5e9', '31f9bc81-3462-51c0-a42a-4bc1079be296', 'بالرجوع إلى الجدول الإحصائي السابق (علامات 20 تلميذًا):
+| العلامة | 8 | 10 | 12 | 14 | 16 |
+|---------|---|----|----|----|----|  
+| التكرار | 2 | 4  | 6  | 5  | 3  |
+
+ما هو وسيط هذه السلسلة؟', '[{"id":"a","text":"11"},{"id":"b","text":"13"},{"id":"c","text":"12"},{"id":"d","text":"14"}]'::jsonb, 'c', 'n = 20 (زوجي)، نبحث عن القيمتَين ذواتَي الرتبتَين 10 و 11. التكرار المجمّع: العلامة 8 → 2، العلامة 10 → 6، العلامة 12 → 12. الرتبة 10 والرتبة 11 كلتاهما تقعان في فئة العلامة 12 (التكرار المجمّع يبلغ 12 عند 12). الوسيط = (12 + 12) ÷ 2 = 12.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('27d53fa5-4c6e-5cff-8a50-dcac20918fc5', '31f9bc81-3462-51c0-a42a-4bc1079be296', 'بالرجوع إلى الجدول الإحصائي السابق (علامات 20 تلميذًا):
+| العلامة | 8 | 10 | 12 | 14 | 16 |
+|---------|---|----|----|----|----|  
+| التكرار | 2 | 4  | 6  | 5  | 3  |
+
+ما هو تواتر (نسبة) العلامة 14 بالمائة؟', '[{"id":"a","text":"20%"},{"id":"b","text":"30%"},{"id":"c","text":"15%"},{"id":"d","text":"25%"}]'::jsonb, 'd', 'التواتر = التكرار ÷ التكرار الكلّي = 5 ÷ 20 = 0{,}25. التواتر بالمائة = 0{,}25 × 100 = 25%. التحقّق: مجموع جميع التكرارات = 20 ✓، ومجموع التواترات بالمائة: 10%+20%+30%+25%+15% = 100% ✓.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('c0709b4d-2cb5-56ad-a4df-a88d8e7bf9c7', '31f9bc81-3462-51c0-a42a-4bc1079be296', 'سجّل تلميذ العلامات التالية في الفصل الأوّل: 10، 12، 14، 8، 16. ما هو معدّله في هذا الفصل؟', '[{"id":"a","text":"11"},{"id":"b","text":"13"},{"id":"c","text":"14"},{"id":"d","text":"12"}]'::jsonb, 'd', 'المعدّل = مجموع العلامات ÷ عددها = (10 + 12 + 14 + 8 + 16) ÷ 5 = 60 ÷ 5 = 12. التحقّق: 10+12=22، 22+14=36، 36+8=44، 44+16=60. 60÷5=12 ✓.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('c559b2d7-c451-5335-a937-abac270def61', '31f9bc81-3462-51c0-a42a-4bc1079be296', 'تحصّل تلميذ في ثلاثة اختبارات على العلامات: 12، 14 و 11. علمًا بأنّ معدّله في أربعة اختبارات هو 13، ما هي علامته في الاختبار الرابع؟', '[{"id":"a","text":"13"},{"id":"b","text":"14"},{"id":"c","text":"15"},{"id":"d","text":"16"}]'::jsonb, 'c', 'مجموع علامات الأربعة اختبارات = المعدّل × العدد = 13 × 4 = 52. مجموع العلامات الثلاثة المعروفة = 12 + 14 + 11 = 37. علامة الاختبار الرابع = 52 − 37 = 15. التحقّق: (12+14+11+15) ÷ 4 = 52 ÷ 4 = 13 ✓.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('f326e9ff-8f5d-59a0-bc33-b53615d43f3d', '4d3cea13-a54f-55f1-ad8d-853c7c9ef05d', 'math', 'تمرين: تطبيق نظرية طاليس وحساب الأطوال', 2, 65, 13, 'practice', 'admin', 1)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -2732,6 +3263,78 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('1cd6a70c-c45e-5409-b6c4-048771ff3fc0', '24ddb42f-96f9-5d15-bda7-fadbd675c804', 'في مثلّث PQR، (ST) ∥ (QR) مع PS = x + 1 وPQ = 3x − 1 وPT = 4 cm وPR = 10 cm. ما قيمة x؟', '[{"id":"a","text":"x = 5"},{"id":"b","text":"x = 6"},{"id":"c","text":"x = 7"},{"id":"d","text":"x = 3"}]'::jsonb, 'c', 'بنظرية طاليس: PS/PQ = PT/PR، أي (x+1)/(3x−1) = 4/10 = 2/5. بالتقاطع: 5(x+1) = 2(3x−1)، أي 5x + 5 = 6x − 2، ومنه x = 7. التحقّق: PS = 8، PQ = 20، فـ 8/20 = 2/5. وPT/PR = 4/10 = 2/5. ✓', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('f33ee550-688a-5f83-8b1c-f714109898ed', '4d3cea13-a54f-55f1-ad8d-853c7c9ef05d', 'math', 'تمرين مراجعة: نظرية طاليس وعكسها (نمط امتحان)', 2, 70, 15, 'practice', 'admin', 3)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('56bbce3f-5120-5770-9ccf-de1c08edbcef', 'f33ee550-688a-5f83-8b1c-f714109898ed', 'في مثلّث ABC، المستقيم (MN) يوازي (BC) ويقطع [AB] في M و[AC] في N. إذا كان AM = 5 cm وAB = 10 cm وAN = 3 cm، فما قيمة AC؟', '[{"id":"a","text":"4 cm"},{"id":"b","text":"5 cm"},{"id":"c","text":"6 cm"},{"id":"d","text":"9 cm"}]'::jsonb, 'c', 'بتطبيق نظرية طاليس: AM/AB = AN/AC، إذن 5/10 = 3/AC، ومنه AC = 3 × 10 ÷ 5 = 6 cm.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('9c198ec7-be2b-5c8d-ad88-51ed81b5d46c', 'f33ee550-688a-5f83-8b1c-f714109898ed', 'في مثلّث ABC، M على [AB] وN على [AC]. هل (MN) ∥ (BC) إذا كان AM = 4 cm وAB = 6 cm وAN = 6 cm وAC = 9 cm؟', '[{"id":"a","text":"نعم، لأنّ AM/AB = AN/AC = 2/3"},{"id":"b","text":"لا، لأنّ AM ≠ AN"},{"id":"c","text":"نعم، لأنّ AM + AN = 10"},{"id":"d","text":"لا، لأنّ AB ≠ AC"}]'::jsonb, 'a', 'AM/AB = 4/6 = 2/3 وAN/AC = 6/9 = 2/3. النسبتان متساويتان، فبالنظرية العكسية لطاليس (MN) ∥ (BC).', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('cca2fb5e-9ee4-5c71-89c0-cdba4e2b52f8', 'f33ee550-688a-5f83-8b1c-f714109898ed', 'في وضعية الفراشة، يتقاطع مستقيمان في O مع (AB) ∥ (CD). إذا كان OA = 3 cm وOC = 9 cm وOB = 4 cm، فما طول OD؟', '[{"id":"a","text":"6 cm"},{"id":"b","text":"9 cm"},{"id":"c","text":"10 cm"},{"id":"d","text":"12 cm"}]'::jsonb, 'd', 'بنظرية طاليس في وضعية الفراشة: OA/OC = OB/OD، إذن 3/9 = 4/OD، ومنه OD = 4 × 9 ÷ 3 = 12 cm.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('9e409479-42b0-5460-b5e0-2f31d6f2dba6', 'f33ee550-688a-5f83-8b1c-f714109898ed', 'في مثلّث ABC، (MN) ∥ (BC) حيث AM = 6 cm وAB = 9 cm وBC = 12 cm. ما طول MN؟', '[{"id":"a","text":"6 cm"},{"id":"b","text":"8 cm"},{"id":"c","text":"9 cm"},{"id":"d","text":"10 cm"}]'::jsonb, 'b', 'بنظرية طاليس: MN/BC = AM/AB = 6/9 = 2/3. إذن MN = BC × (2/3) = 12 × (2/3) = 8 cm.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('b4e7423e-350d-507a-8190-fd0f52071315', 'f33ee550-688a-5f83-8b1c-f714109898ed', 'في مثلّث DEF، (MN) ∥ (EF)، DM = x cm وME = 4 cm وDN = 3 cm وNF = 2 cm. ما قيمة x؟', '[{"id":"a","text":"x = 4 cm"},{"id":"b","text":"x = 5 cm"},{"id":"c","text":"x = 6 cm"},{"id":"d","text":"x = 8 cm"}]'::jsonb, 'c', 'DE = DM + ME = x + 4، وDF = DN + NF = 3 + 2 = 5 cm. بنظرية طاليس: DM/DE = DN/DF، أي x/(x+4) = 3/5. بالتقاطع: 5x = 3(x+4) = 3x + 12، ومنه 2x = 12، أي x = 6 cm. التحقّق: 6/10 = 3/5. ✓', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('cda3fe59-386a-5a33-9fca-650b899f6654', 'f33ee550-688a-5f83-8b1c-f714109898ed', 'أيّ من العبارات التالية تعبّر بشكل صحيح عن النظرية العكسية لطاليس؟', '[{"id":"a","text":"إذا كان AM/AB = AN/AC وM وN داخل الضلعين، فإنّ (MN) ∥ (BC)"},{"id":"b","text":"إذا كانت (MN) ∥ (BC)، فإنّ AM = AN"},{"id":"c","text":"إذا كان MN = BC، فإنّ (MN) ∥ (BC)"},{"id":"d","text":"إذا كانت AM/MB = 1، فإنّ (MN) ∥ (BC)"}]'::jsonb, 'a', 'النظرية العكسية لطاليس تنصّ على: إذا تحقّق AM/AB = AN/AC مع كون M وN على نفس الجانب من الرأس A (داخل الضلعين)، فإنّ (MN) ∥ (BC).', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2885,6 +3488,78 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('45ea24b7-4622-54df-a97f-ccfa0ea12ad5', 'fa8e46c4-235e-5b70-a34b-17b1a9a1920b', 'math', 'تمرين مراجعة: المثلث القائم والنسب المثلثية (نمط امتحان)', 2, 70, 15, 'practice', 'admin', 3)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('62b743c1-f651-569a-a772-66e5937c98c9', '45ea24b7-4622-54df-a97f-ccfa0ea12ad5', 'في مثلّث ABC قائم الزاوية في B، AB = 5 cm وBC = 12 cm. ما طول الوتر AC؟', '[{"id":"a","text":"10 cm"},{"id":"b","text":"13 cm"},{"id":"c","text":"15 cm"},{"id":"d","text":"17 cm"}]'::jsonb, 'b', 'بنظرية فيثاغورس: AC² = AB² + BC² = 5² + 12² = 25 + 144 = 169، ومنه AC = √169 = 13 cm. هذه الثلاثية المشهورة (5، 12، 13).', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('0fcda9a1-fa34-5768-8c5c-e1850330d1d2', '45ea24b7-4622-54df-a97f-ccfa0ea12ad5', 'مثلث أضلاعه 8 cm و15 cm و17 cm. هل هو قائم الزاوية؟', '[{"id":"a","text":"لا، لأنّ 8 + 15 ≠ 17"},{"id":"b","text":"لا، لأنّ 8² + 17² ≠ 15²"},{"id":"c","text":"لا يمكن التحقّق بدون رسم"},{"id":"d","text":"نعم، لأنّ 8² + 15² = 17²"}]'::jsonb, 'd', 'نحسب: 8² + 15² = 64 + 225 = 289 و17² = 289. بما أنّ 8² + 15² = 17²، فبعكس نظرية فيثاغورس المثلث قائم الزاوية (الزاوية القائمة مقابلة للضلع الأطول 17).', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('3fab56a3-4d34-5074-84da-a46a457be4dc', '45ea24b7-4622-54df-a97f-ccfa0ea12ad5', 'في مثلّث ABC قائم الزاوية في B، زاوية A = 45°. أيّ من القيم التالية صحيحة؟', '[{"id":"a","text":"جتا(45°) = 1"},{"id":"b","text":"جا(45°) = √3/2"},{"id":"c","text":"جتا(45°) = √2/2"},{"id":"d","text":"ظا(45°) = √3"}]'::jsonb, 'c', 'الزوايا المشهورة: جا(45°) = جتا(45°) = √2/2 ≈ 0.707، وظا(45°) = 1. إذن جتا(45°) = √2/2 هي الإجابة الصحيحة.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('f53e2aa0-860e-5353-bd2f-01e50007afa6', '45ea24b7-4622-54df-a97f-ccfa0ea12ad5', 'في مثلّث ABC قائم الزاوية في B، زاوية A = 45° وAB = 7 cm. ما طول BC؟', '[{"id":"a","text":"7 cm"},{"id":"b","text":"7√2 cm"},{"id":"c","text":"7√3 cm"},{"id":"d","text":"3.5 cm"}]'::jsonb, 'a', 'ظا(A) = BC/AB، إذن ظا(45°) = BC/7. بما أنّ ظا(45°) = 1، فإنّ BC = 7 × 1 = 7 cm. (المثلث قائم وزاوياه الحادّتان متساويتان، فضلعاه القائمان متساويان.)', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('3d31d49f-8079-543b-b628-3aa0bc442b2d', '45ea24b7-4622-54df-a97f-ccfa0ea12ad5', 'في مثلّث ABC قائم الزاوية في B، زاوية A = 60° والوتر AC = 10 cm. ما طول AB؟', '[{"id":"a","text":"5√3 cm"},{"id":"b","text":"5√2 cm"},{"id":"c","text":"8 cm"},{"id":"d","text":"5 cm"}]'::jsonb, 'd', 'جتا(A) = AB/AC، إذن جتا(60°) = AB/10. بما أنّ جتا(60°) = 1/2، فإنّ AB = 10 × (1/2) = 5 cm.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('7e82d4cb-c9ef-5832-be9f-84c2f258b709', '45ea24b7-4622-54df-a97f-ccfa0ea12ad5', 'في مثلّث ABC قائم الزاوية في B، AB = 6 cm والوتر AC = 12 cm. ما قيمة زاوية A؟', '[{"id":"a","text":"30°"},{"id":"b","text":"45°"},{"id":"c","text":"60°"},{"id":"d","text":"90°"}]'::jsonb, 'c', 'جتا(A) = AB/AC = 6/12 = 1/2. بما أنّ جتا(60°) = 1/2، فإنّ زاوية A = 60°. (يمكن التحقّق: BC = √(AC² − AB²) = √(144 − 36) = √108 = 6√3، وجا(A) = 6√3/12 = √3/2 = جا(60°). ✓)', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('93dfdc12-2b72-5865-99a2-cbfa62c0ded0', '069523c8-c228-5326-bbc1-31ad25257541', 'math', 'تمرين: الزاوية المركزية والزاوية المحيطية', 2, 65, 13, 'practice', 'admin', 1)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -3020,6 +3695,78 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('ba79d051-2cff-575e-bfc7-acfca8574f01', '873efa4f-bd3f-5abb-be22-b8b08bd96d7f', 'في دائرة، الزاوية المحيطية ACB = 63°. ما قيس القوس الصغير AB الذي تحصره هذه الزاوية؟', '[{"id":"a","text":"63°"},{"id":"b","text":"126°"},{"id":"c","text":"31.5°"},{"id":"d","text":"297°"}]'::jsonb, 'b', 'الزاوية المركزية المقابلة = 2 × الزاوية المحيطية = 2 × 63° = 126°. وقيس الزاوية المركزية يساوي قيس قوسها، إذن القوس الصغير AB = 126°.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('1723a195-8a7d-58a9-aca8-4e9271a11138', '069523c8-c228-5326-bbc1-31ad25257541', 'math', 'تمرين مراجعة: الزوايا في الدائرة (نمط امتحان)', 2, 70, 15, 'practice', 'admin', 3)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('796d0d63-c384-51f3-8d91-4122e08a62f4', '1723a195-8a7d-58a9-aca8-4e9271a11138', 'في دائرة مركزها O، الزاوية المركزية AOB = 120°. النقطة C على الدائرة في الجهة المقابلة للقوس الصغير AB. ما قيمة الزاوية المحيطية ACB؟', '[{"id":"a","text":"120°"},{"id":"b","text":"60°"},{"id":"c","text":"240°"},{"id":"d","text":"30°"}]'::jsonb, 'b', 'الزاوية المحيطية = نصف الزاوية المركزية المقابلة لنفس القوس. إذن الزاوية ACB = 120° ÷ 2 = 60°.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('f87fb1de-6040-55a9-884b-8166d6f6a0ff', '1723a195-8a7d-58a9-aca8-4e9271a11138', 'في دائرة مركزها O، الزاوية المحيطية PQR = 35° تحصر القوس PR. ما قيمة الزاوية المركزية POR؟', '[{"id":"a","text":"70°"},{"id":"b","text":"35°"},{"id":"c","text":"17.5°"},{"id":"d","text":"145°"}]'::jsonb, 'a', 'الزاوية المركزية = ضعف الزاوية المحيطية المقابلة لنفس القوس. إذن الزاوية POR = 2 × 35° = 70°.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('6b7fa255-8ccf-594f-a969-4b1a864e2901', '1723a195-8a7d-58a9-aca8-4e9271a11138', 'في دائرة مركزها O، [AC] قطر، والنقطة B على الدائرة. إذا كانت الزاوية BAC = 40°، ما قيمة الزاوية BCA؟', '[{"id":"a","text":"40°"},{"id":"b","text":"90°"},{"id":"c","text":"50°"},{"id":"d","text":"80°"}]'::jsonb, 'c', 'بما أنّ [AC] قطر، فالزاوية ABC = 90° (زاوية محيطية محصورة في نصف دائرة). في المثلث ABC: الزاوية BCA = 180° − 90° − 40° = 50°.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('a81341fd-e00e-5771-8372-84d54917f7a5', '1723a195-8a7d-58a9-aca8-4e9271a11138', 'في دائرة، النقاط A وB وC وD على الدائرة. C وD في نفس الجهة من الوتر [AB]. إذا كانت الزاوية ACB = 38°، ما قيمة الزاوية ADB؟', '[{"id":"a","text":"76°"},{"id":"b","text":"19°"},{"id":"c","text":"142°"},{"id":"d","text":"38°"}]'::jsonb, 'd', 'الزوايا المحيطية التي تحصر نفس القوس من نفس الجهة متقايسة. إذن الزاوية ADB = الزاوية ACB = 38°.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('1d3e65af-6ac2-573e-806e-333c73ba31ee', '1723a195-8a7d-58a9-aca8-4e9271a11138', 'في دائرة مركزها O، الزاوية المركزية AOB = 150°. النقطة C على القوس الكبير (الجهة المقابلة). ما قيمة الزاوية ACB؟', '[{"id":"a","text":"300°"},{"id":"b","text":"75°"},{"id":"c","text":"30°"},{"id":"d","text":"150°"}]'::jsonb, 'b', 'الزاوية المحيطية = نصف الزاوية المركزية المقابلة لنفس القوس. إذن الزاوية ACB = 150° ÷ 2 = 75°.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('bef76b66-7e0a-534f-a565-358ea8541c18', '1723a195-8a7d-58a9-aca8-4e9271a11138', 'في دائرة مركزها O، [AB] قطر، والنقطة C على الدائرة. إذا كانت الزاوية CAB = 55°، ما قيمة الزاوية ABC؟', '[{"id":"a","text":"35°"},{"id":"b","text":"55°"},{"id":"c","text":"90°"},{"id":"d","text":"125°"}]'::jsonb, 'a', 'بما أنّ [AB] قطر، فالزاوية ACB = 90° (زاوية محيطية محصورة في نصف دائرة). في المثلث ABC: الزاوية ABC = 180° − 90° − 55° = 35°.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3173,6 +3920,78 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('3f4fdade-ea1f-5e7e-8045-6e0c9acaa369', '2ed2e3ac-7b29-5351-abd6-b9343cc9a4f9', 'math', 'تمرين مراجعة: الأشعّة والانسحاب (نمط امتحان)', 2, 70, 15, 'practice', 'admin', 3)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('1a4a428a-aab2-59a3-b224-8000dced190c', '3f4fdade-ea1f-5e7e-8045-6e0c9acaa369', 'بتطبيق علاقة شال، ما ناتج $\overrightarrow{AB} + \overrightarrow{BC}$؟', '[{"id":"a","text":"$\\overrightarrow{AC}$"},{"id":"b","text":"$\\overrightarrow{CA}$"},{"id":"c","text":"$\\overrightarrow{BA}$"},{"id":"d","text":"$\\overrightarrow{BC}$"}]'::jsonb, 'a', 'علاقة شال: $\overrightarrow{AB} + \overrightarrow{BC} = \overrightarrow{AC}$. نتتبّع الحروف: طرف الشعاع الأوّل (B) هو منشأ الشعاع الثاني، فيُحذف وتبقى $\overrightarrow{AC}$.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('e6b41809-6203-570a-b2d9-4782a36702c4', '3f4fdade-ea1f-5e7e-8045-6e0c9acaa369', 'ABCD متوازي أضلاع. أيّ من المساواات التالية صحيحة دائمًا؟', '[{"id":"a","text":"$\\overrightarrow{AB} = \\overrightarrow{CB}$"},{"id":"b","text":"$\\overrightarrow{AD} = \\overrightarrow{CB}$"},{"id":"c","text":"$\\overrightarrow{AD} = \\overrightarrow{BC}$"},{"id":"d","text":"$\\overrightarrow{AB} = \\overrightarrow{CD}$"}]'::jsonb, 'c', 'في متوازي الأضلاع ABCD: $\overrightarrow{AB} = \overrightarrow{DC}$ و $\overrightarrow{AD} = \overrightarrow{BC}$. الضلعان AD وBC متوازيان ومتساويان في الطول والمنحى، إذن $\overrightarrow{AD} = \overrightarrow{BC}$.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('c995f255-e02a-52f9-9003-3b04f4b3c64c', '3f4fdade-ea1f-5e7e-8045-6e0c9acaa369', 'الانسحاب ذو الشعاع $\overrightarrow{u}$ ينقل النقطة M إلى النقطة M''. العلاقة المُعرِّفة لهذا الانسحاب هي:', '[{"id":"a","text":"$\\overrightarrow{M''M} = \\overrightarrow{u}$"},{"id":"b","text":"$\\overrightarrow{MM''} = \\overrightarrow{u}$"},{"id":"c","text":"$MM'' = 0$"},{"id":"d","text":"$M = M''$"}]'::jsonb, 'b', 'تعريف الانسحاب ذي الشعاع $\overrightarrow{u}$: لكلّ نقطة M، صورتها M'' تحقّق $\overrightarrow{MM''} = \overrightarrow{u}$. الشعاع ينطلق من M (المنشأ) نحو M'' (الطرف).', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d7ef7b66-5e08-58fe-973c-147c56ee9e9b', '3f4fdade-ea1f-5e7e-8045-6e0c9acaa369', 'I منتصف القطعة [AB]. ما ناتج $\overrightarrow{MA} + \overrightarrow{MB}$ لأيّ نقطة M؟', '[{"id":"a","text":"$\\overrightarrow{AB}$"},{"id":"b","text":"$\\overrightarrow{0}$"},{"id":"c","text":"$\\overrightarrow{IM}$"},{"id":"d","text":"$2\\overrightarrow{MI}$"}]'::jsonb, 'd', 'نطبّق شال: $\overrightarrow{MA} = \overrightarrow{MI} + \overrightarrow{IA}$ و $\overrightarrow{MB} = \overrightarrow{MI} + \overrightarrow{IB}$. بالجمع: $\overrightarrow{MA} + \overrightarrow{MB} = 2\overrightarrow{MI} + \overrightarrow{IA} + \overrightarrow{IB}$. بما أنّ I منتصف [AB]: $\overrightarrow{IA} + \overrightarrow{IB} = \overrightarrow{0}$، إذن الناتج هو $2\overrightarrow{MI}$.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('c63e54a0-7b36-546c-925b-5dff53d2bb59', '3f4fdade-ea1f-5e7e-8045-6e0c9acaa369', 'ما ناتج $\overrightarrow{AB} + \overrightarrow{BC} + \overrightarrow{CA}$؟', '[{"id":"a","text":"$\\overrightarrow{0}$"},{"id":"b","text":"$\\overrightarrow{AC}$"},{"id":"c","text":"$2\\overrightarrow{AB}$"},{"id":"d","text":"$\\overrightarrow{AA}$"}]'::jsonb, 'a', 'بتطبيق شال تدريجيًا: $\overrightarrow{AB} + \overrightarrow{BC} = \overrightarrow{AC}$، ثمّ $\overrightarrow{AC} + \overrightarrow{CA} = \overrightarrow{AA} = \overrightarrow{0}$. مجموع الأشعّة على مضلّع مغلق يساوي دائمًا $\overrightarrow{0}$.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('30b4278a-9635-5f41-a8ac-c0408817170a', '3f4fdade-ea1f-5e7e-8045-6e0c9acaa369', 'في المستوي، A(1 ; 0) وB(4 ; 0) ونقطة C(2 ; 3). صورة C بالانسحاب ذي الشعاع $\overrightarrow{AB}$ هي النقطة C''. ما إحداثيّا C''؟', '[{"id":"a","text":"$C''(2 ; 6)$"},{"id":"b","text":"$C''(-1 ; 3)$"},{"id":"c","text":"$C''(5 ; 3)$"},{"id":"d","text":"$C''(3 ; 3)$"}]'::jsonb, 'c', 'أوّلًا: $\overrightarrow{AB}$ له إحداثيّات $(4-1 ; 0-0) = (3 ; 0)$. الانسحاب يُضيف هذا الشعاع إلى إحداثيّات C: $C''(2+3 ; 3+0) = C''(5 ; 3)$.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('8a45a71b-b2f9-5c7c-ad4d-674eab139c61', '67e1970d-7e67-5193-acd3-1729b90b0cb2', 'math', 'تمرين: الإحداثيّات والمسافات في المعلّم', 2, 65, 13, 'practice', 'admin', 1)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -3317,6 +4136,78 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('64f5f198-b1d7-59c2-9dfd-288814c2030a', '67e1970d-7e67-5193-acd3-1729b90b0cb2', 'math', 'تمرين مراجعة: المعلّم في المستوي (نمط امتحان)', 2, 70, 15, 'practice', 'admin', 3)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('1568e6ec-a611-52ce-8d7b-38e16af2592e', '64f5f198-b1d7-59c2-9dfd-288814c2030a', 'A(-2 ; 3) وB(4 ; -1). ما إحداثيّا الشعاع $\overrightarrow{AB}$؟', '[{"id":"a","text":"$\\begin{pmatrix} -6 \\\\ 4 \\end{pmatrix}$"},{"id":"b","text":"$\\begin{pmatrix} 6 \\\\ -4 \\end{pmatrix}$"},{"id":"c","text":"$\\begin{pmatrix} 2 \\\\ 2 \\end{pmatrix}$"},{"id":"d","text":"$\\begin{pmatrix} 4 \\\\ -2 \\end{pmatrix}$"}]'::jsonb, 'b', 'إحداثيّا $\overrightarrow{AB}$: $x_B - x_A = 4-(-2) = 6$ و $y_B - y_A = -1-3 = -4$. إذن $\overrightarrow{AB}\begin{pmatrix} 6 \\ -4 \end{pmatrix}$. القاعدة: «طرف ناقص منشأ».', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('a4cd8ac5-ef31-5a95-acf7-5a4d19cd083e', '64f5f198-b1d7-59c2-9dfd-288814c2030a', 'ما إحداثيّا منتصف I للقطعة [AB] إذا كانت A(3 ; 5) وB(-1 ; 7)؟', '[{"id":"a","text":"$I(1 ; 6)$"},{"id":"b","text":"$I(2 ; 6)$"},{"id":"c","text":"$I(4 ; 12)$"},{"id":"d","text":"$I(1 ; 1)$"}]'::jsonb, 'a', 'منتصف [AB]: $x_I = \frac{x_A + x_B}{2} = \frac{3+(-1)}{2} = \frac{2}{2} = 1$ و $y_I = \frac{y_A + y_B}{2} = \frac{5+7}{2} = \frac{12}{2} = 6$. إذن $I(1 ; 6)$.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('f95b203a-045b-5942-9dd9-c3548cb363c7', '64f5f198-b1d7-59c2-9dfd-288814c2030a', 'A(0 ; 0) وB(5 ; 12). ما قيمة المسافة AB؟', '[{"id":"a","text":"$AB = 7$"},{"id":"b","text":"$AB = 17$"},{"id":"c","text":"$AB = \\sqrt{119}$"},{"id":"d","text":"$AB = 13$"}]'::jsonb, 'd', '$AB = \sqrt{(5-0)^2 + (12-0)^2} = \sqrt{25 + 144} = \sqrt{169} = 13$. المثلّث 5-12-13 مثلّث قائم كلاسيكي: $5^2 + 12^2 = 25 + 144 = 169 = 13^2$.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('0e3aa295-fdcd-5246-8df6-db9226c80367', '64f5f198-b1d7-59c2-9dfd-288814c2030a', 'ABCD متوازي أضلاع. A(1 ; 2)، B(5 ; 2)، C(6 ; 5). ما إحداثيّا D؟', '[{"id":"a","text":"$D(3 ; 5)$"},{"id":"b","text":"$D(10 ; 5)$"},{"id":"c","text":"$D(2 ; 5)$"},{"id":"d","text":"$D(0 ; 5)$"}]'::jsonb, 'c', 'في متوازي الأضلاع ABCD: $\overrightarrow{AB} = \overrightarrow{DC}$. $\overrightarrow{AB}\begin{pmatrix} 4 \\ 0 \end{pmatrix}$. إذن $\overrightarrow{DC}\begin{pmatrix} 4 \\ 0 \end{pmatrix}$، أي $x_C - x_D = 4$: $x_D = 6-4 = 2$. و $y_C - y_D = 0$: $y_D = 5$. إذن $D(2 ; 5)$.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('27a6be4d-a962-5679-8ff5-496ff0036083', '64f5f198-b1d7-59c2-9dfd-288814c2030a', 'A(2 ; -4) وB(6 ; 8). ما إحداثيّا منتصف I للقطعة [AB]؟', '[{"id":"a","text":"$I(8 ; 4)$"},{"id":"b","text":"$I(4 ; 2)$"},{"id":"c","text":"$I(2 ; 2)$"},{"id":"d","text":"$I(4 ; -2)$"}]'::jsonb, 'b', '$x_I = \frac{2+6}{2} = \frac{8}{2} = 4$ و $y_I = \frac{-4+8}{2} = \frac{4}{2} = 2$. إذن $I(4 ; 2)$. تحقّق: $\overrightarrow{AI}\begin{pmatrix} 2 \\ 6 \end{pmatrix}$ و $\overrightarrow{IB}\begin{pmatrix} 2 \\ 6 \end{pmatrix}$. متساويان ✓.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('6769452a-dee4-5955-98b1-a5bba6570cf5', '64f5f198-b1d7-59c2-9dfd-288814c2030a', 'A(-1 ; 2) وB(3 ; 5). احسب المسافة AB.', '[{"id":"a","text":"$AB = 7$"},{"id":"b","text":"$AB = \\sqrt{7}$"},{"id":"c","text":"$AB = \\sqrt{41}$"},{"id":"d","text":"$AB = 5$"}]'::jsonb, 'd', '$\Delta x = 3-(-1) = 4$ و $\Delta y = 5-2 = 3$. $AB = \sqrt{4^2 + 3^2} = \sqrt{16+9} = \sqrt{25} = 5$. المثلّث 3-4-5 من المثلّثات القياسية في الامتحانات.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('c0f4caab-6fe4-5cc1-9698-141918f14e73', '0c844ff1-0195-5d0c-a7ab-f03a2bc2863e', 'math', 'تمرين: حساب حجوم المجسّمات', 1, 60, 12, 'practice', 'admin', 1)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -3452,6 +4343,78 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('ce97f02a-d74c-52b0-b0e1-7239b8e55545', '00789172-89dd-5cc2-8af9-730645c3c113', 'مخروط نصف قطر قاعدته 6 cm وارتفاعه 8 cm. ما المساحة الجانبية له؟ (π ≈ 3.14)', '[{"id":"a","text":"150.72 cm²"},{"id":"b","text":"301.44 cm²"},{"id":"c","text":"188.4 cm²"},{"id":"d","text":"376.8 cm²"}]'::jsonb, 'c', 'الطول المائل: $l = \sqrt{r^2+h^2} = \sqrt{6^2+8^2} = \sqrt{36+64} = \sqrt{100} = 10 \text{ cm}$. المساحة الجانبية: $S = \pi r l = 3.14 \times 6 \times 10 = 188.4 \text{ cm}^2$.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('3baad67a-a282-5810-90d2-589f56042a87', '0c844ff1-0195-5d0c-a7ab-f03a2bc2863e', 'math', 'تمرين مراجعة: الهندسة في الفضاء (نمط امتحان)', 2, 70, 15, 'practice', 'admin', 3)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('b4b74883-fa9b-534d-af23-d0f23f600417', '3baad67a-a282-5810-90d2-589f56042a87', 'أسطوانة نصف قطرها 5 cm وارتفاعها 4 cm. ما حجمها تقريبًا؟ (π ≈ 3.14)', '[{"id":"a","text":"$314 \\text{ cm}^3$"},{"id":"b","text":"$62.8 \\text{ cm}^3$"},{"id":"c","text":"$125.6 \\text{ cm}^3$"},{"id":"d","text":"$628 \\text{ cm}^3$"}]'::jsonb, 'a', '$V = \pi r^2 h = \pi \times 5^2 \times 4 = \pi \times 25 \times 4 = 100\pi \approx 100 \times 3.14 = 314 \text{ cm}^3$. انتبه: نربّع نصف القطر وليس القطر.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d0411eb3-f2e1-58fe-b6b0-3921da7f87df', '3baad67a-a282-5810-90d2-589f56042a87', 'هرم قاعدته مربّع ضلعه 6 cm وارتفاعه 8 cm. ما حجمه؟', '[{"id":"a","text":"$288 \\text{ cm}^3$"},{"id":"b","text":"$144 \\text{ cm}^3$"},{"id":"c","text":"$96 \\text{ cm}^3$"},{"id":"d","text":"$48 \\text{ cm}^3$"}]'::jsonb, 'c', '$S_{\text{قاعدة}} = 6^2 = 36 \text{ cm}^2$. $V = \frac{1}{3} \times S_{\text{قاعدة}} \times h = \frac{1}{3} \times 36 \times 8 = \frac{288}{3} = 96 \text{ cm}^3$. الهرم دائمًا ثلث الموشور ذي نفس القاعدة والارتفاع.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('3f98b05b-c8bb-55bc-8b73-a18a556d7258', '3baad67a-a282-5810-90d2-589f56042a87', 'مخروط نصف قطر قاعدته 3 cm وارتفاعه 4 cm. ما حجمه تقريبًا؟ (π ≈ 3.14)', '[{"id":"a","text":"$113.04 \\text{ cm}^3$"},{"id":"b","text":"$37.68 \\text{ cm}^3$"},{"id":"c","text":"$56.52 \\text{ cm}^3$"},{"id":"d","text":"$75.36 \\text{ cm}^3$"}]'::jsonb, 'b', '$V = \frac{1}{3} \pi r^2 h = \frac{1}{3} \times 3.14 \times 9 \times 4 = \frac{1}{3} \times 113.04 = 37.68 \text{ cm}^3$. المخروط مثل الهرم: ثلث حجم الأسطوانة ذات القاعدة والارتفاع نفسهما.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d459fcab-1737-56cb-a40c-a7c8cf4981bb', '3baad67a-a282-5810-90d2-589f56042a87', 'كرة نصف قطرها 6 cm. ما حجمها تقريبًا؟ (π ≈ 3.14)', '[{"id":"a","text":"$150.72 \\text{ cm}^3$"},{"id":"b","text":"$452.16 \\text{ cm}^3$"},{"id":"c","text":"$678.24 \\text{ cm}^3$"},{"id":"d","text":"$904.32 \\text{ cm}^3$"}]'::jsonb, 'd', '$V = \frac{4}{3} \pi r^3 = \frac{4}{3} \times 3.14 \times 6^3 = \frac{4}{3} \times 3.14 \times 216 = \frac{4 \times 678.24}{3} = \frac{2712.96}{3} = 904.32 \text{ cm}^3$.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('f9f4b96c-9e1b-5c77-9a00-08d4fdde4565', '3baad67a-a282-5810-90d2-589f56042a87', 'موشور قائم قاعدته مثلّث قائم ساقاه 6 cm و8 cm، وارتفاعه 10 cm. ما حجمه؟', '[{"id":"a","text":"$240 \\text{ cm}^3$"},{"id":"b","text":"$480 \\text{ cm}^3$"},{"id":"c","text":"$120 \\text{ cm}^3$"},{"id":"d","text":"$400 \\text{ cm}^3$"}]'::jsonb, 'a', 'مساحة القاعدة المثلّثية: $S = \frac{1}{2} \times 6 \times 8 = 24 \text{ cm}^2$. حجم الموشور: $V = S \times h = 24 \times 10 = 240 \text{ cm}^3$. الخطوة الأولى دائمًا: احسب مساحة القاعدة.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('e9c55a8c-88c9-5368-a0cd-075e6be633de', '3baad67a-a282-5810-90d2-589f56042a87', 'أسطوانة نصف قطرها 4 cm وارتفاعها 5 cm. ما حجمها تقريبًا؟ (π ≈ 3.14)', '[{"id":"a","text":"$125.6 \\text{ cm}^3$"},{"id":"b","text":"$62.8 \\text{ cm}^3$"},{"id":"c","text":"$251.2 \\text{ cm}^3$"},{"id":"d","text":"$502.4 \\text{ cm}^3$"}]'::jsonb, 'c', '$V = \pi r^2 h = 3.14 \times 4^2 \times 5 = 3.14 \times 16 \times 5 = 3.14 \times 80 = 251.2 \text{ cm}^3$. تذكّر: نربّع نصف القطر أوّلًا ثمّ نضرب في الارتفاع.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
