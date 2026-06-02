@@ -1,0 +1,76 @@
+{
+  "title": "⚔️ Boss : maîtriser la phrase complexe",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complétez : « Il s'entraîne tous les jours ___ son équipe remporte la victoire. »",
+      "options": [
+        { "id": "a", "text": "pour que" },
+        { "id": "b", "text": "parce que" },
+        { "id": "c", "text": "si bien que" },
+        { "id": "d", "text": "quand" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'entraînement vise un résultat futur (la victoire de l'équipe) : on exprime le but avec « pour que » + subjonctif."
+    },
+    {
+      "prompt": "Dans « Dès qu'il arriva, le combat commença. », la subordonnée est une circonstancielle de :",
+      "options": [
+        { "id": "a", "text": "Temps (simultanéité immédiate)" },
+        { "id": "b", "text": "Cause" },
+        { "id": "c", "text": "Conséquence" },
+        { "id": "d", "text": "Concession" }
+      ],
+      "correctOption": "a",
+      "explanation": "« dès que » indique que les deux actions se suivent immédiatement : c'est une circonstancielle de temps."
+    },
+    {
+      "prompt": "Quelle phrase utilise correctement « si » de condition ?",
+      "options": [
+        { "id": "a", "text": "Si tu t'entraînes, tu vaincras." },
+        { "id": "b", "text": "Si tu t'entraîneras, tu vaincras." },
+        { "id": "c", "text": "Si tu t'entraînerais, tu vaincrais." },
+        { "id": "d", "text": "Si tu t'entraînes, tu vaincrais." }
+      ],
+      "correctOption": "a",
+      "explanation": "Avec « si » de condition (réel), la subordonnée est au présent et la principale au futur : « Si tu t'entraînes, tu vaincras. » On n'emploie jamais futur ni conditionnel après « si »."
+    },
+    {
+      "prompt": "Identifiez la proposition principale dans : « Comme il pleuvait, il prit son bouclier. »",
+      "options": [
+        { "id": "a", "text": "il prit son bouclier" },
+        { "id": "b", "text": "Comme il pleuvait" },
+        { "id": "c", "text": "il pleuvait" },
+        { "id": "d", "text": "son bouclier" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Comme il pleuvait » est la subordonnée de cause. La proposition principale, autonome et porteuse de l'information principale, est « il prit son bouclier »."
+    },
+    {
+      "prompt": "Choisissez la forme verbale correcte : « Il parle doucement de peur qu'on ne l'___ . »",
+      "options": [
+        { "id": "a", "text": "entende" },
+        { "id": "b", "text": "entend" },
+        { "id": "c", "text": "entendra" },
+        { "id": "d", "text": "entendrait" }
+      ],
+      "correctOption": "a",
+      "explanation": "« de peur que » exprime le but (crainte) et impose le subjonctif présent : « entende »."
+    },
+    {
+      "prompt": "Dans « Le guerrier que la foule acclame lève son épée. », quel est l'antécédent du pronom relatif « que » ?",
+      "options": [
+        { "id": "a", "text": "Le guerrier" },
+        { "id": "b", "text": "la foule" },
+        { "id": "c", "text": "son épée" },
+        { "id": "d", "text": "acclame" }
+      ],
+      "correctOption": "a",
+      "explanation": "« que » reprend le nom qui précède immédiatement la relative : « le guerrier » — c'est lui qui est acclamé."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "title": "Exercice : reconnaître les propositions subordonnées",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Dans « Je sais que tu réussiras. », la proposition « que tu réussiras » est :",
+      "options": [
+        { "id": "a", "text": "Une subordonnée complétive, COD de « sais »" },
+        { "id": "b", "text": "Une subordonnée relative qualifiant « tu »" },
+        { "id": "c", "text": "Une subordonnée circonstancielle de cause" },
+        { "id": "d", "text": "Une proposition principale" }
+      ],
+      "correctOption": "a",
+      "explanation": "La proposition est introduite par « que », COD du verbe « savoir » : c'est une subordonnée complétive."
+    },
+    {
+      "prompt": "Quel pronom relatif complète correctement la phrase : « L'épée ___ il se sert est magique. »",
+      "options": [
+        { "id": "a", "text": "dont" },
+        { "id": "b", "text": "que" },
+        { "id": "c", "text": "qui" },
+        { "id": "d", "text": "où" }
+      ],
+      "correctOption": "a",
+      "explanation": "« se servir de » → on remplace le groupe « de l'épée » par « dont » : « l'épée dont il se sert »."
+    },
+    {
+      "prompt": "Dans « La forêt où il entra était sombre. », le pronom relatif « où » a la fonction de :",
+      "options": [
+        { "id": "a", "text": "Complément de lieu" },
+        { "id": "b", "text": "Sujet" },
+        { "id": "c", "text": "COD" },
+        { "id": "d", "text": "Complément d'agent" }
+      ],
+      "correctOption": "a",
+      "explanation": "« où » reprend « la forêt » (lieu) et joue le rôle de complément de lieu dans la subordonnée relative."
+    },
+    {
+      "prompt": "Quelle conjonction introduit une subordonnée de but ?",
+      "options": [
+        { "id": "a", "text": "pour que" },
+        { "id": "b", "text": "parce que" },
+        { "id": "c", "text": "si bien que" },
+        { "id": "d", "text": "bien que" }
+      ],
+      "correctOption": "a",
+      "explanation": "« pour que » exprime le but et introduit une subordonnée au subjonctif. « parce que » = cause, « si bien que » = conséquence, « bien que » = concession."
+    },
+    {
+      "prompt": "Dans « Bien qu'il soit fatigué, il continue. », la subordonnée est une circonstancielle de :",
+      "options": [
+        { "id": "a", "text": "Concession" },
+        { "id": "b", "text": "Cause" },
+        { "id": "c", "text": "Temps" },
+        { "id": "d", "text": "Condition" }
+      ],
+      "correctOption": "a",
+      "explanation": "« bien que » + subjonctif exprime un obstacle qui ne bloque pas l'action : c'est la concession."
+    },
+    {
+      "prompt": "Choisissez la forme correcte : « Les batailles ___ nous avons livrées ont forgé notre courage. »",
+      "options": [
+        { "id": "a", "text": "que" },
+        { "id": "b", "text": "qui" },
+        { "id": "c", "text": "dont" },
+        { "id": "d", "text": "où" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le pronom relatif est COD du verbe « livrer » (on a livré les batailles) : on emploie « que ». Le participe « livrées » s'accorde avec l'antécédent féminin pluriel « batailles »."
+    }
+  ]
+}
