@@ -97,7 +97,10 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   return Promise.race([
     promise,
     new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error(`REGRESSION: Server function did not resolve within ${ms}ms`)), ms),
+      setTimeout(
+        () => reject(new Error(`REGRESSION: Server function did not resolve within ${ms}ms`)),
+        ms,
+      ),
     ),
   ]);
 }
@@ -116,9 +119,11 @@ describe("NON-REGRESSION: Quest Server Functions", () => {
   describe("getSubject — must never hang", () => {
     it("resolves within 1s with valid data", async () => {
       mockFrom.mockImplementation((table: string) => {
-        if (table === "subjects") return mockQuery({ id: "s1", name_fr: "Math", color_token: "math", icon: "🧮" });
+        if (table === "subjects")
+          return mockQuery({ id: "s1", name_fr: "Math", color_token: "math", icon: "🧮" });
         if (table === "chapters") return mockQuery([{ id: "ch1", title: "Ch1", display_order: 1 }]);
-        if (table === "exercises") return mockQuery([{ id: "ex1", title: "Ex1", display_order: 1 }]);
+        if (table === "exercises")
+          return mockQuery([{ id: "ex1", title: "Ex1", display_order: 1 }]);
         return mockQuery([]);
       });
       mockRpc.mockResolvedValue({ data: [{ exercise_id: "ex1", best_score: 90 }], error: null });
@@ -281,7 +286,10 @@ describe("NON-REGRESSION: Quest Server Functions", () => {
         if (table === "questions") return mockQuery([{ id: QUESTION_UUID, correct_option: "4" }]);
         return mockQuery([]);
       });
-      mockRpc.mockResolvedValue({ data: null, error: { message: "submit_exercise_attempt failed" } });
+      mockRpc.mockResolvedValue({
+        data: null,
+        error: { message: "submit_exercise_attempt failed" },
+      });
 
       const { submitAttempt } = await import("@/lib/gamification.quest");
 
@@ -312,7 +320,14 @@ describe("NON-REGRESSION: Dashboard Server Functions", () => {
 
   describe("getDashboard — must never hang", () => {
     it("resolves within 1s with existing profile", async () => {
-      const profile = { id: "user-regression-test", display_name: "Yahia", xp: 100, level: 1, current_streak: 3, yahia_coins: 50 };
+      const profile = {
+        id: "user-regression-test",
+        display_name: "Yahia",
+        xp: 100,
+        level: 1,
+        current_streak: 3,
+        yahia_coins: 50,
+      };
       mockFrom.mockImplementation((table: string) => {
         if (table === "profiles") return mockQuery(profile);
         if (table === "subjects") return mockQuery([{ id: "s1", name_fr: "Math" }]);
@@ -324,10 +339,7 @@ describe("NON-REGRESSION: Dashboard Server Functions", () => {
       });
 
       const { getDashboard } = await import("@/lib/gamification.dashboard");
-      const result = await withTimeout(
-        (getDashboard as unknown as () => Promise<unknown>)(),
-        1000,
-      );
+      const result = await withTimeout((getDashboard as unknown as () => Promise<unknown>)(), 1000);
 
       const r = result as Record<string, unknown>;
       expect(r).toHaveProperty("profile");
@@ -335,7 +347,7 @@ describe("NON-REGRESSION: Dashboard Server Functions", () => {
     });
 
     it("resolves when profile does not exist (creates one)", async () => {
-      let profileCreated = false;
+      const profileCreated = false;
       mockFrom.mockImplementation((table: string) => {
         if (table === "profiles") {
           if (!profileCreated) {
@@ -356,10 +368,7 @@ describe("NON-REGRESSION: Dashboard Server Functions", () => {
       });
 
       const { getDashboard } = await import("@/lib/gamification.dashboard");
-      const result = await withTimeout(
-        (getDashboard as unknown as () => Promise<unknown>)(),
-        1000,
-      );
+      const result = await withTimeout((getDashboard as unknown as () => Promise<unknown>)(), 1000);
 
       // Must resolve, not hang or throw
       expect(result).toBeDefined();
@@ -373,10 +382,7 @@ describe("NON-REGRESSION: Dashboard Server Functions", () => {
       const { getDashboard } = await import("@/lib/gamification.dashboard");
 
       await expect(
-        withTimeout(
-          (getDashboard as unknown as () => Promise<unknown>)(),
-          1000,
-        ),
+        withTimeout((getDashboard as unknown as () => Promise<unknown>)(), 1000),
       ).rejects.toThrow();
     });
   });
@@ -386,11 +392,27 @@ describe("NON-REGRESSION: Dashboard Server Functions", () => {
       mockFrom.mockImplementation((table: string) => {
         if (table === "profiles") {
           const chain = mockQuery([
-            { id: "u1", display_name: "Player1", xp: 500, level: 3, hero_class: "mage", avatar_slug: null, avatar_tier: 0 },
+            {
+              id: "u1",
+              display_name: "Player1",
+              xp: 500,
+              level: 3,
+              hero_class: "mage",
+              avatar_slug: null,
+              avatar_tier: 0,
+            },
           ]);
           // Override single for user's own profile lookup
           chain.single = vi.fn().mockReturnValue({
-            data: { id: "user-regression-test", display_name: "Yahia", xp: 300, level: 2, hero_class: "warrior", avatar_slug: null, avatar_tier: 0 },
+            data: {
+              id: "user-regression-test",
+              display_name: "Yahia",
+              xp: 300,
+              level: 2,
+              hero_class: "warrior",
+              avatar_slug: null,
+              avatar_tier: 0,
+            },
             error: null,
           });
           return chain;
@@ -442,10 +464,7 @@ describe("NON-REGRESSION: Dungeon Server Functions", () => {
       const { startDungeonRun } = await import("@/lib/gamification.dungeon");
 
       await expect(
-        withTimeout(
-          (startDungeonRun as unknown as () => Promise<unknown>)(),
-          1000,
-        ),
+        withTimeout((startDungeonRun as unknown as () => Promise<unknown>)(), 1000),
       ).rejects.toThrow();
     });
   });
@@ -455,9 +474,7 @@ describe("NON-REGRESSION: Dungeon Server Functions", () => {
       mockRpc.mockResolvedValue({
         data: {
           currentFloor: 1,
-          questions: [
-            { id: "q1", prompt: "2+2?", options: ["3", "4"], explanation: null },
-          ],
+          questions: [{ id: "q1", prompt: "2+2?", options: ["3", "4"], explanation: null }],
         },
         error: null,
       });
@@ -545,7 +562,8 @@ describe("NON-REGRESSION: Data shape contracts", () => {
 
   it("getSubject returns { subject, chapters, exercises, bestByExercise }", async () => {
     mockFrom.mockImplementation((table: string) => {
-      if (table === "subjects") return mockQuery({ id: "s1", name_fr: "Math", color_token: "math", icon: "📐" });
+      if (table === "subjects")
+        return mockQuery({ id: "s1", name_fr: "Math", color_token: "math", icon: "📐" });
       if (table === "chapters") return mockQuery([]);
       if (table === "exercises") return mockQuery([]);
       return mockQuery([]);
@@ -558,7 +576,12 @@ describe("NON-REGRESSION: Data shape contracts", () => {
     })) as Record<string, unknown>;
 
     // These keys are consumed by the SubjectPage component
-    expect(Object.keys(result).sort()).toEqual(["bestByExercise", "chapters", "exercises", "subject"]);
+    expect(Object.keys(result).sort()).toEqual([
+      "bestByExercise",
+      "chapters",
+      "exercises",
+      "subject",
+    ]);
     expect(result.chapters).toBeInstanceOf(Array);
     expect(result.exercises).toBeInstanceOf(Array);
     expect(typeof result.bestByExercise).toBe("object");
@@ -583,7 +606,10 @@ describe("NON-REGRESSION: Data shape contracts", () => {
   it("submitAttempt returns { correct, total, scorePct, xpEarned, coinsEarned, review, ... }", async () => {
     const QUESTION_UUID = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa";
     mockFrom.mockImplementation((table: string) => {
-      if (table === "questions") return mockQuery([{ id: QUESTION_UUID, prompt: "?", correct_option: "A", explanation: null }]);
+      if (table === "questions")
+        return mockQuery([
+          { id: QUESTION_UUID, prompt: "?", correct_option: "A", explanation: null },
+        ]);
       return mockQuery([]);
     });
     mockRpc.mockResolvedValue({
