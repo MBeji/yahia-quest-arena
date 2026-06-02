@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import { ArrowLeft, Swords, Zap, ChevronRight, Star, Skull, BookOpen } from "lucide-react";
 import { getSubject } from "@/lib/gamification.quest";
 import { isRtlText } from "@/lib/utils";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/subject/$subjectId")({
   head: () => ({ meta: [{ title: "Quests · XP Scholars" }] }),
@@ -13,16 +14,35 @@ export const Route = createFileRoute("/_authenticated/subject/$subjectId")({
 
 function SubjectPage() {
   const { subjectId } = Route.useParams();
+  const t = useT();
   const fetchSubject = useServerFn(getSubject);
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["subject", subjectId],
     queryFn: () => fetchSubject({ data: { subjectId } }),
   });
 
+  if (isError) {
+    return (
+      <div className="mx-auto max-w-md px-6 py-20 text-center">
+        <div className="rounded-2xl border border-destructive/30 bg-destructive/5 p-8">
+          <Skull className="mx-auto h-10 w-10 text-destructive" />
+          <h2 className="mt-4 font-display text-xl font-bold">{t.dashboard.failedLoad}</h2>
+          <p className="mt-2 text-sm text-muted-foreground">{t.dashboard.failedLoadDesc}</p>
+          <Link
+            to="/dashboard"
+            className="mt-4 inline-block rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+          >
+            {t.common.backToHall}
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   if (isLoading || !data) {
     return (
       <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">
-        Loading…
+        {t.common.loading}
       </div>
     );
   }

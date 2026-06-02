@@ -69,7 +69,7 @@ export const getSubject = createServerFn({ method: "GET" })
   .inputValidator((d) => z.object({ subjectId: z.string() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
-    const [subj, chaps, exs, bestScores] = await Promise.all([
+    const [subj, chaps, exs] = await Promise.all([
       supabase.from("subjects").select("*").eq("id", data.subjectId).single(),
       supabase.from("chapters").select("*").eq("subject_id", data.subjectId).order("display_order"),
       supabase
@@ -77,15 +77,27 @@ export const getSubject = createServerFn({ method: "GET" })
         .select("*")
         .eq("subject_id", data.subjectId)
         .order("display_order"),
-      supabase.rpc("get_best_scores_by_exercise", { p_subject: data.subjectId }),
     ]);
     if (subj.error) throw new Error(subj.error.message);
-    if (bestScores.error) throw new Error(bestScores.error.message);
+
+    // Best scores RPC - graceful fallback if function doesn't exist yet
+    let bestScoresData: unknown[] = [];
+    try {
+      const bestScores = await supabase.rpc("get_best_scores_by_exercise" as never, {
+        p_subject: data.subjectId,
+      });
+      if (!bestScores.error && Array.isArray(bestScores.data)) {
+        bestScoresData = bestScores.data;
+      }
+    } catch {
+      // RPC not available — continue with empty scores
+    }
 
     const best: Record<string, number> = {};
-    for (const row of bestScores.data ?? []) {
-      if (typeof row.exercise_id !== "string") continue;
-      best[row.exercise_id] = Number(row.best_score ?? 0);
+    for (const row of bestScoresData) {
+      const r = row as Record<string, unknown>;
+      if (typeof r.exercise_id !== "string") continue;
+      best[r.exercise_id] = Number(r.best_score ?? 0);
     }
 
     return {

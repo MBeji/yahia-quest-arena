@@ -111,15 +111,19 @@ describe("gamification.quest — getSubject", () => {
     ).rejects.toThrow("Not found");
   });
 
-  it("throws on bestScores RPC error", async () => {
-    mockFrom.mockImplementation(() => mockQuery({ id: "s1" }));
+  it("returns empty bestByExercise on bestScores RPC error", async () => {
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "subjects") return mockQuery({ id: "s1" });
+      if (table === "chapters") return mockQuery([]);
+      if (table === "exercises") return mockQuery([]);
+      return mockQuery([]);
+    });
     mockRpc.mockReturnValue({ data: null, error: { message: "RPC fail" } });
 
     const { getSubject } = await import("@/lib/gamification.quest");
 
-    await expect(
-      (getSubject as unknown as (d: unknown) => Promise<unknown>)({ subjectId: "s1" }),
-    ).rejects.toThrow("RPC fail");
+    const result = await (getSubject as unknown as (d: unknown) => Promise<unknown>)({ subjectId: "s1" });
+    expect((result as Record<string, unknown>).bestByExercise).toEqual({});
   });
 });
 
