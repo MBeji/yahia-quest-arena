@@ -814,6 +814,18 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      purchase_shop_item: {
+        Args: { p_item_code: string };
+        Returns: Json;
+      };
+      equip_inventory_skin: {
+        Args: { p_item_code: string };
+        Returns: Json;
+      };
+      link_student_by_code: {
+        Args: { p_code: string; p_relation?: string };
+        Returns: Json;
+      };
       award_coins: {
         Args: { p_user: string; p_coins: number };
         Returns: {

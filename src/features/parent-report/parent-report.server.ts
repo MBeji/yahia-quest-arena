@@ -1,7 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
-import { parseStudentAllianceCode } from "./family-link";
 import { isRateLimited } from "@/shared/lib/rate-limit";
 
 type ParentStudent = {
@@ -224,49 +223,22 @@ export const linkStudentByCode = createServerFn({ method: "POST" })
       throw new Error("Too many link attempts. Please slow down.");
     }
 
-    const { data: profile, error: profileError } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", userId)
-      .single();
+    // Role check, alliance-code decode, student validation and the link write
+    // all happen inside the `link_student_by_code` SECURITY DEFINER RPC; direct
+    // INSERTs into parent_student_links are revoked at the DB layer so a caller
+    // can no longer self-link to an arbitrary student.
+    const { data: result, error } = await supabase.rpc("link_student_by_code", {
+      p_code: data.studentCode,
+      p_relation: data.relationLabel,
+    });
+    if (error) throw new Error(error.message);
 
-    if (profileError) throw new Error(profileError.message);
-    if (!profile || (profile.role !== "parent" && profile.role !== "admin")) {
-      throw new Error("Parent account required to link a student.");
-    }
-
-    const studentId = parseStudentAllianceCode(data.studentCode);
-    if (!studentId) throw new Error("Invalid student alliance code.");
-
-    const { data: studentProfile, error: studentError } = await supabase
-      .from("profiles")
-      .select("id,display_name,role")
-      .eq("id", studentId)
-      .maybeSingle();
-
-    if (studentError) throw new Error(studentError.message);
-    if (!studentProfile) throw new Error("Student not found.");
-    if (studentProfile.role !== "student")
-      throw new Error("This code does not belong to a student account.");
-    if (studentProfile.id === userId) throw new Error("You cannot link your own account.");
-
-    const { error: linkError } = await supabase.from("parent_student_links").upsert(
-      {
-        parent_user_id: userId,
-        student_user_id: studentProfile.id,
-        relation_label: data.relationLabel,
-        is_active: true,
-      },
-      { onConflict: "parent_user_id,student_user_id" },
-    );
-
-    if (linkError) throw new Error(linkError.message);
-
+    const row = result && typeof result === "object" ? (result as Record<string, unknown>) : {};
     return {
-      linked: true,
+      linked: row.linked === true,
       student: {
-        id: studentProfile.id,
-        displayName: studentProfile.display_name,
+        id: typeof row.student_id === "string" ? row.student_id : "",
+        displayName: typeof row.student_display_name === "string" ? row.student_display_name : null,
       },
     };
   });

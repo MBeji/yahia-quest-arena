@@ -309,40 +309,32 @@ describe("parent-report — linkStudentByCode", () => {
     mockRpc.mockReset();
   });
 
-  it("links parent to student successfully", async () => {
+  it("links parent to student successfully via the RPC", async () => {
     const studentUuid = "aabbccdd-1122-3344-5566-778899001122";
-    const allianceCode = "AABB-CCDD-1122-3344-5566-7788-9900-1122";
-    let callIndex = 0;
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "profiles") {
-        callIndex++;
-        if (callIndex === 1) return mockQuery({ role: "parent" });
-        if (callIndex === 2)
-          return mockQuery({ id: studentUuid, display_name: "Yahia", role: "student" });
-      }
-      if (table === "parent_student_links") {
-        const chain = mockQuery(null);
-        chain.upsert = vi.fn().mockReturnValue({ data: null, error: null });
-        return chain;
-      }
-      return mockQuery([]);
+    mockRpc.mockReturnValue({
+      data: { linked: true, student_id: studentUuid, student_display_name: "Yahia" },
+      error: null,
     });
 
     const { linkStudentByCode } = await import("@/features/parent-report/parent-report.server");
     const result = await (linkStudentByCode as unknown as (d: unknown) => Promise<unknown>)({
-      studentCode: allianceCode,
+      studentCode: "AABB-CCDD-1122-3344-5566-7788-9900-1122",
       relationLabel: "parent",
     });
 
     const r = result as Record<string, unknown>;
     expect(r.linked).toBe(true);
     expect((r.student as Record<string, unknown>).id).toBe(studentUuid);
+    expect(mockRpc).toHaveBeenCalledWith("link_student_by_code", {
+      p_code: "AABB-CCDD-1122-3344-5566-7788-9900-1122",
+      p_relation: "parent",
+    });
   });
 
-  it("denies linking for student role", async () => {
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "profiles") return mockQuery({ role: "student" });
-      return mockQuery([]);
+  it("surfaces the RPC error when the caller is not a parent", async () => {
+    mockRpc.mockReturnValue({
+      data: null,
+      error: { message: "Parent account required to link a student." },
     });
 
     const { linkStudentByCode } = await import("@/features/parent-report/parent-report.server");
@@ -354,47 +346,19 @@ describe("parent-report — linkStudentByCode", () => {
     ).rejects.toThrow("Parent account required");
   });
 
-  it("rejects invalid alliance code", async () => {
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "profiles") return mockQuery({ role: "parent" });
-      return mockQuery([]);
+  it("surfaces the RPC error for an invalid alliance code", async () => {
+    mockRpc.mockReturnValue({
+      data: null,
+      error: { message: "Invalid student alliance code." },
     });
 
     const { linkStudentByCode } = await import("@/features/parent-report/parent-report.server");
-    await expect(
-      (linkStudentByCode as unknown as (d: unknown) => Promise<unknown>)({
-        studentCode: "invalid-code",
-        relationLabel: "parent",
-      }),
-    ).rejects.toThrow("Invalid student alliance code");
-  });
-
-  it("rejects self-linking", async () => {
-    // parent-user-1 is the context userId
-    const parentHex = "706172656e742d757365722d31000000"; // doesn't match parent-user-1 uuid format
-    // We need a proper UUID that matches the mocked userId
-    const selfUuid = "parent-user-1";
-    let callIndex = 0;
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "profiles") {
-        callIndex++;
-        if (callIndex === 1) return mockQuery({ role: "parent" });
-        // studentProfile.id === userId should trigger self-link error
-        if (callIndex === 2)
-          return mockQuery({ id: "parent-user-1", display_name: "Me", role: "student" });
-      }
-      return mockQuery([]);
-    });
-
-    const { linkStudentByCode } = await import("@/features/parent-report/parent-report.server");
-    // Use a valid 32-hex code that decodes to parent-user-1 format won't work easily
-    // Instead, test the code path where student is not found
     await expect(
       (linkStudentByCode as unknown as (d: unknown) => Promise<unknown>)({
         studentCode: "AABB-CCDD-1122-3344-5566-7788-9900-1122",
         relationLabel: "parent",
       }),
-    ).rejects.toThrow("cannot link your own account");
+    ).rejects.toThrow("Invalid student alliance code");
   });
 
   it("rejects short student codes", async () => {
