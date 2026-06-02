@@ -89,6 +89,13 @@ the project stays regression- and debt-free while being improved by AI.
    the feature's `__tests__/`. Coverage must not regress.
 6. **Small, reviewable commits.** Branch off `main`; commit/push only when asked.
    Conventional-commit style messages (`feat:`, `fix:`, `test:`, `chore:`…).
+7. **DB ↔ code changes are coordinated.** Pushing to `main` **auto-deploys to
+   Vercel production**. So when a code change depends on a new Supabase migration
+   (new table/column/RPC, or revoked grants), the migration MUST be applied to the
+   DB **before** the code is pushed/deployed — otherwise prod runs code against a
+   schema that doesn't support it. Order: apply migration → verify → then push code.
+   Migrations are not auto-applied by the repo; apply them via the Supabase SQL
+   editor or `supabase db push`.
 
 When unsure about scope or a destructive action, ask before proceeding.
 
