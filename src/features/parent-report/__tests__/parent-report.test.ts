@@ -22,7 +22,11 @@ vi.mock("@tanstack/react-start", () => ({
           const data = validatorFn ? validatorFn(input) : input;
           return handlerFn({
             data,
-            context: { supabase: mockSupabase, userId: "parent-user-1", claims: { sub: "parent-user-1" } },
+            context: {
+              supabase: mockSupabase,
+              userId: "parent-user-1",
+              claims: { sub: "parent-user-1" },
+            },
           });
         };
         return wrapped;
@@ -75,7 +79,18 @@ describe("parent-report — getLinkedStudents", () => {
 
   it("returns students for admin with pagination", async () => {
     const students = [
-      { id: "s1", display_name: "Student 1", hero_class: "mage", level: 3, xp: 200, current_streak: 5, longest_streak: 10, last_active_date: "2026-06-01", created_at: "2026-01-01", role: "student" },
+      {
+        id: "s1",
+        display_name: "Student 1",
+        hero_class: "mage",
+        level: 3,
+        xp: 200,
+        current_streak: 5,
+        longest_streak: 10,
+        last_active_date: "2026-06-01",
+        created_at: "2026-01-01",
+        role: "student",
+      },
     ];
     let callIndex = 0;
     mockFrom.mockImplementation((table: string) => {
@@ -110,7 +125,17 @@ describe("parent-report — getLinkedStudents", () => {
   it("returns linked students for parent role", async () => {
     const links = [{ student_user_id: "s1", relation_label: "parent", is_active: true }];
     const students = [
-      { id: "s1", display_name: "Yahia", hero_class: "warrior", level: 2, xp: 100, current_streak: 2, longest_streak: 5, last_active_date: "2026-06-01", created_at: "2026-01-01" },
+      {
+        id: "s1",
+        display_name: "Yahia",
+        hero_class: "warrior",
+        level: 2,
+        xp: 100,
+        current_streak: 2,
+        longest_streak: 5,
+        last_active_date: "2026-06-01",
+        created_at: "2026-01-01",
+      },
     ];
     let callIndex = 0;
     mockFrom.mockImplementation((table: string) => {
@@ -165,7 +190,10 @@ describe("parent-report — getLinkedStudents", () => {
 
     const { getLinkedStudents } = await import("@/features/parent-report/parent-report.server");
     await expect(
-      (getLinkedStudents as unknown as (d: unknown) => Promise<unknown>)({ page: 1, pageSize: 100 }),
+      (getLinkedStudents as unknown as (d: unknown) => Promise<unknown>)({
+        page: 1,
+        pageSize: 100,
+      }),
     ).rejects.toThrow("Access denied");
   });
 
@@ -174,7 +202,10 @@ describe("parent-report — getLinkedStudents", () => {
 
     const { getLinkedStudents } = await import("@/features/parent-report/parent-report.server");
     await expect(
-      (getLinkedStudents as unknown as (d: unknown) => Promise<unknown>)({ page: 1, pageSize: 100 }),
+      (getLinkedStudents as unknown as (d: unknown) => Promise<unknown>)({
+        page: 1,
+        pageSize: 100,
+      }),
     ).rejects.toThrow("DB down");
   });
 });
@@ -191,9 +222,35 @@ describe("parent-report — getStudentReport", () => {
 
   it("returns parsed report from RPC", async () => {
     const reportPayload = {
-      student: { displayName: "Yahia", heroClass: "warrior", level: 5, xp: 500, currentStreak: 7, longestStreak: 14, lastActiveDate: "2026-06-01", createdAt: "2026-01-01" },
-      summary: { totalTimeMinutes: 120, totalExercises: 30, avgScore: 85, daysActiveThisWeek: 5, seriousnessScore: 90, verdict: "excellent", scoreTrend: 5 },
-      subjectStats: [{ subjectId: "s1", name: "Math", colorToken: "math", attempts: 20, avgScore: 88, totalTimeMinutes: 60 }],
+      student: {
+        displayName: "Yahia",
+        heroClass: "warrior",
+        level: 5,
+        xp: 500,
+        currentStreak: 7,
+        longestStreak: 14,
+        lastActiveDate: "2026-06-01",
+        createdAt: "2026-01-01",
+      },
+      summary: {
+        totalTimeMinutes: 120,
+        totalExercises: 30,
+        avgScore: 85,
+        daysActiveThisWeek: 5,
+        seriousnessScore: 90,
+        verdict: "excellent",
+        scoreTrend: 5,
+      },
+      subjectStats: [
+        {
+          subjectId: "s1",
+          name: "Math",
+          colorToken: "math",
+          attempts: 20,
+          avgScore: 88,
+          totalTimeMinutes: 60,
+        },
+      ],
       dailyActivity: [{ date: "2026-06-01", exercises: 5, minutes: 30, avgScore: 90 }],
     };
     mockRpc.mockResolvedValue({ data: reportPayload, error: null });
@@ -235,7 +292,9 @@ describe("parent-report — getStudentReport", () => {
   it("rejects invalid studentId format", async () => {
     const { getStudentReport } = await import("@/features/parent-report/parent-report.server");
     await expect(
-      (getStudentReport as unknown as (d: unknown) => Promise<unknown>)({ studentId: "not-a-uuid" }),
+      (getStudentReport as unknown as (d: unknown) => Promise<unknown>)({
+        studentId: "not-a-uuid",
+      }),
     ).rejects.toThrow();
   });
 });
@@ -258,7 +317,8 @@ describe("parent-report — linkStudentByCode", () => {
       if (table === "profiles") {
         callIndex++;
         if (callIndex === 1) return mockQuery({ role: "parent" });
-        if (callIndex === 2) return mockQuery({ id: studentUuid, display_name: "Yahia", role: "student" });
+        if (callIndex === 2)
+          return mockQuery({ id: studentUuid, display_name: "Yahia", role: "student" });
       }
       if (table === "parent_student_links") {
         const chain = mockQuery(null);
@@ -320,7 +380,8 @@ describe("parent-report — linkStudentByCode", () => {
         callIndex++;
         if (callIndex === 1) return mockQuery({ role: "parent" });
         // studentProfile.id === userId should trigger self-link error
-        if (callIndex === 2) return mockQuery({ id: "parent-user-1", display_name: "Me", role: "student" });
+        if (callIndex === 2)
+          return mockQuery({ id: "parent-user-1", display_name: "Me", role: "student" });
       }
       return mockQuery([]);
     });

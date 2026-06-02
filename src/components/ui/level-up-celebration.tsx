@@ -54,7 +54,12 @@ function CelebrationParticles() {
   );
 }
 
-export function LevelUpCelebration({ show, newLevel, xpGained, onComplete }: LevelUpCelebrationProps) {
+export function LevelUpCelebration({
+  show,
+  newLevel,
+  xpGained,
+  onComplete,
+}: LevelUpCelebrationProps) {
   const t = useT();
   return (
     <AnimatePresence>
