@@ -310,20 +310,41 @@ export const submitAttempt = createServerFn({ method: "POST" })
       );
     }
 
+    // Comprehension quizzes must be validated by the student alone: we never
+    // return the correct answers / explanations to the client for a quiz, so they
+    // cannot be memorised and the quiz re-passed blindly. The score + pass/fail
+    // are still returned. Practice/boss keep the full end-of-quest correction.
+    const { data: exerciseRow } = await supabase
+      .from("exercises")
+      .select("mode")
+      .eq("id", data.exerciseId)
+      .single();
+    const isQuiz = (exerciseRow as { mode?: string } | null)?.mode === "quiz";
+
     const questionMap = new Map((questions ?? []).map((q) => [q.id, q]));
 
-    const review = data.answers.map((answer) => {
-      const question = questionMap.get(answer.questionId);
+    type ReviewItem = {
+      questionId: string;
+      prompt: string;
+      selectedChoice: string;
+      correctChoice: string;
+      isCorrect: boolean;
+      explanation: string | null;
+    };
+    const review: ReviewItem[] = isQuiz
+      ? []
+      : data.answers.map((answer) => {
+          const question = questionMap.get(answer.questionId);
 
-      return {
-        questionId: answer.questionId,
-        prompt: question?.prompt ?? "Question",
-        selectedChoice: answer.choice,
-        correctChoice: question?.correct_option ?? "",
-        isCorrect: question?.correct_option === answer.choice,
-        explanation: question?.explanation ?? null,
-      };
-    });
+          return {
+            questionId: answer.questionId,
+            prompt: question?.prompt ?? "Question",
+            selectedChoice: answer.choice,
+            correctChoice: question?.correct_option ?? "",
+            isCorrect: question?.correct_option === answer.choice,
+            explanation: question?.explanation ?? null,
+          };
+        });
     const { data: submitData, error: submitErr } = await supabase.rpc("submit_exercise_attempt", {
       p_session_id: data.sessionId,
       p_exercise_id: data.exerciseId,
@@ -348,6 +369,7 @@ export const submitAttempt = createServerFn({ method: "POST" })
       durationSeconds: atomic.durationSeconds,
       profile: atomic.profile,
       review,
+      reviewHidden: isQuiz,
       unlockedBadges: atomic.unlockedBadges,
     };
   });

@@ -356,6 +356,13 @@ function QuestPage() {
       fr: "❌ Tu n'as pas atteint les 80% requis. Relis bien le cours, puis refais le quiz.",
       en: "❌ You did not reach the required 80%. Re-read the lesson, then retake the quiz.",
     }[qlang],
+    // Quiz answers are deliberately NOT corrected on screen — the student must
+    // validate on their own. So the in-quiz message must not promise a correction.
+    quizRecorded: {
+      ar: "تم تسجيل إجابتك. ستظهر نتيجتك في نهاية الاختبار.",
+      fr: "Réponse enregistrée. Ton résultat s'affichera à la fin du quiz.",
+      en: "Answer recorded. Your result will appear at the end of the quiz.",
+    }[qlang],
   };
 
   // Locked screen: the chapter comprehension quiz must be passed first
@@ -514,62 +521,64 @@ function QuestPage() {
               onReplay={resetRun}
             />
 
-            <div className="mt-8 text-left">
-              <h2 className="font-display text-xl font-bold">{t.quest.questReview}</h2>
-              <div className="mt-4 space-y-3">
-                {result.review.map((item, reviewIndex) => (
-                  <div
-                    key={item.questionId}
-                    className="rounded-2xl border border-border/50 bg-background/30 p-4"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <div className="text-xs uppercase tracking-widest text-muted-foreground">
-                          Question {reviewIndex + 1}
+            {!isQuiz && (
+              <div className="mt-8 text-left">
+                <h2 className="font-display text-xl font-bold">{t.quest.questReview}</h2>
+                <div className="mt-4 space-y-3">
+                  {result.review.map((item, reviewIndex) => (
+                    <div
+                      key={item.questionId}
+                      className="rounded-2xl border border-border/50 bg-background/30 p-4"
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <div className="text-xs uppercase tracking-widest text-muted-foreground">
+                            Question {reviewIndex + 1}
+                          </div>
+                          <div
+                            className="mt-1 font-semibold"
+                            dir={isRtlText(item.prompt) ? "rtl" : undefined}
+                          >
+                            {item.prompt}
+                          </div>
                         </div>
                         <div
-                          className="mt-1 font-semibold"
-                          dir={isRtlText(item.prompt) ? "rtl" : undefined}
+                          className={`rounded-full px-3 py-1 text-xs font-bold ${item.isCorrect ? "bg-(--success)/15 text-success" : "bg-destructive/15 text-destructive"}`}
                         >
-                          {item.prompt}
+                          {item.isCorrect ? t.quest.passed : t.quest.needsWork}
                         </div>
                       </div>
-                      <div
-                        className={`rounded-full px-3 py-1 text-xs font-bold ${item.isCorrect ? "bg-(--success)/15 text-success" : "bg-destructive/15 text-destructive"}`}
-                      >
-                        {item.isCorrect ? t.quest.passed : t.quest.needsWork}
+                      <div className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
+                        <div className="rounded-xl bg-card/60 p-3">
+                          <div className="text-xs uppercase tracking-widest text-muted-foreground">
+                            {t.quest.yourAnswer}
+                          </div>
+                          <div className="mt-1 font-mono uppercase">
+                            {getDisplayChoice(item.questionId, item.selectedChoice)}
+                          </div>
+                        </div>
+                        <div className="rounded-xl bg-card/60 p-3">
+                          <div className="text-xs uppercase tracking-widest text-muted-foreground">
+                            {t.quest.correctAnswer}
+                          </div>
+                          <div className="mt-1 font-mono uppercase">
+                            {getDisplayChoice(item.questionId, item.correctChoice)}
+                          </div>
+                        </div>
                       </div>
+                      {item.explanation && (
+                        <p
+                          className="mt-3 text-sm text-muted-foreground"
+                          dir={isRtlText(item.explanation) ? "rtl" : undefined}
+                        >
+                          {item.explanation}
+                        </p>
+                      )}
                     </div>
-                    <div className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
-                      <div className="rounded-xl bg-card/60 p-3">
-                        <div className="text-xs uppercase tracking-widest text-muted-foreground">
-                          {t.quest.yourAnswer}
-                        </div>
-                        <div className="mt-1 font-mono uppercase">
-                          {getDisplayChoice(item.questionId, item.selectedChoice)}
-                        </div>
-                      </div>
-                      <div className="rounded-xl bg-card/60 p-3">
-                        <div className="text-xs uppercase tracking-widest text-muted-foreground">
-                          {t.quest.correctAnswer}
-                        </div>
-                        <div className="mt-1 font-mono uppercase">
-                          {getDisplayChoice(item.questionId, item.correctChoice)}
-                        </div>
-                      </div>
-                    </div>
-                    {item.explanation && (
-                      <p
-                        className="mt-3 text-sm text-muted-foreground"
-                        dir={isRtlText(item.explanation) ? "rtl" : undefined}
-                      >
-                        {item.explanation}
-                      </p>
-                    )}
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </motion.div>
       </div>
@@ -690,7 +699,7 @@ function QuestPage() {
             {current.prompt}
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            {isBoss ? t.quest.bossStrike : t.quest.feedbackMsg}
+            {isBoss ? t.quest.bossStrike : isQuiz ? QL.quizRecorded : t.quest.feedbackMsg}
           </p>
           <div className="mt-6 space-y-3" role="radiogroup" aria-label={current.prompt}>
             {options.map((opt) => {
@@ -756,7 +765,7 @@ function QuestPage() {
               animate={{ opacity: 1, y: 0 }}
               className="mt-4 rounded-xl border border-(--neon-cyan)/30 bg-(--neon-cyan)/10 p-4 text-sm text-neon-cyan"
             >
-              <p>{t.quest.feedbackMsg}</p>
+              <p>{isQuiz ? QL.quizRecorded : t.quest.feedbackMsg}</p>
             </motion.div>
           )}
 

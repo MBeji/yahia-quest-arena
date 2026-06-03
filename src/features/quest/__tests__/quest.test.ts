@@ -307,7 +307,43 @@ describe("gamification.quest — submitAttempt", () => {
     expect(res.xpEarned).toBe(50);
     expect(res.coinsEarned).toBe(10);
     expect((res.review as Array<{ isCorrect: boolean }>)[0].isCorrect).toBe(true);
+    expect(res.reviewHidden).toBe(false);
     expect((res.unlockedBadges as Array<{ code: string }>)[0].code).toBe("first_win");
+  });
+
+  it("hides the correction (no correct answers leak) for a comprehension quiz", async () => {
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") return mockQuery({ mode: "quiz" });
+      // questions table
+      return mockQuery([{ id: Q1_ID, prompt: "2+2?", correct_option: "4", explanation: "x" }]);
+    });
+    mockRpc.mockReturnValue({
+      data: {
+        correct: 1,
+        total: 1,
+        scorePct: 100,
+        xpEarned: 20,
+        coinsEarned: 5,
+        durationSeconds: 10,
+        profile: { xp: 20 },
+        unlockedBadges: [],
+      },
+      error: null,
+    });
+
+    const { submitAttempt } = await import("@/features/quest");
+    const result = await (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
+      sessionId: SESSION_ID,
+      exerciseId: EXERCISE_ID,
+      answers: [{ questionId: Q1_ID, choice: "4" }],
+    });
+
+    const res = result as Record<string, unknown>;
+    // Score is still returned, but the per-question correction (correct answers /
+    // explanations) is withheld so the student can't memorise and re-pass blindly.
+    expect(res.scorePct).toBe(100);
+    expect(res.reviewHidden).toBe(true);
+    expect((res.review as unknown[]).length).toBe(0);
   });
 
   it("throws when rate limited", async () => {
