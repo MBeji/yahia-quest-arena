@@ -75,5 +75,26 @@ export const DEFAULT_WEEKLY_QUESTS = [
 /** Boss mode: time per question in seconds */
 export const BOSS_TIME_PER_QUESTION_S = 20;
 
+// ---------------------------------------------------------------------------
+// Dungeon access gate — the Dungeon requires real prior progress, and the
+// number of daily runs scales with the player's level.
+// NOTE: these thresholds are mirrored in SQL (get_dungeon_access /
+// start_dungeon_run); keep both in sync.
+// ---------------------------------------------------------------------------
+
+/** Daily dungeon runs = min(level, this cap). Level 0 ⇒ 0 ⇒ no access. */
+export const DUNGEON_MAX_RUNS_PER_DAY = 5;
+
+/** Distinct subjects the player must have attempted to unlock the Dungeon. */
+export const DUNGEON_REQUIRED_SUBJECTS = 2;
+
+/** Distinct chapters the player must have attempted to unlock the Dungeon. */
+export const DUNGEON_REQUIRED_CHAPTERS = 3;
+
+/** Max dungeon runs allowed per day for a given level. */
+export function dungeonRunsPerDay(level: number): number {
+  return Math.max(0, Math.min(level, DUNGEON_MAX_RUNS_PER_DAY));
+}
+
 /** Cost in XP Coins to recover a lost streak */
 export const STREAK_RECOVERY_COST = 15;

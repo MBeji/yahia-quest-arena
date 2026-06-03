@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion, AnimatePresence } from "motion/react";
 import { useCallback, useMemo, useRef, useState } from "react";
@@ -14,9 +14,11 @@ import {
   CheckCircle2,
   XCircle,
   Loader2,
+  Lock,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
+  getDungeonAccess,
   getDungeonQuestions,
   startDungeonRun,
   submitDungeonAnswer,
@@ -48,6 +50,13 @@ function DungeonPage() {
   const fetchQuestions = useServerFn(getDungeonQuestions);
   const submitAnswer = useServerFn(submitDungeonAnswer);
   const submitRun = useServerFn(submitDungeonRun);
+  const fetchAccess = useServerFn(getDungeonAccess);
+
+  const accessQuery = useQuery({
+    queryKey: ["dungeon-access"],
+    queryFn: () => fetchAccess(),
+  });
+  const access = accessQuery.data;
 
   const [state, setState] = useState<GameState>("lobby");
   const [runId, setRunId] = useState<string | null>(null);
@@ -145,6 +154,7 @@ function DungeonPage() {
     try {
       const run = await startRun();
       setRunId(run.runId);
+      qc.invalidateQueries({ queryKey: ["dungeon-access"] });
       const ok = await loadBatch(run.runId);
       if (!ok) {
         setState("gameover");
@@ -277,13 +287,53 @@ function DungeonPage() {
               </div>
             </div>
 
-            <button
-              onClick={startDungeon}
-              aria-label="Enter the infinite dungeon mode"
-              className="mt-8 inline-flex items-center gap-2 rounded-lg bg-linear-to-r from-neon-magenta to-neon-violet px-8 py-3.5 text-base font-bold text-primary-foreground shadow-neon transition-transform hover:scale-105"
-            >
-              <Skull className="h-5 w-5" /> {t.dungeon.enterDungeon}
-            </button>
+            {accessQuery.isLoading || !access ? (
+              <div className="mt-8 text-sm text-muted-foreground">…</div>
+            ) : !access.canAccess ? (
+              <div className="mx-auto mt-8 max-w-sm rounded-2xl border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/5 p-5 text-left">
+                <div className="flex items-center gap-2 font-display font-bold text-[color:var(--neon-gold)]">
+                  <Lock className="h-5 w-5" /> Donjon verrouillé
+                </div>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  {access.reason === "DAILY_LIMIT"
+                    ? `Limite quotidienne atteinte (${access.maxRunsPerDay} run${
+                        access.maxRunsPerDay > 1 ? "s" : ""
+                      }/jour). Reviens demain.`
+                    : access.reason === "LEVEL"
+                      ? "Monte de niveau pour débloquer le Donjon."
+                      : "Le Donjon exige d'avoir déjà progressé dans plusieurs matières et chapitres."}
+                </p>
+                {access.reason === "PREREQ" && (
+                  <div className="mt-3 space-y-1 text-xs text-muted-foreground">
+                    <div>
+                      Matières entamées : {access.subjectsDone}/{access.requiredSubjects}
+                    </div>
+                    <div>
+                      Chapitres entamés : {access.chaptersDone}/{access.requiredChapters}
+                    </div>
+                  </div>
+                )}
+                <Link
+                  to="/dashboard"
+                  className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-border/50 px-4 py-2 text-sm font-semibold text-foreground hover:bg-card/60"
+                >
+                  Continuer à m'entraîner
+                </Link>
+              </div>
+            ) : (
+              <>
+                <button
+                  onClick={startDungeon}
+                  aria-label="Enter the infinite dungeon mode"
+                  className="mt-8 inline-flex items-center gap-2 rounded-lg bg-linear-to-r from-neon-magenta to-neon-violet px-8 py-3.5 text-base font-bold text-primary-foreground shadow-neon transition-transform hover:scale-105"
+                >
+                  <Skull className="h-5 w-5" /> {t.dungeon.enterDungeon}
+                </button>
+                <div className="mt-3 text-xs text-muted-foreground">
+                  Runs aujourd'hui : {access.runsToday}/{access.maxRunsPerDay}
+                </div>
+              </>
+            )}
           </div>
         </motion.div>
       </div>

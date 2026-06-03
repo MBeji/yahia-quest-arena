@@ -895,6 +895,20 @@ export type Database = {
         Args: { p_subject: string };
         Returns: { exercise_id: string; best_score: number }[];
       };
+      get_dungeon_access: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          level: number;
+          max_runs_per_day: number;
+          runs_today: number;
+          subjects_done: number;
+          chapters_done: number;
+          required_subjects: number;
+          required_chapters: number;
+          can_access: boolean;
+          reason: string;
+        }[];
+      };
       get_dungeon_questions: {
         Args: { p_run_id: string; p_batch_size?: number };
         Returns: Json;
