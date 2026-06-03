@@ -566,15 +566,24 @@ function QuestPage() {
   }
 
   const options = current ? (shuffledOptionsByQuestionId.get(current.id) ?? []) : [];
+  const leaveQuestClass =
+    "mb-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground";
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-8" dir={isRtlSubject ? "rtl" : undefined}>
-      <Link
-        to=".."
-        className="mb-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
-      >
-        <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.quest.leaveQuest}
-      </Link>
+      {exSubjectId ? (
+        <Link
+          to="/subject/$subjectId"
+          params={{ subjectId: exSubjectId }}
+          className={leaveQuestClass}
+        >
+          <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.quest.leaveQuest}
+        </Link>
+      ) : (
+        <Link to="/dashboard" className={leaveQuestClass}>
+          <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.quest.leaveQuest}
+        </Link>
+      )}
 
       {/* Boss Mode Header */}
       {isBoss && (
