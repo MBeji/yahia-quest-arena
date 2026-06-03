@@ -1,0 +1,154 @@
+{
+  "title": "👑 Défi élite : figures et effets stylistiques",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Identifie la figure de style et son effet dans : « Le Tout-Paris s'était donné rendez-vous pour applaudir la prima donna. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "Hyperbole : l'auteur exagère le nombre de spectateurs pour souligner le succès."
+        },
+        {
+          "id": "b",
+          "text": "Métonymie : « le Tout-Paris » désigne l'élite parisienne par le nom de la ville, créant un effet de mondanité et d'exclusivité."
+        },
+        {
+          "id": "c",
+          "text": "Personnification : Paris est présenté comme un être vivant capable de se déplacer."
+        },
+        {
+          "id": "d",
+          "text": "Synecdoque : la partie (Paris) représente le tout (la France entière)."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "« Le Tout-Paris » est une métonymie : on désigne un groupe social (l'élite, le gratin parisien) par le nom du lieu associé à ce groupe. Ce procédé crée un effet d'exclusivité et de prestige. Ce n'est pas une synecdoque (qui substitue la partie au tout ou inversement à l'intérieur du même référent), ni une hyperbole (il n'y a pas d'exagération chiffrée), ni une personnification (Paris n'accomplit pas d'action proprement humaine).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle figure de style domine dans ce passage, et quel est son effet ? « Il faisait grand jour dehors ; dans son âme régnait une nuit éternelle. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "Métaphore : « nuit éternelle » remplace directement « tristesse » sans outil comparatif, créant une image sombre."
+        },
+        {
+          "id": "b",
+          "text": "Comparaison : l'auteur compare l'âme au jour et à la nuit pour montrer le contraste."
+        },
+        {
+          "id": "c",
+          "text": "Antithèse : l'opposition entre « grand jour » et « nuit éternelle » / entre le dehors et l'âme met en relief le désespoir intérieur du personnage."
+        },
+        {
+          "id": "d",
+          "text": "Oxymore : deux termes contradictoires sont juxtaposés dans la même expression pour créer un paradoxe."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "La figure dominante est l'antithèse : deux idées contraires (grand jour / nuit éternelle ; dehors / âme) sont placées en opposition dans deux propositions symétriques. L'effet est de souligner le fossé entre la réalité extérieure lumineuse et le désespoir intérieur du personnage. L'oxymore exige que les deux termes contraires soient juxtaposés dans une seule expression (ex. : « obscure clarté ») ; ce n'est pas le cas ici. La métaphore est bien présente (« nuit éternelle »), mais elle est au service de l'antithèse, qui est la figure structurante de la phrase.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans « Un souffle, une ombre, un rien lui faisait peur », quelle figure précise reconnaît-on et quel est son effet ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Énumération : une liste de trois éléments sans ordre particulier renforce l'idée de la peur."
+        },
+        {
+          "id": "b",
+          "text": "Hyperbole : l'accumulation exagère la peur du personnage pour la rendre comique."
+        },
+        {
+          "id": "c",
+          "text": "Gradation décroissante : les termes (souffle → ombre → rien) diminuent en substance, suggérant que la peur du personnage est si intense qu'elle n'a besoin d'aucun objet réel pour exister."
+        },
+        {
+          "id": "d",
+          "text": "Comparaison : le personnage est comparé implicitement à quelqu'un d'aussi léger qu'un souffle."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Les trois termes forment une gradation décroissante : « un souffle » (quelque chose de très léger), « une ombre » (une forme à peine perceptible), « un rien » (l'absence totale d'objet réel). L'intensité de la peur est ainsi exaltée par le paradoxe : même le néant terrifie le personnage. Ce n'est pas une simple énumération, car les termes sont ordonnés par intensité décroissante — c'est précisément ce critère d'ordre qui définit la gradation.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Identifie la figure de style dans ce passage et explique sa construction : « La vie est un voyage : nous embarquons à la naissance, naviguons à travers les tempêtes du destin, et jetons enfin l'ancre au seuil de la mort. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "Comparaison filée : la vie est comparée à un voyage grâce à l'outil implicite « est »."
+        },
+        {
+          "id": "b",
+          "text": "Métaphore filée : la métaphore initiale (« la vie est un voyage ») est développée et entretenue sur toute la phrase par un réseau cohérent de termes maritimes (embarquer, naviguer, ancre)."
+        },
+        {
+          "id": "c",
+          "text": "Personnification : la vie, le destin et la mort accomplissent des actions humaines tout au long du passage."
+        },
+        {
+          "id": "d",
+          "text": "Gradation : les étapes de la vie (naissance, destin, mort) sont énumérées par ordre chronologique croissant."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Il s'agit d'une métaphore filée : la métaphore inaugurale (« la vie est un voyage ») est prolongée et cohérente sur l'ensemble du passage grâce à un réseau lexical maritime (embarquons, naviguons, tempêtes, ancre). C'est une métaphore et non une comparaison, car aucun outil comparatif (comme, tel que…) n'est employé. La gradation suppose un ordre d'intensité croissante ou décroissante, non une simple succession chronologique.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle figure de style est employée dans « La forêt retenait son souffle », et quel effet produit-elle ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Métaphore : la forêt est présentée directement comme un être vivant équivalent à un animal."
+        },
+        {
+          "id": "b",
+          "text": "Hyperbole : l'expression exagère le silence de la forêt pour créer un effet de grandeur."
+        },
+        {
+          "id": "c",
+          "text": "Comparaison : la forêt est comparée implicitement à un être humain qui retient son souffle."
+        },
+        {
+          "id": "d",
+          "text": "Personnification : on attribue à la forêt (élément naturel) un geste proprement humain (retenir son souffle), créant une atmosphère de tension et de silence angoissant."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« Retenir son souffle » est un comportement humain attribué à la forêt (un élément de la nature) : c'est bien une personnification. L'effet est double : il crée une atmosphère de tension suspendue et il invite le lecteur à percevoir la forêt comme une présence consciente et inquiète. Ce n'est pas une comparaison (absence d'outil comparatif), ni une simple métaphore nominale (la forêt n'est pas identifiée à un être précis), ni une hyperbole (l'expression ne repose pas sur l'exagération mais sur l'attribution d'une faculté humaine).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans la phrase « Il dévora les pages de ce roman en une nuit, assoiffé de mots », quel procédé stylistique est à l'œuvre et qu'apporte-t-il au sens ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Hyperbole : « en une nuit » exagère la rapidité de lecture pour montrer l'enthousiasme du lecteur."
+        },
+        {
+          "id": "b",
+          "text": "Comparaison : le lecteur est comparé à un animal affamé grâce à l'image implicite de la dévoration."
+        },
+        {
+          "id": "c",
+          "text": "Métaphore verbale : « dévorer » (manger avidement) est employé au sens figuré pour désigner une lecture intense et passionnée, faisant du livre un aliment spirituel."
+        },
+        {
+          "id": "d",
+          "text": "Personnification : les pages sont présentées comme des êtres vivants que l'on peut consommer."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Le verbe « dévorer » est ici employé au sens figuré : il transpose l'action de manger (sens propre, physique) à l'acte de lire (sens figuré, intellectuel). C'est une métaphore verbale — aucun outil comparatif n'est présent — qui assimile la lecture à une ingestion avide et crée l'image du livre comme nourriture de l'esprit. L'expression « assoiffé de mots » prolonge cette métaphore en ajoutant la soif au réseau sensoriel. Ce n'est pas une hyperbole, car l'effet ne repose pas sur une exagération quantitative mais sur le transfert de sens d'un verbe.",
+      "difficulty": 3
+    }
+  ]
+}

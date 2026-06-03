@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { isRateLimited } from "@/shared/lib/rate-limit";
-import { QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
+import { CHALLENGE_MIN_LEVEL, QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { logger } from "@/shared/lib/logger";
 import type { UnlockedBadge } from "@/shared/types/gamification";
@@ -11,6 +11,15 @@ import type { Database } from "@/shared/integrations/supabase/types";
 /** Error message thrown when an exercise is locked behind its chapter quiz. */
 export const QUIZ_LOCKED_MESSAGE =
   "Réussis d'abord le quiz de compréhension du chapitre pour débloquer cet exercice.";
+
+/**
+ * Messages thrown when a premium "Défi élite" (mode='challenge') exercise is
+ * locked. The "Mission premium" prefix is matched by the quest UI to show the
+ * subscription paywall; keep the wording stable.
+ */
+export const CHALLENGE_LOCKED_SUBSCRIPTION_MESSAGE =
+  "Mission premium : un abonnement actif est requis pour lancer ce Défi élite.";
+export const CHALLENGE_LOCKED_LEVEL_MESSAGE = `Mission premium : atteins le niveau ${CHALLENGE_MIN_LEVEL} pour débloquer ce Défi élite.`;
 
 type ProfileSnapshot = Database["public"]["Tables"]["profiles"]["Row"];
 
@@ -143,12 +152,33 @@ export const getSubject = createServerFn({ method: "GET" })
       }
     }
 
+    // Viewer context for premium gating of "Défi élite" missions on the page.
+    // Graceful degradation: any failure (e.g. missing RPC) defaults to "locked"
+    // rather than failing the whole page — mirrors the best-scores fallback.
+    let viewer = { level: 0, hasSubscription: false };
+    try {
+      const [viewerProfile, viewerSub] = await Promise.all([
+        supabase.from("profiles").select("level").eq("id", context.userId).maybeSingle(),
+        supabase.rpc("has_active_subscription", { p_user: context.userId }),
+      ]);
+      viewer = {
+        level: viewerProfile.data?.level ?? 0,
+        hasSubscription: viewerSub.data === true,
+      };
+    } catch (err) {
+      logger.warn("quest.getSubject: viewer context fetch failed", {
+        subjectId: data.subjectId,
+        error: err instanceof Error ? err.message : String(err),
+      });
+    }
+
     return {
       subject: subj.data,
       chapters: chaps.data ?? [],
       exercises,
       bestByExercise: best,
       quizPassedByChapter,
+      viewer,
     };
   });
 
@@ -232,6 +262,26 @@ export const startExerciseSession = createServerFn({ method: "POST" })
       );
     }
 
+    // Premium gate: "Défi élite" missions require an active subscription AND a
+    // minimum player level. Enforced here (server-authoritative), mirroring the
+    // comprehension-quiz gate below.
+    if (ex.mode === "challenge") {
+      const [profileRes, subRes] = await Promise.all([
+        supabase.from("profiles").select("level").eq("id", userId).maybeSingle(),
+        supabase.rpc("has_active_subscription", { p_user: userId }),
+      ]);
+      if (subRes.data !== true) {
+        failWithClientError(
+          "quest.startExerciseSession",
+          subRes.error,
+          CHALLENGE_LOCKED_SUBSCRIPTION_MESSAGE,
+        );
+      }
+      if ((profileRes.data?.level ?? 0) < CHALLENGE_MIN_LEVEL) {
+        failWithClientError("quest.startExerciseSession", null, CHALLENGE_LOCKED_LEVEL_MESSAGE);
+      }
+    }
+
     if (ex.mode !== "quiz" && ex.chapter_id) {
       const { data: quiz } = await supabase
         .from("exercises")
@@ -310,20 +360,41 @@ export const submitAttempt = createServerFn({ method: "POST" })
       );
     }
 
+    // Comprehension quizzes must be validated by the student alone: we never
+    // return the correct answers / explanations to the client for a quiz, so they
+    // cannot be memorised and the quiz re-passed blindly. The score + pass/fail
+    // are still returned. Practice/boss keep the full end-of-quest correction.
+    const { data: exerciseRow } = await supabase
+      .from("exercises")
+      .select("mode")
+      .eq("id", data.exerciseId)
+      .single();
+    const isQuiz = (exerciseRow as { mode?: string } | null)?.mode === "quiz";
+
     const questionMap = new Map((questions ?? []).map((q) => [q.id, q]));
 
-    const review = data.answers.map((answer) => {
-      const question = questionMap.get(answer.questionId);
+    type ReviewItem = {
+      questionId: string;
+      prompt: string;
+      selectedChoice: string;
+      correctChoice: string;
+      isCorrect: boolean;
+      explanation: string | null;
+    };
+    const review: ReviewItem[] = isQuiz
+      ? []
+      : data.answers.map((answer) => {
+          const question = questionMap.get(answer.questionId);
 
-      return {
-        questionId: answer.questionId,
-        prompt: question?.prompt ?? "Question",
-        selectedChoice: answer.choice,
-        correctChoice: question?.correct_option ?? "",
-        isCorrect: question?.correct_option === answer.choice,
-        explanation: question?.explanation ?? null,
-      };
-    });
+          return {
+            questionId: answer.questionId,
+            prompt: question?.prompt ?? "Question",
+            selectedChoice: answer.choice,
+            correctChoice: question?.correct_option ?? "",
+            isCorrect: question?.correct_option === answer.choice,
+            explanation: question?.explanation ?? null,
+          };
+        });
     const { data: submitData, error: submitErr } = await supabase.rpc("submit_exercise_attempt", {
       p_session_id: data.sessionId,
       p_exercise_id: data.exerciseId,
@@ -348,6 +419,7 @@ export const submitAttempt = createServerFn({ method: "POST" })
       durationSeconds: atomic.durationSeconds,
       profile: atomic.profile,
       review,
+      reviewHidden: isQuiz,
       unlockedBadges: atomic.unlockedBadges,
     };
   });

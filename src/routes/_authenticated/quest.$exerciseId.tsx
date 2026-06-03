@@ -16,6 +16,7 @@ import {
   BookOpen,
   Lock,
   Check,
+  Crown,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -34,40 +35,10 @@ import { isRtlText, isMathExpression } from "@/shared/lib/utils";
 import { shuffleOptions, type BaseOption, type DisplayOption } from "@/shared/lib/question-utils";
 import { levelForXp } from "@/shared/lib/level";
 import { QuestResultActions } from "@/features/quest/components/quest-result-actions";
+import { Confetti } from "@/features/quest/components/confetti";
+import { SubscriptionPaywall } from "@/features/subscription";
 import { LevelUpCelebration } from "@/components/ui/level-up-celebration";
 import { useT } from "@/lib/i18n";
-
-// Confetti component for victory
-function Confetti() {
-  const particles = useMemo(
-    () =>
-      Array.from({ length: 50 }, (_, i) => ({
-        id: i,
-        x: Math.random() * 100,
-        delay: Math.random() * 0.5,
-        duration: 1.5 + Math.random() * 2,
-        color: ["#a855f7", "#06b6d4", "#f59e0b", "#ec4899", "#10b981"][
-          Math.floor(Math.random() * 5)
-        ],
-        size: 6 + Math.random() * 8,
-      })),
-    [],
-  );
-  return (
-    <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
-      {particles.map((p) => (
-        <motion.div
-          key={p.id}
-          className="absolute rounded-sm"
-          style={{ left: `${p.x}%`, width: p.size, height: p.size, backgroundColor: p.color }}
-          initial={{ y: -20, opacity: 1, rotate: 0 }}
-          animate={{ y: "100vh", opacity: 0, rotate: 360 + Math.random() * 360 }}
-          transition={{ duration: p.duration, delay: p.delay, ease: "easeIn" }}
-        />
-      ))}
-    </div>
-  );
-}
 
 export const Route = createFileRoute("/_authenticated/quest/$exerciseId")({
   head: () => ({ meta: [{ title: "Quest · XP Scholars" }] }),
@@ -356,12 +327,49 @@ function QuestPage() {
       fr: "❌ Tu n'as pas atteint les 80% requis. Relis bien le cours, puis refais le quiz.",
       en: "❌ You did not reach the required 80%. Re-read the lesson, then retake the quiz.",
     }[qlang],
+    // Quiz answers are deliberately NOT corrected on screen — the student must
+    // validate on their own. So the in-quiz message must not promise a correction.
+    quizRecorded: {
+      ar: "تم تسجيل إجابتك. ستظهر نتيجتك في نهاية الاختبار.",
+      fr: "Réponse enregistrée. Ton résultat s'affichera à la fin du quiz.",
+      en: "Answer recorded. Your result will appear at the end of the quiz.",
+    }[qlang],
+    eliteLockedTitle: {
+      ar: "👑 تحدّي النخبة مقفل",
+      fr: "👑 Défi élite verrouillé",
+      en: "👑 Elite challenge locked",
+    }[qlang],
   };
 
   // Locked screen: the chapter comprehension quiz must be passed first
   // (enforced server-side in startExerciseSession).
   const sessionErrorMsg =
     sessionMutation.error instanceof Error ? sessionMutation.error.message : "";
+
+  // Premium "Défi élite" lock: server rejects the session start. Show the
+  // subscription paywall (plans + admin phone) and the unlock requirement.
+  if (sessionMutation.isError && sessionErrorMsg.startsWith("Mission premium")) {
+    return (
+      <div className="mx-auto max-w-md px-6 py-12 text-center">
+        <div className="rounded-3xl border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/5 p-8">
+          <Crown className="mx-auto h-12 w-12 text-[color:var(--neon-gold)]" />
+          <h1 className="mt-4 font-display text-2xl font-bold">{QL.eliteLockedTitle}</h1>
+          <p className="mt-3 text-sm text-muted-foreground">{sessionErrorMsg}</p>
+          <SubscriptionPaywall />
+          {exSubjectId && (
+            <Link
+              to="/subject/$subjectId"
+              params={{ subjectId: exSubjectId }}
+              className="mt-5 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+            >
+              <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {QL.back}
+            </Link>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   if (sessionMutation.isError && sessionErrorMsg.includes("quiz de compréhension")) {
     return (
       <div
@@ -514,62 +522,64 @@ function QuestPage() {
               onReplay={resetRun}
             />
 
-            <div className="mt-8 text-left">
-              <h2 className="font-display text-xl font-bold">{t.quest.questReview}</h2>
-              <div className="mt-4 space-y-3">
-                {result.review.map((item, reviewIndex) => (
-                  <div
-                    key={item.questionId}
-                    className="rounded-2xl border border-border/50 bg-background/30 p-4"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <div className="text-xs uppercase tracking-widest text-muted-foreground">
-                          Question {reviewIndex + 1}
+            {!isQuiz && (
+              <div className="mt-8 text-left">
+                <h2 className="font-display text-xl font-bold">{t.quest.questReview}</h2>
+                <div className="mt-4 space-y-3">
+                  {result.review.map((item, reviewIndex) => (
+                    <div
+                      key={item.questionId}
+                      className="rounded-2xl border border-border/50 bg-background/30 p-4"
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <div className="text-xs uppercase tracking-widest text-muted-foreground">
+                            Question {reviewIndex + 1}
+                          </div>
+                          <div
+                            className="mt-1 font-semibold"
+                            dir={isRtlText(item.prompt) ? "rtl" : undefined}
+                          >
+                            {item.prompt}
+                          </div>
                         </div>
                         <div
-                          className="mt-1 font-semibold"
-                          dir={isRtlText(item.prompt) ? "rtl" : undefined}
+                          className={`rounded-full px-3 py-1 text-xs font-bold ${item.isCorrect ? "bg-(--success)/15 text-success" : "bg-destructive/15 text-destructive"}`}
                         >
-                          {item.prompt}
+                          {item.isCorrect ? t.quest.passed : t.quest.needsWork}
                         </div>
                       </div>
-                      <div
-                        className={`rounded-full px-3 py-1 text-xs font-bold ${item.isCorrect ? "bg-(--success)/15 text-success" : "bg-destructive/15 text-destructive"}`}
-                      >
-                        {item.isCorrect ? t.quest.passed : t.quest.needsWork}
+                      <div className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
+                        <div className="rounded-xl bg-card/60 p-3">
+                          <div className="text-xs uppercase tracking-widest text-muted-foreground">
+                            {t.quest.yourAnswer}
+                          </div>
+                          <div className="mt-1 font-mono uppercase">
+                            {getDisplayChoice(item.questionId, item.selectedChoice)}
+                          </div>
+                        </div>
+                        <div className="rounded-xl bg-card/60 p-3">
+                          <div className="text-xs uppercase tracking-widest text-muted-foreground">
+                            {t.quest.correctAnswer}
+                          </div>
+                          <div className="mt-1 font-mono uppercase">
+                            {getDisplayChoice(item.questionId, item.correctChoice)}
+                          </div>
+                        </div>
                       </div>
+                      {item.explanation && (
+                        <p
+                          className="mt-3 text-sm text-muted-foreground"
+                          dir={isRtlText(item.explanation) ? "rtl" : undefined}
+                        >
+                          {item.explanation}
+                        </p>
+                      )}
                     </div>
-                    <div className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
-                      <div className="rounded-xl bg-card/60 p-3">
-                        <div className="text-xs uppercase tracking-widest text-muted-foreground">
-                          {t.quest.yourAnswer}
-                        </div>
-                        <div className="mt-1 font-mono uppercase">
-                          {getDisplayChoice(item.questionId, item.selectedChoice)}
-                        </div>
-                      </div>
-                      <div className="rounded-xl bg-card/60 p-3">
-                        <div className="text-xs uppercase tracking-widest text-muted-foreground">
-                          {t.quest.correctAnswer}
-                        </div>
-                        <div className="mt-1 font-mono uppercase">
-                          {getDisplayChoice(item.questionId, item.correctChoice)}
-                        </div>
-                      </div>
-                    </div>
-                    {item.explanation && (
-                      <p
-                        className="mt-3 text-sm text-muted-foreground"
-                        dir={isRtlText(item.explanation) ? "rtl" : undefined}
-                      >
-                        {item.explanation}
-                      </p>
-                    )}
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </motion.div>
       </div>
@@ -690,7 +700,7 @@ function QuestPage() {
             {current.prompt}
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            {isBoss ? t.quest.bossStrike : t.quest.feedbackMsg}
+            {isBoss ? t.quest.bossStrike : isQuiz ? QL.quizRecorded : t.quest.feedbackMsg}
           </p>
           <div className="mt-6 space-y-3" role="radiogroup" aria-label={current.prompt}>
             {options.map((opt) => {
@@ -756,7 +766,7 @@ function QuestPage() {
               animate={{ opacity: 1, y: 0 }}
               className="mt-4 rounded-xl border border-(--neon-cyan)/30 bg-(--neon-cyan)/10 p-4 text-sm text-neon-cyan"
             >
-              <p>{t.quest.feedbackMsg}</p>
+              <p>{isQuiz ? QL.quizRecorded : t.quest.feedbackMsg}</p>
             </motion.div>
           )}
 

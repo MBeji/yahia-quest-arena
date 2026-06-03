@@ -98,3 +98,12 @@ export function dungeonRunsPerDay(level: number): number {
 
 /** Cost in XP Coins to recover a lost streak */
 export const STREAK_RECOVERY_COST = 15;
+
+// ---------------------------------------------------------------------------
+// Premium "Défi élite" challenge exercises — high-difficulty, high-XP missions
+// (mode='challenge') reserved for paying subscribers who have also reached a
+// minimum level. Enforced server-side in quest.startExerciseSession.
+// ---------------------------------------------------------------------------
+
+/** Minimum player level required to unlock premium challenge exercises. */
+export const CHALLENGE_MIN_LEVEL = 5;

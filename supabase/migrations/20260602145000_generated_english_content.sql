@@ -5,6 +5,15 @@
 -- Source of truth: content/english/
 -- =========================================================
 
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'exercises_mode_check') THEN
+    ALTER TABLE public.exercises DROP CONSTRAINT exercises_mode_check;
+  END IF;
+  ALTER TABLE public.exercises
+    ADD CONSTRAINT exercises_mode_check CHECK (mode IN ('practice', 'boss', 'quiz', 'challenge'));
+END $$;
+
 INSERT INTO public.subjects (id, name_fr, description, attribute, color_token, icon, display_order, content_language) VALUES
   ('english', 'Anglais', 'Grammar, tenses, modals, vocabulary, reading & writing — Tunisian 9th-grade syllabus', 'Agilite', 'subject-english', 'Globe', 5, 'en')
 ON CONFLICT (id) DO UPDATE SET
@@ -26,11 +35,11 @@ BEGIN
       AND q.exercise_id = e.id
       AND e.subject_id = 'english'
       AND e.source = 'admin'
-      AND q.id NOT IN ('080d7783-083d-5532-a30c-825175ef6d09', '5c8be484-cc52-575b-ac02-d7dd39f06af1', '138d5e16-6d8d-5dde-8107-11d41bfa48e9', 'd819986f-cfe2-53f8-bd3e-f76c9aa3e3a5', '4e4014e1-cd1d-5dcc-aac5-f44926ed20ed', '7241ee79-462b-5b3a-984c-eea640002fb0', '7a63341f-b75c-5f33-9964-f0a5e371d967', '43bd124a-3273-5b3d-babe-7c21c893d954', 'c4629643-cb37-5769-8cef-57760b3611f9', '499dffeb-77ba-571a-a272-ef6b68e30622', 'a5481854-86d1-56f3-8ac1-c1496af746ac', 'd8b38f06-1764-5f19-ba99-8f0fd06fd79b', '620f8003-045f-50cd-a9f5-2e24398d3bc5', '535f555e-00ec-541c-9430-c8c68f6f8bb0', '71117f1e-36c4-5a8e-b723-9dbc88418bf1', 'bc94054e-1446-5d04-8e8c-221f38cdcb9d', '90a789f4-e6c1-56be-86ef-0e8dd1a6eace', 'b5fe6ca3-0ae0-5d0a-becc-64b5e9be71c2', '0bb52641-d98c-5fc5-a598-beb8dbb6ef71', 'def1e0d2-88c6-5665-b598-fcbea95f96eb', '0cb5ed33-22c7-5edc-901c-0c090a8ffbf8', 'f36a39c7-17e1-500d-a663-25676e3f151d', 'bc3de6df-27c5-564f-a509-4feb9efb0100', '14609924-058c-5c85-b515-6e83bfa1c218', '13f53f19-669d-5bae-bb4e-fee06ce7d631', '63809236-3326-5a22-bf77-ca09b2f1cd0c', '6259cdd8-58d3-5794-8789-ae21fa623ed6', 'c43f3d30-8f67-5e14-a3e2-445602f8671d', 'a79183ff-96f8-5044-a92c-581978d8d1c9', '937bbd74-4c72-52a9-a129-ef162fceeeb5', '67cf5732-4004-59fe-b4a5-bbc42565a024', '75c9c3aa-c5c6-57b3-a6ae-72b8b7d071e4', 'dafd7523-eee4-517a-9606-6b8f9a72155f', '37470435-85a2-505c-91ca-b117d0515933', '7b983cd9-c2c0-5a9c-a73c-ac98bf9d0808', 'd65ae3ef-84c2-5f87-b631-5f91de5eef1f', '1ceda0cf-76cc-5320-b521-1dbaaf81ff83', 'd607352b-8809-5647-8ea5-22f2ffea5f51', '8b0082a8-9de5-5939-9428-c20ddaf4909d', '12f16b47-6a4c-5487-99e2-f1f5e592d512', '4ba459b0-dc9e-57f9-9175-81ba6c0d490d', 'bc58c470-1c5f-570b-b347-e040a8aaabbf', 'ea5d79b1-f11c-501e-b3aa-b94d4fb6c94f', 'f82a2c0b-e513-5770-8b2a-024116d6b3a1', '389a214c-d24f-5aff-b8e6-447a45ed35ed', 'dbf15f17-58e6-5ab5-b012-27b2368c4ca5', 'b8ad51f2-0d2f-5a46-ba24-3e956beb4367', 'e7a6d78a-35e1-5568-a53b-3be72295890c', 'fc5f7dad-9d09-5117-ba74-0cdae2c753c4', 'b3748c61-938a-5781-a6e3-e94630c69381', '723d0846-dcc9-57dc-a8d5-3f9a581abd90', 'd1c87325-095a-555e-95d3-138f47124355', '18298070-040f-5ac3-b119-9cb6fb720fa2', '9fee0d9a-a27d-5059-b62b-3e5c40b1b7ed', 'a682336a-8cac-55fe-98ed-d13e41b90c21', '10cdbbe6-7c81-509f-9107-c3f8ea0bc615', 'a14eb5d9-6d29-5415-8ec9-f1557b3e5161', 'a039206b-03d4-5fc9-86ad-75e0019c4a70', '3e22eee7-36b9-5f3a-8e0f-5333d3b76fdf', '1e66eafa-708f-5de1-a6cc-2921d6e02ffc', '01ffd3bb-6105-5323-92a1-3cc14b8348db', 'd4455f0a-1f51-5dad-ad63-3e592ebb5d36', '59194e7b-1eac-57ca-935a-de51f43964ea', 'f2b8ba0d-7631-5805-8846-a5fa20b419c6', '3e6e3345-a167-528b-86c9-8f8012c051f7', '68c353c4-5d65-5e6c-a162-99ffe1dfcef8', '101b87bc-3422-5b24-b2e4-1cd2a0ca63ab', 'ed4adc8e-de97-5a8f-a68f-5601a89daaa2', '390d080b-349c-538c-9250-acd59fd6c1c3', '462d9345-5c31-5111-8ce8-314de8fd5caa', 'da303622-b350-5b8b-9b6d-370d9728bb8e', '902f8a7c-6687-5818-814b-a17e2eef1444', '32d6d026-1f7e-5d8d-9fea-2141ee659a6a', '013e8407-3e0a-5ecc-af47-acfb7edf86d9', '57545cb8-cc45-5e9a-acc6-42102f111e27', 'ee916acc-ccc1-509c-934c-be74d6578dc8', 'c3be55d8-8928-58bb-bd27-181af4a0d5e3', '9f28f12e-250e-5f6c-9fe4-d5c4de564764', '402518e0-c2ac-5c9c-86c9-8db84a66c20a', 'fc64ccc6-a874-5048-aa2b-ec4bf7fedd1b', '349da296-708e-512c-98a5-f79c0d32d5fd', 'dd9dffa7-3d7a-5ecc-a39f-486149eb142f', '6d753d89-3393-5d46-80cb-7105df4178f0', '279267c3-6b7e-528e-a57e-a4ab75cfd473', 'a4ec5fc8-06d7-59b4-bdeb-31ef723ff6fb', '79afc241-0f21-57eb-b2de-d9c503d9d75c', '3248e070-6326-5ec2-9a5c-9a6562bf3d43', 'a0d0bbc9-7f9c-56c2-a957-6fda2126ca6b', 'c5b5be7e-f4ab-55b6-a38e-181570ee31d9', 'b71e28ea-6533-5302-b2c9-9ddad3b2c439', 'cf42ec20-80b2-537e-a00e-3c58063c62ff', '0b38e0c4-8ce6-5c7a-a51b-cd1d96b9c7b9', '1886b0c7-fccb-565d-92ff-f84e3a6993f4', 'e072540f-1856-5eac-9a8e-db19cec747e6', 'a9e2968b-a92d-5746-9362-164238da0854', '7989200f-316a-50cf-a23b-c990be75e64e', '43b02806-bc22-570c-b797-0b37b895db64', '8fdfff8c-ddbd-5448-85e5-83a9f52730c9', 'c961b0e5-2864-5565-abe0-a6579f21445f', '86e69d95-8ade-5dc8-bc07-e6ac553e4be0', '02029c31-8bc4-5e35-8816-cce63c913e55', '01868ac1-1c85-531f-b957-c922c262d7c3', 'd5b41c1a-0a53-5c06-915c-102435d5c6c0', 'c4d34b52-281d-57e3-8460-aafe4175f0f5', '145aa30d-c72c-5e4d-9190-f15b093dd84f', '26cb3024-d046-5eee-baa5-4d6eac88fbb0', 'b165d39a-8b1a-559a-bc93-6ef918be4194', '94522885-b8e2-5f36-becc-435d20c867e2', '719aef66-3c4a-5ad6-9af9-50fd99dcfbce', 'a209293d-9928-57f6-8315-b45fbd4f39e3', '0c4cb780-1da9-5b34-bd95-073216e9116a', 'f4aafc66-106d-5f85-918e-89cb6ca105d1', '1ddeacd6-9014-5387-85ab-5ebca4c59ff1', '71e33276-0916-5dbf-9e87-3633f36b26be', '6f165226-6514-5ab3-8be5-8e7b31368205', 'c8e56ca4-49e2-5025-8b40-72839f6dcbf5', '97062025-2da0-52e1-b0a4-2dd3e6625115', 'ffba2614-6e95-5898-af20-4f54e0cfbf82', 'cd11e9b8-d66b-5df5-9042-1f71a4c1c943', 'd9e00dc9-ff59-55d0-9648-d429ed81295c', 'c76b8b99-9da2-5728-9cb2-f075223db346', '4935e3cb-7a61-50a1-b744-1f0b34d7815f', '1da5ec88-b844-5781-97cc-219745da8727', '3286e813-6caa-57ff-a8e3-c3606cb69310', '4ae0793a-71f0-59d6-9e51-a31b37912048', 'f68a2c08-9617-5c02-a318-9e30a4619989', 'a387198b-d83b-52a6-9faf-fd4740453fb6', '53788e4f-8c7e-5bbf-86e1-f3ffc3ebb034', '44355f34-9f8c-53a1-aadb-81d5245d24b4', '72cf3144-6f03-53f3-a57f-d413730520ed', '684457b0-f151-5355-b7de-b1cc7331c8e0', '78a7a0fe-8fa8-50d9-8c2f-f514647fb4fc', '118a1f96-6010-503b-a5bf-8d5a7fd05817', '2b2d3600-2cf9-5aa0-af06-ba7393c39024', '74caaa9d-d014-5673-8f8b-9c0121dc06c6', '481b204d-67d0-5c6e-b6f3-01c13e92b87e');
+      AND q.id NOT IN ('080d7783-083d-5532-a30c-825175ef6d09', '5c8be484-cc52-575b-ac02-d7dd39f06af1', '138d5e16-6d8d-5dde-8107-11d41bfa48e9', 'd819986f-cfe2-53f8-bd3e-f76c9aa3e3a5', '4e4014e1-cd1d-5dcc-aac5-f44926ed20ed', '7241ee79-462b-5b3a-984c-eea640002fb0', '7a63341f-b75c-5f33-9964-f0a5e371d967', '43bd124a-3273-5b3d-babe-7c21c893d954', 'c4629643-cb37-5769-8cef-57760b3611f9', '499dffeb-77ba-571a-a272-ef6b68e30622', 'a5481854-86d1-56f3-8ac1-c1496af746ac', 'd8b38f06-1764-5f19-ba99-8f0fd06fd79b', '620f8003-045f-50cd-a9f5-2e24398d3bc5', '535f555e-00ec-541c-9430-c8c68f6f8bb0', '71117f1e-36c4-5a8e-b723-9dbc88418bf1', 'bc94054e-1446-5d04-8e8c-221f38cdcb9d', '90a789f4-e6c1-56be-86ef-0e8dd1a6eace', '86f3a7c0-5851-570f-9244-5836c0bd3430', '496b9bfb-62c9-5779-bfb6-c7155592c344', '40ef29e0-5fdd-59eb-bfc4-e34d75b19024', '21b7cf2a-d994-5d60-ae47-b0557b541a1a', '43209281-e502-55a8-af03-57de11357db3', '4c7fcb80-216b-51a9-aea0-1a7b93d56db9', 'b5fe6ca3-0ae0-5d0a-becc-64b5e9be71c2', '0bb52641-d98c-5fc5-a598-beb8dbb6ef71', 'def1e0d2-88c6-5665-b598-fcbea95f96eb', '0cb5ed33-22c7-5edc-901c-0c090a8ffbf8', 'f36a39c7-17e1-500d-a663-25676e3f151d', 'bc3de6df-27c5-564f-a509-4feb9efb0100', '14609924-058c-5c85-b515-6e83bfa1c218', '13f53f19-669d-5bae-bb4e-fee06ce7d631', '63809236-3326-5a22-bf77-ca09b2f1cd0c', '6259cdd8-58d3-5794-8789-ae21fa623ed6', 'c43f3d30-8f67-5e14-a3e2-445602f8671d', 'a79183ff-96f8-5044-a92c-581978d8d1c9', '937bbd74-4c72-52a9-a129-ef162fceeeb5', '67cf5732-4004-59fe-b4a5-bbc42565a024', '75c9c3aa-c5c6-57b3-a6ae-72b8b7d071e4', 'dafd7523-eee4-517a-9606-6b8f9a72155f', '37470435-85a2-505c-91ca-b117d0515933', 'fe75d1d4-1b37-5ee0-bbb4-a75f8fe2fc53', 'cedab619-4c56-5ca3-ab85-a95e25b97113', '4dd4df16-b2ea-5580-ae08-b16f11a0a65b', '42b58ca1-24dc-5af1-a693-9b4143086c60', 'e1a7eb87-ac87-505d-a32e-4d0f771fc4a9', 'c5e159b5-bd31-599c-86e1-07e774c6fcbd', '7b983cd9-c2c0-5a9c-a73c-ac98bf9d0808', 'd65ae3ef-84c2-5f87-b631-5f91de5eef1f', '1ceda0cf-76cc-5320-b521-1dbaaf81ff83', 'd607352b-8809-5647-8ea5-22f2ffea5f51', '8b0082a8-9de5-5939-9428-c20ddaf4909d', '12f16b47-6a4c-5487-99e2-f1f5e592d512', '4ba459b0-dc9e-57f9-9175-81ba6c0d490d', 'bc58c470-1c5f-570b-b347-e040a8aaabbf', 'ea5d79b1-f11c-501e-b3aa-b94d4fb6c94f', 'f82a2c0b-e513-5770-8b2a-024116d6b3a1', '389a214c-d24f-5aff-b8e6-447a45ed35ed', 'dbf15f17-58e6-5ab5-b012-27b2368c4ca5', 'b8ad51f2-0d2f-5a46-ba24-3e956beb4367', 'e7a6d78a-35e1-5568-a53b-3be72295890c', 'fc5f7dad-9d09-5117-ba74-0cdae2c753c4', 'b3748c61-938a-5781-a6e3-e94630c69381', '723d0846-dcc9-57dc-a8d5-3f9a581abd90', '20e1e342-c46f-5418-9778-f7583673ec41', 'dd27901a-06cb-5aa5-b6ff-932cc32ad2bd', 'cd4a4ebb-6763-5e29-a105-05d6d3c4f871', '4416d439-5708-525c-ab80-c0cf44fcea23', '169e3347-7224-50c0-8f7d-5e3e2e95772a', '6b5844a2-8c40-5cb9-a0a5-f526268f5281', 'd1c87325-095a-555e-95d3-138f47124355', '18298070-040f-5ac3-b119-9cb6fb720fa2', '9fee0d9a-a27d-5059-b62b-3e5c40b1b7ed', 'a682336a-8cac-55fe-98ed-d13e41b90c21', '10cdbbe6-7c81-509f-9107-c3f8ea0bc615', 'a14eb5d9-6d29-5415-8ec9-f1557b3e5161', 'a039206b-03d4-5fc9-86ad-75e0019c4a70', '3e22eee7-36b9-5f3a-8e0f-5333d3b76fdf', '1e66eafa-708f-5de1-a6cc-2921d6e02ffc', '01ffd3bb-6105-5323-92a1-3cc14b8348db', 'd4455f0a-1f51-5dad-ad63-3e592ebb5d36', '59194e7b-1eac-57ca-935a-de51f43964ea', 'f2b8ba0d-7631-5805-8846-a5fa20b419c6', '3e6e3345-a167-528b-86c9-8f8012c051f7', '68c353c4-5d65-5e6c-a162-99ffe1dfcef8', '101b87bc-3422-5b24-b2e4-1cd2a0ca63ab', 'ed4adc8e-de97-5a8f-a68f-5601a89daaa2', '3f3f291b-0ed5-5034-8ea2-007904302b91', 'eba3fdd7-1b65-5e0b-a7d7-298e72c9e03a', 'ecf5bd5c-0f9d-5239-a6b2-06167c953a96', 'bb70b1c9-47f1-5f87-af54-9173dbe7ab3e', '8aeba267-0d13-5fa7-91bb-0e9a7697967e', '3a452b60-51b7-5ddc-874e-12e6700c8005', '390d080b-349c-538c-9250-acd59fd6c1c3', '462d9345-5c31-5111-8ce8-314de8fd5caa', 'da303622-b350-5b8b-9b6d-370d9728bb8e', '902f8a7c-6687-5818-814b-a17e2eef1444', '32d6d026-1f7e-5d8d-9fea-2141ee659a6a', '013e8407-3e0a-5ecc-af47-acfb7edf86d9', '57545cb8-cc45-5e9a-acc6-42102f111e27', 'ee916acc-ccc1-509c-934c-be74d6578dc8', 'c3be55d8-8928-58bb-bd27-181af4a0d5e3', '9f28f12e-250e-5f6c-9fe4-d5c4de564764', '402518e0-c2ac-5c9c-86c9-8db84a66c20a', 'fc64ccc6-a874-5048-aa2b-ec4bf7fedd1b', '349da296-708e-512c-98a5-f79c0d32d5fd', 'dd9dffa7-3d7a-5ecc-a39f-486149eb142f', '6d753d89-3393-5d46-80cb-7105df4178f0', '279267c3-6b7e-528e-a57e-a4ab75cfd473', 'a4ec5fc8-06d7-59b4-bdeb-31ef723ff6fb', '1eec2a52-2bf6-5ef9-ad37-838cf0aa6bdb', '9552a62c-6941-5408-b0ca-cb7b41978a9b', '4a556f41-88ff-55ab-b724-0ab31deddf69', '78208151-f432-5986-89c6-95d2261fe015', '277e4e6e-27b9-5fde-97cd-c6f8f1586ce2', '75194e7f-9c18-5bb3-b70d-cac4a264bee3', '79afc241-0f21-57eb-b2de-d9c503d9d75c', '3248e070-6326-5ec2-9a5c-9a6562bf3d43', 'a0d0bbc9-7f9c-56c2-a957-6fda2126ca6b', 'c5b5be7e-f4ab-55b6-a38e-181570ee31d9', 'b71e28ea-6533-5302-b2c9-9ddad3b2c439', 'cf42ec20-80b2-537e-a00e-3c58063c62ff', '0b38e0c4-8ce6-5c7a-a51b-cd1d96b9c7b9', '1886b0c7-fccb-565d-92ff-f84e3a6993f4', 'e072540f-1856-5eac-9a8e-db19cec747e6', 'a9e2968b-a92d-5746-9362-164238da0854', '7989200f-316a-50cf-a23b-c990be75e64e', '43b02806-bc22-570c-b797-0b37b895db64', '8fdfff8c-ddbd-5448-85e5-83a9f52730c9', 'c961b0e5-2864-5565-abe0-a6579f21445f', '86e69d95-8ade-5dc8-bc07-e6ac553e4be0', '02029c31-8bc4-5e35-8816-cce63c913e55', '01868ac1-1c85-531f-b957-c922c262d7c3', '5c58a0e6-f68f-5902-ad5a-dfaf00b004c1', 'b3509320-48b2-5d64-b94a-277dd38e4efd', '741a817a-a456-5c11-aca4-40c0f9dd6d99', '850a7fac-2254-5cb0-ab2a-3bb1860c3d95', '35a20b5f-927d-587c-a45a-0c20fcc5c2a7', '659c49ec-4a06-519d-aba8-8a72e9ad1b81', 'd5b41c1a-0a53-5c06-915c-102435d5c6c0', 'c4d34b52-281d-57e3-8460-aafe4175f0f5', '145aa30d-c72c-5e4d-9190-f15b093dd84f', '26cb3024-d046-5eee-baa5-4d6eac88fbb0', 'b165d39a-8b1a-559a-bc93-6ef918be4194', '94522885-b8e2-5f36-becc-435d20c867e2', '719aef66-3c4a-5ad6-9af9-50fd99dcfbce', 'a209293d-9928-57f6-8315-b45fbd4f39e3', '0c4cb780-1da9-5b34-bd95-073216e9116a', 'f4aafc66-106d-5f85-918e-89cb6ca105d1', '1ddeacd6-9014-5387-85ab-5ebca4c59ff1', '71e33276-0916-5dbf-9e87-3633f36b26be', '6f165226-6514-5ab3-8be5-8e7b31368205', 'c8e56ca4-49e2-5025-8b40-72839f6dcbf5', '97062025-2da0-52e1-b0a4-2dd3e6625115', 'ffba2614-6e95-5898-af20-4f54e0cfbf82', 'cd11e9b8-d66b-5df5-9042-1f71a4c1c943', 'ce27e8ce-4c97-5c83-921e-c4c8b0fa87b7', '7819a5fe-fbe0-59b2-8d6c-056fc1f5b214', '11d6470e-14ec-5d4c-a173-f08aa8b53c8f', '98ae61e1-b215-5802-96f7-52e519f394d4', '63217691-5552-58cf-91f9-4fb34905a0ef', 'a6eb3cd1-773c-5f0e-80a8-cdc14a156d80', 'd9e00dc9-ff59-55d0-9648-d429ed81295c', 'c76b8b99-9da2-5728-9cb2-f075223db346', '4935e3cb-7a61-50a1-b744-1f0b34d7815f', '1da5ec88-b844-5781-97cc-219745da8727', '3286e813-6caa-57ff-a8e3-c3606cb69310', '4ae0793a-71f0-59d6-9e51-a31b37912048', 'f68a2c08-9617-5c02-a318-9e30a4619989', 'a387198b-d83b-52a6-9faf-fd4740453fb6', '53788e4f-8c7e-5bbf-86e1-f3ffc3ebb034', '44355f34-9f8c-53a1-aadb-81d5245d24b4', '72cf3144-6f03-53f3-a57f-d413730520ed', '684457b0-f151-5355-b7de-b1cc7331c8e0', '78a7a0fe-8fa8-50d9-8c2f-f514647fb4fc', '118a1f96-6010-503b-a5bf-8d5a7fd05817', '2b2d3600-2cf9-5aa0-af06-ba7393c39024', '74caaa9d-d014-5673-8f8b-9c0121dc06c6', '481b204d-67d0-5c6e-b6f3-01c13e92b87e', 'da568abe-ed24-5c8b-87a8-366cf878cc44', '5dfbba67-23ca-5232-bd3a-a66957add243', '30ac2283-9c21-5f32-b50c-f55d02072c39', '509c6467-c2af-55d2-a464-d762a3a5f71a', 'c1b432f1-1cbc-574c-9660-5b7227a13d3a', '843870fc-8656-51d5-9c26-be88398192c7');
   END IF;
 END $$;
-DELETE FROM public.exercises WHERE subject_id = 'english' AND source = 'admin' AND id NOT IN ('c4f248a7-393a-5c6d-b4af-90311f1ae35d', '6b8bbba1-76cd-5943-aa66-9d9da0f72492', '458c297a-6ea2-522c-9a6c-6dc0c6c7267b', '285d360a-8465-518f-990c-916004f4f3b5', '1874477b-34e6-5ff5-8fa9-35f4a38c5e2a', '870d7346-31c1-546f-8e25-ad1a12362ea7', '216cae02-7987-5531-b3fa-6af92e75e33d', '0ac40b31-da66-5e9a-b82f-2414438a00c5', 'efb66754-8009-5a3d-995a-6b71e9cf5537', '818e12ec-9c1e-52e1-8f1a-dde92ca62d2e', 'd33dfa7f-2d01-5e1c-aac3-8c969ee05d93', '5e9f70de-f505-5482-a231-2c5e52d2bb68', '04cd9fbd-81fc-5332-b16f-d4105405d5b6', '97d5948a-d69a-595c-a33a-175dd7c3b34e', 'aa6477e9-c60c-5771-9828-15c32bace66c', '6c069575-64c8-5d0f-bd94-5fda4d4c80a3', '69ebe656-2d06-5124-80fc-9f898ee0a2b8', '50566438-5c32-582c-9b59-43a0b96cc9a4', 'aac0bca3-f9b2-50e6-9fe5-095b3caed4c2', 'e2d9a8ce-ad7d-5cdd-a8af-04c3a19cea1d', '038be31c-9625-5dc2-8227-4a7402dbfe43', 'f34bbeba-a514-5828-9e27-2a8b3711fb93', 'f9d67f42-c6fd-52d1-b4d8-658c24c4069e', '2cbeb6e5-2960-512e-9f42-e5cbe625a305');
-DELETE FROM public.questions WHERE exercise_id IN ('c4f248a7-393a-5c6d-b4af-90311f1ae35d', '6b8bbba1-76cd-5943-aa66-9d9da0f72492', '458c297a-6ea2-522c-9a6c-6dc0c6c7267b', '285d360a-8465-518f-990c-916004f4f3b5', '1874477b-34e6-5ff5-8fa9-35f4a38c5e2a', '870d7346-31c1-546f-8e25-ad1a12362ea7', '216cae02-7987-5531-b3fa-6af92e75e33d', '0ac40b31-da66-5e9a-b82f-2414438a00c5', 'efb66754-8009-5a3d-995a-6b71e9cf5537', '818e12ec-9c1e-52e1-8f1a-dde92ca62d2e', 'd33dfa7f-2d01-5e1c-aac3-8c969ee05d93', '5e9f70de-f505-5482-a231-2c5e52d2bb68', '04cd9fbd-81fc-5332-b16f-d4105405d5b6', '97d5948a-d69a-595c-a33a-175dd7c3b34e', 'aa6477e9-c60c-5771-9828-15c32bace66c', '6c069575-64c8-5d0f-bd94-5fda4d4c80a3', '69ebe656-2d06-5124-80fc-9f898ee0a2b8', '50566438-5c32-582c-9b59-43a0b96cc9a4', 'aac0bca3-f9b2-50e6-9fe5-095b3caed4c2', 'e2d9a8ce-ad7d-5cdd-a8af-04c3a19cea1d', '038be31c-9625-5dc2-8227-4a7402dbfe43', 'f34bbeba-a514-5828-9e27-2a8b3711fb93', 'f9d67f42-c6fd-52d1-b4d8-658c24c4069e', '2cbeb6e5-2960-512e-9f42-e5cbe625a305') AND id NOT IN ('080d7783-083d-5532-a30c-825175ef6d09', '5c8be484-cc52-575b-ac02-d7dd39f06af1', '138d5e16-6d8d-5dde-8107-11d41bfa48e9', 'd819986f-cfe2-53f8-bd3e-f76c9aa3e3a5', '4e4014e1-cd1d-5dcc-aac5-f44926ed20ed', '7241ee79-462b-5b3a-984c-eea640002fb0', '7a63341f-b75c-5f33-9964-f0a5e371d967', '43bd124a-3273-5b3d-babe-7c21c893d954', 'c4629643-cb37-5769-8cef-57760b3611f9', '499dffeb-77ba-571a-a272-ef6b68e30622', 'a5481854-86d1-56f3-8ac1-c1496af746ac', 'd8b38f06-1764-5f19-ba99-8f0fd06fd79b', '620f8003-045f-50cd-a9f5-2e24398d3bc5', '535f555e-00ec-541c-9430-c8c68f6f8bb0', '71117f1e-36c4-5a8e-b723-9dbc88418bf1', 'bc94054e-1446-5d04-8e8c-221f38cdcb9d', '90a789f4-e6c1-56be-86ef-0e8dd1a6eace', 'b5fe6ca3-0ae0-5d0a-becc-64b5e9be71c2', '0bb52641-d98c-5fc5-a598-beb8dbb6ef71', 'def1e0d2-88c6-5665-b598-fcbea95f96eb', '0cb5ed33-22c7-5edc-901c-0c090a8ffbf8', 'f36a39c7-17e1-500d-a663-25676e3f151d', 'bc3de6df-27c5-564f-a509-4feb9efb0100', '14609924-058c-5c85-b515-6e83bfa1c218', '13f53f19-669d-5bae-bb4e-fee06ce7d631', '63809236-3326-5a22-bf77-ca09b2f1cd0c', '6259cdd8-58d3-5794-8789-ae21fa623ed6', 'c43f3d30-8f67-5e14-a3e2-445602f8671d', 'a79183ff-96f8-5044-a92c-581978d8d1c9', '937bbd74-4c72-52a9-a129-ef162fceeeb5', '67cf5732-4004-59fe-b4a5-bbc42565a024', '75c9c3aa-c5c6-57b3-a6ae-72b8b7d071e4', 'dafd7523-eee4-517a-9606-6b8f9a72155f', '37470435-85a2-505c-91ca-b117d0515933', '7b983cd9-c2c0-5a9c-a73c-ac98bf9d0808', 'd65ae3ef-84c2-5f87-b631-5f91de5eef1f', '1ceda0cf-76cc-5320-b521-1dbaaf81ff83', 'd607352b-8809-5647-8ea5-22f2ffea5f51', '8b0082a8-9de5-5939-9428-c20ddaf4909d', '12f16b47-6a4c-5487-99e2-f1f5e592d512', '4ba459b0-dc9e-57f9-9175-81ba6c0d490d', 'bc58c470-1c5f-570b-b347-e040a8aaabbf', 'ea5d79b1-f11c-501e-b3aa-b94d4fb6c94f', 'f82a2c0b-e513-5770-8b2a-024116d6b3a1', '389a214c-d24f-5aff-b8e6-447a45ed35ed', 'dbf15f17-58e6-5ab5-b012-27b2368c4ca5', 'b8ad51f2-0d2f-5a46-ba24-3e956beb4367', 'e7a6d78a-35e1-5568-a53b-3be72295890c', 'fc5f7dad-9d09-5117-ba74-0cdae2c753c4', 'b3748c61-938a-5781-a6e3-e94630c69381', '723d0846-dcc9-57dc-a8d5-3f9a581abd90', 'd1c87325-095a-555e-95d3-138f47124355', '18298070-040f-5ac3-b119-9cb6fb720fa2', '9fee0d9a-a27d-5059-b62b-3e5c40b1b7ed', 'a682336a-8cac-55fe-98ed-d13e41b90c21', '10cdbbe6-7c81-509f-9107-c3f8ea0bc615', 'a14eb5d9-6d29-5415-8ec9-f1557b3e5161', 'a039206b-03d4-5fc9-86ad-75e0019c4a70', '3e22eee7-36b9-5f3a-8e0f-5333d3b76fdf', '1e66eafa-708f-5de1-a6cc-2921d6e02ffc', '01ffd3bb-6105-5323-92a1-3cc14b8348db', 'd4455f0a-1f51-5dad-ad63-3e592ebb5d36', '59194e7b-1eac-57ca-935a-de51f43964ea', 'f2b8ba0d-7631-5805-8846-a5fa20b419c6', '3e6e3345-a167-528b-86c9-8f8012c051f7', '68c353c4-5d65-5e6c-a162-99ffe1dfcef8', '101b87bc-3422-5b24-b2e4-1cd2a0ca63ab', 'ed4adc8e-de97-5a8f-a68f-5601a89daaa2', '390d080b-349c-538c-9250-acd59fd6c1c3', '462d9345-5c31-5111-8ce8-314de8fd5caa', 'da303622-b350-5b8b-9b6d-370d9728bb8e', '902f8a7c-6687-5818-814b-a17e2eef1444', '32d6d026-1f7e-5d8d-9fea-2141ee659a6a', '013e8407-3e0a-5ecc-af47-acfb7edf86d9', '57545cb8-cc45-5e9a-acc6-42102f111e27', 'ee916acc-ccc1-509c-934c-be74d6578dc8', 'c3be55d8-8928-58bb-bd27-181af4a0d5e3', '9f28f12e-250e-5f6c-9fe4-d5c4de564764', '402518e0-c2ac-5c9c-86c9-8db84a66c20a', 'fc64ccc6-a874-5048-aa2b-ec4bf7fedd1b', '349da296-708e-512c-98a5-f79c0d32d5fd', 'dd9dffa7-3d7a-5ecc-a39f-486149eb142f', '6d753d89-3393-5d46-80cb-7105df4178f0', '279267c3-6b7e-528e-a57e-a4ab75cfd473', 'a4ec5fc8-06d7-59b4-bdeb-31ef723ff6fb', '79afc241-0f21-57eb-b2de-d9c503d9d75c', '3248e070-6326-5ec2-9a5c-9a6562bf3d43', 'a0d0bbc9-7f9c-56c2-a957-6fda2126ca6b', 'c5b5be7e-f4ab-55b6-a38e-181570ee31d9', 'b71e28ea-6533-5302-b2c9-9ddad3b2c439', 'cf42ec20-80b2-537e-a00e-3c58063c62ff', '0b38e0c4-8ce6-5c7a-a51b-cd1d96b9c7b9', '1886b0c7-fccb-565d-92ff-f84e3a6993f4', 'e072540f-1856-5eac-9a8e-db19cec747e6', 'a9e2968b-a92d-5746-9362-164238da0854', '7989200f-316a-50cf-a23b-c990be75e64e', '43b02806-bc22-570c-b797-0b37b895db64', '8fdfff8c-ddbd-5448-85e5-83a9f52730c9', 'c961b0e5-2864-5565-abe0-a6579f21445f', '86e69d95-8ade-5dc8-bc07-e6ac553e4be0', '02029c31-8bc4-5e35-8816-cce63c913e55', '01868ac1-1c85-531f-b957-c922c262d7c3', 'd5b41c1a-0a53-5c06-915c-102435d5c6c0', 'c4d34b52-281d-57e3-8460-aafe4175f0f5', '145aa30d-c72c-5e4d-9190-f15b093dd84f', '26cb3024-d046-5eee-baa5-4d6eac88fbb0', 'b165d39a-8b1a-559a-bc93-6ef918be4194', '94522885-b8e2-5f36-becc-435d20c867e2', '719aef66-3c4a-5ad6-9af9-50fd99dcfbce', 'a209293d-9928-57f6-8315-b45fbd4f39e3', '0c4cb780-1da9-5b34-bd95-073216e9116a', 'f4aafc66-106d-5f85-918e-89cb6ca105d1', '1ddeacd6-9014-5387-85ab-5ebca4c59ff1', '71e33276-0916-5dbf-9e87-3633f36b26be', '6f165226-6514-5ab3-8be5-8e7b31368205', 'c8e56ca4-49e2-5025-8b40-72839f6dcbf5', '97062025-2da0-52e1-b0a4-2dd3e6625115', 'ffba2614-6e95-5898-af20-4f54e0cfbf82', 'cd11e9b8-d66b-5df5-9042-1f71a4c1c943', 'd9e00dc9-ff59-55d0-9648-d429ed81295c', 'c76b8b99-9da2-5728-9cb2-f075223db346', '4935e3cb-7a61-50a1-b744-1f0b34d7815f', '1da5ec88-b844-5781-97cc-219745da8727', '3286e813-6caa-57ff-a8e3-c3606cb69310', '4ae0793a-71f0-59d6-9e51-a31b37912048', 'f68a2c08-9617-5c02-a318-9e30a4619989', 'a387198b-d83b-52a6-9faf-fd4740453fb6', '53788e4f-8c7e-5bbf-86e1-f3ffc3ebb034', '44355f34-9f8c-53a1-aadb-81d5245d24b4', '72cf3144-6f03-53f3-a57f-d413730520ed', '684457b0-f151-5355-b7de-b1cc7331c8e0', '78a7a0fe-8fa8-50d9-8c2f-f514647fb4fc', '118a1f96-6010-503b-a5bf-8d5a7fd05817', '2b2d3600-2cf9-5aa0-af06-ba7393c39024', '74caaa9d-d014-5673-8f8b-9c0121dc06c6', '481b204d-67d0-5c6e-b6f3-01c13e92b87e');
+DELETE FROM public.exercises WHERE subject_id = 'english' AND source = 'admin' AND id NOT IN ('c4f248a7-393a-5c6d-b4af-90311f1ae35d', '6b8bbba1-76cd-5943-aa66-9d9da0f72492', '458c297a-6ea2-522c-9a6c-6dc0c6c7267b', '5a7783a2-f424-5be0-b07f-8bed19499adb', '285d360a-8465-518f-990c-916004f4f3b5', '1874477b-34e6-5ff5-8fa9-35f4a38c5e2a', '870d7346-31c1-546f-8e25-ad1a12362ea7', '46cd64a1-c660-59b3-9588-78efe0da7594', '216cae02-7987-5531-b3fa-6af92e75e33d', '0ac40b31-da66-5e9a-b82f-2414438a00c5', 'efb66754-8009-5a3d-995a-6b71e9cf5537', '86c16cd5-392b-5ab2-af1c-2952deb88e38', '818e12ec-9c1e-52e1-8f1a-dde92ca62d2e', 'd33dfa7f-2d01-5e1c-aac3-8c969ee05d93', '5e9f70de-f505-5482-a231-2c5e52d2bb68', '1ce03879-94cc-59c1-9b29-387f46b3cb17', '04cd9fbd-81fc-5332-b16f-d4105405d5b6', '97d5948a-d69a-595c-a33a-175dd7c3b34e', 'aa6477e9-c60c-5771-9828-15c32bace66c', '6fbedf7a-b234-5c70-b36f-1f11fed034fd', '6c069575-64c8-5d0f-bd94-5fda4d4c80a3', '69ebe656-2d06-5124-80fc-9f898ee0a2b8', '50566438-5c32-582c-9b59-43a0b96cc9a4', '4b1a1f73-c67e-5e29-92d8-9b3a4b074943', 'aac0bca3-f9b2-50e6-9fe5-095b3caed4c2', 'e2d9a8ce-ad7d-5cdd-a8af-04c3a19cea1d', '038be31c-9625-5dc2-8227-4a7402dbfe43', 'f87026b5-e3f7-55ce-93f9-9d473c37a345', 'f34bbeba-a514-5828-9e27-2a8b3711fb93', 'f9d67f42-c6fd-52d1-b4d8-658c24c4069e', '2cbeb6e5-2960-512e-9f42-e5cbe625a305', 'e6171568-ac34-5461-a926-00b1198d046e');
+DELETE FROM public.questions WHERE exercise_id IN ('c4f248a7-393a-5c6d-b4af-90311f1ae35d', '6b8bbba1-76cd-5943-aa66-9d9da0f72492', '458c297a-6ea2-522c-9a6c-6dc0c6c7267b', '5a7783a2-f424-5be0-b07f-8bed19499adb', '285d360a-8465-518f-990c-916004f4f3b5', '1874477b-34e6-5ff5-8fa9-35f4a38c5e2a', '870d7346-31c1-546f-8e25-ad1a12362ea7', '46cd64a1-c660-59b3-9588-78efe0da7594', '216cae02-7987-5531-b3fa-6af92e75e33d', '0ac40b31-da66-5e9a-b82f-2414438a00c5', 'efb66754-8009-5a3d-995a-6b71e9cf5537', '86c16cd5-392b-5ab2-af1c-2952deb88e38', '818e12ec-9c1e-52e1-8f1a-dde92ca62d2e', 'd33dfa7f-2d01-5e1c-aac3-8c969ee05d93', '5e9f70de-f505-5482-a231-2c5e52d2bb68', '1ce03879-94cc-59c1-9b29-387f46b3cb17', '04cd9fbd-81fc-5332-b16f-d4105405d5b6', '97d5948a-d69a-595c-a33a-175dd7c3b34e', 'aa6477e9-c60c-5771-9828-15c32bace66c', '6fbedf7a-b234-5c70-b36f-1f11fed034fd', '6c069575-64c8-5d0f-bd94-5fda4d4c80a3', '69ebe656-2d06-5124-80fc-9f898ee0a2b8', '50566438-5c32-582c-9b59-43a0b96cc9a4', '4b1a1f73-c67e-5e29-92d8-9b3a4b074943', 'aac0bca3-f9b2-50e6-9fe5-095b3caed4c2', 'e2d9a8ce-ad7d-5cdd-a8af-04c3a19cea1d', '038be31c-9625-5dc2-8227-4a7402dbfe43', 'f87026b5-e3f7-55ce-93f9-9d473c37a345', 'f34bbeba-a514-5828-9e27-2a8b3711fb93', 'f9d67f42-c6fd-52d1-b4d8-658c24c4069e', '2cbeb6e5-2960-512e-9f42-e5cbe625a305', 'e6171568-ac34-5461-a926-00b1198d046e') AND id NOT IN ('080d7783-083d-5532-a30c-825175ef6d09', '5c8be484-cc52-575b-ac02-d7dd39f06af1', '138d5e16-6d8d-5dde-8107-11d41bfa48e9', 'd819986f-cfe2-53f8-bd3e-f76c9aa3e3a5', '4e4014e1-cd1d-5dcc-aac5-f44926ed20ed', '7241ee79-462b-5b3a-984c-eea640002fb0', '7a63341f-b75c-5f33-9964-f0a5e371d967', '43bd124a-3273-5b3d-babe-7c21c893d954', 'c4629643-cb37-5769-8cef-57760b3611f9', '499dffeb-77ba-571a-a272-ef6b68e30622', 'a5481854-86d1-56f3-8ac1-c1496af746ac', 'd8b38f06-1764-5f19-ba99-8f0fd06fd79b', '620f8003-045f-50cd-a9f5-2e24398d3bc5', '535f555e-00ec-541c-9430-c8c68f6f8bb0', '71117f1e-36c4-5a8e-b723-9dbc88418bf1', 'bc94054e-1446-5d04-8e8c-221f38cdcb9d', '90a789f4-e6c1-56be-86ef-0e8dd1a6eace', '86f3a7c0-5851-570f-9244-5836c0bd3430', '496b9bfb-62c9-5779-bfb6-c7155592c344', '40ef29e0-5fdd-59eb-bfc4-e34d75b19024', '21b7cf2a-d994-5d60-ae47-b0557b541a1a', '43209281-e502-55a8-af03-57de11357db3', '4c7fcb80-216b-51a9-aea0-1a7b93d56db9', 'b5fe6ca3-0ae0-5d0a-becc-64b5e9be71c2', '0bb52641-d98c-5fc5-a598-beb8dbb6ef71', 'def1e0d2-88c6-5665-b598-fcbea95f96eb', '0cb5ed33-22c7-5edc-901c-0c090a8ffbf8', 'f36a39c7-17e1-500d-a663-25676e3f151d', 'bc3de6df-27c5-564f-a509-4feb9efb0100', '14609924-058c-5c85-b515-6e83bfa1c218', '13f53f19-669d-5bae-bb4e-fee06ce7d631', '63809236-3326-5a22-bf77-ca09b2f1cd0c', '6259cdd8-58d3-5794-8789-ae21fa623ed6', 'c43f3d30-8f67-5e14-a3e2-445602f8671d', 'a79183ff-96f8-5044-a92c-581978d8d1c9', '937bbd74-4c72-52a9-a129-ef162fceeeb5', '67cf5732-4004-59fe-b4a5-bbc42565a024', '75c9c3aa-c5c6-57b3-a6ae-72b8b7d071e4', 'dafd7523-eee4-517a-9606-6b8f9a72155f', '37470435-85a2-505c-91ca-b117d0515933', 'fe75d1d4-1b37-5ee0-bbb4-a75f8fe2fc53', 'cedab619-4c56-5ca3-ab85-a95e25b97113', '4dd4df16-b2ea-5580-ae08-b16f11a0a65b', '42b58ca1-24dc-5af1-a693-9b4143086c60', 'e1a7eb87-ac87-505d-a32e-4d0f771fc4a9', 'c5e159b5-bd31-599c-86e1-07e774c6fcbd', '7b983cd9-c2c0-5a9c-a73c-ac98bf9d0808', 'd65ae3ef-84c2-5f87-b631-5f91de5eef1f', '1ceda0cf-76cc-5320-b521-1dbaaf81ff83', 'd607352b-8809-5647-8ea5-22f2ffea5f51', '8b0082a8-9de5-5939-9428-c20ddaf4909d', '12f16b47-6a4c-5487-99e2-f1f5e592d512', '4ba459b0-dc9e-57f9-9175-81ba6c0d490d', 'bc58c470-1c5f-570b-b347-e040a8aaabbf', 'ea5d79b1-f11c-501e-b3aa-b94d4fb6c94f', 'f82a2c0b-e513-5770-8b2a-024116d6b3a1', '389a214c-d24f-5aff-b8e6-447a45ed35ed', 'dbf15f17-58e6-5ab5-b012-27b2368c4ca5', 'b8ad51f2-0d2f-5a46-ba24-3e956beb4367', 'e7a6d78a-35e1-5568-a53b-3be72295890c', 'fc5f7dad-9d09-5117-ba74-0cdae2c753c4', 'b3748c61-938a-5781-a6e3-e94630c69381', '723d0846-dcc9-57dc-a8d5-3f9a581abd90', '20e1e342-c46f-5418-9778-f7583673ec41', 'dd27901a-06cb-5aa5-b6ff-932cc32ad2bd', 'cd4a4ebb-6763-5e29-a105-05d6d3c4f871', '4416d439-5708-525c-ab80-c0cf44fcea23', '169e3347-7224-50c0-8f7d-5e3e2e95772a', '6b5844a2-8c40-5cb9-a0a5-f526268f5281', 'd1c87325-095a-555e-95d3-138f47124355', '18298070-040f-5ac3-b119-9cb6fb720fa2', '9fee0d9a-a27d-5059-b62b-3e5c40b1b7ed', 'a682336a-8cac-55fe-98ed-d13e41b90c21', '10cdbbe6-7c81-509f-9107-c3f8ea0bc615', 'a14eb5d9-6d29-5415-8ec9-f1557b3e5161', 'a039206b-03d4-5fc9-86ad-75e0019c4a70', '3e22eee7-36b9-5f3a-8e0f-5333d3b76fdf', '1e66eafa-708f-5de1-a6cc-2921d6e02ffc', '01ffd3bb-6105-5323-92a1-3cc14b8348db', 'd4455f0a-1f51-5dad-ad63-3e592ebb5d36', '59194e7b-1eac-57ca-935a-de51f43964ea', 'f2b8ba0d-7631-5805-8846-a5fa20b419c6', '3e6e3345-a167-528b-86c9-8f8012c051f7', '68c353c4-5d65-5e6c-a162-99ffe1dfcef8', '101b87bc-3422-5b24-b2e4-1cd2a0ca63ab', 'ed4adc8e-de97-5a8f-a68f-5601a89daaa2', '3f3f291b-0ed5-5034-8ea2-007904302b91', 'eba3fdd7-1b65-5e0b-a7d7-298e72c9e03a', 'ecf5bd5c-0f9d-5239-a6b2-06167c953a96', 'bb70b1c9-47f1-5f87-af54-9173dbe7ab3e', '8aeba267-0d13-5fa7-91bb-0e9a7697967e', '3a452b60-51b7-5ddc-874e-12e6700c8005', '390d080b-349c-538c-9250-acd59fd6c1c3', '462d9345-5c31-5111-8ce8-314de8fd5caa', 'da303622-b350-5b8b-9b6d-370d9728bb8e', '902f8a7c-6687-5818-814b-a17e2eef1444', '32d6d026-1f7e-5d8d-9fea-2141ee659a6a', '013e8407-3e0a-5ecc-af47-acfb7edf86d9', '57545cb8-cc45-5e9a-acc6-42102f111e27', 'ee916acc-ccc1-509c-934c-be74d6578dc8', 'c3be55d8-8928-58bb-bd27-181af4a0d5e3', '9f28f12e-250e-5f6c-9fe4-d5c4de564764', '402518e0-c2ac-5c9c-86c9-8db84a66c20a', 'fc64ccc6-a874-5048-aa2b-ec4bf7fedd1b', '349da296-708e-512c-98a5-f79c0d32d5fd', 'dd9dffa7-3d7a-5ecc-a39f-486149eb142f', '6d753d89-3393-5d46-80cb-7105df4178f0', '279267c3-6b7e-528e-a57e-a4ab75cfd473', 'a4ec5fc8-06d7-59b4-bdeb-31ef723ff6fb', '1eec2a52-2bf6-5ef9-ad37-838cf0aa6bdb', '9552a62c-6941-5408-b0ca-cb7b41978a9b', '4a556f41-88ff-55ab-b724-0ab31deddf69', '78208151-f432-5986-89c6-95d2261fe015', '277e4e6e-27b9-5fde-97cd-c6f8f1586ce2', '75194e7f-9c18-5bb3-b70d-cac4a264bee3', '79afc241-0f21-57eb-b2de-d9c503d9d75c', '3248e070-6326-5ec2-9a5c-9a6562bf3d43', 'a0d0bbc9-7f9c-56c2-a957-6fda2126ca6b', 'c5b5be7e-f4ab-55b6-a38e-181570ee31d9', 'b71e28ea-6533-5302-b2c9-9ddad3b2c439', 'cf42ec20-80b2-537e-a00e-3c58063c62ff', '0b38e0c4-8ce6-5c7a-a51b-cd1d96b9c7b9', '1886b0c7-fccb-565d-92ff-f84e3a6993f4', 'e072540f-1856-5eac-9a8e-db19cec747e6', 'a9e2968b-a92d-5746-9362-164238da0854', '7989200f-316a-50cf-a23b-c990be75e64e', '43b02806-bc22-570c-b797-0b37b895db64', '8fdfff8c-ddbd-5448-85e5-83a9f52730c9', 'c961b0e5-2864-5565-abe0-a6579f21445f', '86e69d95-8ade-5dc8-bc07-e6ac553e4be0', '02029c31-8bc4-5e35-8816-cce63c913e55', '01868ac1-1c85-531f-b957-c922c262d7c3', '5c58a0e6-f68f-5902-ad5a-dfaf00b004c1', 'b3509320-48b2-5d64-b94a-277dd38e4efd', '741a817a-a456-5c11-aca4-40c0f9dd6d99', '850a7fac-2254-5cb0-ab2a-3bb1860c3d95', '35a20b5f-927d-587c-a45a-0c20fcc5c2a7', '659c49ec-4a06-519d-aba8-8a72e9ad1b81', 'd5b41c1a-0a53-5c06-915c-102435d5c6c0', 'c4d34b52-281d-57e3-8460-aafe4175f0f5', '145aa30d-c72c-5e4d-9190-f15b093dd84f', '26cb3024-d046-5eee-baa5-4d6eac88fbb0', 'b165d39a-8b1a-559a-bc93-6ef918be4194', '94522885-b8e2-5f36-becc-435d20c867e2', '719aef66-3c4a-5ad6-9af9-50fd99dcfbce', 'a209293d-9928-57f6-8315-b45fbd4f39e3', '0c4cb780-1da9-5b34-bd95-073216e9116a', 'f4aafc66-106d-5f85-918e-89cb6ca105d1', '1ddeacd6-9014-5387-85ab-5ebca4c59ff1', '71e33276-0916-5dbf-9e87-3633f36b26be', '6f165226-6514-5ab3-8be5-8e7b31368205', 'c8e56ca4-49e2-5025-8b40-72839f6dcbf5', '97062025-2da0-52e1-b0a4-2dd3e6625115', 'ffba2614-6e95-5898-af20-4f54e0cfbf82', 'cd11e9b8-d66b-5df5-9042-1f71a4c1c943', 'ce27e8ce-4c97-5c83-921e-c4c8b0fa87b7', '7819a5fe-fbe0-59b2-8d6c-056fc1f5b214', '11d6470e-14ec-5d4c-a173-f08aa8b53c8f', '98ae61e1-b215-5802-96f7-52e519f394d4', '63217691-5552-58cf-91f9-4fb34905a0ef', 'a6eb3cd1-773c-5f0e-80a8-cdc14a156d80', 'd9e00dc9-ff59-55d0-9648-d429ed81295c', 'c76b8b99-9da2-5728-9cb2-f075223db346', '4935e3cb-7a61-50a1-b744-1f0b34d7815f', '1da5ec88-b844-5781-97cc-219745da8727', '3286e813-6caa-57ff-a8e3-c3606cb69310', '4ae0793a-71f0-59d6-9e51-a31b37912048', 'f68a2c08-9617-5c02-a318-9e30a4619989', 'a387198b-d83b-52a6-9faf-fd4740453fb6', '53788e4f-8c7e-5bbf-86e1-f3ffc3ebb034', '44355f34-9f8c-53a1-aadb-81d5245d24b4', '72cf3144-6f03-53f3-a57f-d413730520ed', '684457b0-f151-5355-b7de-b1cc7331c8e0', '78a7a0fe-8fa8-50d9-8c2f-f514647fb4fc', '118a1f96-6010-503b-a5bf-8d5a7fd05817', '2b2d3600-2cf9-5aa0-af06-ba7393c39024', '74caaa9d-d014-5673-8f8b-9c0121dc06c6', '481b204d-67d0-5c6e-b6f3-01c13e92b87e', 'da568abe-ed24-5c8b-87a8-366cf878cc44', '5dfbba67-23ca-5232-bd3a-a66957add243', '30ac2283-9c21-5f32-b50c-f55d02072c39', '509c6467-c2af-55d2-a464-d762a3a5f71a', 'c1b432f1-1cbc-574c-9660-5b7227a13d3a', '843870fc-8656-51d5-9c26-be88398192c7');
 DELETE FROM public.chapters c WHERE c.subject_id = 'english' AND c.id NOT IN ('6c5876d5-c564-5362-9ec4-db66068dd428', '86194a0b-245d-5f29-bdad-cf1ed247131f', 'ff2b7070-d893-5229-bd8c-2b042dee6081', '9fc5be6f-66c8-5756-a2b9-b3021d83e1ba', 'c9c30f7d-f352-5da1-8baa-12eac9f31b36', '2bd52d30-882a-5849-a561-66dad79c756d', '9b958e8f-0a4d-5299-aedc-ca62d7866435', '0bc67bcc-bd66-52fb-b968-3dc60375eba1') AND NOT EXISTS (SELECT 1 FROM public.exercises e WHERE e.chapter_id = c.id);
 
 INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order) VALUES
@@ -1045,6 +1054,78 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('5a7783a2-f424-5be0-b07f-8bed19499adb', '6c5876d5-c564-5362-9ec4-db66068dd428', 'english', '👑 Elite Challenge: Precision Tenses', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('86f3a7c0-5851-570f-9244-5836c0bd3430', '5a7783a2-f424-5be0-b07f-8bed19499adb', 'Which sentence is grammatically correct?', '[{"id":"a","text":"She has been waiting for two hours."},{"id":"b","text":"She is waiting since two hours."},{"id":"c","text":"She waits for two hours already."},{"id":"d","text":"She has waited since two hours."}]'::jsonb, 'a', 'Use the present perfect continuous (have/has been + -ing) for an action that started in the past and is still ongoing. ''For'' introduces a period of time (two hours), and ''since'' introduces a point in time (since 8 a.m.) — mixing ''since'' with a period (options b, d) is a classic error. Option c uses the wrong tense entirely.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('496b9bfb-62c9-5779-bfb6-c7155592c344', '5a7783a2-f424-5be0-b07f-8bed19499adb', 'The chef ___ the soup to check the salt, and it ___ wonderful. Choose the correct pair.', '[{"id":"a","text":"is tasting / tastes"},{"id":"b","text":"tastes / is tasting"},{"id":"c","text":"is tasting / is tasting"},{"id":"d","text":"tastes / tastes"}]'::jsonb, 'a', 'The verb ''taste'' has two uses: as a dynamic verb meaning ''to sample'' (an action the chef performs deliberately — present continuous is correct), and as a stative verb meaning ''to have a flavour'' (a state — present simple is correct). ''Is tasting / tastes'' captures both uses precisely.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('40ef29e0-5fdd-59eb-bfc4-e34d75b19024', '5a7783a2-f424-5be0-b07f-8bed19499adb', 'He ___ three novels this year, and his publisher is very pleased. Choose the correct form.', '[{"id":"a","text":"has been writing"},{"id":"b","text":"has written"},{"id":"c","text":"is writing"},{"id":"d","text":"writes"}]'::jsonb, 'b', 'When the focus is on a completed, countable result (three finished novels), use the present perfect simple (has written). The present perfect continuous (has been writing) emphasises duration and effort but does not confirm the novels are finished — it would be odd with a specific count of completed works.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('21b7cf2a-d994-5d60-ae47-b0557b541a1a', '5a7783a2-f424-5be0-b07f-8bed19499adb', 'You look completely exhausted. What ___ all morning?', '[{"id":"a","text":"have you done"},{"id":"b","text":"have you been doing"},{"id":"c","text":"are you doing"},{"id":"d","text":"do you do"}]'::jsonb, 'b', 'The present perfect continuous (have you been doing) is used when a recent, extended activity has a visible result in the present — here, the exhaustion. The present perfect simple (have you done) would focus on a completed achievement rather than the tiring process that caused the current state.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('43209281-e502-55a8-af03-57de11357db3', '5a7783a2-f424-5be0-b07f-8bed19499adb', 'Which sentence uses the verb ''think'' correctly?', '[{"id":"a","text":"I''m thinking you are absolutely right."},{"id":"b","text":"I am thinking that this is unfair."},{"id":"c","text":"I am thinking about your proposal right now."},{"id":"d","text":"She is thinking the answer is obvious."}]'::jsonb, 'c', '''Think'' is stative when it expresses an opinion (= believe), so options a, b, and d are wrong — you cannot say ''I am thinking (that)…'' to express a belief. However, ''think about'' describes an active mental process (= consider, reflect on), so the present continuous is correct in option c: ''I am thinking about your proposal right now.''', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('4c7fcb80-216b-51a9-aea0-1a7b93d56db9', '5a7783a2-f424-5be0-b07f-8bed19499adb', 'They ___ on the project for six months, and they still have not finished it. Choose the correct form.', '[{"id":"a","text":"worked"},{"id":"b","text":"are working"},{"id":"c","text":"have worked"},{"id":"d","text":"have been working"}]'::jsonb, 'd', 'The present perfect continuous (have been working) is the right choice: it expresses a continuous activity that started six months ago and is still unfinished now — confirmed by ''still have not finished''. ''Have worked'' (present perfect simple) would suggest the work is complete, contradicting the sentence. ''Worked'' is past simple (no link to the present), and ''are working'' ignores the six-month duration.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('285d360a-8465-518f-990c-916004f4f3b5', '86194a0b-245d-5f29-bdad-cf1ed247131f', 'english', 'Comprehension quiz', 1, 20, 5, 'quiz', 'admin', 0)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -1242,6 +1323,78 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('37470435-85a2-505c-91ca-b117d0515933', '870d7346-31c1-546f-8e25-ad1a12362ea7', 'Choose the correct pair: "They ___ TV when the lights ___ out."', '[{"id":"a","text":"watched ... were going"},{"id":"b","text":"were watching ... went"},{"id":"c","text":"have watched ... went"},{"id":"d","text":"were watching ... were going"}]'::jsonb, 'b', 'Past continuous (were watching) = background in progress; past simple (went) = the sudden interrupting event. This is the classic when-pattern.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('46cd64a1-c660-59b3-9588-78efe0da7594', '86194a0b-245d-5f29-bdad-cf1ed247131f', 'english', '👑 Elite Challenge: Mastering Time Sequences', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('fe75d1d4-1b37-5ee0-bbb4-a75f8fe2fc53', '46cd64a1-c660-59b3-9588-78efe0da7594', 'Complete: "By the time the guests arrived, Yasmine ___ all the food."', '[{"id":"a","text":"prepared"},{"id":"b","text":"was preparing"},{"id":"c","text":"had prepared"},{"id":"d","text":"has prepared"}]'::jsonb, 'c', '"By the time" signals that one past action was completed before another past event. The past perfect (had prepared) is required: Yasmine finished the food first, then the guests arrived. Past simple (prepared) ignores the sequence; past continuous (was preparing) implies it was unfinished; present perfect (has prepared) is impossible in a past context.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('cedab619-4c56-5ca3-ab85-a95e25b97113', '46cd64a1-c660-59b3-9588-78efe0da7594', 'Which sentence contains a grammatical error?', '[{"id":"a","text":"He used to walk to school every day."},{"id":"b","text":"She used to be afraid of spiders."},{"id":"c","text":"They used to played football on Fridays."},{"id":"d","text":"We used to live near the sea."}]'::jsonb, 'c', '"Used to" is always followed by the base form (infinitive without to is already included in the structure: used to + base verb). "Played" is a past form — writing "used to played" double-marks the past. The correct form is "used to play". Options a, b, and d all correctly use "used to" + base verb.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('4dd4df16-b2ea-5580-ae08-b16f11a0a65b', '46cd64a1-c660-59b3-9588-78efe0da7594', 'Complete: "When I ___ to the station, the train already ___ ."', '[{"id":"a","text":"got / had left"},{"id":"b","text":"had got / left"},{"id":"c","text":"was getting / left"},{"id":"d","text":"got / has left"}]'::jsonb, 'a', 'Two past events in sequence: arriving at the station (past simple: got) is the reference point; the train leaving happened before that (past perfect: had left). "Already" reinforces the earlier completion. Option b reverses the logic — the arrival cannot precede itself with past perfect here. Option c is wrong because "getting" implies the journey was still in progress when the train left. Option d mixes past simple with present perfect, which is grammatically impossible.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('42b58ca1-24dc-5af1-a693-9b4143086c60', '46cd64a1-c660-59b3-9588-78efe0da7594', 'Complete: "He ___ the report three times before he ___ it to his teacher."', '[{"id":"a","text":"checked / submitted"},{"id":"b","text":"had checked / submitted"},{"id":"c","text":"was checking / had submitted"},{"id":"d","text":"has checked / submitted"}]'::jsonb, 'b', 'The checking happened before the submitting — both are past events, but checking is the earlier one. The past perfect (had checked) marks it as prior; the past simple (submitted) marks the later reference event. Option a (both past simple) is grammatically possible in informal speech but loses the precise sequence signal required at exam level. Option c wrongly uses past perfect for the later action. Option d wrongly uses present perfect in a fully past context.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('e1a7eb87-ac87-505d-a32e-4d0f771fc4a9', '46cd64a1-c660-59b3-9588-78efe0da7594', 'Identify the ONE correct sentence.', '[{"id":"a","text":"While the phone rang, I was cooking dinner."},{"id":"b","text":"When I was having a bath, the doorbell rang."},{"id":"c","text":"While I arrived, she was leaving the room."},{"id":"d","text":"When she was writing, she was finishing the letter."}]'::jsonb, 'b', 'Option b is correct: "was having" (past continuous) provides the ongoing background; "rang" (past simple) is the short interrupting event — the classic when-pattern. Option a is wrong because "rang" is a short punctual verb and cannot be the background of a "while" clause; it should be "when the phone rang, I was cooking". Option c is wrong because "arrive" is punctual and cannot be a "while" background. Option d is wrong because "finish" describes a completed result and cannot be past continuous alongside another continuous action.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('c5e159b5-bd31-599c-86e1-07e774c6fcbd', '46cd64a1-c660-59b3-9588-78efe0da7594', 'Complete: "The police discovered that the thief ___ through the back window and ___ the safe before anyone ___ the alarm."', '[{"id":"a","text":"climbed / emptied / raised"},{"id":"b","text":"had climbed / had emptied / raised"},{"id":"c","text":"was climbing / emptied / had raised"},{"id":"d","text":"had climbed / was emptying / raised"}]'::jsonb, 'b', 'The thief''s actions (climbing in, emptying the safe) both occurred before the alarm was raised — the reference past event. Past perfect (had climbed, had emptied) correctly places these two earlier actions; past simple (raised) marks the later reference point. Option a loses the sequence entirely. Option c wrongly puts "had raised" on the alarm, reversing the logic — the alarm came last, not first. Option d uses past continuous for "emptying", implying it was still in progress when the alarm went off, which contradicts the "before" clause.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1457,6 +1610,78 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('86c16cd5-392b-5ab2-af1c-2952deb88e38', 'ff2b7070-d893-5229-bd8c-2b042dee6081', 'english', '👑 Elite Challenge: Master of Future Forms', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('20e1e342-c46f-5418-9778-f7583673ec41', '86c16cd5-392b-5ab2-af1c-2952deb88e38', 'Read the timetable notice carefully: "The school bus ___ at 7:15 every morning next term — students must be at the stop two minutes early." Which form is best?', '[{"id":"a","text":"will leave"},{"id":"b","text":"leaves"},{"id":"c","text":"is going to leave"},{"id":"d","text":"is leaving"}]'::jsonb, 'b', 'A fixed, recurring timetable event (official schedule for a vehicle or institution) uses the present simple for the future. "Leaves" is correct. "Will leave" expresses a spontaneous decision or prediction. "Is going to leave" expresses a pre-made personal intention, not a published schedule. "Is leaving" is for a personal confirmed arrangement, not an impersonal timetable.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('dd27901a-06cb-5aa5-b6ff-932cc32ad2bd', '86c16cd5-392b-5ab2-af1c-2952deb88e38', 'Sami calls his mother from the kitchen: the tap has just burst and water is flooding the floor. He shouts: "Mum! The kitchen ___ flood — there''s water everywhere!" Which form is best?', '[{"id":"a","text":"will"},{"id":"b","text":"would"},{"id":"c","text":"is going to"},{"id":"d","text":"is"}]'::jsonb, 'c', 'Water is already spreading — this is a prediction based on immediate visible evidence, which requires "be going to": the kitchen is going to flood. "Will" signals an opinion-based prediction with no direct evidence in front of the speaker. "Would" is conditional or past. "Is" alone describes a present state, not an imminent future event.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('cd4a4ebb-6763-5e29-a105-05d6d3c4f871', '86c16cd5-392b-5ab2-af1c-2952deb88e38', 'Leila has already booked the hall, sent invitations, and confirmed the caterer. She tells a friend: "I ___ organise a surprise party for my brother on Saturday." Which form is best?', '[{"id":"a","text":"will organise"},{"id":"b","text":"am going to organise"},{"id":"c","text":"organise"},{"id":"d","text":"am organising"}]'::jsonb, 'd', 'The event is fully arranged with other people (hall booked, invitations sent, caterer confirmed) — this is a fixed future arrangement, which calls for the present continuous: I am organising a surprise party. "Going to" expresses a pre-made intention but lacks the emphasis on a confirmed, multi-party arrangement. "Will organise" would suggest she is deciding at this very moment. The present simple "organise" does not suit a personal one-off future event.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('4416d439-5708-525c-ab80-c0cf44fcea23', '86c16cd5-392b-5ab2-af1c-2952deb88e38', 'Complete the first conditional: "If the government invests more in education, students ___ better results in national exams."', '[{"id":"a","text":"achieve"},{"id":"b","text":"are going to achieve"},{"id":"c","text":"will achieve"},{"id":"d","text":"are achieving"}]'::jsonb, 'c', 'In a first conditional sentence (real possibility in the future), the if-clause uses the present simple and the main clause uses "will + base verb": students will achieve. "Are going to achieve" is not standard in the result clause of a first conditional — it signals a pre-made intention, not a future consequence of a condition. "Achieve" (present simple) would make this a zero conditional (always-true fact). "Are achieving" is present continuous and does not express a future result.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('169e3347-7224-50c0-8f7d-5e3e2e95772a', '86c16cd5-392b-5ab2-af1c-2952deb88e38', 'Choose the correct words for BOTH blanks: "She ___ not come to school tomorrow; she has an appointment because she ___ see the doctor at 10 a.m."', '[{"id":"a","text":"is ... will"},{"id":"b","text":"will ... is going to"},{"id":"c","text":"would ... is going to"},{"id":"d","text":"will ... will"}]'::jsonb, 'b', '"Will not come" (won''t come) expresses the consequence/decision about tomorrow, so "will" fits the first blank. "Is going to see" reflects a pre-arranged appointment (already booked), so "is going to" fits the second blank. Option a puts "is" in the first blank, making a present-continuous form that implies she is not currently at school — wrong in context. Option c uses conditional "would" in the first blank — unwarranted here. Option d uses "will" for both, treating the appointment as a spontaneous decision rather than an existing arrangement.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('6b5844a2-8c40-5cb9-a0a5-f526268f5281', '86c16cd5-392b-5ab2-af1c-2952deb88e38', 'Spot the one grammatically AND contextually correct sentence about a personal future plan:', '[{"id":"a","text":"When I will finish the concours, I will take a long holiday."},{"id":"b","text":"I am going to take a long holiday as soon as I will finish the concours."},{"id":"c","text":"I am going to take a long holiday as soon as I finish the concours."},{"id":"d","text":"I will taking a long holiday when I finish the concours."}]'::jsonb, 'c', 'After future time conjunctions (when, as soon as, before, after, until), English requires the present simple — never will. The main clause correctly uses "am going to take" to express a pre-made personal intention. Option a wrongly uses "will finish" after "when". Option b uses "am going to take" correctly but then breaks the rule with "will finish" after "as soon as". Option d is ungrammatical: "will taking" is not a valid verb form.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('818e12ec-9c1e-52e1-8f1a-dde92ca62d2e', '9fc5be6f-66c8-5756-a2b9-b3021d83e1ba', 'english', 'Comprehension quiz', 1, 20, 5, 'quiz', 'admin', 0)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -1654,6 +1879,78 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('ed4adc8e-de97-5a8f-a68f-5601a89daaa2', '5e9f70de-f505-5482-a231-2c5e52d2bb68', 'Complete: "It''s getting dark. We ___ hurry, or we''ll miss the bus."', '[{"id":"a","text":"might not"},{"id":"b","text":"should"},{"id":"c","text":"don''t have to"},{"id":"d","text":"couldn''t"}]'::jsonb, 'b', '"Should" expresses a strong recommendation or advice — the right thing to do in the situation: we should hurry. "Might not" and "don''t have to" would weaken the urgency incorrectly.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('1ce03879-94cc-59c1-9b29-387f46b3cb17', '9fc5be6f-66c8-5756-a2b9-b3021d83e1ba', 'english', '👑 Elite Challenge: Modal Mastery Under Pressure', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('3f3f291b-0ed5-5034-8ea2-007904302b91', '1ce03879-94cc-59c1-9b29-387f46b3cb17', 'Look at the context carefully. "There is thick smoke rising from the neighbour''s kitchen window." Which sentence expresses a logical deduction based on the evidence?', '[{"id":"a","text":"The food must be burning."},{"id":"b","text":"The food should be burning."},{"id":"c","text":"The food may burn."},{"id":"d","text":"The food can burn."}]'::jsonb, 'a', '"Must" is used for a strong logical deduction from evidence — the smoke is direct proof that something is burning. "Should" expresses expectation or advice, not deduction. "May burn" is a future possibility with no evidence base. "Can burn" states general ability, not a deduction about what is happening right now.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('eba3fdd7-1b65-5e0b-a7d7-298e72c9e03a', '1ce03879-94cc-59c1-9b29-387f46b3cb17', 'Leila told her teacher she was in Tunis all day yesterday, but her classmate saw her in Sfax at exactly the same time. What is the only logical conclusion?', '[{"id":"a","text":"Leila might not have been telling the truth."},{"id":"b","text":"Leila can''t have been telling the truth."},{"id":"c","text":"Leila mustn''t have been telling the truth."},{"id":"d","text":"Leila shouldn''t have been telling the truth."}]'::jsonb, 'b', '"Can''t have" expresses a logical impossibility about the past — a person cannot be in two cities at once, so it is impossible that she was telling the truth. "Might not have" only suggests doubt, not certainty. "Mustn''t have" is not used for past deduction; "mustn''t" is a prohibition modal. "Shouldn''t have" expresses past criticism, not logical deduction.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('ecf5bd5c-0f9d-5239-a6b2-06167c953a96', '1ce03879-94cc-59c1-9b29-387f46b3cb17', 'Your friend arrives at your door without warning. You say: "You ___ me you were coming! I would have cooked something."', '[{"id":"a","text":"must have told"},{"id":"b","text":"could tell"},{"id":"c","text":"should have told"},{"id":"d","text":"might have told"}]'::jsonb, 'c', '"Should have told" expresses past criticism or regret — the action did not happen, but it was the right thing to do. "Must have told" would mean you are deducing that the person did tell you (which contradicts the context). "Could tell" is present ability, not past. "Might have told" suggests only a weak past possibility, not the implied criticism in the speaker''s tone.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('bb70b1c9-47f1-5f87-af54-9173dbe7ab3e', '1ce03879-94cc-59c1-9b29-387f46b3cb17', 'The national exam results have not been published yet. Ali studied hard but the exam was very difficult. Which sentence is the most appropriate?', '[{"id":"a","text":"Ali must pass the exam."},{"id":"b","text":"Ali can''t pass the exam."},{"id":"c","text":"Ali should pass the exam."},{"id":"d","text":"Ali might pass the exam."}]'::jsonb, 'd', '"Might" expresses weak possibility — results are unknown and the outcome is uncertain (he studied hard but the exam was difficult). "Must" is used for strong logical deduction from clear evidence, which does not apply when the outcome is genuinely unknown. "Can''t" would mean it is logically impossible for him to pass, which contradicts his hard work. "Should" implies an expected or predictable outcome based on an established norm, but the added difficulty creates real uncertainty that "might" captures best.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('8aeba267-0d13-5fa7-91bb-0e9a7697967e', '1ce03879-94cc-59c1-9b29-387f46b3cb17', '"The school regulations state that all pupils ___ arrive before 8:00 a.m. Latecomers will be sent to the headmaster." Which modal fits the context correctly?', '[{"id":"a","text":"have to"},{"id":"b","text":"must"},{"id":"c","text":"should"},{"id":"d","text":"may"}]'::jsonb, 'a', '"Have to" expresses external obligation — the rule comes from school regulations, an outside authority, not the speaker''s personal feeling. "Must" is used when the obligation comes from the speaker''s own will or authority (internal obligation). "Should" is advice or recommendation, not a binding rule. "May" expresses permission or possibility, not obligation.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('3a452b60-51b7-5ddc-874e-12e6700c8005', '1ce03879-94cc-59c1-9b29-387f46b3cb17', 'She noticed the earlier train was still at the platform and chose to wait for her friend instead. She missed the award ceremony as a result. The best analysis of her situation is:', '[{"id":"a","text":"She could have taken the earlier train, but she chose not to."},{"id":"b","text":"She must have taken the earlier train to arrive on time."},{"id":"c","text":"She can''t have taken the earlier train."},{"id":"d","text":"She may take the earlier train if she hurries."}]'::jsonb, 'a', '"Could have" expresses a past possibility or option that existed but was not used — the train was there, the ability and opportunity were present, yet she chose not to act on them. "Must have taken" is a deduction that she did board the train, which contradicts the context. "Can''t have taken" implies it was impossible, also contradicted by the facts. "May take" is present or future possibility, not relevant to a past situation that has already concluded.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1869,6 +2166,78 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('6fbedf7a-b234-5c70-b36f-1f11fed034fd', 'c9c30f7d-f352-5da1-8baa-12eac9f31b36', 'english', '👑 Elite Challenge: Conditionals Mastery', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('1eec2a52-2bf6-5ef9-ad37-838cf0aa6bdb', '6fbedf7a-b234-5c70-b36f-1f11fed034fd', 'Complete both blanks: "If the students ___ more carefully, they ___ that mistake."', '[{"id":"a","text":"had read ... would not have made"},{"id":"b","text":"have read ... would not make"},{"id":"c","text":"read ... would not have made"},{"id":"d","text":"had read ... would not make"}]'::jsonb, 'a', 'This is a third conditional: the reading happened (or did not happen) in the past and the mistake is a past consequence. Form: if + past perfect (had read) + would have + past participle (would not have made). Option d mixes past perfect with a second-conditional main clause, creating an incorrect hybrid.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('9552a62c-6941-5408-b0ca-cb7b41978a9b', '6fbedf7a-b234-5c70-b36f-1f11fed034fd', 'Identify the conditional type: "If she had taken the earlier bus, she would be home by now."', '[{"id":"a","text":"First conditional — real future situation"},{"id":"b","text":"Second conditional — unreal present situation"},{"id":"c","text":"Third conditional — unreal past situation"},{"id":"d","text":"Mixed conditional — past condition, present result"}]'::jsonb, 'd', 'The if-clause uses past perfect (had taken), referring to a past event that did not happen. The main clause uses would + base verb (would be), describing an unreal present result. This is a mixed conditional: the condition is in the past, but the consequence is felt now. A pure third conditional would have ''would have been'' in the main clause.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('4a556f41-88ff-55ab-b724-0ab31deddf69', '6fbedf7a-b234-5c70-b36f-1f11fed034fd', 'Choose the option that correctly rewrites this sentence using "unless": "You will not pass the test if you do not revise your notes."', '[{"id":"a","text":"You will not pass the test unless you don''t revise your notes."},{"id":"b","text":"You will not pass the test unless you revise your notes."},{"id":"c","text":"Unless you will revise your notes, you will not pass the test."},{"id":"d","text":"You will not pass the test unless you revised your notes."}]'::jsonb, 'b', '"Unless" already contains the negative meaning of "if ... not", so the clause after it must be positive. "Unless you revise" = "if you do not revise" — this is correct. Option a adds a double negative (unless + don''t), which is wrong. Option c wrongly uses "will" in the unless-clause. Option d uses past simple, which changes the conditional type incorrectly.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('78208151-f432-5986-89c6-95d2261fe015', '6fbedf7a-b234-5c70-b36f-1f11fed034fd', 'Which sentence correctly uses "could" in a second conditional?', '[{"id":"a","text":"If I have more free time, I could travel the world."},{"id":"b","text":"If I had more free time, I could travel the world."},{"id":"c","text":"If I had more free time, I could have travelled the world."},{"id":"d","text":"If I had had more free time, I could travel the world."}]'::jsonb, 'b', 'In the second conditional, the if-clause uses the past simple (had) for an unreal present or future situation. The main clause can use "would", "could", or "might" + base verb. "Could travel" expresses possibility in an unreal situation, making option b correct. Option a uses present simple in the if-clause (first conditional form). Option c uses "could have travelled" (third conditional main clause). Option d uses past perfect in the if-clause (third conditional form).', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('277e4e6e-27b9-5fde-97cd-c6f8f1586ce2', '6fbedf7a-b234-5c70-b36f-1f11fed034fd', 'Four students wrote sentences about a past exam. Which sentence contains a grammatical error?', '[{"id":"a","text":"If Omar had studied the vocabulary, he would have scored higher."},{"id":"b","text":"If Nour had been more careful, she wouldn''t have misread the question."},{"id":"c","text":"If Tarek had revised, he would pass the exam easily."},{"id":"d","text":"If Sana had arrived earlier, she would have had more time."}]'::jsonb, 'c', 'Option c is incorrect because it mixes the third conditional if-clause (had revised — past perfect, referring to the past) with a second conditional main clause (would pass — present result). For a pure third conditional, it should be "would have passed". For a mixed conditional with a present result, the sentence would need a context change. As written, the inconsistency makes it grammatically wrong.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('75194e7f-9c18-5bb3-b70d-cac4a264bee3', '6fbedf7a-b234-5c70-b36f-1f11fed034fd', 'Complete: "___ the weather forecast ___ good tomorrow, we ___ have cancelled the school trip already."', '[{"id":"a","text":"If ... is ... will"},{"id":"b","text":"Unless ... were ... would"},{"id":"c","text":"If ... had been ... would have"},{"id":"d","text":"Unless ... had been ... would"}]'::jsonb, 'c', 'The adverb "already" signals a completed past action (the cancellation is being discussed as something that would have happened in the past). The correct structure is a third conditional: if + past perfect (had been) + would have + past participle (would have cancelled). "Already" confirms the result belongs to the past, ruling out second conditional forms. Unless does not fit the logic of this sentence, which states a positive past condition.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('6c069575-64c8-5d0f-bd94-5fda4d4c80a3', '2bd52d30-882a-5849-a561-66dad79c756d', 'english', 'Comprehension quiz', 1, 20, 5, 'quiz', 'admin', 0)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -2066,6 +2435,84 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('01868ac1-1c85-531f-b957-c922c262d7c3', '50566438-5c32-582c-9b59-43a0b96cc9a4', 'Complete the sentence with the correct passive: "The new library ___ last year." (open)', '[{"id":"a","text":"is opened"},{"id":"b","text":"was opened"},{"id":"c","text":"opened"},{"id":"d","text":"were opened"}]'::jsonb, 'b', '"The new library" is singular and "last year" signals past tense → WAS + past participle (opened): The new library was opened last year.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('4b1a1f73-c67e-5e29-92d8-9b3a4b074943', '2bd52d30-882a-5849-a561-66dad79c756d', 'english', '👑 Elite Challenge: Passive Voice Across Tenses & Modals', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('5c58a0e6-f68f-5902-ad5a-dfaf00b004c1', '4b1a1f73-c67e-5e29-92d8-9b3a4b074943', 'Transform to passive (future simple): "The government will announce the results tomorrow."
+Which option is correct?', '[{"id":"a","text":"The results will announced by the government tomorrow."},{"id":"b","text":"The results are announced by the government tomorrow."},{"id":"c","text":"The results will be announced by the government tomorrow."},{"id":"d","text":"The results were announced by the government tomorrow."}]'::jsonb, 'c', 'Future simple passive = will + be + past participle. "Announce" → past participle "announced". The object "the results" becomes the subject: The results WILL BE ANNOUNCED by the government tomorrow. Option a omits "be"; b uses present passive (wrong tense); d uses past passive (wrong tense).', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('b3509320-48b2-5d64-b94a-277dd38e4efd', '4b1a1f73-c67e-5e29-92d8-9b3a4b074943', 'Transform to passive (present perfect): "Someone has stolen the exam papers."
+Which option is correct?', '[{"id":"a","text":"The exam papers have been stolen."},{"id":"b","text":"The exam papers has been stolen."},{"id":"c","text":"The exam papers were stolen."},{"id":"d","text":"The exam papers had been stolen."}]'::jsonb, 'a', 'Present perfect passive = have / has + been + past participle. "The exam papers" is plural → HAVE (not has). By-agent is omitted because the agent (someone) is unknown. Option b incorrectly uses "has" with a plural subject; c is past simple (loses the present-perfect meaning); d is past perfect (wrong tense).', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('741a817a-a456-5c11-aca4-40c0f9dd6d99', '4b1a1f73-c67e-5e29-92d8-9b3a4b074943', 'Transform to passive (modal — must): "You must submit all assignments before Friday."
+Which option is correct?', '[{"id":"a","text":"All assignments must been submitted before Friday."},{"id":"b","text":"All assignments must be submitted before Friday."},{"id":"c","text":"All assignments must being submitted before Friday."},{"id":"d","text":"All assignments must submitted before Friday."}]'::jsonb, 'b', 'Passive with a modal = modal + be + past participle. "Must" is already a base-form modal, so: must + BE + submitted. Option a uses "been" without "be" (wrong); c uses "being" (continuous form, wrong here); d omits "be" entirely.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('850a7fac-2254-5cb0-ab2a-3bb1860c3d95', '4b1a1f73-c67e-5e29-92d8-9b3a4b074943', 'Turn the active question into a passive question (present simple): "Do they teach Arabic in this school?"
+Which passive question is correct?', '[{"id":"a","text":"Are Arabic taught in this school?"},{"id":"b","text":"Does Arabic taught in this school?"},{"id":"c","text":"Was Arabic taught in this school?"},{"id":"d","text":"Is Arabic taught in this school?"}]'::jsonb, 'd', 'Present simple passive question = Is / Are + subject + past participle? "Arabic" is an uncountable/singular noun → IS (not are). Past participle of teach = taught. Option a wrongly uses "Are" with the singular noun "Arabic"; b keeps the active auxiliary "Does" (wrong); c uses "Was" — past tense, not present.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('35a20b5f-927d-587c-a45a-0c20fcc5c2a7', '4b1a1f73-c67e-5e29-92d8-9b3a4b074943', 'Active: "Doctors should check patients regularly."
+Which passive sentence is correct AND uses the most natural style (agent omitted when obvious)?', '[{"id":"a","text":"Patients should be check regularly."},{"id":"b","text":"Patients should been checked regularly."},{"id":"c","text":"Patients should be checked regularly."},{"id":"d","text":"Patients should being checked regularly."}]'::jsonb, 'c', 'Modal passive = should + be + past participle (checked). The agent "by doctors" is omitted because it is obvious from context. Option a uses the base form "check" instead of the past participle; b omits "be" and has "been" in the wrong position; d uses "being" (a progressive form that does not follow a bare modal).', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('659c49ec-4a06-519d-aba8-8a72e9ad1b81', '4b1a1f73-c67e-5e29-92d8-9b3a4b074943', 'Active: "The jury awarded the winner a gold medal."
+Which passive sentence is correct?', '[{"id":"a","text":"The winner were awarded a gold medal by the jury."},{"id":"b","text":"The winner was awarded a gold medal by the jury."},{"id":"c","text":"A gold medal is awarded to the winner by the jury."},{"id":"d","text":"The winner was awarded to a gold medal by the jury."}]'::jsonb, 'b', 'With two-object verbs like "award", the indirect object (the winner) can become the subject: The winner WAS awarded a gold medal by the jury. "The winner" is singular + past tense → WAS (not were). Option a wrongly uses "were" with a singular subject; c uses present tense (wrong) and misplaces "to"; d incorrectly inserts "to" between "awarded" and "a gold medal", which is ungrammatical in this pattern.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2281,6 +2728,78 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('f87026b5-e3f7-55ce-93f9-9d473c37a345', '9b958e8f-0a4d-5299-aedc-ca62d7866435', 'english', '👑 Elite Challenge: Mastering Reported Speech', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('ce27e8ce-4c97-5c83-921e-c4c8b0fa87b7', 'f87026b5-e3f7-55ce-93f9-9d473c37a345', 'Direct: "I lost my keys yesterday," Tom told Sarah. Which reported form is FULLY correct (tense, pronoun, and time word all shifted)?', '[{"id":"a","text":"Tom told Sarah that he had lost his keys the day before."},{"id":"b","text":"Tom told Sarah that he lost his keys yesterday."},{"id":"c","text":"Tom told Sarah that he had lost his keys yesterday."},{"id":"d","text":"Tom told Sarah that he has lost his keys the day before."}]'::jsonb, 'a', 'Three shifts are required: (1) ''I'' → ''he'' (pronoun); (2) past simple ''lost'' → past perfect ''had lost'' (backshift); (3) ''yesterday'' → ''the day before'' (time-word shift). Option B misses all three. Option C backshifts the tense correctly but leaves ''yesterday'' unchanged. Option D uses present perfect ''has lost'' instead of past perfect ''had lost''.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('7819a5fe-fbe0-59b2-8d6c-056fc1f5b214', 'f87026b5-e3f7-55ce-93f9-9d473c37a345', 'Direct: "What did you buy at the market?" she asked him. Choose the correctly reported question:', '[{"id":"a","text":"She asked him what did he buy at the market."},{"id":"b","text":"She asked him what he bought at the market."},{"id":"c","text":"She asked him what he had bought at the market."},{"id":"d","text":"She asked him what had he bought at the market."}]'::jsonb, 'c', 'In a reported wh-question: (1) normal subject-before-verb order replaces the inverted question form (''what he…'', not ''what did he…''); (2) past simple ''did buy'' backshifts to past perfect ''had bought''; (3) ''you'' → ''he''. Option A keeps the auxiliary ''did'' (wrong order). Option B uses past simple ''bought'' with no backshift. Option D retains inversion (''had he'') — incorrect in reported speech.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('11d6470e-14ec-5d4c-a173-f08aa8b53c8f', 'f87026b5-e3f7-55ce-93f9-9d473c37a345', 'Direct: "Don''t tell anyone about this!" she told him. Which reported command is correct?', '[{"id":"a","text":"She told him don''t tell anyone about that."},{"id":"b","text":"She asked him not telling anyone about that."},{"id":"c","text":"She said him not to tell anyone about this."},{"id":"d","text":"She told him not to tell anyone about that."}]'::jsonb, 'd', 'Negative commands are reported with ''tell + person + not to + infinitive''. Option A wrongly keeps the imperative ''don''t tell''. Option B incorrectly uses a gerund (''not telling'') instead of ''not to + infinitive''. Option C uses ''said him'' — ''say'' never takes a direct personal object — and fails to shift ''this'' to ''that''. Option D is fully correct: ''told him not to tell… about that''.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('98ae61e1-b215-5802-96f7-52e519f394d4', 'f87026b5-e3f7-55ce-93f9-9d473c37a345', 'Direct: "She may already know the answer," he said. Which sentence applies the correct modal backshift?', '[{"id":"a","text":"He said she may already know the answer."},{"id":"b","text":"He told she might already know the answer."},{"id":"c","text":"He said she might already know the answer."},{"id":"d","text":"He said she could already know the answer."}]'::jsonb, 'c', '''May'' backshifts to ''might'' when the reporting verb is in the past. Option A keeps ''may'' with no backshift. Option B uses ''told'' without a personal object — ''tell'' always requires one (e.g. ''told us''). Option D substitutes ''could'', which is the backshift of ''can'', not ''may''. Option C correctly applies the ''may → might'' backshift with ''said (that)''.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('63217691-5552-58cf-91f9-4fb34905a0ef', 'f87026b5-e3f7-55ce-93f9-9d473c37a345', 'Direct: "Have you ever been to Carthage?" the teacher asked the students. Choose the correct reported question:', '[{"id":"a","text":"The teacher asked the students if they have ever been to Carthage."},{"id":"b","text":"The teacher asked the students whether had they ever been to Carthage."},{"id":"c","text":"The teacher asked the students whether they had ever been to Carthage."},{"id":"d","text":"The teacher asked the students if they were ever to Carthage."}]'::jsonb, 'c', 'A yes/no question is reported with ''if'' or ''whether''. Present perfect ''have been'' backshifts to past perfect ''had been''. Normal word order (subject before verb) replaces inversion. Option A keeps present perfect ''have been'' with no backshift. Option B retains auxiliary inversion (''had they'') — wrong in reported speech. Option D wrongly replaces ''have been to'' with ''were to'', distorting the meaning entirely.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('a6eb3cd1-773c-5f0e-80a8-cdc14a156d80', 'f87026b5-e3f7-55ce-93f9-9d473c37a345', 'Direct: "I will visit my grandmother next week," Ahmed said. Which is the ONLY fully correct reported sentence?', '[{"id":"a","text":"Ahmed said he will visit his grandmother next week."},{"id":"b","text":"Ahmed told he would visit his grandmother the following week."},{"id":"c","text":"Ahmed said he would visit his grandmother next week."},{"id":"d","text":"Ahmed said he would visit his grandmother the following week."}]'::jsonb, 'd', 'Two shifts are required: (1) ''will'' → ''would'' (modal backshift); (2) ''next week'' → ''the following week'' (time-word shift). Option A applies neither shift. Option B correctly backshifts ''will → would'' and shifts the time word, but uses ''told'' without a personal object — always wrong. Option C backshifts ''will → would'' correctly but leaves ''next week'' unchanged. Only Option D applies both the modal backshift and the time-word shift correctly.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('f34bbeba-a514-5828-9e27-2a8b3711fb93', '0bc67bcc-bd66-52fb-b968-3dc60375eba1', 'english', 'Comprehension quiz', 1, 20, 5, 'quiz', 'admin', 0)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -2478,6 +2997,78 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('481b204d-67d0-5c6e-b6f3-01c13e92b87e', '2cbeb6e5-2960-512e-9f42-e5cbe625a305', 'Choose the sentence with the correct superlative form:', '[{"id":"a","text":"Yesterday was the most bad day of my life."},{"id":"b","text":"Yesterday was the baddest day of my life."},{"id":"c","text":"Yesterday was the worse day of my life."},{"id":"d","text":"Yesterday was the worst day of my life."}]'::jsonb, 'd', '''bad'' is irregular: bad → worse → the worst. ''The worst day'' is the only correct superlative. ''Baddest'', ''the most bad'', and ''the worse'' are all incorrect forms.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('e6171568-ac34-5461-a926-00b1198d046e', '0bc67bcc-bd66-52fb-b968-3dc60375eba1', 'english', '👑 Elite Challenge: Relative Clauses & Comparatives Under Pressure', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('da568abe-ed24-5c8b-87a8-366cf878cc44', 'e6171568-ac34-5461-a926-00b1198d046e', 'A student writes: "The museum, that we visited last summer, was built in 1890." What is wrong with this sentence?', '[{"id":"a","text":"Nothing is wrong; ''that'' is always interchangeable with ''which''."},{"id":"b","text":"''that'' cannot be used in a non-defining relative clause; it must be replaced with ''which''."},{"id":"c","text":"The commas are wrong; remove them and the sentence is correct."},{"id":"d","text":"''that'' should be replaced with ''who'' because museums are important places."}]'::jsonb, 'b', 'Non-defining relative clauses (set off by commas) add extra, non-essential information. They require ''which'' for things — never ''that''. ''That'' is only used in defining relative clauses, where no comma is used. Removing the commas (option C) would make it defining, which changes the meaning entirely.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('5dfbba67-23ca-5232-bd3a-a66957add243', 'e6171568-ac34-5461-a926-00b1198d046e', 'Combine these two sentences into ONE using the correct relative pronoun: "We read a report. Its conclusions surprised the entire committee."', '[{"id":"a","text":"We read a report which conclusions surprised the entire committee."},{"id":"b","text":"We read a report that its conclusions surprised the entire committee."},{"id":"c","text":"We read a report whose conclusions surprised the entire committee."},{"id":"d","text":"We read a report where its conclusions surprised the entire committee."}]'::jsonb, 'c', '''Whose'' replaces a possessive (''its conclusions'' = ''the report''s conclusions''). It can refer to both people AND things in formal English. ''Which conclusions'' is ungrammatical without a preposition; ''that its'' repeats the pronoun and is incorrect; ''where'' is for places, not possessive relationships.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('30ac2283-9c21-5f32-b50c-f55d02072c39', 'e6171568-ac34-5461-a926-00b1198d046e', 'Choose the sentence in which the relative pronoun CAN be omitted without making the sentence ungrammatical:', '[{"id":"a","text":"The teacher whose class I attended retired last week."},{"id":"b","text":"The city where I was born is far from here."},{"id":"c","text":"The novel that she recommended to me was excellent."},{"id":"d","text":"The student who answered first won the prize."}]'::jsonb, 'c', 'A relative pronoun can be omitted only when it is the OBJECT of the relative clause. In option C, ''that'' is the object (''she recommended [it] to me''), so it can be dropped: ''The novel she recommended to me was excellent.'' In option D, ''who'' is the SUBJECT (''who answered first''), so it cannot be omitted. ''Whose'' and ''where'' can never be omitted.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('509c6467-c2af-55d2-a464-d762a3a5f71a', 'e6171568-ac34-5461-a926-00b1198d046e', 'Which sentence correctly uses the ''the … the …'' double comparative structure?', '[{"id":"a","text":"The more you practice, the more better your English becomes."},{"id":"b","text":"The harder you study, the best results you will get."},{"id":"c","text":"The harder you study, the better your results will be."},{"id":"d","text":"More harder you study, better your results will be."}]'::jsonb, 'c', 'The ''the + comparative … the + comparative'' structure requires a comparative form (not a superlative) in BOTH clauses. ''The harder … the better'' is correct. Option A wrongly doubles ''more'' and ''better''; option B uses the superlative ''best'' in the second clause; option D omits the definite article ''the'' and adds a redundant ''more'' before ''harder''.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('c1b432f1-1cbc-574c-9660-5b7227a13d3a', 'e6171568-ac34-5461-a926-00b1198d046e', 'Complete the sentence with the correct form: "Among all the students in the school, Yasmine scored ___ marks on the national mock exam." (few)', '[{"id":"a","text":"the fewer"},{"id":"b","text":"the fewest"},{"id":"c","text":"the least few"},{"id":"d","text":"fewer than"}]'::jsonb, 'b', 'When comparing three or more (here: all students in the school), we use the superlative. ''Few'' forms its superlative as ''the fewest'' (regular short-adjective pattern: add -est). ''The fewer'' is the comparative, used only for two items. ''The least few'' is not a real form. ''Fewer than'' is a comparative requiring a second element to compare with.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('843870fc-8656-51d5-9c26-be88398192c7', 'e6171568-ac34-5461-a926-00b1198d046e', 'A student writes: "My handwriting is not as worse as my brother''s." Identify the error and choose the corrected version.', '[{"id":"a","text":"My handwriting is not as bad as my brother''s."},{"id":"b","text":"My handwriting is not as worst as my brother''s."},{"id":"c","text":"My handwriting is not more bad than my brother''s."},{"id":"d","text":"My handwriting is not as badly as my brother''s."}]'::jsonb, 'a', 'The ''as … as'' structure always requires the BASE (positive) form of the adjective — never the comparative or superlative. The base form of ''worse'' is ''bad'', so the correct sentence is ''not as bad as''. Using ''worse'' inside ''as…as'' is the most common trap with irregular adjectives. ''Badly'' is an adverb and cannot describe handwriting as a noun adjunct here.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,

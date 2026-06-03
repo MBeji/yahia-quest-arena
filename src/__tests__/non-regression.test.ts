@@ -586,6 +586,7 @@ describe("NON-REGRESSION: Data shape contracts", () => {
       "exercises",
       "quizPassedByChapter",
       "subject",
+      "viewer",
     ]);
     expect(result.chapters).toBeInstanceOf(Array);
     expect(result.exercises).toBeInstanceOf(Array);

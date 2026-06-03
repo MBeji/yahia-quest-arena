@@ -100,6 +100,7 @@ describe("gamification.quest — getSubject", () => {
       exercises: exercisesData,
       bestByExercise: { "ex-1": 85 },
       quizPassedByChapter: {},
+      viewer: { level: 0, hasSubscription: false },
     });
   });
 
@@ -252,6 +253,63 @@ describe("gamification.quest — startExerciseSession", () => {
 
     expect(result).toEqual({ sessionId: "sess-1", startedAt: "2026-06-01T12:00:00Z" });
   });
+
+  it("blocks a premium challenge mission without an active subscription", async () => {
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises")
+        return mockQuery({ id: "ex-1", mode: "challenge", chapter_id: "ch-1" });
+      if (table === "profiles") return mockQuery({ level: 10 });
+      return mockQuery({ id: "sess-1", started_at: "t" });
+    });
+    mockRpc.mockReturnValue({ data: false, error: null }); // no active subscription
+
+    const { startExerciseSession } = await import("@/features/quest");
+    await expect(
+      (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
+        exerciseId: "11111111-1111-1111-1111-111111111111",
+      }),
+    ).rejects.toThrow("abonnement actif est requis");
+  });
+
+  it("blocks a premium challenge mission below the required level", async () => {
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises")
+        return mockQuery({ id: "ex-1", mode: "challenge", chapter_id: "ch-1" });
+      if (table === "profiles") return mockQuery({ level: 2 });
+      return mockQuery({ id: "sess-1", started_at: "t" });
+    });
+    mockRpc.mockReturnValue({ data: true, error: null }); // active subscription, but low level
+
+    const { startExerciseSession } = await import("@/features/quest");
+    await expect(
+      (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
+        exerciseId: "11111111-1111-1111-1111-111111111111",
+      }),
+    ).rejects.toThrow("atteins le niveau");
+  });
+
+  it("allows a challenge mission with an active subscription and sufficient level", async () => {
+    let exerciseCalls = 0;
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") {
+        exerciseCalls += 1;
+        return exerciseCalls === 1
+          ? mockQuery({ id: "ex-1", mode: "challenge", chapter_id: "ch-1" })
+          : mockQuery({ id: "quiz-1" });
+      }
+      if (table === "profiles") return mockQuery({ level: 10 });
+      if (table === "attempts") return mockQuery([{ id: "att-1" }]); // chapter quiz passed
+      return mockQuery({ id: "sess-1", started_at: "2026-06-01T12:00:00Z" });
+    });
+    mockRpc.mockReturnValue({ data: true, error: null });
+
+    const { startExerciseSession } = await import("@/features/quest");
+    const result = await (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
+      exerciseId: "11111111-1111-1111-1111-111111111111",
+    });
+
+    expect(result).toEqual({ sessionId: "sess-1", startedAt: "2026-06-01T12:00:00Z" });
+  });
 });
 
 describe("gamification.quest — submitAttempt", () => {
@@ -307,7 +365,43 @@ describe("gamification.quest — submitAttempt", () => {
     expect(res.xpEarned).toBe(50);
     expect(res.coinsEarned).toBe(10);
     expect((res.review as Array<{ isCorrect: boolean }>)[0].isCorrect).toBe(true);
+    expect(res.reviewHidden).toBe(false);
     expect((res.unlockedBadges as Array<{ code: string }>)[0].code).toBe("first_win");
+  });
+
+  it("hides the correction (no correct answers leak) for a comprehension quiz", async () => {
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") return mockQuery({ mode: "quiz" });
+      // questions table
+      return mockQuery([{ id: Q1_ID, prompt: "2+2?", correct_option: "4", explanation: "x" }]);
+    });
+    mockRpc.mockReturnValue({
+      data: {
+        correct: 1,
+        total: 1,
+        scorePct: 100,
+        xpEarned: 20,
+        coinsEarned: 5,
+        durationSeconds: 10,
+        profile: { xp: 20 },
+        unlockedBadges: [],
+      },
+      error: null,
+    });
+
+    const { submitAttempt } = await import("@/features/quest");
+    const result = await (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
+      sessionId: SESSION_ID,
+      exerciseId: EXERCISE_ID,
+      answers: [{ questionId: Q1_ID, choice: "4" }],
+    });
+
+    const res = result as Record<string, unknown>;
+    // Score is still returned, but the per-question correction (correct answers /
+    // explanations) is withheld so the student can't memorise and re-pass blindly.
+    expect(res.scorePct).toBe(100);
+    expect(res.reviewHidden).toBe(true);
+    expect((res.review as unknown[]).length).toBe(0);
   });
 
   it("throws when rate limited", async () => {

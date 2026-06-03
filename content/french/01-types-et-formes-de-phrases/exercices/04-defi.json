@@ -1,0 +1,154 @@
+{
+  "title": "👑 Défi élite : types, formes et transformations",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Identifie le TYPE et TOUTES les formes de la phrase : « N'est-ce pas cette légende qui fut racontée par les anciens ? »",
+      "options": [
+        {
+          "id": "a",
+          "text": "Type déclaratif — formes : négative et passive"
+        },
+        {
+          "id": "b",
+          "text": "Type interrogatif — formes : négative, passive et emphatique"
+        },
+        {
+          "id": "c",
+          "text": "Type interrogatif — formes : négative et emphatique seulement"
+        },
+        {
+          "id": "d",
+          "text": "Type exclamatif — formes : passive et emphatique"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "La phrase se termine par « ? » et pose une question → type INTERROGATIF. Elle contient « ne… pas » → forme NÉGATIVE. Le verbe « fut racontée par les anciens » est au passif → forme PASSIVE. La structure « c'est… qui » (ici intégrée à l'interrogation) met un élément en relief → forme EMPHATIQUE. Les quatre caractéristiques coexistent.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Transforme à la voix PASSIVE en conservant le temps grammatical : « Les élèves lisaient attentivement le texte. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "Le texte est lu attentivement par les élèves."
+        },
+        {
+          "id": "b",
+          "text": "Le texte a été lu attentivement par les élèves."
+        },
+        {
+          "id": "c",
+          "text": "Le texte était lu attentivement par les élèves."
+        },
+        {
+          "id": "d",
+          "text": "Le texte sera lu attentivement par les élèves."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Le verbe actif est à l'IMPARFAIT (« lisaient »). Au passif, l'auxiliaire « être » doit rester à l'imparfait : « était lu ». Le COD « le texte » devient sujet et le participe passé s'accorde avec lui (masculin singulier → « lu »). Le complément d'agent « par les élèves » conserve l'agent original.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Mets le COMPLÉMENT D'OBJET DIRECT en relief : « La tempête a détruit le pont. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "C'est le pont que la tempête a détruit."
+        },
+        {
+          "id": "b",
+          "text": "C'est le pont qui a détruit la tempête."
+        },
+        {
+          "id": "c",
+          "text": "C'est la tempête qui a détruit le pont."
+        },
+        {
+          "id": "d",
+          "text": "Le pont a été détruit par la tempête."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Pour mettre un COD en relief, on emploie « C'est… QUE » (et non « qui »). Le pont est COD → « C'est le pont QUE la tempête a détruit. » L'option b est agrammaticale (inversion des rôles). L'option c met le SUJET en relief (c'est…qui). L'option d est une transformation au passif, pas une mise en relief emphatique.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Mets à la forme NÉGATIVE en utilisant la négation correspondant au sens exact : « Elle parle encore à quelqu'un. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "Elle ne parle pas encore à quelqu'un."
+        },
+        {
+          "id": "b",
+          "text": "Elle ne parle jamais à personne."
+        },
+        {
+          "id": "c",
+          "text": "Elle ne parle plus à quelqu'un."
+        },
+        {
+          "id": "d",
+          "text": "Elle ne parle plus à personne."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« encore » (continuité d'une action) s'oppose à « ne… plus » (cessation). « quelqu'un » (une personne) s'oppose à « ne… personne » (aucune personne). Il faut donc COMBINER les deux négations pour rendre fidèlement le sens contraire : « Elle ne parle PLUS à PERSONNE. » L'option a conserve « encore » et n'est pas pleinement négative. L'option b introduit « jamais » qui ne correspond pas à l'opposition de « encore ». L'option c oublie de nier « quelqu'un ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Laquelle de ces phrases est à la FORME IMPERSONNELLE ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Il est arrivé tard ce matin."
+        },
+        {
+          "id": "b",
+          "text": "Il faut travailler davantage pour réussir."
+        },
+        {
+          "id": "c",
+          "text": "Il ne sait pas répondre à la question."
+        },
+        {
+          "id": "d",
+          "text": "Il a dit la vérité à ses parents."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "La forme impersonnelle se reconnaît à un « il » SUJET APPARENT qui ne renvoie à aucune personne ou chose réelle — le vrai sujet est logique (infinitif ou proposition). « Il faut travailler » : « il » est sujet apparent, « travailler » est le vrai sujet logique. Options a, c et d : « il » désigne une personne réelle ou remplace un sujet identifiable — ces phrases sont à la forme personnelle.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Transforme à la voix PASSIVE (le complément d'agent doit être supprimé si la règle l'exige) : « On a réparé la route après la tempête. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "La route a été réparée après la tempête par on."
+        },
+        {
+          "id": "b",
+          "text": "La route fut réparée après la tempête."
+        },
+        {
+          "id": "c",
+          "text": "La route a été réparée après la tempête."
+        },
+        {
+          "id": "d",
+          "text": "La route est réparée après la tempête par on."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Quand le sujet actif est « ON », la transformation au passif SUPPRIME le complément d'agent (on ne dit pas « par on »). Le verbe actif est au PASSÉ COMPOSÉ (« a réparé ») → le passif se forme avec « avoir été » : « a été réparée ». Le participe passé s'accorde avec le nouveau sujet féminin singulier « la route » → « réparée ». Option b utilise le passé simple (changement de temps injustifié). Options a et d conservent « par on », ce qui est agrammatical.",
+      "difficulty": 3
+    }
+  ]
+}

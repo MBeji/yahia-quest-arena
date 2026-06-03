@@ -1,0 +1,154 @@
+{
+  "title": "👑 Elite Challenge: Mastering Reported Speech",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Direct: \"I lost my keys yesterday,\" Tom told Sarah. Which reported form is FULLY correct (tense, pronoun, and time word all shifted)?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Tom told Sarah that he had lost his keys the day before."
+        },
+        {
+          "id": "b",
+          "text": "Tom told Sarah that he lost his keys yesterday."
+        },
+        {
+          "id": "c",
+          "text": "Tom told Sarah that he had lost his keys yesterday."
+        },
+        {
+          "id": "d",
+          "text": "Tom told Sarah that he has lost his keys the day before."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Three shifts are required: (1) 'I' → 'he' (pronoun); (2) past simple 'lost' → past perfect 'had lost' (backshift); (3) 'yesterday' → 'the day before' (time-word shift). Option B misses all three. Option C backshifts the tense correctly but leaves 'yesterday' unchanged. Option D uses present perfect 'has lost' instead of past perfect 'had lost'.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Direct: \"What did you buy at the market?\" she asked him. Choose the correctly reported question:",
+      "options": [
+        {
+          "id": "a",
+          "text": "She asked him what did he buy at the market."
+        },
+        {
+          "id": "b",
+          "text": "She asked him what he bought at the market."
+        },
+        {
+          "id": "c",
+          "text": "She asked him what he had bought at the market."
+        },
+        {
+          "id": "d",
+          "text": "She asked him what had he bought at the market."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "In a reported wh-question: (1) normal subject-before-verb order replaces the inverted question form ('what he…', not 'what did he…'); (2) past simple 'did buy' backshifts to past perfect 'had bought'; (3) 'you' → 'he'. Option A keeps the auxiliary 'did' (wrong order). Option B uses past simple 'bought' with no backshift. Option D retains inversion ('had he') — incorrect in reported speech.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Direct: \"Don't tell anyone about this!\" she told him. Which reported command is correct?",
+      "options": [
+        {
+          "id": "a",
+          "text": "She told him don't tell anyone about that."
+        },
+        {
+          "id": "b",
+          "text": "She asked him not telling anyone about that."
+        },
+        {
+          "id": "c",
+          "text": "She said him not to tell anyone about this."
+        },
+        {
+          "id": "d",
+          "text": "She told him not to tell anyone about that."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Negative commands are reported with 'tell + person + not to + infinitive'. Option A wrongly keeps the imperative 'don't tell'. Option B incorrectly uses a gerund ('not telling') instead of 'not to + infinitive'. Option C uses 'said him' — 'say' never takes a direct personal object — and fails to shift 'this' to 'that'. Option D is fully correct: 'told him not to tell… about that'.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Direct: \"She may already know the answer,\" he said. Which sentence applies the correct modal backshift?",
+      "options": [
+        {
+          "id": "a",
+          "text": "He said she may already know the answer."
+        },
+        {
+          "id": "b",
+          "text": "He told she might already know the answer."
+        },
+        {
+          "id": "c",
+          "text": "He said she might already know the answer."
+        },
+        {
+          "id": "d",
+          "text": "He said she could already know the answer."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "'May' backshifts to 'might' when the reporting verb is in the past. Option A keeps 'may' with no backshift. Option B uses 'told' without a personal object — 'tell' always requires one (e.g. 'told us'). Option D substitutes 'could', which is the backshift of 'can', not 'may'. Option C correctly applies the 'may → might' backshift with 'said (that)'.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Direct: \"Have you ever been to Carthage?\" the teacher asked the students. Choose the correct reported question:",
+      "options": [
+        {
+          "id": "a",
+          "text": "The teacher asked the students if they have ever been to Carthage."
+        },
+        {
+          "id": "b",
+          "text": "The teacher asked the students whether had they ever been to Carthage."
+        },
+        {
+          "id": "c",
+          "text": "The teacher asked the students whether they had ever been to Carthage."
+        },
+        {
+          "id": "d",
+          "text": "The teacher asked the students if they were ever to Carthage."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "A yes/no question is reported with 'if' or 'whether'. Present perfect 'have been' backshifts to past perfect 'had been'. Normal word order (subject before verb) replaces inversion. Option A keeps present perfect 'have been' with no backshift. Option B retains auxiliary inversion ('had they') — wrong in reported speech. Option D wrongly replaces 'have been to' with 'were to', distorting the meaning entirely.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Direct: \"I will visit my grandmother next week,\" Ahmed said. Which is the ONLY fully correct reported sentence?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Ahmed said he will visit his grandmother next week."
+        },
+        {
+          "id": "b",
+          "text": "Ahmed told he would visit his grandmother the following week."
+        },
+        {
+          "id": "c",
+          "text": "Ahmed said he would visit his grandmother next week."
+        },
+        {
+          "id": "d",
+          "text": "Ahmed said he would visit his grandmother the following week."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Two shifts are required: (1) 'will' → 'would' (modal backshift); (2) 'next week' → 'the following week' (time-word shift). Option A applies neither shift. Option B correctly backshifts 'will → would' and shifts the time word, but uses 'told' without a personal object — always wrong. Option C backshifts 'will → would' correctly but leaves 'next week' unchanged. Only Option D applies both the modal backshift and the time-word shift correctly.",
+      "difficulty": 3
+    }
+  ]
+}

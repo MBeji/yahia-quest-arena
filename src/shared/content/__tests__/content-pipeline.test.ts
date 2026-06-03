@@ -105,6 +105,30 @@ describe("schema validation", () => {
     });
     expect(result.success).toBe(false);
   });
+
+  it("accepts a premium 'challenge' exercise at the elite difficulty tier", () => {
+    const result = exerciseSchema.safeParse({
+      title: "Défi élite",
+      difficulty: 4,
+      mode: "challenge",
+      xpReward: 300,
+      rewardCoins: 60,
+      displayOrder: 4,
+      questions: [
+        {
+          prompt: "p",
+          options: [
+            { id: "a", text: "1" },
+            { id: "b", text: "2" },
+          ],
+          correctOption: "a",
+          explanation: "e",
+          difficulty: 3,
+        },
+      ],
+    });
+    expect(result.success).toBe(true);
+  });
 });
 
 describe("deterministic ids", () => {
@@ -226,6 +250,11 @@ describe("buildMigrationSql", () => {
   it("emits the chapter comprehension quiz as a mode='quiz' exercise", () => {
     expect(sql).toContain(sqlString(exerciseId("math", "01-foo", "quiz")));
     expect(sql).toContain("'quiz'");
+  });
+
+  it("self-contains the exercises mode CHECK (incl. 'challenge') so it never blocks", () => {
+    expect(sql).toContain("exercises_mode_check");
+    expect(sql).toContain("CHECK (mode IN ('practice', 'boss', 'quiz', 'challenge'))");
   });
 
   it("serializes question options as jsonb", () => {

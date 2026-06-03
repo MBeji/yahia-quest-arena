@@ -5,6 +5,15 @@
 -- Source of truth: content/svt/
 -- =========================================================
 
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'exercises_mode_check') THEN
+    ALTER TABLE public.exercises DROP CONSTRAINT exercises_mode_check;
+  END IF;
+  ALTER TABLE public.exercises
+    ADD CONSTRAINT exercises_mode_check CHECK (mode IN ('practice', 'boss', 'quiz', 'challenge'));
+END $$;
+
 INSERT INTO public.subjects (id, name_fr, description, attribute, color_token, icon, display_order, content_language) VALUES
   ('svt', 'Sciences physiques', 'الضوء والكهرباء والكيمياء وفق برنامج العلوم الفيزيائية للسنة التاسعة أساسي', 'Observation', 'subject-svt', 'Atom', 4, 'ar')
 ON CONFLICT (id) DO UPDATE SET
@@ -26,11 +35,11 @@ BEGIN
       AND q.exercise_id = e.id
       AND e.subject_id = 'svt'
       AND e.source = 'admin'
-      AND q.id NOT IN ('52d8717b-1c43-560a-a90c-be89d2392f61', 'c0d3540e-6bcd-54fc-bd09-53bc66aa4804', 'ae8f4387-96f1-59a1-a6e6-7e2588de9711', '5690eecf-c76c-54a1-842a-fd503204f945', '426ed470-9a87-53ba-af50-0208d0da05df', '3520e9b6-2c60-5bdb-9452-faf19f751575', '81f6c3b2-6342-5561-927e-2e6ebed08499', 'a617b749-a476-50aa-9d77-27dcf968ea8a', '37d2536d-d2c7-5e45-abcb-8e00d8076e79', 'a8b17c3a-a10b-5ceb-9d4f-8110c42aaee3', 'f5fb35c5-5154-5d48-b3f7-7a390b017440', 'd88cfa81-9602-5207-baae-4cdb136464a2', '83fb403f-75d9-556c-b0a6-63498590cb6b', 'ae3a8765-e3bc-5de4-aad9-c042423ec09d', 'f94cd634-522e-5e75-b7d3-b3e59f27c9cc', '44e1f184-a612-5cdc-a9ba-8533a8834f1d', '69783a50-a7a5-5876-9b7f-29fce45939a8', 'e9b6e6d0-5a21-5a1e-82c4-0c31d41c49a1', '662aeb79-a0c0-5810-b904-6bcb1bb4489c', 'aa27adbe-7cfc-5d30-80b2-7bf20234858b', '6715516e-0d9b-5bd4-a40f-05576bca75fc', 'b08985be-aebe-5647-bc97-865457e42791', '44ddcd17-bb19-5228-ba8b-4211de3562b1', '5e56c005-d7b1-56c6-939c-b2c6cfdb7d38', 'afa792ec-5971-53a8-a4ca-10f21e3027d3', '8784db1c-4b9f-524a-a0e7-124a23220be1', 'da07a20a-588b-5a3f-8fd5-7530377d7fd5', '7b11338c-156d-51a0-8261-6e81584fe742', 'c5e3e513-f9d8-5784-92af-6817ddd63335', 'df25cbc2-c7e3-5ff2-9847-7b1d36b7ee43', '83068f98-093a-50c4-a79b-d309fd03c87a', '3f12af12-f050-52c2-a1db-8fad4a8decaa', 'c9ea1556-ee82-55db-8a40-d7be20088539', 'b9988cb9-26e9-527f-bbc6-edcb45251559', '2c42d55c-cdd9-55de-aa2e-42cf5814f6af', '2d726520-6cd0-5c8e-83fa-f1f921a5596f', 'c82436f1-08a1-59e7-b547-318b3f88c7e1', 'b7848d4b-3e45-523c-b1a3-503e8a557e2e', '5cef7a64-a500-54ae-ba70-57009499ed97', '58fc540e-f2c8-5ec7-8a5f-b7f4f3c5c2ab', '76664654-c161-5832-98f0-bc64f4e97610', 'c0c0bb99-7beb-5f79-86e3-ae6df1b48834', '22840768-e8e7-56f5-a5c5-2491212fc033', '674ae4f4-ad03-5554-823c-749fcbdef4ac', 'e5470327-b001-55f1-9629-5301f11c075f', '1b6f08de-dd25-5cd5-9f6b-46ad4c851bb5', 'b341e3ea-d1b3-5169-8076-a8dd68eb74e9', 'd1ec52c7-8aaa-5f80-a11f-b5b11e512e04', '3be8161b-761a-5a62-a43a-fb96a0c3efb5', 'a171368a-bd36-5525-b952-4b9ba55fefdc', 'be775c57-89b4-5695-9b51-88cba6a39523', '154942ef-f876-504d-9a3d-e5ac1aa4cdbd', '30dc7a1c-f5ae-5380-ad46-822772fecdb1', '261a37e4-5541-5c2c-9229-138fcb398c34', '953e4839-3ddd-5cab-9209-da4c6fd4f6ac', '4b30b1bc-02ad-5baa-9169-342bb966f50e', '737e9f0f-f2d2-5228-a098-d670ad9fc910', '78195190-fc1d-5564-a743-5b77fe7834cc', 'cc2b2eda-e8eb-5c01-ab28-c54e17bba99f', '382486af-141f-5d5b-ad27-0edf365442ff', '20eca5c0-7450-520f-98e6-70065fe31efc', 'f76b245f-3e8f-50ec-9a9d-8676fcce9aac', '472f2736-7a87-57ee-892a-3947d612b368', '00b35176-0c2a-569a-b53c-3fcba9c5f686', 'de7a8c8a-11ab-5845-a18b-ea09a25f0ebd', '26d1cfe6-94c3-5c57-aeec-d0c5388828e6', 'eb0a741b-59df-562f-8139-4e96e205790c', 'b01b9503-2b8d-557b-9f97-a1e65a8f73bd', 'c687b5ae-4a3f-5a77-8f52-feb83e25dda8', '73fd748f-4a38-57a5-9e17-b9c62963e4d3', '95f04cfb-fc30-5317-a00a-ad2938f3b265', 'b23d29b0-9449-51de-8291-a8a59fd70933', 'd421aa28-cfb5-54ae-b986-765a29301f0e', '1f6bacee-755c-5a84-97c4-6cfeb4a30a7d', '55175f89-37f1-5093-be10-635d8cf97a74', '192af321-7e53-5849-900d-cb4c1814f863', 'ea79b802-7f5c-5f15-99a8-70d5c96b57b7', '53586353-b2ea-5962-8d4e-863c37d7367c', '8a56a677-e9ad-5b29-a153-45ba0e93741f', '8d7d1022-2db4-58cf-8902-1b61fe4128ad', 'b46481cb-0b1f-5b2d-8a3d-a1d7bdc16b37', '5fc6de1c-ebe0-5e6e-8fe4-f25fe4e9a09c', '04ac5da9-6bb3-5134-a3a6-0d508cf804bf', '9e8aff14-50ea-5585-9d86-d673d817419c', '07cabb70-9805-5e1d-a27a-644d6106e340', '0f9d875f-e551-5d18-8c2d-f3729b2ebd37', 'a3d39a96-e07d-5833-858e-6043d1c12b0a', 'bd99b9e5-1333-5efa-8a25-355e3246d020', '98af36c6-103f-5681-b3de-b09cc452cce3', 'f2fdbf90-7703-597c-ab64-2f65be736da6', 'dc852d16-39cc-580a-94c7-c31d1e146368', 'cdb6fa80-3981-5d0c-bfe0-380f76481070', 'cf29f7c2-8e2e-5cca-8414-35e1ff94aa6c', 'f821d1c7-4eb5-56e7-ac5e-18bf8df9110b', '24380511-202c-5ce8-9260-3708c9d74d6e', '5331c75a-150d-534f-a688-7318cc0f95f1', '55e16890-ab5d-56d6-b33a-6048d53a5cdf', '6a308347-9fb2-5918-a818-9da7e2510b26', '34aa0eab-bfbb-5f40-9291-98b7e9242788', '78c2c95e-9eb1-522d-b0e2-57c3049564c1', '24284667-64ac-573b-8987-f68e74c448a4', '7b79c439-4e9e-58bd-a167-0ad9f220e008', '60e38c82-e263-5d1d-ada7-21006fdcd533', '9d5722ec-f19f-518d-88b1-b33051a3a937', '2a3c50bc-d7ee-5b80-af81-21f5c1a89d80', '9afc4975-4346-50d6-9565-fee46fd8703f', '4a4eb02a-172a-533f-b615-d23ca18df1ed', '03d3ffec-8982-54e8-af46-bdc34a74db49', 'ba4c35da-a412-5a63-b560-0ae9098103da', 'f135d69e-e440-5280-a33f-857bd03ac27c', '50b9583a-ed55-5045-8898-733dee8955c0', '0a82487d-cc54-5bcb-822d-c146d76f1434', '9db33979-7743-5936-b6c7-a3d6f94ceca9', 'e5d52986-ff3e-5025-a7b9-255341e0839e', 'd3c44940-7ad2-559e-965e-959fbc2e7375', '41266bf3-a20d-5622-ad0f-84d45d288549', 'c9173622-de37-5b06-bd5f-9c3201286a3e', '03d2fda0-9268-5fd0-8a40-9a8c78c5b489', '9972807a-49be-58b7-8a97-01dc9cb6dbbc', 'b149f757-11cd-5672-ba11-d76d0213d466', '81062ac7-2097-5411-9a9e-ad5d73afadf8', '9a0c155f-79a0-568b-9ae7-565ef9002d29', '88200d7c-d007-514e-9fff-98830902cd8b', '6415c31b-bea6-5a0b-8e7a-8189179ffeb4', 'a6e4f1ad-f2dd-55ef-8e05-a98c740e1f40', '70bf4cf9-af39-51ba-a21f-c63ed8494aa5', '52a0d161-eb83-5d7c-87b7-fb8dda4cd2ca', '34b745c3-3d21-5c6e-b777-7b198d981cf1', '19074ba1-dca3-523b-8070-2aea8451ec5a', '80515582-5b5b-55d7-accd-a0156424b884', '8fc16747-a960-50b3-9874-c793e3dd240b', '4c8c17b0-8f75-5e45-b749-2295628a70de', 'c747b840-1d28-51a2-b0b5-825fd5eeb525', '0c3edbd1-43d7-59a2-9731-68f282c315f7', '4c6d3e90-677a-5b28-8ff3-05873bda0227', '626562e0-0107-5931-a5c3-c85b50adcbaf');
+      AND q.id NOT IN ('52d8717b-1c43-560a-a90c-be89d2392f61', 'c0d3540e-6bcd-54fc-bd09-53bc66aa4804', 'ae8f4387-96f1-59a1-a6e6-7e2588de9711', '5690eecf-c76c-54a1-842a-fd503204f945', '426ed470-9a87-53ba-af50-0208d0da05df', '3520e9b6-2c60-5bdb-9452-faf19f751575', '81f6c3b2-6342-5561-927e-2e6ebed08499', 'a617b749-a476-50aa-9d77-27dcf968ea8a', '37d2536d-d2c7-5e45-abcb-8e00d8076e79', 'a8b17c3a-a10b-5ceb-9d4f-8110c42aaee3', 'f5fb35c5-5154-5d48-b3f7-7a390b017440', 'd88cfa81-9602-5207-baae-4cdb136464a2', '83fb403f-75d9-556c-b0a6-63498590cb6b', 'ae3a8765-e3bc-5de4-aad9-c042423ec09d', 'f94cd634-522e-5e75-b7d3-b3e59f27c9cc', '44e1f184-a612-5cdc-a9ba-8533a8834f1d', '69783a50-a7a5-5876-9b7f-29fce45939a8', 'd4c872e9-10c0-5310-8846-fc1e92dde187', '89dc0553-a455-598e-88cd-cf773a0b9335', '82fe6da8-ed9c-5418-a971-bacf9b77deb2', '58185bd7-ec37-5322-b802-227537d6316f', 'a0d5ab35-c9ac-5e52-87a2-6dd402dc5026', '625938b5-a17d-5fb8-a3cd-5891abeb3cd7', 'e9b6e6d0-5a21-5a1e-82c4-0c31d41c49a1', '662aeb79-a0c0-5810-b904-6bcb1bb4489c', 'aa27adbe-7cfc-5d30-80b2-7bf20234858b', '6715516e-0d9b-5bd4-a40f-05576bca75fc', 'b08985be-aebe-5647-bc97-865457e42791', '44ddcd17-bb19-5228-ba8b-4211de3562b1', '5e56c005-d7b1-56c6-939c-b2c6cfdb7d38', 'afa792ec-5971-53a8-a4ca-10f21e3027d3', '8784db1c-4b9f-524a-a0e7-124a23220be1', 'da07a20a-588b-5a3f-8fd5-7530377d7fd5', '7b11338c-156d-51a0-8261-6e81584fe742', 'c5e3e513-f9d8-5784-92af-6817ddd63335', 'df25cbc2-c7e3-5ff2-9847-7b1d36b7ee43', '83068f98-093a-50c4-a79b-d309fd03c87a', '3f12af12-f050-52c2-a1db-8fad4a8decaa', 'c9ea1556-ee82-55db-8a40-d7be20088539', 'b9988cb9-26e9-527f-bbc6-edcb45251559', 'c4bf55ac-d8ad-558b-98bb-ecb3ad61c8b3', '3bc9220a-2125-54eb-a2af-8c35cd392979', '9ffaa4d7-476c-5ba9-a6cd-5c815d1ecc30', '9bd27914-983c-56aa-985d-942d6ab0042e', '57895b66-95e6-591c-8fbb-83ac61367c85', '3eb88fb5-b9a8-53a8-8c86-811a9c549cf3', '2c42d55c-cdd9-55de-aa2e-42cf5814f6af', '2d726520-6cd0-5c8e-83fa-f1f921a5596f', 'c82436f1-08a1-59e7-b547-318b3f88c7e1', 'b7848d4b-3e45-523c-b1a3-503e8a557e2e', '5cef7a64-a500-54ae-ba70-57009499ed97', '58fc540e-f2c8-5ec7-8a5f-b7f4f3c5c2ab', '76664654-c161-5832-98f0-bc64f4e97610', 'c0c0bb99-7beb-5f79-86e3-ae6df1b48834', '22840768-e8e7-56f5-a5c5-2491212fc033', '674ae4f4-ad03-5554-823c-749fcbdef4ac', 'e5470327-b001-55f1-9629-5301f11c075f', '1b6f08de-dd25-5cd5-9f6b-46ad4c851bb5', 'b341e3ea-d1b3-5169-8076-a8dd68eb74e9', 'd1ec52c7-8aaa-5f80-a11f-b5b11e512e04', '3be8161b-761a-5a62-a43a-fb96a0c3efb5', 'a171368a-bd36-5525-b952-4b9ba55fefdc', 'be775c57-89b4-5695-9b51-88cba6a39523', '9fd7456a-c92b-5c07-bc03-a6986e8a1886', '2733dbac-7bc7-5c64-9d71-6ea1bae9c323', 'ed8e49c7-daf9-5508-8326-9a4be7f77ee8', '1cd5e041-9fb3-548a-a160-33be1fe1cc44', '4d33f1dd-210b-5f49-8084-b61282527631', '90ce3f75-0720-5d63-a989-38e912601c34', '154942ef-f876-504d-9a3d-e5ac1aa4cdbd', '30dc7a1c-f5ae-5380-ad46-822772fecdb1', '261a37e4-5541-5c2c-9229-138fcb398c34', '953e4839-3ddd-5cab-9209-da4c6fd4f6ac', '4b30b1bc-02ad-5baa-9169-342bb966f50e', '737e9f0f-f2d2-5228-a098-d670ad9fc910', '78195190-fc1d-5564-a743-5b77fe7834cc', 'cc2b2eda-e8eb-5c01-ab28-c54e17bba99f', '382486af-141f-5d5b-ad27-0edf365442ff', '20eca5c0-7450-520f-98e6-70065fe31efc', 'f76b245f-3e8f-50ec-9a9d-8676fcce9aac', '472f2736-7a87-57ee-892a-3947d612b368', '00b35176-0c2a-569a-b53c-3fcba9c5f686', 'de7a8c8a-11ab-5845-a18b-ea09a25f0ebd', '26d1cfe6-94c3-5c57-aeec-d0c5388828e6', 'eb0a741b-59df-562f-8139-4e96e205790c', 'b01b9503-2b8d-557b-9f97-a1e65a8f73bd', '977bb015-a61d-5b5c-af14-9354f58429e1', '84fe02d9-4990-512e-b26c-a6f5106df37c', '5f3e7d63-0619-5fb5-aecd-4d2cfbe4dd3b', 'e23617bb-3edb-5eb7-89c7-4c4e0952b8da', '82b1cf46-5000-5f4f-ae6c-93c219ebffbc', 'f2afcdd7-d0cc-5d2a-99d9-ad60815edb9b', 'c687b5ae-4a3f-5a77-8f52-feb83e25dda8', '73fd748f-4a38-57a5-9e17-b9c62963e4d3', '95f04cfb-fc30-5317-a00a-ad2938f3b265', 'b23d29b0-9449-51de-8291-a8a59fd70933', 'd421aa28-cfb5-54ae-b986-765a29301f0e', '1f6bacee-755c-5a84-97c4-6cfeb4a30a7d', '55175f89-37f1-5093-be10-635d8cf97a74', '192af321-7e53-5849-900d-cb4c1814f863', 'ea79b802-7f5c-5f15-99a8-70d5c96b57b7', '53586353-b2ea-5962-8d4e-863c37d7367c', '8a56a677-e9ad-5b29-a153-45ba0e93741f', '8d7d1022-2db4-58cf-8902-1b61fe4128ad', 'b46481cb-0b1f-5b2d-8a3d-a1d7bdc16b37', '5fc6de1c-ebe0-5e6e-8fe4-f25fe4e9a09c', '04ac5da9-6bb3-5134-a3a6-0d508cf804bf', '9e8aff14-50ea-5585-9d86-d673d817419c', '07cabb70-9805-5e1d-a27a-644d6106e340', '495be68d-4834-5372-84ba-5f0e01aed6f2', 'b0b34cca-abf0-5535-97dd-870b8e211708', '64130f94-d517-5ac1-a6e5-3ff96111a62e', '2c2bae8c-c0a1-5de5-9c6d-6d70f9bc9015', '9df0696f-c206-5ba6-8a23-55c1abcb8570', '8d4c3643-ad4d-5681-8e82-8830e7b634ae', '0f9d875f-e551-5d18-8c2d-f3729b2ebd37', 'a3d39a96-e07d-5833-858e-6043d1c12b0a', 'bd99b9e5-1333-5efa-8a25-355e3246d020', '98af36c6-103f-5681-b3de-b09cc452cce3', 'f2fdbf90-7703-597c-ab64-2f65be736da6', 'dc852d16-39cc-580a-94c7-c31d1e146368', 'cdb6fa80-3981-5d0c-bfe0-380f76481070', 'cf29f7c2-8e2e-5cca-8414-35e1ff94aa6c', 'f821d1c7-4eb5-56e7-ac5e-18bf8df9110b', '24380511-202c-5ce8-9260-3708c9d74d6e', '5331c75a-150d-534f-a688-7318cc0f95f1', '55e16890-ab5d-56d6-b33a-6048d53a5cdf', '6a308347-9fb2-5918-a818-9da7e2510b26', '34aa0eab-bfbb-5f40-9291-98b7e9242788', '78c2c95e-9eb1-522d-b0e2-57c3049564c1', '24284667-64ac-573b-8987-f68e74c448a4', '7b79c439-4e9e-58bd-a167-0ad9f220e008', 'd9f9db01-b9f9-5211-b97d-c0a832efa09b', 'a3c8aa9c-3115-53e1-8c12-de33a2780f2f', 'ab52928d-bbe1-5cf3-a91d-b71835e59609', '99bce7df-f787-50c3-a22f-72110cde2f63', '4deb73ba-1805-5c0e-a7d8-e2aa1051c32d', '2d082078-f220-544c-ab44-f209fc121b7d', '60e38c82-e263-5d1d-ada7-21006fdcd533', '9d5722ec-f19f-518d-88b1-b33051a3a937', '2a3c50bc-d7ee-5b80-af81-21f5c1a89d80', '9afc4975-4346-50d6-9565-fee46fd8703f', '4a4eb02a-172a-533f-b615-d23ca18df1ed', '03d3ffec-8982-54e8-af46-bdc34a74db49', 'ba4c35da-a412-5a63-b560-0ae9098103da', 'f135d69e-e440-5280-a33f-857bd03ac27c', '50b9583a-ed55-5045-8898-733dee8955c0', '0a82487d-cc54-5bcb-822d-c146d76f1434', '9db33979-7743-5936-b6c7-a3d6f94ceca9', 'e5d52986-ff3e-5025-a7b9-255341e0839e', 'd3c44940-7ad2-559e-965e-959fbc2e7375', '41266bf3-a20d-5622-ad0f-84d45d288549', 'c9173622-de37-5b06-bd5f-9c3201286a3e', '03d2fda0-9268-5fd0-8a40-9a8c78c5b489', '9972807a-49be-58b7-8a97-01dc9cb6dbbc', '4bdadd7a-88a2-5e0c-883c-fa2ad4fd6822', '3a8d9fcf-667e-5cdd-afb3-39bcc0461bf2', 'bab191f2-791e-53ba-b839-6ea99c135c53', '9c160614-5424-53cd-b74d-7fcb08bc01ee', 'c4d933cf-0723-5b04-9512-73b2a26bbfd3', 'aa3037c2-dc2e-5317-9d51-fdf5bfbe32e1', 'b149f757-11cd-5672-ba11-d76d0213d466', '81062ac7-2097-5411-9a9e-ad5d73afadf8', '9a0c155f-79a0-568b-9ae7-565ef9002d29', '88200d7c-d007-514e-9fff-98830902cd8b', '6415c31b-bea6-5a0b-8e7a-8189179ffeb4', 'a6e4f1ad-f2dd-55ef-8e05-a98c740e1f40', '70bf4cf9-af39-51ba-a21f-c63ed8494aa5', '52a0d161-eb83-5d7c-87b7-fb8dda4cd2ca', '34b745c3-3d21-5c6e-b777-7b198d981cf1', '19074ba1-dca3-523b-8070-2aea8451ec5a', '80515582-5b5b-55d7-accd-a0156424b884', '8fc16747-a960-50b3-9874-c793e3dd240b', '4c8c17b0-8f75-5e45-b749-2295628a70de', 'c747b840-1d28-51a2-b0b5-825fd5eeb525', '0c3edbd1-43d7-59a2-9731-68f282c315f7', '4c6d3e90-677a-5b28-8ff3-05873bda0227', '626562e0-0107-5931-a5c3-c85b50adcbaf', 'f37e29c9-292d-58b5-a04d-2e6386464398', 'a7548201-d6f4-5fd4-b61c-360ce1e05647', '81d34d62-3d42-5010-97d3-6c61b81427ce', '910ea47f-22cc-514c-94e8-7da36bd5e32c', '517b0fbc-7cc7-5a38-820b-66c3497d5a78', '4a873fee-4f00-5acc-bd13-ef42c1338312');
   END IF;
 END $$;
-DELETE FROM public.exercises WHERE subject_id = 'svt' AND source = 'admin' AND id NOT IN ('2847ee40-bab5-593a-afce-c051410adabf', '2c90abf4-246f-5ca7-bce2-e8a553e79052', '738049b5-6688-53ba-8f47-c5fea00f2b0b', 'f781672c-d268-5690-a4e7-2a92916e8abb', '71b0fee4-b5db-52e4-8e51-14426ab378c6', 'a18d4cb2-cdcc-506c-86e8-d099fa6d96e1', '1da0695e-2e04-56bd-9f84-120f0b841b71', 'd08d38a1-4e65-593c-97ac-fc646167bd6f', 'cfe8e5ad-8d29-5084-9e65-d6fb15aae2aa', 'cba20902-9fc8-56e2-af36-015bf8f16761', '9b865bc8-65e0-5dea-a117-9c1c5ce40bf4', 'f431df6e-67d9-56e3-91f5-590546de1fca', '887a72dd-e999-5b85-85b3-611050765028', '07576f0b-3c33-598e-80e6-79b3ce4364ab', '107c0650-6e11-5652-b548-d850f77b6e0a', '76c65ba5-f79a-52a8-b7c0-2a9f2910bb70', '24df4d84-60f7-5d08-804d-2b85bc32228b', 'e5ca2d8d-4123-5574-90f6-a5c907c89481', '3b556dba-b4f8-5797-8b33-0bc24deb47b2', '9795d4ab-4ba5-58f5-bbb7-a2d8a35ab255', '7d98ea97-fb08-5cf9-874c-b1c7d35858a7', '4f7081aa-19ca-51d2-89bf-53c0df39a751', 'fe9e08f4-5a19-593f-adfc-78f5531c63b1', '312fd190-acd6-519d-b510-a59663bf790c');
-DELETE FROM public.questions WHERE exercise_id IN ('2847ee40-bab5-593a-afce-c051410adabf', '2c90abf4-246f-5ca7-bce2-e8a553e79052', '738049b5-6688-53ba-8f47-c5fea00f2b0b', 'f781672c-d268-5690-a4e7-2a92916e8abb', '71b0fee4-b5db-52e4-8e51-14426ab378c6', 'a18d4cb2-cdcc-506c-86e8-d099fa6d96e1', '1da0695e-2e04-56bd-9f84-120f0b841b71', 'd08d38a1-4e65-593c-97ac-fc646167bd6f', 'cfe8e5ad-8d29-5084-9e65-d6fb15aae2aa', 'cba20902-9fc8-56e2-af36-015bf8f16761', '9b865bc8-65e0-5dea-a117-9c1c5ce40bf4', 'f431df6e-67d9-56e3-91f5-590546de1fca', '887a72dd-e999-5b85-85b3-611050765028', '07576f0b-3c33-598e-80e6-79b3ce4364ab', '107c0650-6e11-5652-b548-d850f77b6e0a', '76c65ba5-f79a-52a8-b7c0-2a9f2910bb70', '24df4d84-60f7-5d08-804d-2b85bc32228b', 'e5ca2d8d-4123-5574-90f6-a5c907c89481', '3b556dba-b4f8-5797-8b33-0bc24deb47b2', '9795d4ab-4ba5-58f5-bbb7-a2d8a35ab255', '7d98ea97-fb08-5cf9-874c-b1c7d35858a7', '4f7081aa-19ca-51d2-89bf-53c0df39a751', 'fe9e08f4-5a19-593f-adfc-78f5531c63b1', '312fd190-acd6-519d-b510-a59663bf790c') AND id NOT IN ('52d8717b-1c43-560a-a90c-be89d2392f61', 'c0d3540e-6bcd-54fc-bd09-53bc66aa4804', 'ae8f4387-96f1-59a1-a6e6-7e2588de9711', '5690eecf-c76c-54a1-842a-fd503204f945', '426ed470-9a87-53ba-af50-0208d0da05df', '3520e9b6-2c60-5bdb-9452-faf19f751575', '81f6c3b2-6342-5561-927e-2e6ebed08499', 'a617b749-a476-50aa-9d77-27dcf968ea8a', '37d2536d-d2c7-5e45-abcb-8e00d8076e79', 'a8b17c3a-a10b-5ceb-9d4f-8110c42aaee3', 'f5fb35c5-5154-5d48-b3f7-7a390b017440', 'd88cfa81-9602-5207-baae-4cdb136464a2', '83fb403f-75d9-556c-b0a6-63498590cb6b', 'ae3a8765-e3bc-5de4-aad9-c042423ec09d', 'f94cd634-522e-5e75-b7d3-b3e59f27c9cc', '44e1f184-a612-5cdc-a9ba-8533a8834f1d', '69783a50-a7a5-5876-9b7f-29fce45939a8', 'e9b6e6d0-5a21-5a1e-82c4-0c31d41c49a1', '662aeb79-a0c0-5810-b904-6bcb1bb4489c', 'aa27adbe-7cfc-5d30-80b2-7bf20234858b', '6715516e-0d9b-5bd4-a40f-05576bca75fc', 'b08985be-aebe-5647-bc97-865457e42791', '44ddcd17-bb19-5228-ba8b-4211de3562b1', '5e56c005-d7b1-56c6-939c-b2c6cfdb7d38', 'afa792ec-5971-53a8-a4ca-10f21e3027d3', '8784db1c-4b9f-524a-a0e7-124a23220be1', 'da07a20a-588b-5a3f-8fd5-7530377d7fd5', '7b11338c-156d-51a0-8261-6e81584fe742', 'c5e3e513-f9d8-5784-92af-6817ddd63335', 'df25cbc2-c7e3-5ff2-9847-7b1d36b7ee43', '83068f98-093a-50c4-a79b-d309fd03c87a', '3f12af12-f050-52c2-a1db-8fad4a8decaa', 'c9ea1556-ee82-55db-8a40-d7be20088539', 'b9988cb9-26e9-527f-bbc6-edcb45251559', '2c42d55c-cdd9-55de-aa2e-42cf5814f6af', '2d726520-6cd0-5c8e-83fa-f1f921a5596f', 'c82436f1-08a1-59e7-b547-318b3f88c7e1', 'b7848d4b-3e45-523c-b1a3-503e8a557e2e', '5cef7a64-a500-54ae-ba70-57009499ed97', '58fc540e-f2c8-5ec7-8a5f-b7f4f3c5c2ab', '76664654-c161-5832-98f0-bc64f4e97610', 'c0c0bb99-7beb-5f79-86e3-ae6df1b48834', '22840768-e8e7-56f5-a5c5-2491212fc033', '674ae4f4-ad03-5554-823c-749fcbdef4ac', 'e5470327-b001-55f1-9629-5301f11c075f', '1b6f08de-dd25-5cd5-9f6b-46ad4c851bb5', 'b341e3ea-d1b3-5169-8076-a8dd68eb74e9', 'd1ec52c7-8aaa-5f80-a11f-b5b11e512e04', '3be8161b-761a-5a62-a43a-fb96a0c3efb5', 'a171368a-bd36-5525-b952-4b9ba55fefdc', 'be775c57-89b4-5695-9b51-88cba6a39523', '154942ef-f876-504d-9a3d-e5ac1aa4cdbd', '30dc7a1c-f5ae-5380-ad46-822772fecdb1', '261a37e4-5541-5c2c-9229-138fcb398c34', '953e4839-3ddd-5cab-9209-da4c6fd4f6ac', '4b30b1bc-02ad-5baa-9169-342bb966f50e', '737e9f0f-f2d2-5228-a098-d670ad9fc910', '78195190-fc1d-5564-a743-5b77fe7834cc', 'cc2b2eda-e8eb-5c01-ab28-c54e17bba99f', '382486af-141f-5d5b-ad27-0edf365442ff', '20eca5c0-7450-520f-98e6-70065fe31efc', 'f76b245f-3e8f-50ec-9a9d-8676fcce9aac', '472f2736-7a87-57ee-892a-3947d612b368', '00b35176-0c2a-569a-b53c-3fcba9c5f686', 'de7a8c8a-11ab-5845-a18b-ea09a25f0ebd', '26d1cfe6-94c3-5c57-aeec-d0c5388828e6', 'eb0a741b-59df-562f-8139-4e96e205790c', 'b01b9503-2b8d-557b-9f97-a1e65a8f73bd', 'c687b5ae-4a3f-5a77-8f52-feb83e25dda8', '73fd748f-4a38-57a5-9e17-b9c62963e4d3', '95f04cfb-fc30-5317-a00a-ad2938f3b265', 'b23d29b0-9449-51de-8291-a8a59fd70933', 'd421aa28-cfb5-54ae-b986-765a29301f0e', '1f6bacee-755c-5a84-97c4-6cfeb4a30a7d', '55175f89-37f1-5093-be10-635d8cf97a74', '192af321-7e53-5849-900d-cb4c1814f863', 'ea79b802-7f5c-5f15-99a8-70d5c96b57b7', '53586353-b2ea-5962-8d4e-863c37d7367c', '8a56a677-e9ad-5b29-a153-45ba0e93741f', '8d7d1022-2db4-58cf-8902-1b61fe4128ad', 'b46481cb-0b1f-5b2d-8a3d-a1d7bdc16b37', '5fc6de1c-ebe0-5e6e-8fe4-f25fe4e9a09c', '04ac5da9-6bb3-5134-a3a6-0d508cf804bf', '9e8aff14-50ea-5585-9d86-d673d817419c', '07cabb70-9805-5e1d-a27a-644d6106e340', '0f9d875f-e551-5d18-8c2d-f3729b2ebd37', 'a3d39a96-e07d-5833-858e-6043d1c12b0a', 'bd99b9e5-1333-5efa-8a25-355e3246d020', '98af36c6-103f-5681-b3de-b09cc452cce3', 'f2fdbf90-7703-597c-ab64-2f65be736da6', 'dc852d16-39cc-580a-94c7-c31d1e146368', 'cdb6fa80-3981-5d0c-bfe0-380f76481070', 'cf29f7c2-8e2e-5cca-8414-35e1ff94aa6c', 'f821d1c7-4eb5-56e7-ac5e-18bf8df9110b', '24380511-202c-5ce8-9260-3708c9d74d6e', '5331c75a-150d-534f-a688-7318cc0f95f1', '55e16890-ab5d-56d6-b33a-6048d53a5cdf', '6a308347-9fb2-5918-a818-9da7e2510b26', '34aa0eab-bfbb-5f40-9291-98b7e9242788', '78c2c95e-9eb1-522d-b0e2-57c3049564c1', '24284667-64ac-573b-8987-f68e74c448a4', '7b79c439-4e9e-58bd-a167-0ad9f220e008', '60e38c82-e263-5d1d-ada7-21006fdcd533', '9d5722ec-f19f-518d-88b1-b33051a3a937', '2a3c50bc-d7ee-5b80-af81-21f5c1a89d80', '9afc4975-4346-50d6-9565-fee46fd8703f', '4a4eb02a-172a-533f-b615-d23ca18df1ed', '03d3ffec-8982-54e8-af46-bdc34a74db49', 'ba4c35da-a412-5a63-b560-0ae9098103da', 'f135d69e-e440-5280-a33f-857bd03ac27c', '50b9583a-ed55-5045-8898-733dee8955c0', '0a82487d-cc54-5bcb-822d-c146d76f1434', '9db33979-7743-5936-b6c7-a3d6f94ceca9', 'e5d52986-ff3e-5025-a7b9-255341e0839e', 'd3c44940-7ad2-559e-965e-959fbc2e7375', '41266bf3-a20d-5622-ad0f-84d45d288549', 'c9173622-de37-5b06-bd5f-9c3201286a3e', '03d2fda0-9268-5fd0-8a40-9a8c78c5b489', '9972807a-49be-58b7-8a97-01dc9cb6dbbc', 'b149f757-11cd-5672-ba11-d76d0213d466', '81062ac7-2097-5411-9a9e-ad5d73afadf8', '9a0c155f-79a0-568b-9ae7-565ef9002d29', '88200d7c-d007-514e-9fff-98830902cd8b', '6415c31b-bea6-5a0b-8e7a-8189179ffeb4', 'a6e4f1ad-f2dd-55ef-8e05-a98c740e1f40', '70bf4cf9-af39-51ba-a21f-c63ed8494aa5', '52a0d161-eb83-5d7c-87b7-fb8dda4cd2ca', '34b745c3-3d21-5c6e-b777-7b198d981cf1', '19074ba1-dca3-523b-8070-2aea8451ec5a', '80515582-5b5b-55d7-accd-a0156424b884', '8fc16747-a960-50b3-9874-c793e3dd240b', '4c8c17b0-8f75-5e45-b749-2295628a70de', 'c747b840-1d28-51a2-b0b5-825fd5eeb525', '0c3edbd1-43d7-59a2-9731-68f282c315f7', '4c6d3e90-677a-5b28-8ff3-05873bda0227', '626562e0-0107-5931-a5c3-c85b50adcbaf');
+DELETE FROM public.exercises WHERE subject_id = 'svt' AND source = 'admin' AND id NOT IN ('2847ee40-bab5-593a-afce-c051410adabf', '2c90abf4-246f-5ca7-bce2-e8a553e79052', '738049b5-6688-53ba-8f47-c5fea00f2b0b', '4fede007-3f76-5965-8266-8a440e4b6471', 'f781672c-d268-5690-a4e7-2a92916e8abb', '71b0fee4-b5db-52e4-8e51-14426ab378c6', 'a18d4cb2-cdcc-506c-86e8-d099fa6d96e1', '802a58c4-205d-5404-88cb-873dc6024953', '1da0695e-2e04-56bd-9f84-120f0b841b71', 'd08d38a1-4e65-593c-97ac-fc646167bd6f', 'cfe8e5ad-8d29-5084-9e65-d6fb15aae2aa', '709168e8-4fa2-5d35-8b5f-b75d803c0dcd', 'cba20902-9fc8-56e2-af36-015bf8f16761', '9b865bc8-65e0-5dea-a117-9c1c5ce40bf4', 'f431df6e-67d9-56e3-91f5-590546de1fca', '38e8abd0-d72c-5095-882b-8b6512d67fb5', '887a72dd-e999-5b85-85b3-611050765028', '07576f0b-3c33-598e-80e6-79b3ce4364ab', '107c0650-6e11-5652-b548-d850f77b6e0a', '87e67be9-2681-5b4d-8f70-8e8eb0440fb8', '76c65ba5-f79a-52a8-b7c0-2a9f2910bb70', '24df4d84-60f7-5d08-804d-2b85bc32228b', 'e5ca2d8d-4123-5574-90f6-a5c907c89481', 'f249cb4e-cdff-50e2-a513-32d8bea7249d', '3b556dba-b4f8-5797-8b33-0bc24deb47b2', '9795d4ab-4ba5-58f5-bbb7-a2d8a35ab255', '7d98ea97-fb08-5cf9-874c-b1c7d35858a7', '0521d418-e9d4-5282-a308-5f99ca91a898', '4f7081aa-19ca-51d2-89bf-53c0df39a751', 'fe9e08f4-5a19-593f-adfc-78f5531c63b1', '312fd190-acd6-519d-b510-a59663bf790c', '7bb658da-1eb2-5396-855b-6691df866a7e');
+DELETE FROM public.questions WHERE exercise_id IN ('2847ee40-bab5-593a-afce-c051410adabf', '2c90abf4-246f-5ca7-bce2-e8a553e79052', '738049b5-6688-53ba-8f47-c5fea00f2b0b', '4fede007-3f76-5965-8266-8a440e4b6471', 'f781672c-d268-5690-a4e7-2a92916e8abb', '71b0fee4-b5db-52e4-8e51-14426ab378c6', 'a18d4cb2-cdcc-506c-86e8-d099fa6d96e1', '802a58c4-205d-5404-88cb-873dc6024953', '1da0695e-2e04-56bd-9f84-120f0b841b71', 'd08d38a1-4e65-593c-97ac-fc646167bd6f', 'cfe8e5ad-8d29-5084-9e65-d6fb15aae2aa', '709168e8-4fa2-5d35-8b5f-b75d803c0dcd', 'cba20902-9fc8-56e2-af36-015bf8f16761', '9b865bc8-65e0-5dea-a117-9c1c5ce40bf4', 'f431df6e-67d9-56e3-91f5-590546de1fca', '38e8abd0-d72c-5095-882b-8b6512d67fb5', '887a72dd-e999-5b85-85b3-611050765028', '07576f0b-3c33-598e-80e6-79b3ce4364ab', '107c0650-6e11-5652-b548-d850f77b6e0a', '87e67be9-2681-5b4d-8f70-8e8eb0440fb8', '76c65ba5-f79a-52a8-b7c0-2a9f2910bb70', '24df4d84-60f7-5d08-804d-2b85bc32228b', 'e5ca2d8d-4123-5574-90f6-a5c907c89481', 'f249cb4e-cdff-50e2-a513-32d8bea7249d', '3b556dba-b4f8-5797-8b33-0bc24deb47b2', '9795d4ab-4ba5-58f5-bbb7-a2d8a35ab255', '7d98ea97-fb08-5cf9-874c-b1c7d35858a7', '0521d418-e9d4-5282-a308-5f99ca91a898', '4f7081aa-19ca-51d2-89bf-53c0df39a751', 'fe9e08f4-5a19-593f-adfc-78f5531c63b1', '312fd190-acd6-519d-b510-a59663bf790c', '7bb658da-1eb2-5396-855b-6691df866a7e') AND id NOT IN ('52d8717b-1c43-560a-a90c-be89d2392f61', 'c0d3540e-6bcd-54fc-bd09-53bc66aa4804', 'ae8f4387-96f1-59a1-a6e6-7e2588de9711', '5690eecf-c76c-54a1-842a-fd503204f945', '426ed470-9a87-53ba-af50-0208d0da05df', '3520e9b6-2c60-5bdb-9452-faf19f751575', '81f6c3b2-6342-5561-927e-2e6ebed08499', 'a617b749-a476-50aa-9d77-27dcf968ea8a', '37d2536d-d2c7-5e45-abcb-8e00d8076e79', 'a8b17c3a-a10b-5ceb-9d4f-8110c42aaee3', 'f5fb35c5-5154-5d48-b3f7-7a390b017440', 'd88cfa81-9602-5207-baae-4cdb136464a2', '83fb403f-75d9-556c-b0a6-63498590cb6b', 'ae3a8765-e3bc-5de4-aad9-c042423ec09d', 'f94cd634-522e-5e75-b7d3-b3e59f27c9cc', '44e1f184-a612-5cdc-a9ba-8533a8834f1d', '69783a50-a7a5-5876-9b7f-29fce45939a8', 'd4c872e9-10c0-5310-8846-fc1e92dde187', '89dc0553-a455-598e-88cd-cf773a0b9335', '82fe6da8-ed9c-5418-a971-bacf9b77deb2', '58185bd7-ec37-5322-b802-227537d6316f', 'a0d5ab35-c9ac-5e52-87a2-6dd402dc5026', '625938b5-a17d-5fb8-a3cd-5891abeb3cd7', 'e9b6e6d0-5a21-5a1e-82c4-0c31d41c49a1', '662aeb79-a0c0-5810-b904-6bcb1bb4489c', 'aa27adbe-7cfc-5d30-80b2-7bf20234858b', '6715516e-0d9b-5bd4-a40f-05576bca75fc', 'b08985be-aebe-5647-bc97-865457e42791', '44ddcd17-bb19-5228-ba8b-4211de3562b1', '5e56c005-d7b1-56c6-939c-b2c6cfdb7d38', 'afa792ec-5971-53a8-a4ca-10f21e3027d3', '8784db1c-4b9f-524a-a0e7-124a23220be1', 'da07a20a-588b-5a3f-8fd5-7530377d7fd5', '7b11338c-156d-51a0-8261-6e81584fe742', 'c5e3e513-f9d8-5784-92af-6817ddd63335', 'df25cbc2-c7e3-5ff2-9847-7b1d36b7ee43', '83068f98-093a-50c4-a79b-d309fd03c87a', '3f12af12-f050-52c2-a1db-8fad4a8decaa', 'c9ea1556-ee82-55db-8a40-d7be20088539', 'b9988cb9-26e9-527f-bbc6-edcb45251559', 'c4bf55ac-d8ad-558b-98bb-ecb3ad61c8b3', '3bc9220a-2125-54eb-a2af-8c35cd392979', '9ffaa4d7-476c-5ba9-a6cd-5c815d1ecc30', '9bd27914-983c-56aa-985d-942d6ab0042e', '57895b66-95e6-591c-8fbb-83ac61367c85', '3eb88fb5-b9a8-53a8-8c86-811a9c549cf3', '2c42d55c-cdd9-55de-aa2e-42cf5814f6af', '2d726520-6cd0-5c8e-83fa-f1f921a5596f', 'c82436f1-08a1-59e7-b547-318b3f88c7e1', 'b7848d4b-3e45-523c-b1a3-503e8a557e2e', '5cef7a64-a500-54ae-ba70-57009499ed97', '58fc540e-f2c8-5ec7-8a5f-b7f4f3c5c2ab', '76664654-c161-5832-98f0-bc64f4e97610', 'c0c0bb99-7beb-5f79-86e3-ae6df1b48834', '22840768-e8e7-56f5-a5c5-2491212fc033', '674ae4f4-ad03-5554-823c-749fcbdef4ac', 'e5470327-b001-55f1-9629-5301f11c075f', '1b6f08de-dd25-5cd5-9f6b-46ad4c851bb5', 'b341e3ea-d1b3-5169-8076-a8dd68eb74e9', 'd1ec52c7-8aaa-5f80-a11f-b5b11e512e04', '3be8161b-761a-5a62-a43a-fb96a0c3efb5', 'a171368a-bd36-5525-b952-4b9ba55fefdc', 'be775c57-89b4-5695-9b51-88cba6a39523', '9fd7456a-c92b-5c07-bc03-a6986e8a1886', '2733dbac-7bc7-5c64-9d71-6ea1bae9c323', 'ed8e49c7-daf9-5508-8326-9a4be7f77ee8', '1cd5e041-9fb3-548a-a160-33be1fe1cc44', '4d33f1dd-210b-5f49-8084-b61282527631', '90ce3f75-0720-5d63-a989-38e912601c34', '154942ef-f876-504d-9a3d-e5ac1aa4cdbd', '30dc7a1c-f5ae-5380-ad46-822772fecdb1', '261a37e4-5541-5c2c-9229-138fcb398c34', '953e4839-3ddd-5cab-9209-da4c6fd4f6ac', '4b30b1bc-02ad-5baa-9169-342bb966f50e', '737e9f0f-f2d2-5228-a098-d670ad9fc910', '78195190-fc1d-5564-a743-5b77fe7834cc', 'cc2b2eda-e8eb-5c01-ab28-c54e17bba99f', '382486af-141f-5d5b-ad27-0edf365442ff', '20eca5c0-7450-520f-98e6-70065fe31efc', 'f76b245f-3e8f-50ec-9a9d-8676fcce9aac', '472f2736-7a87-57ee-892a-3947d612b368', '00b35176-0c2a-569a-b53c-3fcba9c5f686', 'de7a8c8a-11ab-5845-a18b-ea09a25f0ebd', '26d1cfe6-94c3-5c57-aeec-d0c5388828e6', 'eb0a741b-59df-562f-8139-4e96e205790c', 'b01b9503-2b8d-557b-9f97-a1e65a8f73bd', '977bb015-a61d-5b5c-af14-9354f58429e1', '84fe02d9-4990-512e-b26c-a6f5106df37c', '5f3e7d63-0619-5fb5-aecd-4d2cfbe4dd3b', 'e23617bb-3edb-5eb7-89c7-4c4e0952b8da', '82b1cf46-5000-5f4f-ae6c-93c219ebffbc', 'f2afcdd7-d0cc-5d2a-99d9-ad60815edb9b', 'c687b5ae-4a3f-5a77-8f52-feb83e25dda8', '73fd748f-4a38-57a5-9e17-b9c62963e4d3', '95f04cfb-fc30-5317-a00a-ad2938f3b265', 'b23d29b0-9449-51de-8291-a8a59fd70933', 'd421aa28-cfb5-54ae-b986-765a29301f0e', '1f6bacee-755c-5a84-97c4-6cfeb4a30a7d', '55175f89-37f1-5093-be10-635d8cf97a74', '192af321-7e53-5849-900d-cb4c1814f863', 'ea79b802-7f5c-5f15-99a8-70d5c96b57b7', '53586353-b2ea-5962-8d4e-863c37d7367c', '8a56a677-e9ad-5b29-a153-45ba0e93741f', '8d7d1022-2db4-58cf-8902-1b61fe4128ad', 'b46481cb-0b1f-5b2d-8a3d-a1d7bdc16b37', '5fc6de1c-ebe0-5e6e-8fe4-f25fe4e9a09c', '04ac5da9-6bb3-5134-a3a6-0d508cf804bf', '9e8aff14-50ea-5585-9d86-d673d817419c', '07cabb70-9805-5e1d-a27a-644d6106e340', '495be68d-4834-5372-84ba-5f0e01aed6f2', 'b0b34cca-abf0-5535-97dd-870b8e211708', '64130f94-d517-5ac1-a6e5-3ff96111a62e', '2c2bae8c-c0a1-5de5-9c6d-6d70f9bc9015', '9df0696f-c206-5ba6-8a23-55c1abcb8570', '8d4c3643-ad4d-5681-8e82-8830e7b634ae', '0f9d875f-e551-5d18-8c2d-f3729b2ebd37', 'a3d39a96-e07d-5833-858e-6043d1c12b0a', 'bd99b9e5-1333-5efa-8a25-355e3246d020', '98af36c6-103f-5681-b3de-b09cc452cce3', 'f2fdbf90-7703-597c-ab64-2f65be736da6', 'dc852d16-39cc-580a-94c7-c31d1e146368', 'cdb6fa80-3981-5d0c-bfe0-380f76481070', 'cf29f7c2-8e2e-5cca-8414-35e1ff94aa6c', 'f821d1c7-4eb5-56e7-ac5e-18bf8df9110b', '24380511-202c-5ce8-9260-3708c9d74d6e', '5331c75a-150d-534f-a688-7318cc0f95f1', '55e16890-ab5d-56d6-b33a-6048d53a5cdf', '6a308347-9fb2-5918-a818-9da7e2510b26', '34aa0eab-bfbb-5f40-9291-98b7e9242788', '78c2c95e-9eb1-522d-b0e2-57c3049564c1', '24284667-64ac-573b-8987-f68e74c448a4', '7b79c439-4e9e-58bd-a167-0ad9f220e008', 'd9f9db01-b9f9-5211-b97d-c0a832efa09b', 'a3c8aa9c-3115-53e1-8c12-de33a2780f2f', 'ab52928d-bbe1-5cf3-a91d-b71835e59609', '99bce7df-f787-50c3-a22f-72110cde2f63', '4deb73ba-1805-5c0e-a7d8-e2aa1051c32d', '2d082078-f220-544c-ab44-f209fc121b7d', '60e38c82-e263-5d1d-ada7-21006fdcd533', '9d5722ec-f19f-518d-88b1-b33051a3a937', '2a3c50bc-d7ee-5b80-af81-21f5c1a89d80', '9afc4975-4346-50d6-9565-fee46fd8703f', '4a4eb02a-172a-533f-b615-d23ca18df1ed', '03d3ffec-8982-54e8-af46-bdc34a74db49', 'ba4c35da-a412-5a63-b560-0ae9098103da', 'f135d69e-e440-5280-a33f-857bd03ac27c', '50b9583a-ed55-5045-8898-733dee8955c0', '0a82487d-cc54-5bcb-822d-c146d76f1434', '9db33979-7743-5936-b6c7-a3d6f94ceca9', 'e5d52986-ff3e-5025-a7b9-255341e0839e', 'd3c44940-7ad2-559e-965e-959fbc2e7375', '41266bf3-a20d-5622-ad0f-84d45d288549', 'c9173622-de37-5b06-bd5f-9c3201286a3e', '03d2fda0-9268-5fd0-8a40-9a8c78c5b489', '9972807a-49be-58b7-8a97-01dc9cb6dbbc', '4bdadd7a-88a2-5e0c-883c-fa2ad4fd6822', '3a8d9fcf-667e-5cdd-afb3-39bcc0461bf2', 'bab191f2-791e-53ba-b839-6ea99c135c53', '9c160614-5424-53cd-b74d-7fcb08bc01ee', 'c4d933cf-0723-5b04-9512-73b2a26bbfd3', 'aa3037c2-dc2e-5317-9d51-fdf5bfbe32e1', 'b149f757-11cd-5672-ba11-d76d0213d466', '81062ac7-2097-5411-9a9e-ad5d73afadf8', '9a0c155f-79a0-568b-9ae7-565ef9002d29', '88200d7c-d007-514e-9fff-98830902cd8b', '6415c31b-bea6-5a0b-8e7a-8189179ffeb4', 'a6e4f1ad-f2dd-55ef-8e05-a98c740e1f40', '70bf4cf9-af39-51ba-a21f-c63ed8494aa5', '52a0d161-eb83-5d7c-87b7-fb8dda4cd2ca', '34b745c3-3d21-5c6e-b777-7b198d981cf1', '19074ba1-dca3-523b-8070-2aea8451ec5a', '80515582-5b5b-55d7-accd-a0156424b884', '8fc16747-a960-50b3-9874-c793e3dd240b', '4c8c17b0-8f75-5e45-b749-2295628a70de', 'c747b840-1d28-51a2-b0b5-825fd5eeb525', '0c3edbd1-43d7-59a2-9731-68f282c315f7', '4c6d3e90-677a-5b28-8ff3-05873bda0227', '626562e0-0107-5931-a5c3-c85b50adcbaf', 'f37e29c9-292d-58b5-a04d-2e6386464398', 'a7548201-d6f4-5fd4-b61c-360ce1e05647', '81d34d62-3d42-5010-97d3-6c61b81427ce', '910ea47f-22cc-514c-94e8-7da36bd5e32c', '517b0fbc-7cc7-5a38-820b-66c3497d5a78', '4a873fee-4f00-5acc-bd13-ef42c1338312');
 DELETE FROM public.chapters c WHERE c.subject_id = 'svt' AND c.id NOT IN ('bbf34e0d-c9ae-578e-8880-c3b5d4ecf5d4', 'b0333447-8e00-556a-97b4-680f9c12f200', 'ba9daafc-27c7-5e69-aaaf-eb26f11fae73', '4c10b91f-7bff-5a39-9b21-4f29a7f25d1c', '4dffb31a-ec0d-5def-90db-3ab72e4936d7', '5be5e862-63b0-5bbf-ba43-676b67a97793', '1ef832e7-2310-5ebc-9ddd-7d3d868d77cb', 'cb55bcb6-c41c-5c05-b94a-fad88e81e703') AND NOT EXISTS (SELECT 1 FROM public.exercises e WHERE e.chapter_id = c.id);
 
 INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order) VALUES
@@ -978,6 +987,96 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('4fede007-3f76-5965-8266-8a440e4b6471', 'bbf34e0d-c9ae-578e-8880-c3b5d4ecf5d4', 'svt', '👑 تحدّي النخبة: الانتشار المستقيمي للضوء — مسائل مركّبة', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d4c872e9-10c0-5310-8846-fc1e92dde187', '4fede007-3f76-5965-8266-8a440e4b6471', 'مصدر ضوئي نقطي S موضوع على ارتفاع 3 م فوق الأرض. جسم معتم ارتفاعه 1 م موضوع على الأرض على بُعد 2 م أفقيًّا من S. باستخدام نظرية طاليس، ما طول الظلّ المحمول الذي يتكوّن على الأرض خلف الجسم؟', '[{"id":"a","text":"0.5 م"},{"id":"b","text":"1 م"},{"id":"c","text":"1.5 م"},{"id":"d","text":"2 م"}]'::jsonb, 'b', 'نُطبّق نظرية طاليس مع الشعاع الصادر من S(0, 3) مارًّا بقمّة الجسم (2, 1):
+ميل الشعاع = (1 − 3) ÷ (2 − 0) = −1، فمعادلته: y = 3 − x.
+عند y = 0 (الأرض): x = 3 م.
+الجسم قائدته عند x = 2 م، وطرف الظلّ عند x = 3 م.
+إذن طول الظلّ المحمول = 3 − 2 = 1 م.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('89dc0553-a455-598e-88cd-cf773a0b9335', '4fede007-3f76-5965-8266-8a440e4b6471', 'غرفة مظلمة (صندوق ذو ثقب) عمقها 20 سم. شجرة طولها 2 م موضوعة على بُعد 5 م من الثقب. ما ارتفاع الصورة المتكوّنة على الجدار الخلفي للغرفة؟', '[{"id":"a","text":"8 سم"},{"id":"b","text":"4 سم"},{"id":"c","text":"50 سم"},{"id":"d","text":"2 سم"}]'::jsonb, 'a', 'بالتناسب المستقيم (نظرية طاليس عبر الثقب):
+ارتفاع الصورة / عمق الغرفة = ارتفاع الشجرة / المسافة إلى الثقب
+h = (2 م × 0.20 م) ÷ 5 م = 0.40 ÷ 5 = 0.08 م = 8 سم.
+الصورة مقلوبة وارتفاعها 8 سم.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('82fe6da8-ed9c-5418-a971-bacf9b77deb2', '4fede007-3f76-5965-8266-8a440e4b6471', 'المسافة بين الأرض والقمر تساوي تقريبًا 384 000 كم. علمًا أن سرعة الضوء c = 3 × 10⁵ كم/ث، كم يستغرق الضوء للانتقال من القمر إلى الأرض؟', '[{"id":"a","text":"0.64 ث"},{"id":"b","text":"3.84 ث"},{"id":"c","text":"12.8 ث"},{"id":"d","text":"1.28 ث"}]'::jsonb, 'd', 'نستخدم العلاقة: t = d ÷ c
+t = 384 000 كم ÷ 300 000 كم/ث = 1.28 ث.
+إذن يصل ضوء القمر إلينا في نحو 1.28 ثانية.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('58185bd7-ec37-5322-b802-227537d6316f', '4fede007-3f76-5965-8266-8a440e4b6471', 'مصباح نقطي موضوع على ارتفاع 4 م فوق الأرض. عمود معتم ارتفاعه 1 م يقف على الأرض على بُعد 3 م أفقيًّا من قاعدة المصباح. ما طول الظلّ المحمول على الأرض خلف العمود؟', '[{"id":"a","text":"3 م"},{"id":"b","text":"1.5 م"},{"id":"c","text":"1 م"},{"id":"d","text":"4 م"}]'::jsonb, 'c', 'نرسم الشعاع من S(0, 4) إلى قمّة العمود (3, 1):
+ميل الشعاع = (1 − 4) ÷ (3 − 0) = −1، فمعادلته: y = 4 − x.
+عند y = 0: x = 4 م.
+قاعدة العمود عند x = 3 م وطرف الظلّ عند x = 4 م.
+طول الظلّ المحمول = 4 − 3 = 1 م.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('a0d5ab35-c9ac-5e52-87a2-6dd402dc5026', '4fede007-3f76-5965-8266-8a440e4b6471', 'غرفة مظلمة عمقها 25 سم تُعطي صورةً لشجرة ارتفاعها 10 م؛ الصورة ارتفاعها 5 سم. ما المسافة بين الشجرة والثقب؟', '[{"id":"a","text":"25 م"},{"id":"b","text":"2 م"},{"id":"c","text":"100 م"},{"id":"d","text":"50 م"}]'::jsonb, 'd', 'من تناسب طاليس:
+ارتفاع الصورة / عمق الغرفة = ارتفاع الشجرة / المسافة D
+D = (ارتفاع الشجرة × عمق الغرفة) ÷ ارتفاع الصورة
+D = (10 م × 0.25 م) ÷ 0.05 م = 2.5 ÷ 0.05 = 50 م.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('625938b5-a17d-5fb8-a3cd-5891abeb3cd7', '4fede007-3f76-5965-8266-8a440e4b6471', 'تبعد الشمس عن الأرض مسافة 150 000 000 كم. بسرعة c = 3 × 10⁵ كم/ث، كم دقيقةً يستغرق ضوء الشمس للوصول إلى الأرض (قرّب إلى دقيقة واحدة)؟', '[{"id":"a","text":"5 دقائق"},{"id":"b","text":"50 دقيقة"},{"id":"c","text":"8 دقائق و20 ثانية"},{"id":"d","text":"83 دقيقة"}]'::jsonb, 'c', 't = d ÷ c = 150 000 000 كم ÷ 300 000 كم/ث = 500 ث.
+500 ث ÷ 60 ≈ 8.33 دقيقة = 8 دقائق و20 ثانية.
+إذن تحتاج أشعّة الشمس نحو 8 دقائق و20 ثانية للوصول إلى الأرض.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('f781672c-d268-5690-a4e7-2a92916e8abb', 'b0333447-8e00-556a-97b4-680f9c12f200', 'svt', 'اختبار فهم الدرس', 1, 20, 5, 'quiz', 'admin', 0)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -1175,6 +1274,78 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('b9988cb9-26e9-527f-bbc6-edcb45251559', 'a18d4cb2-cdcc-506c-86e8-d099fa6d96e1', 'لماذا نستطيع رؤية وجوهنا في مرآة مستوية؟', '[{"id":"a","text":"لأنّ المرآة تنتج الضوء من تلقاء نفسها"},{"id":"b","text":"لأنّ المرآة شفّافة تمامًا"},{"id":"c","text":"لأنّ الضوء ينكسر بزاوية كبيرة داخل الزجاج"},{"id":"d","text":"لأنّ الضوء الساقط على وجهنا ينعكس عنه ثمّ ينعكس عن المرآة نحو أعيننا"}]'::jsonb, 'd', 'الضوء (من مصدر خارجي) يسقط على وجهنا وينعكس عنه، ثمّ يسقط على المرآة وينعكس نحو أعيننا فنرى صورتنا.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('802a58c4-205d-5404-88cb-873dc6024953', 'b0333447-8e00-556a-97b4-680f9c12f200', 'svt', '👑 تحدّي النخبة: سيّد قوانين الانعكاس', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('c4bf55ac-d8ad-558b-98bb-ecb3ad61c8b3', '802a58c4-205d-5404-88cb-873dc6024953', 'شعاع ضوئي يسقط على مرآة مستوية بزاوية ورود i = 35°. ما مقدار الانحراف الكلّي للشعاع، أي الزاوية المحصورة بين امتداد الشعاع الوارد والشعاع المنعكس؟', '[{"id":"a","text":"70°"},{"id":"b","text":"35°"},{"id":"c","text":"110°"},{"id":"d","text":"145°"}]'::jsonb, 'c', 'الانحراف الكلّي D هو الزاوية بين امتداد الشعاع الوارد والشعاع المنعكس. في مثلّث الانعكاس: D = 180° − 2i. هنا: D = 180° − 2×35° = 180° − 70° = 110°. الخطأ الشائع هو أخذ 2i = 70° مباشرةً (الاختيار أ) أو مجرّد قيمة i (الاختيار ب).', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('3bc9220a-2125-54eb-a2af-8c35cd392979', '802a58c4-205d-5404-88cb-873dc6024953', 'الزاوية بين شعاع ضوئي وارد وشعاعه المنعكس على مرآة مستوية تساوي 100°. ما زاوية ورود هذا الشعاع على الناظم؟', '[{"id":"a","text":"100°"},{"id":"b","text":"80°"},{"id":"c","text":"25°"},{"id":"d","text":"50°"}]'::jsonb, 'd', 'الزاوية بين الشعاع الوارد والشعاع المنعكس = i + r = 2i (لأنّ i = r). إذن: 2i = 100°، فزاوية الورود i = 50°. الاختيار ب يخلط بين الزاوية مع السطح (90°−i = 40°) ومضاعفها، والاختيار ج يقسم الزاوية على 4 خطأً.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('9ffaa4d7-476c-5ba9-a6cd-5c815d1ecc30', '802a58c4-205d-5404-88cb-873dc6024953', 'مرآة مستوية تدور بزاوية 20° حول نقطة ورود الشعاع عليها، في حين يبقى الشعاع الوارد ثابتًا. بكم تتغيّر زاوية الشعاع المنعكس؟', '[{"id":"a","text":"20°"},{"id":"b","text":"40°"},{"id":"c","text":"10°"},{"id":"d","text":"60°"}]'::jsonb, 'b', 'عند دوران المرآة بزاوية α مع ثبات الشعاع الوارد، يدور الناظم بنفس الزاوية α. وبما أنّ زاوية الورود الجديدة تزيد بمقدار α، وزاوية الانعكاس الجديدة تزيد بمقدار α كذلك، فإنّ الشعاع المنعكس يدور بمقدار 2α. هنا: 2×20° = 40°. هذه القاعدة أساسيّة في أجهزة الرصد البصري.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('9bd27914-983c-56aa-985d-942d6ab0042e', '802a58c4-205d-5404-88cb-873dc6024953', 'مرآتان مستويتان M1 و M2 تتقاطعان بزاوية 60°. يسقط شعاع ضوئي على M1 بزاوية ورود i₁ = 30° (بالنسبة للناظم). ما زاوية الورود i₂ على المرآة M2 بعد الانعكاس عن M1؟', '[{"id":"a","text":"60°"},{"id":"b","text":"45°"},{"id":"c","text":"30°"},{"id":"d","text":"90°"}]'::jsonb, 'c', 'بعد الانعكاس عن M1: r₁ = i₁ = 30°، فيصنع الشعاع المنعكس زاوية (90°−30°) = 60° مع سطح M1. في المثلّث المتكوّن بين الشعاع المنعكس والمرآتين: مجموع الزوايا = 180°، ومنها: زاوية الرأس (بين M1 و M2) = 60°، والزاوية عند M1 = 90°−r₁ = 60°. إذن الزاوية عند M2 = 180°−60°−60° = 60°، فزاوية الورود على M2: i₂ = 90°−60° = 30°.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('57895b66-95e6-591c-8fbb-83ac61367c85', '802a58c4-205d-5404-88cb-873dc6024953', 'مرآتان مستويتان M1 (أفقية) و M2 (رأسية) متعامدتان. يسقط شعاع ضوئي على M1 بزاوية ورود i₁ = 55° (بالنسبة للناظم الرأسي لـ M1). ما زاوية ورود الشعاع على M2 بعد انعكاسه عن M1؟', '[{"id":"a","text":"55°"},{"id":"b","text":"90°"},{"id":"c","text":"35°"},{"id":"d","text":"45°"}]'::jsonb, 'c', 'بعد الانعكاس عن M1 (الأفقية): r₁ = i₁ = 55° من الناظم الرأسي، أي أنّ الشعاع المنعكس يُشكّل 55° مع الرأسي و(90°−55°)=35° مع الأفقي. عند وصوله إلى M2 (الرأسية)، يكون ناظم M2 أفقيًّا، فزاوية الورود = الزاوية بين الشعاع والأفقي = 35°. القاعدة العامّة للمرآتين المتعامدتَين: i₁ + i₂ = 90°.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('3eb88fb5-b9a8-53a8-8c86-811a9c549cf3', '802a58c4-205d-5404-88cb-873dc6024953', 'جسم نقطيّ A يقف أمام مرآة مستوية M1 على بُعد 7 سم منها. ما المسافة بين الجسم A وصورته A′ في المرآة M1؟', '[{"id":"a","text":"7 سم"},{"id":"b","text":"3.5 سم"},{"id":"c","text":"14 سم"},{"id":"d","text":"21 سم"}]'::jsonb, 'c', 'خاصيّة المرآة المستوية: الجسم وصورته متناظران بالنسبة لمستوى المرآة. أي أنّ بُعد الصورة عن المرآة = بُعد الجسم عن المرآة = 7 سم. الجسم A أمام المرآة بـ7 سم، وصورته A′ خلف المرآة بـ7 سم. إذن المسافة الكلّية بين A وA′ = 7 + 7 = 14 سم. الخطأ الشائع: الاعتقاد بأنّ المسافة = 7 سم (بُعد الجسم وحده)، أو 3.5 سم (نصف البُعد).', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1390,6 +1561,111 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('709168e8-4fa2-5d35-8b5f-b75d803c0dcd', 'ba9daafc-27c7-5e69-aaaf-eb26f11fae73', 'svt', '👑 تحدّي النخبة: الانكسار والعدسات الرقيقة', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('9fd7456a-c92b-5c07-bc03-a6986e8a1886', '709168e8-4fa2-5d35-8b5f-b75d803c0dcd', 'شعاع ضوئي ينتقل من الهواء (n₁ = 1) إلى الزجاج (n₂ = 1,5) بزاوية ورود i₁ = 45°. طبّق قانون سنيل–ديكارت (n₁ sin i₁ = n₂ sin i₂) لحساب زاوية الانكسار i₂ (اعلم أنّ sin 45° ≈ 0,707). ما أقرب قيمة لـ i₂؟', '[{"id":"a","text":"i₂ ≈ 28°"},{"id":"b","text":"i₂ ≈ 45°"},{"id":"c","text":"i₂ ≈ 60°"},{"id":"d","text":"i₂ ≈ 19°"}]'::jsonb, 'a', 'نطبّق قانون سنيل–ديكارت: n₁ sin i₁ = n₂ sin i₂
+⟹ 1 × sin 45° = 1,5 × sin i₂
+⟹ sin i₂ = 0,707 / 1,5 ≈ 0,471
+⟹ i₂ = arcsin(0,471) ≈ 28°
+الشعاع ينتقل من وسط أقلّ كثافة بصرية (هواء) إلى وسط أكثر كثافة (زجاج)، فينكسر نحو الناظم؛ أي i₂ < i₁ = 45°، وهذا ما يؤكّد صحّة الجواب.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('2733dbac-7bc7-5c64-9d71-6ea1bae9c323', '709168e8-4fa2-5d35-8b5f-b75d803c0dcd', 'عدسة مجمّعة بُعدها البؤري f = 25 cm. ما قدرتها (فيرجانتها) C بالديوبتر؟', '[{"id":"a","text":"C = 25 δ"},{"id":"b","text":"C = 0,25 δ"},{"id":"c","text":"C = 4 δ"},{"id":"d","text":"C = 2,5 δ"}]'::jsonb, 'c', 'القدرة (الفيرجانس) تُحسب بالعلاقة: C = 1/f، بشرط أن يكون f بالمتر.
+f = 25 cm = 0,25 m
+C = 1 / 0,25 = 4 δ
+الخطأ الشائع هو استعمال f بالسنتيمتر مباشرةً فيُعطي 1/25 = 0,04 أو 25 مباشرةً. يجب دائمًا تحويل البُعد البؤري إلى متر قبل حساب القدرة.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('ed8e49c7-daf9-5508-8326-9a4be7f77ee8', '709168e8-4fa2-5d35-8b5f-b75d803c0dcd', 'عدسة مجمّعة بُعدها البؤري f = 20 cm. جسم مضيء وُضع على بُعد OA = 30 cm أمام العدسة. باستعمال علاقة المقرّبات (1/OA'' − 1/OA = 1/f)، ما موضع الصورة OA''؟', '[{"id":"a","text":"OA'' = 60 cm (من الجهة الأخرى للعدسة)"},{"id":"b","text":"OA'' = 12 cm (من الجهة الأخرى للعدسة)"},{"id":"c","text":"OA'' = −60 cm (في جهة الجسم نفسه)"},{"id":"d","text":"OA'' = 30 cm (من الجهة الأخرى للعدسة)"}]'::jsonb, 'a', 'نأخذ الاتّجاه الجبري: الجسم أمام العدسة فـ OA = −30 cm.
+نطبّق: 1/OA'' − 1/OA = 1/f
+⟹ 1/OA'' = 1/f + 1/OA = 1/20 + 1/(−30)
+= 3/60 − 2/60 = 1/60
+⟹ OA'' = +60 cm
+الإشارة الموجبة تعني أنّ الصورة في الجهة المقابلة للجسم (خلف العدسة)، وهي إذن صورة حقيقية مقلوبة. ولمّا كان 20 cm < 30 cm < 40 cm (بين f و 2f)، فالصورة حقيقية مقلوبة مكبّرة.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('1cd5e041-9fb3-548a-a160-33be1fe1cc44', '709168e8-4fa2-5d35-8b5f-b75d803c0dcd', 'في السؤال السابق (f = 20 cm، OA = −30 cm، OA'' = +60 cm)، جسم طوله AB = 3 cm. ما طول الصورة A''B'' وما اتّجاهها؟', '[{"id":"a","text":"A''B'' = 6 cm، معتدلة (في نفس اتّجاه الجسم)"},{"id":"b","text":"A''B'' = 6 cm، مقلوبة (عكس اتّجاه الجسم)"},{"id":"c","text":"A''B'' = 1,5 cm، مقلوبة"},{"id":"d","text":"A''B'' = 3 cm، مقلوبة"}]'::jsonb, 'b', 'نحسب التكبير الخطّي γ:
+γ = OA'' / OA = (+60) / (−30) = −2
+القيمة السالبة تعني أنّ الصورة مقلوبة. |γ| = 2 يعني أنّ الصورة مكبّرة مرّتين.
+طول الصورة: |A''B''| = |γ| × AB = 2 × 3 = 6 cm، لكنّها مقلوبة.
+الاختيار (أ) خاطئ لأنّ الصورة الحقيقية عبر عدسة مجمّعة دائمًا مقلوبة حين يكون الجسم خارج البُعد البؤري.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('4d33f1dd-210b-5f49-8084-b61282527631', '709168e8-4fa2-5d35-8b5f-b75d803c0dcd', 'وُضع جسم أمام عدسة مجمّعة على بُعد OA = 40 cm، فتكوّنت صورة حقيقية مقلوبة على بُعد OA'' = 40 cm خلف العدسة. ما قدرة هذه العدسة C؟', '[{"id":"a","text":"C = 5 δ"},{"id":"b","text":"C = 40 δ"},{"id":"c","text":"C = 2,5 δ"},{"id":"d","text":"C = 10 δ"}]'::jsonb, 'a', 'نأخذ الاتّجاه الجبري: OA = −40 cm، OA'' = +40 cm.
+نطبّق: 1/f = 1/OA'' − 1/OA = 1/40 − 1/(−40) = 1/40 + 1/40 = 2/40 = 1/20
+⟹ f = 20 cm = 0,20 m
+القدرة: C = 1/f = 1/0,20 = 5 δ
+ملاحظة: وضع الجسم عند d = 2f يعطي صورة حقيقية مقلوبة مساوية على بُعد 2f، وهو ما يتحقّق هنا (f = 20 cm، d = 40 cm = 2f).', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('90ce3f75-0720-5d63-a989-38e912601c34', '709168e8-4fa2-5d35-8b5f-b75d803c0dcd', 'عدسة مجمّعة قدرتها C = 4 δ. وُضع أمامها جسم طوله AB = 6 cm على بُعد OA = 100 cm. ما طول الصورة |A''B''| وما طبيعتها؟', '[{"id":"a","text":"|A''B''| = 2 cm، صورة حقيقية مقلوبة مصغّرة"},{"id":"b","text":"|A''B''| = 4 cm، صورة حقيقية مقلوبة مصغّرة"},{"id":"c","text":"|A''B''| = 3 cm، صورة حقيقية مقلوبة مصغّرة"},{"id":"d","text":"|A''B''| = 2 cm، صورة تخيّلية معتدلة مكبّرة"}]'::jsonb, 'a', 'الخطوة 1 — إيجاد البُعد البؤري:
+C = 4 δ ⟹ f = 1/C = 1/4 = 0,25 m = 25 cm
+
+الخطوة 2 — إيجاد موضع الصورة (OA = −100 cm):
+1/OA'' = 1/f + 1/OA = 1/25 + 1/(−100) = 4/100 − 1/100 = 3/100
+⟹ OA'' = 100/3 ≈ +33,3 cm (صورة حقيقية، خلف العدسة)
+
+الخطوة 3 — حساب التكبير:
+γ = OA'' / OA = (100/3) / (−100) = −1/3
+|γ| = 1/3 < 1 ⟹ صورة مصغّرة ومقلوبة (لأنّ الجسم عند d = 100 cm > 2f = 50 cm)
+
+الخطوة 4 — طول الصورة:
+|A''B''| = |γ| × AB = (1/3) × 6 = 2 cm
+الصورة حقيقية مقلوبة مصغّرة، وهو المتوقَّع حين يكون الجسم أبعد من 2f.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('cba20902-9fc8-56e2-af36-015bf8f16761', '4c10b91f-7bff-5a39-9b21-4f29a7f25d1c', 'svt', 'اختبار فهم الدرس', 1, 20, 5, 'quiz', 'admin', 0)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -1587,6 +1863,78 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('b01b9503-2b8d-557b-9f97-a1e65a8f73bd', 'f431df6e-67d9-56e3-91f5-590546de1fca', 'ما مجموع الذرّات في جزيء H₂SO₄ (حمض الكبريتيك)؟', '[{"id":"a","text":"5 ذرّات"},{"id":"b","text":"6 ذرّات"},{"id":"c","text":"7 ذرّات"},{"id":"d","text":"8 ذرّات"}]'::jsonb, 'c', 'H₂SO₄: ذرّتا هيدروجين (H₂) + ذرّة كبريت (S) + 4 ذرّات أكسجين (O₄). المجموع = 2 + 1 + 4 = 7 ذرّات.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('38e8abd0-d72c-5095-882b-8b6512d67fb5', '4c10b91f-7bff-5a39-9b21-4f29a7f25d1c', 'svt', '👑 تحدّي النخبة: سرائر الذرّة والجزيء', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('977bb015-a61d-5b5c-af14-9354f58429e1', '38e8abd0-d72c-5095-882b-8b6512d67fb5', 'ذرّة الكلور متعادلة كهربائيًّا، عددها الذري Z = 17، وتحتوي نواتها على 18 نيوترونًا. ما مجموع عدد الجسيمات (بروتونات + نيوترونات + إلكترونات) في هذه الذرّة؟', '[{"id":"a","text":"35 جسيمًا"},{"id":"b","text":"52 جسيمًا"},{"id":"c","text":"18 جسيمًا"},{"id":"d","text":"34 جسيمًا"}]'::jsonb, 'b', 'الذرّة المتعادلة: عدد الإلكترونات = عدد البروتونات = Z = 17. إذن المجموع = 17 (بروتون) + 18 (نيوترون) + 17 (إلكترون) = 52 جسيمًا.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('84fe02d9-4990-512e-b26c-a6f5106df37c', '38e8abd0-d72c-5095-882b-8b6512d67fb5', 'جزيء الغلوكوز (سكّر العنب) صيغته C₆H₁₂O₆. ما مجموع عدد الذرّات في جزيء واحد من الغلوكوز؟', '[{"id":"a","text":"18 ذرّة"},{"id":"b","text":"12 ذرّة"},{"id":"c","text":"24 ذرّة"},{"id":"d","text":"6 ذرّات"}]'::jsonb, 'c', 'C₆H₁₂O₆: 6 ذرّات كربون + 12 ذرّة هيدروجين + 6 ذرّات أكسجين. المجموع = 6 + 12 + 6 = 24 ذرّة.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('5f3e7d63-0619-5fb5-aecd-4d2cfbe4dd3b', '38e8abd0-d72c-5095-882b-8b6512d67fb5', 'باستخدام الكتل المولية الذرّية: M(H) = 1 g/mol ، M(S) = 32 g/mol ، M(O) = 16 g/mol. احسب الكتلة المولية الجزيئية لحمض الكبريتيك H₂SO₄.', '[{"id":"a","text":"49 g/mol"},{"id":"b","text":"80 g/mol"},{"id":"c","text":"98 g/mol"},{"id":"d","text":"66 g/mol"}]'::jsonb, 'c', 'M(H₂SO₄) = 2×M(H) + M(S) + 4×M(O) = 2×1 + 32 + 4×16 = 2 + 32 + 64 = 98 g/mol.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('e23617bb-3edb-5eb7-89c7-4c4e0952b8da', '38e8abd0-d72c-5095-882b-8b6512d67fb5', 'جزيء كبريتات الألومنيوم صيغته Al₂(SO₄)₃. الرقم 3 خارج القوسَين يضرب ما بداخلهما. ما مجموع عدد الذرّات في هذا الجزيء؟', '[{"id":"a","text":"9 ذرّات"},{"id":"b","text":"17 ذرّة"},{"id":"c","text":"11 ذرّة"},{"id":"d","text":"20 ذرّة"}]'::jsonb, 'b', 'Al₂(SO₄)₃: ذرّتا ألومنيوم (Al₂) = 2. داخل القوسَين: S + O₄، يُضرب في 3: 3 ذرّات كبريت + 12 ذرّة أكسجين. المجموع = 2 + 3 + 12 = 17 ذرّة.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('82b1cf46-5000-5f4f-ae6c-93c219ebffbc', '38e8abd0-d72c-5095-882b-8b6512d67fb5', 'ذرّة عنصر X متعادلة كهربائيًّا وتحتوي على 7 إلكترونات. هذا العنصر يكوّن جزيءً ثنائيًّا X₂ في الغلاف الجوّي. علمًا أنّ M(X) = 14 g/mol، ما الكتلة المولية لجزيء X₂؟', '[{"id":"a","text":"14 g/mol"},{"id":"b","text":"7 g/mol"},{"id":"c","text":"21 g/mol"},{"id":"d","text":"28 g/mol"}]'::jsonb, 'd', 'الذرّة المتعادلة تحتوي على 7 إلكترونات إذن Z = 7، وهو عنصر النيتروجين N بكتلة مولية ذرّية M(N) = 14 g/mol. جزيء N₂ يحتوي على ذرّتَين، إذن M(N₂) = 2 × 14 = 28 g/mol.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('f2afcdd7-d0cc-5d2a-99d9-ad60815edb9b', '38e8abd0-d72c-5095-882b-8b6512d67fb5', 'استعن بالكتل المولية الذرّية التالية: M(H) = 1 g/mol ، M(C) = 12 g/mol ، M(N) = 14 g/mol ، M(O) = 16 g/mol. أيّ الجزيئات التالية تملك أعلى كتلة مولية جزيئية؟', '[{"id":"a","text":"H₂O"},{"id":"b","text":"NH₃"},{"id":"c","text":"CH₄"},{"id":"d","text":"CO₂"}]'::jsonb, 'd', 'نحسب الكتلة المولية لكلّ جزيء: M(H₂O) = 2×1 + 16 = 18 g/mol. M(NH₃) = 14 + 3×1 = 17 g/mol. M(CH₄) = 12 + 4×1 = 16 g/mol. M(CO₂) = 12 + 2×16 = 44 g/mol. الأعلى هو CO₂ بكتلة 44 g/mol.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1802,6 +2150,97 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('87e67be9-2681-5b4d-8f70-8e8eb0440fb8', '4dffb31a-ec0d-5def-90db-3ab72e4936d7', 'svt', '👑 تحدّي النخبة: موازنة المعادلات وحسابات الكتل', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('495be68d-4834-5372-84ba-5f0e01aed6f2', '87e67be9-2681-5b4d-8f70-8e8eb0440fb8', 'احتراق الإيثان يُعطي ثاني أكسيد الكربون والماء وفق المعادلة غير الموزونة: C₂H₆ + O₂ → CO₂ + H₂O. بعد الموازنة الصحيحة بأصغر معاملات صحيحة، ما معامل O₂؟', '[{"id":"a","text":"5"},{"id":"b","text":"6"},{"id":"c","text":"7"},{"id":"d","text":"4"}]'::jsonb, 'c', 'نوازن المعادلة: 2C₂H₆ + 7O₂ → 4CO₂ + 6H₂O.
+• الكربون: يسار 2×2 = 4، يمين 4 ✓
+• الهيدروجين: يسار 2×6 = 12، يمين 6×2 = 12 ✓
+• الأكسجين: يسار 7×2 = 14، يمين 4×2 + 6×1 = 8 + 6 = 14 ✓
+إذن معامل O₂ هو 7.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('b0b34cca-abf0-5535-97dd-870b8e211708', '87e67be9-2681-5b4d-8f70-8e8eb0440fb8', 'يحترق الكبريت في الأكسجين وفق المعادلة الموزونة: S + O₂ → SO₂. الكتل المولية: M(S) = 32 g/mol، M(O) = 16 g/mol، M(SO₂) = 64 g/mol. إذا احترق 16 g من الكبريت احتراقًا كاملًا، ما كتلة ثاني أكسيد الكبريت SO₂ الناتجة؟', '[{"id":"a","text":"64 g"},{"id":"b","text":"48 g"},{"id":"c","text":"32 g"},{"id":"d","text":"16 g"}]'::jsonb, 'c', 'عدد مولات الكبريت = 16 ÷ 32 = 0.5 mol.
+بحسب المعادلة، 1 mol S تُعطي 1 mol SO₂، إذن 0.5 mol S تُعطي 0.5 mol SO₂.
+كتلة SO₂ = 0.5 × 64 = 32 g.
+(تحقّق بانحفاظ الكتلة: كتلة O₂ المستهلَك = 0.5 × 32 = 16 g؛ مجموع المتفاعلات = 16 + 16 = 32 g = كتلة النواتج ✓)', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('64130f94-d517-5ac1-a6e5-3ff96111a62e', '87e67be9-2681-5b4d-8f70-8e8eb0440fb8', 'يتفاعل الألومنيوم مع الكلور وفق المعادلة الموزونة: 2Al + 3Cl₂ → 2AlCl₃. الكتل المولية: M(Al) = 27 g/mol، M(Cl) = 35.5 g/mol، M(AlCl₃) = 133.5 g/mol. إذا تفاعل 5.4 g من الألومنيوم تفاعلًا كاملًا مع فائض من الكلور، ما كتلة كلوريد الألومنيوم AlCl₃ الناتجة؟', '[{"id":"a","text":"13.35 g"},{"id":"b","text":"26.7 g"},{"id":"c","text":"40.05 g"},{"id":"d","text":"53.4 g"}]'::jsonb, 'b', 'عدد مولات Al = 5.4 ÷ 27 = 0.2 mol.
+بحسب المعادلة: 2 mol Al تُعطي 2 mol AlCl₃، أي النسبة 1:1.
+إذن 0.2 mol Al تُعطي 0.2 mol AlCl₃.
+كتلة AlCl₃ = 0.2 × 133.5 = 26.7 g.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('2c2bae8c-c0a1-5de5-9c6d-6d70f9bc9015', '87e67be9-2681-5b4d-8f70-8e8eb0440fb8', 'أيّ من المعادلات التالية تمثّل الموازنة الصحيحة لاحتراق الأسيتيلين C₂H₂ في الأكسجين مع إنتاج CO₂ والماء فقط؟', '[{"id":"a","text":"C₂H₂ + 2O₂ → 2CO₂ + H₂O"},{"id":"b","text":"2C₂H₂ + 5O₂ → 4CO₂ + 2H₂O"},{"id":"c","text":"C₂H₂ + 3O₂ → 2CO₂ + 2H₂O"},{"id":"d","text":"2C₂H₂ + 4O₂ → 4CO₂ + H₂O"}]'::jsonb, 'b', 'نفحص المعادلة: 2C₂H₂ + 5O₂ → 4CO₂ + 2H₂O.
+• الكربون: يسار 2×2 = 4، يمين 4 ✓
+• الهيدروجين: يسار 2×2 = 4، يمين 2×2 = 4 ✓
+• الأكسجين: يسار 5×2 = 10، يمين 4×2 + 2×1 = 8 + 2 = 10 ✓
+الخيارات الأخرى لا توازن الأكسجين أو الهيدروجين.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('9df0696f-c206-5ba6-8a23-55c1abcb8570', '87e67be9-2681-5b4d-8f70-8e8eb0440fb8', 'يتفاعل النيتروجين والهيدروجين لإنتاج الأمونياك وفق: N₂ + 3H₂ → 2NH₃. الكتل المولية: M(H₂) = 2 g/mol، M(NH₃) = 17 g/mol. لإنتاج 34 g من الأمونياك NH₃، ما كتلة الهيدروجين H₂ اللازمة؟', '[{"id":"a","text":"3 g"},{"id":"b","text":"4 g"},{"id":"c","text":"6 g"},{"id":"d","text":"9 g"}]'::jsonb, 'c', 'عدد مولات NH₃ المطلوبة = 34 ÷ 17 = 2 mol.
+بحسب المعادلة: 2 mol NH₃ تتطلّب 3 mol H₂ (النسبة 3:2).
+كتلة H₂ = 3 × 2 = 6 g.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('8d4c3643-ad4d-5681-8e82-8830e7b634ae', '87e67be9-2681-5b4d-8f70-8e8eb0440fb8', 'تُختزل هيماتيت الحديد Fe₂O₃ بأول أكسيد الكربون وفق: Fe₂O₃ + 3CO → 2Fe + 3CO₂. الكتل المولية: M(Fe₂O₃) = 160 g/mol، M(Fe) = 56 g/mol. إذا تفاعل 16 g من Fe₂O₃ تفاعلًا كاملًا مع فائض من CO، ما كتلة الحديد Fe الناتجة؟', '[{"id":"a","text":"5.6 g"},{"id":"b","text":"11.2 g"},{"id":"c","text":"22.4 g"},{"id":"d","text":"16 g"}]'::jsonb, 'b', 'عدد مولات Fe₂O₃ = 16 ÷ 160 = 0.1 mol.
+بحسب المعادلة: 1 mol Fe₂O₃ تُعطي 2 mol Fe.
+إذن 0.1 mol Fe₂O₃ تُعطي 0.2 mol Fe.
+كتلة Fe = 0.2 × 56 = 11.2 g.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('76c65ba5-f79a-52a8-b7c0-2a9f2910bb70', '5be5e862-63b0-5bbf-ba43-676b67a97793', 'svt', 'اختبار فهم الدرس', 1, 20, 5, 'quiz', 'admin', 0)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -1999,6 +2438,78 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('7b79c439-4e9e-58bd-a167-0ad9f220e008', 'e5ca2d8d-4123-5574-90f6-a5c907c89481', 'حمض المعدة له pH ≈ 1.5. أيّ عبارة تصف هذا المحلول بدقّة؟', '[{"id":"a","text":"حمضي ضعيف جدًّا"},{"id":"b","text":"متعادل"},{"id":"c","text":"حمضي قويّ جدًّا"},{"id":"d","text":"قاعدي ضعيف"}]'::jsonb, 'c', 'pH = 1.5 قريب جدًّا من 0، وهو طرف السلّم الحمضي، إذن المحلول حمضي قويّ جدًّا. كلّما اقترب pH من 0 زادت شدّة الحمضية.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('f249cb4e-cdff-50e2-a513-32d8bea7249d', '5be5e862-63b0-5bbf-ba43-676b67a97793', 'svt', '👑 تحدّي النخبة: سلّم pH والكواشف والتخفيف', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d9f9db01-b9f9-5211-b97d-c0a832efa09b', 'f249cb4e-cdff-50e2-a513-32d8bea7249d', 'أربعة محاليل: A (pH = 2)، B (pH = 9)، C (pH = 7)، D (pH = 12). أيّ الترتيبات الآتية يُصنّف هذه المحاليل من الأشدّ حمضيّةً إلى الأشدّ قاعديّةً؟', '[{"id":"a","text":"D → B → C → A"},{"id":"b","text":"A → C → B → D"},{"id":"c","text":"A → B → C → D"},{"id":"d","text":"C → A → B → D"}]'::jsonb, 'b', 'كلّما كانت قيمة pH أصغر كان المحلول أشدّ حمضيّةً، وكلّما كانت أكبر كان أشدّ قاعديّةً. الترتيب الصحيح من الأشدّ حمضيّةً إلى الأشدّ قاعديّةً: A (pH=2، حمضي جدًّا) → C (pH=7، متعادل) → B (pH=9، قاعدي) → D (pH=12، قاعدي جدًّا). الخيار A يعكس الترتيب تمامًا، والخياران C وD يضعان المتعادل في غير موضعه.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('a3c8aa9c-3115-53e1-8c12-de33a2780f2f', 'f249cb4e-cdff-50e2-a513-32d8bea7249d', 'محلول حمضي قويّ له pH = 3. خُفِّف بالماء 100 مرّة (أي أصبح حجمه 100 ضعف حجمه الأصلي). ما القيمة التقريبية لـ pH المحلول الجديد؟', '[{"id":"a","text":"pH ≈ 5"},{"id":"b","text":"pH ≈ 1"},{"id":"c","text":"pH = 7"},{"id":"d","text":"pH ≈ 8"}]'::jsonb, 'a', 'لكلّ تخفيف بعامل 10 (أي جعل الحجم 10 أضعاف) يرتفع pH الحمض القوي بمقدار 1 وحدة تقريبًا. التخفيف بعامل 100 = تخفيفان متتاليان بعامل 10، فيرتفع pH بمقدار 2 وحدتين: pH الجديد ≈ 3 + 2 = 5. لا يبلغ pH = 7 مهما خُفِّف الحمض (الخيار C خطأ)، ولا ينخفض إلى 1 (الخيار B عكس الصحيح)، ولا يتجاوز 7 ليصبح قاعديًّا (الخيار D خطأ).', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('ab52928d-bbe1-5cf3-a91d-b71835e59609', 'f249cb4e-cdff-50e2-a513-32d8bea7249d', 'محلول قاعدي له pH = 11. أضاف إليه تلميذٌ كميّةً من الماء المقطّر فأصبح حجمه 10 أضعاف حجمه الأصلي (تخفيف بعامل 10). ماذا يحدث لقيمة pH؟', '[{"id":"a","text":"يرتفع pH ويصبح ≈ 12"},{"id":"b","text":"ينخفض pH ويصبح ≈ 10"},{"id":"c","text":"يظلّ pH = 11 دون تغيير"},{"id":"d","text":"ينخفض pH ويصبح أقلّ من 7 ويتحوّل إلى حمضي"}]'::jsonb, 'b', 'تخفيف المحلول القاعدي يُقلّل تركيز القاعدة فينخفض pH نحو 7 (من الجهة القاعدية). لكلّ تخفيف بعامل 10 ينخفض pH القاعدة القوية بمقدار 1 وحدة تقريبًا: pH الجديد ≈ 11 − 1 = 10. لا يتحوّل المحلول القاعدي إلى حمضي بمجرّد التخفيف (الخيار D خطأ مفاهيمي شائع)؛ pH يقترب من 7 لكن لا يتعدّاه إلى ما دونه. الخياران A وC خاطئان لأنّ التخفيف لا يرفع pH القاعدة ولا يُبقيه ثابتًا.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('99bce7df-f787-50c3-a22f-72110cde2f63', 'f249cb4e-cdff-50e2-a513-32d8bea7249d', 'تلميذ يختبر محلولَين مجهولَين X وY. أضاف إلى X كاشف أزرق البروموتيمول (BBT) فاصفرّ المحلول. أضاف إلى Y صبغة عبّاد الشمس فازرقّ المحلول. أيّ العبارات الآتية صحيحة؟', '[{"id":"a","text":"X قاعدي وY حمضي"},{"id":"b","text":"X حمضي (pH < 7) وY قاعدي (pH > 7)"},{"id":"c","text":"كلاهما حمضي"},{"id":"d","text":"X متعادل وY قاعدي"}]'::jsonb, 'b', 'أزرق البروموتيمول (BBT): يصفرّ في الوسط الحمضي (pH < 7)، يخضرّ في الوسط المتعادل، ويزرقّ في الوسط القاعدي. إذن X حمضي لأنّ BBT اصفرّ فيه. عبّاد الشمس: يحمرّ في الوسط الحمضي، ويُصبح أرجوانيًّا في الوسط المتعادل، ويزرقّ في الوسط القاعدي. إذن Y قاعدي لأنّ عبّاد الشمس ازرقّ فيه. الإجابة الصحيحة: X حمضي وY قاعدي.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('4deb73ba-1805-5c0e-a7d8-e2aa1051c32d', 'f249cb4e-cdff-50e2-a513-32d8bea7249d', 'محلول A له pH = 4. جُرِّد منه محلولٌ B بتخفيفه 10 مرّات، ثمّ جُرِّد من B محلولٌ C بتخفيفه 10 مرّات أيضًا. ما الطبيعة الكيميائية للمحلول C وما قيمة pH التقريبية له؟', '[{"id":"a","text":"حمضي، pH ≈ 6"},{"id":"b","text":"متعادل، pH = 7"},{"id":"c","text":"حمضي، pH ≈ 2"},{"id":"d","text":"قاعدي، pH ≈ 8"}]'::jsonb, 'a', 'المحلول A: pH = 4 (حمضي). التخفيف الأوّل (A→B بعامل 10): pH يرتفع بمقدار 1 وحدة → pH_B ≈ 5 (لا يزال حمضيًّا). التخفيف الثاني (B→C بعامل 10): pH يرتفع بمقدار 1 وحدة أخرى → pH_C ≈ 6. المحلول C لا يزال حمضيًّا (pH < 7) رغم التخفيف المتكرّر؛ تخفيف الحمض يرفع pH نحو 7 دون أن يبلغه أو يتجاوزه. الخيار B خطأ لأنّ pH = 7 لا يُبلَغ بمجرّد التخفيف. الخياران C وD يتعارضان مع قاعدة تأثير التخفيف.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('2d082078-f220-544c-ab44-f209fc121b7d', 'f249cb4e-cdff-50e2-a513-32d8bea7249d', 'خلط تلميذٌ 100 mL من محلول حمض كلور الهيدروجين HCl ذي pH = 2 مع 100 mL من الماء المقطّر (تخفيف بعامل 2). ثمّ أضاف إلى المحلول الناتج بضع قطرات من أزرق البروموتيمول (BBT). أيّ الخيارات يصف النتيجة الصحيحة؟', '[{"id":"a","text":"يصبح BBT أزرق — المحلول أصبح قاعديًّا"},{"id":"b","text":"يصبح BBT أخضر — المحلول أصبح متعادلًا عند pH = 7"},{"id":"c","text":"يصبح BBT أصفر — المحلول لا يزال حمضيًّا (pH < 7)"},{"id":"d","text":"يصبح BBT عديم اللون — التخفيف أزال الحمضية كليًّا"}]'::jsonb, 'c', 'التخفيف بعامل 2 (مضاعفة الحجم بالماء): يرتفع pH قليلًا من 2 نحو 7 لكنّه يظلّ أقلّ من 7، أي يبقى المحلول حمضيًّا. pH التقريبي الجديد ≈ 2.3 (أقلّ بكثير من 7). بما أنّ المحلول حمضي (pH < 7)، يصبح BBT أصفر اللون. تخفيف الحمض لا يُحوّله إلى قاعدي (الخيار A خطأ) ولا إلى متعادل بهذا التخفيف الضئيل (الخيار B خطأ)، ولا يُزيل الحمضية كليًّا (الخيار D خطأ — BBT لا يصبح عديم اللون أصلًا).', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2214,6 +2725,78 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('0521d418-e9d4-5282-a308-5f99ca91a898', '1ef832e7-2310-5ebc-9ddd-7d3d868d77cb', 'svt', '👑 تحدّي النخبة: الشوارد والناقلية والتركيز', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('4bdadd7a-88a2-5e0c-883c-fa2ad4fd6822', '0521d418-e9d4-5282-a308-5f99ca91a898', 'حُلَّ 11.7 g من كلوريد الصوديوم NaCl (الكتلة المولية M = 58.5 g/mol) في الماء للحصول على محلول حجمه 500 mL. ثمّ أُخذ 100 mL من هذا المحلول وأُضيف إليه 400 mL من الماء المقطّر. ما تركيز المحلول النهائي بالغرام في اللتر (g/L)؟', '[{"id":"a","text":"4.68 g/L"},{"id":"b","text":"23.4 g/L"},{"id":"c","text":"2.34 g/L"},{"id":"d","text":"11.7 g/L"}]'::jsonb, 'a', 'الخطوة 1 — تركيز المحلول الأصلي: C₁ = m/V = 11.7 g ÷ 0.5 L = 23.4 g/L. الخطوة 2 — قانون التخفيف: C₁ × V₁ = C₂ × V₂. الحجم المأخوذ V₁ = 100 mL، والحجم النهائي V₂ = 100 + 400 = 500 mL. إذن C₂ = 23.4 × 100/500 = 23.4 × 0.2 = 4.68 g/L. الخيار B هو تركيز المحلول الأوّلي (خطأ شائع بنسيان خطوة التخفيف). الخيار C يُعطي نصف القيمة الصحيحة (خطأ في عامل التخفيف). الخيار D هو كتلة NaCl الأصلية بالغرام لا التركيز.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('3a8d9fcf-667e-5cdd-afb3-39bcc0461bf2', '0521d418-e9d4-5282-a308-5f99ca91a898', 'محلول شاردي يحتوي أيونَين موجبَين: 3 mol من Na⁺ و2 mol من Ca²⁺. لكي يكون المحلول متعادلًا كهربائيًّا، كم مولًا من أيون الكلوريد Cl⁻ يجب أن يحتوي المحلول؟', '[{"id":"a","text":"5 mol"},{"id":"b","text":"7 mol"},{"id":"c","text":"6 mol"},{"id":"d","text":"3 mol"}]'::jsonb, 'b', 'شرط التعادل الكهربائي: مجموع الشحنات الموجبة = مجموع الشحنات السالبة. الشحنات الموجبة = (3 mol × +1) + (2 mol × +2) = 3 + 4 = 7 وحدة موجبة. إذن يجب أن تكون الشحنات السالبة = 7 وحدة سالبة. بما أنّ كلّ Cl⁻ يحمل شحنة −1، يلزم 7 mol من Cl⁻. الخيار A (5 mol) هو مجموع عدد مولات الأيونات الموجبة فقط دون حساب الشحنة المضاعفة لـ Ca²⁺ (خطأ شائع). الخيار C يُخطئ في حساب شحنة Ca²⁺. الخيار D يأخذ فقط Na⁺.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('bab191f2-791e-53ba-b839-6ea99c135c53', '0521d418-e9d4-5282-a308-5f99ca91a898', 'عند إضافة بضع قطرات من محلول هيدروكسيد الصوديوم NaOH إلى محلول مجهول، يتشكّل راسب أزرق. ما الأيون الموجب الذي يتميَّز بهذه الطريقة؟ (تلميح: Cu(OH)₂ رسوب أزرق، Fe(OH)₃ رسوب بنّي-أحمر، Zn(OH)₂ رسوب أبيض)', '[{"id":"a","text":"Zn²⁺"},{"id":"b","text":"Fe³⁺"},{"id":"c","text":"Na⁺"},{"id":"d","text":"Cu²⁺"}]'::jsonb, 'd', 'عند إضافة NaOH إلى المحلول يتفاعل أيون الهيدروكسيد OH⁻ مع الكاتيونات المعدنية لتكوين هيدروكسيدات راسبة. الرسوب الأزرق خاصّيته أيون النحاس الثنائي Cu²⁺ وفق التفاعل: Cu²⁺ + 2 OH⁻ → Cu(OH)₂↓ (أزرق). أمّا Zn²⁺ فيعطي رسوبًا أبيض Zn(OH)₂، وFe³⁺ يعطي رسوبًا بنّيًّا-أحمر Fe(OH)₃. أيون Na⁺ لا يكوّن راسبًا مع NaOH لأنّ NaOH نفسه ذائب تمامًا.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('9c160614-5424-53cd-b74d-7fcb08bc01ee', '0521d418-e9d4-5282-a308-5f99ca91a898', 'عند إضافة 1 L من الماء المقطّر إلى 1 L من محلول NaCl تركيزه C₁ = 20 g/L، ثمّ أُخذت من المحلول الناتج عيّنة حجمها 200 mL وخُفِّفت بإضافة الماء حتّى بلغ حجمها الإجمالي 1 L. ما تركيز المحلول في المرحلة الأخيرة (g/L)؟', '[{"id":"a","text":"10 g/L"},{"id":"b","text":"2 g/L"},{"id":"c","text":"4 g/L"},{"id":"d","text":"0.4 g/L"}]'::jsonb, 'b', 'التخفيف الأوّل: C₁ × V₁ = C₂ × V₂ ← 20 × 1 = C₂ × 2 → C₂ = 10 g/L. التخفيف الثاني: C₂ × V = C₃ × V'' ← 10 × 0.2 = C₃ × 1 → C₃ = 2 g/L. الخيار A (10 g/L) هو نتيجة التخفيف الأوّل فقط (توقّف عند منتصف الطريق). الخيار C (4 g/L) خطأ في حساب أحد عاملَي التخفيف. الخيار D (0.4 g/L) يُخطئ في تحويل الوحدات أو ترتيب العمليات.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('c4d933cf-0723-5b04-9512-73b2a26bbfd3', '0521d418-e9d4-5282-a308-5f99ca91a898', 'أُذيب حمض كلور الهيدروجين HCl في الماء فانحلّ تمامًا إلى H⁺ و Cl⁻. ثمّ أُضيف إلى المحلول الناتج كميّةٌ مكافئة (من حيث عدد المولات) من هيدروكسيد الصوديوم NaOH ليتشرّد تمامًا إلى Na⁺ و OH⁻. بعد التفاعل التام بين H⁺ و OH⁻ (تفاعل التعادل: H⁺ + OH⁻ → H₂O)، أيّ الأيونات يبقى في المحلول؟', '[{"id":"a","text":"H⁺ و OH⁻ فقط"},{"id":"b","text":"لا توجد أيونات — المحلول أصبح غير شاردي"},{"id":"c","text":"Na⁺ و Cl⁻ فقط"},{"id":"d","text":"Na⁺ و OH⁻ فقط"}]'::jsonb, 'c', 'عند التعادل بين HCl وNaOH بكميّات مكافئة: H⁺ + OH⁻ → H₂O (يتّحدان ويختفيان). تبقى في المحلول الأيونات المتفرّجة (الطيفية) التي لم تشارك في التفاعل وهي Na⁺ (من NaOH) و Cl⁻ (من HCl). المحلول الناتج شاردي — يحتوي Na⁺ و Cl⁻ — وهو محلول ملح الطعام NaCl. لذا الخيار B خاطئ تمامًا: التعادل لا يُزيل الأيونات الطيفية. الخيار A خاطئ لأنّ H⁺ و OH⁻ تفاعلا وتحوّلا إلى ماء. الخيار D خاطئ لأنّ OH⁻ أُنفق في التفاعل.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('aa3037c2-dc2e-5317-9d51-fdf5bfbe32e1', '0521d418-e9d4-5282-a308-5f99ca91a898', 'محلولان: المحلول A حجمه 250 mL ويحتوي 7.3 g من HCl (M = 36.5 g/mol)، والمحلول B حجمه 500 mL ويحتوي 14.6 g من HCl. مقارنةً بالناقلية الكهربائية: أيّ العبارات صحيحة؟', '[{"id":"a","text":"A أقلّ ناقليةً من B لأنّ كتلة HCl في A أقلّ"},{"id":"b","text":"B أكثر ناقليةً من A لأنّ حجمه أكبر"},{"id":"c","text":"A و B لهما ناقلية متساوية لأنّ تركيزيهما متساويان"},{"id":"d","text":"A أكثر ناقليةً من B لأنّ تركيزه أعلى"}]'::jsonb, 'c', 'الحساب: تركيز A: C_A = 7.3 g ÷ 0.250 L = 29.2 g/L. تركيز B: C_B = 14.6 g ÷ 0.500 L = 29.2 g/L. التركيزان متساويان تمامًا! بما أنّ الناقلية الكهربائية تعتمد على تركيز الشوارد في وحدة الحجم (لا على الكمية الكلية في المحلول)، فإنّ A و B يتساويان في الناقلية رغم اختلاف حجمَيهما وكتلتَي HCl المذابَين فيهما. الخيار A يُخطئ بمقارنة الكتل بدل التركيزات. الخيار B يُخطئ بمقارنة الأحجام بدل التركيزات. الخيار D صحيح المبدأ لكن خاطئ التطبيق لأنّ التركيزَين متساويان.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('4f7081aa-19ca-51d2-89bf-53c0df39a751', 'cb55bcb6-c41c-5c05-b94a-fad88e81e703', 'svt', 'اختبار فهم الدرس', 1, 20, 5, 'quiz', 'admin', 0)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -2411,6 +2994,78 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('626562e0-0107-5931-a5c3-c85b50adcbaf', '312fd190-acd6-519d-b510-a59663bf790c', 'تيار I = 0.5 A يمرّ في دائرة تسلسلية بها R₁ = 8 Ω و R₂ = 12 Ω. ما التوتر الكلّي للمصدر؟', '[{"id":"a","text":"10 V"},{"id":"b","text":"4 V"},{"id":"c","text":"6 V"},{"id":"d","text":"20 V"}]'::jsonb, 'a', 'R_total = R₁ + R₂ = 8 + 12 = 20 Ω. ثمّ U = R_total × I = 20 × 0.5 = 10 V. يمكن التحقّق: U₁ = 8 × 0.5 = 4 V، U₂ = 12 × 0.5 = 6 V، U₁ + U₂ = 10 V.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('7bb658da-1eb2-5396-855b-6691df866a7e', 'cb55bcb6-c41c-5c05-b94a-fad88e81e703', 'svt', '👑 تحدّي النخبة: الدوائر الكهربائية المعقّدة', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('f37e29c9-292d-58b5-a04d-2e6386464398', '7bb658da-1eb2-5396-855b-6691df866a7e', 'دائرة كهربائية مختلطة: مقاومة R₁ = 6 Ω موصولة على التسلسل مع مجموعة توازي مكوّنة من R₂ = 4 Ω و R₃ = 12 Ω. ما المقاومة الإجمالية للدائرة؟', '[{"id":"a","text":"22 Ω"},{"id":"b","text":"10 Ω"},{"id":"c","text":"9 Ω"},{"id":"d","text":"4 Ω"}]'::jsonb, 'c', 'الخطوة 1 — المقاومة المكافئة لـ R₂ و R₃ على التوازي: R₂₃ = (R₂ × R₃) / (R₂ + R₃) = (4 × 12) / (4 + 12) = 48 / 16 = 3 Ω. الخطوة 2 — المقاومة الإجمالية (R₁ على التسلسل مع R₂₃): R_total = R₁ + R₂₃ = 6 + 3 = 9 Ω. الخطأ الشائع: جمع الثلاث مقاومات مباشرةً يعطي 22 Ω وهو خاطئ لأنّ R₂ و R₃ على التوازي وليس على التسلسل.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('a7548201-d6f4-5fd4-b61c-360ce1e05647', '7bb658da-1eb2-5396-855b-6691df866a7e', 'بالنسبة للدائرة المختلطة ذاتها (R₁ = 6 Ω على التسلسل مع R₂ = 4 Ω و R₃ = 12 Ω على التوازي)، إذا كان توتر المصدر U = 18 V، فما شدّة التيار الصادر من المصدر؟', '[{"id":"a","text":"2 A"},{"id":"b","text":"3 A"},{"id":"c","text":"1 A"},{"id":"d","text":"0.5 A"}]'::jsonb, 'a', 'من السؤال السابق عرفنا أنّ R_total = 9 Ω. بتطبيق قانون أوم على الدائرة الكاملة: I = U / R_total = 18 / 9 = 2 A. هذا هو التيار الذي يمرّ في الفرع الرئيسي (عبر R₁) وهو نفسه التيار الكلّي الصادر من المصدر.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('81d34d62-3d42-5010-97d3-6c61b81427ce', '7bb658da-1eb2-5396-855b-6691df866a7e', 'في الدائرة المختلطة ذاتها (R₁ = 6 Ω، R₂ = 4 Ω، R₃ = 12 Ω على التوازي، U = 18 V، I_total = 2 A)، ما شدّة التيار المارّ في R₂ = 4 Ω؟', '[{"id":"a","text":"2 A"},{"id":"b","text":"1 A"},{"id":"c","text":"0.5 A"},{"id":"d","text":"1.5 A"}]'::jsonb, 'd', 'الخطوة 1 — إيجاد التوتر على مجموعة التوازي: U₂₃ = R₂₃ × I_total = 3 × 2 = 6 V (حيث R₂₃ = 3 Ω كما حُسب سابقًا). الخطوة 2 — بما أنّ R₂ و R₃ على التوازي، فالتوتر على كلٍّ منهما هو U₂₃ = 6 V. الخطوة 3 — بقانون أوم: I₂ = U₂₃ / R₂ = 6 / 4 = 1.5 A. تحقّق: I₃ = 6 / 12 = 0.5 A، وI₂ + I₃ = 1.5 + 0.5 = 2 A = I_total ✓.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('910ea47f-22cc-514c-94e8-7da36bd5e32c', '7bb658da-1eb2-5396-855b-6691df866a7e', 'ثلاث مقاومات R₁ = 5 Ω و R₂ = 10 Ω و R₃ = 15 Ω موصولة على التسلسل بمصدر توتره U = 30 V. ما التوتر U₂ عبر المقاومة R₂؟', '[{"id":"a","text":"15 V"},{"id":"b","text":"10 V"},{"id":"c","text":"5 V"},{"id":"d","text":"20 V"}]'::jsonb, 'b', 'الخطوة 1 — المقاومة الكلية: R_total = R₁ + R₂ + R₃ = 5 + 10 + 15 = 30 Ω. الخطوة 2 — شدّة التيار (نفسها في جميع المقاومات على التسلسل): I = U / R_total = 30 / 30 = 1 A. الخطوة 3 — التوتر عبر R₂: U₂ = R₂ × I = 10 × 1 = 10 V. تحقّق: U₁ = 5 V، U₂ = 10 V، U₃ = 15 V، المجموع = 30 V = U ✓. الخطأ الشائع: أخذ نسبة R₂ من مجموع المقاومات ضرب U بشكل خاطئ.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('517b0fbc-7cc7-5a38-820b-66c3497d5a78', '7bb658da-1eb2-5396-855b-6691df866a7e', 'ثلاث مقاومات R₁ = 3 Ω و R₂ = 6 Ω و R₃ = 6 Ω موصولة على التوازي. ما المقاومة الإجمالية المكافئة لهذا التركيب؟', '[{"id":"a","text":"3 Ω"},{"id":"b","text":"2 Ω"},{"id":"c","text":"1.5 Ω"},{"id":"d","text":"4 Ω"}]'::jsonb, 'c', 'في التوازي: 1/R_total = 1/R₁ + 1/R₂ + 1/R₃ = 1/3 + 1/6 + 1/6. نوحّد المقامات: 1/3 = 2/6، إذن 1/R_total = 2/6 + 1/6 + 1/6 = 4/6. ومنه: R_total = 6/4 = 1.5 Ω. تذكّر: المقاومة الإجمالية في التوازي دائمًا أصغر من أصغر مقاومة منفردة (3 Ω هنا)، وهذا يتحقّق إذ 1.5 Ω < 3 Ω.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('4a873fee-4f00-5acc-bd13-ef42c1338312', '7bb658da-1eb2-5396-855b-6691df866a7e', 'دائرة مختلطة: مصدر توتره U = 24 V، ومقاومة R₁ = 8 Ω على التسلسل مع مجموعة توازي من R₂ = 6 Ω و R₃ = 12 Ω. ما التوتر U₁ عبر R₁؟', '[{"id":"a","text":"16 V"},{"id":"b","text":"8 V"},{"id":"c","text":"12 V"},{"id":"d","text":"24 V"}]'::jsonb, 'a', 'الخطوة 1 — المقاومة المكافئة لـ R₂ و R₃ على التوازي: R₂₃ = (6 × 12) / (6 + 12) = 72 / 18 = 4 Ω. الخطوة 2 — المقاومة الإجمالية: R_total = R₁ + R₂₃ = 8 + 4 = 12 Ω. الخطوة 3 — التيار الكلّي: I = U / R_total = 24 / 12 = 2 A. الخطوة 4 — التوتر عبر R₁: U₁ = R₁ × I = 8 × 2 = 16 V. تحقّق: التوتر على مجموعة التوازي U₂₃ = R₂₃ × I = 4 × 2 = 8 V، وU₁ + U₂₃ = 16 + 8 = 24 V = U ✓.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,

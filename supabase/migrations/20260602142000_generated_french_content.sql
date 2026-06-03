@@ -5,6 +5,15 @@
 -- Source of truth: content/french/
 -- =========================================================
 
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'exercises_mode_check') THEN
+    ALTER TABLE public.exercises DROP CONSTRAINT exercises_mode_check;
+  END IF;
+  ALTER TABLE public.exercises
+    ADD CONSTRAINT exercises_mode_check CHECK (mode IN ('practice', 'boss', 'quiz', 'challenge'));
+END $$;
+
 INSERT INTO public.subjects (id, name_fr, description, attribute, color_token, icon, display_order, content_language) VALUES
   ('french', 'Français', 'Grammaire, conjugaison, lexique, compréhension et production écrite — programme de 9ème année de base', 'Sagesse', 'subject-french', 'BookOpen', 2, 'fr')
 ON CONFLICT (id) DO UPDATE SET
@@ -26,11 +35,11 @@ BEGIN
       AND q.exercise_id = e.id
       AND e.subject_id = 'french'
       AND e.source = 'admin'
-      AND q.id NOT IN ('7a3d666a-ae97-5cca-b650-d0d8ab427c72', 'b2ff9a73-4e3e-5480-8908-65ac415b84b9', 'd6a3e46e-b0b6-54a7-b112-b02150981080', 'b54bb455-90a0-51f8-85a9-bd1a7c6490b4', '1f97d038-415e-5681-996d-bbb0881e4026', 'd7f2f2b1-7a71-5c8f-8684-6fe8a2a5b9f3', '50cce373-29a3-50c2-8dfb-6b123b7c0f09', '37b194e0-3e8e-55f3-ab43-d7de67825e3a', 'eccc5914-b0d5-5035-804e-16a2cefc1af6', 'fd092ac9-1a1b-5654-a751-1f1f28f5548a', '6fbb7ffb-02e9-5d41-a1b1-80ebf9561872', '11d792cc-0455-56d3-b00b-9145225ca97b', '9044bfb1-eeb6-54e1-a7d8-10408624f911', '8499fe2e-7b46-5dd1-a7e8-c679eb7bf64c', '079d8ed9-845f-5b08-9391-5984479ec84f', '276a92b0-0c54-5381-b57c-d86ad57b021e', 'aabce6d4-f8ce-58d2-8737-80d73b3f05c8', 'cd3e5a8a-d94f-58a0-8c6f-8838b820e67a', 'ef679ede-b207-51a6-b679-e6d7ec83f53a', '3e6d1a0e-ebba-5662-9b50-235bc8111b80', '051afec1-27e6-5b01-a35c-113fd8d1d9cc', '940021d7-b5b4-5449-83ea-ce2fbc279ff3', 'd645eccd-a5d0-5aeb-9284-79aab3b2de20', '4b8817ab-0b1e-5d97-9a7b-8fd6753ca908', '07e8045b-b474-56cb-88ee-a5cc0e713ffa', 'cff983e1-a078-56c3-96fc-1bc3c9f70b8e', '1e3fc6c2-7f49-579a-9766-20a7860eca17', '308d579a-062a-5895-abfd-e1a05a0356de', 'c19c1f96-69fa-5f06-a875-55bcfda850ce', '98016972-94e1-5f90-9b1e-f59b43d6b0ae', '851ee672-a02e-5b39-85ab-663ccff5fccd', '78994701-0a13-5aa5-b908-e0dc7fa8fd7a', '733b88c0-3f49-56a9-a7a5-beb1ccab73cf', '67a0c11d-ab91-59df-b1f1-e411d1e2cb95', '4a4ba085-73fa-5f77-bfdc-a81caab9b51e', '75e4d82d-47e0-5432-b840-67558c7322b8', '9fec6335-9472-5469-846a-75981fedeba3', '19564ab9-63a3-530c-a139-4913f70fcd20', '783bb08e-d6a7-5d72-ae16-851a5e696425', '96225451-0ff2-5e30-ab72-ea01d8573838', 'ad7aa3eb-7915-51a2-8ad8-f71a33b99fb1', 'c3e2ab45-089e-5a99-b92a-87cbb5576dde', '36a444de-1993-5b9a-8fb0-9a5cfe7f77b6', 'fde829bd-4a35-5b7a-980b-d9373c4bb855', '6d7569dc-adcd-5490-8ab4-9e1252876fbc', '3b271bbf-7019-55aa-93bb-583c3fbb407a', '332e1995-cf27-5529-9e9c-87c94efb4982', '4c1cd36e-d806-5894-a665-34368ab1f4bc', '6abd4b21-6d1c-51e3-9607-d615dae991a3', '3d1e84a5-a743-5748-b970-cc7eda950ebc', 'f22c973f-b551-5ada-b930-ce0801010307', '6d1bf493-f6d4-5de2-8d8f-4e728127758b', 'd54d5b3a-c34c-5314-8b03-d3350d485dcd', '633f9e2a-6695-5ff9-b6f6-934cbe3e687f', '0a8d594c-bdec-5df8-a62e-51a618c211c4', 'e076c07d-7d92-5511-a4ab-c5711a2c73cd', 'c124cc25-0734-5a92-811e-669baf60fa4b', 'a365e428-06ba-5c4e-b3fb-3b1eb755b102', '69045ed1-0311-55cc-a9d1-5ff08b74073c', '103b3b98-c5ec-5850-b280-83a2c4488045', 'b56fc225-0884-57fe-9604-a5f47069571c', 'eed4181b-dcbb-5ee2-b6e2-44685205a62e', 'd53a306c-aa47-55c3-b52a-3b76f508e771', '789d8fb4-ef9b-57a5-971b-67821be37f1a', '927e93ec-4461-53b5-9378-38ef71fbb9b2', '03c3a61a-f9aa-5183-a4e0-994f72750e44', '7b7368b8-68e7-5388-a30c-503e4d1dc5dd', 'b4beed3e-de76-5a9d-b807-84d386df921d', '860343a5-fe3b-56a4-943f-74ea5732b0ef', '6f9f38b1-0cf8-50cf-97b9-f7484f39aac2', 'f7705088-66ed-5e8d-b23e-63a1f2eb6260', '6d2559a3-989d-53df-8054-651a6ed1b9f6', '358f2069-51cf-5a2a-be86-9b7f5e9ef89a', '6d3e559b-0449-57de-89b2-0ff23b9fd893', 'f2f3c849-25e9-53d0-b09e-4eff720714b2', '3ee10a83-a4d9-5855-bb7d-79425521b890', '2329c69b-07a0-5905-8d3b-82a269887104', '815783b6-b7f5-5dea-9eea-baaa8f7a3382', 'a2241625-9fa9-504f-841d-0b346289ca00', '1b86b32d-c59d-5d28-a86e-a87b3cd41919', '3fadd44b-aca0-5ece-b1a4-02766d4517e3', 'cbaa9f7f-4a56-5d1f-b53d-df4861ef1871', '83dfacbc-3c11-55bf-ad09-cc214abb3711', '1f4296d8-c07e-5e6d-b599-0022c8f72118', '3a935e4d-91f9-59c5-aed2-fbaedff745b6', 'a07afd33-a11b-52b9-b5ba-343427b0bc84', 'dbd55b7e-bb3e-5706-9186-e833923ce87d', '5aeed1da-a9ed-53f3-9f19-b9f22a1abc0d', '33b4e382-cde8-5e40-8398-c5e311c1ccf4', 'd6e6c9bc-90d2-5532-9fcf-52ddef7681b1', 'e91167fb-6b84-515a-9848-d07949d71c90', '28997c99-1b74-5330-8272-d08f4682b8c8', 'ee97c631-820f-50c1-9de3-58f140893afa', '5f51a382-45ef-51f7-a25b-2e95a78d6c1f', '676a25e8-1769-5b86-945f-06f2bf2d8548', 'cc3b9212-5768-5113-ad7b-2ba9128d740f', '0b03e40f-b428-588f-8ccc-c9431e9e0fda', 'ba963d3c-68cf-5c49-b62e-344049caab0e', 'c394033c-66d8-548c-951c-5472f4c41c30', 'efa163b4-a341-5c43-9bfb-142a7b277fa7', 'a467a610-6abe-5eac-ba05-83a1fa8608f7', '1ba1108b-cd4f-590a-b3ce-0e1bb8b0a251', '5f8ad45d-b161-562e-b38c-3524e78b7214', '26d2e999-0836-52ea-beac-d55e58bce05d', 'ca5f29a5-a523-5a3a-b6b2-f40db9ee0548', 'f43f9ef9-486d-5151-9ec5-2c5f7ad19738', '0adce953-7057-5641-b1cb-337665f8da31', 'b7b276c1-df61-5015-a396-ac06265465c7', '1cd7fbf9-2cc6-5eb7-879f-94d9ee76d569', '120db6b4-7f11-50e3-bbd3-e8ab5cbe63ff', 'e29bdbfe-677e-5173-8a30-dc1ddc813fe8', '9e3d2494-fea2-5244-b1a6-622c5560913b', 'a8a55df7-3f25-5d5b-8ea5-5f14e3c12204', '5e344432-2f71-56d6-abf1-5c8c31d537c9', '24a82297-67c0-5306-9121-6efc815a919e', '9bfeec0f-5f54-5365-9c20-356635d68e1c', '73d9a740-8761-50f2-a74c-f66483150482', 'a08dc674-1ad0-5709-ac2a-91fb09b03e23', '1a654666-d0cf-5a81-9244-aad9397d5ddb', 'ee69c6c1-c5df-5cd9-9da9-046389fb356f', 'd5881556-ec1e-57f7-9dde-d113d29c8710', '17071935-7310-51c2-a8d6-00bbac4c3e23', '72632bce-eb90-5864-8b0a-fd10908fafe1', 'e4bf56ff-2ae1-5126-9019-5800347aa34a', '1cfa6dc4-e445-543e-9cdf-1baae0c8f842', '00a19639-3883-5d3c-8924-c94faf49d549', 'db7ecffa-12db-5ebe-a71f-0b59145133eb', '4032fad4-617f-58e6-b390-53e4b2c6c1c6', '61ccedd3-9052-5b32-ab73-cd1879d56ae7', '6cc0e08b-af9c-5dce-b02f-5bd6587bd103', 'ed57c56c-2714-58cf-b436-afc5b1f0fb55', 'a704ca25-4e84-5194-ae74-d707994df17e', '3088ed38-3f25-5167-aa73-a51d2fb61486', '16ef4fd9-0bf8-5dcc-bcee-af59ae8bdb12', '64e55faa-0a53-52af-8b05-97dd07023788', '29b2923e-5b05-5c0d-abd3-f0e7bb7dd6eb');
+      AND q.id NOT IN ('7a3d666a-ae97-5cca-b650-d0d8ab427c72', 'b2ff9a73-4e3e-5480-8908-65ac415b84b9', 'd6a3e46e-b0b6-54a7-b112-b02150981080', 'b54bb455-90a0-51f8-85a9-bd1a7c6490b4', '1f97d038-415e-5681-996d-bbb0881e4026', 'd7f2f2b1-7a71-5c8f-8684-6fe8a2a5b9f3', '50cce373-29a3-50c2-8dfb-6b123b7c0f09', '37b194e0-3e8e-55f3-ab43-d7de67825e3a', 'eccc5914-b0d5-5035-804e-16a2cefc1af6', 'fd092ac9-1a1b-5654-a751-1f1f28f5548a', '6fbb7ffb-02e9-5d41-a1b1-80ebf9561872', '11d792cc-0455-56d3-b00b-9145225ca97b', '9044bfb1-eeb6-54e1-a7d8-10408624f911', '8499fe2e-7b46-5dd1-a7e8-c679eb7bf64c', '079d8ed9-845f-5b08-9391-5984479ec84f', '276a92b0-0c54-5381-b57c-d86ad57b021e', 'aabce6d4-f8ce-58d2-8737-80d73b3f05c8', '9d9b6ed5-2ef5-5fff-ac60-55e0b8b2fad9', '5681cba6-16a7-5d6d-82d8-c3818931e1be', '3f75e68a-b3b0-55c3-9382-e5492e615843', '867877d2-a50f-5b3d-802b-ab2e9ce8500d', '82fdcaf9-70ee-54db-9304-ea970a6d626e', 'bfcac64e-20bb-5243-b94e-f9ca32b9656e', 'cd3e5a8a-d94f-58a0-8c6f-8838b820e67a', 'ef679ede-b207-51a6-b679-e6d7ec83f53a', '3e6d1a0e-ebba-5662-9b50-235bc8111b80', '051afec1-27e6-5b01-a35c-113fd8d1d9cc', '940021d7-b5b4-5449-83ea-ce2fbc279ff3', 'd645eccd-a5d0-5aeb-9284-79aab3b2de20', '4b8817ab-0b1e-5d97-9a7b-8fd6753ca908', '07e8045b-b474-56cb-88ee-a5cc0e713ffa', 'cff983e1-a078-56c3-96fc-1bc3c9f70b8e', '1e3fc6c2-7f49-579a-9766-20a7860eca17', '308d579a-062a-5895-abfd-e1a05a0356de', 'c19c1f96-69fa-5f06-a875-55bcfda850ce', '98016972-94e1-5f90-9b1e-f59b43d6b0ae', '851ee672-a02e-5b39-85ab-663ccff5fccd', '78994701-0a13-5aa5-b908-e0dc7fa8fd7a', '733b88c0-3f49-56a9-a7a5-beb1ccab73cf', '67a0c11d-ab91-59df-b1f1-e411d1e2cb95', 'b8697075-71ce-56a1-987c-a1f9cc79846a', '6d3ba807-5296-5b3b-b100-06baba0b4726', 'de3152a5-2625-51bc-97a3-b2ee29cbb5a6', 'cb5483c3-b3c7-58be-8735-6e1c7d30764b', 'a600da65-51d7-52b5-aa7f-11fa86b62d26', '7a99cc03-d6f9-52f4-bdc4-9f531267885c', '4a4ba085-73fa-5f77-bfdc-a81caab9b51e', '75e4d82d-47e0-5432-b840-67558c7322b8', '9fec6335-9472-5469-846a-75981fedeba3', '19564ab9-63a3-530c-a139-4913f70fcd20', '783bb08e-d6a7-5d72-ae16-851a5e696425', '96225451-0ff2-5e30-ab72-ea01d8573838', 'ad7aa3eb-7915-51a2-8ad8-f71a33b99fb1', 'c3e2ab45-089e-5a99-b92a-87cbb5576dde', '36a444de-1993-5b9a-8fb0-9a5cfe7f77b6', 'fde829bd-4a35-5b7a-980b-d9373c4bb855', '6d7569dc-adcd-5490-8ab4-9e1252876fbc', '3b271bbf-7019-55aa-93bb-583c3fbb407a', '332e1995-cf27-5529-9e9c-87c94efb4982', '4c1cd36e-d806-5894-a665-34368ab1f4bc', '6abd4b21-6d1c-51e3-9607-d615dae991a3', '3d1e84a5-a743-5748-b970-cc7eda950ebc', 'f22c973f-b551-5ada-b930-ce0801010307', '47c9ba09-be77-5e69-9af8-8b89d56d6402', '6bb46e0f-1ca3-5dfc-bab0-c7a2e1f611e3', '1061e3a4-4d8c-545b-a98c-2dd987472eaa', '8a6d6d54-fab2-5da9-b165-6880b7d6dfde', '769e9ea5-33a5-5482-b19c-3ff5205cac01', '4357bc16-e6fd-5663-8d0e-ac9d2bfafdea', '6d1bf493-f6d4-5de2-8d8f-4e728127758b', 'd54d5b3a-c34c-5314-8b03-d3350d485dcd', '633f9e2a-6695-5ff9-b6f6-934cbe3e687f', '0a8d594c-bdec-5df8-a62e-51a618c211c4', 'e076c07d-7d92-5511-a4ab-c5711a2c73cd', 'c124cc25-0734-5a92-811e-669baf60fa4b', 'a365e428-06ba-5c4e-b3fb-3b1eb755b102', '69045ed1-0311-55cc-a9d1-5ff08b74073c', '103b3b98-c5ec-5850-b280-83a2c4488045', 'b56fc225-0884-57fe-9604-a5f47069571c', 'eed4181b-dcbb-5ee2-b6e2-44685205a62e', 'd53a306c-aa47-55c3-b52a-3b76f508e771', '789d8fb4-ef9b-57a5-971b-67821be37f1a', '927e93ec-4461-53b5-9378-38ef71fbb9b2', '03c3a61a-f9aa-5183-a4e0-994f72750e44', '7b7368b8-68e7-5388-a30c-503e4d1dc5dd', 'b4beed3e-de76-5a9d-b807-84d386df921d', '1de99ec2-2a17-58f7-9114-ec649edef3b9', 'b262a7f4-2c4a-5516-b86f-a4364a2f19cd', 'bf2f5e39-a69b-57db-bf3b-7ad4944e8af1', '743f0cfa-5ea6-5f79-b14e-37765de428fd', '17aa026e-8a88-58d5-a5c0-affd7e4f59da', '31d88445-55ae-5ab5-a019-4e8421185606', '860343a5-fe3b-56a4-943f-74ea5732b0ef', '6f9f38b1-0cf8-50cf-97b9-f7484f39aac2', 'f7705088-66ed-5e8d-b23e-63a1f2eb6260', '6d2559a3-989d-53df-8054-651a6ed1b9f6', '358f2069-51cf-5a2a-be86-9b7f5e9ef89a', '6d3e559b-0449-57de-89b2-0ff23b9fd893', 'f2f3c849-25e9-53d0-b09e-4eff720714b2', '3ee10a83-a4d9-5855-bb7d-79425521b890', '2329c69b-07a0-5905-8d3b-82a269887104', '815783b6-b7f5-5dea-9eea-baaa8f7a3382', 'a2241625-9fa9-504f-841d-0b346289ca00', '1b86b32d-c59d-5d28-a86e-a87b3cd41919', '3fadd44b-aca0-5ece-b1a4-02766d4517e3', 'cbaa9f7f-4a56-5d1f-b53d-df4861ef1871', '83dfacbc-3c11-55bf-ad09-cc214abb3711', '1f4296d8-c07e-5e6d-b599-0022c8f72118', '3a935e4d-91f9-59c5-aed2-fbaedff745b6', '8c70b94d-f217-58bc-a0a0-0bf5cc8d027c', 'f07596c5-b4cf-56a0-aedb-85e25a439600', 'b188b3ad-3e88-5b36-9912-e9150f3c8998', '3e79728f-c65b-539a-a096-2ed061f3addd', '508d24d2-5250-505a-a83b-7c7c80b29b95', '3476945b-e660-5149-b6af-990f68a221c7', 'a07afd33-a11b-52b9-b5ba-343427b0bc84', 'dbd55b7e-bb3e-5706-9186-e833923ce87d', '5aeed1da-a9ed-53f3-9f19-b9f22a1abc0d', '33b4e382-cde8-5e40-8398-c5e311c1ccf4', 'd6e6c9bc-90d2-5532-9fcf-52ddef7681b1', 'e91167fb-6b84-515a-9848-d07949d71c90', '28997c99-1b74-5330-8272-d08f4682b8c8', 'ee97c631-820f-50c1-9de3-58f140893afa', '5f51a382-45ef-51f7-a25b-2e95a78d6c1f', '676a25e8-1769-5b86-945f-06f2bf2d8548', 'cc3b9212-5768-5113-ad7b-2ba9128d740f', '0b03e40f-b428-588f-8ccc-c9431e9e0fda', 'ba963d3c-68cf-5c49-b62e-344049caab0e', 'c394033c-66d8-548c-951c-5472f4c41c30', 'efa163b4-a341-5c43-9bfb-142a7b277fa7', 'a467a610-6abe-5eac-ba05-83a1fa8608f7', '1ba1108b-cd4f-590a-b3ce-0e1bb8b0a251', 'e67df23c-e9ee-54fe-b2ab-bc1529b38436', '2a0919b3-712a-5d61-91f9-2a023e33b085', '3d69fe82-436d-59e4-96c0-9dbabc7728e9', '28178fc6-48da-5f7a-833e-d9fe334c8358', '10762f40-915a-5ccf-8f2a-9532db6b3023', 'eb19b45f-4918-50fc-afa4-47655504df12', '5f8ad45d-b161-562e-b38c-3524e78b7214', '26d2e999-0836-52ea-beac-d55e58bce05d', 'ca5f29a5-a523-5a3a-b6b2-f40db9ee0548', 'f43f9ef9-486d-5151-9ec5-2c5f7ad19738', '0adce953-7057-5641-b1cb-337665f8da31', 'b7b276c1-df61-5015-a396-ac06265465c7', '1cd7fbf9-2cc6-5eb7-879f-94d9ee76d569', '120db6b4-7f11-50e3-bbd3-e8ab5cbe63ff', 'e29bdbfe-677e-5173-8a30-dc1ddc813fe8', '9e3d2494-fea2-5244-b1a6-622c5560913b', 'a8a55df7-3f25-5d5b-8ea5-5f14e3c12204', '5e344432-2f71-56d6-abf1-5c8c31d537c9', '24a82297-67c0-5306-9121-6efc815a919e', '9bfeec0f-5f54-5365-9c20-356635d68e1c', '73d9a740-8761-50f2-a74c-f66483150482', 'a08dc674-1ad0-5709-ac2a-91fb09b03e23', '1a654666-d0cf-5a81-9244-aad9397d5ddb', '7f3ed481-20e3-5434-bc4b-65cadb9635ea', 'a19b37f7-b80e-5ae9-bbcf-129d2677cdb6', 'f5ce42e1-de4b-5b66-b8a0-880ca8b71616', '1665f4a2-f2d4-5b90-a73f-cfd8ebc25d82', 'aca78fb2-be94-515e-93e9-07de78b76084', 'fe2204e3-3db5-5b36-9d8c-58bb455001d2', 'ee69c6c1-c5df-5cd9-9da9-046389fb356f', 'd5881556-ec1e-57f7-9dde-d113d29c8710', '17071935-7310-51c2-a8d6-00bbac4c3e23', '72632bce-eb90-5864-8b0a-fd10908fafe1', 'e4bf56ff-2ae1-5126-9019-5800347aa34a', '1cfa6dc4-e445-543e-9cdf-1baae0c8f842', '00a19639-3883-5d3c-8924-c94faf49d549', 'db7ecffa-12db-5ebe-a71f-0b59145133eb', '4032fad4-617f-58e6-b390-53e4b2c6c1c6', '61ccedd3-9052-5b32-ab73-cd1879d56ae7', '6cc0e08b-af9c-5dce-b02f-5bd6587bd103', 'ed57c56c-2714-58cf-b436-afc5b1f0fb55', 'a704ca25-4e84-5194-ae74-d707994df17e', '3088ed38-3f25-5167-aa73-a51d2fb61486', '16ef4fd9-0bf8-5dcc-bcee-af59ae8bdb12', '64e55faa-0a53-52af-8b05-97dd07023788', '29b2923e-5b05-5c0d-abd3-f0e7bb7dd6eb', 'ef5d7171-95a0-578b-bc28-53b6fe14dad2', '588ccf1f-d83f-5cb6-91a3-1d26330db329', 'e33bc694-7409-5ed9-b465-5dafa064edd3', 'd023279e-7134-5bd4-becb-6322f8306d5f', 'ff0ae26c-d6d6-5f50-ba1c-9976a19069be', '9c7803ee-0d85-57e7-ba51-8abe476a5058');
   END IF;
 END $$;
-DELETE FROM public.exercises WHERE subject_id = 'french' AND source = 'admin' AND id NOT IN ('1368c9b4-7ea9-5818-ad62-b7c96b0dbda1', 'e8b74863-3fe8-5aad-a426-621ef75ec7ef', '3b342ef2-05e7-53d3-bded-effe80517ef5', '28b6e6d9-1123-5ff7-8652-ff24bca1258a', '03ebf9d6-a2d7-5967-b86c-70019206e357', '2eac0b4b-84dd-5f90-a06c-9eb9e6d1eec3', 'a5ad7b9f-577b-53bd-a84c-f6b7fb550adc', '12f9cc53-1641-5e87-9958-ae1375000007', '0cec718c-9b55-5aa5-b40e-ad20fffbe4ed', '06501a61-9965-5426-8256-57479f8c4308', '7a24537c-05b2-5498-864c-768a4f7b3ee8', 'a929d5d0-6d99-542b-8482-d7e65feeb3b3', 'ad167a20-ae28-5904-9ce3-00d98dc0577e', 'b89d641c-95d4-5820-875a-3bac22a2add4', '7efc2dc4-09b3-576b-b2f2-78e7a6288526', 'c4e4212c-8f83-5e3b-aa43-0d6d3e5a9fba', '4758ebaf-51ff-5d37-b504-914009e31959', '7e38a684-6fa6-5bf2-ac76-40bf6085e469', '8d1de601-0c73-557f-a3b4-d45a964a2872', 'b3042e50-068f-5b9f-91d5-e64df884f924', '25f31af7-de92-57ff-93ce-e6dc3127c707', 'd49bcd74-d20a-552c-9658-c0d86e053975', '216407d2-5ccf-54fb-bd5c-03550dcaa2e1', '981642c4-6f55-5171-897c-bdf40e984522');
-DELETE FROM public.questions WHERE exercise_id IN ('1368c9b4-7ea9-5818-ad62-b7c96b0dbda1', 'e8b74863-3fe8-5aad-a426-621ef75ec7ef', '3b342ef2-05e7-53d3-bded-effe80517ef5', '28b6e6d9-1123-5ff7-8652-ff24bca1258a', '03ebf9d6-a2d7-5967-b86c-70019206e357', '2eac0b4b-84dd-5f90-a06c-9eb9e6d1eec3', 'a5ad7b9f-577b-53bd-a84c-f6b7fb550adc', '12f9cc53-1641-5e87-9958-ae1375000007', '0cec718c-9b55-5aa5-b40e-ad20fffbe4ed', '06501a61-9965-5426-8256-57479f8c4308', '7a24537c-05b2-5498-864c-768a4f7b3ee8', 'a929d5d0-6d99-542b-8482-d7e65feeb3b3', 'ad167a20-ae28-5904-9ce3-00d98dc0577e', 'b89d641c-95d4-5820-875a-3bac22a2add4', '7efc2dc4-09b3-576b-b2f2-78e7a6288526', 'c4e4212c-8f83-5e3b-aa43-0d6d3e5a9fba', '4758ebaf-51ff-5d37-b504-914009e31959', '7e38a684-6fa6-5bf2-ac76-40bf6085e469', '8d1de601-0c73-557f-a3b4-d45a964a2872', 'b3042e50-068f-5b9f-91d5-e64df884f924', '25f31af7-de92-57ff-93ce-e6dc3127c707', 'd49bcd74-d20a-552c-9658-c0d86e053975', '216407d2-5ccf-54fb-bd5c-03550dcaa2e1', '981642c4-6f55-5171-897c-bdf40e984522') AND id NOT IN ('7a3d666a-ae97-5cca-b650-d0d8ab427c72', 'b2ff9a73-4e3e-5480-8908-65ac415b84b9', 'd6a3e46e-b0b6-54a7-b112-b02150981080', 'b54bb455-90a0-51f8-85a9-bd1a7c6490b4', '1f97d038-415e-5681-996d-bbb0881e4026', 'd7f2f2b1-7a71-5c8f-8684-6fe8a2a5b9f3', '50cce373-29a3-50c2-8dfb-6b123b7c0f09', '37b194e0-3e8e-55f3-ab43-d7de67825e3a', 'eccc5914-b0d5-5035-804e-16a2cefc1af6', 'fd092ac9-1a1b-5654-a751-1f1f28f5548a', '6fbb7ffb-02e9-5d41-a1b1-80ebf9561872', '11d792cc-0455-56d3-b00b-9145225ca97b', '9044bfb1-eeb6-54e1-a7d8-10408624f911', '8499fe2e-7b46-5dd1-a7e8-c679eb7bf64c', '079d8ed9-845f-5b08-9391-5984479ec84f', '276a92b0-0c54-5381-b57c-d86ad57b021e', 'aabce6d4-f8ce-58d2-8737-80d73b3f05c8', 'cd3e5a8a-d94f-58a0-8c6f-8838b820e67a', 'ef679ede-b207-51a6-b679-e6d7ec83f53a', '3e6d1a0e-ebba-5662-9b50-235bc8111b80', '051afec1-27e6-5b01-a35c-113fd8d1d9cc', '940021d7-b5b4-5449-83ea-ce2fbc279ff3', 'd645eccd-a5d0-5aeb-9284-79aab3b2de20', '4b8817ab-0b1e-5d97-9a7b-8fd6753ca908', '07e8045b-b474-56cb-88ee-a5cc0e713ffa', 'cff983e1-a078-56c3-96fc-1bc3c9f70b8e', '1e3fc6c2-7f49-579a-9766-20a7860eca17', '308d579a-062a-5895-abfd-e1a05a0356de', 'c19c1f96-69fa-5f06-a875-55bcfda850ce', '98016972-94e1-5f90-9b1e-f59b43d6b0ae', '851ee672-a02e-5b39-85ab-663ccff5fccd', '78994701-0a13-5aa5-b908-e0dc7fa8fd7a', '733b88c0-3f49-56a9-a7a5-beb1ccab73cf', '67a0c11d-ab91-59df-b1f1-e411d1e2cb95', '4a4ba085-73fa-5f77-bfdc-a81caab9b51e', '75e4d82d-47e0-5432-b840-67558c7322b8', '9fec6335-9472-5469-846a-75981fedeba3', '19564ab9-63a3-530c-a139-4913f70fcd20', '783bb08e-d6a7-5d72-ae16-851a5e696425', '96225451-0ff2-5e30-ab72-ea01d8573838', 'ad7aa3eb-7915-51a2-8ad8-f71a33b99fb1', 'c3e2ab45-089e-5a99-b92a-87cbb5576dde', '36a444de-1993-5b9a-8fb0-9a5cfe7f77b6', 'fde829bd-4a35-5b7a-980b-d9373c4bb855', '6d7569dc-adcd-5490-8ab4-9e1252876fbc', '3b271bbf-7019-55aa-93bb-583c3fbb407a', '332e1995-cf27-5529-9e9c-87c94efb4982', '4c1cd36e-d806-5894-a665-34368ab1f4bc', '6abd4b21-6d1c-51e3-9607-d615dae991a3', '3d1e84a5-a743-5748-b970-cc7eda950ebc', 'f22c973f-b551-5ada-b930-ce0801010307', '6d1bf493-f6d4-5de2-8d8f-4e728127758b', 'd54d5b3a-c34c-5314-8b03-d3350d485dcd', '633f9e2a-6695-5ff9-b6f6-934cbe3e687f', '0a8d594c-bdec-5df8-a62e-51a618c211c4', 'e076c07d-7d92-5511-a4ab-c5711a2c73cd', 'c124cc25-0734-5a92-811e-669baf60fa4b', 'a365e428-06ba-5c4e-b3fb-3b1eb755b102', '69045ed1-0311-55cc-a9d1-5ff08b74073c', '103b3b98-c5ec-5850-b280-83a2c4488045', 'b56fc225-0884-57fe-9604-a5f47069571c', 'eed4181b-dcbb-5ee2-b6e2-44685205a62e', 'd53a306c-aa47-55c3-b52a-3b76f508e771', '789d8fb4-ef9b-57a5-971b-67821be37f1a', '927e93ec-4461-53b5-9378-38ef71fbb9b2', '03c3a61a-f9aa-5183-a4e0-994f72750e44', '7b7368b8-68e7-5388-a30c-503e4d1dc5dd', 'b4beed3e-de76-5a9d-b807-84d386df921d', '860343a5-fe3b-56a4-943f-74ea5732b0ef', '6f9f38b1-0cf8-50cf-97b9-f7484f39aac2', 'f7705088-66ed-5e8d-b23e-63a1f2eb6260', '6d2559a3-989d-53df-8054-651a6ed1b9f6', '358f2069-51cf-5a2a-be86-9b7f5e9ef89a', '6d3e559b-0449-57de-89b2-0ff23b9fd893', 'f2f3c849-25e9-53d0-b09e-4eff720714b2', '3ee10a83-a4d9-5855-bb7d-79425521b890', '2329c69b-07a0-5905-8d3b-82a269887104', '815783b6-b7f5-5dea-9eea-baaa8f7a3382', 'a2241625-9fa9-504f-841d-0b346289ca00', '1b86b32d-c59d-5d28-a86e-a87b3cd41919', '3fadd44b-aca0-5ece-b1a4-02766d4517e3', 'cbaa9f7f-4a56-5d1f-b53d-df4861ef1871', '83dfacbc-3c11-55bf-ad09-cc214abb3711', '1f4296d8-c07e-5e6d-b599-0022c8f72118', '3a935e4d-91f9-59c5-aed2-fbaedff745b6', 'a07afd33-a11b-52b9-b5ba-343427b0bc84', 'dbd55b7e-bb3e-5706-9186-e833923ce87d', '5aeed1da-a9ed-53f3-9f19-b9f22a1abc0d', '33b4e382-cde8-5e40-8398-c5e311c1ccf4', 'd6e6c9bc-90d2-5532-9fcf-52ddef7681b1', 'e91167fb-6b84-515a-9848-d07949d71c90', '28997c99-1b74-5330-8272-d08f4682b8c8', 'ee97c631-820f-50c1-9de3-58f140893afa', '5f51a382-45ef-51f7-a25b-2e95a78d6c1f', '676a25e8-1769-5b86-945f-06f2bf2d8548', 'cc3b9212-5768-5113-ad7b-2ba9128d740f', '0b03e40f-b428-588f-8ccc-c9431e9e0fda', 'ba963d3c-68cf-5c49-b62e-344049caab0e', 'c394033c-66d8-548c-951c-5472f4c41c30', 'efa163b4-a341-5c43-9bfb-142a7b277fa7', 'a467a610-6abe-5eac-ba05-83a1fa8608f7', '1ba1108b-cd4f-590a-b3ce-0e1bb8b0a251', '5f8ad45d-b161-562e-b38c-3524e78b7214', '26d2e999-0836-52ea-beac-d55e58bce05d', 'ca5f29a5-a523-5a3a-b6b2-f40db9ee0548', 'f43f9ef9-486d-5151-9ec5-2c5f7ad19738', '0adce953-7057-5641-b1cb-337665f8da31', 'b7b276c1-df61-5015-a396-ac06265465c7', '1cd7fbf9-2cc6-5eb7-879f-94d9ee76d569', '120db6b4-7f11-50e3-bbd3-e8ab5cbe63ff', 'e29bdbfe-677e-5173-8a30-dc1ddc813fe8', '9e3d2494-fea2-5244-b1a6-622c5560913b', 'a8a55df7-3f25-5d5b-8ea5-5f14e3c12204', '5e344432-2f71-56d6-abf1-5c8c31d537c9', '24a82297-67c0-5306-9121-6efc815a919e', '9bfeec0f-5f54-5365-9c20-356635d68e1c', '73d9a740-8761-50f2-a74c-f66483150482', 'a08dc674-1ad0-5709-ac2a-91fb09b03e23', '1a654666-d0cf-5a81-9244-aad9397d5ddb', 'ee69c6c1-c5df-5cd9-9da9-046389fb356f', 'd5881556-ec1e-57f7-9dde-d113d29c8710', '17071935-7310-51c2-a8d6-00bbac4c3e23', '72632bce-eb90-5864-8b0a-fd10908fafe1', 'e4bf56ff-2ae1-5126-9019-5800347aa34a', '1cfa6dc4-e445-543e-9cdf-1baae0c8f842', '00a19639-3883-5d3c-8924-c94faf49d549', 'db7ecffa-12db-5ebe-a71f-0b59145133eb', '4032fad4-617f-58e6-b390-53e4b2c6c1c6', '61ccedd3-9052-5b32-ab73-cd1879d56ae7', '6cc0e08b-af9c-5dce-b02f-5bd6587bd103', 'ed57c56c-2714-58cf-b436-afc5b1f0fb55', 'a704ca25-4e84-5194-ae74-d707994df17e', '3088ed38-3f25-5167-aa73-a51d2fb61486', '16ef4fd9-0bf8-5dcc-bcee-af59ae8bdb12', '64e55faa-0a53-52af-8b05-97dd07023788', '29b2923e-5b05-5c0d-abd3-f0e7bb7dd6eb');
+DELETE FROM public.exercises WHERE subject_id = 'french' AND source = 'admin' AND id NOT IN ('1368c9b4-7ea9-5818-ad62-b7c96b0dbda1', 'e8b74863-3fe8-5aad-a426-621ef75ec7ef', '3b342ef2-05e7-53d3-bded-effe80517ef5', '61b4c2bb-00ff-5be2-8149-7fe96cebfae4', '28b6e6d9-1123-5ff7-8652-ff24bca1258a', '03ebf9d6-a2d7-5967-b86c-70019206e357', '2eac0b4b-84dd-5f90-a06c-9eb9e6d1eec3', 'e98faad8-fe63-51d3-93ec-1a7da7198b3a', 'a5ad7b9f-577b-53bd-a84c-f6b7fb550adc', '12f9cc53-1641-5e87-9958-ae1375000007', '0cec718c-9b55-5aa5-b40e-ad20fffbe4ed', '6964cb06-f67d-56f4-a779-bbbe567f265c', '06501a61-9965-5426-8256-57479f8c4308', '7a24537c-05b2-5498-864c-768a4f7b3ee8', 'a929d5d0-6d99-542b-8482-d7e65feeb3b3', '61bb4f2d-caf9-530c-bf07-7db1eaf72f8e', 'ad167a20-ae28-5904-9ce3-00d98dc0577e', 'b89d641c-95d4-5820-875a-3bac22a2add4', '7efc2dc4-09b3-576b-b2f2-78e7a6288526', '390674fc-7d19-5cd5-a9db-018176765203', 'c4e4212c-8f83-5e3b-aa43-0d6d3e5a9fba', '4758ebaf-51ff-5d37-b504-914009e31959', '7e38a684-6fa6-5bf2-ac76-40bf6085e469', '7095b9e0-8e62-5384-8408-e05fd85503ef', '8d1de601-0c73-557f-a3b4-d45a964a2872', 'b3042e50-068f-5b9f-91d5-e64df884f924', '25f31af7-de92-57ff-93ce-e6dc3127c707', '187b2c98-92ea-540b-a7e7-5dd9c2fa383a', 'd49bcd74-d20a-552c-9658-c0d86e053975', '216407d2-5ccf-54fb-bd5c-03550dcaa2e1', '981642c4-6f55-5171-897c-bdf40e984522', '1e8573c3-f5b0-53c4-afdf-0b71b3a6dd27');
+DELETE FROM public.questions WHERE exercise_id IN ('1368c9b4-7ea9-5818-ad62-b7c96b0dbda1', 'e8b74863-3fe8-5aad-a426-621ef75ec7ef', '3b342ef2-05e7-53d3-bded-effe80517ef5', '61b4c2bb-00ff-5be2-8149-7fe96cebfae4', '28b6e6d9-1123-5ff7-8652-ff24bca1258a', '03ebf9d6-a2d7-5967-b86c-70019206e357', '2eac0b4b-84dd-5f90-a06c-9eb9e6d1eec3', 'e98faad8-fe63-51d3-93ec-1a7da7198b3a', 'a5ad7b9f-577b-53bd-a84c-f6b7fb550adc', '12f9cc53-1641-5e87-9958-ae1375000007', '0cec718c-9b55-5aa5-b40e-ad20fffbe4ed', '6964cb06-f67d-56f4-a779-bbbe567f265c', '06501a61-9965-5426-8256-57479f8c4308', '7a24537c-05b2-5498-864c-768a4f7b3ee8', 'a929d5d0-6d99-542b-8482-d7e65feeb3b3', '61bb4f2d-caf9-530c-bf07-7db1eaf72f8e', 'ad167a20-ae28-5904-9ce3-00d98dc0577e', 'b89d641c-95d4-5820-875a-3bac22a2add4', '7efc2dc4-09b3-576b-b2f2-78e7a6288526', '390674fc-7d19-5cd5-a9db-018176765203', 'c4e4212c-8f83-5e3b-aa43-0d6d3e5a9fba', '4758ebaf-51ff-5d37-b504-914009e31959', '7e38a684-6fa6-5bf2-ac76-40bf6085e469', '7095b9e0-8e62-5384-8408-e05fd85503ef', '8d1de601-0c73-557f-a3b4-d45a964a2872', 'b3042e50-068f-5b9f-91d5-e64df884f924', '25f31af7-de92-57ff-93ce-e6dc3127c707', '187b2c98-92ea-540b-a7e7-5dd9c2fa383a', 'd49bcd74-d20a-552c-9658-c0d86e053975', '216407d2-5ccf-54fb-bd5c-03550dcaa2e1', '981642c4-6f55-5171-897c-bdf40e984522', '1e8573c3-f5b0-53c4-afdf-0b71b3a6dd27') AND id NOT IN ('7a3d666a-ae97-5cca-b650-d0d8ab427c72', 'b2ff9a73-4e3e-5480-8908-65ac415b84b9', 'd6a3e46e-b0b6-54a7-b112-b02150981080', 'b54bb455-90a0-51f8-85a9-bd1a7c6490b4', '1f97d038-415e-5681-996d-bbb0881e4026', 'd7f2f2b1-7a71-5c8f-8684-6fe8a2a5b9f3', '50cce373-29a3-50c2-8dfb-6b123b7c0f09', '37b194e0-3e8e-55f3-ab43-d7de67825e3a', 'eccc5914-b0d5-5035-804e-16a2cefc1af6', 'fd092ac9-1a1b-5654-a751-1f1f28f5548a', '6fbb7ffb-02e9-5d41-a1b1-80ebf9561872', '11d792cc-0455-56d3-b00b-9145225ca97b', '9044bfb1-eeb6-54e1-a7d8-10408624f911', '8499fe2e-7b46-5dd1-a7e8-c679eb7bf64c', '079d8ed9-845f-5b08-9391-5984479ec84f', '276a92b0-0c54-5381-b57c-d86ad57b021e', 'aabce6d4-f8ce-58d2-8737-80d73b3f05c8', '9d9b6ed5-2ef5-5fff-ac60-55e0b8b2fad9', '5681cba6-16a7-5d6d-82d8-c3818931e1be', '3f75e68a-b3b0-55c3-9382-e5492e615843', '867877d2-a50f-5b3d-802b-ab2e9ce8500d', '82fdcaf9-70ee-54db-9304-ea970a6d626e', 'bfcac64e-20bb-5243-b94e-f9ca32b9656e', 'cd3e5a8a-d94f-58a0-8c6f-8838b820e67a', 'ef679ede-b207-51a6-b679-e6d7ec83f53a', '3e6d1a0e-ebba-5662-9b50-235bc8111b80', '051afec1-27e6-5b01-a35c-113fd8d1d9cc', '940021d7-b5b4-5449-83ea-ce2fbc279ff3', 'd645eccd-a5d0-5aeb-9284-79aab3b2de20', '4b8817ab-0b1e-5d97-9a7b-8fd6753ca908', '07e8045b-b474-56cb-88ee-a5cc0e713ffa', 'cff983e1-a078-56c3-96fc-1bc3c9f70b8e', '1e3fc6c2-7f49-579a-9766-20a7860eca17', '308d579a-062a-5895-abfd-e1a05a0356de', 'c19c1f96-69fa-5f06-a875-55bcfda850ce', '98016972-94e1-5f90-9b1e-f59b43d6b0ae', '851ee672-a02e-5b39-85ab-663ccff5fccd', '78994701-0a13-5aa5-b908-e0dc7fa8fd7a', '733b88c0-3f49-56a9-a7a5-beb1ccab73cf', '67a0c11d-ab91-59df-b1f1-e411d1e2cb95', 'b8697075-71ce-56a1-987c-a1f9cc79846a', '6d3ba807-5296-5b3b-b100-06baba0b4726', 'de3152a5-2625-51bc-97a3-b2ee29cbb5a6', 'cb5483c3-b3c7-58be-8735-6e1c7d30764b', 'a600da65-51d7-52b5-aa7f-11fa86b62d26', '7a99cc03-d6f9-52f4-bdc4-9f531267885c', '4a4ba085-73fa-5f77-bfdc-a81caab9b51e', '75e4d82d-47e0-5432-b840-67558c7322b8', '9fec6335-9472-5469-846a-75981fedeba3', '19564ab9-63a3-530c-a139-4913f70fcd20', '783bb08e-d6a7-5d72-ae16-851a5e696425', '96225451-0ff2-5e30-ab72-ea01d8573838', 'ad7aa3eb-7915-51a2-8ad8-f71a33b99fb1', 'c3e2ab45-089e-5a99-b92a-87cbb5576dde', '36a444de-1993-5b9a-8fb0-9a5cfe7f77b6', 'fde829bd-4a35-5b7a-980b-d9373c4bb855', '6d7569dc-adcd-5490-8ab4-9e1252876fbc', '3b271bbf-7019-55aa-93bb-583c3fbb407a', '332e1995-cf27-5529-9e9c-87c94efb4982', '4c1cd36e-d806-5894-a665-34368ab1f4bc', '6abd4b21-6d1c-51e3-9607-d615dae991a3', '3d1e84a5-a743-5748-b970-cc7eda950ebc', 'f22c973f-b551-5ada-b930-ce0801010307', '47c9ba09-be77-5e69-9af8-8b89d56d6402', '6bb46e0f-1ca3-5dfc-bab0-c7a2e1f611e3', '1061e3a4-4d8c-545b-a98c-2dd987472eaa', '8a6d6d54-fab2-5da9-b165-6880b7d6dfde', '769e9ea5-33a5-5482-b19c-3ff5205cac01', '4357bc16-e6fd-5663-8d0e-ac9d2bfafdea', '6d1bf493-f6d4-5de2-8d8f-4e728127758b', 'd54d5b3a-c34c-5314-8b03-d3350d485dcd', '633f9e2a-6695-5ff9-b6f6-934cbe3e687f', '0a8d594c-bdec-5df8-a62e-51a618c211c4', 'e076c07d-7d92-5511-a4ab-c5711a2c73cd', 'c124cc25-0734-5a92-811e-669baf60fa4b', 'a365e428-06ba-5c4e-b3fb-3b1eb755b102', '69045ed1-0311-55cc-a9d1-5ff08b74073c', '103b3b98-c5ec-5850-b280-83a2c4488045', 'b56fc225-0884-57fe-9604-a5f47069571c', 'eed4181b-dcbb-5ee2-b6e2-44685205a62e', 'd53a306c-aa47-55c3-b52a-3b76f508e771', '789d8fb4-ef9b-57a5-971b-67821be37f1a', '927e93ec-4461-53b5-9378-38ef71fbb9b2', '03c3a61a-f9aa-5183-a4e0-994f72750e44', '7b7368b8-68e7-5388-a30c-503e4d1dc5dd', 'b4beed3e-de76-5a9d-b807-84d386df921d', '1de99ec2-2a17-58f7-9114-ec649edef3b9', 'b262a7f4-2c4a-5516-b86f-a4364a2f19cd', 'bf2f5e39-a69b-57db-bf3b-7ad4944e8af1', '743f0cfa-5ea6-5f79-b14e-37765de428fd', '17aa026e-8a88-58d5-a5c0-affd7e4f59da', '31d88445-55ae-5ab5-a019-4e8421185606', '860343a5-fe3b-56a4-943f-74ea5732b0ef', '6f9f38b1-0cf8-50cf-97b9-f7484f39aac2', 'f7705088-66ed-5e8d-b23e-63a1f2eb6260', '6d2559a3-989d-53df-8054-651a6ed1b9f6', '358f2069-51cf-5a2a-be86-9b7f5e9ef89a', '6d3e559b-0449-57de-89b2-0ff23b9fd893', 'f2f3c849-25e9-53d0-b09e-4eff720714b2', '3ee10a83-a4d9-5855-bb7d-79425521b890', '2329c69b-07a0-5905-8d3b-82a269887104', '815783b6-b7f5-5dea-9eea-baaa8f7a3382', 'a2241625-9fa9-504f-841d-0b346289ca00', '1b86b32d-c59d-5d28-a86e-a87b3cd41919', '3fadd44b-aca0-5ece-b1a4-02766d4517e3', 'cbaa9f7f-4a56-5d1f-b53d-df4861ef1871', '83dfacbc-3c11-55bf-ad09-cc214abb3711', '1f4296d8-c07e-5e6d-b599-0022c8f72118', '3a935e4d-91f9-59c5-aed2-fbaedff745b6', '8c70b94d-f217-58bc-a0a0-0bf5cc8d027c', 'f07596c5-b4cf-56a0-aedb-85e25a439600', 'b188b3ad-3e88-5b36-9912-e9150f3c8998', '3e79728f-c65b-539a-a096-2ed061f3addd', '508d24d2-5250-505a-a83b-7c7c80b29b95', '3476945b-e660-5149-b6af-990f68a221c7', 'a07afd33-a11b-52b9-b5ba-343427b0bc84', 'dbd55b7e-bb3e-5706-9186-e833923ce87d', '5aeed1da-a9ed-53f3-9f19-b9f22a1abc0d', '33b4e382-cde8-5e40-8398-c5e311c1ccf4', 'd6e6c9bc-90d2-5532-9fcf-52ddef7681b1', 'e91167fb-6b84-515a-9848-d07949d71c90', '28997c99-1b74-5330-8272-d08f4682b8c8', 'ee97c631-820f-50c1-9de3-58f140893afa', '5f51a382-45ef-51f7-a25b-2e95a78d6c1f', '676a25e8-1769-5b86-945f-06f2bf2d8548', 'cc3b9212-5768-5113-ad7b-2ba9128d740f', '0b03e40f-b428-588f-8ccc-c9431e9e0fda', 'ba963d3c-68cf-5c49-b62e-344049caab0e', 'c394033c-66d8-548c-951c-5472f4c41c30', 'efa163b4-a341-5c43-9bfb-142a7b277fa7', 'a467a610-6abe-5eac-ba05-83a1fa8608f7', '1ba1108b-cd4f-590a-b3ce-0e1bb8b0a251', 'e67df23c-e9ee-54fe-b2ab-bc1529b38436', '2a0919b3-712a-5d61-91f9-2a023e33b085', '3d69fe82-436d-59e4-96c0-9dbabc7728e9', '28178fc6-48da-5f7a-833e-d9fe334c8358', '10762f40-915a-5ccf-8f2a-9532db6b3023', 'eb19b45f-4918-50fc-afa4-47655504df12', '5f8ad45d-b161-562e-b38c-3524e78b7214', '26d2e999-0836-52ea-beac-d55e58bce05d', 'ca5f29a5-a523-5a3a-b6b2-f40db9ee0548', 'f43f9ef9-486d-5151-9ec5-2c5f7ad19738', '0adce953-7057-5641-b1cb-337665f8da31', 'b7b276c1-df61-5015-a396-ac06265465c7', '1cd7fbf9-2cc6-5eb7-879f-94d9ee76d569', '120db6b4-7f11-50e3-bbd3-e8ab5cbe63ff', 'e29bdbfe-677e-5173-8a30-dc1ddc813fe8', '9e3d2494-fea2-5244-b1a6-622c5560913b', 'a8a55df7-3f25-5d5b-8ea5-5f14e3c12204', '5e344432-2f71-56d6-abf1-5c8c31d537c9', '24a82297-67c0-5306-9121-6efc815a919e', '9bfeec0f-5f54-5365-9c20-356635d68e1c', '73d9a740-8761-50f2-a74c-f66483150482', 'a08dc674-1ad0-5709-ac2a-91fb09b03e23', '1a654666-d0cf-5a81-9244-aad9397d5ddb', '7f3ed481-20e3-5434-bc4b-65cadb9635ea', 'a19b37f7-b80e-5ae9-bbcf-129d2677cdb6', 'f5ce42e1-de4b-5b66-b8a0-880ca8b71616', '1665f4a2-f2d4-5b90-a73f-cfd8ebc25d82', 'aca78fb2-be94-515e-93e9-07de78b76084', 'fe2204e3-3db5-5b36-9d8c-58bb455001d2', 'ee69c6c1-c5df-5cd9-9da9-046389fb356f', 'd5881556-ec1e-57f7-9dde-d113d29c8710', '17071935-7310-51c2-a8d6-00bbac4c3e23', '72632bce-eb90-5864-8b0a-fd10908fafe1', 'e4bf56ff-2ae1-5126-9019-5800347aa34a', '1cfa6dc4-e445-543e-9cdf-1baae0c8f842', '00a19639-3883-5d3c-8924-c94faf49d549', 'db7ecffa-12db-5ebe-a71f-0b59145133eb', '4032fad4-617f-58e6-b390-53e4b2c6c1c6', '61ccedd3-9052-5b32-ab73-cd1879d56ae7', '6cc0e08b-af9c-5dce-b02f-5bd6587bd103', 'ed57c56c-2714-58cf-b436-afc5b1f0fb55', 'a704ca25-4e84-5194-ae74-d707994df17e', '3088ed38-3f25-5167-aa73-a51d2fb61486', '16ef4fd9-0bf8-5dcc-bcee-af59ae8bdb12', '64e55faa-0a53-52af-8b05-97dd07023788', '29b2923e-5b05-5c0d-abd3-f0e7bb7dd6eb', 'ef5d7171-95a0-578b-bc28-53b6fe14dad2', '588ccf1f-d83f-5cb6-91a3-1d26330db329', 'e33bc694-7409-5ed9-b465-5dafa064edd3', 'd023279e-7134-5bd4-becb-6322f8306d5f', 'ff0ae26c-d6d6-5f50-ba1c-9976a19069be', '9c7803ee-0d85-57e7-ba51-8abe476a5058');
 DELETE FROM public.chapters c WHERE c.subject_id = 'french' AND c.id NOT IN ('5abb4fbd-3a97-5ce3-b0c4-90a84acfcbe2', 'a6b09d55-6979-5a0c-99a4-248f315de0e4', '6e167f5c-fcde-5d6f-8695-e18a0b556cc7', '1a062e5a-ea6f-50ea-b0e9-80f9f0180d28', '8bea53f8-1edb-5ba6-ba7f-320bea5fe7d3', '139a1fb4-9bc1-5c2d-b0cc-abd4941a13a7', 'cca88b2d-cbd8-5e2a-a496-e9c176a67244', '383392ce-53c3-5d10-b090-6f6f48124bee') AND NOT EXISTS (SELECT 1 FROM public.exercises e WHERE e.chapter_id = c.id);
 
 INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order) VALUES
@@ -1253,6 +1262,78 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('61b4c2bb-00ff-5be2-8149-7fe96cebfae4', '5abb4fbd-3a97-5ce3-b0c4-90a84acfcbe2', 'french', '👑 Défi élite : types, formes et transformations', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('9d9b6ed5-2ef5-5fff-ac60-55e0b8b2fad9', '61b4c2bb-00ff-5be2-8149-7fe96cebfae4', 'Identifie le TYPE et TOUTES les formes de la phrase : « N''est-ce pas cette légende qui fut racontée par les anciens ? »', '[{"id":"a","text":"Type déclaratif — formes : négative et passive"},{"id":"b","text":"Type interrogatif — formes : négative, passive et emphatique"},{"id":"c","text":"Type interrogatif — formes : négative et emphatique seulement"},{"id":"d","text":"Type exclamatif — formes : passive et emphatique"}]'::jsonb, 'b', 'La phrase se termine par « ? » et pose une question → type INTERROGATIF. Elle contient « ne… pas » → forme NÉGATIVE. Le verbe « fut racontée par les anciens » est au passif → forme PASSIVE. La structure « c''est… qui » (ici intégrée à l''interrogation) met un élément en relief → forme EMPHATIQUE. Les quatre caractéristiques coexistent.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('5681cba6-16a7-5d6d-82d8-c3818931e1be', '61b4c2bb-00ff-5be2-8149-7fe96cebfae4', 'Transforme à la voix PASSIVE en conservant le temps grammatical : « Les élèves lisaient attentivement le texte. »', '[{"id":"a","text":"Le texte est lu attentivement par les élèves."},{"id":"b","text":"Le texte a été lu attentivement par les élèves."},{"id":"c","text":"Le texte était lu attentivement par les élèves."},{"id":"d","text":"Le texte sera lu attentivement par les élèves."}]'::jsonb, 'c', 'Le verbe actif est à l''IMPARFAIT (« lisaient »). Au passif, l''auxiliaire « être » doit rester à l''imparfait : « était lu ». Le COD « le texte » devient sujet et le participe passé s''accorde avec lui (masculin singulier → « lu »). Le complément d''agent « par les élèves » conserve l''agent original.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('3f75e68a-b3b0-55c3-9382-e5492e615843', '61b4c2bb-00ff-5be2-8149-7fe96cebfae4', 'Mets le COMPLÉMENT D''OBJET DIRECT en relief : « La tempête a détruit le pont. »', '[{"id":"a","text":"C''est le pont que la tempête a détruit."},{"id":"b","text":"C''est le pont qui a détruit la tempête."},{"id":"c","text":"C''est la tempête qui a détruit le pont."},{"id":"d","text":"Le pont a été détruit par la tempête."}]'::jsonb, 'a', 'Pour mettre un COD en relief, on emploie « C''est… QUE » (et non « qui »). Le pont est COD → « C''est le pont QUE la tempête a détruit. » L''option b est agrammaticale (inversion des rôles). L''option c met le SUJET en relief (c''est…qui). L''option d est une transformation au passif, pas une mise en relief emphatique.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('867877d2-a50f-5b3d-802b-ab2e9ce8500d', '61b4c2bb-00ff-5be2-8149-7fe96cebfae4', 'Mets à la forme NÉGATIVE en utilisant la négation correspondant au sens exact : « Elle parle encore à quelqu''un. »', '[{"id":"a","text":"Elle ne parle pas encore à quelqu''un."},{"id":"b","text":"Elle ne parle jamais à personne."},{"id":"c","text":"Elle ne parle plus à quelqu''un."},{"id":"d","text":"Elle ne parle plus à personne."}]'::jsonb, 'd', '« encore » (continuité d''une action) s''oppose à « ne… plus » (cessation). « quelqu''un » (une personne) s''oppose à « ne… personne » (aucune personne). Il faut donc COMBINER les deux négations pour rendre fidèlement le sens contraire : « Elle ne parle PLUS à PERSONNE. » L''option a conserve « encore » et n''est pas pleinement négative. L''option b introduit « jamais » qui ne correspond pas à l''opposition de « encore ». L''option c oublie de nier « quelqu''un ».', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('82fdcaf9-70ee-54db-9304-ea970a6d626e', '61b4c2bb-00ff-5be2-8149-7fe96cebfae4', 'Laquelle de ces phrases est à la FORME IMPERSONNELLE ?', '[{"id":"a","text":"Il est arrivé tard ce matin."},{"id":"b","text":"Il faut travailler davantage pour réussir."},{"id":"c","text":"Il ne sait pas répondre à la question."},{"id":"d","text":"Il a dit la vérité à ses parents."}]'::jsonb, 'b', 'La forme impersonnelle se reconnaît à un « il » SUJET APPARENT qui ne renvoie à aucune personne ou chose réelle — le vrai sujet est logique (infinitif ou proposition). « Il faut travailler » : « il » est sujet apparent, « travailler » est le vrai sujet logique. Options a, c et d : « il » désigne une personne réelle ou remplace un sujet identifiable — ces phrases sont à la forme personnelle.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('bfcac64e-20bb-5243-b94e-f9ca32b9656e', '61b4c2bb-00ff-5be2-8149-7fe96cebfae4', 'Transforme à la voix PASSIVE (le complément d''agent doit être supprimé si la règle l''exige) : « On a réparé la route après la tempête. »', '[{"id":"a","text":"La route a été réparée après la tempête par on."},{"id":"b","text":"La route fut réparée après la tempête."},{"id":"c","text":"La route a été réparée après la tempête."},{"id":"d","text":"La route est réparée après la tempête par on."}]'::jsonb, 'c', 'Quand le sujet actif est « ON », la transformation au passif SUPPRIME le complément d''agent (on ne dit pas « par on »). Le verbe actif est au PASSÉ COMPOSÉ (« a réparé ») → le passif se forme avec « avoir été » : « a été réparée ». Le participe passé s''accorde avec le nouveau sujet féminin singulier « la route » → « réparée ». Option b utilise le passé simple (changement de temps injustifié). Options a et d conservent « par on », ce qui est agrammatical.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('28b6e6d9-1123-5ff7-8652-ff24bca1258a', 'a6b09d55-6979-5a0c-99a4-248f315de0e4', 'french', 'Quiz de compréhension', 1, 20, 5, 'quiz', 'admin', 0)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -1459,6 +1540,78 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('e98faad8-fe63-51d3-93ec-1a7da7198b3a', 'a6b09d55-6979-5a0c-99a4-248f315de0e4', 'french', '👑 Défi élite : propositions subordonnées', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('b8697075-71ce-56a1-987c-a1f9cc79846a', 'e98faad8-fe63-51d3-93ec-1a7da7198b3a', 'Dans « Je me souviens des leçons que le maître nous a enseignées », quelle est la nature de la proposition soulignée « que le maître nous a enseignées » et quelle est la fonction de « que » dans cette proposition ?', '[{"id":"a","text":"Subordonnée complétive – « que » est conjonction de subordination, sans fonction propre"},{"id":"b","text":"Subordonnée relative – « que » est pronom relatif, COD du verbe « a enseignées »"},{"id":"c","text":"Subordonnée relative – « que » est pronom relatif, sujet du verbe « a enseignées »"},{"id":"d","text":"Subordonnée complétive – « que » est pronom relatif, COD du verbe « a enseignées »"}]'::jsonb, 'b', 'La proposition qualifie l''antécédent « les leçons » : c''est une subordonnée relative. Dans cette relative, « que » est pronom relatif et remplace « les leçons », qui est l''objet de « a enseignées » (COD). La preuve : le participe passé s''accorde au féminin pluriel avec cet antécédent, ce qui est propre à la relative avec « avoir », jamais à la complétive.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('6d3ba807-5296-5b3b-b100-06baba0b4726', 'e98faad8-fe63-51d3-93ec-1a7da7198b3a', 'Dans « Le roman dont les personnages me fascinent est un chef-d''œuvre », quelle est la fonction de « dont » à l''intérieur de la proposition subordonnée relative ?', '[{"id":"a","text":"Complément d''objet direct du verbe « fascinent »"},{"id":"b","text":"Sujet du verbe « fascinent »"},{"id":"c","text":"Complément du nom « personnages »"},{"id":"d","text":"Complément d''objet indirect du verbe « fascinent »"}]'::jsonb, 'c', 'Dans cette relative, « dont » équivaut à « de ce roman » et se rattache au nom « personnages » : « les personnages de ce roman ». Il occupe donc la fonction de complément du nom (déterminatif), et non de complément du verbe. C''est une construction fréquente avec « dont » qui piège les candidats.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('de3152a5-2625-51bc-97a3-b2ee29cbb5a6', 'e98faad8-fe63-51d3-93ec-1a7da7198b3a', 'Choisissez la forme verbale grammaticalement correcte : « Après qu''il ___ la forteresse, l''armée célébra sa victoire. »', '[{"id":"a","text":"ait pris"},{"id":"b","text":"eût pris"},{"id":"c","text":"eut pris"},{"id":"d","text":"prenne"}]'::jsonb, 'c', '« Après que » exprime la postériorité et se construit avec l''indicatif (jamais le subjonctif). Comme la principale est au passé simple, la subordonnée exprime une action antérieure : on emploie le passé antérieur de l''indicatif : « eut pris ». Le subjonctif passé (« ait pris ») ou plus-que-parfait du subjonctif (« eût pris ») sont fautifs après « après que ».', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('cb5483c3-b3c7-58be-8735-6e1c7d30764b', 'e98faad8-fe63-51d3-93ec-1a7da7198b3a', 'Dans la phrase complexe « Le général croit que l''armée qui le suit vaincra l''ennemi », combien de propositions compte-t-on et laquelle est la proposition principale ?', '[{"id":"a","text":"Deux propositions ; principale : « le général croit »"},{"id":"b","text":"Trois propositions ; principale : « Le général croit »"},{"id":"c","text":"Trois propositions ; principale : « que l''armée qui le suit vaincra l''ennemi »"},{"id":"d","text":"Deux propositions ; principale : « l''armée vaincra l''ennemi »"}]'::jsonb, 'b', 'La phrase contient trois propositions : (1) « Le général croit » — principale ; (2) « que l''armée… vaincra l''ennemi » — subordonnée complétive, COD de « croit » ; (3) « qui le suit » — subordonnée relative enchâssée dans la complétive, qualifiant « l''armée ». La principale est bien « Le général croit » : c''est la seule qui soit autonome.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('a600da65-51d7-52b5-aa7f-11fa86b62d26', 'e98faad8-fe63-51d3-93ec-1a7da7198b3a', 'Dans « Les épreuves que ces élèves ont surmontées les ont rendus plus forts », le participe passé « surmontées » est au féminin pluriel. Pourquoi ?', '[{"id":"a","text":"Parce qu''il s''accorde avec « élèves », sujet du verbe de la relative"},{"id":"b","text":"Parce qu''il s''accorde avec « que », pronom relatif qui représente « les épreuves » (féminin pluriel), antécédent placé avant l''auxiliaire « avoir »"},{"id":"c","text":"Parce que le participe passé s''accorde toujours avec le sujet de la proposition principale"},{"id":"d","text":"Parce qu''il s''accorde avec « elles » (les épreuves), sujet sous-entendu de la principale"}]'::jsonb, 'b', 'Avec l''auxiliaire « avoir », le participe passé s''accorde avec le COD lorsque celui-ci est placé avant le verbe. Ici, « que » est le pronom relatif COD de « ont surmontées » ; il représente son antécédent « les épreuves » (féminin pluriel). Le participe prend donc la marque du féminin pluriel : « surmontées ».', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('7a99cc03-d6f9-52f4-bdc4-9f531267885c', 'e98faad8-fe63-51d3-93ec-1a7da7198b3a', 'Laquelle de ces quatre phrases emploie correctement et avec la nuance la plus précise la conjonction de subordination causale en contexte d''examen ?', '[{"id":"a","text":"« Puisqu''il n''avait pas révisé, il échoua à l''examen. » (la cause est ignorée de l''interlocuteur)"},{"id":"b","text":"« Comme il avait bien révisé, il obtint une excellente note. » (la cause est placée en tête de phrase et présentée comme un fait connu ou évident)"},{"id":"c","text":"« Parce que tu es intelligent, tu réussiras sûrement. » (la cause est inconnue de l''interlocuteur et présentée pour la première fois)"},{"id":"d","text":"« Puisqu''il pleuvait, personne ne savait encore pourquoi il était rentré. » (la cause est présentée comme nouvelle et surprenante)"}]'::jsonb, 'b', '« Comme » causal se place obligatoirement en tête de phrase et introduit une cause présentée comme un fait établi ou évident : c''est son emploi correct et précis. — « Puisque » s''emploie pour une cause déjà connue des deux interlocuteurs : la phrase (a) l''utilise à tort pour une cause ignorée. — La phrase (c) confond « parce que » (cause directe et nouvelle) avec le compliment implicite : l''usage n''est pas fautif mais la description « inconnue » est inexacte ici. — La phrase (d) est incorrecte : « puisque » ne peut pas introduire une cause « nouvelle et surprenante ».', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('a5ad7b9f-577b-53bd-a84c-f6b7fb550adc', '6e167f5c-fcde-5d6f-8695-e18a0b556cc7', 'french', 'Quiz de compréhension', 1, 20, 5, 'quiz', 'admin', 0)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -1656,6 +1809,78 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('f22c973f-b551-5ada-b930-ce0801010307', '0cec718c-9b55-5aa5-b40e-ad20fffbe4ed', 'Quelle phrase contient une erreur dans la transformation active → passive ?', '[{"id":"a","text":"Le chien a mordu Paul. → Paul a été mordu par le chien. ✓"},{"id":"b","text":"Les élèves ont applaudi la pièce. → La pièce a été applaudi par les élèves."},{"id":"c","text":"La pluie abîme les récoltes. → Les récoltes sont abîmées par la pluie. ✓"},{"id":"d","text":"Le professeur punira l''élève. → L''élève sera puni par le professeur. ✓"}]'::jsonb, 'b', 'Le sujet passif est « la pièce » (féminin singulier) : le participe passé doit s''accorder → « applaudie ». L''option d comporte une erreur d''accord (« applaudi » au lieu de « applaudie »).', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('6964cb06-f67d-56f4-a779-bbbe567f265c', '6e167f5c-fcde-5d6f-8695-e18a0b556cc7', 'french', '👑 Défi élite : voix active et passive', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('47c9ba09-be77-5e69-9af8-8b89d56d6402', '6964cb06-f67d-56f4-a779-bbbe567f265c', 'Transforme à la voix passive en conservant le temps : « Les archéologues auront découvert ces vestiges avant la fin du chantier. »', '[{"id":"a","text":"Ces vestiges auront été découverts par les archéologues avant la fin du chantier."},{"id":"b","text":"Ces vestiges ont été découverts par les archéologues avant la fin du chantier."},{"id":"c","text":"Ces vestiges avaient été découverts par les archéologues avant la fin du chantier."},{"id":"d","text":"Ces vestiges seront découverts par les archéologues avant la fin du chantier."}]'::jsonb, 'a', 'La phrase active est au futur antérieur (« auront découvert »). Au passif, l''auxiliaire « être » se met au futur antérieur : « auront été » + participe passé accordé avec le nouveau sujet « ces vestiges » (masculin pluriel) → « découverts ». Les options b (passé composé), c (plus-que-parfait) et d (futur simple) ne conservent pas le futur antérieur.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('6bb46e0f-1ca3-5dfc-bab0-c7a2e1f611e3', '6964cb06-f67d-56f4-a779-bbbe567f265c', 'Transforme à la voix active en rétablissant l''agent comme sujet : « Ce roman aurait été apprécié des lecteurs avertis. »', '[{"id":"a","text":"Des lecteurs avertis ont apprécié ce roman."},{"id":"b","text":"Les lecteurs avertis apprécient ce roman."},{"id":"c","text":"Les lecteurs avertis auraient apprécié ce roman."},{"id":"d","text":"On aurait apprécié ce roman."}]'::jsonb, 'c', 'Le complément d''agent « des lecteurs avertis » (introduit ici par « de », usage des verbes de sentiment) devient sujet à la voix active. Le temps est le conditionnel présent (« aurait été apprécié ») : à la voix active, le verbe se met donc au conditionnel présent → « auraient apprécié ». L''option a fausse le temps (passé composé), b fausse le temps (présent), d efface l''agent au lieu de le rétablir.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('1061e3a4-4d8c-545b-a98c-2dd987472eaa', '6964cb06-f67d-56f4-a779-bbbe567f265c', 'Laquelle de ces phrases ne peut PAS être mise à la voix passive, et pourquoi ?', '[{"id":"a","text":"« La foule a applaudi le discours. » — ne peut pas se mettre au passif car le sujet est indéfini."},{"id":"b","text":"« Le directeur a renoncé à ce projet. » — ne peut pas se mettre au passif car « renoncer à » est un verbe transitif indirect (son complément est introduit par « à », pas un COD)."},{"id":"c","text":"« L''arbitre a sifflé la faute. » — ne peut pas se mettre au passif car « siffler » est un verbe intransitif."},{"id":"d","text":"« Les élèves avaient préparé l''exposé. » — ne peut pas se mettre au passif car le sujet est pluriel."}]'::jsonb, 'b', 'Seuls les verbes transitifs directs (ayant un COD) peuvent se mettre à la voix passive. « Renoncer à » est un verbe transitif indirect : son complément est introduit par la préposition « à » et ne constitue pas un COD — la transformation au passif est donc impossible. « Applaudir » (option a) et « siffler » (option c) sont bien transitifs directs et se mettent au passif ; le pluriel du sujet (option d) n''empêche jamais la transformation passive.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('8a6d6d54-fab2-5da9-b165-6880b7d6dfde', '6964cb06-f67d-56f4-a779-bbbe567f265c', 'Quelle est la transformation passive correcte de : « Le jury a condamné les accusées » ?', '[{"id":"a","text":"Les accusées ont été condamnés par le jury."},{"id":"b","text":"Les accusées ont été condamnées par le jury."},{"id":"c","text":"Les accusées ont été condamné par le jury."},{"id":"d","text":"Les accusées avaient été condamnées par le jury."}]'::jsonb, 'b', 'Le COD « les accusées » (féminin pluriel) devient sujet du verbe passif. Le participe passé doit donc s''accorder en féminin pluriel → « condamnées ». L''option a accorde en masculin pluriel (« condamnés »), l''option c laisse le participe invariable (« condamné »), l''option d fausse le temps (plus-que-parfait au lieu du passé composé).', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('769e9ea5-33a5-5482-b19c-3ff5205cac01', '6964cb06-f67d-56f4-a779-bbbe567f265c', 'La phrase « La salle est éclairée. » est-elle à la voix passive ou exprime-t-elle un état résultant ? Quelle option explique correctement la distinction ?', '[{"id":"a","text":"C''est nécessairement une voix passive, car elle contient « être » + participe passé."},{"id":"b","text":"C''est nécessairement un état résultant, car aucun complément d''agent n''est exprimé."},{"id":"c","text":"Elle est ambiguë hors contexte : elle peut décrire l''état résultant d''une action passée (« la salle se trouve dans un état éclairé ») ou une voix passive réelle si un agent est sous-entendu ou exprimable (« La salle est éclairée par des spots »). Le contexte seul permet de trancher."},{"id":"d","text":"C''est une voix passive sans complément d''agent, ce qui la rend grammaticalement incorrecte."}]'::jsonb, 'c', 'La construction « être + participe passé » peut exprimer soit la voix passive (l''action est en cours ou accomplie par un agent), soit un état résultant (adjectif attribut issu d''un participe, décrivant le résultat d''une action antérieure). Sans contexte, « La salle est éclairée » est ambiguë : si l''on peut ajouter « par quelqu''un/quelque chose », c''est une voix passive ; si la phrase décrit un état figé, c''est un emploi attributif. L''absence du complément d''agent (option b) ne suffit pas à trancher, et la voix passive sans agent est grammaticalement correcte (option d est fausse).', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('4357bc16-e6fd-5663-8d0e-ac9d2bfafdea', '6964cb06-f67d-56f4-a779-bbbe567f265c', 'Transforme à la voix passive en conservant exactement le temps : « Le tribunal prononça les peines. »', '[{"id":"a","text":"Les peines furent prononcées par le tribunal."},{"id":"b","text":"Les peines ont été prononcées par le tribunal."},{"id":"c","text":"Les peines étaient prononcées par le tribunal."},{"id":"d","text":"Les peines furent prononcés par le tribunal."}]'::jsonb, 'a', 'La phrase active est au passé simple (« prononça »). Au passif, l''auxiliaire « être » se conjugue au passé simple → « furent » + participe passé accordé avec le nouveau sujet « les peines » (féminin pluriel) → « prononcées ». L''option b utilise le passé composé, l''option c l''imparfait, et l''option d commet une faute d''accord (masculin pluriel « prononcés » au lieu de féminin pluriel « prononcées »).', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1881,6 +2106,86 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('61bb4f2d-caf9-530c-bf07-7db1eaf72f8e', '1a062e5a-ea6f-50ea-b0e9-80f9f0180d28', 'french', '👑 Défi élite : transposition experte', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('1de99ec2-2a17-58f7-9114-ec649edef3b9', '61bb4f2d-caf9-530c-bf07-7db1eaf72f8e', 'Transforme entièrement au discours indirect :
+Il promit : « Avant demain soir, j''aurai tout réparé. »
+Il promit qu''avant ___, il ___ tout réparé.', '[{"id":"a","text":"le lendemain soir / aurait"},{"id":"b","text":"demain soir / aurait"},{"id":"c","text":"le lendemain soir / avait"},{"id":"d","text":"le soir suivant / aura"}]'::jsonb, 'a', 'Le verbe introducteur « promit » est au passé simple. Le futur antérieur « aurai réparé » (qui marque un fait accompli avant un moment futur) se transforme en conditionnel passé « aurait réparé » selon la concordance des temps. L''indicateur « demain » devient « le lendemain » au discours indirect. L''option b conserve « demain » sans le transformer ; c utilise le plus-que-parfait, réservé à la transposition du passé composé ; d invente « le soir suivant » qui ne correspond à aucune règle et conserve le futur simple.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('b262a7f4-2c4a-5516-b86f-a4364a2f19cd', '61bb4f2d-caf9-530c-bf07-7db1eaf72f8e', 'Retrouve le discours direct d''origine à partir de cette phrase au discours indirect :
+Elle confia qu''elle avait terminé son rapport l''avant-veille.
+Quel était le discours direct ?', '[{"id":"a","text":"« J''avais terminé mon rapport avant-hier. »"},{"id":"b","text":"« J''ai terminé mon rapport avant-hier. »"},{"id":"c","text":"« J''ai terminé mon rapport hier. »"},{"id":"d","text":"« Je terminerai mon rapport avant-hier. »"}]'::jsonb, 'b', 'Le verbe introducteur « confia » est au passé. Dans le discours indirect, le plus-que-parfait « avait terminé » provient d''un passé composé « a terminé » dans le discours direct (passé composé → plus-que-parfait). L''indicateur « l''avant-veille » remonte à « avant-hier » dans le discours direct. L''option a conserve le plus-que-parfait dans le DD, ce qui est incorrect (le plus-que-parfait dans le DI correspond au passé composé dans le DD) ; c utilise « hier » qui correspondrait à « la veille », non à « l''avant-veille » ; d utilise le futur, qui donnerait un conditionnel présent dans le DI.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('bf2f5e39-a69b-57db-bf3b-7ad4944e8af1', '61bb4f2d-caf9-530c-bf07-7db1eaf72f8e', 'Transforme au discours indirect en choisissant la version entièrement correcte :
+Le professeur demanda : « Qu''est-ce que vous avez compris hier ? »', '[{"id":"a","text":"Le professeur demanda qu''est-ce que les élèves avaient compris hier."},{"id":"b","text":"Le professeur demanda ce que les élèves avaient compris la veille."},{"id":"c","text":"Le professeur demanda ce que les élèves ont compris hier."},{"id":"d","text":"Le professeur demanda si les élèves avaient compris la veille."}]'::jsonb, 'b', '« Qu''est-ce que » (mis pour le COD de la question) se transforme en « ce que » au discours indirect — on ne conserve jamais la forme « qu''est-ce que » dans une interrogation indirecte. Le verbe introducteur « demanda » est au passé : le passé composé « avez compris » devient plus-que-parfait « avaient compris ». L''indicateur « hier » devient « la veille ». Le pronom « vous » (les élèves interrogés) passe à la 3e personne « les élèves ». L''option a conserve la forme directe interdite au DI ; c oublie la concordance des temps et ne transforme pas « hier » ; d substitue incorrectement « si » (réservé aux questions totales oui/non) à la place d''une question partielle portant sur le COD.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('743f0cfa-5ea6-5f79-b14e-37765de428fd', '61bb4f2d-caf9-530c-bf07-7db1eaf72f8e', 'Identifie la seule transformation entièrement correcte au discours indirect :
+DD : Le médecin lui dit : « Tu dois maintenant prendre ce médicament chaque jour. »', '[{"id":"a","text":"Le médecin lui dit qu''il devait maintenant prendre ce médicament chaque jour."},{"id":"b","text":"Le médecin lui dit qu''il doit alors prendre ce médicament chaque jour."},{"id":"c","text":"Le médecin lui dit qu''il devait alors prendre ce médicament chaque jour."},{"id":"d","text":"Le médecin lui dit de prendre maintenant ce médicament chaque jour."}]'::jsonb, 'c', 'Le verbe introducteur « dit » est ici au passé simple (passé narratif). Le présent « dois » devient imparfait « devait » selon la concordance des temps. Le pronom « tu » (l''interlocuteur, le patient) passe à la 3e personne « il ». L''indicateur « maintenant » se transforme en « alors » au discours indirect. L''option a transforme correctement le pronom et le temps, mais oublie de changer « maintenant » en « alors » ; b transforme correctement l''indicateur mais garde le présent « doit » au lieu de l''imparfait « devait » ; d interprète la phrase comme un ordre à l''impératif (de + infinitif), alors qu''il s''agit ici d''un présent indicatif (obligation déclarative), et ne change pas « maintenant ».', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('17aa026e-8a88-58d5-a5c0-affd7e4f59da', '61bb4f2d-caf9-530c-bf07-7db1eaf72f8e', 'Transforme entièrement au discours indirect en choisissant la version sans faute :
+DD : Le directeur annonça : « Nous signerons le contrat après-demain. »', '[{"id":"a","text":"Le directeur annonça qu''ils signeraient le contrat après-demain."},{"id":"b","text":"Le directeur annonça qu''ils signeront le contrat le surlendemain."},{"id":"c","text":"Le directeur annonça qu''ils signeraient le contrat le surlendemain."},{"id":"d","text":"Le directeur annonça qu''ils signeraient le contrat le lendemain."}]'::jsonb, 'c', 'Le verbe introducteur « annonça » est au passé simple. Le futur simple « signerons » devient conditionnel présent « signeraient ». Le pronom « nous » (qui inclut le directeur et son groupe) passe à la 3e personne « ils ». L''indicateur « après-demain » se transforme en « le surlendemain » au discours indirect. L''option a applique la concordance des temps (conditionnel) et le changement de pronom, mais oublie de transformer « après-demain » ; b transforme correctement l''indicateur et le pronom, mais garde le futur simple au lieu du conditionnel ; d confond « après-demain » (surlendemain) avec « demain » (lendemain).', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('31d88445-55ae-5ab5-a019-4e8421185606', '61bb4f2d-caf9-530c-bf07-7db1eaf72f8e', 'Transforme au discours indirect en choisissant la version entièrement correcte :
+DD : La reine s''interrogea : « Comment mes soldats ont-ils gagné cette bataille hier ? »', '[{"id":"a","text":"La reine s''interrogea comment est-ce que ses soldats avaient gagné cette bataille la veille."},{"id":"b","text":"La reine s''interrogea comment ses soldats avaient gagné cette bataille hier."},{"id":"c","text":"La reine s''interrogea si ses soldats avaient gagné cette bataille la veille."},{"id":"d","text":"La reine s''interrogea comment ses soldats avaient gagné cette bataille la veille."}]'::jsonb, 'd', 'La question partielle introduite par « comment » conserve ce mot interrogatif au discours indirect, sans inversion du sujet et sans point d''interrogation. Le pronom « mes » (soldats de la reine, 1re personne) passe à la 3e personne « ses ». Le verbe introducteur « s''interrogea » est au passé simple : le passé composé « ont gagné » devient plus-que-parfait « avaient gagné ». L''indicateur « hier » se transforme en « la veille ». L''option a conserve la forme « est-ce que » interdite au discours indirect ; b transforme correctement tous les éléments sauf l''indicateur « hier » qui doit devenir « la veille » ; c substitue incorrectement « si » (question totale) à la place de « comment » (question partielle), ce qui change le sens de la question.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('ad167a20-ae28-5904-9ce3-00d98dc0577e', '8bea53f8-1edb-5ba6-ba7f-320bea5fe7d3', 'french', 'Quiz de compréhension', 1, 20, 5, 'quiz', 'admin', 0)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -2084,6 +2389,84 @@ ON CONFLICT (id) DO UPDATE SET
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('3a935e4d-91f9-59c5-aed2-fbaedff745b6', '7efc2dc4-09b3-576b-b2f2-78e7a6288526', 'Complète avec la forme correcte :
 « Il faut que vous ___ la vérité. » (verbe : dire)', '[{"id":"a","text":"disiez"},{"id":"b","text":"direz"},{"id":"c","text":"dites"},{"id":"d","text":"diriez"}]'::jsonb, 'a', 'Après « il faut que », on emploie le subjonctif présent. Pour « dire » à la 2e personne du pluriel, le radical est « dis- » (ils disent → dis-) et la terminaison est « -iez » → disiez. L''option b est le futur de l''indicatif ; c est le présent de l''indicatif ou l''impératif ; d est le conditionnel présent.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('390674fc-7d19-5cd5-a9db-018176765203', '8bea53f8-1edb-5ba6-ba7f-320bea5fe7d3', 'french', '👑 Défi élite : modes et temps au sommet', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('8c70b94d-f217-58bc-a0a0-0bf5cc8d027c', '390674fc-7d19-5cd5-a9db-018176765203', 'Choisir le mode correct dans la phrase suivante :
+« Après qu''il ___ (terminer) l''épreuve, le jury rendit son verdict. »
+Quelle est la forme verbale attendue ?', '[{"id":"a","text":"eut terminé (passé antérieur de l''indicatif)"},{"id":"b","text":"ait terminé (subjonctif passé)"},{"id":"c","text":"terminât (subjonctif imparfait)"},{"id":"d","text":"aurait terminé (conditionnel passé)"}]'::jsonb, 'a', 'La conjonction « après que » introduit un fait accompli et réel : elle exige l''indicatif (ici le passé antérieur « eut terminé », temps littéraire exprimant l''antériorité par rapport au passé simple « rendit »). C''est un piège classique : on confond souvent « après que » (indicatif) avec « avant que » (subjonctif). Les options b et c relèvent du subjonctif, réservé à « avant que » ou « bien que » ; d est le conditionnel passé, inapproprié ici.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('f07596c5-b4cf-56a0-aedb-85e25a439600', '390674fc-7d19-5cd5-a9db-018176765203', 'Conjugue correctement le verbe entre parenthèses au subjonctif présent :
+« Il est peu probable que nous ___ (pouvoir) finir avant minuit. »', '[{"id":"a","text":"pouvions"},{"id":"b","text":"puissions"},{"id":"c","text":"pourrons"},{"id":"d","text":"pourrions"}]'::jsonb, 'b', 'Après « il est peu probable que », le subjonctif présent est obligatoire. Pour « pouvoir », le radical du subjonctif est irrégulier : à la 1re personne du pluriel, il se forme sur « puiss- » (cf. ils peuvent → puiss- au subjonctif) → nous puissions. L''option a (pouvions) est l''imparfait de l''indicatif ; c (pourrons) est le futur simple ; d (pourrions) est le conditionnel présent.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('b188b3ad-3e88-5b36-9912-e9150f3c8998', '390674fc-7d19-5cd5-a9db-018176765203', 'Identifie la valeur du conditionnel dans cette phrase journalistique :
+« Selon des sources proches du dossier, le ministre aurait signé l''accord hier soir. »', '[{"id":"a","text":"Hypothèse liée à une condition (si + imparfait)"},{"id":"b","text":"Politesse ou atténuation d''une demande"},{"id":"c","text":"Information non confirmée ou rapportée sous réserve"},{"id":"d","text":"Futur dans le passé en discours indirect"}]'::jsonb, 'c', 'Le conditionnel passé « aurait signé » est ici employé avec valeur de conditionnel journalistique : il signale que l''information est rapportée mais non vérifiée, ce qui engage la responsabilité de la source et non du locuteur. Ce n''est pas une hypothèse avec « si » (a), ni une politesse (b), ni un futur dans le passé en discours indirect (d), car il n''y a aucun verbe principal de déclaration au passé dont dépendrait une subordonnée.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('3e79728f-c65b-539a-a096-2ed061f3addd', '390674fc-7d19-5cd5-a9db-018176765203', 'Complète avec la structure si-conditionnel correcte :
+« Si tu ___ davantage à l''entraînement l''année dernière, tu ___ le concours cette année. »', '[{"id":"a","text":"travaillais … réussirais"},{"id":"b","text":"avais travaillé … aurais réussi"},{"id":"c","text":"aurais travaillé … aurais réussi"},{"id":"d","text":"travaillais … aurais réussi"}]'::jsonb, 'b', 'Lorsque la condition est irréelle dans le passé (« l''année dernière »), la structure correcte est : si + plus-que-parfait → conditionnel passé. Soit : « Si tu avais travaillé … tu aurais réussi. » L''option a (imparfait → conditionnel présent) exprime une hypothèse irréelle dans le présent, non dans le passé. L''option c est agrammaticale : on ne met jamais le conditionnel dans la proposition introduite par « si ». L''option d mélange les deux registres temporels de façon incohérente.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('508d24d2-5250-505a-a83b-7c7c80b29b95', '390674fc-7d19-5cd5-a9db-018176765203', 'Quelle valeur précise exprime le futur antérieur dans cette phrase ?
+« Dès que tu auras rendu ta copie, tu pourras sortir. »', '[{"id":"a","text":"Une action future certaine et simultanée à une autre action future"},{"id":"b","text":"Une action future accomplie et antérieure à une autre action future"},{"id":"c","text":"Une action passée antérieure à une autre action passée"},{"id":"d","text":"Un ordre exprimé de façon atténuée"}]'::jsonb, 'b', 'Le futur antérieur « auras rendu » exprime une action qui sera accomplie avant une autre action future (« pourras sortir »). C''est sa valeur principale : antériorité et accomplissement par rapport à un point de référence futur. Les conjonctions de temps « dès que, aussitôt que, quand, lorsque » exigent le futur antérieur quand l''action de la subordonnée doit être achevée avant celle de la principale. L''option c décrit le plus-que-parfait ; a est inexact car les deux actions ne sont pas simultanées ; d décrit le futur simple à valeur d''ordre.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('3476945b-e660-5149-b6af-990f68a221c7', '390674fc-7d19-5cd5-a9db-018176765203', 'Laquelle de ces conjonctions impose le mode subjonctif dans la proposition subordonnée qu''elle introduit ?', '[{"id":"a","text":"puisque"},{"id":"b","text":"parce que"},{"id":"c","text":"quoique"},{"id":"d","text":"pendant que"}]'::jsonb, 'c', '« Quoique » (synonyme de « bien que ») est une conjonction de concession qui exige le subjonctif : « Quoiqu''il soit épuisé, il continue. » En revanche, « puisque » (cause certaine), « parce que » (cause) et « pendant que » (simultanéité temporelle) introduisent toutes des faits réels ou certains : elles exigent l''indicatif. Cette distinction mode/conjonction est un point clé du programme de 9e année.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2299,6 +2682,78 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('7095b9e0-8e62-5384-8408-e05fd85503ef', '139a1fb4-9bc1-5c2d-b0cc-abd4941a13a7', 'french', '👑 Défi élite : concordance et systèmes hypothétiques', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('e67df23c-e9ee-54fe-b2ab-bc1529b38436', '7095b9e0-8e62-5384-8408-e05fd85503ef', 'Laquelle de ces phrases illustre correctement l''hypothèse irréelle du passé ?', '[{"id":"a","text":"Si le chevalier saurait la vérité, il n''accepterait pas la mission."},{"id":"b","text":"Si le chevalier avait su la vérité, il n''aurait pas accepté la mission."},{"id":"c","text":"Si le chevalier savait la vérité, il n''accepterait pas la mission."},{"id":"d","text":"Si le chevalier avait su la vérité, il n''accepte pas la mission."}]'::jsonb, 'b', 'L''hypothèse irréelle du passé se construit avec « si » + plus-que-parfait dans la subordonnée, et conditionnel passé dans la principale : « si… avait su… n''aurait pas accepté ». L''option (a) est impossible car on ne met jamais le conditionnel après « si » hypothétique. L''option (c) exprime l''irréel du présent, pas du passé. L''option (d) mélange deux systèmes incompatibles.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('2a0919b3-712a-5d61-91f9-2a023e33b085', '7095b9e0-8e62-5384-8408-e05fd85503ef', 'Transforme au discours indirect : « Il promit : ‹ Quand j''aurai vaincu le dragon, je reviendrai. › »', '[{"id":"a","text":"Il promit que quand il aurait vaincu le dragon, il reviendrait."},{"id":"b","text":"Il promit que quand il avait vaincu le dragon, il reviendrait."},{"id":"c","text":"Il promit que quand il vaincrait le dragon, il reviendrait."},{"id":"d","text":"Il promit que quand il avait vaincu le dragon, il revenait."}]'::jsonb, 'a', 'Au discours indirect avec verbe introducteur au passé, le futur antérieur (« aurai vaincu ») devient conditionnel passé (« aurait vaincu »), et le futur simple (« reviendrai ») devient conditionnel présent (« reviendrait »). L''option (b) confond le conditionnel passé avec le plus-que-parfait (transformation du passé composé). L''option (c) omet la marque d''antériorité. L''option (d) transforme incorrectement la principale en imparfait.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('3d69fe82-436d-59e4-96c0-9dbabc7728e9', '7095b9e0-8e62-5384-8408-e05fd85503ef', 'Complète la phrase au registre soutenu : « Le général exigea que ses troupes _____ au camp avant l''aube. » (verbe : revenir, subjonctif imparfait, 3e pers. pl.)', '[{"id":"a","text":"revinssent"},{"id":"b","text":"reviendraient"},{"id":"c","text":"revinrent"},{"id":"d","text":"reviennent"}]'::jsonb, 'a', 'Quand la principale est au passé (« exigea »), la subordonnée au subjonctif prend le subjonctif imparfait en registre soutenu. La 3e personne du pluriel du subjonctif imparfait de « revenir » est « revinssent » (radical du passé simple : « revinrent » → base « revins- » + désinences du subjonctif imparfait). L''option (b) est le conditionnel, l''option (c) est le passé simple, et l''option (d) est le subjonctif présent.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('28178fc6-48da-5f7a-833e-d9fe334c8358', '7095b9e0-8e62-5384-8408-e05fd85503ef', 'Laquelle de ces phrases contient une erreur de concordance des temps ?', '[{"id":"a","text":"Dès qu''il eut prononcé le serment, les portes s''ouvrirent."},{"id":"b","text":"Il craignait que la reine ne vînt trop tard."},{"id":"c","text":"Pendant qu''il traversait le désert, une tempête éclata soudain."},{"id":"d","text":"Il décida qu''il partirait le lendemain et qu''il avait emporté ses armes."}]'::jsonb, 'd', 'Dans la phrase (d), les deux subordonnées dépendent du même verbe « décida » et expriment toutes deux des actions postérieures à cette décision. La première subordonnée est correcte (« partirait » = conditionnel présent pour la postériorité), mais la seconde utilise le plus-que-parfait « avait emporté », qui exprime une antériorité — erreur de cohérence. Il faudrait « emporterait » ou « aurait emporté » selon le sens voulu. Les phrases (a), (b) et (c) sont toutes correctes.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('10762f40-915a-5ccf-8f2a-9532db6b3023', '7095b9e0-8e62-5384-8408-e05fd85503ef', 'Quelle phrase exprime une hypothèse réalisable (système du potentiel), et non un irréel ?', '[{"id":"a","text":"Si j''avais eu le temps, j''aurais étudié ce chapitre."},{"id":"b","text":"Si j''avais le temps, j''étudierais ce chapitre."},{"id":"c","text":"Si j''ai le temps, j''étudierai ce chapitre."},{"id":"d","text":"Si j''aurais le temps, j''étudierais ce chapitre."}]'::jsonb, 'c', 'Le système du potentiel (hypothèse réalisable) se construit avec « si » + présent de l''indicatif → futur simple dans la principale : « si j''ai le temps, j''étudierai ». L''option (a) est l''irréel du passé (si + PQP → conditionnel passé). L''option (b) est l''irréel du présent (si + imparfait → conditionnel présent). L''option (d) est une construction impossible : on ne place jamais le conditionnel directement après « si » hypothétique.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('eb19b45f-4918-50fc-afa4-47655504df12', '7095b9e0-8e62-5384-8408-e05fd85503ef', 'Transforme l''interrogation au discours indirect : « Le sage demanda : ‹ Avez-vous compris pourquoi le royaume a été détruit ? › »', '[{"id":"a","text":"Le sage demanda s''ils avaient compris pourquoi le royaume avait été détruit."},{"id":"b","text":"Le sage demanda s''ils comprenaient pourquoi le royaume était détruit."},{"id":"c","text":"Le sage demanda s''ils ont compris pourquoi le royaume a été détruit."},{"id":"d","text":"Le sage demanda qu''ils comprennent pourquoi le royaume avait été détruit."}]'::jsonb, 'a', 'L''interrogation totale (oui/non) devient une subordonnée introduite par « si » au discours indirect. Le passé composé « avez-vous compris » devient plus-que-parfait « avaient compris », et « a été détruit » (passé composé passif) devient « avait été détruit » (plus-que-parfait passif), conformément à la règle de concordance avec le verbe introducteur au passé. L''option (b) traduit incorrectement les passés composés en imparfait et en présent. L''option (c) ne fait aucun changement de temps. L''option (d) utilise « que » + subjonctif, ce qui transforme la question en ordre.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('8d1de601-0c73-557f-a3b4-d45a964a2872', 'cca88b2d-cbd8-5e2a-a496-e9c176a67244', 'french', 'Quiz de compréhension', 1, 20, 5, 'quiz', 'admin', 0)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -2505,6 +2960,78 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('187b2c98-92ea-540b-a7e7-5dd9c2fa383a', 'cca88b2d-cbd8-5e2a-a496-e9c176a67244', 'french', '👑 Défi élite : figures et effets stylistiques', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('7f3ed481-20e3-5434-bc4b-65cadb9635ea', '187b2c98-92ea-540b-a7e7-5dd9c2fa383a', 'Identifie la figure de style et son effet dans : « Le Tout-Paris s''était donné rendez-vous pour applaudir la prima donna. »', '[{"id":"a","text":"Hyperbole : l''auteur exagère le nombre de spectateurs pour souligner le succès."},{"id":"b","text":"Métonymie : « le Tout-Paris » désigne l''élite parisienne par le nom de la ville, créant un effet de mondanité et d''exclusivité."},{"id":"c","text":"Personnification : Paris est présenté comme un être vivant capable de se déplacer."},{"id":"d","text":"Synecdoque : la partie (Paris) représente le tout (la France entière)."}]'::jsonb, 'b', '« Le Tout-Paris » est une métonymie : on désigne un groupe social (l''élite, le gratin parisien) par le nom du lieu associé à ce groupe. Ce procédé crée un effet d''exclusivité et de prestige. Ce n''est pas une synecdoque (qui substitue la partie au tout ou inversement à l''intérieur du même référent), ni une hyperbole (il n''y a pas d''exagération chiffrée), ni une personnification (Paris n''accomplit pas d''action proprement humaine).', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('a19b37f7-b80e-5ae9-bbcf-129d2677cdb6', '187b2c98-92ea-540b-a7e7-5dd9c2fa383a', 'Quelle figure de style domine dans ce passage, et quel est son effet ? « Il faisait grand jour dehors ; dans son âme régnait une nuit éternelle. »', '[{"id":"a","text":"Métaphore : « nuit éternelle » remplace directement « tristesse » sans outil comparatif, créant une image sombre."},{"id":"b","text":"Comparaison : l''auteur compare l''âme au jour et à la nuit pour montrer le contraste."},{"id":"c","text":"Antithèse : l''opposition entre « grand jour » et « nuit éternelle » / entre le dehors et l''âme met en relief le désespoir intérieur du personnage."},{"id":"d","text":"Oxymore : deux termes contradictoires sont juxtaposés dans la même expression pour créer un paradoxe."}]'::jsonb, 'c', 'La figure dominante est l''antithèse : deux idées contraires (grand jour / nuit éternelle ; dehors / âme) sont placées en opposition dans deux propositions symétriques. L''effet est de souligner le fossé entre la réalité extérieure lumineuse et le désespoir intérieur du personnage. L''oxymore exige que les deux termes contraires soient juxtaposés dans une seule expression (ex. : « obscure clarté ») ; ce n''est pas le cas ici. La métaphore est bien présente (« nuit éternelle »), mais elle est au service de l''antithèse, qui est la figure structurante de la phrase.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('f5ce42e1-de4b-5b66-b8a0-880ca8b71616', '187b2c98-92ea-540b-a7e7-5dd9c2fa383a', 'Dans « Un souffle, une ombre, un rien lui faisait peur », quelle figure précise reconnaît-on et quel est son effet ?', '[{"id":"a","text":"Énumération : une liste de trois éléments sans ordre particulier renforce l''idée de la peur."},{"id":"b","text":"Hyperbole : l''accumulation exagère la peur du personnage pour la rendre comique."},{"id":"c","text":"Gradation décroissante : les termes (souffle → ombre → rien) diminuent en substance, suggérant que la peur du personnage est si intense qu''elle n''a besoin d''aucun objet réel pour exister."},{"id":"d","text":"Comparaison : le personnage est comparé implicitement à quelqu''un d''aussi léger qu''un souffle."}]'::jsonb, 'c', 'Les trois termes forment une gradation décroissante : « un souffle » (quelque chose de très léger), « une ombre » (une forme à peine perceptible), « un rien » (l''absence totale d''objet réel). L''intensité de la peur est ainsi exaltée par le paradoxe : même le néant terrifie le personnage. Ce n''est pas une simple énumération, car les termes sont ordonnés par intensité décroissante — c''est précisément ce critère d''ordre qui définit la gradation.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('1665f4a2-f2d4-5b90-a73f-cfd8ebc25d82', '187b2c98-92ea-540b-a7e7-5dd9c2fa383a', 'Identifie la figure de style dans ce passage et explique sa construction : « La vie est un voyage : nous embarquons à la naissance, naviguons à travers les tempêtes du destin, et jetons enfin l''ancre au seuil de la mort. »', '[{"id":"a","text":"Comparaison filée : la vie est comparée à un voyage grâce à l''outil implicite « est »."},{"id":"b","text":"Métaphore filée : la métaphore initiale (« la vie est un voyage ») est développée et entretenue sur toute la phrase par un réseau cohérent de termes maritimes (embarquer, naviguer, ancre)."},{"id":"c","text":"Personnification : la vie, le destin et la mort accomplissent des actions humaines tout au long du passage."},{"id":"d","text":"Gradation : les étapes de la vie (naissance, destin, mort) sont énumérées par ordre chronologique croissant."}]'::jsonb, 'b', 'Il s''agit d''une métaphore filée : la métaphore inaugurale (« la vie est un voyage ») est prolongée et cohérente sur l''ensemble du passage grâce à un réseau lexical maritime (embarquons, naviguons, tempêtes, ancre). C''est une métaphore et non une comparaison, car aucun outil comparatif (comme, tel que…) n''est employé. La gradation suppose un ordre d''intensité croissante ou décroissante, non une simple succession chronologique.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('aca78fb2-be94-515e-93e9-07de78b76084', '187b2c98-92ea-540b-a7e7-5dd9c2fa383a', 'Quelle figure de style est employée dans « La forêt retenait son souffle », et quel effet produit-elle ?', '[{"id":"a","text":"Métaphore : la forêt est présentée directement comme un être vivant équivalent à un animal."},{"id":"b","text":"Hyperbole : l''expression exagère le silence de la forêt pour créer un effet de grandeur."},{"id":"c","text":"Comparaison : la forêt est comparée implicitement à un être humain qui retient son souffle."},{"id":"d","text":"Personnification : on attribue à la forêt (élément naturel) un geste proprement humain (retenir son souffle), créant une atmosphère de tension et de silence angoissant."}]'::jsonb, 'd', '« Retenir son souffle » est un comportement humain attribué à la forêt (un élément de la nature) : c''est bien une personnification. L''effet est double : il crée une atmosphère de tension suspendue et il invite le lecteur à percevoir la forêt comme une présence consciente et inquiète. Ce n''est pas une comparaison (absence d''outil comparatif), ni une simple métaphore nominale (la forêt n''est pas identifiée à un être précis), ni une hyperbole (l''expression ne repose pas sur l''exagération mais sur l''attribution d''une faculté humaine).', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('fe2204e3-3db5-5b36-9d8c-58bb455001d2', '187b2c98-92ea-540b-a7e7-5dd9c2fa383a', 'Dans la phrase « Il dévora les pages de ce roman en une nuit, assoiffé de mots », quel procédé stylistique est à l''œuvre et qu''apporte-t-il au sens ?', '[{"id":"a","text":"Hyperbole : « en une nuit » exagère la rapidité de lecture pour montrer l''enthousiasme du lecteur."},{"id":"b","text":"Comparaison : le lecteur est comparé à un animal affamé grâce à l''image implicite de la dévoration."},{"id":"c","text":"Métaphore verbale : « dévorer » (manger avidement) est employé au sens figuré pour désigner une lecture intense et passionnée, faisant du livre un aliment spirituel."},{"id":"d","text":"Personnification : les pages sont présentées comme des êtres vivants que l''on peut consommer."}]'::jsonb, 'c', 'Le verbe « dévorer » est ici employé au sens figuré : il transpose l''action de manger (sens propre, physique) à l''acte de lire (sens figuré, intellectuel). C''est une métaphore verbale — aucun outil comparatif n''est présent — qui assimile la lecture à une ingestion avide et crée l''image du livre comme nourriture de l''esprit. L''expression « assoiffé de mots » prolonge cette métaphore en ajoutant la soif au réseau sensoriel. Ce n''est pas une hyperbole, car l''effet ne repose pas sur une exagération quantitative mais sur le transfert de sens d''un verbe.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('d49bcd74-d20a-552c-9658-c0d86e053975', '383392ce-53c3-5d10-b090-6f6f48124bee', 'french', 'Quiz de compréhension', 1, 20, 5, 'quiz', 'admin', 0)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -2702,6 +3229,78 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('29b2923e-5b05-5c0d-abd3-f0e7bb7dd6eb', '981642c4-6f55-5171-897c-bdf40e984522', 'Pour décrire une salle de château de façon méthodique, quelle organisation est la plus adaptée ?', '[{"id":"a","text":"Un plan chronologique (du passé au présent)"},{"id":"b","text":"Un plan thèse/antithèse/synthèse"},{"id":"c","text":"Un plan spatial (par exemple : de l''entrée vers le fond, puis de gauche à droite)"},{"id":"d","text":"Un plan cause/conséquence"}]'::jsonb, 'c', 'La description d''un lieu s''organise selon un plan spatial (point de vue du regard qui se déplace) pour guider le lecteur de manière cohérente et vivante.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('1e8573c3-f5b0-53c4-afdf-0b71b3a6dd27', '383392ce-53c3-5d10-b090-6f6f48124bee', 'french', '👑 Défi élite : maîtrise des types de textes', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('ef5d7171-95a0-578b-bc28-53b6fe14dad2', '1e8573c3-f5b0-53c4-afdf-0b71b3a6dd27', 'Lis attentivement cet extrait : « La déforestation s''accélère en raison de l''expansion agricole et de l''exploitation du bois. Par conséquent, des millions d''animaux perdent leur habitat chaque année. Les forêts, vastes étendues verdoyantes aux arbres centenaires, disparaissent à un rythme alarmant. » Le passage contient des éléments descriptifs ET explicatifs. Quel est le TYPE DOMINANT et pourquoi ?', '[{"id":"a","text":"Descriptif, car les « vastes étendues verdoyantes » prouvent que la description prime sur tout."},{"id":"b","text":"Explicatif, car la structure cause/conséquence (« en raison de » / « par conséquent ») organise le sens du passage ; la description est au service de l''explication."},{"id":"c","text":"Narratif, car le texte relate des événements dans le temps grâce aux verbes d''action."},{"id":"d","text":"Argumentatif, car l''auteur dénonce la déforestation et cherche à convaincre le lecteur."}]'::jsonb, 'b', 'Le squelette du passage repose sur une relation cause/conséquence (« en raison de » → cause ; « par conséquent » → conséquence) et sur le présent de vérité générale : ce sont les marques de l''explicatif. L''adjectif descriptif « verdoyantes » est un élément secondaire qui illustre, mais ne gouverne pas la logique du texte. L''option d est un piège : dénoncer n''est pas argumenter si aucune thèse personnelle ni structure thèse/argument n''est présente.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('588ccf1f-d83f-5cb6-91a3-1d26330db329', '1e8573c3-f5b0-53c4-afdf-0b71b3a6dd27', 'Dans cet extrait : « Il me semble évident que les écrans nuisent à la concentration des élèves. Certes, certains outils numériques peuvent faciliter l''apprentissage ; néanmoins, leur usage excessif demeure préjudiciable. » — quel procédé argumentatif est à l''œuvre dans la deuxième phrase ?', '[{"id":"a","text":"Une relation cause/effet introduite par « certes » et « néanmoins »."},{"id":"b","text":"Une concession suivie d''une réfutation partielle : on accorde un point à l''adversaire (« certes ») avant de maintenir sa thèse (« néanmoins »)."},{"id":"c","text":"Une illustration par l''exemple, car on cite le cas des outils numériques."},{"id":"d","text":"Une définition du terme « usage excessif » pour clarifier la thèse."}]'::jsonb, 'b', '« Certes » introduit une concession : l''énonciateur reconnaît une vérité partielle favorable à l''opposant. « Néanmoins » est un connecteur d''opposition/réfutation qui permet de maintenir la thèse initiale malgré cette concession. Ce procédé — concession + réfutation — est une figure argumentative avancée distincte de la simple cause/effet ou de l''illustration.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('e33bc694-7409-5ed9-b465-5dafa064edd3', '1e8573c3-f5b0-53c4-afdf-0b71b3a6dd27', 'Quel est le rôle du connecteur « or » dans cette phrase extraite d''un texte argumentatif : « Tout le monde admet que l''eau est une ressource inépuisable. Or, les nappes phréatiques s''épuisent à vue d''œil. » ?', '[{"id":"a","text":"Il exprime la postériorité temporelle, comme « ensuite » ou « puis »."},{"id":"b","text":"Il introduit une conséquence logique découlant de la première proposition."},{"id":"c","text":"Il introduit un fait qui contredit ou nuance la prémisse précédente, créant un retournement argumentatif."},{"id":"d","text":"Il indique une addition d''information, équivalent à « de plus »."}]'::jsonb, 'c', '« Or » est un connecteur logique d''opposition/retournement : il présente un fait nouveau qui infirme ou nuance ce qui vient d''être posé comme acquis. Ici, il invalide la croyance commune (« eau inépuisable ») par un constat contraire (nappes phréatiques qui s''épuisent). Il ne faut pas le confondre avec les connecteurs temporels (ensuite, puis) ni avec les connecteurs de conséquence (donc, ainsi).', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d023279e-7134-5bd4-becb-6322f8306d5f', '1e8573c3-f5b0-53c4-afdf-0b71b3a6dd27', 'Lis cet extrait : « Léa vivait paisiblement dans son village au bord de la rivière. Elle connaissait chaque habitant et passait ses journées à lire sous le grand chêne. Un matin, une lettre anonyme arriva et bouleversa son existence. » À quelle étape du schéma narratif correspond précisément la DERNIÈRE phrase ?', '[{"id":"a","text":"Situation initiale, car elle présente encore le cadre de vie de Léa."},{"id":"b","text":"Péripéties, car la lettre déclenche une série d''actions et d''aventures."},{"id":"c","text":"Élément perturbateur, car un événement soudain (passé simple « arriva ») rompt l''équilibre décrit dans les phrases précédentes."},{"id":"d","text":"Dénouement, car la situation de Léa est résolue après la réception de la lettre."}]'::jsonb, 'c', 'Les deux premières phrases (imparfait : « vivait », « connaissait », « passait ») décrivent l''état d''équilibre initial : c''est la situation initiale. La dernière phrase bascule au passé simple (« arriva », « bouleversa »), signalant un événement brusque qui rompt cet équilibre : c''est l''élément perturbateur. Le piège de l''option b est réel : les péripéties viennent APRÈS l''élément perturbateur, elles ne le constituent pas.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('ff0ae26c-d6d6-5f50-ba1c-9976a19069be', '1e8573c3-f5b0-53c4-afdf-0b71b3a6dd27', 'Parmi ces quatre débuts de paragraphe de production écrite argumentative, lequel présente la structure la plus complète et la plus conforme aux exigences de l''examen du concours ?', '[{"id":"a","text":"« Premièrement, les réseaux sociaux sont dangereux pour les jeunes. »"},{"id":"b","text":"« De plus, il existe de nombreux problèmes liés à Internet, comme les virus et les arnaques, ce qui est très grave. »"},{"id":"c","text":"« En premier lieu, les réseaux sociaux favorisent l''isolement social. En effet, une étude menée en 2022 révèle que les adolescents utilisant ces plateformes plus de trois heures par jour déclarent se sentir plus seuls. Ainsi, l''usage intensif du numérique fragilise les liens réels. »"},{"id":"d","text":"« Les réseaux sociaux ont des avantages et des inconvénients, c''est pourquoi il faut en parler davantage. »"}]'::jsonb, 'c', 'L''option c respecte la structure attendue du paragraphe argumentatif : connecteur d''ordre (« en premier lieu ») + affirmation (argument) + connecteur de cause/preuve (« en effet ») + exemple concret et chiffré + connecteur de conséquence (« ainsi ») + conclusion partielle. Les options a et b manquent d''exemple et de conclusion partielle ; l''option d est vague et n''avance aucun argument réel.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('9c7803ee-0d85-57e7-ba51-8abe476a5058', '1e8573c3-f5b0-53c4-afdf-0b71b3a6dd27', 'Lis cet extrait mixte : « La forêt était silencieuse et sombre, ses arbres tordus ressemblant à des géants endormis. Soudain, Karim entendit un craquement et se retourna brusquement. Il aperçut une silhouette qui disparaissait entre les troncs. » Quel indice prouve que le type NARRATIF est dominant malgré la forte présence descriptive ?', '[{"id":"a","text":"La comparaison « ressemblant à des géants endormis » montre que la description domine le récit."},{"id":"b","text":"L''imparfait (« était », « ressemblant ») et le passé simple (« entendit », « se retourna », « aperçut ») coexistent : l''imparfait assure le fond descriptif, mais c''est la chaîne de passés simples qui fait avancer l''action et structure le texte — signe que le narratif est dominant."},{"id":"c","text":"Le mot « Soudain » est un adjectif qualificatif qui renforce la description de l''atmosphère."},{"id":"d","text":"Le texte est descriptif, car il ne contient aucun connecteur logique de type argumentatif."}]'::jsonb, 'b', 'Dans un texte mixte narratif-descriptif, le type dominant se repère à la fonction des temps : l''imparfait crée le décor (arrière-plan descriptif), tandis que le passé simple fait progresser la séquence d''actions (premier plan narratif). Ici, « entendit », « se retourna », « aperçut » forment une chaîne d''événements successifs qui constituent le moteur du passage : le narratif est donc dominant. « Soudain » est un adverbe de temps (connecteur temporel), non un adjectif.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
