@@ -75,6 +75,22 @@ export function buildMigrationSql(subject: LoadedSubject): string {
     "",
   );
 
+  // --- Exercise modes the pipeline uses (self-contained, idempotent) ---
+  // Kept here so a generated migration always allows every mode it inserts,
+  // regardless of which earlier migration last touched the CHECK constraint
+  // (no cross-migration ordering dependency for new modes like 'challenge').
+  out.push(
+    "DO $$",
+    "BEGIN",
+    "  IF EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'exercises_mode_check') THEN",
+    "    ALTER TABLE public.exercises DROP CONSTRAINT exercises_mode_check;",
+    "  END IF;",
+    "  ALTER TABLE public.exercises",
+    "    ADD CONSTRAINT exercises_mode_check CHECK (mode IN ('practice', 'boss', 'quiz', 'challenge'));",
+    "END $$;",
+    "",
+  );
+
   // --- Subject (upsert) ---
   out.push(
     "INSERT INTO public.subjects (id, name_fr, description, attribute, color_token, icon, display_order, content_language) VALUES",

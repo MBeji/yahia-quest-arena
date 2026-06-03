@@ -13,8 +13,10 @@ import {
   Lock,
   Brain,
   CheckCircle2,
+  Crown,
 } from "lucide-react";
 import { getSubject } from "@/features/quest";
+import { CHALLENGE_MIN_LEVEL } from "@/shared/constants/gamification";
 import { isRtlText } from "@/shared/lib/utils";
 import { useT } from "@/lib/i18n";
 
@@ -57,7 +59,8 @@ function SubjectPage() {
       </div>
     );
   }
-  const { subject, chapters, exercises, bestByExercise, quizPassedByChapter } = data;
+  const { subject, chapters, exercises, bestByExercise, quizPassedByChapter, viewer } = data;
+  const premiumUnlocked = viewer.hasSubscription && viewer.level >= CHALLENGE_MIN_LEVEL;
   const color = `var(--subject-${subject.color_token})`;
   const lang = ((subject as { content_language?: string }).content_language ?? "fr") as
     | "ar"
@@ -74,6 +77,13 @@ function SubjectPage() {
       en: "Pass the quiz to unlock the exercises",
     }[lang],
     review: { ar: "📖 راجع الدرس", fr: "📖 Réviser le cours", en: "📖 Review the lesson" }[lang],
+    elite: { ar: "تحدّي النخبة", fr: "Défi élite", en: "Elite challenge" }[lang],
+    premium: { ar: "مدفوع", fr: "Premium", en: "Premium" }[lang],
+    premiumLock: {
+      ar: `يتطلب اشتراكًا والمستوى ${CHALLENGE_MIN_LEVEL}`,
+      fr: `Abonnement + niveau ${CHALLENGE_MIN_LEVEL} requis`,
+      en: `Subscription + level ${CHALLENGE_MIN_LEVEL} required`,
+    }[lang],
   };
 
   return (
@@ -203,12 +213,20 @@ function SubjectPage() {
                   const stars =
                     best == null ? 0 : best >= 90 ? 3 : best >= 70 ? 2 : best >= 40 ? 1 : 0;
                   const isBoss = ex.mode === "boss";
+                  const isChallenge = ex.mode === "challenge";
+                  const premiumLocked = isChallenge && !premiumUnlocked;
                   const left = (
                     <div className="flex items-center gap-3">
                       <div
-                        className={`grid h-10 w-10 place-items-center rounded-lg ${isBoss ? "bg-gradient-to-br from-destructive/30 to-[color:var(--neon-magenta)]/20" : ""}`}
+                        className={`grid h-10 w-10 place-items-center rounded-lg ${
+                          isChallenge
+                            ? "bg-gradient-to-br from-[color:var(--neon-gold)]/30 to-[color:var(--neon-magenta)]/20 text-[color:var(--neon-gold)]"
+                            : isBoss
+                              ? "bg-gradient-to-br from-destructive/30 to-[color:var(--neon-magenta)]/20"
+                              : ""
+                        }`}
                         style={
-                          !isBoss
+                          !isBoss && !isChallenge
                             ? {
                                 background: `color-mix(in oklab, ${color} 25%, transparent)`,
                                 color,
@@ -218,6 +236,8 @@ function SubjectPage() {
                       >
                         {locked ? (
                           <Lock className="h-5 w-5 text-muted-foreground" />
+                        ) : isChallenge ? (
+                          <Crown className="h-5 w-5" />
                         ) : isBoss ? (
                           <Skull className="h-5 w-5 text-destructive" />
                         ) : (
@@ -235,13 +255,25 @@ function SubjectPage() {
                               Boss
                             </span>
                           )}
+                          {isChallenge && (
+                            <span className="flex items-center gap-1 rounded-full bg-[color:var(--neon-gold)]/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[color:var(--neon-gold)]">
+                              <Crown className="h-3 w-3" /> {L.elite}
+                            </span>
+                          )}
                         </div>
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <span>Difficulty {ex.difficulty}/3</span>
+                          <span>
+                            Difficulty {ex.difficulty}/{isChallenge ? 4 : 3}
+                          </span>
                           <span className="flex items-center gap-0.5 text-[color:var(--neon-gold)]">
                             <Zap className="h-3 w-3" />
                             {ex.xp_reward}
                           </span>
+                          {premiumLocked && (
+                            <span className="flex items-center gap-1 text-[color:var(--neon-gold)]">
+                              <Lock className="h-3 w-3" /> {L.premiumLock}
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -265,9 +297,11 @@ function SubjectPage() {
                       to="/quest/$exerciseId"
                       params={{ exerciseId: ex.id }}
                       className={`group flex items-center justify-between gap-3 rounded-xl border p-4 backdrop-blur-md transition hover:-translate-y-0.5 ${
-                        isBoss
-                          ? "border-destructive/40 bg-destructive/5 hover:border-destructive/70"
-                          : "border-border/50 bg-card/60 hover:border-[color:var(--neon-violet)]/50"
+                        isChallenge
+                          ? "border-[color:var(--neon-gold)]/50 bg-[color:var(--neon-gold)]/5 hover:border-[color:var(--neon-gold)]/70"
+                          : isBoss
+                            ? "border-destructive/40 bg-destructive/5 hover:border-destructive/70"
+                            : "border-border/50 bg-card/60 hover:border-[color:var(--neon-violet)]/50"
                       }`}
                     >
                       {left}

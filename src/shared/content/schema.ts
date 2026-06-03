@@ -80,8 +80,13 @@ export type ContentQuiz = z.infer<typeof quizSchema>;
 /** An exercise file under `<chapter>/exercices/*.json`. */
 export const exerciseSchema = z.object({
   title: z.string().min(1),
-  difficulty: z.number().int().min(1).max(3),
-  mode: z.enum(["practice", "boss"]),
+  /**
+   * Exercise tier: 1 (easy) … 3 (boss). 4 is the premium "Défi élite" tier —
+   * exercises clearly above the chapter average, gated behind a paid
+   * subscription + a minimum player level (see startExerciseSession).
+   */
+  difficulty: z.number().int().min(1).max(4),
+  mode: z.enum(["practice", "boss", "challenge"]),
   xpReward: z.number().int().positive(),
   rewardCoins: z.number().int().nonnegative(),
   displayOrder: z.number().int().positive(),

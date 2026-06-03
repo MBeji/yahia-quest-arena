@@ -16,6 +16,7 @@ import {
   BookOpen,
   Lock,
   Check,
+  Crown,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -34,40 +35,10 @@ import { isRtlText, isMathExpression } from "@/shared/lib/utils";
 import { shuffleOptions, type BaseOption, type DisplayOption } from "@/shared/lib/question-utils";
 import { levelForXp } from "@/shared/lib/level";
 import { QuestResultActions } from "@/features/quest/components/quest-result-actions";
+import { Confetti } from "@/features/quest/components/confetti";
+import { SubscriptionPaywall } from "@/features/subscription";
 import { LevelUpCelebration } from "@/components/ui/level-up-celebration";
 import { useT } from "@/lib/i18n";
-
-// Confetti component for victory
-function Confetti() {
-  const particles = useMemo(
-    () =>
-      Array.from({ length: 50 }, (_, i) => ({
-        id: i,
-        x: Math.random() * 100,
-        delay: Math.random() * 0.5,
-        duration: 1.5 + Math.random() * 2,
-        color: ["#a855f7", "#06b6d4", "#f59e0b", "#ec4899", "#10b981"][
-          Math.floor(Math.random() * 5)
-        ],
-        size: 6 + Math.random() * 8,
-      })),
-    [],
-  );
-  return (
-    <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
-      {particles.map((p) => (
-        <motion.div
-          key={p.id}
-          className="absolute rounded-sm"
-          style={{ left: `${p.x}%`, width: p.size, height: p.size, backgroundColor: p.color }}
-          initial={{ y: -20, opacity: 1, rotate: 0 }}
-          animate={{ y: "100vh", opacity: 0, rotate: 360 + Math.random() * 360 }}
-          transition={{ duration: p.duration, delay: p.delay, ease: "easeIn" }}
-        />
-      ))}
-    </div>
-  );
-}
 
 export const Route = createFileRoute("/_authenticated/quest/$exerciseId")({
   head: () => ({ meta: [{ title: "Quest · XP Scholars" }] }),
@@ -363,12 +334,42 @@ function QuestPage() {
       fr: "Réponse enregistrée. Ton résultat s'affichera à la fin du quiz.",
       en: "Answer recorded. Your result will appear at the end of the quiz.",
     }[qlang],
+    eliteLockedTitle: {
+      ar: "👑 تحدّي النخبة مقفل",
+      fr: "👑 Défi élite verrouillé",
+      en: "👑 Elite challenge locked",
+    }[qlang],
   };
 
   // Locked screen: the chapter comprehension quiz must be passed first
   // (enforced server-side in startExerciseSession).
   const sessionErrorMsg =
     sessionMutation.error instanceof Error ? sessionMutation.error.message : "";
+
+  // Premium "Défi élite" lock: server rejects the session start. Show the
+  // subscription paywall (plans + admin phone) and the unlock requirement.
+  if (sessionMutation.isError && sessionErrorMsg.startsWith("Mission premium")) {
+    return (
+      <div className="mx-auto max-w-md px-6 py-12 text-center">
+        <div className="rounded-3xl border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/5 p-8">
+          <Crown className="mx-auto h-12 w-12 text-[color:var(--neon-gold)]" />
+          <h1 className="mt-4 font-display text-2xl font-bold">{QL.eliteLockedTitle}</h1>
+          <p className="mt-3 text-sm text-muted-foreground">{sessionErrorMsg}</p>
+          <SubscriptionPaywall />
+          {exSubjectId && (
+            <Link
+              to="/subject/$subjectId"
+              params={{ subjectId: exSubjectId }}
+              className="mt-5 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+            >
+              <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {QL.back}
+            </Link>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   if (sessionMutation.isError && sessionErrorMsg.includes("quiz de compréhension")) {
     return (
       <div
