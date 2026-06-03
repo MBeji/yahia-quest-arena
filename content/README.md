@@ -16,6 +16,7 @@ content/
       chapter.json           # titre, description, ordre, sources[]
       cours.md               # cours théorique complet (markdown)
       resume.md              # résumé du cours (markdown)
+      quiz.json              # quiz de compréhension OBLIGATOIRE (verrou des exercices)
       exercices/
         01-<slug>.json       # un exercice QCM (questions + explications)
         02-<slug>.json
@@ -27,6 +28,9 @@ content/
   `icon`, `displayOrder`, `contentLanguage` (`ar` | `fr` | `en`).
 - **`chapter.json`** : `title`, `description`, `displayOrder`, `sources` (liste
   d'URLs / références — traçabilité des sources).
+- **`quiz.json`** (obligatoire) : `title?` + `questions[]` (même forme que les
+  questions d'exercice). Compilé en exercice `mode='quiz'` ; l'élève doit le
+  réussir (≥ `QUIZ_PASS_THRESHOLD_PCT`) pour débloquer les exercices du chapitre.
 - **exercice `*.json`** : `title`, `difficulty` (1-3), `mode`
   (`practice` | `boss`), `xpReward`, `rewardCoins`, `displayOrder`, et
   `questions[]` : `{ prompt, options:[{id,text}], correctOption, explanation }`.

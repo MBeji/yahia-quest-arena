@@ -560,7 +560,7 @@ describe("NON-REGRESSION: Data shape contracts", () => {
     mockRpc.mockReset();
   });
 
-  it("getSubject returns { subject, chapters, exercises, bestByExercise }", async () => {
+  it("getSubject returns { subject, chapters, exercises, bestByExercise, quizPassedByChapter }", async () => {
     mockFrom.mockImplementation((table: string) => {
       if (table === "subjects")
         return mockQuery({ id: "s1", name_fr: "Math", color_token: "math", icon: "📐" });
@@ -580,6 +580,7 @@ describe("NON-REGRESSION: Data shape contracts", () => {
       "bestByExercise",
       "chapters",
       "exercises",
+      "quizPassedByChapter",
       "subject",
     ]);
     expect(result.chapters).toBeInstanceOf(Array);

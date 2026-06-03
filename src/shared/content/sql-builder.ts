@@ -9,6 +9,10 @@ import type { LoadedSubject } from "./schema.ts";
 /** Fixed namespace so generated ids are stable across machines and runs. */
 export const CONTENT_UUID_NAMESPACE = "5f1d6b6e-2a4c-5e7b-9c3a-7d2e1f0a8b44";
 
+/** Modest rewards for passing a chapter comprehension quiz. */
+export const QUIZ_XP_REWARD = 20;
+export const QUIZ_COIN_REWARD = 5;
+
 /** Deterministic RFC-4122 v5 UUID (SHA-1 based) for a given name. */
 export function uuidV5(name: string, namespace: string = CONTENT_UUID_NAMESPACE): string {
   const nsBytes = Buffer.from(namespace.replace(/-/g, ""), "hex");
@@ -90,9 +94,14 @@ export function buildMigrationSql(subject: LoadedSubject): string {
     "",
   );
 
-  // Pre-compute ids so cleanup can reference the managed set.
+  // Pre-compute ids so cleanup can reference the managed set. Every chapter
+  // has a mandatory comprehension quiz (slug "quiz", a mode='quiz' exercise).
   for (const chapter of chapters) {
     chapterIds.push(chapterId(subjectId, chapter.slug));
+    exerciseIds.push(exerciseId(subjectId, chapter.slug, "quiz"));
+    chapter.quiz.questions.forEach((_q, i) => {
+      questionIds.push(questionId(subjectId, chapter.slug, "quiz", i + 1));
+    });
     for (const exercise of chapter.exercises) {
       const exId = exerciseId(subjectId, chapter.slug, exercise.slug);
       exerciseIds.push(exId);
@@ -167,45 +176,91 @@ export function buildMigrationSql(subject: LoadedSubject): string {
   }
 
   // --- Exercises (upsert) ---
-  for (const chapter of chapters) {
-    const chId = chapterId(subjectId, chapter.slug);
-    for (const exercise of chapter.exercises) {
-      const exId = exerciseId(subjectId, chapter.slug, exercise.slug);
-      const ex = exercise.data;
+  type EmittedQuestion = {
+    prompt: string;
+    options: unknown;
+    correctOption: string;
+    explanation: string;
+  };
+  const emitExercise = (
+    chId: string,
+    exId: string,
+    slug: string,
+    chapterSlug: string,
+    title: string,
+    difficulty: number,
+    xpReward: number,
+    rewardCoins: number,
+    mode: string,
+    displayOrder: number,
+    questions: EmittedQuestion[],
+  ) => {
+    out.push(
+      "INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES",
+      `  (${sqlString(exId)}, ${sqlString(chId)}, ${sqlString(subjectId)}, ${sqlString(title)}, ${difficulty}, ${xpReward}, ${rewardCoins}, ${sqlString(
+        mode,
+      )}, 'admin', ${displayOrder})`,
+      "ON CONFLICT (id) DO UPDATE SET",
+      "  chapter_id = EXCLUDED.chapter_id,",
+      "  subject_id = EXCLUDED.subject_id,",
+      "  title = EXCLUDED.title,",
+      "  difficulty = EXCLUDED.difficulty,",
+      "  xp_reward = EXCLUDED.xp_reward,",
+      "  reward_coins = EXCLUDED.reward_coins,",
+      "  mode = EXCLUDED.mode,",
+      "  display_order = EXCLUDED.display_order;",
+      "",
+    );
+    questions.forEach((q, i) => {
+      const qId = questionId(subjectId, chapterSlug, slug, i + 1);
       out.push(
-        "INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES",
-        `  (${sqlString(exId)}, ${sqlString(chId)}, ${sqlString(subjectId)}, ${sqlString(ex.title)}, ${ex.difficulty}, ${ex.xpReward}, ${ex.rewardCoins}, ${sqlString(
-          ex.mode,
-        )}, 'admin', ${ex.displayOrder})`,
+        "INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES",
+        `  (${sqlString(qId)}, ${sqlString(exId)}, ${sqlString(q.prompt)}, ${sqlJson(
+          q.options,
+        )}, ${sqlString(q.correctOption)}, ${sqlString(q.explanation)}, ${i + 1})`,
         "ON CONFLICT (id) DO UPDATE SET",
-        "  chapter_id = EXCLUDED.chapter_id,",
-        "  subject_id = EXCLUDED.subject_id,",
-        "  title = EXCLUDED.title,",
-        "  difficulty = EXCLUDED.difficulty,",
-        "  xp_reward = EXCLUDED.xp_reward,",
-        "  reward_coins = EXCLUDED.reward_coins,",
-        "  mode = EXCLUDED.mode,",
+        "  exercise_id = EXCLUDED.exercise_id,",
+        "  prompt = EXCLUDED.prompt,",
+        "  options = EXCLUDED.options,",
+        "  correct_option = EXCLUDED.correct_option,",
+        "  explanation = EXCLUDED.explanation,",
         "  display_order = EXCLUDED.display_order;",
         "",
       );
+    });
+  };
 
-      ex.questions.forEach((q, i) => {
-        const qId = questionId(subjectId, chapter.slug, exercise.slug, i + 1);
-        out.push(
-          "INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES",
-          `  (${sqlString(qId)}, ${sqlString(exId)}, ${sqlString(q.prompt)}, ${sqlJson(
-            q.options,
-          )}, ${sqlString(q.correctOption)}, ${sqlString(q.explanation)}, ${i + 1})`,
-          "ON CONFLICT (id) DO UPDATE SET",
-          "  exercise_id = EXCLUDED.exercise_id,",
-          "  prompt = EXCLUDED.prompt,",
-          "  options = EXCLUDED.options,",
-          "  correct_option = EXCLUDED.correct_option,",
-          "  explanation = EXCLUDED.explanation,",
-          "  display_order = EXCLUDED.display_order;",
-          "",
-        );
-      });
+  for (const chapter of chapters) {
+    const chId = chapterId(subjectId, chapter.slug);
+    // Mandatory comprehension quiz first (mode='quiz', display_order 0).
+    emitExercise(
+      chId,
+      exerciseId(subjectId, chapter.slug, "quiz"),
+      "quiz",
+      chapter.slug,
+      chapter.quiz.title ?? chapter.meta.title,
+      1,
+      QUIZ_XP_REWARD,
+      QUIZ_COIN_REWARD,
+      "quiz",
+      0,
+      chapter.quiz.questions,
+    );
+    for (const exercise of chapter.exercises) {
+      const ex = exercise.data;
+      emitExercise(
+        chId,
+        exerciseId(subjectId, chapter.slug, exercise.slug),
+        exercise.slug,
+        chapter.slug,
+        ex.title,
+        ex.difficulty,
+        ex.xpReward,
+        ex.rewardCoins,
+        ex.mode,
+        ex.displayOrder,
+        ex.questions,
+      );
     }
   }
 

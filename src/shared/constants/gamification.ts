@@ -3,6 +3,13 @@
 /** Minimum score percentage to pass an exercise */
 export const PASS_THRESHOLD_PCT = 60;
 
+/**
+ * Minimum score percentage to pass a chapter's mandatory comprehension quiz.
+ * Until a chapter's `mode='quiz'` exercise is passed at or above this score,
+ * the chapter's practice/boss exercises stay locked (enforced server-side).
+ */
+export const QUIZ_PASS_THRESHOLD_PCT = 80;
+
 /** Score threshold for half coin reward */
 export const HALF_COIN_THRESHOLD_PCT = 40;
 

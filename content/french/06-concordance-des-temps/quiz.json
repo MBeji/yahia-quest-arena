@@ -1,0 +1,66 @@
+{
+  "title": "Quiz de compréhension",
+  "questions": [
+    {
+      "prompt": "Qu'est-ce que la concordance des temps ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Une règle qui impose d'adapter le temps du verbe subordonné au temps du verbe principal pour assurer la cohérence temporelle."
+        },
+        { "id": "b", "text": "Une règle qui impose d'accorder le participe passé avec le sujet." },
+        {
+          "id": "c",
+          "text": "Une règle qui oblige à employer le passé simple dans tous les récits littéraires."
+        },
+        { "id": "d", "text": "Une règle qui interdit l'emploi du subjonctif dans une subordonnée." }
+      ],
+      "correctOption": "a",
+      "explanation": "La concordance des temps est la règle qui impose d'adapter le temps du verbe de la subordonnée au temps du verbe principal afin d'assurer la cohérence temporelle du texte."
+    },
+    {
+      "prompt": "Dans un récit au passé, quel temps exprime une action antérieure à une autre action passée ?",
+      "options": [
+        { "id": "a", "text": "Le passé simple" },
+        { "id": "b", "text": "L'imparfait" },
+        { "id": "c", "text": "Le plus-que-parfait" },
+        { "id": "d", "text": "Le futur antérieur" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le plus-que-parfait (auxiliaire à l'imparfait + participe passé) marque une action antérieure à une autre action passée. Ex. : « Il avait préparé son plan avant de lancer l'attaque. »"
+    },
+    {
+      "prompt": "Dans la phrase « Pendant qu'il courait, la tempête faisait rage. », quelle relation temporelle unit les deux actions ?",
+      "options": [
+        { "id": "a", "text": "Antériorité : la course précède la tempête." },
+        { "id": "b", "text": "Postériorité : la tempête suit la course." },
+        { "id": "c", "text": "Simultanéité : les deux actions se déroulent en même temps." },
+        { "id": "d", "text": "Hypothèse : la course est une condition de la tempête." }
+      ],
+      "correctOption": "c",
+      "explanation": "L'emploi de l'imparfait dans les deux propositions exprime la simultanéité : les deux actions se déroulent en même temps. « Pendant que » renforce cette idée."
+    },
+    {
+      "prompt": "Dans le discours indirect, quand le verbe introducteur est au passé, le futur simple du discours direct devient :",
+      "options": [
+        { "id": "a", "text": "L'imparfait" },
+        { "id": "b", "text": "Le plus-que-parfait" },
+        { "id": "c", "text": "Le conditionnel présent" },
+        { "id": "d", "text": "Le subjonctif présent" }
+      ],
+      "correctOption": "c",
+      "explanation": "Règle de concordance au discours indirect (verbe introducteur au passé) : futur simple → conditionnel présent. Ex. : « Je partirai. » → Il dit qu'il partirait."
+    },
+    {
+      "prompt": "Le passé antérieur s'emploie principalement dans les subordonnées introduites par « dès que », « quand », « lorsque » pour indiquer :",
+      "options": [
+        { "id": "a", "text": "Une action simultanée à un verbe au passé simple." },
+        { "id": "b", "text": "Une habitude répétée dans le passé." },
+        { "id": "c", "text": "Une action postérieure à un verbe à l'imparfait." },
+        { "id": "d", "text": "Une antériorité immédiate par rapport à un verbe au passé simple." }
+      ],
+      "correctOption": "d",
+      "explanation": "Le passé antérieur (auxiliaire au passé simple + participe passé) exprime une antériorité immédiate par rapport à un verbe principal au passé simple. Ex. : « Quand il eut fini son discours, les guerriers partirent. »"
+    }
+  ]
+}

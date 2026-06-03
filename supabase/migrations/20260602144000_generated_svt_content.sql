@@ -26,11 +26,11 @@ BEGIN
       AND q.exercise_id = e.id
       AND e.subject_id = 'svt'
       AND e.source = 'admin'
-      AND q.id NOT IN ('3520e9b6-2c60-5bdb-9452-faf19f751575', '81f6c3b2-6342-5561-927e-2e6ebed08499', 'a617b749-a476-50aa-9d77-27dcf968ea8a', '37d2536d-d2c7-5e45-abcb-8e00d8076e79', 'a8b17c3a-a10b-5ceb-9d4f-8110c42aaee3', 'f5fb35c5-5154-5d48-b3f7-7a390b017440', 'd88cfa81-9602-5207-baae-4cdb136464a2', '83fb403f-75d9-556c-b0a6-63498590cb6b', 'ae3a8765-e3bc-5de4-aad9-c042423ec09d', 'f94cd634-522e-5e75-b7d3-b3e59f27c9cc', '44e1f184-a612-5cdc-a9ba-8533a8834f1d', '69783a50-a7a5-5876-9b7f-29fce45939a8', '44ddcd17-bb19-5228-ba8b-4211de3562b1', '5e56c005-d7b1-56c6-939c-b2c6cfdb7d38', 'afa792ec-5971-53a8-a4ca-10f21e3027d3', '8784db1c-4b9f-524a-a0e7-124a23220be1', 'da07a20a-588b-5a3f-8fd5-7530377d7fd5', '7b11338c-156d-51a0-8261-6e81584fe742', 'c5e3e513-f9d8-5784-92af-6817ddd63335', 'df25cbc2-c7e3-5ff2-9847-7b1d36b7ee43', '83068f98-093a-50c4-a79b-d309fd03c87a', '3f12af12-f050-52c2-a1db-8fad4a8decaa', 'c9ea1556-ee82-55db-8a40-d7be20088539', 'b9988cb9-26e9-527f-bbc6-edcb45251559', '58fc540e-f2c8-5ec7-8a5f-b7f4f3c5c2ab', '76664654-c161-5832-98f0-bc64f4e97610', 'c0c0bb99-7beb-5f79-86e3-ae6df1b48834', '22840768-e8e7-56f5-a5c5-2491212fc033', '674ae4f4-ad03-5554-823c-749fcbdef4ac', 'e5470327-b001-55f1-9629-5301f11c075f', '1b6f08de-dd25-5cd5-9f6b-46ad4c851bb5', 'b341e3ea-d1b3-5169-8076-a8dd68eb74e9', 'd1ec52c7-8aaa-5f80-a11f-b5b11e512e04', '3be8161b-761a-5a62-a43a-fb96a0c3efb5', 'a171368a-bd36-5525-b952-4b9ba55fefdc', 'be775c57-89b4-5695-9b51-88cba6a39523', '737e9f0f-f2d2-5228-a098-d670ad9fc910', '78195190-fc1d-5564-a743-5b77fe7834cc', 'cc2b2eda-e8eb-5c01-ab28-c54e17bba99f', '382486af-141f-5d5b-ad27-0edf365442ff', '20eca5c0-7450-520f-98e6-70065fe31efc', 'f76b245f-3e8f-50ec-9a9d-8676fcce9aac', '472f2736-7a87-57ee-892a-3947d612b368', '00b35176-0c2a-569a-b53c-3fcba9c5f686', 'de7a8c8a-11ab-5845-a18b-ea09a25f0ebd', '26d1cfe6-94c3-5c57-aeec-d0c5388828e6', 'eb0a741b-59df-562f-8139-4e96e205790c', 'b01b9503-2b8d-557b-9f97-a1e65a8f73bd', '1f6bacee-755c-5a84-97c4-6cfeb4a30a7d', '55175f89-37f1-5093-be10-635d8cf97a74', '192af321-7e53-5849-900d-cb4c1814f863', 'ea79b802-7f5c-5f15-99a8-70d5c96b57b7', '53586353-b2ea-5962-8d4e-863c37d7367c', '8a56a677-e9ad-5b29-a153-45ba0e93741f', '8d7d1022-2db4-58cf-8902-1b61fe4128ad', 'b46481cb-0b1f-5b2d-8a3d-a1d7bdc16b37', '5fc6de1c-ebe0-5e6e-8fe4-f25fe4e9a09c', '04ac5da9-6bb3-5134-a3a6-0d508cf804bf', '9e8aff14-50ea-5585-9d86-d673d817419c', '07cabb70-9805-5e1d-a27a-644d6106e340', 'dc852d16-39cc-580a-94c7-c31d1e146368', 'cdb6fa80-3981-5d0c-bfe0-380f76481070', 'cf29f7c2-8e2e-5cca-8414-35e1ff94aa6c', 'f821d1c7-4eb5-56e7-ac5e-18bf8df9110b', '24380511-202c-5ce8-9260-3708c9d74d6e', '5331c75a-150d-534f-a688-7318cc0f95f1', '55e16890-ab5d-56d6-b33a-6048d53a5cdf', '6a308347-9fb2-5918-a818-9da7e2510b26', '34aa0eab-bfbb-5f40-9291-98b7e9242788', '78c2c95e-9eb1-522d-b0e2-57c3049564c1', '24284667-64ac-573b-8987-f68e74c448a4', '7b79c439-4e9e-58bd-a167-0ad9f220e008', '03d3ffec-8982-54e8-af46-bdc34a74db49', 'ba4c35da-a412-5a63-b560-0ae9098103da', 'f135d69e-e440-5280-a33f-857bd03ac27c', '50b9583a-ed55-5045-8898-733dee8955c0', '0a82487d-cc54-5bcb-822d-c146d76f1434', '9db33979-7743-5936-b6c7-a3d6f94ceca9', 'e5d52986-ff3e-5025-a7b9-255341e0839e', 'd3c44940-7ad2-559e-965e-959fbc2e7375', '41266bf3-a20d-5622-ad0f-84d45d288549', 'c9173622-de37-5b06-bd5f-9c3201286a3e', '03d2fda0-9268-5fd0-8a40-9a8c78c5b489', '9972807a-49be-58b7-8a97-01dc9cb6dbbc', 'a6e4f1ad-f2dd-55ef-8e05-a98c740e1f40', '70bf4cf9-af39-51ba-a21f-c63ed8494aa5', '52a0d161-eb83-5d7c-87b7-fb8dda4cd2ca', '34b745c3-3d21-5c6e-b777-7b198d981cf1', '19074ba1-dca3-523b-8070-2aea8451ec5a', '80515582-5b5b-55d7-accd-a0156424b884', '8fc16747-a960-50b3-9874-c793e3dd240b', '4c8c17b0-8f75-5e45-b749-2295628a70de', 'c747b840-1d28-51a2-b0b5-825fd5eeb525', '0c3edbd1-43d7-59a2-9731-68f282c315f7', '4c6d3e90-677a-5b28-8ff3-05873bda0227', '626562e0-0107-5931-a5c3-c85b50adcbaf');
+      AND q.id NOT IN ('52d8717b-1c43-560a-a90c-be89d2392f61', 'c0d3540e-6bcd-54fc-bd09-53bc66aa4804', 'ae8f4387-96f1-59a1-a6e6-7e2588de9711', '5690eecf-c76c-54a1-842a-fd503204f945', '426ed470-9a87-53ba-af50-0208d0da05df', '3520e9b6-2c60-5bdb-9452-faf19f751575', '81f6c3b2-6342-5561-927e-2e6ebed08499', 'a617b749-a476-50aa-9d77-27dcf968ea8a', '37d2536d-d2c7-5e45-abcb-8e00d8076e79', 'a8b17c3a-a10b-5ceb-9d4f-8110c42aaee3', 'f5fb35c5-5154-5d48-b3f7-7a390b017440', 'd88cfa81-9602-5207-baae-4cdb136464a2', '83fb403f-75d9-556c-b0a6-63498590cb6b', 'ae3a8765-e3bc-5de4-aad9-c042423ec09d', 'f94cd634-522e-5e75-b7d3-b3e59f27c9cc', '44e1f184-a612-5cdc-a9ba-8533a8834f1d', '69783a50-a7a5-5876-9b7f-29fce45939a8', 'e9b6e6d0-5a21-5a1e-82c4-0c31d41c49a1', '662aeb79-a0c0-5810-b904-6bcb1bb4489c', 'aa27adbe-7cfc-5d30-80b2-7bf20234858b', '6715516e-0d9b-5bd4-a40f-05576bca75fc', 'b08985be-aebe-5647-bc97-865457e42791', '44ddcd17-bb19-5228-ba8b-4211de3562b1', '5e56c005-d7b1-56c6-939c-b2c6cfdb7d38', 'afa792ec-5971-53a8-a4ca-10f21e3027d3', '8784db1c-4b9f-524a-a0e7-124a23220be1', 'da07a20a-588b-5a3f-8fd5-7530377d7fd5', '7b11338c-156d-51a0-8261-6e81584fe742', 'c5e3e513-f9d8-5784-92af-6817ddd63335', 'df25cbc2-c7e3-5ff2-9847-7b1d36b7ee43', '83068f98-093a-50c4-a79b-d309fd03c87a', '3f12af12-f050-52c2-a1db-8fad4a8decaa', 'c9ea1556-ee82-55db-8a40-d7be20088539', 'b9988cb9-26e9-527f-bbc6-edcb45251559', '2c42d55c-cdd9-55de-aa2e-42cf5814f6af', '2d726520-6cd0-5c8e-83fa-f1f921a5596f', 'c82436f1-08a1-59e7-b547-318b3f88c7e1', 'b7848d4b-3e45-523c-b1a3-503e8a557e2e', '5cef7a64-a500-54ae-ba70-57009499ed97', '58fc540e-f2c8-5ec7-8a5f-b7f4f3c5c2ab', '76664654-c161-5832-98f0-bc64f4e97610', 'c0c0bb99-7beb-5f79-86e3-ae6df1b48834', '22840768-e8e7-56f5-a5c5-2491212fc033', '674ae4f4-ad03-5554-823c-749fcbdef4ac', 'e5470327-b001-55f1-9629-5301f11c075f', '1b6f08de-dd25-5cd5-9f6b-46ad4c851bb5', 'b341e3ea-d1b3-5169-8076-a8dd68eb74e9', 'd1ec52c7-8aaa-5f80-a11f-b5b11e512e04', '3be8161b-761a-5a62-a43a-fb96a0c3efb5', 'a171368a-bd36-5525-b952-4b9ba55fefdc', 'be775c57-89b4-5695-9b51-88cba6a39523', '154942ef-f876-504d-9a3d-e5ac1aa4cdbd', '30dc7a1c-f5ae-5380-ad46-822772fecdb1', '261a37e4-5541-5c2c-9229-138fcb398c34', '953e4839-3ddd-5cab-9209-da4c6fd4f6ac', '4b30b1bc-02ad-5baa-9169-342bb966f50e', '737e9f0f-f2d2-5228-a098-d670ad9fc910', '78195190-fc1d-5564-a743-5b77fe7834cc', 'cc2b2eda-e8eb-5c01-ab28-c54e17bba99f', '382486af-141f-5d5b-ad27-0edf365442ff', '20eca5c0-7450-520f-98e6-70065fe31efc', 'f76b245f-3e8f-50ec-9a9d-8676fcce9aac', '472f2736-7a87-57ee-892a-3947d612b368', '00b35176-0c2a-569a-b53c-3fcba9c5f686', 'de7a8c8a-11ab-5845-a18b-ea09a25f0ebd', '26d1cfe6-94c3-5c57-aeec-d0c5388828e6', 'eb0a741b-59df-562f-8139-4e96e205790c', 'b01b9503-2b8d-557b-9f97-a1e65a8f73bd', 'c687b5ae-4a3f-5a77-8f52-feb83e25dda8', '73fd748f-4a38-57a5-9e17-b9c62963e4d3', '95f04cfb-fc30-5317-a00a-ad2938f3b265', 'b23d29b0-9449-51de-8291-a8a59fd70933', 'd421aa28-cfb5-54ae-b986-765a29301f0e', '1f6bacee-755c-5a84-97c4-6cfeb4a30a7d', '55175f89-37f1-5093-be10-635d8cf97a74', '192af321-7e53-5849-900d-cb4c1814f863', 'ea79b802-7f5c-5f15-99a8-70d5c96b57b7', '53586353-b2ea-5962-8d4e-863c37d7367c', '8a56a677-e9ad-5b29-a153-45ba0e93741f', '8d7d1022-2db4-58cf-8902-1b61fe4128ad', 'b46481cb-0b1f-5b2d-8a3d-a1d7bdc16b37', '5fc6de1c-ebe0-5e6e-8fe4-f25fe4e9a09c', '04ac5da9-6bb3-5134-a3a6-0d508cf804bf', '9e8aff14-50ea-5585-9d86-d673d817419c', '07cabb70-9805-5e1d-a27a-644d6106e340', '0f9d875f-e551-5d18-8c2d-f3729b2ebd37', 'a3d39a96-e07d-5833-858e-6043d1c12b0a', 'bd99b9e5-1333-5efa-8a25-355e3246d020', '98af36c6-103f-5681-b3de-b09cc452cce3', 'f2fdbf90-7703-597c-ab64-2f65be736da6', 'dc852d16-39cc-580a-94c7-c31d1e146368', 'cdb6fa80-3981-5d0c-bfe0-380f76481070', 'cf29f7c2-8e2e-5cca-8414-35e1ff94aa6c', 'f821d1c7-4eb5-56e7-ac5e-18bf8df9110b', '24380511-202c-5ce8-9260-3708c9d74d6e', '5331c75a-150d-534f-a688-7318cc0f95f1', '55e16890-ab5d-56d6-b33a-6048d53a5cdf', '6a308347-9fb2-5918-a818-9da7e2510b26', '34aa0eab-bfbb-5f40-9291-98b7e9242788', '78c2c95e-9eb1-522d-b0e2-57c3049564c1', '24284667-64ac-573b-8987-f68e74c448a4', '7b79c439-4e9e-58bd-a167-0ad9f220e008', '60e38c82-e263-5d1d-ada7-21006fdcd533', '9d5722ec-f19f-518d-88b1-b33051a3a937', '2a3c50bc-d7ee-5b80-af81-21f5c1a89d80', '9afc4975-4346-50d6-9565-fee46fd8703f', '4a4eb02a-172a-533f-b615-d23ca18df1ed', '03d3ffec-8982-54e8-af46-bdc34a74db49', 'ba4c35da-a412-5a63-b560-0ae9098103da', 'f135d69e-e440-5280-a33f-857bd03ac27c', '50b9583a-ed55-5045-8898-733dee8955c0', '0a82487d-cc54-5bcb-822d-c146d76f1434', '9db33979-7743-5936-b6c7-a3d6f94ceca9', 'e5d52986-ff3e-5025-a7b9-255341e0839e', 'd3c44940-7ad2-559e-965e-959fbc2e7375', '41266bf3-a20d-5622-ad0f-84d45d288549', 'c9173622-de37-5b06-bd5f-9c3201286a3e', '03d2fda0-9268-5fd0-8a40-9a8c78c5b489', '9972807a-49be-58b7-8a97-01dc9cb6dbbc', 'b149f757-11cd-5672-ba11-d76d0213d466', '81062ac7-2097-5411-9a9e-ad5d73afadf8', '9a0c155f-79a0-568b-9ae7-565ef9002d29', '88200d7c-d007-514e-9fff-98830902cd8b', '6415c31b-bea6-5a0b-8e7a-8189179ffeb4', 'a6e4f1ad-f2dd-55ef-8e05-a98c740e1f40', '70bf4cf9-af39-51ba-a21f-c63ed8494aa5', '52a0d161-eb83-5d7c-87b7-fb8dda4cd2ca', '34b745c3-3d21-5c6e-b777-7b198d981cf1', '19074ba1-dca3-523b-8070-2aea8451ec5a', '80515582-5b5b-55d7-accd-a0156424b884', '8fc16747-a960-50b3-9874-c793e3dd240b', '4c8c17b0-8f75-5e45-b749-2295628a70de', 'c747b840-1d28-51a2-b0b5-825fd5eeb525', '0c3edbd1-43d7-59a2-9731-68f282c315f7', '4c6d3e90-677a-5b28-8ff3-05873bda0227', '626562e0-0107-5931-a5c3-c85b50adcbaf');
   END IF;
 END $$;
-DELETE FROM public.exercises WHERE subject_id = 'svt' AND source = 'admin' AND id NOT IN ('2c90abf4-246f-5ca7-bce2-e8a553e79052', '738049b5-6688-53ba-8f47-c5fea00f2b0b', '71b0fee4-b5db-52e4-8e51-14426ab378c6', 'a18d4cb2-cdcc-506c-86e8-d099fa6d96e1', 'd08d38a1-4e65-593c-97ac-fc646167bd6f', 'cfe8e5ad-8d29-5084-9e65-d6fb15aae2aa', '9b865bc8-65e0-5dea-a117-9c1c5ce40bf4', 'f431df6e-67d9-56e3-91f5-590546de1fca', '07576f0b-3c33-598e-80e6-79b3ce4364ab', '107c0650-6e11-5652-b548-d850f77b6e0a', '24df4d84-60f7-5d08-804d-2b85bc32228b', 'e5ca2d8d-4123-5574-90f6-a5c907c89481', '9795d4ab-4ba5-58f5-bbb7-a2d8a35ab255', '7d98ea97-fb08-5cf9-874c-b1c7d35858a7', 'fe9e08f4-5a19-593f-adfc-78f5531c63b1', '312fd190-acd6-519d-b510-a59663bf790c');
-DELETE FROM public.questions WHERE exercise_id IN ('2c90abf4-246f-5ca7-bce2-e8a553e79052', '738049b5-6688-53ba-8f47-c5fea00f2b0b', '71b0fee4-b5db-52e4-8e51-14426ab378c6', 'a18d4cb2-cdcc-506c-86e8-d099fa6d96e1', 'd08d38a1-4e65-593c-97ac-fc646167bd6f', 'cfe8e5ad-8d29-5084-9e65-d6fb15aae2aa', '9b865bc8-65e0-5dea-a117-9c1c5ce40bf4', 'f431df6e-67d9-56e3-91f5-590546de1fca', '07576f0b-3c33-598e-80e6-79b3ce4364ab', '107c0650-6e11-5652-b548-d850f77b6e0a', '24df4d84-60f7-5d08-804d-2b85bc32228b', 'e5ca2d8d-4123-5574-90f6-a5c907c89481', '9795d4ab-4ba5-58f5-bbb7-a2d8a35ab255', '7d98ea97-fb08-5cf9-874c-b1c7d35858a7', 'fe9e08f4-5a19-593f-adfc-78f5531c63b1', '312fd190-acd6-519d-b510-a59663bf790c') AND id NOT IN ('3520e9b6-2c60-5bdb-9452-faf19f751575', '81f6c3b2-6342-5561-927e-2e6ebed08499', 'a617b749-a476-50aa-9d77-27dcf968ea8a', '37d2536d-d2c7-5e45-abcb-8e00d8076e79', 'a8b17c3a-a10b-5ceb-9d4f-8110c42aaee3', 'f5fb35c5-5154-5d48-b3f7-7a390b017440', 'd88cfa81-9602-5207-baae-4cdb136464a2', '83fb403f-75d9-556c-b0a6-63498590cb6b', 'ae3a8765-e3bc-5de4-aad9-c042423ec09d', 'f94cd634-522e-5e75-b7d3-b3e59f27c9cc', '44e1f184-a612-5cdc-a9ba-8533a8834f1d', '69783a50-a7a5-5876-9b7f-29fce45939a8', '44ddcd17-bb19-5228-ba8b-4211de3562b1', '5e56c005-d7b1-56c6-939c-b2c6cfdb7d38', 'afa792ec-5971-53a8-a4ca-10f21e3027d3', '8784db1c-4b9f-524a-a0e7-124a23220be1', 'da07a20a-588b-5a3f-8fd5-7530377d7fd5', '7b11338c-156d-51a0-8261-6e81584fe742', 'c5e3e513-f9d8-5784-92af-6817ddd63335', 'df25cbc2-c7e3-5ff2-9847-7b1d36b7ee43', '83068f98-093a-50c4-a79b-d309fd03c87a', '3f12af12-f050-52c2-a1db-8fad4a8decaa', 'c9ea1556-ee82-55db-8a40-d7be20088539', 'b9988cb9-26e9-527f-bbc6-edcb45251559', '58fc540e-f2c8-5ec7-8a5f-b7f4f3c5c2ab', '76664654-c161-5832-98f0-bc64f4e97610', 'c0c0bb99-7beb-5f79-86e3-ae6df1b48834', '22840768-e8e7-56f5-a5c5-2491212fc033', '674ae4f4-ad03-5554-823c-749fcbdef4ac', 'e5470327-b001-55f1-9629-5301f11c075f', '1b6f08de-dd25-5cd5-9f6b-46ad4c851bb5', 'b341e3ea-d1b3-5169-8076-a8dd68eb74e9', 'd1ec52c7-8aaa-5f80-a11f-b5b11e512e04', '3be8161b-761a-5a62-a43a-fb96a0c3efb5', 'a171368a-bd36-5525-b952-4b9ba55fefdc', 'be775c57-89b4-5695-9b51-88cba6a39523', '737e9f0f-f2d2-5228-a098-d670ad9fc910', '78195190-fc1d-5564-a743-5b77fe7834cc', 'cc2b2eda-e8eb-5c01-ab28-c54e17bba99f', '382486af-141f-5d5b-ad27-0edf365442ff', '20eca5c0-7450-520f-98e6-70065fe31efc', 'f76b245f-3e8f-50ec-9a9d-8676fcce9aac', '472f2736-7a87-57ee-892a-3947d612b368', '00b35176-0c2a-569a-b53c-3fcba9c5f686', 'de7a8c8a-11ab-5845-a18b-ea09a25f0ebd', '26d1cfe6-94c3-5c57-aeec-d0c5388828e6', 'eb0a741b-59df-562f-8139-4e96e205790c', 'b01b9503-2b8d-557b-9f97-a1e65a8f73bd', '1f6bacee-755c-5a84-97c4-6cfeb4a30a7d', '55175f89-37f1-5093-be10-635d8cf97a74', '192af321-7e53-5849-900d-cb4c1814f863', 'ea79b802-7f5c-5f15-99a8-70d5c96b57b7', '53586353-b2ea-5962-8d4e-863c37d7367c', '8a56a677-e9ad-5b29-a153-45ba0e93741f', '8d7d1022-2db4-58cf-8902-1b61fe4128ad', 'b46481cb-0b1f-5b2d-8a3d-a1d7bdc16b37', '5fc6de1c-ebe0-5e6e-8fe4-f25fe4e9a09c', '04ac5da9-6bb3-5134-a3a6-0d508cf804bf', '9e8aff14-50ea-5585-9d86-d673d817419c', '07cabb70-9805-5e1d-a27a-644d6106e340', 'dc852d16-39cc-580a-94c7-c31d1e146368', 'cdb6fa80-3981-5d0c-bfe0-380f76481070', 'cf29f7c2-8e2e-5cca-8414-35e1ff94aa6c', 'f821d1c7-4eb5-56e7-ac5e-18bf8df9110b', '24380511-202c-5ce8-9260-3708c9d74d6e', '5331c75a-150d-534f-a688-7318cc0f95f1', '55e16890-ab5d-56d6-b33a-6048d53a5cdf', '6a308347-9fb2-5918-a818-9da7e2510b26', '34aa0eab-bfbb-5f40-9291-98b7e9242788', '78c2c95e-9eb1-522d-b0e2-57c3049564c1', '24284667-64ac-573b-8987-f68e74c448a4', '7b79c439-4e9e-58bd-a167-0ad9f220e008', '03d3ffec-8982-54e8-af46-bdc34a74db49', 'ba4c35da-a412-5a63-b560-0ae9098103da', 'f135d69e-e440-5280-a33f-857bd03ac27c', '50b9583a-ed55-5045-8898-733dee8955c0', '0a82487d-cc54-5bcb-822d-c146d76f1434', '9db33979-7743-5936-b6c7-a3d6f94ceca9', 'e5d52986-ff3e-5025-a7b9-255341e0839e', 'd3c44940-7ad2-559e-965e-959fbc2e7375', '41266bf3-a20d-5622-ad0f-84d45d288549', 'c9173622-de37-5b06-bd5f-9c3201286a3e', '03d2fda0-9268-5fd0-8a40-9a8c78c5b489', '9972807a-49be-58b7-8a97-01dc9cb6dbbc', 'a6e4f1ad-f2dd-55ef-8e05-a98c740e1f40', '70bf4cf9-af39-51ba-a21f-c63ed8494aa5', '52a0d161-eb83-5d7c-87b7-fb8dda4cd2ca', '34b745c3-3d21-5c6e-b777-7b198d981cf1', '19074ba1-dca3-523b-8070-2aea8451ec5a', '80515582-5b5b-55d7-accd-a0156424b884', '8fc16747-a960-50b3-9874-c793e3dd240b', '4c8c17b0-8f75-5e45-b749-2295628a70de', 'c747b840-1d28-51a2-b0b5-825fd5eeb525', '0c3edbd1-43d7-59a2-9731-68f282c315f7', '4c6d3e90-677a-5b28-8ff3-05873bda0227', '626562e0-0107-5931-a5c3-c85b50adcbaf');
+DELETE FROM public.exercises WHERE subject_id = 'svt' AND source = 'admin' AND id NOT IN ('2847ee40-bab5-593a-afce-c051410adabf', '2c90abf4-246f-5ca7-bce2-e8a553e79052', '738049b5-6688-53ba-8f47-c5fea00f2b0b', 'f781672c-d268-5690-a4e7-2a92916e8abb', '71b0fee4-b5db-52e4-8e51-14426ab378c6', 'a18d4cb2-cdcc-506c-86e8-d099fa6d96e1', '1da0695e-2e04-56bd-9f84-120f0b841b71', 'd08d38a1-4e65-593c-97ac-fc646167bd6f', 'cfe8e5ad-8d29-5084-9e65-d6fb15aae2aa', 'cba20902-9fc8-56e2-af36-015bf8f16761', '9b865bc8-65e0-5dea-a117-9c1c5ce40bf4', 'f431df6e-67d9-56e3-91f5-590546de1fca', '887a72dd-e999-5b85-85b3-611050765028', '07576f0b-3c33-598e-80e6-79b3ce4364ab', '107c0650-6e11-5652-b548-d850f77b6e0a', '76c65ba5-f79a-52a8-b7c0-2a9f2910bb70', '24df4d84-60f7-5d08-804d-2b85bc32228b', 'e5ca2d8d-4123-5574-90f6-a5c907c89481', '3b556dba-b4f8-5797-8b33-0bc24deb47b2', '9795d4ab-4ba5-58f5-bbb7-a2d8a35ab255', '7d98ea97-fb08-5cf9-874c-b1c7d35858a7', '4f7081aa-19ca-51d2-89bf-53c0df39a751', 'fe9e08f4-5a19-593f-adfc-78f5531c63b1', '312fd190-acd6-519d-b510-a59663bf790c');
+DELETE FROM public.questions WHERE exercise_id IN ('2847ee40-bab5-593a-afce-c051410adabf', '2c90abf4-246f-5ca7-bce2-e8a553e79052', '738049b5-6688-53ba-8f47-c5fea00f2b0b', 'f781672c-d268-5690-a4e7-2a92916e8abb', '71b0fee4-b5db-52e4-8e51-14426ab378c6', 'a18d4cb2-cdcc-506c-86e8-d099fa6d96e1', '1da0695e-2e04-56bd-9f84-120f0b841b71', 'd08d38a1-4e65-593c-97ac-fc646167bd6f', 'cfe8e5ad-8d29-5084-9e65-d6fb15aae2aa', 'cba20902-9fc8-56e2-af36-015bf8f16761', '9b865bc8-65e0-5dea-a117-9c1c5ce40bf4', 'f431df6e-67d9-56e3-91f5-590546de1fca', '887a72dd-e999-5b85-85b3-611050765028', '07576f0b-3c33-598e-80e6-79b3ce4364ab', '107c0650-6e11-5652-b548-d850f77b6e0a', '76c65ba5-f79a-52a8-b7c0-2a9f2910bb70', '24df4d84-60f7-5d08-804d-2b85bc32228b', 'e5ca2d8d-4123-5574-90f6-a5c907c89481', '3b556dba-b4f8-5797-8b33-0bc24deb47b2', '9795d4ab-4ba5-58f5-bbb7-a2d8a35ab255', '7d98ea97-fb08-5cf9-874c-b1c7d35858a7', '4f7081aa-19ca-51d2-89bf-53c0df39a751', 'fe9e08f4-5a19-593f-adfc-78f5531c63b1', '312fd190-acd6-519d-b510-a59663bf790c') AND id NOT IN ('52d8717b-1c43-560a-a90c-be89d2392f61', 'c0d3540e-6bcd-54fc-bd09-53bc66aa4804', 'ae8f4387-96f1-59a1-a6e6-7e2588de9711', '5690eecf-c76c-54a1-842a-fd503204f945', '426ed470-9a87-53ba-af50-0208d0da05df', '3520e9b6-2c60-5bdb-9452-faf19f751575', '81f6c3b2-6342-5561-927e-2e6ebed08499', 'a617b749-a476-50aa-9d77-27dcf968ea8a', '37d2536d-d2c7-5e45-abcb-8e00d8076e79', 'a8b17c3a-a10b-5ceb-9d4f-8110c42aaee3', 'f5fb35c5-5154-5d48-b3f7-7a390b017440', 'd88cfa81-9602-5207-baae-4cdb136464a2', '83fb403f-75d9-556c-b0a6-63498590cb6b', 'ae3a8765-e3bc-5de4-aad9-c042423ec09d', 'f94cd634-522e-5e75-b7d3-b3e59f27c9cc', '44e1f184-a612-5cdc-a9ba-8533a8834f1d', '69783a50-a7a5-5876-9b7f-29fce45939a8', 'e9b6e6d0-5a21-5a1e-82c4-0c31d41c49a1', '662aeb79-a0c0-5810-b904-6bcb1bb4489c', 'aa27adbe-7cfc-5d30-80b2-7bf20234858b', '6715516e-0d9b-5bd4-a40f-05576bca75fc', 'b08985be-aebe-5647-bc97-865457e42791', '44ddcd17-bb19-5228-ba8b-4211de3562b1', '5e56c005-d7b1-56c6-939c-b2c6cfdb7d38', 'afa792ec-5971-53a8-a4ca-10f21e3027d3', '8784db1c-4b9f-524a-a0e7-124a23220be1', 'da07a20a-588b-5a3f-8fd5-7530377d7fd5', '7b11338c-156d-51a0-8261-6e81584fe742', 'c5e3e513-f9d8-5784-92af-6817ddd63335', 'df25cbc2-c7e3-5ff2-9847-7b1d36b7ee43', '83068f98-093a-50c4-a79b-d309fd03c87a', '3f12af12-f050-52c2-a1db-8fad4a8decaa', 'c9ea1556-ee82-55db-8a40-d7be20088539', 'b9988cb9-26e9-527f-bbc6-edcb45251559', '2c42d55c-cdd9-55de-aa2e-42cf5814f6af', '2d726520-6cd0-5c8e-83fa-f1f921a5596f', 'c82436f1-08a1-59e7-b547-318b3f88c7e1', 'b7848d4b-3e45-523c-b1a3-503e8a557e2e', '5cef7a64-a500-54ae-ba70-57009499ed97', '58fc540e-f2c8-5ec7-8a5f-b7f4f3c5c2ab', '76664654-c161-5832-98f0-bc64f4e97610', 'c0c0bb99-7beb-5f79-86e3-ae6df1b48834', '22840768-e8e7-56f5-a5c5-2491212fc033', '674ae4f4-ad03-5554-823c-749fcbdef4ac', 'e5470327-b001-55f1-9629-5301f11c075f', '1b6f08de-dd25-5cd5-9f6b-46ad4c851bb5', 'b341e3ea-d1b3-5169-8076-a8dd68eb74e9', 'd1ec52c7-8aaa-5f80-a11f-b5b11e512e04', '3be8161b-761a-5a62-a43a-fb96a0c3efb5', 'a171368a-bd36-5525-b952-4b9ba55fefdc', 'be775c57-89b4-5695-9b51-88cba6a39523', '154942ef-f876-504d-9a3d-e5ac1aa4cdbd', '30dc7a1c-f5ae-5380-ad46-822772fecdb1', '261a37e4-5541-5c2c-9229-138fcb398c34', '953e4839-3ddd-5cab-9209-da4c6fd4f6ac', '4b30b1bc-02ad-5baa-9169-342bb966f50e', '737e9f0f-f2d2-5228-a098-d670ad9fc910', '78195190-fc1d-5564-a743-5b77fe7834cc', 'cc2b2eda-e8eb-5c01-ab28-c54e17bba99f', '382486af-141f-5d5b-ad27-0edf365442ff', '20eca5c0-7450-520f-98e6-70065fe31efc', 'f76b245f-3e8f-50ec-9a9d-8676fcce9aac', '472f2736-7a87-57ee-892a-3947d612b368', '00b35176-0c2a-569a-b53c-3fcba9c5f686', 'de7a8c8a-11ab-5845-a18b-ea09a25f0ebd', '26d1cfe6-94c3-5c57-aeec-d0c5388828e6', 'eb0a741b-59df-562f-8139-4e96e205790c', 'b01b9503-2b8d-557b-9f97-a1e65a8f73bd', 'c687b5ae-4a3f-5a77-8f52-feb83e25dda8', '73fd748f-4a38-57a5-9e17-b9c62963e4d3', '95f04cfb-fc30-5317-a00a-ad2938f3b265', 'b23d29b0-9449-51de-8291-a8a59fd70933', 'd421aa28-cfb5-54ae-b986-765a29301f0e', '1f6bacee-755c-5a84-97c4-6cfeb4a30a7d', '55175f89-37f1-5093-be10-635d8cf97a74', '192af321-7e53-5849-900d-cb4c1814f863', 'ea79b802-7f5c-5f15-99a8-70d5c96b57b7', '53586353-b2ea-5962-8d4e-863c37d7367c', '8a56a677-e9ad-5b29-a153-45ba0e93741f', '8d7d1022-2db4-58cf-8902-1b61fe4128ad', 'b46481cb-0b1f-5b2d-8a3d-a1d7bdc16b37', '5fc6de1c-ebe0-5e6e-8fe4-f25fe4e9a09c', '04ac5da9-6bb3-5134-a3a6-0d508cf804bf', '9e8aff14-50ea-5585-9d86-d673d817419c', '07cabb70-9805-5e1d-a27a-644d6106e340', '0f9d875f-e551-5d18-8c2d-f3729b2ebd37', 'a3d39a96-e07d-5833-858e-6043d1c12b0a', 'bd99b9e5-1333-5efa-8a25-355e3246d020', '98af36c6-103f-5681-b3de-b09cc452cce3', 'f2fdbf90-7703-597c-ab64-2f65be736da6', 'dc852d16-39cc-580a-94c7-c31d1e146368', 'cdb6fa80-3981-5d0c-bfe0-380f76481070', 'cf29f7c2-8e2e-5cca-8414-35e1ff94aa6c', 'f821d1c7-4eb5-56e7-ac5e-18bf8df9110b', '24380511-202c-5ce8-9260-3708c9d74d6e', '5331c75a-150d-534f-a688-7318cc0f95f1', '55e16890-ab5d-56d6-b33a-6048d53a5cdf', '6a308347-9fb2-5918-a818-9da7e2510b26', '34aa0eab-bfbb-5f40-9291-98b7e9242788', '78c2c95e-9eb1-522d-b0e2-57c3049564c1', '24284667-64ac-573b-8987-f68e74c448a4', '7b79c439-4e9e-58bd-a167-0ad9f220e008', '60e38c82-e263-5d1d-ada7-21006fdcd533', '9d5722ec-f19f-518d-88b1-b33051a3a937', '2a3c50bc-d7ee-5b80-af81-21f5c1a89d80', '9afc4975-4346-50d6-9565-fee46fd8703f', '4a4eb02a-172a-533f-b615-d23ca18df1ed', '03d3ffec-8982-54e8-af46-bdc34a74db49', 'ba4c35da-a412-5a63-b560-0ae9098103da', 'f135d69e-e440-5280-a33f-857bd03ac27c', '50b9583a-ed55-5045-8898-733dee8955c0', '0a82487d-cc54-5bcb-822d-c146d76f1434', '9db33979-7743-5936-b6c7-a3d6f94ceca9', 'e5d52986-ff3e-5025-a7b9-255341e0839e', 'd3c44940-7ad2-559e-965e-959fbc2e7375', '41266bf3-a20d-5622-ad0f-84d45d288549', 'c9173622-de37-5b06-bd5f-9c3201286a3e', '03d2fda0-9268-5fd0-8a40-9a8c78c5b489', '9972807a-49be-58b7-8a97-01dc9cb6dbbc', 'b149f757-11cd-5672-ba11-d76d0213d466', '81062ac7-2097-5411-9a9e-ad5d73afadf8', '9a0c155f-79a0-568b-9ae7-565ef9002d29', '88200d7c-d007-514e-9fff-98830902cd8b', '6415c31b-bea6-5a0b-8e7a-8189179ffeb4', 'a6e4f1ad-f2dd-55ef-8e05-a98c740e1f40', '70bf4cf9-af39-51ba-a21f-c63ed8494aa5', '52a0d161-eb83-5d7c-87b7-fb8dda4cd2ca', '34b745c3-3d21-5c6e-b777-7b198d981cf1', '19074ba1-dca3-523b-8070-2aea8451ec5a', '80515582-5b5b-55d7-accd-a0156424b884', '8fc16747-a960-50b3-9874-c793e3dd240b', '4c8c17b0-8f75-5e45-b749-2295628a70de', 'c747b840-1d28-51a2-b0b5-825fd5eeb525', '0c3edbd1-43d7-59a2-9731-68f282c315f7', '4c6d3e90-677a-5b28-8ff3-05873bda0227', '626562e0-0107-5931-a5c3-c85b50adcbaf');
 DELETE FROM public.chapters c WHERE c.subject_id = 'svt' AND c.id NOT IN ('bbf34e0d-c9ae-578e-8880-c3b5d4ecf5d4', 'b0333447-8e00-556a-97b4-680f9c12f200', 'ba9daafc-27c7-5e69-aaaf-eb26f11fae73', '4c10b91f-7bff-5a39-9b21-4f29a7f25d1c', '4dffb31a-ec0d-5def-90db-3ab72e4936d7', '5be5e862-63b0-5bbf-ba43-676b67a97793', '1ef832e7-2310-5ebc-9ddd-7d3d868d77cb', 'cb55bcb6-c41c-5c05-b94a-fad88e81e703') AND NOT EXISTS (SELECT 1 FROM public.exercises e WHERE e.chapter_id = c.id);
 
 INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order) VALUES
@@ -772,6 +772,68 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('2847ee40-bab5-593a-afce-c051410adabf', 'bbf34e0d-c9ae-578e-8880-c3b5d4ecf5d4', 'svt', 'اختبار فهم الدرس', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('52d8717b-1c43-560a-a90c-be89d2392f61', '2847ee40-bab5-593a-afce-c051410adabf', 'ما الفرق بين المصدر الضوئي الأوّلي والمصدر الضوئي الثانوي؟', '[{"id":"a","text":"المصدر الأوّلي يعكس الضوء، والثانوي ينتجه بنفسه"},{"id":"b","text":"المصدر الأوّلي ينتج الضوء بنفسه، والثانوي يبعثه بعد أن يتلقّاه"},{"id":"c","text":"المصدر الأوّلي والثانوي كلاهما يعكسان الضوء فقط"},{"id":"d","text":"المصدر الثانوي هو الذي ينتج الضوء بنفسه كالشمس"}]'::jsonb, 'b', 'المصدر الأوّلي (كالشمس والمصباح) ينتج الضوء بنفسه، أمّا المصدر الثانوي (كالقمر والجدار المضاء) فيبعث الضوء بعد أن يتلقّاه من مصدر آخر.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('c0d3540e-6bcd-54fc-bd09-53bc66aa4804', '2847ee40-bab5-593a-afce-c051410adabf', 'في أيّ شرط ينتشر الضوء في خطوط مستقيمة؟', '[{"id":"a","text":"في أيّ وسط كيفما كان"},{"id":"b","text":"في الفراغ فقط"},{"id":"c","text":"في وسط شفّاف ومتجانس"},{"id":"d","text":"في وسط معتم ومتجانس"}]'::jsonb, 'c', 'ينتشر الضوء في خطوط مستقيمة في وسط شفّاف ومتجانس؛ إذا تغيّر الوسط انكسر الضوء وغيّر اتّجاهه.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('ae8f4387-96f1-59a1-a6e6-7e2588de9711', '2847ee40-bab5-593a-afce-c051410adabf', 'ما «الشعاع الضوئي»؟', '[{"id":"a","text":"مجموعة من الأشعّة الضوئية المتوازية"},{"id":"b","text":"دائرة تمثّل انتشار الضوء"},{"id":"c","text":"نقطة تحدّد مصدر الضوء"},{"id":"d","text":"خطّ مستقيم مسهّم يمثّل مسار الضوء واتّجاهه"}]'::jsonb, 'd', 'الشعاع الضوئي هو خطّ مستقيم مسهّم يمثّل مسار الضوء واتّجاه انتشاره، أمّا مجموعة الأشعّة فتُسمّى حزمة ضوئية.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('5690eecf-c76c-54a1-842a-fd503204f945', '2847ee40-bab5-593a-afce-c051410adabf', 'ما الفرق بين «ظلّ النفس» و«الظلّ المحمول»؟', '[{"id":"a","text":"ظلّ النفس هو المنطقة المظلمة على حاجز خلف الجسم، والظلّ المحمول هو الجزء غير المضاء من الجسم"},{"id":"b","text":"ظلّ النفس هو الجزء غير المضاء من الجسم نفسه، والظلّ المحمول هو المنطقة المظلمة على حاجز خلف الجسم"},{"id":"c","text":"كلاهما اسمان لنفس الظاهرة"},{"id":"d","text":"ظلّ النفس يتكوّن فقط أثناء الكسوف"}]'::jsonb, 'b', 'ظلّ النفس هو الجزء غير المضاء من الجسم المعتم نفسه، أمّا الظلّ المحمول فهو المنطقة المظلمة التي تتكوّن على حاجز موضوع خلف الجسم.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('426ed470-9a87-53ba-af50-0208d0da05df', '2847ee40-bab5-593a-afce-c051410adabf', 'كسوف الشمس يحدث عندما:', '[{"id":"a","text":"تتوسّط الأرضُ بين الشمس والقمر فيقع القمر في ظلّها"},{"id":"b","text":"تتوسّط الشمسُ بين الأرض والقمر"},{"id":"c","text":"يتوسّط القمرُ بين الشمس والأرض فيحجب ضوء الشمس"},{"id":"d","text":"يبتعد القمر عن الأرض إلى مسافة كبيرة جدًّا"}]'::jsonb, 'c', 'كسوف الشمس يحدث عندما يتوسّط القمر بين الشمس والأرض فيحجب ضوء الشمس عنّا. أمّا خسوف القمر فيحدث حين تتوسّط الأرض بين الشمس والقمر.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('2c90abf4-246f-5ca7-bce2-e8a553e79052', 'bbf34e0d-c9ae-578e-8880-c3b5d4ecf5d4', 'svt', 'تمرين: مصادر الضوء وانتشاره', 1, 50, 10, 'practice', 'admin', 1)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -907,6 +969,68 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('69783a50-a7a5-5876-9b7f-29fce45939a8', '738049b5-6688-53ba-8f47-c5fea00f2b0b', 'أيّ العبارات صحيحة حول الشعاع الضوئي؟', '[{"id":"a","text":"هو منحنٍ يمثّل لون الضوء"},{"id":"b","text":"لا اتّجاه له"},{"id":"c","text":"يمثّل سرعة الصوت"},{"id":"d","text":"هو خطّ مستقيم مسهّم يمثّل مسار الضوء"}]'::jsonb, 'd', 'الشعاع الضوئي خطّ مستقيم مسهّم يبيّن مسار الضوء واتّجاه انتشاره.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('f781672c-d268-5690-a4e7-2a92916e8abb', 'b0333447-8e00-556a-97b4-680f9c12f200', 'svt', 'اختبار فهم الدرس', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('e9b6e6d0-5a21-5a1e-82c4-0c31d41c49a1', 'f781672c-d268-5690-a4e7-2a92916e8abb', 'ما تعريف «انعكاس الضوء»؟', '[{"id":"a","text":"انتقال الضوء من وسط شفّاف إلى وسط شفّاف آخر"},{"id":"b","text":"امتصاص الضوء كليًّا عند اصطدامه بسطح معتم"},{"id":"c","text":"ارتداد الضوء عن سطح عاكس دون أن ينفذ أو يُمتصّ"},{"id":"d","text":"انحناء الضوء حول زوايا الأجسام"}]'::jsonb, 'c', 'انعكاس الضوء هو ارتداد الشعاع الضوئي عن سطح عاكس (كالمرآة) دون أن ينفذ إلى الجانب الآخر ولا يُمتصّ.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('662aeb79-a0c0-5810-b904-6bcb1bb4489c', 'f781672c-d268-5690-a4e7-2a92916e8abb', 'كيف تُعرَّف زاوية الورود؟', '[{"id":"a","text":"الزاوية بين الشعاع الوارد وسطح المرآة"},{"id":"b","text":"الزاوية بين الشعاع الوارد والناظم عند نقطة الورود"},{"id":"c","text":"الزاوية بين الشعاع المنعكس وسطح المرآة"},{"id":"d","text":"الزاوية بين الشعاع الوارد والشعاع المنعكس"}]'::jsonb, 'b', 'زاوية الورود هي الزاوية المحصورة بين الشعاع الوارد والناظم عند نقطة الورود على سطح المرآة، لا الزاوية بين الشعاع وسطح المرآة.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('aa27adbe-7cfc-5d30-80b2-7bf20234858b', 'f781672c-d268-5690-a4e7-2a92916e8abb', 'ماذا ينصّ القانون الثاني للانعكاس؟', '[{"id":"a","text":"الشعاع الوارد والمنعكس والناظم تقع في مستوٍ واحد"},{"id":"b","text":"زاوية الورود تساوي ضعف زاوية الانعكاس"},{"id":"c","text":"زاوية الانعكاس تساوي زاوية الورود"},{"id":"d","text":"الشعاع المنعكس يوازي دائمًا سطح المرآة"}]'::jsonb, 'c', 'القانون الثاني للانعكاس ينصّ على أنّ زاوية الانعكاس تساوي زاوية الورود: r = i. أمّا القانون الأوّل فينصّ على أنّ الشعاعَين والناظم يقعان في مستوٍ واحد.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('6715516e-0d9b-5bd4-a40f-05576bca75fc', 'f781672c-d268-5690-a4e7-2a92916e8abb', 'إذا سقط شعاع ضوئي عموديًّا على سطح مرآة مستوية (زاوية الورود = 0°)، فماذا يحدث؟', '[{"id":"a","text":"ينكسر الشعاع ويغيّر اتّجاهه بزاوية 90°"},{"id":"b","text":"يُمتصّ الشعاع كليًّا ولا يرتدّ"},{"id":"c","text":"يرتدّ الشعاع على نفس مساره (زاوية انعكاس = 0°)"},{"id":"d","text":"يتشتّت الشعاع في جميع الاتّجاهات"}]'::jsonb, 'c', 'بتطبيق القانون الثاني: زاوية الانعكاس = زاوية الورود = 0°، فيرتدّ الشعاع على نفس مساره الذي جاء منه.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('b08985be-aebe-5647-bc97-865457e42791', 'f781672c-d268-5690-a4e7-2a92916e8abb', 'ما خصائص صورة نقطة في مرآة مستوية؟', '[{"id":"a","text":"حقيقية، مصغّرة، مقلوبة"},{"id":"b","text":"تخيّلية، مساوية للجسم في الحجم، متناظرة بالنسبة للمرآة"},{"id":"c","text":"حقيقية، مكبّرة، معتدلة"},{"id":"d","text":"تخيّلية، مصغّرة، مقلوبة"}]'::jsonb, 'b', 'الصورة في المرآة المستوية تخيّلية (لا تُسقط على شاشة)، بنفس حجم الجسم، ومتناظرة معه بالنسبة لمستوى المرآة؛ أي أنّ المسافة من الجسم إلى المرآة تساوي المسافة من الصورة إلى المرآة.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1060,6 +1184,68 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('1da0695e-2e04-56bd-9f84-120f0b841b71', 'ba9daafc-27c7-5e69-aaaf-eb26f11fae73', 'svt', 'اختبار فهم الدرس', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('2c42d55c-cdd9-55de-aa2e-42cf5814f6af', '1da0695e-2e04-56bd-9f84-120f0b841b71', 'ما تعريف «انكسار الضوء»؟', '[{"id":"a","text":"ارتداد الضوء عن سطح عاكس"},{"id":"b","text":"امتصاص الضوء كليًّا عند اصطدامه بالزجاج"},{"id":"c","text":"تغيير الضوء لاتّجاهه عند انتقاله من وسط شفّاف إلى وسط شفّاف آخر مختلف"},{"id":"d","text":"انتشار الضوء في خطوط مستقيمة داخل وسط متجانس"}]'::jsonb, 'c', 'انكسار الضوء هو تغيير اتّجاهه عند انتقاله من وسط شفّاف إلى وسط شفّاف آخر مختلف الكثافة الضوئية عند سطح الفصل بين الوسطين.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('2d726520-6cd0-5c8e-83fa-f1f921a5596f', '1da0695e-2e04-56bd-9f84-120f0b841b71', 'عند انتقال الضوء من الهواء (وسط أقلّ كثافة) إلى الزجاج (وسط أكثر كثافة)، تكون زاوية الانكسار:', '[{"id":"a","text":"أكبر من زاوية الورود"},{"id":"b","text":"مساوية لزاوية الورود"},{"id":"c","text":"أصغر من زاوية الورود (ينكسر نحو الناظم)"},{"id":"d","text":"تساوي دائمًا 90°"}]'::jsonb, 'c', 'عند الانتقال من وسط أقلّ كثافة إلى وسط أكثر كثافة ينكسر الضوء نحو الناظم، أي أنّ زاوية الانكسار تكون أصغر من زاوية الورود (i₂ < i₁).', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('c82436f1-08a1-59e7-b547-318b3f88c7e1', '1da0695e-2e04-56bd-9f84-120f0b841b71', 'ما الفرق بين العدسة المجمّعة والعدسة المفرّقة؟', '[{"id":"a","text":"العدسة المجمّعة أرقّ في المنتصف وتفرّق الأشعّة، والمفرّقة أثخن وتجمّعها"},{"id":"b","text":"العدسة المجمّعة (محدّبة) أثخن في المنتصف وتجمّع الأشعّة الموازية، والمفرّقة (مقعّرة) أرقّ وتفرّق الأشعّة"},{"id":"c","text":"كلتاهما تجمّعان الأشعّة لكن بطريقتَين مختلفتَين"},{"id":"d","text":"العدسة المجمّعة لا تُنتج صورة حقيقية أبدًا"}]'::jsonb, 'b', 'العدسة المجمّعة (المحدّبة) أثخن في المنتصف وتجمّع الأشعّة الموازية في نقطة واحدة تُسمّى البؤرة. والعدسة المفرّقة (المقعّرة) أرقّ في المنتصف وتفرّق الأشعّة الموازية.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('b7848d4b-3e45-523c-b1a3-503e8a557e2e', '1da0695e-2e04-56bd-9f84-120f0b841b71', 'ما «البُعد البؤري» في العدسة المجمّعة؟', '[{"id":"a","text":"قطر العدسة"},{"id":"b","text":"المسافة بين المركز البصري والبؤرة"},{"id":"c","text":"المسافة بين الجسم والعدسة"},{"id":"d","text":"المسافة بين العدسة والصورة"}]'::jsonb, 'b', 'البُعد البؤري f هو المسافة بين المركز البصري للعدسة (O) وبؤرتها (F)، ويُرمز له بـ f = OF. كلّما زاد تحدّب العدسة قلّ البُعد البؤري وزادت قوّة التجميع.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('5cef7a64-a500-54ae-ba70-57009499ed97', '1da0695e-2e04-56bd-9f84-120f0b841b71', 'عند وضع جسم داخل البُعد البؤري (d < f) لعدسة مجمّعة، تكون الصورة:', '[{"id":"a","text":"حقيقية، مصغّرة، مقلوبة"},{"id":"b","text":"حقيقية، مكبّرة، مقلوبة"},{"id":"c","text":"تخيّلية، مكبّرة، معتدلة"},{"id":"d","text":"تخيّلية، مصغّرة، مقلوبة"}]'::jsonb, 'c', 'عند وضع الجسم داخل البُعد البؤري (d < f) تكون الصورة تخيّلية ومكبّرة ومعتدلة الاتّجاه. هذا هو مبدأ عمل العدسة المكبّرة.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('d08d38a1-4e65-593c-97ac-fc646167bd6f', 'ba9daafc-27c7-5e69-aaaf-eb26f11fae73', 'svt', 'تمرين: انكسار الضوء والعدسات', 2, 60, 12, 'practice', 'admin', 1)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -1195,6 +1381,68 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('be775c57-89b4-5695-9b51-88cba6a39523', 'cfe8e5ad-8d29-5084-9e65-d6fb15aae2aa', 'ما الفرق بين العدسة المجمّعة والعدسة المفرّقة من حيث التأثير على الضوء الموازي للمحور؟', '[{"id":"a","text":"المجمّعة تجمّع في بؤرة حقيقية، والمفرّقة تفرّق وكأنّها تنبع من بؤرة تخيّلية"},{"id":"b","text":"كلتاهما تجمّع الأشعّة في بؤرة حقيقية"},{"id":"c","text":"المفرّقة تجمّع الأشعّة والمجمّعة تفرّقها"},{"id":"d","text":"لا فرق بينهما إذا كان البُعد البؤري متساويًا"}]'::jsonb, 'a', 'العدسة المجمّعة تجمّع الأشعّة الموازية في بؤرة حقيقية (خلفها). أمّا العدسة المفرّقة فتفرّق الأشعّة وكأنّها صادرة من بؤرة تخيّلية (أمامها من جهة الجسم).', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('cba20902-9fc8-56e2-af36-015bf8f16761', '4c10b91f-7bff-5a39-9b21-4f29a7f25d1c', 'svt', 'اختبار فهم الدرس', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('154942ef-f876-504d-9a3d-e5ac1aa4cdbd', 'cba20902-9fc8-56e2-af36-015bf8f16761', 'ما تعريف الذرّة؟', '[{"id":"a","text":"أصغر جزء من مادّة يحتفظ بخصائصها الكيميائية ويتكوّن من ذرّتَين أو أكثر"},{"id":"b","text":"جسيم موجب الشحنة يوجد في نواة الذرّة"},{"id":"c","text":"أصغر جزء من المادّة يحتفظ بخصائص العنصر الكيميائي"},{"id":"d","text":"مجموعة عناصر مرتبطة بروابط كيميائية"}]'::jsonb, 'c', 'الذرّة هي أصغر جزء من المادّة يحتفظ بخصائص العنصر الكيميائي، وقُطرها يقارب 10⁻¹⁰ متر. أمّا الجزيء فهو أصغر جزء من مادّة يحتفظ بخصائصها الكيميائية.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('30dc7a1c-f5ae-5380-ad46-822772fecdb1', 'cba20902-9fc8-56e2-af36-015bf8f16761', 'ما الجسيمات الموجودة في نواة الذرّة؟', '[{"id":"a","text":"إلكترونات وبروتونات فقط"},{"id":"b","text":"بروتونات (موجبة) ونيوترونات (محايدة)"},{"id":"c","text":"إلكترونات (سالبة) ونيوترونات (محايدة)"},{"id":"d","text":"بروتونات (سالبة) وإلكترونات (موجبة)"}]'::jsonb, 'b', 'تحتوي نواة الذرّة على بروتونات ذات شحنة موجبة (+) ونيوترونات محايدة (لا شحنة لها). أمّا الإلكترونات السالبة فتدور حول النواة في مدارات.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('261a37e4-5541-5c2c-9229-138fcb398c34', 'cba20902-9fc8-56e2-af36-015bf8f16761', 'ما «العدد الذري Z» لعنصر ما؟', '[{"id":"a","text":"عدد النيوترونات في نواة الذرّة"},{"id":"b","text":"الكتلة الذرّية للعنصر"},{"id":"c","text":"عدد الإلكترونات في المدار الخارجي"},{"id":"d","text":"عدد البروتونات في نواة الذرّة"}]'::jsonb, 'd', 'العدد الذري Z هو عدد البروتونات في نواة الذرّة، وهو ما يميّز كلّ عنصر كيميائي عن غيره. الذرّة متعادلة كهربائيًّا فعدد إلكتروناتها يساوي Z أيضًا.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('953e4839-3ddd-5cab-9209-da4c6fd4f6ac', 'cba20902-9fc8-56e2-af36-015bf8f16761', 'كم ذرّة أكسجين يحتوي جزيء ثاني أكسيد الكربون CO₂؟', '[{"id":"a","text":"ذرّة واحدة"},{"id":"b","text":"ثلاث ذرّات"},{"id":"c","text":"ذرّتان"},{"id":"d","text":"أربع ذرّات"}]'::jsonb, 'c', 'صيغة CO₂ تعني: ذرّة كربون واحدة (C) وذرّتان من الأكسجين (O₂). الرقم 2 السفلي بعد O يدلّ على ذرّتَي أكسجين.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('4b30b1bc-02ad-5baa-9169-342bb966f50e', 'cba20902-9fc8-56e2-af36-015bf8f16761', 'ما الرمز الكيميائي الصحيح لعنصر الصوديوم؟', '[{"id":"a","text":"SO"},{"id":"b","text":"NA"},{"id":"c","text":"na"},{"id":"d","text":"Na"}]'::jsonb, 'd', 'الرمز الصحيح للصوديوم هو Na (حرف كبير N يليه حرف صغير a). الرموز الكيميائية تبدأ دائمًا بحرف كبير ويُكمَل بحرف صغير عند الحاجة.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1348,6 +1596,68 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('887a72dd-e999-5b85-85b3-611050765028', '4dffb31a-ec0d-5def-90db-3ab72e4936d7', 'svt', 'اختبار فهم الدرس', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('c687b5ae-4a3f-5a77-8f52-feb83e25dda8', '887a72dd-e999-5b85-85b3-611050765028', 'ما تعريف التفاعل الكيميائي؟', '[{"id":"a","text":"تغيير حالة المادّة من صلبة إلى سائلة دون تغيير طبيعتها"},{"id":"b","text":"تحوّل تختفي خلاله موادّ (المتفاعلات) وتتكوّن موادّ جديدة (النواتج) لها خصائص مختلفة"},{"id":"c","text":"انتشار مادّة في أخرى دون أي تغيير كيميائي"},{"id":"d","text":"تغيّر شكل جسم ما مع بقاء تركيبه الكيميائي"}]'::jsonb, 'b', 'التفاعل الكيميائي هو تحوّل كيميائي تختفي خلاله موادّ تُسمّى المتفاعلات وتنتج موادّ جديدة ذات خصائص مختلفة تُسمّى النواتج.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('73fd748f-4a38-57a5-9e17-b9c62963e4d3', '887a72dd-e999-5b85-85b3-611050765028', 'ماذا ينصّ قانون انحفاظ الكتلة (لافوازييه)؟', '[{"id":"a","text":"كتلة النواتج دائمًا أكبر من كتلة المتفاعلات"},{"id":"b","text":"كتلة المتفاعلات دائمًا أكبر من كتلة النواتج"},{"id":"c","text":"كتلة المتفاعلات تساوي كتلة النواتج في التفاعل الكيميائي"},{"id":"d","text":"الكتلة تختفي جزئيًّا أثناء التفاعل الكيميائي"}]'::jsonb, 'c', 'ينصّ قانون لافوازييه على انحفاظ الكتلة: كتلة المتفاعلات = كتلة النواتج. فلا شيء يُفقَد ولا شيء يُخلَق، كلّ شيء يتحوّل.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('95f04cfb-fc30-5317-a00a-ad2938f3b265', '887a72dd-e999-5b85-85b3-611050765028', 'ما الفرق بين التحوّل الفيزيائي والتحوّل الكيميائي؟', '[{"id":"a","text":"التحوّل الفيزيائي يُنتج موادًّا جديدة والكيميائي لا يغيّر طبيعة المادّة"},{"id":"b","text":"التحوّل الفيزيائي يتغيّر فيه الشكل أو الحالة دون تغيير طبيعة المادّة، أمّا الكيميائي فتظهر فيه موادّ جديدة"},{"id":"c","text":"كلاهما متطابقان في النتيجة"},{"id":"d","text":"التحوّل الكيميائي يشمل ذوبان الجليد وتبخّر الماء"}]'::jsonb, 'b', 'في التحوّل الفيزيائي (كذوبان الجليد أو تبخّر الماء) تتغيّر الحالة أو الشكل دون تغيير طبيعة المادّة. أمّا في التحوّل الكيميائي (كاحتراق الورق أو صدأ الحديد) فتظهر موادّ جديدة.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('b23d29b0-9449-51de-8291-a8a59fd70933', '887a72dd-e999-5b85-85b3-611050765028', 'لماذا يجب موازنة المعادلة الكيميائية بتغيير المعاملات فقط؟', '[{"id":"a","text":"لأنّ تغيير الأرقام السفلية يُغيّر طبيعة المركّب ويُخالف انحفاظ الكتلة"},{"id":"b","text":"لأنّ المعاملات تجعل المعادلة أجمل مظهرًا"},{"id":"c","text":"لأنّ المعاملات تُغيّر طبيعة المواد المتفاعلة"},{"id":"d","text":"لا يوجد سبب علمي لذلك"}]'::jsonb, 'a', 'نوازن المعادلة بتغيير المعاملات أمام الصيغ دون تغيير الأرقام السفلية داخلها، لأنّ تغيير الأرقام السفلية يُغيّر طبيعة المركّب ذاته ويُنتج مواد وهمية غير موجودة.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d421aa28-cfb5-54ae-b986-765a29301f0e', '887a72dd-e999-5b85-85b3-611050765028', 'في المعادلة الموزونة: CH₄ + 2O₂ → CO₂ + 2H₂O، كم ذرّة أكسجين يوجد في طرف النواتج؟', '[{"id":"a","text":"ذرّتان"},{"id":"b","text":"ثلاث ذرّات"},{"id":"c","text":"أربع ذرّات"},{"id":"d","text":"ست ذرّات"}]'::jsonb, 'c', 'في طرف النواتج: CO₂ يحتوي ذرّتَي أكسجين + 2H₂O يحتويان ذرّتَي أكسجين = 4 ذرّات أكسجين. هذا يتوافق مع طرف المتفاعلات: 2O₂ = 4 ذرّات أكسجين، وهو ما يُثبت انحفاظ الكتلة.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('07576f0b-3c33-598e-80e6-79b3ce4364ab', '4dffb31a-ec0d-5def-90db-3ab72e4936d7', 'svt', 'تمرين: المتفاعلات والنواتج وانحفاظ الكتلة', 2, 60, 12, 'practice', 'admin', 1)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -1483,6 +1793,68 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('07cabb70-9805-5e1d-a27a-644d6106e340', '107c0650-6e11-5652-b548-d850f77b6e0a', 'تكوّنت نواتج كتلتها 23 g من تفاعل متفاعلَين، أحدهما كتلته 8 g. ما كتلة المتفاعل الآخر؟', '[{"id":"a","text":"15 g"},{"id":"b","text":"31 g"},{"id":"c","text":"8 g"},{"id":"d","text":"23 g"}]'::jsonb, 'a', 'بانحفاظ الكتلة: مجموع كتل المتفاعلات = 23 g، فكتلة المتفاعل الآخر = 23 − 8 = 15 g.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('76c65ba5-f79a-52a8-b7c0-2a9f2910bb70', '5be5e862-63b0-5bbf-ba43-676b67a97793', 'svt', 'اختبار فهم الدرس', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('0f9d875f-e551-5d18-8c2d-f3729b2ebd37', '76c65ba5-f79a-52a8-b7c0-2a9f2910bb70', 'ما قيمة pH المحلول المتعادل؟', '[{"id":"a","text":"pH = 0"},{"id":"b","text":"pH = 14"},{"id":"c","text":"pH = 7"},{"id":"d","text":"pH = 5"}]'::jsonb, 'c', 'المحلول المتعادل له pH = 7، أمّا المحلول الحمضي فـ pH < 7، والمحلول القاعدي فـ pH > 7. الماء النقي مثال على المحلول المتعادل.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('a3d39a96-e07d-5833-858e-6043d1c12b0a', '76c65ba5-f79a-52a8-b7c0-2a9f2910bb70', 'يُضاف ماء إلى محلول حمضي (تخفيف). ماذا يحدث لـ pH؟', '[{"id":"a","text":"ينخفض pH ويصبح المحلول أكثر حمضية"},{"id":"b","text":"يرتفع pH ويقترب من 7 دون أن يتجاوزه"},{"id":"c","text":"يتجاوز pH قيمة 7 ليصبح المحلول قاعديًّا"},{"id":"d","text":"لا يتغيّر pH أبدًا"}]'::jsonb, 'b', 'عند تخفيف محلول حمضي بالماء تنخفض تركيزية الحمض فيرتفع pH ويقترب من 7 لكنه لا يتجاوزه؛ إذ لا يتحوّل المحلول الحمضي إلى قاعدي بمجرّد التخفيف.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('bd99b9e5-1333-5efa-8a25-355e3246d020', '76c65ba5-f79a-52a8-b7c0-2a9f2910bb70', 'أيّ ممّا يلي محلول قاعدي؟', '[{"id":"a","text":"عصير الليمون (pH ≈ 2-3)"},{"id":"b","text":"حمض المعدة (pH ≈ 1-2)"},{"id":"c","text":"محلول الصابون (pH ≈ 9-10)"},{"id":"d","text":"الخلّ (pH ≈ 3-4)"}]'::jsonb, 'c', 'محلول الصابون قاعدي لأنّ pH يتراوح بين 9 و10، أي أكبر من 7. أمّا عصير الليمون والخلّ وحمض المعدة فكلّها حمضية لأنّ pH أصغر من 7.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('98af36c6-103f-5681-b3de-b09cc452cce3', '76c65ba5-f79a-52a8-b7c0-2a9f2910bb70', 'ما لون أزرق البروموتيمول (BBT) في وسط قاعدي؟', '[{"id":"a","text":"أزرق"},{"id":"b","text":"أصفر"},{"id":"c","text":"أحمر"},{"id":"d","text":"أخضر"}]'::jsonb, 'a', 'أزرق البروموتيمول (BBT) يتحوّل إلى اللون الأزرق في الوسط القاعدي، ويكون أخضر في الوسط المتعادل، وأصفر في الوسط الحمضي.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('f2fdbf90-7703-597c-ab64-2f65be736da6', '76c65ba5-f79a-52a8-b7c0-2a9f2910bb70', 'ما ناتج تفاعل حمض مع قاعدة بكمّيات متكافئة (التعادل)؟', '[{"id":"a","text":"حمض أقوى وماء"},{"id":"b","text":"قاعدة أقوى وغاز"},{"id":"c","text":"ملح وماء"},{"id":"d","text":"أكسجين وهيدروجين"}]'::jsonb, 'c', 'في تفاعل التعادل يتفاعل الحمض مع القاعدة بكمّيات متكافئة فينتج ملح وماء: حمض + قاعدة → ملح + ماء. مثال: HCl + NaOH → NaCl + H₂O.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1636,6 +2008,68 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('3b556dba-b4f8-5797-8b33-0bc24deb47b2', '1ef832e7-2310-5ebc-9ddd-7d3d868d77cb', 'svt', 'اختبار فهم الدرس', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('60e38c82-e263-5d1d-ada7-21006fdcd533', '3b556dba-b4f8-5797-8b33-0bc24deb47b2', 'ما تعريف الكاتيون؟', '[{"id":"a","text":"جسيم يحمل شحنة سالبة"},{"id":"b","text":"جزيء لا يحمل أيّ شحنة"},{"id":"c","text":"أيون موجب الشحنة"},{"id":"d","text":"ذرّة في حالتها الطبيعية المتعادلة"}]'::jsonb, 'c', 'الكاتيون هو أيون (شاردة) موجب الشحنة (+). أمثلة: Na⁺، Ca²⁺، H⁺. أمّا الأنيون فهو أيون سالب الشحنة (−).', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('9d5722ec-f19f-518d-88b1-b33051a3a937', '3b556dba-b4f8-5797-8b33-0bc24deb47b2', 'عند إذابة كلوريد الصوديوم NaCl في الماء، ما الشوارد المتكوّنة؟', '[{"id":"a","text":"Na²⁺ و Cl⁻"},{"id":"b","text":"Na⁺ و Cl⁻"},{"id":"c","text":"Na⁻ و Cl⁺"},{"id":"d","text":"لا تتكوّن شوارد، يذوب كجزيء NaCl كاملًا"}]'::jsonb, 'b', 'عند إذابة NaCl في الماء ينحلّ إلى كاتيونات الصوديوم Na⁺ وأنيونات الكلوريد Cl⁻ تنتشر بحريّة في المحلول.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('2a3c50bc-d7ee-5b80-af81-21f5c1a89d80', '3b556dba-b4f8-5797-8b33-0bc24deb47b2', 'لماذا لا ينقل محلول السكّر (C₁₂H₂₂O₁₁) التيار الكهربائي؟', '[{"id":"a","text":"لأنّ السكّر يمتصّ الكهرباء"},{"id":"b","text":"لأنّ السكّر يذوب دون أن يتحلّل إلى شوارد"},{"id":"c","text":"لأنّ الماء وحده يمنع مرور التيار"},{"id":"d","text":"لأنّ تركيز السكّر منخفض جدًّا"}]'::jsonb, 'b', 'السكّر يذوب في الماء دون أن يتشرّد، أي لا تتكوّن شوارد حرّة في المحلول. بما أنّ الشوارد هي التي تحمل الشحنات وتنقل التيار، فمحلول السكّر لا يوصّل الكهرباء.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('9afc4975-4346-50d6-9565-fee46fd8703f', '3b556dba-b4f8-5797-8b33-0bc24deb47b2', 'ما تأثير زيادة تركيز شوارد المحلول على ناقليته الكهربائية؟', '[{"id":"a","text":"تنقص الناقلية الكهربائية"},{"id":"b","text":"لا يتغيّر شيء"},{"id":"c","text":"يتحوّل المحلول إلى موصل معدني"},{"id":"d","text":"تزداد الناقلية الكهربائية"}]'::jsonb, 'd', 'كلّما زاد تركيز الشوارد في المحلول ازداد عدد حاملات الشحنة فتزداد الناقلية الكهربائية. هذا يُفسّر لماذا يُضيء محلول NaCl المركّز اللمبةَ بشدّة أكبر من المخفّف.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('4a4eb02a-172a-533f-b615-d23ca18df1ed', '3b556dba-b4f8-5797-8b33-0bc24deb47b2', 'في تجربة اختبار ناقلية محلول ما، اللمبة لا تضيء. ماذا يعني ذلك؟', '[{"id":"a","text":"المحلول يحتوي على شوارد كثيرة جدًّا"},{"id":"b","text":"المحلول غير شاردي (لا يحتوي شوارد حرّة)"},{"id":"c","text":"المولّد الكهربائي معطّل"},{"id":"d","text":"اللمبة مُضاءة لكنّ ضوءها خافت جدًّا"}]'::jsonb, 'b', 'عدم إضاءة اللمبة يعني أنّ الدائرة مفتوحة، أي أنّ المحلول لا يوصّل التيار. والسبب هو أنّ المحلول غير شاردي ولا يحتوي شوارد حرّة تحمل الشحنات.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('9795d4ab-4ba5-58f5-bbb7-a2d8a35ab255', '1ef832e7-2310-5ebc-9ddd-7d3d868d77cb', 'svt', 'تمرين: الشوارد وناقلية المحاليل', 2, 60, 12, 'practice', 'admin', 1)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -1771,6 +2205,68 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('9972807a-49be-58b7-8a97-01dc9cb6dbbc', '7d98ea97-fb08-5cf9-874c-b1c7d35858a7', 'ماء الشرب من الصنبور يحتوي شوارد Ca²⁺ و HCO₃⁻. ما خاصّيته الكهربائية؟', '[{"id":"a","text":"لا ينقل التيار لأنّه ماء"},{"id":"b","text":"ينقل التيار فقط عند تسخينه"},{"id":"c","text":"يعطي نتيجة مختلفة من صنبور لآخر بحسب لون الأنابيب"},{"id":"d","text":"ينقل التيار لأنّه شاردي"}]'::jsonb, 'd', 'ماء الصنبور شاردي لاحتوائه شوارد معدنية (Ca²⁺، Mg²⁺، HCO₃⁻ وغيرها)، لذا ينقل التيار الكهربائي. هذا يختلف عن الماء المقطّر النقي الذي لا يحتوي شوارد.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('4f7081aa-19ca-51d2-89bf-53c0df39a751', 'cb55bcb6-c41c-5c05-b94a-fad88e81e703', 'svt', 'اختبار فهم الدرس', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('b149f757-11cd-5672-ba11-d76d0213d466', '4f7081aa-19ca-51d2-89bf-53c0df39a751', 'ما الاتّجاه الاصطلاحي للتيار الكهربائي في الدائرة الخارجية؟', '[{"id":"a","text":"من القطب السالب إلى القطب الموجب"},{"id":"b","text":"من القطب الموجب إلى القطب السالب"},{"id":"c","text":"في كلا الاتّجاهَين في آنٍ واحد"},{"id":"d","text":"لا يوجد اتّجاه محدّد للتيار المستمر"}]'::jsonb, 'b', 'الاتّجاه الاصطلاحي للتيار في الدائرة الخارجية هو من القطب الموجب (+) نحو القطب السالب (−)، وهو عكس اتّجاه حركة الإلكترونات الفعلية.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('81062ac7-2097-5411-9a9e-ad5d73afadf8', '4f7081aa-19ca-51d2-89bf-53c0df39a751', 'ما وحدة قياس شدّة التيار الكهربائي I وبأيّ جهاز يُقاس؟', '[{"id":"a","text":"الفولط (V) ويُقاس بالفولطمتر"},{"id":"b","text":"الأوم (Ω) ويُقاس بالأوميتر"},{"id":"c","text":"الواط (W) ويُقاس بالواطمتر"},{"id":"d","text":"الأمبير (A) ويُقاس بالأمبيرمتر على التسلسل"}]'::jsonb, 'd', 'شدّة التيار I تُقاس بوحدة الأمبير (A) باستخدام الأمبيرمتر الذي يُوصَل دائمًا على التسلسل في الدائرة.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('9a0c155f-79a0-568b-9ae7-565ef9002d29', '4f7081aa-19ca-51d2-89bf-53c0df39a751', 'ما نصّ قانون أوم؟', '[{"id":"a","text":"U = R × I"},{"id":"b","text":"U = R + I"},{"id":"c","text":"I = U + R"},{"id":"d","text":"R = U + I"}]'::jsonb, 'a', 'قانون أوم ينصّ على: U = R × I، حيث U التوتر بالفولط، R المقاومة بالأوم، I شدّة التيار بالأمبير. ويمكن اشتقاق: R = U/I و I = U/R.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('88200d7c-d007-514e-9fff-98830902cd8b', '4f7081aa-19ca-51d2-89bf-53c0df39a751', 'مقاومة قيمتها 50 Ω يمرّ بها تيار شدّته 0.4 A. ما التوتر على طرفَيها؟', '[{"id":"a","text":"125 V"},{"id":"b","text":"0.008 V"},{"id":"c","text":"50.4 V"},{"id":"d","text":"20 V"}]'::jsonb, 'd', 'بتطبيق قانون أوم: U = R × I = 50 × 0.4 = 20 V.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('6415c31b-bea6-5a0b-8e7a-8189179ffeb4', '4f7081aa-19ca-51d2-89bf-53c0df39a751', 'عند توصيل مقاومتَين على التوازي، أيّ العبارات صحيح؟', '[{"id":"a","text":"التوتر الكلّي يساوي مجموع التوتّرَين والتيار نفسه في كلتا المقاومتَين"},{"id":"b","text":"شدّة التيار الكلّية تساوي مجموع شدّتَي التيار، والتوتر نفسه على كلتا المقاومتَين"},{"id":"c","text":"شدّة التيار نفسها في كلتا المقاومتَين والتوتر الكلّي مجموع التوتّرَين"},{"id":"d","text":"المقاومة الإجمالية تساوي مجموع المقاومتَين"}]'::jsonb, 'b', 'في التركيب على التوازي: التوتر نفسه على كلتا المقاومتَين (U₁ = U₂ = U)، وشدّة التيار الكلّية تساوي مجموع الشدّتَين (I = I₁ + I₂). أمّا التركيب على التسلسل فهو من يتشارك نفس شدّة التيار.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,

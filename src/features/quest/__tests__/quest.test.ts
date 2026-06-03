@@ -56,6 +56,7 @@ function mockQuery(data: unknown, error: unknown = null) {
   chain.maybeSingle = vi.fn().mockReturnValue(result);
   chain.insert = vi.fn().mockReturnValue(chain);
   chain.in = vi.fn().mockReturnValue(chain);
+  chain.gte = vi.fn().mockReturnValue(chain);
   // Make the chain itself resolve like a promise with data/error
   chain.then = (fn: (v: unknown) => unknown) => fn(result);
   Object.assign(chain, result);
@@ -94,6 +95,7 @@ describe("gamification.quest — getSubject", () => {
       chapters: chaptersData,
       exercises: exercisesData,
       bestByExercise: { "ex-1": 85 },
+      quizPassedByChapter: {},
     });
   });
 
@@ -201,6 +203,50 @@ describe("gamification.quest — startExerciseSession", () => {
         exerciseId: "11111111-1111-1111-1111-111111111111",
       }),
     ).rejects.toThrow("Insert failed");
+  });
+
+  it("blocks a practice exercise until the chapter comprehension quiz is passed", async () => {
+    let exerciseCalls = 0;
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") {
+        exerciseCalls += 1;
+        // 1st call = the requested exercise; 2nd call = the chapter's quiz.
+        return exerciseCalls === 1
+          ? mockQuery({ id: "ex-1", mode: "practice", chapter_id: "ch-1" })
+          : mockQuery({ id: "quiz-1" });
+      }
+      if (table === "attempts") return mockQuery([]); // no passing attempt
+      return mockQuery({ id: "sess-1", started_at: "t" });
+    });
+
+    const { startExerciseSession } = await import("@/features/quest");
+
+    await expect(
+      (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
+        exerciseId: "11111111-1111-1111-1111-111111111111",
+      }),
+    ).rejects.toThrow("quiz de compréhension");
+  });
+
+  it("allows a practice exercise once the chapter quiz is passed", async () => {
+    let exerciseCalls = 0;
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") {
+        exerciseCalls += 1;
+        return exerciseCalls === 1
+          ? mockQuery({ id: "ex-1", mode: "practice", chapter_id: "ch-1" })
+          : mockQuery({ id: "quiz-1" });
+      }
+      if (table === "attempts") return mockQuery([{ id: "att-1" }]); // passing attempt
+      return mockQuery({ id: "sess-1", started_at: "2026-06-01T12:00:00Z" });
+    });
+
+    const { startExerciseSession } = await import("@/features/quest");
+    const result = await (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
+      exerciseId: "11111111-1111-1111-1111-111111111111",
+    });
+
+    expect(result).toEqual({ sessionId: "sess-1", startedAt: "2026-06-01T12:00:00Z" });
   });
 });
 

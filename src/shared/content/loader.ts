@@ -4,6 +4,7 @@ import { z } from "zod";
 import {
   chapterMetaSchema,
   exerciseSchema,
+  quizSchema,
   subjectMetaSchema,
   type LoadedChapter,
   type LoadedExercise,
@@ -22,6 +23,7 @@ const LESSON_FILE = "cours.md";
 const SUMMARY_FILE = "resume.md";
 const CHAPTER_META = "chapter.json";
 const SUBJECT_META = "subject.json";
+const QUIZ_FILE = "quiz.json";
 const EXERCISES_DIR = "exercices";
 
 function readJson(filePath: string): unknown {
@@ -81,6 +83,11 @@ function loadChapter(chapterDir: string, slug: string): LoadedChapter {
   );
   const lesson = readText(join(chapterDir, LESSON_FILE));
   const summary = readText(join(chapterDir, SUMMARY_FILE));
+  const quiz = parseOrThrow(
+    quizSchema,
+    readJson(join(chapterDir, QUIZ_FILE)),
+    join(chapterDir, QUIZ_FILE),
+  );
 
   const exercisesDir = join(chapterDir, EXERCISES_DIR);
   const exercises: LoadedExercise[] = listJsonFiles(exercisesDir).map((file) => {
@@ -91,7 +98,7 @@ function loadChapter(chapterDir: string, slug: string): LoadedChapter {
     };
   });
 
-  return { slug, meta, lesson, summary, exercises };
+  return { slug, meta, lesson, summary, quiz, exercises };
 }
 
 /** Load and validate one subject directory (containing `subject.json`). */

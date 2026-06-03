@@ -1,0 +1,60 @@
+{
+  "title": "Comprehension quiz",
+  "questions": [
+    {
+      "prompt": "The phone is ringing and you decide to answer it right now. Which sentence is correct?",
+      "options": [
+        { "id": "a", "text": "I am going to answer it." },
+        { "id": "b", "text": "I will answer it." },
+        { "id": "c", "text": "I am answering it tomorrow." },
+        { "id": "d", "text": "I answer it." }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Will\" is used for a spontaneous decision made at the moment of speaking. You have just decided to answer the phone right now."
+    },
+    {
+      "prompt": "You can see dark clouds gathering overhead. Which sentence correctly expresses an evidence-based prediction?",
+      "options": [
+        { "id": "a", "text": "I think it will rain." },
+        { "id": "b", "text": "It rains soon." },
+        { "id": "c", "text": "It is going to rain." },
+        { "id": "d", "text": "It will have rained." }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Be going to\" is used for predictions based on visible present evidence. The dark clouds you can see right now are the evidence."
+    },
+    {
+      "prompt": "Which sentence correctly uses a time clause with a future meaning?",
+      "options": [
+        { "id": "a", "text": "Call me when you will arrive." },
+        { "id": "b", "text": "Call me when you arrive." },
+        { "id": "c", "text": "Call me when you are arriving." },
+        { "id": "d", "text": "Call me when you arrived." }
+      ],
+      "correctOption": "b",
+      "explanation": "After time conjunctions such as when, as soon as, before, after, and until in a future sentence, use the present simple, not will."
+    },
+    {
+      "prompt": "Which form expresses a fixed, confirmed arrangement already in your diary?",
+      "options": [
+        { "id": "a", "text": "I will meet the doctor at 9 a.m. tomorrow." },
+        { "id": "b", "text": "I meet the doctor at 9 a.m. tomorrow." },
+        { "id": "c", "text": "I am meeting the doctor at 9 a.m. tomorrow." },
+        { "id": "d", "text": "I was meeting the doctor at 9 a.m. tomorrow." }
+      ],
+      "correctOption": "c",
+      "explanation": "The present continuous is used for future events that are already arranged and confirmed with others, such as a diary appointment."
+    },
+    {
+      "prompt": "What is the correct negative form of \"will\" in a sentence?",
+      "options": [
+        { "id": "a", "text": "She willn't come." },
+        { "id": "b", "text": "She won't come." },
+        { "id": "c", "text": "She doesn't will come." },
+        { "id": "d", "text": "She isn't will come." }
+      ],
+      "correctOption": "b",
+      "explanation": "The negative of will is will not, contracted to won't. No auxiliary verb like do or be is added alongside will."
+    }
+  ]
+}

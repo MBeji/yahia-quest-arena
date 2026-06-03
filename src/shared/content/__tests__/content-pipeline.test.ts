@@ -152,6 +152,20 @@ describe("buildMigrationSql", () => {
         meta: { title: "الفصل", description: "d", displayOrder: 1, sources: [] },
         lesson: "# cours",
         summary: "## résumé",
+        quiz: {
+          title: "اختبار الفهم",
+          questions: [
+            {
+              prompt: "س؟",
+              options: [
+                { id: "a", text: "1" },
+                { id: "b", text: "2" },
+              ],
+              correctOption: "a",
+              explanation: "ج",
+            },
+          ],
+        },
         exercises: [
           {
             slug: "ex1",
@@ -209,6 +223,11 @@ describe("buildMigrationSql", () => {
     expect(sql).toContain("to_regclass('public.dungeon_run_questions')");
   });
 
+  it("emits the chapter comprehension quiz as a mode='quiz' exercise", () => {
+    expect(sql).toContain(sqlString(exerciseId("math", "01-foo", "quiz")));
+    expect(sql).toContain("'quiz'");
+  });
+
   it("serializes question options as jsonb", () => {
     expect(sql).toContain(`'[{"id":"a","text":"3"},{"id":"b","text":"4"}]'::jsonb`);
   });
@@ -244,6 +263,41 @@ describe("loader", () => {
     writeFileSync(join(chapterDir, "cours.md"), "# cours");
     writeFileSync(join(chapterDir, "resume.md"), "## résumé");
     writeFileSync(
+      join(chapterDir, "quiz.json"),
+      JSON.stringify({
+        title: "اختبار الفهم",
+        questions: [
+          {
+            prompt: "q1",
+            options: [
+              { id: "a", text: "1" },
+              { id: "b", text: "2" },
+            ],
+            correctOption: "a",
+            explanation: "e",
+          },
+          {
+            prompt: "q2",
+            options: [
+              { id: "a", text: "1" },
+              { id: "b", text: "2" },
+            ],
+            correctOption: "b",
+            explanation: "e",
+          },
+          {
+            prompt: "q3",
+            options: [
+              { id: "a", text: "1" },
+              { id: "b", text: "2" },
+            ],
+            correctOption: "a",
+            explanation: "e",
+          },
+        ],
+      }),
+    );
+    writeFileSync(
       join(exDir, "01-pratique.json"),
       JSON.stringify({
         title: "exo",
@@ -277,6 +331,7 @@ describe("loader", () => {
     expect(subject.chapters).toHaveLength(1);
     expect(subject.chapters[0].lesson).toBe("# cours");
     expect(subject.chapters[0].summary).toBe("## résumé");
+    expect(subject.chapters[0].quiz.questions).toHaveLength(3);
     expect(subject.chapters[0].exercises).toHaveLength(1);
   });
 

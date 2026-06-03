@@ -61,6 +61,16 @@ export const questionSchema = z
   });
 export type ContentQuestion = z.infer<typeof questionSchema>;
 
+/**
+ * `quiz.json` — the mandatory comprehension quiz of a chapter. Compiled into
+ * an `exercises` row with `mode='quiz'` that gates the chapter's exercises.
+ */
+export const quizSchema = z.object({
+  title: z.string().min(1).optional(),
+  questions: z.array(questionSchema).min(3).max(10),
+});
+export type ContentQuiz = z.infer<typeof quizSchema>;
+
 /** An exercise file under `<chapter>/exercices/*.json`. */
 export const exerciseSchema = z.object({
   title: z.string().min(1),
@@ -87,6 +97,8 @@ export interface LoadedChapter {
   lesson: string;
   /** Course summary (markdown), stored in `chapters.summary`. */
   summary: string;
+  /** Mandatory comprehension quiz (compiled to a `mode='quiz'` exercise). */
+  quiz: ContentQuiz;
   exercises: LoadedExercise[];
 }
 

@@ -2,8 +2,13 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { isRateLimited } from "@/shared/lib/rate-limit";
+import { QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
 import type { UnlockedBadge } from "@/shared/types/gamification";
 import type { Database } from "@/shared/integrations/supabase/types";
+
+/** Error message thrown when an exercise is locked behind its chapter quiz. */
+export const QUIZ_LOCKED_MESSAGE =
+  "Réussis d'abord le quiz de compréhension du chapitre pour débloquer cet exercice.";
 
 type ProfileSnapshot = Database["public"]["Tables"]["profiles"]["Row"];
 
@@ -101,11 +106,36 @@ export const getSubject = createServerFn({ method: "GET" })
       best[r.exercise_id] = Number(r.best_score ?? 0);
     }
 
+    // Comprehension-quiz gate: a chapter's exercises stay locked until the
+    // user passes that chapter's mode='quiz' exercise at/above the threshold.
+    const exercises = exs.data ?? [];
+    const quizExercises = exercises.filter((e) => e.mode === "quiz");
+    const quizPassedByChapter: Record<string, boolean> = {};
+    for (const quiz of quizExercises) {
+      if (quiz.chapter_id) quizPassedByChapter[quiz.chapter_id] = false;
+    }
+    const quizIds = quizExercises.map((e) => e.id);
+    if (quizIds.length > 0) {
+      const { data: passedRows } = await supabase
+        .from("attempts")
+        .select("exercise_id")
+        .eq("user_id", context.userId)
+        .in("exercise_id", quizIds)
+        .gte("score_pct", QUIZ_PASS_THRESHOLD_PCT);
+      const passedQuizIds = new Set((passedRows ?? []).map((r) => r.exercise_id));
+      for (const quiz of quizExercises) {
+        if (quiz.chapter_id && passedQuizIds.has(quiz.id)) {
+          quizPassedByChapter[quiz.chapter_id] = true;
+        }
+      }
+    }
+
     return {
       subject: subj.data,
       chapters: chaps.data ?? [],
-      exercises: exs.data ?? [],
+      exercises,
       bestByExercise: best,
+      quizPassedByChapter,
     };
   });
 
@@ -169,6 +199,38 @@ export const startExerciseSession = createServerFn({ method: "POST" })
   .inputValidator((d) => z.object({ exerciseId: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
+
+    // Enforce the comprehension-quiz gate: practice/boss exercises cannot be
+    // started until the chapter's quiz is passed. Quizzes themselves are open.
+    const { data: ex, error: exError } = await supabase
+      .from("exercises")
+      .select("id, mode, chapter_id")
+      .eq("id", data.exerciseId)
+      .single();
+    if (exError) throw new Error(exError.message);
+
+    if (ex.mode !== "quiz" && ex.chapter_id) {
+      const { data: quiz } = await supabase
+        .from("exercises")
+        .select("id")
+        .eq("chapter_id", ex.chapter_id)
+        .eq("mode", "quiz")
+        .maybeSingle();
+      // Only gate when a quiz actually exists for the chapter (graceful for
+      // legacy chapters without one).
+      if (quiz) {
+        const { data: passed } = await supabase
+          .from("attempts")
+          .select("id")
+          .eq("user_id", userId)
+          .eq("exercise_id", quiz.id)
+          .gte("score_pct", QUIZ_PASS_THRESHOLD_PCT)
+          .limit(1);
+        if (!passed || passed.length === 0) {
+          throw new Error(QUIZ_LOCKED_MESSAGE);
+        }
+      }
+    }
 
     const { data: session, error } = await supabase
       .from("exercise_sessions")

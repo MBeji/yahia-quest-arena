@@ -1,0 +1,60 @@
+{
+  "title": "Comprehension quiz",
+  "questions": [
+    {
+      "prompt": "What is the core formula for forming the passive voice?",
+      "options": [
+        { "id": "a", "text": "subject + have + past participle" },
+        { "id": "b", "text": "subject + be + past participle" },
+        { "id": "c", "text": "subject + be + present participle (-ing)" },
+        { "id": "d", "text": "subject + do + base verb" }
+      ],
+      "correctOption": "b",
+      "explanation": "The passive is always formed with the correct form of \"be\" + the past participle of the main verb, regardless of tense."
+    },
+    {
+      "prompt": "Which sentence correctly transforms \"They speak French here\" into the present simple passive?",
+      "options": [
+        { "id": "a", "text": "French was spoken here." },
+        { "id": "b", "text": "French has been spoken here." },
+        { "id": "c", "text": "French is spoken here." },
+        { "id": "d", "text": "French are spoken here." }
+      ],
+      "correctOption": "c",
+      "explanation": "The present simple passive uses is/are + past participle. \"French\" is a singular noun, so the correct form is \"is spoken\"."
+    },
+    {
+      "prompt": "What is the first step when converting an active sentence to a passive one?",
+      "options": [
+        { "id": "a", "text": "Add \"by\" and the original subject at the end." },
+        { "id": "b", "text": "Move the object of the active sentence to the subject position." },
+        { "id": "c", "text": "Change the main verb to its present participle." },
+        { "id": "d", "text": "Remove the subject of the active sentence entirely." }
+      ],
+      "correctOption": "b",
+      "explanation": "The first step is to move the object of the active sentence into the subject position. Then choose the correct form of \"be\" and add the past participle."
+    },
+    {
+      "prompt": "When is the \"by + agent\" phrase typically omitted in a passive sentence?",
+      "options": [
+        { "id": "a", "text": "When the sentence is in the present tense" },
+        { "id": "b", "text": "When the subject is plural" },
+        { "id": "c", "text": "When the agent is unknown, unimportant, or obvious from context" },
+        { "id": "d", "text": "When the verb is irregular" }
+      ],
+      "correctOption": "c",
+      "explanation": "The \"by + agent\" phrase is often left out when the agent is unknown (\"My wallet was stolen\"), unimportant, or already obvious from context."
+    },
+    {
+      "prompt": "Which sentence correctly uses the past simple passive?",
+      "options": [
+        { "id": "a", "text": "The bridge is built in 1990." },
+        { "id": "b", "text": "The bridge was build in 1990." },
+        { "id": "c", "text": "The bridge were built in 1990." },
+        { "id": "d", "text": "The bridge was built in 1990." }
+      ],
+      "correctOption": "d",
+      "explanation": "The past simple passive uses was/were + past participle. \"Bridge\" is singular, so \"was\" is correct, and \"built\" is the past participle of \"build\"."
+    }
+  ]
+}

@@ -26,11 +26,11 @@ BEGIN
       AND q.exercise_id = e.id
       AND e.subject_id = 'french'
       AND e.source = 'admin'
-      AND q.id NOT IN ('d7f2f2b1-7a71-5c8f-8684-6fe8a2a5b9f3', '50cce373-29a3-50c2-8dfb-6b123b7c0f09', '37b194e0-3e8e-55f3-ab43-d7de67825e3a', 'eccc5914-b0d5-5035-804e-16a2cefc1af6', 'fd092ac9-1a1b-5654-a751-1f1f28f5548a', '6fbb7ffb-02e9-5d41-a1b1-80ebf9561872', '11d792cc-0455-56d3-b00b-9145225ca97b', '9044bfb1-eeb6-54e1-a7d8-10408624f911', '8499fe2e-7b46-5dd1-a7e8-c679eb7bf64c', '079d8ed9-845f-5b08-9391-5984479ec84f', '276a92b0-0c54-5381-b57c-d86ad57b021e', 'aabce6d4-f8ce-58d2-8737-80d73b3f05c8', 'd645eccd-a5d0-5aeb-9284-79aab3b2de20', '4b8817ab-0b1e-5d97-9a7b-8fd6753ca908', '07e8045b-b474-56cb-88ee-a5cc0e713ffa', 'cff983e1-a078-56c3-96fc-1bc3c9f70b8e', '1e3fc6c2-7f49-579a-9766-20a7860eca17', '308d579a-062a-5895-abfd-e1a05a0356de', 'c19c1f96-69fa-5f06-a875-55bcfda850ce', '98016972-94e1-5f90-9b1e-f59b43d6b0ae', '851ee672-a02e-5b39-85ab-663ccff5fccd', '78994701-0a13-5aa5-b908-e0dc7fa8fd7a', '733b88c0-3f49-56a9-a7a5-beb1ccab73cf', '67a0c11d-ab91-59df-b1f1-e411d1e2cb95', '96225451-0ff2-5e30-ab72-ea01d8573838', 'ad7aa3eb-7915-51a2-8ad8-f71a33b99fb1', 'c3e2ab45-089e-5a99-b92a-87cbb5576dde', '36a444de-1993-5b9a-8fb0-9a5cfe7f77b6', 'fde829bd-4a35-5b7a-980b-d9373c4bb855', '6d7569dc-adcd-5490-8ab4-9e1252876fbc', '3b271bbf-7019-55aa-93bb-583c3fbb407a', '332e1995-cf27-5529-9e9c-87c94efb4982', '4c1cd36e-d806-5894-a665-34368ab1f4bc', '6abd4b21-6d1c-51e3-9607-d615dae991a3', '3d1e84a5-a743-5748-b970-cc7eda950ebc', 'f22c973f-b551-5ada-b930-ce0801010307', 'c124cc25-0734-5a92-811e-669baf60fa4b', 'a365e428-06ba-5c4e-b3fb-3b1eb755b102', '69045ed1-0311-55cc-a9d1-5ff08b74073c', '103b3b98-c5ec-5850-b280-83a2c4488045', 'b56fc225-0884-57fe-9604-a5f47069571c', 'eed4181b-dcbb-5ee2-b6e2-44685205a62e', 'd53a306c-aa47-55c3-b52a-3b76f508e771', '789d8fb4-ef9b-57a5-971b-67821be37f1a', '927e93ec-4461-53b5-9378-38ef71fbb9b2', '03c3a61a-f9aa-5183-a4e0-994f72750e44', '7b7368b8-68e7-5388-a30c-503e4d1dc5dd', 'b4beed3e-de76-5a9d-b807-84d386df921d', '6d3e559b-0449-57de-89b2-0ff23b9fd893', 'f2f3c849-25e9-53d0-b09e-4eff720714b2', '3ee10a83-a4d9-5855-bb7d-79425521b890', '2329c69b-07a0-5905-8d3b-82a269887104', '815783b6-b7f5-5dea-9eea-baaa8f7a3382', 'a2241625-9fa9-504f-841d-0b346289ca00', '1b86b32d-c59d-5d28-a86e-a87b3cd41919', '3fadd44b-aca0-5ece-b1a4-02766d4517e3', 'cbaa9f7f-4a56-5d1f-b53d-df4861ef1871', '83dfacbc-3c11-55bf-ad09-cc214abb3711', '1f4296d8-c07e-5e6d-b599-0022c8f72118', '3a935e4d-91f9-59c5-aed2-fbaedff745b6', 'e91167fb-6b84-515a-9848-d07949d71c90', '28997c99-1b74-5330-8272-d08f4682b8c8', 'ee97c631-820f-50c1-9de3-58f140893afa', '5f51a382-45ef-51f7-a25b-2e95a78d6c1f', '676a25e8-1769-5b86-945f-06f2bf2d8548', 'cc3b9212-5768-5113-ad7b-2ba9128d740f', '0b03e40f-b428-588f-8ccc-c9431e9e0fda', 'ba963d3c-68cf-5c49-b62e-344049caab0e', 'c394033c-66d8-548c-951c-5472f4c41c30', 'efa163b4-a341-5c43-9bfb-142a7b277fa7', 'a467a610-6abe-5eac-ba05-83a1fa8608f7', '1ba1108b-cd4f-590a-b3ce-0e1bb8b0a251', 'b7b276c1-df61-5015-a396-ac06265465c7', '1cd7fbf9-2cc6-5eb7-879f-94d9ee76d569', '120db6b4-7f11-50e3-bbd3-e8ab5cbe63ff', 'e29bdbfe-677e-5173-8a30-dc1ddc813fe8', '9e3d2494-fea2-5244-b1a6-622c5560913b', 'a8a55df7-3f25-5d5b-8ea5-5f14e3c12204', '5e344432-2f71-56d6-abf1-5c8c31d537c9', '24a82297-67c0-5306-9121-6efc815a919e', '9bfeec0f-5f54-5365-9c20-356635d68e1c', '73d9a740-8761-50f2-a74c-f66483150482', 'a08dc674-1ad0-5709-ac2a-91fb09b03e23', '1a654666-d0cf-5a81-9244-aad9397d5ddb', '1cfa6dc4-e445-543e-9cdf-1baae0c8f842', '00a19639-3883-5d3c-8924-c94faf49d549', 'db7ecffa-12db-5ebe-a71f-0b59145133eb', '4032fad4-617f-58e6-b390-53e4b2c6c1c6', '61ccedd3-9052-5b32-ab73-cd1879d56ae7', '6cc0e08b-af9c-5dce-b02f-5bd6587bd103', 'ed57c56c-2714-58cf-b436-afc5b1f0fb55', 'a704ca25-4e84-5194-ae74-d707994df17e', '3088ed38-3f25-5167-aa73-a51d2fb61486', '16ef4fd9-0bf8-5dcc-bcee-af59ae8bdb12', '64e55faa-0a53-52af-8b05-97dd07023788', '29b2923e-5b05-5c0d-abd3-f0e7bb7dd6eb');
+      AND q.id NOT IN ('7a3d666a-ae97-5cca-b650-d0d8ab427c72', 'b2ff9a73-4e3e-5480-8908-65ac415b84b9', 'd6a3e46e-b0b6-54a7-b112-b02150981080', 'b54bb455-90a0-51f8-85a9-bd1a7c6490b4', '1f97d038-415e-5681-996d-bbb0881e4026', 'd7f2f2b1-7a71-5c8f-8684-6fe8a2a5b9f3', '50cce373-29a3-50c2-8dfb-6b123b7c0f09', '37b194e0-3e8e-55f3-ab43-d7de67825e3a', 'eccc5914-b0d5-5035-804e-16a2cefc1af6', 'fd092ac9-1a1b-5654-a751-1f1f28f5548a', '6fbb7ffb-02e9-5d41-a1b1-80ebf9561872', '11d792cc-0455-56d3-b00b-9145225ca97b', '9044bfb1-eeb6-54e1-a7d8-10408624f911', '8499fe2e-7b46-5dd1-a7e8-c679eb7bf64c', '079d8ed9-845f-5b08-9391-5984479ec84f', '276a92b0-0c54-5381-b57c-d86ad57b021e', 'aabce6d4-f8ce-58d2-8737-80d73b3f05c8', 'cd3e5a8a-d94f-58a0-8c6f-8838b820e67a', 'ef679ede-b207-51a6-b679-e6d7ec83f53a', '3e6d1a0e-ebba-5662-9b50-235bc8111b80', '051afec1-27e6-5b01-a35c-113fd8d1d9cc', '940021d7-b5b4-5449-83ea-ce2fbc279ff3', 'd645eccd-a5d0-5aeb-9284-79aab3b2de20', '4b8817ab-0b1e-5d97-9a7b-8fd6753ca908', '07e8045b-b474-56cb-88ee-a5cc0e713ffa', 'cff983e1-a078-56c3-96fc-1bc3c9f70b8e', '1e3fc6c2-7f49-579a-9766-20a7860eca17', '308d579a-062a-5895-abfd-e1a05a0356de', 'c19c1f96-69fa-5f06-a875-55bcfda850ce', '98016972-94e1-5f90-9b1e-f59b43d6b0ae', '851ee672-a02e-5b39-85ab-663ccff5fccd', '78994701-0a13-5aa5-b908-e0dc7fa8fd7a', '733b88c0-3f49-56a9-a7a5-beb1ccab73cf', '67a0c11d-ab91-59df-b1f1-e411d1e2cb95', '4a4ba085-73fa-5f77-bfdc-a81caab9b51e', '75e4d82d-47e0-5432-b840-67558c7322b8', '9fec6335-9472-5469-846a-75981fedeba3', '19564ab9-63a3-530c-a139-4913f70fcd20', '783bb08e-d6a7-5d72-ae16-851a5e696425', '96225451-0ff2-5e30-ab72-ea01d8573838', 'ad7aa3eb-7915-51a2-8ad8-f71a33b99fb1', 'c3e2ab45-089e-5a99-b92a-87cbb5576dde', '36a444de-1993-5b9a-8fb0-9a5cfe7f77b6', 'fde829bd-4a35-5b7a-980b-d9373c4bb855', '6d7569dc-adcd-5490-8ab4-9e1252876fbc', '3b271bbf-7019-55aa-93bb-583c3fbb407a', '332e1995-cf27-5529-9e9c-87c94efb4982', '4c1cd36e-d806-5894-a665-34368ab1f4bc', '6abd4b21-6d1c-51e3-9607-d615dae991a3', '3d1e84a5-a743-5748-b970-cc7eda950ebc', 'f22c973f-b551-5ada-b930-ce0801010307', '6d1bf493-f6d4-5de2-8d8f-4e728127758b', 'd54d5b3a-c34c-5314-8b03-d3350d485dcd', '633f9e2a-6695-5ff9-b6f6-934cbe3e687f', '0a8d594c-bdec-5df8-a62e-51a618c211c4', 'e076c07d-7d92-5511-a4ab-c5711a2c73cd', 'c124cc25-0734-5a92-811e-669baf60fa4b', 'a365e428-06ba-5c4e-b3fb-3b1eb755b102', '69045ed1-0311-55cc-a9d1-5ff08b74073c', '103b3b98-c5ec-5850-b280-83a2c4488045', 'b56fc225-0884-57fe-9604-a5f47069571c', 'eed4181b-dcbb-5ee2-b6e2-44685205a62e', 'd53a306c-aa47-55c3-b52a-3b76f508e771', '789d8fb4-ef9b-57a5-971b-67821be37f1a', '927e93ec-4461-53b5-9378-38ef71fbb9b2', '03c3a61a-f9aa-5183-a4e0-994f72750e44', '7b7368b8-68e7-5388-a30c-503e4d1dc5dd', 'b4beed3e-de76-5a9d-b807-84d386df921d', '860343a5-fe3b-56a4-943f-74ea5732b0ef', '6f9f38b1-0cf8-50cf-97b9-f7484f39aac2', 'f7705088-66ed-5e8d-b23e-63a1f2eb6260', '6d2559a3-989d-53df-8054-651a6ed1b9f6', '358f2069-51cf-5a2a-be86-9b7f5e9ef89a', '6d3e559b-0449-57de-89b2-0ff23b9fd893', 'f2f3c849-25e9-53d0-b09e-4eff720714b2', '3ee10a83-a4d9-5855-bb7d-79425521b890', '2329c69b-07a0-5905-8d3b-82a269887104', '815783b6-b7f5-5dea-9eea-baaa8f7a3382', 'a2241625-9fa9-504f-841d-0b346289ca00', '1b86b32d-c59d-5d28-a86e-a87b3cd41919', '3fadd44b-aca0-5ece-b1a4-02766d4517e3', 'cbaa9f7f-4a56-5d1f-b53d-df4861ef1871', '83dfacbc-3c11-55bf-ad09-cc214abb3711', '1f4296d8-c07e-5e6d-b599-0022c8f72118', '3a935e4d-91f9-59c5-aed2-fbaedff745b6', 'a07afd33-a11b-52b9-b5ba-343427b0bc84', 'dbd55b7e-bb3e-5706-9186-e833923ce87d', '5aeed1da-a9ed-53f3-9f19-b9f22a1abc0d', '33b4e382-cde8-5e40-8398-c5e311c1ccf4', 'd6e6c9bc-90d2-5532-9fcf-52ddef7681b1', 'e91167fb-6b84-515a-9848-d07949d71c90', '28997c99-1b74-5330-8272-d08f4682b8c8', 'ee97c631-820f-50c1-9de3-58f140893afa', '5f51a382-45ef-51f7-a25b-2e95a78d6c1f', '676a25e8-1769-5b86-945f-06f2bf2d8548', 'cc3b9212-5768-5113-ad7b-2ba9128d740f', '0b03e40f-b428-588f-8ccc-c9431e9e0fda', 'ba963d3c-68cf-5c49-b62e-344049caab0e', 'c394033c-66d8-548c-951c-5472f4c41c30', 'efa163b4-a341-5c43-9bfb-142a7b277fa7', 'a467a610-6abe-5eac-ba05-83a1fa8608f7', '1ba1108b-cd4f-590a-b3ce-0e1bb8b0a251', '5f8ad45d-b161-562e-b38c-3524e78b7214', '26d2e999-0836-52ea-beac-d55e58bce05d', 'ca5f29a5-a523-5a3a-b6b2-f40db9ee0548', 'f43f9ef9-486d-5151-9ec5-2c5f7ad19738', '0adce953-7057-5641-b1cb-337665f8da31', 'b7b276c1-df61-5015-a396-ac06265465c7', '1cd7fbf9-2cc6-5eb7-879f-94d9ee76d569', '120db6b4-7f11-50e3-bbd3-e8ab5cbe63ff', 'e29bdbfe-677e-5173-8a30-dc1ddc813fe8', '9e3d2494-fea2-5244-b1a6-622c5560913b', 'a8a55df7-3f25-5d5b-8ea5-5f14e3c12204', '5e344432-2f71-56d6-abf1-5c8c31d537c9', '24a82297-67c0-5306-9121-6efc815a919e', '9bfeec0f-5f54-5365-9c20-356635d68e1c', '73d9a740-8761-50f2-a74c-f66483150482', 'a08dc674-1ad0-5709-ac2a-91fb09b03e23', '1a654666-d0cf-5a81-9244-aad9397d5ddb', 'ee69c6c1-c5df-5cd9-9da9-046389fb356f', 'd5881556-ec1e-57f7-9dde-d113d29c8710', '17071935-7310-51c2-a8d6-00bbac4c3e23', '72632bce-eb90-5864-8b0a-fd10908fafe1', 'e4bf56ff-2ae1-5126-9019-5800347aa34a', '1cfa6dc4-e445-543e-9cdf-1baae0c8f842', '00a19639-3883-5d3c-8924-c94faf49d549', 'db7ecffa-12db-5ebe-a71f-0b59145133eb', '4032fad4-617f-58e6-b390-53e4b2c6c1c6', '61ccedd3-9052-5b32-ab73-cd1879d56ae7', '6cc0e08b-af9c-5dce-b02f-5bd6587bd103', 'ed57c56c-2714-58cf-b436-afc5b1f0fb55', 'a704ca25-4e84-5194-ae74-d707994df17e', '3088ed38-3f25-5167-aa73-a51d2fb61486', '16ef4fd9-0bf8-5dcc-bcee-af59ae8bdb12', '64e55faa-0a53-52af-8b05-97dd07023788', '29b2923e-5b05-5c0d-abd3-f0e7bb7dd6eb');
   END IF;
 END $$;
-DELETE FROM public.exercises WHERE subject_id = 'french' AND source = 'admin' AND id NOT IN ('e8b74863-3fe8-5aad-a426-621ef75ec7ef', '3b342ef2-05e7-53d3-bded-effe80517ef5', '03ebf9d6-a2d7-5967-b86c-70019206e357', '2eac0b4b-84dd-5f90-a06c-9eb9e6d1eec3', '12f9cc53-1641-5e87-9958-ae1375000007', '0cec718c-9b55-5aa5-b40e-ad20fffbe4ed', '7a24537c-05b2-5498-864c-768a4f7b3ee8', 'a929d5d0-6d99-542b-8482-d7e65feeb3b3', 'b89d641c-95d4-5820-875a-3bac22a2add4', '7efc2dc4-09b3-576b-b2f2-78e7a6288526', '4758ebaf-51ff-5d37-b504-914009e31959', '7e38a684-6fa6-5bf2-ac76-40bf6085e469', 'b3042e50-068f-5b9f-91d5-e64df884f924', '25f31af7-de92-57ff-93ce-e6dc3127c707', '216407d2-5ccf-54fb-bd5c-03550dcaa2e1', '981642c4-6f55-5171-897c-bdf40e984522');
-DELETE FROM public.questions WHERE exercise_id IN ('e8b74863-3fe8-5aad-a426-621ef75ec7ef', '3b342ef2-05e7-53d3-bded-effe80517ef5', '03ebf9d6-a2d7-5967-b86c-70019206e357', '2eac0b4b-84dd-5f90-a06c-9eb9e6d1eec3', '12f9cc53-1641-5e87-9958-ae1375000007', '0cec718c-9b55-5aa5-b40e-ad20fffbe4ed', '7a24537c-05b2-5498-864c-768a4f7b3ee8', 'a929d5d0-6d99-542b-8482-d7e65feeb3b3', 'b89d641c-95d4-5820-875a-3bac22a2add4', '7efc2dc4-09b3-576b-b2f2-78e7a6288526', '4758ebaf-51ff-5d37-b504-914009e31959', '7e38a684-6fa6-5bf2-ac76-40bf6085e469', 'b3042e50-068f-5b9f-91d5-e64df884f924', '25f31af7-de92-57ff-93ce-e6dc3127c707', '216407d2-5ccf-54fb-bd5c-03550dcaa2e1', '981642c4-6f55-5171-897c-bdf40e984522') AND id NOT IN ('d7f2f2b1-7a71-5c8f-8684-6fe8a2a5b9f3', '50cce373-29a3-50c2-8dfb-6b123b7c0f09', '37b194e0-3e8e-55f3-ab43-d7de67825e3a', 'eccc5914-b0d5-5035-804e-16a2cefc1af6', 'fd092ac9-1a1b-5654-a751-1f1f28f5548a', '6fbb7ffb-02e9-5d41-a1b1-80ebf9561872', '11d792cc-0455-56d3-b00b-9145225ca97b', '9044bfb1-eeb6-54e1-a7d8-10408624f911', '8499fe2e-7b46-5dd1-a7e8-c679eb7bf64c', '079d8ed9-845f-5b08-9391-5984479ec84f', '276a92b0-0c54-5381-b57c-d86ad57b021e', 'aabce6d4-f8ce-58d2-8737-80d73b3f05c8', 'd645eccd-a5d0-5aeb-9284-79aab3b2de20', '4b8817ab-0b1e-5d97-9a7b-8fd6753ca908', '07e8045b-b474-56cb-88ee-a5cc0e713ffa', 'cff983e1-a078-56c3-96fc-1bc3c9f70b8e', '1e3fc6c2-7f49-579a-9766-20a7860eca17', '308d579a-062a-5895-abfd-e1a05a0356de', 'c19c1f96-69fa-5f06-a875-55bcfda850ce', '98016972-94e1-5f90-9b1e-f59b43d6b0ae', '851ee672-a02e-5b39-85ab-663ccff5fccd', '78994701-0a13-5aa5-b908-e0dc7fa8fd7a', '733b88c0-3f49-56a9-a7a5-beb1ccab73cf', '67a0c11d-ab91-59df-b1f1-e411d1e2cb95', '96225451-0ff2-5e30-ab72-ea01d8573838', 'ad7aa3eb-7915-51a2-8ad8-f71a33b99fb1', 'c3e2ab45-089e-5a99-b92a-87cbb5576dde', '36a444de-1993-5b9a-8fb0-9a5cfe7f77b6', 'fde829bd-4a35-5b7a-980b-d9373c4bb855', '6d7569dc-adcd-5490-8ab4-9e1252876fbc', '3b271bbf-7019-55aa-93bb-583c3fbb407a', '332e1995-cf27-5529-9e9c-87c94efb4982', '4c1cd36e-d806-5894-a665-34368ab1f4bc', '6abd4b21-6d1c-51e3-9607-d615dae991a3', '3d1e84a5-a743-5748-b970-cc7eda950ebc', 'f22c973f-b551-5ada-b930-ce0801010307', 'c124cc25-0734-5a92-811e-669baf60fa4b', 'a365e428-06ba-5c4e-b3fb-3b1eb755b102', '69045ed1-0311-55cc-a9d1-5ff08b74073c', '103b3b98-c5ec-5850-b280-83a2c4488045', 'b56fc225-0884-57fe-9604-a5f47069571c', 'eed4181b-dcbb-5ee2-b6e2-44685205a62e', 'd53a306c-aa47-55c3-b52a-3b76f508e771', '789d8fb4-ef9b-57a5-971b-67821be37f1a', '927e93ec-4461-53b5-9378-38ef71fbb9b2', '03c3a61a-f9aa-5183-a4e0-994f72750e44', '7b7368b8-68e7-5388-a30c-503e4d1dc5dd', 'b4beed3e-de76-5a9d-b807-84d386df921d', '6d3e559b-0449-57de-89b2-0ff23b9fd893', 'f2f3c849-25e9-53d0-b09e-4eff720714b2', '3ee10a83-a4d9-5855-bb7d-79425521b890', '2329c69b-07a0-5905-8d3b-82a269887104', '815783b6-b7f5-5dea-9eea-baaa8f7a3382', 'a2241625-9fa9-504f-841d-0b346289ca00', '1b86b32d-c59d-5d28-a86e-a87b3cd41919', '3fadd44b-aca0-5ece-b1a4-02766d4517e3', 'cbaa9f7f-4a56-5d1f-b53d-df4861ef1871', '83dfacbc-3c11-55bf-ad09-cc214abb3711', '1f4296d8-c07e-5e6d-b599-0022c8f72118', '3a935e4d-91f9-59c5-aed2-fbaedff745b6', 'e91167fb-6b84-515a-9848-d07949d71c90', '28997c99-1b74-5330-8272-d08f4682b8c8', 'ee97c631-820f-50c1-9de3-58f140893afa', '5f51a382-45ef-51f7-a25b-2e95a78d6c1f', '676a25e8-1769-5b86-945f-06f2bf2d8548', 'cc3b9212-5768-5113-ad7b-2ba9128d740f', '0b03e40f-b428-588f-8ccc-c9431e9e0fda', 'ba963d3c-68cf-5c49-b62e-344049caab0e', 'c394033c-66d8-548c-951c-5472f4c41c30', 'efa163b4-a341-5c43-9bfb-142a7b277fa7', 'a467a610-6abe-5eac-ba05-83a1fa8608f7', '1ba1108b-cd4f-590a-b3ce-0e1bb8b0a251', 'b7b276c1-df61-5015-a396-ac06265465c7', '1cd7fbf9-2cc6-5eb7-879f-94d9ee76d569', '120db6b4-7f11-50e3-bbd3-e8ab5cbe63ff', 'e29bdbfe-677e-5173-8a30-dc1ddc813fe8', '9e3d2494-fea2-5244-b1a6-622c5560913b', 'a8a55df7-3f25-5d5b-8ea5-5f14e3c12204', '5e344432-2f71-56d6-abf1-5c8c31d537c9', '24a82297-67c0-5306-9121-6efc815a919e', '9bfeec0f-5f54-5365-9c20-356635d68e1c', '73d9a740-8761-50f2-a74c-f66483150482', 'a08dc674-1ad0-5709-ac2a-91fb09b03e23', '1a654666-d0cf-5a81-9244-aad9397d5ddb', '1cfa6dc4-e445-543e-9cdf-1baae0c8f842', '00a19639-3883-5d3c-8924-c94faf49d549', 'db7ecffa-12db-5ebe-a71f-0b59145133eb', '4032fad4-617f-58e6-b390-53e4b2c6c1c6', '61ccedd3-9052-5b32-ab73-cd1879d56ae7', '6cc0e08b-af9c-5dce-b02f-5bd6587bd103', 'ed57c56c-2714-58cf-b436-afc5b1f0fb55', 'a704ca25-4e84-5194-ae74-d707994df17e', '3088ed38-3f25-5167-aa73-a51d2fb61486', '16ef4fd9-0bf8-5dcc-bcee-af59ae8bdb12', '64e55faa-0a53-52af-8b05-97dd07023788', '29b2923e-5b05-5c0d-abd3-f0e7bb7dd6eb');
+DELETE FROM public.exercises WHERE subject_id = 'french' AND source = 'admin' AND id NOT IN ('1368c9b4-7ea9-5818-ad62-b7c96b0dbda1', 'e8b74863-3fe8-5aad-a426-621ef75ec7ef', '3b342ef2-05e7-53d3-bded-effe80517ef5', '28b6e6d9-1123-5ff7-8652-ff24bca1258a', '03ebf9d6-a2d7-5967-b86c-70019206e357', '2eac0b4b-84dd-5f90-a06c-9eb9e6d1eec3', 'a5ad7b9f-577b-53bd-a84c-f6b7fb550adc', '12f9cc53-1641-5e87-9958-ae1375000007', '0cec718c-9b55-5aa5-b40e-ad20fffbe4ed', '06501a61-9965-5426-8256-57479f8c4308', '7a24537c-05b2-5498-864c-768a4f7b3ee8', 'a929d5d0-6d99-542b-8482-d7e65feeb3b3', 'ad167a20-ae28-5904-9ce3-00d98dc0577e', 'b89d641c-95d4-5820-875a-3bac22a2add4', '7efc2dc4-09b3-576b-b2f2-78e7a6288526', 'c4e4212c-8f83-5e3b-aa43-0d6d3e5a9fba', '4758ebaf-51ff-5d37-b504-914009e31959', '7e38a684-6fa6-5bf2-ac76-40bf6085e469', '8d1de601-0c73-557f-a3b4-d45a964a2872', 'b3042e50-068f-5b9f-91d5-e64df884f924', '25f31af7-de92-57ff-93ce-e6dc3127c707', 'd49bcd74-d20a-552c-9658-c0d86e053975', '216407d2-5ccf-54fb-bd5c-03550dcaa2e1', '981642c4-6f55-5171-897c-bdf40e984522');
+DELETE FROM public.questions WHERE exercise_id IN ('1368c9b4-7ea9-5818-ad62-b7c96b0dbda1', 'e8b74863-3fe8-5aad-a426-621ef75ec7ef', '3b342ef2-05e7-53d3-bded-effe80517ef5', '28b6e6d9-1123-5ff7-8652-ff24bca1258a', '03ebf9d6-a2d7-5967-b86c-70019206e357', '2eac0b4b-84dd-5f90-a06c-9eb9e6d1eec3', 'a5ad7b9f-577b-53bd-a84c-f6b7fb550adc', '12f9cc53-1641-5e87-9958-ae1375000007', '0cec718c-9b55-5aa5-b40e-ad20fffbe4ed', '06501a61-9965-5426-8256-57479f8c4308', '7a24537c-05b2-5498-864c-768a4f7b3ee8', 'a929d5d0-6d99-542b-8482-d7e65feeb3b3', 'ad167a20-ae28-5904-9ce3-00d98dc0577e', 'b89d641c-95d4-5820-875a-3bac22a2add4', '7efc2dc4-09b3-576b-b2f2-78e7a6288526', 'c4e4212c-8f83-5e3b-aa43-0d6d3e5a9fba', '4758ebaf-51ff-5d37-b504-914009e31959', '7e38a684-6fa6-5bf2-ac76-40bf6085e469', '8d1de601-0c73-557f-a3b4-d45a964a2872', 'b3042e50-068f-5b9f-91d5-e64df884f924', '25f31af7-de92-57ff-93ce-e6dc3127c707', 'd49bcd74-d20a-552c-9658-c0d86e053975', '216407d2-5ccf-54fb-bd5c-03550dcaa2e1', '981642c4-6f55-5171-897c-bdf40e984522') AND id NOT IN ('7a3d666a-ae97-5cca-b650-d0d8ab427c72', 'b2ff9a73-4e3e-5480-8908-65ac415b84b9', 'd6a3e46e-b0b6-54a7-b112-b02150981080', 'b54bb455-90a0-51f8-85a9-bd1a7c6490b4', '1f97d038-415e-5681-996d-bbb0881e4026', 'd7f2f2b1-7a71-5c8f-8684-6fe8a2a5b9f3', '50cce373-29a3-50c2-8dfb-6b123b7c0f09', '37b194e0-3e8e-55f3-ab43-d7de67825e3a', 'eccc5914-b0d5-5035-804e-16a2cefc1af6', 'fd092ac9-1a1b-5654-a751-1f1f28f5548a', '6fbb7ffb-02e9-5d41-a1b1-80ebf9561872', '11d792cc-0455-56d3-b00b-9145225ca97b', '9044bfb1-eeb6-54e1-a7d8-10408624f911', '8499fe2e-7b46-5dd1-a7e8-c679eb7bf64c', '079d8ed9-845f-5b08-9391-5984479ec84f', '276a92b0-0c54-5381-b57c-d86ad57b021e', 'aabce6d4-f8ce-58d2-8737-80d73b3f05c8', 'cd3e5a8a-d94f-58a0-8c6f-8838b820e67a', 'ef679ede-b207-51a6-b679-e6d7ec83f53a', '3e6d1a0e-ebba-5662-9b50-235bc8111b80', '051afec1-27e6-5b01-a35c-113fd8d1d9cc', '940021d7-b5b4-5449-83ea-ce2fbc279ff3', 'd645eccd-a5d0-5aeb-9284-79aab3b2de20', '4b8817ab-0b1e-5d97-9a7b-8fd6753ca908', '07e8045b-b474-56cb-88ee-a5cc0e713ffa', 'cff983e1-a078-56c3-96fc-1bc3c9f70b8e', '1e3fc6c2-7f49-579a-9766-20a7860eca17', '308d579a-062a-5895-abfd-e1a05a0356de', 'c19c1f96-69fa-5f06-a875-55bcfda850ce', '98016972-94e1-5f90-9b1e-f59b43d6b0ae', '851ee672-a02e-5b39-85ab-663ccff5fccd', '78994701-0a13-5aa5-b908-e0dc7fa8fd7a', '733b88c0-3f49-56a9-a7a5-beb1ccab73cf', '67a0c11d-ab91-59df-b1f1-e411d1e2cb95', '4a4ba085-73fa-5f77-bfdc-a81caab9b51e', '75e4d82d-47e0-5432-b840-67558c7322b8', '9fec6335-9472-5469-846a-75981fedeba3', '19564ab9-63a3-530c-a139-4913f70fcd20', '783bb08e-d6a7-5d72-ae16-851a5e696425', '96225451-0ff2-5e30-ab72-ea01d8573838', 'ad7aa3eb-7915-51a2-8ad8-f71a33b99fb1', 'c3e2ab45-089e-5a99-b92a-87cbb5576dde', '36a444de-1993-5b9a-8fb0-9a5cfe7f77b6', 'fde829bd-4a35-5b7a-980b-d9373c4bb855', '6d7569dc-adcd-5490-8ab4-9e1252876fbc', '3b271bbf-7019-55aa-93bb-583c3fbb407a', '332e1995-cf27-5529-9e9c-87c94efb4982', '4c1cd36e-d806-5894-a665-34368ab1f4bc', '6abd4b21-6d1c-51e3-9607-d615dae991a3', '3d1e84a5-a743-5748-b970-cc7eda950ebc', 'f22c973f-b551-5ada-b930-ce0801010307', '6d1bf493-f6d4-5de2-8d8f-4e728127758b', 'd54d5b3a-c34c-5314-8b03-d3350d485dcd', '633f9e2a-6695-5ff9-b6f6-934cbe3e687f', '0a8d594c-bdec-5df8-a62e-51a618c211c4', 'e076c07d-7d92-5511-a4ab-c5711a2c73cd', 'c124cc25-0734-5a92-811e-669baf60fa4b', 'a365e428-06ba-5c4e-b3fb-3b1eb755b102', '69045ed1-0311-55cc-a9d1-5ff08b74073c', '103b3b98-c5ec-5850-b280-83a2c4488045', 'b56fc225-0884-57fe-9604-a5f47069571c', 'eed4181b-dcbb-5ee2-b6e2-44685205a62e', 'd53a306c-aa47-55c3-b52a-3b76f508e771', '789d8fb4-ef9b-57a5-971b-67821be37f1a', '927e93ec-4461-53b5-9378-38ef71fbb9b2', '03c3a61a-f9aa-5183-a4e0-994f72750e44', '7b7368b8-68e7-5388-a30c-503e4d1dc5dd', 'b4beed3e-de76-5a9d-b807-84d386df921d', '860343a5-fe3b-56a4-943f-74ea5732b0ef', '6f9f38b1-0cf8-50cf-97b9-f7484f39aac2', 'f7705088-66ed-5e8d-b23e-63a1f2eb6260', '6d2559a3-989d-53df-8054-651a6ed1b9f6', '358f2069-51cf-5a2a-be86-9b7f5e9ef89a', '6d3e559b-0449-57de-89b2-0ff23b9fd893', 'f2f3c849-25e9-53d0-b09e-4eff720714b2', '3ee10a83-a4d9-5855-bb7d-79425521b890', '2329c69b-07a0-5905-8d3b-82a269887104', '815783b6-b7f5-5dea-9eea-baaa8f7a3382', 'a2241625-9fa9-504f-841d-0b346289ca00', '1b86b32d-c59d-5d28-a86e-a87b3cd41919', '3fadd44b-aca0-5ece-b1a4-02766d4517e3', 'cbaa9f7f-4a56-5d1f-b53d-df4861ef1871', '83dfacbc-3c11-55bf-ad09-cc214abb3711', '1f4296d8-c07e-5e6d-b599-0022c8f72118', '3a935e4d-91f9-59c5-aed2-fbaedff745b6', 'a07afd33-a11b-52b9-b5ba-343427b0bc84', 'dbd55b7e-bb3e-5706-9186-e833923ce87d', '5aeed1da-a9ed-53f3-9f19-b9f22a1abc0d', '33b4e382-cde8-5e40-8398-c5e311c1ccf4', 'd6e6c9bc-90d2-5532-9fcf-52ddef7681b1', 'e91167fb-6b84-515a-9848-d07949d71c90', '28997c99-1b74-5330-8272-d08f4682b8c8', 'ee97c631-820f-50c1-9de3-58f140893afa', '5f51a382-45ef-51f7-a25b-2e95a78d6c1f', '676a25e8-1769-5b86-945f-06f2bf2d8548', 'cc3b9212-5768-5113-ad7b-2ba9128d740f', '0b03e40f-b428-588f-8ccc-c9431e9e0fda', 'ba963d3c-68cf-5c49-b62e-344049caab0e', 'c394033c-66d8-548c-951c-5472f4c41c30', 'efa163b4-a341-5c43-9bfb-142a7b277fa7', 'a467a610-6abe-5eac-ba05-83a1fa8608f7', '1ba1108b-cd4f-590a-b3ce-0e1bb8b0a251', '5f8ad45d-b161-562e-b38c-3524e78b7214', '26d2e999-0836-52ea-beac-d55e58bce05d', 'ca5f29a5-a523-5a3a-b6b2-f40db9ee0548', 'f43f9ef9-486d-5151-9ec5-2c5f7ad19738', '0adce953-7057-5641-b1cb-337665f8da31', 'b7b276c1-df61-5015-a396-ac06265465c7', '1cd7fbf9-2cc6-5eb7-879f-94d9ee76d569', '120db6b4-7f11-50e3-bbd3-e8ab5cbe63ff', 'e29bdbfe-677e-5173-8a30-dc1ddc813fe8', '9e3d2494-fea2-5244-b1a6-622c5560913b', 'a8a55df7-3f25-5d5b-8ea5-5f14e3c12204', '5e344432-2f71-56d6-abf1-5c8c31d537c9', '24a82297-67c0-5306-9121-6efc815a919e', '9bfeec0f-5f54-5365-9c20-356635d68e1c', '73d9a740-8761-50f2-a74c-f66483150482', 'a08dc674-1ad0-5709-ac2a-91fb09b03e23', '1a654666-d0cf-5a81-9244-aad9397d5ddb', 'ee69c6c1-c5df-5cd9-9da9-046389fb356f', 'd5881556-ec1e-57f7-9dde-d113d29c8710', '17071935-7310-51c2-a8d6-00bbac4c3e23', '72632bce-eb90-5864-8b0a-fd10908fafe1', 'e4bf56ff-2ae1-5126-9019-5800347aa34a', '1cfa6dc4-e445-543e-9cdf-1baae0c8f842', '00a19639-3883-5d3c-8924-c94faf49d549', 'db7ecffa-12db-5ebe-a71f-0b59145133eb', '4032fad4-617f-58e6-b390-53e4b2c6c1c6', '61ccedd3-9052-5b32-ab73-cd1879d56ae7', '6cc0e08b-af9c-5dce-b02f-5bd6587bd103', 'ed57c56c-2714-58cf-b436-afc5b1f0fb55', 'a704ca25-4e84-5194-ae74-d707994df17e', '3088ed38-3f25-5167-aa73-a51d2fb61486', '16ef4fd9-0bf8-5dcc-bcee-af59ae8bdb12', '64e55faa-0a53-52af-8b05-97dd07023788', '29b2923e-5b05-5c0d-abd3-f0e7bb7dd6eb');
 DELETE FROM public.chapters c WHERE c.subject_id = 'french' AND c.id NOT IN ('5abb4fbd-3a97-5ce3-b0c4-90a84acfcbe2', 'a6b09d55-6979-5a0c-99a4-248f315de0e4', '6e167f5c-fcde-5d6f-8695-e18a0b556cc7', '1a062e5a-ea6f-50ea-b0e9-80f9f0180d28', '8bea53f8-1edb-5ba6-ba7f-320bea5fe7d3', '139a1fb4-9bc1-5c2d-b0cc-abd4941a13a7', 'cca88b2d-cbd8-5e2a-a496-e9c176a67244', '383392ce-53c3-5d10-b090-6f6f48124bee') AND NOT EXISTS (SELECT 1 FROM public.exercises e WHERE e.chapter_id = c.id);
 
 INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order) VALUES
@@ -1047,6 +1047,68 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('1368c9b4-7ea9-5818-ad62-b7c96b0dbda1', '5abb4fbd-3a97-5ce3-b0c4-90a84acfcbe2', 'french', 'Quiz de compréhension', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('7a3d666a-ae97-5cca-b650-d0d8ab427c72', '1368c9b4-7ea9-5818-ad62-b7c96b0dbda1', 'Combien de types de phrases existe-t-il en français ?', '[{"id":"a","text":"Deux (affirmatif et négatif)"},{"id":"b","text":"Trois (déclaratif, interrogatif, exclamatif)"},{"id":"c","text":"Quatre (déclaratif, interrogatif, impératif, exclamatif)"},{"id":"d","text":"Cinq (déclaratif, interrogatif, impératif, exclamatif, emphatique)"}]'::jsonb, 'c', 'Il existe exactement quatre types de phrases : déclaratif (informer), interrogatif (questionner), impératif (ordonner/conseiller) et exclamatif (exprimer une émotion).', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('b2ff9a73-4e3e-5480-8908-65ac415b84b9', '1368c9b4-7ea9-5818-ad62-b7c96b0dbda1', 'Quelle est la caractéristique principale de la phrase impérative ?', '[{"id":"a","text":"Elle se termine toujours par un point d''exclamation."},{"id":"b","text":"Le sujet n''est pas exprimé et le verbe est à l''impératif."},{"id":"c","text":"Elle contient obligatoirement une négation."},{"id":"d","text":"Elle commence toujours par un mot interrogatif."}]'::jsonb, 'b', 'La phrase impérative se reconnaît à l''absence de sujet exprimé et au verbe conjugué à l''impératif (ex. : « Avance. », « Écoutons. »).', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d6a3e46e-b0b6-54a7-b112-b02150981080', '1368c9b4-7ea9-5818-ad62-b7c96b0dbda1', 'Quelle est la différence entre une interrogation totale et une interrogation partielle ?', '[{"id":"a","text":"L''interrogation totale utilise un mot interrogatif ; la partielle n''en utilise pas."},{"id":"b","text":"L''interrogation totale appelle une réponse oui/non ; la partielle porte sur un élément précis."},{"id":"c","text":"L''interrogation totale est au registre soutenu ; la partielle est familière."},{"id":"d","text":"L''interrogation totale utilise l''inversion du sujet ; la partielle utilise « est-ce que »."}]'::jsonb, 'b', 'L''interrogation totale appelle une réponse par oui ou non (ex. : « Viens-tu ? »). L''interrogation partielle porte sur un élément précis et utilise un mot interrogatif (qui, où, quand…).', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('b54bb455-90a0-51f8-85a9-bd1a7c6490b4', '1368c9b4-7ea9-5818-ad62-b7c96b0dbda1', 'Parmi les négations suivantes, laquelle est incorrecte selon les règles de la négation en deux mots ?', '[{"id":"a","text":"ne… pas"},{"id":"b","text":"ne… jamais"},{"id":"c","text":"ne… rien"},{"id":"d","text":"ne… oui"}]'::jsonb, 'd', 'La négation fonctionne toujours en deux mots encadrant le verbe : ne… pas, ne… jamais, ne… plus, ne… rien. « ne… oui » n''est pas une négation française.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('1f97d038-415e-5681-996d-bbb0881e4026', '1368c9b4-7ea9-5818-ad62-b7c96b0dbda1', 'Dans la phrase « C''est la reine qui décide. », quelle forme particulière est utilisée ?', '[{"id":"a","text":"La forme négative"},{"id":"b","text":"La forme passive"},{"id":"c","text":"La forme interrogative"},{"id":"d","text":"La forme emphatique"}]'::jsonb, 'd', 'Le présentatif « c''est… qui » met le sujet en relief : c''est la forme emphatique. Elle souligne l''importance d''un élément de la phrase.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('e8b74863-3fe8-5aad-a426-621ef75ec7ef', '5abb4fbd-3a97-5ce3-b0c4-90a84acfcbe2', 'french', 'Exercice : reconnaître types et formes', 1, 50, 10, 'practice', 'admin', 1)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -1182,6 +1244,68 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('aabce6d4-f8ce-58d2-8737-80d73b3f05c8', '3b342ef2-05e7-53d3-bded-effe80517ef5', 'Mets le sujet en relief : « Le héros sauve le village. »', '[{"id":"a","text":"C''est le village que le héros sauve."},{"id":"b","text":"C''est le héros qui sauve le village."},{"id":"c","text":"Le village est sauvé par le héros."},{"id":"d","text":"Le héros sauve-t-il le village ?"}]'::jsonb, 'b', 'Pour mettre le SUJET en relief, on emploie « c''est… qui » : « C''est le héros qui… ». L''option b met en relief le complément.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('28b6e6d9-1123-5ff7-8652-ff24bca1258a', 'a6b09d55-6979-5a0c-99a4-248f315de0e4', 'french', 'Quiz de compréhension', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('cd3e5a8a-d94f-58a0-8c6f-8838b820e67a', '28b6e6d9-1123-5ff7-8652-ff24bca1258a', 'Qu''est-ce qu''une proposition subordonnée ?', '[{"id":"a","text":"Une proposition autonome qui a un sens complet."},{"id":"b","text":"Une proposition qui dépend de la principale et ne peut pas se lire seule sans perdre son sens."},{"id":"c","text":"Une proposition qui contient toujours un pronom relatif."},{"id":"d","text":"Une proposition qui exprime toujours une condition."}]'::jsonb, 'b', 'La proposition subordonnée dépend de la principale : supprimée, la principale garde son sens ; mais la subordonnée seule perd le sien. Elle est introduite par un subordonnant.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('ef679ede-b207-51a6-b679-e6d7ec83f53a', '28b6e6d9-1123-5ff7-8652-ff24bca1258a', 'Quel pronom relatif est employé lorsque la subordonnée relative a la fonction de sujet ?', '[{"id":"a","text":"que"},{"id":"b","text":"dont"},{"id":"c","text":"qui"},{"id":"d","text":"où"}]'::jsonb, 'c', '« qui » est le pronom relatif sujet : « Le héros qui combat le dragon est courageux. » Le pronom relatif COD est « que », et « dont » remplace un groupe introduit par « de ».', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('3e6d1a0e-ebba-5662-9b50-235bc8111b80', '28b6e6d9-1123-5ff7-8652-ff24bca1258a', 'La subordonnée complétive est introduite par la conjonction « que » et a la fonction de :', '[{"id":"a","text":"Complément circonstanciel de cause"},{"id":"b","text":"COD du verbe principal"},{"id":"c","text":"Sujet de la proposition principale"},{"id":"d","text":"Complément d''agent"}]'::jsonb, 'b', 'La subordonnée complétive est COD du verbe principal et peut être remplacée par « cela » : « Je crois que le héros vaincra. » → « Je crois cela. »', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('051afec1-27e6-5b01-a35c-113fd8d1d9cc', '28b6e6d9-1123-5ff7-8652-ff24bca1258a', 'Quelle conjonction introduit une subordonnée de but et exige le subjonctif ?', '[{"id":"a","text":"parce que"},{"id":"b","text":"si bien que"},{"id":"c","text":"pour que"},{"id":"d","text":"après que"}]'::jsonb, 'c', '« pour que » (ainsi qu''« afin que ») introduit une subordonnée de but, toujours au subjonctif : « Il s''entraîne pour que son équipe gagne. »', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('940021d7-b5b4-5449-83ea-ce2fbc279ff3', '28b6e6d9-1123-5ff7-8652-ff24bca1258a', 'Dans la phrase conditionnelle « Si tu t''entraînais, tu vaincrais. », quel est le temps du verbe dans la subordonnée introduite par « si » ?', '[{"id":"a","text":"Le futur simple"},{"id":"b","text":"Le conditionnel présent"},{"id":"c","text":"L''imparfait"},{"id":"d","text":"Le subjonctif présent"}]'::jsonb, 'c', 'Après « si » de condition exprimant un fait éventuel (hypothèse), on emploie l''imparfait dans la subordonnée et le conditionnel présent dans la principale. On n''emploie jamais le futur ni le conditionnel après « si ».', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1335,6 +1459,68 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('a5ad7b9f-577b-53bd-a84c-f6b7fb550adc', '6e167f5c-fcde-5d6f-8695-e18a0b556cc7', 'french', 'Quiz de compréhension', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('4a4ba085-73fa-5f77-bfdc-a81caab9b51e', 'a5ad7b9f-577b-53bd-a84c-f6b7fb550adc', 'Quelle est la structure du groupe verbal à la voix passive ?', '[{"id":"a","text":"Verbe conjugué normalement"},{"id":"b","text":"Auxiliaire « avoir » + participe passé"},{"id":"c","text":"Auxiliaire « être » conjugué + participe passé accordé avec le sujet"},{"id":"d","text":"Verbe à l''infinitif précédé de « faire »"}]'::jsonb, 'c', 'La voix passive se construit avec l''auxiliaire « être » conjugué au temps voulu, suivi du participe passé qui s''accorde en genre et en nombre avec le sujet.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('75e4d82d-47e0-5432-b840-67558c7322b8', 'a5ad7b9f-577b-53bd-a84c-f6b7fb550adc', 'Lors de la transformation active → passive, que devient le COD de la phrase active ?', '[{"id":"a","text":"Le complément d''agent de la phrase passive"},{"id":"b","text":"Le sujet de la phrase passive"},{"id":"c","text":"Il disparaît de la phrase"},{"id":"d","text":"L''attribut du sujet passif"}]'::jsonb, 'b', 'Règle de transformation : le COD de la phrase active devient le sujet de la phrase passive ; l''ancien sujet actif devient le complément d''agent introduit par « par » ou « de ».', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('9fec6335-9472-5469-846a-75981fedeba3', 'a5ad7b9f-577b-53bd-a84c-f6b7fb550adc', 'Quel type de verbe NE peut PAS se mettre à la voix passive ?', '[{"id":"a","text":"Un verbe transitif direct comme « corriger »"},{"id":"b","text":"Un verbe transitif direct comme « frapper »"},{"id":"c","text":"Un verbe intransitif comme « dormir »"},{"id":"d","text":"Un verbe transitif direct comme « lire »"}]'::jsonb, 'c', 'Seuls les verbes transitifs directs (qui ont un COD) peuvent se mettre à la voix passive. Les verbes intransitifs comme « dormir », « partir » ou « ressembler à » ne le peuvent pas.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('19564ab9-63a3-530c-a139-4913f70fcd20', 'a5ad7b9f-577b-53bd-a84c-f6b7fb550adc', 'Comment transforme-t-on à la voix active la phrase passive « La porte a été fermée. » quand il n''y a pas de complément d''agent ?', '[{"id":"a","text":"Ils ont fermé la porte."},{"id":"b","text":"La porte ferme."},{"id":"c","text":"On a fermé la porte."},{"id":"d","text":"La porte fermait."}]'::jsonb, 'c', 'Quand la phrase passive n''a pas de complément d''agent, on utilise le sujet indéfini « on » à la voix active : « La porte a été fermée. » → « On a fermé la porte. »', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('783bb08e-d6a7-5d72-ae16-851a5e696425', 'a5ad7b9f-577b-53bd-a84c-f6b7fb550adc', 'Quel est l''intérêt stylistique principal de la voix passive ?', '[{"id":"a","text":"Elle met en avant celui qui agit (le sujet-agent)."},{"id":"b","text":"Elle met en avant celui qui subit l''action (l''objet devenu sujet)."},{"id":"c","text":"Elle simplifie toujours la phrase."},{"id":"d","text":"Elle exprime une hypothèse."}]'::jsonb, 'b', 'La voix passive met en lumière celui qui subit l''action. Ex. : « La vérité est révélée par le journaliste. » → l''accent est sur la vérité, pas sur le journaliste.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('12f9cc53-1641-5e87-9958-ae1375000007', '6e167f5c-fcde-5d6f-8695-e18a0b556cc7', 'french', 'Exercice : reconnaître et transformer les voix', 2, 75, 15, 'practice', 'admin', 1)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -1470,6 +1656,68 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('f22c973f-b551-5ada-b930-ce0801010307', '0cec718c-9b55-5aa5-b40e-ad20fffbe4ed', 'Quelle phrase contient une erreur dans la transformation active → passive ?', '[{"id":"a","text":"Le chien a mordu Paul. → Paul a été mordu par le chien. ✓"},{"id":"b","text":"Les élèves ont applaudi la pièce. → La pièce a été applaudi par les élèves."},{"id":"c","text":"La pluie abîme les récoltes. → Les récoltes sont abîmées par la pluie. ✓"},{"id":"d","text":"Le professeur punira l''élève. → L''élève sera puni par le professeur. ✓"}]'::jsonb, 'b', 'Le sujet passif est « la pièce » (féminin singulier) : le participe passé doit s''accorder → « applaudie ». L''option d comporte une erreur d''accord (« applaudi » au lieu de « applaudie »).', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('06501a61-9965-5426-8256-57479f8c4308', '1a062e5a-ea6f-50ea-b0e9-80f9f0180d28', 'french', 'Quiz de compréhension', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('6d1bf493-f6d4-5de2-8d8f-4e728127758b', '06501a61-9965-5426-8256-57479f8c4308', 'Quels signes de ponctuation caractérisent le discours direct ?', '[{"id":"a","text":"Des parenthèses et des crochets"},{"id":"b","text":"Des deux-points, des guillemets (« … ») et éventuellement des tirets"},{"id":"c","text":"Uniquement des virgules et des points-virgules"},{"id":"d","text":"Des astérisques et des points de suspension"}]'::jsonb, 'b', 'Le discours direct se reconnaît aux deux-points annonçant les paroles, aux guillemets les encadrant et aux tirets marquant les changements d''interlocuteur dans un dialogue.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d54d5b3a-c34c-5314-8b03-d3350d485dcd', '06501a61-9965-5426-8256-57479f8c4308', 'Pour transposer au discours indirect une question totale du type « Viens-tu ? », quel outil de subordination utilise-t-on ?', '[{"id":"a","text":"que"},{"id":"b","text":"ce que"},{"id":"c","text":"si"},{"id":"d","text":"de + infinitif"}]'::jsonb, 'c', 'Une question totale (réponse oui/non) est introduite au discours indirect par « si » : « Viens-tu ? » → Il demande si tu viens.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('633f9e2a-6695-5ff9-b6f6-934cbe3e687f', '06501a61-9965-5426-8256-57479f8c4308', 'Le verbe introducteur est au passé : « Elle dit : ''Je travaille.'' » Quel temps prend le verbe au discours indirect ?', '[{"id":"a","text":"Le présent"},{"id":"b","text":"L''imparfait"},{"id":"c","text":"Le plus-que-parfait"},{"id":"d","text":"Le conditionnel présent"}]'::jsonb, 'b', 'Quand le verbe introducteur est au passé, le présent du discours direct devient l''imparfait au discours indirect : « Je travaille. » → Elle dit qu''elle travaillait.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('0a8d594c-bdec-5df8-a62e-51a618c211c4', '06501a61-9965-5426-8256-57479f8c4308', 'Comment transforme-t-on « aujourd''hui » du discours direct en discours indirect (verbe introducteur au passé) ?', '[{"id":"a","text":"demain"},{"id":"b","text":"la veille"},{"id":"c","text":"le lendemain"},{"id":"d","text":"ce jour-là"}]'::jsonb, 'd', 'Les indicateurs de temps s''adaptent au discours indirect : « aujourd''hui » devient « ce jour-là », « hier » devient « la veille », « demain » devient « le lendemain ».', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('e076c07d-7d92-5511-a4ab-c5711a2c73cd', '06501a61-9965-5426-8256-57479f8c4308', 'Au discours indirect, un ordre à l''impératif est transposé grâce à :', '[{"id":"a","text":"la conjonction « que » + subjonctif présent"},{"id":"b","text":"la préposition « de » + infinitif"},{"id":"c","text":"la conjonction « si » + indicatif"},{"id":"d","text":"le pronom relatif « qui » + verbe conjugué"}]'::jsonb, 'b', 'Un impératif se transforme au discours indirect en « de + infinitif » : « Pars ! » → Il lui ordonne de partir.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1633,6 +1881,68 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('ad167a20-ae28-5904-9ce3-00d98dc0577e', '8bea53f8-1edb-5ba6-ba7f-320bea5fe7d3', 'french', 'Quiz de compréhension', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('860343a5-fe3b-56a4-943f-74ea5732b0ef', 'ad167a20-ae28-5904-9ce3-00d98dc0577e', 'Quel mode exprime un fait réel, certain ou daté ?', '[{"id":"a","text":"Le subjonctif"},{"id":"b","text":"Le conditionnel"},{"id":"c","text":"L''impératif"},{"id":"d","text":"L''indicatif"}]'::jsonb, 'd', 'L''indicatif exprime les faits réels, certains ou datés (ex. : « Il part. / Il partira. »). Le subjonctif exprime le possible ou le souhaité, le conditionnel l''hypothèse.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('6f9f38b1-0cf8-50cf-97b9-f7484f39aac2', 'ad167a20-ae28-5904-9ce3-00d98dc0577e', 'Comment se forme un temps composé en français ?', '[{"id":"a","text":"Par la répétition du verbe principal"},{"id":"b","text":"Par l''auxiliaire « avoir » ou « être » + participe passé"},{"id":"c","text":"Par le verbe « faire » + infinitif"},{"id":"d","text":"Par l''ajout du suffixe -ait au verbe"}]'::jsonb, 'b', 'Un temps composé est formé d''un auxiliaire (« avoir » ou « être ») conjugué au temps simple correspondant, suivi du participe passé. Ex. : passé composé = avoir/être au présent + participe passé.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('f7705088-66ed-5e8d-b23e-63a1f2eb6260', 'ad167a20-ae28-5904-9ce3-00d98dc0577e', 'Dans un récit au passé, quel temps est utilisé pour les descriptions et les actions de fond ?', '[{"id":"a","text":"Le passé simple"},{"id":"b","text":"Le futur simple"},{"id":"c","text":"L''imparfait"},{"id":"d","text":"Le passé antérieur"}]'::jsonb, 'c', 'L''imparfait sert au décor, à la description et aux actions de fond ou habituelles dans un récit au passé. Le passé simple, lui, exprime les actions ponctuelles qui font avancer le récit.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('6d2559a3-989d-53df-8054-651a6ed1b9f6', 'ad167a20-ae28-5904-9ce3-00d98dc0577e', 'Quelle est la règle de formation du subjonctif présent ?', '[{"id":"a","text":"Radical du futur simple + terminaisons de l''imparfait"},{"id":"b","text":"Radical de la 3e personne du pluriel du présent de l''indicatif + terminaisons -e, -es, -e, -ions, -iez, -ent"},{"id":"c","text":"Infinitif sans -er + terminaisons -ais, -ais, -ait, -ions, -iez, -aient"},{"id":"d","text":"Participe présent + terminaisons du présent"}]'::jsonb, 'b', 'Le subjonctif présent se forme sur le radical de la 3e personne du pluriel du présent de l''indicatif, auquel on ajoute les terminaisons -e, -es, -e, -ions, -iez, -ent (ex. : ils finissent → qu''il finisse).', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('358f2069-51cf-5a2a-be86-9b7f5e9ef89a', 'ad167a20-ae28-5904-9ce3-00d98dc0577e', 'Quelle valeur exprime le conditionnel présent dans la phrase « Il partirait s''il pouvait. » ?', '[{"id":"a","text":"Un ordre poli"},{"id":"b","text":"Une vérité générale"},{"id":"c","text":"Un fait soumis à une condition (hypothèse)"},{"id":"d","text":"Une action accomplie avant une autre"}]'::jsonb, 'c', 'Le conditionnel présent exprime ici une hypothèse : l''action dépend d''une condition (si + imparfait → conditionnel présent). Il peut aussi exprimer la politesse ou une information non confirmée.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('b89d641c-95d4-5820-875a-3bac22a2add4', '8bea53f8-1edb-5ba6-ba7f-320bea5fe7d3', 'french', 'Exercice : modes et temps verbaux', 2, 75, 15, 'practice', 'admin', 1)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -1774,6 +2084,68 @@ ON CONFLICT (id) DO UPDATE SET
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('3a935e4d-91f9-59c5-aed2-fbaedff745b6', '7efc2dc4-09b3-576b-b2f2-78e7a6288526', 'Complète avec la forme correcte :
 « Il faut que vous ___ la vérité. » (verbe : dire)', '[{"id":"a","text":"disiez"},{"id":"b","text":"direz"},{"id":"c","text":"dites"},{"id":"d","text":"diriez"}]'::jsonb, 'a', 'Après « il faut que », on emploie le subjonctif présent. Pour « dire » à la 2e personne du pluriel, le radical est « dis- » (ils disent → dis-) et la terminaison est « -iez » → disiez. L''option b est le futur de l''indicatif ; c est le présent de l''indicatif ou l''impératif ; d est le conditionnel présent.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('c4e4212c-8f83-5e3b-aa43-0d6d3e5a9fba', '139a1fb4-9bc1-5c2d-b0cc-abd4941a13a7', 'french', 'Quiz de compréhension', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('a07afd33-a11b-52b9-b5ba-343427b0bc84', 'c4e4212c-8f83-5e3b-aa43-0d6d3e5a9fba', 'Qu''est-ce que la concordance des temps ?', '[{"id":"a","text":"Une règle qui impose d''adapter le temps du verbe subordonné au temps du verbe principal pour assurer la cohérence temporelle."},{"id":"b","text":"Une règle qui impose d''accorder le participe passé avec le sujet."},{"id":"c","text":"Une règle qui oblige à employer le passé simple dans tous les récits littéraires."},{"id":"d","text":"Une règle qui interdit l''emploi du subjonctif dans une subordonnée."}]'::jsonb, 'a', 'La concordance des temps est la règle qui impose d''adapter le temps du verbe de la subordonnée au temps du verbe principal afin d''assurer la cohérence temporelle du texte.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('dbd55b7e-bb3e-5706-9186-e833923ce87d', 'c4e4212c-8f83-5e3b-aa43-0d6d3e5a9fba', 'Dans un récit au passé, quel temps exprime une action antérieure à une autre action passée ?', '[{"id":"a","text":"Le passé simple"},{"id":"b","text":"L''imparfait"},{"id":"c","text":"Le plus-que-parfait"},{"id":"d","text":"Le futur antérieur"}]'::jsonb, 'c', 'Le plus-que-parfait (auxiliaire à l''imparfait + participe passé) marque une action antérieure à une autre action passée. Ex. : « Il avait préparé son plan avant de lancer l''attaque. »', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('5aeed1da-a9ed-53f3-9f19-b9f22a1abc0d', 'c4e4212c-8f83-5e3b-aa43-0d6d3e5a9fba', 'Dans la phrase « Pendant qu''il courait, la tempête faisait rage. », quelle relation temporelle unit les deux actions ?', '[{"id":"a","text":"Antériorité : la course précède la tempête."},{"id":"b","text":"Postériorité : la tempête suit la course."},{"id":"c","text":"Simultanéité : les deux actions se déroulent en même temps."},{"id":"d","text":"Hypothèse : la course est une condition de la tempête."}]'::jsonb, 'c', 'L''emploi de l''imparfait dans les deux propositions exprime la simultanéité : les deux actions se déroulent en même temps. « Pendant que » renforce cette idée.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('33b4e382-cde8-5e40-8398-c5e311c1ccf4', 'c4e4212c-8f83-5e3b-aa43-0d6d3e5a9fba', 'Dans le discours indirect, quand le verbe introducteur est au passé, le futur simple du discours direct devient :', '[{"id":"a","text":"L''imparfait"},{"id":"b","text":"Le plus-que-parfait"},{"id":"c","text":"Le conditionnel présent"},{"id":"d","text":"Le subjonctif présent"}]'::jsonb, 'c', 'Règle de concordance au discours indirect (verbe introducteur au passé) : futur simple → conditionnel présent. Ex. : « Je partirai. » → Il dit qu''il partirait.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d6e6c9bc-90d2-5532-9fcf-52ddef7681b1', 'c4e4212c-8f83-5e3b-aa43-0d6d3e5a9fba', 'Le passé antérieur s''emploie principalement dans les subordonnées introduites par « dès que », « quand », « lorsque » pour indiquer :', '[{"id":"a","text":"Une action simultanée à un verbe au passé simple."},{"id":"b","text":"Une habitude répétée dans le passé."},{"id":"c","text":"Une action postérieure à un verbe à l''imparfait."},{"id":"d","text":"Une antériorité immédiate par rapport à un verbe au passé simple."}]'::jsonb, 'd', 'Le passé antérieur (auxiliaire au passé simple + participe passé) exprime une antériorité immédiate par rapport à un verbe principal au passé simple. Ex. : « Quand il eut fini son discours, les guerriers partirent. »', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1927,6 +2299,68 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('8d1de601-0c73-557f-a3b4-d45a964a2872', 'cca88b2d-cbd8-5e2a-a496-e9c176a67244', 'french', 'Quiz de compréhension', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('5f8ad45d-b161-562e-b38c-3524e78b7214', '8d1de601-0c73-557f-a3b4-d45a964a2872', 'Qu''est-ce qu''un préfixe ?', '[{"id":"a","text":"La partie centrale d''un mot qui porte le sens de base."},{"id":"b","text":"Un élément placé après le radical pour changer la catégorie ou le sens du mot."},{"id":"c","text":"Un élément placé avant le radical pour modifier le sens du mot."},{"id":"d","text":"Un mot appartenant au même champ lexical qu''un autre."}]'::jsonb, 'c', 'Le préfixe est un élément placé avant le radical pour modifier le sens du mot. Ex. : « im- » dans « impossible » ; « re- » dans « relire ». Le suffixe, lui, se place après le radical.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('26d2e999-0836-52ea-beac-d55e58bce05d', '8d1de601-0c73-557f-a3b4-d45a964a2872', 'Quelle est la différence entre le champ lexical et le champ sémantique ?', '[{"id":"a","text":"Le champ lexical regroupe les différents sens d''un mot ; le champ sémantique regroupe tous les mots liés à un thème."},{"id":"b","text":"Le champ lexical regroupe tous les mots liés à un thème ; le champ sémantique regroupe les différents sens d''un même mot selon le contexte."},{"id":"c","text":"Le champ lexical est synonyme du champ sémantique."},{"id":"d","text":"Le champ lexical concerne uniquement les adjectifs ; le champ sémantique concerne les verbes."}]'::jsonb, 'b', 'Le champ lexical regroupe tous les mots (de catégories variées) se rapportant à un même thème. Le champ sémantique d''un mot regroupe tous les sens différents que ce mot peut avoir selon le contexte.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('ca5f29a5-a523-5a3a-b6b2-f40db9ee0548', '8d1de601-0c73-557f-a3b4-d45a964a2872', 'Les mots « verre » (récipient), « vers » (poème), « vert » (couleur) et « ver » (animal) sont des :', '[{"id":"a","text":"Synonymes"},{"id":"b","text":"Antonymes"},{"id":"c","text":"Paronymes"},{"id":"d","text":"Homonymes"}]'::jsonb, 'd', 'Les homonymes sont des mots de prononciation identique mais de sens différents. « verre », « vers », « vert » et « ver » se prononcent tous [vɛʁ] mais n''ont pas le même sens.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('f43f9ef9-486d-5151-9ec5-2c5f7ad19738', '8d1de601-0c73-557f-a3b4-d45a964a2872', 'Quelle est la différence entre une comparaison et une métaphore ?', '[{"id":"a","text":"La comparaison est toujours plus courte que la métaphore."},{"id":"b","text":"La comparaison utilise un outil comparatif explicite (comme, tel…) ; la métaphore identifie directement le comparé au comparant sans outil."},{"id":"c","text":"La métaphore utilise un outil comparatif ; la comparaison n''en utilise pas."},{"id":"d","text":"La comparaison s''applique uniquement aux personnes ; la métaphore aux objets."}]'::jsonb, 'b', 'La comparaison rapproche deux éléments à l''aide d''un outil comparatif (comme, tel, pareil à…). La métaphore fait le même rapprochement mais sans outil : elle identifie directement le comparé au comparant. Ex. : « fort comme un lion » (comparaison) vs « ce guerrier est un lion » (métaphore).', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('0adce953-7057-5641-b1cb-337665f8da31', '8d1de601-0c73-557f-a3b4-d45a964a2872', 'La figure de style qui consiste à attribuer des caractéristiques humaines à un objet, un animal ou une abstraction s''appelle :', '[{"id":"a","text":"Une hyperbole"},{"id":"b","text":"Une gradation"},{"id":"c","text":"Une personnification"},{"id":"d","text":"Une énumération"}]'::jsonb, 'c', 'La personnification attribue des caractéristiques humaines à ce qui n''est pas humain. Ex. : « La tempête hurlait sa fureur. » L''hyperbole est une exagération expressive ; la gradation est une suite ordonnée par intensité.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('b3042e50-068f-5b9f-91d5-e64df884f924', 'cca88b2d-cbd8-5e2a-a496-e9c176a67244', 'french', 'Exercice : vocabulaire et figures de style', 2, 75, 15, 'practice', 'admin', 1)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -2062,6 +2496,68 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('1a654666-d0cf-5a81-9244-aad9397d5ddb', '25f31af7-de92-57ff-93ce-e6dc3127c707', 'Dans ce passage, quel est le champ lexical dominant ? « Les lames claquaient, les boucliers résonnaient, les flèches sifflaient, le sang coulait. »', '[{"id":"a","text":"La nature"},{"id":"b","text":"Le combat / la guerre"},{"id":"c","text":"La musique"},{"id":"d","text":"Le voyage"}]'::jsonb, 'b', 'Les mots « lames », « boucliers », « flèches », « sang » appartiennent tous au champ lexical du combat et de la guerre, qui est le thème dominant du passage.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('d49bcd74-d20a-552c-9658-c0d86e053975', '383392ce-53c3-5d10-b090-6f6f48124bee', 'french', 'Quiz de compréhension', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('ee69c6c1-c5df-5cd9-9da9-046389fb356f', 'd49bcd74-d20a-552c-9658-c0d86e053975', 'Quel est le but principal d''un texte argumentatif ?', '[{"id":"a","text":"Raconter une suite d''événements."},{"id":"b","text":"Décrire un personnage ou un lieu."},{"id":"c","text":"Expliquer un phénomène de façon neutre."},{"id":"d","text":"Convaincre le lecteur et défendre une thèse."}]'::jsonb, 'd', 'Le texte argumentatif a pour but de convaincre le lecteur en défendant une thèse. On y trouve des arguments, des exemples et des connecteurs logiques (cependant, donc, or…).', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d5881556-ec1e-57f7-9dde-d113d29c8710', 'd49bcd74-d20a-552c-9658-c0d86e053975', 'Dans le schéma narratif, quel élément rompt l''équilibre initial et déclenche l''histoire ?', '[{"id":"a","text":"La situation initiale"},{"id":"b","text":"Les péripéties"},{"id":"c","text":"L''élément perturbateur"},{"id":"d","text":"La situation finale"}]'::jsonb, 'c', 'L''élément perturbateur (ou déclencheur) rompt l''équilibre de la situation initiale et lance les péripéties. Il est généralement exprimé par un verbe d''action au passé simple.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('17071935-7310-51c2-a8d6-00bbac4c3e23', 'd49bcd74-d20a-552c-9658-c0d86e053975', 'Quels temps verbaux caractérisent avant tout le texte descriptif ?', '[{"id":"a","text":"Le passé simple et le passé antérieur"},{"id":"b","text":"L''imparfait (dans un récit) ou le présent (description autonome)"},{"id":"c","text":"Le futur simple et le conditionnel présent"},{"id":"d","text":"Le subjonctif présent et l''impératif"}]'::jsonb, 'b', 'Le texte descriptif emploie l''imparfait (description insérée dans un récit) ou le présent (description autonome), avec des adjectifs qualificatifs, des verbes d''état et des comparaisons.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('72632bce-eb90-5864-8b0a-fd10908fafe1', 'd49bcd74-d20a-552c-9658-c0d86e053975', 'Quel connecteur logique exprime une relation de conséquence ?', '[{"id":"a","text":"cependant"},{"id":"b","text":"par exemple"},{"id":"c","text":"donc"},{"id":"d","text":"auparavant"}]'::jsonb, 'c', '« donc » (ainsi que « c''est pourquoi », « par conséquent ») est un connecteur de conséquence. « cependant » exprime l''opposition, « par exemple » l''illustration, et « auparavant » l''antériorité temporelle.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('e4bf56ff-2ae1-5126-9019-5800347aa34a', 'd49bcd74-d20a-552c-9658-c0d86e053975', 'Dans un texte narratif, quel temps est principalement utilisé pour les actions ponctuelles qui font avancer le récit ?', '[{"id":"a","text":"L''imparfait"},{"id":"b","text":"Le présent de vérité générale"},{"id":"c","text":"Le plus-que-parfait"},{"id":"d","text":"Le passé simple"}]'::jsonb, 'd', 'Dans un récit littéraire, le passé simple exprime les actions ponctuelles et délimitées qui font progresser l''histoire. L''imparfait, lui, est réservé aux descriptions et aux actions de fond.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,

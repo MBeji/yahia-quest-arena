@@ -1,0 +1,66 @@
+{
+  "title": "Quiz de compréhension",
+  "questions": [
+    {
+      "prompt": "Quel mode exprime un fait réel, certain ou daté ?",
+      "options": [
+        { "id": "a", "text": "Le subjonctif" },
+        { "id": "b", "text": "Le conditionnel" },
+        { "id": "c", "text": "L'impératif" },
+        { "id": "d", "text": "L'indicatif" }
+      ],
+      "correctOption": "d",
+      "explanation": "L'indicatif exprime les faits réels, certains ou datés (ex. : « Il part. / Il partira. »). Le subjonctif exprime le possible ou le souhaité, le conditionnel l'hypothèse."
+    },
+    {
+      "prompt": "Comment se forme un temps composé en français ?",
+      "options": [
+        { "id": "a", "text": "Par la répétition du verbe principal" },
+        { "id": "b", "text": "Par l'auxiliaire « avoir » ou « être » + participe passé" },
+        { "id": "c", "text": "Par le verbe « faire » + infinitif" },
+        { "id": "d", "text": "Par l'ajout du suffixe -ait au verbe" }
+      ],
+      "correctOption": "b",
+      "explanation": "Un temps composé est formé d'un auxiliaire (« avoir » ou « être ») conjugué au temps simple correspondant, suivi du participe passé. Ex. : passé composé = avoir/être au présent + participe passé."
+    },
+    {
+      "prompt": "Dans un récit au passé, quel temps est utilisé pour les descriptions et les actions de fond ?",
+      "options": [
+        { "id": "a", "text": "Le passé simple" },
+        { "id": "b", "text": "Le futur simple" },
+        { "id": "c", "text": "L'imparfait" },
+        { "id": "d", "text": "Le passé antérieur" }
+      ],
+      "correctOption": "c",
+      "explanation": "L'imparfait sert au décor, à la description et aux actions de fond ou habituelles dans un récit au passé. Le passé simple, lui, exprime les actions ponctuelles qui font avancer le récit."
+    },
+    {
+      "prompt": "Quelle est la règle de formation du subjonctif présent ?",
+      "options": [
+        { "id": "a", "text": "Radical du futur simple + terminaisons de l'imparfait" },
+        {
+          "id": "b",
+          "text": "Radical de la 3e personne du pluriel du présent de l'indicatif + terminaisons -e, -es, -e, -ions, -iez, -ent"
+        },
+        {
+          "id": "c",
+          "text": "Infinitif sans -er + terminaisons -ais, -ais, -ait, -ions, -iez, -aient"
+        },
+        { "id": "d", "text": "Participe présent + terminaisons du présent" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le subjonctif présent se forme sur le radical de la 3e personne du pluriel du présent de l'indicatif, auquel on ajoute les terminaisons -e, -es, -e, -ions, -iez, -ent (ex. : ils finissent → qu'il finisse)."
+    },
+    {
+      "prompt": "Quelle valeur exprime le conditionnel présent dans la phrase « Il partirait s'il pouvait. » ?",
+      "options": [
+        { "id": "a", "text": "Un ordre poli" },
+        { "id": "b", "text": "Une vérité générale" },
+        { "id": "c", "text": "Un fait soumis à une condition (hypothèse)" },
+        { "id": "d", "text": "Une action accomplie avant une autre" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le conditionnel présent exprime ici une hypothèse : l'action dépend d'une condition (si + imparfait → conditionnel présent). Il peut aussi exprimer la politesse ou une information non confirmée."
+    }
+  ]
+}

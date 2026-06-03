@@ -26,11 +26,11 @@ BEGIN
       AND q.exercise_id = e.id
       AND e.subject_id = 'english'
       AND e.source = 'admin'
-      AND q.id NOT IN ('7241ee79-462b-5b3a-984c-eea640002fb0', '7a63341f-b75c-5f33-9964-f0a5e371d967', '43bd124a-3273-5b3d-babe-7c21c893d954', 'c4629643-cb37-5769-8cef-57760b3611f9', '499dffeb-77ba-571a-a272-ef6b68e30622', 'a5481854-86d1-56f3-8ac1-c1496af746ac', 'd8b38f06-1764-5f19-ba99-8f0fd06fd79b', '620f8003-045f-50cd-a9f5-2e24398d3bc5', '535f555e-00ec-541c-9430-c8c68f6f8bb0', '71117f1e-36c4-5a8e-b723-9dbc88418bf1', 'bc94054e-1446-5d04-8e8c-221f38cdcb9d', '90a789f4-e6c1-56be-86ef-0e8dd1a6eace', 'bc3de6df-27c5-564f-a509-4feb9efb0100', '14609924-058c-5c85-b515-6e83bfa1c218', '13f53f19-669d-5bae-bb4e-fee06ce7d631', '63809236-3326-5a22-bf77-ca09b2f1cd0c', '6259cdd8-58d3-5794-8789-ae21fa623ed6', 'c43f3d30-8f67-5e14-a3e2-445602f8671d', 'a79183ff-96f8-5044-a92c-581978d8d1c9', '937bbd74-4c72-52a9-a129-ef162fceeeb5', '67cf5732-4004-59fe-b4a5-bbc42565a024', '75c9c3aa-c5c6-57b3-a6ae-72b8b7d071e4', 'dafd7523-eee4-517a-9606-6b8f9a72155f', '37470435-85a2-505c-91ca-b117d0515933', '12f16b47-6a4c-5487-99e2-f1f5e592d512', '4ba459b0-dc9e-57f9-9175-81ba6c0d490d', 'bc58c470-1c5f-570b-b347-e040a8aaabbf', 'ea5d79b1-f11c-501e-b3aa-b94d4fb6c94f', 'f82a2c0b-e513-5770-8b2a-024116d6b3a1', '389a214c-d24f-5aff-b8e6-447a45ed35ed', 'dbf15f17-58e6-5ab5-b012-27b2368c4ca5', 'b8ad51f2-0d2f-5a46-ba24-3e956beb4367', 'e7a6d78a-35e1-5568-a53b-3be72295890c', 'fc5f7dad-9d09-5117-ba74-0cdae2c753c4', 'b3748c61-938a-5781-a6e3-e94630c69381', '723d0846-dcc9-57dc-a8d5-3f9a581abd90', 'a14eb5d9-6d29-5415-8ec9-f1557b3e5161', 'a039206b-03d4-5fc9-86ad-75e0019c4a70', '3e22eee7-36b9-5f3a-8e0f-5333d3b76fdf', '1e66eafa-708f-5de1-a6cc-2921d6e02ffc', '01ffd3bb-6105-5323-92a1-3cc14b8348db', 'd4455f0a-1f51-5dad-ad63-3e592ebb5d36', '59194e7b-1eac-57ca-935a-de51f43964ea', 'f2b8ba0d-7631-5805-8846-a5fa20b419c6', '3e6e3345-a167-528b-86c9-8f8012c051f7', '68c353c4-5d65-5e6c-a162-99ffe1dfcef8', '101b87bc-3422-5b24-b2e4-1cd2a0ca63ab', 'ed4adc8e-de97-5a8f-a68f-5601a89daaa2', '013e8407-3e0a-5ecc-af47-acfb7edf86d9', '57545cb8-cc45-5e9a-acc6-42102f111e27', 'ee916acc-ccc1-509c-934c-be74d6578dc8', 'c3be55d8-8928-58bb-bd27-181af4a0d5e3', '9f28f12e-250e-5f6c-9fe4-d5c4de564764', '402518e0-c2ac-5c9c-86c9-8db84a66c20a', 'fc64ccc6-a874-5048-aa2b-ec4bf7fedd1b', '349da296-708e-512c-98a5-f79c0d32d5fd', 'dd9dffa7-3d7a-5ecc-a39f-486149eb142f', '6d753d89-3393-5d46-80cb-7105df4178f0', '279267c3-6b7e-528e-a57e-a4ab75cfd473', 'a4ec5fc8-06d7-59b4-bdeb-31ef723ff6fb', 'cf42ec20-80b2-537e-a00e-3c58063c62ff', '0b38e0c4-8ce6-5c7a-a51b-cd1d96b9c7b9', '1886b0c7-fccb-565d-92ff-f84e3a6993f4', 'e072540f-1856-5eac-9a8e-db19cec747e6', 'a9e2968b-a92d-5746-9362-164238da0854', '7989200f-316a-50cf-a23b-c990be75e64e', '43b02806-bc22-570c-b797-0b37b895db64', '8fdfff8c-ddbd-5448-85e5-83a9f52730c9', 'c961b0e5-2864-5565-abe0-a6579f21445f', '86e69d95-8ade-5dc8-bc07-e6ac553e4be0', '02029c31-8bc4-5e35-8816-cce63c913e55', '01868ac1-1c85-531f-b957-c922c262d7c3', '94522885-b8e2-5f36-becc-435d20c867e2', '719aef66-3c4a-5ad6-9af9-50fd99dcfbce', 'a209293d-9928-57f6-8315-b45fbd4f39e3', '0c4cb780-1da9-5b34-bd95-073216e9116a', 'f4aafc66-106d-5f85-918e-89cb6ca105d1', '1ddeacd6-9014-5387-85ab-5ebca4c59ff1', '71e33276-0916-5dbf-9e87-3633f36b26be', '6f165226-6514-5ab3-8be5-8e7b31368205', 'c8e56ca4-49e2-5025-8b40-72839f6dcbf5', '97062025-2da0-52e1-b0a4-2dd3e6625115', 'ffba2614-6e95-5898-af20-4f54e0cfbf82', 'cd11e9b8-d66b-5df5-9042-1f71a4c1c943', '4ae0793a-71f0-59d6-9e51-a31b37912048', 'f68a2c08-9617-5c02-a318-9e30a4619989', 'a387198b-d83b-52a6-9faf-fd4740453fb6', '53788e4f-8c7e-5bbf-86e1-f3ffc3ebb034', '44355f34-9f8c-53a1-aadb-81d5245d24b4', '72cf3144-6f03-53f3-a57f-d413730520ed', '684457b0-f151-5355-b7de-b1cc7331c8e0', '78a7a0fe-8fa8-50d9-8c2f-f514647fb4fc', '118a1f96-6010-503b-a5bf-8d5a7fd05817', '2b2d3600-2cf9-5aa0-af06-ba7393c39024', '74caaa9d-d014-5673-8f8b-9c0121dc06c6', '481b204d-67d0-5c6e-b6f3-01c13e92b87e');
+      AND q.id NOT IN ('080d7783-083d-5532-a30c-825175ef6d09', '5c8be484-cc52-575b-ac02-d7dd39f06af1', '138d5e16-6d8d-5dde-8107-11d41bfa48e9', 'd819986f-cfe2-53f8-bd3e-f76c9aa3e3a5', '4e4014e1-cd1d-5dcc-aac5-f44926ed20ed', '7241ee79-462b-5b3a-984c-eea640002fb0', '7a63341f-b75c-5f33-9964-f0a5e371d967', '43bd124a-3273-5b3d-babe-7c21c893d954', 'c4629643-cb37-5769-8cef-57760b3611f9', '499dffeb-77ba-571a-a272-ef6b68e30622', 'a5481854-86d1-56f3-8ac1-c1496af746ac', 'd8b38f06-1764-5f19-ba99-8f0fd06fd79b', '620f8003-045f-50cd-a9f5-2e24398d3bc5', '535f555e-00ec-541c-9430-c8c68f6f8bb0', '71117f1e-36c4-5a8e-b723-9dbc88418bf1', 'bc94054e-1446-5d04-8e8c-221f38cdcb9d', '90a789f4-e6c1-56be-86ef-0e8dd1a6eace', 'b5fe6ca3-0ae0-5d0a-becc-64b5e9be71c2', '0bb52641-d98c-5fc5-a598-beb8dbb6ef71', 'def1e0d2-88c6-5665-b598-fcbea95f96eb', '0cb5ed33-22c7-5edc-901c-0c090a8ffbf8', 'f36a39c7-17e1-500d-a663-25676e3f151d', 'bc3de6df-27c5-564f-a509-4feb9efb0100', '14609924-058c-5c85-b515-6e83bfa1c218', '13f53f19-669d-5bae-bb4e-fee06ce7d631', '63809236-3326-5a22-bf77-ca09b2f1cd0c', '6259cdd8-58d3-5794-8789-ae21fa623ed6', 'c43f3d30-8f67-5e14-a3e2-445602f8671d', 'a79183ff-96f8-5044-a92c-581978d8d1c9', '937bbd74-4c72-52a9-a129-ef162fceeeb5', '67cf5732-4004-59fe-b4a5-bbc42565a024', '75c9c3aa-c5c6-57b3-a6ae-72b8b7d071e4', 'dafd7523-eee4-517a-9606-6b8f9a72155f', '37470435-85a2-505c-91ca-b117d0515933', '7b983cd9-c2c0-5a9c-a73c-ac98bf9d0808', 'd65ae3ef-84c2-5f87-b631-5f91de5eef1f', '1ceda0cf-76cc-5320-b521-1dbaaf81ff83', 'd607352b-8809-5647-8ea5-22f2ffea5f51', '8b0082a8-9de5-5939-9428-c20ddaf4909d', '12f16b47-6a4c-5487-99e2-f1f5e592d512', '4ba459b0-dc9e-57f9-9175-81ba6c0d490d', 'bc58c470-1c5f-570b-b347-e040a8aaabbf', 'ea5d79b1-f11c-501e-b3aa-b94d4fb6c94f', 'f82a2c0b-e513-5770-8b2a-024116d6b3a1', '389a214c-d24f-5aff-b8e6-447a45ed35ed', 'dbf15f17-58e6-5ab5-b012-27b2368c4ca5', 'b8ad51f2-0d2f-5a46-ba24-3e956beb4367', 'e7a6d78a-35e1-5568-a53b-3be72295890c', 'fc5f7dad-9d09-5117-ba74-0cdae2c753c4', 'b3748c61-938a-5781-a6e3-e94630c69381', '723d0846-dcc9-57dc-a8d5-3f9a581abd90', 'd1c87325-095a-555e-95d3-138f47124355', '18298070-040f-5ac3-b119-9cb6fb720fa2', '9fee0d9a-a27d-5059-b62b-3e5c40b1b7ed', 'a682336a-8cac-55fe-98ed-d13e41b90c21', '10cdbbe6-7c81-509f-9107-c3f8ea0bc615', 'a14eb5d9-6d29-5415-8ec9-f1557b3e5161', 'a039206b-03d4-5fc9-86ad-75e0019c4a70', '3e22eee7-36b9-5f3a-8e0f-5333d3b76fdf', '1e66eafa-708f-5de1-a6cc-2921d6e02ffc', '01ffd3bb-6105-5323-92a1-3cc14b8348db', 'd4455f0a-1f51-5dad-ad63-3e592ebb5d36', '59194e7b-1eac-57ca-935a-de51f43964ea', 'f2b8ba0d-7631-5805-8846-a5fa20b419c6', '3e6e3345-a167-528b-86c9-8f8012c051f7', '68c353c4-5d65-5e6c-a162-99ffe1dfcef8', '101b87bc-3422-5b24-b2e4-1cd2a0ca63ab', 'ed4adc8e-de97-5a8f-a68f-5601a89daaa2', '390d080b-349c-538c-9250-acd59fd6c1c3', '462d9345-5c31-5111-8ce8-314de8fd5caa', 'da303622-b350-5b8b-9b6d-370d9728bb8e', '902f8a7c-6687-5818-814b-a17e2eef1444', '32d6d026-1f7e-5d8d-9fea-2141ee659a6a', '013e8407-3e0a-5ecc-af47-acfb7edf86d9', '57545cb8-cc45-5e9a-acc6-42102f111e27', 'ee916acc-ccc1-509c-934c-be74d6578dc8', 'c3be55d8-8928-58bb-bd27-181af4a0d5e3', '9f28f12e-250e-5f6c-9fe4-d5c4de564764', '402518e0-c2ac-5c9c-86c9-8db84a66c20a', 'fc64ccc6-a874-5048-aa2b-ec4bf7fedd1b', '349da296-708e-512c-98a5-f79c0d32d5fd', 'dd9dffa7-3d7a-5ecc-a39f-486149eb142f', '6d753d89-3393-5d46-80cb-7105df4178f0', '279267c3-6b7e-528e-a57e-a4ab75cfd473', 'a4ec5fc8-06d7-59b4-bdeb-31ef723ff6fb', '79afc241-0f21-57eb-b2de-d9c503d9d75c', '3248e070-6326-5ec2-9a5c-9a6562bf3d43', 'a0d0bbc9-7f9c-56c2-a957-6fda2126ca6b', 'c5b5be7e-f4ab-55b6-a38e-181570ee31d9', 'b71e28ea-6533-5302-b2c9-9ddad3b2c439', 'cf42ec20-80b2-537e-a00e-3c58063c62ff', '0b38e0c4-8ce6-5c7a-a51b-cd1d96b9c7b9', '1886b0c7-fccb-565d-92ff-f84e3a6993f4', 'e072540f-1856-5eac-9a8e-db19cec747e6', 'a9e2968b-a92d-5746-9362-164238da0854', '7989200f-316a-50cf-a23b-c990be75e64e', '43b02806-bc22-570c-b797-0b37b895db64', '8fdfff8c-ddbd-5448-85e5-83a9f52730c9', 'c961b0e5-2864-5565-abe0-a6579f21445f', '86e69d95-8ade-5dc8-bc07-e6ac553e4be0', '02029c31-8bc4-5e35-8816-cce63c913e55', '01868ac1-1c85-531f-b957-c922c262d7c3', 'd5b41c1a-0a53-5c06-915c-102435d5c6c0', 'c4d34b52-281d-57e3-8460-aafe4175f0f5', '145aa30d-c72c-5e4d-9190-f15b093dd84f', '26cb3024-d046-5eee-baa5-4d6eac88fbb0', 'b165d39a-8b1a-559a-bc93-6ef918be4194', '94522885-b8e2-5f36-becc-435d20c867e2', '719aef66-3c4a-5ad6-9af9-50fd99dcfbce', 'a209293d-9928-57f6-8315-b45fbd4f39e3', '0c4cb780-1da9-5b34-bd95-073216e9116a', 'f4aafc66-106d-5f85-918e-89cb6ca105d1', '1ddeacd6-9014-5387-85ab-5ebca4c59ff1', '71e33276-0916-5dbf-9e87-3633f36b26be', '6f165226-6514-5ab3-8be5-8e7b31368205', 'c8e56ca4-49e2-5025-8b40-72839f6dcbf5', '97062025-2da0-52e1-b0a4-2dd3e6625115', 'ffba2614-6e95-5898-af20-4f54e0cfbf82', 'cd11e9b8-d66b-5df5-9042-1f71a4c1c943', 'd9e00dc9-ff59-55d0-9648-d429ed81295c', 'c76b8b99-9da2-5728-9cb2-f075223db346', '4935e3cb-7a61-50a1-b744-1f0b34d7815f', '1da5ec88-b844-5781-97cc-219745da8727', '3286e813-6caa-57ff-a8e3-c3606cb69310', '4ae0793a-71f0-59d6-9e51-a31b37912048', 'f68a2c08-9617-5c02-a318-9e30a4619989', 'a387198b-d83b-52a6-9faf-fd4740453fb6', '53788e4f-8c7e-5bbf-86e1-f3ffc3ebb034', '44355f34-9f8c-53a1-aadb-81d5245d24b4', '72cf3144-6f03-53f3-a57f-d413730520ed', '684457b0-f151-5355-b7de-b1cc7331c8e0', '78a7a0fe-8fa8-50d9-8c2f-f514647fb4fc', '118a1f96-6010-503b-a5bf-8d5a7fd05817', '2b2d3600-2cf9-5aa0-af06-ba7393c39024', '74caaa9d-d014-5673-8f8b-9c0121dc06c6', '481b204d-67d0-5c6e-b6f3-01c13e92b87e');
   END IF;
 END $$;
-DELETE FROM public.exercises WHERE subject_id = 'english' AND source = 'admin' AND id NOT IN ('6b8bbba1-76cd-5943-aa66-9d9da0f72492', '458c297a-6ea2-522c-9a6c-6dc0c6c7267b', '1874477b-34e6-5ff5-8fa9-35f4a38c5e2a', '870d7346-31c1-546f-8e25-ad1a12362ea7', '0ac40b31-da66-5e9a-b82f-2414438a00c5', 'efb66754-8009-5a3d-995a-6b71e9cf5537', 'd33dfa7f-2d01-5e1c-aac3-8c969ee05d93', '5e9f70de-f505-5482-a231-2c5e52d2bb68', '97d5948a-d69a-595c-a33a-175dd7c3b34e', 'aa6477e9-c60c-5771-9828-15c32bace66c', '69ebe656-2d06-5124-80fc-9f898ee0a2b8', '50566438-5c32-582c-9b59-43a0b96cc9a4', 'e2d9a8ce-ad7d-5cdd-a8af-04c3a19cea1d', '038be31c-9625-5dc2-8227-4a7402dbfe43', 'f9d67f42-c6fd-52d1-b4d8-658c24c4069e', '2cbeb6e5-2960-512e-9f42-e5cbe625a305');
-DELETE FROM public.questions WHERE exercise_id IN ('6b8bbba1-76cd-5943-aa66-9d9da0f72492', '458c297a-6ea2-522c-9a6c-6dc0c6c7267b', '1874477b-34e6-5ff5-8fa9-35f4a38c5e2a', '870d7346-31c1-546f-8e25-ad1a12362ea7', '0ac40b31-da66-5e9a-b82f-2414438a00c5', 'efb66754-8009-5a3d-995a-6b71e9cf5537', 'd33dfa7f-2d01-5e1c-aac3-8c969ee05d93', '5e9f70de-f505-5482-a231-2c5e52d2bb68', '97d5948a-d69a-595c-a33a-175dd7c3b34e', 'aa6477e9-c60c-5771-9828-15c32bace66c', '69ebe656-2d06-5124-80fc-9f898ee0a2b8', '50566438-5c32-582c-9b59-43a0b96cc9a4', 'e2d9a8ce-ad7d-5cdd-a8af-04c3a19cea1d', '038be31c-9625-5dc2-8227-4a7402dbfe43', 'f9d67f42-c6fd-52d1-b4d8-658c24c4069e', '2cbeb6e5-2960-512e-9f42-e5cbe625a305') AND id NOT IN ('7241ee79-462b-5b3a-984c-eea640002fb0', '7a63341f-b75c-5f33-9964-f0a5e371d967', '43bd124a-3273-5b3d-babe-7c21c893d954', 'c4629643-cb37-5769-8cef-57760b3611f9', '499dffeb-77ba-571a-a272-ef6b68e30622', 'a5481854-86d1-56f3-8ac1-c1496af746ac', 'd8b38f06-1764-5f19-ba99-8f0fd06fd79b', '620f8003-045f-50cd-a9f5-2e24398d3bc5', '535f555e-00ec-541c-9430-c8c68f6f8bb0', '71117f1e-36c4-5a8e-b723-9dbc88418bf1', 'bc94054e-1446-5d04-8e8c-221f38cdcb9d', '90a789f4-e6c1-56be-86ef-0e8dd1a6eace', 'bc3de6df-27c5-564f-a509-4feb9efb0100', '14609924-058c-5c85-b515-6e83bfa1c218', '13f53f19-669d-5bae-bb4e-fee06ce7d631', '63809236-3326-5a22-bf77-ca09b2f1cd0c', '6259cdd8-58d3-5794-8789-ae21fa623ed6', 'c43f3d30-8f67-5e14-a3e2-445602f8671d', 'a79183ff-96f8-5044-a92c-581978d8d1c9', '937bbd74-4c72-52a9-a129-ef162fceeeb5', '67cf5732-4004-59fe-b4a5-bbc42565a024', '75c9c3aa-c5c6-57b3-a6ae-72b8b7d071e4', 'dafd7523-eee4-517a-9606-6b8f9a72155f', '37470435-85a2-505c-91ca-b117d0515933', '12f16b47-6a4c-5487-99e2-f1f5e592d512', '4ba459b0-dc9e-57f9-9175-81ba6c0d490d', 'bc58c470-1c5f-570b-b347-e040a8aaabbf', 'ea5d79b1-f11c-501e-b3aa-b94d4fb6c94f', 'f82a2c0b-e513-5770-8b2a-024116d6b3a1', '389a214c-d24f-5aff-b8e6-447a45ed35ed', 'dbf15f17-58e6-5ab5-b012-27b2368c4ca5', 'b8ad51f2-0d2f-5a46-ba24-3e956beb4367', 'e7a6d78a-35e1-5568-a53b-3be72295890c', 'fc5f7dad-9d09-5117-ba74-0cdae2c753c4', 'b3748c61-938a-5781-a6e3-e94630c69381', '723d0846-dcc9-57dc-a8d5-3f9a581abd90', 'a14eb5d9-6d29-5415-8ec9-f1557b3e5161', 'a039206b-03d4-5fc9-86ad-75e0019c4a70', '3e22eee7-36b9-5f3a-8e0f-5333d3b76fdf', '1e66eafa-708f-5de1-a6cc-2921d6e02ffc', '01ffd3bb-6105-5323-92a1-3cc14b8348db', 'd4455f0a-1f51-5dad-ad63-3e592ebb5d36', '59194e7b-1eac-57ca-935a-de51f43964ea', 'f2b8ba0d-7631-5805-8846-a5fa20b419c6', '3e6e3345-a167-528b-86c9-8f8012c051f7', '68c353c4-5d65-5e6c-a162-99ffe1dfcef8', '101b87bc-3422-5b24-b2e4-1cd2a0ca63ab', 'ed4adc8e-de97-5a8f-a68f-5601a89daaa2', '013e8407-3e0a-5ecc-af47-acfb7edf86d9', '57545cb8-cc45-5e9a-acc6-42102f111e27', 'ee916acc-ccc1-509c-934c-be74d6578dc8', 'c3be55d8-8928-58bb-bd27-181af4a0d5e3', '9f28f12e-250e-5f6c-9fe4-d5c4de564764', '402518e0-c2ac-5c9c-86c9-8db84a66c20a', 'fc64ccc6-a874-5048-aa2b-ec4bf7fedd1b', '349da296-708e-512c-98a5-f79c0d32d5fd', 'dd9dffa7-3d7a-5ecc-a39f-486149eb142f', '6d753d89-3393-5d46-80cb-7105df4178f0', '279267c3-6b7e-528e-a57e-a4ab75cfd473', 'a4ec5fc8-06d7-59b4-bdeb-31ef723ff6fb', 'cf42ec20-80b2-537e-a00e-3c58063c62ff', '0b38e0c4-8ce6-5c7a-a51b-cd1d96b9c7b9', '1886b0c7-fccb-565d-92ff-f84e3a6993f4', 'e072540f-1856-5eac-9a8e-db19cec747e6', 'a9e2968b-a92d-5746-9362-164238da0854', '7989200f-316a-50cf-a23b-c990be75e64e', '43b02806-bc22-570c-b797-0b37b895db64', '8fdfff8c-ddbd-5448-85e5-83a9f52730c9', 'c961b0e5-2864-5565-abe0-a6579f21445f', '86e69d95-8ade-5dc8-bc07-e6ac553e4be0', '02029c31-8bc4-5e35-8816-cce63c913e55', '01868ac1-1c85-531f-b957-c922c262d7c3', '94522885-b8e2-5f36-becc-435d20c867e2', '719aef66-3c4a-5ad6-9af9-50fd99dcfbce', 'a209293d-9928-57f6-8315-b45fbd4f39e3', '0c4cb780-1da9-5b34-bd95-073216e9116a', 'f4aafc66-106d-5f85-918e-89cb6ca105d1', '1ddeacd6-9014-5387-85ab-5ebca4c59ff1', '71e33276-0916-5dbf-9e87-3633f36b26be', '6f165226-6514-5ab3-8be5-8e7b31368205', 'c8e56ca4-49e2-5025-8b40-72839f6dcbf5', '97062025-2da0-52e1-b0a4-2dd3e6625115', 'ffba2614-6e95-5898-af20-4f54e0cfbf82', 'cd11e9b8-d66b-5df5-9042-1f71a4c1c943', '4ae0793a-71f0-59d6-9e51-a31b37912048', 'f68a2c08-9617-5c02-a318-9e30a4619989', 'a387198b-d83b-52a6-9faf-fd4740453fb6', '53788e4f-8c7e-5bbf-86e1-f3ffc3ebb034', '44355f34-9f8c-53a1-aadb-81d5245d24b4', '72cf3144-6f03-53f3-a57f-d413730520ed', '684457b0-f151-5355-b7de-b1cc7331c8e0', '78a7a0fe-8fa8-50d9-8c2f-f514647fb4fc', '118a1f96-6010-503b-a5bf-8d5a7fd05817', '2b2d3600-2cf9-5aa0-af06-ba7393c39024', '74caaa9d-d014-5673-8f8b-9c0121dc06c6', '481b204d-67d0-5c6e-b6f3-01c13e92b87e');
+DELETE FROM public.exercises WHERE subject_id = 'english' AND source = 'admin' AND id NOT IN ('c4f248a7-393a-5c6d-b4af-90311f1ae35d', '6b8bbba1-76cd-5943-aa66-9d9da0f72492', '458c297a-6ea2-522c-9a6c-6dc0c6c7267b', '285d360a-8465-518f-990c-916004f4f3b5', '1874477b-34e6-5ff5-8fa9-35f4a38c5e2a', '870d7346-31c1-546f-8e25-ad1a12362ea7', '216cae02-7987-5531-b3fa-6af92e75e33d', '0ac40b31-da66-5e9a-b82f-2414438a00c5', 'efb66754-8009-5a3d-995a-6b71e9cf5537', '818e12ec-9c1e-52e1-8f1a-dde92ca62d2e', 'd33dfa7f-2d01-5e1c-aac3-8c969ee05d93', '5e9f70de-f505-5482-a231-2c5e52d2bb68', '04cd9fbd-81fc-5332-b16f-d4105405d5b6', '97d5948a-d69a-595c-a33a-175dd7c3b34e', 'aa6477e9-c60c-5771-9828-15c32bace66c', '6c069575-64c8-5d0f-bd94-5fda4d4c80a3', '69ebe656-2d06-5124-80fc-9f898ee0a2b8', '50566438-5c32-582c-9b59-43a0b96cc9a4', 'aac0bca3-f9b2-50e6-9fe5-095b3caed4c2', 'e2d9a8ce-ad7d-5cdd-a8af-04c3a19cea1d', '038be31c-9625-5dc2-8227-4a7402dbfe43', 'f34bbeba-a514-5828-9e27-2a8b3711fb93', 'f9d67f42-c6fd-52d1-b4d8-658c24c4069e', '2cbeb6e5-2960-512e-9f42-e5cbe625a305');
+DELETE FROM public.questions WHERE exercise_id IN ('c4f248a7-393a-5c6d-b4af-90311f1ae35d', '6b8bbba1-76cd-5943-aa66-9d9da0f72492', '458c297a-6ea2-522c-9a6c-6dc0c6c7267b', '285d360a-8465-518f-990c-916004f4f3b5', '1874477b-34e6-5ff5-8fa9-35f4a38c5e2a', '870d7346-31c1-546f-8e25-ad1a12362ea7', '216cae02-7987-5531-b3fa-6af92e75e33d', '0ac40b31-da66-5e9a-b82f-2414438a00c5', 'efb66754-8009-5a3d-995a-6b71e9cf5537', '818e12ec-9c1e-52e1-8f1a-dde92ca62d2e', 'd33dfa7f-2d01-5e1c-aac3-8c969ee05d93', '5e9f70de-f505-5482-a231-2c5e52d2bb68', '04cd9fbd-81fc-5332-b16f-d4105405d5b6', '97d5948a-d69a-595c-a33a-175dd7c3b34e', 'aa6477e9-c60c-5771-9828-15c32bace66c', '6c069575-64c8-5d0f-bd94-5fda4d4c80a3', '69ebe656-2d06-5124-80fc-9f898ee0a2b8', '50566438-5c32-582c-9b59-43a0b96cc9a4', 'aac0bca3-f9b2-50e6-9fe5-095b3caed4c2', 'e2d9a8ce-ad7d-5cdd-a8af-04c3a19cea1d', '038be31c-9625-5dc2-8227-4a7402dbfe43', 'f34bbeba-a514-5828-9e27-2a8b3711fb93', 'f9d67f42-c6fd-52d1-b4d8-658c24c4069e', '2cbeb6e5-2960-512e-9f42-e5cbe625a305') AND id NOT IN ('080d7783-083d-5532-a30c-825175ef6d09', '5c8be484-cc52-575b-ac02-d7dd39f06af1', '138d5e16-6d8d-5dde-8107-11d41bfa48e9', 'd819986f-cfe2-53f8-bd3e-f76c9aa3e3a5', '4e4014e1-cd1d-5dcc-aac5-f44926ed20ed', '7241ee79-462b-5b3a-984c-eea640002fb0', '7a63341f-b75c-5f33-9964-f0a5e371d967', '43bd124a-3273-5b3d-babe-7c21c893d954', 'c4629643-cb37-5769-8cef-57760b3611f9', '499dffeb-77ba-571a-a272-ef6b68e30622', 'a5481854-86d1-56f3-8ac1-c1496af746ac', 'd8b38f06-1764-5f19-ba99-8f0fd06fd79b', '620f8003-045f-50cd-a9f5-2e24398d3bc5', '535f555e-00ec-541c-9430-c8c68f6f8bb0', '71117f1e-36c4-5a8e-b723-9dbc88418bf1', 'bc94054e-1446-5d04-8e8c-221f38cdcb9d', '90a789f4-e6c1-56be-86ef-0e8dd1a6eace', 'b5fe6ca3-0ae0-5d0a-becc-64b5e9be71c2', '0bb52641-d98c-5fc5-a598-beb8dbb6ef71', 'def1e0d2-88c6-5665-b598-fcbea95f96eb', '0cb5ed33-22c7-5edc-901c-0c090a8ffbf8', 'f36a39c7-17e1-500d-a663-25676e3f151d', 'bc3de6df-27c5-564f-a509-4feb9efb0100', '14609924-058c-5c85-b515-6e83bfa1c218', '13f53f19-669d-5bae-bb4e-fee06ce7d631', '63809236-3326-5a22-bf77-ca09b2f1cd0c', '6259cdd8-58d3-5794-8789-ae21fa623ed6', 'c43f3d30-8f67-5e14-a3e2-445602f8671d', 'a79183ff-96f8-5044-a92c-581978d8d1c9', '937bbd74-4c72-52a9-a129-ef162fceeeb5', '67cf5732-4004-59fe-b4a5-bbc42565a024', '75c9c3aa-c5c6-57b3-a6ae-72b8b7d071e4', 'dafd7523-eee4-517a-9606-6b8f9a72155f', '37470435-85a2-505c-91ca-b117d0515933', '7b983cd9-c2c0-5a9c-a73c-ac98bf9d0808', 'd65ae3ef-84c2-5f87-b631-5f91de5eef1f', '1ceda0cf-76cc-5320-b521-1dbaaf81ff83', 'd607352b-8809-5647-8ea5-22f2ffea5f51', '8b0082a8-9de5-5939-9428-c20ddaf4909d', '12f16b47-6a4c-5487-99e2-f1f5e592d512', '4ba459b0-dc9e-57f9-9175-81ba6c0d490d', 'bc58c470-1c5f-570b-b347-e040a8aaabbf', 'ea5d79b1-f11c-501e-b3aa-b94d4fb6c94f', 'f82a2c0b-e513-5770-8b2a-024116d6b3a1', '389a214c-d24f-5aff-b8e6-447a45ed35ed', 'dbf15f17-58e6-5ab5-b012-27b2368c4ca5', 'b8ad51f2-0d2f-5a46-ba24-3e956beb4367', 'e7a6d78a-35e1-5568-a53b-3be72295890c', 'fc5f7dad-9d09-5117-ba74-0cdae2c753c4', 'b3748c61-938a-5781-a6e3-e94630c69381', '723d0846-dcc9-57dc-a8d5-3f9a581abd90', 'd1c87325-095a-555e-95d3-138f47124355', '18298070-040f-5ac3-b119-9cb6fb720fa2', '9fee0d9a-a27d-5059-b62b-3e5c40b1b7ed', 'a682336a-8cac-55fe-98ed-d13e41b90c21', '10cdbbe6-7c81-509f-9107-c3f8ea0bc615', 'a14eb5d9-6d29-5415-8ec9-f1557b3e5161', 'a039206b-03d4-5fc9-86ad-75e0019c4a70', '3e22eee7-36b9-5f3a-8e0f-5333d3b76fdf', '1e66eafa-708f-5de1-a6cc-2921d6e02ffc', '01ffd3bb-6105-5323-92a1-3cc14b8348db', 'd4455f0a-1f51-5dad-ad63-3e592ebb5d36', '59194e7b-1eac-57ca-935a-de51f43964ea', 'f2b8ba0d-7631-5805-8846-a5fa20b419c6', '3e6e3345-a167-528b-86c9-8f8012c051f7', '68c353c4-5d65-5e6c-a162-99ffe1dfcef8', '101b87bc-3422-5b24-b2e4-1cd2a0ca63ab', 'ed4adc8e-de97-5a8f-a68f-5601a89daaa2', '390d080b-349c-538c-9250-acd59fd6c1c3', '462d9345-5c31-5111-8ce8-314de8fd5caa', 'da303622-b350-5b8b-9b6d-370d9728bb8e', '902f8a7c-6687-5818-814b-a17e2eef1444', '32d6d026-1f7e-5d8d-9fea-2141ee659a6a', '013e8407-3e0a-5ecc-af47-acfb7edf86d9', '57545cb8-cc45-5e9a-acc6-42102f111e27', 'ee916acc-ccc1-509c-934c-be74d6578dc8', 'c3be55d8-8928-58bb-bd27-181af4a0d5e3', '9f28f12e-250e-5f6c-9fe4-d5c4de564764', '402518e0-c2ac-5c9c-86c9-8db84a66c20a', 'fc64ccc6-a874-5048-aa2b-ec4bf7fedd1b', '349da296-708e-512c-98a5-f79c0d32d5fd', 'dd9dffa7-3d7a-5ecc-a39f-486149eb142f', '6d753d89-3393-5d46-80cb-7105df4178f0', '279267c3-6b7e-528e-a57e-a4ab75cfd473', 'a4ec5fc8-06d7-59b4-bdeb-31ef723ff6fb', '79afc241-0f21-57eb-b2de-d9c503d9d75c', '3248e070-6326-5ec2-9a5c-9a6562bf3d43', 'a0d0bbc9-7f9c-56c2-a957-6fda2126ca6b', 'c5b5be7e-f4ab-55b6-a38e-181570ee31d9', 'b71e28ea-6533-5302-b2c9-9ddad3b2c439', 'cf42ec20-80b2-537e-a00e-3c58063c62ff', '0b38e0c4-8ce6-5c7a-a51b-cd1d96b9c7b9', '1886b0c7-fccb-565d-92ff-f84e3a6993f4', 'e072540f-1856-5eac-9a8e-db19cec747e6', 'a9e2968b-a92d-5746-9362-164238da0854', '7989200f-316a-50cf-a23b-c990be75e64e', '43b02806-bc22-570c-b797-0b37b895db64', '8fdfff8c-ddbd-5448-85e5-83a9f52730c9', 'c961b0e5-2864-5565-abe0-a6579f21445f', '86e69d95-8ade-5dc8-bc07-e6ac553e4be0', '02029c31-8bc4-5e35-8816-cce63c913e55', '01868ac1-1c85-531f-b957-c922c262d7c3', 'd5b41c1a-0a53-5c06-915c-102435d5c6c0', 'c4d34b52-281d-57e3-8460-aafe4175f0f5', '145aa30d-c72c-5e4d-9190-f15b093dd84f', '26cb3024-d046-5eee-baa5-4d6eac88fbb0', 'b165d39a-8b1a-559a-bc93-6ef918be4194', '94522885-b8e2-5f36-becc-435d20c867e2', '719aef66-3c4a-5ad6-9af9-50fd99dcfbce', 'a209293d-9928-57f6-8315-b45fbd4f39e3', '0c4cb780-1da9-5b34-bd95-073216e9116a', 'f4aafc66-106d-5f85-918e-89cb6ca105d1', '1ddeacd6-9014-5387-85ab-5ebca4c59ff1', '71e33276-0916-5dbf-9e87-3633f36b26be', '6f165226-6514-5ab3-8be5-8e7b31368205', 'c8e56ca4-49e2-5025-8b40-72839f6dcbf5', '97062025-2da0-52e1-b0a4-2dd3e6625115', 'ffba2614-6e95-5898-af20-4f54e0cfbf82', 'cd11e9b8-d66b-5df5-9042-1f71a4c1c943', 'd9e00dc9-ff59-55d0-9648-d429ed81295c', 'c76b8b99-9da2-5728-9cb2-f075223db346', '4935e3cb-7a61-50a1-b744-1f0b34d7815f', '1da5ec88-b844-5781-97cc-219745da8727', '3286e813-6caa-57ff-a8e3-c3606cb69310', '4ae0793a-71f0-59d6-9e51-a31b37912048', 'f68a2c08-9617-5c02-a318-9e30a4619989', 'a387198b-d83b-52a6-9faf-fd4740453fb6', '53788e4f-8c7e-5bbf-86e1-f3ffc3ebb034', '44355f34-9f8c-53a1-aadb-81d5245d24b4', '72cf3144-6f03-53f3-a57f-d413730520ed', '684457b0-f151-5355-b7de-b1cc7331c8e0', '78a7a0fe-8fa8-50d9-8c2f-f514647fb4fc', '118a1f96-6010-503b-a5bf-8d5a7fd05817', '2b2d3600-2cf9-5aa0-af06-ba7393c39024', '74caaa9d-d014-5673-8f8b-9c0121dc06c6', '481b204d-67d0-5c6e-b6f3-01c13e92b87e');
 DELETE FROM public.chapters c WHERE c.subject_id = 'english' AND c.id NOT IN ('6c5876d5-c564-5362-9ec4-db66068dd428', '86194a0b-245d-5f29-bdad-cf1ed247131f', 'ff2b7070-d893-5229-bd8c-2b042dee6081', '9fc5be6f-66c8-5756-a2b9-b3021d83e1ba', 'c9c30f7d-f352-5da1-8baa-12eac9f31b36', '2bd52d30-882a-5849-a561-66dad79c756d', '9b958e8f-0a4d-5299-aedc-ca62d7866435', '0bc67bcc-bd66-52fb-b968-3dc60375eba1') AND NOT EXISTS (SELECT 1 FROM public.exercises e WHERE e.chapter_id = c.id);
 
 INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order) VALUES
@@ -839,6 +839,68 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('c4f248a7-393a-5c6d-b4af-90311f1ae35d', '6c5876d5-c564-5362-9ec4-db66068dd428', 'english', 'Comprehension quiz', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('080d7783-083d-5532-a30c-825175ef6d09', 'c4f248a7-393a-5c6d-b4af-90311f1ae35d', 'Which sentence uses the present simple correctly to express a habit?', '[{"id":"a","text":"She is going to school every day."},{"id":"b","text":"She goes to school every day."},{"id":"c","text":"She go to school every day."},{"id":"d","text":"She has gone to school every day."}]'::jsonb, 'b', 'Habits use the present simple. With a third-person singular subject, add -s to the base verb: she goes.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('5c8be484-cc52-575b-ac02-d7dd39f06af1', 'c4f248a7-393a-5c6d-b4af-90311f1ae35d', 'Which time marker signals that the present continuous should be used?', '[{"id":"a","text":"every Monday"},{"id":"b","text":"usually"},{"id":"c","text":"at the moment"},{"id":"d","text":"twice a week"}]'::jsonb, 'c', '"At the moment" signals an action happening right now, which requires the present continuous (am/is/are + -ing).', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('138d5e16-6d8d-5dde-8107-11d41bfa48e9', 'c4f248a7-393a-5c6d-b4af-90311f1ae35d', 'Why is "I am knowing the answer" incorrect?', '[{"id":"a","text":"\"Know\" must take -s in the present."},{"id":"b","text":"\"Know\" is a stative verb and is not normally used in the continuous form."},{"id":"c","text":"The subject \"I\" requires \"is\" instead of \"am\"."},{"id":"d","text":"The continuous form requires \"was\" for the verb \"know\"."}]'::jsonb, 'b', 'Stative verbs like know, like, love, and want describe mental states, not actions. They are not used in the continuous form.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d819986f-cfe2-53f8-bd3e-f76c9aa3e3a5', 'c4f248a7-393a-5c6d-b4af-90311f1ae35d', 'What is the correct negative form of "She plays tennis" in the present simple?', '[{"id":"a","text":"She isn''t playing tennis."},{"id":"b","text":"She doesn''t plays tennis."},{"id":"c","text":"She doesn''t play tennis."},{"id":"d","text":"She don''t play tennis."}]'::jsonb, 'c', 'The present simple negative uses doesn''t (does not) + the base verb for he/she/it. The main verb keeps its base form: doesn''t play.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('4e4014e1-cd1d-5dcc-aac5-f44926ed20ed', 'c4f248a7-393a-5c6d-b4af-90311f1ae35d', 'Complete the sentence correctly: "Look! The children ___ in the garden."', '[{"id":"a","text":"play"},{"id":"b","text":"plays"},{"id":"c","text":"have played"},{"id":"d","text":"are playing"}]'::jsonb, 'd', '"Look!" is a key signal for the present continuous because it draws attention to an action happening right now. The correct form is are playing.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('6b8bbba1-76cd-5943-aa66-9d9da0f72492', '6c5876d5-c564-5362-9ec4-db66068dd428', 'english', 'Practice: simple or continuous?', 1, 50, 10, 'practice', 'admin', 1)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -974,6 +1036,68 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('90a789f4-e6c1-56be-86ef-0e8dd1a6eace', '458c297a-6ea2-522c-9a6c-6dc0c6c7267b', 'Complete: "Be quiet! The students ___ a test right now."', '[{"id":"a","text":"take"},{"id":"b","text":"takes"},{"id":"c","text":"is taking"},{"id":"d","text":"are taking"}]'::jsonb, 'd', '"right now" signals an action in progress; with the plural subject students we use are + taking.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('285d360a-8465-518f-990c-916004f4f3b5', '86194a0b-245d-5f29-bdad-cf1ed247131f', 'english', 'Comprehension quiz', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('b5fe6ca3-0ae0-5d0a-becc-64b5e9be71c2', '285d360a-8465-518f-990c-916004f4f3b5', 'Which sentence uses the past simple correctly with an irregular verb?', '[{"id":"a","text":"She goed to the market yesterday."},{"id":"b","text":"She went to the market yesterday."},{"id":"c","text":"She has went to the market yesterday."},{"id":"d","text":"She was go to the market yesterday."}]'::jsonb, 'b', '"Go" is an irregular verb whose past simple form is "went". Time markers like "yesterday" confirm the past simple is needed.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('0bb52641-d98c-5fc5-a598-beb8dbb6ef71', '285d360a-8465-518f-990c-916004f4f3b5', 'What is the correct form for a past simple question with a regular verb?', '[{"id":"a","text":"Did she walked to school?"},{"id":"b","text":"Was she walk to school?"},{"id":"c","text":"Did she walk to school?"},{"id":"d","text":"Does she walked to school?"}]'::jsonb, 'c', 'Past simple questions use Did + subject + base verb. After Did, the main verb stays in its base form (no -ed).', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('def1e0d2-88c6-5665-b598-fcbea95f96eb', '285d360a-8465-518f-990c-916004f4f3b5', 'Which structure correctly describes a background action interrupted by a shorter event in the past?', '[{"id":"a","text":"I cooked when the phone was ringing."},{"id":"b","text":"I was cooking when the phone rang."},{"id":"c","text":"I was cooking when the phone was ringing."},{"id":"d","text":"I cooked when the phone had rung."}]'::jsonb, 'b', 'The past continuous (was cooking) provides the background action; the past simple (rang) describes the shorter event that interrupted it.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('0cb5ed33-22c7-5edc-901c-0c090a8ffbf8', '285d360a-8465-518f-990c-916004f4f3b5', 'Which adverb is associated with the present perfect, NOT the past simple?', '[{"id":"a","text":"yesterday"},{"id":"b","text":"last year"},{"id":"c","text":"in 2020"},{"id":"d","text":"already"}]'::jsonb, 'd', '"Already" is a key adverb of the present perfect (have/has + past participle). "Yesterday", "last year", and "in 2020" all indicate a specific past time, so they go with the past simple.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('f36a39c7-17e1-500d-a663-25676e3f151d', '285d360a-8465-518f-990c-916004f4f3b5', 'Which sentence correctly uses the present perfect?', '[{"id":"a","text":"She has visited Rome last summer."},{"id":"b","text":"She visited Rome yet."},{"id":"c","text":"She has never visited Rome."},{"id":"d","text":"She have visited Rome."}]'::jsonb, 'c', 'The present perfect (has + past participle) is used with "never" for a life experience at an unspecified time. A specific time like "last summer" would require the past simple instead.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1127,6 +1251,68 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('216cae02-7987-5531-b3fa-6af92e75e33d', 'ff2b7070-d893-5229-bd8c-2b042dee6081', 'english', 'Comprehension quiz', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('7b983cd9-c2c0-5a9c-a73c-ac98bf9d0808', '216cae02-7987-5531-b3fa-6af92e75e33d', 'The phone is ringing and you decide to answer it right now. Which sentence is correct?', '[{"id":"a","text":"I am going to answer it."},{"id":"b","text":"I will answer it."},{"id":"c","text":"I am answering it tomorrow."},{"id":"d","text":"I answer it."}]'::jsonb, 'b', '"Will" is used for a spontaneous decision made at the moment of speaking. You have just decided to answer the phone right now.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d65ae3ef-84c2-5f87-b631-5f91de5eef1f', '216cae02-7987-5531-b3fa-6af92e75e33d', 'You can see dark clouds gathering overhead. Which sentence correctly expresses an evidence-based prediction?', '[{"id":"a","text":"I think it will rain."},{"id":"b","text":"It rains soon."},{"id":"c","text":"It is going to rain."},{"id":"d","text":"It will have rained."}]'::jsonb, 'c', '"Be going to" is used for predictions based on visible present evidence. The dark clouds you can see right now are the evidence.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('1ceda0cf-76cc-5320-b521-1dbaaf81ff83', '216cae02-7987-5531-b3fa-6af92e75e33d', 'Which sentence correctly uses a time clause with a future meaning?', '[{"id":"a","text":"Call me when you will arrive."},{"id":"b","text":"Call me when you arrive."},{"id":"c","text":"Call me when you are arriving."},{"id":"d","text":"Call me when you arrived."}]'::jsonb, 'b', 'After time conjunctions such as when, as soon as, before, after, and until in a future sentence, use the present simple, not will.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d607352b-8809-5647-8ea5-22f2ffea5f51', '216cae02-7987-5531-b3fa-6af92e75e33d', 'Which form expresses a fixed, confirmed arrangement already in your diary?', '[{"id":"a","text":"I will meet the doctor at 9 a.m. tomorrow."},{"id":"b","text":"I meet the doctor at 9 a.m. tomorrow."},{"id":"c","text":"I am meeting the doctor at 9 a.m. tomorrow."},{"id":"d","text":"I was meeting the doctor at 9 a.m. tomorrow."}]'::jsonb, 'c', 'The present continuous is used for future events that are already arranged and confirmed with others, such as a diary appointment.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('8b0082a8-9de5-5939-9428-c20ddaf4909d', '216cae02-7987-5531-b3fa-6af92e75e33d', 'What is the correct negative form of "will" in a sentence?', '[{"id":"a","text":"She willn''t come."},{"id":"b","text":"She won''t come."},{"id":"c","text":"She doesn''t will come."},{"id":"d","text":"She isn''t will come."}]'::jsonb, 'b', 'The negative of will is will not, contracted to won''t. No auxiliary verb like do or be is added alongside will.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('0ac40b31-da66-5e9a-b82f-2414438a00c5', 'ff2b7070-d893-5229-bd8c-2b042dee6081', 'english', 'Practice: will, going to, or present continuous?', 2, 60, 12, 'practice', 'admin', 1)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -1262,6 +1448,68 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('723d0846-dcc9-57dc-a8d5-3f9a581abd90', 'efb66754-8009-5a3d-995a-6b71e9cf5537', 'Complete both blanks: "She ___ not work tomorrow because she ___ to see a doctor." (arrangement already made)', '[{"id":"a","text":"is ... will go"},{"id":"b","text":"won''t ... will"},{"id":"c","text":"would ... goes"},{"id":"d","text":"will ... is going"}]'::jsonb, 'd', '"will not work" (won''t work) is a prediction/decision; "is going to see" reflects a pre-made plan. "will ... is going" correctly uses will for the first blank and be going to for the second.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('818e12ec-9c1e-52e1-8f1a-dde92ca62d2e', '9fc5be6f-66c8-5756-a2b9-b3021d83e1ba', 'english', 'Comprehension quiz', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d1c87325-095a-555e-95d3-138f47124355', '818e12ec-9c1e-52e1-8f1a-dde92ca62d2e', 'Which sentence contains a correctly formed modal verb?', '[{"id":"a","text":"She cans swim very well."},{"id":"b","text":"He musts leave now."},{"id":"c","text":"They should to study harder."},{"id":"d","text":"You must wear a seatbelt."}]'::jsonb, 'd', 'Modal verbs are followed directly by the base verb with no -s, no -ed, and no "to". "You must wear" is the only correctly formed option.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('18298070-040f-5ac3-b119-9cb6fb720fa2', '818e12ec-9c1e-52e1-8f1a-dde92ca62d2e', 'What is the key difference between "mustn''t" and "don''t have to"?', '[{"id":"a","text":"They mean the same thing: neither action is required."},{"id":"b","text":"\"Mustn''t\" means prohibition; \"don''t have to\" means there is no obligation."},{"id":"c","text":"\"Mustn''t\" is polite; \"don''t have to\" is rude."},{"id":"d","text":"\"Don''t have to\" means it is forbidden; \"mustn''t\" means it is optional."}]'::jsonb, 'b', '"Mustn''t" forbids an action (you are not allowed). "Don''t have to" means the action is not required but you are free to choose.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('9fee0d9a-a27d-5059-b62b-3e5c40b1b7ed', '818e12ec-9c1e-52e1-8f1a-dde92ca62d2e', 'Which modal expresses a polite request, more formal than "can"?', '[{"id":"a","text":"must"},{"id":"b","text":"should"},{"id":"c","text":"could"},{"id":"d","text":"may not"}]'::jsonb, 'c', '"Could" is used for polite requests and is considered more polite than "can". For example: "Could you open the window?"', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('a682336a-8cac-55fe-98ed-d13e41b90c21', '818e12ec-9c1e-52e1-8f1a-dde92ca62d2e', 'Which sentence correctly uses "should" to give advice?', '[{"id":"a","text":"You should to eat more vegetables."},{"id":"b","text":"You should eating more vegetables."},{"id":"c","text":"You should eat more vegetables."},{"id":"d","text":"You shoulds eat more vegetables."}]'::jsonb, 'c', '"Should" is followed by the base verb with no "to" and no -ing. The correct form is "should eat".', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('10cdbbe6-7c81-509f-9107-c3f8ea0bc615', '818e12ec-9c1e-52e1-8f1a-dde92ca62d2e', 'What is the difference between "may" and "might" when expressing possibility?', '[{"id":"a","text":"\"May\" refers to the past; \"might\" refers to the future."},{"id":"b","text":"\"May\" is more certain than \"might\"; \"might\" suggests less certainty."},{"id":"c","text":"\"Might\" is more certain than \"may\"."},{"id":"d","text":"They cannot be used interchangeably for possibility."}]'::jsonb, 'b', 'Both "may" and "might" express possibility, but "might" suggests even less certainty than "may". In practice they can often be used interchangeably.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1415,6 +1663,68 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('04cd9fbd-81fc-5332-b16f-d4105405d5b6', 'c9c30f7d-f352-5da1-8baa-12eac9f31b36', 'english', 'Comprehension quiz', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('390d080b-349c-538c-9250-acd59fd6c1c3', '04cd9fbd-81fc-5332-b16f-d4105405d5b6', 'Which conditional form is used for general truths and scientific facts?', '[{"id":"a","text":"First conditional: if + present simple, will + base verb"},{"id":"b","text":"Zero conditional: if + present simple, present simple"},{"id":"c","text":"Second conditional: if + past simple, would + base verb"},{"id":"d","text":"Zero conditional: if + past simple, present simple"}]'::jsonb, 'b', 'The zero conditional (if + present simple, present simple) expresses facts and general truths where the result always follows the condition.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('462d9345-5c31-5111-8ce8-314de8fd5caa', '04cd9fbd-81fc-5332-b16f-d4105405d5b6', 'Which sentence is a correctly formed first conditional?', '[{"id":"a","text":"If you will study hard, you will pass."},{"id":"b","text":"If you studied hard, you will pass."},{"id":"c","text":"If you study hard, you will pass."},{"id":"d","text":"If you study hard, you would pass."}]'::jsonb, 'c', 'The first conditional uses the present simple in the if-clause (never "will") and will + base verb in the main clause.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('da303622-b350-5b8b-9b6d-370d9728bb8e', '04cd9fbd-81fc-5332-b16f-d4105405d5b6', 'What does the second conditional express?', '[{"id":"a","text":"A real and likely future situation"},{"id":"b","text":"A general scientific truth"},{"id":"c","text":"An imaginary or hypothetical situation in the present or future"},{"id":"d","text":"A completed past action"}]'::jsonb, 'c', 'The second conditional (if + past simple, would + base verb) describes situations that are unreal, imaginary, or unlikely right now.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('902f8a7c-6687-5818-814b-a17e2eef1444', '04cd9fbd-81fc-5332-b16f-d4105405d5b6', 'In formal/standard English, which form of "be" is used in the if-clause of a second conditional?', '[{"id":"a","text":"\"was\" for all persons"},{"id":"b","text":"\"is\" for all persons"},{"id":"c","text":"\"were\" for all persons"},{"id":"d","text":"\"are\" for all persons"}]'::jsonb, 'c', 'In formal and standard English, the second conditional uses "were" for all persons in the if-clause: "If I were you, I would apologise."', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('32d6d026-1f7e-5d8d-9fea-2141ee659a6a', '04cd9fbd-81fc-5332-b16f-d4105405d5b6', 'What does "unless" mean in a conditional sentence?', '[{"id":"a","text":"if"},{"id":"b","text":"although"},{"id":"c","text":"if ... not"},{"id":"d","text":"even if"}]'::jsonb, 'c', '"Unless" means "if ... not". For example, "Unless you hurry, you will miss the train" means "If you don''t hurry, you will miss the train."', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('97d5948a-d69a-595c-a33a-175dd7c3b34e', 'c9c30f7d-f352-5da1-8baa-12eac9f31b36', 'english', 'Practice: zero, first and second conditionals', 2, 75, 15, 'practice', 'admin', 1)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -1550,6 +1860,68 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('a4ec5fc8-06d7-59b4-bdeb-31ef723ff6fb', 'aa6477e9-c60c-5771-9828-15c32bace66c', 'Complete both blanks: "If she ___ the exam, her parents ___ very proud."', '[{"id":"a","text":"will pass ... are"},{"id":"b","text":"passes ... will be"},{"id":"c","text":"passed ... will be"},{"id":"d","text":"passes ... would be"}]'::jsonb, 'b', 'First conditional: if + present simple (passes) + will + base verb (will be). The situation is realistic — she may well pass. Option c mixes past simple with will (second conditional main clause with first conditional if-clause), which is incorrect.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('6c069575-64c8-5d0f-bd94-5fda4d4c80a3', '2bd52d30-882a-5849-a561-66dad79c756d', 'english', 'Comprehension quiz', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('79afc241-0f21-57eb-b2de-d9c503d9d75c', '6c069575-64c8-5d0f-bd94-5fda4d4c80a3', 'What is the core formula for forming the passive voice?', '[{"id":"a","text":"subject + have + past participle"},{"id":"b","text":"subject + be + past participle"},{"id":"c","text":"subject + be + present participle (-ing)"},{"id":"d","text":"subject + do + base verb"}]'::jsonb, 'b', 'The passive is always formed with the correct form of "be" + the past participle of the main verb, regardless of tense.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('3248e070-6326-5ec2-9a5c-9a6562bf3d43', '6c069575-64c8-5d0f-bd94-5fda4d4c80a3', 'Which sentence correctly transforms "They speak French here" into the present simple passive?', '[{"id":"a","text":"French was spoken here."},{"id":"b","text":"French has been spoken here."},{"id":"c","text":"French is spoken here."},{"id":"d","text":"French are spoken here."}]'::jsonb, 'c', 'The present simple passive uses is/are + past participle. "French" is a singular noun, so the correct form is "is spoken".', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('a0d0bbc9-7f9c-56c2-a957-6fda2126ca6b', '6c069575-64c8-5d0f-bd94-5fda4d4c80a3', 'What is the first step when converting an active sentence to a passive one?', '[{"id":"a","text":"Add \"by\" and the original subject at the end."},{"id":"b","text":"Move the object of the active sentence to the subject position."},{"id":"c","text":"Change the main verb to its present participle."},{"id":"d","text":"Remove the subject of the active sentence entirely."}]'::jsonb, 'b', 'The first step is to move the object of the active sentence into the subject position. Then choose the correct form of "be" and add the past participle.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('c5b5be7e-f4ab-55b6-a38e-181570ee31d9', '6c069575-64c8-5d0f-bd94-5fda4d4c80a3', 'When is the "by + agent" phrase typically omitted in a passive sentence?', '[{"id":"a","text":"When the sentence is in the present tense"},{"id":"b","text":"When the subject is plural"},{"id":"c","text":"When the agent is unknown, unimportant, or obvious from context"},{"id":"d","text":"When the verb is irregular"}]'::jsonb, 'c', 'The "by + agent" phrase is often left out when the agent is unknown ("My wallet was stolen"), unimportant, or already obvious from context.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('b71e28ea-6533-5302-b2c9-9ddad3b2c439', '6c069575-64c8-5d0f-bd94-5fda4d4c80a3', 'Which sentence correctly uses the past simple passive?', '[{"id":"a","text":"The bridge is built in 1990."},{"id":"b","text":"The bridge was build in 1990."},{"id":"c","text":"The bridge were built in 1990."},{"id":"d","text":"The bridge was built in 1990."}]'::jsonb, 'd', 'The past simple passive uses was/were + past participle. "Bridge" is singular, so "was" is correct, and "built" is the past participle of "build".', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1703,6 +2075,68 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('aac0bca3-f9b2-50e6-9fe5-095b3caed4c2', '9b958e8f-0a4d-5299-aedc-ca62d7866435', 'english', 'Comprehension quiz', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d5b41c1a-0a53-5c06-915c-102435d5c6c0', 'aac0bca3-f9b2-50e6-9fe5-095b3caed4c2', 'Direct speech: "I am tired." She said ___.', '[{"id":"a","text":"she said that she is tired."},{"id":"b","text":"she said that she was tired."},{"id":"c","text":"she said that I was tired."},{"id":"d","text":"she said that she were tired."}]'::jsonb, 'b', 'When the reporting verb is in the past (said), the present simple "am" shifts back to the past simple "was". The pronoun "I" also changes to "she" to match the speaker.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('c4d34b52-281d-57e3-8460-aafe4175f0f5', 'aac0bca3-f9b2-50e6-9fe5-095b3caed4c2', 'Which reporting verb always requires a person as its object?', '[{"id":"a","text":"say"},{"id":"b","text":"ask"},{"id":"c","text":"tell"},{"id":"d","text":"report"}]'::jsonb, 'c', '"Tell" always needs a person object: tell me, tell him, tell the class. "Say" never takes a direct person object ("say me" is wrong).', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('145aa30d-c72c-5e4d-9190-f15b093dd84f', 'aac0bca3-f9b2-50e6-9fe5-095b3caed4c2', 'In reported speech, what does "tomorrow" in direct speech change to?', '[{"id":"a","text":"today"},{"id":"b","text":"the day before"},{"id":"c","text":"the next day"},{"id":"d","text":"that day"}]'::jsonb, 'c', '"Tomorrow" in direct speech shifts to "the next day" (or "the following day") in reported speech, because the time reference has changed.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('26cb3024-d046-5eee-baa5-4d6eac88fbb0', 'aac0bca3-f9b2-50e6-9fe5-095b3caed4c2', 'Direct speech: "Are you ready?" She asked ___.', '[{"id":"a","text":"if I was ready."},{"id":"b","text":"if was I ready."},{"id":"c","text":"if I am ready."},{"id":"d","text":"if I were ready."}]'::jsonb, 'a', 'Yes/no questions in reported speech use "if" or "whether", with normal word order (subject before verb): "she asked if I was ready". "Are" backshifts to "was".', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('b165d39a-8b1a-559a-bc93-6ef918be4194', 'aac0bca3-f9b2-50e6-9fe5-095b3caed4c2', 'Direct speech: "Don''t run in the corridor!" The teacher told the students ___.', '[{"id":"a","text":"to not run in the corridor."},{"id":"b","text":"don''t run in the corridor."},{"id":"c","text":"not to run in the corridor."},{"id":"d","text":"that they didn''t run in the corridor."}]'::jsonb, 'c', 'Negative commands in reported speech use tell/ask + person + not to + infinitive. The correct form is "told the students not to run".', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('e2d9a8ce-ad7d-5cdd-a8af-04c3a19cea1d', '9b958e8f-0a4d-5299-aedc-ca62d7866435', 'english', 'Practice: reported speech basics', 2, 60, 12, 'practice', 'admin', 1)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -1838,6 +2272,68 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('cd11e9b8-d66b-5df5-9042-1f71a4c1c943', '038be31c-9625-5dc2-8227-4a7402dbfe43', 'Which sentence applies the WRONG backshift?', '[{"id":"a","text":"He said he would call me. (will → would)"},{"id":"b","text":"They said they can finish. (can → no change)"},{"id":"c","text":"She said she had left early. (past simple → past perfect)"},{"id":"d","text":"He said he was studying. (present continuous → past continuous)"}]'::jsonb, 'b', 'When the reporting verb is in the past, ''can'' must backshift to ''could''. Saying ''they can finish'' is incorrect — it should be ''they could finish''.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('f34bbeba-a514-5828-9e27-2a8b3711fb93', '0bc67bcc-bd66-52fb-b968-3dc60375eba1', 'english', 'Comprehension quiz', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d9e00dc9-ff59-55d0-9648-d429ed81295c', 'f34bbeba-a514-5828-9e27-2a8b3711fb93', 'Which relative pronoun is used to refer to people in a defining relative clause?', '[{"id":"a","text":"which"},{"id":"b","text":"where"},{"id":"c","text":"whose"},{"id":"d","text":"who"}]'::jsonb, 'd', '"Who" refers to people in a relative clause: "The teacher who inspired me retired last year." "Which" refers to things or animals.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('c76b8b99-9da2-5728-9cb2-f075223db346', 'f34bbeba-a514-5828-9e27-2a8b3711fb93', 'What is the comparative form of the adjective "happy"?', '[{"id":"a","text":"more happy than"},{"id":"b","text":"happier than"},{"id":"c","text":"happyer than"},{"id":"d","text":"the happiest"}]'::jsonb, 'b', 'Short adjectives ending in -y drop the y and add -ier: happy → happier than. "More happy" is not the standard form.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('4935e3cb-7a61-50a1-b744-1f0b34d7815f', 'f34bbeba-a514-5828-9e27-2a8b3711fb93', 'Which sentence correctly uses the superlative form?', '[{"id":"a","text":"This is more difficult question in the exam."},{"id":"b","text":"This is most difficult question in the exam."},{"id":"c","text":"This is the most difficult question in the exam."},{"id":"d","text":"This is difficultest question in the exam."}]'::jsonb, 'c', 'Superlatives always require the definite article "the" before them: the most difficult. Long adjectives use "the most + adjective".', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('1da5ec88-b844-5781-97cc-219745da8727', 'f34bbeba-a514-5828-9e27-2a8b3711fb93', 'Which relative pronoun shows possession?', '[{"id":"a","text":"that"},{"id":"b","text":"which"},{"id":"c","text":"where"},{"id":"d","text":"whose"}]'::jsonb, 'd', '"Whose" replaces a possessive: "The girl whose bag was lost" means the girl''s bag was lost. It refers to people.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('3286e813-6caa-57ff-a8e3-c3606cb69310', 'f34bbeba-a514-5828-9e27-2a8b3711fb93', 'Which sentence correctly expresses equality using "as ... as"?', '[{"id":"a","text":"Sami is as taller as his brother."},{"id":"b","text":"Sami is as tall as his brother."},{"id":"c","text":"Sami is more tall as his brother."},{"id":"d","text":"Sami is tallest as his brother."}]'::jsonb, 'b', 'The structure for equality is "as + adjective (base form) + as". Never use the comparative form inside this structure: "as tall as", not "as taller as".', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,

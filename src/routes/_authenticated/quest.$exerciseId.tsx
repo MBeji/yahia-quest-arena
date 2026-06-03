@@ -13,10 +13,16 @@ import {
   Skull,
   Heart,
   Timer,
+  BookOpen,
+  Lock,
 } from "lucide-react";
 import { toast } from "sonner";
 import { getExercise, startExerciseSession, submitAttempt } from "@/features/quest";
-import { BOSS_TIME_PER_QUESTION_S, PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
+import {
+  BOSS_TIME_PER_QUESTION_S,
+  PASS_THRESHOLD_PCT,
+  QUIZ_PASS_THRESHOLD_PCT,
+} from "@/shared/constants/gamification";
 import { isRtlText, isMathExpression } from "@/shared/lib/utils";
 import { shuffleOptions, type BaseOption, type DisplayOption } from "@/shared/lib/question-utils";
 import { LevelUpCelebration } from "@/components/ui/level-up-celebration";
@@ -274,9 +280,78 @@ function QuestPage() {
     );
   }
 
+  const isQuiz = data.exercise.mode === "quiz";
+  const chapterId = (data.exercise.chapter_id as string | null) ?? null;
+  const exSubjectId = (data.exercise.subject_id as string | null) ?? null;
+  const qlang = ((data.exercise.subjects as { content_language?: string } | null)
+    ?.content_language ?? "fr") as "ar" | "fr" | "en";
+  const QL = {
+    lockedTitle: {
+      ar: "🔒 التمرين مقفل",
+      fr: "🔒 Exercice verrouillé",
+      en: "🔒 Exercise locked",
+    }[qlang],
+    lockedBody: {
+      ar: "عليك أوّلًا اجتياز اختبار فهم الدرس بنجاح للوصول إلى التمارين. عُد لمراجعة الدرس ثمّ أعِد المحاولة.",
+      fr: "Tu dois d'abord réussir le quiz de compréhension du chapitre pour accéder aux exercices. Relis le cours, puis réessaie.",
+      en: "You must first pass the chapter comprehension quiz to unlock the exercises. Review the lesson, then try again.",
+    }[qlang],
+    review: { ar: "📖 مراجعة الدرس", fr: "📖 Réviser le cours", en: "📖 Review the lesson" }[qlang],
+    back: { ar: "العودة إلى المادة", fr: "Retour à la matière", en: "Back to subject" }[qlang],
+    quizPassedBanner: {
+      ar: "✅ تهانينا! لقد فهمت الدرس، وفُتحت لك التمارين.",
+      fr: "✅ Bravo ! Tu as compris le cours, les exercices sont débloqués.",
+      en: "✅ Well done! You understood the lesson — the exercises are unlocked.",
+    }[qlang],
+    quizFailedBanner: {
+      ar: "❌ لم تبلغ 80% المطلوبة. عُد لقراءة الدرس جيّدًا ثمّ أعِد الاختبار.",
+      fr: "❌ Tu n'as pas atteint les 80% requis. Relis bien le cours, puis refais le quiz.",
+      en: "❌ You did not reach the required 80%. Re-read the lesson, then retake the quiz.",
+    }[qlang],
+  };
+
+  // Locked screen: the chapter comprehension quiz must be passed first
+  // (enforced server-side in startExerciseSession).
+  const sessionErrorMsg =
+    sessionMutation.error instanceof Error ? sessionMutation.error.message : "";
+  if (sessionMutation.isError && sessionErrorMsg.includes("quiz de compréhension")) {
+    return (
+      <div
+        className="mx-auto max-w-md px-6 py-16 text-center"
+        dir={isRtlSubject ? "rtl" : undefined}
+      >
+        <div className="rounded-3xl border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/5 p-8">
+          <Lock className="mx-auto h-12 w-12 text-[color:var(--neon-gold)]" />
+          <h1 className="mt-4 font-display text-2xl font-bold">{QL.lockedTitle}</h1>
+          <p className="mt-3 text-sm text-muted-foreground">{QL.lockedBody}</p>
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            {chapterId && (
+              <Link
+                to="/lesson/$chapterId"
+                params={{ chapterId }}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-neon-violet to-neon-magenta px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-neon hover:scale-105"
+              >
+                <BookOpen className="h-4 w-4" /> {QL.review}
+              </Link>
+            )}
+            {exSubjectId && (
+              <Link
+                to="/subject/$subjectId"
+                params={{ subjectId: exSubjectId }}
+                className="rounded-lg border border-border bg-background/50 px-5 py-2.5 text-sm font-semibold hover:bg-background/80"
+              >
+                {QL.back}
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // RESULTS SCREEN
   if (result) {
-    const passed = result.scorePct >= PASS_THRESHOLD_PCT;
+    const passed = result.scorePct >= (isQuiz ? QUIZ_PASS_THRESHOLD_PCT : PASS_THRESHOLD_PCT);
     const resultLevel = Number((result.profile as Record<string, unknown>)?.level ?? 1);
     return (
       <div className="mx-auto max-w-2xl px-6 py-12" dir={isRtlSubject ? "rtl" : undefined}>
@@ -306,6 +381,27 @@ function QuestPage() {
             <p className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">
               Server-validated time · {result.durationSeconds}s
             </p>
+            {isQuiz && (
+              <div
+                className={`mt-4 rounded-2xl border p-4 text-sm font-semibold ${
+                  passed
+                    ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
+                    : "border-[color:var(--neon-gold)]/50 bg-[color:var(--neon-gold)]/10 text-[color:var(--neon-gold)]"
+                }`}
+                dir={isRtlSubject ? "rtl" : undefined}
+              >
+                {passed ? QL.quizPassedBanner : QL.quizFailedBanner}
+                {!passed && chapterId && (
+                  <Link
+                    to="/lesson/$chapterId"
+                    params={{ chapterId }}
+                    className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-neon-violet to-neon-magenta px-4 py-2 text-xs font-bold text-primary-foreground shadow-neon hover:scale-105"
+                  >
+                    <BookOpen className="h-4 w-4" /> {QL.review}
+                  </Link>
+                )}
+              </div>
+            )}
             <div className="mt-6 grid grid-cols-4 gap-3">
               <div className="rounded-xl bg-(--neon-gold)/15 p-4">
                 <Zap className="mx-auto h-5 w-5 text-neon-gold" />
