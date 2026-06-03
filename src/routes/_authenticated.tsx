@@ -2,7 +2,15 @@ import { createFileRoute, Outlet, Link, useNavigate } from "@tanstack/react-rout
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/features/auth";
-import { Sparkles, LayoutDashboard, LogOut, Swords, Crown, ClipboardList } from "lucide-react";
+import {
+  Sparkles,
+  LayoutDashboard,
+  LogOut,
+  Swords,
+  Crown,
+  ClipboardList,
+  CreditCard,
+} from "lucide-react";
 import { supabase } from "@/shared/integrations/supabase/client";
 import { toast } from "sonner";
 import { useT } from "@/lib/i18n";
@@ -100,13 +108,22 @@ function AuthenticatedLayout() {
               </Link>
             )}
             {userRole === "admin" && (
-              <Link
-                to="/parent-report"
-                className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground"
-                activeProps={{ className: "text-foreground bg-card" }}
-              >
-                <ClipboardList className="h-4 w-4" /> {t.layout.admin}
-              </Link>
+              <>
+                <Link
+                  to="/parent-report"
+                  className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground"
+                  activeProps={{ className: "text-foreground bg-card" }}
+                >
+                  <ClipboardList className="h-4 w-4" /> {t.layout.admin}
+                </Link>
+                <Link
+                  to="/admin/subscriptions"
+                  className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground"
+                  activeProps={{ className: "text-foreground bg-card" }}
+                >
+                  <CreditCard className="h-4 w-4" /> {t.layout.subscriptions}
+                </Link>
+              </>
             )}
             <LanguageSwitcher />
             <button

@@ -26,6 +26,7 @@ import {
   DUNGEON_XP_PER_FLOOR,
   DUNGEON_COINS_PER_5_FLOORS,
 } from "@/features/dungeon";
+import { SubscriptionPaywall } from "@/features/subscription";
 import { isRtlText, isMathExpression } from "@/shared/lib/utils";
 import { shuffleOptions, type BaseOption, type DisplayOption } from "@/shared/lib/question-utils";
 import { useT } from "@/lib/i18n";
@@ -289,6 +290,8 @@ function DungeonPage() {
 
             {accessQuery.isLoading || !access ? (
               <div className="mt-8 text-sm text-muted-foreground">…</div>
+            ) : access.reason === "SUBSCRIPTION" ? (
+              <SubscriptionPaywall />
             ) : !access.canAccess ? (
               <div className="mx-auto mt-8 max-w-sm rounded-2xl border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/5 p-5 text-left">
                 <div className="flex items-center gap-2 font-display font-bold text-[color:var(--neon-gold)]">

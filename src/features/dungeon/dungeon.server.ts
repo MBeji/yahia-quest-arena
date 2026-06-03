@@ -169,8 +169,9 @@ export const getDungeonAccess = createServerFn({ method: "GET" })
         chaptersDone: 0,
         requiredSubjects: 2,
         requiredChapters: 3,
+        hasSubscription: false,
         canAccess: false,
-        reason: "PREREQ" as string,
+        reason: "SUBSCRIPTION" as string,
       };
     }
 
@@ -183,6 +184,7 @@ export const getDungeonAccess = createServerFn({ method: "GET" })
       chaptersDone: row.chapters_done,
       requiredSubjects: row.required_subjects,
       requiredChapters: row.required_chapters,
+      hasSubscription: row.has_subscription ?? false,
       canAccess: row.can_access,
       reason: row.reason,
     };
