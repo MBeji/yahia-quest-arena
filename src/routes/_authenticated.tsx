@@ -15,6 +15,11 @@ import { supabase } from "@/shared/integrations/supabase/client";
 import { toast } from "sonner";
 import { useT } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
+import { GoldAmbient } from "@/components/visual/gold-ambient";
+
+const NAV_LINK =
+  "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground transition hover:bg-[color:var(--gold)]/10 hover:text-champagne";
+const NAV_ACTIVE = { className: "text-[color:var(--gold)] bg-[color:var(--gold)]/12" };
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthenticatedLayout,
@@ -46,8 +51,8 @@ function AuthenticatedLayout() {
 
   if (loading) {
     return (
-      <div className="grid min-h-screen place-items-center bg-hero">
-        <div className="font-display text-sm uppercase tracking-widest text-muted-foreground">
+      <div className="grid min-h-screen place-items-center bg-black-deep">
+        <div className="font-display text-sm uppercase tracking-widest text-champagne/70">
           Loading…
         </div>
       </div>
@@ -64,72 +69,45 @@ function AuthenticatedLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-hero">
-      <div className="absolute inset-0 bg-grid opacity-40 pointer-events-none" />
-      <header className="relative z-10 border-b border-border/40 bg-background/40 backdrop-blur-xl">
+    <div className="relative min-h-screen bg-black-deep">
+      <GoldAmbient />
+      <header className="relative z-10 border-b border-[color:var(--gold)]/15 bg-black/40 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-3">
           <Link to="/dashboard" className="flex items-center gap-2">
-            <div className="grid h-9 w-9 place-items-center rounded-lg bg-linear-to-br from-neon-violet to-neon-magenta shadow-neon">
-              <Sparkles className="h-4 w-4 text-primary-foreground" />
+            <div className="grid h-9 w-9 place-items-center rounded-lg bg-[image:var(--gradient-gold)] shadow-gold">
+              <Sparkles className="h-4 w-4 text-black" />
             </div>
             <span className="font-display text-base font-bold tracking-wider">
-              XP <span className="text-gradient-cyan">SCHOLARS</span>
+              XP <span className="text-gradient-gold">SCHOLARS</span>
             </span>
           </Link>
           <nav className="flex items-center gap-2 text-sm">
-            <Link
-              to="/dashboard"
-              className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground"
-              activeProps={{ className: "text-foreground bg-card" }}
-            >
+            <Link to="/dashboard" className={NAV_LINK} activeProps={NAV_ACTIVE}>
               <LayoutDashboard className="h-4 w-4" /> {t.layout.heroesHall}
             </Link>
-            <Link
-              to="/dungeon"
-              className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground"
-              activeProps={{ className: "text-foreground bg-card" }}
-            >
+            <Link to="/dungeon" className={NAV_LINK} activeProps={NAV_ACTIVE}>
               <Swords className="h-4 w-4" /> {t.layout.dungeon}
             </Link>
-            <Link
-              to="/leaderboard"
-              className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground"
-              activeProps={{ className: "text-foreground bg-card" }}
-            >
+            <Link to="/leaderboard" className={NAV_LINK} activeProps={NAV_ACTIVE}>
               <Crown className="h-4 w-4" /> {t.layout.ranking}
             </Link>
             {userRole === "parent" && (
-              <Link
-                to="/parent-report"
-                className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground"
-                activeProps={{ className: "text-foreground bg-card" }}
-              >
+              <Link to="/parent-report" className={NAV_LINK} activeProps={NAV_ACTIVE}>
                 <ClipboardList className="h-4 w-4" /> {t.layout.parentReport}
               </Link>
             )}
             {userRole === "admin" && (
               <>
-                <Link
-                  to="/parent-report"
-                  className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground"
-                  activeProps={{ className: "text-foreground bg-card" }}
-                >
+                <Link to="/parent-report" className={NAV_LINK} activeProps={NAV_ACTIVE}>
                   <ClipboardList className="h-4 w-4" /> {t.layout.admin}
                 </Link>
-                <Link
-                  to="/admin/subscriptions"
-                  className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground"
-                  activeProps={{ className: "text-foreground bg-card" }}
-                >
+                <Link to="/admin/subscriptions" className={NAV_LINK} activeProps={NAV_ACTIVE}>
                   <CreditCard className="h-4 w-4" /> {t.layout.subscriptions}
                 </Link>
               </>
             )}
             <LanguageSwitcher />
-            <button
-              onClick={signOut}
-              className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground hover:bg-card hover:text-foreground"
-            >
+            <button onClick={signOut} className={NAV_LINK}>
               <LogOut className="h-4 w-4" /> {t.layout.signOut}
             </button>
           </nav>
