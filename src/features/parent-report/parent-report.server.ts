@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { isRateLimited } from "@/shared/lib/rate-limit";
+import { failWithClientError } from "@/shared/lib/safe-error";
 
 type ParentStudent = {
   id: string;
@@ -17,48 +18,85 @@ type ParentStudent = {
   relation: string;
 };
 
-type StudentReportShape = {
-  student: {
-    displayName: string | null;
-    heroClass: string | null;
-    level: number;
-    xp: number;
-    currentStreak: number;
-    longestStreak: number;
-    lastActiveDate: string | null;
-    createdAt: string;
-  };
-  summary: {
-    totalTimeMinutes: number;
-    totalExercises: number;
-    avgScore: number;
-    daysActiveThisWeek: number;
-    seriousnessScore: number;
-    verdict: "excellent" | "good" | "average" | "needs_improvement" | "inactive";
-    scoreTrend: number;
-  };
-  subjectStats: Array<{
-    subjectId: string;
-    name: string;
-    colorToken: string | null;
-    attempts: number;
-    avgScore: number;
-    totalTimeMinutes: number;
-  }>;
-  dailyActivity: Array<{
-    date: string;
-    exercises: number;
-    minutes: number;
-    avgScore: number;
-  }>;
-};
+// The RPC returns a `Json` value; validate field-by-field with zod, coercing
+// numbers, defaulting arrays to [], and constraining the verdict union with a
+// safe fallback so the route's `.map()`/`summary.verdict` access can never crash.
+const numberish = z.coerce.number().catch(0);
+const VERDICT_VALUES = ["excellent", "good", "average", "needs_improvement", "inactive"] as const;
+
+const studentReportSchema = z.object({
+  student: z
+    .object({
+      displayName: z.string().nullable().catch(null),
+      heroClass: z.string().nullable().catch(null),
+      level: numberish,
+      xp: numberish,
+      currentStreak: numberish,
+      longestStreak: numberish,
+      lastActiveDate: z.string().nullable().catch(null),
+      createdAt: z.string().catch(""),
+    })
+    .catch({
+      displayName: null,
+      heroClass: null,
+      level: 0,
+      xp: 0,
+      currentStreak: 0,
+      longestStreak: 0,
+      lastActiveDate: null,
+      createdAt: "",
+    }),
+  summary: z
+    .object({
+      totalTimeMinutes: numberish,
+      totalExercises: numberish,
+      avgScore: numberish,
+      daysActiveThisWeek: numberish,
+      seriousnessScore: numberish,
+      verdict: z.enum(VERDICT_VALUES).catch("average"),
+      scoreTrend: numberish,
+    })
+    .catch({
+      totalTimeMinutes: 0,
+      totalExercises: 0,
+      avgScore: 0,
+      daysActiveThisWeek: 0,
+      seriousnessScore: 0,
+      verdict: "average",
+      scoreTrend: 0,
+    }),
+  subjectStats: z
+    .array(
+      z.object({
+        subjectId: z.string().catch(""),
+        name: z.string().catch(""),
+        colorToken: z.string().nullable().catch(null),
+        attempts: numberish,
+        avgScore: numberish,
+        totalTimeMinutes: numberish,
+      }),
+    )
+    .catch([]),
+  dailyActivity: z
+    .array(
+      z.object({
+        date: z.string().catch(""),
+        exercises: numberish,
+        minutes: numberish,
+        avgScore: numberish,
+      }),
+    )
+    .catch([]),
+});
+
+type StudentReportShape = z.infer<typeof studentReportSchema>;
 
 function parseStudentReportPayload(payload: unknown): StudentReportShape {
   if (!payload || typeof payload !== "object") {
     throw new Error("Invalid student report payload.");
   }
 
-  return payload as StudentReportShape;
+  return studentReportSchema.parse(payload);
 }
 
 /**
@@ -86,7 +124,13 @@ export const getLinkedStudents = createServerFn({ method: "GET" })
       .select("role")
       .eq("id", userId)
       .single();
-    if (profileErr) throw new Error(profileErr.message);
+    if (profileErr) {
+      failWithClientError(
+        "parentReport.getLinkedStudents: failed to load profile",
+        profileErr,
+        "Impossible de charger votre profil.",
+      );
+    }
 
     if (!profile || (profile.role !== "parent" && profile.role !== "admin")) {
       throw new Error("Access denied: parent or admin account required.");
@@ -109,8 +153,20 @@ export const getLinkedStudents = createServerFn({ method: "GET" })
           .eq("role", "student"),
       ]);
 
-      if (studentsRes.error) throw new Error(studentsRes.error.message);
-      if (countRes.error) throw new Error(countRes.error.message);
+      if (studentsRes.error) {
+        failWithClientError(
+          "parentReport.getLinkedStudents: failed to load students",
+          studentsRes.error,
+          "Impossible de charger la liste des élèves.",
+        );
+      }
+      if (countRes.error) {
+        failWithClientError(
+          "parentReport.getLinkedStudents: failed to count students",
+          countRes.error,
+          "Impossible de charger la liste des élèves.",
+        );
+      }
 
       const students: ParentStudent[] = (studentsRes.data ?? []).map((s) => ({
         ...s,
@@ -137,7 +193,13 @@ export const getLinkedStudents = createServerFn({ method: "GET" })
       .select("student_user_id, relation_label, is_active")
       .eq("parent_user_id", userId)
       .eq("is_active", true);
-    if (linksErr) throw new Error(linksErr.message);
+    if (linksErr) {
+      failWithClientError(
+        "parentReport.getLinkedStudents: failed to load links",
+        linksErr,
+        "Impossible de charger les élèves associés.",
+      );
+    }
 
     if (!links || links.length === 0) {
       return {
@@ -160,7 +222,13 @@ export const getLinkedStudents = createServerFn({ method: "GET" })
         "id, display_name, hero_class, level, xp, current_streak, longest_streak, last_active_date, created_at",
       )
       .in("id", studentIds);
-    if (studentsErr) throw new Error(studentsErr.message);
+    if (studentsErr) {
+      failWithClientError(
+        "parentReport.getLinkedStudents: failed to load linked students",
+        studentsErr,
+        "Impossible de charger les élèves associés.",
+      );
+    }
 
     const linkedStudents: ParentStudent[] = (students ?? []).map((s) => ({
       ...s,
@@ -192,7 +260,13 @@ export const getStudentReport = createServerFn({ method: "GET" })
       p_student: data.studentId,
     });
 
-    if (reportErr) throw new Error(reportErr.message);
+    if (reportErr) {
+      failWithClientError(
+        "parentReport.getStudentReport: RPC failed",
+        reportErr,
+        "Impossible de charger le rapport de l'élève.",
+      );
+    }
 
     return parseStudentReportPayload(reportData);
   });
@@ -231,7 +305,13 @@ export const linkStudentByCode = createServerFn({ method: "POST" })
       p_code: data.studentCode,
       p_relation: data.relationLabel,
     });
-    if (error) throw new Error(error.message);
+    if (error) {
+      failWithClientError(
+        "parentReport.linkStudentByCode: RPC failed",
+        error,
+        "Impossible d'associer cet élève. Vérifiez le code et réessayez.",
+      );
+    }
 
     const row = result && typeof result === "object" ? (result as Record<string, unknown>) : {};
     return {

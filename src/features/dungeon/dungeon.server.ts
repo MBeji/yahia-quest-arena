@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { isRateLimited } from "@/shared/lib/rate-limit";
+import { failWithClientError } from "@/shared/lib/safe-error";
 
 /** Dungeon constants */
 export const DUNGEON_XP_PER_FLOOR = 15;
@@ -120,7 +121,13 @@ export const startDungeonRun = createServerFn({ method: "POST" })
     }
 
     const { data, error } = await supabase.rpc("start_dungeon_run");
-    if (error) throw new Error(error.message);
+    if (error) {
+      failWithClientError(
+        "dungeon.startDungeonRun: start_dungeon_run RPC failed",
+        error,
+        "Dungeon run initialization failed.",
+      );
+    }
 
     const runId = typeof data === "string" ? data : "";
     if (!runId) throw new Error("Dungeon run initialization failed.");
@@ -157,7 +164,13 @@ export const getDungeonQuestions = createServerFn({ method: "GET" })
       p_run_id: data.runId,
       p_batch_size: data.batchSize,
     });
-    if (error) throw new Error(error.message);
+    if (error) {
+      failWithClientError(
+        "dungeon.getDungeonQuestions: get_dungeon_questions RPC failed",
+        error,
+        "Failed to load dungeon questions.",
+      );
+    }
 
     return parseDungeonQuestionsPayload(payload);
   });
@@ -185,7 +198,13 @@ export const submitDungeonAnswer = createServerFn({ method: "POST" })
       p_question_id: data.questionId,
       p_choice: data.choice,
     });
-    if (error) throw new Error(error.message);
+    if (error) {
+      failWithClientError(
+        "dungeon.submitDungeonAnswer: submit_dungeon_answer RPC failed",
+        error,
+        "Failed to validate answer.",
+      );
+    }
 
     return parseDungeonAnswerPayload(payload);
   });
@@ -215,7 +234,13 @@ export const submitDungeonRun = createServerFn({ method: "POST" })
       p_run_id: data.runId,
       p_duration_seconds: data.durationSeconds,
     });
-    if (error) throw new Error(error.message);
+    if (error) {
+      failWithClientError(
+        "dungeon.submitDungeonRun: finalize_dungeon_run RPC failed",
+        error,
+        "Failed to finalize the dungeon run.",
+      );
+    }
 
     return parseDungeonFinalizePayload(payload);
   });

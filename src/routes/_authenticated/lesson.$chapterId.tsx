@@ -76,7 +76,7 @@ function LessonPage() {
           params={{ subjectId: chapter.subject_id }}
           className="mt-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
         >
-          <ArrowLeft className="h-4 w-4" /> Back to subject
+          <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> Back to subject
         </Link>
       </div>
     );
@@ -94,7 +94,7 @@ function LessonPage() {
           params={{ subjectId: chapter.subject_id }}
           className="inline-flex items-center gap-1.5 rounded-lg border border-border/50 bg-card/60 px-3 py-2 text-sm text-muted-foreground backdrop-blur-sm transition hover:border-[color:var(--neon-cyan)]/40 hover:text-foreground"
         >
-          <ArrowLeft className="h-4 w-4" /> {subjectData?.name_fr ?? "Back"}
+          <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {subjectData?.name_fr ?? "Back"}
         </Link>
 
         {/* Chapter progress indicator */}
@@ -241,7 +241,7 @@ function LessonPage() {
                 params={{ chapterId: prevChapter.id }}
                 className="group flex items-center gap-2 rounded-xl border border-border/50 bg-card/60 px-4 py-3 text-sm transition hover:border-[color:var(--neon-cyan)]/50 hover:bg-[color:var(--neon-cyan)]/10"
               >
-                <ChevronLeft className="h-4 w-4 transition group-hover:-translate-x-0.5" />
+                <ChevronLeft className="h-4 w-4 transition group-hover:-translate-x-0.5 rtl:-scale-x-100 rtl:group-hover:translate-x-0.5" />
                 <div className="text-right" dir={isRtlText(prevChapter.title) ? "rtl" : undefined}>
                   <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
                     السابق
@@ -273,7 +273,7 @@ function LessonPage() {
                   </div>
                   <div className="font-semibold line-clamp-1">{nextChapter.title}</div>
                 </div>
-                <ChevronRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+                <ChevronRight className="h-4 w-4 transition group-hover:translate-x-0.5 rtl:-scale-x-100 rtl:group-hover:-translate-x-0.5" />
               </Link>
             ) : (
               <Link

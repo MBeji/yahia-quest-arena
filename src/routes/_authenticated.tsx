@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/features/auth";
 import { Sparkles, LayoutDashboard, LogOut, Swords, Crown, ClipboardList } from "lucide-react";
 import { supabase } from "@/shared/integrations/supabase/client";
@@ -15,20 +16,18 @@ function AuthenticatedLayout() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const t = useT();
-  const [userRole, setUserRole] = useState<string | null>(null);
 
-  // Fetch user role for conditional nav
-  useEffect(() => {
-    if (!user) return;
-    supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .single()
-      .then(({ data }) => {
-        if (data) setUserRole(data.role);
-      });
-  }, [user]);
+  // Fetch user role for conditional nav. Cached so it is not refetched on every
+  // navigation within the authenticated layout.
+  const { data: userRole = null } = useQuery({
+    queryKey: ["me-role", user?.id],
+    enabled: !!user,
+    staleTime: 5 * 60_000,
+    queryFn: async () => {
+      const { data } = await supabase.from("profiles").select("role").eq("id", user!.id).single();
+      return data?.role ?? null;
+    },
+  });
 
   // Redirect unauthenticated users via effect (not during render)
   useEffect(() => {

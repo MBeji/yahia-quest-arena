@@ -82,7 +82,7 @@ function SubjectPage() {
         to="/dashboard"
         className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
       >
-        <ArrowLeft className="h-4 w-4" /> Heroes Hall
+        <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> Heroes Hall
       </Link>
 
       <div className="relative overflow-hidden rounded-3xl border border-border/50 bg-card/60 p-8 backdrop-blur-xl">
@@ -280,7 +280,7 @@ function SubjectPage() {
                             />
                           ))}
                         </div>
-                        <ChevronRight className="h-5 w-5 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-foreground" />
+                        <ChevronRight className="h-5 w-5 text-muted-foreground transition group-hover:translate-x-1 rtl:-scale-x-100 rtl:group-hover:-translate-x-1 group-hover:text-foreground" />
                       </div>
                     </Link>
                   );

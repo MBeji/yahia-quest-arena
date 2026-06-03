@@ -41,14 +41,25 @@ function SubjectCard({
       onClick={onClick}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
-      className={`relative rounded-2xl p-6 text-left transition-all ${
-        isSelected
-          ? `border-2 border-[${color}] bg-[${color}]/15`
-          : "border-2 border-slate-700 bg-slate-800/50 hover:border-slate-600"
+      className={`relative rounded-2xl border-2 p-6 text-left transition-all ${
+        isSelected ? "" : "border-slate-700 bg-slate-800/50 hover:border-slate-600"
       }`}
+      style={
+        isSelected
+          ? {
+              borderColor: color,
+              background: `color-mix(in oklab, ${color} 15%, transparent)`,
+            }
+          : undefined
+      }
     >
       <div className="flex items-start gap-4">
-        <div className={`rounded-xl bg-[${color}]/20 p-3`}>{icon}</div>
+        <div
+          className="rounded-xl p-3"
+          style={{ background: `color-mix(in oklab, ${color} 20%, transparent)` }}
+        >
+          {icon}
+        </div>
         <div className="flex-1">
           <h3 className="font-display text-lg font-bold">{name}</h3>
           <p className="mt-1 text-sm text-slate-400">{description}</p>
@@ -57,7 +68,8 @@ function SubjectCard({
       {isSelected && (
         <motion.div
           layoutId="selected"
-          className={`absolute inset-0 rounded-2xl border-2 border-[${color}]`}
+          className="absolute inset-0 rounded-2xl border-2"
+          style={{ borderColor: color }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         />
@@ -68,11 +80,15 @@ function SubjectCard({
 
 function OnboardingStep1({
   subjects,
+  isPending,
+  isError,
   selectedId,
   onSelect,
   onNext,
 }: {
   subjects: OnboardingSubject[];
+  isPending: boolean;
+  isError: boolean;
   selectedId: string | null;
   onSelect: (id: string) => void;
   onNext: () => void;
@@ -89,20 +105,39 @@ function OnboardingStep1({
         <p className="mt-2 text-slate-400">Commence par ce qui t'intéresse le plus!</p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        {subjects.map((subject) => (
-          <SubjectCard
-            key={subject.id}
-            id={subject.id}
-            name={subject.name_fr}
-            description={subject.description}
-            color={`var(--${subject.color_token})`}
-            icon={<Play className="h-6 w-6" />}
-            onClick={() => onSelect(subject.id)}
-            isSelected={selectedId === subject.id}
-          />
-        ))}
-      </div>
+      {isPending ? (
+        <div className="grid gap-4 sm:grid-cols-2">
+          {[0, 1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="h-[104px] animate-pulse rounded-2xl border-2 border-slate-700 bg-slate-800/50"
+            />
+          ))}
+        </div>
+      ) : isError ? (
+        <div className="rounded-2xl border-2 border-slate-700 bg-slate-800/50 p-8 text-center text-sm text-slate-400">
+          Impossible de charger les matières. Réessaie plus tard.
+        </div>
+      ) : subjects.length === 0 ? (
+        <div className="rounded-2xl border-2 border-slate-700 bg-slate-800/50 p-8 text-center text-sm text-slate-400">
+          Aucune matière disponible pour le moment.
+        </div>
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2">
+          {subjects.map((subject) => (
+            <SubjectCard
+              key={subject.id}
+              id={subject.id}
+              name={subject.name_fr}
+              description={subject.description}
+              color={`var(--${subject.color_token})`}
+              icon={<Play className="h-6 w-6" />}
+              onClick={() => onSelect(subject.id)}
+              isSelected={selectedId === subject.id}
+            />
+          ))}
+        </div>
+      )}
 
       <div className="flex gap-3">
         <Button onClick={onNext} disabled={!selectedId} className="ml-auto gap-2">
@@ -167,9 +202,17 @@ function OnboardingStep2({
             whileTap={{ scale: 0.98 }}
             className={`rounded-2xl border-2 p-6 text-left transition-all ${
               difficulty === diff.id
-                ? `border-[${diff.color}] bg-[${diff.color}]/15`
+                ? ""
                 : "border-slate-700 bg-slate-800/50 hover:border-slate-600"
             }`}
+            style={
+              difficulty === diff.id
+                ? {
+                    borderColor: diff.color,
+                    background: `color-mix(in oklab, ${diff.color} 15%, transparent)`,
+                  }
+                : undefined
+            }
           >
             <div className="flex items-center gap-4">
               <div style={{ color: diff.color }}>{diff.icon}</div>
@@ -263,7 +306,11 @@ function OnboardingComponent() {
 
   // Fetch subjects for step 1
   const fetchDashboard = useServerFn(getDashboard);
-  const { data: dashboardData } = useQuery({
+  const {
+    data: dashboardData,
+    isPending: subjectsPending,
+    isError: subjectsError,
+  } = useQuery({
     queryKey: ["dashboard-onboarding"],
     queryFn: () => fetchDashboard(),
   });
@@ -306,6 +353,8 @@ function OnboardingComponent() {
             <OnboardingStep1
               key="step1"
               subjects={subjects}
+              isPending={subjectsPending}
+              isError={subjectsError}
               selectedId={selectedSubject}
               onSelect={setSelectedSubject}
               onNext={handleNext}

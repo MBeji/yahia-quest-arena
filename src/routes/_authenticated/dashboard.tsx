@@ -24,6 +24,7 @@ import {
 import { toast } from "sonner";
 import {
   getDashboard,
+  getDashboardSecondary,
   getSprint2Dashboard,
   formatObjectiveType,
   formatQuestType,
@@ -34,6 +35,7 @@ import { purchaseShopItem, equipInventorySkin } from "@/features/shop";
 import { recoverStreak } from "@/features/progression";
 import { formatStudentAllianceCode } from "@/features/parent-report";
 import { useT } from "@/lib/i18n";
+import { xpToNextLevel, xpWithinLevel } from "@/shared/lib/level";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 
 const DashboardRadarInventory = lazy(() =>
@@ -155,6 +157,7 @@ function Dashboard() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const fetchDashboard = useServerFn(getDashboard);
+  const fetchDashboardSecondary = useServerFn(getDashboardSecondary);
   const fetchSprint2 = useServerFn(getSprint2Dashboard);
   const purchaseItem = useServerFn(purchaseShopItem);
   const equipSkin = useServerFn(equipInventorySkin);
@@ -165,6 +168,14 @@ function Dashboard() {
   const { data: sprint2 } = useQuery({ queryKey: ["sprint2"], queryFn: () => fetchSprint2() });
   const [copiedCode, setCopiedCode] = useState(false);
   const [deferSecondarySections, setDeferSecondarySections] = useState(false);
+
+  // #15: badges/inventory/shop come from a separate server fn, fetched only once
+  // the deferred secondary sections are about to render.
+  const { data: secondary } = useQuery({
+    queryKey: ["dashboard", "secondary"],
+    queryFn: () => fetchDashboardSecondary(),
+    enabled: deferSecondarySections,
+  });
 
   useEffect(() => {
     const timer = window.setTimeout(() => setDeferSecondarySections(true), 350);
@@ -181,18 +192,28 @@ function Dashboard() {
   const purchaseMutation = useMutation({
     mutationFn: (payload: { itemCode: string }) => purchaseItem({ data: payload }),
     onSuccess: (res) => {
+      // TODO(review #32): hardcoded English toast — no matching i18n key exists yet
+      // (e.g. t.dashboard.purchaseSuccess with a {name} placeholder). Add the key to the
+      // i18n files (fr/en/ar/types), then switch to useT(). i18n files are out of scope here.
       toast.success(`${res.purchasedItemName} added to inventory.`);
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
+    // TODO(review #32): hardcoded English fallback — needs an i18n key (e.g.
+    // t.dashboard.purchaseFailed) added to the i18n files before it can use useT().
     onError: (error) => toast.error(error instanceof Error ? error.message : "Purchase failed"),
   });
 
   const equipMutation = useMutation({
     mutationFn: (payload: { itemCode: string }) => equipSkin({ data: payload }),
     onSuccess: (res) => {
+      // TODO(review #32): hardcoded English toast — no matching i18n key exists yet
+      // (e.g. t.dashboard.equipSuccess with a {name} placeholder). Add it to the i18n
+      // files, then switch to useT(). i18n files are out of scope here.
       toast.success(`${res.itemName} equipped.`);
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
+    // TODO(review #32): hardcoded English fallback — needs an i18n key (e.g.
+    // t.dashboard.equipFailed) added to the i18n files before it can use useT().
     onError: (error) => toast.error(error instanceof Error ? error.message : "Equip failed"),
   });
 
@@ -200,11 +221,16 @@ function Dashboard() {
   const streakRecoveryMutation = useMutation({
     mutationFn: () => recoverStreakFn(),
     onSuccess: (res) => {
+      // TODO(review #32): hardcoded English sentence — t.dashboard.days/day exist but the
+      // surrounding "Streak recovered! You now have …" text has no i18n key. Add a key with a
+      // {n}/{unit} placeholder to the i18n files, then switch to useT(). i18n files out of scope.
       toast.success(
         `🔥 Streak recovered! You now have ${res.newStreak} ${res.newStreak > 1 ? t.dashboard.days : t.dashboard.day}.`,
       );
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
+    // TODO(review #32): hardcoded English fallback — needs an i18n key (e.g.
+    // t.dashboard.recoveryFailed) added to the i18n files before it can use useT().
     onError: (error) => toast.error(error instanceof Error ? error.message : "Recovery failed"),
   });
 
@@ -243,14 +269,20 @@ function Dashboard() {
     );
   }
 
-  const { profile, subjects, stats, badges, inventory, shopItems, nextExerciseId } = data;
+  const { profile, subjects, stats, nextExerciseId } = data;
+  // #15: badges/inventory/shop now come from the deferred secondary query.
+  const badges = secondary?.badges ?? [];
+  const inventory = secondary?.inventory ?? [];
+  const shopItems = secondary?.shopItems ?? [];
   if (!profile)
     return <div className="p-8 text-center text-muted-foreground">Profile not found.</div>;
   const studentAllianceCode =
     profile.role === "student" ? formatStudentAllianceCode(profile.id) : "";
 
-  const xpInLevel = profile.xp % 200;
-  const xpPct = (xpInLevel / 200) * 100;
+  // #5: derive within-level XP / remaining XP via shared helpers instead of hardcoded 200.
+  const xpInLevel = xpWithinLevel(profile.xp);
+  const xpToNext = xpToNextLevel(profile.xp);
+  const xpPct = (xpInLevel / (xpInLevel + xpToNext)) * 100;
 
   // Find the best "continue" target: last attempted subject or first subject with no attempts
   const lastSubjectId = data.recent?.[0]?.subject_id;
@@ -280,6 +312,8 @@ function Dashboard() {
       return;
     }
 
+    // TODO(review #32): hardcoded English toast — needs an i18n key (e.g.
+    // t.dashboard.noQuestTarget) added to the i18n files before it can use useT().
     toast.info("No quest target available yet. Complete one subject quest first.");
   }
 
@@ -320,7 +354,9 @@ function Dashboard() {
             <div className="mt-4">
               <div className="mb-1 flex justify-between text-xs text-muted-foreground">
                 <span>Level {profile.level}</span>
-                <span>{xpInLevel} / 200 XP</span>
+                <span>
+                  {xpInLevel} / {xpInLevel + xpToNext} XP
+                </span>
               </div>
               <div
                 className="h-2.5 overflow-hidden rounded-full bg-secondary"

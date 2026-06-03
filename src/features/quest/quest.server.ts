@@ -3,6 +3,7 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { isRateLimited } from "@/shared/lib/rate-limit";
 import { QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
+import { failWithClientError } from "@/shared/lib/safe-error";
 import type { UnlockedBadge } from "@/shared/types/gamification";
 import type { Database } from "@/shared/integrations/supabase/types";
 
@@ -84,7 +85,9 @@ export const getSubject = createServerFn({ method: "GET" })
         .eq("subject_id", data.subjectId)
         .order("display_order"),
     ]);
-    if (subj.error) throw new Error(subj.error.message);
+    if (subj.error) {
+      failWithClientError("quest.getSubject", subj.error, "Impossible de charger la matière.");
+    }
 
     // Best scores RPC - graceful fallback if function doesn't exist yet
     let bestScoresData: unknown[] = [];
@@ -152,7 +155,9 @@ export const getChapterLesson = createServerFn({ method: "GET" })
       )
       .eq("id", data.chapterId)
       .single();
-    if (error) throw new Error(error.message);
+    if (error) {
+      failWithClientError("quest.getChapterLesson", error, "Impossible de charger la leçon.");
+    }
 
     // Fetch all sibling chapters for navigation
     const { data: siblings } = await supabase
@@ -180,7 +185,7 @@ export const getExercise = createServerFn({ method: "GET" })
     const [ex, qs] = await Promise.all([
       supabase
         .from("exercises")
-        .select("*, subjects(*), chapters(*)")
+        .select("*, subjects(id,name_fr,color_token,icon), chapters(id,title,subject_id)")
         .eq("id", data.exerciseId)
         .single(),
       supabase
@@ -189,7 +194,9 @@ export const getExercise = createServerFn({ method: "GET" })
         .eq("exercise_id", data.exerciseId)
         .order("display_order"),
     ]);
-    if (ex.error) throw new Error(ex.error.message);
+    if (ex.error) {
+      failWithClientError("quest.getExercise", ex.error, "Impossible de charger l'exercice.");
+    }
     return { exercise: ex.data, questions: qs.data ?? [] };
   });
 
@@ -207,7 +214,13 @@ export const startExerciseSession = createServerFn({ method: "POST" })
       .select("id, mode, chapter_id")
       .eq("id", data.exerciseId)
       .single();
-    if (exError) throw new Error(exError.message);
+    if (exError) {
+      failWithClientError(
+        "quest.startExerciseSession",
+        exError,
+        "Impossible de démarrer la session.",
+      );
+    }
 
     if (ex.mode !== "quiz" && ex.chapter_id) {
       const { data: quiz } = await supabase
@@ -227,7 +240,7 @@ export const startExerciseSession = createServerFn({ method: "POST" })
           .gte("score_pct", QUIZ_PASS_THRESHOLD_PCT)
           .limit(1);
         if (!passed || passed.length === 0) {
-          throw new Error(QUIZ_LOCKED_MESSAGE);
+          failWithClientError("quest.startExerciseSession", null, QUIZ_LOCKED_MESSAGE);
         }
       }
     }
@@ -238,7 +251,13 @@ export const startExerciseSession = createServerFn({ method: "POST" })
       .select("id,started_at")
       .single();
 
-    if (error) throw new Error(error.message);
+    if (error) {
+      failWithClientError(
+        "quest.startExerciseSession",
+        error,
+        "Impossible de démarrer la session.",
+      );
+    }
 
     return {
       sessionId: session.id,
@@ -273,7 +292,13 @@ export const submitAttempt = createServerFn({ method: "POST" })
       .from("questions")
       .select("id,prompt,correct_option,explanation")
       .eq("exercise_id", data.exerciseId);
-    if (questionErr) throw new Error(questionErr.message);
+    if (questionErr) {
+      failWithClientError(
+        "quest.submitAttempt",
+        questionErr,
+        "Impossible de charger les questions.",
+      );
+    }
 
     const questionMap = new Map((questions ?? []).map((q) => [q.id, q]));
 
@@ -294,7 +319,13 @@ export const submitAttempt = createServerFn({ method: "POST" })
       p_exercise_id: data.exerciseId,
       p_answers: data.answers,
     });
-    if (submitErr) throw new Error(submitErr.message);
+    if (submitErr) {
+      failWithClientError(
+        "quest.submitAttempt",
+        submitErr,
+        "Impossible d'enregistrer votre tentative.",
+      );
+    }
 
     const atomic = parseAtomicSubmitResponse(submitData);
 

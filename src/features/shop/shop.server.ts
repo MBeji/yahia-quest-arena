@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { isRateLimited } from "@/shared/lib/rate-limit";
+import { failWithClientError } from "@/shared/lib/safe-error";
 
 function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === "object" ? (value as Record<string, unknown>) : {};
@@ -24,7 +25,9 @@ export const purchaseShopItem = createServerFn({ method: "POST" })
     const { data: result, error } = await supabase.rpc("purchase_shop_item", {
       p_item_code: data.itemCode,
     });
-    if (error) throw new Error(error.message);
+    if (error) {
+      failWithClientError("shop.purchaseShopItem", error, "Impossible de finaliser l'achat.");
+    }
 
     const row = asRecord(result);
     return {
@@ -46,7 +49,9 @@ export const equipInventorySkin = createServerFn({ method: "POST" })
     const { data: result, error } = await supabase.rpc("equip_inventory_skin", {
       p_item_code: data.itemCode,
     });
-    if (error) throw new Error(error.message);
+    if (error) {
+      failWithClientError("shop.equipInventorySkin", error, "Impossible d'équiper cet objet.");
+    }
 
     const row = asRecord(result);
     return {

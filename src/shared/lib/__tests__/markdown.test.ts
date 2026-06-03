@@ -109,6 +109,16 @@ describe("renderMarkdown", () => {
       expect(result).toContain("First");
       expect(result).toContain("Second");
     });
+
+    it("wraps consecutive ordered li in ol (not orphan li)", () => {
+      const result = renderMarkdown("1. First\n2. Second\n3. Third");
+      expect(result).toContain('<ol class="lesson-ol">');
+      expect(result).toContain("</ol>");
+      // Ordered items must not be wrapped in <ul>
+      expect(result).not.toContain('<ul class="lesson-ul"><li class="lesson-li lesson-oli">');
+      // No orphan <li> outside a list container
+      expect(result).not.toContain('<p><li class="lesson-li lesson-oli">');
+    });
   });
 
   describe("Tables", () => {

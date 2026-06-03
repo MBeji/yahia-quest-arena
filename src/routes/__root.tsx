@@ -7,8 +7,12 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
+import { createIsomorphicFn } from "@tanstack/react-start";
+import { getRequestHeader } from "@tanstack/react-start/server";
 import { Toaster } from "@/components/ui/sonner";
 import { I18nProvider, useT } from "@/lib/i18n";
+import type { Locale } from "@/lib/i18n";
+import { DEFAULT_LOCALE, dirForLocale, localeFromCookieHeader } from "@/lib/i18n/context";
 
 import appCss from "../styles.css?url";
 
@@ -96,9 +100,37 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
+/**
+ * Resolve the locale for the SSR document shell from the persisted cookie so that
+ * <html lang/dir> is correct on first paint (no RTL FOUC for Arabic users).
+ *
+ * Hydration safety: the client provider (I18nProvider) starts at DEFAULT_LOCALE
+ * and only applies the persisted locale in a post-mount effect, so the *body*
+ * markup the client first renders matches the server. The <html> attributes here
+ * are set from the same cookie the client reads, so they agree on both sides.
+ *
+ * TODO(review #8): the cookie is the SSR source of truth, but legacy users who only
+ * have the localStorage value (set before this cookie existed) still see one frame of
+ * the default locale until their next setLocale call writes the cookie. A one-time
+ * migration that mirrors localStorage -> cookie on first mount would close that gap.
+ */
+const getShellLocale = createIsomorphicFn()
+  // Client (hydration / client navigation): read the document cookie directly.
+  .client((): Locale => localeFromCookieHeader(document.cookie))
+  // Server: read the request Cookie header. This branch (and its server-only
+  // import) is stripped from the client bundle by the isomorphic boundary.
+  .server((): Locale => {
+    try {
+      return localeFromCookieHeader(getRequestHeader("cookie"));
+    } catch {
+      return DEFAULT_LOCALE;
+    }
+  });
+
 function RootShell({ children }: { children: React.ReactNode }) {
+  const locale = getShellLocale();
   return (
-    <html lang="en" dir="ltr">
+    <html lang={locale} dir={dirForLocale(locale)}>
       <head>
         <HeadContent />
       </head>

@@ -74,3 +74,6 @@ export const DEFAULT_WEEKLY_QUESTS = [
 
 /** Boss mode: time per question in seconds */
 export const BOSS_TIME_PER_QUESTION_S = 20;
+
+/** Cost in XP Coins to recover a lost streak */
+export const STREAK_RECOVERY_COST = 15;

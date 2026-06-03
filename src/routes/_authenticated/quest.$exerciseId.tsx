@@ -15,6 +15,7 @@ import {
   Timer,
   BookOpen,
   Lock,
+  Check,
 } from "lucide-react";
 import { toast } from "sonner";
 import { getExercise, startExerciseSession, submitAttempt } from "@/features/quest";
@@ -25,6 +26,7 @@ import {
 } from "@/shared/constants/gamification";
 import { isRtlText, isMathExpression } from "@/shared/lib/utils";
 import { shuffleOptions, type BaseOption, type DisplayOption } from "@/shared/lib/question-utils";
+import { levelForXp } from "@/shared/lib/level";
 import { LevelUpCelebration } from "@/components/ui/level-up-celebration";
 import { useT } from "@/lib/i18n";
 
@@ -105,7 +107,7 @@ function QuestPage() {
       const profileLevel = Number((res.profile as Record<string, unknown>)?.level ?? 0);
       const profileXp = Number((res.profile as Record<string, unknown>)?.xp ?? 0);
       const prevXp = profileXp - res.xpEarned;
-      const prevLevel = Math.floor(prevXp / 200) + 1;
+      const prevLevel = levelForXp(prevXp);
       if (profileLevel > prevLevel && res.xpEarned > 0) {
         setTimeout(() => setShowLevelUp(true), 1200);
       }
@@ -571,7 +573,7 @@ function QuestPage() {
         to=".."
         className="mb-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
       >
-        <ArrowLeft className="h-4 w-4" /> {t.quest.leaveQuest}
+        <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.quest.leaveQuest}
       </Link>
 
       {/* Boss Mode Header */}
@@ -657,7 +659,7 @@ function QuestPage() {
           <p className="mt-2 text-sm text-muted-foreground">
             {isBoss ? t.quest.bossStrike : t.quest.feedbackMsg}
           </p>
-          <div className="mt-6 space-y-3">
+          <div className="mt-6 space-y-3" role="radiogroup" aria-label={current.prompt}>
             {options.map((opt) => {
               const isSel = selected === opt.id;
               let cls = isBoss
@@ -677,6 +679,9 @@ function QuestPage() {
               return (
                 <button
                   key={opt.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={isSel}
                   onClick={() => handleSelect(opt.id)}
                   disabled={showFeedback}
                   className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left text-sm transition-all duration-200 ${cls} ${showFeedback ? "cursor-default" : "active:scale-[0.97]"}`}
@@ -692,6 +697,15 @@ function QuestPage() {
                     </span>
                     <span>{opt.text}</span>
                   </span>
+                  {/* Non-color indicator: the quest screen only reveals the recorded
+                      choice (correctness is shown in the end-of-quest review), so mark
+                      the selected option with an icon + screen-reader text. */}
+                  {showFeedback && isSel && (
+                    <span className="flex shrink-0 items-center gap-1">
+                      <Check className="h-5 w-5" aria-hidden="true" />
+                      <span className="sr-only">{t.quest.yourAnswer}</span>
+                    </span>
+                  )}
                 </button>
               );
             })}

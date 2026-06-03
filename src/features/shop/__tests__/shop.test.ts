@@ -42,6 +42,10 @@ vi.mock("@/shared/lib/rate-limit", () => ({
   isRateLimited: vi.fn().mockResolvedValue(false),
 }));
 
+vi.mock("@/shared/lib/logger", () => ({
+  logger: { error: vi.fn(), warn: vi.fn(), info: vi.fn(), debug: vi.fn() },
+}));
+
 // Dispatch rpc responses by function name.
 function rpcResponder(map: Record<string, { data: unknown; error: unknown }>) {
   return (fn: string) => map[fn] ?? { data: null, error: null };
@@ -86,7 +90,7 @@ describe("shop — purchaseShopItem", () => {
     const { purchaseShopItem } = await import("@/features/shop");
     await expect(
       (purchaseShopItem as unknown as (d: unknown) => Promise<unknown>)({ itemCode: "skin_gold" }),
-    ).rejects.toThrow("Insufficient XP Coins");
+    ).rejects.toThrow("Impossible de finaliser l'achat.");
   });
 
   it("surfaces the RPC error when a skin is already owned", async () => {
@@ -102,7 +106,7 @@ describe("shop — purchaseShopItem", () => {
     const { purchaseShopItem } = await import("@/features/shop");
     await expect(
       (purchaseShopItem as unknown as (d: unknown) => Promise<unknown>)({ itemCode: "skin_gold" }),
-    ).rejects.toThrow("already in your inventory");
+    ).rejects.toThrow("Impossible de finaliser l'achat.");
   });
 
   it("rejects empty itemCode (input validation)", async () => {
@@ -152,7 +156,7 @@ describe("shop — equipInventorySkin", () => {
     const { equipInventorySkin } = await import("@/features/shop");
     await expect(
       (equipInventorySkin as unknown as (d: unknown) => Promise<unknown>)({ itemCode: "potion" }),
-    ).rejects.toThrow("Only skins can be equipped");
+    ).rejects.toThrow("Impossible d'équiper cet objet.");
   });
 
   it("rejects empty itemCode (input validation)", async () => {

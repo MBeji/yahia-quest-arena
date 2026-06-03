@@ -33,17 +33,11 @@ export const Route = createFileRoute("/_authenticated/dungeon")({
   component: DungeonPage,
 });
 
-type DungeonQuestion = {
-  id: string;
-  prompt: string;
-  options: DisplayOption[];
-  explanation: string | null;
-  exercises: {
-    difficulty: number;
-    subject_id: string;
-    subjects: { name_fr: string; color_token: string; icon: string };
-  };
-};
+// Derive the question shape from the server fn so we never fabricate non-null fields.
+// The server returns options as raw {id,text}; we replace them with shuffled, labelled
+// DisplayOption[] for rendering.
+type ServerDungeonQuestion = Awaited<ReturnType<typeof getDungeonQuestions>>["questions"][number];
+type DungeonQuestion = Omit<ServerDungeonQuestion, "options"> & { options: DisplayOption[] };
 
 type GameState = "lobby" | "playing" | "gameover";
 
@@ -90,6 +84,7 @@ function DungeonPage() {
       setTotalAnswered(res.totalAnswered);
       qc.invalidateQueries({ queryKey: ["dashboard"] });
     },
+    // TODO(review #32): no i18n key for this fallback yet — add t.dungeon.errorSavingRun.
     onError: (e) => toast.error(e instanceof Error ? e.message : "Error saving run"),
   });
 
@@ -98,7 +93,7 @@ function DungeonPage() {
       submitAnswer({ data: payload }),
   });
 
-  const currentQuestion = questions[currentIdx] as DungeonQuestion | undefined;
+  const currentQuestion: DungeonQuestion | undefined = questions[currentIdx];
 
   const loadBatch = useCallback(
     async (activeRunId: string) => {
@@ -106,11 +101,10 @@ function DungeonPage() {
       try {
         const res = await fetchQuestions({ data: { runId: activeRunId, batchSize: 5 } });
         setFloor(res.currentFloor);
-        const newQuestions = (res.questions ?? []) as unknown as (Omit<
-          DungeonQuestion,
-          "options"
-        > & { options: BaseOption[] })[];
+        const newQuestions = res.questions ?? [];
         if (newQuestions.length === 0) {
+          // TODO(review #32): no i18n key for this dungeon toast yet — add
+          // t.dungeon.noMoreQuestions and switch to it.
           toast.error("No more questions available in the dungeon. Finalizing your run...");
           return false;
         }
@@ -123,6 +117,7 @@ function DungeonPage() {
         setCurrentIdx(0);
         return true;
       } catch {
+        // TODO(review #32): no i18n key for this toast yet — add t.dungeon.failedLoadQuestions.
         toast.error("Failed to load dungeon questions");
         return false;
       } finally {
@@ -158,6 +153,7 @@ function DungeonPage() {
       }
     } catch (error) {
       setState("lobby");
+      // TODO(review #32): no i18n key for this fallback yet — add t.dungeon.failedStartRun.
       toast.error(error instanceof Error ? error.message : "Failed to start dungeon run");
     }
   }
@@ -200,6 +196,7 @@ function DungeonPage() {
       setShowFeedback(false);
       setSelected(null);
       setAnswerWasCorrect(null);
+      // TODO(review #32): no i18n key for this fallback yet — add t.dungeon.failedValidateAnswer.
       toast.error(error instanceof Error ? error.message : "Failed to validate answer");
     }
   }
@@ -236,7 +233,7 @@ function DungeonPage() {
           to="/dashboard"
           className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
         >
-          <ArrowLeft className="h-4 w-4" /> {t.dungeon.heroesHall}
+          <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.dungeon.heroesHall}
         </Link>
 
         <motion.div
@@ -429,7 +426,7 @@ function DungeonPage() {
     );
   }
 
-  const options = (currentQuestion.options as DisplayOption[]) ?? [];
+  const options = currentQuestion.options;
   const subjectInfo = currentQuestion.exercises?.subjects;
   const difficulty = currentQuestion.exercises?.difficulty ?? 1;
   const isCorrectAnswer = showFeedback && answerWasCorrect === true;
@@ -441,7 +438,7 @@ function DungeonPage() {
           to="/dashboard"
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
         >
-          <ArrowLeft className="h-4 w-4" /> {t.dungeon.leaveDungeon}
+          <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.dungeon.leaveDungeon}
         </Link>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5 rounded-full bg-(--neon-magenta)/20 px-3 py-1 text-sm font-bold text-neon-magenta">
@@ -499,7 +496,7 @@ function DungeonPage() {
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">{t.dungeon.warning}</p>
 
-          <div className="mt-6 space-y-3">
+          <div className="mt-6 space-y-3" role="radiogroup" aria-label={currentQuestion.prompt}>
             {options.map((opt) => {
               const isSel = selected === opt.id;
               const isCorrect = showFeedback && isSel && answerWasCorrect === true;
@@ -518,6 +515,9 @@ function DungeonPage() {
               return (
                 <button
                   key={opt.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={isSel}
                   onClick={() => handleSelect(opt.id)}
                   disabled={showFeedback || answerMutation.isPending}
                   className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left text-sm transition ${cls} ${showFeedback ? "cursor-default" : ""}`}
@@ -533,11 +533,19 @@ function DungeonPage() {
                     </span>
                     <span>{opt.text}</span>
                   </span>
+                  {/* Non-color indicator: icon + screen-reader text so correctness is
+                      conveyed without relying on colour alone. */}
                   {showFeedback && isCorrect && (
-                    <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0" />
+                    <span className="flex shrink-0 items-center">
+                      <CheckCircle2 className="h-5 w-5 text-emerald-500" aria-hidden="true" />
+                      <span className="sr-only">{t.dungeon.correctMsg}</span>
+                    </span>
                   )}
                   {showFeedback && isWrong && (
-                    <XCircle className="h-5 w-5 text-destructive shrink-0" />
+                    <span className="flex shrink-0 items-center">
+                      <XCircle className="h-5 w-5 text-destructive" aria-hidden="true" />
+                      <span className="sr-only">{t.dungeon.wrongMsg}</span>
+                    </span>
                   )}
                 </button>
               );
