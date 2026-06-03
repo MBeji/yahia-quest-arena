@@ -528,3 +528,144 @@ describe("gamification.dashboard — getSubjectLeaderboard", () => {
     ).rejects.toThrow(/tableau de bord/i);
   });
 });
+
+describe("gamification.dashboard — branch coverage (error/empty paths)", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    mockFrom.mockReset();
+    mockRpc.mockReset();
+  });
+
+  it("getLeaderboard computes my rank via count when I'm not in the top list", async () => {
+    let n = 0;
+    mockFrom.mockImplementation(() => {
+      n += 1;
+      if (n === 1)
+        return mockQuery([
+          {
+            id: "other",
+            display_name: "Other",
+            hero_class: "mage",
+            level: 9,
+            xp: 9999,
+            current_streak: 0,
+            avatar_tier: 1,
+          },
+        ]);
+      if (n === 2)
+        return mockQuery({
+          id: "user-123",
+          xp: 500,
+          display_name: "Me",
+          hero_class: "novice",
+          level: 2,
+          current_streak: 1,
+          avatar_tier: 1,
+        });
+      return mockQuery(null); // count query → count undefined → `count ?? 0`
+    });
+
+    const { getLeaderboard } = await import("@/features/dashboard");
+    const res = (await (getLeaderboard as unknown as (d?: unknown) => Promise<unknown>)()) as {
+      myRank: { isMe: boolean; rank: number } | undefined;
+    };
+    expect(res.myRank?.isMe).toBe(true);
+    expect(res.myRank?.rank).toBe(1);
+  });
+
+  it("getLeaderboard throws when the 'me' query errors", async () => {
+    let n = 0;
+    mockFrom.mockImplementation(() => {
+      n += 1;
+      if (n === 1) return mockQuery([]);
+      return mockQuery(null, { message: "me error" });
+    });
+    const { getLeaderboard } = await import("@/features/dashboard");
+    await expect(
+      (getLeaderboard as unknown as (d?: unknown) => Promise<unknown>)(),
+    ).rejects.toThrow(/tableau de bord/i);
+  });
+
+  it("getDashboardSecondary skips null badge/item rows and marks unowned shop items", async () => {
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "student_badges")
+        return mockQuery([{ awarded_at: "d", awarded_reason: "r", badge: null }]);
+      if (table === "inventory_items")
+        return mockQuery([{ quantity: 1, is_equipped: false, acquired_at: "d", item: null }]);
+      if (table === "shop_items")
+        return mockQuery([
+          {
+            id: "i9",
+            code: "skin_z",
+            name: "Z",
+            item_type: "skin",
+            description: null,
+            price_coins: 50,
+            is_active: true,
+          },
+        ]);
+      return mockQuery([]);
+    });
+    const { getDashboardSecondary } = await import("@/features/dashboard");
+    const res = (await (
+      getDashboardSecondary as unknown as (d?: unknown) => Promise<unknown>
+    )()) as {
+      badges: unknown[];
+      inventory: unknown[];
+      shopItems: Array<{ isOwned: boolean; isEquipped: boolean; quantity: number }>;
+    };
+    expect(res.badges).toEqual([]);
+    expect(res.inventory).toEqual([]);
+    expect(res.shopItems[0]).toMatchObject({ isOwned: false, isEquipped: false, quantity: 0 });
+  });
+
+  it("getDashboardSecondary throws on inventory error and on shop error", async () => {
+    const { getDashboardSecondary } = await import("@/features/dashboard");
+
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "inventory_items") return mockQuery(null, { message: "inv error" });
+      return mockQuery([]);
+    });
+    await expect(
+      (getDashboardSecondary as unknown as (d?: unknown) => Promise<unknown>)(),
+    ).rejects.toThrow(/tableau de bord/i);
+
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "shop_items") return mockQuery(null, { message: "shop error" });
+      return mockQuery([]);
+    });
+    await expect(
+      (getDashboardSecondary as unknown as (d?: unknown) => Promise<unknown>)(),
+    ).rejects.toThrow(/tableau de bord/i);
+  });
+
+  it("getSubjects throws a generic message on error", async () => {
+    mockFrom.mockImplementation(() => mockQuery(null, { message: "subjects error" }));
+    const { getSubjects } = await import("@/features/dashboard");
+    await expect((getSubjects as unknown as (d?: unknown) => Promise<unknown>)()).rejects.toThrow(
+      /tableau de bord/i,
+    );
+  });
+
+  it("getSprint2Dashboard throws on weekly-quests error and on spaced-rep error", async () => {
+    const { getSprint2Dashboard } = await import("@/features/dashboard");
+
+    let n = 0;
+    mockFrom.mockImplementation(() => {
+      n += 1;
+      return n === 2 ? mockQuery(null, { message: "weekly error" }) : mockQuery([]);
+    });
+    await expect(
+      (getSprint2Dashboard as unknown as (d?: unknown) => Promise<unknown>)(),
+    ).rejects.toThrow(/tableau de bord/i);
+
+    n = 0;
+    mockFrom.mockImplementation(() => {
+      n += 1;
+      return n === 3 ? mockQuery(null, { message: "spaced error" }) : mockQuery([]);
+    });
+    await expect(
+      (getSprint2Dashboard as unknown as (d?: unknown) => Promise<unknown>)(),
+    ).rejects.toThrow(/tableau de bord/i);
+  });
+});

@@ -124,7 +124,7 @@ When unsure about scope or a destructive action, ask before proceeding.
 - **Coverage is scoped to owned code** (`features/`, `shared/`, `lib/`, `hooks/`) in
   `vitest.config.ts`; vendored shadcn UI (`components/ui`), thin route wrappers,
   barrels, generated files, and SSR entry glue are excluded by design. Thresholds are
-  **60%** (actual ≈ 85% stmts / 89% lines). Don't lower them, and don't widen `include`
-  to dilute the metric with vendored/glue code.
+  **80%** on all metrics (actual ≈ 93% stmts / 93% lines / 81% branches). Don't lower them,
+  and don't widen `include` to dilute the metric with vendored/glue code.
 - Some server fns defensively tolerate missing RPCs (e.g. `get_best_scores_by_exercise`
   falls back to empty) — keep that graceful-degradation pattern.
