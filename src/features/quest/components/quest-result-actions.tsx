@@ -4,7 +4,7 @@ import { useT } from "@/lib/i18n";
 const SECONDARY =
   "rounded-lg border border-border bg-background/50 px-5 py-2.5 text-sm font-semibold hover:bg-background/80";
 const PRIMARY =
-  "rounded-lg bg-linear-to-r from-neon-violet to-neon-magenta px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-neon hover:scale-105";
+  "rounded-lg bg-[image:var(--gradient-gold)] px-5 py-2.5 text-sm font-bold text-black shadow-gold hover:scale-105";
 
 /** Action buttons shown on the quest results screen. */
 export function QuestResultActions({

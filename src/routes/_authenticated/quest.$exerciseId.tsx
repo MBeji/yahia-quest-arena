@@ -424,12 +424,12 @@ function QuestPage() {
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="relative overflow-hidden rounded-3xl border border-(--neon-violet)/40 bg-card/60 p-8 text-center backdrop-blur-xl shadow-neon"
+          className="relative overflow-hidden rounded-3xl border border-[color:var(--gold)]/40 bg-card/60 p-8 text-center backdrop-blur-xl shadow-gold"
         >
-          <div className="absolute -top-20 left-1/2 h-48 w-48 -translate-x-1/2 rounded-full bg-(--neon-violet)/40 blur-3xl" />
+          <div className="absolute -top-20 left-1/2 h-48 w-48 -translate-x-1/2 rounded-full bg-[color:var(--gold)]/30 blur-3xl" />
           <div className="relative">
-            <div className="mx-auto grid h-20 w-20 place-items-center rounded-2xl bg-linear-to-br from-neon-violet to-neon-magenta shadow-neon animate-pulse-neon">
-              <Trophy className="h-10 w-10 text-primary-foreground" />
+            <div className="animate-gold-pulse mx-auto grid h-20 w-20 place-items-center rounded-2xl bg-[image:var(--gradient-gold)]">
+              <Trophy className="h-10 w-10 text-black" />
             </div>
             <h1 className="mt-5 font-display text-3xl font-bold">
               {passed ? t.quest.victoryTitle : t.quest.niceTriTitle}

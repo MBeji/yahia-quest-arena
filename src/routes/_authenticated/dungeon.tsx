@@ -328,7 +328,7 @@ function DungeonPage() {
                 <button
                   onClick={startDungeon}
                   aria-label="Enter the infinite dungeon mode"
-                  className="mt-8 inline-flex items-center gap-2 rounded-lg bg-linear-to-r from-neon-magenta to-neon-violet px-8 py-3.5 text-base font-bold text-primary-foreground shadow-neon transition-transform hover:scale-105"
+                  className="mt-8 inline-flex items-center gap-2 rounded-lg bg-[image:var(--gradient-gold)] px-8 py-3.5 text-base font-bold text-black shadow-gold transition-transform hover:scale-105"
                 >
                   <Skull className="h-5 w-5" /> {t.dungeon.enterDungeon}
                 </button>
@@ -454,7 +454,7 @@ function DungeonPage() {
               </Link>
               <button
                 onClick={startDungeon}
-                className="rounded-lg bg-linear-to-r from-neon-magenta to-neon-violet px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-neon hover:scale-105"
+                className="rounded-lg bg-[image:var(--gradient-gold)] px-5 py-2.5 text-sm font-bold text-black shadow-gold hover:scale-105"
               >
                 {t.dungeon.retryDungeon}
               </button>
