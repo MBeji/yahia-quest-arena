@@ -166,3 +166,33 @@ describe("shop — equipInventorySkin", () => {
     ).rejects.toThrow();
   });
 });
+
+describe("shop — RPC payload fallbacks", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    mockFrom.mockReset();
+    mockRpc.mockReset();
+  });
+
+  it("purchaseShopItem falls back to safe defaults when the RPC returns no payload", async () => {
+    mockRpc.mockImplementation(rpcResponder({ purchase_shop_item: { data: null, error: null } }));
+    const { purchaseShopItem } = await import("@/features/shop");
+    const res = (await (purchaseShopItem as unknown as (d: unknown) => Promise<unknown>)({
+      itemCode: "potion_hp",
+    })) as Record<string, unknown>;
+    expect(res.itemCode).toBe("potion_hp"); // falls back to the requested code
+    expect(res.remainingCoins).toBe(0);
+    expect(res.purchasedItemName).toBe("");
+  });
+
+  it("equipInventorySkin falls back to safe defaults when the RPC returns no payload", async () => {
+    mockRpc.mockImplementation(rpcResponder({ equip_inventory_skin: { data: null, error: null } }));
+    const { equipInventorySkin } = await import("@/features/shop");
+    const res = (await (equipInventorySkin as unknown as (d: unknown) => Promise<unknown>)({
+      itemCode: "skin_gold",
+    })) as Record<string, unknown>;
+    expect(res.itemCode).toBe("skin_gold");
+    expect(res.itemName).toBe("");
+    expect(res.avatarSlug).toBeNull();
+  });
+});

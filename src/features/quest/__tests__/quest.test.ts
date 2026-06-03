@@ -532,3 +532,67 @@ describe("gamification.quest — input validation", () => {
     ).rejects.toThrow();
   });
 });
+
+describe("gamification.quest — getChapterLesson", () => {
+  const CH = "11111111-1111-1111-1111-111111111111";
+  beforeEach(() => {
+    vi.resetModules();
+    capturedHandlers = {};
+    mockFrom.mockReset();
+    mockRpc.mockReset();
+  });
+
+  it("returns the chapter and sibling nav (hasLesson reflects lesson_content)", async () => {
+    let calls = 0;
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "chapters") {
+        calls += 1;
+        return calls === 1
+          ? mockQuery({ id: "ch-1", title: "C1", subject_id: "s1", lesson_content: "x" })
+          : mockQuery([
+              { id: "ch-1", title: "C1", display_order: 1, lesson_content: "x" },
+              { id: "ch-2", title: "C2", display_order: 2, lesson_content: null },
+            ]);
+      }
+      return mockQuery([]);
+    });
+
+    const { getChapterLesson } = await import("@/features/quest");
+    const res = (await (getChapterLesson as unknown as (d: unknown) => Promise<unknown>)({
+      chapterId: CH,
+    })) as { chapter: { id: string }; allChapters: Array<{ id: string; hasLesson: boolean }> };
+
+    expect(res.chapter.id).toBe("ch-1");
+    expect(res.allChapters).toEqual([
+      { id: "ch-1", title: "C1", display_order: 1, hasLesson: true },
+      { id: "ch-2", title: "C2", display_order: 2, hasLesson: false },
+    ]);
+  });
+
+  it("falls back to an empty sibling list when none are returned", async () => {
+    let calls = 0;
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "chapters") {
+        calls += 1;
+        return calls === 1 ? mockQuery({ id: "ch-1", subject_id: "s1" }) : mockQuery(null);
+      }
+      return mockQuery([]);
+    });
+
+    const { getChapterLesson } = await import("@/features/quest");
+    const res = (await (getChapterLesson as unknown as (d: unknown) => Promise<unknown>)({
+      chapterId: CH,
+    })) as { allChapters: unknown[] };
+    expect(res.allChapters).toEqual([]);
+  });
+
+  it("throws a safe message on chapter fetch error", async () => {
+    mockFrom.mockImplementation((table: string) =>
+      table === "chapters" ? mockQuery(null, { message: "boom" }) : mockQuery([]),
+    );
+    const { getChapterLesson } = await import("@/features/quest");
+    await expect(
+      (getChapterLesson as unknown as (d: unknown) => Promise<unknown>)({ chapterId: CH }),
+    ).rejects.toThrow(/leçon/i);
+  });
+});

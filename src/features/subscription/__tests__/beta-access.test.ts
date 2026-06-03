@@ -173,3 +173,54 @@ describe("betaAccess — admin fns", () => {
     });
   });
 });
+
+describe("betaAccess — error paths", () => {
+  const EMAIL = { name: "Y", email: "y@example.com" };
+
+  it("getMyBetaRequest throws a safe message on error", async () => {
+    mockMaybeSingle.mockResolvedValue({ data: null, error: { message: "boom" } });
+    const { getMyBetaRequest } = await import("@/features/subscription");
+    await expect((getMyBetaRequest as unknown as AnyFn)()).rejects.toThrow(/demandes/i);
+  });
+
+  it("requestBetaAccess throws when the existing-request lookup errors", async () => {
+    mockMaybeSingle.mockResolvedValue({ data: null, error: { message: "boom" } });
+    const { requestBetaAccess } = await import("@/features/subscription");
+    await expect((requestBetaAccess as unknown as AnyFn)({ data: EMAIL })).rejects.toThrow(
+      /demandes/i,
+    );
+    expect(mockInsert).not.toHaveBeenCalled();
+  });
+
+  it("requestBetaAccess throws when the insert fails", async () => {
+    mockMaybeSingle.mockResolvedValue({ data: null, error: null });
+    mockInsert.mockResolvedValue({ error: { message: "boom" } });
+    const { requestBetaAccess } = await import("@/features/subscription");
+    await expect((requestBetaAccess as unknown as AnyFn)({ data: EMAIL })).rejects.toThrow(
+      /envoyer/i,
+    );
+  });
+
+  it("listBetaRequests returns [] when the RPC yields null data", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: null });
+    const { listBetaRequests } = await import("@/features/subscription");
+    const res = (await (listBetaRequests as unknown as AnyFn)()) as { requests: unknown[] };
+    expect(res.requests).toEqual([]);
+  });
+
+  it("listBetaRequests throws on RPC error", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: { message: "Unauthorized" } });
+    const { listBetaRequests } = await import("@/features/subscription");
+    await expect((listBetaRequests as unknown as AnyFn)()).rejects.toBeTruthy();
+  });
+
+  it("reviewBetaRequest throws on RPC error", async () => {
+    mockRpc.mockResolvedValue({ error: { message: "boom" } });
+    const { reviewBetaRequest } = await import("@/features/subscription");
+    await expect(
+      (reviewBetaRequest as unknown as AnyFn)({
+        data: { requestId: "11111111-1111-1111-1111-111111111111", approve: false },
+      }),
+    ).rejects.toBeTruthy();
+  });
+});
