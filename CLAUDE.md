@@ -116,9 +116,11 @@ When unsure about scope or a destructive action, ask before proceeding.
 - `src/routeTree.gen.ts` is auto-generated — never edit by hand.
 - `src/shared/integrations/supabase/auth-middleware.ts` is marked "automatically generated";
   edit with care.
-- Env vars required at runtime: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` (set in deploy
-  platform / Lovable Cloud). Missing → middleware throws a descriptive error.
-- This is a Lovable-generated project (`.lovable/`, `bunfig.toml`).
+- Env vars required at runtime: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` (set in the deploy
+  platform). Missing → middleware throws a descriptive error.
+- The Vite/TanStack/Cloudflare/Tailwind plugin scaffold is provided by
+  `@lovable.dev/vite-tanstack-config` (see `vite.config.ts`) — a meta-plugin; don't add its
+  bundled plugins manually or the build breaks with duplicates.
 - **Coverage is scoped to owned code** (`features/`, `shared/`, `lib/`, `hooks/`) in
   `vitest.config.ts`; vendored shadcn UI (`components/ui`), thin route wrappers,
   barrels, generated files, and SSR entry glue are excluded by design. Thresholds are
