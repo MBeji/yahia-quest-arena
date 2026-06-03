@@ -1079,7 +1079,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('d6a3e46e-b0b6-54a7-b112-b02150981080', '1368c9b4-7ea9-5818-ad62-b7c96b0dbda1', 'Quelle est la différence entre une interrogation totale et une interrogation partielle ?', '[{"id":"a","text":"L''interrogation totale utilise un mot interrogatif ; la partielle n''en utilise pas."},{"id":"b","text":"L''interrogation totale appelle une réponse oui/non ; la partielle porte sur un élément précis."},{"id":"c","text":"L''interrogation totale est au registre soutenu ; la partielle est familière."},{"id":"d","text":"L''interrogation totale utilise l''inversion du sujet ; la partielle utilise « est-ce que »."}]'::jsonb, 'b', 'L''interrogation totale appelle une réponse par oui ou non (ex. : « Viens-tu ? »). L''interrogation partielle porte sur un élément précis et utilise un mot interrogatif (qui, où, quand…).', 3)
+  ('d6a3e46e-b0b6-54a7-b112-b02150981080', '1368c9b4-7ea9-5818-ad62-b7c96b0dbda1', 'Parmi les négations suivantes, laquelle est incorrecte selon les règles de la négation en deux mots ?', '[{"id":"a","text":"ne… pas"},{"id":"b","text":"ne… jamais"},{"id":"c","text":"ne… rien"},{"id":"d","text":"ne… oui"}]'::jsonb, 'd', 'La négation fonctionne toujours en deux mots encadrant le verbe : ne… pas, ne… jamais, ne… plus, ne… rien. « ne… oui » n''est pas une négation française.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1089,7 +1089,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('b54bb455-90a0-51f8-85a9-bd1a7c6490b4', '1368c9b4-7ea9-5818-ad62-b7c96b0dbda1', 'Parmi les négations suivantes, laquelle est incorrecte selon les règles de la négation en deux mots ?', '[{"id":"a","text":"ne… pas"},{"id":"b","text":"ne… jamais"},{"id":"c","text":"ne… rien"},{"id":"d","text":"ne… oui"}]'::jsonb, 'd', 'La négation fonctionne toujours en deux mots encadrant le verbe : ne… pas, ne… jamais, ne… plus, ne… rien. « ne… oui » n''est pas une négation française.', 4)
+  ('b54bb455-90a0-51f8-85a9-bd1a7c6490b4', '1368c9b4-7ea9-5818-ad62-b7c96b0dbda1', 'Quelle est la différence entre une interrogation totale et une interrogation partielle ?', '[{"id":"a","text":"L''interrogation totale utilise un mot interrogatif ; la partielle n''en utilise pas."},{"id":"b","text":"L''interrogation totale appelle une réponse oui/non ; la partielle porte sur un élément précis."},{"id":"c","text":"L''interrogation totale est au registre soutenu ; la partielle est familière."},{"id":"d","text":"L''interrogation totale utilise l''inversion du sujet ; la partielle utilise « est-ce que »."}]'::jsonb, 'b', 'L''interrogation totale appelle une réponse par oui ou non (ex. : « Viens-tu ? »). L''interrogation partielle porte sur un élément précis et utilise un mot interrogatif (qui, où, quand…).', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1203,7 +1203,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('9044bfb1-eeb6-54e1-a7d8-10408624f911', '3b342ef2-05e7-53d3-bded-effe80517ef5', 'Mets à la forme négative : « Il voit quelqu''un. »', '[{"id":"a","text":"Il ne voit pas quelqu''un."},{"id":"b","text":"Il ne voit rien."},{"id":"c","text":"Il voit personne."},{"id":"d","text":"Il ne voit personne."}]'::jsonb, 'd', 'Le contraire de « quelqu''un » (une personne) est « ne… personne ». « ne… rien » s''emploie pour une chose.', 2)
+  ('9044bfb1-eeb6-54e1-a7d8-10408624f911', '3b342ef2-05e7-53d3-bded-effe80517ef5', 'Quelle phrase est une interrogation partielle ?', '[{"id":"a","text":"Quand pars-tu ?"},{"id":"b","text":"Pars-tu ?"},{"id":"c","text":"Est-ce que tu pars ?"},{"id":"d","text":"Tu pars ?"}]'::jsonb, 'a', 'L''interrogation porte sur un élément précis (le moment) grâce au mot interrogatif « quand » : elle est partielle.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1213,7 +1213,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('8499fe2e-7b46-5dd1-a7e8-c679eb7bf64c', '3b342ef2-05e7-53d3-bded-effe80517ef5', 'Quelle phrase est une interrogation partielle ?', '[{"id":"a","text":"Quand pars-tu ?"},{"id":"b","text":"Pars-tu ?"},{"id":"c","text":"Est-ce que tu pars ?"},{"id":"d","text":"Tu pars ?"}]'::jsonb, 'a', 'L''interrogation porte sur un élément précis (le moment) grâce au mot interrogatif « quand » : elle est partielle.', 3)
+  ('8499fe2e-7b46-5dd1-a7e8-c679eb7bf64c', '3b342ef2-05e7-53d3-bded-effe80517ef5', 'Dans « Le dragon ne dort plus. », la négation « ne… plus » exprime :', '[{"id":"a","text":"L''arrêt d''une action qui durait"},{"id":"b","text":"Une quantité nulle"},{"id":"c","text":"Une question"},{"id":"d","text":"Une exclamation"}]'::jsonb, 'a', '« ne… plus » indique qu''une action a cessé : le dragon dormait, mais ce n''est plus le cas.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1223,7 +1223,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('079d8ed9-845f-5b08-9391-5984479ec84f', '3b342ef2-05e7-53d3-bded-effe80517ef5', 'Mets à la voix active : « La ville fut détruite par l''armée. »', '[{"id":"a","text":"L''armée détruit la ville."},{"id":"b","text":"L''armée détruisit la ville."},{"id":"c","text":"La ville détruisit l''armée."},{"id":"d","text":"La ville a détruit l''armée."}]'::jsonb, 'b', 'Le complément d''agent « l''armée » devient sujet et on conserve le passé simple : « détruisit ».', 4)
+  ('079d8ed9-845f-5b08-9391-5984479ec84f', '3b342ef2-05e7-53d3-bded-effe80517ef5', 'Mets à la forme négative : « Il voit quelqu''un. »', '[{"id":"a","text":"Il ne voit pas quelqu''un."},{"id":"b","text":"Il ne voit rien."},{"id":"c","text":"Il voit personne."},{"id":"d","text":"Il ne voit personne."}]'::jsonb, 'd', 'Le contraire de « quelqu''un » (une personne) est « ne… personne ». « ne… rien » s''emploie pour une chose.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1233,7 +1233,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('276a92b0-0c54-5381-b57c-d86ad57b021e', '3b342ef2-05e7-53d3-bded-effe80517ef5', 'Dans « Le dragon ne dort plus. », la négation « ne… plus » exprime :', '[{"id":"a","text":"L''arrêt d''une action qui durait"},{"id":"b","text":"Une quantité nulle"},{"id":"c","text":"Une question"},{"id":"d","text":"Une exclamation"}]'::jsonb, 'a', '« ne… plus » indique qu''une action a cessé : le dragon dormait, mais ce n''est plus le cas.', 5)
+  ('276a92b0-0c54-5381-b57c-d86ad57b021e', '3b342ef2-05e7-53d3-bded-effe80517ef5', 'Mets à la voix active : « La ville fut détruite par l''armée. »', '[{"id":"a","text":"L''armée détruit la ville."},{"id":"b","text":"L''armée détruisit la ville."},{"id":"c","text":"La ville détruisit l''armée."},{"id":"d","text":"La ville a détruit l''armée."}]'::jsonb, 'b', 'Le complément d''agent « l''armée » devient sujet et on conserve le passé simple : « détruisit ».', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1327,7 +1327,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('d645eccd-a5d0-5aeb-9284-79aab3b2de20', '03ebf9d6-a2d7-5967-b86c-70019206e357', 'Dans « Je sais que tu réussiras. », la proposition « que tu réussiras » est :', '[{"id":"a","text":"Une subordonnée relative qualifiant « tu »"},{"id":"b","text":"Une subordonnée complétive, COD de « sais »"},{"id":"c","text":"Une subordonnée circonstancielle de cause"},{"id":"d","text":"Une proposition principale"}]'::jsonb, 'b', 'La proposition est introduite par « que », COD du verbe « savoir » : c''est une subordonnée complétive.', 1)
+  ('d645eccd-a5d0-5aeb-9284-79aab3b2de20', '03ebf9d6-a2d7-5967-b86c-70019206e357', 'Dans « La forêt où il entra était sombre. », le pronom relatif « où » a la fonction de :', '[{"id":"a","text":"Sujet"},{"id":"b","text":"COD"},{"id":"c","text":"Complément d''agent"},{"id":"d","text":"Complément de lieu"}]'::jsonb, 'd', '« où » reprend « la forêt » (lieu) et joue le rôle de complément de lieu dans la subordonnée relative.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1337,7 +1337,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('4b8817ab-0b1e-5d97-9a7b-8fd6753ca908', '03ebf9d6-a2d7-5967-b86c-70019206e357', 'Quel pronom relatif complète correctement la phrase : « L''épée ___ il se sert est magique. »', '[{"id":"a","text":"dont"},{"id":"b","text":"que"},{"id":"c","text":"qui"},{"id":"d","text":"où"}]'::jsonb, 'a', '« se servir de » → on remplace le groupe « de l''épée » par « dont » : « l''épée dont il se sert ».', 2)
+  ('4b8817ab-0b1e-5d97-9a7b-8fd6753ca908', '03ebf9d6-a2d7-5967-b86c-70019206e357', 'Dans « Je sais que tu réussiras. », la proposition « que tu réussiras » est :', '[{"id":"a","text":"Une subordonnée relative qualifiant « tu »"},{"id":"b","text":"Une subordonnée complétive, COD de « sais »"},{"id":"c","text":"Une subordonnée circonstancielle de cause"},{"id":"d","text":"Une proposition principale"}]'::jsonb, 'b', 'La proposition est introduite par « que », COD du verbe « savoir » : c''est une subordonnée complétive.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1347,7 +1347,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('07e8045b-b474-56cb-88ee-a5cc0e713ffa', '03ebf9d6-a2d7-5967-b86c-70019206e357', 'Dans « La forêt où il entra était sombre. », le pronom relatif « où » a la fonction de :', '[{"id":"a","text":"Sujet"},{"id":"b","text":"COD"},{"id":"c","text":"Complément d''agent"},{"id":"d","text":"Complément de lieu"}]'::jsonb, 'd', '« où » reprend « la forêt » (lieu) et joue le rôle de complément de lieu dans la subordonnée relative.', 3)
+  ('07e8045b-b474-56cb-88ee-a5cc0e713ffa', '03ebf9d6-a2d7-5967-b86c-70019206e357', 'Quel pronom relatif complète correctement la phrase : « L''épée ___ il se sert est magique. »', '[{"id":"a","text":"dont"},{"id":"b","text":"que"},{"id":"c","text":"qui"},{"id":"d","text":"où"}]'::jsonb, 'a', '« se servir de » → on remplace le groupe « de l''épée » par « dont » : « l''épée dont il se sert ».', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1399,7 +1399,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('c19c1f96-69fa-5f06-a875-55bcfda850ce', '2eac0b4b-84dd-5f90-a06c-9eb9e6d1eec3', 'Complétez : « Il s''entraîne tous les jours ___ son équipe remporte la victoire. »', '[{"id":"a","text":"pour que"},{"id":"b","text":"parce que"},{"id":"c","text":"si bien que"},{"id":"d","text":"quand"}]'::jsonb, 'a', 'L''entraînement vise un résultat futur (la victoire de l''équipe) : on exprime le but avec « pour que » + subjonctif.', 1)
+  ('c19c1f96-69fa-5f06-a875-55bcfda850ce', '2eac0b4b-84dd-5f90-a06c-9eb9e6d1eec3', 'Dans « Dès qu''il arriva, le combat commença. », la subordonnée est une circonstancielle de :', '[{"id":"a","text":"Cause"},{"id":"b","text":"Temps (simultanéité immédiate)"},{"id":"c","text":"Conséquence"},{"id":"d","text":"Concession"}]'::jsonb, 'b', '« dès que » indique que les deux actions se suivent immédiatement : c''est une circonstancielle de temps.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1409,7 +1409,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('98016972-94e1-5f90-9b1e-f59b43d6b0ae', '2eac0b4b-84dd-5f90-a06c-9eb9e6d1eec3', 'Dans « Dès qu''il arriva, le combat commença. », la subordonnée est une circonstancielle de :', '[{"id":"a","text":"Cause"},{"id":"b","text":"Temps (simultanéité immédiate)"},{"id":"c","text":"Conséquence"},{"id":"d","text":"Concession"}]'::jsonb, 'b', '« dès que » indique que les deux actions se suivent immédiatement : c''est une circonstancielle de temps.', 2)
+  ('98016972-94e1-5f90-9b1e-f59b43d6b0ae', '2eac0b4b-84dd-5f90-a06c-9eb9e6d1eec3', 'Complétez : « Il s''entraîne tous les jours ___ son équipe remporte la victoire. »', '[{"id":"a","text":"pour que"},{"id":"b","text":"parce que"},{"id":"c","text":"si bien que"},{"id":"d","text":"quand"}]'::jsonb, 'a', 'L''entraînement vise un résultat futur (la victoire de l''équipe) : on exprime le but avec « pour que » + subjonctif.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1419,7 +1419,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('851ee672-a02e-5b39-85ab-663ccff5fccd', '2eac0b4b-84dd-5f90-a06c-9eb9e6d1eec3', 'Quelle phrase utilise correctement « si » de condition ?', '[{"id":"a","text":"Si tu t''entraîneras, tu vaincras."},{"id":"b","text":"Si tu t''entraînerais, tu vaincrais."},{"id":"c","text":"Si tu t''entraînes, tu vaincrais."},{"id":"d","text":"Si tu t''entraînes, tu vaincras."}]'::jsonb, 'd', 'Avec « si » de condition (réel), la subordonnée est au présent et la principale au futur : « Si tu t''entraînes, tu vaincras. » On n''emploie jamais futur ni conditionnel après « si ».', 3)
+  ('851ee672-a02e-5b39-85ab-663ccff5fccd', '2eac0b4b-84dd-5f90-a06c-9eb9e6d1eec3', 'Identifiez la proposition principale dans : « Comme il pleuvait, il prit son bouclier. »', '[{"id":"a","text":"Comme il pleuvait"},{"id":"b","text":"il pleuvait"},{"id":"c","text":"son bouclier"},{"id":"d","text":"il prit son bouclier"}]'::jsonb, 'd', '« Comme il pleuvait » est la subordonnée de cause. La proposition principale, autonome et porteuse de l''information principale, est « il prit son bouclier ».', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1429,7 +1429,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('78994701-0a13-5aa5-b908-e0dc7fa8fd7a', '2eac0b4b-84dd-5f90-a06c-9eb9e6d1eec3', 'Identifiez la proposition principale dans : « Comme il pleuvait, il prit son bouclier. »', '[{"id":"a","text":"Comme il pleuvait"},{"id":"b","text":"il pleuvait"},{"id":"c","text":"son bouclier"},{"id":"d","text":"il prit son bouclier"}]'::jsonb, 'd', '« Comme il pleuvait » est la subordonnée de cause. La proposition principale, autonome et porteuse de l''information principale, est « il prit son bouclier ».', 4)
+  ('78994701-0a13-5aa5-b908-e0dc7fa8fd7a', '2eac0b4b-84dd-5f90-a06c-9eb9e6d1eec3', 'Dans « Le guerrier que la foule acclame lève son épée. », quel est l''antécédent du pronom relatif « que » ?', '[{"id":"a","text":"la foule"},{"id":"b","text":"son épée"},{"id":"c","text":"Le guerrier"},{"id":"d","text":"acclame"}]'::jsonb, 'c', '« que » reprend le nom qui précède immédiatement la relative : « le guerrier » — c''est lui qui est acclamé.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1439,7 +1439,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('733b88c0-3f49-56a9-a7a5-beb1ccab73cf', '2eac0b4b-84dd-5f90-a06c-9eb9e6d1eec3', 'Choisissez la forme verbale correcte : « Il parle doucement de peur qu''on ne l''___ . »', '[{"id":"a","text":"entend"},{"id":"b","text":"entendra"},{"id":"c","text":"entende"},{"id":"d","text":"entendrait"}]'::jsonb, 'c', '« de peur que » exprime le but (crainte) et impose le subjonctif présent : « entende ».', 5)
+  ('733b88c0-3f49-56a9-a7a5-beb1ccab73cf', '2eac0b4b-84dd-5f90-a06c-9eb9e6d1eec3', 'Quelle phrase utilise correctement « si » de condition ?', '[{"id":"a","text":"Si tu t''entraîneras, tu vaincras."},{"id":"b","text":"Si tu t''entraînerais, tu vaincrais."},{"id":"c","text":"Si tu t''entraînes, tu vaincrais."},{"id":"d","text":"Si tu t''entraînes, tu vaincras."}]'::jsonb, 'd', 'Avec « si » de condition (réel), la subordonnée est au présent et la principale au futur : « Si tu t''entraînes, tu vaincras. » On n''emploie jamais futur ni conditionnel après « si ».', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1449,7 +1449,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('67a0c11d-ab91-59df-b1f1-e411d1e2cb95', '2eac0b4b-84dd-5f90-a06c-9eb9e6d1eec3', 'Dans « Le guerrier que la foule acclame lève son épée. », quel est l''antécédent du pronom relatif « que » ?', '[{"id":"a","text":"la foule"},{"id":"b","text":"son épée"},{"id":"c","text":"Le guerrier"},{"id":"d","text":"acclame"}]'::jsonb, 'c', '« que » reprend le nom qui précède immédiatement la relative : « le guerrier » — c''est lui qui est acclamé.', 6)
+  ('67a0c11d-ab91-59df-b1f1-e411d1e2cb95', '2eac0b4b-84dd-5f90-a06c-9eb9e6d1eec3', 'Choisissez la forme verbale correcte : « Il parle doucement de peur qu''on ne l''___ . »', '[{"id":"a","text":"entend"},{"id":"b","text":"entendra"},{"id":"c","text":"entende"},{"id":"d","text":"entendrait"}]'::jsonb, 'c', '« de peur que » exprime le but (crainte) et impose le subjonctif présent : « entende ».', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1543,7 +1543,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('ad7aa3eb-7915-51a2-8ad8-f71a33b99fb1', '12f9cc53-1641-5e87-9958-ae1375000007', 'Transforme à la voix passive : « Le vent renverse les arbres. »', '[{"id":"a","text":"Les arbres renversent le vent."},{"id":"b","text":"Le vent est renversé par les arbres."},{"id":"c","text":"Les arbres ont été renversés par le vent."},{"id":"d","text":"Les arbres sont renversés par le vent."}]'::jsonb, 'd', 'Le COD « les arbres » devient sujet ; le sujet « le vent » devient complément d''agent ; le présent est conservé : « sont renversés ».', 2)
+  ('ad7aa3eb-7915-51a2-8ad8-f71a33b99fb1', '12f9cc53-1641-5e87-9958-ae1375000007', 'Dans « Le gâteau est mangé. », le complément d''agent est :', '[{"id":"a","text":"« le gâteau »"},{"id":"b","text":"Absent : on ne sait pas qui mange le gâteau."},{"id":"c","text":"« est »"},{"id":"d","text":"« mangé »"}]'::jsonb, 'b', 'La phrase passive ne contient aucun groupe introduit par « par » ou « de » : le complément d''agent est absent. L''agent est inconnu ou sans importance.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1553,7 +1553,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('c3e2ab45-089e-5a99-b92a-87cbb5576dde', '12f9cc53-1641-5e87-9958-ae1375000007', 'Transforme à la voix active : « La lettre a été écrite par Marie. »', '[{"id":"a","text":"Marie a écrit la lettre."},{"id":"b","text":"Marie écrit la lettre."},{"id":"c","text":"La lettre a écrit Marie."},{"id":"d","text":"Marie avait écrit la lettre."}]'::jsonb, 'a', 'Le complément d''agent « Marie » devient sujet et on conserve le passé composé : « a écrit ». Le sujet passif « la lettre » devient COD.', 3)
+  ('c3e2ab45-089e-5a99-b92a-87cbb5576dde', '12f9cc53-1641-5e87-9958-ae1375000007', 'Transforme à la voix passive : « Le vent renverse les arbres. »', '[{"id":"a","text":"Les arbres renversent le vent."},{"id":"b","text":"Le vent est renversé par les arbres."},{"id":"c","text":"Les arbres ont été renversés par le vent."},{"id":"d","text":"Les arbres sont renversés par le vent."}]'::jsonb, 'd', 'Le COD « les arbres » devient sujet ; le sujet « le vent » devient complément d''agent ; le présent est conservé : « sont renversés ».', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1563,7 +1563,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('36a444de-1993-5b9a-8fb0-9a5cfe7f77b6', '12f9cc53-1641-5e87-9958-ae1375000007', 'Dans « Le gâteau est mangé. », le complément d''agent est :', '[{"id":"a","text":"« le gâteau »"},{"id":"b","text":"Absent : on ne sait pas qui mange le gâteau."},{"id":"c","text":"« est »"},{"id":"d","text":"« mangé »"}]'::jsonb, 'b', 'La phrase passive ne contient aucun groupe introduit par « par » ou « de » : le complément d''agent est absent. L''agent est inconnu ou sans importance.', 4)
+  ('36a444de-1993-5b9a-8fb0-9a5cfe7f77b6', '12f9cc53-1641-5e87-9958-ae1375000007', 'Transforme à la voix active : « La lettre a été écrite par Marie. »', '[{"id":"a","text":"Marie a écrit la lettre."},{"id":"b","text":"Marie écrit la lettre."},{"id":"c","text":"La lettre a écrit Marie."},{"id":"d","text":"Marie avait écrit la lettre."}]'::jsonb, 'a', 'Le complément d''agent « Marie » devient sujet et on conserve le passé composé : « a écrit ». Le sujet passif « la lettre » devient COD.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1605,7 +1605,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('3b271bbf-7019-55aa-93bb-583c3fbb407a', '0cec718c-9b55-5aa5-b40e-ad20fffbe4ed', 'Transforme à la voix passive en conservant le temps : « Les soldats avaient défendu la forteresse. »', '[{"id":"a","text":"La forteresse avait été défendue par les soldats."},{"id":"b","text":"La forteresse a été défendue par les soldats."},{"id":"c","text":"La forteresse était défendue par les soldats."},{"id":"d","text":"La forteresse fut défendue par les soldats."}]'::jsonb, 'a', 'La phrase active est au plus-que-parfait : l''auxiliaire « être » se met au plus-que-parfait (« avait été ») + participe passé accordé au féminin singulier → « avait été défendue ».', 1)
+  ('3b271bbf-7019-55aa-93bb-583c3fbb407a', '0cec718c-9b55-5aa5-b40e-ad20fffbe4ed', 'Transforme à la voix active : « Le vainqueur était acclamé de toute la foule. »', '[{"id":"a","text":"Toute la foule a acclamé le vainqueur."},{"id":"b","text":"Toute la foule acclamait le vainqueur."},{"id":"c","text":"Le vainqueur acclamait toute la foule."},{"id":"d","text":"On acclamait le vainqueur."}]'::jsonb, 'b', 'Le complément d''agent « de toute la foule » (introduit par « de ») devient sujet ; on conserve l''imparfait : « acclamait ». Le sujet passif « le vainqueur » devient COD.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1615,7 +1615,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('332e1995-cf27-5529-9e9c-87c94efb4982', '0cec718c-9b55-5aa5-b40e-ad20fffbe4ed', 'Transforme à la voix active : « Le vainqueur était acclamé de toute la foule. »', '[{"id":"a","text":"Toute la foule a acclamé le vainqueur."},{"id":"b","text":"Toute la foule acclamait le vainqueur."},{"id":"c","text":"Le vainqueur acclamait toute la foule."},{"id":"d","text":"On acclamait le vainqueur."}]'::jsonb, 'b', 'Le complément d''agent « de toute la foule » (introduit par « de ») devient sujet ; on conserve l''imparfait : « acclamait ». Le sujet passif « le vainqueur » devient COD.', 2)
+  ('332e1995-cf27-5529-9e9c-87c94efb4982', '0cec718c-9b55-5aa5-b40e-ad20fffbe4ed', 'Dans quelle phrase l''accord du participe passé est-il correct ?', '[{"id":"a","text":"Les lois ont été respectées par tous les citoyens."},{"id":"b","text":"Les lois ont été respecté par tous les citoyens."},{"id":"c","text":"Les lois ont été respectés par tous les citoyens."},{"id":"d","text":"Les lois ont été respectée par tous les citoyens."}]'::jsonb, 'a', 'Le sujet du verbe passif est « les lois » (féminin pluriel) : le participe passé s''accorde → « respectées ». Les options b, c, d sont mal accordées.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1625,7 +1625,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('4c1cd36e-d806-5894-a665-34368ab1f4bc', '0cec718c-9b55-5aa5-b40e-ad20fffbe4ed', 'Quelle transformation est correcte ? Phrase de départ : « On a détruit ce pont pendant la guerre. »', '[{"id":"a","text":"Ce pont a été détruit par on pendant la guerre."},{"id":"b","text":"Ce pont est détruit pendant la guerre."},{"id":"c","text":"Ce pont avait été détruit pendant la guerre."},{"id":"d","text":"Ce pont a été détruit pendant la guerre."}]'::jsonb, 'd', 'Quand le sujet actif est « on », on le supprime à la voix passive : le complément d''agent est absent. Le passé composé passif donne « a été détruit ».', 3)
+  ('4c1cd36e-d806-5894-a665-34368ab1f4bc', '0cec718c-9b55-5aa5-b40e-ad20fffbe4ed', 'Pourquoi la phrase « Cette forêt est traversée. » est-elle stylistiquement intéressante sans complément d''agent ?', '[{"id":"a","text":"Elle indique que la forêt fait l''action."},{"id":"b","text":"Elle est incorrecte : la voix passive exige un complément d''agent."},{"id":"c","text":"Elle met l''accent sur la forêt et dépersonnalise l''action."},{"id":"d","text":"Elle exprime une condition."}]'::jsonb, 'c', 'Sans complément d''agent, la voix passive met en avant l''objet de l''action (« cette forêt ») et efface volontairement l''agent : c''est un effet stylistique de dépersonnalisation ou de généralisation.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1635,7 +1635,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('6abd4b21-6d1c-51e3-9607-d615dae991a3', '0cec718c-9b55-5aa5-b40e-ad20fffbe4ed', 'Dans quelle phrase l''accord du participe passé est-il correct ?', '[{"id":"a","text":"Les lois ont été respectées par tous les citoyens."},{"id":"b","text":"Les lois ont été respecté par tous les citoyens."},{"id":"c","text":"Les lois ont été respectés par tous les citoyens."},{"id":"d","text":"Les lois ont été respectée par tous les citoyens."}]'::jsonb, 'a', 'Le sujet du verbe passif est « les lois » (féminin pluriel) : le participe passé s''accorde → « respectées ». Les options b, c, d sont mal accordées.', 4)
+  ('6abd4b21-6d1c-51e3-9607-d615dae991a3', '0cec718c-9b55-5aa5-b40e-ad20fffbe4ed', 'Transforme à la voix passive en conservant le temps : « Les soldats avaient défendu la forteresse. »', '[{"id":"a","text":"La forteresse avait été défendue par les soldats."},{"id":"b","text":"La forteresse a été défendue par les soldats."},{"id":"c","text":"La forteresse était défendue par les soldats."},{"id":"d","text":"La forteresse fut défendue par les soldats."}]'::jsonb, 'a', 'La phrase active est au plus-que-parfait : l''auxiliaire « être » se met au plus-que-parfait (« avait été ») + participe passé accordé au féminin singulier → « avait été défendue ».', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1645,7 +1645,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('3d1e84a5-a743-5748-b970-cc7eda950ebc', '0cec718c-9b55-5aa5-b40e-ad20fffbe4ed', 'Pourquoi la phrase « Cette forêt est traversée. » est-elle stylistiquement intéressante sans complément d''agent ?', '[{"id":"a","text":"Elle indique que la forêt fait l''action."},{"id":"b","text":"Elle est incorrecte : la voix passive exige un complément d''agent."},{"id":"c","text":"Elle met l''accent sur la forêt et dépersonnalise l''action."},{"id":"d","text":"Elle exprime une condition."}]'::jsonb, 'c', 'Sans complément d''agent, la voix passive met en avant l''objet de l''action (« cette forêt ») et efface volontairement l''agent : c''est un effet stylistique de dépersonnalisation ou de généralisation.', 5)
+  ('3d1e84a5-a743-5748-b970-cc7eda950ebc', '0cec718c-9b55-5aa5-b40e-ad20fffbe4ed', 'Quelle transformation est correcte ? Phrase de départ : « On a détruit ce pont pendant la guerre. »', '[{"id":"a","text":"Ce pont a été détruit par on pendant la guerre."},{"id":"b","text":"Ce pont est détruit pendant la guerre."},{"id":"c","text":"Ce pont avait été détruit pendant la guerre."},{"id":"d","text":"Ce pont a été détruit pendant la guerre."}]'::jsonb, 'd', 'Quand le sujet actif est « on », on le supprime à la voix passive : le complément d''agent est absent. Le passé composé passif donne « a été détruit ».', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1780,7 +1780,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('b56fc225-0884-57fe-9604-a5f47069571c', '7a24537c-05b2-5498-864c-768a4f7b3ee8', 'Dans la phrase : « Elle annonça qu''elle avait réussi son examen. », quel était le temps verbal dans le discours direct d''origine ?', '[{"id":"a","text":"Le présent : « Je réussis... »"},{"id":"b","text":"L''imparfait : « Je réussissais... »"},{"id":"c","text":"Le futur simple : « Je réussirai... »"},{"id":"d","text":"Le passé composé : « J''ai réussi... »"}]'::jsonb, 'd', 'Au discours indirect avec un verbe introducteur au passé (« annonça »), le plus-que-parfait « avait réussi » correspond à un passé composé dans le discours direct d''origine : « J''ai réussi mon examen. »', 5)
+  ('b56fc225-0884-57fe-9604-a5f47069571c', '7a24537c-05b2-5498-864c-768a4f7b3ee8', 'Quelle transformation de l''indicateur de lieu est correcte au passage au discours indirect ?', '[{"id":"a","text":"« ici » → « aujourd''hui »"},{"id":"b","text":"« demain » → « ici »"},{"id":"c","text":"« ici » → « là »"},{"id":"d","text":"« hier » → « demain »"}]'::jsonb, 'c', 'L''indicateur de lieu « ici » (point de vue du locuteur au moment où il parle) devient « là » au discours indirect (point de vue du narrateur). Les autres options mélangent indicateurs de temps et de lieu, ou inversent le sens.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1790,7 +1790,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('eed4181b-dcbb-5ee2-b6e2-44685205a62e', '7a24537c-05b2-5498-864c-768a4f7b3ee8', 'Quelle transformation de l''indicateur de lieu est correcte au passage au discours indirect ?', '[{"id":"a","text":"« ici » → « aujourd''hui »"},{"id":"b","text":"« demain » → « ici »"},{"id":"c","text":"« ici » → « là »"},{"id":"d","text":"« hier » → « demain »"}]'::jsonb, 'c', 'L''indicateur de lieu « ici » (point de vue du locuteur au moment où il parle) devient « là » au discours indirect (point de vue du narrateur). Les autres options mélangent indicateurs de temps et de lieu, ou inversent le sens.', 6)
+  ('eed4181b-dcbb-5ee2-b6e2-44685205a62e', '7a24537c-05b2-5498-864c-768a4f7b3ee8', 'Dans la phrase : « Elle annonça qu''elle avait réussi son examen. », quel était le temps verbal dans le discours direct d''origine ?', '[{"id":"a","text":"Le présent : « Je réussis... »"},{"id":"b","text":"L''imparfait : « Je réussissais... »"},{"id":"c","text":"Le futur simple : « Je réussirai... »"},{"id":"d","text":"Le passé composé : « J''ai réussi... »"}]'::jsonb, 'd', 'Au discours indirect avec un verbe introducteur au passé (« annonça »), le plus-que-parfait « avait réussi » correspond à un passé composé dans le discours direct d''origine : « J''ai réussi mon examen. »', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1812,9 +1812,9 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('d53a306c-aa47-55c3-b52a-3b76f508e771', 'a929d5d0-6d99-542b-8482-d7e65feeb3b3', 'Transforme entièrement au discours indirect :
-Le chevalier dit : « Je partirai demain à l''aube. »
-Le chevalier dit qu''il ___.', '[{"id":"a","text":"partira demain à l''aube"},{"id":"b","text":"partirait demain à l''aube"},{"id":"c","text":"partait le lendemain à l''aube"},{"id":"d","text":"partirait le lendemain à l''aube"}]'::jsonb, 'd', 'Le verbe introducteur « dit » est au passé simple : le futur simple « partirai » devient conditionnel présent « partirait ». L''indicateur de temps « demain » se transforme en « le lendemain » au discours indirect. L''option b oublie les deux changements ; c change le temps mais pas l''indicateur ; d utilise l''imparfait à la place du conditionnel.', 1)
+  ('d53a306c-aa47-55c3-b52a-3b76f508e771', 'a929d5d0-6d99-542b-8482-d7e65feeb3b3', 'Transforme au discours indirect :
+L''entraîneur ordonna : « Courez plus vite ! »
+L''entraîneur ordonna ___.', '[{"id":"a","text":"qu''ils couraient plus vite"},{"id":"b","text":"si on court plus vite"},{"id":"c","text":"de courir plus vite"},{"id":"d","text":"que courir plus vite"}]'::jsonb, 'c', 'Un ordre à l''impératif se rapporte au discours indirect par « de + infinitif » : « Courez ! » → ordonna de courir. On n''utilise pas « que » + indicatif pour un ordre, ni « si » qui est réservé aux questions totales.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1824,9 +1824,9 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('789d8fb4-ef9b-57a5-971b-67821be37f1a', 'a929d5d0-6d99-542b-8482-d7e65feeb3b3', 'Transforme au discours indirect :
-L''entraîneur ordonna : « Courez plus vite ! »
-L''entraîneur ordonna ___.', '[{"id":"a","text":"qu''ils couraient plus vite"},{"id":"b","text":"si on court plus vite"},{"id":"c","text":"de courir plus vite"},{"id":"d","text":"que courir plus vite"}]'::jsonb, 'c', 'Un ordre à l''impératif se rapporte au discours indirect par « de + infinitif » : « Courez ! » → ordonna de courir. On n''utilise pas « que » + indicatif pour un ordre, ni « si » qui est réservé aux questions totales.', 2)
+  ('789d8fb4-ef9b-57a5-971b-67821be37f1a', 'a929d5d0-6d99-542b-8482-d7e65feeb3b3', 'Transforme entièrement au discours indirect :
+Le chevalier dit : « Je partirai demain à l''aube. »
+Le chevalier dit qu''il ___.', '[{"id":"a","text":"partira demain à l''aube"},{"id":"b","text":"partirait demain à l''aube"},{"id":"c","text":"partait le lendemain à l''aube"},{"id":"d","text":"partirait le lendemain à l''aube"}]'::jsonb, 'd', 'Le verbe introducteur « dit » est au passé simple : le futur simple « partirai » devient conditionnel présent « partirait ». L''indicateur de temps « demain » se transforme en « le lendemain » au discours indirect. L''option b oublie les deux changements ; c change le temps mais pas l''indicateur ; d utilise l''imparfait à la place du conditionnel.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1923,7 +1923,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('6d2559a3-989d-53df-8054-651a6ed1b9f6', 'ad167a20-ae28-5904-9ce3-00d98dc0577e', 'Quelle est la règle de formation du subjonctif présent ?', '[{"id":"a","text":"Radical du futur simple + terminaisons de l''imparfait"},{"id":"b","text":"Radical de la 3e personne du pluriel du présent de l''indicatif + terminaisons -e, -es, -e, -ions, -iez, -ent"},{"id":"c","text":"Infinitif sans -er + terminaisons -ais, -ais, -ait, -ions, -iez, -aient"},{"id":"d","text":"Participe présent + terminaisons du présent"}]'::jsonb, 'b', 'Le subjonctif présent se forme sur le radical de la 3e personne du pluriel du présent de l''indicatif, auquel on ajoute les terminaisons -e, -es, -e, -ions, -iez, -ent (ex. : ils finissent → qu''il finisse).', 4)
+  ('6d2559a3-989d-53df-8054-651a6ed1b9f6', 'ad167a20-ae28-5904-9ce3-00d98dc0577e', 'Quelle valeur exprime le conditionnel présent dans la phrase « Il partirait s''il pouvait. » ?', '[{"id":"a","text":"Un ordre poli"},{"id":"b","text":"Une vérité générale"},{"id":"c","text":"Un fait soumis à une condition (hypothèse)"},{"id":"d","text":"Une action accomplie avant une autre"}]'::jsonb, 'c', 'Le conditionnel présent exprime ici une hypothèse : l''action dépend d''une condition (si + imparfait → conditionnel présent). Il peut aussi exprimer la politesse ou une information non confirmée.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1933,7 +1933,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('358f2069-51cf-5a2a-be86-9b7f5e9ef89a', 'ad167a20-ae28-5904-9ce3-00d98dc0577e', 'Quelle valeur exprime le conditionnel présent dans la phrase « Il partirait s''il pouvait. » ?', '[{"id":"a","text":"Un ordre poli"},{"id":"b","text":"Une vérité générale"},{"id":"c","text":"Un fait soumis à une condition (hypothèse)"},{"id":"d","text":"Une action accomplie avant une autre"}]'::jsonb, 'c', 'Le conditionnel présent exprime ici une hypothèse : l''action dépend d''une condition (si + imparfait → conditionnel présent). Il peut aussi exprimer la politesse ou une information non confirmée.', 5)
+  ('358f2069-51cf-5a2a-be86-9b7f5e9ef89a', 'ad167a20-ae28-5904-9ce3-00d98dc0577e', 'Quelle est la règle de formation du subjonctif présent ?', '[{"id":"a","text":"Radical du futur simple + terminaisons de l''imparfait"},{"id":"b","text":"Radical de la 3e personne du pluriel du présent de l''indicatif + terminaisons -e, -es, -e, -ions, -iez, -ent"},{"id":"c","text":"Infinitif sans -er + terminaisons -ais, -ais, -ait, -ions, -iez, -aient"},{"id":"d","text":"Participe présent + terminaisons du présent"}]'::jsonb, 'b', 'Le subjonctif présent se forme sur le radical de la 3e personne du pluriel du présent de l''indicatif, auquel on ajoute les terminaisons -e, -es, -e, -ions, -iez, -ent (ex. : ils finissent → qu''il finisse).', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1965,7 +1965,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('f2f3c849-25e9-53d0-b09e-4eff720714b2', 'b89d641c-95d4-5820-875a-3bac22a2add4', 'Dans la phrase « Il lisait quand le tonnerre éclata. », les deux temps utilisés sont :', '[{"id":"a","text":"L''imparfait (lisait) et le passé simple (éclata)"},{"id":"b","text":"Le passé composé (lisait) et l''imparfait (éclata)"},{"id":"c","text":"Le passé simple (lisait) et le passé simple (éclata)"},{"id":"d","text":"Le présent (lisait) et le futur (éclata)"}]'::jsonb, 'a', '« Lisait » est à l''imparfait (action de fond, en cours) et « éclata » est au passé simple (action soudaine et ponctuelle). Ce couple imparfait/passé simple est la structure narrative fondamentale du récit littéraire.', 2)
+  ('f2f3c849-25e9-53d0-b09e-4eff720714b2', 'b89d641c-95d4-5820-875a-3bac22a2add4', 'Quel emploi de l''impératif est illustré dans : « Prends soin de toi. » ?', '[{"id":"a","text":"Un fait réel"},{"id":"b","text":"Une hypothèse"},{"id":"c","text":"Un conseil"},{"id":"d","text":"Un doute"}]'::jsonb, 'c', 'Le ton de « Prends soin de toi » est bienveillant : c''est un conseil, pas un ordre autoritaire. L''impératif peut exprimer un ordre, un conseil ou une prière. Les options b, c, d correspondent à l''indicatif, au conditionnel et au subjonctif, pas à l''impératif.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1975,7 +1975,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('3ee10a83-a4d9-5855-bb7d-79425521b890', 'b89d641c-95d4-5820-875a-3bac22a2add4', 'Laquelle de ces phrases contient un verbe au subjonctif présent ?', '[{"id":"a","text":"Il faut que tu finisses cet exercice."},{"id":"b","text":"Tu finiras cet exercice."},{"id":"c","text":"Tu finissais cet exercice."},{"id":"d","text":"Tu as fini cet exercice."}]'::jsonb, 'a', 'Après « il faut que », le verbe est obligatoirement au subjonctif : « finisses » est bien le subjonctif présent de « finir » (2e personne du singulier). Les options b (futur), c (imparfait) et d (passé composé) sont à l''indicatif.', 3)
+  ('3ee10a83-a4d9-5855-bb7d-79425521b890', 'b89d641c-95d4-5820-875a-3bac22a2add4', 'Dans la phrase « Il lisait quand le tonnerre éclata. », les deux temps utilisés sont :', '[{"id":"a","text":"L''imparfait (lisait) et le passé simple (éclata)"},{"id":"b","text":"Le passé composé (lisait) et l''imparfait (éclata)"},{"id":"c","text":"Le passé simple (lisait) et le passé simple (éclata)"},{"id":"d","text":"Le présent (lisait) et le futur (éclata)"}]'::jsonb, 'a', '« Lisait » est à l''imparfait (action de fond, en cours) et « éclata » est au passé simple (action soudaine et ponctuelle). Ce couple imparfait/passé simple est la structure narrative fondamentale du récit littéraire.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1985,7 +1985,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('2329c69b-07a0-5905-8d3b-82a269887104', 'b89d641c-95d4-5820-875a-3bac22a2add4', 'Quel est le temps composé correspondant à l''imparfait ?', '[{"id":"a","text":"Le passé composé"},{"id":"b","text":"Le futur antérieur"},{"id":"c","text":"Le passé antérieur"},{"id":"d","text":"Le plus-que-parfait"}]'::jsonb, 'd', 'Le plus-que-parfait (ex. : « avait chanté ») est le temps composé qui correspond à l''imparfait (même série temporelle passée). Il exprime une action antérieure et accomplie par rapport à une action à l''imparfait ou au passé simple.', 4)
+  ('2329c69b-07a0-5905-8d3b-82a269887104', 'b89d641c-95d4-5820-875a-3bac22a2add4', 'Laquelle de ces phrases contient un verbe au subjonctif présent ?', '[{"id":"a","text":"Il faut que tu finisses cet exercice."},{"id":"b","text":"Tu finiras cet exercice."},{"id":"c","text":"Tu finissais cet exercice."},{"id":"d","text":"Tu as fini cet exercice."}]'::jsonb, 'a', 'Après « il faut que », le verbe est obligatoirement au subjonctif : « finisses » est bien le subjonctif présent de « finir » (2e personne du singulier). Les options b (futur), c (imparfait) et d (passé composé) sont à l''indicatif.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1995,7 +1995,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('815783b6-b7f5-5dea-9eea-baaa8f7a3382', 'b89d641c-95d4-5820-875a-3bac22a2add4', 'Quelle forme verbale est correcte dans : « Si tu ___ davantage, tu réussirais. » ?', '[{"id":"a","text":"travaillerais"},{"id":"b","text":"travaillais"},{"id":"c","text":"travailleras"},{"id":"d","text":"travailles"}]'::jsonb, 'b', 'Après « si » dans une hypothèse, on emploie l''imparfait (jamais le conditionnel) : « si tu travaillais → tu réussirais ». La structure est : si + imparfait → conditionnel présent. Les options b (conditionnel), c (futur) et d (présent) sont toutes incorrectes après « si » dans ce contexte.', 5)
+  ('815783b6-b7f5-5dea-9eea-baaa8f7a3382', 'b89d641c-95d4-5820-875a-3bac22a2add4', 'Quel est le temps composé correspondant à l''imparfait ?', '[{"id":"a","text":"Le passé composé"},{"id":"b","text":"Le futur antérieur"},{"id":"c","text":"Le passé antérieur"},{"id":"d","text":"Le plus-que-parfait"}]'::jsonb, 'd', 'Le plus-que-parfait (ex. : « avait chanté ») est le temps composé qui correspond à l''imparfait (même série temporelle passée). Il exprime une action antérieure et accomplie par rapport à une action à l''imparfait ou au passé simple.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2005,7 +2005,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('a2241625-9fa9-504f-841d-0b346289ca00', 'b89d641c-95d4-5820-875a-3bac22a2add4', 'Quel emploi de l''impératif est illustré dans : « Prends soin de toi. » ?', '[{"id":"a","text":"Un fait réel"},{"id":"b","text":"Une hypothèse"},{"id":"c","text":"Un conseil"},{"id":"d","text":"Un doute"}]'::jsonb, 'c', 'Le ton de « Prends soin de toi » est bienveillant : c''est un conseil, pas un ordre autoritaire. L''impératif peut exprimer un ordre, un conseil ou une prière. Les options b, c, d correspondent à l''indicatif, au conditionnel et au subjonctif, pas à l''impératif.', 6)
+  ('a2241625-9fa9-504f-841d-0b346289ca00', 'b89d641c-95d4-5820-875a-3bac22a2add4', 'Quelle forme verbale est correcte dans : « Si tu ___ davantage, tu réussirais. » ?', '[{"id":"a","text":"travaillerais"},{"id":"b","text":"travaillais"},{"id":"c","text":"travailleras"},{"id":"d","text":"travailles"}]'::jsonb, 'b', 'Après « si » dans une hypothèse, on emploie l''imparfait (jamais le conditionnel) : « si tu travaillais → tu réussirais ». La structure est : si + imparfait → conditionnel présent. Les options b (conditionnel), c (futur) et d (présent) sont toutes incorrectes après « si » dans ce contexte.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2027,9 +2027,40 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('1b86b32d-c59d-5d28-a86e-a87b3cd41919', '7efc2dc4-09b3-576b-b2f2-78e7a6288526', 'Identifie le temps et le mode du verbe souligné :
+  ('1b86b32d-c59d-5d28-a86e-a87b3cd41919', '7efc2dc4-09b3-576b-b2f2-78e7a6288526', 'Quelle phrase illustre correctement l''emploi du conditionnel de politesse ?', '[{"id":"a","text":"Je veux un renseignement, s''il vous plaît."},{"id":"b","text":"Je voudrais un renseignement, s''il vous plaît."},{"id":"c","text":"Je voulus un renseignement, s''il vous plaît."},{"id":"d","text":"Je veuille un renseignement, s''il vous plaît."}]'::jsonb, 'b', '« Je voudrais » est le conditionnel présent de « vouloir » : il adoucit la demande et exprime la politesse. L''option b (présent de l''indicatif) est plus directe et moins polie ; c (passé simple) est inapproprié ici ; d utilise incorrectement le subjonctif « veuille » dans un contexte où le conditionnel s''impose.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('3fadd44b-aca0-5ece-b1a4-02766d4517e3', '7efc2dc4-09b3-576b-b2f2-78e7a6288526', 'Dans le récit suivant, quel temps manque-t-il pour exprimer l''action qui fait avancer l''histoire ?
+« Le guerrier ___ son épée, ___ un cri et ___ sur l''ennemi. » (actions ponctuelles et successives, style littéraire)', '[{"id":"a","text":"Le passé simple"},{"id":"b","text":"L''imparfait"},{"id":"c","text":"Le présent"},{"id":"d","text":"Le plus-que-parfait"}]'::jsonb, 'a', 'Les actions ponctuelles et successives qui font avancer le récit en style littéraire sont exprimées au passé simple : « saisit, poussa, se rua ». L''imparfait décrit le fond ou les habitudes ; le présent s''emploie dans un récit oral courant ou pour un présent de narration ; le plus-que-parfait exprime l''antériorité.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('cbaa9f7f-4a56-5d1f-b53d-df4861ef1871', '7efc2dc4-09b3-576b-b2f2-78e7a6288526', 'Laquelle de ces formes verbales est au conditionnel présent ?', '[{"id":"a","text":"Elle partait"},{"id":"b","text":"Elle est partie"},{"id":"c","text":"Elle partirait"},{"id":"d","text":"Elle parte"}]'::jsonb, 'c', '« Partirait » = radical du futur (partir-) + terminaison de l''imparfait (-ait) → conditionnel présent. « Partait » est l''imparfait de l''indicatif ; « est partie » est le passé composé ; « parte » est le subjonctif présent.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('83dfacbc-3c11-55bf-ad09-cc214abb3711', '7efc2dc4-09b3-576b-b2f2-78e7a6288526', 'Identifie le temps et le mode du verbe souligné :
 « À peine avait-il franchi la porte qu''une flèche siffla. »
-(verbe : avait franchi)', '[{"id":"a","text":"Passé composé de l''indicatif"},{"id":"b","text":"Passé antérieur de l''indicatif"},{"id":"c","text":"Imparfait de l''indicatif"},{"id":"d","text":"Plus-que-parfait de l''indicatif"}]'::jsonb, 'd', '« Avait franchi » = auxiliaire avoir à l''imparfait + participe passé → c''est le plus-que-parfait de l''indicatif. Il exprime une action antérieure à une autre action passée (« siffla », passé simple). Le passé antérieur utiliserait « eut franchi » (auxiliaire au passé simple).', 1)
+(verbe : avait franchi)', '[{"id":"a","text":"Passé composé de l''indicatif"},{"id":"b","text":"Passé antérieur de l''indicatif"},{"id":"c","text":"Imparfait de l''indicatif"},{"id":"d","text":"Plus-que-parfait de l''indicatif"}]'::jsonb, 'd', '« Avait franchi » = auxiliaire avoir à l''imparfait + participe passé → c''est le plus-que-parfait de l''indicatif. Il exprime une action antérieure à une autre action passée (« siffla », passé simple). Le passé antérieur utiliserait « eut franchi » (auxiliaire au passé simple).', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2039,40 +2070,9 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('3fadd44b-aca0-5ece-b1a4-02766d4517e3', '7efc2dc4-09b3-576b-b2f2-78e7a6288526', 'Conjugue correctement au subjonctif présent (3e personne du singulier) :
+  ('1f4296d8-c07e-5e6d-b599-0022c8f72118', '7efc2dc4-09b3-576b-b2f2-78e7a6288526', 'Conjugue correctement au subjonctif présent (3e personne du singulier) :
 « Il est indispensable que le groupe ___ à l''heure. »
-(verbe : venir)', '[{"id":"a","text":"vient"},{"id":"b","text":"viendra"},{"id":"c","text":"vienne"},{"id":"d","text":"venait"}]'::jsonb, 'c', 'Après « il est indispensable que », on emploie le subjonctif présent. Le radical de la 3e personne du pluriel du présent de l''indicatif est « vienn- » (ils viennent) → qu''il vienne. L''option b est le présent de l''indicatif, c le futur, d l''imparfait.', 2)
-ON CONFLICT (id) DO UPDATE SET
-  exercise_id = EXCLUDED.exercise_id,
-  prompt = EXCLUDED.prompt,
-  options = EXCLUDED.options,
-  correct_option = EXCLUDED.correct_option,
-  explanation = EXCLUDED.explanation,
-  display_order = EXCLUDED.display_order;
-
-INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('cbaa9f7f-4a56-5d1f-b53d-df4861ef1871', '7efc2dc4-09b3-576b-b2f2-78e7a6288526', 'Quelle phrase illustre correctement l''emploi du conditionnel de politesse ?', '[{"id":"a","text":"Je veux un renseignement, s''il vous plaît."},{"id":"b","text":"Je voudrais un renseignement, s''il vous plaît."},{"id":"c","text":"Je voulus un renseignement, s''il vous plaît."},{"id":"d","text":"Je veuille un renseignement, s''il vous plaît."}]'::jsonb, 'b', '« Je voudrais » est le conditionnel présent de « vouloir » : il adoucit la demande et exprime la politesse. L''option b (présent de l''indicatif) est plus directe et moins polie ; c (passé simple) est inapproprié ici ; d utilise incorrectement le subjonctif « veuille » dans un contexte où le conditionnel s''impose.', 3)
-ON CONFLICT (id) DO UPDATE SET
-  exercise_id = EXCLUDED.exercise_id,
-  prompt = EXCLUDED.prompt,
-  options = EXCLUDED.options,
-  correct_option = EXCLUDED.correct_option,
-  explanation = EXCLUDED.explanation,
-  display_order = EXCLUDED.display_order;
-
-INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('83dfacbc-3c11-55bf-ad09-cc214abb3711', '7efc2dc4-09b3-576b-b2f2-78e7a6288526', 'Dans le récit suivant, quel temps manque-t-il pour exprimer l''action qui fait avancer l''histoire ?
-« Le guerrier ___ son épée, ___ un cri et ___ sur l''ennemi. » (actions ponctuelles et successives, style littéraire)', '[{"id":"a","text":"Le passé simple"},{"id":"b","text":"L''imparfait"},{"id":"c","text":"Le présent"},{"id":"d","text":"Le plus-que-parfait"}]'::jsonb, 'a', 'Les actions ponctuelles et successives qui font avancer le récit en style littéraire sont exprimées au passé simple : « saisit, poussa, se rua ». L''imparfait décrit le fond ou les habitudes ; le présent s''emploie dans un récit oral courant ou pour un présent de narration ; le plus-que-parfait exprime l''antériorité.', 4)
-ON CONFLICT (id) DO UPDATE SET
-  exercise_id = EXCLUDED.exercise_id,
-  prompt = EXCLUDED.prompt,
-  options = EXCLUDED.options,
-  correct_option = EXCLUDED.correct_option,
-  explanation = EXCLUDED.explanation,
-  display_order = EXCLUDED.display_order;
-
-INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('1f4296d8-c07e-5e6d-b599-0022c8f72118', '7efc2dc4-09b3-576b-b2f2-78e7a6288526', 'Laquelle de ces formes verbales est au conditionnel présent ?', '[{"id":"a","text":"Elle partait"},{"id":"b","text":"Elle est partie"},{"id":"c","text":"Elle partirait"},{"id":"d","text":"Elle parte"}]'::jsonb, 'c', '« Partirait » = radical du futur (partir-) + terminaison de l''imparfait (-ait) → conditionnel présent. « Partait » est l''imparfait de l''indicatif ; « est partie » est le passé composé ; « parte » est le subjonctif présent.', 5)
+(verbe : venir)', '[{"id":"a","text":"vient"},{"id":"b","text":"viendra"},{"id":"c","text":"vienne"},{"id":"d","text":"venait"}]'::jsonb, 'c', 'Après « il est indispensable que », on emploie le subjonctif présent. Le radical de la 3e personne du pluriel du présent de l''indicatif est « vienn- » (ils viennent) → qu''il vienne. L''option b est le présent de l''indicatif, c le futur, d l''imparfait.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2167,7 +2167,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('e91167fb-6b84-515a-9848-d07949d71c90', '4758ebaf-51ff-5d37-b504-914009e31959', 'Dans « Pendant qu''il _____ , ses compagnons attendaient. », quel temps convient pour marquer la simultanéité ?', '[{"id":"a","text":"dormit"},{"id":"b","text":"avait dormi"},{"id":"c","text":"dormait"},{"id":"d","text":"dormira"}]'::jsonb, 'c', 'La simultanéité dans un récit au passé s''exprime par deux imparfaits : « dormait » correspond à « attendaient ».', 1)
+  ('e91167fb-6b84-515a-9848-d07949d71c90', '4758ebaf-51ff-5d37-b504-914009e31959', 'Quel temps emploie-t-on pour une action antérieure à une autre action au passé simple ?', '[{"id":"a","text":"L''imparfait"},{"id":"b","text":"Le plus-que-parfait"},{"id":"c","text":"Le passé simple"},{"id":"d","text":"Le conditionnel présent"}]'::jsonb, 'b', 'Le plus-que-parfait (auxiliaire à l''imparfait + participe passé) exprime l''antériorité par rapport à une autre action au passé.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2177,7 +2177,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('28997c99-1b74-5330-8272-d08f4682b8c8', '4758ebaf-51ff-5d37-b504-914009e31959', 'Quel temps emploie-t-on pour une action antérieure à une autre action au passé simple ?', '[{"id":"a","text":"L''imparfait"},{"id":"b","text":"Le plus-que-parfait"},{"id":"c","text":"Le passé simple"},{"id":"d","text":"Le conditionnel présent"}]'::jsonb, 'b', 'Le plus-que-parfait (auxiliaire à l''imparfait + participe passé) exprime l''antériorité par rapport à une autre action au passé.', 2)
+  ('28997c99-1b74-5330-8272-d08f4682b8c8', '4758ebaf-51ff-5d37-b504-914009e31959', 'Dans « La forêt _____ silencieuse, mais soudain un cri déchira l''air. », quel temps convient ?', '[{"id":"a","text":"fut"},{"id":"b","text":"avait été"},{"id":"c","text":"sera"},{"id":"d","text":"était"}]'::jsonb, 'd', 'L''imparfait « était » décrit un état de fond, tandis que le passé simple « déchira » exprime l''événement principal qui surgit.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2187,7 +2187,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('ee97c631-820f-50c1-9de3-58f140893afa', '4758ebaf-51ff-5d37-b504-914009e31959', 'Complète au discours indirect : « Il annonça qu''il _____ le lendemain. » (discours direct : « Je partirai demain. »)', '[{"id":"a","text":"partira"},{"id":"b","text":"était parti"},{"id":"c","text":"partirait"},{"id":"d","text":"part"}]'::jsonb, 'c', 'Quand le verbe introducteur est au passé, le futur du discours direct devient conditionnel présent au discours indirect.', 3)
+  ('ee97c631-820f-50c1-9de3-58f140893afa', '4758ebaf-51ff-5d37-b504-914009e31959', 'Dans « Pendant qu''il _____ , ses compagnons attendaient. », quel temps convient pour marquer la simultanéité ?', '[{"id":"a","text":"dormit"},{"id":"b","text":"avait dormi"},{"id":"c","text":"dormait"},{"id":"d","text":"dormira"}]'::jsonb, 'c', 'La simultanéité dans un récit au passé s''exprime par deux imparfaits : « dormait » correspond à « attendaient ».', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2197,7 +2197,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('5f51a382-45ef-51f7-a25b-2e95a78d6c1f', '4758ebaf-51ff-5d37-b504-914009e31959', 'Choisis la phrase correctement construite dans un récit au passé :', '[{"id":"a","text":"Il a préparé son plan avant de lancer l''attaque."},{"id":"b","text":"Il prépara son plan avant d''avoir lancé l''attaque."},{"id":"c","text":"Il avait préparé son plan avant de lancer l''attaque."},{"id":"d","text":"Il préparait son plan avant de lancer l''attaque."}]'::jsonb, 'c', 'Dans un récit au passé, l''action antérieure s''exprime au plus-que-parfait (« avait préparé ») par rapport à l''action postérieure au passé simple.', 4)
+  ('5f51a382-45ef-51f7-a25b-2e95a78d6c1f', '4758ebaf-51ff-5d37-b504-914009e31959', 'Complète au discours indirect : « Il annonça qu''il _____ le lendemain. » (discours direct : « Je partirai demain. »)', '[{"id":"a","text":"partira"},{"id":"b","text":"était parti"},{"id":"c","text":"partirait"},{"id":"d","text":"part"}]'::jsonb, 'c', 'Quand le verbe introducteur est au passé, le futur du discours direct devient conditionnel présent au discours indirect.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2207,7 +2207,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('676a25e8-1769-5b86-945f-06f2bf2d8548', '4758ebaf-51ff-5d37-b504-914009e31959', 'Transforme au discours indirect : « Elle dit : ‹ J''ai terminé mon travail. › »', '[{"id":"a","text":"Elle dit qu''elle avait terminé son travail."},{"id":"b","text":"Elle dit qu''elle terminait son travail."},{"id":"c","text":"Elle dit qu''elle a terminé son travail."},{"id":"d","text":"Elle dit qu''elle terminerait son travail."}]'::jsonb, 'a', 'Le passé composé du discours direct devient plus-que-parfait au discours indirect quand le verbe introducteur est au passé.', 5)
+  ('676a25e8-1769-5b86-945f-06f2bf2d8548', '4758ebaf-51ff-5d37-b504-914009e31959', 'Choisis la phrase correctement construite dans un récit au passé :', '[{"id":"a","text":"Il a préparé son plan avant de lancer l''attaque."},{"id":"b","text":"Il prépara son plan avant d''avoir lancé l''attaque."},{"id":"c","text":"Il avait préparé son plan avant de lancer l''attaque."},{"id":"d","text":"Il préparait son plan avant de lancer l''attaque."}]'::jsonb, 'c', 'Dans un récit au passé, l''action antérieure s''exprime au plus-que-parfait (« avait préparé ») par rapport à l''action postérieure au passé simple.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2217,7 +2217,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('cc3b9212-5768-5113-ad7b-2ba9128d740f', '4758ebaf-51ff-5d37-b504-914009e31959', 'Dans « La forêt _____ silencieuse, mais soudain un cri déchira l''air. », quel temps convient ?', '[{"id":"a","text":"fut"},{"id":"b","text":"avait été"},{"id":"c","text":"sera"},{"id":"d","text":"était"}]'::jsonb, 'd', 'L''imparfait « était » décrit un état de fond, tandis que le passé simple « déchira » exprime l''événement principal qui surgit.', 6)
+  ('cc3b9212-5768-5113-ad7b-2ba9128d740f', '4758ebaf-51ff-5d37-b504-914009e31959', 'Transforme au discours indirect : « Elle dit : ‹ J''ai terminé mon travail. › »', '[{"id":"a","text":"Elle dit qu''elle avait terminé son travail."},{"id":"b","text":"Elle dit qu''elle terminait son travail."},{"id":"c","text":"Elle dit qu''elle a terminé son travail."},{"id":"d","text":"Elle dit qu''elle terminerait son travail."}]'::jsonb, 'a', 'Le passé composé du discours direct devient plus-que-parfait au discours indirect quand le verbe introducteur est au passé.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2249,7 +2249,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('ba963d3c-68cf-5c49-b62e-344049caab0e', '7e38a684-6fa6-5bf2-ac76-40bf6085e469', 'Complète : « Dès qu''il _____ son discours, les guerriers s''élancèrent. » (action antérieure immédiate)', '[{"id":"a","text":"avait terminé"},{"id":"b","text":"termina"},{"id":"c","text":"terminait"},{"id":"d","text":"eut terminé"}]'::jsonb, 'd', 'Après « dès que » suivi d''un verbe au passé simple, l''action antérieure immédiate s''exprime au passé antérieur (auxiliaire au passé simple + participe passé) : « eut terminé ».', 2)
+  ('ba963d3c-68cf-5c49-b62e-344049caab0e', '7e38a684-6fa6-5bf2-ac76-40bf6085e469', 'Quelle phrase respecte la concordance des temps dans le récit au passé ?', '[{"id":"a","text":"Le village est calme : les habitants avaient fui la veille."},{"id":"b","text":"Le village était calme : les habitants avaient fui la veille."},{"id":"c","text":"Le village était calme : les habitants fuiront la veille."},{"id":"d","text":"Le village était calme : les habitants fuyaient la veille avant."}]'::jsonb, 'b', 'L''imparfait « était » décrit l''état de fond ; le plus-que-parfait « avaient fui » exprime correctement l''antériorité par rapport à l''état présent du village.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2259,7 +2259,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('c394033c-66d8-548c-951c-5472f4c41c30', '7e38a684-6fa6-5bf2-ac76-40bf6085e469', 'Quelle phrase respecte la concordance des temps dans le récit au passé ?', '[{"id":"a","text":"Le village est calme : les habitants avaient fui la veille."},{"id":"b","text":"Le village était calme : les habitants avaient fui la veille."},{"id":"c","text":"Le village était calme : les habitants fuiront la veille."},{"id":"d","text":"Le village était calme : les habitants fuyaient la veille avant."}]'::jsonb, 'b', 'L''imparfait « était » décrit l''état de fond ; le plus-que-parfait « avaient fui » exprime correctement l''antériorité par rapport à l''état présent du village.', 3)
+  ('c394033c-66d8-548c-951c-5472f4c41c30', '7e38a684-6fa6-5bf2-ac76-40bf6085e469', 'Transforme au discours indirect (verbe introducteur au passé) : « Il murmura : ‹ Je reviendrai demain. › »', '[{"id":"a","text":"Il murmura qu''il reviendrait le lendemain."},{"id":"b","text":"Il murmura qu''il reviendra demain."},{"id":"c","text":"Il murmura qu''il était revenu le lendemain."},{"id":"d","text":"Il murmura qu''il revenait demain."}]'::jsonb, 'a', 'Le futur simple du discours direct devient conditionnel présent (« reviendrait ») et « demain » devient « le lendemain » au discours indirect avec verbe introducteur au passé.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2269,7 +2269,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('efa163b4-a341-5c43-9bfb-142a7b277fa7', '7e38a684-6fa6-5bf2-ac76-40bf6085e469', 'Transforme au discours indirect (verbe introducteur au passé) : « Il murmura : ‹ Je reviendrai demain. › »', '[{"id":"a","text":"Il murmura qu''il reviendrait le lendemain."},{"id":"b","text":"Il murmura qu''il reviendra demain."},{"id":"c","text":"Il murmura qu''il était revenu le lendemain."},{"id":"d","text":"Il murmura qu''il revenait demain."}]'::jsonb, 'a', 'Le futur simple du discours direct devient conditionnel présent (« reviendrait ») et « demain » devient « le lendemain » au discours indirect avec verbe introducteur au passé.', 4)
+  ('efa163b4-a341-5c43-9bfb-142a7b277fa7', '7e38a684-6fa6-5bf2-ac76-40bf6085e469', 'Complète : « Dès qu''il _____ son discours, les guerriers s''élancèrent. » (action antérieure immédiate)', '[{"id":"a","text":"avait terminé"},{"id":"b","text":"termina"},{"id":"c","text":"terminait"},{"id":"d","text":"eut terminé"}]'::jsonb, 'd', 'Après « dès que » suivi d''un verbe au passé simple, l''action antérieure immédiate s''exprime au passé antérieur (auxiliaire au passé simple + participe passé) : « eut terminé ».', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2321,7 +2321,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('26d2e999-0836-52ea-beac-d55e58bce05d', '8d1de601-0c73-557f-a3b4-d45a964a2872', 'Quelle est la différence entre le champ lexical et le champ sémantique ?', '[{"id":"a","text":"Le champ lexical regroupe les différents sens d''un mot ; le champ sémantique regroupe tous les mots liés à un thème."},{"id":"b","text":"Le champ lexical regroupe tous les mots liés à un thème ; le champ sémantique regroupe les différents sens d''un même mot selon le contexte."},{"id":"c","text":"Le champ lexical est synonyme du champ sémantique."},{"id":"d","text":"Le champ lexical concerne uniquement les adjectifs ; le champ sémantique concerne les verbes."}]'::jsonb, 'b', 'Le champ lexical regroupe tous les mots (de catégories variées) se rapportant à un même thème. Le champ sémantique d''un mot regroupe tous les sens différents que ce mot peut avoir selon le contexte.', 2)
+  ('26d2e999-0836-52ea-beac-d55e58bce05d', '8d1de601-0c73-557f-a3b4-d45a964a2872', 'Les mots « verre » (récipient), « vers » (poème), « vert » (couleur) et « ver » (animal) sont des :', '[{"id":"a","text":"Synonymes"},{"id":"b","text":"Antonymes"},{"id":"c","text":"Paronymes"},{"id":"d","text":"Homonymes"}]'::jsonb, 'd', 'Les homonymes sont des mots de prononciation identique mais de sens différents. « verre », « vers », « vert » et « ver » se prononcent tous [vɛʁ] mais n''ont pas le même sens.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2331,7 +2331,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('ca5f29a5-a523-5a3a-b6b2-f40db9ee0548', '8d1de601-0c73-557f-a3b4-d45a964a2872', 'Les mots « verre » (récipient), « vers » (poème), « vert » (couleur) et « ver » (animal) sont des :', '[{"id":"a","text":"Synonymes"},{"id":"b","text":"Antonymes"},{"id":"c","text":"Paronymes"},{"id":"d","text":"Homonymes"}]'::jsonb, 'd', 'Les homonymes sont des mots de prononciation identique mais de sens différents. « verre », « vers », « vert » et « ver » se prononcent tous [vɛʁ] mais n''ont pas le même sens.', 3)
+  ('ca5f29a5-a523-5a3a-b6b2-f40db9ee0548', '8d1de601-0c73-557f-a3b4-d45a964a2872', 'La figure de style qui consiste à attribuer des caractéristiques humaines à un objet, un animal ou une abstraction s''appelle :', '[{"id":"a","text":"Une hyperbole"},{"id":"b","text":"Une gradation"},{"id":"c","text":"Une personnification"},{"id":"d","text":"Une énumération"}]'::jsonb, 'c', 'La personnification attribue des caractéristiques humaines à ce qui n''est pas humain. Ex. : « La tempête hurlait sa fureur. » L''hyperbole est une exagération expressive ; la gradation est une suite ordonnée par intensité.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2351,7 +2351,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('0adce953-7057-5641-b1cb-337665f8da31', '8d1de601-0c73-557f-a3b4-d45a964a2872', 'La figure de style qui consiste à attribuer des caractéristiques humaines à un objet, un animal ou une abstraction s''appelle :', '[{"id":"a","text":"Une hyperbole"},{"id":"b","text":"Une gradation"},{"id":"c","text":"Une personnification"},{"id":"d","text":"Une énumération"}]'::jsonb, 'c', 'La personnification attribue des caractéristiques humaines à ce qui n''est pas humain. Ex. : « La tempête hurlait sa fureur. » L''hyperbole est une exagération expressive ; la gradation est une suite ordonnée par intensité.', 5)
+  ('0adce953-7057-5641-b1cb-337665f8da31', '8d1de601-0c73-557f-a3b4-d45a964a2872', 'Quelle est la différence entre le champ lexical et le champ sémantique ?', '[{"id":"a","text":"Le champ lexical regroupe les différents sens d''un mot ; le champ sémantique regroupe tous les mots liés à un thème."},{"id":"b","text":"Le champ lexical regroupe tous les mots liés à un thème ; le champ sémantique regroupe les différents sens d''un même mot selon le contexte."},{"id":"c","text":"Le champ lexical est synonyme du champ sémantique."},{"id":"d","text":"Le champ lexical concerne uniquement les adjectifs ; le champ sémantique concerne les verbes."}]'::jsonb, 'b', 'Le champ lexical regroupe tous les mots (de catégories variées) se rapportant à un même thème. Le champ sémantique d''un mot regroupe tous les sens différents que ce mot peut avoir selon le contexte.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2383,7 +2383,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('1cd7fbf9-2cc6-5eb7-879f-94d9ee76d569', 'b3042e50-068f-5b9f-91d5-e64df884f924', 'Lequel de ces mots n''appartient PAS à la famille du mot « terre » ?', '[{"id":"a","text":"terrestre"},{"id":"b","text":"enterrer"},{"id":"c","text":"terrible"},{"id":"d","text":"territoire"}]'::jsonb, 'c', '« terrible » vient du latin « terrere » (effrayer) et n''a pas le même radical que « terre ». Les trois autres partagent le radical « terr- » lié à la terre.', 2)
+  ('1cd7fbf9-2cc6-5eb7-879f-94d9ee76d569', 'b3042e50-068f-5b9f-91d5-e64df884f924', '« Verre » (récipient) et « ver » (animal) sont des :', '[{"id":"a","text":"Homonymes"},{"id":"b","text":"Synonymes"},{"id":"c","text":"Antonymes"},{"id":"d","text":"Paronymes"}]'::jsonb, 'a', 'Ces mots se prononcent de manière identique mais ont des sens et des orthographes différents : ce sont des homonymes.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2393,7 +2393,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('120db6b4-7f11-50e3-bbd3-e8ab5cbe63ff', 'b3042e50-068f-5b9f-91d5-e64df884f924', '« Verre » (récipient) et « ver » (animal) sont des :', '[{"id":"a","text":"Homonymes"},{"id":"b","text":"Synonymes"},{"id":"c","text":"Antonymes"},{"id":"d","text":"Paronymes"}]'::jsonb, 'a', 'Ces mots se prononcent de manière identique mais ont des sens et des orthographes différents : ce sont des homonymes.', 3)
+  ('120db6b4-7f11-50e3-bbd3-e8ab5cbe63ff', 'b3042e50-068f-5b9f-91d5-e64df884f924', 'Dans « La peur dévorait le guerrier », le mot « dévorait » est employé au :', '[{"id":"a","text":"Sens figuré"},{"id":"b","text":"Sens propre"},{"id":"c","text":"Sens technique"},{"id":"d","text":"Sens dénotatif uniquement"}]'::jsonb, 'a', 'La peur ne peut pas manger au sens propre : « dévorait » est ici employé au sens figuré pour exprimer l''intensité de la peur qui ronge le guerrier.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2403,7 +2403,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('e29bdbfe-677e-5173-8a30-dc1ddc813fe8', 'b3042e50-068f-5b9f-91d5-e64df884f924', 'Dans « La peur dévorait le guerrier », le mot « dévorait » est employé au :', '[{"id":"a","text":"Sens figuré"},{"id":"b","text":"Sens propre"},{"id":"c","text":"Sens technique"},{"id":"d","text":"Sens dénotatif uniquement"}]'::jsonb, 'a', 'La peur ne peut pas manger au sens propre : « dévorait » est ici employé au sens figuré pour exprimer l''intensité de la peur qui ronge le guerrier.', 4)
+  ('e29bdbfe-677e-5173-8a30-dc1ddc813fe8', 'b3042e50-068f-5b9f-91d5-e64df884f924', 'Lequel de ces mots n''appartient PAS à la famille du mot « terre » ?', '[{"id":"a","text":"terrestre"},{"id":"b","text":"enterrer"},{"id":"c","text":"terrible"},{"id":"d","text":"territoire"}]'::jsonb, 'c', '« terrible » vient du latin « terrere » (effrayer) et n''a pas le même radical que « terre ». Les trois autres partagent le radical « terr- » lié à la terre.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2445,7 +2445,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('5e344432-2f71-56d6-abf1-5c8c31d537c9', '25f31af7-de92-57ff-93ce-e6dc3127c707', 'Quelle est la différence entre « éruption » et « irruption » ?', '[{"id":"a","text":"Ce sont des synonymes qui désignent tous les deux une explosion."},{"id":"b","text":"« Éruption » = jaillissement (volcan) ; « irruption » = entrée brusque et violente."},{"id":"c","text":"« Irruption » = jaillissement (volcan) ; « éruption » = entrée brusque."},{"id":"d","text":"« Éruption » est le sens figuré de « irruption »."}]'::jsonb, 'b', 'Ce sont des paronymes : « éruption » désigne le jaillissement (volcan, peau) ; « irruption » désigne une entrée soudaine et non autorisée (« faire irruption »). Les confondre est une erreur de paronyme classique.', 1)
+  ('5e344432-2f71-56d6-abf1-5c8c31d537c9', '25f31af7-de92-57ff-93ce-e6dc3127c707', 'Dans ce passage, quel est le champ lexical dominant ? « Les lames claquaient, les boucliers résonnaient, les flèches sifflaient, le sang coulait. »', '[{"id":"a","text":"La nature"},{"id":"b","text":"Le combat / la guerre"},{"id":"c","text":"La musique"},{"id":"d","text":"Le voyage"}]'::jsonb, 'b', 'Les mots « lames », « boucliers », « flèches », « sang » appartiennent tous au champ lexical du combat et de la guerre, qui est le thème dominant du passage.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2455,7 +2455,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('24a82297-67c0-5306-9121-6efc815a919e', '25f31af7-de92-57ff-93ce-e6dc3127c707', 'Identifie la figure de style dans : « Ce général, c''était un roc, une montagne, un géant. »', '[{"id":"a","text":"Gradation et métaphores"},{"id":"b","text":"Comparaison et énumération"},{"id":"c","text":"Hyperbole et personnification"},{"id":"d","text":"Énumération et comparaisons"}]'::jsonb, 'a', 'Trois métaphores (sans outil comparatif : « un roc », « une montagne », « un géant ») s''enchaînent avec une intensité croissante : c''est une gradation de métaphores.', 2)
+  ('24a82297-67c0-5306-9121-6efc815a919e', '25f31af7-de92-57ff-93ce-e6dc3127c707', 'Dans « La victoire sourit à ceux qui persévèrent », quelle figure reconnaît-on ?', '[{"id":"a","text":"Hyperbole"},{"id":"b","text":"Comparaison"},{"id":"c","text":"Personnification"},{"id":"d","text":"Gradation"}]'::jsonb, 'c', 'La victoire (abstraction) accomplit l''action humaine de « sourire » : on lui attribue une caractéristique humaine, c''est une personnification.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2465,7 +2465,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('9bfeec0f-5f54-5365-9c20-356635d68e1c', '25f31af7-de92-57ff-93ce-e6dc3127c707', 'Dans « La victoire sourit à ceux qui persévèrent », quelle figure reconnaît-on ?', '[{"id":"a","text":"Hyperbole"},{"id":"b","text":"Comparaison"},{"id":"c","text":"Personnification"},{"id":"d","text":"Gradation"}]'::jsonb, 'c', 'La victoire (abstraction) accomplit l''action humaine de « sourire » : on lui attribue une caractéristique humaine, c''est une personnification.', 3)
+  ('9bfeec0f-5f54-5365-9c20-356635d68e1c', '25f31af7-de92-57ff-93ce-e6dc3127c707', 'Quel mot a une connotation POSITIVE dans tous les contextes culturels courants ?', '[{"id":"a","text":"ténèbres"},{"id":"b","text":"aurore"},{"id":"c","text":"vautour"},{"id":"d","text":"rouille"}]'::jsonb, 'b', '« Aurore » (aube, début du jour) est universellement associée à l''espoir, au renouveau, au début positif. Les autres ont des connotations négatives (ténèbres = obscurité/mal ; vautour = prédateur/opportuniste ; rouille = dégradation).', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2475,7 +2475,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('73d9a740-8761-50f2-a74c-f66483150482', '25f31af7-de92-57ff-93ce-e6dc3127c707', 'Quel mot a une connotation POSITIVE dans tous les contextes culturels courants ?', '[{"id":"a","text":"ténèbres"},{"id":"b","text":"aurore"},{"id":"c","text":"vautour"},{"id":"d","text":"rouille"}]'::jsonb, 'b', '« Aurore » (aube, début du jour) est universellement associée à l''espoir, au renouveau, au début positif. Les autres ont des connotations négatives (ténèbres = obscurité/mal ; vautour = prédateur/opportuniste ; rouille = dégradation).', 4)
+  ('73d9a740-8761-50f2-a74c-f66483150482', '25f31af7-de92-57ff-93ce-e6dc3127c707', 'Quelle phrase contient une comparaison (et non une métaphore) ?', '[{"id":"a","text":"Ses yeux étaient des étoiles."},{"id":"b","text":"Ses yeux brillaient comme des étoiles."},{"id":"c","text":"Des étoiles l''observaient."},{"id":"d","text":"Ses étoiles-yeux scintillaient."}]'::jsonb, 'b', 'La présence de l''outil comparatif « comme » fait de cette phrase une comparaison. Sans cet outil, « ses yeux étaient des étoiles » serait une métaphore.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2485,7 +2485,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('a08dc674-1ad0-5709-ac2a-91fb09b03e23', '25f31af7-de92-57ff-93ce-e6dc3127c707', 'Quelle phrase contient une comparaison (et non une métaphore) ?', '[{"id":"a","text":"Ses yeux étaient des étoiles."},{"id":"b","text":"Ses yeux brillaient comme des étoiles."},{"id":"c","text":"Des étoiles l''observaient."},{"id":"d","text":"Ses étoiles-yeux scintillaient."}]'::jsonb, 'b', 'La présence de l''outil comparatif « comme » fait de cette phrase une comparaison. Sans cet outil, « ses yeux étaient des étoiles » serait une métaphore.', 5)
+  ('a08dc674-1ad0-5709-ac2a-91fb09b03e23', '25f31af7-de92-57ff-93ce-e6dc3127c707', 'Quelle est la différence entre « éruption » et « irruption » ?', '[{"id":"a","text":"Ce sont des synonymes qui désignent tous les deux une explosion."},{"id":"b","text":"« Éruption » = jaillissement (volcan) ; « irruption » = entrée brusque et violente."},{"id":"c","text":"« Irruption » = jaillissement (volcan) ; « éruption » = entrée brusque."},{"id":"d","text":"« Éruption » est le sens figuré de « irruption »."}]'::jsonb, 'b', 'Ce sont des paronymes : « éruption » désigne le jaillissement (volcan, peau) ; « irruption » désigne une entrée soudaine et non autorisée (« faire irruption »). Les confondre est une erreur de paronyme classique.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2495,7 +2495,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('1a654666-d0cf-5a81-9244-aad9397d5ddb', '25f31af7-de92-57ff-93ce-e6dc3127c707', 'Dans ce passage, quel est le champ lexical dominant ? « Les lames claquaient, les boucliers résonnaient, les flèches sifflaient, le sang coulait. »', '[{"id":"a","text":"La nature"},{"id":"b","text":"Le combat / la guerre"},{"id":"c","text":"La musique"},{"id":"d","text":"Le voyage"}]'::jsonb, 'b', 'Les mots « lames », « boucliers », « flèches », « sang » appartiennent tous au champ lexical du combat et de la guerre, qui est le thème dominant du passage.', 6)
+  ('1a654666-d0cf-5a81-9244-aad9397d5ddb', '25f31af7-de92-57ff-93ce-e6dc3127c707', 'Identifie la figure de style dans : « Ce général, c''était un roc, une montagne, un géant. »', '[{"id":"a","text":"Gradation et métaphores"},{"id":"b","text":"Comparaison et énumération"},{"id":"c","text":"Hyperbole et personnification"},{"id":"d","text":"Énumération et comparaisons"}]'::jsonb, 'a', 'Trois métaphores (sans outil comparatif : « un roc », « une montagne », « un géant ») s''enchaînent avec une intensité croissante : c''est une gradation de métaphores.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2537,7 +2537,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('17071935-7310-51c2-a8d6-00bbac4c3e23', 'd49bcd74-d20a-552c-9658-c0d86e053975', 'Quels temps verbaux caractérisent avant tout le texte descriptif ?', '[{"id":"a","text":"Le passé simple et le passé antérieur"},{"id":"b","text":"L''imparfait (dans un récit) ou le présent (description autonome)"},{"id":"c","text":"Le futur simple et le conditionnel présent"},{"id":"d","text":"Le subjonctif présent et l''impératif"}]'::jsonb, 'b', 'Le texte descriptif emploie l''imparfait (description insérée dans un récit) ou le présent (description autonome), avec des adjectifs qualificatifs, des verbes d''état et des comparaisons.', 3)
+  ('17071935-7310-51c2-a8d6-00bbac4c3e23', 'd49bcd74-d20a-552c-9658-c0d86e053975', 'Dans un texte narratif, quel temps est principalement utilisé pour les actions ponctuelles qui font avancer le récit ?', '[{"id":"a","text":"L''imparfait"},{"id":"b","text":"Le présent de vérité générale"},{"id":"c","text":"Le plus-que-parfait"},{"id":"d","text":"Le passé simple"}]'::jsonb, 'd', 'Dans un récit littéraire, le passé simple exprime les actions ponctuelles et délimitées qui font progresser l''histoire. L''imparfait, lui, est réservé aux descriptions et aux actions de fond.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2547,7 +2547,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('72632bce-eb90-5864-8b0a-fd10908fafe1', 'd49bcd74-d20a-552c-9658-c0d86e053975', 'Quel connecteur logique exprime une relation de conséquence ?', '[{"id":"a","text":"cependant"},{"id":"b","text":"par exemple"},{"id":"c","text":"donc"},{"id":"d","text":"auparavant"}]'::jsonb, 'c', '« donc » (ainsi que « c''est pourquoi », « par conséquent ») est un connecteur de conséquence. « cependant » exprime l''opposition, « par exemple » l''illustration, et « auparavant » l''antériorité temporelle.', 4)
+  ('72632bce-eb90-5864-8b0a-fd10908fafe1', 'd49bcd74-d20a-552c-9658-c0d86e053975', 'Quels temps verbaux caractérisent avant tout le texte descriptif ?', '[{"id":"a","text":"Le passé simple et le passé antérieur"},{"id":"b","text":"L''imparfait (dans un récit) ou le présent (description autonome)"},{"id":"c","text":"Le futur simple et le conditionnel présent"},{"id":"d","text":"Le subjonctif présent et l''impératif"}]'::jsonb, 'b', 'Le texte descriptif emploie l''imparfait (description insérée dans un récit) ou le présent (description autonome), avec des adjectifs qualificatifs, des verbes d''état et des comparaisons.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2557,7 +2557,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('e4bf56ff-2ae1-5126-9019-5800347aa34a', 'd49bcd74-d20a-552c-9658-c0d86e053975', 'Dans un texte narratif, quel temps est principalement utilisé pour les actions ponctuelles qui font avancer le récit ?', '[{"id":"a","text":"L''imparfait"},{"id":"b","text":"Le présent de vérité générale"},{"id":"c","text":"Le plus-que-parfait"},{"id":"d","text":"Le passé simple"}]'::jsonb, 'd', 'Dans un récit littéraire, le passé simple exprime les actions ponctuelles et délimitées qui font progresser l''histoire. L''imparfait, lui, est réservé aux descriptions et aux actions de fond.', 5)
+  ('e4bf56ff-2ae1-5126-9019-5800347aa34a', 'd49bcd74-d20a-552c-9658-c0d86e053975', 'Quel connecteur logique exprime une relation de conséquence ?', '[{"id":"a","text":"cependant"},{"id":"b","text":"par exemple"},{"id":"c","text":"donc"},{"id":"d","text":"auparavant"}]'::jsonb, 'c', '« donc » (ainsi que « c''est pourquoi », « par conséquent ») est un connecteur de conséquence. « cependant » exprime l''opposition, « par exemple » l''illustration, et « auparavant » l''antériorité temporelle.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2681,7 +2681,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('16ef4fd9-0bf8-5dcc-bcee-af59ae8bdb12', '981642c4-6f55-5171-897c-bdf40e984522', 'Quel connecteur logique complète le mieux cette phrase argumentative : « Ce projet est ambitieux ; _____, il est tout à fait réalisable. » ?', '[{"id":"a","text":"car"},{"id":"b","text":"donc"},{"id":"c","text":"ensuite"},{"id":"d","text":"cependant"}]'::jsonb, 'd', '« Cependant » exprime la concession/opposition : on admet une limite (projet ambitieux) tout en la nuançant (mais réalisable). C''est le connecteur d''opposition qui convient ici.', 4)
+  ('16ef4fd9-0bf8-5dcc-bcee-af59ae8bdb12', '981642c4-6f55-5171-897c-bdf40e984522', 'Quelle formule de politesse convient à la clôture d''une lettre formelle adressée à un directeur ?', '[{"id":"a","text":"« Veuillez agréer, Monsieur le Directeur, l''expression de mes salutations distinguées. »"},{"id":"b","text":"« Bisous et à bientôt ! »"},{"id":"c","text":"« Cordialement, ton ami. »"},{"id":"d","text":"« En espérant une réponse rapide. »"}]'::jsonb, 'a', 'La lettre formelle exige une formule de politesse complète reprenant le titre du destinataire. Les options b, c et d appartiennent au registre familier ou sont incomplètes.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2691,7 +2691,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('64e55faa-0a53-52af-8b05-97dd07023788', '981642c4-6f55-5171-897c-bdf40e984522', 'Pour décrire une salle de château de façon méthodique, quelle organisation est la plus adaptée ?', '[{"id":"a","text":"Un plan chronologique (du passé au présent)"},{"id":"b","text":"Un plan thèse/antithèse/synthèse"},{"id":"c","text":"Un plan spatial (par exemple : de l''entrée vers le fond, puis de gauche à droite)"},{"id":"d","text":"Un plan cause/conséquence"}]'::jsonb, 'c', 'La description d''un lieu s''organise selon un plan spatial (point de vue du regard qui se déplace) pour guider le lecteur de manière cohérente et vivante.', 5)
+  ('64e55faa-0a53-52af-8b05-97dd07023788', '981642c4-6f55-5171-897c-bdf40e984522', 'Quel connecteur logique complète le mieux cette phrase argumentative : « Ce projet est ambitieux ; _____, il est tout à fait réalisable. » ?', '[{"id":"a","text":"car"},{"id":"b","text":"donc"},{"id":"c","text":"ensuite"},{"id":"d","text":"cependant"}]'::jsonb, 'd', '« Cependant » exprime la concession/opposition : on admet une limite (projet ambitieux) tout en la nuançant (mais réalisable). C''est le connecteur d''opposition qui convient ici.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2701,7 +2701,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('29b2923e-5b05-5c0d-abd3-f0e7bb7dd6eb', '981642c4-6f55-5171-897c-bdf40e984522', 'Quelle formule de politesse convient à la clôture d''une lettre formelle adressée à un directeur ?', '[{"id":"a","text":"« Veuillez agréer, Monsieur le Directeur, l''expression de mes salutations distinguées. »"},{"id":"b","text":"« Bisous et à bientôt ! »"},{"id":"c","text":"« Cordialement, ton ami. »"},{"id":"d","text":"« En espérant une réponse rapide. »"}]'::jsonb, 'a', 'La lettre formelle exige une formule de politesse complète reprenant le titre du destinataire. Les options b, c et d appartiennent au registre familier ou sont incomplètes.', 6)
+  ('29b2923e-5b05-5c0d-abd3-f0e7bb7dd6eb', '981642c4-6f55-5171-897c-bdf40e984522', 'Pour décrire une salle de château de façon méthodique, quelle organisation est la plus adaptée ?', '[{"id":"a","text":"Un plan chronologique (du passé au présent)"},{"id":"b","text":"Un plan thèse/antithèse/synthèse"},{"id":"c","text":"Un plan spatial (par exemple : de l''entrée vers le fond, puis de gauche à droite)"},{"id":"d","text":"Un plan cause/conséquence"}]'::jsonb, 'c', 'La description d''un lieu s''organise selon un plan spatial (point de vue du regard qui se déplace) pour guider le lecteur de manière cohérente et vivante.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,

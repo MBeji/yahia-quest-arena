@@ -27,7 +27,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "\"While\" + past continuous gives the background action. \"I washed\" (past simple) is the completed action during that time: while she was sleeping."
+      "explanation": "\"While\" + past continuous gives the background action. \"I washed\" (past simple) is the completed action during that time: while she was sleeping.",
+      "difficulty": 2
     },
     {
       "prompt": "Complete: \"I ___ never ___ sushi before. I tried it last night.\"",
@@ -50,7 +51,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "\"never\" with present perfect describes a life experience up to now: I have never eaten sushi. The sentence then adds a specific past event (last night → past simple), showing the contrast."
+      "explanation": "\"never\" with present perfect describes a life experience up to now: I have never eaten sushi. The sentence then adds a specific past event (last night → past simple), showing the contrast.",
+      "difficulty": 3
     },
     {
       "prompt": "Which sentence is correct?",
@@ -73,7 +75,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "\"two years ago\" is a specific past time marker. Use past simple, not present perfect: she visited Paris two years ago."
+      "explanation": "\"two years ago\" is a specific past time marker. Use past simple, not present perfect: she visited Paris two years ago.",
+      "difficulty": 2
     },
     {
       "prompt": "Complete: \"___ the film started when you arrived?\"",
@@ -96,7 +99,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "This asks about a completed event at a specific past moment. Past simple question: Did + subject + base verb. \"Did the film start...?\""
+      "explanation": "This asks about a completed event at a specific past moment. Past simple question: Did + subject + base verb. \"Did the film start...?\"",
+      "difficulty": 2
     },
     {
       "prompt": "Complete: \"Look — Salma ___ already ___ the report!\"",
@@ -119,7 +123,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "\"already\" between have/has and the past participle signals the present perfect: has already written. The result is visible now (Look!)."
+      "explanation": "\"already\" between have/has and the past participle signals the present perfect: has already written. The result is visible now (Look!).",
+      "difficulty": 3
     },
     {
       "prompt": "Choose the correct pair: \"They ___ TV when the lights ___ out.\"",
@@ -142,7 +147,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "Past continuous (were watching) = background in progress; past simple (went) = the sudden interrupting event. This is the classic when-pattern."
+      "explanation": "Past continuous (were watching) = background in progress; past simple (went) = the sudden interrupting event. This is the classic when-pattern.",
+      "difficulty": 3
     }
   ]
 }

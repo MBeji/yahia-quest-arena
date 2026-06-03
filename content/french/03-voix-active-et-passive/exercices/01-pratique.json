@@ -27,7 +27,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "La structure « être conjugué + participe passé + complément d'agent (par la secrétaire) » caractérise la voix passive."
+      "explanation": "La structure « être conjugué + participe passé + complément d'agent (par la secrétaire) » caractérise la voix passive.",
+      "difficulty": 1
     },
     {
       "prompt": "Transforme à la voix passive : « Le vent renverse les arbres. »",
@@ -50,7 +51,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "Le COD « les arbres » devient sujet ; le sujet « le vent » devient complément d'agent ; le présent est conservé : « sont renversés »."
+      "explanation": "Le COD « les arbres » devient sujet ; le sujet « le vent » devient complément d'agent ; le présent est conservé : « sont renversés ».",
+      "difficulty": 2
     },
     {
       "prompt": "Transforme à la voix active : « La lettre a été écrite par Marie. »",
@@ -73,7 +75,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "Le complément d'agent « Marie » devient sujet et on conserve le passé composé : « a écrit ». Le sujet passif « la lettre » devient COD."
+      "explanation": "Le complément d'agent « Marie » devient sujet et on conserve le passé composé : « a écrit ». Le sujet passif « la lettre » devient COD.",
+      "difficulty": 2
     },
     {
       "prompt": "Dans « Le gâteau est mangé. », le complément d'agent est :",
@@ -96,7 +99,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "La phrase passive ne contient aucun groupe introduit par « par » ou « de » : le complément d'agent est absent. L'agent est inconnu ou sans importance."
+      "explanation": "La phrase passive ne contient aucun groupe introduit par « par » ou « de » : le complément d'agent est absent. L'agent est inconnu ou sans importance.",
+      "difficulty": 1
     },
     {
       "prompt": "Quel est le temps de la phrase passive « Le château sera reconstruit par les habitants. » ?",
@@ -119,7 +123,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "L'auxiliaire « être » est conjugué au futur simple (« sera »), ce qui donne la voix passive au futur : « sera reconstruit »."
+      "explanation": "L'auxiliaire « être » est conjugué au futur simple (« sera »), ce qui donne la voix passive au futur : « sera reconstruit ».",
+      "difficulty": 2
     },
     {
       "prompt": "Quel participe passé s'accorde correctement dans : « Les victoires ___ (remporter) par notre équipe nous rendent fiers. » ?",
@@ -142,7 +147,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "Le sujet du verbe passif est « les victoires » (féminin pluriel) : le participe passé s'accorde en genre et en nombre → « remportées »."
+      "explanation": "Le sujet du verbe passif est « les victoires » (féminin pluriel) : le participe passé s'accorde en genre et en nombre → « remportées ».",
+      "difficulty": 3
     }
   ]
 }

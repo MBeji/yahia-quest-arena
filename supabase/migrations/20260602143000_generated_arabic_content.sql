@@ -1264,7 +1264,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('fd04e6f9-f99e-53b0-bf97-e17f875d086d', 'e0728ce7-0202-5fc6-a5ec-566c51e9dc5d', 'في «رأيتُ الطالبَ»، ما إعراب «الطالبَ»؟', '[{"id":"a","text":"مفعول به منصوب بالفتحة"},{"id":"b","text":"فاعل مرفوع بالضمّة"},{"id":"c","text":"مبتدأ مرفوع"},{"id":"d","text":"مضاف إليه مجرور"}]'::jsonb, 'a', '«الطالبَ» وقع عليه فعل الرؤية، فهو مفعول به منصوب وعلامة نصبه الفتحة.', 4)
+  ('fd04e6f9-f99e-53b0-bf97-e17f875d086d', 'e0728ce7-0202-5fc6-a5ec-566c51e9dc5d', 'ما العلامة الأصلية للجرّ في الاسم المفرد؟', '[{"id":"a","text":"الفتحة"},{"id":"b","text":"الضمّة"},{"id":"c","text":"السكون"},{"id":"d","text":"الكسرة"}]'::jsonb, 'd', 'علامة الجرّ الأصلية هي الكسرة، مثل: مررتُ بالطالبِ.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1274,7 +1274,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('3d57cde8-c746-5a39-9751-f9f6bdd7d037', 'e0728ce7-0202-5fc6-a5ec-566c51e9dc5d', 'ما العلامة الأصلية للجرّ في الاسم المفرد؟', '[{"id":"a","text":"الفتحة"},{"id":"b","text":"الضمّة"},{"id":"c","text":"السكون"},{"id":"d","text":"الكسرة"}]'::jsonb, 'd', 'علامة الجرّ الأصلية هي الكسرة، مثل: مررتُ بالطالبِ.', 5)
+  ('3d57cde8-c746-5a39-9751-f9f6bdd7d037', 'e0728ce7-0202-5fc6-a5ec-566c51e9dc5d', 'في «رأيتُ الطالبَ»، ما إعراب «الطالبَ»؟', '[{"id":"a","text":"مفعول به منصوب بالفتحة"},{"id":"b","text":"فاعل مرفوع بالضمّة"},{"id":"c","text":"مبتدأ مرفوع"},{"id":"d","text":"مضاف إليه مجرور"}]'::jsonb, 'a', '«الطالبَ» وقع عليه فعل الرؤية، فهو مفعول به منصوب وعلامة نصبه الفتحة.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1306,7 +1306,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('8175d3cc-7613-5a09-96a5-86b41b7418b1', 'df137ab2-b7c2-518b-8af5-dac47ffe3890', 'في «حضرَ أبوكَ»، ما علامة رفع «أبو»؟', '[{"id":"a","text":"الضمّة"},{"id":"b","text":"الألف"},{"id":"c","text":"الياء"},{"id":"d","text":"الواو لأنّه من الأسماء الخمسة"}]'::jsonb, 'd', '«أبو» من الأسماء الخمسة، تُرفع بالواو وتُنصب بالألف وتُجرّ بالياء.', 1)
+  ('8175d3cc-7613-5a09-96a5-86b41b7418b1', 'df137ab2-b7c2-518b-8af5-dac47ffe3890', 'أيّ الأفعال التالية مبنيّ دائمًا؟', '[{"id":"a","text":"يكتبُ"},{"id":"b","text":"كتبَ"},{"id":"c","text":"يدرسُ"},{"id":"d","text":"يلعبُ"}]'::jsonb, 'b', 'الفعل الماضي «كتبَ» مبنيّ دائمًا، أمّا الأفعال المضارعة فمعربة (تُرفع وتُنصب وتُجزم).', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1316,7 +1316,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('aaa194cd-906d-5bc8-8b9a-4dad3ee1acd7', 'df137ab2-b7c2-518b-8af5-dac47ffe3890', 'في «لم يكتبْ التلميذُ»، ما إعراب الفعل «يكتبْ»؟', '[{"id":"a","text":"فعل مضارع مجزوم بالسكون"},{"id":"b","text":"فعل مضارع مرفوع بالضمّة"},{"id":"c","text":"فعل مضارع منصوب بالفتحة"},{"id":"d","text":"فعل ماضٍ مبنيّ"}]'::jsonb, 'a', '«لم» أداة جزم تجزم المضارع، فالفعل مجزوم وعلامة جزمه السكون.', 2)
+  ('aaa194cd-906d-5bc8-8b9a-4dad3ee1acd7', 'df137ab2-b7c2-518b-8af5-dac47ffe3890', 'في «حضرَ أبوكَ»، ما علامة رفع «أبو»؟', '[{"id":"a","text":"الضمّة"},{"id":"b","text":"الألف"},{"id":"c","text":"الياء"},{"id":"d","text":"الواو لأنّه من الأسماء الخمسة"}]'::jsonb, 'd', '«أبو» من الأسماء الخمسة، تُرفع بالواو وتُنصب بالألف وتُجرّ بالياء.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1326,7 +1326,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('bc54aa2f-e2f6-54a5-96f4-bf040e4f923e', 'df137ab2-b7c2-518b-8af5-dac47ffe3890', 'أيّ الأفعال التالية مبنيّ دائمًا؟', '[{"id":"a","text":"يكتبُ"},{"id":"b","text":"كتبَ"},{"id":"c","text":"يدرسُ"},{"id":"d","text":"يلعبُ"}]'::jsonb, 'b', 'الفعل الماضي «كتبَ» مبنيّ دائمًا، أمّا الأفعال المضارعة فمعربة (تُرفع وتُنصب وتُجزم).', 3)
+  ('bc54aa2f-e2f6-54a5-96f4-bf040e4f923e', 'df137ab2-b7c2-518b-8af5-dac47ffe3890', 'في «لم يكتبْ التلميذُ»، ما إعراب الفعل «يكتبْ»؟', '[{"id":"a","text":"فعل مضارع مجزوم بالسكون"},{"id":"b","text":"فعل مضارع مرفوع بالضمّة"},{"id":"c","text":"فعل مضارع منصوب بالفتحة"},{"id":"d","text":"فعل ماضٍ مبنيّ"}]'::jsonb, 'a', '«لم» أداة جزم تجزم المضارع، فالفعل مجزوم وعلامة جزمه السكون.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1336,7 +1336,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('e1de5f0c-ce74-5ada-8113-6316129f9eb7', 'df137ab2-b7c2-518b-8af5-dac47ffe3890', 'في «مررتُ بمساجدَ»، لماذا جُرّ «مساجدَ» بالفتحة؟', '[{"id":"a","text":"لأنّه جمع مذكّر سالم"},{"id":"b","text":"لأنّه ممنوع من الصرف"},{"id":"c","text":"لأنّه مثنّى"},{"id":"d","text":"لأنّه من الأسماء الخمسة"}]'::jsonb, 'b', '«مساجد» على صيغة منتهى الجموع، فهو ممنوع من الصرف يُجرّ بالفتحة نيابة عن الكسرة.', 4)
+  ('e1de5f0c-ce74-5ada-8113-6316129f9eb7', 'df137ab2-b7c2-518b-8af5-dac47ffe3890', 'في «الطالبانِ مجتهدانِ»، بِمَ رُفع «الطالبانِ»؟', '[{"id":"a","text":"بالواو"},{"id":"b","text":"بالضمّة"},{"id":"c","text":"بالألف لأنّه مثنّى"},{"id":"d","text":"بالياء"}]'::jsonb, 'c', 'المثنّى يُرفع بالألف نيابة عن الضمّة، ويُنصب ويُجرّ بالياء.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1346,7 +1346,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('b8b9fa61-a238-5076-93f5-f91d5c0ba8da', 'df137ab2-b7c2-518b-8af5-dac47ffe3890', 'في «الطالبانِ مجتهدانِ»، بِمَ رُفع «الطالبانِ»؟', '[{"id":"a","text":"بالواو"},{"id":"b","text":"بالضمّة"},{"id":"c","text":"بالألف لأنّه مثنّى"},{"id":"d","text":"بالياء"}]'::jsonb, 'c', 'المثنّى يُرفع بالألف نيابة عن الضمّة، ويُنصب ويُجرّ بالياء.', 5)
+  ('b8b9fa61-a238-5076-93f5-f91d5c0ba8da', 'df137ab2-b7c2-518b-8af5-dac47ffe3890', 'في «مررتُ بمساجدَ»، لماذا جُرّ «مساجدَ» بالفتحة؟', '[{"id":"a","text":"لأنّه جمع مذكّر سالم"},{"id":"b","text":"لأنّه ممنوع من الصرف"},{"id":"c","text":"لأنّه مثنّى"},{"id":"d","text":"لأنّه من الأسماء الخمسة"}]'::jsonb, 'b', '«مساجد» على صيغة منتهى الجموع، فهو ممنوع من الصرف يُجرّ بالفتحة نيابة عن الكسرة.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1388,7 +1388,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('ccf7a825-17bb-53ea-ad56-de88484fee90', '16bbbed5-d269-5272-8299-8cbd05daa995', 'في «إنَّ العلمَ نورٌ»، ما إعراب كلمة «العلمَ»؟', '[{"id":"a","text":"خبر إنّ مرفوع بالضمّة"},{"id":"b","text":"مبتدأ مرفوع بالضمّة"},{"id":"c","text":"اسم إنّ منصوب بالفتحة"},{"id":"d","text":"فاعل مرفوع بالضمّة"}]'::jsonb, 'c', 'إنّ حرف ناسخ ينصب المبتدأ ويُسمّيه «اسم إنّ»، فـ«العلمَ» اسم إنّ منصوب وعلامة نصبه الفتحة.', 2)
+  ('ccf7a825-17bb-53ea-ad56-de88484fee90', '16bbbed5-d269-5272-8299-8cbd05daa995', '«كأنَّ» من أخوات إنّ، وتُفيد معنى:', '[{"id":"a","text":"التوكيد"},{"id":"b","text":"الاستدراك"},{"id":"c","text":"التشبيه"},{"id":"d","text":"التمنّي"}]'::jsonb, 'c', '«كأنّ» حرف تشبيه ونصب، ومعناه المقارنة والتشبيه، كـ«كأنَّ البحرَ مرآةٌ».', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1398,7 +1398,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('2e067820-f788-5055-8699-7953a7db8b8b', '16bbbed5-d269-5272-8299-8cbd05daa995', 'أيٌّ من الأفعال التالية جامد لا يتصرّف ويأتي فقط على صيغة الماضي؟', '[{"id":"a","text":"كانَ"},{"id":"b","text":"أصبحَ"},{"id":"c","text":"صارَ"},{"id":"d","text":"ليسَ"}]'::jsonb, 'd', '«ليس» فعل ماضٍ ناسخ جامد لا يتصرّف، خلافًا لسائر أخوات كان التي تتصرّف في الماضي والمضارع والأمر.', 3)
+  ('2e067820-f788-5055-8699-7953a7db8b8b', '16bbbed5-d269-5272-8299-8cbd05daa995', 'في «إنَّ العلمَ نورٌ»، ما إعراب كلمة «العلمَ»؟', '[{"id":"a","text":"خبر إنّ مرفوع بالضمّة"},{"id":"b","text":"مبتدأ مرفوع بالضمّة"},{"id":"c","text":"اسم إنّ منصوب بالفتحة"},{"id":"d","text":"فاعل مرفوع بالضمّة"}]'::jsonb, 'c', 'إنّ حرف ناسخ ينصب المبتدأ ويُسمّيه «اسم إنّ»، فـ«العلمَ» اسم إنّ منصوب وعلامة نصبه الفتحة.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1408,7 +1408,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('0b15d60e-06cb-5239-9fa9-0e28d4cd7e41', '16bbbed5-d269-5272-8299-8cbd05daa995', '«كأنَّ» من أخوات إنّ، وتُفيد معنى:', '[{"id":"a","text":"التوكيد"},{"id":"b","text":"الاستدراك"},{"id":"c","text":"التشبيه"},{"id":"d","text":"التمنّي"}]'::jsonb, 'c', '«كأنّ» حرف تشبيه ونصب، ومعناه المقارنة والتشبيه، كـ«كأنَّ البحرَ مرآةٌ».', 4)
+  ('0b15d60e-06cb-5239-9fa9-0e28d4cd7e41', '16bbbed5-d269-5272-8299-8cbd05daa995', 'أيٌّ من الأفعال التالية جامد لا يتصرّف ويأتي فقط على صيغة الماضي؟', '[{"id":"a","text":"كانَ"},{"id":"b","text":"أصبحَ"},{"id":"c","text":"صارَ"},{"id":"d","text":"ليسَ"}]'::jsonb, 'd', '«ليس» فعل ماضٍ ناسخ جامد لا يتصرّف، خلافًا لسائر أخوات كان التي تتصرّف في الماضي والمضارع والأمر.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1532,7 +1532,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('65dc9e50-afbd-5d41-b633-c3ec9c7e473a', 'ec6eaad6-3386-5819-99ea-e2e6f6e61450', 'في «ما زالَ المجاهدُ صامدًا»، لماذا لا تعمل «ما زال» إلا هنا مسبوقةً بـ«ما»؟', '[{"id":"a","text":"لأنّ «ما» زائدة لا معنى لها"},{"id":"b","text":"لأنّ «زال» ليست فعلًا ناسخًا بدون «ما»"},{"id":"c","text":"لأنّ «ما» تحوّلها من فعل إلى حرف ناسخ"},{"id":"d","text":"لأنّ «ما زال» من الأفعال الناسخة التي لا تعمل إلا مسبوقةً بنفي أو نهي"}]'::jsonb, 'd', '«ما زال» و«ما انفكّ» و«ما فتئ» و«ما برح» من أخوات «كان» التي لا تعمل عمل الأفعال الناسخة إلا إذا سبقتها «ما» النافية أو نهي.', 3)
+  ('65dc9e50-afbd-5d41-b633-c3ec9c7e473a', 'ec6eaad6-3386-5819-99ea-e2e6f6e61450', 'أيٌّ من التعريفات الآتية يصف «ليتَ» تعريفًا دقيقًا؟', '[{"id":"a","text":"فعل ناسخ يفيد التمنّي، يرفع الاسم وينصب الخبر"},{"id":"b","text":"حرف ناسخ يفيد الترجّي، ينصب الاسم ويرفع الخبر"},{"id":"c","text":"حرف ناسخ يفيد التمنّي، ينصب الاسم ويرفع الخبر"},{"id":"d","text":"حرف ناسخ يفيد الاستدراك، ينصب الاسم ويرفع الخبر"}]'::jsonb, 'c', '«ليت» من أخوات «إنّ» الحروف الناسخة، تفيد التمنّي (لا الترجّي الذي يفيده «لعلّ»)، وتنصب اسمها وترفع خبرها مثل بقيّة أخوات «إنّ».', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1542,7 +1542,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('f56cb490-5cd0-53df-8fec-b808f21fa6be', 'ec6eaad6-3386-5819-99ea-e2e6f6e61450', 'في «علمتُ أنَّ النجاحَ ثمرةُ الجهدِ»، ما موقع «أنَّ» وما بعدها من الإعراب؟', '[{"id":"a","text":"في محلّ رفع فاعل"},{"id":"b","text":"حرف ابتداء لا محلّ له من الإعراب"},{"id":"c","text":"في محلّ جرّ بحرف الجرّ"},{"id":"d","text":"في محلّ نصب مفعول به (مصدر مؤوَّل)"}]'::jsonb, 'd', '«أنَّ» المفتوحة الهمزة مع اسمها وخبرها في تأويل مصدر مؤوَّل (= علمتُ ثمرةَ الجهدِ للنجاح)، وهذا المصدر في محلّ نصب مفعول به للفعل «علمتُ».', 4)
+  ('f56cb490-5cd0-53df-8fec-b808f21fa6be', 'ec6eaad6-3386-5819-99ea-e2e6f6e61450', 'في «ما زالَ المجاهدُ صامدًا»، لماذا لا تعمل «ما زال» إلا هنا مسبوقةً بـ«ما»؟', '[{"id":"a","text":"لأنّ «ما» زائدة لا معنى لها"},{"id":"b","text":"لأنّ «زال» ليست فعلًا ناسخًا بدون «ما»"},{"id":"c","text":"لأنّ «ما» تحوّلها من فعل إلى حرف ناسخ"},{"id":"d","text":"لأنّ «ما زال» من الأفعال الناسخة التي لا تعمل إلا مسبوقةً بنفي أو نهي"}]'::jsonb, 'd', '«ما زال» و«ما انفكّ» و«ما فتئ» و«ما برح» من أخوات «كان» التي لا تعمل عمل الأفعال الناسخة إلا إذا سبقتها «ما» النافية أو نهي.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1552,7 +1552,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('61c89db4-5a69-5f03-a622-120a937eb85d', 'ec6eaad6-3386-5819-99ea-e2e6f6e61450', 'في «كأنَّ الأميرَينِ أسدانِ»، ما علامة نصب «الأميرَينِ»؟', '[{"id":"a","text":"الفتحة لأنّه مفرد"},{"id":"b","text":"الألف لأنّه مثنّى"},{"id":"c","text":"الكسرة لأنّه مجرور"},{"id":"d","text":"الياء لأنّه مثنّى"}]'::jsonb, 'd', '«الأميرَين» اسم «كأنّ» منصوب، وهو مثنّى فعلامة نصبه الياء نيابة عن الفتحة (المثنّى يُنصب ويُجرّ بالياء).', 5)
+  ('61c89db4-5a69-5f03-a622-120a937eb85d', 'ec6eaad6-3386-5819-99ea-e2e6f6e61450', 'في «علمتُ أنَّ النجاحَ ثمرةُ الجهدِ»، ما موقع «أنَّ» وما بعدها من الإعراب؟', '[{"id":"a","text":"في محلّ رفع فاعل"},{"id":"b","text":"حرف ابتداء لا محلّ له من الإعراب"},{"id":"c","text":"في محلّ جرّ بحرف الجرّ"},{"id":"d","text":"في محلّ نصب مفعول به (مصدر مؤوَّل)"}]'::jsonb, 'd', '«أنَّ» المفتوحة الهمزة مع اسمها وخبرها في تأويل مصدر مؤوَّل (= علمتُ ثمرةَ الجهدِ للنجاح)، وهذا المصدر في محلّ نصب مفعول به للفعل «علمتُ».', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1562,7 +1562,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('b7b30f04-111f-5d47-983d-cd88cda57845', 'ec6eaad6-3386-5819-99ea-e2e6f6e61450', 'أيٌّ من التعريفات الآتية يصف «ليتَ» تعريفًا دقيقًا؟', '[{"id":"a","text":"فعل ناسخ يفيد التمنّي، يرفع الاسم وينصب الخبر"},{"id":"b","text":"حرف ناسخ يفيد الترجّي، ينصب الاسم ويرفع الخبر"},{"id":"c","text":"حرف ناسخ يفيد التمنّي، ينصب الاسم ويرفع الخبر"},{"id":"d","text":"حرف ناسخ يفيد الاستدراك، ينصب الاسم ويرفع الخبر"}]'::jsonb, 'c', '«ليت» من أخوات «إنّ» الحروف الناسخة، تفيد التمنّي (لا الترجّي الذي يفيده «لعلّ»)، وتنصب اسمها وترفع خبرها مثل بقيّة أخوات «إنّ».', 6)
+  ('b7b30f04-111f-5d47-983d-cd88cda57845', 'ec6eaad6-3386-5819-99ea-e2e6f6e61450', 'في «كأنَّ الأميرَينِ أسدانِ»، ما علامة نصب «الأميرَينِ»؟', '[{"id":"a","text":"الفتحة لأنّه مفرد"},{"id":"b","text":"الألف لأنّه مثنّى"},{"id":"c","text":"الكسرة لأنّه مجرور"},{"id":"d","text":"الياء لأنّه مثنّى"}]'::jsonb, 'd', '«الأميرَين» اسم «كأنّ» منصوب، وهو مثنّى فعلامة نصبه الياء نيابة عن الفتحة (المثنّى يُنصب ويُجرّ بالياء).', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1584,7 +1584,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('511dd282-467b-5f71-bb20-e646bbf6c781', 'e8522c3d-f6bd-5416-819b-2a8b84c36952', 'المفعول لأجله شرطٌ فيه أن يكون مصدرًا قلبيًّا. ما المقصود بـ«القلبيّ»؟', '[{"id":"a","text":"أن يكون مصدر فعل ثلاثي"},{"id":"b","text":"أن يدلّ على معنى نفسيّ كالحبّ والخوف والاحترام"},{"id":"c","text":"أن يكون منصوبًا بالفتحة دائمًا"},{"id":"d","text":"أن يكون نكرةً لا معرفة"}]'::jsonb, 'b', 'المفعول لأجله يُشترط فيه أن يكون مصدرًا قلبيًّا، أي يدلّ على معنًى نفسيّ داخليّ كالحبّ والخوف والاحترام، كـ«قمتُ احترامًا للضيفِ».', 1)
+  ('511dd282-467b-5f71-bb20-e646bbf6c781', 'e8522c3d-f6bd-5416-819b-2a8b84c36952', 'في الجملة التامّة المثبتة «حضرَ الطلابُ إلا زيدًا»، ما إعراب «زيدًا»؟', '[{"id":"a","text":"فاعل مرفوع"},{"id":"b","text":"مستثنى منصوب وجوبًا"},{"id":"c","text":"مبتدأ مرفوع"},{"id":"d","text":"بدل من الطلاب"}]'::jsonb, 'b', 'في الجملة التامّة المثبتة يُنصب المستثنى بإلّا وجوبًا، فـ«زيدًا» مستثنى منصوب وعلامة نصبه الفتحة.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1594,7 +1594,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('88eb082a-d458-5e9a-b9fc-3b424f4c4cb5', 'e8522c3d-f6bd-5416-819b-2a8b84c36952', 'في «ازدادَ المحبُّ شوقًا»، ما نوع «شوقًا» من المنصوبات؟', '[{"id":"a","text":"مفعول به"},{"id":"b","text":"حال"},{"id":"c","text":"تمييز النسبة"},{"id":"d","text":"مفعول مطلق"}]'::jsonb, 'c', '«شوقًا» تمييز النسبة (تمييز الجملة)، لأنّه يُزيل إبهامًا عن الجملة كلّها ويُجيب على سؤال: ازداد في ماذا؟', 2)
+  ('88eb082a-d458-5e9a-b9fc-3b424f4c4cb5', 'e8522c3d-f6bd-5416-819b-2a8b84c36952', 'المفعول لأجله شرطٌ فيه أن يكون مصدرًا قلبيًّا. ما المقصود بـ«القلبيّ»؟', '[{"id":"a","text":"أن يكون مصدر فعل ثلاثي"},{"id":"b","text":"أن يدلّ على معنى نفسيّ كالحبّ والخوف والاحترام"},{"id":"c","text":"أن يكون منصوبًا بالفتحة دائمًا"},{"id":"d","text":"أن يكون نكرةً لا معرفة"}]'::jsonb, 'b', 'المفعول لأجله يُشترط فيه أن يكون مصدرًا قلبيًّا، أي يدلّ على معنًى نفسيّ داخليّ كالحبّ والخوف والاحترام، كـ«قمتُ احترامًا للضيفِ».', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1614,7 +1614,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('da796652-08db-5d34-9e2c-8d7f9ad1b645', 'e8522c3d-f6bd-5416-819b-2a8b84c36952', 'في الجملة التامّة المثبتة «حضرَ الطلابُ إلا زيدًا»، ما إعراب «زيدًا»؟', '[{"id":"a","text":"فاعل مرفوع"},{"id":"b","text":"مستثنى منصوب وجوبًا"},{"id":"c","text":"مبتدأ مرفوع"},{"id":"d","text":"بدل من الطلاب"}]'::jsonb, 'b', 'في الجملة التامّة المثبتة يُنصب المستثنى بإلّا وجوبًا، فـ«زيدًا» مستثنى منصوب وعلامة نصبه الفتحة.', 4)
+  ('da796652-08db-5d34-9e2c-8d7f9ad1b645', 'e8522c3d-f6bd-5416-819b-2a8b84c36952', 'في «ازدادَ المحبُّ شوقًا»، ما نوع «شوقًا» من المنصوبات؟', '[{"id":"a","text":"مفعول به"},{"id":"b","text":"حال"},{"id":"c","text":"تمييز النسبة"},{"id":"d","text":"مفعول مطلق"}]'::jsonb, 'c', '«شوقًا» تمييز النسبة (تمييز الجملة)، لأنّه يُزيل إبهامًا عن الجملة كلّها ويُجيب على سؤال: ازداد في ماذا؟', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1718,7 +1718,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('fd5b5fda-475d-56e2-8d50-b027ce4f4a70', '3a0414d1-56e5-50c3-ae38-91a93aca51e0', 'في «سارَ الجنديُّ سيرَ الأبطالِ»، ما نوع «سيرَ» ولماذا؟', '[{"id":"a","text":"مفعول مطلق مبيِّن للنوع لأنّه يصف كيفيّة السير"},{"id":"b","text":"مفعول مطلق مؤكِّد للفعل لأنّه من لفظه"},{"id":"c","text":"مفعول به لأنّه وقع عليه الفعل"},{"id":"d","text":"مفعول مطلق مبيِّن للعدد لأنّه يحدّد المرّات"}]'::jsonb, 'a', '«سيرَ الأبطال» مفعول مطلق مبيِّن للنوع لأنّه يُبيّن صفة السير وكيفيّته (كالأبطال)، لا لمجرّد التأكيد؛ وهو منصوب مضاف و«الأبطالِ» مضاف إليه مجرور.', 1)
+  ('fd5b5fda-475d-56e2-8d50-b027ce4f4a70', '3a0414d1-56e5-50c3-ae38-91a93aca51e0', 'في «قرأَ الطلابُ صامتينَ»، ما علامة نصب «صامتينَ»؟', '[{"id":"a","text":"الياء لأنّه جمع مذكّر سالم"},{"id":"b","text":"الفتحة لأنّه اسم مفرد"},{"id":"c","text":"الكسرة لأنّه جمع مؤنّث سالم"},{"id":"d","text":"الألف لأنّه مثنّى"}]'::jsonb, 'a', '«صامتين» حال منصوب وهو جمع مذكّر سالم، فعلامة نصبه الياء نيابة عن الفتحة.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1728,7 +1728,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('e03ae7c4-cbef-5400-90b0-94735107fe41', '3a0414d1-56e5-50c3-ae38-91a93aca51e0', 'أيٌّ من الكلمات الآتية يُعرب تمييز نسبة لا تمييز ذات؟', '[{"id":"a","text":"«كتابًا» في «اشتريتُ عشرينَ كتابًا»"},{"id":"b","text":"«ماءً» في «عندي لتران ماءً»"},{"id":"c","text":"«شوقًا» في «ازدادَ المحبُّ شوقًا»"},{"id":"d","text":"«طالبًا» في «رأيتُ ثلاثةَ طلّابٍ» (تمييز مجرور لا منصوب)"}]'::jsonb, 'c', '«شوقًا» في «ازداد المحبُّ شوقًا» تمييز نسبة لأنّه يُزيل إبهام الجملة كلّها (ماذا ازداد؟)، أمّا «كتابًا» و«ماءً» فتمييز ذات يُزيل إبهام عدد أو مقدار مفرد.', 2)
+  ('e03ae7c4-cbef-5400-90b0-94735107fe41', '3a0414d1-56e5-50c3-ae38-91a93aca51e0', 'أيٌّ من الجمل الآتية يحتوي على مفعول لأجله صحيح؟', '[{"id":"a","text":"«وقفتُ تعظيمًا للعَلَمِ»"},{"id":"b","text":"«وقفتُ أمامَ العَلَمِ»"},{"id":"c","text":"«وقفتُ وقوفًا»"},{"id":"d","text":"«وقفتُ الطالبُ خلفَ الصفِّ»"}]'::jsonb, 'a', '«تعظيمًا» مصدر قلبيّ يدلّ على سبب الوقوف، متّحد مع الفعل في الزمن والفاعل — فهو مفعول لأجله منصوب. أمّا «أمامَ» فظرف مكان، و«وقوفًا» مفعول مطلق مؤكِّد.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1738,7 +1738,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('24be4b4a-ea07-567b-8fdf-aef13d1cc486', '3a0414d1-56e5-50c3-ae38-91a93aca51e0', 'في «ما حضرَ إلّا زيدٌ»، لماذا رُفع «زيدٌ» ولم يُنصب؟', '[{"id":"a","text":"لأنّ الجملة ناقصة منفيّة فيُعرب المستثنى حسب موقعه (فاعل مرفوع)"},{"id":"b","text":"لأنّ المستثنى بعد النفي يجب رفعه دائمًا"},{"id":"c","text":"لأنّ «إلّا» في الجملة المنفيّة لا تعمل"},{"id":"d","text":"لأنّ «زيد» معرفة فلا يُنصب"}]'::jsonb, 'a', 'الجملة ناقصة (لم يُذكر المستثنى منه)، فيُعرب ما بعد «إلّا» حسب موقعه من الجملة: «ما حضرَ إلّا زيدٌ» — «زيدٌ» فاعل مرفوع بالضمّة.', 3)
+  ('24be4b4a-ea07-567b-8fdf-aef13d1cc486', '3a0414d1-56e5-50c3-ae38-91a93aca51e0', 'في «اشتريتُ عشرينَ كتابًا»، ما إعراب «كتابًا»؟', '[{"id":"a","text":"تمييز منصوب وعلامة نصبه الفتحة"},{"id":"b","text":"مفعول به منصوب وعلامة نصبه الفتحة"},{"id":"c","text":"مضاف إليه مجرور وعلامة جرّه الكسرة"},{"id":"d","text":"حال منصوب وعلامة نصبه الفتحة"}]'::jsonb, 'a', 'العدد «عشرين» (من 11 إلى 99) يُميَّز بمفرد منصوب، فـ«كتابًا» تمييز ذات منصوب وعلامة نصبه الفتحة يُزيل إبهام العدد.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1748,7 +1748,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('817eab45-baf2-584e-aebd-15e49473aebc', '3a0414d1-56e5-50c3-ae38-91a93aca51e0', 'في «قرأَ الطلابُ صامتينَ»، ما علامة نصب «صامتينَ»؟', '[{"id":"a","text":"الياء لأنّه جمع مذكّر سالم"},{"id":"b","text":"الفتحة لأنّه اسم مفرد"},{"id":"c","text":"الكسرة لأنّه جمع مؤنّث سالم"},{"id":"d","text":"الألف لأنّه مثنّى"}]'::jsonb, 'a', '«صامتين» حال منصوب وهو جمع مذكّر سالم، فعلامة نصبه الياء نيابة عن الفتحة.', 4)
+  ('817eab45-baf2-584e-aebd-15e49473aebc', '3a0414d1-56e5-50c3-ae38-91a93aca51e0', 'في «سارَ الجنديُّ سيرَ الأبطالِ»، ما نوع «سيرَ» ولماذا؟', '[{"id":"a","text":"مفعول مطلق مبيِّن للنوع لأنّه يصف كيفيّة السير"},{"id":"b","text":"مفعول مطلق مؤكِّد للفعل لأنّه من لفظه"},{"id":"c","text":"مفعول به لأنّه وقع عليه الفعل"},{"id":"d","text":"مفعول مطلق مبيِّن للعدد لأنّه يحدّد المرّات"}]'::jsonb, 'a', '«سيرَ الأبطال» مفعول مطلق مبيِّن للنوع لأنّه يُبيّن صفة السير وكيفيّته (كالأبطال)، لا لمجرّد التأكيد؛ وهو منصوب مضاف و«الأبطالِ» مضاف إليه مجرور.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1758,7 +1758,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('572ec24d-bb8e-5d35-9314-2dc2920f6ef1', '3a0414d1-56e5-50c3-ae38-91a93aca51e0', 'أيٌّ من الجمل الآتية يحتوي على مفعول لأجله صحيح؟', '[{"id":"a","text":"«وقفتُ تعظيمًا للعَلَمِ»"},{"id":"b","text":"«وقفتُ أمامَ العَلَمِ»"},{"id":"c","text":"«وقفتُ وقوفًا»"},{"id":"d","text":"«وقفتُ الطالبُ خلفَ الصفِّ»"}]'::jsonb, 'a', '«تعظيمًا» مصدر قلبيّ يدلّ على سبب الوقوف، متّحد مع الفعل في الزمن والفاعل — فهو مفعول لأجله منصوب. أمّا «أمامَ» فظرف مكان، و«وقوفًا» مفعول مطلق مؤكِّد.', 5)
+  ('572ec24d-bb8e-5d35-9314-2dc2920f6ef1', '3a0414d1-56e5-50c3-ae38-91a93aca51e0', 'أيٌّ من الكلمات الآتية يُعرب تمييز نسبة لا تمييز ذات؟', '[{"id":"a","text":"«كتابًا» في «اشتريتُ عشرينَ كتابًا»"},{"id":"b","text":"«ماءً» في «عندي لتران ماءً»"},{"id":"c","text":"«شوقًا» في «ازدادَ المحبُّ شوقًا»"},{"id":"d","text":"«طالبًا» في «رأيتُ ثلاثةَ طلّابٍ» (تمييز مجرور لا منصوب)"}]'::jsonb, 'c', '«شوقًا» في «ازداد المحبُّ شوقًا» تمييز نسبة لأنّه يُزيل إبهام الجملة كلّها (ماذا ازداد؟)، أمّا «كتابًا» و«ماءً» فتمييز ذات يُزيل إبهام عدد أو مقدار مفرد.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1768,7 +1768,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('5ab3fa4a-69b5-5ed6-a093-fbcbf612e782', '3a0414d1-56e5-50c3-ae38-91a93aca51e0', 'في «اشتريتُ عشرينَ كتابًا»، ما إعراب «كتابًا»؟', '[{"id":"a","text":"تمييز منصوب وعلامة نصبه الفتحة"},{"id":"b","text":"مفعول به منصوب وعلامة نصبه الفتحة"},{"id":"c","text":"مضاف إليه مجرور وعلامة جرّه الكسرة"},{"id":"d","text":"حال منصوب وعلامة نصبه الفتحة"}]'::jsonb, 'a', 'العدد «عشرين» (من 11 إلى 99) يُميَّز بمفرد منصوب، فـ«كتابًا» تمييز ذات منصوب وعلامة نصبه الفتحة يُزيل إبهام العدد.', 6)
+  ('5ab3fa4a-69b5-5ed6-a093-fbcbf612e782', '3a0414d1-56e5-50c3-ae38-91a93aca51e0', 'في «ما حضرَ إلّا زيدٌ»، لماذا رُفع «زيدٌ» ولم يُنصب؟', '[{"id":"a","text":"لأنّ الجملة ناقصة منفيّة فيُعرب المستثنى حسب موقعه (فاعل مرفوع)"},{"id":"b","text":"لأنّ المستثنى بعد النفي يجب رفعه دائمًا"},{"id":"c","text":"لأنّ «إلّا» في الجملة المنفيّة لا تعمل"},{"id":"d","text":"لأنّ «زيد» معرفة فلا يُنصب"}]'::jsonb, 'a', 'الجملة ناقصة (لم يُذكر المستثنى منه)، فيُعرب ما بعد «إلّا» حسب موقعه من الجملة: «ما حضرَ إلّا زيدٌ» — «زيدٌ» فاعل مرفوع بالضمّة.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1810,7 +1810,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('8d24a486-3e0e-5169-a0ee-fa4c4713e0ff', '9d95b6e1-4794-5055-aae8-6955ddf0d606', 'في صيغة التعجّب «أجمِلْ بالسماءِ»، تُعرب «السماءِ» على أنّها:', '[{"id":"a","text":"مفعول به منصوب"},{"id":"b","text":"مضاف إليه مجرور"},{"id":"c","text":"فاعل مرفوع محلًّا مجرور لفظًا"},{"id":"d","text":"خبر مرفوع"}]'::jsonb, 'c', 'في صيغة التعجّب «أفعِلْ به» تكون الباء زائدة، والاسم بعدها فاعل مرفوع محلًّا مجرور لفظًا.', 3)
+  ('8d24a486-3e0e-5169-a0ee-fa4c4713e0ff', '9d95b6e1-4794-5055-aae8-6955ddf0d606', 'أداة الاستفهام «هل» تختلف عن الهمزة في أنّها:', '[{"id":"a","text":"تُستخدم للسؤال عن العاقل فقط"},{"id":"b","text":"تُستخدم للسؤال عن الزمان"},{"id":"c","text":"تسأل عن الجملة بجواب نعم أو لا ولا تُستخدم للتعيين"},{"id":"d","text":"تدخل على الأسماء المفردة دون الجمل"}]'::jsonb, 'c', '«هل» تسأل عن الجملة وجوابها نعم أو لا، ولا تُستخدم للتعيين (الاختيار بين شيئين)، بخلاف الهمزة التي تُستخدم للاستفهام عن الجملة والتعيين معًا.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1820,7 +1820,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('80e55757-a6fc-5faf-aebf-caf6c7f31ae5', '9d95b6e1-4794-5055-aae8-6955ddf0d606', 'أداة الاستفهام «هل» تختلف عن الهمزة في أنّها:', '[{"id":"a","text":"تُستخدم للسؤال عن العاقل فقط"},{"id":"b","text":"تُستخدم للسؤال عن الزمان"},{"id":"c","text":"تسأل عن الجملة بجواب نعم أو لا ولا تُستخدم للتعيين"},{"id":"d","text":"تدخل على الأسماء المفردة دون الجمل"}]'::jsonb, 'c', '«هل» تسأل عن الجملة وجوابها نعم أو لا، ولا تُستخدم للتعيين (الاختيار بين شيئين)، بخلاف الهمزة التي تُستخدم للاستفهام عن الجملة والتعيين معًا.', 4)
+  ('80e55757-a6fc-5faf-aebf-caf6c7f31ae5', '9d95b6e1-4794-5055-aae8-6955ddf0d606', 'في صيغة التعجّب «أجمِلْ بالسماءِ»، تُعرب «السماءِ» على أنّها:', '[{"id":"a","text":"مفعول به منصوب"},{"id":"b","text":"مضاف إليه مجرور"},{"id":"c","text":"فاعل مرفوع محلًّا مجرور لفظًا"},{"id":"d","text":"خبر مرفوع"}]'::jsonb, 'c', 'في صيغة التعجّب «أفعِلْ به» تكون الباء زائدة، والاسم بعدها فاعل مرفوع محلًّا مجرور لفظًا.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1852,7 +1852,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('a1d03de4-820b-5bd8-80fa-3c139ff1fe95', '3068696f-694a-58fa-82ef-d8f555c9e779', 'في قولنا «الصِّدقَ الصِّدقَ!»، ما إعراب «الصِّدقَ» الأول؟', '[{"id":"a","text":"مفعول به منصوب بالفتحة وعامله فعل مذكور"},{"id":"b","text":"مُغرى به منصوب بالفتحة وعامله فعل محذوف وجوبًا تقديره الزَم"},{"id":"c","text":"منادى منصوب بالفتحة"},{"id":"d","text":"مبتدأ مرفوع بالضمّة"}]'::jsonb, 'b', '«الصِّدقَ» في أسلوب الإغراء مُغرى به منصوب بالفتحة، وعامله فعل محذوف وجوبًا تقديره «الزَم» أو «عليك»، لأنّ الإغراء يحثّ المخاطَب على فعل محمود.', 1)
+  ('a1d03de4-820b-5bd8-80fa-3c139ff1fe95', '3068696f-694a-58fa-82ef-d8f555c9e779', 'في قولنا «إيّاكَ والكسلَ!»، ما نوع هذا الأسلوب؟', '[{"id":"a","text":"أسلوب إغراء"},{"id":"b","text":"أسلوب اختصاص"},{"id":"c","text":"أسلوب تحذير"},{"id":"d","text":"أسلوب نداء"}]'::jsonb, 'c', '«إيّاكَ والكسلَ» أسلوب تحذير يُنبَّه فيه المخاطَب إلى أمر مكروه (الكسل) ليتجنّبه. «إيّاكَ» ضمير منفصل مفعول به لفعل محذوف تقديره «احذَر».', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1862,7 +1862,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('4159ad95-8876-5f6a-9a53-3ce763847189', '3068696f-694a-58fa-82ef-d8f555c9e779', 'في قولنا «إيّاكَ والكسلَ!»، ما نوع هذا الأسلوب؟', '[{"id":"a","text":"أسلوب إغراء"},{"id":"b","text":"أسلوب اختصاص"},{"id":"c","text":"أسلوب تحذير"},{"id":"d","text":"أسلوب نداء"}]'::jsonb, 'c', '«إيّاكَ والكسلَ» أسلوب تحذير يُنبَّه فيه المخاطَب إلى أمر مكروه (الكسل) ليتجنّبه. «إيّاكَ» ضمير منفصل مفعول به لفعل محذوف تقديره «احذَر».', 2)
+  ('4159ad95-8876-5f6a-9a53-3ce763847189', '3068696f-694a-58fa-82ef-d8f555c9e779', 'أيّ الجمل التالية تحتوي على أسلوب تعجّب بالصيغة القياسية الأولى (ما أفعلَه)؟', '[{"id":"a","text":"أجمِلْ بالقمرِ!"},{"id":"b","text":"يا لجمالِ القمرِ!"},{"id":"c","text":"كم القمرُ جميلٌ!"},{"id":"d","text":"ما أجملَ القمرَ!"}]'::jsonb, 'd', '«ما أجملَ القمرَ!» هي الصيغة القياسية الأولى للتعجّب: ما (مبتدأ تعجّبيّة) + أجملَ (فعل ماضٍ على وزن أفعَلَ) + القمرَ (مفعول به منصوب). أمّا «أجمِلْ بالقمرِ!» فهي الصيغة الثانية.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1872,7 +1872,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('1709f9da-92da-5523-91d8-0cfdad3dc8a7', '3068696f-694a-58fa-82ef-d8f555c9e779', 'في «يا طالبَ العلمِ اجتهدْ»، ما إعراب «طالبَ»؟', '[{"id":"a","text":"منادى منصوب بالفتحة لأنّه مضاف"},{"id":"b","text":"منادى مبنيّ على الضمّ في محلّ نصب"},{"id":"c","text":"مُغرى به منصوب"},{"id":"d","text":"فاعل مرفوع بالضمّة"}]'::jsonb, 'a', '«طالبَ» منادى مضاف فيُعرب منصوبًا بالفتحة، لأنّ المنادى المضاف يُنصب ولا يُبنى. وهو مضاف و«العلمِ» مضاف إليه مجرور.', 3)
+  ('1709f9da-92da-5523-91d8-0cfdad3dc8a7', '3068696f-694a-58fa-82ef-d8f555c9e779', 'في قولنا «الصِّدقَ الصِّدقَ!»، ما إعراب «الصِّدقَ» الأول؟', '[{"id":"a","text":"مفعول به منصوب بالفتحة وعامله فعل مذكور"},{"id":"b","text":"مُغرى به منصوب بالفتحة وعامله فعل محذوف وجوبًا تقديره الزَم"},{"id":"c","text":"منادى منصوب بالفتحة"},{"id":"d","text":"مبتدأ مرفوع بالضمّة"}]'::jsonb, 'b', '«الصِّدقَ» في أسلوب الإغراء مُغرى به منصوب بالفتحة، وعامله فعل محذوف وجوبًا تقديره «الزَم» أو «عليك»، لأنّ الإغراء يحثّ المخاطَب على فعل محمود.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1882,7 +1882,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('11685e0d-79bc-5851-a88b-ff6e367a800e', '3068696f-694a-58fa-82ef-d8f555c9e779', 'أيّ الجمل التالية تحتوي على أسلوب تعجّب بالصيغة القياسية الأولى (ما أفعلَه)؟', '[{"id":"a","text":"أجمِلْ بالقمرِ!"},{"id":"b","text":"يا لجمالِ القمرِ!"},{"id":"c","text":"كم القمرُ جميلٌ!"},{"id":"d","text":"ما أجملَ القمرَ!"}]'::jsonb, 'd', '«ما أجملَ القمرَ!» هي الصيغة القياسية الأولى للتعجّب: ما (مبتدأ تعجّبيّة) + أجملَ (فعل ماضٍ على وزن أفعَلَ) + القمرَ (مفعول به منصوب). أمّا «أجمِلْ بالقمرِ!» فهي الصيغة الثانية.', 4)
+  ('11685e0d-79bc-5851-a88b-ff6e367a800e', '3068696f-694a-58fa-82ef-d8f555c9e779', 'في «يا طالبَ العلمِ اجتهدْ»، ما إعراب «طالبَ»؟', '[{"id":"a","text":"منادى منصوب بالفتحة لأنّه مضاف"},{"id":"b","text":"منادى مبنيّ على الضمّ في محلّ نصب"},{"id":"c","text":"مُغرى به منصوب"},{"id":"d","text":"فاعل مرفوع بالضمّة"}]'::jsonb, 'a', '«طالبَ» منادى مضاف فيُعرب منصوبًا بالفتحة، لأنّ المنادى المضاف يُنصب ولا يُبنى. وهو مضاف و«العلمِ» مضاف إليه مجرور.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1924,7 +1924,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('24b59f07-e892-5d8d-b996-45e72380e12f', '9bf8d840-480b-5538-8e3a-5dc83c7a4214', 'في «أجمِلْ بالسماءِ!»، ما إعراب «السماءِ» في هذا أسلوب التعجّب؟', '[{"id":"a","text":"مفعول به منصوب"},{"id":"b","text":"مضاف إليه مجرور"},{"id":"c","text":"فاعل مرفوع محلًّا مجرور لفظًا بالباء الزائدة"},{"id":"d","text":"منادى مجرور بحرف النداء"}]'::jsonb, 'c', 'في صيغة «أفعِلْ به» التعجّبية، «الباء» زائدة وما بعدها فاعل مرفوع في المحلّ مجرور لفظًا. فـ«السماءِ» فاعل لـ«أجمِلْ» (الفعل الجامد)، مجرور لفظًا بالباء الزائدة ومرفوع محلًّا.', 1)
+  ('24b59f07-e892-5d8d-b996-45e72380e12f', '9bf8d840-480b-5538-8e3a-5dc83c7a4214', 'حدِّد أسلوب «الإغراء» من بين الجمل التالية:', '[{"id":"a","text":"الجِدَّ والمثابرةَ أيّها الطلابُ!"},{"id":"b","text":"إيّاكَ والتهاونَ!"},{"id":"c","text":"نحنُ — الشبابَ — نبني الوطنَ"},{"id":"d","text":"يا أيّها الطلابُ اجتهدوا!"}]'::jsonb, 'a', '«الجِدَّ والمثابرةَ» أسلوب إغراء يحثّ المخاطَب على فعل محمود (الجدّ والمثابرة)، والاسمان منصوبان بفعل محذوف وجوبًا تقديره «الزَموا». أمّا «إيّاكَ والتهاونَ» فهو تحذير، و«نحن — الشبابَ» فهو اختصاص.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1934,7 +1934,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('a1266f09-f2b1-5d55-87bf-4af1a1473f3b', '9bf8d840-480b-5538-8e3a-5dc83c7a4214', 'في «يا رجلًا أعنِّي بحاجتي»، لماذا نُصب المنادى «رجلًا»؟', '[{"id":"a","text":"لأنّه مضاف فيُنصب"},{"id":"b","text":"لأنّه نكرة غير مقصودة فيُنصب"},{"id":"c","text":"لأنّه علم مفرد فيُبنى على الضمّ"},{"id":"d","text":"لأنّه شبيه بالمضاف فيُنصب"}]'::jsonb, 'b', 'المنادى «رجلًا» نكرة غير مقصودة (أي المتكلّم لا يخاطب شخصًا بعينه بل يُنادي أيّ رجل)، فالنكرة غير المقصودة تُنصب بالتنوين. وهي تختلف عن النكرة المقصودة (يا رجلُ) التي تُبنى على الضمّ.', 2)
+  ('a1266f09-f2b1-5d55-87bf-4af1a1473f3b', '9bf8d840-480b-5538-8e3a-5dc83c7a4214', 'في «يا محمّدُ أقبِلْ»، ما إعراب «محمّدُ» تفصيلًا؟', '[{"id":"a","text":"منادى منصوب بالفتحة لأنّه مضاف"},{"id":"b","text":"منادى علم مفرد مبنيّ على الضمّ في محلّ نصب"},{"id":"c","text":"فاعل مرفوع بالضمّة"},{"id":"d","text":"منادى مبنيّ على الكسر في محلّ نصب"}]'::jsonb, 'b', '«محمّدُ» منادى مفرد علم، وحكمه أن يُبنى على الضمّ في محلّ نصب. «يا» حرف نداء مبنيّ لا محلّ له من الإعراب.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1944,7 +1944,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('a52f3540-4a88-5b6f-8566-d337a8c5e6aa', '9bf8d840-480b-5538-8e3a-5dc83c7a4214', 'ما الشرط المفقود الذي يمنع قول «ما أحمرَ الوردةَ!» بالصيغة القياسية مباشرةً؟', '[{"id":"a","text":"الفعل «احمرَّ» رباعيّ فلا يُصاغ منه التعجّب قياسًا"},{"id":"b","text":"الفعل «احمرَّ» يدلّ على لون فلا يُصاغ منه التعجّب قياسًا"},{"id":"c","text":"الفعل «احمرَّ» جامد فلا يُصاغ منه التعجّب"},{"id":"d","text":"الفعل «احمرَّ» على وزن افعلَّ ولكنّه ثلاثيّ الجذر فيجوز التعجّب منه"}]'::jsonb, 'b', 'من شروط صياغة التعجّب القياسي أن لا يدلّ الفعل على لون أو عيب أو حلية. «احمرَّ» يدلّ على لون (الحمرة) فلا يُصاغ منه التعجّب قياسًا مباشرةً، بل نستعين بفعل مساعد: «ما أشدَّ احمرارَ الوردةِ!»', 3)
+  ('a52f3540-4a88-5b6f-8566-d337a8c5e6aa', '9bf8d840-480b-5538-8e3a-5dc83c7a4214', 'في «أجمِلْ بالسماءِ!»، ما إعراب «السماءِ» في هذا أسلوب التعجّب؟', '[{"id":"a","text":"مفعول به منصوب"},{"id":"b","text":"مضاف إليه مجرور"},{"id":"c","text":"فاعل مرفوع محلًّا مجرور لفظًا بالباء الزائدة"},{"id":"d","text":"منادى مجرور بحرف النداء"}]'::jsonb, 'c', 'في صيغة «أفعِلْ به» التعجّبية، «الباء» زائدة وما بعدها فاعل مرفوع في المحلّ مجرور لفظًا. فـ«السماءِ» فاعل لـ«أجمِلْ» (الفعل الجامد)، مجرور لفظًا بالباء الزائدة ومرفوع محلًّا.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1954,7 +1954,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('e1971226-359d-59ed-9845-51514c0a53f0', '9bf8d840-480b-5538-8e3a-5dc83c7a4214', 'حدِّد أسلوب «الإغراء» من بين الجمل التالية:', '[{"id":"a","text":"الجِدَّ والمثابرةَ أيّها الطلابُ!"},{"id":"b","text":"إيّاكَ والتهاونَ!"},{"id":"c","text":"نحنُ — الشبابَ — نبني الوطنَ"},{"id":"d","text":"يا أيّها الطلابُ اجتهدوا!"}]'::jsonb, 'a', '«الجِدَّ والمثابرةَ» أسلوب إغراء يحثّ المخاطَب على فعل محمود (الجدّ والمثابرة)، والاسمان منصوبان بفعل محذوف وجوبًا تقديره «الزَموا». أمّا «إيّاكَ والتهاونَ» فهو تحذير، و«نحن — الشبابَ» فهو اختصاص.', 4)
+  ('e1971226-359d-59ed-9845-51514c0a53f0', '9bf8d840-480b-5538-8e3a-5dc83c7a4214', 'في «يا رجلًا أعنِّي بحاجتي»، لماذا نُصب المنادى «رجلًا»؟', '[{"id":"a","text":"لأنّه مضاف فيُنصب"},{"id":"b","text":"لأنّه نكرة غير مقصودة فيُنصب"},{"id":"c","text":"لأنّه علم مفرد فيُبنى على الضمّ"},{"id":"d","text":"لأنّه شبيه بالمضاف فيُنصب"}]'::jsonb, 'b', 'المنادى «رجلًا» نكرة غير مقصودة (أي المتكلّم لا يخاطب شخصًا بعينه بل يُنادي أيّ رجل)، فالنكرة غير المقصودة تُنصب بالتنوين. وهي تختلف عن النكرة المقصودة (يا رجلُ) التي تُبنى على الضمّ.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1964,7 +1964,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('0f3f7012-fad9-5670-9ab3-1ca1ee0fee0d', '9bf8d840-480b-5538-8e3a-5dc83c7a4214', 'في «هل درستَ دروسَك؟» و«أدرستَ دروسَك؟»، ما الفرق الدقيق في الاستعمال؟', '[{"id":"a","text":"«هل» للمستقبل وهمزة الاستفهام للماضي"},{"id":"b","text":"«هل» أقوى تأكيدًا من الهمزة في الاستفهام"},{"id":"c","text":"«هل» تدخل على الأسماء وهمزة الاستفهام تدخل على الأفعال فقط"},{"id":"d","text":"الجملتان للتصديق، لكنّ الهمزة تُفيد التعيين أيضًا خلافًا لـ«هل»"}]'::jsonb, 'd', 'كلتا الجملتين استفهام للتصديق (جوابهما نعم أو لا). الفارق أنّ همزة الاستفهام تُستخدم أيضًا للتعيين (الاختيار بين بديلين: أدرستَ أم لا؟)، بينما «هل» قاصرة على التصديق فقط ولا تدخل في سياق التعيين.', 5)
+  ('0f3f7012-fad9-5670-9ab3-1ca1ee0fee0d', '9bf8d840-480b-5538-8e3a-5dc83c7a4214', 'ما الشرط المفقود الذي يمنع قول «ما أحمرَ الوردةَ!» بالصيغة القياسية مباشرةً؟', '[{"id":"a","text":"الفعل «احمرَّ» رباعيّ فلا يُصاغ منه التعجّب قياسًا"},{"id":"b","text":"الفعل «احمرَّ» يدلّ على لون فلا يُصاغ منه التعجّب قياسًا"},{"id":"c","text":"الفعل «احمرَّ» جامد فلا يُصاغ منه التعجّب"},{"id":"d","text":"الفعل «احمرَّ» على وزن افعلَّ ولكنّه ثلاثيّ الجذر فيجوز التعجّب منه"}]'::jsonb, 'b', 'من شروط صياغة التعجّب القياسي أن لا يدلّ الفعل على لون أو عيب أو حلية. «احمرَّ» يدلّ على لون (الحمرة) فلا يُصاغ منه التعجّب قياسًا مباشرةً، بل نستعين بفعل مساعد: «ما أشدَّ احمرارَ الوردةِ!»', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1974,7 +1974,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('cdb37151-e123-5c4e-97d5-b69f3b75e554', '9bf8d840-480b-5538-8e3a-5dc83c7a4214', 'في «يا محمّدُ أقبِلْ»، ما إعراب «محمّدُ» تفصيلًا؟', '[{"id":"a","text":"منادى منصوب بالفتحة لأنّه مضاف"},{"id":"b","text":"منادى علم مفرد مبنيّ على الضمّ في محلّ نصب"},{"id":"c","text":"فاعل مرفوع بالضمّة"},{"id":"d","text":"منادى مبنيّ على الكسر في محلّ نصب"}]'::jsonb, 'b', '«محمّدُ» منادى مفرد علم، وحكمه أن يُبنى على الضمّ في محلّ نصب. «يا» حرف نداء مبنيّ لا محلّ له من الإعراب.', 6)
+  ('cdb37151-e123-5c4e-97d5-b69f3b75e554', '9bf8d840-480b-5538-8e3a-5dc83c7a4214', 'في «هل درستَ دروسَك؟» و«أدرستَ دروسَك؟»، ما الفرق الدقيق في الاستعمال؟', '[{"id":"a","text":"«هل» للمستقبل وهمزة الاستفهام للماضي"},{"id":"b","text":"«هل» أقوى تأكيدًا من الهمزة في الاستفهام"},{"id":"c","text":"«هل» تدخل على الأسماء وهمزة الاستفهام تدخل على الأفعال فقط"},{"id":"d","text":"الجملتان للتصديق، لكنّ الهمزة تُفيد التعيين أيضًا خلافًا لـ«هل»"}]'::jsonb, 'd', 'كلتا الجملتين استفهام للتصديق (جوابهما نعم أو لا). الفارق أنّ همزة الاستفهام تُستخدم أيضًا للتعيين (الاختيار بين بديلين: أدرستَ أم لا؟)، بينما «هل» قاصرة على التصديق فقط ولا تدخل في سياق التعيين.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2068,7 +2068,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('a499ba69-ef76-5d05-b53c-dd56d54005ce', '9f735203-952b-59e2-b286-6928d4ddf273', 'ما وزن الفعل «أَكْرَمَ»؟', '[{"id":"a","text":"فَعَّلَ"},{"id":"b","text":"أَفْعَلَ"},{"id":"c","text":"فَاعَلَ"},{"id":"d","text":"انْفَعَلَ"}]'::jsonb, 'b', 'جذر «أكرم» هو (ك ر م)، وزيادته الهمزة في أوّله. فالكاف مقابل الفاء وهو ساكن، والراء مقابل العين مفتوحة، والميم مقابل اللام مفتوحة. وزنه «أَفْعَلَ».', 2)
+  ('a499ba69-ef76-5d05-b53c-dd56d54005ce', '9f735203-952b-59e2-b286-6928d4ddf273', 'أيّ الأفعال التالية فعل ثلاثيّ مجرّد؟', '[{"id":"a","text":"ذَهَبَ"},{"id":"b","text":"تَعَلَّمَ"},{"id":"c","text":"اسْتَغْفَرَ"},{"id":"d","text":"أَرْسَلَ"}]'::jsonb, 'a', '«ذَهَبَ» فعل ثلاثيّ مجرّد من الجذر (ذ هـ ب) بلا زيادة ووزنه «فَعَلَ». أمّا «تعلَّم» فمزيد بتاء وتضعيف (تَفَعَّلَ)، و«استغفر» مزيد بثلاثة (اسْتَفْعَلَ)، و«أرسل» مزيد بهمزة (أَفْعَلَ).', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2078,7 +2078,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('369bc86d-868c-580c-bee1-9d0e1c59d894', '9f735203-952b-59e2-b286-6928d4ddf273', 'ما الحروف الزائدة في «انْكَسَرَ»؟', '[{"id":"a","text":"الألف والنون"},{"id":"b","text":"الهمزة والنون"},{"id":"c","text":"الهمزة والسين"},{"id":"d","text":"الهمزة فقط"}]'::jsonb, 'b', 'جذر «انكسر» هو (ك س ر). الحروف في الكلمة هي: همزة - نون - كاف - سين - راء. الكاف والسين والراء هي الجذر، إذن الهمزة والنون زائدتان. وزنه «انْفَعَلَ».', 3)
+  ('369bc86d-868c-580c-bee1-9d0e1c59d894', '9f735203-952b-59e2-b286-6928d4ddf273', 'حروف الزيادة العشرة مجموعة في أيّ الجمل التذكيريّة؟', '[{"id":"a","text":"ما أجمل صوتها"},{"id":"b","text":"أمان وسلامة"},{"id":"c","text":"هيّا نتعلّم معًا"},{"id":"d","text":"سَأَلْتُمُونِيهَا"}]'::jsonb, 'd', 'حروف الزيادة العشرة (سين، همزة، لام، تاء، ميم، واو، نون، ياء، هاء، ألف) مجموعة في الجملة التذكيريّة «سَأَلْتُمُونِيهَا». كلّ حرف من هذه يمكن أن يكون زائدًا إذا لم يكن من أصل الجذر.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2088,7 +2088,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('448a6499-4b96-5017-b5c7-fd980c73b962', '9f735203-952b-59e2-b286-6928d4ddf273', 'أيّ الأفعال التالية فعل ثلاثيّ مجرّد؟', '[{"id":"a","text":"ذَهَبَ"},{"id":"b","text":"تَعَلَّمَ"},{"id":"c","text":"اسْتَغْفَرَ"},{"id":"d","text":"أَرْسَلَ"}]'::jsonb, 'a', '«ذَهَبَ» فعل ثلاثيّ مجرّد من الجذر (ذ هـ ب) بلا زيادة ووزنه «فَعَلَ». أمّا «تعلَّم» فمزيد بتاء وتضعيف (تَفَعَّلَ)، و«استغفر» مزيد بثلاثة (اسْتَفْعَلَ)، و«أرسل» مزيد بهمزة (أَفْعَلَ).', 4)
+  ('448a6499-4b96-5017-b5c7-fd980c73b962', '9f735203-952b-59e2-b286-6928d4ddf273', 'ما وزن الفعل «أَكْرَمَ»؟', '[{"id":"a","text":"فَعَّلَ"},{"id":"b","text":"أَفْعَلَ"},{"id":"c","text":"فَاعَلَ"},{"id":"d","text":"انْفَعَلَ"}]'::jsonb, 'b', 'جذر «أكرم» هو (ك ر م)، وزيادته الهمزة في أوّله. فالكاف مقابل الفاء وهو ساكن، والراء مقابل العين مفتوحة، والميم مقابل اللام مفتوحة. وزنه «أَفْعَلَ».', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2098,7 +2098,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('7bc5214d-d379-55df-a17c-f01cdce8356b', '9f735203-952b-59e2-b286-6928d4ddf273', 'ما وزن «اجْتَمَعَ»؟', '[{"id":"a","text":"انْفَعَلَ"},{"id":"b","text":"افْتَعَلَ"},{"id":"c","text":"اسْتَفْعَلَ"},{"id":"d","text":"تَفَاعَلَ"}]'::jsonb, 'b', 'جذر «اجتمع» هو (ج م ع). الحروف: همزة - جيم - تاء - ميم - عين. الجيم مقابل الفاء، والميم مقابل العين، والعين مقابل اللام. الزائدان هما الهمزة والتاء في الموضع الثاني. وزنه «افْتَعَلَ».', 5)
+  ('7bc5214d-d379-55df-a17c-f01cdce8356b', '9f735203-952b-59e2-b286-6928d4ddf273', 'ما الحروف الزائدة في «انْكَسَرَ»؟', '[{"id":"a","text":"الألف والنون"},{"id":"b","text":"الهمزة والنون"},{"id":"c","text":"الهمزة والسين"},{"id":"d","text":"الهمزة فقط"}]'::jsonb, 'b', 'جذر «انكسر» هو (ك س ر). الحروف في الكلمة هي: همزة - نون - كاف - سين - راء. الكاف والسين والراء هي الجذر، إذن الهمزة والنون زائدتان. وزنه «انْفَعَلَ».', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2108,7 +2108,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('613573fe-600d-5c85-9304-64491a5920b7', '9f735203-952b-59e2-b286-6928d4ddf273', 'حروف الزيادة العشرة مجموعة في أيّ الجمل التذكيريّة؟', '[{"id":"a","text":"ما أجمل صوتها"},{"id":"b","text":"أمان وسلامة"},{"id":"c","text":"هيّا نتعلّم معًا"},{"id":"d","text":"سَأَلْتُمُونِيهَا"}]'::jsonb, 'd', 'حروف الزيادة العشرة (سين، همزة، لام، تاء، ميم، واو، نون، ياء، هاء، ألف) مجموعة في الجملة التذكيريّة «سَأَلْتُمُونِيهَا». كلّ حرف من هذه يمكن أن يكون زائدًا إذا لم يكن من أصل الجذر.', 6)
+  ('613573fe-600d-5c85-9304-64491a5920b7', '9f735203-952b-59e2-b286-6928d4ddf273', 'ما وزن «اجْتَمَعَ»؟', '[{"id":"a","text":"انْفَعَلَ"},{"id":"b","text":"افْتَعَلَ"},{"id":"c","text":"اسْتَفْعَلَ"},{"id":"d","text":"تَفَاعَلَ"}]'::jsonb, 'b', 'جذر «اجتمع» هو (ج م ع). الحروف: همزة - جيم - تاء - ميم - عين. الجيم مقابل الفاء، والميم مقابل العين، والعين مقابل اللام. الزائدان هما الهمزة والتاء في الموضع الثاني. وزنه «افْتَعَلَ».', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2130,7 +2130,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('a4a14104-4416-5212-a515-df1e97624d88', '7976d2b4-e83d-58d9-8a37-5ccd181ac151', 'ما وزن «اسْتَخْرَجَ»، وما الحروف الزائدة فيه؟', '[{"id":"a","text":"وزنه افْتَعَلَ، والزائد الهمزة والتاء"},{"id":"b","text":"وزنه انْفَعَلَ، والزائد الهمزة والنون"},{"id":"c","text":"وزنه أَفْعَلَ، والزائد الهمزة فقط"},{"id":"d","text":"وزنه اسْتَفْعَلَ، والزائد الهمزة والسين والتاء"}]'::jsonb, 'd', 'جذر «استخرج» هو (خ ر ج). الكلمة: همزة - سين - تاء - خاء - راء - جيم. الخاء مقابل الفاء، والراء مقابل العين، والجيم مقابل اللام. الزائدات هي الهمزة في الأوّل، والسين بعدها، والتاء ثالثًا. الوزن: «اسْتَفْعَلَ».', 1)
+  ('a4a14104-4416-5212-a515-df1e97624d88', '7976d2b4-e83d-58d9-8a37-5ccd181ac151', 'ما المعنى الصرفيّ الغالب لوزن «انْفَعَلَ» مثل «انكسرَ» و«انقطعَ»؟', '[{"id":"a","text":"التعدية، أي جعل الغير يفعل الفعل"},{"id":"b","text":"الطلب، أي طلب حدوث الفعل"},{"id":"c","text":"المشاركة بين اثنين"},{"id":"d","text":"المطاوعة، أي قبول الأثر وقوعًا على المفعول"}]'::jsonb, 'd', 'وزن «انفعل» يدلّ غالبًا على **المطاوعة**: أي أنّ الشيء قبِل الأثر الواقع عليه. «انكسرَ الزجاجُ» أي طاوع الكسرَ، و«انقطعَ الحبلُ» أي طاوع القطعَ. فهو مقابل «كسرَ / قطعَ» المتعدّيَين.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2140,7 +2140,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('1a776ef9-d363-5b0f-9d0f-cd2df17dc29d', '7976d2b4-e83d-58d9-8a37-5ccd181ac151', 'ما وزن الفعل «دَحْرَجَ»؟', '[{"id":"a","text":"فَعَّلَ"},{"id":"b","text":"فَاعَلَ"},{"id":"c","text":"فَعْلَلَ"},{"id":"d","text":"أَفْعَلَ"}]'::jsonb, 'c', '«دَحْرَجَ» فعل رباعيّ مجرّد: جذره (د ح ر ج) بأربعة أحرف أصليّة كلّها. الدال مقابل الفاء، والحاء مقابل العين، والراء مقابل اللام الأولى، والجيم مقابل اللام الثانية. وزنه «فَعْلَلَ».', 2)
+  ('1a776ef9-d363-5b0f-9d0f-cd2df17dc29d', '7976d2b4-e83d-58d9-8a37-5ccd181ac151', 'أيّ الأفعال التالية على وزن «فَعِلَ» (بكسر العين)؟', '[{"id":"a","text":"فَرِحَ"},{"id":"b","text":"كَتَبَ"},{"id":"c","text":"كَرُمَ"},{"id":"d","text":"أَكَلَ"}]'::jsonb, 'a', '«فَرِحَ»: الفاء مفتوحة، والراء مكسورة (مقابل العين)، والحاء مفتوحة — وزنه «فَعِلَ» بكسر العين. أمّا «كتبَ» و«أكلَ» فعلى «فَعَلَ» بفتح العين، و«كرُم» على «فَعُلَ» بضمّ العين.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2150,7 +2150,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('cbaea361-268e-5742-8759-7a7f759941d0', '7976d2b4-e83d-58d9-8a37-5ccd181ac151', 'ما المعنى الصرفيّ الغالب لوزن «انْفَعَلَ» مثل «انكسرَ» و«انقطعَ»؟', '[{"id":"a","text":"التعدية، أي جعل الغير يفعل الفعل"},{"id":"b","text":"الطلب، أي طلب حدوث الفعل"},{"id":"c","text":"المشاركة بين اثنين"},{"id":"d","text":"المطاوعة، أي قبول الأثر وقوعًا على المفعول"}]'::jsonb, 'd', 'وزن «انفعل» يدلّ غالبًا على **المطاوعة**: أي أنّ الشيء قبِل الأثر الواقع عليه. «انكسرَ الزجاجُ» أي طاوع الكسرَ، و«انقطعَ الحبلُ» أي طاوع القطعَ. فهو مقابل «كسرَ / قطعَ» المتعدّيَين.', 3)
+  ('cbaea361-268e-5742-8759-7a7f759941d0', '7976d2b4-e83d-58d9-8a37-5ccd181ac151', 'ما وزن «اسْتَخْرَجَ»، وما الحروف الزائدة فيه؟', '[{"id":"a","text":"وزنه افْتَعَلَ، والزائد الهمزة والتاء"},{"id":"b","text":"وزنه انْفَعَلَ، والزائد الهمزة والنون"},{"id":"c","text":"وزنه أَفْعَلَ، والزائد الهمزة فقط"},{"id":"d","text":"وزنه اسْتَفْعَلَ، والزائد الهمزة والسين والتاء"}]'::jsonb, 'd', 'جذر «استخرج» هو (خ ر ج). الكلمة: همزة - سين - تاء - خاء - راء - جيم. الخاء مقابل الفاء، والراء مقابل العين، والجيم مقابل اللام. الزائدات هي الهمزة في الأوّل، والسين بعدها، والتاء ثالثًا. الوزن: «اسْتَفْعَلَ».', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2160,7 +2160,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('7a1faccb-c941-556f-aa9c-ad4588c238ae', '7976d2b4-e83d-58d9-8a37-5ccd181ac151', 'ما وزن «تَقَاتَلَ»، وما الحرفان الزائدان فيه؟', '[{"id":"a","text":"تَفَعَّلَ، والزائدان التاء وتضعيف العين"},{"id":"b","text":"افْتَعَلَ، والزائدان الهمزة والتاء"},{"id":"c","text":"تَفَاعَلَ، والزائدان التاء والألف"},{"id":"d","text":"فَاعَلَ، والزائد الألف فقط"}]'::jsonb, 'c', 'جذر «تقاتل» هو (ق ت ل). الكلمة: تاء - قاف - ألف - تاء - لام. القاف مقابل الفاء، والتاء الأصليّة مقابل العين، واللام مقابل اللام. الزائدان هما التاء في الأوّل والألف بين الفاء والعين. الوزن: «تَفَاعَلَ».', 4)
+  ('7a1faccb-c941-556f-aa9c-ad4588c238ae', '7976d2b4-e83d-58d9-8a37-5ccd181ac151', 'ما وزن الفعل «دَحْرَجَ»؟', '[{"id":"a","text":"فَعَّلَ"},{"id":"b","text":"فَاعَلَ"},{"id":"c","text":"فَعْلَلَ"},{"id":"d","text":"أَفْعَلَ"}]'::jsonb, 'c', '«دَحْرَجَ» فعل رباعيّ مجرّد: جذره (د ح ر ج) بأربعة أحرف أصليّة كلّها. الدال مقابل الفاء، والحاء مقابل العين، والراء مقابل اللام الأولى، والجيم مقابل اللام الثانية. وزنه «فَعْلَلَ».', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2170,7 +2170,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('9524e0cb-8a17-5b0d-9a84-483e2973696f', '7976d2b4-e83d-58d9-8a37-5ccd181ac151', 'أيّ الأفعال التالية على وزن «فَعِلَ» (بكسر العين)؟', '[{"id":"a","text":"فَرِحَ"},{"id":"b","text":"كَتَبَ"},{"id":"c","text":"كَرُمَ"},{"id":"d","text":"أَكَلَ"}]'::jsonb, 'a', '«فَرِحَ»: الفاء مفتوحة، والراء مكسورة (مقابل العين)، والحاء مفتوحة — وزنه «فَعِلَ» بكسر العين. أمّا «كتبَ» و«أكلَ» فعلى «فَعَلَ» بفتح العين، و«كرُم» على «فَعُلَ» بضمّ العين.', 5)
+  ('9524e0cb-8a17-5b0d-9a84-483e2973696f', '7976d2b4-e83d-58d9-8a37-5ccd181ac151', 'ما وزن «تَقَاتَلَ»، وما الحرفان الزائدان فيه؟', '[{"id":"a","text":"تَفَعَّلَ، والزائدان التاء وتضعيف العين"},{"id":"b","text":"افْتَعَلَ، والزائدان الهمزة والتاء"},{"id":"c","text":"تَفَاعَلَ، والزائدان التاء والألف"},{"id":"d","text":"فَاعَلَ، والزائد الألف فقط"}]'::jsonb, 'c', 'جذر «تقاتل» هو (ق ت ل). الكلمة: تاء - قاف - ألف - تاء - لام. القاف مقابل الفاء، والتاء الأصليّة مقابل العين، واللام مقابل اللام. الزائدان هما التاء في الأوّل والألف بين الفاء والعين. الوزن: «تَفَاعَلَ».', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2212,7 +2212,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('0b5b52bc-a91a-544e-abef-2b7b7dca2ee6', '9d321826-4676-581f-9584-cf2cd824a0fe', 'اسم الفاعل من الفعل غير الثلاثي (كـ«دَرَّسَ») يُبنى بـ:', '[{"id":"a","text":"وزن فَاعِل"},{"id":"b","text":"وزن مَفعُول"},{"id":"c","text":"ضمّ أوّله وكسر ما قبل آخره"},{"id":"d","text":"ضمّ أوّله وفتح ما قبل آخره"}]'::jsonb, 'c', 'اسم الفاعل من غير الثلاثي يُبنى بضمّ أوّله وكسر ما قبل آخره، كـ«دَرَّسَ ← مُدَرِّس» و«استَعمَلَ ← مُستَعمِل».', 2)
+  ('0b5b52bc-a91a-544e-abef-2b7b7dca2ee6', '9d321826-4676-581f-9584-cf2cd824a0fe', 'أيٌّ من الأوزان التالية هو وزن اسم التفضيل للمذكّر؟', '[{"id":"a","text":"أَفعَل"},{"id":"b","text":"فَعِيل"},{"id":"c","text":"فَعَّال"},{"id":"d","text":"مِفعَال"}]'::jsonb, 'a', 'اسم التفضيل يأتي على وزن «أفعَل» للمذكّر و«فُعلى» للمؤنّث، كـ«أكبر وكُبرى» و«أحسن وحُسنى».', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2222,7 +2222,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('25f6a249-6685-5882-a777-9d03f58c79bd', '9d321826-4676-581f-9584-cf2cd824a0fe', 'أيٌّ من الأوزان التالية هو وزن اسم التفضيل للمذكّر؟', '[{"id":"a","text":"أَفعَل"},{"id":"b","text":"فَعِيل"},{"id":"c","text":"فَعَّال"},{"id":"d","text":"مِفعَال"}]'::jsonb, 'a', 'اسم التفضيل يأتي على وزن «أفعَل» للمذكّر و«فُعلى» للمؤنّث، كـ«أكبر وكُبرى» و«أحسن وحُسنى».', 3)
+  ('25f6a249-6685-5882-a777-9d03f58c79bd', '9d321826-4676-581f-9584-cf2cd824a0fe', 'اسم الآلة «مِفتَاح» على أيّ وزن جاء؟', '[{"id":"a","text":"مِفعَل"},{"id":"b","text":"مِفعَلة"},{"id":"c","text":"مِفعَال"},{"id":"d","text":"فَعَّال"}]'::jsonb, 'c', '«مِفتاح» اسم آلة على وزن «مِفعَال»، وهو أحد الأوزان القياسية الثلاثة لأسماء الآلة.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2232,7 +2232,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('479bac5b-730e-5483-89cf-b6090feb763b', '9d321826-4676-581f-9584-cf2cd824a0fe', 'ما الفرق الدلالي بين اسم الفاعل والصفة المشبّهة؟', '[{"id":"a","text":"لا فرق بينهما في الدلالة"},{"id":"b","text":"اسم الفاعل يُبنى من الرباعي فقط، والصفة المشبّهة من الثلاثي"},{"id":"c","text":"اسم الفاعل يدلّ على صفة ثابتة دائمة، والصفة المشبّهة تدلّ على حدث مؤقّت"},{"id":"d","text":"اسم الفاعل يدلّ على حدث مؤقّت، والصفة المشبّهة تدلّ على صفة ثابتة في صاحبها"}]'::jsonb, 'd', 'اسم الفاعل يدلّ على من وقع منه الفعل في وقت محدّد، أمّا الصفة المشبّهة فتدلّ على صفة ثابتة راسخة في صاحبها، كـ«كريم وشجاع وحسن».', 4)
+  ('479bac5b-730e-5483-89cf-b6090feb763b', '9d321826-4676-581f-9584-cf2cd824a0fe', 'اسم الفاعل من الفعل غير الثلاثي (كـ«دَرَّسَ») يُبنى بـ:', '[{"id":"a","text":"وزن فَاعِل"},{"id":"b","text":"وزن مَفعُول"},{"id":"c","text":"ضمّ أوّله وكسر ما قبل آخره"},{"id":"d","text":"ضمّ أوّله وفتح ما قبل آخره"}]'::jsonb, 'c', 'اسم الفاعل من غير الثلاثي يُبنى بضمّ أوّله وكسر ما قبل آخره، كـ«دَرَّسَ ← مُدَرِّس» و«استَعمَلَ ← مُستَعمِل».', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2242,7 +2242,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('950ce284-e777-5ddd-ae69-f4caabf45dec', '9d321826-4676-581f-9584-cf2cd824a0fe', 'اسم الآلة «مِفتَاح» على أيّ وزن جاء؟', '[{"id":"a","text":"مِفعَل"},{"id":"b","text":"مِفعَلة"},{"id":"c","text":"مِفعَال"},{"id":"d","text":"فَعَّال"}]'::jsonb, 'c', '«مِفتاح» اسم آلة على وزن «مِفعَال»، وهو أحد الأوزان القياسية الثلاثة لأسماء الآلة.', 5)
+  ('950ce284-e777-5ddd-ae69-f4caabf45dec', '9d321826-4676-581f-9584-cf2cd824a0fe', 'ما الفرق الدلالي بين اسم الفاعل والصفة المشبّهة؟', '[{"id":"a","text":"لا فرق بينهما في الدلالة"},{"id":"b","text":"اسم الفاعل يُبنى من الرباعي فقط، والصفة المشبّهة من الثلاثي"},{"id":"c","text":"اسم الفاعل يدلّ على صفة ثابتة دائمة، والصفة المشبّهة تدلّ على حدث مؤقّت"},{"id":"d","text":"اسم الفاعل يدلّ على حدث مؤقّت، والصفة المشبّهة تدلّ على صفة ثابتة في صاحبها"}]'::jsonb, 'd', 'اسم الفاعل يدلّ على من وقع منه الفعل في وقت محدّد، أمّا الصفة المشبّهة فتدلّ على صفة ثابتة راسخة في صاحبها، كـ«كريم وشجاع وحسن».', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2284,7 +2284,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('3a57be27-7b78-5492-82bc-e73906a3416b', '9b5c21ee-37e3-50d8-a7c5-ba6a75e2eb01', 'ما نوع الكلمة «مُدَرِّس» في الجملة «المُدَرِّسُ شرحَ الدرسَ»؟', '[{"id":"a","text":"اسم مفعول من غير الثلاثي"},{"id":"b","text":"اسم فاعل من غير الثلاثي (دَرَّسَ)"},{"id":"c","text":"صيغة مبالغة"},{"id":"d","text":"اسم فاعل من الثلاثي"}]'::jsonb, 'b', '«مُدَرِّس» اسم فاعل من الفعل غير الثلاثي «دَرَّسَ»، بُني بضمّ أوله وكسر ما قبل آخره.', 3)
+  ('3a57be27-7b78-5492-82bc-e73906a3416b', '9b5c21ee-37e3-50d8-a7c5-ba6a75e2eb01', 'ما وزن اسم التفضيل من الفعل «حَسُنَ»؟', '[{"id":"a","text":"أَفعَل (أَحسَن)"},{"id":"b","text":"مَفعُول (مَحسُون)"},{"id":"c","text":"فَاعِل (حَاسِن)"},{"id":"d","text":"فَعِيل (حَسِين)"}]'::jsonb, 'a', 'اسم التفضيل يأتي على وزن أَفعَل، فمن «حَسُنَ» نقول «أَحسَن»، وهو يدلّ على التفوّق في صفة الحُسن.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2294,7 +2294,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('9d12af42-8ca0-5491-98cd-9573549b60f0', '9b5c21ee-37e3-50d8-a7c5-ba6a75e2eb01', 'أيّ الأوزان التالية يدلّ على صيغة مبالغة للكثرة والشدّة؟', '[{"id":"a","text":"فَاعِل (صَائِم)"},{"id":"b","text":"مَفعُول (مَصُوم)"},{"id":"c","text":"مَفعَل (مَصَام)"},{"id":"d","text":"فَعَّال (صَوَّام)"}]'::jsonb, 'd', 'وزن فَعَّال من أوزان صيغة المبالغة الدالّة على كثرة الفعل وتكراره، مثل «صَوَّام» للدلالة على كثرة الصيام.', 4)
+  ('9d12af42-8ca0-5491-98cd-9573549b60f0', '9b5c21ee-37e3-50d8-a7c5-ba6a75e2eb01', 'ما نوع الكلمة «مُدَرِّس» في الجملة «المُدَرِّسُ شرحَ الدرسَ»؟', '[{"id":"a","text":"اسم مفعول من غير الثلاثي"},{"id":"b","text":"اسم فاعل من غير الثلاثي (دَرَّسَ)"},{"id":"c","text":"صيغة مبالغة"},{"id":"d","text":"اسم فاعل من الثلاثي"}]'::jsonb, 'b', '«مُدَرِّس» اسم فاعل من الفعل غير الثلاثي «دَرَّسَ»، بُني بضمّ أوله وكسر ما قبل آخره.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2304,7 +2304,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('1dae3eb0-f7f5-5e50-9fd4-46388fd6f95d', '9b5c21ee-37e3-50d8-a7c5-ba6a75e2eb01', 'ما وزن اسم التفضيل من الفعل «حَسُنَ»؟', '[{"id":"a","text":"أَفعَل (أَحسَن)"},{"id":"b","text":"مَفعُول (مَحسُون)"},{"id":"c","text":"فَاعِل (حَاسِن)"},{"id":"d","text":"فَعِيل (حَسِين)"}]'::jsonb, 'a', 'اسم التفضيل يأتي على وزن أَفعَل، فمن «حَسُنَ» نقول «أَحسَن»، وهو يدلّ على التفوّق في صفة الحُسن.', 5)
+  ('1dae3eb0-f7f5-5e50-9fd4-46388fd6f95d', '9b5c21ee-37e3-50d8-a7c5-ba6a75e2eb01', 'أيّ الأوزان التالية يدلّ على صيغة مبالغة للكثرة والشدّة؟', '[{"id":"a","text":"فَاعِل (صَائِم)"},{"id":"b","text":"مَفعُول (مَصُوم)"},{"id":"c","text":"مَفعَل (مَصَام)"},{"id":"d","text":"فَعَّال (صَوَّام)"}]'::jsonb, 'd', 'وزن فَعَّال من أوزان صيغة المبالغة الدالّة على كثرة الفعل وتكراره، مثل «صَوَّام» للدلالة على كثرة الصيام.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2336,7 +2336,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('6242b042-aeb4-54d4-b948-bd97235a8a5c', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', 'في الجملة «المُستَعمَلُ بِعنايةٍ يدومُ طويلًا»، ما نوع كلمة «المُستَعمَل»؟', '[{"id":"a","text":"اسم فاعل من «استَعمَلَ»"},{"id":"b","text":"اسم مفعول من «استَعمَلَ» (سداسي)"},{"id":"c","text":"صفة مشبّهة"},{"id":"d","text":"اسم زمان"}]'::jsonb, 'b', '«المُستَعمَل» بُني بضمّ أوله وفتح ما قبل آخره، وهو اسم مفعول من الفعل السداسي «استَعمَلَ».', 1)
+  ('6242b042-aeb4-54d4-b948-bd97235a8a5c', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', 'الكلمة «صَبُور» على أيّ وزن من أوزان صيغ المبالغة؟', '[{"id":"a","text":"فَعَّال"},{"id":"b","text":"مِفعَال"},{"id":"c","text":"فَعِيل"},{"id":"d","text":"فَعُول"}]'::jsonb, 'd', '«صَبُور» على وزن فَعُول، وهو من أوزان صيغة المبالغة، مشتقّ من «صَبَرَ» للدلالة على شدّة الصبر وكثرته.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2346,7 +2346,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('ad6d74ec-bdef-5b47-926d-d90644216455', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', 'الكلمة «صَبُور» على أيّ وزن من أوزان صيغ المبالغة؟', '[{"id":"a","text":"فَعَّال"},{"id":"b","text":"مِفعَال"},{"id":"c","text":"فَعِيل"},{"id":"d","text":"فَعُول"}]'::jsonb, 'd', '«صَبُور» على وزن فَعُول، وهو من أوزان صيغة المبالغة، مشتقّ من «صَبَرَ» للدلالة على شدّة الصبر وكثرته.', 2)
+  ('ad6d74ec-bdef-5b47-926d-d90644216455', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', 'أيّ الكلمات التالية اسم زمان أو مكان؟', '[{"id":"a","text":"مَجلِس"},{"id":"b","text":"جَالِس"},{"id":"c","text":"مَجلُوس"},{"id":"d","text":"جَلَّاس"}]'::jsonb, 'a', '«مَجلِس» على وزن مَفعِل وهو اسم مكان (أو زمان) مشتقّ من «جَلَسَ»، يدلّ على مكان الجلوس.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2356,7 +2356,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('7e0f1c35-7a2c-5d87-94c8-3a9c136d6243', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', 'ما الفرق بين «كاتبٌ» و«كَرِيم» من حيث نوع المشتقّ؟', '[{"id":"a","text":"كلاهما اسم فاعل"},{"id":"b","text":"«كاتب» اسم فاعل (حدث مؤقّت)، «كريم» صفة مشبّهة (صفة ثابتة)"},{"id":"c","text":"«كاتب» صفة مشبّهة و«كريم» اسم فاعل"},{"id":"d","text":"كلاهما صفة مشبّهة"}]'::jsonb, 'b', '«كاتب» على وزن فَاعِل فهو اسم فاعل يدلّ على الحدث، أمّا «كَرِيم» على وزن فَعِيل فهو صفة مشبّهة تدلّ على الثبوت والديمومة.', 3)
+  ('7e0f1c35-7a2c-5d87-94c8-3a9c136d6243', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', 'الكلمة «مِكنَسة» على أيّ وزن من أوزان اسم الآلة؟', '[{"id":"a","text":"مِفعَلة"},{"id":"b","text":"مِفعَال"},{"id":"c","text":"مِفعَل"},{"id":"d","text":"فَعَّال"}]'::jsonb, 'a', '«مِكنَسة» على وزن مِفعَلة، وهو أحد الأوزان القياسية الثلاثة لاسم الآلة، مشتقّ من «كَنَسَ».', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2366,7 +2366,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('a8cdd2d6-aaae-54bf-841a-cceeb408a7ed', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', 'أيّ الكلمات التالية اسم زمان أو مكان؟', '[{"id":"a","text":"مَجلِس"},{"id":"b","text":"جَالِس"},{"id":"c","text":"مَجلُوس"},{"id":"d","text":"جَلَّاس"}]'::jsonb, 'a', '«مَجلِس» على وزن مَفعِل وهو اسم مكان (أو زمان) مشتقّ من «جَلَسَ»، يدلّ على مكان الجلوس.', 4)
+  ('a8cdd2d6-aaae-54bf-841a-cceeb408a7ed', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', 'في الجملة «المُستَعمَلُ بِعنايةٍ يدومُ طويلًا»، ما نوع كلمة «المُستَعمَل»؟', '[{"id":"a","text":"اسم فاعل من «استَعمَلَ»"},{"id":"b","text":"اسم مفعول من «استَعمَلَ» (سداسي)"},{"id":"c","text":"صفة مشبّهة"},{"id":"d","text":"اسم زمان"}]'::jsonb, 'b', '«المُستَعمَل» بُني بضمّ أوله وفتح ما قبل آخره، وهو اسم مفعول من الفعل السداسي «استَعمَلَ».', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2376,7 +2376,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('c2c22e3f-3831-5855-a099-2e879c12395d', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', 'في «قرأتُ كِتابًا مُثيرًا»، ما نوع «مُثِير»؟', '[{"id":"a","text":"اسم مفعول من الثلاثي"},{"id":"b","text":"اسم فاعل من غير الثلاثي (أَثَارَ)"},{"id":"c","text":"صيغة مبالغة"},{"id":"d","text":"صفة مشبّهة"}]'::jsonb, 'b', '«مُثِير» اسم فاعل من الفعل الرباعي «أَثَارَ»، بُني بضمّ أوله وكسر ما قبل آخره، وهو يدلّ على الشيء الذي يُثير.', 5)
+  ('c2c22e3f-3831-5855-a099-2e879c12395d', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', 'ما الفرق بين «كاتبٌ» و«كَرِيم» من حيث نوع المشتقّ؟', '[{"id":"a","text":"كلاهما اسم فاعل"},{"id":"b","text":"«كاتب» اسم فاعل (حدث مؤقّت)، «كريم» صفة مشبّهة (صفة ثابتة)"},{"id":"c","text":"«كاتب» صفة مشبّهة و«كريم» اسم فاعل"},{"id":"d","text":"كلاهما صفة مشبّهة"}]'::jsonb, 'b', '«كاتب» على وزن فَاعِل فهو اسم فاعل يدلّ على الحدث، أمّا «كَرِيم» على وزن فَعِيل فهو صفة مشبّهة تدلّ على الثبوت والديمومة.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2386,7 +2386,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('e03bd42b-389f-56b8-942e-9e75455368ac', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', 'الكلمة «مِكنَسة» على أيّ وزن من أوزان اسم الآلة؟', '[{"id":"a","text":"مِفعَلة"},{"id":"b","text":"مِفعَال"},{"id":"c","text":"مِفعَل"},{"id":"d","text":"فَعَّال"}]'::jsonb, 'a', '«مِكنَسة» على وزن مِفعَلة، وهو أحد الأوزان القياسية الثلاثة لاسم الآلة، مشتقّ من «كَنَسَ».', 6)
+  ('e03bd42b-389f-56b8-942e-9e75455368ac', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', 'في «قرأتُ كِتابًا مُثيرًا»، ما نوع «مُثِير»؟', '[{"id":"a","text":"اسم مفعول من الثلاثي"},{"id":"b","text":"اسم فاعل من غير الثلاثي (أَثَارَ)"},{"id":"c","text":"صيغة مبالغة"},{"id":"d","text":"صفة مشبّهة"}]'::jsonb, 'b', '«مُثِير» اسم فاعل من الفعل الرباعي «أَثَارَ»، بُني بضمّ أوله وكسر ما قبل آخره، وهو يدلّ على الشيء الذي يُثير.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2470,7 +2470,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('5de951de-638d-579e-92da-1c428cffbcc0', 'cc89df13-4e9e-55bb-b7f1-ccd8f6c63420', 'في قولنا «محمّدٌ كالأسدِ شجاعةً»، ما نوع هذا التشبيه؟', '[{"id":"a","text":"تشبيه بليغ حُذفت أداته ووجه شبهه"},{"id":"b","text":"تشبيه مجمَل حُذف منه المشبَّه"},{"id":"c","text":"استعارة تصريحية"},{"id":"d","text":"تشبيه مفصَّل (تامّ) ذُكرت فيه الأركان الأربعة"}]'::jsonb, 'd', 'المثال ذكر المشبَّه (محمّد) والمشبَّه به (الأسد) والأداة (الكاف) ووجه الشبه (شجاعةً)، فهو تشبيه مفصَّل (تامّ).', 1)
+  ('5de951de-638d-579e-92da-1c428cffbcc0', 'cc89df13-4e9e-55bb-b7f1-ccd8f6c63420', 'في قولنا «محمّدٌ أسدٌ»، ما نوع هذا التشبيه؟', '[{"id":"a","text":"تشبيه مفصَّل"},{"id":"b","text":"تشبيه مجمَل حُذف منه وجه الشبه فقط"},{"id":"c","text":"استعارة مكنية"},{"id":"d","text":"تشبيه بليغ حُذفت منه الأداة ووجه الشبه"}]'::jsonb, 'd', 'في «محمّدٌ أسدٌ» لم تُذكر الأداة (كاف) ولا وجه الشبه (شجاعة)، وبقي الطرفان فقط، فهو تشبيه بليغ.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2480,7 +2480,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('45a733d5-529d-5409-b11c-93aa401a4cd7', 'cc89df13-4e9e-55bb-b7f1-ccd8f6c63420', 'في قولنا «محمّدٌ أسدٌ»، ما نوع هذا التشبيه؟', '[{"id":"a","text":"تشبيه مفصَّل"},{"id":"b","text":"تشبيه مجمَل حُذف منه وجه الشبه فقط"},{"id":"c","text":"استعارة مكنية"},{"id":"d","text":"تشبيه بليغ حُذفت منه الأداة ووجه الشبه"}]'::jsonb, 'd', 'في «محمّدٌ أسدٌ» لم تُذكر الأداة (كاف) ولا وجه الشبه (شجاعة)، وبقي الطرفان فقط، فهو تشبيه بليغ.', 2)
+  ('45a733d5-529d-5409-b11c-93aa401a4cd7', 'cc89df13-4e9e-55bb-b7f1-ccd8f6c63420', 'في قولنا «محمّدٌ كالأسدِ شجاعةً»، ما نوع هذا التشبيه؟', '[{"id":"a","text":"تشبيه بليغ حُذفت أداته ووجه شبهه"},{"id":"b","text":"تشبيه مجمَل حُذف منه المشبَّه"},{"id":"c","text":"استعارة تصريحية"},{"id":"d","text":"تشبيه مفصَّل (تامّ) ذُكرت فيه الأركان الأربعة"}]'::jsonb, 'd', 'المثال ذكر المشبَّه (محمّد) والمشبَّه به (الأسد) والأداة (الكاف) ووجه الشبه (شجاعةً)، فهو تشبيه مفصَّل (تامّ).', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2542,7 +2542,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('7d67381a-7f69-5d99-87e8-c790b777d680', '3522d195-2f84-58de-8460-f0ba2295cbe1', 'في قولنا «أَكَلَ القومُ المعركةَ»، ما نوع الصورة البيانية وما علاقتها؟', '[{"id":"a","text":"استعارة تصريحية"},{"id":"b","text":"مجاز مرسل علاقته المحلّية"},{"id":"c","text":"كناية عن الشجاعة"},{"id":"d","text":"مجاز مرسل علاقته السببيّة (السبب هو المعركة وأُريد المسبَّب وهو الغنيمة)"}]'::jsonb, 'd', 'أُريد بـ«المعركة» غنيمتها لا المعركة نفسها، فذُكر السبب (المعركة) وأُريد المسبَّب (الغنيمة)، وهذا مجاز مرسل علاقته السببيّة.', 1)
+  ('7d67381a-7f69-5d99-87e8-c790b777d680', '3522d195-2f84-58de-8460-f0ba2295cbe1', 'ما الفرق الجوهري بين الاستعارة التصريحية والاستعارة المكنية؟', '[{"id":"a","text":"في التصريحية تُذكر الأداة، وفي المكنية تُحذف"},{"id":"b","text":"التصريحية للأشياء والمكنية للأشخاص"},{"id":"c","text":"لا فرق بينهما في الجوهر"},{"id":"d","text":"في التصريحية يُحذف المشبَّه، وفي المكنية يُحذف المشبَّه به وتبقى لازمته"}]'::jsonb, 'd', 'الفرق الجوهري: في التصريحية يُحذف المشبَّه ويُصرَّح بالمشبَّه به. في المكنية يُحذف المشبَّه به وتُذكر إحدى لوازمه دليلًا عليه.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2552,7 +2552,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('e6fd7760-828d-5211-88c6-57cb79283947', '3522d195-2f84-58de-8460-f0ba2295cbe1', 'ما الفرق الجوهري بين الاستعارة التصريحية والاستعارة المكنية؟', '[{"id":"a","text":"في التصريحية تُذكر الأداة، وفي المكنية تُحذف"},{"id":"b","text":"التصريحية للأشياء والمكنية للأشخاص"},{"id":"c","text":"لا فرق بينهما في الجوهر"},{"id":"d","text":"في التصريحية يُحذف المشبَّه، وفي المكنية يُحذف المشبَّه به وتبقى لازمته"}]'::jsonb, 'd', 'الفرق الجوهري: في التصريحية يُحذف المشبَّه ويُصرَّح بالمشبَّه به. في المكنية يُحذف المشبَّه به وتُذكر إحدى لوازمه دليلًا عليه.', 2)
+  ('e6fd7760-828d-5211-88c6-57cb79283947', '3522d195-2f84-58de-8460-f0ba2295cbe1', 'أيّ الأمثلة التالية يمثّل تشبيهًا مجمَلًا؟', '[{"id":"a","text":"«الطالبُ نجمٌ» (حُذفت الأداة ووجه الشبه)"},{"id":"b","text":"«الطالبُ كالنجمِ لمعانًا» (ذُكرت جميع الأركان)"},{"id":"c","text":"«الطالبُ كالنجمِ» (حُذف وجه الشبه)"},{"id":"d","text":"«رأيتُ نجمًا يدرسُ» (استعارة تصريحية)"}]'::jsonb, 'c', 'التشبيه المجمَل هو الذي حُذف منه وجه الشبه فقط، وهذا ما يُمثّله «الطالبُ كالنجمِ» إذ ذُكرت الأداة ولم يُذكر وجه الشبه.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2562,7 +2562,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('e071be0c-d016-54c7-aee1-46d37285812e', '3522d195-2f84-58de-8460-f0ba2295cbe1', 'في قولنا «حدَّثَتني المكتبةُ عن أبطالٍ خالدين»، ما نوع الصورة البيانية؟', '[{"id":"a","text":"استعارة تصريحية"},{"id":"b","text":"تشبيه بليغ"},{"id":"c","text":"استعارة مكنية (شُبِّهت المكتبة بإنسان يُحدِّث، وحُذف المشبَّه به وأُبقي فعله)"},{"id":"d","text":"مجاز مرسل علاقته المحلّية"}]'::jsonb, 'c', 'شُبِّهت المكتبة بإنسان يتحدّث، وحُذف المشبَّه به (الإنسان) وبقيت لازمته (فعل الحديث «حدَّثتني»)، فهي استعارة مكنية.', 3)
+  ('e071be0c-d016-54c7-aee1-46d37285812e', '3522d195-2f84-58de-8460-f0ba2295cbe1', 'في قولنا «أَكَلَ القومُ المعركةَ»، ما نوع الصورة البيانية وما علاقتها؟', '[{"id":"a","text":"استعارة تصريحية"},{"id":"b","text":"مجاز مرسل علاقته المحلّية"},{"id":"c","text":"كناية عن الشجاعة"},{"id":"d","text":"مجاز مرسل علاقته السببيّة (السبب هو المعركة وأُريد المسبَّب وهو الغنيمة)"}]'::jsonb, 'd', 'أُريد بـ«المعركة» غنيمتها لا المعركة نفسها، فذُكر السبب (المعركة) وأُريد المسبَّب (الغنيمة)، وهذا مجاز مرسل علاقته السببيّة.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2572,7 +2572,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('4c04b152-8747-54b8-9b93-c77e782ce7e4', '3522d195-2f84-58de-8460-f0ba2295cbe1', 'في قولنا «أعطِ يدَكَ لأخيكَ»، ما نوع المجاز المرسل وما علاقته؟', '[{"id":"a","text":"مجاز مرسل علاقته الجزئية (ذُكر الجزء «اليد» وأُريد الكلّ «الشخص»)"},{"id":"b","text":"مجاز مرسل علاقته الكلّية"},{"id":"c","text":"كناية عن الصداقة"},{"id":"d","text":"استعارة مكنية"}]'::jsonb, 'a', 'ذُكر الجزء (اليد) وأُريد الكلّ (الشخص كاملًا بمساعدته)، وهذا مجاز مرسل علاقته الجزئية.', 4)
+  ('4c04b152-8747-54b8-9b93-c77e782ce7e4', '3522d195-2f84-58de-8460-f0ba2295cbe1', 'في قولنا «حدَّثَتني المكتبةُ عن أبطالٍ خالدين»، ما نوع الصورة البيانية؟', '[{"id":"a","text":"استعارة تصريحية"},{"id":"b","text":"تشبيه بليغ"},{"id":"c","text":"استعارة مكنية (شُبِّهت المكتبة بإنسان يُحدِّث، وحُذف المشبَّه به وأُبقي فعله)"},{"id":"d","text":"مجاز مرسل علاقته المحلّية"}]'::jsonb, 'c', 'شُبِّهت المكتبة بإنسان يتحدّث، وحُذف المشبَّه به (الإنسان) وبقيت لازمته (فعل الحديث «حدَّثتني»)، فهي استعارة مكنية.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2582,7 +2582,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('26f345cc-822a-5d03-9784-e9e66ecd0be7', '3522d195-2f84-58de-8460-f0ba2295cbe1', 'في قولنا «هو نؤومُ الضُّحى» عن امرأة مترفة، ما نوع الصورة البيانية وما المعنى الكنائي؟', '[{"id":"a","text":"استعارة تصريحية"},{"id":"b","text":"كناية عن الترف والدلال (لا تعمل مبكرًا لأنّها مخدومة)"},{"id":"c","text":"تشبيه مجمَل"},{"id":"d","text":"مجاز مرسل علاقته ما كان"}]'::jsonb, 'b', '«نؤوم الضحى» كناية عن الترف والدلال؛ المرأة المترفة المدلَّلة لا تضطرّ إلى الاستيقاظ مبكرًا للعمل، فنومها نهارًا دليلٌ على عيشها الرغيد.', 5)
+  ('26f345cc-822a-5d03-9784-e9e66ecd0be7', '3522d195-2f84-58de-8460-f0ba2295cbe1', 'في قولنا «أعطِ يدَكَ لأخيكَ»، ما نوع المجاز المرسل وما علاقته؟', '[{"id":"a","text":"مجاز مرسل علاقته الجزئية (ذُكر الجزء «اليد» وأُريد الكلّ «الشخص»)"},{"id":"b","text":"مجاز مرسل علاقته الكلّية"},{"id":"c","text":"كناية عن الصداقة"},{"id":"d","text":"استعارة مكنية"}]'::jsonb, 'a', 'ذُكر الجزء (اليد) وأُريد الكلّ (الشخص كاملًا بمساعدته)، وهذا مجاز مرسل علاقته الجزئية.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2592,7 +2592,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('238ef40f-969e-5949-8b7d-2206ce6c3b8c', '3522d195-2f84-58de-8460-f0ba2295cbe1', 'أيّ الأمثلة التالية يمثّل تشبيهًا مجمَلًا؟', '[{"id":"a","text":"«الطالبُ نجمٌ» (حُذفت الأداة ووجه الشبه)"},{"id":"b","text":"«الطالبُ كالنجمِ لمعانًا» (ذُكرت جميع الأركان)"},{"id":"c","text":"«الطالبُ كالنجمِ» (حُذف وجه الشبه)"},{"id":"d","text":"«رأيتُ نجمًا يدرسُ» (استعارة تصريحية)"}]'::jsonb, 'c', 'التشبيه المجمَل هو الذي حُذف منه وجه الشبه فقط، وهذا ما يُمثّله «الطالبُ كالنجمِ» إذ ذُكرت الأداة ولم يُذكر وجه الشبه.', 6)
+  ('238ef40f-969e-5949-8b7d-2206ce6c3b8c', '3522d195-2f84-58de-8460-f0ba2295cbe1', 'في قولنا «هو نؤومُ الضُّحى» عن امرأة مترفة، ما نوع الصورة البيانية وما المعنى الكنائي؟', '[{"id":"a","text":"استعارة تصريحية"},{"id":"b","text":"كناية عن الترف والدلال (لا تعمل مبكرًا لأنّها مخدومة)"},{"id":"c","text":"تشبيه مجمَل"},{"id":"d","text":"مجاز مرسل علاقته ما كان"}]'::jsonb, 'b', '«نؤوم الضحى» كناية عن الترف والدلال؛ المرأة المترفة المدلَّلة لا تضطرّ إلى الاستيقاظ مبكرًا للعمل، فنومها نهارًا دليلٌ على عيشها الرغيد.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2624,7 +2624,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('af043bcd-6f9f-55a3-863e-983746ef752b', '7595fbd9-9810-5997-baee-2c9a13444cd5', '«يعلمون ولا يعلمون» — ما نوع الطباق في هذه العبارة؟', '[{"id":"a","text":"جناس تامّ"},{"id":"b","text":"طباق السلب"},{"id":"c","text":"طباق الإيجاب"},{"id":"d","text":"مقابلة"}]'::jsonb, 'b', 'طباق السلب يتقابل فيه الفعل ونفيه (الإيجاب والنفي)، كما في «يعلمون ولا يعلمون».', 2)
+  ('af043bcd-6f9f-55a3-863e-983746ef752b', '7595fbd9-9810-5997-baee-2c9a13444cd5', 'ما تعريف الجناس التامّ؟', '[{"id":"a","text":"توافق نهايات الفقرات في الحرف الأخير"},{"id":"b","text":"أن يختتم الكلام بلفظ بُدئ به أو بما يشاركه في الاشتقاق"},{"id":"c","text":"اختلاف لفظين في عدد الحروف مع تشابه في النطق"},{"id":"d","text":"اتّفاق لفظين في نوع الحروف وعددها وهيئتها وترتيبها مع اختلاف المعنى"}]'::jsonb, 'd', 'الجناس التامّ هو اتّفاق اللفظين في أربعة أمور: نوع الحروف وعددها وهيئتها وترتيبها، مع اختلاف المعنى، كـ«الساعة» بمعنى القيامة و«الساعة» بمعنى الوقت.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2634,7 +2634,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('e8aaa125-eb96-5282-8ec2-4f65b8b555fc', '7595fbd9-9810-5997-baee-2c9a13444cd5', 'في التورية، أيّ المعنيَين هو المقصود عند الأديب؟', '[{"id":"a","text":"المعنى القريب الظاهر"},{"id":"b","text":"كلا المعنيَين معًا دائمًا"},{"id":"c","text":"المعنى البعيد الخفيّ"},{"id":"d","text":"يتفاوت المعنى حسب السياق دون قصد"}]'::jsonb, 'c', 'في التورية يُذكر اللفظ ذو المعنيَين ويكون المعنى البعيد الخفيّ هو المقصود، بينما يُوهم المعنى القريب الظاهر القارئَ في البداية.', 3)
+  ('e8aaa125-eb96-5282-8ec2-4f65b8b555fc', '7595fbd9-9810-5997-baee-2c9a13444cd5', '«يعلمون ولا يعلمون» — ما نوع الطباق في هذه العبارة؟', '[{"id":"a","text":"جناس تامّ"},{"id":"b","text":"طباق السلب"},{"id":"c","text":"طباق الإيجاب"},{"id":"d","text":"مقابلة"}]'::jsonb, 'b', 'طباق السلب يتقابل فيه الفعل ونفيه (الإيجاب والنفي)، كما في «يعلمون ولا يعلمون».', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2644,7 +2644,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('b1a28bd9-e85b-5a7b-ac65-441b40726d02', '7595fbd9-9810-5997-baee-2c9a13444cd5', 'ما تعريف الجناس التامّ؟', '[{"id":"a","text":"توافق نهايات الفقرات في الحرف الأخير"},{"id":"b","text":"أن يختتم الكلام بلفظ بُدئ به أو بما يشاركه في الاشتقاق"},{"id":"c","text":"اختلاف لفظين في عدد الحروف مع تشابه في النطق"},{"id":"d","text":"اتّفاق لفظين في نوع الحروف وعددها وهيئتها وترتيبها مع اختلاف المعنى"}]'::jsonb, 'd', 'الجناس التامّ هو اتّفاق اللفظين في أربعة أمور: نوع الحروف وعددها وهيئتها وترتيبها، مع اختلاف المعنى، كـ«الساعة» بمعنى القيامة و«الساعة» بمعنى الوقت.', 4)
+  ('b1a28bd9-e85b-5a7b-ac65-441b40726d02', '7595fbd9-9810-5997-baee-2c9a13444cd5', 'في التورية، أيّ المعنيَين هو المقصود عند الأديب؟', '[{"id":"a","text":"المعنى القريب الظاهر"},{"id":"b","text":"كلا المعنيَين معًا دائمًا"},{"id":"c","text":"المعنى البعيد الخفيّ"},{"id":"d","text":"يتفاوت المعنى حسب السياق دون قصد"}]'::jsonb, 'c', 'في التورية يُذكر اللفظ ذو المعنيَين ويكون المعنى البعيد الخفيّ هو المقصود، بينما يُوهم المعنى القريب الظاهر القارئَ في البداية.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2686,7 +2686,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('ea35b652-fa14-5064-802d-cd8b293ed244', '6753802a-6e1f-52cc-b811-1c1ad11ea17b', 'في قوله: «يعلمون ولا يعلمون»، ما نوع الطباق؟', '[{"id":"a","text":"طباق الإيجاب"},{"id":"b","text":"مقابلة"},{"id":"c","text":"تورية"},{"id":"d","text":"طباق السلب"}]'::jsonb, 'd', 'طباق السلب هو ما يتقابل فيه الفعل مع نفيه بحرف النفي، وهنا «يعلمون» قُوبلت بـ«لا يعلمون».', 2)
+  ('ea35b652-fa14-5064-802d-cd8b293ed244', '6753802a-6e1f-52cc-b811-1c1ad11ea17b', 'في المثل: «مَن طلبَ العُلا سَهِرَ اللَّيالي، وسَلكَ سبيلَ الأهوالِ، ونظرَ في عواقب الأحوالِ»، ما المحسّن البديعي اللفظي البارز؟', '[{"id":"a","text":"السجع"},{"id":"b","text":"الجناس التامّ"},{"id":"c","text":"ردّ العجز على الصدر"},{"id":"d","text":"الطباق"}]'::jsonb, 'a', 'الفواصل «اللَّيالي / الأهوالِ / الأحوالِ» تتوافق في الحرف الأخير، وهذا هو السجع الذي يمنح الكلام إيقاعًا موسيقيًّا.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2696,7 +2696,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('610f5d92-d7d9-5805-9f50-d2a06b5d1478', '6753802a-6e1f-52cc-b811-1c1ad11ea17b', 'في المثل: «مَن طلبَ العُلا سَهِرَ اللَّيالي، وسَلكَ سبيلَ الأهوالِ، ونظرَ في عواقب الأحوالِ»، ما المحسّن البديعي اللفظي البارز؟', '[{"id":"a","text":"السجع"},{"id":"b","text":"الجناس التامّ"},{"id":"c","text":"ردّ العجز على الصدر"},{"id":"d","text":"الطباق"}]'::jsonb, 'a', 'الفواصل «اللَّيالي / الأهوالِ / الأحوالِ» تتوافق في الحرف الأخير، وهذا هو السجع الذي يمنح الكلام إيقاعًا موسيقيًّا.', 3)
+  ('610f5d92-d7d9-5805-9f50-d2a06b5d1478', '6753802a-6e1f-52cc-b811-1c1ad11ea17b', 'في قوله: «يعلمون ولا يعلمون»، ما نوع الطباق؟', '[{"id":"a","text":"طباق الإيجاب"},{"id":"b","text":"مقابلة"},{"id":"c","text":"تورية"},{"id":"d","text":"طباق السلب"}]'::jsonb, 'd', 'طباق السلب هو ما يتقابل فيه الفعل مع نفيه بحرف النفي، وهنا «يعلمون» قُوبلت بـ«لا يعلمون».', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2748,7 +2748,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('4d03dd70-5eb0-5ef5-9f74-9759f486be0a', 'a065a310-799f-5641-8171-6ce5aac1f3bb', 'قال الشاعر: «نَحنُ قَومٌ لا تُقبَّلُ قِبلَتُنا». ما المحسّن البديعي في كلمة «قِبلَتُنا»؟', '[{"id":"a","text":"جناس تامّ بين قِبلَة وتُقبَّل"},{"id":"b","text":"طباق إيجاب"},{"id":"c","text":"تورية؛ القريب جهة الصلاة والبعيد المقصود التقبيل"},{"id":"d","text":"حسن تعليل"}]'::jsonb, 'c', 'كلمة «قِبلَتُنا» لها معنيان: قريب ظاهر هو جهة الصلاة، وبعيد خفيّ هو المقصود وهو التقبيل والحبّ. الجناس يشترط لفظَين منفصلَين لا لفظًا واحدًا ذا وجهَين، فالصحيح أنّه تورية.', 1)
+  ('4d03dd70-5eb0-5ef5-9f74-9759f486be0a', 'a065a310-799f-5641-8171-6ce5aac1f3bb', 'ما الفرق الجوهري بين الطباق والمقابلة؟', '[{"id":"a","text":"الطباق لفظيّ والمقابلة معنويّة"},{"id":"b","text":"الطباق ضدّان في سياق واحد، والمقابلة سلسلة من الضدود في جملتين متوازيتين"},{"id":"c","text":"الطباق خاصّ بالشعر والمقابلة خاصّة بالنثر"},{"id":"d","text":"المقابلة ضدّان فقط والطباق ثلاثة فأكثر"}]'::jsonb, 'b', 'الطباق يجمع بين ضدّين فقط في السياق ذاته، أمّا المقابلة فتجمع معنيَين أو أكثر ثمّ تقابلها بمعانٍ مضادّة بنفس الترتيب في جملتين أو أكثر متوازيتين.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2758,7 +2758,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('f28a9693-8061-502f-9c8c-71f25af43d50', 'a065a310-799f-5641-8171-6ce5aac1f3bb', 'ما الفرق الجوهري بين الطباق والمقابلة؟', '[{"id":"a","text":"الطباق لفظيّ والمقابلة معنويّة"},{"id":"b","text":"الطباق ضدّان في سياق واحد، والمقابلة سلسلة من الضدود في جملتين متوازيتين"},{"id":"c","text":"الطباق خاصّ بالشعر والمقابلة خاصّة بالنثر"},{"id":"d","text":"المقابلة ضدّان فقط والطباق ثلاثة فأكثر"}]'::jsonb, 'b', 'الطباق يجمع بين ضدّين فقط في السياق ذاته، أمّا المقابلة فتجمع معنيَين أو أكثر ثمّ تقابلها بمعانٍ مضادّة بنفس الترتيب في جملتين أو أكثر متوازيتين.', 2)
+  ('f28a9693-8061-502f-9c8c-71f25af43d50', 'a065a310-799f-5641-8171-6ce5aac1f3bb', 'ما الأثر البلاغي المميّز لحسن التعليل؟', '[{"id":"a","text":"يُضفي شاعريّة وطرافة باختراع علّة أدبيّة بدلًا من العلّة الحقيقيّة"},{"id":"b","text":"يُقوّي المعنى بالتكرار اللفظي"},{"id":"c","text":"يُبرز التضادّ ويمنح الكلام قوّة"},{"id":"d","text":"يُحدث إيقاعًا موسيقيًّا بتوافق الفواصل"}]'::jsonb, 'a', 'حسن التعليل يتميّز بأنّ الأديب يُنكر العلّة الحقيقيّة ويخترع لها علّة أدبيّة طريفة، فيُضفي على الأسلوب شاعريّة وعمقًا؛ وهذا يختلف عن الطباق (تضادّ المعنى) والسجع (التوافق الصوتي) والتكرار.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2768,7 +2768,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('eeaddb53-ec7a-5fea-ac77-a8c7996f7aa5', 'a065a310-799f-5641-8171-6ce5aac1f3bb', 'في «بَيْنَ النَّضيرِ والنَّضَرِ» (النضير: الشجر المزهر / النضَر: الذهب)، ما نوع الجناس؟', '[{"id":"a","text":"جناس تامّ لتشابه اللفظَين"},{"id":"b","text":"سجع لاتّحاد الفاصلتَين"},{"id":"c","text":"ردّ العجز على الصدر"},{"id":"d","text":"جناس ناقص لاختلاف عدد الحروف"}]'::jsonb, 'd', '«النَّضير» أربعة أحرف و«النَّضَر» ثلاثة أحرف، فاللفظان مختلفان في العدد، وهذا ما يجعل الجناس ناقصًا لا تامًّا.', 3)
+  ('eeaddb53-ec7a-5fea-ac77-a8c7996f7aa5', 'a065a310-799f-5641-8171-6ce5aac1f3bb', 'قال الشاعر: «نَحنُ قَومٌ لا تُقبَّلُ قِبلَتُنا». ما المحسّن البديعي في كلمة «قِبلَتُنا»؟', '[{"id":"a","text":"جناس تامّ بين قِبلَة وتُقبَّل"},{"id":"b","text":"طباق إيجاب"},{"id":"c","text":"تورية؛ القريب جهة الصلاة والبعيد المقصود التقبيل"},{"id":"d","text":"حسن تعليل"}]'::jsonb, 'c', 'كلمة «قِبلَتُنا» لها معنيان: قريب ظاهر هو جهة الصلاة، وبعيد خفيّ هو المقصود وهو التقبيل والحبّ. الجناس يشترط لفظَين منفصلَين لا لفظًا واحدًا ذا وجهَين، فالصحيح أنّه تورية.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2778,7 +2778,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('55ad1fdd-76b3-506e-b629-98dc6aca5fe7', 'a065a310-799f-5641-8171-6ce5aac1f3bb', 'قال أبو تمّام: «السَّيفُ أَصدَقُ أَنبَاءً مِنَ الكُتُبِ * في حَدِّهِ الحَدُّ بَينَ الجِدِّ واللَّعِبِ». ما المحسّن في «حَدِّهِ / الحَدُّ»؟', '[{"id":"a","text":"جناس ناقص لاختلاف الهيئة الإعرابية"},{"id":"b","text":"طباق إيجاب بين الجدّ واللعب"},{"id":"c","text":"سجع بين الكتب واللعب"},{"id":"d","text":"تورية في كلمة الكتب"}]'::jsonb, 'a', '«حدِّه» (حدّ السيف: شفرته) و«الحدُّ» (الحدّ بين شيئين: الفاصل) متّفقان في الحروف ومختلفان في الحركات، فهو جناس ناقص. أمّا «الجدّ/اللعب» فطباق صحيح لكنّ السؤال يسأل عن «حدِّهِ/الحدُّ» تحديدًا.', 4)
+  ('55ad1fdd-76b3-506e-b629-98dc6aca5fe7', 'a065a310-799f-5641-8171-6ce5aac1f3bb', 'في «بَيْنَ النَّضيرِ والنَّضَرِ» (النضير: الشجر المزهر / النضَر: الذهب)، ما نوع الجناس؟', '[{"id":"a","text":"جناس تامّ لتشابه اللفظَين"},{"id":"b","text":"سجع لاتّحاد الفاصلتَين"},{"id":"c","text":"ردّ العجز على الصدر"},{"id":"d","text":"جناس ناقص لاختلاف عدد الحروف"}]'::jsonb, 'd', '«النَّضير» أربعة أحرف و«النَّضَر» ثلاثة أحرف، فاللفظان مختلفان في العدد، وهذا ما يجعل الجناس ناقصًا لا تامًّا.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2788,7 +2788,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('2337961d-e4da-5142-9381-9181c30129c5', 'a065a310-799f-5641-8171-6ce5aac1f3bb', 'ما الأثر البلاغي المميّز لحسن التعليل؟', '[{"id":"a","text":"يُضفي شاعريّة وطرافة باختراع علّة أدبيّة بدلًا من العلّة الحقيقيّة"},{"id":"b","text":"يُقوّي المعنى بالتكرار اللفظي"},{"id":"c","text":"يُبرز التضادّ ويمنح الكلام قوّة"},{"id":"d","text":"يُحدث إيقاعًا موسيقيًّا بتوافق الفواصل"}]'::jsonb, 'a', 'حسن التعليل يتميّز بأنّ الأديب يُنكر العلّة الحقيقيّة ويخترع لها علّة أدبيّة طريفة، فيُضفي على الأسلوب شاعريّة وعمقًا؛ وهذا يختلف عن الطباق (تضادّ المعنى) والسجع (التوافق الصوتي) والتكرار.', 5)
+  ('2337961d-e4da-5142-9381-9181c30129c5', 'a065a310-799f-5641-8171-6ce5aac1f3bb', 'قال أبو تمّام: «السَّيفُ أَصدَقُ أَنبَاءً مِنَ الكُتُبِ * في حَدِّهِ الحَدُّ بَينَ الجِدِّ واللَّعِبِ». ما المحسّن في «حَدِّهِ / الحَدُّ»؟', '[{"id":"a","text":"جناس ناقص لاختلاف الهيئة الإعرابية"},{"id":"b","text":"طباق إيجاب بين الجدّ واللعب"},{"id":"c","text":"سجع بين الكتب واللعب"},{"id":"d","text":"تورية في كلمة الكتب"}]'::jsonb, 'a', '«حدِّه» (حدّ السيف: شفرته) و«الحدُّ» (الحدّ بين شيئين: الفاصل) متّفقان في الحروف ومختلفان في الحركات، فهو جناس ناقص. أمّا «الجدّ/اللعب» فطباق صحيح لكنّ السؤال يسأل عن «حدِّهِ/الحدُّ» تحديدًا.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2820,7 +2820,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('ab0443b3-0734-582d-969f-84118d7865cb', '6e30792d-1678-5b7d-9c70-1fee544bc2b3', 'ما المكوّن السردي الذي يُخلّ بالاستقرار ويُطلق الحبكة؟', '[{"id":"a","text":"الوضع الأوّلي"},{"id":"b","text":"عنصر التحويل (العقدة)"},{"id":"c","text":"الوضع النهائي"},{"id":"d","text":"التحوّلات"}]'::jsonb, 'b', 'عنصر التحويل (العقدة) هو الحدث الذي يُخلّ بالاستقرار الأوّلي ويُطلق الحبكة، كأن يواجه البطل مشكلة مفاجئة.', 2)
+  ('ab0443b3-0734-582d-969f-84118d7865cb', '6e30792d-1678-5b7d-9c70-1fee544bc2b3', 'أيّ الروابط التالية تدلّ على السببية وتُستخدم في النصّ الحجاجي؟', '[{"id":"a","text":"ثمّ — بعد ذلك — عقب ذلك"},{"id":"b","text":"بينما — في الوقت ذاته — حين"},{"id":"c","text":"لأنّ — إذ — بسبب — نظرًا لـ"},{"id":"d","text":"غير أنّ — بيد أنّ — إلا أنّ"}]'::jsonb, 'c', 'الروابط السببية مثل «لأنّ وإذ وبسبب ونظرًا لـ» تُستخدم للدلالة على علاقة السبب والعلّة في النصوص الحجاجية والتفسيرية.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2830,7 +2830,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('c53f7ee2-e685-5310-921f-89f2664dbeb5', '6e30792d-1678-5b7d-9c70-1fee544bc2b3', 'أيّ الروابط التالية تدلّ على السببية وتُستخدم في النصّ الحجاجي؟', '[{"id":"a","text":"ثمّ — بعد ذلك — عقب ذلك"},{"id":"b","text":"بينما — في الوقت ذاته — حين"},{"id":"c","text":"لأنّ — إذ — بسبب — نظرًا لـ"},{"id":"d","text":"غير أنّ — بيد أنّ — إلا أنّ"}]'::jsonb, 'c', 'الروابط السببية مثل «لأنّ وإذ وبسبب ونظرًا لـ» تُستخدم للدلالة على علاقة السبب والعلّة في النصوص الحجاجية والتفسيرية.', 3)
+  ('c53f7ee2-e685-5310-921f-89f2664dbeb5', '6e30792d-1678-5b7d-9c70-1fee544bc2b3', 'ما المكوّن السردي الذي يُخلّ بالاستقرار ويُطلق الحبكة؟', '[{"id":"a","text":"الوضع الأوّلي"},{"id":"b","text":"عنصر التحويل (العقدة)"},{"id":"c","text":"الوضع النهائي"},{"id":"d","text":"التحوّلات"}]'::jsonb, 'b', 'عنصر التحويل (العقدة) هو الحدث الذي يُخلّ بالاستقرار الأوّلي ويُطلق الحبكة، كأن يواجه البطل مشكلة مفاجئة.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2954,7 +2954,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('7842ab0b-4b7c-52de-935b-3e93d3e15bb0', 'e4350b8e-f690-5db8-9d83-2ca3732612fb', 'في نصّ حجاجي يدافع عن أهمّية القراءة، أيّ الجمل التالية تُمثّل الأطروحة؟', '[{"id":"a","text":"تُشير الإحصاءات إلى أنّ القارئ يمتلك ثروة لغوية أوسع"},{"id":"b","text":"قرأ علي عشرين كتابًا في السنة الماضية"},{"id":"c","text":"القراءة نشاط ذهني يشمل فكّ الرموز وبناء المعنى"},{"id":"d","text":"القراءة ضرورة لا رفاهية، وينبغي تشجيعها في المدارس"}]'::jsonb, 'd', 'الأطروحة هي الرأي الصريح الذي يدافع عنه الكاتب ويسعى لإقناع القارئ به. الجملة (أ) تُعبّر عن موقف واضح (القراءة ضرورة) وتدعو إلى فعل (تشجيعها). الجملة (ب) حجّة/شاهد، (ج) مثال سردي، (د) تعريف تفسيري.', 2)
+  ('7842ab0b-4b7c-52de-935b-3e93d3e15bb0', 'e4350b8e-f690-5db8-9d83-2ca3732612fb', 'أيّ الروابط يُناسب تمامًا ملء الفراغ في: «يُعاني الطلاب من ضغط الامتحانات؛ ___ تنتشر ظاهرة القلق في أوساطهم.»', '[{"id":"a","text":"بينما"},{"id":"b","text":"قبل أن"},{"id":"c","text":"رغم ذلك"},{"id":"d","text":"ومن ثمّ"}]'::jsonb, 'd', 'العلاقة بين الجملتين هي علاقة سبب (ضغط الامتحانات) ونتيجة (انتشار القلق). «ومن ثمّ» رابط نتيجة يُعبّر عن هذه العلاقة بدقّة. «بينما» للتزامن والتعارض، «قبل أن» للسبق الزمني، «رغم ذلك» للتنازل والتعارض.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2964,7 +2964,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('853dcace-e711-5fcf-9dc1-b7886bbb5967', 'e4350b8e-f690-5db8-9d83-2ca3732612fb', 'أيّ الروابط يُناسب تمامًا ملء الفراغ في: «يُعاني الطلاب من ضغط الامتحانات؛ ___ تنتشر ظاهرة القلق في أوساطهم.»', '[{"id":"a","text":"بينما"},{"id":"b","text":"قبل أن"},{"id":"c","text":"رغم ذلك"},{"id":"d","text":"ومن ثمّ"}]'::jsonb, 'd', 'العلاقة بين الجملتين هي علاقة سبب (ضغط الامتحانات) ونتيجة (انتشار القلق). «ومن ثمّ» رابط نتيجة يُعبّر عن هذه العلاقة بدقّة. «بينما» للتزامن والتعارض، «قبل أن» للسبق الزمني، «رغم ذلك» للتنازل والتعارض.', 3)
+  ('853dcace-e711-5fcf-9dc1-b7886bbb5967', 'e4350b8e-f690-5db8-9d83-2ca3732612fb', 'اقرأ: «تُحضَّر الهريسة بطحن الفلفل الأحمر المجفّف مع الثوم والكمّون والكزبرة. تُضاف كمّية من الزيت وتُعجن المكوّنات جيّدًا. ثمّ تُحفظ في مرطبانات محكمة الإغلاق.» ما نمط هذا النصّ؟', '[{"id":"a","text":"سردي"},{"id":"b","text":"تفسيري/إيعازي"},{"id":"c","text":"حجاجي"},{"id":"d","text":"وصفي"}]'::jsonb, 'b', 'النصّ يُعطي تعليمات لصنع الهريسة بأفعال مضارع إجرائية (تُحضَّر، تُضاف، تُعجن، تُحفظ) وترتيب تسلسلي (ثمّ)، وهذه هي مؤشّرات النمط التفسيري/الإيعازي. ليس سرديًّا لأنّه لا يحكي أحداثًا، ولا حجاجيًّا لأنّه لا يدافع عن رأي.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2974,7 +2974,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('707f82ca-cc76-5aee-8ed6-b8cfeceeaff8', 'e4350b8e-f690-5db8-9d83-2ca3732612fb', 'اقرأ: «تُحضَّر الهريسة بطحن الفلفل الأحمر المجفّف مع الثوم والكمّون والكزبرة. تُضاف كمّية من الزيت وتُعجن المكوّنات جيّدًا. ثمّ تُحفظ في مرطبانات محكمة الإغلاق.» ما نمط هذا النصّ؟', '[{"id":"a","text":"سردي"},{"id":"b","text":"تفسيري/إيعازي"},{"id":"c","text":"حجاجي"},{"id":"d","text":"وصفي"}]'::jsonb, 'b', 'النصّ يُعطي تعليمات لصنع الهريسة بأفعال مضارع إجرائية (تُحضَّر، تُضاف، تُعجن، تُحفظ) وترتيب تسلسلي (ثمّ)، وهذه هي مؤشّرات النمط التفسيري/الإيعازي. ليس سرديًّا لأنّه لا يحكي أحداثًا، ولا حجاجيًّا لأنّه لا يدافع عن رأي.', 4)
+  ('707f82ca-cc76-5aee-8ed6-b8cfeceeaff8', 'e4350b8e-f690-5db8-9d83-2ca3732612fb', 'في نصّ حجاجي يدافع عن أهمّية القراءة، أيّ الجمل التالية تُمثّل الأطروحة؟', '[{"id":"a","text":"تُشير الإحصاءات إلى أنّ القارئ يمتلك ثروة لغوية أوسع"},{"id":"b","text":"قرأ علي عشرين كتابًا في السنة الماضية"},{"id":"c","text":"القراءة نشاط ذهني يشمل فكّ الرموز وبناء المعنى"},{"id":"d","text":"القراءة ضرورة لا رفاهية، وينبغي تشجيعها في المدارس"}]'::jsonb, 'd', 'الأطروحة هي الرأي الصريح الذي يدافع عنه الكاتب ويسعى لإقناع القارئ به. الجملة (أ) تُعبّر عن موقف واضح (القراءة ضرورة) وتدعو إلى فعل (تشجيعها). الجملة (ب) حجّة/شاهد، (ج) مثال سردي، (د) تعريف تفسيري.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,

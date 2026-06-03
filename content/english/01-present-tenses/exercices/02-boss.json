@@ -27,7 +27,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "This is a general truth, so we use the present simple: water boils at 100 degrees."
+      "explanation": "This is a general truth, so we use the present simple: water boils at 100 degrees.",
+      "difficulty": 2
     },
     {
       "prompt": "Complete: \"I can't talk now, I ___ dinner.\"",
@@ -50,7 +51,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "\"now\" signals an action in progress, so we use the present continuous: I am cooking dinner."
+      "explanation": "\"now\" signals an action in progress, so we use the present continuous: I am cooking dinner.",
+      "difficulty": 1
     },
     {
       "prompt": "Choose the correct negative: \"She ___ coffee.\"",
@@ -73,7 +75,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "Present simple negative for he/she/it uses doesn't + base verb: she doesn't drink coffee."
+      "explanation": "Present simple negative for he/she/it uses doesn't + base verb: she doesn't drink coffee.",
+      "difficulty": 2
     },
     {
       "prompt": "Complete the question: \"___ they live in Tunis?\"",
@@ -96,7 +99,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "Present simple questions with \"they\" use Do + subject + base verb: Do they live...?"
+      "explanation": "Present simple questions with \"they\" use Do + subject + base verb: Do they live...?",
+      "difficulty": 2
     },
     {
       "prompt": "Choose the correct sentence:",
@@ -119,7 +123,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "\"taste\" (= have a flavour) is stative here, so we use the present simple: the cake tastes delicious."
+      "explanation": "\"taste\" (= have a flavour) is stative here, so we use the present simple: the cake tastes delicious.",
+      "difficulty": 3
     },
     {
       "prompt": "Complete: \"Be quiet! The students ___ a test right now.\"",
@@ -142,7 +147,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "\"right now\" signals an action in progress; with the plural subject students we use are + taking."
+      "explanation": "\"right now\" signals an action in progress; with the plural subject students we use are + taking.",
+      "difficulty": 2
     }
   ]
 }

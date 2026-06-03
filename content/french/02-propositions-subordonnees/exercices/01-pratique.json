@@ -27,7 +27,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "La proposition est introduite par « que », COD du verbe « savoir » : c'est une subordonnée complétive."
+      "explanation": "La proposition est introduite par « que », COD du verbe « savoir » : c'est une subordonnée complétive.",
+      "difficulty": 2
     },
     {
       "prompt": "Quel pronom relatif complète correctement la phrase : « L'épée ___ il se sert est magique. »",
@@ -50,7 +51,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "« se servir de » → on remplace le groupe « de l'épée » par « dont » : « l'épée dont il se sert »."
+      "explanation": "« se servir de » → on remplace le groupe « de l'épée » par « dont » : « l'épée dont il se sert ».",
+      "difficulty": 2
     },
     {
       "prompt": "Dans « La forêt où il entra était sombre. », le pronom relatif « où » a la fonction de :",
@@ -73,7 +75,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "« où » reprend « la forêt » (lieu) et joue le rôle de complément de lieu dans la subordonnée relative."
+      "explanation": "« où » reprend « la forêt » (lieu) et joue le rôle de complément de lieu dans la subordonnée relative.",
+      "difficulty": 1
     },
     {
       "prompt": "Quelle conjonction introduit une subordonnée de but ?",
@@ -96,7 +99,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "« pour que » exprime le but et introduit une subordonnée au subjonctif. « parce que » = cause, « si bien que » = conséquence, « bien que » = concession."
+      "explanation": "« pour que » exprime le but et introduit une subordonnée au subjonctif. « parce que » = cause, « si bien que » = conséquence, « bien que » = concession.",
+      "difficulty": 2
     },
     {
       "prompt": "Dans « Bien qu'il soit fatigué, il continue. », la subordonnée est une circonstancielle de :",
@@ -119,7 +123,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "« bien que » + subjonctif exprime un obstacle qui ne bloque pas l'action : c'est la concession."
+      "explanation": "« bien que » + subjonctif exprime un obstacle qui ne bloque pas l'action : c'est la concession.",
+      "difficulty": 2
     },
     {
       "prompt": "Choisissez la forme correcte : « Les batailles ___ nous avons livrées ont forgé notre courage. »",
@@ -142,7 +147,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "Le pronom relatif est COD du verbe « livrer » (on a livré les batailles) : on emploie « que ». Le participe « livrées » s'accorde avec l'antécédent féminin pluriel « batailles »."
+      "explanation": "Le pronom relatif est COD du verbe « livrer » (on a livré les batailles) : on emploie « que ». Le participe « livrées » s'accorde avec l'antécédent féminin pluriel « batailles ».",
+      "difficulty": 3
     }
   ]
 }

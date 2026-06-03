@@ -15,7 +15,8 @@
         { "id": "d", "text": "$\\overrightarrow{BC}$" }
       ],
       "correctOption": "a",
-      "explanation": "علاقة شال: $\\overrightarrow{AB} + \\overrightarrow{BC} = \\overrightarrow{AC}$. نتتبّع الحروف: طرف الشعاع الأوّل (B) هو منشأ الشعاع الثاني، فيُحذف وتبقى $\\overrightarrow{AC}$."
+      "explanation": "علاقة شال: $\\overrightarrow{AB} + \\overrightarrow{BC} = \\overrightarrow{AC}$. نتتبّع الحروف: طرف الشعاع الأوّل (B) هو منشأ الشعاع الثاني، فيُحذف وتبقى $\\overrightarrow{AC}$.",
+      "difficulty": 1
     },
     {
       "prompt": "ABCD متوازي أضلاع. أيّ من المساواات التالية صحيحة دائمًا؟",
@@ -26,7 +27,8 @@
         { "id": "d", "text": "$\\overrightarrow{AB} = \\overrightarrow{CD}$" }
       ],
       "correctOption": "c",
-      "explanation": "في متوازي الأضلاع ABCD: $\\overrightarrow{AB} = \\overrightarrow{DC}$ و $\\overrightarrow{AD} = \\overrightarrow{BC}$. الضلعان AD وBC متوازيان ومتساويان في الطول والمنحى، إذن $\\overrightarrow{AD} = \\overrightarrow{BC}$."
+      "explanation": "في متوازي الأضلاع ABCD: $\\overrightarrow{AB} = \\overrightarrow{DC}$ و $\\overrightarrow{AD} = \\overrightarrow{BC}$. الضلعان AD وBC متوازيان ومتساويان في الطول والمنحى، إذن $\\overrightarrow{AD} = \\overrightarrow{BC}$.",
+      "difficulty": 2
     },
     {
       "prompt": "الانسحاب ذو الشعاع $\\overrightarrow{u}$ ينقل النقطة M إلى النقطة M'. العلاقة المُعرِّفة لهذا الانسحاب هي:",
@@ -37,7 +39,8 @@
         { "id": "d", "text": "$M = M'$" }
       ],
       "correctOption": "b",
-      "explanation": "تعريف الانسحاب ذي الشعاع $\\overrightarrow{u}$: لكلّ نقطة M، صورتها M' تحقّق $\\overrightarrow{MM'} = \\overrightarrow{u}$. الشعاع ينطلق من M (المنشأ) نحو M' (الطرف)."
+      "explanation": "تعريف الانسحاب ذي الشعاع $\\overrightarrow{u}$: لكلّ نقطة M، صورتها M' تحقّق $\\overrightarrow{MM'} = \\overrightarrow{u}$. الشعاع ينطلق من M (المنشأ) نحو M' (الطرف).",
+      "difficulty": 1
     },
     {
       "prompt": "I منتصف القطعة [AB]. ما ناتج $\\overrightarrow{MA} + \\overrightarrow{MB}$ لأيّ نقطة M؟",
@@ -48,7 +51,8 @@
         { "id": "d", "text": "$2\\overrightarrow{MI}$" }
       ],
       "correctOption": "d",
-      "explanation": "نطبّق شال: $\\overrightarrow{MA} = \\overrightarrow{MI} + \\overrightarrow{IA}$ و $\\overrightarrow{MB} = \\overrightarrow{MI} + \\overrightarrow{IB}$. بالجمع: $\\overrightarrow{MA} + \\overrightarrow{MB} = 2\\overrightarrow{MI} + \\overrightarrow{IA} + \\overrightarrow{IB}$. بما أنّ I منتصف [AB]: $\\overrightarrow{IA} + \\overrightarrow{IB} = \\overrightarrow{0}$، إذن الناتج هو $2\\overrightarrow{MI}$."
+      "explanation": "نطبّق شال: $\\overrightarrow{MA} = \\overrightarrow{MI} + \\overrightarrow{IA}$ و $\\overrightarrow{MB} = \\overrightarrow{MI} + \\overrightarrow{IB}$. بالجمع: $\\overrightarrow{MA} + \\overrightarrow{MB} = 2\\overrightarrow{MI} + \\overrightarrow{IA} + \\overrightarrow{IB}$. بما أنّ I منتصف [AB]: $\\overrightarrow{IA} + \\overrightarrow{IB} = \\overrightarrow{0}$، إذن الناتج هو $2\\overrightarrow{MI}$.",
+      "difficulty": 3
     },
     {
       "prompt": "ما ناتج $\\overrightarrow{AB} + \\overrightarrow{BC} + \\overrightarrow{CA}$؟",
@@ -59,7 +63,8 @@
         { "id": "d", "text": "$\\overrightarrow{AA}$" }
       ],
       "correctOption": "a",
-      "explanation": "بتطبيق شال تدريجيًا: $\\overrightarrow{AB} + \\overrightarrow{BC} = \\overrightarrow{AC}$، ثمّ $\\overrightarrow{AC} + \\overrightarrow{CA} = \\overrightarrow{AA} = \\overrightarrow{0}$. مجموع الأشعّة على مضلّع مغلق يساوي دائمًا $\\overrightarrow{0}$."
+      "explanation": "بتطبيق شال تدريجيًا: $\\overrightarrow{AB} + \\overrightarrow{BC} = \\overrightarrow{AC}$، ثمّ $\\overrightarrow{AC} + \\overrightarrow{CA} = \\overrightarrow{AA} = \\overrightarrow{0}$. مجموع الأشعّة على مضلّع مغلق يساوي دائمًا $\\overrightarrow{0}$.",
+      "difficulty": 2
     },
     {
       "prompt": "في المستوي، A(1 ; 0) وB(4 ; 0) ونقطة C(2 ; 3). صورة C بالانسحاب ذي الشعاع $\\overrightarrow{AB}$ هي النقطة C'. ما إحداثيّا C'؟",
@@ -70,7 +75,8 @@
         { "id": "d", "text": "$C'(3 ; 3)$" }
       ],
       "correctOption": "c",
-      "explanation": "أوّلًا: $\\overrightarrow{AB}$ له إحداثيّات $(4-1 ; 0-0) = (3 ; 0)$. الانسحاب يُضيف هذا الشعاع إلى إحداثيّات C: $C'(2+3 ; 3+0) = C'(5 ; 3)$."
+      "explanation": "أوّلًا: $\\overrightarrow{AB}$ له إحداثيّات $(4-1 ; 0-0) = (3 ; 0)$. الانسحاب يُضيف هذا الشعاع إلى إحداثيّات C: $C'(2+3 ; 3+0) = C'(5 ; 3)$.",
+      "difficulty": 3
     }
   ]
 }

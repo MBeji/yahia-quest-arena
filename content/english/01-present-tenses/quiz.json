@@ -10,7 +10,8 @@
         { "id": "d", "text": "She has gone to school every day." }
       ],
       "correctOption": "b",
-      "explanation": "Habits use the present simple. With a third-person singular subject, add -s to the base verb: she goes."
+      "explanation": "Habits use the present simple. With a third-person singular subject, add -s to the base verb: she goes.",
+      "difficulty": 1
     },
     {
       "prompt": "Which time marker signals that the present continuous should be used?",
@@ -21,7 +22,8 @@
         { "id": "d", "text": "twice a week" }
       ],
       "correctOption": "c",
-      "explanation": "\"At the moment\" signals an action happening right now, which requires the present continuous (am/is/are + -ing)."
+      "explanation": "\"At the moment\" signals an action happening right now, which requires the present continuous (am/is/are + -ing).",
+      "difficulty": 1
     },
     {
       "prompt": "Why is \"I am knowing the answer\" incorrect?",
@@ -35,7 +37,8 @@
         { "id": "d", "text": "The continuous form requires \"was\" for the verb \"know\"." }
       ],
       "correctOption": "b",
-      "explanation": "Stative verbs like know, like, love, and want describe mental states, not actions. They are not used in the continuous form."
+      "explanation": "Stative verbs like know, like, love, and want describe mental states, not actions. They are not used in the continuous form.",
+      "difficulty": 2
     },
     {
       "prompt": "What is the correct negative form of \"She plays tennis\" in the present simple?",
@@ -46,7 +49,8 @@
         { "id": "d", "text": "She don't play tennis." }
       ],
       "correctOption": "c",
-      "explanation": "The present simple negative uses doesn't (does not) + the base verb for he/she/it. The main verb keeps its base form: doesn't play."
+      "explanation": "The present simple negative uses doesn't (does not) + the base verb for he/she/it. The main verb keeps its base form: doesn't play.",
+      "difficulty": 2
     },
     {
       "prompt": "Complete the sentence correctly: \"Look! The children ___ in the garden.\"",
@@ -57,7 +61,8 @@
         { "id": "d", "text": "are playing" }
       ],
       "correctOption": "d",
-      "explanation": "\"Look!\" is a key signal for the present continuous because it draws attention to an action happening right now. The correct form is are playing."
+      "explanation": "\"Look!\" is a key signal for the present continuous because it draws attention to an action happening right now. The correct form is are playing.",
+      "difficulty": 1
     }
   ]
 }

@@ -10,7 +10,8 @@
         { "id": "d", "text": "She was go to the market yesterday." }
       ],
       "correctOption": "b",
-      "explanation": "\"Go\" is an irregular verb whose past simple form is \"went\". Time markers like \"yesterday\" confirm the past simple is needed."
+      "explanation": "\"Go\" is an irregular verb whose past simple form is \"went\". Time markers like \"yesterday\" confirm the past simple is needed.",
+      "difficulty": 1
     },
     {
       "prompt": "What is the correct form for a past simple question with a regular verb?",
@@ -21,7 +22,8 @@
         { "id": "d", "text": "Does she walked to school?" }
       ],
       "correctOption": "c",
-      "explanation": "Past simple questions use Did + subject + base verb. After Did, the main verb stays in its base form (no -ed)."
+      "explanation": "Past simple questions use Did + subject + base verb. After Did, the main verb stays in its base form (no -ed).",
+      "difficulty": 1
     },
     {
       "prompt": "Which structure correctly describes a background action interrupted by a shorter event in the past?",
@@ -32,7 +34,8 @@
         { "id": "d", "text": "I cooked when the phone had rung." }
       ],
       "correctOption": "b",
-      "explanation": "The past continuous (was cooking) provides the background action; the past simple (rang) describes the shorter event that interrupted it."
+      "explanation": "The past continuous (was cooking) provides the background action; the past simple (rang) describes the shorter event that interrupted it.",
+      "difficulty": 2
     },
     {
       "prompt": "Which adverb is associated with the present perfect, NOT the past simple?",
@@ -43,7 +46,8 @@
         { "id": "d", "text": "already" }
       ],
       "correctOption": "d",
-      "explanation": "\"Already\" is a key adverb of the present perfect (have/has + past participle). \"Yesterday\", \"last year\", and \"in 2020\" all indicate a specific past time, so they go with the past simple."
+      "explanation": "\"Already\" is a key adverb of the present perfect (have/has + past participle). \"Yesterday\", \"last year\", and \"in 2020\" all indicate a specific past time, so they go with the past simple.",
+      "difficulty": 2
     },
     {
       "prompt": "Which sentence correctly uses the present perfect?",
@@ -54,7 +58,8 @@
         { "id": "d", "text": "She have visited Rome." }
       ],
       "correctOption": "c",
-      "explanation": "The present perfect (has + past participle) is used with \"never\" for a life experience at an unspecified time. A specific time like \"last summer\" would require the past simple instead."
+      "explanation": "The present perfect (has + past participle) is used with \"never\" for a life experience at an unspecified time. A specific time like \"last summer\" would require the past simple instead.",
+      "difficulty": 3
     }
   ]
 }

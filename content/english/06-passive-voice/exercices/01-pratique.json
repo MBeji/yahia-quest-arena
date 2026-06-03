@@ -27,7 +27,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "\"The windows\" is plural, so the present simple passive uses ARE + past participle: are cleaned."
+      "explanation": "\"The windows\" is plural, so the present simple passive uses ARE + past participle: are cleaned.",
+      "difficulty": 1
     },
     {
       "prompt": "Turn this active sentence into passive: \"Someone broke the vase.\" The correct passive is:",
@@ -50,7 +51,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "The active verb is past simple (broke), so the passive uses WAS + past participle (broken): The vase was broken."
+      "explanation": "The active verb is past simple (broke), so the passive uses WAS + past participle (broken): The vase was broken.",
+      "difficulty": 2
     },
     {
       "prompt": "Complete: \"Arabic ___ in Tunisia.\" (present simple passive of 'speak')",
@@ -73,7 +75,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "\"Arabic\" is singular. The present simple passive of \"speak\" is IS + spoken: Arabic is spoken in Tunisia."
+      "explanation": "\"Arabic\" is singular. The present simple passive of \"speak\" is IS + spoken: Arabic is spoken in Tunisia.",
+      "difficulty": 1
     },
     {
       "prompt": "Which sentence is correct?",
@@ -96,7 +99,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "\"The letters\" is plural and the action is past, so we need WERE + past participle (written): The letters were written by the students."
+      "explanation": "\"The letters\" is plural and the action is past, so we need WERE + past participle (written): The letters were written by the students.",
+      "difficulty": 2
     },
     {
       "prompt": "Why is the passive preferred in: \"Oil was discovered in the desert\"?",
@@ -119,7 +123,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "We use the passive here because the agent (who discovered it) is unimportant or unknown — the focus is on the result: oil being discovered."
+      "explanation": "We use the passive here because the agent (who discovered it) is unimportant or unknown — the focus is on the result: oil being discovered.",
+      "difficulty": 3
     },
     {
       "prompt": "Complete: \"The exam ___ yesterday by all the students.\" (past simple passive of 'take')",
@@ -142,7 +147,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "\"The exam\" is singular and \"yesterday\" signals past tense. The past simple passive is WAS + taken: The exam was taken yesterday."
+      "explanation": "\"The exam\" is singular and \"yesterday\" signals past tense. The past simple passive is WAS + taken: The exam was taken yesterday.",
+      "difficulty": 2
     }
   ]
 }

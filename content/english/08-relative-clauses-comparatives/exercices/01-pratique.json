@@ -27,7 +27,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "We use 'who' for people. 'The student who won the prize' — 'who' refers to 'the student' (a person)."
+      "explanation": "We use 'who' for people. 'The student who won the prize' — 'who' refers to 'the student' (a person).",
+      "difficulty": 1
     },
     {
       "prompt": "Complete: \"This is the book ___ changed my life.\"",
@@ -50,7 +51,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "We use 'which' or 'that' for things. 'The book that changed my life' — 'that' refers to 'the book' (a thing). Both 'which' and 'that' are correct for things, but only 'that' is offered."
+      "explanation": "We use 'which' or 'that' for things. 'The book that changed my life' — 'that' refers to 'the book' (a thing). Both 'which' and 'that' are correct for things, but only 'that' is offered.",
+      "difficulty": 1
     },
     {
       "prompt": "Choose the correct comparative: \"A cheetah is ___ a lion.\"",
@@ -73,7 +75,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "'fast' is a short (one-syllable) adjective, so the comparative is 'faster than'. We never use 'more fast' with short adjectives."
+      "explanation": "'fast' is a short (one-syllable) adjective, so the comparative is 'faster than'. We never use 'more fast' with short adjectives.",
+      "difficulty": 1
     },
     {
       "prompt": "Complete: \"Mount Everest is ___ mountain in the world.\"",
@@ -96,7 +99,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "'high' is a short adjective. The superlative adds '-est' and requires 'the': 'the highest'. We never say 'the most high' with short adjectives."
+      "explanation": "'high' is a short adjective. The superlative adds '-est' and requires 'the': 'the highest'. We never say 'the most high' with short adjectives.",
+      "difficulty": 2
     },
     {
       "prompt": "Which sentence uses 'as … as' correctly?",
@@ -119,7 +123,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "The structure is 'as + base adjective + as'. Never use the comparative form inside 'as … as'. 'She is as tall as her sister' is correct."
+      "explanation": "The structure is 'as + base adjective + as'. Never use the comparative form inside 'as … as'. 'She is as tall as her sister' is correct.",
+      "difficulty": 2
     },
     {
       "prompt": "Choose the correct relative pronoun: \"The house ___ she grew up was demolished.\"",
@@ -142,7 +147,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "We use 'where' for places. 'The house where she grew up' — 'where' refers to 'the house' as a location."
+      "explanation": "We use 'where' for places. 'The house where she grew up' — 'where' refers to 'the house' as a location.",
+      "difficulty": 3
     }
   ]
 }

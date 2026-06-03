@@ -233,6 +233,61 @@ describe("buildMigrationSql", () => {
   });
 });
 
+describe("question difficulty ordering", () => {
+  const q = (prompt: string, difficulty: number) => ({
+    prompt,
+    options: [
+      { id: "a", text: "1" },
+      { id: "b", text: "2" },
+    ],
+    correctOption: "a" as const,
+    explanation: "e",
+    difficulty,
+  });
+
+  const sql = buildMigrationSql({
+    meta: {
+      id: "math",
+      nameFr: "M",
+      description: "d",
+      attribute: "Force",
+      colorToken: "subject-math",
+      icon: "Calculator",
+      displayOrder: 1,
+      contentLanguage: "ar" as const,
+    },
+    chapters: [
+      {
+        slug: "01-foo",
+        meta: { title: "t", description: "d", displayOrder: 1, sources: [] },
+        lesson: "l",
+        summary: "s",
+        quiz: { questions: [q("QZ", 1)] },
+        exercises: [
+          {
+            slug: "ex1",
+            data: {
+              title: "exo",
+              difficulty: 2,
+              mode: "practice" as const,
+              xpReward: 50,
+              rewardCoins: 10,
+              displayOrder: 1,
+              // Intentionally out of order: hard, easy, medium.
+              questions: [q("HARD", 3), q("EASY", 1), q("MEDIUM", 2)],
+            },
+          },
+        ],
+      },
+    ],
+  });
+
+  it("emits questions from easiest to hardest regardless of source order", () => {
+    expect(sql.indexOf("EASY")).toBeLessThan(sql.indexOf("MEDIUM"));
+    expect(sql.indexOf("MEDIUM")).toBeLessThan(sql.indexOf("HARD"));
+  });
+});
+
 describe("loader", () => {
   let root: string;
 

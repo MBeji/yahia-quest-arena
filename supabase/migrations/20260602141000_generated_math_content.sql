@@ -1615,7 +1615,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('236b6c99-763f-5a75-abff-dfe61d930300', 'c97bbd8a-3e61-5712-8ef0-a7a7ce925786', 'أيّ من العلاقات التالية تُعبّر عن سلسلة الاحتواء الصحيحة لمجموعات الأعداد؟', '[{"id":"a","text":"ℕ ⊂ ℤ ⊂ 𝔻 ⊂ ℚ ⊂ ℝ"},{"id":"b","text":"ℤ ⊂ ℕ ⊂ ℚ ⊂ 𝔻 ⊂ ℝ"},{"id":"c","text":"ℕ ⊂ ℚ ⊂ ℤ ⊂ 𝔻 ⊂ ℝ"},{"id":"d","text":"ℝ ⊂ ℚ ⊂ ℤ ⊂ ℕ"}]'::jsonb, 'a', 'سلسلة الاحتواء هي ℕ ⊂ ℤ ⊂ 𝔻 ⊂ ℚ ⊂ ℝ: الأعداد الطبيعية ضمن الصحيحة، الصحيحة ضمن العشرية، العشرية ضمن الكسرية (الناطقة)، والكسرية ضمن الحقيقية.', 1)
+  ('236b6c99-763f-5a75-abff-dfe61d930300', 'c97bbd8a-3e61-5712-8ef0-a7a7ce925786', 'ما الخاصيّة التي تميّز العدد الأصمّ عن العدد الناطق؟', '[{"id":"a","text":"العدد الأصمّ يمكن كتابته على شكل كسر a/b"},{"id":"b","text":"العدد الأصمّ له كتابة عشرية متناهية"},{"id":"c","text":"العدد الأصمّ له كتابة عشرية غير متناهية وغير دوريّة"},{"id":"d","text":"العدد الأصمّ ينتمي إلى مجموعة ℚ"}]'::jsonb, 'c', 'العدد الأصمّ لا يمكن كتابته على شكل كسر، وكتابته العشرية غير متناهية وغير دوريّة. أشهر أمثلته √2 وπ. وℝ هي اتّحاد الأعداد الناطقة والأعداد الصمّاء.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1625,7 +1625,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('99b8dbc4-3cb1-59b8-b170-3223474f24bd', 'c97bbd8a-3e61-5712-8ef0-a7a7ce925786', 'ما الخاصيّة التي تميّز العدد الأصمّ عن العدد الناطق؟', '[{"id":"a","text":"العدد الأصمّ يمكن كتابته على شكل كسر a/b"},{"id":"b","text":"العدد الأصمّ له كتابة عشرية متناهية"},{"id":"c","text":"العدد الأصمّ له كتابة عشرية غير متناهية وغير دوريّة"},{"id":"d","text":"العدد الأصمّ ينتمي إلى مجموعة ℚ"}]'::jsonb, 'c', 'العدد الأصمّ لا يمكن كتابته على شكل كسر، وكتابته العشرية غير متناهية وغير دوريّة. أشهر أمثلته √2 وπ. وℝ هي اتّحاد الأعداد الناطقة والأعداد الصمّاء.', 2)
+  ('99b8dbc4-3cb1-59b8-b170-3223474f24bd', 'c97bbd8a-3e61-5712-8ef0-a7a7ce925786', 'أيّ من التعريفات الآتية يصف القيمة المطلقة |x| بشكل صحيح؟', '[{"id":"a","text":"|x| هي ضعف العدد x دائمًا"},{"id":"b","text":"|x| هي بُعد العدد x عن الصفر على المستقيم العددي، وهي دائمًا ≥ 0"},{"id":"c","text":"|x| تكون سالبة إذا كان x سالبًا"},{"id":"d","text":"|x| هي مربّع العدد x"}]'::jsonb, 'b', 'القيمة المطلقة |x| هي بُعد العدد x عن الصفر: تساوي x إذا كان x ≥ 0، وتساوي −x إذا كان x < 0. وهي دائمًا موجبة أو معدومة، لا تكون أبدًا سالبة.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1635,7 +1635,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('2d8ea6c7-b733-594a-8a2d-97e61f6e58e6', 'c97bbd8a-3e61-5712-8ef0-a7a7ce925786', 'ما الأثر على إشارة عدم المساواة عند ضرب طرفَيها في عدد سالب؟', '[{"id":"a","text":"تبقى الإشارة كما هي دون تغيير"},{"id":"b","text":"تُحذف إشارة عدم المساواة"},{"id":"c","text":"تصبح الإشارة يساوي (=)"},{"id":"d","text":"تنقلب إشارة عدم المساواة إلى العكس"}]'::jsonb, 'd', 'عند الضرب في عدد سالب تنقلب إشارة عدم المساواة؛ فمثلًا إذا كان a < b وضربنا في c < 0 نحصل على a × c > b × c. هذا الفخّ الأشهر في باب الأعداد الحقيقية.', 3)
+  ('2d8ea6c7-b733-594a-8a2d-97e61f6e58e6', 'c97bbd8a-3e61-5712-8ef0-a7a7ce925786', 'أيّ من العلاقات التالية تُعبّر عن سلسلة الاحتواء الصحيحة لمجموعات الأعداد؟', '[{"id":"a","text":"ℕ ⊂ ℤ ⊂ 𝔻 ⊂ ℚ ⊂ ℝ"},{"id":"b","text":"ℤ ⊂ ℕ ⊂ ℚ ⊂ 𝔻 ⊂ ℝ"},{"id":"c","text":"ℕ ⊂ ℚ ⊂ ℤ ⊂ 𝔻 ⊂ ℝ"},{"id":"d","text":"ℝ ⊂ ℚ ⊂ ℤ ⊂ ℕ"}]'::jsonb, 'a', 'سلسلة الاحتواء هي ℕ ⊂ ℤ ⊂ 𝔻 ⊂ ℚ ⊂ ℝ: الأعداد الطبيعية ضمن الصحيحة، الصحيحة ضمن العشرية، العشرية ضمن الكسرية (الناطقة)، والكسرية ضمن الحقيقية.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1645,7 +1645,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('51711489-dc10-504b-8879-ec06ab733e04', 'c97bbd8a-3e61-5712-8ef0-a7a7ce925786', 'أيّ من التعريفات الآتية يصف القيمة المطلقة |x| بشكل صحيح؟', '[{"id":"a","text":"|x| هي ضعف العدد x دائمًا"},{"id":"b","text":"|x| هي بُعد العدد x عن الصفر على المستقيم العددي، وهي دائمًا ≥ 0"},{"id":"c","text":"|x| تكون سالبة إذا كان x سالبًا"},{"id":"d","text":"|x| هي مربّع العدد x"}]'::jsonb, 'b', 'القيمة المطلقة |x| هي بُعد العدد x عن الصفر: تساوي x إذا كان x ≥ 0، وتساوي −x إذا كان x < 0. وهي دائمًا موجبة أو معدومة، لا تكون أبدًا سالبة.', 4)
+  ('51711489-dc10-504b-8879-ec06ab733e04', 'c97bbd8a-3e61-5712-8ef0-a7a7ce925786', 'ما الأثر على إشارة عدم المساواة عند ضرب طرفَيها في عدد سالب؟', '[{"id":"a","text":"تبقى الإشارة كما هي دون تغيير"},{"id":"b","text":"تُحذف إشارة عدم المساواة"},{"id":"c","text":"تصبح الإشارة يساوي (=)"},{"id":"d","text":"تنقلب إشارة عدم المساواة إلى العكس"}]'::jsonb, 'd', 'عند الضرب في عدد سالب تنقلب إشارة عدم المساواة؛ فمثلًا إذا كان a < b وضربنا في c < 0 نحصل على a × c > b × c. هذا الفخّ الأشهر في باب الأعداد الحقيقية.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1707,7 +1707,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('41910abe-54ea-5267-899e-74bda7340373', '81ff9da1-548c-50cf-9f91-8ef7d971cab6', 'إذا كان x < 5، فما الذي نحصل عليه بالضرب في (−2) ؟', '[{"id":"a","text":"−2x < −10"},{"id":"b","text":"−2x > −10"},{"id":"c","text":"−2x = −10"},{"id":"d","text":"−2x < 10"}]'::jsonb, 'b', 'الضرب في عدد سالب يقلب اتّجاه عدم المساواة: من x < 5 نستنتج −2x > −10.', 4)
+  ('41910abe-54ea-5267-899e-74bda7340373', '81ff9da1-548c-50cf-9f91-8ef7d971cab6', 'أيّ عدد ينتمي إلى المجال ]2 ، 5] ؟', '[{"id":"a","text":"2"},{"id":"b","text":"5"},{"id":"c","text":"6"},{"id":"d","text":"1"}]'::jsonb, 'b', 'المجال ]2 ، 5] يعني 2 < x ≤ 5: العدد 2 غير مشمول (قوس متّجه) بينما 5 مشمول (قوس مربّع).', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1717,7 +1717,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('b27e6980-2917-582a-8525-701d27cd5267', '81ff9da1-548c-50cf-9f91-8ef7d971cab6', 'أيّ عدد ينتمي إلى المجال ]2 ، 5] ؟', '[{"id":"a","text":"2"},{"id":"b","text":"5"},{"id":"c","text":"6"},{"id":"d","text":"1"}]'::jsonb, 'b', 'المجال ]2 ، 5] يعني 2 < x ≤ 5: العدد 2 غير مشمول (قوس متّجه) بينما 5 مشمول (قوس مربّع).', 5)
+  ('b27e6980-2917-582a-8525-701d27cd5267', '81ff9da1-548c-50cf-9f91-8ef7d971cab6', 'إذا كان x < 5، فما الذي نحصل عليه بالضرب في (−2) ؟', '[{"id":"a","text":"−2x < −10"},{"id":"b","text":"−2x > −10"},{"id":"c","text":"−2x = −10"},{"id":"d","text":"−2x < 10"}]'::jsonb, 'b', 'الضرب في عدد سالب يقلب اتّجاه عدم المساواة: من x < 5 نستنتج −2x > −10.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1749,7 +1749,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('efaec4e2-82a1-50d5-8bdd-e27f7df31aa9', 'ec9248c4-9408-548f-aee3-046aa660c54d', 'ما ناتج العملية: (−3) × (−4) + (−2) ؟', '[{"id":"a","text":"10"},{"id":"b","text":"14"},{"id":"c","text":"−14"},{"id":"d","text":"−10"}]'::jsonb, 'a', '(−3) × (−4) = 12 (سالب × سالب = موجب)، ثمّ 12 + (−2) = 10.', 1)
+  ('efaec4e2-82a1-50d5-8bdd-e27f7df31aa9', 'ec9248c4-9408-548f-aee3-046aa660c54d', 'أيّ من الأعداد التالية عددٌ ناطق؟', '[{"id":"a","text":"√9"},{"id":"b","text":"√2"},{"id":"c","text":"π"},{"id":"d","text":"√5"}]'::jsonb, 'a', '√9 = 3 وهو عدد صحيح ناطق، أمّا √2 و√5 وπ فأعداد صمّاء.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1759,7 +1759,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('c909b9e4-f805-575c-ba4e-6b4800bf2a41', 'ec9248c4-9408-548f-aee3-046aa660c54d', 'أيّ من الأعداد التالية عددٌ ناطق؟', '[{"id":"a","text":"√9"},{"id":"b","text":"√2"},{"id":"c","text":"π"},{"id":"d","text":"√5"}]'::jsonb, 'a', '√9 = 3 وهو عدد صحيح ناطق، أمّا √2 و√5 وπ فأعداد صمّاء.', 2)
+  ('c909b9e4-f805-575c-ba4e-6b4800bf2a41', 'ec9248c4-9408-548f-aee3-046aa660c54d', 'أيّ قيمة لا تنتمي إلى المجال [−1 ، 3[ ؟', '[{"id":"a","text":"3"},{"id":"b","text":"−1"},{"id":"c","text":"0"},{"id":"d","text":"2"}]'::jsonb, 'a', 'المجال [−1 ، 3[ يعني −1 ≤ x < 3: العدد −1 مشمول بينما 3 غير مشمول (قوس متّجه).', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1769,7 +1769,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('80ed71ca-cc0f-5995-9f36-1fe1985c5718', 'ec9248c4-9408-548f-aee3-046aa660c54d', 'ما قيمة |3 − 8| ؟', '[{"id":"a","text":"5"},{"id":"b","text":"−5"},{"id":"c","text":"11"},{"id":"d","text":"−11"}]'::jsonb, 'a', '3 − 8 = −5، والقيمة المطلقة |−5| = 5.', 3)
+  ('80ed71ca-cc0f-5995-9f36-1fe1985c5718', 'ec9248c4-9408-548f-aee3-046aa660c54d', 'ما ناتج العملية: (−3) × (−4) + (−2) ؟', '[{"id":"a","text":"10"},{"id":"b","text":"14"},{"id":"c","text":"−14"},{"id":"d","text":"−10"}]'::jsonb, 'a', '(−3) × (−4) = 12 (سالب × سالب = موجب)، ثمّ 12 + (−2) = 10.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1779,7 +1779,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('a676994a-03af-59e7-958d-6b596ce844df', 'ec9248c4-9408-548f-aee3-046aa660c54d', 'أيّ قيمة لا تنتمي إلى المجال [−1 ، 3[ ؟', '[{"id":"a","text":"3"},{"id":"b","text":"−1"},{"id":"c","text":"0"},{"id":"d","text":"2"}]'::jsonb, 'a', 'المجال [−1 ، 3[ يعني −1 ≤ x < 3: العدد −1 مشمول بينما 3 غير مشمول (قوس متّجه).', 4)
+  ('a676994a-03af-59e7-958d-6b596ce844df', 'ec9248c4-9408-548f-aee3-046aa660c54d', 'ما قيمة |3 − 8| ؟', '[{"id":"a","text":"5"},{"id":"b","text":"−5"},{"id":"c","text":"11"},{"id":"d","text":"−11"}]'::jsonb, 'a', '3 − 8 = −5، والقيمة المطلقة |−5| = 5.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1821,7 +1821,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('44cffaaf-830a-5ca5-81de-17bd3737cbf6', '172edea9-3107-5d1a-a5b3-b8d55d3b96db', 'ما الكتابة العلمية الصحيحة للعدد 2500؟', '[{"id":"a","text":"25 × 10²"},{"id":"b","text":"0.25 × 10⁴"},{"id":"c","text":"2.5 × 10³"},{"id":"d","text":"2.5 × 10⁻³"}]'::jsonb, 'c', 'الكتابة العلمية تشترط أن يكون المعامل بين 1 و10 (غير مشمول). 2500 = 2.5 × 1000 = 2.5 × 10³. الخيار (a) معامله 25 ≥ 10 فلا يُقبل، والخيار (b) معامله أقلّ من 1، والخيار (d) يعطي عددًا أقلّ من 1.', 1)
+  ('44cffaaf-830a-5ca5-81de-17bd3737cbf6', '172edea9-3107-5d1a-a5b3-b8d55d3b96db', 'أيّ من الأعداد التالية ينتمي إلى المجال ]3 ، 7] ؟', '[{"id":"a","text":"3"},{"id":"b","text":"7"},{"id":"c","text":"8"},{"id":"d","text":"2"}]'::jsonb, 'b', 'المجال ]3 ، 7] يعني 3 < x ≤ 7: الحدّ 3 غير مشمول (قوس متّجه)، أمّا الحدّ 7 فمشمول (قوس مربّع). إذن 7 ينتمي إلى المجال، بينما 3 و8 و2 لا ينتمون إليه.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1831,7 +1831,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('c9845284-c085-5b00-9764-2c8eb3d446f2', '172edea9-3107-5d1a-a5b3-b8d55d3b96db', 'ما قيم x الحقيقية التي تحقّق |2x − 3| = 5؟', '[{"id":"a","text":"x = 4 فقط"},{"id":"b","text":"x = 4 أو x = −1"},{"id":"c","text":"x = 1 أو x = −4"},{"id":"d","text":"لا يوجد حلّ"}]'::jsonb, 'b', '|2x − 3| = 5 يعني: إمّا 2x − 3 = 5 فنجد 2x = 8 أي x = 4، وإمّا 2x − 3 = −5 فنجد 2x = −2 أي x = −1. التحقّق: |2(4)−3| = |5| = 5 ✓ و |2(−1)−3| = |−5| = 5 ✓.', 2)
+  ('c9845284-c085-5b00-9764-2c8eb3d446f2', '172edea9-3107-5d1a-a5b3-b8d55d3b96db', 'كانت درجة الحرارة عند الفجر −3°م، ثمّ ارتفعت بمقدار 8 درجات. ما درجة الحرارة الجديدة؟', '[{"id":"a","text":"11°م"},{"id":"b","text":"−11°م"},{"id":"c","text":"5°م"},{"id":"d","text":"−5°م"}]'::jsonb, 'c', 'درجة الحرارة الجديدة = −3 + 8 = 5°م. الارتفاع بمقدار 8 يعني إضافة 8 إلى القيمة السالبة: −3 + 8 = 5.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1841,7 +1841,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('7425c2e9-e237-5e54-9bd0-e80dbaf0b8c5', '172edea9-3107-5d1a-a5b3-b8d55d3b96db', 'أيّ من الأعداد التالية ينتمي إلى المجال ]3 ، 7] ؟', '[{"id":"a","text":"3"},{"id":"b","text":"7"},{"id":"c","text":"8"},{"id":"d","text":"2"}]'::jsonb, 'b', 'المجال ]3 ، 7] يعني 3 < x ≤ 7: الحدّ 3 غير مشمول (قوس متّجه)، أمّا الحدّ 7 فمشمول (قوس مربّع). إذن 7 ينتمي إلى المجال، بينما 3 و8 و2 لا ينتمون إليه.', 3)
+  ('7425c2e9-e237-5e54-9bd0-e80dbaf0b8c5', '172edea9-3107-5d1a-a5b3-b8d55d3b96db', 'ما الكتابة العلمية الصحيحة للعدد 2500؟', '[{"id":"a","text":"25 × 10²"},{"id":"b","text":"0.25 × 10⁴"},{"id":"c","text":"2.5 × 10³"},{"id":"d","text":"2.5 × 10⁻³"}]'::jsonb, 'c', 'الكتابة العلمية تشترط أن يكون المعامل بين 1 و10 (غير مشمول). 2500 = 2.5 × 1000 = 2.5 × 10³. الخيار (a) معامله 25 ≥ 10 فلا يُقبل، والخيار (b) معامله أقلّ من 1، والخيار (d) يعطي عددًا أقلّ من 1.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1851,7 +1851,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('e836ab7e-a4ce-5624-886a-ec90a31280ef', '172edea9-3107-5d1a-a5b3-b8d55d3b96db', 'رتّب الأعداد التالية تصاعديًا وحدّد الأكبر: 2.2 ، √5 ، 9/4 ، 2.3', '[{"id":"a","text":"2.3"},{"id":"b","text":"√5"},{"id":"c","text":"9/4"},{"id":"d","text":"2.2"}]'::jsonb, 'a', 'نُقارن القيم: 2.2 = 2.2 ، √5 ≈ 2.236 ، 9/4 = 2.25 ، 2.3 = 2.3. الترتيب التصاعدي: 2.2 < √5 < 9/4 < 2.3. إذن الأكبر هو 2.3.', 4)
+  ('e836ab7e-a4ce-5624-886a-ec90a31280ef', '172edea9-3107-5d1a-a5b3-b8d55d3b96db', 'إذا كان x ∈ ℝ وكان x² = 16، فما مجموعة الحلول؟', '[{"id":"a","text":"{4}"},{"id":"b","text":"{−4 ، 4}"},{"id":"c","text":"{−16 ، 16}"},{"id":"d","text":"{8 ، −8}"}]'::jsonb, 'b', 'x² = 16 يعني x = 4 أو x = −4، لأنّ (4)² = 16 و(−4)² = 16. لا تنسَ الحلّ السالب! مجموعة الحلول هي {−4 ، 4}.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1861,7 +1861,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('909783ed-8c93-5595-b2c0-bc221c6af843', '172edea9-3107-5d1a-a5b3-b8d55d3b96db', 'كانت درجة الحرارة عند الفجر −3°م، ثمّ ارتفعت بمقدار 8 درجات. ما درجة الحرارة الجديدة؟', '[{"id":"a","text":"11°م"},{"id":"b","text":"−11°م"},{"id":"c","text":"5°م"},{"id":"d","text":"−5°م"}]'::jsonb, 'c', 'درجة الحرارة الجديدة = −3 + 8 = 5°م. الارتفاع بمقدار 8 يعني إضافة 8 إلى القيمة السالبة: −3 + 8 = 5.', 5)
+  ('909783ed-8c93-5595-b2c0-bc221c6af843', '172edea9-3107-5d1a-a5b3-b8d55d3b96db', 'ما قيم x الحقيقية التي تحقّق |2x − 3| = 5؟', '[{"id":"a","text":"x = 4 فقط"},{"id":"b","text":"x = 4 أو x = −1"},{"id":"c","text":"x = 1 أو x = −4"},{"id":"d","text":"لا يوجد حلّ"}]'::jsonb, 'b', '|2x − 3| = 5 يعني: إمّا 2x − 3 = 5 فنجد 2x = 8 أي x = 4، وإمّا 2x − 3 = −5 فنجد 2x = −2 أي x = −1. التحقّق: |2(4)−3| = |5| = 5 ✓ و |2(−1)−3| = |−5| = 5 ✓.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1871,7 +1871,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('1c95a370-18dc-5351-bcfc-33836e75b1df', '172edea9-3107-5d1a-a5b3-b8d55d3b96db', 'إذا كان x ∈ ℝ وكان x² = 16، فما مجموعة الحلول؟', '[{"id":"a","text":"{4}"},{"id":"b","text":"{−4 ، 4}"},{"id":"c","text":"{−16 ، 16}"},{"id":"d","text":"{8 ، −8}"}]'::jsonb, 'b', 'x² = 16 يعني x = 4 أو x = −4، لأنّ (4)² = 16 و(−4)² = 16. لا تنسَ الحلّ السالب! مجموعة الحلول هي {−4 ، 4}.', 6)
+  ('1c95a370-18dc-5351-bcfc-33836e75b1df', '172edea9-3107-5d1a-a5b3-b8d55d3b96db', 'رتّب الأعداد التالية تصاعديًا وحدّد الأكبر: 2.2 ، √5 ، 9/4 ، 2.3', '[{"id":"a","text":"2.3"},{"id":"b","text":"√5"},{"id":"c","text":"9/4"},{"id":"d","text":"2.2"}]'::jsonb, 'a', 'نُقارن القيم: 2.2 = 2.2 ، √5 ≈ 2.236 ، 9/4 = 2.25 ، 2.3 = 2.3. الترتيب التصاعدي: 2.2 < √5 < 9/4 < 2.3. إذن الأكبر هو 2.3.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1903,7 +1903,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('b687a581-d620-5873-9cb7-ca25c04d0128', 'a59fdfa4-f8c5-5e02-ade5-d6bf905d445e', 'ماذا يساوي √(a²) بصفة عامّة لأيّ عدد حقيقي a؟', '[{"id":"a","text":"a دائمًا"},{"id":"b","text":"−a دائمًا"},{"id":"c","text":"a² دائمًا"},{"id":"d","text":"|a| القيمة المطلقة لـ a"}]'::jsonb, 'd', '√(a²) = |a|، وليس a فقط، لأنّ الجذر يعطي دائمًا نتيجة موجبة. مثلًا: √((−5)²) = √25 = 5 = |−5|. هذا فخّ شائع في الامتحانات.', 2)
+  ('b687a581-d620-5873-9cb7-ca25c04d0128', 'a59fdfa4-f8c5-5e02-ade5-d6bf905d445e', 'ما الهدف من إنطاق المقام في كسر مثل 1/√3؟', '[{"id":"a","text":"جعل قيمة الكسر أكبر عدديًّا"},{"id":"b","text":"إلغاء الكسر كلّيًا وتحويله إلى عدد صحيح"},{"id":"c","text":"إزالة الجذر التربيعي من المقام ليصبح المقام عددًا ناطقًا"},{"id":"d","text":"لأنّ الجذر في البسط غير مسموح به"}]'::jsonb, 'c', 'إنطاق المقام يهدف إلى التخلّص من الجذر في المقام بضرب البسط والمقام في الجذر نفسه: 1/√3 = (1×√3)/(√3×√3) = √3/3. يصبح المقام ناطقًا.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1913,7 +1913,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('dd99e1c5-f66e-5d66-b010-083d9fc1cef2', 'a59fdfa4-f8c5-5e02-ade5-d6bf905d445e', 'أيّ من الخصائص التالية غير صحيحة بخصوص الجذور التربيعية؟', '[{"id":"a","text":"√(a × b) = √a × √b لعددَين موجبَين a وb"},{"id":"b","text":"√(a / b) = √a / √b حيث b > 0"},{"id":"c","text":"√(a + b) = √a + √b لعددَين موجبَين a وb"},{"id":"d","text":"√a × √a = a لأيّ عدد موجب a"}]'::jsonb, 'c', 'خاصيّة الجمع تحت الجذر غير صحيحة: √(a + b) ≠ √a + √b. مثال مضادّ: √(9 + 16) = √25 = 5، بينما √9 + √16 = 3 + 4 = 7. الخاصيّة صحيحة للضرب والقسمة فقط.', 3)
+  ('dd99e1c5-f66e-5d66-b010-083d9fc1cef2', 'a59fdfa4-f8c5-5e02-ade5-d6bf905d445e', 'ماذا يساوي √(a²) بصفة عامّة لأيّ عدد حقيقي a؟', '[{"id":"a","text":"a دائمًا"},{"id":"b","text":"−a دائمًا"},{"id":"c","text":"a² دائمًا"},{"id":"d","text":"|a| القيمة المطلقة لـ a"}]'::jsonb, 'd', '√(a²) = |a|، وليس a فقط، لأنّ الجذر يعطي دائمًا نتيجة موجبة. مثلًا: √((−5)²) = √25 = 5 = |−5|. هذا فخّ شائع في الامتحانات.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1923,7 +1923,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('c4c4739d-3ae0-5f4e-b669-7be774d53cb3', 'a59fdfa4-f8c5-5e02-ade5-d6bf905d445e', 'ما الهدف من إنطاق المقام في كسر مثل 1/√3؟', '[{"id":"a","text":"جعل قيمة الكسر أكبر عدديًّا"},{"id":"b","text":"إلغاء الكسر كلّيًا وتحويله إلى عدد صحيح"},{"id":"c","text":"إزالة الجذر التربيعي من المقام ليصبح المقام عددًا ناطقًا"},{"id":"d","text":"لأنّ الجذر في البسط غير مسموح به"}]'::jsonb, 'c', 'إنطاق المقام يهدف إلى التخلّص من الجذر في المقام بضرب البسط والمقام في الجذر نفسه: 1/√3 = (1×√3)/(√3×√3) = √3/3. يصبح المقام ناطقًا.', 4)
+  ('c4c4739d-3ae0-5f4e-b669-7be774d53cb3', 'a59fdfa4-f8c5-5e02-ade5-d6bf905d445e', 'أيّ من الخصائص التالية غير صحيحة بخصوص الجذور التربيعية؟', '[{"id":"a","text":"√(a × b) = √a × √b لعددَين موجبَين a وb"},{"id":"b","text":"√(a / b) = √a / √b حيث b > 0"},{"id":"c","text":"√(a + b) = √a + √b لعددَين موجبَين a وb"},{"id":"d","text":"√a × √a = a لأيّ عدد موجب a"}]'::jsonb, 'c', 'خاصيّة الجمع تحت الجذر غير صحيحة: √(a + b) ≠ √a + √b. مثال مضادّ: √(9 + 16) = √25 = 5، بينما √9 + √16 = 3 + 4 = 7. الخاصيّة صحيحة للضرب والقسمة فقط.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2017,7 +2017,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('d0d46468-66ac-57b8-87c8-6c3ccdd6f77c', '2d3109e8-a00c-5619-8905-d768c68c00b9', 'بعد إنطاق المقام، يصبح الكسر 1/√2 مساويًا لـ:', '[{"id":"a","text":"√2/2"},{"id":"b","text":"2/√2"},{"id":"c","text":"√2"},{"id":"d","text":"1/2"}]'::jsonb, 'a', 'نضرب البسط والمقام في √2: (1×√2)/(√2×√2) = √2/2.', 1)
+  ('d0d46468-66ac-57b8-87c8-6c3ccdd6f77c', '2d3109e8-a00c-5619-8905-d768c68c00b9', 'ما ناتج 3√2 + 5√2 ؟', '[{"id":"a","text":"8√2"},{"id":"b","text":"8√4"},{"id":"c","text":"15√2"},{"id":"d","text":"8"}]'::jsonb, 'a', 'الجذران متشابهان (√2)، فنجمع المعاملين: 3 + 5 = 8، أي 8√2.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2027,7 +2027,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('d4fcdcbc-54d2-512f-a801-a980e162361a', '2d3109e8-a00c-5619-8905-d768c68c00b9', 'ما ناتج 3√2 + 5√2 ؟', '[{"id":"a","text":"8√2"},{"id":"b","text":"8√4"},{"id":"c","text":"15√2"},{"id":"d","text":"8"}]'::jsonb, 'a', 'الجذران متشابهان (√2)، فنجمع المعاملين: 3 + 5 = 8، أي 8√2.', 2)
+  ('d4fcdcbc-54d2-512f-a801-a980e162361a', '2d3109e8-a00c-5619-8905-d768c68c00b9', 'بعد إنطاق المقام، يصبح الكسر 1/√2 مساويًا لـ:', '[{"id":"a","text":"√2/2"},{"id":"b","text":"2/√2"},{"id":"c","text":"√2"},{"id":"d","text":"1/2"}]'::jsonb, 'a', 'نضرب البسط والمقام في √2: (1×√2)/(√2×√2) = √2/2.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2099,7 +2099,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('ac62fe45-0997-55a0-af87-65d914832ea9', 'c8957fdb-6fc2-5637-aef7-b904288394bb', 'ما قيمة √8 + √18 ؟', '[{"id":"a","text":"√26"},{"id":"b","text":"3√6"},{"id":"c","text":"5√2"},{"id":"d","text":"2√26"}]'::jsonb, 'c', 'نبسّط كلّ جذر: √8 = √(4×2) = 2√2 ، و√18 = √(9×2) = 3√2. إذن √8 + √18 = 2√2 + 3√2 = 5√2. الخيار (a) خاطئ لأنّ √(a)+√(b) ≠ √(a+b).', 3)
+  ('ac62fe45-0997-55a0-af87-65d914832ea9', 'c8957fdb-6fc2-5637-aef7-b904288394bb', 'ما قيمة √((−5)²) ؟', '[{"id":"a","text":"−5"},{"id":"b","text":"5"},{"id":"c","text":"25"},{"id":"d","text":"−25"}]'::jsonb, 'b', '(−5)² = 25، ثمّ √25 = 5. وبصفة عامّة √(a²) = |a|، وبما أنّ |−5| = 5 فالجواب هو 5. الجذر التربيعي لا يُعطي أبدًا قيمة سالبة.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2109,7 +2109,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('523c2f5e-e991-5b1e-8011-1f219b3c0338', 'c8957fdb-6fc2-5637-aef7-b904288394bb', 'ما قيمة √((−5)²) ؟', '[{"id":"a","text":"−5"},{"id":"b","text":"5"},{"id":"c","text":"25"},{"id":"d","text":"−25"}]'::jsonb, 'b', '(−5)² = 25، ثمّ √25 = 5. وبصفة عامّة √(a²) = |a|، وبما أنّ |−5| = 5 فالجواب هو 5. الجذر التربيعي لا يُعطي أبدًا قيمة سالبة.', 4)
+  ('523c2f5e-e991-5b1e-8011-1f219b3c0338', 'c8957fdb-6fc2-5637-aef7-b904288394bb', 'اُنطق مقام الكسر 6/√2 :', '[{"id":"a","text":"3√2"},{"id":"b","text":"6√2"},{"id":"c","text":"√2/3"},{"id":"d","text":"3/√2"}]'::jsonb, 'a', 'نضرب في √2/√2: (6 × √2) / (√2 × √2) = 6√2 / 2 = 3√2. الخيار (b) نسي القسمة على 2، و(c) و(d) خاطئان في العملية.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2119,7 +2119,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('a562a03d-fbbd-54c0-a28d-29d30385474d', 'c8957fdb-6fc2-5637-aef7-b904288394bb', 'في مثلّث قائم الزاوية، ضلعاه القائمان يساويان 6 سم و8 سم. ما طول الوتر؟', '[{"id":"a","text":"√14 سم"},{"id":"b","text":"7 سم"},{"id":"c","text":"√48 سم"},{"id":"d","text":"10 سم"}]'::jsonb, 'd', 'بتطبيق نظريّة فيثاغورس: وتر² = 6² + 8² = 36 + 64 = 100، إذن الوتر = √100 = 10 سم. تذكّر المثلث 6-8-10 وهو من مضاعفات المثلث 3-4-5.', 5)
+  ('a562a03d-fbbd-54c0-a28d-29d30385474d', 'c8957fdb-6fc2-5637-aef7-b904288394bb', 'ما قيمة √8 + √18 ؟', '[{"id":"a","text":"√26"},{"id":"b","text":"3√6"},{"id":"c","text":"5√2"},{"id":"d","text":"2√26"}]'::jsonb, 'c', 'نبسّط كلّ جذر: √8 = √(4×2) = 2√2 ، و√18 = √(9×2) = 3√2. إذن √8 + √18 = 2√2 + 3√2 = 5√2. الخيار (a) خاطئ لأنّ √(a)+√(b) ≠ √(a+b).', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2129,7 +2129,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('bd7ca0a1-fb2b-5744-ad6e-36c4ca721219', 'c8957fdb-6fc2-5637-aef7-b904288394bb', 'اُنطق مقام الكسر 6/√2 :', '[{"id":"a","text":"3√2"},{"id":"b","text":"6√2"},{"id":"c","text":"√2/3"},{"id":"d","text":"3/√2"}]'::jsonb, 'a', 'نضرب في √2/√2: (6 × √2) / (√2 × √2) = 6√2 / 2 = 3√2. الخيار (b) نسي القسمة على 2، و(c) و(d) خاطئان في العملية.', 6)
+  ('bd7ca0a1-fb2b-5744-ad6e-36c4ca721219', 'c8957fdb-6fc2-5637-aef7-b904288394bb', 'في مثلّث قائم الزاوية، ضلعاه القائمان يساويان 6 سم و8 سم. ما طول الوتر؟', '[{"id":"a","text":"√14 سم"},{"id":"b","text":"7 سم"},{"id":"c","text":"√48 سم"},{"id":"d","text":"10 سم"}]'::jsonb, 'd', 'بتطبيق نظريّة فيثاغورس: وتر² = 6² + 8² = 36 + 64 = 100، إذن الوتر = √100 = 10 سم. تذكّر المثلث 6-8-10 وهو من مضاعفات المثلث 3-4-5.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2161,7 +2161,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('fc3ba4eb-8227-5f2c-bda2-9a11d5e29b3f', '1d2f2525-db2a-503f-a806-3900b9cbdb66', 'ما نتيجة توزيع −(a − b) وفق قاعدة التوزيع؟', '[{"id":"a","text":"−a − b"},{"id":"b","text":"a − b"},{"id":"c","text":"−a + b"},{"id":"d","text":"a + b"}]'::jsonb, 'c', 'عند توزيع الإشارة السالبة: −(a − b) = −a + b. الفخّ الأشهر هو كتابة −a − b بدل −a + b، لأنّ −1 × (−b) = +b.', 2)
+  ('fc3ba4eb-8227-5f2c-bda2-9a11d5e29b3f', '1d2f2525-db2a-503f-a806-3900b9cbdb66', 'ما المتطابقة الشهيرة التي تُعطي a² − b²؟', '[{"id":"a","text":"(a + b)² = a² − b²"},{"id":"b","text":"(a − b)² = a² − b²"},{"id":"c","text":"(a − b)(a + b) = a² − b²"},{"id":"d","text":"(a + b)(a + b) = a² − b²"}]'::jsonb, 'c', 'متطابقة فرق المربّعين: (a − b)(a + b) = a² − b². تُستخدم كثيرًا في الحساب الذهني، مثلًا: 99 × 101 = (100−1)(100+1) = 10000 − 1 = 9999.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2171,7 +2171,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('d8172834-42e3-57c9-80dc-e090f03d1b77', '1d2f2525-db2a-503f-a806-3900b9cbdb66', 'أيّ من المتطابقات التالية تُعبّر عن مربّع الفرق بشكل صحيح؟', '[{"id":"a","text":"(a − b)² = a² + 2ab + b²"},{"id":"b","text":"(a − b)² = a² − b²"},{"id":"c","text":"(a − b)² = a² − 2ab − b²"},{"id":"d","text":"(a − b)² = a² − 2ab + b²"}]'::jsonb, 'd', 'مربّع الفرق هو (a − b)² = a² − 2ab + b². الخطأ الشائع هو حذف الحدّ الأوسط −2ab. تذكّر: (a − b)² ≠ a² − b².', 3)
+  ('d8172834-42e3-57c9-80dc-e090f03d1b77', '1d2f2525-db2a-503f-a806-3900b9cbdb66', 'ما الهدف من التعميل (إخراج عامل مشترك) في الحساب الحرفي؟', '[{"id":"a","text":"تحويل الجداء إلى مجموع بنشر الأقواس"},{"id":"b","text":"تحويل المجموع إلى جداء بإخراج القاسم المشترك الأكبر"},{"id":"c","text":"حذف الحدود السالبة من العبارة"},{"id":"d","text":"إضافة حدود جديدة إلى العبارة"}]'::jsonb, 'b', 'التعميل هو عكس النشر: نكتب المجموع على شكل جداء بإخراج القاسم المشترك الأكبر لجميع الحدود. مثلًا: 4x² − 8x = 4x(x − 2). نتحقّق دائمًا بالنشر.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2181,7 +2181,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('b9fbee4a-d09d-5d57-831f-3ac634b05e19', '1d2f2525-db2a-503f-a806-3900b9cbdb66', 'ما المتطابقة الشهيرة التي تُعطي a² − b²؟', '[{"id":"a","text":"(a + b)² = a² − b²"},{"id":"b","text":"(a − b)² = a² − b²"},{"id":"c","text":"(a − b)(a + b) = a² − b²"},{"id":"d","text":"(a + b)(a + b) = a² − b²"}]'::jsonb, 'c', 'متطابقة فرق المربّعين: (a − b)(a + b) = a² − b². تُستخدم كثيرًا في الحساب الذهني، مثلًا: 99 × 101 = (100−1)(100+1) = 10000 − 1 = 9999.', 4)
+  ('b9fbee4a-d09d-5d57-831f-3ac634b05e19', '1d2f2525-db2a-503f-a806-3900b9cbdb66', 'ما نتيجة توزيع −(a − b) وفق قاعدة التوزيع؟', '[{"id":"a","text":"−a − b"},{"id":"b","text":"a − b"},{"id":"c","text":"−a + b"},{"id":"d","text":"a + b"}]'::jsonb, 'c', 'عند توزيع الإشارة السالبة: −(a − b) = −a + b. الفخّ الأشهر هو كتابة −a − b بدل −a + b، لأنّ −1 × (−b) = +b.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2191,7 +2191,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('8753e3be-5e19-5b00-a80c-61bbb9965aea', '1d2f2525-db2a-503f-a806-3900b9cbdb66', 'ما الهدف من التعميل (إخراج عامل مشترك) في الحساب الحرفي؟', '[{"id":"a","text":"تحويل الجداء إلى مجموع بنشر الأقواس"},{"id":"b","text":"تحويل المجموع إلى جداء بإخراج القاسم المشترك الأكبر"},{"id":"c","text":"حذف الحدود السالبة من العبارة"},{"id":"d","text":"إضافة حدود جديدة إلى العبارة"}]'::jsonb, 'b', 'التعميل هو عكس النشر: نكتب المجموع على شكل جداء بإخراج القاسم المشترك الأكبر لجميع الحدود. مثلًا: 4x² − 8x = 4x(x − 2). نتحقّق دائمًا بالنشر.', 5)
+  ('8753e3be-5e19-5b00-a80c-61bbb9965aea', '1d2f2525-db2a-503f-a806-3900b9cbdb66', 'أيّ من المتطابقات التالية تُعبّر عن مربّع الفرق بشكل صحيح؟', '[{"id":"a","text":"(a − b)² = a² + 2ab + b²"},{"id":"b","text":"(a − b)² = a² − b²"},{"id":"c","text":"(a − b)² = a² − 2ab − b²"},{"id":"d","text":"(a − b)² = a² − 2ab + b²"}]'::jsonb, 'd', 'مربّع الفرق هو (a − b)² = a² − 2ab + b². الخطأ الشائع هو حذف الحدّ الأوسط −2ab. تذكّر: (a − b)² ≠ a² − b².', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2285,7 +2285,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('cb71b2cd-02b3-56a7-b18e-953f747ecbf0', 'ab49794e-9915-51a9-aaa0-c4a4eec3bf53', 'ما الصورة المعمَّلة للعبارة x² − 25 ؟', '[{"id":"a","text":"(x − 5)²"},{"id":"b","text":"(x + 5)(x − 5)"},{"id":"c","text":"(x − 5)(x − 5)"},{"id":"d","text":"(x + 25)(x − 1)"}]'::jsonb, 'b', 'x² − 25 = x² − 5²، وهذا فرق مربّعين: a² − b² = (a − b)(a + b) حيث a = x و b = 5، إذن النتيجة (x − 5)(x + 5).', 1)
+  ('cb71b2cd-02b3-56a7-b18e-953f747ecbf0', 'ab49794e-9915-51a9-aaa0-c4a4eec3bf53', 'أيّ العبارتين التاليتين متساويتان لـ (a + b)² ؟', '[{"id":"a","text":"a² + b²"},{"id":"b","text":"a² + 2ab + b²"},{"id":"c","text":"a² − 2ab + b²"},{"id":"d","text":"(a − b)(a + b)"}]'::jsonb, 'b', '(a + b)² = a² + 2ab + b² بالبرهان المباشر. الخيار (a) ناقصه الحدّ 2ab، و(c) هو (a−b)²، و(d) هو a²−b².', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2295,7 +2295,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('7beabd0d-1bda-5e00-b65f-7337a970cc9a', 'ab49794e-9915-51a9-aaa0-c4a4eec3bf53', 'ما الصورة المعمَّلة للعبارة x² + 10x + 25 ؟', '[{"id":"a","text":"(x + 5)²"},{"id":"b","text":"(x − 5)²"},{"id":"c","text":"(x + 5)(x − 5)"},{"id":"d","text":"(x + 10)(x + 15)"}]'::jsonb, 'a', 'x² + 10x + 25 = x² + 2(x)(5) + 5²، وهذه مربّع المجموع: (a + b)² حيث a = x و b = 5، إذن (x + 5)².', 2)
+  ('7beabd0d-1bda-5e00-b65f-7337a970cc9a', 'ab49794e-9915-51a9-aaa0-c4a4eec3bf53', 'ما الصورة المعمَّلة للعبارة x² − 25 ؟', '[{"id":"a","text":"(x − 5)²"},{"id":"b","text":"(x + 5)(x − 5)"},{"id":"c","text":"(x − 5)(x − 5)"},{"id":"d","text":"(x + 25)(x − 1)"}]'::jsonb, 'b', 'x² − 25 = x² − 5²، وهذا فرق مربّعين: a² − b² = (a − b)(a + b) حيث a = x و b = 5، إذن النتيجة (x − 5)(x + 5).', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2305,7 +2305,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('574d83f6-8a4e-5cbf-af16-601319f31805', 'ab49794e-9915-51a9-aaa0-c4a4eec3bf53', 'ما قيمة (x + 3)² − (x − 3)² ؟', '[{"id":"a","text":"0"},{"id":"b","text":"12x"},{"id":"c","text":"18"},{"id":"d","text":"2x² + 18"}]'::jsonb, 'b', '(x+3)² = x²+6x+9 و (x−3)² = x²−6x+9، إذن الفرق = (x²+6x+9) − (x²−6x+9) = 12x.', 3)
+  ('574d83f6-8a4e-5cbf-af16-601319f31805', 'ab49794e-9915-51a9-aaa0-c4a4eec3bf53', 'ما الصورة المعمَّلة للعبارة x² + 10x + 25 ؟', '[{"id":"a","text":"(x + 5)²"},{"id":"b","text":"(x − 5)²"},{"id":"c","text":"(x + 5)(x − 5)"},{"id":"d","text":"(x + 10)(x + 15)"}]'::jsonb, 'a', 'x² + 10x + 25 = x² + 2(x)(5) + 5²، وهذه مربّع المجموع: (a + b)² حيث a = x و b = 5، إذن (x + 5)².', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2325,7 +2325,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('e441f276-3a03-5903-b23e-822a4e85f453', 'ab49794e-9915-51a9-aaa0-c4a4eec3bf53', 'ما الصورة المعمَّلة للعبارة 4x² − 12x + 9 ؟', '[{"id":"a","text":"(2x − 3)²"},{"id":"b","text":"(2x + 3)²"},{"id":"c","text":"(4x − 3)(x − 3)"},{"id":"d","text":"(2x − 3)(2x + 3)"}]'::jsonb, 'a', '4x² − 12x + 9 = (2x)² − 2(2x)(3) + 3²، وهذه مربّع الفرق: (a − b)² حيث a = 2x و b = 3، إذن (2x − 3)².', 5)
+  ('e441f276-3a03-5903-b23e-822a4e85f453', 'ab49794e-9915-51a9-aaa0-c4a4eec3bf53', 'ما قيمة (x + 3)² − (x − 3)² ؟', '[{"id":"a","text":"0"},{"id":"b","text":"12x"},{"id":"c","text":"18"},{"id":"d","text":"2x² + 18"}]'::jsonb, 'b', '(x+3)² = x²+6x+9 و (x−3)² = x²−6x+9، إذن الفرق = (x²+6x+9) − (x²−6x+9) = 12x.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2335,7 +2335,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('5316a068-a6c0-5dff-9898-ad76dbe03c69', 'ab49794e-9915-51a9-aaa0-c4a4eec3bf53', 'أيّ العبارتين التاليتين متساويتان لـ (a + b)² ؟', '[{"id":"a","text":"a² + b²"},{"id":"b","text":"a² + 2ab + b²"},{"id":"c","text":"a² − 2ab + b²"},{"id":"d","text":"(a − b)(a + b)"}]'::jsonb, 'b', '(a + b)² = a² + 2ab + b² بالبرهان المباشر. الخيار (a) ناقصه الحدّ 2ab، و(c) هو (a−b)²، و(d) هو a²−b².', 6)
+  ('5316a068-a6c0-5dff-9898-ad76dbe03c69', 'ab49794e-9915-51a9-aaa0-c4a4eec3bf53', 'ما الصورة المعمَّلة للعبارة 4x² − 12x + 9 ؟', '[{"id":"a","text":"(2x − 3)²"},{"id":"b","text":"(2x + 3)²"},{"id":"c","text":"(4x − 3)(x − 3)"},{"id":"d","text":"(2x − 3)(2x + 3)"}]'::jsonb, 'a', '4x² − 12x + 9 = (2x)² − 2(2x)(3) + 3²، وهذه مربّع الفرق: (a − b)² حيث a = 2x و b = 3، إذن (2x − 3)².', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2367,7 +2367,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('3b714f25-0ac6-5d4a-94bc-c57f6464b0cc', '5060d30c-a963-5fa0-9a94-22276e9e2aa5', 'عمّل (حلّل): 4x² − 9', '[{"id":"a","text":"(2x − 9)(2x + 1)"},{"id":"b","text":"(2x − 3)²"},{"id":"c","text":"(2x − 3)(2x + 3)"},{"id":"d","text":"4(x² − 9)"}]'::jsonb, 'c', '4x² − 9 = (2x)² − 3² هو فرق مربّعين. بتطبيق المتطابقة الثالثة (a−b)(a+b) = a²−b² مع a = 2x وb = 3: 4x² − 9 = (2x − 3)(2x + 3). التحقّق بالنشر: (2x−3)(2x+3) = 4x² + 6x − 6x − 9 = 4x² − 9 ✓.', 2)
+  ('3b714f25-0ac6-5d4a-94bc-c57f6464b0cc', '5060d30c-a963-5fa0-9a94-22276e9e2aa5', 'بسّط العبارة: 3(x − 2) + 5(x + 1)', '[{"id":"a","text":"8x − 1"},{"id":"b","text":"8x + 7"},{"id":"c","text":"8x − 7"},{"id":"d","text":"8x + 1"}]'::jsonb, 'a', 'نوزّع أوّلًا: 3(x−2) = 3x − 6 و5(x+1) = 5x + 5. ثمّ نجمع الحدود المتشابهة: (3x + 5x) + (−6 + 5) = 8x + (−1) = 8x − 1.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2377,7 +2377,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('01baab24-4c96-5db7-b164-7c011024ba17', '5060d30c-a963-5fa0-9a94-22276e9e2aa5', 'بسّط العبارة: 3(x − 2) + 5(x + 1)', '[{"id":"a","text":"8x − 1"},{"id":"b","text":"8x + 7"},{"id":"c","text":"8x − 7"},{"id":"d","text":"8x + 1"}]'::jsonb, 'a', 'نوزّع أوّلًا: 3(x−2) = 3x − 6 و5(x+1) = 5x + 5. ثمّ نجمع الحدود المتشابهة: (3x + 5x) + (−6 + 5) = 8x + (−1) = 8x − 1.', 3)
+  ('01baab24-4c96-5db7-b164-7c011024ba17', '5060d30c-a963-5fa0-9a94-22276e9e2aa5', 'انشر وبسّط: (3x − 1)²', '[{"id":"a","text":"9x² + 1"},{"id":"b","text":"9x² − 1"},{"id":"c","text":"9x² + 6x + 1"},{"id":"d","text":"9x² − 6x + 1"}]'::jsonb, 'd', 'باستعمال المتطابقة الثانية: (a − b)² = a² − 2ab + b². هنا a = 3x وb = 1، إذن (3x−1)² = (3x)² − 2(3x)(1) + 1² = 9x² − 6x + 1. الخطأ (a) و(b) ينسيان الحدّ الأوسط.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2387,7 +2387,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('43e1e077-42f6-58a8-8b60-53699a200ec6', '5060d30c-a963-5fa0-9a94-22276e9e2aa5', 'انشر وبسّط: (3x − 1)²', '[{"id":"a","text":"9x² + 1"},{"id":"b","text":"9x² − 1"},{"id":"c","text":"9x² + 6x + 1"},{"id":"d","text":"9x² − 6x + 1"}]'::jsonb, 'd', 'باستعمال المتطابقة الثانية: (a − b)² = a² − 2ab + b². هنا a = 3x وb = 1، إذن (3x−1)² = (3x)² − 2(3x)(1) + 1² = 9x² − 6x + 1. الخطأ (a) و(b) ينسيان الحدّ الأوسط.', 4)
+  ('43e1e077-42f6-58a8-8b60-53699a200ec6', '5060d30c-a963-5fa0-9a94-22276e9e2aa5', 'عمّل (حلّل): 4x² − 9', '[{"id":"a","text":"(2x − 9)(2x + 1)"},{"id":"b","text":"(2x − 3)²"},{"id":"c","text":"(2x − 3)(2x + 3)"},{"id":"d","text":"4(x² − 9)"}]'::jsonb, 'c', '4x² − 9 = (2x)² − 3² هو فرق مربّعين. بتطبيق المتطابقة الثالثة (a−b)(a+b) = a²−b² مع a = 2x وb = 3: 4x² − 9 = (2x − 3)(2x + 3). التحقّق بالنشر: (2x−3)(2x+3) = 4x² + 6x − 6x − 9 = 4x² − 9 ✓.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2583,7 +2583,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('af7b55a2-91be-5ac0-a5a5-0fbb6f2b329e', 'd8d89bf8-2b16-583f-85bd-beb3818b9e4d', 'ما حلّ المتراجحة: 2(x − 3) < 4x + 2 ؟', '[{"id":"a","text":"x > −4"},{"id":"b","text":"x < −4"},{"id":"c","text":"x > 4"},{"id":"d","text":"x < 4"}]'::jsonb, 'a', 'نوسّع: 2x − 6 < 4x + 2 → 2x − 4x < 2 + 6 → −2x < 8 → نقسم على −2 مع قلب الإشارة → x > −4.', 3)
+  ('af7b55a2-91be-5ac0-a5a5-0fbb6f2b329e', 'd8d89bf8-2b16-583f-85bd-beb3818b9e4d', 'إذا كان (x + 7)(3 − x) = 0، فما مجموعة الحلول ؟', '[{"id":"a","text":"{ 7 ، 3 }"},{"id":"b","text":"{ −7 ، 3 }"},{"id":"c","text":"{ 7 ، −3 }"},{"id":"d","text":"{ −7 ، −3 }"}]'::jsonb, 'b', '(x + 7)(3 − x) = 0 → إمّا x + 7 = 0 فـ x = −7، أو 3 − x = 0 فـ x = 3. مجموعة الحلول: {−7 ، 3}.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2593,7 +2593,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('558b377a-59a5-5b6e-933d-7ab376b87274', 'd8d89bf8-2b16-583f-85bd-beb3818b9e4d', 'ما حلّ المتراجحة: −3x + 5 ≥ 2x − 10 ؟', '[{"id":"a","text":"x ≤ 3"},{"id":"b","text":"x ≥ 3"},{"id":"c","text":"x ≤ −3"},{"id":"d","text":"x ≥ −3"}]'::jsonb, 'a', '−3x + 5 ≥ 2x − 10 → 5 + 10 ≥ 2x + 3x → 15 ≥ 5x → نقسم على 5 (موجب) → 3 ≥ x أي x ≤ 3.', 4)
+  ('558b377a-59a5-5b6e-933d-7ab376b87274', 'd8d89bf8-2b16-583f-85bd-beb3818b9e4d', 'ما حلّ المتراجحة: 2(x − 3) < 4x + 2 ؟', '[{"id":"a","text":"x > −4"},{"id":"b","text":"x < −4"},{"id":"c","text":"x > 4"},{"id":"d","text":"x < 4"}]'::jsonb, 'a', 'نوسّع: 2x − 6 < 4x + 2 → 2x − 4x < 2 + 6 → −2x < 8 → نقسم على −2 مع قلب الإشارة → x > −4.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2603,7 +2603,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('95a41b39-5c67-5234-996c-47e30d4d3838', 'd8d89bf8-2b16-583f-85bd-beb3818b9e4d', 'إذا كان (x + 7)(3 − x) = 0، فما مجموعة الحلول ؟', '[{"id":"a","text":"{ 7 ، 3 }"},{"id":"b","text":"{ −7 ، 3 }"},{"id":"c","text":"{ 7 ، −3 }"},{"id":"d","text":"{ −7 ، −3 }"}]'::jsonb, 'b', '(x + 7)(3 − x) = 0 → إمّا x + 7 = 0 فـ x = −7، أو 3 − x = 0 فـ x = 3. مجموعة الحلول: {−7 ، 3}.', 5)
+  ('95a41b39-5c67-5234-996c-47e30d4d3838', 'd8d89bf8-2b16-583f-85bd-beb3818b9e4d', 'ما حلّ المتراجحة: −3x + 5 ≥ 2x − 10 ؟', '[{"id":"a","text":"x ≤ 3"},{"id":"b","text":"x ≥ 3"},{"id":"c","text":"x ≤ −3"},{"id":"d","text":"x ≥ −3"}]'::jsonb, 'a', '−3x + 5 ≥ 2x − 10 → 5 + 10 ≥ 2x + 3x → 15 ≥ 5x → نقسم على 5 (موجب) → 3 ≥ x أي x ≤ 3.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2635,7 +2635,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('1003cd5b-33ef-50a8-a5a0-de63f029f7de', 'ec6351c9-f945-5e92-a049-63e7ef8fc361', 'ما حلّ المعادلة: 2(3x − 1) + 4 = 3(x + 2) ؟', '[{"id":"a","text":"x = 2"},{"id":"b","text":"x = 1"},{"id":"c","text":"x = 4/3"},{"id":"d","text":"x = −4/3"}]'::jsonb, 'c', 'نوسّع الأقواس: 6x − 2 + 4 = 3x + 6، أي 6x + 2 = 3x + 6. ننقل الحدود: 6x − 3x = 6 − 2، فنجد 3x = 4، إذن x = 4/3. التحقّق: 2(3 × 4/3 − 1) + 4 = 2(4 − 1) + 4 = 6 + 4 = 10، و 3(4/3 + 2) = 3(10/3) = 10 ✓', 1)
+  ('1003cd5b-33ef-50a8-a5a0-de63f029f7de', 'ec6351c9-f945-5e92-a049-63e7ef8fc361', 'بتطبيق مبدأ الجداء المعدوم، ما مجموعة حلول المعادلة: (2x − 6)(x + 4) = 0 ؟', '[{"id":"a","text":"{ 6 ، −4 }"},{"id":"b","text":"{ −3 ، 4 }"},{"id":"c","text":"{ −6 ، 4 }"},{"id":"d","text":"{ 3 ، −4 }"}]'::jsonb, 'd', 'جداء عددين يساوي الصفر يعني أنّ أحدهما صفر. إمّا 2x − 6 = 0 فنجد 2x = 6 أي x = 3، وإمّا x + 4 = 0 فنجد x = −4. مجموعة الحلول هي {3 ، −4}. التحقّق: (2×3−6)(3+4) = 0×7 = 0 ✓ و (2×(−4)−6)(−4+4) = (−14)×0 = 0 ✓', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2645,7 +2645,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('d6a1c117-1596-5121-8277-92cd7a7570cd', 'ec6351c9-f945-5e92-a049-63e7ef8fc361', 'بتطبيق مبدأ الجداء المعدوم، ما مجموعة حلول المعادلة: (2x − 6)(x + 4) = 0 ؟', '[{"id":"a","text":"{ 6 ، −4 }"},{"id":"b","text":"{ −3 ، 4 }"},{"id":"c","text":"{ −6 ، 4 }"},{"id":"d","text":"{ 3 ، −4 }"}]'::jsonb, 'd', 'جداء عددين يساوي الصفر يعني أنّ أحدهما صفر. إمّا 2x − 6 = 0 فنجد 2x = 6 أي x = 3، وإمّا x + 4 = 0 فنجد x = −4. مجموعة الحلول هي {3 ، −4}. التحقّق: (2×3−6)(3+4) = 0×7 = 0 ✓ و (2×(−4)−6)(−4+4) = (−14)×0 = 0 ✓', 2)
+  ('d6a1c117-1596-5121-8277-92cd7a7570cd', 'ec6351c9-f945-5e92-a049-63e7ef8fc361', 'ما حلّ المتراجحة: 4x + 3 < 2x − 5 ؟', '[{"id":"a","text":"x < 4"},{"id":"b","text":"x < −4"},{"id":"c","text":"x > −4"},{"id":"d","text":"x > 4"}]'::jsonb, 'b', 'ننقل الحدود: 4x − 2x < −5 − 3، فنجد 2x < −8، ونقسم على 2 (عدد موجب لا قلب في الإشارة): x < −4. الحلّ هو x ∈ ]−∞ ، −4[. تحقّق بقيمة مثلًا x = −5: 4(−5)+3 = −17 و 2(−5)−5 = −15، وفعلًا −17 < −15 ✓', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2655,7 +2655,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('d2c73317-f59c-53e8-b54a-1ae8a4e18434', 'ec6351c9-f945-5e92-a049-63e7ef8fc361', 'ما حلّ المتراجحة: 4x + 3 < 2x − 5 ؟', '[{"id":"a","text":"x < 4"},{"id":"b","text":"x < −4"},{"id":"c","text":"x > −4"},{"id":"d","text":"x > 4"}]'::jsonb, 'b', 'ننقل الحدود: 4x − 2x < −5 − 3، فنجد 2x < −8، ونقسم على 2 (عدد موجب لا قلب في الإشارة): x < −4. الحلّ هو x ∈ ]−∞ ، −4[. تحقّق بقيمة مثلًا x = −5: 4(−5)+3 = −17 و 2(−5)−5 = −15، وفعلًا −17 < −15 ✓', 3)
+  ('d2c73317-f59c-53e8-b54a-1ae8a4e18434', 'ec6351c9-f945-5e92-a049-63e7ef8fc361', 'ما حلّ المعادلة: 2(3x − 1) + 4 = 3(x + 2) ؟', '[{"id":"a","text":"x = 2"},{"id":"b","text":"x = 1"},{"id":"c","text":"x = 4/3"},{"id":"d","text":"x = −4/3"}]'::jsonb, 'c', 'نوسّع الأقواس: 6x − 2 + 4 = 3x + 6، أي 6x + 2 = 3x + 6. ننقل الحدود: 6x − 3x = 6 − 2، فنجد 3x = 4، إذن x = 4/3. التحقّق: 2(3 × 4/3 − 1) + 4 = 2(4 − 1) + 4 = 6 + 4 = 10، و 3(4/3 + 2) = 3(10/3) = 10 ✓', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2727,7 +2727,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('444b9dcc-d7b0-5fec-988b-6b6f2cfa6350', 'a99f6dd2-77a2-59b7-acff-a2e35119d643', 'في طريقة التأليف (الجمع)، ما الهدف من ضرب المعادلتَين في أعداد مناسبة؟', '[{"id":"a","text":"جعل المعادلتَين متماثلتَين تمامًا"},{"id":"b","text":"جعل معامل أحد المجهولَين متعاكسًا في المعادلتَين حتى يختفي بالجمع"},{"id":"c","text":"التخلّص من الأعداد الكسرية في المعادلتَين"},{"id":"d","text":"تحويل المعادلتَين إلى معادلة واحدة من الدرجة الثانية"}]'::jsonb, 'b', 'في طريقة التأليف نضرب المعادلتَين في أعداد مناسبة لجعل معامل أحد المجهولَين متعاكسًا (+k و−k)، فعند جمع المعادلتَين يختفي ذلك المجهول وتبقى معادلة بمجهول واحد.', 3)
+  ('444b9dcc-d7b0-5fec-988b-6b6f2cfa6350', 'a99f6dd2-77a2-59b7-acff-a2e35119d643', 'كيف نتحقّق من صحّة الثنائية الحلّ (x₀ ; y₀) لجملة معادلتَين؟', '[{"id":"a","text":"نعوّض في المعادلة الأولى فقط"},{"id":"b","text":"نعوّض في المعادلة الأسهل حسابًا فقط"},{"id":"c","text":"نتحقّق بصريًّا من أنّ الأعداد تبدو معقولة"},{"id":"d","text":"نعوّض في كلتا المعادلتَين ونتحقّق أنّ الطرفَين يتساويان في كلّ منهما"}]'::jsonb, 'd', 'التحقّق الصحيح يستلزم تعويض (x₀ ; y₀) في كلتا المعادلتَين: يجب أن تتحقّق كلتاهما معًا. التحقّق في معادلة واحدة فقط غير كافٍ لأنّ الثنائية قد تُحقّق إحداهما دون الأخرى.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2737,7 +2737,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('db14f278-3179-5deb-b3a0-e4ed3eec76fd', 'a99f6dd2-77a2-59b7-acff-a2e35119d643', 'متى تُفضَّل طريقة التعويض على طريقة التأليف؟', '[{"id":"a","text":"عندما تكون المعاملات أعدادًا كبيرة جدًّا"},{"id":"b","text":"عندما يكون معامل أحد المجهولَين 1 أو −1 في إحدى المعادلتَين"},{"id":"c","text":"عندما تكون المعادلتان متماثلتَين"},{"id":"d","text":"التأليف يُفضَّل دائمًا ولا يُلجأ إلى التعويض أبدًا"}]'::jsonb, 'b', 'التعويض مُفضَّل عندما يمكن عزل مجهول بسهولة، أي حين يكون معامله 1 أو −1 في إحدى المعادلتَين. كلتا الطريقتَين تُعطيان نفس الحلّ دائمًا.', 4)
+  ('db14f278-3179-5deb-b3a0-e4ed3eec76fd', 'a99f6dd2-77a2-59b7-acff-a2e35119d643', 'في طريقة التأليف (الجمع)، ما الهدف من ضرب المعادلتَين في أعداد مناسبة؟', '[{"id":"a","text":"جعل المعادلتَين متماثلتَين تمامًا"},{"id":"b","text":"جعل معامل أحد المجهولَين متعاكسًا في المعادلتَين حتى يختفي بالجمع"},{"id":"c","text":"التخلّص من الأعداد الكسرية في المعادلتَين"},{"id":"d","text":"تحويل المعادلتَين إلى معادلة واحدة من الدرجة الثانية"}]'::jsonb, 'b', 'في طريقة التأليف نضرب المعادلتَين في أعداد مناسبة لجعل معامل أحد المجهولَين متعاكسًا (+k و−k)، فعند جمع المعادلتَين يختفي ذلك المجهول وتبقى معادلة بمجهول واحد.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2747,7 +2747,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('48276cca-618c-59e5-9b6e-82b8dff833eb', 'a99f6dd2-77a2-59b7-acff-a2e35119d643', 'كيف نتحقّق من صحّة الثنائية الحلّ (x₀ ; y₀) لجملة معادلتَين؟', '[{"id":"a","text":"نعوّض في المعادلة الأولى فقط"},{"id":"b","text":"نعوّض في المعادلة الأسهل حسابًا فقط"},{"id":"c","text":"نتحقّق بصريًّا من أنّ الأعداد تبدو معقولة"},{"id":"d","text":"نعوّض في كلتا المعادلتَين ونتحقّق أنّ الطرفَين يتساويان في كلّ منهما"}]'::jsonb, 'd', 'التحقّق الصحيح يستلزم تعويض (x₀ ; y₀) في كلتا المعادلتَين: يجب أن تتحقّق كلتاهما معًا. التحقّق في معادلة واحدة فقط غير كافٍ لأنّ الثنائية قد تُحقّق إحداهما دون الأخرى.', 5)
+  ('48276cca-618c-59e5-9b6e-82b8dff833eb', 'a99f6dd2-77a2-59b7-acff-a2e35119d643', 'متى تُفضَّل طريقة التعويض على طريقة التأليف؟', '[{"id":"a","text":"عندما تكون المعاملات أعدادًا كبيرة جدًّا"},{"id":"b","text":"عندما يكون معامل أحد المجهولَين 1 أو −1 في إحدى المعادلتَين"},{"id":"c","text":"عندما تكون المعادلتان متماثلتَين"},{"id":"d","text":"التأليف يُفضَّل دائمًا ولا يُلجأ إلى التعويض أبدًا"}]'::jsonb, 'b', 'التعويض مُفضَّل عندما يمكن عزل مجهول بسهولة، أي حين يكون معامله 1 أو −1 في إحدى المعادلتَين. كلتا الطريقتَين تُعطيان نفس الحلّ دائمًا.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2769,21 +2769,9 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('86310bba-8d13-59fb-b8d6-4cd4a80b4bd1', 'b3698968-9bdd-5a04-87a8-d5f872fa3268', 'احلل الجملة بطريقة التأليف:
-$$\begin{cases} x + y = 10 \\ x - y = 4 \end{cases}$$
-ما هو الحلّ؟', '[{"id":"a","text":"(7 ; 3)"},{"id":"b","text":"(6 ; 4)"},{"id":"c","text":"(8 ; 2)"},{"id":"d","text":"(5 ; 5)"}]'::jsonb, 'a', 'بجمع المعادلتَين: (x+y) + (x−y) = 10+4، إذن 2x = 14، x = 7. نعوّض: 7 + y = 10، y = 3. الحلّ هو (7 ; 3). التحقّق: 7+3=10 ✓، 7−3=4 ✓.', 1)
-ON CONFLICT (id) DO UPDATE SET
-  exercise_id = EXCLUDED.exercise_id,
-  prompt = EXCLUDED.prompt,
-  options = EXCLUDED.options,
-  correct_option = EXCLUDED.correct_option,
-  explanation = EXCLUDED.explanation,
-  display_order = EXCLUDED.display_order;
-
-INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('91c39910-2b8b-5da9-b47c-4163d1cc84f6', 'b3698968-9bdd-5a04-87a8-d5f872fa3268', 'احلل الجملة بطريقة التعويض:
+  ('86310bba-8d13-59fb-b8d6-4cd4a80b4bd1', 'b3698968-9bdd-5a04-87a8-d5f872fa3268', 'احلل الجملة بطريقة التعويض:
 $$\begin{cases} x = 3 \\ 2x + y = 8 \end{cases}$$
-ما قيمة y ؟', '[{"id":"a","text":"5"},{"id":"b","text":"2"},{"id":"c","text":"14"},{"id":"d","text":"1"}]'::jsonb, 'b', 'المعادلة الأولى تُعطينا مباشرةً x = 3. نعوّض في الثانية: 2(3) + y = 8، إذن 6 + y = 8، y = 2. الحلّ هو (3 ; 2).', 2)
+ما قيمة y ؟', '[{"id":"a","text":"5"},{"id":"b","text":"2"},{"id":"c","text":"14"},{"id":"d","text":"1"}]'::jsonb, 'b', 'المعادلة الأولى تُعطينا مباشرةً x = 3. نعوّض في الثانية: 2(3) + y = 8، إذن 6 + y = 8، y = 2. الحلّ هو (3 ; 2).', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2793,9 +2781,21 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('c4b38cf9-26ed-5b98-8b28-4def152bce4a', 'b3698968-9bdd-5a04-87a8-d5f872fa3268', 'احلل الجملة:
-$$\begin{cases} x + 3y = 9 \\ 2x + 3y = 12 \end{cases}$$
-ما هو الحلّ؟', '[{"id":"a","text":"(6 ; 1)"},{"id":"b","text":"(0 ; 3)"},{"id":"c","text":"(3 ; 2)"},{"id":"d","text":"(4 ; 2)"}]'::jsonb, 'c', 'نطرح المعادلة الأولى من الثانية: (2x+3y) − (x+3y) = 12−9، إذن x = 3. نعوّض: 3 + 3y = 9، 3y = 6، y = 2. الحلّ (3 ; 2). التحقّق: 3+6=9 ✓، 6+6=12 ✓.', 3)
+  ('91c39910-2b8b-5da9-b47c-4163d1cc84f6', 'b3698968-9bdd-5a04-87a8-d5f872fa3268', 'الثنائية (3 ; 1) هي حلّ الجملة:
+$$\begin{cases} 2x + y = 7 \\ x - y = 2 \end{cases}$$
+هل هذا صحيح؟', '[{"id":"a","text":"لا، لأنّ المعادلة الأولى فقط محقَّقة"},{"id":"b","text":"لا، لأنّ المعادلة الثانية فقط محقَّقة"},{"id":"c","text":"لا، لأنّ الثنائية الصحيحة هي (4 ; −1)"},{"id":"d","text":"نعم، لأنّ كلتا المعادلتَين محقَّقتان"}]'::jsonb, 'd', 'نتحقّق: المعادلة الأولى: 2(3) + 1 = 6 + 1 = 7 ✓. المعادلة الثانية: 3 − 1 = 2 ✓. إذن (3 ; 1) هو الحلّ الصحيح للجملة.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('c4b38cf9-26ed-5b98-8b28-4def152bce4a', 'b3698968-9bdd-5a04-87a8-d5f872fa3268', 'احلل الجملة بطريقة التأليف:
+$$\begin{cases} x + y = 10 \\ x - y = 4 \end{cases}$$
+ما هو الحلّ؟', '[{"id":"a","text":"(7 ; 3)"},{"id":"b","text":"(6 ; 4)"},{"id":"c","text":"(8 ; 2)"},{"id":"d","text":"(5 ; 5)"}]'::jsonb, 'a', 'بجمع المعادلتَين: (x+y) + (x−y) = 10+4، إذن 2x = 14، x = 7. نعوّض: 7 + y = 10، y = 3. الحلّ هو (7 ; 3). التحقّق: 7+3=10 ✓، 7−3=4 ✓.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2806,8 +2806,20 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('5d62ca7c-3ebd-5751-adcc-1afa88307b2f', 'b3698968-9bdd-5a04-87a8-d5f872fa3268', 'احلل الجملة:
+$$\begin{cases} x + 3y = 9 \\ 2x + 3y = 12 \end{cases}$$
+ما هو الحلّ؟', '[{"id":"a","text":"(6 ; 1)"},{"id":"b","text":"(0 ; 3)"},{"id":"c","text":"(3 ; 2)"},{"id":"d","text":"(4 ; 2)"}]'::jsonb, 'c', 'نطرح المعادلة الأولى من الثانية: (2x+3y) − (x+3y) = 12−9، إذن x = 3. نعوّض: 3 + 3y = 9، 3y = 6، y = 2. الحلّ (3 ; 2). التحقّق: 3+6=9 ✓، 6+6=12 ✓.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('413fd85d-1622-563e-bba9-e69551afcd63', 'b3698968-9bdd-5a04-87a8-d5f872fa3268', 'احلل الجملة:
 $$\begin{cases} 2x + 3y = 12 \\ 2x - y = 4 \end{cases}$$
-ما هو الحلّ؟', '[{"id":"a","text":"(2 ; 3)"},{"id":"b","text":"(4 ; 0)"},{"id":"c","text":"(1 ; 4)"},{"id":"d","text":"(3 ; 2)"}]'::jsonb, 'd', 'نطرح المعادلة الثانية من الأولى: (2x+3y) − (2x−y) = 12−4، إذن 4y = 8، y = 2. نعوّض في الثانية: 2x − 2 = 4، 2x = 6، x = 3. الحلّ (3 ; 2). التحقّق: 6+6=12 ✓، 6−2=4 ✓.', 4)
+ما هو الحلّ؟', '[{"id":"a","text":"(2 ; 3)"},{"id":"b","text":"(4 ; 0)"},{"id":"c","text":"(1 ; 4)"},{"id":"d","text":"(3 ; 2)"}]'::jsonb, 'd', 'نطرح المعادلة الثانية من الأولى: (2x+3y) − (2x−y) = 12−4، إذن 4y = 8، y = 2. نعوّض في الثانية: 2x − 2 = 4، 2x = 6، x = 3. الحلّ (3 ; 2). التحقّق: 6+6=12 ✓، 6−2=4 ✓.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2817,19 +2829,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('413fd85d-1622-563e-bba9-e69551afcd63', 'b3698968-9bdd-5a04-87a8-d5f872fa3268', 'مجموع عددَين يساوي 20، والعدد الأوّل يزيد عن الثاني بـ 6. ما هذان العددان؟', '[{"id":"a","text":"14 و 6"},{"id":"b","text":"12 و 8"},{"id":"c","text":"13 و 7"},{"id":"d","text":"15 و 5"}]'::jsonb, 'c', 'نُسمّي العددَين x وy. الشرطان: x + y = 20 و x = y + 6. بالتعويض: (y+6) + y = 20، إذن 2y = 14، y = 7، x = 13. التحقّق: 13+7=20 ✓، 13−7=6 ✓.', 5)
-ON CONFLICT (id) DO UPDATE SET
-  exercise_id = EXCLUDED.exercise_id,
-  prompt = EXCLUDED.prompt,
-  options = EXCLUDED.options,
-  correct_option = EXCLUDED.correct_option,
-  explanation = EXCLUDED.explanation,
-  display_order = EXCLUDED.display_order;
-
-INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('bb25f0a5-ff1b-5bcd-b0ac-5c61293424cf', 'b3698968-9bdd-5a04-87a8-d5f872fa3268', 'الثنائية (3 ; 1) هي حلّ الجملة:
-$$\begin{cases} 2x + y = 7 \\ x - y = 2 \end{cases}$$
-هل هذا صحيح؟', '[{"id":"a","text":"لا، لأنّ المعادلة الأولى فقط محقَّقة"},{"id":"b","text":"لا، لأنّ المعادلة الثانية فقط محقَّقة"},{"id":"c","text":"لا، لأنّ الثنائية الصحيحة هي (4 ; −1)"},{"id":"d","text":"نعم، لأنّ كلتا المعادلتَين محقَّقتان"}]'::jsonb, 'd', 'نتحقّق: المعادلة الأولى: 2(3) + 1 = 6 + 1 = 7 ✓. المعادلة الثانية: 3 − 1 = 2 ✓. إذن (3 ; 1) هو الحلّ الصحيح للجملة.', 6)
+  ('bb25f0a5-ff1b-5bcd-b0ac-5c61293424cf', 'b3698968-9bdd-5a04-87a8-d5f872fa3268', 'مجموع عددَين يساوي 20، والعدد الأوّل يزيد عن الثاني بـ 6. ما هذان العددان؟', '[{"id":"a","text":"14 و 6"},{"id":"b","text":"12 و 8"},{"id":"c","text":"13 و 7"},{"id":"d","text":"15 و 5"}]'::jsonb, 'c', 'نُسمّي العددَين x وy. الشرطان: x + y = 20 و x = y + 6. بالتعويض: (y+6) + y = 20، إذن 2y = 14، y = 7، x = 13. التحقّق: 13+7=20 ✓، 13−7=6 ✓.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2863,9 +2863,9 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('6672c828-0d0f-597d-859b-009023eda5d1', '93b0884f-f1fa-5677-ba0c-45682a394f86', 'احلل بطريقة التعويض:
-$$\begin{cases} 4x - 3y = 5 \\ 2x + y = 5 \end{cases}$$
-ما هو الحلّ؟', '[{"id":"a","text":"(1 ; 3)"},{"id":"b","text":"(3 ; −1)"},{"id":"c","text":"(2 ; 1)"},{"id":"d","text":"(0 ; 5)"}]'::jsonb, 'c', 'من المعادلة الثانية: y = 5 − 2x. نعوّض في الأولى: 4x − 3(5−2x) = 5، 4x − 15 + 6x = 5، 10x = 20، x = 2. إذن y = 5 − 4 = 1. الحلّ (2 ; 1). التحقّق: 8−3=5 ✓، 4+1=5 ✓.', 2)
+  ('6672c828-0d0f-597d-859b-009023eda5d1', '93b0884f-f1fa-5677-ba0c-45682a394f86', 'احلل الجملة:
+$$\begin{cases} 2x + 3y = 11 \\ x - 3y = 1 \end{cases}$$
+ما هو الحلّ؟', '[{"id":"a","text":"(2 ; 2)"},{"id":"b","text":"(4 ; 1)"},{"id":"c","text":"(5 ; 0)"},{"id":"d","text":"(1 ; 3)"}]'::jsonb, 'b', 'بجمع المعادلتَين: (2x+3y) + (x−3y) = 11+1، إذن 3x = 12، x = 4. نعوّض في الثانية: 4 − 3y = 1، 3y = 3، y = 1. الحلّ (4 ; 1). التحقّق: 8+3=11 ✓، 4−3=1 ✓.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2876,30 +2876,30 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('19e2b6d3-e5db-594a-87b0-53d0499742a1', '93b0884f-f1fa-5677-ba0c-45682a394f86', 'احلل الجملة:
-$$\begin{cases} 2x + 3y = 11 \\ x - 3y = 1 \end{cases}$$
-ما هو الحلّ؟', '[{"id":"a","text":"(2 ; 2)"},{"id":"b","text":"(4 ; 1)"},{"id":"c","text":"(5 ; 0)"},{"id":"d","text":"(1 ; 3)"}]'::jsonb, 'b', 'بجمع المعادلتَين: (2x+3y) + (x−3y) = 11+1، إذن 3x = 12، x = 4. نعوّض في الثانية: 4 − 3y = 1، 3y = 3، y = 1. الحلّ (4 ; 1). التحقّق: 8+3=11 ✓، 4−3=1 ✓.', 3)
-ON CONFLICT (id) DO UPDATE SET
-  exercise_id = EXCLUDED.exercise_id,
-  prompt = EXCLUDED.prompt,
-  options = EXCLUDED.options,
-  correct_option = EXCLUDED.correct_option,
-  explanation = EXCLUDED.explanation,
-  display_order = EXCLUDED.display_order;
-
-INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('84de1a4f-6204-5ed3-b409-98b15de489c5', '93b0884f-f1fa-5677-ba0c-45682a394f86', 'زاويتان متتامّتان (مجموعهما 180°)، وإحداهما تساوي ثلاثة أمثال الأخرى. ما قيمة الزاوية الأصغر؟', '[{"id":"a","text":"60°"},{"id":"b","text":"30°"},{"id":"c","text":"90°"},{"id":"d","text":"45°"}]'::jsonb, 'd', 'نُسمّي الزاويتَين x وy مع x = 3y. الجملة: x + y = 180 و x = 3y. بالتعويض: 3y + y = 180، 4y = 180، y = 45°. الزاوية الكبرى هي x = 135°. التحقّق: 135 + 45 = 180 ✓، 135 = 3×45 ✓.', 4)
-ON CONFLICT (id) DO UPDATE SET
-  exercise_id = EXCLUDED.exercise_id,
-  prompt = EXCLUDED.prompt,
-  options = EXCLUDED.options,
-  correct_option = EXCLUDED.correct_option,
-  explanation = EXCLUDED.explanation,
-  display_order = EXCLUDED.display_order;
-
-INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('074173e5-a5fb-57e5-a01d-d884a549b9fb', '93b0884f-f1fa-5677-ba0c-45682a394f86', 'احلل الجملة:
 $$\begin{cases} x + 2y = 9 \\ 3x - 2y = 3 \end{cases}$$
-ما هو الحلّ؟', '[{"id":"a","text":"(4 ; 2)"},{"id":"b","text":"(2 ; 4)"},{"id":"c","text":"(3 ; 3)"},{"id":"d","text":"(5 ; 1)"}]'::jsonb, 'c', 'بجمع المعادلتَين: (x+2y) + (3x−2y) = 9+3، إذن 4x = 12، x = 3. نعوّض في الأولى: 3 + 2y = 9، 2y = 6، y = 3. الحلّ (3 ; 3). التحقّق: 3+6=9 ✓، 9−6=3 ✓.', 5)
+ما هو الحلّ؟', '[{"id":"a","text":"(4 ; 2)"},{"id":"b","text":"(2 ; 4)"},{"id":"c","text":"(3 ; 3)"},{"id":"d","text":"(5 ; 1)"}]'::jsonb, 'c', 'بجمع المعادلتَين: (x+2y) + (3x−2y) = 9+3، إذن 4x = 12، x = 3. نعوّض في الأولى: 3 + 2y = 9، 2y = 6، y = 3. الحلّ (3 ; 3). التحقّق: 3+6=9 ✓، 9−6=3 ✓.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('84de1a4f-6204-5ed3-b409-98b15de489c5', '93b0884f-f1fa-5677-ba0c-45682a394f86', 'احلل بطريقة التعويض:
+$$\begin{cases} 4x - 3y = 5 \\ 2x + y = 5 \end{cases}$$
+ما هو الحلّ؟', '[{"id":"a","text":"(1 ; 3)"},{"id":"b","text":"(3 ; −1)"},{"id":"c","text":"(2 ; 1)"},{"id":"d","text":"(0 ; 5)"}]'::jsonb, 'c', 'من المعادلة الثانية: y = 5 − 2x. نعوّض في الأولى: 4x − 3(5−2x) = 5، 4x − 15 + 6x = 5، 10x = 20، x = 2. إذن y = 5 − 4 = 1. الحلّ (2 ; 1). التحقّق: 8−3=5 ✓، 4+1=5 ✓.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('074173e5-a5fb-57e5-a01d-d884a549b9fb', '93b0884f-f1fa-5677-ba0c-45682a394f86', 'زاويتان متتامّتان (مجموعهما 180°)، وإحداهما تساوي ثلاثة أمثال الأخرى. ما قيمة الزاوية الأصغر؟', '[{"id":"a","text":"60°"},{"id":"b","text":"30°"},{"id":"c","text":"90°"},{"id":"d","text":"45°"}]'::jsonb, 'd', 'نُسمّي الزاويتَين x وy مع x = 3y. الجملة: x + y = 180 و x = 3y. بالتعويض: 3y + y = 180، 4y = 180، y = 45°. الزاوية الكبرى هي x = 135°. التحقّق: 135 + 45 = 180 ✓، 135 = 3×45 ✓.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2931,9 +2931,8 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('d741efb8-605f-5b1d-9111-8e6877639813', 'f2e9adfd-e915-5fd1-89e9-3cc24f005f51', 'احلل الجملة بطريقة التأليف:
-$$\begin{cases} 2x + y = 7 \\ x + 2y = 5 \end{cases}$$
-ما هو الحلّ؟', '[{"id":"a","text":"(2 ; 3)"},{"id":"b","text":"(3 ; 1)"},{"id":"c","text":"(1 ; 2)"},{"id":"d","text":"(4 ; 1)"}]'::jsonb, 'b', 'نضرب المعادلة الأولى في 2: 4x + 2y = 14. نطرح منها المعادلة الثانية: (4x+2y) − (x+2y) = 14−5، إذن 3x = 9، x = 3. نعوّض في المعادلة الأولى: 2(3) + y = 7، y = 1. الحلّ (3 ; 1). التحقّق: 6+1=7 ✓، 3+2=5 ✓.', 1)
+  ('d741efb8-605f-5b1d-9111-8e6877639813', 'f2e9adfd-e915-5fd1-89e9-3cc24f005f51', 'أيٌّ من الثنائيات التالية هي حلّ الجملة:
+$$\begin{cases} 3x - y = 5 \\ x + y = 7 \end{cases}$$', '[{"id":"a","text":"(2 ; 1)"},{"id":"b","text":"(1 ; 6)"},{"id":"c","text":"(4 ; 2)"},{"id":"d","text":"(3 ; 4)"}]'::jsonb, 'd', 'نتحقّق من الثنائية (3 ; 4) في المعادلتَين: المعادلة الأولى: 3(3)−4 = 9−4 = 5 ✓. المعادلة الثانية: 3+4 = 7 ✓. كلتا المعادلتَين محقَّقتان، إذن الحلّ هو (3 ; 4). للتأكّد: نحلّ الجملة بجمع المعادلتَين: (3x−y)+(x+y) = 5+7، إذن 4x = 12، x = 3. نعوّض: 3+y = 7، y = 4.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2955,8 +2954,9 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('4a321ae6-ca1d-5400-ada2-4901e6421f4f', 'f2e9adfd-e915-5fd1-89e9-3cc24f005f51', 'أيٌّ من الثنائيات التالية هي حلّ الجملة:
-$$\begin{cases} 3x - y = 5 \\ x + y = 7 \end{cases}$$', '[{"id":"a","text":"(2 ; 1)"},{"id":"b","text":"(1 ; 6)"},{"id":"c","text":"(4 ; 2)"},{"id":"d","text":"(3 ; 4)"}]'::jsonb, 'd', 'نتحقّق من الثنائية (3 ; 4) في المعادلتَين: المعادلة الأولى: 3(3)−4 = 9−4 = 5 ✓. المعادلة الثانية: 3+4 = 7 ✓. كلتا المعادلتَين محقَّقتان، إذن الحلّ هو (3 ; 4). للتأكّد: نحلّ الجملة بجمع المعادلتَين: (3x−y)+(x+y) = 5+7، إذن 4x = 12، x = 3. نعوّض: 3+y = 7، y = 4.', 3)
+  ('4a321ae6-ca1d-5400-ada2-4901e6421f4f', 'f2e9adfd-e915-5fd1-89e9-3cc24f005f51', 'احلل الجملة:
+$$\begin{cases} 2x + 3y = 16 \\ 2x - y = 8 \end{cases}$$
+ما قيمة y ؟', '[{"id":"a","text":"y = 1"},{"id":"b","text":"y = 4"},{"id":"c","text":"y = 2"},{"id":"d","text":"y = 3"}]'::jsonb, 'c', 'نطرح المعادلة الثانية من الأولى: (2x+3y) − (2x−y) = 16−8، إذن 4y = 8، y = 2. نعوّض في الثانية: 2x−2 = 8، 2x = 10، x = 5. التحقّق: 2(5)+3(2)=10+6=16 ✓، 2(5)−2=8 ✓.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2966,9 +2966,9 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('ee569973-6173-5d85-8bc4-5fc55cae4455', 'f2e9adfd-e915-5fd1-89e9-3cc24f005f51', 'احلل الجملة:
-$$\begin{cases} 2x + 3y = 16 \\ 2x - y = 8 \end{cases}$$
-ما قيمة y ؟', '[{"id":"a","text":"y = 1"},{"id":"b","text":"y = 4"},{"id":"c","text":"y = 2"},{"id":"d","text":"y = 3"}]'::jsonb, 'c', 'نطرح المعادلة الثانية من الأولى: (2x+3y) − (2x−y) = 16−8، إذن 4y = 8، y = 2. نعوّض في الثانية: 2x−2 = 8، 2x = 10، x = 5. التحقّق: 2(5)+3(2)=10+6=16 ✓، 2(5)−2=8 ✓.', 4)
+  ('ee569973-6173-5d85-8bc4-5fc55cae4455', 'f2e9adfd-e915-5fd1-89e9-3cc24f005f51', 'احلل الجملة بطريقة التأليف:
+$$\begin{cases} 2x + y = 7 \\ x + 2y = 5 \end{cases}$$
+ما هو الحلّ؟', '[{"id":"a","text":"(2 ; 3)"},{"id":"b","text":"(3 ; 1)"},{"id":"c","text":"(1 ; 2)"},{"id":"d","text":"(4 ; 1)"}]'::jsonb, 'b', 'نضرب المعادلة الأولى في 2: 4x + 2y = 14. نطرح منها المعادلة الثانية: (4x+2y) − (x+2y) = 14−5، إذن 3x = 9، x = 3. نعوّض في المعادلة الأولى: 2(3) + y = 7، y = 1. الحلّ (3 ; 1). التحقّق: 6+1=7 ✓، 3+2=5 ✓.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3040,7 +3040,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('fcbb23d5-7e21-57df-98b8-2e3f8c777bdb', '8b454cf8-3e90-5659-95d3-6b1d47907ff2', 'كيف نحسب معامل التوجيه a إذا كان المستقيم يمرّ بنقطتَين A(x₁ ; y₁) وB(x₂ ; y₂)؟', '[{"id":"a","text":"a = (x₂ − x₁) / (y₂ − y₁)"},{"id":"b","text":"a = (y₂ − y₁) / (x₂ − x₁)"},{"id":"c","text":"a = (y₂ + y₁) / (x₂ + x₁)"},{"id":"d","text":"a = (x₂ × y₁) − (x₁ × y₂)"}]'::jsonb, 'b', 'معامل التوجيه يُحسب بالصيغة: a = (y₂ − y₁) / (x₂ − x₁)، بشرط أن يكون x₁ ≠ x₂. يمثّل الفرق في التراتيب مقسومًا على الفرق في الفواصل.', 4)
+  ('fcbb23d5-7e21-57df-98b8-2e3f8c777bdb', '8b454cf8-3e90-5659-95d3-6b1d47907ff2', 'ما التمثيل البياني لكلٍّ من الدالة الخطية والدالة التآلفية؟', '[{"id":"a","text":"منحنى من الدرجة الثانية (قطع مكافئ)"},{"id":"b","text":"دائرة مركزها نقطة الأصل"},{"id":"c","text":"مستقيم"},{"id":"d","text":"متقطّع من النقاط المتفرّقة"}]'::jsonb, 'c', 'التمثيل البياني لكلٍّ من الدالة الخطية (f(x) = ax) والدالة التآلفية (f(x) = ax + b) هو مستقيم. لرسمه يكفي حساب نقطتَين وصلهما بمستقيم.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3050,7 +3050,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('2d44b940-4d60-5203-831b-7cc08540267c', '8b454cf8-3e90-5659-95d3-6b1d47907ff2', 'ما التمثيل البياني لكلٍّ من الدالة الخطية والدالة التآلفية؟', '[{"id":"a","text":"منحنى من الدرجة الثانية (قطع مكافئ)"},{"id":"b","text":"دائرة مركزها نقطة الأصل"},{"id":"c","text":"مستقيم"},{"id":"d","text":"متقطّع من النقاط المتفرّقة"}]'::jsonb, 'c', 'التمثيل البياني لكلٍّ من الدالة الخطية (f(x) = ax) والدالة التآلفية (f(x) = ax + b) هو مستقيم. لرسمه يكفي حساب نقطتَين وصلهما بمستقيم.', 5)
+  ('2d44b940-4d60-5203-831b-7cc08540267c', '8b454cf8-3e90-5659-95d3-6b1d47907ff2', 'كيف نحسب معامل التوجيه a إذا كان المستقيم يمرّ بنقطتَين A(x₁ ; y₁) وB(x₂ ; y₂)؟', '[{"id":"a","text":"a = (x₂ − x₁) / (y₂ − y₁)"},{"id":"b","text":"a = (y₂ − y₁) / (x₂ − x₁)"},{"id":"c","text":"a = (y₂ + y₁) / (x₂ + x₁)"},{"id":"d","text":"a = (x₂ × y₁) − (x₁ × y₂)"}]'::jsonb, 'b', 'معامل التوجيه يُحسب بالصيغة: a = (y₂ − y₁) / (x₂ − x₁)، بشرط أن يكون x₁ ≠ x₂. يمثّل الفرق في التراتيب مقسومًا على الفرق في الفواصل.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3112,7 +3112,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('5d1f9b78-da86-566d-9b23-ea9bd72d2d40', '19994972-418b-5eeb-90e0-8db612ea6855', 'بيان دالة تآلفية يمرّ بالنقطتَين (0 ; 3) و (1 ; 5). ما هي الدالة؟', '[{"id":"a","text":"f(x) = 3x + 5"},{"id":"b","text":"f(x) = 2x + 3"},{"id":"c","text":"f(x) = 5x"},{"id":"d","text":"f(x) = 3x − 2"}]'::jsonb, 'b', 'من النقطة (0 ; 3) نستنتج b = f(0) = 3. معامل التوجيه: a = (5 − 3) ÷ (1 − 0) = 2. إذن f(x) = 2x + 3.', 5)
+  ('5d1f9b78-da86-566d-9b23-ea9bd72d2d40', '19994972-418b-5eeb-90e0-8db612ea6855', 'الدالة التآلفية f تُعرَّف بـ f(x) = 3x + 2. ما قيمة x إذا كانت f(x) = 14 ؟', '[{"id":"a","text":"5"},{"id":"b","text":"6"},{"id":"c","text":"4"},{"id":"d","text":"3"}]'::jsonb, 'c', 'نحلّ 3x + 2 = 14، إذن 3x = 12، x = 4. التحقّق: f(4) = 3(4) + 2 = 14 ✓.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3122,7 +3122,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('69267cbe-128b-5be3-b5da-b818fbeb0ed7', '19994972-418b-5eeb-90e0-8db612ea6855', 'الدالة التآلفية f تُعرَّف بـ f(x) = 3x + 2. ما قيمة x إذا كانت f(x) = 14 ؟', '[{"id":"a","text":"5"},{"id":"b","text":"6"},{"id":"c","text":"4"},{"id":"d","text":"3"}]'::jsonb, 'c', 'نحلّ 3x + 2 = 14، إذن 3x = 12، x = 4. التحقّق: f(4) = 3(4) + 2 = 14 ✓.', 6)
+  ('69267cbe-128b-5be3-b5da-b818fbeb0ed7', '19994972-418b-5eeb-90e0-8db612ea6855', 'بيان دالة تآلفية يمرّ بالنقطتَين (0 ; 3) و (1 ; 5). ما هي الدالة؟', '[{"id":"a","text":"f(x) = 3x + 5"},{"id":"b","text":"f(x) = 2x + 3"},{"id":"c","text":"f(x) = 5x"},{"id":"d","text":"f(x) = 3x − 2"}]'::jsonb, 'b', 'من النقطة (0 ; 3) نستنتج b = f(0) = 3. معامل التوجيه: a = (5 − 3) ÷ (1 − 0) = 2. إذن f(x) = 2x + 3.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3164,7 +3164,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('b8fcc3a8-f3fa-5ac4-afdd-4f0e52096877', '6344760c-5d13-5ace-be92-9275a52c654a', 'مستقيمان: f(x) = 2x − 3 و g(x) = −x + 6. ما إحداثيّا نقطة تقاطعهما؟', '[{"id":"a","text":"(3 ; 3)"},{"id":"b","text":"(2 ; 4)"},{"id":"c","text":"(1 ; −1)"},{"id":"d","text":"(3 ; 9)"}]'::jsonb, 'a', 'نحلّ 2x − 3 = −x + 6، إذن 3x = 9، x = 3. الصورة: f(3) = 2(3) − 3 = 3. نقطة التقاطع هي (3 ; 3). التحقّق: g(3) = −3 + 6 = 3 ✓.', 3)
+  ('b8fcc3a8-f3fa-5ac4-afdd-4f0e52096877', '6344760c-5d13-5ace-be92-9275a52c654a', 'الدالة التآلفية f تُعرَّف بـ f(x) = 5x − 7. ما قيمة x حين f(x) = 3 ؟', '[{"id":"a","text":"1"},{"id":"b","text":"2"},{"id":"c","text":"0"},{"id":"d","text":"−4"}]'::jsonb, 'b', 'نحلّ 5x − 7 = 3، إذن 5x = 10، x = 2. التحقّق: f(2) = 5(2) − 7 = 10 − 7 = 3 ✓.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3174,7 +3174,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('bbfa171e-f4a6-5a57-944d-e09c2712a7cb', '6344760c-5d13-5ace-be92-9275a52c654a', 'الدالة التآلفية f تُعرَّف بـ f(x) = 5x − 7. ما قيمة x حين f(x) = 3 ؟', '[{"id":"a","text":"1"},{"id":"b","text":"2"},{"id":"c","text":"0"},{"id":"d","text":"−4"}]'::jsonb, 'b', 'نحلّ 5x − 7 = 3، إذن 5x = 10، x = 2. التحقّق: f(2) = 5(2) − 7 = 10 − 7 = 3 ✓.', 4)
+  ('bbfa171e-f4a6-5a57-944d-e09c2712a7cb', '6344760c-5d13-5ace-be92-9275a52c654a', 'الدالة الخطية f تُعرَّف بـ f(x) = ax وتحقّق f(6) = 18. ما قيمة f(10) ؟', '[{"id":"a","text":"20"},{"id":"b","text":"28"},{"id":"c","text":"180"},{"id":"d","text":"30"}]'::jsonb, 'd', 'من f(6) = 18 نستنتج a = 18 ÷ 6 = 3. إذن f(x) = 3x. f(10) = 3 × 10 = 30.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3184,7 +3184,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('c2beedac-d602-58bc-a393-3fc7d75c20ee', '6344760c-5d13-5ace-be92-9275a52c654a', 'الدالة الخطية f تُعرَّف بـ f(x) = ax وتحقّق f(6) = 18. ما قيمة f(10) ؟', '[{"id":"a","text":"20"},{"id":"b","text":"28"},{"id":"c","text":"180"},{"id":"d","text":"30"}]'::jsonb, 'd', 'من f(6) = 18 نستنتج a = 18 ÷ 6 = 3. إذن f(x) = 3x. f(10) = 3 × 10 = 30.', 5)
+  ('c2beedac-d602-58bc-a393-3fc7d75c20ee', '6344760c-5d13-5ace-be92-9275a52c654a', 'مستقيمان: f(x) = 2x − 3 و g(x) = −x + 6. ما إحداثيّا نقطة تقاطعهما؟', '[{"id":"a","text":"(3 ; 3)"},{"id":"b","text":"(2 ; 4)"},{"id":"c","text":"(1 ; −1)"},{"id":"d","text":"(3 ; 9)"}]'::jsonb, 'a', 'نحلّ 2x − 3 = −x + 6، إذن 3x = 9، x = 3. الصورة: f(3) = 2(3) − 3 = 3. نقطة التقاطع هي (3 ; 3). التحقّق: g(3) = −3 + 6 = 3 ✓.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3246,7 +3246,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('eb98e9dd-57f4-58f4-a0d3-8a77f5224c3d', 'e50af184-82cf-5fed-a75c-5fe103b19bd8', 'مستقيم يمرّ بالنقطتَين A(0 ; 2) و B(3 ; 8). ما هي الدالة التآلفية f التي يمثّلها؟', '[{"id":"a","text":"f(x) = 3x + 2"},{"id":"b","text":"f(x) = 2x + 2"},{"id":"c","text":"f(x) = 2x + 3"},{"id":"d","text":"f(x) = x + 2"}]'::jsonb, 'b', 'معامل التوجيه: a = (8 − 2) / (3 − 0) = 6 / 3 = 2. القطع مع محور التراتيب: b = f(0) = 2. إذن f(x) = 2x + 2. التحقّق: f(0) = 2 ✓، f(3) = 6 + 2 = 8 ✓.', 4)
+  ('eb98e9dd-57f4-58f4-a0d3-8a77f5224c3d', 'e50af184-82cf-5fed-a75c-5fe103b19bd8', 'الدالة الخطية g تُمثَّل بيانيًّا بمستقيم يمرّ بنقطة الأصل و بالنقطة (2 ; −6). ما هي قيمة معامل التناسب a ؟', '[{"id":"a","text":"a = −3"},{"id":"b","text":"a = −2"},{"id":"c","text":"a = 2"},{"id":"d","text":"a = 3"}]'::jsonb, 'a', 'الدالة الخطية هي g(x) = a·x. المستقيم يمرّ بـ (2 ; −6)، إذن g(2) = 2a = −6، فنحصل على a = −3. التحقّق: g(2) = −3 × 2 = −6 ✓. المستقيم نازل لأنّ a < 0.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3256,7 +3256,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('2aa385d0-e81e-5531-a04b-fd0aefb421b6', 'e50af184-82cf-5fed-a75c-5fe103b19bd8', 'الدالة الخطية g تُمثَّل بيانيًّا بمستقيم يمرّ بنقطة الأصل و بالنقطة (2 ; −6). ما هي قيمة معامل التناسب a ؟', '[{"id":"a","text":"a = −3"},{"id":"b","text":"a = −2"},{"id":"c","text":"a = 2"},{"id":"d","text":"a = 3"}]'::jsonb, 'a', 'الدالة الخطية هي g(x) = a·x. المستقيم يمرّ بـ (2 ; −6)، إذن g(2) = 2a = −6، فنحصل على a = −3. التحقّق: g(2) = −3 × 2 = −6 ✓. المستقيم نازل لأنّ a < 0.', 5)
+  ('2aa385d0-e81e-5531-a04b-fd0aefb421b6', 'e50af184-82cf-5fed-a75c-5fe103b19bd8', 'مستقيم يمرّ بالنقطتَين A(0 ; 2) و B(3 ; 8). ما هي الدالة التآلفية f التي يمثّلها؟', '[{"id":"a","text":"f(x) = 3x + 2"},{"id":"b","text":"f(x) = 2x + 2"},{"id":"c","text":"f(x) = 2x + 3"},{"id":"d","text":"f(x) = x + 2"}]'::jsonb, 'b', 'معامل التوجيه: a = (8 − 2) / (3 − 0) = 6 / 3 = 2. القطع مع محور التراتيب: b = f(0) = 2. إذن f(x) = 2x + 2. التحقّق: f(0) = 2 ✓، f(3) = 6 + 2 = 8 ✓.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3308,7 +3308,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('3ad635fa-3037-5dc3-8b0f-75d73fb7da9c', '7e3372ce-3987-501b-a6e5-211167b35fb0', 'ما الصيغة الصحيحة لحساب المعدّل الحسابي لسلسلة إحصائية؟', '[{"id":"a","text":"مجموع جميع القيم فقط، دون قسمة"},{"id":"b","text":"القيمة الوسطى بين أكبر قيمة وأصغر قيمة"},{"id":"c","text":"مجموع (كلّ قيمة مضروبة في تكرارها) مقسومًا على التكرار الكلّي n"},{"id":"d","text":"القيمة الأعلى تكرارًا في السلسلة"}]'::jsonb, 'c', 'المعدّل الحسابي: x̄ = (x₁×n₁ + x₂×n₂ + … + xₖ×nₖ) / n. يتأثّر بالقيم الشاذّة (الكبيرة جدًّا أو الصغيرة جدًّا).', 3)
+  ('3ad635fa-3037-5dc3-8b0f-75d73fb7da9c', '7e3372ce-3987-501b-a6e5-211167b35fb0', 'ما تعريف المنوال (mode) في الإحصاء؟', '[{"id":"a","text":"القيمة التي تقع في المنتصف حين تُرتَّب القيم تصاعديًّا"},{"id":"b","text":"القيمة التي تتكرّر أكثر من غيرها (أعلى تكرار)"},{"id":"c","text":"مجموع جميع القيم مقسومًا على عددها"},{"id":"d","text":"الفرق بين أكبر قيمة وأصغر قيمة في السلسلة"}]'::jsonb, 'b', 'المنوال هو القيمة ذات التكرار الأعلى في السلسلة الإحصائية. يُقرأ مباشرةً من الجدول دون حساب. قد يكون للسلسلة منوالان إذا اشتركت قيمتان في نفس التكرار الأعلى.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3318,7 +3318,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('5fbf5217-2d9e-576b-858b-9be8a7b9ceed', '7e3372ce-3987-501b-a6e5-211167b35fb0', 'ما تعريف المنوال (mode) في الإحصاء؟', '[{"id":"a","text":"القيمة التي تقع في المنتصف حين تُرتَّب القيم تصاعديًّا"},{"id":"b","text":"القيمة التي تتكرّر أكثر من غيرها (أعلى تكرار)"},{"id":"c","text":"مجموع جميع القيم مقسومًا على عددها"},{"id":"d","text":"الفرق بين أكبر قيمة وأصغر قيمة في السلسلة"}]'::jsonb, 'b', 'المنوال هو القيمة ذات التكرار الأعلى في السلسلة الإحصائية. يُقرأ مباشرةً من الجدول دون حساب. قد يكون للسلسلة منوالان إذا اشتركت قيمتان في نفس التكرار الأعلى.', 4)
+  ('5fbf5217-2d9e-576b-858b-9be8a7b9ceed', '7e3372ce-3987-501b-a6e5-211167b35fb0', 'ما الصيغة الصحيحة لحساب المعدّل الحسابي لسلسلة إحصائية؟', '[{"id":"a","text":"مجموع جميع القيم فقط، دون قسمة"},{"id":"b","text":"القيمة الوسطى بين أكبر قيمة وأصغر قيمة"},{"id":"c","text":"مجموع (كلّ قيمة مضروبة في تكرارها) مقسومًا على التكرار الكلّي n"},{"id":"d","text":"القيمة الأعلى تكرارًا في السلسلة"}]'::jsonb, 'c', 'المعدّل الحسابي: x̄ = (x₁×n₁ + x₂×n₂ + … + xₖ×nₖ) / n. يتأثّر بالقيم الشاذّة (الكبيرة جدًّا أو الصغيرة جدًّا).', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3360,7 +3360,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('9778e81d-5484-5cc2-ae1d-0b4b62056bbd', 'b6fdc318-4fb8-5cdf-a865-2ffd1468c8b7', 'في السلسلة الإحصائية المرتّبة: 8 ، 10 ، 10 ، 12 ، 15 (n = 5). ما هو الوسيط؟', '[{"id":"a","text":"8"},{"id":"b","text":"12"},{"id":"c","text":"10"},{"id":"d","text":"11"}]'::jsonb, 'c', 'n = 5 (فردي)، الوسيط هو قيمة الرتبة (5+1)÷2 = 3. القيمة الثالثة في السلسلة المرتّبة هي 10.', 2)
+  ('9778e81d-5484-5cc2-ae1d-0b4b62056bbd', 'b6fdc318-4fb8-5cdf-a865-2ffd1468c8b7', 'في السلسلة ذاتها: 8 ، 10 ، 10 ، 12 ، 15. ما هو المنوال؟', '[{"id":"a","text":"15"},{"id":"b","text":"8"},{"id":"c","text":"12"},{"id":"d","text":"10"}]'::jsonb, 'd', 'المنوال هو القيمة التي تتكرّر أكثر. العدد 10 يتكرّر مرّتين وهو الأعلى تكرارًا.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3370,7 +3370,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('391b11ae-2629-5088-a119-feaed0ba274b', 'b6fdc318-4fb8-5cdf-a865-2ffd1468c8b7', 'في السلسلة ذاتها: 8 ، 10 ، 10 ، 12 ، 15. ما هو المنوال؟', '[{"id":"a","text":"15"},{"id":"b","text":"8"},{"id":"c","text":"12"},{"id":"d","text":"10"}]'::jsonb, 'd', 'المنوال هو القيمة التي تتكرّر أكثر. العدد 10 يتكرّر مرّتين وهو الأعلى تكرارًا.', 3)
+  ('391b11ae-2629-5088-a119-feaed0ba274b', 'b6fdc318-4fb8-5cdf-a865-2ffd1468c8b7', 'في السلسلة الإحصائية المرتّبة: 8 ، 10 ، 10 ، 12 ، 15 (n = 5). ما هو الوسيط؟', '[{"id":"a","text":"8"},{"id":"b","text":"12"},{"id":"c","text":"10"},{"id":"d","text":"11"}]'::jsonb, 'c', 'n = 5 (فردي)، الوسيط هو قيمة الرتبة (5+1)÷2 = 3. القيمة الثالثة في السلسلة المرتّبة هي 10.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3494,12 +3494,12 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('7044e06a-b01a-5567-8a50-18d770f599db', '31f9bc81-3462-51c0-a42a-4bc1079be296', 'يُعطى الجدول الإحصائي التالي لعلامات 20 تلميذًا:
+  ('7044e06a-b01a-5567-8a50-18d770f599db', '31f9bc81-3462-51c0-a42a-4bc1079be296', 'بالرجوع إلى الجدول الإحصائي السابق (علامات 20 تلميذًا):
 | العلامة | 8 | 10 | 12 | 14 | 16 |
 |---------|---|----|----|----|----|  
 | التكرار | 2 | 4  | 6  | 5  | 3  |
 
-ما هو المعدّل الحسابي لهذه السلسلة؟', '[{"id":"a","text":"12"},{"id":"b","text":"12.3"},{"id":"c","text":"12.5"},{"id":"d","text":"11.5"}]'::jsonb, 'b', 'المعدّل = (8×2 + 10×4 + 12×6 + 14×5 + 16×3) ÷ 20 = (16 + 40 + 72 + 70 + 48) ÷ 20 = 246 ÷ 20 = 12{,}3. التحقّق: مجموع التكرارات = 2+4+6+5+3 = 20 ✓.', 1)
+ما هو منوال هذه السلسلة؟', '[{"id":"a","text":"12"},{"id":"b","text":"14"},{"id":"c","text":"16"},{"id":"d","text":"10"}]'::jsonb, 'a', 'المنوال هو القيمة ذات أعلى تكرار. من الجدول: تكرار 8 هو 2، تكرار 10 هو 4، تكرار 12 هو 6، تكرار 14 هو 5، تكرار 16 هو 3. أعلى تكرار هو 6 يقابله العلامة 12. إذن المنوال = 12.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3509,12 +3509,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('63f5da1a-18c9-51da-9482-16616c888864', '31f9bc81-3462-51c0-a42a-4bc1079be296', 'بالرجوع إلى الجدول الإحصائي السابق (علامات 20 تلميذًا):
-| العلامة | 8 | 10 | 12 | 14 | 16 |
-|---------|---|----|----|----|----|  
-| التكرار | 2 | 4  | 6  | 5  | 3  |
-
-ما هو منوال هذه السلسلة؟', '[{"id":"a","text":"12"},{"id":"b","text":"14"},{"id":"c","text":"16"},{"id":"d","text":"10"}]'::jsonb, 'a', 'المنوال هو القيمة ذات أعلى تكرار. من الجدول: تكرار 8 هو 2، تكرار 10 هو 4، تكرار 12 هو 6، تكرار 14 هو 5، تكرار 16 هو 3. أعلى تكرار هو 6 يقابله العلامة 12. إذن المنوال = 12.', 2)
+  ('63f5da1a-18c9-51da-9482-16616c888864', '31f9bc81-3462-51c0-a42a-4bc1079be296', 'سجّل تلميذ العلامات التالية في الفصل الأوّل: 10، 12، 14، 8، 16. ما هو معدّله في هذا الفصل؟', '[{"id":"a","text":"13"},{"id":"b","text":"12"},{"id":"c","text":"14"},{"id":"d","text":"11"}]'::jsonb, 'b', 'المعدّل = مجموع العلامات ÷ عددها = (10 + 12 + 14 + 8 + 16) ÷ 5 = 60 ÷ 5 = 12. التحقّق: 10+12=22، 22+14=36، 36+8=44، 44+16=60. 60÷5=12 ✓.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3529,7 +3524,7 @@ INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, 
 |---------|---|----|----|----|----|  
 | التكرار | 2 | 4  | 6  | 5  | 3  |
 
-ما هو وسيط هذه السلسلة؟', '[{"id":"a","text":"11"},{"id":"b","text":"13"},{"id":"c","text":"12"},{"id":"d","text":"14"}]'::jsonb, 'c', 'n = 20 (زوجي)، نبحث عن القيمتَين ذواتَي الرتبتَين 10 و 11. التكرار المجمّع: العلامة 8 → 2، العلامة 10 → 6، العلامة 12 → 12. الرتبة 10 والرتبة 11 كلتاهما تقعان في فئة العلامة 12 (التكرار المجمّع يبلغ 12 عند 12). الوسيط = (12 + 12) ÷ 2 = 12.', 3)
+ما هو تواتر (نسبة) العلامة 14 بالمائة؟', '[{"id":"a","text":"15%"},{"id":"b","text":"30%"},{"id":"c","text":"20%"},{"id":"d","text":"25%"}]'::jsonb, 'd', 'التواتر = التكرار ÷ التكرار الكلّي = 5 ÷ 20 = 0{,}25. التواتر بالمائة = 0{,}25 × 100 = 25%. التحقّق: مجموع جميع التكرارات = 20 ✓، ومجموع التواترات بالمائة: 10%+20%+30%+25%+15% = 100% ✓.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3539,12 +3534,12 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('27d53fa5-4c6e-5cff-8a50-dcac20918fc5', '31f9bc81-3462-51c0-a42a-4bc1079be296', 'بالرجوع إلى الجدول الإحصائي السابق (علامات 20 تلميذًا):
+  ('27d53fa5-4c6e-5cff-8a50-dcac20918fc5', '31f9bc81-3462-51c0-a42a-4bc1079be296', 'يُعطى الجدول الإحصائي التالي لعلامات 20 تلميذًا:
 | العلامة | 8 | 10 | 12 | 14 | 16 |
 |---------|---|----|----|----|----|  
 | التكرار | 2 | 4  | 6  | 5  | 3  |
 
-ما هو تواتر (نسبة) العلامة 14 بالمائة؟', '[{"id":"a","text":"15%"},{"id":"b","text":"30%"},{"id":"c","text":"20%"},{"id":"d","text":"25%"}]'::jsonb, 'd', 'التواتر = التكرار ÷ التكرار الكلّي = 5 ÷ 20 = 0{,}25. التواتر بالمائة = 0{,}25 × 100 = 25%. التحقّق: مجموع جميع التكرارات = 20 ✓، ومجموع التواترات بالمائة: 10%+20%+30%+25%+15% = 100% ✓.', 4)
+ما هو المعدّل الحسابي لهذه السلسلة؟', '[{"id":"a","text":"12"},{"id":"b","text":"12.3"},{"id":"c","text":"12.5"},{"id":"d","text":"11.5"}]'::jsonb, 'b', 'المعدّل = (8×2 + 10×4 + 12×6 + 14×5 + 16×3) ÷ 20 = (16 + 40 + 72 + 70 + 48) ÷ 20 = 246 ÷ 20 = 12{,}3. التحقّق: مجموع التكرارات = 2+4+6+5+3 = 20 ✓.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3554,7 +3549,12 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('c0709b4d-2cb5-56ad-a4df-a88d8e7bf9c7', '31f9bc81-3462-51c0-a42a-4bc1079be296', 'سجّل تلميذ العلامات التالية في الفصل الأوّل: 10، 12، 14، 8، 16. ما هو معدّله في هذا الفصل؟', '[{"id":"a","text":"13"},{"id":"b","text":"12"},{"id":"c","text":"14"},{"id":"d","text":"11"}]'::jsonb, 'b', 'المعدّل = مجموع العلامات ÷ عددها = (10 + 12 + 14 + 8 + 16) ÷ 5 = 60 ÷ 5 = 12. التحقّق: 10+12=22، 22+14=36، 36+8=44، 44+16=60. 60÷5=12 ✓.', 5)
+  ('c0709b4d-2cb5-56ad-a4df-a88d8e7bf9c7', '31f9bc81-3462-51c0-a42a-4bc1079be296', 'بالرجوع إلى الجدول الإحصائي السابق (علامات 20 تلميذًا):
+| العلامة | 8 | 10 | 12 | 14 | 16 |
+|---------|---|----|----|----|----|  
+| التكرار | 2 | 4  | 6  | 5  | 3  |
+
+ما هو وسيط هذه السلسلة؟', '[{"id":"a","text":"11"},{"id":"b","text":"13"},{"id":"c","text":"12"},{"id":"d","text":"14"}]'::jsonb, 'c', 'n = 20 (زوجي)، نبحث عن القيمتَين ذواتَي الرتبتَين 10 و 11. التكرار المجمّع: العلامة 8 → 2، العلامة 10 → 6، العلامة 12 → 12. الرتبة 10 والرتبة 11 كلتاهما تقعان في فئة العلامة 12 (التكرار المجمّع يبلغ 12 عند 12). الوسيط = (12 + 12) ÷ 2 = 12.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3648,7 +3648,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('0d59856b-0025-5edf-9712-df204c8cf43d', 'f326e9ff-8f5d-59a0-bc33-b53615d43f3d', 'في مثلّث ABC، يقطع المستقيم (MN) الضلعَين [AB] و[AC] في M وN على الترتيب بحيث (MN) ∥ (BC). إذا كان AM = 3 cm وAB = 6 cm وAN = 4 cm، فما قيمة AC؟', '[{"id":"a","text":"6 cm"},{"id":"b","text":"8 cm"},{"id":"c","text":"12 cm"},{"id":"d","text":"2 cm"}]'::jsonb, 'b', 'بتطبيق نظرية طاليس: AM/AB = AN/AC. إذن 3/6 = 4/AC، ومنه AC = 4 × 6 ÷ 3 = 8 cm.', 1)
+  ('0d59856b-0025-5edf-9712-df204c8cf43d', 'f326e9ff-8f5d-59a0-bc33-b53615d43f3d', 'في مثلّث ABC، (MN) ∥ (BC)، وM على [AB] بحيث AM = 5 cm وMB = 3 cm. ما هي نسبة AM/AB؟', '[{"id":"a","text":"5/3"},{"id":"b","text":"3/8"},{"id":"c","text":"5/8"},{"id":"d","text":"3/5"}]'::jsonb, 'c', 'AB = AM + MB = 5 + 3 = 8 cm. إذن AM/AB = 5/8.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3658,7 +3658,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('532e4f79-a180-595e-bad6-4db7449b7e9a', 'f326e9ff-8f5d-59a0-bc33-b53615d43f3d', 'في مثلّث ABC، (MN) ∥ (BC)، وM على [AB] بحيث AM = 5 cm وMB = 3 cm. ما هي نسبة AM/AB؟', '[{"id":"a","text":"5/3"},{"id":"b","text":"3/8"},{"id":"c","text":"5/8"},{"id":"d","text":"3/5"}]'::jsonb, 'c', 'AB = AM + MB = 5 + 3 = 8 cm. إذن AM/AB = 5/8.', 2)
+  ('532e4f79-a180-595e-bad6-4db7449b7e9a', 'f326e9ff-8f5d-59a0-bc33-b53615d43f3d', 'في وضعية طاليس (في مثلّث ABC مع (MN) ∥ (BC))، أيّ النسب التالية تساوي AM/AB؟', '[{"id":"a","text":"AB/AM"},{"id":"b","text":"BC/MN"},{"id":"c","text":"MN/BC"},{"id":"d","text":"AN/AB"}]'::jsonb, 'c', 'نصّ نظرية طاليس: AM/AB = AN/AC = MN/BC. إذن MN/BC هي النسبة المساوية لـ AM/AB.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3668,7 +3668,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('0afcd18c-829f-593d-8c89-713cffedf56f', 'f326e9ff-8f5d-59a0-bc33-b53615d43f3d', 'في وضعية طاليس (في مثلّث ABC مع (MN) ∥ (BC))، أيّ النسب التالية تساوي AM/AB؟', '[{"id":"a","text":"AB/AM"},{"id":"b","text":"BC/MN"},{"id":"c","text":"MN/BC"},{"id":"d","text":"AN/AB"}]'::jsonb, 'c', 'نصّ نظرية طاليس: AM/AB = AN/AC = MN/BC. إذن MN/BC هي النسبة المساوية لـ AM/AB.', 3)
+  ('0afcd18c-829f-593d-8c89-713cffedf56f', 'f326e9ff-8f5d-59a0-bc33-b53615d43f3d', 'في مثلّث ABC، يقطع المستقيم (MN) الضلعَين [AB] و[AC] في M وN على الترتيب بحيث (MN) ∥ (BC). إذا كان AM = 3 cm وAB = 6 cm وAN = 4 cm، فما قيمة AC؟', '[{"id":"a","text":"6 cm"},{"id":"b","text":"8 cm"},{"id":"c","text":"12 cm"},{"id":"d","text":"2 cm"}]'::jsonb, 'b', 'بتطبيق نظرية طاليس: AM/AB = AN/AC. إذن 3/6 = 4/AC، ومنه AC = 4 × 6 ÷ 3 = 8 cm.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3730,7 +3730,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('e16c95ae-301f-5611-a556-0bc68fb575f7', '24ddb42f-96f9-5d15-bda7-fadbd675c804', 'في مثلّث DEF، (MN) ∥ (EF) مع DM = 5 cm وME = 3 cm وNF = 1.8 cm. أوجد DN = x.', '[{"id":"a","text":"x = 2 cm"},{"id":"b","text":"x = 2.5 cm"},{"id":"c","text":"x = 3 cm"},{"id":"d","text":"x = 4 cm"}]'::jsonb, 'c', 'DE = DM + ME = 5 + 3 = 8 cm. DF = DN + NF = x + 1.8. نظرية طاليس: DM/DE = DN/DF. إذن 5/8 = x/(x + 1.8). بالتقاطع: 8x = 5(x + 1.8) = 5x + 9. ومنه 3x = 9، أي x = 3 cm.', 2)
+  ('e16c95ae-301f-5611-a556-0bc68fb575f7', '24ddb42f-96f9-5d15-bda7-fadbd675c804', 'في وضعية الفراشة، يتقاطع مستقيمان في O مع (AB) ∥ (CD). إذا كان OA = 4 cm وOC = 6 cm وAB = 5 cm، فما طول CD؟', '[{"id":"a","text":"6 cm"},{"id":"b","text":"7 cm"},{"id":"c","text":"7.5 cm"},{"id":"d","text":"8 cm"}]'::jsonb, 'c', 'بنظرية طاليس في وضعية الفراشة: OA/OC = AB/CD. إذن 4/6 = 5/CD، ومنه CD = 5 × 6/4 = 30/4 = 7.5 cm.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3740,7 +3740,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('f9dec898-598b-54a1-bc6e-ec5cb998972e', '24ddb42f-96f9-5d15-bda7-fadbd675c804', 'في وضعية الفراشة، يتقاطع مستقيمان في O مع (AB) ∥ (CD). إذا كان OA = 4 cm وOC = 6 cm وAB = 5 cm، فما طول CD؟', '[{"id":"a","text":"6 cm"},{"id":"b","text":"7 cm"},{"id":"c","text":"7.5 cm"},{"id":"d","text":"8 cm"}]'::jsonb, 'c', 'بنظرية طاليس في وضعية الفراشة: OA/OC = AB/CD. إذن 4/6 = 5/CD، ومنه CD = 5 × 6/4 = 30/4 = 7.5 cm.', 3)
+  ('f9dec898-598b-54a1-bc6e-ec5cb998972e', '24ddb42f-96f9-5d15-bda7-fadbd675c804', 'في مثلّث ABC، M على [AB] وN على [AC]. AM = 2 cm، MB = 6 cm، AN = 3 cm، NC = 9 cm. هل (MN) ∥ (BC)؟', '[{"id":"a","text":"نعم لأنّ AM/AB = AN/AC = 1/4"},{"id":"b","text":"لا لأنّ AM ≠ AN"},{"id":"c","text":"نعم لأنّ AM + AN = 5"},{"id":"d","text":"لا لأنّ MB ≠ NC"}]'::jsonb, 'a', 'AB = AM + MB = 2 + 6 = 8 cm، فـ AM/AB = 2/8 = 1/4. AC = AN + NC = 3 + 9 = 12 cm، فـ AN/AC = 3/12 = 1/4. النسبتان متساويتان، إذن بالنظرية العكسية (MN) ∥ (BC).', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3750,7 +3750,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('71d49b34-8c27-56e3-8e48-96ee2353f19b', '24ddb42f-96f9-5d15-bda7-fadbd675c804', 'في مثلّث ABC، M على [AB] وN على [AC]. AM = 2 cm، MB = 6 cm، AN = 3 cm، NC = 9 cm. هل (MN) ∥ (BC)؟', '[{"id":"a","text":"نعم لأنّ AM/AB = AN/AC = 1/4"},{"id":"b","text":"لا لأنّ AM ≠ AN"},{"id":"c","text":"نعم لأنّ AM + AN = 5"},{"id":"d","text":"لا لأنّ MB ≠ NC"}]'::jsonb, 'a', 'AB = AM + MB = 2 + 6 = 8 cm، فـ AM/AB = 2/8 = 1/4. AC = AN + NC = 3 + 9 = 12 cm، فـ AN/AC = 3/12 = 1/4. النسبتان متساويتان، إذن بالنظرية العكسية (MN) ∥ (BC).', 4)
+  ('71d49b34-8c27-56e3-8e48-96ee2353f19b', '24ddb42f-96f9-5d15-bda7-fadbd675c804', 'في مثلّث ABC، AB = 15 cm و(MN) ∥ (BC) حيث AM/AB = 2/5 وBC = 10 cm. ما طول MN؟', '[{"id":"a","text":"3 cm"},{"id":"b","text":"6 cm"},{"id":"c","text":"4 cm"},{"id":"d","text":"5 cm"}]'::jsonb, 'c', 'بنظرية طاليس: MN/BC = AM/AB = 2/5. إذن MN = BC × (2/5) = 10 × (2/5) = 4 cm.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3760,7 +3760,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('cd9c01fe-fddb-523e-b8e5-0d67dbd39857', '24ddb42f-96f9-5d15-bda7-fadbd675c804', 'في مثلّث ABC، AB = 15 cm و(MN) ∥ (BC) حيث AM/AB = 2/5 وBC = 10 cm. ما طول MN؟', '[{"id":"a","text":"3 cm"},{"id":"b","text":"6 cm"},{"id":"c","text":"4 cm"},{"id":"d","text":"5 cm"}]'::jsonb, 'c', 'بنظرية طاليس: MN/BC = AM/AB = 2/5. إذن MN = BC × (2/5) = 10 × (2/5) = 4 cm.', 5)
+  ('cd9c01fe-fddb-523e-b8e5-0d67dbd39857', '24ddb42f-96f9-5d15-bda7-fadbd675c804', 'في مثلّث DEF، (MN) ∥ (EF) مع DM = 5 cm وME = 3 cm وNF = 1.8 cm. أوجد DN = x.', '[{"id":"a","text":"x = 2 cm"},{"id":"b","text":"x = 2.5 cm"},{"id":"c","text":"x = 3 cm"},{"id":"d","text":"x = 4 cm"}]'::jsonb, 'c', 'DE = DM + ME = 5 + 3 = 8 cm. DF = DN + NF = x + 1.8. نظرية طاليس: DM/DE = DN/DF. إذن 5/8 = x/(x + 1.8). بالتقاطع: 8x = 5(x + 1.8) = 5x + 9. ومنه 3x = 9، أي x = 3 cm.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3802,7 +3802,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('9c198ec7-be2b-5c8d-ad88-51ed81b5d46c', 'f33ee550-688a-5f83-8b1c-f714109898ed', 'في مثلّث ABC، M على [AB] وN على [AC]. هل (MN) ∥ (BC) إذا كان AM = 4 cm وAB = 6 cm وAN = 6 cm وAC = 9 cm؟', '[{"id":"a","text":"نعم، لأنّ AM/AB = AN/AC = 2/3"},{"id":"b","text":"لا، لأنّ AM ≠ AN"},{"id":"c","text":"نعم، لأنّ AM + AN = 10"},{"id":"d","text":"لا، لأنّ AB ≠ AC"}]'::jsonb, 'a', 'AM/AB = 4/6 = 2/3 وAN/AC = 6/9 = 2/3. النسبتان متساويتان، فبالنظرية العكسية لطاليس (MN) ∥ (BC).', 2)
+  ('9c198ec7-be2b-5c8d-ad88-51ed81b5d46c', 'f33ee550-688a-5f83-8b1c-f714109898ed', 'أيّ من العبارات التالية تعبّر بشكل صحيح عن النظرية العكسية لطاليس؟', '[{"id":"a","text":"إذا كان AM/AB = AN/AC وM وN داخل الضلعين، فإنّ (MN) ∥ (BC)"},{"id":"b","text":"إذا كانت (MN) ∥ (BC)، فإنّ AM = AN"},{"id":"c","text":"إذا كان MN = BC، فإنّ (MN) ∥ (BC)"},{"id":"d","text":"إذا كانت AM/MB = 1، فإنّ (MN) ∥ (BC)"}]'::jsonb, 'a', 'النظرية العكسية لطاليس تنصّ على: إذا تحقّق AM/AB = AN/AC مع كون M وN على نفس الجانب من الرأس A (داخل الضلعين)، فإنّ (MN) ∥ (BC).', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3812,7 +3812,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('cca2fb5e-9ee4-5c71-89c0-cdba4e2b52f8', 'f33ee550-688a-5f83-8b1c-f714109898ed', 'في وضعية الفراشة، يتقاطع مستقيمان في O مع (AB) ∥ (CD). إذا كان OA = 3 cm وOC = 9 cm وOB = 4 cm، فما طول OD؟', '[{"id":"a","text":"6 cm"},{"id":"b","text":"9 cm"},{"id":"c","text":"10 cm"},{"id":"d","text":"12 cm"}]'::jsonb, 'd', 'بنظرية طاليس في وضعية الفراشة: OA/OC = OB/OD، إذن 3/9 = 4/OD، ومنه OD = 4 × 9 ÷ 3 = 12 cm.', 3)
+  ('cca2fb5e-9ee4-5c71-89c0-cdba4e2b52f8', 'f33ee550-688a-5f83-8b1c-f714109898ed', 'في مثلّث ABC، M على [AB] وN على [AC]. هل (MN) ∥ (BC) إذا كان AM = 4 cm وAB = 6 cm وAN = 6 cm وAC = 9 cm؟', '[{"id":"a","text":"نعم، لأنّ AM/AB = AN/AC = 2/3"},{"id":"b","text":"لا، لأنّ AM ≠ AN"},{"id":"c","text":"نعم، لأنّ AM + AN = 10"},{"id":"d","text":"لا، لأنّ AB ≠ AC"}]'::jsonb, 'a', 'AM/AB = 4/6 = 2/3 وAN/AC = 6/9 = 2/3. النسبتان متساويتان، فبالنظرية العكسية لطاليس (MN) ∥ (BC).', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3822,7 +3822,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('9e409479-42b0-5460-b5e0-2f31d6f2dba6', 'f33ee550-688a-5f83-8b1c-f714109898ed', 'في مثلّث ABC، (MN) ∥ (BC) حيث AM = 6 cm وAB = 9 cm وBC = 12 cm. ما طول MN؟', '[{"id":"a","text":"6 cm"},{"id":"b","text":"8 cm"},{"id":"c","text":"9 cm"},{"id":"d","text":"10 cm"}]'::jsonb, 'b', 'بنظرية طاليس: MN/BC = AM/AB = 6/9 = 2/3. إذن MN = BC × (2/3) = 12 × (2/3) = 8 cm.', 4)
+  ('9e409479-42b0-5460-b5e0-2f31d6f2dba6', 'f33ee550-688a-5f83-8b1c-f714109898ed', 'في وضعية الفراشة، يتقاطع مستقيمان في O مع (AB) ∥ (CD). إذا كان OA = 3 cm وOC = 9 cm وOB = 4 cm، فما طول OD؟', '[{"id":"a","text":"6 cm"},{"id":"b","text":"9 cm"},{"id":"c","text":"10 cm"},{"id":"d","text":"12 cm"}]'::jsonb, 'd', 'بنظرية طاليس في وضعية الفراشة: OA/OC = OB/OD، إذن 3/9 = 4/OD، ومنه OD = 4 × 9 ÷ 3 = 12 cm.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3832,7 +3832,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('b4e7423e-350d-507a-8190-fd0f52071315', 'f33ee550-688a-5f83-8b1c-f714109898ed', 'في مثلّث DEF، (MN) ∥ (EF)، DM = x cm وME = 4 cm وDN = 3 cm وNF = 2 cm. ما قيمة x؟', '[{"id":"a","text":"x = 4 cm"},{"id":"b","text":"x = 5 cm"},{"id":"c","text":"x = 6 cm"},{"id":"d","text":"x = 8 cm"}]'::jsonb, 'c', 'DE = DM + ME = x + 4، وDF = DN + NF = 3 + 2 = 5 cm. بنظرية طاليس: DM/DE = DN/DF، أي x/(x+4) = 3/5. بالتقاطع: 5x = 3(x+4) = 3x + 12، ومنه 2x = 12، أي x = 6 cm. التحقّق: 6/10 = 3/5. ✓', 5)
+  ('b4e7423e-350d-507a-8190-fd0f52071315', 'f33ee550-688a-5f83-8b1c-f714109898ed', 'في مثلّث ABC، (MN) ∥ (BC) حيث AM = 6 cm وAB = 9 cm وBC = 12 cm. ما طول MN؟', '[{"id":"a","text":"6 cm"},{"id":"b","text":"8 cm"},{"id":"c","text":"9 cm"},{"id":"d","text":"10 cm"}]'::jsonb, 'b', 'بنظرية طاليس: MN/BC = AM/AB = 6/9 = 2/3. إذن MN = BC × (2/3) = 12 × (2/3) = 8 cm.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3842,7 +3842,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('cda3fe59-386a-5a33-9fca-650b899f6654', 'f33ee550-688a-5f83-8b1c-f714109898ed', 'أيّ من العبارات التالية تعبّر بشكل صحيح عن النظرية العكسية لطاليس؟', '[{"id":"a","text":"إذا كان AM/AB = AN/AC وM وN داخل الضلعين، فإنّ (MN) ∥ (BC)"},{"id":"b","text":"إذا كانت (MN) ∥ (BC)، فإنّ AM = AN"},{"id":"c","text":"إذا كان MN = BC، فإنّ (MN) ∥ (BC)"},{"id":"d","text":"إذا كانت AM/MB = 1، فإنّ (MN) ∥ (BC)"}]'::jsonb, 'a', 'النظرية العكسية لطاليس تنصّ على: إذا تحقّق AM/AB = AN/AC مع كون M وN على نفس الجانب من الرأس A (داخل الضلعين)، فإنّ (MN) ∥ (BC).', 6)
+  ('cda3fe59-386a-5a33-9fca-650b899f6654', 'f33ee550-688a-5f83-8b1c-f714109898ed', 'في مثلّث DEF، (MN) ∥ (EF)، DM = x cm وME = 4 cm وDN = 3 cm وNF = 2 cm. ما قيمة x؟', '[{"id":"a","text":"x = 4 cm"},{"id":"b","text":"x = 5 cm"},{"id":"c","text":"x = 6 cm"},{"id":"d","text":"x = 8 cm"}]'::jsonb, 'c', 'DE = DM + ME = x + 4، وDF = DN + NF = 3 + 2 = 5 cm. بنظرية طاليس: DM/DE = DN/DF، أي x/(x+4) = 3/5. بالتقاطع: 5x = 3(x+4) = 3x + 12، ومنه 2x = 12، أي x = 6 cm. التحقّق: 6/10 = 3/5. ✓', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4080,7 +4080,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('0fcda9a1-fa34-5768-8c5c-e1850330d1d2', '45ea24b7-4622-54df-a97f-ccfa0ea12ad5', 'مثلث أضلاعه 8 cm و15 cm و17 cm. هل هو قائم الزاوية؟', '[{"id":"a","text":"لا، لأنّ 8 + 15 ≠ 17"},{"id":"b","text":"لا، لأنّ 8² + 17² ≠ 15²"},{"id":"c","text":"لا يمكن التحقّق بدون رسم"},{"id":"d","text":"نعم، لأنّ 8² + 15² = 17²"}]'::jsonb, 'd', 'نحسب: 8² + 15² = 64 + 225 = 289 و17² = 289. بما أنّ 8² + 15² = 17²، فبعكس نظرية فيثاغورس المثلث قائم الزاوية (الزاوية القائمة مقابلة للضلع الأطول 17).', 2)
+  ('0fcda9a1-fa34-5768-8c5c-e1850330d1d2', '45ea24b7-4622-54df-a97f-ccfa0ea12ad5', 'في مثلّث ABC قائم الزاوية في B، زاوية A = 45°. أيّ من القيم التالية صحيحة؟', '[{"id":"a","text":"جتا(45°) = 1"},{"id":"b","text":"جا(45°) = √3/2"},{"id":"c","text":"جتا(45°) = √2/2"},{"id":"d","text":"ظا(45°) = √3"}]'::jsonb, 'c', 'الزوايا المشهورة: جا(45°) = جتا(45°) = √2/2 ≈ 0.707، وظا(45°) = 1. إذن جتا(45°) = √2/2 هي الإجابة الصحيحة.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4090,7 +4090,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('3fab56a3-4d34-5074-84da-a46a457be4dc', '45ea24b7-4622-54df-a97f-ccfa0ea12ad5', 'في مثلّث ABC قائم الزاوية في B، زاوية A = 45°. أيّ من القيم التالية صحيحة؟', '[{"id":"a","text":"جتا(45°) = 1"},{"id":"b","text":"جا(45°) = √3/2"},{"id":"c","text":"جتا(45°) = √2/2"},{"id":"d","text":"ظا(45°) = √3"}]'::jsonb, 'c', 'الزوايا المشهورة: جا(45°) = جتا(45°) = √2/2 ≈ 0.707، وظا(45°) = 1. إذن جتا(45°) = √2/2 هي الإجابة الصحيحة.', 3)
+  ('3fab56a3-4d34-5074-84da-a46a457be4dc', '45ea24b7-4622-54df-a97f-ccfa0ea12ad5', 'مثلث أضلاعه 8 cm و15 cm و17 cm. هل هو قائم الزاوية؟', '[{"id":"a","text":"لا، لأنّ 8 + 15 ≠ 17"},{"id":"b","text":"لا، لأنّ 8² + 17² ≠ 15²"},{"id":"c","text":"لا يمكن التحقّق بدون رسم"},{"id":"d","text":"نعم، لأنّ 8² + 15² = 17²"}]'::jsonb, 'd', 'نحسب: 8² + 15² = 64 + 225 = 289 و17² = 289. بما أنّ 8² + 15² = 17²، فبعكس نظرية فيثاغورس المثلث قائم الزاوية (الزاوية القائمة مقابلة للضلع الأطول 17).', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4492,7 +4492,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('c9c8d407-2396-539e-864e-40d48e430134', 'd5ed3185-e602-5baa-a49f-a68b1191ac7f', 'ABCD متوازي أضلاع. أيّ من المساواات التالية صحيحة؟', '[{"id":"a","text":"$\\overrightarrow{AB} = \\overrightarrow{CD}$"},{"id":"b","text":"$\\overrightarrow{AB} = \\overrightarrow{DC}$"},{"id":"c","text":"$\\overrightarrow{AB} = \\overrightarrow{CB}$"},{"id":"d","text":"$\\overrightarrow{AD} = \\overrightarrow{CB}$"}]'::jsonb, 'b', 'في متوازي الأضلاع ABCD: الضلعان AB وDC متوازيان ومتساويان في الطول ونفس المنحى، إذن $\overrightarrow{AB} = \overrightarrow{DC}$. انتبه: $\overrightarrow{CD}$ معاكس المنحى لـ $\overrightarrow{DC}$.', 2)
+  ('c9c8d407-2396-539e-864e-40d48e430134', 'd5ed3185-e602-5baa-a49f-a68b1191ac7f', 'ما ناتج $\overrightarrow{AB} + \overrightarrow{BA}$؟', '[{"id":"a","text":"$2\\overrightarrow{AB}$"},{"id":"b","text":"$\\overrightarrow{AA}$"},{"id":"c","text":"$\\overrightarrow{0}$"},{"id":"d","text":"$\\overrightarrow{AB}$"}]'::jsonb, 'c', 'بتطبيق شال: $\overrightarrow{AB} + \overrightarrow{BA} = \overrightarrow{AA} = \overrightarrow{0}$. أي أنّ $\overrightarrow{BA} = -\overrightarrow{AB}$ وهو الشعاع المعاكس.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4502,7 +4502,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('5d31b6e9-d3c9-5b12-8a64-9b080894d622', 'd5ed3185-e602-5baa-a49f-a68b1191ac7f', 'ما ناتج $\overrightarrow{AB} + \overrightarrow{BA}$؟', '[{"id":"a","text":"$2\\overrightarrow{AB}$"},{"id":"b","text":"$\\overrightarrow{AA}$"},{"id":"c","text":"$\\overrightarrow{0}$"},{"id":"d","text":"$\\overrightarrow{AB}$"}]'::jsonb, 'c', 'بتطبيق شال: $\overrightarrow{AB} + \overrightarrow{BA} = \overrightarrow{AA} = \overrightarrow{0}$. أي أنّ $\overrightarrow{BA} = -\overrightarrow{AB}$ وهو الشعاع المعاكس.', 3)
+  ('5d31b6e9-d3c9-5b12-8a64-9b080894d622', 'd5ed3185-e602-5baa-a49f-a68b1191ac7f', 'ABCD متوازي أضلاع. أيّ من المساواات التالية صحيحة؟', '[{"id":"a","text":"$\\overrightarrow{AB} = \\overrightarrow{CD}$"},{"id":"b","text":"$\\overrightarrow{AB} = \\overrightarrow{DC}$"},{"id":"c","text":"$\\overrightarrow{AB} = \\overrightarrow{CB}$"},{"id":"d","text":"$\\overrightarrow{AD} = \\overrightarrow{CB}$"}]'::jsonb, 'b', 'في متوازي الأضلاع ABCD: الضلعان AB وDC متوازيان ومتساويان في الطول ونفس المنحى، إذن $\overrightarrow{AB} = \overrightarrow{DC}$. انتبه: $\overrightarrow{CD}$ معاكس المنحى لـ $\overrightarrow{DC}$.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4564,7 +4564,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('1029d23d-c758-50bc-b5ba-adcdadbe99a5', '93d7ec3c-499d-5401-afbd-44d801bd6165', 'O هو منتصف [AC] في متوازي الأضلاع ABCD. ما ناتج $\overrightarrow{BA} + \overrightarrow{BC}$؟', '[{"id":"a","text":"$\\overrightarrow{BD}$"},{"id":"b","text":"$2\\overrightarrow{BO}$"},{"id":"c","text":"$\\overrightarrow{AC}$"},{"id":"d","text":"$\\overrightarrow{0}$"}]'::jsonb, 'b', 'لأيّ نقطة O منتصف [AC]: $\overrightarrow{BA} + \overrightarrow{BC} = 2\overrightarrow{BO}$. هذه النتيجة عامّة: مجموع شعاعين من نقطة إلى طرفَي قطعة يساوي ضعف الشعاع من تلك النقطة إلى المنتصف.', 2)
+  ('1029d23d-c758-50bc-b5ba-adcdadbe99a5', '93d7ec3c-499d-5401-afbd-44d801bd6165', 'A وB وC ثلاث نقاط بحيث $\overrightarrow{AB} + \overrightarrow{CA} = \overrightarrow{u}$. ما هو $\overrightarrow{u}$؟', '[{"id":"a","text":"$\\overrightarrow{CB}$"},{"id":"b","text":"$\\overrightarrow{BC}$"},{"id":"c","text":"$\\overrightarrow{AC}$"},{"id":"d","text":"$\\overrightarrow{0}$"}]'::jsonb, 'a', 'نرتّب الشعاعين: $\overrightarrow{CA} + \overrightarrow{AB}$ (الجمع تبديلي)، فبتطبيق شال: $\overrightarrow{CA} + \overrightarrow{AB} = \overrightarrow{CB}$. إذن $\overrightarrow{u} = \overrightarrow{CB}$.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4574,7 +4574,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('0f58c292-0423-585e-8b48-f312610e77c9', '93d7ec3c-499d-5401-afbd-44d801bd6165', 'A وB وC ثلاث نقاط بحيث $\overrightarrow{AB} + \overrightarrow{CA} = \overrightarrow{u}$. ما هو $\overrightarrow{u}$؟', '[{"id":"a","text":"$\\overrightarrow{CB}$"},{"id":"b","text":"$\\overrightarrow{BC}$"},{"id":"c","text":"$\\overrightarrow{AC}$"},{"id":"d","text":"$\\overrightarrow{0}$"}]'::jsonb, 'a', 'نرتّب الشعاعين: $\overrightarrow{CA} + \overrightarrow{AB}$ (الجمع تبديلي)، فبتطبيق شال: $\overrightarrow{CA} + \overrightarrow{AB} = \overrightarrow{CB}$. إذن $\overrightarrow{u} = \overrightarrow{CB}$.', 3)
+  ('0f58c292-0423-585e-8b48-f312610e77c9', '93d7ec3c-499d-5401-afbd-44d801bd6165', 'صورة المثلث ABC بالانسحاب ذي الشعاع $\overrightarrow{AB}$ هي المثلث A''B''C''. ماذا يساوي $\overrightarrow{AA''}$؟', '[{"id":"a","text":"$\\overrightarrow{BB''}$"},{"id":"b","text":"$\\overrightarrow{BA}$"},{"id":"c","text":"$\\overrightarrow{AB}$"},{"id":"d","text":"$\\overrightarrow{CC''}$"}]'::jsonb, 'c', 'في الانسحاب ذي الشعاع $\overrightarrow{AB}$، كلّ نقطة M تنتقل بحيث $\overrightarrow{MM''} = \overrightarrow{AB}$. فـ$\overrightarrow{AA''} = \overrightarrow{AB}$، والخيار d صحيح أيضًا (كلّ $\overrightarrow{MM''} = \overrightarrow{AB}$)، لكنّ السؤال يطلب ماذا يساوي $\overrightarrow{AA''}$ تحديدًا وهو $\overrightarrow{AB}$.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4584,7 +4584,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('f1e2bc92-9483-533f-bad1-ea11b4139ae1', '93d7ec3c-499d-5401-afbd-44d801bd6165', 'صورة المثلث ABC بالانسحاب ذي الشعاع $\overrightarrow{AB}$ هي المثلث A''B''C''. ماذا يساوي $\overrightarrow{AA''}$؟', '[{"id":"a","text":"$\\overrightarrow{BB''}$"},{"id":"b","text":"$\\overrightarrow{BA}$"},{"id":"c","text":"$\\overrightarrow{AB}$"},{"id":"d","text":"$\\overrightarrow{CC''}$"}]'::jsonb, 'c', 'في الانسحاب ذي الشعاع $\overrightarrow{AB}$، كلّ نقطة M تنتقل بحيث $\overrightarrow{MM''} = \overrightarrow{AB}$. فـ$\overrightarrow{AA''} = \overrightarrow{AB}$، والخيار d صحيح أيضًا (كلّ $\overrightarrow{MM''} = \overrightarrow{AB}$)، لكنّ السؤال يطلب ماذا يساوي $\overrightarrow{AA''}$ تحديدًا وهو $\overrightarrow{AB}$.', 4)
+  ('f1e2bc92-9483-533f-bad1-ea11b4139ae1', '93d7ec3c-499d-5401-afbd-44d801bd6165', 'O هو منتصف [AC] في متوازي الأضلاع ABCD. ما ناتج $\overrightarrow{BA} + \overrightarrow{BC}$؟', '[{"id":"a","text":"$\\overrightarrow{BD}$"},{"id":"b","text":"$2\\overrightarrow{BO}$"},{"id":"c","text":"$\\overrightarrow{AC}$"},{"id":"d","text":"$\\overrightarrow{0}$"}]'::jsonb, 'b', 'لأيّ نقطة O منتصف [AC]: $\overrightarrow{BA} + \overrightarrow{BC} = 2\overrightarrow{BO}$. هذه النتيجة عامّة: مجموع شعاعين من نقطة إلى طرفَي قطعة يساوي ضعف الشعاع من تلك النقطة إلى المنتصف.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4636,7 +4636,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('e6b41809-6203-570a-b2d9-4782a36702c4', '3f4fdade-ea1f-5e7e-8045-6e0c9acaa369', 'ABCD متوازي أضلاع. أيّ من المساواات التالية صحيحة دائمًا؟', '[{"id":"a","text":"$\\overrightarrow{AB} = \\overrightarrow{CB}$"},{"id":"b","text":"$\\overrightarrow{AD} = \\overrightarrow{CB}$"},{"id":"c","text":"$\\overrightarrow{AD} = \\overrightarrow{BC}$"},{"id":"d","text":"$\\overrightarrow{AB} = \\overrightarrow{CD}$"}]'::jsonb, 'c', 'في متوازي الأضلاع ABCD: $\overrightarrow{AB} = \overrightarrow{DC}$ و $\overrightarrow{AD} = \overrightarrow{BC}$. الضلعان AD وBC متوازيان ومتساويان في الطول والمنحى، إذن $\overrightarrow{AD} = \overrightarrow{BC}$.', 2)
+  ('e6b41809-6203-570a-b2d9-4782a36702c4', '3f4fdade-ea1f-5e7e-8045-6e0c9acaa369', 'الانسحاب ذو الشعاع $\overrightarrow{u}$ ينقل النقطة M إلى النقطة M''. العلاقة المُعرِّفة لهذا الانسحاب هي:', '[{"id":"a","text":"$\\overrightarrow{M''M} = \\overrightarrow{u}$"},{"id":"b","text":"$\\overrightarrow{MM''} = \\overrightarrow{u}$"},{"id":"c","text":"$MM'' = 0$"},{"id":"d","text":"$M = M''$"}]'::jsonb, 'b', 'تعريف الانسحاب ذي الشعاع $\overrightarrow{u}$: لكلّ نقطة M، صورتها M'' تحقّق $\overrightarrow{MM''} = \overrightarrow{u}$. الشعاع ينطلق من M (المنشأ) نحو M'' (الطرف).', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4646,7 +4646,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('c995f255-e02a-52f9-9003-3b04f4b3c64c', '3f4fdade-ea1f-5e7e-8045-6e0c9acaa369', 'الانسحاب ذو الشعاع $\overrightarrow{u}$ ينقل النقطة M إلى النقطة M''. العلاقة المُعرِّفة لهذا الانسحاب هي:', '[{"id":"a","text":"$\\overrightarrow{M''M} = \\overrightarrow{u}$"},{"id":"b","text":"$\\overrightarrow{MM''} = \\overrightarrow{u}$"},{"id":"c","text":"$MM'' = 0$"},{"id":"d","text":"$M = M''$"}]'::jsonb, 'b', 'تعريف الانسحاب ذي الشعاع $\overrightarrow{u}$: لكلّ نقطة M، صورتها M'' تحقّق $\overrightarrow{MM''} = \overrightarrow{u}$. الشعاع ينطلق من M (المنشأ) نحو M'' (الطرف).', 3)
+  ('c995f255-e02a-52f9-9003-3b04f4b3c64c', '3f4fdade-ea1f-5e7e-8045-6e0c9acaa369', 'ABCD متوازي أضلاع. أيّ من المساواات التالية صحيحة دائمًا؟', '[{"id":"a","text":"$\\overrightarrow{AB} = \\overrightarrow{CB}$"},{"id":"b","text":"$\\overrightarrow{AD} = \\overrightarrow{CB}$"},{"id":"c","text":"$\\overrightarrow{AD} = \\overrightarrow{BC}$"},{"id":"d","text":"$\\overrightarrow{AB} = \\overrightarrow{CD}$"}]'::jsonb, 'c', 'في متوازي الأضلاع ABCD: $\overrightarrow{AB} = \overrightarrow{DC}$ و $\overrightarrow{AD} = \overrightarrow{BC}$. الضلعان AD وBC متوازيان ومتساويان في الطول والمنحى، إذن $\overrightarrow{AD} = \overrightarrow{BC}$.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4656,7 +4656,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('d7ef7b66-5e08-58fe-973c-147c56ee9e9b', '3f4fdade-ea1f-5e7e-8045-6e0c9acaa369', 'I منتصف القطعة [AB]. ما ناتج $\overrightarrow{MA} + \overrightarrow{MB}$ لأيّ نقطة M؟', '[{"id":"a","text":"$\\overrightarrow{AB}$"},{"id":"b","text":"$\\overrightarrow{0}$"},{"id":"c","text":"$\\overrightarrow{IM}$"},{"id":"d","text":"$2\\overrightarrow{MI}$"}]'::jsonb, 'd', 'نطبّق شال: $\overrightarrow{MA} = \overrightarrow{MI} + \overrightarrow{IA}$ و $\overrightarrow{MB} = \overrightarrow{MI} + \overrightarrow{IB}$. بالجمع: $\overrightarrow{MA} + \overrightarrow{MB} = 2\overrightarrow{MI} + \overrightarrow{IA} + \overrightarrow{IB}$. بما أنّ I منتصف [AB]: $\overrightarrow{IA} + \overrightarrow{IB} = \overrightarrow{0}$، إذن الناتج هو $2\overrightarrow{MI}$.', 4)
+  ('d7ef7b66-5e08-58fe-973c-147c56ee9e9b', '3f4fdade-ea1f-5e7e-8045-6e0c9acaa369', 'ما ناتج $\overrightarrow{AB} + \overrightarrow{BC} + \overrightarrow{CA}$؟', '[{"id":"a","text":"$\\overrightarrow{0}$"},{"id":"b","text":"$\\overrightarrow{AC}$"},{"id":"c","text":"$2\\overrightarrow{AB}$"},{"id":"d","text":"$\\overrightarrow{AA}$"}]'::jsonb, 'a', 'بتطبيق شال تدريجيًا: $\overrightarrow{AB} + \overrightarrow{BC} = \overrightarrow{AC}$، ثمّ $\overrightarrow{AC} + \overrightarrow{CA} = \overrightarrow{AA} = \overrightarrow{0}$. مجموع الأشعّة على مضلّع مغلق يساوي دائمًا $\overrightarrow{0}$.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4666,7 +4666,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('c63e54a0-7b36-546c-925b-5dff53d2bb59', '3f4fdade-ea1f-5e7e-8045-6e0c9acaa369', 'ما ناتج $\overrightarrow{AB} + \overrightarrow{BC} + \overrightarrow{CA}$؟', '[{"id":"a","text":"$\\overrightarrow{0}$"},{"id":"b","text":"$\\overrightarrow{AC}$"},{"id":"c","text":"$2\\overrightarrow{AB}$"},{"id":"d","text":"$\\overrightarrow{AA}$"}]'::jsonb, 'a', 'بتطبيق شال تدريجيًا: $\overrightarrow{AB} + \overrightarrow{BC} = \overrightarrow{AC}$، ثمّ $\overrightarrow{AC} + \overrightarrow{CA} = \overrightarrow{AA} = \overrightarrow{0}$. مجموع الأشعّة على مضلّع مغلق يساوي دائمًا $\overrightarrow{0}$.', 5)
+  ('c63e54a0-7b36-546c-925b-5dff53d2bb59', '3f4fdade-ea1f-5e7e-8045-6e0c9acaa369', 'I منتصف القطعة [AB]. ما ناتج $\overrightarrow{MA} + \overrightarrow{MB}$ لأيّ نقطة M؟', '[{"id":"a","text":"$\\overrightarrow{AB}$"},{"id":"b","text":"$\\overrightarrow{0}$"},{"id":"c","text":"$\\overrightarrow{IM}$"},{"id":"d","text":"$2\\overrightarrow{MI}$"}]'::jsonb, 'd', 'نطبّق شال: $\overrightarrow{MA} = \overrightarrow{MI} + \overrightarrow{IA}$ و $\overrightarrow{MB} = \overrightarrow{MI} + \overrightarrow{IB}$. بالجمع: $\overrightarrow{MA} + \overrightarrow{MB} = 2\overrightarrow{MI} + \overrightarrow{IA} + \overrightarrow{IB}$. بما أنّ I منتصف [AB]: $\overrightarrow{IA} + \overrightarrow{IB} = \overrightarrow{0}$، إذن الناتج هو $2\overrightarrow{MI}$.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4718,7 +4718,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('bf1c92f5-0dc1-5177-834d-601482c99964', '0232a0d3-a032-5031-acef-fa0830294815', 'إذا كانت A(2 ; 8) وB(6 ; 4)، فما إحداثيّات منتصف القطعة [AB]؟', '[{"id":"a","text":"(8 ; 12)"},{"id":"b","text":"(4 ; 4)"},{"id":"c","text":"(4 ; 6)"},{"id":"d","text":"(2 ; 2)"}]'::jsonb, 'c', 'إحداثيّات المنتصف I = ((xA + xB)/2 ; (yA + yB)/2) = ((2+6)/2 ; (8+4)/2) = (4 ; 6). المنتصف هو المعدّل الحسابي للإحداثيّات.', 3)
+  ('bf1c92f5-0dc1-5177-834d-601482c99964', '0232a0d3-a032-5031-acef-fa0830294815', 'النقطة A(−3 ; 5) تقع في أيّ ربع من أرباع المستوي؟', '[{"id":"a","text":"الربع الأوّل (فاصلة موجبة، ترتيبة موجبة)"},{"id":"b","text":"الربع الثاني (فاصلة سالبة، ترتيبة موجبة)"},{"id":"c","text":"الربع الثالث (فاصلة سالبة، ترتيبة سالبة)"},{"id":"d","text":"الربع الرابع (فاصلة موجبة، ترتيبة سالبة)"}]'::jsonb, 'b', 'A(−3 ; 5): الفاصلة −3 < 0 (سالبة) والترتيبة 5 > 0 (موجبة). هذا يوافق الربع الثاني (−, +).', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4728,7 +4728,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('b26762c3-fc84-58d1-9679-63d048d7d87b', '0232a0d3-a032-5031-acef-fa0830294815', 'ما الصيغة الصحيحة لحساب المسافة بين نقطتَين A(xA ; yA) وB(xB ; yB)؟', '[{"id":"a","text":"AB = (xB − xA) + (yB − yA)"},{"id":"b","text":"AB = √((xB − xA)² + (yB − yA)²)"},{"id":"c","text":"AB = (xB − xA)² + (yB − yA)²"},{"id":"d","text":"AB = √((xB + xA)² + (yB + yA)²)"}]'::jsonb, 'b', 'صيغة المسافة: AB = √((xB−xA)² + (yB−yA)²). تنبثق من نظرية فيثاغورس: الفرق في الفاصلات والفرق في الترتيبات يُشكّلان ساقَي مثلّث قائم، والمسافة هي وتره.', 4)
+  ('b26762c3-fc84-58d1-9679-63d048d7d87b', '0232a0d3-a032-5031-acef-fa0830294815', 'إذا كانت A(2 ; 8) وB(6 ; 4)، فما إحداثيّات منتصف القطعة [AB]؟', '[{"id":"a","text":"(8 ; 12)"},{"id":"b","text":"(4 ; 4)"},{"id":"c","text":"(4 ; 6)"},{"id":"d","text":"(2 ; 2)"}]'::jsonb, 'c', 'إحداثيّات المنتصف I = ((xA + xB)/2 ; (yA + yB)/2) = ((2+6)/2 ; (8+4)/2) = (4 ; 6). المنتصف هو المعدّل الحسابي للإحداثيّات.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4738,7 +4738,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('27b1d7a5-68ff-51dc-94b3-f38cd1ec3b32', '0232a0d3-a032-5031-acef-fa0830294815', 'النقطة A(−3 ; 5) تقع في أيّ ربع من أرباع المستوي؟', '[{"id":"a","text":"الربع الأوّل (فاصلة موجبة، ترتيبة موجبة)"},{"id":"b","text":"الربع الثاني (فاصلة سالبة، ترتيبة موجبة)"},{"id":"c","text":"الربع الثالث (فاصلة سالبة، ترتيبة سالبة)"},{"id":"d","text":"الربع الرابع (فاصلة موجبة، ترتيبة سالبة)"}]'::jsonb, 'b', 'A(−3 ; 5): الفاصلة −3 < 0 (سالبة) والترتيبة 5 > 0 (موجبة). هذا يوافق الربع الثاني (−, +).', 5)
+  ('27b1d7a5-68ff-51dc-94b3-f38cd1ec3b32', '0232a0d3-a032-5031-acef-fa0830294815', 'ما الصيغة الصحيحة لحساب المسافة بين نقطتَين A(xA ; yA) وB(xB ; yB)؟', '[{"id":"a","text":"AB = (xB − xA) + (yB − yA)"},{"id":"b","text":"AB = √((xB − xA)² + (yB − yA)²)"},{"id":"c","text":"AB = (xB − xA)² + (yB − yA)²"},{"id":"d","text":"AB = √((xB + xA)² + (yB + yA)²)"}]'::jsonb, 'b', 'صيغة المسافة: AB = √((xB−xA)² + (yB−yA)²). تنبثق من نظرية فيثاغورس: الفرق في الفاصلات والفرق في الترتيبات يُشكّلان ساقَي مثلّث قائم، والمسافة هي وتره.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4780,7 +4780,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('6de356e5-710a-5e65-a741-1ee618d4f5ac', '8a45a71b-b2f9-5c7c-ad4d-674eab139c61', 'A(0 ; 0) وB(3 ; 4). ما المسافة AB؟', '[{"id":"a","text":"7"},{"id":"b","text":"√7"},{"id":"c","text":"5"},{"id":"d","text":"√5"}]'::jsonb, 'c', '$AB = \sqrt{(3-0)^2+(4-0)^2} = \sqrt{9+16} = \sqrt{25} = 5$. وهو المثلّث الكلاسيكي 3-4-5.', 3)
+  ('6de356e5-710a-5e65-a741-1ee618d4f5ac', '8a45a71b-b2f9-5c7c-ad4d-674eab139c61', 'أيّ من النقاط التالية تقع في الربع الثالث (فاصلتها سالبة وترتيبتها سالبة)؟', '[{"id":"a","text":"A(3 ; −2)"},{"id":"b","text":"B(−1 ; 4)"},{"id":"c","text":"C(−2 ; −5)"},{"id":"d","text":"D(0 ; −3)"}]'::jsonb, 'c', 'الربع الثالث هو حيث x < 0 وy < 0. النقطة C(−2 ; −5) تحقّق ذلك. أمّا A فربع رابع، وB ربع ثانٍ، وD على محور الترتيبات.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4790,7 +4790,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('47507fa8-dabb-56f1-b1d6-944470824cef', '8a45a71b-b2f9-5c7c-ad4d-674eab139c61', 'A(−1 ; 2) وB(3 ; 5). ما إحداثيّات منتصف [AB]؟', '[{"id":"a","text":"(2 ; 3.5)"},{"id":"b","text":"(1 ; 3.5)"},{"id":"c","text":"(1 ; 7)"},{"id":"d","text":"(4 ; 7)"}]'::jsonb, 'b', '$I = \left(\frac{-1+3}{2} ; \frac{2+5}{2}\right) = \left(\frac{2}{2} ; \frac{7}{2}\right) = (1 ; 3{,}5)$.', 4)
+  ('47507fa8-dabb-56f1-b1d6-944470824cef', '8a45a71b-b2f9-5c7c-ad4d-674eab139c61', 'A(0 ; 0) وB(3 ; 4). ما المسافة AB؟', '[{"id":"a","text":"7"},{"id":"b","text":"√7"},{"id":"c","text":"5"},{"id":"d","text":"√5"}]'::jsonb, 'c', '$AB = \sqrt{(3-0)^2+(4-0)^2} = \sqrt{9+16} = \sqrt{25} = 5$. وهو المثلّث الكلاسيكي 3-4-5.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4800,7 +4800,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('b7c5cade-1693-5c8c-91c9-b41aa36e44e5', '8a45a71b-b2f9-5c7c-ad4d-674eab139c61', 'A(1 ; 1) وB(4 ; 5). ما المسافة AB؟', '[{"id":"a","text":"7"},{"id":"b","text":"√7"},{"id":"c","text":"√34"},{"id":"d","text":"5"}]'::jsonb, 'd', '$AB = \sqrt{(4-1)^2+(5-1)^2} = \sqrt{3^2+4^2} = \sqrt{9+16} = \sqrt{25} = 5$.', 5)
+  ('b7c5cade-1693-5c8c-91c9-b41aa36e44e5', '8a45a71b-b2f9-5c7c-ad4d-674eab139c61', 'A(−1 ; 2) وB(3 ; 5). ما إحداثيّات منتصف [AB]؟', '[{"id":"a","text":"(2 ; 3.5)"},{"id":"b","text":"(1 ; 3.5)"},{"id":"c","text":"(1 ; 7)"},{"id":"d","text":"(4 ; 7)"}]'::jsonb, 'b', '$I = \left(\frac{-1+3}{2} ; \frac{2+5}{2}\right) = \left(\frac{2}{2} ; \frac{7}{2}\right) = (1 ; 3{,}5)$.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4810,7 +4810,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('092c32a9-516a-5bb5-982e-63f573d04e0f', '8a45a71b-b2f9-5c7c-ad4d-674eab139c61', 'أيّ من النقاط التالية تقع في الربع الثالث (فاصلتها سالبة وترتيبتها سالبة)؟', '[{"id":"a","text":"A(3 ; −2)"},{"id":"b","text":"B(−1 ; 4)"},{"id":"c","text":"C(−2 ; −5)"},{"id":"d","text":"D(0 ; −3)"}]'::jsonb, 'c', 'الربع الثالث هو حيث x < 0 وy < 0. النقطة C(−2 ; −5) تحقّق ذلك. أمّا A فربع رابع، وB ربع ثانٍ، وD على محور الترتيبات.', 6)
+  ('092c32a9-516a-5bb5-982e-63f573d04e0f', '8a45a71b-b2f9-5c7c-ad4d-674eab139c61', 'A(1 ; 1) وB(4 ; 5). ما المسافة AB؟', '[{"id":"a","text":"7"},{"id":"b","text":"√7"},{"id":"c","text":"√34"},{"id":"d","text":"5"}]'::jsonb, 'd', '$AB = \sqrt{(4-1)^2+(5-1)^2} = \sqrt{3^2+4^2} = \sqrt{9+16} = \sqrt{25} = 5$.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4934,7 +4934,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('0e3aa295-fdcd-5246-8df6-db9226c80367', '64f5f198-b1d7-59c2-9dfd-288814c2030a', 'ABCD متوازي أضلاع. A(1 ; 2)، B(5 ; 2)، C(6 ; 5). ما إحداثيّا D؟', '[{"id":"a","text":"$D(3 ; 5)$"},{"id":"b","text":"$D(10 ; 5)$"},{"id":"c","text":"$D(2 ; 5)$"},{"id":"d","text":"$D(0 ; 5)$"}]'::jsonb, 'c', 'في متوازي الأضلاع ABCD: $\overrightarrow{AB} = \overrightarrow{DC}$. $\overrightarrow{AB}\begin{pmatrix} 4 \\ 0 \end{pmatrix}$. إذن $\overrightarrow{DC}\begin{pmatrix} 4 \\ 0 \end{pmatrix}$، أي $x_C - x_D = 4$: $x_D = 6-4 = 2$. و $y_C - y_D = 0$: $y_D = 5$. إذن $D(2 ; 5)$.', 4)
+  ('0e3aa295-fdcd-5246-8df6-db9226c80367', '64f5f198-b1d7-59c2-9dfd-288814c2030a', 'A(2 ; -4) وB(6 ; 8). ما إحداثيّا منتصف I للقطعة [AB]؟', '[{"id":"a","text":"$I(8 ; 4)$"},{"id":"b","text":"$I(4 ; 2)$"},{"id":"c","text":"$I(2 ; 2)$"},{"id":"d","text":"$I(4 ; -2)$"}]'::jsonb, 'b', '$x_I = \frac{2+6}{2} = \frac{8}{2} = 4$ و $y_I = \frac{-4+8}{2} = \frac{4}{2} = 2$. إذن $I(4 ; 2)$. تحقّق: $\overrightarrow{AI}\begin{pmatrix} 2 \\ 6 \end{pmatrix}$ و $\overrightarrow{IB}\begin{pmatrix} 2 \\ 6 \end{pmatrix}$. متساويان ✓.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4944,7 +4944,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('27a6be4d-a962-5679-8ff5-496ff0036083', '64f5f198-b1d7-59c2-9dfd-288814c2030a', 'A(2 ; -4) وB(6 ; 8). ما إحداثيّا منتصف I للقطعة [AB]؟', '[{"id":"a","text":"$I(8 ; 4)$"},{"id":"b","text":"$I(4 ; 2)$"},{"id":"c","text":"$I(2 ; 2)$"},{"id":"d","text":"$I(4 ; -2)$"}]'::jsonb, 'b', '$x_I = \frac{2+6}{2} = \frac{8}{2} = 4$ و $y_I = \frac{-4+8}{2} = \frac{4}{2} = 2$. إذن $I(4 ; 2)$. تحقّق: $\overrightarrow{AI}\begin{pmatrix} 2 \\ 6 \end{pmatrix}$ و $\overrightarrow{IB}\begin{pmatrix} 2 \\ 6 \end{pmatrix}$. متساويان ✓.', 5)
+  ('27a6be4d-a962-5679-8ff5-496ff0036083', '64f5f198-b1d7-59c2-9dfd-288814c2030a', 'A(-1 ; 2) وB(3 ; 5). احسب المسافة AB.', '[{"id":"a","text":"$AB = 7$"},{"id":"b","text":"$AB = \\sqrt{7}$"},{"id":"c","text":"$AB = \\sqrt{41}$"},{"id":"d","text":"$AB = 5$"}]'::jsonb, 'd', '$\Delta x = 3-(-1) = 4$ و $\Delta y = 5-2 = 3$. $AB = \sqrt{4^2 + 3^2} = \sqrt{16+9} = \sqrt{25} = 5$. المثلّث 3-4-5 من المثلّثات القياسية في الامتحانات.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4954,7 +4954,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('6769452a-dee4-5955-98b1-a5bba6570cf5', '64f5f198-b1d7-59c2-9dfd-288814c2030a', 'A(-1 ; 2) وB(3 ; 5). احسب المسافة AB.', '[{"id":"a","text":"$AB = 7$"},{"id":"b","text":"$AB = \\sqrt{7}$"},{"id":"c","text":"$AB = \\sqrt{41}$"},{"id":"d","text":"$AB = 5$"}]'::jsonb, 'd', '$\Delta x = 3-(-1) = 4$ و $\Delta y = 5-2 = 3$. $AB = \sqrt{4^2 + 3^2} = \sqrt{16+9} = \sqrt{25} = 5$. المثلّث 3-4-5 من المثلّثات القياسية في الامتحانات.', 6)
+  ('6769452a-dee4-5955-98b1-a5bba6570cf5', '64f5f198-b1d7-59c2-9dfd-288814c2030a', 'ABCD متوازي أضلاع. A(1 ; 2)، B(5 ; 2)، C(6 ; 5). ما إحداثيّا D؟', '[{"id":"a","text":"$D(3 ; 5)$"},{"id":"b","text":"$D(10 ; 5)$"},{"id":"c","text":"$D(2 ; 5)$"},{"id":"d","text":"$D(0 ; 5)$"}]'::jsonb, 'c', 'في متوازي الأضلاع ABCD: $\overrightarrow{AB} = \overrightarrow{DC}$. $\overrightarrow{AB}\begin{pmatrix} 4 \\ 0 \end{pmatrix}$. إذن $\overrightarrow{DC}\begin{pmatrix} 4 \\ 0 \end{pmatrix}$، أي $x_C - x_D = 4$: $x_D = 6-4 = 2$. و $y_C - y_D = 0$: $y_D = 5$. إذن $D(2 ; 5)$.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -5048,7 +5048,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('223302f2-2f16-52d3-bbbc-10faa71ed40a', 'c0f4caab-6fe4-5cc1-9698-141918f14e73', 'أسطوانة نصف قطرها 3 cm وارتفاعها 4 cm. ما حجمها؟ (π ≈ 3.14)', '[{"id":"a","text":"37.68 cm³"},{"id":"b","text":"75.36 cm³"},{"id":"c","text":"113.04 cm³"},{"id":"d","text":"150.72 cm³"}]'::jsonb, 'c', '$V = \pi r^2 h = 3.14 \times 3^2 \times 4 = 3.14 \times 9 \times 4 = 3.14 \times 36 = 113.04 \text{ cm}^3$.', 2)
+  ('223302f2-2f16-52d3-bbbc-10faa71ed40a', 'c0f4caab-6fe4-5cc1-9698-141918f14e73', 'أيّ صيغة تعطي حجم الأسطوانة؟', '[{"id":"a","text":"$\\frac{1}{3} \\pi r^2 h$"},{"id":"b","text":"$\\frac{4}{3} \\pi r^3$"},{"id":"c","text":"$\\pi r^2 h$"},{"id":"d","text":"$2\\pi r h$"}]'::jsonb, 'c', 'حجم الأسطوانة = مساحة القاعدة × الارتفاع = $\pi r^2 \times h$. أمّا $\frac{1}{3}\pi r^2 h$ فهي المخروط، و$\frac{4}{3}\pi r^3$ هي الكرة، و$2\pi r h$ هي المساحة الجانبية للأسطوانة.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -5058,7 +5058,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('cd3dc54f-1c0c-598c-8515-f4773e66e73f', 'c0f4caab-6fe4-5cc1-9698-141918f14e73', 'هرم قاعدته مربّع ضلعه 6 cm وارتفاعه 4 cm. ما حجمه؟', '[{"id":"a","text":"144 cm³"},{"id":"b","text":"72 cm³"},{"id":"c","text":"48 cm³"},{"id":"d","text":"16 cm³"}]'::jsonb, 'c', '$V = \frac{1}{3} \times S_{\text{قاعدة}} \times h = \frac{1}{3} \times 6^2 \times 4 = \frac{1}{3} \times 36 \times 4 = \frac{144}{3} = 48 \text{ cm}^3$.', 3)
+  ('cd3dc54f-1c0c-598c-8515-f4773e66e73f', 'c0f4caab-6fe4-5cc1-9698-141918f14e73', 'أسطوانة نصف قطرها 3 cm وارتفاعها 4 cm. ما حجمها؟ (π ≈ 3.14)', '[{"id":"a","text":"37.68 cm³"},{"id":"b","text":"75.36 cm³"},{"id":"c","text":"113.04 cm³"},{"id":"d","text":"150.72 cm³"}]'::jsonb, 'c', '$V = \pi r^2 h = 3.14 \times 3^2 \times 4 = 3.14 \times 9 \times 4 = 3.14 \times 36 = 113.04 \text{ cm}^3$.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -5068,7 +5068,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('750dd55f-9959-5972-9ca2-885a2342710f', 'c0f4caab-6fe4-5cc1-9698-141918f14e73', 'مخروط نصف قطر قاعدته 3 cm وارتفاعه 4 cm. ما حجمه؟ (π ≈ 3.14)', '[{"id":"a","text":"113.04 cm³"},{"id":"b","text":"75.36 cm³"},{"id":"c","text":"37.68 cm³"},{"id":"d","text":"25.12 cm³"}]'::jsonb, 'c', '$V = \frac{1}{3} \pi r^2 h = \frac{1}{3} \times 3.14 \times 9 \times 4 = \frac{1}{3} \times 113.04 = 37.68 \text{ cm}^3$.', 4)
+  ('750dd55f-9959-5972-9ca2-885a2342710f', 'c0f4caab-6fe4-5cc1-9698-141918f14e73', 'هرم قاعدته مربّع ضلعه 6 cm وارتفاعه 4 cm. ما حجمه؟', '[{"id":"a","text":"144 cm³"},{"id":"b","text":"72 cm³"},{"id":"c","text":"48 cm³"},{"id":"d","text":"16 cm³"}]'::jsonb, 'c', '$V = \frac{1}{3} \times S_{\text{قاعدة}} \times h = \frac{1}{3} \times 6^2 \times 4 = \frac{1}{3} \times 36 \times 4 = \frac{144}{3} = 48 \text{ cm}^3$.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -5078,7 +5078,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('546ec25e-87b5-5290-bf81-399849944cf6', 'c0f4caab-6fe4-5cc1-9698-141918f14e73', 'ما مساحة سطح كرة نصف قطرها 5 cm؟ (π ≈ 3.14)', '[{"id":"a","text":"78.5 cm²"},{"id":"b","text":"314 cm²"},{"id":"c","text":"523.33 cm²"},{"id":"d","text":"157 cm²"}]'::jsonb, 'b', '$S = 4\pi r^2 = 4 \times 3.14 \times 5^2 = 4 \times 3.14 \times 25 = 314 \text{ cm}^2$.', 5)
+  ('546ec25e-87b5-5290-bf81-399849944cf6', 'c0f4caab-6fe4-5cc1-9698-141918f14e73', 'مخروط نصف قطر قاعدته 3 cm وارتفاعه 4 cm. ما حجمه؟ (π ≈ 3.14)', '[{"id":"a","text":"113.04 cm³"},{"id":"b","text":"75.36 cm³"},{"id":"c","text":"37.68 cm³"},{"id":"d","text":"25.12 cm³"}]'::jsonb, 'c', '$V = \frac{1}{3} \pi r^2 h = \frac{1}{3} \times 3.14 \times 9 \times 4 = \frac{1}{3} \times 113.04 = 37.68 \text{ cm}^3$.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -5088,7 +5088,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('bc3acdeb-df34-5d99-827b-46cad1675a03', 'c0f4caab-6fe4-5cc1-9698-141918f14e73', 'أيّ صيغة تعطي حجم الأسطوانة؟', '[{"id":"a","text":"$\\frac{1}{3} \\pi r^2 h$"},{"id":"b","text":"$\\frac{4}{3} \\pi r^3$"},{"id":"c","text":"$\\pi r^2 h$"},{"id":"d","text":"$2\\pi r h$"}]'::jsonb, 'c', 'حجم الأسطوانة = مساحة القاعدة × الارتفاع = $\pi r^2 \times h$. أمّا $\frac{1}{3}\pi r^2 h$ فهي المخروط، و$\frac{4}{3}\pi r^3$ هي الكرة، و$2\pi r h$ هي المساحة الجانبية للأسطوانة.', 6)
+  ('bc3acdeb-df34-5d99-827b-46cad1675a03', 'c0f4caab-6fe4-5cc1-9698-141918f14e73', 'ما مساحة سطح كرة نصف قطرها 5 cm؟ (π ≈ 3.14)', '[{"id":"a","text":"78.5 cm²"},{"id":"b","text":"314 cm²"},{"id":"c","text":"523.33 cm²"},{"id":"d","text":"157 cm²"}]'::jsonb, 'b', '$S = 4\pi r^2 = 4 \times 3.14 \times 5^2 = 4 \times 3.14 \times 25 = 314 \text{ cm}^2$.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -5212,7 +5212,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('d459fcab-1737-56cb-a40c-a7c8cf4981bb', '3baad67a-a282-5810-90d2-589f56042a87', 'كرة نصف قطرها 6 cm. ما حجمها تقريبًا؟ (π ≈ 3.14)', '[{"id":"a","text":"$150.72 \\text{ cm}^3$"},{"id":"b","text":"$452.16 \\text{ cm}^3$"},{"id":"c","text":"$678.24 \\text{ cm}^3$"},{"id":"d","text":"$904.32 \\text{ cm}^3$"}]'::jsonb, 'd', '$V = \frac{4}{3} \pi r^3 = \frac{4}{3} \times 3.14 \times 6^3 = \frac{4}{3} \times 3.14 \times 216 = \frac{4 \times 678.24}{3} = \frac{2712.96}{3} = 904.32 \text{ cm}^3$.', 4)
+  ('d459fcab-1737-56cb-a40c-a7c8cf4981bb', '3baad67a-a282-5810-90d2-589f56042a87', 'أسطوانة نصف قطرها 4 cm وارتفاعها 5 cm. ما حجمها تقريبًا؟ (π ≈ 3.14)', '[{"id":"a","text":"$125.6 \\text{ cm}^3$"},{"id":"b","text":"$62.8 \\text{ cm}^3$"},{"id":"c","text":"$251.2 \\text{ cm}^3$"},{"id":"d","text":"$502.4 \\text{ cm}^3$"}]'::jsonb, 'c', '$V = \pi r^2 h = 3.14 \times 4^2 \times 5 = 3.14 \times 16 \times 5 = 3.14 \times 80 = 251.2 \text{ cm}^3$. تذكّر: نربّع نصف القطر أوّلًا ثمّ نضرب في الارتفاع.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -5222,7 +5222,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('f9f4b96c-9e1b-5c77-9a00-08d4fdde4565', '3baad67a-a282-5810-90d2-589f56042a87', 'موشور قائم قاعدته مثلّث قائم ساقاه 6 cm و8 cm، وارتفاعه 10 cm. ما حجمه؟', '[{"id":"a","text":"$240 \\text{ cm}^3$"},{"id":"b","text":"$480 \\text{ cm}^3$"},{"id":"c","text":"$120 \\text{ cm}^3$"},{"id":"d","text":"$400 \\text{ cm}^3$"}]'::jsonb, 'a', 'مساحة القاعدة المثلّثية: $S = \frac{1}{2} \times 6 \times 8 = 24 \text{ cm}^2$. حجم الموشور: $V = S \times h = 24 \times 10 = 240 \text{ cm}^3$. الخطوة الأولى دائمًا: احسب مساحة القاعدة.', 5)
+  ('f9f4b96c-9e1b-5c77-9a00-08d4fdde4565', '3baad67a-a282-5810-90d2-589f56042a87', 'كرة نصف قطرها 6 cm. ما حجمها تقريبًا؟ (π ≈ 3.14)', '[{"id":"a","text":"$150.72 \\text{ cm}^3$"},{"id":"b","text":"$452.16 \\text{ cm}^3$"},{"id":"c","text":"$678.24 \\text{ cm}^3$"},{"id":"d","text":"$904.32 \\text{ cm}^3$"}]'::jsonb, 'd', '$V = \frac{4}{3} \pi r^3 = \frac{4}{3} \times 3.14 \times 6^3 = \frac{4}{3} \times 3.14 \times 216 = \frac{4 \times 678.24}{3} = \frac{2712.96}{3} = 904.32 \text{ cm}^3$.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -5232,7 +5232,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('e9c55a8c-88c9-5368-a0cd-075e6be633de', '3baad67a-a282-5810-90d2-589f56042a87', 'أسطوانة نصف قطرها 4 cm وارتفاعها 5 cm. ما حجمها تقريبًا؟ (π ≈ 3.14)', '[{"id":"a","text":"$125.6 \\text{ cm}^3$"},{"id":"b","text":"$62.8 \\text{ cm}^3$"},{"id":"c","text":"$251.2 \\text{ cm}^3$"},{"id":"d","text":"$502.4 \\text{ cm}^3$"}]'::jsonb, 'c', '$V = \pi r^2 h = 3.14 \times 4^2 \times 5 = 3.14 \times 16 \times 5 = 3.14 \times 80 = 251.2 \text{ cm}^3$. تذكّر: نربّع نصف القطر أوّلًا ثمّ نضرب في الارتفاع.', 6)
+  ('e9c55a8c-88c9-5368-a0cd-075e6be633de', '3baad67a-a282-5810-90d2-589f56042a87', 'موشور قائم قاعدته مثلّث قائم ساقاه 6 cm و8 cm، وارتفاعه 10 cm. ما حجمه؟', '[{"id":"a","text":"$240 \\text{ cm}^3$"},{"id":"b","text":"$480 \\text{ cm}^3$"},{"id":"c","text":"$120 \\text{ cm}^3$"},{"id":"d","text":"$400 \\text{ cm}^3$"}]'::jsonb, 'a', 'مساحة القاعدة المثلّثية: $S = \frac{1}{2} \times 6 \times 8 = 24 \text{ cm}^2$. حجم الموشور: $V = S \times h = 24 \times 10 = 240 \text{ cm}^3$. الخطوة الأولى دائمًا: احسب مساحة القاعدة.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,

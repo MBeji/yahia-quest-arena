@@ -27,7 +27,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "This is a zero conditional (general/factual truth about a machine): If you press this button, the machine starts. Both clauses use the present simple."
+      "explanation": "This is a zero conditional (general/factual truth about a machine): If you press this button, the machine starts. Both clauses use the present simple.",
+      "difficulty": 2
     },
     {
       "prompt": "Complete: \"If I ___ you, I would talk to the teacher about this problem.\"",
@@ -50,7 +51,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "In the second conditional, \"be\" takes \"were\" for all persons in standard/formal English: If I were you... It is an imaginary situation."
+      "explanation": "In the second conditional, \"be\" takes \"were\" for all persons in standard/formal English: If I were you... It is an imaginary situation.",
+      "difficulty": 2
     },
     {
       "prompt": "Which sentence is a correct first conditional?",
@@ -73,7 +75,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "First conditional: if + present simple (rains) + will + base verb (will stay). Option a wrongly puts will in the if-clause; c mixes past simple with will; d is second conditional form."
+      "explanation": "First conditional: if + present simple (rains) + will + base verb (will stay). Option a wrongly puts will in the if-clause; c mixes past simple with will; d is second conditional form.",
+      "difficulty": 2
     },
     {
       "prompt": "Complete: \"___ you finish early, you can leave.\" (use unless or if)",
@@ -96,7 +99,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "The sentence means: finishing early is the condition for being allowed to leave. This is a positive condition, so use \"if\": if you finish early, you can leave. \"Unless\" would mean the opposite."
+      "explanation": "The sentence means: finishing early is the condition for being allowed to leave. This is a positive condition, so use \"if\": if you finish early, you can leave. \"Unless\" would mean the opposite.",
+      "difficulty": 3
     },
     {
       "prompt": "Choose the sentence where the comma is used correctly:",
@@ -119,7 +123,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "The comma is placed after the if-clause when it comes first in the sentence: \"If it snows, we will cancel the trip.\" No comma is needed when the main clause comes first (option a has an unnecessary comma)."
+      "explanation": "The comma is placed after the if-clause when it comes first in the sentence: \"If it snows, we will cancel the trip.\" No comma is needed when the main clause comes first (option a has an unnecessary comma).",
+      "difficulty": 2
     },
     {
       "prompt": "Complete both blanks: \"If she ___ the exam, her parents ___ very proud.\"",
@@ -142,7 +147,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "First conditional: if + present simple (passes) + will + base verb (will be). The situation is realistic — she may well pass. Option c mixes past simple with will (second conditional main clause with first conditional if-clause), which is incorrect."
+      "explanation": "First conditional: if + present simple (passes) + will + base verb (will be). The situation is realistic — she may well pass. Option c mixes past simple with will (second conditional main clause with first conditional if-clause), which is incorrect.",
+      "difficulty": 3
     }
   ]
 }

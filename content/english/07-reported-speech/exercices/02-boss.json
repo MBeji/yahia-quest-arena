@@ -27,7 +27,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "Present perfect ('have finished') backshifts to past perfect ('had finished'). 'We' changes to 'they'. We use 'say (that)', not 'told (that)'."
+      "explanation": "Present perfect ('have finished') backshifts to past perfect ('had finished'). 'We' changes to 'they'. We use 'say (that)', not 'told (that)'.",
+      "difficulty": 2
     },
     {
       "prompt": "Direct: \"Where does she live?\" he asked. Choose the correct reported question:",
@@ -50,7 +51,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "Reported wh-questions use normal word order (no inversion, no auxiliary) and apply backshift: 'does she live' → 'she lived'. No question mark in reported speech."
+      "explanation": "Reported wh-questions use normal word order (no inversion, no auxiliary) and apply backshift: 'does she live' → 'she lived'. No question mark in reported speech.",
+      "difficulty": 2
     },
     {
       "prompt": "Direct: \"I studied here yesterday,\" she told me. Identify all the changes in the reported form: 'She told me she had studied there the day before.'",
@@ -73,7 +75,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "'I' → 'she' (pronoun); past simple 'studied' → past perfect 'had studied' (tense backshift); 'here' → 'there' (place word); 'yesterday' → 'the day before' (time word). All four elements changed."
+      "explanation": "'I' → 'she' (pronoun); past simple 'studied' → past perfect 'had studied' (tense backshift); 'here' → 'there' (place word); 'yesterday' → 'the day before' (time word). All four elements changed.",
+      "difficulty": 3
     },
     {
       "prompt": "Direct: \"Can you open the window?\" she asked him. Choose the correct reported form:",
@@ -96,7 +99,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "A yes/no question is reported with 'if/whether'. 'can' backshifts to 'could'. Normal word order: 'he could open'. The pronoun 'you' changes to 'he'."
+      "explanation": "A yes/no question is reported with 'if/whether'. 'can' backshifts to 'could'. Normal word order: 'he could open'. The pronoun 'you' changes to 'he'.",
+      "difficulty": 2
     },
     {
       "prompt": "Direct: \"Come back tomorrow!\" he told her. Choose the correct reported command:",
@@ -119,7 +123,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "Commands use 'tell + person + to + infinitive'. The time word 'tomorrow' shifts to 'the next day' in reported speech. 'said her' is wrong — 'say' never takes a direct person object."
+      "explanation": "Commands use 'tell + person + to + infinitive'. The time word 'tomorrow' shifts to 'the next day' in reported speech. 'said her' is wrong — 'say' never takes a direct person object.",
+      "difficulty": 3
     },
     {
       "prompt": "Which sentence applies the WRONG backshift?",
@@ -142,7 +147,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "When the reporting verb is in the past, 'can' must backshift to 'could'. Saying 'they can finish' is incorrect — it should be 'they could finish'."
+      "explanation": "When the reporting verb is in the past, 'can' must backshift to 'could'. Saying 'they can finish' is incorrect — it should be 'they could finish'.",
+      "difficulty": 3
     }
   ]
 }

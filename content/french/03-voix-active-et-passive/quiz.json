@@ -13,7 +13,8 @@
         { "id": "d", "text": "Verbe à l'infinitif précédé de « faire »" }
       ],
       "correctOption": "c",
-      "explanation": "La voix passive se construit avec l'auxiliaire « être » conjugué au temps voulu, suivi du participe passé qui s'accorde en genre et en nombre avec le sujet."
+      "explanation": "La voix passive se construit avec l'auxiliaire « être » conjugué au temps voulu, suivi du participe passé qui s'accorde en genre et en nombre avec le sujet.",
+      "difficulty": 1
     },
     {
       "prompt": "Lors de la transformation active → passive, que devient le COD de la phrase active ?",
@@ -24,7 +25,8 @@
         { "id": "d", "text": "L'attribut du sujet passif" }
       ],
       "correctOption": "b",
-      "explanation": "Règle de transformation : le COD de la phrase active devient le sujet de la phrase passive ; l'ancien sujet actif devient le complément d'agent introduit par « par » ou « de »."
+      "explanation": "Règle de transformation : le COD de la phrase active devient le sujet de la phrase passive ; l'ancien sujet actif devient le complément d'agent introduit par « par » ou « de ».",
+      "difficulty": 1
     },
     {
       "prompt": "Quel type de verbe NE peut PAS se mettre à la voix passive ?",
@@ -35,7 +37,8 @@
         { "id": "d", "text": "Un verbe transitif direct comme « lire »" }
       ],
       "correctOption": "c",
-      "explanation": "Seuls les verbes transitifs directs (qui ont un COD) peuvent se mettre à la voix passive. Les verbes intransitifs comme « dormir », « partir » ou « ressembler à » ne le peuvent pas."
+      "explanation": "Seuls les verbes transitifs directs (qui ont un COD) peuvent se mettre à la voix passive. Les verbes intransitifs comme « dormir », « partir » ou « ressembler à » ne le peuvent pas.",
+      "difficulty": 2
     },
     {
       "prompt": "Comment transforme-t-on à la voix active la phrase passive « La porte a été fermée. » quand il n'y a pas de complément d'agent ?",
@@ -46,7 +49,8 @@
         { "id": "d", "text": "La porte fermait." }
       ],
       "correctOption": "c",
-      "explanation": "Quand la phrase passive n'a pas de complément d'agent, on utilise le sujet indéfini « on » à la voix active : « La porte a été fermée. » → « On a fermé la porte. »"
+      "explanation": "Quand la phrase passive n'a pas de complément d'agent, on utilise le sujet indéfini « on » à la voix active : « La porte a été fermée. » → « On a fermé la porte. »",
+      "difficulty": 2
     },
     {
       "prompt": "Quel est l'intérêt stylistique principal de la voix passive ?",
@@ -57,7 +61,8 @@
         { "id": "d", "text": "Elle exprime une hypothèse." }
       ],
       "correctOption": "b",
-      "explanation": "La voix passive met en lumière celui qui subit l'action. Ex. : « La vérité est révélée par le journaliste. » → l'accent est sur la vérité, pas sur le journaliste."
+      "explanation": "La voix passive met en lumière celui qui subit l'action. Ex. : « La vérité est révélée par le journaliste. » → l'accent est sur la vérité, pas sur le journaliste.",
+      "difficulty": 2
     }
   ]
 }

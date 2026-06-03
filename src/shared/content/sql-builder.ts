@@ -181,6 +181,7 @@ export function buildMigrationSql(subject: LoadedSubject): string {
     options: unknown;
     correctOption: string;
     explanation: string;
+    difficulty?: number;
   };
   const emitExercise = (
     chId: string,
@@ -211,7 +212,12 @@ export function buildMigrationSql(subject: LoadedSubject): string {
       "  display_order = EXCLUDED.display_order;",
       "",
     );
-    questions.forEach((q, i) => {
+    // Order questions from easiest to hardest (stable; untagged = medium).
+    const ordered = questions
+      .map((q, i) => ({ q, i }))
+      .sort((a, b) => (a.q.difficulty ?? 2) - (b.q.difficulty ?? 2) || a.i - b.i)
+      .map((e) => e.q);
+    ordered.forEach((q, i) => {
       const qId = questionId(subjectId, chapterSlug, slug, i + 1);
       out.push(
         "INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES",

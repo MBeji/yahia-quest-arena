@@ -27,7 +27,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "Le passage explique un phénomène naturel (l'éruption) à l'aide d'une relation cause/effet et du présent de vérité générale : c'est un texte explicatif."
+      "explanation": "Le passage explique un phénomène naturel (l'éruption) à l'aide d'une relation cause/effet et du présent de vérité générale : c'est un texte explicatif.",
+      "difficulty": 2
     },
     {
       "prompt": "Un élève écrit : « Les jeux vidéo sont néfastes pour les jeunes. En effet, ils réduisent le temps consacré aux devoirs. Par exemple, une étude montre que les joueurs réguliers ont de moins bonnes notes. » Quelle structure reconnaît-on ?",
@@ -50,7 +51,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "La première phrase est la thèse (position défendue), « En effet » introduit un argument (raison), et « Par exemple » illustre par un exemple concret : c'est la structure argumentative classique."
+      "explanation": "La première phrase est la thèse (position défendue), « En effet » introduit un argument (raison), et « Par exemple » illustre par un exemple concret : c'est la structure argumentative classique.",
+      "difficulty": 2
     },
     {
       "prompt": "Quelle étape du schéma narratif correspond à ce passage : « Enfin, le héros retrouva son village en paix et ses amis l'accueillirent avec joie. » ?",
@@ -73,7 +75,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "Ce passage décrit le nouvel état d'équilibre atteint après la résolution du conflit : c'est la situation finale, dernière étape du schéma narratif."
+      "explanation": "Ce passage décrit le nouvel état d'équilibre atteint après la résolution du conflit : c'est la situation finale, dernière étape du schéma narratif.",
+      "difficulty": 2
     },
     {
       "prompt": "Quel connecteur logique complète le mieux cette phrase argumentative : « Ce projet est ambitieux ; _____, il est tout à fait réalisable. » ?",
@@ -96,7 +99,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "« Cependant » exprime la concession/opposition : on admet une limite (projet ambitieux) tout en la nuançant (mais réalisable). C'est le connecteur d'opposition qui convient ici."
+      "explanation": "« Cependant » exprime la concession/opposition : on admet une limite (projet ambitieux) tout en la nuançant (mais réalisable). C'est le connecteur d'opposition qui convient ici.",
+      "difficulty": 3
     },
     {
       "prompt": "Pour décrire une salle de château de façon méthodique, quelle organisation est la plus adaptée ?",
@@ -119,7 +123,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "La description d'un lieu s'organise selon un plan spatial (point de vue du regard qui se déplace) pour guider le lecteur de manière cohérente et vivante."
+      "explanation": "La description d'un lieu s'organise selon un plan spatial (point de vue du regard qui se déplace) pour guider le lecteur de manière cohérente et vivante.",
+      "difficulty": 3
     },
     {
       "prompt": "Quelle formule de politesse convient à la clôture d'une lettre formelle adressée à un directeur ?",
@@ -142,7 +147,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "La lettre formelle exige une formule de politesse complète reprenant le titre du destinataire. Les options b, c et d appartiennent au registre familier ou sont incomplètes."
+      "explanation": "La lettre formelle exige une formule de politesse complète reprenant le titre du destinataire. Les options b, c et d appartiennent au registre familier ou sont incomplètes.",
+      "difficulty": 2
     }
   ]
 }

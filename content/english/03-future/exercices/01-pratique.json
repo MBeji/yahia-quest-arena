@@ -27,7 +27,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "The decision is made at the moment of speaking (spontaneous). Use will: I'll answer it!"
+      "explanation": "The decision is made at the moment of speaking (spontaneous). Use will: I'll answer it!",
+      "difficulty": 1
     },
     {
       "prompt": "Look at those black clouds! Complete: \"It ___ rain.\"",
@@ -50,7 +51,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "The visible evidence (black clouds) calls for \"be going to\": it is going to rain."
+      "explanation": "The visible evidence (black clouds) calls for \"be going to\": it is going to rain.",
+      "difficulty": 1
     },
     {
       "prompt": "Complete the time clause: \"I will call you when I ___ home.\"",
@@ -73,7 +75,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "After time conjunctions (when, as soon as, before, after, until) in a future sentence, use the present simple — not will: when I get home."
+      "explanation": "After time conjunctions (when, as soon as, before, after, until) in a future sentence, use the present simple — not will: when I get home.",
+      "difficulty": 2
     },
     {
       "prompt": "Choose the correct sentence about a plan already decided:",
@@ -96,7 +99,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "A plan decided before speaking uses \"be going to\": we are going to visit Djerba next summer."
+      "explanation": "A plan decided before speaking uses \"be going to\": we are going to visit Djerba next summer.",
+      "difficulty": 2
     },
     {
       "prompt": "Complete: \"I ___ the dentist at 3 p.m. tomorrow.\" (appointment confirmed)",
@@ -119,7 +123,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "A confirmed arrangement with a specific time uses the present continuous: I am seeing the dentist at 3 p.m. tomorrow."
+      "explanation": "A confirmed arrangement with a specific time uses the present continuous: I am seeing the dentist at 3 p.m. tomorrow.",
+      "difficulty": 2
     },
     {
       "prompt": "Which time marker does NOT typically go with future tenses?",
@@ -142,7 +147,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "\"Yesterday\" refers to the past, not the future. \"Next week\", \"tomorrow\", and \"soon\" are future time markers."
+      "explanation": "\"Yesterday\" refers to the past, not the future. \"Next week\", \"tomorrow\", and \"soon\" are future time markers.",
+      "difficulty": 1
     }
   ]
 }

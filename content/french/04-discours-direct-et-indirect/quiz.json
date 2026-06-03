@@ -13,7 +13,8 @@
         { "id": "d", "text": "Des astérisques et des points de suspension" }
       ],
       "correctOption": "b",
-      "explanation": "Le discours direct se reconnaît aux deux-points annonçant les paroles, aux guillemets les encadrant et aux tirets marquant les changements d'interlocuteur dans un dialogue."
+      "explanation": "Le discours direct se reconnaît aux deux-points annonçant les paroles, aux guillemets les encadrant et aux tirets marquant les changements d'interlocuteur dans un dialogue.",
+      "difficulty": 1
     },
     {
       "prompt": "Pour transposer au discours indirect une question totale du type « Viens-tu ? », quel outil de subordination utilise-t-on ?",
@@ -24,7 +25,8 @@
         { "id": "d", "text": "de + infinitif" }
       ],
       "correctOption": "c",
-      "explanation": "Une question totale (réponse oui/non) est introduite au discours indirect par « si » : « Viens-tu ? » → Il demande si tu viens."
+      "explanation": "Une question totale (réponse oui/non) est introduite au discours indirect par « si » : « Viens-tu ? » → Il demande si tu viens.",
+      "difficulty": 1
     },
     {
       "prompt": "Le verbe introducteur est au passé : « Elle dit : 'Je travaille.' » Quel temps prend le verbe au discours indirect ?",
@@ -35,7 +37,8 @@
         { "id": "d", "text": "Le conditionnel présent" }
       ],
       "correctOption": "b",
-      "explanation": "Quand le verbe introducteur est au passé, le présent du discours direct devient l'imparfait au discours indirect : « Je travaille. » → Elle dit qu'elle travaillait."
+      "explanation": "Quand le verbe introducteur est au passé, le présent du discours direct devient l'imparfait au discours indirect : « Je travaille. » → Elle dit qu'elle travaillait.",
+      "difficulty": 2
     },
     {
       "prompt": "Comment transforme-t-on « aujourd'hui » du discours direct en discours indirect (verbe introducteur au passé) ?",
@@ -46,7 +49,8 @@
         { "id": "d", "text": "ce jour-là" }
       ],
       "correctOption": "d",
-      "explanation": "Les indicateurs de temps s'adaptent au discours indirect : « aujourd'hui » devient « ce jour-là », « hier » devient « la veille », « demain » devient « le lendemain »."
+      "explanation": "Les indicateurs de temps s'adaptent au discours indirect : « aujourd'hui » devient « ce jour-là », « hier » devient « la veille », « demain » devient « le lendemain ».",
+      "difficulty": 2
     },
     {
       "prompt": "Au discours indirect, un ordre à l'impératif est transposé grâce à :",
@@ -57,7 +61,8 @@
         { "id": "d", "text": "le pronom relatif « qui » + verbe conjugué" }
       ],
       "correctOption": "b",
-      "explanation": "Un impératif se transforme au discours indirect en « de + infinitif » : « Pars ! » → Il lui ordonne de partir."
+      "explanation": "Un impératif se transforme au discours indirect en « de + infinitif » : « Pars ! » → Il lui ordonne de partir.",
+      "difficulty": 2
     }
   ]
 }

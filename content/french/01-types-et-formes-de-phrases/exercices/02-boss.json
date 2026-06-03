@@ -27,7 +27,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "Le COD « les copies » devient sujet, et on garde le présent : « sont corrigées par le maître »."
+      "explanation": "Le COD « les copies » devient sujet, et on garde le présent : « sont corrigées par le maître ».",
+      "difficulty": 2
     },
     {
       "prompt": "Mets à la forme négative : « Il voit quelqu'un. »",
@@ -50,7 +51,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "Le contraire de « quelqu'un » (une personne) est « ne… personne ». « ne… rien » s'emploie pour une chose."
+      "explanation": "Le contraire de « quelqu'un » (une personne) est « ne… personne ». « ne… rien » s'emploie pour une chose.",
+      "difficulty": 3
     },
     {
       "prompt": "Quelle phrase est une interrogation partielle ?",
@@ -73,7 +75,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "L'interrogation porte sur un élément précis (le moment) grâce au mot interrogatif « quand » : elle est partielle."
+      "explanation": "L'interrogation porte sur un élément précis (le moment) grâce au mot interrogatif « quand » : elle est partielle.",
+      "difficulty": 2
     },
     {
       "prompt": "Mets à la voix active : « La ville fut détruite par l'armée. »",
@@ -96,7 +99,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "Le complément d'agent « l'armée » devient sujet et on conserve le passé simple : « détruisit »."
+      "explanation": "Le complément d'agent « l'armée » devient sujet et on conserve le passé simple : « détruisit ».",
+      "difficulty": 3
     },
     {
       "prompt": "Dans « Le dragon ne dort plus. », la négation « ne… plus » exprime :",
@@ -119,7 +123,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "« ne… plus » indique qu'une action a cessé : le dragon dormait, mais ce n'est plus le cas."
+      "explanation": "« ne… plus » indique qu'une action a cessé : le dragon dormait, mais ce n'est plus le cas.",
+      "difficulty": 2
     },
     {
       "prompt": "Mets le sujet en relief : « Le héros sauve le village. »",
@@ -142,7 +147,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "Pour mettre le SUJET en relief, on emploie « c'est… qui » : « C'est le héros qui… ». L'option b met en relief le complément."
+      "explanation": "Pour mettre le SUJET en relief, on emploie « c'est… qui » : « C'est le héros qui… ». L'option b met en relief le complément.",
+      "difficulty": 3
     }
   ]
 }

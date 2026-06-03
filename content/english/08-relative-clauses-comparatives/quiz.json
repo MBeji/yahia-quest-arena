@@ -10,7 +10,8 @@
         { "id": "d", "text": "who" }
       ],
       "correctOption": "d",
-      "explanation": "\"Who\" refers to people in a relative clause: \"The teacher who inspired me retired last year.\" \"Which\" refers to things or animals."
+      "explanation": "\"Who\" refers to people in a relative clause: \"The teacher who inspired me retired last year.\" \"Which\" refers to things or animals.",
+      "difficulty": 1
     },
     {
       "prompt": "What is the comparative form of the adjective \"happy\"?",
@@ -21,7 +22,8 @@
         { "id": "d", "text": "the happiest" }
       ],
       "correctOption": "b",
-      "explanation": "Short adjectives ending in -y drop the y and add -ier: happy → happier than. \"More happy\" is not the standard form."
+      "explanation": "Short adjectives ending in -y drop the y and add -ier: happy → happier than. \"More happy\" is not the standard form.",
+      "difficulty": 1
     },
     {
       "prompt": "Which sentence correctly uses the superlative form?",
@@ -32,7 +34,8 @@
         { "id": "d", "text": "This is difficultest question in the exam." }
       ],
       "correctOption": "c",
-      "explanation": "Superlatives always require the definite article \"the\" before them: the most difficult. Long adjectives use \"the most + adjective\"."
+      "explanation": "Superlatives always require the definite article \"the\" before them: the most difficult. Long adjectives use \"the most + adjective\".",
+      "difficulty": 2
     },
     {
       "prompt": "Which relative pronoun shows possession?",
@@ -43,7 +46,8 @@
         { "id": "d", "text": "whose" }
       ],
       "correctOption": "d",
-      "explanation": "\"Whose\" replaces a possessive: \"The girl whose bag was lost\" means the girl's bag was lost. It refers to people."
+      "explanation": "\"Whose\" replaces a possessive: \"The girl whose bag was lost\" means the girl's bag was lost. It refers to people.",
+      "difficulty": 2
     },
     {
       "prompt": "Which sentence correctly expresses equality using \"as ... as\"?",
@@ -54,7 +58,8 @@
         { "id": "d", "text": "Sami is tallest as his brother." }
       ],
       "correctOption": "b",
-      "explanation": "The structure for equality is \"as + adjective (base form) + as\". Never use the comparative form inside this structure: \"as tall as\", not \"as taller as\"."
+      "explanation": "The structure for equality is \"as + adjective (base form) + as\". Never use the comparative form inside this structure: \"as tall as\", not \"as taller as\".",
+      "difficulty": 3
     }
   ]
 }

@@ -27,7 +27,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "The zero conditional uses present simple in both clauses for general truths: if you mix red and blue, you get purple."
+      "explanation": "The zero conditional uses present simple in both clauses for general truths: if you mix red and blue, you get purple.",
+      "difficulty": 1
     },
     {
       "prompt": "Complete the first conditional: \"If she ___ harder, she will pass the baccalaureate.\"",
@@ -50,7 +51,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "The first conditional uses present simple in the if-clause (not will): if she studies harder, she will pass."
+      "explanation": "The first conditional uses present simple in the if-clause (not will): if she studies harder, she will pass.",
+      "difficulty": 1
     },
     {
       "prompt": "Complete the second conditional: \"If I ___ a superhero, I would fly to school.\"",
@@ -73,7 +75,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "The second conditional uses past simple (or \"were\" for be) in the if-clause: if I were a superhero. This is an imaginary situation."
+      "explanation": "The second conditional uses past simple (or \"were\" for be) in the if-clause: if I were a superhero. This is an imaginary situation.",
+      "difficulty": 2
     },
     {
       "prompt": "Which sentence correctly uses a comma?",
@@ -96,7 +99,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "When the if-clause comes first, place a comma after it: \"If you ask me, I will help you.\" No comma is used when the main clause comes first."
+      "explanation": "When the if-clause comes first, place a comma after it: \"If you ask me, I will help you.\" No comma is used when the main clause comes first.",
+      "difficulty": 2
     },
     {
       "prompt": "Rewrite using \"unless\": \"If you don't eat breakfast, you will feel weak.\" Choose the correct version:",
@@ -119,7 +123,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "\"Unless\" already means \"if ... not\", so the verb stays positive: unless you eat breakfast, you will feel weak. Using \"don't\" after \"unless\" creates a double negative."
+      "explanation": "\"Unless\" already means \"if ... not\", so the verb stays positive: unless you eat breakfast, you will feel weak. Using \"don't\" after \"unless\" creates a double negative.",
+      "difficulty": 3
     },
     {
       "prompt": "Identify the conditional type: \"If animals could talk, the world would be very different.\"",
@@ -142,7 +147,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "If + past simple (could talk) + would + base verb (would be) = second conditional. Animals cannot really talk — it is a hypothetical, unreal situation."
+      "explanation": "If + past simple (could talk) + would + base verb (would be) = second conditional. Animals cannot really talk — it is a hypothetical, unreal situation.",
+      "difficulty": 2
     }
   ]
 }

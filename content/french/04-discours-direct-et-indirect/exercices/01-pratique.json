@@ -27,7 +27,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "Le discours direct reproduit les paroles telles quelles, annoncées par les deux-points et encadrées par des guillemets. Les options b, c et d intègrent les paroles dans une subordonnée : ce sont des discours indirects."
+      "explanation": "Le discours direct reproduit les paroles telles quelles, annoncées par les deux-points et encadrées par des guillemets. Les options b, c et d intègrent les paroles dans une subordonnée : ce sont des discours indirects.",
+      "difficulty": 1
     },
     {
       "prompt": "Transforme au discours indirect : Le héros cria : « Je reviendrai demain ! »\nLe héros cria qu'il ___.",
@@ -50,7 +51,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "Le verbe introducteur « cria » est au passé : le futur simple « reviendrai » devient conditionnel présent « reviendrait ». De plus, l'indicateur de temps « demain » se transforme en « le lendemain » au discours indirect."
+      "explanation": "Le verbe introducteur « cria » est au passé : le futur simple « reviendrai » devient conditionnel présent « reviendrait ». De plus, l'indicateur de temps « demain » se transforme en « le lendemain » au discours indirect.",
+      "difficulty": 2
     },
     {
       "prompt": "Quel outil de subordination utilise-t-on pour rapporter une question totale (réponse oui/non) au discours indirect ?",
@@ -73,7 +75,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "Une question totale (à laquelle on répond par oui ou non) se rapporte au discours indirect avec « si » : « Viens-tu ? » → Il demande si tu viens. On n'utilise « que » que pour les phrases déclaratives, « ce que » pour les questions partielles portant sur le COD, et « de » pour rapporter un ordre."
+      "explanation": "Une question totale (à laquelle on répond par oui ou non) se rapporte au discours indirect avec « si » : « Viens-tu ? » → Il demande si tu viens. On n'utilise « que » que pour les phrases déclaratives, « ce que » pour les questions partielles portant sur le COD, et « de » pour rapporter un ordre.",
+      "difficulty": 2
     },
     {
       "prompt": "Au discours indirect, « Qu'est-ce que tu cherches ? » devient :",
@@ -96,7 +99,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "Au discours indirect, « qu'est-ce que » se transforme en « ce que » (jamais « qu'est-ce que », qui est réservé au discours direct). La phrase perd le point d'interrogation et il n'y a pas d'inversion du sujet."
+      "explanation": "Au discours indirect, « qu'est-ce que » se transforme en « ce que » (jamais « qu'est-ce que », qui est réservé au discours direct). La phrase perd le point d'interrogation et il n'y a pas d'inversion du sujet.",
+      "difficulty": 2
     },
     {
       "prompt": "Dans la phrase : « Elle annonça qu'elle avait réussi son examen. », quel était le temps verbal dans le discours direct d'origine ?",
@@ -119,7 +123,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "Au discours indirect avec un verbe introducteur au passé (« annonça »), le plus-que-parfait « avait réussi » correspond à un passé composé dans le discours direct d'origine : « J'ai réussi mon examen. »"
+      "explanation": "Au discours indirect avec un verbe introducteur au passé (« annonça »), le plus-que-parfait « avait réussi » correspond à un passé composé dans le discours direct d'origine : « J'ai réussi mon examen. »",
+      "difficulty": 3
     },
     {
       "prompt": "Quelle transformation de l'indicateur de lieu est correcte au passage au discours indirect ?",
@@ -142,7 +147,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "L'indicateur de lieu « ici » (point de vue du locuteur au moment où il parle) devient « là » au discours indirect (point de vue du narrateur). Les autres options mélangent indicateurs de temps et de lieu, ou inversent le sens."
+      "explanation": "L'indicateur de lieu « ici » (point de vue du locuteur au moment où il parle) devient « là » au discours indirect (point de vue du narrateur). Les autres options mélangent indicateurs de temps et de lieu, ou inversent le sens.",
+      "difficulty": 2
     }
   ]
 }

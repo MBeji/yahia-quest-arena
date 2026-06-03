@@ -15,7 +15,8 @@
         { "id": "d", "text": "$\\overrightarrow{0}$" }
       ],
       "correctOption": "a",
-      "explanation": "نطبّق شال تدريجيًا: $\\overrightarrow{CA} + \\overrightarrow{AB} = \\overrightarrow{CB}$، ثمّ $\\overrightarrow{CB} + \\overrightarrow{BD} = \\overrightarrow{CD}$. النتيجة هي $\\overrightarrow{CD}$."
+      "explanation": "نطبّق شال تدريجيًا: $\\overrightarrow{CA} + \\overrightarrow{AB} = \\overrightarrow{CB}$، ثمّ $\\overrightarrow{CB} + \\overrightarrow{BD} = \\overrightarrow{CD}$. النتيجة هي $\\overrightarrow{CD}$.",
+      "difficulty": 2
     },
     {
       "prompt": "O هو منتصف [AC] في متوازي الأضلاع ABCD. ما ناتج $\\overrightarrow{BA} + \\overrightarrow{BC}$؟",
@@ -26,7 +27,8 @@
         { "id": "d", "text": "$\\overrightarrow{0}$" }
       ],
       "correctOption": "b",
-      "explanation": "لأيّ نقطة O منتصف [AC]: $\\overrightarrow{BA} + \\overrightarrow{BC} = 2\\overrightarrow{BO}$. هذه النتيجة عامّة: مجموع شعاعين من نقطة إلى طرفَي قطعة يساوي ضعف الشعاع من تلك النقطة إلى المنتصف."
+      "explanation": "لأيّ نقطة O منتصف [AC]: $\\overrightarrow{BA} + \\overrightarrow{BC} = 2\\overrightarrow{BO}$. هذه النتيجة عامّة: مجموع شعاعين من نقطة إلى طرفَي قطعة يساوي ضعف الشعاع من تلك النقطة إلى المنتصف.",
+      "difficulty": 3
     },
     {
       "prompt": "A وB وC ثلاث نقاط بحيث $\\overrightarrow{AB} + \\overrightarrow{CA} = \\overrightarrow{u}$. ما هو $\\overrightarrow{u}$؟",
@@ -37,7 +39,8 @@
         { "id": "d", "text": "$\\overrightarrow{0}$" }
       ],
       "correctOption": "a",
-      "explanation": "نرتّب الشعاعين: $\\overrightarrow{CA} + \\overrightarrow{AB}$ (الجمع تبديلي)، فبتطبيق شال: $\\overrightarrow{CA} + \\overrightarrow{AB} = \\overrightarrow{CB}$. إذن $\\overrightarrow{u} = \\overrightarrow{CB}$."
+      "explanation": "نرتّب الشعاعين: $\\overrightarrow{CA} + \\overrightarrow{AB}$ (الجمع تبديلي)، فبتطبيق شال: $\\overrightarrow{CA} + \\overrightarrow{AB} = \\overrightarrow{CB}$. إذن $\\overrightarrow{u} = \\overrightarrow{CB}$.",
+      "difficulty": 2
     },
     {
       "prompt": "صورة المثلث ABC بالانسحاب ذي الشعاع $\\overrightarrow{AB}$ هي المثلث A'B'C'. ماذا يساوي $\\overrightarrow{AA'}$؟",
@@ -48,7 +51,8 @@
         { "id": "d", "text": "$\\overrightarrow{CC'}$" }
       ],
       "correctOption": "c",
-      "explanation": "في الانسحاب ذي الشعاع $\\overrightarrow{AB}$، كلّ نقطة M تنتقل بحيث $\\overrightarrow{MM'} = \\overrightarrow{AB}$. فـ$\\overrightarrow{AA'} = \\overrightarrow{AB}$، والخيار d صحيح أيضًا (كلّ $\\overrightarrow{MM'} = \\overrightarrow{AB}$)، لكنّ السؤال يطلب ماذا يساوي $\\overrightarrow{AA'}$ تحديدًا وهو $\\overrightarrow{AB}$."
+      "explanation": "في الانسحاب ذي الشعاع $\\overrightarrow{AB}$، كلّ نقطة M تنتقل بحيث $\\overrightarrow{MM'} = \\overrightarrow{AB}$. فـ$\\overrightarrow{AA'} = \\overrightarrow{AB}$، والخيار d صحيح أيضًا (كلّ $\\overrightarrow{MM'} = \\overrightarrow{AB}$)، لكنّ السؤال يطلب ماذا يساوي $\\overrightarrow{AA'}$ تحديدًا وهو $\\overrightarrow{AB}$.",
+      "difficulty": 2
     },
     {
       "prompt": "الشعاع $\\overrightarrow{v}$ بحيث $\\overrightarrow{AB} + \\overrightarrow{v} = \\overrightarrow{AC}$. ما هو $\\overrightarrow{v}$؟",
@@ -59,7 +63,8 @@
         { "id": "d", "text": "$\\overrightarrow{CB}$" }
       ],
       "correctOption": "b",
-      "explanation": "من المعادلة: $\\overrightarrow{v} = \\overrightarrow{AC} - \\overrightarrow{AB} = \\overrightarrow{AC} + \\overrightarrow{BA}$. بشال: $\\overrightarrow{BA} + \\overrightarrow{AC} = \\overrightarrow{BC}$. إذن $\\overrightarrow{v} = \\overrightarrow{BC}$."
+      "explanation": "من المعادلة: $\\overrightarrow{v} = \\overrightarrow{AC} - \\overrightarrow{AB} = \\overrightarrow{AC} + \\overrightarrow{BA}$. بشال: $\\overrightarrow{BA} + \\overrightarrow{AC} = \\overrightarrow{BC}$. إذن $\\overrightarrow{v} = \\overrightarrow{BC}$.",
+      "difficulty": 3
     },
     {
       "prompt": "ABCDEF سداسي منتظم مركزه O. ما ناتج $\\overrightarrow{AB} + \\overrightarrow{CD} + \\overrightarrow{EF}$؟",
@@ -70,7 +75,8 @@
         { "id": "d", "text": "$\\overrightarrow{AE}$" }
       ],
       "correctOption": "c",
-      "explanation": "في السداسي المنتظم: $\\overrightarrow{AB} = \\overrightarrow{DC}$ لكن $\\overrightarrow{CD} = -\\overrightarrow{DC}$. بالنظر بالتناظر: $\\overrightarrow{AB}$، $\\overrightarrow{CD}$، $\\overrightarrow{EF}$ ثلاثة أشعّة متساوية الطول ومتوزّعة بزوايا 120° فيما بينها، مجموعها $\\overrightarrow{0}$."
+      "explanation": "في السداسي المنتظم: $\\overrightarrow{AB} = \\overrightarrow{DC}$ لكن $\\overrightarrow{CD} = -\\overrightarrow{DC}$. بالنظر بالتناظر: $\\overrightarrow{AB}$، $\\overrightarrow{CD}$، $\\overrightarrow{EF}$ ثلاثة أشعّة متساوية الطول ومتوزّعة بزوايا 120° فيما بينها، مجموعها $\\overrightarrow{0}$.",
+      "difficulty": 3
     }
   ]
 }

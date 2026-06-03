@@ -27,7 +27,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "A spontaneous decision (offer made in the moment) uses will (I'll). \"Going to\" would be used if you had planned it beforehand."
+      "explanation": "A spontaneous decision (offer made in the moment) uses will (I'll). \"Going to\" would be used if you had planned it beforehand.",
+      "difficulty": 2
     },
     {
       "prompt": "Complete: \"As soon as she ___, we will start eating.\"",
@@ -50,7 +51,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "After \"as soon as\" in a future sentence, use the present simple (not will): as soon as she arrives."
+      "explanation": "After \"as soon as\" in a future sentence, use the present simple (not will): as soon as she arrives.",
+      "difficulty": 2
     },
     {
       "prompt": "Choose the correct form: \"Look at that cyclist — he ___ fall!\"",
@@ -73,7 +75,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "The cyclist is visibly about to fall (present evidence), so use \"be going to\": he is going to fall."
+      "explanation": "The cyclist is visibly about to fall (present evidence), so use \"be going to\": he is going to fall.",
+      "difficulty": 2
     },
     {
       "prompt": "Which sentence correctly uses the present continuous for a future arrangement?",
@@ -96,7 +99,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "A confirmed, fixed arrangement uses the present continuous: they are flying to Paris next Friday. Option b is ungrammatical (will + -ing), c is present simple with a future marker (possible but less natural for a fixed plan), d is missing the auxiliary \"are\"."
+      "explanation": "A confirmed, fixed arrangement uses the present continuous: they are flying to Paris next Friday. Option b is ungrammatical (will + -ing), c is present simple with a future marker (possible but less natural for a fixed plan), d is missing the auxiliary \"are\".",
+      "difficulty": 3
     },
     {
       "prompt": "Complete: \"I think robots ___ do most jobs in the future.\"",
@@ -119,7 +123,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "\"I think\" signals a personal opinion about the future (no visible evidence). Use will: robots will do most jobs."
+      "explanation": "\"I think\" signals a personal opinion about the future (no visible evidence). Use will: robots will do most jobs.",
+      "difficulty": 2
     },
     {
       "prompt": "Complete both blanks: \"She ___ not work tomorrow because she ___ to see a doctor.\" (arrangement already made)",
@@ -142,7 +147,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "\"will not work\" (won't work) is a prediction/decision; \"is going to see\" reflects a pre-made plan. \"will ... is going\" correctly uses will for the first blank and be going to for the second."
+      "explanation": "\"will not work\" (won't work) is a prediction/decision; \"is going to see\" reflects a pre-made plan. \"will ... is going\" correctly uses will for the first blank and be going to for the second.",
+      "difficulty": 3
     }
   ]
 }

@@ -27,7 +27,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "\"every day\" signals a habit, so we use the present simple with -es: she goes."
+      "explanation": "\"every day\" signals a habit, so we use the present simple with -es: she goes.",
+      "difficulty": 1
     },
     {
       "prompt": "Complete: \"Look! The baby ___.\"",
@@ -50,7 +51,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "\"Look!\" signals an action happening now, so we use the present continuous: is crying."
+      "explanation": "\"Look!\" signals an action happening now, so we use the present continuous: is crying.",
+      "difficulty": 1
     },
     {
       "prompt": "Which word signals the present simple?",
@@ -73,7 +75,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "Adverbs of frequency such as \"usually\" signal a habit (present simple)."
+      "explanation": "Adverbs of frequency such as \"usually\" signal a habit (present simple).",
+      "difficulty": 1
     },
     {
       "prompt": "Complete: \"He ___ football on Sundays.\"",
@@ -96,7 +99,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "Third person singular in the present simple takes -s: he plays."
+      "explanation": "Third person singular in the present simple takes -s: he plays.",
+      "difficulty": 1
     },
     {
       "prompt": "Choose the correct sentence:",
@@ -119,7 +123,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "\"know\" is a stative verb, so it is not used in the continuous: I know the answer."
+      "explanation": "\"know\" is a stative verb, so it is not used in the continuous: I know the answer.",
+      "difficulty": 2
     },
     {
       "prompt": "Complete: \"They ___ TV at the moment.\"",
@@ -142,7 +147,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "\"at the moment\" signals now, so we use the present continuous with the plural subject they: are watching."
+      "explanation": "\"at the moment\" signals now, so we use the present continuous with the plural subject they: are watching.",
+      "difficulty": 1
     }
   ]
 }

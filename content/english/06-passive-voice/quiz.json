@@ -10,7 +10,8 @@
         { "id": "d", "text": "subject + do + base verb" }
       ],
       "correctOption": "b",
-      "explanation": "The passive is always formed with the correct form of \"be\" + the past participle of the main verb, regardless of tense."
+      "explanation": "The passive is always formed with the correct form of \"be\" + the past participle of the main verb, regardless of tense.",
+      "difficulty": 1
     },
     {
       "prompt": "Which sentence correctly transforms \"They speak French here\" into the present simple passive?",
@@ -21,7 +22,8 @@
         { "id": "d", "text": "French are spoken here." }
       ],
       "correctOption": "c",
-      "explanation": "The present simple passive uses is/are + past participle. \"French\" is a singular noun, so the correct form is \"is spoken\"."
+      "explanation": "The present simple passive uses is/are + past participle. \"French\" is a singular noun, so the correct form is \"is spoken\".",
+      "difficulty": 2
     },
     {
       "prompt": "What is the first step when converting an active sentence to a passive one?",
@@ -32,7 +34,8 @@
         { "id": "d", "text": "Remove the subject of the active sentence entirely." }
       ],
       "correctOption": "b",
-      "explanation": "The first step is to move the object of the active sentence into the subject position. Then choose the correct form of \"be\" and add the past participle."
+      "explanation": "The first step is to move the object of the active sentence into the subject position. Then choose the correct form of \"be\" and add the past participle.",
+      "difficulty": 2
     },
     {
       "prompt": "When is the \"by + agent\" phrase typically omitted in a passive sentence?",
@@ -43,7 +46,8 @@
         { "id": "d", "text": "When the verb is irregular" }
       ],
       "correctOption": "c",
-      "explanation": "The \"by + agent\" phrase is often left out when the agent is unknown (\"My wallet was stolen\"), unimportant, or already obvious from context."
+      "explanation": "The \"by + agent\" phrase is often left out when the agent is unknown (\"My wallet was stolen\"), unimportant, or already obvious from context.",
+      "difficulty": 3
     },
     {
       "prompt": "Which sentence correctly uses the past simple passive?",
@@ -54,7 +58,8 @@
         { "id": "d", "text": "The bridge was built in 1990." }
       ],
       "correctOption": "d",
-      "explanation": "The past simple passive uses was/were + past participle. \"Bridge\" is singular, so \"was\" is correct, and \"built\" is the past participle of \"build\"."
+      "explanation": "The past simple passive uses was/were + past participle. \"Bridge\" is singular, so \"was\" is correct, and \"built\" is the past participle of \"build\".",
+      "difficulty": 2
     }
   ]
 }
