@@ -9,7 +9,7 @@ Students do subject "quests" (QCM exercises), earn XP/coins, unlock badges, leve
 hero classes, compete on a leaderboard, and tackle a timed "dungeon" boss mode.
 Shonen/RPG manga aesthetic, trilingual (FR/EN/AR with RTL).
 
-**Stack**: Vite 7 · TanStack Start (SSR + file routing + server fns) · React 19 · TanStack Query 5 · Supabase (Postgres + Auth + RLS) · Tailwind 4 / Radix-shadcn · deploy on Cloudflare Workers (Vercel preview fallback). Package manager: **bun** (`bun.lock`), npm scripts work too. Tests: Vitest 4 + Testing Library.
+**Stack**: Vite 7 · TanStack Start (SSR + file routing + server fns) · React 19 · TanStack Query 5 · Supabase (Postgres + Auth + RLS) · Tailwind 4 / Radix-shadcn · deploy on Vercel (Build Output API v3 via `scripts/build-vercel.mjs`). Package manager: **bun** (`bun.lock`), npm scripts work too. Tests: Vitest 4 + Testing Library.
 
 ## Essential commands
 
@@ -118,9 +118,10 @@ When unsure about scope or a destructive action, ask before proceeding.
   edit with care.
 - Env vars required at runtime: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` (set in the deploy
   platform). Missing → middleware throws a descriptive error.
-- The Vite/TanStack/Cloudflare/Tailwind plugin scaffold is provided by
+- The Vite/TanStack/Tailwind plugin scaffold is provided by
   `@lovable.dev/vite-tanstack-config` (see `vite.config.ts`) — a meta-plugin; don't add its
-  bundled plugins manually or the build breaks with duplicates.
+  bundled plugins manually or the build breaks with duplicates. Its Cloudflare plugin is
+  disabled (`cloudflare: false`); the deploy target is Vercel.
 - **Coverage is scoped to owned code** (`features/`, `shared/`, `lib/`, `hooks/`) in
   `vitest.config.ts`; vendored shadcn UI (`components/ui`), thin route wrappers,
   barrels, generated files, and SSR entry glue are excluded by design. Thresholds are

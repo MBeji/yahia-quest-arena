@@ -1,12 +1,13 @@
 /**
  * Custom Vercel build script.
  *
- * Runs the standard Vite build (which targets Cloudflare Workers),
- * then restructures the output into the Vercel Build Output API v3 format
- * so the Worker entry is served as a Vercel Edge Function.
+ * Runs the standard Vite build (TanStack Start emits a web-standard `fetch`
+ * handler at dist/server/server.js — our src/server.ts), then restructures the
+ * output into the Vercel Build Output API v3 format so the handler is served as
+ * a Node.js Serverless Function.
  */
 import { execSync } from "node:child_process";
-import { cpSync, mkdirSync, writeFileSync, readdirSync } from "node:fs";
+import { cpSync, mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const ROOT = process.cwd();
@@ -37,13 +38,15 @@ cpSync(join(ROOT, "dist", "server"), FUNC_DIR, { recursive: true });
 // Step 4b — Ensure ESM resolution in the function directory
 writeFileSync(join(FUNC_DIR, "package.json"), JSON.stringify({ type: "module" }, null, 2));
 
-// Step 5 — Adapt Worker entry to Vercel Node.js Serverless Function format
-// Cloudflare Workers export { fetch(req, env, ctx) } returning a Response
-// Vercel Node.js functions use (req, res) IncomingMessage/ServerResponse
-import { readFileSync } from "node:fs";
-const originalEntry = readFileSync(join(FUNC_DIR, "index.js"), "utf8");
-// Rename original to _worker.js
+// Step 5 — Adapt the web `fetch` handler to the Vercel Node.js function format.
+// src/server.ts default-exports { fetch(request, env, ctx) } returning a Response;
+// Vercel Node.js functions use (req, res) IncomingMessage/ServerResponse.
+import { readFileSync, rmSync } from "node:fs";
+// dist/server/server.js is the SSR entry (named via tanstackStart server.entry).
+const originalEntry = readFileSync(join(FUNC_DIR, "server.js"), "utf8");
+// Move the entry aside as _worker.js (its ./assets/* relative imports still resolve).
 writeFileSync(join(FUNC_DIR, "_worker.js"), originalEntry);
+rmSync(join(FUNC_DIR, "server.js"), { force: true });
 // Create Node.js adapter entry
 writeFileSync(
   join(FUNC_DIR, "index.js"),
@@ -71,7 +74,7 @@ export default async function handler(req, res) {
       duplex: hasBody ? "half" : undefined,
     });
 
-    // Call the Cloudflare Worker handler
+    // Call the SSR fetch handler (src/server.ts default export)
     const response = await worker.fetch(request, {}, { waitUntil: () => {} });
 
     // Write the Response back to Node.js ServerResponse

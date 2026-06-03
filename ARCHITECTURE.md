@@ -11,7 +11,7 @@ A gamified education platform for Tunisian 9th graders preparing their national 
 Students progress through subjects as "quests", earn XP/coins, unlock badges, and compete
 on a leaderboard — all presented with a shonen manga/RPG aesthetic.
 
-**Live stack**: Vite 7 + TanStack Start (SSR) + React 19 + Supabase (Postgres + Auth) + Cloudflare Workers.
+**Live stack**: Vite 7 + TanStack Start (SSR) + React 19 + Supabase (Postgres + Auth), deployed on Vercel.
 
 ---
 
@@ -93,16 +93,16 @@ features/{name}/
 
 ## 5. Tech stack details
 
-| Layer     | Technology                 | Notes                                        |
-| --------- | -------------------------- | -------------------------------------------- |
-| Framework | TanStack Start 1.x         | File-based routing, SSR, server functions    |
-| UI        | React 19 + Radix/shadcn    | Tailwind CSS 4, motion (Framer Motion)       |
-| State     | TanStack Query 5           | Server state; no client global store         |
-| Auth      | Supabase Auth              | JWT passed via cookie → server middleware    |
-| DB        | Supabase Postgres          | Row-level security, SQL RPCs for complex ops |
-| Deploy    | Cloudflare Workers         | Via @cloudflare/vite-plugin                  |
-| Tests     | Vitest 4 + Testing Library | Unit + integration; mocked Supabase          |
-| Lint      | ESLint 9 + Prettier        | Zero-warning policy                          |
+| Layer     | Technology                 | Notes                                            |
+| --------- | -------------------------- | ------------------------------------------------ |
+| Framework | TanStack Start 1.x         | File-based routing, SSR, server functions        |
+| UI        | React 19 + Radix/shadcn    | Tailwind CSS 4, motion (Framer Motion)           |
+| State     | TanStack Query 5           | Server state; no client global store             |
+| Auth      | Supabase Auth              | JWT passed via cookie → server middleware        |
+| DB        | Supabase Postgres          | Row-level security, SQL RPCs for complex ops     |
+| Deploy    | Vercel                     | Build Output API v3 via scripts/build-vercel.mjs |
+| Tests     | Vitest 4 + Testing Library | Unit + integration; mocked Supabase              |
+| Lint      | ESLint 9 + Prettier        | Zero-warning policy                              |
 
 ---
 
@@ -186,9 +186,11 @@ npm run ci:verify    # Full CI pipeline (lint + test + build + audit)
 
 ## 11. Deployment
 
-- **Platform**: Cloudflare Workers (via Vercel adapter fallback for preview).
-- **Build**: `vite build` → outputs worker bundle.
-- **Config**: `wrangler.jsonc` for Cloudflare, `vercel.json` for Vercel preview.
+- **Platform**: Vercel (Build Output API v3).
+- **Build**: `node scripts/build-vercel.mjs` runs `vite build` (which emits a web
+  `fetch` handler at `dist/server/server.js`) and wraps it as `.vercel/output`.
+- **Config**: `vercel.json` (`buildCommand` → `scripts/build-vercel.mjs`). The build
+  uses `cloudflare: false` in `vite.config.ts` so no Cloudflare worker is produced.
 - **Env vars**: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` (set in deploy platform).
 
 ---
