@@ -6,6 +6,8 @@ export {
   getDashboardSecondary,
   getLeaderboard,
   getSprint2Dashboard,
+  getSubjects,
+  getSubjectLeaderboard,
 } from "./dashboard.server";
 export {
   formatObjectiveType,

@@ -441,3 +441,90 @@ describe("gamification.dashboard — getDashboardSecondary", () => {
     ).rejects.toThrow(/tableau de bord/i);
   });
 });
+
+describe("gamification.dashboard — getSubjects", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    mockFrom.mockReset();
+    mockRpc.mockReset();
+  });
+
+  it("returns the ordered subjects list", async () => {
+    const subjects = [
+      { id: "math", name_fr: "Mathématiques", color_token: "subject-math" },
+      { id: "french", name_fr: "Français", color_token: "subject-french" },
+    ];
+    mockFrom.mockImplementation(() => mockQuery(subjects));
+
+    const { getSubjects } = await import("@/features/dashboard");
+    const result = (await (getSubjects as unknown as (d?: unknown) => Promise<unknown>)()) as {
+      subjects: unknown[];
+    };
+
+    expect(result.subjects).toEqual(subjects);
+  });
+});
+
+describe("gamification.dashboard — getSubjectLeaderboard", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    mockFrom.mockReset();
+    mockRpc.mockReset();
+  });
+
+  it("maps RPC rows and extracts my rank (subject XP)", async () => {
+    mockRpc.mockResolvedValue({
+      data: [
+        {
+          rank: 1,
+          user_id: "user-999",
+          display_name: "Top",
+          hero_class: "S-Rank",
+          level: 10,
+          current_streak: 3,
+          avatar_tier: 2,
+          subject_xp: 500,
+          is_me: false,
+        },
+        {
+          rank: 4,
+          user_id: "user-123",
+          display_name: "Yahia",
+          hero_class: "Novice",
+          level: 3,
+          current_streak: 1,
+          avatar_tier: 1,
+          subject_xp: 120,
+          is_me: true,
+        },
+      ],
+      error: null,
+    });
+
+    const { getSubjectLeaderboard } = await import("@/features/dashboard");
+    const result = (await (getSubjectLeaderboard as unknown as (d: unknown) => Promise<unknown>)({
+      subjectId: "math",
+    })) as {
+      leaderboard: { id: string; xp: number; rank: number }[];
+      myRank: { id: string; xp: number; rank: number } | null;
+    };
+
+    expect(mockRpc).toHaveBeenCalledWith("get_subject_leaderboard", {
+      p_subject: "math",
+      p_limit: expect.any(Number),
+    });
+    expect(result.leaderboard).toHaveLength(2);
+    expect(result.leaderboard[0]).toMatchObject({ id: "user-999", xp: 500, rank: 1 });
+    expect(result.myRank).toMatchObject({ id: "user-123", xp: 120, rank: 4, isMe: true });
+  });
+
+  it("throws a friendly error when the RPC fails", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: { message: "boom" } });
+
+    const { getSubjectLeaderboard } = await import("@/features/dashboard");
+
+    await expect(
+      (getSubjectLeaderboard as unknown as (d: unknown) => Promise<unknown>)({ subjectId: "math" }),
+    ).rejects.toThrow(/tableau de bord/i);
+  });
+});
