@@ -299,6 +299,42 @@ export type Database = {
           },
         ];
       };
+      beta_access_requests: {
+        Row: {
+          created_at: string;
+          email: string;
+          id: string;
+          motivation: string | null;
+          name: string;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          status: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          email: string;
+          id?: string;
+          motivation?: string | null;
+          name: string;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          status?: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          email?: string;
+          id?: string;
+          motivation?: string | null;
+          name?: string;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          status?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       badges: {
         Row: {
           code: string;
@@ -926,6 +962,27 @@ export type Database = {
       };
       admin_set_subscription: {
         Args: { p_user: string; p_type: string };
+        Returns: undefined;
+      };
+      admin_list_beta_requests: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          id: string;
+          user_id: string;
+          name: string;
+          email: string;
+          motivation: string | null;
+          status: string;
+          created_at: string;
+          reviewed_at: string | null;
+        }[];
+      };
+      admin_pending_beta_count: {
+        Args: Record<PropertyKey, never>;
+        Returns: number;
+      };
+      admin_review_beta_request: {
+        Args: { p_request: string; p_approve: boolean };
         Returns: undefined;
       };
       get_dungeon_access: {

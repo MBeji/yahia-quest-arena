@@ -1,7 +1,9 @@
 import { createFileRoute, Outlet, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { useAuth } from "@/features/auth";
+import { getPendingBetaCount } from "@/features/subscription";
 import {
   Sparkles,
   LayoutDashboard,
@@ -10,6 +12,7 @@ import {
   Crown,
   ClipboardList,
   CreditCard,
+  FlaskConical,
 } from "lucide-react";
 import { supabase } from "@/shared/integrations/supabase/client";
 import { toast } from "sonner";
@@ -41,6 +44,16 @@ function AuthenticatedLayout() {
       return data?.role ?? null;
     },
   });
+
+  // Pending beta-access requests count for the admin nav badge.
+  const fetchBetaCount = useServerFn(getPendingBetaCount);
+  const { data: betaCount } = useQuery({
+    queryKey: ["beta-pending-count"],
+    enabled: userRole === "admin",
+    staleTime: 60_000,
+    queryFn: () => fetchBetaCount(),
+  });
+  const pendingBeta = betaCount?.count ?? 0;
 
   // Redirect unauthenticated users via effect (not during render)
   useEffect(() => {
@@ -103,6 +116,14 @@ function AuthenticatedLayout() {
                 </Link>
                 <Link to="/admin/subscriptions" className={NAV_LINK} activeProps={NAV_ACTIVE}>
                   <CreditCard className="h-4 w-4" /> {t.layout.subscriptions}
+                </Link>
+                <Link to="/admin/beta-requests" className={NAV_LINK} activeProps={NAV_ACTIVE}>
+                  <FlaskConical className="h-4 w-4" /> {t.layout.betaRequests}
+                  {pendingBeta > 0 && (
+                    <span className="ml-1 rounded-full bg-[image:var(--gradient-gold)] px-1.5 py-0.5 text-[10px] font-bold text-black">
+                      {pendingBeta}
+                    </span>
+                  )}
                 </Link>
               </>
             )}

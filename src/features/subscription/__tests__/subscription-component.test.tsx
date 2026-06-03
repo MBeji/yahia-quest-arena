@@ -7,6 +7,10 @@ vi.mock("@tanstack/react-router", () => ({
     React.createElement("a", { href: to }, children),
 }));
 
+// The beta-request sub-component needs a QueryClient + server-fn runtime; the
+// paywall test only cares about plans + phone, so stub it out here.
+vi.mock("../components/beta-access-request", () => ({ BetaAccessRequest: () => null }));
+
 import { SubscriptionPaywall } from "../components/subscription-paywall";
 import {
   SubscriptionAdminTable,

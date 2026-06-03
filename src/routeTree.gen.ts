@@ -23,6 +23,7 @@ import { Route as AuthenticatedSubjectSubjectIdRouteImport } from './routes/_aut
 import { Route as AuthenticatedQuestExerciseIdRouteImport } from './routes/_authenticated/quest.$exerciseId'
 import { Route as AuthenticatedLessonChapterIdRouteImport } from './routes/_authenticated/lesson.$chapterId'
 import { Route as AuthenticatedAdminSubscriptionsRouteImport } from './routes/_authenticated/admin.subscriptions'
+import { Route as AuthenticatedAdminBetaRequestsRouteImport } from './routes/_authenticated/admin.beta-requests'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -99,6 +100,12 @@ const AuthenticatedAdminSubscriptionsRoute =
     path: '/admin/subscriptions',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedAdminBetaRequestsRoute =
+  AuthenticatedAdminBetaRequestsRouteImport.update({
+    id: '/admin/beta-requests',
+    path: '/admin/beta-requests',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -110,6 +117,7 @@ export interface FileRoutesByFullPath {
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/parent-report': typeof AuthenticatedParentReportRoute
+  '/admin/beta-requests': typeof AuthenticatedAdminBetaRequestsRoute
   '/admin/subscriptions': typeof AuthenticatedAdminSubscriptionsRoute
   '/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
   '/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
@@ -125,6 +133,7 @@ export interface FileRoutesByTo {
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/parent-report': typeof AuthenticatedParentReportRoute
+  '/admin/beta-requests': typeof AuthenticatedAdminBetaRequestsRoute
   '/admin/subscriptions': typeof AuthenticatedAdminSubscriptionsRoute
   '/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
   '/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
@@ -142,6 +151,7 @@ export interface FileRoutesById {
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/parent-report': typeof AuthenticatedParentReportRoute
+  '/_authenticated/admin/beta-requests': typeof AuthenticatedAdminBetaRequestsRoute
   '/_authenticated/admin/subscriptions': typeof AuthenticatedAdminSubscriptionsRoute
   '/_authenticated/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
   '/_authenticated/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
@@ -159,6 +169,7 @@ export interface FileRouteTypes {
     | '/leaderboard'
     | '/onboarding'
     | '/parent-report'
+    | '/admin/beta-requests'
     | '/admin/subscriptions'
     | '/lesson/$chapterId'
     | '/quest/$exerciseId'
@@ -174,6 +185,7 @@ export interface FileRouteTypes {
     | '/leaderboard'
     | '/onboarding'
     | '/parent-report'
+    | '/admin/beta-requests'
     | '/admin/subscriptions'
     | '/lesson/$chapterId'
     | '/quest/$exerciseId'
@@ -190,6 +202,7 @@ export interface FileRouteTypes {
     | '/_authenticated/leaderboard'
     | '/_authenticated/onboarding'
     | '/_authenticated/parent-report'
+    | '/_authenticated/admin/beta-requests'
     | '/_authenticated/admin/subscriptions'
     | '/_authenticated/lesson/$chapterId'
     | '/_authenticated/quest/$exerciseId'
@@ -304,6 +317,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSubscriptionsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/admin/beta-requests': {
+      id: '/_authenticated/admin/beta-requests'
+      path: '/admin/beta-requests'
+      fullPath: '/admin/beta-requests'
+      preLoaderRoute: typeof AuthenticatedAdminBetaRequestsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
@@ -313,6 +333,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedLeaderboardRoute: typeof AuthenticatedLeaderboardRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedParentReportRoute: typeof AuthenticatedParentReportRoute
+  AuthenticatedAdminBetaRequestsRoute: typeof AuthenticatedAdminBetaRequestsRoute
   AuthenticatedAdminSubscriptionsRoute: typeof AuthenticatedAdminSubscriptionsRoute
   AuthenticatedLessonChapterIdRoute: typeof AuthenticatedLessonChapterIdRoute
   AuthenticatedQuestExerciseIdRoute: typeof AuthenticatedQuestExerciseIdRoute
@@ -325,6 +346,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedLeaderboardRoute: AuthenticatedLeaderboardRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedParentReportRoute: AuthenticatedParentReportRoute,
+  AuthenticatedAdminBetaRequestsRoute: AuthenticatedAdminBetaRequestsRoute,
   AuthenticatedAdminSubscriptionsRoute: AuthenticatedAdminSubscriptionsRoute,
   AuthenticatedLessonChapterIdRoute: AuthenticatedLessonChapterIdRoute,
   AuthenticatedQuestExerciseIdRoute: AuthenticatedQuestExerciseIdRoute,
