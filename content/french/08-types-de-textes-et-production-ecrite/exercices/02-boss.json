@@ -1,0 +1,148 @@
+{
+  "title": "⚔️ Boss : types de textes et production écrite",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Lis ce passage : « Le volcan entre en éruption lorsque la pression des gaz et du magma dépasse la résistance de la roche. La lave jaillit alors par le cratère et dévale les pentes. » Quel est le type dominant ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Explicatif"
+        },
+        {
+          "id": "b",
+          "text": "Narratif"
+        },
+        {
+          "id": "c",
+          "text": "Descriptif"
+        },
+        {
+          "id": "d",
+          "text": "Argumentatif"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Le passage explique un phénomène naturel (l'éruption) à l'aide d'une relation cause/effet et du présent de vérité générale : c'est un texte explicatif."
+    },
+    {
+      "prompt": "Un élève écrit : « Les jeux vidéo sont néfastes pour les jeunes. En effet, ils réduisent le temps consacré aux devoirs. Par exemple, une étude montre que les joueurs réguliers ont de moins bonnes notes. » Quelle structure reconnaît-on ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Thèse + argument + exemple"
+        },
+        {
+          "id": "b",
+          "text": "Situation initiale + élément perturbateur"
+        },
+        {
+          "id": "c",
+          "text": "Description spatiale + cinq sens"
+        },
+        {
+          "id": "d",
+          "text": "Cause + conséquence + opposition"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "La première phrase est la thèse (position défendue), « En effet » introduit un argument (raison), et « Par exemple » illustre par un exemple concret : c'est la structure argumentative classique."
+    },
+    {
+      "prompt": "Quelle étape du schéma narratif correspond à ce passage : « Enfin, le héros retrouva son village en paix et ses amis l'accueillirent avec joie. » ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Élément perturbateur"
+        },
+        {
+          "id": "b",
+          "text": "Situation finale"
+        },
+        {
+          "id": "c",
+          "text": "Péripéties"
+        },
+        {
+          "id": "d",
+          "text": "Situation initiale"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Ce passage décrit le nouvel état d'équilibre atteint après la résolution du conflit : c'est la situation finale, dernière étape du schéma narratif."
+    },
+    {
+      "prompt": "Quel connecteur logique complète le mieux cette phrase argumentative : « Ce projet est ambitieux ; _____, il est tout à fait réalisable. » ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "car"
+        },
+        {
+          "id": "b",
+          "text": "donc"
+        },
+        {
+          "id": "c",
+          "text": "ensuite"
+        },
+        {
+          "id": "d",
+          "text": "cependant"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« Cependant » exprime la concession/opposition : on admet une limite (projet ambitieux) tout en la nuançant (mais réalisable). C'est le connecteur d'opposition qui convient ici."
+    },
+    {
+      "prompt": "Pour décrire une salle de château de façon méthodique, quelle organisation est la plus adaptée ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Un plan chronologique (du passé au présent)"
+        },
+        {
+          "id": "b",
+          "text": "Un plan thèse/antithèse/synthèse"
+        },
+        {
+          "id": "c",
+          "text": "Un plan spatial (par exemple : de l'entrée vers le fond, puis de gauche à droite)"
+        },
+        {
+          "id": "d",
+          "text": "Un plan cause/conséquence"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "La description d'un lieu s'organise selon un plan spatial (point de vue du regard qui se déplace) pour guider le lecteur de manière cohérente et vivante."
+    },
+    {
+      "prompt": "Quelle formule de politesse convient à la clôture d'une lettre formelle adressée à un directeur ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "« Veuillez agréer, Monsieur le Directeur, l'expression de mes salutations distinguées. »"
+        },
+        {
+          "id": "b",
+          "text": "« Bisous et à bientôt ! »"
+        },
+        {
+          "id": "c",
+          "text": "« Cordialement, ton ami. »"
+        },
+        {
+          "id": "d",
+          "text": "« En espérant une réponse rapide. »"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "La lettre formelle exige une formule de politesse complète reprenant le titre du destinataire. Les options b, c et d appartiennent au registre familier ou sont incomplètes."
+    }
+  ]
+}

@@ -1,0 +1,148 @@
+{
+  "title": "⚔️ Boss: conquer the past",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complete: \"While my sister ___, I washed the dishes.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "slept"
+        },
+        {
+          "id": "b",
+          "text": "sleeps"
+        },
+        {
+          "id": "c",
+          "text": "was sleeping"
+        },
+        {
+          "id": "d",
+          "text": "has slept"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "\"While\" + past continuous gives the background action. \"I washed\" (past simple) is the completed action during that time: while she was sleeping."
+    },
+    {
+      "prompt": "Complete: \"I ___ never ___ sushi before. I tried it last night.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "have ... eaten"
+        },
+        {
+          "id": "b",
+          "text": "did ... eat"
+        },
+        {
+          "id": "c",
+          "text": "had ... eaten"
+        },
+        {
+          "id": "d",
+          "text": "was ... eating"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "\"never\" with present perfect describes a life experience up to now: I have never eaten sushi. The sentence then adds a specific past event (last night → past simple), showing the contrast."
+    },
+    {
+      "prompt": "Which sentence is correct?",
+      "options": [
+        {
+          "id": "a",
+          "text": "She visited Paris two years ago."
+        },
+        {
+          "id": "b",
+          "text": "She has visited Paris two years ago."
+        },
+        {
+          "id": "c",
+          "text": "She have visited Paris two years ago."
+        },
+        {
+          "id": "d",
+          "text": "She was visited Paris two years ago."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "\"two years ago\" is a specific past time marker. Use past simple, not present perfect: she visited Paris two years ago."
+    },
+    {
+      "prompt": "Complete: \"___ the film started when you arrived?\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "Did"
+        },
+        {
+          "id": "b",
+          "text": "Has"
+        },
+        {
+          "id": "c",
+          "text": "Was"
+        },
+        {
+          "id": "d",
+          "text": "Were"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "This asks about a completed event at a specific past moment. Past simple question: Did + subject + base verb. \"Did the film start...?\""
+    },
+    {
+      "prompt": "Complete: \"Look — Salma ___ already ___ the report!\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "did ... write"
+        },
+        {
+          "id": "b",
+          "text": "has ... written"
+        },
+        {
+          "id": "c",
+          "text": "was ... writing"
+        },
+        {
+          "id": "d",
+          "text": "had ... written"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "\"already\" between have/has and the past participle signals the present perfect: has already written. The result is visible now (Look!)."
+    },
+    {
+      "prompt": "Choose the correct pair: \"They ___ TV when the lights ___ out.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "watched ... were going"
+        },
+        {
+          "id": "b",
+          "text": "were watching ... went"
+        },
+        {
+          "id": "c",
+          "text": "have watched ... went"
+        },
+        {
+          "id": "d",
+          "text": "were watching ... were going"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Past continuous (were watching) = background in progress; past simple (went) = the sudden interrupting event. This is the classic when-pattern."
+    }
+  ]
+}

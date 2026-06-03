@@ -1,0 +1,148 @@
+{
+  "title": "Practice: modal verbs",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Choose the correct form: \"She ___ play the piano very well.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "can"
+        },
+        {
+          "id": "b",
+          "text": "cans"
+        },
+        {
+          "id": "c",
+          "text": "can to"
+        },
+        {
+          "id": "d",
+          "text": "is can"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Modals never take -s or -to before the base verb: she can play. \"Cans\" and \"can to\" are both wrong."
+    },
+    {
+      "prompt": "Choose the best advice: \"You look tired. You ___ go to bed early.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "should"
+        },
+        {
+          "id": "b",
+          "text": "must not"
+        },
+        {
+          "id": "c",
+          "text": "could not"
+        },
+        {
+          "id": "d",
+          "text": "may not"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Should\" expresses advice: you should go to bed early. \"Must not\" and \"may not\" express prohibition — not advice."
+    },
+    {
+      "prompt": "Complete: \"Students ___ wear a uniform at school. It is the rule.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "have to"
+        },
+        {
+          "id": "b",
+          "text": "should"
+        },
+        {
+          "id": "c",
+          "text": "might"
+        },
+        {
+          "id": "d",
+          "text": "could"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Have to\" expresses external obligation (a rule set by authority): students have to wear a uniform."
+    },
+    {
+      "prompt": "Which sentence means you are NOT allowed to do something?",
+      "options": [
+        {
+          "id": "a",
+          "text": "You mustn't smoke here."
+        },
+        {
+          "id": "b",
+          "text": "You don't have to come."
+        },
+        {
+          "id": "c",
+          "text": "You should rest."
+        },
+        {
+          "id": "d",
+          "text": "You might stay."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Mustn't\" expresses prohibition — you are not allowed to smoke here. \"Don't have to\" simply means it is not necessary."
+    },
+    {
+      "prompt": "Complete: \"___ I use your dictionary, please?\" (informal permission)",
+      "options": [
+        {
+          "id": "a",
+          "text": "Should"
+        },
+        {
+          "id": "b",
+          "text": "Can"
+        },
+        {
+          "id": "c",
+          "text": "Must"
+        },
+        {
+          "id": "d",
+          "text": "Might"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Can\" is used for informal permission requests: Can I use your dictionary? \"Could\" would be more polite; \"May\" more formal."
+    },
+    {
+      "prompt": "Complete: \"I'm not sure, but she ___ be at the library.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "must"
+        },
+        {
+          "id": "b",
+          "text": "should"
+        },
+        {
+          "id": "c",
+          "text": "can't"
+        },
+        {
+          "id": "d",
+          "text": "might"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "\"Might\" expresses weak or uncertain possibility: she might be at the library. \"Must\" would be near certainty; \"might\" fits \"I'm not sure\"."
+    }
+  ]
+}

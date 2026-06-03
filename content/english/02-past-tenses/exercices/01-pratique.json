@@ -1,0 +1,148 @@
+{
+  "title": "Practice: past tenses",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 60,
+  "rewardCoins": 12,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complete: \"She ___ to the market yesterday.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "go"
+        },
+        {
+          "id": "b",
+          "text": "went"
+        },
+        {
+          "id": "c",
+          "text": "goed"
+        },
+        {
+          "id": "d",
+          "text": "goes"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "\"yesterday\" signals the past simple. \"go\" is an irregular verb: go → went."
+    },
+    {
+      "prompt": "Complete: \"We ___ football when it started to rain.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "played"
+        },
+        {
+          "id": "b",
+          "text": "play"
+        },
+        {
+          "id": "c",
+          "text": "have played"
+        },
+        {
+          "id": "d",
+          "text": "were playing"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "The football game was already in progress (background action) when the rain interrupted. Use past continuous: were playing."
+    },
+    {
+      "prompt": "Choose the correct negative: \"He ___ the test last Monday.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "didn't passed"
+        },
+        {
+          "id": "b",
+          "text": "didn't pass"
+        },
+        {
+          "id": "c",
+          "text": "wasn't pass"
+        },
+        {
+          "id": "d",
+          "text": "hasn't passed"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Past simple negative: didn't + base verb. \"last Monday\" confirms past simple, not perfect."
+    },
+    {
+      "prompt": "Complete: \"Have you ___ eaten couscous?\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "yet"
+        },
+        {
+          "id": "b",
+          "text": "ago"
+        },
+        {
+          "id": "c",
+          "text": "ever"
+        },
+        {
+          "id": "d",
+          "text": "yesterday"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "\"ever\" is used in present perfect questions to ask about life experience: Have you ever eaten...?"
+    },
+    {
+      "prompt": "Complete: \"I ___ my homework. I can play now.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "finished"
+        },
+        {
+          "id": "b",
+          "text": "have just finished"
+        },
+        {
+          "id": "c",
+          "text": "was finishing"
+        },
+        {
+          "id": "d",
+          "text": "finish"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "The action is very recent and its result matters now (I can play). Use present perfect with \"just\": have just finished."
+    },
+    {
+      "prompt": "Choose the correct sentence:",
+      "options": [
+        {
+          "id": "a",
+          "text": "Did they go to Djerba last summer?"
+        },
+        {
+          "id": "b",
+          "text": "Did they went to Djerba last summer?"
+        },
+        {
+          "id": "c",
+          "text": "Have they gone to Djerba last summer?"
+        },
+        {
+          "id": "d",
+          "text": "Were they go to Djerba last summer?"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "\"last summer\" is a specific past time, so use past simple. Questions: Did + subject + base verb. Never add -ed/-en after did."
+    }
+  ]
+}

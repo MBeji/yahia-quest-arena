@@ -1,0 +1,65 @@
+{
+  "title": "تمرين: حساب وتبسيط الجذور",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 55,
+  "rewardCoins": 12,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "ما قيمة √64 ؟",
+      "options": [
+        { "id": "a", "text": "8" },
+        { "id": "b", "text": "6" },
+        { "id": "c", "text": "32" },
+        { "id": "d", "text": "16" }
+      ],
+      "correctOption": "a",
+      "explanation": "8 × 8 = 64، إذن √64 = 8."
+    },
+    {
+      "prompt": "ما قيمة √((−6)²) ؟",
+      "options": [
+        { "id": "a", "text": "−6" },
+        { "id": "b", "text": "6" },
+        { "id": "c", "text": "36" },
+        { "id": "d", "text": "غير معرّف" }
+      ],
+      "correctOption": "b",
+      "explanation": "√(a²) = |a|، إذن √((−6)²) = √36 = 6."
+    },
+    {
+      "prompt": "ما هو الشكل المبسّط للعدد √50 ؟",
+      "options": [
+        { "id": "a", "text": "5√2" },
+        { "id": "b", "text": "2√5" },
+        { "id": "c", "text": "25√2" },
+        { "id": "d", "text": "10√5" }
+      ],
+      "correctOption": "a",
+      "explanation": "√50 = √(25 × 2) = √25 × √2 = 5√2."
+    },
+    {
+      "prompt": "ما ناتج √3 × √12 ؟",
+      "options": [
+        { "id": "a", "text": "6" },
+        { "id": "b", "text": "√15" },
+        { "id": "c", "text": "36" },
+        { "id": "d", "text": "√36" }
+      ],
+      "correctOption": "a",
+      "explanation": "√3 × √12 = √(3 × 12) = √36 = 6."
+    },
+    {
+      "prompt": "أيّ من العبارات التالية صحيحة؟",
+      "options": [
+        { "id": "a", "text": "√(9 + 16) = 3 + 4" },
+        { "id": "b", "text": "√(9 × 16) = 3 × 4" },
+        { "id": "c", "text": "√(−4) = 2" },
+        { "id": "d", "text": "√(a²) = a دائمًا" }
+      ],
+      "correctOption": "b",
+      "explanation": "خاصيّة جذر الجداء: √(9×16) = √9 × √16 = 12. أمّا الجمع فلا خاصيّة له، ولا جذر لعدد سالب، و √(a²)=|a|."
+    }
+  ]
+}

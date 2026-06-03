@@ -1,0 +1,148 @@
+{
+  "title": "⚔️ Boss: master the conditionals",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Choose the correct main clause: \"If you press this button, the machine ___,\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "started"
+        },
+        {
+          "id": "b",
+          "text": "starts"
+        },
+        {
+          "id": "c",
+          "text": "would start"
+        },
+        {
+          "id": "d",
+          "text": "will starting"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "This is a zero conditional (general/factual truth about a machine): If you press this button, the machine starts. Both clauses use the present simple."
+    },
+    {
+      "prompt": "Complete: \"If I ___ you, I would talk to the teacher about this problem.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "am"
+        },
+        {
+          "id": "b",
+          "text": "was"
+        },
+        {
+          "id": "c",
+          "text": "were"
+        },
+        {
+          "id": "d",
+          "text": "would be"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "In the second conditional, \"be\" takes \"were\" for all persons in standard/formal English: If I were you... It is an imaginary situation."
+    },
+    {
+      "prompt": "Which sentence is a correct first conditional?",
+      "options": [
+        {
+          "id": "a",
+          "text": "If it will rain, we stay inside."
+        },
+        {
+          "id": "b",
+          "text": "If it rained, we will stay inside."
+        },
+        {
+          "id": "c",
+          "text": "If it rains, we would stay inside."
+        },
+        {
+          "id": "d",
+          "text": "If it rains, we will stay inside."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "First conditional: if + present simple (rains) + will + base verb (will stay). Option a wrongly puts will in the if-clause; c mixes past simple with will; d is second conditional form."
+    },
+    {
+      "prompt": "Complete: \"___ you finish early, you can leave.\" (use unless or if)",
+      "options": [
+        {
+          "id": "a",
+          "text": "Unless"
+        },
+        {
+          "id": "b",
+          "text": "Although"
+        },
+        {
+          "id": "c",
+          "text": "If"
+        },
+        {
+          "id": "d",
+          "text": "Because"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "The sentence means: finishing early is the condition for being allowed to leave. This is a positive condition, so use \"if\": if you finish early, you can leave. \"Unless\" would mean the opposite."
+    },
+    {
+      "prompt": "Choose the sentence where the comma is used correctly:",
+      "options": [
+        {
+          "id": "a",
+          "text": "We will cancel the trip, if it snows."
+        },
+        {
+          "id": "b",
+          "text": "If it snows we will cancel the trip."
+        },
+        {
+          "id": "c",
+          "text": "We will cancel, the trip if it snows."
+        },
+        {
+          "id": "d",
+          "text": "If it snows, we will cancel the trip."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "The comma is placed after the if-clause when it comes first in the sentence: \"If it snows, we will cancel the trip.\" No comma is needed when the main clause comes first (option a has an unnecessary comma)."
+    },
+    {
+      "prompt": "Complete both blanks: \"If she ___ the exam, her parents ___ very proud.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "will pass ... are"
+        },
+        {
+          "id": "b",
+          "text": "passes ... will be"
+        },
+        {
+          "id": "c",
+          "text": "passed ... will be"
+        },
+        {
+          "id": "d",
+          "text": "passes ... would be"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "First conditional: if + present simple (passes) + will + base verb (will be). The situation is realistic — she may well pass. Option c mixes past simple with will (second conditional main clause with first conditional if-clause), which is incorrect."
+    }
+  ]
+}

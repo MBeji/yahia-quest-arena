@@ -1,0 +1,148 @@
+{
+  "title": "Practice: simple or continuous?",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Choose the correct form: \"She ___ to school every day.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "is going"
+        },
+        {
+          "id": "b",
+          "text": "go"
+        },
+        {
+          "id": "c",
+          "text": "goes"
+        },
+        {
+          "id": "d",
+          "text": "going"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "\"every day\" signals a habit, so we use the present simple with -es: she goes."
+    },
+    {
+      "prompt": "Complete: \"Look! The baby ___.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "cries"
+        },
+        {
+          "id": "b",
+          "text": "cry"
+        },
+        {
+          "id": "c",
+          "text": "is crying"
+        },
+        {
+          "id": "d",
+          "text": "cried"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Look!\" signals an action happening now, so we use the present continuous: is crying."
+    },
+    {
+      "prompt": "Which word signals the present simple?",
+      "options": [
+        {
+          "id": "a",
+          "text": "usually"
+        },
+        {
+          "id": "b",
+          "text": "now"
+        },
+        {
+          "id": "c",
+          "text": "at the moment"
+        },
+        {
+          "id": "d",
+          "text": "Look!"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Adverbs of frequency such as \"usually\" signal a habit (present simple)."
+    },
+    {
+      "prompt": "Complete: \"He ___ football on Sundays.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "play"
+        },
+        {
+          "id": "b",
+          "text": "plays"
+        },
+        {
+          "id": "c",
+          "text": "is play"
+        },
+        {
+          "id": "d",
+          "text": "playing"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Third person singular in the present simple takes -s: he plays."
+    },
+    {
+      "prompt": "Choose the correct sentence:",
+      "options": [
+        {
+          "id": "a",
+          "text": "I know the answer."
+        },
+        {
+          "id": "b",
+          "text": "I am knowing the answer."
+        },
+        {
+          "id": "c",
+          "text": "I knows the answer."
+        },
+        {
+          "id": "d",
+          "text": "I am know the answer."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "\"know\" is a stative verb, so it is not used in the continuous: I know the answer."
+    },
+    {
+      "prompt": "Complete: \"They ___ TV at the moment.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "watch"
+        },
+        {
+          "id": "b",
+          "text": "are watching"
+        },
+        {
+          "id": "c",
+          "text": "watches"
+        },
+        {
+          "id": "d",
+          "text": "is watching"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "\"at the moment\" signals now, so we use the present continuous with the plural subject they: are watching."
+    }
+  ]
+}

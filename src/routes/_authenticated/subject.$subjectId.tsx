@@ -2,7 +2,18 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion } from "motion/react";
-import { ArrowLeft, Swords, Zap, ChevronRight, Star, Skull, BookOpen } from "lucide-react";
+import {
+  ArrowLeft,
+  Swords,
+  Zap,
+  ChevronRight,
+  Star,
+  Skull,
+  BookOpen,
+  Lock,
+  Brain,
+  CheckCircle2,
+} from "lucide-react";
 import { getSubject } from "@/features/quest";
 import { isRtlText } from "@/shared/lib/utils";
 import { useT } from "@/lib/i18n";
@@ -46,9 +57,24 @@ function SubjectPage() {
       </div>
     );
   }
-  const { subject, chapters, exercises, bestByExercise } = data;
+  const { subject, chapters, exercises, bestByExercise, quizPassedByChapter } = data;
   const color = `var(--subject-${subject.color_token})`;
-  const isRtlSubject = subject.color_token === "math" || subject.color_token === "arabic";
+  const lang = ((subject as { content_language?: string }).content_language ?? "fr") as
+    | "ar"
+    | "fr"
+    | "en";
+  const isRtlSubject = lang === "ar";
+  const L = {
+    quiz: { ar: "اختبار الفهم", fr: "Quiz de compréhension", en: "Comprehension quiz" }[lang],
+    required: { ar: "إجباري", fr: "Obligatoire", en: "Required" }[lang],
+    passed: { ar: "✓ ناجح", fr: "✓ Réussi", en: "✓ Passed" }[lang],
+    lockedNote: {
+      ar: "انجح في اختبار الفهم لفتح التمارين",
+      fr: "Réussis le quiz pour débloquer les exercices",
+      en: "Pass the quiz to unlock the exercises",
+    }[lang],
+    review: { ar: "📖 راجع الدرس", fr: "📖 Réviser le cours", en: "📖 Review the lesson" }[lang],
+  };
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-8" dir={isRtlSubject ? "rtl" : undefined}>
@@ -78,8 +104,12 @@ function SubjectPage() {
       <div className="mt-8 space-y-8">
         {chapters.map((c, ci) => {
           const chapEx = exercises.filter((e) => e.chapter_id === c.id);
-          const completed = chapEx.filter((e) => (bestByExercise[e.id] ?? 0) >= 40).length;
-          const progressPct = chapEx.length > 0 ? (completed / chapEx.length) * 100 : 0;
+          const quiz = chapEx.find((e) => e.mode === "quiz");
+          const realEx = chapEx.filter((e) => e.mode !== "quiz");
+          const quizPassed = quiz ? (quizPassedByChapter[c.id] ?? false) : true;
+          const locked = !!quiz && !quizPassed;
+          const completed = realEx.filter((e) => (bestByExercise[e.id] ?? 0) >= 40).length;
+          const progressPct = realEx.length > 0 ? (completed / realEx.length) * 100 : 0;
           return (
             <motion.section
               key={c.id}
@@ -97,9 +127,11 @@ function SubjectPage() {
                   </h2>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <span>
-                      {completed}/{chapEx.length}
+                      {completed}/{realEx.length}
                     </span>
-                    {progressPct === 100 && <span className="text-emerald-400">✓</span>}
+                    {progressPct === 100 && realEx.length > 0 && (
+                      <span className="text-emerald-400">✓</span>
+                    )}
                   </div>
                 </div>
                 {/* Progress bar */}
@@ -125,18 +157,108 @@ function SubjectPage() {
                   params={{ chapterId: c.id }}
                   className="mt-2 inline-flex items-center gap-1.5 rounded-lg border border-[color:var(--neon-cyan)]/30 bg-[color:var(--neon-cyan)]/10 px-3 py-1.5 text-xs font-semibold text-[color:var(--neon-cyan)] transition hover:bg-[color:var(--neon-cyan)]/20"
                 >
-                  <BookOpen className="h-3.5 w-3.5" />{" "}
-                  {subject.color_token === "arabic" || subject.color_token === "math"
-                    ? "📖 ملخص الدرس"
-                    : "📖 Résumé du cours"}
+                  <BookOpen className="h-3.5 w-3.5" /> {L.review}
                 </Link>
               </div>
+              {/* Mandatory comprehension quiz — gates the chapter exercises */}
+              {quiz && (
+                <Link
+                  to="/quest/$exerciseId"
+                  params={{ exerciseId: quiz.id }}
+                  dir={isRtlSubject ? "rtl" : undefined}
+                  className={`mb-3 flex items-center justify-between gap-3 rounded-xl border p-4 backdrop-blur-md transition hover:-translate-y-0.5 ${
+                    quizPassed
+                      ? "border-emerald-500/40 bg-emerald-500/5 hover:border-emerald-500/60"
+                      : "border-[color:var(--neon-gold)]/50 bg-[color:var(--neon-gold)]/10 hover:border-[color:var(--neon-gold)]/70"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="grid h-10 w-10 place-items-center rounded-lg bg-[color:var(--neon-gold)]/15 text-[color:var(--neon-gold)]">
+                      {quizPassed ? (
+                        <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                      ) : (
+                        <Brain className="h-5 w-5" />
+                      )}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 font-semibold">
+                        🧠 {L.quiz}
+                        {!quizPassed && (
+                          <span className="rounded-full bg-[color:var(--neon-gold)]/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[color:var(--neon-gold)]">
+                            {L.required}
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {quizPassed ? L.passed : L.lockedNote}
+                      </div>
+                    </div>
+                  </div>
+                  <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                </Link>
+              )}
               <div className="grid gap-3 sm:grid-cols-2">
-                {chapEx.map((ex) => {
+                {realEx.map((ex) => {
                   const best = bestByExercise[ex.id];
                   const stars =
                     best == null ? 0 : best >= 90 ? 3 : best >= 70 ? 2 : best >= 40 ? 1 : 0;
                   const isBoss = ex.mode === "boss";
+                  const left = (
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`grid h-10 w-10 place-items-center rounded-lg ${isBoss ? "bg-gradient-to-br from-destructive/30 to-[color:var(--neon-magenta)]/20" : ""}`}
+                        style={
+                          !isBoss
+                            ? {
+                                background: `color-mix(in oklab, ${color} 25%, transparent)`,
+                                color,
+                              }
+                            : undefined
+                        }
+                      >
+                        {locked ? (
+                          <Lock className="h-5 w-5 text-muted-foreground" />
+                        ) : isBoss ? (
+                          <Skull className="h-5 w-5 text-destructive" />
+                        ) : (
+                          <Swords className="h-5 w-5" />
+                        )}
+                      </div>
+                      <div>
+                        <div
+                          className="flex items-center gap-2 font-semibold"
+                          dir={isRtlText(ex.title) ? "rtl" : undefined}
+                        >
+                          {ex.title}
+                          {isBoss && (
+                            <span className="rounded-full bg-destructive/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-destructive">
+                              Boss
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <span>Difficulty {ex.difficulty}/3</span>
+                          <span className="flex items-center gap-0.5 text-[color:var(--neon-gold)]">
+                            <Zap className="h-3 w-3" />
+                            {ex.xp_reward}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                  if (locked) {
+                    return (
+                      <div
+                        key={ex.id}
+                        title={L.lockedNote}
+                        aria-disabled="true"
+                        className="flex cursor-not-allowed items-center justify-between gap-3 rounded-xl border border-border/40 bg-card/30 p-4 opacity-60"
+                      >
+                        {left}
+                        <Lock className="h-5 w-5 text-muted-foreground" />
+                      </div>
+                    );
+                  }
                   return (
                     <Link
                       key={ex.id}
@@ -148,45 +270,7 @@ function SubjectPage() {
                           : "border-border/50 bg-card/60 hover:border-[color:var(--neon-violet)]/50"
                       }`}
                     >
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={`grid h-10 w-10 place-items-center rounded-lg ${isBoss ? "bg-gradient-to-br from-destructive/30 to-[color:var(--neon-magenta)]/20" : ""}`}
-                          style={
-                            !isBoss
-                              ? {
-                                  background: `color-mix(in oklab, ${color} 25%, transparent)`,
-                                  color,
-                                }
-                              : undefined
-                          }
-                        >
-                          {isBoss ? (
-                            <Skull className="h-5 w-5 text-destructive" />
-                          ) : (
-                            <Swords className="h-5 w-5" />
-                          )}
-                        </div>
-                        <div>
-                          <div
-                            className="flex items-center gap-2 font-semibold"
-                            dir={isRtlText(ex.title) ? "rtl" : undefined}
-                          >
-                            {ex.title}
-                            {isBoss && (
-                              <span className="rounded-full bg-destructive/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-destructive">
-                                Boss
-                              </span>
-                            )}
-                          </div>
-                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                            <span>Difficulty {ex.difficulty}/3</span>
-                            <span className="flex items-center gap-0.5 text-[color:var(--neon-gold)]">
-                              <Zap className="h-3 w-3" />
-                              {ex.xp_reward}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
+                      {left}
                       <div className="flex items-center gap-2">
                         <div className="flex gap-0.5">
                           {[1, 2, 3].map((i) => (
@@ -201,7 +285,7 @@ function SubjectPage() {
                     </Link>
                   );
                 })}
-                {chapEx.length === 0 && (
+                {realEx.length === 0 && (
                   <div className="text-xs italic text-muted-foreground">No quests yet.</div>
                 )}
               </div>

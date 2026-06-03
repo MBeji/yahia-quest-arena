@@ -1,0 +1,60 @@
+{
+  "title": "Comprehension quiz",
+  "questions": [
+    {
+      "prompt": "Which conditional form is used for general truths and scientific facts?",
+      "options": [
+        { "id": "a", "text": "First conditional: if + present simple, will + base verb" },
+        { "id": "b", "text": "Zero conditional: if + present simple, present simple" },
+        { "id": "c", "text": "Second conditional: if + past simple, would + base verb" },
+        { "id": "d", "text": "Zero conditional: if + past simple, present simple" }
+      ],
+      "correctOption": "b",
+      "explanation": "The zero conditional (if + present simple, present simple) expresses facts and general truths where the result always follows the condition."
+    },
+    {
+      "prompt": "Which sentence is a correctly formed first conditional?",
+      "options": [
+        { "id": "a", "text": "If you will study hard, you will pass." },
+        { "id": "b", "text": "If you studied hard, you will pass." },
+        { "id": "c", "text": "If you study hard, you will pass." },
+        { "id": "d", "text": "If you study hard, you would pass." }
+      ],
+      "correctOption": "c",
+      "explanation": "The first conditional uses the present simple in the if-clause (never \"will\") and will + base verb in the main clause."
+    },
+    {
+      "prompt": "What does the second conditional express?",
+      "options": [
+        { "id": "a", "text": "A real and likely future situation" },
+        { "id": "b", "text": "A general scientific truth" },
+        { "id": "c", "text": "An imaginary or hypothetical situation in the present or future" },
+        { "id": "d", "text": "A completed past action" }
+      ],
+      "correctOption": "c",
+      "explanation": "The second conditional (if + past simple, would + base verb) describes situations that are unreal, imaginary, or unlikely right now."
+    },
+    {
+      "prompt": "In formal/standard English, which form of \"be\" is used in the if-clause of a second conditional?",
+      "options": [
+        { "id": "a", "text": "\"was\" for all persons" },
+        { "id": "b", "text": "\"is\" for all persons" },
+        { "id": "c", "text": "\"were\" for all persons" },
+        { "id": "d", "text": "\"are\" for all persons" }
+      ],
+      "correctOption": "c",
+      "explanation": "In formal and standard English, the second conditional uses \"were\" for all persons in the if-clause: \"If I were you, I would apologise.\""
+    },
+    {
+      "prompt": "What does \"unless\" mean in a conditional sentence?",
+      "options": [
+        { "id": "a", "text": "if" },
+        { "id": "b", "text": "although" },
+        { "id": "c", "text": "if ... not" },
+        { "id": "d", "text": "even if" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Unless\" means \"if ... not\". For example, \"Unless you hurry, you will miss the train\" means \"If you don't hurry, you will miss the train.\""
+    }
+  ]
+}

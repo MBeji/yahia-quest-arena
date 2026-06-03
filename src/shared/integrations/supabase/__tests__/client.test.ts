@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const { mockCreateClient } = vi.hoisted(() => ({
   mockCreateClient: vi.fn(),
@@ -17,7 +17,15 @@ describe("shared supabase client", () => {
     delete process.env.SUPABASE_SERVICE_ROLE_KEY;
   });
 
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   it("creates browser client lazily once", async () => {
+    // Provide the build-time vars the browser client reads, so the test is
+    // hermetic and does not depend on CI-provided environment/secrets.
+    vi.stubEnv("VITE_SUPABASE_URL", "https://example.supabase.co");
+    vi.stubEnv("VITE_SUPABASE_PUBLISHABLE_KEY", "anon-key");
     mockCreateClient.mockReturnValue({ from: vi.fn() });
 
     const { supabase } = await import("@/shared/integrations/supabase/client");

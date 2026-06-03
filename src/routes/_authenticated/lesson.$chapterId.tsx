@@ -11,6 +11,7 @@ import {
   ChevronRight,
   List,
   CheckCircle2,
+  FileText,
 } from "lucide-react";
 import { getChapterLesson } from "@/features/quest";
 import { isRtlText } from "@/shared/lib/utils";
@@ -31,6 +32,7 @@ function LessonPage() {
     queryFn: () => fetchLesson({ data: { chapterId } }),
   });
   const [tocOpen, setTocOpen] = useState(false);
+  const [showSummary, setShowSummary] = useState(false);
 
   if (isLoading || !data) {
     return (
@@ -45,14 +47,17 @@ function LessonPage() {
 
   const { chapter, allChapters } = data;
   const content = chapter.lesson_content;
+  const summary = chapter.summary;
   const subjectData = chapter.subjects as {
     id: string;
     name_fr: string;
     color_token: string;
     icon: string;
+    content_language?: string;
   } | null;
-  const isRtlSubject = subjectData?.color_token === "math" || subjectData?.color_token === "arabic";
-  const isRtl = isRtlSubject || (content ? isRtlText(content) : false);
+  const isRtlSubject =
+    subjectData?.content_language === "ar" || (content ? isRtlText(content) : false);
+  const isRtl = isRtlSubject;
 
   const currentIdx = allChapters.findIndex((c) => c.id === chapterId);
   const prevChapter = currentIdx > 0 ? allChapters[currentIdx - 1] : null;
@@ -110,15 +115,31 @@ function LessonPage() {
           ))}
         </div>
 
-        {/* TOC button */}
-        {headings.length > 0 && (
-          <button
-            onClick={() => setTocOpen(!tocOpen)}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-border/50 bg-card/60 px-3 py-2 text-sm text-muted-foreground backdrop-blur-sm transition hover:border-[color:var(--neon-violet)]/40 hover:text-foreground"
-          >
-            <List className="h-4 w-4" /> فهرس
-          </button>
-        )}
+        {/* Action buttons */}
+        <div className="flex items-center gap-2">
+          {summary && (
+            <button
+              onClick={() => setShowSummary(!showSummary)}
+              className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-sm backdrop-blur-sm transition ${
+                showSummary
+                  ? "border-[color:var(--neon-gold)]/50 bg-[color:var(--neon-gold)]/10 text-[color:var(--neon-gold)]"
+                  : "border-border/50 bg-card/60 text-muted-foreground hover:border-[color:var(--neon-gold)]/40 hover:text-foreground"
+              }`}
+            >
+              <FileText className="h-4 w-4" /> ملخّص
+            </button>
+          )}
+
+          {/* TOC button */}
+          {headings.length > 0 && (
+            <button
+              onClick={() => setTocOpen(!tocOpen)}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-border/50 bg-card/60 px-3 py-2 text-sm text-muted-foreground backdrop-blur-sm transition hover:border-[color:var(--neon-violet)]/40 hover:text-foreground"
+            >
+              <List className="h-4 w-4" /> فهرس
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Table of Contents dropdown */}
@@ -145,6 +166,24 @@ function LessonPage() {
               </a>
             ))}
           </div>
+        </motion.div>
+      )}
+
+      {/* Course summary (résumé) */}
+      {summary && showSummary && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-4 rounded-2xl border border-[color:var(--neon-gold)]/30 bg-card/80 p-5 backdrop-blur-xl"
+          dir={isRtl ? "rtl" : undefined}
+        >
+          <h3 className="mb-3 flex items-center gap-2 font-display text-sm font-bold text-[color:var(--neon-gold)]">
+            <FileText className="h-4 w-4" /> ملخّص الدرس
+          </h3>
+          <div
+            className="lesson-content prose prose-invert max-w-none text-sm"
+            dangerouslySetInnerHTML={{ __html: renderMarkdown(summary) }}
+          />
         </motion.div>
       )}
 
