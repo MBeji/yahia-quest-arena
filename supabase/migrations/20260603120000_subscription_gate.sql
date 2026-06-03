@@ -52,6 +52,13 @@ GRANT EXECUTE ON FUNCTION public.has_active_subscription(UUID) TO authenticated;
 -- 'SUBSCRIPTION' reason so the lobby can show the paywall. Other thresholds
 -- (PREREQ / LEVEL / DAILY_LIMIT) are unchanged and still mirror
 -- src/shared/constants/gamification.ts.
+--
+-- The return type (OUT columns) changes vs the previous version, so CREATE OR
+-- REPLACE is not enough — drop first. start_dungeon_run() calls this function
+-- but plpgsql bodies are resolved at run time, so the drop is safe (it is
+-- recreated below before anyone calls it).
+DROP FUNCTION IF EXISTS public.get_dungeon_access();
+
 CREATE OR REPLACE FUNCTION public.get_dungeon_access()
 RETURNS TABLE (
   level INT,
