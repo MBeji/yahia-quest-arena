@@ -215,6 +215,44 @@ export type TranslationKeys = {
     updated: string;
     updateError: string;
   };
+  // Beta tester free premium access
+  betaAccess: {
+    cta: string;
+    title: string;
+    desc: string;
+    nameLabel: string;
+    emailLabel: string;
+    motivationLabel: string;
+    motivationPlaceholder: string;
+    submit: string;
+    submitting: string;
+    sentTitle: string;
+    sentDesc: string;
+    statusLabel: string;
+    statusPending: string;
+    statusApproved: string;
+    statusRejected: string;
+    pendingDesc: string;
+    approvedDesc: string;
+    rejectedDesc: string;
+    cancel: string;
+    error: string;
+    adminTitle: string;
+    adminDesc: string;
+    pendingCount: string;
+    empty: string;
+    colName: string;
+    colEmail: string;
+    colMotivation: string;
+    colDate: string;
+    colStatus: string;
+    colActions: string;
+    approve: string;
+    reject: string;
+    approveOk: string;
+    rejectOk: string;
+    reviewError: string;
+  };
   // Layout
   layout: {
     heroesHall: string;
@@ -223,6 +261,7 @@ export type TranslationKeys = {
     parentReport: string;
     admin: string;
     subscriptions: string;
+    betaRequests: string;
     signOut: string;
     logoutToast: string;
   };
