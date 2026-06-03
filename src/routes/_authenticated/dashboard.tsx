@@ -8,11 +8,6 @@ import {
   Zap,
   Trophy,
   Swords,
-  Sword,
-  BookOpen,
-  Scroll,
-  Leaf,
-  Globe,
   ChevronRight,
   Sparkles,
   Crown,
@@ -33,6 +28,8 @@ import {
 } from "@/features/dashboard";
 import { purchaseShopItem, equipInventorySkin } from "@/features/shop";
 import { recoverStreak } from "@/features/progression";
+import { isSubscriptionActive } from "@/features/subscription";
+import { SubjectPathCard } from "@/features/dashboard/components/subject-path-card";
 import { formatStudentAllianceCode } from "@/features/parent-report";
 import { useT } from "@/lib/i18n";
 import { xpToNextLevel, xpWithinLevel } from "@/shared/lib/level";
@@ -54,14 +51,6 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: "Heroes Hall · XP Scholars" }] }),
   component: Dashboard,
 });
-
-const ICONS: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
-  Sword,
-  BookOpen,
-  Scroll,
-  Leaf,
-  Globe,
-} as never;
 
 function DailyXpWidget({
   xpToday,
@@ -270,6 +259,10 @@ function Dashboard() {
   }
 
   const { profile, subjects, stats, nextExerciseId } = data;
+  const hasSubscription = isSubscriptionActive(
+    (profile as { subscription_expires_at?: string | null } | null)?.subscription_expires_at ??
+      null,
+  );
   // #15: badges/inventory/shop now come from the deferred secondary query.
   const badges = secondary?.badges ?? [];
   const inventory = secondary?.inventory ?? [];
@@ -651,57 +644,16 @@ function Dashboard() {
             </Link>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            {subjects.map((s, i) => {
-              const Icon = ICONS[s.icon] ?? Sword;
-              const st = stats[s.id];
-              return (
-                <motion.div
-                  key={s.id}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                >
-                  <Link
-                    to="/subject/$subjectId"
-                    params={{ subjectId: s.id }}
-                    className="group relative block overflow-hidden rounded-2xl border border-border/50 bg-card/60 p-5 backdrop-blur-md transition hover:-translate-y-1 hover:border-[color:var(--neon-violet)]/60"
-                  >
-                    <div
-                      className="absolute -right-8 -top-8 h-28 w-28 rounded-full blur-2xl opacity-50 transition-opacity group-hover:opacity-90"
-                      style={{
-                        background: `var(--${s.color_token === "math" ? "subject-math" : s.color_token === "french" ? "subject-french" : s.color_token === "arabic" ? "subject-arabic" : s.color_token === "svt" ? "subject-svt" : "subject-english"})`,
-                      }}
-                    />
-                    <div className="relative flex items-start justify-between">
-                      <Icon
-                        className="h-8 w-8"
-                        style={{ color: `var(--subject-${s.color_token})` }}
-                      />
-                      <ChevronRight className="h-5 w-5 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-foreground" />
-                    </div>
-                    <div className="relative mt-4">
-                      <div className="font-display text-lg font-bold">{s.name_fr}</div>
-                      <div className="text-xs uppercase tracking-wider text-muted-foreground">
-                        Attribute · {s.attribute}
-                      </div>
-                    </div>
-                    <div className="relative mt-4 flex items-center justify-between text-xs">
-                      <span className="text-muted-foreground">
-                        {st
-                          ? `${st.count} quest${st.count > 1 ? "s" : ""}`
-                          : t.dashboard.notAttempted}
-                      </span>
-                      <span
-                        className="font-bold"
-                        style={{ color: `var(--subject-${s.color_token})` }}
-                      >
-                        {st ? `${Math.round(st.avg)}%` : "—"}
-                      </span>
-                    </div>
-                  </Link>
-                </motion.div>
-              );
-            })}
+            {subjects.map((s, i) => (
+              <motion.div
+                key={s.id}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.05 }}
+              >
+                <SubjectPathCard subject={s} stat={stats[s.id]} hasSubscription={hasSubscription} />
+              </motion.div>
+            ))}
           </div>
         </section>
 

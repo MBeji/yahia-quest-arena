@@ -21,6 +21,14 @@ export const CHALLENGE_LOCKED_SUBSCRIPTION_MESSAGE =
   "Mission premium : un abonnement actif est requis pour lancer ce Défi élite.";
 export const CHALLENGE_LOCKED_LEVEL_MESSAGE = `Mission premium : atteins le niveau ${CHALLENGE_MIN_LEVEL} pour débloquer ce Défi élite.`;
 
+/**
+ * Thrown when an exercise of a premium subject (a whole premium module, e.g.
+ * "Maîtrise du français") is started without an active subscription. The
+ * "Module premium" prefix is matched by the quest UI to show the paywall.
+ */
+export const PREMIUM_SUBJECT_LOCKED_MESSAGE =
+  "Module premium : un abonnement actif est requis pour accéder à ce module.";
+
 type ProfileSnapshot = Database["public"]["Tables"]["profiles"]["Row"];
 
 type AtomicSubmitResponse = {
@@ -251,7 +259,7 @@ export const startExerciseSession = createServerFn({ method: "POST" })
     // started until the chapter's quiz is passed. Quizzes themselves are open.
     const { data: ex, error: exError } = await supabase
       .from("exercises")
-      .select("id, mode, chapter_id")
+      .select("id, mode, chapter_id, subjects(is_premium)")
       .eq("id", data.exerciseId)
       .single();
     if (exError) {
@@ -260,6 +268,20 @@ export const startExerciseSession = createServerFn({ method: "POST" })
         exError,
         "Impossible de démarrer la session.",
       );
+    }
+
+    // Premium-module gate: every exercise of a premium subject (e.g. the
+    // standalone "Maîtrise du français" module) requires an active subscription
+    // — including its quiz. Subscription only, no level requirement.
+    const subjectRel = ex.subjects as { is_premium?: boolean } | { is_premium?: boolean }[] | null;
+    const isPremiumSubject = Array.isArray(subjectRel)
+      ? (subjectRel[0]?.is_premium ?? false)
+      : (subjectRel?.is_premium ?? false);
+    if (isPremiumSubject) {
+      const { data: hasSub } = await supabase.rpc("has_active_subscription", { p_user: userId });
+      if (hasSub !== true) {
+        failWithClientError("quest.startExerciseSession", null, PREMIUM_SUBJECT_LOCKED_MESSAGE);
+      }
     }
 
     // Premium gate: "Défi élite" missions require an active subscription AND a

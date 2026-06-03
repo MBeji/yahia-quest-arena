@@ -29,6 +29,23 @@ describe("schema validation", () => {
     expect(result.success).toBe(true);
   });
 
+  it("defaults isPremium to false and accepts a premium subject", () => {
+    const base = {
+      id: "fr-mastery",
+      nameFr: "Maîtrise du français",
+      description: "desc",
+      attribute: "Sagesse",
+      colorToken: "subject-french",
+      icon: "BookOpen",
+      displayOrder: 6,
+      contentLanguage: "fr" as const,
+    };
+    const def = subjectMetaSchema.parse(base);
+    expect(def.isPremium).toBe(false);
+    const prem = subjectMetaSchema.parse({ ...base, isPremium: true });
+    expect(prem.isPremium).toBe(true);
+  });
+
   it("rejects an invalid content language", () => {
     const result = subjectMetaSchema.safeParse({
       id: "math",
@@ -169,6 +186,7 @@ describe("buildMigrationSql", () => {
       icon: "Calculator",
       displayOrder: 1,
       contentLanguage: "ar" as const,
+      isPremium: false,
     },
     chapters: [
       {
@@ -252,6 +270,11 @@ describe("buildMigrationSql", () => {
     expect(sql).toContain("'quiz'");
   });
 
+  it("emits the subject is_premium flag", () => {
+    expect(sql).toContain("is_premium");
+    expect(sql).toContain("is_premium = EXCLUDED.is_premium");
+  });
+
   it("self-contains the exercises mode CHECK (incl. 'challenge') so it never blocks", () => {
     expect(sql).toContain("exercises_mode_check");
     expect(sql).toContain("CHECK (mode IN ('practice', 'boss', 'quiz', 'challenge'))");
@@ -284,6 +307,7 @@ describe("question difficulty ordering", () => {
       icon: "Calculator",
       displayOrder: 1,
       contentLanguage: "ar" as const,
+      isPremium: false,
     },
     chapters: [
       {
