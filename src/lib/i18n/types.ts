@@ -190,6 +190,31 @@ export type TranslationKeys = {
     wrongMsg: string;
     depth: string;
   };
+  // Subscription / premium
+  subscription: {
+    premiumTitle: string;
+    premiumDesc: string;
+    monthly: string;
+    quarterly: string;
+    annual: string;
+    contactTitle: string;
+    statusActive: string;
+    statusInactive: string;
+    none: string;
+    colUser: string;
+    colStatus: string;
+    colPlan: string;
+    colActivated: string;
+    colExpires: string;
+    colActions: string;
+    activate: string;
+    block: string;
+    adminTitle: string;
+    adminDesc: string;
+    accessDenied: string;
+    updated: string;
+    updateError: string;
+  };
   // Layout
   layout: {
     heroesHall: string;
@@ -197,6 +222,7 @@ export type TranslationKeys = {
     ranking: string;
     parentReport: string;
     admin: string;
+    subscriptions: string;
     signOut: string;
     logoutToast: string;
   };

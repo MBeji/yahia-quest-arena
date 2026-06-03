@@ -581,6 +581,9 @@ export type Database = {
           level: number;
           longest_streak: number;
           role: string;
+          subscription_activated_at: string | null;
+          subscription_expires_at: string | null;
+          subscription_type: string | null;
           xp: number;
           yahia_coins: number;
         };
@@ -596,6 +599,9 @@ export type Database = {
           level?: number;
           longest_streak?: number;
           role?: string;
+          subscription_activated_at?: string | null;
+          subscription_expires_at?: string | null;
+          subscription_type?: string | null;
           xp?: number;
           yahia_coins?: number;
         };
@@ -611,6 +617,9 @@ export type Database = {
           level?: number;
           longest_streak?: number;
           role?: string;
+          subscription_activated_at?: string | null;
+          subscription_expires_at?: string | null;
+          subscription_type?: string | null;
           xp?: number;
           yahia_coins?: number;
         };
@@ -895,6 +904,27 @@ export type Database = {
         Args: { p_subject: string };
         Returns: { exercise_id: string; best_score: number }[];
       };
+      admin_clear_subscription: {
+        Args: { p_user: string };
+        Returns: undefined;
+      };
+      admin_list_subscriptions: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          user_id: string;
+          display_name: string;
+          email: string | null;
+          role: string;
+          subscription_type: string | null;
+          subscription_activated_at: string | null;
+          subscription_expires_at: string | null;
+          is_active: boolean;
+        }[];
+      };
+      admin_set_subscription: {
+        Args: { p_user: string; p_type: string };
+        Returns: undefined;
+      };
       get_dungeon_access: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -905,9 +935,14 @@ export type Database = {
           chapters_done: number;
           required_subjects: number;
           required_chapters: number;
+          has_subscription: boolean;
           can_access: boolean;
           reason: string;
         }[];
+      };
+      has_active_subscription: {
+        Args: { p_user: string };
+        Returns: boolean;
       };
       get_dungeon_questions: {
         Args: { p_run_id: string; p_batch_size?: number };
