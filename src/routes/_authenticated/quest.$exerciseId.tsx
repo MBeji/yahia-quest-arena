@@ -346,9 +346,12 @@ function QuestPage() {
   const sessionErrorMsg =
     sessionMutation.error instanceof Error ? sessionMutation.error.message : "";
 
-  // Premium "Défi élite" lock: server rejects the session start. Show the
-  // subscription paywall (plans + admin phone) and the unlock requirement.
-  if (sessionMutation.isError && sessionErrorMsg.startsWith("Mission premium")) {
+  // Premium lock ("Défi élite" mission or a whole premium module): server
+  // rejects the session start. Show the subscription paywall + the requirement.
+  if (
+    sessionMutation.isError &&
+    (sessionErrorMsg.startsWith("Mission premium") || sessionErrorMsg.startsWith("Module premium"))
+  ) {
     return (
       <div className="mx-auto max-w-md px-6 py-12 text-center">
         <div className="rounded-3xl border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/5 p-8">

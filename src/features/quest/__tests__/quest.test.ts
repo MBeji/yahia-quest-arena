@@ -254,6 +254,48 @@ describe("gamification.quest — startExerciseSession", () => {
     expect(result).toEqual({ sessionId: "sess-1", startedAt: "2026-06-01T12:00:00Z" });
   });
 
+  it("blocks any exercise of a premium subject without an active subscription", async () => {
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises")
+        return mockQuery({
+          id: "ex-1",
+          mode: "practice",
+          chapter_id: "ch-1",
+          subjects: { is_premium: true },
+        });
+      return mockQuery({ id: "sess-1", started_at: "t" });
+    });
+    mockRpc.mockReturnValue({ data: false, error: null }); // no active subscription
+
+    const { startExerciseSession } = await import("@/features/quest");
+    await expect(
+      (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
+        exerciseId: "11111111-1111-1111-1111-111111111111",
+      }),
+    ).rejects.toThrow("Module premium");
+  });
+
+  it("allows a premium-subject exercise with an active subscription", async () => {
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises")
+        // mode='quiz' so the comprehension-quiz gate is skipped after the premium check.
+        return mockQuery({
+          id: "ex-1",
+          mode: "quiz",
+          chapter_id: "ch-1",
+          subjects: { is_premium: true },
+        });
+      return mockQuery({ id: "sess-1", started_at: "2026-06-01T12:00:00Z" });
+    });
+    mockRpc.mockReturnValue({ data: true, error: null });
+
+    const { startExerciseSession } = await import("@/features/quest");
+    const result = await (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
+      exerciseId: "11111111-1111-1111-1111-111111111111",
+    });
+    expect(result).toEqual({ sessionId: "sess-1", startedAt: "2026-06-01T12:00:00Z" });
+  });
+
   it("blocks a premium challenge mission without an active subscription", async () => {
     mockFrom.mockImplementation((table: string) => {
       if (table === "exercises")

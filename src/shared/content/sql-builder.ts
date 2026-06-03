@@ -93,12 +93,12 @@ export function buildMigrationSql(subject: LoadedSubject): string {
 
   // --- Subject (upsert) ---
   out.push(
-    "INSERT INTO public.subjects (id, name_fr, description, attribute, color_token, icon, display_order, content_language) VALUES",
+    "INSERT INTO public.subjects (id, name_fr, description, attribute, color_token, icon, display_order, content_language, is_premium) VALUES",
     `  (${sqlString(subjectId)}, ${sqlString(meta.nameFr)}, ${sqlString(meta.description)}, ${sqlString(
       meta.attribute,
     )}, ${sqlString(meta.colorToken)}, ${sqlString(meta.icon)}, ${meta.displayOrder}, ${sqlString(
       meta.contentLanguage,
-    )})`,
+    )}, ${meta.isPremium})`,
     "ON CONFLICT (id) DO UPDATE SET",
     "  name_fr = EXCLUDED.name_fr,",
     "  description = EXCLUDED.description,",
@@ -106,7 +106,8 @@ export function buildMigrationSql(subject: LoadedSubject): string {
     "  color_token = EXCLUDED.color_token,",
     "  icon = EXCLUDED.icon,",
     "  display_order = EXCLUDED.display_order,",
-    "  content_language = EXCLUDED.content_language;",
+    "  content_language = EXCLUDED.content_language,",
+    "  is_premium = EXCLUDED.is_premium;",
     "",
   );
 

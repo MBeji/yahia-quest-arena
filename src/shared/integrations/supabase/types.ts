@@ -743,6 +743,7 @@ export type Database = {
           display_order: number;
           icon: string;
           id: string;
+          is_premium: boolean;
           name_fr: string;
         };
         Insert: {
@@ -753,6 +754,7 @@ export type Database = {
           display_order?: number;
           icon: string;
           id: string;
+          is_premium?: boolean;
           name_fr: string;
         };
         Update: {
@@ -763,6 +765,7 @@ export type Database = {
           display_order?: number;
           icon?: string;
           id?: string;
+          is_premium?: boolean;
           name_fr?: string;
         };
         Relationships: [];

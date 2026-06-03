@@ -1,0 +1,97 @@
+{
+  "title": "Palier 3 — Lexique : maîtrise avancée (Boss)",
+  "difficulty": 4,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 25,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Choisissez le mot juste pour compléter : « Le romancier a choisi de traiter ce sujet avec une ______ désarmante, refusant tout pathos. » Le mot attendu désigne une sobriété dépouillée et efficace.",
+      "options": [
+        { "id": "a", "text": "désinvolture" },
+        { "id": "b", "text": "prolixité" },
+        { "id": "c", "text": "sobriété" },
+        { "id": "d", "text": "laconicité" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Sobriété » désigne ici la qualité d'un style dépouillé, retenu, sans ornement superflu ni pathos — sens figuré de la tempérance stylistique. « Désinvolture » implique une légèreté désinhibée, parfois irrévérencieuse, qui ne colle pas au refus du pathos. « Prolixité » est l'excès de paroles, à l'opposé du sens voulu. « Laconicité » existe mais reste très rare et presque pédant dans ce contexte ; « sobriété » est le choix idiomatique naturel en critique littéraire.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans la phrase « Son attitude ______ pendant le procès a été jugée inacceptable par le tribunal », quel paronyme convient pour désigner quelqu'un qui ne montre aucune considération pour les règles ou les personnes ?",
+      "options": [
+        { "id": "a", "text": "cavalière" },
+        { "id": "b", "text": "chevaleresque" },
+        { "id": "c", "text": "équestre" },
+        { "id": "d", "text": "cavale" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Cavalière » au sens figuré (en parlant d'une attitude) signifie désinvolte, sans égards, qui manque de respect ou de tact. L'expression « procédé cavalier » ou « attitude cavalière » désigne une façon d'agir jugée incorrecte envers autrui. « Chevaleresque » signifie au contraire noble, loyal, plein de courtoisie — quasi-antonyme ici. « Équestre » se rapporte aux chevaux ou à l'équitation (statue équestre). « Cavale » est un nom, pas un adjectif.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lequel de ces énoncés illustre correctement le sens de l'expression « jeter de la poudre aux yeux » ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Le chercheur a publié toutes ses données brutes pour que ses pairs puissent les vérifier."
+        },
+        {
+          "id": "b",
+          "text": "Le candidat a exhibé un bilan flatteur construit sur des statistiques trompeuses pour impressionner les électeurs."
+        },
+        {
+          "id": "c",
+          "text": "Le négociateur a révélé honnêtement les failles de son propre dossier pour instaurer la confiance."
+        },
+        {
+          "id": "d",
+          "text": "La direction a admis ses erreurs de gestion devant l'ensemble du personnel."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "« Jeter de la poudre aux yeux » signifie éblouir, impressionner les autres par des apparences trompeuses afin de dissimuler la réalité ou ses propres faiblesses. L'image vient de la poudre projetée pour aveugler l'adversaire. La phrase B illustre exactement ce mécanisme : un bilan flatteur mais fondé sur des données trompeuses, construit pour impressionner. Les phrases A, C et D décrivent au contraire une transparence franche.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans ce texte, identifiez le mot qui appartient au registre SOUTENU et qui serait remplacé par « bizarre » en registre courant : « Son comportement ______ lors de la cérémonie fit l'objet de nombreux commentaires. »",
+      "options": [
+        { "id": "a", "text": "hétéroclite" },
+        { "id": "b", "text": "zarbi" },
+        { "id": "c", "text": "louche" },
+        { "id": "d", "text": "bizarre" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Hétéroclite » (du grec heteroklitos, qui se décline irrégulièrement) désigne au sens figuré ce qui est composé d'éléments disparates, étranges, qui ne s'accordent pas — un équivalent soutenu de « bizarre » ou « singulier ». « Zarbi » est du verlan de « bizarre », donc très familier. « Louche » est courant et porte une connotation de suspicion morale plus que d'étrangeté formelle. « Bizarre » est le terme courant lui-même. Dans un texte soutenu comme une chronique de cérémonie officielle, « hétéroclite » s'impose.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choisissez le mot correct pour compléter : « Le rapport ______ entre les deux entreprises a été mis au jour lors de l'enquête judiciaire. » Il s'agit d'un accord secret et illicite.",
+      "options": [
+        { "id": "a", "text": "collusoire" },
+        { "id": "b", "text": "collisionnel" },
+        { "id": "c", "text": "coalescent" },
+        { "id": "d", "text": "corrosif" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Collusoire » (adjectif dérivé de « collusion ») qualifie ce qui relève d'une entente secrète et frauduleuse entre des parties normalement opposées. C'est le terme juridique précis pour un accord illicite entre, par exemple, deux entreprises concurrentes ou deux parties à un procès. « Collisionnel » n'existe pas en français standard. « Coalescent » se dit de deux éléments qui fusionnent naturellement (sens positif ou neutre). « Corrosif » désigne ce qui ronge ou détruit (au sens propre et figuré).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Laquelle de ces phrases emploie correctement le mot « acéré » en distinguant son sens précis de ses faux amis ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Son esprit acéré lui permettait de saisir immédiatement les subtilités d'un raisonnement."
+        },
+        { "id": "b", "text": "Il portait un regard acéré, plein de douceur et de compréhension." },
+        { "id": "c", "text": "Sa réponse acérée était chaleureuse et empreinte d'affection." },
+        { "id": "d", "text": "Le juge acéré rendit un verdict clément et bienveillant." }
+      ],
+      "correctOption": "a",
+      "explanation": "« Acéré » (de l'ancien français acier, acier) signifie tranchant, incisif — au sens propre, une lame bien aiguisée ; au sens figuré, une intelligence pénétrante ou une critique mordante. La phrase A exploite exactement ce sens figuré positif : un esprit acéré saisit les subtilités comme une lame coupe net. Les phrases B et C créent des contradictions (douceur, chaleur s'opposent à l'idée de tranchant). La phrase D applique incorrectement l'adjectif à une personne plutôt qu'à ses qualités intellectuelles ou à ses propos, et le verdict clément contredit la dureté du terme.",
+      "difficulty": 3
+    }
+  ]
+}

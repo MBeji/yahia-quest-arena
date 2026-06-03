@@ -26,6 +26,12 @@ export const subjectMetaSchema = z.object({
   icon: z.string().min(1),
   displayOrder: z.number().int().positive(),
   contentLanguage: z.enum(CONTENT_LANGUAGES),
+  /**
+   * Premium module: when true, the whole subject (chapters, exercises, quiz) is
+   * reserved to users with an active subscription (gated server-side). Used by
+   * the standalone "Maîtrise du français" module. Defaults to false.
+   */
+  isPremium: z.boolean().default(false),
 });
 export type SubjectMeta = z.infer<typeof subjectMetaSchema>;
 

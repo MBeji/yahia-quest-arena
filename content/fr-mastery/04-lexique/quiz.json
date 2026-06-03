@@ -1,0 +1,59 @@
+{
+  "title": "Diagnostic — Lexique",
+  "questions": [
+    {
+      "prompt": "Dans la phrase « Son regard transperce l'obscurité comme une lame », le mot « transperce » est employé au :",
+      "options": [
+        { "id": "a", "text": "Sens propre, car il s'agit d'une action physique réelle." },
+        {
+          "id": "b",
+          "text": "Sens figuré, car un regard ne peut pas physiquement percer quoi que ce soit."
+        },
+        { "id": "c", "text": "Sens technique, propre au domaine de l'optique." },
+        { "id": "d", "text": "Sens familier, caractéristique de la langue orale." }
+      ],
+      "correctOption": "b",
+      "explanation": "Un regard est immatériel et ne peut pas littéralement percer l'obscurité : le verbe « transpercer » est ici employé au sens figuré pour évoquer l'intensité et la pénétration du regard. Le sens propre serait physique (transpercer une planche avec un clou).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Laquelle de ces paires constitue une paire de PARONYMES ?",
+      "options": [
+        { "id": "a", "text": "rapide / lent" },
+        { "id": "b", "text": "verre / ver" },
+        { "id": "c", "text": "conjecture / conjoncture" },
+        { "id": "d", "text": "courageux / intrépide" }
+      ],
+      "correctOption": "c",
+      "explanation": "Les paronymes sont des mots de forme proche mais de sens différent. « Conjecture » (hypothèse, supposition) et « conjoncture » (situation économique ou sociale) se ressemblent à l'écrit et à l'oral mais ne signifient pas la même chose. « Rapide/lent » sont des antonymes ; « verre/ver » sont des homonymes ; « courageux/intrépide » sont des synonymes.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "« Il nous a expliqué la situation de manière fort limpide. » Quel mot de registre SOUTENU pourrait remplacer « limpide » dans ce contexte ?",
+      "options": [
+        { "id": "a", "text": "sympa" },
+        { "id": "b", "text": "claire" },
+        { "id": "c", "text": "pellucide" },
+        { "id": "d", "text": "zarbi" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Pellucide » (du latin pellucidus) signifie « qui laisse passer la lumière » au sens propre, et « parfaitement clair, transparent » au sens figuré — c'est un synonyme soutenu de « limpide ». « Claire » est courant, « sympa » et « zarbi » sont familiers et ne conviennent pas à un registre soutenu.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Que signifie l'expression idiomatique « brûler les étapes » ?",
+      "options": [
+        { "id": "a", "text": "Progresser avec méthode et rigueur, sans sauter aucune étape." },
+        { "id": "b", "text": "Échouer à plusieurs reprises avant de réussir." },
+        {
+          "id": "c",
+          "text": "Aller trop vite, négliger les phases intermédiaires indispensables."
+        },
+        { "id": "d", "text": "Mettre le feu à ses propres réalisations par excès de zèle." }
+      ],
+      "correctOption": "c",
+      "explanation": "« Brûler les étapes » signifie aller trop vite, sauter des phases nécessaires d'un processus au risque de compromettre le résultat. L'image vient des relais de poste : un courrier qui « brûlait » (dépassait sans s'y arrêter) les étapes de repos risquait d'épuiser ses chevaux.",
+      "difficulty": 2
+    }
+  ]
+}
