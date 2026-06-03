@@ -20,6 +20,13 @@ export default defineConfig({
             if (!id.includes("node_modules")) return;
 
             if (id.includes("@tanstack/")) return "vendor-tanstack";
+            // 3D landing scene — isolated, lazy-loaded chunk (kept out of index/budget).
+            if (
+              id.includes("/three/") ||
+              id.includes("@react-three/") ||
+              id.includes("postprocessing")
+            )
+              return "vendor-three";
             if (id.includes("lucide-react")) return "vendor-icons";
             if (id.includes("recharts") || id.includes("d3-")) return "vendor-charts";
             if (id.includes("motion")) return "vendor-motion";

@@ -46,6 +46,12 @@
   --color-flame: var(--flame);
   --color-success: var(--success);
 
+  /* Premium black & gold palette (landing) */
+  --color-gold: var(--gold);
+  --color-gold-bright: var(--gold-bright);
+  --color-gold-deep: var(--gold-deep);
+  --color-champagne: var(--champagne);
+
   --color-subject-math: var(--subject-math);
   --color-subject-french: var(--subject-french);
   --color-subject-arabic: var(--subject-arabic);
@@ -110,6 +116,17 @@
   --shadow-neon: 0 0 30px oklch(0.66 0.27 295 / 0.55), 0 0 80px oklch(0.66 0.27 295 / 0.25);
   --shadow-cyan: 0 0 25px oklch(0.78 0.18 200 / 0.55), 0 0 60px oklch(0.78 0.18 200 / 0.25);
   --shadow-card: 0 20px 60px -20px oklch(0.05 0.04 275 / 0.8);
+
+  /* ===== Premium black & gold (landing only) ===== */
+  --black-deep: #0a0a0a;
+  --black-elevated: #121011;
+  --gold: oklch(0.83 0.15 86);
+  --gold-bright: oklch(0.92 0.12 96);
+  --gold-deep: oklch(0.66 0.13 70);
+  --champagne: oklch(0.95 0.06 95);
+  --gradient-gold: linear-gradient(135deg, var(--gold-deep), var(--gold) 45%, var(--gold-bright));
+  --gradient-gold-text: linear-gradient(120deg, #f7e8b0 0%, #d4af37 38%, #fff4cf 55%, #c9962f 100%);
+  --shadow-gold: 0 0 40px oklch(0.83 0.15 86 / 0.35), 0 0 110px oklch(0.83 0.15 86 / 0.16);
 }
 
 @layer base {
@@ -182,6 +199,59 @@
     background: repeating-linear-gradient(0deg, transparent 0 3px, oklch(1 0 0 / 0.025) 3px 4px);
     pointer-events: none;
   }
+
+  /* ===== Premium black & gold (landing) ===== */
+  .bg-black-deep {
+    background-color: var(--black-deep);
+  }
+  .text-gradient-gold {
+    background: var(--gradient-gold-text);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .shadow-gold {
+    box-shadow: var(--shadow-gold);
+  }
+  .border-gold {
+    border: 1px solid oklch(0.83 0.15 86 / 0.4);
+  }
+  .glass-gold {
+    background: oklch(0.18 0.02 86 / 0.4);
+    backdrop-filter: blur(16px);
+    border: 1px solid oklch(0.83 0.15 86 / 0.22);
+  }
+  .bg-gold-grid {
+    background-image:
+      linear-gradient(oklch(0.83 0.15 86 / 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(0.83 0.15 86 / 0.07) 1px, transparent 1px);
+    background-size: 54px 54px;
+    mask-image: radial-gradient(ellipse at 50% 35%, black 35%, transparent 78%);
+  }
+  .gold-sheen {
+    animation: gold-sheen 6s linear infinite;
+  }
+}
+
+@keyframes gold-sheen {
+  to {
+    background-position: 200% center;
+  }
+}
+@keyframes gold-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 30px oklch(0.83 0.15 86 / 0.3);
+  }
+  50% {
+    box-shadow:
+      0 0 55px oklch(0.83 0.15 86 / 0.6),
+      0 0 110px oklch(0.92 0.12 96 / 0.25);
+  }
+}
+.animate-gold-pulse {
+  animation: gold-pulse 3s ease-in-out infinite;
 }
 
 @keyframes pulse-neon {
