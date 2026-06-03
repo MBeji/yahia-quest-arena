@@ -14,8 +14,8 @@ BEGIN
     ADD CONSTRAINT exercises_mode_check CHECK (mode IN ('practice', 'boss', 'quiz', 'challenge'));
 END $$;
 
-INSERT INTO public.subjects (id, name_fr, description, attribute, color_token, icon, display_order, content_language) VALUES
-  ('math', 'Mathématiques', 'الأنشطة العددية والهندسية وفق برنامج السنة التاسعة أساسي', 'Force', 'subject-math', 'Calculator', 1, 'ar')
+INSERT INTO public.subjects (id, name_fr, description, attribute, color_token, icon, display_order, content_language, is_premium) VALUES
+  ('math', 'Mathématiques', 'الأنشطة العددية والهندسية وفق برنامج السنة التاسعة أساسي', 'Force', 'subject-math', 'Calculator', 1, 'ar', false)
 ON CONFLICT (id) DO UPDATE SET
   name_fr = EXCLUDED.name_fr,
   description = EXCLUDED.description,
@@ -23,7 +23,8 @@ ON CONFLICT (id) DO UPDATE SET
   color_token = EXCLUDED.color_token,
   icon = EXCLUDED.icon,
   display_order = EXCLUDED.display_order,
-  content_language = EXCLUDED.content_language;
+  content_language = EXCLUDED.content_language,
+  is_premium = EXCLUDED.is_premium;
 
 -- Prune admin-authored content that is no longer in the source tree.
 DO $$
@@ -2556,7 +2557,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('b338f59a-2a9c-5da0-a39a-323a77b349f1', '5060d30c-a963-5fa0-9a94-22276e9e2aa5', 'مستطيل طوله (x + 5) سم وعرضه (x − 2) سم. ما مساحته؟', '[{"id":"a","text":"x² + 3x − 10 سم²"},{"id":"b","text":"x² + 3x − 10 سم²"},{"id":"c","text":"x² − 3x + 10 سم²"},{"id":"d","text":"2x + 3 سم²"}]'::jsonb, 'a', 'المساحة = الطول × العرض = (x+5)(x−2). نوسّع: x(x−2) + 5(x−2) = x² − 2x + 5x − 10 = x² + 3x − 10 سم². الخيار (d) خاطئ لأنّه يجمع الطول والعرض عوضًا عن ضربهما.', 5)
+  ('b338f59a-2a9c-5da0-a39a-323a77b349f1', '5060d30c-a963-5fa0-9a94-22276e9e2aa5', 'مستطيل طوله (x + 5) سم وعرضه (x − 2) سم. ما مساحته؟', '[{"id":"a","text":"x² + 3x − 10 سم²"},{"id":"b","text":"x² + 7x − 10 سم²"},{"id":"c","text":"x² − 3x + 10 سم²"},{"id":"d","text":"2x + 3 سم²"}]'::jsonb, 'a', 'المساحة = الطول × العرض = (x+5)(x−2). نوسّع: x(x−2) + 5(x−2) = x² − 2x + 5x − 10 = x² + 3x − 10 سم². الخيار (d) خاطئ لأنّه يجمع الطول والعرض عوضًا عن ضربهما.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,

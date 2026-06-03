@@ -19,9 +19,11 @@
     "format": "prettier --write .",
     "content:check": "node --experimental-strip-types scripts/content/build.ts --check",
     "content:build": "node --experimental-strip-types scripts/content/build.ts",
+    "content:qa": "node --experimental-strip-types scripts/content/qa.ts",
+    "content:qa:strict": "node --experimental-strip-types scripts/content/qa.ts --strict",
     "verify": "npm run lint && npm run typecheck && npm run test",
     "audit:deps": "npm audit --omit=dev --audit-level=high --registry=https://registry.npmjs.org",
-    "ci:verify": "npm run lint && npm run typecheck && npm run test:coverage && npm run build:check && npm run audit:deps",
+    "ci:verify": "npm run lint && npm run typecheck && npm run test:coverage && npm run build:check && npm run audit:deps && npm run content:qa:strict",
     "prepare": "husky"
   },
   "lint-staged": {
