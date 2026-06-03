@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import {
   DASHBOARD_RECENT_LIMIT,
@@ -260,6 +261,50 @@ export const getLeaderboard = createServerFn({ method: "GET" })
     }
 
     return { leaderboard: ranked, myRank };
+  });
+
+// ---------- Subjects (lightweight list, for leaderboard tabs etc.) ----------
+export const getSubjects = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase } = context;
+    const { data, error } = await supabase
+      .from("subjects")
+      .select("id,name_fr,color_token,icon,content_language")
+      .order("display_order");
+    if (error) failWithClientError("getSubjects", error, DASHBOARD_ERROR_FR);
+    return { subjects: data ?? [] };
+  });
+
+// ---------- Per-subject leaderboard (ranked by XP earned in the subject) ----------
+export const getSubjectLeaderboard = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ subjectId: z.string().min(1) }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+
+    const { data: rows, error } = await supabase.rpc("get_subject_leaderboard", {
+      p_subject: data.subjectId,
+      p_limit: LEADERBOARD_LIMIT,
+    });
+    if (error) failWithClientError("getSubjectLeaderboard", error, DASHBOARD_ERROR_FR);
+
+    const mapped = (rows ?? []).map((r) => ({
+      rank: Number(r.rank),
+      id: r.user_id,
+      displayName: r.display_name,
+      heroClass: r.hero_class,
+      level: r.level,
+      xp: Number(r.subject_xp),
+      streak: r.current_streak,
+      avatarTier: r.avatar_tier,
+      isMe: r.is_me || r.user_id === userId,
+    }));
+
+    const leaderboard = mapped.filter((r) => r.rank <= LEADERBOARD_LIMIT);
+    const myRank = mapped.find((r) => r.isMe) ?? null;
+
+    return { leaderboard, myRank };
   });
 
 // ---------- Get Sprint 2 dashboard data (daily objectives + weekly quests + spaced rep) ----------
