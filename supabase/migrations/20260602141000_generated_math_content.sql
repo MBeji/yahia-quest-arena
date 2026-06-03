@@ -4059,7 +4059,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
-  ('fe10461c-9fe8-5e7e-97e5-ca6da96505d3', '02eb650b-9f63-52d8-af00-acd3d01b6c4d', 'math', '👑 تحدّي النخبة: تحليل إحصائي متعدّد الأبعاد', 4, 300, 60, 'challenge', 'admin', 4)
+  ('fe10461c-9fe8-5e7e-97e5-ca6da96505d3', '02eb650b-9f63-52d8-af00-acd3d01b6c4d', 'math', '👑 تحدّي النخبة: الإحصاء المتقدّم', 4, 300, 60, 'challenge', 'admin', 4)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
   subject_id = EXCLUDED.subject_id,
@@ -4071,20 +4071,19 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('e70ed107-01b6-54cc-9b5e-4f8d77ef9edf', 'fe10461c-9fe8-5e7e-97e5-ca6da96505d3', 'في فصل من 30 تلميذًا، سُجِّلت علامات مادّة الرياضيات كما يلي:
+  ('e70ed107-01b6-54cc-9b5e-4f8d77ef9edf', 'fe10461c-9fe8-5e7e-97e5-ca6da96505d3', 'سجّل أستاذ الرياضيات علامات 30 تلميذًا في جدول التكرارات التالي:
 
-| العلامة | 8 | 10 | 12 | 14 | 16 | 18 |
-|---------|---|----|----|----|----|----||
-| التكرار | 3 | 5  | 8  | 9  | 4  | 1  |
+| العلامة | 9 | 11 | 13 | 15 | 17 |
+|---------|---|----|----|----|----|  
+| التكرار | 3 |  7 | 10 |  7 |  3 |
 
-ما هو المعدّل الحسابي لهذه السلسلة؟', '[{"id":"a","text":"12"},{"id":"b","text":"12.4"},{"id":"c","text":"12.6"},{"id":"d","text":"13"}]'::jsonb, 'c', 'نحسب مجموع حواصل الضرب (القيمة × التكرار):
-(8×3) + (10×5) + (12×8) + (14×9) + (16×4) + (18×1)
-= 24 + 50 + 96 + 126 + 64 + 18
-= 378
-
-المعدّل = 378 ÷ 30 = 12.6
-
-خطأ شائع: قسمة المجموع على عدد القيم المختلفة (6) بدلاً من n = 30، وهو خطأ لأنّ التكرارات متفاوتة.', 1)
+احسب المعدّل الحسابي المرجَّح لهذه العلامات.', '[{"id":"a","text":"13"},{"id":"b","text":"12.5"},{"id":"c","text":"12"},{"id":"d","text":"14"}]'::jsonb, 'a', 'نحسب المعدّل الحسابي المرجَّح خطوةً بخطوة:
+الخطوة 1 — التحقّق من n: 3 + 7 + 10 + 7 + 3 = 30 ✓
+الخطوة 2 — مجموع حواصل الضرب:
+(9×3) + (11×7) + (13×10) + (15×7) + (17×3)
+= 27 + 77 + 130 + 105 + 51 = 390
+الخطوة 3 — المعدّل = 390 ÷ 30 = 13.
+خطأ شائع: بعض التلاميذ يقسمون على عدد القيم المختلفة (5) بدلاً من التكرار الكلّي (30)، فيحصلون على 390÷5 = 78، وهو خاطئ تمامًا.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4094,25 +4093,17 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('df47bfd1-b170-5a6e-845d-1167d00d8e9d', 'fe10461c-9fe8-5e7e-97e5-ca6da96505d3', 'بالنسبة للجدول نفسه من السؤال الأوّل (30 تلميذًا):
+  ('df47bfd1-b170-5a6e-845d-1167d00d8e9d', 'fe10461c-9fe8-5e7e-97e5-ca6da96505d3', 'باستخدام الجدول ذاته من السؤال الأوّل (30 تلميذًا):
 
-| العلامة | 8 | 10 | 12 | 14 | 16 | 18 |
-|---------|---|----|----|----|----|----||
-| التكرار | 3 | 5  | 8  | 9  | 4  | 1  |
+| العلامة | 9 | 11 | 13 | 15 | 17 |
+|---------|---|----|----|----|----|  
+| التكرار | 3 |  7 | 10 |  7 |  3 |
 
-ما هو وسيط هذه السلسلة؟', '[{"id":"a","text":"12"},{"id":"b","text":"13"},{"id":"c","text":"11"},{"id":"d","text":"12.5"}]'::jsonb, 'a', 'n = 30 (زوجي)، نبحث عن القيمتين ذواتَي الرتبتين 15 و16.
-
-التكرارات المجمّعة:
-- حتّى العلامة 8: 3
-- حتّى العلامة 10: 3+5 = 8
-- حتّى العلامة 12: 8+8 = 16
-
-الرتبة 15 تقع في فئة العلامة 12 (لأنّ التكرار المجمّع ينتقل من 8 إلى 16 عند هذه العلامة).
-كذلك الرتبة 16 تقع في فئة العلامة 12.
-
-الوسيط = (12 + 12) ÷ 2 = 12
-
-خطأ شائع: الاعتقاد بأنّ الوسيط هو متوسّط أصغر وأكبر قيمة، أي (8+18)÷2 = 13 — هذا الحساب خاطئ.', 2)
+ما هي زاوية القطاع الدائري المقابل للمنوال في تمثيل بياني دائري؟', '[{"id":"a","text":"108°"},{"id":"b","text":"90°"},{"id":"c","text":"120°"},{"id":"d","text":"144°"}]'::jsonb, 'c', 'الخطوة 1 — تحديد المنوال: المنوال هو القيمة ذات التكرار الأعلى. العلامة 13 تكرارها 10، وهو أعلى تكرار. إذن المنوال = 13.
+الخطوة 2 — التواتر: f = 10 ÷ 30 = 1/3.
+الخطوة 3 — زاوية القطاع: α = (1/3) × 360° = 120°.
+خطأ شائع ①: اختيار 108° يوافق تواترًا 30% أي 9/30 — لكنّ تكرار 13 هو 10 لا 9.
+خطأ شائع ②: اختيار 144° يوافق تواترًا 40% أي 12/30 — أكبر من الصحيح.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4122,95 +4113,94 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('9323468e-45c8-5597-b723-088293a6671f', 'fe10461c-9fe8-5e7e-97e5-ca6da96505d3', 'في السلسلة الإحصائية ذاتها (30 تلميذًا):
+  ('9323468e-45c8-5597-b723-088293a6671f', 'fe10461c-9fe8-5e7e-97e5-ca6da96505d3', 'في فصل مجهول العدد، رصد الأستاذ علامات التلاميذ في جدول ناقص:
 
-| العلامة | 8 | 10 | 12 | 14 | 16 | 18 |
-|---------|---|----|----|----|----|----||
-| التكرار | 3 | 5  | 8  | 9  | 4  | 1  |
-
-احسب مجموع المنوال والمدى (الفارق بين أكبر قيمة وأصغرها).', '[{"id":"a","text":"22"},{"id":"b","text":"26"},{"id":"c","text":"28"},{"id":"d","text":"24"}]'::jsonb, 'd', 'المنوال: القيمة الأعلى تكرارًا هي العلامة 14 (تكرارها 9، وهو الأعلى).
-إذن المنوال = 14.
-
-المدى = أكبر قيمة − أصغر قيمة = 18 − 8 = 10.
-
-المجموع = 14 + 10 = 24.
-
-خطأ شائع ①: اختيار المنوال = 12 (الذي له تكرار 8) — لكنّ تكرار 14 أكبر.
-خطأ شائع ②: حساب المدى = 12 (بطرح رتبتَي الطرفين خطأً).', 3)
-ON CONFLICT (id) DO UPDATE SET
-  exercise_id = EXCLUDED.exercise_id,
-  prompt = EXCLUDED.prompt,
-  options = EXCLUDED.options,
-  correct_option = EXCLUDED.correct_option,
-  explanation = EXCLUDED.explanation,
-  display_order = EXCLUDED.display_order;
-
-INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('54e3d2a1-cd96-570a-8157-e2077bf4b74e', 'fe10461c-9fe8-5e7e-97e5-ca6da96505d3', 'في الفصل المذكور (30 تلميذًا بالجدول أعلاه)، يريد الأستاذ رسم مخطّط دائري. ما هي زاوية القطاع الدائري التي تمثّل التلاميذ الذين علامتهم 12؟', '[{"id":"a","text":"90°"},{"id":"b","text":"96°"},{"id":"c","text":"100°"},{"id":"d","text":"108°"}]'::jsonb, 'b', 'عدد التلاميذ الذين علامتهم 12 هو n₁₂ = 8.
-
-التواتر = 8 ÷ 30 = 4/15
-
-زاوية القطاع = التواتر × 360°
-= (4/15) × 360°
-= 1440° ÷ 15
-= 96°
-
-خطأ شائع ①: حساب (8÷30)×360 = 96 لكن تقريبه خطأً إلى 90° (قيمة قطاع نسبته 25%).
-خطأ شائع ②: ضرب التكرار 8 في 360 مباشرة دون قسمته على n = 30.', 4)
-ON CONFLICT (id) DO UPDATE SET
-  exercise_id = EXCLUDED.exercise_id,
-  prompt = EXCLUDED.prompt,
-  options = EXCLUDED.options,
-  correct_option = EXCLUDED.correct_option,
-  explanation = EXCLUDED.explanation,
-  display_order = EXCLUDED.display_order;
-
-INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('b8b8762f-815d-5032-bc80-1cec59bbea10', 'fe10461c-9fe8-5e7e-97e5-ca6da96505d3', 'حصل تلميذ في 4 اختبارات على العلامات: 8 ، 12 ، 14 ، 10 ، 16 (5 اختبارات بالمجموع). معدّله الحالي = 12. يريد تلميذ آخر تحقيق معدّل مساوٍ له. حصل هذا الثاني على: 10 ، 13 ، 15 ، 14 في أوّل 4 اختبارات. كم يحتاج أن يحصل في الاختبار الخامس؟', '[{"id":"a","text":"6"},{"id":"b","text":"10"},{"id":"c","text":"8"},{"id":"d","text":"12"}]'::jsonb, 'c', 'معدّل التلميذ الأوّل:
-(8 + 12 + 14 + 10 + 16) ÷ 5 = 60 ÷ 5 = 12 ✓
-
-ليحقّق التلميذ الثاني معدّل 12 في 5 اختبارات:
-مجموع علاماته الخمس = 12 × 5 = 60.
-
-مجموع علاماته الأربع الأولى = 10 + 13 + 15 + 14 = 52.
-
-العلامة المطلوبة في الاختبار الخامس = 60 − 52 = 8.
-
-خطأ شائع: حساب معدّل الأربع اختبارات (52÷4 = 13) ثمّ طرحه من 12، وهو خطأ في المنهجية.', 5)
-ON CONFLICT (id) DO UPDATE SET
-  exercise_id = EXCLUDED.exercise_id,
-  prompt = EXCLUDED.prompt,
-  options = EXCLUDED.options,
-  correct_option = EXCLUDED.correct_option,
-  explanation = EXCLUDED.explanation,
-  display_order = EXCLUDED.display_order;
-
-INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('ac564701-5e3c-5dfe-bb71-c8355ab8965b', 'fe10461c-9fe8-5e7e-97e5-ca6da96505d3', 'جدول التكرارات لفصل من التلاميذ كما يلي، حيث a مجهول:
-
-| العلامة | 8 | 10 | 12 | 14 |
+| العلامة | 6 | 10 | 14 | 18 |
 |---------|---|----|----|----|
-| التكرار | 5 | a  | 7  | 3  |
+| التكرار | 5 |  k |  8 |  3 |
 
-إذا علمت أنّ المعدّل الحسابي يساوي 11، فما قيمة a؟', '[{"id":"a","text":"3"},{"id":"b","text":"2"},{"id":"c","text":"4"},{"id":"d","text":"1"}]'::jsonb, 'd', 'التكرار الكلّي n = 5 + a + 7 + 3 = 15 + a.
+إذا كان المعدّل الحسابي يساوي 11، فما قيمة k؟', '[{"id":"a","text":"18"},{"id":"b","text":"20"},{"id":"c","text":"16"},{"id":"d","text":"22"}]'::jsonb, 'b', 'نعيّن k باستخدام شرط المعدّل.
+التكرار الكلّي: n = 5 + k + 8 + 3 = 16 + k.
+مجموع الحواصل: (6×5) + (10×k) + (14×8) + (18×3) = 30 + 10k + 112 + 54 = 196 + 10k.
+شرط المعدّل = 11:
+(196 + 10k) ÷ (16 + k) = 11
+196 + 10k = 11 × (16 + k) = 176 + 11k
+196 − 176 = 11k − 10k
+k = 20.
+التحقّق: n = 36؛ المعدّل = (196 + 200) ÷ 36 = 396 ÷ 36 = 11 ✓
+خطأ شائع: افتراض n = 16 ثابتًا دون إضافة k، مما يعطي 196 + 10k = 176 وk = −2، وهو مستحيل.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
 
-مجموع حواصل الضرب:
-(8×5) + (10×a) + (12×7) + (14×3)
-= 40 + 10a + 84 + 42
-= 166 + 10a
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('54e3d2a1-cd96-570a-8157-e2077bf4b74e', 'fe10461c-9fe8-5e7e-97e5-ca6da96505d3', 'سجّل معلم في جدول تكرارات علامات 29 تلميذًا في مسابقة:
 
-نستعمل شرط المعدّل = 11:
-(166 + 10a) ÷ (15 + a) = 11
-166 + 10a = 11(15 + a)
-166 + 10a = 165 + 11a
-166 − 165 = 11a − 10a
-1 = a
+| العلامة | 7 | 10 | 13 | 16 | 19 |
+|---------|---|----|----|----|----|  
+| التكرار | 4 |  8 |  6 |  9 |  2 |
 
-إذن a = 1، وn = 16.
+ما هو وسيط هذه السلسلة الإحصائية؟', '[{"id":"a","text":"16"},{"id":"b","text":"10"},{"id":"c","text":"13"},{"id":"d","text":"11"}]'::jsonb, 'c', 'الخطوة 1 — التحقّق: n = 4 + 8 + 6 + 9 + 2 = 29 (عدد فردي) ✓.
+الخطوة 2 — رتبة الوسيط = (29 + 1) ÷ 2 = 15.
+الخطوة 3 — جدول التكرارات المجمّعة:
+  ≤ 7 : 4
+  ≤ 10 : 4 + 8 = 12
+  ≤ 13 : 12 + 6 = 18
+  ≤ 16 : 18 + 9 = 27
+  ≤ 19 : 29
+الخطوة 4 — الرتبة 15: التكرار المجمّع عند 10 هو 12 (يشمل الرتب 1−12)، وعند 13 هو 18 (يشمل الرتب 13−18). إذن الرتبة 15 تقع عند القيمة 13.
+الوسيط = 13.
+خطأ شائع: اختيار 16 لأنّها المنوال (تكرار 9)، لكنّ الوسيط ≠ المنوال هنا.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
 
-تحقّق: المعدّل = (40 + 10 + 84 + 42) ÷ 16 = 176 ÷ 16 = 11 ✓
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('b8b8762f-815d-5032-bc80-1cec59bbea10', 'fe10461c-9fe8-5e7e-97e5-ca6da96505d3', 'في إحصاء مدرسي، قُسِّم تلاميذ المستوى إلى مجموعتين:
+• المجموعة أ: 15 تلميذًا، معدّلهم الحسابي 12.
+• المجموعة ب: 10 تلاميذ، معدّلهم الحسابي 15.
+ما هو المعدّل الحسابي الإجمالي لجميع التلاميذ؟', '[{"id":"a","text":"13.5"},{"id":"b","text":"13.2"},{"id":"c","text":"14"},{"id":"d","text":"13"}]'::jsonb, 'b', 'لا يمكن أخذ متوسّط المعدّلَين مباشرةً؛ يجب مراعاة أعداد التلاميذ (الأوزان).
+الخطوة 1 — مجموع علامات المجموعة أ: 15 × 12 = 180.
+الخطوة 2 — مجموع علامات المجموعة ب: 10 × 15 = 150.
+الخطوة 3 — المجموع الكلّي: 180 + 150 = 330.
+الخطوة 4 — العدد الكلّي: 15 + 10 = 25.
+الخطوة 5 — المعدّل الإجمالي = 330 ÷ 25 = 13.2.
+خطأ شائع: (12 + 15) ÷ 2 = 13.5 — هذا خاطئ لأنّه يهمل أنّ المجموعة أ أكبر عددًا، فيمنح الوزن نفسه للمجموعتين.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
 
-خطأ شائع: إهمال أنّ n يعتمد على a، فيضع n = 15 ثابتًا، مما يعطي نتيجة خاطئة.', 6)
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('ac564701-5e3c-5dfe-bb71-c8355ab8965b', 'fe10461c-9fe8-5e7e-97e5-ca6da96505d3', 'سُجِّلت أعمار 30 شخصًا في جدول بيانات مجمَّعة في فئات:
+
+| الفئة (سنة) | [0 ; 5[ | [5 ; 10[ | [10 ; 15[ | [15 ; 20] |
+|-------------|---------|----------|-----------|----------|
+| التكرار      |    4    |    6     |    12     |     8    |
+
+باستخدام قِيَم مراكز الفئات، احسب المعدّل الحسابي التقريبي.', '[{"id":"a","text":"12"},{"id":"b","text":"10.5"},{"id":"c","text":"11"},{"id":"d","text":"11.5"}]'::jsonb, 'd', 'عند تجميع البيانات في فئات، نعوّض كلّ فئة بمركزها (منتصفها).
+الخطوة 1 — قِيَم المراكز:
+  [0 ; 5[  → (0 + 5) ÷ 2 = 2.5
+  [5 ; 10[ → (5 + 10) ÷ 2 = 7.5
+  [10 ; 15[→ (10 + 15) ÷ 2 = 12.5
+  [15 ; 20]→ (15 + 20) ÷ 2 = 17.5
+الخطوة 2 — المجموع المرجَّح:
+(4 × 2.5) + (6 × 7.5) + (12 × 12.5) + (8 × 17.5)
+= 10 + 45 + 150 + 140 = 345
+الخطوة 3 — n = 4 + 6 + 12 + 8 = 30.
+الخطوة 4 — المعدّل = 345 ÷ 30 = 11.5.
+خطأ شائع: استخدام الطرف الأيسر لكلّ فئة (0, 5, 10, 15) بدلاً من المركز يعطي (0+30+120+120)÷30 = 9 — وهو تقدير خاطئ.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4498,7 +4488,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
-  ('0140931b-06a1-57ea-8a77-4ec6e47fc316', '4d3cea13-a54f-55f1-ad8d-853c7c9ef05d', 'math', '👑 تحدّي النخبة: نظرية طاليس المتقدّمة', 4, 300, 60, 'challenge', 'admin', 4)
+  ('0140931b-06a1-57ea-8a77-4ec6e47fc316', '4d3cea13-a54f-55f1-ad8d-853c7c9ef05d', 'math', '👑 تحدّي النخبة: نظرية طاليس — مسائل متقدّمة متعدّدة الخطوات', 4, 300, 60, 'challenge', 'admin', 4)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
   subject_id = EXCLUDED.subject_id,
@@ -4510,7 +4500,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('58d08233-af38-5efb-ac86-c8c038630619', '0140931b-06a1-57ea-8a77-4ec6e47fc316', 'في مثلّث ABC، النقطة M على [AB] والنقطة N على [AC] بحيث AM = 4 cm وMB = 8 cm وAN = 5 cm وNC = 10 cm وBC = 18 cm. أثبت أنّ (MN) ∥ (BC)، ثمّ استنتج طول MN.', '[{"id":"a","text":"MN = 4 cm"},{"id":"b","text":"MN = 5 cm"},{"id":"c","text":"MN = 6 cm"},{"id":"d","text":"MN = 7 cm"}]'::jsonb, 'c', 'أوّلًا — إثبات التوازي بالنظرية العكسية: AB = AM + MB = 4 + 8 = 12 cm، فـ AM/AB = 4/12 = 1/3. AC = AN + NC = 5 + 10 = 15 cm، فـ AN/AC = 5/15 = 1/3. النسبتان متساويتان (1/3)، والنقطتان M وN على نفس جانب A، إذن بالنظرية العكسية لطاليس: (MN) ∥ (BC). ✓ ثانيًا — حساب MN: بنظرية طاليس: MN/BC = AM/AB = 1/3، ومنه MN = BC × (1/3) = 18 × (1/3) = 6 cm.', 1)
+  ('58d08233-af38-5efb-ac86-c8c038630619', '0140931b-06a1-57ea-8a77-4ec6e47fc316', 'في مثلّث ABC، النقطة M على [AB] والنقطة N على [AC] بحيث (MN) ∥ (BC). المعطيات: AM = x cm وMB = 6 cm وAN = 4 cm وNC = (x + 2) cm. أوجد x أوّلًا، ثمّ استنتج طول MN علمًا أنّ BC = 15 cm.', '[{"id":"a","text":"MN = 4 cm"},{"id":"b","text":"MN = 5 cm"},{"id":"c","text":"MN = 6 cm"},{"id":"d","text":"MN = 7.5 cm"}]'::jsonb, 'c', 'الخطوة 1 — إيجاد x بنظرية طاليس (صيغة الجزء على الجزء): AM/MB = AN/NC، إذن x/6 = 4/(x + 2). بالضرب التقاطعي: x(x + 2) = 24، أي x² + 2x − 24 = 0. بحساب المميّز: Δ = 4 + 96 = 100، فـ x = (−2 + 10)/2 = 4 (نرفض الحلّ السالب). إذن AM = 4 cm وMB = 6 cm وNC = 6 cm. الخطوة 2 — حساب MN: AB = AM + MB = 4 + 6 = 10 cm. بنظرية طاليس: MN/BC = AM/AB = 4/10 = 2/5. إذن MN = 15 × (2/5) = 6 cm.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4520,7 +4510,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('9497b139-438e-5002-8508-a1b2f086b343', '0140931b-06a1-57ea-8a77-4ec6e47fc316', 'في مثلّث ABC، (MN) ∥ (BC) مع M على [AB] وN على [AC]. AM = 3x cm وMB = (x + 2) cm وAN = 9 cm وNC = 5 cm. ما طول AB؟', '[{"id":"a","text":"AB = 12 cm"},{"id":"b","text":"AB = 14 cm"},{"id":"c","text":"AB = 15 cm"},{"id":"d","text":"AB = 16 cm"}]'::jsonb, 'b', 'بنظرية طاليس (صيغة الجزء على الجزء المتبقّي): AM/MB = AN/NC. إذن 3x/(x + 2) = 9/5. بالضرب التقاطعي: 5 × 3x = 9 × (x + 2)، أي 15x = 9x + 18، ومنه 6x = 18، فـ x = 3. وعليه: AM = 3 × 3 = 9 cm وMB = 3 + 2 = 5 cm. AB = AM + MB = 9 + 5 = 14 cm.', 2)
+  ('9497b139-438e-5002-8508-a1b2f086b343', '0140931b-06a1-57ea-8a77-4ec6e47fc316', 'في وضعية الفراشة، يتقاطع مستقيمان في النقطة O بحيث (AB) ∥ (CD). المعطيات: OA = 3 cm وOC = 9 cm وOB = 4 cm وAB = 8 cm. أوجد OD وCD، ثمّ احسب محيط المثلّث OCD.', '[{"id":"a","text":"المحيط = 36 cm"},{"id":"b","text":"المحيط = 40 cm"},{"id":"c","text":"المحيط = 42 cm"},{"id":"d","text":"المحيط = 45 cm"}]'::jsonb, 'd', 'الخطوة 1 — إيجاد OD بنظرية طاليس في وضعية الفراشة: OA/OC = OB/OD، إذن 3/9 = 4/OD، ومنه OD = (4 × 9)/3 = 12 cm. الخطوة 2 — إيجاد CD: AB/CD = OA/OC = 3/9 = 1/3، إذن CD = AB × 3 = 8 × 3 = 24 cm. التحقّق: OB/OD = 4/12 = 1/3 = OA/OC. ✓ الخطوة 3 — المحيط: OC + OD + CD = 9 + 12 + 24 = 45 cm.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4530,7 +4520,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('7d3ee860-ba3b-5ce3-8aba-7ef708ee7f39', '0140931b-06a1-57ea-8a77-4ec6e47fc316', 'في وضعية الفراشة، يتقاطع مستقيمان في النقطة O بحيث (AB) ∥ (CD). المعطيات: OA = 3 cm وOC = 5 cm وOB = 6 cm. أوجد OD.', '[{"id":"a","text":"OD = 8 cm"},{"id":"b","text":"OD = 9 cm"},{"id":"c","text":"OD = 10 cm"},{"id":"d","text":"OD = 12 cm"}]'::jsonb, 'c', 'بنظرية طاليس في وضعية الفراشة: OA/OC = OB/OD. إذن 3/5 = 6/OD، ومنه OD = (6 × 5)/3 = 30/3 = 10 cm. تحقّق: OA/OC = 3/5 وOB/OD = 6/10 = 3/5. النسبتان متساويتان. ✓', 3)
+  ('7d3ee860-ba3b-5ce3-8aba-7ef708ee7f39', '0140931b-06a1-57ea-8a77-4ec6e47fc316', 'في مثلّث ABC، المستقيمان (DE) و(FG) يوازيان (BC)، مع D وF على [AB] وE وG على [AC] بحيث AD = 4 cm وAF = 6 cm وAB = 12 cm وBC = 24 cm. ما قيمة FG − DE؟', '[{"id":"a","text":"FG − DE = 2 cm"},{"id":"b","text":"FG − DE = 4 cm"},{"id":"c","text":"FG − DE = 6 cm"},{"id":"d","text":"FG − DE = 8 cm"}]'::jsonb, 'b', 'الخطوة 1 — إيجاد DE: بنظرية طاليس مع (DE) ∥ (BC): DE/BC = AD/AB = 4/12 = 1/3، إذن DE = 24 × (1/3) = 8 cm. الخطوة 2 — إيجاد FG: بنظرية طاليس مع (FG) ∥ (BC): FG/BC = AF/AB = 6/12 = 1/2، إذن FG = 24 × (1/2) = 12 cm. الخطوة 3: FG − DE = 12 − 8 = 4 cm. ملاحظة: كلّما اقتربنا من B كلّما زادت القطعة المتوازية مع (BC)، فالترتيب صحيح: A وD وF وB على [AB] وFG > DE.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4540,7 +4530,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('daf7c0ca-51d5-50fc-9699-ae38472a6214', '0140931b-06a1-57ea-8a77-4ec6e47fc316', 'في مثلّث ABC، M على [AB] وN على [AC]. المعطيات: AM = 5 cm وMB = 7 cm وAN = 6 cm وNC = 8 cm. هل (MN) ∥ (BC)؟', '[{"id":"a","text":"نعم، لأنّ AM/AB = AN/AC = 1/2"},{"id":"b","text":"لا، لأنّ AM/AB = 5/12 بينما AN/AC = 3/7، وهما غير متساويتين"},{"id":"c","text":"نعم، لأنّ AM + AN = MB + NC"},{"id":"d","text":"لا، لأنّ AM ≠ AN"}]'::jsonb, 'b', 'نتحقّق بالنظرية العكسية لطاليس: AB = AM + MB = 5 + 7 = 12 cm، فـ AM/AB = 5/12. AC = AN + NC = 6 + 8 = 14 cm، فـ AN/AC = 6/14 = 3/7. نقارن النسبتين: 5/12 مقابل 3/7 — بالضرب التقاطعي: 5 × 7 = 35 و3 × 12 = 36. بما أنّ 35 ≠ 36 فإنّ النسبتين غير متساويتين، إذن (MN) لا تُوازي (BC).', 4)
+  ('daf7c0ca-51d5-50fc-9699-ae38472a6214', '0140931b-06a1-57ea-8a77-4ec6e47fc316', 'في مثلّث PQR، النقطة S على [PQ] بحيث PS = 8 cm وSQ = 4 cm، والنقطة T على [PR] بحيث PT = 10 cm وTR = 5 cm. أثبت أنّ (ST) ∥ (QR)، ثمّ أوجد ST إذا كان QR = 18 cm.', '[{"id":"a","text":"ST = 9 cm"},{"id":"b","text":"ST = 10 cm"},{"id":"c","text":"ST = 12 cm"},{"id":"d","text":"ST = 14 cm"}]'::jsonb, 'c', 'الخطوة 1 — إثبات التوازي بالنظرية العكسية: PQ = PS + SQ = 8 + 4 = 12 cm، فـ PS/PQ = 8/12 = 2/3. PR = PT + TR = 10 + 5 = 15 cm، فـ PT/PR = 10/15 = 2/3. النسبتان متساويتان (2/3) والنقطتان S وT من نفس جانب الرأس P، إذن بالنظرية العكسية لطاليس: (ST) ∥ (QR). ✓ الخطوة 2 — إيجاد ST: بنظرية طاليس: ST/QR = PS/PQ = 2/3، إذن ST = 18 × (2/3) = 12 cm.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4550,7 +4540,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('12cf9b49-156a-5d12-9f20-6321641c1d1d', '0140931b-06a1-57ea-8a77-4ec6e47fc316', 'في مثلّث ABC، المستقيم (DE) ∥ (BC) مع D على [AB] وE على [AC]. المعطيات: AD = 3 cm وDB = 9 cm وDE = 4 cm. النقطة F على [AB] بحيث AF = 6 cm، والمستقيم (FG) ∥ (BC) مع G على [AC]. أوجد FG.', '[{"id":"a","text":"FG = 6 cm"},{"id":"b","text":"FG = 7 cm"},{"id":"c","text":"FG = 8 cm"},{"id":"d","text":"FG = 10 cm"}]'::jsonb, 'c', 'الخطوة 1 — إيجاد BC: AB = AD + DB = 3 + 9 = 12 cm. بنظرية طاليس في (DE) ∥ (BC): AD/AB = DE/BC، إذن 3/12 = 4/BC، ومنه BC = (4 × 12)/3 = 16 cm. الخطوة 2 — إيجاد FG: بنظرية طاليس في (FG) ∥ (BC): AF/AB = FG/BC، إذن 6/12 = FG/16، ومنه FG = (6 × 16)/12 = 96/12 = 8 cm.', 5)
+  ('12cf9b49-156a-5d12-9f20-6321641c1d1d', '0140931b-06a1-57ea-8a77-4ec6e47fc316', 'في مثلّث ABC، المستقيم (DE) ∥ (BC) مع D على [AB] وE على [AC]. المعطيات: AD = 4 cm وDB = 6 cm وAC = 20 cm. النقطة F هي منتصف [DE]، والمستقيم (BF) يلتقي بالمستقيم (AC) في النقطة G. أوجد طول AG.', '[{"id":"a","text":"AG = 5 cm"},{"id":"b","text":"AG = 6 cm"},{"id":"c","text":"AG = 8 cm"},{"id":"d","text":"AG = 10 cm"}]'::jsonb, 'a', 'الخطوة 1 — نسبة التشابه: AB = AD + DB = 10 cm، فـ AD/AB = 4/10 = 2/5. الخطوة 2 — إيجاد E بالمتّجهات: نضع A أصلَ الإحداثيات، ونكتب بالمتّجهات: D = (2/5)·B وE = (2/5)·C (لأنّ AD/AB = AE/AC = 2/5). الخطوة 3 — إيجاد F (منتصف DE): F = (D + E)/2 = (1/2)·[(2/5)B + (2/5)C] = (1/5)(B + C). الخطوة 4 — تقاطع (BF) مع (AC): نكتب نقطة عامّة على (BF) على شكل B + t(F − B) = (1 − 4t/5)·B + (t/5)·C. لكي تقع هذه النقطة على (AC)، يجب أن يكون معامل B معدومًا: 1 − 4t/5 = 0، فـ t = 5/4. ومنه معامل C هو: t/5 = (5/4)/5 = 1/4. إذن G = (1/4)·C، أي AG = (1/4)·AC = (1/4) × 20 = 5 cm.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -4560,7 +4550,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('d89c0aee-4979-58d1-b2d8-c9c4fa558b60', '0140931b-06a1-57ea-8a77-4ec6e47fc316', 'في وضعية الفراشة، يتقاطع مستقيمان في O بحيث (AB) ∥ (CD). المعطيات: OA = (x + 1) cm وOC = (2x − 1) cm وOB = 6 cm وOD = 9 cm وAB = 8 cm. أوجد x ثمّ استنتج طول CD.', '[{"id":"a","text":"x = 5 وCD = 9 cm"},{"id":"b","text":"x = 4 وCD = 10 cm"},{"id":"c","text":"x = 5 وCD = 12 cm"},{"id":"d","text":"x = 3 وCD = 15 cm"}]'::jsonb, 'c', 'الخطوة 1 — إيجاد x: بنظرية طاليس في وضعية الفراشة: OA/OC = OB/OD، إذن (x + 1)/(2x − 1) = 6/9 = 2/3. بالضرب التقاطعي: 3(x + 1) = 2(2x − 1)، أي 3x + 3 = 4x − 2، ومنه x = 5. الخطوة 2 — إيجاد CD: OA = 5 + 1 = 6 cm وOC = 2 × 5 − 1 = 9 cm. بنظرية طاليس: AB/CD = OA/OC = 6/9 = 2/3، إذن CD = AB × 3/2 = 8 × 3/2 = 12 cm. تحقّق: OB/OD = 6/9 = 2/3. ✓', 6)
+  ('d89c0aee-4979-58d1-b2d8-c9c4fa558b60', '0140931b-06a1-57ea-8a77-4ec6e47fc316', 'في وضعية الفراشة، يتقاطع مستقيمان في O بحيث (AB) ∥ (CD). المعطيات: OA = (2k − 1) cm وOC = (3k + 1) cm وOB = (k + 3) cm وOD = (2k + 5) cm وAB = 7 cm. أوجد k (مع k > 0)، ثمّ استنتج طول CD.', '[{"id":"a","text":"k = 3 وCD = 10.5 cm"},{"id":"b","text":"k = 4 وCD = 13 cm"},{"id":"c","text":"k = 5 وCD = 16 cm"},{"id":"d","text":"k = 6 وCD = 19.5 cm"}]'::jsonb, 'b', 'الخطوة 1 — إيجاد k بنظرية طاليس: OA/OC = OB/OD، إذن (2k − 1)/(3k + 1) = (k + 3)/(2k + 5). بالضرب التقاطعي: (2k − 1)(2k + 5) = (k + 3)(3k + 1). بسط الطرف الأيسر: 4k² + 10k − 2k − 5 = 4k² + 8k − 5. بسط الطرف الأيمن: 3k² + k + 9k + 3 = 3k² + 10k + 3. المعادلة: 4k² + 8k − 5 = 3k² + 10k + 3، ومنه k² − 2k − 8 = 0، أي (k − 4)(k + 2) = 0. بما أنّ k > 0، فـ k = 4. الخطوة 2 — إيجاد CD: OA = 2(4) − 1 = 7 cm وOC = 3(4) + 1 = 13 cm. بنظرية طاليس: AB/CD = OA/OC = 7/13، إذن CD = 7 × (13/7) = 13 cm. التحقّق: OB = 7 cm وOD = 13 cm، فـ OA/OC = OB/OD = 7/13. ✓', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -6248,7 +6238,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
-  ('d1421795-a726-56b0-9cad-50aaa5188d83', '0c844ff1-0195-5d0c-a7ab-f03a2bc2863e', 'math', '👑 تحدّي النخبة: الحجوم والأسطح في الفضاء', 4, 300, 60, 'challenge', 'admin', 4)
+  ('d1421795-a726-56b0-9cad-50aaa5188d83', '0c844ff1-0195-5d0c-a7ab-f03a2bc2863e', 'math', '👑 تحدّي النخبة: الحجوم والأسطح والمجسّمات المركّبة', 4, 300, 60, 'challenge', 'admin', 4)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
   subject_id = EXCLUDED.subject_id,
@@ -6260,13 +6250,15 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('1b26ae99-e537-509d-aa4d-f124c526e5cf', 'd1421795-a726-56b0-9cad-50aaa5188d83', 'هرم قاعدته مربّعة ضلعها 4 cm وارتفاعه 3 cm. إذا كبّرنا هذا الهرم بنسبة تكبير k = 3 (أي ضربنا جميع أبعاده في 3)، فما حجم الهرم الجديد؟', '[{"id":"a","text":"144 cm³"},{"id":"b","text":"432 cm³"},{"id":"c","text":"48 cm³"},{"id":"d","text":"216 cm³"}]'::jsonb, 'b', 'الخطوة 1 — حجم الهرم الأصلي: $V_1 = \frac{1}{3} \times 4^2 \times 3 = \frac{1}{3} \times 16 \times 3 = 16 \text{ cm}^3$.
+  ('1b26ae99-e537-509d-aa4d-f124c526e5cf', 'd1421795-a726-56b0-9cad-50aaa5188d83', 'هرم قاعدته مثلّث قائم ساقاه 6 cm و8 cm وارتفاع الهرم 9 cm. إذا كبّرنا جميع أبعاد هذا الهرم بمعامل k = 2 (أي ضُرب كلّ بُعد في 2)، فما حجم الهرم الجديد؟', '[{"id":"a","text":"144 cm³"},{"id":"b","text":"576 cm³"},{"id":"c","text":"288 cm³"},{"id":"d","text":"216 cm³"}]'::jsonb, 'b', 'الخطوة 1 — مساحة القاعدة المثلّثية: القاعدة مثلّث قائم ساقاه 6 cm و8 cm، إذن $S_{\text{قاعدة}} = \frac{1}{2} \times 6 \times 8 = 24 \text{ cm}^2$.
 
-الخطوة 2 — أثر التكبير على الحجم: عند التكبير بنسبة $k$، تتضاعف الأبعاد الثلاثة معًا، فينضرب الحجم في $k^3$. هنا $k = 3$، إذن $k^3 = 27$.
+الخطوة 2 — حجم الهرم الأصلي: $V_1 = \frac{1}{3} \times 24 \times 9 = \frac{216}{3} = 72 \text{ cm}^3$.
 
-الخطوة 3 — الحجم الجديد: $V_2 = k^3 \times V_1 = 27 \times 16 = 432 \text{ cm}^3$.
+الخطوة 3 — أثر التكبير على الحجم: عند التكبير بمعامل $k$، تنضرب جميع الأبعاد الثلاثة في $k$، فينضرب الحجم في $k^3$. هنا $k = 2$، إذن $k^3 = 8$.
 
-تنبيه: الخطأ الشائع هو ضرب الحجم في k (×3) أو في k² (×9) بدلًا من k³ (×27). التكبير يؤثّر على الأبعاد الثلاثة معًا.', 1)
+الخطوة 4 — الحجم الجديد: $V_2 = k^3 \times V_1 = 8 \times 72 = 576 \text{ cm}^3$.
+
+تحذير: الأخطاء الشائعة هي ضرب الحجم في $k = 2$ (فيُعطي 144) أو في $k^2 = 4$ (فيُعطي 288). يجب دائمًا الضرب في $k^3$ لأنّ الحجم يعتمد على ثلاثة أبعاد.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -6276,14 +6268,13 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('ed040a2c-55f6-5da9-ac2a-df50d6089dee', 'd1421795-a726-56b0-9cad-50aaa5188d83', 'هرم قاعدته مربّعة ضلعها 6 cm. المسافة من قمّة الهرم إلى منتصف أحد أضلاع القاعدة (ارتفاع الوجه المثلّثي) تساوي 5 cm. احسب حجم هذا الهرم.', '[{"id":"a","text":"48 cm³"},{"id":"b","text":"60 cm³"},{"id":"c","text":"36 cm³"},{"id":"d","text":"72 cm³"}]'::jsonb, 'a', 'الخطوة 1 — تحديد الارتفاع الحقيقيّ للهرم بفيثاغورس: المسافة من قمّة الهرم إلى منتصف ضلع القاعدة (أبوثيم الهرم) هي $l = 5$ cm. المسافة من مركز القاعدة إلى منتصف الضلع (أبوثيم القاعدة المربّعة) هي $a = \frac{6}{2} = 3$ cm.
+  ('ed040a2c-55f6-5da9-ac2a-df50d6089dee', 'd1421795-a726-56b0-9cad-50aaa5188d83', 'هرم قاعدته مربّعة ضلعها 8 cm وارتفاعه 3 cm. قمّته فوق مركز القاعدة. ما طول الحافّة الجانبية من القمّة إلى أيٍّ من رؤوس القاعدة الأربعة؟', '[{"id":"a","text":"5 cm"},{"id":"b","text":"$\\sqrt{41}$ cm"},{"id":"c","text":"$\\sqrt{73}$ cm"},{"id":"d","text":"$4\\sqrt{2}$ cm"}]'::jsonb, 'b', 'الخطوة 1 — إيجاد المسافة من مركز القاعدة إلى أحد رؤوسها: القاعدة مربّع ضلعه 8 cm. قطر المربّع = $8\sqrt{2}$ cm، ونصف القطر (من المركز إلى الرأس) = $\frac{8\sqrt{2}}{2} = 4\sqrt{2}$ cm.
 
-في المثلّث القائم المكوَّن من: الارتفاع h، أبوثيم القاعدة a، وأبوثيم الهرم l:
-$$l^2 = h^2 + a^2 \Rightarrow 5^2 = h^2 + 3^2 \Rightarrow 25 = h^2 + 9 \Rightarrow h^2 = 16 \Rightarrow h = 4 \text{ cm}$$
+الخطوة 2 — تطبيق فيثاغورس في الفضاء: في المثلّث القائم الذي تشكّله الحافّة الجانبية والارتفاع ونصف قطر القاعدة:
+$$l^2 = h^2 + \left(4\sqrt{2}\right)^2 = 3^2 + 32 = 9 + 32 = 41$$
+$$l = \sqrt{41} \text{ cm}$$
 
-الخطوة 2 — مساحة القاعدة: $S = 6^2 = 36 \text{ cm}^2$.
-
-الخطوة 3 — الحجم: $V = \frac{1}{3} \times 36 \times 4 = \frac{144}{3} = 48 \text{ cm}^3$.', 2)
+تحذير: الخطأ الأكثر شيوعًا هو استخدام نصف الضلع (4 cm) عوضًا عن نصف القطر ($4\sqrt{2}$ cm)، وهو ما يُعطي $\sqrt{9+16} = \sqrt{25} = 5$ cm — إجابة خاطئة! الخطأ الثاني هو استخدام الضلع الكامل (8 cm): $\sqrt{9+64} = \sqrt{73}$ cm.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -6293,15 +6284,13 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('7582bfe6-a255-5956-b423-62ec96f8d40c', 'd1421795-a726-56b0-9cad-50aaa5188d83', 'مخروط نصف قطر قاعدته 6 cm وارتفاعه 8 cm. قُطع بمستوٍ موازٍ للقاعدة على بُعد 4 cm من القمّة (أي على ارتفاع 4 cm من القمّة). ما حجم الجزء السفليّ (المحبط المقطوع) الذي يقع بين المستوى القاطع والقاعدة؟ استعمل π رمزيًّا.', '[{"id":"a","text":"$84\\pi$ cm³"},{"id":"b","text":"$72\\pi$ cm³"},{"id":"c","text":"$88\\pi$ cm³"},{"id":"d","text":"$80\\pi$ cm³"}]'::jsonb, 'a', 'الخطوة 1 — نسبة التشابه: المخروط الصغير (من القمّة إلى المستوى القاطع) له ارتفاع $h_1 = 4$ cm والمخروط الأصلي ارتفاعه $H = 8$ cm. نسبة التشابه: $k = \frac{h_1}{H} = \frac{4}{8} = \frac{1}{2}$.
+  ('7582bfe6-a255-5956-b423-62ec96f8d40c', 'd1421795-a726-56b0-9cad-50aaa5188d83', 'مجسّم مركّب يتكوّن من أسطوانة نصف قطرها 6 cm وارتفاعها 10 cm، فوقها نصف كرة نفس نصف القطر 6 cm (وجهها المستوي يلتصق بالقاعدة العلوية للأسطوانة). ما الحجم الكلّي لهذا المجسّم؟ استعمل π رمزيًّا.', '[{"id":"a","text":"$648\\pi$ cm³"},{"id":"b","text":"$576\\pi$ cm³"},{"id":"c","text":"$360\\pi$ cm³"},{"id":"d","text":"$504\\pi$ cm³"}]'::jsonb, 'd', 'الخطوة 1 — حجم الأسطوانة: $V_{\text{أسطوانة}} = \pi r^2 h = \pi \times 6^2 \times 10 = \pi \times 36 \times 10 = 360\pi \text{ cm}^3$.
 
-الخطوة 2 — نصف قطر القاعدة العليا: $r_1 = k \times r = \frac{1}{2} \times 6 = 3$ cm.
+الخطوة 2 — حجم نصف الكرة: الكرة الكاملة حجمها $\frac{4}{3}\pi r^3 = \frac{4}{3}\pi \times 216 = 288\pi \text{ cm}^3$، إذن نصف الكرة: $V_{\text{نصف كرة}} = \frac{1}{2} \times 288\pi = 144\pi \text{ cm}^3$.
 
-الخطوة 3 — حجم المخروط الصغير: $V_1 = \frac{1}{3}\pi r_1^2 h_1 = \frac{1}{3}\pi \times 9 \times 4 = 12\pi \text{ cm}^3$.
+الخطوة 3 — الحجم الكلّي: $V_{\text{كلّي}} = 360\pi + 144\pi = 504\pi \text{ cm}^3$.
 
-الخطوة 4 — حجم المخروط الكامل: $V = \frac{1}{3}\pi \times 36 \times 8 = 96\pi \text{ cm}^3$.
-
-الخطوة 5 — حجم المحبط المقطوع (الجزء السفليّ): $V_{\text{محبط}} = V - V_1 = 96\pi - 12\pi = 84\pi \text{ cm}^3$.', 3)
+تحذير: الخطأ الشائع هو استخدام حجم الكرة الكاملة (288π) بدلًا من نصف الكرة (144π)، فيُعطي 360π + 288π = 648π. الخطأ الآخر هو إهمال نصف الكرة كلّيًّا والإجابة بـ 360π.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -6311,17 +6300,13 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('d6484172-24af-5b73-b361-f3cfcabfac58', 'd1421795-a726-56b0-9cad-50aaa5188d83', 'مجسّم مركّب يتكوّن من أسطوانة نصف قطرها 3 cm وارتفاعها 8 cm، فوقها مخروط نفس نصف القطر 3 cm وارتفاعه 4 cm. ما مساحة السطح الكاملة لهذا المجسّم؟ (لا توجد قاعدة علويّة للأسطوانة لأنّ المخروط يجلس عليها). استعمل π رمزيًّا.', '[{"id":"a","text":"$60\\pi$ cm²"},{"id":"b","text":"$72\\pi$ cm²"},{"id":"c","text":"$66\\pi$ cm²"},{"id":"d","text":"$84\\pi$ cm²"}]'::jsonb, 'b', 'الخطوة 1 — الطول المائل للمخروط (apothème): $l = \sqrt{r^2 + h^2} = \sqrt{3^2 + 4^2} = \sqrt{9 + 16} = \sqrt{25} = 5$ cm.
+  ('d6484172-24af-5b73-b361-f3cfcabfac58', 'd1421795-a726-56b0-9cad-50aaa5188d83', 'مخروط ارتفاعه $h = 2r$ (أي ارتفاعه يساوي ضعف نصف قطر قاعدته). وكرة نصف قطرها $r$. ما نسبة حجم المخروط إلى حجم الكرة؟', '[{"id":"a","text":"$\\dfrac{1}{3}$"},{"id":"b","text":"$\\dfrac{1}{4}$"},{"id":"c","text":"$\\dfrac{1}{2}$"},{"id":"d","text":"$\\dfrac{2}{3}$"}]'::jsonb, 'c', 'الخطوة 1 — حجم المخروط (بـ $h = 2r$): $V_{\text{مخروط}} = \frac{1}{3}\pi r^2 h = \frac{1}{3}\pi r^2 \times 2r = \frac{2}{3}\pi r^3$.
 
-الخطوة 2 — المساحة الجانبية للمخروط: $S_{\text{جانبية مخروط}} = \pi r l = \pi \times 3 \times 5 = 15\pi \text{ cm}^2$.
+الخطوة 2 — حجم الكرة: $V_{\text{كرة}} = \frac{4}{3}\pi r^3$.
 
-الخطوة 3 — المساحة الجانبية للأسطوانة: $S_{\text{جانبية أسطوانة}} = 2\pi r h = 2\pi \times 3 \times 8 = 48\pi \text{ cm}^2$.
+الخطوة 3 — النسبة: $$\frac{V_{\text{مخروط}}}{V_{\text{كرة}}} = \frac{\dfrac{2}{3}\pi r^3}{\dfrac{4}{3}\pi r^3} = \frac{2}{4} = \frac{1}{2}$$
 
-الخطوة 4 — قاعدة الأسطوانة السفليّة (الوحيدة): $S_{\text{قاعدة}} = \pi r^2 = 9\pi \text{ cm}^2$.
-
-الخطوة 5 — المساحة الكلّية: $S = 15\pi + 48\pi + 9\pi = 72\pi \text{ cm}^2$.
-
-تنبيه: لا نضيف القاعدة العلوية للأسطوانة لأنّ المخروط يقعد عليها مباشرةً، ولا نضيف قاعدة المخروط لنفس السبب — وجه مشترك مخفيّ داخل المجسّم.', 4)
+إذن حجم المخروط يساوي نصف حجم الكرة حين يتشاركان نفس r وارتفاعه $h = 2r$. تأكّد من إلغاء $\pi r^3$ من البسط والمقام معًا. الخطأ الشائع هو نسيان شرط $h = 2r$ والإجابة بـ $1/3$.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -6331,13 +6316,17 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('465b46f2-fc97-54e3-9464-5aec0e1f19d3', 'd1421795-a726-56b0-9cad-50aaa5188d83', 'كرة نصف قطرها 3 cm. إذا كبّرنا نصف قطرها بمقدار الضعف (أي أصبح نصف القطر الجديد 6 cm)، فبكم تتضاعف مساحة سطح الكرة؟ وما مساحة سطح الكرة الجديدة؟ استعمل π رمزيًّا.', '[{"id":"a","text":"تتضاعف 2 مرّات؛ المساحة الجديدة $72\\pi$ cm²"},{"id":"b","text":"تتضاعف 8 مرّات؛ المساحة الجديدة $288\\pi$ cm²"},{"id":"c","text":"تتضاعف 4 مرّات؛ المساحة الجديدة $144\\pi$ cm²"},{"id":"d","text":"تتضاعف 3 مرّات؛ المساحة الجديدة $108\\pi$ cm²"}]'::jsonb, 'c', 'الخطوة 1 — مساحة سطح الكرة الأصلية (r = 3 cm): $S_1 = 4\pi r^2 = 4\pi \times 9 = 36\pi \text{ cm}^2$.
+  ('465b46f2-fc97-54e3-9464-5aec0e1f19d3', 'd1421795-a726-56b0-9cad-50aaa5188d83', 'مخروط نصف قطر قاعدته 9 cm وارتفاعه 12 cm. ما مساحة سطحه الكلّية (القاعدة + السطح الجانبي)؟ استعمل π رمزيًّا.', '[{"id":"a","text":"$135\\pi$ cm²"},{"id":"b","text":"$216\\pi$ cm²"},{"id":"c","text":"$297\\pi$ cm²"},{"id":"d","text":"$189\\pi$ cm²"}]'::jsonb, 'b', 'الخطوة 1 — الطول المائل (génératrice): بفيثاغورس في المثلّث القائم (r, h, l):
+$$l = \sqrt{r^2 + h^2} = \sqrt{9^2 + 12^2} = \sqrt{81 + 144} = \sqrt{225} = 15 \text{ cm}$$
+(ثلاثيّة فيثاغورس: $9 = 3 \times 3$، $12 = 3 \times 4$، $15 = 3 \times 5$)
 
-الخطوة 2 — مساحة سطح الكرة الجديدة (r'' = 6 cm): $S_2 = 4\pi (r'')^2 = 4\pi \times 36 = 144\pi \text{ cm}^2$.
+الخطوة 2 — المساحة الجانبية: $S_{\text{جانبية}} = \pi r l = \pi \times 9 \times 15 = 135\pi \text{ cm}^2$.
 
-الخطوة 3 — نسبة التضاعف: $\frac{S_2}{S_1} = \frac{144\pi}{36\pi} = 4$.
+الخطوة 3 — مساحة القاعدة الدائرية: $S_{\text{قاعدة}} = \pi r^2 = \pi \times 81 = 81\pi \text{ cm}^2$.
 
-الخلاصة: عند مضاعفة نصف القطر (k = 2)، تتضاعف **المساحة** في $k^2 = 4$ (لأنّ المساحة تتناسب مع مربّع الطول)، بينما يتضاعف الحجم في $k^3 = 8$. هذا قانون عامّ لجميع المجسّمات المتشابهة.', 5)
+الخطوة 4 — المساحة الكلّية: $S_{\text{كلّية}} = 135\pi + 81\pi = 216\pi \text{ cm}^2$.
+
+تحذير: الخطأ الشائع هو استخدام الارتفاع h بدلًا من الطول المائل l في صيغة المساحة الجانبية: $\pi \times 9 \times 12 + 81\pi = 108\pi + 81\pi = 189\pi$ (الخيار د). خطأ آخر هو استخدام صيغة الأسطوانة $2\pi rh$: $2\pi \times 9 \times 12 + 81\pi = 216\pi + 81\pi = 297\pi$.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -6347,13 +6336,15 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('3cb33ba9-0c3d-5211-b47b-4ff5ca7fe80e', 'd1421795-a726-56b0-9cad-50aaa5188d83', 'موشور قائم قاعدته مربّعة ضلعها 6 cm وارتفاعه 9 cm. نُحفر في داخله هرم بنفس القاعدة المربّعة ونفس الارتفاع 9 cm (القاعدة المشتركة هي قاعدة الموشور والهرم مقلوب). ما الحجم المتبقّي من الموشور بعد الحفر؟', '[{"id":"a","text":"216 cm³"},{"id":"b","text":"270 cm³"},{"id":"c","text":"108 cm³"},{"id":"d","text":"162 cm³"}]'::jsonb, 'a', 'الخطوة 1 — حجم الموشور: $V_{\text{موشور}} = S_{\text{قاعدة}} \times h = 6^2 \times 9 = 36 \times 9 = 324 \text{ cm}^3$.
+  ('3cb33ba9-0c3d-5211-b47b-4ff5ca7fe80e', 'd1421795-a726-56b0-9cad-50aaa5188d83', 'موشور قائم قاعدته مثلّث متساوي الأضلاع ضلعه 6 cm وارتفاع الموشور 8 cm. وكرة حجمها يساوي حجم هذا الموشور. ما قيمة $R^3$ حيث R نصف قطر الكرة؟ استعمل π رمزيًّا.', '[{"id":"a","text":"$\\dfrac{54\\sqrt{3}}{\\pi}$ cm³"},{"id":"b","text":"$\\dfrac{108}{\\pi}$ cm³"},{"id":"c","text":"$\\dfrac{18\\sqrt{3}}{\\pi}$ cm³"},{"id":"d","text":"$\\dfrac{54\\pi}{\\sqrt{3}}$ cm³"}]'::jsonb, 'a', 'الخطوة 1 — مساحة القاعدة (مثلّث متساوي الأضلاع ضلعه 6 cm): $$S_{\text{قاعدة}} = \frac{\sqrt{3}}{4} \times 6^2 = \frac{\sqrt{3}}{4} \times 36 = 9\sqrt{3} \text{ cm}^2$$
 
-الخطوة 2 — حجم الهرم المحفور: $V_{\text{هرم}} = \frac{1}{3} \times 6^2 \times 9 = \frac{1}{3} \times 324 = 108 \text{ cm}^3$.
+الخطوة 2 — حجم الموشور: $V_{\text{موشور}} = 9\sqrt{3} \times 8 = 72\sqrt{3} \text{ cm}^3$.
 
-الخطوة 3 — الحجم المتبقّي: $V_{\text{متبقّي}} = V_{\text{موشور}} - V_{\text{هرم}} = 324 - 108 = 216 \text{ cm}^3$.
+الخطوة 3 — معادلة حجم الكرة: $$\frac{4}{3}\pi R^3 = 72\sqrt{3}$$
 
-لاحظ أنّ الهرم يحتلّ دائمًا ثلث الموشور ذي نفس القاعدة والارتفاع، فيبقى دائمًا ثلثا الموشور: $\frac{2}{3} \times 324 = 216 \text{ cm}^3$.', 6)
+الخطوة 4 — استخلاص $R^3$: $$R^3 = 72\sqrt{3} \times \frac{3}{4\pi} = \frac{216\sqrt{3}}{4\pi} = \frac{54\sqrt{3}}{\pi} \text{ cm}^3$$
+
+تحذير: الخطأ الشائع هو استخدام مساحة المثلّث المتساوي الأضلاع الخطأ: $\frac{1}{2} \times 6 \times 6 = 18$ بدلًا من $9\sqrt{3}$، فيُعطي $V = 144$ cm³ ثمّ $R^3 = \frac{3 \times 144}{4\pi} = \frac{108}{\pi}$ (الخيار ب). لا تنسَ الصيغة الصحيحة: $S = \frac{\sqrt{3}}{4} a^2$.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
