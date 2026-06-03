@@ -1,0 +1,154 @@
+{
+  "title": "👑 Défi élite : maîtrise des types de textes",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Lis attentivement cet extrait : « La déforestation s'accélère en raison de l'expansion agricole et de l'exploitation du bois. Par conséquent, des millions d'animaux perdent leur habitat chaque année. Les forêts, vastes étendues verdoyantes aux arbres centenaires, disparaissent à un rythme alarmant. » Le passage contient des éléments descriptifs ET explicatifs. Quel est le TYPE DOMINANT et pourquoi ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Descriptif, car les « vastes étendues verdoyantes » prouvent que la description prime sur tout."
+        },
+        {
+          "id": "b",
+          "text": "Explicatif, car la structure cause/conséquence (« en raison de » / « par conséquent ») organise le sens du passage ; la description est au service de l'explication."
+        },
+        {
+          "id": "c",
+          "text": "Narratif, car le texte relate des événements dans le temps grâce aux verbes d'action."
+        },
+        {
+          "id": "d",
+          "text": "Argumentatif, car l'auteur dénonce la déforestation et cherche à convaincre le lecteur."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Le squelette du passage repose sur une relation cause/conséquence (« en raison de » → cause ; « par conséquent » → conséquence) et sur le présent de vérité générale : ce sont les marques de l'explicatif. L'adjectif descriptif « verdoyantes » est un élément secondaire qui illustre, mais ne gouverne pas la logique du texte. L'option d est un piège : dénoncer n'est pas argumenter si aucune thèse personnelle ni structure thèse/argument n'est présente.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans cet extrait : « Il me semble évident que les écrans nuisent à la concentration des élèves. Certes, certains outils numériques peuvent faciliter l'apprentissage ; néanmoins, leur usage excessif demeure préjudiciable. » — quel procédé argumentatif est à l'œuvre dans la deuxième phrase ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Une relation cause/effet introduite par « certes » et « néanmoins »."
+        },
+        {
+          "id": "b",
+          "text": "Une concession suivie d'une réfutation partielle : on accorde un point à l'adversaire (« certes ») avant de maintenir sa thèse (« néanmoins »)."
+        },
+        {
+          "id": "c",
+          "text": "Une illustration par l'exemple, car on cite le cas des outils numériques."
+        },
+        {
+          "id": "d",
+          "text": "Une définition du terme « usage excessif » pour clarifier la thèse."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "« Certes » introduit une concession : l'énonciateur reconnaît une vérité partielle favorable à l'opposant. « Néanmoins » est un connecteur d'opposition/réfutation qui permet de maintenir la thèse initiale malgré cette concession. Ce procédé — concession + réfutation — est une figure argumentative avancée distincte de la simple cause/effet ou de l'illustration.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quel est le rôle du connecteur « or » dans cette phrase extraite d'un texte argumentatif : « Tout le monde admet que l'eau est une ressource inépuisable. Or, les nappes phréatiques s'épuisent à vue d'œil. » ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Il exprime la postériorité temporelle, comme « ensuite » ou « puis »."
+        },
+        {
+          "id": "b",
+          "text": "Il introduit une conséquence logique découlant de la première proposition."
+        },
+        {
+          "id": "c",
+          "text": "Il introduit un fait qui contredit ou nuance la prémisse précédente, créant un retournement argumentatif."
+        },
+        {
+          "id": "d",
+          "text": "Il indique une addition d'information, équivalent à « de plus »."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "« Or » est un connecteur logique d'opposition/retournement : il présente un fait nouveau qui infirme ou nuance ce qui vient d'être posé comme acquis. Ici, il invalide la croyance commune (« eau inépuisable ») par un constat contraire (nappes phréatiques qui s'épuisent). Il ne faut pas le confondre avec les connecteurs temporels (ensuite, puis) ni avec les connecteurs de conséquence (donc, ainsi).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lis cet extrait : « Léa vivait paisiblement dans son village au bord de la rivière. Elle connaissait chaque habitant et passait ses journées à lire sous le grand chêne. Un matin, une lettre anonyme arriva et bouleversa son existence. » À quelle étape du schéma narratif correspond précisément la DERNIÈRE phrase ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Situation initiale, car elle présente encore le cadre de vie de Léa."
+        },
+        {
+          "id": "b",
+          "text": "Péripéties, car la lettre déclenche une série d'actions et d'aventures."
+        },
+        {
+          "id": "c",
+          "text": "Élément perturbateur, car un événement soudain (passé simple « arriva ») rompt l'équilibre décrit dans les phrases précédentes."
+        },
+        {
+          "id": "d",
+          "text": "Dénouement, car la situation de Léa est résolue après la réception de la lettre."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Les deux premières phrases (imparfait : « vivait », « connaissait », « passait ») décrivent l'état d'équilibre initial : c'est la situation initiale. La dernière phrase bascule au passé simple (« arriva », « bouleversa »), signalant un événement brusque qui rompt cet équilibre : c'est l'élément perturbateur. Le piège de l'option b est réel : les péripéties viennent APRÈS l'élément perturbateur, elles ne le constituent pas.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Parmi ces quatre débuts de paragraphe de production écrite argumentative, lequel présente la structure la plus complète et la plus conforme aux exigences de l'examen du concours ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "« Premièrement, les réseaux sociaux sont dangereux pour les jeunes. »"
+        },
+        {
+          "id": "b",
+          "text": "« De plus, il existe de nombreux problèmes liés à Internet, comme les virus et les arnaques, ce qui est très grave. »"
+        },
+        {
+          "id": "c",
+          "text": "« En premier lieu, les réseaux sociaux favorisent l'isolement social. En effet, une étude menée en 2022 révèle que les adolescents utilisant ces plateformes plus de trois heures par jour déclarent se sentir plus seuls. Ainsi, l'usage intensif du numérique fragilise les liens réels. »"
+        },
+        {
+          "id": "d",
+          "text": "« Les réseaux sociaux ont des avantages et des inconvénients, c'est pourquoi il faut en parler davantage. »"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "L'option c respecte la structure attendue du paragraphe argumentatif : connecteur d'ordre (« en premier lieu ») + affirmation (argument) + connecteur de cause/preuve (« en effet ») + exemple concret et chiffré + connecteur de conséquence (« ainsi ») + conclusion partielle. Les options a et b manquent d'exemple et de conclusion partielle ; l'option d est vague et n'avance aucun argument réel.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lis cet extrait mixte : « La forêt était silencieuse et sombre, ses arbres tordus ressemblant à des géants endormis. Soudain, Karim entendit un craquement et se retourna brusquement. Il aperçut une silhouette qui disparaissait entre les troncs. » Quel indice prouve que le type NARRATIF est dominant malgré la forte présence descriptive ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "La comparaison « ressemblant à des géants endormis » montre que la description domine le récit."
+        },
+        {
+          "id": "b",
+          "text": "L'imparfait (« était », « ressemblant ») et le passé simple (« entendit », « se retourna », « aperçut ») coexistent : l'imparfait assure le fond descriptif, mais c'est la chaîne de passés simples qui fait avancer l'action et structure le texte — signe que le narratif est dominant."
+        },
+        {
+          "id": "c",
+          "text": "Le mot « Soudain » est un adjectif qualificatif qui renforce la description de l'atmosphère."
+        },
+        {
+          "id": "d",
+          "text": "Le texte est descriptif, car il ne contient aucun connecteur logique de type argumentatif."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Dans un texte mixte narratif-descriptif, le type dominant se repère à la fonction des temps : l'imparfait crée le décor (arrière-plan descriptif), tandis que le passé simple fait progresser la séquence d'actions (premier plan narratif). Ici, « entendit », « se retourna », « aperçut » forment une chaîne d'événements successifs qui constituent le moteur du passage : le narratif est donc dominant. « Soudain » est un adverbe de temps (connecteur temporel), non un adjectif.",
+      "difficulty": 3
+    }
+  ]
+}

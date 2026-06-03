@@ -5,6 +5,15 @@
 -- Source of truth: content/arabic/
 -- =========================================================
 
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'exercises_mode_check') THEN
+    ALTER TABLE public.exercises DROP CONSTRAINT exercises_mode_check;
+  END IF;
+  ALTER TABLE public.exercises
+    ADD CONSTRAINT exercises_mode_check CHECK (mode IN ('practice', 'boss', 'quiz', 'challenge'));
+END $$;
+
 INSERT INTO public.subjects (id, name_fr, description, attribute, color_token, icon, display_order, content_language) VALUES
   ('arabic', 'العربية', 'النحو والصرف والبلاغة والإنتاج الكتابي وفق برنامج السنة التاسعة أساسي', 'Esprit', 'subject-arabic', 'Languages', 3, 'ar')
 ON CONFLICT (id) DO UPDATE SET
@@ -26,11 +35,11 @@ BEGIN
       AND q.exercise_id = e.id
       AND e.subject_id = 'arabic'
       AND e.source = 'admin'
-      AND q.id NOT IN ('dafbc769-1cab-527a-a2a5-4b2338f49ce1', '40d28569-1d98-541d-a472-a45fcd679012', 'c644e5bc-c72a-5724-aed7-351d8cd5fc7c', '35b525f6-f4bb-5377-843b-92f5a3a975cb', 'f5e83256-78b0-5bee-b6e8-100732a42c3d', '2c9247ef-09f7-510f-a29c-0a2d21e1cb95', 'b290332e-4669-578d-9720-28fb55d9139b', '83d7ab19-f57c-56a2-ad22-0d9cfec7b1ec', 'fd04e6f9-f99e-53b0-bf97-e17f875d086d', '3d57cde8-c746-5a39-9751-f9f6bdd7d037', 'ad2bf7a0-0b2e-5033-948e-62a2595c981a', '8175d3cc-7613-5a09-96a5-86b41b7418b1', 'aaa194cd-906d-5bc8-8b9a-4dad3ee1acd7', 'bc54aa2f-e2f6-54a5-96f4-bf040e4f923e', 'e1de5f0c-ce74-5ada-8113-6316129f9eb7', 'b8b9fa61-a238-5076-93f5-f91d5c0ba8da', '5fd6d30b-9ffe-5b58-91fa-7af341455373', '5e3f8e1b-fdc7-5866-a924-0a45c10a1177', 'ccf7a825-17bb-53ea-ad56-de88484fee90', '2e067820-f788-5055-8699-7953a7db8b8b', '0b15d60e-06cb-5239-9fa9-0e28d4cd7e41', '715ff356-78f2-5052-8b44-a045b0b624c6', '8868e0d8-2c30-51f3-a641-9268c38dffbd', '167d90f3-45b0-52c1-b383-0b4400a2097c', '13ab600c-3f76-5d89-8f22-4abcadc859ac', '7837f880-8e56-54a1-846b-ae2d6aedf54e', 'cbb5adde-7969-5a81-8f34-47226c8cf51b', 'd81c6a5a-7774-587c-8daa-9180585e34a4', '46d7a9c6-efb5-56f4-84b8-d96170e68b6d', 'd6283438-1cb4-563b-a81c-99048f51cdcb', '65dc9e50-afbd-5d41-b633-c3ec9c7e473a', 'f56cb490-5cd0-53df-8fec-b808f21fa6be', '61c89db4-5a69-5f03-a622-120a937eb85d', 'b7b30f04-111f-5d47-983d-cd88cda57845', '511dd282-467b-5f71-bb20-e646bbf6c781', '88eb082a-d458-5e9a-b9fc-3b424f4c4cb5', '237d8b63-87e3-5fce-95cf-9246730c288f', 'da796652-08db-5d34-9e2c-8d7f9ad1b645', '9280fd93-1388-534c-9713-c363ea093e0c', '96271970-854d-52ac-88cd-09b36519110c', 'd5894891-78f6-523e-ae76-e2e552c508d3', '7c45664c-2b27-582b-92f9-1958cadc443a', '8741a006-cd0d-57e2-becf-e1aa8526f6d3', '3a51ebe9-cc52-5331-82c0-28426ef7be75', 'fefed5f6-3cbc-5c58-8efb-39404470fe91', 'fd5b5fda-475d-56e2-8d50-b027ce4f4a70', 'e03ae7c4-cbef-5400-90b0-94735107fe41', '24be4b4a-ea07-567b-8fdf-aef13d1cc486', '817eab45-baf2-584e-aebd-15e49473aebc', '572ec24d-bb8e-5d35-9314-2dc2920f6ef1', '5ab3fa4a-69b5-5ed6-a093-fbcbf612e782', 'bdf4df9d-47aa-5db9-994d-cba4d0e2893d', 'cf41c62d-4cc4-5571-b2b0-02e8edcff6be', '8d24a486-3e0e-5169-a0ee-fa4c4713e0ff', '80e55757-a6fc-5faf-aebf-caf6c7f31ae5', 'ff9ef25d-f591-5253-b511-6d81efd260d4', 'a1d03de4-820b-5bd8-80fa-3c139ff1fe95', '4159ad95-8876-5f6a-9a53-3ce763847189', '1709f9da-92da-5523-91d8-0cfdad3dc8a7', '11685e0d-79bc-5851-a88b-ff6e367a800e', '9ffc48f6-1162-55c6-8308-ab17054d876b', '102df544-69c1-5ca9-b494-a7a5d1cfdcfb', '24b59f07-e892-5d8d-b996-45e72380e12f', 'a1266f09-f2b1-5d55-87bf-4af1a1473f3b', 'a52f3540-4a88-5b6f-8566-d337a8c5e6aa', 'e1971226-359d-59ed-9845-51514c0a53f0', '0f3f7012-fad9-5670-9ab3-1ca1ee0fee0d', 'cdb37151-e123-5c4e-97d5-b69f3b75e554', '8106810a-8721-525f-b876-bab4b4a8f741', 'bfaa4bc7-ba5d-5e6e-be0e-a1c8cbd03d63', 'b349c7bf-d1a3-5985-a69d-cfebcbc4fb26', '24a65b0c-de48-562c-9c00-e8658488048c', '81c6d5d2-68c7-5d2a-b21e-34600aa73ea2', '771815ee-d1cb-5ff8-9050-c33f3942af1b', 'a499ba69-ef76-5d05-b53c-dd56d54005ce', '369bc86d-868c-580c-bee1-9d0e1c59d894', '448a6499-4b96-5017-b5c7-fd980c73b962', '7bc5214d-d379-55df-a17c-f01cdce8356b', '613573fe-600d-5c85-9304-64491a5920b7', 'a4a14104-4416-5212-a515-df1e97624d88', '1a776ef9-d363-5b0f-9d0f-cd2df17dc29d', 'cbaea361-268e-5742-8759-7a7f759941d0', '7a1faccb-c941-556f-aa9c-ad4588c238ae', '9524e0cb-8a17-5b0d-9a84-483e2973696f', 'be358054-4e8f-5452-9a52-c372e833da72', '33e67a12-2724-52c3-a780-1e4d271bb6e5', '0b5b52bc-a91a-544e-abef-2b7b7dca2ee6', '25f6a249-6685-5882-a777-9d03f58c79bd', '479bac5b-730e-5483-89cf-b6090feb763b', '950ce284-e777-5ddd-ae69-f4caabf45dec', '439a46cb-44b9-5308-8d2d-e66deb1fee1b', '1b1bab6b-e7bb-596b-83b3-c57f76830710', '3a57be27-7b78-5492-82bc-e73906a3416b', '9d12af42-8ca0-5491-98cd-9573549b60f0', '1dae3eb0-f7f5-5e50-9fd4-46388fd6f95d', 'd3014313-a3b3-5e0f-be7b-750a2cedd9d9', '6242b042-aeb4-54d4-b948-bd97235a8a5c', 'ad6d74ec-bdef-5b47-926d-d90644216455', '7e0f1c35-7a2c-5d87-94c8-3a9c136d6243', 'a8cdd2d6-aaae-54bf-841a-cceeb408a7ed', 'c2c22e3f-3831-5855-a099-2e879c12395d', 'e03bd42b-389f-56b8-942e-9e75455368ac', 'e1e857b6-fed2-5a25-a160-95d2e21d9fe7', '4e984d2c-114d-514d-9a8b-b560ad50b75b', 'aeef1bd8-daa6-53ef-91d7-c6a54ef7f302', 'a04a382d-19aa-5a01-bbab-60e72a02be0a', '74b4448f-3a04-5285-a7bf-e98c9880435a', '5de951de-638d-579e-92da-1c428cffbcc0', '45a733d5-529d-5409-b11c-93aa401a4cd7', 'fcf0bef8-e35f-53dc-b087-54a28da039e0', 'c5ccf1c6-a169-5fe9-912d-0b6d64e33fa8', 'a5616303-a323-5a19-9ecf-fae2d3da6cbd', '5b79674c-7665-5f70-9733-9c79ed31c961', '7d67381a-7f69-5d99-87e8-c790b777d680', 'e6fd7760-828d-5211-88c6-57cb79283947', 'e071be0c-d016-54c7-aee1-46d37285812e', '4c04b152-8747-54b8-9b93-c77e782ce7e4', '26f345cc-822a-5d03-9784-e9e66ecd0be7', '238ef40f-969e-5949-8b7d-2206ce6c3b8c', 'c8a057fd-17d7-5394-874d-1324318560ae', 'af043bcd-6f9f-55a3-863e-983746ef752b', 'e8aaa125-eb96-5282-8ec2-4f65b8b555fc', 'b1a28bd9-e85b-5a7b-ac65-441b40726d02', '93cc569b-6dee-596c-b202-3bb4866b75c6', '73fe3e5d-9ec9-53c4-b15d-cbcd045538d5', 'ea35b652-fa14-5064-802d-cd8b293ed244', '610f5d92-d7d9-5805-9f50-d2a06b5d1478', '6db77f00-123b-58e4-87c1-8a8ef4581c6c', 'f2e4e4de-475b-5016-bb8d-45038f68f059', 'e26f9754-dd15-52a1-a0ae-1226bc817aaa', '4d03dd70-5eb0-5ef5-9f74-9759f486be0a', 'f28a9693-8061-502f-9c8c-71f25af43d50', 'eeaddb53-ec7a-5fea-ac77-a8c7996f7aa5', '55ad1fdd-76b3-506e-b629-98dc6aca5fe7', '2337961d-e4da-5142-9381-9181c30129c5', 'fd1329ec-7d03-58c9-a329-6c6fdf2d03f1', 'ab0443b3-0734-582d-969f-84118d7865cb', 'c53f7ee2-e685-5310-921f-89f2664dbeb5', '1beab430-787f-5f08-9f86-5d83f30f6197', 'afef863b-e7e7-5df7-8c83-de5294ebff87', '7e02be7c-b9ad-58cf-93a7-0d5a91d41a55', 'a8f0e40f-27fe-59d6-9241-c7d0f18ab7dd', '89552c3a-1abd-53e1-96ea-853dbdb1fcab', '946a41a6-32d0-59f6-9678-e3dfb5c48f29', 'fdd16948-ea98-5eee-b741-5ce9736bf1d5', 'b6bc5687-b269-5c23-9167-1f2eb88b3243', '8ce46f30-1a80-5d10-ba39-b70922189cd6', '7842ab0b-4b7c-52de-935b-3e93d3e15bb0', '853dcace-e711-5fcf-9dc1-b7886bbb5967', '707f82ca-cc76-5aee-8ed6-b8cfeceeaff8', '17b87af9-a45d-5d1e-b394-0f69d15c4f68');
+      AND q.id NOT IN ('dafbc769-1cab-527a-a2a5-4b2338f49ce1', '40d28569-1d98-541d-a472-a45fcd679012', 'c644e5bc-c72a-5724-aed7-351d8cd5fc7c', '35b525f6-f4bb-5377-843b-92f5a3a975cb', 'f5e83256-78b0-5bee-b6e8-100732a42c3d', '2c9247ef-09f7-510f-a29c-0a2d21e1cb95', 'b290332e-4669-578d-9720-28fb55d9139b', '83d7ab19-f57c-56a2-ad22-0d9cfec7b1ec', 'fd04e6f9-f99e-53b0-bf97-e17f875d086d', '3d57cde8-c746-5a39-9751-f9f6bdd7d037', 'ad2bf7a0-0b2e-5033-948e-62a2595c981a', '8175d3cc-7613-5a09-96a5-86b41b7418b1', 'aaa194cd-906d-5bc8-8b9a-4dad3ee1acd7', 'bc54aa2f-e2f6-54a5-96f4-bf040e4f923e', 'e1de5f0c-ce74-5ada-8113-6316129f9eb7', 'b8b9fa61-a238-5076-93f5-f91d5c0ba8da', '5fd6d30b-9ffe-5b58-91fa-7af341455373', '8aa6f755-3350-5d37-854b-07fb718281b7', '1f502c71-8f1c-50cc-b4b2-8d90d85edd3b', 'd73017d1-cce3-58c3-b1c8-be7cdfc64244', '82129a7b-4d3a-50db-967c-7c4fee7de20c', 'cbff2abf-de2c-50b1-90a6-b2ac953107eb', 'd4ec96b7-d2d2-5251-8076-745bcd4e3b87', '5e3f8e1b-fdc7-5866-a924-0a45c10a1177', 'ccf7a825-17bb-53ea-ad56-de88484fee90', '2e067820-f788-5055-8699-7953a7db8b8b', '0b15d60e-06cb-5239-9fa9-0e28d4cd7e41', '715ff356-78f2-5052-8b44-a045b0b624c6', '8868e0d8-2c30-51f3-a641-9268c38dffbd', '167d90f3-45b0-52c1-b383-0b4400a2097c', '13ab600c-3f76-5d89-8f22-4abcadc859ac', '7837f880-8e56-54a1-846b-ae2d6aedf54e', 'cbb5adde-7969-5a81-8f34-47226c8cf51b', 'd81c6a5a-7774-587c-8daa-9180585e34a4', '46d7a9c6-efb5-56f4-84b8-d96170e68b6d', 'd6283438-1cb4-563b-a81c-99048f51cdcb', '65dc9e50-afbd-5d41-b633-c3ec9c7e473a', 'f56cb490-5cd0-53df-8fec-b808f21fa6be', '61c89db4-5a69-5f03-a622-120a937eb85d', 'b7b30f04-111f-5d47-983d-cd88cda57845', 'f15da5d2-baf2-5bba-a3b6-f8aa6ee58b3c', 'e6a315c9-84af-5ee1-bf30-ca59270fadba', '46d95580-2686-5c8d-a1c4-c421d9033b24', 'c54e9882-aa90-5542-a843-ee6f38805071', 'a481950a-36ae-5678-a374-89fd58b86622', 'd555b720-f9d7-587d-9032-1fa73bd3f76b', '511dd282-467b-5f71-bb20-e646bbf6c781', '88eb082a-d458-5e9a-b9fc-3b424f4c4cb5', '237d8b63-87e3-5fce-95cf-9246730c288f', 'da796652-08db-5d34-9e2c-8d7f9ad1b645', '9280fd93-1388-534c-9713-c363ea093e0c', '96271970-854d-52ac-88cd-09b36519110c', 'd5894891-78f6-523e-ae76-e2e552c508d3', '7c45664c-2b27-582b-92f9-1958cadc443a', '8741a006-cd0d-57e2-becf-e1aa8526f6d3', '3a51ebe9-cc52-5331-82c0-28426ef7be75', 'fefed5f6-3cbc-5c58-8efb-39404470fe91', 'fd5b5fda-475d-56e2-8d50-b027ce4f4a70', 'e03ae7c4-cbef-5400-90b0-94735107fe41', '24be4b4a-ea07-567b-8fdf-aef13d1cc486', '817eab45-baf2-584e-aebd-15e49473aebc', '572ec24d-bb8e-5d35-9314-2dc2920f6ef1', '5ab3fa4a-69b5-5ed6-a093-fbcbf612e782', '7fb75c28-12c7-59a5-be95-5d49608f7b3f', 'bd8d5cae-22c4-5b69-8c03-466898debc29', '3f8cd8ae-d790-581e-8f02-2fb0ff2a051d', '676cf0eb-45e7-5c7f-aa7e-2113e3463aac', '4fe7892b-5622-52b0-ad66-7fe8cef5f348', '953541e2-d500-50c7-b1ea-38463f0d0ac2', 'bdf4df9d-47aa-5db9-994d-cba4d0e2893d', 'cf41c62d-4cc4-5571-b2b0-02e8edcff6be', '8d24a486-3e0e-5169-a0ee-fa4c4713e0ff', '80e55757-a6fc-5faf-aebf-caf6c7f31ae5', 'ff9ef25d-f591-5253-b511-6d81efd260d4', 'a1d03de4-820b-5bd8-80fa-3c139ff1fe95', '4159ad95-8876-5f6a-9a53-3ce763847189', '1709f9da-92da-5523-91d8-0cfdad3dc8a7', '11685e0d-79bc-5851-a88b-ff6e367a800e', '9ffc48f6-1162-55c6-8308-ab17054d876b', '102df544-69c1-5ca9-b494-a7a5d1cfdcfb', '24b59f07-e892-5d8d-b996-45e72380e12f', 'a1266f09-f2b1-5d55-87bf-4af1a1473f3b', 'a52f3540-4a88-5b6f-8566-d337a8c5e6aa', 'e1971226-359d-59ed-9845-51514c0a53f0', '0f3f7012-fad9-5670-9ab3-1ca1ee0fee0d', 'cdb37151-e123-5c4e-97d5-b69f3b75e554', 'aef9a0ad-01c2-5c3d-8767-5c5e1002e661', 'fd91f1e0-c396-5bb8-b0c9-c50017dbabc8', 'afa45a0e-0e4f-5f04-8018-4469055b5d0c', '22d1aaae-7eef-5df7-8209-c4955f3e392b', '42fee5e6-ebba-59f2-8bbb-b082518abb07', 'de13056c-6dd5-5da7-9b63-d6efb31b7829', '8106810a-8721-525f-b876-bab4b4a8f741', 'bfaa4bc7-ba5d-5e6e-be0e-a1c8cbd03d63', 'b349c7bf-d1a3-5985-a69d-cfebcbc4fb26', '24a65b0c-de48-562c-9c00-e8658488048c', '81c6d5d2-68c7-5d2a-b21e-34600aa73ea2', '771815ee-d1cb-5ff8-9050-c33f3942af1b', 'a499ba69-ef76-5d05-b53c-dd56d54005ce', '369bc86d-868c-580c-bee1-9d0e1c59d894', '448a6499-4b96-5017-b5c7-fd980c73b962', '7bc5214d-d379-55df-a17c-f01cdce8356b', '613573fe-600d-5c85-9304-64491a5920b7', 'a4a14104-4416-5212-a515-df1e97624d88', '1a776ef9-d363-5b0f-9d0f-cd2df17dc29d', 'cbaea361-268e-5742-8759-7a7f759941d0', '7a1faccb-c941-556f-aa9c-ad4588c238ae', '9524e0cb-8a17-5b0d-9a84-483e2973696f', 'be358054-4e8f-5452-9a52-c372e833da72', '949db6c8-725f-5035-bc66-0f65ac2f3a56', '95b4372c-a2d5-5a6c-903d-c48e90799ad4', '813bd4e2-fa87-58c0-8c1e-671ce49e87bc', 'cdfa76f5-ac19-59b9-8b89-6502614eeff9', '373f90a2-4443-50f3-a864-832ba079659b', '0abe3a9b-7030-5b6f-b65a-c2f7614708e8', '33e67a12-2724-52c3-a780-1e4d271bb6e5', '0b5b52bc-a91a-544e-abef-2b7b7dca2ee6', '25f6a249-6685-5882-a777-9d03f58c79bd', '479bac5b-730e-5483-89cf-b6090feb763b', '950ce284-e777-5ddd-ae69-f4caabf45dec', '439a46cb-44b9-5308-8d2d-e66deb1fee1b', '1b1bab6b-e7bb-596b-83b3-c57f76830710', '3a57be27-7b78-5492-82bc-e73906a3416b', '9d12af42-8ca0-5491-98cd-9573549b60f0', '1dae3eb0-f7f5-5e50-9fd4-46388fd6f95d', 'd3014313-a3b3-5e0f-be7b-750a2cedd9d9', '6242b042-aeb4-54d4-b948-bd97235a8a5c', 'ad6d74ec-bdef-5b47-926d-d90644216455', '7e0f1c35-7a2c-5d87-94c8-3a9c136d6243', 'a8cdd2d6-aaae-54bf-841a-cceeb408a7ed', 'c2c22e3f-3831-5855-a099-2e879c12395d', 'e03bd42b-389f-56b8-942e-9e75455368ac', '77bcd686-ad6f-5612-9474-7815e9d94bec', '288d4459-8206-5908-ba90-b2d1dd328b96', 'ae42f8db-d01a-5db9-a1ab-8c8d3b458e7f', 'd5382bef-39dd-5adc-8879-68876f9b735d', '6b3e3b6c-7412-506f-8742-a0e7615fe270', 'c97c4a80-12d1-58cc-9aae-3663e3876290', 'e1e857b6-fed2-5a25-a160-95d2e21d9fe7', '4e984d2c-114d-514d-9a8b-b560ad50b75b', 'aeef1bd8-daa6-53ef-91d7-c6a54ef7f302', 'a04a382d-19aa-5a01-bbab-60e72a02be0a', '74b4448f-3a04-5285-a7bf-e98c9880435a', '5de951de-638d-579e-92da-1c428cffbcc0', '45a733d5-529d-5409-b11c-93aa401a4cd7', 'fcf0bef8-e35f-53dc-b087-54a28da039e0', 'c5ccf1c6-a169-5fe9-912d-0b6d64e33fa8', 'a5616303-a323-5a19-9ecf-fae2d3da6cbd', '5b79674c-7665-5f70-9733-9c79ed31c961', '7d67381a-7f69-5d99-87e8-c790b777d680', 'e6fd7760-828d-5211-88c6-57cb79283947', 'e071be0c-d016-54c7-aee1-46d37285812e', '4c04b152-8747-54b8-9b93-c77e782ce7e4', '26f345cc-822a-5d03-9784-e9e66ecd0be7', '238ef40f-969e-5949-8b7d-2206ce6c3b8c', 'ba917376-9c77-516d-a1e0-b684f57ef04f', '1d2c618c-74ff-58e9-882e-ec44096abaf9', '0a9a6133-f303-5e79-963c-f3152ee0bd73', '287f475d-858c-5f99-b7ef-4e335144dc42', '437ea3b1-90c3-57a6-8c00-7364a022bbfd', '2b284118-a0be-5398-994d-e745a6c2f6f7', 'c8a057fd-17d7-5394-874d-1324318560ae', 'af043bcd-6f9f-55a3-863e-983746ef752b', 'e8aaa125-eb96-5282-8ec2-4f65b8b555fc', 'b1a28bd9-e85b-5a7b-ac65-441b40726d02', '93cc569b-6dee-596c-b202-3bb4866b75c6', '73fe3e5d-9ec9-53c4-b15d-cbcd045538d5', 'ea35b652-fa14-5064-802d-cd8b293ed244', '610f5d92-d7d9-5805-9f50-d2a06b5d1478', '6db77f00-123b-58e4-87c1-8a8ef4581c6c', 'f2e4e4de-475b-5016-bb8d-45038f68f059', 'e26f9754-dd15-52a1-a0ae-1226bc817aaa', '4d03dd70-5eb0-5ef5-9f74-9759f486be0a', 'f28a9693-8061-502f-9c8c-71f25af43d50', 'eeaddb53-ec7a-5fea-ac77-a8c7996f7aa5', '55ad1fdd-76b3-506e-b629-98dc6aca5fe7', '2337961d-e4da-5142-9381-9181c30129c5', '9fe234a7-678a-5eb2-8e3c-efacbb228ee1', '194baa77-9e1b-5b00-83a5-92cd64613c6b', '7af9174d-76ea-5122-8d96-f5257a287e69', '7d0c6bd9-b411-59be-bcaa-bfeae9d2dd86', '028b413b-674d-580f-ba80-168434ce72f4', '9652ddf0-c6ef-5001-8e38-305dee743468', 'fd1329ec-7d03-58c9-a329-6c6fdf2d03f1', 'ab0443b3-0734-582d-969f-84118d7865cb', 'c53f7ee2-e685-5310-921f-89f2664dbeb5', '1beab430-787f-5f08-9f86-5d83f30f6197', 'afef863b-e7e7-5df7-8c83-de5294ebff87', '7e02be7c-b9ad-58cf-93a7-0d5a91d41a55', 'a8f0e40f-27fe-59d6-9241-c7d0f18ab7dd', '89552c3a-1abd-53e1-96ea-853dbdb1fcab', '946a41a6-32d0-59f6-9678-e3dfb5c48f29', 'fdd16948-ea98-5eee-b741-5ce9736bf1d5', 'b6bc5687-b269-5c23-9167-1f2eb88b3243', '8ce46f30-1a80-5d10-ba39-b70922189cd6', '7842ab0b-4b7c-52de-935b-3e93d3e15bb0', '853dcace-e711-5fcf-9dc1-b7886bbb5967', '707f82ca-cc76-5aee-8ed6-b8cfeceeaff8', '17b87af9-a45d-5d1e-b394-0f69d15c4f68', 'd0dea70f-f06f-5511-9464-33bbc9f7f185', '5a121bb5-371b-5b61-b555-233f1e38c6ff', 'bc79be7e-39e6-5e0c-a24c-1066fee0d780', 'ee7dbbc4-cada-55a3-ac6c-dad27fbd89f0', '17ba0bb8-b0dd-575c-a38c-d4d0b1366c3a', 'feffa2f6-8284-5318-996d-93099808e433');
   END IF;
 END $$;
-DELETE FROM public.exercises WHERE subject_id = 'arabic' AND source = 'admin' AND id NOT IN ('fc0693e2-361d-5a2b-8837-67ecbdd5835f', 'e0728ce7-0202-5fc6-a5ec-566c51e9dc5d', 'df137ab2-b7c2-518b-8af5-dac47ffe3890', '16bbbed5-d269-5272-8299-8cbd05daa995', 'e484384e-e3e2-590c-8af1-36d54d28d850', 'ec6eaad6-3386-5819-99ea-e2e6f6e61450', 'e8522c3d-f6bd-5416-819b-2a8b84c36952', '98751e6e-34dd-547a-bc9e-6548f561bba7', '3a0414d1-56e5-50c3-ae38-91a93aca51e0', '9d95b6e1-4794-5055-aae8-6955ddf0d606', '3068696f-694a-58fa-82ef-d8f555c9e779', '9bf8d840-480b-5538-8e3a-5dc83c7a4214', 'a0438595-3493-5da8-b730-749033eac9b6', '9f735203-952b-59e2-b286-6928d4ddf273', '7976d2b4-e83d-58d9-8a37-5ccd181ac151', '9d321826-4676-581f-9584-cf2cd824a0fe', '9b5c21ee-37e3-50d8-a7c5-ba6a75e2eb01', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', '17b63a70-7310-5091-ad6c-4a8666f71c38', 'cc89df13-4e9e-55bb-b7f1-ccd8f6c63420', '3522d195-2f84-58de-8460-f0ba2295cbe1', '7595fbd9-9810-5997-baee-2c9a13444cd5', '6753802a-6e1f-52cc-b811-1c1ad11ea17b', 'a065a310-799f-5641-8171-6ce5aac1f3bb', '6e30792d-1678-5b7d-9c70-1fee544bc2b3', '34dc7379-306e-55c9-8d9f-af1b31da72a3', 'e4350b8e-f690-5db8-9d83-2ca3732612fb');
-DELETE FROM public.questions WHERE exercise_id IN ('fc0693e2-361d-5a2b-8837-67ecbdd5835f', 'e0728ce7-0202-5fc6-a5ec-566c51e9dc5d', 'df137ab2-b7c2-518b-8af5-dac47ffe3890', '16bbbed5-d269-5272-8299-8cbd05daa995', 'e484384e-e3e2-590c-8af1-36d54d28d850', 'ec6eaad6-3386-5819-99ea-e2e6f6e61450', 'e8522c3d-f6bd-5416-819b-2a8b84c36952', '98751e6e-34dd-547a-bc9e-6548f561bba7', '3a0414d1-56e5-50c3-ae38-91a93aca51e0', '9d95b6e1-4794-5055-aae8-6955ddf0d606', '3068696f-694a-58fa-82ef-d8f555c9e779', '9bf8d840-480b-5538-8e3a-5dc83c7a4214', 'a0438595-3493-5da8-b730-749033eac9b6', '9f735203-952b-59e2-b286-6928d4ddf273', '7976d2b4-e83d-58d9-8a37-5ccd181ac151', '9d321826-4676-581f-9584-cf2cd824a0fe', '9b5c21ee-37e3-50d8-a7c5-ba6a75e2eb01', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', '17b63a70-7310-5091-ad6c-4a8666f71c38', 'cc89df13-4e9e-55bb-b7f1-ccd8f6c63420', '3522d195-2f84-58de-8460-f0ba2295cbe1', '7595fbd9-9810-5997-baee-2c9a13444cd5', '6753802a-6e1f-52cc-b811-1c1ad11ea17b', 'a065a310-799f-5641-8171-6ce5aac1f3bb', '6e30792d-1678-5b7d-9c70-1fee544bc2b3', '34dc7379-306e-55c9-8d9f-af1b31da72a3', 'e4350b8e-f690-5db8-9d83-2ca3732612fb') AND id NOT IN ('dafbc769-1cab-527a-a2a5-4b2338f49ce1', '40d28569-1d98-541d-a472-a45fcd679012', 'c644e5bc-c72a-5724-aed7-351d8cd5fc7c', '35b525f6-f4bb-5377-843b-92f5a3a975cb', 'f5e83256-78b0-5bee-b6e8-100732a42c3d', '2c9247ef-09f7-510f-a29c-0a2d21e1cb95', 'b290332e-4669-578d-9720-28fb55d9139b', '83d7ab19-f57c-56a2-ad22-0d9cfec7b1ec', 'fd04e6f9-f99e-53b0-bf97-e17f875d086d', '3d57cde8-c746-5a39-9751-f9f6bdd7d037', 'ad2bf7a0-0b2e-5033-948e-62a2595c981a', '8175d3cc-7613-5a09-96a5-86b41b7418b1', 'aaa194cd-906d-5bc8-8b9a-4dad3ee1acd7', 'bc54aa2f-e2f6-54a5-96f4-bf040e4f923e', 'e1de5f0c-ce74-5ada-8113-6316129f9eb7', 'b8b9fa61-a238-5076-93f5-f91d5c0ba8da', '5fd6d30b-9ffe-5b58-91fa-7af341455373', '5e3f8e1b-fdc7-5866-a924-0a45c10a1177', 'ccf7a825-17bb-53ea-ad56-de88484fee90', '2e067820-f788-5055-8699-7953a7db8b8b', '0b15d60e-06cb-5239-9fa9-0e28d4cd7e41', '715ff356-78f2-5052-8b44-a045b0b624c6', '8868e0d8-2c30-51f3-a641-9268c38dffbd', '167d90f3-45b0-52c1-b383-0b4400a2097c', '13ab600c-3f76-5d89-8f22-4abcadc859ac', '7837f880-8e56-54a1-846b-ae2d6aedf54e', 'cbb5adde-7969-5a81-8f34-47226c8cf51b', 'd81c6a5a-7774-587c-8daa-9180585e34a4', '46d7a9c6-efb5-56f4-84b8-d96170e68b6d', 'd6283438-1cb4-563b-a81c-99048f51cdcb', '65dc9e50-afbd-5d41-b633-c3ec9c7e473a', 'f56cb490-5cd0-53df-8fec-b808f21fa6be', '61c89db4-5a69-5f03-a622-120a937eb85d', 'b7b30f04-111f-5d47-983d-cd88cda57845', '511dd282-467b-5f71-bb20-e646bbf6c781', '88eb082a-d458-5e9a-b9fc-3b424f4c4cb5', '237d8b63-87e3-5fce-95cf-9246730c288f', 'da796652-08db-5d34-9e2c-8d7f9ad1b645', '9280fd93-1388-534c-9713-c363ea093e0c', '96271970-854d-52ac-88cd-09b36519110c', 'd5894891-78f6-523e-ae76-e2e552c508d3', '7c45664c-2b27-582b-92f9-1958cadc443a', '8741a006-cd0d-57e2-becf-e1aa8526f6d3', '3a51ebe9-cc52-5331-82c0-28426ef7be75', 'fefed5f6-3cbc-5c58-8efb-39404470fe91', 'fd5b5fda-475d-56e2-8d50-b027ce4f4a70', 'e03ae7c4-cbef-5400-90b0-94735107fe41', '24be4b4a-ea07-567b-8fdf-aef13d1cc486', '817eab45-baf2-584e-aebd-15e49473aebc', '572ec24d-bb8e-5d35-9314-2dc2920f6ef1', '5ab3fa4a-69b5-5ed6-a093-fbcbf612e782', 'bdf4df9d-47aa-5db9-994d-cba4d0e2893d', 'cf41c62d-4cc4-5571-b2b0-02e8edcff6be', '8d24a486-3e0e-5169-a0ee-fa4c4713e0ff', '80e55757-a6fc-5faf-aebf-caf6c7f31ae5', 'ff9ef25d-f591-5253-b511-6d81efd260d4', 'a1d03de4-820b-5bd8-80fa-3c139ff1fe95', '4159ad95-8876-5f6a-9a53-3ce763847189', '1709f9da-92da-5523-91d8-0cfdad3dc8a7', '11685e0d-79bc-5851-a88b-ff6e367a800e', '9ffc48f6-1162-55c6-8308-ab17054d876b', '102df544-69c1-5ca9-b494-a7a5d1cfdcfb', '24b59f07-e892-5d8d-b996-45e72380e12f', 'a1266f09-f2b1-5d55-87bf-4af1a1473f3b', 'a52f3540-4a88-5b6f-8566-d337a8c5e6aa', 'e1971226-359d-59ed-9845-51514c0a53f0', '0f3f7012-fad9-5670-9ab3-1ca1ee0fee0d', 'cdb37151-e123-5c4e-97d5-b69f3b75e554', '8106810a-8721-525f-b876-bab4b4a8f741', 'bfaa4bc7-ba5d-5e6e-be0e-a1c8cbd03d63', 'b349c7bf-d1a3-5985-a69d-cfebcbc4fb26', '24a65b0c-de48-562c-9c00-e8658488048c', '81c6d5d2-68c7-5d2a-b21e-34600aa73ea2', '771815ee-d1cb-5ff8-9050-c33f3942af1b', 'a499ba69-ef76-5d05-b53c-dd56d54005ce', '369bc86d-868c-580c-bee1-9d0e1c59d894', '448a6499-4b96-5017-b5c7-fd980c73b962', '7bc5214d-d379-55df-a17c-f01cdce8356b', '613573fe-600d-5c85-9304-64491a5920b7', 'a4a14104-4416-5212-a515-df1e97624d88', '1a776ef9-d363-5b0f-9d0f-cd2df17dc29d', 'cbaea361-268e-5742-8759-7a7f759941d0', '7a1faccb-c941-556f-aa9c-ad4588c238ae', '9524e0cb-8a17-5b0d-9a84-483e2973696f', 'be358054-4e8f-5452-9a52-c372e833da72', '33e67a12-2724-52c3-a780-1e4d271bb6e5', '0b5b52bc-a91a-544e-abef-2b7b7dca2ee6', '25f6a249-6685-5882-a777-9d03f58c79bd', '479bac5b-730e-5483-89cf-b6090feb763b', '950ce284-e777-5ddd-ae69-f4caabf45dec', '439a46cb-44b9-5308-8d2d-e66deb1fee1b', '1b1bab6b-e7bb-596b-83b3-c57f76830710', '3a57be27-7b78-5492-82bc-e73906a3416b', '9d12af42-8ca0-5491-98cd-9573549b60f0', '1dae3eb0-f7f5-5e50-9fd4-46388fd6f95d', 'd3014313-a3b3-5e0f-be7b-750a2cedd9d9', '6242b042-aeb4-54d4-b948-bd97235a8a5c', 'ad6d74ec-bdef-5b47-926d-d90644216455', '7e0f1c35-7a2c-5d87-94c8-3a9c136d6243', 'a8cdd2d6-aaae-54bf-841a-cceeb408a7ed', 'c2c22e3f-3831-5855-a099-2e879c12395d', 'e03bd42b-389f-56b8-942e-9e75455368ac', 'e1e857b6-fed2-5a25-a160-95d2e21d9fe7', '4e984d2c-114d-514d-9a8b-b560ad50b75b', 'aeef1bd8-daa6-53ef-91d7-c6a54ef7f302', 'a04a382d-19aa-5a01-bbab-60e72a02be0a', '74b4448f-3a04-5285-a7bf-e98c9880435a', '5de951de-638d-579e-92da-1c428cffbcc0', '45a733d5-529d-5409-b11c-93aa401a4cd7', 'fcf0bef8-e35f-53dc-b087-54a28da039e0', 'c5ccf1c6-a169-5fe9-912d-0b6d64e33fa8', 'a5616303-a323-5a19-9ecf-fae2d3da6cbd', '5b79674c-7665-5f70-9733-9c79ed31c961', '7d67381a-7f69-5d99-87e8-c790b777d680', 'e6fd7760-828d-5211-88c6-57cb79283947', 'e071be0c-d016-54c7-aee1-46d37285812e', '4c04b152-8747-54b8-9b93-c77e782ce7e4', '26f345cc-822a-5d03-9784-e9e66ecd0be7', '238ef40f-969e-5949-8b7d-2206ce6c3b8c', 'c8a057fd-17d7-5394-874d-1324318560ae', 'af043bcd-6f9f-55a3-863e-983746ef752b', 'e8aaa125-eb96-5282-8ec2-4f65b8b555fc', 'b1a28bd9-e85b-5a7b-ac65-441b40726d02', '93cc569b-6dee-596c-b202-3bb4866b75c6', '73fe3e5d-9ec9-53c4-b15d-cbcd045538d5', 'ea35b652-fa14-5064-802d-cd8b293ed244', '610f5d92-d7d9-5805-9f50-d2a06b5d1478', '6db77f00-123b-58e4-87c1-8a8ef4581c6c', 'f2e4e4de-475b-5016-bb8d-45038f68f059', 'e26f9754-dd15-52a1-a0ae-1226bc817aaa', '4d03dd70-5eb0-5ef5-9f74-9759f486be0a', 'f28a9693-8061-502f-9c8c-71f25af43d50', 'eeaddb53-ec7a-5fea-ac77-a8c7996f7aa5', '55ad1fdd-76b3-506e-b629-98dc6aca5fe7', '2337961d-e4da-5142-9381-9181c30129c5', 'fd1329ec-7d03-58c9-a329-6c6fdf2d03f1', 'ab0443b3-0734-582d-969f-84118d7865cb', 'c53f7ee2-e685-5310-921f-89f2664dbeb5', '1beab430-787f-5f08-9f86-5d83f30f6197', 'afef863b-e7e7-5df7-8c83-de5294ebff87', '7e02be7c-b9ad-58cf-93a7-0d5a91d41a55', 'a8f0e40f-27fe-59d6-9241-c7d0f18ab7dd', '89552c3a-1abd-53e1-96ea-853dbdb1fcab', '946a41a6-32d0-59f6-9678-e3dfb5c48f29', 'fdd16948-ea98-5eee-b741-5ce9736bf1d5', 'b6bc5687-b269-5c23-9167-1f2eb88b3243', '8ce46f30-1a80-5d10-ba39-b70922189cd6', '7842ab0b-4b7c-52de-935b-3e93d3e15bb0', '853dcace-e711-5fcf-9dc1-b7886bbb5967', '707f82ca-cc76-5aee-8ed6-b8cfeceeaff8', '17b87af9-a45d-5d1e-b394-0f69d15c4f68');
+DELETE FROM public.exercises WHERE subject_id = 'arabic' AND source = 'admin' AND id NOT IN ('fc0693e2-361d-5a2b-8837-67ecbdd5835f', 'e0728ce7-0202-5fc6-a5ec-566c51e9dc5d', 'df137ab2-b7c2-518b-8af5-dac47ffe3890', 'de698859-c461-58c5-9dda-ca90d16dc9e6', '16bbbed5-d269-5272-8299-8cbd05daa995', 'e484384e-e3e2-590c-8af1-36d54d28d850', 'ec6eaad6-3386-5819-99ea-e2e6f6e61450', '3ad77ca8-1ab7-5f9f-8c74-0c1057c69625', 'e8522c3d-f6bd-5416-819b-2a8b84c36952', '98751e6e-34dd-547a-bc9e-6548f561bba7', '3a0414d1-56e5-50c3-ae38-91a93aca51e0', '5942675f-5063-565d-a33b-9715493c48b3', '9d95b6e1-4794-5055-aae8-6955ddf0d606', '3068696f-694a-58fa-82ef-d8f555c9e779', '9bf8d840-480b-5538-8e3a-5dc83c7a4214', 'acd6eb5c-3981-5b02-bf6d-8df8daf6641f', 'a0438595-3493-5da8-b730-749033eac9b6', '9f735203-952b-59e2-b286-6928d4ddf273', '7976d2b4-e83d-58d9-8a37-5ccd181ac151', '0a6742b5-e0d5-52fb-a139-6570e057ce7e', '9d321826-4676-581f-9584-cf2cd824a0fe', '9b5c21ee-37e3-50d8-a7c5-ba6a75e2eb01', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', '8f824bb5-eca9-5bc8-bffc-9f1396773f9d', '17b63a70-7310-5091-ad6c-4a8666f71c38', 'cc89df13-4e9e-55bb-b7f1-ccd8f6c63420', '3522d195-2f84-58de-8460-f0ba2295cbe1', '5de50223-ae07-51a5-bcd2-ed9e846ecda0', '7595fbd9-9810-5997-baee-2c9a13444cd5', '6753802a-6e1f-52cc-b811-1c1ad11ea17b', 'a065a310-799f-5641-8171-6ce5aac1f3bb', '8f9f6853-09ce-5205-88ba-7ff93e158a13', '6e30792d-1678-5b7d-9c70-1fee544bc2b3', '34dc7379-306e-55c9-8d9f-af1b31da72a3', 'e4350b8e-f690-5db8-9d83-2ca3732612fb', '34f29785-e946-591d-8ba0-dc2773a51a71');
+DELETE FROM public.questions WHERE exercise_id IN ('fc0693e2-361d-5a2b-8837-67ecbdd5835f', 'e0728ce7-0202-5fc6-a5ec-566c51e9dc5d', 'df137ab2-b7c2-518b-8af5-dac47ffe3890', 'de698859-c461-58c5-9dda-ca90d16dc9e6', '16bbbed5-d269-5272-8299-8cbd05daa995', 'e484384e-e3e2-590c-8af1-36d54d28d850', 'ec6eaad6-3386-5819-99ea-e2e6f6e61450', '3ad77ca8-1ab7-5f9f-8c74-0c1057c69625', 'e8522c3d-f6bd-5416-819b-2a8b84c36952', '98751e6e-34dd-547a-bc9e-6548f561bba7', '3a0414d1-56e5-50c3-ae38-91a93aca51e0', '5942675f-5063-565d-a33b-9715493c48b3', '9d95b6e1-4794-5055-aae8-6955ddf0d606', '3068696f-694a-58fa-82ef-d8f555c9e779', '9bf8d840-480b-5538-8e3a-5dc83c7a4214', 'acd6eb5c-3981-5b02-bf6d-8df8daf6641f', 'a0438595-3493-5da8-b730-749033eac9b6', '9f735203-952b-59e2-b286-6928d4ddf273', '7976d2b4-e83d-58d9-8a37-5ccd181ac151', '0a6742b5-e0d5-52fb-a139-6570e057ce7e', '9d321826-4676-581f-9584-cf2cd824a0fe', '9b5c21ee-37e3-50d8-a7c5-ba6a75e2eb01', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', '8f824bb5-eca9-5bc8-bffc-9f1396773f9d', '17b63a70-7310-5091-ad6c-4a8666f71c38', 'cc89df13-4e9e-55bb-b7f1-ccd8f6c63420', '3522d195-2f84-58de-8460-f0ba2295cbe1', '5de50223-ae07-51a5-bcd2-ed9e846ecda0', '7595fbd9-9810-5997-baee-2c9a13444cd5', '6753802a-6e1f-52cc-b811-1c1ad11ea17b', 'a065a310-799f-5641-8171-6ce5aac1f3bb', '8f9f6853-09ce-5205-88ba-7ff93e158a13', '6e30792d-1678-5b7d-9c70-1fee544bc2b3', '34dc7379-306e-55c9-8d9f-af1b31da72a3', 'e4350b8e-f690-5db8-9d83-2ca3732612fb', '34f29785-e946-591d-8ba0-dc2773a51a71') AND id NOT IN ('dafbc769-1cab-527a-a2a5-4b2338f49ce1', '40d28569-1d98-541d-a472-a45fcd679012', 'c644e5bc-c72a-5724-aed7-351d8cd5fc7c', '35b525f6-f4bb-5377-843b-92f5a3a975cb', 'f5e83256-78b0-5bee-b6e8-100732a42c3d', '2c9247ef-09f7-510f-a29c-0a2d21e1cb95', 'b290332e-4669-578d-9720-28fb55d9139b', '83d7ab19-f57c-56a2-ad22-0d9cfec7b1ec', 'fd04e6f9-f99e-53b0-bf97-e17f875d086d', '3d57cde8-c746-5a39-9751-f9f6bdd7d037', 'ad2bf7a0-0b2e-5033-948e-62a2595c981a', '8175d3cc-7613-5a09-96a5-86b41b7418b1', 'aaa194cd-906d-5bc8-8b9a-4dad3ee1acd7', 'bc54aa2f-e2f6-54a5-96f4-bf040e4f923e', 'e1de5f0c-ce74-5ada-8113-6316129f9eb7', 'b8b9fa61-a238-5076-93f5-f91d5c0ba8da', '5fd6d30b-9ffe-5b58-91fa-7af341455373', '8aa6f755-3350-5d37-854b-07fb718281b7', '1f502c71-8f1c-50cc-b4b2-8d90d85edd3b', 'd73017d1-cce3-58c3-b1c8-be7cdfc64244', '82129a7b-4d3a-50db-967c-7c4fee7de20c', 'cbff2abf-de2c-50b1-90a6-b2ac953107eb', 'd4ec96b7-d2d2-5251-8076-745bcd4e3b87', '5e3f8e1b-fdc7-5866-a924-0a45c10a1177', 'ccf7a825-17bb-53ea-ad56-de88484fee90', '2e067820-f788-5055-8699-7953a7db8b8b', '0b15d60e-06cb-5239-9fa9-0e28d4cd7e41', '715ff356-78f2-5052-8b44-a045b0b624c6', '8868e0d8-2c30-51f3-a641-9268c38dffbd', '167d90f3-45b0-52c1-b383-0b4400a2097c', '13ab600c-3f76-5d89-8f22-4abcadc859ac', '7837f880-8e56-54a1-846b-ae2d6aedf54e', 'cbb5adde-7969-5a81-8f34-47226c8cf51b', 'd81c6a5a-7774-587c-8daa-9180585e34a4', '46d7a9c6-efb5-56f4-84b8-d96170e68b6d', 'd6283438-1cb4-563b-a81c-99048f51cdcb', '65dc9e50-afbd-5d41-b633-c3ec9c7e473a', 'f56cb490-5cd0-53df-8fec-b808f21fa6be', '61c89db4-5a69-5f03-a622-120a937eb85d', 'b7b30f04-111f-5d47-983d-cd88cda57845', 'f15da5d2-baf2-5bba-a3b6-f8aa6ee58b3c', 'e6a315c9-84af-5ee1-bf30-ca59270fadba', '46d95580-2686-5c8d-a1c4-c421d9033b24', 'c54e9882-aa90-5542-a843-ee6f38805071', 'a481950a-36ae-5678-a374-89fd58b86622', 'd555b720-f9d7-587d-9032-1fa73bd3f76b', '511dd282-467b-5f71-bb20-e646bbf6c781', '88eb082a-d458-5e9a-b9fc-3b424f4c4cb5', '237d8b63-87e3-5fce-95cf-9246730c288f', 'da796652-08db-5d34-9e2c-8d7f9ad1b645', '9280fd93-1388-534c-9713-c363ea093e0c', '96271970-854d-52ac-88cd-09b36519110c', 'd5894891-78f6-523e-ae76-e2e552c508d3', '7c45664c-2b27-582b-92f9-1958cadc443a', '8741a006-cd0d-57e2-becf-e1aa8526f6d3', '3a51ebe9-cc52-5331-82c0-28426ef7be75', 'fefed5f6-3cbc-5c58-8efb-39404470fe91', 'fd5b5fda-475d-56e2-8d50-b027ce4f4a70', 'e03ae7c4-cbef-5400-90b0-94735107fe41', '24be4b4a-ea07-567b-8fdf-aef13d1cc486', '817eab45-baf2-584e-aebd-15e49473aebc', '572ec24d-bb8e-5d35-9314-2dc2920f6ef1', '5ab3fa4a-69b5-5ed6-a093-fbcbf612e782', '7fb75c28-12c7-59a5-be95-5d49608f7b3f', 'bd8d5cae-22c4-5b69-8c03-466898debc29', '3f8cd8ae-d790-581e-8f02-2fb0ff2a051d', '676cf0eb-45e7-5c7f-aa7e-2113e3463aac', '4fe7892b-5622-52b0-ad66-7fe8cef5f348', '953541e2-d500-50c7-b1ea-38463f0d0ac2', 'bdf4df9d-47aa-5db9-994d-cba4d0e2893d', 'cf41c62d-4cc4-5571-b2b0-02e8edcff6be', '8d24a486-3e0e-5169-a0ee-fa4c4713e0ff', '80e55757-a6fc-5faf-aebf-caf6c7f31ae5', 'ff9ef25d-f591-5253-b511-6d81efd260d4', 'a1d03de4-820b-5bd8-80fa-3c139ff1fe95', '4159ad95-8876-5f6a-9a53-3ce763847189', '1709f9da-92da-5523-91d8-0cfdad3dc8a7', '11685e0d-79bc-5851-a88b-ff6e367a800e', '9ffc48f6-1162-55c6-8308-ab17054d876b', '102df544-69c1-5ca9-b494-a7a5d1cfdcfb', '24b59f07-e892-5d8d-b996-45e72380e12f', 'a1266f09-f2b1-5d55-87bf-4af1a1473f3b', 'a52f3540-4a88-5b6f-8566-d337a8c5e6aa', 'e1971226-359d-59ed-9845-51514c0a53f0', '0f3f7012-fad9-5670-9ab3-1ca1ee0fee0d', 'cdb37151-e123-5c4e-97d5-b69f3b75e554', 'aef9a0ad-01c2-5c3d-8767-5c5e1002e661', 'fd91f1e0-c396-5bb8-b0c9-c50017dbabc8', 'afa45a0e-0e4f-5f04-8018-4469055b5d0c', '22d1aaae-7eef-5df7-8209-c4955f3e392b', '42fee5e6-ebba-59f2-8bbb-b082518abb07', 'de13056c-6dd5-5da7-9b63-d6efb31b7829', '8106810a-8721-525f-b876-bab4b4a8f741', 'bfaa4bc7-ba5d-5e6e-be0e-a1c8cbd03d63', 'b349c7bf-d1a3-5985-a69d-cfebcbc4fb26', '24a65b0c-de48-562c-9c00-e8658488048c', '81c6d5d2-68c7-5d2a-b21e-34600aa73ea2', '771815ee-d1cb-5ff8-9050-c33f3942af1b', 'a499ba69-ef76-5d05-b53c-dd56d54005ce', '369bc86d-868c-580c-bee1-9d0e1c59d894', '448a6499-4b96-5017-b5c7-fd980c73b962', '7bc5214d-d379-55df-a17c-f01cdce8356b', '613573fe-600d-5c85-9304-64491a5920b7', 'a4a14104-4416-5212-a515-df1e97624d88', '1a776ef9-d363-5b0f-9d0f-cd2df17dc29d', 'cbaea361-268e-5742-8759-7a7f759941d0', '7a1faccb-c941-556f-aa9c-ad4588c238ae', '9524e0cb-8a17-5b0d-9a84-483e2973696f', 'be358054-4e8f-5452-9a52-c372e833da72', '949db6c8-725f-5035-bc66-0f65ac2f3a56', '95b4372c-a2d5-5a6c-903d-c48e90799ad4', '813bd4e2-fa87-58c0-8c1e-671ce49e87bc', 'cdfa76f5-ac19-59b9-8b89-6502614eeff9', '373f90a2-4443-50f3-a864-832ba079659b', '0abe3a9b-7030-5b6f-b65a-c2f7614708e8', '33e67a12-2724-52c3-a780-1e4d271bb6e5', '0b5b52bc-a91a-544e-abef-2b7b7dca2ee6', '25f6a249-6685-5882-a777-9d03f58c79bd', '479bac5b-730e-5483-89cf-b6090feb763b', '950ce284-e777-5ddd-ae69-f4caabf45dec', '439a46cb-44b9-5308-8d2d-e66deb1fee1b', '1b1bab6b-e7bb-596b-83b3-c57f76830710', '3a57be27-7b78-5492-82bc-e73906a3416b', '9d12af42-8ca0-5491-98cd-9573549b60f0', '1dae3eb0-f7f5-5e50-9fd4-46388fd6f95d', 'd3014313-a3b3-5e0f-be7b-750a2cedd9d9', '6242b042-aeb4-54d4-b948-bd97235a8a5c', 'ad6d74ec-bdef-5b47-926d-d90644216455', '7e0f1c35-7a2c-5d87-94c8-3a9c136d6243', 'a8cdd2d6-aaae-54bf-841a-cceeb408a7ed', 'c2c22e3f-3831-5855-a099-2e879c12395d', 'e03bd42b-389f-56b8-942e-9e75455368ac', '77bcd686-ad6f-5612-9474-7815e9d94bec', '288d4459-8206-5908-ba90-b2d1dd328b96', 'ae42f8db-d01a-5db9-a1ab-8c8d3b458e7f', 'd5382bef-39dd-5adc-8879-68876f9b735d', '6b3e3b6c-7412-506f-8742-a0e7615fe270', 'c97c4a80-12d1-58cc-9aae-3663e3876290', 'e1e857b6-fed2-5a25-a160-95d2e21d9fe7', '4e984d2c-114d-514d-9a8b-b560ad50b75b', 'aeef1bd8-daa6-53ef-91d7-c6a54ef7f302', 'a04a382d-19aa-5a01-bbab-60e72a02be0a', '74b4448f-3a04-5285-a7bf-e98c9880435a', '5de951de-638d-579e-92da-1c428cffbcc0', '45a733d5-529d-5409-b11c-93aa401a4cd7', 'fcf0bef8-e35f-53dc-b087-54a28da039e0', 'c5ccf1c6-a169-5fe9-912d-0b6d64e33fa8', 'a5616303-a323-5a19-9ecf-fae2d3da6cbd', '5b79674c-7665-5f70-9733-9c79ed31c961', '7d67381a-7f69-5d99-87e8-c790b777d680', 'e6fd7760-828d-5211-88c6-57cb79283947', 'e071be0c-d016-54c7-aee1-46d37285812e', '4c04b152-8747-54b8-9b93-c77e782ce7e4', '26f345cc-822a-5d03-9784-e9e66ecd0be7', '238ef40f-969e-5949-8b7d-2206ce6c3b8c', 'ba917376-9c77-516d-a1e0-b684f57ef04f', '1d2c618c-74ff-58e9-882e-ec44096abaf9', '0a9a6133-f303-5e79-963c-f3152ee0bd73', '287f475d-858c-5f99-b7ef-4e335144dc42', '437ea3b1-90c3-57a6-8c00-7364a022bbfd', '2b284118-a0be-5398-994d-e745a6c2f6f7', 'c8a057fd-17d7-5394-874d-1324318560ae', 'af043bcd-6f9f-55a3-863e-983746ef752b', 'e8aaa125-eb96-5282-8ec2-4f65b8b555fc', 'b1a28bd9-e85b-5a7b-ac65-441b40726d02', '93cc569b-6dee-596c-b202-3bb4866b75c6', '73fe3e5d-9ec9-53c4-b15d-cbcd045538d5', 'ea35b652-fa14-5064-802d-cd8b293ed244', '610f5d92-d7d9-5805-9f50-d2a06b5d1478', '6db77f00-123b-58e4-87c1-8a8ef4581c6c', 'f2e4e4de-475b-5016-bb8d-45038f68f059', 'e26f9754-dd15-52a1-a0ae-1226bc817aaa', '4d03dd70-5eb0-5ef5-9f74-9759f486be0a', 'f28a9693-8061-502f-9c8c-71f25af43d50', 'eeaddb53-ec7a-5fea-ac77-a8c7996f7aa5', '55ad1fdd-76b3-506e-b629-98dc6aca5fe7', '2337961d-e4da-5142-9381-9181c30129c5', '9fe234a7-678a-5eb2-8e3c-efacbb228ee1', '194baa77-9e1b-5b00-83a5-92cd64613c6b', '7af9174d-76ea-5122-8d96-f5257a287e69', '7d0c6bd9-b411-59be-bcaa-bfeae9d2dd86', '028b413b-674d-580f-ba80-168434ce72f4', '9652ddf0-c6ef-5001-8e38-305dee743468', 'fd1329ec-7d03-58c9-a329-6c6fdf2d03f1', 'ab0443b3-0734-582d-969f-84118d7865cb', 'c53f7ee2-e685-5310-921f-89f2664dbeb5', '1beab430-787f-5f08-9f86-5d83f30f6197', 'afef863b-e7e7-5df7-8c83-de5294ebff87', '7e02be7c-b9ad-58cf-93a7-0d5a91d41a55', 'a8f0e40f-27fe-59d6-9241-c7d0f18ab7dd', '89552c3a-1abd-53e1-96ea-853dbdb1fcab', '946a41a6-32d0-59f6-9678-e3dfb5c48f29', 'fdd16948-ea98-5eee-b741-5ce9736bf1d5', 'b6bc5687-b269-5c23-9167-1f2eb88b3243', '8ce46f30-1a80-5d10-ba39-b70922189cd6', '7842ab0b-4b7c-52de-935b-3e93d3e15bb0', '853dcace-e711-5fcf-9dc1-b7886bbb5967', '707f82ca-cc76-5aee-8ed6-b8cfeceeaff8', '17b87af9-a45d-5d1e-b394-0f69d15c4f68', 'd0dea70f-f06f-5511-9464-33bbc9f7f185', '5a121bb5-371b-5b61-b555-233f1e38c6ff', 'bc79be7e-39e6-5e0c-a24c-1066fee0d780', 'ee7dbbc4-cada-55a3-ac6c-dad27fbd89f0', '17ba0bb8-b0dd-575c-a38c-d4d0b1366c3a', 'feffa2f6-8284-5318-996d-93099808e433');
 DELETE FROM public.chapters c WHERE c.subject_id = 'arabic' AND c.id NOT IN ('e1499e39-9a76-5e0c-b297-921b08b69cf4', '6f86fdbf-9213-56bf-b9b9-f64baacf4184', '7ffcf241-6fe1-5136-87ff-53ecbdbbdaeb', 'ccaffc76-5b0e-539a-b938-127edf17aa08', '0e711bc7-a998-5955-bb59-5818797e887b', 'e8c9404f-97df-59ea-9c72-d1453f8fa7ba', '3e834f6b-a6c4-5d1b-b962-887db2faa81f', '7b7b1804-7f76-50ee-8992-21af9c7b4c3f', '376034b3-0a7a-5092-af54-e7ac20a7bdde') AND NOT EXISTS (SELECT 1 FROM public.exercises e WHERE e.chapter_id = c.id);
 
 INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order) VALUES
@@ -1366,6 +1375,78 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('de698859-c461-58c5-9dda-ca90d16dc9e6', 'e1499e39-9a76-5e0c-b297-921b08b69cf4', 'arabic', '👑 تحدّي النخبة: دقائق الإعراب والبناء', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('8aa6f755-3350-5d37-854b-07fb718281b7', 'de698859-c461-58c5-9dda-ca90d16dc9e6', 'في الجملة «الطالباتُ يكتبْنَ الدرسَ»، ما إعراب الفعل «يكتبْنَ»؟', '[{"id":"a","text":"فعل مضارع مبنيّ على السكون لاتّصاله بنون النسوة"},{"id":"b","text":"فعل مضارع مرفوع بالضمّة"},{"id":"c","text":"فعل مضارع مرفوع بثبوت النون"},{"id":"d","text":"فعل مضارع مجزوم بالسكون"}]'::jsonb, 'a', 'الفعل المضارع المتّصل بنون النسوة مبنيّ على السكون في محلّ رفع، إذ إنّ نون النسوة تُصيّر الفعل مبنيًّا وتُحوّله عن أصل الإعراب. والجملة هنا في محلّ رفع خبر.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('1f502c71-8f1c-50cc-b4b2-8d90d85edd3b', 'de698859-c461-58c5-9dda-ca90d16dc9e6', 'في «أكرمتُ الذي اجتهدَ»، ما موضع الاسم الموصول «الذي» من الإعراب؟', '[{"id":"a","text":"مبنيّ على السكون في محلّ جرّ بحرف الجرّ"},{"id":"b","text":"مبنيّ على السكون في محلّ نصب مفعول به"},{"id":"c","text":"اسم معرب منصوب بالفتحة"},{"id":"d","text":"مبنيّ على الضمّ في محلّ نصب مفعول به"}]'::jsonb, 'b', 'الاسم الموصول «الذي» مبنيّ على السكون لا محلّ له من الإعراب في ذاته، غير أنّه وقع مفعولًا به للفعل «أكرمتُ» فهو في محلّ نصب. الأسماء الموصولة مبنيّة، وتُعرب بمحلّها من الجملة لا بحركة ظاهرة.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d73017d1-cce3-58c3-b1c8-be7cdfc64244', 'de698859-c461-58c5-9dda-ca90d16dc9e6', 'في «سافرتُ إلى أحمدَ»، لماذا جُرَّ «أحمد» بالفتحة لا بالكسرة؟', '[{"id":"a","text":"لأنّه اسم علم مذكّر ثلاثيّ ساكن الوسط، فيُجرّ بالكسرة في الأصل"},{"id":"b","text":"لأنّه ممنوع من الصرف: علم على وزن أفعل، فتنوب الفتحة عن الكسرة"},{"id":"c","text":"لأنّه من الأسماء الخمسة التي تُجرّ بالياء"},{"id":"d","text":"لأنّ حرف الجرّ «إلى» يجرّ بالفتحة دائمًا"}]'::jsonb, 'b', '«أحمد» علم على وزن «أفعل» الذي لا يقبل التأنيث، وهذا أحد موانع الصرف (العلميّة + وزن أفعل)؛ فهو ممنوع من الصرف لا يُنوَّن ويُجرّ بالفتحة نيابةً عن الكسرة.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('82129a7b-4d3a-50db-967c-7c4fee7de20c', 'de698859-c461-58c5-9dda-ca90d16dc9e6', 'في «استمعتُ إلى حديثِ أخيكَ»، ما علامة جرّ «أخيكَ»؟', '[{"id":"a","text":"الكسرة لأنّه مضاف إليه مفرد"},{"id":"b","text":"الياء لأنّه من الأسماء الخمسة مضافًا إلى ضمير"},{"id":"c","text":"الكسرة المقدّرة لأنّه مثنّى"},{"id":"d","text":"الياء لأنّه جمع مذكّر سالم"}]'::jsonb, 'b', '«أخ» من الأسماء الخمسة الستّة؛ وهي تُجرّ بالياء نيابةً عن الكسرة شريطة أن تكون مكبَّرة مضافة إلى غير ياء المتكلّم. فـ«أخيكَ» مجرور بالياء علامةً فرعيّة، وليس بالكسرة التي هي العلامة الأصلية للجرّ.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('cbff2abf-de2c-50b1-90a6-b2ac953107eb', 'de698859-c461-58c5-9dda-ca90d16dc9e6', 'في «لن تسعى الفتاةُ إلى الكسلِ»، ما علامة نصب الفعل «تسعى»؟', '[{"id":"a","text":"الفتحة الظاهرة على آخره"},{"id":"b","text":"الفتحة المقدّرة على الألف منعًا للتعذّر"},{"id":"c","text":"حذف النون لأنّه من الأفعال الخمسة"},{"id":"d","text":"السكون لأنّ «لن» تجزم المضارع"}]'::jsonb, 'b', 'الفعل «تسعى» فعل مضارع معتلّ الآخر بالألف، منصوب بـ«لن»، وعلامة نصبه الفتحة المقدّرة على الألف منعًا من ظهورها للتعذّر. و«لن» حرف نصب لا جزم، فلا يُطبَّق عليها السكون.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d4ec96b7-d2d2-5251-8076-745bcd4e3b87', 'de698859-c461-58c5-9dda-ca90d16dc9e6', 'في «شاهدتُ معلّماتٍ مجتهداتٍ»، بِمَ نُصبت «معلّماتٍ»؟', '[{"id":"a","text":"بالفتحة لأنّها مفعول به"},{"id":"b","text":"بالكسرة نيابةً عن الفتحة لأنّها جمع مؤنّث سالم"},{"id":"c","text":"بالياء لأنّها جمع مذكّر سالم"},{"id":"d","text":"بالألف لأنّها من الأسماء الخمسة"}]'::jsonb, 'b', 'جمع المؤنّث السالم يُرفع بالضمّة وينصب ويُجرّ بالكسرة نيابةً عن الفتحة (في النصب) وعن الكسرة الأصلية (في الجرّ). فـ«معلّماتٍ» مفعول به منصوب وعلامة نصبه الكسرة نيابةً عن الفتحة، وهي علامة فرعية خاصّة بهذا النوع من الجموع.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('16bbbed5-d269-5272-8299-8cbd05daa995', '6f86fdbf-9213-56bf-b9b9-f64baacf4184', 'arabic', 'اختبار فهم الدرس', 1, 20, 5, 'quiz', 'admin', 0)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -1563,6 +1644,78 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('b7b30f04-111f-5d47-983d-cd88cda57845', 'ec6eaad6-3386-5819-99ea-e2e6f6e61450', 'في «كأنَّ الأميرَينِ أسدانِ»، ما علامة نصب «الأميرَينِ»؟', '[{"id":"a","text":"الفتحة لأنّه مفرد"},{"id":"b","text":"الألف لأنّه مثنّى"},{"id":"c","text":"الكسرة لأنّه مجرور"},{"id":"d","text":"الياء لأنّه مثنّى"}]'::jsonb, 'd', '«الأميرَين» اسم «كأنّ» منصوب، وهو مثنّى فعلامة نصبه الياء نيابة عن الفتحة (المثنّى يُنصب ويُجرّ بالياء).', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('3ad77ca8-1ab7-5f9f-8c74-0c1057c69625', '6f86fdbf-9213-56bf-b9b9-f64baacf4184', 'arabic', '👑 تحدّي النخبة: النواسخ — مسائل المناظرة', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('f15da5d2-baf2-5bba-a3b6-f8aa6ee58b3c', '3ad77ca8-1ab7-5f9f-8c74-0c1057c69625', 'في الجملة «جاءَ الذي كانَ مجتهدًا»، ما الوظيفة النحويّة الدقيقة لـ«كانَ» في هذا السياق؟', '[{"id":"a","text":"فعل ناسخ يرفع «الذي» اسمًا له وينصب «مجتهدًا» خبرًا له"},{"id":"b","text":"فعل ناسخ زائد لا عمل له، و«مجتهدًا» حال من الضمير المستتر في الصلة"},{"id":"c","text":"فعل تامّ يكتفي بمرفوعه ولا يحتاج إلى خبر"},{"id":"d","text":"فعل ناسخ والجملة صلة الموصول اسمها الضمير المستتر وخبرها «مجتهدًا»"}]'::jsonb, 'b', '«كانَ» هنا زائدة في صلة الموصول لا تعمل عمل الأفعال الناسخة، و«مجتهدًا» حال منصوبة من الضمير المستتر العائد على «الذي»، لا خبر لكان. وهذا استعمال مقرَّر في النحو العربي: كان الزائدة لا محلّ لها من الإعراب.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('e6a315c9-84af-5ee1-bf30-ca59270fadba', '3ad77ca8-1ab7-5f9f-8c74-0c1057c69625', 'في الجملة «إنَّ في الدارِ رجلًا كريمًا»، ما الإعراب الصحيح لـ«رجلًا»؟', '[{"id":"a","text":"خبر «إنَّ» مقدَّم منصوب بالفتحة"},{"id":"b","text":"فاعل للفعل المحذوف منصوب"},{"id":"c","text":"اسم «إنَّ» مؤخَّر منصوب بالفتحة، وشبه الجملة «في الدار» خبرها مقدَّم"},{"id":"d","text":"مبتدأ مؤخَّر مرفوع بالضمّة"}]'::jsonb, 'c', 'يجوز تقديم خبر «إنَّ» على اسمها إذا كان شبه جملة؛ فـ«في الدارِ» شبه جملة جارّ ومجرور في محلّ رفع خبر «إنّ» مقدَّم، و«رجلًا» اسم «إنّ» مؤخَّر منصوب وعلامة نصبه الفتحة.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('46d95580-2686-5c8d-a1c4-c421d9033b24', '3ad77ca8-1ab7-5f9f-8c74-0c1057c69625', 'في «إنَّ المعلِّماتِ مجتهداتٌ»، ما علامة نصب «المعلِّماتِ» وما السبب؟', '[{"id":"a","text":"الفتحة لأنّه اسم مفرد"},{"id":"b","text":"الياء لأنّه جمع مذكّر سالم"},{"id":"c","text":"الكسرة نيابةً عن الفتحة لأنّه جمع مؤنّث سالم"},{"id":"d","text":"الضمّة لأنّ اسم «إنّ» دائمًا مرفوع"}]'::jsonb, 'c', '«المعلِّماتِ» اسم «إنَّ» منصوب، وهو جمع مؤنّث سالم، فتنوب الكسرةُ عن الفتحة في نصبه. وهذه من النيابات الإعرابيّة المقرَّرة: الجمع المؤنّث السالم يُنصب بالكسرة لا بالفتحة.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('c54e9882-aa90-5542-a843-ee6f38805071', '3ad77ca8-1ab7-5f9f-8c74-0c1057c69625', 'في «ظنَّ الطالبُ الدرسَ سهلًا»، ما الإعراب الصحيح لـ«سهلًا»؟', '[{"id":"a","text":"خبر «ظنَّ» مرفوع بالضمّة لأنّ «ظنّ» فعل ناسخ كـ«كان»"},{"id":"b","text":"مفعول به ثانٍ لـ«ظنَّ» منصوب بالفتحة، لأنّ «ظنّ» من أفعال القلوب التي تنصب مفعولَين"},{"id":"c","text":"حال منصوبة من «الدرسَ»"},{"id":"d","text":"تمييز منصوب"}]'::jsonb, 'b', '«ظنَّ» من أفعال القلوب (ظنّ وأخواتها) التي تنصب مفعولَين أصلهما مبتدأ وخبر؛ فـ«الدرسَ» مفعول به أوّل و«سهلًا» مفعول به ثانٍ، كلاهما منصوب. وهي تختلف عن «كان» التي ترفع اسمها لا تنصبه.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('a481950a-36ae-5678-a374-89fd58b86622', '3ad77ca8-1ab7-5f9f-8c74-0c1057c69625', 'في «كانَ الفارسُ يَحمي الحِمى»، ما محلّ جملة «يحمي الحِمى» من الإعراب؟', '[{"id":"a","text":"في محلّ رفع خبر «كان»"},{"id":"b","text":"في محلّ نصب خبر «كان»"},{"id":"c","text":"في محلّ رفع اسم «كان»"},{"id":"d","text":"جملة مستأنفة لا محلّ لها من الإعراب"}]'::jsonb, 'b', 'خبر «كان» منصوب دائمًا، سواء أكان مفردًا أم جملةً. فجملة «يحمي الحِمى» جملة فعلية وقعت خبرًا لـ«كان»، فهي في محلّ نصب. والفارسُ: اسم «كان» مرفوع.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d555b720-f9d7-587d-9032-1fa73bd3f76b', '3ad77ca8-1ab7-5f9f-8c74-0c1057c69625', 'أيٌّ من الجملتَين الآتيتَين يتضمّن «لكنَّ» ناسخةً (بالتشديد) لا «لكنْ» عاطفةً (بالتخفيف)، وما أثر ذلك في الإعراب؟', '[{"id":"a","text":"«نجحَ زيدٌ لكنْ أخوهُ رسبَ» — «لكنْ» ناسخة تنصب «أخوهُ» وترفع «رسبَ»"},{"id":"b","text":"«نجحَ زيدٌ لكنَّ أخاهُ رسبَ» — «لكنَّ» المشدَّدة ناسخة: «أخاهُ» اسمها منصوب بالألف لأنّه من الأسماء الخمسة، وجملة «رسبَ» خبرها"},{"id":"c","text":"«نجحَ زيدٌ لكنَّ أخوهُ رسبَ» — الصواب رفع «أخوه» لأنّ «لكنَّ» لا تنصب"},{"id":"d","text":"«نجحَ زيدٌ لكنْ أخاهُ رسبَ» — «لكنْ» المخفَّفة ناسخة تنصب «أخاهُ»"}]'::jsonb, 'b', '«لكنَّ» المشدَّدة حرف استدراك ناسخ من أخوات «إنّ»: تنصب اسمها وترفع خبرها. «أخاهُ» اسمها منصوب بالألف نيابةً عن الفتحة لأنّه من الأسماء الخمسة (أخ مضاف). أمّا «لكنْ» المخفَّفة فحرف عطف لا ينصب، وما بعدها معطوف على ما قبلها.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1778,6 +1931,78 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('5942675f-5063-565d-a33b-9715493c48b3', '7ffcf241-6fe1-5136-87ff-53ecbdbbdaeb', 'arabic', '👑 تحدّي النخبة: المنصوبات — مستوى المناظرة', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('7fb75c28-12c7-59a5-be95-5d49608f7b3f', '5942675f-5063-565d-a33b-9715493c48b3', 'في الجملة «امتلأَ وجهُ الطالبِ خجلًا وعادَ إلى البيتِ صامتًا»، حدِّد إعراب «خجلًا» وبيِّن الفارق بينه وبين «صامتًا»:', '[{"id":"a","text":"«خجلًا» تمييز نسبة منصوب يُزيل إبهام الجملة (بماذا امتلأ الوجه)، و«صامتًا» حال منصوب يُبيّن هيئة الطالب عند العودة"},{"id":"b","text":"«خجلًا» حال منصوب لأنّه يصف حالة الطالب، و«صامتًا» تمييز نسبة لأنّه يُزيل إبهام العودة"},{"id":"c","text":"كلاهما حال منصوب لأنّ كليهما نكرة مشتقّة جاءت بعد فعل تامّ"},{"id":"d","text":"«خجلًا» مفعول مطلق مؤكِّد للفعل «امتلأ»، و«صامتًا» حال منصوب"}]'::jsonb, 'a', '«خجلًا» جاء بعد فعل مبهوم في نسبته (امتلأ — ماذا؟)، فهو تمييز نسبة يُزيل إبهام الجملة لا إبهام مفرد، ومنصوب بالفتحة. أمّا «صامتًا» فنكرة مشتقّة تُبيّن هيئة صاحبها «الطالبِ» وقت عودته، فهو حال منصوب بالفتحة. المفتاح: التمييز يُجيب عن «ماذا / مَن؟» المبهم في الجملة، والحال يُجيب عن «كيف؟» لصاحبه.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('bd8d5cae-22c4-5b69-8c03-466898debc29', '5942675f-5063-565d-a33b-9715493c48b3', 'في «سارَ الجنديُّ سريعًا نحوَ المعركةِ»، يرى بعض النحاة أنّ «سريعًا» مفعول مطلق نابت عنه صفته، بينما يرى آخرون أنّها حال. أيّ التحليلَين أدقّ وفق شرط الإنابة في المفعول المطلق؟', '[{"id":"a","text":"«سريعًا» حال منصوب فحسب، لأنّ شرط الإنابة عن المفعول المطلق أن تكون الصفة دالّة على كيفيّة الفعل مع حذف المصدر، وهذا ممكن لكنّه ليس الوصف الأدقّ لـ«سريعًا» التي تُبيّن هيئة الفاعل لا الفعل"},{"id":"b","text":"«سريعًا» مفعول مطلق نابت عنه صفته وجوبًا، لأنّ كلّ صفة منصوبة بعد فعل تامّ تُعرب مفعولًا مطلقًا"},{"id":"c","text":"«سريعًا» ظرف مكان منصوب لأنّها تدلّ على اتّجاه السير"},{"id":"d","text":"«سريعًا» مفعول به منصوب لأنّ الفعل «سارَ» متعدٍّ"}]'::jsonb, 'a', 'الصفة المنصوبة قد تُنيب عن المفعول المطلق إذا دلّت على كيفيّة الحدث ذاته (مثل: «ضربتُه شديدًا» أي ضربًا شديدًا). أمّا «سريعًا» في «سارَ سريعًا» فهي أقرب إلى الحال لأنّها تُبيّن هيئة الفاعل «الجنديّ» لا كيفيّة الفعل تجريدًا، إذ «السرعة» صفة السائر لا صفة السير المجرّد. وفق المنهج الرسمي للسنة التاسعة: «سريعًا» حال منصوب وعلامة نصبه الفتحة.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('3f8cd8ae-d790-581e-8f02-2fb0ff2a051d', '5942675f-5063-565d-a33b-9715493c48b3', 'في الجملة التامّة المنفيّة «ما استجابَ المدعوّونَ إلّا رجلًا واحدًا»، أيٌّ من الإعرابَين التاليَين مقبول نحويًّا، وأيُّهما أولى؟', '[{"id":"a","text":"النصب وجوبًا فقط: «رجلًا» مستثنى منصوب، إذ الجملة تامّة فلا يجوز البدل"},{"id":"b","text":"يجوز النصب (مستثنى) أو الرفع بدلًا من «المدعوّون»، لكنّ النصب أكثر شيوعًا في التامّة المنفيّة"},{"id":"c","text":"الرفع وجوبًا: «رجلٌ» فاعل، لأنّ الجملة منفيّة والنفي يُلغي عمل «إلّا»"},{"id":"d","text":"الجرّ على الاستثناء: «رجلٍ» مجرور بـ«إلّا» الحرفيّة"}]'::jsonb, 'b', 'في الجملة التامّة المنفيّة (ذُكر المستثنى منه وهو «المدعوّون») يجوز في المستثنى وجهان: النصب على الاستثناء («رجلًا»)، والإتباع على البدل من المستثنى منه («رجلٌ» بدل بعض من كلّ مرفوع). والنصب أشيع في الكلام العربي الفصيح. أمّا الرفع وجوبًا فخاصّ بالجملة الناقصة المنفيّة حيث يُعرب ما بعد «إلّا» حسب موقعه.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('676cf0eb-45e7-5c7f-aa7e-2113e3463aac', '5942675f-5063-565d-a33b-9715493c48b3', 'أيٌّ من التراكيب الآتية يشتمل على مفعول لأجله مستوفٍ لشروطه الثلاثة (مصدر — قلبيّ — متّحد مع العامل في الزمن والفاعل)؟', '[{"id":"a","text":"«أقبلَ الأبُ مسرعًا لإنقاذِ ابنِه» — «لإنقاذِ»: مجرور باللام فلا يُعرب مفعولًا لأجله"},{"id":"b","text":"«وقفَ التلميذُ تعظيمًا للأستاذِ» — «تعظيمًا»: مصدر قلبيّ دالّ على السبب، فاعله وزمنه متّحدان مع الفعل «وقفَ»"},{"id":"c","text":"«قرأَ الطالبُ درسًا استعدادًا للامتحانِ» — «استعدادًا» ينقض شرط الفاعل إذ الاستعداد فعل إرادي لا قلبيّ"},{"id":"d","text":"«بكى الولدُ بكاءً شديدًا» — «بكاءً» مفعول لأجله لأنّه يُبيّن علّة الحزن"}]'::jsonb, 'b', '«تعظيمًا» في «وقفَ التلميذُ تعظيمًا للأستاذ» مفعول لأجله مستوفٍ للشروط الثلاثة: (1) مصدر، (2) قلبيّ يدلّ على معنى نفسيّ (التعظيم شعور داخليّ)، (3) فاعله هو التلميذ ذاته فاعل «وقفَ» وزمنهما واحد. أمّا «لإنقاذِ» فمجرور باللام، و«استعداد» قد يُقبل وقد يُناقَش، و«بكاءً» مفعول مطلق مبيِّن للنوع لا مفعول لأجله.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('4fe7892b-5622-52b0-ad66-7fe8cef5f348', '5942675f-5063-565d-a33b-9715493c48b3', 'في الجملة «كرَّمَ المديرُ المتفوِّقَينِ مبتهجًا بنجاحِهما»، ما إعراب «المتفوِّقَينِ» و«مبتهجًا» على الترتيب؟', '[{"id":"a","text":"«المتفوِّقَينِ» مفعول به منصوب وعلامة نصبه الياء (مثنّى)، و«مبتهجًا» حال منصوب بالفتحة وصاحبه «المديرُ»"},{"id":"b","text":"«المتفوِّقَينِ» مفعول به منصوب بالفتحة، و«مبتهجًا» مفعول به ثانٍ لأنّ «كرَّمَ» فعل متعدٍّ لمفعولَين"},{"id":"c","text":"«المتفوِّقَينِ» فاعل مرفوع بالألف لأنّه مثنّى، و«مبتهجًا» حال منصوب"},{"id":"d","text":"«المتفوِّقَينِ» مفعول به منصوب وعلامة نصبه الياء (مثنّى)، و«مبتهجًا» تمييز نسبة منصوب بالفتحة"}]'::jsonb, 'a', '«المتفوِّقَين» مفعول به منصوب وعلامة نصبه الياء لأنّه مثنّى (نيابة عن الفتحة). «مبتهجًا» نكرة مشتقّة (اسم فاعل) تُبيّن هيئة المدير وقت التكريم، فهو حال منصوب بالفتحة وصاحبه «المديرُ» المعرفة. لا يصحّ جعله تمييزًا لأنّ التمييز لا يُزيل إبهام جملة هنا، ولا مفعولًا ثانيًا لأنّ «كرَّمَ» لا يتعدّى إلّا لمفعول واحد.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('953541e2-d500-50c7-b1ea-38463f0d0ac2', '5942675f-5063-565d-a33b-9715493c48b3', 'في «أهدى المعلّمُ سبعةَ طلّابٍ كتابًا وثلاثةً وعشرينَ طالبًا جائزةً»، ما الفرق في إعراب تمييز «سبعة» وتمييز «ثلاثة وعشرين»؟', '[{"id":"a","text":"تمييز «سبعة» (3-10) جمع مجرور: «طلّابٍ» مضاف إليه مجرور بالكسرة؛ وتمييز «ثلاثة وعشرين» (11-99) مفرد منصوب: «طالبًا» تمييز منصوب بالفتحة"},{"id":"b","text":"كلاهما جمع مجرور لأنّ الأعداد المركّبة تتبع حكم الآحاد (3-10)"},{"id":"c","text":"كلاهما مفرد منصوب لأنّ التمييز دائمًا منصوب في العربيّة"},{"id":"d","text":"تمييز «سبعة» مفرد منصوب وتمييز «ثلاثة وعشرين» جمع مجرور، لأنّ العدد المركّب يتبع حكم العشرات"}]'::jsonb, 'a', 'قاعدة تمييز العدد: الأعداد من 3 إلى 10 تُضاف إلى جمع مجرور (مضاف إليه)؛ فـ«سبعة» تُضاف إلى «طلّابٍ» جمع مجرور بالإضافة. أمّا الأعداد من 11 إلى 99 فتُميَّز بمفرد منصوب؛ فـ«ثلاثة وعشرون» يُميَّز بـ«طالبًا» مفرد منصوب وعلامة نصبه الفتحة. هذا من أدقّ مسائل الإعراب في المناظرة.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('9d95b6e1-4794-5055-aae8-6955ddf0d606', 'ccaffc76-5b0e-539a-b938-127edf17aa08', 'arabic', 'اختبار فهم الدرس', 1, 20, 5, 'quiz', 'admin', 0)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -1975,6 +2200,78 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('cdb37151-e123-5c4e-97d5-b69f3b75e554', '9bf8d840-480b-5538-8e3a-5dc83c7a4214', 'في «هل درستَ دروسَك؟» و«أدرستَ دروسَك؟»، ما الفرق الدقيق في الاستعمال؟', '[{"id":"a","text":"«هل» للمستقبل وهمزة الاستفهام للماضي"},{"id":"b","text":"«هل» أقوى تأكيدًا من الهمزة في الاستفهام"},{"id":"c","text":"«هل» تدخل على الأسماء وهمزة الاستفهام تدخل على الأفعال فقط"},{"id":"d","text":"الجملتان للتصديق، لكنّ الهمزة تُفيد التعيين أيضًا خلافًا لـ«هل»"}]'::jsonb, 'd', 'كلتا الجملتين استفهام للتصديق (جوابهما نعم أو لا). الفارق أنّ همزة الاستفهام تُستخدم أيضًا للتعيين (الاختيار بين بديلين: أدرستَ أم لا؟)، بينما «هل» قاصرة على التصديق فقط ولا تدخل في سياق التعيين.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('acd6eb5c-3981-5b02-bf6d-8df8daf6641f', 'ccaffc76-5b0e-539a-b938-127edf17aa08', 'arabic', '👑 تحدّي النخبة: دقائق الأساليب وإعرابها', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('aef9a0ad-01c2-5c3d-8767-5c5e1002e661', 'acd6eb5c-3981-5b02-bf6d-8df8daf6641f', 'في «نحنُ — المعلّمينَ — نُقدِّر العلمَ»، ما الإعراب الدقيق لـ«المعلّمينَ» وما علامة إعرابه؟', '[{"id":"a","text":"منصوب على الاختصاص بفعل محذوف تقديره «أخصّ»، وعلامة نصبه الياء لأنّه جمع مذكّر سالم"},{"id":"b","text":"بدل من «نحنُ» منصوب بالياء"},{"id":"c","text":"توكيد معنويّ مرفوع بالواو لأنّه جمع مذكّر سالم"},{"id":"d","text":"حال منصوب بالياء من ضمير المتكلّم"}]'::jsonb, 'a', '«المعلّمينَ» اسم اختصاص منصوب على الاختصاص بفعل محذوف وجوبًا تقديره «أخصّ»، وجاء بعد ضمير المتكلّم «نحنُ» لتخصيص الحكم به. وعلامة نصبه الياء نيابةً عن الفتحة لأنّه جمع مذكّر سالم. وليس بدلًا لأنّ البدل لا يُحذف عامله، ولا توكيدًا لأنّ التوكيد يتبع المؤكَّد في إعرابه.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('fd91f1e0-c396-5bb8-b0c9-c50017dbabc8', 'acd6eb5c-3981-5b02-bf6d-8df8daf6641f', 'في «إيّاكَ والكذبَ!»، ما الإعراب الصحيح لـ«إيّاكَ» وما الفعل المقدَّر؟', '[{"id":"a","text":"ضمير منفصل مبنيّ في محلّ رفع مبتدأ، والفعل المقدَّر «احذَر»"},{"id":"b","text":"ضمير منفصل مبنيّ في محلّ جرّ بحرف محذوف"},{"id":"c","text":"ضمير منفصل مبنيّ في محلّ نصب مفعول به لفعل محذوف وجوبًا تقديره «احذَر»"},{"id":"d","text":"ضمير منفصل مبنيّ في محلّ نصب على الإغراء"}]'::jsonb, 'c', '«إيّاكَ» في أسلوب التحذير ضمير منفصل مبنيّ في محلّ نصب مفعول به لفعل محذوف وجوبًا تقديره «احذَر». وفعل التحذير يُحذف وجوبًا مع «إيّا» اتّفاقًا. وليس مبتدأً لأنّ الضمائر المنفصلة قد تقع مفعولًا به، وليس مجرورًا إذ لا حرف جرّ هنا.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('afa45a0e-0e4f-5f04-8018-4469055b5d0c', 'acd6eb5c-3981-5b02-bf6d-8df8daf6641f', 'أيّ الجمل التالية يستوفي فعلُها شروطَ التعجّب القياسيّ المباشر (الصيغة: ما أفعلَه / أفعِلْ به)؟', '[{"id":"a","text":"ما أموتَ فلانًا! (من «مات»)"},{"id":"b","text":"ما أحسنَ الفتاةَ! (من «حسُن»)"},{"id":"c","text":"ما أبيضَ الثلجَ! (من «ابيضَّ»)"},{"id":"d","text":"ما أعورَ الرجلَ! (من «عَوِرَ»)"}]'::jsonb, 'b', '«حسُن» فعل ثلاثيّ تامّ متصرّف لا يدلّ على لون ولا عيب وهو قابل للتفاضل، فتستوفي «ما أحسنَ الفتاةَ!» جميع الشروط. أمّا «مات» فجامد في التعجّب (لا يُصاغ منه قياسًا)، و«ابيضَّ» يدلّ على لون على وزن افعلَّ السداسيّ فلا يُصاغ منه مباشرةً، و«عَوِرَ» يدلّ على عيب فلا يُصاغ منه التعجّب قياسًا.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('22d1aaae-7eef-5df7-8209-c4955f3e392b', 'acd6eb5c-3981-5b02-bf6d-8df8daf6641f', 'في «يا أيّها الطلابُ اجتهدوا!»، ما الإعراب الصحيح لـ«الطلابُ» ولـ«أيّها»؟', '[{"id":"a","text":"«أيّها»: منادى مبنيّ على الضمّ في محلّ نصب؛ «الطلابُ»: بدل أو نعت مرفوع بالضمّة"},{"id":"b","text":"«أيّها»: منادى منصوب بالفتحة لأنّه مضاف؛ «الطلابُ»: مضاف إليه مجرور"},{"id":"c","text":"«أيّها»: حرف نداء؛ «الطلابُ»: منادى مبنيّ على الضمّ"},{"id":"d","text":"«أيّها»: اسم إشارة في محلّ نصب؛ «الطلابُ»: عطف بيان مرفوع"}]'::jsonb, 'a', 'في النداء بـ«يا أيّها»: «أيّ» هي المنادى وتُبنى على الضمّ في محلّ نصب، و«ها» للتنبيه. أمّا «الطلابُ» فهو نعت لـ«أيّ» أو بدل منه، ويجب أن يكون مرفوعًا لأنّ «أيّ» لا تُضاف فعلًا وما بعدها صفة مرفوعة. وهذا ما يُميّز هذا النوع من النداء عن نداء المضاف.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('42fee5e6-ebba-59f2-8bbb-b082518abb07', 'acd6eb5c-3981-5b02-bf6d-8df8daf6641f', 'في جملة «الأمانةَ يا صديقي»، ما الأساليب النحوية الواردة فيها وما إعراب «صديقي»؟', '[{"id":"a","text":"أسلوب تحذير فقط؛ «صديقي»: منادى مضاف منصوب بالفتحة المقدَّرة"},{"id":"b","text":"أسلوب اختصاص فقط؛ «صديقي»: منصوب على الاختصاص"},{"id":"c","text":"أسلوب إغراء فقط؛ «صديقي»: مضاف إليه مجرور بالكسرة"},{"id":"d","text":"أسلوبا إغراء ونداء معًا؛ «صديقي»: منادى مضاف منصوب وعلامة نصبه الفتحة المقدَّرة على ما قبل الياء"}]'::jsonb, 'd', 'تجمع الجملة أسلوبَين: «الأمانةَ» إغراء (مُغرى به منصوب بفعل محذوف وجوبًا تقديره «الزَم») يحثّ المخاطَب على التمسّك بالأمانة، و«يا صديقي» نداء. «صديقي» منادى مضاف منصوب وعلامة نصبه الفتحة المقدَّرة على ما قبل ياء المتكلّم منعًا من ظهورها الاشتغال المحلّ بحركة المناسبة، والياء ضمير متّصل مضاف إليه في محلّ جرّ.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('de13056c-6dd5-5da7-9b63-d6efb31b7829', 'acd6eb5c-3981-5b02-bf6d-8df8daf6641f', 'أيّ الجمل التالية تمثّل استخدامًا صحيحًا لهمزة الاستفهام دون «هل»، بحيث لا يصحّ استبدالها بـ«هل»؟', '[{"id":"a","text":"أسافرتَ أمس؟"},{"id":"b","text":"أيُّهما أحسنُ خُلُقًا: زيدٌ أم عمرٌو؟"},{"id":"c","text":"أأنتَ كتبتَ الدرسَ؟"},{"id":"d","text":"أفهمتَ الشرحَ؟"}]'::jsonb, 'b', 'الهمزة وحدها تُفيد «التعيين» أي الاختيار بين أمرين أو أكثر بعد «أم». في «أيُّهما أحسنُ خُلُقًا: زيدٌ أم عمرٌو؟» يُطلب تعيين الأحسن بين اثنين، ولا يصحّ هنا استبدال الهمزة بـ«هل» لأنّ «هل» قاصرة على التصديق (جوابه نعم أو لا) ولا تدخل في سياق التعيين. أمّا الجمل الأخرى (أسافرتَ، أأنتَ، أفهمتَ) فهي للتصديق ويمكن نظريًّا صياغتها بـ«هل» وإن تفاوتت في السياق.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2190,6 +2487,78 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('0a6742b5-e0d5-52fb-a139-6570e057ce7e', '0e711bc7-a998-5955-bb59-5818797e887b', 'arabic', '👑 تحدّي النخبة: دقائق الميزان والإعلال', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('949db6c8-725f-5035-bc66-0f65ac2f3a56', '0a6742b5-e0d5-52fb-a139-6570e057ce7e', 'الفعل «اصْطَفَى» جذره (ص ف ي/و). بعد تطبيق قاعدة الإعلال بالقلب على لامه، ما وزنه الصرفيّ الدقيق؟', '[{"id":"a","text":"افْتَعَلَ، لأنّ اللام محفوظة"},{"id":"b","text":"افْتَعَى، لأنّ الياء في لام الفعل قُلبت ألفًا فصار الوزن المعلّ افْتَعَى"},{"id":"c","text":"افْعَلَّ، لأنّ اللام مشدّدة"},{"id":"d","text":"اسْتَفْعَلَ، لأنّ فيه ثلاثة أحرف زائدة"}]'::jsonb, 'b', 'جذر «اصطفى» هو (ص ف ي): الصاد فاء، والفاء عين، والياء لام. الزائدان: همزة الوصل في الأوّل، والطاء (أصلها تاء افتعل قُلبت طاءً بسبب مجاورة الصاد). أمّا اللام (الياء)، فقد تحرّكت وانفتح ما قبلها فقُلبت ألفًا (إعلال بالقلب). ولذلك يكتب الوزن معلولًا: «افْتَعَى» لا «افْتَعَلَ»، والألف في آخره تقابل الياء المقلوبة.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('95b4372c-a2d5-5a6c-903d-c48e90799ad4', '0a6742b5-e0d5-52fb-a139-6570e057ce7e', 'ما الفرق الصرفيّ الدقيق بين «أَقَامَ» و«قَاوَمَ» من حيث الوزن وعدد الأحرف الزائدة؟', '[{"id":"a","text":"كلاهما على وزن «فَاعَلَ» بزيادة الألف فقط"},{"id":"b","text":"«أَقَامَ» على «أَفْعَلَ» بزيادة الهمزة، و«قَاوَمَ» على «فَاعَلَ» بزيادة الألف"},{"id":"c","text":"«أَقَامَ» على «فَاعَلَ» بزيادة الألف، و«قَاوَمَ» على «أَفْعَلَ» بزيادة الهمزة"},{"id":"d","text":"كلاهما على وزن «أَفْعَلَ» بزيادة الهمزة، والألف في كليهما إعلال لا زيادة"}]'::jsonb, 'b', '«أَقَامَ»: جذره (ق و م)، الهمزة زائدة في أوّله والألف في «قَامَ» ليست زائدة بل هي عين الفعل (الواو) قُلبت ألفًا إعلالًا. وزنه «أَفْعَلَ» وأصله «أَقْوَمَ». أمّا «قَاوَمَ»: جذره (ق و م) أيضًا، لكنّ الألف بين القاف والواو هي الحرف الزائد (ألف المفاعلة)، والواو هنا عين الفعل محفوظة. وزنه «فَاعَلَ». الخلاصة: كلٌّ من الكلمتين مزيد بحرف واحد لكنّ الزائد مختلف.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('813bd4e2-fa87-58c0-8c1e-671ce49e87bc', '0a6742b5-e0d5-52fb-a139-6570e057ce7e', 'الفعل «اسْتَقَامَ» مزيد بثلاثة أحرف. ما جذره ووزنه مع بيان موضع الإعلال؟', '[{"id":"a","text":"جذره (ق ي م)، وزنه اسْتَفَالَ، والإعلال في العين بقلب الياء ألفًا"},{"id":"b","text":"جذره (ق و م)، وزنه اسْتَفْعَلَ ولا إعلال فيه"},{"id":"c","text":"جذره (ق و م)، وزنه اسْتَفْعَلَ والألف في «قَام» إعلال للعين (الواو→ألف)، فالوزن المعلّ اسْتَفَالَ"},{"id":"d","text":"جذره (ق م)، وزنه افْتَعَلَ والإعلال في الفاء"}]'::jsonb, 'c', 'جذر «استقام» هو (ق و م). الأحرف الزائدة ثلاثة: همزة الوصل في الأوّل، والسين، والتاء — مجتمعةً تُكوّن بادئة «اسْتَ». الوزن الأصليّ قبل الإعلال: «اسْتَفْعَلَ»، إذ القاف فاء، والواو عين، والميم لام. غير أنّ الواو (عين الفعل) تحرّكت وانفتح ما قبلها فقُلبت ألفًا (إعلال بالقلب)، فصار النطق «اسْتَقَامَ» والوزن المعلّ «اسْتَفَالَ»، وهذا الوزن المعلّ هو الذي يُعدّ الجواب الكامل الدقيق.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('cdfa76f5-ac19-59b9-8b89-6502614eeff9', '0a6742b5-e0d5-52fb-a139-6570e057ce7e', 'أيّ الأفعال الآتية يُعدّ فعلَ المطاوعة المناسب لـ «عَلَّمَ» على الوزن المتوقَّع صرفيًّا؟', '[{"id":"a","text":"انْعَلَمَ، على وزن انْفَعَلَ"},{"id":"b","text":"تَعَلَّمَ، على وزن تَفَعَّلَ"},{"id":"c","text":"اعْتَلَمَ، على وزن افْتَعَلَ"},{"id":"d","text":"اسْتَعْلَمَ، على وزن اسْتَفْعَلَ"}]'::jsonb, 'b', 'القاعدة الصرفيّة: مطاوع «فَعَّلَ» يأتي على وزن «تَفَعَّلَ». فمطاوع «عَلَّمَ» (فَعَّلَ) هو «تَعَلَّمَ» (تَفَعَّلَ)، ومعناه: قبِل التعليمَ وأثَّر فيه. أمّا «انفعل» فمطاوع «فَعَلَ» الثلاثيّ، و«اسْتَفْعَلَ» يدلّ على الطلب لا المطاوعة، و«افْتَعَلَ» ليس له علاقة صرفيّة مطّردة بمطاوعة «فَعَّلَ».', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('373f90a2-4443-50f3-a864-832ba079659b', '0a6742b5-e0d5-52fb-a139-6570e057ce7e', 'ما وزن اسم المفعول «مُسْتَخْرَج»، وكيف يُشتقّ من فعله «اسْتَخْرَجَ»؟', '[{"id":"a","text":"مَفْعُول، لأنّ كلّ اسم مفعول على هذا الوزن"},{"id":"b","text":"مُفْتَعَل، لأنّه مشتقّ من «افتعل»"},{"id":"c","text":"مُسْتَفْعَل، بضمّ الميم وفتح العين، لأنّه مشتقّ من «اسْتَفْعَلَ»"},{"id":"d","text":"فَعِيل، كما في كثير من الصفات المشبّهة"}]'::jsonb, 'c', 'تُشتقّ أسماء المفعول من الأفعال المزيدة بإبدال حرف المضارعة ميمًا مضمومةً وفتح ما قبل الآخر. فعل «اسْتَخْرَجَ» وزنه «اسْتَفْعَلَ»؛ مضارعه «يَسْتَخْرِجُ» — نستبدل الياء بميم مضمومة ونفتح ما قبل الآخر: «مُسْتَخْرَج»، ووزنه «مُسْتَفْعَل». وهذا الوزن خاصّ باسم المفعول من «اسْتَفْعَلَ» وليس «مَفْعُول» الذي يُقتصر على الثلاثيّ المجرّد.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('0abe3a9b-7030-5b6f-b65a-c2f7614708e8', '0a6742b5-e0d5-52fb-a139-6570e057ce7e', 'الفعل «قَالَ» أصله «قَوَلَ» قبل الإعلال. ما وزنه الحقيقيّ قبل الإعلال وما نوع الإعلال الذي طرأ عليه؟', '[{"id":"a","text":"وزنه «فَعَلَ» أصلًا، وطرأ عليه إعلال بالحذف (حُذفت الواو)"},{"id":"b","text":"وزنه «فَعَلَ» أصلًا، وطرأ عليه إعلال بالقلب (الواو→ألف) لتحرّكها وانفتاح ما قبلها"},{"id":"c","text":"وزنه «فَاعَلَ» لأنّ الألف في «قَالَ» زائدة"},{"id":"d","text":"وزنه «فَعِلَ» لأنّ أصله «قَوِلَ» بكسر الواو"}]'::jsonb, 'b', 'أصل «قَالَ» في الميزان الصرفيّ هو «قَوَلَ» على وزن «فَعَلَ»، إذ الجذر (ق و ل): القاف فاء، والواو عين، واللام لام. غير أنّ الواو (عين الفعل) تحرّكت وانفتح ما قبلها (القاف مفتوحة) فوجب قلبها ألفًا — وهذا هو «الإعلال بالقلب». فالألف في «قَالَ» ليست زائدة بل هي عين الفعل بعد الإعلال، ووزنه الحقيقيّ «فَعَلَ» لا «فَاعَلَ».', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('9d321826-4676-581f-9584-cf2cd824a0fe', 'e8c9404f-97df-59ea-9c72-d1453f8fa7ba', 'arabic', 'اختبار فهم الدرس', 1, 20, 5, 'quiz', 'admin', 0)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -2387,6 +2756,78 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('e03bd42b-389f-56b8-942e-9e75455368ac', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', 'في «قرأتُ كِتابًا مُثيرًا»، ما نوع «مُثِير»؟', '[{"id":"a","text":"اسم مفعول من الثلاثي"},{"id":"b","text":"اسم فاعل من غير الثلاثي (أَثَارَ)"},{"id":"c","text":"صيغة مبالغة"},{"id":"d","text":"صفة مشبّهة"}]'::jsonb, 'b', '«مُثِير» اسم فاعل من الفعل الرباعي «أَثَارَ»، بُني بضمّ أوله وكسر ما قبل آخره، وهو يدلّ على الشيء الذي يُثير.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('8f824bb5-eca9-5bc8-bffc-9f1396773f9d', 'e8c9404f-97df-59ea-9c72-d1453f8fa7ba', 'arabic', '👑 تحدّي النخبة: المشتقّات — مستوى المناظرة', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('77bcd686-ad6f-5612-9474-7815e9d94bec', '8f824bb5-eca9-5bc8-bffc-9f1396773f9d', 'في العبارة «المُستَخدِمُ الماهرُ يُنتِج عملًا مُستَخدَمًا بكفاءة»، كلمتا «مُستَخدِم» و«مُستَخدَم» مشتقّتان من الفعل السداسي «استَخدَمَ». ما الذي يُميَّز بينهما نحويًّا؟', '[{"id":"a","text":"«مُستَخدِم» اسم فاعل (كسر ما قبل الآخر)، و«مُستَخدَم» اسم مفعول (فتح ما قبل الآخر)"},{"id":"b","text":"كلتاهما اسم مفعول، والفرق في الإعراب فقط"},{"id":"c","text":"«مُستَخدِم» صفة مشبّهة، و«مُستَخدَم» اسم فاعل"},{"id":"d","text":"كلتاهما اسم فاعل لأنّ الفعل السداسي لا يبني اسم مفعول"}]'::jsonb, 'a', 'في المشتقّات من غير الثلاثي: اسم الفاعل يُبنى بضمّ أوله وكسر ما قبل آخره (مُستَخدِم)، أمّا اسم المفعول فيُبنى بضمّ أوله وفتح ما قبل آخره (مُستَخدَم). هذا الفرق الحركي الدقيق هو المعيار الوحيد للتمييز بينهما في الأفعال السداسية.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('288d4459-8206-5908-ba90-b2d1dd328b96', '8f824bb5-eca9-5bc8-bffc-9f1396773f9d', 'أيّ الكلمات التالية تنتمي إلى الصفة المشبّهة وليست صيغة مبالغة، مع تعليل الاختيار؟', '[{"id":"a","text":"غَيُور — لأنّه على وزن فَعُول"},{"id":"b","text":"حَذِر — لأنّه على وزن فَعِل"},{"id":"c","text":"عَلِيم — لأنّه على وزن فَعِيل"},{"id":"d","text":"حَسَن — لأنّه على وزن فَعَل"}]'::jsonb, 'd', '«حَسَن» على وزن فَعَل وهو من أوزان الصفة المشبّهة الدالّة على صفة ثابتة راسخة في صاحبها. أمّا «غَيُور» (فَعُول) و«عَلِيم» (فَعِيل) فهما من أوزان صيغ المبالغة المنصوص عليها. وأمّا «حَذِر» (فَعِل) فهو مشترك؛ يُعدّ في الغالب صيغة مبالغة لا صفة مشبّهة لدلالته على شدّة الحذر، في حين يدلّ «حَسَن» على الثبوت لا المبالغة.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('ae42f8db-d01a-5db9-a1ab-8c8d3b458e7f', '8f824bb5-eca9-5bc8-bffc-9f1396773f9d', 'أيّ الجمل التالية تحتوي على اسم مكان مبنيٍّ من فعل غير ثلاثي على القياس الصحيح؟', '[{"id":"a","text":"«التَّمرُّنُ في المَلعَبِ يُقوِّي الجسمَ» — مَلعَب: اسم مكان من «لَعِبَ» الثلاثي"},{"id":"b","text":"«ذهبَ المريضُ إلى المُستَشفى» — مُستَشفى: اسم مكان من «استَشفى» السداسي"},{"id":"c","text":"«فتحتُ المِفتاحَ» — مِفتاح: اسم مكان من «فَتَحَ»"},{"id":"d","text":"«جلستُ في المَجلُوسِ» — مَجلُوس: اسم مكان من «جَلَسَ»"}]'::jsonb, 'b', 'اسم الزمان والمكان من غير الثلاثي يُبنى كاسم المفعول تمامًا (ضمّ أوله وفتح ما قبل آخره)؛ فـ«مُستَشفى» هو اسم مكان قياسي من الفعل السداسي «استَشفى». أمّا «مَلعَب» فهو من الثلاثي. و«مِفتاح» هو اسم آلة لا اسم مكان. و«مَجلُوس» هو اسم مفعول، إذ يجب أن يكون «مَجلِس» (بكسر اللام) هو اسم المكان.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d5382bef-39dd-5adc-8879-68876f9b735d', '8f824bb5-eca9-5bc8-bffc-9f1396773f9d', 'أراد طالبٌ أن يصوغ اسم تفضيل مباشرًا من الفعل «عَرِجَ» (أي صار أعرج). أيّ الخيارات يصف الحكم الصحيح ويُعلّله؟', '[{"id":"a","text":"يجوز مباشرةً، فيُقال «أَعرَج» على وزن أَفعَل"},{"id":"b","text":"لا يجوز مباشرةً لأنّ دلالته على عيب جسدي، فيُستعاض عنه بـ«أشدّ عَرَجًا»"},{"id":"c","text":"لا يجوز لأنّ الفعل غير ثلاثي"},{"id":"d","text":"لا يجوز لأنّ الفعل منفيّ بطبعه"}]'::jsonb, 'b', 'من شروط بناء اسم التفضيل مباشرةً من الفعل أن لا تكون دلالته الأصلية على لون أو عيب جسدي. «عَرِجَ» يدلّ على العَرَج وهو عيب، فيمتنع قياسًا صياغةُ «أَعرَج» اسمَ تفضيل وإن وُجد «أَعرَج» صفةً مشبّهة بمعنى وصف صاحب العَرَج. والصواب: «أشدّ عَرَجًا» أو «أكثر عَرَجًا» بالتعويض بمصدر.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('6b3e3b6c-7412-506f-8742-a0e7615fe270', '8f824bb5-eca9-5bc8-bffc-9f1396773f9d', 'في قول الشاعر: «لَيسَ الكَرِيمُ الذي يُعطِي عَطِيَّتَهُ — عن الجَزاءِ، ولكنِ الوهّابُ مَن بَذَلا»، كلمة «الوهّاب» في البيت على أيّ وزن، وما نوعها؟', '[{"id":"a","text":"وزن مِفعَال، اسم آلة"},{"id":"b","text":"وزن فَعَّال، صيغة مبالغة من «وَهَبَ»"},{"id":"c","text":"وزن فَاعِل، اسم فاعل من «وَهَبَ»"},{"id":"d","text":"وزن فَعِيل، صفة مشبّهة"}]'::jsonb, 'b', '«الوهّاب» على وزن فَعَّال (الواو فاء الكلمة، والهاء عينها، والباء لامها)، وهو من أوزان صيغة المبالغة الدالّة على كثرة الوهب والعطاء. ومن هذا الوزن جاء اسم الله «الوهّاب» في القرآن الكريم. ولا ينبغي الخلط بينه وبين «واهب» (اسم فاعل على فَاعِل) الذي يدلّ على حدث مؤقّت لا مبالغة.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('c97c4a80-12d1-58cc-9aae-3663e3876290', '8f824bb5-eca9-5bc8-bffc-9f1396773f9d', 'طالبٌ يحلّل الجملة: «المُتَفَوِّقُ يَبلُغُ مَنزِلًا مُتَفَوَّقًا فيه». ادَّعى أنّ «مُتَفَوِّق» اسم مفعول و«مُتَفَوَّق» اسم فاعل. ما الحكم الصحيح ولماذا؟', '[{"id":"a","text":"الطالب مصيب؛ فكلا الكلمتين تبدآن بميم مضمومة فالفرق اعتباطي"},{"id":"b","text":"الطالب مخطئ؛ «مُتَفَوِّق» اسم فاعل (كسر ما قبل الآخر) و«مُتَفَوَّق» اسم مفعول (فتح ما قبل الآخر)، كلاهما من الخماسي «تَفَوَّقَ»"},{"id":"c","text":"الطالب مخطئ؛ «مُتَفَوِّق» صفة مشبّهة و«مُتَفَوَّق» اسم زمان"},{"id":"d","text":"الطالب مخطئ؛ «مُتَفَوِّق» و«مُتَفَوَّق» كلتاهما اسم فاعل لأنّ الخماسي لا يبني اسم مفعول"}]'::jsonb, 'b', 'القاعدة الذهبية في المشتقّات من غير الثلاثي: اسم الفاعل يُكسَر ما قبل آخره (مُتَفَوِّق ← كسرة على القاف)، واسم المفعول يُفتَح ما قبل آخره (مُتَفَوَّق ← فتحة على القاف). فالطالب عكس الحكمين. وكلتا الكلمتين مشتقّتان من الفعل الخماسي «تَفَوَّقَ»، وللخماسي والسداسي اسمُ مفعول قياسي.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2602,6 +3043,78 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('5de50223-ae07-51a5-bcd2-ed9e846ecda0', '3e834f6b-a6c4-5d1b-b962-887db2faa81f', 'arabic', '👑 تحدّي النخبة: الصور البيانية في نصوص أدبية', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('ba917376-9c77-516d-a1e0-b684f57ef04f', '5de50223-ae07-51a5-bcd2-ed9e846ecda0', 'في قوله تعالى: «وَاشْتَعَلَ الرَّأْسُ شَيْبًا» (مريم: 4)، ما نوع الصورة البيانية وما المحذوف فيها؟', '[{"id":"a","text":"استعارة مكنية؛ شُبِّه الشيبُ بالنار، وحُذف المشبَّه به (النار) وأُبقيت لازمته (فعل «اشتعل»)"},{"id":"b","text":"استعارة تصريحية؛ صُرِّح بالمشبَّه به (الشيب) وحُذف المشبَّه (الرأس)"},{"id":"c","text":"مجاز مرسل علاقته الجزئية؛ ذُكر الرأس وأُريد سائر الجسد"},{"id":"d","text":"تشبيه بليغ؛ الرأس مشبَّه والشيب مشبَّه به وحُذفت الأداة ووجه الشبه"}]'::jsonb, 'a', 'الفعل «اشتعل» من لوازم النار؛ فقد شُبِّه الشيبُ بالنار المشتعلة، وحُذف المشبَّه به (النار) وبقيت لازمته الدالّة عليه، وهو ما يُعرَّف بالاستعارة المكنية. أمّا الخيار (ب) فيعكس الأمر: في التصريحية يُحذف المشبَّه لا المشبَّه به.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('1d2c618c-74ff-58e9-882e-ec44096abaf9', '5de50223-ae07-51a5-bcd2-ed9e846ecda0', 'قال المتنبي: «أنا الغريقُ فما خوفي من البَلَلِ». ما نوع الصورة البيانية في «أنا الغريق»؟', '[{"id":"a","text":"تشبيه مجمَل؛ ذُكرت الأداة وحُذف وجه الشبه"},{"id":"b","text":"استعارة مكنية؛ حُذف المشبَّه به وبقيت لازمته"},{"id":"c","text":"استعارة تصريحية؛ شبَّه المتنبي نفسه بالغريق وحُذف المشبَّه (نفسُه) وصُرِّح بالمشبَّه به (الغريق)"},{"id":"d","text":"كناية عن الغرق في الهموم"}]'::jsonb, 'c', 'شبَّه المتنبي نفسه (وهو في أشدّ ما يكون من البلاء) بالغريق؛ فحُذف المشبَّه (نفسُه) وصُرِّح بالمشبَّه به (الغريق) مكانه في الكلام، وهذا هو حدّ الاستعارة التصريحية. لو كانت مكنية لذُكر هو (المشبَّه) وبقيت لازمة الغرق دون تصريح به.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('0a9a6133-f303-5e79-963c-f3152ee0bd73', '5de50223-ae07-51a5-bcd2-ed9e846ecda0', 'في قول الشاعر: «قرأتُ في عيونِهِ خوفًا لا يُقال»، أيّ تحليل يصفُ الصورة البيانية وصفًا دقيقًا؟', '[{"id":"a","text":"كناية عن الخوف الشديد؛ لأنّ العيون تكشف المخفيّ"},{"id":"b","text":"مجاز مرسل علاقته المحلّية؛ ذُكرت العيون (المحلّ) وأُريد ما تُعبّر عنه"},{"id":"c","text":"تشبيه بليغ؛ العيون مشبَّهة بالكتاب وحُذفت الأداة ووجه الشبه"},{"id":"d","text":"استعارة مكنية؛ شُبِّهت العيون بكتاب يُقرأ، وحُذف المشبَّه به (الكتاب) وأُبقيت لازمته (فعل «قرأ»)"}]'::jsonb, 'd', 'الفعل «قرأ» لازمٌ خاصّ بالكتاب؛ فالشاعر شبَّه عيون المحبوب بكتاب تُقرأ منه المشاعر، ثمّ حذف المشبَّه به (الكتاب) وأبقى لازمته (فعل القراءة) دليلًا عليه، فهذه استعارة مكنية. الخيار (ب) يُخطئ لأنّ المجاز المرسل المحلّي يستلزم ذِكر المكان إرادةً لما فيه (كـ«قرأتُ المكتبةَ» أي الكتبَ)، وليس هذا مقصود الشاعر هنا.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('287f475d-858c-5f99-b7ef-4e335144dc42', '5de50223-ae07-51a5-bcd2-ed9e846ecda0', 'في قول الشاعر: «رَعَى الغيثُ الزرعَ حتّى أينَعَ»، ما الصورة البيانية ونوعها بدقّة؟', '[{"id":"a","text":"استعارة مكنية؛ شُبِّه الغيثُ براعٍ وحُذف المشبَّه به وأُبقي فعله (رعى)"},{"id":"b","text":"مجاز مرسل علاقته السببيّة؛ ذُكر السبب (الغيث) وأُريد المسبَّب (عمليّة الرعاية الحقيقية للزرع)"},{"id":"c","text":"تشبيه بليغ؛ الغيث مشبَّه والراعي مشبَّه به"},{"id":"d","text":"كناية عن الخصوبة والنماء"}]'::jsonb, 'a', '«رعى» فعلٌ لا يُسنَد حقيقةً إلّا إلى الراعي (إنسان أو حيوان)؛ فقد شُبِّه الغيثُ براعٍ يحنو على زرعه، وحُذف المشبَّه به (الراعي) وأُبقيت لازمته (رعى). هذا بالضبط تعريف الاستعارة المكنية. أمّا الخيار (ب) فمثال على المجاز المرسل السببي يكون في نحو «رعى الغيثُ الزرعَ» بمعنى أنّ الغيث هو السبب في نموّ الزرع لا في رعايته بالمعنى المجازي، وهو تأويل أقلّ دقّةً من الاستعارة المكنية هنا.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('437ea3b1-90c3-57a6-8c00-7364a022bbfd', '5de50223-ae07-51a5-bcd2-ed9e846ecda0', 'قال الكاتب عن أستاذه: «إنّه طويلُ الباعِ في العلم، واسعُ الأفق في الفكر». ما نوع «طويل الباع»؟', '[{"id":"a","text":"مجاز مرسل علاقته الجزئية؛ ذُكر الجزء (الباع) وأُريد الكلّ (الشخص)"},{"id":"b","text":"تشبيه مجمَل؛ الأستاذ مشبَّه بالشيء الطويل وحُذف وجه الشبه"},{"id":"c","text":"كناية عن سعة العلم والمعرفة؛ طول الباع لازمٌ يُشير إلى الامتداد والشمول دون أن يُراد معناه الحقيقي حصرًا"},{"id":"d","text":"استعارة تصريحية؛ صُرِّح بالمشبَّه به (الباع) وحُذف المشبَّه"}]'::jsonb, 'c', '«طويل الباع» تعبيرٌ لا يُراد به طول الذراع حقيقةً، بل يُراد به لازم هذا المعنى وهو سعة العلم والتمكّن؛ فهي كناية عن المعرفة الواسعة. والفارق الدقيق عن الخيار (أ): المجاز المرسل الجزئي يستلزم أن يكون الجزء المذكور علاقتُه بالكلّ هي الجزئية المادّية (كـ«أعطِ يدَكَ» أي نفسَكَ)، بينما هنا «الباع» لا يُراد منه جزء الجسد بل يُراد لازمه المعنوي.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('2b284118-a0be-5398-994d-e745a6c2f6f7', '5de50223-ae07-51a5-bcd2-ed9e846ecda0', 'قال تعالى: «إِنَّكَ مَيِّتٌ وَإِنَّهُم مَّيِّتُونَ» (الزمر: 30)، والمخاطَب والقوم لا يزالون أحياءً لحظةَ النزول. ما نوع الصورة البيانية في إطلاق «ميِّت» عليهم؟', '[{"id":"a","text":"استعارة تصريحية؛ حُذف المشبَّه (الفاني) وصُرِّح بالمشبَّه به (الميِّت)"},{"id":"b","text":"كناية عن قِصَر الأجل وقُرب الموت"},{"id":"c","text":"مجاز مرسل علاقته «ما يكون»؛ أُطلقت كلمة «ميِّت» على الحيّ لأنّه سيؤول إلى الموت"},{"id":"d","text":"تشبيه بليغ؛ المخاطَب مشبَّه بالميِّت وحُذفت الأداة ووجه الشبه"}]'::jsonb, 'c', 'المخاطَب حيٌّ وقتَ الخطاب، غير أنّ الآية أطلقت عليه «ميِّت» بناءً على ما سيؤول إليه من الموت الحتمي؛ وهذا هو المجاز المرسل بعلاقة «ما يكون» (أي اعتبار ما سيكون عليه الشيء مستقبلًا). وهو مجاز مرسل لا استعارة؛ لأنّ العلاقة ليست المشابهة بل علاقة المآل والمصير.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('7595fbd9-9810-5997-baee-2c9a13444cd5', '7b7b1804-7f76-50ee-8992-21af9c7b4c3f', 'arabic', 'اختبار فهم الدرس', 1, 20, 5, 'quiz', 'admin', 0)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -2798,6 +3311,78 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('8f9f6853-09ce-5205-88ba-7ff93e158a13', '7b7b1804-7f76-50ee-8992-21af9c7b4c3f', 'arabic', '👑 تحدّي النخبة: دقائق البديع', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('9fe234a7-678a-5eb2-8e3c-efacbb228ee1', '8f9f6853-09ce-5205-88ba-7ff93e158a13', 'قال تعالى: ﴿قُلْ هَلْ يَسْتَوِي الَّذِينَ يَعْلَمُونَ وَالَّذِينَ لَا يَعْلَمُونَ﴾. ما نوع المحسّن البديعي بين «يعلمون» و«لا يعلمون»، وما وجه الدقّة في تحديده؟', '[{"id":"a","text":"طباق سلب؛ لأنّ التقابل بين الفعل ونفيه بـ«لا»، وليس بين ضدَّين مستقلَّين"},{"id":"b","text":"طباق إيجاب؛ لأنّ العلم وعدمه ضدّان في المعنى"},{"id":"c","text":"مقابلة؛ لأنّ الجملة تتضمّن فريقين متقابلَين"},{"id":"d","text":"جناس ناقص؛ لاشتراك اللفظَين في أصل الفعل «علم»"}]'::jsonb, 'a', 'طباق السلب يقوم على تقابل الفعل مع نفيه الصريح (يعلمون / لا يعلمون)، لا على ذكر ضدَّين مستقلَّين من معجم اللغة. وهذا ما يميّزه عن طباق الإيجاب الذي يستدعي لفظَين مستقلَّين متضادَّين كـ«يضحك / يبكي». أمّا الجناس فيشترط لفظَين مختلفَي المعنى لا نفيًا وإيجابًا، والمقابلة تستوجب أكثر من ضدَّين في صفَّين متوازيَين.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('194baa77-9e1b-5b00-83a5-92cd64613c6b', '8f9f6853-09ce-5205-88ba-7ff93e158a13', 'قال الجاحظ: «وإذا كان النُّبلاء يَمَلُّون الرَّاحةَ ويَشتاقون إلى التَّعَب، فإنّ الأغبياءَ يَمَلُّون التَّعَبَ ويَشتاقون إلى الرَّاحة.» ما المحسّن البديعي الأدقّ وصفًا لهذا الأسلوب؟', '[{"id":"a","text":"طباق إيجاب؛ لوجود ضدَّي «الراحة» و«التعب»"},{"id":"b","text":"مقابلة رباعية؛ قُوبل «النبلاء/يملّون/الراحة/يشتاقون/التعب» بما يضادّه بالترتيب ذاته"},{"id":"c","text":"سجع؛ لأنّ الجملتَين تنتهيان بلفظَين متناسبَين"},{"id":"d","text":"جناس ناقص بين «يملّون» في الجملتَين"}]'::jsonb, 'b', 'الأسلوب مقابلة لا مجرّد طباق؛ فالجملة الأولى تحمل: (النبلاء ← يملّون ← الراحة ← يشتاقون ← التعب)، وتُقابَل في الجملة الثانية بالترتيب ذاته: (الأغبياء ← يملّون ← التعب ← يشتاقون ← الراحة)، وهذا التقابل المتوازي لأكثر من عنصرَين هو جوهر المقابلة. أمّا الطباق فيكتفي بضدَّين في موضع واحد. والسجع يقتضي توافق الحروف الأخيرة، والجناس يقتضي اختلاف المعنى لا التماثل اللفظي بالضبط.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('7af9174d-76ea-5122-8d96-f5257a287e69', '8f9f6853-09ce-5205-88ba-7ff93e158a13', 'قال الشاعر المتنبّي: «على قَدرِ أهلِ العَزمِ تَأتي العَزائِمُ». ما المحسّن البديعي في «العَزمِ» و«العَزائِمُ»، وما الوصف الأدقّ له؟', '[{"id":"a","text":"جناس تامّ؛ لأنّ اللفظَين يتّفقان في الحروف الأصلية"},{"id":"b","text":"ردّ العجز على الصدر؛ إذ جاء في عجز البيت «العزائم» مشتقًّا من «العزم» الوارد في صدره"},{"id":"c","text":"سجع؛ لتوافق «العزائم» مع فاصلة البيت الذي يليه"},{"id":"d","text":"جناس ناقص؛ لاختلاف وزن «العزم» و«العزائم»"}]'::jsonb, 'b', 'ردّ العجز على الصدر يقوم على أن يُختتم الكلام بلفظٍ بُدئ به أو بمشتقٍّ منه. هنا بدأ الشاعر بـ«أهل العَزم» وانتهى البيت بـ«العَزائم» وهي مشتقّة من الجذر ذاته (ع ز م)، فحقّق الانسجام بين الصدر والعجز. أمّا الجناس التامّ فيشترط تطابق الحروف والهيئة مع اختلاف المعنى بين لفظَين لا المشتقَّين، والجناس الناقص لا ينطبق لأنّ العلاقة اشتقاقيّة لا مجرّد تشابه في بعض الحروف.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('7d0c6bd9-b411-59be-bcaa-bfeae9d2dd86', '8f9f6853-09ce-5205-88ba-7ff93e158a13', 'قال تعالى: ﴿وَيَوْمَ تَقُومُ السَّاعَةُ يُقسِمُ المُجرِمُونَ مَا لَبِثُوا غَيرَ سَاعَةٍ﴾. ما المحسّن البديعي الحاضر في لفظة «السَّاعَة» و«سَاعَةٍ»، ولماذا هو تامّ لا ناقص؟', '[{"id":"a","text":"جناس ناقص؛ لأنّ المعنيَين مختلفان فدلّ الاختلاف على نقصان"},{"id":"b","text":"تورية؛ لأنّ «الساعة» تحمل المعنى القريب (الوقت) والمعنى البعيد (القيامة)"},{"id":"c","text":"جناس تامّ؛ لأنّ اللفظَين متّفقان في نوع الحروف وعددها وهيئتها وترتيبها مع اختلاف المعنى"},{"id":"d","text":"طباق سلب؛ لأنّ المجرمين ينفون قيام الساعة بادّعاء قصر المدّة"}]'::jsonb, 'c', 'الجناس التامّ يشترط اتّفاق اللفظَين في أربعة أمور: نوع الحروف (س-ا-ع-ة) وعددها (أربعة) وهيئتها (الحركات والسكنات في الأصل) وترتيبها، مع اختلاف المعنى. «السَّاعة» (يوم القيامة) و«سَاعَة» (وحدة الوقت) يستوفيان هذه الشروط الأربعة جميعًا. ولا يُجعل الاختلافُ في المعنى سببًا للنقصان، بل المعنى المختلف هو شرط الجناس ذاته. والتورية تستلزم إخفاء المعنى المقصود، وهنا كلا المعنيَين ظاهر من السياق.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('028b413b-674d-580f-ba80-168434ce72f4', '8f9f6853-09ce-5205-88ba-7ff93e158a13', 'قرأ أحد الطلاب هذا البيت: «فَعُلٌّ عَلَّ مِن عَلَلٍ نُهوضًا * فَلا عَلَّ الزَّمانُ ولا أَفاقَا» (عُلّ: سُقِيَ مرّةً بعد مرّة / عَلَّ: لعلّ / عَلَل: الشُّرب الثاني / عَلَّ الزمانُ: مرض). ما المحسّن الأبرز؟', '[{"id":"a","text":"سجع؛ لاتّفاق «نهوضًا» و«أفاقا» في حرف الألف الأخير"},{"id":"b","text":"طباق إيجاب بين «علَّ» بمعنى لعلّ و«لا علّ» بمعنى النفي"},{"id":"c","text":"جناس تامّ متعدّد؛ إذ تكرّرت مادّة «ع-ل-ل/ع-ل» بصور متعدّدة مع تعدّد المعاني (الشرب/الرجاء/المرض)"},{"id":"d","text":"ردّ العجز على الصدر؛ لأنّ البيت بدأ وانتهى بنفس المادة اللغوية"}]'::jsonb, 'c', 'البيت نموذج بارع للجناس التامّ المتعدّد (يسمّيه البلاغيّون أحيانًا «الجناس المُلَمَّع» أو المحرَّف): «عُلَّ» (سُقي)، و«عَلَّ» (لعلّ)، و«عَلَل» (الشرب الثاني)، و«علَّ الزمانُ» (مرض) — مادّة واحدة في صور صرفيّة ومعانٍ مختلفة. السجع يحتاج توافق الفاصلتَين في الحرف الأخير، لكنّ «نهوضًا» و«أفاقا» لا يتّفقان في مقطع أخير متماثل، فهو ليس سجعًا صريحًا. وردّ العجز يستلزم أن يكون اللفظ المكرَّر آخرَ الكلام ذاتَ اللفظ الذي في الصدر بعينه، وهو هنا منتشر في جميع البيت لا في الصدر والعجز فحسب.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('9652ddf0-c6ef-5001-8e38-305dee743468', '8f9f6853-09ce-5205-88ba-7ff93e158a13', 'في قول ابن نُباتة: «وما الدَّهرُ إلاّ مِن رُواةٍ كأنّما * يُقلِّبُ كَفَّيهِ بمَاتِحٍ وسَاقِ» — يشبّه الشاعرُ الدهرَ بساقٍ يسقي، وفي هذا إشارةٌ إلى أنّ الدهرَ يُعطي ويَمنع. لو أضاف شاعرٌ شطرًا: «أَسقى قومًا ومَنَعَ الرِّيَّ قومَا» — فأيّ المحسّنَين البديعيَّين يتحقّق في الشطر المُضاف؟', '[{"id":"a","text":"الجناس الناقص بين «أسقى» و«الريّ» لتقارب معنيَيهما"},{"id":"b","text":"طباق الإيجاب؛ إذ قُوبل «أسقى» بـ«منع» وهما فعلان متضادّان من جنس واحد"},{"id":"c","text":"السجع؛ لأنّ «قومًا» تكرّرت في الشطر"},{"id":"d","text":"حسن التعليل؛ لأنّ الشاعر يعلّل العطاء والمنع بطبيعة الدهر"}]'::jsonb, 'b', 'في الشطر المضاف «أَسقى قومًا ومَنَعَ الرِّيَّ قومَا»: الفعلان «أسقى» و«منع» ضدّان من جنس واحد (فعلان مضارعان في المعنى المتضادّ: العطاء / الحرمان)، وهذا هو طباق الإيجاب بعينه. أمّا الجناس فيستلزم تشابهًا لفظيًّا بين لفظَين لا تقارب المعنى. والسجع يقتضي توافق الفاصلتَين في الحرف الأخير لا مجرّد تكرار لفظة «قومًا». وحسن التعليل يستوجب نسب ظاهرة ما إلى علّة أدبيّة مخترَعة، وهو غير حاضر هنا.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('6e30792d-1678-5b7d-9c70-1fee544bc2b3', '376034b3-0a7a-5092-af54-e7ac20a7bdde', 'arabic', 'اختبار فهم الدرس', 1, 20, 5, 'quiz', 'admin', 0)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -2985,6 +3570,78 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('17b87af9-a45d-5d1e-b394-0f69d15c4f68', 'e4350b8e-f690-5db8-9d83-2ca3732612fb', 'ما الترتيب الصحيح لمكوّنات النصّ السردي؟', '[{"id":"a","text":"العقدة ← الوضع الأوّلي ← التحوّلات ← النهاية ← الحلّ"},{"id":"b","text":"التحوّلات ← الوضع الأوّلي ← العقدة ← الحلّ ← النهاية"},{"id":"c","text":"الحلّ ← الوضع الأوّلي ← العقدة ← التحوّلات ← النهاية"},{"id":"d","text":"الوضع الأوّلي ← العقدة ← التحوّلات ← الحلّ ← الوضع النهائي"}]'::jsonb, 'd', 'النصّ السردي يبدأ بتقديم الوضع المستقرّ (الوضع الأوّلي) ثمّ تطرأ العقدة فتُحرّك الأحداث (التحوّلات) حتّى تُحسم بالحلّ وتستقرّ في وضع نهائي جديد. هذا الترتيب المنطقي هو ما يجعل الحبكة مفهومة ومتماسكة.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('34f29785-e946-591d-8ba0-dc2773a51a71', '376034b3-0a7a-5092-af54-e7ac20a7bdde', 'arabic', '👑 تحدّي النخبة: دقائق الأنماط والروابط', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d0dea70f-f06f-5511-9464-33bbc9f7f185', '34f29785-e946-591d-8ba0-dc2773a51a71', 'اقرأ المقطع الآتي بعناية: «وجد عليّ في صفحات التاريخ دليلًا دامغًا على أنّ الأمم التي أهملت لغتها الأمّ سقطت حضاريًّا. لأنّ اللغة ليست أداةً للتواصل وحسب، بل هي الذاكرة الجماعية للشعوب. وقد أثبت المؤرّخ ابن خلدون أنّ اندثار لسان الأمّة يسبق اندثار هويّتها.» أيّ نمط يُمثّله هذا المقطع، مع ذكر المؤشّر الأوّل الحاسم؟', '[{"id":"a","text":"سردي؛ لأنّ الفعل الماضي «وجد» يدلّ على حدث في الزمن"},{"id":"b","text":"حجاجي؛ لأنّ الكاتب يُدافع عن رأي (اللغة ركيزة الحضارة) بحجّة سببية وشاهد موثَّق"},{"id":"c","text":"تفسيري؛ لأنّه يشرح معنى اللغة ووظيفتها بأسلوب تعريفي"},{"id":"d","text":"وصفي؛ لأنّ الكاتب يُقدّم تفاصيل دقيقة عن دور اللغة في الحضارة"}]'::jsonb, 'b', 'رغم وجود فعل ماضٍ (وجد) وتفاصيل تفسيرية، فإنّ البنية الكلّية هي حجاجية لا سردية ولا تفسيرية: ثمّة أطروحة صريحة (إهمال اللغة يُسقط الأمم)، ورابط سببي «لأنّ» يُقدّم برهانًا، وشاهد موثَّق بنسبته إلى ابن خلدون. قاعدة المناظرة: حين يخدم الوصف أو السرد داخل النصّ برهنةً على رأي، يظلّ النمط الغالب حجاجيًّا.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('5a121bb5-371b-5b61-b555-233f1e38c6ff', '34f29785-e946-591d-8ba0-dc2773a51a71', 'حدّد الوظيفة الدقيقة للرابط «بيد أنّ» في الجملة: «يرى المتشائمون أنّ الأمل وهمٌ لا طائل من ورائه؛ بيد أنّ التجربة الإنسانية عبر القرون تُثبت العكس.»', '[{"id":"a","text":"رابط إضافة يُضيف حجّة جديدة تدعم الفكرة السابقة"},{"id":"b","text":"رابط تعارض وتنازل يُدحض الرأي المعارض ويُؤسّس للأطروحة الأصلية"},{"id":"c","text":"رابط نتيجة يستخلص خلاصة منطقية من المقدّمة"},{"id":"d","text":"رابط سببي يُبيّن علّة التشاؤم عند المتشائمين"}]'::jsonb, 'b', '«بيد أنّ» من روابط التعارض والتنازل (في مصافّ: غير أنّ، إلا أنّ، في حين أنّ). وظيفتها هنا مزدوجة: أوّلًا تمنح الرأي المعارض (التشاؤم) حضورًا مشروعًا (تنازل)، ثمّ تعكس مساره مباشرةً بالأطروحة المضادّة (تعارض). هذه التقنية هي جوهر المناقشة الحجاجية الناضجة، وتمييزها عن روابط الإضافة أو النتيجة معيار أساسي في المناظرة.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('bc79be7e-39e6-5e0c-a24c-1066fee0d780', '34f29785-e946-591d-8ba0-dc2773a51a71', 'انظر إلى هذا المقطع من فقرة حجاجية: «[أ] لا ريب أنّ التعليم الرقمي بات ضرورةً عصرية. [ب] فالطالب الذي يمتلك أدوات التعلّم الإلكتروني يستطيع الوصول إلى آلاف المصادر في لحظات. [ج] وقد أشارت دراسة اليونسكو (2023) إلى أنّ الفجوة الرقمية تُعمّق التفاوت بين الأجيال. [د] لذلك ينبغي دمج التكنولوجيا في مناهج التعليم الأساسي.» ما الوظيفة البنيوية للجملة [ج]؟', '[{"id":"a","text":"أطروحة؛ إذ تُعبّر عن الرأي العامّ الذي تدافع عنه الفقرة"},{"id":"b","text":"مثال سردي؛ إذ تروي واقعة عن طالب بعينه"},{"id":"c","text":"شاهد موثَّق؛ إذ تستند إلى مرجع علمي موثوق لتدعيم الحجّة"},{"id":"d","text":"استنتاج؛ إذ تختم الفقرة بخلاصة تُعيد تأكيد الأطروحة"}]'::jsonb, 'c', 'الجملة [أ] هي الأطروحة (رأي صريح)، [ب] هي الحجّة بمثال (الطالب النموذجي)، [ج] تستشهد بدراسة اليونسكو وهو مرجع علمي دولي موثَّق فهي الشاهد، و[د] تبدأ بـ«لذلك» رابط استنتاج فهي الاستنتاج. تمييز الشاهد (إحصاء أو اقتباس موثَّق) عن المثال (واقعة فردية) عن الحجّة (برهان منطقي) مهارة جوهرية في المناظرة.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('ee7dbbc4-cada-55a3-ac6c-dad27fbd89f0', '34f29785-e946-591d-8ba0-dc2773a51a71', 'اقرأ: «تُطلّ المدينة العتيقة من خلف أسوارها الصمّاء كشيخ حكيم يحمل أسرار القرون. تتعانق أزقّتها الضيّقة المُعبَّقة بروائح الياسمين والبخور. وتشهد جدرانها المُطلاة بالأزرق والأبيض على حضارة متجذّرة لا تموت.» ثمّ: «غير أنّ هذا الإرث في خطر حقيقي؛ إذ تتهدّده العشوائية العمرانية والإهمال. لذلك يجب على الدولة أن تُشرّع قوانين صارمة لصون هذا الموروث.» ما النمط المهيمن على المقطعَين معًا؟', '[{"id":"a","text":"حجاجي؛ لأنّ الوصف في المقطع الأوّل يخدم برهنة دعوى الحماية في المقطع الثاني"},{"id":"b","text":"وصفي؛ لأنّ المقطع الأوّل يُهيمن بتفاصيله الحسّية والصور البيانية"},{"id":"c","text":"تفسيري؛ لأنّ الكاتب يشرح أسباب تدهور المدينة العتيقة"},{"id":"d","text":"سردي؛ لأنّ المقطع يستحضر ماضي المدينة وتاريخها عبر الأزمنة"}]'::jsonb, 'a', 'هذا سؤال النمط المُركَّب وهو من أصعب أسئلة المناظرة: المقطع الأوّل وصفيٌّ في أسلوبه لكنّه وُظِّف خدمةً لغرض إقناعي أشمل. المقطع الثاني يكشف الأطروحة الحقيقية (الإرث مهدَّد ← يجب التشريع) بروابط سببية «إذ» واستنتاجية «لذلك». حين يكون الوصف أو السرد أداةً للإقناع لا غاية بذاتها، فالنمط الغالب حجاجي. هذا التمييز هو ما يُفرّق بين إجابة المتوسّط وإجابة النخبة.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('17ba0bb8-b0dd-575c-a38c-d4d0b1366c3a', '34f29785-e946-591d-8ba0-dc2773a51a71', 'أيٌّ من الجمل الآتية لا تؤدّي وظيفة رابط الاستنتاج، بل تؤدّي وظيفة رابط السببية؟', '[{"id":"a","text":"«خلاصة القول، إنّ المطالعة المنتظمة تُرسّخ الفهم العميق.»"},{"id":"b","text":"«وهكذا يتّضح أنّ الحوار الحضاري هو مفتاح التعايش.»"},{"id":"c","text":"«ونستنتج من كلّ ما سبق أنّ الحرّية والمسؤولية وجهان لعملة واحدة.»"},{"id":"d","text":"«نظرًا لتراجع مستوى القراءة، باتت الأمّة تعاني من فقر معرفي حادّ.»"}]'::jsonb, 'd', '«نظرًا لـ» رابط سببي يُعبّر عن العلّة أو السبب (تراجع القراءة هو سبب الفقر المعرفي). أمّا «خلاصة القول» و«وهكذا يتّضح» و«ونستنتج من كلّ ما سبق» فجميعها روابط استنتاج تُغلق الحجاج وتُجمل خلاصته. الخلط بين السببية والاستنتاج خطأ شائع في امتحانات المناظرة؛ السببية تُقدّم العلّة أمام النتيجة، والاستنتاج يأتي في الخاتمة يلخّص ما سبق.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('feffa2f6-8284-5318-996d-93099808e433', '34f29785-e946-591d-8ba0-dc2773a51a71', 'في مقطع حجاجي عن ضرورة الرياضة المدرسية، أيّ العناصر الآتية يُصنَّف «حجّة منطقية» لا «شاهدًا» ولا «مثالًا»؟', '[{"id":"a","text":"«أثبتت منظّمة الصحّة العالمية أنّ ممارسة الرياضة ثلاث مرّات أسبوعيًّا تُخفّض معدّل القلق بنسبة 40٪.»"},{"id":"b","text":"«عندما شارك طلاب مدرسة النخبة في دوري كرة القدم، تحسّنت نتائجهم الدراسية بشكل ملحوظ.»"},{"id":"c","text":"«الجسم السليم يمنح العقل طاقةً للتركيز، وبالتالي فإنّ الرياضة تُحسّن الأداء الذهني مباشرةً.»"},{"id":"d","text":"«قال الفيلسوف أفلاطون: لا تُعلّموا أبناءكم بالقسر، بل بالرياضة واللعب.»"}]'::jsonb, 'c', 'العنصر (أ) شاهد: إحصاء موثَّق منسوب لمرجع علمي معترف به. العنصر (ب) مثال: واقعة بعينها تخصّ مدرسة محدّدة وطلابًا حقيقيين. العنصر (د) شاهد: اقتباس موثَّق منسوب لشخصية مرجعية. أمّا (ج) فهو حجّة منطقية: استنتاج عقلاني عامّ مبنيٌّ على علاقة سببية مباشرة (الجسم السليم ← طاقة التركيز ← أداء ذهني أفضل)، دون الاستناد إلى رقم أو مرجع أو واقعة فردية. تمييز الحجّة المنطقية عن الشاهد والمثال معيار تمييزي في مناظرة التاسعة.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
