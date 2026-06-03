@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useAuth } from "@/features/auth";
 import { getPendingBetaCount } from "@/features/subscription";
+import { getOpenReportsCount } from "@/features/content-report";
 import {
   Sparkles,
   LayoutDashboard,
@@ -13,6 +14,7 @@ import {
   ClipboardList,
   CreditCard,
   FlaskConical,
+  Flag,
 } from "lucide-react";
 import { supabase } from "@/shared/integrations/supabase/client";
 import { toast } from "sonner";
@@ -54,6 +56,16 @@ function AuthenticatedLayout() {
     queryFn: () => fetchBetaCount(),
   });
   const pendingBeta = betaCount?.count ?? 0;
+
+  // Open content-error reports count for the admin nav badge.
+  const fetchReportsCount = useServerFn(getOpenReportsCount);
+  const { data: reportsCount } = useQuery({
+    queryKey: ["open-reports-count"],
+    enabled: userRole === "admin",
+    staleTime: 60_000,
+    queryFn: () => fetchReportsCount(),
+  });
+  const openReports = reportsCount?.count ?? 0;
 
   // Redirect unauthenticated users via effect (not during render)
   useEffect(() => {
@@ -122,6 +134,14 @@ function AuthenticatedLayout() {
                   {pendingBeta > 0 && (
                     <span className="ml-1 rounded-full bg-[image:var(--gradient-gold)] px-1.5 py-0.5 text-[10px] font-bold text-black">
                       {pendingBeta}
+                    </span>
+                  )}
+                </Link>
+                <Link to="/admin/content-reports" className={NAV_LINK} activeProps={NAV_ACTIVE}>
+                  <Flag className="h-4 w-4" /> {t.layout.contentReports}
+                  {openReports > 0 && (
+                    <span className="ml-1 rounded-full bg-[image:var(--gradient-gold)] px-1.5 py-0.5 text-[10px] font-bold text-black">
+                      {openReports}
                     </span>
                   )}
                 </Link>

@@ -35,6 +35,7 @@ import { isRtlText, isMathExpression } from "@/shared/lib/utils";
 import { shuffleOptions, type BaseOption, type DisplayOption } from "@/shared/lib/question-utils";
 import { levelForXp } from "@/shared/lib/level";
 import { QuestResultActions } from "@/features/quest/components/quest-result-actions";
+import { ReportErrorButton } from "@/features/content-report";
 import { Confetti } from "@/features/quest/components/confetti";
 import { SubscriptionPaywall } from "@/features/subscription";
 import { LevelUpCelebration } from "@/components/ui/level-up-celebration";
@@ -524,6 +525,7 @@ function QuestPage() {
               nextExerciseId={nextExerciseId}
               onReplay={resetRun}
             />
+            <ReportErrorButton exerciseId={exerciseId} />
 
             {!isQuiz && (
               <div className="mt-8 text-left">
