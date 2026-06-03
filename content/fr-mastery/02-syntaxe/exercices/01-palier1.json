@@ -1,0 +1,82 @@
+{
+  "title": "Palier 1 — Identification des fonctions syntaxiques",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Dans « Elle renonce à ses certitudes », quelle est la fonction du groupe « à ses certitudes » ?",
+      "options": [
+        { "id": "a", "text": "Complément d'objet direct (COD)" },
+        { "id": "b", "text": "Complément d'objet indirect (COI)" },
+        { "id": "c", "text": "Complément circonstanciel de cause" },
+        { "id": "d", "text": "Attribut du sujet" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le verbe « renoncer » se construit avec la préposition « à » : on pose la question « renoncer à quoi ? » → « à ses certitudes ». Comme la préposition est obligatoire, il s'agit d'un COI, et non d'un COD (lequel est sans préposition).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans « Ce texte est remarquable », quelle est la fonction de l'adjectif « remarquable » ?",
+      "options": [
+        { "id": "a", "text": "Épithète du nom « texte »" },
+        { "id": "b", "text": "Complément du nom" },
+        { "id": "c", "text": "Attribut du sujet" },
+        { "id": "d", "text": "Complément d'objet direct" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le verbe « être » est un verbe d'état ; l'adjectif qui le suit et qualifie le sujet est un **attribut du sujet**. Une épithète serait directement accolée au nom (« un texte remarquable »), sans verbe intermédiaire.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel groupe est complément du nom dans « La rigueur du raisonnement s'impose » ?",
+      "options": [
+        { "id": "a", "text": "« La rigueur »" },
+        { "id": "b", "text": "« du raisonnement »" },
+        { "id": "c", "text": "« s'impose »" },
+        { "id": "d", "text": "« La rigueur du raisonnement »" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le groupe prépositionnel « du raisonnement » précise le nom « rigueur » en indiquant ce dont il s'agit. Introduit par la préposition « de », il remplit la fonction de complément du nom.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans « À l'aube, le débat reprit », quelle est la fonction du groupe « À l'aube » ?",
+      "options": [
+        { "id": "a", "text": "Sujet" },
+        { "id": "b", "text": "Attribut du sujet" },
+        { "id": "c", "text": "Complément circonstanciel de temps" },
+        { "id": "d", "text": "COI du verbe « reprendre »" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le groupe « À l'aube » indique le moment où se déroule l'action ; il est déplaçable (on peut le placer en fin de phrase) et supprimable sans rendre la phrase agrammaticale : c'est un complément circonstanciel de temps.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Laquelle de ces phrases contient une épithète ?",
+      "options": [
+        { "id": "a", "text": "Cet argument paraît solide." },
+        { "id": "b", "text": "On considère cet argument solide." },
+        { "id": "c", "text": "Un argument solide convainc toujours." },
+        { "id": "d", "text": "Cet argument l'est." }
+      ],
+      "correctOption": "c",
+      "explanation": "Dans « un argument solide », l'adjectif « solide » est directement rattaché au nom « argument » sans verbe intermédiaire : c'est une épithète. Dans (a), « solide » est attribut du sujet via « paraît » ; dans (b), attribut du COD via « considère ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle question permet d'identifier le COD d'un verbe ?",
+      "options": [
+        { "id": "a", "text": "« Verbe + à qui / à quoi ? »" },
+        { "id": "b", "text": "« Verbe + de qui / de quoi ? »" },
+        { "id": "c", "text": "« Qui est-ce qui ? / Qu'est-ce qui ? »" },
+        { "id": "d", "text": "« Verbe + qui / quoi ? » (sans préposition)" }
+      ],
+      "correctOption": "d",
+      "explanation": "Le COD se trouve en posant « verbe + qui ? » ou « verbe + quoi ? » sans aucune préposition. La question « à qui / à quoi ? » identifie le COI introduit par « à » ; « qui est-ce qui ? » identifie le sujet.",
+      "difficulty": 2
+    }
+  ]
+}

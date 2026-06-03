@@ -1,0 +1,97 @@
+{
+  "title": "Palier 1 — Lecture et repérage",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Lisez ce passage :\n\n« La forêt amazonienne produit environ 20 % de l'oxygène terrestre et abrite plus de la moitié des espèces animales et végétales connues. Sa destruction met donc en péril non seulement la biodiversité mondiale, mais aussi l'équilibre climatique de la planète entière. »\n\nQuelle est l'idée directrice de ce texte ?",
+      "options": [
+        { "id": "a", "text": "La forêt amazonienne est très grande et très ancienne." },
+        {
+          "id": "b",
+          "text": "La destruction de la forêt amazonienne menace l'équilibre du monde entier."
+        },
+        { "id": "c", "text": "Les espèces animales de l'Amazonie sont les plus variées du globe." },
+        { "id": "d", "text": "La production d'oxygène est le seul enjeu de la déforestation." }
+      ],
+      "correctOption": "b",
+      "explanation": "L'idée directrice est la conclusion logique vers laquelle converge tout le passage : après avoir rappelé le rôle vital de l'Amazonie (oxygène, biodiversité), l'auteur en déduit que sa destruction met en péril l'ensemble de la planète. L'option (a) ne figure pas dans le texte. L'option (c) n'est qu'un détail parmi d'autres. L'option (d) déforme le texte, qui mentionne aussi la biodiversité et le climat.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lisez ce passage :\n\n« La forêt amazonienne produit environ 20 % de l'oxygène terrestre et abrite plus de la moitié des espèces animales et végétales connues. Sa destruction met donc en péril non seulement la biodiversité mondiale, mais aussi l'équilibre climatique de la planète entière. »\n\nQuel est le rôle du connecteur « donc » dans ce texte ?",
+      "options": [
+        { "id": "a", "text": "Il introduit une opposition entre deux faits contradictoires." },
+        { "id": "b", "text": "Il signale une cause expliquant le fait précédent." },
+        { "id": "c", "text": "Il marque la conséquence qui découle des faits énoncés avant lui." },
+        { "id": "d", "text": "Il ajoute un exemple supplémentaire à la liste des espèces." }
+      ],
+      "correctOption": "c",
+      "explanation": "« Donc » est un connecteur de conséquence : il relie logiquement les données présentées (rôle vital de la forêt) à la conclusion qui s'ensuit (menace globale de sa destruction). Il ne marque pas une opposition (a) — ce serait « cependant » ou « or » —, ni une cause (b) — ce serait « car » ou « puisque » —, ni une addition d'exemples (d).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lisez ce court texte :\n\n« Chaque matin, Élise parcourait les mêmes rues désertes, saluait le même boulanger sourd, déposait le même journal sur le même paillasson. Elle avait cessé depuis longtemps d'espérer que quelque chose change. »\n\nQuel sentiment l'auteur cherche-t-il à communiquer au sujet d'Élise ?",
+      "options": [
+        { "id": "a", "text": "La joie tranquille d'une vie bien ordonnée." },
+        { "id": "b", "text": "L'anxiété face à un avenir incertain." },
+        { "id": "c", "text": "La résignation à une existence monotone et sans espoir." },
+        { "id": "d", "text": "L'admiration pour la constance d'une routinière accomplie." }
+      ],
+      "correctOption": "c",
+      "explanation": "La répétition insistante de « même » (cinq occurrences) et la phrase conclusive « avait cessé d'espérer que quelque chose change » expriment sans équivoque la résignation face à une vie figée. Rien dans le texte ne suggère la joie (a), l'anxiété face à l'incertitude (b) — au contraire, tout est prévisible —, ni l'admiration (d), ton que l'auteur n'adopte pas ici.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez ce passage :\n\n« Les réseaux sociaux ne sont pas, en eux-mêmes, dangereux. C'est l'usage qu'on en fait qui détermine leur impact. Un outil de communication peut devenir un espace d'épanouissement ou un vecteur d'isolement selon les pratiques de chacun. »\n\nQuelle est la thèse défendue par l'auteur ?",
+      "options": [
+        { "id": "a", "text": "Les réseaux sociaux sont fondamentalement nocifs pour la société." },
+        { "id": "b", "text": "Les réseaux sociaux devraient être interdits aux mineurs." },
+        {
+          "id": "c",
+          "text": "L'impact des réseaux sociaux dépend de la manière dont chacun les utilise."
+        },
+        {
+          "id": "d",
+          "text": "Les réseaux sociaux sont les meilleurs outils de communication modernes."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "La thèse est énoncée explicitement dès la deuxième phrase : « C'est l'usage qu'on en fait qui détermine leur impact. » L'auteur refuse de porter un jugement absolu (ni (a) — dangereux par nature — ni (d) — meilleurs par nature). L'interdiction aux mineurs (b) n'est pas évoquée. La thèse nuancée repose sur la responsabilité individuelle.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez ce passage :\n\n« Le soleil s'était couché derrière la colline, laissant dans le ciel des traînées cramoisies. Les champs dormaient sous une brume légère, et seul le chant intermittent d'un grillon troublait ce silence épais. »\n\nDe quel type de texte s'agit-il ?",
+      "options": [
+        { "id": "a", "text": "Argumentatif : l'auteur défend l'idée que la nature est belle." },
+        { "id": "b", "text": "Explicatif : le texte explique le phénomène du coucher de soleil." },
+        {
+          "id": "c",
+          "text": "Narratif : le texte raconte une suite d'événements avec des personnages."
+        },
+        {
+          "id": "d",
+          "text": "Descriptif : le texte peint un tableau sensoriel d'un paysage au crépuscule."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Ce passage convoque des images visuelles (traînées cramoisies, brume légère) et auditives (chant du grillon, silence) pour brosser un tableau immobile du paysage : c'est un texte descriptif. Il ne défend aucune thèse (a), n'explique aucun phénomène scientifique (b), et ne raconte pas d'actions enchaînées avec des personnages agissants (c) — le décor est inerte, figé.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lisez cet extrait :\n\n« Malgré des décennies de campagnes de sensibilisation, la consommation de tabac reste élevée chez les jeunes adultes. »\n\nQuel mot ou groupe de mots indique le mieux que l'auteur exprime une tension entre deux réalités opposées ?",
+      "options": [
+        { "id": "a", "text": "« des décennies »" },
+        { "id": "b", "text": "« reste élevée »" },
+        { "id": "c", "text": "« Malgré »" },
+        { "id": "d", "text": "« jeunes adultes »" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Malgré » est un connecteur d'opposition (ou de concession) : il signale que le résultat observé (consommation élevée) va à l'encontre de ce que les campagnes de sensibilisation auraient dû produire. C'est lui qui crée la tension entre effort fourni et résultat décevant. Les autres éléments — « des décennies » (durée), « reste élevée » (constat), « jeunes adultes » (public ciblé) — sont informatifs mais ne portent pas ce rapport d'opposition.",
+      "difficulty": 2
+    }
+  ]
+}

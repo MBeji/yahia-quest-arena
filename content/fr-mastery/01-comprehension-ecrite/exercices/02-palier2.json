@@ -1,0 +1,115 @@
+{
+  "title": "Palier 2 — Inférence et implicite",
+  "difficulty": 3,
+  "mode": "practice",
+  "xpReward": 80,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Lisez ce passage :\n\n« Depuis que le laboratoire a publié ses résultats, le silence des autorités sanitaires est assourdissant. Aucun communiqué, aucune conférence de presse, aucune réponse aux journalistes. On se demande ce que ce mutisme protège. »\n\nQue sous-entend la dernière phrase de ce texte ?",
+      "options": [
+        { "id": "a", "text": "Les autorités sanitaires ignorent l'existence de ces résultats." },
+        {
+          "id": "b",
+          "text": "Le silence des autorités dissimule peut-être des informations compromettantes."
+        },
+        { "id": "c", "text": "Les journalistes ont choisi de ne pas publier leurs questions." },
+        { "id": "d", "text": "Le laboratoire a demandé aux autorités de ne pas commenter l'étude." }
+      ],
+      "correctOption": "b",
+      "explanation": "La formulation rhétorique « On se demande ce que ce mutisme protège » est un sous-entendu : l'auteur n'affirme pas directement que les autorités cachent quelque chose, mais il le laisse entendre en utilisant le verbe « protège », qui implique qu'il y a quelque chose à dissimuler. L'option (a) est contredite par le fait que des journalistes ont posé des questions. Les options (c) et (d) introduisent des acteurs et des faits absents du texte.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez ce passage :\n\n« Depuis que le laboratoire a publié ses résultats, le silence des autorités sanitaires est assourdissant. Aucun communiqué, aucune conférence de presse, aucune réponse aux journalistes. On se demande ce que ce mutisme protège. »\n\nQuel est le ton dominant de cet extrait ?",
+      "options": [
+        { "id": "a", "text": "Admiratif : l'auteur salue la discrétion des autorités." },
+        { "id": "b", "text": "Neutre et factuel : l'auteur se contente de rapporter des faits." },
+        {
+          "id": "c",
+          "text": "Polémique et suspicieux : l'auteur met en cause l'attitude des autorités."
+        },
+        {
+          "id": "d",
+          "text": "Didactique : l'auteur explique le fonctionnement des institutions sanitaires."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "L'oxymore « silence assourdissant », l'anaphore en « aucun… aucune… aucune » et la question rhétorique finale révèlent un ton délibérément critique et suspicieux. Loin d'être neutre (b), le texte prend clairement position contre le comportement des autorités. Il n'y a ni admiration (a) ni explication pédagogique (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez ce texte :\n\n« Nadia avait pourtant tout préparé : les dossiers, les chiffres, les arguments. Elle entra dans la salle de réunion, vit les visages fermés autour de la table, et comprit qu'il était déjà trop tard. »\n\nQuelle information le texte laisse-t-il inférer ?",
+      "options": [
+        { "id": "a", "text": "Nadia a oublié ses dossiers avant la réunion." },
+        {
+          "id": "b",
+          "text": "La décision avait été prise avant même que Nadia ne prenne la parole."
+        },
+        { "id": "c", "text": "Les participants à la réunion ne connaissaient pas Nadia." },
+        { "id": "d", "text": "Nadia a choisi de ne pas présenter ses arguments." }
+      ],
+      "correctOption": "b",
+      "explanation": "L'expression « il était déjà trop tard » et les « visages fermés » permettent d'inférer que l'issue était scellée avant l'intervention de Nadia — la réunion n'était qu'une formalité. Le texte dit explicitement qu'elle avait tout préparé, donc (a) et (d) sont faux. Rien ne dit que les participants ne la connaissaient pas (c) : les visages fermés indiquent une décision prise, pas une méconnaissance.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez ce passage :\n\n« L'art contemporain fascine autant qu'il déroute. Certains y voient une révolution du regard ; d'autres, un vaste canular institutionnalisé. La vérité est peut-être que les deux camps ont raison : l'art a toujours provoqué, et c'est précisément ce trouble qui atteste sa vitalité. »\n\nQuelle reformulation est la plus fidèle à la position de l'auteur ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "L'art contemporain est incompréhensible et ne mérite pas d'être défendu."
+        },
+        {
+          "id": "b",
+          "text": "L'art contemporain n'est qu'un canular, mais certains y croient sincèrement."
+        },
+        {
+          "id": "c",
+          "text": "Le débat autour de l'art contemporain est lui-même la preuve de la puissance de l'art."
+        },
+        {
+          "id": "d",
+          "text": "L'art contemporain plaît à tous ceux qui comprennent vraiment l'art."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "L'auteur ne tranche pas entre les deux camps mais synthétise en affirmant que la provocation et le trouble sont constitutifs de l'art vivant : « c'est précisément ce trouble qui atteste sa vitalité. » L'option (c) restitue fidèlement cette idée. L'option (a) impose un jugement négatif que l'auteur refuse. L'option (b) valide unilatéralement le camp du canular. L'option (d) invente une distinction entre « vrais » et « faux » connaisseurs, absente du texte.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lisez ce passage :\n\n« En vingt ans, le prix du mètre carré dans cette ville a été multiplié par quatre. Les familles modestes ont migré vers la périphérie. Les commerces de proximité ont fermé, remplacés par des boutiques de luxe. Le quartier a changé de visage — et de population. »\n\nQuel phénomène urbain ce texte décrit-il implicitement sans jamais le nommer ?",
+      "options": [
+        { "id": "a", "text": "La désindustrialisation d'un quartier ouvrier." },
+        { "id": "b", "text": "La gentrification — embourgeoisement d'un quartier populaire." },
+        { "id": "c", "text": "L'exode rural vers les grandes métropoles." },
+        { "id": "d", "text": "La suburbanisation liée à la construction de nouvelles routes." }
+      ],
+      "correctOption": "b",
+      "explanation": "Tous les indices convergent vers la gentrification : hausse des prix de l'immobilier, départ des populations à faibles revenus, fermeture des commerces populaires et installation de boutiques de luxe, changement de population. Ce phénomène n'est jamais nommé dans le texte — il faut l'inférer. La désindustrialisation (a) implique une activité industrielle qui n'est pas mentionnée. L'exode rural (c) concerne le déplacement des campagnes vers les villes. La suburbanisation (d) porte sur l'étalement urbain lié aux transports.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lisez cet extrait :\n\n« Il se disait philosophe, mais ne supportait aucune contradiction. Il prônait la tolérance dans ses livres et coupait court aux discussions dès que ses idées étaient remises en question. Ses disciples ne manquaient jamais de le citer ; ses pairs ne le citaient presque jamais. »\n\nQuel procédé stylistique structure cet extrait et quel effet produit-il ?",
+      "options": [
+        { "id": "a", "text": "La métaphore filée : elle rend la description plus poétique." },
+        {
+          "id": "b",
+          "text": "L'antithèse répétée : elle souligne les contradictions entre le discours et les actes du personnage."
+        },
+        {
+          "id": "c",
+          "text": "La gradation ascendante : elle amplifie progressivement les qualités du philosophe."
+        },
+        {
+          "id": "d",
+          "text": "Le discours indirect libre : il restitue les pensées intimes du personnage."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Le texte est construit sur une série d'antithèses (se disait philosophe / ne supportait aucune contradiction ; prônait la tolérance / coupait court aux discussions ; disciples le citaient / pairs ne le citaient pas) qui mettent en évidence l'écart entre le discours public du personnage et son comportement réel. Cet effet ironique démystifie le prétendu philosophe. Il n'y a pas de métaphore filée (a), pas de gradation vers le positif (c) — au contraire —, et le texte est à la troisième personne distancée, non en discours indirect libre (d).",
+      "difficulty": 3
+    }
+  ]
+}

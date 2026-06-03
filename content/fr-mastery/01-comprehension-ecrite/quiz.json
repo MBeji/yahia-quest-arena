@@ -1,0 +1,62 @@
+{
+  "title": "Diagnostic — Compréhension",
+  "questions": [
+    {
+      "prompt": "Un lecteur actif commence par examiner le paratexte d'un texte. Que désigne le terme « paratexte » ?",
+      "options": [
+        { "id": "a", "text": "Le résumé rédigé par le lecteur après sa lecture." },
+        {
+          "id": "b",
+          "text": "L'ensemble des éléments périphériques au texte : titre, auteur, source, date."
+        },
+        { "id": "c", "text": "Les notes de bas de page uniquement." },
+        { "id": "d", "text": "La conclusion du texte, placée en dehors du corps principal." }
+      ],
+      "correctOption": "b",
+      "explanation": "Le paratexte regroupe tous les éléments qui encadrent le texte principal sans en faire partie : titre, auteur, source, date de publication, chapeau introductif, etc. Ces indices orientent la lecture avant même d'aborder le corps du texte. Les notes de bas de page (c) n'en sont qu'un sous-ensemble. Le résumé du lecteur (a) est une production personnelle, pas un élément paratextuel. La conclusion (d) fait partie du texte lui-même.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans un texte argumentatif, quel est le rôle du connecteur « or » ?",
+      "options": [
+        { "id": "a", "text": "Il introduit une cause expliquant ce qui précède." },
+        { "id": "b", "text": "Il marque une addition entre deux arguments de même sens." },
+        {
+          "id": "c",
+          "text": "Il introduit un fait nouveau qui nuance ou contredit ce qui précède."
+        },
+        { "id": "d", "text": "Il signale une conséquence découlant du raisonnement." }
+      ],
+      "correctOption": "c",
+      "explanation": "« Or » est un connecteur logique d'opposition ou de transition : il introduit un élément nouveau, souvent inattendu, qui vient nuancer, compliquer ou contredire ce qui vient d'être affirmé. Il ne marque ni une cause (a) — rôle de « car », « puisque » —, ni une addition (b) — rôle de « de plus », « par ailleurs » —, ni une conséquence (d) — rôle de « donc », « ainsi ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez cet extrait : « Il a finalement arrêté de tricher. » Quelle information ce fragment présuppose-t-il ?",
+      "options": [
+        { "id": "a", "text": "Il trichait auparavant." },
+        { "id": "b", "text": "Il a été pris en flagrant délit de triche." },
+        { "id": "c", "text": "Il ne trichera plus jamais à l'avenir." },
+        { "id": "d", "text": "Son entourage l'a encouragé à cesser de tricher." }
+      ],
+      "correctOption": "a",
+      "explanation": "Le verbe « arrêter de » présuppose que l'action était en cours : dire qu'il a « arrêté de tricher » implique nécessairement qu'il trichait avant. C'est un présupposé — une information tenue pour acquise par l'énoncé lui-même. En revanche, qu'il ait été pris (b), qu'il ne récidive pas (c) ou que quelqu'un l'y ait incité (d) sont des inférences possibles mais non garanties par le texte.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Un auteur emploie un champ lexical de la maladie pour décrire une ville (« artères bouchées », « fièvre spéculative », « corps social gangrené »). Quelle est la visée principale de ce choix stylistique ?",
+      "options": [
+        { "id": "a", "text": "Informer objectivement le lecteur sur les problèmes urbains." },
+        { "id": "b", "text": "Divertir le lecteur avec des images insolites." },
+        {
+          "id": "c",
+          "text": "Convaincre le lecteur que la ville est en état de crise grave en suscitant une réaction émotionnelle."
+        },
+        { "id": "d", "text": "Expliquer les mécanismes biologiques de la croissance urbaine." }
+      ],
+      "correctOption": "c",
+      "explanation": "L'emploi systématique d'une métaphore filée (ici, la ville-corps malade) est une stratégie rhétorique : elle amplifie la gravité de la situation et cherche à émouvoir et convaincre le lecteur plutôt qu'à l'informer de façon neutre (a). Ce n'est pas du pur divertissement (b) — le choix est idéologiquement orienté. Et il ne s'agit pas d'une explication scientifique (d) : le registre est délibérément figuré, non factuel.",
+      "difficulty": 3
+    }
+  ]
+}
