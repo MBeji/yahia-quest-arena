@@ -16,6 +16,12 @@ dist-ssr
 .nitro
 *.local
 
+# Playwright (e2e)
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
 # Wrangler / Cloudflare
 .wrangler/
 .dev.vars
