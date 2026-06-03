@@ -104,6 +104,26 @@ export function buildMigrationSql(subject: LoadedSubject): string {
 
   // --- Prune replaced admin content (safe: parent content untouched) ---
   out.push("-- Prune admin-authored content that is no longer in the source tree.");
+  if (questionIds.length > 0) {
+    // Gameplay tables (e.g. dungeon_run_questions) reference questions with
+    // ON DELETE RESTRICT, which would block the prune. Clear those references
+    // first for the admin questions that are about to be removed. Guarded so
+    // the migration also runs on databases without the dungeon tables.
+    out.push(
+      "DO $$",
+      "BEGIN",
+      "  IF to_regclass('public.dungeon_run_questions') IS NOT NULL THEN",
+      "    DELETE FROM public.dungeon_run_questions d",
+      "    USING public.questions q, public.exercises e",
+      "    WHERE d.question_id = q.id",
+      "      AND q.exercise_id = e.id",
+      `      AND e.subject_id = ${sqlString(subjectId)}`,
+      "      AND e.source = 'admin'",
+      `      AND q.id NOT IN (${sqlIdList(questionIds)});`,
+      "  END IF;",
+      "END $$;",
+    );
+  }
   if (exerciseIds.length > 0) {
     out.push(
       `DELETE FROM public.exercises WHERE subject_id = ${sqlString(subjectId)} AND source = 'admin' AND id NOT IN (${sqlIdList(

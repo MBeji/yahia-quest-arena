@@ -204,6 +204,11 @@ describe("buildMigrationSql", () => {
     expect(sql).not.toContain("source = 'parent'");
   });
 
+  it("clears RESTRICT-referencing dungeon rows before pruning questions", () => {
+    expect(sql).toContain("dungeon_run_questions");
+    expect(sql).toContain("to_regclass('public.dungeon_run_questions')");
+  });
+
   it("serializes question options as jsonb", () => {
     expect(sql).toContain(`'[{"id":"a","text":"3"},{"id":"b","text":"4"}]'::jsonb`);
   });
