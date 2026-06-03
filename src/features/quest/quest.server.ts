@@ -4,6 +4,7 @@ import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middlew
 import { isRateLimited } from "@/shared/lib/rate-limit";
 import { QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
 import { failWithClientError } from "@/shared/lib/safe-error";
+import { logger } from "@/shared/lib/logger";
 import type { UnlockedBadge } from "@/shared/types/gamification";
 import type { Database } from "@/shared/integrations/supabase/types";
 
@@ -89,17 +90,26 @@ export const getSubject = createServerFn({ method: "GET" })
       failWithClientError("quest.getSubject", subj.error, "Impossible de charger la matière.");
     }
 
-    // Best scores RPC - graceful fallback if function doesn't exist yet
+    // Best scores RPC — graceful fallback if it fails, but log it so a broken
+    // RPC never silently hides completion progress again.
     let bestScoresData: unknown[] = [];
     try {
       const bestScores = await supabase.rpc("get_best_scores_by_exercise", {
         p_subject: data.subjectId,
       });
-      if (!bestScores.error && Array.isArray(bestScores.data)) {
+      if (bestScores.error) {
+        logger.warn("quest.getSubject: get_best_scores_by_exercise failed", {
+          subjectId: data.subjectId,
+          error: bestScores.error.message,
+        });
+      } else if (Array.isArray(bestScores.data)) {
         bestScoresData = bestScores.data;
       }
-    } catch {
-      // RPC not available — continue with empty scores
+    } catch (err) {
+      logger.warn("quest.getSubject: get_best_scores_by_exercise threw", {
+        subjectId: data.subjectId,
+        error: err instanceof Error ? err.message : String(err),
+      });
     }
 
     const best: Record<string, number> = {};
