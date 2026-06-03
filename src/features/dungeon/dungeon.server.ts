@@ -122,6 +122,11 @@ export const startDungeonRun = createServerFn({ method: "POST" })
 
     const { data, error } = await supabase.rpc("start_dungeon_run");
     if (error) {
+      if (typeof error.message === "string" && error.message.includes("DUNGEON_LOCKED")) {
+        throw new Error(
+          "Accès au Dungeon refusé : prérequis non atteints ou limite quotidienne atteinte.",
+        );
+      }
       failWithClientError(
         "dungeon.startDungeonRun: start_dungeon_run RPC failed",
         error,
@@ -135,6 +140,51 @@ export const startDungeonRun = createServerFn({ method: "POST" })
     return {
       runId,
       currentFloor: 1,
+    };
+  });
+
+/** Dungeon access state for the current user (gate + UI). */
+export const getDungeonAccess = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase } = context;
+
+    const { data, error } = await supabase.rpc("get_dungeon_access");
+    if (error) {
+      failWithClientError(
+        "dungeon.getDungeonAccess",
+        error,
+        "Impossible de vérifier l'accès au Dungeon.",
+      );
+    }
+
+    const row = Array.isArray(data) ? data[0] : null;
+    if (!row) {
+      return {
+        level: 0,
+        maxRunsPerDay: 0,
+        runsToday: 0,
+        remaining: 0,
+        subjectsDone: 0,
+        chaptersDone: 0,
+        requiredSubjects: 2,
+        requiredChapters: 3,
+        canAccess: false,
+        reason: "PREREQ" as string,
+      };
+    }
+
+    return {
+      level: row.level,
+      maxRunsPerDay: row.max_runs_per_day,
+      runsToday: row.runs_today,
+      remaining: Math.max(0, row.max_runs_per_day - row.runs_today),
+      subjectsDone: row.subjects_done,
+      chaptersDone: row.chapters_done,
+      requiredSubjects: row.required_subjects,
+      requiredChapters: row.required_chapters,
+      canAccess: row.can_access,
+      reason: row.reason,
     };
   });
 

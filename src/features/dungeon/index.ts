@@ -2,6 +2,7 @@
 // Public API — import from "@/features/dungeon"
 
 export {
+  getDungeonAccess,
   getDungeonQuestions,
   startDungeonRun,
   submitDungeonAnswer,

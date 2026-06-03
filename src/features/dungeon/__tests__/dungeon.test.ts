@@ -429,3 +429,80 @@ describe("dungeon — submitDungeonRun (finalize parser)", () => {
     ).rejects.toThrow(/too many submissions/i);
   });
 });
+
+describe("dungeon — getDungeonAccess", () => {
+  it("maps the access RPC row (remaining = max - today)", async () => {
+    mockRpc.mockImplementation(
+      rpcResponder({
+        get_dungeon_access: {
+          data: [
+            {
+              level: 3,
+              max_runs_per_day: 3,
+              runs_today: 1,
+              subjects_done: 2,
+              chapters_done: 4,
+              required_subjects: 2,
+              required_chapters: 3,
+              can_access: true,
+              reason: "",
+            },
+          ],
+          error: null,
+        },
+      }),
+    );
+
+    const { getDungeonAccess } = await import("@/features/dungeon");
+    const res = (await (getDungeonAccess as unknown as AnyFn)()) as Record<string, unknown>;
+
+    expect(mockRpc).toHaveBeenCalledWith("get_dungeon_access");
+    expect(res.canAccess).toBe(true);
+    expect(res.maxRunsPerDay).toBe(3);
+    expect(res.remaining).toBe(2);
+  });
+
+  it("reports a locked state with its reason code", async () => {
+    mockRpc.mockImplementation(
+      rpcResponder({
+        get_dungeon_access: {
+          data: [
+            {
+              level: 1,
+              max_runs_per_day: 1,
+              runs_today: 0,
+              subjects_done: 1,
+              chapters_done: 1,
+              required_subjects: 2,
+              required_chapters: 3,
+              can_access: false,
+              reason: "PREREQ",
+            },
+          ],
+          error: null,
+        },
+      }),
+    );
+
+    const { getDungeonAccess } = await import("@/features/dungeon");
+    const res = (await (getDungeonAccess as unknown as AnyFn)()) as Record<string, unknown>;
+
+    expect(res.canAccess).toBe(false);
+    expect(res.reason).toBe("PREREQ");
+  });
+});
+
+describe("dungeon — startDungeonRun gate", () => {
+  it("surfaces a friendly message when the RPC reports DUNGEON_LOCKED", async () => {
+    mockRpc.mockImplementation(
+      rpcResponder({
+        start_dungeon_run: { data: null, error: { message: "DUNGEON_LOCKED:DAILY_LIMIT" } },
+      }),
+    );
+
+    const { startDungeonRun } = await import("@/features/dungeon");
+    await expect((startDungeonRun as unknown as AnyFn)()).rejects.toThrow(
+      /Accès au Dungeon refusé/i,
+    );
+  });
+});
