@@ -8,3 +8,4 @@ export {
   startExerciseSession,
   submitAttempt,
 } from "./quest.server";
+export { computeNextExerciseId } from "./next-exercise";

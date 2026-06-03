@@ -144,6 +144,8 @@ export const fr: TranslationKeys = {
     streakLabel: "Streak",
     badgesUnlocked: "Badges débloqués",
     replayQuest: "Rejouer la quête",
+    nextQuest: "Quête suivante",
+    backToSubject: "Retour à la matière",
     questReview: "Révision de la quête",
     passed: "Réussi",
     needsWork: "À revoir",

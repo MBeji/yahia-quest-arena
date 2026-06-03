@@ -141,6 +141,8 @@ export const ar: TranslationKeys = {
     streakLabel: "سلسلة",
     badgesUnlocked: "شارات مفتوحة",
     replayQuest: "إعادة المهمة",
+    nextQuest: "المهمة التالية",
+    backToSubject: "العودة إلى المادة",
     questReview: "مراجعة المهمة",
     passed: "ناجح",
     needsWork: "يحتاج مراجعة",
