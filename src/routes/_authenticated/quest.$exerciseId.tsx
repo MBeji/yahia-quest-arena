@@ -18,7 +18,13 @@ import {
   Check,
 } from "lucide-react";
 import { toast } from "sonner";
-import { getExercise, startExerciseSession, submitAttempt } from "@/features/quest";
+import {
+  computeNextExerciseId,
+  getExercise,
+  getSubject,
+  startExerciseSession,
+  submitAttempt,
+} from "@/features/quest";
 import {
   BOSS_TIME_PER_QUESTION_S,
   PASS_THRESHOLD_PCT,
@@ -27,6 +33,7 @@ import {
 import { isRtlText, isMathExpression } from "@/shared/lib/utils";
 import { shuffleOptions, type BaseOption, type DisplayOption } from "@/shared/lib/question-utils";
 import { levelForXp } from "@/shared/lib/level";
+import { QuestResultActions } from "@/features/quest/components/quest-result-actions";
 import { LevelUpCelebration } from "@/components/ui/level-up-celebration";
 import { useT } from "@/lib/i18n";
 
@@ -76,11 +83,27 @@ function QuestPage() {
   const fetchExercise = useServerFn(getExercise);
   const startSession = useServerFn(startExerciseSession);
   const submit = useServerFn(submitAttempt);
+  const fetchSubjectForNext = useServerFn(getSubject);
 
   const { data, isLoading } = useQuery({
     queryKey: ["exercise", exerciseId],
     queryFn: () => fetchExercise({ data: { exerciseId } }),
   });
+
+  const subjectIdForNext = data?.exercise?.subject_id ?? null;
+  const siblingSubjectQuery = useQuery({
+    queryKey: ["subject", subjectIdForNext],
+    queryFn: () => fetchSubjectForNext({ data: { subjectId: subjectIdForNext as string } }),
+    enabled: Boolean(subjectIdForNext),
+  });
+
+  // The next playable exercise (skipping quizzes), in chapter → display order.
+  const nextExerciseId = useMemo<string | null>(() => {
+    const sd = siblingSubjectQuery.data;
+    const cur = data?.exercise;
+    if (!sd || !cur) return null;
+    return computeNextExerciseId(sd.chapters, sd.exercises, cur);
+  }, [siblingSubjectQuery.data, data]);
 
   const [idx, setIdx] = useState(0);
   const [answers, setAnswers] = useState<Answer[]>([]);
@@ -205,6 +228,29 @@ function QuestPage() {
     if (!isBoss || total === 0) return 100;
     return Math.max(0, Math.round(((total - idx) / total) * 100));
   }, [isBoss, total, idx]);
+
+  const resetRun = useCallback(() => {
+    if (feedbackTimeoutRef.current) {
+      clearTimeout(feedbackTimeoutRef.current);
+      feedbackTimeoutRef.current = null;
+    }
+    answeredQuestionRef.current = null;
+    setResult(null);
+    setIdx(0);
+    setAnswers([]);
+    setSelected(null);
+    setShowFeedback(false);
+    setShowConfetti(false);
+    setShowLevelUp(false);
+    setSessionId(null);
+    setBossTimer(0);
+  }, []);
+
+  // Reset run state when navigating to a different exercise (e.g. "Next quest"),
+  // so the same component instance starts the new quest cleanly.
+  useEffect(() => {
+    resetRun();
+  }, [exerciseId, resetRun]);
 
   useEffect(() => {
     if (!data?.exercise?.id || sessionId || sessionMutation.isPending || result) return;
@@ -462,33 +508,11 @@ function QuestPage() {
                 </div>
               </div>
             )}
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Link
-                to="/dashboard"
-                className="rounded-lg border border-border bg-background/50 px-5 py-2.5 text-sm font-semibold hover:bg-background/80"
-              >
-                {t.common.backToHall}
-              </Link>
-              <button
-                onClick={() => {
-                  if (feedbackTimeoutRef.current) {
-                    clearTimeout(feedbackTimeoutRef.current);
-                    feedbackTimeoutRef.current = null;
-                  }
-                  answeredQuestionRef.current = null;
-                  setResult(null);
-                  setIdx(0);
-                  setAnswers([]);
-                  setSelected(null);
-                  setShowFeedback(false);
-                  setShowConfetti(false);
-                  setSessionId(null);
-                }}
-                className="rounded-lg bg-linear-to-r from-neon-violet to-neon-magenta px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-neon hover:scale-105"
-              >
-                {t.quest.replayQuest}
-              </button>
-            </div>
+            <QuestResultActions
+              subjectId={exSubjectId}
+              nextExerciseId={nextExerciseId}
+              onReplay={resetRun}
+            />
 
             <div className="mt-8 text-left">
               <h2 className="font-display text-xl font-bold">{t.quest.questReview}</h2>
