@@ -27,7 +27,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "La simultanéité dans un récit au passé s'exprime par deux imparfaits : « dormait » correspond à « attendaient »."
+      "explanation": "La simultanéité dans un récit au passé s'exprime par deux imparfaits : « dormait » correspond à « attendaient ».",
+      "difficulty": 2
     },
     {
       "prompt": "Quel temps emploie-t-on pour une action antérieure à une autre action au passé simple ?",
@@ -50,7 +51,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "Le plus-que-parfait (auxiliaire à l'imparfait + participe passé) exprime l'antériorité par rapport à une autre action au passé."
+      "explanation": "Le plus-que-parfait (auxiliaire à l'imparfait + participe passé) exprime l'antériorité par rapport à une autre action au passé.",
+      "difficulty": 1
     },
     {
       "prompt": "Complète au discours indirect : « Il annonça qu'il _____ le lendemain. » (discours direct : « Je partirai demain. »)",
@@ -73,7 +75,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "Quand le verbe introducteur est au passé, le futur du discours direct devient conditionnel présent au discours indirect."
+      "explanation": "Quand le verbe introducteur est au passé, le futur du discours direct devient conditionnel présent au discours indirect.",
+      "difficulty": 2
     },
     {
       "prompt": "Choisis la phrase correctement construite dans un récit au passé :",
@@ -96,7 +99,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "Dans un récit au passé, l'action antérieure s'exprime au plus-que-parfait (« avait préparé ») par rapport à l'action postérieure au passé simple."
+      "explanation": "Dans un récit au passé, l'action antérieure s'exprime au plus-que-parfait (« avait préparé ») par rapport à l'action postérieure au passé simple.",
+      "difficulty": 2
     },
     {
       "prompt": "Transforme au discours indirect : « Elle dit : ‹ J'ai terminé mon travail. › »",
@@ -119,7 +123,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "Le passé composé du discours direct devient plus-que-parfait au discours indirect quand le verbe introducteur est au passé."
+      "explanation": "Le passé composé du discours direct devient plus-que-parfait au discours indirect quand le verbe introducteur est au passé.",
+      "difficulty": 2
     },
     {
       "prompt": "Dans « La forêt _____ silencieuse, mais soudain un cri déchira l'air. », quel temps convient ?",
@@ -142,7 +147,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "L'imparfait « était » décrit un état de fond, tandis que le passé simple « déchira » exprime l'événement principal qui surgit."
+      "explanation": "L'imparfait « était » décrit un état de fond, tandis que le passé simple « déchira » exprime l'événement principal qui surgit.",
+      "difficulty": 1
     }
   ]
 }

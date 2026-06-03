@@ -27,7 +27,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "\"yesterday\" signals the past simple. \"go\" is an irregular verb: go → went."
+      "explanation": "\"yesterday\" signals the past simple. \"go\" is an irregular verb: go → went.",
+      "difficulty": 1
     },
     {
       "prompt": "Complete: \"We ___ football when it started to rain.\"",
@@ -50,7 +51,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "The football game was already in progress (background action) when the rain interrupted. Use past continuous: were playing."
+      "explanation": "The football game was already in progress (background action) when the rain interrupted. Use past continuous: were playing.",
+      "difficulty": 2
     },
     {
       "prompt": "Choose the correct negative: \"He ___ the test last Monday.\"",
@@ -73,7 +75,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "Past simple negative: didn't + base verb. \"last Monday\" confirms past simple, not perfect."
+      "explanation": "Past simple negative: didn't + base verb. \"last Monday\" confirms past simple, not perfect.",
+      "difficulty": 2
     },
     {
       "prompt": "Complete: \"Have you ___ eaten couscous?\"",
@@ -96,7 +99,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "\"ever\" is used in present perfect questions to ask about life experience: Have you ever eaten...?"
+      "explanation": "\"ever\" is used in present perfect questions to ask about life experience: Have you ever eaten...?",
+      "difficulty": 1
     },
     {
       "prompt": "Complete: \"I ___ my homework. I can play now.\"",
@@ -119,7 +123,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "The action is very recent and its result matters now (I can play). Use present perfect with \"just\": have just finished."
+      "explanation": "The action is very recent and its result matters now (I can play). Use present perfect with \"just\": have just finished.",
+      "difficulty": 2
     },
     {
       "prompt": "Choose the correct sentence:",
@@ -142,7 +147,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "\"last summer\" is a specific past time, so use past simple. Questions: Did + subject + base verb. Never add -ed/-en after did."
+      "explanation": "\"last summer\" is a specific past time, so use past simple. Questions: Did + subject + base verb. Never add -ed/-en after did.",
+      "difficulty": 2
     }
   ]
 }

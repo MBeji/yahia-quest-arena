@@ -27,7 +27,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "Ce sont des paronymes : « éruption » désigne le jaillissement (volcan, peau) ; « irruption » désigne une entrée soudaine et non autorisée (« faire irruption »). Les confondre est une erreur de paronyme classique."
+      "explanation": "Ce sont des paronymes : « éruption » désigne le jaillissement (volcan, peau) ; « irruption » désigne une entrée soudaine et non autorisée (« faire irruption »). Les confondre est une erreur de paronyme classique.",
+      "difficulty": 3
     },
     {
       "prompt": "Identifie la figure de style dans : « Ce général, c'était un roc, une montagne, un géant. »",
@@ -50,7 +51,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "Trois métaphores (sans outil comparatif : « un roc », « une montagne », « un géant ») s'enchaînent avec une intensité croissante : c'est une gradation de métaphores."
+      "explanation": "Trois métaphores (sans outil comparatif : « un roc », « une montagne », « un géant ») s'enchaînent avec une intensité croissante : c'est une gradation de métaphores.",
+      "difficulty": 3
     },
     {
       "prompt": "Dans « La victoire sourit à ceux qui persévèrent », quelle figure reconnaît-on ?",
@@ -73,7 +75,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "La victoire (abstraction) accomplit l'action humaine de « sourire » : on lui attribue une caractéristique humaine, c'est une personnification."
+      "explanation": "La victoire (abstraction) accomplit l'action humaine de « sourire » : on lui attribue une caractéristique humaine, c'est une personnification.",
+      "difficulty": 2
     },
     {
       "prompt": "Quel mot a une connotation POSITIVE dans tous les contextes culturels courants ?",
@@ -96,7 +99,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "« Aurore » (aube, début du jour) est universellement associée à l'espoir, au renouveau, au début positif. Les autres ont des connotations négatives (ténèbres = obscurité/mal ; vautour = prédateur/opportuniste ; rouille = dégradation)."
+      "explanation": "« Aurore » (aube, début du jour) est universellement associée à l'espoir, au renouveau, au début positif. Les autres ont des connotations négatives (ténèbres = obscurité/mal ; vautour = prédateur/opportuniste ; rouille = dégradation).",
+      "difficulty": 2
     },
     {
       "prompt": "Quelle phrase contient une comparaison (et non une métaphore) ?",
@@ -119,7 +123,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "La présence de l'outil comparatif « comme » fait de cette phrase une comparaison. Sans cet outil, « ses yeux étaient des étoiles » serait une métaphore."
+      "explanation": "La présence de l'outil comparatif « comme » fait de cette phrase une comparaison. Sans cet outil, « ses yeux étaient des étoiles » serait une métaphore.",
+      "difficulty": 2
     },
     {
       "prompt": "Dans ce passage, quel est le champ lexical dominant ? « Les lames claquaient, les boucliers résonnaient, les flèches sifflaient, le sang coulait. »",
@@ -142,7 +147,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "Les mots « lames », « boucliers », « flèches », « sang » appartiennent tous au champ lexical du combat et de la guerre, qui est le thème dominant du passage."
+      "explanation": "Les mots « lames », « boucliers », « flèches », « sang » appartiennent tous au champ lexical du combat et de la guerre, qui est le thème dominant du passage.",
+      "difficulty": 1
     }
   ]
 }

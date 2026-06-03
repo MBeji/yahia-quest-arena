@@ -10,7 +10,8 @@
         { "id": "d", "text": "she said that she were tired." }
       ],
       "correctOption": "b",
-      "explanation": "When the reporting verb is in the past (said), the present simple \"am\" shifts back to the past simple \"was\". The pronoun \"I\" also changes to \"she\" to match the speaker."
+      "explanation": "When the reporting verb is in the past (said), the present simple \"am\" shifts back to the past simple \"was\". The pronoun \"I\" also changes to \"she\" to match the speaker.",
+      "difficulty": 1
     },
     {
       "prompt": "Which reporting verb always requires a person as its object?",
@@ -21,7 +22,8 @@
         { "id": "d", "text": "report" }
       ],
       "correctOption": "c",
-      "explanation": "\"Tell\" always needs a person object: tell me, tell him, tell the class. \"Say\" never takes a direct person object (\"say me\" is wrong)."
+      "explanation": "\"Tell\" always needs a person object: tell me, tell him, tell the class. \"Say\" never takes a direct person object (\"say me\" is wrong).",
+      "difficulty": 1
     },
     {
       "prompt": "In reported speech, what does \"tomorrow\" in direct speech change to?",
@@ -32,7 +34,8 @@
         { "id": "d", "text": "that day" }
       ],
       "correctOption": "c",
-      "explanation": "\"Tomorrow\" in direct speech shifts to \"the next day\" (or \"the following day\") in reported speech, because the time reference has changed."
+      "explanation": "\"Tomorrow\" in direct speech shifts to \"the next day\" (or \"the following day\") in reported speech, because the time reference has changed.",
+      "difficulty": 2
     },
     {
       "prompt": "Direct speech: \"Are you ready?\" She asked ___.",
@@ -43,7 +46,8 @@
         { "id": "d", "text": "if I were ready." }
       ],
       "correctOption": "a",
-      "explanation": "Yes/no questions in reported speech use \"if\" or \"whether\", with normal word order (subject before verb): \"she asked if I was ready\". \"Are\" backshifts to \"was\"."
+      "explanation": "Yes/no questions in reported speech use \"if\" or \"whether\", with normal word order (subject before verb): \"she asked if I was ready\". \"Are\" backshifts to \"was\".",
+      "difficulty": 2
     },
     {
       "prompt": "Direct speech: \"Don't run in the corridor!\" The teacher told the students ___.",
@@ -54,7 +58,8 @@
         { "id": "d", "text": "that they didn't run in the corridor." }
       ],
       "correctOption": "c",
-      "explanation": "Negative commands in reported speech use tell/ask + person + not to + infinitive. The correct form is \"told the students not to run\"."
+      "explanation": "Negative commands in reported speech use tell/ask + person + not to + infinitive. The correct form is \"told the students not to run\".",
+      "difficulty": 3
     }
   ]
 }

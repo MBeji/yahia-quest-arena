@@ -27,7 +27,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "Modals do not take -s, and \"must\" is not followed by \"to\". The correct form is modal + base verb: he must leave now."
+      "explanation": "Modals do not take -s, and \"must\" is not followed by \"to\". The correct form is modal + base verb: he must leave now.",
+      "difficulty": 1
     },
     {
       "prompt": "What is the difference between these two sentences? (1) \"You mustn't tell her.\" (2) \"You don't have to tell her.\"",
@@ -50,7 +51,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "\"Mustn't\" = prohibition (you are NOT allowed to tell her). \"Don't have to\" = no obligation (you are free not to, but it's your choice). These are opposite in meaning."
+      "explanation": "\"Mustn't\" = prohibition (you are NOT allowed to tell her). \"Don't have to\" = no obligation (you are free not to, but it's your choice). These are opposite in meaning.",
+      "difficulty": 3
     },
     {
       "prompt": "Choose the most polite request:",
@@ -73,7 +75,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "\"Could you... please?\" is the most polite form for a request. \"Can\" is acceptable but less formal; \"could\" is more polite."
+      "explanation": "\"Could you... please?\" is the most polite form for a request. \"Can\" is acceptable but less formal; \"could\" is more polite.",
+      "difficulty": 2
     },
     {
       "prompt": "Complete: \"When she was a child, she ___ speak French fluently.\"",
@@ -96,7 +99,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "\"Could\" is the past form of \"can\" and expresses past ability: she could speak French fluently when she was a child."
+      "explanation": "\"Could\" is the past form of \"can\" and expresses past ability: she could speak French fluently when she was a child.",
+      "difficulty": 2
     },
     {
       "prompt": "Choose the correct sentence about formal permission:",
@@ -119,7 +123,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "\"May I...?\" is the formal way to ask for permission. \"Can\" is informal; \"must\" is for obligation; \"should\" is for advice."
+      "explanation": "\"May I...?\" is the formal way to ask for permission. \"Can\" is informal; \"must\" is for obligation; \"should\" is for advice.",
+      "difficulty": 2
     },
     {
       "prompt": "Complete: \"It's getting dark. We ___ hurry, or we'll miss the bus.\"",
@@ -142,7 +147,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "\"Should\" expresses a strong recommendation or advice — the right thing to do in the situation: we should hurry. \"Might not\" and \"don't have to\" would weaken the urgency incorrectly."
+      "explanation": "\"Should\" expresses a strong recommendation or advice — the right thing to do in the situation: we should hurry. \"Might not\" and \"don't have to\" would weaken the urgency incorrectly.",
+      "difficulty": 3
     }
   ]
 }

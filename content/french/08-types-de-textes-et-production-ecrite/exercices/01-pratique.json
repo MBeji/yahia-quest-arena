@@ -27,7 +27,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "Le texte argumentatif vise à défendre une thèse et à convaincre le lecteur à l'aide d'arguments et d'exemples."
+      "explanation": "Le texte argumentatif vise à défendre une thèse et à convaincre le lecteur à l'aide d'arguments et d'exemples.",
+      "difficulty": 1
     },
     {
       "prompt": "Dans le schéma narratif, quel est l'élément qui rompt l'équilibre initial et déclenche l'action ?",
@@ -50,7 +51,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "L'élément perturbateur (ou déclencheur) est l'événement qui brise l'équilibre de la situation initiale et met le récit en mouvement."
+      "explanation": "L'élément perturbateur (ou déclencheur) est l'événement qui brise l'équilibre de la situation initiale et met le récit en mouvement.",
+      "difficulty": 1
     },
     {
       "prompt": "Quel connecteur exprime une relation de CAUSE ?",
@@ -73,7 +75,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "« Car » est un connecteur de cause (il introduit la raison d'un fait). « Donc » exprime la conséquence, « cependant » l'opposition, « ensuite » la succession temporelle."
+      "explanation": "« Car » est un connecteur de cause (il introduit la raison d'un fait). « Donc » exprime la conséquence, « cependant » l'opposition, « ensuite » la succession temporelle.",
+      "difficulty": 2
     },
     {
       "prompt": "Quel indice est caractéristique d'un texte DESCRIPTIF ?",
@@ -96,7 +99,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "Le texte descriptif se reconnaît à l'abondance d'adjectifs qualificatifs, de verbes d'état (être, paraître, sembler) et de l'imparfait, qui peignent une réalité sans la faire évoluer."
+      "explanation": "Le texte descriptif se reconnaît à l'abondance d'adjectifs qualificatifs, de verbes d'état (être, paraître, sembler) et de l'imparfait, qui peignent une réalité sans la faire évoluer.",
+      "difficulty": 2
     },
     {
       "prompt": "Dans quel ordre se succèdent les étapes du schéma narratif ?",
@@ -119,7 +123,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "Le schéma narratif canonique comporte cinq étapes dans cet ordre précis : situation initiale, élément perturbateur, péripéties, dénouement, situation finale."
+      "explanation": "Le schéma narratif canonique comporte cinq étapes dans cet ordre précis : situation initiale, élément perturbateur, péripéties, dénouement, situation finale.",
+      "difficulty": 2
     },
     {
       "prompt": "Dans une lettre formelle, où place-t-on habituellement le lieu et la date ?",
@@ -142,7 +147,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "Dans une lettre formelle française, le lieu et la date se placent en haut à droite, avant la formule d'appel (ex. : « Tunis, le 2 juin 2026 »)."
+      "explanation": "Dans une lettre formelle française, le lieu et la date se placent en haut à droite, avant la formule d'appel (ex. : « Tunis, le 2 juin 2026 »).",
+      "difficulty": 3
     }
   ]
 }

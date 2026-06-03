@@ -10,7 +10,8 @@
         { "id": "d", "text": "Cinq (déclaratif, interrogatif, impératif, exclamatif, emphatique)" }
       ],
       "correctOption": "c",
-      "explanation": "Il existe exactement quatre types de phrases : déclaratif (informer), interrogatif (questionner), impératif (ordonner/conseiller) et exclamatif (exprimer une émotion)."
+      "explanation": "Il existe exactement quatre types de phrases : déclaratif (informer), interrogatif (questionner), impératif (ordonner/conseiller) et exclamatif (exprimer une émotion).",
+      "difficulty": 1
     },
     {
       "prompt": "Quelle est la caractéristique principale de la phrase impérative ?",
@@ -21,7 +22,8 @@
         { "id": "d", "text": "Elle commence toujours par un mot interrogatif." }
       ],
       "correctOption": "b",
-      "explanation": "La phrase impérative se reconnaît à l'absence de sujet exprimé et au verbe conjugué à l'impératif (ex. : « Avance. », « Écoutons. »)."
+      "explanation": "La phrase impérative se reconnaît à l'absence de sujet exprimé et au verbe conjugué à l'impératif (ex. : « Avance. », « Écoutons. »).",
+      "difficulty": 1
     },
     {
       "prompt": "Quelle est la différence entre une interrogation totale et une interrogation partielle ?",
@@ -44,7 +46,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "L'interrogation totale appelle une réponse par oui ou non (ex. : « Viens-tu ? »). L'interrogation partielle porte sur un élément précis et utilise un mot interrogatif (qui, où, quand…)."
+      "explanation": "L'interrogation totale appelle une réponse par oui ou non (ex. : « Viens-tu ? »). L'interrogation partielle porte sur un élément précis et utilise un mot interrogatif (qui, où, quand…).",
+      "difficulty": 2
     },
     {
       "prompt": "Parmi les négations suivantes, laquelle est incorrecte selon les règles de la négation en deux mots ?",
@@ -55,7 +58,8 @@
         { "id": "d", "text": "ne… oui" }
       ],
       "correctOption": "d",
-      "explanation": "La négation fonctionne toujours en deux mots encadrant le verbe : ne… pas, ne… jamais, ne… plus, ne… rien. « ne… oui » n'est pas une négation française."
+      "explanation": "La négation fonctionne toujours en deux mots encadrant le verbe : ne… pas, ne… jamais, ne… plus, ne… rien. « ne… oui » n'est pas une négation française.",
+      "difficulty": 1
     },
     {
       "prompt": "Dans la phrase « C'est la reine qui décide. », quelle forme particulière est utilisée ?",
@@ -66,7 +70,8 @@
         { "id": "d", "text": "La forme emphatique" }
       ],
       "correctOption": "d",
-      "explanation": "Le présentatif « c'est… qui » met le sujet en relief : c'est la forme emphatique. Elle souligne l'importance d'un élément de la phrase."
+      "explanation": "Le présentatif « c'est… qui » met le sujet en relief : c'est la forme emphatique. Elle souligne l'importance d'un élément de la phrase.",
+      "difficulty": 2
     }
   ]
 }

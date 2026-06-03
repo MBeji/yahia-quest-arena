@@ -13,7 +13,8 @@
         { "id": "d", "text": "Un mot appartenant au même champ lexical qu'un autre." }
       ],
       "correctOption": "c",
-      "explanation": "Le préfixe est un élément placé avant le radical pour modifier le sens du mot. Ex. : « im- » dans « impossible » ; « re- » dans « relire ». Le suffixe, lui, se place après le radical."
+      "explanation": "Le préfixe est un élément placé avant le radical pour modifier le sens du mot. Ex. : « im- » dans « impossible » ; « re- » dans « relire ». Le suffixe, lui, se place après le radical.",
+      "difficulty": 1
     },
     {
       "prompt": "Quelle est la différence entre le champ lexical et le champ sémantique ?",
@@ -33,7 +34,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "Le champ lexical regroupe tous les mots (de catégories variées) se rapportant à un même thème. Le champ sémantique d'un mot regroupe tous les sens différents que ce mot peut avoir selon le contexte."
+      "explanation": "Le champ lexical regroupe tous les mots (de catégories variées) se rapportant à un même thème. Le champ sémantique d'un mot regroupe tous les sens différents que ce mot peut avoir selon le contexte.",
+      "difficulty": 3
     },
     {
       "prompt": "Les mots « verre » (récipient), « vers » (poème), « vert » (couleur) et « ver » (animal) sont des :",
@@ -44,7 +46,8 @@
         { "id": "d", "text": "Homonymes" }
       ],
       "correctOption": "d",
-      "explanation": "Les homonymes sont des mots de prononciation identique mais de sens différents. « verre », « vers », « vert » et « ver » se prononcent tous [vɛʁ] mais n'ont pas le même sens."
+      "explanation": "Les homonymes sont des mots de prononciation identique mais de sens différents. « verre », « vers », « vert » et « ver » se prononcent tous [vɛʁ] mais n'ont pas le même sens.",
+      "difficulty": 1
     },
     {
       "prompt": "Quelle est la différence entre une comparaison et une métaphore ?",
@@ -64,7 +67,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "La comparaison rapproche deux éléments à l'aide d'un outil comparatif (comme, tel, pareil à…). La métaphore fait le même rapprochement mais sans outil : elle identifie directement le comparé au comparant. Ex. : « fort comme un lion » (comparaison) vs « ce guerrier est un lion » (métaphore)."
+      "explanation": "La comparaison rapproche deux éléments à l'aide d'un outil comparatif (comme, tel, pareil à…). La métaphore fait le même rapprochement mais sans outil : elle identifie directement le comparé au comparant. Ex. : « fort comme un lion » (comparaison) vs « ce guerrier est un lion » (métaphore).",
+      "difficulty": 2
     },
     {
       "prompt": "La figure de style qui consiste à attribuer des caractéristiques humaines à un objet, un animal ou une abstraction s'appelle :",
@@ -75,7 +79,8 @@
         { "id": "d", "text": "Une énumération" }
       ],
       "correctOption": "c",
-      "explanation": "La personnification attribue des caractéristiques humaines à ce qui n'est pas humain. Ex. : « La tempête hurlait sa fureur. » L'hyperbole est une exagération expressive ; la gradation est une suite ordonnée par intensité."
+      "explanation": "La personnification attribue des caractéristiques humaines à ce qui n'est pas humain. Ex. : « La tempête hurlait sa fureur. » L'hyperbole est une exagération expressive ; la gradation est une suite ordonnée par intensité.",
+      "difficulty": 1
     }
   ]
 }

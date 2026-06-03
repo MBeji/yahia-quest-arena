@@ -10,7 +10,8 @@
         { "id": "d", "text": "Zero conditional: if + past simple, present simple" }
       ],
       "correctOption": "b",
-      "explanation": "The zero conditional (if + present simple, present simple) expresses facts and general truths where the result always follows the condition."
+      "explanation": "The zero conditional (if + present simple, present simple) expresses facts and general truths where the result always follows the condition.",
+      "difficulty": 1
     },
     {
       "prompt": "Which sentence is a correctly formed first conditional?",
@@ -21,7 +22,8 @@
         { "id": "d", "text": "If you study hard, you would pass." }
       ],
       "correctOption": "c",
-      "explanation": "The first conditional uses the present simple in the if-clause (never \"will\") and will + base verb in the main clause."
+      "explanation": "The first conditional uses the present simple in the if-clause (never \"will\") and will + base verb in the main clause.",
+      "difficulty": 2
     },
     {
       "prompt": "What does the second conditional express?",
@@ -32,7 +34,8 @@
         { "id": "d", "text": "A completed past action" }
       ],
       "correctOption": "c",
-      "explanation": "The second conditional (if + past simple, would + base verb) describes situations that are unreal, imaginary, or unlikely right now."
+      "explanation": "The second conditional (if + past simple, would + base verb) describes situations that are unreal, imaginary, or unlikely right now.",
+      "difficulty": 1
     },
     {
       "prompt": "In formal/standard English, which form of \"be\" is used in the if-clause of a second conditional?",
@@ -43,7 +46,8 @@
         { "id": "d", "text": "\"are\" for all persons" }
       ],
       "correctOption": "c",
-      "explanation": "In formal and standard English, the second conditional uses \"were\" for all persons in the if-clause: \"If I were you, I would apologise.\""
+      "explanation": "In formal and standard English, the second conditional uses \"were\" for all persons in the if-clause: \"If I were you, I would apologise.\"",
+      "difficulty": 2
     },
     {
       "prompt": "What does \"unless\" mean in a conditional sentence?",
@@ -54,7 +58,8 @@
         { "id": "d", "text": "even if" }
       ],
       "correctOption": "c",
-      "explanation": "\"Unless\" means \"if ... not\". For example, \"Unless you hurry, you will miss the train\" means \"If you don't hurry, you will miss the train.\""
+      "explanation": "\"Unless\" means \"if ... not\". For example, \"Unless you hurry, you will miss the train\" means \"If you don't hurry, you will miss the train.\"",
+      "difficulty": 3
     }
   ]
 }

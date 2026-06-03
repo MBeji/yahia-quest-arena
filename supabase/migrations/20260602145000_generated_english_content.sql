@@ -871,7 +871,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('138d5e16-6d8d-5dde-8107-11d41bfa48e9', 'c4f248a7-393a-5c6d-b4af-90311f1ae35d', 'Why is "I am knowing the answer" incorrect?', '[{"id":"a","text":"\"Know\" must take -s in the present."},{"id":"b","text":"\"Know\" is a stative verb and is not normally used in the continuous form."},{"id":"c","text":"The subject \"I\" requires \"is\" instead of \"am\"."},{"id":"d","text":"The continuous form requires \"was\" for the verb \"know\"."}]'::jsonb, 'b', 'Stative verbs like know, like, love, and want describe mental states, not actions. They are not used in the continuous form.', 3)
+  ('138d5e16-6d8d-5dde-8107-11d41bfa48e9', 'c4f248a7-393a-5c6d-b4af-90311f1ae35d', 'Complete the sentence correctly: "Look! The children ___ in the garden."', '[{"id":"a","text":"play"},{"id":"b","text":"plays"},{"id":"c","text":"have played"},{"id":"d","text":"are playing"}]'::jsonb, 'd', '"Look!" is a key signal for the present continuous because it draws attention to an action happening right now. The correct form is are playing.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -881,7 +881,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('d819986f-cfe2-53f8-bd3e-f76c9aa3e3a5', 'c4f248a7-393a-5c6d-b4af-90311f1ae35d', 'What is the correct negative form of "She plays tennis" in the present simple?', '[{"id":"a","text":"She isn''t playing tennis."},{"id":"b","text":"She doesn''t plays tennis."},{"id":"c","text":"She doesn''t play tennis."},{"id":"d","text":"She don''t play tennis."}]'::jsonb, 'c', 'The present simple negative uses doesn''t (does not) + the base verb for he/she/it. The main verb keeps its base form: doesn''t play.', 4)
+  ('d819986f-cfe2-53f8-bd3e-f76c9aa3e3a5', 'c4f248a7-393a-5c6d-b4af-90311f1ae35d', 'Why is "I am knowing the answer" incorrect?', '[{"id":"a","text":"\"Know\" must take -s in the present."},{"id":"b","text":"\"Know\" is a stative verb and is not normally used in the continuous form."},{"id":"c","text":"The subject \"I\" requires \"is\" instead of \"am\"."},{"id":"d","text":"The continuous form requires \"was\" for the verb \"know\"."}]'::jsonb, 'b', 'Stative verbs like know, like, love, and want describe mental states, not actions. They are not used in the continuous form.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -891,7 +891,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('4e4014e1-cd1d-5dcc-aac5-f44926ed20ed', 'c4f248a7-393a-5c6d-b4af-90311f1ae35d', 'Complete the sentence correctly: "Look! The children ___ in the garden."', '[{"id":"a","text":"play"},{"id":"b","text":"plays"},{"id":"c","text":"have played"},{"id":"d","text":"are playing"}]'::jsonb, 'd', '"Look!" is a key signal for the present continuous because it draws attention to an action happening right now. The correct form is are playing.', 5)
+  ('4e4014e1-cd1d-5dcc-aac5-f44926ed20ed', 'c4f248a7-393a-5c6d-b4af-90311f1ae35d', 'What is the correct negative form of "She plays tennis" in the present simple?', '[{"id":"a","text":"She isn''t playing tennis."},{"id":"b","text":"She doesn''t plays tennis."},{"id":"c","text":"She doesn''t play tennis."},{"id":"d","text":"She don''t play tennis."}]'::jsonb, 'c', 'The present simple negative uses doesn''t (does not) + the base verb for he/she/it. The main verb keeps its base form: doesn''t play.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -953,7 +953,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('499dffeb-77ba-571a-a272-ef6b68e30622', '6b8bbba1-76cd-5943-aa66-9d9da0f72492', 'Choose the correct sentence:', '[{"id":"a","text":"I know the answer."},{"id":"b","text":"I am knowing the answer."},{"id":"c","text":"I knows the answer."},{"id":"d","text":"I am know the answer."}]'::jsonb, 'a', '"know" is a stative verb, so it is not used in the continuous: I know the answer.', 5)
+  ('499dffeb-77ba-571a-a272-ef6b68e30622', '6b8bbba1-76cd-5943-aa66-9d9da0f72492', 'Complete: "They ___ TV at the moment."', '[{"id":"a","text":"watch"},{"id":"b","text":"are watching"},{"id":"c","text":"watches"},{"id":"d","text":"is watching"}]'::jsonb, 'b', '"at the moment" signals now, so we use the present continuous with the plural subject they: are watching.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -963,7 +963,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('a5481854-86d1-56f3-8ac1-c1496af746ac', '6b8bbba1-76cd-5943-aa66-9d9da0f72492', 'Complete: "They ___ TV at the moment."', '[{"id":"a","text":"watch"},{"id":"b","text":"are watching"},{"id":"c","text":"watches"},{"id":"d","text":"is watching"}]'::jsonb, 'b', '"at the moment" signals now, so we use the present continuous with the plural subject they: are watching.', 6)
+  ('a5481854-86d1-56f3-8ac1-c1496af746ac', '6b8bbba1-76cd-5943-aa66-9d9da0f72492', 'Choose the correct sentence:', '[{"id":"a","text":"I know the answer."},{"id":"b","text":"I am knowing the answer."},{"id":"c","text":"I knows the answer."},{"id":"d","text":"I am know the answer."}]'::jsonb, 'a', '"know" is a stative verb, so it is not used in the continuous: I know the answer.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -985,7 +985,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('d8b38f06-1764-5f19-ba99-8f0fd06fd79b', '458c297a-6ea2-522c-9a6c-6dc0c6c7267b', 'Choose the correct form: "Water ___ at 100 degrees."', '[{"id":"a","text":"boils"},{"id":"b","text":"is boiling"},{"id":"c","text":"boil"},{"id":"d","text":"are boiling"}]'::jsonb, 'a', 'This is a general truth, so we use the present simple: water boils at 100 degrees.', 1)
+  ('d8b38f06-1764-5f19-ba99-8f0fd06fd79b', '458c297a-6ea2-522c-9a6c-6dc0c6c7267b', 'Complete: "I can''t talk now, I ___ dinner."', '[{"id":"a","text":"cook"},{"id":"b","text":"cooks"},{"id":"c","text":"am cooking"},{"id":"d","text":"cooked"}]'::jsonb, 'c', '"now" signals an action in progress, so we use the present continuous: I am cooking dinner.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -995,7 +995,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('620f8003-045f-50cd-a9f5-2e24398d3bc5', '458c297a-6ea2-522c-9a6c-6dc0c6c7267b', 'Complete: "I can''t talk now, I ___ dinner."', '[{"id":"a","text":"cook"},{"id":"b","text":"cooks"},{"id":"c","text":"am cooking"},{"id":"d","text":"cooked"}]'::jsonb, 'c', '"now" signals an action in progress, so we use the present continuous: I am cooking dinner.', 2)
+  ('620f8003-045f-50cd-a9f5-2e24398d3bc5', '458c297a-6ea2-522c-9a6c-6dc0c6c7267b', 'Choose the correct form: "Water ___ at 100 degrees."', '[{"id":"a","text":"boils"},{"id":"b","text":"is boiling"},{"id":"c","text":"boil"},{"id":"d","text":"are boiling"}]'::jsonb, 'a', 'This is a general truth, so we use the present simple: water boils at 100 degrees.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1025,7 +1025,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('bc94054e-1446-5d04-8e8c-221f38cdcb9d', '458c297a-6ea2-522c-9a6c-6dc0c6c7267b', 'Choose the correct sentence:', '[{"id":"a","text":"This cake tastes delicious."},{"id":"b","text":"This cake is tasting delicious."},{"id":"c","text":"This cake taste delicious."},{"id":"d","text":"This cake are tasting delicious."}]'::jsonb, 'a', '"taste" (= have a flavour) is stative here, so we use the present simple: the cake tastes delicious.', 5)
+  ('bc94054e-1446-5d04-8e8c-221f38cdcb9d', '458c297a-6ea2-522c-9a6c-6dc0c6c7267b', 'Complete: "Be quiet! The students ___ a test right now."', '[{"id":"a","text":"take"},{"id":"b","text":"takes"},{"id":"c","text":"is taking"},{"id":"d","text":"are taking"}]'::jsonb, 'd', '"right now" signals an action in progress; with the plural subject students we use are + taking.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1035,7 +1035,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('90a789f4-e6c1-56be-86ef-0e8dd1a6eace', '458c297a-6ea2-522c-9a6c-6dc0c6c7267b', 'Complete: "Be quiet! The students ___ a test right now."', '[{"id":"a","text":"take"},{"id":"b","text":"takes"},{"id":"c","text":"is taking"},{"id":"d","text":"are taking"}]'::jsonb, 'd', '"right now" signals an action in progress; with the plural subject students we use are + taking.', 6)
+  ('90a789f4-e6c1-56be-86ef-0e8dd1a6eace', '458c297a-6ea2-522c-9a6c-6dc0c6c7267b', 'Choose the correct sentence:', '[{"id":"a","text":"This cake tastes delicious."},{"id":"b","text":"This cake is tasting delicious."},{"id":"c","text":"This cake taste delicious."},{"id":"d","text":"This cake are tasting delicious."}]'::jsonb, 'a', '"taste" (= have a flavour) is stative here, so we use the present simple: the cake tastes delicious.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1129,7 +1129,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('14609924-058c-5c85-b515-6e83bfa1c218', '1874477b-34e6-5ff5-8fa9-35f4a38c5e2a', 'Complete: "We ___ football when it started to rain."', '[{"id":"a","text":"played"},{"id":"b","text":"play"},{"id":"c","text":"have played"},{"id":"d","text":"were playing"}]'::jsonb, 'd', 'The football game was already in progress (background action) when the rain interrupted. Use past continuous: were playing.', 2)
+  ('14609924-058c-5c85-b515-6e83bfa1c218', '1874477b-34e6-5ff5-8fa9-35f4a38c5e2a', 'Complete: "Have you ___ eaten couscous?"', '[{"id":"a","text":"yet"},{"id":"b","text":"ago"},{"id":"c","text":"ever"},{"id":"d","text":"yesterday"}]'::jsonb, 'c', '"ever" is used in present perfect questions to ask about life experience: Have you ever eaten...?', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1139,7 +1139,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('13f53f19-669d-5bae-bb4e-fee06ce7d631', '1874477b-34e6-5ff5-8fa9-35f4a38c5e2a', 'Choose the correct negative: "He ___ the test last Monday."', '[{"id":"a","text":"didn''t passed"},{"id":"b","text":"didn''t pass"},{"id":"c","text":"wasn''t pass"},{"id":"d","text":"hasn''t passed"}]'::jsonb, 'b', 'Past simple negative: didn''t + base verb. "last Monday" confirms past simple, not perfect.', 3)
+  ('13f53f19-669d-5bae-bb4e-fee06ce7d631', '1874477b-34e6-5ff5-8fa9-35f4a38c5e2a', 'Complete: "We ___ football when it started to rain."', '[{"id":"a","text":"played"},{"id":"b","text":"play"},{"id":"c","text":"have played"},{"id":"d","text":"were playing"}]'::jsonb, 'd', 'The football game was already in progress (background action) when the rain interrupted. Use past continuous: were playing.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1149,7 +1149,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('63809236-3326-5a22-bf77-ca09b2f1cd0c', '1874477b-34e6-5ff5-8fa9-35f4a38c5e2a', 'Complete: "Have you ___ eaten couscous?"', '[{"id":"a","text":"yet"},{"id":"b","text":"ago"},{"id":"c","text":"ever"},{"id":"d","text":"yesterday"}]'::jsonb, 'c', '"ever" is used in present perfect questions to ask about life experience: Have you ever eaten...?', 4)
+  ('63809236-3326-5a22-bf77-ca09b2f1cd0c', '1874477b-34e6-5ff5-8fa9-35f4a38c5e2a', 'Choose the correct negative: "He ___ the test last Monday."', '[{"id":"a","text":"didn''t passed"},{"id":"b","text":"didn''t pass"},{"id":"c","text":"wasn''t pass"},{"id":"d","text":"hasn''t passed"}]'::jsonb, 'b', 'Past simple negative: didn''t + base verb. "last Monday" confirms past simple, not perfect.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1201,7 +1201,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('937bbd74-4c72-52a9-a129-ef162fceeeb5', '870d7346-31c1-546f-8e25-ad1a12362ea7', 'Complete: "I ___ never ___ sushi before. I tried it last night."', '[{"id":"a","text":"have ... eaten"},{"id":"b","text":"did ... eat"},{"id":"c","text":"had ... eaten"},{"id":"d","text":"was ... eating"}]'::jsonb, 'a', '"never" with present perfect describes a life experience up to now: I have never eaten sushi. The sentence then adds a specific past event (last night → past simple), showing the contrast.', 2)
+  ('937bbd74-4c72-52a9-a129-ef162fceeeb5', '870d7346-31c1-546f-8e25-ad1a12362ea7', 'Which sentence is correct?', '[{"id":"a","text":"She visited Paris two years ago."},{"id":"b","text":"She has visited Paris two years ago."},{"id":"c","text":"She have visited Paris two years ago."},{"id":"d","text":"She was visited Paris two years ago."}]'::jsonb, 'a', '"two years ago" is a specific past time marker. Use past simple, not present perfect: she visited Paris two years ago.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1211,7 +1211,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('67cf5732-4004-59fe-b4a5-bbc42565a024', '870d7346-31c1-546f-8e25-ad1a12362ea7', 'Which sentence is correct?', '[{"id":"a","text":"She visited Paris two years ago."},{"id":"b","text":"She has visited Paris two years ago."},{"id":"c","text":"She have visited Paris two years ago."},{"id":"d","text":"She was visited Paris two years ago."}]'::jsonb, 'a', '"two years ago" is a specific past time marker. Use past simple, not present perfect: she visited Paris two years ago.', 3)
+  ('67cf5732-4004-59fe-b4a5-bbc42565a024', '870d7346-31c1-546f-8e25-ad1a12362ea7', 'Complete: "___ the film started when you arrived?"', '[{"id":"a","text":"Did"},{"id":"b","text":"Has"},{"id":"c","text":"Was"},{"id":"d","text":"Were"}]'::jsonb, 'a', 'This asks about a completed event at a specific past moment. Past simple question: Did + subject + base verb. "Did the film start...?"', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1221,7 +1221,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('75c9c3aa-c5c6-57b3-a6ae-72b8b7d071e4', '870d7346-31c1-546f-8e25-ad1a12362ea7', 'Complete: "___ the film started when you arrived?"', '[{"id":"a","text":"Did"},{"id":"b","text":"Has"},{"id":"c","text":"Was"},{"id":"d","text":"Were"}]'::jsonb, 'a', 'This asks about a completed event at a specific past moment. Past simple question: Did + subject + base verb. "Did the film start...?"', 4)
+  ('75c9c3aa-c5c6-57b3-a6ae-72b8b7d071e4', '870d7346-31c1-546f-8e25-ad1a12362ea7', 'Complete: "I ___ never ___ sushi before. I tried it last night."', '[{"id":"a","text":"have ... eaten"},{"id":"b","text":"did ... eat"},{"id":"c","text":"had ... eaten"},{"id":"d","text":"was ... eating"}]'::jsonb, 'a', '"never" with present perfect describes a life experience up to now: I have never eaten sushi. The sentence then adds a specific past event (last night → past simple), showing the contrast.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1283,7 +1283,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('1ceda0cf-76cc-5320-b521-1dbaaf81ff83', '216cae02-7987-5531-b3fa-6af92e75e33d', 'Which sentence correctly uses a time clause with a future meaning?', '[{"id":"a","text":"Call me when you will arrive."},{"id":"b","text":"Call me when you arrive."},{"id":"c","text":"Call me when you are arriving."},{"id":"d","text":"Call me when you arrived."}]'::jsonb, 'b', 'After time conjunctions such as when, as soon as, before, after, and until in a future sentence, use the present simple, not will.', 3)
+  ('1ceda0cf-76cc-5320-b521-1dbaaf81ff83', '216cae02-7987-5531-b3fa-6af92e75e33d', 'What is the correct negative form of "will" in a sentence?', '[{"id":"a","text":"She willn''t come."},{"id":"b","text":"She won''t come."},{"id":"c","text":"She doesn''t will come."},{"id":"d","text":"She isn''t will come."}]'::jsonb, 'b', 'The negative of will is will not, contracted to won''t. No auxiliary verb like do or be is added alongside will.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1293,7 +1293,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('d607352b-8809-5647-8ea5-22f2ffea5f51', '216cae02-7987-5531-b3fa-6af92e75e33d', 'Which form expresses a fixed, confirmed arrangement already in your diary?', '[{"id":"a","text":"I will meet the doctor at 9 a.m. tomorrow."},{"id":"b","text":"I meet the doctor at 9 a.m. tomorrow."},{"id":"c","text":"I am meeting the doctor at 9 a.m. tomorrow."},{"id":"d","text":"I was meeting the doctor at 9 a.m. tomorrow."}]'::jsonb, 'c', 'The present continuous is used for future events that are already arranged and confirmed with others, such as a diary appointment.', 4)
+  ('d607352b-8809-5647-8ea5-22f2ffea5f51', '216cae02-7987-5531-b3fa-6af92e75e33d', 'Which sentence correctly uses a time clause with a future meaning?', '[{"id":"a","text":"Call me when you will arrive."},{"id":"b","text":"Call me when you arrive."},{"id":"c","text":"Call me when you are arriving."},{"id":"d","text":"Call me when you arrived."}]'::jsonb, 'b', 'After time conjunctions such as when, as soon as, before, after, and until in a future sentence, use the present simple, not will.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1303,7 +1303,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('8b0082a8-9de5-5939-9428-c20ddaf4909d', '216cae02-7987-5531-b3fa-6af92e75e33d', 'What is the correct negative form of "will" in a sentence?', '[{"id":"a","text":"She willn''t come."},{"id":"b","text":"She won''t come."},{"id":"c","text":"She doesn''t will come."},{"id":"d","text":"She isn''t will come."}]'::jsonb, 'b', 'The negative of will is will not, contracted to won''t. No auxiliary verb like do or be is added alongside will.', 5)
+  ('8b0082a8-9de5-5939-9428-c20ddaf4909d', '216cae02-7987-5531-b3fa-6af92e75e33d', 'Which form expresses a fixed, confirmed arrangement already in your diary?', '[{"id":"a","text":"I will meet the doctor at 9 a.m. tomorrow."},{"id":"b","text":"I meet the doctor at 9 a.m. tomorrow."},{"id":"c","text":"I am meeting the doctor at 9 a.m. tomorrow."},{"id":"d","text":"I was meeting the doctor at 9 a.m. tomorrow."}]'::jsonb, 'c', 'The present continuous is used for future events that are already arranged and confirmed with others, such as a diary appointment.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1345,7 +1345,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('bc58c470-1c5f-570b-b347-e040a8aaabbf', '0ac40b31-da66-5e9a-b82f-2414438a00c5', 'Complete the time clause: "I will call you when I ___ home."', '[{"id":"a","text":"get"},{"id":"b","text":"will get"},{"id":"c","text":"am getting"},{"id":"d","text":"got"}]'::jsonb, 'a', 'After time conjunctions (when, as soon as, before, after, until) in a future sentence, use the present simple — not will: when I get home.', 3)
+  ('bc58c470-1c5f-570b-b347-e040a8aaabbf', '0ac40b31-da66-5e9a-b82f-2414438a00c5', 'Which time marker does NOT typically go with future tenses?', '[{"id":"a","text":"next week"},{"id":"b","text":"tomorrow"},{"id":"c","text":"yesterday"},{"id":"d","text":"soon"}]'::jsonb, 'c', '"Yesterday" refers to the past, not the future. "Next week", "tomorrow", and "soon" are future time markers.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1355,7 +1355,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('ea5d79b1-f11c-501e-b3aa-b94d4fb6c94f', '0ac40b31-da66-5e9a-b82f-2414438a00c5', 'Choose the correct sentence about a plan already decided:', '[{"id":"a","text":"We will visit Djerba next summer."},{"id":"b","text":"We visit Djerba next summer."},{"id":"c","text":"We visited Djerba next summer."},{"id":"d","text":"We are going to visit Djerba next summer."}]'::jsonb, 'd', 'A plan decided before speaking uses "be going to": we are going to visit Djerba next summer.', 4)
+  ('ea5d79b1-f11c-501e-b3aa-b94d4fb6c94f', '0ac40b31-da66-5e9a-b82f-2414438a00c5', 'Complete the time clause: "I will call you when I ___ home."', '[{"id":"a","text":"get"},{"id":"b","text":"will get"},{"id":"c","text":"am getting"},{"id":"d","text":"got"}]'::jsonb, 'a', 'After time conjunctions (when, as soon as, before, after, until) in a future sentence, use the present simple — not will: when I get home.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1365,7 +1365,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('f82a2c0b-e513-5770-8b2a-024116d6b3a1', '0ac40b31-da66-5e9a-b82f-2414438a00c5', 'Complete: "I ___ the dentist at 3 p.m. tomorrow." (appointment confirmed)', '[{"id":"a","text":"will see"},{"id":"b","text":"am seeing"},{"id":"c","text":"see"},{"id":"d","text":"am going to see"}]'::jsonb, 'b', 'A confirmed arrangement with a specific time uses the present continuous: I am seeing the dentist at 3 p.m. tomorrow.', 5)
+  ('f82a2c0b-e513-5770-8b2a-024116d6b3a1', '0ac40b31-da66-5e9a-b82f-2414438a00c5', 'Choose the correct sentence about a plan already decided:', '[{"id":"a","text":"We will visit Djerba next summer."},{"id":"b","text":"We visit Djerba next summer."},{"id":"c","text":"We visited Djerba next summer."},{"id":"d","text":"We are going to visit Djerba next summer."}]'::jsonb, 'd', 'A plan decided before speaking uses "be going to": we are going to visit Djerba next summer.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1375,7 +1375,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('389a214c-d24f-5aff-b8e6-447a45ed35ed', '0ac40b31-da66-5e9a-b82f-2414438a00c5', 'Which time marker does NOT typically go with future tenses?', '[{"id":"a","text":"next week"},{"id":"b","text":"tomorrow"},{"id":"c","text":"yesterday"},{"id":"d","text":"soon"}]'::jsonb, 'c', '"Yesterday" refers to the past, not the future. "Next week", "tomorrow", and "soon" are future time markers.', 6)
+  ('389a214c-d24f-5aff-b8e6-447a45ed35ed', '0ac40b31-da66-5e9a-b82f-2414438a00c5', 'Complete: "I ___ the dentist at 3 p.m. tomorrow." (appointment confirmed)', '[{"id":"a","text":"will see"},{"id":"b","text":"am seeing"},{"id":"c","text":"see"},{"id":"d","text":"am going to see"}]'::jsonb, 'b', 'A confirmed arrangement with a specific time uses the present continuous: I am seeing the dentist at 3 p.m. tomorrow.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1427,7 +1427,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('fc5f7dad-9d09-5117-ba74-0cdae2c753c4', 'efb66754-8009-5a3d-995a-6b71e9cf5537', 'Which sentence correctly uses the present continuous for a future arrangement?', '[{"id":"a","text":"They will flying to Paris next Friday."},{"id":"b","text":"They are flying to Paris next Friday. (tickets booked)"},{"id":"c","text":"They fly to Paris next Friday."},{"id":"d","text":"They going to fly to Paris next Friday."}]'::jsonb, 'b', 'A confirmed, fixed arrangement uses the present continuous: they are flying to Paris next Friday. Option b is ungrammatical (will + -ing), c is present simple with a future marker (possible but less natural for a fixed plan), d is missing the auxiliary "are".', 4)
+  ('fc5f7dad-9d09-5117-ba74-0cdae2c753c4', 'efb66754-8009-5a3d-995a-6b71e9cf5537', 'Complete: "I think robots ___ do most jobs in the future."', '[{"id":"a","text":"will"},{"id":"b","text":"are going to"},{"id":"c","text":"are"},{"id":"d","text":"would"}]'::jsonb, 'a', '"I think" signals a personal opinion about the future (no visible evidence). Use will: robots will do most jobs.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1437,7 +1437,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('b3748c61-938a-5781-a6e3-e94630c69381', 'efb66754-8009-5a3d-995a-6b71e9cf5537', 'Complete: "I think robots ___ do most jobs in the future."', '[{"id":"a","text":"will"},{"id":"b","text":"are going to"},{"id":"c","text":"are"},{"id":"d","text":"would"}]'::jsonb, 'a', '"I think" signals a personal opinion about the future (no visible evidence). Use will: robots will do most jobs.', 5)
+  ('b3748c61-938a-5781-a6e3-e94630c69381', 'efb66754-8009-5a3d-995a-6b71e9cf5537', 'Which sentence correctly uses the present continuous for a future arrangement?', '[{"id":"a","text":"They will flying to Paris next Friday."},{"id":"b","text":"They are flying to Paris next Friday. (tickets booked)"},{"id":"c","text":"They fly to Paris next Friday."},{"id":"d","text":"They going to fly to Paris next Friday."}]'::jsonb, 'b', 'A confirmed, fixed arrangement uses the present continuous: they are flying to Paris next Friday. Option b is ungrammatical (will + -ing), c is present simple with a future marker (possible but less natural for a fixed plan), d is missing the auxiliary "are".', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1479,7 +1479,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('18298070-040f-5ac3-b119-9cb6fb720fa2', '818e12ec-9c1e-52e1-8f1a-dde92ca62d2e', 'What is the key difference between "mustn''t" and "don''t have to"?', '[{"id":"a","text":"They mean the same thing: neither action is required."},{"id":"b","text":"\"Mustn''t\" means prohibition; \"don''t have to\" means there is no obligation."},{"id":"c","text":"\"Mustn''t\" is polite; \"don''t have to\" is rude."},{"id":"d","text":"\"Don''t have to\" means it is forbidden; \"mustn''t\" means it is optional."}]'::jsonb, 'b', '"Mustn''t" forbids an action (you are not allowed). "Don''t have to" means the action is not required but you are free to choose.', 2)
+  ('18298070-040f-5ac3-b119-9cb6fb720fa2', '818e12ec-9c1e-52e1-8f1a-dde92ca62d2e', 'Which sentence correctly uses "should" to give advice?', '[{"id":"a","text":"You should to eat more vegetables."},{"id":"b","text":"You should eating more vegetables."},{"id":"c","text":"You should eat more vegetables."},{"id":"d","text":"You shoulds eat more vegetables."}]'::jsonb, 'c', '"Should" is followed by the base verb with no "to" and no -ing. The correct form is "should eat".', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1499,7 +1499,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('a682336a-8cac-55fe-98ed-d13e41b90c21', '818e12ec-9c1e-52e1-8f1a-dde92ca62d2e', 'Which sentence correctly uses "should" to give advice?', '[{"id":"a","text":"You should to eat more vegetables."},{"id":"b","text":"You should eating more vegetables."},{"id":"c","text":"You should eat more vegetables."},{"id":"d","text":"You shoulds eat more vegetables."}]'::jsonb, 'c', '"Should" is followed by the base verb with no "to" and no -ing. The correct form is "should eat".', 4)
+  ('a682336a-8cac-55fe-98ed-d13e41b90c21', '818e12ec-9c1e-52e1-8f1a-dde92ca62d2e', 'What is the difference between "may" and "might" when expressing possibility?', '[{"id":"a","text":"\"May\" refers to the past; \"might\" refers to the future."},{"id":"b","text":"\"May\" is more certain than \"might\"; \"might\" suggests less certainty."},{"id":"c","text":"\"Might\" is more certain than \"may\"."},{"id":"d","text":"They cannot be used interchangeably for possibility."}]'::jsonb, 'b', 'Both "may" and "might" express possibility, but "might" suggests even less certainty than "may". In practice they can often be used interchangeably.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1509,7 +1509,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('10cdbbe6-7c81-509f-9107-c3f8ea0bc615', '818e12ec-9c1e-52e1-8f1a-dde92ca62d2e', 'What is the difference between "may" and "might" when expressing possibility?', '[{"id":"a","text":"\"May\" refers to the past; \"might\" refers to the future."},{"id":"b","text":"\"May\" is more certain than \"might\"; \"might\" suggests less certainty."},{"id":"c","text":"\"Might\" is more certain than \"may\"."},{"id":"d","text":"They cannot be used interchangeably for possibility."}]'::jsonb, 'b', 'Both "may" and "might" express possibility, but "might" suggests even less certainty than "may". In practice they can often be used interchangeably.', 5)
+  ('10cdbbe6-7c81-509f-9107-c3f8ea0bc615', '818e12ec-9c1e-52e1-8f1a-dde92ca62d2e', 'What is the key difference between "mustn''t" and "don''t have to"?', '[{"id":"a","text":"They mean the same thing: neither action is required."},{"id":"b","text":"\"Mustn''t\" means prohibition; \"don''t have to\" means there is no obligation."},{"id":"c","text":"\"Mustn''t\" is polite; \"don''t have to\" is rude."},{"id":"d","text":"\"Don''t have to\" means it is forbidden; \"mustn''t\" means it is optional."}]'::jsonb, 'b', '"Mustn''t" forbids an action (you are not allowed). "Don''t have to" means the action is not required but you are free to choose.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1561,7 +1561,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('1e66eafa-708f-5de1-a6cc-2921d6e02ffc', 'd33dfa7f-2d01-5e1c-aac3-8c969ee05d93', 'Which sentence means you are NOT allowed to do something?', '[{"id":"a","text":"You mustn''t smoke here."},{"id":"b","text":"You don''t have to come."},{"id":"c","text":"You should rest."},{"id":"d","text":"You might stay."}]'::jsonb, 'a', '"Mustn''t" expresses prohibition — you are not allowed to smoke here. "Don''t have to" simply means it is not necessary.', 4)
+  ('1e66eafa-708f-5de1-a6cc-2921d6e02ffc', 'd33dfa7f-2d01-5e1c-aac3-8c969ee05d93', 'Complete: "___ I use your dictionary, please?" (informal permission)', '[{"id":"a","text":"Should"},{"id":"b","text":"Can"},{"id":"c","text":"Must"},{"id":"d","text":"Might"}]'::jsonb, 'b', '"Can" is used for informal permission requests: Can I use your dictionary? "Could" would be more polite; "May" more formal.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1571,7 +1571,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('01ffd3bb-6105-5323-92a1-3cc14b8348db', 'd33dfa7f-2d01-5e1c-aac3-8c969ee05d93', 'Complete: "___ I use your dictionary, please?" (informal permission)', '[{"id":"a","text":"Should"},{"id":"b","text":"Can"},{"id":"c","text":"Must"},{"id":"d","text":"Might"}]'::jsonb, 'b', '"Can" is used for informal permission requests: Can I use your dictionary? "Could" would be more polite; "May" more formal.', 5)
+  ('01ffd3bb-6105-5323-92a1-3cc14b8348db', 'd33dfa7f-2d01-5e1c-aac3-8c969ee05d93', 'Which sentence means you are NOT allowed to do something?', '[{"id":"a","text":"You mustn''t smoke here."},{"id":"b","text":"You don''t have to come."},{"id":"c","text":"You should rest."},{"id":"d","text":"You might stay."}]'::jsonb, 'a', '"Mustn''t" expresses prohibition — you are not allowed to smoke here. "Don''t have to" simply means it is not necessary.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1613,7 +1613,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('f2b8ba0d-7631-5805-8846-a5fa20b419c6', '5e9f70de-f505-5482-a231-2c5e52d2bb68', 'What is the difference between these two sentences? (1) "You mustn''t tell her." (2) "You don''t have to tell her."', '[{"id":"a","text":"They mean the same thing: it is not necessary."},{"id":"b","text":"(1) means it is forbidden; (2) means it is not necessary."},{"id":"c","text":"(1) means it is not necessary; (2) means it is forbidden."},{"id":"d","text":"Both mean you are not allowed."}]'::jsonb, 'b', '"Mustn''t" = prohibition (you are NOT allowed to tell her). "Don''t have to" = no obligation (you are free not to, but it''s your choice). These are opposite in meaning.', 2)
+  ('f2b8ba0d-7631-5805-8846-a5fa20b419c6', '5e9f70de-f505-5482-a231-2c5e52d2bb68', 'Choose the most polite request:', '[{"id":"a","text":"Could you pass the salt, please?"},{"id":"b","text":"Can you pass the salt?"},{"id":"c","text":"Pass the salt."},{"id":"d","text":"You should pass the salt."}]'::jsonb, 'a', '"Could you... please?" is the most polite form for a request. "Can" is acceptable but less formal; "could" is more polite.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1623,7 +1623,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('3e6e3345-a167-528b-86c9-8f8012c051f7', '5e9f70de-f505-5482-a231-2c5e52d2bb68', 'Choose the most polite request:', '[{"id":"a","text":"Could you pass the salt, please?"},{"id":"b","text":"Can you pass the salt?"},{"id":"c","text":"Pass the salt."},{"id":"d","text":"You should pass the salt."}]'::jsonb, 'a', '"Could you... please?" is the most polite form for a request. "Can" is acceptable but less formal; "could" is more polite.', 3)
+  ('3e6e3345-a167-528b-86c9-8f8012c051f7', '5e9f70de-f505-5482-a231-2c5e52d2bb68', 'Complete: "When she was a child, she ___ speak French fluently."', '[{"id":"a","text":"can"},{"id":"b","text":"may"},{"id":"c","text":"could"},{"id":"d","text":"should"}]'::jsonb, 'c', '"Could" is the past form of "can" and expresses past ability: she could speak French fluently when she was a child.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1633,7 +1633,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('68c353c4-5d65-5e6c-a162-99ffe1dfcef8', '5e9f70de-f505-5482-a231-2c5e52d2bb68', 'Complete: "When she was a child, she ___ speak French fluently."', '[{"id":"a","text":"can"},{"id":"b","text":"may"},{"id":"c","text":"could"},{"id":"d","text":"should"}]'::jsonb, 'c', '"Could" is the past form of "can" and expresses past ability: she could speak French fluently when she was a child.', 4)
+  ('68c353c4-5d65-5e6c-a162-99ffe1dfcef8', '5e9f70de-f505-5482-a231-2c5e52d2bb68', 'Choose the correct sentence about formal permission:', '[{"id":"a","text":"Can I go to the toilet?"},{"id":"b","text":"May I leave the room, please?"},{"id":"c","text":"Must I go to the toilet?"},{"id":"d","text":"Should I leave the room?"}]'::jsonb, 'b', '"May I...?" is the formal way to ask for permission. "Can" is informal; "must" is for obligation; "should" is for advice.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1643,7 +1643,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('101b87bc-3422-5b24-b2e4-1cd2a0ca63ab', '5e9f70de-f505-5482-a231-2c5e52d2bb68', 'Choose the correct sentence about formal permission:', '[{"id":"a","text":"Can I go to the toilet?"},{"id":"b","text":"May I leave the room, please?"},{"id":"c","text":"Must I go to the toilet?"},{"id":"d","text":"Should I leave the room?"}]'::jsonb, 'b', '"May I...?" is the formal way to ask for permission. "Can" is informal; "must" is for obligation; "should" is for advice.', 5)
+  ('101b87bc-3422-5b24-b2e4-1cd2a0ca63ab', '5e9f70de-f505-5482-a231-2c5e52d2bb68', 'What is the difference between these two sentences? (1) "You mustn''t tell her." (2) "You don''t have to tell her."', '[{"id":"a","text":"They mean the same thing: it is not necessary."},{"id":"b","text":"(1) means it is forbidden; (2) means it is not necessary."},{"id":"c","text":"(1) means it is not necessary; (2) means it is forbidden."},{"id":"d","text":"Both mean you are not allowed."}]'::jsonb, 'b', '"Mustn''t" = prohibition (you are NOT allowed to tell her). "Don''t have to" = no obligation (you are free not to, but it''s your choice). These are opposite in meaning.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1685,7 +1685,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('462d9345-5c31-5111-8ce8-314de8fd5caa', '04cd9fbd-81fc-5332-b16f-d4105405d5b6', 'Which sentence is a correctly formed first conditional?', '[{"id":"a","text":"If you will study hard, you will pass."},{"id":"b","text":"If you studied hard, you will pass."},{"id":"c","text":"If you study hard, you will pass."},{"id":"d","text":"If you study hard, you would pass."}]'::jsonb, 'c', 'The first conditional uses the present simple in the if-clause (never "will") and will + base verb in the main clause.', 2)
+  ('462d9345-5c31-5111-8ce8-314de8fd5caa', '04cd9fbd-81fc-5332-b16f-d4105405d5b6', 'What does the second conditional express?', '[{"id":"a","text":"A real and likely future situation"},{"id":"b","text":"A general scientific truth"},{"id":"c","text":"An imaginary or hypothetical situation in the present or future"},{"id":"d","text":"A completed past action"}]'::jsonb, 'c', 'The second conditional (if + past simple, would + base verb) describes situations that are unreal, imaginary, or unlikely right now.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1695,7 +1695,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('da303622-b350-5b8b-9b6d-370d9728bb8e', '04cd9fbd-81fc-5332-b16f-d4105405d5b6', 'What does the second conditional express?', '[{"id":"a","text":"A real and likely future situation"},{"id":"b","text":"A general scientific truth"},{"id":"c","text":"An imaginary or hypothetical situation in the present or future"},{"id":"d","text":"A completed past action"}]'::jsonb, 'c', 'The second conditional (if + past simple, would + base verb) describes situations that are unreal, imaginary, or unlikely right now.', 3)
+  ('da303622-b350-5b8b-9b6d-370d9728bb8e', '04cd9fbd-81fc-5332-b16f-d4105405d5b6', 'Which sentence is a correctly formed first conditional?', '[{"id":"a","text":"If you will study hard, you will pass."},{"id":"b","text":"If you studied hard, you will pass."},{"id":"c","text":"If you study hard, you will pass."},{"id":"d","text":"If you study hard, you would pass."}]'::jsonb, 'c', 'The first conditional uses the present simple in the if-clause (never "will") and will + base verb in the main clause.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1777,7 +1777,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('9f28f12e-250e-5f6c-9fe4-d5c4de564764', '97d5948a-d69a-595c-a33a-175dd7c3b34e', 'Rewrite using "unless": "If you don''t eat breakfast, you will feel weak." Choose the correct version:', '[{"id":"a","text":"Unless you don''t eat breakfast, you will feel weak."},{"id":"b","text":"Unless you ate breakfast, you would feel weak."},{"id":"c","text":"Unless you eat breakfast, you would feel weak."},{"id":"d","text":"Unless you eat breakfast, you will feel weak."}]'::jsonb, 'd', '"Unless" already means "if ... not", so the verb stays positive: unless you eat breakfast, you will feel weak. Using "don''t" after "unless" creates a double negative.', 5)
+  ('9f28f12e-250e-5f6c-9fe4-d5c4de564764', '97d5948a-d69a-595c-a33a-175dd7c3b34e', 'Identify the conditional type: "If animals could talk, the world would be very different."', '[{"id":"a","text":"Zero conditional"},{"id":"b","text":"First conditional"},{"id":"c","text":"No conditional"},{"id":"d","text":"Second conditional"}]'::jsonb, 'd', 'If + past simple (could talk) + would + base verb (would be) = second conditional. Animals cannot really talk — it is a hypothetical, unreal situation.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1787,7 +1787,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('402518e0-c2ac-5c9c-86c9-8db84a66c20a', '97d5948a-d69a-595c-a33a-175dd7c3b34e', 'Identify the conditional type: "If animals could talk, the world would be very different."', '[{"id":"a","text":"Zero conditional"},{"id":"b","text":"First conditional"},{"id":"c","text":"No conditional"},{"id":"d","text":"Second conditional"}]'::jsonb, 'd', 'If + past simple (could talk) + would + base verb (would be) = second conditional. Animals cannot really talk — it is a hypothetical, unreal situation.', 6)
+  ('402518e0-c2ac-5c9c-86c9-8db84a66c20a', '97d5948a-d69a-595c-a33a-175dd7c3b34e', 'Rewrite using "unless": "If you don''t eat breakfast, you will feel weak." Choose the correct version:', '[{"id":"a","text":"Unless you don''t eat breakfast, you will feel weak."},{"id":"b","text":"Unless you ate breakfast, you would feel weak."},{"id":"c","text":"Unless you eat breakfast, you would feel weak."},{"id":"d","text":"Unless you eat breakfast, you will feel weak."}]'::jsonb, 'd', '"Unless" already means "if ... not", so the verb stays positive: unless you eat breakfast, you will feel weak. Using "don''t" after "unless" creates a double negative.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1839,7 +1839,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('6d753d89-3393-5d46-80cb-7105df4178f0', 'aa6477e9-c60c-5771-9828-15c32bace66c', 'Complete: "___ you finish early, you can leave." (use unless or if)', '[{"id":"a","text":"Unless"},{"id":"b","text":"Although"},{"id":"c","text":"If"},{"id":"d","text":"Because"}]'::jsonb, 'c', 'The sentence means: finishing early is the condition for being allowed to leave. This is a positive condition, so use "if": if you finish early, you can leave. "Unless" would mean the opposite.', 4)
+  ('6d753d89-3393-5d46-80cb-7105df4178f0', 'aa6477e9-c60c-5771-9828-15c32bace66c', 'Choose the sentence where the comma is used correctly:', '[{"id":"a","text":"We will cancel the trip, if it snows."},{"id":"b","text":"If it snows we will cancel the trip."},{"id":"c","text":"We will cancel, the trip if it snows."},{"id":"d","text":"If it snows, we will cancel the trip."}]'::jsonb, 'd', 'The comma is placed after the if-clause when it comes first in the sentence: "If it snows, we will cancel the trip." No comma is needed when the main clause comes first (option a has an unnecessary comma).', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1849,7 +1849,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('279267c3-6b7e-528e-a57e-a4ab75cfd473', 'aa6477e9-c60c-5771-9828-15c32bace66c', 'Choose the sentence where the comma is used correctly:', '[{"id":"a","text":"We will cancel the trip, if it snows."},{"id":"b","text":"If it snows we will cancel the trip."},{"id":"c","text":"We will cancel, the trip if it snows."},{"id":"d","text":"If it snows, we will cancel the trip."}]'::jsonb, 'd', 'The comma is placed after the if-clause when it comes first in the sentence: "If it snows, we will cancel the trip." No comma is needed when the main clause comes first (option a has an unnecessary comma).', 5)
+  ('279267c3-6b7e-528e-a57e-a4ab75cfd473', 'aa6477e9-c60c-5771-9828-15c32bace66c', 'Complete: "___ you finish early, you can leave." (use unless or if)', '[{"id":"a","text":"Unless"},{"id":"b","text":"Although"},{"id":"c","text":"If"},{"id":"d","text":"Because"}]'::jsonb, 'c', 'The sentence means: finishing early is the condition for being allowed to leave. This is a positive condition, so use "if": if you finish early, you can leave. "Unless" would mean the opposite.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1911,7 +1911,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('c5b5be7e-f4ab-55b6-a38e-181570ee31d9', '6c069575-64c8-5d0f-bd94-5fda4d4c80a3', 'When is the "by + agent" phrase typically omitted in a passive sentence?', '[{"id":"a","text":"When the sentence is in the present tense"},{"id":"b","text":"When the subject is plural"},{"id":"c","text":"When the agent is unknown, unimportant, or obvious from context"},{"id":"d","text":"When the verb is irregular"}]'::jsonb, 'c', 'The "by + agent" phrase is often left out when the agent is unknown ("My wallet was stolen"), unimportant, or already obvious from context.', 4)
+  ('c5b5be7e-f4ab-55b6-a38e-181570ee31d9', '6c069575-64c8-5d0f-bd94-5fda4d4c80a3', 'Which sentence correctly uses the past simple passive?', '[{"id":"a","text":"The bridge is built in 1990."},{"id":"b","text":"The bridge was build in 1990."},{"id":"c","text":"The bridge were built in 1990."},{"id":"d","text":"The bridge was built in 1990."}]'::jsonb, 'd', 'The past simple passive uses was/were + past participle. "Bridge" is singular, so "was" is correct, and "built" is the past participle of "build".', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1921,7 +1921,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('b71e28ea-6533-5302-b2c9-9ddad3b2c439', '6c069575-64c8-5d0f-bd94-5fda4d4c80a3', 'Which sentence correctly uses the past simple passive?', '[{"id":"a","text":"The bridge is built in 1990."},{"id":"b","text":"The bridge was build in 1990."},{"id":"c","text":"The bridge were built in 1990."},{"id":"d","text":"The bridge was built in 1990."}]'::jsonb, 'd', 'The past simple passive uses was/were + past participle. "Bridge" is singular, so "was" is correct, and "built" is the past participle of "build".', 5)
+  ('b71e28ea-6533-5302-b2c9-9ddad3b2c439', '6c069575-64c8-5d0f-bd94-5fda4d4c80a3', 'When is the "by + agent" phrase typically omitted in a passive sentence?', '[{"id":"a","text":"When the sentence is in the present tense"},{"id":"b","text":"When the subject is plural"},{"id":"c","text":"When the agent is unknown, unimportant, or obvious from context"},{"id":"d","text":"When the verb is irregular"}]'::jsonb, 'c', 'The "by + agent" phrase is often left out when the agent is unknown ("My wallet was stolen"), unimportant, or already obvious from context.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1953,7 +1953,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('0b38e0c4-8ce6-5c7a-a51b-cd1d96b9c7b9', '69ebe656-2d06-5124-80fc-9f898ee0a2b8', 'Turn this active sentence into passive: "Someone broke the vase." The correct passive is:', '[{"id":"a","text":"The vase is broken."},{"id":"b","text":"The vase was broken."},{"id":"c","text":"The vase were broken."},{"id":"d","text":"The vase was break."}]'::jsonb, 'b', 'The active verb is past simple (broke), so the passive uses WAS + past participle (broken): The vase was broken.', 2)
+  ('0b38e0c4-8ce6-5c7a-a51b-cd1d96b9c7b9', '69ebe656-2d06-5124-80fc-9f898ee0a2b8', 'Complete: "Arabic ___ in Tunisia." (present simple passive of ''speak'')', '[{"id":"a","text":"speaks"},{"id":"b","text":"is spoken"},{"id":"c","text":"are spoken"},{"id":"d","text":"was spoken"}]'::jsonb, 'b', '"Arabic" is singular. The present simple passive of "speak" is IS + spoken: Arabic is spoken in Tunisia.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1963,7 +1963,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('1886b0c7-fccb-565d-92ff-f84e3a6993f4', '69ebe656-2d06-5124-80fc-9f898ee0a2b8', 'Complete: "Arabic ___ in Tunisia." (present simple passive of ''speak'')', '[{"id":"a","text":"speaks"},{"id":"b","text":"is spoken"},{"id":"c","text":"are spoken"},{"id":"d","text":"was spoken"}]'::jsonb, 'b', '"Arabic" is singular. The present simple passive of "speak" is IS + spoken: Arabic is spoken in Tunisia.', 3)
+  ('1886b0c7-fccb-565d-92ff-f84e3a6993f4', '69ebe656-2d06-5124-80fc-9f898ee0a2b8', 'Turn this active sentence into passive: "Someone broke the vase." The correct passive is:', '[{"id":"a","text":"The vase is broken."},{"id":"b","text":"The vase was broken."},{"id":"c","text":"The vase were broken."},{"id":"d","text":"The vase was break."}]'::jsonb, 'b', 'The active verb is past simple (broke), so the passive uses WAS + past participle (broken): The vase was broken.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1983,7 +1983,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('a9e2968b-a92d-5746-9362-164238da0854', '69ebe656-2d06-5124-80fc-9f898ee0a2b8', 'Why is the passive preferred in: "Oil was discovered in the desert"?', '[{"id":"a","text":"Because the subject is performing the action."},{"id":"b","text":"Because the action is happening right now."},{"id":"c","text":"Because the agent is unimportant; the focus is on the discovery."},{"id":"d","text":"Because \"discover\" is a stative verb."}]'::jsonb, 'c', 'We use the passive here because the agent (who discovered it) is unimportant or unknown — the focus is on the result: oil being discovered.', 5)
+  ('a9e2968b-a92d-5746-9362-164238da0854', '69ebe656-2d06-5124-80fc-9f898ee0a2b8', 'Complete: "The exam ___ yesterday by all the students." (past simple passive of ''take'')', '[{"id":"a","text":"is taken"},{"id":"b","text":"are taken"},{"id":"c","text":"was taken"},{"id":"d","text":"took"}]'::jsonb, 'c', '"The exam" is singular and "yesterday" signals past tense. The past simple passive is WAS + taken: The exam was taken yesterday.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1993,7 +1993,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('7989200f-316a-50cf-a23b-c990be75e64e', '69ebe656-2d06-5124-80fc-9f898ee0a2b8', 'Complete: "The exam ___ yesterday by all the students." (past simple passive of ''take'')', '[{"id":"a","text":"is taken"},{"id":"b","text":"are taken"},{"id":"c","text":"was taken"},{"id":"d","text":"took"}]'::jsonb, 'c', '"The exam" is singular and "yesterday" signals past tense. The past simple passive is WAS + taken: The exam was taken yesterday.', 6)
+  ('7989200f-316a-50cf-a23b-c990be75e64e', '69ebe656-2d06-5124-80fc-9f898ee0a2b8', 'Why is the passive preferred in: "Oil was discovered in the desert"?', '[{"id":"a","text":"Because the subject is performing the action."},{"id":"b","text":"Because the action is happening right now."},{"id":"c","text":"Because the agent is unimportant; the focus is on the discovery."},{"id":"d","text":"Because \"discover\" is a stative verb."}]'::jsonb, 'c', 'We use the passive here because the agent (who discovered it) is unimportant or unknown — the focus is on the result: oil being discovered.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2159,7 +2159,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('719aef66-3c4a-5ad6-9af9-50fd99dcfbce', 'e2d9a8ce-ad7d-5cdd-a8af-04c3a19cea1d', 'Direct: "I will help you," he said. Choose the correct reported form:', '[{"id":"a","text":"He said that he will help you."},{"id":"b","text":"He told that he would help me."},{"id":"c","text":"He said that he would help me."},{"id":"d","text":"He said that he would help you."}]'::jsonb, 'c', '''will'' backshifts to ''would''. The pronoun ''you'' changes to ''me'' (the listener becomes the reporter). We use ''say that'', not ''told that''.', 2)
+  ('719aef66-3c4a-5ad6-9af9-50fd99dcfbce', 'e2d9a8ce-ad7d-5cdd-a8af-04c3a19cea1d', 'Which sentence uses ''tell'' correctly?', '[{"id":"a","text":"She told that she was ready."},{"id":"b","text":"She said me that she was ready."},{"id":"c","text":"She told me that she was ready."},{"id":"d","text":"She told that the test was easy."}]'::jsonb, 'c', '''tell'' always requires a personal object: tell + person + (that) + clause. ''She told me that she was ready'' is the only correct pattern.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2169,7 +2169,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('a209293d-9928-57f6-8315-b45fbd4f39e3', 'e2d9a8ce-ad7d-5cdd-a8af-04c3a19cea1d', 'Which sentence uses ''tell'' correctly?', '[{"id":"a","text":"She told that she was ready."},{"id":"b","text":"She said me that she was ready."},{"id":"c","text":"She told me that she was ready."},{"id":"d","text":"She told that the test was easy."}]'::jsonb, 'c', '''tell'' always requires a personal object: tell + person + (that) + clause. ''She told me that she was ready'' is the only correct pattern.', 3)
+  ('a209293d-9928-57f6-8315-b45fbd4f39e3', 'e2d9a8ce-ad7d-5cdd-a8af-04c3a19cea1d', 'Direct: "I will help you," he said. Choose the correct reported form:', '[{"id":"a","text":"He said that he will help you."},{"id":"b","text":"He told that he would help me."},{"id":"c","text":"He said that he would help me."},{"id":"d","text":"He said that he would help you."}]'::jsonb, 'c', '''will'' backshifts to ''would''. The pronoun ''you'' changes to ''me'' (the listener becomes the reporter). We use ''say that'', not ''told that''.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2241,7 +2241,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('c8e56ca4-49e2-5025-8b40-72839f6dcbf5', '038be31c-9625-5dc2-8227-4a7402dbfe43', 'Direct: "I studied here yesterday," she told me. Identify all the changes in the reported form: ''She told me she had studied there the day before.''', '[{"id":"a","text":"Only the tense changed."},{"id":"b","text":"Only the pronoun and time word changed."},{"id":"c","text":"The pronoun, tense, place word, and time word all changed."},{"id":"d","text":"The tense, place word, and time word all changed."}]'::jsonb, 'c', '''I'' → ''she'' (pronoun); past simple ''studied'' → past perfect ''had studied'' (tense backshift); ''here'' → ''there'' (place word); ''yesterday'' → ''the day before'' (time word). All four elements changed.', 3)
+  ('c8e56ca4-49e2-5025-8b40-72839f6dcbf5', '038be31c-9625-5dc2-8227-4a7402dbfe43', 'Direct: "Can you open the window?" she asked him. Choose the correct reported form:', '[{"id":"a","text":"She asked him if he can open the window."},{"id":"b","text":"She told him if he could open the window."},{"id":"c","text":"She asked him if he could open the window."},{"id":"d","text":"She asked him could he open the window."}]'::jsonb, 'c', 'A yes/no question is reported with ''if/whether''. ''can'' backshifts to ''could''. Normal word order: ''he could open''. The pronoun ''you'' changes to ''he''.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2251,7 +2251,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('97062025-2da0-52e1-b0a4-2dd3e6625115', '038be31c-9625-5dc2-8227-4a7402dbfe43', 'Direct: "Can you open the window?" she asked him. Choose the correct reported form:', '[{"id":"a","text":"She asked him if he can open the window."},{"id":"b","text":"She told him if he could open the window."},{"id":"c","text":"She asked him if he could open the window."},{"id":"d","text":"She asked him could he open the window."}]'::jsonb, 'c', 'A yes/no question is reported with ''if/whether''. ''can'' backshifts to ''could''. Normal word order: ''he could open''. The pronoun ''you'' changes to ''he''.', 4)
+  ('97062025-2da0-52e1-b0a4-2dd3e6625115', '038be31c-9625-5dc2-8227-4a7402dbfe43', 'Direct: "I studied here yesterday," she told me. Identify all the changes in the reported form: ''She told me she had studied there the day before.''', '[{"id":"a","text":"Only the tense changed."},{"id":"b","text":"Only the pronoun and time word changed."},{"id":"c","text":"The pronoun, tense, place word, and time word all changed."},{"id":"d","text":"The tense, place word, and time word all changed."}]'::jsonb, 'c', '''I'' → ''she'' (pronoun); past simple ''studied'' → past perfect ''had studied'' (tense backshift); ''here'' → ''there'' (place word); ''yesterday'' → ''the day before'' (time word). All four elements changed.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,

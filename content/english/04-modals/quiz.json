@@ -10,7 +10,8 @@
         { "id": "d", "text": "You must wear a seatbelt." }
       ],
       "correctOption": "d",
-      "explanation": "Modal verbs are followed directly by the base verb with no -s, no -ed, and no \"to\". \"You must wear\" is the only correctly formed option."
+      "explanation": "Modal verbs are followed directly by the base verb with no -s, no -ed, and no \"to\". \"You must wear\" is the only correctly formed option.",
+      "difficulty": 1
     },
     {
       "prompt": "What is the key difference between \"mustn't\" and \"don't have to\"?",
@@ -27,7 +28,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "\"Mustn't\" forbids an action (you are not allowed). \"Don't have to\" means the action is not required but you are free to choose."
+      "explanation": "\"Mustn't\" forbids an action (you are not allowed). \"Don't have to\" means the action is not required but you are free to choose.",
+      "difficulty": 3
     },
     {
       "prompt": "Which modal expresses a polite request, more formal than \"can\"?",
@@ -38,7 +40,8 @@
         { "id": "d", "text": "may not" }
       ],
       "correctOption": "c",
-      "explanation": "\"Could\" is used for polite requests and is considered more polite than \"can\". For example: \"Could you open the window?\""
+      "explanation": "\"Could\" is used for polite requests and is considered more polite than \"can\". For example: \"Could you open the window?\"",
+      "difficulty": 2
     },
     {
       "prompt": "Which sentence correctly uses \"should\" to give advice?",
@@ -49,7 +52,8 @@
         { "id": "d", "text": "You shoulds eat more vegetables." }
       ],
       "correctOption": "c",
-      "explanation": "\"Should\" is followed by the base verb with no \"to\" and no -ing. The correct form is \"should eat\"."
+      "explanation": "\"Should\" is followed by the base verb with no \"to\" and no -ing. The correct form is \"should eat\".",
+      "difficulty": 1
     },
     {
       "prompt": "What is the difference between \"may\" and \"might\" when expressing possibility?",
@@ -63,7 +67,8 @@
         { "id": "d", "text": "They cannot be used interchangeably for possibility." }
       ],
       "correctOption": "b",
-      "explanation": "Both \"may\" and \"might\" express possibility, but \"might\" suggests even less certainty than \"may\". In practice they can often be used interchangeably."
+      "explanation": "Both \"may\" and \"might\" express possibility, but \"might\" suggests even less certainty than \"may\". In practice they can often be used interchangeably.",
+      "difficulty": 2
     }
   ]
 }

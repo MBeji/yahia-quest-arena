@@ -10,7 +10,8 @@
         { "id": "d", "text": "I answer it." }
       ],
       "correctOption": "b",
-      "explanation": "\"Will\" is used for a spontaneous decision made at the moment of speaking. You have just decided to answer the phone right now."
+      "explanation": "\"Will\" is used for a spontaneous decision made at the moment of speaking. You have just decided to answer the phone right now.",
+      "difficulty": 1
     },
     {
       "prompt": "You can see dark clouds gathering overhead. Which sentence correctly expresses an evidence-based prediction?",
@@ -21,7 +22,8 @@
         { "id": "d", "text": "It will have rained." }
       ],
       "correctOption": "c",
-      "explanation": "\"Be going to\" is used for predictions based on visible present evidence. The dark clouds you can see right now are the evidence."
+      "explanation": "\"Be going to\" is used for predictions based on visible present evidence. The dark clouds you can see right now are the evidence.",
+      "difficulty": 1
     },
     {
       "prompt": "Which sentence correctly uses a time clause with a future meaning?",
@@ -32,7 +34,8 @@
         { "id": "d", "text": "Call me when you arrived." }
       ],
       "correctOption": "b",
-      "explanation": "After time conjunctions such as when, as soon as, before, after, and until in a future sentence, use the present simple, not will."
+      "explanation": "After time conjunctions such as when, as soon as, before, after, and until in a future sentence, use the present simple, not will.",
+      "difficulty": 2
     },
     {
       "prompt": "Which form expresses a fixed, confirmed arrangement already in your diary?",
@@ -43,7 +46,8 @@
         { "id": "d", "text": "I was meeting the doctor at 9 a.m. tomorrow." }
       ],
       "correctOption": "c",
-      "explanation": "The present continuous is used for future events that are already arranged and confirmed with others, such as a diary appointment."
+      "explanation": "The present continuous is used for future events that are already arranged and confirmed with others, such as a diary appointment.",
+      "difficulty": 2
     },
     {
       "prompt": "What is the correct negative form of \"will\" in a sentence?",
@@ -54,7 +58,8 @@
         { "id": "d", "text": "She isn't will come." }
       ],
       "correctOption": "b",
-      "explanation": "The negative of will is will not, contracted to won't. No auxiliary verb like do or be is added alongside will."
+      "explanation": "The negative of will is will not, contracted to won't. No auxiliary verb like do or be is added alongside will.",
+      "difficulty": 1
     }
   ]
 }

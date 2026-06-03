@@ -27,7 +27,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "Active: present simple. \"These shoes\" is plural → ARE + past participle of make (made): These shoes are made in Italy."
+      "explanation": "Active: present simple. \"These shoes\" is plural → ARE + past participle of make (made): These shoes are made in Italy.",
+      "difficulty": 2
     },
     {
       "prompt": "Transform to passive: \"The teacher corrected our homework.\" The correct passive is:",
@@ -50,7 +51,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "Active verb is past simple (corrected). \"Our homework\" is singular → WAS + past participle (corrected): Our homework was corrected by the teacher."
+      "explanation": "Active verb is past simple (corrected). \"Our homework\" is singular → WAS + past participle (corrected): Our homework was corrected by the teacher.",
+      "difficulty": 2
     },
     {
       "prompt": "Choose the sentence where the passive is used correctly:",
@@ -73,7 +75,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "\"The pyramids\" is plural + past time → WERE + past participle of build (built): The pyramids were built thousands of years ago."
+      "explanation": "\"The pyramids\" is plural + past time → WERE + past participle of build (built): The pyramids were built thousands of years ago.",
+      "difficulty": 2
     },
     {
       "prompt": "Active: \"A student finds a wallet.\" → Passive:",
@@ -96,7 +99,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "Active verb is present simple (finds). \"A wallet\" is singular → IS + past participle of find (found): A wallet is found by a student."
+      "explanation": "Active verb is present simple (finds). \"A wallet\" is singular → IS + past participle of find (found): A wallet is found by a student.",
+      "difficulty": 2
     },
     {
       "prompt": "Choose the sentence that correctly OMITS the by-agent because it is obvious:",
@@ -119,7 +123,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "When it is obvious that a doctor performs the examination, \"by a doctor\" adds no information and is correctly omitted: The patient was examined."
+      "explanation": "When it is obvious that a doctor performs the examination, \"by a doctor\" adds no information and is correctly omitted: The patient was examined.",
+      "difficulty": 3
     },
     {
       "prompt": "Complete the sentence with the correct passive: \"The new library ___ last year.\" (open)",
@@ -142,7 +147,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "\"The new library\" is singular and \"last year\" signals past tense → WAS + past participle (opened): The new library was opened last year."
+      "explanation": "\"The new library\" is singular and \"last year\" signals past tense → WAS + past participle (opened): The new library was opened last year.",
+      "difficulty": 3
     }
   ]
 }

@@ -27,7 +27,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "The reporting verb is past (said), so the present simple 'am' backshifts to past simple 'was'. The pronoun 'I' changes to 'she'. We use 'say that', not 'told that'."
+      "explanation": "The reporting verb is past (said), so the present simple 'am' backshifts to past simple 'was'. The pronoun 'I' changes to 'she'. We use 'say that', not 'told that'.",
+      "difficulty": 1
     },
     {
       "prompt": "Direct: \"I will help you,\" he said. Choose the correct reported form:",
@@ -50,7 +51,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "'will' backshifts to 'would'. The pronoun 'you' changes to 'me' (the listener becomes the reporter). We use 'say that', not 'told that'."
+      "explanation": "'will' backshifts to 'would'. The pronoun 'you' changes to 'me' (the listener becomes the reporter). We use 'say that', not 'told that'.",
+      "difficulty": 2
     },
     {
       "prompt": "Which sentence uses 'tell' correctly?",
@@ -73,7 +75,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "'tell' always requires a personal object: tell + person + (that) + clause. 'She told me that she was ready' is the only correct pattern."
+      "explanation": "'tell' always requires a personal object: tell + person + (that) + clause. 'She told me that she was ready' is the only correct pattern.",
+      "difficulty": 1
     },
     {
       "prompt": "Direct: \"Are you ready?\" she asked me. Choose the correct reported question:",
@@ -96,7 +99,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "Yes/no questions use 'if/whether'. Word order becomes normal (subject before verb): 'if I was ready'. The tense backshifts: 'are' → 'was'."
+      "explanation": "Yes/no questions use 'if/whether'. Word order becomes normal (subject before verb): 'if I was ready'. The tense backshifts: 'are' → 'was'.",
+      "difficulty": 2
     },
     {
       "prompt": "Direct: \"Don't run in the corridor!\" the teacher said. Choose the correct reported command:",
@@ -119,7 +123,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "Negative commands are reported with 'tell + person + not to + infinitive'. 'The teacher told the students not to run in the corridor' is correct."
+      "explanation": "Negative commands are reported with 'tell + person + not to + infinitive'. 'The teacher told the students not to run in the corridor' is correct.",
+      "difficulty": 2
     },
     {
       "prompt": "Direct: \"I can swim,\" she said. The time word 'now' in her speech would become:",
@@ -142,7 +147,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "When time and place words shift to reported speech, 'now' becomes 'then'. Other shifts: today → that day, tomorrow → the next day, here → there."
+      "explanation": "When time and place words shift to reported speech, 'now' becomes 'then'. Other shifts: today → that day, tomorrow → the next day, here → there.",
+      "difficulty": 3
     }
   ]
 }

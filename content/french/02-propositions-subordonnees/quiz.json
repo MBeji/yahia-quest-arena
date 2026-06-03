@@ -13,7 +13,8 @@
         { "id": "d", "text": "Une proposition qui exprime toujours une condition." }
       ],
       "correctOption": "b",
-      "explanation": "La proposition subordonnée dépend de la principale : supprimée, la principale garde son sens ; mais la subordonnée seule perd le sien. Elle est introduite par un subordonnant."
+      "explanation": "La proposition subordonnée dépend de la principale : supprimée, la principale garde son sens ; mais la subordonnée seule perd le sien. Elle est introduite par un subordonnant.",
+      "difficulty": 1
     },
     {
       "prompt": "Quel pronom relatif est employé lorsque la subordonnée relative a la fonction de sujet ?",
@@ -24,7 +25,8 @@
         { "id": "d", "text": "où" }
       ],
       "correctOption": "c",
-      "explanation": "« qui » est le pronom relatif sujet : « Le héros qui combat le dragon est courageux. » Le pronom relatif COD est « que », et « dont » remplace un groupe introduit par « de »."
+      "explanation": "« qui » est le pronom relatif sujet : « Le héros qui combat le dragon est courageux. » Le pronom relatif COD est « que », et « dont » remplace un groupe introduit par « de ».",
+      "difficulty": 1
     },
     {
       "prompt": "La subordonnée complétive est introduite par la conjonction « que » et a la fonction de :",
@@ -35,7 +37,8 @@
         { "id": "d", "text": "Complément d'agent" }
       ],
       "correctOption": "b",
-      "explanation": "La subordonnée complétive est COD du verbe principal et peut être remplacée par « cela » : « Je crois que le héros vaincra. » → « Je crois cela. »"
+      "explanation": "La subordonnée complétive est COD du verbe principal et peut être remplacée par « cela » : « Je crois que le héros vaincra. » → « Je crois cela. »",
+      "difficulty": 2
     },
     {
       "prompt": "Quelle conjonction introduit une subordonnée de but et exige le subjonctif ?",
@@ -46,7 +49,8 @@
         { "id": "d", "text": "après que" }
       ],
       "correctOption": "c",
-      "explanation": "« pour que » (ainsi qu'« afin que ») introduit une subordonnée de but, toujours au subjonctif : « Il s'entraîne pour que son équipe gagne. »"
+      "explanation": "« pour que » (ainsi qu'« afin que ») introduit une subordonnée de but, toujours au subjonctif : « Il s'entraîne pour que son équipe gagne. »",
+      "difficulty": 2
     },
     {
       "prompt": "Dans la phrase conditionnelle « Si tu t'entraînais, tu vaincrais. », quel est le temps du verbe dans la subordonnée introduite par « si » ?",
@@ -57,7 +61,8 @@
         { "id": "d", "text": "Le subjonctif présent" }
       ],
       "correctOption": "c",
-      "explanation": "Après « si » de condition exprimant un fait éventuel (hypothèse), on emploie l'imparfait dans la subordonnée et le conditionnel présent dans la principale. On n'emploie jamais le futur ni le conditionnel après « si »."
+      "explanation": "Après « si » de condition exprimant un fait éventuel (hypothèse), on emploie l'imparfait dans la subordonnée et le conditionnel présent dans la principale. On n'emploie jamais le futur ni le conditionnel après « si ».",
+      "difficulty": 3
     }
   ]
 }

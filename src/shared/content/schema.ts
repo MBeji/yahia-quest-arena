@@ -50,6 +50,12 @@ export const questionSchema = z
     options: z.array(optionSchema).min(2).max(6),
     correctOption: z.string().min(1),
     explanation: z.string().min(1),
+    /**
+     * Per-question difficulty (1 = easy … 3 = hard). Questions within an
+     * exercise/quiz are emitted ordered by ascending difficulty. Optional;
+     * untagged questions default to medium (2) for ordering.
+     */
+    difficulty: z.number().int().min(1).max(3).optional(),
   })
   .refine((q) => new Set(q.options.map((o) => o.id)).size === q.options.length, {
     message: "option ids must be unique",

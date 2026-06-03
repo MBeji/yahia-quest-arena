@@ -27,7 +27,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "Modals never take -s or -to before the base verb: she can play. \"Cans\" and \"can to\" are both wrong."
+      "explanation": "Modals never take -s or -to before the base verb: she can play. \"Cans\" and \"can to\" are both wrong.",
+      "difficulty": 1
     },
     {
       "prompt": "Choose the best advice: \"You look tired. You ___ go to bed early.\"",
@@ -50,7 +51,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "\"Should\" expresses advice: you should go to bed early. \"Must not\" and \"may not\" express prohibition — not advice."
+      "explanation": "\"Should\" expresses advice: you should go to bed early. \"Must not\" and \"may not\" express prohibition — not advice.",
+      "difficulty": 1
     },
     {
       "prompt": "Complete: \"Students ___ wear a uniform at school. It is the rule.\"",
@@ -73,7 +75,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "\"Have to\" expresses external obligation (a rule set by authority): students have to wear a uniform."
+      "explanation": "\"Have to\" expresses external obligation (a rule set by authority): students have to wear a uniform.",
+      "difficulty": 1
     },
     {
       "prompt": "Which sentence means you are NOT allowed to do something?",
@@ -96,7 +99,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "\"Mustn't\" expresses prohibition — you are not allowed to smoke here. \"Don't have to\" simply means it is not necessary."
+      "explanation": "\"Mustn't\" expresses prohibition — you are not allowed to smoke here. \"Don't have to\" simply means it is not necessary.",
+      "difficulty": 2
     },
     {
       "prompt": "Complete: \"___ I use your dictionary, please?\" (informal permission)",
@@ -119,7 +123,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "\"Can\" is used for informal permission requests: Can I use your dictionary? \"Could\" would be more polite; \"May\" more formal."
+      "explanation": "\"Can\" is used for informal permission requests: Can I use your dictionary? \"Could\" would be more polite; \"May\" more formal.",
+      "difficulty": 1
     },
     {
       "prompt": "Complete: \"I'm not sure, but she ___ be at the library.\"",
@@ -142,7 +147,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "\"Might\" expresses weak or uncertain possibility: she might be at the library. \"Must\" would be near certainty; \"might\" fits \"I'm not sure\"."
+      "explanation": "\"Might\" expresses weak or uncertain possibility: she might be at the library. \"Must\" would be near certainty; \"might\" fits \"I'm not sure\".",
+      "difficulty": 2
     }
   ]
 }

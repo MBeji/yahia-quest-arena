@@ -928,7 +928,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('83fb403f-75d9-556c-b0a6-63498590cb6b', '738049b5-6688-53ba-8f47-c5fea00f2b0b', 'يحدث خسوف القمر عندما:', '[{"id":"a","text":"يتوسّط القمر بين الشمس والأرض"},{"id":"b","text":"يكون القمر بدرًا بعيدًا"},{"id":"c","text":"تشرق الشمس والقمر معًا"},{"id":"d","text":"تتوسّط الأرضُ بين الشمس والقمر"}]'::jsonb, 'd', 'في خسوف القمر تتوسّط الأرض بين الشمس والقمر، فيقع القمر في ظلّ الأرض.', 2)
+  ('83fb403f-75d9-556c-b0a6-63498590cb6b', '738049b5-6688-53ba-8f47-c5fea00f2b0b', 'الجسم الذي ينفذ منه الضوء وتُرى الأجسام عبره بوضوح يُسمّى:', '[{"id":"a","text":"معتمًا"},{"id":"b","text":"شفّافًا"},{"id":"c","text":"نصف شفّاف"},{"id":"d","text":"عاكسًا"}]'::jsonb, 'b', 'الجسم الشفّاف (كالزجاج النقي) ينفذ منه الضوء وتُرى الأجسام عبره بوضوح.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -938,7 +938,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('ae3a8765-e3bc-5de4-aad9-c042423ec09d', '738049b5-6688-53ba-8f47-c5fea00f2b0b', 'في الغرفة المظلمة (الصندوق ذو الثقب)، تكون الصورة المتكوّنة:', '[{"id":"a","text":"معتدلة ومكبّرة دائمًا"},{"id":"b","text":"غير موجودة"},{"id":"c","text":"مقلوبة"},{"id":"d","text":"ملوّنة بألوان قوس قزح"}]'::jsonb, 'c', 'بسبب الانتشار المستقيمي للضوء عبر الثقب، تنقلب الأشعّة فتتكوّن صورة مقلوبة.', 3)
+  ('ae3a8765-e3bc-5de4-aad9-c042423ec09d', '738049b5-6688-53ba-8f47-c5fea00f2b0b', 'يحدث خسوف القمر عندما:', '[{"id":"a","text":"يتوسّط القمر بين الشمس والأرض"},{"id":"b","text":"يكون القمر بدرًا بعيدًا"},{"id":"c","text":"تشرق الشمس والقمر معًا"},{"id":"d","text":"تتوسّط الأرضُ بين الشمس والقمر"}]'::jsonb, 'd', 'في خسوف القمر تتوسّط الأرض بين الشمس والقمر، فيقع القمر في ظلّ الأرض.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -948,7 +948,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('f94cd634-522e-5e75-b7d3-b3e59f27c9cc', '738049b5-6688-53ba-8f47-c5fea00f2b0b', 'الجسم الذي ينفذ منه الضوء وتُرى الأجسام عبره بوضوح يُسمّى:', '[{"id":"a","text":"معتمًا"},{"id":"b","text":"شفّافًا"},{"id":"c","text":"نصف شفّاف"},{"id":"d","text":"عاكسًا"}]'::jsonb, 'b', 'الجسم الشفّاف (كالزجاج النقي) ينفذ منه الضوء وتُرى الأجسام عبره بوضوح.', 4)
+  ('f94cd634-522e-5e75-b7d3-b3e59f27c9cc', '738049b5-6688-53ba-8f47-c5fea00f2b0b', 'في الغرفة المظلمة (الصندوق ذو الثقب)، تكون الصورة المتكوّنة:', '[{"id":"a","text":"معتدلة ومكبّرة دائمًا"},{"id":"b","text":"غير موجودة"},{"id":"c","text":"مقلوبة"},{"id":"d","text":"ملوّنة بألوان قوس قزح"}]'::jsonb, 'c', 'بسبب الانتشار المستقيمي للضوء عبر الثقب، تنقلب الأشعّة فتتكوّن صورة مقلوبة.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1154,7 +1154,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('3f12af12-f050-52c2-a1db-8fad4a8decaa', 'a18d4cb2-cdcc-506c-86e8-d099fa6d96e1', 'شعاع ضوئي يسقط على مرآة مستوية بزاوية 30° مع سطح المرآة (لا مع الناظم). ما زاوية الانعكاس؟', '[{"id":"a","text":"30°"},{"id":"b","text":"90°"},{"id":"c","text":"60°"},{"id":"d","text":"45°"}]'::jsonb, 'c', 'زاوية الورود تُقاس مع الناظم لا مع السطح. إذا كانت الزاوية مع السطح 30°، فزاوية الورود = 90° - 30° = 60°، وبالتالي زاوية الانعكاس = 60°.', 4)
+  ('3f12af12-f050-52c2-a1db-8fad4a8decaa', 'a18d4cb2-cdcc-506c-86e8-d099fa6d96e1', 'جسم طوله 10 سم يقف أمام مرآة مستوية. ما طول صورته؟', '[{"id":"a","text":"10 سم"},{"id":"b","text":"5 سم"},{"id":"c","text":"20 سم"},{"id":"d","text":"يعتمد على بُعده من المرآة"}]'::jsonb, 'a', 'الصورة في المرآة المستوية مماثلة، أي نفس حجم الجسم تمامًا. طول الصورة = طول الجسم = 10 سم بغضّ النظر عن البُعد.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1164,7 +1164,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('c9ea1556-ee82-55db-8a40-d7be20088539', 'a18d4cb2-cdcc-506c-86e8-d099fa6d96e1', 'لماذا نستطيع رؤية وجوهنا في مرآة مستوية؟', '[{"id":"a","text":"لأنّ المرآة تنتج الضوء من تلقاء نفسها"},{"id":"b","text":"لأنّ المرآة شفّافة تمامًا"},{"id":"c","text":"لأنّ الضوء ينكسر بزاوية كبيرة داخل الزجاج"},{"id":"d","text":"لأنّ الضوء الساقط على وجهنا ينعكس عنه ثمّ ينعكس عن المرآة نحو أعيننا"}]'::jsonb, 'd', 'الضوء (من مصدر خارجي) يسقط على وجهنا وينعكس عنه، ثمّ يسقط على المرآة وينعكس نحو أعيننا فنرى صورتنا.', 5)
+  ('c9ea1556-ee82-55db-8a40-d7be20088539', 'a18d4cb2-cdcc-506c-86e8-d099fa6d96e1', 'شعاع ضوئي يسقط على مرآة مستوية بزاوية 30° مع سطح المرآة (لا مع الناظم). ما زاوية الانعكاس؟', '[{"id":"a","text":"30°"},{"id":"b","text":"90°"},{"id":"c","text":"60°"},{"id":"d","text":"45°"}]'::jsonb, 'c', 'زاوية الورود تُقاس مع الناظم لا مع السطح. إذا كانت الزاوية مع السطح 30°، فزاوية الورود = 90° - 30° = 60°، وبالتالي زاوية الانعكاس = 60°.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1174,7 +1174,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('b9988cb9-26e9-527f-bbc6-edcb45251559', 'a18d4cb2-cdcc-506c-86e8-d099fa6d96e1', 'جسم طوله 10 سم يقف أمام مرآة مستوية. ما طول صورته؟', '[{"id":"a","text":"10 سم"},{"id":"b","text":"5 سم"},{"id":"c","text":"20 سم"},{"id":"d","text":"يعتمد على بُعده من المرآة"}]'::jsonb, 'a', 'الصورة في المرآة المستوية مماثلة، أي نفس حجم الجسم تمامًا. طول الصورة = طول الجسم = 10 سم بغضّ النظر عن البُعد.', 6)
+  ('b9988cb9-26e9-527f-bbc6-edcb45251559', 'a18d4cb2-cdcc-506c-86e8-d099fa6d96e1', 'لماذا نستطيع رؤية وجوهنا في مرآة مستوية؟', '[{"id":"a","text":"لأنّ المرآة تنتج الضوء من تلقاء نفسها"},{"id":"b","text":"لأنّ المرآة شفّافة تمامًا"},{"id":"c","text":"لأنّ الضوء ينكسر بزاوية كبيرة داخل الزجاج"},{"id":"d","text":"لأنّ الضوء الساقط على وجهنا ينعكس عنه ثمّ ينعكس عن المرآة نحو أعيننا"}]'::jsonb, 'd', 'الضوء (من مصدر خارجي) يسقط على وجهنا وينعكس عنه، ثمّ يسقط على المرآة وينعكس نحو أعيننا فنرى صورتنا.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1206,7 +1206,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('2d726520-6cd0-5c8e-83fa-f1f921a5596f', '1da0695e-2e04-56bd-9f84-120f0b841b71', 'عند انتقال الضوء من الهواء (وسط أقلّ كثافة) إلى الزجاج (وسط أكثر كثافة)، تكون زاوية الانكسار:', '[{"id":"a","text":"أكبر من زاوية الورود"},{"id":"b","text":"مساوية لزاوية الورود"},{"id":"c","text":"أصغر من زاوية الورود (ينكسر نحو الناظم)"},{"id":"d","text":"تساوي دائمًا 90°"}]'::jsonb, 'c', 'عند الانتقال من وسط أقلّ كثافة إلى وسط أكثر كثافة ينكسر الضوء نحو الناظم، أي أنّ زاوية الانكسار تكون أصغر من زاوية الورود (i₂ < i₁).', 2)
+  ('2d726520-6cd0-5c8e-83fa-f1f921a5596f', '1da0695e-2e04-56bd-9f84-120f0b841b71', 'ما الفرق بين العدسة المجمّعة والعدسة المفرّقة؟', '[{"id":"a","text":"العدسة المجمّعة أرقّ في المنتصف وتفرّق الأشعّة، والمفرّقة أثخن وتجمّعها"},{"id":"b","text":"العدسة المجمّعة (محدّبة) أثخن في المنتصف وتجمّع الأشعّة الموازية، والمفرّقة (مقعّرة) أرقّ وتفرّق الأشعّة"},{"id":"c","text":"كلتاهما تجمّعان الأشعّة لكن بطريقتَين مختلفتَين"},{"id":"d","text":"العدسة المجمّعة لا تُنتج صورة حقيقية أبدًا"}]'::jsonb, 'b', 'العدسة المجمّعة (المحدّبة) أثخن في المنتصف وتجمّع الأشعّة الموازية في نقطة واحدة تُسمّى البؤرة. والعدسة المفرّقة (المقعّرة) أرقّ في المنتصف وتفرّق الأشعّة الموازية.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1216,7 +1216,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('c82436f1-08a1-59e7-b547-318b3f88c7e1', '1da0695e-2e04-56bd-9f84-120f0b841b71', 'ما الفرق بين العدسة المجمّعة والعدسة المفرّقة؟', '[{"id":"a","text":"العدسة المجمّعة أرقّ في المنتصف وتفرّق الأشعّة، والمفرّقة أثخن وتجمّعها"},{"id":"b","text":"العدسة المجمّعة (محدّبة) أثخن في المنتصف وتجمّع الأشعّة الموازية، والمفرّقة (مقعّرة) أرقّ وتفرّق الأشعّة"},{"id":"c","text":"كلتاهما تجمّعان الأشعّة لكن بطريقتَين مختلفتَين"},{"id":"d","text":"العدسة المجمّعة لا تُنتج صورة حقيقية أبدًا"}]'::jsonb, 'b', 'العدسة المجمّعة (المحدّبة) أثخن في المنتصف وتجمّع الأشعّة الموازية في نقطة واحدة تُسمّى البؤرة. والعدسة المفرّقة (المقعّرة) أرقّ في المنتصف وتفرّق الأشعّة الموازية.', 3)
+  ('c82436f1-08a1-59e7-b547-318b3f88c7e1', '1da0695e-2e04-56bd-9f84-120f0b841b71', 'ما «البُعد البؤري» في العدسة المجمّعة؟', '[{"id":"a","text":"قطر العدسة"},{"id":"b","text":"المسافة بين المركز البصري والبؤرة"},{"id":"c","text":"المسافة بين الجسم والعدسة"},{"id":"d","text":"المسافة بين العدسة والصورة"}]'::jsonb, 'b', 'البُعد البؤري f هو المسافة بين المركز البصري للعدسة (O) وبؤرتها (F)، ويُرمز له بـ f = OF. كلّما زاد تحدّب العدسة قلّ البُعد البؤري وزادت قوّة التجميع.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1226,7 +1226,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('b7848d4b-3e45-523c-b1a3-503e8a557e2e', '1da0695e-2e04-56bd-9f84-120f0b841b71', 'ما «البُعد البؤري» في العدسة المجمّعة؟', '[{"id":"a","text":"قطر العدسة"},{"id":"b","text":"المسافة بين المركز البصري والبؤرة"},{"id":"c","text":"المسافة بين الجسم والعدسة"},{"id":"d","text":"المسافة بين العدسة والصورة"}]'::jsonb, 'b', 'البُعد البؤري f هو المسافة بين المركز البصري للعدسة (O) وبؤرتها (F)، ويُرمز له بـ f = OF. كلّما زاد تحدّب العدسة قلّ البُعد البؤري وزادت قوّة التجميع.', 4)
+  ('b7848d4b-3e45-523c-b1a3-503e8a557e2e', '1da0695e-2e04-56bd-9f84-120f0b841b71', 'عند انتقال الضوء من الهواء (وسط أقلّ كثافة) إلى الزجاج (وسط أكثر كثافة)، تكون زاوية الانكسار:', '[{"id":"a","text":"أكبر من زاوية الورود"},{"id":"b","text":"مساوية لزاوية الورود"},{"id":"c","text":"أصغر من زاوية الورود (ينكسر نحو الناظم)"},{"id":"d","text":"تساوي دائمًا 90°"}]'::jsonb, 'c', 'عند الانتقال من وسط أقلّ كثافة إلى وسط أكثر كثافة ينكسر الضوء نحو الناظم، أي أنّ زاوية الانكسار تكون أصغر من زاوية الورود (i₂ < i₁).', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1258,7 +1258,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('58fc540e-f2c8-5ec7-8a5f-b7f4f3c5c2ab', 'd08d38a1-4e65-593c-97ac-fc646167bd6f', 'ماذا يحدث لشعاع ضوئي حين ينتقل من الهواء إلى الزجاج؟', '[{"id":"a","text":"ينعكس كلّيًّا دون نفاذ"},{"id":"b","text":"يواصل مساره دون أيّ تغيير"},{"id":"c","text":"ينكسر بعيدًا عن الناظم (زاوية الانكسار أكبر من زاوية الورود)"},{"id":"d","text":"ينكسر نحو الناظم (زاوية الانكسار أصغر من زاوية الورود)"}]'::jsonb, 'd', 'الزجاج أكثر كثافة بصرية من الهواء، فحين ينتقل الضوء من الهواء إلى الزجاج ينكسر نحو الناظم وتكون زاوية الانكسار أصغر من زاوية الورود.', 1)
+  ('58fc540e-f2c8-5ec7-8a5f-b7f4f3c5c2ab', 'd08d38a1-4e65-593c-97ac-fc646167bd6f', 'ما الاسم الذي يُطلق على الخطّ العموديّ على سطح الفصل عند نقطة الورود؟', '[{"id":"a","text":"الناظم"},{"id":"b","text":"المحور البصري"},{"id":"c","text":"الشعاع المنكسر"},{"id":"d","text":"البُعد البؤري"}]'::jsonb, 'a', 'الناظم هو الخطّ المستقيم العموديّ على سطح الفصل عند نقطة الورود، ومنه تُقاس زاويتا الورود والانكسار.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1268,7 +1268,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('76664654-c161-5832-98f0-bc64f4e97610', 'd08d38a1-4e65-593c-97ac-fc646167bd6f', 'ما الاسم الذي يُطلق على الخطّ العموديّ على سطح الفصل عند نقطة الورود؟', '[{"id":"a","text":"الناظم"},{"id":"b","text":"المحور البصري"},{"id":"c","text":"الشعاع المنكسر"},{"id":"d","text":"البُعد البؤري"}]'::jsonb, 'a', 'الناظم هو الخطّ المستقيم العموديّ على سطح الفصل عند نقطة الورود، ومنه تُقاس زاويتا الورود والانكسار.', 2)
+  ('76664654-c161-5832-98f0-bc64f4e97610', 'd08d38a1-4e65-593c-97ac-fc646167bd6f', 'أيّ نوع من العدسات أثخن في المنتصف ويجمّع الأشعّة المتوازية في نقطة واحدة؟', '[{"id":"a","text":"العدسة المفرّقة (المقعّرة)"},{"id":"b","text":"العدسة المجمّعة (المحدّبة)"},{"id":"c","text":"المرآة المستوية"},{"id":"d","text":"المنشور الزجاجي"}]'::jsonb, 'b', 'العدسة المجمّعة (المحدّبة) أثخن في المنتصف، وتجمّع الأشعّة الموازية للمحور البصري في نقطة تُسمّى البؤرة.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1278,7 +1278,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('c0c0bb99-7beb-5f79-86e3-ae6df1b48834', 'd08d38a1-4e65-593c-97ac-fc646167bd6f', 'أيّ نوع من العدسات أثخن في المنتصف ويجمّع الأشعّة المتوازية في نقطة واحدة؟', '[{"id":"a","text":"العدسة المفرّقة (المقعّرة)"},{"id":"b","text":"العدسة المجمّعة (المحدّبة)"},{"id":"c","text":"المرآة المستوية"},{"id":"d","text":"المنشور الزجاجي"}]'::jsonb, 'b', 'العدسة المجمّعة (المحدّبة) أثخن في المنتصف، وتجمّع الأشعّة الموازية للمحور البصري في نقطة تُسمّى البؤرة.', 3)
+  ('c0c0bb99-7beb-5f79-86e3-ae6df1b48834', 'd08d38a1-4e65-593c-97ac-fc646167bd6f', 'ما البُعد البؤري f لعدسة مجمّعة؟', '[{"id":"a","text":"المسافة من البؤرة إلى سطح الفصل"},{"id":"b","text":"المسافة من الجسم إلى الصورة"},{"id":"c","text":"قطر العدسة"},{"id":"d","text":"المسافة من المركز البصري O إلى البؤرة F"}]'::jsonb, 'd', 'البُعد البؤري f هو المسافة بين المركز البصري للعدسة O والبؤرة F، أي f = OF.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1288,7 +1288,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('22840768-e8e7-56f5-a5c5-2491212fc033', 'd08d38a1-4e65-593c-97ac-fc646167bd6f', 'أين تتكوّن صورة جسم بُعده عن العدسة المجمّعة أكبر من ضعف البُعد البؤري (d > 2f)؟', '[{"id":"a","text":"صورة تخيّلية معتدلة مكبّرة"},{"id":"b","text":"صورة حقيقية مقلوبة مصغّرة"},{"id":"c","text":"لا تتكوّن أيّ صورة"},{"id":"d","text":"صورة حقيقية مقلوبة مكبّرة"}]'::jsonb, 'b', 'عندما يكون بُعد الجسم عن العدسة أكبر من ضعف البُعد البؤري (d > 2f)، تكون الصورة حقيقية مقلوبة ومصغّرة.', 4)
+  ('22840768-e8e7-56f5-a5c5-2491212fc033', 'd08d38a1-4e65-593c-97ac-fc646167bd6f', 'ماذا يحدث لشعاع ضوئي حين ينتقل من الهواء إلى الزجاج؟', '[{"id":"a","text":"ينعكس كلّيًّا دون نفاذ"},{"id":"b","text":"يواصل مساره دون أيّ تغيير"},{"id":"c","text":"ينكسر بعيدًا عن الناظم (زاوية الانكسار أكبر من زاوية الورود)"},{"id":"d","text":"ينكسر نحو الناظم (زاوية الانكسار أصغر من زاوية الورود)"}]'::jsonb, 'd', 'الزجاج أكثر كثافة بصرية من الهواء، فحين ينتقل الضوء من الهواء إلى الزجاج ينكسر نحو الناظم وتكون زاوية الانكسار أصغر من زاوية الورود.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1298,7 +1298,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('674ae4f4-ad03-5554-823c-749fcbdef4ac', 'd08d38a1-4e65-593c-97ac-fc646167bd6f', 'ما البُعد البؤري f لعدسة مجمّعة؟', '[{"id":"a","text":"المسافة من البؤرة إلى سطح الفصل"},{"id":"b","text":"المسافة من الجسم إلى الصورة"},{"id":"c","text":"قطر العدسة"},{"id":"d","text":"المسافة من المركز البصري O إلى البؤرة F"}]'::jsonb, 'd', 'البُعد البؤري f هو المسافة بين المركز البصري للعدسة O والبؤرة F، أي f = OF.', 5)
+  ('674ae4f4-ad03-5554-823c-749fcbdef4ac', 'd08d38a1-4e65-593c-97ac-fc646167bd6f', 'كيف تعمل العدسة المكبّرة لتعطي صورة مكبّرة؟', '[{"id":"a","text":"يُوضع الجسم على بُعد أكبر من ضعف البُعد البؤري"},{"id":"b","text":"يُوضع الجسم عند البؤرة تمامًا (d = f)"},{"id":"c","text":"تُستعمل عدسة مفرّقة لا مجمّعة"},{"id":"d","text":"يُوضع الجسم بين العدسة والبؤرة (d < f)"}]'::jsonb, 'd', 'للحصول على صورة تخيّلية مكبّرة معتدلة بالعدسة المكبّرة، يجب وضع الجسم بين العدسة والبؤرة أي على بُعد أصغر من البُعد البؤري (d < f).', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1308,7 +1308,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('e5470327-b001-55f1-9629-5301f11c075f', 'd08d38a1-4e65-593c-97ac-fc646167bd6f', 'كيف تعمل العدسة المكبّرة لتعطي صورة مكبّرة؟', '[{"id":"a","text":"يُوضع الجسم على بُعد أكبر من ضعف البُعد البؤري"},{"id":"b","text":"يُوضع الجسم عند البؤرة تمامًا (d = f)"},{"id":"c","text":"تُستعمل عدسة مفرّقة لا مجمّعة"},{"id":"d","text":"يُوضع الجسم بين العدسة والبؤرة (d < f)"}]'::jsonb, 'd', 'للحصول على صورة تخيّلية مكبّرة معتدلة بالعدسة المكبّرة، يجب وضع الجسم بين العدسة والبؤرة أي على بُعد أصغر من البُعد البؤري (d < f).', 6)
+  ('e5470327-b001-55f1-9629-5301f11c075f', 'd08d38a1-4e65-593c-97ac-fc646167bd6f', 'أين تتكوّن صورة جسم بُعده عن العدسة المجمّعة أكبر من ضعف البُعد البؤري (d > 2f)؟', '[{"id":"a","text":"صورة تخيّلية معتدلة مكبّرة"},{"id":"b","text":"صورة حقيقية مقلوبة مصغّرة"},{"id":"c","text":"لا تتكوّن أيّ صورة"},{"id":"d","text":"صورة حقيقية مقلوبة مكبّرة"}]'::jsonb, 'b', 'عندما يكون بُعد الجسم عن العدسة أكبر من ضعف البُعد البؤري (d > 2f)، تكون الصورة حقيقية مقلوبة ومصغّرة.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1484,7 +1484,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('cc2b2eda-e8eb-5c01-ab28-c54e17bba99f', '9b865bc8-65e0-5dea-a117-9c1c5ce40bf4', 'كم ذرّة أكسجين يحتوي جزيء ثاني أكسيد الكربون CO₂؟', '[{"id":"a","text":"ذرّة واحدة"},{"id":"b","text":"ذرّتان"},{"id":"c","text":"ثلاث ذرّات"},{"id":"d","text":"أربع ذرّات"}]'::jsonb, 'b', 'في صيغة CO₂، الرقم السفلي 2 بجانب O يعني ذرّتَين من الأكسجين. الجزيء يحتوي أيضًا على ذرّة كربون واحدة.', 3)
+  ('cc2b2eda-e8eb-5c01-ab28-c54e17bba99f', '9b865bc8-65e0-5dea-a117-9c1c5ce40bf4', 'ما رمز عنصر الصوديوم؟', '[{"id":"a","text":"So"},{"id":"b","text":"Sd"},{"id":"c","text":"S"},{"id":"d","text":"Na"}]'::jsonb, 'd', 'رمز الصوديوم هو Na مشتقّ من اسمه اللاتيني Natrium. أمّا S فهو رمز الكبريت (Sulfur).', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1494,7 +1494,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('382486af-141f-5d5b-ad27-0edf365442ff', '9b865bc8-65e0-5dea-a117-9c1c5ce40bf4', 'ما الفرق بين O و O₂؟', '[{"id":"a","text":"لا فرق، هما نفس الشيء"},{"id":"b","text":"O جزيء، O₂ ذرّة"},{"id":"c","text":"O أكسجين، O₂ أوزون"},{"id":"d","text":"O ذرّة أكسجين واحدة، O₂ جزيء يتكوّن من ذرّتَي أكسجين"}]'::jsonb, 'd', 'O يرمز إلى ذرّة أكسجين واحدة منفردة، أمّا O₂ فهو جزيء يتكوّن من ذرّتَي أكسجين مرتبطتَين. الأكسجين في الهواء يوجد في شكل O₂.', 4)
+  ('382486af-141f-5d5b-ad27-0edf365442ff', '9b865bc8-65e0-5dea-a117-9c1c5ce40bf4', 'كم ذرّة أكسجين يحتوي جزيء ثاني أكسيد الكربون CO₂؟', '[{"id":"a","text":"ذرّة واحدة"},{"id":"b","text":"ذرّتان"},{"id":"c","text":"ثلاث ذرّات"},{"id":"d","text":"أربع ذرّات"}]'::jsonb, 'b', 'في صيغة CO₂، الرقم السفلي 2 بجانب O يعني ذرّتَين من الأكسجين. الجزيء يحتوي أيضًا على ذرّة كربون واحدة.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1504,7 +1504,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('20eca5c0-7450-520f-98e6-70065fe31efc', '9b865bc8-65e0-5dea-a117-9c1c5ce40bf4', 'كم ذرّة في المجموع يحتوي جزيء الماء H₂O؟', '[{"id":"a","text":"ذرّة واحدة"},{"id":"b","text":"ذرّتان"},{"id":"c","text":"أربع ذرّات"},{"id":"d","text":"ثلاث ذرّات"}]'::jsonb, 'd', 'H₂O يحتوي على ذرّتَي هيدروجين (H₂) وذرّة أكسجين واحدة (O)، أي 2 + 1 = 3 ذرّات في المجموع.', 5)
+  ('20eca5c0-7450-520f-98e6-70065fe31efc', '9b865bc8-65e0-5dea-a117-9c1c5ce40bf4', 'ما الفرق بين O و O₂؟', '[{"id":"a","text":"لا فرق، هما نفس الشيء"},{"id":"b","text":"O جزيء، O₂ ذرّة"},{"id":"c","text":"O أكسجين، O₂ أوزون"},{"id":"d","text":"O ذرّة أكسجين واحدة، O₂ جزيء يتكوّن من ذرّتَي أكسجين"}]'::jsonb, 'd', 'O يرمز إلى ذرّة أكسجين واحدة منفردة، أمّا O₂ فهو جزيء يتكوّن من ذرّتَي أكسجين مرتبطتَين. الأكسجين في الهواء يوجد في شكل O₂.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1514,7 +1514,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('f76b245f-3e8f-50ec-9a9d-8676fcce9aac', '9b865bc8-65e0-5dea-a117-9c1c5ce40bf4', 'ما رمز عنصر الصوديوم؟', '[{"id":"a","text":"So"},{"id":"b","text":"Sd"},{"id":"c","text":"S"},{"id":"d","text":"Na"}]'::jsonb, 'd', 'رمز الصوديوم هو Na مشتقّ من اسمه اللاتيني Natrium. أمّا S فهو رمز الكبريت (Sulfur).', 6)
+  ('f76b245f-3e8f-50ec-9a9d-8676fcce9aac', '9b865bc8-65e0-5dea-a117-9c1c5ce40bf4', 'كم ذرّة في المجموع يحتوي جزيء الماء H₂O؟', '[{"id":"a","text":"ذرّة واحدة"},{"id":"b","text":"ذرّتان"},{"id":"c","text":"أربع ذرّات"},{"id":"d","text":"ثلاث ذرّات"}]'::jsonb, 'd', 'H₂O يحتوي على ذرّتَي هيدروجين (H₂) وذرّة أكسجين واحدة (O)، أي 2 + 1 = 3 ذرّات في المجموع.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1536,7 +1536,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('472f2736-7a87-57ee-892a-3947d612b368', 'f431df6e-67d9-56e3-91f5-590546de1fca', 'جزيء الميتان CH₄: كم ذرّة هيدروجين يحتوي، وكم مجموع ذرّاته؟', '[{"id":"a","text":"ذرّتا هيدروجين، 3 ذرّات في المجموع"},{"id":"b","text":"4 ذرّات هيدروجين، 4 ذرّات في المجموع"},{"id":"c","text":"ذرّة هيدروجين واحدة، 2 ذرّات في المجموع"},{"id":"d","text":"4 ذرّات هيدروجين، 5 ذرّات في المجموع"}]'::jsonb, 'd', 'CH₄: ذرّة كربون واحدة (C) + 4 ذرّات هيدروجين (H₄). المجموع = 1 + 4 = 5 ذرّات.', 1)
+  ('472f2736-7a87-57ee-892a-3947d612b368', 'f431df6e-67d9-56e3-91f5-590546de1fca', 'أيّ الصيغ التالية تمثّل جزيء ملح الطعام (كلوريد الصوديوم)؟', '[{"id":"a","text":"NaOH"},{"id":"b","text":"Na₂O"},{"id":"c","text":"NaCl"},{"id":"d","text":"ClH"}]'::jsonb, 'c', 'ملح الطعام (كلوريد الصوديوم) صيغته NaCl: ذرّة صوديوم Na وذرّة كلور Cl. أمّا NaOH فهو هيدروكسيد الصوديوم (الصودا الكاوية).', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1546,7 +1546,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('00b35176-0c2a-569a-b53c-3fcba9c5f686', 'f431df6e-67d9-56e3-91f5-590546de1fca', 'ما مجموع الذرّات في جزيء H₂SO₄ (حمض الكبريتيك)؟', '[{"id":"a","text":"5 ذرّات"},{"id":"b","text":"6 ذرّات"},{"id":"c","text":"7 ذرّات"},{"id":"d","text":"8 ذرّات"}]'::jsonb, 'c', 'H₂SO₄: ذرّتا هيدروجين (H₂) + ذرّة كبريت (S) + 4 ذرّات أكسجين (O₄). المجموع = 2 + 1 + 4 = 7 ذرّات.', 2)
+  ('00b35176-0c2a-569a-b53c-3fcba9c5f686', 'f431df6e-67d9-56e3-91f5-590546de1fca', 'جزيء الميتان CH₄: كم ذرّة هيدروجين يحتوي، وكم مجموع ذرّاته؟', '[{"id":"a","text":"ذرّتا هيدروجين، 3 ذرّات في المجموع"},{"id":"b","text":"4 ذرّات هيدروجين، 4 ذرّات في المجموع"},{"id":"c","text":"ذرّة هيدروجين واحدة، 2 ذرّات في المجموع"},{"id":"d","text":"4 ذرّات هيدروجين، 5 ذرّات في المجموع"}]'::jsonb, 'd', 'CH₄: ذرّة كربون واحدة (C) + 4 ذرّات هيدروجين (H₄). المجموع = 1 + 4 = 5 ذرّات.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1566,7 +1566,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('26d1cfe6-94c3-5c57-aeec-d0c5388828e6', 'f431df6e-67d9-56e3-91f5-590546de1fca', 'أيّ الصيغ التالية تمثّل جزيء ملح الطعام (كلوريد الصوديوم)؟', '[{"id":"a","text":"NaOH"},{"id":"b","text":"Na₂O"},{"id":"c","text":"NaCl"},{"id":"d","text":"ClH"}]'::jsonb, 'c', 'ملح الطعام (كلوريد الصوديوم) صيغته NaCl: ذرّة صوديوم Na وذرّة كلور Cl. أمّا NaOH فهو هيدروكسيد الصوديوم (الصودا الكاوية).', 4)
+  ('26d1cfe6-94c3-5c57-aeec-d0c5388828e6', 'f431df6e-67d9-56e3-91f5-590546de1fca', 'أيّ الجمل التالية صحيحة حول الناظم (N) في نموذج الذرّة؟', '[{"id":"a","text":"النيوترونات موجبة الشحنة وتوجد خارج النواة"},{"id":"b","text":"النيوترونات سالبة الشحنة وتدور حول النواة"},{"id":"c","text":"النيوترونات محايدة الشحنة وتوجد داخل النواة"},{"id":"d","text":"النيوترونات هي نفسها الإلكترونات"}]'::jsonb, 'c', 'النيوترونات جسيمات عديمة الشحنة (محايدة) توجد داخل نواة الذرّة إلى جانب البروتونات. أمّا الإلكترونات فسالبة وتدور خارج النواة.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1576,7 +1576,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('eb0a741b-59df-562f-8139-4e96e205790c', 'f431df6e-67d9-56e3-91f5-590546de1fca', 'أيّ الجمل التالية صحيحة حول الناظم (N) في نموذج الذرّة؟', '[{"id":"a","text":"النيوترونات موجبة الشحنة وتوجد خارج النواة"},{"id":"b","text":"النيوترونات سالبة الشحنة وتدور حول النواة"},{"id":"c","text":"النيوترونات محايدة الشحنة وتوجد داخل النواة"},{"id":"d","text":"النيوترونات هي نفسها الإلكترونات"}]'::jsonb, 'c', 'النيوترونات جسيمات عديمة الشحنة (محايدة) توجد داخل نواة الذرّة إلى جانب البروتونات. أمّا الإلكترونات فسالبة وتدور خارج النواة.', 5)
+  ('eb0a741b-59df-562f-8139-4e96e205790c', 'f431df6e-67d9-56e3-91f5-590546de1fca', 'جزيء CO₂ يحتوي على كربون وأكسجين. ما مجموع الذرّات فيه؟', '[{"id":"a","text":"ذرّتان"},{"id":"b","text":"4 ذرّات"},{"id":"c","text":"3 ذرّات"},{"id":"d","text":"ذرّة واحدة"}]'::jsonb, 'c', 'CO₂: ذرّة كربون واحدة (C) + ذرّتا أكسجين (O₂). المجموع = 1 + 2 = 3 ذرّات.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1586,7 +1586,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('b01b9503-2b8d-557b-9f97-a1e65a8f73bd', 'f431df6e-67d9-56e3-91f5-590546de1fca', 'جزيء CO₂ يحتوي على كربون وأكسجين. ما مجموع الذرّات فيه؟', '[{"id":"a","text":"ذرّتان"},{"id":"b","text":"4 ذرّات"},{"id":"c","text":"3 ذرّات"},{"id":"d","text":"ذرّة واحدة"}]'::jsonb, 'c', 'CO₂: ذرّة كربون واحدة (C) + ذرّتا أكسجين (O₂). المجموع = 1 + 2 = 3 ذرّات.', 6)
+  ('b01b9503-2b8d-557b-9f97-a1e65a8f73bd', 'f431df6e-67d9-56e3-91f5-590546de1fca', 'ما مجموع الذرّات في جزيء H₂SO₄ (حمض الكبريتيك)؟', '[{"id":"a","text":"5 ذرّات"},{"id":"b","text":"6 ذرّات"},{"id":"c","text":"7 ذرّات"},{"id":"d","text":"8 ذرّات"}]'::jsonb, 'c', 'H₂SO₄: ذرّتا هيدروجين (H₂) + ذرّة كبريت (S) + 4 ذرّات أكسجين (O₄). المجموع = 2 + 1 + 4 = 7 ذرّات.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1710,7 +1710,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('53586353-b2ea-5962-8d4e-863c37d7367c', '07576f0b-3c33-598e-80e6-79b3ce4364ab', 'كم عدد ذرّات الأكسجين في 2H₂O؟', '[{"id":"a","text":"2"},{"id":"b","text":"4"},{"id":"c","text":"1"},{"id":"d","text":"3"}]'::jsonb, 'a', 'كلّ جزيء ماء يحتوي ذرّة أكسجين واحدة، و2H₂O يعني جزيئين، أي 2 × 1 = 2 ذرّة أكسجين.', 5)
+  ('53586353-b2ea-5962-8d4e-863c37d7367c', '07576f0b-3c33-598e-80e6-79b3ce4364ab', 'أيّ ممّا يلي مؤشّر على حدوث تفاعل كيميائي؟', '[{"id":"a","text":"انطلاق غاز أو تغيّر اللون وتكوّن مادّة جديدة"},{"id":"b","text":"تغيّر شكل المادّة فقط"},{"id":"c","text":"تغيّر درجة الحرارة دون تغيّر المادّة"},{"id":"d","text":"تبخّر الماء"}]'::jsonb, 'a', 'ظهور مادّة جديدة يصاحبه غالبًا انطلاق غاز أو تغيّر لون أو تكوّن راسب، وهي مؤشّرات على تفاعل كيميائي.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1720,7 +1720,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('8a56a677-e9ad-5b29-a153-45ba0e93741f', '07576f0b-3c33-598e-80e6-79b3ce4364ab', 'أيّ ممّا يلي مؤشّر على حدوث تفاعل كيميائي؟', '[{"id":"a","text":"انطلاق غاز أو تغيّر اللون وتكوّن مادّة جديدة"},{"id":"b","text":"تغيّر شكل المادّة فقط"},{"id":"c","text":"تغيّر درجة الحرارة دون تغيّر المادّة"},{"id":"d","text":"تبخّر الماء"}]'::jsonb, 'a', 'ظهور مادّة جديدة يصاحبه غالبًا انطلاق غاز أو تغيّر لون أو تكوّن راسب، وهي مؤشّرات على تفاعل كيميائي.', 6)
+  ('8a56a677-e9ad-5b29-a153-45ba0e93741f', '07576f0b-3c33-598e-80e6-79b3ce4364ab', 'كم عدد ذرّات الأكسجين في 2H₂O؟', '[{"id":"a","text":"2"},{"id":"b","text":"4"},{"id":"c","text":"1"},{"id":"d","text":"3"}]'::jsonb, 'a', 'كلّ جزيء ماء يحتوي ذرّة أكسجين واحدة، و2H₂O يعني جزيئين، أي 2 × 1 = 2 ذرّة أكسجين.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1742,7 +1742,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('8d7d1022-2db4-58cf-8902-1b61fe4128ad', '107c0650-6e11-5652-b548-d850f77b6e0a', 'ما الموازنة الصحيحة للتفاعل: H₂ + O₂ → H₂O؟', '[{"id":"a","text":"H₂ + O₂ → H₂O"},{"id":"b","text":"2H₂ + O₂ → 2H₂O"},{"id":"c","text":"H₂ + 2O₂ → 2H₂O"},{"id":"d","text":"2H₂ + 2O₂ → 2H₂O"}]'::jsonb, 'b', 'بـ 2H₂ + O₂ → 2H₂O يتساوى الهيدروجين (4 = 4) والأكسجين (2 = 2).', 1)
+  ('8d7d1022-2db4-58cf-8902-1b61fe4128ad', '107c0650-6e11-5652-b548-d850f77b6e0a', 'عند موازنة معادلة كيميائية، ما الذي يُسمح بتغييره؟', '[{"id":"a","text":"الأرقام السفلية داخل الصيغة"},{"id":"b","text":"رموز العناصر"},{"id":"c","text":"اتّجاه السهم"},{"id":"d","text":"المعاملات الموضوعة أمام الصيغ"}]'::jsonb, 'd', 'نوازن بتغيير المعاملات أمام الصيغ فقط؛ تغيير الأرقام السفلية يغيّر طبيعة المادّة نفسها.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1752,7 +1752,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('b46481cb-0b1f-5b2d-8a3d-a1d7bdc16b37', '107c0650-6e11-5652-b548-d850f77b6e0a', 'في CH₄ + 2O₂ → CO₂ + 2H₂O، كم عدد ذرّات الأكسجين في طرف المتفاعلات؟', '[{"id":"a","text":"2"},{"id":"b","text":"3"},{"id":"c","text":"4"},{"id":"d","text":"6"}]'::jsonb, 'c', '2O₂ يعني جزيئين من الأكسجين، أي 2 × 2 = 4 ذرّات أكسجين.', 2)
+  ('b46481cb-0b1f-5b2d-8a3d-a1d7bdc16b37', '107c0650-6e11-5652-b548-d850f77b6e0a', 'صدأ الحديد في الهواء الرطب هو تحوّل:', '[{"id":"a","text":"فيزيائي"},{"id":"b","text":"تغيّر حالة فقط"},{"id":"c","text":"لا تحوّل فيه"},{"id":"d","text":"كيميائي"}]'::jsonb, 'd', 'يتكوّن الصدأ (أكسيد الحديد) وهو مادّة جديدة، فالتحوّل كيميائي.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1762,7 +1762,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('5fc6de1c-ebe0-5e6e-8fe4-f25fe4e9a09c', '107c0650-6e11-5652-b548-d850f77b6e0a', 'عند موازنة معادلة كيميائية، ما الذي يُسمح بتغييره؟', '[{"id":"a","text":"الأرقام السفلية داخل الصيغة"},{"id":"b","text":"رموز العناصر"},{"id":"c","text":"اتّجاه السهم"},{"id":"d","text":"المعاملات الموضوعة أمام الصيغ"}]'::jsonb, 'd', 'نوازن بتغيير المعاملات أمام الصيغ فقط؛ تغيير الأرقام السفلية يغيّر طبيعة المادّة نفسها.', 3)
+  ('5fc6de1c-ebe0-5e6e-8fe4-f25fe4e9a09c', '107c0650-6e11-5652-b548-d850f77b6e0a', 'هل المعادلة C + O₂ → CO₂ موزونة؟', '[{"id":"a","text":"لا، ينقص الكربون"},{"id":"b","text":"لا، ينقص الأكسجين"},{"id":"c","text":"نعم، لأنّ عدد ذرّات كلّ عنصر متساوٍ في الطرفين"},{"id":"d","text":"لا يمكن معرفة ذلك"}]'::jsonb, 'c', 'الكربون 1 = 1 والأكسجين 2 = 2، فالمعادلة موزونة.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1772,7 +1772,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('04ac5da9-6bb3-5134-a3a6-0d508cf804bf', '107c0650-6e11-5652-b548-d850f77b6e0a', 'هل المعادلة C + O₂ → CO₂ موزونة؟', '[{"id":"a","text":"لا، ينقص الكربون"},{"id":"b","text":"لا، ينقص الأكسجين"},{"id":"c","text":"نعم، لأنّ عدد ذرّات كلّ عنصر متساوٍ في الطرفين"},{"id":"d","text":"لا يمكن معرفة ذلك"}]'::jsonb, 'c', 'الكربون 1 = 1 والأكسجين 2 = 2، فالمعادلة موزونة.', 4)
+  ('04ac5da9-6bb3-5134-a3a6-0d508cf804bf', '107c0650-6e11-5652-b548-d850f77b6e0a', 'تكوّنت نواتج كتلتها 23 g من تفاعل متفاعلَين، أحدهما كتلته 8 g. ما كتلة المتفاعل الآخر؟', '[{"id":"a","text":"15 g"},{"id":"b","text":"31 g"},{"id":"c","text":"8 g"},{"id":"d","text":"23 g"}]'::jsonb, 'a', 'بانحفاظ الكتلة: مجموع كتل المتفاعلات = 23 g، فكتلة المتفاعل الآخر = 23 − 8 = 15 g.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1782,7 +1782,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('9e8aff14-50ea-5585-9d86-d673d817419c', '107c0650-6e11-5652-b548-d850f77b6e0a', 'صدأ الحديد في الهواء الرطب هو تحوّل:', '[{"id":"a","text":"فيزيائي"},{"id":"b","text":"تغيّر حالة فقط"},{"id":"c","text":"لا تحوّل فيه"},{"id":"d","text":"كيميائي"}]'::jsonb, 'd', 'يتكوّن الصدأ (أكسيد الحديد) وهو مادّة جديدة، فالتحوّل كيميائي.', 5)
+  ('9e8aff14-50ea-5585-9d86-d673d817419c', '107c0650-6e11-5652-b548-d850f77b6e0a', 'ما الموازنة الصحيحة للتفاعل: H₂ + O₂ → H₂O؟', '[{"id":"a","text":"H₂ + O₂ → H₂O"},{"id":"b","text":"2H₂ + O₂ → 2H₂O"},{"id":"c","text":"H₂ + 2O₂ → 2H₂O"},{"id":"d","text":"2H₂ + 2O₂ → 2H₂O"}]'::jsonb, 'b', 'بـ 2H₂ + O₂ → 2H₂O يتساوى الهيدروجين (4 = 4) والأكسجين (2 = 2).', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1792,7 +1792,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('07cabb70-9805-5e1d-a27a-644d6106e340', '107c0650-6e11-5652-b548-d850f77b6e0a', 'تكوّنت نواتج كتلتها 23 g من تفاعل متفاعلَين، أحدهما كتلته 8 g. ما كتلة المتفاعل الآخر؟', '[{"id":"a","text":"15 g"},{"id":"b","text":"31 g"},{"id":"c","text":"8 g"},{"id":"d","text":"23 g"}]'::jsonb, 'a', 'بانحفاظ الكتلة: مجموع كتل المتفاعلات = 23 g، فكتلة المتفاعل الآخر = 23 − 8 = 15 g.', 6)
+  ('07cabb70-9805-5e1d-a27a-644d6106e340', '107c0650-6e11-5652-b548-d850f77b6e0a', 'في CH₄ + 2O₂ → CO₂ + 2H₂O، كم عدد ذرّات الأكسجين في طرف المتفاعلات؟', '[{"id":"a","text":"2"},{"id":"b","text":"3"},{"id":"c","text":"4"},{"id":"d","text":"6"}]'::jsonb, 'c', '2O₂ يعني جزيئين من الأكسجين، أي 2 × 2 = 4 ذرّات أكسجين.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1886,7 +1886,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('cdb6fa80-3981-5d0c-bfe0-380f76481070', '24df4d84-60f7-5d08-804d-2b85bc32228b', 'أيّ من المحاليل التالية له pH أكبر من 7؟', '[{"id":"a","text":"عصير الليمون"},{"id":"b","text":"خلّ المائدة"},{"id":"c","text":"محلول الأمونياك"},{"id":"d","text":"حمض المعدة"}]'::jsonb, 'c', 'محلول الأمونياك قاعدي وله pH يتراوح بين 11 و12، أي أكبر من 7. أمّا عصير الليمون والخلّ وحمض المعدة فكلّها حمضية (pH < 7).', 2)
+  ('cdb6fa80-3981-5d0c-bfe0-380f76481070', '24df4d84-60f7-5d08-804d-2b85bc32228b', 'ما قيمة pH الماء النقي عند 25 °C؟', '[{"id":"a","text":"0"},{"id":"b","text":"7"},{"id":"c","text":"14"},{"id":"d","text":"5"}]'::jsonb, 'b', 'الماء النقي عند 25 °C متعادل تمامًا؛ pH = 7 لا حمضيًّا ولا قاعديًّا.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1896,7 +1896,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('cf29f7c2-8e2e-5cca-8414-35e1ff94aa6c', '24df4d84-60f7-5d08-804d-2b85bc32228b', 'ما لون أزرق البروموتيمول (BBT) في محلول حمضي؟', '[{"id":"a","text":"أصفر"},{"id":"b","text":"أزرق"},{"id":"c","text":"أخضر"},{"id":"d","text":"أحمر"}]'::jsonb, 'a', 'أزرق البروموتيمول (BBT) يتحوّل إلى اللون الأصفر في الوسط الحمضي، وإلى الأخضر في الوسط المتعادل، وإلى الأزرق في الوسط القاعدي.', 3)
+  ('cf29f7c2-8e2e-5cca-8414-35e1ff94aa6c', '24df4d84-60f7-5d08-804d-2b85bc32228b', 'أيّ من المحاليل التالية له pH أكبر من 7؟', '[{"id":"a","text":"عصير الليمون"},{"id":"b","text":"خلّ المائدة"},{"id":"c","text":"محلول الأمونياك"},{"id":"d","text":"حمض المعدة"}]'::jsonb, 'c', 'محلول الأمونياك قاعدي وله pH يتراوح بين 11 و12، أي أكبر من 7. أمّا عصير الليمون والخلّ وحمض المعدة فكلّها حمضية (pH < 7).', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1906,7 +1906,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('f821d1c7-4eb5-56e7-ac5e-18bf8df9110b', '24df4d84-60f7-5d08-804d-2b85bc32228b', 'عند تخفيف محلول حمضي بإضافة الماء، ماذا يحدث لقيمة pH؟', '[{"id":"a","text":"ترتفع وتقترب من 7 دون تجاوزه"},{"id":"b","text":"تنخفض وتقترب من 0"},{"id":"c","text":"تتجاوز 7 وينقلب المحلول إلى قاعدي"},{"id":"d","text":"لا تتغيّر"}]'::jsonb, 'a', 'تخفيف المحلول الحمضي يُنقص تركيز الحمض فيرتفع pH ويقترب من 7، لكنّه لا يتجاوز 7 ولا يتحوّل المحلول إلى قاعدي.', 4)
+  ('f821d1c7-4eb5-56e7-ac5e-18bf8df9110b', '24df4d84-60f7-5d08-804d-2b85bc32228b', 'ما لون أزرق البروموتيمول (BBT) في محلول حمضي؟', '[{"id":"a","text":"أصفر"},{"id":"b","text":"أزرق"},{"id":"c","text":"أخضر"},{"id":"d","text":"أحمر"}]'::jsonb, 'a', 'أزرق البروموتيمول (BBT) يتحوّل إلى اللون الأصفر في الوسط الحمضي، وإلى الأخضر في الوسط المتعادل، وإلى الأزرق في الوسط القاعدي.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1916,7 +1916,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('24380511-202c-5ce8-9260-3708c9d74d6e', '24df4d84-60f7-5d08-804d-2b85bc32228b', 'ما قيمة pH الماء النقي عند 25 °C؟', '[{"id":"a","text":"0"},{"id":"b","text":"7"},{"id":"c","text":"14"},{"id":"d","text":"5"}]'::jsonb, 'b', 'الماء النقي عند 25 °C متعادل تمامًا؛ pH = 7 لا حمضيًّا ولا قاعديًّا.', 5)
+  ('24380511-202c-5ce8-9260-3708c9d74d6e', '24df4d84-60f7-5d08-804d-2b85bc32228b', 'أيّ كاشف يُعطي نتيجة pH تقريبية بين 0 و14 دفعةً واحدة؟', '[{"id":"a","text":"عبّاد الشمس"},{"id":"b","text":"ورق الـ pH (الكاشف العالمي)"},{"id":"c","text":"أزرق البروموتيمول"},{"id":"d","text":"فينول فثالين"}]'::jsonb, 'b', 'ورق الـ pH (الكاشف العالمي) يُعطي قيمة pH تقريبية من 0 إلى 14 بمقارنة لونه مع جدول ألوان مرجعي.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1926,7 +1926,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('5331c75a-150d-534f-a688-7318cc0f95f1', '24df4d84-60f7-5d08-804d-2b85bc32228b', 'أيّ كاشف يُعطي نتيجة pH تقريبية بين 0 و14 دفعةً واحدة؟', '[{"id":"a","text":"عبّاد الشمس"},{"id":"b","text":"ورق الـ pH (الكاشف العالمي)"},{"id":"c","text":"أزرق البروموتيمول"},{"id":"d","text":"فينول فثالين"}]'::jsonb, 'b', 'ورق الـ pH (الكاشف العالمي) يُعطي قيمة pH تقريبية من 0 إلى 14 بمقارنة لونه مع جدول ألوان مرجعي.', 6)
+  ('5331c75a-150d-534f-a688-7318cc0f95f1', '24df4d84-60f7-5d08-804d-2b85bc32228b', 'عند تخفيف محلول حمضي بإضافة الماء، ماذا يحدث لقيمة pH؟', '[{"id":"a","text":"ترتفع وتقترب من 7 دون تجاوزه"},{"id":"b","text":"تنخفض وتقترب من 0"},{"id":"c","text":"تتجاوز 7 وينقلب المحلول إلى قاعدي"},{"id":"d","text":"لا تتغيّر"}]'::jsonb, 'a', 'تخفيف المحلول الحمضي يُنقص تركيز الحمض فيرتفع pH ويقترب من 7، لكنّه لا يتجاوز 7 ولا يتحوّل المحلول إلى قاعدي.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1968,7 +1968,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('34aa0eab-bfbb-5f40-9291-98b7e9242788', 'e5ca2d8d-4123-5574-90f6-a5c907c89481', 'خلّطنا كمّيات متكافئة من حمض كلور الهيدروجين HCl وهيدروكسيد الصوديوم NaOH. ما المنتجات الناتجة؟', '[{"id":"a","text":"NaCl وH₂O فقط"},{"id":"b","text":"HCl فقط"},{"id":"c","text":"NaOH فقط"},{"id":"d","text":"لا يحدث أيّ تفاعل"}]'::jsonb, 'a', 'تفاعل التعادل: HCl + NaOH → NaCl + H₂O؛ ينتج ملح كلوريد الصوديوم (ملح الطعام) والماء، وتكون قيمة pH للمحلول قريبة من 7.', 3)
+  ('34aa0eab-bfbb-5f40-9291-98b7e9242788', 'e5ca2d8d-4123-5574-90f6-a5c907c89481', 'ما الكاشف الملائم لتمييز محلول حمضي عن قاعدي مع الحصول على قيمة pH تقريبية؟', '[{"id":"a","text":"عبّاد الشمس فقط"},{"id":"b","text":"أزرق البروموتيمول فقط"},{"id":"c","text":"ورق الـ pH (الكاشف العالمي)"},{"id":"d","text":"ماء مقطّر"}]'::jsonb, 'c', 'ورق الـ pH (الكاشف العالمي) هو الأنسب للحصول على قيمة pH تقريبية (0-14)، بينما يُعطي عبّاد الشمس وأزرق البروموتيمول معلومات نوعية (حمضي/متعادل/قاعدي) دون قيمة رقمية دقيقة.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1978,7 +1978,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('78c2c95e-9eb1-522d-b0e2-57c3049564c1', 'e5ca2d8d-4123-5574-90f6-a5c907c89481', 'تلميذ لديه محلول حمضي pH = 2، ثمّ خفّفه بالماء مرّتين. أيّ النتائج متوقّعة؟', '[{"id":"a","text":"pH ينخفض إلى 1"},{"id":"b","text":"pH يتجاوز 7 ويصبح قاعديًّا"},{"id":"c","text":"pH يرتفع ويقترب من 7 لكن يظلّ أقلّ من 7"},{"id":"d","text":"pH يبقى ثابتًا عند 2"}]'::jsonb, 'c', 'التخفيف يُقلّل تركيز الحمض فيرفع pH نحو 7، لكنّ المحلول يبقى حمضيًّا (pH < 7) ولا يتحوّل إلى قاعدي مهما خُفِّف.', 4)
+  ('78c2c95e-9eb1-522d-b0e2-57c3049564c1', 'e5ca2d8d-4123-5574-90f6-a5c907c89481', 'خلّطنا كمّيات متكافئة من حمض كلور الهيدروجين HCl وهيدروكسيد الصوديوم NaOH. ما المنتجات الناتجة؟', '[{"id":"a","text":"NaCl وH₂O فقط"},{"id":"b","text":"HCl فقط"},{"id":"c","text":"NaOH فقط"},{"id":"d","text":"لا يحدث أيّ تفاعل"}]'::jsonb, 'a', 'تفاعل التعادل: HCl + NaOH → NaCl + H₂O؛ ينتج ملح كلوريد الصوديوم (ملح الطعام) والماء، وتكون قيمة pH للمحلول قريبة من 7.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1988,7 +1988,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('24284667-64ac-573b-8987-f68e74c448a4', 'e5ca2d8d-4123-5574-90f6-a5c907c89481', 'ما الكاشف الملائم لتمييز محلول حمضي عن قاعدي مع الحصول على قيمة pH تقريبية؟', '[{"id":"a","text":"عبّاد الشمس فقط"},{"id":"b","text":"أزرق البروموتيمول فقط"},{"id":"c","text":"ورق الـ pH (الكاشف العالمي)"},{"id":"d","text":"ماء مقطّر"}]'::jsonb, 'c', 'ورق الـ pH (الكاشف العالمي) هو الأنسب للحصول على قيمة pH تقريبية (0-14)، بينما يُعطي عبّاد الشمس وأزرق البروموتيمول معلومات نوعية (حمضي/متعادل/قاعدي) دون قيمة رقمية دقيقة.', 5)
+  ('24284667-64ac-573b-8987-f68e74c448a4', 'e5ca2d8d-4123-5574-90f6-a5c907c89481', 'تلميذ لديه محلول حمضي pH = 2، ثمّ خفّفه بالماء مرّتين. أيّ النتائج متوقّعة؟', '[{"id":"a","text":"pH ينخفض إلى 1"},{"id":"b","text":"pH يتجاوز 7 ويصبح قاعديًّا"},{"id":"c","text":"pH يرتفع ويقترب من 7 لكن يظلّ أقلّ من 7"},{"id":"d","text":"pH يبقى ثابتًا عند 2"}]'::jsonb, 'c', 'التخفيف يُقلّل تركيز الحمض فيرفع pH نحو 7، لكنّ المحلول يبقى حمضيًّا (pH < 7) ولا يتحوّل إلى قاعدي مهما خُفِّف.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2050,7 +2050,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('9afc4975-4346-50d6-9565-fee46fd8703f', '3b556dba-b4f8-5797-8b33-0bc24deb47b2', 'ما تأثير زيادة تركيز شوارد المحلول على ناقليته الكهربائية؟', '[{"id":"a","text":"تنقص الناقلية الكهربائية"},{"id":"b","text":"لا يتغيّر شيء"},{"id":"c","text":"يتحوّل المحلول إلى موصل معدني"},{"id":"d","text":"تزداد الناقلية الكهربائية"}]'::jsonb, 'd', 'كلّما زاد تركيز الشوارد في المحلول ازداد عدد حاملات الشحنة فتزداد الناقلية الكهربائية. هذا يُفسّر لماذا يُضيء محلول NaCl المركّز اللمبةَ بشدّة أكبر من المخفّف.', 4)
+  ('9afc4975-4346-50d6-9565-fee46fd8703f', '3b556dba-b4f8-5797-8b33-0bc24deb47b2', 'في تجربة اختبار ناقلية محلول ما، اللمبة لا تضيء. ماذا يعني ذلك؟', '[{"id":"a","text":"المحلول يحتوي على شوارد كثيرة جدًّا"},{"id":"b","text":"المحلول غير شاردي (لا يحتوي شوارد حرّة)"},{"id":"c","text":"المولّد الكهربائي معطّل"},{"id":"d","text":"اللمبة مُضاءة لكنّ ضوءها خافت جدًّا"}]'::jsonb, 'b', 'عدم إضاءة اللمبة يعني أنّ الدائرة مفتوحة، أي أنّ المحلول لا يوصّل التيار. والسبب هو أنّ المحلول غير شاردي ولا يحتوي شوارد حرّة تحمل الشحنات.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2060,7 +2060,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('4a4eb02a-172a-533f-b615-d23ca18df1ed', '3b556dba-b4f8-5797-8b33-0bc24deb47b2', 'في تجربة اختبار ناقلية محلول ما، اللمبة لا تضيء. ماذا يعني ذلك؟', '[{"id":"a","text":"المحلول يحتوي على شوارد كثيرة جدًّا"},{"id":"b","text":"المحلول غير شاردي (لا يحتوي شوارد حرّة)"},{"id":"c","text":"المولّد الكهربائي معطّل"},{"id":"d","text":"اللمبة مُضاءة لكنّ ضوءها خافت جدًّا"}]'::jsonb, 'b', 'عدم إضاءة اللمبة يعني أنّ الدائرة مفتوحة، أي أنّ المحلول لا يوصّل التيار. والسبب هو أنّ المحلول غير شاردي ولا يحتوي شوارد حرّة تحمل الشحنات.', 5)
+  ('4a4eb02a-172a-533f-b615-d23ca18df1ed', '3b556dba-b4f8-5797-8b33-0bc24deb47b2', 'ما تأثير زيادة تركيز شوارد المحلول على ناقليته الكهربائية؟', '[{"id":"a","text":"تنقص الناقلية الكهربائية"},{"id":"b","text":"لا يتغيّر شيء"},{"id":"c","text":"يتحوّل المحلول إلى موصل معدني"},{"id":"d","text":"تزداد الناقلية الكهربائية"}]'::jsonb, 'd', 'كلّما زاد تركيز الشوارد في المحلول ازداد عدد حاملات الشحنة فتزداد الناقلية الكهربائية. هذا يُفسّر لماذا يُضيء محلول NaCl المركّز اللمبةَ بشدّة أكبر من المخفّف.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2102,7 +2102,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('f135d69e-e440-5280-a33f-857bd03ac27c', '9795d4ab-4ba5-58f5-bbb7-a2d8a35ab255', 'ما الشوارد الناتجة عن إذابة NaCl في الماء؟', '[{"id":"a","text":"Na²⁺ و Cl²⁻"},{"id":"b","text":"Na⁻ و Cl⁺"},{"id":"c","text":"Na⁺ و Cl⁻"},{"id":"d","text":"NaCl يبقى بلا تشرّد"}]'::jsonb, 'c', 'عند إذابة كلوريد الصوديوم NaCl في الماء يتشرّد إلى Na⁺ (كاتيون بشحنة +1) و Cl⁻ (أنيون بشحنة −1).', 3)
+  ('f135d69e-e440-5280-a33f-857bd03ac27c', '9795d4ab-4ba5-58f5-bbb7-a2d8a35ab255', 'الجسيم الذي يحمل شحنة كهربائية سالبة في المحلول يُسمّى:', '[{"id":"a","text":"كاتيون"},{"id":"b","text":"بروتون"},{"id":"c","text":"أنيون"},{"id":"d","text":"نيوترون"}]'::jsonb, 'c', 'الأنيون هو الأيون السالب (يحمل شحنة سالبة)، مثل Cl⁻ و OH⁻ و SO₄²⁻. أمّا الكاتيون فهو الأيون الموجب.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2112,7 +2112,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('50b9583a-ed55-5045-8898-733dee8955c0', '9795d4ab-4ba5-58f5-bbb7-a2d8a35ab255', 'إذا خفّفنا محلول NaCl المركّز بإضافة الماء، ماذا يحدث للناقلية الكهربائية؟', '[{"id":"a","text":"تزيد الناقلية"},{"id":"b","text":"تنقص الناقلية"},{"id":"c","text":"تنعدم الناقلية تمامًا"},{"id":"d","text":"لا تتغيّر الناقلية"}]'::jsonb, 'b', 'التخفيف يُقلّل تركيز الشوارد في وحدة الحجم، فتنقص الناقلية الكهربائية للمحلول. لكنّ المحلول يبقى شارديًّا (لا تنعدم الناقلية تمامًا).', 4)
+  ('50b9583a-ed55-5045-8898-733dee8955c0', '9795d4ab-4ba5-58f5-bbb7-a2d8a35ab255', 'ما الشوارد الناتجة عن إذابة NaCl في الماء؟', '[{"id":"a","text":"Na²⁺ و Cl²⁻"},{"id":"b","text":"Na⁻ و Cl⁺"},{"id":"c","text":"Na⁺ و Cl⁻"},{"id":"d","text":"NaCl يبقى بلا تشرّد"}]'::jsonb, 'c', 'عند إذابة كلوريد الصوديوم NaCl في الماء يتشرّد إلى Na⁺ (كاتيون بشحنة +1) و Cl⁻ (أنيون بشحنة −1).', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2132,7 +2132,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('9db33979-7743-5936-b6c7-a3d6f94ceca9', '9795d4ab-4ba5-58f5-bbb7-a2d8a35ab255', 'الجسيم الذي يحمل شحنة كهربائية سالبة في المحلول يُسمّى:', '[{"id":"a","text":"كاتيون"},{"id":"b","text":"بروتون"},{"id":"c","text":"أنيون"},{"id":"d","text":"نيوترون"}]'::jsonb, 'c', 'الأنيون هو الأيون السالب (يحمل شحنة سالبة)، مثل Cl⁻ و OH⁻ و SO₄²⁻. أمّا الكاتيون فهو الأيون الموجب.', 6)
+  ('9db33979-7743-5936-b6c7-a3d6f94ceca9', '9795d4ab-4ba5-58f5-bbb7-a2d8a35ab255', 'إذا خفّفنا محلول NaCl المركّز بإضافة الماء، ماذا يحدث للناقلية الكهربائية؟', '[{"id":"a","text":"تزيد الناقلية"},{"id":"b","text":"تنقص الناقلية"},{"id":"c","text":"تنعدم الناقلية تمامًا"},{"id":"d","text":"لا تتغيّر الناقلية"}]'::jsonb, 'b', 'التخفيف يُقلّل تركيز الشوارد في وحدة الحجم، فتنقص الناقلية الكهربائية للمحلول. لكنّ المحلول يبقى شارديًّا (لا تنعدم الناقلية تمامًا).', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2154,7 +2154,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('e5d52986-ff3e-5025-a7b9-255341e0839e', '7d98ea97-fb08-5cf9-874c-b1c7d35858a7', 'في تجربة ناقلية المحاليل، أضأنا اللمبة عند غمس القطبَين في محلول A، ولم تُضأ عند غمسهما في محلول B. أيّ الاستنتاجات صحيح؟', '[{"id":"a","text":"A وB كلاهما شاردي"},{"id":"b","text":"A غير شاردي؛ B شاردي"},{"id":"c","text":"A شاردي يحتوي شوارد؛ B غير شاردي لا يحتوي شوارد"},{"id":"d","text":"كلا المحلولَين غير شارديَّين"}]'::jsonb, 'c', 'إضاءة اللمبة دليل على وجود شوارد تنقل التيار (محلول A شاردي). عدم الإضاءة يدلّ على غياب الشوارد (محلول B غير شاردي كمحلول السكّر مثلًا).', 1)
+  ('e5d52986-ff3e-5025-a7b9-255341e0839e', '7d98ea97-fb08-5cf9-874c-b1c7d35858a7', 'تلميذ يريد اختبار ما إذا كان سائل مجهول ناقلًا للكهرباء. ما الجهاز المناسب لذلك؟', '[{"id":"a","text":"دائرة كهربائية بها بطارية ولمبة وقطبَين"},{"id":"b","text":"ميزان الحرارة"},{"id":"c","text":"ورق pH"},{"id":"d","text":"مجهر ضوئي"}]'::jsonb, 'a', 'يُستخدم جهاز اختبار الناقلية: دائرة كهربائية تتضمّن مولّدًا (بطارية) ولمبة وقطبَين (إلكترودَين) يُغمسان في السائل. إضاءة اللمبة تدلّ على أنّ السائل ناقل (شاردي).', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2164,7 +2164,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('d3c44940-7ad2-559e-965e-959fbc2e7375', '7d98ea97-fb08-5cf9-874c-b1c7d35858a7', 'أيّ من الأيونات التالية أنيون (يحمل شحنة سالبة)؟', '[{"id":"a","text":"SO₄²⁻"},{"id":"b","text":"Ca²⁺"},{"id":"c","text":"Na⁺"},{"id":"d","text":"H⁺"}]'::jsonb, 'a', 'SO₄²⁻ هو أيون الكبريتات ويحمل شحنة سالبة مقدارها −2، فهو أنيون. Ca²⁺ وNa⁺ وH⁺ كلّها كاتيونات (شحنات موجبة).', 2)
+  ('d3c44940-7ad2-559e-965e-959fbc2e7375', '7d98ea97-fb08-5cf9-874c-b1c7d35858a7', 'في تجربة ناقلية المحاليل، أضأنا اللمبة عند غمس القطبَين في محلول A، ولم تُضأ عند غمسهما في محلول B. أيّ الاستنتاجات صحيح؟', '[{"id":"a","text":"A وB كلاهما شاردي"},{"id":"b","text":"A غير شاردي؛ B شاردي"},{"id":"c","text":"A شاردي يحتوي شوارد؛ B غير شاردي لا يحتوي شوارد"},{"id":"d","text":"كلا المحلولَين غير شارديَّين"}]'::jsonb, 'c', 'إضاءة اللمبة دليل على وجود شوارد تنقل التيار (محلول A شاردي). عدم الإضاءة يدلّ على غياب الشوارد (محلول B غير شاردي كمحلول السكّر مثلًا).', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2174,7 +2174,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('41266bf3-a20d-5622-ad0f-84d45d288549', '7d98ea97-fb08-5cf9-874c-b1c7d35858a7', 'ثلاثة محاليل: A (ملح الطعام NaCl)، B (سكّر)، C (حمض HCl). أيّها يُعدّ محاليل شاردية؟', '[{"id":"a","text":"A فقط"},{"id":"b","text":"B فقط"},{"id":"c","text":"A و B و C كلّها"},{"id":"d","text":"A و C فقط"}]'::jsonb, 'd', 'NaCl يُعطي Na⁺ و Cl⁻ فهو شاردي. HCl يُعطي H⁺ و Cl⁻ فهو شاردي. أمّا السكّر فيذوب دون تشرّد — غير شاردي لا ينقل التيار.', 3)
+  ('41266bf3-a20d-5622-ad0f-84d45d288549', '7d98ea97-fb08-5cf9-874c-b1c7d35858a7', 'أيّ من الأيونات التالية أنيون (يحمل شحنة سالبة)؟', '[{"id":"a","text":"SO₄²⁻"},{"id":"b","text":"Ca²⁺"},{"id":"c","text":"Na⁺"},{"id":"d","text":"H⁺"}]'::jsonb, 'a', 'SO₄²⁻ هو أيون الكبريتات ويحمل شحنة سالبة مقدارها −2، فهو أنيون. Ca²⁺ وNa⁺ وH⁺ كلّها كاتيونات (شحنات موجبة).', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2184,7 +2184,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('c9173622-de37-5b06-bd5f-9c3201286a3e', '7d98ea97-fb08-5cf9-874c-b1c7d35858a7', 'كيف تفسّر أنّ زيادة تركيز محلول NaCl تزيد سطوع اللمبة في تجربة الناقلية؟', '[{"id":"a","text":"لأنّ عدد الشوارد في وحدة الحجم يزداد فتزداد الناقلية"},{"id":"b","text":"لأنّ الماء يصبح أكثر"},{"id":"c","text":"لأنّ درجة حرارة المحلول ترتفع"},{"id":"d","text":"لأنّ pH المحلول يتغيّر"}]'::jsonb, 'a', 'ناقلية المحلول تعتمد على عدد الشوارد الحرّة في وحدة الحجم. عند رفع التركيز يزداد عدد Na⁺ و Cl⁻ فتزداد الناقلية ويزداد سطوع اللمبة.', 4)
+  ('c9173622-de37-5b06-bd5f-9c3201286a3e', '7d98ea97-fb08-5cf9-874c-b1c7d35858a7', 'ثلاثة محاليل: A (ملح الطعام NaCl)، B (سكّر)، C (حمض HCl). أيّها يُعدّ محاليل شاردية؟', '[{"id":"a","text":"A فقط"},{"id":"b","text":"B فقط"},{"id":"c","text":"A و B و C كلّها"},{"id":"d","text":"A و C فقط"}]'::jsonb, 'd', 'NaCl يُعطي Na⁺ و Cl⁻ فهو شاردي. HCl يُعطي H⁺ و Cl⁻ فهو شاردي. أمّا السكّر فيذوب دون تشرّد — غير شاردي لا ينقل التيار.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2194,7 +2194,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('03d2fda0-9268-5fd0-8a40-9a8c78c5b489', '7d98ea97-fb08-5cf9-874c-b1c7d35858a7', 'تلميذ يريد اختبار ما إذا كان سائل مجهول ناقلًا للكهرباء. ما الجهاز المناسب لذلك؟', '[{"id":"a","text":"دائرة كهربائية بها بطارية ولمبة وقطبَين"},{"id":"b","text":"ميزان الحرارة"},{"id":"c","text":"ورق pH"},{"id":"d","text":"مجهر ضوئي"}]'::jsonb, 'a', 'يُستخدم جهاز اختبار الناقلية: دائرة كهربائية تتضمّن مولّدًا (بطارية) ولمبة وقطبَين (إلكترودَين) يُغمسان في السائل. إضاءة اللمبة تدلّ على أنّ السائل ناقل (شاردي).', 5)
+  ('03d2fda0-9268-5fd0-8a40-9a8c78c5b489', '7d98ea97-fb08-5cf9-874c-b1c7d35858a7', 'كيف تفسّر أنّ زيادة تركيز محلول NaCl تزيد سطوع اللمبة في تجربة الناقلية؟', '[{"id":"a","text":"لأنّ عدد الشوارد في وحدة الحجم يزداد فتزداد الناقلية"},{"id":"b","text":"لأنّ الماء يصبح أكثر"},{"id":"c","text":"لأنّ درجة حرارة المحلول ترتفع"},{"id":"d","text":"لأنّ pH المحلول يتغيّر"}]'::jsonb, 'a', 'ناقلية المحلول تعتمد على عدد الشوارد الحرّة في وحدة الحجم. عند رفع التركيز يزداد عدد Na⁺ و Cl⁻ فتزداد الناقلية ويزداد سطوع اللمبة.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2288,7 +2288,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('a6e4f1ad-f2dd-55ef-8e05-a98c740e1f40', 'fe9e08f4-5a19-593f-adfc-78f5531c63b1', 'مقاومة R = 50 Ω يمرّ بها تيار I = 0.4 A. ما التوتر U عبرها؟', '[{"id":"a","text":"0.008 V"},{"id":"b","text":"125 V"},{"id":"c","text":"20 V"},{"id":"d","text":"50.4 V"}]'::jsonb, 'c', 'بتطبيق قانون أوم: U = R × I = 50 × 0.4 = 20 V. الخيار 125 V ناتج عن قسمة خاطئة (50/0.4)، والخيار 0.008 V ناتج عن قسمة I/R.', 1)
+  ('a6e4f1ad-f2dd-55ef-8e05-a98c740e1f40', 'fe9e08f4-5a19-593f-adfc-78f5531c63b1', 'أيّ جهاز يُستخدم لقياس شدّة التيار الكهربائي، وكيف يُوصَل؟', '[{"id":"a","text":"الفولطمتر — على التوازي"},{"id":"b","text":"الأمبيرمتر — على التوازي"},{"id":"c","text":"الفولطمتر — على التسلسل"},{"id":"d","text":"الأمبيرمتر — على التسلسل"}]'::jsonb, 'd', 'الأمبيرمتر يقيس شدّة التيار ويُوصَل على التسلسل في الدائرة لأنّ التيار يجب أن يمرّ خلاله. الفولطمتر يقيس التوتر ويُوصَل على التوازي.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2298,7 +2298,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('70bf4cf9-af39-51ba-a21f-c63ed8494aa5', 'fe9e08f4-5a19-593f-adfc-78f5531c63b1', 'أيّ جهاز يُستخدم لقياس شدّة التيار الكهربائي، وكيف يُوصَل؟', '[{"id":"a","text":"الفولطمتر — على التوازي"},{"id":"b","text":"الأمبيرمتر — على التوازي"},{"id":"c","text":"الفولطمتر — على التسلسل"},{"id":"d","text":"الأمبيرمتر — على التسلسل"}]'::jsonb, 'd', 'الأمبيرمتر يقيس شدّة التيار ويُوصَل على التسلسل في الدائرة لأنّ التيار يجب أن يمرّ خلاله. الفولطمتر يقيس التوتر ويُوصَل على التوازي.', 2)
+  ('70bf4cf9-af39-51ba-a21f-c63ed8494aa5', 'fe9e08f4-5a19-593f-adfc-78f5531c63b1', 'ما الاتّجاه الاصطلاحي للتيار الكهربائي في الدائرة الخارجية؟', '[{"id":"a","text":"من القطب السالب (−) إلى القطب الموجب (+)"},{"id":"b","text":"يمكن أن يكون في الاتّجاهَين معًا"},{"id":"c","text":"من القطب الموجب (+) إلى القطب السالب (−)"},{"id":"d","text":"لا اتّجاه له"}]'::jsonb, 'c', 'الاتّجاه الاصطلاحي للتيار في الدائرة الخارجية هو من القطب الموجب (+) إلى القطب السالب (−). أمّا الإلكترونات فتتحرّك في الاتّجاه المعاكس.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2308,7 +2308,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('52a0d161-eb83-5d7c-87b7-fb8dda4cd2ca', 'fe9e08f4-5a19-593f-adfc-78f5531c63b1', 'توتر مصدر كهربائي U = 12 V ومقاومة R = 4 Ω. ما شدّة التيار I؟', '[{"id":"a","text":"48 A"},{"id":"b","text":"0.33 A"},{"id":"c","text":"8 A"},{"id":"d","text":"3 A"}]'::jsonb, 'd', 'بتطبيق قانون أوم: I = U / R = 12 / 4 = 3 A. الخيار 48 A ناتج عن ضرب خاطئ (12 × 4).', 3)
+  ('52a0d161-eb83-5d7c-87b7-fb8dda4cd2ca', 'fe9e08f4-5a19-593f-adfc-78f5531c63b1', 'مقاومة R = 50 Ω يمرّ بها تيار I = 0.4 A. ما التوتر U عبرها؟', '[{"id":"a","text":"0.008 V"},{"id":"b","text":"125 V"},{"id":"c","text":"20 V"},{"id":"d","text":"50.4 V"}]'::jsonb, 'c', 'بتطبيق قانون أوم: U = R × I = 50 × 0.4 = 20 V. الخيار 125 V ناتج عن قسمة خاطئة (50/0.4)، والخيار 0.008 V ناتج عن قسمة I/R.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2318,7 +2318,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('34b745c3-3d21-5c6e-b777-7b198d981cf1', 'fe9e08f4-5a19-593f-adfc-78f5531c63b1', 'في دائرة تسلسلية تحتوي مقاومتَين R₁ = 10 Ω و R₂ = 20 Ω. ما المقاومة الإجمالية؟', '[{"id":"a","text":"10 Ω"},{"id":"b","text":"6.7 Ω"},{"id":"c","text":"30 Ω"},{"id":"d","text":"200 Ω"}]'::jsonb, 'c', 'في التركيب على التسلسل: R_total = R₁ + R₂ = 10 + 20 = 30 Ω. الخيار 6.7 Ω هو ناتج التوازي (1/R_total = 1/10 + 1/20).', 4)
+  ('34b745c3-3d21-5c6e-b777-7b198d981cf1', 'fe9e08f4-5a19-593f-adfc-78f5531c63b1', 'توتر مصدر كهربائي U = 12 V ومقاومة R = 4 Ω. ما شدّة التيار I؟', '[{"id":"a","text":"48 A"},{"id":"b","text":"0.33 A"},{"id":"c","text":"8 A"},{"id":"d","text":"3 A"}]'::jsonb, 'd', 'بتطبيق قانون أوم: I = U / R = 12 / 4 = 3 A. الخيار 48 A ناتج عن ضرب خاطئ (12 × 4).', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2328,7 +2328,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('19074ba1-dca3-523b-8070-2aea8451ec5a', 'fe9e08f4-5a19-593f-adfc-78f5531c63b1', 'ما الاتّجاه الاصطلاحي للتيار الكهربائي في الدائرة الخارجية؟', '[{"id":"a","text":"من القطب السالب (−) إلى القطب الموجب (+)"},{"id":"b","text":"يمكن أن يكون في الاتّجاهَين معًا"},{"id":"c","text":"من القطب الموجب (+) إلى القطب السالب (−)"},{"id":"d","text":"لا اتّجاه له"}]'::jsonb, 'c', 'الاتّجاه الاصطلاحي للتيار في الدائرة الخارجية هو من القطب الموجب (+) إلى القطب السالب (−). أمّا الإلكترونات فتتحرّك في الاتّجاه المعاكس.', 5)
+  ('19074ba1-dca3-523b-8070-2aea8451ec5a', 'fe9e08f4-5a19-593f-adfc-78f5531c63b1', 'في دائرة تسلسلية تحتوي مقاومتَين R₁ = 10 Ω و R₂ = 20 Ω. ما المقاومة الإجمالية؟', '[{"id":"a","text":"10 Ω"},{"id":"b","text":"6.7 Ω"},{"id":"c","text":"30 Ω"},{"id":"d","text":"200 Ω"}]'::jsonb, 'c', 'في التركيب على التسلسل: R_total = R₁ + R₂ = 10 + 20 = 30 Ω. الخيار 6.7 Ω هو ناتج التوازي (1/R_total = 1/10 + 1/20).', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2360,7 +2360,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('8fc16747-a960-50b3-9874-c793e3dd240b', '312fd190-acd6-519d-b510-a59663bf790c', 'مقاومة R = 100 Ω يمرّ بها تيار I = 0.2 A. ما التوتر U عبرها؟', '[{"id":"a","text":"500 V"},{"id":"b","text":"100.2 V"},{"id":"c","text":"20 V"},{"id":"d","text":"0.002 V"}]'::jsonb, 'c', 'بتطبيق قانون أوم: U = R × I = 100 × 0.2 = 20 V. الخيار 500 V ناتج عن قسمة خاطئة (100 / 0.2).', 1)
+  ('8fc16747-a960-50b3-9874-c793e3dd240b', '312fd190-acd6-519d-b510-a59663bf790c', 'لقياس التوتر عبر لمبة في دائرة، كيف يُوصَل الفولطمتر؟', '[{"id":"a","text":"على التوازي مع اللمبة"},{"id":"b","text":"على التسلسل مع اللمبة"},{"id":"c","text":"بديلًا عن المصدر"},{"id":"d","text":"بين المصدر والأمبيرمتر فقط"}]'::jsonb, 'a', 'الفولطمتر يقيس فرق الجهد (التوتر) ويُوصَل دائمًا على التوازي مع العنصر المراد قياس توتّره. وصله على التسلسل يُعطّل الدائرة لأنّ مقاومته كبيرة جدًّا.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2370,7 +2370,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('4c8c17b0-8f75-5e45-b749-2295628a70de', '312fd190-acd6-519d-b510-a59663bf790c', 'في دائرة توازي مكوّنة من R₁ = 6 Ω و R₂ = 12 Ω، التوتر الكلّي U = 12 V. ما شدّة التيار في R₁؟', '[{"id":"a","text":"1 A"},{"id":"b","text":"2 A"},{"id":"c","text":"3 A"},{"id":"d","text":"0.5 A"}]'::jsonb, 'b', 'في التوازي، التوتر على كلّ مقاومة هو نفس التوتر الكلّي. إذن U₁ = 12 V وR₁ = 6 Ω، فـ I₁ = U₁ / R₁ = 12 / 6 = 2 A.', 2)
+  ('4c8c17b0-8f75-5e45-b749-2295628a70de', '312fd190-acd6-519d-b510-a59663bf790c', 'مقاومة R = 100 Ω يمرّ بها تيار I = 0.2 A. ما التوتر U عبرها؟', '[{"id":"a","text":"500 V"},{"id":"b","text":"100.2 V"},{"id":"c","text":"20 V"},{"id":"d","text":"0.002 V"}]'::jsonb, 'c', 'بتطبيق قانون أوم: U = R × I = 100 × 0.2 = 20 V. الخيار 500 V ناتج عن قسمة خاطئة (100 / 0.2).', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2380,7 +2380,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('c747b840-1d28-51a2-b0b5-825fd5eeb525', '312fd190-acd6-519d-b510-a59663bf790c', 'دائرة تسلسلية: مصدر توتره U = 9 V، ومقاومتان R₁ = 10 Ω و R₂ = 20 Ω. ما شدّة التيار في الدائرة؟', '[{"id":"a","text":"0.9 A"},{"id":"b","text":"3 A"},{"id":"c","text":"0.3 A"},{"id":"d","text":"0.45 A"}]'::jsonb, 'c', 'في التسلسل: R_total = R₁ + R₂ = 10 + 20 = 30 Ω. ثمّ: I = U / R_total = 9 / 30 = 0.3 A. هذا التيار نفسه يمرّ في الجميع.', 3)
+  ('c747b840-1d28-51a2-b0b5-825fd5eeb525', '312fd190-acd6-519d-b510-a59663bf790c', 'في دائرة توازي مكوّنة من R₁ = 6 Ω و R₂ = 12 Ω، التوتر الكلّي U = 12 V. ما شدّة التيار في R₁؟', '[{"id":"a","text":"1 A"},{"id":"b","text":"2 A"},{"id":"c","text":"3 A"},{"id":"d","text":"0.5 A"}]'::jsonb, 'b', 'في التوازي، التوتر على كلّ مقاومة هو نفس التوتر الكلّي. إذن U₁ = 12 V وR₁ = 6 Ω، فـ I₁ = U₁ / R₁ = 12 / 6 = 2 A.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2390,7 +2390,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('0c3edbd1-43d7-59a2-9731-68f282c315f7', '312fd190-acd6-519d-b510-a59663bf790c', 'لقياس التوتر عبر لمبة في دائرة، كيف يُوصَل الفولطمتر؟', '[{"id":"a","text":"على التوازي مع اللمبة"},{"id":"b","text":"على التسلسل مع اللمبة"},{"id":"c","text":"بديلًا عن المصدر"},{"id":"d","text":"بين المصدر والأمبيرمتر فقط"}]'::jsonb, 'a', 'الفولطمتر يقيس فرق الجهد (التوتر) ويُوصَل دائمًا على التوازي مع العنصر المراد قياس توتّره. وصله على التسلسل يُعطّل الدائرة لأنّ مقاومته كبيرة جدًّا.', 4)
+  ('0c3edbd1-43d7-59a2-9731-68f282c315f7', '312fd190-acd6-519d-b510-a59663bf790c', 'دائرة تسلسلية: مصدر توتره U = 9 V، ومقاومتان R₁ = 10 Ω و R₂ = 20 Ω. ما شدّة التيار في الدائرة؟', '[{"id":"a","text":"0.9 A"},{"id":"b","text":"3 A"},{"id":"c","text":"0.3 A"},{"id":"d","text":"0.45 A"}]'::jsonb, 'c', 'في التسلسل: R_total = R₁ + R₂ = 10 + 20 = 30 Ω. ثمّ: I = U / R_total = 9 / 30 = 0.3 A. هذا التيار نفسه يمرّ في الجميع.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,

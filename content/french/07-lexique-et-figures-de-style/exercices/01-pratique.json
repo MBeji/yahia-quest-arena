@@ -27,7 +27,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "Le préfixe « im- » (variante de « in- » devant p/b/m) est privatif : il donne le sens contraire, ici « non possible »."
+      "explanation": "Le préfixe « im- » (variante de « in- » devant p/b/m) est privatif : il donne le sens contraire, ici « non possible ».",
+      "difficulty": 1
     },
     {
       "prompt": "Lequel de ces mots n'appartient PAS à la famille du mot « terre » ?",
@@ -50,7 +51,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "« terrible » vient du latin « terrere » (effrayer) et n'a pas le même radical que « terre ». Les trois autres partagent le radical « terr- » lié à la terre."
+      "explanation": "« terrible » vient du latin « terrere » (effrayer) et n'a pas le même radical que « terre ». Les trois autres partagent le radical « terr- » lié à la terre.",
+      "difficulty": 2
     },
     {
       "prompt": "« Verre » (récipient) et « ver » (animal) sont des :",
@@ -73,7 +75,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "Ces mots se prononcent de manière identique mais ont des sens et des orthographes différents : ce sont des homonymes."
+      "explanation": "Ces mots se prononcent de manière identique mais ont des sens et des orthographes différents : ce sont des homonymes.",
+      "difficulty": 1
     },
     {
       "prompt": "Dans « La peur dévorait le guerrier », le mot « dévorait » est employé au :",
@@ -96,7 +99,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "La peur ne peut pas manger au sens propre : « dévorait » est ici employé au sens figuré pour exprimer l'intensité de la peur qui ronge le guerrier."
+      "explanation": "La peur ne peut pas manger au sens propre : « dévorait » est ici employé au sens figuré pour exprimer l'intensité de la peur qui ronge le guerrier.",
+      "difficulty": 1
     },
     {
       "prompt": "Identifie la figure de style dans : « Il tremblait, frissonnait, grelottait de terreur. »",
@@ -119,7 +123,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "Les trois verbes expriment le même état (le froid/la peur) avec une intensité croissante : c'est une gradation (ascendante)."
+      "explanation": "Les trois verbes expriment le même état (le froid/la peur) avec une intensité croissante : c'est une gradation (ascendante).",
+      "difficulty": 2
     },
     {
       "prompt": "Dans « Le vent **hurlait** entre les ruines », quelle figure de style reconnaît-on ?",
@@ -142,7 +147,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "Attribuer au vent l'action « hurler » (cri humain) lui confère une caractéristique humaine : c'est une personnification."
+      "explanation": "Attribuer au vent l'action « hurler » (cri humain) lui confère une caractéristique humaine : c'est une personnification.",
+      "difficulty": 2
     }
   ]
 }

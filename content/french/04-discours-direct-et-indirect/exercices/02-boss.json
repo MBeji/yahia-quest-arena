@@ -27,7 +27,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "Le verbe introducteur « dit » est au passé simple : le futur simple « partirai » devient conditionnel présent « partirait ». L'indicateur de temps « demain » se transforme en « le lendemain » au discours indirect. L'option b oublie les deux changements ; c change le temps mais pas l'indicateur ; d utilise l'imparfait à la place du conditionnel."
+      "explanation": "Le verbe introducteur « dit » est au passé simple : le futur simple « partirai » devient conditionnel présent « partirait ». L'indicateur de temps « demain » se transforme en « le lendemain » au discours indirect. L'option b oublie les deux changements ; c change le temps mais pas l'indicateur ; d utilise l'imparfait à la place du conditionnel.",
+      "difficulty": 3
     },
     {
       "prompt": "Transforme au discours indirect :\nL'entraîneur ordonna : « Courez plus vite ! »\nL'entraîneur ordonna ___.",
@@ -50,7 +51,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "Un ordre à l'impératif se rapporte au discours indirect par « de + infinitif » : « Courez ! » → ordonna de courir. On n'utilise pas « que » + indicatif pour un ordre, ni « si » qui est réservé aux questions totales."
+      "explanation": "Un ordre à l'impératif se rapporte au discours indirect par « de + infinitif » : « Courez ! » → ordonna de courir. On n'utilise pas « que » + indicatif pour un ordre, ni « si » qui est réservé aux questions totales.",
+      "difficulty": 2
     },
     {
       "prompt": "Transforme au discours indirect :\nElle demanda : « Qu'est-ce qui fait ce bruit ? »\nElle demanda ___.",
@@ -73,7 +75,8 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "« Qu'est-ce qui » (sujet) se transforme en « ce qui » au discours indirect. Le verbe introducteur « demanda » est au passé : le présent « fait » devient imparfait « faisait ». L'option b utilise « ce que » (réservé au COD) ; c conserve la forme directe interdite au DI ; d modifie complètement le sens."
+      "explanation": "« Qu'est-ce qui » (sujet) se transforme en « ce qui » au discours indirect. Le verbe introducteur « demanda » est au passé : le présent « fait » devient imparfait « faisait ». L'option b utilise « ce que » (réservé au COD) ; c conserve la forme directe interdite au DI ; d modifie complètement le sens.",
+      "difficulty": 3
     },
     {
       "prompt": "Laquelle de ces transformations est entièrement correcte ?\nDD : La sorcière murmura : « Je serai là ce soir. »",
@@ -96,7 +99,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "« murmura » est au passé → le futur « serai » devient conditionnel présent « serait » (✓ a et c). L'indicateur « ce soir » devient « ce soir-là » au DI (✓ a seulement). L'option c oublie de changer l'indicateur ; b oublie la concordance des temps ; d utilise l'imparfait au lieu du conditionnel."
+      "explanation": "« murmura » est au passé → le futur « serai » devient conditionnel présent « serait » (✓ a et c). L'indicateur « ce soir » devient « ce soir-là » au DI (✓ a seulement). L'option c oublie de changer l'indicateur ; b oublie la concordance des temps ; d utilise l'imparfait au lieu du conditionnel.",
+      "difficulty": 3
     },
     {
       "prompt": "Dans la phrase au discours indirect : « Le guide nous expliqua qu'il avait visité ce site l'année précédente. », quel était le discours direct d'origine ?",
@@ -119,7 +123,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "Au DI, le verbe introducteur « expliqua » est au passé → le plus-que-parfait « avait visité » remonte au passé composé « a visité » dans le DD. L'indicateur « l'année précédente » correspond à « l'année dernière » au DD. L'option b conserverait le plus-que-parfait dans le DD, ce qui est incorrect ; c mènerait à un conditionnel passé ; d mènerait à un imparfait."
+      "explanation": "Au DI, le verbe introducteur « expliqua » est au passé → le plus-que-parfait « avait visité » remonte au passé composé « a visité » dans le DD. L'indicateur « l'année précédente » correspond à « l'année dernière » au DD. L'option b conserverait le plus-que-parfait dans le DD, ce qui est incorrect ; c mènerait à un conditionnel passé ; d mènerait à un imparfait.",
+      "difficulty": 3
     },
     {
       "prompt": "Transforme au discours indirect :\nIl s'écria : « Où étais-tu hier ? »\nIl s'écria ___.",
@@ -142,7 +147,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "La question partielle « où » se maintient au DI. « s'écria » est au passé → l'imparfait « étais » devient plus-que-parfait « avait été ». Le pronom « tu » (interlocuteur) devient « il » (3e personne). L'indicateur « hier » → « la veille ». L'option b ne change pas le pronom ; c transforme en question totale avec « si » ; d garde le pronom de 1re personne."
+      "explanation": "La question partielle « où » se maintient au DI. « s'écria » est au passé → l'imparfait « étais » devient plus-que-parfait « avait été ». Le pronom « tu » (interlocuteur) devient « il » (3e personne). L'indicateur « hier » → « la veille ». L'option b ne change pas le pronom ; c transforme en question totale avec « si » ; d garde le pronom de 1re personne.",
+      "difficulty": 3
     }
   ]
 }

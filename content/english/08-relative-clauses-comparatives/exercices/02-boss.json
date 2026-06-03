@@ -27,7 +27,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "We need 'whose' because it refers to the scientist's research (possession). 'The scientist whose research won the Nobel Prize' — 'whose' replaces 'the scientist's'."
+      "explanation": "We need 'whose' because it refers to the scientist's research (possession). 'The scientist whose research won the Nobel Prize' — 'whose' replaces 'the scientist's'.",
+      "difficulty": 2
     },
     {
       "prompt": "Complete with the correct comparative: \"This exam is ___ the one we did last month.\" (difficult)",
@@ -50,7 +51,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "'difficult' is a long adjective (three syllables), so the comparative is 'more difficult than'. We never add '-er' to long adjectives, and the second element is introduced by 'than', not 'as'."
+      "explanation": "'difficult' is a long adjective (three syllables), so the comparative is 'more difficult than'. We never add '-er' to long adjectives, and the second element is introduced by 'than', not 'as'.",
+      "difficulty": 2
     },
     {
       "prompt": "Choose the correct sentence:",
@@ -73,7 +75,8 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "'good' is irregular. Its comparative is 'better than' — not 'gooder', 'more good', or 'best'. The superlative would be 'the best'."
+      "explanation": "'good' is irregular. Its comparative is 'better than' — not 'gooder', 'more good', or 'best'. The superlative would be 'the best'.",
+      "difficulty": 2
     },
     {
       "prompt": "Complete: \"Rania is not ___ her brother at maths.\" (good)",
@@ -96,7 +99,8 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "For equality/inequality, use 'as + base adjective + as'. 'not as good as' is correct. 'as better as' wrongly uses the comparative inside the structure; 'so good than' is not a real pattern; 'as well as' is an adverb phrase, not an adjective comparison."
+      "explanation": "For equality/inequality, use 'as + base adjective + as'. 'not as good as' is correct. 'as better as' wrongly uses the comparative inside the structure; 'so good than' is not a real pattern; 'as well as' is an adverb phrase, not an adjective comparison.",
+      "difficulty": 3
     },
     {
       "prompt": "Which sentence correctly uses a writing connector to show contrast?",
@@ -119,7 +123,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "'however' signals contrast between two opposing ideas. 'therefore' = result, 'furthermore' = addition, 'for example' = illustration. Only 'however' correctly contrasts studying hard with failing."
+      "explanation": "'however' signals contrast between two opposing ideas. 'therefore' = result, 'furthermore' = addition, 'for example' = illustration. Only 'however' correctly contrasts studying hard with failing.",
+      "difficulty": 3
     },
     {
       "prompt": "Choose the sentence with the correct superlative form:",
@@ -142,7 +147,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "'bad' is irregular: bad → worse → the worst. 'The worst day' is the only correct superlative. 'Baddest', 'the most bad', and 'the worse' are all incorrect forms."
+      "explanation": "'bad' is irregular: bad → worse → the worst. 'The worst day' is the only correct superlative. 'Baddest', 'the most bad', and 'the worse' are all incorrect forms.",
+      "difficulty": 3
     }
   ]
 }
