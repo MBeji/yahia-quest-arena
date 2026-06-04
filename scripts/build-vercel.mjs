@@ -108,6 +108,12 @@ writeFileSync(
       handler: "index.js",
       launcherType: "Nodejs",
       maxDuration: 30,
+      // Pin the SSR function to Stockholm (arn1) to co-locate it with the
+      // Supabase project (region eu-north-1 / AWS Stockholm). Every server fn
+      // talks to Supabase over PostgREST, so same-region placement removes a
+      // cross-continent round-trip from each request. A single region keeps
+      // this within the free/Hobby plan (multi-region needs Pro).
+      regions: ["arn1"],
     },
     null,
     2,
