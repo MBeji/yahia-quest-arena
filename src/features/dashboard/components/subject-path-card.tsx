@@ -53,7 +53,7 @@ export function SubjectPathCard({
       className={`group relative block overflow-hidden rounded-2xl border bg-card/60 p-5 backdrop-blur-md transition hover:-translate-y-1 ${
         isPremium
           ? "border-[color:var(--neon-gold)]/50 hover:border-[color:var(--neon-gold)]/80"
-          : "border-border/50 hover:border-[color:var(--neon-violet)]/60"
+          : "border-border/50 hover:border-[color:var(--gold)]/60"
       }`}
     >
       {isPremium && (

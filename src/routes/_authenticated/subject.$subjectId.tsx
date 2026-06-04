@@ -118,7 +118,7 @@ function SubjectPage() {
         <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> Heroes Hall
       </Link>
 
-      <div className="relative overflow-hidden rounded-3xl border border-border/50 bg-card/60 p-8 backdrop-blur-xl">
+      <div className="relative overflow-hidden rounded-3xl border border-border/50 bg-black/60 p-8 backdrop-blur-xl">
         <div
           className="absolute -right-10 -top-10 h-52 w-52 rounded-full blur-3xl opacity-50"
           style={{ background: color }}
@@ -188,7 +188,7 @@ function SubjectPage() {
                 <Link
                   to="/lesson/$chapterId"
                   params={{ chapterId: c.id }}
-                  className="mt-2 inline-flex items-center gap-1.5 rounded-lg border border-[color:var(--neon-cyan)]/30 bg-[color:var(--neon-cyan)]/10 px-3 py-1.5 text-xs font-semibold text-[color:var(--neon-cyan)] transition hover:bg-[color:var(--neon-cyan)]/20"
+                  className="mt-2 inline-flex items-center gap-1.5 rounded-lg border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/10 px-3 py-1.5 text-xs font-semibold text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/20"
                 >
                   <BookOpen className="h-3.5 w-3.5" /> {L.review}
                 </Link>
@@ -245,9 +245,9 @@ function SubjectPage() {
                       <div
                         className={`grid h-10 w-10 place-items-center rounded-lg ${
                           isChallenge
-                            ? "bg-gradient-to-br from-[color:var(--neon-gold)]/30 to-[color:var(--neon-magenta)]/20 text-[color:var(--neon-gold)]"
+                            ? "bg-gradient-to-br from-[color:var(--neon-gold)]/30 to-[color:var(--gold)]/20 text-[color:var(--neon-gold)]"
                             : isBoss
-                              ? "bg-gradient-to-br from-destructive/30 to-[color:var(--neon-magenta)]/20"
+                              ? "bg-gradient-to-br from-destructive/30 to-[color:var(--gold)]/20"
                               : ""
                         }`}
                         style={
@@ -309,7 +309,7 @@ function SubjectPage() {
                         key={ex.id}
                         title={L.lockedNote}
                         aria-disabled="true"
-                        className="flex cursor-not-allowed items-center justify-between gap-3 rounded-xl border border-border/40 bg-card/30 p-4 opacity-60"
+                        className="flex cursor-not-allowed items-center justify-between gap-3 rounded-xl border border-border/40 bg-black/30 p-4 opacity-60"
                       >
                         {left}
                         <Lock className="h-5 w-5 text-muted-foreground" />
@@ -326,7 +326,7 @@ function SubjectPage() {
                           ? "border-[color:var(--neon-gold)]/50 bg-[color:var(--neon-gold)]/5 hover:border-[color:var(--neon-gold)]/70"
                           : isBoss
                             ? "border-destructive/40 bg-destructive/5 hover:border-destructive/70"
-                            : "border-border/50 bg-card/60 hover:border-[color:var(--neon-violet)]/50"
+                            : "border-border/50 bg-black/60 hover:border-[color:var(--gold)]/50"
                       }`}
                     >
                       {left}

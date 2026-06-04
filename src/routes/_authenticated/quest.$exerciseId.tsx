@@ -389,7 +389,7 @@ function QuestPage() {
               <Link
                 to="/lesson/$chapterId"
                 params={{ chapterId }}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-neon-violet to-neon-magenta px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-neon hover:scale-105"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-5 py-2.5 text-sm font-bold text-black shadow-gold hover:scale-105"
               >
                 <BookOpen className="h-4 w-4" /> {QL.review}
               </Link>
@@ -398,7 +398,7 @@ function QuestPage() {
               <Link
                 to="/subject/$subjectId"
                 params={{ subjectId: exSubjectId }}
-                className="rounded-lg border border-border bg-background/50 px-5 py-2.5 text-sm font-semibold hover:bg-background/80"
+                className="rounded-lg border border-border bg-black/50 px-5 py-2.5 text-sm font-semibold hover:bg-black/80"
               >
                 {QL.back}
               </Link>
@@ -425,7 +425,7 @@ function QuestPage() {
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="relative overflow-hidden rounded-3xl border border-[color:var(--gold)]/40 bg-card/60 p-8 text-center backdrop-blur-xl shadow-gold"
+          className="relative overflow-hidden rounded-3xl border border-[color:var(--gold)]/40 bg-black/60 p-8 text-center backdrop-blur-xl shadow-gold"
         >
           <div className="absolute -top-20 left-1/2 h-48 w-48 -translate-x-1/2 rounded-full bg-[color:var(--gold)]/30 blur-3xl" />
           <div className="relative">
@@ -455,7 +455,7 @@ function QuestPage() {
                   <Link
                     to="/lesson/$chapterId"
                     params={{ chapterId }}
-                    className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-neon-violet to-neon-magenta px-4 py-2 text-xs font-bold text-primary-foreground shadow-neon hover:scale-105"
+                    className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-4 py-2 text-xs font-bold text-black shadow-gold hover:scale-105"
                   >
                     <BookOpen className="h-4 w-4" /> {QL.review}
                   </Link>
@@ -472,18 +472,18 @@ function QuestPage() {
                   {t.quest.xpLabel}
                 </div>
               </div>
-              <div className="rounded-xl bg-(--neon-cyan)/15 p-4">
-                <Sparkles className="mx-auto h-5 w-5 text-neon-cyan" />
-                <div className="mt-1 font-display text-2xl font-bold text-neon-cyan">
+              <div className="rounded-xl bg-(--gold)/15 p-4">
+                <Sparkles className="mx-auto h-5 w-5 text-[color:var(--gold)]" />
+                <div className="mt-1 font-display text-2xl font-bold text-[color:var(--gold)]">
                   +{result.coinsEarned ?? 0}
                 </div>
                 <div className="text-xs uppercase tracking-wider text-muted-foreground">
                   {t.quest.coinsLabel}
                 </div>
               </div>
-              <div className="rounded-xl bg-(--neon-violet)/15 p-4">
-                <Sparkles className="mx-auto h-5 w-5 text-neon-violet" />
-                <div className="mt-1 font-display text-2xl font-bold text-neon-violet">
+              <div className="rounded-xl bg-(--gold)/15 p-4">
+                <Sparkles className="mx-auto h-5 w-5 text-[color:var(--gold)]" />
+                <div className="mt-1 font-display text-2xl font-bold text-[color:var(--gold)]">
                   {result.profile?.level ?? "?"}
                 </div>
                 <div className="text-xs uppercase tracking-wider text-muted-foreground">
@@ -500,7 +500,7 @@ function QuestPage() {
                 </div>
               </div>
             </div>
-            <div className="mt-6 text-xs uppercase tracking-widest text-neon-cyan">
+            <div className="mt-6 text-xs uppercase tracking-widest text-[color:var(--champagne)]">
               {result.profile?.hero_class}
             </div>
             {result.unlockedBadges.length > 0 && (
@@ -510,7 +510,7 @@ function QuestPage() {
                 </div>
                 <div className="mt-3 flex flex-wrap gap-3">
                   {result.unlockedBadges.map((badge) => (
-                    <div key={badge.code} className="rounded-xl bg-card/70 px-4 py-3">
+                    <div key={badge.code} className="rounded-xl bg-black/70 px-4 py-3">
                       <div className="font-display text-sm font-bold">{badge.name}</div>
                       <div className="text-xs uppercase tracking-widest text-muted-foreground">
                         {badge.rarity}
@@ -534,7 +534,7 @@ function QuestPage() {
                   {result.review.map((item, reviewIndex) => (
                     <div
                       key={item.questionId}
-                      className="rounded-2xl border border-border/50 bg-background/30 p-4"
+                      className="rounded-2xl border border-border/50 bg-black/30 p-4"
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div>
@@ -555,7 +555,7 @@ function QuestPage() {
                         </div>
                       </div>
                       <div className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
-                        <div className="rounded-xl bg-card/60 p-3">
+                        <div className="rounded-xl bg-black/60 p-3">
                           <div className="text-xs uppercase tracking-widest text-muted-foreground">
                             {t.quest.yourAnswer}
                           </div>
@@ -563,7 +563,7 @@ function QuestPage() {
                             {getDisplayChoice(item.questionId, item.selectedChoice)}
                           </div>
                         </div>
-                        <div className="rounded-xl bg-card/60 p-3">
+                        <div className="rounded-xl bg-black/60 p-3">
                           <div className="text-xs uppercase tracking-widest text-muted-foreground">
                             {t.quest.correctAnswer}
                           </div>
@@ -633,7 +633,7 @@ function QuestPage() {
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="grid h-10 w-10 place-items-center rounded-xl bg-linear-to-br from-destructive to-neon-magenta shadow-lg animate-pulse">
+              <div className="grid h-10 w-10 place-items-center rounded-xl bg-linear-to-br from-destructive to-[color:var(--gold)] shadow-lg animate-pulse">
                 <Skull className="h-5 w-5 text-primary-foreground" />
               </div>
               <div>
@@ -643,10 +643,12 @@ function QuestPage() {
                 <div className="font-display text-lg font-bold">{data.exercise.title}</div>
               </div>
             </div>
-            <div className="flex items-center gap-2 rounded-full bg-background/60 px-3 py-1.5 text-sm font-bold">
+            <div className="flex items-center gap-2 rounded-full bg-black/60 px-3 py-1.5 text-sm font-bold">
               <Timer className="h-4 w-4 text-destructive" />
               <span
-                className={bossTimer <= 5 ? "text-destructive animate-pulse" : "text-neon-cyan"}
+                className={
+                  bossTimer <= 5 ? "text-destructive animate-pulse" : "text-[color:var(--gold)]"
+                }
               >
                 {bossTimer}s
               </span>
@@ -662,7 +664,7 @@ function QuestPage() {
             </div>
             <div className="h-3 overflow-hidden rounded-full bg-secondary/80">
               <motion.div
-                className="h-full rounded-full bg-linear-to-r from-destructive to-neon-magenta"
+                className="h-full rounded-full bg-linear-to-r from-destructive to-[color:var(--gold)]"
                 initial={{ width: "100%" }}
                 animate={{ width: `${bossHp}%` }}
                 transition={{ duration: 0.5 }}
@@ -677,11 +679,11 @@ function QuestPage() {
           <span>
             Question {idx + 1} / {total}
           </span>
-          {!isBoss && <span className="text-neon-cyan">{data.exercise.title}</span>}
+          {!isBoss && <span className="text-[color:var(--gold)]">{data.exercise.title}</span>}
         </div>
         <div className="h-2 overflow-hidden rounded-full bg-secondary">
           <motion.div
-            className={`h-full rounded-full shadow-neon ${isBoss ? "bg-linear-to-r from-destructive to-neon-magenta" : "bg-linear-to-r from-neon-violet to-neon-magenta"}`}
+            className={`h-full rounded-full shadow-gold ${isBoss ? "bg-linear-to-r from-destructive to-[color:var(--gold)]" : "bg-[image:var(--gradient-gold)]"}`}
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
             transition={{ duration: 0.4 }}
@@ -696,7 +698,7 @@ function QuestPage() {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -30 }}
           transition={{ duration: 0.3 }}
-          className={`rounded-3xl border p-6 backdrop-blur-xl sm:p-8 ${isBoss ? "border-destructive/30 bg-destructive/5" : "border-border/50 bg-card/60"}`}
+          className={`rounded-3xl border p-6 backdrop-blur-xl sm:p-8 ${isBoss ? "border-destructive/30 bg-destructive/5" : "border-border/50 bg-black/60"}`}
         >
           <h2
             className="font-display text-xl font-semibold sm:text-2xl"
@@ -711,18 +713,18 @@ function QuestPage() {
             {options.map((opt) => {
               const isSel = selected === opt.id;
               let cls = isBoss
-                ? "border-destructive/20 bg-background/40 hover:border-destructive/60 hover:bg-destructive/10"
-                : "border-border bg-background/40 hover:border-(--neon-violet)/60 hover:bg-background/70";
+                ? "border-destructive/20 bg-black/40 hover:border-destructive/60 hover:bg-destructive/10"
+                : "border-border bg-black/40 hover:border-(--gold)/60 hover:bg-black/70";
               if (showFeedback) {
                 if (isSel) {
                   cls = isBoss
                     ? "border-destructive bg-destructive/20"
-                    : "border-(--neon-violet) bg-(--neon-violet)/15";
-                } else cls = "border-border/30 bg-background/20 opacity-50";
+                    : "border-(--gold) bg-(--gold)/15";
+                } else cls = "border-border/30 bg-black/20 opacity-50";
               } else if (isSel) {
                 cls = isBoss
                   ? "border-destructive bg-destructive/20"
-                  : "border-(--neon-violet) bg-(--neon-violet)/15";
+                  : "border-(--gold) bg-(--gold)/15";
               }
               return (
                 <button
@@ -769,7 +771,7 @@ function QuestPage() {
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-4 rounded-xl border border-(--neon-cyan)/30 bg-(--neon-cyan)/10 p-4 text-sm text-neon-cyan"
+              className="mt-4 rounded-xl border border-(--gold)/30 bg-(--gold)/10 p-4 text-sm text-[color:var(--gold)]"
             >
               <p>{isQuiz ? QL.quizRecorded : t.quest.feedbackMsg}</p>
             </motion.div>
@@ -779,10 +781,10 @@ function QuestPage() {
             <button
               disabled={!showFeedback || mutation.isPending || sessionMutation.isPending}
               onClick={advanceNow}
-              className={`inline-flex items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-bold text-primary-foreground shadow-neon transition disabled:opacity-40 ${
+              className={`inline-flex items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-bold shadow-gold transition disabled:opacity-40 ${
                 isBoss
-                  ? "bg-linear-to-r from-destructive to-neon-magenta"
-                  : "bg-linear-to-r from-neon-violet to-neon-magenta"
+                  ? "bg-linear-to-r from-destructive to-[color:var(--gold)] text-primary-foreground"
+                  : "bg-[image:var(--gradient-gold)] text-black"
               }`}
             >
               {(mutation.isPending || sessionMutation.isPending) && (

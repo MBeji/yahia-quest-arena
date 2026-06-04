@@ -82,11 +82,11 @@ export function LevelUpCelebration({
             transition={{ type: "spring", damping: 15, stiffness: 200, delay: 0.2 }}
           >
             <motion.div
-              className="grid h-20 w-20 place-items-center rounded-2xl bg-gradient-to-br from-[color:var(--neon-gold)] to-[color:var(--neon-magenta)] shadow-lg"
+              className="grid h-20 w-20 place-items-center rounded-2xl bg-[image:var(--gradient-gold)] shadow-gold"
               animate={{ rotate: [0, -10, 10, -5, 5, 0], scale: [1, 1.1, 1] }}
               transition={{ duration: 0.8, delay: 0.5 }}
             >
-              <Crown className="h-10 w-10 text-primary-foreground" />
+              <Crown className="h-10 w-10 text-black" />
             </motion.div>
 
             <motion.div
@@ -98,7 +98,7 @@ export function LevelUpCelebration({
               <div className="text-xs uppercase tracking-[0.3em] text-[color:var(--neon-gold)]">
                 {t.levelUp.title}
               </div>
-              <div className="mt-2 font-display text-5xl font-black text-gradient-primary">
+              <div className="mt-2 font-display text-5xl font-black text-gradient-gold">
                 Lvl {newLevel}
               </div>
             </motion.div>
@@ -107,7 +107,7 @@ export function LevelUpCelebration({
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.6 }}
-              className="flex items-center gap-2 rounded-full bg-[color:var(--neon-violet)]/20 px-4 py-2"
+              className="flex items-center gap-2 rounded-full bg-[color:var(--gold)]/20 px-4 py-2"
             >
               <Zap className="h-4 w-4 text-[color:var(--neon-gold)]" />
               <span className="font-display text-lg font-bold text-[color:var(--neon-gold)]">

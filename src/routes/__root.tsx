@@ -20,15 +20,15 @@ import appCss from "../styles.css?url";
 function NotFoundComponent() {
   const t = useT();
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="flex min-h-screen items-center justify-center bg-black-deep px-4">
       <div className="max-w-md text-center">
-        <h1 className="font-display text-8xl text-gradient-primary">404</h1>
+        <h1 className="font-display text-8xl text-gradient-gold">404</h1>
         <h2 className="mt-4 text-xl font-semibold">{t.errors.notFoundTitle}</h2>
         <p className="mt-2 text-sm text-muted-foreground">{t.errors.notFoundDesc}</p>
         <div className="mt-6">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-md bg-gradient-to-r from-primary to-[color:var(--neon-magenta)] px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-neon"
+            className="inline-flex items-center justify-center rounded-md bg-[image:var(--gradient-gold)] px-5 py-2.5 text-sm font-semibold text-black shadow-gold hover:opacity-90"
           >
             {t.errors.notFoundAction}
           </Link>
@@ -43,7 +43,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   const router = useRouter();
   const t = useT();
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="flex min-h-screen items-center justify-center bg-black-deep px-4">
       <div className="max-w-md text-center">
         <h1 className="font-display text-2xl">{t.errors.errorTitle}</h1>
         <p className="mt-2 text-sm text-muted-foreground">
@@ -59,7 +59,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           >
             {t.common.retry}
           </button>
-          <a href="/" className="rounded-md border border-input bg-background px-4 py-2 text-sm">
+          <a href="/" className="rounded-md border border-input bg-black-deep px-4 py-2 text-sm">
             {t.common.home}
           </a>
         </div>
