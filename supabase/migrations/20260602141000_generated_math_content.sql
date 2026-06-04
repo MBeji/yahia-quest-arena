@@ -2037,7 +2037,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('1bc63cf6-4649-5021-927c-19dbd169687b', '5680c5e9-d223-542e-9db3-4c3e770da622', 'ما قيمة √64 ؟', '[{"id":"a","text":"8"},{"id":"b","text":"6"},{"id":"c","text":"32"},{"id":"d","text":"16"}]'::jsonb, 'a', '8 × 8 = 64، إذن √64 = 8.', 1)
+  ('1bc63cf6-4649-5021-927c-19dbd169687b', '5680c5e9-d223-542e-9db3-4c3e770da622', 'ما قيمة √64 ؟', '[{"id":"a","text":"8"},{"id":"b","text":"6"},{"id":"c","text":"32"},{"id":"d","text":"16"}]'::jsonb, 'a', 'الجذر التربيعي لعدد موجب a هو العدد الموجب الذي مربّعه يساوي a. نبحث عن العدد الذي مربّعه 64: بما أنّ 8² = 8 × 8 = 64 فإنّ √64 = 8. تحقّق: 8² = 64 ✓ (وليس 6 لأنّ 6²=36، ولا 32 أو 16 لأنّ مربّعهما أكبر بكثير).', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2057,7 +2057,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('d73efe27-cd2b-5ade-b536-f505689746d4', '5680c5e9-d223-542e-9db3-4c3e770da622', 'ما هو الشكل المبسّط للعدد √50 ؟', '[{"id":"a","text":"5√2"},{"id":"b","text":"2√5"},{"id":"c","text":"25√2"},{"id":"d","text":"10√5"}]'::jsonb, 'a', '√50 = √(25 × 2) = √25 × √2 = 5√2.', 3)
+  ('d73efe27-cd2b-5ade-b536-f505689746d4', '5680c5e9-d223-542e-9db3-4c3e770da622', 'ما هو الشكل المبسّط للعدد √50 ؟', '[{"id":"a","text":"5√2"},{"id":"b","text":"2√5"},{"id":"c","text":"25√2"},{"id":"d","text":"10√5"}]'::jsonb, 'a', 'لتبسيط الجذر نُخرج أكبر مربّع كامل عاملًا للعدد: 50 = 25 × 2 حيث 25 مربّع كامل. نطبّق خاصيّة جذر الجداء √(a×b) = √a × √b: √50 = √(25 × 2) = √25 × √2 = 5√2. الخيار (b) حلّل 50 خطأً، و(c) لم يُخرج الجذر من 25.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2067,7 +2067,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('0e1a8e5a-8a8b-5f8d-abb9-846f550be28f', '5680c5e9-d223-542e-9db3-4c3e770da622', 'ما ناتج √3 × √12 ؟', '[{"id":"a","text":"6"},{"id":"b","text":"√15"},{"id":"c","text":"36"},{"id":"d","text":"√36"}]'::jsonb, 'a', '√3 × √12 = √(3 × 12) = √36 = 6.', 4)
+  ('0e1a8e5a-8a8b-5f8d-abb9-846f550be28f', '5680c5e9-d223-542e-9db3-4c3e770da622', 'ما ناتج √3 × √12 ؟', '[{"id":"a","text":"6"},{"id":"b","text":"√15"},{"id":"c","text":"36"},{"id":"d","text":"√36"}]'::jsonb, 'a', 'نطبّق خاصيّة جذر الجداء √a × √b = √(a×b): √3 × √12 = √(3 × 12) = √36. وبما أنّ 6² = 36 فإنّ √36 = 6. تحقّق: الناتج عدد ناطق لأنّ 3 × 12 = 36 مربّع كامل.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2109,7 +2109,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('d4fcdcbc-54d2-512f-a801-a980e162361a', '2d3109e8-a00c-5619-8905-d768c68c00b9', 'بعد إنطاق المقام، يصبح الكسر 1/√2 مساويًا لـ:', '[{"id":"a","text":"√2/2"},{"id":"b","text":"2/√2"},{"id":"c","text":"√2"},{"id":"d","text":"1/2"}]'::jsonb, 'a', 'نضرب البسط والمقام في √2: (1×√2)/(√2×√2) = √2/2.', 2)
+  ('d4fcdcbc-54d2-512f-a801-a980e162361a', '2d3109e8-a00c-5619-8905-d768c68c00b9', 'بعد إنطاق المقام، يصبح الكسر 1/√2 مساويًا لـ:', '[{"id":"a","text":"√2/2"},{"id":"b","text":"2/√2"},{"id":"c","text":"√2"},{"id":"d","text":"1/2"}]'::jsonb, 'a', 'لإنطاق المقام نتخلّص من الجذر بضرب البسط والمقام في الجذر نفسه √2: (1×√2)/(√2×√2) = √2/(√2)² = √2/2، لأنّ (√2)² = 2. النتيجة 1/√2 = √2/2 وقيمتها لم تتغيّر (نفس العدد ≈ 0.707).', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2119,7 +2119,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('761705b3-5632-50c3-8e89-1fcbb1a293ee', '2d3109e8-a00c-5619-8905-d768c68c00b9', 'ما هو الشكل المبسّط للعدد √75 ؟', '[{"id":"a","text":"5√3"},{"id":"b","text":"3√5"},{"id":"c","text":"25√3"},{"id":"d","text":"15"}]'::jsonb, 'a', '√75 = √(25 × 3) = 5√3.', 3)
+  ('761705b3-5632-50c3-8e89-1fcbb1a293ee', '2d3109e8-a00c-5619-8905-d768c68c00b9', 'ما هو الشكل المبسّط للعدد √75 ؟', '[{"id":"a","text":"5√3"},{"id":"b","text":"3√5"},{"id":"c","text":"25√3"},{"id":"d","text":"15"}]'::jsonb, 'a', 'نُخرج أكبر مربّع كامل عاملًا للعدد 75: 75 = 25 × 3 حيث 25 مربّع كامل. إذن √75 = √(25 × 3) = √25 × √3 = 5√3. الخيار (b) حلّل العدد خطأً، و(c) لم يُخرج الجذر من 25.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3237,7 +3237,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('074173e5-a5fb-57e5-a01d-d884a549b9fb', '93b0884f-f1fa-5677-ba0c-45682a394f86', 'زاويتان متتامّتان (مجموعهما 180°)، وإحداهما تساوي ثلاثة أمثال الأخرى. ما قيمة الزاوية الأصغر؟', '[{"id":"a","text":"60°"},{"id":"b","text":"30°"},{"id":"c","text":"90°"},{"id":"d","text":"45°"}]'::jsonb, 'd', 'نُسمّي الزاويتَين x وy مع x = 3y. الجملة: x + y = 180 و x = 3y. بالتعويض: 3y + y = 180، 4y = 180، y = 45°. الزاوية الكبرى هي x = 135°. التحقّق: 135 + 45 = 180 ✓، 135 = 3×45 ✓.', 5)
+  ('074173e5-a5fb-57e5-a01d-d884a549b9fb', '93b0884f-f1fa-5677-ba0c-45682a394f86', 'زاويتان متكاملتان (مجموعهما 180°)، وإحداهما تساوي ثلاثة أمثال الأخرى. ما قيمة الزاوية الأصغر؟', '[{"id":"a","text":"60°"},{"id":"b","text":"30°"},{"id":"c","text":"90°"},{"id":"d","text":"45°"}]'::jsonb, 'd', 'نُسمّي الزاويتَين x وy مع x = 3y. الجملة: x + y = 180 و x = 3y. بالتعويض: 3y + y = 180، 4y = 180، y = 45°. الزاوية الكبرى هي x = 135°. التحقّق: 135 + 45 = 180 ✓، 135 = 3×45 ✓.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3836,7 +3836,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('13d3926a-0976-5989-9f7c-1cd036bcd326', 'b6fdc318-4fb8-5cdf-a865-2ffd1468c8b7', 'سجّل معلّم علامات 5 تلاميذ في مادّة الرياضيات: 8 ، 12 ، 15 ، 10 ، 10. ما هو المعدّل الحسابي لهذه العلامات؟', '[{"id":"a","text":"10"},{"id":"b","text":"11"},{"id":"c","text":"12"},{"id":"d","text":"9"}]'::jsonb, 'b', 'المجموع = 8 + 12 + 15 + 10 + 10 = 55. المعدّل = 55 ÷ 5 = 11.', 1)
+  ('13d3926a-0976-5989-9f7c-1cd036bcd326', 'b6fdc318-4fb8-5cdf-a865-2ffd1468c8b7', 'سجّل معلّم علامات 5 تلاميذ في مادّة الرياضيات: 8 ، 12 ، 15 ، 10 ، 10. ما هو المعدّل الحسابي لهذه العلامات؟', '[{"id":"a","text":"10"},{"id":"b","text":"11"},{"id":"c","text":"12"},{"id":"d","text":"9"}]'::jsonb, 'b', 'المعدّل الحسابي = مجموع القيم ÷ عددها. المجموع = 8 + 12 + 15 + 10 + 10 = 55، وعدد القيم 5، إذن المعدّل = 55 ÷ 5 = 11. تحقّق: 11 يقع بين أصغر علامة (8) وأكبرها (15) كما هو متوقّع.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3846,7 +3846,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('9778e81d-5484-5cc2-ae1d-0b4b62056bbd', 'b6fdc318-4fb8-5cdf-a865-2ffd1468c8b7', 'في السلسلة ذاتها: 8 ، 10 ، 10 ، 12 ، 15. ما هو المنوال؟', '[{"id":"a","text":"15"},{"id":"b","text":"8"},{"id":"c","text":"12"},{"id":"d","text":"10"}]'::jsonb, 'd', 'المنوال هو القيمة التي تتكرّر أكثر. العدد 10 يتكرّر مرّتين وهو الأعلى تكرارًا.', 2)
+  ('9778e81d-5484-5cc2-ae1d-0b4b62056bbd', 'b6fdc318-4fb8-5cdf-a865-2ffd1468c8b7', 'في السلسلة ذاتها: 8 ، 10 ، 10 ، 12 ، 15. ما هو المنوال؟', '[{"id":"a","text":"15"},{"id":"b","text":"8"},{"id":"c","text":"12"},{"id":"d","text":"10"}]'::jsonb, 'd', 'المنوال هو القيمة الأعلى تكرارًا في السلسلة. نعدّ التكرارات: 8 مرّة واحدة، 10 مرّتين، 12 مرّة، 15 مرّة. أعلى تكرار هو 2 ويقابله العدد 10، إذن المنوال = 10.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3866,7 +3866,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('99dd9b8d-c6cf-551f-b96d-97c7cdbddb7f', 'b6fdc318-4fb8-5cdf-a865-2ffd1468c8b7', 'في فصل من 40 تلميذًا، حصل 10 تلاميذ على علامة 14. ما هو التواتر بالمائة لعلامة 14؟', '[{"id":"a","text":"20 %"},{"id":"b","text":"14 %"},{"id":"c","text":"40 %"},{"id":"d","text":"25 %"}]'::jsonb, 'd', 'التواتر = n_i ÷ n = 10 ÷ 40 = 0.25. التواتر بالمائة = 0.25 × 100 = 25 %.', 4)
+  ('99dd9b8d-c6cf-551f-b96d-97c7cdbddb7f', 'b6fdc318-4fb8-5cdf-a865-2ffd1468c8b7', 'في فصل من 40 تلميذًا، حصل 10 تلاميذ على علامة 14. ما هو التواتر بالمائة لعلامة 14؟', '[{"id":"a","text":"20 %"},{"id":"b","text":"14 %"},{"id":"c","text":"40 %"},{"id":"d","text":"25 %"}]'::jsonb, 'd', 'التواتر هو نسبة تكرار القيمة إلى التكرار الكلّي: f = n_i ÷ n = 10 ÷ 40 = 0.25. نحوّله إلى نسبة مئوية بالضرب في 100: 0.25 × 100 = 25 %. تحقّق: 25 % من 40 = 10 تلاميذ ✓.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3876,7 +3876,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('70c72520-1938-5ed8-9f18-589953b27100', 'b6fdc318-4fb8-5cdf-a865-2ffd1468c8b7', 'في تمثيل بيانيّ على شكل قطاع دائري، فئة تمثّل 40 % من المجتمع. ما هي زاوية القطاع المقابل لها؟', '[{"id":"a","text":"40°"},{"id":"b","text":"144°"},{"id":"c","text":"120°"},{"id":"d","text":"80°"}]'::jsonb, 'b', 'زاوية القطاع = f_i × 360° = 0.40 × 360° = 144°.', 5)
+  ('70c72520-1938-5ed8-9f18-589953b27100', 'b6fdc318-4fb8-5cdf-a865-2ffd1468c8b7', 'في تمثيل بيانيّ على شكل قطاع دائري، فئة تمثّل 40 % من المجتمع. ما هي زاوية القطاع المقابل لها؟', '[{"id":"a","text":"40°"},{"id":"b","text":"144°"},{"id":"c","text":"120°"},{"id":"d","text":"80°"}]'::jsonb, 'b', 'القطاع الدائري يوزّع 360° بحسب التواتر: زاوية القطاع = f_i × 360°. هنا f_i = 40 % = 0.40، إذن الزاوية = 0.40 × 360° = 144°. تحقّق: 144° ÷ 360° = 0.40 = 40 % ✓.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3908,7 +3908,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('4c206254-1a5d-5f89-9405-19436cb62a41', '7880a5ae-03cb-524b-aef9-ff8c1bb9b85b', 'علامات 6 تلاميذ مرتّبة تصاعديًّا: 5 ، 9 ، 9 ، 11 ، 13 ، 13. ما هو المعدّل الحسابي؟', '[{"id":"a","text":"10"},{"id":"b","text":"9"},{"id":"c","text":"11"},{"id":"d","text":"10.5"}]'::jsonb, 'a', 'المجموع = 5 + 9 + 9 + 11 + 13 + 13 = 60. المعدّل = 60 ÷ 6 = 10.', 1)
+  ('4c206254-1a5d-5f89-9405-19436cb62a41', '7880a5ae-03cb-524b-aef9-ff8c1bb9b85b', 'علامات 6 تلاميذ مرتّبة تصاعديًّا: 5 ، 9 ، 9 ، 11 ، 13 ، 13. ما هو المعدّل الحسابي؟', '[{"id":"a","text":"10"},{"id":"b","text":"9"},{"id":"c","text":"11"},{"id":"d","text":"10.5"}]'::jsonb, 'a', 'المعدّل الحسابي = مجموع القيم ÷ عددها. المجموع = 5 + 9 + 9 + 11 + 13 + 13 = 60، وعدد القيم 6، إذن المعدّل = 60 ÷ 6 = 10. تحقّق: 10 يقع ضمن المدى [5 ، 13] ✓.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3938,7 +3938,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('ac35bf2e-668e-5f5f-9d8f-b2c572a3747a', '7880a5ae-03cb-524b-aef9-ff8c1bb9b85b', 'في فصل من 60 تلميذًا، حصل 15 تلميذًا على علامة 10. ما هي زاوية القطاع الدائري المقابل لهذه الفئة؟', '[{"id":"a","text":"60°"},{"id":"b","text":"54°"},{"id":"c","text":"90°"},{"id":"d","text":"36°"}]'::jsonb, 'c', 'التواتر = 15 ÷ 60 = 0.25. زاوية القطاع = 0.25 × 360° = 90°.', 4)
+  ('ac35bf2e-668e-5f5f-9d8f-b2c572a3747a', '7880a5ae-03cb-524b-aef9-ff8c1bb9b85b', 'في فصل من 60 تلميذًا، حصل 15 تلميذًا على علامة 10. ما هي زاوية القطاع الدائري المقابل لهذه الفئة؟', '[{"id":"a","text":"60°"},{"id":"b","text":"54°"},{"id":"c","text":"90°"},{"id":"d","text":"36°"}]'::jsonb, 'c', 'نحسب أوّلًا التواتر = التكرار ÷ التكرار الكلّي = 15 ÷ 60 = 0.25. ثمّ زاوية القطاع = التواتر × 360° = 0.25 × 360° = 90°. تحقّق: 90° هي ربع الدائرة، وفعلًا 15 تلميذًا = ربع الـ60 ✓.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -5427,7 +5427,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('0f58c292-0423-585e-8b48-f312610e77c9', '93d7ec3c-499d-5401-afbd-44d801bd6165', 'صورة المثلث ABC بالانسحاب ذي الشعاع $\overrightarrow{AB}$ هي المثلث A''B''C''. ماذا يساوي $\overrightarrow{AA''}$؟', '[{"id":"a","text":"$\\overrightarrow{BB''}$"},{"id":"b","text":"$\\overrightarrow{BA}$"},{"id":"c","text":"$\\overrightarrow{AB}$"},{"id":"d","text":"$\\overrightarrow{CC''}$"}]'::jsonb, 'c', 'في الانسحاب ذي الشعاع $\overrightarrow{AB}$، كلّ نقطة M تنتقل بحيث $\overrightarrow{MM''} = \overrightarrow{AB}$. فـ$\overrightarrow{AA''} = \overrightarrow{AB}$، والخيار d صحيح أيضًا (كلّ $\overrightarrow{MM''} = \overrightarrow{AB}$)، لكنّ السؤال يطلب ماذا يساوي $\overrightarrow{AA''}$ تحديدًا وهو $\overrightarrow{AB}$.', 3)
+  ('0f58c292-0423-585e-8b48-f312610e77c9', '93d7ec3c-499d-5401-afbd-44d801bd6165', 'صورة المثلث ABC بالانسحاب ذي الشعاع $\overrightarrow{AB}$ هي المثلث A''B''C''. ماذا يساوي $\overrightarrow{AA''}$؟', '[{"id":"a","text":"$\\overrightarrow{AC}$"},{"id":"b","text":"$\\overrightarrow{BA}$"},{"id":"c","text":"$\\overrightarrow{AB}$"},{"id":"d","text":"$\\overrightarrow{0}$"}]'::jsonb, 'c', 'في الانسحاب ذي الشعاع $\overrightarrow{AB}$، كلّ نقطة M تنتقل بحيث $\overrightarrow{MM''} = \overrightarrow{AB}$. وبما أنّ A تنتقل إلى A''، فإنّ $\overrightarrow{AA''} = \overrightarrow{AB}$. أمّا الخيارات الأخرى فخاطئة: $\overrightarrow{BA}$ معاكسٌ له، و$\overrightarrow{AC}$ شعاعٌ آخر، و$\overrightarrow{0}$ يعني انعدام الانتقال.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -6035,7 +6035,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('f938f51c-9d1e-5da4-b531-8b543a4792c2', 'c0f4caab-6fe4-5cc1-9698-141918f14e73', 'موشور قائم قاعدته مستطيل طوله 5 cm وعرضه 3 cm وارتفاعه 4 cm. ما حجمه؟', '[{"id":"a","text":"60 cm³"},{"id":"b","text":"45 cm³"},{"id":"c","text":"30 cm³"},{"id":"d","text":"20 cm³"}]'::jsonb, 'a', '$V = S_{\text{قاعدة}} \times h = (5 \times 3) \times 4 = 15 \times 4 = 60 \text{ cm}^3$.', 1)
+  ('f938f51c-9d1e-5da4-b531-8b543a4792c2', 'c0f4caab-6fe4-5cc1-9698-141918f14e73', 'موشور قائم قاعدته مستطيل طوله 5 cm وعرضه 3 cm وارتفاعه 4 cm. ما حجمه؟', '[{"id":"a","text":"60 cm³"},{"id":"b","text":"45 cm³"},{"id":"c","text":"30 cm³"},{"id":"d","text":"20 cm³"}]'::jsonb, 'a', 'حجم الموشور القائم = مساحة القاعدة × الارتفاع. القاعدة مستطيل مساحته $5 \times 3 = 15 \text{ cm}^2$، إذن $V = 15 \times 4 = 60 \text{ cm}^3$. تنبيه: نحسب مساحة القاعدة أوّلًا ثمّ نضربها في الارتفاع.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -6055,7 +6055,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('cd3dc54f-1c0c-598c-8515-f4773e66e73f', 'c0f4caab-6fe4-5cc1-9698-141918f14e73', 'أسطوانة نصف قطرها 3 cm وارتفاعها 4 cm. ما حجمها؟ (π ≈ 3.14)', '[{"id":"a","text":"37.68 cm³"},{"id":"b","text":"75.36 cm³"},{"id":"c","text":"113.04 cm³"},{"id":"d","text":"150.72 cm³"}]'::jsonb, 'c', '$V = \pi r^2 h = 3.14 \times 3^2 \times 4 = 3.14 \times 9 \times 4 = 3.14 \times 36 = 113.04 \text{ cm}^3$.', 3)
+  ('cd3dc54f-1c0c-598c-8515-f4773e66e73f', 'c0f4caab-6fe4-5cc1-9698-141918f14e73', 'أسطوانة نصف قطرها 3 cm وارتفاعها 4 cm. ما حجمها؟ (π ≈ 3.14)', '[{"id":"a","text":"37.68 cm³"},{"id":"b","text":"75.36 cm³"},{"id":"c","text":"113.04 cm³"},{"id":"d","text":"150.72 cm³"}]'::jsonb, 'c', 'حجم الأسطوانة = مساحة القاعدة الدائرية × الارتفاع = $\pi r^2 h$. نربّع نصف القطر أوّلًا: $r^2 = 3^2 = 9$، إذن $V = 3.14 \times 9 \times 4 = 3.14 \times 36 = 113.04 \text{ cm}^3$. انتبه: نربّع نصف القطر r وليس القطر.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -6075,7 +6075,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('546ec25e-87b5-5290-bf81-399849944cf6', 'c0f4caab-6fe4-5cc1-9698-141918f14e73', 'مخروط نصف قطر قاعدته 3 cm وارتفاعه 4 cm. ما حجمه؟ (π ≈ 3.14)', '[{"id":"a","text":"113.04 cm³"},{"id":"b","text":"75.36 cm³"},{"id":"c","text":"37.68 cm³"},{"id":"d","text":"25.12 cm³"}]'::jsonb, 'c', '$V = \frac{1}{3} \pi r^2 h = \frac{1}{3} \times 3.14 \times 9 \times 4 = \frac{1}{3} \times 113.04 = 37.68 \text{ cm}^3$.', 5)
+  ('546ec25e-87b5-5290-bf81-399849944cf6', 'c0f4caab-6fe4-5cc1-9698-141918f14e73', 'مخروط نصف قطر قاعدته 3 cm وارتفاعه 4 cm. ما حجمه؟ (π ≈ 3.14)', '[{"id":"a","text":"113.04 cm³"},{"id":"b","text":"75.36 cm³"},{"id":"c","text":"37.68 cm³"},{"id":"d","text":"25.12 cm³"}]'::jsonb, 'c', 'حجم المخروط = ثلث حجم الأسطوانة ذات القاعدة والارتفاع نفسهما: $V = \frac{1}{3} \pi r^2 h$. نحسب $\pi r^2 h = 3.14 \times 9 \times 4 = 113.04$، ثمّ نأخذ الثلث: $V = \frac{1}{3} \times 113.04 = 37.68 \text{ cm}^3$.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -6085,7 +6085,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('bc3acdeb-df34-5d99-827b-46cad1675a03', 'c0f4caab-6fe4-5cc1-9698-141918f14e73', 'ما مساحة سطح كرة نصف قطرها 5 cm؟ (π ≈ 3.14)', '[{"id":"a","text":"78.5 cm²"},{"id":"b","text":"314 cm²"},{"id":"c","text":"523.33 cm²"},{"id":"d","text":"157 cm²"}]'::jsonb, 'b', '$S = 4\pi r^2 = 4 \times 3.14 \times 5^2 = 4 \times 3.14 \times 25 = 314 \text{ cm}^2$.', 6)
+  ('bc3acdeb-df34-5d99-827b-46cad1675a03', 'c0f4caab-6fe4-5cc1-9698-141918f14e73', 'ما مساحة سطح كرة نصف قطرها 5 cm؟ (π ≈ 3.14)', '[{"id":"a","text":"78.5 cm²"},{"id":"b","text":"314 cm²"},{"id":"c","text":"523.33 cm²"},{"id":"d","text":"157 cm²"}]'::jsonb, 'b', 'مساحة سطح الكرة = $4\pi r^2$. نربّع نصف القطر: $r^2 = 5^2 = 25$، إذن $S = 4 \times 3.14 \times 25 = 314 \text{ cm}^2$. انتبه إلى التمييز: $4\pi r^2$ هي المساحة، أمّا الحجم فهو $\frac{4}{3}\pi r^3$.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -6107,7 +6107,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('eca58638-841d-588b-9108-5ed680a14f01', '00789172-89dd-5cc2-8af9-730645c3c113', 'أسطوانة نصف قطرها 5 cm وارتفاعها 8 cm. ما حجمها؟ (π ≈ 3.14)', '[{"id":"a","text":"314 cm³"},{"id":"b","text":"502.4 cm³"},{"id":"c","text":"628 cm³"},{"id":"d","text":"251.2 cm³"}]'::jsonb, 'c', '$V = \pi r^2 h = 3.14 \times 5^2 \times 8 = 3.14 \times 25 \times 8 = 3.14 \times 200 = 628 \text{ cm}^3$.', 1)
+  ('eca58638-841d-588b-9108-5ed680a14f01', '00789172-89dd-5cc2-8af9-730645c3c113', 'أسطوانة نصف قطرها 5 cm وارتفاعها 8 cm. ما حجمها؟ (π ≈ 3.14)', '[{"id":"a","text":"314 cm³"},{"id":"b","text":"502.4 cm³"},{"id":"c","text":"628 cm³"},{"id":"d","text":"251.2 cm³"}]'::jsonb, 'c', 'حجم الأسطوانة = مساحة القاعدة الدائرية × الارتفاع = $\pi r^2 h$. نربّع نصف القطر: $r^2 = 5^2 = 25$، إذن $V = 3.14 \times 25 \times 8 = 3.14 \times 200 = 628 \text{ cm}^3$.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -6117,7 +6117,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('cfca19fb-620b-5f95-9212-1b6ef4bfafcf', '00789172-89dd-5cc2-8af9-730645c3c113', 'مخروط نصف قطر قاعدته 6 cm وارتفاعه 9 cm. ما حجمه؟ (π ≈ 3.14)', '[{"id":"a","text":"1017.36 cm³"},{"id":"b","text":"678.24 cm³"},{"id":"c","text":"169.56 cm³"},{"id":"d","text":"339.12 cm³"}]'::jsonb, 'd', '$V = \frac{1}{3}\pi r^2 h = \frac{1}{3} \times 3.14 \times 36 \times 9 = \frac{1}{3} \times 1017.36 = 339.12 \text{ cm}^3$.', 2)
+  ('cfca19fb-620b-5f95-9212-1b6ef4bfafcf', '00789172-89dd-5cc2-8af9-730645c3c113', 'مخروط نصف قطر قاعدته 6 cm وارتفاعه 9 cm. ما حجمه؟ (π ≈ 3.14)', '[{"id":"a","text":"1017.36 cm³"},{"id":"b","text":"678.24 cm³"},{"id":"c","text":"169.56 cm³"},{"id":"d","text":"339.12 cm³"}]'::jsonb, 'd', 'حجم المخروط = ثلث حجم الأسطوانة المقابلة: $V = \frac{1}{3}\pi r^2 h$. نربّع نصف القطر: $r^2 = 6^2 = 36$، ونحسب $\pi r^2 h = 3.14 \times 36 \times 9 = 1017.36$، ثمّ نأخذ الثلث: $V = \frac{1}{3} \times 1017.36 = 339.12 \text{ cm}^3$.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,

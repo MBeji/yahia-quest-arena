@@ -123,7 +123,7 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "Après « si » dans une hypothèse, on emploie l'imparfait (jamais le conditionnel) : « si tu travaillais → tu réussirais ». La structure est : si + imparfait → conditionnel présent. Les options b (conditionnel), c (futur) et d (présent) sont toutes incorrectes après « si » dans ce contexte.",
+      "explanation": "Après « si » dans une hypothèse, on emploie l'imparfait (jamais le conditionnel) : « si tu travaillais → tu réussirais ». La structure est : si + imparfait → conditionnel présent ; la réponse est donc b (« travaillais »). Les options a (conditionnel), c (futur) et d (présent) sont toutes interdites après « si » dans ce contexte.",
       "difficulty": 2
     },
     {
@@ -147,7 +147,7 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "Le ton de « Prends soin de toi » est bienveillant : c'est un conseil, pas un ordre autoritaire. L'impératif peut exprimer un ordre, un conseil ou une prière. Les options b, c, d correspondent à l'indicatif, au conditionnel et au subjonctif, pas à l'impératif.",
+      "explanation": "Le ton de « Prends soin de toi » est bienveillant : c'est un conseil (réponse c), pas un ordre autoritaire. L'impératif peut exprimer un ordre, un conseil ou une prière. Les autres valeurs proposées relèvent d'autres modes : le fait réel (a) de l'indicatif, l'hypothèse (b) du conditionnel et le doute (d) du subjonctif.",
       "difficulty": 1
     }
   ]

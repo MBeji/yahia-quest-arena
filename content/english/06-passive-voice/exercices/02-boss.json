@@ -27,7 +27,7 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "Active: present simple. \"These shoes\" is plural → ARE + past participle of make (made): These shoes are made in Italy.",
+      "explanation": "The active verb \"make\" is present simple, so the passive stays present. \"These shoes\" is plural → ARE + the past participle \"made\": these shoes are made in Italy. \"were made\" changes the tense to past; \"is made\" wrongly uses the singular \"is\"; \"are make\" keeps the base verb instead of the participle.",
       "difficulty": 2
     },
     {
@@ -51,7 +51,7 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "Active verb is past simple (corrected). \"Our homework\" is singular → WAS + past participle (corrected): Our homework was corrected by the teacher.",
+      "explanation": "The active verb \"corrected\" is past simple, and \"our homework\" is singular (uncountable), so the passive is WAS + the past participle \"corrected\": our homework was corrected by the teacher. \"is corrected\" changes the tense; \"were corrected\" wrongly uses the plural \"were\"; \"was correct\" uses the adjective/base form, not the past participle.",
       "difficulty": 2
     },
     {
@@ -75,7 +75,7 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "\"The pyramids\" is plural + past time → WERE + past participle of build (built): The pyramids were built thousands of years ago.",
+      "explanation": "\"The pyramids\" is plural and \"thousands of years ago\" is past, so we use WERE + the past participle \"built\": the pyramids were built. \"were build\" keeps the base verb instead of the participle; \"was built\" wrongly uses the singular \"was\"; \"are built\" is present and clashes with the past time marker.",
       "difficulty": 2
     },
     {
@@ -99,7 +99,7 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "Active verb is present simple (finds). \"A wallet\" is singular → IS + past participle of find (found): A wallet is found by a student.",
+      "explanation": "The active verb \"finds\" is present simple, and \"a wallet\" is singular, so the passive is IS + the past participle \"found\": a wallet is found by a student. Option b drops the auxiliary \"is\"; \"were found\" wrongly uses the plural past \"were\"; \"was found\" changes the tense to past.",
       "difficulty": 2
     },
     {
@@ -147,7 +147,7 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "\"The new library\" is singular and \"last year\" signals past tense → WAS + past participle (opened): The new library was opened last year.",
+      "explanation": "\"last year\" signals past tense and \"the new library\" is singular, so the passive is WAS + the past participle \"opened\": the new library was opened last year. \"is opened\" is present; \"opened\" alone is the active past, not the passive; \"were opened\" wrongly uses the plural \"were\".",
       "difficulty": 3
     }
   ]

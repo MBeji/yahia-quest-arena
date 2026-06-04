@@ -14,8 +14,8 @@ BEGIN
     ADD CONSTRAINT exercises_mode_check CHECK (mode IN ('practice', 'boss', 'quiz', 'challenge'));
 END $$;
 
-INSERT INTO public.subjects (id, name_fr, description, attribute, color_token, icon, display_order, content_language) VALUES
-  ('svt', 'Sciences physiques', 'الضوء والكهرباء والكيمياء وفق برنامج العلوم الفيزيائية للسنة التاسعة أساسي', 'Observation', 'subject-svt', 'Atom', 4, 'ar')
+INSERT INTO public.subjects (id, name_fr, description, attribute, color_token, icon, display_order, content_language, is_premium) VALUES
+  ('svt', 'Sciences physiques', 'الضوء والكهرباء والكيمياء وفق برنامج العلوم الفيزيائية للسنة التاسعة أساسي', 'Observation', 'subject-svt', 'Atom', 4, 'ar', false)
 ON CONFLICT (id) DO UPDATE SET
   name_fr = EXCLUDED.name_fr,
   description = EXCLUDED.description,
@@ -23,7 +23,8 @@ ON CONFLICT (id) DO UPDATE SET
   color_token = EXCLUDED.color_token,
   icon = EXCLUDED.icon,
   display_order = EXCLUDED.display_order,
-  content_language = EXCLUDED.content_language;
+  content_language = EXCLUDED.content_language,
+  is_premium = EXCLUDED.is_premium;
 
 -- Prune admin-authored content that is no longer in the source tree.
 DO $$
@@ -855,7 +856,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('3520e9b6-2c60-5bdb-9452-faf19f751575', '2c90abf4-246f-5ca7-bce2-e8a553e79052', 'أيّ ممّا يلي مصدر ضوئي ثانوي؟', '[{"id":"a","text":"الشمس"},{"id":"b","text":"المصباح المتوهّج"},{"id":"c","text":"القمر"},{"id":"d","text":"اللهب"}]'::jsonb, 'c', 'القمر لا ينتج الضوء بنفسه بل يعكس ضوء الشمس، فهو مصدر ضوئي ثانوي.', 1)
+  ('3520e9b6-2c60-5bdb-9452-faf19f751575', '2c90abf4-246f-5ca7-bce2-e8a553e79052', 'أيّ ممّا يلي مصدر ضوئي ثانوي؟', '[{"id":"a","text":"الشمس"},{"id":"b","text":"المصباح المتوهّج"},{"id":"c","text":"القمر"},{"id":"d","text":"اللهب"}]'::jsonb, 'c', 'المصدر الضوئي الأوّلي ينتج الضوء بنفسه (كالشمس والمصباح المتوهّج واللهب)، أمّا المصدر الثانوي فيعكس ضوءًا يتلقّاه من غيره. القمر لا يبعث ضوءًا ذاتيًّا بل يعكس إلينا ضوء الشمس الساقط عليه، لذلك يُصنَّف مصدرًا ضوئيًّا ثانويًّا.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -865,7 +866,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('81f6c3b2-6342-5561-927e-2e6ebed08499', '2c90abf4-246f-5ca7-bce2-e8a553e79052', 'كيف ينتشر الضوء في وسط شفّاف ومتجانس؟', '[{"id":"a","text":"في خطوط منحنية"},{"id":"b","text":"في خطوط مستقيمة"},{"id":"c","text":"في خطوط متعرّجة"},{"id":"d","text":"في دوائر"}]'::jsonb, 'b', 'في وسط شفّاف ومتجانس ينتشر الضوء في خطوط مستقيمة (الانتشار المستقيمي).', 2)
+  ('81f6c3b2-6342-5561-927e-2e6ebed08499', '2c90abf4-246f-5ca7-bce2-e8a553e79052', 'كيف ينتشر الضوء في وسط شفّاف ومتجانس؟', '[{"id":"a","text":"في خطوط منحنية"},{"id":"b","text":"في خطوط مستقيمة"},{"id":"c","text":"في خطوط متعرّجة"},{"id":"d","text":"في دوائر"}]'::jsonb, 'b', 'مبدأ الانتشار المستقيمي للضوء: في وسط شفّاف (ينفذ منه الضوء) ومتجانس (له الخصائص نفسها في كلّ نقطة)، ينتقل الضوء في خطوط مستقيمة دون انحناء. ولهذا نمثّل مساره بشعاع ضوئي مستقيم، وعليه يُفسَّر تكوّن الظلال والكسوف. أمّا إذا تغيّر الوسط فينكسر الضوء ويتغيّر اتّجاهه.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -875,7 +876,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('a617b749-a476-50aa-9d77-27dcf968ea8a', '2c90abf4-246f-5ca7-bce2-e8a553e79052', 'متى نرى جسمًا غير مضيء؟', '[{"id":"a","text":"عندما ينتج الضوء بنفسه"},{"id":"b","text":"في الظلام التامّ"},{"id":"c","text":"عندما يمتصّ كلّ الضوء"},{"id":"d","text":"عندما يصلنا الضوء المنعكس عنه"}]'::jsonb, 'd', 'الجسم غير المضيء يُرى حين يعكس الضوء الساقط عليه ويدخل هذا الضوء أعيننا.', 3)
+  ('a617b749-a476-50aa-9d77-27dcf968ea8a', '2c90abf4-246f-5ca7-bce2-e8a553e79052', 'متى نرى جسمًا غير مضيء؟', '[{"id":"a","text":"عندما ينتج الضوء بنفسه"},{"id":"b","text":"في الظلام التامّ"},{"id":"c","text":"عندما يمتصّ كلّ الضوء"},{"id":"d","text":"عندما يصلنا الضوء المنعكس عنه"}]'::jsonb, 'd', 'الجسم غير المضيء لا يبعث ضوءًا ذاتيًّا، فلا يمكن رؤيته في الظلام التامّ. لرؤيته يجب أن يسقط عليه ضوء من مصدر، فيعكسه الجسم في كلّ الاتّجاهات، وحين يصل جزءٌ من هذا الضوء المنعكس إلى أعيننا نراه. إذن الشرط هو وصول الضوء المنعكس عنه إلى العين.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -905,7 +906,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('f5fb35c5-5154-5d48-b3f7-7a390b017440', '2c90abf4-246f-5ca7-bce2-e8a553e79052', 'ما هو «الظلّ المحمول»؟', '[{"id":"a","text":"الجزء غير المضاء من الجسم نفسه"},{"id":"b","text":"الضوء المنعكس عن المرآة"},{"id":"c","text":"مصدر ضوئي ثانوي"},{"id":"d","text":"المنطقة المظلمة المتكوّنة على حاجز خلف الجسم"}]'::jsonb, 'd', 'الظلّ المحمول هو المنطقة المظلمة التي تتكوّن على حاجز خلف الجسم المعتم، أمّا الجزء غير المضاء من الجسم فهو ظلّ النفس.', 6)
+  ('f5fb35c5-5154-5d48-b3f7-7a390b017440', '2c90abf4-246f-5ca7-bce2-e8a553e79052', 'ما هو «الظلّ المحمول»؟', '[{"id":"a","text":"الجزء غير المضاء من الجسم نفسه"},{"id":"b","text":"الضوء المنعكس عن المرآة"},{"id":"c","text":"مصدر ضوئي ثانوي"},{"id":"d","text":"المنطقة المظلمة المتكوّنة على حاجز خلف الجسم"}]'::jsonb, 'd', 'لأنّ الضوء ينتشر مستقيمًا، يحجب الجسم المعتم الأشعّة فيمنعها من بلوغ منطقة من الحاجز خلفه؛ هذه المنطقة المظلمة على الحاجز هي «الظلّ المحمول». أمّا «ظلّ النفس» فهو الجزء غير المضاء من سطح الجسم نفسه (الوجه البعيد عن المنبع). فالأوّل يقع على الحاجز والثاني على الجسم.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -927,7 +928,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('d88cfa81-9602-5207-baae-4cdb136464a2', '738049b5-6688-53ba-8f47-c5fea00f2b0b', 'يحدث كسوف الشمس عندما:', '[{"id":"a","text":"يتوسّط القمرُ بين الشمس والأرض"},{"id":"b","text":"تتوسّط الأرضُ بين الشمس والقمر"},{"id":"c","text":"تتوسّط الشمسُ بين الأرض والقمر"},{"id":"d","text":"يبتعد القمر عن الأرض"}]'::jsonb, 'a', 'في كسوف الشمس يتوسّط القمر بين الشمس والأرض فيحجب ضوء الشمس عنّا.', 1)
+  ('d88cfa81-9602-5207-baae-4cdb136464a2', '738049b5-6688-53ba-8f47-c5fea00f2b0b', 'يحدث كسوف الشمس عندما:', '[{"id":"a","text":"يتوسّط القمرُ بين الشمس والأرض"},{"id":"b","text":"تتوسّط الأرضُ بين الشمس والقمر"},{"id":"c","text":"تتوسّط الشمسُ بين الأرض والقمر"},{"id":"d","text":"يبتعد القمر عن الأرض"}]'::jsonb, 'a', 'يحدث الكسوف لأنّ الضوء ينتشر مستقيمًا: حين يصطفّ القمر بين الشمس والأرض، يعترض القمر المعتم أشعّة الشمس فيُلقي ظلّه على جزء من الأرض، فيختفي قرص الشمس كليًّا أو جزئيًّا عمّن يقف في منطقة الظلّ. لذلك يكون الكسوف نهارًا والقمر في طور المحاق.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -947,7 +948,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('ae3a8765-e3bc-5de4-aad9-c042423ec09d', '738049b5-6688-53ba-8f47-c5fea00f2b0b', 'يحدث خسوف القمر عندما:', '[{"id":"a","text":"يتوسّط القمر بين الشمس والأرض"},{"id":"b","text":"يكون القمر بدرًا بعيدًا"},{"id":"c","text":"تشرق الشمس والقمر معًا"},{"id":"d","text":"تتوسّط الأرضُ بين الشمس والقمر"}]'::jsonb, 'd', 'في خسوف القمر تتوسّط الأرض بين الشمس والقمر، فيقع القمر في ظلّ الأرض.', 3)
+  ('ae3a8765-e3bc-5de4-aad9-c042423ec09d', '738049b5-6688-53ba-8f47-c5fea00f2b0b', 'يحدث خسوف القمر عندما:', '[{"id":"a","text":"يتوسّط القمر بين الشمس والأرض"},{"id":"b","text":"يكون القمر بدرًا بعيدًا"},{"id":"c","text":"تشرق الشمس والقمر معًا"},{"id":"d","text":"تتوسّط الأرضُ بين الشمس والقمر"}]'::jsonb, 'd', 'حين تتوسّط الأرض بين الشمس والقمر على استقامة واحدة، تحجب الأرضُ المعتمة ضوءَ الشمس فيدخل القمر في ظلّها (المخروط المظلم خلفها)، فيُحرَم من الضوء الذي يعكسه إلينا عادةً ويبدو معتمًا أو محمرًّا. لذلك يقع الخسوف ليلًا والقمر في طور البدر.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1151,7 +1152,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('44ddcd17-bb19-5228-ba8b-4211de3562b1', '71b0fee4-b5db-52e4-8e51-14426ab378c6', 'ما الذي يحدث للضوء عند اصطدامه بسطح المرآة المستوية؟', '[{"id":"a","text":"ينفذ عبرها"},{"id":"b","text":"يرتدّ (ينعكس)"},{"id":"c","text":"يُمتصّ كلّيًّا"},{"id":"d","text":"يتوقّف"}]'::jsonb, 'b', 'عند اصطدام الضوء بسطح المرآة ينعكس، أي يرتدّ دون نفاذ ودون امتصاص كليّ.', 1)
+  ('44ddcd17-bb19-5228-ba8b-4211de3562b1', '71b0fee4-b5db-52e4-8e51-14426ab378c6', 'ما الذي يحدث للضوء عند اصطدامه بسطح المرآة المستوية؟', '[{"id":"a","text":"ينفذ عبرها"},{"id":"b","text":"يرتدّ (ينعكس)"},{"id":"c","text":"يُمتصّ كلّيًّا"},{"id":"d","text":"يتوقّف"}]'::jsonb, 'b', 'سطح المرآة العاكس لا يسمح للضوء بالنفاذ خلفه ولا يمتصّه، فالضوء الساقط يرتدّ عنه عائدًا إلى الوسط نفسه؛ هذه الظاهرة هي الانعكاس. ولأنّ السطح أملس ومنتظم يكون الانعكاس منتظمًا فتتكوّن صورة واضحة.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1479,7 +1480,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('e5470327-b001-55f1-9629-5301f11c075f', 'd08d38a1-4e65-593c-97ac-fc646167bd6f', 'أين تتكوّن صورة جسم بُعده عن العدسة المجمّعة أكبر من ضعف البُعد البؤري (d > 2f)؟', '[{"id":"a","text":"صورة تخيّلية معتدلة مكبّرة"},{"id":"b","text":"صورة حقيقية مقلوبة مصغّرة"},{"id":"c","text":"لا تتكوّن أيّ صورة"},{"id":"d","text":"صورة حقيقية مقلوبة مكبّرة"}]'::jsonb, 'b', 'عندما يكون بُعد الجسم عن العدسة أكبر من ضعف البُعد البؤري (d > 2f)، تكون الصورة حقيقية مقلوبة ومصغّرة.', 6)
+  ('e5470327-b001-55f1-9629-5301f11c075f', 'd08d38a1-4e65-593c-97ac-fc646167bd6f', 'أين تتكوّن صورة جسم بُعده عن العدسة المجمّعة أكبر من ضعف البُعد البؤري (d > 2f)؟', '[{"id":"a","text":"صورة تخيّلية معتدلة مكبّرة"},{"id":"b","text":"صورة حقيقية مقلوبة مصغّرة"},{"id":"c","text":"لا تتكوّن أيّ صورة"},{"id":"d","text":"صورة حقيقية مقلوبة مكبّرة"}]'::jsonb, 'b', 'حين يكون الجسم بعيدًا (d > 2f)، تتقاطع الأشعّة بعد عبورها العدسة المجمّعة في الجهة المقابلة، فتتكوّن صورة حقيقية يمكن إسقاطها على شاشة، وتكون مقلوبة (لتقاطع الأشعّة) ومصغّرة (لأنّها أقرب إلى العدسة من الجسم). وعلى هذا المبدأ يعمل آلة التصوير وعدسة العين.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1842,7 +1843,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('26d1cfe6-94c3-5c57-aeec-d0c5388828e6', 'f431df6e-67d9-56e3-91f5-590546de1fca', 'أيّ الجمل التالية صحيحة حول الناظم (N) في نموذج الذرّة؟', '[{"id":"a","text":"النيوترونات موجبة الشحنة وتوجد خارج النواة"},{"id":"b","text":"النيوترونات سالبة الشحنة وتدور حول النواة"},{"id":"c","text":"النيوترونات محايدة الشحنة وتوجد داخل النواة"},{"id":"d","text":"النيوترونات هي نفسها الإلكترونات"}]'::jsonb, 'c', 'النيوترونات جسيمات عديمة الشحنة (محايدة) توجد داخل نواة الذرّة إلى جانب البروتونات. أمّا الإلكترونات فسالبة وتدور خارج النواة.', 4)
+  ('26d1cfe6-94c3-5c57-aeec-d0c5388828e6', 'f431df6e-67d9-56e3-91f5-590546de1fca', 'أيّ الجمل التالية صحيحة حول النيوترون (N) في نموذج الذرّة؟', '[{"id":"a","text":"النيوترونات موجبة الشحنة وتوجد خارج النواة"},{"id":"b","text":"النيوترونات سالبة الشحنة وتدور حول النواة"},{"id":"c","text":"النيوترونات محايدة الشحنة وتوجد داخل النواة"},{"id":"d","text":"النيوترونات هي نفسها الإلكترونات"}]'::jsonb, 'c', 'النيوترونات جسيمات عديمة الشحنة (محايدة) توجد داخل نواة الذرّة إلى جانب البروتونات. أمّا الإلكترونات فسالبة وتدور خارج النواة.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2018,7 +2019,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('1f6bacee-755c-5a84-97c4-6cfeb4a30a7d', '07576f0b-3c33-598e-80e6-79b3ce4364ab', 'في التفاعل: C + O₂ → CO₂، ما هي المتفاعلات؟', '[{"id":"a","text":"CO₂ فقط"},{"id":"b","text":"C و CO₂"},{"id":"c","text":"O₂ و CO₂"},{"id":"d","text":"C و O₂"}]'::jsonb, 'd', 'المتفاعلات هي الموادّ الموجودة قبل السهم: الكربون C والأكسجين O₂، أمّا CO₂ فهو الناتج.', 1)
+  ('1f6bacee-755c-5a84-97c4-6cfeb4a30a7d', '07576f0b-3c33-598e-80e6-79b3ce4364ab', 'في التفاعل: C + O₂ → CO₂، ما هي المتفاعلات؟', '[{"id":"a","text":"CO₂ فقط"},{"id":"b","text":"C و CO₂"},{"id":"c","text":"O₂ و CO₂"},{"id":"d","text":"C و O₂"}]'::jsonb, 'd', 'في المعادلة الكيميائية يفصل السهم بين الموادّ الداخلة في التفاعل (المتفاعلات) على يساره والموادّ المتكوّنة (النواتج) على يمينه. هنا الكربون C والأكسجين O₂ على يسار السهم فهما المتفاعلان اللذان يستهلكان، وثاني أكسيد الكربون CO₂ على يمينه فهو الناتج المتكوّن من اتّحادهما.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2028,7 +2029,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('55175f89-37f1-5093-be10-635d8cf97a74', '07576f0b-3c33-598e-80e6-79b3ce4364ab', 'أيّ ممّا يلي تحوّل فيزيائي؟', '[{"id":"a","text":"احتراق الورق"},{"id":"b","text":"صدأ الحديد"},{"id":"c","text":"ذوبان الجليد"},{"id":"d","text":"احتراق الميثان"}]'::jsonb, 'c', 'ذوبان الجليد تغيّر حالة فقط (ماء صلب ← ماء سائل) دون تكوّن مادّة جديدة، فهو تحوّل فيزيائي.', 2)
+  ('55175f89-37f1-5093-be10-635d8cf97a74', '07576f0b-3c33-598e-80e6-79b3ce4364ab', 'أيّ ممّا يلي تحوّل فيزيائي؟', '[{"id":"a","text":"احتراق الورق"},{"id":"b","text":"صدأ الحديد"},{"id":"c","text":"ذوبان الجليد"},{"id":"d","text":"احتراق الميثان"}]'::jsonb, 'c', 'في ذوبان الجليد تتغيّر الحالة الفيزيائية فقط من الصلبة إلى السائلة، لكنّ المادّة تبقى ماءً (H₂O) ولا تتكوّن مادّة جديدة، لذا فهو تحوّل فيزيائي قابل للعكس بالتجميد. أمّا احتراق الورق أو الميثان وصدأ الحديد فتظهر فيها موادّ جديدة مختلفة الخصائص، فهي تحوّلات كيميائية.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2038,7 +2039,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('192af321-7e53-5849-900d-cb4c1814f863', '07576f0b-3c33-598e-80e6-79b3ce4364ab', 'ماذا ينصّ قانون انحفاظ الكتلة (لافوازييه)؟', '[{"id":"a","text":"كتلة المتفاعلات = كتلة النواتج"},{"id":"b","text":"كتلة المتفاعلات أكبر من كتلة النواتج"},{"id":"c","text":"كتلة المتفاعلات أصغر من كتلة النواتج"},{"id":"d","text":"تختفي الكتلة أثناء التفاعل"}]'::jsonb, 'a', 'تنحفظ الكتلة في التفاعل الكيميائي: مجموع كتل المتفاعلات يساوي مجموع كتل النواتج.', 3)
+  ('192af321-7e53-5849-900d-cb4c1814f863', '07576f0b-3c33-598e-80e6-79b3ce4364ab', 'ماذا ينصّ قانون انحفاظ الكتلة (لافوازييه)؟', '[{"id":"a","text":"كتلة المتفاعلات = كتلة النواتج"},{"id":"b","text":"كتلة المتفاعلات أكبر من كتلة النواتج"},{"id":"c","text":"كتلة المتفاعلات أصغر من كتلة النواتج"},{"id":"d","text":"تختفي الكتلة أثناء التفاعل"}]'::jsonb, 'a', 'قانون لافوازييه: «لا شيء يُفقَد ولا شيء يُخلَق، كلّ شيء يتحوّل». فأثناء التفاعل لا تختفي الذرّات بل تعيد ترتيب روابطها فقط، لذا يبقى عددها ونوعها ثابتَين، ومن ثَمّ يكون مجموع كتل المتفاعلات مساويًا تمامًا لمجموع كتل النواتج.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2048,7 +2049,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('ea79b802-7f5c-5f15-99a8-70d5c96b57b7', '07576f0b-3c33-598e-80e6-79b3ce4364ab', 'تفاعل 4 g من الميثان مع 16 g من الأكسجين تفاعلًا تامًّا. ما كتلة النواتج؟', '[{"id":"a","text":"20 g"},{"id":"b","text":"12 g"},{"id":"c","text":"16 g"},{"id":"d","text":"4 g"}]'::jsonb, 'a', 'بانحفاظ الكتلة: كتلة النواتج = 4 + 16 = 20 g.', 4)
+  ('ea79b802-7f5c-5f15-99a8-70d5c96b57b7', '07576f0b-3c33-598e-80e6-79b3ce4364ab', 'تفاعل 4 g من الميثان مع 16 g من الأكسجين تفاعلًا تامًّا. ما كتلة النواتج؟', '[{"id":"a","text":"20 g"},{"id":"b","text":"12 g"},{"id":"c","text":"16 g"},{"id":"d","text":"4 g"}]'::jsonb, 'a', 'بما أنّ التفاعل تامّ، تُستهلك المتفاعلات كاملةً. وبتطبيق قانون انحفاظ الكتلة (كتلة النواتج = كتلة المتفاعلات): كتلة النواتج = 4 g (ميثان) + 16 g (أكسجين) = 20 g.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2100,7 +2101,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('b46481cb-0b1f-5b2d-8a3d-a1d7bdc16b37', '107c0650-6e11-5652-b548-d850f77b6e0a', 'صدأ الحديد في الهواء الرطب هو تحوّل:', '[{"id":"a","text":"فيزيائي"},{"id":"b","text":"تغيّر حالة فقط"},{"id":"c","text":"لا تحوّل فيه"},{"id":"d","text":"كيميائي"}]'::jsonb, 'd', 'يتكوّن الصدأ (أكسيد الحديد) وهو مادّة جديدة، فالتحوّل كيميائي.', 2)
+  ('b46481cb-0b1f-5b2d-8a3d-a1d7bdc16b37', '107c0650-6e11-5652-b548-d850f77b6e0a', 'صدأ الحديد في الهواء الرطب هو تحوّل:', '[{"id":"a","text":"فيزيائي"},{"id":"b","text":"تغيّر حالة فقط"},{"id":"c","text":"لا تحوّل فيه"},{"id":"d","text":"كيميائي"}]'::jsonb, 'd', 'في الهواء الرطب يتّحد الحديد مع الأكسجين والماء فيتكوّن الصدأ (أكسيد الحديد المميّأ)، وهو مادّة جديدة تختلف في لونها وخصائصها عن الحديد الأصلي. ولأنّه تظهر مادّة جديدة لا يمكن استرجاع الحديد منها بسهولة، فالتحوّل كيميائي لا فيزيائي.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2110,7 +2111,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('5fc6de1c-ebe0-5e6e-8fe4-f25fe4e9a09c', '107c0650-6e11-5652-b548-d850f77b6e0a', 'هل المعادلة C + O₂ → CO₂ موزونة؟', '[{"id":"a","text":"لا، ينقص الكربون"},{"id":"b","text":"لا، ينقص الأكسجين"},{"id":"c","text":"نعم، لأنّ عدد ذرّات كلّ عنصر متساوٍ في الطرفين"},{"id":"d","text":"لا يمكن معرفة ذلك"}]'::jsonb, 'c', 'الكربون 1 = 1 والأكسجين 2 = 2، فالمعادلة موزونة.', 3)
+  ('5fc6de1c-ebe0-5e6e-8fe4-f25fe4e9a09c', '107c0650-6e11-5652-b548-d850f77b6e0a', 'هل المعادلة C + O₂ → CO₂ موزونة؟', '[{"id":"a","text":"لا، ينقص الكربون"},{"id":"b","text":"لا، ينقص الأكسجين"},{"id":"c","text":"نعم، لأنّ عدد ذرّات كلّ عنصر متساوٍ في الطرفين"},{"id":"d","text":"لا يمكن معرفة ذلك"}]'::jsonb, 'c', 'نتحقّق من توازن كلّ عنصر: الكربون يسارًا 1 (في C) ويمينًا 1 (في CO₂) فهو متساوٍ؛ والأكسجين يسارًا 2 (في O₂) ويمينًا 2 (في CO₂) فهو متساوٍ كذلك. وبما أنّ عدد ذرّات كلّ عنصر متساوٍ في الطرفين، فالمعادلة موزونة فعلًا.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2130,7 +2131,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('9e8aff14-50ea-5585-9d86-d673d817419c', '107c0650-6e11-5652-b548-d850f77b6e0a', 'ما الموازنة الصحيحة للتفاعل: H₂ + O₂ → H₂O؟', '[{"id":"a","text":"H₂ + O₂ → H₂O"},{"id":"b","text":"2H₂ + O₂ → 2H₂O"},{"id":"c","text":"H₂ + 2O₂ → 2H₂O"},{"id":"d","text":"2H₂ + 2O₂ → 2H₂O"}]'::jsonb, 'b', 'بـ 2H₂ + O₂ → 2H₂O يتساوى الهيدروجين (4 = 4) والأكسجين (2 = 2).', 5)
+  ('9e8aff14-50ea-5585-9d86-d673d817419c', '107c0650-6e11-5652-b548-d850f77b6e0a', 'ما الموازنة الصحيحة للتفاعل: H₂ + O₂ → H₂O؟', '[{"id":"a","text":"H₂ + O₂ → H₂O"},{"id":"b","text":"2H₂ + O₂ → 2H₂O"},{"id":"c","text":"H₂ + 2O₂ → 2H₂O"},{"id":"d","text":"2H₂ + 2O₂ → 2H₂O"}]'::jsonb, 'b', 'نوازن بتعديل المعاملات حتى يتساوى عدد ذرّات كلّ عنصر في الطرفين (انحفاظ الكتلة). بالصيغة الأصلية يكون الأكسجين 2 يسارًا و1 يمينًا فهي غير موزونة. بوضع 2H₂ + O₂ → 2H₂O نحصل على الهيدروجين: يسار 2×2=4، يمين 2×2=4 ✓؛ والأكسجين: يسار 2، يمين 2×1=2 ✓. إذن المعادلة موزونة.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2140,7 +2141,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('07cabb70-9805-5e1d-a27a-644d6106e340', '107c0650-6e11-5652-b548-d850f77b6e0a', 'في CH₄ + 2O₂ → CO₂ + 2H₂O، كم عدد ذرّات الأكسجين في طرف المتفاعلات؟', '[{"id":"a","text":"2"},{"id":"b","text":"3"},{"id":"c","text":"4"},{"id":"d","text":"6"}]'::jsonb, 'c', '2O₂ يعني جزيئين من الأكسجين، أي 2 × 2 = 4 ذرّات أكسجين.', 6)
+  ('07cabb70-9805-5e1d-a27a-644d6106e340', '107c0650-6e11-5652-b548-d850f77b6e0a', 'في CH₄ + 2O₂ → CO₂ + 2H₂O، كم عدد ذرّات الأكسجين في طرف المتفاعلات؟', '[{"id":"a","text":"2"},{"id":"b","text":"3"},{"id":"c","text":"4"},{"id":"d","text":"6"}]'::jsonb, 'c', 'المعامل 2 أمام O₂ يدلّ على جزيئين من الأكسجين، وكلّ جزيء O₂ يحوي ذرّتَين. إذن عدد ذرّات الأكسجين في طرف المتفاعلات = المعامل × عدد الذرّات في الصيغة = 2 × 2 = 4 ذرّات (وهي تساوي ما في طرف النواتج: CO₂ فيها 2 و2H₂O فيها 2، أي 4 أيضًا).', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
