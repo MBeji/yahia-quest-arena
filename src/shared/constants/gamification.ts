@@ -10,6 +10,14 @@ export const PASS_THRESHOLD_PCT = 60;
  */
 export const QUIZ_PASS_THRESHOLD_PCT = 80;
 
+/**
+ * Minimum plausible seconds per question. An attempt completed faster than
+ * (questions × this) is treated as "too fast to be real" — it earns no XP/coins
+ * (server-enforced in submit_exercise_attempt) and does NOT satisfy the
+ * comprehension-quiz gate. Mirrors the 4s/question used in the scoring RPC.
+ */
+export const MIN_SECONDS_PER_QUESTION = 4;
+
 /** Score threshold for half coin reward */
 export const HALF_COIN_THRESHOLD_PCT = 40;
 
