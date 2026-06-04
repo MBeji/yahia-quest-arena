@@ -27,7 +27,7 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "\"every day\" signals a habit, so we use the present simple with -es: she goes.",
+      "explanation": "\"every day\" signals a repeated habit, so we use the present simple. With the third-person singular \"she\", we add -es to a verb ending in -o: she goes. \"is going\" (present continuous) is for actions happening now; \"go\" forgets the -es needed after she/he/it; \"going\" alone is not a finite verb.",
       "difficulty": 1
     },
     {
@@ -51,7 +51,7 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "\"Look!\" signals an action happening now, so we use the present continuous: is crying.",
+      "explanation": "\"Look!\" draws attention to something happening right now, so we use the present continuous (is + -ing): the baby is crying. \"cries\" and \"cry\" are present simple (habits, not this moment); \"cried\" is past simple.",
       "difficulty": 1
     },
     {
@@ -75,7 +75,7 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "Adverbs of frequency such as \"usually\" signal a habit (present simple).",
+      "explanation": "Adverbs of frequency such as \"usually\" describe how often something happens, so they signal a habit and the present simple. By contrast, \"now\", \"at the moment\", and \"Look!\" all point to an action in progress and go with the present continuous.",
       "difficulty": 1
     },
     {
@@ -99,7 +99,7 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "Third person singular in the present simple takes -s: he plays.",
+      "explanation": "\"on Sundays\" signals a regular habit, so we use the present simple. The third-person singular \"he\" adds -s to the verb: he plays. \"play\" is missing the -s; \"is play\" mixes two verb forms; \"playing\" alone cannot be the main verb without am/is/are.",
       "difficulty": 1
     },
     {
