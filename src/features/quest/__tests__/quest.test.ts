@@ -412,6 +412,11 @@ describe("gamification.quest — submitAttempt", () => {
     expect((res.review as Array<{ isCorrect: boolean }>)[0].isCorrect).toBe(true);
     expect(res.reviewHidden).toBe(false);
     expect((res.unlockedBadges as Array<{ code: string }>)[0].code).toBe("first_win");
+    // Daily/weekly goal rows are ensured before the atomic submit so progress
+    // actually increments (they used to never be created → stuck at 0).
+    expect(mockRpc).toHaveBeenCalledWith("ensure_daily_weekly_goals", {
+      p_user: expect.any(String),
+    });
   });
 
   it("hides the correction (no correct answers leak) for a comprehension quiz", async () => {

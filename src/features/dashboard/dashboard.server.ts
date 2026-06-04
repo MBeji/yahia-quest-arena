@@ -315,6 +315,10 @@ export const getSprint2Dashboard = createServerFn({ method: "GET" })
     const currentWeekStart = getCurrentWeekStartUtc();
     const today = getTodayUtc();
 
+    // Create today's daily objective & this week's weekly quest if missing, so
+    // the widgets show a real goal (and the submit RPC has a row to increment).
+    await supabase.rpc("ensure_daily_weekly_goals", { p_user: userId });
+
     const [dailyObjs, weeklyQs, spacedRep] = await Promise.all([
       supabase
         .from("daily_objectives")

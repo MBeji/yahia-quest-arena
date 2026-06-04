@@ -338,6 +338,10 @@ describe("gamification.dashboard — getSprint2Dashboard", () => {
     const res = result as Record<string, unknown>;
     expect(res.dailyObjectives).toEqual(dailyObjs);
     expect(res.weeklyQuests).toEqual(weeklyQs);
+    // The goals are created on demand so the widgets are never empty/stuck at 0.
+    expect(mockRpc).toHaveBeenCalledWith("ensure_daily_weekly_goals", {
+      p_user: expect.any(String),
+    });
   });
 
   it("throws a generic French message on daily objectives error (#14)", async () => {
