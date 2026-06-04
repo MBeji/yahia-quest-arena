@@ -462,6 +462,17 @@ function QuestPage() {
                 )}
               </div>
             )}
+            {result.xpEarned === 0 && (
+              <div className="mt-6 rounded-xl border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 p-3 text-center text-xs text-[color:var(--gold)]">
+                {result.tooFast
+                  ? "⏱️ Trop rapide — aucune XP. Prends le temps de lire et de comprendre chaque question."
+                  : result.scorePct < 60
+                    ? "🎯 Sous 60 % — aucune XP. Répondre au hasard ne rapporte rien : vise la compréhension."
+                    : !result.improved
+                      ? "✅ Déjà maîtrisé — pas de nouvelle XP. Bats ton meilleur score sur cet exercice pour en regagner."
+                      : "Aucune XP gagnée cette fois."}
+              </div>
+            )}
             <div className="mt-6 grid grid-cols-4 gap-3">
               <div className="rounded-xl bg-(--neon-gold)/15 p-4">
                 <Zap className="mx-auto h-5 w-5 text-neon-gold" />

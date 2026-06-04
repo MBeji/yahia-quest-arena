@@ -370,6 +370,41 @@ describe("gamification.quest — submitAttempt", () => {
     mockRpc.mockReset();
   });
 
+  it("surfaces the anti-rush flags (tooFast / improved) and a 0-XP result", async () => {
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") return mockQuery({ mode: "practice" });
+      return mockQuery([{ id: Q1_ID, prompt: "2+2?", correct_option: "4", explanation: "x" }]);
+    });
+    // The hardened RPC returns 0 XP with tooFast=true when answered too quickly.
+    mockRpc.mockReturnValue({
+      data: {
+        correct: 1,
+        total: 2,
+        scorePct: 50,
+        xpEarned: 0,
+        coinsEarned: 0,
+        durationSeconds: 2,
+        tooFast: true,
+        improved: false,
+      },
+      error: null,
+    });
+
+    const { submitAttempt } = await import("@/features/quest");
+    const res = (await (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
+      sessionId: SESSION_ID,
+      exerciseId: EXERCISE_ID,
+      answers: [
+        { questionId: Q1_ID, choice: "4" },
+        { questionId: Q2_ID, choice: "1" },
+      ],
+    })) as Record<string, unknown>;
+
+    expect(res.tooFast).toBe(true);
+    expect(res.improved).toBe(false);
+    expect(res.xpEarned).toBe(0);
+  });
+
   it("returns scored result with review", async () => {
     const questionsData = [
       { id: Q1_ID, prompt: "2+2?", correct_option: "4", explanation: "Basic math" },
