@@ -42,4 +42,51 @@ describe("SubjectPathCard", () => {
     render(<SubjectPathCard subject={base} stat={undefined} hasSubscription={false} />);
     expect(screen.queryByText("Premium")).not.toBeInTheDocument();
   });
+
+  it("resolves the subject colour var without double-prefixing a prefixed token", () => {
+    const { container } = render(
+      <SubjectPathCard
+        subject={{ ...base, color_token: "subject-arabic" }}
+        stat={{ count: 1, avg: 50 }}
+        hasSubscription={false}
+      />,
+    );
+    expect(container.innerHTML).toContain("var(--subject-arabic)");
+    expect(container.innerHTML).not.toContain("subject-subject-arabic");
+  });
+
+  it("resolves the subject colour var from a bare token too", () => {
+    const { container } = render(
+      <SubjectPathCard
+        subject={{ ...base, color_token: "math" }}
+        stat={undefined}
+        hasSubscription={false}
+      />,
+    );
+    expect(container.innerHTML).toContain("var(--subject-math)");
+    expect(container.innerHTML).not.toContain("subject-subject-math");
+  });
+
+  it("renders the mapped lucide icon instead of the Sword fallback", () => {
+    const mapped = render(
+      <SubjectPathCard
+        subject={{ ...base, icon: "Calculator" }}
+        stat={undefined}
+        hasSubscription={false}
+      />,
+    )
+      .container.querySelector("svg")
+      ?.getAttribute("class");
+    const fallback = render(
+      <SubjectPathCard
+        subject={{ ...base, icon: "DefinitelyNotAnIcon" }}
+        stat={undefined}
+        hasSubscription={false}
+      />,
+    )
+      .container.querySelector("svg")
+      ?.getAttribute("class");
+    expect(mapped).toBeTruthy();
+    expect(mapped).not.toEqual(fallback); // Calculator was resolved, not collapsed to Sword
+  });
 });
