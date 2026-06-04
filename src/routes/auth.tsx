@@ -53,9 +53,14 @@ function AuthPage() {
       hash.get("error_description") ||
       hash.get("error");
     if (oauthError) {
-      const friendly = friendlyAuthError(new Error(oauthError));
-      setFormError(friendly);
-      toast.error(friendly);
+      const raw = decodeURIComponent(oauthError);
+      const friendly = friendlyAuthError(new Error(raw));
+      // For OAuth, show the raw provider/Supabase message when it isn't a known
+      // case — it's far more actionable than a generic fallback for debugging.
+      const shown =
+        friendly === "Erreur d'authentification. Réessaie." ? `Google : ${raw}` : friendly;
+      setFormError(shown);
+      toast.error(shown);
       window.history.replaceState({}, "", "/auth");
     }
 
