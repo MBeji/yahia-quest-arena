@@ -8,6 +8,7 @@ import { getOpenReportsCount } from "@/features/content-report";
 import {
   Sparkles,
   LayoutDashboard,
+  Map,
   LogOut,
   Swords,
   Crown,
@@ -109,6 +110,9 @@ function AuthenticatedLayout() {
           <nav className="flex items-center gap-2 text-sm">
             <Link to="/dashboard" className={NAV_LINK} activeProps={NAV_ACTIVE}>
               <LayoutDashboard className="h-4 w-4" /> {t.layout.heroesHall}
+            </Link>
+            <Link to="/parcours" className={NAV_LINK} activeProps={NAV_ACTIVE}>
+              <Map className="h-4 w-4" /> {t.layout.parcours}
             </Link>
             <Link to="/dungeon" className={NAV_LINK} activeProps={NAV_ACTIVE}>
               <Swords className="h-4 w-4" /> {t.layout.dungeon}
