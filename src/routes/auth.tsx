@@ -43,9 +43,19 @@ function AuthPage() {
   const runBootstrapProfile = useServerFn(bootstrapProfile);
 
   useEffect(() => {
+    // Redirect away if already signed in. This must also cover the OAuth (Google)
+    // callback: when the browser returns to /auth?code=..., Supabase exchanges the
+    // code for a session ASYNCHRONOUSLY — often after this initial getSession()
+    // has already resolved with no session. A one-shot check would leave the user
+    // stuck on the login form, so we also subscribe to auth-state changes and
+    // navigate when the SIGNED_IN event fires once the exchange completes.
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) navigate({ to: "/dashboard" });
     });
+    const { data: authSub } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) navigate({ to: "/dashboard" });
+    });
+    return () => authSub.subscription.unsubscribe();
   }, [navigate]);
 
   function friendlyAuthError(err: unknown): string {
