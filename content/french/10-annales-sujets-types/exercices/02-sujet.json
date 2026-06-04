@@ -1,0 +1,88 @@
+{
+  "title": "⚔️ Sujet 2 (Boss) — Texte informatif : l'eau, une ressource précieuse",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Lisez le texte :\n\n« L'eau douce ne représente qu'une très petite partie de l'eau de la planète. Pourtant, elle est gaspillée chaque jour : des robinets fuient, des cultures sont mal arrosées et des litres entiers sont perdus. Les spécialistes rappellent que des gestes simples suffisent à économiser cette ressource. Si chacun fermait le robinet en se brossant les dents, des milliers de litres seraient préservés. »\n\nQuelle est l'idée directrice de ce texte ?",
+      "options": [
+        { "id": "a", "text": "L'eau douce est très abondante sur la planète." },
+        { "id": "b", "text": "Le gaspillage de l'eau ne peut pas être évité." },
+        {
+          "id": "c",
+          "text": "L'eau douce est rare et gaspillée, mais des gestes simples permettent de l'économiser."
+        },
+        { "id": "d", "text": "Il faut interdire totalement l'usage de l'eau." }
+      ],
+      "correctOption": "c",
+      "explanation": "Le texte enchaîne trois idées : l'eau douce est rare (« une très petite partie »), elle est gaspillée, et des gestes simples permettent de l'économiser : c'est l'idée directrice. (a) contredit « une très petite partie ». (b) est contredit par « des gestes simples suffisent ». (d) exagère : le texte parle d'économie, pas d'interdiction.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lisez le texte :\n\n« L'eau douce ne représente qu'une très petite partie de l'eau de la planète. Pourtant, elle est gaspillée chaque jour : des robinets fuient, des cultures sont mal arrosées et des litres entiers sont perdus. Les spécialistes rappellent que des gestes simples suffisent à économiser cette ressource. Si chacun fermait le robinet en se brossant les dents, des milliers de litres seraient préservés. »\n\nQuel est le rôle du connecteur « Pourtant » au début de la deuxième phrase ?",
+      "options": [
+        { "id": "a", "text": "Il ajoute une idée de même sens que la précédente." },
+        {
+          "id": "b",
+          "text": "Il marque une opposition entre la rareté de l'eau et son gaspillage."
+        },
+        { "id": "c", "text": "Il exprime la cause de la première phrase." },
+        { "id": "d", "text": "Il introduit un exemple chiffré." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Pourtant » oppose deux idées contradictoires : l'eau est rare, et POURTANT on la gaspille. (a) confondrait avec une addition (« de plus »). (c) serait « car » ou « parce que ». (d) : l'exemple chiffré (« des milliers de litres ») vient plus loin et n'est pas introduit par « pourtant ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez le texte :\n\n« L'eau douce ne représente qu'une très petite partie de l'eau de la planète. Pourtant, elle est gaspillée chaque jour : des robinets fuient, des cultures sont mal arrosées et des litres entiers sont perdus. Les spécialistes rappellent que des gestes simples suffisent à économiser cette ressource. Si chacun fermait le robinet en se brossant les dents, des milliers de litres seraient préservés. »\n\nDans la phrase « des cultures sont mal arrosées », à quelle voix est le verbe, et quelle serait la phrase à la voix active ?",
+      "options": [
+        { "id": "a", "text": "Voix passive ; à l'actif : « on arrose mal des cultures »." },
+        { "id": "b", "text": "Voix active ; elle ne peut pas devenir passive." },
+        { "id": "c", "text": "Voix passive ; à l'actif : « des cultures arrosent mal »." },
+        { "id": "d", "text": "Voix active ; à l'actif : « des cultures sont arrosées »." }
+      ],
+      "correctOption": "a",
+      "explanation": "« sont arrosées » (auxiliaire être + participe passé) est une voix passive sans complément d'agent exprimé ; à l'actif, on rétablit un sujet indéfini : « on arrose mal des cultures ». (b) est faux : la phrase EST déjà passive. (c) inverse le sens (les cultures n'arrosent pas). (d) répète une forme passive en la présentant à tort comme active.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lisez le texte :\n\n« L'eau douce ne représente qu'une très petite partie de l'eau de la planète. Pourtant, elle est gaspillée chaque jour : des robinets fuient, des cultures sont mal arrosées et des litres entiers sont perdus. Les spécialistes rappellent que des gestes simples suffisent à économiser cette ressource. Si chacun fermait le robinet en se brossant les dents, des milliers de litres seraient préservés. »\n\nDans « Si chacun fermait le robinet…, des milliers de litres seraient préservés », quel rapport logique exprime la subordonnée introduite par « Si » ?",
+      "options": [
+        { "id": "a", "text": "Une cause déjà réalisée dans le passé." },
+        { "id": "b", "text": "Une hypothèse (condition) dont dépend la conséquence." },
+        { "id": "c", "text": "Un but à atteindre absolument." },
+        { "id": "d", "text": "Une simple comparaison entre deux quantités." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Si chacun fermait… » + conditionnel « seraient préservés » exprime une hypothèse : une condition imaginée et sa conséquence probable. (a) : ce n'est pas une cause réelle passée. (c) : le but s'introduirait par « afin que / pour que ». (d) : aucune comparaison n'est faite, mais une condition.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lisez le texte :\n\n« L'eau douce ne représente qu'une très petite partie de l'eau de la planète. Pourtant, elle est gaspillée chaque jour : des robinets fuient, des cultures sont mal arrosées et des litres entiers sont perdus. Les spécialistes rappellent que des gestes simples suffisent à économiser cette ressource. Si chacun fermait le robinet en se brossant les dents, des milliers de litres seraient préservés. »\n\nDans ce contexte, quel est le sens du mot « préservés » ?",
+      "options": [
+        { "id": "a", "text": "Gaspillés, perdus inutilement." },
+        { "id": "b", "text": "Protégés, économisés, donc non perdus." },
+        { "id": "c", "text": "Vendus à un prix élevé." },
+        { "id": "d", "text": "Salis, rendus impropres à la consommation." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Préservés » s'oppose ici à « gaspillés » et « perdus » du début : ces litres seraient sauvegardés, économisés. Le contexte (« économiser cette ressource ») le confirme. (a) dit l'inverse exact. (c) introduit une idée de vente absente. (d) confond avec « pollués », ce que le texte ne dit pas.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Vous rédigez un court texte pour convaincre vos camarades d'économiser l'eau. Vous disposez de trois phrases :\n\n1) Par exemple, fermer le robinet en se brossant les dents économise des litres d'eau.\n2) Il est donc urgent d'adopter des gestes simples au quotidien.\n3) L'eau douce est une ressource rare qu'il faut protéger.\n\nQuel est le bon ordre logique du paragraphe ?",
+      "options": [
+        { "id": "a", "text": "3 puis 1 puis 2" },
+        { "id": "b", "text": "1 puis 2 puis 3" },
+        { "id": "c", "text": "2 puis 3 puis 1" },
+        { "id": "d", "text": "1 puis 3 puis 2" }
+      ],
+      "correctOption": "a",
+      "explanation": "On annonce d'abord l'idée (3 : l'eau est rare), on l'illustre par un exemple (1 : « Par exemple… »), puis on conclut avec « donc » (2) : l'ordre 3-1-2 respecte annoncer → illustrer → conclure. Les autres ordres placent l'exemple (« Par exemple ») ou la conclusion (« donc ») avant l'idée annoncée, ce qui rompt la logique.",
+      "difficulty": 3
+    }
+  ]
+}
