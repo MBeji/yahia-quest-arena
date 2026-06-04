@@ -2,10 +2,10 @@ import { useI18n, type Locale } from "@/lib/i18n";
 import { Globe } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
-const LOCALES: { code: Locale; label: string; flag: string }[] = [
-  { code: "en", label: "English", flag: "🇬🇧" },
-  { code: "fr", label: "Français", flag: "🇫🇷" },
-  { code: "ar", label: "العربية", flag: "🇹🇳" },
+const LOCALES: { code: Locale; label: string; short: string }[] = [
+  { code: "en", label: "English", short: "EN" },
+  { code: "fr", label: "Français", short: "FR" },
+  { code: "ar", label: "العربية", short: "AR" },
 ];
 
 export function LanguageSwitcher({ className = "" }: { className?: string }) {
@@ -34,7 +34,7 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
         aria-label="Change language"
       >
         <Globe className="h-3.5 w-3.5" />
-        <span>{current.flag}</span>
+        <span className="font-bold tracking-wide">{current.short}</span>
       </button>
       {open && (
         <div className="absolute end-0 top-full z-50 mt-1.5 min-w-[140px] overflow-hidden rounded-xl border border-border/60 bg-black/95 p-1 shadow-lg backdrop-blur-xl">
@@ -52,7 +52,9 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
                   : "text-muted-foreground hover:bg-accent hover:text-foreground"
               }`}
             >
-              <span className="text-base">{l.flag}</span>
+              <span className="grid h-6 w-7 place-items-center rounded border border-border/60 text-[10px] font-bold tracking-wide">
+                {l.short}
+              </span>
               <span>{l.label}</span>
             </button>
           ))}
