@@ -307,15 +307,15 @@ function LessonPage() {
               params={{ chapterId: c.id }}
               className={`flex items-center gap-2 rounded-xl border px-3 py-2.5 text-sm transition ${
                 c.id === chapterId
-                  ? "border-[color:var(--neon-cyan)]/60 bg-[color:var(--neon-cyan)]/15 font-semibold text-[color:var(--neon-cyan)]"
+                  ? "border-[color:var(--gold)]/60 bg-[color:var(--gold)]/15 font-semibold text-[color:var(--gold)]"
                   : c.hasLesson
-                    ? "border-border/50 hover:border-[color:var(--neon-cyan)]/30 hover:bg-[color:var(--neon-cyan)]/5"
+                    ? "border-border/50 hover:border-[color:var(--gold)]/30 hover:bg-[color:var(--gold)]/5"
                     : "border-border/30 text-muted-foreground/50 pointer-events-none"
               }`}
             >
               <span
                 className={`grid h-6 w-6 shrink-0 place-items-center rounded-lg text-xs font-bold ${
-                  c.id === chapterId ? "bg-[color:var(--neon-cyan)]/20" : "bg-muted-foreground/10"
+                  c.id === chapterId ? "bg-[color:var(--gold)]/20" : "bg-muted-foreground/10"
                 }`}
               >
                 {i + 1}

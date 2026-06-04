@@ -30,14 +30,14 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-1.5 rounded-md border border-border/50 bg-background/40 px-2.5 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur-md transition hover:border-[color:var(--neon-cyan)]/50 hover:text-foreground"
+        className="flex items-center gap-1.5 rounded-md border border-border/50 bg-black/40 px-2.5 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur-md transition hover:border-[color:var(--gold)]/50 hover:text-foreground"
         aria-label="Change language"
       >
         <Globe className="h-3.5 w-3.5" />
         <span>{current.flag}</span>
       </button>
       {open && (
-        <div className="absolute end-0 top-full z-50 mt-1.5 min-w-[140px] overflow-hidden rounded-xl border border-border/60 bg-card/95 p-1 shadow-lg backdrop-blur-xl">
+        <div className="absolute end-0 top-full z-50 mt-1.5 min-w-[140px] overflow-hidden rounded-xl border border-border/60 bg-black/95 p-1 shadow-lg backdrop-blur-xl">
           {LOCALES.map((l) => (
             <button
               key={l.code}
@@ -48,7 +48,7 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
               }}
               className={`flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition ${
                 l.code === locale
-                  ? "bg-[color:var(--neon-violet)]/15 text-[color:var(--neon-violet)] font-semibold"
+                  ? "bg-[color:var(--gold)]/15 text-[color:var(--gold)] font-semibold"
                   : "text-muted-foreground hover:bg-accent hover:text-foreground"
               }`}
             >

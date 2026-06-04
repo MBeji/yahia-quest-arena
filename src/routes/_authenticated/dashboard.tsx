@@ -688,9 +688,9 @@ function Dashboard() {
               <Suspense
                 fallback={
                   <div className="space-y-4">
-                    <div className="h-8 w-40 animate-pulse rounded bg-card/40" />
-                    <div className="h-80 animate-pulse rounded-2xl bg-card/40" />
-                    <div className="h-52 animate-pulse rounded-2xl bg-card/40" />
+                    <div className="h-8 w-40 animate-pulse rounded bg-black/40" />
+                    <div className="h-80 animate-pulse rounded-2xl bg-black/40" />
+                    <div className="h-52 animate-pulse rounded-2xl bg-black/40" />
                   </div>
                 }
               >
@@ -698,9 +698,9 @@ function Dashboard() {
               </Suspense>
             ) : (
               <div className="space-y-4">
-                <div className="h-8 w-40 animate-pulse rounded bg-card/40" />
-                <div className="h-80 rounded-2xl bg-card/40" />
-                <div className="h-52 rounded-2xl bg-card/40" />
+                <div className="h-8 w-40 animate-pulse rounded bg-black/40" />
+                <div className="h-80 rounded-2xl bg-black/40" />
+                <div className="h-52 rounded-2xl bg-black/40" />
               </div>
             )}
           </section>
@@ -710,21 +710,21 @@ function Dashboard() {
           <Suspense
             fallback={
               <div className="mt-8 space-y-6">
-                <div className="h-8 w-48 animate-pulse rounded bg-card/40" />
+                <div className="h-8 w-48 animate-pulse rounded bg-black/40" />
                 <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                   {[1, 2, 3].map((item) => (
                     <div
                       key={`badges-skeleton-${item}`}
-                      className="h-44 animate-pulse rounded-2xl bg-card/40"
+                      className="h-44 animate-pulse rounded-2xl bg-black/40"
                     />
                   ))}
                 </div>
-                <div className="h-8 w-48 animate-pulse rounded bg-card/40" />
+                <div className="h-8 w-48 animate-pulse rounded bg-black/40" />
                 <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                   {[1, 2, 3].map((item) => (
                     <div
                       key={`shop-skeleton-${item}`}
-                      className="h-52 animate-pulse rounded-2xl bg-card/40"
+                      className="h-52 animate-pulse rounded-2xl bg-black/40"
                     />
                   ))}
                 </div>
@@ -743,21 +743,21 @@ function Dashboard() {
           </Suspense>
         ) : (
           <div className="mt-8 space-y-6">
-            <div className="h-8 w-48 rounded bg-card/40" />
+            <div className="h-8 w-48 rounded bg-black/40" />
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {[1, 2, 3].map((item) => (
                 <div
                   key={`initial-badges-skeleton-${item}`}
-                  className="h-44 rounded-2xl bg-card/40"
+                  className="h-44 rounded-2xl bg-black/40"
                 />
               ))}
             </div>
-            <div className="h-8 w-48 rounded bg-card/40" />
+            <div className="h-8 w-48 rounded bg-black/40" />
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {[1, 2, 3].map((item) => (
                 <div
                   key={`initial-shop-skeleton-${item}`}
-                  className="h-52 rounded-2xl bg-card/40"
+                  className="h-52 rounded-2xl bg-black/40"
                 />
               ))}
             </div>
