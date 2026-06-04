@@ -42,7 +42,9 @@ function SubjectCard({
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       className={`relative rounded-2xl border-2 p-6 text-left transition-all ${
-        isSelected ? "" : "border-slate-700 bg-slate-800/50 hover:border-slate-600"
+        isSelected
+          ? ""
+          : "border-[color:var(--gold)]/30 bg-black/50 hover:border-[color:var(--gold)]/60"
       }`}
       style={
         isSelected
@@ -62,7 +64,7 @@ function SubjectCard({
         </div>
         <div className="flex-1">
           <h3 className="font-display text-lg font-bold">{name}</h3>
-          <p className="mt-1 text-sm text-slate-400">{description}</p>
+          <p className="mt-1 text-sm text-muted-foreground">{description}</p>
         </div>
       </div>
       {isSelected && (
@@ -102,7 +104,7 @@ function OnboardingStep1({
     >
       <div>
         <h2 className="font-display text-3xl font-bold">Choisis ta matière préférée</h2>
-        <p className="mt-2 text-slate-400">Commence par ce qui t'intéresse le plus!</p>
+        <p className="mt-2 text-muted-foreground">Commence par ce qui t'intéresse le plus!</p>
       </div>
 
       {isPending ? (
@@ -110,16 +112,16 @@ function OnboardingStep1({
           {[0, 1, 2, 3].map((i) => (
             <div
               key={i}
-              className="h-[104px] animate-pulse rounded-2xl border-2 border-slate-700 bg-slate-800/50"
+              className="h-[104px] animate-pulse rounded-2xl border-2 border-[color:var(--gold)]/30 bg-black/50"
             />
           ))}
         </div>
       ) : isError ? (
-        <div className="rounded-2xl border-2 border-slate-700 bg-slate-800/50 p-8 text-center text-sm text-slate-400">
+        <div className="rounded-2xl border-2 border-[color:var(--gold)]/30 bg-black/50 p-8 text-center text-sm text-muted-foreground">
           Impossible de charger les matières. Réessaie plus tard.
         </div>
       ) : subjects.length === 0 ? (
-        <div className="rounded-2xl border-2 border-slate-700 bg-slate-800/50 p-8 text-center text-sm text-slate-400">
+        <div className="rounded-2xl border-2 border-[color:var(--gold)]/30 bg-black/50 p-8 text-center text-sm text-muted-foreground">
           Aucune matière disponible pour le moment.
         </div>
       ) : (
@@ -163,7 +165,7 @@ function OnboardingStep2({
       label: "Facile",
       description: "Parfait pour commencer",
       icon: <Brain className="h-8 w-8" />,
-      color: "var(--neon-cyan)",
+      color: "var(--gold)",
     },
     {
       id: "hard",
@@ -177,7 +179,7 @@ function OnboardingStep2({
       label: "Extrême",
       description: "Pour les champions",
       icon: <Award className="h-8 w-8" />,
-      color: "var(--neon-violet)",
+      color: "var(--gold)",
     },
   ] as const;
 
@@ -190,7 +192,7 @@ function OnboardingStep2({
     >
       <div>
         <h2 className="font-display text-3xl font-bold">Quel est ton niveau?</h2>
-        <p className="mt-2 text-slate-400">Tu peux toujours changer après!</p>
+        <p className="mt-2 text-muted-foreground">Tu peux toujours changer après!</p>
       </div>
 
       <div className="grid gap-4">

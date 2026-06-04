@@ -72,7 +72,7 @@ function DailyXpWidget({
   const isComplete = pct >= 100;
 
   return (
-    <div className="flex items-center gap-5 rounded-2xl border border-[color:var(--neon-violet)]/30 bg-card/40 p-5 backdrop-blur-md">
+    <div className="flex items-center gap-5 rounded-2xl border border-[color:var(--gold)]/30 bg-black/40 p-5 backdrop-blur-md">
       <div className="relative h-24 w-24 shrink-0">
         <svg className="h-full w-full -rotate-90" viewBox="0 0 96 96">
           <circle
@@ -91,7 +91,7 @@ function DailyXpWidget({
             fill="none"
             strokeWidth="6"
             strokeLinecap="round"
-            stroke={isComplete ? "var(--neon-gold)" : "var(--neon-violet)"}
+            stroke={isComplete ? "var(--neon-gold)" : "var(--gold)"}
             strokeDasharray={circumference}
             strokeDashoffset={dashOffset}
             className="transition-all duration-700"
@@ -102,7 +102,7 @@ function DailyXpWidget({
         </div>
       </div>
       <div>
-        <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--neon-violet)]">
+        <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--gold)]">
           {t.dashboard.dailyGoalLabel}
         </div>
         <div className="mt-1 font-display text-2xl font-bold">
@@ -133,8 +133,8 @@ function MotivationalQuote() {
   const quote = t.quotes[dayIndex];
 
   return (
-    <div className="flex flex-col justify-center rounded-2xl border border-[color:var(--neon-cyan)]/20 bg-card/40 p-5 backdrop-blur-md">
-      <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--neon-cyan)] mb-3">
+    <div className="flex flex-col justify-center rounded-2xl border border-[color:var(--gold)]/20 bg-black/40 p-5 backdrop-blur-md">
+      <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--gold)] mb-3">
         {t.dashboard.quoteLabel}
       </div>
       <blockquote className="font-display text-base font-medium italic leading-relaxed">
@@ -256,14 +256,14 @@ function Dashboard() {
   if (isLoading || !data) {
     return (
       <div className="mx-auto max-w-7xl px-6 py-8 space-y-6">
-        <div className="h-48 animate-pulse rounded-3xl bg-card/40" />
+        <div className="h-48 animate-pulse rounded-3xl bg-black/40" />
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="h-20 animate-pulse rounded-2xl bg-card/30" />
-          <div className="h-20 animate-pulse rounded-2xl bg-card/30" />
+          <div className="h-20 animate-pulse rounded-2xl bg-black/30" />
+          <div className="h-20 animate-pulse rounded-2xl bg-black/30" />
         </div>
         <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-5">
           {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="h-28 animate-pulse rounded-2xl bg-card/30" />
+            <div key={i} className="h-28 animate-pulse rounded-2xl bg-black/30" />
           ))}
         </div>
       </div>
@@ -336,23 +336,23 @@ function Dashboard() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative overflow-hidden rounded-3xl border border-[color:var(--neon-violet)]/30 bg-card/40 p-6 backdrop-blur-xl shadow-card sm:p-8"
+          className="relative overflow-hidden rounded-3xl border border-[color:var(--gold)]/30 bg-black/40 p-6 backdrop-blur-xl shadow-card sm:p-8"
         >
-          <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-[color:var(--neon-violet)]/30 blur-3xl" />
-          <div className="absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-[color:var(--neon-cyan)]/20 blur-3xl" />
+          <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/30 blur-3xl" />
+          <div className="absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/20 blur-3xl" />
           <div className="relative grid gap-6 sm:grid-cols-[auto,1fr,auto] sm:items-center">
-            <div className="grid h-20 w-20 place-items-center rounded-2xl bg-gradient-to-br from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] shadow-neon animate-pulse-neon">
-              <Sparkles className="h-9 w-9 text-primary-foreground" />
+            <div className="grid h-20 w-20 place-items-center rounded-2xl bg-[image:var(--gradient-gold)] shadow-neon animate-pulse-neon">
+              <Sparkles className="h-9 w-9 text-black" />
             </div>
             <div>
-              <div className="text-xs uppercase tracking-[0.3em] text-[color:var(--neon-cyan)]">
+              <div className="text-xs uppercase tracking-[0.3em] text-[color:var(--gold)]">
                 {profile.hero_class}
               </div>
               <h1 className="font-display text-3xl font-bold sm:text-4xl">
                 {profile.display_name}
               </h1>
               <div className="mt-3 flex flex-wrap items-center gap-3">
-                <div className="rounded-full bg-[color:var(--neon-violet)]/20 px-3 py-1 text-sm font-bold text-[color:var(--neon-violet)]">
+                <div className="rounded-full bg-[color:var(--gold)]/20 px-3 py-1 text-sm font-bold text-[color:var(--gold)]">
                   Lvl {profile.level}
                 </div>
                 <div className="flex items-center gap-1 rounded-full bg-[color:var(--flame)]/20 px-3 py-1 text-sm font-bold text-[color:var(--flame)]">

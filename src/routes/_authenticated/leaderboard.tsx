@@ -84,7 +84,7 @@ function LeaderboardPage() {
           className={`rounded-full border px-4 py-1.5 text-sm font-semibold transition ${
             isGlobal
               ? "border-[color:var(--gold)]/60 bg-[color:var(--gold)]/15 text-[color:var(--gold)]"
-              : "border-border/50 bg-card/40 text-muted-foreground hover:text-foreground"
+              : "border-border/50 bg-black/40 text-muted-foreground hover:text-foreground"
           }`}
         >
           🌍 Global
@@ -98,8 +98,8 @@ function LeaderboardPage() {
               dir={isRtlText(s.name_fr) ? "rtl" : undefined}
               className={`rounded-full border px-4 py-1.5 text-sm font-semibold transition ${
                 active
-                  ? "border-[color:var(--neon-cyan)]/60 bg-[color:var(--neon-cyan)]/15 text-[color:var(--neon-cyan)]"
-                  : "border-border/50 bg-card/40 text-muted-foreground hover:text-foreground"
+                  ? "border-[color:var(--gold)]/60 bg-[color:var(--gold)]/15 text-[color:var(--gold)]"
+                  : "border-border/50 bg-black/40 text-muted-foreground hover:text-foreground"
               }`}
             >
               {s.name_fr}
@@ -119,7 +119,7 @@ function LeaderboardPage() {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-6 rounded-2xl border border-[color:var(--gold)]/40 bg-card/60 p-5 backdrop-blur-xl shadow-gold"
+              className="mb-6 rounded-2xl border border-[color:var(--gold)]/40 bg-black/60 p-5 backdrop-blur-xl shadow-gold"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">

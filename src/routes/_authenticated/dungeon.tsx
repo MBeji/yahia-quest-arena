@@ -250,29 +250,29 @@ function DungeonPage() {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative overflow-hidden rounded-3xl border border-(--neon-magenta)/40 bg-card/60 p-8 text-center backdrop-blur-xl"
+          className="relative overflow-hidden rounded-3xl border border-[color:var(--gold)]/40 bg-black/60 p-8 text-center backdrop-blur-xl"
         >
-          <div className="absolute -top-16 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-(--neon-magenta)/30 blur-3xl" />
+          <div className="absolute -top-16 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-[color:var(--gold)]/30 blur-3xl" />
           <div className="relative">
-            <div className="mx-auto grid h-20 w-20 place-items-center rounded-2xl bg-linear-to-br from-neon-magenta to-neon-violet shadow-neon animate-pulse-neon">
-              <Skull className="h-10 w-10 text-primary-foreground" />
+            <div className="mx-auto grid h-20 w-20 place-items-center rounded-2xl bg-[image:var(--gradient-gold)] shadow-gold animate-pulse-neon">
+              <Skull className="h-10 w-10 text-black" />
             </div>
             <h1 className="mt-5 font-display text-4xl font-bold">{t.dungeon.title}</h1>
             <p className="mt-3 text-muted-foreground max-w-md mx-auto">{t.dungeon.desc}</p>
 
             <div className="mt-8 grid grid-cols-3 gap-4 max-w-sm mx-auto">
-              <div className="rounded-xl bg-(--neon-gold)/10 p-3">
-                <Zap className="mx-auto h-5 w-5 text-neon-gold" />
-                <div className="mt-1 font-display text-lg font-bold text-neon-gold">
+              <div className="rounded-xl bg-[color:var(--gold)]/10 p-3">
+                <Zap className="mx-auto h-5 w-5 text-[color:var(--gold)]" />
+                <div className="mt-1 font-display text-lg font-bold text-[color:var(--gold)]">
                   {DUNGEON_XP_PER_FLOOR}
                 </div>
                 <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
                   {t.dungeon.xpPerFloor}
                 </div>
               </div>
-              <div className="rounded-xl bg-(--neon-cyan)/10 p-3">
-                <Sparkles className="mx-auto h-5 w-5 text-neon-cyan" />
-                <div className="mt-1 font-display text-lg font-bold text-neon-cyan">
+              <div className="rounded-xl bg-[color:var(--gold)]/10 p-3">
+                <Sparkles className="mx-auto h-5 w-5 text-[color:var(--gold)]" />
+                <div className="mt-1 font-display text-lg font-bold text-[color:var(--gold)]">
                   {DUNGEON_COINS_PER_5_FLOORS}
                 </div>
                 <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
@@ -351,12 +351,12 @@ function DungeonPage() {
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="relative overflow-hidden rounded-3xl border border-destructive/40 bg-card/60 p-8 text-center backdrop-blur-xl"
+          className="relative overflow-hidden rounded-3xl border border-destructive/40 bg-black/60 p-8 text-center backdrop-blur-xl"
         >
           <div className="absolute -top-16 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-destructive/30 blur-3xl" />
           <div className="relative">
-            <div className="mx-auto grid h-20 w-20 place-items-center rounded-2xl bg-linear-to-br from-destructive to-neon-magenta shadow-lg">
-              <Skull className="h-10 w-10 text-primary-foreground" />
+            <div className="mx-auto grid h-20 w-20 place-items-center rounded-2xl bg-linear-to-br from-destructive to-[color:var(--gold)] shadow-lg">
+              <Skull className="h-10 w-10 text-black" />
             </div>
             <h1 className="mt-5 font-display text-3xl font-bold">{t.dungeon.collapsed}</h1>
             <p className="mt-2 text-muted-foreground">

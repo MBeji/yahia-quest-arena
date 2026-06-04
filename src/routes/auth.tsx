@@ -163,16 +163,16 @@ function AuthPage() {
 
   if (emailSent) {
     return (
-      <main className="relative min-h-screen overflow-hidden bg-hero">
+      <main className="relative min-h-screen overflow-hidden bg-black-deep">
         <div className="absolute inset-0 bg-grid opacity-50" />
         <div className="relative mx-auto flex min-h-screen max-w-md flex-col items-center justify-center px-6 py-12">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="w-full glass rounded-2xl p-8 shadow-neon text-center"
+            className="w-full glass-gold rounded-2xl p-8 shadow-neon text-center"
           >
-            <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-2xl bg-[color:var(--neon-cyan)]/20 border border-[color:var(--neon-cyan)]/40">
-              <MailCheck className="h-8 w-8 text-[color:var(--neon-cyan)]" />
+            <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-2xl bg-[color:var(--gold)]/20 border border-[color:var(--gold)]/40">
+              <MailCheck className="h-8 w-8 text-[color:var(--gold)]" />
             </div>
             <h1 className="font-display text-2xl font-bold">Confirme ton email</h1>
             <p className="mt-3 text-sm text-muted-foreground">
@@ -180,7 +180,7 @@ function AuthPage() {
               <span className="font-semibold text-foreground">{sentTo}</span>.<br />
               Clique sur le lien pour activer ton compte et accéder à l&apos;arène.
             </p>
-            <div className="mt-6 rounded-xl border border-[color:var(--neon-violet)]/30 bg-[color:var(--neon-violet)]/5 p-4 text-xs text-muted-foreground">
+            <div className="mt-6 rounded-xl border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 p-4 text-xs text-muted-foreground">
               📬 Vérifie aussi tes spams si tu ne vois pas l&apos;email dans ta boîte principale.
             </div>
             <button
@@ -189,7 +189,7 @@ function AuthPage() {
                 setEmailSent(false);
                 setSentTo("");
               }}
-              className="mt-6 text-xs text-[color:var(--neon-cyan)] hover:underline"
+              className="mt-6 text-xs text-[color:var(--gold)] hover:underline"
             >
               ← Modifier l&apos;adresse email
             </button>
@@ -200,15 +200,15 @@ function AuthPage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-hero">
+    <main className="relative min-h-screen overflow-hidden bg-black-deep">
       <div className="absolute inset-0 bg-grid opacity-50" />
       <div className="relative mx-auto flex min-h-screen max-w-md flex-col items-center justify-center px-6 py-12">
         <Link to="/" className="mb-8 flex items-center gap-2">
-          <div className="grid h-10 w-10 place-items-center rounded-lg bg-gradient-to-br from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] shadow-neon">
-            <Sparkles className="h-5 w-5 text-primary-foreground" />
+          <div className="grid h-10 w-10 place-items-center rounded-lg bg-[image:var(--gradient-gold)] shadow-neon">
+            <Sparkles className="h-5 w-5 text-black" />
           </div>
           <span className="font-display text-xl font-bold tracking-wider">
-            XP <span className="text-gradient-cyan">SCHOLARS</span>
+            XP <span className="text-gradient-gold">SCHOLARS</span>
           </span>
         </Link>
 
@@ -216,7 +216,7 @@ function AuthPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="w-full glass rounded-2xl p-8 shadow-neon"
+          className="w-full glass-gold rounded-2xl p-8 shadow-neon"
         >
           <h1 className="font-display text-2xl font-bold">
             {isSignup ? "Forge your hero" : "Welcome back, warrior"}
@@ -231,7 +231,7 @@ function AuthPage() {
             type="button"
             disabled={busy}
             onClick={handleGoogle}
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-background/50 px-4 py-2.5 text-sm font-medium transition hover:bg-background/80 disabled:opacity-50"
+            className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-black/50 px-4 py-2.5 text-sm font-medium transition hover:bg-black/80 disabled:opacity-50"
           >
             <svg width="18" height="18" viewBox="0 0 24 24">
               <path
@@ -264,7 +264,7 @@ function AuthPage() {
 
           <form onSubmit={handleSubmit} className="space-y-3">
             {isSignup && (
-              <div className="rounded-xl border border-border/60 bg-background/30 p-3">
+              <div className="rounded-xl border border-border/60 bg-black/30 p-3">
                 <div className="mb-2 text-xs uppercase tracking-wider text-muted-foreground">
                   Choose your Guild Role
                 </div>
@@ -272,7 +272,7 @@ function AuthPage() {
                   <button
                     type="button"
                     onClick={() => setRole("student")}
-                    className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${role === "student" ? "bg-[color:var(--neon-violet)]/20 text-[color:var(--neon-violet)] border border-[color:var(--neon-violet)]/40" : "bg-background/40 text-muted-foreground border border-border/50 hover:text-foreground"}`}
+                    className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${role === "student" ? "bg-[color:var(--gold)]/15 text-[color:var(--gold)] border border-[color:var(--gold)]/40" : "bg-black/40 text-muted-foreground border border-border/50 hover:text-foreground"}`}
                   >
                     Eleve · Hero
                   </button>
