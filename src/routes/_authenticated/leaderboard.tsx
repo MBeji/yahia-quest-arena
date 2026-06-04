@@ -128,7 +128,7 @@ function LeaderboardPage() {
                   </div>
                   <div>
                     <div className="font-display text-lg font-bold">{myRank.displayName}</div>
-                    <div className="text-xs uppercase tracking-widest text-[color:var(--neon-cyan)]">
+                    <div className="text-xs uppercase tracking-widest text-[color:var(--champagne)]">
                       {myRank.heroClass}
                     </div>
                   </div>
@@ -197,7 +197,7 @@ function LeaderboardPage() {
                 className={`flex items-center gap-4 rounded-xl border p-4 transition ${
                   player.isMe
                     ? "border-[color:var(--gold)]/50 bg-[color:var(--gold)]/10"
-                    : "border-border/50 bg-card/40 hover:bg-card/60"
+                    : "border-border/50 bg-black/40 hover:bg-black/60"
                 }`}
               >
                 <div

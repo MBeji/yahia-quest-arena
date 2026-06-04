@@ -362,7 +362,7 @@ function Dashboard() {
                 <div className="flex items-center gap-1 rounded-full bg-[color:var(--neon-gold)]/20 px-3 py-1 text-sm font-bold text-[color:var(--neon-gold)]">
                   <Zap className="h-4 w-4" /> {profile.xp} XP
                 </div>
-                <div className="flex items-center gap-1 rounded-full border border-[color:var(--neon-cyan)]/30 bg-[color:var(--neon-cyan)]/10 px-3 py-1 text-sm font-bold text-[color:var(--neon-cyan)]">
+                <div className="flex items-center gap-1 rounded-full border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/10 px-3 py-1 text-sm font-bold text-[color:var(--gold)]">
                   <Sparkles className="h-4 w-4" /> {profile.yahia_coins ?? 0} XP Coins
                 </div>
               </div>
@@ -382,14 +382,14 @@ function Dashboard() {
                   aria-valuemax={100}
                 >
                   <div
-                    className="h-full rounded-full bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] shadow-neon transition-all"
+                    className="h-full rounded-full bg-gradient-to-r from-[color:var(--gold)] to-[color:var(--gold-bright)] shadow-neon transition-all"
                     style={{ width: `${xpPct}%` }}
                   />
                 </div>
               </div>
               {studentAllianceCode && (
-                <div className="mt-4 rounded-xl border border-[color:var(--neon-cyan)]/35 bg-[color:var(--neon-cyan)]/8 p-3">
-                  <div className="text-[11px] uppercase tracking-[0.2em] text-[color:var(--neon-cyan)]">
+                <div className="mt-4 rounded-xl border border-[color:var(--gold)]/35 bg-[color:var(--gold)]/8 p-3">
+                  <div className="text-[11px] uppercase tracking-[0.2em] text-[color:var(--gold)]">
                     {t.dashboard.allianceCode}
                   </div>
                   <div className="mt-1 flex items-center justify-between gap-2">
@@ -403,7 +403,7 @@ function Dashboard() {
                         setCopiedCode(true);
                         setTimeout(() => setCopiedCode(false), 1200);
                       }}
-                      className="inline-flex items-center gap-1 rounded-md border border-[color:var(--neon-cyan)]/40 px-2 py-1 text-xs text-[color:var(--neon-cyan)] hover:bg-[color:var(--neon-cyan)]/10"
+                      className="inline-flex items-center gap-1 rounded-md border border-[color:var(--gold)]/40 px-2 py-1 text-xs text-[color:var(--gold)] hover:bg-[color:var(--gold)]/10"
                     >
                       {copiedCode ? (
                         <Check className="h-3.5 w-3.5" />
@@ -508,39 +508,39 @@ function Dashboard() {
             <Link
               to="/subject/$subjectId"
               params={{ subjectId: continueSubject.id }}
-              className="group flex items-center justify-between gap-4 rounded-2xl border border-[color:var(--neon-cyan)]/30 bg-[color:var(--neon-cyan)]/5 p-4 backdrop-blur-md transition hover:border-[color:var(--neon-cyan)]/60 hover:bg-[color:var(--neon-cyan)]/10 sm:p-5"
+              className="group flex items-center justify-between gap-4 rounded-2xl border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 p-4 backdrop-blur-md transition hover:border-[color:var(--gold)]/60 hover:bg-[color:var(--gold)]/10 sm:p-5"
             >
               <div className="flex items-center gap-3">
-                <div className="grid h-12 w-12 place-items-center rounded-xl bg-[color:var(--neon-cyan)]/20">
-                  <Play className="h-6 w-6 text-[color:var(--neon-cyan)]" />
+                <div className="grid h-12 w-12 place-items-center rounded-xl bg-[color:var(--gold)]/20">
+                  <Play className="h-6 w-6 text-[color:var(--gold)]" />
                 </div>
                 <div>
-                  <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--neon-cyan)]">
+                  <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--gold)]">
                     {t.dashboard.continueLabel}
                   </div>
                   <div className="font-display text-lg font-bold">{continueSubject.name_fr}</div>
                 </div>
               </div>
-              <ChevronRight className="h-6 w-6 text-[color:var(--neon-cyan)] transition group-hover:translate-x-1" />
+              <ChevronRight className="h-6 w-6 text-[color:var(--gold)] transition group-hover:translate-x-1" />
             </Link>
           )}
           {/* Dungeon mode - infinite survival */}
           <Link
             to="/dungeon"
-            className="group flex items-center justify-between gap-4 rounded-2xl border border-[color:var(--neon-magenta)]/30 bg-[color:var(--neon-magenta)]/5 p-4 backdrop-blur-md transition hover:border-[color:var(--neon-magenta)]/60 hover:bg-[color:var(--neon-magenta)]/10 sm:p-5"
+            className="group flex items-center justify-between gap-4 rounded-2xl border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 p-4 backdrop-blur-md transition hover:border-[color:var(--gold)]/60 hover:bg-[color:var(--gold)]/10 sm:p-5"
           >
             <div className="flex items-center gap-3">
-              <div className="grid h-12 w-12 place-items-center rounded-xl bg-[color:var(--neon-magenta)]/20">
-                <Skull className="h-6 w-6 text-[color:var(--neon-magenta)]" />
+              <div className="grid h-12 w-12 place-items-center rounded-xl bg-[color:var(--gold)]/20">
+                <Skull className="h-6 w-6 text-[color:var(--gold)]" />
               </div>
               <div>
-                <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--neon-magenta)] font-bold">
+                <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--gold)] font-bold">
                   {t.dashboard.dungeonLabel}
                 </div>
                 <div className="font-display text-lg font-bold">{t.dashboard.dungeonDesc}</div>
               </div>
             </div>
-            <ChevronRight className="h-6 w-6 text-[color:var(--neon-magenta)] transition group-hover:translate-x-1" />
+            <ChevronRight className="h-6 w-6 text-[color:var(--gold)] transition group-hover:translate-x-1" />
           </Link>
         </motion.div>
 
@@ -552,9 +552,9 @@ function Dashboard() {
           className="mt-8 grid gap-6 sm:grid-cols-2"
         >
           {/* Daily Objectives */}
-          <div className="rounded-2xl border border-[color:var(--neon-cyan)]/30 bg-[color:var(--neon-cyan)]/5 p-5 backdrop-blur-md">
+          <div className="rounded-2xl border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 p-5 backdrop-blur-md">
             <div className="mb-4 flex items-center gap-2 font-display text-lg font-bold">
-              <Trophy className="h-5 w-5 text-[color:var(--neon-cyan)]" /> {t.dashboard.dailyQuests}
+              <Trophy className="h-5 w-5 text-[color:var(--gold)]" /> {t.dashboard.dailyQuests}
             </div>
             <div className="space-y-3">
               {(sprint2?.dailyObjectives ?? []).length === 0 && (
@@ -570,19 +570,17 @@ function Dashboard() {
                 return (
                   <div
                     key={obj.id}
-                    className={`rounded-xl bg-background/40 p-3 ${done ? "opacity-60" : ""}`}
+                    className={`rounded-xl bg-black/40 p-3 ${done ? "opacity-60" : ""}`}
                   >
                     <div className="flex items-center justify-between">
                       <div className="text-sm font-semibold">
                         {formatObjectiveType(obj.objective_type)}
                       </div>
-                      <div className="text-xs text-[color:var(--neon-cyan)]">
-                        {obj.xp_reward} XP
-                      </div>
+                      <div className="text-xs text-[color:var(--gold)]">{obj.xp_reward} XP</div>
                     </div>
                     <div className="mt-2 h-2 overflow-hidden rounded-full bg-secondary">
                       <div
-                        className="h-full bg-gradient-to-r from-[color:var(--neon-cyan)] to-[color:var(--neon-magenta)] transition-all"
+                        className="h-full bg-gradient-to-r from-[color:var(--gold)] to-[color:var(--gold-bright)] transition-all"
                         style={{ width: `${pct}%` }}
                       />
                     </div>
@@ -593,7 +591,7 @@ function Dashboard() {
                       type="button"
                       disabled={done}
                       onClick={() => runQuestAction(action)}
-                      className="mt-2 rounded-md border border-[color:var(--neon-cyan)]/40 bg-[color:var(--neon-cyan)]/15 px-2.5 py-1 text-xs font-semibold text-[color:var(--neon-cyan)] transition hover:bg-[color:var(--neon-cyan)]/25 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="mt-2 rounded-md border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/15 px-2.5 py-1 text-xs font-semibold text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/25 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {done ? t.common.completed : t.common.continue}
                     </button>
@@ -622,7 +620,7 @@ function Dashboard() {
                 return (
                   <div
                     key={q.id}
-                    className={`rounded-xl bg-background/40 p-3 ${done ? "opacity-60" : ""}`}
+                    className={`rounded-xl bg-black/40 p-3 ${done ? "opacity-60" : ""}`}
                   >
                     <div className="flex items-center justify-between">
                       <div className="text-sm font-semibold">{formatQuestType(q.quest_type)}</div>
@@ -630,7 +628,7 @@ function Dashboard() {
                     </div>
                     <div className="mt-2 h-2 overflow-hidden rounded-full bg-secondary">
                       <div
-                        className="h-full bg-gradient-to-r from-[color:var(--neon-gold)] to-[color:var(--neon-magenta)] transition-all"
+                        className="h-full bg-gradient-to-r from-[color:var(--gold)] to-[color:var(--gold-bright)] transition-all"
                         style={{ width: `${pct}%` }}
                       />
                     </div>
@@ -657,8 +655,7 @@ function Dashboard() {
           <section>
             <div className="mb-4 flex items-center justify-between">
               <h2 className="flex items-center gap-2 font-display text-xl font-bold">
-                <Swords className="h-5 w-5 text-[color:var(--neon-violet)]" />{" "}
-                {t.dashboard.pathsTitle}
+                <Swords className="h-5 w-5 text-[color:var(--gold)]" /> {t.dashboard.pathsTitle}
               </h2>
               <Link
                 to="/leaderboard"

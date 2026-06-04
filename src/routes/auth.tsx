@@ -279,7 +279,7 @@ function AuthPage() {
                   <button
                     type="button"
                     onClick={() => setRole("parent")}
-                    className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${role === "parent" ? "bg-[color:var(--neon-cyan)]/20 text-[color:var(--neon-cyan)] border border-[color:var(--neon-cyan)]/40" : "bg-background/40 text-muted-foreground border border-border/50 hover:text-foreground"}`}
+                    className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${role === "parent" ? "bg-[color:var(--gold)]/15 text-[color:var(--gold)] border border-[color:var(--gold)]/40" : "bg-black/40 text-muted-foreground border border-border/50 hover:text-foreground"}`}
                   >
                     Parent · Mentor
                   </button>
@@ -300,7 +300,7 @@ function AuthPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Hero name"
-                  className="w-full rounded-lg border border-input bg-background/50 py-2.5 pl-10 pr-3 text-sm focus:border-[color:var(--neon-violet)] focus:outline-none"
+                  className="w-full rounded-lg border border-input bg-black/50 py-2.5 pl-10 pr-3 text-sm focus:border-[color:var(--gold)] focus:outline-none"
                 />
               </div>
             )}
@@ -317,7 +317,7 @@ function AuthPage() {
                   onChange={(e) => setAllianceCode(e.target.value)}
                   placeholder="Alliance Code eleve (optionnel)"
                   aria-describedby="auth-alliance-code-hint"
-                  className="w-full rounded-lg border border-input bg-background/50 py-2.5 px-3 text-sm focus:border-[color:var(--neon-cyan)] focus:outline-none"
+                  className="w-full rounded-lg border border-input bg-black/50 py-2.5 px-3 text-sm focus:border-[color:var(--gold)] focus:outline-none"
                 />
                 <p id="auth-alliance-code-hint" className="mt-1 text-xs text-muted-foreground">
                   Entre le code de ton enfant pour lier les comptes maintenant.
@@ -336,7 +336,7 @@ function AuthPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
-                className="w-full rounded-lg border border-input bg-background/50 py-2.5 pl-10 pr-3 text-sm focus:border-[color:var(--neon-violet)] focus:outline-none"
+                className="w-full rounded-lg border border-input bg-black/50 py-2.5 pl-10 pr-3 text-sm focus:border-[color:var(--gold)] focus:outline-none"
               />
             </div>
             <div className="relative">
@@ -357,13 +357,10 @@ function AuthPage() {
                 placeholder="Password (min 8 characters)"
                 aria-invalid={passwordError ? true : undefined}
                 aria-describedby={passwordError ? "auth-password-error" : undefined}
-                className="w-full rounded-lg border border-input bg-background/50 py-2.5 pl-10 pr-3 text-sm focus:border-[color:var(--neon-violet)] focus:outline-none"
+                className="w-full rounded-lg border border-input bg-black/50 py-2.5 pl-10 pr-3 text-sm focus:border-[color:var(--gold)] focus:outline-none"
               />
               {passwordError && (
-                <p
-                  id="auth-password-error"
-                  className="mt-1 text-xs text-[color:var(--neon-magenta)]"
-                >
+                <p id="auth-password-error" className="mt-1 text-xs text-[color:var(--gold)]">
                   {passwordError}
                 </p>
               )}
@@ -373,7 +370,7 @@ function AuthPage() {
                 reliably when `formError` changes (see #23). */}
             <div role="alert" aria-live="polite">
               {formError && (
-                <p className="rounded-lg border border-[color:var(--neon-magenta)]/40 bg-[color:var(--neon-magenta)]/10 px-3 py-2 text-xs text-[color:var(--neon-magenta)]">
+                <p className="rounded-lg border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/10 px-3 py-2 text-xs text-[color:var(--gold)]">
                   {formError}
                 </p>
               )}
@@ -381,7 +378,7 @@ function AuthPage() {
             <button
               type="submit"
               disabled={busy}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] py-2.5 text-sm font-bold text-primary-foreground shadow-neon transition hover:scale-[1.02] disabled:opacity-60"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-[image:var(--gradient-gold)] py-2.5 text-sm font-bold text-black shadow-neon transition hover:opacity-90 disabled:opacity-60"
             >
               {busy && <Loader2 className="h-4 w-4 animate-spin" />}
               {isSignup ? "Forge my hero" : "Enter the arena"}
@@ -393,7 +390,7 @@ function AuthPage() {
             <Link
               to="/auth"
               search={{ mode: isSignup ? "login" : "signup" }}
-              className="font-semibold text-[color:var(--neon-cyan)] hover:underline"
+              className="font-semibold text-[color:var(--gold)] hover:underline"
             >
               {isSignup ? "Sign in" : "Create an account"}
             </Link>

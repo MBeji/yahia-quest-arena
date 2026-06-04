@@ -205,7 +205,7 @@ function OnboardingStep2({
             className={`rounded-2xl border-2 p-6 text-left transition-all ${
               difficulty === diff.id
                 ? ""
-                : "border-slate-700 bg-slate-800/50 hover:border-slate-600"
+                : "border-[color:var(--gold)]/30 bg-black/50 hover:border-[color:var(--gold)]/60"
             }`}
             style={
               difficulty === diff.id
@@ -220,7 +220,7 @@ function OnboardingStep2({
               <div style={{ color: diff.color }}>{diff.icon}</div>
               <div>
                 <h3 className="font-display text-xl font-bold">{diff.label}</h3>
-                <p className="text-sm text-slate-400">{diff.description}</p>
+                <p className="text-sm text-muted-foreground">{diff.description}</p>
               </div>
             </div>
           </motion.button>
@@ -261,15 +261,15 @@ function OnboardingStep3({
     >
       <div>
         <h2 className="font-display text-3xl font-bold">Prêt à commencer?</h2>
-        <p className="mt-2 text-slate-400">Ton premier exercice t'attend!</p>
+        <p className="mt-2 text-muted-foreground">Ton premier exercice t'attend!</p>
       </div>
 
-      <Card className="border-[color:var(--neon-cyan)]/30 bg-[color:var(--neon-cyan)]/5 p-8">
+      <Card className="border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 p-8">
         <div className="space-y-4 text-center">
           <div className="text-4xl">🚀</div>
           <div>
             <h3 className="font-display text-xl font-bold">{selectedSubject?.name_fr}</h3>
-            <p className="mt-1 text-sm text-slate-400">
+            <p className="mt-1 text-sm text-muted-foreground">
               Niveau:{" "}
               {difficulty === "easy" ? "Facile" : difficulty === "hard" ? "Difficile" : "Extrême"}
             </p>
@@ -277,7 +277,7 @@ function OnboardingStep3({
         </div>
       </Card>
 
-      <p className="text-center text-sm text-slate-400">
+      <p className="text-center text-sm text-muted-foreground">
         Tu gagneras des points XP, des pièces, et tu débloquereras des badges au fur et à mesure! 🎮
       </p>
 
@@ -287,7 +287,7 @@ function OnboardingStep3({
         </Button>
         <Link
           to="/dashboard"
-          className="ml-auto inline-flex items-center gap-2 rounded-lg bg-[color:var(--neon-cyan)] px-6 py-2 font-semibold text-slate-950 transition hover:bg-[color:var(--neon-cyan)]/90"
+          className="ml-auto inline-flex items-center gap-2 rounded-lg bg-[image:var(--gradient-gold)] px-6 py-2 font-semibold text-black transition hover:opacity-90"
         >
           Commencer <Play className="h-4 w-4" />
         </Link>
@@ -333,7 +333,7 @@ function OnboardingComponent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-6">
+    <div className="min-h-screen bg-black-deep p-6">
       <div className="mx-auto max-w-2xl">
         {/* Progress indicator */}
         <div className="mb-12 flex gap-2">
@@ -341,7 +341,7 @@ function OnboardingComponent() {
             <motion.div
               key={i}
               className={`h-1 flex-1 rounded-full transition-colors ${
-                i <= step ? "bg-[color:var(--neon-cyan)]" : "bg-slate-700"
+                i <= step ? "bg-[color:var(--gold)]" : "bg-muted/50"
               }`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

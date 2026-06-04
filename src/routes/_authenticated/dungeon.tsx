@@ -318,7 +318,7 @@ function DungeonPage() {
                 )}
                 <Link
                   to="/dashboard"
-                  className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-border/50 px-4 py-2 text-sm font-semibold text-foreground hover:bg-card/60"
+                  className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-border/50 px-4 py-2 text-sm font-semibold text-foreground hover:bg-black/60"
                 >
                   Continuer à m'entraîner
                 </Link>
@@ -406,36 +406,36 @@ function DungeonPage() {
 
             {/* Stats */}
             <div className="mt-6 grid grid-cols-4 gap-3">
-              <div className="rounded-xl bg-(--neon-violet)/15 p-3">
-                <Layers className="mx-auto h-4 w-4 text-neon-violet" />
-                <div className="mt-1 font-display text-xl font-bold text-neon-violet">
+              <div className="rounded-xl bg-[color:var(--gold)]/15 p-3">
+                <Layers className="mx-auto h-4 w-4 text-[color:var(--gold)]" />
+                <div className="mt-1 font-display text-xl font-bold text-[color:var(--gold)]">
                   {floorsCleared}
                 </div>
                 <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
                   {t.dungeon.floors}
                 </div>
               </div>
-              <div className="rounded-xl bg-(--neon-gold)/15 p-3">
-                <Zap className="mx-auto h-4 w-4 text-neon-gold" />
-                <div className="mt-1 font-display text-xl font-bold text-neon-gold">
+              <div className="rounded-xl bg-[color:var(--gold)]/15 p-3">
+                <Zap className="mx-auto h-4 w-4 text-[color:var(--gold)]" />
+                <div className="mt-1 font-display text-xl font-bold text-[color:var(--gold)]">
                   +{runResult?.xpEarned ?? "..."}
                 </div>
                 <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
                   {t.dungeon.xp}
                 </div>
               </div>
-              <div className="rounded-xl bg-(--neon-cyan)/15 p-3">
-                <Sparkles className="mx-auto h-4 w-4 text-neon-cyan" />
-                <div className="mt-1 font-display text-xl font-bold text-neon-cyan">
+              <div className="rounded-xl bg-[color:var(--gold)]/15 p-3">
+                <Sparkles className="mx-auto h-4 w-4 text-[color:var(--gold)]" />
+                <div className="mt-1 font-display text-xl font-bold text-[color:var(--gold)]">
                   +{runResult?.coinsEarned ?? "..."}
                 </div>
                 <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
                   {t.dungeon.coins}
                 </div>
               </div>
-              <div className="rounded-xl bg-(--flame)/15 p-3">
-                <Shield className="mx-auto h-4 w-4 text-flame" />
-                <div className="mt-1 font-display text-xl font-bold text-flame">
+              <div className="rounded-xl bg-[color:var(--gold)]/15 p-3">
+                <Shield className="mx-auto h-4 w-4 text-[color:var(--gold)]" />
+                <div className="mt-1 font-display text-xl font-bold text-[color:var(--gold)]">
                   {runResult?.totalCorrect ?? totalCorrect}/
                   {runResult?.totalAnswered ?? totalAnswered}
                 </div>
@@ -470,7 +470,7 @@ function DungeonPage() {
     return (
       <div className="grid min-h-[60vh] place-items-center">
         <div className="flex flex-col items-center gap-3">
-          <Loader2 className="h-8 w-8 animate-spin text-neon-magenta" />
+          <Loader2 className="h-8 w-8 animate-spin text-[color:var(--gold)]" />
           <div className="font-display text-sm uppercase tracking-widest text-muted-foreground">
             {t.dungeon.descending.replace("{n}", String(floor))}
           </div>
@@ -494,7 +494,7 @@ function DungeonPage() {
           <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.dungeon.leaveDungeon}
         </Link>
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 rounded-full bg-(--neon-magenta)/20 px-3 py-1 text-sm font-bold text-neon-magenta">
+          <div className="flex items-center gap-1.5 rounded-full bg-[color:var(--gold)]/20 px-3 py-1 text-sm font-bold text-[color:var(--gold)]">
             <Layers className="h-3.5 w-3.5" /> {t.dungeon.floor.replace("{n}", String(floor))}
           </div>
           <div className="flex items-center gap-1.5 rounded-full bg-destructive/20 px-3 py-1 text-sm font-bold text-destructive">
@@ -520,7 +520,7 @@ function DungeonPage() {
           {[1, 2, 3].map((d) => (
             <div
               key={d}
-              className={`h-2 w-5 rounded-full ${d <= difficulty ? "bg-neon-magenta" : "bg-secondary"}`}
+              className={`h-2 w-5 rounded-full ${d <= difficulty ? "bg-[color:var(--gold)]" : "bg-secondary"}`}
             />
           ))}
         </div>
@@ -533,7 +533,7 @@ function DungeonPage() {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -30 }}
           transition={{ duration: 0.25 }}
-          className="rounded-3xl border border-(--neon-magenta)/30 bg-card/60 p-6 backdrop-blur-xl sm:p-8"
+          className="rounded-3xl border border-[color:var(--gold)]/30 bg-black/60 p-6 backdrop-blur-xl sm:p-8"
           dir={
             subjectInfo &&
             (subjectInfo.color_token === "math" || subjectInfo.color_token === "arabic")
@@ -556,13 +556,13 @@ function DungeonPage() {
               const isWrong = showFeedback && isSel && answerWasCorrect === false;
 
               let cls =
-                "border-(--neon-magenta)/20 bg-background/40 hover:border-(--neon-magenta)/60 hover:bg-(--neon-magenta)/5";
+                "border-[color:var(--gold)]/20 bg-background/40 hover:border-[color:var(--gold)]/60 hover:bg-[color:var(--gold)]/5";
               if (showFeedback) {
                 if (isCorrect) cls = "border-emerald-500 bg-emerald-500/15";
                 else if (isWrong) cls = "border-destructive bg-destructive/15";
                 else cls = "border-border/30 bg-background/20 opacity-50";
               } else if (isSel) {
-                cls = "border-(--neon-magenta) bg-(--neon-magenta)/15";
+                cls = "border-[color:var(--gold)] bg-[color:var(--gold)]/15";
               }
 
               return (
@@ -640,12 +640,12 @@ function DungeonPage() {
           aria-valuemax={50}
         >
           <motion.div
-            className="h-full rounded-full bg-linear-to-r from-neon-magenta to-neon-violet"
+            className="h-full rounded-full bg-[linear-gradient(to_right,var(--gold),var(--gold-bright))]"
             animate={{ width: `${Math.min(100, (floor / 50) * 100)}%` }}
             transition={{ duration: 0.5 }}
           />
         </div>
-        <div className="text-xs font-bold text-neon-magenta">{floor}</div>
+        <div className="text-xs font-bold text-[color:var(--gold)]">{floor}</div>
       </div>
     </div>
   );

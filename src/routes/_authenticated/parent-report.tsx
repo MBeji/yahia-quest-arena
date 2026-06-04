@@ -85,7 +85,7 @@ function ParentReport() {
   if (loadingStudents) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-indigo-400 border-t-transparent rounded-full" />
+        <div className="animate-spin w-8 h-8 border-4 border-[color:var(--gold)] border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -93,9 +93,9 @@ function ParentReport() {
   if (students.length === 0 && isAdmin) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center">
-        <Users className="w-16 h-16 text-gray-400 mb-4" />
+        <Users className="w-16 h-16 text-muted-foreground mb-4" />
         <h2 className="text-xl font-bold text-white mb-2">Aucun eleve inscrit</h2>
-        <p className="text-gray-400 max-w-md">
+        <p className="text-muted-foreground max-w-md">
           Aucun compte eleve n'existe encore dans la plateforme.
         </p>
       </div>
@@ -106,10 +106,10 @@ function ParentReport() {
     <div className="min-h-screen p-4 md:p-8 max-w-6xl mx-auto">
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
         <h1 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
-          <Activity className="w-7 h-7 text-indigo-400" />
+          <Activity className="w-7 h-7 text-[color:var(--gold)]" />
           {isAdmin ? "Admin — Suivi des élèves" : "Rapport de suivi"}
         </h1>
-        <p className="text-gray-400 mt-1">
+        <p className="text-muted-foreground mt-1">
           {isAdmin
             ? `${students.length} élève(s) inscrits — sélectionnez pour voir le détail`
             : "Vue d'ensemble de l'activité de votre enfant"}
@@ -117,8 +117,8 @@ function ParentReport() {
       </motion.div>
 
       {!isAdmin && (
-        <div className="mb-6 rounded-xl border border-indigo-700/40 bg-indigo-950/30 p-4">
-          <div className="mb-3 flex items-center gap-2 text-indigo-200">
+        <div className="mb-6 rounded-xl border border-[color:var(--gold)]/40 bg-black/30 p-4">
+          <div className="mb-3 flex items-center gap-2 text-[color:var(--champagne)]">
             <LinkIcon className="h-4 w-4" />
             <span className="font-semibold">Associer un eleve via Alliance Code</span>
           </div>
@@ -127,24 +127,26 @@ function ParentReport() {
               value={studentCode}
               onChange={(e) => setStudentCode(e.target.value)}
               placeholder="Code eleve"
-              className="rounded-lg border border-gray-700 bg-gray-900/70 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:border-indigo-500 focus:outline-none"
+              className="rounded-lg border border-[color:var(--gold)]/30 bg-black/70 px-3 py-2 text-sm text-white placeholder:text-muted-foreground focus:border-[color:var(--gold)] focus:outline-none"
             />
             <input
               value={relationLabel}
               onChange={(e) => setRelationLabel(e.target.value)}
               placeholder="Relation (parent)"
-              className="rounded-lg border border-gray-700 bg-gray-900/70 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:border-indigo-500 focus:outline-none"
+              className="rounded-lg border border-[color:var(--gold)]/30 bg-black/70 px-3 py-2 text-sm text-white placeholder:text-muted-foreground focus:border-[color:var(--gold)] focus:outline-none"
             />
             <button
               type="button"
               disabled={studentCode.trim().length < 8 || linkMutation.isPending}
               onClick={() => linkMutation.mutate()}
-              className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50"
+              className="rounded-lg bg-[image:var(--gradient-gold)] px-4 py-2 text-sm font-semibold text-black hover:opacity-90 disabled:opacity-50"
             >
               {linkMutation.isPending ? "Liaison..." : "Associer"}
             </button>
           </div>
-          <p className="mt-2 text-xs text-gray-400">L'eleve trouve son code dans son dashboard.</p>
+          <p className="mt-2 text-xs text-muted-foreground">
+            L'eleve trouve son code dans son dashboard.
+          </p>
         </div>
       )}
 
@@ -157,8 +159,8 @@ function ParentReport() {
               onClick={() => setSelectedStudent(s.id)}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 selectedStudent === s.id
-                  ? "bg-indigo-600 text-white"
-                  : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                  ? "bg-[image:var(--gradient-gold)] text-black"
+                  : "bg-black/50 text-muted-foreground hover:bg-black/70 border border-[color:var(--gold)]/30 hover:border-[color:var(--gold)]/60"
               }`}
             >
               {s.display_name ?? "Élève"}
@@ -171,11 +173,11 @@ function ParentReport() {
                 type="button"
                 onClick={() => setAdminPage((p) => Math.max(1, p - 1))}
                 disabled={pagination.page <= 1}
-                className="rounded-md border border-gray-700 bg-gray-900/70 px-3 py-1.5 text-xs font-semibold text-gray-200 disabled:opacity-40"
+                className="rounded-md border border-[color:var(--gold)]/30 bg-black/70 px-3 py-1.5 text-xs font-semibold text-[color:var(--champagne)] disabled:opacity-40"
               >
                 Prec
               </button>
-              <span className="text-xs text-gray-400">
+              <span className="text-xs text-muted-foreground">
                 Page {pagination.page} /{" "}
                 {Math.max(1, Math.ceil(pagination.total / pagination.pageSize))}
               </span>
@@ -200,7 +202,7 @@ function ParentReport() {
 
       {loadingReport ? (
         <div className="flex items-center justify-center py-20">
-          <div className="animate-spin w-8 h-8 border-4 border-indigo-400 border-t-transparent rounded-full" />
+          <div className="animate-spin w-8 h-8 border-4 border-[color:var(--gold)] border-t-transparent rounded-full" />
         </div>
       ) : report ? (
         <ReportContent report={report} />
