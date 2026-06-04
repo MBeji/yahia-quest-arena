@@ -368,6 +368,42 @@ export type Database = {
         };
         Relationships: [];
       };
+      content_reports: {
+        Row: {
+          created_at: string;
+          exercise_id: string | null;
+          id: string;
+          message: string;
+          question_id: string | null;
+          resolved_at: string | null;
+          resolved_by: string | null;
+          status: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          exercise_id?: string | null;
+          id?: string;
+          message: string;
+          question_id?: string | null;
+          resolved_at?: string | null;
+          resolved_by?: string | null;
+          status?: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          exercise_id?: string | null;
+          id?: string;
+          message?: string;
+          question_id?: string | null;
+          resolved_at?: string | null;
+          resolved_by?: string | null;
+          status?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       chapters: {
         Row: {
           description: string | null;
@@ -983,6 +1019,27 @@ export type Database = {
       };
       admin_review_beta_request: {
         Args: { p_request: string; p_approve: boolean };
+        Returns: undefined;
+      };
+      admin_list_content_reports: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          id: string;
+          message: string;
+          status: string;
+          created_at: string;
+          exercise_id: string | null;
+          exercise_title: string | null;
+          subject_id: string | null;
+          question_id: string | null;
+        }[];
+      };
+      admin_open_reports_count: {
+        Args: Record<PropertyKey, never>;
+        Returns: number;
+      };
+      admin_resolve_content_report: {
+        Args: { p_report: string; p_status: string };
         Returns: undefined;
       };
       get_dungeon_access: {

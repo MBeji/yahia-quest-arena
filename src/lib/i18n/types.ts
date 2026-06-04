@@ -253,6 +253,28 @@ export type TranslationKeys = {
     rejectOk: string;
     reviewError: string;
   };
+  // Content error reports ("Signaler une erreur")
+  contentReport: {
+    cta: string;
+    label: string;
+    placeholder: string;
+    send: string;
+    cancel: string;
+    sent: string;
+    error: string;
+    adminTitle: string;
+    adminDesc: string;
+    openCount: string;
+    empty: string;
+    unknownExercise: string;
+    statusOpen: string;
+    statusResolved: string;
+    statusDismissed: string;
+    resolve: string;
+    dismiss: string;
+    updated: string;
+    updateError: string;
+  };
   // Layout
   layout: {
     heroesHall: string;
@@ -262,6 +284,7 @@ export type TranslationKeys = {
     admin: string;
     subscriptions: string;
     betaRequests: string;
+    contentReports: string;
     signOut: string;
     logoutToast: string;
   };
