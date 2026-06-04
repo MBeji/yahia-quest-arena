@@ -49,7 +49,7 @@ export function DashboardBadgesShop({
             badges.map((badge) => (
               <div
                 key={`${badge.code}-${badge.awardedAt}`}
-                className="rounded-2xl border border-border/50 bg-card/60 p-5 backdrop-blur-md"
+                className="rounded-2xl border border-border/50 bg-black/60 p-5 backdrop-blur-md"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
@@ -80,7 +80,7 @@ export function DashboardBadgesShop({
 
       <section className="mt-8">
         <h2 className="mb-4 flex items-center gap-2 font-display text-xl font-bold">
-          <ShoppingBag className="h-5 w-5 text-[color:var(--neon-cyan)]" /> Academy Shop
+          <ShoppingBag className="h-5 w-5 text-[color:var(--gold)]" /> Academy Shop
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {shopItems.map((item) => {
@@ -91,16 +91,16 @@ export function DashboardBadgesShop({
             return (
               <div
                 key={item.code}
-                className="rounded-2xl border border-border/50 bg-card/60 p-5 backdrop-blur-md"
+                className="rounded-2xl border border-border/50 bg-black/60 p-5 backdrop-blur-md"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <div className="font-display text-lg font-bold">{item.name}</div>
-                    <div className="text-xs uppercase tracking-widest text-[color:var(--neon-cyan)]">
+                    <div className="text-xs uppercase tracking-widest text-[color:var(--gold)]">
                       {item.itemType}
                     </div>
                   </div>
-                  <div className="rounded-full bg-[color:var(--neon-cyan)]/10 px-3 py-1 text-xs font-bold text-[color:var(--neon-cyan)]">
+                  <div className="rounded-full bg-[color:var(--gold)]/10 px-3 py-1 text-xs font-bold text-[color:var(--gold)]">
                     {item.priceCoins} XP Coins
                   </div>
                 </div>
@@ -123,7 +123,7 @@ export function DashboardBadgesShop({
                     disabled={!canBuy || isBusy || availableCoins < item.priceCoins}
                     onClick={() => onPurchase(item.code)}
                     aria-label={`Buy ${item.name}`}
-                    className="flex-1 rounded-lg border border-border bg-background/50 px-4 py-2.5 text-sm font-semibold disabled:opacity-40"
+                    className="flex-1 rounded-lg border border-border bg-black/50 px-4 py-2.5 text-sm font-semibold disabled:opacity-40"
                   >
                     {isPurchasePending ? (
                       <Loader2 className="mx-auto h-4 w-4 animate-spin" />
@@ -136,7 +136,7 @@ export function DashboardBadgesShop({
                       disabled={isBusy}
                       onClick={() => onEquip(item.code)}
                       aria-label={`Equip ${item.name}`}
-                      className="flex-1 rounded-lg bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] px-4 py-2.5 text-sm font-bold text-primary-foreground shadow-neon disabled:opacity-40"
+                      className="flex-1 rounded-lg bg-[image:var(--gradient-gold)] px-4 py-2.5 text-sm font-bold text-black shadow-gold disabled:opacity-40"
                     >
                       {isEquipPending ? (
                         <Loader2 className="mx-auto h-4 w-4 animate-spin" />

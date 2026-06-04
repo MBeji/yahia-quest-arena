@@ -60,7 +60,10 @@ function AdminSubscriptionsPage() {
     return (
       <div className="mx-auto max-w-2xl px-6 py-12 text-center">
         <h1 className="font-display text-2xl font-bold">{t.subscription.accessDenied}</h1>
-        <Link to="/dashboard" className="mt-4 inline-block text-sm text-neon-cyan hover:underline">
+        <Link
+          to="/dashboard"
+          className="mt-4 inline-block text-sm text-[color:var(--gold)] hover:underline"
+        >
           {t.common.backToHall}
         </Link>
       </div>
@@ -77,8 +80,8 @@ function AdminSubscriptionsPage() {
       </Link>
 
       <div className="mb-6 flex items-center gap-3">
-        <div className="grid h-11 w-11 place-items-center rounded-xl bg-linear-to-br from-neon-violet to-neon-magenta shadow-neon">
-          <CreditCard className="h-5 w-5 text-primary-foreground" />
+        <div className="grid h-11 w-11 place-items-center rounded-xl bg-[image:var(--gradient-gold)] shadow-gold">
+          <CreditCard className="h-5 w-5 text-black" />
         </div>
         <div>
           <h1 className="font-display text-2xl font-bold">{t.subscription.adminTitle}</h1>
@@ -88,7 +91,7 @@ function AdminSubscriptionsPage() {
 
       {listQuery.isLoading ? (
         <div className="grid place-items-center py-16">
-          <Loader2 className="h-8 w-8 animate-spin text-neon-magenta" />
+          <Loader2 className="h-8 w-8 animate-spin text-[color:var(--gold)]" />
         </div>
       ) : listQuery.isError ? (
         <div className="rounded-2xl border border-destructive/40 bg-destructive/5 p-6 text-sm text-destructive">

@@ -341,7 +341,7 @@ function Dashboard() {
           <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/30 blur-3xl" />
           <div className="absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/20 blur-3xl" />
           <div className="relative grid gap-6 sm:grid-cols-[auto,1fr,auto] sm:items-center">
-            <div className="grid h-20 w-20 place-items-center rounded-2xl bg-[image:var(--gradient-gold)] shadow-neon animate-pulse-neon">
+            <div className="grid h-20 w-20 place-items-center rounded-2xl bg-[image:var(--gradient-gold)] shadow-gold animate-pulse-neon">
               <Sparkles className="h-9 w-9 text-black" />
             </div>
             <div>
@@ -382,7 +382,7 @@ function Dashboard() {
                   aria-valuemax={100}
                 >
                   <div
-                    className="h-full rounded-full bg-gradient-to-r from-[color:var(--gold)] to-[color:var(--gold-bright)] shadow-neon transition-all"
+                    className="h-full rounded-full bg-gradient-to-r from-[color:var(--gold)] to-[color:var(--gold-bright)] shadow-gold transition-all"
                     style={{ width: `${xpPct}%` }}
                   />
                 </div>

@@ -49,14 +49,14 @@ export function DashboardRadarInventory({ radarData, inventory }: DashboardRadar
         </p>
       </div>
 
-      <div className="mt-6 rounded-2xl border border-border/50 bg-card/60 p-4 backdrop-blur-md">
+      <div className="mt-6 rounded-2xl border border-border/50 bg-black/60 p-4 backdrop-blur-md">
         <h3 className="mb-3 flex items-center gap-2 font-display text-lg font-bold">
-          <Backpack className="h-4 w-4 text-[color:var(--neon-cyan)]" /> Inventory
+          <Backpack className="h-4 w-4 text-[color:var(--gold)]" /> Inventory
         </h3>
         <div className="space-y-3">
           {inventory.length > 0 ? (
             inventory.slice(0, 4).map((item) => (
-              <div key={item.code} className="rounded-xl bg-background/40 p-3">
+              <div key={item.code} className="rounded-xl bg-black/40 p-3">
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <div className="font-semibold">{item.name}</div>
@@ -65,7 +65,7 @@ export function DashboardRadarInventory({ radarData, inventory }: DashboardRadar
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="font-display text-lg font-bold text-[color:var(--neon-cyan)]">
+                    <div className="font-display text-lg font-bold text-[color:var(--gold)]">
                       x{item.quantity}
                     </div>
                     {item.isEquipped && (

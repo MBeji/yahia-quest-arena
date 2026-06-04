@@ -29,7 +29,10 @@ function AdminBetaRequestsPage() {
     return (
       <div className="mx-auto max-w-2xl px-6 py-12 text-center">
         <h1 className="font-display text-2xl font-bold">{t.subscription.accessDenied}</h1>
-        <Link to="/dashboard" className="mt-4 inline-block text-sm text-neon-cyan hover:underline">
+        <Link
+          to="/dashboard"
+          className="mt-4 inline-block text-sm text-[color:var(--gold)] hover:underline"
+        >
           {t.common.backToHall}
         </Link>
       </div>

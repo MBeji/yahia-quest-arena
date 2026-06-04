@@ -169,7 +169,7 @@ function AuthPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="w-full glass-gold rounded-2xl p-8 shadow-neon text-center"
+            className="w-full glass-gold rounded-2xl p-8 shadow-gold text-center"
           >
             <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-2xl bg-[color:var(--gold)]/20 border border-[color:var(--gold)]/40">
               <MailCheck className="h-8 w-8 text-[color:var(--gold)]" />
@@ -204,7 +204,7 @@ function AuthPage() {
       <div className="absolute inset-0 bg-grid opacity-50" />
       <div className="relative mx-auto flex min-h-screen max-w-md flex-col items-center justify-center px-6 py-12">
         <Link to="/" className="mb-8 flex items-center gap-2">
-          <div className="grid h-10 w-10 place-items-center rounded-lg bg-[image:var(--gradient-gold)] shadow-neon">
+          <div className="grid h-10 w-10 place-items-center rounded-lg bg-[image:var(--gradient-gold)] shadow-gold">
             <Sparkles className="h-5 w-5 text-black" />
           </div>
           <span className="font-display text-xl font-bold tracking-wider">
@@ -216,7 +216,7 @@ function AuthPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="w-full glass-gold rounded-2xl p-8 shadow-neon"
+          className="w-full glass-gold rounded-2xl p-8 shadow-gold"
         >
           <h1 className="font-display text-2xl font-bold">
             {isSignup ? "Forge your hero" : "Welcome back, warrior"}
@@ -378,7 +378,7 @@ function AuthPage() {
             <button
               type="submit"
               disabled={busy}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-[image:var(--gradient-gold)] py-2.5 text-sm font-bold text-black shadow-neon transition hover:opacity-90 disabled:opacity-60"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-[image:var(--gradient-gold)] py-2.5 text-sm font-bold text-black shadow-gold transition hover:opacity-90 disabled:opacity-60"
             >
               {busy && <Loader2 className="h-4 w-4 animate-spin" />}
               {isSignup ? "Forge my hero" : "Enter the arena"}
