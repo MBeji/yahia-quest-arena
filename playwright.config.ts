@@ -2,18 +2,27 @@ import { defineConfig, devices } from "@playwright/test";
 
 /**
  * Playwright end-to-end config — runs REAL browser journeys against the app.
+ * NOT runnable in the restricted build sandbox (it blocks the browser download).
  *
- * Runs locally and in CI, NOT in the restricted build sandbox (the sandbox
- * blocks the Playwright browser download). Setup:
- *   npm i                       # @playwright/test is a devDependency
+ * Two tiers of tests:
+ *  • PUBLIC (landing + logged-out auth redirects): need no real backend, run in
+ *    the standard `E2E` workflow with dummy Supabase env.  → projects: public-*
+ *  • AUTHENTICATED (free/premium/admin/parent journeys): need the TEST Supabase
+ *    project + seeded users. The `setup` project logs each role in through the
+ *    UI and saves its storage state; the `authed-*` project reuses it.
+ *
+ * Local:
  *   npx playwright install chromium
- *   npm run test:e2e
+ *   npm run test:e2e          # public only (no backend)
+ *   npm run e2e:seed          # seed test users (needs SUPABASE_SERVICE_ROLE_KEY)
+ *   npm run test:e2e:auth     # authenticated journeys (needs the test project)
  *
- * By default Playwright starts the dev server itself. Point at an already-running
- * server (e.g. a Vercel preview) with PLAYWRIGHT_BASE_URL=https://… npm run test:e2e
- * — in that case it won't spawn a local server.
+ * Point at an already-running server with PLAYWRIGHT_BASE_URL=https://…
  */
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://localhost:${process.env.PORT ?? 5173}`;
+
+const PUBLIC_SPECS = /(landing|auth-redirects)\.spec\.ts/;
+const AUTHED_SPECS = /authed\/.*\.spec\.ts/;
 
 export default defineConfig({
   testDir: "./e2e",
@@ -26,8 +35,18 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   projects: [
-    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
-    { name: "mobile", use: { ...devices["Pixel 7"] } },
+    // ---- Public (no backend) ----
+    { name: "public-chromium", testMatch: PUBLIC_SPECS, use: { ...devices["Desktop Chrome"] } },
+    { name: "public-mobile", testMatch: PUBLIC_SPECS, use: { ...devices["Pixel 7"] } },
+
+    // ---- Authenticated (needs the test Supabase project + seeded users) ----
+    { name: "setup", testMatch: /auth\.setup\.ts/, use: { ...devices["Desktop Chrome"] } },
+    {
+      name: "authed-chromium",
+      testMatch: AUTHED_SPECS,
+      dependencies: ["setup"],
+      use: { ...devices["Desktop Chrome"] },
+    },
   ],
   // Spawn the dev server only when no external base URL was provided.
   webServer: process.env.PLAYWRIGHT_BASE_URL
