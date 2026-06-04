@@ -38,6 +38,8 @@ type AtomicSubmitResponse = {
   xpEarned: number;
   coinsEarned: number;
   durationSeconds: number;
+  tooFast: boolean;
+  improved: boolean;
   profile: ProfileSnapshot | null;
   unlockedBadges: UnlockedBadge[];
 };
@@ -82,6 +84,8 @@ function parseAtomicSubmitResponse(payload: unknown): AtomicSubmitResponse {
     xpEarned: Number(row.xpEarned ?? 0),
     coinsEarned: Number(row.coinsEarned ?? 0),
     durationSeconds: Number(row.durationSeconds ?? 0),
+    tooFast: row.tooFast === true,
+    improved: row.improved === true,
     profile:
       row.profile && typeof row.profile === "object" ? (row.profile as ProfileSnapshot) : null,
     unlockedBadges: toUnlockedBadges(row.unlockedBadges),
@@ -434,6 +438,8 @@ export const submitAttempt = createServerFn({ method: "POST" })
       xpEarned: atomic.xpEarned,
       coinsEarned: atomic.coinsEarned,
       durationSeconds: atomic.durationSeconds,
+      tooFast: atomic.tooFast,
+      improved: atomic.improved,
       profile: atomic.profile,
       review,
       reviewHidden: isQuiz,
