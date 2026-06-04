@@ -1,0 +1,85 @@
+{
+  "title": "Practice: read and understand (1)",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Read this passage:\n\n\"My grandmother lives with us. Every afternoon she tells us old stories about her village, and we listen carefully. Thanks to her, we know a lot about how families lived long ago.\"\n\nWhat is the main idea of this passage?",
+      "options": [
+        { "id": "a", "text": "The grandmother is too old to live alone." },
+        {
+          "id": "b",
+          "text": "The grandmother shares stories that teach the family about the past."
+        },
+        { "id": "c", "text": "The children do not like listening to old stories." },
+        { "id": "d", "text": "The village has changed a lot over the years." }
+      ],
+      "correctOption": "b",
+      "explanation": "The passage centres on the grandmother telling stories and the family learning about the past from her. (a) Living alone is never mentioned. (c) The opposite is true — they listen carefully. (d) The village's changes are not the topic.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Read this passage:\n\n\"The science club meets twice a week. On Tuesday the members do experiments, and on Thursday they prepare projects for the school fair.\"\n\nWhat do the members do on Thursday?",
+      "options": [
+        { "id": "a", "text": "They do experiments." },
+        { "id": "b", "text": "They prepare projects for the school fair." },
+        { "id": "c", "text": "They clean the laboratory." },
+        { "id": "d", "text": "They take an exam." }
+      ],
+      "correctOption": "b",
+      "explanation": "Scan for 'Thursday'. The text says: on Thursday 'they prepare projects for the school fair'. The experiments happen on Tuesday (a), and cleaning (c) and an exam (d) are not mentioned.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Read this passage:\n\n\"Karim turned off the television, put away his books and yawned. He set his alarm and switched off the light.\"\n\nWhat can we infer that Karim is about to do?",
+      "options": [
+        { "id": "a", "text": "go to school" },
+        { "id": "b", "text": "start cooking dinner" },
+        { "id": "c", "text": "go to sleep" },
+        { "id": "d", "text": "watch a film" }
+      ],
+      "correctOption": "c",
+      "explanation": "Yawning, setting the alarm and switching off the light are all clues that Karim is going to bed. The text does not say 'sleep' directly, but the actions prove it. He has just turned off the TV (not watching a film, d), and there is no sign of school (a) or cooking (b).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read this passage:\n\n\"Doctors say that walking is excellent for your health. It is free, and you can do it almost anywhere.\"\n\nIn the second sentence, what does the word \"it\" refer to?",
+      "options": [
+        { "id": "a", "text": "the doctor" },
+        { "id": "b", "text": "your health" },
+        { "id": "c", "text": "walking" },
+        { "id": "d", "text": "the second sentence" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"It is free\" and \"you can do it anywhere\" describe the activity being praised — walking. 'It' refers back to the nearest matching idea, which is walking. It is not the doctor (a person) or 'your health', which is not something free that you 'do'.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Read this passage:\n\n\"The room was spotless. Not a single speck of dust could be seen, and everything was in its place.\"\n\nWhat does the word \"spotless\" most probably mean?",
+      "options": [
+        { "id": "a", "text": "very dirty" },
+        { "id": "b", "text": "very clean" },
+        { "id": "c", "text": "very large" },
+        { "id": "d", "text": "very dark" }
+      ],
+      "correctOption": "b",
+      "explanation": "The next sentence explains the word: no dust and everything in its place — that describes a very clean room, so 'spotless' means very clean. The context rules out 'dirty' (a, the opposite), and says nothing about size (c) or light (d).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Read this passage:\n\n\"The bus was late, so we missed the beginning of the film.\"\n\nWhat is the function of the connector \"so\" in this sentence?",
+      "options": [
+        { "id": "a", "text": "It introduces a contrast." },
+        { "id": "b", "text": "It introduces the result of the first part." },
+        { "id": "c", "text": "It introduces an example." },
+        { "id": "d", "text": "It introduces a purpose." }
+      ],
+      "correctOption": "b",
+      "explanation": "'So' links a cause (the bus was late) to its result (we missed the start of the film). It marks result/consequence. A contrast would use 'but' (a), an example 'such as' (c), and a purpose 'in order to' (d).",
+      "difficulty": 2
+    }
+  ]
+}

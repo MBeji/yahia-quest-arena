@@ -1,0 +1,85 @@
+{
+  "title": "⚔️ Boss: read deeply, write tightly",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Read this passage:\n\n\"Some people think a city is judged by its tall towers and wide roads. In truth, a city is judged by how it treats its weakest citizens — its children, its elderly and its sick.\"\n\nWhat is the writer's main point?",
+      "options": [
+        { "id": "a", "text": "Tall towers make a city beautiful and successful." },
+        {
+          "id": "b",
+          "text": "The real value of a city is how well it cares for its most vulnerable people."
+        },
+        { "id": "c", "text": "Cities should build wider roads to reduce traffic." },
+        { "id": "d", "text": "Children, the elderly and the sick live in every city." }
+      ],
+      "correctOption": "b",
+      "explanation": "The writer rejects the common view (towers, roads) with 'In truth' and states the real measure: how a city treats its weakest citizens. That is the main point. (a) is the idea the writer corrects. (c) is not discussed. (d) is a literal detail, not the message.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read this passage:\n\n\"Nadia had been saving for months. When she finally counted her coins on the table, she sighed, shook her head, and quietly put the bicycle catalogue back on the shelf.\"\n\nWhat can we infer from this passage?",
+      "options": [
+        { "id": "a", "text": "Nadia had enough money to buy the bicycle." },
+        { "id": "b", "text": "Nadia did not have enough money for the bicycle she wanted." },
+        { "id": "c", "text": "Nadia had decided she no longer liked bicycles." },
+        { "id": "d", "text": "Nadia had already bought the bicycle." }
+      ],
+      "correctOption": "b",
+      "explanation": "Sighing, shaking her head and putting the catalogue away after counting her coins are clues of disappointment — she still cannot afford the bicycle. The text never says it directly, but the clues prove it. (a) and (d) contradict her sad reaction; (c) is wrong, as she was saving precisely to buy one.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read this passage:\n\n\"Online learning helped many students continue their studies. Teachers recorded lessons, and learners watched them at home. Yet this solution had a serious limit: it left out those who had no internet at all.\"\n\nIn the third sentence, what does \"this solution\" refer to?",
+      "options": [
+        { "id": "a", "text": "the serious limit" },
+        { "id": "b", "text": "online learning" },
+        { "id": "c", "text": "the students who had no internet" },
+        { "id": "d", "text": "the teachers" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"This solution\" sums up what was described before: online learning (recorded lessons watched at home). Reference phrases like 'this solution' point back to the whole idea just explained. It is not the limit (a), which the solution 'had', nor the students (c) or teachers (d).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read this passage:\n\n\"The volunteers worked tirelessly all weekend, clearing rubbish from the beach despite the heat and the long hours.\"\n\nWhat does the word \"tirelessly\" most probably mean?",
+      "options": [
+        { "id": "a", "text": "without getting paid" },
+        { "id": "b", "text": "without stopping or becoming tired" },
+        { "id": "c", "text": "in complete silence" },
+        { "id": "d", "text": "very slowly and carefully" }
+      ],
+      "correctOption": "b",
+      "explanation": "The context — working 'all weekend', 'long hours', 'despite the heat' — shows continuous, energetic effort, so 'tirelessly' means without stopping or getting tired. Pay (a), silence (c) and slowness (d) are not suggested; in fact 'slowly' would contradict the hard, steady work described.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Put these sentences in the correct order to form a well-organised paragraph:\n\n1. \"As a result, customers receive their answers much faster than before.\"\n2. \"Therefore, many companies now combine machines with human staff to get the best of both.\"\n3. \"Technology has changed the way services treat their customers.\"\n4. \"However, a machine cannot fully understand a worried customer the way a person can.\"\n\nWhat is the best order?",
+      "options": [
+        { "id": "a", "text": "3 – 1 – 4 – 2" },
+        { "id": "b", "text": "1 – 3 – 2 – 4" },
+        { "id": "c", "text": "3 – 4 – 1 – 2" },
+        { "id": "d", "text": "2 – 3 – 1 – 4" }
+      ],
+      "correctOption": "a",
+      "explanation": "Sentence 3 is the general topic sentence (it comes first). Then 1 ('As a result') gives a benefit of the technology. Sentence 4 ('However') introduces the drawback, and 2 ('Therefore') gives the logical conclusion. The chain of connectors gives 3 – 1 – 4 – 2.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read this paragraph about good manners:\n\n\"Good manners cost nothing but bring great rewards. A polite greeting makes people feel respected. Holding the door for others shows kindness. The new shopping mall has a huge car park. In short, small courteous acts build a friendlier society.\"\n\nWhich sentence breaks the unity of the paragraph and should be removed?",
+      "options": [
+        { "id": "a", "text": "\"A polite greeting makes people feel respected.\"" },
+        { "id": "b", "text": "\"Holding the door for others shows kindness.\"" },
+        { "id": "c", "text": "\"The new shopping mall has a huge car park.\"" },
+        { "id": "d", "text": "\"In short, small courteous acts build a friendlier society.\"" }
+      ],
+      "correctOption": "c",
+      "explanation": "The paragraph develops one idea — good manners and their value — supported by examples (greeting, holding the door) and a closing sentence ('In short…'). 'The new shopping mall has a huge car park' is off-topic and breaks the unity, so it must be removed.",
+      "difficulty": 2
+    }
+  ]
+}
