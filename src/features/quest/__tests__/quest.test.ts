@@ -242,7 +242,9 @@ describe("gamification.quest — startExerciseSession", () => {
           ? mockQuery({ id: "ex-1", mode: "practice", chapter_id: "ch-1" })
           : mockQuery({ id: "quiz-1" });
       }
-      if (table === "attempts") return mockQuery([{ id: "att-1" }]); // passing attempt
+      // Passing attempt done with effort (>= 4s/question): genuinely unlocks.
+      if (table === "attempts")
+        return mockQuery([{ id: "att-1", duration_seconds: 40, total_count: 6 }]);
       return mockQuery({ id: "sess-1", started_at: "2026-06-01T12:00:00Z" });
     });
 
@@ -252,6 +254,29 @@ describe("gamification.quest — startExerciseSession", () => {
     });
 
     expect(result).toEqual({ sessionId: "sess-1", startedAt: "2026-06-01T12:00:00Z" });
+  });
+
+  it("does NOT unlock when the only passing quiz attempt was rushed (< 4s/question)", async () => {
+    let exerciseCalls = 0;
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") {
+        exerciseCalls += 1;
+        return exerciseCalls === 1
+          ? mockQuery({ id: "ex-1", mode: "practice", chapter_id: "ch-1" })
+          : mockQuery({ id: "quiz-1" });
+      }
+      // High score but rushed (3s for 6 questions) → must not satisfy the gate.
+      if (table === "attempts")
+        return mockQuery([{ id: "att-1", duration_seconds: 3, total_count: 6 }]);
+      return mockQuery({ id: "sess-1", started_at: "t" });
+    });
+
+    const { startExerciseSession } = await import("@/features/quest");
+    await expect(
+      (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
+        exerciseId: "11111111-1111-1111-1111-111111111111",
+      }),
+    ).rejects.toThrow("quiz de compréhension");
   });
 
   it("blocks any exercise of a premium subject without an active subscription", async () => {

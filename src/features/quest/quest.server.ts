@@ -2,7 +2,11 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { isRateLimited } from "@/shared/lib/rate-limit";
-import { PREMIUM_MIN_DIFFICULTY, QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
+import {
+  MIN_SECONDS_PER_QUESTION,
+  PREMIUM_MIN_DIFFICULTY,
+  QUIZ_PASS_THRESHOLD_PCT,
+} from "@/shared/constants/gamification";
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { logger } from "@/shared/lib/logger";
 import type { UnlockedBadge } from "@/shared/types/gamification";
@@ -152,11 +156,19 @@ export const getSubject = createServerFn({ method: "GET" })
     if (quizIds.length > 0) {
       const { data: passedRows } = await supabase
         .from("attempts")
-        .select("exercise_id")
+        .select("exercise_id,duration_seconds,total_count")
         .eq("user_id", context.userId)
         .in("exercise_id", quizIds)
         .gte("score_pct", QUIZ_PASS_THRESHOLD_PCT);
-      const passedQuizIds = new Set((passedRows ?? []).map((r) => r.exercise_id));
+      // A quiz only counts as passed if the qualifying attempt was not rushed
+      // (>= 4s/question) — a fast random pass must not unlock the chapter.
+      const passedQuizIds = new Set(
+        (passedRows ?? [])
+          .filter(
+            (r) => (r.duration_seconds ?? 0) >= (r.total_count ?? 0) * MIN_SECONDS_PER_QUESTION,
+          )
+          .map((r) => r.exercise_id),
+      );
       for (const quiz of quizExercises) {
         if (quiz.chapter_id && passedQuizIds.has(quiz.id)) {
           quizPassedByChapter[quiz.chapter_id] = true;
@@ -310,12 +322,16 @@ export const startExerciseSession = createServerFn({ method: "POST" })
       if (quiz) {
         const { data: passed } = await supabase
           .from("attempts")
-          .select("id")
+          .select("duration_seconds,total_count")
           .eq("user_id", userId)
           .eq("exercise_id", quiz.id)
-          .gte("score_pct", QUIZ_PASS_THRESHOLD_PCT)
-          .limit(1);
-        if (!passed || passed.length === 0) {
+          .gte("score_pct", QUIZ_PASS_THRESHOLD_PCT);
+        // The qualifying quiz pass must not be rushed (>= 4s/question), otherwise
+        // a fast random pass could unlock the chapter without comprehension.
+        const genuinelyPassed = (passed ?? []).some(
+          (r) => (r.duration_seconds ?? 0) >= (r.total_count ?? 0) * MIN_SECONDS_PER_QUESTION,
+        );
+        if (!genuinelyPassed) {
           failWithClientError("quest.startExerciseSession", null, QUIZ_LOCKED_MESSAGE);
         }
       }
