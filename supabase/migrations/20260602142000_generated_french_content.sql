@@ -14,8 +14,8 @@ BEGIN
     ADD CONSTRAINT exercises_mode_check CHECK (mode IN ('practice', 'boss', 'quiz', 'challenge'));
 END $$;
 
-INSERT INTO public.subjects (id, name_fr, description, attribute, color_token, icon, display_order, content_language) VALUES
-  ('french', 'Français', 'Grammaire, conjugaison, lexique, compréhension et production écrite — programme de 9ème année de base', 'Sagesse', 'subject-french', 'BookOpen', 2, 'fr')
+INSERT INTO public.subjects (id, name_fr, description, attribute, color_token, icon, display_order, content_language, is_premium) VALUES
+  ('french', 'Français', 'Grammaire, conjugaison, lexique, compréhension et production écrite — programme de 9ème année de base', 'Sagesse', 'subject-french', 'BookOpen', 2, 'fr', false)
 ON CONFLICT (id) DO UPDATE SET
   name_fr = EXCLUDED.name_fr,
   description = EXCLUDED.description,
@@ -23,7 +23,8 @@ ON CONFLICT (id) DO UPDATE SET
   color_token = EXCLUDED.color_token,
   icon = EXCLUDED.icon,
   display_order = EXCLUDED.display_order,
-  content_language = EXCLUDED.content_language;
+  content_language = EXCLUDED.content_language,
+  is_premium = EXCLUDED.is_premium;
 
 -- Prune admin-authored content that is no longer in the source tree.
 DO $$
@@ -1808,7 +1809,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('f22c973f-b551-5ada-b930-ce0801010307', '0cec718c-9b55-5aa5-b40e-ad20fffbe4ed', 'Quelle phrase contient une erreur dans la transformation active → passive ?', '[{"id":"a","text":"Le chien a mordu Paul. → Paul a été mordu par le chien. ✓"},{"id":"b","text":"Les élèves ont applaudi la pièce. → La pièce a été applaudi par les élèves."},{"id":"c","text":"La pluie abîme les récoltes. → Les récoltes sont abîmées par la pluie. ✓"},{"id":"d","text":"Le professeur punira l''élève. → L''élève sera puni par le professeur. ✓"}]'::jsonb, 'b', 'Le sujet passif est « la pièce » (féminin singulier) : le participe passé doit s''accorder → « applaudie ». L''option d comporte une erreur d''accord (« applaudi » au lieu de « applaudie »).', 6)
+  ('f22c973f-b551-5ada-b930-ce0801010307', '0cec718c-9b55-5aa5-b40e-ad20fffbe4ed', 'Quelle phrase contient une erreur dans la transformation active → passive ?', '[{"id":"a","text":"Le chien a mordu Paul. → Paul a été mordu par le chien. ✓"},{"id":"b","text":"Les élèves ont applaudi la pièce. → La pièce a été applaudi par les élèves."},{"id":"c","text":"La pluie abîme les récoltes. → Les récoltes sont abîmées par la pluie. ✓"},{"id":"d","text":"Le professeur punira l''élève. → L''élève sera puni par le professeur. ✓"}]'::jsonb, 'b', 'Le sujet passif est « la pièce » (féminin singulier) : le participe passé doit s''accorder → « applaudie ». C''est donc l''option b qui comporte l''erreur d''accord (« applaudi » au lieu de « applaudie ») ; les options a, c et d sont correctes.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
