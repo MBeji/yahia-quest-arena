@@ -1,0 +1,101 @@
+{
+  "title": "Quiz: Know the exam paper",
+  "questions": [
+    {
+      "prompt": "An exam reading question asks: \"What is the writer's main idea?\" What should you look for?",
+      "options": [
+        { "id": "a", "text": "A small detail such as a name or a number." },
+        { "id": "b", "text": "The whole message of the text, often near the start or end." },
+        { "id": "c", "text": "Your own opinion about the topic." },
+        { "id": "d", "text": "The longest sentence in the text." }
+      ],
+      "correctOption": "b",
+      "explanation": "The main idea is the overall message of the text, usually stated near the beginning or end. (a) is a detail, not the main idea; (c) the answer must come from the text, not your opinion; (d) length has nothing to do with importance.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "In a True / False / Not mentioned task, when should you choose \"Not mentioned\"?",
+      "options": [
+        { "id": "a", "text": "When the text clearly says the opposite." },
+        { "id": "b", "text": "When you personally disagree with the statement." },
+        { "id": "c", "text": "When the text simply does not give that information." },
+        { "id": "d", "text": "When the statement is too long to check." }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Not mentioned\" means the information is absent from the text. (a) describes \"False\" (the text contradicts it); (b) your opinion is irrelevant; (d) length does not decide the answer.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Read this sentence:\n\n\"My sister loves animals, so she wants to become a vet.\"\n\nIn this sentence, who does the word \"she\" refer to?",
+      "options": [
+        { "id": "a", "text": "the vet" },
+        { "id": "b", "text": "my sister" },
+        { "id": "c", "text": "the animals" },
+        { "id": "d", "text": "the writer" }
+      ],
+      "correctOption": "b",
+      "explanation": "A reference word points back to the nearest matching noun. \"She\" is singular and female, so it stands for \"my sister\". The vet (a) is what she wants to become, the animals (c) are plural, and \"the writer\" (d) would be \"I\".",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choose the correct verb form:\n\n\"Yesterday, the students ______ a documentary about the desert.\"",
+      "options": [
+        { "id": "a", "text": "watch" },
+        { "id": "b", "text": "watched" },
+        { "id": "c", "text": "are watching" },
+        { "id": "d", "text": "will watch" }
+      ],
+      "correctOption": "b",
+      "explanation": "The time marker \"Yesterday\" signals a finished past action, so the past simple \"watched\" is correct. (a) is present simple, (c) present continuous, and (d) future — none fits a past time marker.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choose the correct modal:\n\n\"You look tired. You ______ go to bed early tonight.\" (giving advice)",
+      "options": [
+        { "id": "a", "text": "should" },
+        { "id": "b", "text": "can" },
+        { "id": "c", "text": "must" },
+        { "id": "d", "text": "might" }
+      ],
+      "correctOption": "a",
+      "explanation": "For advice we use \"should\". (b) \"can\" expresses ability/permission; (c) \"must\" is a strong obligation, too strong for friendly advice; (d) \"might\" expresses possibility, not advice.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Put the verb in the passive voice:\n\n\"The new library ______ last year.\" (open)",
+      "options": [
+        { "id": "a", "text": "opened" },
+        { "id": "b", "text": "was opened" },
+        { "id": "c", "text": "is opening" },
+        { "id": "d", "text": "has opened" }
+      ],
+      "correctOption": "b",
+      "explanation": "The passive is \"be + past participle\", and \"last year\" needs a past form: \"was opened\". The library receives the action; it did not open itself. (a) and (d) are active, (c) is present continuous and wrong in time.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which sentence is the best topic sentence for a paragraph about the benefits of reading?",
+      "options": [
+        { "id": "a", "text": "For example, novels can teach us about other cultures." },
+        { "id": "b", "text": "Reading regularly brings many benefits to young people." },
+        { "id": "c", "text": "Yesterday I borrowed two books from the school library." },
+        { "id": "d", "text": "In short, that is why everyone should read." }
+      ],
+      "correctOption": "b",
+      "explanation": "A topic sentence is general and announces the paragraph's main idea — exactly what (b) does. (a) is a supporting example (\"For example\"), (c) is a narrow personal detail, and (d) is a closing sentence (\"In short\").",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choose the best linking word:\n\n\"The bus was late; ______, we still arrived on time.\"",
+      "options": [
+        { "id": "a", "text": "therefore" },
+        { "id": "b", "text": "because" },
+        { "id": "c", "text": "however" },
+        { "id": "d", "text": "for example" }
+      ],
+      "correctOption": "c",
+      "explanation": "There is a contrast between the late bus and arriving on time, so \"however\" fits. (a) \"therefore\" shows a result, (b) \"because\" shows a cause, and (d) \"for example\" introduces an example — none expresses contrast.",
+      "difficulty": 3
+    }
+  ]
+}

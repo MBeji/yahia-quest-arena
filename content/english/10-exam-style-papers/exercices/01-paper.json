@@ -1,0 +1,82 @@
+{
+  "title": "Paper 1: Practice — Family Life",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Read the text:\n\n\"Every Friday evening, the Karoui family gathers in the kitchen. While the parents prepare couscous, the children set the table and tell jokes. Grandfather, who lives next door, always arrives first. For them, this weekly meal is more important than any present, because it keeps the family close.\"\n\nWhat is the main idea of the text?",
+      "options": [
+        { "id": "a", "text": "Couscous is the best dish to cook on Fridays." },
+        { "id": "b", "text": "The family's weekly meal keeps them close together." },
+        { "id": "c", "text": "Grandfather lives in the house next door." },
+        { "id": "d", "text": "Children should always help in the kitchen." }
+      ],
+      "correctOption": "b",
+      "explanation": "The last sentence states the message directly: the weekly meal \"keeps the family close\". (a) couscous is only a detail; (c) where Grandfather lives is a small detail; (d) is not the writer's point.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Read the text:\n\n\"Every Friday evening, the Karoui family gathers in the kitchen. While the parents prepare couscous, the children set the table and tell jokes. Grandfather, who lives next door, always arrives first. For them, this weekly meal is more important than any present, because it keeps the family close.\"\n\nAccording to the text, who arrives first?",
+      "options": [
+        { "id": "a", "text": "the parents" },
+        { "id": "b", "text": "the children" },
+        { "id": "c", "text": "Grandfather" },
+        { "id": "d", "text": "the neighbours" }
+      ],
+      "correctOption": "c",
+      "explanation": "The text says \"Grandfather... always arrives first\". (a) the parents are cooking, (b) the children set the table, and (d) neighbours are never mentioned.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Read the text:\n\n\"Every Friday evening, the Karoui family gathers in the kitchen. While the parents prepare couscous, the children set the table and tell jokes. Grandfather, who lives next door, always arrives first. For them, this weekly meal is more important than any present, because it keeps the family close.\"\n\nIn the last sentence, what does the word \"it\" refer to?",
+      "options": [
+        { "id": "a", "text": "the present" },
+        { "id": "b", "text": "the weekly meal" },
+        { "id": "c", "text": "Grandfather" },
+        { "id": "d", "text": "the kitchen" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"It keeps the family close\" — \"it\" points back to the subject just mentioned, \"this weekly meal\". A present (a) is what the meal is compared to, while Grandfather (c) and the kitchen (d) are not what keeps the family close.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read the text:\n\n\"Every Friday evening, the Karoui family gathers in the kitchen. While the parents prepare couscous, the children set the table and tell jokes. Grandfather, who lives next door, always arrives first. For them, this weekly meal is more important than any present, because it keeps the family close.\"\n\nLanguage: which tense is used in \"the children set the table\", and why?",
+      "options": [
+        { "id": "a", "text": "Present simple, because it describes a regular Friday habit." },
+        { "id": "b", "text": "Past simple, because it happened yesterday." },
+        { "id": "c", "text": "Present continuous, because it is happening right now." },
+        { "id": "d", "text": "Future, because it will happen next week." }
+      ],
+      "correctOption": "a",
+      "explanation": "The phrase \"Every Friday evening\" marks a repeated routine, so the present simple is used. (b) there is no past time marker; (c) \"set\" here is simple, not \"-ing\"; (d) it is not a future plan but a habit.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read the text:\n\n\"Every Friday evening, the Karoui family gathers in the kitchen. While the parents prepare couscous, the children set the table and tell jokes. Grandfather, who lives next door, always arrives first. For them, this weekly meal is more important than any present, because it keeps the family close.\"\n\nLanguage: in \"Grandfather, who lives next door\", what does the relative word \"who\" refer to?",
+      "options": [
+        { "id": "a", "text": "the door" },
+        { "id": "b", "text": "the children" },
+        { "id": "c", "text": "Grandfather" },
+        { "id": "d", "text": "the kitchen" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Who\" is used for people and refers to the noun right before it: \"Grandfather\". (a) and (d) are places (they would need \"where\"/\"which\"); (b) the children are not the noun the clause describes.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read the text:\n\n\"Every Friday evening, the Karoui family gathers in the kitchen. While the parents prepare couscous, the children set the table and tell jokes. Grandfather, who lives next door, always arrives first. For them, this weekly meal is more important than any present, because it keeps the family close.\"\n\nWriting: you want to add a sentence about another family activity. Which one best continues the paragraph?",
+      "options": [
+        { "id": "a", "text": "The price of vegetables has risen sharply this month." },
+        { "id": "b", "text": "After dinner, they often play cards together and laugh until late." },
+        { "id": "c", "text": "My favourite football team won the match on Saturday." },
+        { "id": "d", "text": "The new mobile phone has a very good camera." }
+      ],
+      "correctOption": "b",
+      "explanation": "A coherent continuation must stay on the topic of family togetherness; playing cards after dinner fits perfectly. (a) prices, (c) football and (d) a phone all drift to unrelated subjects and break the paragraph's unity.",
+      "difficulty": 3
+    }
+  ]
+}
