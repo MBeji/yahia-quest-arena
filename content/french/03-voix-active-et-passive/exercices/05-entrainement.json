@@ -1,0 +1,85 @@
+{
+  "title": "🛡️ Entraînement examen : voix active et voix passive",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Mets à la voix passive : « Les élèves respectent leur professeur. »",
+      "options": [
+        { "id": "a", "text": "Le professeur respecte ses élèves." },
+        { "id": "b", "text": "Le professeur est respecté par les élèves." },
+        { "id": "c", "text": "Le professeur a été respecté par les élèves." },
+        { "id": "d", "text": "Les élèves sont respectés par le professeur." }
+      ],
+      "correctOption": "b",
+      "explanation": "Le COD « leur professeur » devient sujet et le présent est conservé : « est respecté par les élèves ». L'option c change le temps (passé composé), a inverse le sens, d inverse les rôles.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Mets à la voix active : « Ce roman a été écrit par un jeune auteur. »",
+      "options": [
+        { "id": "a", "text": "Un jeune auteur écrit ce roman." },
+        { "id": "b", "text": "Un jeune auteur a écrit ce roman." },
+        { "id": "c", "text": "Ce roman écrit un jeune auteur." },
+        { "id": "d", "text": "Un jeune auteur écrivait ce roman." }
+      ],
+      "correctOption": "b",
+      "explanation": "Le complément d'agent « un jeune auteur » devient sujet et on conserve le temps de la voix passive : « a été écrit » (passé composé) donne « a écrit ». L'option a est au présent, d à l'imparfait, c inverse les rôles.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans « La porte a été ouverte par le vent. », quel est le complément d'agent ?",
+      "options": [
+        { "id": "a", "text": "La porte" },
+        { "id": "b", "text": "a été ouverte" },
+        { "id": "c", "text": "le vent" },
+        { "id": "d", "text": "par" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le complément d'agent désigne celui qui fait l'action ; introduit par « par », c'est ici « le vent ». « La porte » est le sujet (a), « a été ouverte » le verbe passif (b), « par » la simple préposition (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase est correctement à la voix passive ?",
+      "options": [
+        { "id": "a", "text": "Le voleur a arrêté par la police." },
+        { "id": "b", "text": "Le voleur a été arrêté par la police." },
+        { "id": "c", "text": "Le voleur est arrêté la police." },
+        { "id": "d", "text": "La police a été arrêté le voleur." }
+      ],
+      "correctOption": "b",
+      "explanation": "La voix passive se forme avec l'auxiliaire « être » conjugué + participe passé accordé : « a été arrêté par la police ». L'option a oublie « été », c oublie « par », d mélange sujet et complément.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Mets à la voix passive en respectant l'accord : « La directrice félicite les lauréates. »",
+      "options": [
+        { "id": "a", "text": "Les lauréates sont félicité par la directrice." },
+        { "id": "b", "text": "Les lauréates sont félicitées par la directrice." },
+        { "id": "c", "text": "Les lauréates ont félicité la directrice." },
+        { "id": "d", "text": "La directrice est félicitée par les lauréates." }
+      ],
+      "correctOption": "b",
+      "explanation": "Le participe passé s'accorde avec le sujet « les lauréates » (féminin pluriel) : « félicitées ». L'option a oublie l'accord, c et d inversent les rôles.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Pourquoi emploie-t-on souvent la voix passive dans la phrase « Le coupable a été condamné. » ?",
+      "options": [
+        { "id": "a", "text": "Pour poser une question." },
+        {
+          "id": "b",
+          "text": "Pour mettre en valeur l'objet de l'action quand l'agent est inconnu ou peu important."
+        },
+        { "id": "c", "text": "Pour donner un ordre." },
+        { "id": "d", "text": "Parce que la voix passive est interdite à l'écrit." }
+      ],
+      "correctOption": "b",
+      "explanation": "La voix passive permet de mettre l'accent sur celui qui subit l'action (« le coupable ») et d'effacer l'agent quand il est inconnu ou secondaire. Elle ne sert ni à interroger (a), ni à ordonner (c), et elle est tout à fait correcte à l'écrit (d est faux).",
+      "difficulty": 3
+    }
+  ]
+}
