@@ -9,10 +9,22 @@
     {
       "prompt": "Complete: \"The man ___ lives next door is a doctor.\"",
       "options": [
-        { "id": "a", "text": "which" },
-        { "id": "b", "text": "who" },
-        { "id": "c", "text": "whose" },
-        { "id": "d", "text": "where" }
+        {
+          "id": "a",
+          "text": "which"
+        },
+        {
+          "id": "b",
+          "text": "who"
+        },
+        {
+          "id": "c",
+          "text": "whose"
+        },
+        {
+          "id": "d",
+          "text": "where"
+        }
       ],
       "correctOption": "b",
       "explanation": "\"who\" is the relative pronoun for people acting as the subject: the man who lives next door. \"which\" is for things; \"whose\" shows possession; \"where\" refers to places.",
@@ -21,10 +33,22 @@
     {
       "prompt": "Complete: \"That's the girl ___ bag was stolen.\"",
       "options": [
-        { "id": "a", "text": "who" },
-        { "id": "b", "text": "which" },
-        { "id": "c", "text": "whose" },
-        { "id": "d", "text": "that" }
+        {
+          "id": "a",
+          "text": "who"
+        },
+        {
+          "id": "b",
+          "text": "which"
+        },
+        {
+          "id": "c",
+          "text": "whose"
+        },
+        {
+          "id": "d",
+          "text": "that"
+        }
       ],
       "correctOption": "c",
       "explanation": "\"whose\" shows possession (the girl's bag): the girl whose bag was stolen. \"who\"/\"that\" replace the person but cannot show possession; \"which\" is for things.",
@@ -33,10 +57,22 @@
     {
       "prompt": "Complete: \"This is the restaurant ___ we had dinner last night.\"",
       "options": [
-        { "id": "a", "text": "which" },
-        { "id": "b", "text": "who" },
-        { "id": "c", "text": "where" },
-        { "id": "d", "text": "whose" }
+        {
+          "id": "a",
+          "text": "which"
+        },
+        {
+          "id": "b",
+          "text": "who"
+        },
+        {
+          "id": "c",
+          "text": "where"
+        },
+        {
+          "id": "d",
+          "text": "whose"
+        }
       ],
       "correctOption": "c",
       "explanation": "\"where\" refers to a place and means \"in which\": the restaurant where we had dinner. \"which\" would need a preposition (in which); \"who\" is for people; \"whose\" shows possession.",
@@ -45,10 +81,22 @@
     {
       "prompt": "Complete: \"This book is ___ than the last one I read.\"",
       "options": [
-        { "id": "a", "text": "more interesting" },
-        { "id": "b", "text": "interestinger" },
-        { "id": "c", "text": "most interesting" },
-        { "id": "d", "text": "more interestinger" }
+        {
+          "id": "a",
+          "text": "more interesting"
+        },
+        {
+          "id": "b",
+          "text": "interestinger"
+        },
+        {
+          "id": "c",
+          "text": "most interesting"
+        },
+        {
+          "id": "d",
+          "text": "more interestinger"
+        }
       ],
       "correctOption": "a",
       "explanation": "Long adjectives form the comparative with \"more\": more interesting. \"interestinger\" wrongly adds -er to a long adjective; \"most interesting\" is the superlative; \"more interestinger\" double-marks the comparative.",
@@ -57,25 +105,49 @@
     {
       "prompt": "Complete: \"Everest is ___ mountain in the world.\"",
       "options": [
-        { "id": "a", "text": "the highest" },
-        { "id": "b", "text": "the higher" },
-        { "id": "c", "text": "highest" },
-        { "id": "d", "text": "the most high" }
+        {
+          "id": "a",
+          "text": "the highest"
+        },
+        {
+          "id": "b",
+          "text": "the higher"
+        },
+        {
+          "id": "c",
+          "text": "highest"
+        },
+        {
+          "id": "d",
+          "text": "the most high"
+        }
       ],
       "correctOption": "a",
       "explanation": "Comparing one thing with all others needs the superlative with \"the\": the highest mountain. \"the higher\" is a comparative (two things); \"highest\" needs \"the\"; \"the most high\" wrongly uses \"most\" with a short adjective that takes -est.",
       "difficulty": 2
     },
     {
-      "prompt": "Complete: \"My new phone is not ___ my old one; they cost the same.\"",
+      "prompt": "Complete: \"My new phone is just ___ my old one; they cost the same.\"",
       "options": [
-        { "id": "a", "text": "as expensive as" },
-        { "id": "b", "text": "more expensive than" },
-        { "id": "c", "text": "as expensive than" },
-        { "id": "d", "text": "so expensive than" }
+        {
+          "id": "a",
+          "text": "as expensive as"
+        },
+        {
+          "id": "b",
+          "text": "more expensive than"
+        },
+        {
+          "id": "c",
+          "text": "as expensive than"
+        },
+        {
+          "id": "d",
+          "text": "so expensive than"
+        }
       ],
       "correctOption": "a",
-      "explanation": "To say two things are equal (or, with \"not\", to compare them) we use \"as + adjective + as\": not as expensive as. \"more expensive than\" states a difference, which contradicts \"they cost the same\"; (c) and (d) mix \"as/so\" with \"than\", which is incorrect.",
+      "explanation": "To say two things are equal we use \"as + adjective + as\": just as expensive as. \"more expensive than\" states a difference, which contradicts \"they cost the same\"; (c) and (d) wrongly mix \"as/so\" with \"than\".",
       "difficulty": 3
     }
   ]

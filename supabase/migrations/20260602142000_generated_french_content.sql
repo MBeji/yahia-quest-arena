@@ -3428,7 +3428,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('1fc3ea14-1df5-5242-b3f3-b309c23e2746', 'c6f2e772-c6cf-51e0-aa37-472c24c0db05', 'Complète : « Il pensait qu''elle … déjà partie. »', '[{"id":"a","text":"est"},{"id":"b","text":"était"},{"id":"c","text":"sera"},{"id":"d","text":"soit"}]'::jsonb, 'b', 'Le verbe introducteur « pensait » est au passé : la subordonnée se met à l''imparfait pour exprimer la simultanéité dans le passé : « qu''elle était déjà partie ». « est » (présent, a) et « sera » (futur, c) ne respectent pas la concordance ; « soit » (d) est un subjonctif, non requis après « penser » à la forme affirmative.', 6)
+  ('1fc3ea14-1df5-5242-b3f3-b309c23e2746', 'c6f2e772-c6cf-51e0-aa37-472c24c0db05', 'Complète : « Il pensait qu''elle … déjà partie. »', '[{"id":"a","text":"est"},{"id":"b","text":"était"},{"id":"c","text":"sera"},{"id":"d","text":"soit"}]'::jsonb, 'b', 'Le verbe introducteur « pensait » étant au passé, on emploie le plus-que-parfait « était déjà partie » (auxiliaire « être » à l''imparfait + participe « partie ») pour marquer l''antériorité de son départ par rapport au moment de la pensée. « est » (présent, a) et « sera » (futur, c) ne respectent pas la concordance ; « soit » (d) est un subjonctif, non requis après « penser » à la forme affirmative.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,

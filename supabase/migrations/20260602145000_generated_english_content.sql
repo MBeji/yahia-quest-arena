@@ -2862,7 +2862,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('9f2d069b-fa0b-5f5c-9903-f395c6ade85b', 'a0cec752-fdcc-52c6-8f78-9fa392d7b638', 'Complete: "If she ___ harder last year, she would have better marks now."', '[{"id":"a","text":"works"},{"id":"b","text":"will work"},{"id":"c","text":"worked"},{"id":"d","text":"would work"}]'::jsonb, 'c', 'This is a second conditional describing an unreal/imagined situation, so the if-clause takes the past simple: If she worked harder... she would have better marks. "works"/"will work" are for real conditions; "would work" cannot go in the if-clause — "would" belongs in the result clause.', 6)
+  ('9f2d069b-fa0b-5f5c-9903-f395c6ade85b', 'a0cec752-fdcc-52c6-8f78-9fa392d7b638', 'Complete: "If she ___ harder, she would have better marks."', '[{"id":"a","text":"works"},{"id":"b","text":"will work"},{"id":"c","text":"worked"},{"id":"d","text":"would work"}]'::jsonb, 'c', 'This is a second conditional describing an unreal/imagined situation, so the if-clause takes the past simple: If she worked harder... she would have better marks. "works"/"will work" are for real conditions; "would work" cannot go in the if-clause — "would" belongs in the result clause.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -3918,7 +3918,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('99bb5c63-3dc9-5203-88e2-3d6ecca98e13', '1db52ab9-d385-5a85-9cd2-6d84b31ac29c', 'Complete: "My new phone is not ___ my old one; they cost the same."', '[{"id":"a","text":"as expensive as"},{"id":"b","text":"more expensive than"},{"id":"c","text":"as expensive than"},{"id":"d","text":"so expensive than"}]'::jsonb, 'a', 'To say two things are equal (or, with "not", to compare them) we use "as + adjective + as": not as expensive as. "more expensive than" states a difference, which contradicts "they cost the same"; (c) and (d) mix "as/so" with "than", which is incorrect.', 6)
+  ('99bb5c63-3dc9-5203-88e2-3d6ecca98e13', '1db52ab9-d385-5a85-9cd2-6d84b31ac29c', 'Complete: "My new phone is just ___ my old one; they cost the same."', '[{"id":"a","text":"as expensive as"},{"id":"b","text":"more expensive than"},{"id":"c","text":"as expensive than"},{"id":"d","text":"so expensive than"}]'::jsonb, 'a', 'To say two things are equal we use "as + adjective + as": just as expensive as. "more expensive than" states a difference, which contradicts "they cost the same"; (c) and (d) wrongly mix "as/so" with "than".', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
