@@ -1,0 +1,82 @@
+{
+  "title": "🛡️ Entraînement examen : les propositions subordonnées",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Dans « Je connais l'élève qui a gagné le concours. », la proposition subordonnée est :",
+      "options": [
+        { "id": "a", "text": "Une subordonnée relative" },
+        { "id": "b", "text": "Une subordonnée complétive" },
+        { "id": "c", "text": "Une subordonnée circonstancielle de temps" },
+        { "id": "d", "text": "Une proposition indépendante" }
+      ],
+      "correctOption": "a",
+      "explanation": "« qui a gagné le concours » est introduite par le pronom relatif « qui » et complète le nom « élève » (son antécédent) : c'est une subordonnée relative. Une complétive (b) est introduite par « que » et complète un verbe ; une circonstancielle de temps (c) répond à « quand ? » ; ce n'est pas une indépendante (d) car elle dépend de la principale.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase contient une subordonnée complétive (conjonctive par « que ») ?",
+      "options": [
+        { "id": "a", "text": "Le livre que tu lis est passionnant." },
+        { "id": "b", "text": "Je pense que tu as raison." },
+        { "id": "c", "text": "Il viendra quand il pourra." },
+        { "id": "d", "text": "C'est la maison où je suis né." }
+      ],
+      "correctOption": "b",
+      "explanation": "« que tu as raison » complète le verbe « pense » et joue le rôle de COD : c'est une complétive. Dans a, « que » est pronom relatif (antécédent « livre ») ; dans c, « quand » introduit une circonstancielle de temps ; dans d, « où » est un pronom relatif (subordonnée relative).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans « Bien qu'il soit fatigué, il continue de courir. », quelle est la nature de la subordonnée ?",
+      "options": [
+        { "id": "a", "text": "Subordonnée circonstancielle de cause" },
+        { "id": "b", "text": "Subordonnée circonstancielle de but" },
+        { "id": "c", "text": "Subordonnée circonstancielle de concession (opposition)" },
+        { "id": "d", "text": "Subordonnée relative" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Bien que » introduit une concession : on exprime un obstacle qui n'empêche pourtant pas l'action (il court malgré la fatigue). « Parce que » marquerait la cause (a), « pour que » le but (b), un pronom relatif une relative (d).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quel subordonnant introduit une subordonnée circonstancielle de but ?",
+      "options": [
+        { "id": "a", "text": "parce que" },
+        { "id": "b", "text": "afin que" },
+        { "id": "c", "text": "lorsque" },
+        { "id": "d", "text": "si bien que" }
+      ],
+      "correctOption": "b",
+      "explanation": "« afin que » (suivi du subjonctif) exprime le but, l'objectif visé. « parce que » introduit la cause (a), « lorsque » le temps (c), « si bien que » la conséquence (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans « La ville où je vis est ancienne. », quelle est la fonction du pronom relatif « où » ?",
+      "options": [
+        { "id": "a", "text": "Complément circonstanciel de lieu (dans la subordonnée)" },
+        { "id": "b", "text": "Sujet de « vis »" },
+        { "id": "c", "text": "COD de « vis »" },
+        { "id": "d", "text": "Attribut du sujet" }
+      ],
+      "correctOption": "a",
+      "explanation": "« où » remplace « dans la ville » et indique le lieu où se déroule l'action « je vis » : il est complément circonstanciel de lieu. Le sujet de « vis » est « je » (b) ; « vivre » ici est intransitif, donc pas de COD (c) ; « où » n'est pas un attribut (d).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle phrase ne contient AUCUNE proposition subordonnée ?",
+      "options": [
+        { "id": "a", "text": "Il pleut, mais nous sortons quand même." },
+        { "id": "b", "text": "J'espère que tu réussiras." },
+        { "id": "c", "text": "Je lis le roman que tu m'as offert." },
+        { "id": "d", "text": "Comme il pleut, nous restons." }
+      ],
+      "correctOption": "a",
+      "explanation": "Dans a, « mais » coordonne deux propositions indépendantes : il n'y a pas de subordination. En b, « que tu réussiras » est une complétive ; en c, « que tu m'as offert » est une relative ; en d, « Comme il pleut » est une circonstancielle de cause.",
+      "difficulty": 3
+    }
+  ]
+}

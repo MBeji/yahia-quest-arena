@@ -1,0 +1,82 @@
+{
+  "title": "تمرين تدريبي: الحساب الحرفي والمتطابقات (مراجعة شاملة)",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "انشر وبسّط العبارة: (x − 4)(x + 4) ؟",
+      "options": [
+        { "id": "a", "text": "x² − 16" },
+        { "id": "b", "text": "x² + 16" },
+        { "id": "c", "text": "x² − 8x − 16" },
+        { "id": "d", "text": "x² − 8" }
+      ],
+      "correctOption": "a",
+      "explanation": "هذا فرق مربّعين: (a − b)(a + b) = a² − b² مع a = x وb = 4. إذن (x − 4)(x + 4) = x² − 4² = x² − 16.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "انشر العبارة: (2x − 3)² ؟",
+      "options": [
+        { "id": "a", "text": "4x² − 12x + 9" },
+        { "id": "b", "text": "4x² + 9" },
+        { "id": "c", "text": "2x² − 12x + 9" },
+        { "id": "d", "text": "4x² − 6x + 9" }
+      ],
+      "correctOption": "a",
+      "explanation": "مربّع الفرق: (a − b)² = a² − 2ab + b² مع a = 2x وb = 3. إذن (2x)² − 2(2x)(3) + 3² = 4x² − 12x + 9. الخيار (b) نسي الحدّ الأوسط −12x.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "عمّل العبارة: 3x² − 12 ؟",
+      "options": [
+        { "id": "a", "text": "3(x − 2)(x + 2)" },
+        { "id": "b", "text": "3(x² − 12)" },
+        { "id": "c", "text": "(3x − 12)(x + 1)" },
+        { "id": "d", "text": "3(x − 4)(x + 4)" }
+      ],
+      "correctOption": "a",
+      "explanation": "نُخرج العامل المشترك 3 أوّلًا: 3x² − 12 = 3(x² − 4). ثمّ x² − 4 = x² − 2² فرق مربّعين = (x − 2)(x + 2). النتيجة: 3(x − 2)(x + 2).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "احسب 99² باستخدام المتطابقات الشهيرة:",
+      "options": [
+        { "id": "a", "text": "9801" },
+        { "id": "b", "text": "9999" },
+        { "id": "c", "text": "9601" },
+        { "id": "d", "text": "9802" }
+      ],
+      "correctOption": "a",
+      "explanation": "99² = (100 − 1)² = 100² − 2(100)(1) + 1² = 10000 − 200 + 1 = 9801.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "عمّل العبارة: x² + 6x + 9 − y² ؟",
+      "options": [
+        { "id": "a", "text": "(x + 3 − y)(x + 3 + y)" },
+        { "id": "b", "text": "(x + 3)² − y" },
+        { "id": "c", "text": "(x + 3 − y)²" },
+        { "id": "d", "text": "(x − 3 − y)(x − 3 + y)" }
+      ],
+      "correctOption": "a",
+      "explanation": "نلاحظ x² + 6x + 9 = (x + 3)². إذن العبارة = (x + 3)² − y² وهي فرق مربّعين: = (x + 3 − y)(x + 3 + y).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ما قيمة العبارة 2(a + b)² − 2(a − b)² ؟",
+      "options": [
+        { "id": "a", "text": "8ab" },
+        { "id": "b", "text": "4ab" },
+        { "id": "c", "text": "0" },
+        { "id": "d", "text": "4a² + 4b²" }
+      ],
+      "correctOption": "a",
+      "explanation": "(a + b)² = a² + 2ab + b² و(a − b)² = a² − 2ab + b². الفرق (a+b)² − (a−b)² = 4ab. نضرب في 2: 2 × 4ab = 8ab.",
+      "difficulty": 3
+    }
+  ]
+}

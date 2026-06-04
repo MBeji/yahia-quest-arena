@@ -1,0 +1,91 @@
+{
+  "title": "تمرين تدريبي: الأشعّة والانسحاب (مراجعة شاملة)",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "بسّط بتطبيق علاقة شال: $\\overrightarrow{AB} + \\overrightarrow{BC}$",
+      "options": [
+        { "id": "a", "text": "$\\overrightarrow{AC}$" },
+        { "id": "b", "text": "$\\overrightarrow{CA}$" },
+        { "id": "c", "text": "$\\overrightarrow{BA}$" },
+        { "id": "d", "text": "$\\overrightarrow{0}$" }
+      ],
+      "correctOption": "a",
+      "explanation": "علاقة شال: $\\overrightarrow{AB} + \\overrightarrow{BC} = \\overrightarrow{AC}$ (النقطة الوسطى B تختفي).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "بسّط: $\\overrightarrow{AB} + \\overrightarrow{BC} + \\overrightarrow{CA}$",
+      "options": [
+        { "id": "a", "text": "$\\overrightarrow{0}$" },
+        { "id": "b", "text": "$\\overrightarrow{AC}$" },
+        { "id": "c", "text": "$\\overrightarrow{AA}$ يساوي $\\overrightarrow{AB}$" },
+        { "id": "d", "text": "$\\overrightarrow{CA}$" }
+      ],
+      "correctOption": "a",
+      "explanation": "بشال تدريجيًا: $\\overrightarrow{AB} + \\overrightarrow{BC} = \\overrightarrow{AC}$، ثمّ $\\overrightarrow{AC} + \\overrightarrow{CA} = \\overrightarrow{AA} = \\overrightarrow{0}$. مجموع أشعّة دورة مغلقة دائمًا الشعاع المعدوم.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ABCD متوازي أضلاع. أيّ مساواة صحيحة دائمًا؟",
+      "options": [
+        { "id": "a", "text": "$\\overrightarrow{AB} = \\overrightarrow{DC}$" },
+        { "id": "b", "text": "$\\overrightarrow{AB} = \\overrightarrow{CD}$" },
+        { "id": "c", "text": "$\\overrightarrow{AB} = \\overrightarrow{BC}$" },
+        { "id": "d", "text": "$\\overrightarrow{AC} = \\overrightarrow{BD}$" }
+      ],
+      "correctOption": "a",
+      "explanation": "في متوازي الأضلاع ABCD يكون الضلعان [AB] و[DC] متوازيَين ومتساويَين وبالاتّجاه نفسه، إذن $\\overrightarrow{AB} = \\overrightarrow{DC}$. أمّا $\\overrightarrow{CD}$ فهو الشعاع المعاكس.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "في الانسحاب الذي شعاعه $\\overrightarrow{u}$، صورة النقطة A هي A'. ما العلاقة بين النقاط؟",
+      "options": [
+        { "id": "a", "text": "$\\overrightarrow{AA'} = \\overrightarrow{u}$" },
+        { "id": "b", "text": "$\\overrightarrow{A'A} = \\overrightarrow{u}$" },
+        { "id": "c", "text": "$\\overrightarrow{AA'} = \\overrightarrow{0}$" },
+        { "id": "d", "text": "$\\overrightarrow{AA'} = 2\\overrightarrow{u}$" }
+      ],
+      "correctOption": "a",
+      "explanation": "تعريف الانسحاب ذي الشعاع $\\overrightarrow{u}$: كلّ نقطة M وصورتها M' تحقّقان $\\overrightarrow{MM'} = \\overrightarrow{u}$. إذن للنقطة A: $\\overrightarrow{AA'} = \\overrightarrow{u}$.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "I منتصف القطعة [AB]. أيّ مساواة صحيحة؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "$\\overrightarrow{IA} + \\overrightarrow{IB} = \\overrightarrow{0}$"
+        },
+        { "id": "b", "text": "$\\overrightarrow{IA} = \\overrightarrow{IB}$" },
+        { "id": "c", "text": "$\\overrightarrow{AI} = \\overrightarrow{BI}$" },
+        {
+          "id": "d",
+          "text": "$\\overrightarrow{IA} + \\overrightarrow{IB} = \\overrightarrow{AB}$"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "بما أنّ I منتصف [AB] فإنّ $\\overrightarrow{IA}$ و$\\overrightarrow{IB}$ متساويان في الطول ومتعاكسان في الاتّجاه، أي $\\overrightarrow{IB} = -\\overrightarrow{IA}$، ومجموعهما $\\overrightarrow{0}$.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "بسّط: $\\overrightarrow{AB} - \\overrightarrow{CB}$",
+      "options": [
+        { "id": "a", "text": "$\\overrightarrow{AC}$" },
+        { "id": "b", "text": "$\\overrightarrow{CA}$" },
+        {
+          "id": "c",
+          "text": "$\\overrightarrow{AB} + \\overrightarrow{BC}$ يساوي $\\overrightarrow{0}$"
+        },
+        { "id": "d", "text": "$\\overrightarrow{BA}$" }
+      ],
+      "correctOption": "a",
+      "explanation": "نحوّل الطرح إلى جمع بالشعاع المعاكس: $\\overrightarrow{AB} - \\overrightarrow{CB} = \\overrightarrow{AB} + \\overrightarrow{BC}$ (لأنّ $-\\overrightarrow{CB} = \\overrightarrow{BC}$). بشال: $= \\overrightarrow{AC}$.",
+      "difficulty": 3
+    }
+  ]
+}
