@@ -100,10 +100,11 @@ export function dungeonRunsPerDay(level: number): number {
 export const STREAK_RECOVERY_COST = 15;
 
 // ---------------------------------------------------------------------------
-// Premium "Défi élite" challenge exercises — high-difficulty, high-XP missions
-// (mode='challenge') reserved for paying subscribers who have also reached a
-// minimum level. Enforced server-side in quest.startExerciseSession.
+// Premium difficulty gate — exercises at or above this difficulty are reserved
+// for paying subscribers (subscription only, no level requirement). Difficulty
+// 1-2 stay free for everyone; 3+ are premium, across every subject/chapter.
+// Enforced server-side in quest.startExerciseSession.
 // ---------------------------------------------------------------------------
 
-/** Minimum player level required to unlock premium challenge exercises. */
-export const CHALLENGE_MIN_LEVEL = 5;
+/** Lowest exercise difficulty that requires an active subscription (3 and 4 are premium). */
+export const PREMIUM_MIN_DIFFICULTY = 3;

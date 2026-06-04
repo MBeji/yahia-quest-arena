@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { isRateLimited } from "@/shared/lib/rate-limit";
-import { CHALLENGE_MIN_LEVEL, QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
+import { PREMIUM_MIN_DIFFICULTY, QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { logger } from "@/shared/lib/logger";
 import type { UnlockedBadge } from "@/shared/types/gamification";
@@ -13,13 +13,13 @@ export const QUIZ_LOCKED_MESSAGE =
   "Réussis d'abord le quiz de compréhension du chapitre pour débloquer cet exercice.";
 
 /**
- * Messages thrown when a premium "Défi élite" (mode='challenge') exercise is
- * locked. The "Mission premium" prefix is matched by the quest UI to show the
- * subscription paywall; keep the wording stable.
+ * Thrown when an exercise at or above PREMIUM_MIN_DIFFICULTY (3+) is started
+ * without an active subscription. Difficulty 1-2 are free for everyone; 3+ are
+ * premium, across every subject and chapter. The "Mission premium" prefix is
+ * matched by the quest UI to show the subscription paywall; keep it stable.
  */
-export const CHALLENGE_LOCKED_SUBSCRIPTION_MESSAGE =
-  "Mission premium : un abonnement actif est requis pour lancer ce Défi élite.";
-export const CHALLENGE_LOCKED_LEVEL_MESSAGE = `Mission premium : atteins le niveau ${CHALLENGE_MIN_LEVEL} pour débloquer ce Défi élite.`;
+export const DIFFICULTY_PREMIUM_LOCKED_MESSAGE =
+  "Mission premium : un abonnement actif est requis pour cet exercice avancé (difficulté 3+).";
 
 /**
  * Thrown when an exercise of a premium subject (a whole premium module, e.g.
@@ -259,7 +259,7 @@ export const startExerciseSession = createServerFn({ method: "POST" })
     // started until the chapter's quiz is passed. Quizzes themselves are open.
     const { data: ex, error: exError } = await supabase
       .from("exercises")
-      .select("id, mode, chapter_id, subjects(is_premium)")
+      .select("id, mode, difficulty, chapter_id, subjects(is_premium)")
       .eq("id", data.exerciseId)
       .single();
     if (exError) {
@@ -284,23 +284,13 @@ export const startExerciseSession = createServerFn({ method: "POST" })
       }
     }
 
-    // Premium gate: "Défi élite" missions require an active subscription AND a
-    // minimum player level. Enforced here (server-authoritative), mirroring the
-    // comprehension-quiz gate below.
-    if (ex.mode === "challenge") {
-      const [profileRes, subRes] = await Promise.all([
-        supabase.from("profiles").select("level").eq("id", userId).maybeSingle(),
-        supabase.rpc("has_active_subscription", { p_user: userId }),
-      ]);
-      if (subRes.data !== true) {
-        failWithClientError(
-          "quest.startExerciseSession",
-          subRes.error,
-          CHALLENGE_LOCKED_SUBSCRIPTION_MESSAGE,
-        );
-      }
-      if ((profileRes.data?.level ?? 0) < CHALLENGE_MIN_LEVEL) {
-        failWithClientError("quest.startExerciseSession", null, CHALLENGE_LOCKED_LEVEL_MESSAGE);
+    // Premium difficulty gate: exercises at difficulty >= PREMIUM_MIN_DIFFICULTY
+    // (3+) require an active subscription — subscription only, no level. Applies
+    // to every subject/chapter. Difficulty 1-2 stay free. Server-authoritative.
+    if ((ex.difficulty ?? 0) >= PREMIUM_MIN_DIFFICULTY) {
+      const { data: hasSub } = await supabase.rpc("has_active_subscription", { p_user: userId });
+      if (hasSub !== true) {
+        failWithClientError("quest.startExerciseSession", null, DIFFICULTY_PREMIUM_LOCKED_MESSAGE);
       }
     }
 
