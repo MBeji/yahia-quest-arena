@@ -971,6 +971,10 @@ export type Database = {
         Args: { p_key: string; p_max_requests: number; p_window_ms: number };
         Returns: boolean;
       };
+      ensure_daily_weekly_goals: {
+        Args: { p_user: string };
+        Returns: undefined;
+      };
       finalize_dungeon_run: {
         Args: { p_run_id: string; p_duration_seconds: number };
         Returns: Json;

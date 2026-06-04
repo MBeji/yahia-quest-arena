@@ -407,6 +407,11 @@ export const submitAttempt = createServerFn({ method: "POST" })
             explanation: question?.explanation ?? null,
           };
         });
+    // Ensure today's daily objective & this week's weekly quest rows exist
+    // before the atomic RPC increments them (they are created on demand, so a
+    // first-of-the-day submission isn't lost). Best-effort: never block a submit.
+    await supabase.rpc("ensure_daily_weekly_goals", { p_user: userId });
+
     const { data: submitData, error: submitErr } = await supabase.rpc("submit_exercise_attempt", {
       p_session_id: data.sessionId,
       p_exercise_id: data.exerciseId,
