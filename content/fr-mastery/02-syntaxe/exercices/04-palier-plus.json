@@ -1,0 +1,82 @@
+{
+  "title": "Palier + — Syntaxe : subordination, relief et constructions complexes",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 25,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Dans la phrase « Quiconque a lu ce roman en mesure la portée », quelle est la fonction de « Quiconque a lu ce roman » ?",
+      "options": [
+        { "id": "a", "text": "Complément d'objet direct du verbe « mesure »" },
+        { "id": "b", "text": "Sujet du verbe « mesure »" },
+        { "id": "c", "text": "Complément circonstanciel de condition" },
+        { "id": "d", "text": "Apposition au pronom « en »" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Quiconque » est un pronom relatif indéfini sans antécédent qui forme, avec la subordonnée qu'il introduit, un groupe nominalisé occupant la fonction de sujet : « Qui est-ce qui en mesure la portée ? » → « Quiconque a lu ce roman ». L'option (a) confond avec le COD, qui est ici « la portée » (repris par « en » pour le complément du nom). L'option (c) plaque une valeur de condition que « quiconque » n'a pas : il généralise un sujet, il ne pose pas d'hypothèse comme « si ». L'option (d) est fautive : « en » est complément du nom « portée », non un terme appelant une apposition.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle phrase met correctement en relief le complément « à ses parents » au moyen d'un présentatif ?",
+      "options": [
+        { "id": "a", "text": "À ses parents, c'est à eux qu'il doit tout." },
+        { "id": "b", "text": "C'est à ses parents qu'il doit tout." },
+        { "id": "c", "text": "C'est ses parents dont il doit tout." },
+        { "id": "d", "text": "Ce sont à ses parents qu'il doit tout." }
+      ],
+      "correctOption": "b",
+      "explanation": "L'extraction par présentatif « c'est… que » conserve la préposition régie par le verbe (« devoir qqch. à qqn ») : « C'est à ses parents qu'il doit tout. » L'option (a) cumule une dislocation (« À ses parents ») et une extraction redondante (« c'est à eux que »), ce qui est pléonastique et fautif. L'option (c) emploie « dont » (mis pour « de qui »), incompatible avec la construction en « à ». L'option (d) accorde à tort le présentatif au pluriel (« Ce sont ») devant un groupe prépositionnel : on dit « C'est à… ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Laquelle de ces phrases comporte une concordance des temps fautive ?",
+      "options": [
+        { "id": "a", "text": "Je craignais qu'il ne fût trop tard." },
+        { "id": "b", "text": "Il voulait que nous partions sur-le-champ." },
+        { "id": "c", "text": "Elle souhaitait que tu réussisses ton examen." },
+        { "id": "d", "text": "Nous pensions qu'il vienne le lendemain." }
+      ],
+      "correctOption": "d",
+      "explanation": "« Penser que », à la forme affirmative, exprime une opinion posée comme réelle et appelle l'indicatif : il faut « qu'il viendrait le lendemain » (futur du passé), non le subjonctif « qu'il vienne ». L'option (d) est donc fautive. Les options (a), (b) et (c) reposent sur des verbes de crainte ou de volonté (« craindre », « vouloir », « souhaiter ») qui régissent légitimement le subjonctif ; les temps y sont cohérents avec le contexte passé (subjonctif imparfait en a, présent admis dans l'usage en b et c).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choisissez la phrase qui corrige la zeugme syntaxique de « *Il sortit son mouchoir et ses excuses ».",
+      "options": [
+        { "id": "a", "text": "Il sortit son mouchoir et présenta ses excuses." },
+        { "id": "b", "text": "Il sortit son mouchoir et ses excuses ensemble." },
+        { "id": "c", "text": "Il sortit son mouchoir, ses excuses aussi." },
+        { "id": "d", "text": "Il sortit et son mouchoir et ses excuses." }
+      ],
+      "correctOption": "a",
+      "explanation": "La phrase de départ coordonne sous un seul verbe deux compléments qui n'en admettent pas le même sens : on « sort » un mouchoir (sens concret) mais on ne « sort » pas des excuses (il faut « présenter / faire » des excuses). La correction consiste à doter chaque complément du verbe approprié : « Il sortit son mouchoir et présenta ses excuses. » Les options (b), (c) et (d) maintiennent l'unique verbe « sortir » pour les deux compléments et laissent donc subsister l'attelage fautif.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quel verbe complète correctement la phrase « Il ___ à ce que tout soit vérifié avant la publication » en respectant le régime du verbe ?",
+      "options": [
+        { "id": "a", "text": "exigea" },
+        { "id": "b", "text": "veilla" },
+        { "id": "c", "text": "réclama" },
+        { "id": "d", "text": "ordonna" }
+      ],
+      "correctOption": "b",
+      "explanation": "Seul « veiller » se construit avec « à ce que » + subjonctif : « veiller à ce que tout soit vérifié » est la tournure attendue, le verbe régissant la préposition « à ». Les options (a), (c) et (d) régissent une complétive directe sans préposition : on dit « exiger que », « réclamer que », « ordonner que » (et non « *exiger à ce que », « *réclamer à ce que », « *ordonner à ce que »). Le « à ce que » déjà présent dans l'énoncé impose donc « veilla ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans laquelle de ces phrases la proposition subordonnée est-elle une relative (et non une complétive conjonctive) ?",
+      "options": [
+        { "id": "a", "text": "Je sais que tu as raison." },
+        { "id": "b", "text": "L'argument que tu avances me convainc." },
+        { "id": "c", "text": "Il faut que tu reviennes." },
+        { "id": "d", "text": "Je doute que cela suffise." }
+      ],
+      "correctOption": "b",
+      "explanation": "Dans l'option (b), « que » est un pronom relatif COD reprenant l'antécédent « l'argument » : la subordonnée « que tu avances » complète un nom et peut se gloser par « lequel tu avances » → c'est une relative. Dans (a), (c) et (d), « que » est une conjonction de subordination introduisant une complétive complément du verbe (« savoir que », « il faut que », « douter que ») : il n'y a aucun antécédent nominal repris, et « que » n'y a pas de fonction grammaticale dans la subordonnée.",
+      "difficulty": 3
+    }
+  ]
+}

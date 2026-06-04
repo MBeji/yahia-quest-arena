@@ -1,0 +1,82 @@
+{
+  "title": "🔁 Practice Plus: modal verbs review",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complete: \"You ___ smoke here; it's a hospital.\"",
+      "options": [
+        { "id": "a", "text": "mustn't" },
+        { "id": "b", "text": "don't have to" },
+        { "id": "c", "text": "shouldn't to" },
+        { "id": "d", "text": "mustn't to" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"mustn't\" expresses prohibition (it is forbidden): you mustn't smoke here. \"don't have to\" means it is not necessary (no obligation), which is the opposite meaning; modals are followed by a bare infinitive, so \"shouldn't to\" and \"mustn't to\" wrongly add \"to\".",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"You look tired. You ___ go to bed early.\"",
+      "options": [
+        { "id": "a", "text": "must" },
+        { "id": "b", "text": "should" },
+        { "id": "c", "text": "can" },
+        { "id": "d", "text": "have to" }
+      ],
+      "correctOption": "b",
+      "explanation": "Friendly advice uses \"should\": you should go to bed early. \"must\" and \"have to\" express strong obligation, which is too forceful for a suggestion; \"can\" expresses ability or permission, not advice.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choose the correct sentence:",
+      "options": [
+        { "id": "a", "text": "She can to swim very well." },
+        { "id": "b", "text": "She cans swim very well." },
+        { "id": "c", "text": "She can swim very well." },
+        { "id": "d", "text": "She can swims very well." }
+      ],
+      "correctOption": "c",
+      "explanation": "A modal is followed by the bare infinitive and never changes for the third person: she can swim. \"can to\" wrongly adds \"to\"; \"cans\" wrongly adds -s to the modal; \"can swims\" wrongly adds -s to the main verb.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"It's a public school, so students ___ pay any fees.\"",
+      "options": [
+        { "id": "a", "text": "mustn't" },
+        { "id": "b", "text": "don't have to" },
+        { "id": "c", "text": "shouldn't" },
+        { "id": "d", "text": "can't" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"don't have to\" means there is no obligation: the fees are simply not required. \"mustn't\" would mean paying is forbidden, which is not the idea; \"shouldn't\" gives advice against it; \"can't\" expresses impossibility or refusal.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"The lights are off, so they ___ be asleep.\"",
+      "options": [
+        { "id": "a", "text": "can" },
+        { "id": "b", "text": "must" },
+        { "id": "c", "text": "should" },
+        { "id": "d", "text": "have to" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"must\" expresses a logical deduction from evidence: the lights are off, so they must be asleep. \"can\" here would suggest ability, not certainty; \"should\" expresses advice or expectation, weaker than a deduction; \"have to\" expresses obligation, not a conclusion.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"___ I open the window? It's very hot.\"",
+      "options": [
+        { "id": "a", "text": "May" },
+        { "id": "b", "text": "Must" },
+        { "id": "c", "text": "Should I to" },
+        { "id": "d", "text": "Am I" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"May I...?\" is the polite way to ask for permission: May I open the window? \"Must I\" asks about obligation, not permission; \"Should I to\" wrongly adds \"to\" after the modal; \"Am I\" is not a modal and leaves \"open\" without a correct form.",
+      "difficulty": 2
+    }
+  ]
+}

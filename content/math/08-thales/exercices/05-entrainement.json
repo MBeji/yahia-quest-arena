@@ -1,0 +1,82 @@
+{
+  "title": "تمرين تدريبي: نظرية طاليس (مراجعة شاملة)",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "في مثلّث ABC، (MN) ∥ (BC) مع AM = 3 cm وAB = 9 cm وBC = 12 cm. ما طول MN؟",
+      "options": [
+        { "id": "a", "text": "4 cm" },
+        { "id": "b", "text": "6 cm" },
+        { "id": "c", "text": "3 cm" },
+        { "id": "d", "text": "8 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "نسبة التشابه = AM/AB = 3/9 = 1/3. بنظرية طاليس: MN/BC = 1/3، إذن MN = 12 × (1/3) = 4 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "في مثلّث ABC، (MN) ∥ (BC) مع AM = 4 cm وMB = 6 cm وAN = 5 cm. ما طول NC؟",
+      "options": [
+        { "id": "a", "text": "7.5 cm" },
+        { "id": "b", "text": "6 cm" },
+        { "id": "c", "text": "5 cm" },
+        { "id": "d", "text": "3.33 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "بنظرية طاليس: AM/MB = AN/NC، أي 4/6 = 5/NC. بالتقاطع: 4 × NC = 6 × 5 = 30، إذن NC = 30 ÷ 4 = 7.5 cm.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "في وضعية الفراشة، يتقاطع مستقيمان في O مع (AB) ∥ (CD). إذا كان OA = 3 cm وOB = 4 cm وOC = 9 cm، فما طول OD؟",
+      "options": [
+        { "id": "a", "text": "12 cm" },
+        { "id": "b", "text": "6.75 cm" },
+        { "id": "c", "text": "10 cm" },
+        { "id": "d", "text": "16 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "في وضعية الفراشة بنظرية طاليس: OA/OC = OB/OD. إذن 3/9 = 4/OD، بالتقاطع 3 × OD = 9 × 4 = 36، فـ OD = 12 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "في مثلّث ABC، M على [AB] وN على [AC] مع AM = 2 cm، AB = 5 cm، AN = 3 cm، AC = 8 cm. هل (MN) ∥ (BC)؟",
+      "options": [
+        { "id": "a", "text": "لا، لأنّ AM/AB = 2/5 ≠ AN/AC = 3/8" },
+        { "id": "b", "text": "نعم، لأنّ AM/AB = AN/AC" },
+        { "id": "c", "text": "نعم، لأنّ AM + AN = 5" },
+        { "id": "d", "text": "لا يمكن التحديد" }
+      ],
+      "correctOption": "a",
+      "explanation": "نقارن النسبتَين: AM/AB = 2/5 = 0.4، وAN/AC = 3/8 = 0.375. بما أنّهما غير متساويتين فحسب النظرية العكسية (MN) ليست موازية لـ (BC).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "في مثلّث ABC، (MN) ∥ (BC) مع AM = 4 cm، AN = 6 cm، NC = 9 cm. ما طول AB؟",
+      "options": [
+        { "id": "a", "text": "10 cm" },
+        { "id": "b", "text": "6 cm" },
+        { "id": "c", "text": "13 cm" },
+        { "id": "d", "text": "8 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "AC = AN + NC = 6 + 9 = 15 cm. بنظرية طاليس: AM/AB = AN/AC، أي 4/AB = 6/15 = 2/5. بالتقاطع: 2 × AB = 4 × 5 = 20، إذن AB = 10 cm.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "في مثلّث PQR، (ST) ∥ (QR) مع PS = 2x وPQ = 12 cm وPT = x + 1 وPR = 8 cm. ما قيمة x؟",
+      "options": [
+        { "id": "a", "text": "x = 3" },
+        { "id": "b", "text": "x = 2" },
+        { "id": "c", "text": "x = 4" },
+        { "id": "d", "text": "x = 1.5" }
+      ],
+      "correctOption": "a",
+      "explanation": "بنظرية طاليس: PS/PQ = PT/PR، أي 2x/12 = (x+1)/8. بالتقاطع: 8 × 2x = 12 × (x+1) → 16x = 12x + 12 → 4x = 12 → x = 3. التحقّق: PS=6، PT=4؛ 6/12 = 1/2 و4/8 = 1/2 ✓.",
+      "difficulty": 3
+    }
+  ]
+}
