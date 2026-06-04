@@ -10,7 +10,7 @@
         { "id": "d", "text": "She has gone to school every day." }
       ],
       "correctOption": "b",
-      "explanation": "Habits use the present simple. With a third-person singular subject, add -s to the base verb: she goes.",
+      "explanation": "\"every day\" marks a habit, which takes the present simple. With the third-person singular \"she\", add -es: she goes. \"is going\" is present continuous (now); \"go\" forgets the -es; \"has gone\" is present perfect (a result), not a habit.",
       "difficulty": 1
     },
     {

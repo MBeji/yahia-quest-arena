@@ -14,8 +14,8 @@ BEGIN
     ADD CONSTRAINT exercises_mode_check CHECK (mode IN ('practice', 'boss', 'quiz', 'challenge'));
 END $$;
 
-INSERT INTO public.subjects (id, name_fr, description, attribute, color_token, icon, display_order, content_language) VALUES
-  ('french', 'Français', 'Grammaire, conjugaison, lexique, compréhension et production écrite — programme de 9ème année de base', 'Sagesse', 'subject-french', 'BookOpen', 2, 'fr')
+INSERT INTO public.subjects (id, name_fr, description, attribute, color_token, icon, display_order, content_language, is_premium) VALUES
+  ('french', 'Français', 'Grammaire, conjugaison, lexique, compréhension et production écrite — programme de 9ème année de base', 'Sagesse', 'subject-french', 'BookOpen', 2, 'fr', false)
 ON CONFLICT (id) DO UPDATE SET
   name_fr = EXCLUDED.name_fr,
   description = EXCLUDED.description,
@@ -23,7 +23,8 @@ ON CONFLICT (id) DO UPDATE SET
   color_token = EXCLUDED.color_token,
   icon = EXCLUDED.icon,
   display_order = EXCLUDED.display_order,
-  content_language = EXCLUDED.content_language;
+  content_language = EXCLUDED.content_language,
+  is_premium = EXCLUDED.is_premium;
 
 -- Prune admin-authored content that is no longer in the source tree.
 DO $$
@@ -1252,7 +1253,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('aabce6d4-f8ce-58d2-8737-80d73b3f05c8', '3b342ef2-05e7-53d3-bded-effe80517ef5', 'Mets le sujet en relief : « Le héros sauve le village. »', '[{"id":"a","text":"C''est le village que le héros sauve."},{"id":"b","text":"C''est le héros qui sauve le village."},{"id":"c","text":"Le village est sauvé par le héros."},{"id":"d","text":"Le héros sauve-t-il le village ?"}]'::jsonb, 'b', 'Pour mettre le SUJET en relief, on emploie « c''est… qui » : « C''est le héros qui… ». L''option b met en relief le complément.', 6)
+  ('aabce6d4-f8ce-58d2-8737-80d73b3f05c8', '3b342ef2-05e7-53d3-bded-effe80517ef5', 'Mets le sujet en relief : « Le héros sauve le village. »', '[{"id":"a","text":"C''est le village que le héros sauve."},{"id":"b","text":"C''est le héros qui sauve le village."},{"id":"c","text":"Le village est sauvé par le héros."},{"id":"d","text":"Le héros sauve-t-il le village ?"}]'::jsonb, 'b', 'Pour mettre le SUJET en relief, on emploie le présentatif « c''est… qui » : « C''est le héros qui sauve le village. » L''option a (« c''est… que ») met en relief le COD ; l''option c est une transformation passive ; l''option d est une interrogation.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1808,7 +1809,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('f22c973f-b551-5ada-b930-ce0801010307', '0cec718c-9b55-5aa5-b40e-ad20fffbe4ed', 'Quelle phrase contient une erreur dans la transformation active → passive ?', '[{"id":"a","text":"Le chien a mordu Paul. → Paul a été mordu par le chien. ✓"},{"id":"b","text":"Les élèves ont applaudi la pièce. → La pièce a été applaudi par les élèves."},{"id":"c","text":"La pluie abîme les récoltes. → Les récoltes sont abîmées par la pluie. ✓"},{"id":"d","text":"Le professeur punira l''élève. → L''élève sera puni par le professeur. ✓"}]'::jsonb, 'b', 'Le sujet passif est « la pièce » (féminin singulier) : le participe passé doit s''accorder → « applaudie ». L''option d comporte une erreur d''accord (« applaudi » au lieu de « applaudie »).', 6)
+  ('f22c973f-b551-5ada-b930-ce0801010307', '0cec718c-9b55-5aa5-b40e-ad20fffbe4ed', 'Quelle phrase contient une erreur dans la transformation active → passive ?', '[{"id":"a","text":"Le chien a mordu Paul. → Paul a été mordu par le chien. ✓"},{"id":"b","text":"Les élèves ont applaudi la pièce. → La pièce a été applaudi par les élèves."},{"id":"c","text":"La pluie abîme les récoltes. → Les récoltes sont abîmées par la pluie. ✓"},{"id":"d","text":"Le professeur punira l''élève. → L''élève sera puni par le professeur. ✓"}]'::jsonb, 'b', 'Le sujet passif est « la pièce » (féminin singulier) : le participe passé doit s''accorder → « applaudie ». C''est donc l''option b qui comporte l''erreur d''accord (« applaudi » au lieu de « applaudie ») ; les options a, c et d sont correctes.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1964,7 +1965,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('c124cc25-0734-5a92-811e-669baf60fa4b', '7a24537c-05b2-5498-864c-768a4f7b3ee8', 'Laquelle de ces phrases est au discours direct ?', '[{"id":"a","text":"Le professeur dit qu''ils ouvrent leurs cahiers."},{"id":"b","text":"Le professeur leur ordonne d''ouvrir leurs cahiers."},{"id":"c","text":"Le professeur dit : « Ouvrez vos cahiers. »"},{"id":"d","text":"Le professeur demande si les cahiers sont ouverts."}]'::jsonb, 'c', 'Le discours direct reproduit les paroles telles quelles, annoncées par les deux-points et encadrées par des guillemets. Les options b, c et d intègrent les paroles dans une subordonnée : ce sont des discours indirects.', 1)
+  ('c124cc25-0734-5a92-811e-669baf60fa4b', '7a24537c-05b2-5498-864c-768a4f7b3ee8', 'Laquelle de ces phrases est au discours direct ?', '[{"id":"a","text":"Le professeur dit qu''ils ouvrent leurs cahiers."},{"id":"b","text":"Le professeur leur ordonne d''ouvrir leurs cahiers."},{"id":"c","text":"Le professeur dit : « Ouvrez vos cahiers. »"},{"id":"d","text":"Le professeur demande si les cahiers sont ouverts."}]'::jsonb, 'c', 'Le discours direct reproduit les paroles telles quelles, annoncées par les deux-points et encadrées par des guillemets : c''est l''option c. Les options a, b et d intègrent les paroles dans une subordonnée (« qu''ils ouvrent », « d''ouvrir », « si… ») : ce sont des discours indirects.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2051,7 +2052,7 @@ ON CONFLICT (id) DO UPDATE SET
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('789d8fb4-ef9b-57a5-971b-67821be37f1a', 'a929d5d0-6d99-542b-8482-d7e65feeb3b3', 'Transforme entièrement au discours indirect :
 Le chevalier dit : « Je partirai demain à l''aube. »
-Le chevalier dit qu''il ___.', '[{"id":"a","text":"partira demain à l''aube"},{"id":"b","text":"partirait demain à l''aube"},{"id":"c","text":"partait le lendemain à l''aube"},{"id":"d","text":"partirait le lendemain à l''aube"}]'::jsonb, 'd', 'Le verbe introducteur « dit » est au passé simple : le futur simple « partirai » devient conditionnel présent « partirait ». L''indicateur de temps « demain » se transforme en « le lendemain » au discours indirect. L''option b oublie les deux changements ; c change le temps mais pas l''indicateur ; d utilise l''imparfait à la place du conditionnel.', 2)
+Le chevalier dit qu''il ___.', '[{"id":"a","text":"partira demain à l''aube"},{"id":"b","text":"partirait demain à l''aube"},{"id":"c","text":"partait le lendemain à l''aube"},{"id":"d","text":"partirait le lendemain à l''aube"}]'::jsonb, 'd', 'Le verbe introducteur « dit » est au passé simple : le futur simple « partirai » devient conditionnel présent « partirait », et l''indicateur de temps « demain » se transforme en « le lendemain » au discours indirect. D''où la réponse d (« partirait le lendemain à l''aube »). L''option a n''opère aucun des deux changements ; l''option b change le temps mais garde « demain » ; l''option c change l''indicateur mais emploie l''imparfait au lieu du conditionnel.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2063,7 +2064,7 @@ ON CONFLICT (id) DO UPDATE SET
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('927e93ec-4461-53b5-9378-38ef71fbb9b2', 'a929d5d0-6d99-542b-8482-d7e65feeb3b3', 'Transforme au discours indirect :
 Elle demanda : « Qu''est-ce qui fait ce bruit ? »
-Elle demanda ___.', '[{"id":"a","text":"ce que faisait ce bruit"},{"id":"b","text":"ce qui faisait ce bruit"},{"id":"c","text":"qu''est-ce qui faisait ce bruit"},{"id":"d","text":"si quelque chose faisait ce bruit"}]'::jsonb, 'b', '« Qu''est-ce qui » (sujet) se transforme en « ce qui » au discours indirect. Le verbe introducteur « demanda » est au passé : le présent « fait » devient imparfait « faisait ». L''option b utilise « ce que » (réservé au COD) ; c conserve la forme directe interdite au DI ; d modifie complètement le sens.', 3)
+Elle demanda ___.', '[{"id":"a","text":"ce que faisait ce bruit"},{"id":"b","text":"ce qui faisait ce bruit"},{"id":"c","text":"qu''est-ce qui faisait ce bruit"},{"id":"d","text":"si quelque chose faisait ce bruit"}]'::jsonb, 'b', '« Qu''est-ce qui » (sujet) se transforme en « ce qui » au discours indirect, d''où la réponse b. Le verbe introducteur « demanda » étant au passé, le présent « fait » devient imparfait « faisait ». L''option a emploie « ce que », réservé au COD (et non au sujet) ; l''option c conserve « qu''est-ce qui », forme directe interdite au DI ; l''option d (« si ») transforme à tort la question partielle en question totale et altère le sens.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2084,7 +2085,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('7b7368b8-68e7-5388-a30c-503e4d1dc5dd', 'a929d5d0-6d99-542b-8482-d7e65feeb3b3', 'Dans la phrase au discours indirect : « Le guide nous expliqua qu''il avait visité ce site l''année précédente. », quel était le discours direct d''origine ?', '[{"id":"a","text":"« J''avais visité ce site l''année précédente. »"},{"id":"b","text":"« Je visiterai ce site l''année prochaine. »"},{"id":"c","text":"« J''ai visité ce site l''année dernière. »"},{"id":"d","text":"« Je visite ce site l''année dernière. »"}]'::jsonb, 'c', 'Au DI, le verbe introducteur « expliqua » est au passé → le plus-que-parfait « avait visité » remonte au passé composé « a visité » dans le DD. L''indicateur « l''année précédente » correspond à « l''année dernière » au DD. L''option b conserverait le plus-que-parfait dans le DD, ce qui est incorrect ; c mènerait à un conditionnel passé ; d mènerait à un imparfait.', 5)
+  ('7b7368b8-68e7-5388-a30c-503e4d1dc5dd', 'a929d5d0-6d99-542b-8482-d7e65feeb3b3', 'Dans la phrase au discours indirect : « Le guide nous expliqua qu''il avait visité ce site l''année précédente. », quel était le discours direct d''origine ?', '[{"id":"a","text":"« J''avais visité ce site l''année précédente. »"},{"id":"b","text":"« Je visiterai ce site l''année prochaine. »"},{"id":"c","text":"« J''ai visité ce site l''année dernière. »"},{"id":"d","text":"« Je visite ce site l''année dernière. »"}]'::jsonb, 'c', 'Au DI, le verbe introducteur « expliqua » est au passé : le plus-que-parfait « avait visité » remonte au passé composé « a visité » dans le DD, et l''indicateur « l''année précédente » redevient « l''année dernière ». La réponse est donc c. L''option a reprend telle quelle la forme du DI (plus-que-parfait + « l''année précédente »), au lieu de restituer le DD ; l''option b emploie le futur, qui aurait donné un conditionnel au DI ; l''option d emploie le présent, incompatible avec « avait visité ».', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2270,7 +2271,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('f2f3c849-25e9-53d0-b09e-4eff720714b2', 'b89d641c-95d4-5820-875a-3bac22a2add4', 'Quel emploi de l''impératif est illustré dans : « Prends soin de toi. » ?', '[{"id":"a","text":"Un fait réel"},{"id":"b","text":"Une hypothèse"},{"id":"c","text":"Un conseil"},{"id":"d","text":"Un doute"}]'::jsonb, 'c', 'Le ton de « Prends soin de toi » est bienveillant : c''est un conseil, pas un ordre autoritaire. L''impératif peut exprimer un ordre, un conseil ou une prière. Les options b, c, d correspondent à l''indicatif, au conditionnel et au subjonctif, pas à l''impératif.', 2)
+  ('f2f3c849-25e9-53d0-b09e-4eff720714b2', 'b89d641c-95d4-5820-875a-3bac22a2add4', 'Quel emploi de l''impératif est illustré dans : « Prends soin de toi. » ?', '[{"id":"a","text":"Un fait réel"},{"id":"b","text":"Une hypothèse"},{"id":"c","text":"Un conseil"},{"id":"d","text":"Un doute"}]'::jsonb, 'c', 'Le ton de « Prends soin de toi » est bienveillant : c''est un conseil (réponse c), pas un ordre autoritaire. L''impératif peut exprimer un ordre, un conseil ou une prière. Les autres valeurs proposées relèvent d''autres modes : le fait réel (a) de l''indicatif, l''hypothèse (b) du conditionnel et le doute (d) du subjonctif.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2310,7 +2311,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('a2241625-9fa9-504f-841d-0b346289ca00', 'b89d641c-95d4-5820-875a-3bac22a2add4', 'Quelle forme verbale est correcte dans : « Si tu ___ davantage, tu réussirais. » ?', '[{"id":"a","text":"travaillerais"},{"id":"b","text":"travaillais"},{"id":"c","text":"travailleras"},{"id":"d","text":"travailles"}]'::jsonb, 'b', 'Après « si » dans une hypothèse, on emploie l''imparfait (jamais le conditionnel) : « si tu travaillais → tu réussirais ». La structure est : si + imparfait → conditionnel présent. Les options b (conditionnel), c (futur) et d (présent) sont toutes incorrectes après « si » dans ce contexte.', 6)
+  ('a2241625-9fa9-504f-841d-0b346289ca00', 'b89d641c-95d4-5820-875a-3bac22a2add4', 'Quelle forme verbale est correcte dans : « Si tu ___ davantage, tu réussirais. » ?', '[{"id":"a","text":"travaillerais"},{"id":"b","text":"travaillais"},{"id":"c","text":"travailleras"},{"id":"d","text":"travailles"}]'::jsonb, 'b', 'Après « si » dans une hypothèse, on emploie l''imparfait (jamais le conditionnel) : « si tu travaillais → tu réussirais ». La structure est : si + imparfait → conditionnel présent ; la réponse est donc b (« travaillais »). Les options a (conditionnel), c (futur) et d (présent) sont toutes interdites après « si » dans ce contexte.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2332,7 +2333,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('1b86b32d-c59d-5d28-a86e-a87b3cd41919', '7efc2dc4-09b3-576b-b2f2-78e7a6288526', 'Quelle phrase illustre correctement l''emploi du conditionnel de politesse ?', '[{"id":"a","text":"Je veux un renseignement, s''il vous plaît."},{"id":"b","text":"Je voudrais un renseignement, s''il vous plaît."},{"id":"c","text":"Je voulus un renseignement, s''il vous plaît."},{"id":"d","text":"Je veuille un renseignement, s''il vous plaît."}]'::jsonb, 'b', '« Je voudrais » est le conditionnel présent de « vouloir » : il adoucit la demande et exprime la politesse. L''option b (présent de l''indicatif) est plus directe et moins polie ; c (passé simple) est inapproprié ici ; d utilise incorrectement le subjonctif « veuille » dans un contexte où le conditionnel s''impose.', 1)
+  ('1b86b32d-c59d-5d28-a86e-a87b3cd41919', '7efc2dc4-09b3-576b-b2f2-78e7a6288526', 'Quelle phrase illustre correctement l''emploi du conditionnel de politesse ?', '[{"id":"a","text":"Je veux un renseignement, s''il vous plaît."},{"id":"b","text":"Je voudrais un renseignement, s''il vous plaît."},{"id":"c","text":"Je voulus un renseignement, s''il vous plaît."},{"id":"d","text":"Je veuille un renseignement, s''il vous plaît."}]'::jsonb, 'b', '« Je voudrais » est le conditionnel présent de « vouloir » : il adoucit la demande et exprime la politesse (réponse b). L''option a (« je veux », présent de l''indicatif) est plus directe et moins polie ; c (« je voulus », passé simple) est inapproprié ici ; d (« je veuille ») emploie à tort le subjonctif dans un contexte où le conditionnel s''impose.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2377,7 +2378,7 @@ ON CONFLICT (id) DO UPDATE SET
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('1f4296d8-c07e-5e6d-b599-0022c8f72118', '7efc2dc4-09b3-576b-b2f2-78e7a6288526', 'Conjugue correctement au subjonctif présent (3e personne du singulier) :
 « Il est indispensable que le groupe ___ à l''heure. »
-(verbe : venir)', '[{"id":"a","text":"vient"},{"id":"b","text":"viendra"},{"id":"c","text":"vienne"},{"id":"d","text":"venait"}]'::jsonb, 'c', 'Après « il est indispensable que », on emploie le subjonctif présent. Le radical de la 3e personne du pluriel du présent de l''indicatif est « vienn- » (ils viennent) → qu''il vienne. L''option b est le présent de l''indicatif, c le futur, d l''imparfait.', 5)
+(verbe : venir)', '[{"id":"a","text":"vient"},{"id":"b","text":"viendra"},{"id":"c","text":"vienne"},{"id":"d","text":"venait"}]'::jsonb, 'c', 'Après « il est indispensable que », on emploie le subjonctif présent. Le radical se prend sur la 3e personne du pluriel du présent de l''indicatif (« ils viennent » → « vienn- ») : qu''il vienne (réponse c). L''option a (« vient ») est le présent de l''indicatif, b (« viendra ») le futur, d (« venait ») l''imparfait.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,

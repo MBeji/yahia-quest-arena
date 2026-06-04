@@ -27,7 +27,7 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "This is a zero conditional (general/factual truth about a machine): If you press this button, the machine starts. Both clauses use the present simple.",
+      "explanation": "Pressing the button always makes the machine start, so this is a zero conditional (a reliable fact): both clauses use the present simple, hence \"the machine starts\". \"started\" is past simple; \"would start\" is second conditional (imaginary); \"will starting\" is not a valid verb form.",
       "difficulty": 2
     },
     {
@@ -51,7 +51,7 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "In the second conditional, \"be\" takes \"were\" for all persons in standard/formal English: If I were you... It is an imaginary situation.",
+      "explanation": "\"If I were you\" gives advice about an imaginary situation, so it is a second conditional. In standard English, \"be\" takes \"were\" for every person in the if-clause: If I were you. \"am\" is the real present; \"was\" is the common informal form but not the exam-standard one; \"would be\" belongs in the main clause, not the if-clause.",
       "difficulty": 2
     },
     {
@@ -75,7 +75,7 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "First conditional: if + present simple (rains) + will + base verb (will stay). Option a wrongly puts will in the if-clause; c mixes past simple with will; d is second conditional form.",
+      "explanation": "First conditional: if + present simple (rains) + will + base verb (will stay), as in option d. Option a wrongly puts \"will\" in the if-clause; option b mixes past simple (\"rained\") with \"will\"; option c uses \"would\" in the main clause, which belongs to the second conditional.",
       "difficulty": 2
     },
     {

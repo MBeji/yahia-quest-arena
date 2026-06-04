@@ -27,7 +27,7 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "\"The windows\" is plural, so the present simple passive uses ARE + past participle: are cleaned.",
+      "explanation": "The passive = \"be\" + past participle. \"The windows\" is plural and the time is present (every week), so we use ARE + cleaned: the windows are cleaned. \"clean\" is active; \"is cleaned\" wrongly uses the singular \"is\"; \"were cleaned\" is past, not present.",
       "difficulty": 1
     },
     {
@@ -51,7 +51,7 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "The active verb is past simple (broke), so the passive uses WAS + past participle (broken): The vase was broken.",
+      "explanation": "The active verb \"broke\" is past simple, so the passive keeps the past tense: \"the vase\" (singular) + WAS + past participle \"broken\". \"is broken\" changes the tense to present; \"were broken\" wrongly uses the plural \"were\"; \"was break\" uses the base verb instead of the past participle.",
       "difficulty": 2
     },
     {
@@ -75,7 +75,7 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "\"Arabic\" is singular. The present simple passive of \"speak\" is IS + spoken: Arabic is spoken in Tunisia.",
+      "explanation": "\"Arabic\" (a language) is singular, so the present simple passive uses IS + the past participle \"spoken\": Arabic is spoken in Tunisia. \"speaks\" is active; \"are spoken\" wrongly uses the plural \"are\"; \"was spoken\" is past, not present.",
       "difficulty": 1
     },
     {
@@ -147,7 +147,7 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "\"The exam\" is singular and \"yesterday\" signals past tense. The past simple passive is WAS + taken: The exam was taken yesterday.",
+      "explanation": "\"yesterday\" signals past tense and \"the exam\" is singular, so the past simple passive is WAS + the past participle \"taken\": the exam was taken. \"is taken\"/\"are taken\" are present; \"took\" is the active past, not the passive.",
       "difficulty": 2
     }
   ]

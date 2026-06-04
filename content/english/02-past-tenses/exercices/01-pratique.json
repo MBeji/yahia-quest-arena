@@ -27,7 +27,7 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "\"yesterday\" signals the past simple. \"go\" is an irregular verb: go → went.",
+      "explanation": "\"yesterday\" is a finished past time, so we use the past simple. \"go\" is irregular: go → went (not the regular \"goed\"). \"go\"/\"goes\" are present simple, which cannot describe yesterday.",
       "difficulty": 1
     },
     {
@@ -75,7 +75,7 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "Past simple negative: didn't + base verb. \"last Monday\" confirms past simple, not perfect.",
+      "explanation": "\"last Monday\" is a specific finished time, so we use the past simple, not the present perfect. The negative is \"didn't\" + base verb: he didn't pass. \"didn't passed\" double-marks the past; \"wasn't pass\" wrongly uses \"be\"; \"hasn't passed\" is present perfect, which cannot go with a specific past time.",
       "difficulty": 2
     },
     {
@@ -99,7 +99,7 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "\"ever\" is used in present perfect questions to ask about life experience: Have you ever eaten...?",
+      "explanation": "\"ever\" is placed between the subject and the past participle in present perfect questions to ask about experience at any time in your life: Have you ever eaten couscous? \"ago\" and \"yesterday\" mark a finished past time and need the past simple, not the present perfect; \"yet\" is used in questions but goes at the end (Have you eaten yet?), not in this position.",
       "difficulty": 1
     },
     {

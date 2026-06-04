@@ -14,8 +14,8 @@ BEGIN
     ADD CONSTRAINT exercises_mode_check CHECK (mode IN ('practice', 'boss', 'quiz', 'challenge'));
 END $$;
 
-INSERT INTO public.subjects (id, name_fr, description, attribute, color_token, icon, display_order, content_language) VALUES
-  ('arabic', 'العربية', 'النحو والصرف والبلاغة والإنتاج الكتابي وفق برنامج السنة التاسعة أساسي', 'Esprit', 'subject-arabic', 'Languages', 3, 'ar')
+INSERT INTO public.subjects (id, name_fr, description, attribute, color_token, icon, display_order, content_language, is_premium) VALUES
+  ('arabic', 'العربية', 'النحو والصرف والبلاغة والإنتاج الكتابي وفق برنامج السنة التاسعة أساسي', 'Esprit', 'subject-arabic', 'Languages', 3, 'ar', false)
 ON CONFLICT (id) DO UPDATE SET
   name_fr = EXCLUDED.name_fr,
   description = EXCLUDED.description,
@@ -23,7 +23,8 @@ ON CONFLICT (id) DO UPDATE SET
   color_token = EXCLUDED.color_token,
   icon = EXCLUDED.icon,
   display_order = EXCLUDED.display_order,
-  content_language = EXCLUDED.content_language;
+  content_language = EXCLUDED.content_language,
+  is_premium = EXCLUDED.is_premium;
 
 -- Prune admin-authored content that is no longer in the source tree.
 DO $$
@@ -1253,7 +1254,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('b290332e-4669-578d-9720-28fb55d9139b', 'e0728ce7-0202-5fc6-a5ec-566c51e9dc5d', 'في «جاءَ الطالبُ»، ما علامة رفع الفاعل «الطالبُ»؟', '[{"id":"a","text":"الضمّة"},{"id":"b","text":"الفتحة"},{"id":"c","text":"الكسرة"},{"id":"d","text":"السكون"}]'::jsonb, 'a', 'الفاعل مرفوع، وعلامة الرفع الأصلية للاسم المفرد هي الضمّة.', 2)
+  ('b290332e-4669-578d-9720-28fb55d9139b', 'e0728ce7-0202-5fc6-a5ec-566c51e9dc5d', 'في «جاءَ الطالبُ»، ما علامة رفع الفاعل «الطالبُ»؟', '[{"id":"a","text":"الضمّة"},{"id":"b","text":"الفتحة"},{"id":"c","text":"الكسرة"},{"id":"d","text":"السكون"}]'::jsonb, 'a', '«الطالبُ» فاعل لأنّه مَن قام بفعل المجيء، والفاعل حكمه الرفع دائمًا. وهو اسم مفرد، فعلامة رفعه الضمّة الظاهرة على آخره وهي العلامة الأصلية للرفع. ولا يصحّ نصبه بالفتحة ولا جرّه بالكسرة لأنّه ليس مفعولًا ولا مجرورًا.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1273,7 +1274,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('fd04e6f9-f99e-53b0-bf97-e17f875d086d', 'e0728ce7-0202-5fc6-a5ec-566c51e9dc5d', 'ما العلامة الأصلية للجرّ في الاسم المفرد؟', '[{"id":"a","text":"الفتحة"},{"id":"b","text":"الضمّة"},{"id":"c","text":"السكون"},{"id":"d","text":"الكسرة"}]'::jsonb, 'd', 'علامة الجرّ الأصلية هي الكسرة، مثل: مررتُ بالطالبِ.', 4)
+  ('fd04e6f9-f99e-53b0-bf97-e17f875d086d', 'e0728ce7-0202-5fc6-a5ec-566c51e9dc5d', 'ما العلامة الأصلية للجرّ في الاسم المفرد؟', '[{"id":"a","text":"الفتحة"},{"id":"b","text":"الضمّة"},{"id":"c","text":"السكون"},{"id":"d","text":"الكسرة"}]'::jsonb, 'd', 'العلامة الأصلية للجرّ في الاسم المفرد المنصرف هي الكسرة الظاهرة على آخره، نحو «مررتُ بالطالبِ» حيث جُرّ «الطالبِ» بالكسرة. أمّا الفتحة فعلامة فرعية للجرّ في الممنوع من الصرف، والضمّة والسكون فليستا من علامات الجرّ أصلًا.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2261,7 +2262,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('42fee5e6-ebba-59f2-8bbb-b082518abb07', 'acd6eb5c-3981-5b02-bf6d-8df8daf6641f', 'في جملة «الأمانةَ يا صديقي»، ما الأساليب النحوية الواردة فيها وما إعراب «صديقي»؟', '[{"id":"a","text":"أسلوب تحذير فقط؛ «صديقي»: منادى مضاف منصوب بالفتحة المقدَّرة"},{"id":"b","text":"أسلوب اختصاص فقط؛ «صديقي»: منصوب على الاختصاص"},{"id":"c","text":"أسلوب إغراء فقط؛ «صديقي»: مضاف إليه مجرور بالكسرة"},{"id":"d","text":"أسلوبا إغراء ونداء معًا؛ «صديقي»: منادى مضاف منصوب وعلامة نصبه الفتحة المقدَّرة على ما قبل الياء"}]'::jsonb, 'd', 'تجمع الجملة أسلوبَين: «الأمانةَ» إغراء (مُغرى به منصوب بفعل محذوف وجوبًا تقديره «الزَم») يحثّ المخاطَب على التمسّك بالأمانة، و«يا صديقي» نداء. «صديقي» منادى مضاف منصوب وعلامة نصبه الفتحة المقدَّرة على ما قبل ياء المتكلّم منعًا من ظهورها الاشتغال المحلّ بحركة المناسبة، والياء ضمير متّصل مضاف إليه في محلّ جرّ.', 5)
+  ('42fee5e6-ebba-59f2-8bbb-b082518abb07', 'acd6eb5c-3981-5b02-bf6d-8df8daf6641f', 'في جملة «الأمانةَ يا صديقي»، ما الأساليب النحوية الواردة فيها وما إعراب «صديقي»؟', '[{"id":"a","text":"أسلوب تحذير فقط؛ «صديقي»: منادى مضاف منصوب بالفتحة المقدَّرة"},{"id":"b","text":"أسلوب اختصاص فقط؛ «صديقي»: منصوب على الاختصاص"},{"id":"c","text":"أسلوب إغراء فقط؛ «صديقي»: مضاف إليه مجرور بالكسرة"},{"id":"d","text":"أسلوبا إغراء ونداء معًا؛ «صديقي»: منادى مضاف منصوب وعلامة نصبه الفتحة المقدَّرة على ما قبل الياء"}]'::jsonb, 'd', 'تجمع الجملة أسلوبَين: «الأمانةَ» إغراء (مُغرى به منصوب بفعل محذوف وجوبًا تقديره «الزَم») يحثّ المخاطَب على التمسّك بالأمانة، و«يا صديقي» نداء. «صديقي» منادى مضاف منصوب وعلامة نصبه الفتحة المقدَّرة على ما قبل ياء المتكلّم، منَع من ظهورها اشتغالُ المحلّ بحركة المناسبة، والياء ضمير متّصل مضاف إليه في محلّ جرّ.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2633,7 +2634,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('439a46cb-44b9-5308-8d2d-e66deb1fee1b', '9b5c21ee-37e3-50d8-a7c5-ba6a75e2eb01', 'ما وزن اسم الفاعل من الفعل الثلاثي «نَصَرَ»؟', '[{"id":"a","text":"مَفعُول (مَنصُور)"},{"id":"b","text":"فَاعِل (نَاصِر)"},{"id":"c","text":"مِفعَال (مِنصَار)"},{"id":"d","text":"فَعِيل (نَصِير)"}]'::jsonb, 'b', 'اسم الفاعل من الفعل الثلاثي يأتي على وزن فَاعِل، فمن «نَصَرَ» نقول «نَاصِر».', 1)
+  ('439a46cb-44b9-5308-8d2d-e66deb1fee1b', '9b5c21ee-37e3-50d8-a7c5-ba6a75e2eb01', 'ما وزن اسم الفاعل من الفعل الثلاثي «نَصَرَ»؟', '[{"id":"a","text":"مَفعُول (مَنصُور)"},{"id":"b","text":"فَاعِل (نَاصِر)"},{"id":"c","text":"مِفعَال (مِنصَار)"},{"id":"d","text":"فَعِيل (نَصِير)"}]'::jsonb, 'b', 'اسم الفاعل من الثلاثي يُصاغ قياسًا على وزن «فَاعِل»، فمن «نَصَرَ» نقول «نَاصِر» (من وقع منه النصر). أمّا «مَنصُور» فاسم مفعول (وزن مَفعُول)، و«نَصِير» صفة مشبّهة (فَعِيل)، و«مِنصَار» وزن غير مستعمل لاسم الفاعل.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2643,7 +2644,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('1b1bab6b-e7bb-596b-83b3-c57f76830710', '9b5c21ee-37e3-50d8-a7c5-ba6a75e2eb01', 'أيّ الكلمات التالية اسم مفعول صحيح؟', '[{"id":"a","text":"مَكتُوب"},{"id":"b","text":"كَاتِب"},{"id":"c","text":"كَتِيب"},{"id":"d","text":"مِكتَاب"}]'::jsonb, 'a', '«مَكتُوب» جاء على وزن مَفعُول، وهو وزن اسم المفعول من الفعل الثلاثي «كَتَبَ».', 2)
+  ('1b1bab6b-e7bb-596b-83b3-c57f76830710', '9b5c21ee-37e3-50d8-a7c5-ba6a75e2eb01', 'أيّ الكلمات التالية اسم مفعول صحيح؟', '[{"id":"a","text":"مَكتُوب"},{"id":"b","text":"كَاتِب"},{"id":"c","text":"كَتِيب"},{"id":"d","text":"مِكتَاب"}]'::jsonb, 'a', 'اسم المفعول من الثلاثي يُصاغ على وزن «مَفعُول»، و«مَكتُوب» على هذا الوزن من «كَتَبَ» فهو يدلّ على ما وقع عليه فعل الكتابة. أمّا «كَاتِب» فاسم فاعل (فَاعِل)، و«مِكتَاب» اسم آلة (مِفعَال)، و«كَتِيب» ليس مشتقًّا قياسيًّا لاسم المفعول.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2653,7 +2654,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('3a57be27-7b78-5492-82bc-e73906a3416b', '9b5c21ee-37e3-50d8-a7c5-ba6a75e2eb01', 'ما وزن اسم التفضيل من الفعل «حَسُنَ»؟', '[{"id":"a","text":"أَفعَل (أَحسَن)"},{"id":"b","text":"مَفعُول (مَحسُون)"},{"id":"c","text":"فَاعِل (حَاسِن)"},{"id":"d","text":"فَعِيل (حَسِين)"}]'::jsonb, 'a', 'اسم التفضيل يأتي على وزن أَفعَل، فمن «حَسُنَ» نقول «أَحسَن»، وهو يدلّ على التفوّق في صفة الحُسن.', 3)
+  ('3a57be27-7b78-5492-82bc-e73906a3416b', '9b5c21ee-37e3-50d8-a7c5-ba6a75e2eb01', 'ما وزن اسم التفضيل من الفعل «حَسُنَ»؟', '[{"id":"a","text":"أَفعَل (أَحسَن)"},{"id":"b","text":"مَفعُول (مَحسُون)"},{"id":"c","text":"فَاعِل (حَاسِن)"},{"id":"d","text":"فَعِيل (حَسِين)"}]'::jsonb, 'a', 'اسم التفضيل يُصاغ من الثلاثي على وزن «أَفعَل» للدلالة على أنّ شيئًا زاد على غيره في الصفة؛ فمن «حَسُنَ» نقول «أَحسَن» أي أزيد حُسنًا. أمّا «مَحسُون» فليس مستعملًا، و«حَاسِن» اسم فاعل، و«حَسِين» صفة مشبّهة — ولا يدلّ أيٌّ منها على التفضيل.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2663,7 +2664,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('9d12af42-8ca0-5491-98cd-9573549b60f0', '9b5c21ee-37e3-50d8-a7c5-ba6a75e2eb01', 'ما نوع الكلمة «مُدَرِّس» في الجملة «المُدَرِّسُ شرحَ الدرسَ»؟', '[{"id":"a","text":"اسم مفعول من غير الثلاثي"},{"id":"b","text":"اسم فاعل من غير الثلاثي (دَرَّسَ)"},{"id":"c","text":"صيغة مبالغة"},{"id":"d","text":"اسم فاعل من الثلاثي"}]'::jsonb, 'b', '«مُدَرِّس» اسم فاعل من الفعل غير الثلاثي «دَرَّسَ»، بُني بضمّ أوله وكسر ما قبل آخره.', 4)
+  ('9d12af42-8ca0-5491-98cd-9573549b60f0', '9b5c21ee-37e3-50d8-a7c5-ba6a75e2eb01', 'ما نوع الكلمة «مُدَرِّس» في الجملة «المُدَرِّسُ شرحَ الدرسَ»؟', '[{"id":"a","text":"اسم مفعول من غير الثلاثي"},{"id":"b","text":"اسم فاعل من غير الثلاثي (دَرَّسَ)"},{"id":"c","text":"صيغة مبالغة"},{"id":"d","text":"اسم فاعل من الثلاثي"}]'::jsonb, 'b', 'اسم الفاعل من غير الثلاثي يُصاغ من مضارعه بإبدال حرف المضارعة ميمًا مضمومة وكسر ما قبل الآخر؛ فمن «دَرَّسَ ← يُدَرِّس» نقول «مُدَرِّس» بكسر الراء (ما قبل الآخر)، وهو هنا فاعل الفعل «شرحَ» (الذي درّس وشرح). ولو فُتح ما قبل آخره (مُدَرَّس) لصار اسم مفعول، فالكسرة هي التي عيّنته اسمَ فاعل لا اسمَ مفعول ولا صيغةَ مبالغة.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2673,7 +2674,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('1dae3eb0-f7f5-5e50-9fd4-46388fd6f95d', '9b5c21ee-37e3-50d8-a7c5-ba6a75e2eb01', 'أيّ الأوزان التالية يدلّ على صيغة مبالغة للكثرة والشدّة؟', '[{"id":"a","text":"فَاعِل (صَائِم)"},{"id":"b","text":"مَفعُول (مَصُوم)"},{"id":"c","text":"مَفعَل (مَصَام)"},{"id":"d","text":"فَعَّال (صَوَّام)"}]'::jsonb, 'd', 'وزن فَعَّال من أوزان صيغة المبالغة الدالّة على كثرة الفعل وتكراره، مثل «صَوَّام» للدلالة على كثرة الصيام.', 5)
+  ('1dae3eb0-f7f5-5e50-9fd4-46388fd6f95d', '9b5c21ee-37e3-50d8-a7c5-ba6a75e2eb01', 'أيّ الأوزان التالية يدلّ على صيغة مبالغة للكثرة والشدّة؟', '[{"id":"a","text":"فَاعِل (صَائِم)"},{"id":"b","text":"مَفعُول (مَصُوم)"},{"id":"c","text":"مَفعَل (مَصَام)"},{"id":"d","text":"فَعَّال (صَوَّام)"}]'::jsonb, 'd', 'صيغة المبالغة تدلّ على كثرة الفعل وشدّته، ومن أشهر أوزانها «فَعَّال»؛ فـ«صَوَّام» على هذا الوزن تدلّ على كثرة الصيام (لا مجرّد فاعله). أمّا «صَائِم» فاسم فاعل (فَاعِل) يدلّ على الفعل دون مبالغة، و«مَصُوم» و«مَصَام» ليسا من أوزان المبالغة.', 5)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2683,7 +2684,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('d3014313-a3b3-5e0f-be7b-750a2cedd9d9', '9b5c21ee-37e3-50d8-a7c5-ba6a75e2eb01', 'أيّ الكلمات التالية اسم آلة على وزن مِفعَال؟', '[{"id":"a","text":"مِبرَد"},{"id":"b","text":"مِفتَاح"},{"id":"c","text":"مِكنَسة"},{"id":"d","text":"مِقصَّ"}]'::jsonb, 'b', '«مِفتَاح» على وزن مِفعَال وهو من أوزان اسم الآلة القياسية، مشتقّ من «فَتَحَ».', 6)
+  ('d3014313-a3b3-5e0f-be7b-750a2cedd9d9', '9b5c21ee-37e3-50d8-a7c5-ba6a75e2eb01', 'أيّ الكلمات التالية اسم آلة على وزن مِفعَال؟', '[{"id":"a","text":"مِبرَد"},{"id":"b","text":"مِفتَاح"},{"id":"c","text":"مِكنَسة"},{"id":"d","text":"مِقصَّ"}]'::jsonb, 'b', 'اسم الآلة يُصاغ على ثلاثة أوزان قياسية: مِفعَال ومِفعَل ومِفعَلة. و«مِفتَاح» على وزن «مِفعَال» (الميم زائدة والفاء-التاء-الحاء من جذر فَتَحَ)، فهو أداة الفتح. أمّا «مِبرَد» فعلى مِفعَل، و«مِكنَسة» على مِفعَلة، و«مِقصّ» على مِفعَل — فالمطابق لوزن مِفعَال هو «مِفتَاح» وحده.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2705,7 +2706,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('6242b042-aeb4-54d4-b948-bd97235a8a5c', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', 'الكلمة «صَبُور» على أيّ وزن من أوزان صيغ المبالغة؟', '[{"id":"a","text":"فَعَّال"},{"id":"b","text":"مِفعَال"},{"id":"c","text":"فَعِيل"},{"id":"d","text":"فَعُول"}]'::jsonb, 'd', '«صَبُور» على وزن فَعُول، وهو من أوزان صيغة المبالغة، مشتقّ من «صَبَرَ» للدلالة على شدّة الصبر وكثرته.', 1)
+  ('6242b042-aeb4-54d4-b948-bd97235a8a5c', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', 'الكلمة «صَبُور» على أيّ وزن من أوزان صيغ المبالغة؟', '[{"id":"a","text":"فَعَّال"},{"id":"b","text":"مِفعَال"},{"id":"c","text":"فَعِيل"},{"id":"d","text":"فَعُول"}]'::jsonb, 'd', '«صَبُور» على وزن «فَعُول» (الصاد فاء والباء عين والراء لام من جذر صَبَرَ)، وهو من أوزان صيغة المبالغة الدالّة على شدّة الصبر وكثرته لا مجرّد حصوله. ولا يصحّ «فَعَّال» (وزنه صَبَّار وهو موجود لكنّه ليس صورة الكلمة هنا) ولا «مِفعَال» ولا «فَعِيل»، لأنّ بنية «صَبُور» تطابق فَعُول بعينه.', 1)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2715,7 +2716,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('ad6d74ec-bdef-5b47-926d-d90644216455', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', 'أيّ الكلمات التالية اسم زمان أو مكان؟', '[{"id":"a","text":"مَجلِس"},{"id":"b","text":"جَالِس"},{"id":"c","text":"مَجلُوس"},{"id":"d","text":"جَلَّاس"}]'::jsonb, 'a', '«مَجلِس» على وزن مَفعِل وهو اسم مكان (أو زمان) مشتقّ من «جَلَسَ»، يدلّ على مكان الجلوس.', 2)
+  ('ad6d74ec-bdef-5b47-926d-d90644216455', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', 'أيّ الكلمات التالية اسم زمان أو مكان؟', '[{"id":"a","text":"مَجلِس"},{"id":"b","text":"جَالِس"},{"id":"c","text":"مَجلُوس"},{"id":"d","text":"جَلَّاس"}]'::jsonb, 'a', 'اسم الزمان والمكان من الثلاثي يُصاغ على «مَفعَل» أو «مَفعِل»؛ و«مَجلِس» على وزن «مَفعِل» (كُسرت عينه لأنّ مضارعه «يَجلِس» مكسور العين)، ويدلّ على مكان الجلوس. أمّا «جَالِس» فاسم فاعل، و«مَجلُوس» اسم مفعول، و«جَلَّاس» صيغة مبالغة — فلا يدلّ أيٌّ منها على المكان.', 2)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2725,7 +2726,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('7e0f1c35-7a2c-5d87-94c8-3a9c136d6243', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', 'الكلمة «مِكنَسة» على أيّ وزن من أوزان اسم الآلة؟', '[{"id":"a","text":"مِفعَلة"},{"id":"b","text":"مِفعَال"},{"id":"c","text":"مِفعَل"},{"id":"d","text":"فَعَّال"}]'::jsonb, 'a', '«مِكنَسة» على وزن مِفعَلة، وهو أحد الأوزان القياسية الثلاثة لاسم الآلة، مشتقّ من «كَنَسَ».', 3)
+  ('7e0f1c35-7a2c-5d87-94c8-3a9c136d6243', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', 'الكلمة «مِكنَسة» على أيّ وزن من أوزان اسم الآلة؟', '[{"id":"a","text":"مِفعَلة"},{"id":"b","text":"مِفعَال"},{"id":"c","text":"مِفعَل"},{"id":"d","text":"فَعَّال"}]'::jsonb, 'a', '«مِكنَسة» على وزن «مِفعَلة» (الميم زائدة، والكاف-النون-السين من جذر كَنَسَ، ثمّ تاء التأنيث)، وهو أحد أوزان اسم الآلة القياسية الثلاثة (مِفعَال، مِفعَل، مِفعَلة) فهي أداة الكَنس. ولا يطابقها مِفعَال (مِكناس) ولا مِفعَل (مِكنَس) ولا فَعَّال، لأنّ ختمها بالتاء يُعيّن وزن مِفعَلة.', 3)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2735,7 +2736,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('a8cdd2d6-aaae-54bf-841a-cceeb408a7ed', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', 'في الجملة «المُستَعمَلُ بِعنايةٍ يدومُ طويلًا»، ما نوع كلمة «المُستَعمَل»؟', '[{"id":"a","text":"اسم فاعل من «استَعمَلَ»"},{"id":"b","text":"اسم مفعول من «استَعمَلَ» (سداسي)"},{"id":"c","text":"صفة مشبّهة"},{"id":"d","text":"اسم زمان"}]'::jsonb, 'b', '«المُستَعمَل» بُني بضمّ أوله وفتح ما قبل آخره، وهو اسم مفعول من الفعل السداسي «استَعمَلَ».', 4)
+  ('a8cdd2d6-aaae-54bf-841a-cceeb408a7ed', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', 'في الجملة «المُستَعمَلُ بِعنايةٍ يدومُ طويلًا»، ما نوع كلمة «المُستَعمَل»؟', '[{"id":"a","text":"اسم فاعل من «استَعمَلَ»"},{"id":"b","text":"اسم مفعول من «استَعمَلَ» (سداسي)"},{"id":"c","text":"صفة مشبّهة"},{"id":"d","text":"اسم زمان"}]'::jsonb, 'b', 'اسم المفعول من غير الثلاثي يُصاغ من مضارعه بميم مضمومة مكان حرف المضارعة وفتح ما قبل الآخر؛ فمن «استَعمَلَ ← يُستَعمَل» نقول «مُستَعمَل» بفتح الميم الثانية (ما قبل الآخر)، فهو ما وقع عليه الاستعمال. ولو كُسر ما قبل الآخر (مُستَعمِل) لصار اسم فاعل (مَن يستعمل)، فالفتحة هي الفارق الحاسم هنا.', 4)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -2755,7 +2756,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
-  ('e03bd42b-389f-56b8-942e-9e75455368ac', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', 'في «قرأتُ كِتابًا مُثيرًا»، ما نوع «مُثِير»؟', '[{"id":"a","text":"اسم مفعول من الثلاثي"},{"id":"b","text":"اسم فاعل من غير الثلاثي (أَثَارَ)"},{"id":"c","text":"صيغة مبالغة"},{"id":"d","text":"صفة مشبّهة"}]'::jsonb, 'b', '«مُثِير» اسم فاعل من الفعل الرباعي «أَثَارَ»، بُني بضمّ أوله وكسر ما قبل آخره، وهو يدلّ على الشيء الذي يُثير.', 6)
+  ('e03bd42b-389f-56b8-942e-9e75455368ac', '88a20df0-483f-51e9-b7a2-ca4a3ea0ddc2', 'في «قرأتُ كِتابًا مُثيرًا»، ما نوع «مُثِير»؟', '[{"id":"a","text":"اسم مفعول من الثلاثي"},{"id":"b","text":"اسم فاعل من غير الثلاثي (أَثَارَ)"},{"id":"c","text":"صيغة مبالغة"},{"id":"d","text":"صفة مشبّهة"}]'::jsonb, 'b', '«مُثِير» اسم فاعل من الفعل الرباعي المزيد «أَثَارَ ← يُثِير»، صيغ بميم مضمومة وكسر ما قبل الآخر (الياء)، فدلّ على ما يقوم بالإثارة (الكتاب المثير). ولو فُتح ما قبل آخره (مُثَار) لكان اسم مفعول، وليس صفة مشبّهة لأنّه يدلّ على حدث متجدّد لا صفة ثابتة، ولا صيغة مبالغة لانتفاء وزنها.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
