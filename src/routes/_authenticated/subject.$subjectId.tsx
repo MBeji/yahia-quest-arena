@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { getSubject } from "@/features/quest";
 import { SubscriptionPaywall } from "@/features/subscription";
-import { CHALLENGE_MIN_LEVEL } from "@/shared/constants/gamification";
+import { PREMIUM_MIN_DIFFICULTY } from "@/shared/constants/gamification";
 import { isRtlText } from "@/shared/lib/utils";
 import { useT } from "@/lib/i18n";
 
@@ -61,7 +61,6 @@ function SubjectPage() {
     );
   }
   const { subject, chapters, exercises, bestByExercise, quizPassedByChapter, viewer } = data;
-  const premiumUnlocked = viewer.hasSubscription && viewer.level >= CHALLENGE_MIN_LEVEL;
   const color = `var(--subject-${subject.color_token})`;
 
   // Premium module gate: the whole subject is reserved to subscribers.
@@ -104,9 +103,9 @@ function SubjectPage() {
     elite: { ar: "تحدّي النخبة", fr: "Défi élite", en: "Elite challenge" }[lang],
     premium: { ar: "مدفوع", fr: "Premium", en: "Premium" }[lang],
     premiumLock: {
-      ar: `يتطلب اشتراكًا والمستوى ${CHALLENGE_MIN_LEVEL}`,
-      fr: `Abonnement + niveau ${CHALLENGE_MIN_LEVEL} requis`,
-      en: `Subscription + level ${CHALLENGE_MIN_LEVEL} required`,
+      ar: "يتطلب اشتراكًا",
+      fr: "Abonnement requis",
+      en: "Subscription required",
     }[lang],
   };
 
@@ -238,7 +237,9 @@ function SubjectPage() {
                     best == null ? 0 : best >= 90 ? 3 : best >= 70 ? 2 : best >= 40 ? 1 : 0;
                   const isBoss = ex.mode === "boss";
                   const isChallenge = ex.mode === "challenge";
-                  const premiumLocked = isChallenge && !premiumUnlocked;
+                  // Difficulty 3+ is premium (subscription only), every subject/chapter.
+                  const premiumLocked =
+                    ex.difficulty >= PREMIUM_MIN_DIFFICULTY && !viewer.hasSubscription;
                   const left = (
                     <div className="flex items-center gap-3">
                       <div
