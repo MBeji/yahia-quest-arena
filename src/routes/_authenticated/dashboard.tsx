@@ -271,6 +271,7 @@ function Dashboard() {
   }
 
   const { profile, subjects, stats, nextExerciseId } = data;
+  const otherSubjects = data.otherSubjects ?? [];
   const hasSubscription = isSubscriptionActive(
     (profile as { subscription_expires_at?: string | null } | null)?.subscription_expires_at ??
       null,
@@ -681,6 +682,33 @@ function Dashboard() {
               ))}
             </div>
           </section>
+
+          {otherSubjects.length > 0 && (
+            <section>
+              <div className="mb-4 flex items-center gap-2">
+                <h2 className="flex items-center gap-2 font-display text-xl font-bold">
+                  <Sparkles className="h-5 w-5 text-[color:var(--gold)]" />{" "}
+                  {t.dashboard.otherThemesTitle}
+                </h2>
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {otherSubjects.map((s, i) => (
+                  <motion.div
+                    key={s.id}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                  >
+                    <SubjectPathCard
+                      subject={s}
+                      stat={stats[s.id]}
+                      hasSubscription={hasSubscription}
+                    />
+                  </motion.div>
+                ))}
+              </div>
+            </section>
+          )}
 
           {/* RADAR */}
           <section>

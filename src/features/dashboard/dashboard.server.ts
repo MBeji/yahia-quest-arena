@@ -98,9 +98,21 @@ export const getDashboard = createServerFn({ method: "GET" })
       }
     }
 
+    // Scope subjects by the student's grade (#themes). School subjects are filtered
+    // to the chosen `current_grade_id`; legacy profiles without a grade fall back to
+    // every grade-bound subject (today the only populated grade is the 9ème année de
+    // base). Grade-agnostic theme subjects (e.g. fr-mastery) are surfaced separately.
+    const allSubjects = subjectsRes.data ?? [];
+    const gradeId = profile?.current_grade_id ?? null;
+    const schoolSubjects = gradeId
+      ? allSubjects.filter((s) => s.grade_id === gradeId)
+      : allSubjects.filter((s) => s.grade_id != null);
+    const otherSubjects = allSubjects.filter((s) => s.grade_id == null);
+
     return {
       profile,
-      subjects: subjectsRes.data ?? [],
+      subjects: schoolSubjects,
+      otherSubjects,
       stats: bySubject,
       recent: recentRes.data ?? [],
       nextExerciseId,

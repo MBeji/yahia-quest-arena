@@ -119,6 +119,7 @@ export const en: TranslationKeys = {
     dailyEmpty: "Complete exercises to unlock daily objectives.",
     weeklyEmpty: "Weekly quests appear as you progress.",
     pathsTitle: "Paths to conquer",
+    otherThemesTitle: "Other themes",
     notAttempted: "Not attempted yet",
     failedLoad: "Failed to load dashboard",
     failedLoadDesc: "Something went wrong. Please try again.",
