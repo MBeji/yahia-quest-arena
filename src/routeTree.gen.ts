@@ -14,6 +14,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedThemesRouteImport } from './routes/_authenticated/themes'
 import { Route as AuthenticatedParentReportRouteImport } from './routes/_authenticated/parent-report'
 import { Route as AuthenticatedParcoursRouteImport } from './routes/_authenticated/parcours'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
@@ -51,6 +52,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedThemesRoute = AuthenticatedThemesRouteImport.update({
+  id: '/themes',
+  path: '/themes',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedParentReportRoute =
   AuthenticatedParentReportRouteImport.update({
@@ -138,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/parcours': typeof AuthenticatedParcoursRouteWithChildren
   '/parent-report': typeof AuthenticatedParentReportRoute
+  '/themes': typeof AuthenticatedThemesRoute
   '/admin/beta-requests': typeof AuthenticatedAdminBetaRequestsRoute
   '/admin/content-reports': typeof AuthenticatedAdminContentReportsRoute
   '/admin/subscriptions': typeof AuthenticatedAdminSubscriptionsRoute
@@ -157,6 +164,7 @@ export interface FileRoutesByTo {
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/parcours': typeof AuthenticatedParcoursRouteWithChildren
   '/parent-report': typeof AuthenticatedParentReportRoute
+  '/themes': typeof AuthenticatedThemesRoute
   '/admin/beta-requests': typeof AuthenticatedAdminBetaRequestsRoute
   '/admin/content-reports': typeof AuthenticatedAdminContentReportsRoute
   '/admin/subscriptions': typeof AuthenticatedAdminSubscriptionsRoute
@@ -178,6 +186,7 @@ export interface FileRoutesById {
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/parcours': typeof AuthenticatedParcoursRouteWithChildren
   '/_authenticated/parent-report': typeof AuthenticatedParentReportRoute
+  '/_authenticated/themes': typeof AuthenticatedThemesRoute
   '/_authenticated/admin/beta-requests': typeof AuthenticatedAdminBetaRequestsRoute
   '/_authenticated/admin/content-reports': typeof AuthenticatedAdminContentReportsRoute
   '/_authenticated/admin/subscriptions': typeof AuthenticatedAdminSubscriptionsRoute
@@ -199,6 +208,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/parcours'
     | '/parent-report'
+    | '/themes'
     | '/admin/beta-requests'
     | '/admin/content-reports'
     | '/admin/subscriptions'
@@ -218,6 +228,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/parcours'
     | '/parent-report'
+    | '/themes'
     | '/admin/beta-requests'
     | '/admin/content-reports'
     | '/admin/subscriptions'
@@ -238,6 +249,7 @@ export interface FileRouteTypes {
     | '/_authenticated/onboarding'
     | '/_authenticated/parcours'
     | '/_authenticated/parent-report'
+    | '/_authenticated/themes'
     | '/_authenticated/admin/beta-requests'
     | '/_authenticated/admin/content-reports'
     | '/_authenticated/admin/subscriptions'
@@ -291,6 +303,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/themes': {
+      id: '/_authenticated/themes'
+      path: '/themes'
+      fullPath: '/themes'
+      preLoaderRoute: typeof AuthenticatedThemesRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/parent-report': {
       id: '/_authenticated/parent-report'
@@ -406,6 +425,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedParcoursRoute: typeof AuthenticatedParcoursRouteWithChildren
   AuthenticatedParentReportRoute: typeof AuthenticatedParentReportRoute
+  AuthenticatedThemesRoute: typeof AuthenticatedThemesRoute
   AuthenticatedAdminBetaRequestsRoute: typeof AuthenticatedAdminBetaRequestsRoute
   AuthenticatedAdminContentReportsRoute: typeof AuthenticatedAdminContentReportsRoute
   AuthenticatedAdminSubscriptionsRoute: typeof AuthenticatedAdminSubscriptionsRoute
@@ -421,6 +441,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedParcoursRoute: AuthenticatedParcoursRouteWithChildren,
   AuthenticatedParentReportRoute: AuthenticatedParentReportRoute,
+  AuthenticatedThemesRoute: AuthenticatedThemesRoute,
   AuthenticatedAdminBetaRequestsRoute: AuthenticatedAdminBetaRequestsRoute,
   AuthenticatedAdminContentReportsRoute: AuthenticatedAdminContentReportsRoute,
   AuthenticatedAdminSubscriptionsRoute: AuthenticatedAdminSubscriptionsRoute,

@@ -279,6 +279,7 @@ export type TranslationKeys = {
   layout: {
     heroesHall: string;
     parcours: string;
+    themes: string;
     dungeon: string;
     ranking: string;
     parentReport: string;
