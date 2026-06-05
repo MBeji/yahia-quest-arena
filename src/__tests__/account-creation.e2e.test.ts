@@ -411,6 +411,32 @@ describe("END-TO-END: account-creation edge cases", () => {
     ).rejects.toThrow();
   });
 
+  it("setCurrentGrade persists the student's chosen school grade", async () => {
+    const { setCurrentGrade } = await import("@/features/auth");
+
+    const chain = mockQuery(null, null);
+    mockFrom.mockImplementation((table: string) => (table === "profiles" ? chain : mockQuery([])));
+
+    const res = (await (setCurrentGrade as unknown as Fn)({
+      gradeId: "11111111-1111-1111-1111-111111111111",
+    })) as { ok: boolean };
+
+    expect(res.ok).toBe(true);
+    expect(chain.update).toHaveBeenCalledWith({
+      current_grade_id: "11111111-1111-1111-1111-111111111111",
+    });
+    // Constrained to the caller's own profile row.
+    expect(chain.eq).toHaveBeenCalledWith("id", "user-regression-test");
+  });
+
+  it("setCurrentGrade rejects a non-uuid grade at the validator", async () => {
+    const { setCurrentGrade } = await import("@/features/auth");
+    mockFrom.mockImplementation(() => mockQuery(null));
+
+    await expect((setCurrentGrade as unknown as Fn)({ gradeId: "not-a-uuid" })).rejects.toThrow();
+    expect(mockFrom).not.toHaveBeenCalled();
+  });
+
   it("getDashboard for a brand-new user with zero attempts returns empty aggregates", async () => {
     const { getDashboard } = await import("@/features/dashboard");
 
