@@ -6,5 +6,7 @@
   "colorToken": "subject-svt",
   "icon": "Leaf",
   "displayOrder": 7,
-  "contentLanguage": "ar"
+  "contentLanguage": "ar",
+  "themeId": "ecole-tn",
+  "gradeSlug": "9eme-base"
 }

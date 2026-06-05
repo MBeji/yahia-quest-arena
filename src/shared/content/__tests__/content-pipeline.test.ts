@@ -25,6 +25,8 @@ describe("schema validation", () => {
       icon: "Calculator",
       displayOrder: 1,
       contentLanguage: "ar",
+      themeId: "ecole-tn",
+      gradeSlug: "9eme-base",
     });
     expect(result.success).toBe(true);
   });
@@ -39,11 +41,31 @@ describe("schema validation", () => {
       icon: "BookOpen",
       displayOrder: 6,
       contentLanguage: "fr" as const,
+      themeId: "francais",
     };
     const def = subjectMetaSchema.parse(base);
     expect(def.isPremium).toBe(false);
+    // gradeSlug defaults to null for grade-agnostic subjects.
+    expect(def.gradeSlug).toBeNull();
     const prem = subjectMetaSchema.parse({ ...base, isPremium: true });
     expect(prem.isPremium).toBe(true);
+  });
+
+  it("requires a theme and rejects a non-kebab themeId", () => {
+    const base = {
+      id: "math",
+      nameFr: "x",
+      description: "x",
+      attribute: "x",
+      colorToken: "x",
+      icon: "x",
+      displayOrder: 1,
+      contentLanguage: "ar" as const,
+    };
+    // themeId is mandatory: every subject belongs to exactly one theme.
+    expect(subjectMetaSchema.safeParse(base).success).toBe(false);
+    expect(subjectMetaSchema.safeParse({ ...base, themeId: "Ecole TN" }).success).toBe(false);
+    expect(subjectMetaSchema.safeParse({ ...base, themeId: "ecole-tn" }).success).toBe(true);
   });
 
   it("rejects an invalid content language", () => {
@@ -56,6 +78,7 @@ describe("schema validation", () => {
       icon: "x",
       displayOrder: 1,
       contentLanguage: "es",
+      themeId: "ecole-tn",
     });
     expect(result.success).toBe(false);
   });
@@ -70,6 +93,7 @@ describe("schema validation", () => {
       icon: "x",
       displayOrder: 1,
       contentLanguage: "ar",
+      themeId: "ecole-tn",
     });
     expect(result.success).toBe(false);
   });
@@ -186,6 +210,8 @@ describe("buildMigrationSql", () => {
       icon: "Calculator",
       displayOrder: 1,
       contentLanguage: "ar" as const,
+      themeId: "ecole-tn",
+      gradeSlug: "9eme-base",
       isPremium: false,
     },
     chapters: [
@@ -275,6 +301,25 @@ describe("buildMigrationSql", () => {
     expect(sql).toContain("is_premium = EXCLUDED.is_premium");
   });
 
+  it("emits the subject theme and resolves the grade by (theme, slug)", () => {
+    expect(sql).toContain("'ecole-tn'");
+    expect(sql).toContain(
+      "SELECT id FROM public.grades WHERE theme_id = 'ecole-tn' AND slug = '9eme-base'",
+    );
+    expect(sql).toContain("theme_id = EXCLUDED.theme_id");
+    expect(sql).toContain("grade_id = EXCLUDED.grade_id");
+  });
+
+  it("emits grade_id NULL for a grade-agnostic subject (no grades lookup)", () => {
+    const agnostic = buildMigrationSql({
+      meta: { ...subject.meta, themeId: "francais", gradeSlug: null },
+      chapters: subject.chapters,
+    });
+    expect(agnostic).toContain("'francais'");
+    expect(agnostic).not.toContain("SELECT id FROM public.grades");
+    expect(agnostic).toMatch(/'francais', NULL\)/);
+  });
+
   it("self-contains the exercises mode CHECK (incl. 'challenge') so it never blocks", () => {
     expect(sql).toContain("exercises_mode_check");
     expect(sql).toContain("CHECK (mode IN ('practice', 'boss', 'quiz', 'challenge'))");
@@ -307,6 +352,8 @@ describe("question difficulty ordering", () => {
       icon: "Calculator",
       displayOrder: 1,
       contentLanguage: "ar" as const,
+      themeId: "ecole-tn",
+      gradeSlug: "9eme-base",
       isPremium: false,
     },
     chapters: [
@@ -362,6 +409,8 @@ describe("loader", () => {
         icon: "Calculator",
         displayOrder: 1,
         contentLanguage: "ar",
+        themeId: "ecole-tn",
+        gradeSlug: "9eme-base",
       }),
     );
     writeFileSync(
@@ -462,6 +511,8 @@ describe("loader", () => {
         icon: "x",
         displayOrder: 1,
         contentLanguage: "fr",
+        themeId: "ecole-tn",
+        gradeSlug: "9eme-base",
       }),
     );
     writeFileSync(
