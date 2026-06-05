@@ -121,6 +121,7 @@ export type TranslationKeys = {
     dailyEmpty: string;
     weeklyEmpty: string;
     pathsTitle: string;
+    otherThemesTitle: string;
     notAttempted: string;
     failedLoad: string;
     failedLoadDesc: string;

@@ -115,6 +115,7 @@ export const ar: TranslationKeys = {
     dailyEmpty: "أكمل تمارين لفتح الأهداف اليومية.",
     weeklyEmpty: "المهام الأسبوعية تظهر مع تقدمك.",
     pathsTitle: "مسارات للغزو",
+    otherThemesTitle: "مواضيع أخرى",
     notAttempted: "لم تُحاول بعد",
     failedLoad: "فشل تحميل لوحة التحكم",
     failedLoadDesc: "حدث خطأ ما. حاول مرة أخرى.",

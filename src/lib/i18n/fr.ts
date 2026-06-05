@@ -118,6 +118,7 @@ export const fr: TranslationKeys = {
     dailyEmpty: "Complète des exercices pour débloquer les objectifs quotidiens.",
     weeklyEmpty: "Les quêtes hebdomadaires apparaissent avec ta progression.",
     pathsTitle: "Voies à conquérir",
+    otherThemesTitle: "Autres thèmes",
     notAttempted: "Pas encore tenté",
     failedLoad: "Impossible de charger le dashboard",
     failedLoadDesc: "Quelque chose s'est mal passé. Réessaie.",

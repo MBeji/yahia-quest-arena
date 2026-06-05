@@ -134,11 +134,12 @@ describe("END-TO-END: new student signs up", () => {
           level: 1,
           coins: 0,
           current_streak: 0,
+          current_grade_id: "g9",
         });
       if (table === "subjects")
         return mockQuery([
-          { id: "s1", name_fr: "Math", color_token: "math", display_order: 1 },
-          { id: "s2", name_fr: "Physique", color_token: "phys", display_order: 2 },
+          { id: "s1", name_fr: "Math", color_token: "math", display_order: 1, grade_id: "g9" },
+          { id: "s2", name_fr: "Physique", color_token: "phys", display_order: 2, grade_id: "g9" },
         ]);
       // attempts (recent + stats)
       return mockQuery([]);
@@ -320,7 +321,12 @@ describe("END-TO-END: onboarding route data fetch", () => {
 
     mockFrom.mockImplementation((table: string) => {
       if (table === "profiles")
-        return mockQuery({ id: "user-regression-test", display_name: "Yahia", role: "student" });
+        return mockQuery({
+          id: "user-regression-test",
+          display_name: "Yahia",
+          role: "student",
+          current_grade_id: "g9",
+        });
       if (table === "subjects")
         return mockQuery([
           {
@@ -329,6 +335,7 @@ describe("END-TO-END: onboarding route data fetch", () => {
             description: "Algèbre",
             color_token: "math",
             display_order: 1,
+            grade_id: "g9",
           },
           {
             id: "s2",
@@ -336,6 +343,7 @@ describe("END-TO-END: onboarding route data fetch", () => {
             description: "Bio",
             color_token: "sci",
             display_order: 2,
+            grade_id: "g9",
           },
         ]);
       return mockQuery([]);

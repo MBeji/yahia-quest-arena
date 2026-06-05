@@ -66,8 +66,18 @@ describe("gamification.dashboard — getDashboard", () => {
   });
 
   it("returns primary dashboard data with existing profile", async () => {
-    const profile = { id: "user-123", display_name: "Yahia", xp: 300, level: 2 };
-    const subjects = [{ id: "s1", name_fr: "Math" }];
+    const profile = {
+      id: "user-123",
+      display_name: "Yahia",
+      xp: 300,
+      level: 2,
+      current_grade_id: "g9",
+    };
+    // s1 is a school subject for the student's grade; fr is a grade-agnostic theme
+    // subject — getDashboard must split them into subjects / otherSubjects.
+    const schoolSubject = { id: "s1", name_fr: "Math", grade_id: "g9" };
+    const otherSubject = { id: "fr", name_fr: "Français", grade_id: null };
+    const subjects = [schoolSubject, otherSubject];
     const attempts = [
       {
         subject_id: "s1",
@@ -90,12 +100,37 @@ describe("gamification.dashboard — getDashboard", () => {
 
     const res = result as Record<string, unknown>;
     expect(res.profile).toEqual(profile);
-    expect(res.subjects).toEqual(subjects);
+    // subjects is scoped to the student's grade; the grade-agnostic subject is split out.
+    expect(res.subjects).toEqual([schoolSubject]);
+    expect(res.otherSubjects).toEqual([otherSubject]);
     expect(res.recent).toEqual(attempts);
     // #15: badges/inventory/shop moved out of the primary fn.
     expect(res.badges).toBeUndefined();
     expect(res.inventory).toBeUndefined();
     expect(res.shopItems).toBeUndefined();
+  });
+
+  it("falls back to all grade-bound subjects when the profile has no grade (#themes)", async () => {
+    // Legacy profile without current_grade_id: school subjects = every grade-bound
+    // subject; grade-agnostic subjects still split into otherSubjects.
+    const profile = { id: "user-123", display_name: "Yahia" };
+    const g9 = { id: "s1", name_fr: "Math", grade_id: "g9" };
+    const bac = { id: "s2", name_fr: "Philo", grade_id: "gbac" };
+    const free = { id: "fr", name_fr: "Français", grade_id: null };
+
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "profiles") return mockQuery(profile);
+      if (table === "subjects") return mockQuery([g9, bac, free]);
+      if (table === "attempts") return mockQuery([]);
+      return mockQuery([]);
+    });
+
+    const { getDashboard } = await import("@/features/dashboard");
+    const result = await (getDashboard as unknown as (d?: unknown) => Promise<unknown>)();
+
+    const res = result as Record<string, unknown>;
+    expect(res.subjects).toEqual([g9, bac]);
+    expect(res.otherSubjects).toEqual([free]);
   });
 
   it("creates profile if not found", async () => {
