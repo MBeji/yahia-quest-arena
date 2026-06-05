@@ -270,6 +270,7 @@ export const fr: TranslationKeys = {
   layout: {
     heroesHall: "Hall des Héros",
     parcours: "Parcours",
+    themes: "Thèmes",
     dungeon: "Donjon",
     ranking: "Classement",
     parentReport: "Suivi",

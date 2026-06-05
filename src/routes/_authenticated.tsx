@@ -9,6 +9,7 @@ import {
   Sparkles,
   LayoutDashboard,
   Map,
+  Layers,
   LogOut,
   Swords,
   Crown,
@@ -115,6 +116,10 @@ function AuthenticatedLayout() {
             <Link to="/parcours" className={NAV_LINK} activeProps={NAV_ACTIVE}>
               <Map className="h-4 w-4 shrink-0" />{" "}
               <span className="hidden lg:inline">{t.layout.parcours}</span>
+            </Link>
+            <Link to="/themes" className={NAV_LINK} activeProps={NAV_ACTIVE}>
+              <Layers className="h-4 w-4 shrink-0" />{" "}
+              <span className="hidden lg:inline">{t.layout.themes}</span>
             </Link>
             <Link to="/dungeon" className={NAV_LINK} activeProps={NAV_ACTIVE}>
               <Swords className="h-4 w-4 shrink-0" />{" "}

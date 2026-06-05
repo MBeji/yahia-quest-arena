@@ -266,6 +266,7 @@ export const ar: TranslationKeys = {
   layout: {
     heroesHall: "قاعة الأبطال",
     parcours: "المسار",
+    themes: "المواضيع",
     dungeon: "الزنزانة",
     ranking: "الترتيب",
     parentReport: "التقرير",

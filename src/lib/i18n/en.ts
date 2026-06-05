@@ -271,6 +271,7 @@ export const en: TranslationKeys = {
   layout: {
     heroesHall: "Heroes Hall",
     parcours: "Adventure",
+    themes: "Themes",
     dungeon: "Dungeon",
     ranking: "Ranking",
     parentReport: "Report",
