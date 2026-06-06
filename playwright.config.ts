@@ -23,18 +23,25 @@ import { defineConfig, devices } from "@playwright/test";
 // not Vite's 5173. Override with PORT or PLAYWRIGHT_BASE_URL if a run needs to.
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://localhost:${process.env.PORT ?? 8080}`;
 
-const PUBLIC_SPECS = /(landing|auth-redirects)\.spec\.ts/;
+// Folder-based convention: drop a public spec in e2e/public/ or an authed spec
+// in e2e/authed/ and it's picked up automatically — no config change needed.
+const PUBLIC_SPECS = /public\/.*\.spec\.ts/;
 const AUTHED_SPECS = /authed\/.*\.spec\.ts/;
 
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 1 : 0,
-  reporter: process.env.CI ? "github" : "list",
+  retries: process.env.CI ? 2 : 0,
+  // HTML report on both (CI uploads it as an artifact); GitHub annotations in CI.
+  reporter: process.env.CI
+    ? [["github"], ["html", { open: "never" }]]
+    : [["list"], ["html", { open: "never" }]],
   use: {
     baseURL,
     trace: "on-first-retry",
+    screenshot: "only-on-failure",
+    video: "retain-on-failure",
   },
   projects: [
     // ---- Public (no backend) ----

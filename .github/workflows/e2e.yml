@@ -5,6 +5,11 @@ on:
   push:
     branches: [main]
 
+# Newer pushes cancel in-flight runs for the same ref.
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   e2e:
     runs-on: ubuntu-latest
@@ -30,10 +35,23 @@ jobs:
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
 
+      # Guardrails so the e2e suite can't silently rot (it's not in `npm run verify`).
+      - name: Typecheck e2e
+        run: npx tsc --noEmit -p e2e/tsconfig.json
+
+      - name: Lint e2e
+        run: npx eslint e2e --max-warnings=0
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
       - name: Install Playwright browser (chromium)
         run: npx playwright install --with-deps chromium
 
-      - name: Run E2E tests
+      - name: Run E2E tests (public)
         run: npm run test:e2e
 
       - name: Upload Playwright report

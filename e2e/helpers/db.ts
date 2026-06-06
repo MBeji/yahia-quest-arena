@@ -1,38 +1,37 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { requireAdminEnv } from "./env";
 
 /**
- * Test-only DB access via the service-role key (set in the same env used by
- * `npm run e2e:seed`: SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY). Used to pick
- * deterministic content ids instead of walking a quiz-gated UI.
+ * Test-only DB access via the service-role key (bypasses RLS). Use to pick
+ * deterministic content ids / set up data, instead of walking a quiz-gated UI.
+ * Exposed to specs through the `adminDb` fixture.
  */
-function adminClient() {
-  const url = process.env.SUPABASE_URL ?? process.env.VITE_SUPABASE_URL ?? "";
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
-  if (!url || !serviceKey) {
-    throw new Error(
-      "helpers/db needs SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in the environment " +
-        "(same vars as `npm run e2e:seed`).",
-    );
-  }
-  return createClient(url, serviceKey, { auth: { persistSession: false } });
+export interface AdminDb {
+  readonly client: SupabaseClient;
+  /**
+   * Id of a premium (subscription-only) subject. A free account opening its
+   * subject page gets the subscription paywall rendered directly — the reliable
+   * way to assert the free-user paywall journey (no quest-session / quiz race).
+   */
+  premiumSubjectId(): Promise<string>;
 }
 
-/**
- * Id of a premium (subscription-only) subject — the whole module is reserved to
- * subscribers. A free account opening its subject page gets the subscription
- * paywall rendered directly on the page (no quest session / chapter-quiz race),
- * so it is the reliable way to assert the free-user paywall journey.
- */
-export async function getPremiumSubjectId(): Promise<string> {
-  const { data, error } = await adminClient()
-    .from("subjects")
-    .select("id")
-    .eq("is_premium", true)
-    .limit(1)
-    .maybeSingle();
-  if (error) throw new Error(`getPremiumSubjectId: ${error.message}`);
-  if (!data) {
-    throw new Error("No premium subject (is_premium=true) found in the test project.");
-  }
-  return data.id as string;
+export function createAdminDb(): AdminDb {
+  const { url, serviceRoleKey } = requireAdminEnv();
+  const client = createClient(url, serviceRoleKey, { auth: { persistSession: false } });
+
+  return {
+    client,
+    async premiumSubjectId() {
+      const { data, error } = await client
+        .from("subjects")
+        .select("id")
+        .eq("is_premium", true)
+        .limit(1)
+        .maybeSingle();
+      if (error) throw new Error(`premiumSubjectId: ${error.message}`);
+      if (!data) throw new Error("No premium subject (is_premium=true) found in the test project.");
+      return data.id as string;
+    },
+  };
 }
