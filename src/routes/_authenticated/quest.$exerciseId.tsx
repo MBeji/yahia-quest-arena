@@ -5,9 +5,6 @@ import { motion, AnimatePresence } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
-  Zap,
-  Flame,
-  Sparkles,
   Loader2,
   Trophy,
   Skull,
@@ -23,6 +20,7 @@ import {
   computeNextExerciseId,
   getExercise,
   getSubject,
+  noXpReason,
   startExerciseSession,
   submitAttempt,
 } from "@/features/quest";
@@ -35,10 +33,12 @@ import { isRtlText, isMathExpression } from "@/shared/lib/utils";
 import { shuffleOptions, type BaseOption, type DisplayOption } from "@/shared/lib/question-utils";
 import { levelForXp } from "@/shared/lib/level";
 import { QuestResultActions } from "@/features/quest/components/quest-result-actions";
+import { QuestRewardGrid } from "@/features/quest/components/quest-reward-grid";
 import { ReportErrorButton } from "@/features/content-report";
 import { Confetti } from "@/features/quest/components/confetti";
 import { SubscriptionPaywall } from "@/features/subscription";
 import { LevelUpCelebration } from "@/components/ui/level-up-celebration";
+import { ExplainHint } from "@/components/ui/explain-hint";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/quest/$exerciseId")({
@@ -436,7 +436,13 @@ function QuestPage() {
               {passed ? t.quest.victoryTitle : t.quest.niceTriTitle}
             </h1>
             <p className="mt-1 text-muted-foreground">
-              {result.correct} / {result.total} correct answers · {Math.round(result.scorePct)}%
+              <ExplainHint
+                text={t.explain.questResultScore
+                  .replace("{correct}", String(result.correct))
+                  .replace("{total}", String(result.total))}
+              >
+                {result.correct} / {result.total} correct answers · {Math.round(result.scorePct)}%
+              </ExplainHint>
             </p>
             <p className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">
               Server-validated time · {result.durationSeconds}s
@@ -464,53 +470,15 @@ function QuestPage() {
             )}
             {result.xpEarned === 0 && (
               <div className="mt-6 rounded-xl border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 p-3 text-center text-xs text-[color:var(--gold)]">
-                {result.tooFast
-                  ? "⏱️ Trop rapide — aucune XP. Prends le temps de lire et de comprendre chaque question."
-                  : result.scorePct < 60
-                    ? "🎯 Sous 60 % — aucune XP. Répondre au hasard ne rapporte rien : vise la compréhension."
-                    : !result.improved
-                      ? "✅ Déjà maîtrisé — pas de nouvelle XP. Bats ton meilleur score sur cet exercice pour en regagner."
-                      : "Aucune XP gagnée cette fois."}
+                {noXpReason(result)}
               </div>
             )}
-            <div className="mt-6 grid grid-cols-4 gap-3">
-              <div className="rounded-xl bg-(--neon-gold)/15 p-4">
-                <Zap className="mx-auto h-5 w-5 text-neon-gold" />
-                <div className="mt-1 font-display text-2xl font-bold text-neon-gold">
-                  +{result.xpEarned}
-                </div>
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">
-                  {t.quest.xpLabel}
-                </div>
-              </div>
-              <div className="rounded-xl bg-(--gold)/15 p-4">
-                <Sparkles className="mx-auto h-5 w-5 text-[color:var(--gold)]" />
-                <div className="mt-1 font-display text-2xl font-bold text-[color:var(--gold)]">
-                  +{result.coinsEarned ?? 0}
-                </div>
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">
-                  {t.quest.coinsLabel}
-                </div>
-              </div>
-              <div className="rounded-xl bg-(--gold)/15 p-4">
-                <Sparkles className="mx-auto h-5 w-5 text-[color:var(--gold)]" />
-                <div className="mt-1 font-display text-2xl font-bold text-[color:var(--gold)]">
-                  {result.profile?.level ?? "?"}
-                </div>
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">
-                  {t.quest.levelLabel}
-                </div>
-              </div>
-              <div className="rounded-xl bg-(--flame)/15 p-4">
-                <Flame className="mx-auto h-5 w-5 text-flame animate-flame" />
-                <div className="mt-1 font-display text-2xl font-bold text-flame">
-                  {result.profile?.current_streak ?? 0}
-                </div>
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">
-                  {t.quest.streakLabel}
-                </div>
-              </div>
-            </div>
+            <QuestRewardGrid
+              xpEarned={result.xpEarned}
+              coinsEarned={result.coinsEarned ?? 0}
+              level={result.profile?.level ?? "?"}
+              streak={result.profile?.current_streak ?? 0}
+            />
             <div className="mt-6 text-xs uppercase tracking-widest text-[color:var(--champagne)]">
               {result.profile?.hero_class}
             </div>

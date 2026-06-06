@@ -9,3 +9,4 @@ export {
   submitAttempt,
 } from "./quest.server";
 export { computeNextExerciseId } from "./next-exercise";
+export { noXpReason } from "./no-xp-reason";
