@@ -16,6 +16,8 @@ export type DashboardShopItem = {
   isOwned: boolean;
   isEquipped: boolean;
   quantity: number;
+  /** Cosmetic skin slug (from `effect_payload.avatarSlug`); null for non-skins. */
+  avatarSlug: string | null;
 };
 
 export type BadgeRow = {
