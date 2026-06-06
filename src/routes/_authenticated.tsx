@@ -79,7 +79,7 @@ function AuthenticatedLayout() {
 
   if (loading) {
     return (
-      <div className="grid min-h-screen place-items-center bg-black-deep">
+      <div className="app-shell grid min-h-screen place-items-center bg-black-deep">
         <div className="font-display text-sm uppercase tracking-widest text-champagne/70">
           Loading…
         </div>
@@ -97,7 +97,7 @@ function AuthenticatedLayout() {
   }
 
   return (
-    <div className="relative min-h-screen bg-black-deep">
+    <div className="app-shell relative min-h-screen bg-black-deep">
       <GoldAmbient />
       <header className="relative z-10 border-b border-[color:var(--gold)]/15 bg-black/40 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
