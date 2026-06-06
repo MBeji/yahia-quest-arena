@@ -30,14 +30,14 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-1.5 rounded-md border border-border/50 bg-black/40 px-2.5 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur-md transition hover:border-[color:var(--gold)]/50 hover:text-foreground"
+        className="flex items-center gap-1.5 rounded-md border border-border/50 bg-background/50 px-2.5 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur-md transition hover:border-[color:var(--gold)]/50 hover:text-foreground"
         aria-label="Change language"
       >
         <Globe className="h-3.5 w-3.5" />
         <span className="font-bold tracking-wide">{current.short}</span>
       </button>
       {open && (
-        <div className="absolute end-0 top-full z-50 mt-1.5 min-w-[140px] overflow-hidden rounded-xl border border-border/60 bg-black/95 p-1 shadow-lg backdrop-blur-xl">
+        <div className="absolute end-0 top-full z-50 mt-1.5 min-w-[140px] overflow-hidden rounded-xl border border-border/60 bg-popover/95 p-1 shadow-lg backdrop-blur-xl">
           {LOCALES.map((l) => (
             <button
               key={l.code}
