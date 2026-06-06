@@ -181,7 +181,12 @@ html.light {
     radial-gradient(at 82% 28%, oklch(0.92 0.12 96 / 0.4), transparent 55%),
     radial-gradient(at 50% 92%, oklch(0.66 0.13 70 / 0.18), transparent 60%),
     linear-gradient(180deg, oklch(0.99 0.01 92), oklch(0.96 0.02 90));
-  --gradient-primary: linear-gradient(135deg, var(--gold-deep), var(--gold) 55%, var(--gold-bright));
+  --gradient-primary: linear-gradient(
+    135deg,
+    var(--gold-deep),
+    var(--gold) 55%,
+    var(--gold-bright)
+  );
   --gradient-cyan: linear-gradient(135deg, var(--neon-cyan), var(--neon-violet));
   --gradient-flame: linear-gradient(135deg, var(--flame), var(--neon-magenta));
 
@@ -241,6 +246,26 @@ html.light .glass {
 html.light .bg-black-deep {
   background-color: oklch(0.985 0.01 92);
 }
+
+/* ---------------------------------------------------------------
+  Authenticated app shell (light theme).
+  The app builds most of its panels from translucent `bg-black/<alpha>`
+  glasses. Remap Tailwind's `black` token to white *inside the shell only*
+  so those panels become bright ivory cards — the landing, auth screen and
+  portaled modal scrims (all outside .app-shell) keep their dark surfaces.
+  Ink-on-gold (`text-black`) and headings (`text-white`) are re-pinned to a
+  deep ink so they stay readable on the now-light cards, and the canvas is
+  deepened a touch so the white cards read as elevated.
+  --------------------------------------------------------------- */
+html.light .app-shell {
+  --color-black: oklch(1 0 0);
+}
+html.light .app-shell.bg-black-deep {
+  background-color: oklch(0.96 0.013 88);
+}
+html.light .app-shell :is(.text-black, .text-white) {
+  color: oklch(0.22 0.02 80);
+}
 html.light .glass-gold {
   background: oklch(1 0 0 / 0.62);
   border-color: oklch(0.72 0.13 80 / 0.28);
@@ -259,7 +284,12 @@ html.light .scanline::after {
   background: repeating-linear-gradient(0deg, transparent 0 3px, oklch(0.2 0.02 80 / 0.03) 3px 4px);
 }
 html.light .animate-shimmer {
-  background: linear-gradient(90deg, transparent 25%, oklch(0.2 0.02 80 / 0.06) 50%, transparent 75%);
+  background: linear-gradient(
+    90deg,
+    transparent 25%,
+    oklch(0.2 0.02 80 / 0.06) 50%,
+    transparent 75%
+  );
   background-size: 200% 100%;
 }
 html.light ::-webkit-scrollbar-thumb {
