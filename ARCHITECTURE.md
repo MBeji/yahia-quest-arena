@@ -166,12 +166,12 @@ through SECURITY DEFINER RPCs (consumable migrations under
 `supabase/migrations/202606061200…` / `…130000…`) and share one inventory flag:
 **`inventory_items.is_active` = "armed"**.
 
-| Mechanic      | `item_type` | `effect_payload`                  | Seed example                      |
-| ------------- | ----------- | --------------------------------- | --------------------------------- |
-| Potions       | `potion`    | `xpMultiplier` / `coinMultiplier` | `potion_xp_boost`, `potion_coins` |
-| Retry shield  | `shield`    | `retries`                         | `shield_retry`                    |
-| Streak shield | `shield`    | `streakShield`                    | _(passive; not yet seeded)_       |
-| Hints         | `booster`   | `hints` / `hintBoost`             | `booster_hint` (`{"hints":3}`)    |
+| Mechanic      | `item_type`          | `effect_payload`                  | Seed example                                                        |
+| ------------- | -------------------- | --------------------------------- | ------------------------------------------------------------------- |
+| Potions       | `potion`             | `xpMultiplier` / `coinMultiplier` | `potion_xp_boost`, `potion_coins`                                   |
+| Retry shield  | `shield`             | `retries`                         | `shield_retry`                                                      |
+| Streak shield | `shield`             | `streakShield`                    | `bouclier_flamme`                                                   |
+| Hints         | `booster` / `potion` | `hints` / `hintBoost`             | `booster_hint` (`{"hints":3}`), `potion_rappel` (`{"hintBoost":1}`) |
 
 **Two-slot arming model** (`activate_inventory_item`): a consumable is "armed" by setting
 `is_active = true`. The slot is derived from the `effect_payload`:
