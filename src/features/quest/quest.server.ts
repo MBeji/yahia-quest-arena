@@ -35,6 +35,14 @@ export const PREMIUM_SUBJECT_LOCKED_MESSAGE =
 
 type ProfileSnapshot = Database["public"]["Tables"]["profiles"]["Row"];
 
+/** Multiplier potion applied to a reward-earning attempt (null when none armed). */
+export type PotionApplied = {
+  itemCode: string;
+  itemName: string;
+  xpMultiplier: number;
+  coinMultiplier: number;
+};
+
 type AtomicSubmitResponse = {
   correct: number;
   total: number;
@@ -46,6 +54,7 @@ type AtomicSubmitResponse = {
   improved: boolean;
   profile: ProfileSnapshot | null;
   unlockedBadges: UnlockedBadge[];
+  potionApplied: PotionApplied | null;
 };
 
 function toUnlockedBadges(value: unknown): UnlockedBadge[] {
@@ -74,6 +83,20 @@ function toUnlockedBadges(value: unknown): UnlockedBadge[] {
     .filter((badge): badge is UnlockedBadge => badge !== null);
 }
 
+function toPotionApplied(value: unknown): PotionApplied | null {
+  if (!value || typeof value !== "object") return null;
+
+  const row = value as Record<string, unknown>;
+  if (typeof row.itemCode !== "string") return null;
+
+  return {
+    itemCode: row.itemCode,
+    itemName: typeof row.itemName === "string" ? row.itemName : "",
+    xpMultiplier: Number(row.xpMultiplier ?? 1),
+    coinMultiplier: Number(row.coinMultiplier ?? 1),
+  };
+}
+
 function parseAtomicSubmitResponse(payload: unknown): AtomicSubmitResponse {
   if (!payload || typeof payload !== "object") {
     throw new Error("Unexpected quest submission response.");
@@ -93,6 +116,7 @@ function parseAtomicSubmitResponse(payload: unknown): AtomicSubmitResponse {
     profile:
       row.profile && typeof row.profile === "object" ? (row.profile as ProfileSnapshot) : null,
     unlockedBadges: toUnlockedBadges(row.unlockedBadges),
+    potionApplied: toPotionApplied(row.potionApplied),
   };
 }
 
@@ -460,5 +484,6 @@ export const submitAttempt = createServerFn({ method: "POST" })
       review,
       reviewHidden: isQuiz,
       unlockedBadges: atomic.unlockedBadges,
+      potionApplied: atomic.potionApplied,
     };
   });

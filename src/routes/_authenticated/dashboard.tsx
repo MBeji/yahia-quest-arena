@@ -26,7 +26,7 @@ import {
   resolveDailyAction,
   resolveWeeklyAction,
 } from "@/features/dashboard";
-import { purchaseShopItem, equipInventorySkin } from "@/features/shop";
+import { purchaseShopItem, equipInventorySkin, activateInventoryItem } from "@/features/shop";
 import { recoverStreak } from "@/features/progression";
 import { isSubscriptionActive } from "@/features/subscription";
 import { SubjectPathCard } from "@/features/dashboard/components/subject-path-card";
@@ -156,6 +156,7 @@ function Dashboard() {
   const fetchSprint2 = useServerFn(getSprint2Dashboard);
   const purchaseItem = useServerFn(purchaseShopItem);
   const equipSkin = useServerFn(equipInventorySkin);
+  const activateItem = useServerFn(activateInventoryItem);
   const { data, isLoading, isError } = useQuery({
     queryKey: ["dashboard"],
     queryFn: () => fetchDashboard(),
@@ -218,6 +219,17 @@ function Dashboard() {
     // TODO(review #32): hardcoded English fallback — needs an i18n key (e.g.
     // t.dashboard.equipFailed) added to the i18n files before it can use useT().
     onError: (error) => toast.error(error instanceof Error ? error.message : "Equip failed"),
+  });
+
+  const activateMutation = useMutation({
+    mutationFn: (payload: { itemCode: string }) => activateItem({ data: payload }),
+    onSuccess: (res) => {
+      // TODO(review #32): hardcoded toast — no matching i18n key exists yet. Add a key
+      // (e.g. t.dashboard.potionArmed with a {name} placeholder), then switch to useT().
+      toast.success(`${res.itemName} activée · prochaine quête.`);
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+    },
+    onError: (error) => toast.error(error instanceof Error ? error.message : "Activation failed"),
   });
 
   const recoverStreakFn = useServerFn(recoverStreak);
@@ -716,6 +728,8 @@ function Dashboard() {
                   inventory={inventory}
                   avatarSlug={profile.avatar_slug}
                   displayName={profile.display_name}
+                  isActivatePending={activateMutation.isPending}
+                  onActivate={(itemCode) => activateMutation.mutate({ itemCode })}
                 />
               </Suspense>
             ) : (
@@ -759,8 +773,10 @@ function Dashboard() {
               availableCoins={profile.yahia_coins ?? 0}
               isPurchasePending={purchaseMutation.isPending}
               isEquipPending={equipMutation.isPending}
+              isActivatePending={activateMutation.isPending}
               onPurchase={(itemCode) => purchaseMutation.mutate({ itemCode })}
               onEquip={(itemCode) => equipMutation.mutate({ itemCode })}
+              onActivate={(itemCode) => activateMutation.mutate({ itemCode })}
             />
           </Suspense>
         ) : (

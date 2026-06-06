@@ -479,6 +479,81 @@ describe("gamification.quest — submitAttempt", () => {
     });
   });
 
+  it("surfaces an applied multiplier potion from the RPC payload", async () => {
+    const questionsData = [
+      { id: Q1_ID, prompt: "2+2?", correct_option: "4", explanation: "Basic math" },
+    ];
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") return mockQuery({ mode: "practice" });
+      return mockQuery(questionsData);
+    });
+    mockRpc.mockReturnValue({
+      data: {
+        correct: 1,
+        total: 1,
+        scorePct: 100,
+        xpEarned: 100,
+        coinsEarned: 20,
+        durationSeconds: 30,
+        tooFast: false,
+        improved: true,
+        profile: { xp: 100 },
+        unlockedBadges: [],
+        potionApplied: {
+          itemCode: "potion_xp_boost",
+          itemName: "XP Boost",
+          xpMultiplier: 2,
+          coinMultiplier: 1,
+        },
+      },
+      error: null,
+    });
+
+    const { submitAttempt } = await import("@/features/quest");
+    const result = (await (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
+      sessionId: SESSION_ID,
+      exerciseId: EXERCISE_ID,
+      answers: [{ questionId: Q1_ID, choice: "4" }],
+    })) as Record<string, unknown>;
+
+    const potion = result.potionApplied as Record<string, unknown> | null;
+    expect(potion).not.toBeNull();
+    expect(potion?.itemCode).toBe("potion_xp_boost");
+    expect(potion?.xpMultiplier).toBe(2);
+    expect(potion?.coinMultiplier).toBe(1);
+  });
+
+  it("returns potionApplied = null when no potion was applied", async () => {
+    const questionsData = [{ id: Q1_ID, prompt: "2+2?", correct_option: "4", explanation: "x" }];
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") return mockQuery({ mode: "practice" });
+      return mockQuery(questionsData);
+    });
+    mockRpc.mockReturnValue({
+      data: {
+        correct: 1,
+        total: 1,
+        scorePct: 100,
+        xpEarned: 50,
+        coinsEarned: 10,
+        durationSeconds: 30,
+        profile: { xp: 50 },
+        unlockedBadges: [],
+        potionApplied: null,
+      },
+      error: null,
+    });
+
+    const { submitAttempt } = await import("@/features/quest");
+    const result = (await (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
+      sessionId: SESSION_ID,
+      exerciseId: EXERCISE_ID,
+      answers: [{ questionId: Q1_ID, choice: "4" }],
+    })) as Record<string, unknown>;
+
+    expect(result.potionApplied).toBeNull();
+  });
+
   it("hides the correction (no correct answers leak) for a comprehension quiz", async () => {
     mockFrom.mockImplementation((table: string) => {
       if (table === "exercises") return mockQuery({ mode: "quiz" });

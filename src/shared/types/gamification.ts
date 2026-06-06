@@ -18,6 +18,10 @@ export type DashboardShopItem = {
   quantity: number;
   /** Cosmetic skin slug (from `effect_payload.avatarSlug`); null for non-skins. */
   avatarSlug: string | null;
+  /** True for owned multiplier potions that can be armed ("Activer"). */
+  isArmable: boolean;
+  /** True when this owned consumable is currently armed for the next quest. */
+  isActive: boolean;
 };
 
 export type BadgeRow = {
@@ -34,6 +38,7 @@ export type BadgeRow = {
 export type InventoryRow = {
   quantity: number;
   is_equipped: boolean;
+  is_active: boolean;
   acquired_at: string;
   item: {
     id: string;
@@ -42,6 +47,8 @@ export type InventoryRow = {
     item_type: string;
     description: string | null;
     price_coins: number;
+    /** Supabase `Json`; narrow to a record before reading multiplier keys. */
+    effect_payload: unknown;
   } | null;
 };
 

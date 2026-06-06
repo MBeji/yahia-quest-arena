@@ -20,6 +20,8 @@ type ShopItem = {
   isEquipped: boolean;
   quantity: number;
   avatarSlug: string | null;
+  isArmable: boolean;
+  isActive: boolean;
 };
 
 type DashboardBadgesShopProps = {
@@ -28,8 +30,10 @@ type DashboardBadgesShopProps = {
   availableCoins: number;
   isPurchasePending: boolean;
   isEquipPending: boolean;
+  isActivatePending: boolean;
   onPurchase: (itemCode: string) => void;
   onEquip: (itemCode: string) => void;
+  onActivate: (itemCode: string) => void;
 };
 
 export function DashboardBadgesShop({
@@ -38,8 +42,10 @@ export function DashboardBadgesShop({
   availableCoins,
   isPurchasePending,
   isEquipPending,
+  isActivatePending,
   onPurchase,
   onEquip,
+  onActivate,
 }: DashboardBadgesShopProps) {
   return (
     <>
@@ -88,8 +94,9 @@ export function DashboardBadgesShop({
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {shopItems.map((item) => {
             const canEquip = item.itemType === "skin" && item.isOwned && !item.isEquipped;
+            const canActivate = item.isArmable && !item.isActive;
             const canBuy = !item.isOwned || item.itemType !== "skin";
-            const isBusy = isPurchasePending || isEquipPending;
+            const isBusy = isPurchasePending || isEquipPending || isActivatePending;
             const skinEmoji = avatarEmojiForSlug(item.avatarSlug);
 
             return (
@@ -133,6 +140,11 @@ export function DashboardBadgesShop({
                         : `In stock x${item.quantity}`}
                     </div>
                   )}
+                  {item.isActive && (
+                    <div className="rounded-full bg-[color:var(--gold)]/15 px-3 py-1 text-xs font-bold text-[color:var(--gold)]">
+                      Actif · prochaine quête
+                    </div>
+                  )}
                 </div>
                 <div className="mt-4 flex gap-2">
                   <button
@@ -158,6 +170,20 @@ export function DashboardBadgesShop({
                         <Loader2 className="mx-auto h-4 w-4 animate-spin" />
                       ) : (
                         "Equip"
+                      )}
+                    </button>
+                  )}
+                  {canActivate && (
+                    <button
+                      disabled={isBusy}
+                      onClick={() => onActivate(item.code)}
+                      aria-label={`Activer ${item.name}`}
+                      className="flex-1 rounded-lg bg-[image:var(--gradient-gold)] px-4 py-2.5 text-sm font-bold text-black shadow-gold disabled:opacity-40"
+                    >
+                      {isActivatePending ? (
+                        <Loader2 className="mx-auto h-4 w-4 animate-spin" />
+                      ) : (
+                        "Activer"
                       )}
                     </button>
                   )}
