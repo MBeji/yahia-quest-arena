@@ -4,12 +4,26 @@
 
 ## What this is
 
-Gamified education platform for Tunisian 9th graders prepping the national exam.
-Students do subject "quests" (QCM exercises), earn XP/coins, unlock badges, level up
-hero classes, compete on a leaderboard, and tackle a timed "dungeon" boss mode.
-Shonen/RPG manga aesthetic, trilingual (FR/EN/AR with RTL).
+Gamified learning **academy** — a broad catalogue, not a single course. Students do "quests"
+(QCM exercises), earn XP/coins, unlock badges, level up hero classes, compete on a leaderboard,
+and tackle a timed "dungeon" boss mode. Shonen/RPG manga aesthetic, trilingual (FR/EN/AR with RTL).
 
-**Stack**: Vite 7 · TanStack Start (SSR + file routing + server fns) · React 19 · TanStack Query 5 · Supabase (Postgres + Auth + RLS) · Tailwind 4 / Radix-shadcn · deploy on Cloudflare Workers (Vercel preview fallback). Package manager: **bun** (`bun.lock`), npm scripts work too. Tests: Vitest 4 + Testing Library.
+**Catalogue hierarchy** (this is the key mental model — the app is wider than its origins):
+`themes` → `grades` → `subjects` → `chapters` → `exercises` → `questions`.
+
+- A **theme** is a top-level track. Seeded themes: `ecole-tn` (Programme scolaire tunisien),
+  plus standalone tracks `culture-generale`, `muscle-cerveau`, `anti-vieillissement`, and
+  language tracks `anglais` / `francais` / `arabe`. Only the school theme has grades
+  (`themes.has_grades`).
+- **Grades** exist _only_ under the school theme: the full Tunisian ladder, 1ère année de base →
+  Baccalauréat (13 levels). 6ème, 9ème and Bac are national-exam years
+  (`grades.is_concours_national`). The student picks one at onboarding → `profiles.current_grade_id`.
+- So **"9ème année" is just one grade**, under one theme. It's currently the most-populated grade
+  (most `content/` subjects target `9eme-base`), but treat that as data, not as the app's scope.
+  Everything below `subjects` (chapters/exercises + all gameplay: XP, quiz gate, dungeon,
+  leaderboard) is theme/grade-agnostic.
+
+**Stack**: Vite 7 · TanStack Start (SSR + file routing + server fns) · React 19 · TanStack Query 5 · Supabase (Postgres + Auth + RLS) · Tailwind 4 / Radix-shadcn · **deploys to Vercel** — push to `main` auto-deploys prod via `scripts/build-vercel.mjs` (`vercel.json`). A Cloudflare Workers config also exists, but Vercel is the live target. Package manager: **bun** (`bun.lock`), npm scripts work too. Tests: Vitest 4 + Testing Library (unit) and Playwright (e2e).
 
 ## Essential commands
 
@@ -17,14 +31,32 @@ Shonen/RPG manga aesthetic, trilingual (FR/EN/AR with RTL).
 npm run dev          # Vite dev server (SSR)
 npm run build        # production build
 npm run build:check  # build + bundle-budget check
-npm test             # vitest run (312 tests / 28 files)
+npm test             # vitest run (unit; ~525 tests / 56 files)
 npm run test:watch   # watch mode
 npm run test:coverage
 npm run lint         # eslint src --max-warnings=0  (zero-warning policy)
 npm run typecheck    # tsc --noEmit (strict)
 npm run format       # prettier --write .
-npm run verify       # lint + typecheck + test       (fast local gate / pre-push)
-npm run ci:verify    # verify + coverage + build:check + audit:deps  (full CI gate)
+npm run verify       # lint + typecheck + test                          (fast local gate / pre-push)
+npm run ci:verify    # verify + coverage + build:check + audit:deps + content:qa:strict  (full gate)
+```
+
+**Content pipeline** (authored files → Supabase migrations — see "Content pipeline" below):
+
+```bash
+npm run content:check      # validate all content, write nothing
+npm run content:build      # compile content/ → idempotent SQL in supabase/migrations/
+npm run content:qa         # content quality checks
+npm run content:qa:strict  # same, fail on warnings (part of ci:verify)
+```
+
+**E2E (Playwright)** — needs a dedicated TEST Supabase project + seeded users; not part of the unit gate:
+
+```bash
+npm run test:e2e:install   # one-time: install chromium
+npm run e2e:seed           # seed test users into the TEST project (scripts/e2e/)
+npm run test:e2e           # public (chromium + mobile) specs
+npm run test:e2e:auth      # authenticated specs (uses e2e/.auth/*.json storage state)
 ```
 
 **Git hooks (husky):** `pre-commit` runs `lint-staged` (Prettier + ESLint `--fix` on
@@ -46,8 +78,9 @@ staged files); `pre-push` runs `npm run verify`. Installed automatically via the
 
 ## Data model (Supabase)
 
-`profiles` (xp/level/streak/coins/hero_class/role) · `subjects` → `chapters` → `exercises`
-→ `questions` (QCM, `options` JSONB) · `attempts` · `exercise_sessions` · `student_badges` /
+`profiles` (xp/level/streak/coins/hero_class/role/`current_grade_id`) · `themes` → `grades`
+(school theme only) → `subjects` → `chapters` → `exercises` → `questions` (QCM, `options` JSONB)
+· `attempts` · `exercise_sessions` · `student_badges` /
 `shop_items` / `inventory_items` · `daily_objectives` · `weekly_quests` ·
 `spaced_repetition_schedule` (SM-2) · `dungeon_runs` · `family_links`.
 
@@ -69,6 +102,33 @@ Potions (`xpMultiplier`/`coinMultiplier`) and the retry shield (`retries`) share
 consumable is consumed only when it actually takes effect, and never bypasses the
 `tooFast`/`≥60%`/`improved` anti-farm gates. Apply consumable migrations before deploy (§7).
 See ARCHITECTURE.md "Consumables (shop items)" for the full model.
+
+## Content pipeline (`content/`)
+
+Pedagogical content (subjects, chapters, courses, summaries, quizzes, exercises) is **not**
+hand-written SQL — it lives as versioned files under `content/<subject>/NN-<slug>/`
+(`subject.json`, `chapter.json`, `cours.md`, `resume.md`, `quiz.json`, `exercices/*.json`),
+validated by Zod (`src/shared/content/schema.ts`), then compiled by
+`scripts/content/build.ts` into **idempotent** SQL in `supabase/migrations/`. IDs are
+**deterministic UUIDv5** derived from slugs, so rebuilding updates rows in place (no dupes)
+and removed admin content is pruned — **parent-authored content is never touched**. Each
+`subject.json` declares `themeId` (required) + `gradeSlug` (resolved to a `grades` UUID at
+compile time, never hard-coded). `quiz.json` is mandatory and gates a chapter's exercises
+(student must pass ≥ `QUIZ_PASS_THRESHOLD_PCT`). Edit content as files → `content:build` →
+review the generated SQL → apply to the DB **before** deploying dependent code (DoD §7).
+Full spec: [`content/README.md`](./content/README.md) (in French).
+
+**Generating content — use the skills.** Content authoring is industrialized via a suite of
+Claude Code skills under [`.claude/skills/`](./.claude/skills/). `content-engine` is the shared core
+(schema, quality bar, reward table, RPG style, trilingual model, validate-then-stop workflow) in its
+`references/`; thin per-program wrappers defer to it: `content-ecole-tn` (national school program,
+**faithful to the official curriculum**), `content-culture-generale` and `content-muscle-cerveau`
+(trilingual FR/EN/AR → three sibling subjects), and `content-langue-{anglais,francais,arabe}`
+(immersion, one per language). Skills produce **files only** (then run `content:check` +
+`content:qa:strict`); you review the diff, then build/apply. **Non-school** programs are trilingual =
+three sibling subjects (one `contentLanguage` each) under one theme; **school** content (`ecole-tn`)
+stays in the subject's **official language of instruction** (monolingual). Every mission/quiz
+indicates its difficulty level (⭐ scale) in its title. There is no per-record translation.
 
 ## Conventions
 
@@ -141,3 +201,11 @@ When unsure about scope or a destructive action, ask before proceeding.
   and don't widen `include` to dilute the metric with vendored/glue code.
 - Some server fns defensively tolerate missing RPCs (e.g. `get_best_scores_by_exercise`
   falls back to empty) — keep that graceful-degradation pattern.
+- **E2E ≠ unit gate.** Playwright specs (`e2e/`, run via `e2e.yml` / `e2e-auth.yml`) hit a
+  **dedicated TEST Supabase project** with seeded users (`scripts/e2e/`), not the unit-test
+  mocks. They are not part of `npm run verify`/`ci:verify`; don't point them at prod.
+- **CI workflow runs a subset.** `.github/workflows/ci.yml` runs lint + typecheck +
+  test:coverage + build:check + audit:deps — it does **not** run `content:qa:strict` (only the
+  local `ci:verify` script does). Run `content:qa:strict` yourself when touching `content/`.
+- The Copilot guide (`.github/copilot-instructions.md`) still references `@/shared/ui/` for UI
+  primitives — that move never happened; use `@/components/ui/*` (same drift noted above).
