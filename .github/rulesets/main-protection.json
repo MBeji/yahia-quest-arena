@@ -25,7 +25,9 @@
         "strict_required_status_checks_policy": true,
         "required_status_checks": [
           { "context": "verify" },
-          { "context": "migration-presence" }
+          { "context": "Migration presence" },
+          { "context": "pgTAP suite" },
+          { "context": "e2e" }
         ]
       }
     }
