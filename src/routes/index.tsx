@@ -20,6 +20,7 @@ import {
 import heroImg from "@/assets/hero-warrior.jpg";
 import { useT } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
+import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLenis } from "@/components/landing/use-lenis";
 
@@ -176,6 +177,7 @@ function Landing() {
             </nav>
             <div className="flex items-center gap-2">
               <LanguageSwitcher />
+              <ThemeSwitcher />
               <Link
                 to="/login"
                 className="rounded-md px-4 py-2 text-sm text-muted-foreground transition hover:text-champagne"

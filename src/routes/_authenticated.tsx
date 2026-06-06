@@ -22,6 +22,7 @@ import { supabase } from "@/shared/integrations/supabase/client";
 import { toast } from "sonner";
 import { useT } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
+import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 import { GoldAmbient } from "@/components/visual/gold-ambient";
 
 const NAV_LINK =
@@ -166,6 +167,7 @@ function AuthenticatedLayout() {
               </>
             )}
             <LanguageSwitcher />
+            <ThemeSwitcher />
             <button onClick={signOut} className={NAV_LINK} aria-label={t.layout.signOut}>
               <LogOut className="h-4 w-4 shrink-0" />{" "}
               <span className="hidden lg:inline">{t.layout.signOut}</span>

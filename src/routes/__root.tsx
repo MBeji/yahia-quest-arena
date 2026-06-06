@@ -14,6 +14,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { I18nProvider, useT } from "@/lib/i18n";
 import type { Locale } from "@/lib/i18n";
 import { DEFAULT_LOCALE, dirForLocale, localeFromCookieHeader } from "@/lib/i18n/context";
+import { ThemeProvider, useTheme, DEFAULT_THEME, themeFromCookieHeader } from "@/lib/theme";
+import type { Theme } from "@/lib/theme";
 
 import appCss from "../styles.css?url";
 
@@ -138,10 +140,27 @@ const getShellLocale = createIsomorphicFn()
     }
   });
 
+/**
+ * Resolve the UI theme for the SSR shell from the persisted cookie so the
+ * <html class="dark|light"> is correct on first paint (no flash of the wrong
+ * theme). The client branch reads the same cookie during hydration, so both
+ * sides agree on the <html> class. See ThemeProvider for the runtime sync.
+ */
+const getShellTheme = createIsomorphicFn()
+  .client((): Theme => themeFromCookieHeader(document.cookie))
+  .server((): Theme => {
+    try {
+      return themeFromCookieHeader(getRequestHeader("cookie"));
+    } catch {
+      return DEFAULT_THEME;
+    }
+  });
+
 function RootShell({ children }: { children: React.ReactNode }) {
   const locale = getShellLocale();
+  const theme = getShellTheme();
   return (
-    <html lang={locale} dir={dirForLocale(locale)}>
+    <html lang={locale} dir={dirForLocale(locale)} className={theme}>
       <head>
         <HeadContent />
       </head>
@@ -166,10 +185,18 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <I18nProvider>
-        <Outlet />
-        <Toaster richColors theme="dark" position="top-center" />
-      </I18nProvider>
+      <ThemeProvider>
+        <I18nProvider>
+          <Outlet />
+          <ThemedToaster />
+        </I18nProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
+}
+
+/** Toaster whose colour scheme follows the active UI theme. */
+function ThemedToaster() {
+  const { theme } = useTheme();
+  return <Toaster richColors theme={theme} position="top-center" />;
 }
