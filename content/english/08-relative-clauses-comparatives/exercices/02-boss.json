@@ -1,0 +1,154 @@
+{
+  "title": "⚔️ Boss: relative clauses & comparatives mastery",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Choose the correct relative pronoun: \"The scientist ___ research won the Nobel Prize gave a lecture.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "who"
+        },
+        {
+          "id": "b",
+          "text": "which"
+        },
+        {
+          "id": "c",
+          "text": "whose"
+        },
+        {
+          "id": "d",
+          "text": "that"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "The research belongs to the scientist, so we need the possessive relative pronoun \"whose\": the scientist whose research won the Nobel Prize (= the scientist's research). \"who\" replaces a person as subject/object, not a possessor; \"which\"/\"that\" refer to things and cannot show possession here.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete with the correct comparative: \"This exam is ___ the one we did last month.\" (difficult)",
+      "options": [
+        {
+          "id": "a",
+          "text": "difficulter than"
+        },
+        {
+          "id": "b",
+          "text": "the most difficult than"
+        },
+        {
+          "id": "c",
+          "text": "more difficult as"
+        },
+        {
+          "id": "d",
+          "text": "more difficult than"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "'difficult' is a long adjective (three syllables), so the comparative is 'more difficult than'. We never add '-er' to long adjectives, and the second element is introduced by 'than', not 'as'.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choose the correct sentence:",
+      "options": [
+        {
+          "id": "a",
+          "text": "Her results are better than mine."
+        },
+        {
+          "id": "b",
+          "text": "Her results are gooder than mine."
+        },
+        {
+          "id": "c",
+          "text": "Her results are more good than mine."
+        },
+        {
+          "id": "d",
+          "text": "Her results are best than mine."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "'good' is irregular. Its comparative is 'better than' — not 'gooder', 'more good', or 'best'. The superlative would be 'the best'.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"Rania is not ___ her brother at maths.\" (good)",
+      "options": [
+        {
+          "id": "a",
+          "text": "as better as"
+        },
+        {
+          "id": "b",
+          "text": "so good than"
+        },
+        {
+          "id": "c",
+          "text": "as good as"
+        },
+        {
+          "id": "d",
+          "text": "as well as"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "For equality/inequality, use 'as + base adjective + as'. 'not as good as' is correct. 'as better as' wrongly uses the comparative inside the structure; 'so good than' is not a real pattern; 'as well as' is an adverb phrase, not an adjective comparison.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which sentence correctly uses a writing connector to show contrast?",
+      "options": [
+        {
+          "id": "a",
+          "text": "He studied hard; therefore, he failed the exam."
+        },
+        {
+          "id": "b",
+          "text": "He studied hard; furthermore, he failed the exam."
+        },
+        {
+          "id": "c",
+          "text": "He studied hard; for example, he failed the exam."
+        },
+        {
+          "id": "d",
+          "text": "He studied hard; however, he failed the exam."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "'however' signals contrast between two opposing ideas. 'therefore' = result, 'furthermore' = addition, 'for example' = illustration. Only 'however' correctly contrasts studying hard with failing.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choose the sentence with the correct superlative form:",
+      "options": [
+        {
+          "id": "a",
+          "text": "Yesterday was the most bad day of my life."
+        },
+        {
+          "id": "b",
+          "text": "Yesterday was the baddest day of my life."
+        },
+        {
+          "id": "c",
+          "text": "Yesterday was the worse day of my life."
+        },
+        {
+          "id": "d",
+          "text": "Yesterday was the worst day of my life."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "'bad' is irregular: bad → worse → the worst. 'The worst day' is the only correct superlative. 'Baddest', 'the most bad', and 'the worse' are all incorrect forms.",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "title": "Quiz de compréhension",
+  "questions": [
+    {
+      "prompt": "Combien de types de phrases existe-t-il en français ?",
+      "options": [
+        { "id": "a", "text": "Deux (affirmatif et négatif)" },
+        { "id": "b", "text": "Trois (déclaratif, interrogatif, exclamatif)" },
+        { "id": "c", "text": "Quatre (déclaratif, interrogatif, impératif, exclamatif)" },
+        { "id": "d", "text": "Cinq (déclaratif, interrogatif, impératif, exclamatif, emphatique)" }
+      ],
+      "correctOption": "c",
+      "explanation": "Il existe exactement quatre types de phrases : déclaratif (informer), interrogatif (questionner), impératif (ordonner/conseiller) et exclamatif (exprimer une émotion).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle est la caractéristique principale de la phrase impérative ?",
+      "options": [
+        { "id": "a", "text": "Elle se termine toujours par un point d'exclamation." },
+        { "id": "b", "text": "Le sujet n'est pas exprimé et le verbe est à l'impératif." },
+        { "id": "c", "text": "Elle contient obligatoirement une négation." },
+        { "id": "d", "text": "Elle commence toujours par un mot interrogatif." }
+      ],
+      "correctOption": "b",
+      "explanation": "La phrase impérative se reconnaît à l'absence de sujet exprimé et au verbe conjugué à l'impératif (ex. : « Avance. », « Écoutons. »).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle est la différence entre une interrogation totale et une interrogation partielle ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "L'interrogation totale utilise un mot interrogatif ; la partielle n'en utilise pas."
+        },
+        {
+          "id": "b",
+          "text": "L'interrogation totale appelle une réponse oui/non ; la partielle porte sur un élément précis."
+        },
+        {
+          "id": "c",
+          "text": "L'interrogation totale est au registre soutenu ; la partielle est familière."
+        },
+        {
+          "id": "d",
+          "text": "L'interrogation totale utilise l'inversion du sujet ; la partielle utilise « est-ce que »."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "L'interrogation totale appelle une réponse par oui ou non (ex. : « Viens-tu ? »). L'interrogation partielle porte sur un élément précis et utilise un mot interrogatif (qui, où, quand…).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Parmi les négations suivantes, laquelle est incorrecte selon les règles de la négation en deux mots ?",
+      "options": [
+        { "id": "a", "text": "ne… pas" },
+        { "id": "b", "text": "ne… jamais" },
+        { "id": "c", "text": "ne… rien" },
+        { "id": "d", "text": "ne… oui" }
+      ],
+      "correctOption": "d",
+      "explanation": "La négation fonctionne toujours en deux mots encadrant le verbe : ne… pas, ne… jamais, ne… plus, ne… rien. « ne… oui » n'est pas une négation française.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans la phrase « C'est la reine qui décide. », quelle forme particulière est utilisée ?",
+      "options": [
+        { "id": "a", "text": "La forme négative" },
+        { "id": "b", "text": "La forme passive" },
+        { "id": "c", "text": "La forme interrogative" },
+        { "id": "d", "text": "La forme emphatique" }
+      ],
+      "correctOption": "d",
+      "explanation": "Le présentatif « c'est… qui » met le sujet en relief : c'est la forme emphatique. Elle souligne l'importance d'un élément de la phrase.",
+      "difficulty": 2
+    }
+  ]
+}

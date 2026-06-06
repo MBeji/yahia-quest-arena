@@ -1,0 +1,82 @@
+{
+  "title": "تمرين مراجعة: نظرية طاليس وعكسها (نمط امتحان)",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "في مثلّث ABC، المستقيم (MN) يوازي (BC) ويقطع [AB] في M و[AC] في N. إذا كان AM = 5 cm وAB = 10 cm وAN = 3 cm، فما قيمة AC؟",
+      "options": [
+        { "id": "a", "text": "4 cm" },
+        { "id": "b", "text": "5 cm" },
+        { "id": "c", "text": "6 cm" },
+        { "id": "d", "text": "9 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "بتطبيق نظرية طاليس: AM/AB = AN/AC، إذن 5/10 = 3/AC، ومنه AC = 3 × 10 ÷ 5 = 6 cm.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "في مثلّث ABC، M على [AB] وN على [AC]. هل (MN) ∥ (BC) إذا كان AM = 4 cm وAB = 6 cm وAN = 6 cm وAC = 9 cm؟",
+      "options": [
+        { "id": "a", "text": "نعم، لأنّ AM/AB = AN/AC = 2/3" },
+        { "id": "b", "text": "لا، لأنّ AM ≠ AN" },
+        { "id": "c", "text": "نعم، لأنّ AM + AN = 10" },
+        { "id": "d", "text": "لا، لأنّ AB ≠ AC" }
+      ],
+      "correctOption": "a",
+      "explanation": "AM/AB = 4/6 = 2/3 وAN/AC = 6/9 = 2/3. النسبتان متساويتان، فبالنظرية العكسية لطاليس (MN) ∥ (BC).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "في وضعية الفراشة، يتقاطع مستقيمان في O مع (AB) ∥ (CD). إذا كان OA = 3 cm وOC = 9 cm وOB = 4 cm، فما طول OD؟",
+      "options": [
+        { "id": "a", "text": "6 cm" },
+        { "id": "b", "text": "9 cm" },
+        { "id": "c", "text": "10 cm" },
+        { "id": "d", "text": "12 cm" }
+      ],
+      "correctOption": "d",
+      "explanation": "بنظرية طاليس في وضعية الفراشة: OA/OC = OB/OD، إذن 3/9 = 4/OD، ومنه OD = 4 × 9 ÷ 3 = 12 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "في مثلّث ABC، (MN) ∥ (BC) حيث AM = 6 cm وAB = 9 cm وBC = 12 cm. ما طول MN؟",
+      "options": [
+        { "id": "a", "text": "6 cm" },
+        { "id": "b", "text": "8 cm" },
+        { "id": "c", "text": "9 cm" },
+        { "id": "d", "text": "10 cm" }
+      ],
+      "correctOption": "b",
+      "explanation": "بنظرية طاليس: MN/BC = AM/AB = 6/9 = 2/3. إذن MN = BC × (2/3) = 12 × (2/3) = 8 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "في مثلّث DEF، (MN) ∥ (EF)، DM = x cm وME = 4 cm وDN = 3 cm وNF = 2 cm. ما قيمة x؟",
+      "options": [
+        { "id": "a", "text": "x = 4 cm" },
+        { "id": "b", "text": "x = 5 cm" },
+        { "id": "c", "text": "x = 6 cm" },
+        { "id": "d", "text": "x = 8 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "DE = DM + ME = x + 4، وDF = DN + NF = 3 + 2 = 5 cm. بنظرية طاليس: DM/DE = DN/DF، أي x/(x+4) = 3/5. بالتقاطع: 5x = 3(x+4) = 3x + 12، ومنه 2x = 12، أي x = 6 cm. التحقّق: 6/10 = 3/5. ✓",
+      "difficulty": 3
+    },
+    {
+      "prompt": "أيّ من العبارات التالية تعبّر بشكل صحيح عن النظرية العكسية لطاليس؟",
+      "options": [
+        { "id": "a", "text": "إذا كان AM/AB = AN/AC وM وN داخل الضلعين، فإنّ (MN) ∥ (BC)" },
+        { "id": "b", "text": "إذا كانت (MN) ∥ (BC)، فإنّ AM = AN" },
+        { "id": "c", "text": "إذا كان MN = BC، فإنّ (MN) ∥ (BC)" },
+        { "id": "d", "text": "إذا كانت AM/MB = 1، فإنّ (MN) ∥ (BC)" }
+      ],
+      "correctOption": "a",
+      "explanation": "النظرية العكسية لطاليس تنصّ على: إذا تحقّق AM/AB = AN/AC مع كون M وN على نفس الجانب من الرأس A (داخل الضلعين)، فإنّ (MN) ∥ (BC).",
+      "difficulty": 1
+    }
+  ]
+}

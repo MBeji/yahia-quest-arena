@@ -1,0 +1,154 @@
+{
+  "title": "Practice: will, going to, or present continuous?",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 60,
+  "rewardCoins": 12,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "The phone is ringing. Complete: \"Don't worry — I ___ it!\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "am going to answer"
+        },
+        {
+          "id": "b",
+          "text": "answer"
+        },
+        {
+          "id": "c",
+          "text": "will answer"
+        },
+        {
+          "id": "d",
+          "text": "am answering"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "The phone rings and you decide to answer at that very moment, so this is a spontaneous decision: use \"will\" (I'll answer it!). \"am going to answer\" implies a plan made earlier; \"answer\" (present simple) is for timetables; \"am answering\" (present continuous) is for fixed arrangements, not an on-the-spot offer.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Look at those black clouds! Complete: \"It ___ rain.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "will"
+        },
+        {
+          "id": "b",
+          "text": "is"
+        },
+        {
+          "id": "c",
+          "text": "rains"
+        },
+        {
+          "id": "d",
+          "text": "is going to"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "When you predict the future from evidence you can see right now (black clouds), use \"be going to\": it is going to rain. \"will\" is for opinions/predictions without present evidence; \"is\" alone and \"rains\" (present simple) do not express this kind of prediction.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete the time clause: \"I will call you when I ___ home.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "get"
+        },
+        {
+          "id": "b",
+          "text": "will get"
+        },
+        {
+          "id": "c",
+          "text": "am getting"
+        },
+        {
+          "id": "d",
+          "text": "got"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "After time conjunctions (when, as soon as, before, after, until) in a future sentence, use the present simple — not will: when I get home.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choose the correct sentence about a plan already decided:",
+      "options": [
+        {
+          "id": "a",
+          "text": "We will visit Djerba next summer."
+        },
+        {
+          "id": "b",
+          "text": "We visit Djerba next summer."
+        },
+        {
+          "id": "c",
+          "text": "We visited Djerba next summer."
+        },
+        {
+          "id": "d",
+          "text": "We are going to visit Djerba next summer."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "An intention or plan decided before the moment of speaking uses \"be going to\": we are going to visit Djerba next summer. \"will visit\" suits a decision made now or a simple prediction, not a settled plan; \"visit\" (present simple) needs a timetable; \"visited\" is past simple and clashes with the future marker \"next summer\".",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"I ___ the dentist at 3 p.m. tomorrow.\" (appointment confirmed)",
+      "options": [
+        {
+          "id": "a",
+          "text": "will see"
+        },
+        {
+          "id": "b",
+          "text": "am seeing"
+        },
+        {
+          "id": "c",
+          "text": "see"
+        },
+        {
+          "id": "d",
+          "text": "am going to see"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "A confirmed arrangement with a specific time uses the present continuous: I am seeing the dentist at 3 p.m. tomorrow.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which time marker does NOT typically go with future tenses?",
+      "options": [
+        {
+          "id": "a",
+          "text": "next week"
+        },
+        {
+          "id": "b",
+          "text": "tomorrow"
+        },
+        {
+          "id": "c",
+          "text": "yesterday"
+        },
+        {
+          "id": "d",
+          "text": "soon"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Yesterday\" refers to the past, not the future. \"Next week\", \"tomorrow\", and \"soon\" are future time markers.",
+      "difficulty": 1
+    }
+  ]
+}

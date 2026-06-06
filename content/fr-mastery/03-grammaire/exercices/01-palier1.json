@@ -1,0 +1,82 @@
+{
+  "title": "Palier 1 — Accords et homophones fondamentaux",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complétez : « Les enfants ___ partis avant l'aube. »",
+      "options": [
+        { "id": "a", "text": "sont" },
+        { "id": "b", "text": "ont" },
+        { "id": "c", "text": "était" },
+        { "id": "d", "text": "a" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le verbe « partir » se conjugue avec l'auxiliaire « être » aux temps composés. Le sujet « les enfants » est masculin pluriel, d'où « sont partis » (accord du participe avec le sujet). « Ont » serait l'auxiliaire avoir, incorrect ici.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choisissez la forme correcte : « Il ___ rencontré ses collègues hier. »",
+      "options": [
+        { "id": "a", "text": "a" },
+        { "id": "b", "text": "à" },
+        { "id": "c", "text": "as" },
+        { "id": "d", "text": "est" }
+      ],
+      "correctOption": "a",
+      "explanation": "« A » est ici le verbe avoir conjugué à la 3e personne du singulier du présent (passé composé). On peut le remplacer par « avait » → « il avait rencontré » : le test confirme que c'est bien le verbe, non la préposition « à ».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Laquelle de ces phrases est correctement accordée ?",
+      "options": [
+        { "id": "a", "text": "La troupe de soldats marchaient en silence." },
+        { "id": "b", "text": "La troupe de soldats marchait en silence." },
+        { "id": "c", "text": "La troupe de soldats marchaients en silence." },
+        { "id": "d", "text": "La troupe de soldats ont marché en silence." }
+      ],
+      "correctOption": "b",
+      "explanation": "Le sujet grammatical est « la troupe » (nom collectif singulier), non « soldats ». Le verbe s'accorde donc au singulier : « marchait ». Les options a et c accordent à tort avec le complément pluriel « soldats ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complétez : « Je ne sais pas ___ tu viendras demain. »",
+      "options": [
+        { "id": "a", "text": "ce que" },
+        { "id": "b", "text": "se que" },
+        { "id": "c", "text": "si" },
+        { "id": "d", "text": "soit" }
+      ],
+      "correctOption": "c",
+      "explanation": "L'interrogative indirecte portant sur l'éventualité d'une venue s'introduit par « si » : « Je ne sais pas si tu viendras ». « Ce que » introduirait une subordonnée complétive en COD d'une tout autre nature (objet inconnu, non éventualité).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel est l'homophone correct dans : « ___ livre est passionnant ; prête-le moi. » ?",
+      "options": [
+        { "id": "a", "text": "Se" },
+        { "id": "b", "text": "Ce" },
+        { "id": "c", "text": "Cet" },
+        { "id": "d", "text": "Ces" }
+      ],
+      "correctOption": "b",
+      "explanation": "Devant le nom masculin singulier « livre », le déterminant démonstratif est « ce » (masculin singulier). « Cet » s'emploie devant une voyelle ou un h muet (*cet homme*). « Se » est un pronom réfléchi, non un déterminant. « Ces » est pluriel.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Laquelle de ces phrases emploie correctement « ou » / « où » ?",
+      "options": [
+        { "id": "a", "text": "Dis-moi ou tu vas, ou reste ici." },
+        { "id": "b", "text": "Dis-moi où tu vas, ou reste ici." },
+        { "id": "c", "text": "Dis-moi où tu vas, où reste ici." },
+        { "id": "d", "text": "Dis-moi ou tu vas, où reste ici." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Où » (avec accent) est l'adverbe relatif de lieu introduisant la subordonnée interrogative indirecte « où tu vas ». « Ou » (sans accent, remplaçable par « ou bien ») est la conjonction de coordination reliant les deux propositions principales. Seule l'option b respecte cette double distinction.",
+      "difficulty": 2
+    }
+  ]
+}

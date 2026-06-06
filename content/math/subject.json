@@ -1,0 +1,12 @@
+{
+  "id": "math",
+  "nameFr": "Mathématiques",
+  "description": "الأنشطة العددية والهندسية وفق برنامج السنة التاسعة أساسي",
+  "attribute": "Force",
+  "colorToken": "subject-math",
+  "icon": "Calculator",
+  "displayOrder": 1,
+  "contentLanguage": "ar",
+  "themeId": "ecole-tn",
+  "gradeSlug": "9eme-base"
+}

@@ -16,7 +16,9 @@ function bytesToKb(bytes) {
 }
 
 function findLatestChunkSize(prefix) {
-  const entries = readdirSync(clientAssetsDir).filter((name) => name.startsWith(prefix) && name.endsWith(".js"));
+  const entries = readdirSync(clientAssetsDir).filter(
+    (name) => name.startsWith(prefix) && name.endsWith(".js"),
+  );
   if (entries.length === 0) return null;
   const sizes = entries.map((name) => ({
     name,
@@ -38,7 +40,9 @@ for (const [prefix, maxSize] of Object.entries(BUDGETS)) {
 
   const ok = chunk.size <= maxSize;
   const status = ok ? "OK" : "FAIL";
-  console.log(`- ${chunk.name}: ${bytesToKb(chunk.size)} kB / budget ${bytesToKb(maxSize)} kB => ${status}`);
+  console.log(
+    `- ${chunk.name}: ${bytesToKb(chunk.size)} kB / budget ${bytesToKb(maxSize)} kB => ${status}`,
+  );
 
   if (!ok) failed = true;
 }

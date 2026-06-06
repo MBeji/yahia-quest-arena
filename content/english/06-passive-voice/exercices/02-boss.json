@@ -1,0 +1,154 @@
+{
+  "title": "⚔️ Boss: passive voice mastery",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Transform to passive: \"They make these shoes in Italy.\" The correct passive is:",
+      "options": [
+        {
+          "id": "a",
+          "text": "These shoes are made in Italy."
+        },
+        {
+          "id": "b",
+          "text": "These shoes were made in Italy."
+        },
+        {
+          "id": "c",
+          "text": "These shoes is made in Italy."
+        },
+        {
+          "id": "d",
+          "text": "These shoes are make in Italy."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "The active verb \"make\" is present simple, so the passive stays present. \"These shoes\" is plural → ARE + the past participle \"made\": these shoes are made in Italy. \"were made\" changes the tense to past; \"is made\" wrongly uses the singular \"is\"; \"are make\" keeps the base verb instead of the participle.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Transform to passive: \"The teacher corrected our homework.\" The correct passive is:",
+      "options": [
+        {
+          "id": "a",
+          "text": "Our homework is corrected by the teacher."
+        },
+        {
+          "id": "b",
+          "text": "Our homework were corrected by the teacher."
+        },
+        {
+          "id": "c",
+          "text": "Our homework was correct by the teacher."
+        },
+        {
+          "id": "d",
+          "text": "Our homework was corrected by the teacher."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "The active verb \"corrected\" is past simple, and \"our homework\" is singular (uncountable), so the passive is WAS + the past participle \"corrected\": our homework was corrected by the teacher. \"is corrected\" changes the tense; \"were corrected\" wrongly uses the plural \"were\"; \"was correct\" uses the adjective/base form, not the past participle.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choose the sentence where the passive is used correctly:",
+      "options": [
+        {
+          "id": "a",
+          "text": "The pyramids were build thousands of years ago."
+        },
+        {
+          "id": "b",
+          "text": "The pyramids were built thousands of years ago."
+        },
+        {
+          "id": "c",
+          "text": "The pyramids was built thousands of years ago."
+        },
+        {
+          "id": "d",
+          "text": "The pyramids are built thousands of years ago."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "\"The pyramids\" is plural and \"thousands of years ago\" is past, so we use WERE + the past participle \"built\": the pyramids were built. \"were build\" keeps the base verb instead of the participle; \"was built\" wrongly uses the singular \"was\"; \"are built\" is present and clashes with the past time marker.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Active: \"A student finds a wallet.\" → Passive:",
+      "options": [
+        {
+          "id": "a",
+          "text": "A wallet is found by a student."
+        },
+        {
+          "id": "b",
+          "text": "A wallet found by a student."
+        },
+        {
+          "id": "c",
+          "text": "A wallet were found by a student."
+        },
+        {
+          "id": "d",
+          "text": "A wallet was found by a student."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "The active verb \"finds\" is present simple, and \"a wallet\" is singular, so the passive is IS + the past participle \"found\": a wallet is found by a student. Option b drops the auxiliary \"is\"; \"were found\" wrongly uses the plural past \"were\"; \"was found\" changes the tense to past.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choose the sentence that correctly OMITS the by-agent because it is obvious:",
+      "options": [
+        {
+          "id": "a",
+          "text": "The patient was examined by a doctor."
+        },
+        {
+          "id": "b",
+          "text": "The patient is examining."
+        },
+        {
+          "id": "c",
+          "text": "The patient was examined."
+        },
+        {
+          "id": "d",
+          "text": "The patient examines."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "When it is obvious that a doctor performs the examination, \"by a doctor\" adds no information and is correctly omitted: The patient was examined.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete the sentence with the correct passive: \"The new library ___ last year.\" (open)",
+      "options": [
+        {
+          "id": "a",
+          "text": "is opened"
+        },
+        {
+          "id": "b",
+          "text": "was opened"
+        },
+        {
+          "id": "c",
+          "text": "opened"
+        },
+        {
+          "id": "d",
+          "text": "were opened"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "\"last year\" signals past tense and \"the new library\" is singular, so the passive is WAS + the past participle \"opened\": the new library was opened last year. \"is opened\" is present; \"opened\" alone is the active past, not the passive; \"were opened\" wrongly uses the plural \"were\".",
+      "difficulty": 3
+    }
+  ]
+}

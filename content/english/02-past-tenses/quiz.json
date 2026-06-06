@@ -1,0 +1,65 @@
+{
+  "title": "Comprehension quiz",
+  "questions": [
+    {
+      "prompt": "Which sentence uses the past simple correctly with an irregular verb?",
+      "options": [
+        { "id": "a", "text": "She goed to the market yesterday." },
+        { "id": "b", "text": "She went to the market yesterday." },
+        { "id": "c", "text": "She has went to the market yesterday." },
+        { "id": "d", "text": "She was go to the market yesterday." }
+      ],
+      "correctOption": "b",
+      "explanation": "\"yesterday\" needs the past simple, and \"go\" is irregular: its past form is \"went\", not the regular \"goed\". \"has went\" is wrong because the present perfect uses the past participle \"gone\", not \"went\"; \"was go\" mixes \"be\" with a base verb.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "What is the correct form for a past simple question with a regular verb?",
+      "options": [
+        { "id": "a", "text": "Did she walked to school?" },
+        { "id": "b", "text": "Was she walk to school?" },
+        { "id": "c", "text": "Did she walk to school?" },
+        { "id": "d", "text": "Does she walked to school?" }
+      ],
+      "correctOption": "c",
+      "explanation": "Past simple questions use Did + subject + base verb. After Did, the main verb stays in its base form (no -ed).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which structure correctly describes a background action interrupted by a shorter event in the past?",
+      "options": [
+        { "id": "a", "text": "I cooked when the phone was ringing." },
+        { "id": "b", "text": "I was cooking when the phone rang." },
+        { "id": "c", "text": "I was cooking when the phone was ringing." },
+        { "id": "d", "text": "I cooked when the phone had rung." }
+      ],
+      "correctOption": "b",
+      "explanation": "The past continuous (was cooking) provides the background action; the past simple (rang) describes the shorter event that interrupted it.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which adverb is associated with the present perfect, NOT the past simple?",
+      "options": [
+        { "id": "a", "text": "yesterday" },
+        { "id": "b", "text": "last year" },
+        { "id": "c", "text": "in 2020" },
+        { "id": "d", "text": "already" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"Already\" is a key adverb of the present perfect (have/has + past participle). \"Yesterday\", \"last year\", and \"in 2020\" all indicate a specific past time, so they go with the past simple.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which sentence correctly uses the present perfect?",
+      "options": [
+        { "id": "a", "text": "She has visited Rome last summer." },
+        { "id": "b", "text": "She visited Rome yet." },
+        { "id": "c", "text": "She has never visited Rome." },
+        { "id": "d", "text": "She have visited Rome." }
+      ],
+      "correctOption": "c",
+      "explanation": "The present perfect (has + past participle) is used with \"never\" for a life experience at an unspecified time. A specific time like \"last summer\" would require the past simple instead.",
+      "difficulty": 3
+    }
+  ]
+}

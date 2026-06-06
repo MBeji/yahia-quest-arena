@@ -1,0 +1,112 @@
+{
+  "title": "Palier 2 — Épreuve de synthèse : la rumeur (Boss)",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 25,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Lisez ce texte, support de toute l'épreuve :\n\n« La rumeur ne marche jamais seule : elle avance escortée de tous ceux qui jurent ne pas y croire et qui, pourtant, la répètent. Chacun la transmet en l'allégeant de sa propre responsabilité — « on dit que… », « il paraît que… » —, si bien qu'à la fin nul ne l'a affirmée et que tous l'ont colportée. C'est là sa ruse : naître de personne pour s'imposer à tous. »\n\n[COMPRÉHENSION — implicite] Quelle idée l'auteur défend-il à travers ce texte ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "La rumeur se propage précisément parce que chacun s'en croit irresponsable tout en la diffusant."
+        },
+        {
+          "id": "b",
+          "text": "La rumeur ne circule que parmi ceux qui y croient sincèrement."
+        },
+        {
+          "id": "c",
+          "text": "La rumeur disparaît dès que personne ne veut l'affirmer."
+        },
+        {
+          "id": "d",
+          "text": "La rumeur est toujours fondée sur des faits vérifiables."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Le paradoxe central — « nul ne l'a affirmée et tous l'ont colportée » — montre que la diffusion repose sur la déresponsabilisation de chacun (« en l'allégeant de sa propre responsabilité »). (b) est contredit par « ceux qui jurent ne pas y croire et qui la répètent ». (c) inverse la thèse : c'est justement que personne ne l'assume qu'elle prospère. (d) n'a aucun appui dans le texte.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "[LEXIQUE — sens précis] Dans le texte, le verbe « colporter » signifie :",
+      "options": [
+        { "id": "a", "text": "Démentir publiquement une fausse nouvelle." },
+        {
+          "id": "b",
+          "text": "Répandre, propager de bouche à oreille une nouvelle, souvent une rumeur."
+        },
+        { "id": "c", "text": "Vérifier l'exactitude d'une information avant de la diffuser." },
+        { "id": "d", "text": "Garder une information pour soi par discrétion." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Colporter » (étymologiquement « porter à son cou », comme le marchand ambulant) signifie répandre, propager une nouvelle de proche en proche — péjoratif quand il s'agit d'une rumeur. Le contexte (« tous l'ont colportée ») confirme l'idée de diffusion. (a), (c) et (d) décrivent des comportements inverses (démentir, vérifier, taire).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "[SYNTAXE — ponctuation et structure] Dans la phrase « C'est là sa ruse : naître de personne pour s'imposer à tous », quelle est la valeur des deux-points ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Ils annoncent une explication : ce qui suit définit en quoi consiste « sa ruse »."
+        },
+        { "id": "b", "text": "Ils introduisent une citation rapportée au discours direct." },
+        { "id": "c", "text": "Ils marquent une simple énumération de plusieurs éléments." },
+        { "id": "d", "text": "Ils signalent une opposition entre deux propositions contraires." }
+      ],
+      "correctOption": "a",
+      "explanation": "Les deux-points introduisent ici une explicitation : après avoir nommé « sa ruse », l'auteur précise en quoi elle consiste (« naître de personne pour s'imposer à tous »). Ce n'est pas une citation (b) — il n'y a ni guillemets ni verbe de parole —, ni une énumération (c), ni une opposition (d), qui appellerait plutôt « mais » ou un point-virgule entre deux idées contraires.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "[GRAMMAIRE — mode] Réécrivons l'idée du texte : « Il est étonnant que personne n'______ jamais cette rumeur et que tous la répandent. » Quelle forme verbale convient ?",
+      "options": [
+        { "id": "a", "text": "affirme" },
+        { "id": "b", "text": "affirmera" },
+        { "id": "c", "text": "a affirmé" },
+        { "id": "d", "text": "affirmait" }
+      ],
+      "correctOption": "a",
+      "explanation": "La tournure « Il est étonnant que… » exprime un sentiment et commande le subjonctif : on écrit « n'affirme » (subjonctif présent), en parallèle avec « que tous la répandent », lui aussi au subjonctif. Le futur (b), le passé composé de l'indicatif (c) et l'imparfait de l'indicatif (d) ne sont pas régis par cette construction expressive.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "[LEXIQUE — paronymes] Pour désigner la personne qui propage une rumeur, on emploiera le mot juste. Lequel, sans le confondre avec son paronyme ?",
+      "options": [
+        { "id": "a", "text": "un délateur" },
+        { "id": "b", "text": "un détracteur" },
+        { "id": "c", "text": "un colporteur" },
+        { "id": "d", "text": "un correcteur" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Colporteur » (de rumeurs) désigne celui qui les répand, en cohérence avec le verbe « colporter » du texte. « Délateur » (a) dénonce quelqu'un aux autorités. « Détracteur » (b) critique et cherche à rabaisser une personne ou une œuvre. « Correcteur » (d) corrige des fautes. Seul « colporteur » nomme l'agent de la propagation.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "[SYNTAXE + COMPRÉHENSION] La proposition « si bien qu'à la fin nul ne l'a affirmée et que tous l'ont colportée » est une subordonnée. Quelle est sa valeur logique, et que souligne-t-elle dans l'argumentation ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Valeur de conséquence : elle expose le résultat du mécanisme décrit (la déresponsabilisation aboutit à une diffusion anonyme)."
+        },
+        {
+          "id": "b",
+          "text": "Valeur de cause : elle indique pourquoi la rumeur existe."
+        },
+        {
+          "id": "c",
+          "text": "Valeur de but : elle exprime l'objectif visé par les locuteurs."
+        },
+        {
+          "id": "d",
+          "text": "Valeur de condition : elle pose une hypothèse non réalisée."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "La locution « si bien que » introduit une subordonnée circonstancielle de conséquence : elle énonce le résultat du processus décrit juste avant (chacun allège sa responsabilité). Elle souligne ainsi le paradoxe — diffusion maximale, responsabilité nulle. Ce n'est pas une cause (b : on dirait « parce que »), ni un but (c : « afin que »), ni une condition (d : « si »).",
+      "difficulty": 3
+    }
+  ]
+}

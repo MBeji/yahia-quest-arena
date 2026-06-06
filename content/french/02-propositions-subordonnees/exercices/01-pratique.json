@@ -1,0 +1,154 @@
+{
+  "title": "Exercice : reconnaître les propositions subordonnées",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Dans « Je sais que tu réussiras. », la proposition « que tu réussiras » est :",
+      "options": [
+        {
+          "id": "a",
+          "text": "Une subordonnée relative qualifiant « tu »"
+        },
+        {
+          "id": "b",
+          "text": "Une subordonnée complétive, COD de « sais »"
+        },
+        {
+          "id": "c",
+          "text": "Une subordonnée circonstancielle de cause"
+        },
+        {
+          "id": "d",
+          "text": "Une proposition principale"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "La proposition est introduite par « que », COD du verbe « savoir » : c'est une subordonnée complétive.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel pronom relatif complète correctement la phrase : « L'épée ___ il se sert est magique. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "dont"
+        },
+        {
+          "id": "b",
+          "text": "que"
+        },
+        {
+          "id": "c",
+          "text": "qui"
+        },
+        {
+          "id": "d",
+          "text": "où"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "« se servir de » → on remplace le groupe « de l'épée » par « dont » : « l'épée dont il se sert ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans « La forêt où il entra était sombre. », le pronom relatif « où » a la fonction de :",
+      "options": [
+        {
+          "id": "a",
+          "text": "Sujet"
+        },
+        {
+          "id": "b",
+          "text": "COD"
+        },
+        {
+          "id": "c",
+          "text": "Complément d'agent"
+        },
+        {
+          "id": "d",
+          "text": "Complément de lieu"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« où » reprend « la forêt » (lieu) et joue le rôle de complément de lieu dans la subordonnée relative.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle conjonction introduit une subordonnée de but ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "parce que"
+        },
+        {
+          "id": "b",
+          "text": "si bien que"
+        },
+        {
+          "id": "c",
+          "text": "pour que"
+        },
+        {
+          "id": "d",
+          "text": "bien que"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "« pour que » exprime le but et introduit une subordonnée au subjonctif. « parce que » = cause, « si bien que » = conséquence, « bien que » = concession.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans « Bien qu'il soit fatigué, il continue. », la subordonnée est une circonstancielle de :",
+      "options": [
+        {
+          "id": "a",
+          "text": "Cause"
+        },
+        {
+          "id": "b",
+          "text": "Temps"
+        },
+        {
+          "id": "c",
+          "text": "Condition"
+        },
+        {
+          "id": "d",
+          "text": "Concession"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« bien que » + subjonctif exprime un obstacle qui ne bloque pas l'action : c'est la concession.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choisissez la forme correcte : « Les batailles ___ nous avons livrées ont forgé notre courage. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "que"
+        },
+        {
+          "id": "b",
+          "text": "qui"
+        },
+        {
+          "id": "c",
+          "text": "dont"
+        },
+        {
+          "id": "d",
+          "text": "où"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Le pronom relatif est COD du verbe « livrer » (on a livré les batailles) : on emploie « que ». Le participe « livrées » s'accorde avec l'antécédent féminin pluriel « batailles ».",
+      "difficulty": 3
+    }
+  ]
+}

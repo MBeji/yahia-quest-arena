@@ -1,0 +1,78 @@
+name: E2E (authenticated)
+
+# Real authenticated browser journeys against a dedicated TEST Supabase project.
+# Runs on demand and on main. It SKIPS GRACEFULLY (green) when the test secrets
+# are not configured, so it never blocks contributors who don't have them.
+#
+# Required repository secrets:
+#   TEST_SUPABASE_URL                – the TEST project URL (NOT production)
+#   TEST_SUPABASE_ANON_KEY           – its anon / publishable key
+#   TEST_SUPABASE_SERVICE_ROLE_KEY   – its service-role key (for seeding users)
+#   E2E_USER_PASSWORD                – password for the seeded test accounts
+#
+# Prereq: run all DB migrations + content on the test project once.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  e2e-auth:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Check test secrets are configured
+        id: guard
+        run: |
+          if [ -z "${{ secrets.TEST_SUPABASE_URL }}" ] || [ -z "${{ secrets.TEST_SUPABASE_SERVICE_ROLE_KEY }}" ]; then
+            echo "Test Supabase secrets are not set — skipping authenticated E2E."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Node
+        if: steps.guard.outputs.configured == 'true'
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        if: steps.guard.outputs.configured == 'true'
+        run: npm ci --no-audit --no-fund
+
+      - name: Install Playwright browser (chromium)
+        if: steps.guard.outputs.configured == 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Seed test users
+        if: steps.guard.outputs.configured == 'true'
+        env:
+          SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.TEST_SUPABASE_SERVICE_ROLE_KEY }}
+          E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}
+        run: npm run e2e:seed
+
+      - name: Run authenticated E2E
+        if: steps.guard.outputs.configured == 'true'
+        env:
+          CI: "true"
+          VITE_SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.TEST_SUPABASE_ANON_KEY }}
+          SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.TEST_SUPABASE_ANON_KEY }}
+          E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}
+        run: npm run test:e2e:auth
+
+      - name: Upload Playwright report
+        if: ${{ steps.guard.outputs.configured == 'true' && !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-auth
+          path: playwright-report/
+          retention-days: 7

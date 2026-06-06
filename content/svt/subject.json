@@ -1,0 +1,12 @@
+{
+  "id": "svt",
+  "nameFr": "Sciences physiques",
+  "description": "الضوء والكهرباء والكيمياء وفق برنامج العلوم الفيزيائية للسنة التاسعة أساسي",
+  "attribute": "Observation",
+  "colorToken": "subject-svt",
+  "icon": "Atom",
+  "displayOrder": 4,
+  "contentLanguage": "ar",
+  "themeId": "ecole-tn",
+  "gradeSlug": "9eme-base"
+}

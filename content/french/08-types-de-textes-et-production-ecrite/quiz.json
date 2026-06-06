@@ -1,0 +1,65 @@
+{
+  "title": "Quiz de compréhension",
+  "questions": [
+    {
+      "prompt": "Quel est le but principal d'un texte argumentatif ?",
+      "options": [
+        { "id": "a", "text": "Raconter une suite d'événements." },
+        { "id": "b", "text": "Décrire un personnage ou un lieu." },
+        { "id": "c", "text": "Expliquer un phénomène de façon neutre." },
+        { "id": "d", "text": "Convaincre le lecteur et défendre une thèse." }
+      ],
+      "correctOption": "d",
+      "explanation": "Le texte argumentatif a pour but de convaincre le lecteur en défendant une thèse. On y trouve des arguments, des exemples et des connecteurs logiques (cependant, donc, or…).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans le schéma narratif, quel élément rompt l'équilibre initial et déclenche l'histoire ?",
+      "options": [
+        { "id": "a", "text": "La situation initiale" },
+        { "id": "b", "text": "Les péripéties" },
+        { "id": "c", "text": "L'élément perturbateur" },
+        { "id": "d", "text": "La situation finale" }
+      ],
+      "correctOption": "c",
+      "explanation": "L'élément perturbateur (ou déclencheur) rompt l'équilibre de la situation initiale et lance les péripéties. Il est généralement exprimé par un verbe d'action au passé simple.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quels temps verbaux caractérisent avant tout le texte descriptif ?",
+      "options": [
+        { "id": "a", "text": "Le passé simple et le passé antérieur" },
+        { "id": "b", "text": "L'imparfait (dans un récit) ou le présent (description autonome)" },
+        { "id": "c", "text": "Le futur simple et le conditionnel présent" },
+        { "id": "d", "text": "Le subjonctif présent et l'impératif" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le texte descriptif emploie l'imparfait (description insérée dans un récit) ou le présent (description autonome), avec des adjectifs qualificatifs, des verbes d'état et des comparaisons.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel connecteur logique exprime une relation de conséquence ?",
+      "options": [
+        { "id": "a", "text": "cependant" },
+        { "id": "b", "text": "par exemple" },
+        { "id": "c", "text": "donc" },
+        { "id": "d", "text": "auparavant" }
+      ],
+      "correctOption": "c",
+      "explanation": "« donc » (ainsi que « c'est pourquoi », « par conséquent ») est un connecteur de conséquence. « cependant » exprime l'opposition, « par exemple » l'illustration, et « auparavant » l'antériorité temporelle.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans un texte narratif, quel temps est principalement utilisé pour les actions ponctuelles qui font avancer le récit ?",
+      "options": [
+        { "id": "a", "text": "L'imparfait" },
+        { "id": "b", "text": "Le présent de vérité générale" },
+        { "id": "c", "text": "Le plus-que-parfait" },
+        { "id": "d", "text": "Le passé simple" }
+      ],
+      "correctOption": "d",
+      "explanation": "Dans un récit littéraire, le passé simple exprime les actions ponctuelles et délimitées qui font progresser l'histoire. L'imparfait, lui, est réservé aux descriptions et aux actions de fond.",
+      "difficulty": 1
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "title": "👑 تحدّي النخبة: المعلّم في المستوي — مستوى الامتياز",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "في معلّم متعامد ومتجانس، لدينا A(1 ; 1) وB(5 ; 2) وC(7 ; 6) وD(3 ; 5). احسب $\\overrightarrow{AB}$ و $\\overrightarrow{DC}$ ثمّ $\\overrightarrow{AD}$ و $\\overrightarrow{BC}$، واستنتج طبيعة ABCD.",
+      "options": [
+        { "id": "a", "text": "ABCD معيّن (لوزيّ الشكل) لأنّ AB = AD" },
+        {
+          "id": "b",
+          "text": "ABCD مستطيل لأنّ $\\overrightarrow{AB} = \\overrightarrow{DC}$ وزوايا قائمة"
+        },
+        {
+          "id": "c",
+          "text": "ABCD متوازي أضلاع لأنّ $\\overrightarrow{AB} = \\overrightarrow{DC}$ وليس معيّنًا ولا مستطيلًا"
+        },
+        { "id": "d", "text": "ABCD شبه منحرف فقط لأنّ ضلعًا واحدًا موازٍ للآخر" }
+      ],
+      "correctOption": "c",
+      "explanation": "نحسب: $\\overrightarrow{AB} = (5-1 ; 2-1) = (4 ; 1)$ و $\\overrightarrow{DC} = (7-3 ; 6-5) = (4 ; 1)$، إذن $\\overrightarrow{AB} = \\overrightarrow{DC}$. كذلك $\\overrightarrow{AD} = (3-1 ; 5-1) = (2 ; 4)$ و $\\overrightarrow{BC} = (7-5 ; 6-2) = (2 ; 4)$، إذن $\\overrightarrow{AD} = \\overrightarrow{BC}$. استنتاج: ABCD متوازي أضلاع. — هل هو معيّن؟ $AB = \\sqrt{4^2+1^2} = \\sqrt{17}$ و $AD = \\sqrt{2^2+4^2} = \\sqrt{20}$، إذن $AB \\neq AD$، ليس معيّنًا. — هل هو مستطيل؟ $\\overrightarrow{AB} \\cdot \\overrightarrow{AD} = 4 \\times 2 + 1 \\times 4 = 12 \\neq 0$، ليس مستطيلًا. إذن ABCD متوازي أضلاع فحسب.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "I هي منتصف القطعة [AC] حيث I(2 ; 3) وA(−1 ; 1). أوجد إحداثيّات C، ثمّ احسب المسافة AC.",
+      "options": [
+        { "id": "a", "text": "$C(5 ; 5)$ والمسافة $AC = \\sqrt{52}$" },
+        { "id": "b", "text": "$C(5 ; 5)$ والمسافة $AC = 2\\sqrt{13}$" },
+        { "id": "c", "text": "$C(3 ; 5)$ والمسافة $AC = \\sqrt{20}$" },
+        { "id": "d", "text": "$C(5 ; 3)$ والمسافة $AC = \\sqrt{52}$" }
+      ],
+      "correctOption": "b",
+      "explanation": "بما أنّ I منتصف [AC]: $x_I = \\frac{x_A + x_C}{2}$، إذن $2 = \\frac{-1 + x_C}{2}$، فـ $x_C = 5$. وكذلك $y_I = \\frac{y_A + y_C}{2}$، إذن $3 = \\frac{1 + y_C}{2}$، فـ $y_C = 5$. إذن $C(5 ; 5)$. — المسافة: $AC = \\sqrt{(5-(-1))^2 + (5-1)^2} = \\sqrt{6^2 + 4^2} = \\sqrt{36 + 16} = \\sqrt{52} = 2\\sqrt{13}$. ملاحظة: $\\sqrt{52} = \\sqrt{4 \\times 13} = 2\\sqrt{13}$، فالإجابة الصحيحة هي الخيار ب الذي يعبّر عنها بأبسط صورة.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "النقاط A(1 ; 2) وB(3 ; 5) وC(k ; 8) متقاطعة (على مستقيم واحد). استخدم شرط التوازي بين $\\overrightarrow{AB}$ و $\\overrightarrow{AC}$ لإيجاد قيمة k.",
+      "options": [
+        { "id": "a", "text": "$k = 5$" },
+        { "id": "b", "text": "$k = 7$" },
+        { "id": "c", "text": "$k = 4$" },
+        { "id": "d", "text": "$k = 3$" }
+      ],
+      "correctOption": "a",
+      "explanation": "$\\overrightarrow{AB} = (3-1 ; 5-2) = (2 ; 3)$ و $\\overrightarrow{AC} = (k-1 ; 8-2) = (k-1 ; 6)$. شرط أن تكون A وB وC على مستقيم واحد هو أن يكون $\\overrightarrow{AC}$ مضاعفًا لـ $\\overrightarrow{AB}$، أي تناسب المركّبات: $\\frac{k-1}{2} = \\frac{6}{3}$. إذن $\\frac{k-1}{2} = 2$، فـ $k - 1 = 4$، فـ $k = 5$. — التحقّق: $\\overrightarrow{AC} = (4 ; 6) = 2 \\times (2 ; 3) = 2\\overrightarrow{AB}$ ✓، إذن A وB وC متقاطعة.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "المثلّث ABC بـ A(−2 ; 1) وB(4 ; 1) وC(1 ; 5). أثبت أنّه متساوي الساقين ثمّ احسب محيطه. ما محيط المثلّث؟",
+      "options": [
+        { "id": "a", "text": "المحيط = $6 + 5 + 5 = 16$" },
+        { "id": "b", "text": "المحيط = $6 + \\sqrt{13} + \\sqrt{13}$" },
+        { "id": "c", "text": "المحيط = $6 + \\sqrt{20} + \\sqrt{20}$" },
+        { "id": "d", "text": "المحيط = $\\sqrt{36} + \\sqrt{25} + \\sqrt{20}$" }
+      ],
+      "correctOption": "a",
+      "explanation": "$AB = \\sqrt{(4-(-2))^2 + (1-1)^2} = \\sqrt{6^2 + 0} = 6$. $AC = \\sqrt{(1-(-2))^2 + (5-1)^2} = \\sqrt{3^2 + 4^2} = \\sqrt{9+16} = \\sqrt{25} = 5$. $BC = \\sqrt{(1-4)^2 + (5-1)^2} = \\sqrt{(-3)^2 + 4^2} = \\sqrt{9+16} = \\sqrt{25} = 5$. بما أنّ $AC = BC = 5$، فالمثلّث متساوي الساقين في C. المحيط = $AB + AC + BC = 6 + 5 + 5 = 16$.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ABCD متوازي أضلاع حيث A(2 ; −1) وB(6 ; 1) وC(7 ; 5). أوجد إحداثيّات D ثمّ تحقّق بحساب منتصفَي قطرَي المتوازي.",
+      "options": [
+        { "id": "a", "text": "$D(4 ; 3)$، ومنتصف [AC] = منتصف [BD] = $(4.5 ; 2)$" },
+        { "id": "b", "text": "$D(3 ; 3)$، ومنتصف [AC] = منتصف [BD] = $(4.5 ; 2)$" },
+        { "id": "c", "text": "$D(3 ; 3)$، ومنتصف [AC] = منتصف [BD] = $(4 ; 3)$" },
+        { "id": "d", "text": "$D(4 ; 3)$، ومنتصف [AC] = منتصف [BD] = $(5 ; 2)$" }
+      ],
+      "correctOption": "b",
+      "explanation": "في متوازي الأضلاع ABCD: $\\overrightarrow{AB} = \\overrightarrow{DC}$. $\\overrightarrow{AB} = (6-2 ; 1-(-1)) = (4 ; 2)$. إذن $\\overrightarrow{DC} = (4 ; 2)$، أي $C - D = (4 ; 2)$، فـ $D = C - (4;2) = (7-4 ; 5-2) = (3 ; 3)$. — التحقّق بالأقطار: منتصف [AC] = $\\left(\\frac{2+7}{2} ; \\frac{-1+5}{2}\\right) = (4.5 ; 2)$. منتصف [BD] = $\\left(\\frac{6+3}{2} ; \\frac{1+3}{2}\\right) = (4.5 ; 2)$. المنتصفان متساويان ✓، وهذا يؤكّد أنّ ABCD متوازي أضلاع.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "A(−3 ; 2) وB(1 ; −2). النقطة M تحقّق $\\overrightarrow{AM} = \\frac{3}{2}\\overrightarrow{AB}$. أوجد إحداثيّات M ثمّ احسب مسافتها من نقطة الأصل O.",
+      "options": [
+        { "id": "a", "text": "$M(3 ; −4)$ والمسافة $OM = 5$" },
+        { "id": "b", "text": "$M(3 ; −4)$ والمسافة $OM = \\sqrt{7}$" },
+        { "id": "c", "text": "$M(0 ; 0)$ والمسافة $OM = 0$" },
+        { "id": "d", "text": "$M(3 ; −1)$ والمسافة $OM = \\sqrt{10}$" }
+      ],
+      "correctOption": "a",
+      "explanation": "$\\overrightarrow{AB} = (1-(-3) ; -2-2) = (4 ; -4)$. إذن $\\frac{3}{2}\\overrightarrow{AB} = \\left(\\frac{3}{2} \\times 4 ; \\frac{3}{2} \\times (-4)\\right) = (6 ; -6)$. النقطة M تحقّق $\\overrightarrow{AM} = (6 ; -6)$، إذن $M = A + (6 ; -6) = (-3+6 ; 2+(-6)) = (3 ; -4)$. — المسافة من الأصل: $OM = \\sqrt{3^2 + (-4)^2} = \\sqrt{9 + 16} = \\sqrt{25} = 5$. (المثلّث 3-4-5 الكلاسيكي!)",
+      "difficulty": 3
+    }
+  ]
+}

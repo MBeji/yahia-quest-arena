@@ -1,0 +1,12 @@
+{
+  "id": "sciences-vie-terre",
+  "nameFr": "Sciences de la vie et de la terre",
+  "description": "علوم الحياة والأرض وفق برنامج السنة التاسعة أساسي: التكاثر والمناعة والوراثة وعلوم الأرض",
+  "attribute": "Vitalite",
+  "colorToken": "subject-svt",
+  "icon": "Leaf",
+  "displayOrder": 7,
+  "contentLanguage": "ar",
+  "themeId": "ecole-tn",
+  "gradeSlug": "9eme-base"
+}

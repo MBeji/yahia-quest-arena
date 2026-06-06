@@ -1,0 +1,82 @@
+{
+  "title": "تمرين: الأشعّة وعلاقة شال",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 65,
+  "rewardCoins": 13,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "ما ناتج $\\overrightarrow{AB} + \\overrightarrow{BC}$ وفق علاقة شال؟",
+      "options": [
+        { "id": "a", "text": "$\\overrightarrow{AC}$" },
+        { "id": "b", "text": "$\\overrightarrow{CA}$" },
+        { "id": "c", "text": "$\\overrightarrow{BA}$" },
+        { "id": "d", "text": "$\\overrightarrow{0}$" }
+      ],
+      "correctOption": "a",
+      "explanation": "علاقة شال تنصّ على: $\\overrightarrow{AB} + \\overrightarrow{BC} = \\overrightarrow{AC}$. نتتبّع الحروف: نبدأ من A وننتهي في C مرورًا بـ B.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ABCD متوازي أضلاع. أيّ من المساواات التالية صحيحة؟",
+      "options": [
+        { "id": "a", "text": "$\\overrightarrow{AB} = \\overrightarrow{CD}$" },
+        { "id": "b", "text": "$\\overrightarrow{AB} = \\overrightarrow{DC}$" },
+        { "id": "c", "text": "$\\overrightarrow{AB} = \\overrightarrow{CB}$" },
+        { "id": "d", "text": "$\\overrightarrow{AD} = \\overrightarrow{CB}$" }
+      ],
+      "correctOption": "b",
+      "explanation": "في متوازي الأضلاع ABCD: الضلعان AB وDC متوازيان ومتساويان في الطول ونفس المنحى، إذن $\\overrightarrow{AB} = \\overrightarrow{DC}$. انتبه: $\\overrightarrow{CD}$ معاكس المنحى لـ $\\overrightarrow{DC}$.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتج $\\overrightarrow{AB} + \\overrightarrow{BA}$؟",
+      "options": [
+        { "id": "a", "text": "$2\\overrightarrow{AB}$" },
+        { "id": "b", "text": "$\\overrightarrow{AA}$" },
+        { "id": "c", "text": "$\\overrightarrow{0}$" },
+        { "id": "d", "text": "$\\overrightarrow{AB}$" }
+      ],
+      "correctOption": "c",
+      "explanation": "بتطبيق شال: $\\overrightarrow{AB} + \\overrightarrow{BA} = \\overrightarrow{AA} = \\overrightarrow{0}$. أي أنّ $\\overrightarrow{BA} = -\\overrightarrow{AB}$ وهو الشعاع المعاكس.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "M نقطة في المستوي. صورتها بالانسحاب ذي الشعاع $\\overrightarrow{AB}$ هي النقطة M' التي تحقّق:",
+      "options": [
+        { "id": "a", "text": "$\\overrightarrow{M'M} = \\overrightarrow{AB}$" },
+        { "id": "b", "text": "$\\overrightarrow{MM'} = \\overrightarrow{AB}$" },
+        { "id": "c", "text": "$MM' = 0$" },
+        { "id": "d", "text": "$M' = M$" }
+      ],
+      "correctOption": "b",
+      "explanation": "الانسحاب ذو الشعاع $\\overrightarrow{AB}$ ينقل كلّ نقطة M إلى M' بحيث $\\overrightarrow{MM'} = \\overrightarrow{AB}$. المنشأ هو M والطرف هو M'.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتج $\\overrightarrow{AB} + \\overrightarrow{BC} + \\overrightarrow{CD}$؟",
+      "options": [
+        { "id": "a", "text": "$\\overrightarrow{BD}$" },
+        { "id": "b", "text": "$\\overrightarrow{AC}$" },
+        { "id": "c", "text": "$\\overrightarrow{AD}$" },
+        { "id": "d", "text": "$\\overrightarrow{0}$" }
+      ],
+      "correctOption": "c",
+      "explanation": "نطبّق شال تدريجيًا: $\\overrightarrow{AB} + \\overrightarrow{BC} = \\overrightarrow{AC}$، ثمّ $\\overrightarrow{AC} + \\overrightarrow{CD} = \\overrightarrow{AD}$.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ABCD متوازي أضلاع مركزه O. ما ناتج $\\overrightarrow{OA} + \\overrightarrow{OC}$؟",
+      "options": [
+        { "id": "a", "text": "$\\overrightarrow{AC}$" },
+        { "id": "b", "text": "$2\\overrightarrow{OC}$" },
+        { "id": "c", "text": "$\\overrightarrow{OB}$" },
+        { "id": "d", "text": "$\\overrightarrow{0}$" }
+      ],
+      "correctOption": "d",
+      "explanation": "O هو منتصف [AC] في متوازي الأضلاع، إذن $\\overrightarrow{OA} = -\\overrightarrow{OC}$، ومنه $\\overrightarrow{OA} + \\overrightarrow{OC} = \\overrightarrow{0}$.",
+      "difficulty": 3
+    }
+  ]
+}

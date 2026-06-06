@@ -1,0 +1,82 @@
+{
+  "title": "👑 Elite Challenge: Precision Tenses",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Which sentence is grammatically correct?",
+      "options": [
+        { "id": "a", "text": "She has been waiting for two hours." },
+        { "id": "b", "text": "She is waiting since two hours." },
+        { "id": "c", "text": "She waits for two hours already." },
+        { "id": "d", "text": "She has waited since two hours." }
+      ],
+      "correctOption": "a",
+      "explanation": "Use the present perfect continuous (have/has been + -ing) for an action that started in the past and is still ongoing. 'For' introduces a period of time (two hours), and 'since' introduces a point in time (since 8 a.m.) — mixing 'since' with a period (options b, d) is a classic error. Option c uses the wrong tense entirely.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "The chef ___ the soup to check the salt, and it ___ wonderful. Choose the correct pair.",
+      "options": [
+        { "id": "a", "text": "is tasting / tastes" },
+        { "id": "b", "text": "tastes / is tasting" },
+        { "id": "c", "text": "is tasting / is tasting" },
+        { "id": "d", "text": "tastes / tastes" }
+      ],
+      "correctOption": "a",
+      "explanation": "The verb 'taste' has two uses: as a dynamic verb meaning 'to sample' (an action the chef performs deliberately — present continuous is correct), and as a stative verb meaning 'to have a flavour' (a state — present simple is correct). 'Is tasting / tastes' captures both uses precisely.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "He ___ three novels this year, and his publisher is very pleased. Choose the correct form.",
+      "options": [
+        { "id": "a", "text": "has been writing" },
+        { "id": "b", "text": "has written" },
+        { "id": "c", "text": "is writing" },
+        { "id": "d", "text": "writes" }
+      ],
+      "correctOption": "b",
+      "explanation": "When the focus is on a completed, countable result (three finished novels), use the present perfect simple (has written). The present perfect continuous (has been writing) emphasises duration and effort but does not confirm the novels are finished — it would be odd with a specific count of completed works.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "You look completely exhausted. What ___ all morning?",
+      "options": [
+        { "id": "a", "text": "have you done" },
+        { "id": "b", "text": "have you been doing" },
+        { "id": "c", "text": "are you doing" },
+        { "id": "d", "text": "do you do" }
+      ],
+      "correctOption": "b",
+      "explanation": "The present perfect continuous (have you been doing) is used when a recent, extended activity has a visible result in the present — here, the exhaustion. The present perfect simple (have you done) would focus on a completed achievement rather than the tiring process that caused the current state.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which sentence uses the verb 'think' correctly?",
+      "options": [
+        { "id": "a", "text": "I'm thinking you are absolutely right." },
+        { "id": "b", "text": "I am thinking that this is unfair." },
+        { "id": "c", "text": "I am thinking about your proposal right now." },
+        { "id": "d", "text": "She is thinking the answer is obvious." }
+      ],
+      "correctOption": "c",
+      "explanation": "'Think' is stative when it expresses an opinion (= believe), so options a, b, and d are wrong — you cannot say 'I am thinking (that)…' to express a belief. However, 'think about' describes an active mental process (= consider, reflect on), so the present continuous is correct in option c: 'I am thinking about your proposal right now.'",
+      "difficulty": 3
+    },
+    {
+      "prompt": "They ___ on the project for six months, and they still have not finished it. Choose the correct form.",
+      "options": [
+        { "id": "a", "text": "worked" },
+        { "id": "b", "text": "are working" },
+        { "id": "c", "text": "have worked" },
+        { "id": "d", "text": "have been working" }
+      ],
+      "correctOption": "d",
+      "explanation": "The present perfect continuous (have been working) is the right choice: it expresses a continuous activity that started six months ago and is still unfinished now — confirmed by 'still have not finished'. 'Have worked' (present perfect simple) would suggest the work is complete, contradicting the sentence. 'Worked' is past simple (no link to the present), and 'are working' ignores the six-month duration.",
+      "difficulty": 3
+    }
+  ]
+}
