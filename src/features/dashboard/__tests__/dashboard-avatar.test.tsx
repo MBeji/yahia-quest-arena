@@ -21,6 +21,8 @@ describe("equipped skin rendering", () => {
         inventory={[]}
         avatarSlug="dragon"
         displayName="Yahia"
+        isActivatePending={false}
+        onActivate={() => {}}
       />,
     );
     expect(screen.getByText("🐲")).toBeInTheDocument();
@@ -33,6 +35,8 @@ describe("equipped skin rendering", () => {
         inventory={[]}
         avatarSlug={null}
         displayName="Yahia"
+        isActivatePending={false}
+        onActivate={() => {}}
       />,
     );
     expect(screen.getByText("YA")).toBeInTheDocument();
@@ -53,13 +57,17 @@ describe("equipped skin rendering", () => {
             isEquipped: false,
             quantity: 0,
             avatarSlug: "pharaoh",
+            isArmable: false,
+            isActive: false,
           },
         ]}
         availableCoins={500}
         isPurchasePending={false}
         isEquipPending={false}
+        isActivatePending={false}
         onPurchase={() => {}}
         onEquip={() => {}}
+        onActivate={() => {}}
       />,
     );
     expect(screen.getByText("👑")).toBeInTheDocument();

@@ -167,6 +167,63 @@ describe("shop — equipInventorySkin", () => {
   });
 });
 
+describe("shop — activateInventoryItem", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    mockFrom.mockReset();
+    mockRpc.mockReset();
+  });
+
+  it("arms a potion and returns the result mapped from the RPC payload", async () => {
+    mockRpc.mockImplementation(
+      rpcResponder({
+        activate_inventory_item: {
+          data: { item_code: "potion_xp_boost", item_name: "XP Boost", is_active: true },
+          error: null,
+        },
+      }),
+    );
+
+    const { activateInventoryItem } = await import("@/features/shop");
+    const result = await (activateInventoryItem as unknown as (d: unknown) => Promise<unknown>)({
+      itemCode: "potion_xp_boost",
+    });
+
+    const res = result as Record<string, unknown>;
+    expect(res.itemCode).toBe("potion_xp_boost");
+    expect(res.itemName).toBe("XP Boost");
+    expect(res.isActive).toBe(true);
+    expect(mockRpc).toHaveBeenCalledWith("activate_inventory_item", {
+      p_item_code: "potion_xp_boost",
+    });
+  });
+
+  it("surfaces the RPC error when the item is not a potion", async () => {
+    mockRpc.mockImplementation(
+      rpcResponder({
+        activate_inventory_item: {
+          data: null,
+          error: { message: "Only consumable potions can be activated." },
+        },
+      }),
+    );
+
+    const { activateInventoryItem } = await import("@/features/shop");
+    await expect(
+      (activateInventoryItem as unknown as (d: unknown) => Promise<unknown>)({
+        itemCode: "skin_gold",
+      }),
+    ).rejects.toThrow("Impossible d'activer cette potion.");
+  });
+
+  it("rejects empty itemCode (input validation)", async () => {
+    const { activateInventoryItem } = await import("@/features/shop");
+    await expect(
+      (activateInventoryItem as unknown as (d: unknown) => Promise<unknown>)({ itemCode: "" }),
+    ).rejects.toThrow();
+  });
+});
+
 describe("shop — RPC payload fallbacks", () => {
   beforeEach(() => {
     vi.resetModules();
@@ -194,5 +251,18 @@ describe("shop — RPC payload fallbacks", () => {
     expect(res.itemCode).toBe("skin_gold");
     expect(res.itemName).toBe("");
     expect(res.avatarSlug).toBeNull();
+  });
+
+  it("activateInventoryItem falls back to safe defaults when the RPC returns no payload", async () => {
+    mockRpc.mockImplementation(
+      rpcResponder({ activate_inventory_item: { data: null, error: null } }),
+    );
+    const { activateInventoryItem } = await import("@/features/shop");
+    const res = (await (activateInventoryItem as unknown as (d: unknown) => Promise<unknown>)({
+      itemCode: "potion_coins",
+    })) as Record<string, unknown>;
+    expect(res.itemCode).toBe("potion_coins");
+    expect(res.itemName).toBe("");
+    expect(res.isActive).toBe(false);
   });
 });

@@ -14,6 +14,8 @@ type InventoryItem = {
   itemType: string;
   quantity: number;
   isEquipped: boolean;
+  isArmable: boolean;
+  isActive: boolean;
 };
 
 type DashboardRadarInventoryProps = {
@@ -23,6 +25,8 @@ type DashboardRadarInventoryProps = {
   avatarSlug?: string | null;
   /** Fallback initials shown when no skin is equipped. */
   displayName?: string;
+  isActivatePending: boolean;
+  onActivate: (itemCode: string) => void;
 };
 
 export function DashboardRadarInventory({
@@ -30,6 +34,8 @@ export function DashboardRadarInventory({
   inventory,
   avatarSlug,
   displayName,
+  isActivatePending,
+  onActivate,
 }: DashboardRadarInventoryProps) {
   const avatarEmoji = avatarEmojiForSlug(avatarSlug);
   const initials = (displayName ?? "").trim().slice(0, 2).toUpperCase() || "?";
@@ -98,6 +104,24 @@ export function DashboardRadarInventory({
                     )}
                   </div>
                 </div>
+                {item.isArmable && (
+                  <div className="mt-3 flex items-center justify-between gap-2">
+                    {item.isActive ? (
+                      <span className="rounded-full bg-[color:var(--gold)]/15 px-3 py-1 text-xs font-bold text-[color:var(--gold)]">
+                        Actif · prochaine quête
+                      </span>
+                    ) : (
+                      <button
+                        disabled={isActivatePending}
+                        onClick={() => onActivate(item.code)}
+                        aria-label={`Activer ${item.name}`}
+                        className="rounded-lg bg-[image:var(--gradient-gold)] px-3 py-1.5 text-xs font-bold text-black shadow-gold disabled:opacity-40"
+                      >
+                        Activer
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             ))
           ) : (

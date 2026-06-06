@@ -137,7 +137,7 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
       supabase
         .from("inventory_items")
         .select(
-          "quantity, is_equipped, acquired_at, item:shop_items(id,code,name,item_type,description,price_coins)",
+          "quantity, is_equipped, is_active, acquired_at, item:shop_items(id,code,name,item_type,description,price_coins,effect_payload)",
         )
         .eq("student_user_id", userId)
         .order("acquired_at", { ascending: false }),
@@ -174,8 +174,18 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
       ];
     });
 
+    // A multiplier potion is "armable": item_type 'potion' carrying an
+    // xpMultiplier/coinMultiplier effect (hint potions are out of scope).
+    const isMultiplierPotion = (itemType: string, payload: Record<string, unknown>) =>
+      itemType === "potion" && ("xpMultiplier" in payload || "coinMultiplier" in payload);
+
     const inventory = (inventoryRes.data ?? []).flatMap((row: InventoryRow) => {
       if (!row.item) return [];
+
+      const payload =
+        row.item.effect_payload && typeof row.item.effect_payload === "object"
+          ? (row.item.effect_payload as Record<string, unknown>)
+          : {};
 
       return [
         {
@@ -186,6 +196,8 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
           priceCoins: row.item.price_coins,
           quantity: row.quantity,
           isEquipped: row.is_equipped,
+          isActive: row.is_active,
+          isArmable: isMultiplierPotion(row.item.item_type, payload),
           acquiredAt: row.acquired_at,
         },
       ];
@@ -210,6 +222,8 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
         isEquipped: owned?.isEquipped ?? false,
         quantity: owned?.quantity ?? 0,
         avatarSlug,
+        isArmable: Boolean(owned) && isMultiplierPotion(item.item_type, payload),
+        isActive: owned?.isActive ?? false,
       };
     });
 

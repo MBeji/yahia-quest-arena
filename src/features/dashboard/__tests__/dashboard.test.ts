@@ -473,6 +473,90 @@ describe("gamification.dashboard — getDashboardSecondary", () => {
     expect(shop[0].avatarSlug).toBe("samurai");
   });
 
+  it("marks owned multiplier potions as armable and surfaces the armed one (#consumables)", async () => {
+    const inventory = [
+      {
+        quantity: 2,
+        is_equipped: false,
+        is_active: true,
+        acquired_at: "2026-06-02",
+        item: {
+          id: "p1",
+          code: "potion_xp_boost",
+          name: "XP Boost",
+          item_type: "potion",
+          description: "XP x2",
+          price_coins: 50,
+          effect_payload: { xpMultiplier: 2, uses: 1 },
+        },
+      },
+      {
+        quantity: 1,
+        is_equipped: false,
+        is_active: false,
+        acquired_at: "2026-06-01",
+        item: {
+          id: "p2",
+          code: "potion_rappel",
+          name: "Rappel",
+          item_type: "potion",
+          description: "hint",
+          price_coins: 30,
+          effect_payload: { hintBoost: 1 },
+        },
+      },
+    ];
+    const shopItems = [
+      {
+        id: "p1",
+        code: "potion_xp_boost",
+        name: "XP Boost",
+        item_type: "potion",
+        description: "XP x2",
+        price_coins: 50,
+        is_active: true,
+        effect_payload: { xpMultiplier: 2, uses: 1 },
+      },
+      {
+        id: "p2",
+        code: "potion_rappel",
+        name: "Rappel",
+        item_type: "potion",
+        description: "hint",
+        price_coins: 30,
+        is_active: true,
+        effect_payload: { hintBoost: 1 },
+      },
+    ];
+
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "student_badges") return mockQuery([]);
+      if (table === "inventory_items") return mockQuery(inventory);
+      if (table === "shop_items") return mockQuery(shopItems);
+      return mockQuery([]);
+    });
+
+    const { getDashboardSecondary } = await import("@/features/dashboard");
+    const result = await (getDashboardSecondary as unknown as (d?: unknown) => Promise<unknown>)();
+
+    const res = result as Record<string, unknown>;
+    const inv = res.inventory as Array<{ code: string; isArmable: boolean; isActive: boolean }>;
+    const xpInv = inv.find((i) => i.code === "potion_xp_boost");
+    const hintInv = inv.find((i) => i.code === "potion_rappel");
+    // Multiplier potion is armable and currently armed; hint potion is neither.
+    expect(xpInv?.isArmable).toBe(true);
+    expect(xpInv?.isActive).toBe(true);
+    expect(hintInv?.isArmable).toBe(false);
+
+    const shop = res.shopItems as Array<{ code: string; isArmable: boolean; isActive: boolean }>;
+    const xpShop = shop.find((i) => i.code === "potion_xp_boost");
+    const hintShop = shop.find((i) => i.code === "potion_rappel");
+    expect(xpShop?.isArmable).toBe(true);
+    expect(xpShop?.isActive).toBe(true);
+    // Hint potion is owned but NOT armable (out of scope this iteration).
+    expect(hintShop?.isArmable).toBe(false);
+  });
+
   it("throws a generic French message on badges error (#14)", async () => {
     mockFrom.mockImplementation((table: string) => {
       if (table === "student_badges") return mockQuery(null, { message: "Badges error" });

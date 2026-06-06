@@ -584,6 +584,7 @@ export type Database = {
         Row: {
           acquired_at: string;
           id: string;
+          is_active: boolean;
           is_equipped: boolean;
           quantity: number;
           shop_item_id: string;
@@ -592,6 +593,7 @@ export type Database = {
         Insert: {
           acquired_at?: string;
           id?: string;
+          is_active?: boolean;
           is_equipped?: boolean;
           quantity?: number;
           shop_item_id: string;
@@ -600,6 +602,7 @@ export type Database = {
         Update: {
           acquired_at?: string;
           id?: string;
+          is_active?: boolean;
           is_equipped?: boolean;
           quantity?: number;
           shop_item_id?: string;
@@ -1017,6 +1020,10 @@ export type Database = {
         Returns: Json;
       };
       equip_inventory_skin: {
+        Args: { p_item_code: string };
+        Returns: Json;
+      };
+      activate_inventory_item: {
         Args: { p_item_code: string };
         Returns: Json;
       };

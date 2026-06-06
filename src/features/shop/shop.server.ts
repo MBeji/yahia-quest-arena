@@ -60,3 +60,32 @@ export const equipInventorySkin = createServerFn({ method: "POST" })
       avatarSlug: typeof row.avatar_slug === "string" ? row.avatar_slug : null,
     };
   });
+
+// ---------- Arm a consumable potion ----------
+// Ownership + "potion only" validation and the one-armed-at-a-time toggle happen
+// atomically in the `activate_inventory_item` SECURITY DEFINER RPC. The armed
+// potion applies to the next reward-earning quest, then is consumed.
+export const activateInventoryItem = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ itemCode: z.string().min(1) }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+
+    const { data: result, error } = await supabase.rpc("activate_inventory_item", {
+      p_item_code: data.itemCode,
+    });
+    if (error) {
+      failWithClientError(
+        "shop.activateInventoryItem",
+        error,
+        "Impossible d'activer cette potion.",
+      );
+    }
+
+    const row = asRecord(result);
+    return {
+      itemCode: typeof row.item_code === "string" ? row.item_code : data.itemCode,
+      itemName: typeof row.item_name === "string" ? row.item_name : "",
+      isActive: row.is_active === true,
+    };
+  });

@@ -473,6 +473,13 @@ function QuestPage() {
                 {noXpReason(result)}
               </div>
             )}
+            {result.potionApplied && (
+              <div className="mt-6 rounded-xl border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/10 p-3 text-center text-sm font-bold text-[color:var(--gold)]">
+                {result.potionApplied.xpMultiplier > 1
+                  ? `Potion XP ×${result.potionApplied.xpMultiplier} appliquée !`
+                  : `Potion Pièces ×${result.potionApplied.coinMultiplier} appliquée !`}
+              </div>
+            )}
             <QuestRewardGrid
               xpEarned={result.xpEarned}
               coinsEarned={result.coinsEarned ?? 0}
