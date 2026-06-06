@@ -1,6 +1,18 @@
 import { Link } from "@tanstack/react-router";
 import React from "react";
-import { Sword, BookOpen, Scroll, Leaf, Globe, ChevronRight, Crown, Lock } from "lucide-react";
+import {
+  Sword,
+  BookOpen,
+  Scroll,
+  Leaf,
+  Globe,
+  Calculator,
+  Languages,
+  Atom,
+  ChevronRight,
+  Crown,
+  Lock,
+} from "lucide-react";
 import { useT } from "@/lib/i18n";
 
 const ICONS: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
@@ -9,18 +21,18 @@ const ICONS: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> 
   Scroll,
   Leaf,
   Globe,
-} as never;
+  Calculator,
+  Languages,
+  Atom,
+};
 
-const glowToken = (token: string) =>
-  token === "math"
-    ? "subject-math"
-    : token === "french"
-      ? "subject-french"
-      : token === "arabic"
-        ? "subject-arabic"
-        : token === "svt"
-          ? "subject-svt"
-          : "subject-english";
+/**
+ * Resolve a subject's CSS colour variable from its `color_token`. The DB stores
+ * the token already prefixed (e.g. "subject-math"), so we normalise a possible
+ * leading "subject-" and rebuild `--subject-<base>` — robust whether the token
+ * is stored as "subject-math" or bare "math".
+ */
+const colorVar = (token: string) => `var(--subject-${token.replace(/^subject-/, "")})`;
 
 type SubjectLike = {
   id: string;
@@ -45,15 +57,16 @@ export function SubjectPathCard({
   const Icon = ICONS[subject.icon] ?? Sword;
   const isPremium = subject.is_premium ?? false;
   const premiumLocked = isPremium && !hasSubscription;
+  const color = colorVar(subject.color_token);
 
   return (
     <Link
       to="/subject/$subjectId"
       params={{ subjectId: subject.id }}
-      className={`group relative block overflow-hidden rounded-2xl border bg-card/60 p-5 backdrop-blur-md transition hover:-translate-y-1 ${
+      className={`group relative block overflow-hidden rounded-2xl border bg-black/60 p-5 backdrop-blur-md transition hover:-translate-y-1 ${
         isPremium
           ? "border-[color:var(--neon-gold)]/50 hover:border-[color:var(--neon-gold)]/80"
-          : "border-border/50 hover:border-[color:var(--neon-violet)]/60"
+          : "border-border/50 hover:border-[color:var(--gold)]/60"
       }`}
     >
       {isPremium && (
@@ -64,10 +77,10 @@ export function SubjectPathCard({
       )}
       <div
         className="absolute -right-8 -top-8 h-28 w-28 rounded-full blur-2xl opacity-50 transition-opacity group-hover:opacity-90"
-        style={{ background: `var(--${glowToken(subject.color_token)})` }}
+        style={{ background: color }}
       />
       <div className="relative flex items-start justify-between">
-        <Icon className="h-8 w-8" style={{ color: `var(--subject-${subject.color_token})` }} />
+        <Icon className="h-8 w-8" style={{ color }} />
         <ChevronRight className="h-5 w-5 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-foreground" />
       </div>
       <div className="relative mt-4">
@@ -80,7 +93,7 @@ export function SubjectPathCard({
         <span className="text-muted-foreground">
           {stat ? `${stat.count} quest${stat.count > 1 ? "s" : ""}` : t.dashboard.notAttempted}
         </span>
-        <span className="font-bold" style={{ color: `var(--subject-${subject.color_token})` }}>
+        <span className="font-bold" style={{ color }}>
           {stat ? `${Math.round(stat.avg)}%` : "—"}
         </span>
       </div>

@@ -22,7 +22,7 @@
         { "id": "d", "text": "the happiest" }
       ],
       "correctOption": "b",
-      "explanation": "Short adjectives ending in -y drop the y and add -ier: happy → happier than. \"More happy\" is not the standard form.",
+      "explanation": "Short adjectives ending in consonant + -y change the y to i and add -er: happy → happier (than). \"more happy\" is wrong because \"more\" is only for long adjectives; \"happyer\" keeps the y instead of changing it to i; \"the happiest\" is the superlative, not the comparative.",
       "difficulty": 1
     },
     {

@@ -1,0 +1,97 @@
+{
+  "title": "Palier 1 — Épreuve de synthèse : un portrait en demi-teinte",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Lisez attentivement ce texte, support de toute l'épreuve :\n\n« Monsieur Lévêque passait, dans le quartier, pour un homme affable. Il saluait chacun, s'enquérait de la santé des uns, des affaires des autres ; nul ne l'avait jamais entendu hausser le ton. Pourtant, ceux qui travaillaient sous ses ordres en parlaient à voix basse : derrière les portes closes, l'homme affable se faisait âpre, et sa courtoisie de façade tombait comme un masque. »\n\n[COMPRÉHENSION] Quelle vérité sur le personnage ce texte conduit-il à inférer ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Sa courtoisie publique masque une dureté que seuls ses subordonnés connaissent."
+        },
+        { "id": "b", "text": "Il est uniformément doux, en public comme en privé." },
+        { "id": "c", "text": "Les habitants du quartier le détestent ouvertement." },
+        { "id": "d", "text": "Ses subordonnés le respectent pour sa franchise constante." }
+      ],
+      "correctOption": "a",
+      "explanation": "L'opposition annoncée par « Pourtant » oppose la réputation publique (« un homme affable ») au témoignage des subordonnés (« âpre », « courtoisie de façade »), et l'image du « masque » qui « tombe » scelle l'inférence : la douceur n'est qu'une apparence. (b) ignore le « Pourtant » et le second visage du personnage. (c) est faux : le quartier l'apprécie. (d) contredit le ton inquiet (« à voix basse ») des subordonnés.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "[LEXIQUE] Dans le texte, l'adjectif « âpre » appliqué à l'homme « derrière les portes closes » signifie :",
+      "options": [
+        { "id": "a", "text": "Aimable et chaleureux." },
+        { "id": "b", "text": "Rude, dur et désagréable dans ses rapports." },
+        { "id": "c", "text": "Distrait et insouciant." },
+        { "id": "d", "text": "Timide et effacé." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Âpre », au sens propre, qualifie une saveur rude ; au sens figuré, un caractère ou un ton dur, rêche, sans douceur. Le contexte (opposition à « affable », « masque » qui tombe) impose cette valeur. (a) en est l'antonyme. (c) et (d) introduisent des traits absents du texte et incompatibles avec la dureté décrite.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "[SYNTAXE] Dans la phrase « ceux qui travaillaient sous ses ordres en parlaient à voix basse », quelle est la fonction de la proposition « qui travaillaient sous ses ordres » ?",
+      "options": [
+        { "id": "a", "text": "Subordonnée relative, complément de l'antécédent « ceux »." },
+        { "id": "b", "text": "Subordonnée complétive, COD de « parlaient »." },
+        { "id": "c", "text": "Subordonnée circonstancielle de temps." },
+        { "id": "d", "text": "Proposition principale." }
+      ],
+      "correctOption": "a",
+      "explanation": "Le pronom relatif « qui » reprend l'antécédent « ceux » et introduit une relative qui le détermine (de qui parle-t-on ? de ceux qui travaillaient sous ses ordres). Une complétive (b) serait introduite par « que » conjonction et compléterait un verbe. Il n'y a pas de valeur temporelle (c), et la principale est « ceux… en parlaient à voix basse » (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "[GRAMMAIRE] Quelle réécriture conserve un accord parfaitement correct ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "La courtoisie qu'il avait affichée toute la journée tomba d'un coup."
+        },
+        {
+          "id": "b",
+          "text": "La courtoisie qu'il avait affiché toute la journée tomba d'un coup."
+        },
+        {
+          "id": "c",
+          "text": "La courtoisie qu'il avait affichés toute la journée tomba d'un coup."
+        },
+        {
+          "id": "d",
+          "text": "La courtoisie qu'il avaient affichée toute la journée tomba d'un coup."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Avec « avoir », le participe passé s'accorde avec le COD antéposé : ici « qu' » mis pour « la courtoisie » (féminin singulier), placé avant « avait affichée » → « affichée ». (b) néglige l'accord. (c) met un pluriel injustifié. (d) commet en outre une faute d'accord sujet-verbe (« il avaient »).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "[LEXIQUE — paronymes] Pour qualifier la fausse cordialité du personnage, on pourrait dire qu'il faisait preuve de « ______ ». Choisissez le mot juste, sans le confondre avec son paronyme.",
+      "options": [
+        { "id": "a", "text": "dissimulation" },
+        { "id": "b", "text": "dissipation" },
+        { "id": "c", "text": "dissertation" },
+        { "id": "d", "text": "dissension" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Dissimulation » désigne l'action de cacher ses véritables sentiments ou intentions — exactement le « masque » décrit dans le texte. « Dissipation » (b) évoque le fait de gaspiller, ou un manque de concentration. « Dissertation » (c) est un exercice écrit. « Dissension » (d) désigne un désaccord profond entre personnes. Seul (a) convient au sens visé.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "[GRAMMAIRE — concordance] Complétez en respectant la concordance des temps : « Ses subordonnés affirmaient que, dès que la porte ______, l'homme changeait de visage. »",
+      "options": [
+        { "id": "a", "text": "se referme" },
+        { "id": "b", "text": "se refermait" },
+        { "id": "c", "text": "se refermera" },
+        { "id": "d", "text": "se soit refermée" }
+      ],
+      "correctOption": "b",
+      "explanation": "La principale est au passé (« affirmaient ») et décrit une habitude passée (« changeait de visage ») : la subordonnée temporelle, qui exprime une action concomitante et répétée dans ce cadre passé, prend l'imparfait, « se refermait ». Le présent (a) et le futur (c) rompent la concordance avec un récit au passé. Le subjonctif (d) n'est pas commandé par « dès que », qui régit l'indicatif.",
+      "difficulty": 3
+    }
+  ]
+}

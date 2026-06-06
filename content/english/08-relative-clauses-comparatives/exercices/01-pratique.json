@@ -27,7 +27,7 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "We use 'who' for people. 'The student who won the prize' — 'who' refers to 'the student' (a person).",
+      "explanation": "We use \"who\" for people, and \"the student\" is a person: the student who won the prize. \"which\" is for things; \"where\" is for places; \"whose\" shows possession (the student's...), which is not the meaning here.",
       "difficulty": 1
     },
     {
@@ -75,7 +75,7 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "'fast' is a short (one-syllable) adjective, so the comparative is 'faster than'. We never use 'more fast' with short adjectives.",
+      "explanation": "\"fast\" is a short (one-syllable) adjective, so the comparative adds -er + than: faster than. \"more fast\" is wrong because \"more\" is only for long adjectives; \"fastest than\" is a superlative form (and superlatives never take \"than\"); \"as fast than\" mixes the \"as...as\" pattern with \"than\".",
       "difficulty": 1
     },
     {
@@ -99,7 +99,7 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "'high' is a short adjective. The superlative adds '-est' and requires 'the': 'the highest'. We never say 'the most high' with short adjectives.",
+      "explanation": "Comparing one mountain to all others needs a superlative. \"high\" is a short adjective, so the superlative adds -est and requires \"the\": the highest. \"the most high\" is wrong because \"most\" is only for long adjectives; \"more high\" and \"higher\" are comparatives (for two things), not superlatives.",
       "difficulty": 2
     },
     {

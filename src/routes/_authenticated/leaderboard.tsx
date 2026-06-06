@@ -68,7 +68,7 @@ function LeaderboardPage() {
 
       <div className="mb-6 text-center">
         <h1 className="font-display text-4xl font-bold">
-          <span className="text-gradient-primary">Academy</span> Leaderboard
+          <span className="text-gradient-gold">Academy</span> Leaderboard
         </h1>
         <p className="mt-2 text-muted-foreground">
           {isGlobal
@@ -83,8 +83,8 @@ function LeaderboardPage() {
           onClick={() => setTab(GLOBAL)}
           className={`rounded-full border px-4 py-1.5 text-sm font-semibold transition ${
             isGlobal
-              ? "border-[color:var(--neon-violet)]/60 bg-[color:var(--neon-violet)]/15 text-[color:var(--neon-violet)]"
-              : "border-border/50 bg-card/40 text-muted-foreground hover:text-foreground"
+              ? "border-[color:var(--gold)]/60 bg-[color:var(--gold)]/15 text-[color:var(--gold)]"
+              : "border-border/50 bg-black/40 text-muted-foreground hover:text-foreground"
           }`}
         >
           🌍 Global
@@ -98,8 +98,8 @@ function LeaderboardPage() {
               dir={isRtlText(s.name_fr) ? "rtl" : undefined}
               className={`rounded-full border px-4 py-1.5 text-sm font-semibold transition ${
                 active
-                  ? "border-[color:var(--neon-cyan)]/60 bg-[color:var(--neon-cyan)]/15 text-[color:var(--neon-cyan)]"
-                  : "border-border/50 bg-card/40 text-muted-foreground hover:text-foreground"
+                  ? "border-[color:var(--gold)]/60 bg-[color:var(--gold)]/15 text-[color:var(--gold)]"
+                  : "border-border/50 bg-black/40 text-muted-foreground hover:text-foreground"
               }`}
             >
               {s.name_fr}
@@ -119,16 +119,16 @@ function LeaderboardPage() {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-6 rounded-2xl border border-[color:var(--neon-violet)]/40 bg-card/60 p-5 backdrop-blur-xl shadow-neon"
+              className="mb-6 rounded-2xl border border-[color:var(--gold)]/40 bg-black/60 p-5 backdrop-blur-xl shadow-gold"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] font-display text-xl font-bold text-primary-foreground shadow-neon">
+                  <div className="grid h-12 w-12 place-items-center rounded-xl bg-[image:var(--gradient-gold)] font-display text-xl font-bold text-black shadow-gold">
                     #{myRank.rank}
                   </div>
                   <div>
                     <div className="font-display text-lg font-bold">{myRank.displayName}</div>
-                    <div className="text-xs uppercase tracking-widest text-[color:var(--neon-cyan)]">
+                    <div className="text-xs uppercase tracking-widest text-[color:var(--champagne)]">
                       {myRank.heroClass}
                     </div>
                   </div>
@@ -196,8 +196,8 @@ function LeaderboardPage() {
                 transition={{ delay: i * 0.02 }}
                 className={`flex items-center gap-4 rounded-xl border p-4 transition ${
                   player.isMe
-                    ? "border-[color:var(--neon-violet)]/50 bg-[color:var(--neon-violet)]/10"
-                    : "border-border/50 bg-card/40 hover:bg-card/60"
+                    ? "border-[color:var(--gold)]/50 bg-[color:var(--gold)]/10"
+                    : "border-border/50 bg-black/40 hover:bg-black/60"
                 }`}
               >
                 <div
@@ -214,7 +214,7 @@ function LeaderboardPage() {
                   <div className="flex items-center gap-2">
                     <span className="font-semibold truncate">{player.displayName}</span>
                     {player.isMe && (
-                      <span className="rounded-full bg-[color:var(--neon-violet)]/20 px-2 py-0.5 text-[10px] font-bold uppercase text-[color:var(--neon-violet)]">
+                      <span className="rounded-full bg-[color:var(--gold)]/20 px-2 py-0.5 text-[10px] font-bold uppercase text-[color:var(--gold)]">
                         You
                       </span>
                     )}

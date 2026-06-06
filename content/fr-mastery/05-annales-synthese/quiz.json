@@ -1,0 +1,116 @@
+{
+  "title": "Diagnostic — Épreuve de synthèse",
+  "questions": [
+    {
+      "prompt": "Lisez ce passage :\n\n« On vantait partout sa générosité ; il ne donnait pourtant qu'à ceux dont il attendait un retour. Les nécessiteux véritables, eux, restaient à sa porte. »\n\nQue laisse inférer ce passage sur le personnage ?",
+      "options": [
+        { "id": "a", "text": "Sa générosité est sincère mais mal comprise du public." },
+        { "id": "b", "text": "Sa prétendue générosité n'est qu'un calcul intéressé." },
+        { "id": "c", "text": "Il aide en priorité les personnes les plus démunies." },
+        { "id": "d", "text": "Il ignore que sa réputation est usurpée." }
+      ],
+      "correctOption": "b",
+      "explanation": "L'opposition marquée par « pourtant » entre la réputation (« on vantait sa générosité ») et les faits (« il ne donnait qu'à ceux dont il attendait un retour ») révèle un intérêt déguisé en bienfaisance ; le sort des « nécessiteux véritables » le confirme. (a) prend la réputation pour argent comptant. (c) est l'inverse de ce que dit le texte. (d) invente un état mental absent du passage.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans la phrase « Le rapport, que la commission avait longtemps tenu secret, fut enfin rendu public », quelle est la nature et la fonction de la proposition « que la commission avait longtemps tenu secret » ?",
+      "options": [
+        { "id": "a", "text": "Une subordonnée complétive, COD du verbe « fut »." },
+        { "id": "b", "text": "Une subordonnée relative, complément de l'antécédent « rapport »." },
+        { "id": "c", "text": "Une subordonnée circonstancielle de cause." },
+        { "id": "d", "text": "Une proposition indépendante juxtaposée." }
+      ],
+      "correctOption": "b",
+      "explanation": "Introduite par le pronom relatif « que » (qui reprend l'antécédent « rapport » et y exerce la fonction de COD de « avait tenu »), la proposition est une subordonnée relative qui complète le nom « rapport ». Une complétive (a) serait introduite par la conjonction « que » et compléterait un verbe, non un nom. Il n'y a ni valeur causale (c) ni juxtaposition (d) : la proposition est enchâssée et dépend du nom.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase respecte correctement l'accord du participe passé ?",
+      "options": [
+        { "id": "a", "text": "Les décisions que le conseil a prises ont surpris l'assemblée." },
+        { "id": "b", "text": "Les décisions que le conseil a pris ont surpris l'assemblée." },
+        { "id": "c", "text": "Les décisions que le conseil a prise ont surpris l'assemblée." },
+        { "id": "d", "text": "Les décisions que le conseil ont prises ont surpris l'assemblée." }
+      ],
+      "correctOption": "a",
+      "explanation": "Avec l'auxiliaire « avoir », le participe passé s'accorde avec le COD lorsque celui-ci est placé avant le verbe. Ici le COD est « que », mis pour « les décisions » (féminin pluriel), antéposé : on écrit donc « prises ». (b) et (c) négligent ou faussent l'accord. (d) commet en outre une faute d'accord sujet-verbe (« le conseil ont »).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choisissez le mot juste : « Faute de preuves, l'enquêteur en fut réduit à de simples ______ sur le mobile du crime. »",
+      "options": [
+        { "id": "a", "text": "conjonctures" },
+        { "id": "b", "text": "conjectures" },
+        { "id": "c", "text": "confitures" },
+        { "id": "d", "text": "conjugaisons" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Conjecture » désigne une hypothèse fondée sur des indices incertains : « faute de preuves » impose ce sens. Le paronyme « conjoncture » (a) désigne une situation économique ou sociale à un moment donné et ne convient pas. (c) et (d) sont des intrus sans rapport sémantique, glissés pour tester la lecture attentive.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez ce passage :\n\n« Il prétendait n'avoir rien remarqué. Mais ses mains tremblaient, sa voix se brisait, et il évitait soigneusement de croiser nos regards. »\n\nQuel est l'effet produit par la succession des trois notations après « Mais » ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Une énumération accumulative qui dément, par les indices physiques, la dénégation du personnage."
+        },
+        {
+          "id": "b",
+          "text": "Une gradation descendante qui atténue progressivement le trouble du personnage."
+        },
+        { "id": "c", "text": "Une comparaison qui rapproche le personnage d'un coupable type." },
+        { "id": "d", "text": "Une digression qui détourne l'attention du sujet principal." }
+      ],
+      "correctOption": "a",
+      "explanation": "Les trois propositions juxtaposées (« ses mains tremblaient, sa voix se brisait, et il évitait… ») forment une accumulation d'indices corporels qui contredisent la dénégation initiale (« il prétendait n'avoir rien remarqué ») : le « Mais » articule cette opposition. Il n'y a pas d'affaiblissement (b), pas de comparaison explicite (c), et ces notations sont au cœur du propos, non une digression (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complétez en respectant la concordance des temps : « Je savais bien qu'un jour il ______ la vérité, quelles qu'en fussent les conséquences. »",
+      "options": [
+        { "id": "a", "text": "dira" },
+        { "id": "b", "text": "dirait" },
+        { "id": "c", "text": "dise" },
+        { "id": "d", "text": "ait dit" }
+      ],
+      "correctOption": "b",
+      "explanation": "La principale est au passé (« je savais »), et la subordonnée exprime un fait postérieur à ce moment passé : on emploie alors le conditionnel présent à valeur de futur dans le passé, « dirait ». Le futur « dira » (a) conviendrait après une principale au présent. Le subjonctif (c) n'est pas commandé ici par « savoir » à la forme affirmative. (d) introduit un temps composé sans justification.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lisez ce passage :\n\n« La réforme, présentée comme une avancée sociale, ne profitera, en réalité, qu'aux mieux pourvus. On l'a parée de toutes les vertus ; le temps en dira la véritable nature. »\n\nQuel mot ou groupe de mots porte le plus nettement la prise de position critique de l'auteur ?",
+      "options": [
+        { "id": "a", "text": "« présentée comme une avancée sociale »" },
+        { "id": "b", "text": "« en réalité »" },
+        { "id": "c", "text": "« la réforme »" },
+        { "id": "d", "text": "« le temps »" }
+      ],
+      "correctOption": "b",
+      "explanation": "La locution « en réalité » oppose explicitement l'apparence (« présentée comme une avancée ») à ce que l'auteur tient pour le fait véritable : elle signale le démenti et donc la position critique. « Présentée comme » (a) introduit certes l'apparence trompeuse mais c'est « en réalité » qui marque la rupture critique. « La réforme » (c) et « le temps » (d) sont des éléments neutres du propos.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans la phrase « Ses remarques acérées blessaient sans qu'il en eût conscience », quel énoncé analyse correctement à la fois le sens de « acérées » et le mode du verbe « eût » ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "« Acérées » signifie chaleureuses ; « eût » est un conditionnel passé."
+        },
+        {
+          "id": "b",
+          "text": "« Acérées » signifie incisives, mordantes ; « eût » est un subjonctif imparfait commandé par « sans que »."
+        },
+        {
+          "id": "c",
+          "text": "« Acérées » signifie maladroites ; « eût » est un plus-que-parfait de l'indicatif."
+        },
+        { "id": "d", "text": "« Acérées » signifie hésitantes ; « eût » est un futur antérieur." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Acéré », au sens figuré, qualifie des propos tranchants, mordants — cohérent avec « blessaient ». La locution conjonctive « sans que » commande le subjonctif : « eût » est ici un subjonctif imparfait (forme soutenue de « ait »), et non un conditionnel (a), un indicatif plus-que-parfait (c) ou un futur antérieur (d). Les sens proposés en (a), (c) et (d) contredisent en outre l'idée de blessure.",
+      "difficulty": 3
+    }
+  ]
+}

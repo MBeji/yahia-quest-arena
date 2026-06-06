@@ -54,4 +54,46 @@ describe("computeNextExerciseId", () => {
       }),
     ).toBeNull();
   });
+
+  it("returns null when the current exercise is not in the playable list", () => {
+    expect(
+      computeNextExerciseId(chapters, exercises, {
+        id: "ghost",
+        chapter_id: "c1",
+        mode: "practice",
+      }),
+    ).toBeNull();
+  });
+
+  it("returns null from a quiz whose chapter has no playable exercise", () => {
+    const ch = [{ id: "c1", display_order: 1 }];
+    const ex = [{ id: "c1-quiz", chapter_id: "c1", display_order: 0, mode: "quiz" }];
+    expect(
+      computeNextExerciseId(ch, ex, { id: "c1-quiz", chapter_id: "c1", mode: "quiz" }),
+    ).toBeNull();
+  });
+
+  it("falls back to order 0 when display_order is null", () => {
+    const ch = [
+      { id: "c1", display_order: null },
+      { id: "c2", display_order: null },
+    ];
+    const ex = [
+      { id: "a", chapter_id: "c1", display_order: null, mode: "practice" },
+      { id: "b", chapter_id: "c2", display_order: null, mode: "practice" },
+    ];
+    expect(computeNextExerciseId(ch, ex, { id: "a", chapter_id: "c1", mode: "practice" })).toBe(
+      "b",
+    );
+  });
+
+  it("uses the fallback order for exercises whose chapter is absent from the list", () => {
+    const ex = [
+      { id: "x", chapter_id: "missing", display_order: 1, mode: "practice" },
+      { id: "y", chapter_id: "missing", display_order: 2, mode: "practice" },
+    ];
+    expect(
+      computeNextExerciseId(chapters, ex, { id: "x", chapter_id: "missing", mode: "practice" }),
+    ).toBe("y");
+  });
 });

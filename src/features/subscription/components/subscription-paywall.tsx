@@ -6,6 +6,7 @@ import {
   SUBSCRIPTION_CURRENCY,
   SUBSCRIPTION_PLANS,
 } from "@/shared/constants/subscription";
+import { BetaAccessRequest } from "./beta-access-request";
 
 /**
  * Paywall shown when a user without an active subscription tries to reach a
@@ -50,6 +51,9 @@ export function SubscriptionPaywall() {
           <Phone className="h-5 w-5" /> {ADMIN_CONTACT_PHONE}
         </a>
       </div>
+
+      {/* Free beta-tester access request */}
+      <BetaAccessRequest />
 
       <Link
         to="/dashboard"

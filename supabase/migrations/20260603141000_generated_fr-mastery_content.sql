@@ -36,12 +36,12 @@ BEGIN
       AND q.exercise_id = e.id
       AND e.subject_id = 'fr-mastery'
       AND e.source = 'admin'
-      AND q.id NOT IN ('8680f10f-8d40-577d-b35c-88ecfd6fff8a', 'c943af63-5273-5fc1-af24-e6adde99d287', 'fddf1418-e9ef-5697-81f4-3c6fcd2feaae', 'd9f6457e-c264-587c-91ef-75cf4ac3341f', 'ed5ee1c1-ba81-57be-9b5a-59a76b8bb1b3', '6f05cdf1-ffa1-53a6-865c-3e7ef5b9f13f', '0195e47e-5a24-54a0-8d37-efdb074e38e5', 'edaae71f-2a0f-56b0-9de8-7af983a5f97a', 'c99f2101-7624-5966-b58e-bfc8fa12baec', '9ceacbb2-b92d-5d73-aa5d-98cfa7409985', 'd1eae56a-a4bf-58b9-9ea7-713473f2640a', '67de4e18-6eaa-5c85-9054-25ed7a08ab43', '1cd4d96d-aa2f-58b3-bcf2-69b54a040ef5', 'eb0f01e1-ed4d-55ee-99b2-35afd2948326', '543014f2-55ac-563c-b3d3-b44234606183', '7d30546c-fbb5-5240-9020-167990160ec1', '305156d8-219f-5eee-a20b-b902ce441b97', '74dd8103-2347-5068-9316-b65cc95f48f6', '050d08b6-399e-59f6-b9fe-019502d9bdf0', '89951cf7-dd8a-594b-9403-54a1641084b4', 'c08ae3cd-f963-52cf-84b6-beafaeca7e0e', 'd2bc1d53-6f4e-51ee-bb0b-bf5b177253f9', 'a89112a7-94e9-5e91-b04a-50edc4c953dc', '4b1c03fb-9575-51c4-bc11-850d12c955bf', 'a14d463f-5a21-5d0d-b187-2efa8905c8fd', '70b59c54-c7b6-58aa-81ee-c3e6523f65b0', '026f14b3-d80a-50ef-b862-7c312b3a8d99', 'e34a5753-21d5-58d7-86d0-65e3186e4981', 'e2d40a55-1980-57c0-9b15-a2a22f0ce69d', 'f9c2cca1-7844-5d5c-8eda-7bb309b2c1ef', 'f445d68b-2223-5682-8116-078a7a28f03b', '660243d7-9d26-5171-a25a-06fa13b891da', 'f72f5bd1-c49e-5252-8756-125c05759ab5', '025e5ee8-c412-52f1-97a1-919f13436b34', '375d49fc-7cd3-5d29-8542-e8eea2807342', 'dec2df78-f75b-55e7-ab6c-c0781f1325ea', '354fa3dd-041c-5e2b-a6bc-3a7ff1a63d01', '61ce2200-1a09-5c0b-bad7-4fbdfa7c99b5', '59f990a9-883c-5147-b3c7-67c35168c1db', 'e1768e1e-f0fa-5797-9180-d1d844ba24a2', '4b412957-d2ab-51c9-9647-8e7fc9085277', '6e1ad5a9-e292-54c2-a1e2-34c4542cb757', '1022efe2-107a-5610-879e-0bf25fa22f2c', '0a639db0-f9f9-585b-a2a7-e1a7d3453f3e', '115924d1-a555-58be-a771-5fcbad701f96', '5e4bfea9-57b3-5165-9c59-b71751b2ef84', 'b0409dd4-399d-5d99-8c58-9d75fb2bc07a', '26f7441c-d57b-5761-a6c9-16b90ec2c7f3', 'ee63c286-3de2-5973-9c22-96fffbaf86c1', '553347ac-bad6-5fc9-8c07-1e80392a33da', 'afb10bb6-999f-55bd-8122-155008c0e77e', 'e13f276a-7aac-5f4a-a773-e6bf3b275035', '68147ffc-dc72-5d42-b0de-4acc32bdf14f', '689afb94-f533-512b-9e88-140cc7cb2f68', '9b765c8d-b822-5bbd-9f21-8c13676dead8', '8b5e61ff-14e4-5f2b-97e7-e1214174224d', 'a2d3a00c-11f0-58df-becc-9b01b0c28d46', '902e41b0-978f-5f5b-9d50-671be361e6de', 'd1c704b3-d2c1-5494-9a83-3e546078888e', '4ca1c45c-63f9-5298-b5b8-4c5786e44c8c', 'c11b1d50-1b25-5bff-8225-f1fe1d80e993', '4db617a3-c445-5c2c-b81e-d7dcd502200c', '2d82bdb6-d713-5a54-ac54-abf97f260c5e', '45650677-9f13-5d19-896f-49157dbbd7f1', '183ea238-cae4-5fdb-bae1-ac120e01907e', 'e480c693-6f3f-50e6-9a24-fd45d2cebccb', '8ebefc85-d7ac-5d15-bead-db4207d08461', '5b5e3d20-2505-58d2-bbfe-50a8dbcd256c', '6c35ac86-7613-51cf-9a30-88bd5fa54a75', 'a5f03323-bbcb-54ec-abaf-8698b6e52ed3', 'ec46e2f3-8c2c-5d00-bf65-2c70abb9116d', '013f1b15-e4ea-5d75-b28c-e0515a027df5', '4438d74f-ed2d-565d-a342-971ae57232d8', '7400f4c5-9e93-5a49-9a31-9aa0aff92d25', '851df533-6479-59d6-863d-5265cb8fa8d2', 'c637e468-2efd-5f88-a681-dc7efd7eefd0', '7be23713-0f88-53c8-9b38-caee5ebb556e', 'ce54f665-a4d5-5529-ab5f-8a1f1af15c40', '54a3cc39-3157-5d8e-9ef0-5183474954b7', '0e91ac31-d95e-53c9-a53c-35fd08f4efcf', '00b519a1-3006-539e-ba8d-c75c4178cf56', 'f73ee323-bb3c-59b7-9d16-dba2847fbaf5', 'b4498f76-9810-5847-becb-1930b226c782', 'c91d708c-58ca-5f6a-9a38-150c20c3ada0', 'ed7dc171-9562-59b6-86d4-4c0aa32154db', 'ac16c26b-a52b-5105-8a5d-177753609eb4', '49ba7791-70c4-5618-8b9f-b4ab73617396', 'a2734595-ffd1-5cb6-8948-9d13ebdf9b20');
+      AND q.id NOT IN ('8680f10f-8d40-577d-b35c-88ecfd6fff8a', 'c943af63-5273-5fc1-af24-e6adde99d287', 'fddf1418-e9ef-5697-81f4-3c6fcd2feaae', 'd9f6457e-c264-587c-91ef-75cf4ac3341f', 'ed5ee1c1-ba81-57be-9b5a-59a76b8bb1b3', '6f05cdf1-ffa1-53a6-865c-3e7ef5b9f13f', '0195e47e-5a24-54a0-8d37-efdb074e38e5', 'edaae71f-2a0f-56b0-9de8-7af983a5f97a', 'c99f2101-7624-5966-b58e-bfc8fa12baec', '9ceacbb2-b92d-5d73-aa5d-98cfa7409985', 'd1eae56a-a4bf-58b9-9ea7-713473f2640a', '67de4e18-6eaa-5c85-9054-25ed7a08ab43', '1cd4d96d-aa2f-58b3-bcf2-69b54a040ef5', 'eb0f01e1-ed4d-55ee-99b2-35afd2948326', '543014f2-55ac-563c-b3d3-b44234606183', '7d30546c-fbb5-5240-9020-167990160ec1', '305156d8-219f-5eee-a20b-b902ce441b97', '74dd8103-2347-5068-9316-b65cc95f48f6', '050d08b6-399e-59f6-b9fe-019502d9bdf0', '89951cf7-dd8a-594b-9403-54a1641084b4', 'c08ae3cd-f963-52cf-84b6-beafaeca7e0e', 'd2bc1d53-6f4e-51ee-bb0b-bf5b177253f9', '476aa55c-605b-544b-89ef-280d038a1bc9', 'f802b339-cc4c-57f0-84ac-500b0d1673f7', 'a3240a58-68e4-57d8-8c21-5387b1d1d597', '30feca9c-e19b-56a1-85c6-4c28c20fa411', 'c1ed7e8d-0e91-5728-9003-b5fd12a3c7ee', 'd327a865-d514-51e3-98f3-378dbd03cb3d', 'a89112a7-94e9-5e91-b04a-50edc4c953dc', '4b1c03fb-9575-51c4-bc11-850d12c955bf', 'a14d463f-5a21-5d0d-b187-2efa8905c8fd', '70b59c54-c7b6-58aa-81ee-c3e6523f65b0', '026f14b3-d80a-50ef-b862-7c312b3a8d99', 'e34a5753-21d5-58d7-86d0-65e3186e4981', 'e2d40a55-1980-57c0-9b15-a2a22f0ce69d', 'f9c2cca1-7844-5d5c-8eda-7bb309b2c1ef', 'f445d68b-2223-5682-8116-078a7a28f03b', '660243d7-9d26-5171-a25a-06fa13b891da', 'f72f5bd1-c49e-5252-8756-125c05759ab5', '025e5ee8-c412-52f1-97a1-919f13436b34', '375d49fc-7cd3-5d29-8542-e8eea2807342', 'dec2df78-f75b-55e7-ab6c-c0781f1325ea', '354fa3dd-041c-5e2b-a6bc-3a7ff1a63d01', '61ce2200-1a09-5c0b-bad7-4fbdfa7c99b5', '59f990a9-883c-5147-b3c7-67c35168c1db', 'e1768e1e-f0fa-5797-9180-d1d844ba24a2', '4b412957-d2ab-51c9-9647-8e7fc9085277', '6e1ad5a9-e292-54c2-a1e2-34c4542cb757', '1022efe2-107a-5610-879e-0bf25fa22f2c', '0a639db0-f9f9-585b-a2a7-e1a7d3453f3e', 'ccd840c4-cc50-5339-a540-b4994840b711', '8a6da883-7ec6-5058-a646-8f94b34de605', '81f2daf0-3330-50e4-a637-bfdb518b1811', 'c7a0b57b-63ba-5ad0-a56b-dc6c373c39ff', 'c8e9fba5-743a-54f0-bc2b-4450a9501479', '3c1dcfe8-09c4-5c3c-9e0b-540698241c5c', '115924d1-a555-58be-a771-5fcbad701f96', '5e4bfea9-57b3-5165-9c59-b71751b2ef84', 'b0409dd4-399d-5d99-8c58-9d75fb2bc07a', '26f7441c-d57b-5761-a6c9-16b90ec2c7f3', 'ee63c286-3de2-5973-9c22-96fffbaf86c1', '553347ac-bad6-5fc9-8c07-1e80392a33da', 'afb10bb6-999f-55bd-8122-155008c0e77e', 'e13f276a-7aac-5f4a-a773-e6bf3b275035', '68147ffc-dc72-5d42-b0de-4acc32bdf14f', '689afb94-f533-512b-9e88-140cc7cb2f68', '9b765c8d-b822-5bbd-9f21-8c13676dead8', '8b5e61ff-14e4-5f2b-97e7-e1214174224d', 'a2d3a00c-11f0-58df-becc-9b01b0c28d46', '902e41b0-978f-5f5b-9d50-671be361e6de', 'd1c704b3-d2c1-5494-9a83-3e546078888e', '4ca1c45c-63f9-5298-b5b8-4c5786e44c8c', 'c11b1d50-1b25-5bff-8225-f1fe1d80e993', '4db617a3-c445-5c2c-b81e-d7dcd502200c', '2d82bdb6-d713-5a54-ac54-abf97f260c5e', '45650677-9f13-5d19-896f-49157dbbd7f1', '183ea238-cae4-5fdb-bae1-ac120e01907e', 'e480c693-6f3f-50e6-9a24-fd45d2cebccb', '3e19d9f5-874c-541e-90b5-54c54fdb2f00', 'dd97f75f-40ae-58fb-8bfb-a16b0fb1795b', '7356941c-ecb1-5fb9-a2e2-c00236ed4d85', 'b8d3d3ef-4629-5188-9bea-79e3c147eab8', 'c3a39f38-5cbe-5ea3-9a60-9f96ce2b69ca', 'a19551e0-c43b-50a9-8765-e100dd0276e8', '8ebefc85-d7ac-5d15-bead-db4207d08461', '5b5e3d20-2505-58d2-bbfe-50a8dbcd256c', '6c35ac86-7613-51cf-9a30-88bd5fa54a75', 'a5f03323-bbcb-54ec-abaf-8698b6e52ed3', 'ec46e2f3-8c2c-5d00-bf65-2c70abb9116d', '013f1b15-e4ea-5d75-b28c-e0515a027df5', '4438d74f-ed2d-565d-a342-971ae57232d8', '7400f4c5-9e93-5a49-9a31-9aa0aff92d25', '851df533-6479-59d6-863d-5265cb8fa8d2', 'c637e468-2efd-5f88-a681-dc7efd7eefd0', '7be23713-0f88-53c8-9b38-caee5ebb556e', 'ce54f665-a4d5-5529-ab5f-8a1f1af15c40', '54a3cc39-3157-5d8e-9ef0-5183474954b7', '0e91ac31-d95e-53c9-a53c-35fd08f4efcf', '00b519a1-3006-539e-ba8d-c75c4178cf56', 'f73ee323-bb3c-59b7-9d16-dba2847fbaf5', 'b4498f76-9810-5847-becb-1930b226c782', 'c91d708c-58ca-5f6a-9a38-150c20c3ada0', 'ed7dc171-9562-59b6-86d4-4c0aa32154db', 'ac16c26b-a52b-5105-8a5d-177753609eb4', '49ba7791-70c4-5618-8b9f-b4ab73617396', 'a2734595-ffd1-5cb6-8948-9d13ebdf9b20', '1229b917-95ca-56e5-9bb9-9642304181eb', '1b7380a4-60eb-578f-90d3-657d5b22e971', '0f353fd6-63bf-5c48-b0fe-5d952a0c3025', '1c8d65ce-dbd3-555d-bf40-1318ebba46f8', '403c7dc2-aaeb-5c2c-973f-c5203c8be46c', 'd9721052-6326-5cdc-b9b1-ff7546955bca', '6d99f9d8-fcb6-5a7d-9baf-459d334b4cd6', 'ab216150-dd83-579a-8f57-80bb1ed85e02', 'e2e27486-5901-5b7b-9f51-3fe5324ca8d7', '3abac0a4-d792-5edc-93ef-a33f33d4859e', '3375ad20-96fe-554b-9520-fc7939ef43fb', '766d61e0-2be1-5e35-979c-76c48ce2154c', '82f28540-d59d-5d25-b090-d08b1f2dcc68', 'b09c3bfa-b228-56cd-99f9-54366c124d14', 'f8565956-c4bb-50ef-ab48-27cbb2f6ef63', 'ccb068ce-d222-5367-99dd-98988ced687b', '28fc8b33-1a6c-5e88-9c8f-57e07682634d', '966c30fa-0738-5b10-8f72-7d212cdac238', 'b39f3841-74ef-53de-8648-ee43d15429b8', '8e09901c-fd3c-5a9c-9544-0216fdde2ac8', '4f70f10b-563d-576a-8424-b798ff3c453f', '759d6691-82c9-58b7-b4a1-8528cea9c6ce', 'bebb8ff8-4c6c-58af-864a-e214786fe43e', '29709e99-70e0-597e-b8e5-c5efe47be0b5', '388e036e-cd33-5c4e-9d91-4d1600e416ad', 'a5511b2b-1054-5205-bebc-e62e6ba38318', '095ee978-daef-52a9-ac8d-046d80c81024', 'af7c8f70-d1a9-50c6-a081-1efc1c20792b', 'b1d2bc86-bf86-527b-8ddf-69e22c4356e2', 'ff3d65f3-a07b-5787-8931-694b37d358e9', 'a4021c34-6085-5253-a2df-13d29fdee570', 'bd984a6b-8d79-5b8b-9bcb-e48edf379300');
   END IF;
 END $$;
-DELETE FROM public.exercises WHERE subject_id = 'fr-mastery' AND source = 'admin' AND id NOT IN ('54ebcf26-152c-5cc6-9442-9a71e96be049', '4c7d1479-e287-5c31-a3bf-7aad83bb36f5', '285d4a2f-f961-5728-9f15-7468924a29aa', '741c45aa-05e1-5ccc-9531-1f7fdb02fffa', 'b566b02c-fbad-5f84-8ddc-ebf03091d01a', '7ee9e74e-1bd3-509c-a965-5d61a375acbc', '25b15911-6bf2-5f29-8228-13c586098442', '3bc1a97f-6e89-5006-aed2-f13c83a892b3', '8fabba57-8b30-5556-93df-aa2262c2be6e', 'b5b691ef-e67d-5bca-bf1d-2084e919cf8c', '31001c4d-1d4a-5f6d-93e3-fc375abcad66', 'ad8b7b85-fea8-560d-a651-04eb586bf8ce', '8ab4d9e6-cc7a-54de-b89d-acea53b3c2b8', '386598a5-17d9-51eb-9865-0080cbdd5d02', '41046ebf-95c5-5214-b87d-ad7399326ff6', 'fc862ec5-38fd-53d9-8241-c711a5c5a92f');
-DELETE FROM public.questions WHERE exercise_id IN ('54ebcf26-152c-5cc6-9442-9a71e96be049', '4c7d1479-e287-5c31-a3bf-7aad83bb36f5', '285d4a2f-f961-5728-9f15-7468924a29aa', '741c45aa-05e1-5ccc-9531-1f7fdb02fffa', 'b566b02c-fbad-5f84-8ddc-ebf03091d01a', '7ee9e74e-1bd3-509c-a965-5d61a375acbc', '25b15911-6bf2-5f29-8228-13c586098442', '3bc1a97f-6e89-5006-aed2-f13c83a892b3', '8fabba57-8b30-5556-93df-aa2262c2be6e', 'b5b691ef-e67d-5bca-bf1d-2084e919cf8c', '31001c4d-1d4a-5f6d-93e3-fc375abcad66', 'ad8b7b85-fea8-560d-a651-04eb586bf8ce', '8ab4d9e6-cc7a-54de-b89d-acea53b3c2b8', '386598a5-17d9-51eb-9865-0080cbdd5d02', '41046ebf-95c5-5214-b87d-ad7399326ff6', 'fc862ec5-38fd-53d9-8241-c711a5c5a92f') AND id NOT IN ('8680f10f-8d40-577d-b35c-88ecfd6fff8a', 'c943af63-5273-5fc1-af24-e6adde99d287', 'fddf1418-e9ef-5697-81f4-3c6fcd2feaae', 'd9f6457e-c264-587c-91ef-75cf4ac3341f', 'ed5ee1c1-ba81-57be-9b5a-59a76b8bb1b3', '6f05cdf1-ffa1-53a6-865c-3e7ef5b9f13f', '0195e47e-5a24-54a0-8d37-efdb074e38e5', 'edaae71f-2a0f-56b0-9de8-7af983a5f97a', 'c99f2101-7624-5966-b58e-bfc8fa12baec', '9ceacbb2-b92d-5d73-aa5d-98cfa7409985', 'd1eae56a-a4bf-58b9-9ea7-713473f2640a', '67de4e18-6eaa-5c85-9054-25ed7a08ab43', '1cd4d96d-aa2f-58b3-bcf2-69b54a040ef5', 'eb0f01e1-ed4d-55ee-99b2-35afd2948326', '543014f2-55ac-563c-b3d3-b44234606183', '7d30546c-fbb5-5240-9020-167990160ec1', '305156d8-219f-5eee-a20b-b902ce441b97', '74dd8103-2347-5068-9316-b65cc95f48f6', '050d08b6-399e-59f6-b9fe-019502d9bdf0', '89951cf7-dd8a-594b-9403-54a1641084b4', 'c08ae3cd-f963-52cf-84b6-beafaeca7e0e', 'd2bc1d53-6f4e-51ee-bb0b-bf5b177253f9', 'a89112a7-94e9-5e91-b04a-50edc4c953dc', '4b1c03fb-9575-51c4-bc11-850d12c955bf', 'a14d463f-5a21-5d0d-b187-2efa8905c8fd', '70b59c54-c7b6-58aa-81ee-c3e6523f65b0', '026f14b3-d80a-50ef-b862-7c312b3a8d99', 'e34a5753-21d5-58d7-86d0-65e3186e4981', 'e2d40a55-1980-57c0-9b15-a2a22f0ce69d', 'f9c2cca1-7844-5d5c-8eda-7bb309b2c1ef', 'f445d68b-2223-5682-8116-078a7a28f03b', '660243d7-9d26-5171-a25a-06fa13b891da', 'f72f5bd1-c49e-5252-8756-125c05759ab5', '025e5ee8-c412-52f1-97a1-919f13436b34', '375d49fc-7cd3-5d29-8542-e8eea2807342', 'dec2df78-f75b-55e7-ab6c-c0781f1325ea', '354fa3dd-041c-5e2b-a6bc-3a7ff1a63d01', '61ce2200-1a09-5c0b-bad7-4fbdfa7c99b5', '59f990a9-883c-5147-b3c7-67c35168c1db', 'e1768e1e-f0fa-5797-9180-d1d844ba24a2', '4b412957-d2ab-51c9-9647-8e7fc9085277', '6e1ad5a9-e292-54c2-a1e2-34c4542cb757', '1022efe2-107a-5610-879e-0bf25fa22f2c', '0a639db0-f9f9-585b-a2a7-e1a7d3453f3e', '115924d1-a555-58be-a771-5fcbad701f96', '5e4bfea9-57b3-5165-9c59-b71751b2ef84', 'b0409dd4-399d-5d99-8c58-9d75fb2bc07a', '26f7441c-d57b-5761-a6c9-16b90ec2c7f3', 'ee63c286-3de2-5973-9c22-96fffbaf86c1', '553347ac-bad6-5fc9-8c07-1e80392a33da', 'afb10bb6-999f-55bd-8122-155008c0e77e', 'e13f276a-7aac-5f4a-a773-e6bf3b275035', '68147ffc-dc72-5d42-b0de-4acc32bdf14f', '689afb94-f533-512b-9e88-140cc7cb2f68', '9b765c8d-b822-5bbd-9f21-8c13676dead8', '8b5e61ff-14e4-5f2b-97e7-e1214174224d', 'a2d3a00c-11f0-58df-becc-9b01b0c28d46', '902e41b0-978f-5f5b-9d50-671be361e6de', 'd1c704b3-d2c1-5494-9a83-3e546078888e', '4ca1c45c-63f9-5298-b5b8-4c5786e44c8c', 'c11b1d50-1b25-5bff-8225-f1fe1d80e993', '4db617a3-c445-5c2c-b81e-d7dcd502200c', '2d82bdb6-d713-5a54-ac54-abf97f260c5e', '45650677-9f13-5d19-896f-49157dbbd7f1', '183ea238-cae4-5fdb-bae1-ac120e01907e', 'e480c693-6f3f-50e6-9a24-fd45d2cebccb', '8ebefc85-d7ac-5d15-bead-db4207d08461', '5b5e3d20-2505-58d2-bbfe-50a8dbcd256c', '6c35ac86-7613-51cf-9a30-88bd5fa54a75', 'a5f03323-bbcb-54ec-abaf-8698b6e52ed3', 'ec46e2f3-8c2c-5d00-bf65-2c70abb9116d', '013f1b15-e4ea-5d75-b28c-e0515a027df5', '4438d74f-ed2d-565d-a342-971ae57232d8', '7400f4c5-9e93-5a49-9a31-9aa0aff92d25', '851df533-6479-59d6-863d-5265cb8fa8d2', 'c637e468-2efd-5f88-a681-dc7efd7eefd0', '7be23713-0f88-53c8-9b38-caee5ebb556e', 'ce54f665-a4d5-5529-ab5f-8a1f1af15c40', '54a3cc39-3157-5d8e-9ef0-5183474954b7', '0e91ac31-d95e-53c9-a53c-35fd08f4efcf', '00b519a1-3006-539e-ba8d-c75c4178cf56', 'f73ee323-bb3c-59b7-9d16-dba2847fbaf5', 'b4498f76-9810-5847-becb-1930b226c782', 'c91d708c-58ca-5f6a-9a38-150c20c3ada0', 'ed7dc171-9562-59b6-86d4-4c0aa32154db', 'ac16c26b-a52b-5105-8a5d-177753609eb4', '49ba7791-70c4-5618-8b9f-b4ab73617396', 'a2734595-ffd1-5cb6-8948-9d13ebdf9b20');
-DELETE FROM public.chapters c WHERE c.subject_id = 'fr-mastery' AND c.id NOT IN ('2a753d3d-b1b1-5d10-a785-849d04e11ed9', '3d2a602e-0a87-5334-b9b0-cd5dfacc5a4b', 'b639796a-5cad-5da3-8402-37ce2601e5db', '4aa90233-3a14-53a0-ba53-31a005968fcf') AND NOT EXISTS (SELECT 1 FROM public.exercises e WHERE e.chapter_id = c.id);
+DELETE FROM public.exercises WHERE subject_id = 'fr-mastery' AND source = 'admin' AND id NOT IN ('54ebcf26-152c-5cc6-9442-9a71e96be049', '4c7d1479-e287-5c31-a3bf-7aad83bb36f5', '285d4a2f-f961-5728-9f15-7468924a29aa', '741c45aa-05e1-5ccc-9531-1f7fdb02fffa', 'f54249c2-0582-5cab-bb49-93e5d3d2bd35', 'b566b02c-fbad-5f84-8ddc-ebf03091d01a', '7ee9e74e-1bd3-509c-a965-5d61a375acbc', '25b15911-6bf2-5f29-8228-13c586098442', '3bc1a97f-6e89-5006-aed2-f13c83a892b3', '534a0c72-b1fc-5531-9dcc-162b0488cc61', '8fabba57-8b30-5556-93df-aa2262c2be6e', 'b5b691ef-e67d-5bca-bf1d-2084e919cf8c', '31001c4d-1d4a-5f6d-93e3-fc375abcad66', 'ad8b7b85-fea8-560d-a651-04eb586bf8ce', 'c22e7d7c-648d-58ad-9221-65c0523458d7', '8ab4d9e6-cc7a-54de-b89d-acea53b3c2b8', '386598a5-17d9-51eb-9865-0080cbdd5d02', '41046ebf-95c5-5214-b87d-ad7399326ff6', 'fc862ec5-38fd-53d9-8241-c711a5c5a92f', '1a82c875-7519-569f-b160-f4a24344656f', 'b9f2bdad-5941-5c18-8f7a-6a75f83de4c7', '38655883-4f78-5df4-b448-466ffb2dd3b2', '6419b53e-71ab-5c5e-9801-72544a707d1a', '29169835-f5bb-546d-b09a-54a5fc7e260f');
+DELETE FROM public.questions WHERE exercise_id IN ('54ebcf26-152c-5cc6-9442-9a71e96be049', '4c7d1479-e287-5c31-a3bf-7aad83bb36f5', '285d4a2f-f961-5728-9f15-7468924a29aa', '741c45aa-05e1-5ccc-9531-1f7fdb02fffa', 'f54249c2-0582-5cab-bb49-93e5d3d2bd35', 'b566b02c-fbad-5f84-8ddc-ebf03091d01a', '7ee9e74e-1bd3-509c-a965-5d61a375acbc', '25b15911-6bf2-5f29-8228-13c586098442', '3bc1a97f-6e89-5006-aed2-f13c83a892b3', '534a0c72-b1fc-5531-9dcc-162b0488cc61', '8fabba57-8b30-5556-93df-aa2262c2be6e', 'b5b691ef-e67d-5bca-bf1d-2084e919cf8c', '31001c4d-1d4a-5f6d-93e3-fc375abcad66', 'ad8b7b85-fea8-560d-a651-04eb586bf8ce', 'c22e7d7c-648d-58ad-9221-65c0523458d7', '8ab4d9e6-cc7a-54de-b89d-acea53b3c2b8', '386598a5-17d9-51eb-9865-0080cbdd5d02', '41046ebf-95c5-5214-b87d-ad7399326ff6', 'fc862ec5-38fd-53d9-8241-c711a5c5a92f', '1a82c875-7519-569f-b160-f4a24344656f', 'b9f2bdad-5941-5c18-8f7a-6a75f83de4c7', '38655883-4f78-5df4-b448-466ffb2dd3b2', '6419b53e-71ab-5c5e-9801-72544a707d1a', '29169835-f5bb-546d-b09a-54a5fc7e260f') AND id NOT IN ('8680f10f-8d40-577d-b35c-88ecfd6fff8a', 'c943af63-5273-5fc1-af24-e6adde99d287', 'fddf1418-e9ef-5697-81f4-3c6fcd2feaae', 'd9f6457e-c264-587c-91ef-75cf4ac3341f', 'ed5ee1c1-ba81-57be-9b5a-59a76b8bb1b3', '6f05cdf1-ffa1-53a6-865c-3e7ef5b9f13f', '0195e47e-5a24-54a0-8d37-efdb074e38e5', 'edaae71f-2a0f-56b0-9de8-7af983a5f97a', 'c99f2101-7624-5966-b58e-bfc8fa12baec', '9ceacbb2-b92d-5d73-aa5d-98cfa7409985', 'd1eae56a-a4bf-58b9-9ea7-713473f2640a', '67de4e18-6eaa-5c85-9054-25ed7a08ab43', '1cd4d96d-aa2f-58b3-bcf2-69b54a040ef5', 'eb0f01e1-ed4d-55ee-99b2-35afd2948326', '543014f2-55ac-563c-b3d3-b44234606183', '7d30546c-fbb5-5240-9020-167990160ec1', '305156d8-219f-5eee-a20b-b902ce441b97', '74dd8103-2347-5068-9316-b65cc95f48f6', '050d08b6-399e-59f6-b9fe-019502d9bdf0', '89951cf7-dd8a-594b-9403-54a1641084b4', 'c08ae3cd-f963-52cf-84b6-beafaeca7e0e', 'd2bc1d53-6f4e-51ee-bb0b-bf5b177253f9', '476aa55c-605b-544b-89ef-280d038a1bc9', 'f802b339-cc4c-57f0-84ac-500b0d1673f7', 'a3240a58-68e4-57d8-8c21-5387b1d1d597', '30feca9c-e19b-56a1-85c6-4c28c20fa411', 'c1ed7e8d-0e91-5728-9003-b5fd12a3c7ee', 'd327a865-d514-51e3-98f3-378dbd03cb3d', 'a89112a7-94e9-5e91-b04a-50edc4c953dc', '4b1c03fb-9575-51c4-bc11-850d12c955bf', 'a14d463f-5a21-5d0d-b187-2efa8905c8fd', '70b59c54-c7b6-58aa-81ee-c3e6523f65b0', '026f14b3-d80a-50ef-b862-7c312b3a8d99', 'e34a5753-21d5-58d7-86d0-65e3186e4981', 'e2d40a55-1980-57c0-9b15-a2a22f0ce69d', 'f9c2cca1-7844-5d5c-8eda-7bb309b2c1ef', 'f445d68b-2223-5682-8116-078a7a28f03b', '660243d7-9d26-5171-a25a-06fa13b891da', 'f72f5bd1-c49e-5252-8756-125c05759ab5', '025e5ee8-c412-52f1-97a1-919f13436b34', '375d49fc-7cd3-5d29-8542-e8eea2807342', 'dec2df78-f75b-55e7-ab6c-c0781f1325ea', '354fa3dd-041c-5e2b-a6bc-3a7ff1a63d01', '61ce2200-1a09-5c0b-bad7-4fbdfa7c99b5', '59f990a9-883c-5147-b3c7-67c35168c1db', 'e1768e1e-f0fa-5797-9180-d1d844ba24a2', '4b412957-d2ab-51c9-9647-8e7fc9085277', '6e1ad5a9-e292-54c2-a1e2-34c4542cb757', '1022efe2-107a-5610-879e-0bf25fa22f2c', '0a639db0-f9f9-585b-a2a7-e1a7d3453f3e', 'ccd840c4-cc50-5339-a540-b4994840b711', '8a6da883-7ec6-5058-a646-8f94b34de605', '81f2daf0-3330-50e4-a637-bfdb518b1811', 'c7a0b57b-63ba-5ad0-a56b-dc6c373c39ff', 'c8e9fba5-743a-54f0-bc2b-4450a9501479', '3c1dcfe8-09c4-5c3c-9e0b-540698241c5c', '115924d1-a555-58be-a771-5fcbad701f96', '5e4bfea9-57b3-5165-9c59-b71751b2ef84', 'b0409dd4-399d-5d99-8c58-9d75fb2bc07a', '26f7441c-d57b-5761-a6c9-16b90ec2c7f3', 'ee63c286-3de2-5973-9c22-96fffbaf86c1', '553347ac-bad6-5fc9-8c07-1e80392a33da', 'afb10bb6-999f-55bd-8122-155008c0e77e', 'e13f276a-7aac-5f4a-a773-e6bf3b275035', '68147ffc-dc72-5d42-b0de-4acc32bdf14f', '689afb94-f533-512b-9e88-140cc7cb2f68', '9b765c8d-b822-5bbd-9f21-8c13676dead8', '8b5e61ff-14e4-5f2b-97e7-e1214174224d', 'a2d3a00c-11f0-58df-becc-9b01b0c28d46', '902e41b0-978f-5f5b-9d50-671be361e6de', 'd1c704b3-d2c1-5494-9a83-3e546078888e', '4ca1c45c-63f9-5298-b5b8-4c5786e44c8c', 'c11b1d50-1b25-5bff-8225-f1fe1d80e993', '4db617a3-c445-5c2c-b81e-d7dcd502200c', '2d82bdb6-d713-5a54-ac54-abf97f260c5e', '45650677-9f13-5d19-896f-49157dbbd7f1', '183ea238-cae4-5fdb-bae1-ac120e01907e', 'e480c693-6f3f-50e6-9a24-fd45d2cebccb', '3e19d9f5-874c-541e-90b5-54c54fdb2f00', 'dd97f75f-40ae-58fb-8bfb-a16b0fb1795b', '7356941c-ecb1-5fb9-a2e2-c00236ed4d85', 'b8d3d3ef-4629-5188-9bea-79e3c147eab8', 'c3a39f38-5cbe-5ea3-9a60-9f96ce2b69ca', 'a19551e0-c43b-50a9-8765-e100dd0276e8', '8ebefc85-d7ac-5d15-bead-db4207d08461', '5b5e3d20-2505-58d2-bbfe-50a8dbcd256c', '6c35ac86-7613-51cf-9a30-88bd5fa54a75', 'a5f03323-bbcb-54ec-abaf-8698b6e52ed3', 'ec46e2f3-8c2c-5d00-bf65-2c70abb9116d', '013f1b15-e4ea-5d75-b28c-e0515a027df5', '4438d74f-ed2d-565d-a342-971ae57232d8', '7400f4c5-9e93-5a49-9a31-9aa0aff92d25', '851df533-6479-59d6-863d-5265cb8fa8d2', 'c637e468-2efd-5f88-a681-dc7efd7eefd0', '7be23713-0f88-53c8-9b38-caee5ebb556e', 'ce54f665-a4d5-5529-ab5f-8a1f1af15c40', '54a3cc39-3157-5d8e-9ef0-5183474954b7', '0e91ac31-d95e-53c9-a53c-35fd08f4efcf', '00b519a1-3006-539e-ba8d-c75c4178cf56', 'f73ee323-bb3c-59b7-9d16-dba2847fbaf5', 'b4498f76-9810-5847-becb-1930b226c782', 'c91d708c-58ca-5f6a-9a38-150c20c3ada0', 'ed7dc171-9562-59b6-86d4-4c0aa32154db', 'ac16c26b-a52b-5105-8a5d-177753609eb4', '49ba7791-70c4-5618-8b9f-b4ab73617396', 'a2734595-ffd1-5cb6-8948-9d13ebdf9b20', '1229b917-95ca-56e5-9bb9-9642304181eb', '1b7380a4-60eb-578f-90d3-657d5b22e971', '0f353fd6-63bf-5c48-b0fe-5d952a0c3025', '1c8d65ce-dbd3-555d-bf40-1318ebba46f8', '403c7dc2-aaeb-5c2c-973f-c5203c8be46c', 'd9721052-6326-5cdc-b9b1-ff7546955bca', '6d99f9d8-fcb6-5a7d-9baf-459d334b4cd6', 'ab216150-dd83-579a-8f57-80bb1ed85e02', 'e2e27486-5901-5b7b-9f51-3fe5324ca8d7', '3abac0a4-d792-5edc-93ef-a33f33d4859e', '3375ad20-96fe-554b-9520-fc7939ef43fb', '766d61e0-2be1-5e35-979c-76c48ce2154c', '82f28540-d59d-5d25-b090-d08b1f2dcc68', 'b09c3bfa-b228-56cd-99f9-54366c124d14', 'f8565956-c4bb-50ef-ab48-27cbb2f6ef63', 'ccb068ce-d222-5367-99dd-98988ced687b', '28fc8b33-1a6c-5e88-9c8f-57e07682634d', '966c30fa-0738-5b10-8f72-7d212cdac238', 'b39f3841-74ef-53de-8648-ee43d15429b8', '8e09901c-fd3c-5a9c-9544-0216fdde2ac8', '4f70f10b-563d-576a-8424-b798ff3c453f', '759d6691-82c9-58b7-b4a1-8528cea9c6ce', 'bebb8ff8-4c6c-58af-864a-e214786fe43e', '29709e99-70e0-597e-b8e5-c5efe47be0b5', '388e036e-cd33-5c4e-9d91-4d1600e416ad', 'a5511b2b-1054-5205-bebc-e62e6ba38318', '095ee978-daef-52a9-ac8d-046d80c81024', 'af7c8f70-d1a9-50c6-a081-1efc1c20792b', 'b1d2bc86-bf86-527b-8ddf-69e22c4356e2', 'ff3d65f3-a07b-5787-8931-694b37d358e9', 'a4021c34-6085-5253-a2df-13d29fdee570', 'bd984a6b-8d79-5b8b-9bcb-e48edf379300');
+DELETE FROM public.chapters c WHERE c.subject_id = 'fr-mastery' AND c.id NOT IN ('2a753d3d-b1b1-5d10-a785-849d04e11ed9', '3d2a602e-0a87-5334-b9b0-cd5dfacc5a4b', 'b639796a-5cad-5da3-8402-37ce2601e5db', '4aa90233-3a14-53a0-ba53-31a005968fcf', '2567b64f-bd7c-5121-8690-413031a1ac80') AND NOT EXISTS (SELECT 1 FROM public.exercises e WHERE e.chapter_id = c.id);
 
 INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order) VALUES
   ('2a753d3d-b1b1-5d10-a785-849d04e11ed9', 'fr-mastery', 'Compréhension écrite', 'Méthodes et stratégies pour lire activement, identifier la thèse et les arguments, saisir l''implicite et analyser la visée d''un texte.', '# Compréhension écrite — Méthodologie active
@@ -364,6 +364,75 @@ Une **expression idiomatique** (ou locution figée) ne se comprend pas mot à mo
 - **Paronymes** : forme proche, sens différent — _influer/influencer_, _conjecture/conjoncture_, _éminent/imminent_, _collision/collusion_. Les mémoriser en contexte.
 - **Expressions idiomatiques** : sens conventionnel non compositionnel (_avoir le cafard_, _brûler les étapes_). Apprendre avec l''idée et un exemple d''emploi.
 - **Apprentissage actif** : contextualiser, réseauter (famille + synonymes + antonymes), réemployer en phrases personnelles, réviser en spirale (répétition espacée).', 4)
+ON CONFLICT (id) DO UPDATE SET
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  description = EXCLUDED.description,
+  lesson_content = EXCLUDED.lesson_content,
+  summary = EXCLUDED.summary,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order) VALUES
+  ('2567b64f-bd7c-5121-8690-413031a1ac80', 'fr-mastery', 'Annales & épreuves de synthèse', 'Des épreuves de synthèse exigeantes qui mêlent, sur un même texte, les quatre axes du module : compréhension fine et inférence, syntaxe, grammaire et lexique de précision. Niveau perfectionnement, au-delà du tronc commun.', '# Annales & épreuves de synthèse — Méthodologie
+
+> « Une épreuve de synthèse ne juge pas une compétence isolée : elle révèle la cohérence de votre lecture, de votre analyse de la phrase et de votre maîtrise des mots. »
+
+Une **épreuve de synthèse** part toujours d''un texte exigeant — extrait littéraire, page d''essai, chronique argumentée — et l''interroge sur **quatre fronts à la fois** : compréhension fine, syntaxe, grammaire, lexique de précision. Réussir, c''est articuler ces quatre lectures sans jamais les séparer du texte.
+
+## 1. D''abord, lire en profondeur (compréhension fine)
+
+Avant toute question de langue, on **comprend l''intention** du texte.
+
+- **Dénoté / connoté** : distinguer ce qui est dit explicitement de ce qui est suggéré (sous-entendu, ironie, présupposé).
+- **Inférence** : tirer une conclusion que le texte ne formule pas mais qu''il rend nécessaire (« il était déjà trop tard » → la décision était prise).
+- **Tonalité et visée** : repérer si l''auteur informe, persuade, dénonce, émeut — l''oxymore, l''anaphore ou la question rhétorique trahissent souvent une thèse cachée.
+
+**Méthode** : reformuler la thèse de l''auteur en une phrase avant d''aborder le détail. Une compréhension juste oriente toutes les autres réponses.
+
+## 2. Analyser la phrase (syntaxe)
+
+La syntaxe étudie **comment la phrase est construite** et comment ce montage produit du sens.
+
+- **Subordination** : reconnaître la nature de la subordonnée (relative, complétive, circonstancielle) et la fonction qu''elle occupe ; une cause, une concession ou une hypothèse ne pèsent pas du même poids dans l''argument.
+- **Ponctuation expressive** : le point-virgule lie deux propositions parallèles ; les deux-points annoncent une explication ou une conséquence ; le tiret isole une rupture ou une chute.
+- **Ordre des mots et mise en relief** : l''antéposition, la tournure clivée (« c''est… qui »), l''apposition orientent l''emphase et donc l''interprétation.
+
+**Méthode** : pour chaque phrase complexe, repérer la proposition principale, puis la dépendance et la valeur logique de chaque subordonnée.
+
+## 3. Vérifier la correction (grammaire)
+
+La grammaire contrôle les **accords**, les **modes et temps**, et la **cohérence temporelle**.
+
+- **Accords délicats** : participe passé avec _avoir_ (COD antéposé), participe passé des verbes pronominaux, accords du sujet inversé ou collectif.
+- **Modes et temps** : le subjonctif après l''expression du doute, de la volonté, de la concession ; le conditionnel d''hypothèse ou d''information non confirmée ; l''imparfait/passé simple dans le récit.
+- **Concordance des temps** : harmoniser le temps de la subordonnée avec celui de la principale (« je croyais qu''il **viendrait** », et non « viendra »).
+
+**Méthode** : remonter au déclencheur (verbe principal, conjonction) pour décider du mode et du temps, plutôt que de se fier à l''oreille.
+
+## 4. Peser chaque mot (lexique de précision)
+
+Le lexique exigeant départage des candidats par des **nuances fines**.
+
+- **Paronymes** : ne pas confondre les mots proches par la forme (_influer / influencer_, _éminent / imminent_, _conjecture / conjoncture_, _collision / collusion_).
+- **Registres** : ajuster le mot au ton du texte (soutenu, courant, familier) — un terme familier ruine une analyse soutenue.
+- **Sens figuré et connotation** : un même mot change de valeur selon le contexte (_acéré_, _limpide_, _âpre_) ; identifier le sens activé par la phrase.
+
+**Méthode** : remplacer mentalement le mot par chaque distracteur et vérifier la construction (transitivité, préposition) et la cohérence de sens.
+
+## 5. La démarche de synthèse, pas à pas
+
+1. **Lire le texte deux fois** : la première pour le sens global, la seconde crayon en main.
+2. **Cartographier la thèse** : une phrase qui résume l''intention de l''auteur.
+3. **Traiter chaque question selon son axe**, mais toujours en revenant au texte : la bonne réponse est celle que le texte autorise, pas celle qui « sonne » bien.
+4. **Traquer les pièges fins** : paronyme glissé dans un distracteur, fausse régularité d''accord, mode plausible mais non commandé par le déclencheur.
+5. **Justifier intérieurement** : pour la clé retenue, savoir dire pourquoi elle est juste **et** pourquoi chaque autre est fausse. C''est le réflexe qui sépare le perfectionnement de l''à-peu-près.', '# Résumé — Annales & épreuves de synthèse
+
+- **Principe** : une épreuve de synthèse part d''un texte exigeant et l''interroge simultanément sur quatre axes — compréhension fine, syntaxe, grammaire, lexique. Toujours revenir au texte : la bonne réponse est celle qu''il autorise.
+- **Compréhension fine** : distinguer dénoté et connoté ; inférer ce que le texte rend nécessaire sans le dire ; repérer la tonalité et la visée (oxymore, anaphore, question rhétorique trahissent une thèse).
+- **Syntaxe** : identifier la nature et la fonction des subordonnées (relative, complétive, circonstancielle) ; lire la ponctuation expressive (point-virgule, deux-points, tiret) ; repérer la mise en relief (antéposition, tournure clivée « c''est… qui »).
+- **Grammaire** : maîtriser les accords délicats (participe passé avec _avoir_ et COD antéposé, verbes pronominaux) ; choisir le mode et le temps d''après le déclencheur (subjonctif après doute/volonté/concession, conditionnel d''hypothèse) ; respecter la concordance des temps.
+- **Lexique de précision** : éviter les paronymes (_influer/influencer_, _éminent/imminent_, _conjecture/conjoncture_, _collision/collusion_) ; ajuster le registre au ton du texte ; identifier le sens figuré ou la connotation activée par le contexte.
+- **Démarche** : lire deux fois → résumer la thèse en une phrase → traiter chaque question selon son axe → traquer les pièges fins (paronyme caché, fausse régularité, mode plausible mais non commandé) → justifier la clé ET réfuter chaque distracteur.', 5)
 ON CONFLICT (id) DO UPDATE SET
   subject_id = EXCLUDED.subject_id,
   title = EXCLUDED.title,
@@ -713,6 +782,102 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('f54249c2-0582-5cab-bb49-93e5d3d2bd35', '2a753d3d-b1b1-5d10-a785-849d04e11ed9', 'fr-mastery', 'Palier + — Compréhension fine : implicite, posture et nuances', 3, 120, 25, 'boss', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('476aa55c-605b-544b-89ef-280d038a1bc9', 'f54249c2-0582-5cab-bb49-93e5d3d2bd35', 'Lisez ce passage :
+
+« On vante volontiers la patience de ceux qui attendent leur heure. J''y vois plus souvent la résignation de ceux qui n''osent plus la provoquer. La patience, cette vertu si commode pour qui se contente de durer. »
+
+Quelle attitude l''auteur adopte-t-il à l''égard de la patience ?', '[{"id":"a","text":"Il en fait l''éloge sans réserve comme d''une vertu cardinale."},{"id":"b","text":"Il la démystifie en la requalifiant ironiquement de passivité déguisée."},{"id":"c","text":"Il l''analyse de façon neutre et purement descriptive."},{"id":"d","text":"Il la recommande aux seuls esprits ambitieux et déterminés."}]'::jsonb, 'b', 'L''auteur prend ses distances avec l''éloge convenu : il oppose à « la patience » louée par autrui sa propre lecture (« J''y vois plus souvent la résignation »), puis la disqualifie par l''ironie (« cette vertu si commode pour qui se contente de durer »). Il démystifie donc une valeur reçue en y débusquant une passivité. L''option (a) prend le premier énoncé pour la thèse de l''auteur alors qu''il s''en démarque. L''option (c) ignore la charge critique du « si commode » ironique. L''option (d) invente une recommandation absente : l''auteur dénonce, il ne conseille pas.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('f802b339-cc4c-57f0-84ac-500b0d1673f7', 'f54249c2-0582-5cab-bb49-93e5d3d2bd35', 'Lisez ce passage :
+
+« Le progrès technique, dit-on, libère l''homme des tâches pénibles. Soit. Mais à mesure qu''il nous décharge de l''effort, ne nous décharge-t-il pas aussi, insensiblement, de la compétence — et avec elle, d''une certaine fierté d''être capable ? »
+
+Que suggère la question finale posée par l''auteur ?', '[{"id":"a","text":"Que le progrès technique doit être interdit pour préserver les savoir-faire."},{"id":"b","text":"Que l''allègement de l''effort pourrait s''accompagner d''une perte de compétence et d''estime de soi."},{"id":"c","text":"Que les tâches pénibles procurent toujours plus de fierté que les loisirs."},{"id":"d","text":"Que la technique n''a aucun effet mesurable sur les capacités humaines."}]'::jsonb, 'b', 'La question rhétorique « ne nous décharge-t-il pas aussi… de la compétence — et… d''une certaine fierté ? » est une affirmation déguisée : l''auteur suggère que l''avantage (moins d''effort) a une contrepartie cachée (perte de compétence et d''estime). L''option (b) restitue cette nuance. L''option (a) radicalise en une interdiction que le texte ne formule pas (le « Soit » concède même la libération). L''option (c) déforme : il n''est question ni de loisirs ni d''une comparaison de fiertés. L''option (d) contredit le texte, qui pose précisément un effet (la décharge progressive de la compétence).', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('a3240a58-68e4-57d8-8c21-5387b1d1d597', 'f54249c2-0582-5cab-bb49-93e5d3d2bd35', 'Lisez ce passage :
+
+« Elle relut la lettre une dernière fois, sourit, puis la plia avec soin avant de la déchirer en menus morceaux qu''elle laissa filer par la fenêtre. »
+
+Que révèle l''enchaînement des gestes du personnage ?', '[{"id":"a","text":"Une colère brutale et incontrôlée contre l''expéditeur de la lettre."},{"id":"b","text":"Une indifférence totale à l''égard du contenu de la lettre."},{"id":"c","text":"Un renoncement apaisé et délibéré, accompli sans amertume."},{"id":"d","text":"Une hésitation anxieuse quant à la décision à prendre."}]'::jsonb, 'c', 'Le détail des gestes oriente l''interprétation : elle « sourit », plie « avec soin », et le déchirement n''est ni rageur ni précipité mais maîtrisé (« en menus morceaux qu''elle laissa filer »). L''ensemble dessine un renoncement consenti et serein. L''option (a) contredit le « sourit » et le « avec soin » qui excluent la fureur. L''option (b) est démentie par la relecture attentive : elle n''est pas indifférente. L''option (d) prête une hésitation que l''achèvement net du geste et le sourire écartent.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('30feca9c-e19b-56a1-85c6-4c28c20fa411', 'f54249c2-0582-5cab-bb49-93e5d3d2bd35', 'Lisez ces deux phrases d''un même texte :
+
+« (1) Certes, les réseaux sociaux donnent la parole à des voix longtemps inaudibles. (2) Encore faut-il que cette parole, noyée dans le flot, parvienne à se faire entendre. »
+
+Quel rôle joue la locution « Encore faut-il que » en tête de la phrase (2) ?', '[{"id":"a","text":"Elle ajoute un argument allant dans le même sens que (1), pour le renforcer."},{"id":"b","text":"Elle introduit une restriction qui limite la portée de la concession faite en (1)."},{"id":"c","text":"Elle reformule l''idée de (1) sans en modifier la portée."},{"id":"d","text":"Elle pose la conséquence logique et inévitable de l''idée énoncée en (1)."}]'::jsonb, 'b', '« Encore faut-il que » pose une condition restrictive : elle accorde le point précédent (« Certes… ») tout en signalant qu''il ne suffit pas — donner la parole ne vaut que si cette parole peut effectivement être entendue. C''est une restriction qui nuance la concession. L''option (a) confond ajout et limitation : la phrase (2) ne renforce pas (1), elle en borne la portée. L''option (c) néglige cette inflexion : la portée est précisément modifiée. L''option (d) y voit une conséquence (« donc »), alors qu''il s''agit d''une condition non garantie.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('c1ed7e8d-0e91-5728-9003-b5fd12a3c7ee', 'f54249c2-0582-5cab-bb49-93e5d3d2bd35', 'Lisez ce passage :
+
+« Il ne mentait jamais. Il se contentait de choisir, parmi les vérités, celles qui le servaient — et de taire les autres. »
+
+Quel portrait moral du personnage se dégage de ces lignes ?', '[{"id":"a","text":"Un homme d''une honnêteté irréprochable et d''une transparence exemplaire."},{"id":"b","text":"Un homme qui, sans mentir au sens strict, manipule par sélection et omission."},{"id":"c","text":"Un homme incapable de dissimuler quoi que ce soit à son entourage."},{"id":"d","text":"Un homme naïf qui ignore l''effet de ses paroles sur autrui."}]'::jsonb, 'b', 'Le texte joue sur l''écart entre la lettre et l''esprit : « Il ne mentait jamais » est immédiatement retourné par ce qui suit (il trie les vérités utiles et tait le reste). Le procédé révèle une manipulation par sélection et omission, plus retorse que le mensonge franc. L''option (a) s''arrête à la première phrase et ignore le démenti ironique. L''option (c) est contredite par le « taire les autres », qui est précisément une dissimulation. L''option (d) prête une naïveté incompatible avec le calcul (« celles qui le servaient »).', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d327a865-d514-51e3-98f3-378dbd03cb3d', 'f54249c2-0582-5cab-bb49-93e5d3d2bd35', 'Lisez ce passage :
+
+« Les statistiques sont formelles : depuis dix ans, la délinquance recule. Pourtant, jamais le sentiment d''insécurité n''a été aussi vif. Faut-il en conclure que les chiffres mentent — ou que la peur, elle, ne se nourrit pas de chiffres ? »
+
+Quelle est l''intention principale de l''auteur dans ce passage ?', '[{"id":"a","text":"Prouver, données à l''appui, que la délinquance est en réalité en hausse."},{"id":"b","text":"Inviter le lecteur à distinguer la réalité mesurée et la perception subjective qui ne s''y réduit pas."},{"id":"c","text":"Démontrer que les statistiques officielles sont systématiquement falsifiées."},{"id":"d","text":"Rassurer le lecteur en affirmant que toute peur est dénuée de fondement."}]'::jsonb, 'b', 'L''alternative finale (« les chiffres mentent — ou… la peur ne se nourrit pas de chiffres ») oriente clairement vers la seconde branche : l''auteur amène à dissocier la réalité objective (baisse mesurée) du ressenti subjectif (insécurité vive), qui obéit à d''autres ressorts. L''option (a) contredit la prémisse acceptée (« Les statistiques sont formelles… recule »). L''option (c) retient l''hypothèse que la question rhétorique écarte au profit de l''autre. L''option (d) durcit le propos en un déni de toute peur, alors que l''auteur en explique le mécanisme sans la disqualifier.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('b566b02c-fbad-5f84-8ddc-ebf03091d01a', '3d2a602e-0a87-5334-b9b0-cd5dfacc5a4b', 'fr-mastery', 'Diagnostic — Syntaxe', 1, 20, 5, 'quiz', 'admin', 0)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -972,6 +1137,78 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('0a639db0-f9f9-585b-a2a7-e1a7d3453f3e', '3bc1a97f-6e89-5006-aed2-f13c83a892b3', 'Laquelle de ces phrases respecte l''ordre des mots et les contraintes syntaxiques du français soutenu ?', '[{"id":"a","text":"C''est pourquoi il faut, avant de conclure, examiner les contre-arguments."},{"id":"b","text":"C''est pourquoi il faut examiner, avant de conclure les contre-arguments."},{"id":"c","text":"C''est pourquoi il faut examiner les contre-arguments, avant de conclure."},{"id":"d","text":"C''est pourquoi avant de conclure il faut examiner les contre-arguments."}]'::jsonb, 'a', 'La phrase (a) place l''infinitive circonstancielle « avant de conclure » en incise, entre virgules, immédiatement après le verbe modal « faut », ce qui est syntaxiquement et stylistiquement correct : la frontière entre le verbe principal et son COD reste lisible. La phrase (b) crée une ambiguïté d''attachement : on ne sait pas si « avant de conclure » modifie « examiner » ou si « les contre-arguments » est COD de « conclure ». La phrase (d) omet les virgules nécessaires à l''incise.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('534a0c72-b1fc-5531-9dcc-162b0488cc61', '3d2a602e-0a87-5334-b9b0-cd5dfacc5a4b', 'fr-mastery', 'Palier + — Syntaxe : subordination, relief et constructions complexes', 3, 120, 25, 'boss', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('ccd840c4-cc50-5339-a540-b4994840b711', '534a0c72-b1fc-5531-9dcc-162b0488cc61', 'Dans la phrase « Quiconque a lu ce roman en mesure la portée », quelle est la fonction de « Quiconque a lu ce roman » ?', '[{"id":"a","text":"Complément d''objet direct du verbe « mesure »"},{"id":"b","text":"Sujet du verbe « mesure »"},{"id":"c","text":"Complément circonstanciel de condition"},{"id":"d","text":"Apposition au pronom « en »"}]'::jsonb, 'b', '« Quiconque » est un pronom relatif indéfini sans antécédent qui forme, avec la subordonnée qu''il introduit, un groupe nominalisé occupant la fonction de sujet : « Qui est-ce qui en mesure la portée ? » → « Quiconque a lu ce roman ». L''option (a) confond avec le COD, qui est « la portée ». L''option (c) plaque une valeur de condition que « quiconque » n''a pas : il généralise un sujet, il ne pose pas d''hypothèse comme « si ». L''option (d) est fautive : « en » (équivalent de « de ce roman ») est complément du nom « portée », et non un terme appelant une apposition.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('8a6da883-7ec6-5058-a646-8f94b34de605', '534a0c72-b1fc-5531-9dcc-162b0488cc61', 'Quelle phrase met correctement en relief le complément « à ses parents » au moyen d''un présentatif ?', '[{"id":"a","text":"À ses parents, c''est à eux qu''il doit tout."},{"id":"b","text":"C''est à ses parents qu''il doit tout."},{"id":"c","text":"C''est ses parents dont il doit tout."},{"id":"d","text":"Ce sont à ses parents qu''il doit tout."}]'::jsonb, 'b', 'L''extraction par présentatif « c''est… que » conserve la préposition régie par le verbe (« devoir qqch. à qqn ») : « C''est à ses parents qu''il doit tout. » L''option (a) cumule une dislocation (« À ses parents ») et une extraction redondante (« c''est à eux que »), ce qui est pléonastique et fautif. L''option (c) emploie « dont » (mis pour « de qui »), incompatible avec la construction en « à ». L''option (d) accorde à tort le présentatif au pluriel (« Ce sont ») devant un groupe prépositionnel : on dit « C''est à… ».', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('81f2daf0-3330-50e4-a637-bfdb518b1811', '534a0c72-b1fc-5531-9dcc-162b0488cc61', 'Laquelle de ces phrases comporte une concordance des temps fautive ?', '[{"id":"a","text":"Je craignais qu''il ne fût trop tard."},{"id":"b","text":"Il voulait que nous partions sur-le-champ."},{"id":"c","text":"Elle souhaitait que tu réussisses ton examen."},{"id":"d","text":"Nous pensions qu''il vienne le lendemain."}]'::jsonb, 'd', '« Penser que », à la forme affirmative, exprime une opinion posée comme réelle et appelle l''indicatif : il faut « qu''il viendrait le lendemain » (futur du passé), non le subjonctif « qu''il vienne ». L''option (d) est donc fautive. Les options (a), (b) et (c) reposent sur des verbes de crainte ou de volonté (« craindre », « vouloir », « souhaiter ») qui régissent légitimement le subjonctif ; les temps y sont cohérents avec le contexte passé (subjonctif imparfait en a, présent admis dans l''usage en b et c).', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('c7a0b57b-63ba-5ad0-a56b-dc6c373c39ff', '534a0c72-b1fc-5531-9dcc-162b0488cc61', 'Choisissez la phrase qui corrige la zeugme syntaxique de « *Il sortit son mouchoir et ses excuses ».', '[{"id":"a","text":"Il sortit son mouchoir et présenta ses excuses."},{"id":"b","text":"Il sortit son mouchoir et ses excuses ensemble."},{"id":"c","text":"Il sortit son mouchoir, ses excuses aussi."},{"id":"d","text":"Il sortit et son mouchoir et ses excuses."}]'::jsonb, 'a', 'La phrase de départ coordonne sous un seul verbe deux compléments qui n''en admettent pas le même sens : on « sort » un mouchoir (sens concret) mais on ne « sort » pas des excuses (il faut « présenter / faire » des excuses). La correction consiste à doter chaque complément du verbe approprié : « Il sortit son mouchoir et présenta ses excuses. » Les options (b), (c) et (d) maintiennent l''unique verbe « sortir » pour les deux compléments et laissent donc subsister l''attelage fautif.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('c8e9fba5-743a-54f0-bc2b-4450a9501479', '534a0c72-b1fc-5531-9dcc-162b0488cc61', 'Quel verbe complète correctement la phrase « Il ___ à ce que tout soit vérifié avant la publication » en respectant le régime du verbe ?', '[{"id":"a","text":"exigea"},{"id":"b","text":"veilla"},{"id":"c","text":"réclama"},{"id":"d","text":"ordonna"}]'::jsonb, 'b', 'Seul « veiller » se construit avec « à ce que » + subjonctif : « veiller à ce que tout soit vérifié » est la tournure attendue, le verbe régissant la préposition « à ». Les options (a), (c) et (d) régissent une complétive directe sans préposition : on dit « exiger que », « réclamer que », « ordonner que » (et non « *exiger à ce que », « *réclamer à ce que », « *ordonner à ce que »). Le « à ce que » déjà présent dans l''énoncé impose donc « veilla ».', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('3c1dcfe8-09c4-5c3c-9e0b-540698241c5c', '534a0c72-b1fc-5531-9dcc-162b0488cc61', 'Dans laquelle de ces phrases la proposition subordonnée est-elle une relative (et non une complétive conjonctive) ?', '[{"id":"a","text":"Je sais que tu as raison."},{"id":"b","text":"L''argument que tu avances me convainc."},{"id":"c","text":"Il faut que tu reviennes."},{"id":"d","text":"Je doute que cela suffise."}]'::jsonb, 'b', 'Dans l''option (b), « que » est un pronom relatif COD reprenant l''antécédent « l''argument » : la subordonnée « que tu avances » complète un nom et peut se gloser par « lequel tu avances » → c''est une relative. Dans (a), (c) et (d), « que » est une conjonction de subordination introduisant une complétive complément du verbe (« savoir que », « il faut que », « douter que ») : il n''y a aucun antécédent nominal repris, et « que » n''y a pas de fonction grammaticale dans la subordonnée.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
@@ -1249,6 +1486,78 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('c22e7d7c-648d-58ad-9221-65c0523458d7', 'b639796a-5cad-5da3-8402-37ce2601e5db', 'fr-mastery', 'Palier + — Grammaire : accords délicats, modes et pièges d''homophonie', 3, 120, 25, 'boss', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('3e19d9f5-874c-541e-90b5-54c54fdb2f00', 'c22e7d7c-648d-58ad-9221-65c0523458d7', 'Quelle phrase respecte l''accord du participe passé avec « avoir » et COD antéposé ?', '[{"id":"a","text":"Les efforts qu''il a fournis ont payé."},{"id":"b","text":"Les efforts qu''il a fourni ont payé."},{"id":"c","text":"Les efforts qu''il a fournit ont payé."},{"id":"d","text":"Les efforts qu''il a fournies ont payé."}]'::jsonb, 'a', 'Avec l''auxiliaire « avoir », le participe passé s''accorde avec le COD lorsque celui-ci précède le verbe. Ici le COD est « les efforts » (masculin pluriel), repris par le relatif « que » placé avant « a fourni » : le participe prend donc la marque du masculin pluriel → « fournis ». L''option (b) laisse le participe invariable, en oubliant l''accord avec le COD antéposé. L''option (c) écrit une forme verbale conjuguée (« fournit ») au lieu du participe. L''option (d) accorde au féminin, ce qui ne correspond pas au genre de « efforts ».', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('dd97f75f-40ae-58fb-8bfb-a16b0fb1795b', 'c22e7d7c-648d-58ad-9221-65c0523458d7', 'Dans la phrase « Il n''est pas certain qu''elle ___ à temps », quelle forme verbale est correcte ?', '[{"id":"a","text":"arrivera"},{"id":"b","text":"arrive"},{"id":"c","text":"arriverait"},{"id":"d","text":"arrivait"}]'::jsonb, 'b', 'La forme négative « il n''est pas certain que » exprime un doute et appelle le subjonctif → « qu''elle arrive ». C''est le pendant inverse de « il est certain que » (certitude) qui, lui, régit l''indicatif (« qu''elle arrivera »). L''option (a) emploie l''indicatif futur, valable seulement à la forme affirmative. Les options (c) et (d) proposent un conditionnel et un imparfait que la construction n''autorise pas ici.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('7356941c-ecb1-5fb9-a2e2-c00236ed4d85', 'c22e7d7c-648d-58ad-9221-65c0523458d7', 'Dans la phrase « Les dix euros que ce livre m''a ___ valaient la dépense », quelle forme du participe « coûter » convient ?', '[{"id":"a","text":"coûtés"},{"id":"b","text":"coûté"},{"id":"c","text":"coûtée"},{"id":"d","text":"coûtées"}]'::jsonb, 'b', 'Employé au sens propre (un prix, une somme), « coûter » est intransitif : « les dix euros » n''est pas un COD mais un complément circonstanciel de prix (« combien ce livre a-t-il coûté ? »). Le participe reste donc invariable → « coûté ». Le piège est l''antéposition de « que », qui simule un COD : mais on n''accorde pas, car il n''y a pas de COD. (Au sens figuré — « les efforts que ce projet m''a coûtés » — l''accord redeviendrait possible.) Les options (a), (c) et (d) appliquent à tort la règle de l''accord avec un faux COD.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('b8d3d3ef-4629-5188-9bea-79e3c147eab8', 'c22e7d7c-648d-58ad-9221-65c0523458d7', 'Repérez la phrase où TOUS les homophones grammaticaux sont correctement orthographiés.', '[{"id":"a","text":"Quand bien même il s''entêterait, on ne changerait pas d''avis quant à lui."},{"id":"b","text":"Quant bien même il s''entêterait, on ne changerait pas d''avis quand à lui."},{"id":"c","text":"Quand bien même il s''entêterait, on ne changerait pas d''avis quand à lui."},{"id":"d","text":"Quant bien même il s''entêterait, on ne changerait pas d''avis quant à lui."}]'::jsonb, 'a', 'Deux homophones sont en jeu. « Quand bien même » (locution concessive, équivalant à « même si ») s''écrit avec « quand ». « Quant à » (au sens de « en ce qui concerne ») s''écrit avec « quant ». Seule l''option (a) combine les deux graphies correctes. L''option (b) inverse les deux ; les options (c) et (d) se trompent chacune sur l''un des deux termes.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('c3a39f38-5cbe-5ea3-9a60-9f96ce2b69ca', 'c22e7d7c-648d-58ad-9221-65c0523458d7', 'Quelle phrase contient un emploi correct de « leur », « se » et « ces / ses » sans aucune faute ?', '[{"id":"a","text":"Les enfants ont rangé leurs jouets, puis se sont mis à lire ces livres qu''ils aiment."},{"id":"b","text":"Les enfants ont rangé leur jouets, puis ce sont mis à lire ses livres qu''ils aiment."},{"id":"c","text":"Les enfants ont rangé leurs jouets, puis ce sont mis à lire ces livres qu''ils aiment."},{"id":"d","text":"Les enfants ont rangé leur jouets, puis se sont mis à lire ces livres qu''ils aiment."}]'::jsonb, 'a', 'Trois points sont testés. « Leurs jouets » : déterminant possessif au pluriel car chaque enfant a plusieurs jouets et le nom est au pluriel → « leurs ». « Se sont mis » : pronom réfléchi « se » du verbe pronominal « se mettre » (et non « ce », démonstratif). « Ces livres » : déterminant démonstratif désignant des livres présents (et non « ses », possessif). Seule l''option (a) réunit les trois graphies correctes. (b) cumule « leur » singulier fautif, « ce » au lieu de « se » et « ses » au lieu de « ces » ; (c) garde le « ce » fautif ; (d) garde le « leur » singulier fautif.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('a19551e0-c43b-50a9-8765-e100dd0276e8', 'c22e7d7c-648d-58ad-9221-65c0523458d7', 'Dans la phrase « ___ que soient les obstacles, elle persévérera », quelle forme convient ?', '[{"id":"a","text":"Quels"},{"id":"b","text":"Quelque"},{"id":"c","text":"Quel"},{"id":"d","text":"Quelques"}]'::jsonb, 'a', 'La locution concessive « quel que » (en deux mots) s''emploie devant le verbe « être » au subjonctif et s''accorde avec le sujet qui suit. Ici le sujet est « les obstacles » (masculin pluriel), donc « Quels que soient les obstacles ». L''option (b) « quelque » (en un mot) est un adverbe ou un déterminant qui ne s''emploie pas devant « que soient ». L''option (c) ne fait pas l''accord en nombre. L''option (d) « quelques » est un déterminant indéfini, étranger à cette tournure concessive.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
   ('8ab4d9e6-cc7a-54de-b89d-acea53b3c2b8', '4aa90233-3a14-53a0-ba53-31a005968fcf', 'fr-mastery', 'Diagnostic — Lexique', 1, 20, 5, 'quiz', 'admin', 0)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
@@ -1508,6 +1817,410 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('a2734595-ffd1-5cb6-8948-9d13ebdf9b20', 'fc862ec5-38fd-53d9-8241-c711a5c5a92f', 'Laquelle de ces phrases emploie correctement le mot « acéré » en distinguant son sens précis de ses faux amis ?', '[{"id":"a","text":"Son esprit acéré lui permettait de saisir immédiatement les subtilités d''un raisonnement."},{"id":"b","text":"Il portait un regard acéré, plein de douceur et de compréhension."},{"id":"c","text":"Sa réponse acérée était chaleureuse et empreinte d''affection."},{"id":"d","text":"Le juge acéré rendit un verdict clément et bienveillant."}]'::jsonb, 'a', '« Acéré » (de l''ancien français acier, acier) signifie tranchant, incisif — au sens propre, une lame bien aiguisée ; au sens figuré, une intelligence pénétrante ou une critique mordante. La phrase A exploite exactement ce sens figuré positif : un esprit acéré saisit les subtilités comme une lame coupe net. Les phrases B et C créent des contradictions (douceur, chaleur s''opposent à l''idée de tranchant). La phrase D applique incorrectement l''adjectif à une personne plutôt qu''à ses qualités intellectuelles ou à ses propos, et le verdict clément contredit la dureté du terme.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('1a82c875-7519-569f-b160-f4a24344656f', '4aa90233-3a14-53a0-ba53-31a005968fcf', 'fr-mastery', 'Palier + — Lexique de précision : paronymes, registres et sens propre', 3, 120, 25, 'boss', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('1229b917-95ca-56e5-9bb9-9642304181eb', '1a82c875-7519-569f-b160-f4a24344656f', 'Choisissez le paronyme juste : « Le ministre a tenu des propos ___ qui ont apaisé les tensions. » Le mot attendu signifie « propre à concilier, à réconcilier ».', '[{"id":"a","text":"conciliants"},{"id":"b","text":"concis"},{"id":"c","text":"consensuels"},{"id":"d","text":"conciliables"}]'::jsonb, 'a', '« Conciliant » qualifie ce qui — ou celui qui — cherche à concilier, à apaiser : des « propos conciliants » désamorcent un conflit, ce qui correspond exactement au contexte (« ont apaisé les tensions »). Le piège est « conciliable », qui signifie « qui peut s''accorder avec autre chose » (deux thèses conciliables) et ne se dit pas de propos apaisants. « Concis » signifie « bref, ramassé », sans rapport avec l''apaisement. « Consensuel » conviendrait par le sens mais s''écarte de la définition donnée, centrée sur l''action de concilier propre à « conciliant ».', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('1b7380a4-60eb-578f-90d3-657d5b22e971', '1a82c875-7519-569f-b160-f4a24344656f', 'Quel mot complète justement : « Cette mesure ___ le problème au lieu de le résoudre, en le repoussant à plus tard. » Le terme attendu signifie « différer, retarder ».', '[{"id":"a","text":"élude"},{"id":"b","text":"ajourne"},{"id":"c","text":"résout"},{"id":"d","text":"exacerbe"}]'::jsonb, 'b', '« Ajourner » signifie renvoyer à une date ultérieure, différer — c''est exactement « repousser à plus tard » l''énoncé. « Éluder » signifie esquiver, contourner une question sans la traiter : proche, mais l''idée n''est pas le report dans le temps mais l''évitement, et la suite (« en le repoussant à plus tard ») désigne bien le report. « Résoudre » est l''antonyme de ce que dit la phrase (« au lieu de le résoudre »). « Exacerber » signifie aggraver, intensifier, ce qui ne correspond ni à la définition donnée ni au contexte.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('0f353fd6-63bf-5c48-b0fe-5d952a0c3025', '1a82c875-7519-569f-b160-f4a24344656f', 'Choisissez le mot de registre soutenu signifiant « qui parle peu, avare de paroles ».', '[{"id":"a","text":"taiseux"},{"id":"b","text":"taciturne"},{"id":"c","text":"muet"},{"id":"d","text":"discret"}]'::jsonb, 'b', '« Taciturne » désigne, en registre soutenu, une personne d''humeur silencieuse, peu encline à parler — c''est l''équivalent exact de la définition. « Taiseux » a le même sens mais relève d''un usage régional ou familier. « Muet » signifie privé de l''usage de la parole (une incapacité), et non le simple fait de parler peu. « Discret » porte sur la réserve, la retenue dans la conduite ou la confidence, non spécifiquement sur la rareté des paroles.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('1c8d65ce-dbd3-555d-bf40-1318ebba46f8', '1a82c875-7519-569f-b160-f4a24344656f', 'Dans « Son discours était truffé de ___ : il répétait sans cesse les mêmes idées sous des formes différentes », quel mot convient ? Le terme désigne la répétition inutile d''une même idée.', '[{"id":"a","text":"pléonasmes"},{"id":"b","text":"redondances"},{"id":"c","text":"digressions"},{"id":"d","text":"périphrases"}]'::jsonb, 'b', '« Redondance » désigne la répétition superflue d''une même idée, énoncée plusieurs fois sous des formulations différentes — ce que décrit précisément la phrase. Le « pléonasme » est plus étroit : il répète une notion à l''intérieur d''une même expression (« monter en haut »), ce qui ne couvre pas la répétition d''idées d''une phrase à l''autre. La « digression » est un écart par rapport au sujet, non une répétition. La « périphrase » est un détour pour désigner une chose en plusieurs mots (« l''astre du jour » pour le soleil), sans idée de redite.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('403c7dc2-aaeb-5c2c-973f-c5203c8be46c', '1a82c875-7519-569f-b160-f4a24344656f', 'Identifiez l''emploi correct de « émigrer » par opposition à « immigrer ».', '[{"id":"a","text":"Au XIXe siècle, des milliers d''Irlandais émigrèrent vers les États-Unis pour fuir la famine."},{"id":"b","text":"Au XIXe siècle, des milliers d''Irlandais émigrèrent aux États-Unis, où ils s''installèrent durablement."},{"id":"c","text":"Beaucoup d''Italiens émigrèrent en France, ce qui enrichit la population française d''arrivants."},{"id":"d","text":"Le pays a accueilli ceux qui émigraient sur son territoire."}]'::jsonb, 'a', '« Émigrer », c''est quitter son pays d''origine ; le verbe se construit avec un point de départ et la destination introduite par « vers / pour ». L''option (a) est exemplaire : « émigrèrent vers les États-Unis pour fuir la famine » envisage le départ depuis l''Irlande. Les options (b), (c) et (d) adoptent le point de vue de l''arrivée et du séjour dans le pays d''accueil (« s''installèrent », « enrichit la population française », « sur son territoire »), ce qui relève d''« immigrer ». Le verbe doit être choisi selon le point de vue : départ → émigrer ; arrivée → immigrer.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d9721052-6326-5cdc-b9b1-ff7546955bca', '1a82c875-7519-569f-b160-f4a24344656f', 'Quel mot complète justement : « Devant l''ampleur de la catastrophe, l''aide internationale s''est révélée ___ : quelques tentes pour des milliers de sinistrés. » Le terme attendu signifie « insuffisant au point d''être dérisoire ».', '[{"id":"a","text":"parcimonieuse"},{"id":"b","text":"frugale"},{"id":"c","text":"indigente"},{"id":"d","text":"ascétique"}]'::jsonb, 'c', '« Indigent » signifie, au sens figuré, d''une pauvreté criante, dérisoirement insuffisant : une aide « indigente » est si maigre qu''elle en devient dérisoire, ce qu''illustre « quelques tentes pour des milliers de sinistrés ». « Parcimonieux » qualifie celui qui donne avec une économie mesurée, intentionnelle — une retenue, non une insuffisance accablante. « Frugal » se dit d''un repas ou d''une vie simple et sobre, par choix, sans nuance péjorative d''insuffisance. « Ascétique » renvoie à une privation volontaire et austère, étrangère à l''idée d''une aide défaillante subie.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('b9f2bdad-5941-5c18-8f7a-6a75f83de4c7', '2567b64f-bd7c-5121-8690-413031a1ac80', 'fr-mastery', 'Diagnostic — Épreuve de synthèse', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('6d99f9d8-fcb6-5a7d-9baf-459d334b4cd6', 'b9f2bdad-5941-5c18-8f7a-6a75f83de4c7', 'Lisez ce passage :
+
+« On vantait partout sa générosité ; il ne donnait pourtant qu''à ceux dont il attendait un retour. Les nécessiteux véritables, eux, restaient à sa porte. »
+
+Que laisse inférer ce passage sur le personnage ?', '[{"id":"a","text":"Sa générosité est sincère mais mal comprise du public."},{"id":"b","text":"Sa prétendue générosité n''est qu''un calcul intéressé."},{"id":"c","text":"Il aide en priorité les personnes les plus démunies."},{"id":"d","text":"Il ignore que sa réputation est usurpée."}]'::jsonb, 'b', 'L''opposition marquée par « pourtant » entre la réputation (« on vantait sa générosité ») et les faits (« il ne donnait qu''à ceux dont il attendait un retour ») révèle un intérêt déguisé en bienfaisance ; le sort des « nécessiteux véritables » le confirme. (a) prend la réputation pour argent comptant. (c) est l''inverse de ce que dit le texte. (d) invente un état mental absent du passage.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('ab216150-dd83-579a-8f57-80bb1ed85e02', 'b9f2bdad-5941-5c18-8f7a-6a75f83de4c7', 'Dans la phrase « Le rapport, que la commission avait longtemps tenu secret, fut enfin rendu public », quelle est la nature et la fonction de la proposition « que la commission avait longtemps tenu secret » ?', '[{"id":"a","text":"Une subordonnée complétive, COD du verbe « fut »."},{"id":"b","text":"Une subordonnée relative, complément de l''antécédent « rapport »."},{"id":"c","text":"Une subordonnée circonstancielle de cause."},{"id":"d","text":"Une proposition indépendante juxtaposée."}]'::jsonb, 'b', 'Introduite par le pronom relatif « que » (qui reprend l''antécédent « rapport » et y exerce la fonction de COD de « avait tenu »), la proposition est une subordonnée relative qui complète le nom « rapport ». Une complétive (a) serait introduite par la conjonction « que » et compléterait un verbe, non un nom. Il n''y a ni valeur causale (c) ni juxtaposition (d) : la proposition est enchâssée et dépend du nom.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('e2e27486-5901-5b7b-9f51-3fe5324ca8d7', 'b9f2bdad-5941-5c18-8f7a-6a75f83de4c7', 'Quelle phrase respecte correctement l''accord du participe passé ?', '[{"id":"a","text":"Les décisions que le conseil a prises ont surpris l''assemblée."},{"id":"b","text":"Les décisions que le conseil a pris ont surpris l''assemblée."},{"id":"c","text":"Les décisions que le conseil a prise ont surpris l''assemblée."},{"id":"d","text":"Les décisions que le conseil ont prises ont surpris l''assemblée."}]'::jsonb, 'a', 'Avec l''auxiliaire « avoir », le participe passé s''accorde avec le COD lorsque celui-ci est placé avant le verbe. Ici le COD est « que », mis pour « les décisions » (féminin pluriel), antéposé : on écrit donc « prises ». (b) et (c) négligent ou faussent l''accord. (d) commet en outre une faute d''accord sujet-verbe (« le conseil ont »).', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('3abac0a4-d792-5edc-93ef-a33f33d4859e', 'b9f2bdad-5941-5c18-8f7a-6a75f83de4c7', 'Choisissez le mot juste : « Faute de preuves, l''enquêteur en fut réduit à de simples ______ sur le mobile du crime. »', '[{"id":"a","text":"conjonctures"},{"id":"b","text":"conjectures"},{"id":"c","text":"confitures"},{"id":"d","text":"conjugaisons"}]'::jsonb, 'b', '« Conjecture » désigne une hypothèse fondée sur des indices incertains : « faute de preuves » impose ce sens. Le paronyme « conjoncture » (a) désigne une situation économique ou sociale à un moment donné et ne convient pas. (c) et (d) sont des intrus sans rapport sémantique, glissés pour tester la lecture attentive.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('3375ad20-96fe-554b-9520-fc7939ef43fb', 'b9f2bdad-5941-5c18-8f7a-6a75f83de4c7', 'Lisez ce passage :
+
+« Il prétendait n''avoir rien remarqué. Mais ses mains tremblaient, sa voix se brisait, et il évitait soigneusement de croiser nos regards. »
+
+Quel est l''effet produit par la succession des trois notations après « Mais » ?', '[{"id":"a","text":"Une énumération accumulative qui dément, par les indices physiques, la dénégation du personnage."},{"id":"b","text":"Une gradation descendante qui atténue progressivement le trouble du personnage."},{"id":"c","text":"Une comparaison qui rapproche le personnage d''un coupable type."},{"id":"d","text":"Une digression qui détourne l''attention du sujet principal."}]'::jsonb, 'a', 'Les trois propositions juxtaposées (« ses mains tremblaient, sa voix se brisait, et il évitait… ») forment une accumulation d''indices corporels qui contredisent la dénégation initiale (« il prétendait n''avoir rien remarqué ») : le « Mais » articule cette opposition. Il n''y a pas d''affaiblissement (b), pas de comparaison explicite (c), et ces notations sont au cœur du propos, non une digression (d).', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('766d61e0-2be1-5e35-979c-76c48ce2154c', 'b9f2bdad-5941-5c18-8f7a-6a75f83de4c7', 'Complétez en respectant la concordance des temps : « Je savais bien qu''un jour il ______ la vérité, quelles qu''en fussent les conséquences. »', '[{"id":"a","text":"dira"},{"id":"b","text":"dirait"},{"id":"c","text":"dise"},{"id":"d","text":"ait dit"}]'::jsonb, 'b', 'La principale est au passé (« je savais »), et la subordonnée exprime un fait postérieur à ce moment passé : on emploie alors le conditionnel présent à valeur de futur dans le passé, « dirait ». Le futur « dira » (a) conviendrait après une principale au présent. Le subjonctif (c) n''est pas commandé ici par « savoir » à la forme affirmative. (d) introduit un temps composé sans justification.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('82f28540-d59d-5d25-b090-d08b1f2dcc68', 'b9f2bdad-5941-5c18-8f7a-6a75f83de4c7', 'Lisez ce passage :
+
+« La réforme, présentée comme une avancée sociale, ne profitera, en réalité, qu''aux mieux pourvus. On l''a parée de toutes les vertus ; le temps en dira la véritable nature. »
+
+Quel mot ou groupe de mots porte le plus nettement la prise de position critique de l''auteur ?', '[{"id":"a","text":"« présentée comme une avancée sociale »"},{"id":"b","text":"« en réalité »"},{"id":"c","text":"« la réforme »"},{"id":"d","text":"« le temps »"}]'::jsonb, 'b', 'La locution « en réalité » oppose explicitement l''apparence (« présentée comme une avancée ») à ce que l''auteur tient pour le fait véritable : elle signale le démenti et donc la position critique. « Présentée comme » (a) introduit certes l''apparence trompeuse mais c''est « en réalité » qui marque la rupture critique. « La réforme » (c) et « le temps » (d) sont des éléments neutres du propos.', 7)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('b09c3bfa-b228-56cd-99f9-54366c124d14', 'b9f2bdad-5941-5c18-8f7a-6a75f83de4c7', 'Dans la phrase « Ses remarques acérées blessaient sans qu''il en eût conscience », quel énoncé analyse correctement à la fois le sens de « acérées » et le mode du verbe « eût » ?', '[{"id":"a","text":"« Acérées » signifie chaleureuses ; « eût » est un conditionnel passé."},{"id":"b","text":"« Acérées » signifie incisives, mordantes ; « eût » est un subjonctif imparfait commandé par « sans que »."},{"id":"c","text":"« Acérées » signifie maladroites ; « eût » est un plus-que-parfait de l''indicatif."},{"id":"d","text":"« Acérées » signifie hésitantes ; « eût » est un futur antérieur."}]'::jsonb, 'b', '« Acéré », au sens figuré, qualifie des propos tranchants, mordants — cohérent avec « blessaient ». La locution conjonctive « sans que » commande le subjonctif : « eût » est ici un subjonctif imparfait (forme soutenue de « ait »), et non un conditionnel (a), un indicatif plus-que-parfait (c) ou un futur antérieur (d). Les sens proposés en (a), (c) et (d) contredisent en outre l''idée de blessure.', 8)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('38655883-4f78-5df4-b448-466ffb2dd3b2', '2567b64f-bd7c-5121-8690-413031a1ac80', 'fr-mastery', 'Palier 1 — Épreuve de synthèse : un portrait en demi-teinte', 2, 50, 10, 'practice', 'admin', 1)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('f8565956-c4bb-50ef-ab48-27cbb2f6ef63', '38655883-4f78-5df4-b448-466ffb2dd3b2', 'Lisez attentivement ce texte, support de toute l''épreuve :
+
+« Monsieur Lévêque passait, dans le quartier, pour un homme affable. Il saluait chacun, s''enquérait de la santé des uns, des affaires des autres ; nul ne l''avait jamais entendu hausser le ton. Pourtant, ceux qui travaillaient sous ses ordres en parlaient à voix basse : derrière les portes closes, l''homme affable se faisait âpre, et sa courtoisie de façade tombait comme un masque. »
+
+[COMPRÉHENSION] Quelle vérité sur le personnage ce texte conduit-il à inférer ?', '[{"id":"a","text":"Sa courtoisie publique masque une dureté que seuls ses subordonnés connaissent."},{"id":"b","text":"Il est uniformément doux, en public comme en privé."},{"id":"c","text":"Les habitants du quartier le détestent ouvertement."},{"id":"d","text":"Ses subordonnés le respectent pour sa franchise constante."}]'::jsonb, 'a', 'L''opposition annoncée par « Pourtant » oppose la réputation publique (« un homme affable ») au témoignage des subordonnés (« âpre », « courtoisie de façade »), et l''image du « masque » qui « tombe » scelle l''inférence : la douceur n''est qu''une apparence. (b) ignore le « Pourtant » et le second visage du personnage. (c) est faux : le quartier l''apprécie. (d) contredit le ton inquiet (« à voix basse ») des subordonnés.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('ccb068ce-d222-5367-99dd-98988ced687b', '38655883-4f78-5df4-b448-466ffb2dd3b2', '[LEXIQUE] Dans le texte, l''adjectif « âpre » appliqué à l''homme « derrière les portes closes » signifie :', '[{"id":"a","text":"Aimable et chaleureux."},{"id":"b","text":"Rude, dur et désagréable dans ses rapports."},{"id":"c","text":"Distrait et insouciant."},{"id":"d","text":"Timide et effacé."}]'::jsonb, 'b', '« Âpre », au sens propre, qualifie une saveur rude ; au sens figuré, un caractère ou un ton dur, rêche, sans douceur. Le contexte (opposition à « affable », « masque » qui tombe) impose cette valeur. (a) en est l''antonyme. (c) et (d) introduisent des traits absents du texte et incompatibles avec la dureté décrite.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('28fc8b33-1a6c-5e88-9c8f-57e07682634d', '38655883-4f78-5df4-b448-466ffb2dd3b2', '[SYNTAXE] Dans la phrase « ceux qui travaillaient sous ses ordres en parlaient à voix basse », quelle est la fonction de la proposition « qui travaillaient sous ses ordres » ?', '[{"id":"a","text":"Subordonnée relative, complément de l''antécédent « ceux »."},{"id":"b","text":"Subordonnée complétive, COD de « parlaient »."},{"id":"c","text":"Subordonnée circonstancielle de temps."},{"id":"d","text":"Proposition principale."}]'::jsonb, 'a', 'Le pronom relatif « qui » reprend l''antécédent « ceux » et introduit une relative qui le détermine (de qui parle-t-on ? de ceux qui travaillaient sous ses ordres). Une complétive (b) serait introduite par « que » conjonction et compléterait un verbe. Il n''y a pas de valeur temporelle (c), et la principale est « ceux… en parlaient à voix basse » (d).', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('966c30fa-0738-5b10-8f72-7d212cdac238', '38655883-4f78-5df4-b448-466ffb2dd3b2', '[GRAMMAIRE] Quelle réécriture conserve un accord parfaitement correct ?', '[{"id":"a","text":"La courtoisie qu''il avait affichée toute la journée tomba d''un coup."},{"id":"b","text":"La courtoisie qu''il avait affiché toute la journée tomba d''un coup."},{"id":"c","text":"La courtoisie qu''il avait affichés toute la journée tomba d''un coup."},{"id":"d","text":"La courtoisie qu''il avaient affichée toute la journée tomba d''un coup."}]'::jsonb, 'a', 'Avec « avoir », le participe passé s''accorde avec le COD antéposé : ici « qu'' » mis pour « la courtoisie » (féminin singulier), placé avant « avait affichée » → « affichée ». (b) néglige l''accord. (c) met un pluriel injustifié. (d) commet en outre une faute d''accord sujet-verbe (« il avaient »).', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('b39f3841-74ef-53de-8648-ee43d15429b8', '38655883-4f78-5df4-b448-466ffb2dd3b2', '[LEXIQUE — paronymes] Pour qualifier la fausse cordialité du personnage, on pourrait dire qu''il faisait preuve de « ______ ». Choisissez le mot juste, sans le confondre avec son paronyme.', '[{"id":"a","text":"dissimulation"},{"id":"b","text":"dissipation"},{"id":"c","text":"dissertation"},{"id":"d","text":"dissension"}]'::jsonb, 'a', '« Dissimulation » désigne l''action de cacher ses véritables sentiments ou intentions — exactement le « masque » décrit dans le texte. « Dissipation » (b) évoque le fait de gaspiller, ou un manque de concentration. « Dissertation » (c) est un exercice écrit. « Dissension » (d) désigne un désaccord profond entre personnes. Seul (a) convient au sens visé.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('8e09901c-fd3c-5a9c-9544-0216fdde2ac8', '38655883-4f78-5df4-b448-466ffb2dd3b2', '[GRAMMAIRE — concordance] Complétez en respectant la concordance des temps : « Ses subordonnés affirmaient que, dès que la porte ______, l''homme changeait de visage. »', '[{"id":"a","text":"se referme"},{"id":"b","text":"se refermait"},{"id":"c","text":"se refermera"},{"id":"d","text":"se soit refermée"}]'::jsonb, 'b', 'La principale est au passé (« affirmaient ») et décrit une habitude passée (« changeait de visage ») : la subordonnée temporelle, qui exprime une action concomitante et répétée dans ce cadre passé, prend l''imparfait, « se refermait ». Le présent (a) et le futur (c) rompent la concordance avec un récit au passé. Le subjonctif (d) n''est pas commandé par « dès que », qui régit l''indicatif.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('6419b53e-71ab-5c5e-9801-72544a707d1a', '2567b64f-bd7c-5121-8690-413031a1ac80', 'fr-mastery', 'Palier 2 — Épreuve de synthèse : la rumeur (Boss)', 3, 120, 25, 'boss', 'admin', 2)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('4f70f10b-563d-576a-8424-b798ff3c453f', '6419b53e-71ab-5c5e-9801-72544a707d1a', '[LEXIQUE — sens précis] Dans le texte, le verbe « colporter » signifie :', '[{"id":"a","text":"Démentir publiquement une fausse nouvelle."},{"id":"b","text":"Répandre, propager de bouche à oreille une nouvelle, souvent une rumeur."},{"id":"c","text":"Vérifier l''exactitude d''une information avant de la diffuser."},{"id":"d","text":"Garder une information pour soi par discrétion."}]'::jsonb, 'b', '« Colporter » (étymologiquement « porter à son cou », comme le marchand ambulant) signifie répandre, propager une nouvelle de proche en proche — péjoratif quand il s''agit d''une rumeur. Le contexte (« tous l''ont colportée ») confirme l''idée de diffusion. (a), (c) et (d) décrivent des comportements inverses (démentir, vérifier, taire).', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('759d6691-82c9-58b7-b4a1-8528cea9c6ce', '6419b53e-71ab-5c5e-9801-72544a707d1a', 'Lisez ce texte, support de toute l''épreuve :
+
+« La rumeur ne marche jamais seule : elle avance escortée de tous ceux qui jurent ne pas y croire et qui, pourtant, la répètent. Chacun la transmet en l''allégeant de sa propre responsabilité — « on dit que… », « il paraît que… » —, si bien qu''à la fin nul ne l''a affirmée et que tous l''ont colportée. C''est là sa ruse : naître de personne pour s''imposer à tous. »
+
+[COMPRÉHENSION — implicite] Quelle idée l''auteur défend-il à travers ce texte ?', '[{"id":"a","text":"La rumeur se propage précisément parce que chacun s''en croit irresponsable tout en la diffusant."},{"id":"b","text":"La rumeur ne circule que parmi ceux qui y croient sincèrement."},{"id":"c","text":"La rumeur disparaît dès que personne ne veut l''affirmer."},{"id":"d","text":"La rumeur est toujours fondée sur des faits vérifiables."}]'::jsonb, 'a', 'Le paradoxe central — « nul ne l''a affirmée et tous l''ont colportée » — montre que la diffusion repose sur la déresponsabilisation de chacun (« en l''allégeant de sa propre responsabilité »). (b) est contredit par « ceux qui jurent ne pas y croire et qui la répètent ». (c) inverse la thèse : c''est justement que personne ne l''assume qu''elle prospère. (d) n''a aucun appui dans le texte.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('bebb8ff8-4c6c-58af-864a-e214786fe43e', '6419b53e-71ab-5c5e-9801-72544a707d1a', '[SYNTAXE — ponctuation et structure] Dans la phrase « C''est là sa ruse : naître de personne pour s''imposer à tous », quelle est la valeur des deux-points ?', '[{"id":"a","text":"Ils annoncent une explication : ce qui suit définit en quoi consiste « sa ruse »."},{"id":"b","text":"Ils introduisent une citation rapportée au discours direct."},{"id":"c","text":"Ils marquent une simple énumération de plusieurs éléments."},{"id":"d","text":"Ils signalent une opposition entre deux propositions contraires."}]'::jsonb, 'a', 'Les deux-points introduisent ici une explicitation : après avoir nommé « sa ruse », l''auteur précise en quoi elle consiste (« naître de personne pour s''imposer à tous »). Ce n''est pas une citation (b) — il n''y a ni guillemets ni verbe de parole —, ni une énumération (c), ni une opposition (d), qui appellerait plutôt « mais » ou un point-virgule entre deux idées contraires.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('29709e99-70e0-597e-b8e5-c5efe47be0b5', '6419b53e-71ab-5c5e-9801-72544a707d1a', '[LEXIQUE — paronymes] Pour désigner la personne qui propage une rumeur, on emploiera le mot juste. Lequel, sans le confondre avec son paronyme ?', '[{"id":"a","text":"un délateur"},{"id":"b","text":"un détracteur"},{"id":"c","text":"un colporteur"},{"id":"d","text":"un correcteur"}]'::jsonb, 'c', '« Colporteur » (de rumeurs) désigne celui qui les répand, en cohérence avec le verbe « colporter » du texte. « Délateur » (a) dénonce quelqu''un aux autorités. « Détracteur » (b) critique et cherche à rabaisser une personne ou une œuvre. « Correcteur » (d) corrige des fautes. Seul « colporteur » nomme l''agent de la propagation.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('388e036e-cd33-5c4e-9d91-4d1600e416ad', '6419b53e-71ab-5c5e-9801-72544a707d1a', '[GRAMMAIRE — mode] Réécrivons l''idée du texte : « Il est étonnant que personne n''______ jamais cette rumeur et que tous la répandent. » Quelle forme verbale convient ?', '[{"id":"a","text":"affirme"},{"id":"b","text":"affirmera"},{"id":"c","text":"a affirmé"},{"id":"d","text":"affirmait"}]'::jsonb, 'a', 'La tournure « Il est étonnant que… » exprime un sentiment et commande le subjonctif : on écrit « n''affirme » (subjonctif présent), en parallèle avec « que tous la répandent », lui aussi au subjonctif. Le futur (b), le passé composé de l''indicatif (c) et l''imparfait de l''indicatif (d) ne sont pas régis par cette construction expressive.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('a5511b2b-1054-5205-bebc-e62e6ba38318', '6419b53e-71ab-5c5e-9801-72544a707d1a', '[SYNTAXE + COMPRÉHENSION] La proposition « si bien qu''à la fin nul ne l''a affirmée et que tous l''ont colportée » est une subordonnée. Quelle est sa valeur logique, et que souligne-t-elle dans l''argumentation ?', '[{"id":"a","text":"Valeur de conséquence : elle expose le résultat du mécanisme décrit (la déresponsabilisation aboutit à une diffusion anonyme)."},{"id":"b","text":"Valeur de cause : elle indique pourquoi la rumeur existe."},{"id":"c","text":"Valeur de but : elle exprime l''objectif visé par les locuteurs."},{"id":"d","text":"Valeur de condition : elle pose une hypothèse non réalisée."}]'::jsonb, 'a', 'La locution « si bien que » introduit une subordonnée circonstancielle de conséquence : elle énonce le résultat du processus décrit juste avant (chacun allège sa responsabilité). Elle souligne ainsi le paradoxe — diffusion maximale, responsabilité nulle. Ce n''est pas une cause (b : on dirait « parce que »), ni un but (c : « afin que »), ni une condition (d : « si »).', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('29169835-f5bb-546d-b09a-54a5fc7e260f', '2567b64f-bd7c-5121-8690-413031a1ac80', 'fr-mastery', '🔥 Palier 3 — Épreuve de synthèse : l''éloge ambigu (Défi)', 4, 300, 60, 'challenge', 'admin', 3)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('095ee978-daef-52a9-ac8d-046d80c81024', '29169835-f5bb-546d-b09a-54a5fc7e260f', '[LEXIQUE — paronyme/nuance] Dans le texte, le mot « pusillanime » signifie :', '[{"id":"a","text":"Magnanime, d''une grandeur d''âme généreuse."},{"id":"b","text":"Qui manque de courage, craintif devant le risque et la décision."},{"id":"c","text":"Méticuleux et soucieux du détail."},{"id":"d","text":"Versatile, qui change sans cesse d''avis."}]'::jsonb, 'b', '« Pusillanime » (du latin pusillus animus, « âme petite ») qualifie celui qui manque de courage et de fermeté, qui recule devant le risque. Le contexte (« peur déguisée en sagesse », « jamais il ne s''engageait qu''à demi ») l''impose. « Magnanime » (a) en est presque l''antonyme moral. (c) et (d) décrivent d''autres défauts (minutie, inconstance) sans rapport avec l''absence de courage.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('af7c8f70-d1a9-50c6-a081-1efc1c20792b', '29169835-f5bb-546d-b09a-54a5fc7e260f', 'Lisez ce texte exigeant, support de toute l''épreuve :
+
+« On le disait prudent ; il n''était que pusillanime. Cette prudence dont on le créditait, et qu''il revendiquait volontiers, n''était qu''une peur déguisée en sagesse. Jamais il n''avançait sans s''être ménagé une retraite ; jamais il ne s''engageait qu''à demi, de sorte qu''on ne pût lui reprocher ni l''échec, dont il se lavait par avance, ni le succès, qu''il n''avait jamais vraiment risqué. Eût-il osé une seule fois, on l''eût peut-être admiré ; il préféra qu''on l''estimât, ce qui coûte moins. »
+
+[COMPRÉHENSION — implicite/ironie] Quelle est la thèse réelle de l''auteur sur ce personnage ?', '[{"id":"a","text":"L''auteur célèbre une prudence exemplaire qui a préservé le personnage de tout échec."},{"id":"b","text":"Sous couvert de prudence, le personnage dissimule une lâcheté calculée qui lui épargne tout risque."},{"id":"c","text":"Le personnage est un audacieux que la rumeur a injustement diminué."},{"id":"d","text":"L''auteur reste neutre et se contente de décrire un tempérament mesuré."}]'::jsonb, 'b', 'Dès la première phrase, l''antithèse « prudent / pusillanime » dévoile la critique, confirmée par « une peur déguisée en sagesse » et par le calcul décrit (ni échec ni succès, jamais rien risqué). (a) prend l''éloge apparent au pied de la lettre. (c) inverse le portrait : le texte nie toute audace (« jamais… qu''à demi »). (d) ignore l''ironie mordante et le jugement explicite de l''auteur.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('b1d2bc86-bf86-527b-8ddf-69e22c4356e2', '29169835-f5bb-546d-b09a-54a5fc7e260f', '[GRAMMAIRE — mode/temps soutenu] Dans « Eût-il osé une seule fois, on l''eût peut-être admiré », comment analyse-t-on les deux formes en « eût » ?', '[{"id":"a","text":"Ce sont deux conditionnels passés (2e forme) exprimant une hypothèse non réalisée dans le passé ; « Eût-il osé » équivaut à « S''il avait osé »."},{"id":"b","text":"Ce sont deux subjonctifs présents marquant un souhait."},{"id":"c","text":"Ce sont deux passés simples de l''indicatif énonçant des faits avérés."},{"id":"d","text":"Ce sont deux futurs antérieurs annonçant des événements certains."}]'::jsonb, 'a', '« Eût osé » et « eût admiré » sont des conditionnels passés deuxième forme (homonymes du plus-que-parfait du subjonctif), tournure soutenue de l''irréel du passé. L''inversion « Eût-il osé » remplace « S''il avait osé » et pose une hypothèse contraire aux faits (il n''a jamais osé). Ce ne sont ni des subjonctifs de souhait (b), ni des passés simples de faits réels (c) — le texte dit l''inverse —, ni des futurs antérieurs (d).', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('ff3d65f3-a07b-5787-8931-694b37d358e9', '29169835-f5bb-546d-b09a-54a5fc7e260f', '[SYNTAXE — subordination et logique] La proposition « de sorte qu''on ne pût lui reprocher ni l''échec… ni le succès… » : quelle est sa valeur, et qu''apporte le mode du verbe « pût » ?', '[{"id":"a","text":"Conséquence visée : le subjonctif « pût » marque que ce résultat était recherché, presque un but que le personnage s''assignait."},{"id":"b","text":"Cause réelle : le subjonctif indique un fait certain et accompli."},{"id":"c","text":"Comparaison : la subordonnée met deux situations en parallèle."},{"id":"d","text":"Temps : la subordonnée situe l''action dans la durée."}]'::jsonb, 'a', '« De sorte que » suivi du subjonctif (« pût ») exprime une conséquence voulue, teintée de finalité : le personnage agissait à demi afin qu''on ne pût rien lui reprocher. Le subjonctif souligne précisément ce caractère recherché (par opposition à « de sorte qu''on ne pouvait », indicatif, qui signalerait une simple conséquence de fait). Il ne s''agit ni d''une cause (b), ni d''une comparaison (c), ni d''une circonstancielle de temps (d).', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('a4021c34-6085-5253-a2df-13d29fdee570', '29169835-f5bb-546d-b09a-54a5fc7e260f', '[GRAMMAIRE — accord du participe passé] Choisissez la phrase dont l''accord est rigoureusement correct.', '[{"id":"a","text":"Les retraites qu''il s''était toujours ménagées le protégeaient de tout reproche."},{"id":"b","text":"Les retraites qu''il s''était toujours ménagé le protégeaient de tout reproche."},{"id":"c","text":"Les retraites qu''il s''était toujours ménagés le protégeaient de tout reproche."},{"id":"d","text":"Les retraites qu''il s''était toujours ménager le protégeaient de tout reproche."}]'::jsonb, 'a', 'Avec un verbe pronominal comme « se ménager », le participe passé s''accorde avec le COD s''il précède le verbe. Ici « se » est COI (ménager quelque chose à soi) et le COD est « qu'' », mis pour « les retraites » (féminin pluriel), antéposé → « ménagées ». (b) et (c) faussent le genre ou le nombre de l''accord. (d) emploie un infinitif à la place du participe : faute majeure.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('bd984a6b-8d79-5b8b-9bcb-e48edf379300', '29169835-f5bb-546d-b09a-54a5fc7e260f', '[LEXIQUE + COMPRÉHENSION] La chute « il préféra qu''on l''estimât, ce qui coûte moins » repose sur une distinction fine entre « admirer » et « estimer ». Quelle interprétation est la plus juste ?', '[{"id":"a","text":"« Admirer » suppose l''éclat d''un acte risqué, tandis qu''« estimer » se contente d''un mérite tranquille ; le personnage choisit la reconnaissance la moins exigeante."},{"id":"b","text":"« Admirer » et « estimer » sont strictement synonymes ; la phrase ne fait que les répéter."},{"id":"c","text":"« Estimer » implique plus d''enthousiasme qu''« admirer » ; le personnage vise donc le sentiment le plus fort."},{"id":"d","text":"« Estimer » signifie ici « évaluer une quantité » ; la phrase porte sur un calcul chiffré."}]'::jsonb, 'a', 'L''admiration naît d''un éclat, d''un exploit qui force l''enthousiasme ; l''estime, plus mesurée, reconnaît un mérite sans transport. La chute ironique (« ce qui coûte moins ») confirme que le personnage préfère cette reconnaissance modeste, qui n''exige aucun risque. (b) nie une nuance que le texte exploite précisément. (c) intervertit l''intensité des deux termes. (d) confond le sens moral d''« estimer » avec son sens d''évaluation quantitative, hors contexte ici.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,

@@ -1,0 +1,82 @@
+{
+  "title": "🛡️ Entraînement examen : types de textes et production écrite",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Lisez ce passage :\n\n« La girafe est un mammifère herbivore. Elle possède un long cou qui lui permet d'atteindre les feuilles des arbres les plus hauts. On la trouve principalement dans les savanes d'Afrique. »\n\nÀ quel type de texte appartient ce passage ?",
+      "options": [
+        { "id": "a", "text": "Texte narratif" },
+        { "id": "b", "text": "Texte explicatif (informatif)" },
+        { "id": "c", "text": "Texte argumentatif" },
+        { "id": "d", "text": "Texte injonctif" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le passage donne des informations objectives pour faire connaître un animal : c'est un texte explicatif/informatif. Il ne raconte pas d'histoire (a), ne défend pas d'opinion (c) et ne donne pas d'instructions (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel texte est de type injonctif ?",
+      "options": [
+        { "id": "a", "text": "Il était une fois un roi qui vivait dans un grand château." },
+        { "id": "b", "text": "Mélangez la farine et les œufs, puis ajoutez le lait." },
+        { "id": "c", "text": "À mon avis, lire est le meilleur des loisirs." },
+        { "id": "d", "text": "Le ciel était gris et la mer agitée." }
+      ],
+      "correctOption": "b",
+      "explanation": "Le texte injonctif donne des consignes, souvent à l'impératif : « Mélangez… ajoutez… » (recette). L'option a est narrative, c argumentative, d descriptive.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans le schéma narratif, comment appelle-t-on l'événement qui rompt l'équilibre initial et lance l'action ?",
+      "options": [
+        { "id": "a", "text": "La situation finale" },
+        { "id": "b", "text": "L'élément perturbateur (déclencheur)" },
+        { "id": "c", "text": "La situation initiale" },
+        { "id": "d", "text": "Le dénouement" }
+      ],
+      "correctOption": "b",
+      "explanation": "L'élément perturbateur (ou déclencheur) brise l'équilibre de la situation initiale et met l'histoire en mouvement. La situation initiale (c) présente l'équilibre de départ, les péripéties suivent, et le dénouement (d) puis la situation finale (a) closent le récit.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel connecteur logique exprime une CONSÉQUENCE ?",
+      "options": [
+        { "id": "a", "text": "parce que" },
+        { "id": "b", "text": "par conséquent" },
+        { "id": "c", "text": "cependant" },
+        { "id": "d", "text": "d'abord" }
+      ],
+      "correctOption": "b",
+      "explanation": "« par conséquent » introduit la conséquence d'un fait. « parce que » exprime la cause (a), « cependant » l'opposition (c), « d'abord » l'ordre/le temps (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez ce passage :\n\n« Je pense que les jeux vidéo ne sont pas seulement une perte de temps. En effet, certains développent la réflexion et la rapidité. C'est pourquoi il faut savoir les utiliser avec mesure. »\n\nÀ quel type de texte appartient ce passage ?",
+      "options": [
+        { "id": "a", "text": "Texte descriptif" },
+        { "id": "b", "text": "Texte argumentatif" },
+        { "id": "c", "text": "Texte narratif" },
+        { "id": "d", "text": "Texte explicatif" }
+      ],
+      "correctOption": "b",
+      "explanation": "L'auteur défend une opinion (« Je pense que… ») avec un argument (« En effet… ») et une conclusion (« C'est pourquoi… ») : c'est un texte argumentatif. Il ne décrit pas (a), ne raconte pas (c) et ne se contente pas d'informer objectivement (d).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans un paragraphe argumentatif, quel est le rôle de la phrase introduite par « Par exemple » ?",
+      "options": [
+        { "id": "a", "text": "Annoncer l'idée principale de l'auteur." },
+        { "id": "b", "text": "Illustrer l'argument par un cas concret." },
+        { "id": "c", "text": "Réfuter l'opinion adverse." },
+        { "id": "d", "text": "Conclure le paragraphe." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Par exemple » introduit une illustration : un cas concret qui appuie l'argument. L'idée principale s'annonce sans connecteur d'exemple (a), la réfutation emploie « certes… mais » (c), et la conclusion utilise « ainsi », « donc » (d).",
+      "difficulty": 3
+    }
+  ]
+}

@@ -10,7 +10,7 @@
         { "id": "d", "text": "She was go to the market yesterday." }
       ],
       "correctOption": "b",
-      "explanation": "\"Go\" is an irregular verb whose past simple form is \"went\". Time markers like \"yesterday\" confirm the past simple is needed.",
+      "explanation": "\"yesterday\" needs the past simple, and \"go\" is irregular: its past form is \"went\", not the regular \"goed\". \"has went\" is wrong because the present perfect uses the past participle \"gone\", not \"went\"; \"was go\" mixes \"be\" with a base verb.",
       "difficulty": 1
     },
     {

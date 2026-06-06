@@ -45,13 +45,13 @@
     {
       "prompt": "صورة المثلث ABC بالانسحاب ذي الشعاع $\\overrightarrow{AB}$ هي المثلث A'B'C'. ماذا يساوي $\\overrightarrow{AA'}$؟",
       "options": [
-        { "id": "a", "text": "$\\overrightarrow{BB'}$" },
+        { "id": "a", "text": "$\\overrightarrow{AC}$" },
         { "id": "b", "text": "$\\overrightarrow{BA}$" },
         { "id": "c", "text": "$\\overrightarrow{AB}$" },
-        { "id": "d", "text": "$\\overrightarrow{CC'}$" }
+        { "id": "d", "text": "$\\overrightarrow{0}$" }
       ],
       "correctOption": "c",
-      "explanation": "في الانسحاب ذي الشعاع $\\overrightarrow{AB}$، كلّ نقطة M تنتقل بحيث $\\overrightarrow{MM'} = \\overrightarrow{AB}$. فـ$\\overrightarrow{AA'} = \\overrightarrow{AB}$، والخيار d صحيح أيضًا (كلّ $\\overrightarrow{MM'} = \\overrightarrow{AB}$)، لكنّ السؤال يطلب ماذا يساوي $\\overrightarrow{AA'}$ تحديدًا وهو $\\overrightarrow{AB}$.",
+      "explanation": "في الانسحاب ذي الشعاع $\\overrightarrow{AB}$، كلّ نقطة M تنتقل بحيث $\\overrightarrow{MM'} = \\overrightarrow{AB}$. وبما أنّ A تنتقل إلى A'، فإنّ $\\overrightarrow{AA'} = \\overrightarrow{AB}$. أمّا الخيارات الأخرى فخاطئة: $\\overrightarrow{BA}$ معاكسٌ له، و$\\overrightarrow{AC}$ شعاعٌ آخر، و$\\overrightarrow{0}$ يعني انعدام الانتقال.",
       "difficulty": 2
     },
     {
