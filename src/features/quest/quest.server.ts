@@ -55,6 +55,12 @@ type AtomicSubmitResponse = {
   profile: ProfileSnapshot | null;
   unlockedBadges: UnlockedBadge[];
   potionApplied: PotionApplied | null;
+  /**
+   * True when an armed retry shield suppressed this failed attempt's penalty (it
+   * was consumed). The result UI nudges an immediate replay — the higher of the
+   * two scores wins via the existing best-score eligibility gate.
+   */
+  retryShieldUsed: boolean;
 };
 
 function toUnlockedBadges(value: unknown): UnlockedBadge[] {
@@ -117,6 +123,7 @@ function parseAtomicSubmitResponse(payload: unknown): AtomicSubmitResponse {
       row.profile && typeof row.profile === "object" ? (row.profile as ProfileSnapshot) : null,
     unlockedBadges: toUnlockedBadges(row.unlockedBadges),
     potionApplied: toPotionApplied(row.potionApplied),
+    retryShieldUsed: row.retryShieldUsed === true,
   };
 }
 
@@ -485,5 +492,6 @@ export const submitAttempt = createServerFn({ method: "POST" })
       reviewHidden: isQuiz,
       unlockedBadges: atomic.unlockedBadges,
       potionApplied: atomic.potionApplied,
+      retryShieldUsed: atomic.retryShieldUsed,
     };
   });

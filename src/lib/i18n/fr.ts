@@ -144,6 +144,7 @@ export const fr: TranslationKeys = {
     levelLabel: "Niveau",
     streakLabel: "Streak",
     badgesUnlocked: "Badges débloqués",
+    retryShieldUsed: "Bouclier utilisé — réessaie sans pénalité !",
     replayQuest: "Rejouer la quête",
     nextQuest: "Quête suivante",
     backToSubject: "Retour à la matière",

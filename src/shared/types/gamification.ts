@@ -18,9 +18,14 @@ export type DashboardShopItem = {
   quantity: number;
   /** Cosmetic skin slug (from `effect_payload.avatarSlug`); null for non-skins. */
   avatarSlug: string | null;
-  /** True for owned multiplier potions that can be armed ("Activer"). */
+  /** True for owned consumables (potions / shields) that can be armed ("Activer"). */
   isArmable: boolean;
-  /** True when this owned consumable is currently armed for the next quest. */
+  /**
+   * Arming slot derived from the effect payload (null for non-armable items):
+   * "next-quest" (multiplier potions + retry shield) or "passive" (streak shield).
+   */
+  armSlot: "next-quest" | "passive" | null;
+  /** True when this owned consumable is currently armed (next-quest or passive slot). */
   isActive: boolean;
 };
 

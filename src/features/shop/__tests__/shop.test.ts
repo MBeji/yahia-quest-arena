@@ -198,12 +198,62 @@ describe("shop — activateInventoryItem", () => {
     });
   });
 
-  it("surfaces the RPC error when the item is not a potion", async () => {
+  it("arms a retry shield into the next-quest slot", async () => {
+    mockRpc.mockImplementation(
+      rpcResponder({
+        activate_inventory_item: {
+          data: {
+            item_code: "shield_retry",
+            item_name: "Bouclier de Réessai",
+            slot: "next-quest",
+            is_active: true,
+          },
+          error: null,
+        },
+      }),
+    );
+
+    const { activateInventoryItem } = await import("@/features/shop");
+    const res = (await (activateInventoryItem as unknown as (d: unknown) => Promise<unknown>)({
+      itemCode: "shield_retry",
+    })) as Record<string, unknown>;
+
+    expect(res.itemCode).toBe("shield_retry");
+    expect(res.slot).toBe("next-quest");
+    expect(res.isActive).toBe(true);
+  });
+
+  it("arms a streak shield into the passive slot", async () => {
+    mockRpc.mockImplementation(
+      rpcResponder({
+        activate_inventory_item: {
+          data: {
+            item_code: "bouclier_flamme",
+            item_name: "Bouclier de Flamme",
+            slot: "passive",
+            is_active: true,
+          },
+          error: null,
+        },
+      }),
+    );
+
+    const { activateInventoryItem } = await import("@/features/shop");
+    const res = (await (activateInventoryItem as unknown as (d: unknown) => Promise<unknown>)({
+      itemCode: "bouclier_flamme",
+    })) as Record<string, unknown>;
+
+    expect(res.itemCode).toBe("bouclier_flamme");
+    expect(res.slot).toBe("passive");
+    expect(res.isActive).toBe(true);
+  });
+
+  it("surfaces the RPC error when the item is not armable", async () => {
     mockRpc.mockImplementation(
       rpcResponder({
         activate_inventory_item: {
           data: null,
-          error: { message: "Only consumable potions can be activated." },
+          error: { message: "This item cannot be activated." },
         },
       }),
     );
@@ -213,7 +263,7 @@ describe("shop — activateInventoryItem", () => {
       (activateInventoryItem as unknown as (d: unknown) => Promise<unknown>)({
         itemCode: "skin_gold",
       }),
-    ).rejects.toThrow("Impossible d'activer cette potion.");
+    ).rejects.toThrow("Impossible d'activer cet objet.");
   });
 
   it("rejects empty itemCode (input validation)", async () => {
@@ -263,6 +313,7 @@ describe("shop — RPC payload fallbacks", () => {
     })) as Record<string, unknown>;
     expect(res.itemCode).toBe("potion_coins");
     expect(res.itemName).toBe("");
+    expect(res.slot).toBe("next-quest");
     expect(res.isActive).toBe(false);
   });
 });

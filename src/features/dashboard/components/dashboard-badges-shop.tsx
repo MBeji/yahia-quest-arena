@@ -21,8 +21,14 @@ type ShopItem = {
   quantity: number;
   avatarSlug: string | null;
   isArmable: boolean;
+  armSlot: "next-quest" | "passive" | null;
   isActive: boolean;
 };
+
+/** Armed-badge label per arming slot (passive streak shield vs next-quest item). */
+function armedLabel(armSlot: "next-quest" | "passive" | null): string {
+  return armSlot === "passive" ? "Actif · protège ta série" : "Actif · prochaine quête";
+}
 
 type DashboardBadgesShopProps = {
   badges: Badge[];
@@ -142,7 +148,7 @@ export function DashboardBadgesShop({
                   )}
                   {item.isActive && (
                     <div className="rounded-full bg-[color:var(--gold)]/15 px-3 py-1 text-xs font-bold text-[color:var(--gold)]">
-                      Actif · prochaine quête
+                      {armedLabel(item.armSlot)}
                     </div>
                   )}
                 </div>

@@ -145,6 +145,7 @@ export const en: TranslationKeys = {
     levelLabel: "Level",
     streakLabel: "Streak",
     badgesUnlocked: "Badges unlocked",
+    retryShieldUsed: "Shield used — retry with no penalty!",
     replayQuest: "Replay quest",
     nextQuest: "Next quest",
     backToSubject: "Back to subject",

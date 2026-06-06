@@ -554,6 +554,71 @@ describe("gamification.quest — submitAttempt", () => {
     expect(result.potionApplied).toBeNull();
   });
 
+  it("surfaces retryShieldUsed=true when an armed retry shield suppressed a failure penalty", async () => {
+    const questionsData = [{ id: Q1_ID, prompt: "2+2?", correct_option: "4", explanation: "x" }];
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") return mockQuery({ mode: "practice" });
+      return mockQuery(questionsData);
+    });
+    mockRpc.mockReturnValue({
+      data: {
+        correct: 0,
+        total: 1,
+        scorePct: 0,
+        xpEarned: 0,
+        coinsEarned: 0,
+        durationSeconds: 30,
+        tooFast: false,
+        improved: false,
+        profile: { xp: 0 },
+        unlockedBadges: [],
+        potionApplied: null,
+        retryShieldUsed: true,
+      },
+      error: null,
+    });
+
+    const { submitAttempt } = await import("@/features/quest");
+    const result = (await (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
+      sessionId: SESSION_ID,
+      exerciseId: EXERCISE_ID,
+      answers: [{ questionId: Q1_ID, choice: "5" }],
+    })) as Record<string, unknown>;
+
+    expect(result.retryShieldUsed).toBe(true);
+  });
+
+  it("defaults retryShieldUsed to false when the RPC omits it", async () => {
+    const questionsData = [{ id: Q1_ID, prompt: "2+2?", correct_option: "4", explanation: "x" }];
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") return mockQuery({ mode: "practice" });
+      return mockQuery(questionsData);
+    });
+    mockRpc.mockReturnValue({
+      data: {
+        correct: 1,
+        total: 1,
+        scorePct: 100,
+        xpEarned: 50,
+        coinsEarned: 10,
+        durationSeconds: 30,
+        profile: { xp: 50 },
+        unlockedBadges: [],
+        potionApplied: null,
+      },
+      error: null,
+    });
+
+    const { submitAttempt } = await import("@/features/quest");
+    const result = (await (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
+      sessionId: SESSION_ID,
+      exerciseId: EXERCISE_ID,
+      answers: [{ questionId: Q1_ID, choice: "4" }],
+    })) as Record<string, unknown>;
+
+    expect(result.retryShieldUsed).toBe(false);
+  });
+
   it("hides the correction (no correct answers leak) for a comprehension quiz", async () => {
     mockFrom.mockImplementation((table: string) => {
       if (table === "exercises") return mockQuery({ mode: "quiz" });
