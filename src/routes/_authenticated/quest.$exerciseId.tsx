@@ -11,7 +11,6 @@ import {
   Heart,
   Timer,
   BookOpen,
-  Lock,
   Check,
   Crown,
 } from "lucide-react";
@@ -34,6 +33,7 @@ import { shuffleOptions, type BaseOption, type DisplayOption } from "@/shared/li
 import { levelForXp } from "@/shared/lib/level";
 import { QuestResultActions } from "@/features/quest/components/quest-result-actions";
 import { QuestRewardGrid } from "@/features/quest/components/quest-reward-grid";
+import { QuizLockScreen } from "@/features/quest/components/quiz-lock-screen";
 import { ReportErrorButton } from "@/features/content-report";
 import { Confetti } from "@/features/quest/components/confetti";
 import { SubscriptionPaywall } from "@/features/subscription";
@@ -91,6 +91,11 @@ function QuestPage() {
     onSuccess: (res) => setSessionId(res.sessionId),
     onError: (e) => toast.error(e instanceof Error ? e.message : "Unable to start the quest"),
   });
+  // `mutate`/`reset` are referentially stable (bound to the mutation observer),
+  // so the session-start effect can depend on `startSessionMutate` instead of the
+  // whole `sessionMutation` object — the latter is recreated every render and
+  // would make the effect re-run (and re-fire mutate) on each status change.
+  const { mutate: startSessionMutate, reset: resetSessionMutation } = sessionMutation;
 
   const mutation = useMutation({
     mutationFn: (payload: { sessionId: string; exerciseId: string; answers: Answer[] }) =>
@@ -144,6 +149,11 @@ function QuestPage() {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const feedbackTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const answeredQuestionRef = useRef<string | null>(null);
+  // The exercise id we've already started (or attempted to start) a session for.
+  // This guards the start effect so a rejected start (e.g. a premium-locked
+  // mission the server refuses) does NOT retry in a loop and spam an error toast
+  // on every render. resetRun() clears it so replays / navigation start fresh.
+  const sessionStartedForRef = useRef<string | null>(null);
   // Refs to avoid stale closures in setInterval
   const selectedRef = useRef(selected);
   const answersRef = useRef(answers);
@@ -207,6 +217,10 @@ function QuestPage() {
       feedbackTimeoutRef.current = null;
     }
     answeredQuestionRef.current = null;
+    // Allow the next exercise (or a replay of this one) to start a fresh session,
+    // and clear any prior start error so it can't leak into the new run's render.
+    sessionStartedForRef.current = null;
+    resetSessionMutation();
     setResult(null);
     setIdx(0);
     setAnswers([]);
@@ -216,7 +230,7 @@ function QuestPage() {
     setShowLevelUp(false);
     setSessionId(null);
     setBossTimer(0);
-  }, []);
+  }, [resetSessionMutation]);
 
   // Reset run state when navigating to a different exercise (e.g. "Next quest"),
   // so the same component instance starts the new quest cleanly.
@@ -224,10 +238,18 @@ function QuestPage() {
     resetRun();
   }, [exerciseId, resetRun]);
 
+  // Start the secure session once per exercise. The ref guard (not the mutation
+  // status) is what stops re-firing: a rejected start settles to `isError`, and
+  // re-running mutate() would loop and pop an error toast each time. Keying on
+  // the exercise id lets a new exercise — or a replay, which clears the ref —
+  // start cleanly on this same (reused) component instance.
   useEffect(() => {
-    if (!data?.exercise?.id || sessionId || sessionMutation.isPending || result) return;
-    sessionMutation.mutate({ exerciseId: data.exercise.id });
-  }, [data?.exercise?.id, result, sessionId, sessionMutation]);
+    const exId = data?.exercise?.id;
+    if (!exId || sessionId || result) return;
+    if (sessionStartedForRef.current === exId) return;
+    sessionStartedForRef.current = exId;
+    startSessionMutate({ exerciseId: exId });
+  }, [data?.exercise?.id, result, sessionId, startSessionMutate]);
 
   const advanceWithChoice = useCallback(
     (choice: string) => {
@@ -292,13 +314,13 @@ function QuestPage() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   });
 
-  if (isLoading || !data) {
-    return (
-      <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">
-        {t.quest.preparing}
-      </div>
-    );
-  }
+  const preparingScreen = (
+    <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">
+      {t.quest.preparing}
+    </div>
+  );
+
+  if (isLoading || !data) return preparingScreen;
 
   const isQuiz = data.exercise.mode === "quiz";
   const chapterId = (data.exercise.chapter_id as string | null) ?? null;
@@ -376,36 +398,15 @@ function QuestPage() {
 
   if (sessionMutation.isError && sessionErrorMsg.includes("quiz de compréhension")) {
     return (
-      <div
-        className="mx-auto max-w-md px-6 py-16 text-center"
-        dir={isRtlSubject ? "rtl" : undefined}
-      >
-        <div className="rounded-3xl border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/5 p-8">
-          <Lock className="mx-auto h-12 w-12 text-[color:var(--neon-gold)]" />
-          <h1 className="mt-4 font-display text-2xl font-bold">{QL.lockedTitle}</h1>
-          <p className="mt-3 text-sm text-muted-foreground">{QL.lockedBody}</p>
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
-            {chapterId && (
-              <Link
-                to="/lesson/$chapterId"
-                params={{ chapterId }}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-5 py-2.5 text-sm font-bold text-black shadow-gold hover:scale-105"
-              >
-                <BookOpen className="h-4 w-4" /> {QL.review}
-              </Link>
-            )}
-            {exSubjectId && (
-              <Link
-                to="/subject/$subjectId"
-                params={{ subjectId: exSubjectId }}
-                className="rounded-lg border border-border bg-black/50 px-5 py-2.5 text-sm font-semibold hover:bg-black/80"
-              >
-                {QL.back}
-              </Link>
-            )}
-          </div>
-        </div>
-      </div>
+      <QuizLockScreen
+        title={QL.lockedTitle}
+        body={QL.lockedBody}
+        reviewLabel={QL.review}
+        backLabel={QL.back}
+        chapterId={chapterId}
+        subjectId={exSubjectId}
+        rtl={isRtlSubject}
+      />
     );
   }
 
@@ -581,6 +582,13 @@ function QuestPage() {
       </div>
     );
   }
+
+  // The secure session is still being created (or re-created after a replay).
+  // Hold on the "preparing" screen until we have a session id, so a premium-
+  // locked mission never flashes the playing screen before the paywall (handled
+  // by the early returns above) appears. A genuine non-premium/non-quiz start
+  // error keeps `isError` set, surfaces its toast, and falls through below.
+  if (!sessionId && !sessionMutation.isError) return preparingScreen;
 
   function handleSelect(optId: string) {
     if (showFeedback) return; // prevent changing during feedback
