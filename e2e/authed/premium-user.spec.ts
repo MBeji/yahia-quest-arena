@@ -1,31 +1,35 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "../fixtures";
 import { STORAGE_STATE } from "../helpers/users";
 
 /**
- * PREMIUM student journey. The key differentiator vs a free user: opening a
- * difficulty 3+ mission does NOT show the subscription paywall (they may still
- * hit the comprehension-quiz gate, but never the "subscribe" wall).
+ * PREMIUM student journey. Key differentiator vs free: opening a difficulty 3+
+ * mission does NOT show the subscription paywall.
  */
 test.use({ storageState: STORAGE_STATE.premium });
 
 test.describe("Premium student", () => {
-  test("dashboard loads", async ({ page }) => {
-    await page.goto("/dashboard");
+  test("dashboard loads", async ({ page, dashboard }) => {
+    await dashboard.goto();
     await expect(page).toHaveURL(/\/dashboard/);
-    await expect(page.locator('a[href^="/subject/"]').first()).toBeVisible({ timeout: 15_000 });
+    await expect(dashboard.firstSubject()).toBeVisible({ timeout: 15_000 });
   });
 
-  test("opening a premium (difficulty 3+) mission does NOT show the paywall", async ({ page }) => {
-    await page.goto("/dashboard");
-    await page.locator('a[href^="/subject/"]').first().click();
+  test("opening a premium (difficulty 3+) mission does NOT show the paywall", async ({
+    page,
+    dashboard,
+    subject,
+    quest,
+  }) => {
+    await dashboard.goto();
+    await dashboard.openFirstSubject();
     await expect(page).toHaveURL(/\/subject\//);
 
-    // Premium users should NOT see the "Abonnement requis" lock on difficulty 3+.
-    await expect(page.getByText(/abonnement requis/i)).toHaveCount(0);
+    // No "Abonnement requis" lock for a subscriber.
+    await expect(subject.premiumLock).toHaveCount(0);
 
-    // Open the first available mission; the subscription paywall must not appear.
-    await page.locator('a[href^="/quest/"]').first().click();
+    await subject.openFirstMission();
     await expect(page).toHaveURL(/\/quest\//);
-    await expect(page.getByRole("button", { name: /bêta|beta/i })).toHaveCount(0);
+    // ...and no subscription paywall on the mission itself.
+    await expect(quest.betaCta).toHaveCount(0);
   });
 });

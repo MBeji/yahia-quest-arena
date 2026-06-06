@@ -7,7 +7,7 @@ name: E2E (authenticated)
 # Required repository secrets:
 #   TEST_SUPABASE_URL                – the TEST project URL (NOT production)
 #   TEST_SUPABASE_ANON_KEY           – its anon / publishable key
-#   TEST_SUPABASE_SERVICE_ROLE_KEY   – its service-role key (for seeding users)
+#   TEST_SUPABASE_SERVICE_ROLE_KEY   – its service-role key (for seeding/reset)
 #   E2E_USER_PASSWORD                – password for the seeded test accounts
 #
 # Prereq: run all DB migrations + content on the test project once.
@@ -16,6 +16,10 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
+
+concurrency:
+  group: e2e-auth-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   e2e-auth:
@@ -46,6 +50,13 @@ jobs:
         if: steps.guard.outputs.configured == 'true'
         run: npm ci --no-audit --no-fund
 
+      - name: Cache Playwright browsers
+        if: steps.guard.outputs.configured == 'true'
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
       - name: Install Playwright browser (chromium)
         if: steps.guard.outputs.configured == 'true'
         run: npx playwright install --with-deps chromium
@@ -57,6 +68,15 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.TEST_SUPABASE_SERVICE_ROLE_KEY }}
           E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}
         run: npm run e2e:seed
+
+      # Deterministic starting point: wipe accumulated gameplay state (keeps
+      # accounts + roles/subscriptions from the seed).
+      - name: Reset gameplay state
+        if: steps.guard.outputs.configured == 'true'
+        env:
+          SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.TEST_SUPABASE_SERVICE_ROLE_KEY }}
+        run: node scripts/e2e/reset-gameplay.mjs
 
       - name: Run authenticated E2E
         if: steps.guard.outputs.configured == 'true'

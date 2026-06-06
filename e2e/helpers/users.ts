@@ -3,12 +3,13 @@
  * Supabase project — create/refresh them with `npm run e2e:seed` (uses the
  * service-role key). Never point this at production.
  *
- * Password comes from E2E_USER_PASSWORD (set it in CI secrets and your local
- * .env). The fallback is for throwaway local test projects only.
+ * Password comes from E2E_USER_PASSWORD (see helpers/env.ts).
  */
+import { E2E_PASSWORD } from "./env";
+
 export type Role = "free" | "premium" | "parent" | "admin";
 
-export const E2E_PASSWORD = process.env.E2E_USER_PASSWORD ?? "E2e-Test-Passw0rd!";
+export { E2E_PASSWORD };
 
 export const TEST_USERS: Record<Role, { email: string; role: string; premium: boolean }> = {
   free: { email: "student.free@e2e.xpscholars.test", role: "student", premium: false },
