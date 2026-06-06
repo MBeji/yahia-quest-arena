@@ -134,11 +134,12 @@ describe("END-TO-END: new student signs up", () => {
           level: 1,
           coins: 0,
           current_streak: 0,
+          current_grade_id: "g9",
         });
       if (table === "subjects")
         return mockQuery([
-          { id: "s1", name_fr: "Math", color_token: "math", display_order: 1 },
-          { id: "s2", name_fr: "Physique", color_token: "phys", display_order: 2 },
+          { id: "s1", name_fr: "Math", color_token: "math", display_order: 1, grade_id: "g9" },
+          { id: "s2", name_fr: "Physique", color_token: "phys", display_order: 2, grade_id: "g9" },
         ]);
       // attempts (recent + stats)
       return mockQuery([]);
@@ -320,7 +321,12 @@ describe("END-TO-END: onboarding route data fetch", () => {
 
     mockFrom.mockImplementation((table: string) => {
       if (table === "profiles")
-        return mockQuery({ id: "user-regression-test", display_name: "Yahia", role: "student" });
+        return mockQuery({
+          id: "user-regression-test",
+          display_name: "Yahia",
+          role: "student",
+          current_grade_id: "g9",
+        });
       if (table === "subjects")
         return mockQuery([
           {
@@ -329,6 +335,7 @@ describe("END-TO-END: onboarding route data fetch", () => {
             description: "Algèbre",
             color_token: "math",
             display_order: 1,
+            grade_id: "g9",
           },
           {
             id: "s2",
@@ -336,6 +343,7 @@ describe("END-TO-END: onboarding route data fetch", () => {
             description: "Bio",
             color_token: "sci",
             display_order: 2,
+            grade_id: "g9",
           },
         ]);
       return mockQuery([]);
@@ -409,6 +417,32 @@ describe("END-TO-END: account-creation edge cases", () => {
     await expect(
       (bootstrapProfile as unknown as Fn)({ displayName: "Yahia", role: "student" }),
     ).rejects.toThrow();
+  });
+
+  it("setCurrentGrade persists the student's chosen school grade", async () => {
+    const { setCurrentGrade } = await import("@/features/auth");
+
+    const chain = mockQuery(null, null);
+    mockFrom.mockImplementation((table: string) => (table === "profiles" ? chain : mockQuery([])));
+
+    const res = (await (setCurrentGrade as unknown as Fn)({
+      gradeId: "11111111-1111-1111-1111-111111111111",
+    })) as { ok: boolean };
+
+    expect(res.ok).toBe(true);
+    expect(chain.update).toHaveBeenCalledWith({
+      current_grade_id: "11111111-1111-1111-1111-111111111111",
+    });
+    // Constrained to the caller's own profile row.
+    expect(chain.eq).toHaveBeenCalledWith("id", "user-regression-test");
+  });
+
+  it("setCurrentGrade rejects a non-uuid grade at the validator", async () => {
+    const { setCurrentGrade } = await import("@/features/auth");
+    mockFrom.mockImplementation(() => mockQuery(null));
+
+    await expect((setCurrentGrade as unknown as Fn)({ gradeId: "not-a-uuid" })).rejects.toThrow();
+    expect(mockFrom).not.toHaveBeenCalled();
   });
 
   it("getDashboard for a brand-new user with zero attempts returns empty aggregates", async () => {

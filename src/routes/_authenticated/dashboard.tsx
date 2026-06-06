@@ -26,7 +26,7 @@ import {
   resolveDailyAction,
   resolveWeeklyAction,
 } from "@/features/dashboard";
-import { purchaseShopItem, equipInventorySkin } from "@/features/shop";
+import { purchaseShopItem, equipInventorySkin, activateInventoryItem } from "@/features/shop";
 import { recoverStreak } from "@/features/progression";
 import { isSubscriptionActive } from "@/features/subscription";
 import { SubjectPathCard } from "@/features/dashboard/components/subject-path-card";
@@ -37,6 +37,8 @@ const GoldAmbientCanvas = lazy(() => import("@/components/visual/gold-ambient-ca
 import { formatStudentAllianceCode } from "@/features/parent-report";
 import { useT } from "@/lib/i18n";
 import { xpToNextLevel, xpWithinLevel } from "@/shared/lib/level";
+import { HeroAvatar } from "@/features/dashboard/components/hero-avatar";
+import { HeroStatChips } from "@/features/dashboard/components/hero-stat-chips";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 
 const DashboardRadarInventory = lazy(() =>
@@ -154,6 +156,7 @@ function Dashboard() {
   const fetchSprint2 = useServerFn(getSprint2Dashboard);
   const purchaseItem = useServerFn(purchaseShopItem);
   const equipSkin = useServerFn(equipInventorySkin);
+  const activateItem = useServerFn(activateInventoryItem);
   const { data, isLoading, isError } = useQuery({
     queryKey: ["dashboard"],
     queryFn: () => fetchDashboard(),
@@ -218,6 +221,19 @@ function Dashboard() {
     onError: (error) => toast.error(error instanceof Error ? error.message : "Equip failed"),
   });
 
+  const activateMutation = useMutation({
+    mutationFn: (payload: { itemCode: string }) => activateItem({ data: payload }),
+    onSuccess: (res) => {
+      // TODO(review #32): hardcoded toast — no matching i18n key exists yet. Add a key
+      // (e.g. t.dashboard.itemArmed with {name}/{slot} placeholders), then switch to useT().
+      const suffix =
+        res.slot === "passive" ? "activé · protège ta série." : "activé · prochaine quête.";
+      toast.success(`${res.itemName} ${suffix}`);
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+    },
+    onError: (error) => toast.error(error instanceof Error ? error.message : "Activation failed"),
+  });
+
   const recoverStreakFn = useServerFn(recoverStreak);
   const streakRecoveryMutation = useMutation({
     mutationFn: () => recoverStreakFn(),
@@ -271,6 +287,7 @@ function Dashboard() {
   }
 
   const { profile, subjects, stats, nextExerciseId } = data;
+  const otherSubjects = data.otherSubjects ?? [];
   const hasSubscription = isSubscriptionActive(
     (profile as { subscription_expires_at?: string | null } | null)?.subscription_expires_at ??
       null,
@@ -341,31 +358,18 @@ function Dashboard() {
           <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/30 blur-3xl" />
           <div className="absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/20 blur-3xl" />
           <div className="relative grid gap-6 sm:grid-cols-[auto,1fr,auto] sm:items-center">
-            <div className="grid h-20 w-20 place-items-center rounded-2xl bg-[image:var(--gradient-gold)] shadow-gold animate-pulse-neon">
-              <Sparkles className="h-9 w-9 text-black" />
-            </div>
+            <HeroAvatar avatarSlug={profile.avatar_slug} />
             <div>
-              <div className="text-xs uppercase tracking-[0.3em] text-[color:var(--gold)]">
-                {profile.hero_class}
-              </div>
               <h1 className="font-display text-3xl font-bold sm:text-4xl">
                 {profile.display_name}
               </h1>
-              <div className="mt-3 flex flex-wrap items-center gap-3">
-                <div className="rounded-full bg-[color:var(--gold)]/20 px-3 py-1 text-sm font-bold text-[color:var(--gold)]">
-                  Lvl {profile.level}
-                </div>
-                <div className="flex items-center gap-1 rounded-full bg-[color:var(--flame)]/20 px-3 py-1 text-sm font-bold text-[color:var(--flame)]">
-                  <Flame className="h-4 w-4 animate-flame" /> {profile.current_streak}{" "}
-                  {profile.current_streak > 1 ? t.dashboard.days : t.dashboard.day}
-                </div>
-                <div className="flex items-center gap-1 rounded-full bg-[color:var(--neon-gold)]/20 px-3 py-1 text-sm font-bold text-[color:var(--neon-gold)]">
-                  <Zap className="h-4 w-4" /> {profile.xp} XP
-                </div>
-                <div className="flex items-center gap-1 rounded-full border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/10 px-3 py-1 text-sm font-bold text-[color:var(--gold)]">
-                  <Sparkles className="h-4 w-4" /> {profile.yahia_coins ?? 0} XP Coins
-                </div>
-              </div>
+              <HeroStatChips
+                level={profile.level}
+                currentStreak={profile.current_streak}
+                xp={profile.xp}
+                coins={profile.yahia_coins ?? 0}
+                heroClass={profile.hero_class}
+              />
               <div className="mt-4">
                 <div className="mb-1 flex justify-between text-xs text-muted-foreground">
                   <span>Level {profile.level}</span>
@@ -682,6 +686,33 @@ function Dashboard() {
             </div>
           </section>
 
+          {otherSubjects.length > 0 && (
+            <section>
+              <div className="mb-4 flex items-center gap-2">
+                <h2 className="flex items-center gap-2 font-display text-xl font-bold">
+                  <Sparkles className="h-5 w-5 text-[color:var(--gold)]" />{" "}
+                  {t.dashboard.otherThemesTitle}
+                </h2>
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {otherSubjects.map((s, i) => (
+                  <motion.div
+                    key={s.id}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                  >
+                    <SubjectPathCard
+                      subject={s}
+                      stat={stats[s.id]}
+                      hasSubscription={hasSubscription}
+                    />
+                  </motion.div>
+                ))}
+              </div>
+            </section>
+          )}
+
           {/* RADAR */}
           <section>
             {deferSecondarySections ? (
@@ -694,7 +725,14 @@ function Dashboard() {
                   </div>
                 }
               >
-                <DashboardRadarInventory radarData={radarData} inventory={inventory} />
+                <DashboardRadarInventory
+                  radarData={radarData}
+                  inventory={inventory}
+                  avatarSlug={profile.avatar_slug}
+                  displayName={profile.display_name}
+                  isActivatePending={activateMutation.isPending}
+                  onActivate={(itemCode) => activateMutation.mutate({ itemCode })}
+                />
               </Suspense>
             ) : (
               <div className="space-y-4">
@@ -737,8 +775,10 @@ function Dashboard() {
               availableCoins={profile.yahia_coins ?? 0}
               isPurchasePending={purchaseMutation.isPending}
               isEquipPending={equipMutation.isPending}
+              isActivatePending={activateMutation.isPending}
               onPurchase={(itemCode) => purchaseMutation.mutate({ itemCode })}
               onEquip={(itemCode) => equipMutation.mutate({ itemCode })}
+              onActivate={(itemCode) => activateMutation.mutate({ itemCode })}
             />
           </Suspense>
         ) : (

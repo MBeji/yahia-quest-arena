@@ -42,3 +42,26 @@ export const bootstrapProfile = createServerFn({ method: "POST" })
 
     return { ok: true as const };
   });
+
+/**
+ * Persist the student's current school grade (e.g. chosen at onboarding).
+ * Scopes the "Programme scolaire tunisien" theme to the right level. The update
+ * is constrained to the caller's own profile row.
+ */
+export const setCurrentGrade = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ gradeId: z.string().uuid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+
+    const { error } = await supabase
+      .from("profiles")
+      .update({ current_grade_id: data.gradeId })
+      .eq("id", userId);
+
+    if (error) {
+      failWithClientError("auth.setCurrentGrade update failed", error, "set_grade_failed");
+    }
+
+    return { ok: true as const };
+  });

@@ -4,10 +4,12 @@
 export {
   getDashboard,
   getDashboardSecondary,
+  getGradesByTheme,
   getLeaderboard,
   getSprint2Dashboard,
   getSubjects,
   getSubjectLeaderboard,
+  getThemes,
 } from "./dashboard.server";
 export {
   formatObjectiveType,

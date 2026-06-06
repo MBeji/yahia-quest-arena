@@ -2,7 +2,11 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { isRateLimited } from "@/shared/lib/rate-limit";
-import { PREMIUM_MIN_DIFFICULTY, QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
+import {
+  MIN_SECONDS_PER_QUESTION,
+  PREMIUM_MIN_DIFFICULTY,
+  QUIZ_PASS_THRESHOLD_PCT,
+} from "@/shared/constants/gamification";
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { logger } from "@/shared/lib/logger";
 import type { UnlockedBadge } from "@/shared/types/gamification";
@@ -31,6 +35,14 @@ export const PREMIUM_SUBJECT_LOCKED_MESSAGE =
 
 type ProfileSnapshot = Database["public"]["Tables"]["profiles"]["Row"];
 
+/** Multiplier potion applied to a reward-earning attempt (null when none armed). */
+export type PotionApplied = {
+  itemCode: string;
+  itemName: string;
+  xpMultiplier: number;
+  coinMultiplier: number;
+};
+
 type AtomicSubmitResponse = {
   correct: number;
   total: number;
@@ -38,8 +50,17 @@ type AtomicSubmitResponse = {
   xpEarned: number;
   coinsEarned: number;
   durationSeconds: number;
+  tooFast: boolean;
+  improved: boolean;
   profile: ProfileSnapshot | null;
   unlockedBadges: UnlockedBadge[];
+  potionApplied: PotionApplied | null;
+  /**
+   * True when an armed retry shield suppressed this failed attempt's penalty (it
+   * was consumed). The result UI nudges an immediate replay — the higher of the
+   * two scores wins via the existing best-score eligibility gate.
+   */
+  retryShieldUsed: boolean;
 };
 
 function toUnlockedBadges(value: unknown): UnlockedBadge[] {
@@ -68,6 +89,20 @@ function toUnlockedBadges(value: unknown): UnlockedBadge[] {
     .filter((badge): badge is UnlockedBadge => badge !== null);
 }
 
+function toPotionApplied(value: unknown): PotionApplied | null {
+  if (!value || typeof value !== "object") return null;
+
+  const row = value as Record<string, unknown>;
+  if (typeof row.itemCode !== "string") return null;
+
+  return {
+    itemCode: row.itemCode,
+    itemName: typeof row.itemName === "string" ? row.itemName : "",
+    xpMultiplier: Number(row.xpMultiplier ?? 1),
+    coinMultiplier: Number(row.coinMultiplier ?? 1),
+  };
+}
+
 function parseAtomicSubmitResponse(payload: unknown): AtomicSubmitResponse {
   if (!payload || typeof payload !== "object") {
     throw new Error("Unexpected quest submission response.");
@@ -82,9 +117,13 @@ function parseAtomicSubmitResponse(payload: unknown): AtomicSubmitResponse {
     xpEarned: Number(row.xpEarned ?? 0),
     coinsEarned: Number(row.coinsEarned ?? 0),
     durationSeconds: Number(row.durationSeconds ?? 0),
+    tooFast: row.tooFast === true,
+    improved: row.improved === true,
     profile:
       row.profile && typeof row.profile === "object" ? (row.profile as ProfileSnapshot) : null,
     unlockedBadges: toUnlockedBadges(row.unlockedBadges),
+    potionApplied: toPotionApplied(row.potionApplied),
+    retryShieldUsed: row.retryShieldUsed === true,
   };
 }
 
@@ -148,11 +187,19 @@ export const getSubject = createServerFn({ method: "GET" })
     if (quizIds.length > 0) {
       const { data: passedRows } = await supabase
         .from("attempts")
-        .select("exercise_id")
+        .select("exercise_id,duration_seconds,total_count")
         .eq("user_id", context.userId)
         .in("exercise_id", quizIds)
         .gte("score_pct", QUIZ_PASS_THRESHOLD_PCT);
-      const passedQuizIds = new Set((passedRows ?? []).map((r) => r.exercise_id));
+      // A quiz only counts as passed if the qualifying attempt was not rushed
+      // (>= 4s/question) — a fast random pass must not unlock the chapter.
+      const passedQuizIds = new Set(
+        (passedRows ?? [])
+          .filter(
+            (r) => (r.duration_seconds ?? 0) >= (r.total_count ?? 0) * MIN_SECONDS_PER_QUESTION,
+          )
+          .map((r) => r.exercise_id),
+      );
       for (const quiz of quizExercises) {
         if (quiz.chapter_id && passedQuizIds.has(quiz.id)) {
           quizPassedByChapter[quiz.chapter_id] = true;
@@ -306,12 +353,16 @@ export const startExerciseSession = createServerFn({ method: "POST" })
       if (quiz) {
         const { data: passed } = await supabase
           .from("attempts")
-          .select("id")
+          .select("duration_seconds,total_count")
           .eq("user_id", userId)
           .eq("exercise_id", quiz.id)
-          .gte("score_pct", QUIZ_PASS_THRESHOLD_PCT)
-          .limit(1);
-        if (!passed || passed.length === 0) {
+          .gte("score_pct", QUIZ_PASS_THRESHOLD_PCT);
+        // The qualifying quiz pass must not be rushed (>= 4s/question), otherwise
+        // a fast random pass could unlock the chapter without comprehension.
+        const genuinelyPassed = (passed ?? []).some(
+          (r) => (r.duration_seconds ?? 0) >= (r.total_count ?? 0) * MIN_SECONDS_PER_QUESTION,
+        );
+        if (!genuinelyPassed) {
           failWithClientError("quest.startExerciseSession", null, QUIZ_LOCKED_MESSAGE);
         }
       }
@@ -434,9 +485,13 @@ export const submitAttempt = createServerFn({ method: "POST" })
       xpEarned: atomic.xpEarned,
       coinsEarned: atomic.coinsEarned,
       durationSeconds: atomic.durationSeconds,
+      tooFast: atomic.tooFast,
+      improved: atomic.improved,
       profile: atomic.profile,
       review,
       reviewHidden: isQuiz,
       unlockedBadges: atomic.unlockedBadges,
+      potionApplied: atomic.potionApplied,
+      retryShieldUsed: atomic.retryShieldUsed,
     };
   });

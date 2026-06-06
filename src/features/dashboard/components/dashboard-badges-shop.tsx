@@ -1,4 +1,6 @@
 import { Loader2, Shield, ShoppingBag } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { avatarEmojiForSlug } from "@/shared/lib/avatar";
 
 type Badge = {
   code: string;
@@ -17,7 +19,16 @@ type ShopItem = {
   isOwned: boolean;
   isEquipped: boolean;
   quantity: number;
+  avatarSlug: string | null;
+  isArmable: boolean;
+  armSlot: "next-quest" | "passive" | null;
+  isActive: boolean;
 };
+
+/** Armed-badge label per arming slot (passive streak shield vs next-quest item). */
+function armedLabel(armSlot: "next-quest" | "passive" | null): string {
+  return armSlot === "passive" ? "Actif · protège ta série" : "Actif · prochaine quête";
+}
 
 type DashboardBadgesShopProps = {
   badges: Badge[];
@@ -25,8 +36,10 @@ type DashboardBadgesShopProps = {
   availableCoins: number;
   isPurchasePending: boolean;
   isEquipPending: boolean;
+  isActivatePending: boolean;
   onPurchase: (itemCode: string) => void;
   onEquip: (itemCode: string) => void;
+  onActivate: (itemCode: string) => void;
 };
 
 export function DashboardBadgesShop({
@@ -35,8 +48,10 @@ export function DashboardBadgesShop({
   availableCoins,
   isPurchasePending,
   isEquipPending,
+  isActivatePending,
   onPurchase,
   onEquip,
+  onActivate,
 }: DashboardBadgesShopProps) {
   return (
     <>
@@ -85,8 +100,10 @@ export function DashboardBadgesShop({
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {shopItems.map((item) => {
             const canEquip = item.itemType === "skin" && item.isOwned && !item.isEquipped;
+            const canActivate = item.isArmable && !item.isActive;
             const canBuy = !item.isOwned || item.itemType !== "skin";
-            const isBusy = isPurchasePending || isEquipPending;
+            const isBusy = isPurchasePending || isEquipPending || isActivatePending;
+            const skinEmoji = avatarEmojiForSlug(item.avatarSlug);
 
             return (
               <div
@@ -94,14 +111,26 @@ export function DashboardBadgesShop({
                 className="rounded-2xl border border-border/50 bg-black/60 p-5 backdrop-blur-md"
               >
                 <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <div className="font-display text-lg font-bold">{item.name}</div>
-                    <div className="text-xs uppercase tracking-widest text-[color:var(--gold)]">
-                      {item.itemType}
+                  <div className="flex items-center gap-3">
+                    {skinEmoji && (
+                      <Avatar className="h-10 w-10 border border-[color:var(--gold)]/40">
+                        <AvatarFallback
+                          className="bg-[image:var(--gradient-gold)] text-lg text-black"
+                          aria-label={item.avatarSlug ?? "avatar"}
+                        >
+                          {skinEmoji}
+                        </AvatarFallback>
+                      </Avatar>
+                    )}
+                    <div>
+                      <div className="font-display text-lg font-bold">{item.name}</div>
+                      <div className="text-xs uppercase tracking-widest text-[color:var(--gold)]">
+                        {item.itemType}
+                      </div>
                     </div>
                   </div>
                   <div className="rounded-full bg-[color:var(--gold)]/10 px-3 py-1 text-xs font-bold text-[color:var(--gold)]">
-                    {item.priceCoins} XP Coins
+                    {item.priceCoins} Coins
                   </div>
                 </div>
                 <p className="mt-3 text-sm text-muted-foreground">
@@ -115,6 +144,11 @@ export function DashboardBadgesShop({
                           ? "Equipped"
                           : "Owned"
                         : `In stock x${item.quantity}`}
+                    </div>
+                  )}
+                  {item.isActive && (
+                    <div className="rounded-full bg-[color:var(--gold)]/15 px-3 py-1 text-xs font-bold text-[color:var(--gold)]">
+                      {armedLabel(item.armSlot)}
                     </div>
                   )}
                 </div>
@@ -142,6 +176,20 @@ export function DashboardBadgesShop({
                         <Loader2 className="mx-auto h-4 w-4 animate-spin" />
                       ) : (
                         "Equip"
+                      )}
+                    </button>
+                  )}
+                  {canActivate && (
+                    <button
+                      disabled={isBusy}
+                      onClick={() => onActivate(item.code)}
+                      aria-label={`Activer ${item.name}`}
+                      className="flex-1 rounded-lg bg-[image:var(--gradient-gold)] px-4 py-2.5 text-sm font-bold text-black shadow-gold disabled:opacity-40"
+                    >
+                      {isActivatePending ? (
+                        <Loader2 className="mx-auto h-4 w-4 animate-spin" />
+                      ) : (
+                        "Activer"
                       )}
                     </button>
                   )}

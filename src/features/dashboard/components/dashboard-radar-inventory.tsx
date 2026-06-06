@@ -1,5 +1,7 @@
 import { Backpack, Trophy } from "lucide-react";
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer } from "recharts";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { avatarEmojiForSlug } from "@/shared/lib/avatar";
 
 type RadarPoint = {
   subject: string;
@@ -12,14 +14,37 @@ type InventoryItem = {
   itemType: string;
   quantity: number;
   isEquipped: boolean;
+  isArmable: boolean;
+  armSlot: "next-quest" | "passive" | null;
+  isActive: boolean;
 };
+
+/** Armed-badge label per arming slot (passive streak shield vs next-quest item). */
+function armedLabel(armSlot: "next-quest" | "passive" | null): string {
+  return armSlot === "passive" ? "Actif · protège ta série" : "Actif · prochaine quête";
+}
 
 type DashboardRadarInventoryProps = {
   radarData: RadarPoint[];
   inventory: InventoryItem[];
+  /** Currently equipped cosmetic skin slug (`profiles.avatar_slug`), if any. */
+  avatarSlug?: string | null;
+  /** Fallback initials shown when no skin is equipped. */
+  displayName?: string;
+  isActivatePending: boolean;
+  onActivate: (itemCode: string) => void;
 };
 
-export function DashboardRadarInventory({ radarData, inventory }: DashboardRadarInventoryProps) {
+export function DashboardRadarInventory({
+  radarData,
+  inventory,
+  avatarSlug,
+  displayName,
+  isActivatePending,
+  onActivate,
+}: DashboardRadarInventoryProps) {
+  const avatarEmoji = avatarEmojiForSlug(avatarSlug);
+  const initials = (displayName ?? "").trim().slice(0, 2).toUpperCase() || "?";
   return (
     <>
       <h2 className="mb-4 flex items-center gap-2 font-display text-xl font-bold">
@@ -50,9 +75,19 @@ export function DashboardRadarInventory({ radarData, inventory }: DashboardRadar
       </div>
 
       <div className="mt-6 rounded-2xl border border-border/50 bg-black/60 p-4 backdrop-blur-md">
-        <h3 className="mb-3 flex items-center gap-2 font-display text-lg font-bold">
-          <Backpack className="h-4 w-4 text-[color:var(--gold)]" /> Inventory
-        </h3>
+        <div className="mb-3 flex items-center justify-between gap-2">
+          <h3 className="flex items-center gap-2 font-display text-lg font-bold">
+            <Backpack className="h-4 w-4 text-[color:var(--gold)]" /> Inventory
+          </h3>
+          <Avatar className="h-9 w-9 border border-[color:var(--gold)]/40">
+            <AvatarFallback
+              className="bg-[image:var(--gradient-gold)] text-base text-black"
+              aria-label={avatarEmoji ? (avatarSlug ?? "avatar") : "avatar"}
+            >
+              {avatarEmoji ?? initials}
+            </AvatarFallback>
+          </Avatar>
+        </div>
         <div className="space-y-3">
           {inventory.length > 0 ? (
             inventory.slice(0, 4).map((item) => (
@@ -75,6 +110,24 @@ export function DashboardRadarInventory({ radarData, inventory }: DashboardRadar
                     )}
                   </div>
                 </div>
+                {item.isArmable && (
+                  <div className="mt-3 flex items-center justify-between gap-2">
+                    {item.isActive ? (
+                      <span className="rounded-full bg-[color:var(--gold)]/15 px-3 py-1 text-xs font-bold text-[color:var(--gold)]">
+                        {armedLabel(item.armSlot)}
+                      </span>
+                    ) : (
+                      <button
+                        disabled={isActivatePending}
+                        onClick={() => onActivate(item.code)}
+                        aria-label={`Activer ${item.name}`}
+                        className="rounded-lg bg-[image:var(--gradient-gold)] px-3 py-1.5 text-xs font-bold text-black shadow-gold disabled:opacity-40"
+                      >
+                        Activer
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             ))
           ) : (

@@ -43,19 +43,57 @@ function AuthPage() {
   const runBootstrapProfile = useServerFn(bootstrapProfile);
 
   useEffect(() => {
-    // Redirect away if already signed in. This must also cover the OAuth (Google)
-    // callback: when the browser returns to /auth?code=..., Supabase exchanges the
-    // code for a session ASYNCHRONOUSLY — often after this initial getSession()
-    // has already resolved with no session. A one-shot check would leave the user
-    // stuck on the login form, so we also subscribe to auth-state changes and
-    // navigate when the SIGNED_IN event fires once the exchange completes.
+    // 1) Surface OAuth/callback errors that Supabase appends to the URL (query or
+    // hash). Without this the user silently bounces back to the login form.
+    const params = new URLSearchParams(window.location.search);
+    const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+    const oauthError =
+      params.get("error_description") ||
+      params.get("error") ||
+      hash.get("error_description") ||
+      hash.get("error");
+    if (oauthError) {
+      const raw = decodeURIComponent(oauthError);
+      const friendly = friendlyAuthError(new Error(raw));
+      // For OAuth, show the raw provider/Supabase message when it isn't a known
+      // case — it's far more actionable than a generic fallback for debugging.
+      const shown =
+        friendly === "Erreur d'authentification. Réessaie." ? `Google : ${raw}` : friendly;
+      setFormError(shown);
+      toast.error(shown);
+      window.history.replaceState({}, "", "/auth");
+    }
+
+    // 2) Redirect away if already signed in. Covers the OAuth callback too:
+    // Supabase exchanges /auth?code=... for a session ASYNCHRONOUSLY, so we also
+    // subscribe to auth-state changes and navigate on SIGNED_IN.
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) navigate({ to: "/dashboard" });
     });
     const { data: authSub } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session) navigate({ to: "/dashboard" });
     });
-    return () => authSub.subscription.unsubscribe();
+
+    // 3) Fallback: arrived from the OAuth callback (?code=) but no session
+    // materialised → tell the user instead of silently bouncing.
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    if (params.has("code") && !oauthError) {
+      timer = setTimeout(() => {
+        supabase.auth.getSession().then(({ data }) => {
+          if (!data.session) {
+            const m =
+              "La connexion Google n'a pas pu être finalisée. Réessaie — et vérifie que ce compte n'est pas déjà inscrit par email/mot de passe.";
+            setFormError(m);
+            toast.error(m);
+          }
+        });
+      }, 2500);
+    }
+
+    return () => {
+      authSub.subscription.unsubscribe();
+      if (timer) clearTimeout(timer);
+    };
   }, [navigate]);
 
   function friendlyAuthError(err: unknown): string {
