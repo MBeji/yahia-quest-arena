@@ -1,0 +1,105 @@
+name: Migration gate
+
+# Deploy-ordering guardrail (CLAUDE.md §7).
+#
+# Pushing to `main` auto-deploys to production, but Supabase migrations are
+# applied MANUALLY and MUST be applied to the prod DB BEFORE the code that
+# depends on them is merged/deployed. Forgetting this has caused incidents:
+# prod ends up running new code against an old schema.
+#
+# This job fails a PR that adds new `supabase/migrations/*.sql` files unless the
+# author confirms the migration was already applied to prod by adding the
+# `migration-applied` label to the PR. No new migrations → the job passes
+# silently.
+#
+# NOTE: this is a SOFT guardrail (a label is a human ack, not proof). Hard
+# enforcement (required status check + branch protection) is handled separately;
+# see ci.yml / repo settings.
+
+on:
+  pull_request:
+    # `labeled` / `unlabeled` so the check re-runs the moment the
+    # `migration-applied` label is added or removed.
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+# Read-only token; only needs repo contents to diff and the PR metadata that
+# `pull_request` events already expose. No write scopes required.
+permissions:
+  contents: read
+
+jobs:
+  migration-presence:
+    name: Migration presence
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@v5
+        with:
+          # Full history so we can diff against the base branch tip. A shallow
+          # clone would make `origin/<base>...HEAD` unresolvable.
+          fetch-depth: 0
+
+      - name: Fetch base branch
+        run: git fetch --no-tags origin "${{ github.base_ref }}"
+
+      - name: Detect new migration files
+        id: detect
+        run: |
+          set -euo pipefail
+          base="origin/${{ github.base_ref }}"
+
+          # Added/modified migration SQL between the base tip and this PR head.
+          # `|| true` so a no-match `grep` (exit 1) doesn't fail the step.
+          migrations="$(git diff --name-only "${base}...HEAD" -- supabase/migrations \
+            | grep '\.sql$' || true)"
+
+          if [ -z "${migrations}" ]; then
+            echo "No new Supabase migrations in this PR."
+            echo "has_migrations=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "New migration file(s) detected:"
+            echo "${migrations}"
+            echo "has_migrations=true" >> "$GITHUB_OUTPUT"
+            # Multiline output via heredoc delimiter.
+            {
+              echo "migration_list<<__MIGRATIONS__"
+              echo "${migrations}"
+              echo "__MIGRATIONS__"
+            } >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Enforce migration-applied acknowledgement
+        if: steps.detect.outputs.has_migrations == 'true'
+        env:
+          # Pre-computed by the Actions expression engine, so the shell never
+          # interpolates label text directly (avoids injection via label names).
+          HAS_LABEL: ${{ contains(github.event.pull_request.labels.*.name, 'migration-applied') }}
+          MIGRATIONS: ${{ steps.detect.outputs.migration_list }}
+        run: |
+          set -euo pipefail
+
+          # Fork PRs from untrusted contributors can have label data restricted.
+          # `pull_request` (not `pull_request_target`) still exposes labels that
+          # exist at trigger time, but a maintainer-applied label may not appear
+          # until the run is re-triggered. We fail closed (the safe default) and
+          # tell the maintainer how to satisfy the gate.
+          if [ "${HAS_LABEL}" = "true" ]; then
+            echo "::notice title=Migration gate::'migration-applied' label present — migration ack confirmed. Ensure it was actually applied to the production DB before merge (CLAUDE.md §7)."
+            exit 0
+          fi
+
+          {
+            echo "::error title=Migration gate::New migration(s) detected without the 'migration-applied' label."
+            echo ""
+            echo "New migration(s) detected:"
+            echo "${MIGRATIONS}" | sed 's/^/  - /'
+            echo ""
+            echo "Pushing to main auto-deploys to production. Apply these migration(s)"
+            echo "to the production Supabase DB FIRST (Supabase SQL editor or"
+            echo "\`supabase db push\`), then add the \`migration-applied\` label to this PR"
+            echo "to acknowledge it. See CLAUDE.md §7."
+            echo ""
+            echo "If this is a fork PR and you cannot add labels, ask a maintainer to"
+            echo "apply the migration and add the label (the check re-runs on label change)."
+          } >&2
+          exit 1
