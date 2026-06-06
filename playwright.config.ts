@@ -19,7 +19,9 @@ import { defineConfig, devices } from "@playwright/test";
  *
  * Point at an already-running server with PLAYWRIGHT_BASE_URL=https://…
  */
-const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://localhost:${process.env.PORT ?? 5173}`;
+// The dev server (@lovable.dev/vite-tanstack-config) serves on 8080 by default,
+// not Vite's 5173. Override with PORT or PLAYWRIGHT_BASE_URL if a run needs to.
+const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://localhost:${process.env.PORT ?? 8080}`;
 
 const PUBLIC_SPECS = /(landing|auth-redirects)\.spec\.ts/;
 const AUTHED_SPECS = /authed\/.*\.spec\.ts/;
