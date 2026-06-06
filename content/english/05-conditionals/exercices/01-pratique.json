@@ -27,7 +27,7 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "The zero conditional uses present simple in both clauses for general truths: if you mix red and blue, you get purple.",
+      "explanation": "Mixing red and blue always gives purple, so this is a general truth = zero conditional, which uses the present simple in both clauses: you get purple. \"will get\" would make it a first conditional (a specific future result); \"would get\" is second conditional (imaginary); \"got\" is past simple and does not fit a timeless fact.",
       "difficulty": 1
     },
     {
@@ -51,7 +51,7 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "The first conditional uses present simple in the if-clause (not will): if she studies harder, she will pass.",
+      "explanation": "In the first conditional, the if-clause uses the present simple and \"will\" appears only in the main clause: if she studies harder, she will pass. So \"will study\" inside the if-clause is the classic mistake; \"studied\"/\"would study\" belong to the second conditional (imaginary), not this realistic situation.",
       "difficulty": 1
     },
     {
@@ -75,7 +75,7 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "The second conditional uses past simple (or \"were\" for be) in the if-clause: if I were a superhero. This is an imaginary situation.",
+      "explanation": "Being a superhero is imaginary, so this is a second conditional. In standard English the verb \"be\" takes \"were\" for all persons in the if-clause: if I were a superhero. \"am\" is present (real); \"will be\" belongs to the first conditional; \"would be\" is for the main clause, not the if-clause.",
       "difficulty": 2
     },
     {

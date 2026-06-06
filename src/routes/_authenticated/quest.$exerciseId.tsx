@@ -5,16 +5,12 @@ import { motion, AnimatePresence } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
-  Zap,
-  Flame,
-  Sparkles,
   Loader2,
   Trophy,
   Skull,
   Heart,
   Timer,
   BookOpen,
-  Lock,
   Check,
   Crown,
 } from "lucide-react";
@@ -23,6 +19,7 @@ import {
   computeNextExerciseId,
   getExercise,
   getSubject,
+  noXpReason,
   startExerciseSession,
   submitAttempt,
 } from "@/features/quest";
@@ -35,9 +32,13 @@ import { isRtlText, isMathExpression } from "@/shared/lib/utils";
 import { shuffleOptions, type BaseOption, type DisplayOption } from "@/shared/lib/question-utils";
 import { levelForXp } from "@/shared/lib/level";
 import { QuestResultActions } from "@/features/quest/components/quest-result-actions";
+import { QuestRewardGrid } from "@/features/quest/components/quest-reward-grid";
+import { QuizLockScreen } from "@/features/quest/components/quiz-lock-screen";
+import { ReportErrorButton } from "@/features/content-report";
 import { Confetti } from "@/features/quest/components/confetti";
 import { SubscriptionPaywall } from "@/features/subscription";
 import { LevelUpCelebration } from "@/components/ui/level-up-celebration";
+import { ExplainHint } from "@/components/ui/explain-hint";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/quest/$exerciseId")({
@@ -90,6 +91,11 @@ function QuestPage() {
     onSuccess: (res) => setSessionId(res.sessionId),
     onError: (e) => toast.error(e instanceof Error ? e.message : "Unable to start the quest"),
   });
+  // `mutate`/`reset` are referentially stable (bound to the mutation observer),
+  // so the session-start effect can depend on `startSessionMutate` instead of the
+  // whole `sessionMutation` object — the latter is recreated every render and
+  // would make the effect re-run (and re-fire mutate) on each status change.
+  const { mutate: startSessionMutate, reset: resetSessionMutation } = sessionMutation;
 
   const mutation = useMutation({
     mutationFn: (payload: { sessionId: string; exerciseId: string; answers: Answer[] }) =>
@@ -143,6 +149,11 @@ function QuestPage() {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const feedbackTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const answeredQuestionRef = useRef<string | null>(null);
+  // The exercise id we've already started (or attempted to start) a session for.
+  // This guards the start effect so a rejected start (e.g. a premium-locked
+  // mission the server refuses) does NOT retry in a loop and spam an error toast
+  // on every render. resetRun() clears it so replays / navigation start fresh.
+  const sessionStartedForRef = useRef<string | null>(null);
   // Refs to avoid stale closures in setInterval
   const selectedRef = useRef(selected);
   const answersRef = useRef(answers);
@@ -206,6 +217,10 @@ function QuestPage() {
       feedbackTimeoutRef.current = null;
     }
     answeredQuestionRef.current = null;
+    // Allow the next exercise (or a replay of this one) to start a fresh session,
+    // and clear any prior start error so it can't leak into the new run's render.
+    sessionStartedForRef.current = null;
+    resetSessionMutation();
     setResult(null);
     setIdx(0);
     setAnswers([]);
@@ -215,7 +230,7 @@ function QuestPage() {
     setShowLevelUp(false);
     setSessionId(null);
     setBossTimer(0);
-  }, []);
+  }, [resetSessionMutation]);
 
   // Reset run state when navigating to a different exercise (e.g. "Next quest"),
   // so the same component instance starts the new quest cleanly.
@@ -223,10 +238,18 @@ function QuestPage() {
     resetRun();
   }, [exerciseId, resetRun]);
 
+  // Start the secure session once per exercise. The ref guard (not the mutation
+  // status) is what stops re-firing: a rejected start settles to `isError`, and
+  // re-running mutate() would loop and pop an error toast each time. Keying on
+  // the exercise id lets a new exercise — or a replay, which clears the ref —
+  // start cleanly on this same (reused) component instance.
   useEffect(() => {
-    if (!data?.exercise?.id || sessionId || sessionMutation.isPending || result) return;
-    sessionMutation.mutate({ exerciseId: data.exercise.id });
-  }, [data?.exercise?.id, result, sessionId, sessionMutation]);
+    const exId = data?.exercise?.id;
+    if (!exId || sessionId || result) return;
+    if (sessionStartedForRef.current === exId) return;
+    sessionStartedForRef.current = exId;
+    startSessionMutate({ exerciseId: exId });
+  }, [data?.exercise?.id, result, sessionId, startSessionMutate]);
 
   const advanceWithChoice = useCallback(
     (choice: string) => {
@@ -291,13 +314,13 @@ function QuestPage() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   });
 
-  if (isLoading || !data) {
-    return (
-      <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">
-        {t.quest.preparing}
-      </div>
-    );
-  }
+  const preparingScreen = (
+    <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">
+      {t.quest.preparing}
+    </div>
+  );
+
+  if (isLoading || !data) return preparingScreen;
 
   const isQuiz = data.exercise.mode === "quiz";
   const chapterId = (data.exercise.chapter_id as string | null) ?? null;
@@ -375,36 +398,15 @@ function QuestPage() {
 
   if (sessionMutation.isError && sessionErrorMsg.includes("quiz de compréhension")) {
     return (
-      <div
-        className="mx-auto max-w-md px-6 py-16 text-center"
-        dir={isRtlSubject ? "rtl" : undefined}
-      >
-        <div className="rounded-3xl border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/5 p-8">
-          <Lock className="mx-auto h-12 w-12 text-[color:var(--neon-gold)]" />
-          <h1 className="mt-4 font-display text-2xl font-bold">{QL.lockedTitle}</h1>
-          <p className="mt-3 text-sm text-muted-foreground">{QL.lockedBody}</p>
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
-            {chapterId && (
-              <Link
-                to="/lesson/$chapterId"
-                params={{ chapterId }}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-neon-violet to-neon-magenta px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-neon hover:scale-105"
-              >
-                <BookOpen className="h-4 w-4" /> {QL.review}
-              </Link>
-            )}
-            {exSubjectId && (
-              <Link
-                to="/subject/$subjectId"
-                params={{ subjectId: exSubjectId }}
-                className="rounded-lg border border-border bg-background/50 px-5 py-2.5 text-sm font-semibold hover:bg-background/80"
-              >
-                {QL.back}
-              </Link>
-            )}
-          </div>
-        </div>
-      </div>
+      <QuizLockScreen
+        title={QL.lockedTitle}
+        body={QL.lockedBody}
+        reviewLabel={QL.review}
+        backLabel={QL.back}
+        chapterId={chapterId}
+        subjectId={exSubjectId}
+        rtl={isRtlSubject}
+      />
     );
   }
 
@@ -424,7 +426,7 @@ function QuestPage() {
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="relative overflow-hidden rounded-3xl border border-[color:var(--gold)]/40 bg-card/60 p-8 text-center backdrop-blur-xl shadow-gold"
+          className="relative overflow-hidden rounded-3xl border border-[color:var(--gold)]/40 bg-black/60 p-8 text-center backdrop-blur-xl shadow-gold"
         >
           <div className="absolute -top-20 left-1/2 h-48 w-48 -translate-x-1/2 rounded-full bg-[color:var(--gold)]/30 blur-3xl" />
           <div className="relative">
@@ -435,7 +437,13 @@ function QuestPage() {
               {passed ? t.quest.victoryTitle : t.quest.niceTriTitle}
             </h1>
             <p className="mt-1 text-muted-foreground">
-              {result.correct} / {result.total} correct answers · {Math.round(result.scorePct)}%
+              <ExplainHint
+                text={t.explain.questResultScore
+                  .replace("{correct}", String(result.correct))
+                  .replace("{total}", String(result.total))}
+              >
+                {result.correct} / {result.total} correct answers · {Math.round(result.scorePct)}%
+              </ExplainHint>
             </p>
             <p className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">
               Server-validated time · {result.durationSeconds}s
@@ -454,52 +462,32 @@ function QuestPage() {
                   <Link
                     to="/lesson/$chapterId"
                     params={{ chapterId }}
-                    className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-linear-to-r from-neon-violet to-neon-magenta px-4 py-2 text-xs font-bold text-primary-foreground shadow-neon hover:scale-105"
+                    className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-4 py-2 text-xs font-bold text-black shadow-gold hover:scale-105"
                   >
                     <BookOpen className="h-4 w-4" /> {QL.review}
                   </Link>
                 )}
               </div>
             )}
-            <div className="mt-6 grid grid-cols-4 gap-3">
-              <div className="rounded-xl bg-(--neon-gold)/15 p-4">
-                <Zap className="mx-auto h-5 w-5 text-neon-gold" />
-                <div className="mt-1 font-display text-2xl font-bold text-neon-gold">
-                  +{result.xpEarned}
-                </div>
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">
-                  {t.quest.xpLabel}
-                </div>
+            {result.xpEarned === 0 && (
+              <div className="mt-6 rounded-xl border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 p-3 text-center text-xs text-[color:var(--gold)]">
+                {noXpReason(result)}
               </div>
-              <div className="rounded-xl bg-(--neon-cyan)/15 p-4">
-                <Sparkles className="mx-auto h-5 w-5 text-neon-cyan" />
-                <div className="mt-1 font-display text-2xl font-bold text-neon-cyan">
-                  +{result.coinsEarned ?? 0}
-                </div>
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">
-                  {t.quest.coinsLabel}
-                </div>
+            )}
+            {result.potionApplied && (
+              <div className="mt-6 rounded-xl border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/10 p-3 text-center text-sm font-bold text-[color:var(--gold)]">
+                {result.potionApplied.xpMultiplier > 1
+                  ? `Potion XP ×${result.potionApplied.xpMultiplier} appliquée !`
+                  : `Potion Pièces ×${result.potionApplied.coinMultiplier} appliquée !`}
               </div>
-              <div className="rounded-xl bg-(--neon-violet)/15 p-4">
-                <Sparkles className="mx-auto h-5 w-5 text-neon-violet" />
-                <div className="mt-1 font-display text-2xl font-bold text-neon-violet">
-                  {result.profile?.level ?? "?"}
-                </div>
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">
-                  {t.quest.levelLabel}
-                </div>
-              </div>
-              <div className="rounded-xl bg-(--flame)/15 p-4">
-                <Flame className="mx-auto h-5 w-5 text-flame animate-flame" />
-                <div className="mt-1 font-display text-2xl font-bold text-flame">
-                  {result.profile?.current_streak ?? 0}
-                </div>
-                <div className="text-xs uppercase tracking-wider text-muted-foreground">
-                  {t.quest.streakLabel}
-                </div>
-              </div>
-            </div>
-            <div className="mt-6 text-xs uppercase tracking-widest text-neon-cyan">
+            )}
+            <QuestRewardGrid
+              xpEarned={result.xpEarned}
+              coinsEarned={result.coinsEarned ?? 0}
+              level={result.profile?.level ?? "?"}
+              streak={result.profile?.current_streak ?? 0}
+            />
+            <div className="mt-6 text-xs uppercase tracking-widest text-[color:var(--champagne)]">
               {result.profile?.hero_class}
             </div>
             {result.unlockedBadges.length > 0 && (
@@ -509,7 +497,7 @@ function QuestPage() {
                 </div>
                 <div className="mt-3 flex flex-wrap gap-3">
                   {result.unlockedBadges.map((badge) => (
-                    <div key={badge.code} className="rounded-xl bg-card/70 px-4 py-3">
+                    <div key={badge.code} className="rounded-xl bg-black/70 px-4 py-3">
                       <div className="font-display text-sm font-bold">{badge.name}</div>
                       <div className="text-xs uppercase tracking-widest text-muted-foreground">
                         {badge.rarity}
@@ -519,11 +507,17 @@ function QuestPage() {
                 </div>
               </div>
             )}
+            {result.retryShieldUsed && (
+              <div className="mt-6 rounded-xl border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/10 p-3 text-center text-sm font-bold text-[color:var(--gold)]">
+                {t.quest.retryShieldUsed}
+              </div>
+            )}
             <QuestResultActions
               subjectId={exSubjectId}
               nextExerciseId={nextExerciseId}
               onReplay={resetRun}
             />
+            <ReportErrorButton exerciseId={exerciseId} />
 
             {!isQuiz && (
               <div className="mt-8 text-left">
@@ -532,7 +526,7 @@ function QuestPage() {
                   {result.review.map((item, reviewIndex) => (
                     <div
                       key={item.questionId}
-                      className="rounded-2xl border border-border/50 bg-background/30 p-4"
+                      className="rounded-2xl border border-border/50 bg-black/30 p-4"
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div>
@@ -553,7 +547,7 @@ function QuestPage() {
                         </div>
                       </div>
                       <div className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
-                        <div className="rounded-xl bg-card/60 p-3">
+                        <div className="rounded-xl bg-black/60 p-3">
                           <div className="text-xs uppercase tracking-widest text-muted-foreground">
                             {t.quest.yourAnswer}
                           </div>
@@ -561,7 +555,7 @@ function QuestPage() {
                             {getDisplayChoice(item.questionId, item.selectedChoice)}
                           </div>
                         </div>
-                        <div className="rounded-xl bg-card/60 p-3">
+                        <div className="rounded-xl bg-black/60 p-3">
                           <div className="text-xs uppercase tracking-widest text-muted-foreground">
                             {t.quest.correctAnswer}
                           </div>
@@ -588,6 +582,13 @@ function QuestPage() {
       </div>
     );
   }
+
+  // The secure session is still being created (or re-created after a replay).
+  // Hold on the "preparing" screen until we have a session id, so a premium-
+  // locked mission never flashes the playing screen before the paywall (handled
+  // by the early returns above) appears. A genuine non-premium/non-quiz start
+  // error keeps `isError` set, surfaces its toast, and falls through below.
+  if (!sessionId && !sessionMutation.isError) return preparingScreen;
 
   function handleSelect(optId: string) {
     if (showFeedback) return; // prevent changing during feedback
@@ -631,7 +632,7 @@ function QuestPage() {
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="grid h-10 w-10 place-items-center rounded-xl bg-linear-to-br from-destructive to-neon-magenta shadow-lg animate-pulse">
+              <div className="grid h-10 w-10 place-items-center rounded-xl bg-linear-to-br from-destructive to-[color:var(--gold)] shadow-lg animate-pulse">
                 <Skull className="h-5 w-5 text-primary-foreground" />
               </div>
               <div>
@@ -641,10 +642,12 @@ function QuestPage() {
                 <div className="font-display text-lg font-bold">{data.exercise.title}</div>
               </div>
             </div>
-            <div className="flex items-center gap-2 rounded-full bg-background/60 px-3 py-1.5 text-sm font-bold">
+            <div className="flex items-center gap-2 rounded-full bg-black/60 px-3 py-1.5 text-sm font-bold">
               <Timer className="h-4 w-4 text-destructive" />
               <span
-                className={bossTimer <= 5 ? "text-destructive animate-pulse" : "text-neon-cyan"}
+                className={
+                  bossTimer <= 5 ? "text-destructive animate-pulse" : "text-[color:var(--gold)]"
+                }
               >
                 {bossTimer}s
               </span>
@@ -660,7 +663,7 @@ function QuestPage() {
             </div>
             <div className="h-3 overflow-hidden rounded-full bg-secondary/80">
               <motion.div
-                className="h-full rounded-full bg-linear-to-r from-destructive to-neon-magenta"
+                className="h-full rounded-full bg-linear-to-r from-destructive to-[color:var(--gold)]"
                 initial={{ width: "100%" }}
                 animate={{ width: `${bossHp}%` }}
                 transition={{ duration: 0.5 }}
@@ -675,11 +678,11 @@ function QuestPage() {
           <span>
             Question {idx + 1} / {total}
           </span>
-          {!isBoss && <span className="text-neon-cyan">{data.exercise.title}</span>}
+          {!isBoss && <span className="text-[color:var(--gold)]">{data.exercise.title}</span>}
         </div>
         <div className="h-2 overflow-hidden rounded-full bg-secondary">
           <motion.div
-            className={`h-full rounded-full shadow-neon ${isBoss ? "bg-linear-to-r from-destructive to-neon-magenta" : "bg-linear-to-r from-neon-violet to-neon-magenta"}`}
+            className={`h-full rounded-full shadow-gold ${isBoss ? "bg-linear-to-r from-destructive to-[color:var(--gold)]" : "bg-[image:var(--gradient-gold)]"}`}
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
             transition={{ duration: 0.4 }}
@@ -694,7 +697,7 @@ function QuestPage() {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -30 }}
           transition={{ duration: 0.3 }}
-          className={`rounded-3xl border p-6 backdrop-blur-xl sm:p-8 ${isBoss ? "border-destructive/30 bg-destructive/5" : "border-border/50 bg-card/60"}`}
+          className={`rounded-3xl border p-6 backdrop-blur-xl sm:p-8 ${isBoss ? "border-destructive/30 bg-destructive/5" : "border-border/50 bg-black/60"}`}
         >
           <h2
             className="font-display text-xl font-semibold sm:text-2xl"
@@ -709,18 +712,18 @@ function QuestPage() {
             {options.map((opt) => {
               const isSel = selected === opt.id;
               let cls = isBoss
-                ? "border-destructive/20 bg-background/40 hover:border-destructive/60 hover:bg-destructive/10"
-                : "border-border bg-background/40 hover:border-(--neon-violet)/60 hover:bg-background/70";
+                ? "border-destructive/20 bg-black/40 hover:border-destructive/60 hover:bg-destructive/10"
+                : "border-border bg-black/40 hover:border-(--gold)/60 hover:bg-black/70";
               if (showFeedback) {
                 if (isSel) {
                   cls = isBoss
                     ? "border-destructive bg-destructive/20"
-                    : "border-(--neon-violet) bg-(--neon-violet)/15";
-                } else cls = "border-border/30 bg-background/20 opacity-50";
+                    : "border-(--gold) bg-(--gold)/15";
+                } else cls = "border-border/30 bg-black/20 opacity-50";
               } else if (isSel) {
                 cls = isBoss
                   ? "border-destructive bg-destructive/20"
-                  : "border-(--neon-violet) bg-(--neon-violet)/15";
+                  : "border-(--gold) bg-(--gold)/15";
               }
               return (
                 <button
@@ -767,7 +770,7 @@ function QuestPage() {
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-4 rounded-xl border border-(--neon-cyan)/30 bg-(--neon-cyan)/10 p-4 text-sm text-neon-cyan"
+              className="mt-4 rounded-xl border border-(--gold)/30 bg-(--gold)/10 p-4 text-sm text-[color:var(--gold)]"
             >
               <p>{isQuiz ? QL.quizRecorded : t.quest.feedbackMsg}</p>
             </motion.div>
@@ -777,10 +780,10 @@ function QuestPage() {
             <button
               disabled={!showFeedback || mutation.isPending || sessionMutation.isPending}
               onClick={advanceNow}
-              className={`inline-flex items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-bold text-primary-foreground shadow-neon transition disabled:opacity-40 ${
+              className={`inline-flex items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-bold shadow-gold transition disabled:opacity-40 ${
                 isBoss
-                  ? "bg-linear-to-r from-destructive to-neon-magenta"
-                  : "bg-linear-to-r from-neon-violet to-neon-magenta"
+                  ? "bg-linear-to-r from-destructive to-[color:var(--gold)] text-primary-foreground"
+                  : "bg-[image:var(--gradient-gold)] text-black"
               }`}
             >
               {(mutation.isPending || sessionMutation.isPending) && (

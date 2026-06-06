@@ -158,7 +158,8 @@ describe("END-TO-END: student completes a quest", () => {
             })
           : mockQuery({ id: "quiz1" });
       }
-      if (table === "attempts") return mockQuery({ id: "att1" });
+      if (table === "attempts")
+        return mockQuery([{ id: "att1", duration_seconds: 60, total_count: 6 }]);
       return mockQuery({ id: "sess1", started_at: "2026-06-03T00:00:00Z" });
     });
     const session = (await (quest.startExerciseSession as unknown as Fn)({ exerciseId: EX })) as {
@@ -203,13 +204,13 @@ describe("END-TO-END: premium gating of an élite challenge", () => {
     mockRpc.mockReset();
   });
 
-  it("blocks a non-subscriber, then allows a subscribed level-5 player", async () => {
+  it("blocks a non-subscriber on a difficulty 3+ exercise, then allows a subscriber", async () => {
     const { startExerciseSession } = await import("@/features/quest");
 
     // Non-subscriber → blocked with the premium message.
     mockFrom.mockImplementation((table: string) => {
       if (table === "exercises")
-        return mockQuery({ id: "ex1", mode: "challenge", chapter_id: "ch1" });
+        return mockQuery({ id: "ex1", mode: "challenge", difficulty: 4, chapter_id: "ch1" });
       if (table === "profiles") return mockQuery({ level: 10 });
       return mockQuery({ id: "sess1", started_at: "t" });
     });
@@ -218,7 +219,7 @@ describe("END-TO-END: premium gating of an élite challenge", () => {
       /abonnement actif/i,
     );
 
-    // Subscribed + level ≥ 5, quiz passed → session starts.
+    // Subscribed + quiz passed → session starts (no level requirement).
     let exCalls = 0;
     mockFrom.mockImplementation((table: string) => {
       if (table === "exercises") {
@@ -227,8 +228,8 @@ describe("END-TO-END: premium gating of an élite challenge", () => {
           ? mockQuery({ id: "ex1", mode: "challenge", chapter_id: "ch1" })
           : mockQuery({ id: "quiz1" });
       }
-      if (table === "profiles") return mockQuery({ level: 10 });
-      if (table === "attempts") return mockQuery({ id: "att1" });
+      if (table === "attempts")
+        return mockQuery([{ id: "att1", duration_seconds: 60, total_count: 6 }]);
       return mockQuery({ id: "sess1", started_at: "2026-06-03T00:00:00Z" });
     });
     mockRpc.mockResolvedValue({ data: true, error: null }); // active subscription

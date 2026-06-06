@@ -27,7 +27,7 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "This is a general truth, so we use the present simple: water boils at 100 degrees.",
+      "explanation": "A scientific fact or general truth always takes the present simple: water boils at 100 degrees. \"is boiling\" would mean it is happening at this moment, not always; \"boil\" forgets the -s for the singular subject \"water\"; \"are boiling\" wrongly treats \"water\" as plural.",
       "difficulty": 2
     },
     {
@@ -51,7 +51,7 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "\"now\" signals an action in progress, so we use the present continuous: I am cooking dinner.",
+      "explanation": "\"I can't talk now\" tells us the action is in progress at this moment, so we use the present continuous: I am cooking dinner. \"cook\"/\"cooks\" are present simple (habits), and \"cooked\" is past simple.",
       "difficulty": 1
     },
     {
@@ -75,7 +75,7 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "Present simple negative for he/she/it uses doesn't + base verb: she doesn't drink coffee.",
+      "explanation": "In the present simple negative for he/she/it, the auxiliary \"does\" carries the -s, so the main verb stays in its base form: she doesn't drink coffee. \"don't drink\" uses the wrong auxiliary for \"she\"; \"isn't drink\" mixes \"be\" with a base verb; \"not drinks\" has no auxiliary at all.",
       "difficulty": 2
     },
     {
@@ -99,7 +99,7 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "Present simple questions with \"they\" use Do + subject + base verb: Do they live...?",
+      "explanation": "Present simple questions use \"do/does\" as the auxiliary. With the plural subject \"they\" we use \"Do\" + base verb: Do they live...? \"Does\" is only for he/she/it; \"Are\"/\"Is\" would be needed for the present continuous (Are they living...?), not the present simple.",
       "difficulty": 2
     },
     {

@@ -75,11 +75,11 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "\"two years ago\" is a specific past time marker. Use past simple, not present perfect: she visited Paris two years ago.",
+      "explanation": "\"two years ago\" names a specific finished time, so the past simple is required: she visited Paris. The present perfect (has/have visited) can never be used with a finished-time expression like \"ago\", which rules out options b and c; \"was visited\" is a passive form that does not fit here.",
       "difficulty": 2
     },
     {
-      "prompt": "Complete: \"___ the film started when you arrived?\"",
+      "prompt": "Complete: \"___ the film start when you arrived?\"",
       "options": [
         {
           "id": "a",

@@ -32,6 +32,7 @@ test.describe("Landing page", () => {
   test("navigates to signup from the landing CTA", async ({ page }) => {
     await page.goto("/");
     await page.locator('a[href="/signup"]').first().click();
-    await expect(page).toHaveURL(/\/signup/);
+    // `/signup` is a thin redirect route to the auth page in signup mode.
+    await expect(page).toHaveURL(/\/auth\?mode=signup/);
   });
 });

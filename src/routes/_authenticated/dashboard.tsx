@@ -26,7 +26,7 @@ import {
   resolveDailyAction,
   resolveWeeklyAction,
 } from "@/features/dashboard";
-import { purchaseShopItem, equipInventorySkin } from "@/features/shop";
+import { purchaseShopItem, equipInventorySkin, activateInventoryItem } from "@/features/shop";
 import { recoverStreak } from "@/features/progression";
 import { isSubscriptionActive } from "@/features/subscription";
 import { SubjectPathCard } from "@/features/dashboard/components/subject-path-card";
@@ -37,6 +37,8 @@ const GoldAmbientCanvas = lazy(() => import("@/components/visual/gold-ambient-ca
 import { formatStudentAllianceCode } from "@/features/parent-report";
 import { useT } from "@/lib/i18n";
 import { xpToNextLevel, xpWithinLevel } from "@/shared/lib/level";
+import { HeroAvatar } from "@/features/dashboard/components/hero-avatar";
+import { HeroStatChips } from "@/features/dashboard/components/hero-stat-chips";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 
 const DashboardRadarInventory = lazy(() =>
@@ -72,7 +74,7 @@ function DailyXpWidget({
   const isComplete = pct >= 100;
 
   return (
-    <div className="flex items-center gap-5 rounded-2xl border border-[color:var(--neon-violet)]/30 bg-card/40 p-5 backdrop-blur-md">
+    <div className="flex items-center gap-5 rounded-2xl border border-[color:var(--gold)]/30 bg-black/40 p-5 backdrop-blur-md">
       <div className="relative h-24 w-24 shrink-0">
         <svg className="h-full w-full -rotate-90" viewBox="0 0 96 96">
           <circle
@@ -91,7 +93,7 @@ function DailyXpWidget({
             fill="none"
             strokeWidth="6"
             strokeLinecap="round"
-            stroke={isComplete ? "var(--neon-gold)" : "var(--neon-violet)"}
+            stroke={isComplete ? "var(--neon-gold)" : "var(--gold)"}
             strokeDasharray={circumference}
             strokeDashoffset={dashOffset}
             className="transition-all duration-700"
@@ -102,7 +104,7 @@ function DailyXpWidget({
         </div>
       </div>
       <div>
-        <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--neon-violet)]">
+        <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--gold)]">
           {t.dashboard.dailyGoalLabel}
         </div>
         <div className="mt-1 font-display text-2xl font-bold">
@@ -133,8 +135,8 @@ function MotivationalQuote() {
   const quote = t.quotes[dayIndex];
 
   return (
-    <div className="flex flex-col justify-center rounded-2xl border border-[color:var(--neon-cyan)]/20 bg-card/40 p-5 backdrop-blur-md">
-      <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--neon-cyan)] mb-3">
+    <div className="flex flex-col justify-center rounded-2xl border border-[color:var(--gold)]/20 bg-black/40 p-5 backdrop-blur-md">
+      <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--gold)] mb-3">
         {t.dashboard.quoteLabel}
       </div>
       <blockquote className="font-display text-base font-medium italic leading-relaxed">
@@ -154,6 +156,7 @@ function Dashboard() {
   const fetchSprint2 = useServerFn(getSprint2Dashboard);
   const purchaseItem = useServerFn(purchaseShopItem);
   const equipSkin = useServerFn(equipInventorySkin);
+  const activateItem = useServerFn(activateInventoryItem);
   const { data, isLoading, isError } = useQuery({
     queryKey: ["dashboard"],
     queryFn: () => fetchDashboard(),
@@ -218,6 +221,19 @@ function Dashboard() {
     onError: (error) => toast.error(error instanceof Error ? error.message : "Equip failed"),
   });
 
+  const activateMutation = useMutation({
+    mutationFn: (payload: { itemCode: string }) => activateItem({ data: payload }),
+    onSuccess: (res) => {
+      // TODO(review #32): hardcoded toast — no matching i18n key exists yet. Add a key
+      // (e.g. t.dashboard.itemArmed with {name}/{slot} placeholders), then switch to useT().
+      const suffix =
+        res.slot === "passive" ? "activé · protège ta série." : "activé · prochaine quête.";
+      toast.success(`${res.itemName} ${suffix}`);
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+    },
+    onError: (error) => toast.error(error instanceof Error ? error.message : "Activation failed"),
+  });
+
   const recoverStreakFn = useServerFn(recoverStreak);
   const streakRecoveryMutation = useMutation({
     mutationFn: () => recoverStreakFn(),
@@ -256,14 +272,14 @@ function Dashboard() {
   if (isLoading || !data) {
     return (
       <div className="mx-auto max-w-7xl px-6 py-8 space-y-6">
-        <div className="h-48 animate-pulse rounded-3xl bg-card/40" />
+        <div className="h-48 animate-pulse rounded-3xl bg-black/40" />
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="h-20 animate-pulse rounded-2xl bg-card/30" />
-          <div className="h-20 animate-pulse rounded-2xl bg-card/30" />
+          <div className="h-20 animate-pulse rounded-2xl bg-black/30" />
+          <div className="h-20 animate-pulse rounded-2xl bg-black/30" />
         </div>
         <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-5">
           {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="h-28 animate-pulse rounded-2xl bg-card/30" />
+            <div key={i} className="h-28 animate-pulse rounded-2xl bg-black/30" />
           ))}
         </div>
       </div>
@@ -271,6 +287,7 @@ function Dashboard() {
   }
 
   const { profile, subjects, stats, nextExerciseId } = data;
+  const otherSubjects = data.otherSubjects ?? [];
   const hasSubscription = isSubscriptionActive(
     (profile as { subscription_expires_at?: string | null } | null)?.subscription_expires_at ??
       null,
@@ -336,36 +353,23 @@ function Dashboard() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative overflow-hidden rounded-3xl border border-[color:var(--neon-violet)]/30 bg-card/40 p-6 backdrop-blur-xl shadow-card sm:p-8"
+          className="relative overflow-hidden rounded-3xl border border-[color:var(--gold)]/30 bg-black/40 p-6 backdrop-blur-xl shadow-card sm:p-8"
         >
-          <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-[color:var(--neon-violet)]/30 blur-3xl" />
-          <div className="absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-[color:var(--neon-cyan)]/20 blur-3xl" />
+          <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/30 blur-3xl" />
+          <div className="absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/20 blur-3xl" />
           <div className="relative grid gap-6 sm:grid-cols-[auto,1fr,auto] sm:items-center">
-            <div className="grid h-20 w-20 place-items-center rounded-2xl bg-gradient-to-br from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] shadow-neon animate-pulse-neon">
-              <Sparkles className="h-9 w-9 text-primary-foreground" />
-            </div>
+            <HeroAvatar avatarSlug={profile.avatar_slug} />
             <div>
-              <div className="text-xs uppercase tracking-[0.3em] text-[color:var(--neon-cyan)]">
-                {profile.hero_class}
-              </div>
               <h1 className="font-display text-3xl font-bold sm:text-4xl">
                 {profile.display_name}
               </h1>
-              <div className="mt-3 flex flex-wrap items-center gap-3">
-                <div className="rounded-full bg-[color:var(--neon-violet)]/20 px-3 py-1 text-sm font-bold text-[color:var(--neon-violet)]">
-                  Lvl {profile.level}
-                </div>
-                <div className="flex items-center gap-1 rounded-full bg-[color:var(--flame)]/20 px-3 py-1 text-sm font-bold text-[color:var(--flame)]">
-                  <Flame className="h-4 w-4 animate-flame" /> {profile.current_streak}{" "}
-                  {profile.current_streak > 1 ? t.dashboard.days : t.dashboard.day}
-                </div>
-                <div className="flex items-center gap-1 rounded-full bg-[color:var(--neon-gold)]/20 px-3 py-1 text-sm font-bold text-[color:var(--neon-gold)]">
-                  <Zap className="h-4 w-4" /> {profile.xp} XP
-                </div>
-                <div className="flex items-center gap-1 rounded-full border border-[color:var(--neon-cyan)]/30 bg-[color:var(--neon-cyan)]/10 px-3 py-1 text-sm font-bold text-[color:var(--neon-cyan)]">
-                  <Sparkles className="h-4 w-4" /> {profile.yahia_coins ?? 0} XP Coins
-                </div>
-              </div>
+              <HeroStatChips
+                level={profile.level}
+                currentStreak={profile.current_streak}
+                xp={profile.xp}
+                coins={profile.yahia_coins ?? 0}
+                heroClass={profile.hero_class}
+              />
               <div className="mt-4">
                 <div className="mb-1 flex justify-between text-xs text-muted-foreground">
                   <span>Level {profile.level}</span>
@@ -382,14 +386,14 @@ function Dashboard() {
                   aria-valuemax={100}
                 >
                   <div
-                    className="h-full rounded-full bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] shadow-neon transition-all"
+                    className="h-full rounded-full bg-gradient-to-r from-[color:var(--gold)] to-[color:var(--gold-bright)] shadow-gold transition-all"
                     style={{ width: `${xpPct}%` }}
                   />
                 </div>
               </div>
               {studentAllianceCode && (
-                <div className="mt-4 rounded-xl border border-[color:var(--neon-cyan)]/35 bg-[color:var(--neon-cyan)]/8 p-3">
-                  <div className="text-[11px] uppercase tracking-[0.2em] text-[color:var(--neon-cyan)]">
+                <div className="mt-4 rounded-xl border border-[color:var(--gold)]/35 bg-[color:var(--gold)]/8 p-3">
+                  <div className="text-[11px] uppercase tracking-[0.2em] text-[color:var(--gold)]">
                     {t.dashboard.allianceCode}
                   </div>
                   <div className="mt-1 flex items-center justify-between gap-2">
@@ -403,7 +407,7 @@ function Dashboard() {
                         setCopiedCode(true);
                         setTimeout(() => setCopiedCode(false), 1200);
                       }}
-                      className="inline-flex items-center gap-1 rounded-md border border-[color:var(--neon-cyan)]/40 px-2 py-1 text-xs text-[color:var(--neon-cyan)] hover:bg-[color:var(--neon-cyan)]/10"
+                      className="inline-flex items-center gap-1 rounded-md border border-[color:var(--gold)]/40 px-2 py-1 text-xs text-[color:var(--gold)] hover:bg-[color:var(--gold)]/10"
                     >
                       {copiedCode ? (
                         <Check className="h-3.5 w-3.5" />
@@ -508,39 +512,39 @@ function Dashboard() {
             <Link
               to="/subject/$subjectId"
               params={{ subjectId: continueSubject.id }}
-              className="group flex items-center justify-between gap-4 rounded-2xl border border-[color:var(--neon-cyan)]/30 bg-[color:var(--neon-cyan)]/5 p-4 backdrop-blur-md transition hover:border-[color:var(--neon-cyan)]/60 hover:bg-[color:var(--neon-cyan)]/10 sm:p-5"
+              className="group flex items-center justify-between gap-4 rounded-2xl border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 p-4 backdrop-blur-md transition hover:border-[color:var(--gold)]/60 hover:bg-[color:var(--gold)]/10 sm:p-5"
             >
               <div className="flex items-center gap-3">
-                <div className="grid h-12 w-12 place-items-center rounded-xl bg-[color:var(--neon-cyan)]/20">
-                  <Play className="h-6 w-6 text-[color:var(--neon-cyan)]" />
+                <div className="grid h-12 w-12 place-items-center rounded-xl bg-[color:var(--gold)]/20">
+                  <Play className="h-6 w-6 text-[color:var(--gold)]" />
                 </div>
                 <div>
-                  <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--neon-cyan)]">
+                  <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--gold)]">
                     {t.dashboard.continueLabel}
                   </div>
                   <div className="font-display text-lg font-bold">{continueSubject.name_fr}</div>
                 </div>
               </div>
-              <ChevronRight className="h-6 w-6 text-[color:var(--neon-cyan)] transition group-hover:translate-x-1" />
+              <ChevronRight className="h-6 w-6 text-[color:var(--gold)] transition group-hover:translate-x-1" />
             </Link>
           )}
           {/* Dungeon mode - infinite survival */}
           <Link
             to="/dungeon"
-            className="group flex items-center justify-between gap-4 rounded-2xl border border-[color:var(--neon-magenta)]/30 bg-[color:var(--neon-magenta)]/5 p-4 backdrop-blur-md transition hover:border-[color:var(--neon-magenta)]/60 hover:bg-[color:var(--neon-magenta)]/10 sm:p-5"
+            className="group flex items-center justify-between gap-4 rounded-2xl border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 p-4 backdrop-blur-md transition hover:border-[color:var(--gold)]/60 hover:bg-[color:var(--gold)]/10 sm:p-5"
           >
             <div className="flex items-center gap-3">
-              <div className="grid h-12 w-12 place-items-center rounded-xl bg-[color:var(--neon-magenta)]/20">
-                <Skull className="h-6 w-6 text-[color:var(--neon-magenta)]" />
+              <div className="grid h-12 w-12 place-items-center rounded-xl bg-[color:var(--gold)]/20">
+                <Skull className="h-6 w-6 text-[color:var(--gold)]" />
               </div>
               <div>
-                <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--neon-magenta)] font-bold">
+                <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--gold)] font-bold">
                   {t.dashboard.dungeonLabel}
                 </div>
                 <div className="font-display text-lg font-bold">{t.dashboard.dungeonDesc}</div>
               </div>
             </div>
-            <ChevronRight className="h-6 w-6 text-[color:var(--neon-magenta)] transition group-hover:translate-x-1" />
+            <ChevronRight className="h-6 w-6 text-[color:var(--gold)] transition group-hover:translate-x-1" />
           </Link>
         </motion.div>
 
@@ -552,9 +556,9 @@ function Dashboard() {
           className="mt-8 grid gap-6 sm:grid-cols-2"
         >
           {/* Daily Objectives */}
-          <div className="rounded-2xl border border-[color:var(--neon-cyan)]/30 bg-[color:var(--neon-cyan)]/5 p-5 backdrop-blur-md">
+          <div className="rounded-2xl border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 p-5 backdrop-blur-md">
             <div className="mb-4 flex items-center gap-2 font-display text-lg font-bold">
-              <Trophy className="h-5 w-5 text-[color:var(--neon-cyan)]" /> {t.dashboard.dailyQuests}
+              <Trophy className="h-5 w-5 text-[color:var(--gold)]" /> {t.dashboard.dailyQuests}
             </div>
             <div className="space-y-3">
               {(sprint2?.dailyObjectives ?? []).length === 0 && (
@@ -570,19 +574,17 @@ function Dashboard() {
                 return (
                   <div
                     key={obj.id}
-                    className={`rounded-xl bg-background/40 p-3 ${done ? "opacity-60" : ""}`}
+                    className={`rounded-xl bg-black/40 p-3 ${done ? "opacity-60" : ""}`}
                   >
                     <div className="flex items-center justify-between">
                       <div className="text-sm font-semibold">
                         {formatObjectiveType(obj.objective_type)}
                       </div>
-                      <div className="text-xs text-[color:var(--neon-cyan)]">
-                        {obj.xp_reward} XP
-                      </div>
+                      <div className="text-xs text-[color:var(--gold)]">{obj.xp_reward} XP</div>
                     </div>
                     <div className="mt-2 h-2 overflow-hidden rounded-full bg-secondary">
                       <div
-                        className="h-full bg-gradient-to-r from-[color:var(--neon-cyan)] to-[color:var(--neon-magenta)] transition-all"
+                        className="h-full bg-gradient-to-r from-[color:var(--gold)] to-[color:var(--gold-bright)] transition-all"
                         style={{ width: `${pct}%` }}
                       />
                     </div>
@@ -593,7 +595,7 @@ function Dashboard() {
                       type="button"
                       disabled={done}
                       onClick={() => runQuestAction(action)}
-                      className="mt-2 rounded-md border border-[color:var(--neon-cyan)]/40 bg-[color:var(--neon-cyan)]/15 px-2.5 py-1 text-xs font-semibold text-[color:var(--neon-cyan)] transition hover:bg-[color:var(--neon-cyan)]/25 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="mt-2 rounded-md border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/15 px-2.5 py-1 text-xs font-semibold text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/25 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {done ? t.common.completed : t.common.continue}
                     </button>
@@ -622,7 +624,7 @@ function Dashboard() {
                 return (
                   <div
                     key={q.id}
-                    className={`rounded-xl bg-background/40 p-3 ${done ? "opacity-60" : ""}`}
+                    className={`rounded-xl bg-black/40 p-3 ${done ? "opacity-60" : ""}`}
                   >
                     <div className="flex items-center justify-between">
                       <div className="text-sm font-semibold">{formatQuestType(q.quest_type)}</div>
@@ -630,7 +632,7 @@ function Dashboard() {
                     </div>
                     <div className="mt-2 h-2 overflow-hidden rounded-full bg-secondary">
                       <div
-                        className="h-full bg-gradient-to-r from-[color:var(--neon-gold)] to-[color:var(--neon-magenta)] transition-all"
+                        className="h-full bg-gradient-to-r from-[color:var(--gold)] to-[color:var(--gold-bright)] transition-all"
                         style={{ width: `${pct}%` }}
                       />
                     </div>
@@ -657,8 +659,7 @@ function Dashboard() {
           <section>
             <div className="mb-4 flex items-center justify-between">
               <h2 className="flex items-center gap-2 font-display text-xl font-bold">
-                <Swords className="h-5 w-5 text-[color:var(--neon-violet)]" />{" "}
-                {t.dashboard.pathsTitle}
+                <Swords className="h-5 w-5 text-[color:var(--gold)]" /> {t.dashboard.pathsTitle}
               </h2>
               <Link
                 to="/leaderboard"
@@ -685,25 +686,59 @@ function Dashboard() {
             </div>
           </section>
 
+          {otherSubjects.length > 0 && (
+            <section>
+              <div className="mb-4 flex items-center gap-2">
+                <h2 className="flex items-center gap-2 font-display text-xl font-bold">
+                  <Sparkles className="h-5 w-5 text-[color:var(--gold)]" />{" "}
+                  {t.dashboard.otherThemesTitle}
+                </h2>
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {otherSubjects.map((s, i) => (
+                  <motion.div
+                    key={s.id}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                  >
+                    <SubjectPathCard
+                      subject={s}
+                      stat={stats[s.id]}
+                      hasSubscription={hasSubscription}
+                    />
+                  </motion.div>
+                ))}
+              </div>
+            </section>
+          )}
+
           {/* RADAR */}
           <section>
             {deferSecondarySections ? (
               <Suspense
                 fallback={
                   <div className="space-y-4">
-                    <div className="h-8 w-40 animate-pulse rounded bg-card/40" />
-                    <div className="h-80 animate-pulse rounded-2xl bg-card/40" />
-                    <div className="h-52 animate-pulse rounded-2xl bg-card/40" />
+                    <div className="h-8 w-40 animate-pulse rounded bg-black/40" />
+                    <div className="h-80 animate-pulse rounded-2xl bg-black/40" />
+                    <div className="h-52 animate-pulse rounded-2xl bg-black/40" />
                   </div>
                 }
               >
-                <DashboardRadarInventory radarData={radarData} inventory={inventory} />
+                <DashboardRadarInventory
+                  radarData={radarData}
+                  inventory={inventory}
+                  avatarSlug={profile.avatar_slug}
+                  displayName={profile.display_name}
+                  isActivatePending={activateMutation.isPending}
+                  onActivate={(itemCode) => activateMutation.mutate({ itemCode })}
+                />
               </Suspense>
             ) : (
               <div className="space-y-4">
-                <div className="h-8 w-40 animate-pulse rounded bg-card/40" />
-                <div className="h-80 rounded-2xl bg-card/40" />
-                <div className="h-52 rounded-2xl bg-card/40" />
+                <div className="h-8 w-40 animate-pulse rounded bg-black/40" />
+                <div className="h-80 rounded-2xl bg-black/40" />
+                <div className="h-52 rounded-2xl bg-black/40" />
               </div>
             )}
           </section>
@@ -713,21 +748,21 @@ function Dashboard() {
           <Suspense
             fallback={
               <div className="mt-8 space-y-6">
-                <div className="h-8 w-48 animate-pulse rounded bg-card/40" />
+                <div className="h-8 w-48 animate-pulse rounded bg-black/40" />
                 <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                   {[1, 2, 3].map((item) => (
                     <div
                       key={`badges-skeleton-${item}`}
-                      className="h-44 animate-pulse rounded-2xl bg-card/40"
+                      className="h-44 animate-pulse rounded-2xl bg-black/40"
                     />
                   ))}
                 </div>
-                <div className="h-8 w-48 animate-pulse rounded bg-card/40" />
+                <div className="h-8 w-48 animate-pulse rounded bg-black/40" />
                 <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                   {[1, 2, 3].map((item) => (
                     <div
                       key={`shop-skeleton-${item}`}
-                      className="h-52 animate-pulse rounded-2xl bg-card/40"
+                      className="h-52 animate-pulse rounded-2xl bg-black/40"
                     />
                   ))}
                 </div>
@@ -740,27 +775,29 @@ function Dashboard() {
               availableCoins={profile.yahia_coins ?? 0}
               isPurchasePending={purchaseMutation.isPending}
               isEquipPending={equipMutation.isPending}
+              isActivatePending={activateMutation.isPending}
               onPurchase={(itemCode) => purchaseMutation.mutate({ itemCode })}
               onEquip={(itemCode) => equipMutation.mutate({ itemCode })}
+              onActivate={(itemCode) => activateMutation.mutate({ itemCode })}
             />
           </Suspense>
         ) : (
           <div className="mt-8 space-y-6">
-            <div className="h-8 w-48 rounded bg-card/40" />
+            <div className="h-8 w-48 rounded bg-black/40" />
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {[1, 2, 3].map((item) => (
                 <div
                   key={`initial-badges-skeleton-${item}`}
-                  className="h-44 rounded-2xl bg-card/40"
+                  className="h-44 rounded-2xl bg-black/40"
                 />
               ))}
             </div>
-            <div className="h-8 w-48 rounded bg-card/40" />
+            <div className="h-8 w-48 rounded bg-black/40" />
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {[1, 2, 3].map((item) => (
                 <div
                   key={`initial-shop-skeleton-${item}`}
-                  className="h-52 rounded-2xl bg-card/40"
+                  className="h-52 rounded-2xl bg-black/40"
                 />
               ))}
             </div>

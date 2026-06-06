@@ -27,7 +27,7 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "Le verbe introducteur « dit » est au passé simple : le futur simple « partirai » devient conditionnel présent « partirait ». L'indicateur de temps « demain » se transforme en « le lendemain » au discours indirect. L'option b oublie les deux changements ; c change le temps mais pas l'indicateur ; d utilise l'imparfait à la place du conditionnel.",
+      "explanation": "Le verbe introducteur « dit » est au passé simple : le futur simple « partirai » devient conditionnel présent « partirait », et l'indicateur de temps « demain » se transforme en « le lendemain » au discours indirect. D'où la réponse d (« partirait le lendemain à l'aube »). L'option a n'opère aucun des deux changements ; l'option b change le temps mais garde « demain » ; l'option c change l'indicateur mais emploie l'imparfait au lieu du conditionnel.",
       "difficulty": 3
     },
     {
@@ -75,7 +75,7 @@
         }
       ],
       "correctOption": "b",
-      "explanation": "« Qu'est-ce qui » (sujet) se transforme en « ce qui » au discours indirect. Le verbe introducteur « demanda » est au passé : le présent « fait » devient imparfait « faisait ». L'option b utilise « ce que » (réservé au COD) ; c conserve la forme directe interdite au DI ; d modifie complètement le sens.",
+      "explanation": "« Qu'est-ce qui » (sujet) se transforme en « ce qui » au discours indirect, d'où la réponse b. Le verbe introducteur « demanda » étant au passé, le présent « fait » devient imparfait « faisait ». L'option a emploie « ce que », réservé au COD (et non au sujet) ; l'option c conserve « qu'est-ce qui », forme directe interdite au DI ; l'option d (« si ») transforme à tort la question partielle en question totale et altère le sens.",
       "difficulty": 3
     },
     {
@@ -123,7 +123,7 @@
         }
       ],
       "correctOption": "c",
-      "explanation": "Au DI, le verbe introducteur « expliqua » est au passé → le plus-que-parfait « avait visité » remonte au passé composé « a visité » dans le DD. L'indicateur « l'année précédente » correspond à « l'année dernière » au DD. L'option b conserverait le plus-que-parfait dans le DD, ce qui est incorrect ; c mènerait à un conditionnel passé ; d mènerait à un imparfait.",
+      "explanation": "Au DI, le verbe introducteur « expliqua » est au passé : le plus-que-parfait « avait visité » remonte au passé composé « a visité » dans le DD, et l'indicateur « l'année précédente » redevient « l'année dernière ». La réponse est donc c. L'option a reprend telle quelle la forme du DI (plus-que-parfait + « l'année précédente »), au lieu de restituer le DD ; l'option b emploie le futur, qui aurait donné un conditionnel au DI ; l'option d emploie le présent, incompatible avec « avait visité ».",
       "difficulty": 3
     },
     {

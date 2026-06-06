@@ -35,7 +35,7 @@ export const recoverStreak = createServerFn({ method: "POST" })
     }
 
     if ((profile.yahia_coins ?? 0) < STREAK_RECOVERY_COST) {
-      throw new Error(`Il te faut ${STREAK_RECOVERY_COST} XP Coins pour récupérer ton streak.`);
+      throw new Error(`Il te faut ${STREAK_RECOVERY_COST} Coins pour récupérer ton streak.`);
     }
 
     // Spend coins

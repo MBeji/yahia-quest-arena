@@ -27,6 +27,19 @@ export const subjectMetaSchema = z.object({
   displayOrder: z.number().int().positive(),
   contentLanguage: z.enum(CONTENT_LANGUAGES),
   /**
+   * Theme this subject belongs to (FK → `themes.id`). Required: every subject
+   * lives under exactly one theme, e.g. `ecole-tn` (Tunisian school program) or
+   * a standalone module theme such as `francais`.
+   */
+  themeId: z.string().regex(/^[a-z][a-z0-9-]*$/, "themeId must be kebab-case (e.g. 'ecole-tn')"),
+  /**
+   * Grade within the theme's ladder, referenced by its stable `grades.slug`
+   * (e.g. `9eme-base`). `null` for grade-agnostic subjects — only graded themes
+   * (today `ecole-tn`) carry a grade. The compiled SQL resolves the slug to the
+   * grade UUID, so content never hard-codes ids. Defaults to `null`.
+   */
+  gradeSlug: z.string().min(1).nullable().default(null),
+  /**
    * Premium module: when true, the whole subject (chapters, exercises, quiz) is
    * reserved to users with an active subscription (gated server-side). Used by
    * the standalone "Maîtrise du français" module. Defaults to false.

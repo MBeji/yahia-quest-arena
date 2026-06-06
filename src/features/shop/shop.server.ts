@@ -60,3 +60,33 @@ export const equipInventorySkin = createServerFn({ method: "POST" })
       avatarSlug: typeof row.avatar_slug === "string" ? row.avatar_slug : null,
     };
   });
+
+// ---------- Arm a consumable (potion or shield) ----------
+// Ownership + "armable only" validation and the two-slot toggle happen atomically
+// in the `activate_inventory_item` SECURITY DEFINER RPC. Items arm into one of two
+// independent slots derived from the effect payload:
+//   * "next-quest": multiplier potions + retry shield — applied to the next quest,
+//     one armed at a time.
+//   * "passive": streak shield — protects a missed day automatically, armed
+//     independently of the next-quest slot.
+export const activateInventoryItem = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ itemCode: z.string().min(1) }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+
+    const { data: result, error } = await supabase.rpc("activate_inventory_item", {
+      p_item_code: data.itemCode,
+    });
+    if (error) {
+      failWithClientError("shop.activateInventoryItem", error, "Impossible d'activer cet objet.");
+    }
+
+    const row = asRecord(result);
+    return {
+      itemCode: typeof row.item_code === "string" ? row.item_code : data.itemCode,
+      itemName: typeof row.item_name === "string" ? row.item_name : "",
+      slot: row.slot === "passive" ? ("passive" as const) : ("next-quest" as const),
+      isActive: row.is_active === true,
+    };
+  });
