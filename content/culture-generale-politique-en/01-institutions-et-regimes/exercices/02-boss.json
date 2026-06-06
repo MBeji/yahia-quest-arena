@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss ⭐⭐⭐: Politics",
+  "mode": "boss",
+  "difficulty": 3,
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Which power has the role of judging and interpreting the laws?",
+      "options": [
+        { "id": "a", "text": "The judicial power" },
+        { "id": "b", "text": "The legislative power" },
+        { "id": "c", "text": "The executive power" },
+        { "id": "d", "text": "The constituent power" }
+      ],
+      "correctOption": "a",
+      "explanation": "The judicial power, exercised by independent judges, settles disputes and interprets the laws. The \"constituent power\" refers to the authority that drafts or revises the Constitution: it is a trap, because it sounds right but is not one of Montesquieu's three powers.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "In what year did women win the right to vote in France?",
+      "options": [
+        { "id": "a", "text": "1936" },
+        { "id": "b", "text": "1944" },
+        { "id": "c", "text": "1958" },
+        { "id": "d", "text": "1968" }
+      ],
+      "correctOption": "b",
+      "explanation": "The ordinance of 21 April 1944, issued by General de Gaulle's Provisional Government, granted women the right to vote; they voted for the first time in 1945. France was late: New Zealand had done so as early as 1893. 1958 (the Fifth Republic) and 1968 (May 1968) are decoys drawn from nearby landmark years.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "In a parliamentary regime, which mechanism allows Parliament to bring down the government?",
+      "options": [
+        { "id": "a", "text": "The vote of no confidence" },
+        { "id": "b", "text": "The presidential veto" },
+        { "id": "c", "text": "The motion to proceed" },
+        { "id": "d", "text": "The shared-initiative referendum" }
+      ],
+      "correctOption": "a",
+      "explanation": "A vote of no confidence, passed by members of parliament, forces the government to resign: it is the hallmark of the parliamentary regime, where the executive is accountable to Parliament. The veto is a tool of the president (presidential regime), and a shared-initiative referendum serves to propose a law, not to bring down a government.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "What is the current length of the French president's term of office (the quinquennat)?",
+      "options": [
+        { "id": "a", "text": "4 years" },
+        { "id": "b", "text": "6 years" },
+        { "id": "c", "text": "5 years" },
+        { "id": "d", "text": "7 years" }
+      ],
+      "correctOption": "c",
+      "explanation": "Since the referendum of 2000 (under Jacques Chirac), the French presidential term has lasted 5 years: this is the quinquennat, first applied in 2002. Previously it was 7 years (the septennat): \"7 years\" is therefore the old length, a deliberately credible distractor.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "How many states founded the United Nations in 1945?",
+      "options": [
+        { "id": "a", "text": "27" },
+        { "id": "b", "text": "193" },
+        { "id": "c", "text": "100" },
+        { "id": "d", "text": "51" }
+      ],
+      "correctOption": "d",
+      "explanation": "The UN was founded in 1945 by 51 member states, following the San Francisco conference. Do not confuse this with the 193 members today: that is the classic trap. The number 27, for its part, evokes the member states of the European Union — a different organization.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which article of the 1789 Declaration of the Rights of Man and of the Citizen states that \"the principle of all sovereignty resides essentially in the nation\"?",
+      "options": [
+        { "id": "a", "text": "Article 1" },
+        { "id": "b", "text": "Article 3" },
+        { "id": "c", "text": "Article 16" },
+        { "id": "d", "text": "Article 10" }
+      ],
+      "correctOption": "b",
+      "explanation": "It is Article 3 of the 1789 Declaration that establishes national sovereignty: power emanates from the nation, not from the king. Beware the trap: Article 16, also famous, is the one that requires the separation of powers (\"Any society in which... the separation of powers [is] not determined has no Constitution\"). Article 1 proclaims that \"men are born free and equal\".",
+      "difficulty": 3
+    }
+  ]
+}

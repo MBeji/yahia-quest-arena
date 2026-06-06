@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Dungeon — Boss ⭐⭐⭐",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "History — In which year did the Berlin Wall fall, marking the end of Germany's division?",
+      "options": [
+        { "id": "a", "text": "1989" },
+        { "id": "b", "text": "1991" },
+        { "id": "c", "text": "1985" },
+        { "id": "d", "text": "1961" }
+      ],
+      "correctOption": "a",
+      "explanation": "The Berlin Wall fell on the night of 9 November 1989, after 28 years of separation. Worth knowing: it had been built in 1961 (the trap \"1961\" is its construction, not its fall). 1991 is the year the USSR was dissolved, a distinct and later event.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Geography — On which continent is the Sahara, the largest hot desert in the world, located?",
+      "options": [
+        { "id": "a", "text": "Asia" },
+        { "id": "b", "text": "Africa" },
+        { "id": "c", "text": "South America" },
+        { "id": "d", "text": "Oceania" }
+      ],
+      "correctOption": "b",
+      "explanation": "The Sahara covers a wide band of northern Africa, across about a dozen countries. It is the largest hot desert in the world (around 9 million km²). The trap \"Asia\" points to the Gobi Desert: vast as well, but it is a cold desert, distinct from the Sahara.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Politics — Which UN body holds the primary responsibility for maintaining international peace and security?",
+      "options": [
+        { "id": "a", "text": "The General Assembly" },
+        { "id": "b", "text": "The International Court of Justice" },
+        { "id": "c", "text": "The Security Council" },
+        { "id": "d", "text": "The Secretariat" }
+      ],
+      "correctOption": "c",
+      "explanation": "The Security Council is responsible for maintaining peace; its five permanent members (United States, Russia, China, France, United Kingdom) hold veto power. The General Assembly gathers all 193 member states but its resolutions are not binding: it debates, while the Council decides and can impose sanctions.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Economics — What does the term \"inflation\" mean in economics?",
+      "options": [
+        { "id": "a", "text": "A general and sustained rise in prices" },
+        { "id": "b", "text": "A general fall in prices" },
+        { "id": "c", "text": "A rise in unemployment" },
+        { "id": "d", "text": "An increase in exports" }
+      ],
+      "correctOption": "a",
+      "explanation": "Inflation is the general, sustained rise in prices, which reduces the purchasing power of money. The European Central Bank aims for around 2 % per year. The trap \"fall in prices\" has its own name: deflation, the opposite phenomenon, often judged dangerous because it can paralyze economic activity.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Sciences — What is, in order of magnitude, the speed of light in a vacuum?",
+      "options": [
+        { "id": "a", "text": "About 300,000 km/s" },
+        { "id": "b", "text": "About 300,000 km/h" },
+        { "id": "c", "text": "About 3,000 km/s" },
+        { "id": "d", "text": "About 30,000,000 km/s" }
+      ],
+      "correctOption": "a",
+      "explanation": "Light travels at 299,792,458 m/s in a vacuum, that is about 300,000 km/s — a fundamental constant that has even been used to define the metre since 1983. The trap \"km/h\" uses the wrong unit: 300,000 km/h would be hundreds of thousands of times too slow.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Arts — Which country was Wolfgang Amadeus Mozart, composer of \"The Magic Flute\", from?",
+      "options": [
+        { "id": "a", "text": "Germany" },
+        { "id": "b", "text": "Italy" },
+        { "id": "c", "text": "Austria" },
+        { "id": "d", "text": "France" }
+      ],
+      "correctOption": "c",
+      "explanation": "Mozart was born in Salzburg in 1756, then part of the Holy Roman Empire but a city that is Austrian today; he is one of the great figures of Viennese classical music. The trap \"Germany\" comes from the German language he spoke: but Salzburg and Vienna, where he built his career, are in Austria, not Germany.",
+      "difficulty": 3
+    }
+  ]
+}

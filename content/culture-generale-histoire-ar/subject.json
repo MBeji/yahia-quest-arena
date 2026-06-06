@@ -1,0 +1,12 @@
+{
+  "id": "culture-generale-histoire-ar",
+  "nameFr": "Culture générale — Histoire (AR)",
+  "description": "أهم التواريخ والشخصيات في التاريخ العالمي والتونسي، من العصور القديمة إلى أيامنا، لبناء ثقافة تاريخية متينة.",
+  "attribute": "Mémoire",
+  "colorToken": "subject-svt",
+  "icon": "Landmark",
+  "displayOrder": 12,
+  "contentLanguage": "ar",
+  "themeId": "culture-generale",
+  "gradeSlug": null
+}

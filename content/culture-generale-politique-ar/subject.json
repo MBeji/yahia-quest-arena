@@ -1,0 +1,12 @@
+{
+  "id": "culture-generale-politique-ar",
+  "nameFr": "Culture générale — Politique (AR)",
+  "description": "فهم الحياة السياسية: الديمقراطية، الفصل بين السلطات، الأنظمة والمؤسسات، باللغة العربية.",
+  "attribute": "Stratégie",
+  "colorToken": "subject-arabic",
+  "icon": "Scale",
+  "displayOrder": 18,
+  "contentLanguage": "ar",
+  "themeId": "culture-generale",
+  "gradeSlug": null
+}

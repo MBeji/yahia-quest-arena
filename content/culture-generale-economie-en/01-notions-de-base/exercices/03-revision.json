@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Review: Economics",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "What do we call a general and lasting fall in prices, the opposite phenomenon of inflation?",
+      "options": [
+        { "id": "a", "text": "Deflation" },
+        { "id": "b", "text": "Stagflation" },
+        { "id": "c", "text": "Devaluation" },
+        { "id": "d", "text": "Recession" }
+      ],
+      "correctOption": "a",
+      "explanation": "Deflation is the general and lasting fall in prices: don't confuse it with recession (a fall in activity) or devaluation (a deliberate lowering of a currency's value). Deflation is dreaded because it encourages people to postpone purchases, which slows the economy.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which level of economic analysis studies a country's broad aggregates such as GDP, unemployment, or inflation?",
+      "options": [
+        { "id": "a", "text": "Microeconomics" },
+        { "id": "b", "text": "Business management" },
+        { "id": "c", "text": "Marketing" },
+        { "id": "d", "text": "Macroeconomics" }
+      ],
+      "correctOption": "d",
+      "explanation": "Macroeconomics studies a country's economy as a whole through its broad aggregates (GDP, unemployment, inflation). Microeconomics, by contrast, focuses on the choices of an individual agent. The prefix \"macro\" (large) signals that we are reasoning at the scale of the nation.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which expression by Adam Smith captures the idea that the pursuit of self-interest can benefit society as a whole?",
+      "options": [
+        { "id": "a", "text": "Creative destruction" },
+        { "id": "b", "text": "Class struggle" },
+        { "id": "c", "text": "The invisible hand" },
+        { "id": "d", "text": "The Keynesian multiplier" }
+      ],
+      "correctOption": "c",
+      "explanation": "Adam Smith's \"invisible hand\" describes how individual actions driven by self-interest contribute to the common good through the market. Creative destruction is Schumpeter's, class struggle is Marx's, and the multiplier is Keynes's: each a different author and idea.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which institution is tasked with setting key interest rates and safeguarding price stability in the eurozone?",
+      "options": [
+        { "id": "a", "text": "The European Central Bank (ECB)" },
+        { "id": "b", "text": "The European Commission" },
+        { "id": "c", "text": "The European Parliament" },
+        { "id": "d", "text": "The International Monetary Fund (IMF)" }
+      ],
+      "correctOption": "a",
+      "explanation": "The ECB conducts the eurozone's monetary policy: it sets key interest rates to keep inflation in check and prices stable. The Commission and Parliament have political and legislative roles, and the IMF acts at the global scale, not just within the eurozone.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Since when have euro banknotes and coins physically circulated in the pockets of eurozone citizens?",
+      "options": [
+        { "id": "a", "text": "Since 1 January 1999" },
+        { "id": "b", "text": "Since 1 January 2002" },
+        { "id": "c", "text": "Since 1 January 1995" },
+        { "id": "d", "text": "Since 1 January 2010" }
+      ],
+      "correctOption": "b",
+      "explanation": "Euro banknotes and coins were put into circulation on 1 January 2002. The euro had already existed since 1 January 1999, but only as an \"invisible\" currency (electronic and accounting payments): that's the trap between the creation of the currency and the arrival of cash.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "A firm sees the price of its raw materials rise sharply and passes that cost on to its selling prices. Which mechanism of inflation does this correspond to?",
+      "options": [
+        { "id": "a", "text": "Demand-pull inflation" },
+        { "id": "b", "text": "Cost-push inflation" },
+        { "id": "c", "text": "Imported deflation" },
+        { "id": "d", "text": "Disinflation" }
+      ],
+      "correctOption": "b",
+      "explanation": "When a rise in production costs (raw materials, wages) pushes firms to raise their prices, we speak of cost-push inflation. Demand-pull inflation, by contrast, comes from demand exceeding supply. Disinflation is merely a slowdown of inflation, not a cause.",
+      "difficulty": 3
+    }
+  ]
+}

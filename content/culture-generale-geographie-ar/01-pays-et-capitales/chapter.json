@@ -1,0 +1,12 @@
+{
+  "title": "البلدان والعواصم",
+  "description": "عواصم العالم (بما في ذلك الأفخاخ الشهيرة)، والقارات، والمحيطات، وأبرز الأرقام الجغرافية القياسية للكوكب.",
+  "displayOrder": 1,
+  "sources": [
+    "https://www.britannica.com/place/Canberra",
+    "https://en.wikipedia.org/wiki/List_of_countries_and_dependencies_by_area",
+    "https://www.un.org/development/desa/pd/content/india-overtakes-china-world%E2%80%99s-most-populous-country",
+    "https://en.wikipedia.org/wiki/List_of_deserts_by_area",
+    "https://www.nationsonline.org/oneworld/countries_by_area.htm"
+  ]
+}

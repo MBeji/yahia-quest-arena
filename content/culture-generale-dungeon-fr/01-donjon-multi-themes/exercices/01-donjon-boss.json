@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Donjon — Boss ⭐⭐⭐",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Histoire — En quelle année est tombé le mur de Berlin, marquant la fin de la division de l'Allemagne ?",
+      "options": [
+        { "id": "a", "text": "1989" },
+        { "id": "b", "text": "1991" },
+        { "id": "c", "text": "1985" },
+        { "id": "d", "text": "1961" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le mur de Berlin est tombé dans la nuit du 9 novembre 1989, après 28 ans de séparation. À savoir : il avait été érigé en 1961 (le piège « 1961 » est sa construction, pas sa chute). 1991 est l'année de la dissolution de l'URSS, un événement distinct et postérieur.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Géographie — Sur quel continent se trouve le désert du Sahara, le plus grand désert chaud du monde ?",
+      "options": [
+        { "id": "a", "text": "Asie" },
+        { "id": "b", "text": "Afrique" },
+        { "id": "c", "text": "Amérique du Sud" },
+        { "id": "d", "text": "Océanie" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le Sahara couvre une large bande du nord de l'Afrique, sur une dizaine de pays. C'est le plus grand désert chaud du monde (environ 9 millions de km²). Le piège « Asie » correspond au désert de Gobi : vaste lui aussi, mais c'est un désert froid, distinct du Sahara.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Politique — Quel organe de l'ONU a la responsabilité principale du maintien de la paix et de la sécurité internationales ?",
+      "options": [
+        { "id": "a", "text": "L'Assemblée générale" },
+        { "id": "b", "text": "La Cour internationale de justice" },
+        { "id": "c", "text": "Le Conseil de sécurité" },
+        { "id": "d", "text": "Le Secrétariat" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le Conseil de sécurité est chargé du maintien de la paix ; ses cinq membres permanents (États-Unis, Russie, Chine, France, Royaume-Uni) disposent du droit de veto. L'Assemblée générale réunit les 193 États membres mais ses résolutions n'ont pas force contraignante : elle débat, le Conseil décide et peut imposer des sanctions.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Économie — Que désigne le terme « inflation » en économie ?",
+      "options": [
+        { "id": "a", "text": "Une hausse générale et durable des prix" },
+        { "id": "b", "text": "Une baisse générale des prix" },
+        { "id": "c", "text": "Une hausse du chômage" },
+        { "id": "d", "text": "Une augmentation des exportations" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'inflation est la hausse générale et durable des prix, qui réduit le pouvoir d'achat de la monnaie. La Banque centrale européenne vise environ 2 % par an. Le piège « baisse des prix » a un nom propre : la déflation, phénomène inverse souvent jugé dangereux car il peut paralyser l'activité.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Sciences — Quelle est, en ordre de grandeur, la vitesse de la lumière dans le vide ?",
+      "options": [
+        { "id": "a", "text": "Environ 300 000 km/s" },
+        { "id": "b", "text": "Environ 300 000 km/h" },
+        { "id": "c", "text": "Environ 3 000 km/s" },
+        { "id": "d", "text": "Environ 30 000 000 km/s" }
+      ],
+      "correctOption": "a",
+      "explanation": "La lumière voyage à 299 792 458 m/s dans le vide, soit environ 300 000 km/s — une constante fondamentale qui sert même à définir le mètre depuis 1983. Le piège « km/h » se trompe d'unité : 300 000 km/h serait des centaines de milliers de fois trop lent.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Arts — De quel pays Wolfgang Amadeus Mozart, compositeur de « La Flûte enchantée », était-il originaire ?",
+      "options": [
+        { "id": "a", "text": "Allemagne" },
+        { "id": "b", "text": "Italie" },
+        { "id": "c", "text": "Autriche" },
+        { "id": "d", "text": "France" }
+      ],
+      "correctOption": "c",
+      "explanation": "Mozart est né à Salzbourg en 1756, alors dans le Saint-Empire mais ville aujourd'hui autrichienne ; il est l'une des grandes figures de la musique classique viennoise. Le piège « Allemagne » vient de la langue allemande qu'il parlait : mais Salzbourg et Vienne, où il a fait carrière, sont en Autriche, pas en Allemagne.",
+      "difficulty": 3
+    }
+  ]
+}

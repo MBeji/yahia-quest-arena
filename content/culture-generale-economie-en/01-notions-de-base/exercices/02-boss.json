@@ -1,0 +1,85 @@
+{
+  "title": "⚔️ Boss ⭐⭐⭐: Economics",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Which of these pairs makes up the two main factors of production?",
+      "options": [
+        { "id": "a", "text": "Labour and capital" },
+        { "id": "b", "text": "Supply and demand" },
+        { "id": "c", "text": "Tax and subsidy" },
+        { "id": "d", "text": "Savings and debt" }
+      ],
+      "correctOption": "a",
+      "explanation": "Producing combines two factors: labour (human effort) and capital (machines, tools, buildings). Supply and demand, by contrast, describe how the market works, not the means of production. Some economists add land as a third factor.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which Scottish philosopher is regarded as the father of modern economics with his 1776 work, The Wealth of Nations?",
+      "options": [
+        { "id": "a", "text": "Karl Marx" },
+        { "id": "b", "text": "John Maynard Keynes" },
+        { "id": "c", "text": "David Ricardo" },
+        { "id": "d", "text": "Adam Smith" }
+      ],
+      "correctOption": "d",
+      "explanation": "Adam Smith publishes The Wealth of Nations in 1776, the birth certificate of modern economics and of the \"invisible hand.\" Marx (19th c.) and Keynes (20th c.) came later; Ricardo, a contemporary of Smith, mainly theorised comparative advantage rather than founding the discipline.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "What is the essential difference between nominal GDP and real GDP?",
+      "options": [
+        { "id": "a", "text": "Real GDP includes inflation, nominal GDP excludes it" },
+        {
+          "id": "b",
+          "text": "Real GDP is adjusted for inflation, nominal GDP is calculated at current prices"
+        },
+        { "id": "c", "text": "Nominal GDP covers services only" },
+        { "id": "d", "text": "Real GDP measures exports only" }
+      ],
+      "correctOption": "b",
+      "explanation": "Nominal GDP is measured at current prices and swells with inflation; real GDP is adjusted for inflation, so it reflects true production. It is real GDP that we track to judge growth. Option a flips the two notions exactly: that's the trap.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "In 1944, the Bretton Woods agreements created an institution tasked with safeguarding the stability of the international monetary system. Which one?",
+      "options": [
+        { "id": "a", "text": "The World Trade Organization (WTO)" },
+        { "id": "b", "text": "The United Nations (UN)" },
+        { "id": "c", "text": "The European Central Bank (ECB)" },
+        { "id": "d", "text": "The International Monetary Fund (IMF)" }
+      ],
+      "correctOption": "d",
+      "explanation": "The IMF was born in July 1944 at the Bretton Woods conference to stabilise the post-war monetary system and help countries in difficulty. The WTO dates from 1995, the ECB from 1998 (eurozone), and the UN, founded in 1945, has no specific monetary role.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "An economy experiences 10% inflation over the year. What happens to the purchasing power of 100 kept under the mattress, in real terms?",
+      "options": [
+        { "id": "a", "text": "It rises, because prices go up" },
+        { "id": "b", "text": "It falls: 100 buys fewer goods than before" },
+        { "id": "c", "text": "It stays exactly the same" },
+        { "id": "d", "text": "It automatically doubles" }
+      ],
+      "correctOption": "b",
+      "explanation": "With 10% inflation, what cost 100 now costs 110: the same 100 therefore buys fewer goods, so its purchasing power falls. The common trap is to think rising prices enrich those holding cash: it's the opposite, inflation erodes uninvested savings.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "On a competitive market, the supply of a product suddenly doubles while demand stays unchanged. What is the most likely effect on the equilibrium price?",
+      "options": [
+        { "id": "a", "text": "The equilibrium price falls" },
+        { "id": "b", "text": "The equilibrium price rises" },
+        { "id": "c", "text": "The equilibrium price is multiplied by two" },
+        { "id": "d", "text": "The market vanishes immediately" }
+      ],
+      "correctOption": "a",
+      "explanation": "When supply rises without demand following, the product becomes relatively plentiful and the equilibrium price falls to clear the quantities. The trap is to think that doubling supply doubles the price: the quantity supplied and the price move in opposite directions, not the same one.",
+      "difficulty": 3
+    }
+  ]
+}

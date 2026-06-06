@@ -1,0 +1,12 @@
+{
+  "id": "culture-generale-economie-en",
+  "nameFr": "Culture générale — Économie (EN)",
+  "description": "The big ideas of economics: wealth, markets, money, and the players that keep the world turning.",
+  "attribute": "Richesse",
+  "colorToken": "subject-french",
+  "icon": "TrendingUp",
+  "displayOrder": 20,
+  "contentLanguage": "en",
+  "themeId": "culture-generale",
+  "gradeSlug": null
+}

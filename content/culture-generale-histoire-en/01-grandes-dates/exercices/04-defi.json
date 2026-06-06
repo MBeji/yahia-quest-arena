@@ -1,0 +1,94 @@
+{
+  "title": "👑 Elite challenge ⭐⭐⭐⭐: History",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "In what year did the capture of Constantinople by the Ottomans end the Byzantine (Eastern Roman) Empire?",
+      "options": [
+        { "id": "a", "text": "476" },
+        { "id": "b", "text": "1453" },
+        { "id": "c", "text": "1492" },
+        { "id": "d", "text": "1204" }
+      ],
+      "correctOption": "b",
+      "explanation": "Constantinople fell on 29 May 1453 to Sultan Mehmed II, ending the Byzantine Empire, heir to Rome in the East for nearly a thousand years. The common trap is to confuse it with 476 (a), which concerns the Western Empire. 1204 (d) is the sack of the city by the Crusaders (a temporary occupation), and 1492 (c) is Columbus's arrival in America.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which Tunisian trade unionist, founder of the UGTT and a figure of the independence struggle, was assassinated on 5 December 1952?",
+      "options": [
+        { "id": "a", "text": "Tahar Ben Ammar" },
+        { "id": "b", "text": "Salah Ben Youssef" },
+        { "id": "c", "text": "Farhat Hached" },
+        { "id": "d", "text": "Mongi Slim" }
+      ],
+      "correctOption": "c",
+      "explanation": "Farhat Hached, founder of the UGTT in 1946 and a comrade-in-arms of the Neo-Destour, was assassinated on 5 December 1952, becoming a martyr of independence. Salah Ben Youssef (b) was a rival of Bourguiba; Tahar Ben Ammar (a) signed the independence accord as head of government; Mongi Slim (d) was a Destourian diplomat.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "The 14th of July 1789 was chosen as the French national holiday. But in what year was this decision officially made?",
+      "options": [
+        { "id": "a", "text": "1789" },
+        { "id": "b", "text": "1804" },
+        { "id": "c", "text": "1880" },
+        { "id": "d", "text": "1918" }
+      ],
+      "correctOption": "c",
+      "explanation": "It was in 1880, under the Third Republic, that the 14th of July was instituted as the French national holiday, in reference to the storming of the Bastille of 1789. The trap is to answer 1789 (a), the year of the event itself, rather than that of its institution as a holiday. 1804 (b) is Napoleon's coronation and 1918 (d) the end of the First World War.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "The first German surrender of the Second World War, on 7 May 1945, was followed by a second signing at Stalin's request. In which city did this first signing take place?",
+      "options": [
+        { "id": "a", "text": "Berlin" },
+        { "id": "b", "text": "Reims" },
+        { "id": "c", "text": "Yalta" },
+        { "id": "d", "text": "Potsdam" }
+      ],
+      "correctOption": "b",
+      "explanation": "The German surrender was first signed at Reims on 7 May 1945, at Eisenhower's headquarters; Stalin demanded a second signing in Berlin (Karlshorst) during the night of 8 to 9 May, hence the celebration of 8 May. Yalta (c) and Potsdam (d) are inter-Allied conferences of 1945, not surrender venues.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which Apollo 11 astronaut did NOT walk on the Moon, having remained in orbit in the command module?",
+      "options": [
+        { "id": "a", "text": "Neil Armstrong" },
+        { "id": "b", "text": "Yuri Gagarin" },
+        { "id": "c", "text": "Buzz Aldrin" },
+        { "id": "d", "text": "Michael Collins" }
+      ],
+      "correctOption": "d",
+      "explanation": "Michael Collins stayed alone in lunar orbit aboard the command module Columbia while Armstrong and Aldrin descended to the Moon in 1969. The trap is to name Gagarin (b), who never took part in Apollo 11: he was the first man in space (USSR, 1961). Armstrong (a) and Aldrin (c) did indeed walk on the lunar surface.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Order these four events from oldest to most recent: fall of Rome, fall of Constantinople, storming of the Bastille, fall of the Berlin Wall.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Fall of Rome, fall of Constantinople, storming of the Bastille, fall of the Berlin Wall"
+        },
+        {
+          "id": "b",
+          "text": "Fall of Constantinople, fall of Rome, storming of the Bastille, fall of the Berlin Wall"
+        },
+        {
+          "id": "c",
+          "text": "Fall of Rome, storming of the Bastille, fall of Constantinople, fall of the Berlin Wall"
+        },
+        {
+          "id": "d",
+          "text": "Storming of the Bastille, fall of Rome, fall of Constantinople, fall of the Berlin Wall"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "The chronological order is: fall of Rome (476), fall of Constantinople (1453), storming of the Bastille (1789), fall of the Berlin Wall (1989). The common trap is to swap the two imperial falls (b): the Western Roman Empire fell almost a thousand years before Constantinople. Options (c) and (d) move the Bastille out of its chronological place.",
+      "difficulty": 3
+    }
+  ]
+}

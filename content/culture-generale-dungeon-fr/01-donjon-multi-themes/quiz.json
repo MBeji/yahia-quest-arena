@@ -1,0 +1,65 @@
+{
+  "title": "Échauffement du donjon ⭐",
+  "questions": [
+    {
+      "prompt": "En quelle année a eu lieu la prise de la Bastille, événement fondateur de la Révolution française ?",
+      "options": [
+        { "id": "a", "text": "1789" },
+        { "id": "b", "text": "1799" },
+        { "id": "c", "text": "1769" },
+        { "id": "d", "text": "1815" }
+      ],
+      "correctOption": "a",
+      "explanation": "La prise de la Bastille a eu lieu le 14 juillet 1789, marquant le début symbolique de la Révolution française. À savoir : le 14 juillet n'est devenu fête nationale qu'en 1880. L'année 1799 est celle du coup d'État de Bonaparte (fin de la Révolution), pas de son début.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle est la capitale de l'Australie ?",
+      "options": [
+        { "id": "a", "text": "Sydney" },
+        { "id": "b", "text": "Melbourne" },
+        { "id": "c", "text": "Canberra" },
+        { "id": "d", "text": "Perth" }
+      ],
+      "correctOption": "c",
+      "explanation": "La capitale de l'Australie est Canberra, choisie en 1908 comme compromis entre les rivales Sydney et Melbourne et bâtie de toutes pièces. Sydney et Melbourne sont les plus grandes villes, mais aucune n'est la capitale : la notoriété d'une ville ne fait pas d'elle un siège du gouvernement.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel est le symbole chimique de l'or dans le tableau périodique ?",
+      "options": [
+        { "id": "a", "text": "Ag" },
+        { "id": "b", "text": "Au" },
+        { "id": "c", "text": "Or" },
+        { "id": "d", "text": "Go" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le symbole de l'or est Au, des deux premières lettres de son nom latin « aurum » ; son numéro atomique est 79. Le piège « Ag » est le symbole de l'argent (du latin « argentum ») : l'or et l'argent appartiennent au même groupe 11.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Qui a peint La Joconde, exposée au musée du Louvre ?",
+      "options": [
+        { "id": "a", "text": "Michel-Ange" },
+        { "id": "b", "text": "Raphaël" },
+        { "id": "c", "text": "Léonard de Vinci" },
+        { "id": "d", "text": "Botticelli" }
+      ],
+      "correctOption": "c",
+      "explanation": "La Joconde a été peinte par Léonard de Vinci au début du XVIe siècle, avec la célèbre technique du sfumato (contours fondus). Michel-Ange, contemporain et rival, était surtout sculpteur et fresquiste (plafond de la chapelle Sixtine) : il n'a pas peint ce portrait.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Que mesure le PIB (produit intérieur brut) d'un pays ?",
+      "options": [
+        { "id": "a", "text": "La richesse produite sur le territoire pendant une période donnée" },
+        { "id": "b", "text": "Le nombre total d'habitants du pays" },
+        { "id": "c", "text": "La somme d'argent détenue par l'État" },
+        { "id": "d", "text": "La superficie totale du pays" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le PIB mesure la valeur de tous les biens et services produits sur un territoire pendant une période (souvent un an) ; sa variation indique la croissance économique. Il ne compte ni la population ni le territoire : un grand pays peu productif peut avoir un PIB plus faible qu'un petit pays très productif.",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Quelle est la capitale de l'Australie ?",
+      "options": [
+        { "id": "a", "text": "Sydney" },
+        { "id": "b", "text": "Melbourne" },
+        { "id": "c", "text": "Canberra" },
+        { "id": "d", "text": "Perth" }
+      ],
+      "correctOption": "c",
+      "explanation": "La capitale de l'Australie est Canberra, créée en 1913 comme compromis politique entre Sydney et Melbourne, qui se disputaient le titre. Sydney est la plus grande ville du pays, mais la capitale est bien là où siège le gouvernement.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel est le plus grand pays du monde par sa superficie ?",
+      "options": [
+        { "id": "a", "text": "La Russie" },
+        { "id": "b", "text": "Le Canada" },
+        { "id": "c", "text": "La Chine" },
+        { "id": "d", "text": "Les États-Unis" }
+      ],
+      "correctOption": "a",
+      "explanation": "La Russie est le plus grand pays du monde avec environ 17 millions de km², à cheval sur l'Europe et l'Asie. Le Canada arrive deuxième : c'est un piège courant, car il est très étendu mais reste près de deux fois plus petit que la Russie.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel est le plus grand océan du monde ?",
+      "options": [
+        { "id": "a", "text": "L'océan Atlantique" },
+        { "id": "b", "text": "L'océan Indien" },
+        { "id": "c", "text": "L'océan Arctique" },
+        { "id": "d", "text": "L'océan Pacifique" }
+      ],
+      "correctOption": "d",
+      "explanation": "L'océan Pacifique est le plus grand : il couvre à lui seul près d'un tiers de la surface du globe. L'Atlantique est le deuxième ; l'Arctique, lui, est le plus petit des cinq océans.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Depuis 2023, quel pays est le plus peuplé du monde ?",
+      "options": [
+        { "id": "a", "text": "La Chine" },
+        { "id": "b", "text": "L'Inde" },
+        { "id": "c", "text": "Les États-Unis" },
+        { "id": "d", "text": "L'Indonésie" }
+      ],
+      "correctOption": "b",
+      "explanation": "L'Inde a dépassé la Chine en 2023 et compte désormais plus de 1,4 milliard d'habitants. La Chine a longtemps détenu ce record, mais sa population a commencé à décliner, alors que celle de l'Inde continue de croître.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Combien de continents compte traditionnellement la Terre ?",
+      "options": [
+        { "id": "a", "text": "Cinq" },
+        { "id": "b", "text": "Six" },
+        { "id": "c", "text": "Sept" },
+        { "id": "d", "text": "Huit" }
+      ],
+      "correctOption": "c",
+      "explanation": "On compte traditionnellement 7 continents : Asie, Afrique, Amérique du Nord, Amérique du Sud, Antarctique, Europe et Océanie. L'Asie est le plus vaste et le plus peuplé d'entre eux.",
+      "difficulty": 2
+    }
+  ]
+}

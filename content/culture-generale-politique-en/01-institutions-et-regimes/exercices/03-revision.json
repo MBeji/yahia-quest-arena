@@ -1,0 +1,85 @@
+{
+  "title": "⭐⭐ Review: Politics",
+  "mode": "practice",
+  "difficulty": 2,
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "In the classical regimes, the \"power of the people\" stands in contrast to aristocracy. What does aristocracy mean?",
+      "options": [
+        { "id": "a", "text": "The power of one" },
+        { "id": "b", "text": "The power of the few" },
+        { "id": "c", "text": "The power of the judges" },
+        { "id": "d", "text": "The power of the majority" }
+      ],
+      "correctOption": "b",
+      "explanation": "Aristocracy (from the Greek aristos, \"the best\") is the rule of the few, supposedly the most qualified. The power of one is monarchy; the power of the majority is democracy. These three families of regimes were already described in antiquity by Aristotle.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Why does Montesquieu defend the separation of powers?",
+      "options": [
+        { "id": "a", "text": "To speed up the passing of laws" },
+        { "id": "b", "text": "To make the state less expensive" },
+        { "id": "c", "text": "To prevent the abuse of power and safeguard liberty" },
+        { "id": "d", "text": "To give all power to the king" }
+      ],
+      "correctOption": "c",
+      "explanation": "For Montesquieu, \"power should check power\": by entrusting the three functions to distinct bodies, tyranny is prevented and liberty is protected. The aim is neither speed nor economy, and certainly not to concentrate power in the hands of one person — that would be the opposite of his thesis.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which statement correctly describes a parliamentary regime?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The government is accountable to Parliament, which can bring it down"
+        },
+        { "id": "b", "text": "The president can never be removed by Parliament" },
+        { "id": "c", "text": "There is no elected assembly at all" },
+        { "id": "d", "text": "The judges vote on the laws" }
+      ],
+      "correctOption": "a",
+      "explanation": "In a parliamentary regime, the government derives its legitimacy from Parliament and can be brought down by it (a vote of no confidence). The impossibility of removing the executive characterizes the presidential regime instead. A Parliament always exists, and judges never vote on the laws.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "The United Kingdom is an example of which type of regime?",
+      "options": [
+        { "id": "a", "text": "A presidential republic" },
+        { "id": "b", "text": "A military dictatorship" },
+        { "id": "c", "text": "An absolute monarchy" },
+        { "id": "d", "text": "A constitutional monarchy" }
+      ],
+      "correctOption": "d",
+      "explanation": "The United Kingdom is a constitutional monarchy: a king (a hereditary head of state) with a largely symbolic role, and a Prime Minister who governs with the support of Parliament. It is not an absolute monarchy (the sovereign's powers are strictly limited) nor a republic, since the head of state is not elected.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which Constitution governs the French Fifth Republic?",
+      "options": [
+        { "id": "a", "text": "The Constitution of 1946" },
+        { "id": "b", "text": "The Constitution of 1958" },
+        { "id": "c", "text": "The Constitution of 1875" },
+        { "id": "d", "text": "The Constitution of 1791" }
+      ],
+      "correctOption": "b",
+      "explanation": "The Fifth Republic is governed by the Constitution of 4 October 1958, championed by Charles de Gaulle. The one of 1946 founded the Fourth Republic, and the one of 1791 (born of the Revolution) established a constitutional monarchy: these are neighbouring texts but other regimes.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Where is the headquarters of the United Nations located?",
+      "options": [
+        { "id": "a", "text": "Geneva" },
+        { "id": "b", "text": "Paris" },
+        { "id": "c", "text": "New York" },
+        { "id": "d", "text": "Brussels" }
+      ],
+      "correctOption": "c",
+      "explanation": "The UN headquarters is in New York, in the United States. Geneva does host a major UN office (and the former institutions of the League of Nations), but not the headquarters; Brussels is the heart of the European Union and NATO, and Paris that of UNESCO.",
+      "difficulty": 2
+    }
+  ]
+}

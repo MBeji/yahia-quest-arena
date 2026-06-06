@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss ⭐⭐⭐: History",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Which date conventionally marks the beginning of the First World War?",
+      "options": [
+        { "id": "a", "text": "1914" },
+        { "id": "b", "text": "1918" },
+        { "id": "c", "text": "1939" },
+        { "id": "d", "text": "1871" }
+      ],
+      "correctOption": "a",
+      "explanation": "The First World War began in 1914 and ended in 1918. It was triggered after the assassination of Archduke Franz Ferdinand in Sarajevo. 1918 (b) is its end, 1939 (c) the start of the Second World War, and 1871 (d) the year of German unification.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which Neo-Destour leader negotiated Tunisia's independence and became its first president?",
+      "options": [
+        { "id": "a", "text": "Gamal Abdel Nasser" },
+        { "id": "b", "text": "Tahar Ben Ammar" },
+        { "id": "c", "text": "Farhat Hached" },
+        { "id": "d", "text": "Habib Bourguiba" }
+      ],
+      "correctOption": "d",
+      "explanation": "Habib Bourguiba, founder of the Neo-Destour, led the fight for independence won on 20 March 1956 and became the first president of the Tunisian Republic in 1957. Tahar Ben Ammar (b) was the head of government who signed the accord, but not the leader of the movement. Farhat Hached (c) was a trade unionist assassinated in 1952. Nasser (a) led Egypt.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which Germanic chieftain deposed the last Western Roman emperor in 476?",
+      "options": [
+        { "id": "a", "text": "Attila" },
+        { "id": "b", "text": "Clovis" },
+        { "id": "c", "text": "Odoacer" },
+        { "id": "d", "text": "Charlemagne" }
+      ],
+      "correctOption": "c",
+      "explanation": "In 476, the Germanic chieftain Odoacer deposed Romulus Augustulus, marking the end of the Western Roman Empire and of Antiquity. Attila (a), king of the Huns, had died back in 453. Clovis (b), king of the Franks, and Charlemagne (d), crowned emperor in the year 800, are later figures of the Middle Ages.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Where was the armistice of 11 November 1918 signed, ending the fighting of the First World War?",
+      "options": [
+        { "id": "a", "text": "In the Hall of Mirrors at Versailles" },
+        { "id": "b", "text": "In a railway carriage at Rethondes (Compiègne forest)" },
+        { "id": "c", "text": "At the palace of Yalta" },
+        { "id": "d", "text": "In a school in Reims" }
+      ],
+      "correctOption": "b",
+      "explanation": "The armistice of 11 November 1918 was signed in a dining car, in the clearing of Rethondes (Compiègne forest). The Treaty of Versailles (a), by contrast, would be signed in 1919. Yalta (c) is the 1945 conference between the Allies, and Reims (d) is where the first German surrender of 1945 was signed — a common chronological trap.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which fundamental text, adopted on 26 August 1789, proclaims that \"men are born and remain free and equal in rights\"?",
+      "options": [
+        { "id": "a", "text": "The Civil Code" },
+        { "id": "b", "text": "The Declaration of the Rights of Man and of the Citizen" },
+        { "id": "c", "text": "The Charter of the United Nations" },
+        { "id": "d", "text": "The Edict of Nantes" }
+      ],
+      "correctOption": "b",
+      "explanation": "The Declaration of the Rights of Man and of the Citizen, adopted on 26 August 1789, sets out this founding principle; it remains a reference text for human rights. The Civil Code (a) dates from 1804 (Napoleon), the Charter of the United Nations (c) from 1945, and the Edict of Nantes (d) from 1598 (religious tolerance) — texts from entirely different eras.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "The Second World War ended on different dates in Europe and in Asia. Which pairing is correct?",
+      "options": [
+        { "id": "a", "text": "Europe: 2 September 1945; Japan: 8 May 1945" },
+        { "id": "b", "text": "Europe: 8 May 1945; Japan: 2 September 1945" },
+        { "id": "c", "text": "Europe: 11 November 1945; Japan: 8 May 1945" },
+        { "id": "d", "text": "Europe: 8 May 1939; Japan: 2 September 1939" }
+      ],
+      "correctOption": "b",
+      "explanation": "The German surrender was signed on 8 May 1945 (end of the war in Europe), while the Japanese surrender, after Hiroshima and Nagasaki, came on 2 September 1945 (worldwide end of the conflict). The common trap (a) is to swap the two dates. 11 November (c) refers to 1918, and 1939 (d) is the year the war broke out, not when it ended.",
+      "difficulty": 3
+    }
+  ]
+}

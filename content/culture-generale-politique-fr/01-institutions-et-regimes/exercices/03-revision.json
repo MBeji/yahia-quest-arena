@@ -1,0 +1,85 @@
+{
+  "title": "⭐⭐ Révision : Politique",
+  "mode": "practice",
+  "difficulty": 2,
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Le « pouvoir du peuple » s'oppose, dans les régimes classiques, à l'aristocratie. Que désigne l'aristocratie ?",
+      "options": [
+        { "id": "a", "text": "Le pouvoir d'un seul" },
+        { "id": "b", "text": "Le pouvoir de quelques-uns" },
+        { "id": "c", "text": "Le pouvoir des juges" },
+        { "id": "d", "text": "Le pouvoir de la majorité" }
+      ],
+      "correctOption": "b",
+      "explanation": "L'aristocratie (du grec aristos, « le meilleur ») est le gouvernement de quelques-uns, censés être les plus qualifiés. Le pouvoir d'un seul est la monarchie ; celui de la majorité, la démocratie. Ces trois familles de régimes ont été décrites dès l'Antiquité par Aristote.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Pourquoi Montesquieu défend-il la séparation des pouvoirs ?",
+      "options": [
+        { "id": "a", "text": "Pour accélérer le vote des lois" },
+        { "id": "b", "text": "Pour rendre l'État moins coûteux" },
+        { "id": "c", "text": "Pour empêcher l'abus de pouvoir et garantir la liberté" },
+        { "id": "d", "text": "Pour donner tous les pouvoirs au roi" }
+      ],
+      "correctOption": "c",
+      "explanation": "Pour Montesquieu, « le pouvoir arrête le pouvoir » : en confiant les trois fonctions à des organes distincts, on empêche la tyrannie et on protège la liberté. L'objectif n'est ni la rapidité ni l'économie, et certainement pas de concentrer le pouvoir entre les mains d'un seul — ce serait l'inverse de sa thèse.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle affirmation décrit correctement un régime parlementaire ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Le gouvernement est responsable devant le Parlement, qui peut le renverser"
+        },
+        { "id": "b", "text": "Le président ne peut jamais être renversé par le Parlement" },
+        { "id": "c", "text": "Il n'existe aucune assemblée élue" },
+        { "id": "d", "text": "Les juges votent les lois" }
+      ],
+      "correctOption": "a",
+      "explanation": "Dans un régime parlementaire, le gouvernement tient sa légitimité du Parlement et peut être renversé par lui (motion de censure). L'impossibilité de renverser l'exécutif caractérise au contraire le régime présidentiel. Un Parlement existe toujours, et les juges ne votent jamais les lois.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Le Royaume-Uni est un exemple de quel type de régime ?",
+      "options": [
+        { "id": "a", "text": "Une république présidentielle" },
+        { "id": "b", "text": "Une dictature militaire" },
+        { "id": "c", "text": "Une monarchie absolue" },
+        { "id": "d", "text": "Une monarchie constitutionnelle" }
+      ],
+      "correctOption": "d",
+      "explanation": "Le Royaume-Uni est une monarchie constitutionnelle : un roi (chef d'État héréditaire) au rôle largement symbolique, et un Premier ministre qui gouverne avec le soutien du Parlement. Ce n'est pas une monarchie absolue (les pouvoirs du souverain sont strictement limités) ni une république, puisque le chef d'État n'est pas élu.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle Constitution régit la Ve République française ?",
+      "options": [
+        { "id": "a", "text": "La Constitution de 1946" },
+        { "id": "b", "text": "La Constitution de 1958" },
+        { "id": "c", "text": "La Constitution de 1875" },
+        { "id": "d", "text": "La Constitution de 1791" }
+      ],
+      "correctOption": "b",
+      "explanation": "La Ve République est régie par la Constitution du 4 octobre 1958, portée par Charles de Gaulle. Celle de 1946 fondait la IVe République, et celle de 1791 (issue de la Révolution) instaurait une monarchie constitutionnelle : ce sont des textes voisins mais d'autres régimes.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Où se trouve le siège des Nations unies ?",
+      "options": [
+        { "id": "a", "text": "Genève" },
+        { "id": "b", "text": "Paris" },
+        { "id": "c", "text": "New York" },
+        { "id": "d", "text": "Bruxelles" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le siège de l'ONU est à New York, aux États-Unis. Genève abrite bien un grand bureau de l'ONU (et d'anciennes institutions de la SDN), mais pas le siège ; Bruxelles est le cœur de l'Union européenne et de l'OTAN, et Paris celui de l'UNESCO.",
+      "difficulty": 2
+    }
+  ]
+}
