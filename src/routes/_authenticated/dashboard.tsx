@@ -364,7 +364,7 @@ function Dashboard() {
                   <Zap className="h-4 w-4" /> {profile.xp} XP
                 </div>
                 <div className="flex items-center gap-1 rounded-full border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/10 px-3 py-1 text-sm font-bold text-[color:var(--gold)]">
-                  <Sparkles className="h-4 w-4" /> {profile.yahia_coins ?? 0} XP Coins
+                  <Sparkles className="h-4 w-4" /> {profile.yahia_coins ?? 0} Coins
                 </div>
               </div>
               <div className="mt-4">

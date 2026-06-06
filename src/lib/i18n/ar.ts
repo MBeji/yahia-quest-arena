@@ -103,7 +103,7 @@ export const ar: TranslationKeys = {
     consecutiveDays: "أيام متتالية",
     quoteLabel: "حكمة اليوم",
     streakLostTitle: "ضاعت السلسلة!",
-    streakLostDesc: "استرجع سلسلتك مقابل 15 عملة XP (كان لديك {n} أيام)",
+    streakLostDesc: "استرجع سلسلتك مقابل 15 عملة (كان لديك {n} أيام)",
     streakRecover: "🔥 استرجع",
     retryLabel: "⚡ أعد المحاولة",
     retryTitle: "آخر تمرين لك",

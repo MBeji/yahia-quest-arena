@@ -101,7 +101,7 @@ export function DashboardBadgesShop({
                     </div>
                   </div>
                   <div className="rounded-full bg-[color:var(--gold)]/10 px-3 py-1 text-xs font-bold text-[color:var(--gold)]">
-                    {item.priceCoins} XP Coins
+                    {item.priceCoins} Coins
                   </div>
                 </div>
                 <p className="mt-3 text-sm text-muted-foreground">

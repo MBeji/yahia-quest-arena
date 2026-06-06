@@ -106,7 +106,7 @@ export const fr: TranslationKeys = {
     consecutiveDays: "jours consécutifs",
     quoteLabel: "Parole du jour",
     streakLostTitle: "Streak perdu !",
-    streakLostDesc: "Récupère ton streak pour 15 XP Coins (tu avais {n} jours)",
+    streakLostDesc: "Récupère ton streak pour 15 Coins (tu avais {n} jours)",
     streakRecover: "🔥 Récupérer",
     retryLabel: "⚡ Retenter",
     retryTitle: "Ton dernier exercice",

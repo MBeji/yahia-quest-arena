@@ -138,7 +138,7 @@ describe("gamification.progression — recoverStreak", () => {
 
     const { recoverStreak } = await import("@/features/progression");
     await expect((recoverStreak as unknown as () => Promise<unknown>)()).rejects.toThrow(
-      "15 XP Coins",
+      "15 Coins",
     );
   });
 

@@ -104,7 +104,7 @@ export function dungeonRunsPerDay(level: number): number {
   return Math.max(0, Math.min(level, DUNGEON_MAX_RUNS_PER_DAY));
 }
 
-/** Cost in XP Coins to recover a lost streak */
+/** Cost in Coins to recover a lost streak */
 export const STREAK_RECOVERY_COST = 15;
 
 // ---------------------------------------------------------------------------
