@@ -1,0 +1,59 @@
+name: DB integration tests
+
+# Runs the pgTAP suite (supabase/tests/*.sql) against a REAL Postgres with ALL
+# migrations applied, via the Supabase CLI local stack. This is the executable
+# safety net for the SECURITY DEFINER SQL (grants, RLS, scoring/anti-cheat) that
+# the Vitest unit suite cannot cover because it mocks Supabase.
+#
+# Harness choice: we use the Supabase CLI (`supabase db start` + `supabase test
+# db`) rather than a bare `postgres:` service container. The CLI applies every
+# migration in `supabase/migrations/` in order against the real Supabase image,
+# so `auth.uid()`, `auth.jwt()` and the `anon` / `authenticated` / `service_role`
+# roles match production exactly — which is precisely what these tests assert
+# against. A bare postgres service would need hand-rolled shims for all of that.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Read-only: the job only needs the checkout.
+permissions:
+  contents: read
+
+# A second push to the same ref cancels the in-flight run (Docker boots are slow).
+concurrency:
+  group: db-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pgtap:
+    name: pgTAP suite
+    runs-on: ubuntu-latest
+    # Booting the Supabase stack (pulling images) + applying ~60 migrations is
+    # the slow part; 20 min is comfortable headroom over the typical ~5-8 min.
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Install the Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start the local stack (applies all migrations)
+        # `supabase db start` boots just Postgres + applies every migration in
+        # supabase/migrations/ in order. We avoid the full `supabase start`
+        # (Studio/Kong/etc.) since the tests only need the database.
+        run: supabase db start
+
+      - name: Run pgTAP integration tests
+        # `supabase test db` discovers supabase/tests/*.sql, runs them through
+        # pg_prove, and exits non-zero on ANY failing assertion -> fails the job.
+        run: supabase test db
+
+      - name: Tear down
+        if: always()
+        run: supabase stop --no-backup
