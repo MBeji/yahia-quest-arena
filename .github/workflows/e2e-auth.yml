@@ -1,8 +1,9 @@
 name: E2E (authenticated)
 
 # Real authenticated browser journeys against a dedicated TEST Supabase project.
-# Runs on demand and on main. It SKIPS GRACEFULLY (green) when the test secrets
-# are not configured, so it never blocks contributors who don't have them.
+# Runs in the nightly build (see nightly.yml) and on demand. It SKIPS GRACEFULLY
+# (green) when the test secrets are not configured, so it never blocks
+# contributors who don't have them.
 #
 # Required repository secrets:
 #   TEST_SUPABASE_URL                – the TEST project URL (NOT production)
@@ -13,9 +14,8 @@ name: E2E (authenticated)
 # Prereq: run all DB migrations + content on the test project once.
 
 on:
+  workflow_call:
   workflow_dispatch:
-  push:
-    branches: [main]
 
 concurrency:
   group: e2e-auth-${{ github.ref }}

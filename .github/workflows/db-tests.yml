@@ -12,10 +12,11 @@ name: DB integration tests
 # roles match production exactly — which is precisely what these tests assert
 # against. A bare postgres service would need hand-rolled shims for all of that.
 
+# Slow pgTAP suite (Docker + ~60 migrations, ~5-8 min). No longer per-commit: it
+# runs in the nightly build (see nightly.yml) and on demand from the Actions tab.
 on:
-  pull_request:
-  push:
-    branches: [main]
+  workflow_call:
+  workflow_dispatch:
 
 # Read-only: the job only needs the checkout.
 permissions:
