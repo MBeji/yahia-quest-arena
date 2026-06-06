@@ -37,6 +37,7 @@ const GoldAmbientCanvas = lazy(() => import("@/components/visual/gold-ambient-ca
 import { formatStudentAllianceCode } from "@/features/parent-report";
 import { useT } from "@/lib/i18n";
 import { xpToNextLevel, xpWithinLevel } from "@/shared/lib/level";
+import { HeroAvatar } from "@/features/dashboard/components/hero-avatar";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 
 const DashboardRadarInventory = lazy(() =>
@@ -342,9 +343,7 @@ function Dashboard() {
           <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/30 blur-3xl" />
           <div className="absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/20 blur-3xl" />
           <div className="relative grid gap-6 sm:grid-cols-[auto,1fr,auto] sm:items-center">
-            <div className="grid h-20 w-20 place-items-center rounded-2xl bg-[image:var(--gradient-gold)] shadow-gold animate-pulse-neon">
-              <Sparkles className="h-9 w-9 text-black" />
-            </div>
+            <HeroAvatar avatarSlug={profile.avatar_slug} />
             <div>
               <div className="text-xs uppercase tracking-[0.3em] text-[color:var(--gold)]">
                 {profile.hero_class}
@@ -722,7 +721,12 @@ function Dashboard() {
                   </div>
                 }
               >
-                <DashboardRadarInventory radarData={radarData} inventory={inventory} />
+                <DashboardRadarInventory
+                  radarData={radarData}
+                  inventory={inventory}
+                  avatarSlug={profile.avatar_slug}
+                  displayName={profile.display_name}
+                />
               </Suspense>
             ) : (
               <div className="space-y-4">

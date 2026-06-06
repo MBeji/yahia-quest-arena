@@ -445,6 +445,7 @@ describe("gamification.dashboard — getDashboardSecondary", () => {
         description: null,
         price_coins: 100,
         is_active: true,
+        effect_payload: { avatarSlug: "samurai" },
       },
     ];
 
@@ -461,10 +462,15 @@ describe("gamification.dashboard — getDashboardSecondary", () => {
     const res = result as Record<string, unknown>;
     expect((res.badges as unknown[]).length).toBe(1);
     expect((res.inventory as unknown[]).length).toBe(1);
-    const shop = res.shopItems as Array<{ isOwned: boolean; isEquipped: boolean }>;
+    const shop = res.shopItems as Array<{
+      isOwned: boolean;
+      isEquipped: boolean;
+      avatarSlug: string | null;
+    }>;
     expect(shop.length).toBe(1);
     expect(shop[0].isOwned).toBe(true);
     expect(shop[0].isEquipped).toBe(true);
+    expect(shop[0].avatarSlug).toBe("samurai");
   });
 
   it("throws a generic French message on badges error (#14)", async () => {

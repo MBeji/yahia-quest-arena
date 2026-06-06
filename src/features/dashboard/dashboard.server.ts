@@ -143,7 +143,7 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
         .order("acquired_at", { ascending: false }),
       supabase
         .from("shop_items")
-        .select("id,code,name,item_type,description,price_coins,is_active")
+        .select("id,code,name,item_type,description,price_coins,is_active,effect_payload")
         .eq("is_active", true)
         .order("price_coins", { ascending: true }),
     ]);
@@ -194,6 +194,11 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
     const inventoryByCode = new Map(inventory.map((item) => [item.code, item]));
     const shopItems: DashboardShopItem[] = (shopRes.data ?? []).map((item) => {
       const owned = inventoryByCode.get(item.code);
+      const payload =
+        item.effect_payload && typeof item.effect_payload === "object"
+          ? (item.effect_payload as Record<string, unknown>)
+          : {};
+      const avatarSlug = typeof payload.avatarSlug === "string" ? payload.avatarSlug : null;
 
       return {
         code: item.code,
@@ -204,6 +209,7 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
         isOwned: Boolean(owned),
         isEquipped: owned?.isEquipped ?? false,
         quantity: owned?.quantity ?? 0,
+        avatarSlug,
       };
     });
 

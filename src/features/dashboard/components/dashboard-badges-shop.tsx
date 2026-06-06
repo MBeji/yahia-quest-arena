@@ -1,4 +1,6 @@
 import { Loader2, Shield, ShoppingBag } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { avatarEmojiForSlug } from "@/shared/lib/avatar";
 
 type Badge = {
   code: string;
@@ -17,6 +19,7 @@ type ShopItem = {
   isOwned: boolean;
   isEquipped: boolean;
   quantity: number;
+  avatarSlug: string | null;
 };
 
 type DashboardBadgesShopProps = {
@@ -87,6 +90,7 @@ export function DashboardBadgesShop({
             const canEquip = item.itemType === "skin" && item.isOwned && !item.isEquipped;
             const canBuy = !item.isOwned || item.itemType !== "skin";
             const isBusy = isPurchasePending || isEquipPending;
+            const skinEmoji = avatarEmojiForSlug(item.avatarSlug);
 
             return (
               <div
@@ -94,10 +98,22 @@ export function DashboardBadgesShop({
                 className="rounded-2xl border border-border/50 bg-black/60 p-5 backdrop-blur-md"
               >
                 <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <div className="font-display text-lg font-bold">{item.name}</div>
-                    <div className="text-xs uppercase tracking-widest text-[color:var(--gold)]">
-                      {item.itemType}
+                  <div className="flex items-center gap-3">
+                    {skinEmoji && (
+                      <Avatar className="h-10 w-10 border border-[color:var(--gold)]/40">
+                        <AvatarFallback
+                          className="bg-[image:var(--gradient-gold)] text-lg text-black"
+                          aria-label={item.avatarSlug ?? "avatar"}
+                        >
+                          {skinEmoji}
+                        </AvatarFallback>
+                      </Avatar>
+                    )}
+                    <div>
+                      <div className="font-display text-lg font-bold">{item.name}</div>
+                      <div className="text-xs uppercase tracking-widest text-[color:var(--gold)]">
+                        {item.itemType}
+                      </div>
                     </div>
                   </div>
                   <div className="rounded-full bg-[color:var(--gold)]/10 px-3 py-1 text-xs font-bold text-[color:var(--gold)]">
