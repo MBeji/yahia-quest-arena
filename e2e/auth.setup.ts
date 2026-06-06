@@ -2,26 +2,39 @@ import { test as setup, expect } from "@playwright/test";
 import { TEST_USERS, STORAGE_STATE, E2E_PASSWORD, type Role } from "./helpers/users";
 
 /**
- * Setup project: logs in each seeded test account through the REAL login UI and
- * saves its authenticated browser state to e2e/.auth/<role>.json. The authed
- * specs then reuse that state (via test.use({ storageState })) — fast and
- * avoids re-logging in for every test. This also doubles as a real login smoke
- * test for each role.
+ * Setup project: logs each seeded test account in through the REAL login UI and
+ * saves its authenticated browser state to e2e/.auth/<role>.json, which the
+ * authed specs reuse. Doubles as a per-role login smoke test.
  *
  * Requires the test Supabase project + seeded users (`npm run e2e:seed`).
+ *
+ * NOTE: this is an SSR app — a click can land *before* React hydrates, in which
+ * case the browser does a native form submit (page reload) and never calls
+ * Supabase. We therefore re-navigate + fill + submit inside expect.toPass()
+ * until the client-side sign-in request (POST /auth/v1/token) actually fires.
+ * Each retry starts from a fresh navigation, so a pre-hydration reload can't
+ * livelock the loop. The dev server's first (cold) compile is slow, hence the
+ * generous per-test timeout.
  */
 for (const role of Object.keys(TEST_USERS) as Role[]) {
   setup(`authenticate as ${role}`, async ({ page }) => {
+    setup.setTimeout(120_000);
     const { email } = TEST_USERS[role];
 
-    await page.goto("/auth?mode=login");
+    await expect(async () => {
+      await page.goto("/auth?mode=login");
+      await page.waitForTimeout(2000); // let React hydrate before interacting
+      await page.locator('input[type="email"]').fill(email);
+      await page.locator('input[type="password"]').fill(E2E_PASSWORD);
+      await Promise.all([
+        page.waitForResponse(
+          (r) => r.url().includes("/auth/v1/token") && r.request().method() === "POST",
+          { timeout: 8000 },
+        ),
+        page.locator('button[type="submit"]').click(),
+      ]);
+    }).toPass({ timeout: 90_000 });
 
-    // Robust, locale-independent selectors (the form labels are i18n/â€‘free here).
-    await page.locator('input[type="email"]').fill(email);
-    await page.locator('input[type="password"]').fill(E2E_PASSWORD);
-    await page.locator('button[type="submit"]').click();
-
-    // On success the app redirects authenticated users to the dashboard.
     await page.waitForURL(/\/dashboard/, { timeout: 20_000 });
     await expect(page).toHaveURL(/\/dashboard/);
 

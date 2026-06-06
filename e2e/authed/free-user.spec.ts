@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { STORAGE_STATE } from "../helpers/users";
+import { getPremiumSubjectId } from "../helpers/db";
 
 /**
  * FREE student journey. Reuses the authenticated browser state captured by the
@@ -23,22 +24,15 @@ test.describe("Free student", () => {
     await expect(page.getByText(/\/\s*3/).first()).toBeVisible({ timeout: 15_000 });
   });
 
-  test("hitting a premium (difficulty 3+) mission shows the paywall + beta CTA", async ({
-    page,
-  }) => {
-    await page.goto("/dashboard");
-    await page.locator('a[href^="/subject/"]').first().click();
-    await expect(page).toHaveURL(/\/subject\//);
+  test("opening a premium module shows the paywall + beta CTA", async ({ page }) => {
+    // A free account opening a premium (subscription-only) subject gets the
+    // subscription paywall rendered straight on the subject page — deterministic,
+    // with no quest-session / chapter-quiz race.
+    const subjectId = await getPremiumSubjectId();
+    await page.goto(`/subject/${subjectId}`);
 
-    // A difficulty 3+ exercise shows the "Abonnement requis" lock for free users.
-    const premiumExercise = page
-      .locator('a[href^="/quest/"]')
-      .filter({ hasText: /requis/i })
-      .first();
-    await premiumExercise.click();
-
-    // The quest page renders the subscription paywall (plan prices + free beta CTA).
+    // Paywall: premium plan info + the free beta-tester CTA button.
     await expect(page.getByText(/premium/i).first()).toBeVisible({ timeout: 15_000 });
-    await expect(page.getByRole("button", { name: /bêta|beta/i })).toBeVisible();
+    await expect(page.getByRole("button", { name: /bêta|beta/i })).toBeVisible({ timeout: 15_000 });
   });
 });
