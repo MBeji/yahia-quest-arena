@@ -38,6 +38,7 @@ import { formatStudentAllianceCode } from "@/features/parent-report";
 import { useT } from "@/lib/i18n";
 import { xpToNextLevel, xpWithinLevel } from "@/shared/lib/level";
 import { HeroAvatar } from "@/features/dashboard/components/hero-avatar";
+import { HeroStatChips } from "@/features/dashboard/components/hero-stat-chips";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 
 const DashboardRadarInventory = lazy(() =>
@@ -345,27 +346,16 @@ function Dashboard() {
           <div className="relative grid gap-6 sm:grid-cols-[auto,1fr,auto] sm:items-center">
             <HeroAvatar avatarSlug={profile.avatar_slug} />
             <div>
-              <div className="text-xs uppercase tracking-[0.3em] text-[color:var(--gold)]">
-                {profile.hero_class}
-              </div>
               <h1 className="font-display text-3xl font-bold sm:text-4xl">
                 {profile.display_name}
               </h1>
-              <div className="mt-3 flex flex-wrap items-center gap-3">
-                <div className="rounded-full bg-[color:var(--gold)]/20 px-3 py-1 text-sm font-bold text-[color:var(--gold)]">
-                  Lvl {profile.level}
-                </div>
-                <div className="flex items-center gap-1 rounded-full bg-[color:var(--flame)]/20 px-3 py-1 text-sm font-bold text-[color:var(--flame)]">
-                  <Flame className="h-4 w-4 animate-flame" /> {profile.current_streak}{" "}
-                  {profile.current_streak > 1 ? t.dashboard.days : t.dashboard.day}
-                </div>
-                <div className="flex items-center gap-1 rounded-full bg-[color:var(--neon-gold)]/20 px-3 py-1 text-sm font-bold text-[color:var(--neon-gold)]">
-                  <Zap className="h-4 w-4" /> {profile.xp} XP
-                </div>
-                <div className="flex items-center gap-1 rounded-full border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/10 px-3 py-1 text-sm font-bold text-[color:var(--gold)]">
-                  <Sparkles className="h-4 w-4" /> {profile.yahia_coins ?? 0} Coins
-                </div>
-              </div>
+              <HeroStatChips
+                level={profile.level}
+                currentStreak={profile.current_streak}
+                xp={profile.xp}
+                coins={profile.yahia_coins ?? 0}
+                heroClass={profile.hero_class}
+              />
               <div className="mt-4">
                 <div className="mb-1 flex justify-between text-xs text-muted-foreground">
                   <span>Level {profile.level}</span>

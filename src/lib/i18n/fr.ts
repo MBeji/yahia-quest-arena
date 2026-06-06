@@ -302,6 +302,17 @@ export const fr: TranslationKeys = {
     backToMap: "Retour à la carte",
     empty: "Aucune étape pour l'instant.",
   },
+  explain: {
+    xp: "Tes points d'expérience. Réussis un exercice à 60 % ou plus en battant ton record pour en gagner. 200 XP = 1 niveau.",
+    level: "Ton rang de héros : tu montes d'un niveau tous les 200 XP.",
+    streak: "Tes jours d'entraînement d'affilée. Reviens chaque jour pour la garder en vie !",
+    coins: "Ta monnaie. Gagne-les en réussissant des exercices, dépense-les à la boutique.",
+    heroClass: "Ta classe de héros : elle évolue à mesure que tu montes en niveau.",
+    questResultXp:
+      "XP = récompense de l'exercice × ton score. Conditions : ≥ 60 %, au moins 4 s par question, et battre ton meilleur score sur cet exercice.",
+    questResultScore: "{correct} bonnes réponses sur {total}.",
+    lockedChapter: "Réussis d'abord le quiz de compréhension à 80 % pour débloquer ce chapitre.",
+  },
   quotes: [
     { text: "Le guerrier qui s'entraîne chaque jour devient invincible.", author: "Sensei XP" },
     { text: "Chaque bonne réponse est un coup porté à l'ignorance.", author: "L'Académie" },

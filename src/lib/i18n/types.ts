@@ -312,6 +312,17 @@ export type TranslationKeys = {
     backToMap: string;
     empty: string;
   };
+  // Playful explainability hover hints
+  explain: {
+    xp: string;
+    level: string;
+    streak: string;
+    coins: string;
+    heroClass: string;
+    questResultXp: string;
+    questResultScore: string;
+    lockedChapter: string;
+  };
   // Motivational quotes
   quotes: Array<{ text: string; author: string }>;
 };

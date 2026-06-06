@@ -303,6 +303,17 @@ export const en: TranslationKeys = {
     backToMap: "Back to the map",
     empty: "No steps yet.",
   },
+  explain: {
+    xp: "Your experience points. Pass an exercise at 60% or more and beat your record to earn them. 200 XP = 1 level.",
+    level: "Your hero rank: you go up one level every 200 XP.",
+    streak: "Your training days in a row. Come back every day to keep it alive!",
+    coins: "Your currency. Earn it by passing exercises, spend it in the shop.",
+    heroClass: "Your hero class: it evolves as you level up.",
+    questResultXp:
+      "XP = exercise reward × your score. Conditions: ≥ 60%, at least 4s per question, and beat your best score on this exercise.",
+    questResultScore: "{correct} correct answers out of {total}.",
+    lockedChapter: "Pass the comprehension quiz at 80% first to unlock this chapter.",
+  },
   quotes: [
     { text: "The warrior who trains every day becomes invincible.", author: "Sensei XP" },
     { text: "Every correct answer is a blow against ignorance.", author: "The Academy" },

@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { useT } from "@/lib/i18n";
+import { ExplainHint } from "@/components/ui/explain-hint";
 import { JourneyHeader } from "./journey-header";
 import { JourneyTrack, TrackRow } from "./journey-track";
 import { PathNode } from "./path-node";
@@ -50,7 +51,9 @@ export function SubjectPath({ subjectName, chapters, profile }: SubjectPathProps
           return (
             <TrackRow key={c.id} side={nodeSide(i)} index={i}>
               {c.state === "locked" ? (
-                node
+                <ExplainHint text={t.explain.lockedChapter} label={c.title}>
+                  {node}
+                </ExplainHint>
               ) : (
                 <Link to="/lesson/$chapterId" params={{ chapterId: c.id }} aria-label={c.title}>
                   {node}
