@@ -148,6 +148,7 @@ export type TranslationKeys = {
     levelLabel: string;
     streakLabel: string;
     badgesUnlocked: string;
+    retryShieldUsed: string;
     replayQuest: string;
     nextQuest: string;
     backToSubject: string;

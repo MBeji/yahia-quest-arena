@@ -141,6 +141,7 @@ export const ar: TranslationKeys = {
     levelLabel: "المستوى",
     streakLabel: "سلسلة",
     badgesUnlocked: "شارات مفتوحة",
+    retryShieldUsed: "تم استخدام الدرع — أعد المحاولة دون عقوبة!",
     replayQuest: "إعادة المهمة",
     nextQuest: "المهمة التالية",
     backToSubject: "العودة إلى المادة",

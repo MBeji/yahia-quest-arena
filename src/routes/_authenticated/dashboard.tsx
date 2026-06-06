@@ -225,8 +225,10 @@ function Dashboard() {
     mutationFn: (payload: { itemCode: string }) => activateItem({ data: payload }),
     onSuccess: (res) => {
       // TODO(review #32): hardcoded toast — no matching i18n key exists yet. Add a key
-      // (e.g. t.dashboard.potionArmed with a {name} placeholder), then switch to useT().
-      toast.success(`${res.itemName} activée · prochaine quête.`);
+      // (e.g. t.dashboard.itemArmed with {name}/{slot} placeholders), then switch to useT().
+      const suffix =
+        res.slot === "passive" ? "activé · protège ta série." : "activé · prochaine quête.";
+      toast.success(`${res.itemName} ${suffix}`);
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
     onError: (error) => toast.error(error instanceof Error ? error.message : "Activation failed"),

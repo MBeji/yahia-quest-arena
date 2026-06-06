@@ -58,6 +58,7 @@ describe("equipped skin rendering", () => {
             quantity: 0,
             avatarSlug: "pharaoh",
             isArmable: false,
+            armSlot: null,
             isActive: false,
           },
         ]}

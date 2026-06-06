@@ -15,8 +15,14 @@ type InventoryItem = {
   quantity: number;
   isEquipped: boolean;
   isArmable: boolean;
+  armSlot: "next-quest" | "passive" | null;
   isActive: boolean;
 };
+
+/** Armed-badge label per arming slot (passive streak shield vs next-quest item). */
+function armedLabel(armSlot: "next-quest" | "passive" | null): string {
+  return armSlot === "passive" ? "Actif · protège ta série" : "Actif · prochaine quête";
+}
 
 type DashboardRadarInventoryProps = {
   radarData: RadarPoint[];
@@ -108,7 +114,7 @@ export function DashboardRadarInventory({
                   <div className="mt-3 flex items-center justify-between gap-2">
                     {item.isActive ? (
                       <span className="rounded-full bg-[color:var(--gold)]/15 px-3 py-1 text-xs font-bold text-[color:var(--gold)]">
-                        Actif · prochaine quête
+                        {armedLabel(item.armSlot)}
                       </span>
                     ) : (
                       <button
