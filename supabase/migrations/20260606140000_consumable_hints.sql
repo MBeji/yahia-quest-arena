@@ -54,10 +54,27 @@ BEGIN
     WHERE id = p_question_id;
   IF NOT FOUND THEN RAISE EXCEPTION 'Question not found.'; END IF;
 
-  -- Pick the user's oldest/cheapest hint consumable with at least one charge and
-  -- lock ONLY that inventory row (never the shared shop_items catalog) so two
-  -- concurrent reveals can't both decrement the same unit: the second blocks
-  -- here, then re-checks. Charge count = inventory.quantity (one reveal each).
+  -- Hint source = the question's explanation. Compute it BEFORE touching any
+  -- charge: if there is nothing to reveal we must NOT spend a charge. This keeps
+  -- the same anti-waste invariant as potions/shields — a consumable is consumed
+  -- only when it actually takes effect.
+  v_hint := NULLIF(btrim(COALESCE(v_explanation, '')), '');
+
+  IF v_hint IS NULL THEN
+    -- No hint available for this question → spend nothing, report consumed = false.
+    RETURN jsonb_build_object(
+      'questionId', p_question_id,
+      'hint', NULL,
+      'consumed', false,
+      'itemCode', NULL,
+      'itemName', NULL
+    );
+  END IF;
+
+  -- There is a hint to reveal: pick the user's oldest/cheapest hint consumable
+  -- with at least one charge and lock ONLY that inventory row (never the shared
+  -- shop_items catalog) so two concurrent reveals can't both decrement the same
+  -- unit: the second blocks here, then re-checks. Charge = inventory.quantity.
   SELECT inv.id, si.code, si.name
     INTO v_inv_id, v_item_code, v_item_name
     FROM public.inventory_items inv
@@ -81,14 +98,10 @@ BEGIN
   DELETE FROM public.inventory_items
     WHERE id = v_inv_id AND quantity <= 0;
 
-  -- Hint source = the question's explanation. Graceful fallback when it is
-  -- NULL/empty so a charge is never spent for nothing: a generic "no hint
-  -- available" message (kept simple, no eliminate-option machinery).
-  v_hint := NULLIF(btrim(COALESCE(v_explanation, '')), '');
-
   RETURN jsonb_build_object(
     'questionId', p_question_id,
     'hint', v_hint,
+    'consumed', true,
     'itemCode', v_item_code,
     'itemName', v_item_name
   );

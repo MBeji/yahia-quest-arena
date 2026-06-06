@@ -137,12 +137,16 @@ function QuestPage() {
   const hintMutation = useMutation({
     mutationFn: (payload: { questionId: string }) => reveal({ data: payload }),
     onSuccess: (res) => {
-      // Only the FIRST reveal of a question spends a charge (the RPC decremented
-      // exactly once); record the hint text (or null) and drop a charge locally.
+      // Record the reveal result for this question (text, or null when the
+      // question has no explanation).
       setRevealedHints((prev) =>
         res.questionId in prev ? prev : { ...prev, [res.questionId]: res.hint },
       );
-      setHintsRemaining((n) => Math.max(0, n - 1));
+      // Drop a charge locally only when the RPC actually spent one. A question
+      // with no hint to give costs nothing (anti-waste, matches the server).
+      if (res.consumed) {
+        setHintsRemaining((n) => Math.max(0, n - 1));
+      }
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : "Error"),
   });

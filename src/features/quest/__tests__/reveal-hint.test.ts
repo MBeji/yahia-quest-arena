@@ -65,6 +65,7 @@ describe("quest — revealHint", () => {
           data: {
             questionId: QUESTION_ID,
             hint: "Pense au théorème de Pythagore.",
+            consumed: true,
             itemCode: "booster_hint",
             itemName: "Indice Mystique",
           },
@@ -80,15 +81,22 @@ describe("quest — revealHint", () => {
 
     expect(res.questionId).toBe(QUESTION_ID);
     expect(res.hint).toBe("Pense au théorème de Pythagore.");
+    expect(res.consumed).toBe(true);
     expect(res.itemCode).toBe("booster_hint");
     expect(mockRpc).toHaveBeenCalledWith("consume_hint", { p_question_id: QUESTION_ID });
   });
 
-  it("returns hint=null when the question has no explanation (graceful fallback)", async () => {
+  it("reports consumed=false (no charge spent) when the question has no explanation", async () => {
     mockRpc.mockImplementation(
       rpcResponder({
         consume_hint: {
-          data: { questionId: QUESTION_ID, hint: null, itemCode: "potion_rappel", itemName: "" },
+          data: {
+            questionId: QUESTION_ID,
+            hint: null,
+            consumed: false,
+            itemCode: null,
+            itemName: null,
+          },
           error: null,
         },
       }),
@@ -100,7 +108,7 @@ describe("quest — revealHint", () => {
     })) as Record<string, unknown>;
 
     expect(res.hint).toBeNull();
-    expect(res.itemCode).toBe("potion_rappel");
+    expect(res.consumed).toBe(false);
   });
 
   it("surfaces the RPC error when the user has 0 hint charges", async () => {
@@ -126,6 +134,7 @@ describe("quest — revealHint", () => {
 
     expect(res.questionId).toBe(QUESTION_ID); // falls back to the requested id
     expect(res.hint).toBeNull();
+    expect(res.consumed).toBe(false);
     expect(res.itemCode).toBe("");
   });
 

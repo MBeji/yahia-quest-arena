@@ -439,6 +439,9 @@ export const revealHint = createServerFn({ method: "POST" })
     return {
       questionId: typeof row.questionId === "string" ? row.questionId : data.questionId,
       hint: typeof row.hint === "string" && row.hint.length > 0 ? row.hint : null,
+      // A charge is spent only when the RPC actually revealed a hint; when the
+      // question has no explanation, consumed is false and no charge was used.
+      consumed: row.consumed === true,
       itemCode: typeof row.itemCode === "string" ? row.itemCode : "",
       itemName: typeof row.itemName === "string" ? row.itemName : "",
     };
