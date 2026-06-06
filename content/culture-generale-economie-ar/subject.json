@@ -1,0 +1,12 @@
+{
+  "id": "culture-generale-economie-ar",
+  "nameFr": "Culture générale — Économie (AR)",
+  "description": "المفاهيم الكبرى في الاقتصاد: الثروة، السوق، النقود والأطراف الفاعلة التي تدير العالم.",
+  "attribute": "Richesse",
+  "colorToken": "subject-french",
+  "icon": "TrendingUp",
+  "displayOrder": 21,
+  "contentLanguage": "ar",
+  "themeId": "culture-generale",
+  "gradeSlug": null
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision : Géographie",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Quelle est la capitale des États-Unis ?",
+      "options": [
+        { "id": "a", "text": "New York" },
+        { "id": "b", "text": "Washington, D.C." },
+        { "id": "c", "text": "Los Angeles" },
+        { "id": "d", "text": "Chicago" }
+      ],
+      "correctOption": "b",
+      "explanation": "La capitale des États-Unis est Washington, D.C., un district fédéral distinct des États. New York, la plus grande ville et siège de l'ONU, est le piège habituel car beaucoup la croient capitale.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel est le continent le plus peuplé du monde ?",
+      "options": [
+        { "id": "a", "text": "L'Afrique" },
+        { "id": "b", "text": "L'Europe" },
+        { "id": "c", "text": "L'Asie" },
+        { "id": "d", "text": "L'Amérique" }
+      ],
+      "correctOption": "c",
+      "explanation": "L'Asie est le continent le plus peuplé : elle abrite plus de la moitié de l'humanité, dont la Chine et l'Inde, les deux pays les plus peuplés. C'est aussi le plus vaste des continents.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle est la capitale de l'Espagne ?",
+      "options": [
+        { "id": "a", "text": "Barcelone" },
+        { "id": "b", "text": "Séville" },
+        { "id": "c", "text": "Valence" },
+        { "id": "d", "text": "Madrid" }
+      ],
+      "correctOption": "d",
+      "explanation": "Madrid, située au centre du pays, est la capitale de l'Espagne et sa plus grande ville. Barcelone, capitale de la Catalogne et célèbre métropole côtière, est le distracteur le plus tentant.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Sur quels deux continents s'étend la Russie ?",
+      "options": [
+        { "id": "a", "text": "L'Europe et l'Asie" },
+        { "id": "b", "text": "L'Asie et l'Afrique" },
+        { "id": "c", "text": "L'Europe et l'Amérique du Nord" },
+        { "id": "d", "text": "L'Asie et l'Océanie" }
+      ],
+      "correctOption": "a",
+      "explanation": "La Russie est un pays transcontinental qui s'étend sur l'Europe (à l'ouest de l'Oural) et l'Asie (la Sibérie, à l'est). C'est aussi le plus grand pays du monde par sa superficie.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel pays a longtemps été le plus peuplé avant d'être dépassé par l'Inde en 2023 ?",
+      "options": [
+        { "id": "a", "text": "L'Indonésie" },
+        { "id": "b", "text": "La Chine" },
+        { "id": "c", "text": "Les États-Unis" },
+        { "id": "d", "text": "Le Pakistan" }
+      ],
+      "correctOption": "b",
+      "explanation": "La Chine fut le pays le plus peuplé du monde pendant des décennies, jusqu'à ce que l'Inde la dépasse en 2023. La population chinoise a même commencé à décliner, conséquence d'un faible taux de natalité.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Combien d'océans compte-t-on aujourd'hui sur la Terre ?",
+      "options": [
+        { "id": "a", "text": "Trois" },
+        { "id": "b", "text": "Quatre" },
+        { "id": "c", "text": "Cinq" },
+        { "id": "d", "text": "Six" }
+      ],
+      "correctOption": "c",
+      "explanation": "On reconnaît aujourd'hui 5 océans : Pacifique, Atlantique, Indien, Austral et Arctique. L'océan Austral, autour de l'Antarctique, est le plus récemment ajouté à la liste : on disait autrefois qu'il n'y en avait que quatre.",
+      "difficulty": 2
+    }
+  ]
+}

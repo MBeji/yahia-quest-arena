@@ -1,0 +1,82 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : Géographie",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Quelle est la capitale de la Suisse ?",
+      "options": [
+        { "id": "a", "text": "Zurich" },
+        { "id": "b", "text": "Genève" },
+        { "id": "c", "text": "Berne" },
+        { "id": "d", "text": "Bâle" }
+      ],
+      "correctOption": "c",
+      "explanation": "Berne est la « ville fédérale » et le siège du gouvernement suisse depuis 1848. Le piège courant est Zurich, la plus grande ville, et Genève, siège de nombreuses organisations internationales ; mais aucune des deux n'est la capitale.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle est la capitale administrative (exécutive) de l'Afrique du Sud ?",
+      "options": [
+        { "id": "a", "text": "Le Cap" },
+        { "id": "b", "text": "Johannesburg" },
+        { "id": "c", "text": "Durban" },
+        { "id": "d", "text": "Pretoria" }
+      ],
+      "correctOption": "d",
+      "explanation": "L'Afrique du Sud a trois capitales : Pretoria (exécutive), Le Cap (législative) et Bloemfontein (judiciaire) ; la capitale du gouvernement est donc Pretoria. Cette répartition, datant de 1910, fut un compromis pour qu'aucune région ne domine. Johannesburg, la plus grande ville, n'a aucun de ces rôles.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle est la capitale du Kazakhstan ?",
+      "options": [
+        { "id": "a", "text": "Almaty" },
+        { "id": "b", "text": "Astana" },
+        { "id": "c", "text": "Tachkent" },
+        { "id": "d", "text": "Bichkek" }
+      ],
+      "correctOption": "b",
+      "explanation": "La capitale du Kazakhstan est Astana, qui a remplacé Almaty en 1997 (elle s'est même brièvement appelée Nour-Soultan de 2019 à 2022). Tachkent et Bichkek sont des distracteurs : ce sont les capitales de l'Ouzbékistan et du Kirghizistan voisins.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle est la plus grande étendue d'eau intérieure (le plus grand lac) du monde ?",
+      "options": [
+        { "id": "a", "text": "La mer Caspienne" },
+        { "id": "b", "text": "Le lac Supérieur" },
+        { "id": "c", "text": "Le lac Victoria" },
+        { "id": "d", "text": "Le lac Baïkal" }
+      ],
+      "correctOption": "a",
+      "explanation": "Malgré son nom de « mer », la mer Caspienne est le plus grand lac du monde par sa superficie. Le lac Supérieur est le plus grand lac d'eau douce, et le Baïkal le plus profond : ce sont les pièges classiques de cette question.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quel pays est entièrement entouré par l'Afrique du Sud (enclave) ?",
+      "options": [
+        { "id": "a", "text": "L'Eswatini (Swaziland)" },
+        { "id": "b", "text": "Le Botswana" },
+        { "id": "c", "text": "Le Lesotho" },
+        { "id": "d", "text": "Le Zimbabwe" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le Lesotho est un État enclavé entièrement à l'intérieur de l'Afrique du Sud, un cas rare dans le monde. L'Eswatini est tentant car il est aussi petit et voisin, mais il possède une frontière avec le Mozambique : il n'est donc pas entièrement enclavé.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quel détroit sépare l'Europe de l'Afrique en reliant l'Atlantique à la Méditerranée ?",
+      "options": [
+        { "id": "a", "text": "Le détroit du Bosphore" },
+        { "id": "b", "text": "Le détroit de Gibraltar" },
+        { "id": "c", "text": "Le détroit de Messine" },
+        { "id": "d", "text": "Le canal de Suez" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le détroit de Gibraltar sépare l'Espagne du Maroc et relie l'océan Atlantique à la mer Méditerranée. Le Bosphore est le piège : il sépare bien deux continents, mais c'est l'Europe de l'Asie, à Istanbul, et non l'Europe de l'Afrique.",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "title": "Comprehension test ⭐",
+  "questions": [
+    {
+      "prompt": "What does the word \"democracy\" literally mean, according to its Greek origin?",
+      "options": [
+        { "id": "a", "text": "The power of the people" },
+        { "id": "b", "text": "The power of one" },
+        { "id": "c", "text": "The power of the wealthiest" },
+        { "id": "d", "text": "The power of the military" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Democracy\" comes from the Greek dêmos (\"the people\") and kratos (\"power\"): the power of the people. The regime was born in Athens in the 5th century BC. The \"power of one\" describes a monarchy instead, and the \"power of the few\" describes an aristocracy.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which philosopher developed the theory of the separation of powers in \"The Spirit of the Laws\" (1748)?",
+      "options": [
+        { "id": "a", "text": "Voltaire" },
+        { "id": "b", "text": "Montesquieu" },
+        { "id": "c", "text": "Rousseau" },
+        { "id": "d", "text": "Descartes" }
+      ],
+      "correctOption": "b",
+      "explanation": "It was Montesquieu who, in \"The Spirit of the Laws\" (1748), distinguished the legislative, executive and judicial powers to prevent tyranny. Rousseau (\"The Social Contract\") mainly developed the idea of popular sovereignty, and Voltaire that of tolerance: neither of them theorized this separation.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "How many distinct powers does the separation of powers identify?",
+      "options": [
+        { "id": "a", "text": "Two" },
+        { "id": "b", "text": "Four" },
+        { "id": "c", "text": "Three" },
+        { "id": "d", "text": "Five" }
+      ],
+      "correctOption": "c",
+      "explanation": "There are three powers: the legislative (make the laws), the executive (enforce them) and the judicial (judge). The press is sometimes called the \"fourth estate\", but that is a figure of speech: only the first three are public powers in the constitutional sense.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which power has the main role of voting on and making the laws?",
+      "options": [
+        { "id": "a", "text": "The executive power" },
+        { "id": "b", "text": "The judicial power" },
+        { "id": "c", "text": "The military power" },
+        { "id": "d", "text": "The legislative power" }
+      ],
+      "correctOption": "d",
+      "explanation": "The legislative power, exercised by Parliament (an elected assembly), votes on the laws. The executive (head of state, government) enforces them, and the judiciary (the courts) makes sure they are respected. Confusing the executive and the legislative is the most common mistake.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "In a republic, how does the head of state come to power?",
+      "options": [
+        { "id": "a", "text": "By heredity, from father to son" },
+        { "id": "b", "text": "Through an election" },
+        { "id": "c", "text": "By a lottery for life" },
+        { "id": "d", "text": "Through a systematic coup d'état" }
+      ],
+      "correctOption": "b",
+      "explanation": "In a republic, the head of state is elected (directly or indirectly) for a limited term. That is what sets it apart from a monarchy, where the head of state (king or queen) ascends to the throne by heredity. The word \"republic\" comes from the Latin res publica, \"the public thing\".",
+      "difficulty": 2
+    }
+  ]
+}

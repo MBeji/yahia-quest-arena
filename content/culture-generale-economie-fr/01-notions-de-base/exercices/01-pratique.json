@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Quiz : Économie",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Quel concept de base désigne le fait que les ressources sont limitées alors que les besoins sont illimités ?",
+      "options": [
+        { "id": "a", "text": "La rareté" },
+        { "id": "b", "text": "L'abondance" },
+        { "id": "c", "text": "La gratuité" },
+        { "id": "d", "text": "Le gaspillage" }
+      ],
+      "correctOption": "a",
+      "explanation": "La rareté est le point de départ de l'économie : comme les ressources (temps, argent, matières) sont limitées, il faut faire des choix. C'est l'opposé de l'abondance. Tout choix économique a donc un coût, appelé coût d'opportunité.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lequel de ces éléments est un service plutôt qu'un bien ?",
+      "options": [
+        { "id": "a", "text": "Une consultation chez le médecin" },
+        { "id": "b", "text": "Une bouteille d'eau" },
+        { "id": "c", "text": "Un téléphone portable" },
+        { "id": "d", "text": "Une paire de chaussures" }
+      ],
+      "correctOption": "a",
+      "explanation": "Un service est une prestation immatérielle (consultation, transport, coupe de cheveux), alors qu'un bien est un objet matériel qu'on peut stocker. La consultation médicale est donc un service ; les trois autres sont des biens.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quels sont les trois grands agents économiques d'un pays ?",
+      "options": [
+        { "id": "a", "text": "Les banques, les usines et les magasins" },
+        { "id": "b", "text": "Les acheteurs, les vendeurs et les touristes" },
+        { "id": "c", "text": "Les ménages, les entreprises et l'État" },
+        { "id": "d", "text": "Les riches, les pauvres et la classe moyenne" }
+      ],
+      "correctOption": "c",
+      "explanation": "Les trois agents économiques de base sont les ménages (qui consomment et travaillent), les entreprises (qui produisent) et l'État (qui prélève des impôts et redistribue). Banques et magasins sont des types d'entreprises, pas une catégorie d'agents à part.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "À quoi sert principalement la monnaie dans une économie ?",
+      "options": [
+        { "id": "a", "text": "À décorer les portefeuilles" },
+        { "id": "b", "text": "À remplacer totalement le travail" },
+        { "id": "c", "text": "À faciliter les échanges et mesurer la valeur" },
+        { "id": "d", "text": "À fixer la météo des marchés" }
+      ],
+      "correctOption": "c",
+      "explanation": "La monnaie facilite les échanges (intermédiaire), mesure la valeur (unité de compte) et permet d'épargner (réserve de valeur). Sans elle, il faudrait recourir au troc, beaucoup plus contraignant car il exige une double coïncidence des besoins.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Comment appelle-t-on l'augmentation de la production (PIB réel) d'un pays d'une année sur l'autre ?",
+      "options": [
+        { "id": "a", "text": "L'inflation" },
+        { "id": "b", "text": "La croissance économique" },
+        { "id": "c", "text": "La récession" },
+        { "id": "d", "text": "Le chômage" }
+      ],
+      "correctOption": "b",
+      "explanation": "La croissance économique est la hausse du PIB réel d'une année sur l'autre. À ne pas confondre avec l'inflation (hausse des prix) ni la récession, qui est au contraire un recul de l'activité. Quand le PIB baisse durablement, on parle de récession.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Sur un marché, comment appelle-t-on le prix pour lequel la quantité offerte est égale à la quantité demandée ?",
+      "options": [
+        { "id": "a", "text": "Le prix de revient" },
+        { "id": "b", "text": "Le prix de gros" },
+        { "id": "c", "text": "Le prix d'équilibre" },
+        { "id": "d", "text": "Le prix de luxe" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le prix d'équilibre est celui où l'offre rencontre exactement la demande : ni pénurie, ni surplus. C'est le point de rencontre des deux courbes. Le prix de revient, lui, est ce que coûte la fabrication d'un produit, ce qui est une notion différente.",
+      "difficulty": 1
+    }
+  ]
+}

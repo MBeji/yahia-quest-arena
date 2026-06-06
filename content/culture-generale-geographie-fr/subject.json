@@ -1,0 +1,12 @@
+{
+  "id": "culture-generale-geographie-fr",
+  "nameFr": "Culture générale — Géographie (FR)",
+  "description": "Pays, capitales, continents, océans et records de la planète : la géographie du monde en version culture générale.",
+  "attribute": "Exploration",
+  "colorToken": "subject-english",
+  "icon": "Globe",
+  "displayOrder": 13,
+  "contentLanguage": "fr",
+  "themeId": "culture-generale",
+  "gradeSlug": null
+}

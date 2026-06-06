@@ -1,0 +1,82 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : Politique",
+  "mode": "challenge",
+  "difficulty": 4,
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Dans quel ouvrage Montesquieu expose-t-il sa théorie de la séparation des pouvoirs ?",
+      "options": [
+        { "id": "a", "text": "Du contrat social" },
+        { "id": "b", "text": "De l'esprit des lois" },
+        { "id": "c", "text": "Le Léviathan" },
+        { "id": "d", "text": "Les Lettres persanes" }
+      ],
+      "correctOption": "b",
+      "explanation": "La séparation des pouvoirs est exposée dans « De l'esprit des lois » (1748). « Du contrat social » est de Rousseau, « Le Léviathan » de Hobbes (qui défend au contraire un pouvoir fort), et « Les Lettres persanes » sont bien de Montesquieu mais constituent un roman satirique, pas son traité politique : un piège fin.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "En quelle année le quinquennat a-t-il été adopté par référendum en France ?",
+      "options": [
+        { "id": "a", "text": "1995" },
+        { "id": "b", "text": "2002" },
+        { "id": "c", "text": "2000" },
+        { "id": "d", "text": "2008" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le quinquennat a été approuvé par référendum en 2000, sous Jacques Chirac, et appliqué pour la première fois en 2002. 2002 est l'année de la première application (le piège), et 2008 celle de la révision limitant à deux mandats consécutifs : des années réelles, mais qui ne correspondent pas au référendum.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quel article de la DDHC de 1789 énonce que toute société sans séparation des pouvoirs « n'a point de Constitution » ?",
+      "options": [
+        { "id": "a", "text": "L'article 16" },
+        { "id": "b", "text": "L'article 3" },
+        { "id": "c", "text": "L'article 6" },
+        { "id": "d", "text": "L'article 17" }
+      ],
+      "correctOption": "a",
+      "explanation": "C'est l'article 16 : « Toute société dans laquelle la garantie des droits n'est pas assurée, ni la séparation des pouvoirs déterminée, n'a point de Constitution. » L'article 3 traite de la souveraineté nationale, l'article 6 de la loi comme « expression de la volonté générale » et l'article 17 du droit de propriété.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "La France de la Ve République est le plus souvent qualifiée de régime :",
+      "options": [
+        { "id": "a", "text": "Présidentiel pur" },
+        { "id": "b", "text": "Parlementaire pur" },
+        { "id": "c", "text": "Semi-présidentiel" },
+        { "id": "d", "text": "D'assemblée" }
+      ],
+      "correctOption": "c",
+      "explanation": "La Ve République combine un président élu au suffrage universel et un gouvernement responsable devant l'Assemblée : on parle de régime semi-présidentiel (ou mixte). Elle n'est pas présidentielle « pure » comme les États-Unis (où il n'y a pas de Premier ministre responsable), ni un régime d'assemblée, où le Parlement domine tout.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Combien d'États membres compte aujourd'hui l'Organisation des Nations unies ?",
+      "options": [
+        { "id": "a", "text": "151" },
+        { "id": "b", "text": "193" },
+        { "id": "c", "text": "27" },
+        { "id": "d", "text": "200" }
+      ],
+      "correctOption": "b",
+      "explanation": "L'ONU compte 193 États membres depuis l'adhésion du Soudan du Sud en 2011. Le 51 des origines (1945) et le 27 de l'Union européenne sont des chiffres voisins souvent confondus ; il n'existe pas exactement 200 États reconnus dans le monde, ce qui rend ce distracteur tentant mais faux.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quel principe affirme que l'autorité politique émane du peuple et non d'un roi de droit divin ?",
+      "options": [
+        { "id": "a", "text": "La souveraineté nationale" },
+        { "id": "b", "text": "La subsidiarité" },
+        { "id": "c", "text": "La laïcité" },
+        { "id": "d", "text": "Le fédéralisme" }
+      ],
+      "correctOption": "a",
+      "explanation": "La souveraineté nationale (ou populaire) pose que le pouvoir vient du peuple, rompant avec la monarchie de droit divin : c'est l'esprit de l'article 3 de la DDHC de 1789. La subsidiarité concerne la répartition des compétences entre échelons, la laïcité la séparation des Églises et de l'État, et le fédéralisme l'organisation territoriale du pouvoir.",
+      "difficulty": 3
+    }
+  ]
+}

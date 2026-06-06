@@ -1,0 +1,13 @@
+{
+  "title": "Donjon multi-thèmes",
+  "description": "Un gantelet de culture générale : chaque question surgit d'un domaine différent — histoire, géographie, politique, économie, sciences, arts. Échauffe-toi, affronte le Boss, puis défie l'Élite.",
+  "displayOrder": 1,
+  "sources": [
+    "https://fr.wikipedia.org/wiki/Prise_de_la_Bastille",
+    "https://fr.wikipedia.org/wiki/Organisation_des_Nations_unies",
+    "https://fr.wikipedia.org/wiki/La_Joconde",
+    "https://fr.wikipedia.org/wiki/Accords_de_Bretton_Woods",
+    "https://fr.wikipedia.org/wiki/Plus_haut_sommet_du_monde",
+    "https://fr.wikipedia.org/wiki/Or"
+  ]
+}

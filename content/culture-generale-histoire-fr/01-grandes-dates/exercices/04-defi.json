@@ -1,0 +1,94 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : Histoire",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "En quelle année la prise de Constantinople par les Ottomans met-elle fin à l'Empire byzantin (romain d'Orient) ?",
+      "options": [
+        { "id": "a", "text": "476" },
+        { "id": "b", "text": "1453" },
+        { "id": "c", "text": "1492" },
+        { "id": "d", "text": "1204" }
+      ],
+      "correctOption": "b",
+      "explanation": "Constantinople tombe le 29 mai 1453 face au sultan Mehmed II, mettant fin à l'Empire byzantin, héritier de Rome en Orient pendant près de mille ans. Le piège courant est de confondre avec 476 (a), qui concerne l'Empire d'Occident. 1204 (d) est le sac de la ville par les croisés (occupation temporaire), et 1492 (c) l'arrivée de Colomb en Amérique.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quel syndicaliste tunisien, fondateur de l'UGTT et figure de la lutte indépendantiste, fut assassiné le 5 décembre 1952 ?",
+      "options": [
+        { "id": "a", "text": "Tahar Ben Ammar" },
+        { "id": "b", "text": "Salah Ben Youssef" },
+        { "id": "c", "text": "Farhat Hached" },
+        { "id": "d", "text": "Mongi Slim" }
+      ],
+      "correctOption": "c",
+      "explanation": "Farhat Hached, fondateur de l'UGTT en 1946 et compagnon de lutte du Néo-Destour, fut assassiné le 5 décembre 1952, devenant un martyr de l'indépendance. Salah Ben Youssef (b) fut un rival de Bourguiba ; Tahar Ben Ammar (a) signa l'accord d'indépendance comme chef du gouvernement ; Mongi Slim (d) fut un diplomate destourien.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Le 14 juillet 1789 a été choisi comme fête nationale française. Mais en quelle année cette décision a-t-elle été officiellement prise ?",
+      "options": [
+        { "id": "a", "text": "1789" },
+        { "id": "b", "text": "1804" },
+        { "id": "c", "text": "1880" },
+        { "id": "d", "text": "1918" }
+      ],
+      "correctOption": "c",
+      "explanation": "C'est en 1880, sous la IIIe République, que le 14 juillet est institué fête nationale française, en référence à la prise de la Bastille de 1789. Le piège est de répondre 1789 (a), l'année de l'événement lui-même, et non celle de son institution comme fête. 1804 (b) est le sacre de Napoléon et 1918 (d) la fin de la Première Guerre mondiale.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "La première capitulation allemande de la Seconde Guerre mondiale, le 7 mai 1945, est suivie d'une seconde signature à la demande de Staline. Dans quelle ville eut lieu cette première signature ?",
+      "options": [
+        { "id": "a", "text": "Berlin" },
+        { "id": "b", "text": "Reims" },
+        { "id": "c", "text": "Yalta" },
+        { "id": "d", "text": "Potsdam" }
+      ],
+      "correctOption": "b",
+      "explanation": "La capitulation allemande est d'abord signée à Reims le 7 mai 1945, au quartier général d'Eisenhower ; Staline exige une seconde signature à Berlin (Karlshorst) dans la nuit du 8 au 9 mai, d'où la célébration du 8 mai. Yalta (c) et Potsdam (d) sont des conférences interalliées de 1945, non des lieux de capitulation.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quel astronaute d'Apollo 11 n'a PAS marché sur la Lune, étant resté en orbite dans le module de commande ?",
+      "options": [
+        { "id": "a", "text": "Neil Armstrong" },
+        { "id": "b", "text": "Iouri Gagarine" },
+        { "id": "c", "text": "Buzz Aldrin" },
+        { "id": "d", "text": "Michael Collins" }
+      ],
+      "correctOption": "d",
+      "explanation": "Michael Collins est resté seul en orbite lunaire à bord du module de commande Columbia pendant qu'Armstrong et Aldrin descendaient sur la Lune en 1969. Le piège est de citer Gagarine (b), qui n'a jamais participé à Apollo 11 : il fut le premier homme dans l'espace (URSS, 1961). Armstrong (a) et Aldrin (c), eux, ont bien foulé le sol lunaire.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Classez ces quatre événements du plus ancien au plus récent : chute de Rome, chute de Constantinople, prise de la Bastille, chute du mur de Berlin.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Chute de Rome, chute de Constantinople, prise de la Bastille, chute du mur de Berlin"
+        },
+        {
+          "id": "b",
+          "text": "Chute de Constantinople, chute de Rome, prise de la Bastille, chute du mur de Berlin"
+        },
+        {
+          "id": "c",
+          "text": "Chute de Rome, prise de la Bastille, chute de Constantinople, chute du mur de Berlin"
+        },
+        {
+          "id": "d",
+          "text": "Prise de la Bastille, chute de Rome, chute de Constantinople, chute du mur de Berlin"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "L'ordre chronologique est : chute de Rome (476), chute de Constantinople (1453), prise de la Bastille (1789), chute du mur de Berlin (1989). Le piège courant est d'inverser les deux chutes d'empire (b) : Rome d'Occident tombe presque mille ans avant Constantinople. Les options (c) et (d) déplacent la Bastille hors de sa place chronologique.",
+      "difficulty": 3
+    }
+  ]
+}

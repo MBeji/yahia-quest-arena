@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Quiz: Politics",
+  "mode": "practice",
+  "difficulty": 1,
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "The word \"democracy\" is built from two Greek words. Which ones?",
+      "options": [
+        { "id": "a", "text": "Dêmos (people) and kratos (power)" },
+        { "id": "b", "text": "Polis (city) and nomos (law)" },
+        { "id": "c", "text": "Monos (one) and arkhê (rule)" },
+        { "id": "d", "text": "Aristos (best) and kratos (power)" }
+      ],
+      "correctOption": "a",
+      "explanation": "Democracy = dêmos (\"people\") + kratos (\"power\"), that is, the power of the people. \"Monos + arkhê\" gives \"monarchy\" (the power of one) and \"aristos + kratos\" gives \"aristocracy\" (the power of the best / of the few): those roots are real, but they form other regimes.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "What is the role of the executive power?",
+      "options": [
+        { "id": "a", "text": "To vote on the laws" },
+        { "id": "b", "text": "To enforce the laws" },
+        { "id": "c", "text": "To judge trials" },
+        { "id": "d", "text": "To write the press" }
+      ],
+      "correctOption": "b",
+      "explanation": "The executive power enforces and carries out the laws; it is embodied by the head of state and the government. Voting on the laws belongs to the legislative, and judging belongs to the judiciary. The word \"executive\" comes from \"execute\", that is, to put into action.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "In a monarchy, how does the head of state generally come to power?",
+      "options": [
+        { "id": "a", "text": "By election through universal suffrage" },
+        { "id": "b", "text": "By an administrative examination" },
+        { "id": "c", "text": "By heredity" },
+        { "id": "d", "text": "By an annual referendum" }
+      ],
+      "correctOption": "c",
+      "explanation": "In a monarchy, the king or queen ascends to the throne by heredity (family succession). In a republic, by contrast, the head of state is elected. Today most monarchies are \"constitutional\": a constitution limits the monarch's powers.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which country is the textbook example of a presidential regime?",
+      "options": [
+        { "id": "a", "text": "The United Kingdom" },
+        { "id": "b", "text": "Germany" },
+        { "id": "c", "text": "Italy" },
+        { "id": "d", "text": "The United States" }
+      ],
+      "correctOption": "d",
+      "explanation": "The United States is the model of the presidential regime: the president is both head of state and head of government, and cannot be removed by Congress. The United Kingdom, Germany and Italy are parliamentary regimes instead, where the government answers to Parliament.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "What is the primary mission of the United Nations (UN)?",
+      "options": [
+        { "id": "a", "text": "To maintain international peace and security" },
+        { "id": "b", "text": "To set the world price of oil" },
+        { "id": "c", "text": "To organize the Olympic Games" },
+        { "id": "d", "text": "To award the Nobel Prizes" }
+      ],
+      "correctOption": "a",
+      "explanation": "Created in 1945 after the Second World War, the UN's primary goal is to maintain peace and security in the world. The Olympic Games are run by the IOC and the Nobel Prizes by Swedish and Norwegian foundations: those missions have nothing to do with the UN.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Who was the first president of the French Fifth Republic?",
+      "options": [
+        { "id": "a", "text": "Georges Pompidou" },
+        { "id": "b", "text": "Charles de Gaulle" },
+        { "id": "c", "text": "François Mitterrand" },
+        { "id": "d", "text": "Vincent Auriol" }
+      ],
+      "correctOption": "b",
+      "explanation": "Charles de Gaulle, the driving force behind the Constitution of 4 October 1958, was its first president. Georges Pompidou succeeded him in 1969 and François Mitterrand was elected in 1981. Vincent Auriol, for his part, was president under the Fourth Republic, not the Fifth.",
+      "difficulty": 1
+    }
+  ]
+}

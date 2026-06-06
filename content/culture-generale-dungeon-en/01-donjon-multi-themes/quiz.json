@@ -1,0 +1,65 @@
+{
+  "title": "Dungeon warm-up ⭐",
+  "questions": [
+    {
+      "prompt": "In which year did the Storming of the Bastille take place, the founding event of the French Revolution?",
+      "options": [
+        { "id": "a", "text": "1789" },
+        { "id": "b", "text": "1799" },
+        { "id": "c", "text": "1769" },
+        { "id": "d", "text": "1815" }
+      ],
+      "correctOption": "a",
+      "explanation": "The Storming of the Bastille happened on 14 July 1789, marking the symbolic start of the French Revolution. Worth knowing: 14 July only became France's national holiday in 1880. The year 1799 is when Bonaparte staged his coup (the end of the Revolution), not its beginning.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "What is the capital of Australia?",
+      "options": [
+        { "id": "a", "text": "Sydney" },
+        { "id": "b", "text": "Melbourne" },
+        { "id": "c", "text": "Canberra" },
+        { "id": "d", "text": "Perth" }
+      ],
+      "correctOption": "c",
+      "explanation": "The capital of Australia is Canberra, chosen in 1908 as a compromise between rivals Sydney and Melbourne and built from scratch. Sydney and Melbourne are the largest cities, but neither is the capital: a city's fame does not make it the seat of government.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "What is the chemical symbol for gold in the periodic table?",
+      "options": [
+        { "id": "a", "text": "Ag" },
+        { "id": "b", "text": "Au" },
+        { "id": "c", "text": "Go" },
+        { "id": "d", "text": "Gd" }
+      ],
+      "correctOption": "b",
+      "explanation": "The symbol for gold is Au, from the first two letters of its Latin name \"aurum\"; its atomic number is 79. The trap \"Ag\" is the symbol for silver (from the Latin \"argentum\"): gold and silver belong to the same group 11.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Who painted the Mona Lisa, displayed at the Louvre Museum?",
+      "options": [
+        { "id": "a", "text": "Michelangelo" },
+        { "id": "b", "text": "Raphael" },
+        { "id": "c", "text": "Leonardo da Vinci" },
+        { "id": "d", "text": "Botticelli" }
+      ],
+      "correctOption": "c",
+      "explanation": "The Mona Lisa was painted by Leonardo da Vinci in the early 16th century, using the famous sfumato technique (softened, blurred outlines). Michelangelo, his contemporary and rival, was mainly a sculptor and fresco painter (the Sistine Chapel ceiling): he did not paint this portrait.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "What does a country's GDP (gross domestic product) measure?",
+      "options": [
+        { "id": "a", "text": "The wealth produced within the territory over a given period" },
+        { "id": "b", "text": "The total number of inhabitants of the country" },
+        { "id": "c", "text": "The amount of money held by the state" },
+        { "id": "d", "text": "The total area of the country" }
+      ],
+      "correctOption": "a",
+      "explanation": "GDP measures the value of all goods and services produced within a territory over a period (often a year); its change indicates economic growth. It counts neither the population nor the territory: a large, unproductive country can have a lower GDP than a small, highly productive one.",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Revision: History",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "The fall of the Western Roman Empire in 476 traditionally marks the end of which historical period?",
+      "options": [
+        { "id": "a", "text": "Prehistory" },
+        { "id": "b", "text": "Antiquity" },
+        { "id": "c", "text": "The Early Modern period" },
+        { "id": "d", "text": "The Renaissance" }
+      ],
+      "correctOption": "b",
+      "explanation": "The fall of Rome in 476 marks the end of Antiquity and the beginning of the Middle Ages. Worth remembering: historians traditionally divide history into Prehistory, Antiquity, the Middle Ages, the Early Modern period and then the contemporary era. The Renaissance (d) and the Early Modern period (c) do not begin until the 15th-16th century.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which event of 1492 is often taken as the start of the Early Modern period?",
+      "options": [
+        { "id": "a", "text": "The storming of the Bastille" },
+        { "id": "b", "text": "The fall of Constantinople" },
+        { "id": "c", "text": "Christopher Columbus's arrival in America" },
+        { "id": "d", "text": "The coronation of Charlemagne" }
+      ],
+      "correctOption": "c",
+      "explanation": "Columbus's arrival in America in 1492 opens the age of the Great Discoveries and is often used as a marker for the start of the Early Modern period. The fall of Constantinople (b) dates from 1453 (another possible marker), the storming of the Bastille (a) from 1789, and the coronation of Charlemagne (d) from the year 800.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which treaty of 1881 had established the French protectorate over Tunisia, abolished at independence in 1956?",
+      "options": [
+        { "id": "a", "text": "The Treaty of Versailles" },
+        { "id": "b", "text": "The Treaty of Bardo" },
+        { "id": "c", "text": "The Treaty of Tordesillas" },
+        { "id": "d", "text": "The Treaty of Rome" }
+      ],
+      "correctOption": "b",
+      "explanation": "The Treaty of Bardo, signed in 1881, had established the French protectorate over Tunisia; it was abrogated at independence on 20 March 1956. The Treaty of Versailles (a) closed the First World War (1919), Tordesillas (c) divided the New World between Spain and Portugal (1494), and the Treaty of Rome (d) founded the EEC (1957).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which famous sentence did Neil Armstrong utter as he set foot on the Moon?",
+      "options": [
+        { "id": "a", "text": "\"Houston, we have a problem.\"" },
+        { "id": "b", "text": "\"That's one small step for man, one giant leap for mankind.\"" },
+        { "id": "c", "text": "\"The Earth is blue.\"" },
+        { "id": "d", "text": "\"Veni, vidi, vici.\"" }
+      ],
+      "correctOption": "b",
+      "explanation": "In 1969, Armstrong said \"That's one small step for man, one giant leap for mankind.\" The sentence (a) is associated with the Apollo 13 mission (1970); \"The Earth is blue\" (c) is attributed to Gagarin in 1961; \"Veni, vidi, vici\" (d) is a phrase of Julius Caesar, unrelated to space.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "The Berlin Wall separated two political entities. Which ones?",
+      "options": [
+        { "id": "a", "text": "Germany and France" },
+        { "id": "b", "text": "Poland and Germany" },
+        { "id": "c", "text": "East Germany and West Germany" },
+        { "id": "d", "text": "The USSR and the United States" }
+      ],
+      "correctOption": "c",
+      "explanation": "Built in 1961, the Berlin Wall separated communist East Germany (GDR) from West Germany (FRG), at the heart of the Cold War. Its fall in 1989 would pave the way for German reunification in 1990. It did not mark a border between distinct countries such as France (a) or Poland (b).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which international organization was founded in 1945 to safeguard peace after the Second World War?",
+      "options": [
+        { "id": "a", "text": "The United Nations (UN)" },
+        { "id": "b", "text": "The League of Nations" },
+        { "id": "c", "text": "The European Union" },
+        { "id": "d", "text": "NATO" }
+      ],
+      "correctOption": "a",
+      "explanation": "The UN was created in 1945, in the aftermath of the Second World War, to maintain international peace and security. The League of Nations (b) had preceded it after 1918 but failed to prevent the war. NATO (d) is a military alliance founded in 1949, and the European Union (c) in its current form dates from 1992.",
+      "difficulty": 2
+    }
+  ]
+}

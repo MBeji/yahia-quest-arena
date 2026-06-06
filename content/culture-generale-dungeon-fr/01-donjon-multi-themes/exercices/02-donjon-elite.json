@@ -1,0 +1,82 @@
+{
+  "title": "👑 Donjon — Élite ⭐⭐⭐⭐",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Histoire — En 1215, les barons anglais imposent au roi Jean sans Terre un texte limitant son pouvoir, considéré comme une étape majeure vers l'État de droit. Quel est ce texte ?",
+      "options": [
+        { "id": "a", "text": "La Magna Carta (Grande Charte)" },
+        { "id": "b", "text": "La Déclaration des droits de l'homme" },
+        { "id": "c", "text": "Le Bill of Rights anglais" },
+        { "id": "d", "text": "L'Habeas Corpus" }
+      ],
+      "correctOption": "a",
+      "explanation": "La Magna Carta, signée en 1215 à Runnymede, soumet le roi à la loi et garantit aux hommes libres un jugement régulier ; elle préfigure les libertés constitutionnelles. Les pièges sont plus tardifs : l'Habeas Corpus date de 1679 et le Bill of Rights anglais de 1689, tous deux postérieurs de plusieurs siècles.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Géographie — Quelle est l'altitude approximative du mont Everest, point culminant de la Terre par rapport au niveau de la mer ?",
+      "options": [
+        { "id": "a", "text": "Environ 6 500 m" },
+        { "id": "b", "text": "Environ 7 200 m" },
+        { "id": "c", "text": "Environ 8 849 m" },
+        { "id": "d", "text": "Environ 9 600 m" }
+      ],
+      "correctOption": "c",
+      "explanation": "L'Everest, dans l'Himalaya, culmine à environ 8 849 m au-dessus du niveau de la mer (mesure sino-népalaise de 2020). À savoir : mesuré de sa base sous-marine, le Mauna Kea d'Hawaï serait plus « haut », mais le critère officiel reste l'altitude par rapport à la mer, ce qui consacre l'Everest.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Économie — Les accords de Bretton Woods, signés en 1944, ont donné naissance à deux grandes institutions économiques internationales. Lesquelles ?",
+      "options": [
+        { "id": "a", "text": "L'OMC et l'OCDE" },
+        { "id": "b", "text": "Le FMI et la Banque mondiale" },
+        { "id": "c", "text": "La BCE et la Réserve fédérale" },
+        { "id": "d", "text": "L'OPEP et le G7" }
+      ],
+      "correctOption": "b",
+      "explanation": "Bretton Woods (1944) a créé le Fonds monétaire international (FMI) et la Banque mondiale, pour stabiliser les monnaies et financer la reconstruction d'après-guerre. Le piège « OMC » est plus récent (1995, issue du GATT) et ne traite pas de la monnaie mais du commerce : un autre rôle, une autre époque.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Sciences — Quelle est la planète la plus proche du Soleil dans le système solaire ?",
+      "options": [
+        { "id": "a", "text": "Vénus" },
+        { "id": "b", "text": "Mars" },
+        { "id": "c", "text": "Mercure" },
+        { "id": "d", "text": "La Terre" }
+      ],
+      "correctOption": "c",
+      "explanation": "Mercure est la planète la plus proche du Soleil et la plus petite du système solaire. Curiosité : ce n'est pas la plus chaude — c'est Vénus, dont l'épaisse atmosphère de CO₂ piège la chaleur (effet de serre). Le piège « Vénus » confond la deuxième planète (la plus chaude) avec la première (la plus proche).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Arts — Le tableau « Guernica », puissante œuvre contre la guerre inspirée d'un bombardement de 1937, est l'œuvre de quel peintre ?",
+      "options": [
+        { "id": "a", "text": "Salvador Dalí" },
+        { "id": "b", "text": "Pablo Picasso" },
+        { "id": "c", "text": "Joan Miró" },
+        { "id": "d", "text": "Francisco Goya" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Guernica » a été peint par Pablo Picasso en 1937, en réaction au bombardement de la ville basque de Guernica pendant la guerre civile espagnole ; c'est une icône en gris et noir de l'art anti-guerre, exposée à Madrid. Le piège « Goya » est cohérent (autre Espagnol célèbre pour des scènes de guerre) mais il vivait au tournant du XIXe siècle.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Politique — En quelle année l'Organisation des Nations unies (ONU) a-t-elle officiellement été créée ?",
+      "options": [
+        { "id": "a", "text": "1919" },
+        { "id": "b", "text": "1948" },
+        { "id": "c", "text": "1945" },
+        { "id": "d", "text": "1950" }
+      ],
+      "correctOption": "c",
+      "explanation": "L'ONU a été créée le 24 octobre 1945, après la ratification de sa Charte par les 51 États fondateurs ; elle compte aujourd'hui 193 membres et siège à New York. Le piège « 1919 » est la Société des Nations (SDN), l'organisation qui a précédé l'ONU et qu'elle a remplacée après l'échec de cette dernière à empêcher la Seconde Guerre mondiale.",
+      "difficulty": 3
+    }
+  ]
+}

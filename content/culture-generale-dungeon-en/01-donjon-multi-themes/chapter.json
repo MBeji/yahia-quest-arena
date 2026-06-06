@@ -1,0 +1,13 @@
+{
+  "title": "Multi-theme dungeon",
+  "description": "A general-knowledge gauntlet: every question springs from a different domain — history, geography, politics, economics, sciences, arts. Warm up, face the Boss, then dare the Elite.",
+  "displayOrder": 1,
+  "sources": [
+    "https://en.wikipedia.org/wiki/Storming_of_the_Bastille",
+    "https://en.wikipedia.org/wiki/United_Nations",
+    "https://en.wikipedia.org/wiki/Mona_Lisa",
+    "https://en.wikipedia.org/wiki/Bretton_Woods_Conference",
+    "https://en.wikipedia.org/wiki/Mount_Everest",
+    "https://en.wikipedia.org/wiki/Gold"
+  ]
+}

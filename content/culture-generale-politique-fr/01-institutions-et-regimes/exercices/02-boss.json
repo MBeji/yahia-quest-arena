@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss ⭐⭐⭐ : Politique",
+  "mode": "boss",
+  "difficulty": 3,
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Quel pouvoir a pour rôle de juger et d'interpréter les lois ?",
+      "options": [
+        { "id": "a", "text": "Le pouvoir judiciaire" },
+        { "id": "b", "text": "Le pouvoir législatif" },
+        { "id": "c", "text": "Le pouvoir exécutif" },
+        { "id": "d", "text": "Le pouvoir constituant" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le pouvoir judiciaire, exercé par des juges indépendants, tranche les litiges et interprète les lois. Le « pouvoir constituant » désigne, lui, l'autorité qui rédige ou révise la Constitution : c'est un piège, car il sonne juste mais ne fait pas partie des trois pouvoirs de Montesquieu.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "En quelle année les femmes ont-elles obtenu le droit de vote en France ?",
+      "options": [
+        { "id": "a", "text": "1936" },
+        { "id": "b", "text": "1944" },
+        { "id": "c", "text": "1958" },
+        { "id": "d", "text": "1968" }
+      ],
+      "correctOption": "b",
+      "explanation": "L'ordonnance du 21 avril 1944, prise par le Gouvernement provisoire du général de Gaulle, accorde le droit de vote aux femmes ; elles votent pour la première fois en 1945. La France est tardive : la Nouvelle-Zélande l'avait fait dès 1893. 1958 (Ve République) et 1968 (mai 68) sont des leurres d'années marquantes voisines.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans un régime parlementaire, quel mécanisme permet au Parlement de renverser le gouvernement ?",
+      "options": [
+        { "id": "a", "text": "La motion de censure" },
+        { "id": "b", "text": "Le veto présidentiel" },
+        { "id": "c", "text": "La question préalable" },
+        { "id": "d", "text": "Le référendum d'initiative partagée" }
+      ],
+      "correctOption": "a",
+      "explanation": "La motion de censure, votée par les députés, contraint le gouvernement à démissionner : c'est la marque du régime parlementaire, où l'exécutif est responsable devant le Parlement. Le veto est un outil du président (régime présidentiel), et le référendum d'initiative partagée sert à proposer une loi, pas à renverser un gouvernement.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle est la durée actuelle du mandat du président de la République française (le quinquennat) ?",
+      "options": [
+        { "id": "a", "text": "4 ans" },
+        { "id": "b", "text": "6 ans" },
+        { "id": "c", "text": "5 ans" },
+        { "id": "d", "text": "7 ans" }
+      ],
+      "correctOption": "c",
+      "explanation": "Depuis le référendum de 2000 (sous Jacques Chirac), le mandat présidentiel français dure 5 ans : c'est le quinquennat, appliqué dès 2002. Auparavant, il était de 7 ans (le septennat) : le « 7 ans » est donc l'ancienne durée, un distracteur volontairement crédible.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Combien d'États ont fondé l'Organisation des Nations unies en 1945 ?",
+      "options": [
+        { "id": "a", "text": "27" },
+        { "id": "b", "text": "193" },
+        { "id": "c", "text": "100" },
+        { "id": "d", "text": "51" }
+      ],
+      "correctOption": "d",
+      "explanation": "L'ONU a été fondée en 1945 par 51 États membres, à la suite de la conférence de San Francisco. À ne pas confondre avec les 193 membres actuels : c'est le piège classique. Le nombre 27 évoque, lui, les États membres de l'Union européenne — une autre organisation.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quel article de la Déclaration des droits de l'homme et du citoyen de 1789 affirme que « le principe de toute souveraineté réside essentiellement dans la nation » ?",
+      "options": [
+        { "id": "a", "text": "L'article 1er" },
+        { "id": "b", "text": "L'article 3" },
+        { "id": "c", "text": "L'article 16" },
+        { "id": "d", "text": "L'article 10" }
+      ],
+      "correctOption": "b",
+      "explanation": "C'est l'article 3 de la DDHC de 1789 qui pose la souveraineté nationale : le pouvoir émane de la nation, non du roi. Attention au piège : l'article 16, lui aussi célèbre, est celui qui exige la séparation des pouvoirs (« Toute société dans laquelle… la séparation des pouvoirs [n'est pas] déterminée, n'a point de Constitution »). L'article 1er proclame que « les hommes naissent libres et égaux ».",
+      "difficulty": 3
+    }
+  ]
+}

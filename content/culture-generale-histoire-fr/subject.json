@@ -1,0 +1,12 @@
+{
+  "id": "culture-generale-histoire-fr",
+  "nameFr": "Culture générale — Histoire (FR)",
+  "description": "Les grandes dates et figures de l'histoire mondiale et tunisienne, de l'Antiquité à nos jours, pour bâtir une solide culture historique.",
+  "attribute": "Mémoire",
+  "colorToken": "subject-svt",
+  "icon": "Landmark",
+  "displayOrder": 10,
+  "contentLanguage": "fr",
+  "themeId": "culture-generale",
+  "gradeSlug": null
+}

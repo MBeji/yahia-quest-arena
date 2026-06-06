@@ -1,0 +1,12 @@
+{
+  "id": "culture-generale-politique-en",
+  "nameFr": "Culture générale — Politique (EN)",
+  "description": "Understand political life: democracy, separation of powers, regimes and institutions, in English.",
+  "attribute": "Stratégie",
+  "colorToken": "subject-arabic",
+  "icon": "Scale",
+  "displayOrder": 17,
+  "contentLanguage": "en",
+  "themeId": "culture-generale",
+  "gradeSlug": null
+}

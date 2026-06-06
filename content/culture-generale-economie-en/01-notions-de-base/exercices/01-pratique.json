@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Quiz: Economics",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Which basic concept describes the fact that resources are limited while wants are unlimited?",
+      "options": [
+        { "id": "a", "text": "Scarcity" },
+        { "id": "b", "text": "Abundance" },
+        { "id": "c", "text": "Free availability" },
+        { "id": "d", "text": "Waste" }
+      ],
+      "correctOption": "a",
+      "explanation": "Scarcity is the starting point of economics: because resources (time, money, materials) are limited, we have to make choices. It is the opposite of abundance. Every economic choice therefore has a cost, called the opportunity cost.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which of these is a service rather than a good?",
+      "options": [
+        { "id": "a", "text": "A consultation with a doctor" },
+        { "id": "b", "text": "A bottle of water" },
+        { "id": "c", "text": "A mobile phone" },
+        { "id": "d", "text": "A pair of shoes" }
+      ],
+      "correctOption": "a",
+      "explanation": "A service is an intangible provision (a consultation, transport, a haircut), whereas a good is a physical object you can store. The medical consultation is therefore a service; the other three are goods.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "What are the three major economic agents of a country?",
+      "options": [
+        { "id": "a", "text": "Banks, factories, and shops" },
+        { "id": "b", "text": "Buyers, sellers, and tourists" },
+        { "id": "c", "text": "Households, firms, and the State" },
+        { "id": "d", "text": "The rich, the poor, and the middle class" }
+      ],
+      "correctOption": "c",
+      "explanation": "The three basic economic agents are households (who consume and work), firms (who produce), and the State (which collects taxes and redistributes). Banks and shops are types of firms, not a separate category of agents.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "What is money mainly used for in an economy?",
+      "options": [
+        { "id": "a", "text": "To decorate wallets" },
+        { "id": "b", "text": "To completely replace work" },
+        { "id": "c", "text": "To make trade easier and to measure value" },
+        { "id": "d", "text": "To set the weather of the markets" }
+      ],
+      "correctOption": "c",
+      "explanation": "Money makes trade easier (medium of exchange), measures value (unit of account), and lets us save (store of value). Without it, we would have to fall back on barter, which is far more cumbersome because it requires a double coincidence of wants.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "What do we call the increase in a country's output (real GDP) from one year to the next?",
+      "options": [
+        { "id": "a", "text": "Inflation" },
+        { "id": "b", "text": "Economic growth" },
+        { "id": "c", "text": "Recession" },
+        { "id": "d", "text": "Unemployment" }
+      ],
+      "correctOption": "b",
+      "explanation": "Economic growth is the rise in real GDP from one year to the next. Don't confuse it with inflation (a rise in prices) or with recession, which is on the contrary a fall in activity. When GDP falls in a lasting way, we speak of a recession.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "On a market, what do we call the price at which the quantity supplied equals the quantity demanded?",
+      "options": [
+        { "id": "a", "text": "The cost price" },
+        { "id": "b", "text": "The wholesale price" },
+        { "id": "c", "text": "The equilibrium price" },
+        { "id": "d", "text": "The luxury price" }
+      ],
+      "correctOption": "c",
+      "explanation": "The equilibrium price is the one where supply meets demand exactly: neither shortage nor surplus. It is the meeting point of the two curves. The cost price, by contrast, is what it costs to make a product, which is a different notion.",
+      "difficulty": 1
+    }
+  ]
+}

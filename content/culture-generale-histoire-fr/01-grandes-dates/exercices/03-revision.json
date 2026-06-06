@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision : Histoire",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "La chute de l'Empire romain d'Occident en 476 marque traditionnellement la fin de quelle période historique ?",
+      "options": [
+        { "id": "a", "text": "La Préhistoire" },
+        { "id": "b", "text": "L'Antiquité" },
+        { "id": "c", "text": "Les Temps modernes" },
+        { "id": "d", "text": "La Renaissance" }
+      ],
+      "correctOption": "b",
+      "explanation": "La chute de Rome en 476 marque la fin de l'Antiquité et le début du Moyen Âge. À retenir : les historiens découpent traditionnellement l'histoire en Préhistoire, Antiquité, Moyen Âge, Temps modernes puis époque contemporaine. La Renaissance (d) et les Temps modernes (c) ne commencent qu'au XVe-XVIe siècle.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel événement de 1492 est souvent retenu comme le début des Temps modernes ?",
+      "options": [
+        { "id": "a", "text": "La prise de la Bastille" },
+        { "id": "b", "text": "La chute de Constantinople" },
+        { "id": "c", "text": "L'arrivée de Christophe Colomb en Amérique" },
+        { "id": "d", "text": "Le couronnement de Charlemagne" }
+      ],
+      "correctOption": "c",
+      "explanation": "L'arrivée de Colomb en Amérique en 1492 ouvre l'ère des Grandes Découvertes et sert souvent de borne au début des Temps modernes. La chute de Constantinople (b) date de 1453 (autre borne possible), la prise de la Bastille (a) de 1789, et le couronnement de Charlemagne (d) de l'an 800.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel traité de 1881 avait instauré le protectorat français sur la Tunisie, aboli lors de l'indépendance de 1956 ?",
+      "options": [
+        { "id": "a", "text": "Le traité de Versailles" },
+        { "id": "b", "text": "Le traité du Bardo" },
+        { "id": "c", "text": "Le traité de Tordesillas" },
+        { "id": "d", "text": "Le traité de Rome" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le traité du Bardo, signé en 1881, avait instauré le protectorat français sur la Tunisie ; il fut abrogé lors de l'indépendance du 20 mars 1956. Le traité de Versailles (a) clôt la Première Guerre mondiale (1919), Tordesillas (c) partageait le Nouveau Monde entre Espagne et Portugal (1494), et le traité de Rome (d) fonde la CEE (1957).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase célèbre Neil Armstrong a-t-il prononcée en posant le pied sur la Lune ?",
+      "options": [
+        { "id": "a", "text": "« Houston, nous avons un problème. »" },
+        { "id": "b", "text": "« Un petit pas pour l'homme, un bond de géant pour l'humanité. »" },
+        { "id": "c", "text": "« La Terre est bleue. »" },
+        { "id": "d", "text": "« Veni, vidi, vici. »" }
+      ],
+      "correctOption": "b",
+      "explanation": "En 1969, Armstrong prononce « Un petit pas pour l'homme, un bond de géant pour l'humanité ». La phrase (a) est associée à la mission Apollo 13 (1970) ; « La Terre est bleue » (c) est attribuée à Gagarine en 1961 ; « Veni, vidi, vici » (d) est une formule de Jules César, sans rapport avec l'espace.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Le mur de Berlin séparait deux entités politiques. Lesquelles ?",
+      "options": [
+        { "id": "a", "text": "L'Allemagne et la France" },
+        { "id": "b", "text": "La Pologne et l'Allemagne" },
+        { "id": "c", "text": "L'Allemagne de l'Est et l'Allemagne de l'Ouest" },
+        { "id": "d", "text": "L'URSS et les États-Unis" }
+      ],
+      "correctOption": "c",
+      "explanation": "Construit en 1961, le mur de Berlin séparait l'Allemagne de l'Est communiste (RDA) de l'Allemagne de l'Ouest (RFA), au cœur de la guerre froide. Sa chute en 1989 ouvrira la voie à la réunification allemande de 1990. Il ne marquait pas une frontière entre pays distincts comme la France (a) ou la Pologne (b).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle organisation internationale est fondée en 1945 pour préserver la paix après la Seconde Guerre mondiale ?",
+      "options": [
+        { "id": "a", "text": "L'Organisation des Nations unies (ONU)" },
+        { "id": "b", "text": "La Société des Nations (SDN)" },
+        { "id": "c", "text": "L'Union européenne" },
+        { "id": "d", "text": "L'OTAN" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'ONU est créée en 1945, au lendemain de la Seconde Guerre mondiale, pour maintenir la paix et la sécurité internationales. La SDN (b) l'avait précédée après 1918 mais échoua à empêcher la guerre. L'OTAN (d) est une alliance militaire fondée en 1949, et l'Union européenne (c) sous sa forme actuelle date de 1992.",
+      "difficulty": 2
+    }
+  ]
+}

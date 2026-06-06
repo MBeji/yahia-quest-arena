@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Quiz : Politique",
+  "mode": "practice",
+  "difficulty": 1,
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Le mot « démocratie » est formé à partir de deux mots grecs. Lesquels ?",
+      "options": [
+        { "id": "a", "text": "Dêmos (peuple) et kratos (pouvoir)" },
+        { "id": "b", "text": "Polis (cité) et nomos (loi)" },
+        { "id": "c", "text": "Monos (seul) et arkhê (commandement)" },
+        { "id": "d", "text": "Aristos (meilleur) et kratos (pouvoir)" }
+      ],
+      "correctOption": "a",
+      "explanation": "Démocratie = dêmos (« peuple ») + kratos (« pouvoir »), soit le pouvoir du peuple. « Monos + arkhê » donne « monarchie » (pouvoir d'un seul) et « aristos + kratos » donne « aristocratie » (pouvoir des meilleurs / de quelques-uns) : ces racines existent bien, mais elles forment d'autres régimes.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel est le rôle du pouvoir exécutif ?",
+      "options": [
+        { "id": "a", "text": "Voter les lois" },
+        { "id": "b", "text": "Appliquer les lois" },
+        { "id": "c", "text": "Juger les procès" },
+        { "id": "d", "text": "Écrire la presse" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le pouvoir exécutif applique et fait exécuter les lois ; il est incarné par le chef de l'État et le gouvernement. Voter les lois relève du législatif, et juger relève du judiciaire. Le mot « exécutif » vient d'« exécuter », c'est-à-dire mettre en œuvre.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans une monarchie, comment le chef de l'État accède-t-il généralement au pouvoir ?",
+      "options": [
+        { "id": "a", "text": "Par élection au suffrage universel" },
+        { "id": "b", "text": "Par concours administratif" },
+        { "id": "c", "text": "Par hérédité" },
+        { "id": "d", "text": "Par référendum annuel" }
+      ],
+      "correctOption": "c",
+      "explanation": "Dans une monarchie, le roi ou la reine accède au trône par hérédité (succession familiale). Dans une république, au contraire, le chef de l'État est élu. Aujourd'hui, la plupart des monarchies sont « constitutionnelles » : une constitution limite les pouvoirs du monarque.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel pays est l'exemple type d'un régime présidentiel ?",
+      "options": [
+        { "id": "a", "text": "Le Royaume-Uni" },
+        { "id": "b", "text": "L'Allemagne" },
+        { "id": "c", "text": "L'Italie" },
+        { "id": "d", "text": "Les États-Unis" }
+      ],
+      "correctOption": "d",
+      "explanation": "Les États-Unis sont le modèle du régime présidentiel : le président est à la fois chef de l'État et du gouvernement, et n'est pas renversable par le Congrès. Le Royaume-Uni, l'Allemagne et l'Italie sont au contraire des régimes parlementaires, où le gouvernement répond devant le Parlement.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle est la mission première de l'Organisation des Nations unies (ONU) ?",
+      "options": [
+        { "id": "a", "text": "Maintenir la paix et la sécurité internationales" },
+        { "id": "b", "text": "Fixer le prix mondial du pétrole" },
+        { "id": "c", "text": "Organiser les Jeux olympiques" },
+        { "id": "d", "text": "Décerner les prix Nobel" }
+      ],
+      "correctOption": "a",
+      "explanation": "Créée en 1945 après la Seconde Guerre mondiale, l'ONU a pour but premier de maintenir la paix et la sécurité dans le monde. Les Jeux olympiques relèvent du CIO et les prix Nobel de fondations suédoises et norvégiennes : ces missions n'ont rien à voir avec l'ONU.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Qui est le premier président de la Ve République française ?",
+      "options": [
+        { "id": "a", "text": "Georges Pompidou" },
+        { "id": "b", "text": "Charles de Gaulle" },
+        { "id": "c", "text": "François Mitterrand" },
+        { "id": "d", "text": "Vincent Auriol" }
+      ],
+      "correctOption": "b",
+      "explanation": "Charles de Gaulle, à l'origine de la Constitution du 4 octobre 1958, en est le premier président. Georges Pompidou lui succède en 1969 et François Mitterrand est élu en 1981. Vincent Auriol, lui, fut président sous la IVe République, et non la Ve.",
+      "difficulty": 1
+    }
+  ]
+}
