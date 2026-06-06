@@ -39,16 +39,18 @@ SELECT is(
 -- pg_get_function_result renders the full RETURNS TABLE column list as text; we
 -- assert `user_id` is absent and `is_me` is present.
 -- ---------------------------------------------------------
-SELECT unlike(
+-- pgTAP's LIKE-pattern helpers (like/unlike) aren't present in the pg_prove
+-- image, so use the regex matchers (matches/doesnt_match), which are core.
+SELECT doesnt_match(
   (SELECT pg_get_function_result('public.get_subject_leaderboard(text, int)'::regprocedure)),
-  '%user_id%'::text,
-  'S2(b): get_subject_leaderboard does NOT expose a user_id column'::text
+  'user_id',
+  'S2(b): get_subject_leaderboard does NOT expose a user_id column'
 );
 
-SELECT like(
+SELECT matches(
   (SELECT pg_get_function_result('public.get_subject_leaderboard(text, int)'::regprocedure)),
-  '%is_me%'::text,
-  'S2(b): get_subject_leaderboard still exposes the is_me flag'::text
+  'is_me',
+  'S2(b): get_subject_leaderboard still exposes the is_me flag'
 );
 
 -- ---------------------------------------------------------
