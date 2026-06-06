@@ -57,6 +57,19 @@ RPC (atomic scoring + rewards + badge unlocks). All tables have RLS; the two pri
 functions are `REVOKE`d from anon/authenticated. Gameplay thresholds are centralized in
 `src/shared/constants/gamification.ts` — change rules there, not inline.
 
+**Consumables (shop items):** `shop_items.effect_payload` (JSONB) drives three live
+mechanics, all keyed off `inventory_items.is_active` = "armed" (skins use `is_equipped`).
+Potions (`xpMultiplier`/`coinMultiplier`) and the retry shield (`retries`) share a
+**next-quest slot** (one armed at a time); the streak shield (`streakShield`) is a separate
+**passive slot**; hints (`hints`/`hintBoost`) are spent on demand, never armed.
+`activate_inventory_item` arms; `submit_exercise_attempt` applies/consumes potions
+(`potionApplied`) and the retry shield (suppresses the spaced-rep penalty on a `<60%` fail,
+`retryShieldUsed`); `award_xp` consumes a streak shield to save a one-missed-day streak;
+`consume_hint` reveals `questions.explanation` on demand (decrements one charge). Anti-waste: a
+consumable is consumed only when it actually takes effect, and never bypasses the
+`tooFast`/`≥60%`/`improved` anti-farm gates. Apply consumable migrations before deploy (§7).
+See ARCHITECTURE.md "Consumables (shop items)" for the full model.
+
 ## Conventions
 
 - Feature-based: `src/features/{auth,dashboard,quest,dungeon,shop,progression,parent-report}/`.

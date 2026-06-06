@@ -158,6 +158,62 @@ Run with coverage: `npm run test:coverage`
 | dungeon_runs               | Boss mode run state                                    |
 | family_links               | Parent-student linking                                 |
 
+### Consumables (shop items)
+
+`shop_items` rows have an `item_type` and a JSONB `effect_payload`. `skin` items are
+cosmetic (equipped via `is_equipped`). The three **live consumable mechanics** are wired
+through SECURITY DEFINER RPCs (consumable migrations under
+`supabase/migrations/202606061200…` / `…130000…`) and share one inventory flag:
+**`inventory_items.is_active` = "armed"**.
+
+| Mechanic      | `item_type`          | `effect_payload`                  | Seed example                                                        |
+| ------------- | -------------------- | --------------------------------- | ------------------------------------------------------------------- |
+| Potions       | `potion`             | `xpMultiplier` / `coinMultiplier` | `potion_xp_boost`, `potion_coins`                                   |
+| Retry shield  | `shield`             | `retries`                         | `shield_retry`                                                      |
+| Streak shield | `shield`             | `streakShield`                    | `bouclier_flamme`                                                   |
+| Hints         | `booster` / `potion` | `hints` / `hintBoost`             | `booster_hint` (`{"hints":3}`), `potion_rappel` (`{"hintBoost":1}`) |
+
+**Two-slot arming model** (`activate_inventory_item`): a consumable is "armed" by setting
+`is_active = true`. The slot is derived from the `effect_payload`:
+
+- **Next-quest slot** — `xpMultiplier`/`coinMultiplier`/`retries` (multiplier potions +
+  retry shield). One armed at a time; arming one clears the other next-quest rows.
+- **Passive slot** — `streakShield` (streak shield). Independent of the next-quest slot
+  (arming a passive item never disarms a next-quest item, and vice-versa).
+- **Hints are not armed** — they are spent on demand during a quest, not pre-armed.
+
+**Mechanics:**
+
+- **Potions** — on the next _eligible_ quest, `submit_exercise_attempt` multiplies the
+  earned XP/coins by the armed potion's multiplier, then consumes it (`quantity − 1`, row
+  deleted at 0, `is_active` cleared). Surfaced as `potionApplied` in the response.
+- **Retry shield** (`retries`) — on a `<60%` fail with the shield armed,
+  `submit_exercise_attempt` **suppresses the spaced-repetition penalty** (skips scheduling)
+  and consumes the shield (`retryShieldUsed = true`). "Best of two" needs no extra code —
+  the existing best-score eligibility gate (`score > previous best`) already keeps the
+  higher replay score.
+- **Streak shield** (`streakShield`) — passive. In `award_xp`, when the student is active
+  after missing **exactly one day** (`last_active_date = today − 2 days`), an armed streak
+  shield is consumed to preserve the streak. Gaps of ≥ 2 missed days reset to 1 and do
+  **not** consume the shield.
+- **Hints** (`hints`/`hintBoost`) — reveal a question's `questions.explanation` on demand
+  during a quest (the per-question "Indice" button), decrementing one charge via the
+  `consume_hint` RPC. Not armed and not tied to submit. No XP/reward effect. Anti-waste: a
+  charge is spent **only** when there is actually a hint to reveal — a question with no
+  explanation returns `consumed = false` and costs nothing.
+
+**Anti-waste & anti-cheat invariant:** a consumable is consumed **only when it actually
+takes effect** (a potion only on a reward-earning attempt; a retry shield only on an actual
+penalised fail; a streak shield only on an exactly-one-day gap). Consumables never grant XP
+on their own and never bypass the `tooFast` / `≥ 60%` / `improved` anti-farm gates in
+`submit_exercise_attempt` — the potion multiplier applies _after_ those gates have already
+passed.
+
+The consumable RPCs (`activate_inventory_item`, `submit_exercise_attempt`, `award_xp`, and
+`consume_hint`) are `REVOKE`d from anon. Per §7 (DB ↔ code coordination),
+these consumable migrations must be applied to the database **before** the matching code is
+deployed.
+
 ---
 
 ## 9. How to add a new feature
