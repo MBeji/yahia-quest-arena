@@ -23,7 +23,7 @@ BEGIN;
 -- pgTAP is normally pre-installed by `supabase test db`; create it defensively
 -- so the file is self-contained when run via psql too. Idempotent.
 CREATE EXTENSION IF NOT EXISTS pgtap;
-SELECT plan(9);
+SELECT plan(10);
 
 -- ---------------------------------------------------------
 -- Shared content fixtures (owned by superuser; RLS not yet in play).

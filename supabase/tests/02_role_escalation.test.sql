@@ -41,14 +41,14 @@ SELECT is(
 -- ---------------------------------------------------------
 SELECT unlike(
   (SELECT pg_get_function_result('public.get_subject_leaderboard(text, int)'::regprocedure)),
-  '%user_id%',
-  'S2(b): get_subject_leaderboard does NOT expose a user_id column'
+  '%user_id%'::text,
+  'S2(b): get_subject_leaderboard does NOT expose a user_id column'::text
 );
 
 SELECT like(
   (SELECT pg_get_function_result('public.get_subject_leaderboard(text, int)'::regprocedure)),
-  '%is_me%',
-  'S2(b): get_subject_leaderboard still exposes the is_me flag'
+  '%is_me%'::text,
+  'S2(b): get_subject_leaderboard still exposes the is_me flag'::text
 );
 
 -- ---------------------------------------------------------
