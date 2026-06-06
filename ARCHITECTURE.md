@@ -196,9 +196,11 @@ through SECURITY DEFINER RPCs (consumable migrations under
   after missing **exactly one day** (`last_active_date = today − 2 days`), an armed streak
   shield is consumed to preserve the streak. Gaps of ≥ 2 missed days reset to 1 and do
   **not** consume the shield.
-- **Hints** (`hints`/`hintBoost`) — _in progress; branch not yet merged._ Reveal a
-  question's `questions.explanation` on demand during a quest, decrementing a charge via a
-  `consume_hint` RPC. No XP/reward effect.
+- **Hints** (`hints`/`hintBoost`) — reveal a question's `questions.explanation` on demand
+  during a quest (the per-question "Indice" button), decrementing one charge via the
+  `consume_hint` RPC. Not armed and not tied to submit. No XP/reward effect. Anti-waste: a
+  charge is spent **only** when there is actually a hint to reveal — a question with no
+  explanation returns `consumed = false` and costs nothing.
 
 **Anti-waste & anti-cheat invariant:** a consumable is consumed **only when it actually
 takes effect** (a potion only on a reward-earning attempt; a retry shield only on an actual
@@ -208,7 +210,7 @@ on their own and never bypass the `tooFast` / `≥ 60%` / `improved` anti-farm g
 passed.
 
 The consumable RPCs (`activate_inventory_item`, `submit_exercise_attempt`, `award_xp`, and
-the in-progress `consume_hint`) are `REVOKE`d from anon. Per §7 (DB ↔ code coordination),
+`consume_hint`) are `REVOKE`d from anon. Per §7 (DB ↔ code coordination),
 these consumable migrations must be applied to the database **before** the matching code is
 deployed.
 

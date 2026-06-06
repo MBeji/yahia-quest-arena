@@ -65,7 +65,7 @@ Potions (`xpMultiplier`/`coinMultiplier`) and the retry shield (`retries`) share
 `activate_inventory_item` arms; `submit_exercise_attempt` applies/consumes potions
 (`potionApplied`) and the retry shield (suppresses the spaced-rep penalty on a `<60%` fail,
 `retryShieldUsed`); `award_xp` consumes a streak shield to save a one-missed-day streak;
-`consume_hint` reveals `questions.explanation` (hints branch in progress). Anti-waste: a
+`consume_hint` reveals `questions.explanation` on demand (decrements one charge). Anti-waste: a
 consumable is consumed only when it actually takes effect, and never bypasses the
 `tooFast`/`≥60%`/`improved` anti-farm gates. Apply consumable migrations before deploy (§7).
 See ARCHITECTURE.md "Consumables (shop items)" for the full model.
