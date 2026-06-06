@@ -19,7 +19,7 @@ import {
   Star,
   Link as LinkIcon,
 } from "lucide-react";
-import { getLinkedStudents, getStudentReport, linkStudentByCode } from "@/lib/gamification.parent";
+import { getLinkedStudents, getStudentReport, linkStudentByCode } from "@/features/parent-report";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -85,7 +85,7 @@ function ParentReport() {
   if (loadingStudents) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-indigo-400 border-t-transparent rounded-full" />
+        <div className="animate-spin w-8 h-8 border-4 border-[color:var(--gold)] border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -93,9 +93,9 @@ function ParentReport() {
   if (students.length === 0 && isAdmin) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center">
-        <Users className="w-16 h-16 text-gray-400 mb-4" />
+        <Users className="w-16 h-16 text-muted-foreground mb-4" />
         <h2 className="text-xl font-bold text-white mb-2">Aucun eleve inscrit</h2>
-        <p className="text-gray-400 max-w-md">
+        <p className="text-muted-foreground max-w-md">
           Aucun compte eleve n'existe encore dans la plateforme.
         </p>
       </div>
@@ -106,10 +106,10 @@ function ParentReport() {
     <div className="min-h-screen p-4 md:p-8 max-w-6xl mx-auto">
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
         <h1 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
-          <Activity className="w-7 h-7 text-indigo-400" />
+          <Activity className="w-7 h-7 text-[color:var(--gold)]" />
           {isAdmin ? "Admin — Suivi des élèves" : "Rapport de suivi"}
         </h1>
-        <p className="text-gray-400 mt-1">
+        <p className="text-muted-foreground mt-1">
           {isAdmin
             ? `${students.length} élève(s) inscrits — sélectionnez pour voir le détail`
             : "Vue d'ensemble de l'activité de votre enfant"}
@@ -117,8 +117,8 @@ function ParentReport() {
       </motion.div>
 
       {!isAdmin && (
-        <div className="mb-6 rounded-xl border border-indigo-700/40 bg-indigo-950/30 p-4">
-          <div className="mb-3 flex items-center gap-2 text-indigo-200">
+        <div className="mb-6 rounded-xl border border-[color:var(--gold)]/40 bg-black/30 p-4">
+          <div className="mb-3 flex items-center gap-2 text-[color:var(--champagne)]">
             <LinkIcon className="h-4 w-4" />
             <span className="font-semibold">Associer un eleve via Alliance Code</span>
           </div>
@@ -127,24 +127,26 @@ function ParentReport() {
               value={studentCode}
               onChange={(e) => setStudentCode(e.target.value)}
               placeholder="Code eleve"
-              className="rounded-lg border border-gray-700 bg-gray-900/70 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:border-indigo-500 focus:outline-none"
+              className="rounded-lg border border-[color:var(--gold)]/30 bg-black/70 px-3 py-2 text-sm text-white placeholder:text-muted-foreground focus:border-[color:var(--gold)] focus:outline-none"
             />
             <input
               value={relationLabel}
               onChange={(e) => setRelationLabel(e.target.value)}
               placeholder="Relation (parent)"
-              className="rounded-lg border border-gray-700 bg-gray-900/70 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:border-indigo-500 focus:outline-none"
+              className="rounded-lg border border-[color:var(--gold)]/30 bg-black/70 px-3 py-2 text-sm text-white placeholder:text-muted-foreground focus:border-[color:var(--gold)] focus:outline-none"
             />
             <button
               type="button"
               disabled={studentCode.trim().length < 8 || linkMutation.isPending}
               onClick={() => linkMutation.mutate()}
-              className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50"
+              className="rounded-lg bg-[image:var(--gradient-gold)] px-4 py-2 text-sm font-semibold text-black hover:opacity-90 disabled:opacity-50"
             >
               {linkMutation.isPending ? "Liaison..." : "Associer"}
             </button>
           </div>
-          <p className="mt-2 text-xs text-gray-400">L'eleve trouve son code dans son dashboard.</p>
+          <p className="mt-2 text-xs text-muted-foreground">
+            L'eleve trouve son code dans son dashboard.
+          </p>
         </div>
       )}
 
@@ -157,8 +159,8 @@ function ParentReport() {
               onClick={() => setSelectedStudent(s.id)}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 selectedStudent === s.id
-                  ? "bg-indigo-600 text-white"
-                  : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                  ? "bg-[image:var(--gradient-gold)] text-black"
+                  : "bg-black/50 text-muted-foreground hover:bg-black/70 border border-[color:var(--gold)]/30 hover:border-[color:var(--gold)]/60"
               }`}
             >
               {s.display_name ?? "Élève"}
@@ -171,11 +173,11 @@ function ParentReport() {
                 type="button"
                 onClick={() => setAdminPage((p) => Math.max(1, p - 1))}
                 disabled={pagination.page <= 1}
-                className="rounded-md border border-gray-700 bg-gray-900/70 px-3 py-1.5 text-xs font-semibold text-gray-200 disabled:opacity-40"
+                className="rounded-md border border-[color:var(--gold)]/30 bg-black/70 px-3 py-1.5 text-xs font-semibold text-[color:var(--champagne)] disabled:opacity-40"
               >
                 Prec
               </button>
-              <span className="text-xs text-gray-400">
+              <span className="text-xs text-muted-foreground">
                 Page {pagination.page} /{" "}
                 {Math.max(1, Math.ceil(pagination.total / pagination.pageSize))}
               </span>
@@ -183,7 +185,7 @@ function ParentReport() {
                 type="button"
                 onClick={() => setAdminPage((p) => p + 1)}
                 disabled={!pagination.hasMore}
-                className="rounded-md border border-gray-700 bg-gray-900/70 px-3 py-1.5 text-xs font-semibold text-gray-200 disabled:opacity-40"
+                className="rounded-md border border-[color:var(--gold)]/30 bg-black/70 px-3 py-1.5 text-xs font-semibold text-[color:var(--champagne)] disabled:opacity-40"
               >
                 Suiv
               </button>
@@ -193,14 +195,14 @@ function ParentReport() {
       )}
 
       {!isAdmin && students.length === 0 && (
-        <div className="rounded-xl border border-gray-700/50 bg-gray-900/50 p-8 text-center text-gray-300">
+        <div className="rounded-xl border border-border/50 bg-black/50 p-8 text-center text-muted-foreground">
           Associez votre premier eleve avec son Alliance Code pour debloquer le suivi.
         </div>
       )}
 
       {loadingReport ? (
         <div className="flex items-center justify-center py-20">
-          <div className="animate-spin w-8 h-8 border-4 border-indigo-400 border-t-transparent rounded-full" />
+          <div className="animate-spin w-8 h-8 border-4 border-[color:var(--gold)] border-t-transparent rounded-full" />
         </div>
       ) : report ? (
         <ReportContent report={report} />
@@ -220,12 +222,12 @@ function ReportContent({ report }: { report: ReportData }) {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-r from-indigo-900/50 to-purple-900/50 border border-indigo-700/30 rounded-xl p-6"
+        className="bg-black/50 border border-[color:var(--gold)]/40 rounded-xl p-6"
       >
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h2 className="text-xl font-bold text-white">{student.displayName}</h2>
-            <p className="text-gray-400 text-sm mt-1">
+            <p className="text-muted-foreground text-sm mt-1">
               Classe: {student.heroClass ?? "Non choisie"} · Membre depuis{" "}
               {new Date(student.createdAt).toLocaleDateString("fr-FR")}
             </p>
@@ -269,15 +271,15 @@ function ReportContent({ report }: { report: ReportData }) {
       </div>
 
       {/* Score trend */}
-      <div className="bg-gray-900/50 border border-gray-700/50 rounded-xl p-4 flex items-center gap-3">
+      <div className="bg-black/50 border border-border/50 rounded-xl p-4 flex items-center gap-3">
         {summary.scoreTrend > 0 ? (
           <TrendingUp className="w-5 h-5 text-green-400" />
         ) : summary.scoreTrend < 0 ? (
           <TrendingDown className="w-5 h-5 text-red-400" />
         ) : (
-          <Minus className="w-5 h-5 text-gray-400" />
+          <Minus className="w-5 h-5 text-muted-foreground" />
         )}
-        <span className="text-gray-300">
+        <span className="text-muted-foreground">
           Tendance des scores:{" "}
           <span
             className={
@@ -285,7 +287,7 @@ function ReportContent({ report }: { report: ReportData }) {
                 ? "text-green-400"
                 : summary.scoreTrend < 0
                   ? "text-red-400"
-                  : "text-gray-400"
+                  : "text-muted-foreground"
             }
           >
             {summary.scoreTrend > 0 ? "+" : ""}
@@ -296,9 +298,9 @@ function ReportContent({ report }: { report: ReportData }) {
       </div>
 
       {/* Activity chart (simple bar chart) */}
-      <div className="bg-gray-900/50 border border-gray-700/50 rounded-xl p-4">
+      <div className="bg-black/50 border border-border/50 rounded-xl p-4">
         <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-          <Calendar className="w-5 h-5 text-indigo-400" />
+          <Calendar className="w-5 h-5 text-[color:var(--gold)]" />
           Activité des 30 derniers jours
         </h3>
         <div className="flex items-end gap-[2px] h-32 overflow-x-auto">
@@ -313,7 +315,7 @@ function ReportContent({ report }: { report: ReportData }) {
               >
                 <div
                   className={`w-full rounded-t transition-colors ${
-                    day.exercises > 0 ? "bg-indigo-500 hover:bg-indigo-400" : "bg-gray-700"
+                    day.exercises > 0 ? "bg-[color:var(--gold)] hover:opacity-80" : "bg-muted/50"
                   }`}
                   style={{ height: `${Math.max(height, 4)}%` }}
                 />
@@ -321,7 +323,7 @@ function ReportContent({ report }: { report: ReportData }) {
             );
           })}
         </div>
-        <div className="flex justify-between mt-2 text-xs text-gray-500">
+        <div className="flex justify-between mt-2 text-xs text-muted-foreground">
           <span>{dailyActivity[0]?.date}</span>
           <span>Aujourd'hui</span>
         </div>
@@ -329,7 +331,7 @@ function ReportContent({ report }: { report: ReportData }) {
 
       {/* Subject breakdown */}
       {subjectStats.length > 0 && (
-        <div className="bg-gray-900/50 border border-gray-700/50 rounded-xl p-4">
+        <div className="bg-black/50 border border-border/50 rounded-xl p-4">
           <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
             <BookOpen className="w-5 h-5 text-green-400" />
             Performance par matière
@@ -337,15 +339,17 @@ function ReportContent({ report }: { report: ReportData }) {
           <div className="space-y-3">
             {subjectStats.map((s) => (
               <div key={s.subjectId} className="flex items-center gap-3">
-                <div className="w-28 text-sm text-gray-300 truncate">{s.name}</div>
-                <div className="flex-1 h-4 bg-gray-800 rounded-full overflow-hidden">
+                <div className="w-28 text-sm text-muted-foreground truncate">{s.name}</div>
+                <div className="flex-1 h-4 bg-muted/50 rounded-full overflow-hidden">
                   <div
-                    className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all"
+                    className="h-full rounded-full bg-[image:var(--gradient-gold)] transition-all"
                     style={{ width: `${s.avgScore}%` }}
                   />
                 </div>
-                <div className="w-12 text-right text-sm text-gray-300">{s.avgScore}%</div>
-                <div className="w-20 text-right text-xs text-gray-500">{s.attempts} ex.</div>
+                <div className="w-12 text-right text-sm text-muted-foreground">{s.avgScore}%</div>
+                <div className="w-20 text-right text-xs text-muted-foreground">
+                  {s.attempts} ex.
+                </div>
               </div>
             ))}
           </div>
@@ -353,7 +357,7 @@ function ReportContent({ report }: { report: ReportData }) {
       )}
 
       {/* Last active */}
-      <div className="text-center text-sm text-gray-500 py-4">
+      <div className="text-center text-sm text-muted-foreground py-4">
         Dernière activité:{" "}
         {student.lastActiveDate
           ? new Date(student.lastActiveDate).toLocaleDateString("fr-FR", {
@@ -418,14 +422,14 @@ function VerdictCard({ score, verdict }: { score: number; verdict: string }) {
       <div className="flex-1">
         <div className="flex items-center gap-3">
           <span className={`text-lg font-bold ${c.color}`}>{c.label}</span>
-          <span className="text-sm text-gray-400">Score d'assiduité: {score}/100</span>
+          <span className="text-sm text-muted-foreground">Score d'assiduité: {score}/100</span>
         </div>
-        <p className="text-gray-300 text-sm mt-1">{c.desc}</p>
+        <p className="text-muted-foreground text-sm mt-1">{c.desc}</p>
       </div>
       {/* Circular gauge */}
       <div className="relative w-16 h-16">
         <svg className="w-16 h-16 -rotate-90" viewBox="0 0 36 36">
-          <circle cx="18" cy="18" r="15" fill="none" stroke="#374151" strokeWidth="3" />
+          <circle cx="18" cy="18" r="15" fill="none" stroke="var(--muted)" strokeWidth="3" />
           <circle
             cx="18"
             cy="18"
@@ -457,10 +461,10 @@ function MetricCard({
   value: string;
 }) {
   return (
-    <div className="bg-gray-900/50 border border-gray-700/50 rounded-xl p-4 text-center">
+    <div className="bg-black/50 border border-border/50 rounded-xl p-4 text-center">
       <div className="flex justify-center mb-2">{icon}</div>
       <div className="text-xl font-bold text-white">{value}</div>
-      <div className="text-xs text-gray-400 mt-1">{label}</div>
+      <div className="text-xs text-muted-foreground mt-1">{label}</div>
     </div>
   );
 }
@@ -475,10 +479,10 @@ function StatBadge({
   value: string | number;
 }) {
   return (
-    <div className="flex items-center gap-2 bg-gray-800/80 rounded-lg px-3 py-2">
+    <div className="flex items-center gap-2 bg-black/60 rounded-lg px-3 py-2 border border-[color:var(--gold)]/30">
       {icon}
       <div>
-        <div className="text-xs text-gray-400">{label}</div>
+        <div className="text-xs text-muted-foreground">{label}</div>
         <div className="text-sm font-bold text-white">{value}</div>
       </div>
     </div>

@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { Sparkles, Mail, Lock, User as UserIcon, Loader2, MailCheck } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/shared/integrations/supabase/client";
 import { useServerFn } from "@tanstack/react-start";
-import { linkStudentByCode } from "@/lib/gamification.parent";
+import { linkStudentByCode } from "@/features/parent-report";
+import { bootstrapProfile } from "@/features/auth";
+import { Label } from "@/components/ui/label";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -33,12 +35,65 @@ function AuthPage() {
   const [busy, setBusy] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [sentTo, setSentTo] = useState("");
+  // Inline, screen-reader-announced form error (see #23). `passwordError` is the
+  // specific min-length validation surfaced on the password field.
+  const [formError, setFormError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const linkByCode = useServerFn(linkStudentByCode);
+  const runBootstrapProfile = useServerFn(bootstrapProfile);
 
   useEffect(() => {
+    // 1) Surface OAuth/callback errors that Supabase appends to the URL (query or
+    // hash). Without this the user silently bounces back to the login form.
+    const params = new URLSearchParams(window.location.search);
+    const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+    const oauthError =
+      params.get("error_description") ||
+      params.get("error") ||
+      hash.get("error_description") ||
+      hash.get("error");
+    if (oauthError) {
+      const raw = decodeURIComponent(oauthError);
+      const friendly = friendlyAuthError(new Error(raw));
+      // For OAuth, show the raw provider/Supabase message when it isn't a known
+      // case — it's far more actionable than a generic fallback for debugging.
+      const shown =
+        friendly === "Erreur d'authentification. Réessaie." ? `Google : ${raw}` : friendly;
+      setFormError(shown);
+      toast.error(shown);
+      window.history.replaceState({}, "", "/auth");
+    }
+
+    // 2) Redirect away if already signed in. Covers the OAuth callback too:
+    // Supabase exchanges /auth?code=... for a session ASYNCHRONOUSLY, so we also
+    // subscribe to auth-state changes and navigate on SIGNED_IN.
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) navigate({ to: "/dashboard" });
     });
+    const { data: authSub } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) navigate({ to: "/dashboard" });
+    });
+
+    // 3) Fallback: arrived from the OAuth callback (?code=) but no session
+    // materialised → tell the user instead of silently bouncing.
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    if (params.has("code") && !oauthError) {
+      timer = setTimeout(() => {
+        supabase.auth.getSession().then(({ data }) => {
+          if (!data.session) {
+            const m =
+              "La connexion Google n'a pas pu être finalisée. Réessaie — et vérifie que ce compte n'est pas déjà inscrit par email/mot de passe.";
+            setFormError(m);
+            toast.error(m);
+          }
+        });
+      }, 2500);
+    }
+
+    return () => {
+      authSub.subscription.unsubscribe();
+      if (timer) clearTimeout(timer);
+    };
   }, [navigate]);
 
   function friendlyAuthError(err: unknown): string {
@@ -56,39 +111,45 @@ function AuthPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setFormError("");
     if (password.length < 8) {
-      toast.error("Le mot de passe doit contenir au moins 8 caractères.");
+      const msg = "Le mot de passe doit contenir au moins 8 caractères.";
+      setPasswordError(msg);
+      setFormError(msg);
+      // TODO(review #32): route toast/inline auth strings through useT() once an
+      // `auth` i18n namespace with these keys exists (no keys today; do not edit i18n files).
+      toast.error(msg);
       return;
     }
+    setPasswordError("");
     setBusy(true);
     try {
       if (isSignup) {
+        const displayName = name || email.split("@")[0];
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
             emailRedirectTo: `${window.location.origin}/dashboard`,
-            data: { display_name: name || email.split("@")[0] },
+            data: { display_name: displayName },
           },
         });
         if (error) throw error;
 
-        if (data.user) {
-          const { error: profileErr } = await supabase.from("profiles").upsert(
-            {
-              id: data.user.id,
-              display_name: name || email.split("@")[0],
-              role,
-            },
-            { onConflict: "id" },
-          );
-          if (profileErr) throw profileErr;
+        // Profile bootstrap (display name + role) is extracted to the
+        // `bootstrapProfile` server fn (review #19). It is authenticated, so it can
+        // only run once a session exists (signup auto-login). When email
+        // confirmation is required there is no session yet — the `handle_new_user`
+        // trigger + signUp metadata already seed the profile, so we skip it.
+        if (data.user && data.session) {
+          await runBootstrapProfile({ data: { displayName, role } });
 
           if (role === "parent" && allianceCode.trim().length > 0) {
             const linkRes = await linkByCode({
               data: { studentCode: allianceCode.trim(), relationLabel: "parent" },
             });
             if (linkRes.linked) {
+              // TODO(review #32): use useT() once an `auth` i18n key exists.
               toast.success(`Linked with ${linkRes.student.displayName ?? "student"}.`);
             }
           }
@@ -100,22 +161,27 @@ function AuthPage() {
           setEmailSent(true);
           return;
         }
+        // TODO(review #32): use useT() once an `auth` i18n key exists.
         toast.success("Hero created! Welcome to the academy.");
         navigate({ to: "/dashboard" });
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
+        // TODO(review #32): use useT() once an `auth` i18n key exists.
         toast.success("Welcome back, warrior.");
         navigate({ to: "/dashboard" });
       }
     } catch (err) {
-      toast.error(friendlyAuthError(err));
+      const message = friendlyAuthError(err);
+      setFormError(message);
+      toast.error(message);
     } finally {
       setBusy(false);
     }
   }
 
   async function handleGoogle() {
+    setFormError("");
     setBusy(true);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -129,11 +195,14 @@ function AuthPage() {
 
     if (error) {
       const message = error.message.toLowerCase();
-      if (message.includes("provider") || message.includes("oauth")) {
-        toast.error("Google provider n'est pas configuré dans Supabase Auth.");
-      } else {
-        toast.error(`Google sign-in failed: ${error.message}`);
-      }
+      // TODO(review #32): route these strings through useT() once an `auth` i18n
+      // namespace with matching keys exists (none today; do not edit i18n files).
+      const friendly =
+        message.includes("provider") || message.includes("oauth")
+          ? "Google provider n'est pas configuré dans Supabase Auth."
+          : `Google sign-in failed: ${error.message}`;
+      setFormError(friendly);
+      toast.error(friendly);
       setBusy(false);
       return;
     }
@@ -142,16 +211,16 @@ function AuthPage() {
 
   if (emailSent) {
     return (
-      <main className="relative min-h-screen overflow-hidden bg-hero">
+      <main className="relative min-h-screen overflow-hidden bg-black-deep">
         <div className="absolute inset-0 bg-grid opacity-50" />
         <div className="relative mx-auto flex min-h-screen max-w-md flex-col items-center justify-center px-6 py-12">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="w-full glass rounded-2xl p-8 shadow-neon text-center"
+            className="w-full glass-gold rounded-2xl p-8 shadow-gold text-center"
           >
-            <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-2xl bg-[color:var(--neon-cyan)]/20 border border-[color:var(--neon-cyan)]/40">
-              <MailCheck className="h-8 w-8 text-[color:var(--neon-cyan)]" />
+            <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-2xl bg-[color:var(--gold)]/20 border border-[color:var(--gold)]/40">
+              <MailCheck className="h-8 w-8 text-[color:var(--gold)]" />
             </div>
             <h1 className="font-display text-2xl font-bold">Confirme ton email</h1>
             <p className="mt-3 text-sm text-muted-foreground">
@@ -159,7 +228,7 @@ function AuthPage() {
               <span className="font-semibold text-foreground">{sentTo}</span>.<br />
               Clique sur le lien pour activer ton compte et accéder à l&apos;arène.
             </p>
-            <div className="mt-6 rounded-xl border border-[color:var(--neon-violet)]/30 bg-[color:var(--neon-violet)]/5 p-4 text-xs text-muted-foreground">
+            <div className="mt-6 rounded-xl border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 p-4 text-xs text-muted-foreground">
               📬 Vérifie aussi tes spams si tu ne vois pas l&apos;email dans ta boîte principale.
             </div>
             <button
@@ -168,7 +237,7 @@ function AuthPage() {
                 setEmailSent(false);
                 setSentTo("");
               }}
-              className="mt-6 text-xs text-[color:var(--neon-cyan)] hover:underline"
+              className="mt-6 text-xs text-[color:var(--gold)] hover:underline"
             >
               ← Modifier l&apos;adresse email
             </button>
@@ -179,15 +248,15 @@ function AuthPage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-hero">
+    <main className="relative min-h-screen overflow-hidden bg-black-deep">
       <div className="absolute inset-0 bg-grid opacity-50" />
       <div className="relative mx-auto flex min-h-screen max-w-md flex-col items-center justify-center px-6 py-12">
         <Link to="/" className="mb-8 flex items-center gap-2">
-          <div className="grid h-10 w-10 place-items-center rounded-lg bg-gradient-to-br from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] shadow-neon">
-            <Sparkles className="h-5 w-5 text-primary-foreground" />
+          <div className="grid h-10 w-10 place-items-center rounded-lg bg-[image:var(--gradient-gold)] shadow-gold">
+            <Sparkles className="h-5 w-5 text-black" />
           </div>
           <span className="font-display text-xl font-bold tracking-wider">
-            XP <span className="text-gradient-cyan">SCHOLARS</span>
+            XP <span className="text-gradient-gold">SCHOLARS</span>
           </span>
         </Link>
 
@@ -195,7 +264,7 @@ function AuthPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="w-full glass rounded-2xl p-8 shadow-neon"
+          className="w-full glass-gold rounded-2xl p-8 shadow-gold"
         >
           <h1 className="font-display text-2xl font-bold">
             {isSignup ? "Forge your hero" : "Welcome back, warrior"}
@@ -210,7 +279,7 @@ function AuthPage() {
             type="button"
             disabled={busy}
             onClick={handleGoogle}
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-background/50 px-4 py-2.5 text-sm font-medium transition hover:bg-background/80 disabled:opacity-50"
+            className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-black/50 px-4 py-2.5 text-sm font-medium transition hover:bg-black/80 disabled:opacity-50"
           >
             <svg width="18" height="18" viewBox="0 0 24 24">
               <path
@@ -243,7 +312,7 @@ function AuthPage() {
 
           <form onSubmit={handleSubmit} className="space-y-3">
             {isSignup && (
-              <div className="rounded-xl border border-border/60 bg-background/30 p-3">
+              <div className="rounded-xl border border-border/60 bg-black/30 p-3">
                 <div className="mb-2 text-xs uppercase tracking-wider text-muted-foreground">
                   Choose your Guild Role
                 </div>
@@ -251,14 +320,14 @@ function AuthPage() {
                   <button
                     type="button"
                     onClick={() => setRole("student")}
-                    className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${role === "student" ? "bg-[color:var(--neon-violet)]/20 text-[color:var(--neon-violet)] border border-[color:var(--neon-violet)]/40" : "bg-background/40 text-muted-foreground border border-border/50 hover:text-foreground"}`}
+                    className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${role === "student" ? "bg-[color:var(--gold)]/15 text-[color:var(--gold)] border border-[color:var(--gold)]/40" : "bg-black/40 text-muted-foreground border border-border/50 hover:text-foreground"}`}
                   >
                     Eleve · Hero
                   </button>
                   <button
                     type="button"
                     onClick={() => setRole("parent")}
-                    className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${role === "parent" ? "bg-[color:var(--neon-cyan)]/20 text-[color:var(--neon-cyan)] border border-[color:var(--neon-cyan)]/40" : "bg-background/40 text-muted-foreground border border-border/50 hover:text-foreground"}`}
+                    className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${role === "parent" ? "bg-[color:var(--gold)]/15 text-[color:var(--gold)] border border-[color:var(--gold)]/40" : "bg-black/40 text-muted-foreground border border-border/50 hover:text-foreground"}`}
                   >
                     Parent · Mentor
                   </button>
@@ -268,59 +337,96 @@ function AuthPage() {
 
             {isSignup && (
               <div className="relative">
+                <Label htmlFor="auth-name" className="sr-only">
+                  Hero name
+                </Label>
                 <UserIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <input
+                  id="auth-name"
                   type="text"
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Hero name"
-                  className="w-full rounded-lg border border-input bg-background/50 py-2.5 pl-10 pr-3 text-sm focus:border-[color:var(--neon-violet)] focus:outline-none"
+                  className="w-full rounded-lg border border-input bg-black/50 py-2.5 pl-10 pr-3 text-sm focus:border-[color:var(--gold)] focus:outline-none"
                 />
               </div>
             )}
 
             {isSignup && role === "parent" && (
               <div className="relative">
+                <Label htmlFor="auth-alliance-code" className="sr-only">
+                  Alliance Code eleve (optionnel)
+                </Label>
                 <input
+                  id="auth-alliance-code"
                   type="text"
                   value={allianceCode}
                   onChange={(e) => setAllianceCode(e.target.value)}
                   placeholder="Alliance Code eleve (optionnel)"
-                  className="w-full rounded-lg border border-input bg-background/50 py-2.5 px-3 text-sm focus:border-[color:var(--neon-cyan)] focus:outline-none"
+                  aria-describedby="auth-alliance-code-hint"
+                  className="w-full rounded-lg border border-input bg-black/50 py-2.5 px-3 text-sm focus:border-[color:var(--gold)] focus:outline-none"
                 />
-                <p className="mt-1 text-xs text-muted-foreground">
+                <p id="auth-alliance-code-hint" className="mt-1 text-xs text-muted-foreground">
                   Entre le code de ton enfant pour lier les comptes maintenant.
                 </p>
               </div>
             )}
             <div className="relative">
+              <Label htmlFor="auth-email" className="sr-only">
+                Email
+              </Label>
               <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <input
+                id="auth-email"
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
-                className="w-full rounded-lg border border-input bg-background/50 py-2.5 pl-10 pr-3 text-sm focus:border-[color:var(--neon-violet)] focus:outline-none"
+                className="w-full rounded-lg border border-input bg-black/50 py-2.5 pl-10 pr-3 text-sm focus:border-[color:var(--gold)] focus:outline-none"
               />
             </div>
             <div className="relative">
+              <Label htmlFor="auth-password" className="sr-only">
+                Password (min 8 characters)
+              </Label>
               <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <input
+                id="auth-password"
                 type="password"
                 required
                 minLength={8}
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (passwordError) setPasswordError("");
+                }}
                 placeholder="Password (min 8 characters)"
-                className="w-full rounded-lg border border-input bg-background/50 py-2.5 pl-10 pr-3 text-sm focus:border-[color:var(--neon-violet)] focus:outline-none"
+                aria-invalid={passwordError ? true : undefined}
+                aria-describedby={passwordError ? "auth-password-error" : undefined}
+                className="w-full rounded-lg border border-input bg-black/50 py-2.5 pl-10 pr-3 text-sm focus:border-[color:var(--gold)] focus:outline-none"
               />
+              {passwordError && (
+                <p id="auth-password-error" className="mt-1 text-xs text-[color:var(--gold)]">
+                  {passwordError}
+                </p>
+              )}
+            </div>
+
+            {/* Always-mounted live region so screen readers announce errors
+                reliably when `formError` changes (see #23). */}
+            <div role="alert" aria-live="polite">
+              {formError && (
+                <p className="rounded-lg border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/10 px-3 py-2 text-xs text-[color:var(--gold)]">
+                  {formError}
+                </p>
+              )}
             </div>
             <button
               type="submit"
               disabled={busy}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[color:var(--neon-violet)] to-[color:var(--neon-magenta)] py-2.5 text-sm font-bold text-primary-foreground shadow-neon transition hover:scale-[1.02] disabled:opacity-60"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-[image:var(--gradient-gold)] py-2.5 text-sm font-bold text-black shadow-gold transition hover:opacity-90 disabled:opacity-60"
             >
               {busy && <Loader2 className="h-4 w-4 animate-spin" />}
               {isSignup ? "Forge my hero" : "Enter the arena"}
@@ -332,7 +438,7 @@ function AuthPage() {
             <Link
               to="/auth"
               search={{ mode: isSignup ? "login" : "signup" }}
-              className="font-semibold text-[color:var(--neon-cyan)] hover:underline"
+              className="font-semibold text-[color:var(--gold)] hover:underline"
             >
               {isSignup ? "Sign in" : "Create an account"}
             </Link>

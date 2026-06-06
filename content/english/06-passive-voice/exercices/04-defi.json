@@ -1,0 +1,82 @@
+{
+  "title": "👑 Elite Challenge: Passive Voice Across Tenses & Modals",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Transform to passive (future simple): \"The government will announce the results tomorrow.\"\nWhich option is correct?",
+      "options": [
+        { "id": "a", "text": "The results will announced by the government tomorrow." },
+        { "id": "b", "text": "The results are announced by the government tomorrow." },
+        { "id": "c", "text": "The results will be announced by the government tomorrow." },
+        { "id": "d", "text": "The results were announced by the government tomorrow." }
+      ],
+      "correctOption": "c",
+      "explanation": "Future simple passive = will + be + past participle. \"Announce\" → past participle \"announced\". The object \"the results\" becomes the subject: The results WILL BE ANNOUNCED by the government tomorrow. Option a omits \"be\"; b uses present passive (wrong tense); d uses past passive (wrong tense).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Transform to passive (present perfect): \"Someone has stolen the exam papers.\"\nWhich option is correct?",
+      "options": [
+        { "id": "a", "text": "The exam papers have been stolen." },
+        { "id": "b", "text": "The exam papers has been stolen." },
+        { "id": "c", "text": "The exam papers were stolen." },
+        { "id": "d", "text": "The exam papers had been stolen." }
+      ],
+      "correctOption": "a",
+      "explanation": "Present perfect passive = have / has + been + past participle. \"The exam papers\" is plural → HAVE (not has). By-agent is omitted because the agent (someone) is unknown. Option b incorrectly uses \"has\" with a plural subject; c is past simple (loses the present-perfect meaning); d is past perfect (wrong tense).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Transform to passive (modal — must): \"You must submit all assignments before Friday.\"\nWhich option is correct?",
+      "options": [
+        { "id": "a", "text": "All assignments must been submitted before Friday." },
+        { "id": "b", "text": "All assignments must be submitted before Friday." },
+        { "id": "c", "text": "All assignments must being submitted before Friday." },
+        { "id": "d", "text": "All assignments must submitted before Friday." }
+      ],
+      "correctOption": "b",
+      "explanation": "Passive with a modal = modal + be + past participle. \"Must\" is already a base-form modal, so: must + BE + submitted. Option a uses \"been\" without \"be\" (wrong); c uses \"being\" (continuous form, wrong here); d omits \"be\" entirely.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Turn the active question into a passive question (present simple): \"Do they teach Arabic in this school?\"\nWhich passive question is correct?",
+      "options": [
+        { "id": "a", "text": "Are Arabic taught in this school?" },
+        { "id": "b", "text": "Does Arabic taught in this school?" },
+        { "id": "c", "text": "Was Arabic taught in this school?" },
+        { "id": "d", "text": "Is Arabic taught in this school?" }
+      ],
+      "correctOption": "d",
+      "explanation": "Present simple passive question = Is / Are + subject + past participle? \"Arabic\" is an uncountable/singular noun → IS (not are). Past participle of teach = taught. Option a wrongly uses \"Are\" with the singular noun \"Arabic\"; b keeps the active auxiliary \"Does\" (wrong); c uses \"Was\" — past tense, not present.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Active: \"Doctors should check patients regularly.\"\nWhich passive sentence is correct AND uses the most natural style (agent omitted when obvious)?",
+      "options": [
+        { "id": "a", "text": "Patients should be check regularly." },
+        { "id": "b", "text": "Patients should been checked regularly." },
+        { "id": "c", "text": "Patients should be checked regularly." },
+        { "id": "d", "text": "Patients should being checked regularly." }
+      ],
+      "correctOption": "c",
+      "explanation": "Modal passive = should + be + past participle (checked). The agent \"by doctors\" is omitted because it is obvious from context. Option a uses the base form \"check\" instead of the past participle; b omits \"be\" and has \"been\" in the wrong position; d uses \"being\" (a progressive form that does not follow a bare modal).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Active: \"The jury awarded the winner a gold medal.\"\nWhich passive sentence is correct?",
+      "options": [
+        { "id": "a", "text": "The winner were awarded a gold medal by the jury." },
+        { "id": "b", "text": "The winner was awarded a gold medal by the jury." },
+        { "id": "c", "text": "A gold medal is awarded to the winner by the jury." },
+        { "id": "d", "text": "The winner was awarded to a gold medal by the jury." }
+      ],
+      "correctOption": "b",
+      "explanation": "With two-object verbs like \"award\", the indirect object (the winner) can become the subject: The winner WAS awarded a gold medal by the jury. \"The winner\" is singular + past tense → WAS (not were). Option a wrongly uses \"were\" with a singular subject; c uses present tense (wrong) and misplaces \"to\"; d incorrectly inserts \"to\" between \"awarded\" and \"a gold medal\", which is ungrammatical in this pattern.",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "title": "⚔️ Paper 2: Boss — Health & the Environment",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Read the text:\n\n\"Last summer, the small town of Beni Khalled launched a clean-air week. Cars were banned from the centre, and people were encouraged to cycle. By Friday, the streets were quieter and the sky looked clearer. A doctor told the local radio, 'I have seen fewer patients with breathing problems this week.' The mayor promised to repeat the event every year.\"\n\nWhat can we infer from the doctor's words?",
+      "options": [
+        { "id": "a", "text": "The doctor wanted the event to stop." },
+        { "id": "b", "text": "Cleaner air seemed to improve people's breathing." },
+        { "id": "c", "text": "The hospital closed during the clean-air week." },
+        { "id": "d", "text": "Most people in the town were ill." }
+      ],
+      "correctOption": "b",
+      "explanation": "Fewer breathing patients during a clean-air week suggests the cleaner air helped people breathe better — an inference supported by the clues. (a) contradicts the positive report; (c) and (d) are never stated and go beyond what the text suggests.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read the text:\n\n\"Last summer, the small town of Beni Khalled launched a clean-air week. Cars were banned from the centre, and people were encouraged to cycle. By Friday, the streets were quieter and the sky looked clearer. A doctor told the local radio, 'I have seen fewer patients with breathing problems this week.' The mayor promised to repeat the event every year.\"\n\nIn the text, the word \"banned\" most probably means:",
+      "options": [
+        { "id": "a", "text": "allowed everywhere" },
+        { "id": "b", "text": "officially not permitted" },
+        { "id": "c", "text": "repaired" },
+        { "id": "d", "text": "sold cheaply" }
+      ],
+      "correctOption": "b",
+      "explanation": "Cars were \"banned from the centre\" so that people would cycle instead — the context shows they were not allowed. (a) is the opposite; (c) and (d) do not fit the idea of keeping cars out for cleaner air.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read the text:\n\n\"Last summer, the small town of Beni Khalled launched a clean-air week. Cars were banned from the centre, and people were encouraged to cycle. By Friday, the streets were quieter and the sky looked clearer. A doctor told the local radio, 'I have seen fewer patients with breathing problems this week.' The mayor promised to repeat the event every year.\"\n\nLanguage: the sentence \"Cars were banned from the centre\" is in the:",
+      "options": [
+        { "id": "a", "text": "active voice, present simple" },
+        { "id": "b", "text": "passive voice, past simple" },
+        { "id": "c", "text": "active voice, past continuous" },
+        { "id": "d", "text": "passive voice, present perfect" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Were banned\" = was/were + past participle, the passive of the past simple; the cars receive the action and the doer is unimportant. (a) and (c) are active; (d) would be \"have been banned\".",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read the text:\n\n\"Last summer, the small town of Beni Khalled launched a clean-air week. Cars were banned from the centre, and people were encouraged to cycle. By Friday, the streets were quieter and the sky looked clearer. A doctor told the local radio, 'I have seen fewer patients with breathing problems this week.' The mayor promised to repeat the event every year.\"\n\nLanguage: report the doctor's words. The doctor said that ______.",
+      "options": [
+        { "id": "a", "text": "he has seen fewer patients with breathing problems that week" },
+        { "id": "b", "text": "he had seen fewer patients with breathing problems that week" },
+        { "id": "c", "text": "I have seen fewer patients with breathing problems this week" },
+        { "id": "d", "text": "he will see fewer patients with breathing problems this week" }
+      ],
+      "correctOption": "b",
+      "explanation": "In reported speech the present perfect \"have seen\" shifts back to the past perfect \"had seen\", \"I\" becomes \"he\", and \"this week\" becomes \"that week\". (a) keeps the present perfect, (c) keeps the exact quote, and (d) changes the meaning to the future.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read the text:\n\n\"Last summer, the small town of Beni Khalled launched a clean-air week. Cars were banned from the centre, and people were encouraged to cycle. By Friday, the streets were quieter and the sky looked clearer. A doctor told the local radio, 'I have seen fewer patients with breathing problems this week.' The mayor promised to repeat the event every year.\"\n\nLanguage: complete this conditional sentence based on the text.\n\n\"If more towns banned cars for a week, the air ______ cleaner.\"",
+      "options": [
+        { "id": "a", "text": "will be" },
+        { "id": "b", "text": "would be" },
+        { "id": "c", "text": "would have been" },
+        { "id": "d", "text": "is" }
+      ],
+      "correctOption": "b",
+      "explanation": "The if-clause uses the past simple \"banned\", which signals a second conditional (an imagined situation), so the main clause needs \"would + base verb\": \"would be\". (a) belongs to the first conditional, (c) to the third, and (d) is not conditional.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read the text:\n\n\"Last summer, the small town of Beni Khalled launched a clean-air week. Cars were banned from the centre, and people were encouraged to cycle. By Friday, the streets were quieter and the sky looked clearer. A doctor told the local radio, 'I have seen fewer patients with breathing problems this week.' The mayor promised to repeat the event every year.\"\n\nWriting: which sentence would be the best topic sentence for a paragraph summarising this text?",
+      "options": [
+        { "id": "a", "text": "The mayor spoke to the local radio on Friday." },
+        {
+          "id": "b",
+          "text": "A clean-air week in Beni Khalled made the town healthier and is set to return."
+        },
+        { "id": "c", "text": "Some people prefer cars to bicycles in summer." },
+        { "id": "d", "text": "For instance, the sky looked clearer by Friday." }
+      ],
+      "correctOption": "b",
+      "explanation": "A topic sentence is general and captures the whole idea: a successful clean-air week that will be repeated — exactly (b). (a) is a small detail (and inaccurate: the doctor spoke), (c) is off-topic, and (d) is a supporting example introduced by \"For instance\".",
+      "difficulty": 3
+    }
+  ]
+}

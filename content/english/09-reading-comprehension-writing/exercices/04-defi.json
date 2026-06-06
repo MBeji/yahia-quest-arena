@@ -1,0 +1,94 @@
+{
+  "title": "👑 Elite Challenge: Master Reader & Writer",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Read this passage:\n\n\"For years, the village school had only one computer, shared by two hundred pupils. Last year a charity sent thirty laptops. Test scores have not changed much yet, but for the first time the children no longer queue for hours, and their curiosity is finally awake.\"\n\nWhat does the writer most strongly suggest about the donation?",
+      "options": [
+        { "id": "a", "text": "It was a complete failure because test scores did not rise." },
+        {
+          "id": "b",
+          "text": "Its most valuable effect so far is on the children's access and motivation, not yet on grades."
+        },
+        {
+          "id": "c",
+          "text": "It proves that technology always improves exam results immediately."
+        },
+        { "id": "d", "text": "The school no longer needs any teachers." }
+      ],
+      "correctOption": "b",
+      "explanation": "The writer admits scores 'have not changed much yet' but stresses the real gains: no more queuing and awakened curiosity. The suggested meaning is that the early value lies in access and motivation, not grades. (a) ignores the clearly positive 'but'. (c) is contradicted by 'have not changed much'. (d) is never implied.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read this passage:\n\n\"The film was praised by every critic in the country. Maya, however, walked out before the end, glancing at her watch more than once.\"\n\nWhat can we most reasonably infer about Maya?",
+      "options": [
+        { "id": "a", "text": "She agreed completely with the critics' praise." },
+        { "id": "b", "text": "She found the film boring even though critics loved it." },
+        { "id": "c", "text": "She had to leave because the cinema was closing." },
+        { "id": "d", "text": "She had already seen the film many times before." }
+      ],
+      "correctOption": "b",
+      "explanation": "The contrast word 'however', leaving early, and repeatedly checking her watch are clues that Maya was bored, unlike the critics. The inference is supported by the text. (a) contradicts those clues. (c) and (d) invent reasons the passage never gives.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read this passage:\n\n\"Parents often worry about screens. Yet screens are only tools. Used wisely, they teach and connect; used carelessly, they isolate. The difference lies not in the device but in the hand that holds it.\"\n\nIn the last sentence, what does \"the hand that holds it\" refer to figuratively?",
+      "options": [
+        { "id": "a", "text": "the parents' actual hands" },
+        { "id": "b", "text": "the way each person chooses to use the screen" },
+        { "id": "c", "text": "the company that builds the device" },
+        { "id": "d", "text": "the size of the screen" }
+      ],
+      "correctOption": "b",
+      "explanation": "The passage argues that the same tool can help or harm depending on use ('used wisely… used carelessly'). 'The hand that holds it' is a figurative image for the user's choices and habits. It is not literal hands (a), the manufacturer (c) or the screen size (d).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read this passage:\n\n\"At first the new recycling rules seemed cumbersome: residents had to sort waste into four separate bins. Within a month, though, the sorting felt automatic and the streets were noticeably cleaner.\"\n\nWhat does the word \"cumbersome\" most probably mean here?",
+      "options": [
+        { "id": "a", "text": "cheap and simple" },
+        { "id": "b", "text": "awkward and troublesome to do" },
+        { "id": "c", "text": "dangerous and harmful" },
+        { "id": "d", "text": "exciting and enjoyable" }
+      ],
+      "correctOption": "b",
+      "explanation": "The contrast structure ('At first… though') shows that 'cumbersome' describes the early difficulty before it 'felt automatic'. Sorting waste into four bins being a burden means awkward and troublesome. 'Cheap and simple' (a) and 'enjoyable' (d) contradict the contrast, and danger (c) is not mentioned.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "You must complete a paragraph whose topic sentence is: \"Reading for pleasure offers benefits that go far beyond the classroom.\" Two supporting sentences and a wrong continuation follow. Which sentence would be the LEAST appropriate to include in this paragraph?",
+      "options": [
+        { "id": "a", "text": "It widens vocabulary and sharpens the imagination." },
+        { "id": "b", "text": "Moreover, it builds patience and the habit of concentration." },
+        {
+          "id": "c",
+          "text": "These skills help young people in work and in life, not only in exams."
+        },
+        { "id": "d", "text": "The bookshop near my house closes at nine o'clock in the evening." }
+      ],
+      "correctOption": "d",
+      "explanation": "The paragraph develops the benefits of reading beyond school. Sentences a, b and c each support that idea with relevant points and good connectors. The closing time of a bookshop (d) is an off-topic detail that breaks the unity, so it is the least appropriate to include.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read this opening:\n\n\"Civility is the oil that keeps a society running smoothly. When people are rude, even small disagreements turn into conflicts.\"\n\nWhich sentence is the most coherent AND best-linked continuation?",
+      "options": [
+        {
+          "id": "a",
+          "text": "On the other hand, when people are courteous, tense situations are quickly calmed."
+        },
+        { "id": "b", "text": "For example, the bus arrives at eight every morning." },
+        { "id": "c", "text": "Therefore, my favourite season is winter." },
+        { "id": "d", "text": "Although oil is used to cook many delicious meals." }
+      ],
+      "correctOption": "a",
+      "explanation": "The passage contrasts the effect of rudeness with that of courtesy, so the best continuation balances the two with a contrast connector: 'On the other hand…' (a). Option (b) misuses 'For example' for an unrelated fact; (c) draws an illogical conclusion; (d) takes the word 'oil' literally and derails the paragraph.",
+      "difficulty": 3
+    }
+  ]
+}

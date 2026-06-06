@@ -1,0 +1,94 @@
+{
+  "title": "Palier 3 — Maîtrise : accords, modes et homophones avancés",
+  "difficulty": 4,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 25,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Laquelle de ces phrases présente un accord du participe passé avec un verbe pronominal correctement traité ?",
+      "options": [
+        { "id": "a", "text": "Elles se sont souri en se retrouvant." },
+        { "id": "b", "text": "Elles se sont souris en se retrouvant." },
+        { "id": "c", "text": "Elles se sont sourie en se retrouvant." },
+        { "id": "d", "text": "Elles se sont souri en se retrouvants." }
+      ],
+      "correctOption": "a",
+      "explanation": "« Sourire à quelqu'un » se construit avec un COI. Ici, « se » est COI (elles ont souri l'une à l'autre) : le participe passé ne s'accorde pas avec un COI antéposé → « souri » reste invariable. Seule l'option a est correcte ; b (masculin pluriel), c (féminin singulier) sont des accords erronés avec le sujet ; d ajoute un barbarisme sur le participe présent.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Repérez la phrase dans laquelle TOUS les homophones sont correctement écrits.",
+      "options": [
+        {
+          "id": "a",
+          "text": "On leurs a dit qu'il fallait ce mettre au travail ou ils le souhaitaient."
+        },
+        {
+          "id": "b",
+          "text": "On leur a dit qu'il fallait se mettre au travail où ils le souhaitaient."
+        },
+        {
+          "id": "c",
+          "text": "On leur a dit qu'il fallait se mettre au travail ou il le souhaitaient."
+        },
+        {
+          "id": "d",
+          "text": "Ont leur a dit qu'il fallait ce mettre au travail où ils le souhaitaient."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "« Leur » (pronom COI invariable), « se » (pronom réfléchi de « se mettre »), « où » (adverbe relatif de lieu) : ces trois formes sont toutes correctes dans l'option b. L'option a fautit sur *leurs* (déterminant à tort), *ce* (démonstratif à la place du réfléchi) et *ou* (conjonction au lieu de l'adverbe de lieu) ; c conserve *ou* sans accent ; d commence par *Ont* au lieu de *On*.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans la phrase « Quelle que soit la difficulté, il faut ___ affronter. », quel pronom complète correctement la phrase ?",
+      "options": [
+        { "id": "a", "text": "la" },
+        { "id": "b", "text": "le" },
+        { "id": "c", "text": "y" },
+        { "id": "d", "text": "en" }
+      ],
+      "correctOption": "a",
+      "explanation": "« La difficulté » est un nom féminin singulier, COD de « affronter ». Le pronom personnel COD correspondant est « la » (féminin singulier). « Le » serait masculin ; « y » remplace un complément introduit par « à » + lieu ou chose ; « en » remplace un complément introduit par « de » ou un partitif. Seul « la » convient ici.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choisissez la forme verbale correcte pour compléter : « À peine ___ -il entré que la lumière s'éteignit. »",
+      "options": [
+        { "id": "a", "text": "avait" },
+        { "id": "b", "text": "a" },
+        { "id": "c", "text": "fut" },
+        { "id": "d", "text": "était" }
+      ],
+      "correctOption": "c",
+      "explanation": "La locution « à peine… que » dans un récit littéraire exige le passé antérieur pour l'action accomplie en premier (entrer), suivi du passé simple pour l'action qui en résulte (s'éteignit). Le passé antérieur de « entrer » (verbe conjugué avec être) est « fut entré ». Le plus-que-parfait « avait entré » est impossible car « entrer » prend « être » ; le passé composé « a » est hors registre littéraire ici.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Parmi ces phrases, laquelle contient une faute d'accord de l'adjectif ?",
+      "options": [
+        { "id": "a", "text": "Ces femmes sont tout étonnées de le revoir." },
+        { "id": "b", "text": "Ces femmes sont toutes surprises de le revoir." },
+        { "id": "c", "text": "Ces femmes semblent tout heureuses de le revoir." },
+        { "id": "d", "text": "Ces femmes paraissent toutes ravies de le revoir." }
+      ],
+      "correctOption": "c",
+      "explanation": "Devant un adjectif féminin commençant par une consonne ou un h aspiré, « tout » (adverbe) prend la forme « toute(s) » pour des raisons euphoniques. « Heureuses » commence par un h aspiré : il faut écrire « toutes heureuses ». En revanche, « tout étonnées » (option a) est correct car « étonnées » commence par une voyelle → l'adverbe reste invariable. Les options b et d emploient « toutes » comme déterminant (accord normal avec le sujet féminin pluriel).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans quelle phrase le mode subjonctif est-il correctement employé — et nécessaire ?",
+      "options": [
+        { "id": "a", "text": "Je crois qu'il vienne demain." },
+        { "id": "b", "text": "Il est certain qu'elle réussisse." },
+        { "id": "c", "text": "Bien qu'il pleuve, nous partirons." },
+        { "id": "d", "text": "Il affirme que tu aies raison." }
+      ],
+      "correctOption": "c",
+      "explanation": "La conjonction « bien que » exige obligatoirement le subjonctif : « qu'il pleuve » est bien au subjonctif présent → correct. En revanche, « croire que » (option a) à la forme affirmative appelle l'indicatif (*vient*) ; « il est certain que » (option b) est une certitude → indicatif (*réussira/réussit*) ; « affirmer que » (option d) appelle l'indicatif (*as raison*). Seule l'option c est à la fois correcte et nécessaire.",
+      "difficulty": 3
+    }
+  ]
+}

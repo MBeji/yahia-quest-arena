@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <title>Hors ligne · XP Scholars</title>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: #0a0a0a;
+        color: #f5f5f5;
+        font-family:
+          "Space Grotesk",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        text-align: center;
+        padding: 24px;
+      }
+      .card {
+        max-width: 420px;
+      }
+      .crown {
+        width: 84px;
+        height: 84px;
+        margin: 0 auto 20px;
+      }
+      h1 {
+        font-size: 1.6rem;
+        margin: 0 0 8px;
+        background: linear-gradient(120deg, #f7e8b0, #d4af37, #fff4cf);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      p {
+        color: #b9b4a7;
+        line-height: 1.6;
+        margin: 0 0 24px;
+      }
+      button {
+        border: 1px solid rgba(212, 175, 55, 0.5);
+        background: rgba(212, 175, 55, 0.12);
+        color: #f7e8b0;
+        font: inherit;
+        font-weight: 700;
+        padding: 12px 22px;
+        border-radius: 12px;
+        cursor: pointer;
+      }
+      button:hover {
+        background: rgba(212, 175, 55, 0.22);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <svg
+        class="crown"
+        viewBox="0 0 512 512"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#c9962f" />
+          <stop offset="0.5" stop-color="#f7e8b0" />
+          <stop offset="1" stop-color="#d4af37" />
+        </linearGradient>
+        <g fill="url(#g)">
+          <path d="M120 348 L120 250 L180 300 L256 198 L332 300 L392 250 L392 348 Z" />
+          <rect x="120" y="356" width="272" height="42" rx="10" />
+          <circle cx="120" cy="250" r="20" />
+          <circle cx="256" cy="193" r="22" />
+          <circle cx="392" cy="250" r="20" />
+        </g>
+      </svg>
+      <h1>Tu es hors ligne</h1>
+      <p>
+        Impossible de charger cette page sans connexion. Reconnecte-toi pour reprendre tes quêtes —
+        ta progression t'attend.
+      </p>
+      <button onclick="location.reload()">Réessayer</button>
+    </div>
+  </body>
+</html>

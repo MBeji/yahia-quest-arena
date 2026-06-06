@@ -1,0 +1,142 @@
+{
+  "title": "🔥 Palier 3 — Épreuve de synthèse : l'éloge ambigu (Défi)",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Lisez ce texte exigeant, support de toute l'épreuve :\n\n« On le disait prudent ; il n'était que pusillanime. Cette prudence dont on le créditait, et qu'il revendiquait volontiers, n'était qu'une peur déguisée en sagesse. Jamais il n'avançait sans s'être ménagé une retraite ; jamais il ne s'engageait qu'à demi, de sorte qu'on ne pût lui reprocher ni l'échec, dont il se lavait par avance, ni le succès, qu'il n'avait jamais vraiment risqué. Eût-il osé une seule fois, on l'eût peut-être admiré ; il préféra qu'on l'estimât, ce qui coûte moins. »\n\n[COMPRÉHENSION — implicite/ironie] Quelle est la thèse réelle de l'auteur sur ce personnage ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "L'auteur célèbre une prudence exemplaire qui a préservé le personnage de tout échec."
+        },
+        {
+          "id": "b",
+          "text": "Sous couvert de prudence, le personnage dissimule une lâcheté calculée qui lui épargne tout risque."
+        },
+        {
+          "id": "c",
+          "text": "Le personnage est un audacieux que la rumeur a injustement diminué."
+        },
+        {
+          "id": "d",
+          "text": "L'auteur reste neutre et se contente de décrire un tempérament mesuré."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Dès la première phrase, l'antithèse « prudent / pusillanime » dévoile la critique, confirmée par « une peur déguisée en sagesse » et par le calcul décrit (ni échec ni succès, jamais rien risqué). (a) prend l'éloge apparent au pied de la lettre. (c) inverse le portrait : le texte nie toute audace (« jamais… qu'à demi »). (d) ignore l'ironie mordante et le jugement explicite de l'auteur.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "[LEXIQUE — paronyme/nuance] Dans le texte, le mot « pusillanime » signifie :",
+      "options": [
+        { "id": "a", "text": "Magnanime, d'une grandeur d'âme généreuse." },
+        { "id": "b", "text": "Qui manque de courage, craintif devant le risque et la décision." },
+        { "id": "c", "text": "Méticuleux et soucieux du détail." },
+        { "id": "d", "text": "Versatile, qui change sans cesse d'avis." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Pusillanime » (du latin pusillus animus, « âme petite ») qualifie celui qui manque de courage et de fermeté, qui recule devant le risque. Le contexte (« peur déguisée en sagesse », « jamais il ne s'engageait qu'à demi ») l'impose. « Magnanime » (a) en est presque l'antonyme moral. (c) et (d) décrivent d'autres défauts (minutie, inconstance) sans rapport avec l'absence de courage.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "[GRAMMAIRE — mode/temps soutenu] Dans « Eût-il osé une seule fois, on l'eût peut-être admiré », comment analyse-t-on les deux formes en « eût » ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Ce sont deux conditionnels passés (2e forme) exprimant une hypothèse non réalisée dans le passé ; « Eût-il osé » équivaut à « S'il avait osé »."
+        },
+        {
+          "id": "b",
+          "text": "Ce sont deux subjonctifs présents marquant un souhait."
+        },
+        {
+          "id": "c",
+          "text": "Ce sont deux passés simples de l'indicatif énonçant des faits avérés."
+        },
+        {
+          "id": "d",
+          "text": "Ce sont deux futurs antérieurs annonçant des événements certains."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "« Eût osé » et « eût admiré » sont des conditionnels passés deuxième forme (homonymes du plus-que-parfait du subjonctif), tournure soutenue de l'irréel du passé. L'inversion « Eût-il osé » remplace « S'il avait osé » et pose une hypothèse contraire aux faits (il n'a jamais osé). Ce ne sont ni des subjonctifs de souhait (b), ni des passés simples de faits réels (c) — le texte dit l'inverse —, ni des futurs antérieurs (d).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "[SYNTAXE — subordination et logique] La proposition « de sorte qu'on ne pût lui reprocher ni l'échec… ni le succès… » : quelle est sa valeur, et qu'apporte le mode du verbe « pût » ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Conséquence visée : le subjonctif « pût » marque que ce résultat était recherché, presque un but que le personnage s'assignait."
+        },
+        {
+          "id": "b",
+          "text": "Cause réelle : le subjonctif indique un fait certain et accompli."
+        },
+        {
+          "id": "c",
+          "text": "Comparaison : la subordonnée met deux situations en parallèle."
+        },
+        {
+          "id": "d",
+          "text": "Temps : la subordonnée situe l'action dans la durée."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "« De sorte que » suivi du subjonctif (« pût ») exprime une conséquence voulue, teintée de finalité : le personnage agissait à demi afin qu'on ne pût rien lui reprocher. Le subjonctif souligne précisément ce caractère recherché (par opposition à « de sorte qu'on ne pouvait », indicatif, qui signalerait une simple conséquence de fait). Il ne s'agit ni d'une cause (b), ni d'une comparaison (c), ni d'une circonstancielle de temps (d).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "[GRAMMAIRE — accord du participe passé] Choisissez la phrase dont l'accord est rigoureusement correct.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Les retraites qu'il s'était toujours ménagées le protégeaient de tout reproche."
+        },
+        {
+          "id": "b",
+          "text": "Les retraites qu'il s'était toujours ménagé le protégeaient de tout reproche."
+        },
+        {
+          "id": "c",
+          "text": "Les retraites qu'il s'était toujours ménagés le protégeaient de tout reproche."
+        },
+        {
+          "id": "d",
+          "text": "Les retraites qu'il s'était toujours ménager le protégeaient de tout reproche."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Avec un verbe pronominal comme « se ménager », le participe passé s'accorde avec le COD s'il précède le verbe. Ici « se » est COI (ménager quelque chose à soi) et le COD est « qu' », mis pour « les retraites » (féminin pluriel), antéposé → « ménagées ». (b) et (c) faussent le genre ou le nombre de l'accord. (d) emploie un infinitif à la place du participe : faute majeure.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "[LEXIQUE + COMPRÉHENSION] La chute « il préféra qu'on l'estimât, ce qui coûte moins » repose sur une distinction fine entre « admirer » et « estimer ». Quelle interprétation est la plus juste ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "« Admirer » suppose l'éclat d'un acte risqué, tandis qu'« estimer » se contente d'un mérite tranquille ; le personnage choisit la reconnaissance la moins exigeante."
+        },
+        {
+          "id": "b",
+          "text": "« Admirer » et « estimer » sont strictement synonymes ; la phrase ne fait que les répéter."
+        },
+        {
+          "id": "c",
+          "text": "« Estimer » implique plus d'enthousiasme qu'« admirer » ; le personnage vise donc le sentiment le plus fort."
+        },
+        {
+          "id": "d",
+          "text": "« Estimer » signifie ici « évaluer une quantité » ; la phrase porte sur un calcul chiffré."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "L'admiration naît d'un éclat, d'un exploit qui force l'enthousiasme ; l'estime, plus mesurée, reconnaît un mérite sans transport. La chute ironique (« ce qui coûte moins ») confirme que le personnage préfère cette reconnaissance modeste, qui n'exige aucun risque. (b) nie une nuance que le texte exploite précisément. (c) intervertit l'intensité des deux termes. (d) confond le sens moral d'« estimer » avec son sens d'évaluation quantitative, hors contexte ici.",
+      "difficulty": 3
+    }
+  ]
+}

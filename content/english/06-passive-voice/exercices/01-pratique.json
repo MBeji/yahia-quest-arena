@@ -1,0 +1,154 @@
+{
+  "title": "Practice: active or passive?",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 60,
+  "rewardCoins": 12,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Choose the correct passive form: \"The windows ___ every week.\" (present simple passive)",
+      "options": [
+        {
+          "id": "a",
+          "text": "clean"
+        },
+        {
+          "id": "b",
+          "text": "are cleaned"
+        },
+        {
+          "id": "c",
+          "text": "is cleaned"
+        },
+        {
+          "id": "d",
+          "text": "were cleaned"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "The passive = \"be\" + past participle. \"The windows\" is plural and the time is present (every week), so we use ARE + cleaned: the windows are cleaned. \"clean\" is active; \"is cleaned\" wrongly uses the singular \"is\"; \"were cleaned\" is past, not present.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Turn this active sentence into passive: \"Someone broke the vase.\" The correct passive is:",
+      "options": [
+        {
+          "id": "a",
+          "text": "The vase is broken."
+        },
+        {
+          "id": "b",
+          "text": "The vase was broken."
+        },
+        {
+          "id": "c",
+          "text": "The vase were broken."
+        },
+        {
+          "id": "d",
+          "text": "The vase was break."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "The active verb \"broke\" is past simple, so the passive keeps the past tense: \"the vase\" (singular) + WAS + past participle \"broken\". \"is broken\" changes the tense to present; \"were broken\" wrongly uses the plural \"were\"; \"was break\" uses the base verb instead of the past participle.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"Arabic ___ in Tunisia.\" (present simple passive of 'speak')",
+      "options": [
+        {
+          "id": "a",
+          "text": "speaks"
+        },
+        {
+          "id": "b",
+          "text": "is spoken"
+        },
+        {
+          "id": "c",
+          "text": "are spoken"
+        },
+        {
+          "id": "d",
+          "text": "was spoken"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Arabic\" (a language) is singular, so the present simple passive uses IS + the past participle \"spoken\": Arabic is spoken in Tunisia. \"speaks\" is active; \"are spoken\" wrongly uses the plural \"are\"; \"was spoken\" is past, not present.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which sentence is correct?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The letters were written by the students."
+        },
+        {
+          "id": "b",
+          "text": "The letters were write by the students."
+        },
+        {
+          "id": "c",
+          "text": "The letters was written by the students."
+        },
+        {
+          "id": "d",
+          "text": "The letters are written by the students yesterday."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "\"The letters\" is plural and the action is past, so we need WERE + past participle (written): The letters were written by the students.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Why is the passive preferred in: \"Oil was discovered in the desert\"?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Because the subject is performing the action."
+        },
+        {
+          "id": "b",
+          "text": "Because the action is happening right now."
+        },
+        {
+          "id": "c",
+          "text": "Because the agent is unimportant; the focus is on the discovery."
+        },
+        {
+          "id": "d",
+          "text": "Because \"discover\" is a stative verb."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "We use the passive here because the agent (who discovered it) is unimportant or unknown — the focus is on the result: oil being discovered.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"The exam ___ yesterday by all the students.\" (past simple passive of 'take')",
+      "options": [
+        {
+          "id": "a",
+          "text": "is taken"
+        },
+        {
+          "id": "b",
+          "text": "are taken"
+        },
+        {
+          "id": "c",
+          "text": "was taken"
+        },
+        {
+          "id": "d",
+          "text": "took"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "\"yesterday\" signals past tense and \"the exam\" is singular, so the past simple passive is WAS + the past participle \"taken\": the exam was taken. \"is taken\"/\"are taken\" are present; \"took\" is the active past, not the passive.",
+      "difficulty": 2
+    }
+  ]
+}

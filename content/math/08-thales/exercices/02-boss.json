@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ زعيم الفصل: نظرية طاليس والأطوال المجهولة",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "في مثلّث ABC، (MN) ∥ (BC) مع AM = 6 cm وMB = 4 cm وMN = 3 cm. ما طول BC؟",
+      "options": [
+        { "id": "a", "text": "4 cm" },
+        { "id": "b", "text": "5 cm" },
+        { "id": "c", "text": "6 cm" },
+        { "id": "d", "text": "4.5 cm" }
+      ],
+      "correctOption": "b",
+      "explanation": "AB = AM + MB = 6 + 4 = 10 cm. نسبة التشابه = AM/AB = 6/10 = 3/5. إذن MN/BC = 3/5، ومنه BC = MN ÷ (3/5) = 3 × 5/3 = 5 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "في مثلّث DEF، (MN) ∥ (EF) مع DM = 5 cm وME = 3 cm وNF = 1.8 cm. أوجد DN = x.",
+      "options": [
+        { "id": "a", "text": "x = 2 cm" },
+        { "id": "b", "text": "x = 2.5 cm" },
+        { "id": "c", "text": "x = 3 cm" },
+        { "id": "d", "text": "x = 4 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "DE = DM + ME = 5 + 3 = 8 cm. DF = DN + NF = x + 1.8. نظرية طاليس: DM/DE = DN/DF. إذن 5/8 = x/(x + 1.8). بالتقاطع: 8x = 5(x + 1.8) = 5x + 9. ومنه 3x = 9، أي x = 3 cm.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "في وضعية الفراشة، يتقاطع مستقيمان في O مع (AB) ∥ (CD). إذا كان OA = 4 cm وOC = 6 cm وAB = 5 cm، فما طول CD؟",
+      "options": [
+        { "id": "a", "text": "6 cm" },
+        { "id": "b", "text": "7 cm" },
+        { "id": "c", "text": "7.5 cm" },
+        { "id": "d", "text": "8 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "بنظرية طاليس في وضعية الفراشة: OA/OC = AB/CD. إذن 4/6 = 5/CD، ومنه CD = 5 × 6/4 = 30/4 = 7.5 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "في مثلّث ABC، M على [AB] وN على [AC]. AM = 2 cm، MB = 6 cm، AN = 3 cm، NC = 9 cm. هل (MN) ∥ (BC)؟",
+      "options": [
+        { "id": "a", "text": "نعم لأنّ AM/AB = AN/AC = 1/4" },
+        { "id": "b", "text": "لا لأنّ AM ≠ AN" },
+        { "id": "c", "text": "نعم لأنّ AM + AN = 5" },
+        { "id": "d", "text": "لا لأنّ MB ≠ NC" }
+      ],
+      "correctOption": "a",
+      "explanation": "AB = AM + MB = 2 + 6 = 8 cm، فـ AM/AB = 2/8 = 1/4. AC = AN + NC = 3 + 9 = 12 cm، فـ AN/AC = 3/12 = 1/4. النسبتان متساويتان، إذن بالنظرية العكسية (MN) ∥ (BC).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "في مثلّث ABC، AB = 15 cm و(MN) ∥ (BC) حيث AM/AB = 2/5 وBC = 10 cm. ما طول MN؟",
+      "options": [
+        { "id": "a", "text": "3 cm" },
+        { "id": "b", "text": "6 cm" },
+        { "id": "c", "text": "4 cm" },
+        { "id": "d", "text": "5 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "بنظرية طاليس: MN/BC = AM/AB = 2/5. إذن MN = BC × (2/5) = 10 × (2/5) = 4 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "في مثلّث PQR، (ST) ∥ (QR) مع PS = x + 1 وPQ = 3x − 1 وPT = 4 cm وPR = 10 cm. ما قيمة x؟",
+      "options": [
+        { "id": "a", "text": "x = 5" },
+        { "id": "b", "text": "x = 6" },
+        { "id": "c", "text": "x = 7" },
+        { "id": "d", "text": "x = 3" }
+      ],
+      "correctOption": "c",
+      "explanation": "بنظرية طاليس: PS/PQ = PT/PR، أي (x+1)/(3x−1) = 4/10 = 2/5. بالتقاطع: 5(x+1) = 2(3x−1)، أي 5x + 5 = 6x − 2، ومنه x = 7. التحقّق: PS = 8، PQ = 20، فـ 8/20 = 2/5. وPT/PR = 4/10 = 2/5. ✓",
+      "difficulty": 3
+    }
+  ]
+}

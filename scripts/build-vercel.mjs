@@ -35,10 +35,7 @@ cpSync(join(ROOT, "dist", "client"), STATIC_DIR, { recursive: true });
 cpSync(join(ROOT, "dist", "server"), FUNC_DIR, { recursive: true });
 
 // Step 4b — Ensure ESM resolution in the function directory
-writeFileSync(
-  join(FUNC_DIR, "package.json"),
-  JSON.stringify({ type: "module" }, null, 2)
-);
+writeFileSync(join(FUNC_DIR, "package.json"), JSON.stringify({ type: "module" }, null, 2));
 
 // Step 5 — Adapt Worker entry to Vercel Node.js Serverless Function format
 // Cloudflare Workers export { fetch(req, env, ctx) } returning a Response
@@ -99,7 +96,7 @@ export default async function handler(req, res) {
     res.end("Internal Server Error");
   }
 }
-`
+`,
 );
 
 // Step 6 — Write Serverless Function config (.vc-config.json)
@@ -111,10 +108,16 @@ writeFileSync(
       handler: "index.js",
       launcherType: "Nodejs",
       maxDuration: 30,
+      // Pin the SSR function to Stockholm (arn1) to co-locate it with the
+      // Supabase project (region eu-north-1 / AWS Stockholm). Every server fn
+      // talks to Supabase over PostgREST, so same-region placement removes a
+      // cross-continent round-trip from each request. A single region keeps
+      // this within the free/Hobby plan (multi-region needs Pro).
+      regions: ["arn1"],
     },
     null,
-    2
-  )
+    2,
+  ),
 );
 
 // Step 6 — Write global routing config
@@ -124,6 +127,38 @@ writeFileSync(
     {
       version: 3,
       routes: [
+        // Security headers on every response (then continue routing)
+        {
+          src: "/(.*)",
+          headers: {
+            "X-Content-Type-Options": "nosniff",
+            "X-Frame-Options": "DENY",
+            "Referrer-Policy": "strict-origin-when-cross-origin",
+            "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
+            "Permissions-Policy": "camera=(), microphone=(), geolocation=(), browsing-topics=()",
+            "Content-Security-Policy": [
+              "default-src 'self'",
+              // TODO(review #6): replace with nonce-based CSP. TanStack Start emits
+              // inline hydration scripts (serialized router + query state), so a
+              // per-request nonce must be generated in the SSR handler AND echoed in
+              // both the <script nonce> tags and this CSP header. Vercel's Build
+              // Output config.json headers are STATIC (not per-request), so the nonce
+              // cannot live here — it would have to be injected from src/server.ts on
+              // each response. Until that is wired without breaking hydration, keep
+              // 'unsafe-inline' so the app stays functional.
+              "script-src 'self' 'unsafe-inline'",
+              "style-src 'self' 'unsafe-inline'",
+              "img-src 'self' data: blob: https:",
+              "font-src 'self' data:",
+              "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
+              "frame-ancestors 'none'",
+              "base-uri 'self'",
+              "form-action 'self'",
+              "object-src 'none'",
+            ].join("; "),
+          },
+          continue: true,
+        },
         // Serve static assets directly (immutable cache for hashed filenames)
         {
           src: "/assets/(.*)",
@@ -137,8 +172,8 @@ writeFileSync(
       ],
     },
     null,
-    2
-  )
+    2,
+  ),
 );
 
 console.log("✅ Vercel Build Output API v3 ready at .vercel/output/");

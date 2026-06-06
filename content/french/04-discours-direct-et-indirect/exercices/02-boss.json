@@ -1,0 +1,154 @@
+{
+  "title": "⚔️ Boss : maîtriser le discours rapporté",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Transforme entièrement au discours indirect :\nLe chevalier dit : « Je partirai demain à l'aube. »\nLe chevalier dit qu'il ___.",
+      "options": [
+        {
+          "id": "a",
+          "text": "partira demain à l'aube"
+        },
+        {
+          "id": "b",
+          "text": "partirait demain à l'aube"
+        },
+        {
+          "id": "c",
+          "text": "partait le lendemain à l'aube"
+        },
+        {
+          "id": "d",
+          "text": "partirait le lendemain à l'aube"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Le verbe introducteur « dit » est au passé simple : le futur simple « partirai » devient conditionnel présent « partirait », et l'indicateur de temps « demain » se transforme en « le lendemain » au discours indirect. D'où la réponse d (« partirait le lendemain à l'aube »). L'option a n'opère aucun des deux changements ; l'option b change le temps mais garde « demain » ; l'option c change l'indicateur mais emploie l'imparfait au lieu du conditionnel.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Transforme au discours indirect :\nL'entraîneur ordonna : « Courez plus vite ! »\nL'entraîneur ordonna ___.",
+      "options": [
+        {
+          "id": "a",
+          "text": "qu'ils couraient plus vite"
+        },
+        {
+          "id": "b",
+          "text": "si on court plus vite"
+        },
+        {
+          "id": "c",
+          "text": "de courir plus vite"
+        },
+        {
+          "id": "d",
+          "text": "que courir plus vite"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Un ordre à l'impératif se rapporte au discours indirect par « de + infinitif » : « Courez ! » → ordonna de courir. On n'utilise pas « que » + indicatif pour un ordre, ni « si » qui est réservé aux questions totales.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Transforme au discours indirect :\nElle demanda : « Qu'est-ce qui fait ce bruit ? »\nElle demanda ___.",
+      "options": [
+        {
+          "id": "a",
+          "text": "ce que faisait ce bruit"
+        },
+        {
+          "id": "b",
+          "text": "ce qui faisait ce bruit"
+        },
+        {
+          "id": "c",
+          "text": "qu'est-ce qui faisait ce bruit"
+        },
+        {
+          "id": "d",
+          "text": "si quelque chose faisait ce bruit"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "« Qu'est-ce qui » (sujet) se transforme en « ce qui » au discours indirect, d'où la réponse b. Le verbe introducteur « demanda » étant au passé, le présent « fait » devient imparfait « faisait ». L'option a emploie « ce que », réservé au COD (et non au sujet) ; l'option c conserve « qu'est-ce qui », forme directe interdite au DI ; l'option d (« si ») transforme à tort la question partielle en question totale et altère le sens.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Laquelle de ces transformations est entièrement correcte ?\nDD : La sorcière murmura : « Je serai là ce soir. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "La sorcière murmura qu'elle serait là ce soir-là."
+        },
+        {
+          "id": "b",
+          "text": "La sorcière murmura qu'elle sera là ce soir."
+        },
+        {
+          "id": "c",
+          "text": "La sorcière murmura qu'elle serait là ce soir."
+        },
+        {
+          "id": "d",
+          "text": "La sorcière murmura qu'elle était là ce soir-là."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "« murmura » est au passé → le futur « serai » devient conditionnel présent « serait » (✓ a et c). L'indicateur « ce soir » devient « ce soir-là » au DI (✓ a seulement). L'option c oublie de changer l'indicateur ; b oublie la concordance des temps ; d utilise l'imparfait au lieu du conditionnel.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans la phrase au discours indirect : « Le guide nous expliqua qu'il avait visité ce site l'année précédente. », quel était le discours direct d'origine ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "« J'avais visité ce site l'année précédente. »"
+        },
+        {
+          "id": "b",
+          "text": "« Je visiterai ce site l'année prochaine. »"
+        },
+        {
+          "id": "c",
+          "text": "« J'ai visité ce site l'année dernière. »"
+        },
+        {
+          "id": "d",
+          "text": "« Je visite ce site l'année dernière. »"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Au DI, le verbe introducteur « expliqua » est au passé : le plus-que-parfait « avait visité » remonte au passé composé « a visité » dans le DD, et l'indicateur « l'année précédente » redevient « l'année dernière ». La réponse est donc c. L'option a reprend telle quelle la forme du DI (plus-que-parfait + « l'année précédente »), au lieu de restituer le DD ; l'option b emploie le futur, qui aurait donné un conditionnel au DI ; l'option d emploie le présent, incompatible avec « avait visité ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Transforme au discours indirect :\nIl s'écria : « Où étais-tu hier ? »\nIl s'écria ___.",
+      "options": [
+        {
+          "id": "a",
+          "text": "où il avait été la veille"
+        },
+        {
+          "id": "b",
+          "text": "où tu avais été hier"
+        },
+        {
+          "id": "c",
+          "text": "si tu étais là hier"
+        },
+        {
+          "id": "d",
+          "text": "où j'avais été la veille"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "La question partielle « où » se maintient au DI. « s'écria » est au passé → l'imparfait « étais » devient plus-que-parfait « avait été ». Le pronom « tu » (interlocuteur) devient « il » (3e personne). L'indicateur « hier » → « la veille ». L'option b ne change pas le pronom ; c transforme en question totale avec « si » ; d garde le pronom de 1re personne.",
+      "difficulty": 3
+    }
+  ]
+}

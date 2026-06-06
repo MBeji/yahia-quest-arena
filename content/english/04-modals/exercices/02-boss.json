@@ -1,0 +1,154 @@
+{
+  "title": "⚔️ Boss: master the modals",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Choose the grammatically correct sentence:",
+      "options": [
+        {
+          "id": "a",
+          "text": "He musts leave now."
+        },
+        {
+          "id": "b",
+          "text": "He must leave now."
+        },
+        {
+          "id": "c",
+          "text": "He must to leave now."
+        },
+        {
+          "id": "d",
+          "text": "He must leaves now."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Modals do not take -s, and \"must\" is not followed by \"to\". The correct form is modal + base verb: he must leave now.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "What is the difference between these two sentences? (1) \"You mustn't tell her.\" (2) \"You don't have to tell her.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "They mean the same thing: it is not necessary."
+        },
+        {
+          "id": "b",
+          "text": "(1) means it is forbidden; (2) means it is not necessary."
+        },
+        {
+          "id": "c",
+          "text": "(1) means it is not necessary; (2) means it is forbidden."
+        },
+        {
+          "id": "d",
+          "text": "Both mean you are not allowed."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Mustn't\" = prohibition (you are NOT allowed to tell her). \"Don't have to\" = no obligation (you are free not to, but it's your choice). These are opposite in meaning.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choose the most polite request:",
+      "options": [
+        {
+          "id": "a",
+          "text": "Could you pass the salt, please?"
+        },
+        {
+          "id": "b",
+          "text": "Can you pass the salt?"
+        },
+        {
+          "id": "c",
+          "text": "Pass the salt."
+        },
+        {
+          "id": "d",
+          "text": "You should pass the salt."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Could you... please?\" is the most polite form for a request. \"Can\" is acceptable but less formal; \"could\" is more polite.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"When she was a child, she ___ speak French fluently.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "can"
+        },
+        {
+          "id": "b",
+          "text": "may"
+        },
+        {
+          "id": "c",
+          "text": "could"
+        },
+        {
+          "id": "d",
+          "text": "should"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Could\" is the past form of \"can\" and expresses past ability: she could speak French fluently when she was a child.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choose the correct sentence about formal permission:",
+      "options": [
+        {
+          "id": "a",
+          "text": "Can I go to the toilet?"
+        },
+        {
+          "id": "b",
+          "text": "May I leave the room, please?"
+        },
+        {
+          "id": "c",
+          "text": "Must I go to the toilet?"
+        },
+        {
+          "id": "d",
+          "text": "Should I leave the room?"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "\"May I...?\" is the formal way to ask for permission. \"Can\" is informal; \"must\" is for obligation; \"should\" is for advice.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"It's getting dark. We ___ hurry, or we'll miss the bus.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "might not"
+        },
+        {
+          "id": "b",
+          "text": "should"
+        },
+        {
+          "id": "c",
+          "text": "don't have to"
+        },
+        {
+          "id": "d",
+          "text": "couldn't"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Should\" expresses a strong recommendation or advice — the right thing to do in the situation: we should hurry. \"Might not\" and \"don't have to\" would weaken the urgency incorrectly.",
+      "difficulty": 3
+    }
+  ]
+}

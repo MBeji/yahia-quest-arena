@@ -1,0 +1,85 @@
+{
+  "title": "Palier 2 — Structure de la phrase et liaisons entre propositions",
+  "difficulty": 3,
+  "mode": "practice",
+  "xpReward": 80,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Quel procédé syntaxique relie les deux propositions dans « L'orateur développa ses thèses ; le public resta sceptique » ?",
+      "options": [
+        { "id": "a", "text": "La subordination circonstancielle de conséquence" },
+        { "id": "b", "text": "La coordination par la conjonction « mais »" },
+        { "id": "c", "text": "La juxtaposition par le point-virgule" },
+        { "id": "d", "text": "La subordination relative" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le point-virgule sépare deux propositions indépendantes sans mot de liaison : c'est la juxtaposition. Le lien logique (ici, une opposition implicite) doit être inféré par le lecteur. La coordination exigerait une conjonction explicite (« mais », « donc »…) ; la subordination, un subordonnant.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Laquelle de ces phrases illustre une subordination et non une coordination ?",
+      "options": [
+        { "id": "a", "text": "Il avait raison, mais personne ne l'écoutait." },
+        { "id": "b", "text": "Elle parla longuement, car elle souhaitait convaincre." },
+        { "id": "c", "text": "Il argumenta si bien que l'assemblée changea d'avis." },
+        { "id": "d", "text": "Le débat fut houleux, or les conclusions s'imposèrent." }
+      ],
+      "correctOption": "c",
+      "explanation": "Dans la phrase (c), « si bien que » est une locution conjonctive de subordination : la seconde proposition dépend syntaxiquement de la première et ne peut pas se lire seule. Les phrases (a), (b) et (d) utilisent des conjonctions de coordination (« mais », « car », « or ») qui relient deux propositions indépendantes.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans « C'est la rigueur syntaxique qui distingue un bon scripteur », quel élément est mis en relief ?",
+      "options": [
+        { "id": "a", "text": "Le verbe « distingue »" },
+        { "id": "b", "text": "Le COD « un bon scripteur »" },
+        { "id": "c", "text": "Le sujet « la rigueur syntaxique »" },
+        { "id": "d", "text": "Le complément circonstanciel sous-entendu" }
+      ],
+      "correctOption": "c",
+      "explanation": "La construction présentative « c'est… qui » isole et focalise le groupe nominal placé entre « c'est » et « qui » : ici, « la rigueur syntaxique » est le sujet mis en relief. Pour mettre en relief un COD ou un CC, on utilise « c'est… que ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase présente une thématisation (dislocation) correctement formée ?",
+      "options": [
+        { "id": "a", "text": "La précision lexicale est essentielle pour lui." },
+        { "id": "b", "text": "La précision lexicale, il y tenait par-dessus tout." },
+        { "id": "c", "text": "C'est la précision lexicale qu'il tenait par-dessus tout." },
+        { "id": "d", "text": "Il tenait à la précision lexicale par-dessus tout." }
+      ],
+      "correctOption": "b",
+      "explanation": "La thématisation (ou dislocation) consiste à détacher un groupe en tête de phrase et à le reprendre par un pronom anaphorique dans la proposition : « La précision lexicale, il y tenait » (reprise par « y »). La phrase (c) est un présentatif, non une dislocation. Les phrases (a) et (d) sont des constructions canoniques sans mise en relief.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Laquelle de ces phrases contient une faute de construction syntaxique ?",
+      "options": [
+        { "id": "a", "text": "Bien qu'il soit fatigué, il poursuit son analyse." },
+        { "id": "b", "text": "Il est fatigué, mais il poursuit son analyse." },
+        { "id": "c", "text": "Étant fatigué, mais il poursuit cependant son analyse." },
+        { "id": "d", "text": "Malgré sa fatigue, il poursuit son analyse." }
+      ],
+      "correctOption": "c",
+      "explanation": "La phrase (c) mélange deux constructions incompatibles : le participe présent « étant fatigué » (construction participiale absolue) et la conjonction de coordination « mais », qui ne peut pas s'articuler avec un participe pour former une proposition. Les phrases (a), (b) et (d) sont syntaxiquement irréprochables.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans « Dans ce contexte précis, l'auteur adopte un ton polémique », quel effet produit l'antéposition du complément circonstanciel ?",
+      "options": [
+        { "id": "a", "text": "Elle supprime toute ambiguïté sur le sujet de la phrase." },
+        {
+          "id": "b",
+          "text": "Elle met en relief la circonstance et crée un cadre interprétatif avant l'assertion principale."
+        },
+        { "id": "c", "text": "Elle transforme le complément en sujet grammatical." },
+        { "id": "d", "text": "Elle impose un mode subjonctif au verbe principal." }
+      ],
+      "correctOption": "b",
+      "explanation": "Placer un complément circonstanciel en tête de phrase (avant le sujet et le verbe) en fait un « cadre » : le lecteur interprète l'assertion principale à la lumière de cette circonstance posée d'emblée. Ce procédé est fréquent dans l'argumentation et les textes analytiques pour contextualiser une affirmation.",
+      "difficulty": 3
+    }
+  ]
+}

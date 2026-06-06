@@ -1,0 +1,127 @@
+{
+  "title": "Palier + — Compréhension fine : implicite, posture et nuances",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 25,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Lisez ce passage :\n\n« On vante volontiers la patience de ceux qui attendent leur heure. J'y vois plus souvent la résignation de ceux qui n'osent plus la provoquer. La patience, cette vertu si commode pour qui se contente de durer. »\n\nQuelle attitude l'auteur adopte-t-il à l'égard de la patience ?",
+      "options": [
+        { "id": "a", "text": "Il en fait l'éloge sans réserve comme d'une vertu cardinale." },
+        {
+          "id": "b",
+          "text": "Il la démystifie en la requalifiant ironiquement de passivité déguisée."
+        },
+        { "id": "c", "text": "Il l'analyse de façon neutre et purement descriptive." },
+        { "id": "d", "text": "Il la recommande aux seuls esprits ambitieux et déterminés." }
+      ],
+      "correctOption": "b",
+      "explanation": "L'auteur prend ses distances avec l'éloge convenu : il oppose à « la patience » louée par autrui sa propre lecture (« J'y vois plus souvent la résignation »), puis la disqualifie par l'ironie (« cette vertu si commode pour qui se contente de durer »). Il démystifie donc une valeur reçue en y débusquant une passivité. L'option (a) prend le premier énoncé pour la thèse de l'auteur alors qu'il s'en démarque. L'option (c) ignore la charge critique du « si commode » ironique. L'option (d) invente une recommandation absente : l'auteur dénonce, il ne conseille pas.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez ce passage :\n\n« Le progrès technique, dit-on, libère l'homme des tâches pénibles. Soit. Mais à mesure qu'il nous décharge de l'effort, ne nous décharge-t-il pas aussi, insensiblement, de la compétence — et avec elle, d'une certaine fierté d'être capable ? »\n\nQue suggère la question finale posée par l'auteur ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Que le progrès technique doit être interdit pour préserver les savoir-faire."
+        },
+        {
+          "id": "b",
+          "text": "Que l'allègement de l'effort pourrait s'accompagner d'une perte de compétence et d'estime de soi."
+        },
+        {
+          "id": "c",
+          "text": "Que les tâches pénibles procurent toujours plus de fierté que les loisirs."
+        },
+        {
+          "id": "d",
+          "text": "Que la technique n'a aucun effet mesurable sur les capacités humaines."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "La question rhétorique « ne nous décharge-t-il pas aussi… de la compétence — et… d'une certaine fierté ? » est une affirmation déguisée : l'auteur suggère que l'avantage (moins d'effort) a une contrepartie cachée (perte de compétence et d'estime). L'option (b) restitue cette nuance. L'option (a) radicalise en une interdiction que le texte ne formule pas (le « Soit » concède même la libération). L'option (c) déforme : il n'est question ni de loisirs ni d'une comparaison de fiertés. L'option (d) contredit le texte, qui pose précisément un effet (la décharge progressive de la compétence).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lisez ce passage :\n\n« Elle relut la lettre une dernière fois, sourit, puis la plia avec soin avant de la déchirer en menus morceaux qu'elle laissa filer par la fenêtre. »\n\nQue révèle l'enchaînement des gestes du personnage ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Une colère brutale et incontrôlée contre l'expéditeur de la lettre."
+        },
+        { "id": "b", "text": "Une indifférence totale à l'égard du contenu de la lettre." },
+        { "id": "c", "text": "Un renoncement apaisé et délibéré, accompli sans amertume." },
+        { "id": "d", "text": "Une hésitation anxieuse quant à la décision à prendre." }
+      ],
+      "correctOption": "c",
+      "explanation": "Le détail des gestes oriente l'interprétation : elle « sourit », plie « avec soin », et le déchirement n'est ni rageur ni précipité mais maîtrisé (« en menus morceaux qu'elle laissa filer »). L'ensemble dessine un renoncement consenti et serein. L'option (a) contredit le « sourit » et le « avec soin » qui excluent la fureur. L'option (b) est démentie par la relecture attentive : elle n'est pas indifférente. L'option (d) prête une hésitation que l'achèvement net du geste et le sourire écartent.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lisez ces deux phrases d'un même texte :\n\n« (1) Certes, les réseaux sociaux donnent la parole à des voix longtemps inaudibles. (2) Encore faut-il que cette parole, noyée dans le flot, parvienne à se faire entendre. »\n\nQuel rôle joue la locution « Encore faut-il que » en tête de la phrase (2) ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Elle ajoute un argument allant dans le même sens que (1), pour le renforcer."
+        },
+        {
+          "id": "b",
+          "text": "Elle introduit une restriction qui limite la portée de la concession faite en (1)."
+        },
+        { "id": "c", "text": "Elle reformule l'idée de (1) sans en modifier la portée." },
+        {
+          "id": "d",
+          "text": "Elle pose la conséquence logique et inévitable de l'idée énoncée en (1)."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "« Encore faut-il que » pose une condition restrictive : elle accorde le point précédent (« Certes… ») tout en signalant qu'il ne suffit pas — donner la parole ne vaut que si cette parole peut effectivement être entendue. C'est une restriction qui nuance la concession. L'option (a) confond ajout et limitation : la phrase (2) ne renforce pas (1), elle en borne la portée. L'option (c) néglige cette inflexion : la portée est précisément modifiée. L'option (d) y voit une conséquence (« donc »), alors qu'il s'agit d'une condition non garantie.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lisez ce passage :\n\n« Il ne mentait jamais. Il se contentait de choisir, parmi les vérités, celles qui le servaient — et de taire les autres. »\n\nQuel portrait moral du personnage se dégage de ces lignes ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Un homme d'une honnêteté irréprochable et d'une transparence exemplaire."
+        },
+        {
+          "id": "b",
+          "text": "Un homme qui, sans mentir au sens strict, manipule par sélection et omission."
+        },
+        { "id": "c", "text": "Un homme incapable de dissimuler quoi que ce soit à son entourage." },
+        { "id": "d", "text": "Un homme naïf qui ignore l'effet de ses paroles sur autrui." }
+      ],
+      "correctOption": "b",
+      "explanation": "Le texte joue sur l'écart entre la lettre et l'esprit : « Il ne mentait jamais » est immédiatement retourné par ce qui suit (il trie les vérités utiles et tait le reste). Le procédé révèle une manipulation par sélection et omission, plus retorse que le mensonge franc. L'option (a) s'arrête à la première phrase et ignore le démenti ironique. L'option (c) est contredite par le « taire les autres », qui est précisément une dissimulation. L'option (d) prête une naïveté incompatible avec le calcul (« celles qui le servaient »).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lisez ce passage :\n\n« Les statistiques sont formelles : depuis dix ans, la délinquance recule. Pourtant, jamais le sentiment d'insécurité n'a été aussi vif. Faut-il en conclure que les chiffres mentent — ou que la peur, elle, ne se nourrit pas de chiffres ? »\n\nQuelle est l'intention principale de l'auteur dans ce passage ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Prouver, données à l'appui, que la délinquance est en réalité en hausse."
+        },
+        {
+          "id": "b",
+          "text": "Inviter le lecteur à distinguer la réalité mesurée et la perception subjective qui ne s'y réduit pas."
+        },
+        {
+          "id": "c",
+          "text": "Démontrer que les statistiques officielles sont systématiquement falsifiées."
+        },
+        {
+          "id": "d",
+          "text": "Rassurer le lecteur en affirmant que toute peur est dénuée de fondement."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "L'alternative finale (« les chiffres mentent — ou… la peur ne se nourrit pas de chiffres ») oriente clairement vers la seconde branche : l'auteur amène à dissocier la réalité objective (baisse mesurée) du ressenti subjectif (insécurité vive), qui obéit à d'autres ressorts. L'option (a) contredit la prémisse acceptée (« Les statistiques sont formelles… recule »). L'option (c) retient l'hypothèse que la question rhétorique écarte au profit de l'autre. L'option (d) durcit le propos en un déni de toute peur, alors que l'auteur en explique le mécanisme sans la disqualifier.",
+      "difficulty": 3
+    }
+  ]
+}

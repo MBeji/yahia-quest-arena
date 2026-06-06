@@ -1,0 +1,82 @@
+{
+  "title": "👑 Elite Challenge: Mastering Time Sequences",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Complete: \"By the time the guests arrived, Yasmine ___ all the food.\"",
+      "options": [
+        { "id": "a", "text": "prepared" },
+        { "id": "b", "text": "was preparing" },
+        { "id": "c", "text": "had prepared" },
+        { "id": "d", "text": "has prepared" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"By the time\" signals that one past action was completed before another past event. The past perfect (had prepared) is required: Yasmine finished the food first, then the guests arrived. Past simple (prepared) ignores the sequence; past continuous (was preparing) implies it was unfinished; present perfect (has prepared) is impossible in a past context.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which sentence contains a grammatical error?",
+      "options": [
+        { "id": "a", "text": "He used to walk to school every day." },
+        { "id": "b", "text": "She used to be afraid of spiders." },
+        { "id": "c", "text": "They used to played football on Fridays." },
+        { "id": "d", "text": "We used to live near the sea." }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Used to\" is always followed by the base form (infinitive without to is already included in the structure: used to + base verb). \"Played\" is a past form — writing \"used to played\" double-marks the past. The correct form is \"used to play\". Options a, b, and d all correctly use \"used to\" + base verb.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"When I ___ to the station, the train already ___ .\"",
+      "options": [
+        { "id": "a", "text": "got / had left" },
+        { "id": "b", "text": "had got / left" },
+        { "id": "c", "text": "was getting / left" },
+        { "id": "d", "text": "got / has left" }
+      ],
+      "correctOption": "a",
+      "explanation": "Two past events in sequence: arriving at the station (past simple: got) is the reference point; the train leaving happened before that (past perfect: had left). \"Already\" reinforces the earlier completion. Option b reverses the logic — the arrival cannot precede itself with past perfect here. Option c is wrong because \"getting\" implies the journey was still in progress when the train left. Option d mixes past simple with present perfect, which is grammatically impossible.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"He ___ the report three times before he ___ it to his teacher.\"",
+      "options": [
+        { "id": "a", "text": "checked / submitted" },
+        { "id": "b", "text": "had checked / submitted" },
+        { "id": "c", "text": "was checking / had submitted" },
+        { "id": "d", "text": "has checked / submitted" }
+      ],
+      "correctOption": "b",
+      "explanation": "The checking happened before the submitting — both are past events, but checking is the earlier one. The past perfect (had checked) marks it as prior; the past simple (submitted) marks the later reference event. Option a (both past simple) is grammatically possible in informal speech but loses the precise sequence signal required at exam level. Option c wrongly uses past perfect for the later action. Option d wrongly uses present perfect in a fully past context.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Identify the ONE correct sentence.",
+      "options": [
+        { "id": "a", "text": "While the phone rang, I was cooking dinner." },
+        { "id": "b", "text": "When I was having a bath, the doorbell rang." },
+        { "id": "c", "text": "While I arrived, she was leaving the room." },
+        { "id": "d", "text": "When she was writing, she was finishing the letter." }
+      ],
+      "correctOption": "b",
+      "explanation": "Option b is correct: \"was having\" (past continuous) provides the ongoing background; \"rang\" (past simple) is the short interrupting event — the classic when-pattern. Option a is wrong because \"rang\" is a short punctual verb and cannot be the background of a \"while\" clause; it should be \"when the phone rang, I was cooking\". Option c is wrong because \"arrive\" is punctual and cannot be a \"while\" background. Option d is wrong because \"finish\" describes a completed result and cannot be past continuous alongside another continuous action.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"The police discovered that the thief ___ through the back window and ___ the safe before anyone ___ the alarm.\"",
+      "options": [
+        { "id": "a", "text": "climbed / emptied / raised" },
+        { "id": "b", "text": "had climbed / had emptied / raised" },
+        { "id": "c", "text": "was climbing / emptied / had raised" },
+        { "id": "d", "text": "had climbed / was emptying / raised" }
+      ],
+      "correctOption": "b",
+      "explanation": "The thief's actions (climbing in, emptying the safe) both occurred before the alarm was raised — the reference past event. Past perfect (had climbed, had emptied) correctly places these two earlier actions; past simple (raised) marks the later reference point. Option a loses the sequence entirely. Option c wrongly puts \"had raised\" on the alarm, reversing the logic — the alarm came last, not first. Option d uses past continuous for \"emptying\", implying it was still in progress when the alarm went off, which contradicts the \"before\" clause.",
+      "difficulty": 3
+    }
+  ]
+}
