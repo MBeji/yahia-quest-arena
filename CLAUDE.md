@@ -1,6 +1,10 @@
 # CLAUDE.md — yahia-quest-arena (XP Scholars)
 
-> Operational guide for AI/devs. For the full architecture deep-dive, read [`ARCHITECTURE.md`](./ARCHITECTURE.md) first — this file covers commands, conventions, and gotchas not obvious from the code.
+> **This file is the single canonical source of truth.** When it disagrees with any
+> other doc, CLAUDE.md wins — fix the other doc. [`ARCHITECTURE.md`](./ARCHITECTURE.md)
+> is the deeper architecture companion; the per-topic policy files under `docs/` and the
+> Copilot pointer at `.github/copilot-instructions.md` defer to these two. This file
+> covers commands, conventions, and gotchas not obvious from the code.
 
 ## What this is
 
@@ -17,7 +21,7 @@ Shonen/RPG manga aesthetic, trilingual (FR/EN/AR with RTL).
 npm run dev          # Vite dev server (SSR)
 npm run build        # production build
 npm run build:check  # build + bundle-budget check
-npm test             # vitest run (312 tests / 28 files)
+npm test             # vitest run — run `npm test` for the current test/file count
 npm run test:watch   # watch mode
 npm run test:coverage
 npm run lint         # eslint src --max-warnings=0  (zero-warning policy)
@@ -49,7 +53,9 @@ staged files); `pre-push` runs `npm run verify`. Installed automatically via the
 `profiles` (xp/level/streak/coins/hero_class/role) · `subjects` → `chapters` → `exercises`
 → `questions` (QCM, `options` JSONB) · `attempts` · `exercise_sessions` · `student_badges` /
 `shop_items` / `inventory_items` · `daily_objectives` · `weekly_quests` ·
-`spaced_repetition_schedule` (SM-2) · `dungeon_runs` · `family_links`.
+`spaced_repetition_schedule` (SM-2) · `dungeon_runs` · `family_links` · `subscriptions`
+(premium gate) · `beta_access_requests` · `content_reports` (user-flagged content errors) ·
+`themes` / `grades`.
 
 Server-side logic lives in SQL: `handle_new_user` (auto-profile on signup), `award_xp`
 (streak + level curve: 200 XP/level, hero-class tiers), and the `submit_exercise_attempt`
@@ -72,14 +78,42 @@ See ARCHITECTURE.md "Consumables (shop items)" for the full model.
 
 ## Conventions
 
-- Feature-based: `src/features/{auth,dashboard,quest,dungeon,shop,progression,parent-report}/`.
-  Each has `index.ts` (public barrel), `{name}.server.ts`, optional `components/`, `__tests__/`.
+- Feature-based: `src/features/{auth,dashboard,quest,dungeon,shop,progression,parent-report,subscription,content-report,parcours}/`
+  (10 features). Each has `index.ts` (public barrel), `{name}.server.ts`, optional
+  `components/`, `__tests__/`. The three newer features:
+  - **`subscription/`** — premium gate central to scoring: difficulty 3+ exercises and
+    whole premium modules require an active subscription; also beta-access requests + admin.
+  - **`content-report/`** — user-flagged content errors ("Signaler une erreur") + admin triage.
+  - **`parcours/`** — gamified journey-map / adventure-path UI over subjects & chapters.
+
   (Leaderboard has no feature folder — `getLeaderboard` lives in `dashboard.server.ts`.
   Onboarding has no feature folder — it is an inline route at `routes/_authenticated/onboarding.tsx`.)
 - **Features never import other features** — share via `src/shared/`. Routes stay thin (no business logic).
 - Import aliases: `@/features/{name}`, `@/shared/lib|constants|types|integrations/...`. UI primitives live at `@/components/ui/*`, i18n at `@/lib/i18n`, the mobile hook at `@/hooks/use-mobile`.
 - Input validation with **zod** on every server fn (`.inputValidator`). Sanitize HTML with DOMPurify (`src/shared/lib/markdown.ts`).
 - Naming: kebab-case files, server fns are verbs (`getSubject`, `submitAttempt`). Structured logging via `@/shared/lib/logger` (redacts secrets) — not raw `console`.
+
+## Subsystems & further docs
+
+- **Subject content → SQL migrations (the right way to add content).** Authored content
+  lives under `content/` (one dir per subject). The deterministic generator in
+  `src/shared/content/{schema,loader,sql-builder}.ts` validates it (zod schema) and emits an
+  idempotent Supabase migration per subject (stable v5 UUIDs, no machine-dependent output).
+  Scripts: `npm run content:build` (regenerate migrations into `supabase/migrations/`),
+  `npm run content:check` (build in `--check` mode, no writes), `npm run content:qa` /
+  `content:qa:strict` (content QA; strict variant runs in `ci:verify`). **Add subjects/
+  chapters/exercises by editing `content/` and rebuilding — never hand-write content
+  migrations.**
+- **End-to-end tests (Playwright).** Specs live in `/e2e`; config is `playwright.config.ts`
+  (repo root).
+  Scripts: `npm run test:e2e` (public projects: `public-chromium` + `public-mobile`),
+  `npm run test:e2e:auth` (`authed-chromium`), `npm run test:e2e:install` (install the
+  browser). Authenticated runs are seeded via `scripts/e2e/seed-test-users.mjs`. E2E is
+  separate from the Vitest unit/integration gate.
+- **Policy docs (`docs/*.md`).** Topic-specific rules referenced from here:
+  `docs/environment-variables.md`, `docs/logging-standard.md`, `docs/xss-rendering-policy.md`,
+  `docs/release-tagging-policy.md`, `docs/dependency-maintenance.md`. These defer to
+  CLAUDE.md / ARCHITECTURE.md for anything that overlaps.
 
 ## Working mode — Definition of Done
 
@@ -123,9 +157,10 @@ When unsure about scope or a destructive action, ask before proceeding.
   server fns + helpers → `@/features/{name}`; utils/logger/supabase/types → `@/shared/*`.
 - **Not yet relocated to `shared/` (still real code, not shims):** i18n lives at `@/lib/i18n`,
   the mobile hook at `@/hooks/use-mobile`, and shadcn UI primitives at `@/components/ui/*`.
-  There is no `src/integrations/` directory; the Supabase client/middleware live at
-  `@/shared/integrations/supabase/*`. ARCHITECTURE.md aspirationally lists `@/shared/ui` —
-  that move hasn't happened; use `@/components/ui` in practice.
+  There is **no `src/shared/ui`** directory — import UI primitives as `@/components/ui/*`
+  (the `@/*` alias maps to `./src/*`). There is no `src/integrations/` directory either; the
+  Supabase client/middleware live at `@/shared/integrations/supabase/*`. The `useAuth` hook
+  lives at `@/features/auth` (not `@/hooks`).
 - `src/routeTree.gen.ts` is auto-generated — never edit by hand.
 - `src/shared/integrations/supabase/auth-middleware.ts` is marked "automatically generated";
   edit with care.

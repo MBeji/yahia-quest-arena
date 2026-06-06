@@ -19,27 +19,35 @@ on a leaderboard — all presented with a shonen manga/RPG aesthetic.
 
 ```
 src/
-├── features/           ← Domain modules (one folder per bounded context)
-│   ├── auth/           ← Login, signup, guest access, session management
-│   ├── dashboard/      ← Main dashboard: stats, radar, recent attempts
+├── features/           ← Domain modules (one folder per bounded context — 10 total)
+│   ├── auth/           ← Login, signup, guest access, session management (incl. use-auth)
+│   ├── dashboard/      ← Main dashboard: stats, radar, recent attempts, leaderboard
 │   ├── quest/          ← Exercise flow: subject → chapter → exercise → submit
 │   ├── dungeon/        ← Boss/dungeon mode: timed floor-by-floor challenge
-│   ├── shop/           ← In-game shop: purchase & equip skins
+│   ├── shop/           ← In-game shop: purchase & equip skins, consumables
 │   ├── progression/    ← Spaced repetition, daily objectives, weekly quests, difficulty
-│   └── parent-report/  ← Family link + parent progress report
+│   ├── parent-report/  ← Family link + parent progress report
+│   ├── subscription/   ← Premium gate (difficulty 3+ / premium modules) + beta access + admin
+│   ├── content-report/ ← User-flagged content errors ("Signaler une erreur") + admin triage
+│   └── parcours/       ← Gamified journey-map / adventure-path over subjects & chapters
 │
 │   (Leaderboard has no feature folder — `getLeaderboard` lives in dashboard.server.ts.
 │    Onboarding has no feature folder — it is an inline route at
 │    routes/_authenticated/onboarding.tsx.)
 │
 ├── shared/             ← Cross-cutting code shared by multiple features
-│   ├── ui/             ← Reusable UI components (shadcn/Radix primitives)
 │   ├── lib/            ← Utilities (cn, logger, error-capture, markdown, rate-limit)
 │   ├── constants/      ← Global gameplay constants
 │   ├── types/          ← Shared TypeScript types
+│   ├── content/        ← Subject content schema/loader/sql-builder (content → SQL migrations)
 │   └── integrations/   ← Supabase client, auth middleware
 │
-├── hooks/              ← Shared React hooks (use-auth, use-mobile)
+├── components/         ← Non-feature React components
+│   ├── ui/             ← shadcn/Radix UI primitives — imported as `@/components/ui/*`
+│   ├── landing/        ← Public landing-page components
+│   └── visual/         ← Decorative / visual-effect components
+├── hooks/              ← Shared React hooks (use-mobile)  [use-auth lives in features/auth]
+├── lib/                ← i18n (`@/lib/i18n`) and other not-yet-relocated shared code
 ├── routes/             ← TanStack Router file-based routes (THIN wrappers only)
 ├── assets/             ← Static assets (images, fonts)
 ├── styles.css          ← Global Tailwind styles
@@ -48,6 +56,9 @@ src/
 ├── server.ts           ← SSR entry with error wrapper
 └── start.ts            ← Client entry
 ```
+
+> **Note**: there is no `src/shared/ui`. UI primitives live in `src/components/ui` and are
+> imported as `@/components/ui/*` (the `@/*` alias maps to `./src/*`).
 
 ---
 
@@ -82,12 +93,14 @@ features/{name}/
 | ---------------------------- | ------------------------------------------ |
 | Feature server function      | `@/features/{name}`                        |
 | Feature component            | `@/features/{name}/components/{Component}` |
-| UI primitive (Button, Card…) | `@/shared/ui/{component}`                  |
+| UI primitive (Button, Card…) | `@/components/ui/{component}`              |
 | Utility (cn, logger…)        | `@/shared/lib/{module}`                    |
 | Gameplay constants           | `@/shared/constants/gamification`          |
 | Shared types                 | `@/shared/types/{module}`                  |
 | Supabase client/middleware   | `@/shared/integrations/supabase/{module}`  |
-| React hook                   | `@/hooks/{hook}`                           |
+| i18n                         | `@/lib/i18n`                               |
+| Auth hook (`useAuth`)        | `@/features/auth`                          |
+| Mobile hook (`useIsMobile`)  | `@/hooks/use-mobile`                       |
 
 ---
 
@@ -132,9 +145,15 @@ The middleware injects `supabase` (authenticated client) and `userId` into conte
 - **Unit tests**: Pure functions (constants, utils, question-utils).
 - **Integration tests**: Server functions with mocked Supabase client.
 - **Component tests**: React components with Testing Library.
-- **Coverage target**: Statements > 60% per feature.
+- **Coverage thresholds**: **80%** on all metrics (statements, lines, functions, branches),
+  enforced globally in `vitest.config.ts`. Coverage is scoped to owned code
+  (`features/`, `shared/`, `lib/`, `hooks/`); vendored UI, route wrappers, barrels,
+  generated files, and SSR glue are excluded by design.
+- **End-to-end**: Playwright specs under `/e2e` (config `playwright.config.ts` at the repo
+  root), run via `npm run test:e2e` / `test:e2e:auth`; separate from the Vitest gate. See
+  CLAUDE.md "Subsystems & further docs".
 
-Run tests: `npm test`
+Run tests: `npm test` (run it for the current test/file count)
 Run with coverage: `npm run test:coverage`
 
 ---
@@ -157,6 +176,11 @@ Run with coverage: `npm run test:coverage`
 | spaced_repetition_schedule | SM-2 style review schedule                             |
 | dungeon_runs               | Boss mode run state                                    |
 | family_links               | Parent-student linking                                 |
+| subscriptions              | Premium-gate state (difficulty 3+ / premium modules)   |
+| beta_access_requests       | Beta-access requests + admin review                    |
+| content_reports            | User-flagged content errors ("Signaler une erreur")    |
+| themes                     | Selectable visual themes                               |
+| grades                     | Grade levels (e.g. 9th grade)                          |
 
 ### Consumables (shop items)
 
@@ -232,11 +256,23 @@ deployed.
 ```bash
 npm run dev          # Start dev server (Vite + SSR)
 npm run build        # Production build
-npm run test         # Run all tests
+npm run test         # Run all tests (run it for the current count)
 npm run test:watch   # Watch mode
+npm run test:e2e     # Playwright E2E (public projects); :auth for authed
 npm run lint         # ESLint (zero warnings)
-npm run ci:verify    # Full CI pipeline (lint + test + build + audit)
+npm run content:build  # Regenerate subject SQL migrations from content/
+npm run content:qa     # Content QA checks (:strict in ci:verify)
+npm run ci:verify    # Full CI pipeline (lint + typecheck + coverage + build + audit + content:qa:strict)
 ```
+
+### Adding subject content (not a feature)
+
+Authored content lives under `content/` (one dir per subject). To add or change
+subjects/chapters/exercises, **edit `content/` and regenerate** — do not hand-write content
+migrations. `src/shared/content/{schema,loader,sql-builder}.ts` validates the tree (zod)
+and emits one idempotent Supabase migration per subject (stable v5 UUIDs). Run
+`npm run content:build` to write migrations, `npm run content:check` to validate without
+writing, and `npm run content:qa` for QA.
 
 ---
 
@@ -257,7 +293,7 @@ the duplicated `@/lib/*`, `@/integrations/supabase/*`, `@/hooks/use-auth`, and
 or `@/shared/`.
 
 Still living outside `shared/` (real code with no `shared`/`feature` home, not shims):
-`@/lib/i18n`, `@/hooks/use-mobile`, and `@/components/ui/*` (shadcn primitives — the
-`@/shared/ui` location in §4 is aspirational and not yet adopted). There is no
-`src/integrations/` directory; the Supabase client/middleware live at
+`@/lib/i18n`, `@/hooks/use-mobile`, and `@/components/ui/*` (shadcn primitives). There is no
+`src/shared/ui` directory — UI primitives are imported as `@/components/ui/*`. There is no
+`src/integrations/` directory either; the Supabase client/middleware live at
 `@/shared/integrations/supabase/*`.
