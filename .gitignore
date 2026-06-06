@@ -33,6 +33,8 @@ dist-ssr
 
 # Claude Code — share settings.json, hooks & skills; keep personal overrides local
 .claude/settings.local.json
+# Ephemeral git worktrees created for background agents (never commit these)
+.claude/worktrees/
 
 # Supabase local
 supabase/.temp/
