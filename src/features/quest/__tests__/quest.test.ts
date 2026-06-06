@@ -159,7 +159,35 @@ describe("gamification.quest — getExercise", () => {
       exerciseId: "11111111-1111-1111-1111-111111111111",
     });
 
-    expect(result).toEqual({ exercise: exerciseData, questions: questionsData });
+    expect(result).toEqual({
+      exercise: exerciseData,
+      questions: questionsData,
+      hintCharges: 0,
+    });
+  });
+
+  it("sums reveal charges from owned hint consumables", async () => {
+    const exerciseData = { id: "ex-1", title: "Ex 1" };
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") return mockQuery(exerciseData);
+      if (table === "questions") return mockQuery([]);
+      if (table === "inventory_items")
+        return mockQuery([
+          { quantity: 3, item: { item_type: "booster", effect_payload: { hints: 3 } } },
+          { quantity: 1, item: { item_type: "potion", effect_payload: { hintBoost: 1 } } },
+          // A non-hint potion must NOT count toward reveal charges.
+          { quantity: 5, item: { item_type: "potion", effect_payload: { xpMultiplier: 2 } } },
+        ]);
+      return mockQuery([]);
+    });
+
+    const { getExercise } = await import("@/features/quest");
+    const result = (await (getExercise as unknown as (d: unknown) => Promise<unknown>)({
+      exerciseId: "11111111-1111-1111-1111-111111111111",
+    })) as { hintCharges: number };
+
+    // 3 (booster_hint) + 1 (potion_rappel) = 4; the xp potion is excluded.
+    expect(result.hintCharges).toBe(4);
   });
 
   it("throws on exercise fetch error", async () => {

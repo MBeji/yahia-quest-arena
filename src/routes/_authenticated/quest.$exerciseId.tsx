@@ -20,6 +20,7 @@ import {
   getExercise,
   getSubject,
   noXpReason,
+  revealHint,
   startExerciseSession,
   submitAttempt,
 } from "@/features/quest";
@@ -34,6 +35,8 @@ import { levelForXp } from "@/shared/lib/level";
 import { QuestResultActions } from "@/features/quest/components/quest-result-actions";
 import { QuestRewardGrid } from "@/features/quest/components/quest-reward-grid";
 import { QuizLockScreen } from "@/features/quest/components/quiz-lock-screen";
+import { QuestHintButton } from "@/features/quest/components/quest-hint-button";
+import { buildQuestLabels, type QuestContentLang } from "@/features/quest/quest-labels";
 import { ReportErrorButton } from "@/features/content-report";
 import { Confetti } from "@/features/quest/components/confetti";
 import { SubscriptionPaywall } from "@/features/subscription";
@@ -56,6 +59,7 @@ function QuestPage() {
   const startSession = useServerFn(startExerciseSession);
   const submit = useServerFn(submitAttempt);
   const fetchSubjectForNext = useServerFn(getSubject);
+  const reveal = useServerFn(revealHint);
 
   const { data, isLoading } = useQuery({
     queryKey: ["exercise", exerciseId],
@@ -85,6 +89,11 @@ function QuestPage() {
   const [showLevelUp, setShowLevelUp] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [result, setResult] = useState<Awaited<ReturnType<typeof submitAttempt>> | null>(null);
+  // Hint consumables (booster_hint / potion_rappel): remaining reveal charges and
+  // the hints revealed this session, keyed by question id (value = text or null
+  // when the question has no explanation). A revealed question can't be re-spent.
+  const [hintsRemaining, setHintsRemaining] = useState(0);
+  const [revealedHints, setRevealedHints] = useState<Record<string, string | null>>({});
 
   const sessionMutation = useMutation({
     mutationFn: (payload: { exerciseId: string }) => startSession({ data: payload }),
@@ -113,6 +122,27 @@ function QuestPage() {
       }
       qc.invalidateQueries({ queryKey: ["dashboard"] });
       qc.invalidateQueries({ queryKey: ["subject"] });
+    },
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Error"),
+  });
+
+  // Sync the available reveal charges once the exercise (and the user's hint
+  // inventory) loads. The server fn is the authority for decrementing; this only
+  // seeds the client-side display/guard.
+  const hintCharges = data?.hintCharges ?? 0;
+  useEffect(() => {
+    setHintsRemaining(hintCharges);
+  }, [hintCharges, exerciseId]);
+
+  const hintMutation = useMutation({
+    mutationFn: (payload: { questionId: string }) => reveal({ data: payload }),
+    onSuccess: (res) => {
+      // Only the FIRST reveal of a question spends a charge (the RPC decremented
+      // exactly once); record the hint text (or null) and drop a charge locally.
+      setRevealedHints((prev) =>
+        res.questionId in prev ? prev : { ...prev, [res.questionId]: res.hint },
+      );
+      setHintsRemaining((n) => Math.max(0, n - 1));
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : "Error"),
   });
@@ -230,7 +260,9 @@ function QuestPage() {
     setShowLevelUp(false);
     setSessionId(null);
     setBossTimer(0);
-  }, [resetSessionMutation]);
+    setRevealedHints({});
+    setHintsRemaining(hintCharges);
+  }, [resetSessionMutation, hintCharges]);
 
   // Reset run state when navigating to a different exercise (e.g. "Next quest"),
   // so the same component instance starts the new quest cleanly.
@@ -326,43 +358,8 @@ function QuestPage() {
   const chapterId = (data.exercise.chapter_id as string | null) ?? null;
   const exSubjectId = (data.exercise.subject_id as string | null) ?? null;
   const qlang = ((data.exercise.subjects as { content_language?: string } | null)
-    ?.content_language ?? "fr") as "ar" | "fr" | "en";
-  const QL = {
-    lockedTitle: {
-      ar: "🔒 التمرين مقفل",
-      fr: "🔒 Exercice verrouillé",
-      en: "🔒 Exercise locked",
-    }[qlang],
-    lockedBody: {
-      ar: "عليك أوّلًا اجتياز اختبار فهم الدرس بنجاح للوصول إلى التمارين. عُد لمراجعة الدرس ثمّ أعِد المحاولة.",
-      fr: "Tu dois d'abord réussir le quiz de compréhension du chapitre pour accéder aux exercices. Relis le cours, puis réessaie.",
-      en: "You must first pass the chapter comprehension quiz to unlock the exercises. Review the lesson, then try again.",
-    }[qlang],
-    review: { ar: "📖 مراجعة الدرس", fr: "📖 Réviser le cours", en: "📖 Review the lesson" }[qlang],
-    back: { ar: "العودة إلى المادة", fr: "Retour à la matière", en: "Back to subject" }[qlang],
-    quizPassedBanner: {
-      ar: "✅ تهانينا! لقد فهمت الدرس، وفُتحت لك التمارين.",
-      fr: "✅ Bravo ! Tu as compris le cours, les exercices sont débloqués.",
-      en: "✅ Well done! You understood the lesson — the exercises are unlocked.",
-    }[qlang],
-    quizFailedBanner: {
-      ar: "❌ لم تبلغ 80% المطلوبة. عُد لقراءة الدرس جيّدًا ثمّ أعِد الاختبار.",
-      fr: "❌ Tu n'as pas atteint les 80% requis. Relis bien le cours, puis refais le quiz.",
-      en: "❌ You did not reach the required 80%. Re-read the lesson, then retake the quiz.",
-    }[qlang],
-    // Quiz answers are deliberately NOT corrected on screen — the student must
-    // validate on their own. So the in-quiz message must not promise a correction.
-    quizRecorded: {
-      ar: "تم تسجيل إجابتك. ستظهر نتيجتك في نهاية الاختبار.",
-      fr: "Réponse enregistrée. Ton résultat s'affichera à la fin du quiz.",
-      en: "Answer recorded. Your result will appear at the end of the quiz.",
-    }[qlang],
-    eliteLockedTitle: {
-      ar: "👑 تحدّي النخبة مقفل",
-      fr: "👑 Défi élite verrouillé",
-      en: "👑 Elite challenge locked",
-    }[qlang],
-  };
+    ?.content_language ?? "fr") as QuestContentLang;
+  const QL = buildQuestLabels(qlang);
 
   // Locked screen: the chapter comprehension quiz must be passed first
   // (enforced server-side in startExerciseSession).
@@ -604,6 +601,11 @@ function QuestPage() {
   }
 
   const options = current ? (shuffledOptionsByQuestionId.get(current.id) ?? []) : [];
+  // Hints are only offered in standard practice quests: quizzes hide their
+  // explanations on purpose, and boss mode is a timed speed fight. The "Indice"
+  // button reveals the current question's explanation for one consumable charge.
+  const canUseHints = !isQuiz && !isBoss;
+  const currentHintRevealed = current ? current.id in revealedHints : false;
   const leaveQuestClass =
     "mb-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground";
 
@@ -764,6 +766,19 @@ function QuestPage() {
             <div className="mt-3 text-center text-xs text-muted-foreground/60 hidden sm:block">
               {t.quest.keyboardHint.replace("{keys1}", "1-4").replace("{keys2}", "A-D")}
             </div>
+          )}
+
+          {canUseHints && current && (
+            <QuestHintButton
+              remaining={hintsRemaining}
+              revealed={revealedHints[current.id]}
+              isRevealed={currentHintRevealed}
+              isPending={hintMutation.isPending}
+              onReveal={() => {
+                if (currentHintRevealed) return;
+                hintMutation.mutate({ questionId: current.id });
+              }}
+            />
           )}
 
           {showFeedback && (
