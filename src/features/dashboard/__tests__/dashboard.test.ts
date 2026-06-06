@@ -66,8 +66,18 @@ describe("gamification.dashboard — getDashboard", () => {
   });
 
   it("returns primary dashboard data with existing profile", async () => {
-    const profile = { id: "user-123", display_name: "Yahia", xp: 300, level: 2 };
-    const subjects = [{ id: "s1", name_fr: "Math" }];
+    const profile = {
+      id: "user-123",
+      display_name: "Yahia",
+      xp: 300,
+      level: 2,
+      current_grade_id: "g9",
+    };
+    // s1 is a school subject for the student's grade; fr is a grade-agnostic theme
+    // subject — getDashboard must split them into subjects / otherSubjects.
+    const schoolSubject = { id: "s1", name_fr: "Math", grade_id: "g9" };
+    const otherSubject = { id: "fr", name_fr: "Français", grade_id: null };
+    const subjects = [schoolSubject, otherSubject];
     const attempts = [
       {
         subject_id: "s1",
@@ -90,12 +100,37 @@ describe("gamification.dashboard — getDashboard", () => {
 
     const res = result as Record<string, unknown>;
     expect(res.profile).toEqual(profile);
-    expect(res.subjects).toEqual(subjects);
+    // subjects is scoped to the student's grade; the grade-agnostic subject is split out.
+    expect(res.subjects).toEqual([schoolSubject]);
+    expect(res.otherSubjects).toEqual([otherSubject]);
     expect(res.recent).toEqual(attempts);
     // #15: badges/inventory/shop moved out of the primary fn.
     expect(res.badges).toBeUndefined();
     expect(res.inventory).toBeUndefined();
     expect(res.shopItems).toBeUndefined();
+  });
+
+  it("falls back to all grade-bound subjects when the profile has no grade (#themes)", async () => {
+    // Legacy profile without current_grade_id: school subjects = every grade-bound
+    // subject; grade-agnostic subjects still split into otherSubjects.
+    const profile = { id: "user-123", display_name: "Yahia" };
+    const g9 = { id: "s1", name_fr: "Math", grade_id: "g9" };
+    const bac = { id: "s2", name_fr: "Philo", grade_id: "gbac" };
+    const free = { id: "fr", name_fr: "Français", grade_id: null };
+
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "profiles") return mockQuery(profile);
+      if (table === "subjects") return mockQuery([g9, bac, free]);
+      if (table === "attempts") return mockQuery([]);
+      return mockQuery([]);
+    });
+
+    const { getDashboard } = await import("@/features/dashboard");
+    const result = await (getDashboard as unknown as (d?: unknown) => Promise<unknown>)();
+
+    const res = result as Record<string, unknown>;
+    expect(res.subjects).toEqual([g9, bac]);
+    expect(res.otherSubjects).toEqual([free]);
   });
 
   it("creates profile if not found", async () => {
@@ -410,6 +445,7 @@ describe("gamification.dashboard — getDashboardSecondary", () => {
         description: null,
         price_coins: 100,
         is_active: true,
+        effect_payload: { avatarSlug: "samurai" },
       },
     ];
 
@@ -426,10 +462,99 @@ describe("gamification.dashboard — getDashboardSecondary", () => {
     const res = result as Record<string, unknown>;
     expect((res.badges as unknown[]).length).toBe(1);
     expect((res.inventory as unknown[]).length).toBe(1);
-    const shop = res.shopItems as Array<{ isOwned: boolean; isEquipped: boolean }>;
+    const shop = res.shopItems as Array<{
+      isOwned: boolean;
+      isEquipped: boolean;
+      avatarSlug: string | null;
+    }>;
     expect(shop.length).toBe(1);
     expect(shop[0].isOwned).toBe(true);
     expect(shop[0].isEquipped).toBe(true);
+    expect(shop[0].avatarSlug).toBe("samurai");
+  });
+
+  it("marks owned multiplier potions as armable and surfaces the armed one (#consumables)", async () => {
+    const inventory = [
+      {
+        quantity: 2,
+        is_equipped: false,
+        is_active: true,
+        acquired_at: "2026-06-02",
+        item: {
+          id: "p1",
+          code: "potion_xp_boost",
+          name: "XP Boost",
+          item_type: "potion",
+          description: "XP x2",
+          price_coins: 50,
+          effect_payload: { xpMultiplier: 2, uses: 1 },
+        },
+      },
+      {
+        quantity: 1,
+        is_equipped: false,
+        is_active: false,
+        acquired_at: "2026-06-01",
+        item: {
+          id: "p2",
+          code: "potion_rappel",
+          name: "Rappel",
+          item_type: "potion",
+          description: "hint",
+          price_coins: 30,
+          effect_payload: { hintBoost: 1 },
+        },
+      },
+    ];
+    const shopItems = [
+      {
+        id: "p1",
+        code: "potion_xp_boost",
+        name: "XP Boost",
+        item_type: "potion",
+        description: "XP x2",
+        price_coins: 50,
+        is_active: true,
+        effect_payload: { xpMultiplier: 2, uses: 1 },
+      },
+      {
+        id: "p2",
+        code: "potion_rappel",
+        name: "Rappel",
+        item_type: "potion",
+        description: "hint",
+        price_coins: 30,
+        is_active: true,
+        effect_payload: { hintBoost: 1 },
+      },
+    ];
+
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "student_badges") return mockQuery([]);
+      if (table === "inventory_items") return mockQuery(inventory);
+      if (table === "shop_items") return mockQuery(shopItems);
+      return mockQuery([]);
+    });
+
+    const { getDashboardSecondary } = await import("@/features/dashboard");
+    const result = await (getDashboardSecondary as unknown as (d?: unknown) => Promise<unknown>)();
+
+    const res = result as Record<string, unknown>;
+    const inv = res.inventory as Array<{ code: string; isArmable: boolean; isActive: boolean }>;
+    const xpInv = inv.find((i) => i.code === "potion_xp_boost");
+    const hintInv = inv.find((i) => i.code === "potion_rappel");
+    // Multiplier potion is armable and currently armed; hint potion is neither.
+    expect(xpInv?.isArmable).toBe(true);
+    expect(xpInv?.isActive).toBe(true);
+    expect(hintInv?.isArmable).toBe(false);
+
+    const shop = res.shopItems as Array<{ code: string; isArmable: boolean; isActive: boolean }>;
+    const xpShop = shop.find((i) => i.code === "potion_xp_boost");
+    const hintShop = shop.find((i) => i.code === "potion_rappel");
+    expect(xpShop?.isArmable).toBe(true);
+    expect(xpShop?.isActive).toBe(true);
+    // Hint potion is owned but NOT armable (out of scope this iteration).
+    expect(hintShop?.isArmable).toBe(false);
   });
 
   it("throws a generic French message on badges error (#14)", async () => {
@@ -466,6 +591,62 @@ describe("gamification.dashboard — getSubjects", () => {
     };
 
     expect(result.subjects).toEqual(subjects);
+  });
+});
+
+describe("gamification.dashboard — getThemes / getGradesByTheme", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    mockFrom.mockReset();
+    mockRpc.mockReset();
+  });
+
+  it("getThemes returns the ordered root themes", async () => {
+    const themes = [
+      { id: "ecole-tn", name_fr: "Programme scolaire tunisien", has_grades: true },
+      { id: "culture-generale", name_fr: "Culture générale", has_grades: false },
+    ];
+    mockFrom.mockImplementation(() => mockQuery(themes));
+
+    const { getThemes } = await import("@/features/dashboard");
+    const result = (await (getThemes as unknown as (d?: unknown) => Promise<unknown>)()) as {
+      themes: unknown[];
+    };
+
+    expect(result.themes).toEqual(themes);
+  });
+
+  it("getGradesByTheme filters by theme and returns the ladder", async () => {
+    const grades = [
+      { id: "g6", slug: "6eme-base", name_fr: "6ème année de base", is_concours_national: true },
+      { id: "g9", slug: "9eme-base", name_fr: "9ème année de base", is_concours_national: true },
+    ];
+    const chain = mockQuery(grades);
+    mockFrom.mockImplementation(() => chain);
+
+    const { getGradesByTheme } = await import("@/features/dashboard");
+    const result = (await (getGradesByTheme as unknown as (d: unknown) => Promise<unknown>)({
+      themeId: "ecole-tn",
+    })) as { grades: unknown[] };
+
+    expect(result.grades).toEqual(grades);
+    expect(chain.eq).toHaveBeenCalledWith("theme_id", "ecole-tn");
+  });
+
+  it("getSubjects scopes by theme and grade when both are provided", async () => {
+    const subjects = [{ id: "math-bac", name_fr: "Mathématiques", theme_id: "ecole-tn" }];
+    const chain = mockQuery(subjects);
+    mockFrom.mockImplementation(() => chain);
+
+    const { getSubjects } = await import("@/features/dashboard");
+    const result = (await (getSubjects as unknown as (d: unknown) => Promise<unknown>)({
+      themeId: "ecole-tn",
+      gradeId: "11111111-1111-1111-1111-111111111111",
+    })) as { subjects: unknown[] };
+
+    expect(result.subjects).toEqual(subjects);
+    expect(chain.eq).toHaveBeenCalledWith("theme_id", "ecole-tn");
+    expect(chain.eq).toHaveBeenCalledWith("grade_id", "11111111-1111-1111-1111-111111111111");
   });
 });
 

@@ -6,5 +6,7 @@
   "colorToken": "subject-english",
   "icon": "Globe",
   "displayOrder": 5,
-  "contentLanguage": "en"
+  "contentLanguage": "en",
+  "themeId": "ecole-tn",
+  "gradeSlug": "9eme-base"
 }

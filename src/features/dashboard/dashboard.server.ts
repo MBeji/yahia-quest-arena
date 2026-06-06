@@ -98,9 +98,21 @@ export const getDashboard = createServerFn({ method: "GET" })
       }
     }
 
+    // Scope subjects by the student's grade (#themes). School subjects are filtered
+    // to the chosen `current_grade_id`; legacy profiles without a grade fall back to
+    // every grade-bound subject (today the only populated grade is the 9ème année de
+    // base). Grade-agnostic theme subjects (e.g. fr-mastery) are surfaced separately.
+    const allSubjects = subjectsRes.data ?? [];
+    const gradeId = profile?.current_grade_id ?? null;
+    const schoolSubjects = gradeId
+      ? allSubjects.filter((s) => s.grade_id === gradeId)
+      : allSubjects.filter((s) => s.grade_id != null);
+    const otherSubjects = allSubjects.filter((s) => s.grade_id == null);
+
     return {
       profile,
-      subjects: subjectsRes.data ?? [],
+      subjects: schoolSubjects,
+      otherSubjects,
       stats: bySubject,
       recent: recentRes.data ?? [],
       nextExerciseId,
@@ -125,13 +137,13 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
       supabase
         .from("inventory_items")
         .select(
-          "quantity, is_equipped, acquired_at, item:shop_items(id,code,name,item_type,description,price_coins)",
+          "quantity, is_equipped, is_active, acquired_at, item:shop_items(id,code,name,item_type,description,price_coins,effect_payload)",
         )
         .eq("student_user_id", userId)
         .order("acquired_at", { ascending: false }),
       supabase
         .from("shop_items")
-        .select("id,code,name,item_type,description,price_coins,is_active")
+        .select("id,code,name,item_type,description,price_coins,is_active,effect_payload")
         .eq("is_active", true)
         .order("price_coins", { ascending: true }),
     ]);
@@ -162,8 +174,33 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
       ];
     });
 
+    // Armable consumables fall into two independent arming slots, derived from the
+    // effect payload (mirrors activate_inventory_item):
+    //   * "next-quest": multiplier potions (xpMultiplier/coinMultiplier) + the retry
+    //     shield (retries) — applied to the next quest, one armed at a time.
+    //   * "passive": the streak shield (streakShield) — protects a missed day
+    //     automatically, armed independently of the next-quest slot.
+    // Hint potions (hintBoost) carry no armable effect and stay out of scope.
+    const armSlotFor = (
+      itemType: string,
+      payload: Record<string, unknown>,
+    ): "next-quest" | "passive" | null => {
+      if (itemType !== "potion" && itemType !== "shield") return null;
+      if ("streakShield" in payload) return "passive";
+      if ("xpMultiplier" in payload || "coinMultiplier" in payload || "retries" in payload) {
+        return "next-quest";
+      }
+      return null;
+    };
+
     const inventory = (inventoryRes.data ?? []).flatMap((row: InventoryRow) => {
       if (!row.item) return [];
+
+      const payload =
+        row.item.effect_payload && typeof row.item.effect_payload === "object"
+          ? (row.item.effect_payload as Record<string, unknown>)
+          : {};
+      const armSlot = armSlotFor(row.item.item_type, payload);
 
       return [
         {
@@ -174,6 +211,9 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
           priceCoins: row.item.price_coins,
           quantity: row.quantity,
           isEquipped: row.is_equipped,
+          isActive: row.is_active,
+          isArmable: armSlot !== null,
+          armSlot,
           acquiredAt: row.acquired_at,
         },
       ];
@@ -182,6 +222,12 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
     const inventoryByCode = new Map(inventory.map((item) => [item.code, item]));
     const shopItems: DashboardShopItem[] = (shopRes.data ?? []).map((item) => {
       const owned = inventoryByCode.get(item.code);
+      const payload =
+        item.effect_payload && typeof item.effect_payload === "object"
+          ? (item.effect_payload as Record<string, unknown>)
+          : {};
+      const avatarSlug = typeof payload.avatarSlug === "string" ? payload.avatarSlug : null;
+      const armSlot = armSlotFor(item.item_type, payload);
 
       return {
         code: item.code,
@@ -192,6 +238,10 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
         isOwned: Boolean(owned),
         isEquipped: owned?.isEquipped ?? false,
         quantity: owned?.quantity ?? 0,
+        avatarSlug,
+        isArmable: Boolean(owned) && armSlot !== null,
+        armSlot,
+        isActive: owned?.isActive ?? false,
       };
     });
 
@@ -264,16 +314,58 @@ export const getLeaderboard = createServerFn({ method: "GET" })
   });
 
 // ---------- Subjects (lightweight list, for leaderboard tabs etc.) ----------
-export const getSubjects = createServerFn({ method: "GET" })
+// ---------- Root content themes (culture générale, école tunisienne, …) ----------
+export const getThemes = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase } = context;
     const { data, error } = await supabase
-      .from("subjects")
-      .select("id,name_fr,color_token,icon,content_language")
+      .from("themes")
+      .select("id,name_fr,description,icon,color_token,content_language,has_grades")
       .order("display_order");
+    if (error) failWithClientError("getThemes", error, DASHBOARD_ERROR_FR);
+    return { themes: data ?? [] };
+  });
+
+// ---------- Grade levels of a theme (the Tunisian ladder under 'ecole-tn') ----------
+export const getGradesByTheme = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ themeId: z.string().min(1) }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    const { data: rows, error } = await supabase
+      .from("grades")
+      .select("id,slug,name_fr,cycle,is_concours_national")
+      .eq("theme_id", data.themeId)
+      .order("display_order");
+    if (error) failWithClientError("getGradesByTheme", error, DASHBOARD_ERROR_FR);
+    return { grades: rows ?? [] };
+  });
+
+// ---------- Subjects, optionally scoped to a theme and/or grade ----------
+// No filter → every subject (backward compatible). Callers pass `themeId`
+// (and `gradeId` for the school theme) to browse one branch of the catalogue.
+export const getSubjects = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) =>
+    z
+      .object({
+        themeId: z.string().min(1).optional(),
+        gradeId: z.string().uuid().optional(),
+      })
+      .parse(d ?? {}),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    let query = supabase
+      .from("subjects")
+      .select("id,name_fr,color_token,icon,content_language,theme_id,grade_id")
+      .order("display_order");
+    if (data.themeId) query = query.eq("theme_id", data.themeId);
+    if (data.gradeId) query = query.eq("grade_id", data.gradeId);
+    const { data: rows, error } = await query;
     if (error) failWithClientError("getSubjects", error, DASHBOARD_ERROR_FR);
-    return { subjects: data ?? [] };
+    return { subjects: rows ?? [] };
   });
 
 // ---------- Per-subject leaderboard (ranked by XP earned in the subject) ----------

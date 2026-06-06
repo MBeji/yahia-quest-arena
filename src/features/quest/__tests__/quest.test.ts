@@ -242,7 +242,9 @@ describe("gamification.quest — startExerciseSession", () => {
           ? mockQuery({ id: "ex-1", mode: "practice", chapter_id: "ch-1" })
           : mockQuery({ id: "quiz-1" });
       }
-      if (table === "attempts") return mockQuery([{ id: "att-1" }]); // passing attempt
+      // Passing attempt done with effort (>= 4s/question): genuinely unlocks.
+      if (table === "attempts")
+        return mockQuery([{ id: "att-1", duration_seconds: 40, total_count: 6 }]);
       return mockQuery({ id: "sess-1", started_at: "2026-06-01T12:00:00Z" });
     });
 
@@ -252,6 +254,29 @@ describe("gamification.quest — startExerciseSession", () => {
     });
 
     expect(result).toEqual({ sessionId: "sess-1", startedAt: "2026-06-01T12:00:00Z" });
+  });
+
+  it("does NOT unlock when the only passing quiz attempt was rushed (< 4s/question)", async () => {
+    let exerciseCalls = 0;
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") {
+        exerciseCalls += 1;
+        return exerciseCalls === 1
+          ? mockQuery({ id: "ex-1", mode: "practice", chapter_id: "ch-1" })
+          : mockQuery({ id: "quiz-1" });
+      }
+      // High score but rushed (3s for 6 questions) → must not satisfy the gate.
+      if (table === "attempts")
+        return mockQuery([{ id: "att-1", duration_seconds: 3, total_count: 6 }]);
+      return mockQuery({ id: "sess-1", started_at: "t" });
+    });
+
+    const { startExerciseSession } = await import("@/features/quest");
+    await expect(
+      (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
+        exerciseId: "11111111-1111-1111-1111-111111111111",
+      }),
+    ).rejects.toThrow("quiz de compréhension");
   });
 
   it("blocks any exercise of a premium subject without an active subscription", async () => {
@@ -370,6 +395,41 @@ describe("gamification.quest — submitAttempt", () => {
     mockRpc.mockReset();
   });
 
+  it("surfaces the anti-rush flags (tooFast / improved) and a 0-XP result", async () => {
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") return mockQuery({ mode: "practice" });
+      return mockQuery([{ id: Q1_ID, prompt: "2+2?", correct_option: "4", explanation: "x" }]);
+    });
+    // The hardened RPC returns 0 XP with tooFast=true when answered too quickly.
+    mockRpc.mockReturnValue({
+      data: {
+        correct: 1,
+        total: 2,
+        scorePct: 50,
+        xpEarned: 0,
+        coinsEarned: 0,
+        durationSeconds: 2,
+        tooFast: true,
+        improved: false,
+      },
+      error: null,
+    });
+
+    const { submitAttempt } = await import("@/features/quest");
+    const res = (await (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
+      sessionId: SESSION_ID,
+      exerciseId: EXERCISE_ID,
+      answers: [
+        { questionId: Q1_ID, choice: "4" },
+        { questionId: Q2_ID, choice: "1" },
+      ],
+    })) as Record<string, unknown>;
+
+    expect(res.tooFast).toBe(true);
+    expect(res.improved).toBe(false);
+    expect(res.xpEarned).toBe(0);
+  });
+
   it("returns scored result with review", async () => {
     const questionsData = [
       { id: Q1_ID, prompt: "2+2?", correct_option: "4", explanation: "Basic math" },
@@ -417,6 +477,146 @@ describe("gamification.quest — submitAttempt", () => {
     expect(mockRpc).toHaveBeenCalledWith("ensure_daily_weekly_goals", {
       p_user: expect.any(String),
     });
+  });
+
+  it("surfaces an applied multiplier potion from the RPC payload", async () => {
+    const questionsData = [
+      { id: Q1_ID, prompt: "2+2?", correct_option: "4", explanation: "Basic math" },
+    ];
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") return mockQuery({ mode: "practice" });
+      return mockQuery(questionsData);
+    });
+    mockRpc.mockReturnValue({
+      data: {
+        correct: 1,
+        total: 1,
+        scorePct: 100,
+        xpEarned: 100,
+        coinsEarned: 20,
+        durationSeconds: 30,
+        tooFast: false,
+        improved: true,
+        profile: { xp: 100 },
+        unlockedBadges: [],
+        potionApplied: {
+          itemCode: "potion_xp_boost",
+          itemName: "XP Boost",
+          xpMultiplier: 2,
+          coinMultiplier: 1,
+        },
+      },
+      error: null,
+    });
+
+    const { submitAttempt } = await import("@/features/quest");
+    const result = (await (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
+      sessionId: SESSION_ID,
+      exerciseId: EXERCISE_ID,
+      answers: [{ questionId: Q1_ID, choice: "4" }],
+    })) as Record<string, unknown>;
+
+    const potion = result.potionApplied as Record<string, unknown> | null;
+    expect(potion).not.toBeNull();
+    expect(potion?.itemCode).toBe("potion_xp_boost");
+    expect(potion?.xpMultiplier).toBe(2);
+    expect(potion?.coinMultiplier).toBe(1);
+  });
+
+  it("returns potionApplied = null when no potion was applied", async () => {
+    const questionsData = [{ id: Q1_ID, prompt: "2+2?", correct_option: "4", explanation: "x" }];
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") return mockQuery({ mode: "practice" });
+      return mockQuery(questionsData);
+    });
+    mockRpc.mockReturnValue({
+      data: {
+        correct: 1,
+        total: 1,
+        scorePct: 100,
+        xpEarned: 50,
+        coinsEarned: 10,
+        durationSeconds: 30,
+        profile: { xp: 50 },
+        unlockedBadges: [],
+        potionApplied: null,
+      },
+      error: null,
+    });
+
+    const { submitAttempt } = await import("@/features/quest");
+    const result = (await (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
+      sessionId: SESSION_ID,
+      exerciseId: EXERCISE_ID,
+      answers: [{ questionId: Q1_ID, choice: "4" }],
+    })) as Record<string, unknown>;
+
+    expect(result.potionApplied).toBeNull();
+  });
+
+  it("surfaces retryShieldUsed=true when an armed retry shield suppressed a failure penalty", async () => {
+    const questionsData = [{ id: Q1_ID, prompt: "2+2?", correct_option: "4", explanation: "x" }];
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") return mockQuery({ mode: "practice" });
+      return mockQuery(questionsData);
+    });
+    mockRpc.mockReturnValue({
+      data: {
+        correct: 0,
+        total: 1,
+        scorePct: 0,
+        xpEarned: 0,
+        coinsEarned: 0,
+        durationSeconds: 30,
+        tooFast: false,
+        improved: false,
+        profile: { xp: 0 },
+        unlockedBadges: [],
+        potionApplied: null,
+        retryShieldUsed: true,
+      },
+      error: null,
+    });
+
+    const { submitAttempt } = await import("@/features/quest");
+    const result = (await (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
+      sessionId: SESSION_ID,
+      exerciseId: EXERCISE_ID,
+      answers: [{ questionId: Q1_ID, choice: "5" }],
+    })) as Record<string, unknown>;
+
+    expect(result.retryShieldUsed).toBe(true);
+  });
+
+  it("defaults retryShieldUsed to false when the RPC omits it", async () => {
+    const questionsData = [{ id: Q1_ID, prompt: "2+2?", correct_option: "4", explanation: "x" }];
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") return mockQuery({ mode: "practice" });
+      return mockQuery(questionsData);
+    });
+    mockRpc.mockReturnValue({
+      data: {
+        correct: 1,
+        total: 1,
+        scorePct: 100,
+        xpEarned: 50,
+        coinsEarned: 10,
+        durationSeconds: 30,
+        profile: { xp: 50 },
+        unlockedBadges: [],
+        potionApplied: null,
+      },
+      error: null,
+    });
+
+    const { submitAttempt } = await import("@/features/quest");
+    const result = (await (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
+      sessionId: SESSION_ID,
+      exerciseId: EXERCISE_ID,
+      answers: [{ questionId: Q1_ID, choice: "4" }],
+    })) as Record<string, unknown>;
+
+    expect(result.retryShieldUsed).toBe(false);
   });
 
   it("hides the correction (no correct answers leak) for a comprehension quiz", async () => {

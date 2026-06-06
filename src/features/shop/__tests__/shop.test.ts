@@ -167,6 +167,113 @@ describe("shop — equipInventorySkin", () => {
   });
 });
 
+describe("shop — activateInventoryItem", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    mockFrom.mockReset();
+    mockRpc.mockReset();
+  });
+
+  it("arms a potion and returns the result mapped from the RPC payload", async () => {
+    mockRpc.mockImplementation(
+      rpcResponder({
+        activate_inventory_item: {
+          data: { item_code: "potion_xp_boost", item_name: "XP Boost", is_active: true },
+          error: null,
+        },
+      }),
+    );
+
+    const { activateInventoryItem } = await import("@/features/shop");
+    const result = await (activateInventoryItem as unknown as (d: unknown) => Promise<unknown>)({
+      itemCode: "potion_xp_boost",
+    });
+
+    const res = result as Record<string, unknown>;
+    expect(res.itemCode).toBe("potion_xp_boost");
+    expect(res.itemName).toBe("XP Boost");
+    expect(res.isActive).toBe(true);
+    expect(mockRpc).toHaveBeenCalledWith("activate_inventory_item", {
+      p_item_code: "potion_xp_boost",
+    });
+  });
+
+  it("arms a retry shield into the next-quest slot", async () => {
+    mockRpc.mockImplementation(
+      rpcResponder({
+        activate_inventory_item: {
+          data: {
+            item_code: "shield_retry",
+            item_name: "Bouclier de Réessai",
+            slot: "next-quest",
+            is_active: true,
+          },
+          error: null,
+        },
+      }),
+    );
+
+    const { activateInventoryItem } = await import("@/features/shop");
+    const res = (await (activateInventoryItem as unknown as (d: unknown) => Promise<unknown>)({
+      itemCode: "shield_retry",
+    })) as Record<string, unknown>;
+
+    expect(res.itemCode).toBe("shield_retry");
+    expect(res.slot).toBe("next-quest");
+    expect(res.isActive).toBe(true);
+  });
+
+  it("arms a streak shield into the passive slot", async () => {
+    mockRpc.mockImplementation(
+      rpcResponder({
+        activate_inventory_item: {
+          data: {
+            item_code: "bouclier_flamme",
+            item_name: "Bouclier de Flamme",
+            slot: "passive",
+            is_active: true,
+          },
+          error: null,
+        },
+      }),
+    );
+
+    const { activateInventoryItem } = await import("@/features/shop");
+    const res = (await (activateInventoryItem as unknown as (d: unknown) => Promise<unknown>)({
+      itemCode: "bouclier_flamme",
+    })) as Record<string, unknown>;
+
+    expect(res.itemCode).toBe("bouclier_flamme");
+    expect(res.slot).toBe("passive");
+    expect(res.isActive).toBe(true);
+  });
+
+  it("surfaces the RPC error when the item is not armable", async () => {
+    mockRpc.mockImplementation(
+      rpcResponder({
+        activate_inventory_item: {
+          data: null,
+          error: { message: "This item cannot be activated." },
+        },
+      }),
+    );
+
+    const { activateInventoryItem } = await import("@/features/shop");
+    await expect(
+      (activateInventoryItem as unknown as (d: unknown) => Promise<unknown>)({
+        itemCode: "skin_gold",
+      }),
+    ).rejects.toThrow("Impossible d'activer cet objet.");
+  });
+
+  it("rejects empty itemCode (input validation)", async () => {
+    const { activateInventoryItem } = await import("@/features/shop");
+    await expect(
+      (activateInventoryItem as unknown as (d: unknown) => Promise<unknown>)({ itemCode: "" }),
+    ).rejects.toThrow();
+  });
+});
+
 describe("shop — RPC payload fallbacks", () => {
   beforeEach(() => {
     vi.resetModules();
@@ -194,5 +301,19 @@ describe("shop — RPC payload fallbacks", () => {
     expect(res.itemCode).toBe("skin_gold");
     expect(res.itemName).toBe("");
     expect(res.avatarSlug).toBeNull();
+  });
+
+  it("activateInventoryItem falls back to safe defaults when the RPC returns no payload", async () => {
+    mockRpc.mockImplementation(
+      rpcResponder({ activate_inventory_item: { data: null, error: null } }),
+    );
+    const { activateInventoryItem } = await import("@/features/shop");
+    const res = (await (activateInventoryItem as unknown as (d: unknown) => Promise<unknown>)({
+      itemCode: "potion_coins",
+    })) as Record<string, unknown>;
+    expect(res.itemCode).toBe("potion_coins");
+    expect(res.itemName).toBe("");
+    expect(res.slot).toBe("next-quest");
+    expect(res.isActive).toBe(false);
   });
 });

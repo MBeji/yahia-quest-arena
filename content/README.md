@@ -25,7 +25,12 @@ content/
 ## Format des fichiers
 
 - **`subject.json`** : `id`, `nameFr`, `description`, `attribute`, `colorToken`,
-  `icon`, `displayOrder`, `contentLanguage` (`ar` | `fr` | `en`).
+  `icon`, `displayOrder`, `contentLanguage` (`ar` | `fr` | `en`), `themeId`
+  (thème d'appartenance — **obligatoire**, ex. `ecole-tn` pour le programme
+  scolaire ou `francais` pour un module autonome), `gradeSlug` (niveau dans
+  l'échelle du thème, ex. `9eme-base` ; `null` pour les matières indépendantes
+  d'un niveau — le slug est résolu en UUID `grades` à la compilation, jamais
+  codé en dur), `isPremium?`.
 - **`chapter.json`** : `title`, `description`, `displayOrder`, `sources` (liste
   d'URLs / références — traçabilité des sources).
 - **`quiz.json`** (obligatoire) : `title?` + `questions[]` (même forme que les

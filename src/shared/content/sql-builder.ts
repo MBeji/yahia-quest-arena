@@ -92,13 +92,20 @@ export function buildMigrationSql(subject: LoadedSubject): string {
   );
 
   // --- Subject (upsert) ---
+  // grade_id is resolved from the stable (theme_id, slug) pair so content never
+  // hard-codes a UUID; NULL for grade-agnostic subjects (e.g. language modules).
+  const gradeIdSql = meta.gradeSlug
+    ? `(SELECT id FROM public.grades WHERE theme_id = ${sqlString(meta.themeId)} AND slug = ${sqlString(
+        meta.gradeSlug,
+      )})`
+    : "NULL";
   out.push(
-    "INSERT INTO public.subjects (id, name_fr, description, attribute, color_token, icon, display_order, content_language, is_premium) VALUES",
+    "INSERT INTO public.subjects (id, name_fr, description, attribute, color_token, icon, display_order, content_language, is_premium, theme_id, grade_id) VALUES",
     `  (${sqlString(subjectId)}, ${sqlString(meta.nameFr)}, ${sqlString(meta.description)}, ${sqlString(
       meta.attribute,
     )}, ${sqlString(meta.colorToken)}, ${sqlString(meta.icon)}, ${meta.displayOrder}, ${sqlString(
       meta.contentLanguage,
-    )}, ${meta.isPremium})`,
+    )}, ${meta.isPremium}, ${sqlString(meta.themeId)}, ${gradeIdSql})`,
     "ON CONFLICT (id) DO UPDATE SET",
     "  name_fr = EXCLUDED.name_fr,",
     "  description = EXCLUDED.description,",
@@ -107,7 +114,9 @@ export function buildMigrationSql(subject: LoadedSubject): string {
     "  icon = EXCLUDED.icon,",
     "  display_order = EXCLUDED.display_order,",
     "  content_language = EXCLUDED.content_language,",
-    "  is_premium = EXCLUDED.is_premium;",
+    "  is_premium = EXCLUDED.is_premium,",
+    "  theme_id = EXCLUDED.theme_id,",
+    "  grade_id = EXCLUDED.grade_id;",
     "",
   );
 

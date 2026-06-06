@@ -121,6 +121,7 @@ export type TranslationKeys = {
     dailyEmpty: string;
     weeklyEmpty: string;
     pathsTitle: string;
+    otherThemesTitle: string;
     notAttempted: string;
     failedLoad: string;
     failedLoadDesc: string;
@@ -147,6 +148,7 @@ export type TranslationKeys = {
     levelLabel: string;
     streakLabel: string;
     badgesUnlocked: string;
+    retryShieldUsed: string;
     replayQuest: string;
     nextQuest: string;
     backToSubject: string;
@@ -278,6 +280,8 @@ export type TranslationKeys = {
   // Layout
   layout: {
     heroesHall: string;
+    parcours: string;
+    themes: string;
     dungeon: string;
     ranking: string;
     parentReport: string;
@@ -287,6 +291,38 @@ export type TranslationKeys = {
     contentReports: string;
     signOut: string;
     logoutToast: string;
+  };
+  // Adventure path / journey map
+  parcours: {
+    worldTitle: string;
+    worldSubtitle: string;
+    level: string;
+    xpToNext: string;
+    maxLevel: string;
+    start: string;
+    continueLabel: string;
+    review: string;
+    locked: string;
+    lockedHint: string;
+    premium: string;
+    premiumHint: string;
+    done: string;
+    current: string;
+    xpToEarn: string;
+    chapters: string;
+    backToMap: string;
+    empty: string;
+  };
+  // Playful explainability hover hints
+  explain: {
+    xp: string;
+    level: string;
+    streak: string;
+    coins: string;
+    heroClass: string;
+    questResultXp: string;
+    questResultScore: string;
+    lockedChapter: string;
   };
   // Motivational quotes
   quotes: Array<{ text: string; author: string }>;
