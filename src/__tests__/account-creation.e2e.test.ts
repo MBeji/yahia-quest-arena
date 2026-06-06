@@ -114,14 +114,19 @@ describe("END-TO-END: new student signs up", () => {
     const { getDashboard } = await import("@/features/dashboard");
 
     // 1) Bootstrap the freshly created profile as a student.
+    //    Role is now set via the `set_profile_role` SECURITY DEFINER RPC, never a
+    //    direct client write (P0 S2a containment), so arm the RPC mock.
     mockFrom.mockImplementation((table: string) =>
       table === "profiles" ? mockQuery(null) : mockQuery([]),
     );
+    mockRpc.mockImplementation(rpcByName({ set_profile_role: { data: null, error: null } }));
     const bootstrap = (await (bootstrapProfile as unknown as Fn)({
       displayName: "Yahia",
       role: "student",
     })) as { ok: boolean };
     expect(bootstrap.ok).toBe(true);
+    // The role must NOT be written through a direct profiles upsert anymore.
+    expect(mockRpc).toHaveBeenCalledWith("set_profile_role", { p_role: "student" });
 
     // 2) First dashboard load — profile row already exists (trigger + bootstrap).
     mockFrom.mockImplementation((table: string) => {
@@ -208,13 +213,15 @@ describe("END-TO-END: new parent signs up and links a student", () => {
     const { bootstrapProfile } = await import("@/features/auth");
     const { linkStudentByCode } = await import("@/features/parent-report");
 
-    // 1) Bootstrap as a parent.
+    // 1) Bootstrap as a parent. Role goes through the `set_profile_role` RPC.
     mockFrom.mockImplementation(() => mockQuery(null));
+    mockRpc.mockImplementation(rpcByName({ set_profile_role: { data: null, error: null } }));
     const bootstrap = (await (bootstrapProfile as unknown as Fn)({
       displayName: "Parent Yahia",
       role: "parent",
     })) as { ok: boolean };
     expect(bootstrap.ok).toBe(true);
+    expect(mockRpc).toHaveBeenCalledWith("set_profile_role", { p_role: "parent" });
 
     // 2) Link a real student via alliance code → RPC reports linked.
     mockRpc.mockImplementation(
@@ -379,6 +386,7 @@ describe("END-TO-END: account-creation edge cases", () => {
     mockFrom.mockImplementation((table: string) =>
       table === "profiles" ? mockQuery(null, null) : mockQuery([]),
     );
+    mockRpc.mockImplementation(rpcByName({ set_profile_role: { data: null, error: null } }));
 
     const first = (await (bootstrapProfile as unknown as Fn)({
       displayName: "Yahia",
@@ -412,6 +420,25 @@ describe("END-TO-END: account-creation edge cases", () => {
       table === "profiles"
         ? mockQuery(null, { message: "rls denied", code: "42501" })
         : mockQuery([]),
+    );
+
+    await expect(
+      (bootstrapProfile as unknown as Fn)({ displayName: "Yahia", role: "student" }),
+    ).rejects.toThrow();
+  });
+
+  it("bootstrapProfile surfaces a sanitized error when the role RPC fails", async () => {
+    const { bootstrapProfile } = await import("@/features/auth");
+
+    // Name upsert succeeds; the sanctioned `set_profile_role` RPC then errors
+    // (e.g. trigger rejection) → the raw DB message must not leak.
+    mockFrom.mockImplementation((table: string) =>
+      table === "profiles" ? mockQuery(null, null) : mockQuery([]),
+    );
+    mockRpc.mockImplementation(
+      rpcByName({
+        set_profile_role: { data: null, error: { message: "trigger denied", code: "P0001" } },
+      }),
     );
 
     await expect(

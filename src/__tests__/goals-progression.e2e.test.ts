@@ -329,8 +329,9 @@ describe("END-TO-END: global leaderboard ranking + myRank", () => {
 
     expect(res.leaderboard).toHaveLength(3);
     expect(res.leaderboard.map((r) => r.rank)).toEqual([1, 2, 3]);
-    expect(res.leaderboard[0].id).toBe(ME);
+    // SECURITY (P0 S2b): rows expose no peer/self UUID; self is flagged by isMe.
     expect(res.leaderboard[0].isMe).toBe(true);
+    expect(res.leaderboard[0]).not.toHaveProperty("id");
     expect(res.leaderboard[1].isMe).toBe(false);
     // myRank is the in-top-N row, no fallback count query needed.
     expect(res.myRank?.rank).toBe(1);
@@ -396,8 +397,8 @@ describe("END-TO-END: global leaderboard ranking + myRank", () => {
     expect(res.leaderboard.some((r) => r.isMe)).toBe(false);
     // 41 students have more XP → my rank is 42.
     expect(res.myRank?.rank).toBe(42);
-    expect(res.myRank?.id).toBe(ME);
     expect(res.myRank?.isMe).toBe(true);
+    expect(res.myRank).not.toHaveProperty("id");
     expect(res.myRank?.xp).toBe(300);
   });
 });
@@ -413,11 +414,12 @@ describe("END-TO-END: per-subject leaderboard maps the RPC rows", () => {
   it("maps get_subject_leaderboard rows (rank, subject_xp, is_me)", async () => {
     const { getSubjectLeaderboard } = await import("@/features/dashboard");
 
+    // SECURITY (P0 S2b): the RPC no longer returns peer `user_id`s; the self
+    // row is flagged by `is_me`.
     mockRpc.mockResolvedValue({
       data: [
         {
           rank: 1,
-          user_id: "p1",
           display_name: "Sami",
           hero_class: "warrior",
           level: 10,
@@ -428,7 +430,6 @@ describe("END-TO-END: per-subject leaderboard maps the RPC rows", () => {
         },
         {
           rank: 2,
-          user_id: ME,
           display_name: "Yahia",
           hero_class: "mage",
           level: 8,
@@ -453,8 +454,8 @@ describe("END-TO-END: per-subject leaderboard maps the RPC rows", () => {
     expect(res.leaderboard).toHaveLength(2);
     expect(res.leaderboard[0].rank).toBe(1);
     expect(res.leaderboard[0].xp).toBe(900);
-    expect(res.leaderboard[1].id).toBe(ME);
     expect(res.leaderboard[1].isMe).toBe(true);
+    expect(res.leaderboard[1]).not.toHaveProperty("id");
     expect(res.myRank?.rank).toBe(2);
     expect(res.myRank?.xp).toBe(640);
   });

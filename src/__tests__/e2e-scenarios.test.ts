@@ -486,10 +486,10 @@ describe("END-TO-END: leaderboards (global + per-subject)", () => {
     mockRpc.mockImplementation(
       rpcByName({
         get_subject_leaderboard: {
+          // No peer/self user_id in the RPC shape (P0 S2b); is_me flags self.
           data: [
             {
               rank: 1,
-              user_id: "user-regression-test",
               display_name: "Yahia",
               hero_class: "warrior",
               level: 5,

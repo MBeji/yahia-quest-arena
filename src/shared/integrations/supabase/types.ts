@@ -4,7 +4,10 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 // to add `subjects.content_language` and `chapters.summary` (migration
 // 20260602140000_content_pipeline_schema.sql), and the `themes` / `grades`
 // tables plus `subjects.theme_id`/`grade_id` and `profiles.current_grade_id`
-// (migration 20260605120000_themes_and_grades.sql). Regenerate to resync online.
+// (migration 20260605120000_themes_and_grades.sql); and for the P0 security
+// hardening (migration 20260606150000_security_p0_hardening.sql): added the
+// `set_profile_role` RPC and removed `user_id` from `get_subject_leaderboard`'s
+// Returns shape (peer-UUID leak fix). Regenerate to resync online.
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
@@ -1189,7 +1192,6 @@ export type Database = {
         Args: { p_subject: string; p_limit?: number };
         Returns: {
           rank: number;
-          user_id: string;
           display_name: string;
           hero_class: string;
           level: number;
@@ -1202,6 +1204,30 @@ export type Database = {
       get_student_report: {
         Args: { p_student: string };
         Returns: Json;
+      };
+      set_profile_role: {
+        Args: { p_role: string };
+        Returns: {
+          avatar_slug: string | null;
+          avatar_tier: number;
+          created_at: string;
+          current_streak: number;
+          display_name: string;
+          hero_class: string;
+          id: string;
+          last_active_date: string | null;
+          level: number;
+          longest_streak: number;
+          role: string;
+          xp: number;
+          yahia_coins: number;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "profiles";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
       };
       spend_coins: {
         Args: { p_user: string; p_coins: number };
