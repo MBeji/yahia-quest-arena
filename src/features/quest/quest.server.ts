@@ -276,8 +276,8 @@ export const getExercise = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) => z.object({ exerciseId: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
-    const { supabase } = context;
-    const [ex, qs] = await Promise.all([
+    const { supabase, userId } = context;
+    const [ex, qs, hintInv] = await Promise.all([
       supabase
         .from("exercises")
         .select("*, subjects(id,name_fr,color_token,icon), chapters(id,title,subject_id)")
@@ -288,11 +288,32 @@ export const getExercise = createServerFn({ method: "GET" })
         .select("id,prompt,options,display_order")
         .eq("exercise_id", data.exerciseId)
         .order("display_order"),
+      // Total reveal charges the user owns (hint consumables: booster_hint /
+      // potion_rappel). Each owned unit = one reveal, so we sum the quantities.
+      // Mirrors the consume_hint RPC's eligibility filter.
+      supabase
+        .from("inventory_items")
+        .select("quantity, item:shop_items!inner(item_type, effect_payload)")
+        .eq("student_user_id", userId)
+        .in("shop_items.item_type", ["booster", "potion"]),
     ]);
     if (ex.error) {
       failWithClientError("quest.getExercise", ex.error, "Impossible de charger l'exercice.");
     }
-    return { exercise: ex.data, questions: qs.data ?? [] };
+
+    let hintCharges = 0;
+    for (const row of hintInv.data ?? []) {
+      const item = (row as { item?: { effect_payload?: unknown } | null }).item;
+      const payload =
+        item?.effect_payload && typeof item.effect_payload === "object"
+          ? (item.effect_payload as Record<string, unknown>)
+          : {};
+      if ("hints" in payload || "hintBoost" in payload) {
+        hintCharges += Number((row as { quantity?: number }).quantity ?? 0);
+      }
+    }
+
+    return { exercise: ex.data, questions: qs.data ?? [], hintCharges };
   });
 
 // ---------- Start a secure exercise session ----------
@@ -385,6 +406,44 @@ export const startExerciseSession = createServerFn({ method: "POST" })
     return {
       sessionId: session.id,
       startedAt: session.started_at,
+    };
+  });
+
+// ---------- Reveal a hint (on-demand consumable) ----------
+// Spends one charge of a hint consumable (booster_hint / potion_rappel) to reveal
+// a hint for the given question. All ownership/charge validation + the atomic
+// decrement happen inside the `consume_hint` SECURITY DEFINER RPC; the hint text
+// comes from the question's `explanation` (null/empty → graceful fallback). This
+// is purely informational: it grants no XP/coins and never touches scoring or the
+// arm/slot system.
+export const revealHint = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ questionId: z.string().uuid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+
+    // Rate limit: max 10 reveals per 10 seconds (the client also guards against
+    // re-spending on an already-revealed question).
+    if (await isRateLimited(supabase, `hint_${userId}`, 10, 10_000)) {
+      throw new Error("Too many hint requests. Please slow down.");
+    }
+
+    const { data: result, error } = await supabase.rpc("consume_hint", {
+      p_question_id: data.questionId,
+    });
+    if (error) {
+      failWithClientError("quest.revealHint", error, "Impossible de révéler un indice.");
+    }
+
+    const row = result && typeof result === "object" ? (result as Record<string, unknown>) : {};
+    return {
+      questionId: typeof row.questionId === "string" ? row.questionId : data.questionId,
+      hint: typeof row.hint === "string" && row.hint.length > 0 ? row.hint : null,
+      // A charge is spent only when the RPC actually revealed a hint; when the
+      // question has no explanation, consumed is false and no charge was used.
+      consumed: row.consumed === true,
+      itemCode: typeof row.itemCode === "string" ? row.itemCode : "",
+      itemName: typeof row.itemName === "string" ? row.itemName : "",
     };
   });
 

@@ -1027,6 +1027,10 @@ export type Database = {
         Args: { p_item_code: string };
         Returns: Json;
       };
+      consume_hint: {
+        Args: { p_question_id: string };
+        Returns: Json;
+      };
       link_student_by_code: {
         Args: { p_code: string; p_relation?: string };
         Returns: Json;

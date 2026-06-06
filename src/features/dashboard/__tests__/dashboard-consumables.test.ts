@@ -190,4 +190,65 @@ describe("getDashboardSecondary — shield arming slots (#consumables step 2)", 
     expect(skin?.isArmable).toBe(false);
     expect(skin?.armSlot).toBeNull();
   });
+
+  it("marks hint consumables as non-armable hint consumables (used in quest)", async () => {
+    const inventory = [
+      {
+        quantity: 3,
+        is_equipped: false,
+        is_active: false,
+        acquired_at: "2026-06-03",
+        item: {
+          id: "h1",
+          code: "booster_hint",
+          name: "Indice Mystique",
+          item_type: "booster",
+          description: "hint",
+          price_coins: 30,
+          effect_payload: { hints: 3 },
+        },
+      },
+      {
+        quantity: 1,
+        is_equipped: false,
+        is_active: false,
+        acquired_at: "2026-06-04",
+        item: {
+          id: "h2",
+          code: "potion_rappel",
+          name: "Potion de Rappel",
+          item_type: "potion",
+          description: "hint",
+          price_coins: 120,
+          effect_payload: { hintBoost: 1 },
+        },
+      },
+    ];
+
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "student_badges") return mockQuery([]);
+      if (table === "inventory_items") return mockQuery(inventory);
+      if (table === "shop_items") return mockQuery([]);
+      return mockQuery([]);
+    });
+
+    const { getDashboardSecondary } = await import("@/features/dashboard");
+    const result = await (getDashboardSecondary as unknown as (d?: unknown) => Promise<unknown>)();
+
+    const res = result as Record<string, unknown>;
+    const inv = res.inventory as Array<{
+      code: string;
+      isArmable: boolean;
+      armSlot: string | null;
+      isHintConsumable: boolean;
+    }>;
+    // Hint consumables are NOT armed (no slot) but flagged for the "use in quest"
+    // inventory label.
+    for (const code of ["booster_hint", "potion_rappel"]) {
+      const item = inv.find((i) => i.code === code);
+      expect(item?.isArmable).toBe(false);
+      expect(item?.armSlot).toBeNull();
+      expect(item?.isHintConsumable).toBe(true);
+    }
+  });
 });

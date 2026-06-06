@@ -149,6 +149,11 @@ export type TranslationKeys = {
     streakLabel: string;
     badgesUnlocked: string;
     retryShieldUsed: string;
+    revealHint: string;
+    hintRevealed: string;
+    noHintsLeft: string;
+    hintUnavailable: string;
+    hintUseInQuest: string;
     replayQuest: string;
     nextQuest: string;
     backToSubject: string;

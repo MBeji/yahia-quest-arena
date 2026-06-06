@@ -1,7 +1,8 @@
-import { Backpack, Trophy } from "lucide-react";
+import { Backpack, Lightbulb, Trophy } from "lucide-react";
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer } from "recharts";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { avatarEmojiForSlug } from "@/shared/lib/avatar";
+import { useT } from "@/lib/i18n";
 
 type RadarPoint = {
   subject: string;
@@ -17,6 +18,8 @@ type InventoryItem = {
   isArmable: boolean;
   armSlot: "next-quest" | "passive" | null;
   isActive: boolean;
+  /** Hint consumable (booster_hint / potion_rappel) — used on demand in a quest. */
+  isHintConsumable?: boolean;
 };
 
 /** Armed-badge label per arming slot (passive streak shield vs next-quest item). */
@@ -43,6 +46,7 @@ export function DashboardRadarInventory({
   isActivatePending,
   onActivate,
 }: DashboardRadarInventoryProps) {
+  const t = useT();
   const avatarEmoji = avatarEmojiForSlug(avatarSlug);
   const initials = (displayName ?? "").trim().slice(0, 2).toUpperCase() || "?";
   return (
@@ -126,6 +130,15 @@ export function DashboardRadarInventory({
                         Activer
                       </button>
                     )}
+                  </div>
+                )}
+                {/* Hint consumables are spent on demand inside a quest (no arming),
+                    so they get a label instead of an "Activer" button. */}
+                {item.isHintConsumable && (
+                  <div className="mt-3">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--neon-gold)]/15 px-3 py-1 text-xs font-bold text-[color:var(--neon-gold)]">
+                      <Lightbulb className="h-3.5 w-3.5" /> {t.quest.hintUseInQuest}
+                    </span>
                   </div>
                 )}
               </div>

@@ -193,6 +193,14 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
       return null;
     };
 
+    // Hint consumables (booster_hint / potion_rappel) are NOT armed — they are
+    // spent on demand during a quest via the "Indice" button. Each owned unit is
+    // one reveal charge. The inventory UI labels them "à utiliser en quête" (no
+    // "Activer" button). Mirrors the consume_hint RPC's eligibility check.
+    const isHintConsumableFor = (itemType: string, payload: Record<string, unknown>): boolean =>
+      (itemType === "booster" || itemType === "potion") &&
+      ("hints" in payload || "hintBoost" in payload);
+
     const inventory = (inventoryRes.data ?? []).flatMap((row: InventoryRow) => {
       if (!row.item) return [];
 
@@ -214,6 +222,7 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
           isActive: row.is_active,
           isArmable: armSlot !== null,
           armSlot,
+          isHintConsumable: isHintConsumableFor(row.item.item_type, payload),
           acquiredAt: row.acquired_at,
         },
       ];
