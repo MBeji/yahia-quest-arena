@@ -223,7 +223,11 @@ BEGIN
         AND si.item_type = 'potion'
         AND (si.effect_payload ? 'xpMultiplier' OR si.effect_payload ? 'coinMultiplier')
       ORDER BY inv.acquired_at ASC
-      LIMIT 1;
+      LIMIT 1
+      -- Lock ONLY the inventory row (never the shared shop_items catalog) so two
+      -- concurrent submissions can't both read+apply the same armed potion: the
+      -- second submit blocks here, then re-checks and finds the potion gone.
+      FOR UPDATE OF inv;
 
     IF FOUND THEN
       v_xp_multiplier := GREATEST(1, COALESCE((v_potion.effect_payload ->> 'xpMultiplier')::INT, 1));
