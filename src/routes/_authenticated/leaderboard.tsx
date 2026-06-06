@@ -14,9 +14,10 @@ export const Route = createFileRoute("/_authenticated/leaderboard")({
 
 const GLOBAL = "global";
 
+// SECURITY: rows carry no peer `user_id` (UUID-leak fix). They are keyed by
+// `rank` (unique per board) and the self row is flagged by `isMe` server-side.
 type Player = {
   rank: number;
-  id: string;
   displayName: string;
   heroClass: string;
   level: number;
@@ -157,7 +158,7 @@ function LeaderboardPage() {
                 ];
                 return (
                   <motion.div
-                    key={player.id}
+                    key={player.rank}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.1 }}
@@ -190,7 +191,7 @@ function LeaderboardPage() {
           <div className="space-y-2">
             {leaderboard.map((player, i) => (
               <motion.div
-                key={player.id}
+                key={player.rank}
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.02 }}

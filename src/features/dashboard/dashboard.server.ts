@@ -283,9 +283,11 @@ export const getLeaderboard = createServerFn({ method: "GET" })
 
     const topPlayers = topPlayersRes.data ?? [];
 
+    // SECURITY: never expose peer `user_id`s to the client. `isMe` is computed
+    // here (server-side) from the caller's own id; the client keys/highlights
+    // rows by `rank` + `isMe`, so no other user's UUID leaves the server.
     const ranked = topPlayers.map((p, i) => ({
       rank: i + 1,
-      id: p.id,
       displayName: p.display_name,
       heroClass: p.hero_class,
       level: p.level,
@@ -308,7 +310,6 @@ export const getLeaderboard = createServerFn({ method: "GET" })
 
       myRank = {
         rank: (count ?? 0) + 1,
-        id: meRes.data.id,
         displayName: meRes.data.display_name,
         heroClass: meRes.data.hero_class,
         level: meRes.data.level,
@@ -382,7 +383,7 @@ export const getSubjectLeaderboard = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) => z.object({ subjectId: z.string().min(1) }).parse(d))
   .handler(async ({ data, context }) => {
-    const { supabase, userId } = context;
+    const { supabase } = context;
 
     const { data: rows, error } = await supabase.rpc("get_subject_leaderboard", {
       p_subject: data.subjectId,
@@ -390,16 +391,18 @@ export const getSubjectLeaderboard = createServerFn({ method: "GET" })
     });
     if (error) failWithClientError("getSubjectLeaderboard", error, DASHBOARD_ERROR_FR);
 
+    // SECURITY: the RPC no longer returns peer `user_id`s (UUID-leak fix). Rows
+    // are identified to the client by `rank` (stable, unique per board) and the
+    // self row by the RPC's `is_me` flag — no other user's id is ever exposed.
     const mapped = (rows ?? []).map((r) => ({
       rank: Number(r.rank),
-      id: r.user_id,
       displayName: r.display_name,
       heroClass: r.hero_class,
       level: r.level,
       xp: Number(r.subject_xp),
       streak: r.current_streak,
       avatarTier: r.avatar_tier,
-      isMe: r.is_me || r.user_id === userId,
+      isMe: r.is_me,
     }));
 
     const leaderboard = mapped.filter((r) => r.rank <= LEADERBOARD_LIMIT);

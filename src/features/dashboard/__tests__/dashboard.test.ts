@@ -330,9 +330,20 @@ describe("gamification.dashboard — getLeaderboard", () => {
     const { getLeaderboard } = await import("@/features/dashboard");
     const result = await (getLeaderboard as unknown as (d?: unknown) => Promise<unknown>)();
 
-    const res = result as { leaderboard: unknown[]; myRank: unknown };
+    const res = result as {
+      leaderboard: Record<string, unknown>[];
+      myRank: Record<string, unknown> | undefined;
+    };
     expect(res.leaderboard).toHaveLength(2);
     expect(res.myRank).toBeDefined();
+
+    // SECURITY (P0 S2b): the global leaderboard must not surface any peer UUIDs.
+    // `isMe` is computed server-side; rows are keyed by `rank` on the client.
+    expect(res.leaderboard[0]).toMatchObject({ rank: 1, isMe: true });
+    expect(res.leaderboard[1]).toMatchObject({ rank: 2, isMe: false });
+    for (const row of res.leaderboard) {
+      expect(row).not.toHaveProperty("id");
+    }
   });
 
   it("throws a generic French message on fetch error (#14)", async () => {
@@ -657,12 +668,13 @@ describe("gamification.dashboard — getSubjectLeaderboard", () => {
     mockRpc.mockReset();
   });
 
-  it("maps RPC rows and extracts my rank (subject XP)", async () => {
+  it("maps RPC rows and extracts my rank (subject XP) WITHOUT exposing peer UUIDs", async () => {
+    // SECURITY (P0 S2b): the RPC no longer returns peer `user_id`s; the self row
+    // is flagged by `is_me`. The mapped output must carry NO `id` field at all.
     mockRpc.mockResolvedValue({
       data: [
         {
           rank: 1,
-          user_id: "user-999",
           display_name: "Top",
           hero_class: "S-Rank",
           level: 10,
@@ -673,7 +685,6 @@ describe("gamification.dashboard — getSubjectLeaderboard", () => {
         },
         {
           rank: 4,
-          user_id: "user-123",
           display_name: "Yahia",
           hero_class: "Novice",
           level: 3,
@@ -690,8 +701,8 @@ describe("gamification.dashboard — getSubjectLeaderboard", () => {
     const result = (await (getSubjectLeaderboard as unknown as (d: unknown) => Promise<unknown>)({
       subjectId: "math",
     })) as {
-      leaderboard: { id: string; xp: number; rank: number }[];
-      myRank: { id: string; xp: number; rank: number } | null;
+      leaderboard: Record<string, unknown>[];
+      myRank: Record<string, unknown> | null;
     };
 
     expect(mockRpc).toHaveBeenCalledWith("get_subject_leaderboard", {
@@ -699,8 +710,14 @@ describe("gamification.dashboard — getSubjectLeaderboard", () => {
       p_limit: expect.any(Number),
     });
     expect(result.leaderboard).toHaveLength(2);
-    expect(result.leaderboard[0]).toMatchObject({ id: "user-999", xp: 500, rank: 1 });
-    expect(result.myRank).toMatchObject({ id: "user-123", xp: 120, rank: 4, isMe: true });
+    expect(result.leaderboard[0]).toMatchObject({ xp: 500, rank: 1, isMe: false });
+    expect(result.myRank).toMatchObject({ xp: 120, rank: 4, isMe: true });
+
+    // No row — peer OR self — may carry a raw user id field.
+    for (const row of [...result.leaderboard, result.myRank]) {
+      expect(row).not.toHaveProperty("id");
+      expect(row).not.toHaveProperty("user_id");
+    }
   });
 
   it("throws a friendly error when the RPC fails", async () => {
