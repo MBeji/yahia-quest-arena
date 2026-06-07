@@ -1,0 +1,154 @@
+{
+  "title": "⭐ Warm-up",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Look at the sequence: the number of dots increases by 1 at each step. Which figure comes next? <svg viewBox=\"0 0 100 100\"><rect x=\"2\" y=\"35\" width=\"22\" height=\"30\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><circle cx=\"13\" cy=\"50\" r=\"4\" fill=\"#222\"/><rect x=\"27\" y=\"35\" width=\"22\" height=\"30\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><circle cx=\"33\" cy=\"50\" r=\"4\" fill=\"#222\"/><circle cx=\"43\" cy=\"50\" r=\"4\" fill=\"#222\"/><rect x=\"52\" y=\"35\" width=\"22\" height=\"30\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><circle cx=\"57\" cy=\"50\" r=\"4\" fill=\"#222\"/><circle cx=\"63\" cy=\"50\" r=\"4\" fill=\"#222\"/><circle cx=\"69\" cy=\"50\" r=\"4\" fill=\"#222\"/><rect x=\"77\" y=\"35\" width=\"22\" height=\"30\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\" stroke-dasharray=\"3 3\"/><text x=\"88\" y=\"55\" font-size=\"16\" text-anchor=\"middle\" fill=\"#888\">?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"25\" y=\"30\" width=\"50\" height=\"40\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><circle cx=\"38\" cy=\"50\" r=\"5\" fill=\"#222\"/><circle cx=\"50\" cy=\"50\" r=\"5\" fill=\"#222\"/><circle cx=\"62\" cy=\"50\" r=\"5\" fill=\"#222\"/><circle cx=\"50\" cy=\"38\" r=\"5\" fill=\"#222\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"25\" y=\"30\" width=\"50\" height=\"40\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><circle cx=\"38\" cy=\"50\" r=\"5\" fill=\"#222\"/><circle cx=\"50\" cy=\"50\" r=\"5\" fill=\"#222\"/><circle cx=\"62\" cy=\"50\" r=\"5\" fill=\"#222\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"25\" y=\"30\" width=\"50\" height=\"40\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><circle cx=\"34\" cy=\"50\" r=\"5\" fill=\"#222\"/><circle cx=\"45\" cy=\"50\" r=\"5\" fill=\"#222\"/><circle cx=\"56\" cy=\"50\" r=\"5\" fill=\"#222\"/><circle cx=\"67\" cy=\"50\" r=\"5\" fill=\"#222\"/><circle cx=\"50\" cy=\"38\" r=\"5\" fill=\"#222\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"25\" y=\"30\" width=\"50\" height=\"40\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><circle cx=\"42\" cy=\"50\" r=\"5\" fill=\"#222\"/><circle cx=\"58\" cy=\"50\" r=\"5\" fill=\"#222\"/></svg>"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "The rule is: +1 dot per box (1, then 2, then 3). The next box must therefore contain 4 dots → option a ✓. The trap: b repeats 3 dots (we forgot to add one), d goes back to 2 dots (we read the sequence backwards) and c puts 5 (we skipped a step). We add ONE single dot per step, so 3 + 1 = 4.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "The arrow turns a quarter-turn (90°) clockwise at each step: up, right, down… What is the next step? <svg viewBox=\"0 0 100 100\"><g stroke=\"#222\" stroke-width=\"3\" fill=\"#222\"><line x1=\"15\" y1=\"62\" x2=\"15\" y2=\"38\"/><polygon points=\"15,30 10,40 20,40\"/></g><g stroke=\"#222\" stroke-width=\"3\" fill=\"#222\"><line x1=\"38\" y1=\"50\" x2=\"62\" y2=\"50\"/><polygon points=\"70,50 60,45 60,55\"/></g><g stroke=\"#222\" stroke-width=\"3\" fill=\"#222\"><line x1=\"85\" y1=\"38\" x2=\"85\" y2=\"62\"/><polygon points=\"85,70 80,60 90,60\"/></g></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#222\" stroke-width=\"4\" fill=\"#222\"><line x1=\"50\" y1=\"62\" x2=\"50\" y2=\"38\"/><polygon points=\"50,30 44,40 56,40\"/></g></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#222\" stroke-width=\"4\" fill=\"#222\"><line x1=\"38\" y1=\"50\" x2=\"62\" y2=\"50\"/><polygon points=\"70,50 60,44 60,56\"/></g></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#222\" stroke-width=\"4\" fill=\"#222\"><line x1=\"62\" y1=\"50\" x2=\"38\" y2=\"50\"/><polygon points=\"30,50 40,44 40,56\"/></g></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#222\" stroke-width=\"4\" fill=\"#222\"><line x1=\"50\" y1=\"38\" x2=\"50\" y2=\"62\"/><polygon points=\"50,70 44,60 56,60\"/></g></svg>"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "At each step the arrow turns 90° clockwise: up → right → down → left. After \"down\" therefore comes \"left\" → option c ✓. The trap: a (up) and b (right) go backwards in the sequence, and d (down) repeats the previous step. You must continue the rotation, not stop it or reverse it.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Three of these figures follow the same rule, only one is different. Which is the odd one out? <svg viewBox=\"0 0 100 100\"><text x=\"50\" y=\"55\" font-size=\"12\" text-anchor=\"middle\" fill=\"#222\">3 triangles + 1 carré</text><polygon points=\"50,15 40,30 60,30\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"50,25 30,70 70,70\" fill=\"none\" stroke=\"#222\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"25,70 50,25 75,70\" fill=\"none\" stroke=\"#222\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"28\" y=\"28\" width=\"44\" height=\"44\" fill=\"none\" stroke=\"#222\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"30,30 70,40 45,72\" fill=\"none\" stroke=\"#222\" stroke-width=\"3\"/></svg>"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "The rule is: each figure is a triangle (3 sides). The odd one out is option c ✓, which is a square (4 sides). Count the sides: a, b and d have 3, only c has 4. The trap is to look at the size or the orientation instead of the number of sides; here it is indeed the square that breaks the \"3 sides\" rule.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "The small black square moves by one corner at each step, clockwise. Where will it be next? <svg viewBox=\"0 0 100 100\"><rect x=\"4\" y=\"38\" width=\"24\" height=\"24\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><rect x=\"6\" y=\"40\" width=\"7\" height=\"7\" fill=\"#222\"/><rect x=\"38\" y=\"38\" width=\"24\" height=\"24\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><rect x=\"53\" y=\"40\" width=\"7\" height=\"7\" fill=\"#222\"/><rect x=\"72\" y=\"38\" width=\"24\" height=\"24\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><rect x=\"87\" y=\"53\" width=\"7\" height=\"7\" fill=\"#222\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"30\" y=\"30\" width=\"40\" height=\"40\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><rect x=\"32\" y=\"32\" width=\"10\" height=\"10\" fill=\"#222\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"30\" y=\"30\" width=\"40\" height=\"40\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><rect x=\"58\" y=\"32\" width=\"10\" height=\"10\" fill=\"#222\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"30\" y=\"30\" width=\"40\" height=\"40\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><rect x=\"58\" y=\"58\" width=\"10\" height=\"10\" fill=\"#222\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"30\" y=\"30\" width=\"40\" height=\"40\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><rect x=\"32\" y=\"58\" width=\"10\" height=\"10\" fill=\"#222\"/></svg>"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "The black square turns clockwise: top-left → top-right → bottom-right → bottom-left. After the bottom-right corner therefore comes the bottom-left corner → option d ✓. The trap: c repeats the bottom-right (previous step), b (top-right) and a (top-left) go backwards. Keep following the rotation to the next corner.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Three circles follow the same rule, only one is different. Which is the odd one out? <svg viewBox=\"0 0 100 100\"><text x=\"50\" y=\"45\" font-size=\"11\" text-anchor=\"middle\" fill=\"#222\">3 ronds pleins</text><text x=\"50\" y=\"60\" font-size=\"11\" text-anchor=\"middle\" fill=\"#222\">+ 1 rond vide</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"48\" cy=\"50\" r=\"24\" fill=\"#222\" stroke=\"#222\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"none\" stroke=\"#222\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"24\" fill=\"#222\" stroke=\"#222\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"52\" cy=\"50\" r=\"24\" fill=\"#222\" stroke=\"#222\" stroke-width=\"2\"/></svg>"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "The rule is: each circle is filled (filled with black). The odd one out is option b ✓, the only empty circle (just an outline). a, c and d are identical and filled; b breaks the filling rule. The trap is to look for a difference in size or position: here all the sizes are equal, it is the filling that sets b apart.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Look at the sequence of polygons: the number of sides increases by 1 at each step (3, then 4, then 5…). Which figure comes next? <svg viewBox=\"0 0 100 100\"><polygon points=\"15,68 5,82 25,82\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><polygon points=\"33,30 51,30 51,48 33,48\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><polygon points=\"70,28 82,37 78,51 62,51 58,37\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><text x=\"50\" y=\"92\" font-size=\"10\" text-anchor=\"middle\" fill=\"#888\">3 côtés, 4 côtés, 5 côtés, ?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"32,32 68,32 68,68 32,68\" fill=\"none\" stroke=\"#222\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"50,20 73,33 73,60 50,73 27,60 27,33\" fill=\"none\" stroke=\"#222\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"50,22 71,37 63,62 37,62 29,37\" fill=\"none\" stroke=\"#222\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"50,20 70,30 75,52 62,70 38,70 25,52 30,30\" fill=\"none\" stroke=\"#222\" stroke-width=\"3\"/></svg>"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "The rule is: +1 side at each step (triangle 3, square 4, pentagon 5…). The next polygon must have 6 sides → the hexagon, option b ✓. The trap: c is a pentagon (5 sides, we forgot to add one), a a square (4, going backwards) and d a heptagon (7, we jumped by two). We add ONE single side, so 5 + 1 = 6.",
+      "difficulty": 1
+    }
+  ]
+}

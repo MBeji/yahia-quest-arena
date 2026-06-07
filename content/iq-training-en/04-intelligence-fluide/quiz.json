@@ -1,0 +1,125 @@
+{
+  "title": "Fluid intelligence warm-up ⭐",
+  "questions": [
+    {
+      "prompt": "Each box adds one dot compared to the previous one. How many dots go in the missing box? <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"38\" width=\"20\" height=\"24\" fill=\"none\" stroke=\"#1d4ed8\" stroke-width=\"2\"/><circle cx=\"16\" cy=\"50\" r=\"3\" fill=\"#1d4ed8\"/><rect x=\"30\" y=\"38\" width=\"20\" height=\"24\" fill=\"none\" stroke=\"#1d4ed8\" stroke-width=\"2\"/><circle cx=\"37\" cy=\"50\" r=\"3\" fill=\"#1d4ed8\"/><circle cx=\"45\" cy=\"50\" r=\"3\" fill=\"#1d4ed8\"/><rect x=\"54\" y=\"38\" width=\"20\" height=\"24\" fill=\"none\" stroke=\"#1d4ed8\" stroke-width=\"2\"/><circle cx=\"60\" cy=\"50\" r=\"3\" fill=\"#1d4ed8\"/><circle cx=\"68\" cy=\"50\" r=\"3\" fill=\"#1d4ed8\"/><circle cx=\"64\" cy=\"43\" r=\"3\" fill=\"#1d4ed8\"/><rect x=\"78\" y=\"38\" width=\"20\" height=\"24\" fill=\"none\" stroke=\"#1d4ed8\" stroke-width=\"2\"/><text x=\"88\" y=\"55\" font-size=\"16\" fill=\"#64748b\" text-anchor=\"middle\">?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"38\" y=\"38\" width=\"24\" height=\"24\" fill=\"none\" stroke=\"#1d4ed8\" stroke-width=\"2\"/><circle cx=\"46\" cy=\"46\" r=\"3\" fill=\"#1d4ed8\"/><circle cx=\"54\" cy=\"46\" r=\"3\" fill=\"#1d4ed8\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"38\" y=\"38\" width=\"24\" height=\"24\" fill=\"none\" stroke=\"#1d4ed8\" stroke-width=\"2\"/><circle cx=\"46\" cy=\"46\" r=\"3\" fill=\"#1d4ed8\"/><circle cx=\"54\" cy=\"46\" r=\"3\" fill=\"#1d4ed8\"/><circle cx=\"46\" cy=\"54\" r=\"3\" fill=\"#1d4ed8\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"38\" y=\"38\" width=\"24\" height=\"24\" fill=\"none\" stroke=\"#1d4ed8\" stroke-width=\"2\"/><circle cx=\"46\" cy=\"46\" r=\"3\" fill=\"#1d4ed8\"/><circle cx=\"54\" cy=\"46\" r=\"3\" fill=\"#1d4ed8\"/><circle cx=\"46\" cy=\"54\" r=\"3\" fill=\"#1d4ed8\"/><circle cx=\"54\" cy=\"54\" r=\"3\" fill=\"#1d4ed8\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"38\" y=\"38\" width=\"24\" height=\"24\" fill=\"none\" stroke=\"#1d4ed8\" stroke-width=\"2\"/><circle cx=\"50\" cy=\"50\" r=\"3\" fill=\"#1d4ed8\"/></svg>"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "The hidden rule: the number of dots increases by 1 in each box — 1, 2, 3… ✓ So the missing box must contain 4, which is option c. Option b (3 dots) repeats the previous box instead of increasing. Option a (2 dots) steps back one. Option d (1 dot) returns to the very start of the sequence.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "A single rule acts on the triangle at each step. Which figure comes next? <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"18,60 6,40 30,40\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"2\"/><polygon points=\"45,60 33,40 57,40\" fill=\"#7c3aed\" stroke=\"#7c3aed\" stroke-width=\"2\"/><polygon points=\"72,60 60,40 84,40\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"2\"/><text x=\"94\" y=\"54\" font-size=\"16\" fill=\"#64748b\" text-anchor=\"middle\">?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"50,62 36,40 64,40\" fill=\"#7c3aed\" stroke=\"#7c3aed\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"50,62 36,40 64,40\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"50,40 36,62 64,62\" fill=\"#7c3aed\" stroke=\"#7c3aed\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"40\" y=\"40\" width=\"20\" height=\"20\" fill=\"#7c3aed\" stroke=\"#7c3aed\" stroke-width=\"2\"/></svg>"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "The hidden rule: the fill alternates — empty, filled, empty… ✓ After the empty triangle, the next one must be filled, which is option a. Option b is empty: it repeats the previous step instead of alternating. Option c is indeed filled but flipped downward: the shape and orientation never changed in the sequence. Option d replaces the triangle with a square: only the colour changes, never the shape.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "In each box, the dot always moves one corner to the right (clockwise). Where will it be in the missing box? <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"38\" width=\"22\" height=\"22\" fill=\"none\" stroke=\"#0f766e\" stroke-width=\"2\"/><circle cx=\"11\" cy=\"43\" r=\"3.5\" fill=\"#0f766e\"/><rect x=\"32\" y=\"38\" width=\"22\" height=\"22\" fill=\"none\" stroke=\"#0f766e\" stroke-width=\"2\"/><circle cx=\"49\" cy=\"43\" r=\"3.5\" fill=\"#0f766e\"/><rect x=\"58\" y=\"38\" width=\"22\" height=\"22\" fill=\"none\" stroke=\"#0f766e\" stroke-width=\"2\"/><circle cx=\"75\" cy=\"55\" r=\"3.5\" fill=\"#0f766e\"/><rect x=\"84\" y=\"38\" width=\"22\" height=\"22\" fill=\"none\" stroke=\"#0f766e\" stroke-width=\"2\"/><text x=\"95\" y=\"55\" font-size=\"15\" fill=\"#64748b\" text-anchor=\"middle\">?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"38\" y=\"38\" width=\"24\" height=\"24\" fill=\"none\" stroke=\"#0f766e\" stroke-width=\"2\"/><circle cx=\"56\" cy=\"44\" r=\"3.5\" fill=\"#0f766e\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"38\" y=\"38\" width=\"24\" height=\"24\" fill=\"none\" stroke=\"#0f766e\" stroke-width=\"2\"/><circle cx=\"44\" cy=\"56\" r=\"3.5\" fill=\"#0f766e\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"38\" y=\"38\" width=\"24\" height=\"24\" fill=\"none\" stroke=\"#0f766e\" stroke-width=\"2\"/><circle cx=\"56\" cy=\"56\" r=\"3.5\" fill=\"#0f766e\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"38\" y=\"38\" width=\"24\" height=\"24\" fill=\"none\" stroke=\"#0f766e\" stroke-width=\"2\"/><circle cx=\"44\" cy=\"44\" r=\"3.5\" fill=\"#0f766e\"/></svg>"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "The hidden rule: the dot advances one corner clockwise in each box — top-left, top-right, bottom-right… ✓ The next corner clockwise is bottom-left, which is option b. Option c (bottom-right) repeats the previous box. Option a (top-right) steps back one. Option d (top-left) returns to the starting point, as if the loop were already complete.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "We overlay the left box and the middle box: a corner is coloured in the result only if it is coloured in exactly one of the two boxes (never in both). What is the result? <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"35\" width=\"26\" height=\"26\" fill=\"none\" stroke=\"#be123c\" stroke-width=\"2\"/><line x1=\"19\" y1=\"35\" x2=\"19\" y2=\"61\" stroke=\"#be123c\" stroke-width=\"1\"/><line x1=\"6\" y1=\"48\" x2=\"32\" y2=\"48\" stroke=\"#be123c\" stroke-width=\"1\"/><rect x=\"6\" y=\"35\" width=\"13\" height=\"13\" fill=\"#be123c\"/><rect x=\"19\" y=\"48\" width=\"13\" height=\"13\" fill=\"#be123c\"/><text x=\"42\" y=\"52\" font-size=\"16\" fill=\"#64748b\" text-anchor=\"middle\">+</text><rect x=\"52\" y=\"35\" width=\"26\" height=\"26\" fill=\"none\" stroke=\"#be123c\" stroke-width=\"2\"/><line x1=\"65\" y1=\"35\" x2=\"65\" y2=\"61\" stroke=\"#be123c\" stroke-width=\"1\"/><line x1=\"52\" y1=\"48\" x2=\"78\" y2=\"48\" stroke=\"#be123c\" stroke-width=\"1\"/><rect x=\"52\" y=\"35\" width=\"13\" height=\"13\" fill=\"#be123c\"/><rect x=\"65\" y=\"35\" width=\"13\" height=\"13\" fill=\"#be123c\"/><text x=\"88\" y=\"52\" font-size=\"16\" fill=\"#64748b\" text-anchor=\"middle\">?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"37\" y=\"37\" width=\"26\" height=\"26\" fill=\"none\" stroke=\"#be123c\" stroke-width=\"2\"/><line x1=\"50\" y1=\"37\" x2=\"50\" y2=\"63\" stroke=\"#be123c\" stroke-width=\"1\"/><line x1=\"37\" y1=\"50\" x2=\"63\" y2=\"50\" stroke=\"#be123c\" stroke-width=\"1\"/><rect x=\"50\" y=\"37\" width=\"13\" height=\"13\" fill=\"#be123c\"/><rect x=\"50\" y=\"50\" width=\"13\" height=\"13\" fill=\"#be123c\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"37\" y=\"37\" width=\"26\" height=\"26\" fill=\"none\" stroke=\"#be123c\" stroke-width=\"2\"/><line x1=\"50\" y1=\"37\" x2=\"50\" y2=\"63\" stroke=\"#be123c\" stroke-width=\"1\"/><line x1=\"37\" y1=\"50\" x2=\"63\" y2=\"50\" stroke=\"#be123c\" stroke-width=\"1\"/><rect x=\"37\" y=\"37\" width=\"13\" height=\"13\" fill=\"#be123c\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"37\" y=\"37\" width=\"26\" height=\"26\" fill=\"none\" stroke=\"#be123c\" stroke-width=\"2\"/><line x1=\"50\" y1=\"37\" x2=\"50\" y2=\"63\" stroke=\"#be123c\" stroke-width=\"1\"/><line x1=\"37\" y1=\"50\" x2=\"63\" y2=\"50\" stroke=\"#be123c\" stroke-width=\"1\"/><rect x=\"50\" y=\"37\" width=\"13\" height=\"13\" fill=\"#be123c\"/><rect x=\"37\" y=\"50\" width=\"13\" height=\"13\" fill=\"#be123c\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"37\" y=\"37\" width=\"26\" height=\"26\" fill=\"none\" stroke=\"#be123c\" stroke-width=\"2\"/><line x1=\"50\" y1=\"37\" x2=\"50\" y2=\"63\" stroke=\"#be123c\" stroke-width=\"1\"/><line x1=\"37\" y1=\"50\" x2=\"63\" y2=\"50\" stroke=\"#be123c\" stroke-width=\"1\"/><rect x=\"37\" y=\"37\" width=\"13\" height=\"13\" fill=\"#be123c\"/><rect x=\"50\" y=\"37\" width=\"13\" height=\"13\" fill=\"#be123c\"/><rect x=\"37\" y=\"50\" width=\"13\" height=\"13\" fill=\"#be123c\"/><rect x=\"50\" y=\"50\" width=\"13\" height=\"13\" fill=\"#be123c\"/></svg>"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "The hidden rule: a corner is coloured only if it is coloured in exactly one of the two boxes. On the left, top-left and bottom-right are coloured; in the middle, top-left and top-right. The top-left is coloured in both: it switches off. ✓ Top-right and bottom-right remain, which is option a. Option d adds up all the coloured corners without switching any off. Option c keeps the shared top-left, which should have disappeared. Option b keeps only one corner and forgets one.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "A single rule connects the first three boxes. Which figure completes the last box? <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"15\" cy=\"50\" r=\"5\" fill=\"none\" stroke=\"#b45309\" stroke-width=\"2\"/><g stroke=\"#b45309\" stroke-width=\"2\" fill=\"none\"><circle cx=\"38\" cy=\"50\" r=\"5\"/><circle cx=\"38\" cy=\"50\" r=\"9\"/></g><g stroke=\"#b45309\" stroke-width=\"2\" fill=\"none\"><circle cx=\"63\" cy=\"50\" r=\"5\"/><circle cx=\"63\" cy=\"50\" r=\"9\"/><circle cx=\"63\" cy=\"50\" r=\"13\"/></g><text x=\"88\" y=\"55\" font-size=\"16\" fill=\"#64748b\" text-anchor=\"middle\">?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><g stroke=\"#b45309\" stroke-width=\"2\" fill=\"none\"><circle cx=\"50\" cy=\"50\" r=\"5\"/><circle cx=\"50\" cy=\"50\" r=\"9\"/><circle cx=\"50\" cy=\"50\" r=\"13\"/></g></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><g stroke=\"#b45309\" stroke-width=\"2\" fill=\"none\"><circle cx=\"50\" cy=\"50\" r=\"5\"/><circle cx=\"50\" cy=\"50\" r=\"9\"/><circle cx=\"50\" cy=\"50\" r=\"13\"/><circle cx=\"50\" cy=\"50\" r=\"17\"/></g></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><g stroke=\"#b45309\" stroke-width=\"2\" fill=\"none\"><circle cx=\"50\" cy=\"50\" r=\"5\"/><circle cx=\"50\" cy=\"50\" r=\"9\"/></g></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"50\" cy=\"50\" r=\"5\" fill=\"none\" stroke=\"#b45309\" stroke-width=\"2\"/></svg>"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "The hidden rule: the number of concentric circles increases by 1 in each box — 1, 2, 3… ✓ The last box must contain 4, which is option b. Option a (3 circles) repeats the previous box instead of adding a circle. Option c (2 circles) steps back one. Option d (1 circle) returns to the very first box.",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "title": "👑 نخبة المنطق ⭐⭐⭐⭐",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "مصفوفة 3×3: لاحظ عدد النقاط السوداء في كل خانة. أي شكل يكمل الخانة المعلَّمة بـ«؟» (في الأسفل إلى اليمين)؟ <svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"1.5\" fill=\"none\"><rect x=\"4\" y=\"4\" width=\"92\" height=\"92\"/><line x1=\"34.7\" y1=\"4\" x2=\"34.7\" y2=\"96\"/><line x1=\"65.3\" y1=\"4\" x2=\"65.3\" y2=\"96\"/><line x1=\"4\" y1=\"34.7\" x2=\"96\" y2=\"34.7\"/><line x1=\"4\" y1=\"65.3\" x2=\"96\" y2=\"65.3\"/></g><g fill=\"#1e293b\"><circle cx=\"19\" cy=\"19\" r=\"3.5\"/><circle cx=\"45\" cy=\"15\" r=\"3.5\"/><circle cx=\"55\" cy=\"23\" r=\"3.5\"/><circle cx=\"73\" cy=\"14\" r=\"3.5\"/><circle cx=\"81\" cy=\"19\" r=\"3.5\"/><circle cx=\"88\" cy=\"24\" r=\"3.5\"/><circle cx=\"19\" cy=\"50\" r=\"3.5\"/><circle cx=\"45\" cy=\"46\" r=\"3.5\"/><circle cx=\"55\" cy=\"54\" r=\"3.5\"/><circle cx=\"73\" cy=\"45\" r=\"3.5\"/><circle cx=\"81\" cy=\"50\" r=\"3.5\"/><circle cx=\"88\" cy=\"55\" r=\"3.5\"/><circle cx=\"19\" cy=\"81\" r=\"3.5\"/><circle cx=\"45\" cy=\"77\" r=\"3.5\"/><circle cx=\"55\" cy=\"85\" r=\"3.5\"/></g><text x=\"81\" y=\"86\" font-size=\"14\" text-anchor=\"middle\" fill=\"#ef4444\">?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><g fill=\"#1e293b\"><circle cx=\"38\" cy=\"50\" r=\"6\"/><circle cx=\"62\" cy=\"50\" r=\"6\"/></g></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><g fill=\"#1e293b\"><circle cx=\"30\" cy=\"50\" r=\"6\"/><circle cx=\"50\" cy=\"50\" r=\"6\"/><circle cx=\"70\" cy=\"50\" r=\"6\"/></g></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><g fill=\"#1e293b\"><circle cx=\"25\" cy=\"50\" r=\"6\"/><circle cx=\"42\" cy=\"50\" r=\"6\"/><circle cx=\"58\" cy=\"50\" r=\"6\"/><circle cx=\"75\" cy=\"50\" r=\"6\"/></g></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><g fill=\"#1e293b\"><circle cx=\"50\" cy=\"50\" r=\"6\"/></g></svg>"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "القاعدة الخفية: عدد النقاط يعتمد على العمود فقط — العمود 1 = نقطة واحدة، العمود 2 = نقطتان، العمود 3 = 3 نقاط، متطابق في كل سطر. الخانة «؟» في العمود 3، فيلزم 3 نقاط. ✓ الخيار b. فخّ a (نقطتان): نسخنا العمود الأوسط. فخّ c (4 نقاط): واصلنا بـ1+ بدل التوقف عند العمود 3. فخّ d (نقطة واحدة): خلطنا مع العمود الأيسر.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "متتالية أشكال: لاحظ كيف يتغير كل شكل لينتقل إلى التالي. أي شكل يحل محل علامة «؟» <svg viewBox=\"0 0 100 100\"><g fill=\"none\" stroke=\"#1e293b\" stroke-width=\"3\"><polygon points=\"15,38 25,22 35,38\"/><polygon points=\"42,22 58,22 58,38 42,38\"/><polygon points=\"75,21 84,28 80,38 70,38 66,28\"/></g><text x=\"25\" y=\"52\" font-size=\"9\" text-anchor=\"middle\" fill=\"#64748b\">3 côtés</text><text x=\"50\" y=\"52\" font-size=\"9\" text-anchor=\"middle\" fill=\"#64748b\">4 côtés</text><text x=\"75\" y=\"52\" font-size=\"9\" text-anchor=\"middle\" fill=\"#64748b\">5 côtés</text><text x=\"50\" y=\"78\" font-size=\"14\" text-anchor=\"middle\" fill=\"#ef4444\">? = forme suivante</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"35,30 65,30 65,60 35,60\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"50,28 70,38 66,60 34,60 30,38\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"40,28 60,28 72,45 60,62 40,62 28,45\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"50,26 62,34 68,48 62,62 50,70 38,62 32,48 38,34\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"3\"/></svg>"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "القاعدة: في كل مرحلة يكتسب الشكل ضلعًا واحدًا بالضبط — مثلث (3)، مربع (4)، مخمّس (5). فيجب أن يكون للشكل التالي 6 أضلاع: مسدّس. ✓ الخيار c. فخّ b (مخمّس، 5 أضلاع): نسخنا الشكل الأخير دون إضافة ضلع. فخّ d (مثمّن، 8 أضلاع): قفزنا إلى ما بعد 6. فخّ a (مربع، 4 أضلاع): تراجعنا في المتتالية بدل التقدّم.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "تناظر: نسبة A إلى B كنسبة C إلى ؟ — اكتشف التحويل الذي يقود من A إلى B، ثم طبّقه على C. <svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"4\" fill=\"none\"><line x1=\"12\" y1=\"42\" x2=\"12\" y2=\"18\"/><polyline points=\"7,25 12,18 17,25\"/></g><text x=\"24\" y=\"34\" font-size=\"12\" fill=\"#1e293b\">→</text><g stroke=\"#1e293b\" stroke-width=\"4\" fill=\"none\"><line x1=\"34\" y1=\"30\" x2=\"58\" y2=\"30\"/><polyline points=\"51,25 58,30 51,35\"/></g><text x=\"68\" y=\"34\" font-size=\"11\" fill=\"#64748b\">::</text><g stroke=\"#1e293b\" stroke-width=\"4\" fill=\"none\"><line x1=\"86\" y1=\"30\" x2=\"62\" y2=\"30\"/><polyline points=\"69,25 62,30 69,35\"/></g><text x=\"50\" y=\"78\" font-size=\"13\" text-anchor=\"middle\" fill=\"#ef4444\">C → ?</text><text x=\"50\" y=\"92\" font-size=\"9\" text-anchor=\"middle\" fill=\"#64748b\">A: vers le haut, B: vers la droite, C: vers la gauche</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"4\" fill=\"none\"><line x1=\"50\" y1=\"68\" x2=\"50\" y2=\"32\"/><polyline points=\"42,42 50,32 58,42\"/></g></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"4\" fill=\"none\"><line x1=\"50\" y1=\"32\" x2=\"50\" y2=\"68\"/><polyline points=\"42,58 50,68 58,58\"/></g></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"4\" fill=\"none\"><line x1=\"32\" y1=\"50\" x2=\"68\" y2=\"50\"/><polyline points=\"58,42 68,50 58,58\"/></g></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"4\" fill=\"none\"><line x1=\"68\" y1=\"50\" x2=\"32\" y2=\"50\"/><polyline points=\"42,42 32,50 42,58\"/></g></svg>"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "القاعدة: من A إلى B يدور السهم ربع دورة (90°) في اتجاه عقارب الساعة — الأعلى يصير اليمين. نطبّق الدوران نفسه مع عقارب الساعة على C، الذي يشير نحو اليسار: اليسار مدارًا ربع دورة مع عقارب الساعة يصير الأعلى. ✓ الخيار a (سهم نحو الأعلى). فخّ b (نحو الأسفل): إنه دوران عكس عقارب الساعة، اتجاه خاطئ. فخّ d (نحو اليسار): نسخنا C دون تدويره. فخّ c (نحو اليمين): إنه دوران 180°، أي ربعا دورة بدل واحد.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "الدخيل: ثلاثة من هذه الأشكال تخضع لقاعدة واحدة، وواحد فقط يكسرها. أيها الدخيل؟ <svg viewBox=\"0 0 100 100\"><text x=\"50\" y=\"44\" font-size=\"11\" text-anchor=\"middle\" fill=\"#1e293b\">Un point et un contour par figure.</text><text x=\"50\" y=\"60\" font-size=\"11\" text-anchor=\"middle\" fill=\"#1e293b\">Trouve celle qui sort du lot.</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"26\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"3\"/><circle cx=\"50\" cy=\"50\" r=\"5\" fill=\"#1e293b\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"26\" y=\"26\" width=\"48\" height=\"48\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"3\"/><circle cx=\"50\" cy=\"50\" r=\"5\" fill=\"#1e293b\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"50,22 76,68 24,68\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"3\"/><circle cx=\"50\" cy=\"54\" r=\"5\" fill=\"#1e293b\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"44\" cy=\"50\" r=\"22\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"3\"/><circle cx=\"82\" cy=\"50\" r=\"5\" fill=\"#1e293b\"/></svg>"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "القاعدة: في كل شكل يجب أن تقع النقطة السوداء داخل المحيط. دائرة+نقطة بالداخل (a)، مربع+نقطة بالداخل (b)، مثلث+نقطة بالداخل (c) تحترم القاعدة. في (d) النقطة موضوعة خارج الدائرة: إنه الدخيل. ✓ الخيار d. فخّ a وb وc: إنها أشكال مختلفة (دائرة، مربع، مثلث)، لكن شكل المحيط ليس القاعدة — المهم فقط أن تكون النقطة بالداخل، وهذا ما يجعلها كلها مطابقة.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "استنتاج منطقي. نعلم أن: (1) كل الغليبات بروماتٌ. (2) لا بروم زارن. (3) ميلو غليب. ما الاستنتاج الصحيح بالضرورة؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "ميلو زارن."
+        },
+        {
+          "id": "b",
+          "text": "ميلو ليس زارنًا."
+        },
+        {
+          "id": "c",
+          "text": "بعض البرومات زارنات."
+        },
+        {
+          "id": "d",
+          "text": "ميلو ليس برومًا."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "القاعدة: نسلسل الاستلزامات. ميلو غليب (3)، وكل الغليبات بروماتٌ (1)، إذن ميلو بروم. ولا بروم زارن (2)، إذن ميلو ليس زارنًا. ✓ الخيار b. فخّ a: استنتاج معاكس، يناقض (2). فخّ d: خاطئ، فقد استنتجنا للتو أن ميلو بروم عبر (1). فخّ c: يناقض مباشرة (2) التي تقول إن لا بروم زارن.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "متتالية أعداد: 2، 6، 12، 20، 30، ؟ — اكتشف القاعدة الخفية التي تربط كل حدّ بالتالي، ثم أعطِ العدد الناقص.",
+      "options": [
+        {
+          "id": "a",
+          "text": "40"
+        },
+        {
+          "id": "b",
+          "text": "42"
+        },
+        {
+          "id": "c",
+          "text": "36"
+        },
+        {
+          "id": "d",
+          "text": "56"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "القاعدة: الفروق بين الحدود تزداد بمقدار 2 في كل مرة — 4+، 6+، 8+، 10+، فيكون الفرق التالي 12+. 30 + 12 = 42. ✓ (قراءة أخرى: كل حدّ يساوي n×(n+1): 1×2، 2×3، 3×4، 4×5، 5×6، ثم 6×7 = 42). فخّ a (40): أعدنا استعمال الفرق الأخير 10+ بدل 12+. فخّ c (36): أخذنا فرقًا قدره 6+، بتكرار قفزة قديمة. فخّ d (56): إنه 7×8، قفزنا عن حدّ من المتتالية.",
+      "difficulty": 3
+    }
+  ]
+}

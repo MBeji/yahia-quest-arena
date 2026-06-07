@@ -1,0 +1,154 @@
+{
+  "title": "👑 Math Reasoning Elite ⭐⭐⭐⭐",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Observe the sequence and find the number that replaces the “?”: 2, 6, 12, 20, 30, ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "42"
+        },
+        {
+          "id": "b",
+          "text": "40"
+        },
+        {
+          "id": "c",
+          "text": "36"
+        },
+        {
+          "id": "d",
+          "text": "38"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Hidden rule: the gap between two terms grows steadily by 2. The differences are 4, 6, 8, 10 (6−2=4, 12−6=6, 20−12=8, 30−20=10), so the next one is 12. 30 + 12 = 42. ✓ option a. (Another view: each term is n×(n+1): 1×2, 2×3, 3×4, 4×5, 5×6, then 6×7 = 42.) Trap b (40): you kept the last gap 10 instead of raising it to 12. Trap d (38): you added 8 instead of 12, repeating an older gap. Trap c (36): you assumed a constant gap of 6, which the sequence contradicts from the start.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "One same rule links the left number to the right one. 3 → 10 and 5 → 16. So 7 → ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "24"
+        },
+        {
+          "id": "b",
+          "text": "21"
+        },
+        {
+          "id": "c",
+          "text": "22"
+        },
+        {
+          "id": "d",
+          "text": "20"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Hidden rule: you multiply by 3 then add 1. Check with BOTH given pairs: 3×3+1 = 10 ✓ and 5×3+1 = 16 ✓. Only one refined rule fits both examples, so 7×3+1 = 22. ✓ option c. Trap b (21): you multiplied by 3 but forgot the “+1” (7×3 = 21). Trap d (20): you saw “+7” (3+7=10) and applied +13, or added at random; that rule doesn't work on 5 → 16. Trap a (24): you did ×3+3, which would give 12 for 3, so it's wrong.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "In this magic square, each row, each column and each diagonal has the SAME sum. Which number goes in the “?” cell? <svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"2\" fill=\"none\"><rect x=\"5\" y=\"5\" width=\"30\" height=\"30\"/><rect x=\"35\" y=\"5\" width=\"30\" height=\"30\"/><rect x=\"65\" y=\"5\" width=\"30\" height=\"30\"/><rect x=\"5\" y=\"35\" width=\"30\" height=\"30\"/><rect x=\"35\" y=\"35\" width=\"30\" height=\"30\"/><rect x=\"65\" y=\"35\" width=\"30\" height=\"30\"/><rect x=\"5\" y=\"65\" width=\"30\" height=\"30\"/><rect x=\"35\" y=\"65\" width=\"30\" height=\"30\"/><rect x=\"65\" y=\"65\" width=\"30\" height=\"30\"/></g><g font-size=\"15\" text-anchor=\"middle\" fill=\"#1e293b\"><text x=\"20\" y=\"25\">8</text><text x=\"50\" y=\"25\">1</text><text x=\"80\" y=\"25\">6</text><text x=\"20\" y=\"55\">3</text><text x=\"50\" y=\"55\" fill=\"#ef4444\">?</text><text x=\"80\" y=\"55\">7</text><text x=\"20\" y=\"85\">4</text><text x=\"50\" y=\"85\">9</text><text x=\"80\" y=\"85\">2</text></g></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "6"
+        },
+        {
+          "id": "b",
+          "text": "5"
+        },
+        {
+          "id": "c",
+          "text": "4"
+        },
+        {
+          "id": "d",
+          "text": "7"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Rule: all rows/columns/diagonals share the same sum. One complete row gives it: 8 + 1 + 6 = 15, so the common sum is 15. The “?” cell is in the center; its row 3 + ? + 7 = 15 forces ? = 5. ✓ option b. You can verify: the column 1 + ? + 9 = 15 also gives 5, and the diagonal 8 + ? + 2 = 15 too. Three checks agree. Trap a (6): you took the sum 16 instead of 15, getting a reference row wrong. Trap c (4): you added only 3 + 7 + 1 without setting the right target sum. Trap d (7): you copied a neighboring value from the grid instead of computing.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "One same rule links the two top numbers to the bottom number in each triangle. Find the bottom number of the last triangle (the “?”). <svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"1.5\"><line x1=\"10\" y1=\"22\" x2=\"18\" y2=\"55\"/><line x1=\"26\" y1=\"22\" x2=\"18\" y2=\"55\"/><line x1=\"42\" y1=\"22\" x2=\"50\" y2=\"55\"/><line x1=\"58\" y1=\"22\" x2=\"50\" y2=\"55\"/><line x1=\"74\" y1=\"22\" x2=\"82\" y2=\"55\"/><line x1=\"90\" y1=\"22\" x2=\"82\" y2=\"55\"/></g><g stroke=\"#1e293b\" stroke-width=\"1.5\" fill=\"#e2e8f0\"><circle cx=\"10\" cy=\"22\" r=\"9\"/><circle cx=\"26\" cy=\"22\" r=\"9\"/><circle cx=\"18\" cy=\"60\" r=\"9\"/><circle cx=\"42\" cy=\"22\" r=\"9\"/><circle cx=\"58\" cy=\"22\" r=\"9\"/><circle cx=\"50\" cy=\"60\" r=\"9\"/><circle cx=\"74\" cy=\"22\" r=\"9\"/><circle cx=\"90\" cy=\"22\" r=\"9\"/><circle cx=\"82\" cy=\"60\" r=\"9\" fill=\"#fee2e2\"/></g><g font-size=\"11\" text-anchor=\"middle\" fill=\"#1e293b\"><text x=\"10\" y=\"26\">3</text><text x=\"26\" y=\"26\">4</text><text x=\"18\" y=\"64\">11</text><text x=\"42\" y=\"26\">2</text><text x=\"58\" y=\"26\">5</text><text x=\"50\" y=\"64\">9</text><text x=\"74\" y=\"26\">4</text><text x=\"90\" y=\"26\">6</text><text x=\"82\" y=\"64\" fill=\"#ef4444\">?</text></g></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "22"
+        },
+        {
+          "id": "b",
+          "text": "24"
+        },
+        {
+          "id": "c",
+          "text": "10"
+        },
+        {
+          "id": "d",
+          "text": "23"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Rule: bottom number = (product of the two top ones) − 1. You deduce it from the two complete triangles: 3×4 − 1 = 11 ✓ and 2×5 − 1 = 9 ✓. It's the only rule that works for both. Apply it: 4×6 − 1 = 24 − 1 = 23. ✓ option d. Trap b (24): you took the product 4×6 but forgot to remove 1. Trap c (10): you added 4 + 6 then adjusted, confusing sum and product. Trap a (22): you removed 2 instead of 1, getting the constant wrong.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "To make a syrup with the same taste, you need 12 glasses of water for 3 glasses of concentrate. How many glasses of water for 5 glasses of concentrate? <svg viewBox=\"0 0 100 100\"><g font-size=\"9\" fill=\"#1e293b\"><text x=\"4\" y=\"20\">3 concentré</text><text x=\"4\" y=\"58\">5 concentré</text></g><g stroke=\"#1e293b\" stroke-width=\"1\"><rect x=\"4\" y=\"24\" width=\"12\" height=\"10\" fill=\"#fca5a5\"/><rect x=\"16\" y=\"24\" width=\"12\" height=\"10\" fill=\"#fca5a5\"/><rect x=\"28\" y=\"24\" width=\"12\" height=\"10\" fill=\"#fca5a5\"/><rect x=\"4\" y=\"62\" width=\"12\" height=\"10\" fill=\"#fca5a5\"/><rect x=\"16\" y=\"62\" width=\"12\" height=\"10\" fill=\"#fca5a5\"/><rect x=\"28\" y=\"62\" width=\"12\" height=\"10\" fill=\"#fca5a5\"/><rect x=\"40\" y=\"62\" width=\"12\" height=\"10\" fill=\"#fca5a5\"/><rect x=\"52\" y=\"62\" width=\"12\" height=\"10\" fill=\"#fca5a5\"/></g><g font-size=\"9\" fill=\"#1e293b\"><text x=\"50\" y=\"32\">+ 12 eau</text><text x=\"70\" y=\"70\" fill=\"#ef4444\">+ ? eau</text></g></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "20"
+        },
+        {
+          "id": "b",
+          "text": "14"
+        },
+        {
+          "id": "c",
+          "text": "60"
+        },
+        {
+          "id": "d",
+          "text": "36"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Rule: to keep the same taste, the water/concentrate ratio stays constant. Here 12 ÷ 3 = 4, so you need 4 glasses of water per glass of concentrate. For 5 concentrate: 5 × 4 = 20 glasses of water. ✓ option a. Trap b (14): additive reasoning — you added the difference in concentrate (5−3 = 2) to 12 instead of using the ratio. Trap c (60): you multiplied 12 by 5 (the total number of concentrates) instead of multiplying by the ratio. Trap d (36): you multiplied 12 by 3, reusing the old number of concentrates. A proportion is preserved by multiplying the ratio, not by adding.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Observe the sequence and find the number that replaces the “?”: 1, 2, 6, 24, 120, ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "600"
+        },
+        {
+          "id": "b",
+          "text": "720"
+        },
+        {
+          "id": "c",
+          "text": "144"
+        },
+        {
+          "id": "d",
+          "text": "840"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Hidden rule: you multiply by a factor that grows by 1 at each step. 1×2 = 2, 2×3 = 6, 6×4 = 24, 24×5 = 120, so the next step is ×6: 120 × 6 = 720. ✓ option b. Trap a (600): you kept the same factor (×5) instead of raising it to ×6. Trap c (144): you added the two last terms (120 + 24), a Fibonacci-style reflex that doesn't fit the sequence. Trap d (840): you skipped a factor by multiplying by 7 instead of 6. The factor grows by exactly 1 at each step.",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "title": "👑 Logic Elite ⭐⭐⭐⭐",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "3×3 matrix: look at the number of black dots in each cell. Which figure completes the cell marked « ? » (bottom right)? <svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"1.5\" fill=\"none\"><rect x=\"4\" y=\"4\" width=\"92\" height=\"92\"/><line x1=\"34.7\" y1=\"4\" x2=\"34.7\" y2=\"96\"/><line x1=\"65.3\" y1=\"4\" x2=\"65.3\" y2=\"96\"/><line x1=\"4\" y1=\"34.7\" x2=\"96\" y2=\"34.7\"/><line x1=\"4\" y1=\"65.3\" x2=\"96\" y2=\"65.3\"/></g><g fill=\"#1e293b\"><circle cx=\"19\" cy=\"19\" r=\"3.5\"/><circle cx=\"45\" cy=\"15\" r=\"3.5\"/><circle cx=\"55\" cy=\"23\" r=\"3.5\"/><circle cx=\"73\" cy=\"14\" r=\"3.5\"/><circle cx=\"81\" cy=\"19\" r=\"3.5\"/><circle cx=\"88\" cy=\"24\" r=\"3.5\"/><circle cx=\"19\" cy=\"50\" r=\"3.5\"/><circle cx=\"45\" cy=\"46\" r=\"3.5\"/><circle cx=\"55\" cy=\"54\" r=\"3.5\"/><circle cx=\"73\" cy=\"45\" r=\"3.5\"/><circle cx=\"81\" cy=\"50\" r=\"3.5\"/><circle cx=\"88\" cy=\"55\" r=\"3.5\"/><circle cx=\"19\" cy=\"81\" r=\"3.5\"/><circle cx=\"45\" cy=\"77\" r=\"3.5\"/><circle cx=\"55\" cy=\"85\" r=\"3.5\"/></g><text x=\"81\" y=\"86\" font-size=\"14\" text-anchor=\"middle\" fill=\"#ef4444\">?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><g fill=\"#1e293b\"><circle cx=\"38\" cy=\"50\" r=\"6\"/><circle cx=\"62\" cy=\"50\" r=\"6\"/></g></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><g fill=\"#1e293b\"><circle cx=\"30\" cy=\"50\" r=\"6\"/><circle cx=\"50\" cy=\"50\" r=\"6\"/><circle cx=\"70\" cy=\"50\" r=\"6\"/></g></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><g fill=\"#1e293b\"><circle cx=\"25\" cy=\"50\" r=\"6\"/><circle cx=\"42\" cy=\"50\" r=\"6\"/><circle cx=\"58\" cy=\"50\" r=\"6\"/><circle cx=\"75\" cy=\"50\" r=\"6\"/></g></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><g fill=\"#1e293b\"><circle cx=\"50\" cy=\"50\" r=\"6\"/></g></svg>"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Hidden rule: the number of dots depends ONLY on the column — column 1 = 1 dot, column 2 = 2 dots, column 3 = 3 dots, the same on every row. The « ? » cell is in column 3, so 3 dots are needed. ✓ option b. Trap a (2 dots): copying the middle column. Trap c (4 dots): continuing at +1 instead of stopping at column 3. Trap d (1 dot): confusing it with the left column.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Sequence of figures: observe how each shape changes to become the next one. Which figure replaces the « ? »? <svg viewBox=\"0 0 100 100\"><g fill=\"none\" stroke=\"#1e293b\" stroke-width=\"3\"><polygon points=\"15,38 25,22 35,38\"/><polygon points=\"42,22 58,22 58,38 42,38\"/><polygon points=\"75,21 84,28 80,38 70,38 66,28\"/></g><text x=\"25\" y=\"52\" font-size=\"9\" text-anchor=\"middle\" fill=\"#64748b\">3 côtés</text><text x=\"50\" y=\"52\" font-size=\"9\" text-anchor=\"middle\" fill=\"#64748b\">4 côtés</text><text x=\"75\" y=\"52\" font-size=\"9\" text-anchor=\"middle\" fill=\"#64748b\">5 côtés</text><text x=\"50\" y=\"78\" font-size=\"14\" text-anchor=\"middle\" fill=\"#ef4444\">? = forme suivante</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"35,30 65,30 65,60 35,60\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"50,28 70,38 66,60 34,60 30,38\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"40,28 60,28 72,45 60,62 40,62 28,45\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"50,26 62,34 68,48 62,62 50,70 38,62 32,48 38,34\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"3\"/></svg>"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Rule: at each step the shape gains exactly ONE side — triangle (3), square (4), pentagon (5). The next figure must therefore have 6 sides: a hexagon. ✓ option c. Trap b (pentagon, 5 sides): copying the last shape without adding a side. Trap d (octagon, 8 sides): jumping past 6. Trap a (square, 4 sides): going backward in the sequence instead of forward.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Analogy: A is to B as C is to ? — discover the transformation that leads from A to B, then apply it to C. <svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"4\" fill=\"none\"><line x1=\"12\" y1=\"42\" x2=\"12\" y2=\"18\"/><polyline points=\"7,25 12,18 17,25\"/></g><text x=\"24\" y=\"34\" font-size=\"12\" fill=\"#1e293b\">→</text><g stroke=\"#1e293b\" stroke-width=\"4\" fill=\"none\"><line x1=\"34\" y1=\"30\" x2=\"58\" y2=\"30\"/><polyline points=\"51,25 58,30 51,35\"/></g><text x=\"68\" y=\"34\" font-size=\"11\" fill=\"#64748b\">::</text><g stroke=\"#1e293b\" stroke-width=\"4\" fill=\"none\"><line x1=\"86\" y1=\"30\" x2=\"62\" y2=\"30\"/><polyline points=\"69,25 62,30 69,35\"/></g><text x=\"50\" y=\"78\" font-size=\"13\" text-anchor=\"middle\" fill=\"#ef4444\">C → ?</text><text x=\"50\" y=\"92\" font-size=\"9\" text-anchor=\"middle\" fill=\"#64748b\">A: vers le haut, B: vers la droite, C: vers la gauche</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"4\" fill=\"none\"><line x1=\"50\" y1=\"68\" x2=\"50\" y2=\"32\"/><polyline points=\"42,42 50,32 58,42\"/></g></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"4\" fill=\"none\"><line x1=\"50\" y1=\"32\" x2=\"50\" y2=\"68\"/><polyline points=\"42,58 50,68 58,58\"/></g></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"4\" fill=\"none\"><line x1=\"32\" y1=\"50\" x2=\"68\" y2=\"50\"/><polyline points=\"58,42 68,50 58,58\"/></g></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"4\" fill=\"none\"><line x1=\"68\" y1=\"50\" x2=\"32\" y2=\"50\"/><polyline points=\"42,42 32,50 42,58\"/></g></svg>"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Rule: from A to B the arrow turns a quarter turn (90°) clockwise — up becomes right. Apply the same clockwise rotation to C, which points LEFT: left turned a clockwise quarter turn becomes UP. ✓ option a (arrow pointing up). Trap b (pointing down): that is a counter-clockwise rotation, wrong direction. Trap d (pointing left): copying C without turning it. Trap c (pointing right): that is a 180° rotation, two quarter turns instead of one.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Odd one out: three of these figures obey the same rule, only one breaks it. Which is the odd one out? <svg viewBox=\"0 0 100 100\"><text x=\"50\" y=\"44\" font-size=\"11\" text-anchor=\"middle\" fill=\"#1e293b\">Un point et un contour par figure.</text><text x=\"50\" y=\"60\" font-size=\"11\" text-anchor=\"middle\" fill=\"#1e293b\">Trouve celle qui sort du lot.</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"26\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"3\"/><circle cx=\"50\" cy=\"50\" r=\"5\" fill=\"#1e293b\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"26\" y=\"26\" width=\"48\" height=\"48\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"3\"/><circle cx=\"50\" cy=\"50\" r=\"5\" fill=\"#1e293b\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"50,22 76,68 24,68\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"3\"/><circle cx=\"50\" cy=\"54\" r=\"5\" fill=\"#1e293b\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"44\" cy=\"50\" r=\"22\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"3\"/><circle cx=\"82\" cy=\"50\" r=\"5\" fill=\"#1e293b\"/></svg>"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Rule: in each figure the black dot must lie INSIDE the outline. Circle+dot inside (a), square+dot inside (b), triangle+dot inside (c) obey the rule. In (d) the dot is placed OUTSIDE the circle: that is the odd one out. ✓ option d. Trap a, b, c: these are different shapes (circle, square, triangle), but the shape of the outline is not the rule — all that matters is that the dot be inside, which makes them all compliant.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Logical deduction. We know that: (1) All Glips are Bromes. (2) No Brome is a Zarn. (3) Milo is a Glip. Which conclusion is NECESSARILY true?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Milo is a Zarn."
+        },
+        {
+          "id": "b",
+          "text": "Milo is not a Zarn."
+        },
+        {
+          "id": "c",
+          "text": "Some Bromes are Zarns."
+        },
+        {
+          "id": "d",
+          "text": "Milo is not a Brome."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Rule: chain the implications. Milo is a Glip (3), and all Glips are Bromes (1), so Milo is a Brome. And no Brome is a Zarn (2), so Milo is NOT a Zarn. ✓ option b. Trap a: opposite conclusion, it contradicts (2). Trap d: false, we just deduced that Milo IS a Brome via (1). Trap c: directly contradicts (2), which says that NO Brome is a Zarn.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Number sequence: 2, 6, 12, 20, 30, ? — find the hidden rule that links each term to the next, then give the missing number.",
+      "options": [
+        {
+          "id": "a",
+          "text": "40"
+        },
+        {
+          "id": "b",
+          "text": "42"
+        },
+        {
+          "id": "c",
+          "text": "36"
+        },
+        {
+          "id": "d",
+          "text": "56"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Rule: the gaps between terms increase by 2 each time — +4, +6, +8, +10, so the next gap is +12. 30 + 12 = 42. ✓ (another reading: each term equals n×(n+1): 1×2, 2×3, 3×4, 4×5, 5×6, then 6×7 = 42). Trap a (40): reusing the last gap +10 instead of +12. Trap c (36): taking a gap of +6, repeating an earlier jump. Trap d (56): that is 7×8, skipping a term of the sequence.",
+      "difficulty": 3
+    }
+  ]
+}
