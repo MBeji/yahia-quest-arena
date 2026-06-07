@@ -1,0 +1,154 @@
+{
+  "title": "⭐ Warm-up",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "In this 3×3 grid, the number of dots in each cell equals its row number (row 1 = 1 dot, row 2 = 2 dots, row 3 = 3 dots). Which figure completes the cell marked « ? »? <svg viewBox=\"0 0 100 100\"><g fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"><rect x=\"6\" y=\"6\" width=\"88\" height=\"88\"/><line x1=\"35\" y1=\"6\" x2=\"35\" y2=\"94\"/><line x1=\"65\" y1=\"6\" x2=\"65\" y2=\"94\"/><line x1=\"6\" y1=\"35\" x2=\"94\" y2=\"35\"/><line x1=\"6\" y1=\"65\" x2=\"94\" y2=\"65\"/></g><g fill=\"#222\"><circle cx=\"20\" cy=\"20\" r=\"3.5\"/><circle cx=\"50\" cy=\"20\" r=\"3.5\"/><circle cx=\"80\" cy=\"20\" r=\"3.5\"/><circle cx=\"15\" cy=\"50\" r=\"3.5\"/><circle cx=\"25\" cy=\"50\" r=\"3.5\"/><circle cx=\"45\" cy=\"50\" r=\"3.5\"/><circle cx=\"55\" cy=\"50\" r=\"3.5\"/><circle cx=\"75\" cy=\"50\" r=\"3.5\"/><circle cx=\"85\" cy=\"50\" r=\"3.5\"/><circle cx=\"14\" cy=\"80\" r=\"3.5\"/><circle cx=\"20\" cy=\"80\" r=\"3.5\"/><circle cx=\"26\" cy=\"80\" r=\"3.5\"/><circle cx=\"44\" cy=\"80\" r=\"3.5\"/><circle cx=\"50\" cy=\"80\" r=\"3.5\"/><circle cx=\"56\" cy=\"80\" r=\"3.5\"/></g><text x=\"80\" y=\"85\" font-size=\"16\" text-anchor=\"middle\" fill=\"#888\">?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"15\" y=\"15\" width=\"70\" height=\"70\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><circle cx=\"50\" cy=\"50\" r=\"6\" fill=\"#222\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"15\" y=\"15\" width=\"70\" height=\"70\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><circle cx=\"38\" cy=\"50\" r=\"6\" fill=\"#222\"/><circle cx=\"62\" cy=\"50\" r=\"6\" fill=\"#222\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"15\" y=\"15\" width=\"70\" height=\"70\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><circle cx=\"32\" cy=\"50\" r=\"6\" fill=\"#222\"/><circle cx=\"50\" cy=\"50\" r=\"6\" fill=\"#222\"/><circle cx=\"68\" cy=\"50\" r=\"6\" fill=\"#222\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"15\" y=\"15\" width=\"70\" height=\"70\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><circle cx=\"28\" cy=\"50\" r=\"6\" fill=\"#222\"/><circle cx=\"43\" cy=\"50\" r=\"6\" fill=\"#222\"/><circle cx=\"58\" cy=\"50\" r=\"6\" fill=\"#222\"/><circle cx=\"73\" cy=\"50\" r=\"6\" fill=\"#222\"/></svg>"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "The grid's rule is: number of dots = row number. The « ? » cell is on the 3rd row (where there are already cells with 3 dots), so it must contain 3 dots → option c ✓. The trap: b puts 2 (reading the column number instead of the row), a puts 1 (mistaking it for the 1st row) and d puts 4 (adding one dot too many). Apply the ROW rule: 3rd row = 3 dots.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Look at the number sequence: 2, 5, 8, 11, ? — each term always increases by the same step. Which number comes next?",
+      "options": [
+        {
+          "id": "a",
+          "text": "12"
+        },
+        {
+          "id": "b",
+          "text": "13"
+        },
+        {
+          "id": "c",
+          "text": "14"
+        },
+        {
+          "id": "d",
+          "text": "15"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "The rule is: add 3 at each step (2 → 5 → 8 → 11). After 11 comes 11 + 3 = 14 → option c ✓. The trap: 12 adds only 1 (forgetting the real step), 13 adds 2 (wrong step) and 15 adds 4 (one step too many). Measure the gap between two neighboring terms (always +3) and reproduce it: 11 + 3 = 14.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Analogy: the left figure turns into the right one through a half-turn (180° rotation). Apply the SAME transformation to the 3rd figure to find the answer. <svg viewBox=\"0 0 100 100\"><polygon points=\"15,15 15,40 35,27\" fill=\"#222\"/><text x=\"45\" y=\"30\" font-size=\"12\" fill=\"#222\">→</text><polygon points=\"85,15 85,40 65,27\" fill=\"#222\"/><text x=\"30\" y=\"72\" font-size=\"12\" fill=\"#222\">L'Éclair monte ↑, puis ?</text><polygon points=\"50,55 70,55 60,40\" fill=\"#c33\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"40,45 60,45 50,60\" fill=\"#c33\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"40,60 60,60 50,45\" fill=\"#c33\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"40,40 55,50 40,60\" fill=\"#c33\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"60,40 60,60 40,50\" fill=\"#c33\"/></svg>"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "The transformation is a half-turn (180°): the solid arrow pointing right becomes an arrow pointing left. The red triangle points UP; after a half-turn it must point DOWN → option a ✓. The trap: b still points up (no rotation), c points right and d points left (a 90° rotation instead of 180°). A half-turn completely reverses the direction: up → down.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Three of these arrows point in the same direction, only one is different. Which is the odd one out? <svg viewBox=\"0 0 100 100\"><text x=\"50\" y=\"45\" font-size=\"11\" text-anchor=\"middle\" fill=\"#222\">Même direction</text><text x=\"50\" y=\"60\" font-size=\"11\" text-anchor=\"middle\" fill=\"#222\">pour 3 flèches sur 4</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#222\" stroke-width=\"4\" fill=\"#222\"><line x1=\"50\" y1=\"70\" x2=\"50\" y2=\"38\"/><polygon points=\"50,28 42,42 58,42\"/></g></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#222\" stroke-width=\"4\" fill=\"#222\"><line x1=\"50\" y1=\"30\" x2=\"50\" y2=\"62\"/><polygon points=\"50,72 42,58 58,58\"/></g></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#222\" stroke-width=\"4\" fill=\"#222\"><line x1=\"50\" y1=\"72\" x2=\"50\" y2=\"40\"/><polygon points=\"50,30 42,44 58,44\"/></g></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#222\" stroke-width=\"4\" fill=\"#222\"><line x1=\"50\" y1=\"68\" x2=\"50\" y2=\"36\"/><polygon points=\"50,26 42,40 58,40\"/></g></svg>"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "The rule is: each arrow points UP. The odd one out is option b ✓, the only one pointing down (its tip is at the bottom). Look only at where the tip is: a, c and d have their tip at the top, only b has it at the bottom. The trap is comparing the length or position of the lines; here only the DIRECTION of the tip matters.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Deduction: « All Zogs wear a hat. » We observe a creature that does NOT wear a hat. What can we conclude with certainty?",
+      "options": [
+        {
+          "id": "a",
+          "text": "This creature is a Zog."
+        },
+        {
+          "id": "b",
+          "text": "This creature is not a Zog."
+        },
+        {
+          "id": "c",
+          "text": "All hat-wearers are Zogs."
+        },
+        {
+          "id": "d",
+          "text": "No creature wears a hat."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "The rule says that EVERY Zog wears a hat. So a creature without a hat cannot be a Zog (otherwise it would wear one) → option b ✓. The trap: a directly contradicts the observation; c reverses the rule (« every Zog has a hat » does not mean « every hat belongs to a Zog »); d invents a claim that is unrelated. Apply the rule by contrapositive: no hat ⇒ not a Zog.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Analogy: the left figure turns into the right one by FILLING with black. Apply the same rule to the 3rd figure. <svg viewBox=\"0 0 100 100\"><circle cx=\"22\" cy=\"28\" r=\"14\" fill=\"none\" stroke=\"#222\" stroke-width=\"3\"/><text x=\"42\" y=\"32\" font-size=\"12\" fill=\"#222\">→</text><circle cx=\"78\" cy=\"28\" r=\"14\" fill=\"#222\" stroke=\"#222\" stroke-width=\"2\"/><rect x=\"36\" y=\"60\" width=\"28\" height=\"28\" fill=\"none\" stroke=\"#222\" stroke-width=\"3\"/><text x=\"50\" y=\"98\" font-size=\"9\" text-anchor=\"middle\" fill=\"#888\">carré vide → ?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"32\" y=\"32\" width=\"36\" height=\"36\" fill=\"none\" stroke=\"#222\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"20\" fill=\"#222\" stroke=\"#222\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"32\" y=\"32\" width=\"36\" height=\"36\" fill=\"#222\" stroke=\"#222\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"38\" y=\"38\" width=\"24\" height=\"24\" fill=\"none\" stroke=\"#222\" stroke-width=\"3\"/></svg>"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "The transformation does NOT change the shape: it only fills the inside with black (the empty circle becomes a solid circle). The empty square must therefore become a solid square → option c ✓. The trap: a keeps the square empty (forgetting to fill it), d shrinks it (changing the size, not the fill) and b changes the shape to a circle (the rule acts on the fill, not the shape). Apply only « fill with black » while keeping the square.",
+      "difficulty": 1
+    }
+  ]
+}

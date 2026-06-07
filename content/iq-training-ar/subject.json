@@ -1,0 +1,12 @@
+{
+  "id": "iq-training-ar",
+  "nameFr": "Muscle ton cerveau — Entraînement QI (AR)",
+  "description": "تحديات بصرية في المنطق الخالص: تأمّل الشكل، استنتج القاعدة الخفية، واختر الإجابة الصحيحة — لا حاجة للحفظ، فقط الاستدلال.",
+  "attribute": "Logique",
+  "colorToken": "subject-math",
+  "icon": "Brain",
+  "displayOrder": 62,
+  "contentLanguage": "ar",
+  "themeId": "muscle-cerveau",
+  "gradeSlug": null
+}

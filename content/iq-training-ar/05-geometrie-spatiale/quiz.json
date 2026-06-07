@@ -1,0 +1,125 @@
+{
+  "title": "إحماء الهندسة والإدراك المكاني ⭐",
+  "questions": [
+    {
+      "prompt": "يدور الشكل النموذجي ربع دورة (90°) في اتجاه عقارب الساعة. ما الرسم الذي نحصل عليه؟ <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"30\" y1=\"25\" x2=\"30\" y2=\"70\" stroke=\"#1d4ed8\" stroke-width=\"5\"/><line x1=\"30\" y1=\"70\" x2=\"65\" y2=\"70\" stroke=\"#1d4ed8\" stroke-width=\"5\"/><circle cx=\"30\" cy=\"25\" r=\"6\" fill=\"#1d4ed8\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"75\" y1=\"30\" x2=\"30\" y2=\"30\" stroke=\"#1d4ed8\" stroke-width=\"5\"/><line x1=\"30\" y1=\"30\" x2=\"30\" y2=\"65\" stroke=\"#1d4ed8\" stroke-width=\"5\"/><circle cx=\"75\" cy=\"30\" r=\"6\" fill=\"#1d4ed8\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"30\" y1=\"25\" x2=\"30\" y2=\"70\" stroke=\"#1d4ed8\" stroke-width=\"5\"/><line x1=\"30\" y1=\"70\" x2=\"65\" y2=\"70\" stroke=\"#1d4ed8\" stroke-width=\"5\"/><circle cx=\"30\" cy=\"25\" r=\"6\" fill=\"#1d4ed8\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"25\" y1=\"70\" x2=\"70\" y2=\"70\" stroke=\"#1d4ed8\" stroke-width=\"5\"/><line x1=\"70\" y1=\"70\" x2=\"70\" y2=\"30\" stroke=\"#1d4ed8\" stroke-width=\"5\"/><circle cx=\"25\" cy=\"70\" r=\"6\" fill=\"#1d4ed8\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"70\" y1=\"25\" x2=\"70\" y2=\"70\" stroke=\"#1d4ed8\" stroke-width=\"5\"/><line x1=\"70\" y1=\"70\" x2=\"35\" y2=\"70\" stroke=\"#1d4ed8\" stroke-width=\"5\"/><circle cx=\"70\" cy=\"25\" r=\"6\" fill=\"#1d4ed8\"/></svg>"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "نتتبّع النقطة المرجعية. في النموذج توجد في الأعلى، عند طرف القضيب العمودي. ربع دورة في اتجاه عقارب الساعة ينقل الأعلى نحو اليمين: فتنتقل النقطة إلى أعلى اليمين ويصبح القضيب أفقيًّا، ثم تنزل الزاوية بعد ذلك. ✓ إنه الخيار a. الخيار b مطابق للنموذج (لا دوران). الخيار c دار في الاتجاه المعاكس (عكس عقارب الساعة). الخيار d له الشكل الصحيح لكن النقطة المرجعية في موضع خاطئ: فقد قُلب الشكل كما في مرآة بدل أن يُدار.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "هذا عَلَم نموذجي. اختر انعكاسه في مرآة عمودية (يسار-يمين). <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"30\" y1=\"20\" x2=\"30\" y2=\"80\" stroke=\"#0f766e\" stroke-width=\"4\"/><polygon points=\"30,22 62,34 30,46\" fill=\"#0f766e\" stroke=\"#0f766e\" stroke-width=\"2\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"30\" y1=\"20\" x2=\"30\" y2=\"80\" stroke=\"#0f766e\" stroke-width=\"4\"/><polygon points=\"30,22 62,34 30,46\" fill=\"#0f766e\" stroke=\"#0f766e\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"70\" y1=\"20\" x2=\"70\" y2=\"80\" stroke=\"#0f766e\" stroke-width=\"4\"/><polygon points=\"70,22 38,34 70,46\" fill=\"#0f766e\" stroke=\"#0f766e\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"30\" y1=\"20\" x2=\"30\" y2=\"80\" stroke=\"#0f766e\" stroke-width=\"4\"/><polygon points=\"30,54 62,66 30,78\" fill=\"#0f766e\" stroke=\"#0f766e\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"20\" y1=\"30\" x2=\"80\" y2=\"30\" stroke=\"#0f766e\" stroke-width=\"4\"/><polygon points=\"22,30 34,62 46,30\" fill=\"#0f766e\" stroke=\"#0f766e\" stroke-width=\"2\"/></svg>"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "المرآة العمودية تبادل اليسار واليمين: تبقى السارية عمودية لكنها تنتقل إلى اليمين، والرايّة التي كانت تشير إلى اليمين صارت تشير إلى اليسار. ✓ إنه الخيار b. الخيار a مطابق للنموذج (لا انعكاس). الخيار c أنزل الرايّة إلى أسفل السارية: لكن مرآة اليسار-اليمين لا تغيّر الارتفاع. الخيار d أدار العَلَم كاملًا ربع دورة: هذا دوران لا انعكاس.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "هذا التكديس مكوَّن من مكعبات متطابقة (لا مكعب مخفيًّا خلفه، والخلف ممتلئ حيث يلزم لكي يثبت البناء). كم عدد المكعبات فيه إجمالًا؟ <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><g fill=\"#fde68a\" stroke=\"#b45309\" stroke-width=\"2\"><rect x=\"20\" y=\"66\" width=\"20\" height=\"20\"/><rect x=\"40\" y=\"66\" width=\"20\" height=\"20\"/><rect x=\"60\" y=\"66\" width=\"20\" height=\"20\"/><rect x=\"20\" y=\"46\" width=\"20\" height=\"20\"/><rect x=\"40\" y=\"46\" width=\"20\" height=\"20\"/><rect x=\"20\" y=\"26\" width=\"20\" height=\"20\"/></g></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "5 مكعبات"
+        },
+        {
+          "id": "b",
+          "text": "7 مكعبات"
+        },
+        {
+          "id": "c",
+          "text": "6 مكعبات"
+        },
+        {
+          "id": "d",
+          "text": "9 مكعبات"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "نعدّ طابقًا طابقًا. في الأسفل: 3 مكعبات. في الوسط: مكعبان. في الأعلى: مكعب واحد. المجموع 3 + 2 + 1 = 6 مكعبات. ✓ إنه الخيار c. الخيار a (5) يُغفِل مكعبًا، غالبًا مكعب القمة. الخيار b (7) يضيف مكعبًا زائدًا. الخيار d (9) يفترض أن كل طابق ممتلئ (3 × 3) في حين يُظهر الشكل هرمًا على شكل سُلّم.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "واحد فقط من هذه المخططات (الرسوم المفرودة) يمكن طيّه ليكوّن مكعبًا مغلقًا بستة أوجه. أيها؟ <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><g fill=\"#ddd6fe\" stroke=\"#6d28d9\" stroke-width=\"2\"><rect x=\"42\" y=\"10\" width=\"16\" height=\"16\"/><rect x=\"42\" y=\"26\" width=\"16\" height=\"16\"/><rect x=\"26\" y=\"42\" width=\"16\" height=\"16\"/><rect x=\"42\" y=\"42\" width=\"16\" height=\"16\"/><rect x=\"58\" y=\"42\" width=\"16\" height=\"16\"/><rect x=\"42\" y=\"58\" width=\"16\" height=\"16\"/></g></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><g fill=\"#ddd6fe\" stroke=\"#6d28d9\" stroke-width=\"2\"><rect x=\"18\" y=\"42\" width=\"16\" height=\"16\"/><rect x=\"34\" y=\"42\" width=\"16\" height=\"16\"/><rect x=\"50\" y=\"42\" width=\"16\" height=\"16\"/><rect x=\"66\" y=\"42\" width=\"16\" height=\"16\"/><rect x=\"34\" y=\"26\" width=\"16\" height=\"16\"/><rect x=\"34\" y=\"58\" width=\"16\" height=\"16\"/></g></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><g fill=\"#ddd6fe\" stroke=\"#6d28d9\" stroke-width=\"2\"><rect x=\"26\" y=\"26\" width=\"16\" height=\"16\"/><rect x=\"42\" y=\"26\" width=\"16\" height=\"16\"/><rect x=\"26\" y=\"42\" width=\"16\" height=\"16\"/><rect x=\"42\" y=\"42\" width=\"16\" height=\"16\"/><rect x=\"58\" y=\"42\" width=\"16\" height=\"16\"/><rect x=\"58\" y=\"58\" width=\"16\" height=\"16\"/></g></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><g fill=\"#ddd6fe\" stroke=\"#6d28d9\" stroke-width=\"2\"><rect x=\"26\" y=\"26\" width=\"16\" height=\"16\"/><rect x=\"42\" y=\"26\" width=\"16\" height=\"16\"/><rect x=\"58\" y=\"26\" width=\"16\" height=\"16\"/><rect x=\"26\" y=\"42\" width=\"16\" height=\"16\"/><rect x=\"42\" y=\"42\" width=\"16\" height=\"16\"/><rect x=\"58\" y=\"42\" width=\"16\" height=\"16\"/></g></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><g fill=\"#ddd6fe\" stroke=\"#6d28d9\" stroke-width=\"2\"><rect x=\"42\" y=\"12\" width=\"16\" height=\"16\"/><rect x=\"42\" y=\"28\" width=\"16\" height=\"16\"/><rect x=\"42\" y=\"44\" width=\"16\" height=\"16\"/><rect x=\"42\" y=\"60\" width=\"16\" height=\"16\"/><rect x=\"26\" y=\"60\" width=\"16\" height=\"16\"/><rect x=\"26\" y=\"76\" width=\"16\" height=\"16\"/></g></svg>"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "لصُنع مكعب نحتاج 6 مربّعات تنطوي دون أن يتراكب أيٌّ منها. الخيار a هو الصليب الكلاسيكي: صفّ من أربعة مربّعات (الجوانب) مع مربّع فوقه وآخر تحته (الأعلى والأسفل) — وينغلق بإحكام تامّ. ✓ الخيار c مستطيل ممتلئ 3 × 2: عند طيّه تتراكب الأوجه ويغيب الغطاء. الخيار b والخيار d يكوّنان عند الطيّ مربّعين يقعان في الموضع نفسه: فيبقى المكعب مثقوبًا من جهة ومُضاعَفًا من الأخرى.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "نريد ضمّ قطعتين، حافة مستقيمة إلى حافة مستقيمة، لإعادة تكوين مستطيل كامل. القطعة الأولى موجودة أدناه. أيُّ قطعة تُكمِلها تمامًا؟ <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"25,30 75,30 25,70\" fill=\"#fca5a5\" stroke=\"#b91c1c\" stroke-width=\"2\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"25,30 75,30 75,70\" fill=\"#fca5a5\" stroke=\"#b91c1c\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"25,40 75,40 50,70\" fill=\"#fca5a5\" stroke=\"#b91c1c\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"30\" y=\"35\" width=\"40\" height=\"30\" fill=\"#fca5a5\" stroke=\"#b91c1c\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"75,30 75,70 25,70\" fill=\"#fca5a5\" stroke=\"#b91c1c\" stroke-width=\"2\"/></svg>"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "القطعة الأولى هي النصف العلوي الأيسر من مستطيل: وَتَرُها (الحافة المائلة) يمتدّ من الزاوية العليا اليمنى إلى الزاوية السفلى اليسرى. لإعادة تكوين المستطيل نحتاج المثلث الناقص، أي النصف السفلي الأيمن، الذي يكون لوَتَرِه الميلُ نفسه تمامًا فيلتصق بها. ✓ إنه الخيار d. الخيار a مثلث ميلُه في الاتجاه الآخر: إذا وُضع بمحاذاة النموذج ترك فجوة وتجاوز الحدود. الخيار b مثلث متساوي الساقين (رأسه إلى الأسفل)، وشكله لا يُكمِل المستطيل. الخيار c مستطيل ممتلئ بالفعل: إضافته تتجاوز المستطيل كثيرًا.",
+      "difficulty": 2
+    }
+  ]
+}

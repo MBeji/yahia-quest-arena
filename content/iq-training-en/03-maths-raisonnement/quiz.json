@@ -1,0 +1,125 @@
+{
+  "title": "Math Reasoning Warm-up ⭐",
+  "questions": [
+    {
+      "prompt": "Observe the number sequence and find the hidden rule: 3, 6, 9, 12, ? — which number comes next?",
+      "options": [
+        {
+          "id": "a",
+          "text": "15"
+        },
+        {
+          "id": "b",
+          "text": "13"
+        },
+        {
+          "id": "c",
+          "text": "16"
+        },
+        {
+          "id": "d",
+          "text": "24"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "The hidden rule: you add 3 at each step (3, 6, 9, 12…). ✓ So the next term is 12 + 3 = 15, which is option a. Option b (13) adds only 1, as if you were just counting on. Option c (16) adds 4: that's the right type of operation but the wrong step. Option d (24) doubles the last term instead of continuing the steady addition.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete the analogy by keeping the same relation: 3 is to 6 as 5 is to ? (Hint: by what must you multiply 3 to get 6?)",
+      "options": [
+        {
+          "id": "a",
+          "text": "11"
+        },
+        {
+          "id": "b",
+          "text": "15"
+        },
+        {
+          "id": "c",
+          "text": "10"
+        },
+        {
+          "id": "d",
+          "text": "25"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "The hidden relation: you multiply by 2 (3 × 2 = 6). ✓ Apply the same rule to 5: 5 × 2 = 10, which is option c. Option a (11) adds 5 + 6, that is, it adds the result of the first pair instead of reusing its rule. Option b (15) multiplies by 3 (5 × 3), taking the first number of the model as the factor instead of the “×2”. Option d (25) squares 5: you switch operations midway.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "In this grid, the two rows have the same sum. Which number is missing where the “?” is? <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"15\" y=\"15\" width=\"70\" height=\"70\" fill=\"none\" stroke=\"#1d4ed8\" stroke-width=\"2\"/><line x1=\"38\" y1=\"15\" x2=\"38\" y2=\"85\" stroke=\"#1d4ed8\" stroke-width=\"1.5\"/><line x1=\"62\" y1=\"15\" x2=\"62\" y2=\"85\" stroke=\"#1d4ed8\" stroke-width=\"1.5\"/><line x1=\"15\" y1=\"50\" x2=\"85\" y2=\"50\" stroke=\"#1d4ed8\" stroke-width=\"1.5\"/><text x=\"26\" y=\"37\" font-size=\"13\" fill=\"#0f172a\" text-anchor=\"middle\">2</text><text x=\"50\" y=\"37\" font-size=\"13\" fill=\"#0f172a\" text-anchor=\"middle\">4</text><text x=\"74\" y=\"37\" font-size=\"13\" fill=\"#0f172a\" text-anchor=\"middle\">3</text><text x=\"26\" y=\"73\" font-size=\"13\" fill=\"#0f172a\" text-anchor=\"middle\">5</text><text x=\"50\" y=\"73\" font-size=\"13\" fill=\"#0f172a\" text-anchor=\"middle\">?</text><text x=\"74\" y=\"73\" font-size=\"13\" fill=\"#be123c\" text-anchor=\"middle\">2</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "4"
+        },
+        {
+          "id": "b",
+          "text": "2"
+        },
+        {
+          "id": "c",
+          "text": "9"
+        },
+        {
+          "id": "d",
+          "text": "5"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "The rule: the two rows have the same sum. The top row is 2 + 4 + 3 = 9. ✓ The bottom row must also be 9: 5 + ? + 2 = 9, so ? = 9 − 7 = 2, which is option b. Option a (4) just copies a neighbor without computing. Option c (9) gives the total sum of a row instead of the missing cell. Option d (5) repeats the first number of the row instead of completing the sum.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "A recipe uses 2 eggs for 6 pancakes. Keeping the same proportion, how many eggs are needed for 12 pancakes?",
+      "options": [
+        {
+          "id": "a",
+          "text": "8"
+        },
+        {
+          "id": "b",
+          "text": "6"
+        },
+        {
+          "id": "c",
+          "text": "4"
+        },
+        {
+          "id": "d",
+          "text": "3"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "The rule: the number of pancakes doubles (6 → 12), so everything doubles to keep the same proportion. ✓ You need 2 × 2 = 4 eggs, which is option c. Option a (8) adds 6 to the eggs just as 6 was added to the pancakes: it adds instead of keeping the ratio. Option b (6) copies the starting number of pancakes. Option d (3) adds only 1, ignoring the doubling.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Each shape contains a number. The rule is the same from one shape to the next. Which number must replace the “?” in the last shape? <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"15\" cy=\"50\" r=\"11\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"2\"/><text x=\"15\" y=\"55\" font-size=\"13\" fill=\"#0f172a\" text-anchor=\"middle\">1</text><circle cx=\"39\" cy=\"50\" r=\"11\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"2\"/><text x=\"39\" y=\"55\" font-size=\"13\" fill=\"#0f172a\" text-anchor=\"middle\">2</text><circle cx=\"63\" cy=\"50\" r=\"11\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"2\"/><text x=\"63\" y=\"55\" font-size=\"13\" fill=\"#0f172a\" text-anchor=\"middle\">4</text><circle cx=\"87\" cy=\"50\" r=\"11\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"2\"/><text x=\"87\" y=\"55\" font-size=\"13\" fill=\"#be123c\" text-anchor=\"middle\">?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "5"
+        },
+        {
+          "id": "b",
+          "text": "6"
+        },
+        {
+          "id": "c",
+          "text": "8"
+        },
+        {
+          "id": "d",
+          "text": "16"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "The hidden rule: each number is double the previous one (1, then 2, then 4…). ✓ The next one is 4 × 2 = 8, which is option c. With three given terms (1, 2, 4), only the “×2” rule fits: addition is ruled out because the gap changes (from 1 to 2, then from 2 to 4). Option a (5) adds 1 to the last term. Option b (6) adds the last gap (4 + 2) instead of doubling. Option d (16) doubles twice (skips a step).",
+      "difficulty": 2
+    }
+  ]
+}

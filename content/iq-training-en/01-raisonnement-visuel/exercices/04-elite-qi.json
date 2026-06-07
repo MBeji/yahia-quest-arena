@@ -1,0 +1,154 @@
+{
+  "title": "👑 IQ Elite ⭐⭐⭐⭐",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Here is a figure and the dashed vertical axis to its right. Which option is its image by REFLECTION in this vertical mirror (left-right)? <svg viewBox=\"0 0 100 100\"><polyline points=\"30,20 30,80 70,80\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"6\"/><circle cx=\"30\" cy=\"20\" r=\"7\" fill=\"#ef4444\" stroke=\"#1e293b\" stroke-width=\"2\"/><line x1=\"88\" y1=\"10\" x2=\"88\" y2=\"90\" stroke=\"#64748b\" stroke-width=\"2\" stroke-dasharray=\"4 4\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><polyline points=\"30,20 30,80 70,80\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"6\"/><circle cx=\"30\" cy=\"20\" r=\"7\" fill=\"#ef4444\" stroke=\"#1e293b\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><polyline points=\"70,20 70,80 30,80\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"6\"/><circle cx=\"70\" cy=\"20\" r=\"7\" fill=\"#ef4444\" stroke=\"#1e293b\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><polyline points=\"30,80 30,20 70,20\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"6\"/><circle cx=\"30\" cy=\"80\" r=\"7\" fill=\"#ef4444\" stroke=\"#1e293b\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><polyline points=\"70,80 70,20 30,20\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"6\"/><circle cx=\"70\" cy=\"80\" r=\"7\" fill=\"#ef4444\" stroke=\"#1e293b\" stroke-width=\"2\"/></svg>"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Hidden rule: a vertical reflection (left-right mirror) flips the horizontal axis and keeps the vertical axis. The L-shaped figure has its corner at the bottom left and the red ball at the top left; after the mirror, the corner moves to the bottom right and the ball stays AT THE TOP, on the right. ✓ option b. Trap a: it is the starting figure unchanged (no mirror). Trap c: it is a top-bottom flip, not left-right (the ball would go down). Trap d: it is a 180° rotation, which flips BOTH axes at once.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "This staircase is built with identical cubes. Counting also the cubes hidden behind, how many cubes in total make it up? <svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"1.5\" fill=\"#cbd5e1\"><rect x=\"20\" y=\"70\" width=\"18\" height=\"18\"/><rect x=\"38\" y=\"70\" width=\"18\" height=\"18\"/><rect x=\"56\" y=\"70\" width=\"18\" height=\"18\"/><rect x=\"20\" y=\"52\" width=\"18\" height=\"18\"/><rect x=\"38\" y=\"52\" width=\"18\" height=\"18\"/><rect x=\"20\" y=\"34\" width=\"18\" height=\"18\"/></g><text x=\"50\" y=\"24\" font-size=\"10\" text-anchor=\"middle\" fill=\"#1e293b\">profondeur 1</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "5"
+        },
+        {
+          "id": "b",
+          "text": "9"
+        },
+        {
+          "id": "c",
+          "text": "6"
+        },
+        {
+          "id": "d",
+          "text": "10"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Rule: we add up the cubes column by column, depth 1 (nothing hidden behind, as indicated). Left column = 3 stacked cubes, middle column = 2, right column = 1. Total = 3 + 2 + 1 = 6. ✓ option c. Trap a (5): we forgot a cube of one column. Trap b (9): we assumed a full 3×3 square when it is a staircase. Trap d (10): we added a hidden layer behind, but the depth is 1.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Only one of these (unfolded) nets can fold into a closed CUBE, with no missing face and no overlapping face. Which one? <svg viewBox=\"0 0 100 100\"><text x=\"50\" y=\"50\" font-size=\"11\" text-anchor=\"middle\" fill=\"#1e293b\">6 carrés = patron du cube</text><text x=\"50\" y=\"66\" font-size=\"11\" text-anchor=\"middle\" fill=\"#1e293b\">Lequel se replie ?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"1.5\" fill=\"#93c5fd\"><rect x=\"40\" y=\"10\" width=\"20\" height=\"20\"/><rect x=\"40\" y=\"30\" width=\"20\" height=\"20\"/><rect x=\"20\" y=\"50\" width=\"20\" height=\"20\"/><rect x=\"40\" y=\"50\" width=\"20\" height=\"20\"/><rect x=\"60\" y=\"50\" width=\"20\" height=\"20\"/><rect x=\"40\" y=\"70\" width=\"20\" height=\"20\"/></g></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"1.5\" fill=\"#93c5fd\"><rect x=\"20\" y=\"20\" width=\"20\" height=\"20\"/><rect x=\"40\" y=\"20\" width=\"20\" height=\"20\"/><rect x=\"20\" y=\"40\" width=\"20\" height=\"20\"/><rect x=\"40\" y=\"40\" width=\"20\" height=\"20\"/><rect x=\"60\" y=\"40\" width=\"20\" height=\"20\"/><rect x=\"60\" y=\"60\" width=\"20\" height=\"20\"/></g></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"1.5\" fill=\"#93c5fd\"><rect x=\"15\" y=\"40\" width=\"20\" height=\"20\"/><rect x=\"35\" y=\"40\" width=\"20\" height=\"20\"/><rect x=\"55\" y=\"40\" width=\"20\" height=\"20\"/><rect x=\"75\" y=\"40\" width=\"20\" height=\"20\"/><rect x=\"15\" y=\"60\" width=\"20\" height=\"20\"/><rect x=\"35\" y=\"60\" width=\"20\" height=\"20\"/></g></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"1.5\" fill=\"#93c5fd\"><rect x=\"20\" y=\"20\" width=\"20\" height=\"20\"/><rect x=\"40\" y=\"20\" width=\"20\" height=\"20\"/><rect x=\"60\" y=\"20\" width=\"20\" height=\"20\"/><rect x=\"20\" y=\"40\" width=\"20\" height=\"20\"/><rect x=\"40\" y=\"40\" width=\"20\" height=\"20\"/><rect x=\"60\" y=\"40\" width=\"20\" height=\"20\"/></g></svg>"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Rule: a valid cube net has 6 squares arranged so that none overlap when folded; the great classic is the cross (a central square with one square on each side + one extending it). Option a is this elongated T-cross: a column of 4 squares with two squares on the sides of the 3rd one — it folds perfectly. ✓ option a. Trap b: it forms a 2×2 block plus two squares in a staircase; when folded, two faces overlap and one is missing. Trap d: it is a full 3×2 rectangle, which folds into an open box (two faces overlap, no closed cube). Trap c: a 4+2 configuration where the two bottom squares are misplaced, so two faces land in the same spot.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "We overlay the two left-hand figures EXACTLY (same centre), black lines over black lines. Which option shows the result of this overlay? <svg viewBox=\"0 0 100 100\"><g fill=\"none\" stroke=\"#1e293b\" stroke-width=\"4\"><rect x=\"12\" y=\"30\" width=\"34\" height=\"34\"/></g><text x=\"55\" y=\"50\" font-size=\"16\" text-anchor=\"middle\" fill=\"#1e293b\">+</text><g fill=\"none\" stroke=\"#1e293b\" stroke-width=\"4\"><line x1=\"66\" y1=\"30\" x2=\"94\" y2=\"58\"/><line x1=\"94\" y1=\"30\" x2=\"66\" y2=\"58\"/></g></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"30\" y=\"30\" width=\"40\" height=\"40\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"4\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"22\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"4\"/><line x1=\"34\" y1=\"34\" x2=\"66\" y2=\"66\" stroke=\"#1e293b\" stroke-width=\"4\"/><line x1=\"66\" y1=\"34\" x2=\"34\" y2=\"66\" stroke=\"#1e293b\" stroke-width=\"4\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"30\" y=\"30\" width=\"40\" height=\"40\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"4\"/><line x1=\"30\" y1=\"30\" x2=\"70\" y2=\"70\" stroke=\"#1e293b\" stroke-width=\"4\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"30\" y=\"30\" width=\"40\" height=\"40\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"4\"/><line x1=\"30\" y1=\"30\" x2=\"70\" y2=\"70\" stroke=\"#1e293b\" stroke-width=\"4\"/><line x1=\"70\" y1=\"30\" x2=\"30\" y2=\"70\" stroke=\"#1e293b\" stroke-width=\"4\"/></svg>"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Rule: the overlay keeps ALL the lines of both figures, without adding or removing anything. We have a square AND an X cross (two diagonals); the result is therefore the square crossed by its two diagonals forming an X. ✓ option d. Trap a: it is the square alone, we forgot the cross. Trap c: a single diagonal, we lost half of the X. Trap b: we replaced the square with a circle, whereas the overlay never turns one shape into another.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Transformation A → B, apply the SAME one to C to find the result. A→B: the arrow turns 90° clockwise AND a black dot appears. <svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"4\" fill=\"none\"><line x1=\"10\" y1=\"50\" x2=\"34\" y2=\"50\"/><polyline points=\"28,44 34,50 28,56\"/></g><text x=\"42\" y=\"54\" font-size=\"12\" fill=\"#1e293b\">→</text><g stroke=\"#1e293b\" stroke-width=\"4\" fill=\"none\"><line x1=\"58\" y1=\"34\" x2=\"58\" y2=\"58\"/><polyline points=\"52,52 58,58 64,52\"/></g><circle cx=\"78\" cy=\"40\" r=\"4\" fill=\"#1e293b\"/><text x=\"50\" y=\"82\" font-size=\"11\" text-anchor=\"middle\" fill=\"#1e293b\">C : flèche vers le bas, sans point</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"4\" fill=\"none\"><line x1=\"30\" y1=\"50\" x2=\"70\" y2=\"50\"/><polyline points=\"62,42 70,50 62,58\"/></g></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"4\" fill=\"none\"><line x1=\"30\" y1=\"50\" x2=\"70\" y2=\"50\"/><polyline points=\"38,42 30,50 38,58\"/></g><circle cx=\"78\" cy=\"24\" r=\"5\" fill=\"#1e293b\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"4\" fill=\"none\"><line x1=\"50\" y1=\"30\" x2=\"50\" y2=\"70\"/><polyline points=\"42,38 50,30 58,38\"/></g><circle cx=\"78\" cy=\"24\" r=\"5\" fill=\"#1e293b\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"4\" fill=\"none\"><line x1=\"30\" y1=\"50\" x2=\"70\" y2=\"50\"/><polyline points=\"62,42 70,50 62,58\"/></g><circle cx=\"78\" cy=\"24\" r=\"5\" fill=\"#1e293b\"/></svg>"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Rule: 90° clockwise rotation + adding a dot. C points DOWN; after a clockwise quarter-turn, down goes to the LEFT, so the arrow points left, and we add the dot. ✓ option b (arrow pointing left + dot). Trap c: we forgot to turn (arrow still vertical) while adding the dot. Trap d: clockwise rotation but arrow pointing RIGHT — that is the direction error (down turning clockwise does not go right). Trap a: arrow pointing right AND dot forgotten, two errors combined.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "The pattern turns a quarter-turn (90°) at each cell, always in the same direction. Observing the progression, which figure occupies the cell with the « ? »? <svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"3\" fill=\"none\"><rect x=\"4\" y=\"35\" width=\"28\" height=\"28\"/><line x1=\"18\" y1=\"49\" x2=\"30\" y2=\"49\"/><rect x=\"36\" y=\"35\" width=\"28\" height=\"28\"/><line x1=\"50\" y1=\"49\" x2=\"50\" y2=\"61\"/><rect x=\"68\" y=\"35\" width=\"28\" height=\"28\"/><line x1=\"82\" y1=\"49\" x2=\"70\" y2=\"49\"/></g><text x=\"82\" y=\"82\" font-size=\"14\" text-anchor=\"middle\" fill=\"#ef4444\">?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"30\" y=\"30\" width=\"40\" height=\"40\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"4\"/><line x1=\"50\" y1=\"50\" x2=\"70\" y2=\"50\" stroke=\"#1e293b\" stroke-width=\"4\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"30\" y=\"30\" width=\"40\" height=\"40\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"4\"/><line x1=\"50\" y1=\"50\" x2=\"30\" y2=\"50\" stroke=\"#1e293b\" stroke-width=\"4\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"30\" y=\"30\" width=\"40\" height=\"40\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"4\"/><line x1=\"50\" y1=\"50\" x2=\"50\" y2=\"30\" stroke=\"#1e293b\" stroke-width=\"4\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"30\" y=\"30\" width=\"40\" height=\"40\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"4\"/><line x1=\"50\" y1=\"50\" x2=\"50\" y2=\"70\" stroke=\"#1e293b\" stroke-width=\"4\"/></svg>"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Rule: the needle starting from the centre turns 90° clockwise at each cell. Cell 1: needle to the RIGHT. Cell 2: a clockwise quarter-turn → DOWN. Cell 3: another quarter-turn → LEFT. Cell 4 (the ?): a final quarter-turn → UP. ✓ option c (needle pointing up). Trap a: back to the right, as if returning to the start instead of continuing. Trap d: needle pointing down, we skipped a rotation step. Trap b: needle pointing left, we repeated cell 3 without turning.",
+      "difficulty": 3
+    }
+  ]
+}

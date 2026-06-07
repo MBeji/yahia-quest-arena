@@ -1,0 +1,154 @@
+{
+  "title": "⭐ Warm-up",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Here is a figure: a flag attached to the top of a pole, pointing to the RIGHT. Which of the options is its image in a vertical mirror (left-right swapped)? <svg viewBox=\"0 0 100 100\"><line x1=\"35\" y1=\"15\" x2=\"35\" y2=\"85\" stroke=\"#222\" stroke-width=\"3\"/><polygon points=\"35,18 70,30 35,42\" fill=\"#222\" stroke=\"#222\" stroke-width=\"2\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><line x1=\"35\" y1=\"15\" x2=\"35\" y2=\"85\" stroke=\"#222\" stroke-width=\"3\"/><polygon points=\"35,58 70,70 35,82\" fill=\"#222\" stroke=\"#222\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><line x1=\"35\" y1=\"15\" x2=\"35\" y2=\"85\" stroke=\"#222\" stroke-width=\"3\"/><polygon points=\"35,18 70,30 35,42\" fill=\"#222\" stroke=\"#222\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><line x1=\"65\" y1=\"15\" x2=\"65\" y2=\"85\" stroke=\"#222\" stroke-width=\"3\"/><polygon points=\"65,18 30,30 65,42\" fill=\"#222\" stroke=\"#222\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><line x1=\"65\" y1=\"15\" x2=\"65\" y2=\"85\" stroke=\"#222\" stroke-width=\"3\"/><polygon points=\"65,58 30,70 65,82\" fill=\"#222\" stroke=\"#222\" stroke-width=\"2\"/></svg>"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "A vertical mirror swaps left and right but keeps the top at the top. So the pole moves to the right and the flag, which was pointing right, must now point LEFT → option c ✓. The trap: b is the original figure unchanged (no reflection), a keeps the pole on the left and just lowers the flag (vertical and horizontal mirrors were confused), and d flips the figure top-to-bottom on top of the side swap (double transformation, that is not a simple left-right mirror).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "The same \"L\" piece (4 squares) turns a quarter turn (90°) clockwise at each step. Here are orientations 1, 2 and 3. Which figure is orientation 4? <svg viewBox=\"0 0 100 100\"><g fill=\"#222\" stroke=\"#fff\" stroke-width=\"1\"><rect x=\"8\" y=\"24\" width=\"9\" height=\"9\"/><rect x=\"8\" y=\"33\" width=\"9\" height=\"9\"/><rect x=\"8\" y=\"42\" width=\"9\" height=\"9\"/><rect x=\"17\" y=\"42\" width=\"9\" height=\"9\"/><rect x=\"40\" y=\"33\" width=\"9\" height=\"9\"/><rect x=\"40\" y=\"42\" width=\"9\" height=\"9\"/><rect x=\"49\" y=\"33\" width=\"9\" height=\"9\"/><rect x=\"58\" y=\"33\" width=\"9\" height=\"9\"/><rect x=\"76\" y=\"24\" width=\"9\" height=\"9\"/><rect x=\"85\" y=\"24\" width=\"9\" height=\"9\"/><rect x=\"85\" y=\"33\" width=\"9\" height=\"9\"/><rect x=\"85\" y=\"42\" width=\"9\" height=\"9\"/></g></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><g fill=\"#222\" stroke=\"#fff\" stroke-width=\"1\"><rect x=\"23\" y=\"32\" width=\"18\" height=\"18\"/><rect x=\"23\" y=\"50\" width=\"18\" height=\"18\"/><rect x=\"41\" y=\"32\" width=\"18\" height=\"18\"/><rect x=\"59\" y=\"32\" width=\"18\" height=\"18\"/></g></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><g fill=\"#222\" stroke=\"#fff\" stroke-width=\"1\"><rect x=\"32\" y=\"23\" width=\"18\" height=\"18\"/><rect x=\"50\" y=\"23\" width=\"18\" height=\"18\"/><rect x=\"50\" y=\"41\" width=\"18\" height=\"18\"/><rect x=\"50\" y=\"59\" width=\"18\" height=\"18\"/></g></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><g fill=\"#222\" stroke=\"#fff\" stroke-width=\"1\"><rect x=\"23\" y=\"32\" width=\"18\" height=\"18\"/><rect x=\"23\" y=\"50\" width=\"18\" height=\"18\"/><rect x=\"41\" y=\"50\" width=\"18\" height=\"18\"/><rect x=\"59\" y=\"50\" width=\"18\" height=\"18\"/></g></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><g fill=\"#222\" stroke=\"#fff\" stroke-width=\"1\"><rect x=\"23\" y=\"50\" width=\"18\" height=\"18\"/><rect x=\"41\" y=\"50\" width=\"18\" height=\"18\"/><rect x=\"59\" y=\"32\" width=\"18\" height=\"18\"/><rect x=\"59\" y=\"50\" width=\"18\" height=\"18\"/></g></svg>"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "The piece is always the same \"L\" of 4 squares; we turn it a quarter turn clockwise. Orientation 3 has the vertical bar on the right with the foot at the top left; one more quarter turn clockwise brings the bar horizontal at the bottom with the foot coming back up on the right → option d ✓. The trap: a is orientation 2 (a quarter turn backward), b repeats orientation 3 (we forgot to turn), and c is the \"L\" flipped like a mirror (wrong direction / piece reversed), which never happens by simple rotation. Keep the 4 squares and turn just one quarter turn clockwise.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "This stack of identical cubes is arranged in steps. How many cubes does it have in total (no cube hidden behind)? <svg viewBox=\"0 0 100 100\"><g fill=\"none\" stroke=\"#222\" stroke-width=\"2\"><rect x=\"20\" y=\"60\" width=\"20\" height=\"20\"/><rect x=\"40\" y=\"60\" width=\"20\" height=\"20\"/><rect x=\"60\" y=\"60\" width=\"20\" height=\"20\"/><rect x=\"40\" y=\"40\" width=\"20\" height=\"20\"/><rect x=\"60\" y=\"40\" width=\"20\" height=\"20\"/><rect x=\"60\" y=\"20\" width=\"20\" height=\"20\"/></g></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "5 cubes"
+        },
+        {
+          "id": "b",
+          "text": "6 cubes"
+        },
+        {
+          "id": "c",
+          "text": "7 cubes"
+        },
+        {
+          "id": "d",
+          "text": "9 cubes"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Count the visible squares, which are all cubes (nothing is hidden): the bottom row has 3, the middle row 2 and the top row 1, that is 3 + 2 + 1 = 6 cubes → option b ✓. The trap: a (5) forgets a cube in a row, c (7) counts one too many, and d (9) assumes a complete 3×3 square whereas the steps leave gaps. Add up only the cubes actually drawn.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "We fold this cube net (Latin cross, 6 squares) to form a cube. The net has a BLACK disk on the LEFT arm and a WHITE (empty) disk on the RIGHT arm. Which pair of patterns ends up on two OPPOSITE faces of the cube once folded? <svg viewBox=\"0 0 100 100\"><g fill=\"none\" stroke=\"#222\" stroke-width=\"2\"><rect x=\"40\" y=\"10\" width=\"20\" height=\"20\"/><rect x=\"20\" y=\"30\" width=\"20\" height=\"20\"/><rect x=\"40\" y=\"30\" width=\"20\" height=\"20\"/><rect x=\"60\" y=\"30\" width=\"20\" height=\"20\"/><rect x=\"40\" y=\"50\" width=\"20\" height=\"20\"/><rect x=\"40\" y=\"70\" width=\"20\" height=\"20\"/></g><circle cx=\"30\" cy=\"40\" r=\"6\" fill=\"#222\"/><circle cx=\"70\" cy=\"40\" r=\"6\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"30\" cy=\"50\" r=\"12\" fill=\"#222\" stroke=\"#222\" stroke-width=\"2\"/><circle cx=\"70\" cy=\"50\" r=\"12\" fill=\"none\" stroke=\"#222\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"30\" cy=\"50\" r=\"12\" fill=\"#222\" stroke=\"#222\" stroke-width=\"2\"/><circle cx=\"70\" cy=\"50\" r=\"12\" fill=\"#222\" stroke=\"#222\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"30\" cy=\"50\" r=\"12\" fill=\"none\" stroke=\"#222\" stroke-width=\"3\"/><circle cx=\"70\" cy=\"50\" r=\"12\" fill=\"none\" stroke=\"#222\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"30\" cy=\"50\" r=\"12\" fill=\"#222\" stroke=\"#222\" stroke-width=\"2\"/><rect x=\"58\" y=\"38\" width=\"24\" height=\"24\" fill=\"none\" stroke=\"#222\" stroke-width=\"3\"/></svg>"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "In a Latin cross, the two side arms (left and right) are the two opposite flaps: once folded, they become two OPPOSITE faces of the cube. So the black disk (left arm) ends up opposite the white disk (right arm) → option a ✓. The trap: b shows two black disks and c two white disks (but the two patterns are different: one solid and one empty), and d replaces the white disk with a square, a pattern that appears nowhere on the net. The two opposite arms of a cross always land on opposite faces.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "We stack these two transparent shapes keeping their exact position (a large triangle and a small square). Which figure do you get when you pile one on the other? <svg viewBox=\"0 0 100 100\"><polygon points=\"20,20 45,20 32,42\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><rect x=\"60\" y=\"60\" width=\"22\" height=\"22\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"20,20 45,20 32,42\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"20,20 45,20 32,42\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><circle cx=\"71\" cy=\"71\" r=\"12\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"20,20 45,20 32,42\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><rect x=\"60\" y=\"60\" width=\"22\" height=\"22\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"60,60 85,60 72,82\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><rect x=\"20\" y=\"20\" width=\"22\" height=\"22\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/></svg>"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Stacking while keeping the exact position means each shape stays where it was: the triangle stays at the top left and the square stays at the bottom right, and both appear together → option c ✓. The trap: b turns the square into a circle (you are not allowed to change a shape), a makes the square disappear (a shape was forgotten), and d swaps the positions of the two shapes (but stacking keeps the locations). Keep both shapes, in their place.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "The capital letter \"F\" is the right way up. Which of the options is its reflection in a vertical mirror (left-right swapped)? <svg viewBox=\"0 0 100 100\"><polygon points=\"40,15 70,15 70,25 50,25 50,45 65,45 65,55 50,55 50,85 40,85\" fill=\"#222\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"30,15 70,15 70,25 50,25 50,45 65,45 65,55 30,55 30,85 40,85 40,55 30,55\" fill=\"#222\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"40,15 70,15 70,25 50,25 50,45 65,45 65,55 50,55 50,85 40,85\" fill=\"#222\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"40,85 70,85 70,75 50,75 50,55 65,55 65,45 50,45 50,15 40,15\" fill=\"#222\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"60,15 30,15 30,25 50,25 50,45 35,45 35,55 50,55 50,85 60,85\" fill=\"#222\"/></svg>"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "A vertical mirror swaps left and right without touching top/bottom: the vertical bar of the \"F\" moves to the right and its two arms now point to the left → option d ✓. The trap: b is the original \"F\" unchanged (no reflection), c flips the letter top-to-bottom (the arms come off the bottom, that is a horizontal mirror and not a vertical one), and a is a distorted shape that is not a mirror \"F\". In a vertical mirror, only left and right are swapped.",
+      "difficulty": 1
+    }
+  ]
+}

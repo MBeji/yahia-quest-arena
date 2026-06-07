@@ -1,0 +1,125 @@
+{
+  "title": "Geometry & spatial reasoning warm-up ⭐",
+  "questions": [
+    {
+      "prompt": "The model figure turns a quarter turn (90°) clockwise. Which drawing do you get? <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"30\" y1=\"25\" x2=\"30\" y2=\"70\" stroke=\"#1d4ed8\" stroke-width=\"5\"/><line x1=\"30\" y1=\"70\" x2=\"65\" y2=\"70\" stroke=\"#1d4ed8\" stroke-width=\"5\"/><circle cx=\"30\" cy=\"25\" r=\"6\" fill=\"#1d4ed8\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"75\" y1=\"30\" x2=\"30\" y2=\"30\" stroke=\"#1d4ed8\" stroke-width=\"5\"/><line x1=\"30\" y1=\"30\" x2=\"30\" y2=\"65\" stroke=\"#1d4ed8\" stroke-width=\"5\"/><circle cx=\"75\" cy=\"30\" r=\"6\" fill=\"#1d4ed8\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"30\" y1=\"25\" x2=\"30\" y2=\"70\" stroke=\"#1d4ed8\" stroke-width=\"5\"/><line x1=\"30\" y1=\"70\" x2=\"65\" y2=\"70\" stroke=\"#1d4ed8\" stroke-width=\"5\"/><circle cx=\"30\" cy=\"25\" r=\"6\" fill=\"#1d4ed8\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"25\" y1=\"70\" x2=\"70\" y2=\"70\" stroke=\"#1d4ed8\" stroke-width=\"5\"/><line x1=\"70\" y1=\"70\" x2=\"70\" y2=\"30\" stroke=\"#1d4ed8\" stroke-width=\"5\"/><circle cx=\"25\" cy=\"70\" r=\"6\" fill=\"#1d4ed8\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"70\" y1=\"25\" x2=\"70\" y2=\"70\" stroke=\"#1d4ed8\" stroke-width=\"5\"/><line x1=\"70\" y1=\"70\" x2=\"35\" y2=\"70\" stroke=\"#1d4ed8\" stroke-width=\"5\"/><circle cx=\"70\" cy=\"25\" r=\"6\" fill=\"#1d4ed8\"/></svg>"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Follow the reference dot. In the model it is at the top, at the end of the vertical bar. A quarter turn clockwise sends the top toward the right: so the dot moves to the top right and the bar becomes horizontal, with the elbow then going down. ✓ That is option a. Option b is identical to the model (no rotation). Option c turned the other way (counterclockwise). Option d has the right shape but the reference dot is in the wrong place: the figure was flipped like a mirror image instead of being rotated.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Here is a model flag. Choose its reflection in a vertical mirror (left-right). <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"30\" y1=\"20\" x2=\"30\" y2=\"80\" stroke=\"#0f766e\" stroke-width=\"4\"/><polygon points=\"30,22 62,34 30,46\" fill=\"#0f766e\" stroke=\"#0f766e\" stroke-width=\"2\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"30\" y1=\"20\" x2=\"30\" y2=\"80\" stroke=\"#0f766e\" stroke-width=\"4\"/><polygon points=\"30,22 62,34 30,46\" fill=\"#0f766e\" stroke=\"#0f766e\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"70\" y1=\"20\" x2=\"70\" y2=\"80\" stroke=\"#0f766e\" stroke-width=\"4\"/><polygon points=\"70,22 38,34 70,46\" fill=\"#0f766e\" stroke=\"#0f766e\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"30\" y1=\"20\" x2=\"30\" y2=\"80\" stroke=\"#0f766e\" stroke-width=\"4\"/><polygon points=\"30,54 62,66 30,78\" fill=\"#0f766e\" stroke=\"#0f766e\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"20\" y1=\"30\" x2=\"80\" y2=\"30\" stroke=\"#0f766e\" stroke-width=\"4\"/><polygon points=\"22,30 34,62 46,30\" fill=\"#0f766e\" stroke=\"#0f766e\" stroke-width=\"2\"/></svg>"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "A vertical mirror swaps left and right: the pole stays vertical but moves to the right, and the pennant that was pointing right now points left. ✓ That is option b. Option a is identical to the model (no reflection). Option c slid the pennant down the pole: a left-right mirror does not change the height. Option d rotated the whole flag a quarter turn: that is a rotation, not a reflection.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "This stack is made of identical cubes (no cube hidden behind, the back is solid where needed to hold things up). How many cubes does it have in total? <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><g fill=\"#fde68a\" stroke=\"#b45309\" stroke-width=\"2\"><rect x=\"20\" y=\"66\" width=\"20\" height=\"20\"/><rect x=\"40\" y=\"66\" width=\"20\" height=\"20\"/><rect x=\"60\" y=\"66\" width=\"20\" height=\"20\"/><rect x=\"20\" y=\"46\" width=\"20\" height=\"20\"/><rect x=\"40\" y=\"46\" width=\"20\" height=\"20\"/><rect x=\"20\" y=\"26\" width=\"20\" height=\"20\"/></g></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "5 cubes"
+        },
+        {
+          "id": "b",
+          "text": "7 cubes"
+        },
+        {
+          "id": "c",
+          "text": "6 cubes"
+        },
+        {
+          "id": "d",
+          "text": "9 cubes"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Count layer by layer. Bottom: 3 cubes. Middle: 2 cubes. Top: 1 cube. Total 3 + 2 + 1 = 6 cubes. ✓ That is option c. Option a (5) forgets a cube, often the one at the top. Option b (7) adds one too many. Option d (9) assumes each layer is complete (3 × 3) whereas the figure shows a stepped pyramid.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Only one of these nets (unfolded drawings) can be folded into a closed cube with 6 faces. Which one? <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><g fill=\"#ddd6fe\" stroke=\"#6d28d9\" stroke-width=\"2\"><rect x=\"42\" y=\"10\" width=\"16\" height=\"16\"/><rect x=\"42\" y=\"26\" width=\"16\" height=\"16\"/><rect x=\"26\" y=\"42\" width=\"16\" height=\"16\"/><rect x=\"42\" y=\"42\" width=\"16\" height=\"16\"/><rect x=\"58\" y=\"42\" width=\"16\" height=\"16\"/><rect x=\"42\" y=\"58\" width=\"16\" height=\"16\"/></g></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><g fill=\"#ddd6fe\" stroke=\"#6d28d9\" stroke-width=\"2\"><rect x=\"18\" y=\"42\" width=\"16\" height=\"16\"/><rect x=\"34\" y=\"42\" width=\"16\" height=\"16\"/><rect x=\"50\" y=\"42\" width=\"16\" height=\"16\"/><rect x=\"66\" y=\"42\" width=\"16\" height=\"16\"/><rect x=\"34\" y=\"26\" width=\"16\" height=\"16\"/><rect x=\"34\" y=\"58\" width=\"16\" height=\"16\"/></g></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><g fill=\"#ddd6fe\" stroke=\"#6d28d9\" stroke-width=\"2\"><rect x=\"26\" y=\"26\" width=\"16\" height=\"16\"/><rect x=\"42\" y=\"26\" width=\"16\" height=\"16\"/><rect x=\"26\" y=\"42\" width=\"16\" height=\"16\"/><rect x=\"42\" y=\"42\" width=\"16\" height=\"16\"/><rect x=\"58\" y=\"42\" width=\"16\" height=\"16\"/><rect x=\"58\" y=\"58\" width=\"16\" height=\"16\"/></g></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><g fill=\"#ddd6fe\" stroke=\"#6d28d9\" stroke-width=\"2\"><rect x=\"26\" y=\"26\" width=\"16\" height=\"16\"/><rect x=\"42\" y=\"26\" width=\"16\" height=\"16\"/><rect x=\"58\" y=\"26\" width=\"16\" height=\"16\"/><rect x=\"26\" y=\"42\" width=\"16\" height=\"16\"/><rect x=\"42\" y=\"42\" width=\"16\" height=\"16\"/><rect x=\"58\" y=\"42\" width=\"16\" height=\"16\"/></g></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><g fill=\"#ddd6fe\" stroke=\"#6d28d9\" stroke-width=\"2\"><rect x=\"42\" y=\"12\" width=\"16\" height=\"16\"/><rect x=\"42\" y=\"28\" width=\"16\" height=\"16\"/><rect x=\"42\" y=\"44\" width=\"16\" height=\"16\"/><rect x=\"42\" y=\"60\" width=\"16\" height=\"16\"/><rect x=\"26\" y=\"60\" width=\"16\" height=\"16\"/><rect x=\"26\" y=\"76\" width=\"16\" height=\"16\"/></g></svg>"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "To make a cube you need 6 squares that fold up without any of them overlapping. Option a is the classic cross: a line of four squares (the sides) with one square above and one below (the top and the bottom) — it closes up perfectly. ✓ Option c is a full 3 × 2 rectangle: when folded, faces overlap and the lid is missing. Option b and option d, once folded, produce two squares that land in the same spot: the cube is left with a hole on one side and a doubled face on the other.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "We want to join two pieces, flat edge against flat edge, to rebuild a complete rectangle. The first piece is shown below. Which piece completes it exactly? <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"25,30 75,30 25,70\" fill=\"#fca5a5\" stroke=\"#b91c1c\" stroke-width=\"2\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"25,30 75,30 75,70\" fill=\"#fca5a5\" stroke=\"#b91c1c\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"25,40 75,40 50,70\" fill=\"#fca5a5\" stroke=\"#b91c1c\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"30\" y=\"35\" width=\"40\" height=\"30\" fill=\"#fca5a5\" stroke=\"#b91c1c\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"75,30 75,70 25,70\" fill=\"#fca5a5\" stroke=\"#b91c1c\" stroke-width=\"2\"/></svg>"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "The starting piece is the top-left half of a rectangle: its hypotenuse (the slanted edge) runs from the top-right corner to the bottom-left corner. To rebuild the rectangle, you need the missing triangle, the bottom-right half, whose hypotenuse has exactly the same slope and fits against it. ✓ That is option d. Option a is a triangle whose slant goes the other way: placed against the model, it leaves a gap and sticks out. Option b is an isosceles triangle (point at the bottom), its shape does not complete the rectangle. Option c is already a full rectangle: added on, it would stick out well beyond the rectangle.",
+      "difficulty": 2
+    }
+  ]
+}
