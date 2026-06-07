@@ -12,9 +12,13 @@ export class SubjectPage {
   get lockedMissions(): Locator {
     return this.page.getByTestId("mission-locked");
   }
-  /** Difficulty 3+ premium lock label shown to free users ("Abonnement requis"). */
+  /**
+   * Difficulty 3+ premium lock label shown to free users. The wording follows
+   * the subject's content language: FR "Abonnement requis", EN "Subscription
+   * required", AR "يتطلب اشتراكًا".
+   */
   get premiumLock(): Locator {
-    return this.page.getByText(/abonnement requis/i);
+    return this.page.getByText(/abonnement requis|subscription required|يتطلب اشتراك/i);
   }
   // Subscription paywall (rendered in-page for a premium/subscription-only subject).
   get paywallPremiumText(): Locator {

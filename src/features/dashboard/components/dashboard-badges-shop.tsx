@@ -93,7 +93,7 @@ export function DashboardBadgesShop({
         </div>
       </section>
 
-      <section className="mt-8">
+      <section className="mt-8" data-testid="shop">
         <h2 className="mb-4 flex items-center gap-2 font-display text-xl font-bold">
           <ShoppingBag className="h-5 w-5 text-[color:var(--gold)]" /> Academy Shop
         </h2>
@@ -108,6 +108,9 @@ export function DashboardBadgesShop({
             return (
               <div
                 key={item.code}
+                data-testid="shop-item"
+                data-item-code={item.code}
+                data-owned={item.isOwned}
                 className="rounded-2xl border border-border/50 bg-black/60 p-5 backdrop-blur-md"
               >
                 <div className="flex items-start justify-between gap-3">

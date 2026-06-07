@@ -82,6 +82,7 @@ function LeaderboardPage() {
       <div className="mb-6 flex flex-wrap justify-center gap-2">
         <button
           onClick={() => setTab(GLOBAL)}
+          data-testid="leaderboard-global-tab"
           className={`rounded-full border px-4 py-1.5 text-sm font-semibold transition ${
             isGlobal
               ? "border-[color:var(--gold)]/60 bg-[color:var(--gold)]/15 text-[color:var(--gold)]"
@@ -192,6 +193,7 @@ function LeaderboardPage() {
             {leaderboard.map((player, i) => (
               <motion.div
                 key={player.rank}
+                data-testid="leaderboard-row"
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.02 }}
