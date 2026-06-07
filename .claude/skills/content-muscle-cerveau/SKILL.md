@@ -14,7 +14,12 @@ description: >-
 
 Brain-training content offered in **all three languages** (FR, EN, AR) → **three sibling subjects**
 under the `muscle-cerveau` theme (`gradeSlug: null`). Trilingual applies because this is a **non-school**
-theme (school content is monolingual; see `content-ecole-tn`). Read `content-engine/references/themes-and-trilingual.md`
+theme (school content is monolingual; see `content-ecole-tn`).
+
+> For **pure IQ / visual reasoning** (logic matrices, spatial puzzles, SVG figures, no theory, no
+> memorization), use the specialized **`content-iq-training`** skill instead.
+
+Read `content-engine/references/themes-and-trilingual.md`
 and the rest of the content-engine skill before writing.
 
 ## What to cover
