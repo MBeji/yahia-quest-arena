@@ -1,0 +1,125 @@
+{
+  "title": "Échauffement visuel ⭐",
+  "questions": [
+    {
+      "prompt": "Observe la suite de cercles. Quel cercle continue la série ? <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"15\" cy=\"50\" r=\"6\" fill=\"none\" stroke=\"#1d4ed8\" stroke-width=\"2\"/><circle cx=\"38\" cy=\"50\" r=\"11\" fill=\"none\" stroke=\"#1d4ed8\" stroke-width=\"2\"/><circle cx=\"68\" cy=\"50\" r=\"16\" fill=\"none\" stroke=\"#1d4ed8\" stroke-width=\"2\"/><text x=\"92\" y=\"56\" font-size=\"16\" fill=\"#64748b\" text-anchor=\"middle\">?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"50\" cy=\"50\" r=\"21\" fill=\"none\" stroke=\"#1d4ed8\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"50\" cy=\"50\" r=\"16\" fill=\"none\" stroke=\"#1d4ed8\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"50\" cy=\"50\" r=\"6\" fill=\"none\" stroke=\"#1d4ed8\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"50\" cy=\"50\" r=\"21\" fill=\"#1d4ed8\" stroke=\"#1d4ed8\" stroke-width=\"2\"/></svg>"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "La règle cachée : le rayon grandit de 5 à chaque étape (6, 11, 16…). ✓ Le suivant vaut donc 21, soit l'option a. L'option b (16) répète le dernier cercle au lieu d'augmenter. L'option c (6) revient au tout premier. L'option d a la bonne taille mais devient pleine : la couleur n'a jamais changé dans la série, on ne doit pas inventer une nouvelle règle.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Trois figures suivent la même règle, une seule est l'intrus. Laquelle ? <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"8\" y=\"40\" width=\"18\" height=\"18\" fill=\"#7c3aed\" stroke=\"#7c3aed\" stroke-width=\"2\"/><rect x=\"32\" y=\"40\" width=\"18\" height=\"18\" fill=\"#7c3aed\" stroke=\"#7c3aed\" stroke-width=\"2\"/><rect x=\"56\" y=\"40\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"2\"/><rect x=\"80\" y=\"40\" width=\"18\" height=\"18\" fill=\"#7c3aed\" stroke=\"#7c3aed\" stroke-width=\"2\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"41\" y=\"41\" width=\"18\" height=\"18\" fill=\"#7c3aed\" stroke=\"#7c3aed\" stroke-width=\"2\"/><text x=\"50\" y=\"82\" font-size=\"14\" fill=\"#64748b\" text-anchor=\"middle\">1</text></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"41\" y=\"41\" width=\"18\" height=\"18\" fill=\"#7c3aed\" stroke=\"#7c3aed\" stroke-width=\"2\"/><text x=\"50\" y=\"82\" font-size=\"14\" fill=\"#64748b\" text-anchor=\"middle\">2</text></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"41\" y=\"41\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"2\"/><text x=\"50\" y=\"82\" font-size=\"14\" fill=\"#64748b\" text-anchor=\"middle\">3</text></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"41\" y=\"41\" width=\"18\" height=\"18\" fill=\"#7c3aed\" stroke=\"#7c3aed\" stroke-width=\"2\"/><text x=\"50\" y=\"82\" font-size=\"14\" fill=\"#64748b\" text-anchor=\"middle\">4</text></svg>"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "La règle commune : tous les carrés sont pleins. ✓ Le carré n°3 est le seul vide (juste un contour), c'est donc l'intrus, l'option c. Les options a, b et d montrent des carrés pleins, identiques aux autres : ils respectent la règle et ne peuvent pas être l'intrus.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "À gauche, une flèche modèle. Choisis son image dans un miroir vertical (gauche-droite). <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"30\" y1=\"50\" x2=\"70\" y2=\"50\" stroke=\"#0f766e\" stroke-width=\"4\"/><polyline points=\"56,38 70,50 56,62\" fill=\"none\" stroke=\"#0f766e\" stroke-width=\"4\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"30\" y1=\"50\" x2=\"70\" y2=\"50\" stroke=\"#0f766e\" stroke-width=\"4\"/><polyline points=\"56,38 70,50 56,62\" fill=\"none\" stroke=\"#0f766e\" stroke-width=\"4\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"70\" y1=\"50\" x2=\"30\" y2=\"50\" stroke=\"#0f766e\" stroke-width=\"4\"/><polyline points=\"44,38 30,50 44,62\" fill=\"none\" stroke=\"#0f766e\" stroke-width=\"4\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"50\" y1=\"30\" x2=\"50\" y2=\"70\" stroke=\"#0f766e\" stroke-width=\"4\"/><polyline points=\"38,56 50,70 62,56\" fill=\"none\" stroke=\"#0f766e\" stroke-width=\"4\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"50\" y1=\"70\" x2=\"50\" y2=\"30\" stroke=\"#0f766e\" stroke-width=\"4\"/><polyline points=\"38,44 50,30 62,44\" fill=\"none\" stroke=\"#0f766e\" stroke-width=\"4\"/></svg>"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Un miroir vertical échange la gauche et la droite : une flèche qui pointe à droite pointe alors à gauche. ✓ C'est l'option b. L'option a est identique au modèle (aucune réflexion). Les options c et d pointent vers le bas et vers le haut : ce serait une rotation, pas un miroir gauche-droite.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Une seule flèche tourne d'un quart de tour dans le sens des aiguilles d'une montre à chaque étape. Que vient ensuite ? <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><g><line x1=\"12\" y1=\"58\" x2=\"12\" y2=\"30\" stroke=\"#b45309\" stroke-width=\"4\"/><polyline points=\"5,38 12,30 19,38\" fill=\"none\" stroke=\"#b45309\" stroke-width=\"4\"/></g><g><line x1=\"40\" y1=\"44\" x2=\"68\" y2=\"44\" stroke=\"#b45309\" stroke-width=\"4\"/><polyline points=\"60,37 68,44 60,51\" fill=\"none\" stroke=\"#b45309\" stroke-width=\"4\"/></g><text x=\"88\" y=\"50\" font-size=\"16\" fill=\"#64748b\" text-anchor=\"middle\">?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"50\" y1=\"32\" x2=\"50\" y2=\"68\" stroke=\"#b45309\" stroke-width=\"4\"/><polyline points=\"42,60 50,68 58,60\" fill=\"none\" stroke=\"#b45309\" stroke-width=\"4\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"68\" y1=\"50\" x2=\"32\" y2=\"50\" stroke=\"#b45309\" stroke-width=\"4\"/><polyline points=\"40,42 32,50 40,58\" fill=\"none\" stroke=\"#b45309\" stroke-width=\"4\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"50\" y1=\"68\" x2=\"50\" y2=\"32\" stroke=\"#b45309\" stroke-width=\"4\"/><polyline points=\"42,40 50,32 58,40\" fill=\"none\" stroke=\"#b45309\" stroke-width=\"4\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"32\" y1=\"50\" x2=\"68\" y2=\"50\" stroke=\"#b45309\" stroke-width=\"4\"/><polyline points=\"60,42 68,50 60,58\" fill=\"none\" stroke=\"#b45309\" stroke-width=\"4\"/></svg>"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "La flèche pointe d'abord vers le haut, puis vers la droite : c'est un quart de tour horaire. ✓ Le pas suivant donne une flèche vers le bas, soit l'option a. L'option d (vers la droite) répète l'étape précédente. L'option b (vers la gauche) tourne dans le mauvais sens. L'option c (vers le haut) revient au point de départ.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Observe le nombre de côtés des polygones. Quelle figure complète la suite ? <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"18,58 8,42 28,42\" fill=\"none\" stroke=\"#be123c\" stroke-width=\"2\"/><rect x=\"40\" y=\"40\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"#be123c\" stroke-width=\"2\"/><polygon points=\"78,38 88,46 84,58 72,58 68,46\" fill=\"none\" stroke=\"#be123c\" stroke-width=\"2\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"50,32 64,42 59,58 41,58 36,42\" fill=\"none\" stroke=\"#be123c\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"50,32 62,39 62,53 50,60 38,53 38,39\" fill=\"none\" stroke=\"#be123c\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"41\" y=\"41\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"#be123c\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"50,33 58,58 38,42 62,42 42,58\" fill=\"none\" stroke=\"#be123c\" stroke-width=\"2\"/></svg>"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "La règle : le nombre de côtés augmente de 1 à chaque pas — triangle (3), carré (4), pentagone (5). ✓ Le suivant doit avoir 6 côtés, donc l'hexagone de l'option b. L'option a est un pentagone (5 côtés), elle répète la figure précédente. L'option c est un carré (4 côtés), déjà passé. L'option d est une étoile à 5 branches : on a compté les pointes au lieu des côtés du polygone.",
+      "difficulty": 2
+    }
+  ]
+}

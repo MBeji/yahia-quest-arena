@@ -1,0 +1,154 @@
+{
+  "title": "⚔️ Défi logique ⭐⭐⭐",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "La flèche tourne d'un quart de tour (90°) dans le sens des aiguilles d'une montre à chaque étape. Quelle flèche vient ensuite ? <svg viewBox=\"0 0 100 100\"><line x1=\"15\" y1=\"75\" x2=\"15\" y2=\"30\" stroke=\"#1f2937\" stroke-width=\"4\"/><polygon points=\"8,38 22,38 15,24\" fill=\"#1f2937\"/><line x1=\"40\" y1=\"50\" x2=\"85\" y2=\"50\" stroke=\"#1f2937\" stroke-width=\"4\"/><polygon points=\"77,43 77,57 91,50\" fill=\"#1f2937\"/><line x1=\"60\" y1=\"25\" x2=\"60\" y2=\"70\" stroke=\"#1f2937\" stroke-width=\"4\"/><polygon points=\"53,62 67,62 60,76\" fill=\"#1f2937\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><line x1=\"75\" y1=\"50\" x2=\"30\" y2=\"50\" stroke=\"#1f2937\" stroke-width=\"5\"/><polygon points=\"38,42 38,58 22,50\" fill=\"#1f2937\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><line x1=\"25\" y1=\"50\" x2=\"70\" y2=\"50\" stroke=\"#1f2937\" stroke-width=\"5\"/><polygon points=\"62,42 62,58 78,50\" fill=\"#1f2937\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><line x1=\"50\" y1=\"75\" x2=\"50\" y2=\"30\" stroke=\"#1f2937\" stroke-width=\"5\"/><polygon points=\"42,38 58,38 50,22\" fill=\"#1f2937\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><line x1=\"50\" y1=\"25\" x2=\"50\" y2=\"70\" stroke=\"#1f2937\" stroke-width=\"5\"/><polygon points=\"42,62 58,62 50,78\" fill=\"#1f2937\"/></svg>"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "La règle cachée : +90° dans le sens horaire à chaque étape. Haut → droite → bas → gauche. ✓ L'option a pointe vers la gauche : c'est la suite correcte. L'option d (vers le bas) répète l'étape précédente sans tourner. L'option c (vers le haut) revient en arrière (rotation inverse). L'option b (vers la droite) saute une étape. Astuce : suis toujours le même sens de rotation, sans sauter ni revenir.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "A est à B ce que C est à ? — observe la transformation entre les deux premières figures, puis applique-la. <svg viewBox=\"0 0 100 100\"><rect x=\"8\" y=\"38\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"32\" y=\"52\" font-size=\"12\" fill=\"#1f2937\">:</text><rect x=\"40\" y=\"26\" width=\"40\" height=\"40\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"86\" y=\"52\" font-size=\"12\" fill=\"#1f2937\">::</text><circle cx=\"96\" cy=\"46\" r=\"3\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"20\" y=\"20\" width=\"60\" height=\"60\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"8\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"30\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"30\" fill=\"#1f2937\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "La règle cachée : la figure grandit fortement, la forme et le contour restant identiques (un petit carré vide devient un grand carré vide). On applique le même agrandissement au petit cercle vide. ✓ L'option c est un grand cercle vide : c'est la bonne analogie. L'option b garde la petite taille (aucune transformation). L'option a change la forme (carré au lieu de cercle). L'option d change l'attribut couleur (cercle plein), ce que la transformation A→B ne faisait pas. Garde une seule transformation : la taille.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "La suite de points grandit selon une règle simple. Combien de points doit contenir la figure suivante ? <svg viewBox=\"0 0 100 100\"><rect x=\"4\" y=\"40\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"#9ca3af\" stroke-width=\"1.5\"/><circle cx=\"13\" cy=\"49\" r=\"3\" fill=\"#1f2937\"/><rect x=\"30\" y=\"40\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"#9ca3af\" stroke-width=\"1.5\"/><circle cx=\"37\" cy=\"49\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"44\" cy=\"49\" r=\"3\" fill=\"#1f2937\"/><rect x=\"56\" y=\"40\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"#9ca3af\" stroke-width=\"1.5\"/><circle cx=\"61\" cy=\"49\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"68\" cy=\"49\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"65\" cy=\"43\" r=\"3\" fill=\"#1f2937\"/><rect x=\"82\" y=\"40\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"#9ca3af\" stroke-width=\"1.5\"/><text x=\"88\" y=\"54\" font-size=\"14\" fill=\"#1f2937\">?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"20\" y=\"20\" width=\"60\" height=\"60\" fill=\"none\" stroke=\"#9ca3af\" stroke-width=\"2\"/><circle cx=\"32\" cy=\"40\" r=\"7\" fill=\"#1f2937\"/><circle cx=\"50\" cy=\"40\" r=\"7\" fill=\"#1f2937\"/><circle cx=\"68\" cy=\"40\" r=\"7\" fill=\"#1f2937\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"20\" y=\"20\" width=\"60\" height=\"60\" fill=\"none\" stroke=\"#9ca3af\" stroke-width=\"2\"/><circle cx=\"35\" cy=\"40\" r=\"7\" fill=\"#1f2937\"/><circle cx=\"60\" cy=\"40\" r=\"7\" fill=\"#1f2937\"/><circle cx=\"35\" cy=\"62\" r=\"7\" fill=\"#1f2937\"/><circle cx=\"60\" cy=\"62\" r=\"7\" fill=\"#1f2937\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"20\" y=\"20\" width=\"60\" height=\"60\" fill=\"none\" stroke=\"#9ca3af\" stroke-width=\"2\"/><circle cx=\"32\" cy=\"40\" r=\"7\" fill=\"#1f2937\"/><circle cx=\"50\" cy=\"40\" r=\"7\" fill=\"#1f2937\"/><circle cx=\"68\" cy=\"40\" r=\"7\" fill=\"#1f2937\"/><circle cx=\"32\" cy=\"64\" r=\"7\" fill=\"#1f2937\"/><circle cx=\"50\" cy=\"64\" r=\"7\" fill=\"#1f2937\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"20\" y=\"20\" width=\"60\" height=\"60\" fill=\"none\" stroke=\"#9ca3af\" stroke-width=\"2\"/><circle cx=\"32\" cy=\"40\" r=\"7\" fill=\"#1f2937\"/><circle cx=\"50\" cy=\"40\" r=\"7\" fill=\"#1f2937\"/><circle cx=\"68\" cy=\"40\" r=\"7\" fill=\"#1f2937\"/><circle cx=\"32\" cy=\"64\" r=\"7\" fill=\"#1f2937\"/><circle cx=\"50\" cy=\"64\" r=\"7\" fill=\"#1f2937\"/><circle cx=\"68\" cy=\"64\" r=\"7\" fill=\"#1f2937\"/></svg>"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "La règle cachée : on ajoute un point à chaque étape (1, puis 2, puis 3…), l'écart constant étant +1. La figure suivante doit donc contenir 4 points. ✓ L'option b affiche exactement 4 points : c'est la bonne. L'option a (3 points) répète l'étape précédente sans avancer. L'option c (5 points) ajoute deux points d'un coup (mauvais écart). L'option d (6 points) double le saut. Compte précisément : il faut passer de 3 à 4, soit +1.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "A est à B ce que C est à ? — la transformation est une symétrie (effet miroir) gauche-droite. Quelle figure complète l'analogie ? <svg viewBox=\"0 0 100 100\"><polygon points=\"6,30 6,66 26,48\" fill=\"#1f2937\"/><text x=\"30\" y=\"52\" font-size=\"11\" fill=\"#1f2937\">:</text><polygon points=\"58,30 58,66 38,48\" fill=\"#1f2937\"/><text x=\"62\" y=\"52\" font-size=\"11\" fill=\"#1f2937\">::</text><polyline points=\"78,30 96,40 78,50\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><polyline points=\"38,30 62,50 38,70\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"5\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><polyline points=\"30,38 50,62 70,38\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"5\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><polyline points=\"30,62 50,38 70,62\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"5\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><polyline points=\"62,30 38,50 62,70\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"5\"/></svg>"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "La règle cachée : symétrie miroir gauche-droite (la figure est retournée horizontalement, comme dans un miroir vertical). Un chevron pointant à droite ( > ) devient un chevron pointant à gauche ( < ). ✓ L'option d est le miroir horizontal exact : c'est la bonne. L'option a est identique à C (aucune transformation appliquée). Les options b et c appliquent une rotation de 90° (chevron vers le bas ou vers le haut) au lieu d'un miroir gauche-droite. Distingue bien miroir et rotation.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Matrice 3×3 : dans chaque ligne, le nombre de points augmente de 1 en allant vers la droite (1, 2, 3). Quelle figure remplit la case manquante (en bas à droite) ? <svg viewBox=\"0 0 100 100\"><line x1=\"34\" y1=\"4\" x2=\"34\" y2=\"96\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"66\" y1=\"4\" x2=\"66\" y2=\"96\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"4\" y1=\"34\" x2=\"96\" y2=\"34\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"4\" y1=\"66\" x2=\"96\" y2=\"66\" stroke=\"#9ca3af\" stroke-width=\"1\"/><circle cx=\"19\" cy=\"19\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"45\" cy=\"19\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"55\" cy=\"19\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"78\" cy=\"19\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"84\" cy=\"19\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"81\" cy=\"13\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"19\" cy=\"51\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"45\" cy=\"51\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"55\" cy=\"51\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"78\" cy=\"51\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"84\" cy=\"51\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"81\" cy=\"45\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"19\" cy=\"83\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"45\" cy=\"83\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"55\" cy=\"83\" r=\"3\" fill=\"#1f2937\"/><text x=\"77\" y=\"88\" font-size=\"16\" fill=\"#1f2937\">?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"7\" fill=\"#1f2937\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"38\" cy=\"50\" r=\"7\" fill=\"#1f2937\"/><circle cx=\"62\" cy=\"50\" r=\"7\" fill=\"#1f2937\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"38\" cy=\"58\" r=\"7\" fill=\"#1f2937\"/><circle cx=\"62\" cy=\"58\" r=\"7\" fill=\"#1f2937\"/><circle cx=\"50\" cy=\"36\" r=\"7\" fill=\"#1f2937\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"30\" cy=\"40\" r=\"7\" fill=\"#1f2937\"/><circle cx=\"50\" cy=\"40\" r=\"7\" fill=\"#1f2937\"/><circle cx=\"70\" cy=\"40\" r=\"7\" fill=\"#1f2937\"/><circle cx=\"40\" cy=\"64\" r=\"7\" fill=\"#1f2937\"/></svg>"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "La règle cachée : sur chaque ligne, la 1re case a 1 point, la 2e en a 2, la 3e en a 3. La case manquante est la 3e de la dernière ligne : elle doit donc contenir 3 points. ✓ L'option c montre 3 points : c'est la bonne. L'option b (2 points) répète la colonne du milieu. L'option a (1 point) répète la première colonne. L'option d (4 points) dépasse la règle (+1 de trop). Lis la matrice ligne par ligne pour fixer l'écart constant : +1 par colonne.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "L'aiguille tourne toujours de 45° dans le sens des aiguilles d'une montre, autour de son point central. Quelle figure poursuit la suite ? <svg viewBox=\"0 0 100 100\"><circle cx=\"17\" cy=\"50\" r=\"2.5\" fill=\"#1f2937\"/><line x1=\"17\" y1=\"50\" x2=\"17\" y2=\"28\" stroke=\"#1f2937\" stroke-width=\"3\"/><polygon points=\"17,24 12,33 22,33\" fill=\"#1f2937\"/><circle cx=\"50\" cy=\"50\" r=\"2.5\" fill=\"#1f2937\"/><line x1=\"50\" y1=\"50\" x2=\"66\" y2=\"34\" stroke=\"#1f2937\" stroke-width=\"3\"/><polygon points=\"69,31 58,34 65,41\" fill=\"#1f2937\"/><circle cx=\"83\" cy=\"50\" r=\"2.5\" fill=\"#1f2937\"/><line x1=\"83\" y1=\"50\" x2=\"95\" y2=\"50\" stroke=\"#1f2937\" stroke-width=\"3\"/><polygon points=\"99,50 90,45 90,55\" fill=\"#1f2937\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"3\" fill=\"#1f2937\"/><line x1=\"50\" y1=\"50\" x2=\"70\" y2=\"70\" stroke=\"#1f2937\" stroke-width=\"4\"/><polygon points=\"75,75 62,72 72,62\" fill=\"#1f2937\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"3\" fill=\"#1f2937\"/><line x1=\"50\" y1=\"50\" x2=\"50\" y2=\"75\" stroke=\"#1f2937\" stroke-width=\"4\"/><polygon points=\"50,80 44,68 56,68\" fill=\"#1f2937\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"3\" fill=\"#1f2937\"/><line x1=\"50\" y1=\"50\" x2=\"70\" y2=\"30\" stroke=\"#1f2937\" stroke-width=\"4\"/><polygon points=\"75,25 62,28 72,38\" fill=\"#1f2937\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"3\" fill=\"#1f2937\"/><line x1=\"50\" y1=\"50\" x2=\"30\" y2=\"70\" stroke=\"#1f2937\" stroke-width=\"4\"/><polygon points=\"25,75 28,62 38,72\" fill=\"#1f2937\"/></svg>"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "La règle cachée : +45° dans le sens horaire à chaque étape. L'aiguille pointe vers le haut (90°), puis vers le haut-droite (45°), puis vers la droite (0°)… l'étape suivante doit pointer vers le bas-droite. ✓ L'option a pointe vers le bas-droite : c'est la bonne suite. L'option c (haut-droite) revient en arrière d'un cran (rotation inverse). L'option b (vers le bas) saute un cran de 45°. L'option d (bas-gauche) part dans le mauvais sens (sens anti-horaire). Garde un pas constant de 45°, toujours dans le même sens horaire.",
+      "difficulty": 3
+    }
+  ]
+}
