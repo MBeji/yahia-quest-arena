@@ -67,6 +67,27 @@ There is **no** `nameEn`/`nameAr`. There is **no** per-language text anywhere.
 Cross-field rules (Zod refine): option **ids must be unique**; `correctOption` ∈ option ids.
 Convention: option ids `a`,`b`,`c`,`d`.
 
+### Figures (inline SVG) in questions
+
+Any question field (`prompt`, an option's `text`, `explanation`) is a plain string, but it may embed
+**one** `<svg>…</svg>` block to carry a figure (geometry diagrams, IQ matrices, shape sequences,
+visual answer options). The renderer splits the field into its text and the SVG, sanitizes the SVG
+(DOMPurify SVG profile — drawing primitives only), and shows the figure; surrounding text renders
+normally. No schema/DB change is needed (it is just markup inside the string), and it round-trips
+through the pipeline unchanged.
+
+Rules for authoring figures:
+
+- **Self-contained SVG only.** Use a `viewBox`, and drawing primitives: `path`, `rect`, `circle`,
+  `ellipse`, `line`, `polyline`, `polygon`, `g`, `text`, `tspan`, gradients/patterns. **Forbidden /
+  stripped:** `<script>`, `<style>`, `<foreignObject>`, `<a>`, `<image>`, `<use>`, any `on*` handler,
+  any `href`/`xlink:href`, external URLs. No raster images — vectors only.
+- **One `<svg>` per field.** A figure-only option is just its `<svg>` (no text needed); a stimulus is
+  `prompt` text + one `<svg>`.
+- Keep figures compact and legible (a `viewBox` around `0 0 100 100`–ish, explicit `stroke`/`fill`,
+  readable when scaled to ~64px for options / ~256px max for prompts).
+- The answer to a visual item must be **unambiguous and derivable from the figure alone**.
+
 ## quiz.json
 
 | Field       | Type       | Required | Constraint                                                            |

@@ -1,6 +1,6 @@
 import { Lightbulb, Loader2 } from "lucide-react";
 import { useT } from "@/lib/i18n";
-import { isRtlText } from "@/shared/lib/utils";
+import { RichField } from "@/components/ui/svg-figure";
 
 type QuestHintButtonProps = {
   /** Remaining reveal charges the user owns across all hint consumables. */
@@ -35,9 +35,7 @@ export function QuestHintButton({
         <div className="mb-1 flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest">
           <Lightbulb className="h-3.5 w-3.5" /> {t.quest.hintRevealed}
         </div>
-        <p dir={revealed && isRtlText(revealed) ? "rtl" : undefined}>
-          {revealed ?? t.quest.hintUnavailable}
-        </p>
+        {revealed ? <RichField raw={revealed} as="p" /> : <p>{t.quest.hintUnavailable}</p>}
       </div>
     );
   }

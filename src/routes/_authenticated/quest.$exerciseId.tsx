@@ -31,6 +31,7 @@ import {
 } from "@/shared/constants/gamification";
 import { isRtlText, isMathExpression } from "@/shared/lib/utils";
 import { shuffleOptions, type BaseOption, type DisplayOption } from "@/shared/lib/question-utils";
+import { RichField, OptionContent } from "@/components/ui/svg-figure";
 import { levelForXp } from "@/shared/lib/level";
 import { QuestResultActions } from "@/features/quest/components/quest-result-actions";
 import { QuestRewardGrid } from "@/features/quest/components/quest-reward-grid";
@@ -534,12 +535,7 @@ function QuestPage() {
                           <div className="text-xs uppercase tracking-widest text-muted-foreground">
                             Question {reviewIndex + 1}
                           </div>
-                          <div
-                            className="mt-1 font-semibold"
-                            dir={isRtlText(item.prompt) ? "rtl" : undefined}
-                          >
-                            {item.prompt}
-                          </div>
+                          <RichField raw={item.prompt} className="mt-1 font-semibold" />
                         </div>
                         <div
                           className={`rounded-full px-3 py-1 text-xs font-bold ${item.isCorrect ? "bg-(--success)/15 text-success" : "bg-destructive/15 text-destructive"}`}
@@ -566,12 +562,11 @@ function QuestPage() {
                         </div>
                       </div>
                       {item.explanation && (
-                        <p
+                        <RichField
+                          raw={item.explanation}
+                          as="p"
                           className="mt-3 text-sm text-muted-foreground"
-                          dir={isRtlText(item.explanation) ? "rtl" : undefined}
-                        >
-                          {item.explanation}
-                        </p>
+                        />
                       )}
                     </div>
                   ))}
@@ -705,12 +700,11 @@ function QuestPage() {
           transition={{ duration: 0.3 }}
           className={`rounded-3xl border p-6 backdrop-blur-xl sm:p-8 ${isBoss ? "border-destructive/30 bg-destructive/5" : "border-border/50 bg-black/60"}`}
         >
-          <h2
+          <RichField
+            raw={current.prompt}
+            as="h2"
             className="font-display text-xl font-semibold sm:text-2xl"
-            dir={isRtlText(current.prompt) ? "rtl" : undefined}
-          >
-            {current.prompt}
-          </h2>
+          />
           <p className="mt-2 text-sm text-muted-foreground">
             {isBoss ? t.quest.bossStrike : isQuiz ? QL.quizRecorded : t.quest.feedbackMsg}
           </p>
@@ -750,7 +744,7 @@ function QuestPage() {
                     <span className="grid h-7 w-7 place-items-center rounded-md border border-current font-mono text-xs uppercase">
                       {opt.displayId}
                     </span>
-                    <span>{opt.text}</span>
+                    <OptionContent raw={opt.text} />
                   </span>
                   {/* Non-color indicator: the quest screen only reveals the recorded
                       choice (correctness is shown in the end-of-quest review), so mark
