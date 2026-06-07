@@ -1,0 +1,154 @@
+{
+  "title": "⚔️ Défi Intelligence fluide ⭐⭐⭐",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Règle inédite : on superpose les deux premières grilles. Un point ne reste dans le résultat que s'il apparaît dans UNE seule des deux grilles (jamais dans les deux). Quelle grille est le résultat ? <svg viewBox=\"0 0 100 100\"><rect x=\"4\" y=\"34\" width=\"28\" height=\"28\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"2\"/><line x1=\"18\" y1=\"34\" x2=\"18\" y2=\"62\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"4\" y1=\"48\" x2=\"32\" y2=\"48\" stroke=\"#9ca3af\" stroke-width=\"1\"/><circle cx=\"11\" cy=\"41\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"25\" cy=\"55\" r=\"3\" fill=\"#1f2937\"/><text x=\"36\" y=\"53\" font-size=\"14\" fill=\"#1f2937\">+</text><rect x=\"48\" y=\"34\" width=\"28\" height=\"28\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"2\"/><line x1=\"62\" y1=\"34\" x2=\"62\" y2=\"62\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"48\" y1=\"48\" x2=\"76\" y2=\"48\" stroke=\"#9ca3af\" stroke-width=\"1\"/><circle cx=\"55\" cy=\"41\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"69\" cy=\"41\" r=\"3\" fill=\"#1f2937\"/><text x=\"80\" y=\"53\" font-size=\"14\" fill=\"#1f2937\">=</text><text x=\"90\" y=\"53\" font-size=\"14\" fill=\"#1f2937\">?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"25\" y=\"25\" width=\"50\" height=\"50\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"2\"/><line x1=\"50\" y1=\"25\" x2=\"50\" y2=\"75\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"25\" y1=\"50\" x2=\"75\" y2=\"50\" stroke=\"#9ca3af\" stroke-width=\"1\"/><circle cx=\"62\" cy=\"37\" r=\"5\" fill=\"#1f2937\"/><circle cx=\"62\" cy=\"62\" r=\"5\" fill=\"#1f2937\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"25\" y=\"25\" width=\"50\" height=\"50\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"2\"/><line x1=\"50\" y1=\"25\" x2=\"50\" y2=\"75\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"25\" y1=\"50\" x2=\"75\" y2=\"50\" stroke=\"#9ca3af\" stroke-width=\"1\"/><circle cx=\"37\" cy=\"37\" r=\"5\" fill=\"#1f2937\"/><circle cx=\"62\" cy=\"37\" r=\"5\" fill=\"#1f2937\"/><circle cx=\"62\" cy=\"62\" r=\"5\" fill=\"#1f2937\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"25\" y=\"25\" width=\"50\" height=\"50\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"2\"/><line x1=\"50\" y1=\"25\" x2=\"50\" y2=\"75\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"25\" y1=\"50\" x2=\"75\" y2=\"50\" stroke=\"#9ca3af\" stroke-width=\"1\"/><circle cx=\"37\" cy=\"37\" r=\"5\" fill=\"#1f2937\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"25\" y=\"25\" width=\"50\" height=\"50\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"2\"/><line x1=\"50\" y1=\"25\" x2=\"50\" y2=\"75\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"25\" y1=\"50\" x2=\"75\" y2=\"50\" stroke=\"#9ca3af\" stroke-width=\"1\"/><circle cx=\"37\" cy=\"37\" r=\"5\" fill=\"#1f2937\"/><circle cx=\"62\" cy=\"37\" r=\"5\" fill=\"#1f2937\"/><circle cx=\"37\" cy=\"62\" r=\"5\" fill=\"#1f2937\"/><circle cx=\"62\" cy=\"62\" r=\"5\" fill=\"#1f2937\"/></svg>"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "La règle cachée est un OU exclusif : on garde une case noircie seulement si elle est marquée dans exactement une des deux grilles. Grille 1 = haut-gauche + bas-droite ; grille 2 = haut-gauche + haut-droite. La case haut-gauche est dans les deux → elle s'annule. Restent haut-droite (grille 2 seule) et bas-droite (grille 1 seule). ✓ L'option a montre exactement ces deux points (haut-droite et bas-droite). L'option b est l'union (elle garde le point commun haut-gauche, c'est l'erreur classique du « tout additionner »). L'option d est aussi l'union, encore plus chargée. L'option c ne garde que le point commun, soit l'inverse exact de la règle (intersection). Marque un point uniquement quand il apparaît dans une seule grille.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Chaîne de transformation : observe comment le nombre de côtés du polygone évolue d'une figure à la suivante, puis prolonge la suite. Quelle figure vient ensuite ? <svg viewBox=\"0 0 100 100\"><polygon points=\"14,62 6,46 22,46\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"2\"/><rect x=\"30\" y=\"42\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"2\"/><polygon points=\"64,40 73,47 70,58 58,58 55,47\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"2\"/><text x=\"84\" y=\"56\" font-size=\"16\" fill=\"#1f2937\">?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"50,22 68,34 74,54 62,72 38,72 26,54 32,34\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"50,24 70,38 62,62 38,62 30,38\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"30\" y=\"30\" width=\"40\" height=\"40\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"50,22 72,35 72,61 50,74 28,61 28,35\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "La règle cachée : le nombre de côtés augmente de 1 à chaque étape. Triangle (3) → carré (4) → pentagone (5) → ?. La figure suivante doit donc avoir 6 côtés : un hexagone. ✓ L'option d est un hexagone (6 côtés) : c'est la bonne. L'option b est un pentagone (5 côtés) et répète l'étape précédente sans avancer. L'option c est un carré (4 côtés), elle revient deux crans en arrière. L'option a est un heptagone (7 côtés), elle saute un cran (+2 au lieu de +1). Compte les côtés et garde l'écart constant de +1.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Deux attributs varient indépendamment le long de la suite : la FORME (cercle / carré, en alternance) et le REMPLISSAGE (vide / plein, en alternance). Quelle figure occupe la case « ? » ? <svg viewBox=\"0 0 100 100\"><circle cx=\"14\" cy=\"50\" r=\"9\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"2\"/><rect x=\"30\" y=\"41\" width=\"18\" height=\"18\" fill=\"#1f2937\" stroke=\"#1f2937\" stroke-width=\"2\"/><circle cx=\"66\" cy=\"50\" r=\"9\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"2\"/><text x=\"84\" y=\"56\" font-size=\"16\" fill=\"#1f2937\">?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"30\" y=\"30\" width=\"40\" height=\"40\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"30\" y=\"30\" width=\"40\" height=\"40\" fill=\"#1f2937\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"20\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"20\" fill=\"#1f2937\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "La règle cachée : deux cycles indépendants à suivre séparément. La forme alterne cercle, carré, cercle, … donc la 4e case est un CARRÉ. Le remplissage alterne vide, plein, vide, … donc la 4e case est PLEINE. La réponse combine les deux : un carré plein. ✓ L'option b (carré plein) respecte forme = carré ET remplissage = plein. L'option a (carré vide) a la bonne forme mais inverse le remplissage. L'option d (cercle plein) a le bon remplissage mais garde la forme précédente (oubli de l'alternance de forme). L'option c (cercle vide) se trompe sur les deux attributs à la fois. Le piège courant : ne suivre qu'un seul attribut ; ici il faut faire avancer la forme ET le remplissage chacun dans son cycle.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Chaîne de transformation à DEUX effets combinés à chaque pas : la flèche tourne de 90° dans le sens horaire ET un point supplémentaire apparaît (1, puis 2, puis 3…). Quelle figure poursuit la suite ? <svg viewBox=\"0 0 100 100\"><line x1=\"14\" y1=\"62\" x2=\"14\" y2=\"40\" stroke=\"#1f2937\" stroke-width=\"3\"/><polygon points=\"14,34 9,44 19,44\" fill=\"#1f2937\"/><circle cx=\"14\" cy=\"72\" r=\"2.5\" fill=\"#1f2937\"/><line x1=\"40\" y1=\"50\" x2=\"62\" y2=\"50\" stroke=\"#1f2937\" stroke-width=\"3\"/><polygon points=\"68,50 58,45 58,55\" fill=\"#1f2937\"/><circle cx=\"46\" cy=\"68\" r=\"2.5\" fill=\"#1f2937\"/><circle cx=\"56\" cy=\"68\" r=\"2.5\" fill=\"#1f2937\"/><line x1=\"86\" y1=\"40\" x2=\"86\" y2=\"62\" stroke=\"#1f2937\" stroke-width=\"3\"/><polygon points=\"86,68 81,58 91,58\" fill=\"#1f2937\"/><circle cx=\"78\" cy=\"34\" r=\"2.5\" fill=\"#1f2937\"/><circle cx=\"86\" cy=\"34\" r=\"2.5\" fill=\"#1f2937\"/><circle cx=\"94\" cy=\"34\" r=\"2.5\" fill=\"#1f2937\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><line x1=\"60\" y1=\"40\" x2=\"38\" y2=\"40\" stroke=\"#1f2937\" stroke-width=\"4\"/><polygon points=\"32,40 42,34 42,46\" fill=\"#1f2937\"/><circle cx=\"38\" cy=\"66\" r=\"4\" fill=\"#1f2937\"/><circle cx=\"50\" cy=\"66\" r=\"4\" fill=\"#1f2937\"/><circle cx=\"62\" cy=\"66\" r=\"4\" fill=\"#1f2937\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><line x1=\"40\" y1=\"40\" x2=\"62\" y2=\"40\" stroke=\"#1f2937\" stroke-width=\"4\"/><polygon points=\"68,40 58,34 58,46\" fill=\"#1f2937\"/><circle cx=\"32\" cy=\"66\" r=\"4\" fill=\"#1f2937\"/><circle cx=\"44\" cy=\"66\" r=\"4\" fill=\"#1f2937\"/><circle cx=\"56\" cy=\"66\" r=\"4\" fill=\"#1f2937\"/><circle cx=\"68\" cy=\"66\" r=\"4\" fill=\"#1f2937\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><line x1=\"60\" y1=\"40\" x2=\"38\" y2=\"40\" stroke=\"#1f2937\" stroke-width=\"4\"/><polygon points=\"32,40 42,34 42,46\" fill=\"#1f2937\"/><circle cx=\"32\" cy=\"66\" r=\"4\" fill=\"#1f2937\"/><circle cx=\"44\" cy=\"66\" r=\"4\" fill=\"#1f2937\"/><circle cx=\"56\" cy=\"66\" r=\"4\" fill=\"#1f2937\"/><circle cx=\"68\" cy=\"66\" r=\"4\" fill=\"#1f2937\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><line x1=\"50\" y1=\"60\" x2=\"50\" y2=\"38\" stroke=\"#1f2937\" stroke-width=\"4\"/><polygon points=\"50,32 44,42 56,42\" fill=\"#1f2937\"/><circle cx=\"32\" cy=\"70\" r=\"4\" fill=\"#1f2937\"/><circle cx=\"44\" cy=\"70\" r=\"4\" fill=\"#1f2937\"/><circle cx=\"56\" cy=\"70\" r=\"4\" fill=\"#1f2937\"/><circle cx=\"68\" cy=\"70\" r=\"4\" fill=\"#1f2937\"/></svg>"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "La règle cachée combine deux effets simultanés. Direction : haut → droite → bas → ?, soit +90° horaire à chaque pas, donc la suite pointe vers la GAUCHE. Points : 1, 2, 3, … donc l'étape suivante en a 4. ✓ L'option c réunit les deux : flèche vers la gauche ET 4 points. L'option b a bien 4 points mais la flèche pointe à droite (mauvaise rotation, retour en arrière). L'option a a la bonne direction (gauche) mais seulement 3 points (oubli du +1). L'option d garde 4 points mais une flèche vers le haut (saut d'un quart de tour). Applique TOUJOURS les deux transformations ensemble, jamais une seule.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Matrice 3×3, règle inédite par ligne : la 3e case s'obtient en RETIRANT de la 1re case les positions qui sont aussi occupées dans la 2e case (case 1 moins case 2). Quelle figure remplit la case manquante (en bas à droite) ? <svg viewBox=\"0 0 100 100\"><line x1=\"34\" y1=\"4\" x2=\"34\" y2=\"96\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"66\" y1=\"4\" x2=\"66\" y2=\"96\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"4\" y1=\"34\" x2=\"96\" y2=\"34\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"4\" y1=\"66\" x2=\"96\" y2=\"66\" stroke=\"#9ca3af\" stroke-width=\"1\"/><circle cx=\"12\" cy=\"12\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"24\" cy=\"12\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"12\" cy=\"24\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"44\" cy=\"12\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"56\" cy=\"24\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"88\" cy=\"12\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"76\" cy=\"24\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"12\" cy=\"44\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"24\" cy=\"44\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"24\" cy=\"56\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"56\" cy=\"44\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"76\" cy=\"44\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"88\" cy=\"56\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"12\" cy=\"76\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"24\" cy=\"76\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"12\" cy=\"88\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"24\" cy=\"88\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"56\" cy=\"76\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"44\" cy=\"88\" r=\"3\" fill=\"#1f2937\"/><circle cx=\"56\" cy=\"88\" r=\"3\" fill=\"#1f2937\"/><text x=\"76\" y=\"86\" font-size=\"16\" fill=\"#1f2937\">?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"40\" cy=\"40\" r=\"6\" fill=\"#1f2937\"/><circle cx=\"60\" cy=\"60\" r=\"6\" fill=\"#1f2937\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"40\" cy=\"40\" r=\"6\" fill=\"#1f2937\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"40\" cy=\"60\" r=\"6\" fill=\"#1f2937\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"40\" cy=\"40\" r=\"6\" fill=\"#1f2937\"/><circle cx=\"60\" cy=\"40\" r=\"6\" fill=\"#1f2937\"/><circle cx=\"40\" cy=\"60\" r=\"6\" fill=\"#1f2937\"/></svg>"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "La règle cachée : case 3 = case 1, dont on retire toute position déjà occupée dans la case 2. Vérifie sur la 1re ligne : case 1 occupe haut-gauche, haut-droite, bas-gauche ; case 2 occupe haut-gauche et bas-droite ; on enlève la position commune (haut-gauche) → il reste haut-droite et bas-gauche, soit 2 points, exactement la case 3. La 2e ligne confirme : {haut-gauche, haut-droite, bas-droite} moins {haut-droite} = {haut-gauche, bas-droite}, 2 points. Dernière ligne : case 1 est pleine (haut-gauche, haut-droite, bas-gauche, bas-droite), case 2 occupe haut-droite, bas-gauche, bas-droite ; on enlève ces trois → il reste UNIQUEMENT le haut-gauche. ✓ L'option b est un seul point en haut-gauche : c'est la bonne. L'option a garde 2 points (elle n'a retiré qu'une partie des positions communes). L'option d garde 3 points (elle additionne ou oublie la soustraction). L'option c met bien 1 point mais en bas-gauche, justement une position annulée par la case 2. Soustrais position par position : ne conserve que ce que la case 2 ne touche pas.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Règle inédite à découvrir : un jeton noir tourne autour des coins d'un carré dans le sens horaire ; à chaque pas, le côté du carré qui PORTE le jeton s'épaissit (devient un trait gras). Quelle figure poursuit la suite ? <svg viewBox=\"0 0 100 100\"><rect x=\"6\" y=\"38\" width=\"22\" height=\"22\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"1.5\"/><line x1=\"6\" y1=\"38\" x2=\"28\" y2=\"38\" stroke=\"#1f2937\" stroke-width=\"4\"/><circle cx=\"6\" cy=\"38\" r=\"3.5\" fill=\"#1f2937\"/><rect x=\"40\" y=\"38\" width=\"22\" height=\"22\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"1.5\"/><line x1=\"62\" y1=\"38\" x2=\"62\" y2=\"60\" stroke=\"#1f2937\" stroke-width=\"4\"/><circle cx=\"62\" cy=\"38\" r=\"3.5\" fill=\"#1f2937\"/><rect x=\"74\" y=\"38\" width=\"22\" height=\"22\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"1.5\"/><line x1=\"74\" y1=\"60\" x2=\"96\" y2=\"60\" stroke=\"#1f2937\" stroke-width=\"4\"/><circle cx=\"96\" cy=\"60\" r=\"3.5\" fill=\"#1f2937\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"30\" y=\"30\" width=\"40\" height=\"40\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"2\"/><line x1=\"30\" y1=\"30\" x2=\"30\" y2=\"70\" stroke=\"#1f2937\" stroke-width=\"6\"/><circle cx=\"30\" cy=\"70\" r=\"6\" fill=\"#1f2937\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"30\" y=\"30\" width=\"40\" height=\"40\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"2\"/><line x1=\"30\" y1=\"30\" x2=\"30\" y2=\"70\" stroke=\"#1f2937\" stroke-width=\"6\"/><circle cx=\"30\" cy=\"30\" r=\"6\" fill=\"#1f2937\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"30\" y=\"30\" width=\"40\" height=\"40\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"2\"/><line x1=\"30\" y1=\"70\" x2=\"70\" y2=\"70\" stroke=\"#1f2937\" stroke-width=\"6\"/><circle cx=\"30\" cy=\"70\" r=\"6\" fill=\"#1f2937\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"30\" y=\"30\" width=\"40\" height=\"40\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"2\"/><line x1=\"30\" y1=\"30\" x2=\"70\" y2=\"30\" stroke=\"#1f2937\" stroke-width=\"6\"/><circle cx=\"30\" cy=\"70\" r=\"6\" fill=\"#1f2937\"/></svg>"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "La règle cachée combine deux mouvements liés. Le jeton occupe les coins dans le sens horaire : coin haut-gauche → coin haut-droite → coin bas-droite → ensuite coin bas-GAUCHE. Et le côté épaissi est toujours celui qui suit le jeton dans ce sens : haut, puis droite, puis bas, donc ensuite le côté GAUCHE. ✓ L'option a place le jeton en bas-gauche ET épaissit le côté gauche : les deux mouvements concordent. L'option b épaissit bien le côté gauche mais remet le jeton en haut-gauche (retour en arrière). L'option c laisse le jeton en bas-gauche mais épaissit le bas (le côté précédent, pas le suivant). L'option d mélange : jeton en bas-gauche mais côté haut épaissi (deux crans d'écart). Fais avancer le jeton ET le côté gras ensemble, d'un cran horaire.",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "title": "Échauffement Maths-raisonnement ⭐",
+  "questions": [
+    {
+      "prompt": "Observe la suite de nombres et trouve la règle cachée : 3, 6, 9, 12, ? — quel nombre vient ensuite ?",
+      "options": [
+        { "id": "a", "text": "15" },
+        { "id": "b", "text": "13" },
+        { "id": "c", "text": "16" },
+        { "id": "d", "text": "24" }
+      ],
+      "correctOption": "a",
+      "explanation": "La règle cachée : on ajoute 3 à chaque pas (3, 6, 9, 12…). ✓ Le terme suivant est donc 12 + 3 = 15, soit l'option a. L'option b (13) ajoute seulement 1, comme si on comptait à la suite. L'option c (16) ajoute 4 : c'est le bon type d'opération mais le mauvais pas. L'option d (24) double le dernier terme au lieu de poursuivre l'addition régulière.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète l'analogie en gardant la même relation : 3 est à 6 ce que 5 est à ? (Indice : par combien faut-il multiplier 3 pour obtenir 6 ?)",
+      "options": [
+        { "id": "a", "text": "11" },
+        { "id": "b", "text": "15" },
+        { "id": "c", "text": "10" },
+        { "id": "d", "text": "25" }
+      ],
+      "correctOption": "c",
+      "explanation": "La relation cachée : on multiplie par 2 (3 × 2 = 6). ✓ On applique la même règle à 5 : 5 × 2 = 10, soit l'option c. L'option a (11) additionne 5 + 6, c'est-à-dire ajoute le résultat de la première paire au lieu de réutiliser sa règle. L'option b (15) multiplie par 3 (5 × 3), en prenant le premier nombre du modèle comme facteur au lieu du « ×2 ». L'option d (25) met 5 au carré : on change d'opération en cours de route.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans cette grille, les deux lignes ont la même somme. Quel nombre manque à la place du « ? » ? <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"15\" y=\"15\" width=\"70\" height=\"70\" fill=\"none\" stroke=\"#1d4ed8\" stroke-width=\"2\"/><line x1=\"38\" y1=\"15\" x2=\"38\" y2=\"85\" stroke=\"#1d4ed8\" stroke-width=\"1.5\"/><line x1=\"62\" y1=\"15\" x2=\"62\" y2=\"85\" stroke=\"#1d4ed8\" stroke-width=\"1.5\"/><line x1=\"15\" y1=\"50\" x2=\"85\" y2=\"50\" stroke=\"#1d4ed8\" stroke-width=\"1.5\"/><text x=\"26\" y=\"37\" font-size=\"13\" fill=\"#0f172a\" text-anchor=\"middle\">2</text><text x=\"50\" y=\"37\" font-size=\"13\" fill=\"#0f172a\" text-anchor=\"middle\">4</text><text x=\"74\" y=\"37\" font-size=\"13\" fill=\"#0f172a\" text-anchor=\"middle\">3</text><text x=\"26\" y=\"73\" font-size=\"13\" fill=\"#0f172a\" text-anchor=\"middle\">5</text><text x=\"50\" y=\"73\" font-size=\"13\" fill=\"#0f172a\" text-anchor=\"middle\">?</text><text x=\"74\" y=\"73\" font-size=\"13\" fill=\"#be123c\" text-anchor=\"middle\">2</text></svg>",
+      "options": [
+        { "id": "a", "text": "4" },
+        { "id": "b", "text": "2" },
+        { "id": "c", "text": "9" },
+        { "id": "d", "text": "5" }
+      ],
+      "correctOption": "b",
+      "explanation": "La règle : les deux lignes ont la même somme. La ligne du haut fait 2 + 4 + 3 = 9. ✓ La ligne du bas doit aussi faire 9 : 5 + ? + 2 = 9, donc ? = 9 − 7 = 2, soit l'option b. L'option a (4) recopie un voisin sans calculer. L'option c (9) donne la somme totale d'une ligne au lieu de la case manquante. L'option d (5) répète le premier nombre de la ligne au lieu de compléter la somme.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Une recette utilise 2 œufs pour 6 crêpes. En gardant la même proportion, combien d'œufs faut-il pour 12 crêpes ?",
+      "options": [
+        { "id": "a", "text": "8" },
+        { "id": "b", "text": "6" },
+        { "id": "c", "text": "4" },
+        { "id": "d", "text": "3" }
+      ],
+      "correctOption": "c",
+      "explanation": "La règle : le nombre de crêpes double (6 → 12), donc tout double à proportion égale. ✓ Il faut 2 × 2 = 4 œufs, soit l'option c. L'option a (8) ajoute 6 aux œufs comme on a ajouté 6 aux crêpes : on additionne au lieu de respecter le rapport. L'option b (6) recopie le nombre de crêpes de départ. L'option d (3) ajoute seulement 1, sans tenir compte du doublement.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Chaque forme contient un nombre. La règle est la même d'une forme à l'autre. Quel nombre doit remplacer le « ? » dans la dernière forme ? <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"15\" cy=\"50\" r=\"11\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"2\"/><text x=\"15\" y=\"55\" font-size=\"13\" fill=\"#0f172a\" text-anchor=\"middle\">1</text><circle cx=\"39\" cy=\"50\" r=\"11\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"2\"/><text x=\"39\" y=\"55\" font-size=\"13\" fill=\"#0f172a\" text-anchor=\"middle\">2</text><circle cx=\"63\" cy=\"50\" r=\"11\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"2\"/><text x=\"63\" y=\"55\" font-size=\"13\" fill=\"#0f172a\" text-anchor=\"middle\">4</text><circle cx=\"87\" cy=\"50\" r=\"11\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"2\"/><text x=\"87\" y=\"55\" font-size=\"13\" fill=\"#be123c\" text-anchor=\"middle\">?</text></svg>",
+      "options": [
+        { "id": "a", "text": "5" },
+        { "id": "b", "text": "6" },
+        { "id": "c", "text": "8" },
+        { "id": "d", "text": "16" }
+      ],
+      "correctOption": "c",
+      "explanation": "La règle cachée : chaque nombre est le double du précédent (1, puis 2, puis 4…). ✓ Le suivant vaut 4 × 2 = 8, soit l'option c. Avec trois termes donnés (1, 2, 4), seule la règle « ×2 » convient : l'addition est exclue car l'écart change (de 1 à 2, puis de 2 à 4). L'option a (5) ajoute 1 au dernier terme. L'option b (6) ajoute le dernier écart (4 + 2) au lieu de doubler. L'option d (16) double deux fois (saute une étape).",
+      "difficulty": 2
+    }
+  ]
+}

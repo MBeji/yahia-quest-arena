@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Échauffement",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Observe la suite et trouve la règle cachée : 4, 7, 10, 13, ? Quel nombre vient ensuite ?",
+      "options": [
+        { "id": "a", "text": "16" },
+        { "id": "b", "text": "15" },
+        { "id": "c", "text": "17" },
+        { "id": "d", "text": "26" }
+      ],
+      "correctOption": "a",
+      "explanation": "La règle est : +3 à chaque étape (7−4 = 3, 10−7 = 3, 13−10 = 3). Le nombre suivant est donc 13 + 3 = 16 → l'option a ✓. Le piège : b (15) ajoute seulement 2, c (17) ajoute 4, et d (26) double le dernier nombre. L'écart entre deux termes reste constant et vaut 3.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Trouve la règle commune aux deux exemples, puis applique-la : 2 → 4, 3 → 6, alors 5 → ?",
+      "options": [
+        { "id": "a", "text": "8" },
+        { "id": "b", "text": "10" },
+        { "id": "c", "text": "9" },
+        { "id": "d", "text": "11" }
+      ],
+      "correctOption": "b",
+      "explanation": "Avec deux exemples, une seule règle marche pour les DEUX : on multiplie par 2. Vérifie : 2 × 2 = 4 et 3 × 2 = 6 ✓. On applique à 5 : 5 × 2 = 10 → l'option b ✓. Le piège : a (8) suppose « ajouter 3 » (3 + 3 = 6), mais cette règle échoue sur le premier exemple (2 + 3 = 5 ≠ 4), donc elle est éliminée ; c (9) fait 5 + 4 et d (11) fait 5 + 6, qui ne collent à aucun des deux exemples. Seule la multiplication par 2 reproduit 4 et 6, donc 5 donne 10.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans cette grille, chaque ligne suit la même règle : les deux premières cases s'additionnent pour donner la troisième. Quel nombre remplace le « ? » ? <svg viewBox=\"0 0 100 100\"><rect x=\"10\" y=\"15\" width=\"80\" height=\"70\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><line x1=\"36\" y1=\"15\" x2=\"36\" y2=\"85\" stroke=\"#222\" stroke-width=\"2\"/><line x1=\"63\" y1=\"15\" x2=\"63\" y2=\"85\" stroke=\"#222\" stroke-width=\"2\"/><line x1=\"10\" y1=\"38\" x2=\"90\" y2=\"38\" stroke=\"#222\" stroke-width=\"2\"/><line x1=\"10\" y1=\"61\" x2=\"90\" y2=\"61\" stroke=\"#222\" stroke-width=\"2\"/><text x=\"23\" y=\"31\" font-size=\"13\" text-anchor=\"middle\" fill=\"#222\">2</text><text x=\"49\" y=\"31\" font-size=\"13\" text-anchor=\"middle\" fill=\"#222\">3</text><text x=\"76\" y=\"31\" font-size=\"13\" text-anchor=\"middle\" fill=\"#222\">5</text><text x=\"23\" y=\"54\" font-size=\"13\" text-anchor=\"middle\" fill=\"#222\">4</text><text x=\"49\" y=\"54\" font-size=\"13\" text-anchor=\"middle\" fill=\"#222\">1</text><text x=\"76\" y=\"54\" font-size=\"13\" text-anchor=\"middle\" fill=\"#222\">5</text><text x=\"23\" y=\"77\" font-size=\"13\" text-anchor=\"middle\" fill=\"#222\">3</text><text x=\"49\" y=\"77\" font-size=\"13\" text-anchor=\"middle\" fill=\"#222\">4</text><text x=\"76\" y=\"77\" font-size=\"15\" text-anchor=\"middle\" fill=\"#888\">?</text></svg>",
+      "options": [
+        { "id": "a", "text": "5" },
+        { "id": "b", "text": "12" },
+        { "id": "c", "text": "7" },
+        { "id": "d", "text": "1" }
+      ],
+      "correctOption": "c",
+      "explanation": "La règle, lisible sur les deux premières lignes : case3 = case1 + case2 (2 + 3 = 5, puis 4 + 1 = 5). Pour la dernière ligne : 3 + 4 = 7 → l'option c ✓. Le piège : a (5) recopie le résultat des autres lignes au lieu de calculer, b (12) multiplie 3 × 4, et d (1) soustrait 4 − 3. La bonne opération est l'addition des deux premières cases.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Observe la suite et trouve la règle cachée : 2, 4, 6, 8, ? Quel nombre vient ensuite ?",
+      "options": [
+        { "id": "a", "text": "9" },
+        { "id": "b", "text": "16" },
+        { "id": "c", "text": "12" },
+        { "id": "d", "text": "10" }
+      ],
+      "correctOption": "d",
+      "explanation": "La règle est : +2 à chaque étape, ce sont les nombres pairs (2, 4, 6, 8…). Le suivant est 8 + 2 = 10 → l'option d ✓. Le piège : a (9) ajoute 1 et donne un nombre impair, b (16) double le dernier terme, et c (12) saute une étape (+4). On avance régulièrement de 2 en 2, donc après 8 vient 10.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "2 billes identiques coûtent 6 pièces d'or. Au même prix par bille, combien coûtent 5 billes ?",
+      "options": [
+        { "id": "a", "text": "9" },
+        { "id": "b", "text": "15" },
+        { "id": "c", "text": "12" },
+        { "id": "d", "text": "30" }
+      ],
+      "correctOption": "b",
+      "explanation": "On cherche d'abord le prix d'une bille : 6 ÷ 2 = 3 pièces. Pour 5 billes : 5 × 3 = 15 → l'option b ✓. Le piège : a (9) ajoute juste 3 à 6 (comme si on passait de 2 à 3 billes), c (12) double le prix de 2 billes, et d (30) multiplie 6 par 5 sans ramener au prix unitaire. Il faut trouver le prix d'UNE bille, puis multiplier par 5.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans cette pyramide, chaque nombre est la somme des deux nombres juste en dessous de lui. Quel nombre va tout en haut ? <svg viewBox=\"0 0 100 100\"><rect x=\"38\" y=\"10\" width=\"24\" height=\"22\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><text x=\"50\" y=\"26\" font-size=\"15\" text-anchor=\"middle\" fill=\"#888\">?</text><rect x=\"24\" y=\"39\" width=\"24\" height=\"22\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><text x=\"36\" y=\"55\" font-size=\"13\" text-anchor=\"middle\" fill=\"#222\">5</text><rect x=\"52\" y=\"39\" width=\"24\" height=\"22\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><text x=\"64\" y=\"55\" font-size=\"13\" text-anchor=\"middle\" fill=\"#222\">8</text><rect x=\"10\" y=\"68\" width=\"24\" height=\"22\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><text x=\"22\" y=\"84\" font-size=\"13\" text-anchor=\"middle\" fill=\"#222\">2</text><rect x=\"38\" y=\"68\" width=\"24\" height=\"22\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><text x=\"50\" y=\"84\" font-size=\"13\" text-anchor=\"middle\" fill=\"#222\">3</text><rect x=\"66\" y=\"68\" width=\"24\" height=\"22\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><text x=\"78\" y=\"84\" font-size=\"13\" text-anchor=\"middle\" fill=\"#222\">5</text></svg>",
+      "options": [
+        { "id": "a", "text": "10" },
+        { "id": "b", "text": "23" },
+        { "id": "c", "text": "13" },
+        { "id": "d", "text": "15" }
+      ],
+      "correctOption": "c",
+      "explanation": "La règle se vérifie sur la base : 2 + 3 = 5 et 3 + 5 = 8, ce sont bien les deux cases du milieu. Le sommet vaut donc 5 + 8 = 13 → l'option c ✓. Le piège : a (10) additionne les extrêmes de la base (2 + 3 + 5 = 10), b (23) additionne tous les nombres affichés, et d (15) ajoute 2 au sommet. Le sommet est la somme des DEUX cases juste en dessous, soit 5 + 8 = 13.",
+      "difficulty": 1
+    }
+  ]
+}
