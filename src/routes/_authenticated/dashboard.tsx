@@ -35,7 +35,8 @@ import { useReducedMotion } from "motion/react";
 
 const GoldAmbientCanvas = lazy(() => import("@/components/visual/gold-ambient-canvas"));
 import { formatStudentAllianceCode } from "@/features/parent-report";
-import { useT } from "@/lib/i18n";
+import { useT, useI18n } from "@/lib/i18n";
+import { filterSubjectsByLocale } from "@/shared/lib/subject-locale";
 import { xpToNextLevel, xpWithinLevel } from "@/shared/lib/level";
 import { HeroAvatar } from "@/features/dashboard/components/hero-avatar";
 import { HeroStatChips } from "@/features/dashboard/components/hero-stat-chips";
@@ -149,6 +150,7 @@ function MotivationalQuote() {
 
 function Dashboard() {
   const t = useT();
+  const { locale } = useI18n();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const fetchDashboard = useServerFn(getDashboard);
@@ -287,7 +289,7 @@ function Dashboard() {
   }
 
   const { profile, subjects, stats, nextExerciseId } = data;
-  const otherSubjects = data.otherSubjects ?? [];
+  const otherSubjects = filterSubjectsByLocale(data.otherSubjects ?? [], locale);
   const hasSubscription = isSubscriptionActive(
     (profile as { subscription_expires_at?: string | null } | null)?.subscription_expires_at ??
       null,

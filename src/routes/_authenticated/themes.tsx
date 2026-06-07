@@ -20,6 +20,8 @@ import {
   ChevronLeft,
 } from "lucide-react";
 import { getThemes, getGradesByTheme, getSubjects } from "@/features/dashboard";
+import { useI18n } from "@/lib/i18n";
+import { filterSubjectsByLocale } from "@/shared/lib/subject-locale";
 
 export const Route = createFileRoute("/_authenticated/themes")({
   head: () => ({ meta: [{ title: "Thèmes · XP Scholars" }] }),
@@ -49,6 +51,7 @@ type Subject = {
   name_fr: string;
   icon: string;
   color_token: string;
+  content_language: string;
   theme_id: string;
   grade_id: string | null;
 };
@@ -85,6 +88,7 @@ function PanelSkeleton() {
 }
 
 function ThemesPage() {
+  const { locale } = useI18n();
   const fetchThemes = useServerFn(getThemes);
   const fetchGrades = useServerFn(getGradesByTheme);
   const fetchSubjects = useServerFn(getSubjects);
@@ -116,7 +120,10 @@ function ThemesPage() {
 
   const themes: Theme[] = (themesQuery.data?.themes as Theme[]) ?? [];
   const grades: Grade[] = (gradesQuery.data?.grades as Grade[]) ?? [];
-  const subjects: Subject[] = (subjectsQuery.data?.subjects as Subject[]) ?? [];
+  const subjects: Subject[] = filterSubjectsByLocale(
+    (subjectsQuery.data?.subjects as Subject[]) ?? [],
+    locale,
+  );
 
   const resetToThemes = () => {
     setTheme(null);
