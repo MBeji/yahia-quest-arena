@@ -307,6 +307,7 @@ function SubjectPage() {
                     return (
                       <div
                         key={ex.id}
+                        data-testid="mission-locked"
                         title={L.lockedNote}
                         aria-disabled="true"
                         className="flex cursor-not-allowed items-center justify-between gap-3 rounded-xl border border-border/40 bg-black/30 p-4 opacity-60"

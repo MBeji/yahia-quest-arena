@@ -438,7 +438,7 @@ function QuestPage() {
             <h1 className="mt-5 font-display text-3xl font-bold">
               {passed ? t.quest.victoryTitle : t.quest.niceTriTitle}
             </h1>
-            <p className="mt-1 text-muted-foreground">
+            <p className="mt-1 text-muted-foreground" data-testid="quest-score">
               <ExplainHint
                 text={t.explain.questResultScore
                   .replace("{correct}", String(result.correct))
@@ -528,6 +528,8 @@ function QuestPage() {
                   {result.review.map((item, reviewIndex) => (
                     <div
                       key={item.questionId}
+                      data-testid="review-item"
+                      data-correct={item.isCorrect ? "true" : "false"}
                       className="rounded-2xl border border-border/50 bg-black/30 p-4"
                     >
                       <div className="flex items-start justify-between gap-4">
@@ -791,6 +793,7 @@ function QuestPage() {
 
           <div className="mt-6 flex justify-end">
             <button
+              data-testid="quest-submit"
               disabled={!showFeedback || mutation.isPending || sessionMutation.isPending}
               onClick={advanceNow}
               className={`inline-flex items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-bold shadow-gold transition disabled:opacity-40 ${
