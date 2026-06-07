@@ -67,7 +67,9 @@ A chapter directory `content/<subject>/NN-<slug>/` requires all of: `chapter.jso
 2. **Course** — `cours.md`: the full lesson, in the subject's one language, in the RPG style of
    `references/style-guide.md` (~50–75 lines). **`resume.md`**: a tight bullet summary mirroring it.
 3. **Quiz** — `quiz.json`: the comprehension gate. **5 questions** (3–10 allowed), 4 options
-   (`a`–`d`), difficulty 1–2, short explanations. Students must pass at **≥80%** to unlock exercises.
+   (`a`–`d`), difficulty 1–2, short explanations. For **school-program** subjects, students must pass
+   at **≥80%** to unlock the chapter's exercises; **non-school themes don't gate** (the quiz is an
+   optional warm-up there).
 4. **Exercises** — `exercices/NN-<slug>.json`, the canonical ladder:
    `01-pratique` (practice, d1, 50/10) · `02-boss` (boss, d3, 120/30) · `03-revision`
    (practice, d2, 70/15, optional) · `04-defi` (challenge, d4, 300/60) · `05-*` (boss, d3, 120/30).
