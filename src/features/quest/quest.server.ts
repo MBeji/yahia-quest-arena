@@ -178,13 +178,19 @@ export const getSubject = createServerFn({ method: "GET" })
     // Comprehension-quiz gate: a chapter's exercises stay locked until the
     // user passes that chapter's mode='quiz' exercise at/above the threshold.
     const exercises = exs.data ?? [];
+    // The comprehension-quiz gate applies only to the school program (grade-bound
+    // subjects). Non-school themes (culture-générale, muscle-cerveau/IQ, languages)
+    // have no theory to validate, so their chapters are never quiz-gated.
+    const isSchoolSubject =
+      ((subj.data as { grade_id?: string | null } | null)?.grade_id ?? null) !== null;
     const quizExercises = exercises.filter((e) => e.mode === "quiz");
     const quizPassedByChapter: Record<string, boolean> = {};
     for (const quiz of quizExercises) {
-      if (quiz.chapter_id) quizPassedByChapter[quiz.chapter_id] = false;
+      // Non-school chapters start unlocked; school chapters lock until the quiz passes.
+      if (quiz.chapter_id) quizPassedByChapter[quiz.chapter_id] = !isSchoolSubject;
     }
     const quizIds = quizExercises.map((e) => e.id);
-    if (quizIds.length > 0) {
+    if (isSchoolSubject && quizIds.length > 0) {
       const { data: passedRows } = await supabase
         .from("attempts")
         .select("exercise_id,duration_seconds,total_count")
@@ -327,7 +333,7 @@ export const startExerciseSession = createServerFn({ method: "POST" })
     // started until the chapter's quiz is passed. Quizzes themselves are open.
     const { data: ex, error: exError } = await supabase
       .from("exercises")
-      .select("id, mode, difficulty, chapter_id, subjects(is_premium)")
+      .select("id, mode, difficulty, chapter_id, subjects(is_premium, grade_id)")
       .eq("id", data.exerciseId)
       .single();
     if (exError) {
@@ -341,10 +347,16 @@ export const startExerciseSession = createServerFn({ method: "POST" })
     // Premium-module gate: every exercise of a premium subject (e.g. the
     // standalone "Maîtrise du français" module) requires an active subscription
     // — including its quiz. Subscription only, no level requirement.
-    const subjectRel = ex.subjects as { is_premium?: boolean } | { is_premium?: boolean }[] | null;
-    const isPremiumSubject = Array.isArray(subjectRel)
-      ? (subjectRel[0]?.is_premium ?? false)
-      : (subjectRel?.is_premium ?? false);
+    const subjectRel = ex.subjects as
+      | { is_premium?: boolean; grade_id?: string | null }
+      | { is_premium?: boolean; grade_id?: string | null }[]
+      | null;
+    const subjectRow = Array.isArray(subjectRel) ? subjectRel[0] : subjectRel;
+    const isPremiumSubject = subjectRow?.is_premium ?? false;
+    // The comprehension-quiz gate applies only to the school program (subjects
+    // bound to a grade). Non-school themes (culture-générale, muscle-cerveau/IQ,
+    // language tracks) have no theory to validate, so they are never quiz-gated.
+    const isSchoolSubject = (subjectRow?.grade_id ?? null) !== null;
     if (isPremiumSubject) {
       const { data: hasSub } = await supabase.rpc("has_active_subscription", { p_user: userId });
       if (hasSub !== true) {
@@ -362,7 +374,7 @@ export const startExerciseSession = createServerFn({ method: "POST" })
       }
     }
 
-    if (ex.mode !== "quiz" && ex.chapter_id) {
+    if (isSchoolSubject && ex.mode !== "quiz" && ex.chapter_id) {
       const { data: quiz } = await supabase
         .from("exercises")
         .select("id")

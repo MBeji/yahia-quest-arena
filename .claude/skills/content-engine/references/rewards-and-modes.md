@@ -53,13 +53,13 @@ combos like `difficulty:4, mode:boss` or `difficulty:3, mode:practice`. Coins tr
 
 ## Scoring thresholds you must design around (server-enforced)
 
-| constant                   | value | meaning for authoring                                                                       |
-| -------------------------- | ----- | ------------------------------------------------------------------------------------------- |
-| `PASS_THRESHOLD_PCT`       | 60    | min score to pass an exercise                                                               |
-| `QUIZ_PASS_THRESHOLD_PCT`  | 80    | quiz must be passed ≥80% (and not rushed) to unlock the chapter's exercises                 |
-| `MIN_SECONDS_PER_QUESTION` | 4     | attempts under `4s × questions` earn nothing & don't satisfy the gate — keep ≥5–6 questions |
-| `HALF_COIN_THRESHOLD_PCT`  | 40    | 40–59% → half coins; <40% → none                                                            |
-| `improved`                 | —     | re-attempts only re-award on an improved score (anti-farm)                                  |
+| constant                   | value | meaning for authoring                                                                                                 |
+| -------------------------- | ----- | --------------------------------------------------------------------------------------------------------------------- |
+| `PASS_THRESHOLD_PCT`       | 60    | min score to pass an exercise                                                                                         |
+| `QUIZ_PASS_THRESHOLD_PCT`  | 80    | quiz ≥80% (not rushed) unlocks a chapter's exercises — **school-program subjects only; non-school themes never gate** |
+| `MIN_SECONDS_PER_QUESTION` | 4     | attempts under `4s × questions` earn nothing & don't satisfy the gate — keep ≥5–6 questions                           |
+| `HALF_COIN_THRESHOLD_PCT`  | 40    | 40–59% → half coins; <40% → none                                                                                      |
+| `improved`                 | —     | re-attempts only re-award on an improved score (anti-farm)                                                            |
 
 Don't set rewards expecting them to apply on a sub-60%, rushed, or non-improving attempt — the engine
 won't grant them. Don't put essential free progression behind difficulty 3–4 (it's paywalled).

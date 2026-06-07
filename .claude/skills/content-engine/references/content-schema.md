@@ -90,10 +90,10 @@ Rules for authoring figures:
 
 ## quiz.json
 
-| Field       | Type       | Required | Constraint                                                            |
-| ----------- | ---------- | -------- | --------------------------------------------------------------------- |
-| `title`     | string     | no       | if present, non-empty                                                 |
-| `questions` | question[] | yes      | **3–10** (use 5). Difficulty skews 1–2 (it is the comprehension gate) |
+| Field       | Type       | Required | Constraint                                                                                             |
+| ----------- | ---------- | -------- | ------------------------------------------------------------------------------------------------------ |
+| `title`     | string     | no       | if present, non-empty                                                                                  |
+| `questions` | question[] | yes      | **3–10** (use 5). Difficulty skews 1–2 (comprehension check; gates exercises for school subjects only) |
 
 Compiled to a `mode='quiz'`, `display_order=0` exercise with fixed rewards (20 XP / 5 coins) —
 you do **not** author quiz rewards.

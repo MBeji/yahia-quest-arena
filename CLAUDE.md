@@ -119,8 +119,10 @@ validated by Zod (`src/shared/content/schema.ts`), then compiled by
 **deterministic UUIDv5** derived from slugs, so rebuilding updates rows in place (no dupes)
 and removed admin content is pruned — **parent-authored content is never touched**. Each
 `subject.json` declares `themeId` (required) + `gradeSlug` (resolved to a `grades` UUID at
-compile time, never hard-coded). `quiz.json` is mandatory and gates a chapter's exercises
-(student must pass ≥ `QUIZ_PASS_THRESHOLD_PCT`). Edit content as files → `content:build` →
+compile time, never hard-coded). `quiz.json` is mandatory; for **school-program** subjects it gates a
+chapter's exercises (student must pass ≥ `QUIZ_PASS_THRESHOLD_PCT`), but **non-school themes never
+gate on the quiz** (theory is optional there — `quest.startExerciseSession` skips the gate when
+`grade_id` is null). Edit content as files → `content:build` →
 review the generated SQL → apply to the DB **before** deploying dependent code (DoD §7).
 Full spec: [`content/README.md`](./content/README.md) (in French).
 

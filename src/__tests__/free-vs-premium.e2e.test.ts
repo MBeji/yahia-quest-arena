@@ -362,7 +362,7 @@ describe("FREE vs PREMIUM E2E: comprehension-quiz gate", () => {
               mode: "practice",
               difficulty: 2,
               chapter_id: CH,
-              subjects: { is_premium: false },
+              subjects: { is_premium: false, grade_id: "g-1" },
             })
           : mockQuery({ id: "quiz1" }); // a quiz exists for the chapter
       }
@@ -386,7 +386,7 @@ describe("FREE vs PREMIUM E2E: comprehension-quiz gate", () => {
               mode: "practice",
               difficulty: 2,
               chapter_id: CH,
-              subjects: { is_premium: false },
+              subjects: { is_premium: false, grade_id: "g-1" },
             })
           : mockQuery({ id: "quiz1" });
       }
