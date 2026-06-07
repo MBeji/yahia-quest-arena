@@ -7,6 +7,11 @@ export class SubjectPage {
   get missionLinks(): Locator {
     return this.page.locator('a[href^="/quest/"]');
   }
+  /** Mission tiles locked behind the chapter comprehension quiz (school program
+   * only after the gate change). Non-link tiles tagged data-testid="mission-locked". */
+  get lockedMissions(): Locator {
+    return this.page.getByTestId("mission-locked");
+  }
   /** Difficulty 3+ premium lock label shown to free users ("Abonnement requis"). */
   get premiumLock(): Locator {
     return this.page.getByText(/abonnement requis/i);
