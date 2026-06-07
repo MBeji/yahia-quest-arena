@@ -11,6 +11,7 @@
  *
  * ⚠️ Never run against production. Add new mutable gameplay tables to GAMEPLAY_TABLES.
  */
+import "./_env.mjs";
 import { createClient } from "@supabase/supabase-js";
 
 const URL =

@@ -58,10 +58,18 @@ npm run content:qa:strict  # same, fail on warnings (part of ci:verify)
 
 ```bash
 npm run test:e2e:install   # one-time: install chromium
-npm run e2e:seed           # seed test users into the TEST project (scripts/e2e/)
-npm run test:e2e           # public (chromium + mobile) specs
+npm run test:e2e           # public (chromium + mobile) specs — no backend needed
+
+# Authenticated tier — TEST project only (cp .env.test.example .env.test first):
+npm run e2e:doctor         # verify .env.test is complete (secrets masked)
+npm run e2e:setup          # provision TEST: db:push + seed users + reset gameplay
 npm run test:e2e:auth      # authenticated specs (uses e2e/.auth/*.json storage state)
 ```
+
+`.env.test` (gitignored) holds the **dedicated TEST** Supabase creds; `playwright.config.ts`
+loads it so the spawned dev server targets TEST, and `_env.mjs` + the config refuse the known
+prod ref as a safety net. Never point e2e at production — it seeds/resets/mutates data. Full
+runbook: [`e2e/README.md`](./e2e/README.md).
 
 **Git hooks (husky):** `pre-commit` runs `lint-staged` (Prettier + ESLint `--fix` on
 staged files); `pre-push` runs `npm run verify`. Installed automatically via the

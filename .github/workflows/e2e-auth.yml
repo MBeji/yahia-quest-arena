@@ -38,6 +38,13 @@ jobs:
           else
             echo "configured=true" >> "$GITHUB_OUTPUT"
           fi
+          # Optional: if a DB connection string is provided, this workflow can
+          # self-provision the TEST schema + content (otherwise it's a prereq).
+          if [ -z "${{ secrets.TEST_SUPABASE_DB_URL }}" ]; then
+            echo "has_db_url=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_db_url=true" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Setup Node
         if: steps.guard.outputs.configured == 'true'
@@ -60,6 +67,18 @@ jobs:
       - name: Install Playwright browser (chromium)
         if: steps.guard.outputs.configured == 'true'
         run: npx playwright install --with-deps chromium
+
+      # Self-provision the TEST database (schema + generated content) when a DB
+      # connection string is available. Idempotent — only pushes new migrations.
+      - name: Set up Supabase CLI
+        if: steps.guard.outputs.configured == 'true' && steps.guard.outputs.has_db_url == 'true'
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Apply migrations + content to TEST project
+        if: steps.guard.outputs.configured == 'true' && steps.guard.outputs.has_db_url == 'true'
+        run: supabase db push --db-url "${{ secrets.TEST_SUPABASE_DB_URL }}" --include-all
 
       - name: Seed test users
         if: steps.guard.outputs.configured == 'true'

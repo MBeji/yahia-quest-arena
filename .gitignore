@@ -29,6 +29,8 @@ dist-ssr
 # Environment (secrets)
 .env
 .env.*
+# …but keep the committed, secret-free TEST template:
+!.env.test.example
 .sbtoken
 
 # Claude Code — share settings.json, hooks & skills; keep personal overrides local

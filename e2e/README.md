@@ -29,8 +29,12 @@ e2e/
   public/              # logged-out specs (no backend)
   authed/              # authenticated specs (reuse a role's stored session)
 scripts/e2e/
-  seed-test-users.mjs  # create/refresh the 4 test accounts  (npm run e2e:seed)
-  reset-gameplay.mjs   # wipe gameplay state to a clean slate (node scripts/e2e/reset-gameplay.mjs)
+  _env.mjs             # loads .env.test + refuses to ever touch the prod project
+  check-env.mjs        # doctor: is the TEST env complete?    (npm run e2e:doctor)
+  setup-test-db.mjs    # apply migrations+content to TEST     (npm run e2e:db:push)
+  seed-test-users.mjs  # create/refresh the 4 test accounts   (npm run e2e:seed)
+  reset-gameplay.mjs   # wipe gameplay state to a clean slate (npm run e2e:reset)
+.env.test.example      # copy → .env.test, fill with TEST project creds (gitignored)
 ```
 
 ## Conventions (keep the suite clean & extensible)
@@ -67,24 +71,48 @@ npm run test:e2e           # public/*.spec.ts
 
 ## Run the authenticated tier
 
-1. **Create a dedicated TEST Supabase project** (never production). Apply all
-   `supabase/migrations/` (schema + generated content): `supabase db push`.
-2. **Set env** locally (a `.env` you don't commit, or your shell):
-   ```bash
-   SUPABASE_URL / VITE_SUPABASE_URL                 = https://<test-ref>.supabase.co
-   SUPABASE_PUBLISHABLE_KEY / VITE_SUPABASE_PUBLISHABLE_KEY = <test anon key>
-   SUPABASE_SERVICE_ROLE_KEY                        = <test service-role key>
-   E2E_USER_PASSWORD                                = <a strong password>
-   ```
-   In **GitHub → Settings → Secrets → Actions**: `TEST_SUPABASE_URL`,
-   `TEST_SUPABASE_ANON_KEY`, `TEST_SUPABASE_SERVICE_ROLE_KEY`, `E2E_USER_PASSWORD`.
-   The authenticated workflow skips (green) until these are set.
-3. **Seed + run**:
-   ```bash
-   npm run e2e:seed                       # 4 accounts (free/premium/parent/admin), same password
-   node scripts/e2e/reset-gameplay.mjs    # optional: clean slate
-   npm run test:e2e:auth
-   ```
+> Everything below talks ONLY to a **dedicated TEST Supabase project**. The suite
+> seeds, resets and mutates data — never point it at production. `.env.test`,
+> `_env.mjs` and `playwright.config.ts` each refuse the known prod ref as a safety
+> net, and `playwright.config.ts` loads `.env.test` so the spawned dev server also
+> targets the TEST project (not your `.env`).
+
+### Local — turnkey
+
+```bash
+# 0. one-time
+npm run test:e2e:install                 # download Chromium
+cp .env.test.example .env.test           # then fill in TEST project values
+
+# 1. verify the env is complete (secrets masked)
+npm run e2e:doctor
+
+# 2. provision the TEST project: migrations+content, accounts, clean slate
+#    (needs TEST_SUPABASE_DB_URL in .env.test for the db push step)
+npm run e2e:setup                        # = e2e:db:push && e2e:seed && e2e:reset
+
+# 3. run the authenticated journeys
+npm run test:e2e:auth
+```
+
+Individual steps are also available: `npm run e2e:db:push`, `e2e:seed`, `e2e:reset`.
+Re-run `e2e:reset` before a fresh pass to get a deterministic starting point.
+
+### CI
+
+Set these **GitHub → Settings → Secrets → Actions** (the `E2E (authenticated)`
+workflow skips green until they exist):
+
+| Secret                           | Purpose                                             |
+| -------------------------------- | --------------------------------------------------- |
+| `TEST_SUPABASE_URL`              | TEST project API URL (client + server)              |
+| `TEST_SUPABASE_ANON_KEY`         | TEST anon / publishable key                         |
+| `TEST_SUPABASE_SERVICE_ROLE_KEY` | TEST service-role key (seed / reset)                |
+| `E2E_USER_PASSWORD`              | password for the 4 seeded accounts                  |
+| `TEST_SUPABASE_DB_URL`           | _optional_ — Postgres URI; lets CI `db push` itself |
+
+With `TEST_SUPABASE_DB_URL` set, the workflow self-provisions the schema+content
+each run; without it, applying migrations to the TEST project is a one-time prereq.
 
 Seeded accounts (all password `E2E_USER_PASSWORD`):
 `student.free@`, `student.premium@`, `parent@`, `admin@e2e.xpscholars.test`.

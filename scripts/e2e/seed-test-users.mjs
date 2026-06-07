@@ -11,6 +11,7 @@
  * ⚠️ Never run against production. Run all DB migrations + content on the test
  * project first so subjects/exercises exist for the journeys.
  */
+import "./_env.mjs";
 import { createClient } from "@supabase/supabase-js";
 
 const URL = process.env.SUPABASE_URL ?? process.env.TEST_SUPABASE_URL;

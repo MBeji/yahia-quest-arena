@@ -1,4 +1,44 @@
 import { defineConfig, devices } from "@playwright/test";
+import { existsSync } from "node:fs";
+import dotenv from "dotenv";
+
+// --- TEST-project env (local convenience) ------------------------------------
+// Load `.env.test` (repo root) so a LOCAL run — and the dev server we spawn via
+// `webServer` — targets the dedicated TEST Supabase project, never your `.env`
+// (which may be production). CI has no `.env.test` and injects env through the
+// workflow, so this is a no-op there. `override: true` so a stale shell var
+// can't silently redirect the run.
+if (existsSync(".env.test")) {
+  dotenv.config({ path: ".env.test", override: true });
+  const required = [
+    "SUPABASE_URL",
+    "SUPABASE_PUBLISHABLE_KEY",
+    "VITE_SUPABASE_URL",
+    "VITE_SUPABASE_PUBLISHABLE_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "E2E_USER_PASSWORD",
+  ];
+  const missing = required.filter((k) => {
+    const v = process.env[k];
+    return !v || v.includes("your-") || v.includes("<");
+  });
+  if (missing.length > 0) {
+    throw new Error(
+      `[e2e] .env.test is present but incomplete: ${missing.join(", ")}. ` +
+        "Fill it from .env.test.example (TEST project only), or delete it to run the public tier against your .env.",
+    );
+  }
+}
+
+// Hard safety net: never run e2e against the production project.
+const PROD_REFS = ["fasrenmmrkqjoobrztbp"];
+for (const maybeUrl of [process.env.SUPABASE_URL, process.env.VITE_SUPABASE_URL]) {
+  if (maybeUrl && PROD_REFS.some((ref) => maybeUrl.includes(ref))) {
+    throw new Error(
+      `[e2e] Refusing to run: ${maybeUrl} is the PRODUCTION project. Point .env.test at the TEST project.`,
+    );
+  }
+}
 
 /**
  * Playwright end-to-end config — runs REAL browser journeys against the app.
