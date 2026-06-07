@@ -7,6 +7,8 @@ import { QuestPage } from "./pages/quest.page";
 import { NavBar } from "./pages/nav.page";
 import { LeaderboardPage } from "./pages/leaderboard.page";
 import { ShopPage } from "./pages/shop.page";
+import { DungeonPage } from "./pages/dungeon.page";
+import { OnboardingPage } from "./pages/onboarding.page";
 import { createAdminDb, type AdminDb } from "./helpers/db";
 
 /**
@@ -29,6 +31,8 @@ type Pages = {
   nav: NavBar;
   leaderboard: LeaderboardPage;
   shop: ShopPage;
+  dungeon: DungeonPage;
+  onboarding: OnboardingPage;
 };
 
 type Helpers = {
@@ -59,6 +63,12 @@ export const test = base.extend<Pages & Helpers>({
   },
   shop: async ({ page }, provide) => {
     await provide(new ShopPage(page));
+  },
+  dungeon: async ({ page }, provide) => {
+    await provide(new DungeonPage(page));
+  },
+  onboarding: async ({ page }, provide) => {
+    await provide(new OnboardingPage(page));
   },
   // Built lazily from env; only specs that request `adminDb` need the service key.
   // eslint-disable-next-line no-empty-pattern
