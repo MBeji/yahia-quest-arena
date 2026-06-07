@@ -1,0 +1,12 @@
+{
+  "id": "iq-training-fr",
+  "nameFr": "Muscle ton cerveau — Entraînement QI (FR)",
+  "description": "Des défis visuels de logique pure : observe la figure, déduis la règle cachée, choisis la bonne réponse — aucune mémoire, que du raisonnement.",
+  "attribute": "Logique",
+  "colorToken": "subject-math",
+  "icon": "Brain",
+  "displayOrder": 60,
+  "contentLanguage": "fr",
+  "themeId": "muscle-cerveau",
+  "gradeSlug": null
+}
