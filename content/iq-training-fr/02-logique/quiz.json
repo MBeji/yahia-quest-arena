@@ -1,0 +1,125 @@
+{
+  "title": "Échauffement Logique ⭐",
+  "questions": [
+    {
+      "prompt": "Matrice 3×3 : sur chaque ligne, le nombre de points augmente de 1 en allant vers la droite. Quelle figure remplace le « ? » ? <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"35\" y1=\"4\" x2=\"35\" y2=\"96\" stroke=\"#94a3b8\" stroke-width=\"1\"/><line x1=\"66\" y1=\"4\" x2=\"66\" y2=\"96\" stroke=\"#94a3b8\" stroke-width=\"1\"/><line x1=\"4\" y1=\"35\" x2=\"96\" y2=\"35\" stroke=\"#94a3b8\" stroke-width=\"1\"/><line x1=\"4\" y1=\"66\" x2=\"96\" y2=\"66\" stroke=\"#94a3b8\" stroke-width=\"1\"/><circle cx=\"19\" cy=\"19\" r=\"3\" fill=\"#1d4ed8\"/><circle cx=\"44\" cy=\"19\" r=\"3\" fill=\"#1d4ed8\"/><circle cx=\"56\" cy=\"19\" r=\"3\" fill=\"#1d4ed8\"/><circle cx=\"75\" cy=\"19\" r=\"3\" fill=\"#1d4ed8\"/><circle cx=\"81\" cy=\"19\" r=\"3\" fill=\"#1d4ed8\"/><circle cx=\"87\" cy=\"19\" r=\"3\" fill=\"#1d4ed8\"/><circle cx=\"19\" cy=\"50\" r=\"3\" fill=\"#1d4ed8\"/><circle cx=\"44\" cy=\"50\" r=\"3\" fill=\"#1d4ed8\"/><circle cx=\"56\" cy=\"50\" r=\"3\" fill=\"#1d4ed8\"/><circle cx=\"75\" cy=\"50\" r=\"3\" fill=\"#1d4ed8\"/><circle cx=\"81\" cy=\"50\" r=\"3\" fill=\"#1d4ed8\"/><circle cx=\"87\" cy=\"50\" r=\"3\" fill=\"#1d4ed8\"/><circle cx=\"19\" cy=\"81\" r=\"3\" fill=\"#1d4ed8\"/><circle cx=\"44\" cy=\"81\" r=\"3\" fill=\"#1d4ed8\"/><circle cx=\"56\" cy=\"81\" r=\"3\" fill=\"#1d4ed8\"/><text x=\"81\" y=\"86\" font-size=\"16\" fill=\"#64748b\" text-anchor=\"middle\">?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"32\" cy=\"50\" r=\"5\" fill=\"#1d4ed8\"/><circle cx=\"50\" cy=\"50\" r=\"5\" fill=\"#1d4ed8\"/><circle cx=\"68\" cy=\"50\" r=\"5\" fill=\"#1d4ed8\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"41\" cy=\"50\" r=\"5\" fill=\"#1d4ed8\"/><circle cx=\"59\" cy=\"50\" r=\"5\" fill=\"#1d4ed8\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"50\" cy=\"50\" r=\"5\" fill=\"#1d4ed8\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"26\" cy=\"50\" r=\"5\" fill=\"#1d4ed8\"/><circle cx=\"42\" cy=\"50\" r=\"5\" fill=\"#1d4ed8\"/><circle cx=\"58\" cy=\"50\" r=\"5\" fill=\"#1d4ed8\"/><circle cx=\"74\" cy=\"50\" r=\"5\" fill=\"#1d4ed8\"/></svg>"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "La règle cachée : sur chaque ligne le nombre de points va 1, puis 2, puis 3 (colonne gauche = 1, colonne du milieu = 2, colonne droite = 3). ✓ La case manquante est en bas à droite, elle doit donc contenir 3 points : c'est l'option a. L'option b (2 points) recopie la colonne du milieu. L'option c (1 point) recopie la colonne de gauche. L'option d (4 points) prolonge la suite d'un cran de trop : la ligne s'arrête à 3.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Observe la suite de carrés : leur taille change selon une règle régulière. Quel carré vient ensuite ? <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"8\" y=\"44\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"2\"/><rect x=\"30\" y=\"40\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"2\"/><rect x=\"58\" y=\"36\" width=\"28\" height=\"28\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"2\"/><text x=\"94\" y=\"55\" font-size=\"16\" fill=\"#64748b\" text-anchor=\"middle\">?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"32\" y=\"32\" width=\"36\" height=\"36\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"36\" y=\"36\" width=\"28\" height=\"28\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"44\" y=\"44\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"32\" y=\"32\" width=\"36\" height=\"36\" fill=\"#7c3aed\" stroke=\"#7c3aed\" stroke-width=\"2\"/></svg>"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "La règle : le côté du carré grandit de 8 à chaque étape (12, 20, 28…). ✓ Le carré suivant mesure donc 36 de côté, vide comme les autres : c'est l'option a. L'option b (28) recopie le dernier carré au lieu de l'agrandir. L'option c (12) revient au tout premier. L'option d a la bonne taille mais devient pleine : la couleur n'a jamais changé dans la suite, il ne faut pas inventer une règle nouvelle.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Analogie : le rond est au triangle ce que le carré est à … ? À gauche le modèle (rond → triangle) : on remplace la figure par celle qui a un côté de plus. Applique la même transformation au carré. <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"16\" cy=\"30\" r=\"10\" fill=\"none\" stroke=\"#0f766e\" stroke-width=\"2\"/><text x=\"34\" y=\"35\" font-size=\"12\" fill=\"#64748b\" text-anchor=\"middle\">→</text><polygon points=\"52,22 44,38 60,38\" fill=\"none\" stroke=\"#0f766e\" stroke-width=\"2\"/><rect x=\"8\" y=\"66\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"#0f766e\" stroke-width=\"2\"/><text x=\"40\" y=\"79\" font-size=\"12\" fill=\"#64748b\" text-anchor=\"middle\">→</text><text x=\"66\" y=\"80\" font-size=\"16\" fill=\"#64748b\" text-anchor=\"middle\">?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"50,28 64,40 58,58 42,58 36,40\" fill=\"none\" stroke=\"#0f766e\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"50,30 60,42 50,54 40,42\" fill=\"none\" stroke=\"#0f766e\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"50,30 42,46 58,46\" fill=\"none\" stroke=\"#0f766e\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"50,28 60,34 60,46 50,52 40,46 40,34\" fill=\"none\" stroke=\"#0f766e\" stroke-width=\"2\"/></svg>"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "La transformation du modèle : on passe d'une figure à celle qui a un côté de plus. Le rond (vu comme 0 côté droit) devient un triangle (3 côtés)… mais la vraie règle lisible est « +1 côté » appliquée au carré. Le carré a 4 côtés, il doit donc devenir un pentagone, 5 côtés. ✓ C'est l'option a. L'option b est un losange (4 côtés) : même nombre de côtés que le carré, aucune transformation. L'option c est un triangle (3 côtés) : un côté de moins. L'option d est un hexagone (6 côtés) : deux côtés de plus, on a ajouté 2 au lieu de 1.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trois figures partagent la même règle, une seule est l'intrus. Laquelle ? (Indice : compte le nombre de côtés.) <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"18,58 8,42 28,42\" fill=\"none\" stroke=\"#be123c\" stroke-width=\"2\"/><rect x=\"40\" y=\"40\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"#be123c\" stroke-width=\"2\"/><polygon points=\"78,40 88,48 84,60 72,60 68,48\" fill=\"none\" stroke=\"#be123c\" stroke-width=\"2\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"50,28 42,44 58,44\" fill=\"none\" stroke=\"#be123c\" stroke-width=\"2\"/><text x=\"50\" y=\"82\" font-size=\"14\" fill=\"#64748b\" text-anchor=\"middle\">1</text></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"40\" y=\"30\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"#be123c\" stroke-width=\"2\"/><text x=\"50\" y=\"82\" font-size=\"14\" fill=\"#64748b\" text-anchor=\"middle\">2</text></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"50\" cy=\"40\" r=\"11\" fill=\"none\" stroke=\"#be123c\" stroke-width=\"2\"/><text x=\"50\" y=\"82\" font-size=\"14\" fill=\"#64748b\" text-anchor=\"middle\">3</text></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"50,28 60,36 56,48 44,48 40,36\" fill=\"none\" stroke=\"#be123c\" stroke-width=\"2\"/><text x=\"50\" y=\"82\" font-size=\"14\" fill=\"#64748b\" text-anchor=\"middle\">4</text></svg>"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "La règle commune : toutes ces figures sont des polygones, c'est-à-dire faites de côtés droits (triangle, carré, pentagone). ✓ Le cercle de l'option c n'a aucun côté droit : c'est le seul à ne pas être un polygone, donc l'intrus. L'option a (triangle, 3 côtés), l'option b (carré, 4 côtés) et l'option d (pentagone, 5 côtés) respectent toutes la règle « tracé de côtés droits » et ne peuvent pas être l'intrus.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Déduction : RÈGLE — toutes les figures bleues sont des cercles. Sur la carte tu vois une figure bleue, mais sa forme est cachée par un voile gris. Laquelle de ces propositions est forcément vraie ? <svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"4\" y=\"4\" width=\"92\" height=\"92\" rx=\"6\" fill=\"none\" stroke=\"#94a3b8\" stroke-width=\"2\"/><rect x=\"32\" y=\"32\" width=\"36\" height=\"36\" rx=\"4\" fill=\"#9ca3af\" stroke=\"#6b7280\" stroke-width=\"2\"/><text x=\"50\" y=\"55\" font-size=\"22\" fill=\"#374151\" text-anchor=\"middle\">?</text><text x=\"50\" y=\"88\" font-size=\"10\" fill=\"#2563eb\" text-anchor=\"middle\">figure bleue</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "C'est forcément un cercle."
+        },
+        {
+          "id": "b",
+          "text": "C'est forcément un carré."
+        },
+        {
+          "id": "c",
+          "text": "Ce peut être n'importe quelle forme, on ne peut rien dire."
+        },
+        {
+          "id": "d",
+          "text": "C'est forcément un triangle."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "La règle dit : « toute figure bleue est un cercle. » La figure cachée est bleue, donc elle entre dans la règle : elle est forcément un cercle. ✓ C'est l'option a. L'option c oublie qu'on connaît déjà sa couleur : la règle s'applique et permet de conclure. L'option b et l'option d inventent une forme que la règle interdit pour une figure bleue. Astuce : « si bleu alors cercle » + « c'est bleu » ⇒ « c'est un cercle » (déduction directe).",
+      "difficulty": 2
+    }
+  ]
+}

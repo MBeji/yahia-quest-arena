@@ -1,0 +1,142 @@
+{
+  "title": "👑 Élite Intelligence fluide ⭐⭐⭐⭐",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Découvre la règle de cette suite : à CHAQUE case, la forme change (carré → cercle → triangle → carré…) ET son remplissage s'inverse (vide ↔ plein). Quelle figure occupe la case « ? » ? <svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"3\"><rect x=\"6\" y=\"42\" width=\"16\" height=\"16\" fill=\"#1e293b\"/><circle cx=\"36\" cy=\"50\" r=\"8\" fill=\"none\"/><polygon points=\"58,42 66,58 50,58\" fill=\"#1e293b\"/></g><rect x=\"76\" y=\"40\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"#cbd5e1\" stroke-width=\"2\"/><text x=\"86\" y=\"56\" font-size=\"14\" text-anchor=\"middle\" fill=\"#ef4444\">?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"18\" fill=\"#1e293b\" stroke=\"#1e293b\" stroke-width=\"4\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"34\" y=\"34\" width=\"32\" height=\"32\" fill=\"#1e293b\" stroke=\"#1e293b\" stroke-width=\"4\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"50,32 68,68 32,68\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"4\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"34\" y=\"34\" width=\"32\" height=\"32\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"4\"/></svg>"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Règle cachée : deux choses changent ensemble à chaque pas — la FORME suit le cycle carré → cercle → triangle → carré, et le REMPLISSAGE alterne vide/plein. Case 1 carré PLEIN, case 2 cercle VIDE, case 3 triangle PLEIN. La case 4 reprend donc la forme carré (le cycle reboucle) et inverse le plein en VIDE : un carré vide. ✓ option d. Piège b : bon carré mais on a gardé le plein au lieu de l'inverser. Piège c : triangle vide — on a oublié que la forme reboucle sur le carré. Piège a : cercle plein — mauvaise forme ET mauvais remplissage.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Trois cercles se chevauchent. Règle observée : le symbole placé dans une zone dépend du NOMBRE de cercles qui s'y recouvrent — 1 cercle → trait, 2 cercles → croix, 3 cercles → étoile. Quel symbole doit occuper la zone centrale marquée « ? », commune aux TROIS cercles ? <svg viewBox=\"0 0 100 100\"><g fill=\"none\" stroke=\"#1e293b\" stroke-width=\"2\"><circle cx=\"40\" cy=\"42\" r=\"26\"/><circle cx=\"60\" cy=\"42\" r=\"26\"/><circle cx=\"50\" cy=\"60\" r=\"26\"/></g><line x1=\"22\" y1=\"30\" x2=\"30\" y2=\"30\" stroke=\"#1e293b\" stroke-width=\"3\"/><g stroke=\"#1e293b\" stroke-width=\"2\"><line x1=\"67\" y1=\"26\" x2=\"73\" y2=\"32\"/><line x1=\"73\" y1=\"26\" x2=\"67\" y2=\"32\"/></g><text x=\"50\" y=\"50\" font-size=\"12\" text-anchor=\"middle\" fill=\"#ef4444\">?</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><line x1=\"38\" y1=\"50\" x2=\"62\" y2=\"50\" stroke=\"#1e293b\" stroke-width=\"5\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><line x1=\"38\" y1=\"38\" x2=\"62\" y2=\"62\" stroke=\"#1e293b\" stroke-width=\"5\"/><line x1=\"62\" y1=\"38\" x2=\"38\" y2=\"62\" stroke=\"#1e293b\" stroke-width=\"5\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"50,28 56,44 72,44 59,54 64,70 50,60 36,70 41,54 28,44 44,44\" fill=\"#1e293b\" stroke=\"#1e293b\" stroke-width=\"1\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"6\" fill=\"#1e293b\"/></svg>"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Règle cachée : le symbole code le nombre de cercles superposés à cet endroit. La légende le confirme — une zone à 1 cercle porte un trait, une zone à 2 cercles porte une croix. La zone centrale appartient aux TROIS cercles à la fois, donc elle porte l'étoile. ✓ option c (l'étoile). Piège a : le trait vaut pour 1 cercle seulement. Piège b : la croix vaut pour 2 cercles, pas 3. Piège d : le point n'est pas dans le code de la règle (symbole inventé).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Règle inédite à induire : on superpose la grille de gauche et celle du milieu, mais une pastille ne SURVIT que si elle apparaît dans UNE SEULE des deux grilles (si elle est dans les deux, elles s'annulent ; si dans aucune, la case reste vide). Quelle grille est le résultat ? <svg viewBox=\"0 0 100 100\"><g stroke=\"#94a3b8\" stroke-width=\"1\" fill=\"none\"><rect x=\"4\" y=\"36\" width=\"30\" height=\"30\"/><line x1=\"14\" y1=\"36\" x2=\"14\" y2=\"66\"/><line x1=\"24\" y1=\"36\" x2=\"24\" y2=\"66\"/><line x1=\"4\" y1=\"46\" x2=\"34\" y2=\"46\"/><line x1=\"4\" y1=\"56\" x2=\"34\" y2=\"56\"/></g><circle cx=\"9\" cy=\"41\" r=\"3\" fill=\"#1e293b\"/><circle cx=\"29\" cy=\"41\" r=\"3\" fill=\"#1e293b\"/><circle cx=\"19\" cy=\"61\" r=\"3\" fill=\"#1e293b\"/><text x=\"42\" y=\"55\" font-size=\"12\" fill=\"#1e293b\">+</text><g stroke=\"#94a3b8\" stroke-width=\"1\" fill=\"none\"><rect x=\"52\" y=\"36\" width=\"30\" height=\"30\"/><line x1=\"62\" y1=\"36\" x2=\"62\" y2=\"66\"/><line x1=\"72\" y1=\"36\" x2=\"72\" y2=\"66\"/><line x1=\"52\" y1=\"46\" x2=\"82\" y2=\"46\"/><line x1=\"52\" y1=\"56\" x2=\"82\" y2=\"56\"/></g><circle cx=\"57\" cy=\"41\" r=\"3\" fill=\"#1e293b\"/><circle cx=\"77\" cy=\"61\" r=\"3\" fill=\"#1e293b\"/><circle cx=\"67\" cy=\"61\" r=\"3\" fill=\"#1e293b\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#94a3b8\" stroke-width=\"1.5\" fill=\"none\"><rect x=\"25\" y=\"25\" width=\"50\" height=\"50\"/><line x1=\"41.7\" y1=\"25\" x2=\"41.7\" y2=\"75\"/><line x1=\"58.3\" y1=\"25\" x2=\"58.3\" y2=\"75\"/><line x1=\"25\" y1=\"41.7\" x2=\"75\" y2=\"41.7\"/><line x1=\"25\" y1=\"58.3\" x2=\"75\" y2=\"58.3\"/></g><circle cx=\"67\" cy=\"33\" r=\"4\" fill=\"#1e293b\"/><circle cx=\"67\" cy=\"67\" r=\"4\" fill=\"#1e293b\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#94a3b8\" stroke-width=\"1.5\" fill=\"none\"><rect x=\"25\" y=\"25\" width=\"50\" height=\"50\"/><line x1=\"41.7\" y1=\"25\" x2=\"41.7\" y2=\"75\"/><line x1=\"58.3\" y1=\"25\" x2=\"58.3\" y2=\"75\"/><line x1=\"25\" y1=\"41.7\" x2=\"75\" y2=\"41.7\"/><line x1=\"25\" y1=\"58.3\" x2=\"75\" y2=\"58.3\"/></g><circle cx=\"33\" cy=\"33\" r=\"4\" fill=\"#1e293b\"/><circle cx=\"50\" cy=\"67\" r=\"4\" fill=\"#1e293b\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#94a3b8\" stroke-width=\"1.5\" fill=\"none\"><rect x=\"25\" y=\"25\" width=\"50\" height=\"50\"/><line x1=\"41.7\" y1=\"25\" x2=\"41.7\" y2=\"75\"/><line x1=\"58.3\" y1=\"25\" x2=\"58.3\" y2=\"75\"/><line x1=\"25\" y1=\"41.7\" x2=\"75\" y2=\"41.7\"/><line x1=\"25\" y1=\"58.3\" x2=\"75\" y2=\"58.3\"/></g><circle cx=\"33\" cy=\"33\" r=\"4\" fill=\"#1e293b\"/><circle cx=\"67\" cy=\"33\" r=\"4\" fill=\"#1e293b\"/><circle cx=\"50\" cy=\"67\" r=\"4\" fill=\"#1e293b\"/><circle cx=\"67\" cy=\"67\" r=\"4\" fill=\"#1e293b\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><g stroke=\"#94a3b8\" stroke-width=\"1.5\" fill=\"none\"><rect x=\"25\" y=\"25\" width=\"50\" height=\"50\"/><line x1=\"41.7\" y1=\"25\" x2=\"41.7\" y2=\"75\"/><line x1=\"58.3\" y1=\"25\" x2=\"58.3\" y2=\"75\"/><line x1=\"25\" y1=\"41.7\" x2=\"75\" y2=\"41.7\"/><line x1=\"25\" y1=\"58.3\" x2=\"75\" y2=\"58.3\"/></g><circle cx=\"50\" cy=\"50\" r=\"4\" fill=\"#1e293b\"/></svg>"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Règle cachée : c'est un « ou exclusif » (XOR). Une case survit seulement si elle a une pastille dans exactement UNE des deux grilles. Grille 1 = coin haut-gauche, coin haut-droit, centre-bas. Grille 2 = coin haut-gauche, centre-bas, coin bas-droit. Le coin haut-gauche est dans les DEUX → s'annule. Le centre-bas est dans les DEUX → s'annule. Restent : le coin haut-droit (grille 1 seule) et le coin bas-droit (grille 2 seule). Résultat = exactement deux pastilles : haut-droit et bas-droit, et rien d'autre. ✓ option a (haut-droit + bas-droit). Piège b : on a gardé l'INTERSECTION (haut-gauche + centre-bas), c'est-à-dire l'inverse de la règle — on a conservé les cases communes au lieu de les annuler. Piège c : on a fait l'UNION des deux grilles (haut-gauche, haut-droit, centre-bas, bas-droit), sans rien annuler. Piège d : une seule pastille au centre, position inventée hors des deux grilles.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Suite numérique cachée dans les figures : chaque carré contient un certain nombre de points. Trouve la règle qui lie un terme au suivant, puis donne le nombre de points de la figure « ? ». Les comptes sont 2, 3, 5, 8, puis ?. <svg viewBox=\"0 0 100 100\"><g stroke=\"#94a3b8\" stroke-width=\"1\" fill=\"none\"><rect x=\"3\" y=\"40\" width=\"15\" height=\"15\"/><rect x=\"22\" y=\"40\" width=\"15\" height=\"15\"/><rect x=\"41\" y=\"40\" width=\"15\" height=\"15\"/><rect x=\"60\" y=\"40\" width=\"15\" height=\"15\"/><rect x=\"79\" y=\"40\" width=\"15\" height=\"15\"/></g><g fill=\"#1e293b\"><circle cx=\"8\" cy=\"45\" r=\"2\"/><circle cx=\"13\" cy=\"50\" r=\"2\"/><circle cx=\"27\" cy=\"44\" r=\"2\"/><circle cx=\"32\" cy=\"44\" r=\"2\"/><circle cx=\"29\" cy=\"51\" r=\"2\"/><circle cx=\"45\" cy=\"44\" r=\"2\"/><circle cx=\"51\" cy=\"44\" r=\"2\"/><circle cx=\"45\" cy=\"51\" r=\"2\"/><circle cx=\"51\" cy=\"51\" r=\"2\"/><circle cx=\"48\" cy=\"47\" r=\"2\"/><circle cx=\"63\" cy=\"43\" r=\"2\"/><circle cx=\"68\" cy=\"43\" r=\"2\"/><circle cx=\"72\" cy=\"43\" r=\"2\"/><circle cx=\"63\" cy=\"48\" r=\"2\"/><circle cx=\"68\" cy=\"48\" r=\"2\"/><circle cx=\"72\" cy=\"48\" r=\"2\"/><circle cx=\"65\" cy=\"52\" r=\"2\"/><circle cx=\"70\" cy=\"52\" r=\"2\"/></g><text x=\"86\" y=\"52\" font-size=\"12\" text-anchor=\"middle\" fill=\"#ef4444\">?</text></svg>",
+      "options": [
+        { "id": "a", "text": "11" },
+        { "id": "b", "text": "13" },
+        { "id": "c", "text": "16" },
+        { "id": "d", "text": "10" }
+      ],
+      "correctOption": "b",
+      "explanation": "Règle cachée : chaque terme est la SOMME des deux précédents (suite de type Fibonacci), pas un écart constant. 2 ; 3 ; 2+3=5 ; 3+5=8 ; donc le suivant = 5+8 = 13. ✓ option b (13). Piège a (11) : on a additionné un écart constant de +3 (8+3), en confondant avec une suite arithmétique. Piège d (10) : on a fait 8+2 (mauvais couple de termes). Piège c (16) : on a doublé le dernier terme (8×2), règle inventée.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Analogie matricielle : « A est à B ce que C est à ? ». De A à B, DEUX choses se produisent en même temps — la barre tourne d'un quart de tour horaire ET le nombre de points est divisé par deux. Applique exactement la même double transformation à C. <svg viewBox=\"0 0 100 100\"><g stroke=\"#1e293b\" stroke-width=\"3\"><line x1=\"6\" y1=\"30\" x2=\"30\" y2=\"30\"/></g><g fill=\"#1e293b\"><circle cx=\"10\" cy=\"40\" r=\"2.5\"/><circle cx=\"17\" cy=\"40\" r=\"2.5\"/><circle cx=\"24\" cy=\"40\" r=\"2.5\"/><circle cx=\"13\" cy=\"46\" r=\"2.5\"/></g><text x=\"36\" y=\"40\" font-size=\"10\" fill=\"#1e293b\">:</text><g stroke=\"#1e293b\" stroke-width=\"3\"><line x1=\"48\" y1=\"26\" x2=\"48\" y2=\"50\"/></g><g fill=\"#1e293b\"><circle cx=\"56\" cy=\"34\" r=\"2.5\"/><circle cx=\"56\" cy=\"42\" r=\"2.5\"/></g><text x=\"66\" y=\"40\" font-size=\"10\" fill=\"#1e293b\">::</text><g stroke=\"#1e293b\" stroke-width=\"3\"><line x1=\"74\" y1=\"70\" x2=\"98\" y2=\"70\"/></g><g fill=\"#1e293b\"><circle cx=\"78\" cy=\"80\" r=\"2.5\"/><circle cx=\"84\" cy=\"80\" r=\"2.5\"/><circle cx=\"90\" cy=\"80\" r=\"2.5\"/><circle cx=\"96\" cy=\"80\" r=\"2.5\"/></g></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><line x1=\"50\" y1=\"26\" x2=\"50\" y2=\"54\" stroke=\"#1e293b\" stroke-width=\"4\"/><circle cx=\"62\" cy=\"34\" r=\"3\" fill=\"#1e293b\"/><circle cx=\"62\" cy=\"46\" r=\"3\" fill=\"#1e293b\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><line x1=\"32\" y1=\"50\" x2=\"68\" y2=\"50\" stroke=\"#1e293b\" stroke-width=\"4\"/><circle cx=\"40\" cy=\"62\" r=\"3\" fill=\"#1e293b\"/><circle cx=\"52\" cy=\"62\" r=\"3\" fill=\"#1e293b\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><line x1=\"50\" y1=\"26\" x2=\"50\" y2=\"54\" stroke=\"#1e293b\" stroke-width=\"4\"/><circle cx=\"62\" cy=\"32\" r=\"3\" fill=\"#1e293b\"/><circle cx=\"62\" cy=\"42\" r=\"3\" fill=\"#1e293b\"/><circle cx=\"62\" cy=\"52\" r=\"3\" fill=\"#1e293b\"/><circle cx=\"62\" cy=\"62\" r=\"3\" fill=\"#1e293b\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><line x1=\"32\" y1=\"50\" x2=\"68\" y2=\"50\" stroke=\"#1e293b\" stroke-width=\"4\"/><circle cx=\"44\" cy=\"62\" r=\"3\" fill=\"#1e293b\"/></svg>"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Règle cachée : deux transformations simultanées. (1) Rotation : la barre tourne d'un quart de tour horaire. (2) Quantité : le nombre de points est divisé par deux. Pour C, la barre est HORIZONTALE ; un quart de tour horaire la rend VERTICALE. Les points passent de 4 à 4÷2 = 2. ✓ option a : barre verticale + 2 points. Piège b : on a oublié de tourner la barre (encore horizontale) tout en divisant bien les points. Piège d : barre non tournée ET on a trop réduit (1 point au lieu de 2). Piège c : barre bien tournée mais on a gardé 4 points (oubli de la division).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Règle inédite à découvrir : dans chaque figure, le nombre de CÔTÉS de la forme extérieure est toujours égal au nombre de petits points qu'elle contient PLUS un. Une seule option respecte cette règle cachée. Laquelle ? <svg viewBox=\"0 0 100 100\"><polygon points=\"20,80 50,20 80,80\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"3\"/><circle cx=\"42\" cy=\"62\" r=\"3\" fill=\"#1e293b\"/><circle cx=\"58\" cy=\"62\" r=\"3\" fill=\"#1e293b\"/><text x=\"50\" y=\"96\" font-size=\"9\" text-anchor=\"middle\" fill=\"#64748b\">exemple : 3 côtés, 2 points</text></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"50,24 72,40 64,68 36,68 28,40\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"3\"/><circle cx=\"50\" cy=\"50\" r=\"3\" fill=\"#1e293b\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"28\" y=\"28\" width=\"44\" height=\"44\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"3\"/><circle cx=\"44\" cy=\"50\" r=\"3\" fill=\"#1e293b\"/><circle cx=\"56\" cy=\"50\" r=\"3\" fill=\"#1e293b\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><polygon points=\"50,24 72,40 64,68 36,68 28,40\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"3\"/><circle cx=\"42\" cy=\"52\" r=\"3\" fill=\"#1e293b\"/><circle cx=\"50\" cy=\"52\" r=\"3\" fill=\"#1e293b\"/><circle cx=\"58\" cy=\"52\" r=\"3\" fill=\"#1e293b\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><rect x=\"28\" y=\"28\" width=\"44\" height=\"44\" fill=\"none\" stroke=\"#1e293b\" stroke-width=\"3\"/><circle cx=\"42\" cy=\"50\" r=\"3\" fill=\"#1e293b\"/><circle cx=\"50\" cy=\"50\" r=\"3\" fill=\"#1e293b\"/><circle cx=\"58\" cy=\"50\" r=\"3\" fill=\"#1e293b\"/></svg>"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Règle cachée : côtés = points + 1 (l'exemple le montre : un triangle a 3 côtés et contient 2 points, et 3 = 2 + 1). On teste chaque option. Option d : carré = 4 côtés, 3 points → 4 = 3 + 1 ✓. Option d respecte la règle. Piège b : carré (4 côtés) avec 2 points → il faudrait 3 points (4 = 2+1 est faux). Piège c : pentagone (5 côtés) avec 3 points → il faudrait 4 points. Piège a : pentagone (5 côtés) avec 1 point → il faudrait 4 points. La clé est de relier deux attributs (côtés et points) par une seule formule, pas de les juger séparément.",
+      "difficulty": 3
+    }
+  ]
+}
