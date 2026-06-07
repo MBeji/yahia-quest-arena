@@ -20,6 +20,11 @@ export class SubjectPage {
   get premiumLock(): Locator {
     return this.page.getByText(/abonnement requis|subscription required|يتطلب اشتراك/i);
   }
+  /** "✓ Passed" badge shown on a chapter once its comprehension quiz is cleared
+   * (FR "✓ Réussi", EN "✓ Passed", AR "✓ ناجح"). */
+  get passedBadge(): Locator {
+    return this.page.getByText(/réussi|passed|ناجح/i);
+  }
   // Subscription paywall (rendered in-page for a premium/subscription-only subject).
   get paywallPremiumText(): Locator {
     return this.page.getByText(/premium/i).first();

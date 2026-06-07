@@ -49,6 +49,10 @@ export interface AdminDb {
    * (the quest UI shuffles options, so a test must match by text, not position).
    */
   answerKey(exerciseId: string): Promise<{ prompt: string; correctText: string }[]>;
+  /** Delete every student link owned by a parent — clean slate for link tests. */
+  clearParentLinks(parentUserId: string): Promise<void>;
+  /** The comprehension-quiz exercise (mode='quiz') with the lowest display order. */
+  quizExerciseId(subjectId: string): Promise<string>;
 }
 
 export function createAdminDb(): AdminDb {
@@ -207,6 +211,26 @@ export function createAdminDb(): AdminDb {
         const correct = opts.find((o) => o.id === q.correct_option);
         return { prompt: q.prompt as string, correctText: correct?.text ?? "" };
       });
+    },
+    async clearParentLinks(parentUserId: string) {
+      const { error } = await client
+        .from("parent_student_links")
+        .delete()
+        .eq("parent_user_id", parentUserId);
+      if (error) throw new Error(`clearParentLinks: ${error.message}`);
+    },
+    async quizExerciseId(subjectId: string) {
+      const { data, error } = await client
+        .from("exercises")
+        .select("id")
+        .eq("subject_id", subjectId)
+        .eq("mode", "quiz")
+        .order("display_order")
+        .limit(1)
+        .maybeSingle();
+      if (error) throw new Error(`quizExerciseId: ${error.message}`);
+      if (!data) throw new Error(`No quiz exercise for subject ${subjectId}.`);
+      return data.id as string;
     },
   };
 }
