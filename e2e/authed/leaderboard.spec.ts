@@ -12,12 +12,14 @@ test.describe("Leaderboard", () => {
     await expect(leaderboard.heading).toBeVisible();
     await expect(leaderboard.globalTab).toBeVisible();
 
-    // Either populated rows or the explicit empty-state — both are valid.
-    if ((await leaderboard.rows.count()) > 0) {
-      await expect(leaderboard.rows.first()).toBeVisible();
-    } else {
-      await expect(leaderboard.emptyState).toBeVisible();
-    }
+    // Wait for the board to finish loading — either ranked rows or the explicit
+    // empty-state. (Reading rows.count() before the query resolves is a race.)
+    await expect(leaderboard.rows.first().or(leaderboard.emptyState)).toBeVisible({
+      timeout: 15_000,
+    });
+    const rendered =
+      (await leaderboard.rows.count()) > 0 || (await leaderboard.emptyState.isVisible());
+    expect(rendered).toBeTruthy();
   });
 
   test("can switch to a per-subject ranking", async ({ leaderboard, adminDb }) => {

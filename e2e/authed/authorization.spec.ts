@@ -20,7 +20,9 @@ test.describe("Authorization — student boundaries", () => {
     page,
   }) => {
     await page.goto("/parent-report");
-    // Renders the alliance-code linking UI (no linked students → no foreign data).
-    await expect(page.getByText(/alliance code/i).first()).toBeVisible();
+    // A student's getLinkedStudents is denied server-side; React Query retries
+    // (~7s) before the page settles to the alliance-code linking UI (no linked
+    // students → no foreign data), so allow generous time.
+    await expect(page.getByText(/alliance code/i).first()).toBeVisible({ timeout: 20_000 });
   });
 });

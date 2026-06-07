@@ -32,6 +32,13 @@ export class DashboardPage {
 
   async goto(): Promise<void> {
     await this.page.goto("/dashboard");
+    // SSR cold-start + profile/catalogue fetch can exceed the default 5s assertion
+    // timeout, leaving <main> briefly empty. Wait for primary data (the hero stat
+    // chips or the first subject card) before returning so specs aren't flaky.
+    await this.statLevel
+      .or(this.subjectCards.first())
+      .first()
+      .waitFor({ state: "visible", timeout: 30_000 });
   }
 
   /** Parse the integer balance out of a stat chip (e.g. "1 234 Coins" → 1234). */

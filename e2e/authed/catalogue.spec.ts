@@ -12,7 +12,8 @@ test.describe("Catalogue navigation", () => {
 
     await dashboard.openFirstSubject();
     await expect(page).toHaveURL(/\/subject\//);
-    // The subject page always exposes at least one mission link (the quiz tile).
-    await expect(page.locator('a[href^="/quest/"]').first()).toBeVisible();
+    // The subject page always exposes at least one mission link (the quiz tile);
+    // allow for the subject content fetch on a cold server.
+    await expect(page.locator('a[href^="/quest/"]').first()).toBeVisible({ timeout: 15_000 });
   });
 });
