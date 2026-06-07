@@ -59,6 +59,26 @@ export class AuthPage {
   }
 
   /**
+   * Fill + submit the signup form, firing the real signup request (hydration-safe
+   * retry). Creates a real auth user — the caller MUST clean it up.
+   */
+  async attemptSignup(name: string, email: string, password: string): Promise<void> {
+    await this.goto("signup");
+    await expect(async () => {
+      await this.nameField.fill(name);
+      await this.email.fill(email);
+      await this.password.fill(password);
+      await Promise.all([
+        this.page.waitForResponse(
+          (r) => r.url().includes("/auth/v1/signup") && r.request().method() === "POST",
+          { timeout: 8000 },
+        ),
+        this.submit.click(),
+      ]);
+    }).toPass({ timeout: 60_000 });
+  }
+
+  /**
    * Log in through the real UI. This is an SSR app: a click before React hydrates
    * does a native form submit that never calls Supabase, so we re-navigate + fill
    * + submit until the POST /auth/v1/token actually fires, then wait for the

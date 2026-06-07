@@ -49,6 +49,14 @@ export interface AdminDb {
    * (the quest UI shuffles options, so a test must match by text, not position).
    */
   answerKey(exerciseId: string): Promise<{ prompt: string; correctText: string }[]>;
+  /** Delete an auth user by email if it exists — cleanup for the signup test. */
+  deleteUserByEmail(email: string): Promise<void>;
+  /**
+   * Whether the project auto-confirms new signups (GoTrue `mailer_autoconfirm`).
+   * When false, UI signup needs a working SMTP to complete — used to skip the
+   * signup happy-path on test projects that have neither.
+   */
+  authAutoconfirm(): Promise<boolean>;
   /** Delete every student link owned by a parent — clean slate for link tests. */
   clearParentLinks(parentUserId: string): Promise<void>;
   /** The comprehension-quiz exercise (mode='quiz') with the lowest display order. */
@@ -211,6 +219,18 @@ export function createAdminDb(): AdminDb {
         const correct = opts.find((o) => o.id === q.correct_option);
         return { prompt: q.prompt as string, correctText: correct?.text ?? "" };
       });
+    },
+    async deleteUserByEmail(email: string) {
+      const id = await this.userIdByEmail(email).catch(() => null);
+      if (!id) return;
+      const { error } = await client.auth.admin.deleteUser(id);
+      if (error) throw new Error(`deleteUserByEmail: ${error.message}`);
+    },
+    async authAutoconfirm() {
+      const res = await fetch(`${url}/auth/v1/settings`, { headers: { apikey: serviceRoleKey } });
+      if (!res.ok) return false;
+      const settings = (await res.json()) as { mailer_autoconfirm?: boolean };
+      return settings.mailer_autoconfirm === true;
     },
     async clearParentLinks(parentUserId: string) {
       const { error } = await client
