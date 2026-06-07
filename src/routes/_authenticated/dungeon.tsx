@@ -29,6 +29,7 @@ import {
 import { SubscriptionPaywall } from "@/features/subscription";
 import { isRtlText, isMathExpression } from "@/shared/lib/utils";
 import { shuffleOptions, type BaseOption, type DisplayOption } from "@/shared/lib/question-utils";
+import { RichField, OptionContent } from "@/components/ui/svg-figure";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/dungeon")({
@@ -369,12 +370,7 @@ function DungeonPage() {
                 <div className="text-xs uppercase tracking-widest text-destructive font-bold mb-2">
                   {t.dungeon.fatalQuestion}
                 </div>
-                <p
-                  className="font-semibold"
-                  dir={isRtlText(lastWrongAnswer.prompt) ? "rtl" : undefined}
-                >
-                  {lastWrongAnswer.prompt}
-                </p>
+                <RichField raw={lastWrongAnswer.prompt} as="p" className="font-semibold" />
                 <div className="mt-2 grid gap-2 sm:grid-cols-2 text-sm">
                   <div className="rounded-lg bg-destructive/10 p-2">
                     <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
@@ -394,12 +390,11 @@ function DungeonPage() {
                   </div>
                 </div>
                 {lastWrongAnswer.explanation && (
-                  <p
+                  <RichField
+                    raw={lastWrongAnswer.explanation}
+                    as="p"
                     className="mt-2 text-sm text-muted-foreground"
-                    dir={isRtlText(lastWrongAnswer.explanation) ? "rtl" : undefined}
-                  >
-                    {lastWrongAnswer.explanation}
-                  </p>
+                  />
                 )}
               </div>
             )}
@@ -541,12 +536,11 @@ function DungeonPage() {
               : undefined
           }
         >
-          <h2
+          <RichField
+            raw={currentQuestion.prompt}
+            as="h2"
             className="font-display text-xl font-semibold sm:text-2xl"
-            dir={isRtlText(currentQuestion.prompt) ? "rtl" : undefined}
-          >
-            {currentQuestion.prompt}
-          </h2>
+          />
           <p className="mt-2 text-sm text-muted-foreground">{t.dungeon.warning}</p>
 
           <div className="mt-6 space-y-3" role="radiogroup" aria-label={currentQuestion.prompt}>
@@ -584,7 +578,7 @@ function DungeonPage() {
                     <span className="grid h-7 w-7 place-items-center rounded-md border border-current font-mono text-xs uppercase">
                       {opt.displayId}
                     </span>
-                    <span>{opt.text}</span>
+                    <OptionContent raw={opt.text} />
                   </span>
                   {/* Non-color indicator: icon + screen-reader text so correctness is
                       conveyed without relying on colour alone. */}
