@@ -16,6 +16,8 @@ test.describe("XP & coins progression", () => {
   });
 
   test("passing a free exercise awards XP", async ({ quest, adminDb }) => {
+    // Paces ≥4.5s/question to clear the anti-farm floor, so allow ample time.
+    test.setTimeout(150_000);
     // Use culture-générale (plain-text questions) for reliable text matching.
     const subjectId = await adminDb.subjectIdByTheme("culture-generale");
     test.skip(!subjectId, "culture-générale content not applied to the test project.");

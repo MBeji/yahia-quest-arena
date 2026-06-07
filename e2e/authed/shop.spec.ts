@@ -27,6 +27,7 @@ test.describe("Academy shop", () => {
   });
 
   test("a purchased consumable can be armed", async ({ dashboard, shop, adminDb, page }) => {
+    test.setTimeout(90_000); // buys every item, each triggering a dashboard refetch
     const userId = await adminDb.userIdByEmail(TEST_USERS.premium.email);
     await adminDb.setCoins(userId, 99_999);
     await dashboard.goto();
