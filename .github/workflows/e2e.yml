@@ -1,9 +1,10 @@
 name: E2E
 
+# Slow Playwright suite (~20 min). No longer per-commit: it runs in the nightly
+# build (see nightly.yml) and can be triggered on demand from the Actions tab.
 on:
-  pull_request:
-  push:
-    branches: [main]
+  workflow_call:
+  workflow_dispatch:
 
 # Newer pushes cancel in-flight runs for the same ref.
 concurrency:

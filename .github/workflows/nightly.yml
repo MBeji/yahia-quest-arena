@@ -1,0 +1,124 @@
+name: Nightly tests
+
+# Runs the slow suites (Playwright public + authenticated, pgTAP DB integration)
+# once a night instead of on every commit/PR. After all of them finish, the
+# `report` job aggregates the results into a job summary AND opens/updates a
+# tracking GitHub issue so failures are surfaced (and email-notified to repo
+# watchers) without any external secret.
+#
+# NOTE: GitHub only fires `schedule` triggers from the default branch (main), so
+# the cron below takes effect once this file is merged to main. Until then (and
+# any time), use the "Run workflow" button (workflow_dispatch) to launch it.
+
+on:
+  schedule:
+    # 23:00 UTC == 00:00 in Tunisia (Africa/Tunis is UTC+1, no DST) — midnight.
+    - cron: "0 23 * * *"
+  workflow_dispatch:
+
+# `report` opens/updates a tracking issue; the called suites only read contents.
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  e2e:
+    name: E2E (public)
+    uses: ./.github/workflows/e2e.yml
+
+  e2e-auth:
+    name: E2E (authenticated)
+    uses: ./.github/workflows/e2e-auth.yml
+    # Forward TEST_SUPABASE_* / E2E_USER_PASSWORD so the suite can run (it skips
+    # gracefully when they're unset).
+    secrets: inherit
+
+  pgtap:
+    name: DB integration (pgTAP)
+    uses: ./.github/workflows/db-tests.yml
+
+  report:
+    name: Nightly report
+    needs: [e2e, e2e-auth, pgtap]
+    # Always run so the report reflects failures too, not just all-green nights.
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: Aggregate results and update tracking issue
+        uses: actions/github-script@v7
+        env:
+          E2E_RESULT: ${{ needs.e2e.result }}
+          E2E_AUTH_RESULT: ${{ needs.e2e-auth.result }}
+          PGTAP_RESULT: ${{ needs.pgtap.result }}
+        with:
+          script: |
+            const results = {
+              'E2E (public)': process.env.E2E_RESULT,
+              'E2E (authenticated)': process.env.E2E_AUTH_RESULT,
+              'DB integration (pgTAP)': process.env.PGTAP_RESULT,
+            };
+            const icon = (r) =>
+              r === 'success' ? '✅' : r === 'skipped' ? '⏭️' : '❌';
+            const failed = Object.values(results).some(
+              (r) => r !== 'success' && r !== 'skipped',
+            );
+
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const date = new Date().toISOString().slice(0, 10);
+
+            let body = `### 🌙 Nightly tests — ${date}\n\n`;
+            body += `| Suite | Résultat |\n| --- | --- |\n`;
+            for (const [name, r] of Object.entries(results)) {
+              body += `| ${name} | ${icon(r)} ${r} |\n`;
+            }
+            body += `\n[Voir le run complet](${runUrl})\n`;
+
+            // Always publish the run summary.
+            await core.summary.addRaw(body).write();
+
+            const LABEL = 'nightly-failure';
+            try {
+              await github.rest.issues.getLabel({ ...context.repo, name: LABEL });
+            } catch {
+              await github.rest.issues.createLabel({
+                ...context.repo,
+                name: LABEL,
+                color: 'b60205',
+                description: 'Échec du nightly build',
+              });
+            }
+
+            const existing = await github.rest.issues.listForRepo({
+              ...context.repo,
+              state: 'open',
+              labels: LABEL,
+            });
+
+            if (failed) {
+              const title = '🌙 Nightly tests en échec';
+              if (existing.data.length > 0) {
+                const n = existing.data[0].number;
+                await github.rest.issues.update({ ...context.repo, issue_number: n, title });
+                await github.rest.issues.createComment({ ...context.repo, issue_number: n, body });
+              } else {
+                await github.rest.issues.create({ ...context.repo, title, body, labels: [LABEL] });
+              }
+              core.setFailed('Nightly suite(s) failed — see the tracking issue.');
+            } else {
+              // All green: close any open failure issue with a success note.
+              for (const issue of existing.data) {
+                await github.rest.issues.createComment({
+                  ...context.repo,
+                  issue_number: issue.number,
+                  body: body + '\n✅ Tout est repassé au vert — fermeture automatique.',
+                });
+                await github.rest.issues.update({
+                  ...context.repo,
+                  issue_number: issue.number,
+                  state: 'closed',
+                });
+              }
+            }
