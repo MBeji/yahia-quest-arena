@@ -161,15 +161,58 @@ describe("betaAccess — admin fns", () => {
     expect(res.count).toBe(0);
   });
 
-  it("reviewBetaRequest calls the review RPC", async () => {
-    mockRpc.mockResolvedValue({ error: null });
+  it("reviewBetaRequest reviews then grants a beta entitlement on the current premium parcours", async () => {
+    mockRpc.mockResolvedValue({ error: null, data: null });
+    // 1) beta_access_requests → user_id, 2) profiles → current_parcours_id.
+    mockMaybeSingle
+      .mockResolvedValueOnce({ data: { user_id: "beta-user-1" }, error: null })
+      .mockResolvedValueOnce({ data: { current_parcours_id: "concours-6eme" }, error: null });
+
     const { reviewBetaRequest } = await import("@/features/subscription");
     await (reviewBetaRequest as unknown as AnyFn)({
       data: { requestId: "11111111-1111-1111-1111-111111111111", approve: true },
     });
-    expect(mockRpc).toHaveBeenCalledWith("admin_review_beta_request", {
+
+    expect(mockRpc).toHaveBeenNthCalledWith(1, "admin_review_beta_request", {
       p_request: "11111111-1111-1111-1111-111111111111",
       p_approve: true,
+    });
+    const grantCall = mockRpc.mock.calls.find((c) => c[0] === "admin_grant_parcours");
+    expect(grantCall).toBeTruthy();
+    const grantArgs = grantCall![1] as Record<string, unknown>;
+    expect(grantArgs.p_user).toBe("beta-user-1");
+    expect(grantArgs.p_parcours).toBe("concours-6eme");
+    expect(grantArgs.p_source).toBe("beta");
+    expect(typeof grantArgs.p_expires_at).toBe("string");
+  });
+
+  it("reviewBetaRequest defaults the grant to the flagship parcours when current is not premium", async () => {
+    mockRpc.mockResolvedValue({ error: null, data: null });
+    mockMaybeSingle
+      .mockResolvedValueOnce({ data: { user_id: "beta-user-2" }, error: null })
+      .mockResolvedValueOnce({ data: { current_parcours_id: "francais" }, error: null });
+
+    const { reviewBetaRequest } = await import("@/features/subscription");
+    await (reviewBetaRequest as unknown as AnyFn)({
+      data: { requestId: "11111111-1111-1111-1111-111111111111", approve: true },
+    });
+
+    const grantCall = mockRpc.mock.calls.find((c) => c[0] === "admin_grant_parcours");
+    expect((grantCall![1] as Record<string, unknown>).p_parcours).toBe("concours-9eme");
+  });
+
+  it("reviewBetaRequest on rejection only reviews and never grants", async () => {
+    mockRpc.mockResolvedValue({ error: null, data: null });
+
+    const { reviewBetaRequest } = await import("@/features/subscription");
+    await (reviewBetaRequest as unknown as AnyFn)({
+      data: { requestId: "11111111-1111-1111-1111-111111111111", approve: false },
+    });
+
+    expect(mockRpc).toHaveBeenCalledTimes(1);
+    expect(mockRpc).toHaveBeenCalledWith("admin_review_beta_request", {
+      p_request: "11111111-1111-1111-1111-111111111111",
+      p_approve: false,
     });
   });
 });

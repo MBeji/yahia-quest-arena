@@ -208,18 +208,33 @@ export type TranslationKeys = {
     statusActive: string;
     statusInactive: string;
     none: string;
+    perpetual: string;
     colUser: string;
     colStatus: string;
-    colPlan: string;
-    colActivated: string;
+    colParcours: string;
+    colSource: string;
     colExpires: string;
     colActions: string;
-    activate: string;
-    block: string;
+    // Entitlement sources
+    purchase: string;
+    beta: string;
+    gift: string;
+    family: string;
     adminTitle: string;
     adminDesc: string;
     accessDenied: string;
-    updated: string;
+    grantTitle: string;
+    grantUserId: string;
+    grantUserIdPlaceholder: string;
+    grantParcours: string;
+    grantSource: string;
+    grantMonths: string;
+    grantMonthsPlaceholder: string;
+    grant: string;
+    revoke: string;
+    granted: string;
+    revoked: string;
+    entitlementsEmpty: string;
     updateError: string;
   };
   // Beta tester free premium access

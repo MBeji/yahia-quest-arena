@@ -117,68 +117,162 @@ describe("subscription — getMySubscription", () => {
   });
 });
 
-describe("subscription — admin server fns", () => {
-  it("listSubscriptions maps RPC rows", async () => {
+describe("subscription — admin parcours entitlement fns", () => {
+  it("listParcoursEntitlements maps RPC rows snake→camel", async () => {
     mockRpc.mockResolvedValue({
       data: [
         {
           user_id: USER_ID,
           display_name: "Yahia",
           email: "y@example.com",
-          role: "student",
-          subscription_type: "monthly",
-          subscription_activated_at: "2026-06-01T00:00:00Z",
-          subscription_expires_at: "2026-07-01T00:00:00Z",
+          parcours_id: "concours-9eme",
+          parcours_name: "Préparation Concours 9ème",
+          source: "purchase",
+          granted_at: "2026-06-01T00:00:00Z",
+          expires_at: "2026-09-01T00:00:00Z",
           is_active: true,
         },
       ],
       error: null,
     });
 
-    const { listSubscriptions } = await import("@/features/subscription");
-    const res = (await (listSubscriptions as unknown as AnyFn)()) as {
-      users: Array<Record<string, unknown>>;
+    const { listParcoursEntitlements } = await import("@/features/subscription");
+    const res = (await (listParcoursEntitlements as unknown as AnyFn)()) as {
+      entitlements: Array<Record<string, unknown>>;
     };
 
-    expect(mockRpc).toHaveBeenCalledWith("admin_list_subscriptions");
-    expect(res.users[0]).toMatchObject({ userId: USER_ID, type: "monthly", isActive: true });
-  });
-
-  it("setSubscription forwards user + plan to the RPC", async () => {
-    mockRpc.mockResolvedValue({ data: null, error: null });
-
-    const { setSubscription } = await import("@/features/subscription");
-    await (setSubscription as unknown as AnyFn)({ data: { userId: USER_ID, type: "quarterly" } });
-
-    expect(mockRpc).toHaveBeenCalledWith("admin_set_subscription", {
-      p_user: USER_ID,
-      p_type: "quarterly",
+    expect(mockRpc).toHaveBeenCalledWith("admin_list_parcours_entitlements");
+    expect(res.entitlements[0]).toMatchObject({
+      userId: USER_ID,
+      parcoursId: "concours-9eme",
+      parcoursName: "Préparation Concours 9ème",
+      source: "purchase",
+      grantedAt: "2026-06-01T00:00:00Z",
+      isActive: true,
     });
   });
 
-  it("setSubscription rejects an invalid plan type before hitting the RPC", async () => {
-    const { setSubscription } = await import("@/features/subscription");
+  it("listParcoursEntitlements returns [] when the RPC yields null data", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: null });
+    const { listParcoursEntitlements } = await import("@/features/subscription");
+    const res = (await (listParcoursEntitlements as unknown as AnyFn)()) as {
+      entitlements: unknown[];
+    };
+    expect(res.entitlements).toEqual([]);
+  });
+
+  it("listParcoursEntitlements throws a safe message on RPC error", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: { message: "Unauthorized" } });
+    const { listParcoursEntitlements } = await import("@/features/subscription");
+    await expect((listParcoursEntitlements as unknown as AnyFn)()).rejects.toThrow(/parcours/i);
+  });
+
+  it("grantParcoursEntitlement defaults the source to 'purchase' and grants perpetually", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: null });
+
+    const { grantParcoursEntitlement } = await import("@/features/subscription");
+    await (grantParcoursEntitlement as unknown as AnyFn)({
+      data: { userId: USER_ID, parcoursId: "concours-9eme" },
+    });
+
+    // No expiry passed (perpetual) → p_expires_at omitted.
+    expect(mockRpc).toHaveBeenCalledWith("admin_grant_parcours", {
+      p_user: USER_ID,
+      p_parcours: "concours-9eme",
+      p_source: "purchase",
+    });
+  });
+
+  it("grantParcoursEntitlement converts a months convenience into an expiry", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: null });
+
+    const { grantParcoursEntitlement } = await import("@/features/subscription");
+    await (grantParcoursEntitlement as unknown as AnyFn)({
+      data: { userId: USER_ID, parcoursId: "concours-6eme", source: "gift", months: 3 },
+    });
+
+    expect(mockRpc).toHaveBeenCalledTimes(1);
+    const [rpcName, args] = mockRpc.mock.calls[0] as [string, Record<string, unknown>];
+    expect(rpcName).toBe("admin_grant_parcours");
+    expect(args.p_user).toBe(USER_ID);
+    expect(args.p_parcours).toBe("concours-6eme");
+    expect(args.p_source).toBe("gift");
+    expect(typeof args.p_expires_at).toBe("string");
+  });
+
+  it("grantParcoursEntitlement forwards an explicit expiry", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: null });
+
+    const { grantParcoursEntitlement } = await import("@/features/subscription");
+    await (grantParcoursEntitlement as unknown as AnyFn)({
+      data: {
+        userId: USER_ID,
+        parcoursId: "concours-9eme",
+        source: "beta",
+        expiresAt: "2026-12-01T00:00:00.000Z",
+      },
+    });
+
+    expect(mockRpc).toHaveBeenCalledWith("admin_grant_parcours", {
+      p_user: USER_ID,
+      p_parcours: "concours-9eme",
+      p_source: "beta",
+      p_expires_at: "2026-12-01T00:00:00.000Z",
+    });
+  });
+
+  it("grantParcoursEntitlement rejects an invalid source before hitting the RPC", async () => {
+    const { grantParcoursEntitlement } = await import("@/features/subscription");
     await expect(
-      (setSubscription as unknown as AnyFn)({ data: { userId: USER_ID, type: "lifetime" } }),
+      (grantParcoursEntitlement as unknown as AnyFn)({
+        data: { userId: USER_ID, parcoursId: "concours-9eme", source: "lifetime" },
+      }),
     ).rejects.toThrow();
     expect(mockRpc).not.toHaveBeenCalled();
   });
 
-  it("clearSubscription forwards the user to the RPC", async () => {
-    mockRpc.mockResolvedValue({ data: null, error: null });
-
-    const { clearSubscription } = await import("@/features/subscription");
-    await (clearSubscription as unknown as AnyFn)({ data: { userId: USER_ID } });
-
-    expect(mockRpc).toHaveBeenCalledWith("admin_clear_subscription", { p_user: USER_ID });
+  it("grantParcoursEntitlement rejects an empty parcours id", async () => {
+    const { grantParcoursEntitlement } = await import("@/features/subscription");
+    await expect(
+      (grantParcoursEntitlement as unknown as AnyFn)({
+        data: { userId: USER_ID, parcoursId: "" },
+      }),
+    ).rejects.toThrow();
+    expect(mockRpc).not.toHaveBeenCalled();
   });
 
-  it("clearSubscription surfaces a safe message on RPC error", async () => {
+  it("grantParcoursEntitlement surfaces a safe message on RPC error", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: { message: "nope" } });
+    const { grantParcoursEntitlement } = await import("@/features/subscription");
+    await expect(
+      (grantParcoursEntitlement as unknown as AnyFn)({
+        data: { userId: USER_ID, parcoursId: "concours-9eme" },
+      }),
+    ).rejects.toThrow(/parcours/i);
+  });
+
+  it("revokeParcoursEntitlement forwards user + parcours to the RPC", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: null });
+
+    const { revokeParcoursEntitlement } = await import("@/features/subscription");
+    await (revokeParcoursEntitlement as unknown as AnyFn)({
+      data: { userId: USER_ID, parcoursId: "concours-9eme" },
+    });
+
+    expect(mockRpc).toHaveBeenCalledWith("admin_revoke_parcours", {
+      p_user: USER_ID,
+      p_parcours: "concours-9eme",
+    });
+  });
+
+  it("revokeParcoursEntitlement surfaces a safe message on RPC error", async () => {
     mockRpc.mockResolvedValue({ data: null, error: { message: "nope" } });
 
-    const { clearSubscription } = await import("@/features/subscription");
+    const { revokeParcoursEntitlement } = await import("@/features/subscription");
     await expect(
-      (clearSubscription as unknown as AnyFn)({ data: { userId: USER_ID } }),
-    ).rejects.toThrow(/bloquer/i);
+      (revokeParcoursEntitlement as unknown as AnyFn)({
+        data: { userId: USER_ID, parcoursId: "concours-9eme" },
+      }),
+    ).rejects.toThrow(/parcours/i);
   });
 });

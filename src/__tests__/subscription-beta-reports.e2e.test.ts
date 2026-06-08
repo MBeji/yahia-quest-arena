@@ -225,60 +225,70 @@ describe("END-TO-END: pending beta count", () => {
 });
 
 // =============================================================================
-// SCENARIO 4 — Admin subscriptions: list → grant a plan → revoke.
+// SCENARIO 4 — Admin parcours entitlements: list → grant → revoke.
 // =============================================================================
-describe("END-TO-END: admin subscription management", () => {
-  it("listSubscriptions maps rows → setSubscription → clearSubscription (RPCs invoked)", async () => {
+describe("END-TO-END: admin parcours entitlement management", () => {
+  it("listParcoursEntitlements maps rows → grant → revoke (RPCs invoked)", async () => {
     const sub = await import("@/features/subscription/subscription.server");
 
-    // 1) List every user with their subscription state.
+    // 1) List every live parcours entitlement.
     mockRpc.mockImplementation(
       rpcByName({
-        admin_list_subscriptions: {
+        admin_list_parcours_entitlements: {
           data: [
             {
               user_id: U,
               display_name: "Student One",
               email: "one@example.com",
-              role: "student",
-              subscription_type: null,
-              subscription_activated_at: null,
-              subscription_expires_at: null,
-              is_active: false,
+              parcours_id: "concours-9eme",
+              parcours_name: "Concours 9ème",
+              source: "purchase",
+              granted_at: "2026-06-01T00:00:00Z",
+              expires_at: "2026-09-01T00:00:00Z",
+              is_active: true,
             },
           ],
           error: null,
         },
       }),
     );
-    const listed = (await (sub.listSubscriptions as unknown as Fn)()) as {
-      users: Array<{ userId: string; isActive: boolean; type: string | null }>;
+    const listed = (await (sub.listParcoursEntitlements as unknown as Fn)()) as {
+      entitlements: Array<{ userId: string; isActive: boolean; parcoursId: string }>;
     };
-    expect(listed.users).toHaveLength(1);
-    expect(listed.users[0]).toMatchObject({ userId: U, isActive: false, type: null });
-    expect(mockRpc).toHaveBeenCalledWith("admin_list_subscriptions");
+    expect(listed.entitlements).toHaveLength(1);
+    expect(listed.entitlements[0]).toMatchObject({
+      userId: U,
+      isActive: true,
+      parcoursId: "concours-9eme",
+    });
+    expect(mockRpc).toHaveBeenCalledWith("admin_list_parcours_entitlements");
 
-    // 2) Grant an annual plan to that user.
+    // 2) Grant the concours-9eme parcours to that user (perpetual purchase).
     mockRpc.mockClear();
     mockRpc.mockResolvedValue({ data: null, error: null });
-    const granted = (await (sub.setSubscription as unknown as Fn)({
+    const granted = (await (sub.grantParcoursEntitlement as unknown as Fn)({
       userId: U,
-      type: "annual",
+      parcoursId: "concours-9eme",
     })) as { ok: boolean };
     expect(granted).toEqual({ ok: true });
-    expect(mockRpc).toHaveBeenCalledWith("admin_set_subscription", {
+    expect(mockRpc).toHaveBeenCalledWith("admin_grant_parcours", {
       p_user: U,
-      p_type: "annual",
+      p_parcours: "concours-9eme",
+      p_source: "purchase",
     });
 
-    // 3) Revoke (block) the subscription again.
+    // 3) Revoke the entitlement again.
     mockRpc.mockClear();
     mockRpc.mockResolvedValue({ data: null, error: null });
-    const cleared = (await (sub.clearSubscription as unknown as Fn)({ userId: U })) as {
-      ok: boolean;
-    };
-    expect(cleared).toEqual({ ok: true });
-    expect(mockRpc).toHaveBeenCalledWith("admin_clear_subscription", { p_user: U });
+    const revoked = (await (sub.revokeParcoursEntitlement as unknown as Fn)({
+      userId: U,
+      parcoursId: "concours-9eme",
+    })) as { ok: boolean };
+    expect(revoked).toEqual({ ok: true });
+    expect(mockRpc).toHaveBeenCalledWith("admin_revoke_parcours", {
+      p_user: U,
+      p_parcours: "concours-9eme",
+    });
   });
 });
 
@@ -383,14 +393,14 @@ describe("END-TO-END: content report lifecycle", () => {
 // SCENARIO 6 — Unauthorized admin path is surfaced as an error (no hang).
 // =============================================================================
 describe("END-TO-END: unauthorized admin RPC is surfaced", () => {
-  it("listSubscriptions throws when the RPC reports Unauthorized", async () => {
+  it("listParcoursEntitlements throws when the RPC reports Unauthorized", async () => {
     const sub = await import("@/features/subscription/subscription.server");
     mockRpc.mockImplementation(
       rpcByName({
-        admin_list_subscriptions: { data: null, error: { message: "Unauthorized" } },
+        admin_list_parcours_entitlements: { data: null, error: { message: "Unauthorized" } },
       }),
     );
-    await expect((sub.listSubscriptions as unknown as Fn)()).rejects.toThrow();
+    await expect((sub.listParcoursEntitlements as unknown as Fn)()).rejects.toThrow();
   });
 
   it("reviewBetaRequest throws when the RPC reports Unauthorized", async () => {

@@ -5,13 +5,18 @@ import { ArrowLeft, CreditCard, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/features/auth";
 import {
-  listSubscriptions,
-  setSubscription,
-  clearSubscription,
-  SubscriptionAdminTable,
+  listParcoursEntitlements,
+  grantParcoursEntitlement,
+  revokeParcoursEntitlement,
+  ParcoursEntitlementsAdmin,
+  type AdminParcoursOption,
 } from "@/features/subscription";
+import { getParcours } from "@/features/dashboard";
 import { supabase } from "@/shared/integrations/supabase/client";
-import type { SubscriptionType } from "@/shared/constants/subscription";
+import {
+  ADMIN_CONTACT_PHONE,
+  type ParcoursEntitlementSource,
+} from "@/shared/constants/subscription";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/admin/subscriptions")({
@@ -34,29 +39,49 @@ function AdminSubscriptionsPage() {
     },
   });
 
-  const fetchList = useServerFn(listSubscriptions);
-  const activate = useServerFn(setSubscription);
-  const block = useServerFn(clearSubscription);
+  const fetchEntitlements = useServerFn(listParcoursEntitlements);
+  const fetchParcours = useServerFn(getParcours);
+  const grant = useServerFn(grantParcoursEntitlement);
+  const revoke = useServerFn(revokeParcoursEntitlement);
+
+  const isAdmin = role === "admin";
 
   const listQuery = useQuery({
-    queryKey: ["admin-subscriptions"],
-    enabled: role === "admin",
-    queryFn: () => fetchList(),
+    queryKey: ["admin-parcours-entitlements"],
+    enabled: isAdmin,
+    queryFn: () => fetchEntitlements(),
   });
 
-  const mutation = useMutation({
-    mutationFn: (action: { userId: string; type?: SubscriptionType }) =>
-      action.type
-        ? activate({ data: { userId: action.userId, type: action.type } })
-        : block({ data: { userId: action.userId } }),
+  const parcoursQuery = useQuery({
+    queryKey: ["admin-parcours-options"],
+    enabled: isAdmin,
+    queryFn: () => fetchParcours(),
+  });
+
+  const grantMutation = useMutation({
+    mutationFn: (input: {
+      userId: string;
+      parcoursId: string;
+      source: ParcoursEntitlementSource;
+      months?: number;
+    }) => grant({ data: input }),
     onSuccess: () => {
-      toast.success(t.subscription.updated);
-      qc.invalidateQueries({ queryKey: ["admin-subscriptions"] });
+      toast.success(t.subscription.granted);
+      qc.invalidateQueries({ queryKey: ["admin-parcours-entitlements"] });
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : t.subscription.updateError),
   });
 
-  if (role !== null && role !== "admin") {
+  const revokeMutation = useMutation({
+    mutationFn: (input: { userId: string; parcoursId: string }) => revoke({ data: input }),
+    onSuccess: () => {
+      toast.success(t.subscription.revoked);
+      qc.invalidateQueries({ queryKey: ["admin-parcours-entitlements"] });
+    },
+    onError: (e) => toast.error(e instanceof Error ? e.message : t.subscription.updateError),
+  });
+
+  if (role !== null && !isAdmin) {
     return (
       <div className="mx-auto max-w-2xl px-6 py-12 text-center">
         <h1 className="font-display text-2xl font-bold">{t.subscription.accessDenied}</h1>
@@ -69,6 +94,16 @@ function AdminSubscriptionsPage() {
       </div>
     );
   }
+
+  const parcoursOptions: AdminParcoursOption[] = (parcoursQuery.data?.parcours ?? []).map((p) => ({
+    id: p.id,
+    name: p.name_fr,
+    isPremium: p.is_premium,
+  }));
+
+  const pendingKey = revokeMutation.isPending
+    ? `${revokeMutation.variables?.userId}:${revokeMutation.variables?.parcoursId}`
+    : null;
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-10">
@@ -89,6 +124,10 @@ function AdminSubscriptionsPage() {
         </div>
       </div>
 
+      <p className="mb-6 rounded-xl border border-border/50 bg-card/30 px-4 py-3 text-sm text-muted-foreground">
+        {t.subscription.contactTitle}: <span className="font-semibold">{ADMIN_CONTACT_PHONE}</span>
+      </p>
+
       {listQuery.isLoading ? (
         <div className="grid place-items-center py-16">
           <Loader2 className="h-8 w-8 animate-spin text-[color:var(--gold)]" />
@@ -98,11 +137,13 @@ function AdminSubscriptionsPage() {
           {t.subscription.updateError}
         </div>
       ) : (
-        <SubscriptionAdminTable
-          users={listQuery.data?.users ?? []}
-          pendingUserId={mutation.isPending ? (mutation.variables?.userId ?? null) : null}
-          onActivate={(userId, type) => mutation.mutate({ userId, type })}
-          onBlock={(userId) => mutation.mutate({ userId })}
+        <ParcoursEntitlementsAdmin
+          entitlements={listQuery.data?.entitlements ?? []}
+          parcoursOptions={parcoursOptions}
+          onGrant={(input) => grantMutation.mutate(input)}
+          onRevoke={(userId, parcoursId) => revokeMutation.mutate({ userId, parcoursId })}
+          pendingKey={pendingKey}
+          isGranting={grantMutation.isPending}
         />
       )}
     </div>

@@ -3,9 +3,9 @@
 
 export {
   getMySubscription,
-  listSubscriptions,
-  setSubscription,
-  clearSubscription,
+  listParcoursEntitlements,
+  grantParcoursEntitlement,
+  revokeParcoursEntitlement,
 } from "./subscription.server";
 export { isSubscriptionActive, type SubscriptionState } from "./subscription";
 export {
@@ -20,6 +20,7 @@ export { SubscriptionPaywall } from "./components/subscription-paywall";
 export { BetaAccessRequest } from "./components/beta-access-request";
 export { BetaRequestsAdmin } from "./components/beta-requests-admin";
 export {
-  SubscriptionAdminTable,
-  type AdminSubscriptionUser,
-} from "./components/subscription-admin-table";
+  ParcoursEntitlementsAdmin,
+  type ParcoursEntitlementRow,
+  type AdminParcoursOption,
+} from "./components/parcours-entitlements-admin";

@@ -2,7 +2,12 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { failWithClientError } from "@/shared/lib/safe-error";
-import type { BetaRequestStatus } from "@/shared/constants/subscription";
+import {
+  BETA_ACCESS_MONTHS,
+  FLAGSHIP_PARCOURS_ID,
+  PREMIUM_PARCOURS_IDS,
+  type BetaRequestStatus,
+} from "@/shared/constants/subscription";
 
 /** A beta access request as exposed to the client. */
 export type BetaRequest = {
@@ -119,7 +124,15 @@ export const getPendingBetaCount = createServerFn({ method: "GET" })
     return { count: typeof data === "number" ? data : 0 };
   });
 
-/** Admin: approve or reject a request. Approval grants free premium automatically. */
+/**
+ * Admin: approve or reject a request. Approval grants free premium access.
+ *
+ * The `admin_review_beta_request` RPC still writes the now-dormant
+ * `profiles.subscription_*` columns; that write is intentional and kept as-is to
+ * avoid a migration (a future cleanup will fold it into the RPC). The live access
+ * gate reads per-parcours entitlements, so on approval we ALSO grant a `beta`
+ * parcours entitlement so the tester actually gets access under the new gate.
+ */
 export const reviewBetaRequest = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) => z.object({ requestId: z.string().uuid(), approve: z.boolean() }).parse(d))
@@ -135,5 +148,45 @@ export const reviewBetaRequest = createServerFn({ method: "POST" })
         error,
         "Impossible de traiter la demande.",
       );
+
+    // On approval, grant a per-parcours `beta` entitlement so the tester gets
+    // access under the live (entitlement-based) gate. Target the requester's
+    // current parcours when it's premium; otherwise default to the flagship.
+    if (data.approve) {
+      const { data: req } = await supabase
+        .from("beta_access_requests")
+        .select("user_id")
+        .eq("id", data.requestId)
+        .maybeSingle();
+      const betaUserId = req?.user_id;
+      if (betaUserId) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("current_parcours_id")
+          .eq("id", betaUserId)
+          .maybeSingle();
+        const current = profile?.current_parcours_id ?? null;
+        const targetParcoursId =
+          current && (PREMIUM_PARCOURS_IDS as readonly string[]).includes(current)
+            ? current
+            : FLAGSHIP_PARCOURS_ID;
+
+        const expires = new Date();
+        expires.setMonth(expires.getMonth() + BETA_ACCESS_MONTHS);
+        const { error: grantErr } = await supabase.rpc("admin_grant_parcours", {
+          p_user: betaUserId,
+          p_parcours: targetParcoursId,
+          p_source: "beta",
+          p_expires_at: expires.toISOString(),
+        });
+        if (grantErr)
+          failWithClientError(
+            "betaAccess.reviewBetaRequest.grant",
+            grantErr,
+            "Impossible de traiter la demande.",
+          );
+      }
+    }
+
     return { ok: true } as const;
   });

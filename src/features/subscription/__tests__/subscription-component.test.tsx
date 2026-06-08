@@ -13,9 +13,10 @@ vi.mock("../components/beta-access-request", () => ({ BetaAccessRequest: () => n
 
 import { SubscriptionPaywall } from "../components/subscription-paywall";
 import {
-  SubscriptionAdminTable,
-  type AdminSubscriptionUser,
-} from "../components/subscription-admin-table";
+  ParcoursEntitlementsAdmin,
+  type ParcoursEntitlementRow,
+  type AdminParcoursOption,
+} from "../components/parcours-entitlements-admin";
 import { ADMIN_CONTACT_PHONE, SUBSCRIPTION_PLANS } from "@/shared/constants/subscription";
 
 describe("SubscriptionPaywall", () => {
@@ -28,61 +29,101 @@ describe("SubscriptionPaywall", () => {
   });
 });
 
-const ACTIVE_USER: AdminSubscriptionUser = {
+const PARCOURS_OPTIONS: AdminParcoursOption[] = [
+  { id: "concours-9eme", name: "Concours 9ème", isPremium: true },
+  { id: "concours-6eme", name: "Concours 6ème", isPremium: true },
+  { id: "francais", name: "Français", isPremium: false },
+];
+
+const ACTIVE_ENT: ParcoursEntitlementRow = {
   userId: "u-active",
   displayName: "Active Hero",
   email: "active@example.com",
-  role: "student",
-  type: "monthly",
-  activatedAt: "2026-06-01T00:00:00Z",
+  parcoursId: "concours-9eme",
+  parcoursName: "Concours 9ème",
+  source: "purchase",
+  grantedAt: "2026-06-01T00:00:00Z",
   expiresAt: "2999-01-01T00:00:00Z",
   isActive: true,
 };
 
-const INACTIVE_USER: AdminSubscriptionUser = {
+const INACTIVE_ENT: ParcoursEntitlementRow = {
   userId: "u-inactive",
   displayName: "Idle Hero",
   email: null,
-  role: "student",
-  type: null,
-  activatedAt: null,
+  parcoursId: "concours-6eme",
+  parcoursName: "Concours 6ème",
+  source: "beta",
+  grantedAt: null,
   expiresAt: null,
   isActive: false,
 };
 
-describe("SubscriptionAdminTable", () => {
-  it("activates with the selected plan", () => {
-    const onActivate = vi.fn();
+describe("ParcoursEntitlementsAdmin", () => {
+  it("grants with the chosen parcours, source and months", () => {
+    const onGrant = vi.fn();
     render(
-      <SubscriptionAdminTable
-        users={[INACTIVE_USER]}
-        onActivate={onActivate}
-        onBlock={vi.fn()}
-        pendingUserId={null}
+      <ParcoursEntitlementsAdmin
+        entitlements={[]}
+        parcoursOptions={PARCOURS_OPTIONS}
+        onGrant={onGrant}
+        onRevoke={vi.fn()}
+        pendingKey={null}
+        isGranting={false}
       />,
     );
 
-    fireEvent.change(screen.getByRole("combobox"), { target: { value: "annual" } });
-    fireEvent.click(screen.getByText("Unlock"));
-    expect(onActivate).toHaveBeenCalledWith("u-inactive", "annual");
+    fireEvent.change(screen.getByLabelText("User ID"), {
+      target: { value: "11111111-1111-1111-1111-111111111111" },
+    });
+    fireEvent.change(screen.getByLabelText("Parcours"), { target: { value: "concours-6eme" } });
+    fireEvent.change(screen.getByLabelText("Source"), { target: { value: "gift" } });
+    fireEvent.change(screen.getByLabelText("Duration (months)"), { target: { value: "3" } });
+    fireEvent.click(screen.getByText("Grant"));
+
+    expect(onGrant).toHaveBeenCalledWith({
+      userId: "11111111-1111-1111-1111-111111111111",
+      parcoursId: "concours-6eme",
+      source: "gift",
+      months: 3,
+    });
   });
 
-  it("blocks an active user and disables Block for inactive users", () => {
-    const onBlock = vi.fn();
+  it("does not grant when the user id is blank", () => {
+    const onGrant = vi.fn();
     render(
-      <SubscriptionAdminTable
-        users={[ACTIVE_USER, INACTIVE_USER]}
-        onActivate={vi.fn()}
-        onBlock={onBlock}
-        pendingUserId={null}
+      <ParcoursEntitlementsAdmin
+        entitlements={[]}
+        parcoursOptions={PARCOURS_OPTIONS}
+        onGrant={onGrant}
+        onRevoke={vi.fn()}
+        pendingKey={null}
+        isGranting={false}
+      />,
+    );
+
+    fireEvent.click(screen.getByText("Grant"));
+    expect(onGrant).not.toHaveBeenCalled();
+  });
+
+  it("revokes an active entitlement and disables Revoke for inactive ones", () => {
+    const onRevoke = vi.fn();
+    render(
+      <ParcoursEntitlementsAdmin
+        entitlements={[ACTIVE_ENT, INACTIVE_ENT]}
+        parcoursOptions={PARCOURS_OPTIONS}
+        onGrant={vi.fn()}
+        onRevoke={onRevoke}
+        pendingKey={null}
+        isGranting={false}
       />,
     );
 
     const activeRow = screen.getByText("Active Hero").closest("tr") as HTMLElement;
-    fireEvent.click(within(activeRow).getByText("Block"));
-    expect(onBlock).toHaveBeenCalledWith("u-active");
+    fireEvent.click(within(activeRow).getByText("Revoke"));
+    expect(onRevoke).toHaveBeenCalledWith("u-active", "concours-9eme");
 
     const inactiveRow = screen.getByText("Idle Hero").closest("tr") as HTMLElement;
-    expect(within(inactiveRow).getByText("Block").closest("button")).toBeDisabled();
+    expect(within(inactiveRow).getByText("Revoke").closest("button")).toBeDisabled();
   });
 });

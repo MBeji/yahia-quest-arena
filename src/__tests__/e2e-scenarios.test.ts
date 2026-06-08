@@ -306,7 +306,13 @@ describe("END-TO-END: beta tester request → admin approval", () => {
     const mine = (await (sub.getMyBetaRequest as unknown as Fn)()) as { status: string } | null;
     expect(mine?.status).toBe("pending");
 
-    // 3) Admin lists and approves (RPC grants premium).
+    // 3) Admin lists and approves. Approval reviews the request (dormant
+    //    subscription write) AND grants a per-parcours `beta` entitlement.
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "beta_access_requests") return mockQuery({ user_id: U });
+      if (table === "profiles") return mockQuery({ current_parcours_id: "concours-9eme" });
+      return mockQuery([]);
+    });
     mockRpc.mockImplementation(
       rpcByName({
         admin_list_beta_requests: {
@@ -325,6 +331,7 @@ describe("END-TO-END: beta tester request → admin approval", () => {
           error: null,
         },
         admin_review_beta_request: { data: null, error: null },
+        admin_grant_parcours: { data: null, error: null },
       }),
     );
     const list = (await (sub.listBetaRequests as unknown as Fn)()) as {
@@ -340,10 +347,15 @@ describe("END-TO-END: beta tester request → admin approval", () => {
       p_request: REQ,
       p_approve: true,
     });
+    // The beta tester gets a per-parcours entitlement under the live gate.
+    const grantCall = mockRpc.mock.calls.find((c) => c[0] === "admin_grant_parcours");
+    expect(grantCall).toBeTruthy();
+    expect((grantCall![1] as Record<string, unknown>).p_source).toBe("beta");
+    expect((grantCall![1] as Record<string, unknown>).p_parcours).toBe("concours-9eme");
   });
 });
 
-describe("END-TO-END: admin manages a paid subscription", () => {
+describe("END-TO-END: admin manages parcours entitlements", () => {
   beforeEach(() => {
     vi.resetModules();
     capturedHandlers = {};
@@ -356,39 +368,45 @@ describe("END-TO-END: admin manages a paid subscription", () => {
 
     mockRpc.mockImplementation(
       rpcByName({
-        admin_list_subscriptions: {
+        admin_list_parcours_entitlements: {
           data: [
             {
               user_id: U,
               display_name: "Yahia",
               email: "y@example.com",
-              role: "student",
-              subscription_type: null,
-              subscription_activated_at: null,
-              subscription_expires_at: null,
-              is_active: false,
+              parcours_id: "concours-9eme",
+              parcours_name: "Concours 9ème",
+              source: "purchase",
+              granted_at: "2026-06-01T00:00:00Z",
+              expires_at: null,
+              is_active: true,
             },
           ],
           error: null,
         },
-        admin_set_subscription: { data: null, error: null },
-        admin_clear_subscription: { data: null, error: null },
+        admin_grant_parcours: { data: null, error: null },
+        admin_revoke_parcours: { data: null, error: null },
       }),
     );
 
-    const list = (await (sub.listSubscriptions as unknown as Fn)()) as { users: unknown[] };
-    expect(list.users).toHaveLength(1);
+    const list = (await (sub.listParcoursEntitlements as unknown as Fn)()) as {
+      entitlements: unknown[];
+    };
+    expect(list.entitlements).toHaveLength(1);
 
-    const granted = (await (sub.setSubscription as unknown as Fn)({
+    const granted = (await (sub.grantParcoursEntitlement as unknown as Fn)({
       userId: U,
-      type: "annual",
+      parcoursId: "concours-9eme",
+      source: "gift",
+      months: 6,
     })) as { ok: boolean };
     expect(granted.ok).toBe(true);
 
-    const cleared = (await (sub.clearSubscription as unknown as Fn)({ userId: U })) as {
-      ok: boolean;
-    };
-    expect(cleared.ok).toBe(true);
+    const revoked = (await (sub.revokeParcoursEntitlement as unknown as Fn)({
+      userId: U,
+      parcoursId: "concours-9eme",
+    })) as { ok: boolean };
+    expect(revoked.ok).toBe(true);
   });
 });
 
