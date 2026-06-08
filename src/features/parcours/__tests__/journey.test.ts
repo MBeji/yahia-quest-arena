@@ -38,15 +38,14 @@ describe("buildSubjectNodes", () => {
   ];
 
   it("marks mastery as done, started as current, gates the rest", () => {
-    const nodes = buildSubjectNodes(
-      subjects,
-      { math: { count: 5, avg: 90 }, french: { count: 3, avg: 50 } },
-      true,
-    );
+    const nodes = buildSubjectNodes(subjects, {
+      math: { count: 5, avg: 90 },
+      french: { count: 3, avg: 50 },
+    });
     expect(nodes.map((n) => n.state)).toEqual(["done", "current", "open", "locked"]);
   });
 
-  it("gates premium subjects on the subscription", () => {
+  it("flags premium-locked subjects from the locked-id set", () => {
     const subj = [
       { id: "math", name_fr: "Maths", color_token: "subject-math", icon: "Calculator" },
       {
@@ -58,8 +57,10 @@ describe("buildSubjectNodes", () => {
       },
     ];
     const stats = { math: { count: 1, avg: 60 } };
-    expect(buildSubjectNodes(subj, stats, false)[1].state).toBe("premium-locked");
-    expect(buildSubjectNodes(subj, stats, true)[1].state).toBe("open");
+    // Locked when its id is in the set (premium parcours without entitlement)…
+    expect(buildSubjectNodes(subj, stats, new Set(["frm"]))[1].state).toBe("premium-locked");
+    // …and not locked when the set is empty (entitled / free).
+    expect(buildSubjectNodes(subj, stats, new Set())[1].state).toBe("open");
   });
 });
 
@@ -90,7 +91,10 @@ describe("buildChapterNodes", () => {
     const nodes = buildChapterNodes(chapters, exercises, {}, {});
     expect(nodes[0].xpReward).toBe(170); // 50 + 120 (quiz's 20 excluded)
     expect(nodes[0].total).toBe(2);
-    expect(nodes[0].hasPremium).toBe(true); // has a difficulty-3 boss
-    expect(nodes[1].hasPremium).toBe(false);
+    // Premium content = anything past the free preview (difficulty > 1): c1 has a
+    // difficulty-3 boss, c2 a difficulty-2 practice; c3 (empty) has none.
+    expect(nodes[0].hasPremium).toBe(true);
+    expect(nodes[1].hasPremium).toBe(true);
+    expect(nodes[2].hasPremium).toBe(false);
   });
 });

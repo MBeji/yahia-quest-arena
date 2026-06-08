@@ -4,7 +4,7 @@
  * (getDashboard / getSubject) and pass the results to presentational components,
  * so this feature never imports another feature.
  */
-import { XP_PER_LEVEL } from "@/shared/constants/gamification";
+import { FREE_PREVIEW_MAX_DIFFICULTY, XP_PER_LEVEL } from "@/shared/constants/gamification";
 
 /** Visual state of a path node. */
 export type NodeState = "done" | "current" | "open" | "locked" | "premium-locked";
@@ -64,13 +64,14 @@ type SubjectLike = {
 
 /**
  * World-map subject nodes. A region unlocks once the previous (non-premium)
- * region has been started; premium regions are independently gated by the
- * subscription. The mastery (>=80% avg) ones show as "done".
+ * region has been started; premium regions whose parcours the caller has not
+ * unlocked are surfaced as "premium-locked" (the set is computed by the caller
+ * from the parcours entitlement). The mastery (>=80% avg) ones show as "done".
  */
 export function buildSubjectNodes(
   subjects: SubjectLike[],
   statsBySubject: Record<string, { count: number; avg: number }>,
-  hasSubscription: boolean,
+  lockedSubjectIds: ReadonlySet<string> = new Set(),
 ): SubjectNode[] {
   let unlocked = true;
   return subjects.map((s) => {
@@ -79,7 +80,7 @@ export function buildSubjectNodes(
     const premium = s.is_premium ?? false;
 
     let state: NodeState;
-    if (premium && !hasSubscription) state = "premium-locked";
+    if (lockedSubjectIds.has(s.id)) state = "premium-locked";
     else if (!unlocked) state = "locked";
     else if (started && st.avg >= 80) state = "done";
     else if (started) state = "current";
@@ -131,7 +132,7 @@ export function buildChapterNodes(
     const total = exs.length;
     const completed = exs.filter((e) => (bestByExercise[e.id] ?? 0) >= passPct).length;
     const xpReward = exs.reduce((sum, e) => sum + (e.xp_reward ?? 0), 0);
-    const hasPremium = exs.some((e) => (e.difficulty ?? 0) >= 3);
+    const hasPremium = exs.some((e) => (e.difficulty ?? 0) > FREE_PREVIEW_MAX_DIFFICULTY);
     const allDone = total > 0 && completed === total;
     // No quiz for the chapter → not a blocker (defaults to passed).
     const quizPassed = quizPassedByChapter[c.id] ?? true;

@@ -10,7 +10,6 @@ import {
   Languages,
   Atom,
   ChevronRight,
-  Crown,
   Lock,
 } from "lucide-react";
 import { useT } from "@/lib/i18n";
@@ -43,20 +42,18 @@ type SubjectLike = {
   is_premium?: boolean;
 };
 
-/** One subject "path" card on the dashboard. Premium modules show a crown/lock badge. */
-export function SubjectPathCard({
-  subject,
-  stat,
-  hasSubscription,
-}: {
+/** One subject "path" card on the dashboard. Locked premium subjects show a lock badge. */
+export function SubjectPathCard(props: {
   subject: SubjectLike;
   stat: { count: number; avg: number } | undefined;
-  hasSubscription: boolean;
+  premiumLocked: boolean;
 }) {
+  const { subject, stat } = props;
   const t = useT();
   const Icon = ICONS[subject.icon] ?? Sword;
-  const isPremium = subject.is_premium ?? false;
-  const premiumLocked = isPremium && !hasSubscription;
+  // Show the Premium (lock) badge only when the subject is locked (the student is
+  // not yet entitled); an entitled student needs no badge.
+  const premiumLocked = props.premiumLocked;
   const color = colorVar(subject.color_token);
 
   return (
@@ -64,14 +61,14 @@ export function SubjectPathCard({
       to="/subject/$subjectId"
       params={{ subjectId: subject.id }}
       className={`group relative block overflow-hidden rounded-2xl border bg-black/60 p-5 backdrop-blur-md transition hover:-translate-y-1 ${
-        isPremium
+        premiumLocked
           ? "border-[color:var(--neon-gold)]/50 hover:border-[color:var(--neon-gold)]/80"
           : "border-border/50 hover:border-[color:var(--gold)]/60"
       }`}
     >
-      {isPremium && (
+      {premiumLocked && (
         <div className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full bg-[color:var(--neon-gold)]/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[color:var(--neon-gold)]">
-          {premiumLocked ? <Lock className="h-3 w-3" /> : <Crown className="h-3 w-3" />}
+          <Lock className="h-3 w-3" />
           Premium
         </div>
       )}

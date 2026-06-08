@@ -14,12 +14,7 @@ type ProfileRow = {
   level?: number | null;
   xp?: number | null;
   hero_class?: string | null;
-  subscription_expires_at?: string | null;
 };
-
-function hasActiveSub(p: ProfileRow | null | undefined): boolean {
-  return !!p?.subscription_expires_at && new Date(p.subscription_expires_at) > new Date();
-}
 
 function ParcoursPage() {
   const t = useT();
@@ -38,7 +33,11 @@ function ParcoursPage() {
   }
 
   const profile = data.profile as ProfileRow | null;
-  const nodes = buildSubjectNodes(data.subjects, data.stats, hasActiveSub(profile));
+  const nodes = buildSubjectNodes(
+    data.subjects,
+    data.stats,
+    new Set(data.premiumLockedSubjectIds ?? []),
+  );
 
   return (
     <JourneyMap

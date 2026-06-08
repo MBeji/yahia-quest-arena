@@ -109,6 +109,34 @@ export const getDashboard = createServerFn({ method: "GET" })
       : allSubjects.filter((s) => s.grade_id != null);
     const otherSubjects = allSubjects.filter((s) => s.grade_id == null);
 
+    // Premium lock: the school subjects all belong to one concours parcours. If it
+    // is premium and the student lacks an entitlement, surface them as locked (the
+    // server gate is authoritative; this only drives the lock badges in the UI).
+    let premiumLockedSubjectIds: string[] = [];
+    const firstSchool = schoolSubjects[0];
+    if (firstSchool) {
+      try {
+        // resolve_subject_parcours matches grade_id with IS NOT DISTINCT FROM, so a
+        // null grade is valid (grade-agnostic themes); the generated arg type narrows
+        // p_grade to string, so describe the real (nullable) contract here.
+        const { data: parcoursId } = await supabase.rpc("resolve_subject_parcours", {
+          p_theme: firstSchool.theme_id,
+          p_grade: firstSchool.grade_id as string,
+        });
+        if (parcoursId) {
+          const [parcoursRow, ent] = await Promise.all([
+            supabase.from("parcours").select("is_premium").eq("id", parcoursId).maybeSingle(),
+            supabase.rpc("has_parcours_entitlement", { p_user: userId, p_parcours: parcoursId }),
+          ]);
+          if ((parcoursRow.data?.is_premium ?? false) && ent.data !== true) {
+            premiumLockedSubjectIds = schoolSubjects.map((s) => s.id);
+          }
+        }
+      } catch {
+        // graceful: no lock badges (server still enforces)
+      }
+    }
+
     return {
       profile,
       subjects: schoolSubjects,
@@ -116,6 +144,7 @@ export const getDashboard = createServerFn({ method: "GET" })
       stats: bySubject,
       recent: recentRes.data ?? [],
       nextExerciseId,
+      premiumLockedSubjectIds,
     };
   });
 

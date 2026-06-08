@@ -2,11 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { isRateLimited } from "@/shared/lib/rate-limit";
-import {
-  MIN_SECONDS_PER_QUESTION,
-  PREMIUM_MIN_DIFFICULTY,
-  QUIZ_PASS_THRESHOLD_PCT,
-} from "@/shared/constants/gamification";
+import { MIN_SECONDS_PER_QUESTION, QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { logger } from "@/shared/lib/logger";
 import type { UnlockedBadge } from "@/shared/types/gamification";
@@ -17,21 +13,15 @@ export const QUIZ_LOCKED_MESSAGE =
   "Réussis d'abord le quiz de compréhension du chapitre pour débloquer cet exercice.";
 
 /**
- * Thrown when an exercise at or above PREMIUM_MIN_DIFFICULTY (3+) is started
- * without an active subscription. Difficulty 1-2 are free for everyone; 3+ are
- * premium, across every subject and chapter. The "Mission premium" prefix is
- * matched by the quest UI to show the subscription paywall; keep it stable.
+ * Thrown when a premium parcours' mission is started without an entitlement and
+ * outside the free preview. The "Parcours premium" prefix is matched by the quest
+ * UI to show the paywall; keep it stable.
  */
-export const DIFFICULTY_PREMIUM_LOCKED_MESSAGE =
-  "Mission premium : un abonnement actif est requis pour cet exercice avancé (difficulté 3+).";
-
-/**
- * Thrown when an exercise of a premium subject (a whole premium module, e.g.
- * "Maîtrise du français") is started without an active subscription. The
- * "Module premium" prefix is matched by the quest UI to show the paywall.
- */
-export const PREMIUM_SUBJECT_LOCKED_MESSAGE =
-  "Module premium : un abonnement actif est requis pour accéder à ce module.";
+export const PARCOURS_LOCKED_MESSAGE =
+  "Parcours premium : débloque ce parcours pour accéder à cette mission.";
+/** Thrown when the resolved parcours is not yet available (coming soon). */
+export const PARCOURS_COMING_SOON_MESSAGE =
+  "Parcours premium : ce parcours sera bientôt disponible.";
 
 type ProfileSnapshot = Database["public"]["Tables"]["profiles"]["Row"];
 
@@ -213,24 +203,48 @@ export const getSubject = createServerFn({ method: "GET" })
       }
     }
 
-    // Viewer context for premium gating of "Défi élite" missions on the page.
-    // Graceful degradation: any failure (e.g. missing RPC) defaults to "locked"
-    // rather than failing the whole page — mirrors the best-scores fallback.
-    let viewer = { level: 0, hasSubscription: false };
+    // Parcours access context for premium gating of missions on the page.
+    let viewer: { level: number; isPremium: boolean; hasEntitlement: boolean } = {
+      level: 0,
+      isPremium: false,
+      hasEntitlement: true,
+    };
     try {
-      const [viewerProfile, viewerSub] = await Promise.all([
+      const themeId = (subj.data as { theme_id?: string | null }).theme_id ?? null;
+      const gradeId = (subj.data as { grade_id?: string | null }).grade_id ?? null;
+      const [viewerProfile, parcoursIdRes] = await Promise.all([
         supabase.from("profiles").select("level").eq("id", context.userId).maybeSingle(),
-        supabase.rpc("has_active_subscription", { p_user: context.userId }),
+        themeId
+          ? // resolve_subject_parcours matches grade_id with IS NOT DISTINCT FROM, so a
+            // null grade is valid (grade-agnostic themes resolve their own parcours); the
+            // generated arg type narrows p_grade to string, hence the cast on the nullable.
+            supabase.rpc("resolve_subject_parcours", {
+              p_theme: themeId,
+              p_grade: gradeId as string,
+            })
+          : Promise.resolve({ data: null as string | null }),
       ]);
-      viewer = {
-        level: viewerProfile.data?.level ?? 0,
-        hasSubscription: viewerSub.data === true,
-      };
+      const level = viewerProfile.data?.level ?? 0;
+      const parcoursId = (parcoursIdRes as { data?: string | null }).data ?? null;
+      if (parcoursId) {
+        const [parcoursRow, entRes] = await Promise.all([
+          supabase.from("parcours").select("is_premium").eq("id", parcoursId).maybeSingle(),
+          supabase.rpc("has_parcours_entitlement", {
+            p_user: context.userId,
+            p_parcours: parcoursId,
+          }),
+        ]);
+        const isPremium = parcoursRow.data?.is_premium ?? false;
+        viewer = { level, isPremium, hasEntitlement: isPremium ? entRes.data === true : true };
+      } else {
+        viewer = { level, isPremium: false, hasEntitlement: true };
+      }
     } catch (err) {
-      logger.warn("quest.getSubject: viewer context fetch failed", {
+      logger.warn("quest.getSubject: parcours access fetch failed", {
         subjectId: data.subjectId,
         error: err instanceof Error ? err.message : String(err),
       });
+      viewer = { level: 0, isPremium: true, hasEntitlement: false }; // safe default: show locked
     }
 
     return {
@@ -333,7 +347,7 @@ export const startExerciseSession = createServerFn({ method: "POST" })
     // started until the chapter's quiz is passed. Quizzes themselves are open.
     const { data: ex, error: exError } = await supabase
       .from("exercises")
-      .select("id, mode, difficulty, chapter_id, subjects(is_premium, grade_id)")
+      .select("id, mode, difficulty, chapter_id, subjects(grade_id)")
       .eq("id", data.exerciseId)
       .single();
     if (exError) {
@@ -344,35 +358,39 @@ export const startExerciseSession = createServerFn({ method: "POST" })
       );
     }
 
-    // Premium-module gate: every exercise of a premium subject (e.g. the
-    // standalone "Maîtrise du français" module) requires an active subscription
-    // — including its quiz. Subscription only, no level requirement.
-    const subjectRel = ex.subjects as
-      | { is_premium?: boolean; grade_id?: string | null }
-      | { is_premium?: boolean; grade_id?: string | null }[]
-      | null;
-    const subjectRow = Array.isArray(subjectRel) ? subjectRel[0] : subjectRel;
-    const isPremiumSubject = subjectRow?.is_premium ?? false;
+    // Parcours entitlement gate (server-authoritative): resolve_exercise_access
+    // resolves the exercise's parcours, premium status, the caller's entitlement,
+    // and whether the exercise is inside the free preview, then returns `allowed`.
+    const { data: accessRows, error: accessError } = await supabase.rpc("resolve_exercise_access", {
+      p_exercise: data.exerciseId,
+    });
+    if (accessError) {
+      logger.warn("quest.startExerciseSession: resolve_exercise_access failed", {
+        exerciseId: data.exerciseId,
+        error: accessError.message,
+      });
+    }
+    const access = Array.isArray(accessRows) ? accessRows[0] : accessRows;
+    // Fail closed: if access is unknown (RPC error) or not allowed, block.
+    if (!access || access.allowed !== true) {
+      failWithClientError(
+        "quest.startExerciseSession",
+        null,
+        access?.reason === "PARCOURS_COMING_SOON"
+          ? PARCOURS_COMING_SOON_MESSAGE
+          : PARCOURS_LOCKED_MESSAGE,
+      );
+    }
+
     // The comprehension-quiz gate applies only to the school program (subjects
     // bound to a grade). Non-school themes (culture-générale, muscle-cerveau/IQ,
     // language tracks) have no theory to validate, so they are never quiz-gated.
+    const subjectRel = ex.subjects as
+      | { grade_id?: string | null }
+      | { grade_id?: string | null }[]
+      | null;
+    const subjectRow = Array.isArray(subjectRel) ? subjectRel[0] : subjectRel;
     const isSchoolSubject = (subjectRow?.grade_id ?? null) !== null;
-    if (isPremiumSubject) {
-      const { data: hasSub } = await supabase.rpc("has_active_subscription", { p_user: userId });
-      if (hasSub !== true) {
-        failWithClientError("quest.startExerciseSession", null, PREMIUM_SUBJECT_LOCKED_MESSAGE);
-      }
-    }
-
-    // Premium difficulty gate: exercises at difficulty >= PREMIUM_MIN_DIFFICULTY
-    // (3+) require an active subscription — subscription only, no level. Applies
-    // to every subject/chapter. Difficulty 1-2 stay free. Server-authoritative.
-    if ((ex.difficulty ?? 0) >= PREMIUM_MIN_DIFFICULTY) {
-      const { data: hasSub } = await supabase.rpc("has_active_subscription", { p_user: userId });
-      if (hasSub !== true) {
-        failWithClientError("quest.startExerciseSession", null, DIFFICULTY_PREMIUM_LOCKED_MESSAGE);
-      }
-    }
 
     if (isSchoolSubject && ex.mode !== "quiz" && ex.chapter_id) {
       const { data: quiz } = await supabase

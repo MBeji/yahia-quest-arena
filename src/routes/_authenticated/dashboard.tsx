@@ -28,7 +28,6 @@ import {
 } from "@/features/dashboard";
 import { purchaseShopItem, equipInventorySkin, activateInventoryItem } from "@/features/shop";
 import { recoverStreak } from "@/features/progression";
-import { isSubscriptionActive } from "@/features/subscription";
 import { SubjectPathCard } from "@/features/dashboard/components/subject-path-card";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useReducedMotion } from "motion/react";
@@ -290,10 +289,8 @@ function Dashboard() {
 
   const { profile, subjects, stats, nextExerciseId } = data;
   const otherSubjects = filterSubjectsByLocale(data.otherSubjects ?? [], locale);
-  const hasSubscription = isSubscriptionActive(
-    (profile as { subscription_expires_at?: string | null } | null)?.subscription_expires_at ??
-      null,
-  );
+  // School subjects flagged as locked by the server (premium parcours, no entitlement).
+  const lockedSet = new Set(data.premiumLockedSubjectIds ?? []);
   // #15: badges/inventory/shop now come from the deferred secondary query.
   const badges = secondary?.badges ?? [];
   const inventory = secondary?.inventory ?? [];
@@ -681,7 +678,7 @@ function Dashboard() {
                   <SubjectPathCard
                     subject={s}
                     stat={stats[s.id]}
-                    hasSubscription={hasSubscription}
+                    premiumLocked={lockedSet.has(s.id)}
                   />
                 </motion.div>
               ))}
@@ -704,11 +701,7 @@ function Dashboard() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05 }}
                   >
-                    <SubjectPathCard
-                      subject={s}
-                      stat={stats[s.id]}
-                      hasSubscription={hasSubscription}
-                    />
+                    <SubjectPathCard subject={s} stat={stats[s.id]} premiumLocked={false} />
                   </motion.div>
                 ))}
               </div>

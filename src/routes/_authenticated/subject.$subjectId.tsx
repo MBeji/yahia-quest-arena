@@ -16,8 +16,7 @@ import {
   Crown,
 } from "lucide-react";
 import { getSubject } from "@/features/quest";
-import { SubscriptionPaywall } from "@/features/subscription";
-import { PREMIUM_MIN_DIFFICULTY } from "@/shared/constants/gamification";
+import { FREE_PREVIEW_MAX_DIFFICULTY } from "@/shared/constants/gamification";
 import { isRtlText } from "@/shared/lib/utils";
 import { useT } from "@/lib/i18n";
 
@@ -63,28 +62,6 @@ function SubjectPage() {
   const { subject, chapters, exercises, bestByExercise, quizPassedByChapter, viewer } = data;
   const color = `var(--subject-${subject.color_token})`;
 
-  // Premium module gate: the whole subject is reserved to subscribers.
-  if ((subject as { is_premium?: boolean }).is_premium && !viewer.hasSubscription) {
-    return (
-      <div className="mx-auto max-w-md px-6 py-12 text-center">
-        <Link
-          to="/dashboard"
-          className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
-        >
-          <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> Heroes Hall
-        </Link>
-        <div className="rounded-3xl border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/5 p-8">
-          <Crown className="mx-auto h-12 w-12 text-[color:var(--neon-gold)]" />
-          <h1 className="mt-4 font-display text-2xl font-bold">{subject.name_fr}</h1>
-          {subject.description && (
-            <p className="mt-2 text-sm text-muted-foreground">{subject.description}</p>
-          )}
-          <SubscriptionPaywall />
-        </div>
-      </div>
-    );
-  }
-
   const lang = ((subject as { content_language?: string }).content_language ?? "fr") as
     | "ar"
     | "fr"
@@ -102,11 +79,7 @@ function SubjectPage() {
     review: { ar: "📖 راجع الدرس", fr: "📖 Réviser le cours", en: "📖 Review the lesson" }[lang],
     elite: { ar: "تحدّي النخبة", fr: "Défi élite", en: "Elite challenge" }[lang],
     premium: { ar: "مدفوع", fr: "Premium", en: "Premium" }[lang],
-    premiumLock: {
-      ar: "يتطلب اشتراكًا",
-      fr: "Abonnement requis",
-      en: "Subscription required",
-    }[lang],
+    premiumLock: { ar: "للفتح", fr: "À débloquer", en: "Unlock" }[lang],
   };
 
   return (
@@ -237,9 +210,13 @@ function SubjectPage() {
                     best == null ? 0 : best >= 90 ? 3 : best >= 70 ? 2 : best >= 40 ? 1 : 0;
                   const isBoss = ex.mode === "boss";
                   const isChallenge = ex.mode === "challenge";
-                  // Difficulty 3+ is premium (subscription only), every subject/chapter.
+                  // Premium parcours without an entitlement: only the quiz and
+                  // difficulty-1 missions are free; difficulty >= 2 is locked.
                   const premiumLocked =
-                    ex.difficulty >= PREMIUM_MIN_DIFFICULTY && !viewer.hasSubscription;
+                    viewer.isPremium &&
+                    !viewer.hasEntitlement &&
+                    ex.mode !== "quiz" &&
+                    ex.difficulty > FREE_PREVIEW_MAX_DIFFICULTY;
                   const left = (
                     <div className="flex items-center gap-3">
                       <div

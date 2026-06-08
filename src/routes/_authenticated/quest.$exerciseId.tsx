@@ -371,12 +371,9 @@ function QuestPage() {
   const sessionErrorMsg =
     sessionMutation.error instanceof Error ? sessionMutation.error.message : "";
 
-  // Premium lock ("Défi élite" mission or a whole premium module): server
-  // rejects the session start. Show the subscription paywall + the requirement.
-  if (
-    sessionMutation.isError &&
-    (sessionErrorMsg.startsWith("Mission premium") || sessionErrorMsg.startsWith("Module premium"))
-  ) {
+  // Premium lock: the resolved parcours is premium and the mission is outside the
+  // free preview. The server rejects the session start; show the paywall + reason.
+  if (sessionMutation.isError && sessionErrorMsg.startsWith("Parcours premium")) {
     return (
       <div className="mx-auto max-w-md px-6 py-12 text-center">
         <div className="rounded-3xl border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/5 p-8">

@@ -1,13 +1,16 @@
 /**
  * FREE vs PREMIUM — END-TO-END SCENARIO SUITE
  * ===========================================
- * Server-fn-level non-regression scenarios for the FREE vs PREMIUM access model
- * and the "opening missions" flow. Each test chains real server fns (getSubject,
- * getExercise, startExerciseSession, submitAttempt) against the mocked Supabase
- * layer to mimic a realistic student journey through the gating rules:
- *   - difficulty 3+ requires an active subscription ("Mission premium")
- *   - premium subjects require an active subscription ("Module premium")
+ * Server-fn-level non-regression scenarios for the per-parcours entitlement
+ * access model and the "opening missions" flow. Each test chains real server fns
+ * (getSubject, getExercise, startExerciseSession, submitAttempt) against the
+ * mocked Supabase layer to mimic a realistic student journey through the gating
+ * rules:
+ *   - the server RPC resolve_exercise_access is authoritative for mission access:
+ *       allowed=false / reason='PARCOURS_LOCKED' → "Parcours premium" (paywall)
+ *       allowed=true → the mission starts (free preview or entitled)
  *   - practice/boss locked until the chapter comprehension quiz is passed
+ *   - getSubject surfaces the parcours viewer ctx {level, isPremium, hasEntitlement}
  *   - quizzes never leak correct answers (anti-cheat)
  */
 import { describe, it, expect, vi, beforeEach } from "vitest";
@@ -111,7 +114,9 @@ type Fn = (d?: unknown) => Promise<unknown>;
  *   subjects(single) · chapters(order) · exercises(order) [Promise.all]
  *   then get_best_scores_by_exercise RPC
  *   then attempts(in/gte) for the quiz-passed map (only if quiz exercises exist)
- *   then profiles(maybeSingle) + has_active_subscription RPC (viewer ctx)
+ *   then profiles(maybeSingle) for the level + resolve_subject_parcours RPC; when a
+ *   parcours resolves, parcours(maybeSingle, is_premium) + has_parcours_entitlement RPC.
+ * Pass parcoursIsPremium to drive the parcours row read for the viewer ctx.
  */
 function armGetSubject(opts: {
   subject: Record<string, unknown>;
@@ -119,6 +124,7 @@ function armGetSubject(opts: {
   exercises?: unknown[];
   passedQuizRows?: unknown[];
   viewerLevel?: number;
+  parcoursIsPremium?: boolean;
 }) {
   mockFrom.mockImplementation((table: string) => {
     if (table === "subjects") return mockQuery(opts.subject);
@@ -126,6 +132,7 @@ function armGetSubject(opts: {
     if (table === "exercises") return mockQuery(opts.exercises ?? []);
     if (table === "attempts") return mockQuery(opts.passedQuizRows ?? []);
     if (table === "profiles") return mockQuery({ level: opts.viewerLevel ?? 1 });
+    if (table === "parcours") return mockQuery({ is_premium: opts.parcoursIsPremium ?? false });
     return mockQuery([]);
   });
 }
@@ -138,22 +145,23 @@ describe("FREE vs PREMIUM E2E: free user opens a beginner mission", () => {
     mockRpc.mockReset();
   });
 
-  it("getSubject → getExercise → startExerciseSession → submitAttempt succeeds for difficulty 1-2 (no subscription)", async () => {
+  it("getSubject → getExercise → startExerciseSession → submitAttempt succeeds for a free/preview mission", async () => {
     const quest = await import("@/features/quest");
 
-    // 1) Browse the (free) subject. No premium flags.
+    // 1) Browse the (free) subject. No theme → no parcours → not premium.
     armGetSubject({
-      subject: { id: "s1", name_fr: "Math", is_premium: false, content_language: "fr" },
+      subject: { id: "s1", name_fr: "Math", content_language: "fr" },
       chapters: [{ id: CH, title: "Ch1", display_order: 1 }],
       exercises: [{ id: "ex1", title: "Ex1", display_order: 1, mode: "practice", difficulty: 2 }],
     });
-    mockRpc.mockImplementation(rpcByName({ has_active_subscription: { data: false } }));
+    mockRpc.mockImplementation(rpcByName({}));
     const subject = (await (quest.getSubject as unknown as Fn)({ subjectId: "s1" })) as Record<
       string,
       unknown
     >;
     expect(subject).toHaveProperty("exercises");
-    expect((subject.viewer as { hasSubscription: boolean }).hasSubscription).toBe(false);
+    expect((subject.viewer as { isPremium: boolean }).isPremium).toBe(false);
+    expect((subject.viewer as { hasEntitlement: boolean }).hasEntitlement).toBe(true);
 
     // 2) Open the exercise.
     mockFrom.mockImplementation((table: string) => {
@@ -169,7 +177,7 @@ describe("FREE vs PREMIUM E2E: free user opens a beginner mission", () => {
     >;
     expect(exercise).toHaveProperty("questions");
 
-    // 3) Start a secure session: difficulty 2 (free), quiz already passed.
+    // 3) Start a secure session: server grants access (free preview), quiz passed.
     let exCalls = 0;
     mockFrom.mockImplementation((table: string) => {
       if (table === "exercises") {
@@ -180,14 +188,17 @@ describe("FREE vs PREMIUM E2E: free user opens a beginner mission", () => {
               mode: "practice",
               difficulty: 2,
               chapter_id: CH,
-              subjects: { is_premium: false },
+              subjects: { grade_id: "g-1" },
             })
           : mockQuery({ id: "quiz1" });
       }
-      if (table === "attempts") return mockQuery([{ id: "att1" }]); // quiz passed
+      if (table === "attempts")
+        return mockQuery([{ id: "att1", duration_seconds: 40, total_count: 6 }]); // quiz passed
       return mockQuery({ id: "sess1", started_at: "2026-06-03T00:00:00Z" });
     });
-    mockRpc.mockResolvedValue({ data: null, error: null });
+    mockRpc.mockImplementation(
+      rpcByName({ resolve_exercise_access: { data: [{ allowed: true }] } }),
+    );
     const session = (await (quest.startExerciseSession as unknown as Fn)({ exerciseId: EX })) as {
       sessionId: string;
     };
@@ -229,7 +240,7 @@ describe("FREE vs PREMIUM E2E: free user opens a beginner mission", () => {
   });
 });
 
-describe("FREE vs PREMIUM E2E: difficulty 3+ premium gate", () => {
+describe("FREE vs PREMIUM E2E: premium-parcours mission gate", () => {
   beforeEach(() => {
     vi.resetModules();
     capturedHandlers = {};
@@ -237,7 +248,7 @@ describe("FREE vs PREMIUM E2E: difficulty 3+ premium gate", () => {
     mockRpc.mockReset();
   });
 
-  it("blocks a FREE user on a difficulty 3+ exercise with /Mission premium/", async () => {
+  it("blocks a FREE user when resolve_exercise_access denies the mission (/Parcours premium/)", async () => {
     const { startExerciseSession } = await import("@/features/quest");
 
     mockFrom.mockImplementation((table: string) => {
@@ -247,18 +258,47 @@ describe("FREE vs PREMIUM E2E: difficulty 3+ premium gate", () => {
           mode: "challenge",
           difficulty: 3,
           chapter_id: CH,
-          subjects: { is_premium: false },
+          subjects: { grade_id: "g-1" },
         });
       return mockQuery({ id: "sess1", started_at: "t" });
     });
-    mockRpc.mockImplementation(rpcByName({ has_active_subscription: { data: false } }));
+    mockRpc.mockImplementation(
+      rpcByName({
+        resolve_exercise_access: { data: [{ allowed: false, reason: "PARCOURS_LOCKED" }] },
+      }),
+    );
 
     await expect((startExerciseSession as unknown as Fn)({ exerciseId: EX })).rejects.toThrow(
-      /Mission premium/,
+      /Parcours premium/,
     );
   });
 
-  it("allows a PREMIUM user on a difficulty 3+ challenge exercise", async () => {
+  it("surfaces /bientôt disponible/ when the parcours is coming soon", async () => {
+    const { startExerciseSession } = await import("@/features/quest");
+
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises")
+        return mockQuery({
+          id: "ex1",
+          mode: "challenge",
+          difficulty: 3,
+          chapter_id: CH,
+          subjects: { grade_id: "g-1" },
+        });
+      return mockQuery({ id: "sess1", started_at: "t" });
+    });
+    mockRpc.mockImplementation(
+      rpcByName({
+        resolve_exercise_access: { data: [{ allowed: false, reason: "PARCOURS_COMING_SOON" }] },
+      }),
+    );
+
+    await expect((startExerciseSession as unknown as Fn)({ exerciseId: EX })).rejects.toThrow(
+      /bientôt disponible/,
+    );
+  });
+
+  it("allows an entitled user when resolve_exercise_access grants access", async () => {
     const { startExerciseSession } = await import("@/features/quest");
 
     let exCalls = 0;
@@ -271,72 +311,45 @@ describe("FREE vs PREMIUM E2E: difficulty 3+ premium gate", () => {
               mode: "challenge",
               difficulty: 4,
               chapter_id: CH,
-              subjects: { is_premium: false },
+              subjects: { grade_id: "g-1" },
             })
           : mockQuery({ id: "quiz1" });
       }
-      if (table === "attempts") return mockQuery([{ id: "att1" }]); // quiz passed
+      if (table === "attempts")
+        return mockQuery([{ id: "att1", duration_seconds: 40, total_count: 6 }]); // quiz passed
       return mockQuery({ id: "sess1", started_at: "2026-06-03T00:00:00Z" });
     });
-    mockRpc.mockImplementation(rpcByName({ has_active_subscription: { data: true } }));
+    mockRpc.mockImplementation(
+      rpcByName({ resolve_exercise_access: { data: [{ allowed: true }] } }),
+    );
 
     const session = (await (startExerciseSession as unknown as Fn)({ exerciseId: EX })) as {
       sessionId: string;
     };
     expect(session.sessionId).toBe("sess1");
   });
-});
 
-describe("FREE vs PREMIUM E2E: premium subject (module) gate", () => {
-  beforeEach(() => {
-    vi.resetModules();
-    capturedHandlers = {};
-    mockFrom.mockReset();
-    mockRpc.mockReset();
-  });
-
-  it("blocks a FREE user on a premium subject with /Module premium/", async () => {
+  it("fails closed when resolve_exercise_access errors (/Parcours premium/)", async () => {
     const { startExerciseSession } = await import("@/features/quest");
 
     mockFrom.mockImplementation((table: string) => {
       if (table === "exercises")
         return mockQuery({
           id: "ex1",
-          mode: "quiz", // even the quiz of a premium module is gated; difficulty low
-          difficulty: 1,
+          mode: "challenge",
+          difficulty: 3,
           chapter_id: CH,
-          subjects: { is_premium: true },
+          subjects: { grade_id: "g-1" },
         });
       return mockQuery({ id: "sess1", started_at: "t" });
     });
-    mockRpc.mockImplementation(rpcByName({ has_active_subscription: { data: false } }));
+    mockRpc.mockImplementation(
+      rpcByName({ resolve_exercise_access: { data: null, error: { message: "RPC down" } } }),
+    );
 
     await expect((startExerciseSession as unknown as Fn)({ exerciseId: EX })).rejects.toThrow(
-      /Module premium/,
+      /Parcours premium/,
     );
-  });
-
-  it("allows a PREMIUM subscriber into the same premium subject", async () => {
-    const { startExerciseSession } = await import("@/features/quest");
-
-    // mode='quiz' → no comprehension-quiz gate (quizzes are open); difficulty 1.
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises")
-        return mockQuery({
-          id: "ex1",
-          mode: "quiz",
-          difficulty: 1,
-          chapter_id: CH,
-          subjects: { is_premium: true },
-        });
-      return mockQuery({ id: "sess1", started_at: "2026-06-03T00:00:00Z" });
-    });
-    mockRpc.mockImplementation(rpcByName({ has_active_subscription: { data: true } }));
-
-    const session = (await (startExerciseSession as unknown as Fn)({ exerciseId: EX })) as {
-      sessionId: string;
-    };
-    expect(session.sessionId).toBe("sess1");
   });
 });
 
@@ -351,7 +364,7 @@ describe("FREE vs PREMIUM E2E: comprehension-quiz gate", () => {
   it("blocks practice until the chapter quiz is passed (/quiz de compréhension/), then allows it", async () => {
     const { startExerciseSession } = await import("@/features/quest");
 
-    // 1) Quiz NOT passed → practice exercise locked.
+    // 1) Quiz NOT passed → practice exercise locked (access otherwise granted).
     let exCalls = 0;
     mockFrom.mockImplementation((table: string) => {
       if (table === "exercises") {
@@ -362,14 +375,16 @@ describe("FREE vs PREMIUM E2E: comprehension-quiz gate", () => {
               mode: "practice",
               difficulty: 2,
               chapter_id: CH,
-              subjects: { is_premium: false, grade_id: "g-1" },
+              subjects: { grade_id: "g-1" },
             })
           : mockQuery({ id: "quiz1" }); // a quiz exists for the chapter
       }
       if (table === "attempts") return mockQuery([]); // no passing attempt yet
       return mockQuery({ id: "sess1", started_at: "t" });
     });
-    mockRpc.mockResolvedValue({ data: null, error: null });
+    mockRpc.mockImplementation(
+      rpcByName({ resolve_exercise_access: { data: [{ allowed: true }] } }),
+    );
 
     await expect((startExerciseSession as unknown as Fn)({ exerciseId: EX })).rejects.toThrow(
       /quiz de compréhension/,
@@ -386,14 +401,17 @@ describe("FREE vs PREMIUM E2E: comprehension-quiz gate", () => {
               mode: "practice",
               difficulty: 2,
               chapter_id: CH,
-              subjects: { is_premium: false, grade_id: "g-1" },
+              subjects: { grade_id: "g-1" },
             })
           : mockQuery({ id: "quiz1" });
       }
-      if (table === "attempts") return mockQuery([{ id: "att1" }]); // a passing attempt exists
+      if (table === "attempts")
+        return mockQuery([{ id: "att1", duration_seconds: 40, total_count: 6 }]); // a passing attempt exists
       return mockQuery({ id: "sess1", started_at: "2026-06-03T00:00:00Z" });
     });
-    mockRpc.mockResolvedValue({ data: null, error: null });
+    mockRpc.mockImplementation(
+      rpcByName({ resolve_exercise_access: { data: [{ allowed: true }] } }),
+    );
 
     const session = (await (startExerciseSession as unknown as Fn)({ exerciseId: EX })) as {
       sessionId: string;
@@ -454,7 +472,7 @@ describe("FREE vs PREMIUM E2E: quiz anti-cheat (no answer leak)", () => {
   });
 });
 
-describe("FREE vs PREMIUM E2E: getSubject viewer.hasSubscription flag", () => {
+describe("FREE vs PREMIUM E2E: getSubject viewer parcours context", () => {
   beforeEach(() => {
     vi.resetModules();
     capturedHandlers = {};
@@ -462,38 +480,83 @@ describe("FREE vs PREMIUM E2E: getSubject viewer.hasSubscription flag", () => {
     mockRpc.mockReset();
   });
 
-  it("reports hasSubscription=false for a free viewer", async () => {
+  it("reports isPremium=true / hasEntitlement=false for a premium parcours without an entitlement", async () => {
     const { getSubject } = await import("@/features/quest");
 
     armGetSubject({
-      subject: { id: "s1", name_fr: "Math", is_premium: false, content_language: "fr" },
+      subject: {
+        id: "s1",
+        name_fr: "Math",
+        theme_id: "ecole-tn",
+        grade_id: "g9",
+        content_language: "fr",
+      },
       exercises: [{ id: "ex1", display_order: 1, mode: "practice", difficulty: 1 }],
       viewerLevel: 3,
+      parcoursIsPremium: true,
     });
-    mockRpc.mockImplementation(rpcByName({ has_active_subscription: { data: false } }));
+    mockRpc.mockImplementation(
+      rpcByName({
+        resolve_subject_parcours: { data: "parcours-1" },
+        has_parcours_entitlement: { data: false },
+      }),
+    );
 
     const subject = (await (getSubject as unknown as Fn)({ subjectId: "s1" })) as {
-      viewer: { level: number; hasSubscription: boolean };
+      viewer: { level: number; isPremium: boolean; hasEntitlement: boolean };
     };
-    expect(subject.viewer.hasSubscription).toBe(false);
+    expect(subject.viewer.isPremium).toBe(true);
+    expect(subject.viewer.hasEntitlement).toBe(false);
     expect(subject.viewer.level).toBe(3);
   });
 
-  it("reports hasSubscription=true for a subscribed viewer", async () => {
+  it("reports hasEntitlement=true for a premium parcours the viewer has unlocked", async () => {
     const { getSubject } = await import("@/features/quest");
 
     armGetSubject({
-      subject: { id: "s1", name_fr: "Math", is_premium: false, content_language: "fr" },
+      subject: {
+        id: "s1",
+        name_fr: "Math",
+        theme_id: "ecole-tn",
+        grade_id: "g9",
+        content_language: "fr",
+      },
       exercises: [{ id: "ex1", display_order: 1, mode: "practice", difficulty: 1 }],
       viewerLevel: 7,
+      parcoursIsPremium: true,
     });
-    mockRpc.mockImplementation(rpcByName({ has_active_subscription: { data: true } }));
+    mockRpc.mockImplementation(
+      rpcByName({
+        resolve_subject_parcours: { data: "parcours-1" },
+        has_parcours_entitlement: { data: true },
+      }),
+    );
 
     const subject = (await (getSubject as unknown as Fn)({ subjectId: "s1" })) as {
-      viewer: { level: number; hasSubscription: boolean };
+      viewer: { level: number; isPremium: boolean; hasEntitlement: boolean };
     };
-    expect(subject.viewer.hasSubscription).toBe(true);
+    expect(subject.viewer.isPremium).toBe(true);
+    expect(subject.viewer.hasEntitlement).toBe(true);
     expect(subject.viewer.level).toBe(7);
+  });
+
+  it("reports isPremium=false / hasEntitlement=true for a free parcours", async () => {
+    const { getSubject } = await import("@/features/quest");
+
+    armGetSubject({
+      subject: { id: "s1", name_fr: "Math", theme_id: "culture-generale", content_language: "fr" },
+      exercises: [{ id: "ex1", display_order: 1, mode: "practice", difficulty: 1 }],
+      viewerLevel: 2,
+      parcoursIsPremium: false,
+    });
+    mockRpc.mockImplementation(rpcByName({ resolve_subject_parcours: { data: "parcours-free" } }));
+
+    const subject = (await (getSubject as unknown as Fn)({ subjectId: "s1" })) as {
+      viewer: { level: number; isPremium: boolean; hasEntitlement: boolean };
+    };
+    expect(subject.viewer.isPremium).toBe(false);
+    expect(subject.viewer.hasEntitlement).toBe(true);
+    expect(subject.viewer.level).toBe(2);
   });
 });
 

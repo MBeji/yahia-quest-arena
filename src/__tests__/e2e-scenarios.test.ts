@@ -144,7 +144,7 @@ describe("END-TO-END: student completes a quest", () => {
     >;
     expect(exercise).toHaveProperty("questions");
 
-    // 3) Start a secure session (quiz already passed).
+    // 3) Start a secure session (access granted by the server, quiz passed).
     let exCalls = 0;
     mockFrom.mockImplementation((table: string) => {
       if (table === "exercises") {
@@ -154,7 +154,7 @@ describe("END-TO-END: student completes a quest", () => {
               id: "ex1",
               mode: "practice",
               chapter_id: "ch1",
-              subjects: { is_premium: false },
+              subjects: { grade_id: "g-1" },
             })
           : mockQuery({ id: "quiz1" });
       }
@@ -162,6 +162,9 @@ describe("END-TO-END: student completes a quest", () => {
         return mockQuery([{ id: "att1", duration_seconds: 60, total_count: 6 }]);
       return mockQuery({ id: "sess1", started_at: "2026-06-03T00:00:00Z" });
     });
+    mockRpc.mockImplementation(
+      rpcByName({ resolve_exercise_access: { data: [{ allowed: true }] } }),
+    );
     const session = (await (quest.startExerciseSession as unknown as Fn)({ exerciseId: EX })) as {
       sessionId: string;
     };
@@ -196,7 +199,7 @@ describe("END-TO-END: student completes a quest", () => {
   });
 });
 
-describe("END-TO-END: premium gating of an élite challenge", () => {
+describe("END-TO-END: premium-parcours gating of an élite challenge", () => {
   beforeEach(() => {
     vi.resetModules();
     capturedHandlers = {};
@@ -204,35 +207,51 @@ describe("END-TO-END: premium gating of an élite challenge", () => {
     mockRpc.mockReset();
   });
 
-  it("blocks a non-subscriber on a difficulty 3+ exercise, then allows a subscriber", async () => {
+  it("blocks an unentitled user on a locked mission, then allows an entitled one", async () => {
     const { startExerciseSession } = await import("@/features/quest");
 
-    // Non-subscriber → blocked with the premium message.
+    // No entitlement, outside the free preview → server denies → "Parcours premium".
     mockFrom.mockImplementation((table: string) => {
       if (table === "exercises")
-        return mockQuery({ id: "ex1", mode: "challenge", difficulty: 4, chapter_id: "ch1" });
-      if (table === "profiles") return mockQuery({ level: 10 });
+        return mockQuery({
+          id: "ex1",
+          mode: "challenge",
+          difficulty: 4,
+          chapter_id: "ch1",
+          subjects: { grade_id: "g-1" },
+        });
       return mockQuery({ id: "sess1", started_at: "t" });
     });
-    mockRpc.mockResolvedValue({ data: false, error: null }); // no active subscription
+    mockRpc.mockImplementation(
+      rpcByName({
+        resolve_exercise_access: { data: [{ allowed: false, reason: "PARCOURS_LOCKED" }] },
+      }),
+    );
     await expect((startExerciseSession as unknown as Fn)({ exerciseId: EX })).rejects.toThrow(
-      /abonnement actif/i,
+      /Parcours premium/,
     );
 
-    // Subscribed + quiz passed → session starts (no level requirement).
+    // Entitled (server grants access) + quiz passed → session starts.
     let exCalls = 0;
     mockFrom.mockImplementation((table: string) => {
       if (table === "exercises") {
         exCalls += 1;
         return exCalls === 1
-          ? mockQuery({ id: "ex1", mode: "challenge", chapter_id: "ch1" })
+          ? mockQuery({
+              id: "ex1",
+              mode: "challenge",
+              chapter_id: "ch1",
+              subjects: { grade_id: "g-1" },
+            })
           : mockQuery({ id: "quiz1" });
       }
       if (table === "attempts")
         return mockQuery([{ id: "att1", duration_seconds: 60, total_count: 6 }]);
       return mockQuery({ id: "sess1", started_at: "2026-06-03T00:00:00Z" });
     });
-    mockRpc.mockResolvedValue({ data: true, error: null }); // active subscription
+    mockRpc.mockImplementation(
+      rpcByName({ resolve_exercise_access: { data: [{ allowed: true }] } }),
+    );
     const session = (await (startExerciseSession as unknown as Fn)({ exerciseId: EX })) as {
       sessionId: string;
     };

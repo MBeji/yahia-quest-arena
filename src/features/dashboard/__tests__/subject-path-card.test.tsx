@@ -19,7 +19,7 @@ const base = {
 
 describe("SubjectPathCard", () => {
   it("renders the name, attribute, quest count and average", () => {
-    render(<SubjectPathCard subject={base} stat={{ count: 3, avg: 82 }} hasSubscription={false} />);
+    render(<SubjectPathCard subject={base} stat={{ count: 3, avg: 82 }} premiumLocked={false} />);
     expect(screen.getByText("Mathématiques")).toBeInTheDocument();
     expect(screen.getByText(/Force/)).toBeInTheDocument();
     expect(screen.getByText(/3 quest/)).toBeInTheDocument();
@@ -27,19 +27,17 @@ describe("SubjectPathCard", () => {
   });
 
   it("shows a dash for the average when there is no stat", () => {
-    render(<SubjectPathCard subject={base} stat={undefined} hasSubscription={false} />);
+    render(<SubjectPathCard subject={base} stat={undefined} premiumLocked={false} />);
     expect(screen.getByText("—")).toBeInTheDocument();
   });
 
-  it("shows a Premium badge on premium subjects", () => {
-    render(
-      <SubjectPathCard subject={{ ...base, is_premium: true }} stat={undefined} hasSubscription />,
-    );
+  it("shows a Premium (lock) badge on a premium-locked subject", () => {
+    render(<SubjectPathCard subject={base} stat={undefined} premiumLocked />);
     expect(screen.getByText("Premium")).toBeInTheDocument();
   });
 
-  it("does not show a Premium badge on regular subjects", () => {
-    render(<SubjectPathCard subject={base} stat={undefined} hasSubscription={false} />);
+  it("does not show a Premium badge when the subject is not locked (entitled or free)", () => {
+    render(<SubjectPathCard subject={base} stat={undefined} premiumLocked={false} />);
     expect(screen.queryByText("Premium")).not.toBeInTheDocument();
   });
 
@@ -48,7 +46,7 @@ describe("SubjectPathCard", () => {
       <SubjectPathCard
         subject={{ ...base, color_token: "subject-arabic" }}
         stat={{ count: 1, avg: 50 }}
-        hasSubscription={false}
+        premiumLocked={false}
       />,
     );
     expect(container.innerHTML).toContain("var(--subject-arabic)");
@@ -60,7 +58,7 @@ describe("SubjectPathCard", () => {
       <SubjectPathCard
         subject={{ ...base, color_token: "math" }}
         stat={undefined}
-        hasSubscription={false}
+        premiumLocked={false}
       />,
     );
     expect(container.innerHTML).toContain("var(--subject-math)");
@@ -72,7 +70,7 @@ describe("SubjectPathCard", () => {
       <SubjectPathCard
         subject={{ ...base, icon: "Calculator" }}
         stat={undefined}
-        hasSubscription={false}
+        premiumLocked={false}
       />,
     )
       .container.querySelector("svg")
@@ -81,7 +79,7 @@ describe("SubjectPathCard", () => {
       <SubjectPathCard
         subject={{ ...base, icon: "DefinitelyNotAnIcon" }}
         stat={undefined}
-        hasSubscription={false}
+        premiumLocked={false}
       />,
     )
       .container.querySelector("svg")

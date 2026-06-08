@@ -100,7 +100,7 @@ describe("gamification.quest — getSubject", () => {
       exercises: exercisesData,
       bestByExercise: { "ex-1": 85 },
       quizPassedByChapter: {},
-      viewer: { level: 0, hasSubscription: false },
+      viewer: { level: 0, isPremium: false, hasEntitlement: true },
     });
   });
 
@@ -217,6 +217,7 @@ describe("gamification.quest — startExerciseSession", () => {
   it("returns session id and started_at", async () => {
     const sessionData = { id: "sess-1", started_at: "2026-06-01T12:00:00Z" };
     mockFrom.mockImplementation(() => mockQuery(sessionData));
+    mockRpc.mockReturnValue({ data: [{ allowed: true }], error: null });
 
     const { startExerciseSession } = await import("@/features/quest");
     const result = await (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
@@ -228,6 +229,7 @@ describe("gamification.quest — startExerciseSession", () => {
 
   it("throws on insert error", async () => {
     mockFrom.mockImplementation(() => mockQuery(null, { message: "Insert failed" }));
+    mockRpc.mockReturnValue({ data: [{ allowed: true }], error: null });
 
     const { startExerciseSession } = await import("@/features/quest");
 
@@ -256,6 +258,7 @@ describe("gamification.quest — startExerciseSession", () => {
       if (table === "attempts") return mockQuery([]); // no passing attempt
       return mockQuery({ id: "sess-1", started_at: "t" });
     });
+    mockRpc.mockReturnValue({ data: [{ allowed: true }], error: null });
 
     const { startExerciseSession } = await import("@/features/quest");
 
@@ -285,6 +288,7 @@ describe("gamification.quest — startExerciseSession", () => {
         return mockQuery([{ id: "att-1", duration_seconds: 40, total_count: 6 }]);
       return mockQuery({ id: "sess-1", started_at: "2026-06-01T12:00:00Z" });
     });
+    mockRpc.mockReturnValue({ data: [{ allowed: true }], error: null });
 
     const { startExerciseSession } = await import("@/features/quest");
     const result = await (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
@@ -308,6 +312,7 @@ describe("gamification.quest — startExerciseSession", () => {
       if (table === "attempts") return mockQuery([]); // no passing quiz attempt
       return mockQuery({ id: "sess-1", started_at: "t" });
     });
+    mockRpc.mockReturnValue({ data: [{ allowed: true }], error: null });
 
     const { startExerciseSession } = await import("@/features/quest");
     const result = await (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
@@ -336,6 +341,7 @@ describe("gamification.quest — startExerciseSession", () => {
         return mockQuery([{ id: "att-1", duration_seconds: 3, total_count: 6 }]);
       return mockQuery({ id: "sess-1", started_at: "t" });
     });
+    mockRpc.mockReturnValue({ data: [{ allowed: true }], error: null });
 
     const { startExerciseSession } = await import("@/features/quest");
     await expect(
@@ -345,99 +351,81 @@ describe("gamification.quest — startExerciseSession", () => {
     ).rejects.toThrow("quiz de compréhension");
   });
 
-  it("blocks any exercise of a premium subject without an active subscription", async () => {
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises")
-        return mockQuery({
-          id: "ex-1",
-          mode: "practice",
-          chapter_id: "ch-1",
-          subjects: { is_premium: true },
-        });
-      return mockQuery({ id: "sess-1", started_at: "t" });
-    });
-    mockRpc.mockReturnValue({ data: false, error: null }); // no active subscription
-
-    const { startExerciseSession } = await import("@/features/quest");
-    await expect(
-      (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
-        exerciseId: "11111111-1111-1111-1111-111111111111",
-      }),
-    ).rejects.toThrow("Module premium");
-  });
-
-  it("allows a premium-subject exercise with an active subscription", async () => {
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises")
-        // mode='quiz' so the comprehension-quiz gate is skipped after the premium check.
-        return mockQuery({
-          id: "ex-1",
-          mode: "quiz",
-          chapter_id: "ch-1",
-          subjects: { is_premium: true },
-        });
-      return mockQuery({ id: "sess-1", started_at: "2026-06-01T12:00:00Z" });
-    });
-    mockRpc.mockReturnValue({ data: true, error: null });
-
-    const { startExerciseSession } = await import("@/features/quest");
-    const result = await (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
-      exerciseId: "11111111-1111-1111-1111-111111111111",
-    });
-    expect(result).toEqual({ sessionId: "sess-1", startedAt: "2026-06-01T12:00:00Z" });
-  });
-
-  it("blocks a difficulty 3+ exercise without an active subscription", async () => {
+  it("blocks a premium-parcours mission when resolve_exercise_access denies it", async () => {
     mockFrom.mockImplementation((table: string) => {
       if (table === "exercises")
         return mockQuery({ id: "ex-1", mode: "boss", difficulty: 3, chapter_id: "ch-1" });
       return mockQuery({ id: "sess-1", started_at: "t" });
     });
-    mockRpc.mockReturnValue({ data: false, error: null }); // no active subscription
+    // Server gate denies access (no entitlement, outside the free preview).
+    mockRpc.mockReturnValue({
+      data: [{ allowed: false, reason: "PARCOURS_LOCKED" }],
+      error: null,
+    });
 
     const { startExerciseSession } = await import("@/features/quest");
     await expect(
       (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
         exerciseId: "11111111-1111-1111-1111-111111111111",
       }),
-    ).rejects.toThrow("Mission premium");
+    ).rejects.toThrow(/Parcours premium/);
   });
 
-  it("allows a difficulty 1-2 exercise for free (no subscription)", async () => {
-    let exerciseCalls = 0;
+  it("surfaces the coming-soon message when the parcours is not yet available", async () => {
     mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises") {
-        exerciseCalls += 1;
-        return exerciseCalls === 1
-          ? mockQuery({ id: "ex-1", mode: "practice", difficulty: 2, chapter_id: "ch-1" })
-          : mockQuery({ id: "quiz-1" });
-      }
-      if (table === "attempts") return mockQuery([{ id: "att-1" }]); // chapter quiz passed
-      return mockQuery({ id: "sess-1", started_at: "2026-06-01T12:00:00Z" });
+      if (table === "exercises")
+        return mockQuery({ id: "ex-1", mode: "boss", difficulty: 3, chapter_id: "ch-1" });
+      return mockQuery({ id: "sess-1", started_at: "t" });
     });
-    mockRpc.mockReturnValue({ data: false, error: null }); // no subscription — must still pass
+    mockRpc.mockReturnValue({
+      data: [{ allowed: false, reason: "PARCOURS_COMING_SOON" }],
+      error: null,
+    });
 
     const { startExerciseSession } = await import("@/features/quest");
-    const result = await (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
-      exerciseId: "11111111-1111-1111-1111-111111111111",
-    });
-
-    expect(result).toEqual({ sessionId: "sess-1", startedAt: "2026-06-01T12:00:00Z" });
+    await expect(
+      (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
+        exerciseId: "11111111-1111-1111-1111-111111111111",
+      }),
+    ).rejects.toThrow(/bientôt disponible/);
   });
 
-  it("allows a difficulty 3+ exercise with an active subscription", async () => {
+  it("fails closed when resolve_exercise_access errors (unknown access)", async () => {
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises")
+        return mockQuery({ id: "ex-1", mode: "boss", difficulty: 3, chapter_id: "ch-1" });
+      return mockQuery({ id: "sess-1", started_at: "t" });
+    });
+    mockRpc.mockReturnValue({ data: null, error: { message: "RPC down" } });
+
+    const { startExerciseSession } = await import("@/features/quest");
+    await expect(
+      (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
+        exerciseId: "11111111-1111-1111-1111-111111111111",
+      }),
+    ).rejects.toThrow(/Parcours premium/);
+  });
+
+  it("allows a mission inside the free preview / with an entitlement (access allowed)", async () => {
     let exerciseCalls = 0;
     mockFrom.mockImplementation((table: string) => {
       if (table === "exercises") {
         exerciseCalls += 1;
         return exerciseCalls === 1
-          ? mockQuery({ id: "ex-1", mode: "challenge", difficulty: 4, chapter_id: "ch-1" })
+          ? mockQuery({
+              id: "ex-1",
+              mode: "practice",
+              difficulty: 2,
+              chapter_id: "ch-1",
+              subjects: { grade_id: "g-1" },
+            })
           : mockQuery({ id: "quiz-1" });
       }
-      if (table === "attempts") return mockQuery([{ id: "att-1" }]); // chapter quiz passed
+      if (table === "attempts")
+        return mockQuery([{ id: "att-1", duration_seconds: 40, total_count: 6 }]); // quiz passed
       return mockQuery({ id: "sess-1", started_at: "2026-06-01T12:00:00Z" });
     });
-    mockRpc.mockReturnValue({ data: true, error: null });
+    mockRpc.mockReturnValue({ data: [{ allowed: true }], error: null });
 
     const { startExerciseSession } = await import("@/features/quest");
     const result = await (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({

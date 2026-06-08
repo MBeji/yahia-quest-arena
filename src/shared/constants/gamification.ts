@@ -107,12 +107,11 @@ export function dungeonRunsPerDay(level: number): number {
 /** Cost in Coins to recover a lost streak */
 export const STREAK_RECOVERY_COST = 15;
 
-// ---------------------------------------------------------------------------
-// Premium difficulty gate — exercises at or above this difficulty are reserved
-// for paying subscribers (subscription only, no level requirement). Difficulty
-// 1-2 stay free for everyone; 3+ are premium, across every subject/chapter.
-// Enforced server-side in quest.startExerciseSession.
-// ---------------------------------------------------------------------------
-
-/** Lowest exercise difficulty that requires an active subscription (3 and 4 are premium). */
-export const PREMIUM_MIN_DIFFICULTY = 3;
+/**
+ * Highest exercise difficulty included in a premium parcours' FREE PREVIEW.
+ * In a premium parcours WITHOUT an entitlement, the chapter comprehension quiz
+ * and difficulty-1 (⭐) missions are free; difficulty >= 2 requires unlocking the
+ * parcours. The server gate (resolve_exercise_access RPC) is authoritative; this
+ * mirrors the rule for the lock/preview affordances in the UI.
+ */
+export const FREE_PREVIEW_MAX_DIFFICULTY = 1;
