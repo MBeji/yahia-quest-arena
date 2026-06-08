@@ -45,13 +45,13 @@ psql "$(supabase status -o env | grep DB_URL | cut -d= -f2-)" -f supabase/tests/
 
 ## What is covered
 
-| File | Invariant | Maps to |
-| --- | --- | --- |
-| `01_economy_grants.test.sql` | `award_xp` / `award_coins` are **not** EXECUTE-grantable by `authenticated` (catalogue + live permission-denied); `spend_coins` **is** still callable | **S1** (the grant regression net) |
-| `02_role_escalation.test.sql` | direct `UPDATE profiles SET role=…` is rejected; `set_profile_role` allows only `student`/`parent` (else `Invalid role`); a default-role INSERT (signup) is allowed | **S2(a)** |
-| `02_role_escalation.test.sql` | `get_subject_leaderboard` result shape has **no** `user_id` column and still has `is_me` | **S2(b)** |
-| `03_rls_isolation.test.sql` | user A cannot SELECT/UPDATE user B's `attempts` under `SET ROLE authenticated` | **RLS** |
-| `04_scoring_submit_attempt.test.sql` | correct+unrushed attempt awards score-proportional XP + full coins; too-fast attempt earns zero (anti-rush); `<60%` fail schedules spaced-repetition; an armed retry shield suppresses that penalty | **scoring** |
+| File                                 | Invariant                                                                                                                                                                                           | Maps to                           |
+| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
+| `01_economy_grants.test.sql`         | `award_xp` / `award_coins` are **not** EXECUTE-grantable by `authenticated` (catalogue + live permission-denied); `spend_coins` **is** still callable                                               | **S1** (the grant regression net) |
+| `02_role_escalation.test.sql`        | direct `UPDATE profiles SET role=…` is rejected; `set_profile_role` allows only `student`/`parent` (else `Invalid role`); a default-role INSERT (signup) is allowed                                 | **S2(a)**                         |
+| `02_role_escalation.test.sql`        | `get_subject_leaderboard` result shape has **no** `user_id` column and still has `is_me`                                                                                                            | **S2(b)**                         |
+| `03_rls_isolation.test.sql`          | user A cannot SELECT/UPDATE user B's `attempts` under `SET ROLE authenticated`                                                                                                                      | **RLS**                           |
+| `04_scoring_submit_attempt.test.sql` | correct+unrushed attempt awards score-proportional XP + full coins; too-fast attempt earns zero (anti-rush); `<60%` fail schedules spaced-repetition; an armed retry shield suppresses that penalty | **scoring**                       |
 
 ## Conventions / gotchas when adding tests
 

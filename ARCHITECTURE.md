@@ -175,7 +175,7 @@ Run with coverage: `npm run test:coverage`
 | weekly_quests              | Weekly challenges                                      |
 | spaced_repetition_schedule | SM-2 style review schedule                             |
 | dungeon_runs               | Boss mode run state                                    |
-| family_links               | Parent-student linking                                 |
+| parent_student_links       | Parent-student linking                                 |
 | subscriptions              | Premium-gate state (difficulty 3+ / premium modules)   |
 | beta_access_requests       | Beta-access requests + admin review                    |
 | content_reports            | User-flagged content errors ("Signaler une erreur")    |

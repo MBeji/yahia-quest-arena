@@ -94,7 +94,7 @@ staged files); `pre-push` runs `npm run verify`. Installed automatically via the
 (school theme only) → `subjects` → `chapters` → `exercises` → `questions` (QCM, `options` JSONB)
 · `attempts` · `exercise_sessions` · `student_badges` /
 `shop_items` / `inventory_items` · `daily_objectives` · `weekly_quests` ·
-`spaced_repetition_schedule` (SM-2) · `dungeon_runs` · `family_links` · `subscriptions`
+`spaced_repetition_schedule` (SM-2) · `dungeon_runs` · `parent_student_links` · `subscriptions`
 (premium gate) · `beta_access_requests` · `content_reports` (user-flagged content errors) ·
 `themes` / `grades`.
 

@@ -82,12 +82,12 @@ doit être affirmé explicitement, pas passé sous silence.
 
 ### 5. Classer chaque finding par sévérité
 
-| Sévérité | Sens | Exemples |
-|---|---|---|
-| 🔴 **Bloquant** | Doit être corrigé avant merge | Faille de sécurité, RLS/grant manquant, gate rouge, régression, violation `CLAUDE.md`, ordre migration↔deploy non respecté |
-| 🟠 **Majeur** | À corriger sauf justification explicite | Bug edge-case, fuite d'abstraction, frontière feature/shared franchie, test manquant sur comportement nouveau |
-| 🟡 **Mineur** | À améliorer | Lisibilité, nommage, duplication légère, log mal placé |
-| 🔵 **Nit / suggestion** | Optionnel | Style, micro-perf, idée d'amélioration future |
+| Sévérité                | Sens                                    | Exemples                                                                                                                   |
+| ----------------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| 🔴 **Bloquant**         | Doit être corrigé avant merge           | Faille de sécurité, RLS/grant manquant, gate rouge, régression, violation `CLAUDE.md`, ordre migration↔deploy non respecté |
+| 🟠 **Majeur**           | À corriger sauf justification explicite | Bug edge-case, fuite d'abstraction, frontière feature/shared franchie, test manquant sur comportement nouveau              |
+| 🟡 **Mineur**           | À améliorer                             | Lisibilité, nommage, duplication légère, log mal placé                                                                     |
+| 🔵 **Nit / suggestion** | Optionnel                               | Style, micro-perf, idée d'amélioration future                                                                              |
 
 Chaque finding cite **`fichier:ligne`**, explique le **pourquoi** (impact, pas
 seulement « c'est mal »), et propose un **correctif concret**.
@@ -149,7 +149,7 @@ seulement « c'est mal »), et propose un **correctif concret**.
 - [ ] **Gate premium** : difficulté 3+ et modules premium exigent un abonnement
       actif, vérifié **côté serveur** (jamais seulement masqué dans l'UI).
 - [ ] **Données de mineurs / vie privée** : pas d'exposition de PII (élève,
-      famille) au-delà du strict nécessaire ; les `family_links`,
+      famille) au-delà du strict nécessaire ; les `parent_student_links`,
       `parent-report`, leaderboard ne fuitent pas d'identifiants/données privées.
 - [ ] **XSS** : tout HTML rendu est assaini via DOMPurify
       (`src/shared/lib/markdown.ts`) ; conformité à `docs/xss-rendering-policy.md` ;
@@ -257,7 +257,7 @@ Termine **toujours** par un rapport structuré :
 1. **Verdict** : ✅ Approuvé · 🟠 Approuvé sous réserve · 🔴 Changements requis.
 2. **Résumé** : 2-3 lignes — ce que fait la PR, qualité globale, gate (vert/rouge).
 3. **Findings par sévérité** (🔴 → 🔵), chacun avec `fichier:ligne`, le
-   *pourquoi* (impact) et un correctif proposé. Regroupe par axe si volumineux.
+   _pourquoi_ (impact) et un correctif proposé. Regroupe par axe si volumineux.
 4. **Ce qui est bien** : souligne les bons choix (renforce les bonnes pratiques).
 5. **Checklist de sortie** : liste cochée des axes A→J (OK / N/A / findings).
 
