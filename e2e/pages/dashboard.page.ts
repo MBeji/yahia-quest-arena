@@ -32,13 +32,16 @@ export class DashboardPage {
 
   async goto(): Promise<void> {
     await this.page.goto("/dashboard");
-    // SSR cold-start + profile/catalogue fetch can exceed the default 5s assertion
-    // timeout, leaving <main> briefly empty. Wait for primary data (the hero stat
-    // chips or the first subject card) before returning so specs aren't flaky.
+    // SSR cold-start + profile/catalogue fetch can leave <main> briefly empty.
+    // Best-effort wait for primary data (hero stat chips or the first subject
+    // card) so data-dependent specs aren't flaky — but DON'T fail here: some
+    // dashboards (e.g. the admin account with no grade) render neither, and those
+    // specs only assert nav/role. Each spec still waits on what it actually needs.
     await this.statLevel
       .or(this.subjectCards.first())
       .first()
-      .waitFor({ state: "visible", timeout: 30_000 });
+      .waitFor({ state: "visible", timeout: 15_000 })
+      .catch(() => {});
   }
 
   /** Parse the integer balance out of a stat chip (e.g. "1 234 Coins" → 1234). */

@@ -146,35 +146,24 @@ export function createAdminDb(): AdminDb {
       return { exerciseId: data.id as string, subjectId: data.subject_id as string };
     },
     async subjectIdByTheme(themeSlug: string) {
-      const { data: theme, error: tErr } = await client
-        .from("themes")
-        .select("id")
-        .eq("slug", themeSlug)
-        .maybeSingle();
-      if (tErr) throw new Error(`subjectIdByTheme(theme): ${tErr.message}`);
-      if (!theme) return null;
+      // themes.id IS the slug ('ecole-tn', 'culture-generale'…), and subjects.theme_id
+      // stores that slug directly — no separate themes.slug column exists.
       const { data, error } = await client
         .from("subjects")
         .select("id")
-        .eq("theme_id", theme.id)
+        .eq("theme_id", themeSlug)
         .eq("is_premium", false)
         .order("display_order")
         .limit(1)
         .maybeSingle();
-      if (error) throw new Error(`subjectIdByTheme(subject): ${error.message}`);
+      if (error) throw new Error(`subjectIdByTheme: ${error.message}`);
       return (data?.id as string) ?? null;
     },
     async themeSlugsWithSubjects() {
-      const { data: subs, error: subErr } = await client.from("subjects").select("theme_id");
-      if (subErr) throw new Error(`themeSlugsWithSubjects(subjects): ${subErr.message}`);
-      const themeIds = [...new Set((subs ?? []).map((s) => s.theme_id as string))];
-      if (themeIds.length === 0) return [];
-      const { data: themes, error: tErr } = await client
-        .from("themes")
-        .select("slug")
-        .in("id", themeIds);
-      if (tErr) throw new Error(`themeSlugsWithSubjects(themes): ${tErr.message}`);
-      return (themes ?? []).map((t) => t.slug as string);
+      // subjects.theme_id is the theme slug; distinct values = families with content.
+      const { data: subs, error } = await client.from("subjects").select("theme_id");
+      if (error) throw new Error(`themeSlugsWithSubjects: ${error.message}`);
+      return [...new Set((subs ?? []).map((s) => s.theme_id as string))];
     },
     async userIdByEmail(email: string) {
       for (let page = 1; page <= 20; page += 1) {

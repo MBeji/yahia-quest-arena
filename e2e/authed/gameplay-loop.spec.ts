@@ -7,18 +7,20 @@ test.use({ storageState: STORAGE_STATE.free });
 
 test.describe("Core gameplay loop — free non-school exercise", () => {
   test("answer a QCM end-to-end and see the scored review", async ({ quest, adminDb }) => {
+    test.setTimeout(60_000);
     const subjectId = await adminDb.nonSchoolSubjectId();
     const exerciseId = await adminDb.freeExerciseId(subjectId);
     await quest.goto(exerciseId);
 
-    // QCM renders (no quiz-lock, no paywall): at least two radio options.
-    await expect(quest.options.first()).toBeVisible();
+    // QCM renders (no quiz-lock, no paywall): at least two radio options. Allow for
+    // the secure-session "preparing" screen under full-parallel-suite load.
+    await expect(quest.options.first()).toBeVisible({ timeout: 25_000 });
     expect(await quest.options.count()).toBeGreaterThanOrEqual(2);
 
     await quest.answerAll();
 
     // Results screen: score with a percentage + one review card per question.
-    await expect(quest.score).toBeVisible();
+    await expect(quest.score).toBeVisible({ timeout: 15_000 });
     await expect(quest.score).toContainText("%");
     expect(await quest.reviewItems.count()).toBeGreaterThan(0);
   });

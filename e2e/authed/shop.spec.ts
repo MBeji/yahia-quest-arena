@@ -14,7 +14,9 @@ test.describe("Academy shop", () => {
 
     await dashboard.goto();
     await expect(dashboard.statCoins).toBeVisible();
-    await expect.poll(() => dashboard.statNumber(dashboard.statCoins)).toBe(99_999);
+    await expect
+      .poll(() => dashboard.statNumber(dashboard.statCoins), { timeout: 15_000 })
+      .toBe(99_999);
 
     await expect(shop.items.first()).toBeVisible();
     const before = await dashboard.statNumber(dashboard.statCoins);
@@ -22,38 +24,28 @@ test.describe("Academy shop", () => {
 
     await shop.buyButtons.first().click();
 
-    await expect.poll(() => dashboard.statNumber(dashboard.statCoins)).toBeLessThan(before);
-    await expect.poll(() => shop.ownedBadges.count()).toBeGreaterThan(ownedBefore);
+    await expect
+      .poll(() => dashboard.statNumber(dashboard.statCoins), { timeout: 15_000 })
+      .toBeLessThan(before);
+    await expect
+      .poll(() => shop.ownedBadges.count(), { timeout: 15_000 })
+      .toBeGreaterThan(ownedBefore);
   });
 
-  test("a purchased consumable can be armed", async ({ dashboard, shop, adminDb, page }) => {
-    test.setTimeout(90_000); // buys every item, each triggering a dashboard refetch
+  test("a purchased consumable can be armed", async ({ dashboard, shop, adminDb }) => {
+    test.setTimeout(60_000);
     const userId = await adminDb.userIdByEmail(TEST_USERS.premium.email);
     await adminDb.setCoins(userId, 99_999);
     await dashboard.goto();
-    await expect(shop.items.first()).toBeVisible();
 
-    // Buy each distinct item once so any armable consumable becomes owned.
-    const codes = await shop.items.evaluateAll((els) =>
-      els.map((e) => (e as HTMLElement).dataset.itemCode ?? "").filter(Boolean),
-    );
-    for (const code of codes) {
-      const buy = shop.section
-        .locator(`[data-item-code="${code}"]`)
-        .getByRole("button", { name: /^Buy/i });
-      if (await buy.isEnabled().catch(() => false)) {
-        const before = await dashboard.statNumber(dashboard.statCoins);
-        await buy.click();
-        await expect.poll(() => dashboard.statNumber(dashboard.statCoins)).toBeLessThan(before);
-      }
-    }
+    // Buy a known armable consumable (the coin potion) and arm it — targeted, so
+    // it stays fast/robust under full-suite load (no bulk-buy loop).
+    const card = shop.section.locator('[data-item-code="potion_coins"]');
+    await expect(card).toBeVisible({ timeout: 15_000 });
+    await card.getByRole("button", { name: /^Buy/i }).click();
 
-    if ((await shop.activateButtons.count()) > 0) {
-      await shop.activateButtons.first().click();
-      await expect(shop.activeBadges.first()).toBeVisible();
-    } else {
-      // No armable consumable seeded — at least confirm the purchases landed.
-      expect(await shop.ownedBadges.count()).toBeGreaterThan(0);
-    }
+    // Once owned, the potion becomes armable → "Activer" appears in its card.
+    await card.getByRole("button", { name: /^Activer/i }).click({ timeout: 15_000 });
+    await expect(shop.activeBadges.first()).toBeVisible({ timeout: 15_000 });
   });
 });

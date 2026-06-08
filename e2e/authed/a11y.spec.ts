@@ -24,11 +24,6 @@ test.describe("Accessibility — authenticated pages", () => {
   test("subject page", async ({ subject, adminDb, page }) => {
     await subject.goto(await adminDb.schoolSubjectId());
     await page.waitForLoadState("networkidle");
-    // KNOWN FINDING (tracked separately): `--muted-foreground` (#4f5460) on the
-    // near-black background is 2.61:1, failing WCAG AA contrast on chapter
-    // descriptions / progress text. Disable only that rule so this spec still
-    // guards the page's structural a11y (roles, names, labels) until the design
-    // token is darkened. Dashboard + leaderboard pass contrast unchanged.
-    await expectNoSeriousA11yViolations(page, { disableRules: ["color-contrast"] });
+    await expectNoSeriousA11yViolations(page);
   });
 });

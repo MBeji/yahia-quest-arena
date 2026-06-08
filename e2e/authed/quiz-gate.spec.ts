@@ -17,7 +17,7 @@ test.describe("Comprehension-quiz gate — school program only", () => {
     await subject.goto(id);
 
     // Page loaded: the always-clickable quiz tile(s) are present.
-    await expect(page.locator('a[href^="/quest/"]').first()).toBeVisible();
+    await expect(page.locator('a[href^="/quest/"]').first()).toBeVisible({ timeout: 15_000 });
     // Fresh free user → no quiz passed → at least one locked mission tile.
     await expect(subject.lockedMissions.first()).toBeVisible();
     expect(await subject.lockedMissions.count()).toBeGreaterThan(0);
@@ -31,7 +31,7 @@ test.describe("Comprehension-quiz gate — school program only", () => {
     const id = await adminDb.nonSchoolSubjectId();
     await subject.goto(id);
 
-    await expect(page.locator('a[href^="/quest/"]').first()).toBeVisible();
+    await expect(page.locator('a[href^="/quest/"]').first()).toBeVisible({ timeout: 15_000 });
     await expect(subject.lockedMissions).toHaveCount(0);
   });
 });

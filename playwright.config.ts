@@ -73,10 +73,16 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
+  // The authed suite drives ONE dev server + a shared (free-tier) TEST DB, so high
+  // parallelism saturates them and causes cascading timeouts. Cap the workers.
+  workers: process.env.CI ? 2 : 4,
   // HTML report on both (CI uploads it as an artifact); GitHub annotations in CI.
   reporter: process.env.CI
     ? [["github"], ["html", { open: "never" }]]
     : [["list"], ["html", { open: "never" }]],
+  // Slightly higher than the 5s default: the authed suite hits a single dev server
+  // + shared TEST DB under heavy parallelism, so first-loads can exceed 5s.
+  expect: { timeout: 10_000 },
   use: {
     baseURL,
     trace: "on-first-retry",
