@@ -64,24 +64,27 @@ export const bootstrapProfile = createServerFn({ method: "POST" })
   });
 
 /**
- * Persist the student's current school grade (e.g. chosen at onboarding).
- * Scopes the "Programme scolaire tunisien" theme to the right level. The update
- * is constrained to the caller's own profile row.
+ * Persist the student's active parcours (chosen at onboarding).
+ *
+ * Goes through the `set_current_parcours` SECURITY DEFINER RPC, which self-scopes
+ * (writes only the caller's own profile), sets `current_parcours_id`, and — for
+ * concours parcours — syncs `current_grade_id` so the school-theme catalogue scopes
+ * to the right level. Returns the updated profile row.
  */
-export const setCurrentGrade = createServerFn({ method: "POST" })
+export const setCurrentParcours = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => z.object({ gradeId: z.string().uuid() }).parse(d))
+  .inputValidator((d: unknown) => z.object({ parcoursId: z.string().min(1) }).parse(d))
   .handler(async ({ data, context }) => {
-    const { supabase, userId } = context;
-
-    const { error } = await supabase
-      .from("profiles")
-      .update({ current_grade_id: data.gradeId })
-      .eq("id", userId);
-
+    const { supabase } = context;
+    const { data: profile, error } = await supabase.rpc("set_current_parcours", {
+      p_parcours: data.parcoursId,
+    });
     if (error) {
-      failWithClientError("auth.setCurrentGrade update failed", error, "set_grade_failed");
+      failWithClientError(
+        "auth.setCurrentParcours",
+        error,
+        "Impossible d'enregistrer ton parcours.",
+      );
     }
-
-    return { ok: true as const };
+    return { profile };
   });

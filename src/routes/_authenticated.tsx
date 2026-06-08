@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Outlet, Link, useNavigate, useLocation } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -36,19 +36,25 @@ export const Route = createFileRoute("/_authenticated")({
 function AuthenticatedLayout() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const t = useT();
 
-  // Fetch user role for conditional nav. Cached so it is not refetched on every
-  // navigation within the authenticated layout.
-  const { data: userRole = null } = useQuery({
+  // Fetch user role + active parcours for conditional nav and the onboarding guard.
+  // Cached so it is not refetched on every navigation within the authenticated layout.
+  const { data: me = null, isSuccess: meLoaded } = useQuery({
     queryKey: ["me-role", user?.id],
     enabled: !!user,
     staleTime: 5 * 60_000,
     queryFn: async () => {
-      const { data } = await supabase.from("profiles").select("role").eq("id", user!.id).single();
-      return data?.role ?? null;
+      const { data } = await supabase
+        .from("profiles")
+        .select("role,current_parcours_id")
+        .eq("id", user!.id)
+        .single();
+      return data ?? null;
     },
   });
+  const userRole = me?.role ?? null;
 
   // Pending beta-access requests count for the admin nav badge.
   const fetchBetaCount = useServerFn(getPendingBetaCount);
@@ -76,6 +82,16 @@ function AuthenticatedLayout() {
       navigate({ to: "/auth", search: { mode: "login" } });
     }
   }, [loading, user, navigate]);
+
+  // Profile-first onboarding guard: a signed-in user with no active parcours is
+  // sent to /onboarding. Gated on the profile query having loaded (no flash) and
+  // the user not already being on /onboarding (no redirect loop).
+  useEffect(() => {
+    if (!user || !meLoaded) return;
+    if (me && me.current_parcours_id == null && location.pathname !== "/onboarding") {
+      navigate({ to: "/onboarding" });
+    }
+  }, [user, meLoaded, me, location.pathname, navigate]);
 
   if (loading) {
     return (

@@ -98,53 +98,49 @@ export const getDashboard = createServerFn({ method: "GET" })
       }
     }
 
-    // Scope subjects by the student's grade (#themes). School subjects are filtered
-    // to the chosen `current_grade_id`; legacy profiles without a grade fall back to
-    // every grade-bound subject (today the only populated grade is the 9ème année de
-    // base). Grade-agnostic theme subjects (e.g. fr-mastery) are surfaced separately.
+    // Scope subjects by the student's ACTIVE parcours (#parcours-pivot). A parcours
+    // pins a theme (and, for concours, a grade); the dashboard shows only that
+    // parcours' subjects. Premium parcours without an entitlement surface their
+    // subjects as locked (the server gate is authoritative; this only drives the
+    // lock badges in the UI).
     const allSubjects = subjectsRes.data ?? [];
-    const gradeId = profile?.current_grade_id ?? null;
-    const schoolSubjects = gradeId
-      ? allSubjects.filter((s) => s.grade_id === gradeId)
-      : allSubjects.filter((s) => s.grade_id != null);
-    const otherSubjects = allSubjects.filter((s) => s.grade_id == null);
-
-    // Premium lock: the school subjects all belong to one concours parcours. If it
-    // is premium and the student lacks an entitlement, surface them as locked (the
-    // server gate is authoritative; this only drives the lock badges in the UI).
+    const parcoursId = profile?.current_parcours_id ?? null;
+    let subjects: typeof allSubjects = [];
     let premiumLockedSubjectIds: string[] = [];
-    const firstSchool = schoolSubjects[0];
-    if (firstSchool) {
-      try {
-        // resolve_subject_parcours matches grade_id with IS NOT DISTINCT FROM, so a
-        // null grade is valid (grade-agnostic themes); the generated arg type narrows
-        // p_grade to string, so describe the real (nullable) contract here.
-        const { data: parcoursId } = await supabase.rpc("resolve_subject_parcours", {
-          p_theme: firstSchool.theme_id,
-          p_grade: firstSchool.grade_id as string,
-        });
-        if (parcoursId) {
-          const [parcoursRow, ent] = await Promise.all([
-            supabase.from("parcours").select("is_premium").eq("id", parcoursId).maybeSingle(),
-            supabase.rpc("has_parcours_entitlement", { p_user: userId, p_parcours: parcoursId }),
-          ]);
-          if ((parcoursRow.data?.is_premium ?? false) && ent.data !== true) {
-            premiumLockedSubjectIds = schoolSubjects.map((s) => s.id);
-          }
+    if (parcoursId) {
+      const { data: par } = await supabase
+        .from("parcours")
+        .select("theme_id,grade_id,is_premium")
+        .eq("id", parcoursId)
+        .maybeSingle();
+      if (par) {
+        subjects = allSubjects.filter(
+          (s) =>
+            s.theme_id === par.theme_id &&
+            (par.grade_id ? s.grade_id === par.grade_id : s.grade_id == null),
+        );
+        if (par.is_premium) {
+          const { data: ent } = await supabase.rpc("has_parcours_entitlement", {
+            p_user: userId,
+            p_parcours: parcoursId,
+          });
+          if (ent !== true) premiumLockedSubjectIds = subjects.map((s) => s.id);
         }
-      } catch {
-        // graceful: no lock badges (server still enforces)
       }
     }
+    // Other free parcours to discover (free-theme subjects not in the active parcours).
+    const activeIds = new Set(subjects.map((s) => s.id));
+    const otherSubjects = allSubjects.filter((s) => s.grade_id == null && !activeIds.has(s.id));
 
     return {
       profile,
-      subjects: schoolSubjects,
+      subjects,
       otherSubjects,
       stats: bySubject,
       recent: recentRes.data ?? [],
       nextExerciseId,
       premiumLockedSubjectIds,
+      currentParcoursId: parcoursId,
     };
   });
 
@@ -350,6 +346,19 @@ export const getLeaderboard = createServerFn({ method: "GET" })
     }
 
     return { leaderboard: ranked, myRank };
+  });
+
+// ---------- Parcours catalogue (sellable journeys: concours + free libre tracks) ----------
+export const getParcours = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase } = context;
+    const { data, error } = await supabase
+      .from("parcours")
+      .select("id,name_fr,kind,is_premium,status,display_order,icon,color,theme_id,grade_id")
+      .order("display_order");
+    if (error) failWithClientError("getParcours", error, DASHBOARD_ERROR_FR);
+    return { parcours: data ?? [] };
   });
 
 // ---------- Subjects (lightweight list, for leaderboard tabs etc.) ----------

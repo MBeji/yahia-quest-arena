@@ -128,7 +128,8 @@ describe("END-TO-END: new student signs up", () => {
     // The role must NOT be written through a direct profiles upsert anymore.
     expect(mockRpc).toHaveBeenCalledWith("set_profile_role", { p_role: "student" });
 
-    // 2) First dashboard load — profile row already exists (trigger + bootstrap).
+    // 2) First dashboard load — profile row already exists (trigger + bootstrap),
+    //    with an active concours parcours pinning theme + grade.
     mockFrom.mockImplementation((table: string) => {
       if (table === "profiles")
         return mockQuery({
@@ -140,11 +141,28 @@ describe("END-TO-END: new student signs up", () => {
           coins: 0,
           current_streak: 0,
           current_grade_id: "g9",
+          current_parcours_id: "concours-9eme",
         });
+      if (table === "parcours")
+        return mockQuery({ theme_id: "ecole-tn", grade_id: "g9", is_premium: false });
       if (table === "subjects")
         return mockQuery([
-          { id: "s1", name_fr: "Math", color_token: "math", display_order: 1, grade_id: "g9" },
-          { id: "s2", name_fr: "Physique", color_token: "phys", display_order: 2, grade_id: "g9" },
+          {
+            id: "s1",
+            name_fr: "Math",
+            color_token: "math",
+            display_order: 1,
+            theme_id: "ecole-tn",
+            grade_id: "g9",
+          },
+          {
+            id: "s2",
+            name_fr: "Physique",
+            color_token: "phys",
+            display_order: 2,
+            theme_id: "ecole-tn",
+            grade_id: "g9",
+          },
         ]);
       // attempts (recent + stats)
       return mockQuery([]);
@@ -323,51 +341,45 @@ describe("END-TO-END: onboarding route data fetch", () => {
     mockRpc.mockReset();
   });
 
-  it("getDashboard supplies the subjects the onboarding wizard renders", async () => {
-    const { getDashboard } = await import("@/features/dashboard");
+  it("getParcours supplies the parcours the profile-first onboarding wizard renders", async () => {
+    const { getParcours } = await import("@/features/dashboard");
 
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "profiles")
-        return mockQuery({
-          id: "user-regression-test",
-          display_name: "Yahia",
-          role: "student",
-          current_grade_id: "g9",
-        });
-      if (table === "subjects")
-        return mockQuery([
-          {
-            id: "s1",
-            name_fr: "Mathématiques",
-            description: "Algèbre",
-            color_token: "math",
-            display_order: 1,
-            grade_id: "g9",
-          },
-          {
-            id: "s2",
-            name_fr: "Sciences",
-            description: "Bio",
-            color_token: "sci",
-            display_order: 2,
-            grade_id: "g9",
-          },
-        ]);
-      return mockQuery([]);
-    });
+    const rows = [
+      {
+        id: "concours-9eme",
+        name_fr: "Préparation Concours 9ème",
+        kind: "concours",
+        is_premium: true,
+        status: "available",
+        display_order: 1,
+        icon: "GraduationCap",
+        color: "subject-math",
+        theme_id: "ecole-tn",
+        grade_id: "g9",
+      },
+      {
+        id: "culture-generale",
+        name_fr: "Culture générale",
+        kind: "libre",
+        is_premium: false,
+        status: "available",
+        display_order: 11,
+        icon: "Globe",
+        color: "subject-culture",
+        theme_id: "culture-generale",
+        grade_id: null,
+      },
+    ];
+    mockFrom.mockImplementation((table: string) =>
+      table === "parcours" ? mockQuery(rows) : mockQuery([]),
+    );
 
-    const dashboard = (await (getDashboard as unknown as Fn)()) as {
-      subjects: Array<{ id: string; name_fr: string; color_token: string }>;
-    };
+    const res = (await (getParcours as unknown as Fn)()) as { parcours: typeof rows };
 
-    // Onboarding reads dashboardData.subjects and renders SubjectCard per item.
-    expect(dashboard.subjects).toHaveLength(2);
-    expect(dashboard.subjects[0]).toMatchObject({
-      id: "s1",
-      name_fr: "Mathématiques",
-      color_token: "math",
-    });
-    expect(dashboard.subjects.every((s) => typeof s.id === "string")).toBe(true);
+    // Onboarding filters by kind/status and renders a ParcoursCard per item.
+    expect(res.parcours).toHaveLength(2);
+    expect(res.parcours[0]).toMatchObject({ id: "concours-9eme", kind: "concours" });
+    expect(res.parcours[1]).toMatchObject({ id: "culture-generale", kind: "libre" });
   });
 });
 
@@ -446,30 +458,47 @@ describe("END-TO-END: account-creation edge cases", () => {
     ).rejects.toThrow();
   });
 
-  it("setCurrentGrade persists the student's chosen school grade", async () => {
-    const { setCurrentGrade } = await import("@/features/auth");
+  it("setCurrentParcours persists the chosen parcours via the RPC and returns the profile", async () => {
+    const { setCurrentParcours } = await import("@/features/auth");
 
-    const chain = mockQuery(null, null);
-    mockFrom.mockImplementation((table: string) => (table === "profiles" ? chain : mockQuery([])));
+    const updatedProfile = {
+      id: "user-regression-test",
+      current_parcours_id: "concours-9eme",
+      current_grade_id: "g9",
+    };
+    mockRpc.mockImplementation(
+      rpcByName({ set_current_parcours: { data: updatedProfile, error: null } }),
+    );
 
-    const res = (await (setCurrentGrade as unknown as Fn)({
-      gradeId: "11111111-1111-1111-1111-111111111111",
-    })) as { ok: boolean };
+    const res = (await (setCurrentParcours as unknown as Fn)({
+      parcoursId: "concours-9eme",
+    })) as { profile: typeof updatedProfile };
 
-    expect(res.ok).toBe(true);
-    expect(chain.update).toHaveBeenCalledWith({
-      current_grade_id: "11111111-1111-1111-1111-111111111111",
-    });
-    // Constrained to the caller's own profile row.
-    expect(chain.eq).toHaveBeenCalledWith("id", "user-regression-test");
+    // The self-scoped SECURITY DEFINER RPC is the only sanctioned write path.
+    expect(mockRpc).toHaveBeenCalledWith("set_current_parcours", { p_parcours: "concours-9eme" });
+    expect(res.profile).toEqual(updatedProfile);
   });
 
-  it("setCurrentGrade rejects a non-uuid grade at the validator", async () => {
-    const { setCurrentGrade } = await import("@/features/auth");
-    mockFrom.mockImplementation(() => mockQuery(null));
+  it("setCurrentParcours surfaces a sanitized error when the RPC fails", async () => {
+    const { setCurrentParcours } = await import("@/features/auth");
 
-    await expect((setCurrentGrade as unknown as Fn)({ gradeId: "not-a-uuid" })).rejects.toThrow();
-    expect(mockFrom).not.toHaveBeenCalled();
+    mockRpc.mockImplementation(
+      rpcByName({
+        set_current_parcours: { data: null, error: { message: "rls denied", code: "42501" } },
+      }),
+    );
+
+    await expect(
+      (setCurrentParcours as unknown as Fn)({ parcoursId: "concours-9eme" }),
+    ).rejects.toThrow(/parcours/i);
+  });
+
+  it("setCurrentParcours rejects an empty parcours id at the validator", async () => {
+    const { setCurrentParcours } = await import("@/features/auth");
+    mockRpc.mockResolvedValue({ data: null, error: null });
+
+    await expect((setCurrentParcours as unknown as Fn)({ parcoursId: "" })).rejects.toThrow();
+    expect(mockRpc).not.toHaveBeenCalled();
   });
 
   it("getDashboard for a brand-new user with zero attempts returns empty aggregates", async () => {

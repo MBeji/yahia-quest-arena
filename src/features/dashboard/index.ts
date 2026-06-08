@@ -6,6 +6,7 @@ export {
   getDashboardSecondary,
   getGradesByTheme,
   getLeaderboard,
+  getParcours,
   getSprint2Dashboard,
   getSubjects,
   getSubjectLeaderboard,
