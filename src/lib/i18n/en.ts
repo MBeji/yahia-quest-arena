@@ -2,11 +2,12 @@ import type { TranslationKeys } from "./types";
 
 export const en: TranslationKeys = {
   meta: {
-    title: "XP Scholars — The Shonen Academy for the 9th Grade Exam",
+    title: "XP Scholars — The Shonen Academy for the 6th & 9th Grade National Exams",
     description:
-      "Turn your study sessions into epic quests. XP, streaks, duels and bosses to prepare for the 9th grade exam.",
-    ogTitle: "XP Scholars — 9th Grade Exam RPG",
-    ogDescription: "The shonen academy to dominate the 9th grade exam.",
+      "Prep for the Tunisian 6th and 9th grade national exams in RPG mode — plus a free academy: General Knowledge, Brain Training and Languages. XP, streaks, duels and bosses.",
+    ogTitle: "XP Scholars — National Exams & Free Academy",
+    ogDescription:
+      "6th & 9th grade exam prep + a free academy (General Knowledge, Brain Training, Languages), shonen style.",
   },
   common: {
     backToHall: "Back to hall",
@@ -32,12 +33,12 @@ export const en: TranslationKeys = {
     navRanks: "Ranks",
     signIn: "Sign in",
     joinAcademy: "Join the Academy",
-    badge: "9th Grade Exam · RPG Mode",
+    badge: "6th & 9th Grade Exams · RPG Mode",
     heroTitle1: "Become the",
     heroTitle2: "Legend",
-    heroTitle3: "of the 9th Grade Exam",
+    heroTitle3: "of the National Exams",
     heroDesc:
-      "XP Scholars turns your study sessions into manga quests. Earn XP, ignite your streak, rank up and defeat Chapter Bosses to ace the exam.",
+      "XP Scholars turns your study sessions into manga quests. Prep for the 6th and 9th grade national exams, and freely explore General Knowledge, Brain Training and Languages. Earn XP, ignite your streak and defeat Chapter Bosses.",
     ctaStart: "Start my quest",
     ctaLogin: "I already have a hero",
     statSubjects: "Subjects",
@@ -56,7 +57,7 @@ export const en: TranslationKeys = {
     ranksTitle1: "From Civilian to",
     ranksTitle2: "S-Rank Legend",
     ranksCta: "Forge my hero",
-    footer: "9th Grade Exam · Tunisia",
+    footer: "6th & 9th Grade National Exams · Tunisia",
     featureXpTitle: "XP & Levels",
     featureXpDesc:
       "Every correct answer earns you experience. Rise from Civilian Candidate to S-Rank Legend.",
@@ -72,7 +73,7 @@ export const en: TranslationKeys = {
     featureBossDesc: "Complete a chapter by defeating its Boss. HP bar, damage with every answer.",
     featureCurriculumTitle: "Official Curriculum",
     featureCurriculumDesc:
-      "Math, French, Arabic, Science, English. Aligned with the 9th grade exam.",
+      "Math, French, Arabic, Science, English. Aligned with the 6th and 9th grade national exams.",
     subjectMath: "Mathematics",
     subjectFrench: "French",
     subjectArabic: "العربية",
@@ -87,7 +88,7 @@ export const en: TranslationKeys = {
     rankAspirant: "Academy Aspirant",
     rankWarrior: "Equation Warrior",
     rankMaster: "Language Master",
-    rankElite: "Exam Elite",
+    rankElite: "Legendary Elite",
     rankLegend: "S-Rank Legend",
   },
   dashboard: {
@@ -278,7 +279,7 @@ export const en: TranslationKeys = {
   layout: {
     heroesHall: "Heroes Hall",
     parcours: "Adventure",
-    themes: "Themes",
+    themes: "Explorer",
     dungeon: "Dungeon",
     ranking: "Ranking",
     parentReport: "Report",
@@ -308,6 +309,19 @@ export const en: TranslationKeys = {
     chapters: "chapters",
     backToMap: "Back to the map",
     empty: "No steps yet.",
+  },
+  explorer: {
+    heading: "Choose your path",
+    subtitle: "Prep for a national exam or freely explore the Academy's paths.",
+    concoursTitle: "Exam Prep",
+    libreTitle: "Free Exploration",
+    unlocked: "Unlocked",
+    premium: "Premium",
+    comingSoon: "Coming soon",
+    switching: "Switching path…",
+    switchError: "Couldn't switch path. Try again.",
+    failedLoad: "Couldn't load the paths.",
+    empty: "No path available right now.",
   },
   explain: {
     xp: "Your experience points. Pass an exercise at 60% or more and beat your record to earn them. 200 XP = 1 level.",

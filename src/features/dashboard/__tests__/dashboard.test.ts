@@ -575,46 +575,6 @@ describe("gamification.dashboard — getSubjects", () => {
 
     expect(result.subjects).toEqual(subjects);
   });
-});
-
-describe("gamification.dashboard — getThemes / getGradesByTheme", () => {
-  beforeEach(() => {
-    vi.resetModules();
-    mockFrom.mockReset();
-    mockRpc.mockReset();
-  });
-
-  it("getThemes returns the ordered root themes", async () => {
-    const themes = [
-      { id: "ecole-tn", name_fr: "Programme scolaire tunisien", has_grades: true },
-      { id: "culture-generale", name_fr: "Culture générale", has_grades: false },
-    ];
-    mockFrom.mockImplementation(() => mockQuery(themes));
-
-    const { getThemes } = await import("@/features/dashboard");
-    const result = (await (getThemes as unknown as (d?: unknown) => Promise<unknown>)()) as {
-      themes: unknown[];
-    };
-
-    expect(result.themes).toEqual(themes);
-  });
-
-  it("getGradesByTheme filters by theme and returns the ladder", async () => {
-    const grades = [
-      { id: "g6", slug: "6eme-base", name_fr: "6ème année de base", is_concours_national: true },
-      { id: "g9", slug: "9eme-base", name_fr: "9ème année de base", is_concours_national: true },
-    ];
-    const chain = mockQuery(grades);
-    mockFrom.mockImplementation(() => chain);
-
-    const { getGradesByTheme } = await import("@/features/dashboard");
-    const result = (await (getGradesByTheme as unknown as (d: unknown) => Promise<unknown>)({
-      themeId: "ecole-tn",
-    })) as { grades: unknown[] };
-
-    expect(result.grades).toEqual(grades);
-    expect(chain.eq).toHaveBeenCalledWith("theme_id", "ecole-tn");
-  });
 
   it("getSubjects scopes by theme and grade when both are provided", async () => {
     const subjects = [{ id: "math-bac", name_fr: "Mathématiques", theme_id: "ecole-tn" }];

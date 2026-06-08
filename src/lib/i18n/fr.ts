@@ -2,11 +2,12 @@ import type { TranslationKeys } from "./types";
 
 export const fr: TranslationKeys = {
   meta: {
-    title: "XP Scholars — L'Académie Shonen pour le Concours 9ème",
+    title: "XP Scholars — L'Académie Shonen des concours nationaux 6ème & 9ème",
     description:
-      "Transforme tes révisions en quêtes épiques. XP, streaks, duels et boss pour préparer le concours 9ème année.",
-    ogTitle: "XP Scholars — Concours 9ème en mode RPG",
-    ogDescription: "L'académie shonen pour dominer le concours 9ème.",
+      "Prépare les concours nationaux tunisiens de 6ème et 9ème en mode RPG — plus une académie gratuite : Culture Générale, Muscle ton Cerveau et Langues. XP, streaks, duels et boss.",
+    ogTitle: "XP Scholars — Concours nationaux & Académie gratuite",
+    ogDescription:
+      "Prépa concours 6ème & 9ème + une académie gratuite (Culture Générale, QI, Langues), façon shonen.",
   },
   common: {
     backToHall: "Retour au hall",
@@ -32,12 +33,12 @@ export const fr: TranslationKeys = {
     navRanks: "Rangs",
     signIn: "Connexion",
     joinAcademy: "Rejoindre l'Académie",
-    badge: "Concours 9ème · Mode RPG",
+    badge: "Concours 6ème & 9ème · Mode RPG",
     heroTitle1: "Deviens la",
     heroTitle2: "Légende",
-    heroTitle3: "du Concours 9ème",
+    heroTitle3: "des concours nationaux",
     heroDesc:
-      "XP Scholars transforme tes révisions en quêtes manga. Gagne de l'XP, enflamme ton streak, monte en rang et bats les Boss de chapitre pour réussir le concours.",
+      "XP Scholars transforme tes révisions en quêtes manga. Prépare les concours nationaux 6ème et 9ème, et explore gratuitement Culture Générale, Muscle ton Cerveau et les Langues. Gagne de l'XP, enflamme ton streak et bats les Boss de chapitre.",
     ctaStart: "Commencer ma quête",
     ctaLogin: "J'ai déjà un héros",
     statSubjects: "Matières",
@@ -56,7 +57,7 @@ export const fr: TranslationKeys = {
     ranksTitle1: "De Civil à",
     ranksTitle2: "Légende S-Rank",
     ranksCta: "Forger mon héros",
-    footer: "Concours 9ème · Tunisie",
+    footer: "Concours nationaux 6ème & 9ème · Tunisie",
     featureXpTitle: "XP & Niveaux",
     featureXpDesc:
       "Chaque bonne réponse te rapporte de l'expérience. Passe de Candidat Civil à Légende S-Rank.",
@@ -71,7 +72,8 @@ export const fr: TranslationKeys = {
     featureBossDesc:
       "Termine un chapitre en battant son Boss. Barre de HP, dégâts à chaque réponse.",
     featureCurriculumTitle: "Programme Officiel",
-    featureCurriculumDesc: "Maths, Français, Arabe, Sciences, Anglais. Aligné au concours 9ème.",
+    featureCurriculumDesc:
+      "Maths, Français, Arabe, Sciences, Anglais. Aligné aux concours nationaux 6ème et 9ème.",
     subjectMath: "Mathématiques",
     subjectFrench: "Français",
     subjectArabic: "العربية",
@@ -86,7 +88,7 @@ export const fr: TranslationKeys = {
     rankAspirant: "Aspirant Académie",
     rankWarrior: "Guerrier des Équations",
     rankMaster: "Maître des Langues",
-    rankElite: "Élite du Concours",
+    rankElite: "Élite Légendaire",
     rankLegend: "Légende S-Rank",
   },
   dashboard: {
@@ -277,7 +279,7 @@ export const fr: TranslationKeys = {
   layout: {
     heroesHall: "Hall des Héros",
     parcours: "Parcours",
-    themes: "Thèmes",
+    themes: "Explorer",
     dungeon: "Donjon",
     ranking: "Classement",
     parentReport: "Suivi",
@@ -307,6 +309,19 @@ export const fr: TranslationKeys = {
     chapters: "chapitres",
     backToMap: "Retour à la carte",
     empty: "Aucune étape pour l'instant.",
+  },
+  explorer: {
+    heading: "Choisis ton parcours",
+    subtitle: "Prépare un concours national ou explore librement les voies de l'Académie.",
+    concoursTitle: "Préparation Concours",
+    libreTitle: "Exploration libre",
+    unlocked: "Débloqué",
+    premium: "Premium",
+    comingSoon: "Bientôt disponible",
+    switching: "Changement de parcours…",
+    switchError: "Impossible de changer de parcours. Réessaie.",
+    failedLoad: "Impossible de charger les parcours.",
+    empty: "Aucun parcours disponible pour le moment.",
   },
   explain: {
     xp: "Tes points d'expérience. Réussis un exercice à 60 % ou plus en battant ton record pour en gagner. 200 XP = 1 niveau.",

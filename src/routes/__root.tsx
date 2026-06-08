@@ -75,15 +75,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { title: "XP Scholars — The Shonen Academy for the 9th Grade Exam" },
+      { title: "XP Scholars — The Shonen Academy for the 6th & 9th Grade National Exams" },
       {
         name: "description",
         content:
-          "Turn your study sessions into epic quests. XP, streaks, duels and bosses to prepare for the 9th grade exam.",
+          "Prep for the Tunisian 6th and 9th grade national exams in RPG mode — plus a free academy: General Knowledge, Brain Training and Languages. XP, streaks, duels and bosses.",
       },
       { name: "author", content: "XP Scholars" },
-      { property: "og:title", content: "XP Scholars — 9th Grade Exam RPG" },
-      { property: "og:description", content: "The shonen academy to dominate the 9th grade exam." },
+      { property: "og:title", content: "XP Scholars — National Exams & Free Academy" },
+      {
+        property: "og:description",
+        content:
+          "6th & 9th grade exam prep + a free academy (General Knowledge, Brain Training, Languages), shonen style.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       // PWA / mobile install

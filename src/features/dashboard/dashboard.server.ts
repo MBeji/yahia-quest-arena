@@ -349,45 +349,33 @@ export const getLeaderboard = createServerFn({ method: "GET" })
   });
 
 // ---------- Parcours catalogue (sellable journeys: concours + free libre tracks) ----------
+// Each row is enriched with `hasEntitlement`: always true for free parcours, and for
+// premium parcours the result of the `has_parcours_entitlement` RPC for the caller.
+// The Explorer hub + onboarding read this to drive the Crown/Lock badges; the server
+// gate (`resolve_exercise_access`) stays authoritative — this only shapes the UI.
 export const getParcours = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { supabase } = context;
+    const { supabase, userId } = context;
     const { data, error } = await supabase
       .from("parcours")
       .select("id,name_fr,kind,is_premium,status,display_order,icon,color,theme_id,grade_id")
       .order("display_order");
     if (error) failWithClientError("getParcours", error, DASHBOARD_ERROR_FR);
-    return { parcours: data ?? [] };
-  });
+    const rows = data ?? [];
 
-// ---------- Subjects (lightweight list, for leaderboard tabs etc.) ----------
-// ---------- Root content themes (culture générale, école tunisienne, …) ----------
-export const getThemes = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    const { supabase } = context;
-    const { data, error } = await supabase
-      .from("themes")
-      .select("id,name_fr,description,icon,color_token,content_language,has_grades")
-      .order("display_order");
-    if (error) failWithClientError("getThemes", error, DASHBOARD_ERROR_FR);
-    return { themes: data ?? [] };
-  });
+    const enriched = await Promise.all(
+      rows.map(async (p) => {
+        if (!p.is_premium) return { ...p, hasEntitlement: true };
+        const { data: ent } = await supabase.rpc("has_parcours_entitlement", {
+          p_user: userId,
+          p_parcours: p.id,
+        });
+        return { ...p, hasEntitlement: ent === true };
+      }),
+    );
 
-// ---------- Grade levels of a theme (the Tunisian ladder under 'ecole-tn') ----------
-export const getGradesByTheme = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ themeId: z.string().min(1) }).parse(d))
-  .handler(async ({ data, context }) => {
-    const { supabase } = context;
-    const { data: rows, error } = await supabase
-      .from("grades")
-      .select("id,slug,name_fr,cycle,is_concours_national")
-      .eq("theme_id", data.themeId)
-      .order("display_order");
-    if (error) failWithClientError("getGradesByTheme", error, DASHBOARD_ERROR_FR);
-    return { grades: rows ?? [] };
+    return { parcours: enriched };
   });
 
 // ---------- Subjects, optionally scoped to a theme and/or grade ----------

@@ -146,8 +146,10 @@ seulement « c'est mal »), et propose un **correctif concret**.
       consommables et les gates anti-farm (`tooFast` / `≥60%` / `improved`) ne
       sont jamais contournables côté client ; le scoring reste atomique dans
       `submit_exercise_attempt`.
-- [ ] **Gate premium** : difficulté 3+ et modules premium exigent un abonnement
-      actif, vérifié **côté serveur** (jamais seulement masqué dans l'UI).
+- [ ] **Gate premium par parcours** : l'accès est désormais **par parcours** — un
+      parcours concours exige une entitlement active (l'aperçu gratuit = quiz de
+      compréhension + difficulté 1). Vérifié **côté serveur** via
+      `resolve_exercise_access`, jamais seulement masqué dans l'UI.
 - [ ] **Données de mineurs / vie privée** : pas d'exposition de PII (élève,
       famille) au-delà du strict nécessaire ; les `parent_student_links`,
       `parent-report`, leaderboard ne fuitent pas d'identifiants/données privées.

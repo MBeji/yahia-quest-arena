@@ -373,13 +373,26 @@ describe("END-TO-END: onboarding route data fetch", () => {
     mockFrom.mockImplementation((table: string) =>
       table === "parcours" ? mockQuery(rows) : mockQuery([]),
     );
+    // getParcours now enriches premium rows via has_parcours_entitlement.
+    mockRpc.mockResolvedValue({ data: false, error: null });
 
-    const res = (await (getParcours as unknown as Fn)()) as { parcours: typeof rows };
+    const res = (await (getParcours as unknown as Fn)()) as {
+      parcours: Array<(typeof rows)[number] & { hasEntitlement: boolean }>;
+    };
 
     // Onboarding filters by kind/status and renders a ParcoursCard per item.
     expect(res.parcours).toHaveLength(2);
-    expect(res.parcours[0]).toMatchObject({ id: "concours-9eme", kind: "concours" });
-    expect(res.parcours[1]).toMatchObject({ id: "culture-generale", kind: "libre" });
+    expect(res.parcours[0]).toMatchObject({
+      id: "concours-9eme",
+      kind: "concours",
+      hasEntitlement: false,
+    });
+    // Free parcours are always entitled, without an RPC round-trip.
+    expect(res.parcours[1]).toMatchObject({
+      id: "culture-generale",
+      kind: "libre",
+      hasEntitlement: true,
+    });
   });
 });
 

@@ -30,14 +30,18 @@ const GoldenHeroCanvas = lazy(() => import("@/components/landing/golden-hero-can
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "XP Scholars — The Shonen Academy for the 9th Grade Exam" },
+      { title: "XP Scholars — The Shonen Academy for the 6th & 9th Grade National Exams" },
       {
         name: "description",
         content:
-          "Turn your study sessions into epic quests. XP, streaks, duels and bosses to prepare for the 9th grade exam.",
+          "Prep for the Tunisian 6th and 9th grade national exams in RPG mode — plus a free academy: General Knowledge, Brain Training and Languages. XP, streaks, duels and bosses.",
       },
-      { property: "og:title", content: "XP Scholars" },
-      { property: "og:description", content: "9th Grade Exam in RPG mode." },
+      { property: "og:title", content: "XP Scholars — National Exams & Free Academy" },
+      {
+        property: "og:description",
+        content:
+          "6th & 9th grade exam prep + a free academy (General Knowledge, Brain Training, Languages), shonen style.",
+      },
     ],
   }),
   component: Landing,

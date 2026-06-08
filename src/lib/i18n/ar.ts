@@ -2,11 +2,12 @@ import type { TranslationKeys } from "./types";
 
 export const ar: TranslationKeys = {
   meta: {
-    title: "XP Scholars — أكاديمية الشونين لمناظرة التاسعة",
+    title: "XP Scholars — أكاديمية الشونين لمناظرتي السادسة والتاسعة",
     description:
-      "حوّل مراجعاتك إلى مهام ملحمية. XP، سلاسل يومية، مبارزات وبوسات لتحضير مناظرة التاسعة.",
-    ogTitle: "XP Scholars — مناظرة التاسعة بنمط RPG",
-    ogDescription: "أكاديمية الشونين للسيطرة على مناظرة التاسعة.",
+      "حضّر للمناظرات الوطنية التونسية للسادسة والتاسعة بنمط RPG — بالإضافة إلى أكاديمية مجانية: الثقافة العامة، تمرين الدماغ واللغات. XP، سلاسل يومية، مبارزات وبوسات.",
+    ogTitle: "XP Scholars — المناظرات الوطنية وأكاديمية مجانية",
+    ogDescription:
+      "تحضير مناظرتي السادسة والتاسعة + أكاديمية مجانية (ثقافة عامة، تمرين الدماغ، لغات)، بأسلوب الشونين.",
   },
   common: {
     backToHall: "العودة للقاعة",
@@ -32,12 +33,12 @@ export const ar: TranslationKeys = {
     navRanks: "الرتب",
     signIn: "تسجيل الدخول",
     joinAcademy: "انضم للأكاديمية",
-    badge: "مناظرة التاسعة · نمط RPG",
+    badge: "مناظرتا السادسة والتاسعة · نمط RPG",
     heroTitle1: "كن",
     heroTitle2: "أسطورة",
-    heroTitle3: "مناظرة التاسعة",
+    heroTitle3: "المناظرات الوطنية",
     heroDesc:
-      "XP Scholars يحوّل مراجعاتك إلى مهام مانغا. اكسب XP، أشعل سلسلتك، ارتقِ في الرتب واهزم بوسات الفصول لتنجح في المناظرة.",
+      "XP Scholars يحوّل مراجعاتك إلى مهام مانغا. حضّر للمناظرات الوطنية للسادسة والتاسعة، واستكشف مجاناً الثقافة العامة وتمرين الدماغ واللغات. اكسب XP، أشعل سلسلتك واهزم بوسات الفصول.",
     ctaStart: "ابدأ مهمتي",
     ctaLogin: "لديّ بطل بالفعل",
     statSubjects: "مواد",
@@ -56,7 +57,7 @@ export const ar: TranslationKeys = {
     ranksTitle1: "من مدني إلى",
     ranksTitle2: "أسطورة S-Rank",
     ranksCta: "اصنع بطلي",
-    footer: "مناظرة التاسعة · تونس",
+    footer: "المناظرات الوطنية للسادسة والتاسعة · تونس",
     featureXpTitle: "XP والمستويات",
     featureXpDesc: "كل إجابة صحيحة تكسبك خبرة. ارتقِ من مرشح مدني إلى أسطورة S-Rank.",
     featureStreakTitle: "السلسلة اليومية",
@@ -68,7 +69,8 @@ export const ar: TranslationKeys = {
     featureBossTitle: "بوس الفصل",
     featureBossDesc: "أكمل فصلاً بهزيمة البوس. شريط HP، ضرر مع كل إجابة.",
     featureCurriculumTitle: "المنهج الرسمي",
-    featureCurriculumDesc: "رياضيات، فرنسية، عربية، علوم، إنجليزية. متوافق مع مناظرة التاسعة.",
+    featureCurriculumDesc:
+      "رياضيات، فرنسية، عربية، علوم، إنجليزية. متوافق مع المناظرات الوطنية للسادسة والتاسعة.",
     subjectMath: "الرياضيات",
     subjectFrench: "الفرنسية",
     subjectArabic: "العربية",
@@ -83,7 +85,7 @@ export const ar: TranslationKeys = {
     rankAspirant: "طامح أكاديمي",
     rankWarrior: "محارب المعادلات",
     rankMaster: "سيد اللغات",
-    rankElite: "نخبة المناظرة",
+    rankElite: "النخبة الأسطورية",
     rankLegend: "أسطورة S-Rank",
   },
   dashboard: {
@@ -273,7 +275,7 @@ export const ar: TranslationKeys = {
   layout: {
     heroesHall: "قاعة الأبطال",
     parcours: "المسار",
-    themes: "المواضيع",
+    themes: "استكشاف",
     dungeon: "الزنزانة",
     ranking: "الترتيب",
     parentReport: "التقرير",
@@ -303,6 +305,19 @@ export const ar: TranslationKeys = {
     chapters: "فصول",
     backToMap: "العودة إلى الخريطة",
     empty: "لا توجد مراحل بعد.",
+  },
+  explorer: {
+    heading: "اختر مسارك",
+    subtitle: "حضّر لمناظرة وطنية أو استكشف مسارات الأكاديمية بحرية.",
+    concoursTitle: "تحضير المناظرة",
+    libreTitle: "استكشاف حر",
+    unlocked: "مفتوح",
+    premium: "مدفوع",
+    comingSoon: "قريباً",
+    switching: "جارٍ تغيير المسار…",
+    switchError: "تعذّر تغيير المسار. أعد المحاولة.",
+    failedLoad: "تعذّر تحميل المسارات.",
+    empty: "لا يوجد مسار متاح حالياً.",
   },
   explain: {
     xp: "نقاط خبرتك. انجح في تمرين بنسبة 60٪ أو أكثر متجاوزًا رقمك القياسي لتكسبها. 200 نقطة خبرة = مستوى واحد.",

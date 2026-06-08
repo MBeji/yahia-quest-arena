@@ -318,6 +318,20 @@ export type TranslationKeys = {
     backToMap: string;
     empty: string;
   };
+  // Explorer parcours hub (/themes route)
+  explorer: {
+    heading: string;
+    subtitle: string;
+    concoursTitle: string;
+    libreTitle: string;
+    unlocked: string;
+    premium: string;
+    comingSoon: string;
+    switching: string;
+    switchError: string;
+    failedLoad: string;
+    empty: string;
+  };
   // Playful explainability hover hints
   explain: {
     xp: string;

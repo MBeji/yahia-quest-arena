@@ -179,29 +179,76 @@ describe("dashboard.parcours — getParcours catalogue", () => {
     mockRpc.mockReset();
   });
 
-  it("returns the ordered parcours catalogue", async () => {
-    const parcours = [
-      {
-        id: "concours-9eme",
-        name_fr: "Préparation Concours 9ème",
-        kind: "concours",
-        is_premium: true,
-        status: "available",
-        display_order: 1,
-        icon: "GraduationCap",
-        color: "subject-math",
-        theme_id: "ecole-tn",
-        grade_id: "g9",
-      },
-    ];
-    const chain = mockQuery(parcours);
+  it("enriches each parcours with hasEntitlement (free=true, premium=RPC result)", async () => {
+    const concours = {
+      id: "concours-9eme",
+      name_fr: "Préparation Concours 9ème",
+      kind: "concours",
+      is_premium: true,
+      status: "available",
+      display_order: 1,
+      icon: "GraduationCap",
+      color: "subject-math",
+      theme_id: "ecole-tn",
+      grade_id: "g9",
+    };
+    const libre = {
+      id: "culture-generale",
+      name_fr: "Culture Générale",
+      kind: "libre",
+      is_premium: false,
+      status: "available",
+      display_order: 2,
+      icon: "Globe",
+      color: "subject-french",
+      theme_id: "culture-generale",
+      grade_id: null,
+    };
+    const chain = mockQuery([concours, libre]);
     mockFrom.mockImplementation(() => chain);
+    // Premium parcours has no entitlement for this user.
+    mockRpc.mockImplementation(rpcEntitlement(false));
 
     const { getParcours } = await import("@/features/dashboard");
-    const result = (await (getParcours as unknown as Fn)()) as { parcours: unknown[] };
+    const result = (await (getParcours as unknown as Fn)()) as {
+      parcours: Array<Record<string, unknown>>;
+    };
 
-    expect(result.parcours).toEqual(parcours);
     expect(chain.order).toHaveBeenCalledWith("display_order");
+    expect(result.parcours).toEqual([
+      { ...concours, hasEntitlement: false },
+      { ...libre, hasEntitlement: true },
+    ]);
+    // Entitlement RPC is queried only for the premium parcours.
+    expect(mockRpc).toHaveBeenCalledTimes(1);
+    expect(mockRpc).toHaveBeenCalledWith("has_parcours_entitlement", {
+      p_user: "user-123",
+      p_parcours: "concours-9eme",
+    });
+  });
+
+  it("marks a premium parcours unlocked when the entitlement RPC returns true", async () => {
+    const concours = {
+      id: "concours-9eme",
+      name_fr: "Préparation Concours 9ème",
+      kind: "concours",
+      is_premium: true,
+      status: "available",
+      display_order: 1,
+      icon: "GraduationCap",
+      color: "subject-math",
+      theme_id: "ecole-tn",
+      grade_id: "g9",
+    };
+    mockFrom.mockImplementation(() => mockQuery([concours]));
+    mockRpc.mockImplementation(rpcEntitlement(true));
+
+    const { getParcours } = await import("@/features/dashboard");
+    const result = (await (getParcours as unknown as Fn)()) as {
+      parcours: Array<Record<string, unknown>>;
+    };
+
+    expect(result.parcours).toEqual([{ ...concours, hasEntitlement: true }]);
   });
 
   it("throws a generic message on error", async () => {
