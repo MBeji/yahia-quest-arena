@@ -245,7 +245,9 @@ Ces zones concentrent le risque ; double-attention dès qu'elles sont touchées 
 - `activate_inventory_item` / mécaniques de consommables (slots next-quest vs
   passif, anti-gaspillage).
 - `auth-middleware.ts` et tout `createServerFn` — surface authn/authz.
-- Gate premium (`subscription/`) — toute logique de scoring/déblocage.
+- Gate premium (`parcours/` — entitlements + `resolve_exercise_access`) — toute logique de
+  scoring/déblocage ; aucun code ne dépend de `subscription_*` / `has_active_subscription` /
+  `admin_*_subscription` (supprimés dans la migration `20260609000000`).
 - `content-report/` et `parent-report/` — exposition de données.
 - `src/server.ts` / `src/start.ts` — entrées SSR/Worker, gestion d'erreur 500.
 - Toute migration sous `supabase/migrations/` et les grants/RLS.

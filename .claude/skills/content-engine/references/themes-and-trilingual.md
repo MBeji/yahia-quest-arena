@@ -39,7 +39,9 @@ to a `grades` UUID at compile time, so the `grades` row must exist (all 13 are s
   `9eme-base`: math/svt/arabic in `ar`, french in `fr`, english in `en`. (Scientific subjects switch
   to French in secondary/lycée — see `content-ecole-tn` for the full rule.)
 - **Standalone subject** (any non-school theme): `themeId: "<theme>"`, `gradeSlug: null`. Precedent:
-  `content/fr-mastery/subject.json` (`themeId: "francais"`, `gradeSlug: null`, `isPremium: true`).
+  `content/fr-mastery/subject.json` (`themeId: "francais"`, `gradeSlug: null`). Its legacy
+  `isPremium` flag is no longer read by the gate — premium is decided per parcours, and `francais`
+  is a free `libre` parcours today.
 
 ## Trilingual = three sibling subjects (critical)
 

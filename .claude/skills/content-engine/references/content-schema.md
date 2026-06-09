@@ -39,9 +39,15 @@ content/
 | `contentLanguage` | enum         | yes         | `"ar"` \| `"fr"` \| `"en"` — the one language the content is written in (drives RTL) |
 | `themeId`         | string       | yes         | kebab-case, FK → an existing `themes.id` (see themes-and-trilingual.md)              |
 | `gradeSlug`       | string\|null | no (→null)  | school subjects only (e.g. `9eme-base`); `null` for standalone themes                |
-| `isPremium`       | boolean      | no (→false) | true = whole subject is subscription-gated                                           |
+| `isPremium`       | boolean      | no (→false) | **legacy/secondary** — premium is now decided **per parcours**, not by this flag     |
 
 There is **no** `nameEn`/`nameAr`. There is **no** per-language text anywhere.
+
+> **Premium is per-parcours, not per-subject.** Access is governed by the parcours a subject resolves
+> to (its theme+grade) and enforced server-side by `resolve_exercise_access` — not by `isPremium`. The
+> `isPremium` flag is legacy and no longer read by the gate; leave it `false`/omit it. The **free
+> preview** (the chapter comprehension quiz + every difficulty-1 mission) always shows, even on a
+> premium parcours, so a prospect can taste a chapter before paying. See CLAUDE.md "Premium gate".
 
 ## chapter.json
 
@@ -100,15 +106,15 @@ you do **not** author quiz rewards.
 
 ## exercices/\*.json
 
-| Field          | Type       | Required | Constraint                                                        |
-| -------------- | ---------- | -------- | ----------------------------------------------------------------- |
-| `title`        | string     | yes      | non-empty (RPG-flavored, see style-guide.md)                      |
-| `difficulty`   | number     | yes      | integer **1–4** (1 easy · 2 medium · 3 boss · 4 élite premium)    |
-| `mode`         | enum       | yes      | `"practice"` \| `"boss"` \| `"challenge"` (never `"quiz"`)        |
-| `xpReward`     | number     | yes      | positive integer — use the canonical table (rewards-and-modes.md) |
-| `rewardCoins`  | number     | yes      | non-negative integer                                              |
-| `displayOrder` | number     | yes      | positive integer (match the filename `NN`)                        |
-| `questions`    | question[] | yes      | **1–50** (use 6)                                                  |
+| Field          | Type       | Required | Constraint                                                                             |
+| -------------- | ---------- | -------- | -------------------------------------------------------------------------------------- |
+| `title`        | string     | yes      | non-empty (RPG-flavored, see style-guide.md)                                           |
+| `difficulty`   | number     | yes      | integer **1–4** (1 easy · 2 medium · 3 boss · 4 élite; 3–4 premium-gated per parcours) |
+| `mode`         | enum       | yes      | `"practice"` \| `"boss"` \| `"challenge"` (never `"quiz"`)                             |
+| `xpReward`     | number     | yes      | positive integer — use the canonical table (rewards-and-modes.md)                      |
+| `rewardCoins`  | number     | yes      | non-negative integer                                                                   |
+| `displayOrder` | number     | yes      | positive integer (match the filename `NN`)                                             |
+| `questions`    | question[] | yes      | **1–50** (use 6)                                                                       |
 
 ## Defaults you may omit
 

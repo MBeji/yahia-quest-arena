@@ -11,7 +11,11 @@ These themes teach a language as a skill, independent of any school grade.
 - A single language theme can hold several subjects to model proficiency levels or strands — suffix
   the subject `id`, e.g. `anglais-a1`, `anglais-a2`, `anglais-grammar`, `anglais-vocab`. Use
   `displayOrder` to sequence them. `nameFr` still labels them in French for the catalogue.
-- `isPremium` may gate advanced subjects/levels (precedent: `fr-mastery` is premium).
+- Premium access is now decided **per parcours**, not by the subject's `isPremium` flag (legacy). A
+  language theme that maps to a premium parcours gates the **whole subject** behind a live parcours
+  entitlement, but free users still get the **free preview** (the chapter comprehension quiz +
+  difficulty-1 missions) via `resolve_exercise_access`. The standalone language tracks ship as **free**
+  `libre` parcours today, so leave `isPremium` off.
 
 ## What a good language chapter contains
 

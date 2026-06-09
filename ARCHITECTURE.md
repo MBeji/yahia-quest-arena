@@ -7,9 +7,11 @@
 
 ## 1. What is this project?
 
-A gamified education platform for Tunisian 9th graders preparing their national exam.
-Students progress through subjects as "quests", earn XP/coins, unlock badges, and compete
-on a leaderboard — all presented with a shonen manga/RPG aesthetic.
+A gamified learning **academy** for the Tunisian curriculum. Its paid flagship is national-exam
+prep for the two concours years — **Concours 6ème and 9ème** (sold as per-parcours "concours"
+tracks) — alongside FREE exploration parcours (culture générale, brain-training, languages).
+Students progress through subjects as "quests", earn XP/coins, unlock badges, and compete on a
+leaderboard — shonen manga/RPG aesthetic, trilingual (FR/EN/AR with RTL).
 
 **Live stack**: Vite 7 + TanStack Start (SSR) + React 19 + Supabase (Postgres + Auth) + Cloudflare Workers.
 

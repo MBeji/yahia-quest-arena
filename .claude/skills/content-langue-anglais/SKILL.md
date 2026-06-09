@@ -21,8 +21,9 @@ written **in English** (immersion). Read the content-engine skill and especially
 
 - **Theme/subjects**: `themeId: "anglais"`. Use level/strand subjects with suffixed ids, e.g.
   `anglais-a1`, `anglais-a2`, `anglais-grammar`, `anglais-vocab`; sequence with `displayOrder`.
-  `nameFr` labels them in French for the catalogue; the content is English. `isPremium` may gate
-  advanced levels.
+  `nameFr` labels them in French for the catalogue; the content is English. Leave `isPremium` off —
+  premium is decided **per parcours**, not by this legacy subject flag, and `anglais` is a free
+  `libre` parcours today.
 - **Chapters**: one grammar point / tense / vocabulary field / reading skill each. cours.md teaches
   the rule with many example sentences and a forms/conjugation table; quiz.json (5 Q) checks the core
   rule; exercises drill it.

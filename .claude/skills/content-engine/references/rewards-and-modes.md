@@ -20,8 +20,11 @@ Source: `src/shared/constants/gamification.ts`, `src/shared/content/schema.ts`,
 - **Exercise** `difficulty`: 1–4 → 1 easy · 2 medium · 3 boss · 4 élite.
 - **Question** `difficulty`: 1–3 (optional, untagged = 2). Questions are emitted easiest→hardest, so
   difficulty tags set ordering — keep them deliberate.
-- **Premium gate: difficulty ≥ 3 requires an active subscription** (`PREMIUM_MIN_DIFFICULTY = 3`).
-  Therefore keep **core, free progression at difficulty 1–2**; reserve 3–4 for paid boss/challenge.
+- **Premium gate: difficulty 3–4 are premium-gated _per parcours_** — they require a live parcours
+  entitlement on the exercise's (premium) parcours. The **free preview always includes** the chapter
+  comprehension quiz + every difficulty-1 (⭐) mission, so a prospect can taste a chapter end-to-end
+  before paying. Enforced server-side by `resolve_exercise_access` (see CLAUDE.md "Premium gate").
+  Therefore keep **core, free progression at difficulty 1–2**; reserve 3–4 for premium boss/challenge.
 
 ### Difficulty indicator — show it on every mission & quiz
 
@@ -39,13 +42,13 @@ the schema `difficulty` field (which the engine uses for gating/ordering):
 
 ## Canonical reward table (use these)
 
-| difficulty | mode      | xpReward | rewardCoins | use                                     |
-| ---------- | --------- | -------- | ----------- | --------------------------------------- |
-| 1          | practice  | 50       | 10          | free intro practice                     |
-| 2          | practice  | 75       | 15          | free standard practice                  |
-| 3          | boss      | 120      | 30          | chapter boss (premium)                  |
-| 4          | challenge | 300      | 60          | élite challenge (premium + level)       |
-| (auto)     | quiz      | 20       | 5           | generated from quiz.json — never author |
+| difficulty | mode      | xpReward | rewardCoins | use                                       |
+| ---------- | --------- | -------- | ----------- | ----------------------------------------- |
+| 1          | practice  | 50       | 10          | free intro practice                       |
+| 2          | practice  | 75       | 15          | free standard practice                    |
+| 3          | boss      | 120      | 30          | chapter boss (premium-gated, parcours)    |
+| 4          | challenge | 300      | 60          | élite challenge (premium-gated, parcours) |
+| (auto)     | quiz      | 20       | 5           | generated from quiz.json — never author   |
 
 Keep boss at difficulty 3 and challenge at difficulty 4 (the dominant pattern); avoid off-pattern
 combos like `difficulty:4, mode:boss` or `difficulty:3, mode:practice`. Coins track XP at roughly
@@ -62,4 +65,5 @@ combos like `difficulty:4, mode:boss` or `difficulty:3, mode:practice`. Coins tr
 | `improved`                 | —     | re-attempts only re-award on an improved score (anti-farm)                                                            |
 
 Don't set rewards expecting them to apply on a sub-60%, rushed, or non-improving attempt — the engine
-won't grant them. Don't put essential free progression behind difficulty 3–4 (it's paywalled).
+won't grant them. Don't put essential free progression behind difficulty 3–4 (those are premium-gated
+via parcours entitlements; free access always includes the quiz + difficulty-1 missions).

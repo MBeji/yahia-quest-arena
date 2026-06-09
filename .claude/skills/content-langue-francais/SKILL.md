@@ -16,15 +16,18 @@ description: >-
 
 Authors content under the `francais` theme, `contentLanguage: "fr"`, `gradeSlug: null`. The content is
 written **in French** (immersion). This is the standalone "améliore ton français" track — distinct
-from the school program's French subject (use `content-ecole-tn` for that). The existing premium
-subject `fr-mastery` already lives under this theme — extend it or add sibling subjects. Read the
-content-engine skill and especially `content-engine/references/language-track.md` before writing.
+from the school program's French subject (use `content-ecole-tn` for that). The existing subject
+`fr-mastery` already lives under this theme — extend it or add sibling subjects. The `francais` track
+is a **free `libre` parcours** today; premium is decided per parcours, not by the legacy subject
+`isPremium` flag. Read the content-engine skill and especially
+`content-engine/references/language-track.md` before writing.
 
 ## Specifics
 
 - **Theme/subjects**: `themeId: "francais"`. Level/strand subjects with suffixed ids, e.g.
-  `francais-grammaire`, `francais-conjugaison`, `francais-vocab`, or `fr-mastery` (existing,
-  `isPremium: true`); sequence with `displayOrder`.
+  `francais-grammaire`, `francais-conjugaison`, `francais-vocab`, or `fr-mastery` (existing);
+  sequence with `displayOrder`. Leave `isPremium` off — the `francais` parcours is free today, and
+  premium is gated per parcours (not by this legacy flag).
 - **Chapters**: one rule / tense / vocabulary field / comprehension skill each. cours.md teaches the
   rule with many example sentences and a conjugation/forms table; quiz.json (5 Q); exercises drill it.
 - **Question types**: gap-fill, pick the correct form/agreement/conjugation, spot-the-error
