@@ -2,12 +2,10 @@
 // Public API — import from "@/features/subscription"
 
 export {
-  getMySubscription,
   listParcoursEntitlements,
   grantParcoursEntitlement,
   revokeParcoursEntitlement,
 } from "./subscription.server";
-export { isSubscriptionActive, type SubscriptionState } from "./subscription";
 export {
   getMyBetaRequest,
   requestBetaAccess,

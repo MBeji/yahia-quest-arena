@@ -196,11 +196,8 @@ export const en: TranslationKeys = {
   subscription: {
     premiumTitle: "Premium Feature",
     premiumDesc:
-      "This advanced feature is reserved for subscribed members. Pick a plan to unlock it.",
-    monthly: "Monthly",
-    quarterly: "Quarterly",
-    annual: "Annual (12 months)",
-    contactTitle: "To subscribe, contact the administrator",
+      "Premium access is unlocked per Concours parcours, granted by the administrator (no monthly subscription). Contact them to unlock your parcours.",
+    contactTitle: "To unlock a parcours, contact the administrator",
     statusActive: "Active",
     statusInactive: "Inactive",
     none: "—",

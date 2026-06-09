@@ -1,37 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { isSubscriptionActive } from "../subscription";
 
-// Pure helper — no mocks needed.
-describe("isSubscriptionActive", () => {
-  const now = new Date("2026-06-03T00:00:00Z");
-
-  it("is false when there is no expiry", () => {
-    expect(isSubscriptionActive(null, now)).toBe(false);
-  });
-
-  it("is true when the expiry is in the future", () => {
-    expect(isSubscriptionActive("2026-07-03T00:00:00Z", now)).toBe(true);
-  });
-
-  it("is false when the expiry has passed (auto-revoke)", () => {
-    expect(isSubscriptionActive("2026-05-03T00:00:00Z", now)).toBe(false);
-  });
-
-  it("is false for an unparseable date", () => {
-    expect(isSubscriptionActive("not-a-date", now)).toBe(false);
-  });
-});
-
-// ---- Server fns: mock the supabase + auth + logger layers (shop/dungeon pattern) ----
-const mockMaybeSingle = vi.fn();
-const fromBuilder = {
-  select: () => fromBuilder,
-  eq: () => fromBuilder,
-  maybeSingle: () => mockMaybeSingle(),
-};
-const mockFrom = vi.fn(() => fromBuilder);
+// ---- Server fns: mock the supabase + auth + logger layers (shop/dungeon pattern).
+// Premium access is per-parcours now; these admin fns talk to entitlement RPCs only. ----
 const mockRpc = vi.fn();
-const mockSupabase = { from: mockFrom, rpc: mockRpc };
+const mockSupabase = { rpc: mockRpc };
 
 vi.mock("@tanstack/react-start", () => ({
   createMiddleware: () => ({ server: (fn: unknown) => fn }),
@@ -77,44 +49,6 @@ const USER_ID = "33333333-3333-3333-3333-333333333333";
 beforeEach(() => {
   vi.resetModules();
   mockRpc.mockReset();
-  mockMaybeSingle.mockReset();
-  mockFrom.mockClear();
-});
-
-describe("subscription — getMySubscription", () => {
-  it("maps the profile row and derives isActive from a future expiry", async () => {
-    mockMaybeSingle.mockResolvedValue({
-      data: {
-        subscription_type: "annual",
-        subscription_activated_at: "2026-06-01T00:00:00Z",
-        subscription_expires_at: "2999-01-01T00:00:00Z",
-      },
-      error: null,
-    });
-
-    const { getMySubscription } = await import("@/features/subscription");
-    const res = (await (getMySubscription as unknown as AnyFn)()) as Record<string, unknown>;
-
-    expect(res.type).toBe("annual");
-    expect(res.isActive).toBe(true);
-  });
-
-  it("returns an inactive null state when there is no profile", async () => {
-    mockMaybeSingle.mockResolvedValue({ data: null, error: null });
-
-    const { getMySubscription } = await import("@/features/subscription");
-    const res = (await (getMySubscription as unknown as AnyFn)()) as Record<string, unknown>;
-
-    expect(res.type).toBeNull();
-    expect(res.isActive).toBe(false);
-  });
-
-  it("throws a safe message when the query errors", async () => {
-    mockMaybeSingle.mockResolvedValue({ data: null, error: { message: "boom" } });
-
-    const { getMySubscription } = await import("@/features/subscription");
-    await expect((getMySubscription as unknown as AnyFn)()).rejects.toThrow(/abonnements/i);
-  });
 });
 
 describe("subscription — admin parcours entitlement fns", () => {

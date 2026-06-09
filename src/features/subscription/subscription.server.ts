@@ -2,33 +2,9 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { failWithClientError } from "@/shared/lib/safe-error";
-import type { SubscriptionType } from "@/shared/constants/subscription";
 import { PARCOURS_ENTITLEMENT_SOURCES } from "@/shared/constants/subscription";
-import { isSubscriptionActive, type SubscriptionState } from "./subscription";
 
-const SUB_LOAD_ERROR_FR = "Impossible de charger les abonnements. Veuillez réessayer.";
 const ENT_LOAD_ERROR_FR = "Impossible de charger les accès parcours. Veuillez réessayer.";
-
-/** The current user's own subscription state (drives the paywall). */
-export const getMySubscription = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }): Promise<SubscriptionState> => {
-    const { supabase, userId } = context;
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("subscription_type,subscription_activated_at,subscription_expires_at")
-      .eq("id", userId)
-      .maybeSingle();
-    if (error) failWithClientError("subscription.getMySubscription", error, SUB_LOAD_ERROR_FR);
-
-    return {
-      // The column is DB-constrained to the plan types (CHECK), so this narrow is safe.
-      type: (data?.subscription_type ?? null) as SubscriptionType | null,
-      activatedAt: data?.subscription_activated_at ?? null,
-      expiresAt: data?.subscription_expires_at ?? null,
-      isActive: isSubscriptionActive(data?.subscription_expires_at ?? null),
-    };
-  });
 
 /**
  * Admin: every live parcours entitlement (user × parcours grants). RPC enforces

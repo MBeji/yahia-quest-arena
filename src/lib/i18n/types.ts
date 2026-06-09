@@ -201,9 +201,6 @@ export type TranslationKeys = {
   subscription: {
     premiumTitle: string;
     premiumDesc: string;
-    monthly: string;
-    quarterly: string;
-    annual: string;
     contactTitle: string;
     statusActive: string;
     statusInactive: string;

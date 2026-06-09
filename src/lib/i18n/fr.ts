@@ -196,11 +196,8 @@ export const fr: TranslationKeys = {
   subscription: {
     premiumTitle: "Fonctionnalité Premium",
     premiumDesc:
-      "Cette fonctionnalité avancée est réservée aux membres abonnés. Choisis une formule pour la débloquer.",
-    monthly: "Mensuel",
-    quarterly: "Trimestriel",
-    annual: "Annuel (12 mois)",
-    contactTitle: "Pour t'abonner, contacte l'administrateur",
+      "L'accès premium se débloque par parcours Concours, accordé par l'administrateur (pas d'abonnement mensuel). Contacte-le pour débloquer ton parcours.",
+    contactTitle: "Pour débloquer un parcours, contacte l'administrateur",
     statusActive: "Actif",
     statusInactive: "Inactif",
     none: "—",

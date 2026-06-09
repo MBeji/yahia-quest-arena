@@ -192,11 +192,9 @@ export const ar: TranslationKeys = {
   },
   subscription: {
     premiumTitle: "ميزة مميّزة",
-    premiumDesc: "هذه الميزة المتقدمة مخصّصة للأعضاء المشتركين. اختر باقة لفتحها.",
-    monthly: "شهري",
-    quarterly: "ثلاثي",
-    annual: "سنوي (12 شهرًا)",
-    contactTitle: "للاشتراك، تواصل مع المسؤول",
+    premiumDesc:
+      "يتم فتح الوصول المميّز لكل مسار مناظرة (Concours)، يمنحه المسؤول (دون اشتراك شهري). تواصل معه لفتح مسارك.",
+    contactTitle: "لفتح مسار، تواصل مع المسؤول",
     statusActive: "نشط",
     statusInactive: "غير نشط",
     none: "—",

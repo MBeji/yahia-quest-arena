@@ -17,15 +17,15 @@ import {
   type ParcoursEntitlementRow,
   type AdminParcoursOption,
 } from "../components/parcours-entitlements-admin";
-import { ADMIN_CONTACT_PHONE, SUBSCRIPTION_PLANS } from "@/shared/constants/subscription";
+import { ADMIN_CONTACT_PHONE } from "@/shared/constants/subscription";
 
 describe("SubscriptionPaywall", () => {
-  it("shows the three plans, prices and the admin contact phone", () => {
+  it("surfaces the per-parcours admin contact phone (no time-based plans)", () => {
     render(<SubscriptionPaywall />);
-    for (const plan of SUBSCRIPTION_PLANS) {
-      expect(screen.getByText(new RegExp(String(plan.priceTnd)))).toBeInTheDocument();
-    }
+    // Premium is provisioned out-of-band per parcours: the only call-to-action is
+    // the admin contact phone — there are no monthly/quarterly/annual plan prices.
     expect(screen.getByText(ADMIN_CONTACT_PHONE)).toBeInTheDocument();
+    expect(screen.queryByText(/\b19\b|\b40\b|\b99\b/)).not.toBeInTheDocument();
   });
 });
 
