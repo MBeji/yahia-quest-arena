@@ -177,7 +177,8 @@ function QuestPage() {
   const progress = useMemo(() => (total > 0 ? (idx / total) * 100 : 0), [idx, total]);
   const isBoss = data?.exercise?.mode === "boss";
   const subjectInfo = data?.exercise?.subjects as { color_token?: string } | null;
-  const isRtlSubject = subjectInfo?.color_token === "math" || subjectInfo?.color_token === "arabic";
+  // Only Arabic content is RTL; math/other subjects are LTR.
+  const isRtlSubject = subjectInfo?.color_token === "arabic";
 
   // Boss mode: timer
   const [bossTimer, setBossTimer] = useState(0);
