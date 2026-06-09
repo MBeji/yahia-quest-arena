@@ -9,10 +9,12 @@ import { requireAdminEnv } from "./env";
 export interface AdminDb {
   readonly client: SupabaseClient;
   /**
-   * Id of a premium (subscription-only) subject. A free account opening its
-   * subject page gets the subscription paywall rendered directly.
+   * Id of a subject under a PREMIUM concours parcours (theme 'ecole-tn' + a
+   * national-exam grade). A free account without an entitlement is gated on its
+   * difficulty>=2 missions — only the comprehension quiz + difficulty-1 preview
+   * is free (resolve_exercise_access).
    */
-  premiumSubjectId(): Promise<string>;
+  premiumParcoursSubjectId(): Promise<string>;
   /**
    * A non-premium subject bound to a school grade (`grade_id != null`). Its
    * chapters are comprehension-quiz-gated for a fresh free user.
@@ -29,11 +31,14 @@ export interface AdminDb {
    */
   freeExerciseId(subjectId: string): Promise<string>;
   /**
-   * A premium-gated exercise (difficulty >= 3) in a FREE, NON-school subject, so
-   * the ONLY active gate is the difficulty premium gate — never the quiz gate.
-   * Lets a test prove free=locked / premium=unlocked without a quiz confound.
+   * A premium-gated mission in a PREMIUM concours parcours: a non-quiz exercise
+   * at difficulty >= 2 (outside the free difficulty-1/quiz preview), so the ONLY
+   * active gate is the per-parcours entitlement. Lets a test prove
+   * locked-without-entitlement / unlocked-with-entitlement.
    */
-  premiumDifficultyExercise(): Promise<{ exerciseId: string; subjectId: string }>;
+  premiumParcoursExercise(): Promise<{ exerciseId: string; subjectId: string }>;
+  /** A PREMIUM concours parcours: its id + the (theme_id, grade_id) its subjects share. */
+  premiumConcoursParcours(): Promise<{ id: string; theme: string; grade: string }>;
   /** First non-premium subject under a theme slug (e.g. "culture-generale"). */
   subjectIdByTheme(themeSlug: string): Promise<string | null>;
   /** Theme slugs that currently have at least one subject in the catalogue. */
@@ -61,6 +66,17 @@ export interface AdminDb {
   clearParentLinks(parentUserId: string): Promise<void>;
   /** The comprehension-quiz exercise (mode='quiz') with the lowest display order. */
   quizExerciseId(subjectId: string): Promise<string>;
+  /**
+   * Grant a user a live entitlement on a parcours (per-parcours premium model)
+   * via the admin_grant_parcours RPC — service-role bypasses is_admin(). Pass
+   * `months` for a time-boxed grant; omit for perpetual. Idempotent (upserts the
+   * live-grant slot).
+   */
+  grantEntitlement(userId: string, parcoursId: string, months?: number): Promise<void>;
+  /** Soft-revoke a user's live entitlement on a parcours (admin_revoke_parcours). */
+  revokeEntitlement(userId: string, parcoursId: string): Promise<void>;
+  /** Whether a user currently holds a live (non-revoked, non-expired) grant on a parcours. */
+  hasEntitlement(userId: string, parcoursId: string): Promise<boolean>;
 }
 
 export function createAdminDb(): AdminDb {
@@ -69,15 +85,22 @@ export function createAdminDb(): AdminDb {
 
   return {
     client,
-    async premiumSubjectId() {
+    async premiumParcoursSubjectId() {
+      // A subject under a PREMIUM concours parcours: same (theme_id, grade_id) as
+      // an is_premium parcours of kind 'concours' (e.g. concours-9eme → ecole-tn /
+      // 9eme-base). Premium is per-parcours now, not the subject's is_premium flag.
+      const { theme, grade } = await this.premiumConcoursParcours();
       const { data, error } = await client
         .from("subjects")
         .select("id")
-        .eq("is_premium", true)
+        .eq("theme_id", theme)
+        .eq("grade_id", grade)
+        .order("display_order")
         .limit(1)
         .maybeSingle();
-      if (error) throw new Error(`premiumSubjectId: ${error.message}`);
-      if (!data) throw new Error("No premium subject (is_premium=true) found in the test project.");
+      if (error) throw new Error(`premiumParcoursSubjectId: ${error.message}`);
+      if (!data)
+        throw new Error("No subject under a premium concours parcours (apply content to TEST?).");
       return data.id as string;
     },
     async schoolSubjectId() {
@@ -121,29 +144,61 @@ export function createAdminDb(): AdminDb {
         throw new Error(`No free exercise (non-quiz, difficulty<=2) for subject ${subjectId}.`);
       return data.id as string;
     },
-    async premiumDifficultyExercise() {
-      // FREE + non-school subjects → no quiz gate, so difficulty is the only gate.
+    async premiumParcoursExercise() {
+      // A premium-gated mission in a PREMIUM concours parcours: a non-quiz exercise
+      // at difficulty >= 2 (outside the difficulty-1/quiz free preview). Its subject
+      // shares the parcours' (theme_id, grade_id), so the entitlement is the only gate.
+      const { theme, grade } = await this.premiumConcoursParcours();
       const { data: subs, error: subErr } = await client
         .from("subjects")
         .select("id")
-        .eq("is_premium", false)
-        .is("grade_id", null);
-      if (subErr) throw new Error(`premiumDifficultyExercise(subjects): ${subErr.message}`);
+        .eq("theme_id", theme)
+        .eq("grade_id", grade);
+      if (subErr) throw new Error(`premiumParcoursExercise(subjects): ${subErr.message}`);
       const ids = (subs ?? []).map((s) => s.id as string);
-      if (ids.length === 0) throw new Error("No free non-school subject for premium-gate test.");
+      if (ids.length === 0)
+        throw new Error("No subject under a premium concours parcours (apply content to TEST?).");
       const { data, error } = await client
         .from("exercises")
         .select("id, subject_id")
         .in("subject_id", ids)
         .neq("mode", "quiz")
-        .gte("difficulty", 3)
+        .gte("difficulty", 2)
         .order("display_order")
         .limit(1)
         .maybeSingle();
-      if (error) throw new Error(`premiumDifficultyExercise: ${error.message}`);
+      if (error) throw new Error(`premiumParcoursExercise: ${error.message}`);
       if (!data)
-        throw new Error("No difficulty>=3 exercise in a free non-school subject (apply content?).");
+        throw new Error(
+          "No difficulty>=2 mission under a premium concours parcours (apply content to TEST?).",
+        );
       return { exerciseId: data.id as string, subjectId: data.subject_id as string };
+    },
+    /**
+     * Resolve a PREMIUM concours parcours' (theme_id, grade_id) and id. Used to find
+     * gated subjects/missions without hard-coding the catalogue. Throws if none is
+     * seeded (the parcours migration seeds concours-9eme / concours-6eme).
+     */
+    async premiumConcoursParcours() {
+      const { data, error } = await client
+        .from("parcours")
+        .select("id, theme_id, grade_id")
+        .eq("kind", "concours")
+        .eq("is_premium", true)
+        .not("grade_id", "is", null)
+        .order("display_order")
+        .limit(1)
+        .maybeSingle();
+      if (error) throw new Error(`premiumConcoursParcours: ${error.message}`);
+      if (!data)
+        throw new Error(
+          "No premium concours parcours seeded in the test project (apply migrations?).",
+        );
+      return {
+        id: data.id as string,
+        theme: data.theme_id as string,
+        grade: data.grade_id as string,
+      };
     },
     async subjectIdByTheme(themeSlug: string) {
       // themes.id IS the slug ('ecole-tn', 'culture-generale'…), and subjects.theme_id
@@ -240,6 +295,45 @@ export function createAdminDb(): AdminDb {
       if (error) throw new Error(`quizExerciseId: ${error.message}`);
       if (!data) throw new Error(`No quiz exercise for subject ${subjectId}.`);
       return data.id as string;
+    },
+    async grantEntitlement(userId: string, parcoursId: string, months?: number) {
+      // Service-role bypasses is_admin(), so admin_grant_parcours succeeds here.
+      // Omit p_expires_at for a perpetual grant (the RPC defaults it to NULL).
+      let expiry: string | undefined;
+      if (typeof months === "number") {
+        const d = new Date();
+        d.setMonth(d.getMonth() + months);
+        expiry = d.toISOString();
+      }
+      const { error } = await client.rpc("admin_grant_parcours", {
+        p_user: userId,
+        p_parcours: parcoursId,
+        p_source: "purchase",
+        ...(expiry ? { p_expires_at: expiry } : {}),
+      });
+      if (error) throw new Error(`grantEntitlement: ${error.message}`);
+    },
+    async revokeEntitlement(userId: string, parcoursId: string) {
+      const { error } = await client.rpc("admin_revoke_parcours", {
+        p_user: userId,
+        p_parcours: parcoursId,
+      });
+      if (error) throw new Error(`revokeEntitlement: ${error.message}`);
+    },
+    async hasEntitlement(userId: string, parcoursId: string) {
+      const { data, error } = await client
+        .from("parcours_entitlements")
+        .select("id, expires_at")
+        .eq("user_id", userId)
+        .eq("parcours_id", parcoursId)
+        .is("revoked_at", null)
+        .order("granted_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (error) throw new Error(`hasEntitlement: ${error.message}`);
+      if (!data) return false;
+      const expires = data.expires_at as string | null;
+      return expires === null || new Date(expires) > new Date();
     },
   };
 }

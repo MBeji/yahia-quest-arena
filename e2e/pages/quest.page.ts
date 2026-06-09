@@ -4,12 +4,20 @@ import { type Page, type Locator, expect } from "@playwright/test";
 export class QuestPage {
   constructor(private readonly page: Page) {}
 
-  // Subscription paywall (shown when a free user opens a difficulty 3+ / premium mission).
+  // Premium paywall (SubscriptionPaywall) — shown when a user without an entitlement
+  // opens a premium-parcours mission outside the free preview. Matches both the
+  // "Parcours premium" denial copy and the paywall's "Premium Feature" title.
   get paywallPremiumText(): Locator {
     return this.page.getByText(/premium/i).first();
   }
   get betaCta(): Locator {
     return this.page.getByRole("button", { name: /bêta|beta/i });
+  }
+  /** Chapter comprehension-quiz lock screen (school subjects): shown when the
+   * mission is reachable (entitlement OK) but the chapter quiz isn't passed yet.
+   * FR "Exercice verrouillé", EN "Exercise locked", AR "التمرين مقفل". */
+  get quizLock(): Locator {
+    return this.page.getByText(/exercice verrouillé|exercise locked|التمرين مقفل/i).first();
   }
 
   /** Answer options (radio buttons) of the current question. */

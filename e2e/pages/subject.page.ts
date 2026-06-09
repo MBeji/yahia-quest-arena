@@ -13,19 +13,23 @@ export class SubjectPage {
     return this.page.getByTestId("mission-locked");
   }
   /**
-   * Difficulty 3+ premium lock label shown to free users. The wording follows
-   * the subject's content language: FR "Abonnement requis", EN "Subscription
-   * required", AR "يتطلب اشتراكًا".
+   * Per-parcours premium lock badge shown on a difficulty>=2 mission to a user
+   * without an entitlement on a premium (concours) parcours. The subject page
+   * renders the localized "unlock" label (FR "À débloquer", EN "Unlock", AR
+   * "للفتح") next to a lock icon — NOT the quest-page "Parcours premium" copy.
    */
   get premiumLock(): Locator {
-    return this.page.getByText(/abonnement requis|subscription required|يتطلب اشتراك/i);
+    return this.page.getByText(/à débloquer|unlock|للفتح/i);
   }
   /** "✓ Passed" badge shown on a chapter once its comprehension quiz is cleared
    * (FR "✓ Réussi", EN "✓ Passed", AR "✓ ناجح"). */
   get passedBadge(): Locator {
     return this.page.getByText(/réussi|passed|ناجح/i);
   }
-  // Subscription paywall (rendered in-page for a premium/subscription-only subject).
+  // Generic "premium" copy matcher. NOTE: the premium paywall + beta CTA now render
+  // on the QUEST page (opening a gated mission), not on the subject page — the
+  // subject page only shows the per-mission `premiumLock` badge. Use the quest Page
+  // Object's paywallPremiumText / betaCta for the paywall itself.
   get paywallPremiumText(): Locator {
     return this.page.getByText(/premium/i).first();
   }

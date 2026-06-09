@@ -1,9 +1,10 @@
 import { test, expect } from "../fixtures";
-import { STORAGE_STATE } from "../helpers/users";
+import { STORAGE_STATE, TEST_USERS } from "../helpers/users";
 
 /**
- * PREMIUM student journey. Key differentiator vs free: opening a difficulty 3+
- * mission does NOT show the subscription paywall.
+ * PREMIUM student journey. The student holds a live entitlement on both Concours
+ * parcours (seeded via admin_grant_parcours), so — unlike the free student —
+ * opening a premium-parcours mission does NOT hit the "Parcours premium" paywall.
  */
 test.use({ storageState: STORAGE_STATE.premium });
 
@@ -14,22 +15,24 @@ test.describe("Premium student", () => {
     await expect(dashboard.firstSubject()).toBeVisible({ timeout: 15_000 });
   });
 
-  test("opening a premium (difficulty 3+) mission does NOT show the paywall", async ({
-    page,
-    dashboard,
-    subject,
+  test("opening a premium-parcours mission does NOT show the paywall", async ({
     quest,
+    adminDb,
   }) => {
-    await dashboard.goto();
-    await dashboard.openFirstSubject();
-    await expect(page).toHaveURL(/\/subject\//);
+    const { id: parcoursId } = await adminDb.premiumConcoursParcours();
+    const premiumUserId = await adminDb.userIdByEmail(TEST_USERS.premium.email);
+    // The premium student's seeded entitlement is live.
+    expect(await adminDb.hasEntitlement(premiumUserId, parcoursId)).toBe(true);
 
-    // No "Abonnement requis" lock for a subscriber.
-    await expect(subject.premiumLock).toHaveCount(0);
+    // A difficulty>=2 mission of the premium parcours (outside the free preview).
+    const { exerciseId } = await adminDb.premiumParcoursExercise();
+    await quest.goto(exerciseId);
 
-    await subject.openFirstMission();
-    await expect(page).toHaveURL(/\/quest\//);
-    // ...and no subscription paywall on the mission itself.
+    // The entitlement gate is passed → the session resolves to the QCM or, since
+    // concours parcours are SCHOOL subjects, the chapter quiz-lock (a separate gate).
+    // Neither is the "Parcours premium" paywall, and there's no beta CTA.
+    await expect(quest.options.first().or(quest.quizLock)).toBeVisible({ timeout: 20_000 });
+    await expect(quest.paywallPremiumText).toHaveCount(0);
     await expect(quest.betaCta).toHaveCount(0);
   });
 });

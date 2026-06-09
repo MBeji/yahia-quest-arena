@@ -47,7 +47,7 @@ scripts/e2e/
   raw `page.locator(...)` chains in specs — add a Page Object method/getter instead.
 - **Auth** is declared per spec: `test.use({ storageState: STORAGE_STATE.<role> })`.
 - **Data**: never hardcode ids. Query via the `adminDb` fixture (service-role),
-  e.g. `await adminDb.premiumSubjectId()`.
+  e.g. `await adminDb.premiumParcoursExercise()`.
 - **Determinism**: authed runs start from a clean slate (`reset-gameplay.mjs` runs
   before the suite in CI). If you add a spec that **mutates** gameplay, make sure the
   table it touches is in `GAMEPLAY_TABLES` (scripts/e2e/reset-gameplay.mjs).
@@ -116,6 +116,10 @@ each run; without it, applying migrations to the TEST project is a one-time prer
 
 Seeded accounts (all password `E2E_USER_PASSWORD`):
 `student.free@`, `student.premium@`, `parent@`, `admin@e2e.xpscholars.test`.
+Premium is now per-parcours: `student.premium@` is **granted the `concours-9eme` +
+`concours-6eme` entitlements** via `admin_grant_parcours` (the seed runs as service-role,
+bypassing `is_admin()`); `student.free@` has **no entitlements**. There are no
+`subscription_*` columns anymore.
 
 ## Maintenance / guardrails
 

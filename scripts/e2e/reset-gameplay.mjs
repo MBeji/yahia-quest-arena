@@ -2,8 +2,8 @@
  * Reset the TEST project's gameplay state to a clean slate, so authenticated e2e
  * runs are deterministic and repeatable. Clears progress tables and zeroes
  * profile progression; CONTENT (subjects/chapters/exercises/questions/shop/badge
- * definitions) and the accounts themselves are preserved (roles/subscriptions are
- * re-applied by `npm run e2e:seed`).
+ * definitions), the accounts, and their per-parcours entitlements are preserved
+ * (roles + entitlements are re-applied by `npm run e2e:seed`).
  *
  *   SUPABASE_URL=...                 (the TEST project URL)
  *   SUPABASE_SERVICE_ROLE_KEY=...

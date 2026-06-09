@@ -1,7 +1,8 @@
 /**
  * Seed (or refresh) the E2E test accounts in the TEST Supabase project.
- * Idempotent: creates each user if missing, always resets the password, and
- * sets role / subscription on the profile. Uses the SERVICE-ROLE key.
+ * Idempotent: creates each user if missing, always resets the password, sets the
+ * profile role, and grants per-parcours entitlements (the premium student gets
+ * both Concours parcours). Uses the SERVICE-ROLE key.
  *
  *   SUPABASE_URL=...            (the TEST project URL)
  *   SUPABASE_SERVICE_ROLE_KEY=...
@@ -78,22 +79,28 @@ async function main() {
   for (const u of USERS) {
     const id = await getOrCreate(u.email, u.display);
 
-    const patch = { role: u.role, display_name: u.display };
-    if (u.premium) {
-      const now = new Date();
-      const expires = new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000);
-      patch.subscription_type = "annual";
-      patch.subscription_activated_at = now.toISOString();
-      patch.subscription_expires_at = expires.toISOString();
-    } else {
-      patch.subscription_type = null;
-      patch.subscription_activated_at = null;
-      patch.subscription_expires_at = null;
-    }
-
-    // Profile is created by the handle_new_user trigger; update its role/subscription.
-    const { error } = await admin.from("profiles").update(patch).eq("id", id);
+    // Profile is created by the handle_new_user trigger; set its role.
+    const { error } = await admin
+      .from("profiles")
+      .update({ role: u.role, display_name: u.display })
+      .eq("id", id);
     if (error) throw error;
+
+    // Premium = a live entitlement on both premium Concours parcours (perpetual).
+    // The service-role key bypasses is_admin(), so admin_grant_parcours succeeds.
+    // The grant is an idempotent upsert against the live-grant slot, so re-seeding
+    // is safe. Free accounts get no entitlement (the model dropped subscription_*).
+    if (u.premium) {
+      for (const parcoursId of ["concours-9eme", "concours-6eme"]) {
+        const { error } = await admin.rpc("admin_grant_parcours", {
+          p_user: id,
+          p_parcours: parcoursId,
+          p_source: "purchase",
+          p_expires_at: null,
+        });
+        if (error) throw error;
+      }
+    }
 
     console.log(`✓ ${u.email}  (role=${u.role}, premium=${u.premium})`);
   }

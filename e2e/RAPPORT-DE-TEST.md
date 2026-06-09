@@ -65,25 +65,29 @@ e2e ESLint ✅ · `playwright --list` → **56 tests / 19 fichiers** · tier pub
 - **Spec** : `authed/catalogue.spec.ts`.
 - **Résultat** : ⏳ **PRÊT (CI)**.
 
-### 2.2 Verrou « niveau supérieur » premium — élève gratuit bloqué
+### 2.2 Verrou premium **par parcours** — élève sans entitlement bloqué
 
-- **Étapes** : récupérer une mission **difficulté ≥ 3** dans une matière **gratuite & hors-école**
-  (donc seul le verrou premium s'applique, pas le quiz) ; sur la page matière, vérifier le label
-  _Abonnement requis_ (FR/EN/AR) ; ouvrir la mission → **paywall** affiché.
-- **Spec** : `authed/premium-gate.spec.ts` (describe « free »).
-- **Résultat** : ⏳ **PRÊT (CI)**. Voir ⚠️ §6.1 (le seuil difficulté ≥ 3 est **global**, pas limité à la 9ème).
+- **Étapes** : récupérer une mission **difficulté ≥ 2** d'un **parcours concours premium**
+  (`concours-9eme`, hors aperçu gratuit) ; vérifier (via `adminDb.hasEntitlement`) que l'élève gratuit
+  n'a **aucune** entitlement ; sur la page matière, vérifier le badge de verrou _À débloquer / Unlock_ ;
+  ouvrir la mission → **paywall « Parcours premium »** affiché.
+- **Spec** : `authed/premium-gate.spec.ts` (describe « sans entitlement »).
+- **Résultat** : ⏳ **PRÊT (CI)**. Modèle : accès **par parcours** (`resolve_exercise_access`), aperçu
+  gratuit = quiz + difficulté 1.
 
-### 2.3 Déverrouillage premium — abonné
+### 2.3 Déverrouillage premium — élève avec entitlement
 
-- **Étapes** : le **compte premium** ouvre la **même** mission difficulté ≥ 3 → pas de paywall,
-  le QCM s'affiche (≥ 2 options).
-- **Spec** : `authed/premium-gate.spec.ts` (describe « premium »).
+- **Étapes** : le **compte premium** (entitlement `concours-9eme` seedée) ouvre la **même** mission →
+  **pas** de paywall « Parcours premium » ; la session se résout vers le QCM ou le verrou-quiz scolaire
+  (porte distincte), jamais le paywall.
+- **Spec** : `authed/premium-gate.spec.ts` (describe « avec entitlement »).
 - **Résultat** : ⏳ **PRÊT (CI)**.
 
-### 2.4 Module entièrement premium (matière payante) — élève gratuit
+### 2.4 Mission premium d'un parcours concours — élève gratuit
 
-- **Étapes** : ouvrir une matière `is_premium` → paywall d'abonnement + CTA bêta rendus en page.
-- **Spec** : `authed/free-user.spec.ts` (existant).
+- **Étapes** : élève gratuit ouvre une mission premium (difficulté ≥ 2) d'un parcours concours →
+  paywall « Parcours premium » + CTA bêta rendus sur la **page quête**.
+- **Spec** : `authed/free-user.spec.ts`.
 - **Résultat** : ⏳ **PRÊT (CI)**.
 
 ### 2.5 Verrou quiz de compréhension — **programme scolaire uniquement**
@@ -186,10 +190,11 @@ e2e ESLint ✅ · `playwright --list` → **56 tests / 19 fichiers** · tier pub
 
 > Constats relevés en lisant le code pendant l'écriture des tests — à confirmer / corriger.
 
-1. **⚠️ Le verrou premium « difficulté ≥ 3 » est GLOBAL, pas spécifique à la 9ème.**
-   `PREMIUM_MIN_DIFFICULTY = 3` s'applique à **tous** les thèmes (y compris culture-générale et QI),
-   alors que l'intention exprimée est « seul le niveau supérieur du programme 9ème est premium ».
-   → Décider : verrou par difficulté global (comportement actuel) **ou** réservé au scolaire ?
+1. **✅ Résolu — le premium est désormais PAR PARCOURS.** L'ancien verrou global
+   « difficulté ≥ 3 + abonnement » (`PREMIUM_MIN_DIFFICULTY`) a été supprimé. L'accès est maintenant
+   décidé par **parcours** : un parcours concours premium exige une **entitlement** ; l'aperçu gratuit
+   (quiz de compréhension + missions difficulté 1) reste ouvert à tous ; tout est arbitré côté serveur
+   par `resolve_exercise_access`. Les parcours « libres » (culture-générale, QI, langues) sont gratuits.
 
 2. **⚠️ Fenêtre de garde admin pendant le chargement du rôle.** La garde
    `if (role !== null && role !== "admin")` ne bloque pas tant que `role` vaut `null` (chargement).
@@ -203,9 +208,10 @@ e2e ESLint ✅ · `playwright --list` → **56 tests / 19 fichiers** · tier pub
    l'appel est **rate-limité**. Aucune donnée tierce n'est exposée. → Améliorer le confort : ajouter
    une garde de rôle côté route pour ne pas afficher l'UI parent à un élève (priorité basse).
 
-4. **⚠️ Track « langue » incomplet.** Seul le thème `francais` a du contenu (`fr-mastery`), et il est
-   **premium** → un élève gratuit n'a accès à **aucun** contenu de programme de langue. Les thèmes
-   `anglais` / `arabe` sont seedés mais **vides**. → « Programme de langue (3 langues) » non couvert.
+4. **⚠️ Track « langue » incomplet.** Seul le thème `francais` a du contenu (`fr-mastery`) ; il vit
+   désormais sous un parcours **« libre » gratuit** (l'ancien flag `is_premium` n'est plus lu par le
+   gate). Les thèmes `anglais` / `arabe` sont seedés mais **vides**. → « Programme de langue (3
+   langues) » non couvert (contenu manquant, pas un problème d'accès).
 
 5. **ℹ️ Industrialisation des sélecteurs.** Ajout de `data-testid` ciblés : `stat-level/-xp/-coins`,
    `leaderboard-row`, `leaderboard-global-tab`, `shop` + `shop-item[data-item-code][data-owned]`.
@@ -216,8 +222,9 @@ e2e ESLint ✅ · `playwright --list` → **56 tests / 19 fichiers** · tier pub
 ## 7. Pré-requis pour exécuter le tier authentifié (CI)
 
 1. **Projet Supabase TEST** (`pqegdnwdtbjtplcthxyp`) avec **schéma + contenu appliqués** :
-   migrations de base **et** les lots culture-générale + iq-training (sinon `subjectIdByTheme`,
-   `premiumDifficultyExercise`, `four-families` échouent par absence de données).
+   migrations de base (dont les parcours + entitlements), le contenu du parcours concours
+   (`concours-9eme`, ≥ 1 mission difficulté ≥ 2) **et** les lots culture-générale + iq-training
+   (sinon `subjectIdByTheme`, `premiumParcoursExercise`, `four-families` échouent par absence de données).
 2. **Comptes seedés** : `npm run e2e:seed` (free / premium / parent / admin).
 3. **Secrets CI** : `TEST_SUPABASE_URL`, `TEST_SUPABASE_ANON_KEY`, `TEST_SUPABASE_SERVICE_ROLE_KEY`,
    `E2E_USER_PASSWORD` (sinon `e2e-auth.yml` est _skipped_ en vert).

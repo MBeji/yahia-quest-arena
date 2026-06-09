@@ -16,12 +16,18 @@ test.describe("Free student", () => {
     await expect(dashboard.dailyGoal).toBeVisible({ timeout: 15_000 });
   });
 
-  test("opening a premium module shows the paywall + beta CTA", async ({ subject, adminDb }) => {
-    // A free account opening a premium (subscription-only) subject gets the
-    // subscription paywall rendered straight on the subject page — deterministic,
-    // with no quest-session / chapter-quiz race.
-    await subject.goto(await adminDb.premiumSubjectId());
-    await expect(subject.paywallPremiumText).toBeVisible({ timeout: 15_000 });
-    await expect(subject.betaCta).toBeVisible({ timeout: 15_000 });
+  test("opening a premium-parcours mission shows the paywall + beta CTA", async ({
+    quest,
+    adminDb,
+  }) => {
+    // Premium is now per-parcours: a free account (no entitlement) opening a gated
+    // mission of a premium Concours parcours is rejected server-side and the in-quest
+    // "Parcours premium" paywall (with the free beta-access CTA) renders. Opening the
+    // mission directly is deterministic — no quest-session / chapter-quiz race, since
+    // the entitlement gate runs BEFORE the quiz gate in startExerciseSession.
+    const { exerciseId } = await adminDb.premiumParcoursExercise();
+    await quest.goto(exerciseId);
+    await expect(quest.paywallPremiumText).toBeVisible({ timeout: 15_000 });
+    await expect(quest.betaCta).toBeVisible({ timeout: 15_000 });
   });
 });
