@@ -27,7 +27,7 @@ src/
 │   ├── shop/           ← In-game shop: purchase & equip skins, consumables
 │   ├── progression/    ← Spaced repetition, daily objectives, weekly quests, difficulty
 │   ├── parent-report/  ← Family link + parent progress report
-│   ├── subscription/   ← Premium gate (difficulty 3+ / premium modules) + beta access + admin
+│   ├── subscription/   ← Premium parcours entitlements + beta access + admin RPCs
 │   ├── content-report/ ← User-flagged content errors ("Signaler une erreur") + admin triage
 │   └── parcours/       ← Gamified journey-map / adventure-path over subjects & chapters
 │
@@ -160,27 +160,57 @@ Run with coverage: `npm run test:coverage`
 
 ## 8. Key data model (Supabase tables)
 
-| Table                      | Purpose                                                |
-| -------------------------- | ------------------------------------------------------ |
-| profiles                   | Student profile (XP, level, streak, coins, hero_class) |
-| subjects                   | Math, Science, etc.                                    |
-| chapters                   | Chapters within a subject                              |
-| exercises                  | Exercises within a chapter                             |
-| questions                  | Multiple-choice questions within an exercise           |
-| attempts                   | Student exercise attempt results                       |
-| student_badges             | Awarded badges                                         |
-| shop_items                 | Purchasable items                                      |
-| inventory_items            | Student-owned items                                    |
-| daily_objectives           | Daily goals (auto-created)                             |
-| weekly_quests              | Weekly challenges                                      |
-| spaced_repetition_schedule | SM-2 style review schedule                             |
-| dungeon_runs               | Boss mode run state                                    |
-| parent_student_links       | Parent-student linking                                 |
-| subscriptions              | Premium-gate state (difficulty 3+ / premium modules)   |
-| beta_access_requests       | Beta-access requests + admin review                    |
-| content_reports            | User-flagged content errors ("Signaler une erreur")    |
-| themes                     | Selectable visual themes                               |
-| grades                     | Grade levels (e.g. 9th grade)                          |
+| Table                      | Purpose                                                                     |
+| -------------------------- | --------------------------------------------------------------------------- |
+| profiles                   | Student profile (XP, level, streak, coins, hero_class, current_parcours_id) |
+| subjects                   | Math, Science, etc.                                                         |
+| chapters                   | Chapters within a subject                                                   |
+| exercises                  | Exercises within a chapter                                                  |
+| questions                  | Multiple-choice questions within an exercise                                |
+| attempts                   | Student exercise attempt results                                            |
+| student_badges             | Awarded badges                                                              |
+| shop_items                 | Purchasable items                                                           |
+| inventory_items            | Student-owned items                                                         |
+| daily_objectives           | Daily goals (auto-created)                                                  |
+| weekly_quests              | Weekly challenges                                                           |
+| spaced_repetition_schedule | SM-2 style review schedule                                                  |
+| dungeon_runs               | Boss mode run state                                                         |
+| parent_student_links       | Parent-student linking                                                      |
+| parcours                   | Sellable tracks — FREE or PREMIUM concours                                  |
+| parcours_entitlements      | Per-parcours grants (purchase/beta/gift/family)                             |
+| subscriptions (DEPRECATED) | Removed in migration 20260609000000 → parcours_entitlements                 |
+| beta_access_requests       | Beta-access requests + admin review                                         |
+| content_reports            | User-flagged content errors ("Signaler une erreur")                         |
+| themes                     | Top-level content tracks (école-tn, culture-générale…)                      |
+| grades                     | Grade levels (e.g. 9th grade)                                               |
+
+### 8a. Premium access model (parcours + entitlements)
+
+Premium is **per-parcours**, not global. A **parcours** is the student's enrolled track
+(`profiles.current_parcours_id`), resolved from a `(theme_id, grade_id)` pair:
+
+- **PREMIUM concours** parcours — `concours-9eme`, `concours-6eme` (the paid products), under theme
+  `ecole-tn`.
+- **FREE exploration** parcours — one per standalone theme (culture-générale, muscle-cerveau,
+  langues…), `grade_id` NULL.
+
+`parcours_entitlements` (`user_id`, `parcours_id`, `source` ∈ {purchase|beta|gift|family},
+`expires_at` nullable = perpetual, `revoked_at` soft-delete) holds the grants. The **single
+authoritative gate** is the SECURITY DEFINER RPC `resolve_exercise_access(exercise)`:
+
+- FREE parcours → always allowed.
+- PREMIUM parcours → allowed iff the caller holds a live entitlement (`has_parcours_entitlement`,
+  which also honors an **active linked parent's** grant — the _family pack_), **or** the exercise is
+  in the **free preview** (the chapter comprehension quiz + difficulty-1 missions,
+  `FREE_PREVIEW_MAX_DIFFICULTY`). A `coming_soon` parcours returns a distinct reason.
+
+The Dungeon is a premium perk gated on holding any concours entitlement. Admin provisioning:
+`admin_grant_parcours` / `admin_revoke_parcours` / `admin_list_parcours_entitlements`; onboarding sets
+the active track via `set_current_parcours`. Migrations: `20260608120000` (entity + RPCs), `…121000`
+(resolver), `…122000` (backfill), `…123000` (dungeon gate), `20260609000000` (drops the legacy
+`subscription_*` columns + `has_active_subscription` / `admin_*_subscription` RPCs).
+
+---
 
 ### Consumables (shop items)
 

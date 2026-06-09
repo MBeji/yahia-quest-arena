@@ -26,6 +26,11 @@ and tackle a timed "dungeon" boss mode. Shonen/RPG manga aesthetic, trilingual (
   (most `content/` subjects target `9eme-base`), but treat that as data, not as the app's scope.
   Everything below `subjects` (chapters/exercises + all gameplay: XP, quiz gate, dungeon,
   leaderboard) is theme/grade-agnostic.
+- A **parcours** is the student's enrolled track (`profiles.current_parcours_id`), resolved from a
+  `(theme, grade)` pair. The two PREMIUM **concours** parcours (9ème, 6ème) are the paid products;
+  the rest are FREE **exploration** parcours. Premium missions need a per-parcours **entitlement**
+  (see "Premium gate" under Data model); the free preview is the comprehension quiz + difficulty-1.
+  The dashboard is scoped to the active parcours; the Explorer (`/themes`) lets a student switch.
 
 **Stack**: Vite 7 · TanStack Start (SSR + file routing + server fns) · React 19 · TanStack Query 5 · Supabase (Postgres + Auth + RLS) · Tailwind 4 / Radix-shadcn · **deploys to Vercel** — push to `main` auto-deploys prod via `scripts/build-vercel.mjs` (`vercel.json`). A Cloudflare Workers config also exists, but Vercel is the live target. Package manager: **bun** (`bun.lock`), npm scripts work too. Tests: Vitest 4 + Testing Library (unit) and Playwright (e2e).
 
@@ -90,19 +95,31 @@ staged files); `pre-push` runs `npm run verify`. Installed automatically via the
 
 ## Data model (Supabase)
 
-`profiles` (xp/level/streak/coins/hero_class/role/`current_grade_id`) · `themes` → `grades`
+`profiles` (xp/level/streak/coins/hero_class/role/`current_grade_id`/`current_parcours_id`) · `themes` → `grades`
 (school theme only) → `subjects` → `chapters` → `exercises` → `questions` (QCM, `options` JSONB)
 · `attempts` · `exercise_sessions` · `student_badges` /
 `shop_items` / `inventory_items` · `daily_objectives` · `weekly_quests` ·
-`spaced_repetition_schedule` (SM-2) · `dungeon_runs` · `parent_student_links` · `subscriptions`
-(premium gate) · `beta_access_requests` · `content_reports` (user-flagged content errors) ·
-`themes` / `grades`.
+`spaced_repetition_schedule` (SM-2) · `dungeon_runs` · `parent_student_links` · `parcours`
+(sellable tracks — FREE or PREMIUM) · `parcours_entitlements` (per-parcours grants; `source` ∈
+{purchase/beta/gift/family}; family pack via `parent_student_links`) · `beta_access_requests` ·
+`content_reports` (user-flagged content errors) · `themes` / `grades`. (The old `subscriptions`
+columns + RPCs were removed in migration `20260609000000`.)
 
 Server-side logic lives in SQL: `handle_new_user` (auto-profile on signup), `award_xp`
 (streak + level curve: 200 XP/level, hero-class tiers), and the `submit_exercise_attempt`
 RPC (atomic scoring + rewards + badge unlocks). All tables have RLS; the two privileged
 functions are `REVOKE`d from anon/authenticated. Gameplay thresholds are centralized in
 `src/shared/constants/gamification.ts` — change rules there, not inline.
+
+**Premium gate (per-parcours).** Access is decided server-side by the single authoritative RPC
+`resolve_exercise_access(exercise)`: a FREE parcours is always open; a PREMIUM (concours) parcours
+opens a mission only for a holder of a live `parcours_entitlement` — directly, or via an active
+linked parent (the **family pack**) — **except the free preview** (the chapter comprehension quiz +
+difficulty-1 missions, `FREE_PREVIEW_MAX_DIFFICULTY`). `has_parcours_entitlement(user, parcours)`
+encapsulates the check; `set_current_parcours` sets the student's active track at onboarding; admin
+provisioning is `admin_grant_parcours` / `admin_revoke_parcours` / `admin_list_parcours_entitlements`.
+The Dungeon is a premium perk (any concours entitlement). The legacy global "difficulty ≥ 3 +
+subscription" gate is **gone** — no code reads `subscription_*` / `has_active_subscription`.
 
 **Consumables (shop items):** `shop_items.effect_payload` (JSONB) drives three live
 mechanics, all keyed off `inventory_items.is_active` = "armed" (skins use `is_equipped`).
@@ -151,8 +168,9 @@ indicates its difficulty level (⭐ scale) in its title. There is no per-record 
 - Feature-based: `src/features/{auth,dashboard,quest,dungeon,shop,progression,parent-report,subscription,content-report,parcours}/`
   (10 features). Each has `index.ts` (public barrel), `{name}.server.ts`, optional
   `components/`, `__tests__/`. The three newer features:
-  - **`subscription/`** — premium gate central to scoring: difficulty 3+ exercises and
-    whole premium modules require an active subscription; also beta-access requests + admin.
+  - **`subscription/`** — premium gate + admin: per-parcours **entitlements** (a concours parcours
+    requires a live entitlement; free preview = comprehension quiz + difficulty-1), provisioned via
+    `admin_grant_parcours`; beta-access requests; the out-of-band (phone) paywall component.
   - **`content-report/`** — user-flagged content errors ("Signaler une erreur") + admin triage.
   - **`parcours/`** — gamified journey-map / adventure-path UI over subjects & chapters.
 
