@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة (نمط امتحان): الرباعيّات",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "ما هذا الرباعيّ؟ <svg viewBox=\"0 0 100 100\"><rect x=\"16\" y=\"32\" width=\"68\" height=\"40\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><rect x=\"16\" y=\"32\" width=\"9\" height=\"9\" fill=\"none\" stroke=\"#ef4444\" stroke-width=\"1.3\"/></svg>",
+      "options": [
+        { "id": "a", "text": "مربّع" },
+        { "id": "b", "text": "مستطيل" },
+        { "id": "c", "text": "شبه منحرف" },
+        { "id": "d", "text": "معيّن" }
+      ],
+      "correctOption": "b",
+      "explanation": "زواياه قائمة وطولُه ≠ عرضه، فهو مستطيل.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "زوايا المستطيل:",
+      "options": [
+        { "id": "a", "text": "قائمة (90°)" },
+        { "id": "b", "text": "حادّة" },
+        { "id": "c", "text": "منفرجة" },
+        { "id": "d", "text": "مختلفة" }
+      ],
+      "correctOption": "a",
+      "explanation": "زوايا المستطيل الأربعُ قائمة (كلٌّ منها 90°).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيُّ رباعيٍّ له زوجٌ واحدٌ فقط من الأضلاع المتوازية؟",
+      "options": [
+        { "id": "a", "text": "متوازي الأضلاع" },
+        { "id": "b", "text": "المربّع" },
+        { "id": "c", "text": "شبه المنحرف" },
+        { "id": "d", "text": "المعيّن" }
+      ],
+      "correctOption": "c",
+      "explanation": "شبه المنحرف هو الرباعيُّ الذي له زوجٌ واحدٌ فقط من الأضلاع المتوازية.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما هذا الرباعيّ؟ <svg viewBox=\"0 0 100 100\"><polygon points=\"26,72 74,72 86,34 38,34\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/></svg>",
+      "options": [
+        { "id": "a", "text": "المستطيل" },
+        { "id": "b", "text": "المربّع" },
+        { "id": "c", "text": "شبه المنحرف" },
+        { "id": "d", "text": "متوازي الأضلاع" }
+      ],
+      "correctOption": "d",
+      "explanation": "زوجان من الأضلاع المتوازية المائلة دون زوايا قائمة ⟸ متوازي الأضلاع.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "المربّعُ له ... أضلاع متساوية و... زوايا قائمة:",
+      "options": [
+        { "id": "a", "text": "4 و 4" },
+        { "id": "b", "text": "2 و 2" },
+        { "id": "c", "text": "3 و 1" },
+        { "id": "d", "text": "4 و 0" }
+      ],
+      "correctOption": "a",
+      "explanation": "للمربّع 4 أضلاع متساوية و4 زوايا قائمة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيُّ العبارات التالية خطأ؟",
+      "options": [
+        { "id": "a", "text": "المربّعُ مستطيل" },
+        { "id": "b", "text": "شبه المنحرف متوازي أضلاع" },
+        { "id": "c", "text": "المربّعُ معيّن" },
+        { "id": "d", "text": "المستطيلُ متوازي أضلاع" }
+      ],
+      "correctOption": "b",
+      "explanation": "العبارةُ الخطأ هي «شبه المنحرف متوازي أضلاع»؛ شبه المنحرف له زوجٌ واحدٌ فقط من التوازي.",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: أوّلُ خطوات مع الرباعيّات",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "في متوازي الأضلاع، الأضلاعُ المتقابلة:",
+      "options": [
+        { "id": "a", "text": "متوازية ومتساوية" },
+        { "id": "b", "text": "غيرُ متوازية" },
+        { "id": "c", "text": "متعامدة دائمًا" },
+        { "id": "d", "text": "مختلفة الأطوال" }
+      ],
+      "correctOption": "a",
+      "explanation": "في متوازي الأضلاع كلُّ ضلعين متقابلين متوازيان ومتساويان.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما هذا الرباعيّ؟ <svg viewBox=\"0 0 100 100\"><rect x=\"16\" y=\"32\" width=\"68\" height=\"40\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><rect x=\"16\" y=\"32\" width=\"9\" height=\"9\" fill=\"none\" stroke=\"#ef4444\" stroke-width=\"1.3\"/></svg>",
+      "options": [
+        { "id": "a", "text": "مربّع" },
+        { "id": "b", "text": "مستطيل" },
+        { "id": "c", "text": "معيّن" },
+        { "id": "d", "text": "شبه منحرف" }
+      ],
+      "correctOption": "b",
+      "explanation": "الشكلُ زواياه قائمة (المربّع الصغير) وطولُه أكبرُ من عرضه، فهو مستطيل.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "المعيّنُ رباعيٌّ أضلاعُه الأربعة:",
+      "options": [
+        { "id": "a", "text": "متساوية" },
+        { "id": "b", "text": "مختلفة" },
+        { "id": "c", "text": "ثلاثةٌ منها فقط متساوية" },
+        { "id": "d", "text": "غيرُ موجودة" }
+      ],
+      "correctOption": "a",
+      "explanation": "المعيّنُ متوازي أضلاعٍ أضلاعُه الأربعة متساوية.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما هذا الرباعيّ (4 أضلاع متساوية و4 زوايا قائمة)؟ <svg viewBox=\"0 0 100 100\"><rect x=\"27\" y=\"24\" width=\"50\" height=\"50\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><rect x=\"27\" y=\"24\" width=\"9\" height=\"9\" fill=\"none\" stroke=\"#ef4444\" stroke-width=\"1.3\"/></svg>",
+      "options": [
+        { "id": "a", "text": "مستطيل" },
+        { "id": "b", "text": "مربّع" },
+        { "id": "c", "text": "شبه منحرف" },
+        { "id": "d", "text": "معيّن منفرج" }
+      ],
+      "correctOption": "b",
+      "explanation": "أضلاعُه الأربعة متساوية وزواياه قائمة، فهو مربّع.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "شبه المنحرف له:",
+      "options": [
+        { "id": "a", "text": "زوجان من الأضلاع المتوازية" },
+        { "id": "b", "text": "لا توازٍ بين أضلاعه" },
+        { "id": "c", "text": "زوجٌ واحدٌ من الأضلاع المتوازية" },
+        { "id": "d", "text": "3 أضلاع" }
+      ],
+      "correctOption": "c",
+      "explanation": "شبه المنحرف له زوجٌ واحدٌ فقط من الأضلاع المتوازية.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما هذا الرباعيّ (زوجان من الأضلاع المتوازية، بلا زوايا قائمة)؟ <svg viewBox=\"0 0 100 100\"><polygon points=\"26,72 74,72 86,34 38,34\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/></svg>",
+      "options": [
+        { "id": "a", "text": "مستطيل" },
+        { "id": "b", "text": "مربّع" },
+        { "id": "c", "text": "شبه منحرف" },
+        { "id": "d", "text": "متوازي الأضلاع" }
+      ],
+      "correctOption": "d",
+      "explanation": "له زوجان من الأضلاع المتوازية وليست زواياه قائمة، فهو متوازي الأضلاع.",
+      "difficulty": 2
+    }
+  ]
+}

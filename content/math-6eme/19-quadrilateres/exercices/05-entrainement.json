@@ -1,0 +1,82 @@
+{
+  "title": "📝 تدريب ⭐⭐⭐: مراجعة شاملة للرباعيّات",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "ما هذا الرباعيّ؟ <svg viewBox=\"0 0 100 100\"><rect x=\"27\" y=\"24\" width=\"50\" height=\"50\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><rect x=\"27\" y=\"24\" width=\"9\" height=\"9\" fill=\"none\" stroke=\"#ef4444\" stroke-width=\"1.3\"/></svg>",
+      "options": [
+        { "id": "a", "text": "مستطيل" },
+        { "id": "b", "text": "مربّع" },
+        { "id": "c", "text": "معيّن" },
+        { "id": "d", "text": "شبه منحرف" }
+      ],
+      "correctOption": "b",
+      "explanation": "أضلاعُه الأربعة متساوية وزواياه قائمة، فهو مربّع.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أضلاعُ المعيّن:",
+      "options": [
+        { "id": "a", "text": "الأربعة متساوية" },
+        { "id": "b", "text": "مختلفة" },
+        { "id": "c", "text": "ضلعان فقط متساويان" },
+        { "id": "d", "text": "غيرُ متوازية" }
+      ],
+      "correctOption": "a",
+      "explanation": "المعيّنُ أضلاعُه الأربعة متساوية.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما هذا الرباعيّ؟ <svg viewBox=\"0 0 100 100\"><polygon points=\"18,72 82,72 64,34 36,34\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><polyline points=\"47,74 50,70 53,74\" fill=\"none\" stroke=\"#ef4444\" stroke-width=\"1.5\"/><polyline points=\"47,36 50,32 53,36\" fill=\"none\" stroke=\"#ef4444\" stroke-width=\"1.5\"/></svg>",
+      "options": [
+        { "id": "a", "text": "متوازي الأضلاع" },
+        { "id": "b", "text": "المربّع" },
+        { "id": "c", "text": "شبه المنحرف" },
+        { "id": "d", "text": "المستطيل" }
+      ],
+      "correctOption": "c",
+      "explanation": "زوجٌ واحدٌ متوازٍ (السهمان على القاعدتين) فقط، فهو شبه المنحرف.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما محيطُ مستطيلٍ طولُه 6 سم وعرضُه 4 سم؟",
+      "options": [
+        { "id": "a", "text": "20 سم" },
+        { "id": "b", "text": "24 سم" },
+        { "id": "c", "text": "10 سم" },
+        { "id": "d", "text": "14 سم" }
+      ],
+      "correctOption": "a",
+      "explanation": "المحيط = 2 × (6 + 4) = 2 × 10 = 20 سم.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "المربّعُ يختلف عن المستطيل في أنّ:",
+      "options": [
+        { "id": "a", "text": "زواياه ليست قائمة" },
+        { "id": "b", "text": "أضلاعَه الأربعة متساوية" },
+        { "id": "c", "text": "ليس له توازٍ" },
+        { "id": "d", "text": "له 3 أضلاع" }
+      ],
+      "correctOption": "b",
+      "explanation": "المربّعُ مستطيلٌ بأضلاعٍ أربعةٍ متساوية؛ أمّا المستطيلُ العامُّ فطولُه قد يختلف عن عرضه.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ما هذا الرباعيّ (زوجان متوازيان، بلا زوايا قائمة)؟ <svg viewBox=\"0 0 100 100\"><polygon points=\"26,72 74,72 86,34 38,34\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/></svg>",
+      "options": [
+        { "id": "a", "text": "المستطيل" },
+        { "id": "b", "text": "المربّع" },
+        { "id": "c", "text": "شبه المنحرف" },
+        { "id": "d", "text": "متوازي الأضلاع" }
+      ],
+      "correctOption": "d",
+      "explanation": "زوجان من الأضلاع المتوازية دون زوايا قائمة ⟸ متوازي الأضلاع.",
+      "difficulty": 3
+    }
+  ]
+}
