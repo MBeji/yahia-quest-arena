@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة (نمط امتحان): الزوايا",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "كم قيسُ الزاوية القائمة؟",
+      "options": [
+        { "id": "a", "text": "90°" },
+        { "id": "b", "text": "45°" },
+        { "id": "c", "text": "180°" },
+        { "id": "d", "text": "60°" }
+      ],
+      "correctOption": "a",
+      "explanation": "قيسُ الزاوية القائمة هو 90°.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما نوعُ هذه الزاوية؟ <svg viewBox=\"0 0 100 100\"><line x1=\"50\" y1=\"82\" x2=\"95\" y2=\"82\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"50\" y1=\"82\" x2=\"82\" y2=\"50\" stroke=\"currentColor\" stroke-width=\"2.5\"/><circle cx=\"50\" cy=\"82\" r=\"2.5\" fill=\"currentColor\"/></svg>",
+      "options": [
+        { "id": "a", "text": "قائمة" },
+        { "id": "b", "text": "حادّة" },
+        { "id": "c", "text": "منفرجة" },
+        { "id": "d", "text": "مستقيمة" }
+      ],
+      "correctOption": "b",
+      "explanation": "الفتحةُ أصغرُ من 90°، فالزاوية حادّة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "الزاويةُ الأكبرُ من القائمة والأصغرُ من المستقيمة تُسمّى:",
+      "options": [
+        { "id": "a", "text": "حادّة" },
+        { "id": "b", "text": "قائمة" },
+        { "id": "c", "text": "منفرجة" },
+        { "id": "d", "text": "معدومة" }
+      ],
+      "correctOption": "c",
+      "explanation": "الزاويةُ التي قيسُها بين 90° و180° هي زاويةٌ منفرجة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما نوعُ هذه الزاوية؟ <svg viewBox=\"0 0 100 100\"><line x1=\"8\" y1=\"55\" x2=\"92\" y2=\"55\" stroke=\"currentColor\" stroke-width=\"2.5\"/><circle cx=\"50\" cy=\"55\" r=\"2.5\" fill=\"currentColor\"/></svg>",
+      "options": [
+        { "id": "a", "text": "حادّة" },
+        { "id": "b", "text": "قائمة" },
+        { "id": "c", "text": "منفرجة" },
+        { "id": "d", "text": "مستقيمة" }
+      ],
+      "correctOption": "d",
+      "explanation": "ضلعا الزاوية على استقامةٍ واحدة، فقيسُها 180° وهي زاويةٌ مستقيمة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "زاويةٌ قيسُها 90°. ما نوعُها؟",
+      "options": [
+        { "id": "a", "text": "حادّة" },
+        { "id": "b", "text": "قائمة" },
+        { "id": "c", "text": "منفرجة" },
+        { "id": "d", "text": "مستقيمة" }
+      ],
+      "correctOption": "b",
+      "explanation": "الزاويةُ التي قيسُها 90° بالضبط هي زاويةٌ قائمة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "زاويتان متجاورتان تكوّنان زاوية مستقيمة (180°). إذا كانت إحداهما 120°، فالأخرى:",
+      "options": [
+        { "id": "a", "text": "60°" },
+        { "id": "b", "text": "90°" },
+        { "id": "c", "text": "80°" },
+        { "id": "d", "text": "240°" }
+      ],
+      "correctOption": "a",
+      "explanation": "مجموعُهما 180°، فالأخرى = 180° − 120° = 60°.",
+      "difficulty": 3
+    }
+  ]
+}

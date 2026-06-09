@@ -1,0 +1,82 @@
+{
+  "title": "📝 تدريب ⭐⭐⭐: مراجعة شاملة للزوايا",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "ما نوعُ هذه الزاوية؟ <svg viewBox=\"0 0 100 100\"><line x1=\"50\" y1=\"82\" x2=\"95\" y2=\"82\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"50\" y1=\"82\" x2=\"50\" y2=\"33\" stroke=\"currentColor\" stroke-width=\"2.5\"/><rect x=\"50\" y=\"72\" width=\"10\" height=\"10\" fill=\"none\" stroke=\"#ef4444\" stroke-width=\"1.5\"/><circle cx=\"50\" cy=\"82\" r=\"2.5\" fill=\"currentColor\"/></svg>",
+      "options": [
+        { "id": "a", "text": "حادّة" },
+        { "id": "b", "text": "قائمة" },
+        { "id": "c", "text": "منفرجة" },
+        { "id": "d", "text": "مستقيمة" }
+      ],
+      "correctOption": "b",
+      "explanation": "المربّعُ الصغير عند الرأس علامةُ الزاوية القائمة (90°).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "الزاويةُ التي قيسُها 180° تُسمّى:",
+      "options": [
+        { "id": "a", "text": "حادّة" },
+        { "id": "b", "text": "قائمة" },
+        { "id": "c", "text": "منفرجة" },
+        { "id": "d", "text": "مستقيمة" }
+      ],
+      "correctOption": "d",
+      "explanation": "الزاويةُ التي قيسُها 180° هي زاويةٌ مستقيمة (ضلعاها على استقامةٍ واحدة).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما نوعُ هذه الزاوية؟ <svg viewBox=\"0 0 100 100\"><line x1=\"50\" y1=\"82\" x2=\"95\" y2=\"82\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"50\" y1=\"82\" x2=\"72\" y2=\"43\" stroke=\"currentColor\" stroke-width=\"2.5\"/><circle cx=\"50\" cy=\"82\" r=\"2.5\" fill=\"currentColor\"/></svg>",
+      "options": [
+        { "id": "a", "text": "قائمة" },
+        { "id": "b", "text": "منفرجة" },
+        { "id": "c", "text": "حادّة" },
+        { "id": "d", "text": "مستقيمة" }
+      ],
+      "correctOption": "c",
+      "explanation": "الفتحةُ أصغرُ من 90°، فالزاوية حادّة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "بأيّ أداةٍ نرسم زاويةً قيسُها 60° بدقّة؟",
+      "options": [
+        { "id": "a", "text": "المنقلة" },
+        { "id": "b", "text": "الميزان" },
+        { "id": "c", "text": "المسطرة فقط" },
+        { "id": "d", "text": "الفرجار فقط" }
+      ],
+      "correctOption": "a",
+      "explanation": "نستعمل المنقلة لقياس الزوايا ورسمها بقيسٍ محدّد مثل 60°.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "زاويتان متجاورتان قيسُهما 35° و 55°. ما قيسُ الزاوية الكلّية الناتجة؟",
+      "options": [
+        { "id": "a", "text": "90°" },
+        { "id": "b", "text": "20°" },
+        { "id": "c", "text": "80°" },
+        { "id": "d", "text": "100°" }
+      ],
+      "correctOption": "a",
+      "explanation": "نجمع قيسَي الزاويتين المتجاورتين: 35° + 55° = 90° (زاويةٌ قائمة).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "قيسُ هذه الزاوية 120°. هل هي أكبرُ أم أصغرُ من الزاوية القائمة؟ <svg viewBox=\"0 0 100 100\"><line x1=\"50\" y1=\"82\" x2=\"95\" y2=\"82\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"50\" y1=\"82\" x2=\"27\" y2=\"43\" stroke=\"currentColor\" stroke-width=\"2.5\"/><circle cx=\"50\" cy=\"82\" r=\"2.5\" fill=\"currentColor\"/></svg>",
+      "options": [
+        { "id": "a", "text": "أصغر" },
+        { "id": "b", "text": "أكبر" },
+        { "id": "c", "text": "تساويها" },
+        { "id": "d", "text": "لا يمكن المقارنة" }
+      ],
+      "correctOption": "b",
+      "explanation": "قيسُها 120° أكبرُ من 90° (الزاوية القائمة)، فهي أكبر (وهي منفرجة).",
+      "difficulty": 3
+    }
+  ]
+}

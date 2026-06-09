@@ -19,7 +19,7 @@
       "difficulty": 1
     },
     {
-      "prompt": "ماذا يمثّل هذا الشكل؟ <svg viewBox=\"0 0 100 100\"><line x1=\"8\" y1=\"58\" x2=\"92\" y2=\"58\" stroke=\"#222\" stroke-width=\"2.5\"/><line x1=\"50\" y1=\"10\" x2=\"50\" y2=\"94\" stroke=\"#222\" stroke-width=\"2.5\"/><rect x=\"50\" y=\"48\" width=\"10\" height=\"10\" fill=\"none\" stroke=\"#c0392b\" stroke-width=\"1.5\"/></svg>",
+      "prompt": "ماذا يمثّل هذا الشكل؟ <svg viewBox=\"0 0 100 100\"><line x1=\"8\" y1=\"58\" x2=\"92\" y2=\"58\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"50\" y1=\"10\" x2=\"50\" y2=\"94\" stroke=\"currentColor\" stroke-width=\"2.5\"/><rect x=\"50\" y=\"48\" width=\"10\" height=\"10\" fill=\"none\" stroke=\"#ef4444\" stroke-width=\"1.5\"/></svg>",
       "options": [
         { "id": "a", "text": "مستقيمان متوازيان" },
         { "id": "b", "text": "مستقيمان متعامدان" },
@@ -55,7 +55,7 @@
       "difficulty": 2
     },
     {
-      "prompt": "هذان المستقيمان متقاطعان، لكنّهما: <svg viewBox=\"0 0 100 100\"><line x1=\"8\" y1=\"72\" x2=\"92\" y2=\"72\" stroke=\"#222\" stroke-width=\"2.5\"/><line x1=\"22\" y1=\"92\" x2=\"78\" y2=\"24\" stroke=\"#222\" stroke-width=\"2.5\"/></svg>",
+      "prompt": "هذان المستقيمان متقاطعان، لكنّهما: <svg viewBox=\"0 0 100 100\"><line x1=\"8\" y1=\"72\" x2=\"92\" y2=\"72\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"22\" y1=\"92\" x2=\"78\" y2=\"24\" stroke=\"currentColor\" stroke-width=\"2.5\"/></svg>",
       "options": [
         { "id": "a", "text": "متعامدان" },
         { "id": "b", "text": "متوازيان" },

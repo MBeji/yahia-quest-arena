@@ -1,0 +1,65 @@
+{
+  "title": "اختبار فهم الدرس ⭐",
+  "questions": [
+    {
+      "prompt": "ممّ تتكوّن الزاوية؟",
+      "options": [
+        { "id": "a", "text": "من نصفَي مستقيم لهما رأسٌ مشترك" },
+        { "id": "b", "text": "من مستقيمين متوازيين" },
+        { "id": "c", "text": "من نقطةٍ واحدة" },
+        { "id": "d", "text": "من دائرة" }
+      ],
+      "correctOption": "a",
+      "explanation": "الزاويةُ تتكوّن من نصفَي مستقيم (ضلعين) لهما رأسٌ مشترك هو رأسُ الزاوية.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم قيسُ الزاوية القائمة؟",
+      "options": [
+        { "id": "a", "text": "180°" },
+        { "id": "b", "text": "90°" },
+        { "id": "c", "text": "45°" },
+        { "id": "d", "text": "100°" }
+      ],
+      "correctOption": "b",
+      "explanation": "قيسُ الزاوية القائمة هو 90°؛ أمّا 180° فهو قيسُ الزاوية المستقيمة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما نوعُ هذه الزاوية؟ <svg viewBox=\"0 0 100 100\"><line x1=\"50\" y1=\"82\" x2=\"95\" y2=\"82\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"50\" y1=\"82\" x2=\"50\" y2=\"33\" stroke=\"currentColor\" stroke-width=\"2.5\"/><rect x=\"50\" y=\"72\" width=\"10\" height=\"10\" fill=\"none\" stroke=\"#ef4444\" stroke-width=\"1.5\"/><circle cx=\"50\" cy=\"82\" r=\"2.5\" fill=\"currentColor\"/></svg>",
+      "options": [
+        { "id": "a", "text": "حادّة" },
+        { "id": "b", "text": "قائمة" },
+        { "id": "c", "text": "منفرجة" },
+        { "id": "d", "text": "مستقيمة" }
+      ],
+      "correctOption": "b",
+      "explanation": "المربّعُ الصغير عند الرأس يدلّ على زاوية قائمة قيسُها 90°.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما نوعُ هذه الزاوية؟ <svg viewBox=\"0 0 100 100\"><line x1=\"50\" y1=\"82\" x2=\"95\" y2=\"82\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"50\" y1=\"82\" x2=\"84\" y2=\"53\" stroke=\"currentColor\" stroke-width=\"2.5\"/><circle cx=\"50\" cy=\"82\" r=\"2.5\" fill=\"currentColor\"/></svg>",
+      "options": [
+        { "id": "a", "text": "قائمة" },
+        { "id": "b", "text": "منفرجة" },
+        { "id": "c", "text": "حادّة" },
+        { "id": "d", "text": "مستقيمة" }
+      ],
+      "correctOption": "c",
+      "explanation": "فتحةُ الزاوية أصغرُ من الزاوية القائمة (90°)، فهي زاوية حادّة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "الزاويةُ المنفرجة قيسُها:",
+      "options": [
+        { "id": "a", "text": "أصغر من 90°" },
+        { "id": "b", "text": "يساوي 90°" },
+        { "id": "c", "text": "يساوي 180°" },
+        { "id": "d", "text": "أكبر من 90° وأصغر من 180°" }
+      ],
+      "correctOption": "d",
+      "explanation": "الزاويةُ المنفرجة قيسُها أكبرُ من 90° وأصغرُ من 180°.",
+      "difficulty": 2
+    }
+  ]
+}
