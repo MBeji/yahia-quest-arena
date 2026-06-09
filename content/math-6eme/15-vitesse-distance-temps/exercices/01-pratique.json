@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: أوّلُ خطوات السرعة والمسافة والزمن",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "قطع عدّاءٌ 10 km في ساعةٍ واحدة. ما سرعتُه؟",
+      "options": [
+        { "id": "a", "text": "10 km/h" },
+        { "id": "b", "text": "1 km/h" },
+        { "id": "c", "text": "100 km/h" },
+        { "id": "d", "text": "5 km/h" }
+      ],
+      "correctOption": "a",
+      "explanation": "السرعة = المسافة ÷ الزمن = 10 ÷ 1 = 10 km/h.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "المسافةُ تساوي:",
+      "options": [
+        { "id": "a", "text": "السرعة ÷ الزمن" },
+        { "id": "b", "text": "السرعة × الزمن" },
+        { "id": "c", "text": "السرعة + الزمن" },
+        { "id": "d", "text": "الزمن ÷ السرعة" }
+      ],
+      "correctOption": "b",
+      "explanation": "المسافة = السرعة × الزمن (نقلب علاقةَ السرعة = المسافة ÷ الزمن).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "سار شخصٌ بسرعة 5 km/h لمدّة ساعتين. ما المسافة؟",
+      "options": [
+        { "id": "a", "text": "7 km" },
+        { "id": "b", "text": "2,5 km" },
+        { "id": "c", "text": "10 km" },
+        { "id": "d", "text": "5 km" }
+      ],
+      "correctOption": "c",
+      "explanation": "المسافة = السرعة × الزمن = 5 × 2 = 10 km.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "قطعت سيّارةٌ 100 km في ساعتين. ما سرعتها؟",
+      "options": [
+        { "id": "a", "text": "200 km/h" },
+        { "id": "b", "text": "100 km/h" },
+        { "id": "c", "text": "102 km/h" },
+        { "id": "d", "text": "50 km/h" }
+      ],
+      "correctOption": "d",
+      "explanation": "السرعة = المسافة ÷ الزمن = 100 ÷ 2 = 50 km/h.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "سيّارةٌ سرعتُها 80 km/h. كم km تقطع في ساعتين؟",
+      "options": [
+        { "id": "a", "text": "160 km" },
+        { "id": "b", "text": "82 km" },
+        { "id": "c", "text": "40 km" },
+        { "id": "d", "text": "80 km" }
+      ],
+      "correctOption": "a",
+      "explanation": "المسافة = السرعة × الزمن = 80 × 2 = 160 km.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "قطع قطارٌ 200 km بسرعة 100 km/h. كم استغرق من الزمن؟",
+      "options": [
+        { "id": "a", "text": "20 ساعة" },
+        { "id": "b", "text": "2 ساعة" },
+        { "id": "c", "text": "300 ساعة" },
+        { "id": "d", "text": "0,5 ساعة" }
+      ],
+      "correctOption": "b",
+      "explanation": "الزمن = المسافة ÷ السرعة = 200 ÷ 100 = 2 ساعة.",
+      "difficulty": 2
+    }
+  ]
+}

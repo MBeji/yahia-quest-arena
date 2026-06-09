@@ -1,0 +1,82 @@
+{
+  "title": "👑 تحدّي النخبة ⭐⭐⭐⭐: أبطالُ السرعة",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "قطعت سيّارةٌ 250 km في 5 ساعات. ما سرعتها؟",
+      "options": [
+        { "id": "a", "text": "50 km/h" },
+        { "id": "b", "text": "255 km/h" },
+        { "id": "c", "text": "1250 km/h" },
+        { "id": "d", "text": "45 km/h" }
+      ],
+      "correctOption": "a",
+      "explanation": "السرعة = المسافة ÷ الزمن = 250 ÷ 5 = 50 km/h.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "سار شخصان: الأوّل بسرعة 60 km/h لمدّة 2 ساعة، والثاني بسرعة 40 km/h لمدّة 4 ساعات. مَن قطع مسافةً أطول؟",
+      "options": [
+        { "id": "a", "text": "الأوّل" },
+        { "id": "b", "text": "الثاني" },
+        { "id": "c", "text": "متساويان" },
+        { "id": "d", "text": "لا يمكن المعرفة" }
+      ],
+      "correctOption": "b",
+      "explanation": "الأوّل: 60 × 2 = 120 km؛ الثاني: 40 × 4 = 160 km؛ فالثاني قطع مسافةً أطول.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "قطعت دراجةٌ 36 km في ساعةٍ ونصف (1,5 ساعة). ما سرعتها؟",
+      "options": [
+        { "id": "a", "text": "54 km/h" },
+        { "id": "b", "text": "37,5 km/h" },
+        { "id": "c", "text": "24 km/h" },
+        { "id": "d", "text": "18 km/h" }
+      ],
+      "correctOption": "c",
+      "explanation": "السرعة = المسافة ÷ الزمن = 36 ÷ 1,5 = 24 km/h.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "سيّارةٌ سرعتُها 90 km/h. كم km تقطع في 20 دقيقة (ثلثِ ساعة)؟",
+      "options": [
+        { "id": "a", "text": "90 km" },
+        { "id": "b", "text": "270 km" },
+        { "id": "c", "text": "45 km" },
+        { "id": "d", "text": "30 km" }
+      ],
+      "correctOption": "d",
+      "explanation": "20 دقيقة = 1/3 ساعة؛ المسافة = 90 × 1/3 = 30 km.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "قطع قطارٌ مسافةً في 4 ساعات بسرعة 110 km/h. ما المسافة؟",
+      "options": [
+        { "id": "a", "text": "440 km" },
+        { "id": "b", "text": "114 km" },
+        { "id": "c", "text": "27,5 km" },
+        { "id": "d", "text": "400 km" }
+      ],
+      "correctOption": "a",
+      "explanation": "المسافة = السرعة × الزمن = 110 × 4 = 440 km.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "رحلةٌ طولُها 300 km. كم ساعةً تحتاج بسرعة 60 km/h، ثمّ بسرعة 100 km/h؟",
+      "options": [
+        { "id": "a", "text": "5 ساعات ثمّ 4 ساعات" },
+        { "id": "b", "text": "5 ساعات ثمّ 3 ساعات" },
+        { "id": "c", "text": "6 ساعات ثمّ 3 ساعات" },
+        { "id": "d", "text": "4 ساعات ثمّ 3 ساعات" }
+      ],
+      "correctOption": "b",
+      "explanation": "بسرعة 60: 300 ÷ 60 = 5 ساعات؛ وبسرعة 100: 300 ÷ 100 = 3 ساعات.",
+      "difficulty": 3
+    }
+  ]
+}

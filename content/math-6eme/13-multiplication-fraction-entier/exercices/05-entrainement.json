@@ -1,0 +1,82 @@
+{
+  "title": "📝 تدريب ⭐⭐⭐: مراجعة شاملة لضرب الكسور",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "ما ناتج 1/9 × 4؟",
+      "options": [
+        { "id": "a", "text": "4/9" },
+        { "id": "b", "text": "1/36" },
+        { "id": "c", "text": "4/36" },
+        { "id": "d", "text": "5/9" }
+      ],
+      "correctOption": "a",
+      "explanation": "نضرب البسطَ في 4 ونُبقي المقام: 1/9 × 4 = (1×4)/9 = 4/9.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما ناتج 3/5 × 4؟",
+      "options": [
+        { "id": "a", "text": "7/5" },
+        { "id": "b", "text": "12/5" },
+        { "id": "c", "text": "12/20" },
+        { "id": "d", "text": "3/20" }
+      ],
+      "correctOption": "b",
+      "explanation": "نضرب البسطَ في 4 ونُبقي المقام: 3/5 × 4 = (3×4)/5 = 12/5.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتج 1/2 × 6؟",
+      "options": [
+        { "id": "a", "text": "6/12" },
+        { "id": "b", "text": "1/3" },
+        { "id": "c", "text": "3" },
+        { "id": "d", "text": "7/2" }
+      ],
+      "correctOption": "c",
+      "explanation": "1/2 × 6 = 6/2؛ وبالاختزال على 2: 6/2 = 3.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتج 4 × 3/10 (مع الاختزال)؟",
+      "options": [
+        { "id": "a", "text": "12/40" },
+        { "id": "b", "text": "7/10" },
+        { "id": "c", "text": "7/40" },
+        { "id": "d", "text": "6/5" }
+      ],
+      "correctOption": "d",
+      "explanation": "4 × 3/10 = 12/10، وبالاختزال على 2: 12/10 = 6/5.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتج 8/3 × 3؟",
+      "options": [
+        { "id": "a", "text": "8" },
+        { "id": "b", "text": "24/9" },
+        { "id": "c", "text": "11/3" },
+        { "id": "d", "text": "1/8" }
+      ],
+      "correctOption": "a",
+      "explanation": "8/3 × 3 = 24/3؛ وبالاختزال على 3: 24/3 = 8.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ثمنُ مترٍ من القماش 3/2 دينارًا. كم ثمنُ 6 أمتار؟",
+      "options": [
+        { "id": "a", "text": "18/12 دينارًا" },
+        { "id": "b", "text": "9 دنانير" },
+        { "id": "c", "text": "9/2 دينارًا" },
+        { "id": "d", "text": "4 دنانير" }
+      ],
+      "correctOption": "b",
+      "explanation": "الثمن = 6 × 3/2 = 18/2 = 9 دنانير.",
+      "difficulty": 3
+    }
+  ]
+}

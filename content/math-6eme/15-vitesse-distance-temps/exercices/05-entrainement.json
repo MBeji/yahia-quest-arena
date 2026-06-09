@@ -1,0 +1,82 @@
+{
+  "title": "📝 تدريب ⭐⭐⭐: مراجعة شاملة للسرعة والمسافة والزمن",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "قطعت سيّارةٌ 70 km في ساعةٍ واحدة. ما سرعتها؟",
+      "options": [
+        { "id": "a", "text": "70 km/h" },
+        { "id": "b", "text": "7 km/h" },
+        { "id": "c", "text": "71 km/h" },
+        { "id": "d", "text": "35 km/h" }
+      ],
+      "correctOption": "a",
+      "explanation": "السرعة = المسافة ÷ الزمن = 70 ÷ 1 = 70 km/h.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "دراجٌ سرعتُه 22 km/h. كم km يقطع في ساعتين؟",
+      "options": [
+        { "id": "a", "text": "24 km" },
+        { "id": "b", "text": "44 km" },
+        { "id": "c", "text": "11 km" },
+        { "id": "d", "text": "40 km" }
+      ],
+      "correctOption": "b",
+      "explanation": "المسافة = السرعة × الزمن = 22 × 2 = 44 km.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "قطع قطارٌ 360 km بسرعة 90 km/h. كم استغرق من الزمن؟",
+      "options": [
+        { "id": "a", "text": "270 ساعة" },
+        { "id": "b", "text": "450 ساعة" },
+        { "id": "c", "text": "4 ساعات" },
+        { "id": "d", "text": "40 ساعة" }
+      ],
+      "correctOption": "c",
+      "explanation": "الزمن = المسافة ÷ السرعة = 360 ÷ 90 = 4 ساعات.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "قطعت حافلةٌ 210 km في 3 ساعات. ما سرعتها؟",
+      "options": [
+        { "id": "a", "text": "630 km/h" },
+        { "id": "b", "text": "207 km/h" },
+        { "id": "c", "text": "60 km/h" },
+        { "id": "d", "text": "70 km/h" }
+      ],
+      "correctOption": "d",
+      "explanation": "السرعة = المسافة ÷ الزمن = 210 ÷ 3 = 70 km/h.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "سيّارةٌ سرعتُها 80 km/h. كم km تقطع في نصف ساعة (0,5 ساعة)؟",
+      "options": [
+        { "id": "a", "text": "40 km" },
+        { "id": "b", "text": "160 km" },
+        { "id": "c", "text": "80 km" },
+        { "id": "d", "text": "8 km" }
+      ],
+      "correctOption": "a",
+      "explanation": "المسافة = السرعة × الزمن = 80 × 0,5 = 40 km.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "قطعت طائرةٌ 1200 km في ساعتين. ما سرعتها؟",
+      "options": [
+        { "id": "a", "text": "2400 km/h" },
+        { "id": "b", "text": "600 km/h" },
+        { "id": "c", "text": "1202 km/h" },
+        { "id": "d", "text": "300 km/h" }
+      ],
+      "correctOption": "b",
+      "explanation": "السرعة = المسافة ÷ الزمن = 1200 ÷ 2 = 600 km/h.",
+      "difficulty": 3
+    }
+  ]
+}

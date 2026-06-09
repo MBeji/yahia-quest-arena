@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ زعيم الفصل ⭐⭐⭐: سيّدُ السرعة",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "قطعت دراجةٌ 30 km في ساعتين. ما سرعتها؟",
+      "options": [
+        { "id": "a", "text": "15 km/h" },
+        { "id": "b", "text": "60 km/h" },
+        { "id": "c", "text": "32 km/h" },
+        { "id": "d", "text": "30 km/h" }
+      ],
+      "correctOption": "a",
+      "explanation": "السرعة = المسافة ÷ الزمن = 30 ÷ 2 = 15 km/h.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "الزمنُ يساوي:",
+      "options": [
+        { "id": "a", "text": "المسافة × السرعة" },
+        { "id": "b", "text": "المسافة ÷ السرعة" },
+        { "id": "c", "text": "السرعة ÷ المسافة" },
+        { "id": "d", "text": "المسافة + السرعة" }
+      ],
+      "correctOption": "b",
+      "explanation": "الزمن = المسافة ÷ السرعة (نقلب علاقةَ السرعة = المسافة ÷ الزمن).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "سار قاربٌ بسرعة 25 km/h لمدّة 4 ساعات. ما المسافة؟",
+      "options": [
+        { "id": "a", "text": "29 km" },
+        { "id": "b", "text": "6,25 km" },
+        { "id": "c", "text": "100 km" },
+        { "id": "d", "text": "50 km" }
+      ],
+      "correctOption": "c",
+      "explanation": "المسافة = السرعة × الزمن = 25 × 4 = 100 km.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "قطعت سيّارةٌ 240 km بسرعة 60 km/h. كم استغرقت من الزمن؟",
+      "options": [
+        { "id": "a", "text": "180 ساعة" },
+        { "id": "b", "text": "300 ساعة" },
+        { "id": "c", "text": "3 ساعات" },
+        { "id": "d", "text": "4 ساعات" }
+      ],
+      "correctOption": "d",
+      "explanation": "الزمن = المسافة ÷ السرعة = 240 ÷ 60 = 4 ساعات.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "قطعت طائرةٌ 900 km في ساعةٍ ونصف (1,5 ساعة). ما سرعتها؟",
+      "options": [
+        { "id": "a", "text": "600 km/h" },
+        { "id": "b", "text": "1350 km/h" },
+        { "id": "c", "text": "450 km/h" },
+        { "id": "d", "text": "901 km/h" }
+      ],
+      "correctOption": "a",
+      "explanation": "السرعة = المسافة ÷ الزمن = 900 ÷ 1,5 = 600 km/h.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "سرعةُ عدّاءٍ 12 km/h. كم km يقطع في نصف ساعة (0,5 ساعة)؟",
+      "options": [
+        { "id": "a", "text": "24 km" },
+        { "id": "b", "text": "6 km" },
+        { "id": "c", "text": "12,5 km" },
+        { "id": "d", "text": "6,5 km" }
+      ],
+      "correctOption": "b",
+      "explanation": "المسافة = السرعة × الزمن = 12 × 0,5 = 6 km.",
+      "difficulty": 3
+    }
+  ]
+}

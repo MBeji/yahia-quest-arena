@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة (نمط امتحان): التناسب والنسبة المئوية",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "ثمنُ 5 تذاكر 25 دينارًا. كم ثمنُ تذكرةٍ واحدة؟",
+      "options": [
+        { "id": "a", "text": "5 دنانير" },
+        { "id": "b", "text": "25 دينارًا" },
+        { "id": "c", "text": "125 دينارًا" },
+        { "id": "d", "text": "1 دينار" }
+      ],
+      "correctOption": "a",
+      "explanation": "ثمنُ تذكرةٍ واحدة = 25 ÷ 5 = 5 دنانير (معامل التناسب).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم يساوي 20% من 80؟",
+      "options": [
+        { "id": "a", "text": "20" },
+        { "id": "b", "text": "16" },
+        { "id": "c", "text": "40" },
+        { "id": "d", "text": "8" }
+      ],
+      "correctOption": "b",
+      "explanation": "20% من 80 = (20/100) × 80 = 16.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما النسبةُ المئوية 75% ككسرٍ مختزَل؟",
+      "options": [
+        { "id": "a", "text": "1/4" },
+        { "id": "b", "text": "7/5" },
+        { "id": "c", "text": "3/4" },
+        { "id": "d", "text": "75" }
+      ],
+      "correctOption": "c",
+      "explanation": "75% = 75/100، وبالاختزال على 25: 75/100 = 3/4.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ثمنُ 2 لتر حليب 3 دنانير. كم ثمنُ 6 لترات؟",
+      "options": [
+        { "id": "a", "text": "7 دنانير" },
+        { "id": "b", "text": "12 دينارًا" },
+        { "id": "c", "text": "4,5 دنانير" },
+        { "id": "d", "text": "9 دنانير" }
+      ],
+      "correctOption": "d",
+      "explanation": "ثمنُ اللتر = 3 ÷ 2 = 1,5 دينارًا، فثمنُ 6 لترات = 6 × 1,5 = 9 دنانير.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم يساوي 100% من 45؟",
+      "options": [
+        { "id": "a", "text": "45" },
+        { "id": "b", "text": "0" },
+        { "id": "c", "text": "100" },
+        { "id": "d", "text": "90" }
+      ],
+      "correctOption": "a",
+      "explanation": "100% من عددٍ هو العددُ نفسُه: 100% من 45 = 45.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "حصل تلميذٌ على 15 من 20 في امتحان. ما نسبتُه المئوية؟",
+      "options": [
+        { "id": "a", "text": "15%" },
+        { "id": "b", "text": "75%" },
+        { "id": "c", "text": "60%" },
+        { "id": "d", "text": "80%" }
+      ],
+      "correctOption": "b",
+      "explanation": "15/20 = (15×5)/(20×5) = 75/100 = 75%.",
+      "difficulty": 3
+    }
+  ]
+}

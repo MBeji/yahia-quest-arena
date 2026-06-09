@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: من الكسر إلى العدد العشري",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "ما القيمةُ العشرية للكسر 4/10؟",
+      "options": [
+        { "id": "a", "text": "0,4" },
+        { "id": "b", "text": "4" },
+        { "id": "c", "text": "0,04" },
+        { "id": "d", "text": "40" }
+      ],
+      "correctOption": "a",
+      "explanation": "مقامُ الكسر 10، فله رقمٌ واحدٌ بعد الفاصلة: 4/10 = 0,4.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "اكتب العددَ 0,3 على شكل كسرٍ عشريّ.",
+      "options": [
+        { "id": "a", "text": "3/100" },
+        { "id": "b", "text": "3/10" },
+        { "id": "c", "text": "30" },
+        { "id": "d", "text": "1/3" }
+      ],
+      "correctOption": "b",
+      "explanation": "للعدد 0,3 رقمٌ واحدٌ بعد الفاصلة، فهو 3 أعشار: 0,3 = 3/10.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما القيمةُ العشرية للكسر 7/100؟",
+      "options": [
+        { "id": "a", "text": "0,7" },
+        { "id": "b", "text": "7" },
+        { "id": "c", "text": "0,07" },
+        { "id": "d", "text": "0,007" }
+      ],
+      "correctOption": "c",
+      "explanation": "مقامُ الكسر 100، فله رقمان بعد الفاصلة: 7/100 = 0,07.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما الكسرُ العشريّ المساوي للعدد 0,9؟",
+      "options": [
+        { "id": "a", "text": "9/100" },
+        { "id": "b", "text": "90" },
+        { "id": "c", "text": "9" },
+        { "id": "d", "text": "9/10" }
+      ],
+      "correctOption": "d",
+      "explanation": "للعدد 0,9 رقمٌ واحدٌ بعد الفاصلة، فهو 9 أعشار: 0,9 = 9/10.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "اختزل الكسرَ العشريّ 5/10.",
+      "options": [
+        { "id": "a", "text": "1/2" },
+        { "id": "b", "text": "5/100" },
+        { "id": "c", "text": "1/5" },
+        { "id": "d", "text": "50" }
+      ],
+      "correctOption": "a",
+      "explanation": "5/10 = 0,5؛ وبالاختزال على 5: 5/10 = 1/2.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما القيمةُ العشرية للكسر 125/100؟",
+      "options": [
+        { "id": "a", "text": "12,5" },
+        { "id": "b", "text": "1,25" },
+        { "id": "c", "text": "0,125" },
+        { "id": "d", "text": "125" }
+      ],
+      "correctOption": "b",
+      "explanation": "مقامُ الكسر 100، فله رقمان بعد الفاصلة: 125/100 = 1,25.",
+      "difficulty": 2
+    }
+  ]
+}
