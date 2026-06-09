@@ -761,9 +761,6 @@ export type Database = {
           level: number;
           longest_streak: number;
           role: string;
-          subscription_activated_at: string | null;
-          subscription_expires_at: string | null;
-          subscription_type: string | null;
           total_time_minutes: number;
           weekly_objectives_completed: number;
           xp: number;
@@ -784,9 +781,6 @@ export type Database = {
           level?: number;
           longest_streak?: number;
           role?: string;
-          subscription_activated_at?: string | null;
-          subscription_expires_at?: string | null;
-          subscription_type?: string | null;
           total_time_minutes?: number;
           weekly_objectives_completed?: number;
           xp?: number;
@@ -807,9 +801,6 @@ export type Database = {
           level?: number;
           longest_streak?: number;
           role?: string;
-          subscription_activated_at?: string | null;
-          subscription_expires_at?: string | null;
-          subscription_type?: string | null;
           total_time_minutes?: number;
           weekly_objectives_completed?: number;
           xp?: number;
@@ -1270,7 +1261,6 @@ export type Database = {
     };
     Functions: {
       activate_inventory_item: { Args: { p_item_code: string }; Returns: Json };
-      admin_clear_subscription: { Args: { p_user: string }; Returns: undefined };
       admin_grant_parcours: {
         Args: {
           p_expires_at?: string;
@@ -1320,19 +1310,6 @@ export type Database = {
           user_id: string;
         }[];
       };
-      admin_list_subscriptions: {
-        Args: never;
-        Returns: {
-          display_name: string;
-          email: string;
-          is_active: boolean;
-          role: string;
-          subscription_activated_at: string;
-          subscription_expires_at: string;
-          subscription_type: string;
-          user_id: string;
-        }[];
-      };
       admin_open_reports_count: { Args: never; Returns: number };
       admin_pending_beta_count: { Args: never; Returns: number };
       admin_resolve_content_report: {
@@ -1345,10 +1322,6 @@ export type Database = {
       };
       admin_revoke_parcours: {
         Args: { p_parcours: string; p_user: string };
-        Returns: undefined;
-      };
-      admin_set_subscription: {
-        Args: { p_type: string; p_user: string };
         Returns: undefined;
       };
       award_badge_if_new: {
@@ -1372,9 +1345,6 @@ export type Database = {
           level: number;
           longest_streak: number;
           role: string;
-          subscription_activated_at: string | null;
-          subscription_expires_at: string | null;
-          subscription_type: string | null;
           total_time_minutes: number;
           weekly_objectives_completed: number;
           xp: number;
@@ -1404,9 +1374,6 @@ export type Database = {
           level: number;
           longest_streak: number;
           role: string;
-          subscription_activated_at: string | null;
-          subscription_expires_at: string | null;
-          subscription_type: string | null;
           total_time_minutes: number;
           weekly_objectives_completed: number;
           xp: number;
@@ -1477,7 +1444,6 @@ export type Database = {
           subject_xp: number;
         }[];
       };
-      has_active_subscription: { Args: { p_user: string }; Returns: boolean };
       has_parcours_entitlement: {
         Args: { p_parcours: string; p_user: string };
         Returns: boolean;
@@ -1529,9 +1495,6 @@ export type Database = {
           level: number;
           longest_streak: number;
           role: string;
-          subscription_activated_at: string | null;
-          subscription_expires_at: string | null;
-          subscription_type: string | null;
           total_time_minutes: number;
           weekly_objectives_completed: number;
           xp: number;
@@ -1561,9 +1524,6 @@ export type Database = {
           level: number;
           longest_streak: number;
           role: string;
-          subscription_activated_at: string | null;
-          subscription_expires_at: string | null;
-          subscription_type: string | null;
           total_time_minutes: number;
           weekly_objectives_completed: number;
           xp: number;
@@ -1593,9 +1553,6 @@ export type Database = {
           level: number;
           longest_streak: number;
           role: string;
-          subscription_activated_at: string | null;
-          subscription_expires_at: string | null;
-          subscription_type: string | null;
           total_time_minutes: number;
           weekly_objectives_completed: number;
           xp: number;
