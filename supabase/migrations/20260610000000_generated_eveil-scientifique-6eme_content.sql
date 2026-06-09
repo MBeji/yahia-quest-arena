@@ -38,12 +38,12 @@ BEGIN
       AND q.exercise_id = e.id
       AND e.subject_id = 'eveil-scientifique-6eme'
       AND e.source = 'admin'
-      AND q.id NOT IN ('22b1784b-cfc3-514b-9c28-f09f47b66944', '647cbfbc-b8e2-5b40-bba6-22e3c136e4cd', '5d2c2a2f-85de-50da-8e69-e418201c807b', '25148e63-2f62-5534-92f4-be9d4d5c8ce0', 'ab2c7b9c-0468-5dec-b731-4762c3bdfbcb', '82dcbdab-16a7-5df9-9cb7-f4cddb7cb0e1', 'e06a976d-142d-556b-811c-49bc1cadae23', 'c0061061-4c17-5e75-ab76-75793f41e464', 'b76bf2e4-e2a0-597d-a05a-6be2a216e4a2', '139e4b74-06da-5979-8395-f9497d98cb71', '8f9da4f4-5811-5f01-a30b-10d394173566', '23ba0a44-a33b-5cc0-b56c-0ed407c81516', 'faff4440-78e7-5010-b17d-3a2b46830f88', '8dff7eee-11c3-5ba3-98bc-ff8f02ead6db', 'f683b638-cc3c-5a55-a388-82ba940e7b29', '9b17c77a-462b-5ecb-b45a-8efe0e8e6c45', 'e8e67b32-c3ac-5bd8-a988-3f58829e1ad7', 'cb6656de-0f96-5120-bd27-cfe3d371dd65', 'fabdd1ed-2731-53e9-b46b-e7848bcca742', '6e1b2b61-5df0-58d5-847f-b84878fde7c9', '477d8191-370c-54f3-b72b-9c11054d1edd', '85e563a0-fd0f-5fd4-b229-fa1ffbdb5912', '642b9384-a3b7-5657-b727-de2b8817ce7b', '7ff2e5f0-a0d5-545e-aa4f-e6a68802bbc0', '2127e544-e2ff-5603-9d28-3dc492666a99', '353627f0-2068-5961-8f0a-4cb97333879c', '07d3d011-b650-5bc8-b293-607d11bcffff', '74666f2c-e6d6-5769-8c5d-2d0294955edc', 'd6709280-b3d8-5a2c-99f1-84ca6e159405', 'ef8fe2ed-827e-5bc2-9690-1f6133188c6d', 'e11a043e-95e0-593f-80b3-913cc03f1b0e', '09fd283e-06cc-5e66-a3de-3999e365a953', '08ff61cc-7013-5d02-a8df-34f4ea0d8559', '13349f24-ec96-5949-86bb-3971f68b5d2e', '1f6d5b40-df86-50b9-8d0b-5fbf6e753273', 'daf8a4c2-099a-5dbc-8de1-39c4e7fd305a', '9e96e371-8cfb-5e45-88b8-b335cfd4ddc8', 'bccab6fe-9303-559a-90c7-3b76e3aedc39', '1bf295eb-9a58-5cae-879c-2df38cdbba36', '7bd45187-54c3-5296-bcb5-bafb7c24bbe4', 'a9118ad3-48fd-54b7-8a88-74254fdcdb7a', '02b7493d-0a90-51b9-ab4d-2c6062fb8b2b', 'e1c04794-5255-56a7-8877-0c5575d985c7', '9fcadfa1-c422-577a-a63f-ac6e8515f591', '159c036b-42bc-56a3-aaf8-969b97f1496f', '0d03b54c-9422-51dc-85ff-7d37a59ac103', '6214cf7a-e549-588d-8cbb-b406af16aff0', 'abc98ba8-9d5c-5498-acc1-f743901e7879', '5a559640-7cd6-5fe1-ae7e-81f1de11de8e', '67b14cb9-a119-57db-8eba-706116074617', 'f7f33503-b459-5d27-adc8-d84ddd9cff08', 'dd185a0c-5964-5921-89c5-6efda6cc9cd4', 'd8a54c40-6502-5056-bf69-f383bc3a676a', 'd7655934-9e62-5a01-a5ed-22de92ae59cb', '0993075f-f19b-509e-825f-0ed08c7fd454', '18063625-8d57-5ff3-928c-639e90c4fa14', '6a967509-b002-58fc-b16d-d5ffd9242d63', '608c5491-da95-5c7d-893e-750d1b7b6f9d', '1f99edab-6543-54c6-ac7b-77f9f4a1d8c7', 'c03e30e1-b023-51fb-a85a-c0398441f94c', '386d67af-7e63-5a6a-8a0c-e2509a41a81b', '39959081-838f-544e-bc60-b45818a9f0ce', 'b93f158a-23c1-5475-9070-bd3f7855aaa8', 'f3cd1045-3d9f-55ce-9308-aa21205f383b', '76e167cd-8d4e-5be5-85ef-6fc2c010ef91', '25767b39-8d52-50ae-84b5-430398ee5bf3', 'dcd9b827-88b9-54d0-8744-f6a7c258031c', '1cc0ee4d-cb5d-5c0c-bcf1-95ef5f970df4', '4bb77781-f351-5501-9e6d-237773298888', '6dd95402-0204-5cd8-9f51-681b9577b53d', '57e35d02-c3b4-57d0-a79d-c78d60e826b7', 'd07f106a-5080-58ba-87c1-5f4b7778c331', 'f97d3e0d-fc52-58b2-8851-99a53f0ea7b4', 'ff728071-e2ab-5e02-a50f-9a0bae3ec40a', '83feb802-34ba-547d-86f5-afa61e0f361a', 'eb65f3da-8183-580d-a805-1f2d36292a0f', '27a56397-91e1-5876-814a-f8283f7a913a', '6778f97d-b31f-5c85-b06f-f31d204d840f', '509f07d9-78c5-573f-bfe1-c6a40f324ce2', 'a43c0482-0ff7-54b7-892b-e9a96e9f316d', '789f77cb-8f58-51f6-b872-c6db571d7355', '4251c047-26f4-55a4-b131-ee1af87d5bef', 'ce65fa02-3925-56b9-bad1-1e1a4f856b5c', '5dd3b035-e4b9-56bc-8d84-bb098ef7e407', '7cfe7c7b-ef68-57d9-8143-948130313ce7', '2841e9e5-9800-5ec2-bf00-6f62c4357b3e', '6fbf4970-b44d-57ae-8fef-942a73ec719d', '5346b05b-37c7-5fd6-aeda-1ef357eb8278', '38dc6a97-457f-5c42-b02e-069a87a11bc3', 'fbd347fa-698b-5e74-9e4c-049422a29781', '87623f38-b4f1-5bed-ab71-9b216463a61b', 'dfcb43b3-6192-5598-8236-2bcce1004488', 'deda32eb-75cc-532a-bfbd-f824f2f9d810', '811267f4-0bee-574b-b9f1-76291e74a596', 'd96dc9dc-8f78-5259-aded-3995906da600', '995f1b02-168d-59ae-b2b3-d84204c67ed9', 'b13a435f-81ba-57b4-b009-54a8978d619d', 'da55f641-4fd9-5828-8444-472d2388d0fb', '0c4cd92f-70c9-5c7a-a1f6-af7d4570dc3f', '7a23f433-a990-549e-8e5b-42066890bf8b', '200f2a92-1c5e-5594-bd59-6bac9037abf7', 'f7e5501e-298d-5303-9222-88503da6124d', '82e16296-f6d6-57b6-927e-04c21c48ac31', '198f99da-24d1-5be9-984c-4c2b81154870', '70237436-444d-5abf-912c-37e00c8aa73b');
+      AND q.id NOT IN ('22b1784b-cfc3-514b-9c28-f09f47b66944', '647cbfbc-b8e2-5b40-bba6-22e3c136e4cd', '5d2c2a2f-85de-50da-8e69-e418201c807b', '25148e63-2f62-5534-92f4-be9d4d5c8ce0', 'ab2c7b9c-0468-5dec-b731-4762c3bdfbcb', '82dcbdab-16a7-5df9-9cb7-f4cddb7cb0e1', 'e06a976d-142d-556b-811c-49bc1cadae23', 'c0061061-4c17-5e75-ab76-75793f41e464', 'b76bf2e4-e2a0-597d-a05a-6be2a216e4a2', '139e4b74-06da-5979-8395-f9497d98cb71', '8f9da4f4-5811-5f01-a30b-10d394173566', '23ba0a44-a33b-5cc0-b56c-0ed407c81516', 'faff4440-78e7-5010-b17d-3a2b46830f88', '8dff7eee-11c3-5ba3-98bc-ff8f02ead6db', 'f683b638-cc3c-5a55-a388-82ba940e7b29', '9b17c77a-462b-5ecb-b45a-8efe0e8e6c45', 'e8e67b32-c3ac-5bd8-a988-3f58829e1ad7', 'cb6656de-0f96-5120-bd27-cfe3d371dd65', 'fabdd1ed-2731-53e9-b46b-e7848bcca742', '6e1b2b61-5df0-58d5-847f-b84878fde7c9', '477d8191-370c-54f3-b72b-9c11054d1edd', '85e563a0-fd0f-5fd4-b229-fa1ffbdb5912', '642b9384-a3b7-5657-b727-de2b8817ce7b', '7ff2e5f0-a0d5-545e-aa4f-e6a68802bbc0', '2127e544-e2ff-5603-9d28-3dc492666a99', '353627f0-2068-5961-8f0a-4cb97333879c', '07d3d011-b650-5bc8-b293-607d11bcffff', '74666f2c-e6d6-5769-8c5d-2d0294955edc', 'd6709280-b3d8-5a2c-99f1-84ca6e159405', 'ef8fe2ed-827e-5bc2-9690-1f6133188c6d', 'e11a043e-95e0-593f-80b3-913cc03f1b0e', '09fd283e-06cc-5e66-a3de-3999e365a953', '08ff61cc-7013-5d02-a8df-34f4ea0d8559', '13349f24-ec96-5949-86bb-3971f68b5d2e', '1f6d5b40-df86-50b9-8d0b-5fbf6e753273', 'daf8a4c2-099a-5dbc-8de1-39c4e7fd305a', '9e96e371-8cfb-5e45-88b8-b335cfd4ddc8', 'bccab6fe-9303-559a-90c7-3b76e3aedc39', '1bf295eb-9a58-5cae-879c-2df38cdbba36', '7bd45187-54c3-5296-bcb5-bafb7c24bbe4', 'a9118ad3-48fd-54b7-8a88-74254fdcdb7a', '02b7493d-0a90-51b9-ab4d-2c6062fb8b2b', 'e1c04794-5255-56a7-8877-0c5575d985c7', '9fcadfa1-c422-577a-a63f-ac6e8515f591', '159c036b-42bc-56a3-aaf8-969b97f1496f', '0d03b54c-9422-51dc-85ff-7d37a59ac103', '6214cf7a-e549-588d-8cbb-b406af16aff0', 'abc98ba8-9d5c-5498-acc1-f743901e7879', '5a559640-7cd6-5fe1-ae7e-81f1de11de8e', '67b14cb9-a119-57db-8eba-706116074617', 'f7f33503-b459-5d27-adc8-d84ddd9cff08', 'dd185a0c-5964-5921-89c5-6efda6cc9cd4', 'd8a54c40-6502-5056-bf69-f383bc3a676a', 'd7655934-9e62-5a01-a5ed-22de92ae59cb', '0993075f-f19b-509e-825f-0ed08c7fd454', '18063625-8d57-5ff3-928c-639e90c4fa14', '6a967509-b002-58fc-b16d-d5ffd9242d63', '608c5491-da95-5c7d-893e-750d1b7b6f9d', '1f99edab-6543-54c6-ac7b-77f9f4a1d8c7', 'c03e30e1-b023-51fb-a85a-c0398441f94c', '386d67af-7e63-5a6a-8a0c-e2509a41a81b', '39959081-838f-544e-bc60-b45818a9f0ce', 'b93f158a-23c1-5475-9070-bd3f7855aaa8', 'f3cd1045-3d9f-55ce-9308-aa21205f383b', '76e167cd-8d4e-5be5-85ef-6fc2c010ef91', '25767b39-8d52-50ae-84b5-430398ee5bf3', 'dcd9b827-88b9-54d0-8744-f6a7c258031c', '1cc0ee4d-cb5d-5c0c-bcf1-95ef5f970df4', '4bb77781-f351-5501-9e6d-237773298888', '6dd95402-0204-5cd8-9f51-681b9577b53d', '57e35d02-c3b4-57d0-a79d-c78d60e826b7', 'd07f106a-5080-58ba-87c1-5f4b7778c331', 'f97d3e0d-fc52-58b2-8851-99a53f0ea7b4', 'ff728071-e2ab-5e02-a50f-9a0bae3ec40a', '83feb802-34ba-547d-86f5-afa61e0f361a', 'eb65f3da-8183-580d-a805-1f2d36292a0f', '27a56397-91e1-5876-814a-f8283f7a913a', '6778f97d-b31f-5c85-b06f-f31d204d840f', '509f07d9-78c5-573f-bfe1-c6a40f324ce2', 'a43c0482-0ff7-54b7-892b-e9a96e9f316d', '789f77cb-8f58-51f6-b872-c6db571d7355', '4251c047-26f4-55a4-b131-ee1af87d5bef', 'ce65fa02-3925-56b9-bad1-1e1a4f856b5c', '5dd3b035-e4b9-56bc-8d84-bb098ef7e407', '7cfe7c7b-ef68-57d9-8143-948130313ce7', '2841e9e5-9800-5ec2-bf00-6f62c4357b3e', '6fbf4970-b44d-57ae-8fef-942a73ec719d', '5346b05b-37c7-5fd6-aeda-1ef357eb8278', '38dc6a97-457f-5c42-b02e-069a87a11bc3', 'fbd347fa-698b-5e74-9e4c-049422a29781', '87623f38-b4f1-5bed-ab71-9b216463a61b', 'dfcb43b3-6192-5598-8236-2bcce1004488', 'deda32eb-75cc-532a-bfbd-f824f2f9d810', '811267f4-0bee-574b-b9f1-76291e74a596', 'd96dc9dc-8f78-5259-aded-3995906da600', '995f1b02-168d-59ae-b2b3-d84204c67ed9', 'b13a435f-81ba-57b4-b009-54a8978d619d', 'da55f641-4fd9-5828-8444-472d2388d0fb', '0c4cd92f-70c9-5c7a-a1f6-af7d4570dc3f', '7a23f433-a990-549e-8e5b-42066890bf8b', '200f2a92-1c5e-5594-bd59-6bac9037abf7', 'f7e5501e-298d-5303-9222-88503da6124d', '82e16296-f6d6-57b6-927e-04c21c48ac31', '198f99da-24d1-5be9-984c-4c2b81154870', '70237436-444d-5abf-912c-37e00c8aa73b', '598dcf22-8f0d-56ce-af19-6b95c7a7fdeb', 'da6185d0-9015-526f-936e-d63ab33167ec', 'f9230061-659f-5ead-b17e-a9d0010fb4ba', 'ec33c552-5786-5491-9e34-996aa80fa514', 'ff7b5569-9796-5ac6-a861-0e8dc4336867', '728bd33e-bc94-5853-816f-e757c62a2534', 'fdb90979-16b6-58ad-b6d0-f774fe4fa0cd', 'e64affef-a984-594f-8854-a74afeea2a04', '77812901-dfc7-58f1-ab41-2e518f9d1e5f', 'b994ad66-2f09-5b3e-b031-152ba52996df', 'cf5bedb3-703f-54a9-b9b2-cccb424ef271', '3fa136f8-5cb2-574b-9e29-3a498c81f9fc', 'f0051dd3-2108-542f-9056-d381d5a66bb2', 'f752a0de-59fc-5806-9508-122a259aadf2', '05ccad0d-d28d-5b03-9d8a-38cd65ec2946', 'f11d30a2-0109-5e57-9587-d17ba1364d2d', '03573208-af6c-5ed7-9d4c-6c73be6b8e0c', 'e611dbfd-ac17-5584-b1b0-6dbe0c407730', '1cad21f2-f878-55cf-9553-a5b25b154c08', '3d7c9686-9569-5fa3-abe2-68866ccba0d6', 'f37d1227-5fed-5f71-b7cf-911057ed7cbc', 'b84472e9-1a12-5a28-bbb7-483090ff55b9', '4c6305b4-68c8-53bf-9c67-37683416661d', '0b597e1c-2c66-5072-b8bb-188d2955bffb', 'cae8c318-5cb1-53e1-9207-61b6eea69920', '74774f6f-ead4-59ce-91dd-8c37a9ad15b9', '7cfb07f9-0b74-5ef3-b5b6-b57275fcde39', '35d47135-093a-5bc5-aa71-00cbd54a5e29', 'd8fae5a7-b5ba-5410-8f2f-effd0afeb672', '27b32498-29b4-58ca-9e78-ae91c64c8872', '340967fe-54ec-5093-b4e6-c4f010d6493c', 'b04a5bbe-62b0-5aeb-8e73-d09f158a1efe', 'a9f28943-cd78-59c0-9ec2-f4ca21e6d665', 'd2effcaa-5c75-55f3-9d0f-6f91896d7a6a', 'f466f465-4355-5fed-bd9b-0337ac97e29a', '1ddefae2-932b-55ce-83ea-8c745346b781', 'a2106db2-cacb-51c3-b71b-d1189eb3dc1e', '33092fc0-5b35-5d31-be3a-b98dd2ad8074', '4603f188-7346-59a1-b447-49e499583f4e', '192f1e6c-eee1-5a15-907e-e0ba2eeb7368', '70e19185-686c-5957-80e1-23b4ab8910d1', '4487ff4a-4305-59e0-aca0-70dc32f837c9', 'c94f1475-70bc-59e4-84ab-bdab9703f69e', '2fbeb761-6f14-5efd-ac39-b57649a3860b', '13666676-4288-5243-8b94-ad9144595a6c', '10f9124d-6062-5a14-85da-05d74a49ca63', '96682937-6424-5f10-9726-ea65590a5a83', '9d8d6b7e-7264-5200-bebf-f90b66b3715f', 'b4a1e85a-98d4-5a0f-bacb-3dc566b49cdb', 'cd5c0596-3059-58d8-b7b5-fce4d0edd6fd', '52b6e98a-a695-538b-97a7-6c35ff5b3b38', 'a60bb7c9-eccf-56e9-b201-a1eee0c25750', '4e4b5c15-8899-5eaa-a3d5-d182d1069395', '56e31342-66d1-592b-a872-99387da8398e', '2dca6e5f-c324-5c69-9856-fde628426355', '77af92ff-190d-5880-8cf0-0ab8a42f711f', '4f277377-e4a1-5197-a312-aeaedae93c8c', '1add8108-981a-59e8-a114-22e96465a994', '06fcf09f-b204-55e4-9716-52447033af38', '85629355-1dfb-5867-854d-5e90ff7a8cda', 'e1d625de-4248-5afd-ad67-01f49bee9ba2', '54f0a1c3-ca4a-5761-b5f9-82a62c9bffa0', 'dd4301d0-a563-57ca-a2b7-17de966778d6', 'ee37c28b-d434-575f-a056-0f393ab6ef5b', '90a55f25-585c-5d4f-a75f-def19cf984c9', 'c87db149-cb49-563e-bb8a-1718cae44d49', 'bfa5b9e7-418c-5904-92de-f76610812f5e', 'd0f525a2-04db-5aaa-85d1-f023d453e991', 'c01255e1-92d7-5ae1-a47b-660e6c83cc3a', '1a0940ba-0491-5893-887e-9458b4a95fec');
   END IF;
 END $$;
-DELETE FROM public.exercises WHERE subject_id = 'eveil-scientifique-6eme' AND source = 'admin' AND id NOT IN ('1c711c11-93d9-5c1a-a172-2e42e9639577', '95a7dd4f-f56f-5189-87f5-f8258dd27a5b', 'dbd48634-d6aa-59c9-96de-2e95e4c8e4be', '7552521d-0930-57e3-bc97-d27689d002f2', '3dd0f522-71ce-5d61-bbd7-1ff28f99740b', '31c7f00e-2811-5947-b3fb-96d2c5012f46', '785b1133-03dc-5ea6-a119-68343d35e8c5', '45614f7e-b1c0-5094-8f09-3d1ee809b452', 'c9471038-aa68-5d23-9828-c6787a18a851', '93e3ff54-751f-5338-9891-ed7496283db4', '83144a7b-33cd-5d46-981e-0d6aea1b6c3f', '9ce85352-fd3a-5438-b2c8-5490dc648e59', '21283609-6e6f-5624-bc24-cedd580c9f0a', 'ba04966f-d093-56cb-81c9-1dd689f6edc5', '25e852eb-166d-5524-beb5-573294fd9eb6', '5a8adbb4-f4f5-51ac-bbee-71e52c439c0a', 'd97ff5d4-e6f6-54be-8c0f-eaf6fe2e1a2a', '69aa3ace-412d-5b40-9cef-44addf566012');
-DELETE FROM public.questions WHERE exercise_id IN ('1c711c11-93d9-5c1a-a172-2e42e9639577', '95a7dd4f-f56f-5189-87f5-f8258dd27a5b', 'dbd48634-d6aa-59c9-96de-2e95e4c8e4be', '7552521d-0930-57e3-bc97-d27689d002f2', '3dd0f522-71ce-5d61-bbd7-1ff28f99740b', '31c7f00e-2811-5947-b3fb-96d2c5012f46', '785b1133-03dc-5ea6-a119-68343d35e8c5', '45614f7e-b1c0-5094-8f09-3d1ee809b452', 'c9471038-aa68-5d23-9828-c6787a18a851', '93e3ff54-751f-5338-9891-ed7496283db4', '83144a7b-33cd-5d46-981e-0d6aea1b6c3f', '9ce85352-fd3a-5438-b2c8-5490dc648e59', '21283609-6e6f-5624-bc24-cedd580c9f0a', 'ba04966f-d093-56cb-81c9-1dd689f6edc5', '25e852eb-166d-5524-beb5-573294fd9eb6', '5a8adbb4-f4f5-51ac-bbee-71e52c439c0a', 'd97ff5d4-e6f6-54be-8c0f-eaf6fe2e1a2a', '69aa3ace-412d-5b40-9cef-44addf566012') AND id NOT IN ('22b1784b-cfc3-514b-9c28-f09f47b66944', '647cbfbc-b8e2-5b40-bba6-22e3c136e4cd', '5d2c2a2f-85de-50da-8e69-e418201c807b', '25148e63-2f62-5534-92f4-be9d4d5c8ce0', 'ab2c7b9c-0468-5dec-b731-4762c3bdfbcb', '82dcbdab-16a7-5df9-9cb7-f4cddb7cb0e1', 'e06a976d-142d-556b-811c-49bc1cadae23', 'c0061061-4c17-5e75-ab76-75793f41e464', 'b76bf2e4-e2a0-597d-a05a-6be2a216e4a2', '139e4b74-06da-5979-8395-f9497d98cb71', '8f9da4f4-5811-5f01-a30b-10d394173566', '23ba0a44-a33b-5cc0-b56c-0ed407c81516', 'faff4440-78e7-5010-b17d-3a2b46830f88', '8dff7eee-11c3-5ba3-98bc-ff8f02ead6db', 'f683b638-cc3c-5a55-a388-82ba940e7b29', '9b17c77a-462b-5ecb-b45a-8efe0e8e6c45', 'e8e67b32-c3ac-5bd8-a988-3f58829e1ad7', 'cb6656de-0f96-5120-bd27-cfe3d371dd65', 'fabdd1ed-2731-53e9-b46b-e7848bcca742', '6e1b2b61-5df0-58d5-847f-b84878fde7c9', '477d8191-370c-54f3-b72b-9c11054d1edd', '85e563a0-fd0f-5fd4-b229-fa1ffbdb5912', '642b9384-a3b7-5657-b727-de2b8817ce7b', '7ff2e5f0-a0d5-545e-aa4f-e6a68802bbc0', '2127e544-e2ff-5603-9d28-3dc492666a99', '353627f0-2068-5961-8f0a-4cb97333879c', '07d3d011-b650-5bc8-b293-607d11bcffff', '74666f2c-e6d6-5769-8c5d-2d0294955edc', 'd6709280-b3d8-5a2c-99f1-84ca6e159405', 'ef8fe2ed-827e-5bc2-9690-1f6133188c6d', 'e11a043e-95e0-593f-80b3-913cc03f1b0e', '09fd283e-06cc-5e66-a3de-3999e365a953', '08ff61cc-7013-5d02-a8df-34f4ea0d8559', '13349f24-ec96-5949-86bb-3971f68b5d2e', '1f6d5b40-df86-50b9-8d0b-5fbf6e753273', 'daf8a4c2-099a-5dbc-8de1-39c4e7fd305a', '9e96e371-8cfb-5e45-88b8-b335cfd4ddc8', 'bccab6fe-9303-559a-90c7-3b76e3aedc39', '1bf295eb-9a58-5cae-879c-2df38cdbba36', '7bd45187-54c3-5296-bcb5-bafb7c24bbe4', 'a9118ad3-48fd-54b7-8a88-74254fdcdb7a', '02b7493d-0a90-51b9-ab4d-2c6062fb8b2b', 'e1c04794-5255-56a7-8877-0c5575d985c7', '9fcadfa1-c422-577a-a63f-ac6e8515f591', '159c036b-42bc-56a3-aaf8-969b97f1496f', '0d03b54c-9422-51dc-85ff-7d37a59ac103', '6214cf7a-e549-588d-8cbb-b406af16aff0', 'abc98ba8-9d5c-5498-acc1-f743901e7879', '5a559640-7cd6-5fe1-ae7e-81f1de11de8e', '67b14cb9-a119-57db-8eba-706116074617', 'f7f33503-b459-5d27-adc8-d84ddd9cff08', 'dd185a0c-5964-5921-89c5-6efda6cc9cd4', 'd8a54c40-6502-5056-bf69-f383bc3a676a', 'd7655934-9e62-5a01-a5ed-22de92ae59cb', '0993075f-f19b-509e-825f-0ed08c7fd454', '18063625-8d57-5ff3-928c-639e90c4fa14', '6a967509-b002-58fc-b16d-d5ffd9242d63', '608c5491-da95-5c7d-893e-750d1b7b6f9d', '1f99edab-6543-54c6-ac7b-77f9f4a1d8c7', 'c03e30e1-b023-51fb-a85a-c0398441f94c', '386d67af-7e63-5a6a-8a0c-e2509a41a81b', '39959081-838f-544e-bc60-b45818a9f0ce', 'b93f158a-23c1-5475-9070-bd3f7855aaa8', 'f3cd1045-3d9f-55ce-9308-aa21205f383b', '76e167cd-8d4e-5be5-85ef-6fc2c010ef91', '25767b39-8d52-50ae-84b5-430398ee5bf3', 'dcd9b827-88b9-54d0-8744-f6a7c258031c', '1cc0ee4d-cb5d-5c0c-bcf1-95ef5f970df4', '4bb77781-f351-5501-9e6d-237773298888', '6dd95402-0204-5cd8-9f51-681b9577b53d', '57e35d02-c3b4-57d0-a79d-c78d60e826b7', 'd07f106a-5080-58ba-87c1-5f4b7778c331', 'f97d3e0d-fc52-58b2-8851-99a53f0ea7b4', 'ff728071-e2ab-5e02-a50f-9a0bae3ec40a', '83feb802-34ba-547d-86f5-afa61e0f361a', 'eb65f3da-8183-580d-a805-1f2d36292a0f', '27a56397-91e1-5876-814a-f8283f7a913a', '6778f97d-b31f-5c85-b06f-f31d204d840f', '509f07d9-78c5-573f-bfe1-c6a40f324ce2', 'a43c0482-0ff7-54b7-892b-e9a96e9f316d', '789f77cb-8f58-51f6-b872-c6db571d7355', '4251c047-26f4-55a4-b131-ee1af87d5bef', 'ce65fa02-3925-56b9-bad1-1e1a4f856b5c', '5dd3b035-e4b9-56bc-8d84-bb098ef7e407', '7cfe7c7b-ef68-57d9-8143-948130313ce7', '2841e9e5-9800-5ec2-bf00-6f62c4357b3e', '6fbf4970-b44d-57ae-8fef-942a73ec719d', '5346b05b-37c7-5fd6-aeda-1ef357eb8278', '38dc6a97-457f-5c42-b02e-069a87a11bc3', 'fbd347fa-698b-5e74-9e4c-049422a29781', '87623f38-b4f1-5bed-ab71-9b216463a61b', 'dfcb43b3-6192-5598-8236-2bcce1004488', 'deda32eb-75cc-532a-bfbd-f824f2f9d810', '811267f4-0bee-574b-b9f1-76291e74a596', 'd96dc9dc-8f78-5259-aded-3995906da600', '995f1b02-168d-59ae-b2b3-d84204c67ed9', 'b13a435f-81ba-57b4-b009-54a8978d619d', 'da55f641-4fd9-5828-8444-472d2388d0fb', '0c4cd92f-70c9-5c7a-a1f6-af7d4570dc3f', '7a23f433-a990-549e-8e5b-42066890bf8b', '200f2a92-1c5e-5594-bd59-6bac9037abf7', 'f7e5501e-298d-5303-9222-88503da6124d', '82e16296-f6d6-57b6-927e-04c21c48ac31', '198f99da-24d1-5be9-984c-4c2b81154870', '70237436-444d-5abf-912c-37e00c8aa73b');
-DELETE FROM public.chapters c WHERE c.subject_id = 'eveil-scientifique-6eme' AND c.id NOT IN ('e560f7f7-a314-5ca6-a3f1-a294385e4f28', '38976f55-d157-591a-9efd-ad38e0e0b33a', 'a5efe929-363c-5e01-a9bc-06eff4fbe288') AND NOT EXISTS (SELECT 1 FROM public.exercises e WHERE e.chapter_id = c.id);
+DELETE FROM public.exercises WHERE subject_id = 'eveil-scientifique-6eme' AND source = 'admin' AND id NOT IN ('1c711c11-93d9-5c1a-a172-2e42e9639577', '95a7dd4f-f56f-5189-87f5-f8258dd27a5b', 'dbd48634-d6aa-59c9-96de-2e95e4c8e4be', '7552521d-0930-57e3-bc97-d27689d002f2', '3dd0f522-71ce-5d61-bbd7-1ff28f99740b', '31c7f00e-2811-5947-b3fb-96d2c5012f46', '785b1133-03dc-5ea6-a119-68343d35e8c5', '45614f7e-b1c0-5094-8f09-3d1ee809b452', 'c9471038-aa68-5d23-9828-c6787a18a851', '93e3ff54-751f-5338-9891-ed7496283db4', '83144a7b-33cd-5d46-981e-0d6aea1b6c3f', '9ce85352-fd3a-5438-b2c8-5490dc648e59', '21283609-6e6f-5624-bc24-cedd580c9f0a', 'ba04966f-d093-56cb-81c9-1dd689f6edc5', '25e852eb-166d-5524-beb5-573294fd9eb6', '5a8adbb4-f4f5-51ac-bbee-71e52c439c0a', 'd97ff5d4-e6f6-54be-8c0f-eaf6fe2e1a2a', '69aa3ace-412d-5b40-9cef-44addf566012', '1d0412f9-ef6c-5479-84a2-2e542351f305', 'a1223f64-4330-52b5-8b8a-ae4694a55832', '259fd70b-0e26-583e-941d-5b8ff81932c2', '93b390db-d856-50d9-8cc7-74dc537f737d', '6c647109-fa0a-5dd0-992a-37912e24f1c5', 'e5fb5a0a-624e-5402-b813-fea1d2e80fd0', 'aecf02b2-d4c6-5cc5-867f-38928ffbdb57', '02ecec19-f2c1-58c9-bb3f-5f5a83be045b', '68655d37-f975-53af-b6fb-2687adba1ce9', '28c17ebc-d3df-52e1-bf70-852dfb60ab2e', 'c5cd521a-7515-5ad2-9da2-0302047934f2', 'ae6c1d5c-5cad-5808-89e8-9e1adf0bf999');
+DELETE FROM public.questions WHERE exercise_id IN ('1c711c11-93d9-5c1a-a172-2e42e9639577', '95a7dd4f-f56f-5189-87f5-f8258dd27a5b', 'dbd48634-d6aa-59c9-96de-2e95e4c8e4be', '7552521d-0930-57e3-bc97-d27689d002f2', '3dd0f522-71ce-5d61-bbd7-1ff28f99740b', '31c7f00e-2811-5947-b3fb-96d2c5012f46', '785b1133-03dc-5ea6-a119-68343d35e8c5', '45614f7e-b1c0-5094-8f09-3d1ee809b452', 'c9471038-aa68-5d23-9828-c6787a18a851', '93e3ff54-751f-5338-9891-ed7496283db4', '83144a7b-33cd-5d46-981e-0d6aea1b6c3f', '9ce85352-fd3a-5438-b2c8-5490dc648e59', '21283609-6e6f-5624-bc24-cedd580c9f0a', 'ba04966f-d093-56cb-81c9-1dd689f6edc5', '25e852eb-166d-5524-beb5-573294fd9eb6', '5a8adbb4-f4f5-51ac-bbee-71e52c439c0a', 'd97ff5d4-e6f6-54be-8c0f-eaf6fe2e1a2a', '69aa3ace-412d-5b40-9cef-44addf566012', '1d0412f9-ef6c-5479-84a2-2e542351f305', 'a1223f64-4330-52b5-8b8a-ae4694a55832', '259fd70b-0e26-583e-941d-5b8ff81932c2', '93b390db-d856-50d9-8cc7-74dc537f737d', '6c647109-fa0a-5dd0-992a-37912e24f1c5', 'e5fb5a0a-624e-5402-b813-fea1d2e80fd0', 'aecf02b2-d4c6-5cc5-867f-38928ffbdb57', '02ecec19-f2c1-58c9-bb3f-5f5a83be045b', '68655d37-f975-53af-b6fb-2687adba1ce9', '28c17ebc-d3df-52e1-bf70-852dfb60ab2e', 'c5cd521a-7515-5ad2-9da2-0302047934f2', 'ae6c1d5c-5cad-5808-89e8-9e1adf0bf999') AND id NOT IN ('22b1784b-cfc3-514b-9c28-f09f47b66944', '647cbfbc-b8e2-5b40-bba6-22e3c136e4cd', '5d2c2a2f-85de-50da-8e69-e418201c807b', '25148e63-2f62-5534-92f4-be9d4d5c8ce0', 'ab2c7b9c-0468-5dec-b731-4762c3bdfbcb', '82dcbdab-16a7-5df9-9cb7-f4cddb7cb0e1', 'e06a976d-142d-556b-811c-49bc1cadae23', 'c0061061-4c17-5e75-ab76-75793f41e464', 'b76bf2e4-e2a0-597d-a05a-6be2a216e4a2', '139e4b74-06da-5979-8395-f9497d98cb71', '8f9da4f4-5811-5f01-a30b-10d394173566', '23ba0a44-a33b-5cc0-b56c-0ed407c81516', 'faff4440-78e7-5010-b17d-3a2b46830f88', '8dff7eee-11c3-5ba3-98bc-ff8f02ead6db', 'f683b638-cc3c-5a55-a388-82ba940e7b29', '9b17c77a-462b-5ecb-b45a-8efe0e8e6c45', 'e8e67b32-c3ac-5bd8-a988-3f58829e1ad7', 'cb6656de-0f96-5120-bd27-cfe3d371dd65', 'fabdd1ed-2731-53e9-b46b-e7848bcca742', '6e1b2b61-5df0-58d5-847f-b84878fde7c9', '477d8191-370c-54f3-b72b-9c11054d1edd', '85e563a0-fd0f-5fd4-b229-fa1ffbdb5912', '642b9384-a3b7-5657-b727-de2b8817ce7b', '7ff2e5f0-a0d5-545e-aa4f-e6a68802bbc0', '2127e544-e2ff-5603-9d28-3dc492666a99', '353627f0-2068-5961-8f0a-4cb97333879c', '07d3d011-b650-5bc8-b293-607d11bcffff', '74666f2c-e6d6-5769-8c5d-2d0294955edc', 'd6709280-b3d8-5a2c-99f1-84ca6e159405', 'ef8fe2ed-827e-5bc2-9690-1f6133188c6d', 'e11a043e-95e0-593f-80b3-913cc03f1b0e', '09fd283e-06cc-5e66-a3de-3999e365a953', '08ff61cc-7013-5d02-a8df-34f4ea0d8559', '13349f24-ec96-5949-86bb-3971f68b5d2e', '1f6d5b40-df86-50b9-8d0b-5fbf6e753273', 'daf8a4c2-099a-5dbc-8de1-39c4e7fd305a', '9e96e371-8cfb-5e45-88b8-b335cfd4ddc8', 'bccab6fe-9303-559a-90c7-3b76e3aedc39', '1bf295eb-9a58-5cae-879c-2df38cdbba36', '7bd45187-54c3-5296-bcb5-bafb7c24bbe4', 'a9118ad3-48fd-54b7-8a88-74254fdcdb7a', '02b7493d-0a90-51b9-ab4d-2c6062fb8b2b', 'e1c04794-5255-56a7-8877-0c5575d985c7', '9fcadfa1-c422-577a-a63f-ac6e8515f591', '159c036b-42bc-56a3-aaf8-969b97f1496f', '0d03b54c-9422-51dc-85ff-7d37a59ac103', '6214cf7a-e549-588d-8cbb-b406af16aff0', 'abc98ba8-9d5c-5498-acc1-f743901e7879', '5a559640-7cd6-5fe1-ae7e-81f1de11de8e', '67b14cb9-a119-57db-8eba-706116074617', 'f7f33503-b459-5d27-adc8-d84ddd9cff08', 'dd185a0c-5964-5921-89c5-6efda6cc9cd4', 'd8a54c40-6502-5056-bf69-f383bc3a676a', 'd7655934-9e62-5a01-a5ed-22de92ae59cb', '0993075f-f19b-509e-825f-0ed08c7fd454', '18063625-8d57-5ff3-928c-639e90c4fa14', '6a967509-b002-58fc-b16d-d5ffd9242d63', '608c5491-da95-5c7d-893e-750d1b7b6f9d', '1f99edab-6543-54c6-ac7b-77f9f4a1d8c7', 'c03e30e1-b023-51fb-a85a-c0398441f94c', '386d67af-7e63-5a6a-8a0c-e2509a41a81b', '39959081-838f-544e-bc60-b45818a9f0ce', 'b93f158a-23c1-5475-9070-bd3f7855aaa8', 'f3cd1045-3d9f-55ce-9308-aa21205f383b', '76e167cd-8d4e-5be5-85ef-6fc2c010ef91', '25767b39-8d52-50ae-84b5-430398ee5bf3', 'dcd9b827-88b9-54d0-8744-f6a7c258031c', '1cc0ee4d-cb5d-5c0c-bcf1-95ef5f970df4', '4bb77781-f351-5501-9e6d-237773298888', '6dd95402-0204-5cd8-9f51-681b9577b53d', '57e35d02-c3b4-57d0-a79d-c78d60e826b7', 'd07f106a-5080-58ba-87c1-5f4b7778c331', 'f97d3e0d-fc52-58b2-8851-99a53f0ea7b4', 'ff728071-e2ab-5e02-a50f-9a0bae3ec40a', '83feb802-34ba-547d-86f5-afa61e0f361a', 'eb65f3da-8183-580d-a805-1f2d36292a0f', '27a56397-91e1-5876-814a-f8283f7a913a', '6778f97d-b31f-5c85-b06f-f31d204d840f', '509f07d9-78c5-573f-bfe1-c6a40f324ce2', 'a43c0482-0ff7-54b7-892b-e9a96e9f316d', '789f77cb-8f58-51f6-b872-c6db571d7355', '4251c047-26f4-55a4-b131-ee1af87d5bef', 'ce65fa02-3925-56b9-bad1-1e1a4f856b5c', '5dd3b035-e4b9-56bc-8d84-bb098ef7e407', '7cfe7c7b-ef68-57d9-8143-948130313ce7', '2841e9e5-9800-5ec2-bf00-6f62c4357b3e', '6fbf4970-b44d-57ae-8fef-942a73ec719d', '5346b05b-37c7-5fd6-aeda-1ef357eb8278', '38dc6a97-457f-5c42-b02e-069a87a11bc3', 'fbd347fa-698b-5e74-9e4c-049422a29781', '87623f38-b4f1-5bed-ab71-9b216463a61b', 'dfcb43b3-6192-5598-8236-2bcce1004488', 'deda32eb-75cc-532a-bfbd-f824f2f9d810', '811267f4-0bee-574b-b9f1-76291e74a596', 'd96dc9dc-8f78-5259-aded-3995906da600', '995f1b02-168d-59ae-b2b3-d84204c67ed9', 'b13a435f-81ba-57b4-b009-54a8978d619d', 'da55f641-4fd9-5828-8444-472d2388d0fb', '0c4cd92f-70c9-5c7a-a1f6-af7d4570dc3f', '7a23f433-a990-549e-8e5b-42066890bf8b', '200f2a92-1c5e-5594-bd59-6bac9037abf7', 'f7e5501e-298d-5303-9222-88503da6124d', '82e16296-f6d6-57b6-927e-04c21c48ac31', '198f99da-24d1-5be9-984c-4c2b81154870', '70237436-444d-5abf-912c-37e00c8aa73b', '598dcf22-8f0d-56ce-af19-6b95c7a7fdeb', 'da6185d0-9015-526f-936e-d63ab33167ec', 'f9230061-659f-5ead-b17e-a9d0010fb4ba', 'ec33c552-5786-5491-9e34-996aa80fa514', 'ff7b5569-9796-5ac6-a861-0e8dc4336867', '728bd33e-bc94-5853-816f-e757c62a2534', 'fdb90979-16b6-58ad-b6d0-f774fe4fa0cd', 'e64affef-a984-594f-8854-a74afeea2a04', '77812901-dfc7-58f1-ab41-2e518f9d1e5f', 'b994ad66-2f09-5b3e-b031-152ba52996df', 'cf5bedb3-703f-54a9-b9b2-cccb424ef271', '3fa136f8-5cb2-574b-9e29-3a498c81f9fc', 'f0051dd3-2108-542f-9056-d381d5a66bb2', 'f752a0de-59fc-5806-9508-122a259aadf2', '05ccad0d-d28d-5b03-9d8a-38cd65ec2946', 'f11d30a2-0109-5e57-9587-d17ba1364d2d', '03573208-af6c-5ed7-9d4c-6c73be6b8e0c', 'e611dbfd-ac17-5584-b1b0-6dbe0c407730', '1cad21f2-f878-55cf-9553-a5b25b154c08', '3d7c9686-9569-5fa3-abe2-68866ccba0d6', 'f37d1227-5fed-5f71-b7cf-911057ed7cbc', 'b84472e9-1a12-5a28-bbb7-483090ff55b9', '4c6305b4-68c8-53bf-9c67-37683416661d', '0b597e1c-2c66-5072-b8bb-188d2955bffb', 'cae8c318-5cb1-53e1-9207-61b6eea69920', '74774f6f-ead4-59ce-91dd-8c37a9ad15b9', '7cfb07f9-0b74-5ef3-b5b6-b57275fcde39', '35d47135-093a-5bc5-aa71-00cbd54a5e29', 'd8fae5a7-b5ba-5410-8f2f-effd0afeb672', '27b32498-29b4-58ca-9e78-ae91c64c8872', '340967fe-54ec-5093-b4e6-c4f010d6493c', 'b04a5bbe-62b0-5aeb-8e73-d09f158a1efe', 'a9f28943-cd78-59c0-9ec2-f4ca21e6d665', 'd2effcaa-5c75-55f3-9d0f-6f91896d7a6a', 'f466f465-4355-5fed-bd9b-0337ac97e29a', '1ddefae2-932b-55ce-83ea-8c745346b781', 'a2106db2-cacb-51c3-b71b-d1189eb3dc1e', '33092fc0-5b35-5d31-be3a-b98dd2ad8074', '4603f188-7346-59a1-b447-49e499583f4e', '192f1e6c-eee1-5a15-907e-e0ba2eeb7368', '70e19185-686c-5957-80e1-23b4ab8910d1', '4487ff4a-4305-59e0-aca0-70dc32f837c9', 'c94f1475-70bc-59e4-84ab-bdab9703f69e', '2fbeb761-6f14-5efd-ac39-b57649a3860b', '13666676-4288-5243-8b94-ad9144595a6c', '10f9124d-6062-5a14-85da-05d74a49ca63', '96682937-6424-5f10-9726-ea65590a5a83', '9d8d6b7e-7264-5200-bebf-f90b66b3715f', 'b4a1e85a-98d4-5a0f-bacb-3dc566b49cdb', 'cd5c0596-3059-58d8-b7b5-fce4d0edd6fd', '52b6e98a-a695-538b-97a7-6c35ff5b3b38', 'a60bb7c9-eccf-56e9-b201-a1eee0c25750', '4e4b5c15-8899-5eaa-a3d5-d182d1069395', '56e31342-66d1-592b-a872-99387da8398e', '2dca6e5f-c324-5c69-9856-fde628426355', '77af92ff-190d-5880-8cf0-0ab8a42f711f', '4f277377-e4a1-5197-a312-aeaedae93c8c', '1add8108-981a-59e8-a114-22e96465a994', '06fcf09f-b204-55e4-9716-52447033af38', '85629355-1dfb-5867-854d-5e90ff7a8cda', 'e1d625de-4248-5afd-ad67-01f49bee9ba2', '54f0a1c3-ca4a-5761-b5f9-82a62c9bffa0', 'dd4301d0-a563-57ca-a2b7-17de966778d6', 'ee37c28b-d434-575f-a056-0f393ab6ef5b', '90a55f25-585c-5d4f-a75f-def19cf984c9', 'c87db149-cb49-563e-bb8a-1718cae44d49', 'bfa5b9e7-418c-5904-92de-f76610812f5e', 'd0f525a2-04db-5aaa-85d1-f023d453e991', 'c01255e1-92d7-5ae1-a47b-660e6c83cc3a', '1a0940ba-0491-5893-887e-9458b4a95fec');
+DELETE FROM public.chapters c WHERE c.subject_id = 'eveil-scientifique-6eme' AND c.id NOT IN ('e560f7f7-a314-5ca6-a3f1-a294385e4f28', '38976f55-d157-591a-9efd-ad38e0e0b33a', 'a5efe929-363c-5e01-a9bc-06eff4fbe288', 'dcc4acda-70b9-50dd-b4f2-b161b7ddd292', '9ba90402-06a3-5fc3-84bf-8c80671bb811') AND NOT EXISTS (SELECT 1 FROM public.exercises e WHERE e.chapter_id = c.id);
 
 INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order) VALUES
   ('e560f7f7-a314-5ca6-a3f1-a294385e4f28', 'eveil-scientifique-6eme', 'الهواء', 'خاصيّاتُ الهواء ومكوّناتُه (الآزوت والأكسجين)، وأهميّتُه للحياة، والاحتراقُ ودورُ الأكسجين', '# 💨 الهواء
@@ -61,10 +61,10 @@ INSERT INTO public.chapters (id, subject_id, title, description, lesson_content,
 
 الهواءُ **خليطٌ** من الغازات:
 
-| الغاز                                | النسبة التقريبيّة |
-| ------------------------------------ | ----------------- |
-| الآزوت (النيتروجين)                  | حوالي 78%         |
-| الأكسجين                             | حوالي 21%         |
+| الغاز                                 | النسبة التقريبيّة |
+| ------------------------------------- | ----------------- |
+| الآزوت (النيتروجين)                   | حوالي 78%         |
+| الأكسجين                              | حوالي 21%         |
 | غازاتٌ أخرى (منها ثاني أكسيد الكربون) | حوالي 1%          |
 
 ## 🔥 الاحتراقُ وأهميّةُ الأكسجين
@@ -138,12 +138,12 @@ INSERT INTO public.chapters (id, subject_id, title, description, lesson_content,
 
 ## 🩸 تركيبةُ الدم
 
-| المكوّن            | الدور                              |
-| ------------------ | ---------------------------------- |
-| البلازما           | سائلٌ يحملُ المكوّناتِ والمغذّيات   |
-| الكريّات الحمراء   | نقلُ الأكسجين                       |
-| الكريّات البيضاء   | الدفاعُ عن الجسم ضدّ الميكروبات     |
-| الصفيحات الدمويّة  | تخثّرُ الدم وإيقافُ النزيف          |
+| المكوّن           | الدور                             |
+| ----------------- | --------------------------------- |
+| البلازما          | سائلٌ يحملُ المكوّناتِ والمغذّيات |
+| الكريّات الحمراء  | نقلُ الأكسجين                     |
+| الكريّات البيضاء  | الدفاعُ عن الجسم ضدّ الميكروبات   |
+| الصفيحات الدمويّة | تخثّرُ الدم وإيقافُ النزيف        |
 
 ## 🫀 القلبُ والأوعية
 
@@ -166,6 +166,97 @@ INSERT INTO public.chapters (id, subject_id, title, description, lesson_content,
 - **الأوعية:** الشرايين (من القلب) والأوردة (إلى القلب) والشعيرات الدمويّة.
 - **وظيفةُ الدم:** نقلُ الأكسجين والمغذّيات إلى الأعضاء، ونقلُ ثاني أكسيد الكربون والفضلات بعيدًا.
 - ⚠️ الكريّاتُ الحمراء تنقلُ الأكسجين، والبيضاءُ تدافعُ عن الجسم.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  description = EXCLUDED.description,
+  lesson_content = EXCLUDED.lesson_content,
+  summary = EXCLUDED.summary,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order) VALUES
+  ('dcc4acda-70b9-50dd-b4f2-b161b7ddd292', 'eveil-scientifique-6eme', 'التغذية عند الإنسان', 'أصنافُ الأغذية (بانية، طاقيّة، واقية) ووظائفُها، والوجبةُ المتوازنة، والأمراضُ الناتجة عن سوء التغذية', '# 🍎 التغذية عند الإنسان
+
+> 💡 «نأكلُ لنبني أجسامَنا ونتحرّكَ ونقاومَ المرض. لكنّ الغذاءَ الصحّيَّ توازنٌ، لا كثرةٌ ولا قلّة.»
+
+## 🍽️ أصنافُ الأغذية ووظائفُها
+
+| الصنف        | أمثلة                                  | الوظيفة                       |
+| ------------ | -------------------------------------- | ----------------------------- |
+| أغذية بانية  | اللحوم، السمك، البيض، الحليب، البقول    | بناءُ الجسم ونموّه وترميمُه    |
+| أغذية طاقيّة | الخبز، العجائن، الأرز، السكّر، الزيت    | تمدُّ الجسمَ بالطاقة           |
+| أغذية واقية  | الخضر والغلال (فيتامينات وأملاح معدنيّة) | تقي الجسمَ من الأمراض          |
+
+> 💧 ولا ننسى **الماء**: ضروريٌّ لكلّ وظائف الجسم.
+
+## ⚖️ الوجبةُ المتوازنة
+
+الوجبةُ المتوازنة تحتوي على **الأصناف الثلاثة** بكمّيّاتٍ مناسبة، وتختلفُ الحاجةُ حسب **السنّ والنشاط** (الرياضيُّ يحتاجُ طاقةً أكثر).
+
+## 🤒 سوءُ التغذية
+
+- **الإفراط** (خاصّةً في السكّريات والدهون) ⟵ السمنةُ وتسوّسُ الأسنان.
+- **النقص** ⟵ الهزالُ وضعفُ النموّ.
+- **نقصُ صنفٍ معيّن** ⟵ أمراضٌ خاصّة (مثل نقص الحديد ⟵ فقر الدم).
+
+> ⚠️ الفخّ الشائع: اعتبارُ الأكل الكثير غذاءً جيّدًا. الغذاءُ الصحّيُّ **متوازنٌ ومتنوّع**، لا مجرّدُ كمّيّةٍ كبيرة.
+
+> 🏆 عرفتَ كيف تختارُ غذاءَك. التالي: كيف تترابطُ الكائناتُ الحيّة في الطبيعة عبر السلاسل الغذائيّة.', '# 📜 ملخّص: التغذية عند الإنسان
+
+- **الأغذية البانية:** (لحوم، سمك، بيض، حليب، بقول) لبناء الجسم ونموّه.
+- **الأغذية الطاقيّة:** (خبز، أرز، سكّر، زيت) تمدُّ بالطاقة.
+- **الأغذية الواقية:** (خضر وغلال) فيتامينات وأملاح تقي من الأمراض.
+- **الماء** ضروريٌّ لكلّ وظائف الجسم.
+- **الوجبة المتوازنة:** الأصناف الثلاثة بنسبٍ مناسبة حسب السنّ والنشاط.
+- **سوء التغذية:** الإفراط ← السمنة وتسوّس الأسنان؛ النقص ← الهزال؛ نقص الحديد ← فقر الدم.
+- ⚠️ الغذاء الجيّد متوازنٌ ومتنوّع، لا مجرّد كمّيّةٍ كبيرة.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  description = EXCLUDED.description,
+  lesson_content = EXCLUDED.lesson_content,
+  summary = EXCLUDED.summary,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order) VALUES
+  ('9ba90402-06a3-5fc3-84bf-8c80671bb811', 'eveil-scientifique-6eme', 'الوسط البيئي والسلاسل الغذائية', 'الوسطُ البيئي ومكوّناتُه، والسلسلةُ الغذائية (منتِج، مستهلكون) واتّجاهُ السهم، والتوازنُ الطبيعي، وتلوّثُ المياه والمحافظةُ عليها', '# 🌿 الوسط البيئي والسلاسل الغذائية
+
+> 💡 «في الطبيعة، كلُّ كائنٍ حيٍّ يأكلُ ويُؤكَل. هذه العلاقاتُ تنسجُ سلاسلَ تربطُ النباتَ بالحيوان وتحفظُ توازنَ الوسط.»
+
+## 🏞️ الوسطُ البيئي
+
+**الوسطُ البيئي** هو المكانُ الذي تعيشُ فيه الكائناتُ الحيّة (نباتاتٌ وحيوانات) وتتفاعلُ فيما بينها ومع مكوّناته غير الحيّة: **الماء، الهواء، التربة، الضوء**.
+
+## 🔗 السلسلةُ الغذائية
+
+تبيّنُ السلسلةُ الغذائيّة علاقةَ **«مَن يأكلُ مَن»**:
+
+- **المُنتِج:** النباتُ الأخضر، يصنعُ غذاءَه بنفسه.
+- **المستهلِكُ الأوّل:** حيوانٌ عاشبٌ يأكلُ النبات.
+- **المستهلِكُ الثاني:** حيوانٌ لاحمٌ يأكلُ العاشب.
+
+> 🔁 مثال: **عُشب ← أرنب ← ثعلب** (النباتُ يأكلُه الأرنب، والأرنبُ يأكلُه الثعلب). السهمُ (←) يعني **«يُؤكَلُ مِن قِبَل»**، أي يتّجهُ من المأكول إلى الآكل.
+
+## ⚖️ التوازنُ الطبيعي
+
+كلُّ حلقةٍ تعتمدُ على غيرها؛ فإذا اختفت حلقةٌ (مثلًا النبات) **اختلّت** السلسلةُ كلُّها وتأثّرت بقيّةُ الكائنات.
+
+## 💧 تلوّثُ الأوساط المائية والمحافظةُ عليها
+
+- **مصادرُ التلوّث:** النفاياتُ، المياهُ المستعملة، الموادُّ الكيميائيّة.
+- **الوقاية:** عدمُ رمي الفضلات في الماء، ومعالجةُ المياه المستعملة، والمحافظةُ على نظافة الأوساط.
+- المياهُ الملوّثةُ تسبّبُ **أمراضًا**، لذلك تجبُ حمايتُها.
+
+> ⚠️ الفخّ الشائع: عكسُ اتّجاه السهم. السهمُ في السلسلة الغذائيّة يتّجهُ دائمًا من **المأكول إلى الآكل** (من النبات إلى العاشب)، لا العكس.
+
+> 🏆 فهمتَ كيف ترتبطُ الكائناتُ في الوسط وكيف نحميه. رحلتُك في عالَم العلوم تتواصل!', '# 📜 ملخّص: الوسط البيئي والسلاسل الغذائية
+
+- **الوسطُ البيئي:** مكانُ عيش الكائنات الحيّة وتفاعلُها فيما بينها ومع الماء والهواء والتربة والضوء.
+- **السلسلةُ الغذائية:** المُنتِج (نباتٌ أخضر) ← مستهلكٌ أوّل (عاشب) ← مستهلكٌ ثانٍ (لاحم).
+- **السهمُ** يعني «يُؤكَلُ مِن قِبَل»، ويتّجهُ من المأكول إلى الآكل.
+- **التوازنُ الطبيعي:** اختفاءُ حلقةٍ يُخلّ بالسلسلة كلّها.
+- **تلوّثُ المياه:** مصادرُه النفايات والمياه المستعملة والمواد الكيميائيّة؛ نحميها بعدم التلويث والمعالجة.
+- ⚠️ السهمُ يتّجه من المأكول إلى الآكل (لا العكس).', 5)
 ON CONFLICT (id) DO UPDATE SET
   subject_id = EXCLUDED.subject_id,
   title = EXCLUDED.title,
@@ -1432,6 +1523,850 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
   ('70237436-444d-5abf-912c-37e00c8aa73b', '69aa3ace-412d-5b40-9cef-44addf566012', 'لماذا يُعدُّ الدمُ مهمًّا للحياة؟', '[{"id":"a","text":"لأنّه ينقلُ الأكسجينَ والغذاءَ ويزيلُ الفضلات"},{"id":"b","text":"لأنّه يصنعُ الهواء"},{"id":"c","text":"لأنّه يبرّدُ الجلدَ فقط"},{"id":"d","text":"لأنّه يُنتجُ العظام"}]'::jsonb, 'a', 'الدمُ يحفظُ الحياةَ لأنّه ينقلُ الأكسجينَ والمغذّياتِ لكلّ الأعضاء ويُبعدُ الفضلات.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('1d0412f9-ef6c-5479-84a2-2e542351f305', 'dcc4acda-70b9-50dd-b4f2-b161b7ddd292', 'eveil-scientifique-6eme', 'اختبار فهم الدرس ⭐', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('598dcf22-8f0d-56ce-af19-6b95c7a7fdeb', '1d0412f9-ef6c-5479-84a2-2e542351f305', 'الأغذيةُ البانية (كاللحوم والبيض) تُستعملُ أساسًا لـ:', '[{"id":"a","text":"بناء الجسم ونموّه"},{"id":"b","text":"إمداد الجسم بالطاقة فقط"},{"id":"c","text":"تبريد الجسم"},{"id":"d","text":"تلوين الجلد"}]'::jsonb, 'a', 'الأغذيةُ البانية (بروتينات) تُستعملُ لبناء الجسم ونموّه وترميم أنسجته.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('da6185d0-9015-526f-936e-d63ab33167ec', '1d0412f9-ef6c-5479-84a2-2e542351f305', 'الأغذيةُ الطاقيّة (كالخبز والأرز) تمدُّ الجسمَ بـ:', '[{"id":"a","text":"الطاقة"},{"id":"b","text":"الفيتامينات فقط"},{"id":"c","text":"الميكروبات"},{"id":"d","text":"الهواء"}]'::jsonb, 'a', 'الأغذيةُ الطاقيّة (سكّريات ودهون) تمدُّ الجسمَ بالطاقة اللازمة للحركة والنشاط.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('f9230061-659f-5ead-b17e-a9d0010fb4ba', '1d0412f9-ef6c-5479-84a2-2e542351f305', 'أيُّ هذه أغذيةٌ واقية؟', '[{"id":"a","text":"الخضر والغلال"},{"id":"b","text":"اللحوم الحمراء"},{"id":"c","text":"الزيت والزبدة"},{"id":"d","text":"السكّر"}]'::jsonb, 'a', 'الخضرُ والغلالُ أغذيةٌ واقية، فهي غنيّةٌ بالفيتامينات والأملاح التي تقي من الأمراض.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('ec33c552-5786-5491-9e34-996aa80fa514', '1d0412f9-ef6c-5479-84a2-2e542351f305', 'ما الوجبةُ الغذائيّةُ المتوازنة؟', '[{"id":"a","text":"التي تجمعُ الأصناف الثلاثة بنسبٍ مناسبة"},{"id":"b","text":"التي تتكوّنُ من السكّر فقط"},{"id":"c","text":"أكبرُ كمّيّةٍ ممكنةٍ من الطعام"},{"id":"d","text":"اللحومُ فقط"}]'::jsonb, 'a', 'الوجبةُ المتوازنة تجمعُ الأغذيةَ البانية والطاقيّة والواقية بكمّيّاتٍ مناسبة.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('ff7b5569-9796-5ac6-a861-0e8dc4336867', '1d0412f9-ef6c-5479-84a2-2e542351f305', 'الإفراطُ في السكّريات والدهون قد يسبّبُ:', '[{"id":"a","text":"السمنة وتسوّس الأسنان"},{"id":"b","text":"زيادةَ الذكاء"},{"id":"c","text":"نموًّا أسرعَ للعظام"},{"id":"d","text":"لا شيءَ إطلاقًا"}]'::jsonb, 'a', 'كثرةُ السكّريات والدهون تؤدّي إلى السمنة وإلى تسوّس الأسنان.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('a1223f64-4330-52b5-8b8a-ae4694a55832', 'dcc4acda-70b9-50dd-b4f2-b161b7ddd292', 'eveil-scientifique-6eme', '⭐ تمرين: أوّلُ خطوات مع التغذية', 1, 50, 10, 'practice', 'admin', 1)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('728bd33e-bc94-5853-816f-e757c62a2534', 'a1223f64-4330-52b5-8b8a-ae4694a55832', 'اللحومُ والبيضُ والحليب أغذيةٌ:', '[{"id":"a","text":"بانية"},{"id":"b","text":"طاقيّة"},{"id":"c","text":"واقية"},{"id":"d","text":"ضارّة"}]'::jsonb, 'a', 'اللحومُ والبيضُ والحليب أغذيةٌ بانية تساعدُ على بناء الجسم ونموّه.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('fdb90979-16b6-58ad-b6d0-f774fe4fa0cd', 'a1223f64-4330-52b5-8b8a-ae4694a55832', 'الخبزُ والأرزُ والسكّر أغذيةٌ:', '[{"id":"a","text":"طاقيّة"},{"id":"b","text":"بانية"},{"id":"c","text":"واقية"},{"id":"d","text":"معدنيّة"}]'::jsonb, 'a', 'الخبزُ والأرزُ والسكّر أغذيةٌ طاقيّة تمدُّ الجسمَ بالطاقة.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('e64affef-a984-594f-8854-a74afeea2a04', 'a1223f64-4330-52b5-8b8a-ae4694a55832', 'الخضرُ والغلالُ أغذيةٌ:', '[{"id":"a","text":"واقية"},{"id":"b","text":"بانية"},{"id":"c","text":"طاقيّة فقط"},{"id":"d","text":"بلا فائدة"}]'::jsonb, 'a', 'الخضرُ والغلالُ أغذيةٌ واقية غنيّةٌ بالفيتامينات والأملاح المعدنيّة.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('77812901-dfc7-58f1-ab41-2e518f9d1e5f', 'a1223f64-4330-52b5-8b8a-ae4694a55832', 'أيُّ شرابٍ ضروريٌّ لكلّ وظائف الجسم؟', '[{"id":"a","text":"الماء"},{"id":"b","text":"المشروباتُ الغازيّة"},{"id":"c","text":"القهوة"},{"id":"d","text":"العصيرُ المحلّى"}]'::jsonb, 'a', 'الماءُ ضروريٌّ لكلّ وظائف الجسم، ولا يمكنُ الاستغناءُ عنه.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('b994ad66-2f09-5b3e-b031-152ba52996df', 'a1223f64-4330-52b5-8b8a-ae4694a55832', 'ما وظيفةُ الأغذية البانية؟', '[{"id":"a","text":"بناءُ الجسم ونموّه"},{"id":"b","text":"تبريدُ الجسم"},{"id":"c","text":"إنتاجُ الهواء"},{"id":"d","text":"تلوينُ البشرة"}]'::jsonb, 'a', 'الأغذيةُ البانية مسؤولةٌ عن بناء الجسم ونموّه وترميم أنسجته.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('cf5bedb3-703f-54a9-b9b2-cccb424ef271', 'a1223f64-4330-52b5-8b8a-ae4694a55832', 'ما وظيفةُ الأغذية الطاقيّة؟', '[{"id":"a","text":"إمدادُ الجسم بالطاقة"},{"id":"b","text":"بناءُ العضلات فقط"},{"id":"c","text":"محاربةُ الميكروبات"},{"id":"d","text":"إيقافُ النزيف"}]'::jsonb, 'a', 'الأغذيةُ الطاقيّة تمدُّ الجسمَ بالطاقة اللازمة للحركة والنشاط.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('259fd70b-0e26-583e-941d-5b8ff81932c2', 'dcc4acda-70b9-50dd-b4f2-b161b7ddd292', 'eveil-scientifique-6eme', '⚔️ زعيم الفصل ⭐⭐⭐: تحدّي التغذية', 3, 120, 30, 'boss', 'admin', 2)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('3fa136f8-5cb2-574b-9e29-3a498c81f9fc', '259fd70b-0e26-583e-941d-5b8ff81932c2', 'الأغذيةُ الواقية تأتي أساسًا من:', '[{"id":"a","text":"الخضر والغلال"},{"id":"b","text":"اللحوم والأسماك"},{"id":"c","text":"الزيوت والدهون"},{"id":"d","text":"الحلويات"}]'::jsonb, 'a', 'الخضرُ والغلالُ مصدرٌ أساسيٌّ للأغذية الواقية (فيتامينات وأملاح معدنيّة).', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('f0051dd3-2108-542f-9056-d381d5a66bb2', '259fd70b-0e26-583e-941d-5b8ff81932c2', 'ما الذي يميّزُ الوجبةَ المتوازنة؟', '[{"id":"a","text":"احتواؤها على الأصناف الثلاثة بنسبٍ مناسبة"},{"id":"b","text":"احتواؤها على صنفٍ واحدٍ فقط"},{"id":"c","text":"كثرةُ الحلويات فيها"},{"id":"d","text":"خلوّها من الماء"}]'::jsonb, 'a', 'الوجبةُ المتوازنة تحتوي الأصنافَ الثلاثة (بانية وطاقيّة وواقية) بكمّيّاتٍ مناسبة.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('f752a0de-59fc-5806-9508-122a259aadf2', '259fd70b-0e26-583e-941d-5b8ff81932c2', 'لماذا يحتاجُ الرياضيُّ إلى طاقةٍ أكثر من غيره؟', '[{"id":"a","text":"لأنّ نشاطَه البدنيَّ أكبر"},{"id":"b","text":"لأنّه ينامُ أكثر"},{"id":"c","text":"لأنّه لا يتحرّك"},{"id":"d","text":"لأنّ جسمَه لا يحتاجُ غذاءً"}]'::jsonb, 'a', 'يستهلكُ الرياضيُّ طاقةً كبيرةً في الحركة، فيحتاجُ أغذيةً طاقيّةً أكثر.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('05ccad0d-d28d-5b03-9d8a-38cd65ec2946', '259fd70b-0e26-583e-941d-5b8ff81932c2', 'الإفراطُ في تناول الحلويات يؤدّي غالبًا إلى:', '[{"id":"a","text":"السمنة وتسوّس الأسنان"},{"id":"b","text":"تقويةِ النظر"},{"id":"c","text":"زيادةِ الطول فقط"},{"id":"d","text":"لا شيء"}]'::jsonb, 'a', 'كثرةُ الحلويات (سكّريات) تسبّبُ السمنةَ وتسوّسَ الأسنان.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('f11d30a2-0109-5e57-9587-d17ba1364d2d', '259fd70b-0e26-583e-941d-5b8ff81932c2', 'نقصُ الحديد في الغذاء قد يؤدّي إلى:', '[{"id":"a","text":"فقر الدم"},{"id":"b","text":"زيادةِ الوزن"},{"id":"c","text":"قوّةِ العضلات"},{"id":"d","text":"تحسّنِ البصر"}]'::jsonb, 'a', 'الحديدُ ضروريٌّ لتكوين الكريّات الحمراء، فنقصُه يسبّبُ فقرَ الدم.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('03573208-af6c-5ed7-9d4c-6c73be6b8e0c', '259fd70b-0e26-583e-941d-5b8ff81932c2', 'لماذا يُنصحُ بتنويع الغذاء؟', '[{"id":"a","text":"ليحصلَ الجسمُ على كلّ ما يحتاجُه من الأصناف"},{"id":"b","text":"ليأكلَ الإنسانُ أكثر دائمًا"},{"id":"c","text":"لأنّ صنفًا واحدًا يكفي الجسمَ تمامًا"},{"id":"d","text":"لتلوين الطبق فقط"}]'::jsonb, 'a', 'كلُّ صنفٍ يقدّمُ فائدةً مختلفة، فتنويعُ الغذاء يضمنُ حصولَ الجسم على كلّ حاجاته.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('93b390db-d856-50d9-8cc7-74dc537f737d', 'dcc4acda-70b9-50dd-b4f2-b161b7ddd292', 'eveil-scientifique-6eme', '⭐⭐ تمرين مراجعة (نمط امتحان): التغذية', 2, 70, 15, 'practice', 'admin', 3)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('e611dbfd-ac17-5584-b1b0-6dbe0c407730', '93b390db-d856-50d9-8cc7-74dc537f737d', 'صنّفِ السمكَ ضمن الأغذية:', '[{"id":"a","text":"البانية"},{"id":"b","text":"الطاقيّة"},{"id":"c","text":"الواقية"},{"id":"d","text":"المعدنيّة"}]'::jsonb, 'a', 'السمكُ غذاءٌ بانٍ غنيٌّ بالبروتينات التي تبني الجسم.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('1cad21f2-f878-55cf-9553-a5b25b154c08', '93b390db-d856-50d9-8cc7-74dc537f737d', 'صنّفِ الزيتَ ضمن الأغذية:', '[{"id":"a","text":"الطاقيّة"},{"id":"b","text":"البانية"},{"id":"c","text":"الواقية"},{"id":"d","text":"غير الغذائيّة"}]'::jsonb, 'a', 'الزيتُ مادّةٌ دهنيّةٌ غذاؤها طاقيّ، يمدُّ الجسمَ بالطاقة.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('3d7c9686-9569-5fa3-abe2-68866ccba0d6', '93b390db-d856-50d9-8cc7-74dc537f737d', 'صنّفِ البرتقالَ ضمن الأغذية:', '[{"id":"a","text":"الواقية"},{"id":"b","text":"البانية"},{"id":"c","text":"الطاقيّة فقط"},{"id":"d","text":"الضارّة"}]'::jsonb, 'a', 'البرتقالُ من الغلال، وهو غذاءٌ واقٍ غنيٌّ بالفيتامينات.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('f37d1227-5fed-5f71-b7cf-911057ed7cbc', '93b390db-d856-50d9-8cc7-74dc537f737d', 'ما الذي يميّزُ وجبةً متوازنة؟', '[{"id":"a","text":"تنوّعُ الأصناف بكمّيّاتٍ مناسبة"},{"id":"b","text":"صنفٌ واحدٌ بكمّيّةٍ كبيرة"},{"id":"c","text":"حلوياتٌ فقط"},{"id":"d","text":"غيابُ الخضر والغلال"}]'::jsonb, 'a', 'الوجبةُ المتوازنة تتميّزُ بتنوّع أصنافها بكمّيّاتٍ مناسبة.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('b84472e9-1a12-5a28-bbb7-483090ff55b9', '93b390db-d856-50d9-8cc7-74dc537f737d', 'ما سببُ الهزال وضعف النموّ عند الطفل؟', '[{"id":"a","text":"نقصُ الغذاء (سوء تغذية)"},{"id":"b","text":"الإفراطُ في الخضر"},{"id":"c","text":"شربُ الماء"},{"id":"d","text":"النومُ الكافي"}]'::jsonb, 'a', 'نقصُ الغذاء يحرمُ الجسمَ من حاجاته، فيؤدّي إلى الهزال وضعف النموّ.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('4c6305b4-68c8-53bf-9c67-37683416661d', '93b390db-d856-50d9-8cc7-74dc537f737d', 'طفلٌ يأكلُ الحلويات فقط ويُهملُ بقيّةَ الأصناف. ما الخطرُ على صحّته؟', '[{"id":"a","text":"سوءُ تغذيةٍ ونقصٌ في الأغذية البانية والواقية"},{"id":"b","text":"صحّةٌ مثاليّة"},{"id":"c","text":"نموٌّ متوازن"},{"id":"d","text":"مناعةٌ قويّة"}]'::jsonb, 'a', 'الاقتصارُ على الحلويات يحرمُ الجسمَ من الأغذية البانية والواقية ويسبّبُ سوءَ تغذية.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('6c647109-fa0a-5dd0-992a-37912e24f1c5', 'dcc4acda-70b9-50dd-b4f2-b161b7ddd292', 'eveil-scientifique-6eme', '👑 تحدّي النخبة ⭐⭐⭐⭐: سيّدُ التغذية', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('0b597e1c-2c66-5072-b8bb-188d2955bffb', '6c647109-fa0a-5dd0-992a-37912e24f1c5', 'نقصُ أيِّ عنصرٍ في الغذاء يسبّبُ فقرَ الدم؟', '[{"id":"a","text":"الحديد"},{"id":"b","text":"السكّر"},{"id":"c","text":"الزيت"},{"id":"d","text":"الملح"}]'::jsonb, 'a', 'الحديدُ لازمٌ لتكوين الكريّات الحمراء، فنقصُه يؤدّي إلى فقر الدم.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('cae8c318-5cb1-53e1-9207-61b6eea69920', '6c647109-fa0a-5dd0-992a-37912e24f1c5', 'وجبةٌ فيها لحمٌ وأرزٌ وسلطةٌ خضراء. هل هي متوازنة؟', '[{"id":"a","text":"نعم، فهي تجمعُ بانيًا وطاقيًّا وواقيًا"},{"id":"b","text":"لا، لأنّها تنقصُها الحلويات"},{"id":"c","text":"لا، لأنّ فيها أصنافًا كثيرة"},{"id":"d","text":"نعم، لأنّها كلُّها لحوم"}]'::jsonb, 'a', 'اللحمُ بانٍ والأرزُ طاقيٌّ والسلطةُ واقية، فالوجبةُ تجمعُ الأصنافَ الثلاثة فهي متوازنة.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('74774f6f-ead4-59ce-91dd-8c37a9ad15b9', '6c647109-fa0a-5dd0-992a-37912e24f1c5', 'لماذا يُنصحُ بالتقليل من السكّر؟', '[{"id":"a","text":"لتجنّب السمنة وتسوّس الأسنان"},{"id":"b","text":"لأنّ السكّرَ يبني العضلات"},{"id":"c","text":"لأنّه يقي من كلّ الأمراض"},{"id":"d","text":"لأنّه غذاءٌ بانٍ"}]'::jsonb, 'a', 'الإفراطُ في السكّر يسبّبُ السمنةَ وتسوّسَ الأسنان، لذلك يُنصحُ بالتقليل منه.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('7cfb07f9-0b74-5ef3-b5b6-b57275fcde39', '6c647109-fa0a-5dd0-992a-37912e24f1c5', 'أيُّ مجموعةٍ غذائيّةٍ مسؤولةٌ أساسًا عن بناء العضلات؟', '[{"id":"a","text":"الأغذية البانية (البروتينات)"},{"id":"b","text":"الأغذية الطاقيّة"},{"id":"c","text":"الماء وحده"},{"id":"d","text":"السكّريات"}]'::jsonb, 'a', 'البروتينات في الأغذية البانية هي التي تبني العضلاتِ وأنسجةَ الجسم.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('35d47135-093a-5bc5-aa71-00cbd54a5e29', '6c647109-fa0a-5dd0-992a-37912e24f1c5', 'عدّاءُ مسافاتٍ طويلة يحتاجُ بكثرةٍ إلى:', '[{"id":"a","text":"الأغذية الطاقيّة"},{"id":"b","text":"الفيتامينات وحدها"},{"id":"c","text":"تقليل كلّ الطعام"},{"id":"d","text":"الماء فقط دون طعام"}]'::jsonb, 'a', 'الجريُ الطويلُ يستهلكُ طاقةً كبيرة، فيحتاجُ العدّاءُ أغذيةً طاقيّةً وافرة.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d8fae5a7-b5ba-5410-8f2f-effd0afeb672', '6c647109-fa0a-5dd0-992a-37912e24f1c5', 'لماذا تبقى الخضرُ والغلالُ مهمّةً رغم أنّها لا تبني ولا تعطي طاقةً كبيرة؟', '[{"id":"a","text":"لأنّها واقيةٌ تمدُّ الجسمَ بفيتاميناتٍ وأملاحٍ تقي من الأمراض"},{"id":"b","text":"لأنّها تبني العظامَ فقط"},{"id":"c","text":"لأنّها أكبرُ مصدرٍ للطاقة"},{"id":"d","text":"لأنّها بلا فائدةٍ حقيقيّة"}]'::jsonb, 'a', 'دورُ الخضر والغلال وقائيٌّ: تمدُّ الجسمَ بالفيتامينات والأملاح المعدنيّة التي تحميه من الأمراض.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('e5fb5a0a-624e-5402-b813-fea1d2e80fd0', 'dcc4acda-70b9-50dd-b4f2-b161b7ddd292', 'eveil-scientifique-6eme', '📝 تدريب ⭐⭐⭐: مراجعةٌ شاملةٌ للتغذية', 3, 120, 30, 'boss', 'admin', 5)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('27b32498-29b4-58ca-9e78-ae91c64c8872', 'e5fb5a0a-624e-5402-b813-fea1d2e80fd0', 'من أمثلة الأغذية البانية:', '[{"id":"a","text":"اللحوم والبيض والحليب"},{"id":"b","text":"الخبز والأرز"},{"id":"c","text":"الخضر والغلال"},{"id":"d","text":"الماء فقط"}]'::jsonb, 'a', 'اللحومُ والبيضُ والحليب أمثلةٌ على الأغذية البانية الغنيّة بالبروتينات.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('340967fe-54ec-5093-b4e6-c4f010d6493c', 'e5fb5a0a-624e-5402-b813-fea1d2e80fd0', 'من أمثلة الأغذية الطاقيّة:', '[{"id":"a","text":"الخبز والأرز والزيت"},{"id":"b","text":"اللحوم والسمك"},{"id":"c","text":"الخضر والغلال"},{"id":"d","text":"الفيتامينات"}]'::jsonb, 'a', 'الخبزُ والأرزُ والزيت أغذيةٌ طاقيّة تمدُّ الجسمَ بالطاقة.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('b04a5bbe-62b0-5aeb-8e73-d09f158a1efe', 'e5fb5a0a-624e-5402-b813-fea1d2e80fd0', 'من أمثلة الأغذية الواقية:', '[{"id":"a","text":"الخضر والغلال"},{"id":"b","text":"اللحوم"},{"id":"c","text":"السكّر"},{"id":"d","text":"الزبدة"}]'::jsonb, 'a', 'الخضرُ والغلالُ أغذيةٌ واقيةٌ غنيّةٌ بالفيتامينات والأملاح.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('a9f28943-cd78-59c0-9ec2-f4ca21e6d665', 'e5fb5a0a-624e-5402-b813-fea1d2e80fd0', 'ما تعريفُ الوجبة المتوازنة؟', '[{"id":"a","text":"التي تجمعُ الأصناف الثلاثة بنسبٍ مناسبة"},{"id":"b","text":"التي تحتوي صنفًا واحدًا بكثرة"},{"id":"c","text":"أكبرُ كمّيّةٍ من الحلويات"},{"id":"d","text":"وجبةٌ بلا ماء"}]'::jsonb, 'a', 'الوجبةُ المتوازنة هي التي تجمعُ الأغذيةَ البانية والطاقيّة والواقية بنسبٍ مناسبة.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d2effcaa-5c75-55f3-9d0f-6f91896d7a6a', 'e5fb5a0a-624e-5402-b813-fea1d2e80fd0', 'أيُّ مرضٍ قد ينتجُ عن الإفراط في الغذاء؟', '[{"id":"a","text":"السمنة"},{"id":"b","text":"الهزال"},{"id":"c","text":"فقر الدم بسبب نقص الحديد"},{"id":"d","text":"ضعفُ النموّ"}]'::jsonb, 'a', 'الإفراطُ في الغذاء (خاصّةً الدهون والسكّريات) يؤدّي إلى السمنة.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('f466f465-4355-5fed-bd9b-0337ac97e29a', 'e5fb5a0a-624e-5402-b813-fea1d2e80fd0', 'لماذا تُعدُّ التغذيةُ السليمةُ مهمّة؟', '[{"id":"a","text":"لنموّ الجسم ونشاطه ووقايته من الأمراض"},{"id":"b","text":"لزيادة الوزن دائمًا"},{"id":"c","text":"لتلوين الطعام"},{"id":"d","text":"لا أهمّيةَ لها"}]'::jsonb, 'a', 'التغذيةُ السليمة تضمنُ نموَّ الجسم ونشاطَه ووقايتَه من الأمراض.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('aecf02b2-d4c6-5cc5-867f-38928ffbdb57', '9ba90402-06a3-5fc3-84bf-8c80671bb811', 'eveil-scientifique-6eme', 'اختبار فهم الدرس ⭐', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('1ddefae2-932b-55ce-83ea-8c745346b781', 'aecf02b2-d4c6-5cc5-867f-38928ffbdb57', 'مَنِ المُنتِجُ في السلسلة الغذائية؟', '[{"id":"a","text":"النبات الأخضر"},{"id":"b","text":"الحيوان العاشب"},{"id":"c","text":"الحيوان اللاحم"},{"id":"d","text":"الإنسان فقط"}]'::jsonb, 'a', 'النباتُ الأخضرُ هو المُنتِج لأنّه يصنعُ غذاءَه بنفسه، فهو أوّلُ حلقةٍ في السلسلة.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('a2106db2-cacb-51c3-b71b-d1189eb3dc1e', 'aecf02b2-d4c6-5cc5-867f-38928ffbdb57', 'المستهلِكُ الأوّلُ حيوانٌ:', '[{"id":"a","text":"عاشبٌ يأكلُ النبات"},{"id":"b","text":"لاحمٌ يأكلُ الأسود"},{"id":"c","text":"يصنعُ غذاءَه بنفسه"},{"id":"d","text":"لا يأكلُ شيئًا"}]'::jsonb, 'a', 'المستهلِكُ الأوّلُ حيوانٌ عاشبٌ يتغذّى على النبات (المُنتِج).', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('33092fc0-5b35-5d31-be3a-b98dd2ad8074', 'aecf02b2-d4c6-5cc5-867f-38928ffbdb57', 'في أيِّ اتّجاهٍ يسيرُ سهمُ السلسلة الغذائية؟', '[{"id":"a","text":"من المأكول إلى الآكل"},{"id":"b","text":"من الآكل إلى المأكول"},{"id":"c","text":"في كلّ الاتّجاهات معًا"},{"id":"d","text":"لا اتّجاهَ له"}]'::jsonb, 'a', 'السهمُ يعني «يُؤكَلُ مِن قِبَل»، فيتّجهُ من المأكول إلى الآكل.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('4603f188-7346-59a1-b447-49e499583f4e', 'aecf02b2-d4c6-5cc5-867f-38928ffbdb57', 'ماذا يحدثُ للسلسلة الغذائية إذا اختفى النبات؟', '[{"id":"a","text":"تختلُّ السلسلةُ ويتأثّرُ باقي الكائنات"},{"id":"b","text":"لا يتغيّرُ شيء"},{"id":"c","text":"تزدادُ الحيوانات قوّة"},{"id":"d","text":"تصبحُ الحيوانات نباتات"}]'::jsonb, 'a', 'النباتُ أوّلُ حلقة؛ فاختفاؤه يحرمُ العواشبَ غذاءَها فتختلُّ السلسلةُ كلُّها.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('192f1e6c-eee1-5a15-907e-e0ba2eeb7368', 'aecf02b2-d4c6-5cc5-867f-38928ffbdb57', 'من مصادر تلوّث الأوساط المائية:', '[{"id":"a","text":"النفايات والمياه المستعملة"},{"id":"b","text":"ضوءُ الشمس"},{"id":"c","text":"هبوبُ الرياح"},{"id":"d","text":"مياهُ المطر النظيفة"}]'::jsonb, 'a', 'رميُ النفايات والمياه المستعملة والمواد الكيميائيّة من أهمّ مصادر تلوّث المياه.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('02ecec19-f2c1-58c9-bb3f-5f5a83be045b', '9ba90402-06a3-5fc3-84bf-8c80671bb811', 'eveil-scientifique-6eme', '⭐ تمرين: أوّلُ خطوات مع الوسط البيئي', 1, 50, 10, 'practice', 'admin', 1)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('70e19185-686c-5957-80e1-23b4ab8910d1', '02ecec19-f2c1-58c9-bb3f-5f5a83be045b', 'ما الوسطُ البيئي؟', '[{"id":"a","text":"مكانُ عيش الكائنات الحيّة وتفاعلِها"},{"id":"b","text":"نوعٌ من الطعام"},{"id":"c","text":"آلةٌ كهربائيّة"},{"id":"d","text":"مرضٌ معدٍ"}]'::jsonb, 'a', 'الوسطُ البيئي هو المكانُ الذي تعيشُ فيه الكائناتُ الحيّة وتتفاعلُ فيما بينها ومع محيطها.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('4487ff4a-4305-59e0-aca0-70dc32f837c9', '02ecec19-f2c1-58c9-bb3f-5f5a83be045b', 'مَن يصنعُ غذاءَه بنفسه في السلسلة الغذائية؟', '[{"id":"a","text":"النبات الأخضر"},{"id":"b","text":"الأرنب"},{"id":"c","text":"الثعلب"},{"id":"d","text":"الأسد"}]'::jsonb, 'a', 'النباتُ الأخضرُ منتِجٌ يصنعُ غذاءَه بنفسه، بينما الحيواناتُ مستهلكة.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('c94f1475-70bc-59e4-84ab-bdab9703f69e', '02ecec19-f2c1-58c9-bb3f-5f5a83be045b', 'الحيوانُ العاشبُ يتغذّى على:', '[{"id":"a","text":"النبات"},{"id":"b","text":"الحجارة"},{"id":"c","text":"الماء فقط"},{"id":"d","text":"الحديد"}]'::jsonb, 'a', 'الحيوانُ العاشبُ يأكلُ النبات، فهو مستهلكٌ أوّل في السلسلة.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('2fbeb761-6f14-5efd-ac39-b57649a3860b', '02ecec19-f2c1-58c9-bb3f-5f5a83be045b', 'الحيوانُ اللاحمُ يتغذّى على:', '[{"id":"a","text":"حيواناتٍ أخرى"},{"id":"b","text":"النبات فقط"},{"id":"c","text":"الضوء"},{"id":"d","text":"التربة"}]'::jsonb, 'a', 'الحيوانُ اللاحمُ يأكلُ حيواناتٍ أخرى، فهو مستهلكٌ في مرتبةٍ أعلى.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('13666676-4288-5243-8b94-ad9144595a6c', '02ecec19-f2c1-58c9-bb3f-5f5a83be045b', 'في السلسلة «عُشب ← أرنب ← ثعلب»، مَنِ المُنتِج؟', '[{"id":"a","text":"العُشب (النبات)"},{"id":"b","text":"الأرنب"},{"id":"c","text":"الثعلب"},{"id":"d","text":"لا منتِجَ فيها"}]'::jsonb, 'a', 'العُشبُ نباتٌ أخضرُ يصنعُ غذاءَه، فهو المُنتِجُ وأوّلُ حلقةٍ في السلسلة.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('10f9124d-6062-5a14-85da-05d74a49ca63', '02ecec19-f2c1-58c9-bb3f-5f5a83be045b', 'أيٌّ ممّا يلي من مكوّنات الوسط غير الحيّة؟', '[{"id":"a","text":"الماء والهواء والتربة"},{"id":"b","text":"النباتات"},{"id":"c","text":"الحيوانات"},{"id":"d","text":"الإنسان"}]'::jsonb, 'a', 'الماءُ والهواءُ والتربةُ والضوءُ مكوّناتٌ غيرُ حيّةٍ في الوسط البيئي.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('68655d37-f975-53af-b6fb-2687adba1ce9', '9ba90402-06a3-5fc3-84bf-8c80671bb811', 'eveil-scientifique-6eme', '⚔️ زعيم الفصل ⭐⭐⭐: تحدّي الوسط البيئي', 3, 120, 30, 'boss', 'admin', 2)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('96682937-6424-5f10-9726-ea65590a5a83', '68655d37-f975-53af-b6fb-2687adba1ce9', 'المستهلِكُ الأوّلُ في السلسلة الغذائية هو:', '[{"id":"a","text":"الحيوان العاشب"},{"id":"b","text":"النبات الأخضر"},{"id":"c","text":"الحيوان اللاحم الكبير"},{"id":"d","text":"التربة"}]'::jsonb, 'a', 'المستهلِكُ الأوّلُ حيوانٌ عاشبٌ يأكلُ النباتَ مباشرةً.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('9d8d6b7e-7264-5200-bebf-f90b66b3715f', '68655d37-f975-53af-b6fb-2687adba1ce9', 'ماذا يعني السهمُ (←) في السلسلة الغذائية؟', '[{"id":"a","text":"يُؤكَلُ مِن قِبَل (من المأكول إلى الآكل)"},{"id":"b","text":"يهربُ مِن"},{"id":"c","text":"يساوي"},{"id":"d","text":"يعيشُ بعيدًا عن"}]'::jsonb, 'a', 'السهمُ يدلّ على «يُؤكَلُ مِن قِبَل»، فيتّجهُ من الكائن المأكول إلى الكائن الآكل.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('b4a1e85a-98d4-5a0f-bacb-3dc566b49cdb', '68655d37-f975-53af-b6fb-2687adba1ce9', 'في السلسلة «عُشب ← أرنب ← ثعلب»، ماذا يأكلُ الثعلب؟', '[{"id":"a","text":"الأرنب"},{"id":"b","text":"العُشب"},{"id":"c","text":"الثعالبَ الأخرى"},{"id":"d","text":"التربة"}]'::jsonb, 'a', 'في هذه السلسلة الثعلبُ لاحمٌ يأكلُ الأرنبَ (المستهلكَ الأوّل).', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('cd5c0596-3059-58d8-b7b5-fce4d0edd6fd', '68655d37-f975-53af-b6fb-2687adba1ce9', 'إذا تكاثرت الثعالبُ كثيرًا في وسطٍ ما، فماذا يحدثُ غالبًا لأعداد الأرانب؟', '[{"id":"a","text":"تتناقصُ لأنّها تُؤكَلُ أكثر"},{"id":"b","text":"تتزايدُ بقوّة"},{"id":"c","text":"لا تتغيّرُ أبدًا"},{"id":"d","text":"تتحوّلُ إلى ثعالب"}]'::jsonb, 'a', 'زيادةُ الثعالب (المفترِسات) تعني افتراسًا أكبرَ للأرانب، فيتناقصُ عددُها.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('52b6e98a-a695-538b-97a7-6c35ff5b3b38', '68655d37-f975-53af-b6fb-2687adba1ce9', 'لو اختفى النباتُ من وسطٍ بيئيّ، فما النتيجةُ المتوقّعة؟', '[{"id":"a","text":"تختلُّ السلسلةُ وتتأثّرُ بقيّةُ الكائنات"},{"id":"b","text":"تزدهرُ كلُّ الحيوانات"},{"id":"c","text":"لا أثرَ لذلك"},{"id":"d","text":"يزدادُ عددُ العواشب"}]'::jsonb, 'a', 'النباتُ قاعدةُ السلسلة؛ فاختفاؤه يحرمُ العواشبَ غذاءَها وتتأثّرُ بقيّةُ الحلقات.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('a60bb7c9-eccf-56e9-b201-a1eee0c25750', '68655d37-f975-53af-b6fb-2687adba1ce9', 'لماذا يُسمّى النباتُ الأخضرُ «منتِجًا»؟', '[{"id":"a","text":"لأنّه يصنعُ غذاءَه بنفسه"},{"id":"b","text":"لأنّه يأكلُ الحيوانات"},{"id":"c","text":"لأنّه لا يحتاجُ ضوءًا"},{"id":"d","text":"لأنّه يصنعُ الحجارة"}]'::jsonb, 'a', 'يُسمّى النباتُ منتِجًا لأنّه يصنعُ غذاءَه بنفسه ولا يعتمدُ على غيره في التغذية.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('28c17ebc-d3df-52e1-bf70-852dfb60ab2e', '9ba90402-06a3-5fc3-84bf-8c80671bb811', 'eveil-scientifique-6eme', '⭐⭐ تمرين مراجعة (نمط امتحان): الوسط البيئي', 2, 70, 15, 'practice', 'admin', 3)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('4e4b5c15-8899-5eaa-a3d5-d182d1069395', '28c17ebc-d3df-52e1-bf70-852dfb60ab2e', 'مَنِ المُنتِجُ دائمًا في السلسلة الغذائية؟', '[{"id":"a","text":"النبات الأخضر"},{"id":"b","text":"العاشب"},{"id":"c","text":"اللاحم"},{"id":"d","text":"الميكروب"}]'::jsonb, 'a', 'النباتُ الأخضرُ هو المنتِجُ دائمًا، فهو أوّلُ حلقةٍ تصنعُ الغذاء.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('56e31342-66d1-592b-a872-99387da8398e', '28c17ebc-d3df-52e1-bf70-852dfb60ab2e', 'المستهلِكُ الثاني غالبًا حيوانٌ:', '[{"id":"a","text":"لاحمٌ يأكلُ العاشب"},{"id":"b","text":"يصنعُ غذاءَه بنفسه"},{"id":"c","text":"يأكلُ النباتَ مباشرةً"},{"id":"d","text":"لا يأكلُ شيئًا"}]'::jsonb, 'a', 'المستهلِكُ الثاني لاحمٌ يتغذّى على المستهلك الأوّل (العاشب).', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('2dca6e5f-c324-5c69-9856-fde628426355', '28c17ebc-d3df-52e1-bf70-852dfb60ab2e', 'اتّجاهُ سهم السلسلة الغذائية يكون:', '[{"id":"a","text":"من المأكول إلى الآكل"},{"id":"b","text":"من الآكل إلى المأكول"},{"id":"c","text":"عشوائيًّا"},{"id":"d","text":"من اليمين دائمًا"}]'::jsonb, 'a', 'السهمُ يدلّ على «يُؤكَلُ مِن قِبَل»، أي يسيرُ من المأكول نحو الآكل.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('77af92ff-190d-5880-8cf0-0ab8a42f711f', '28c17ebc-d3df-52e1-bf70-852dfb60ab2e', 'من مصادر تلوّث الماء:', '[{"id":"a","text":"رميُ النفايات والمواد الكيميائيّة"},{"id":"b","text":"غرسُ الأشجار"},{"id":"c","text":"سقوطُ المطر"},{"id":"d","text":"هبوبُ النسيم"}]'::jsonb, 'a', 'رميُ النفايات والمياه المستعملة والمواد الكيميائيّة في الماء يلوّثُه.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('4f277377-e4a1-5197-a312-aeaedae93c8c', '28c17ebc-d3df-52e1-bf70-852dfb60ab2e', 'كيف نحافظُ على نظافة المياه؟', '[{"id":"a","text":"بعدم رمي الفضلات ومعالجة المياه المستعملة"},{"id":"b","text":"بإلقاء النفايات في الأنهار"},{"id":"c","text":"بسكب الزيوت في الماء"},{"id":"d","text":"بعدم استعمال الماء أبدًا"}]'::jsonb, 'a', 'نحافظُ على المياه بعدم رمي الفضلات فيها وبمعالجة المياه المستعملة قبل صرفها.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('1add8108-981a-59e8-a114-22e96465a994', '28c17ebc-d3df-52e1-bf70-852dfb60ab2e', 'لماذا تُعدُّ المياهُ الملوّثةُ خطيرة؟', '[{"id":"a","text":"لأنّها تسبّبُ أمراضًا للإنسان والكائنات"},{"id":"b","text":"لأنّها تجعلُ النباتَ ينمو أسرع"},{"id":"c","text":"لأنّها تنظّفُ الجسم"},{"id":"d","text":"لا خطرَ منها"}]'::jsonb, 'a', 'المياهُ الملوّثةُ تنقلُ الميكروباتِ والموادَّ الضارّة فتسبّبُ أمراضًا للإنسان والكائنات.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('c5cd521a-7515-5ad2-9da2-0302047934f2', '9ba90402-06a3-5fc3-84bf-8c80671bb811', 'eveil-scientifique-6eme', '👑 تحدّي النخبة ⭐⭐⭐⭐: سيّدُ الوسط البيئي', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('06fcf09f-b204-55e4-9716-52447033af38', 'c5cd521a-7515-5ad2-9da2-0302047934f2', 'في أيّة مرتبةٍ يأتي المُنتِجُ في السلسلة الغذائية؟', '[{"id":"a","text":"في البداية (الحلقة الأولى)"},{"id":"b","text":"في النهاية"},{"id":"c","text":"في الوسط دائمًا"},{"id":"d","text":"لا يدخلُ في السلسلة"}]'::jsonb, 'a', 'المُنتِجُ (النبات) هو الحلقةُ الأولى، إذ تعتمدُ عليه بقيّةُ الكائنات في غذائها.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('85629355-1dfb-5867-854d-5e90ff7a8cda', 'c5cd521a-7515-5ad2-9da2-0302047934f2', 'في السلسلة «عُشب ← غزال ← أسد»، مَنِ المستهلِكُ الأوّل؟', '[{"id":"a","text":"الغزال"},{"id":"b","text":"العُشب"},{"id":"c","text":"الأسد"},{"id":"d","text":"لا يوجد"}]'::jsonb, 'a', 'الغزالُ عاشبٌ يأكلُ العُشب، فهو المستهلِكُ الأوّل، والأسدُ لاحمٌ يأكلُ الغزال.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('e1d625de-4248-5afd-ad67-01f49bee9ba2', 'c5cd521a-7515-5ad2-9da2-0302047934f2', 'رُشَّ مبيدٌ قضى على كلّ الحشرات في حقل. ما الأثرُ المتوقّعُ على الطيور التي تتغذّى عليها؟', '[{"id":"a","text":"يقلُّ غذاؤها فيتأثّرُ عددُها"},{"id":"b","text":"يزدادُ عددُها فجأة"},{"id":"c","text":"لا تتأثّرُ إطلاقًا"},{"id":"d","text":"تتحوّلُ إلى حشرات"}]'::jsonb, 'a', 'الطيورُ تعتمدُ على الحشرات في غذائها؛ فاختفاؤها يقلّلُ غذاءَ الطيور ويؤثّرُ في أعدادها.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('54f0a1c3-ca4a-5761-b5f9-82a62c9bffa0', 'c5cd521a-7515-5ad2-9da2-0302047934f2', 'لماذا يُعدُّ التوازنُ الطبيعيُّ مهمًّا في الوسط البيئي؟', '[{"id":"a","text":"لأنّ كلَّ كائنٍ يعتمدُ على غيره في السلسلة"},{"id":"b","text":"لأنّ الكائناتِ لا تتأثّرُ ببعضها"},{"id":"c","text":"لأنّ النباتَ وحدَه يكفي"},{"id":"d","text":"لأنّه لا أهمّيةَ للتوازن"}]'::jsonb, 'a', 'التوازنُ مهمٌّ لأنّ الكائناتِ مرتبطةٌ في سلاسلَ، فاختلالُ حلقةٍ يؤثّرُ في الباقي.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('dd4301d0-a563-57ca-a2b7-17de966778d6', 'c5cd521a-7515-5ad2-9da2-0302047934f2', 'أيُّ سلوكٍ يحمي الأوساطَ المائية؟', '[{"id":"a","text":"معالجةُ المياه المستعملة قبل صرفها"},{"id":"b","text":"رميُ النفايات في النهر"},{"id":"c","text":"سكبُ الزيوت في البحر"},{"id":"d","text":"إلقاءُ المواد الكيميائيّة في الماء"}]'::jsonb, 'a', 'معالجةُ المياه المستعملة قبل إعادتها إلى الطبيعة تحمي الأوساطَ المائيّة من التلوّث.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('ee37c28b-d434-575f-a056-0f393ab6ef5b', 'c5cd521a-7515-5ad2-9da2-0302047934f2', 'لماذا لا يصحُّ عكسُ اتّجاه السهم في السلسلة الغذائية؟', '[{"id":"a","text":"لأنّه يدلُّ على من يأكلُ من؛ من المأكول إلى الآكل"},{"id":"b","text":"لأنّ السهمَ مجرّدُ زينة"},{"id":"c","text":"لأنّ الاتّجاهَ لا معنى له"},{"id":"d","text":"لأنّ النباتَ يأكلُ الحيوان"}]'::jsonb, 'a', 'السهمُ يحملُ معنى «يُؤكَلُ مِن قِبَل»؛ فعكسُه يقلبُ العلاقةَ الغذائيّةَ ويجعلُها خاطئة.', 6)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('ae6c1d5c-5cad-5808-89e8-9e1adf0bf999', '9ba90402-06a3-5fc3-84bf-8c80671bb811', 'eveil-scientifique-6eme', '📝 تدريب ⭐⭐⭐: مراجعةٌ شاملةٌ للوسط البيئي', 3, 120, 30, 'boss', 'admin', 5)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('90a55f25-585c-5d4f-a75f-def19cf984c9', 'ae6c1d5c-5cad-5808-89e8-9e1adf0bf999', 'ما السلسلةُ الغذائية؟', '[{"id":"a","text":"علاقةُ «مَن يأكلُ مَن» بين الكائنات"},{"id":"b","text":"قائمةُ مشترياتٍ للطعام"},{"id":"c","text":"نوعٌ من النباتات"},{"id":"d","text":"جهازٌ في جسم الإنسان"}]'::jsonb, 'a', 'السلسلةُ الغذائية تبيّنُ علاقةَ «مَن يأكلُ مَن» وتربطُ الكائناتِ الحيّة ببعضها.', 1)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('c87db149-cb49-563e-bb8a-1718cae44d49', 'ae6c1d5c-5cad-5808-89e8-9e1adf0bf999', 'المُنتِجُ في السلسلة هو:', '[{"id":"a","text":"النبات الأخضر"},{"id":"b","text":"العاشب"},{"id":"c","text":"اللاحم"},{"id":"d","text":"التربة"}]'::jsonb, 'a', 'النباتُ الأخضرُ منتِجٌ يصنعُ غذاءَه، وهو قاعدةُ كلّ سلسلةٍ غذائيّة.', 2)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('bfa5b9e7-418c-5904-92de-f76610812f5e', 'ae6c1d5c-5cad-5808-89e8-9e1adf0bf999', 'المستهلِكُ الأوّلُ هو:', '[{"id":"a","text":"الحيوان العاشب"},{"id":"b","text":"النبات"},{"id":"c","text":"كبيرُ اللواحم"},{"id":"d","text":"الهواء"}]'::jsonb, 'a', 'المستهلِكُ الأوّلُ حيوانٌ عاشبٌ يأكلُ النباتَ مباشرةً.', 3)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('d0f525a2-04db-5aaa-85d1-f023d453e991', 'ae6c1d5c-5cad-5808-89e8-9e1adf0bf999', 'في السلسلة «نبات ← جرادة ← ضفدع ← ثعبان»، مَن يأكلُ الجرادة؟', '[{"id":"a","text":"الضفدع"},{"id":"b","text":"النبات"},{"id":"c","text":"الثعبان"},{"id":"d","text":"لا أحد"}]'::jsonb, 'a', 'حسب السلسلة، الضفدعُ يأكلُ الجرادة، ثمّ يأتي الثعبانُ ليأكلَ الضفدع.', 4)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('c01255e1-92d7-5ae1-a47b-660e6c83cc3a', 'ae6c1d5c-5cad-5808-89e8-9e1adf0bf999', 'ماذا يحدثُ لكائنات الوسط إذا لوّثنا ماءَه بشدّة؟', '[{"id":"a","text":"تمرضُ أو تموتُ كثيرٌ منها"},{"id":"b","text":"تزدادُ صحّةً وقوّة"},{"id":"c","text":"تتكاثرُ بسرعة"},{"id":"d","text":"لا تتأثّرُ نهائيًّا"}]'::jsonb, 'a', 'التلوّثُ الشديدُ للماء يضرُّ بالكائنات الحيّة فيمرضُ أو يموتُ كثيرٌ منها.', 5)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+  ('1a0940ba-0491-5893-887e-9458b4a95fec', 'ae6c1d5c-5cad-5808-89e8-9e1adf0bf999', 'كيف نحافظُ على الوسط البيئي؟', '[{"id":"a","text":"بعدم التلويث والمحافظة على الكائنات"},{"id":"b","text":"برمي النفايات في كلّ مكان"},{"id":"c","text":"بقطع كلّ الأشجار"},{"id":"d","text":"بتلويث المياه"}]'::jsonb, 'a', 'نحافظُ على الوسط البيئي بعدم تلويثه وبحماية كائناته ومكوّناته الطبيعيّة.', 6)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
