@@ -3,7 +3,7 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { isRateLimited } from "@/shared/lib/rate-limit";
 import { MIN_SECONDS_PER_QUESTION, QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
-import { failWithClientError } from "@/shared/lib/safe-error";
+import { errorMessage, failWithClientError } from "@/shared/lib/safe-error";
 import { logger } from "@/shared/lib/logger";
 import type { UnlockedBadge } from "@/shared/types/gamification";
 import type { Database } from "@/shared/integrations/supabase/types";
@@ -154,7 +154,7 @@ export const getSubject = createServerFn({ method: "GET" })
     } catch (err) {
       logger.warn("quest.getSubject: get_best_scores_by_exercise threw", {
         subjectId: data.subjectId,
-        error: err instanceof Error ? err.message : String(err),
+        error: errorMessage(err),
       });
     }
 
@@ -242,7 +242,7 @@ export const getSubject = createServerFn({ method: "GET" })
     } catch (err) {
       logger.warn("quest.getSubject: parcours access fetch failed", {
         subjectId: data.subjectId,
-        error: err instanceof Error ? err.message : String(err),
+        error: errorMessage(err),
       });
       viewer = { level: 0, isPremium: true, hasEntitlement: false }; // safe default: show locked
     }
