@@ -2,8 +2,8 @@
 name: content-iq-training
 description: >-
   Author IQ-test / cognitive-training exercises — no theory, no memorization, pure
-  reasoning — for yahia-quest-arena's brain-training themes (muscle-cerveau,
-  anti-vieillissement). Generates VISUAL missions/quizzes using inline SVG figures
+  reasoning — for yahia-quest-arena's brain-training theme (muscle-cerveau). Generates
+  VISUAL missions/quizzes using inline SVG figures
   (logic matrices, shape sequences, geometric/spatial puzzles) plus logical reasoning,
   mathematical reasoning, and fluid-intelligence problem solving. Use whenever the user
   wants "muscle ton cerveau" / anti-âge cérébral / anti-atrophie / test de QI /
@@ -26,7 +26,7 @@ First read the content-engine skill and its references (`.claude/skills/content-
 
 ## Mapping
 
-- **Theme**: `muscle-cerveau` (default) or `anti-vieillissement`. `gradeSlug: null` (non-school).
+- **Theme**: `muscle-cerveau`. `gradeSlug: null` (non-school).
 - **Native per language** (see content-engine): produce one sibling subject per requested language
   (`-fr`/`-en`/`-ar`). IQ figures are **language-neutral** (shapes/numbers) and can be reused across
   languages; only the short instruction text and the explanation are authored natively in each language.

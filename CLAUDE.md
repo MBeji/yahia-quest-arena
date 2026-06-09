@@ -16,7 +16,7 @@ and tackle a timed "dungeon" boss mode. Shonen/RPG manga aesthetic, trilingual (
 `themes` → `grades` → `subjects` → `chapters` → `exercises` → `questions`.
 
 - A **theme** is a top-level track. Seeded themes: `ecole-tn` (Programme scolaire tunisien),
-  plus standalone tracks `culture-generale`, `muscle-cerveau`, `anti-vieillissement`, and
+  plus standalone tracks `culture-generale`, `muscle-cerveau`, and
   language tracks `anglais` / `francais` / `arabe`. Only the school theme has grades
   (`themes.has_grades`).
 - **Grades** exist _only_ under the school theme: the full Tunisian ladder, 1ère année de base →

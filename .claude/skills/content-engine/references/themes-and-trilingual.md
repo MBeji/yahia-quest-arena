@@ -11,15 +11,14 @@ theme/grade-agnostic.
 
 ## Seeded themes (use these `themeId`s — they already exist)
 
-| themeId               | name                          | has grades? | typical contentLanguage |
-| --------------------- | ----------------------------- | ----------- | ----------------------- |
-| `ecole-tn`            | Programme scolaire tunisien   | **yes**     | per subject (ar/fr/en)  |
-| `culture-generale`    | Culture générale              | no          | trilingual → 3 subjects |
-| `muscle-cerveau`      | Muscler ton cerveau           | no          | trilingual → 3 subjects |
-| `anti-vieillissement` | Programme anti-vieillissement | no          | trilingual → 3 subjects |
-| `anglais`             | Améliore ton anglais          | no          | `en`                    |
-| `francais`            | Améliore ton français         | no          | `fr`                    |
-| `arabe`               | Améliore ton arabe            | no          | `ar`                    |
+| themeId            | name                        | has grades? | typical contentLanguage |
+| ------------------ | --------------------------- | ----------- | ----------------------- |
+| `ecole-tn`         | Programme scolaire tunisien | **yes**     | per subject (ar/fr/en)  |
+| `culture-generale` | Culture générale            | no          | trilingual → 3 subjects |
+| `muscle-cerveau`   | Muscler ton cerveau         | no          | trilingual → 3 subjects |
+| `anglais`          | Améliore ton anglais        | no          | `en`                    |
+| `francais`         | Améliore ton français       | no          | `fr`                    |
+| `arabe`            | Améliore ton arabe          | no          | `ar`                    |
 
 Don't invent theme ids. If a genuinely new theme is needed, that's a `themes` seed migration — flag
 it to the human rather than referencing a non-existent `themeId` (the FK won't resolve).
@@ -46,7 +45,7 @@ to a `grades` UUID at compile time, so the `grades` row must exist (all 13 are s
 ## Trilingual = three sibling subjects (critical)
 
 **Scope:** the trilingual fan-out applies to **non-school standalone themes only** (culture-generale,
-muscle-cerveau, anti-vieillissement, …). **School content (`ecole-tn`) is never trilingual** — it is
+muscle-cerveau, …). **School content (`ecole-tn`) is never trilingual** — it is
 authored in the subject's single official language of instruction (see the school-subject row above
 and the `content-ecole-tn` skill).
 
