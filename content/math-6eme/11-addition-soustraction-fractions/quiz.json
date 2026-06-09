@@ -1,0 +1,65 @@
+{
+  "title": "اختبار فهم الدرس ⭐",
+  "questions": [
+    {
+      "prompt": "ما ناتج 2/7 + 3/7؟",
+      "options": [
+        { "id": "a", "text": "5/7" },
+        { "id": "b", "text": "5/14" },
+        { "id": "c", "text": "6/7" },
+        { "id": "d", "text": "5/49" }
+      ],
+      "correctOption": "a",
+      "explanation": "عند تساوي المقام نجمع البُسُط ونُبقي المقام: 2/7 + 3/7 = (2+3)/7 = 5/7.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما ناتج 5/8 − 2/8؟",
+      "options": [
+        { "id": "a", "text": "7/8" },
+        { "id": "b", "text": "3/8" },
+        { "id": "c", "text": "3/16" },
+        { "id": "d", "text": "6/8" }
+      ],
+      "correctOption": "b",
+      "explanation": "عند تساوي المقام نطرح البُسُط ونُبقي المقام: 5/8 − 2/8 = (5−2)/8 = 3/8.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما ناتج 1/2 + 1/3 (وحّد على 6)؟",
+      "options": [
+        { "id": "a", "text": "2/5" },
+        { "id": "b", "text": "2/6" },
+        { "id": "c", "text": "5/6" },
+        { "id": "d", "text": "1/6" }
+      ],
+      "correctOption": "c",
+      "explanation": "نوحّد على 6: 1/2 = 3/6 و 1/3 = 2/6؛ ثمّ 3/6 + 2/6 = 5/6.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتج 3/4 − 1/2 (وحّد على 4)؟",
+      "options": [
+        { "id": "a", "text": "2/2" },
+        { "id": "b", "text": "1/2" },
+        { "id": "c", "text": "2/4" },
+        { "id": "d", "text": "1/4" }
+      ],
+      "correctOption": "d",
+      "explanation": "نوحّد على 4: 1/2 = 2/4؛ ثمّ 3/4 − 2/4 = 1/4.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتج 1 + 1/4؟",
+      "options": [
+        { "id": "a", "text": "5/4" },
+        { "id": "b", "text": "2/4" },
+        { "id": "c", "text": "1/5" },
+        { "id": "d", "text": "4/4" }
+      ],
+      "correctOption": "a",
+      "explanation": "نكتب العددَ الصحيح 1 = 4/4؛ ثمّ 4/4 + 1/4 = 5/4.",
+      "difficulty": 2
+    }
+  ]
+}
