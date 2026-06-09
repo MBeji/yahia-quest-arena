@@ -1,0 +1,82 @@
+{
+  "title": "📝 تدريب ⭐⭐⭐: مراجعةٌ شاملةٌ للمُجسّمات",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "كم رأسًا للمكعّب؟",
+      "options": [
+        { "id": "a", "text": "8 رؤوس" },
+        { "id": "b", "text": "6 رؤوس" },
+        { "id": "c", "text": "12 رأسًا" },
+        { "id": "d", "text": "4 رؤوس" }
+      ],
+      "correctOption": "a",
+      "explanation": "للمكعّب 8 رؤوس (و12 حرفًا و6 أوجه).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "مكعّبٌ طولُ حرفه 5 سم. ما مساحتُه الجانبيّة؟",
+      "options": [
+        { "id": "a", "text": "100 سم²" },
+        { "id": "b", "text": "150 سم²" },
+        { "id": "c", "text": "25 سم²" },
+        { "id": "d", "text": "50 سم²" }
+      ],
+      "correctOption": "a",
+      "explanation": "الجانبيّة = 4 × (الحرف × الحرف) = 4 × (5 × 5) = 4 × 25 = 100 سم².",
+      "difficulty": 2
+    },
+    {
+      "prompt": "مكعّبٌ طولُ حرفه 4 سم. ما مساحتُه الجمليّة؟",
+      "options": [
+        { "id": "a", "text": "96 سم²" },
+        { "id": "b", "text": "64 سم²" },
+        { "id": "c", "text": "16 سم²" },
+        { "id": "d", "text": "48 سم²" }
+      ],
+      "correctOption": "a",
+      "explanation": "الجمليّة = 6 × (الحرف × الحرف) = 6 × (4 × 4) = 6 × 16 = 96 سم².",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما المساحةُ الجانبيّة لمتوازي المستطيلات هذا (الطول 6، العرض 3، الارتفاع 4)؟ <svg viewBox=\"0 0 100 100\"><rect x=\"18\" y=\"50\" width=\"44\" height=\"30\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><polyline points=\"34,36 78,36 78,66\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"18\" y1=\"50\" x2=\"34\" y2=\"36\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"62\" y1=\"50\" x2=\"78\" y2=\"36\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"62\" y1=\"80\" x2=\"78\" y2=\"66\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"34\" y1=\"36\" x2=\"34\" y2=\"66\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-dasharray=\"4 3\"/><line x1=\"34\" y1=\"66\" x2=\"78\" y2=\"66\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-dasharray=\"4 3\"/><line x1=\"18\" y1=\"80\" x2=\"34\" y2=\"66\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-dasharray=\"4 3\"/></svg>",
+      "options": [
+        { "id": "a", "text": "72 سم²" },
+        { "id": "b", "text": "36 سم²" },
+        { "id": "c", "text": "90 سم²" },
+        { "id": "d", "text": "18 سم²" }
+      ],
+      "correctOption": "a",
+      "explanation": "الجانبيّة = محيطُ القاعدة × الارتفاع = 2 × (6 + 3) × 4 = 18 × 4 = 72 سم².",
+      "difficulty": 3
+    },
+    {
+      "prompt": "متوازي مستطيلاتٍ طولُه 5 سم وعرضُه 4 سم وارتفاعُه 2 سم. ما مساحتُه الجمليّة؟",
+      "options": [
+        { "id": "a", "text": "76 سم²" },
+        { "id": "b", "text": "36 سم²" },
+        { "id": "c", "text": "40 سم²" },
+        { "id": "d", "text": "20 سم²" }
+      ],
+      "correctOption": "a",
+      "explanation": "الجانبيّة = 2 × (5 + 4) × 2 = 36، ومساحةُ القاعدة = 5 × 4 = 20، فالجمليّة = 36 + 2 × 20 = 36 + 40 = 76 سم².",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ما الفرقُ بين المساحة الجانبيّة والمساحة الجمليّة؟",
+      "options": [
+        { "id": "a", "text": "الجمليّةُ تضيفُ القاعدتين إلى الجانبيّة" },
+        { "id": "b", "text": "هما متساويتان دائمًا" },
+        { "id": "c", "text": "الجانبيّةُ تضيفُ القاعدتين" },
+        { "id": "d", "text": "الجمليّةُ أصغرُ دائمًا" }
+      ],
+      "correctOption": "a",
+      "explanation": "الجانبيّةُ تشملُ الأوجهَ الجانبيّةَ فقط، والجمليّةُ تضيفُ إليها القاعدتين (+ 2 × مساحة القاعدة).",
+      "difficulty": 3
+    }
+  ]
+}
