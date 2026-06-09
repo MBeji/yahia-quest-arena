@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة (نمط امتحان): الجمع والطرح العشريّ",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "ما ناتجُ 7,2 + 2,7؟",
+      "options": [
+        { "id": "a", "text": "9,9" },
+        { "id": "b", "text": "9,09" },
+        { "id": "c", "text": "10,9" },
+        { "id": "d", "text": "99" }
+      ],
+      "correctOption": "a",
+      "explanation": "نجمع الأعشارَ مع الأعشار ثمّ الوحداتِ مع الوحدات: 7,2 + 2,7 = 9,9.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما ناتجُ 20,5 − 12,35؟",
+      "options": [
+        { "id": "a", "text": "8,25" },
+        { "id": "b", "text": "8,15" },
+        { "id": "c", "text": "7,15" },
+        { "id": "d", "text": "8,05" }
+      ],
+      "correctOption": "b",
+      "explanation": "نُكمل: 20,50 − 12,35 = 8,15.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتجُ 0,75 + 0,25؟",
+      "options": [
+        { "id": "a", "text": "0,90" },
+        { "id": "b", "text": "1,1" },
+        { "id": "c", "text": "1" },
+        { "id": "d", "text": "0,1" }
+      ],
+      "correctOption": "c",
+      "explanation": "نجمع: 0,75 + 0,25 = 1,00 = 1، أي وحدةٌ كاملة (75 + 25 = 100 جزءًا من المئة).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتجُ 6,3 + 0,07؟",
+      "options": [
+        { "id": "a", "text": "6,1" },
+        { "id": "b", "text": "7,0" },
+        { "id": "c", "text": "6,307" },
+        { "id": "d", "text": "6,37" }
+      ],
+      "correctOption": "d",
+      "explanation": "نُكمل: 6,30 + 0,07 = 6,37 (3 أعشار + 7 أجزاء من المئة).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتجُ 100 − 0,5؟",
+      "options": [
+        { "id": "a", "text": "99,5" },
+        { "id": "b", "text": "95" },
+        { "id": "c", "text": "99,95" },
+        { "id": "d", "text": "100,5" }
+      ],
+      "correctOption": "a",
+      "explanation": "نكتب 100 في صورة 100,0 ثمّ نطرح: 100,0 − 0,5 = 99,5.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ثمنُ سلعةٍ 24,90 دينارًا، دفع الزبونُ ورقةَ 50 دينارًا. كم الباقي؟",
+      "options": [
+        { "id": "a", "text": "26,10 دينارًا" },
+        { "id": "b", "text": "25,10 دينارًا" },
+        { "id": "c", "text": "25,90 دينارًا" },
+        { "id": "d", "text": "24,10 دينارًا" }
+      ],
+      "correctOption": "b",
+      "explanation": "الباقي = 50 − 24,90 = 25,10 دينارًا.",
+      "difficulty": 3
+    }
+  ]
+}

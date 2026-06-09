@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ زعيم الفصل ⭐⭐⭐: معركةُ الجمع والطرح",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "ما ناتجُ 10,2 + 5,3؟",
+      "options": [
+        { "id": "a", "text": "15,5" },
+        { "id": "b", "text": "15,3" },
+        { "id": "c", "text": "16,5" },
+        { "id": "d", "text": "153" }
+      ],
+      "correctOption": "a",
+      "explanation": "نجمع والفاصلةُ تحت الفاصلة: 10,2 + 5,3 = 15,5.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما ناتجُ 12,4 + 7,68؟",
+      "options": [
+        { "id": "a", "text": "20,8" },
+        { "id": "b", "text": "19,08" },
+        { "id": "c", "text": "20,08" },
+        { "id": "d", "text": "20,18" }
+      ],
+      "correctOption": "c",
+      "explanation": "نُكمل: 12,40 + 7,68 = 20,08.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتجُ 15 − 6,4؟",
+      "options": [
+        { "id": "a", "text": "9,6" },
+        { "id": "b", "text": "8,6" },
+        { "id": "c", "text": "8,4" },
+        { "id": "d", "text": "9,4" }
+      ],
+      "correctOption": "b",
+      "explanation": "نكتب 15 في صورة 15,0 ثمّ نطرح: 15,0 − 6,4 = 8,6.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتجُ 9,05 − 3,7؟",
+      "options": [
+        { "id": "a", "text": "5,25" },
+        { "id": "b", "text": "6,35" },
+        { "id": "c", "text": "5,45" },
+        { "id": "d", "text": "5,35" }
+      ],
+      "correctOption": "d",
+      "explanation": "نُكمل: 9,05 − 3,70 = 5,35.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ما ناتجُ 2,75 + 3,5 + 1,25؟",
+      "options": [
+        { "id": "a", "text": "7,5" },
+        { "id": "b", "text": "7,05" },
+        { "id": "c", "text": "6,5" },
+        { "id": "d", "text": "8,5" }
+      ],
+      "correctOption": "a",
+      "explanation": "نُجمّع بذكاء: (2,75 + 1,25) + 3,5 = 4 + 3,5 = 7,5.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "عدّاءٌ قطع 3,5 km ثمّ 2,75 km ثمّ 4,2 km. كم قطع إجمالًا؟",
+      "options": [
+        { "id": "a", "text": "10,35 km" },
+        { "id": "b", "text": "9,45 km" },
+        { "id": "c", "text": "10,45 km" },
+        { "id": "d", "text": "11,45 km" }
+      ],
+      "correctOption": "c",
+      "explanation": "3,5 + 2,75 + 4,2 = 6,25 + 4,2 = 10,45 km.",
+      "difficulty": 3
+    }
+  ]
+}

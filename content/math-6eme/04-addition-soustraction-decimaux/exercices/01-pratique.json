@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: أوّلُ جمعٍ وطرحٍ عشريّ",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "ما ناتجُ 2,1 + 3,4؟",
+      "options": [
+        { "id": "a", "text": "5,5" },
+        { "id": "b", "text": "5,4" },
+        { "id": "c", "text": "6,5" },
+        { "id": "d", "text": "55" }
+      ],
+      "correctOption": "a",
+      "explanation": "نجمع الوحداتِ مع الوحدات والأعشارَ مع الأعشار: 2,1 + 3,4 = 5,5.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما ناتجُ 6,8 − 1,5؟",
+      "options": [
+        { "id": "a", "text": "5,5" },
+        { "id": "b", "text": "4,3" },
+        { "id": "c", "text": "5,3" },
+        { "id": "d", "text": "7,3" }
+      ],
+      "correctOption": "c",
+      "explanation": "نطرح الوحداتِ من الوحدات والأعشارَ من الأعشار: 6,8 − 1,5 = 5,3.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما ناتجُ 0,5 + 0,5؟",
+      "options": [
+        { "id": "a", "text": "0,10" },
+        { "id": "b", "text": "1" },
+        { "id": "c", "text": "0,55" },
+        { "id": "d", "text": "10" }
+      ],
+      "correctOption": "b",
+      "explanation": "5 أعشار + 5 أعشار = 10 أعشار = وحدةٌ كاملة، أي 0,5 + 0,5 = 1.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "لجمع 3,2 و 1,45 كتابيًّا، نكتب 3,2 في صورة:",
+      "options": [
+        { "id": "a", "text": "3,20" },
+        { "id": "b", "text": "3,02" },
+        { "id": "c", "text": "32" },
+        { "id": "d", "text": "3,002" }
+      ],
+      "correctOption": "a",
+      "explanation": "نُكمل بصفرٍ على يمين الجزء العشريّ ليتساوى الطول: 3,2 = 3,20 (دون تغيير القيمة).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما ناتجُ 4,7 + 2,35؟",
+      "options": [
+        { "id": "a", "text": "7,5" },
+        { "id": "b", "text": "6,05" },
+        { "id": "c", "text": "7,15" },
+        { "id": "d", "text": "7,05" }
+      ],
+      "correctOption": "d",
+      "explanation": "نُكمل: 4,70 + 2,35 = 7,05.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتجُ 8,5 − 3,75؟",
+      "options": [
+        { "id": "a", "text": "5,75" },
+        { "id": "b", "text": "4,25" },
+        { "id": "c", "text": "4,75" },
+        { "id": "d", "text": "5,25" }
+      ],
+      "correctOption": "c",
+      "explanation": "نُكمل: 8,50 − 3,75 = 4,75.",
+      "difficulty": 2
+    }
+  ]
+}

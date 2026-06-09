@@ -1,0 +1,82 @@
+{
+  "title": "📝 تدريب ⭐⭐⭐: مراجعة شاملة للجمع والطرح العشريّ",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "ما ناتجُ 4,4 + 4,4؟",
+      "options": [
+        { "id": "a", "text": "8,8" },
+        { "id": "b", "text": "8,4" },
+        { "id": "c", "text": "16" },
+        { "id": "d", "text": "88" }
+      ],
+      "correctOption": "a",
+      "explanation": "نجمع: 4,4 + 4,4 = 8,8، أي ضِعفُ العددِ 4,4.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما ناتجُ 11,25 + 6,75؟",
+      "options": [
+        { "id": "a", "text": "17" },
+        { "id": "b", "text": "18,5" },
+        { "id": "c", "text": "18" },
+        { "id": "d", "text": "17,90" }
+      ],
+      "correctOption": "c",
+      "explanation": "11,25 + 6,75 = 18,00 = 18.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتجُ 30,4 − 15,65؟",
+      "options": [
+        { "id": "a", "text": "15,75" },
+        { "id": "b", "text": "14,75" },
+        { "id": "c", "text": "14,85" },
+        { "id": "d", "text": "15,25" }
+      ],
+      "correctOption": "b",
+      "explanation": "نُكمل: 30,40 − 15,65 = 14,75.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتجُ 0,9 + 0,09 + 0,009؟",
+      "options": [
+        { "id": "a", "text": "0,27" },
+        { "id": "b", "text": "0,099" },
+        { "id": "c", "text": "1,08" },
+        { "id": "d", "text": "0,999" }
+      ],
+      "correctOption": "d",
+      "explanation": "نُكمل الطول: 0,900 + 0,090 + 0,009 = 0,999.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم نضيف إلى 13,6 لنبلغ 20؟",
+      "options": [
+        { "id": "a", "text": "6,4" },
+        { "id": "b", "text": "7,4" },
+        { "id": "c", "text": "6,6" },
+        { "id": "d", "text": "7,6" }
+      ],
+      "correctOption": "a",
+      "explanation": "العددُ المطلوب = 20 − 13,6 = 6,4 (نتحقّق: 13,6 + 6,4 = 20).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ثلاثُ قطعِ قماشٍ أطوالُها 2,4 m و 3,75 m و 1,85 m. قُصَّ منها 1,5 m. كم بقي؟",
+      "options": [
+        { "id": "a", "text": "6,15 m" },
+        { "id": "b", "text": "9,5 m" },
+        { "id": "c", "text": "6,5 m" },
+        { "id": "d", "text": "6,85 m" }
+      ],
+      "correctOption": "c",
+      "explanation": "مجموعُ الأطوال = 2,4 + 3,75 + 1,85 = 8 m، والباقي = 8 − 1,5 = 6,5 m.",
+      "difficulty": 3
+    }
+  ]
+}

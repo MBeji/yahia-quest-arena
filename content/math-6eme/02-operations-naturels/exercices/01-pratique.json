@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: تدرّب على العمليّات الأربع",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "ما ناتجُ 1 250 + 340؟",
+      "options": [
+        { "id": "a", "text": "1 690" },
+        { "id": "b", "text": "1 590" },
+        { "id": "c", "text": "1 500" },
+        { "id": "d", "text": "1 290" }
+      ],
+      "correctOption": "b",
+      "explanation": "1 250 + 340 = 1 590 (نجمع: 250 + 340 = 590 ثمّ نضيف الألف).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما ناتجُ 900 − 250؟",
+      "options": [
+        { "id": "a", "text": "750" },
+        { "id": "b", "text": "550" },
+        { "id": "c", "text": "650" },
+        { "id": "d", "text": "1 150" }
+      ],
+      "correctOption": "c",
+      "explanation": "نطرح: 900 − 250 = 650 (نتحقّق بالجمع العكسيّ: 650 + 250 = 900).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما ناتجُ 12 × 5؟",
+      "options": [
+        { "id": "a", "text": "60" },
+        { "id": "b", "text": "65" },
+        { "id": "c", "text": "70" },
+        { "id": "d", "text": "17" }
+      ],
+      "correctOption": "a",
+      "explanation": "نضرب: 12 × 5 = 60، أي خمسُ مرّاتٍ العددَ 12 (12 + 12 + 12 + 12 + 12).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما خارجُ القسمة التامّة 64 ÷ 8؟",
+      "options": [
+        { "id": "a", "text": "6" },
+        { "id": "b", "text": "7" },
+        { "id": "c", "text": "9" },
+        { "id": "d", "text": "8" }
+      ],
+      "correctOption": "d",
+      "explanation": "8 × 8 = 64، إذن 64 ÷ 8 = 8 والباقي 0.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ماذا نسمّي العددين اللذين نجمعهما؟",
+      "options": [
+        { "id": "a", "text": "العاملان" },
+        { "id": "b", "text": "الحدّان" },
+        { "id": "c", "text": "المطروح والمطروح منه" },
+        { "id": "d", "text": "المقسوم والمقسوم عليه" }
+      ],
+      "correctOption": "b",
+      "explanation": "العددان المجموعان يُسمّيان الحدّين، ونتيجتُهما المجموع.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما ناتجُ 25 × 4؟",
+      "options": [
+        { "id": "a", "text": "90" },
+        { "id": "b", "text": "29" },
+        { "id": "c", "text": "100" },
+        { "id": "d", "text": "200" }
+      ],
+      "correctOption": "c",
+      "explanation": "نضرب: 25 × 4 = 100، أي أربعُ مرّاتٍ العددَ 25 (25 + 25 + 25 + 25).",
+      "difficulty": 2
+    }
+  ]
+}

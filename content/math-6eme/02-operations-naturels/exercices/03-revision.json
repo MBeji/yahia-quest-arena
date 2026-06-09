@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة (نمط امتحان): العمليّات",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "ماذا نسمّي نتيجةَ عمليّة الطرح؟",
+      "options": [
+        { "id": "a", "text": "المجموع" },
+        { "id": "b", "text": "الفرق" },
+        { "id": "c", "text": "الجداء" },
+        { "id": "d", "text": "الخارج" }
+      ],
+      "correctOption": "b",
+      "explanation": "نتيجةُ الطرح تُسمّى الفرق.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما ناتجُ 4 500 + 2 750؟",
+      "options": [
+        { "id": "a", "text": "7 350" },
+        { "id": "b", "text": "6 250" },
+        { "id": "c", "text": "7 250" },
+        { "id": "d", "text": "7 150" }
+      ],
+      "correctOption": "c",
+      "explanation": "نجمع حسب الرتب من اليمين إلى اليسار: 4 500 + 2 750 = 7 250.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتجُ 6 003 − 2 815؟",
+      "options": [
+        { "id": "a", "text": "3 288" },
+        { "id": "b", "text": "3 188" },
+        { "id": "c", "text": "4 188" },
+        { "id": "d", "text": "3 198" }
+      ],
+      "correctOption": "b",
+      "explanation": "6 003 − 2 815 = 3 188 (نتحقّق: 2 815 + 3 188 = 6 003).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتجُ 125 × 8؟",
+      "options": [
+        { "id": "a", "text": "100" },
+        { "id": "b", "text": "1 025" },
+        { "id": "c", "text": "960" },
+        { "id": "d", "text": "1 000" }
+      ],
+      "correctOption": "d",
+      "explanation": "نضرب: 125 × 8 = 1 000 (نتحقّق بالقسمة العكسيّة: 1 000 ÷ 8 = 125).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما باقي القسمة الإقليدية 59 ÷ 6؟",
+      "options": [
+        { "id": "a", "text": "5" },
+        { "id": "b", "text": "4" },
+        { "id": "c", "text": "6" },
+        { "id": "d", "text": "3" }
+      ],
+      "correctOption": "a",
+      "explanation": "6 × 9 = 54 و 59 = 54 + 5، فالخارجُ 9 والباقي 5 (5 < 6).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "اشترى تاجرٌ 6 صناديقَ في كلٍّ منها 48 قارورة. كم قارورةً اشترى؟",
+      "options": [
+        { "id": "a", "text": "282" },
+        { "id": "b", "text": "248" },
+        { "id": "c", "text": "288" },
+        { "id": "d", "text": "300" }
+      ],
+      "correctOption": "c",
+      "explanation": "عددُ القوارير = 6 × 48 = 288.",
+      "difficulty": 3
+    }
+  ]
+}
