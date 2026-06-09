@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: أوّلُ خطوات مع الزمن",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "كم ثانيةً في الدقيقة الواحدة؟",
+      "options": [
+        { "id": "a", "text": "60 ثا" },
+        { "id": "b", "text": "100 ثا" },
+        { "id": "c", "text": "10 ثا" },
+        { "id": "d", "text": "6 ثا" }
+      ],
+      "correctOption": "a",
+      "explanation": "الدقيقةُ الواحدة = 60 ثانية؛ التحويلُ في الزمن يكون بـ 60.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم دقيقةً في الساعة الواحدة؟",
+      "options": [
+        { "id": "a", "text": "60 د" },
+        { "id": "b", "text": "100 د" },
+        { "id": "c", "text": "24 د" },
+        { "id": "d", "text": "12 د" }
+      ],
+      "correctOption": "a",
+      "explanation": "الساعةُ الواحدة = 60 دقيقة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "إلى أيّ ساعةٍ يشيرُ العقربان؟ <svg viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"38\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"50\" y1=\"50\" x2=\"50\" y2=\"20\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"50\" y1=\"50\" x2=\"74\" y2=\"50\" stroke=\"#ef4444\" stroke-width=\"2.5\"/><circle cx=\"50\" cy=\"50\" r=\"2.5\" fill=\"currentColor\"/></svg>",
+      "options": [
+        { "id": "a", "text": "3 سا تماماً" },
+        { "id": "b", "text": "9 سا تماماً" },
+        { "id": "c", "text": "12 سا تماماً" },
+        { "id": "d", "text": "6 سا تماماً" }
+      ],
+      "correctOption": "a",
+      "explanation": "العقربُ القصير (الساعات) يشيرُ إلى 3 والطويلُ (الدقائق) إلى 12، فالوقتُ 3 سا تماماً.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم ساعةً في اليوم الواحد؟",
+      "options": [
+        { "id": "a", "text": "24 سا" },
+        { "id": "b", "text": "12 سا" },
+        { "id": "c", "text": "60 سا" },
+        { "id": "d", "text": "10 سا" }
+      ],
+      "correctOption": "a",
+      "explanation": "اليومُ الواحد يساوي 24 ساعة، أي من منتصف الليل إلى منتصف الليل التالي.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم دقيقةً في ساعتين (2 سا)؟",
+      "options": [
+        { "id": "a", "text": "120 د" },
+        { "id": "b", "text": "60 د" },
+        { "id": "c", "text": "200 د" },
+        { "id": "d", "text": "100 د" }
+      ],
+      "correctOption": "a",
+      "explanation": "2 سا = 2 × 60 = 120 دقيقة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "120 ثانية تساوي كم دقيقة؟",
+      "options": [
+        { "id": "a", "text": "2 د" },
+        { "id": "b", "text": "12 د" },
+        { "id": "c", "text": "60 د" },
+        { "id": "d", "text": "20 د" }
+      ],
+      "correctOption": "a",
+      "explanation": "نقسمُ على 60: 120 ÷ 60 = 2 دقيقتان.",
+      "difficulty": 2
+    }
+  ]
+}

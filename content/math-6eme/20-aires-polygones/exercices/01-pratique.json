@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: أوّلُ خطوات مع المساحات",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "مستطيلٌ طولُه 5 سم وعرضُه 3 سم. ما مساحتُه؟",
+      "options": [
+        { "id": "a", "text": "15 سم²" },
+        { "id": "b", "text": "8 سم²" },
+        { "id": "c", "text": "16 سم²" },
+        { "id": "d", "text": "53 سم²" }
+      ],
+      "correctOption": "a",
+      "explanation": "مساحةُ المستطيل = الطول × العرض = 5 × 3 = 15 سم².",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما مساحةُ مربّعٍ طولُ ضلعه 4 سم؟",
+      "options": [
+        { "id": "a", "text": "16 سم²" },
+        { "id": "b", "text": "8 سم²" },
+        { "id": "c", "text": "12 سم²" },
+        { "id": "d", "text": "4 سم²" }
+      ],
+      "correctOption": "a",
+      "explanation": "مساحةُ المربّع = الضلع × الضلع = 4 × 4 = 16 سم².",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما مساحةُ هذا المستطيل؟ <svg viewBox=\"0 0 100 100\"><rect x=\"20\" y=\"40\" width=\"60\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><text x=\"47\" y=\"74\" font-size=\"11\" fill=\"currentColor\">6</text><text x=\"11\" y=\"54\" font-size=\"11\" fill=\"currentColor\">2</text></svg>",
+      "options": [
+        { "id": "a", "text": "12 سم²" },
+        { "id": "b", "text": "8 سم²" },
+        { "id": "c", "text": "16 سم²" },
+        { "id": "d", "text": "62 سم²" }
+      ],
+      "correctOption": "a",
+      "explanation": "المستطيل طولُه 6 وعرضُه 2، فمساحتُه = 6 × 2 = 12 سم².",
+      "difficulty": 1
+    },
+    {
+      "prompt": "مساحةُ المثلّث تُحسبُ بالصيغة:",
+      "options": [
+        { "id": "a", "text": "(القاعدة × الارتفاع) ÷ 2" },
+        { "id": "b", "text": "القاعدة × الارتفاع" },
+        { "id": "c", "text": "القاعدة + الارتفاع" },
+        { "id": "d", "text": "الضلع × الضلع" }
+      ],
+      "correctOption": "a",
+      "explanation": "مساحةُ المثلّث = (القاعدة × الارتفاع) ÷ 2، فهي نصفُ مساحة متوازي الأضلاع.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "متوازي أضلاعٍ قاعدتُه 5 سم وارتفاعُه 4 سم. ما مساحتُه؟",
+      "options": [
+        { "id": "a", "text": "20 سم²" },
+        { "id": "b", "text": "9 سم²" },
+        { "id": "c", "text": "18 سم²" },
+        { "id": "d", "text": "10 سم²" }
+      ],
+      "correctOption": "a",
+      "explanation": "مساحةُ متوازي الأضلاع = القاعدة × الارتفاع = 5 × 4 = 20 سم².",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما مساحةُ هذا المثلّث؟ <svg viewBox=\"0 0 100 100\"><polygon points=\"20,72 80,72 50,32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"50\" y1=\"32\" x2=\"50\" y2=\"72\" stroke=\"#ef4444\" stroke-width=\"1.5\" stroke-dasharray=\"4 3\"/><rect x=\"50\" y=\"66\" width=\"6\" height=\"6\" fill=\"none\" stroke=\"#ef4444\" stroke-width=\"1.2\"/><text x=\"45\" y=\"86\" font-size=\"11\" fill=\"currentColor\">6</text><text x=\"54\" y=\"54\" font-size=\"11\" fill=\"#ef4444\">4</text></svg>",
+      "options": [
+        { "id": "a", "text": "12 سم²" },
+        { "id": "b", "text": "24 سم²" },
+        { "id": "c", "text": "10 سم²" },
+        { "id": "d", "text": "6 سم²" }
+      ],
+      "correctOption": "a",
+      "explanation": "القاعدة 6 والارتفاع 4 (الخطّ المتقطّع)، فالمساحة = (6 × 4) ÷ 2 = 24 ÷ 2 = 12 سم².",
+      "difficulty": 2
+    }
+  ]
+}

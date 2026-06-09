@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ زعيم الفصل ⭐⭐⭐: تحدّي الزمن",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "كم يومًا في الأسبوع الواحد؟",
+      "options": [
+        { "id": "a", "text": "7 أيّام" },
+        { "id": "b", "text": "5 أيّام" },
+        { "id": "c", "text": "30 يومًا" },
+        { "id": "d", "text": "12 يومًا" }
+      ],
+      "correctOption": "a",
+      "explanation": "الأسبوعُ الواحد = 7 أيّام.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم دقيقةً في 3 ساعات (3 سا)؟",
+      "options": [
+        { "id": "a", "text": "180 د" },
+        { "id": "b", "text": "120 د" },
+        { "id": "c", "text": "300 د" },
+        { "id": "d", "text": "90 د" }
+      ],
+      "correctOption": "a",
+      "explanation": "3 سا = 3 × 60 = 180 دقيقة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "240 ثانية تساوي كم دقيقة؟",
+      "options": [
+        { "id": "a", "text": "4 د" },
+        { "id": "b", "text": "24 د" },
+        { "id": "c", "text": "40 د" },
+        { "id": "d", "text": "2,4 د" }
+      ],
+      "correctOption": "a",
+      "explanation": "نقسمُ على 60: 240 ÷ 60 = 4 دقائق.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "احسب: 1 سا 20 د + 2 سا 30 د.",
+      "options": [
+        { "id": "a", "text": "3 سا 50 د" },
+        { "id": "b", "text": "3 سا 10 د" },
+        { "id": "c", "text": "4 سا 50 د" },
+        { "id": "d", "text": "3 سا 5 د" }
+      ],
+      "correctOption": "a",
+      "explanation": "نجمعُ الساعاتِ (1 + 2 = 3) والدقائقَ (20 + 30 = 50)، فالمجموع = 3 سا 50 د.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "كم ثانيةً في الساعة الواحدة؟",
+      "options": [
+        { "id": "a", "text": "3 600 ثا" },
+        { "id": "b", "text": "60 ثا" },
+        { "id": "c", "text": "600 ثا" },
+        { "id": "d", "text": "1 000 ثا" }
+      ],
+      "correctOption": "a",
+      "explanation": "1 سا = 60 د، وكلُّ دقيقة 60 ثا، فإنّ 60 × 60 = 3 600 ثا.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "حصّةٌ انطلقت في 14 سا ودامت ساعتين. متى تنتهي؟",
+      "options": [
+        { "id": "a", "text": "16 سا" },
+        { "id": "b", "text": "12 سا" },
+        { "id": "c", "text": "15 سا" },
+        { "id": "d", "text": "18 سا" }
+      ],
+      "correctOption": "a",
+      "explanation": "لحظةُ الانتهاء = لحظةُ الانطلاق + المدّة = 14 + 2 = 16 سا.",
+      "difficulty": 2
+    }
+  ]
+}
