@@ -127,11 +127,10 @@ export const getPendingBetaCount = createServerFn({ method: "GET" })
 /**
  * Admin: approve or reject a request. Approval grants free premium access.
  *
- * The `admin_review_beta_request` RPC still writes the now-dormant
- * `profiles.subscription_*` columns; that write is intentional and kept as-is to
- * avoid a migration (a future cleanup will fold it into the RPC). The live access
- * gate reads per-parcours entitlements, so on approval we ALSO grant a `beta`
- * parcours entitlement so the tester actually gets access under the new gate.
+ * `admin_review_beta_request` is status-only (migration 20260609000000 removed
+ * its legacy `subscription_*` write). Premium for a beta tester is a per-parcours
+ * entitlement: on approval we grant a `beta` entitlement so the tester gets
+ * access under the live (entitlement-based) gate.
  */
 export const reviewBetaRequest = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
