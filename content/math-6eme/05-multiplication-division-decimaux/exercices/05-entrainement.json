@@ -1,0 +1,82 @@
+{
+  "title": "📝 تدريب ⭐⭐⭐: مراجعة شاملة للضرب والقسمة العشريّ",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "ما ناتجُ 2,2 × 3؟",
+      "options": [
+        { "id": "a", "text": "6,6" },
+        { "id": "b", "text": "66" },
+        { "id": "c", "text": "5,2" },
+        { "id": "d", "text": "6,06" }
+      ],
+      "correctOption": "a",
+      "explanation": "نحسب 22 × 3 = 66، وفي العامل 2,2 رقمٌ عشريٌّ واحد، فالجداء 6,6.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما ناتجُ 0,7 × 1000؟",
+      "options": [
+        { "id": "a", "text": "70" },
+        { "id": "b", "text": "7 000" },
+        { "id": "c", "text": "700" },
+        { "id": "d", "text": "0,007" }
+      ],
+      "correctOption": "c",
+      "explanation": "الضربُ في 1000 يُزحزح الفاصلةَ ثلاثةَ أرقامٍ نحو اليمين: 0,7 × 1000 = 700.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتجُ 14,4 ÷ 6؟",
+      "options": [
+        { "id": "a", "text": "24" },
+        { "id": "b", "text": "2,4" },
+        { "id": "c", "text": "2,04" },
+        { "id": "d", "text": "8,4" }
+      ],
+      "correctOption": "b",
+      "explanation": "نقسم على عددٍ طبيعيّ: 14,4 ÷ 6 = 2,4 (نتحقّق: 6 × 2,4 = 14,4).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتجُ 0,9 × 0,9؟",
+      "options": [
+        { "id": "a", "text": "8,1" },
+        { "id": "b", "text": "81" },
+        { "id": "c", "text": "1,8" },
+        { "id": "d", "text": "0,81" }
+      ],
+      "correctOption": "d",
+      "explanation": "نحسب 9 × 9 = 81، ومجموعُ الأرقام العشرية رقمان، فجداءُ 0,9 × 0,9 = 0,81.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتجُ 3 ÷ 8؟",
+      "options": [
+        { "id": "a", "text": "0,375" },
+        { "id": "b", "text": "0,38" },
+        { "id": "c", "text": "2,67" },
+        { "id": "d", "text": "0,35" }
+      ],
+      "correctOption": "a",
+      "explanation": "نواصل القسمة بإضافة الأصفار: 3 ÷ 8 = 0,375 (نتحقّق: 8 × 0,375 = 3).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "اشترى 2,5 kg من اللحم بسعر 28 دينارًا للكيلوغرام. كم دفع؟",
+      "options": [
+        { "id": "a", "text": "75 دينارًا" },
+        { "id": "b", "text": "65 دينارًا" },
+        { "id": "c", "text": "70 دينارًا" },
+        { "id": "d", "text": "56 دينارًا" }
+      ],
+      "correctOption": "c",
+      "explanation": "نحسب الثمنَ بالضرب: 2,5 × 28 = 70 دينارًا.",
+      "difficulty": 3
+    }
+  ]
+}

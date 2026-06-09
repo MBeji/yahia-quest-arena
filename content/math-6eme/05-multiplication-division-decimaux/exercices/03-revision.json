@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة (نمط امتحان): الضرب والقسمة العشريّ",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "ما ناتجُ 1,1 × 5؟",
+      "options": [
+        { "id": "a", "text": "5,5" },
+        { "id": "b", "text": "55" },
+        { "id": "c", "text": "6,1" },
+        { "id": "d", "text": "5,05" }
+      ],
+      "correctOption": "a",
+      "explanation": "نحسب 11 × 5 = 55، وفي العامل 1,1 رقمٌ عشريٌّ واحد، فالجداء 5,5.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما ناتجُ 3,45 × 100؟",
+      "options": [
+        { "id": "a", "text": "34,5" },
+        { "id": "b", "text": "345" },
+        { "id": "c", "text": "3 450" },
+        { "id": "d", "text": "3,45" }
+      ],
+      "correctOption": "b",
+      "explanation": "الضربُ في 100 يُزحزح الفاصلةَ رقمين نحو اليمين: 3,45 × 100 = 345.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتجُ 9,9 ÷ 3؟",
+      "options": [
+        { "id": "a", "text": "33" },
+        { "id": "b", "text": "3,03" },
+        { "id": "c", "text": "3,3" },
+        { "id": "d", "text": "6,6" }
+      ],
+      "correctOption": "c",
+      "explanation": "نقسم على عددٍ طبيعيّ: 9,9 ÷ 3 = 3,3 (نتحقّق: 3 × 3,3 = 9,9).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتجُ 2,5 × 2؟",
+      "options": [
+        { "id": "a", "text": "50" },
+        { "id": "b", "text": "4,5" },
+        { "id": "c", "text": "0,5" },
+        { "id": "d", "text": "5" }
+      ],
+      "correctOption": "d",
+      "explanation": "نحسب 25 × 2 = 50، وفي العامل 2,5 رقمٌ عشريٌّ واحد، فالجداء 5,0 = 5.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتجُ 0,8 × 0,5؟",
+      "options": [
+        { "id": "a", "text": "0,4" },
+        { "id": "b", "text": "4" },
+        { "id": "c", "text": "0,04" },
+        { "id": "d", "text": "1,3" }
+      ],
+      "correctOption": "a",
+      "explanation": "نحسب 8 × 5 = 40، ومجموعُ الأرقام العشرية رقمان، فجداءُ 0,8 × 0,5 = 0,40 = 0,4.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتجُ 15 ÷ 4؟",
+      "options": [
+        { "id": "a", "text": "3,7" },
+        { "id": "b", "text": "3,75" },
+        { "id": "c", "text": "3,5" },
+        { "id": "d", "text": "4,25" }
+      ],
+      "correctOption": "b",
+      "explanation": "نواصل القسمة بإضافة الأصفار: 15 ÷ 4 = 3,75 (نتحقّق: 4 × 3,75 = 15).",
+      "difficulty": 3
+    }
+  ]
+}

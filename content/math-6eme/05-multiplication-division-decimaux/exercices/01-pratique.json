@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: أوّلُ ضربٍ وقسمةٍ عشريّ",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "ما ناتجُ 2,1 × 2؟",
+      "options": [
+        { "id": "a", "text": "4,2" },
+        { "id": "b", "text": "42" },
+        { "id": "c", "text": "2,2" },
+        { "id": "d", "text": "4,02" }
+      ],
+      "correctOption": "a",
+      "explanation": "نحسب 21 × 2 = 42، وفي العامل 2,1 رقمٌ عشريٌّ واحد، فالجداء 4,2.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما ناتجُ 1,3 × 10؟",
+      "options": [
+        { "id": "a", "text": "1,3" },
+        { "id": "b", "text": "130" },
+        { "id": "c", "text": "13" },
+        { "id": "d", "text": "0,13" }
+      ],
+      "correctOption": "c",
+      "explanation": "الضربُ في 10 يُزحزح الفاصلةَ رقمًا واحدًا نحو اليمين: 1,3 × 10 = 13.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما ناتجُ 6,4 ÷ 2؟",
+      "options": [
+        { "id": "a", "text": "32" },
+        { "id": "b", "text": "3,2" },
+        { "id": "c", "text": "2,2" },
+        { "id": "d", "text": "3,02" }
+      ],
+      "correctOption": "b",
+      "explanation": "نقسم على عددٍ طبيعيّ: 6,4 ÷ 2 = 3,2 (نتحقّق: 2 × 3,2 = 6,4).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم رقمًا عشريًّا في جداء 0,5 × 0,5؟",
+      "options": [
+        { "id": "a", "text": "1" },
+        { "id": "b", "text": "2" },
+        { "id": "c", "text": "0" },
+        { "id": "d", "text": "3" }
+      ],
+      "correctOption": "b",
+      "explanation": "نجمع الأرقامَ العشرية للعاملين: 1 + 1 = 2، فجداءُ 0,5 × 0,5 = 0,25 فيه رقمان عشريّان.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتجُ 3,2 × 4؟",
+      "options": [
+        { "id": "a", "text": "128" },
+        { "id": "b", "text": "12,2" },
+        { "id": "c", "text": "6,4" },
+        { "id": "d", "text": "12,8" }
+      ],
+      "correctOption": "d",
+      "explanation": "نحسب 32 × 4 = 128، وفي العامل 3,2 رقمٌ عشريٌّ واحد، فالجداء 12,8.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتجُ 45,6 ÷ 10؟",
+      "options": [
+        { "id": "a", "text": "456" },
+        { "id": "b", "text": "0,456" },
+        { "id": "c", "text": "4,56" },
+        { "id": "d", "text": "45,6" }
+      ],
+      "correctOption": "c",
+      "explanation": "القسمةُ على 10 تُزحزح الفاصلةَ رقمًا واحدًا نحو اليسار: 45,6 ÷ 10 = 4,56.",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ زعيم الفصل ⭐⭐⭐: معركةُ الضرب والقسمة",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "ما ناتجُ 5,2 × 2؟",
+      "options": [
+        { "id": "a", "text": "10,4" },
+        { "id": "b", "text": "104" },
+        { "id": "c", "text": "7,2" },
+        { "id": "d", "text": "10,04" }
+      ],
+      "correctOption": "a",
+      "explanation": "نحسب 52 × 2 = 104، وفي العامل 5,2 رقمٌ عشريٌّ واحد، فالجداء 10,4.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما ناتجُ 2,5 × 4؟",
+      "options": [
+        { "id": "a", "text": "1" },
+        { "id": "b", "text": "10" },
+        { "id": "c", "text": "100" },
+        { "id": "d", "text": "8,5" }
+      ],
+      "correctOption": "b",
+      "explanation": "نحسب 25 × 4 = 100، وفي العامل 2,5 رقمٌ عشريٌّ واحد، فالجداء 10,0 = 10.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتجُ 0,3 × 0,6؟",
+      "options": [
+        { "id": "a", "text": "1,8" },
+        { "id": "b", "text": "18" },
+        { "id": "c", "text": "0,18" },
+        { "id": "d", "text": "0,9" }
+      ],
+      "correctOption": "c",
+      "explanation": "نحسب 3 × 6 = 18، ومجموعُ الأرقام العشرية للعاملين رقمان، فجداءُ 0,3 × 0,6 = 0,18.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتجُ 7 ÷ 4؟",
+      "options": [
+        { "id": "a", "text": "1,7" },
+        { "id": "b", "text": "0,57" },
+        { "id": "c", "text": "1,57" },
+        { "id": "d", "text": "1,75" }
+      ],
+      "correctOption": "d",
+      "explanation": "نواصل القسمة بإضافة الأصفار: 7,00 ÷ 4 = 1,75 (نتحقّق: 4 × 1,75 = 7).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ما ناتجُ 12,5 × 100؟",
+      "options": [
+        { "id": "a", "text": "1 250" },
+        { "id": "b", "text": "125" },
+        { "id": "c", "text": "12 500" },
+        { "id": "d", "text": "1,25" }
+      ],
+      "correctOption": "a",
+      "explanation": "الضربُ في 100 يُزحزح الفاصلةَ رقمين نحو اليمين: 12,5 × 100 = 1 250.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ما ناتجُ 9 ÷ 100؟",
+      "options": [
+        { "id": "a", "text": "0,9" },
+        { "id": "b", "text": "0,009" },
+        { "id": "c", "text": "0,09" },
+        { "id": "d", "text": "900" }
+      ],
+      "correctOption": "c",
+      "explanation": "القسمةُ على 100 تُزحزح الفاصلةَ رقمين نحو اليسار: 9 = 9,00 ومنها 0,09.",
+      "difficulty": 3
+    }
+  ]
+}
