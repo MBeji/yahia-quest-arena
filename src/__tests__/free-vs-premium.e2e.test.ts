@@ -6,9 +6,11 @@
  * (getSubject, getExercise, startExerciseSession, submitAttempt) against the
  * mocked Supabase layer to mimic a realistic student journey through the gating
  * rules:
- *   - the server RPC resolve_exercise_access is authoritative for mission access:
- *       allowed=false / reason='PARCOURS_LOCKED' → "Parcours premium" (paywall)
- *       allowed=true → the mission starts (free preview or entitled)
+ *   - the start_exercise_session RPC is server-authoritative for starting a mission
+ *     (it wraps the premium resolver resolve_exercise_access + the quiz gate):
+ *       PARCOURS_LOCKED → "Parcours premium" (paywall)
+ *       PARCOURS_COMING_SOON → "bientôt disponible"; QUIZ_LOCKED → "quiz de compréhension"
+ *       success → the created session is returned (free preview or entitled)
  *   - practice/boss locked until the chapter comprehension quiz is passed
  *   - getSubject surfaces the parcours viewer ctx {level, isPremium, hasEntitlement}
  *   - quizzes never leak correct answers (anti-cheat)
@@ -177,27 +179,14 @@ describe("FREE vs PREMIUM E2E: free user opens a beginner mission", () => {
     >;
     expect(exercise).toHaveProperty("questions");
 
-    // 3) Start a secure session: server grants access (free preview), quiz passed.
-    let exCalls = 0;
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises") {
-        exCalls += 1;
-        return exCalls === 1
-          ? mockQuery({
-              id: "ex1",
-              mode: "practice",
-              difficulty: 2,
-              chapter_id: CH,
-              subjects: { grade_id: "g-1" },
-            })
-          : mockQuery({ id: "quiz1" });
-      }
-      if (table === "attempts")
-        return mockQuery([{ id: "att1", duration_seconds: 40, total_count: 6 }]); // quiz passed
-      return mockQuery({ id: "sess1", started_at: "2026-06-03T00:00:00Z" });
-    });
+    // 3) Start a secure session — the start_exercise_session RPC enforces access +
+    //    the quiz gate server-side and returns the created session.
     mockRpc.mockImplementation(
-      rpcByName({ resolve_exercise_access: { data: [{ allowed: true }] } }),
+      rpcByName({
+        start_exercise_session: {
+          data: [{ session_id: "sess1", started_at: "2026-06-03T00:00:00Z" }],
+        },
+      }),
     );
     const session = (await (quest.startExerciseSession as unknown as Fn)({ exerciseId: EX })) as {
       sessionId: string;
@@ -253,24 +242,11 @@ describe("FREE vs PREMIUM E2E: premium-parcours mission gate", () => {
     mockRpc.mockReset();
   });
 
-  it("blocks a FREE user when resolve_exercise_access denies the mission (/Parcours premium/)", async () => {
+  it("blocks a FREE user when the start RPC denies the mission (/Parcours premium/)", async () => {
     const { startExerciseSession } = await import("@/features/quest");
 
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises")
-        return mockQuery({
-          id: "ex1",
-          mode: "challenge",
-          difficulty: 3,
-          chapter_id: CH,
-          subjects: { grade_id: "g-1" },
-        });
-      return mockQuery({ id: "sess1", started_at: "t" });
-    });
     mockRpc.mockImplementation(
-      rpcByName({
-        resolve_exercise_access: { data: [{ allowed: false, reason: "PARCOURS_LOCKED" }] },
-      }),
+      rpcByName({ start_exercise_session: { error: { message: "PARCOURS_LOCKED" } } }),
     );
 
     await expect((startExerciseSession as unknown as Fn)({ exerciseId: EX })).rejects.toThrow(
@@ -281,21 +257,8 @@ describe("FREE vs PREMIUM E2E: premium-parcours mission gate", () => {
   it("surfaces /bientôt disponible/ when the parcours is coming soon", async () => {
     const { startExerciseSession } = await import("@/features/quest");
 
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises")
-        return mockQuery({
-          id: "ex1",
-          mode: "challenge",
-          difficulty: 3,
-          chapter_id: CH,
-          subjects: { grade_id: "g-1" },
-        });
-      return mockQuery({ id: "sess1", started_at: "t" });
-    });
     mockRpc.mockImplementation(
-      rpcByName({
-        resolve_exercise_access: { data: [{ allowed: false, reason: "PARCOURS_COMING_SOON" }] },
-      }),
+      rpcByName({ start_exercise_session: { error: { message: "PARCOURS_COMING_SOON" } } }),
     );
 
     await expect((startExerciseSession as unknown as Fn)({ exerciseId: EX })).rejects.toThrow(
@@ -303,29 +266,15 @@ describe("FREE vs PREMIUM E2E: premium-parcours mission gate", () => {
     );
   });
 
-  it("allows an entitled user when resolve_exercise_access grants access", async () => {
+  it("allows an entitled user when the start RPC grants access", async () => {
     const { startExerciseSession } = await import("@/features/quest");
 
-    let exCalls = 0;
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises") {
-        exCalls += 1;
-        return exCalls === 1
-          ? mockQuery({
-              id: "ex1",
-              mode: "challenge",
-              difficulty: 4,
-              chapter_id: CH,
-              subjects: { grade_id: "g-1" },
-            })
-          : mockQuery({ id: "quiz1" });
-      }
-      if (table === "attempts")
-        return mockQuery([{ id: "att1", duration_seconds: 40, total_count: 6 }]); // quiz passed
-      return mockQuery({ id: "sess1", started_at: "2026-06-03T00:00:00Z" });
-    });
     mockRpc.mockImplementation(
-      rpcByName({ resolve_exercise_access: { data: [{ allowed: true }] } }),
+      rpcByName({
+        start_exercise_session: {
+          data: [{ session_id: "sess1", started_at: "2026-06-03T00:00:00Z" }],
+        },
+      }),
     );
 
     const session = (await (startExerciseSession as unknown as Fn)({ exerciseId: EX })) as {
@@ -334,26 +283,15 @@ describe("FREE vs PREMIUM E2E: premium-parcours mission gate", () => {
     expect(session.sessionId).toBe("sess1");
   });
 
-  it("fails closed when resolve_exercise_access errors (/Parcours premium/)", async () => {
+  it("fails closed (no session) on an unexpected start RPC error", async () => {
     const { startExerciseSession } = await import("@/features/quest");
 
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises")
-        return mockQuery({
-          id: "ex1",
-          mode: "challenge",
-          difficulty: 3,
-          chapter_id: CH,
-          subjects: { grade_id: "g-1" },
-        });
-      return mockQuery({ id: "sess1", started_at: "t" });
-    });
     mockRpc.mockImplementation(
-      rpcByName({ resolve_exercise_access: { data: null, error: { message: "RPC down" } } }),
+      rpcByName({ start_exercise_session: { error: { message: "deadlock detected" } } }),
     );
 
     await expect((startExerciseSession as unknown as Fn)({ exerciseId: EX })).rejects.toThrow(
-      /Parcours premium/,
+      "Impossible de démarrer la session.",
     );
   });
 });
@@ -369,55 +307,22 @@ describe("FREE vs PREMIUM E2E: comprehension-quiz gate", () => {
   it("blocks practice until the chapter quiz is passed (/quiz de compréhension/), then allows it", async () => {
     const { startExerciseSession } = await import("@/features/quest");
 
-    // 1) Quiz NOT passed → practice exercise locked (access otherwise granted).
-    let exCalls = 0;
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises") {
-        exCalls += 1;
-        return exCalls === 1
-          ? mockQuery({
-              id: "ex1",
-              mode: "practice",
-              difficulty: 2,
-              chapter_id: CH,
-              subjects: { grade_id: "g-1" },
-            })
-          : mockQuery({ id: "quiz1" }); // a quiz exists for the chapter
-      }
-      if (table === "attempts") return mockQuery([]); // no passing attempt yet
-      return mockQuery({ id: "sess1", started_at: "t" });
-    });
+    // 1) Quiz NOT passed → the start RPC raises QUIZ_LOCKED → practice locked.
     mockRpc.mockImplementation(
-      rpcByName({ resolve_exercise_access: { data: [{ allowed: true }] } }),
+      rpcByName({ start_exercise_session: { error: { message: "QUIZ_LOCKED" } } }),
     );
-
     await expect((startExerciseSession as unknown as Fn)({ exerciseId: EX })).rejects.toThrow(
       /quiz de compréhension/,
     );
 
-    // 2) Quiz passed → practice unlocked.
-    exCalls = 0;
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises") {
-        exCalls += 1;
-        return exCalls === 1
-          ? mockQuery({
-              id: "ex1",
-              mode: "practice",
-              difficulty: 2,
-              chapter_id: CH,
-              subjects: { grade_id: "g-1" },
-            })
-          : mockQuery({ id: "quiz1" });
-      }
-      if (table === "attempts")
-        return mockQuery([{ id: "att1", duration_seconds: 40, total_count: 6 }]); // a passing attempt exists
-      return mockQuery({ id: "sess1", started_at: "2026-06-03T00:00:00Z" });
-    });
+    // 2) Quiz passed → the RPC returns the created session.
     mockRpc.mockImplementation(
-      rpcByName({ resolve_exercise_access: { data: [{ allowed: true }] } }),
+      rpcByName({
+        start_exercise_session: {
+          data: [{ session_id: "sess1", started_at: "2026-06-03T00:00:00Z" }],
+        },
+      }),
     );
-
     const session = (await (startExerciseSession as unknown as Fn)({ exerciseId: EX })) as {
       sessionId: string;
     };

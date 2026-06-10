@@ -1575,6 +1575,10 @@ export type Database = {
         };
       };
       start_dungeon_run: { Args: never; Returns: string };
+      start_exercise_session: {
+        Args: { p_exercise_id: string };
+        Returns: { session_id: string; started_at: string }[];
+      };
       submit_dungeon_answer: {
         Args: { p_choice: string; p_question_id: string; p_run_id: string };
         Returns: Json;

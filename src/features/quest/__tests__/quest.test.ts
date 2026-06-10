@@ -214,225 +214,50 @@ describe("gamification.quest — startExerciseSession", () => {
     mockRpc.mockReset();
   });
 
-  it("returns session id and started_at", async () => {
-    const sessionData = { id: "sess-1", started_at: "2026-06-01T12:00:00Z" };
-    mockFrom.mockImplementation(() => mockQuery(sessionData));
-    mockRpc.mockReturnValue({ data: [{ allowed: true }], error: null });
-
+  // The gate now lives in the start_exercise_session SECURITY DEFINER RPC; this
+  // server fn is a thin wrapper. These tests pin the wrapper contract: it returns
+  // the RPC's session row and maps each raised gate signal to its client message.
+  // The gate LOGIC itself (premium / quiz / anti-rush) is enforced and covered
+  // server-side by the SQL RPC + the live C3 security probes, not by these mocks.
+  const EXID = "11111111-1111-1111-1111-111111111111";
+  const start = async () => {
     const { startExerciseSession } = await import("@/features/quest");
-    const result = await (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
-      exerciseId: "11111111-1111-1111-1111-111111111111",
+    return (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
+      exerciseId: EXID,
     });
+  };
 
-    expect(result).toEqual({ sessionId: "sess-1", startedAt: "2026-06-01T12:00:00Z" });
-  });
-
-  it("throws on insert error", async () => {
-    mockFrom.mockImplementation(() => mockQuery(null, { message: "Insert failed" }));
-    mockRpc.mockReturnValue({ data: [{ allowed: true }], error: null });
-
-    const { startExerciseSession } = await import("@/features/quest");
-
-    await expect(
-      (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
-        exerciseId: "11111111-1111-1111-1111-111111111111",
-      }),
-    ).rejects.toThrow("Impossible de démarrer la session.");
-  });
-
-  it("blocks a practice exercise until the chapter comprehension quiz is passed", async () => {
-    let exerciseCalls = 0;
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises") {
-        exerciseCalls += 1;
-        // 1st call = the requested exercise; 2nd call = the chapter's quiz.
-        return exerciseCalls === 1
-          ? mockQuery({
-              id: "ex-1",
-              mode: "practice",
-              chapter_id: "ch-1",
-              subjects: { grade_id: "g-1" },
-            })
-          : mockQuery({ id: "quiz-1" });
-      }
-      if (table === "attempts") return mockQuery([]); // no passing attempt
-      return mockQuery({ id: "sess-1", started_at: "t" });
-    });
-    mockRpc.mockReturnValue({ data: [{ allowed: true }], error: null });
-
-    const { startExerciseSession } = await import("@/features/quest");
-
-    await expect(
-      (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
-        exerciseId: "11111111-1111-1111-1111-111111111111",
-      }),
-    ).rejects.toThrow("quiz de compréhension");
-  });
-
-  it("allows a practice exercise once the chapter quiz is passed", async () => {
-    let exerciseCalls = 0;
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises") {
-        exerciseCalls += 1;
-        return exerciseCalls === 1
-          ? mockQuery({
-              id: "ex-1",
-              mode: "practice",
-              chapter_id: "ch-1",
-              subjects: { grade_id: "g-1" },
-            })
-          : mockQuery({ id: "quiz-1" });
-      }
-      // Passing attempt done with effort (>= 4s/question): genuinely unlocks.
-      if (table === "attempts")
-        return mockQuery([{ id: "att-1", duration_seconds: 40, total_count: 6 }]);
-      return mockQuery({ id: "sess-1", started_at: "2026-06-01T12:00:00Z" });
-    });
-    mockRpc.mockReturnValue({ data: [{ allowed: true }], error: null });
-
-    const { startExerciseSession } = await import("@/features/quest");
-    const result = await (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
-      exerciseId: "11111111-1111-1111-1111-111111111111",
-    });
-
-    expect(result).toEqual({ sessionId: "sess-1", startedAt: "2026-06-01T12:00:00Z" });
-  });
-
-  it("does NOT quiz-gate a non-school subject's exercise (grade_id null)", async () => {
-    // Non-school themes (culture-générale, muscle-cerveau/IQ, language tracks) have
-    // no theory to validate: a practice exercise starts even with no quiz attempt.
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises")
-        return mockQuery({
-          id: "ex-1",
-          mode: "practice",
-          chapter_id: "ch-1",
-          subjects: { grade_id: null },
-        });
-      if (table === "attempts") return mockQuery([]); // no passing quiz attempt
-      return mockQuery({ id: "sess-1", started_at: "t" });
-    });
-    mockRpc.mockReturnValue({ data: [{ allowed: true }], error: null });
-
-    const { startExerciseSession } = await import("@/features/quest");
-    const result = await (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
-      exerciseId: "11111111-1111-1111-1111-111111111111",
-    });
-
-    expect(result).toEqual({ sessionId: "sess-1", startedAt: "t" });
-  });
-
-  it("does NOT unlock when the only passing quiz attempt was rushed (< 4s/question)", async () => {
-    let exerciseCalls = 0;
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises") {
-        exerciseCalls += 1;
-        return exerciseCalls === 1
-          ? mockQuery({
-              id: "ex-1",
-              mode: "practice",
-              chapter_id: "ch-1",
-              subjects: { grade_id: "g-1" },
-            })
-          : mockQuery({ id: "quiz-1" });
-      }
-      // High score but rushed (3s for 6 questions) → must not satisfy the gate.
-      if (table === "attempts")
-        return mockQuery([{ id: "att-1", duration_seconds: 3, total_count: 6 }]);
-      return mockQuery({ id: "sess-1", started_at: "t" });
-    });
-    mockRpc.mockReturnValue({ data: [{ allowed: true }], error: null });
-
-    const { startExerciseSession } = await import("@/features/quest");
-    await expect(
-      (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
-        exerciseId: "11111111-1111-1111-1111-111111111111",
-      }),
-    ).rejects.toThrow("quiz de compréhension");
-  });
-
-  it("blocks a premium-parcours mission when resolve_exercise_access denies it", async () => {
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises")
-        return mockQuery({ id: "ex-1", mode: "boss", difficulty: 3, chapter_id: "ch-1" });
-      return mockQuery({ id: "sess-1", started_at: "t" });
-    });
-    // Server gate denies access (no entitlement, outside the free preview).
+  it("returns the session id and started_at from the RPC", async () => {
     mockRpc.mockReturnValue({
-      data: [{ allowed: false, reason: "PARCOURS_LOCKED" }],
+      data: [{ session_id: "sess-1", started_at: "2026-06-01T12:00:00Z" }],
       error: null,
     });
-
-    const { startExerciseSession } = await import("@/features/quest");
-    await expect(
-      (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
-        exerciseId: "11111111-1111-1111-1111-111111111111",
-      }),
-    ).rejects.toThrow(/Parcours premium/);
+    expect(await start()).toEqual({ sessionId: "sess-1", startedAt: "2026-06-01T12:00:00Z" });
   });
 
-  it("surfaces the coming-soon message when the parcours is not yet available", async () => {
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises")
-        return mockQuery({ id: "ex-1", mode: "boss", difficulty: 3, chapter_id: "ch-1" });
-      return mockQuery({ id: "sess-1", started_at: "t" });
-    });
-    mockRpc.mockReturnValue({
-      data: [{ allowed: false, reason: "PARCOURS_COMING_SOON" }],
-      error: null,
-    });
-
-    const { startExerciseSession } = await import("@/features/quest");
-    await expect(
-      (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
-        exerciseId: "11111111-1111-1111-1111-111111111111",
-      }),
-    ).rejects.toThrow(/bientôt disponible/);
+  it("surfaces the premium paywall message on a PARCOURS_LOCKED gate", async () => {
+    mockRpc.mockReturnValue({ data: null, error: { message: "PARCOURS_LOCKED" } });
+    await expect(start()).rejects.toThrow(/Parcours premium/);
   });
 
-  it("fails closed when resolve_exercise_access errors (unknown access)", async () => {
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises")
-        return mockQuery({ id: "ex-1", mode: "boss", difficulty: 3, chapter_id: "ch-1" });
-      return mockQuery({ id: "sess-1", started_at: "t" });
-    });
-    mockRpc.mockReturnValue({ data: null, error: { message: "RPC down" } });
-
-    const { startExerciseSession } = await import("@/features/quest");
-    await expect(
-      (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
-        exerciseId: "11111111-1111-1111-1111-111111111111",
-      }),
-    ).rejects.toThrow(/Parcours premium/);
+  it("surfaces the coming-soon message on a PARCOURS_COMING_SOON gate", async () => {
+    mockRpc.mockReturnValue({ data: null, error: { message: "PARCOURS_COMING_SOON" } });
+    await expect(start()).rejects.toThrow(/bientôt disponible/);
   });
 
-  it("allows a mission inside the free preview / with an entitlement (access allowed)", async () => {
-    let exerciseCalls = 0;
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises") {
-        exerciseCalls += 1;
-        return exerciseCalls === 1
-          ? mockQuery({
-              id: "ex-1",
-              mode: "practice",
-              difficulty: 2,
-              chapter_id: "ch-1",
-              subjects: { grade_id: "g-1" },
-            })
-          : mockQuery({ id: "quiz-1" });
-      }
-      if (table === "attempts")
-        return mockQuery([{ id: "att-1", duration_seconds: 40, total_count: 6 }]); // quiz passed
-      return mockQuery({ id: "sess-1", started_at: "2026-06-01T12:00:00Z" });
-    });
-    mockRpc.mockReturnValue({ data: [{ allowed: true }], error: null });
+  it("surfaces the quiz-gate message on a QUIZ_LOCKED gate", async () => {
+    mockRpc.mockReturnValue({ data: null, error: { message: "QUIZ_LOCKED" } });
+    await expect(start()).rejects.toThrow(/quiz de compréhension/);
+  });
 
-    const { startExerciseSession } = await import("@/features/quest");
-    const result = await (startExerciseSession as unknown as (d: unknown) => Promise<unknown>)({
-      exerciseId: "11111111-1111-1111-1111-111111111111",
-    });
+  it("fails closed with a generic message on any other RPC error (no session)", async () => {
+    mockRpc.mockReturnValue({ data: null, error: { message: "deadlock detected" } });
+    await expect(start()).rejects.toThrow("Impossible de démarrer la session.");
+  });
 
-    expect(result).toEqual({ sessionId: "sess-1", startedAt: "2026-06-01T12:00:00Z" });
+  it("throws a generic message when the RPC returns no row", async () => {
+    mockRpc.mockReturnValue({ data: [], error: null });
+    await expect(start()).rejects.toThrow("Impossible de démarrer la session.");
   });
 });
 
