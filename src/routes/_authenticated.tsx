@@ -2,7 +2,7 @@ import { createFileRoute, Outlet, Link, useNavigate, useLocation } from "@tansta
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useAuth } from "@/features/auth";
+import { useAuth, useMyRole } from "@/features/auth";
 import { getPendingBetaCount } from "@/features/subscription";
 import { getOpenReportsCount } from "@/features/content-report";
 import {
@@ -39,22 +39,11 @@ function AuthenticatedLayout() {
   const location = useLocation();
   const t = useT();
 
-  // Fetch user role + active parcours for conditional nav and the onboarding guard.
-  // Cached so it is not refetched on every navigation within the authenticated layout.
-  const { data: me = null, isSuccess: meLoaded } = useQuery({
-    queryKey: ["me-role", user?.id],
-    enabled: !!user,
-    staleTime: 5 * 60_000,
-    queryFn: async () => {
-      const { data } = await supabase
-        .from("profiles")
-        .select("role,current_parcours_id")
-        .eq("id", user!.id)
-        .single();
-      return data ?? null;
-    },
-  });
-  const userRole = me?.role ?? null;
+  // User role + active parcours for conditional nav and the onboarding guard.
+  // Shared with every /admin guard via useMyRole — see that hook for why a single
+  // shared query definition is required (cache-key collision otherwise locked
+  // admins out of their consoles).
+  const { role: userRole, currentParcoursId, hasProfile, isLoaded: meLoaded } = useMyRole();
 
   // Pending beta-access requests count for the admin nav badge.
   const fetchBetaCount = useServerFn(getPendingBetaCount);
@@ -88,10 +77,10 @@ function AuthenticatedLayout() {
   // the user not already being on /onboarding (no redirect loop).
   useEffect(() => {
     if (!user || !meLoaded) return;
-    if (me && me.current_parcours_id == null && location.pathname !== "/onboarding") {
+    if (hasProfile && currentParcoursId == null && location.pathname !== "/onboarding") {
       navigate({ to: "/onboarding" });
     }
-  }, [user, meLoaded, me, location.pathname, navigate]);
+  }, [user, meLoaded, hasProfile, currentParcoursId, location.pathname, navigate]);
 
   if (loading) {
     return (

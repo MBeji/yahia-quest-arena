@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { ArrowLeft, CreditCard, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { useAuth } from "@/features/auth";
+import { useMyRole } from "@/features/auth";
 import {
   listParcoursEntitlements,
   grantParcoursEntitlement,
@@ -12,7 +12,6 @@ import {
   type AdminParcoursOption,
 } from "@/features/subscription";
 import { getParcours } from "@/features/dashboard";
-import { supabase } from "@/shared/integrations/supabase/client";
 import {
   ADMIN_CONTACT_PHONE,
   type ParcoursEntitlementSource,
@@ -27,24 +26,12 @@ export const Route = createFileRoute("/_authenticated/admin/subscriptions")({
 function AdminSubscriptionsPage() {
   const t = useT();
   const qc = useQueryClient();
-  const { user } = useAuth();
-
-  const { data: role = null } = useQuery({
-    queryKey: ["me-role", user?.id],
-    enabled: !!user,
-    staleTime: 5 * 60_000,
-    queryFn: async () => {
-      const { data } = await supabase.from("profiles").select("role").eq("id", user!.id).single();
-      return data?.role ?? null;
-    },
-  });
+  const { role, isAdmin } = useMyRole();
 
   const fetchEntitlements = useServerFn(listParcoursEntitlements);
   const fetchParcours = useServerFn(getParcours);
   const grant = useServerFn(grantParcoursEntitlement);
   const revoke = useServerFn(revokeParcoursEntitlement);
-
-  const isAdmin = role === "admin";
 
   const listQuery = useQuery({
     queryKey: ["admin-parcours-entitlements"],
