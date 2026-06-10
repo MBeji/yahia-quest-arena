@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { STREAK_RECOVERY_COST } from "@/shared/constants/gamification";
-import { getTodayUtc } from "@/shared/lib/dates";
+import { getTodayUtc, getYesterdayUtc } from "@/shared/lib/dates";
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { isRateLimited } from "@/shared/lib/rate-limit";
 
@@ -25,8 +25,12 @@ export const recoverStreak = createServerFn({ method: "POST" })
       failWithClientError("recoverStreak: failed to load profile", profileErr, profileErr.message);
     }
 
-    // Only allow recovery if streak is currently 0 and user had a previous streak
-    if ((profile.current_streak ?? 0) > 0) {
+    // A streak counted today or yesterday is still alive — nothing to recover yet.
+    // award_xp only resets current_streak to 1 on the NEXT study after a missed day,
+    // so the reachable signal of a broken streak is a stale last_active_date, NOT
+    // current_streak === 0 (which award_xp never persists — that was the dead gate).
+    const lastActive = profile.last_active_date;
+    if (lastActive != null && lastActive >= getYesterdayUtc()) {
       throw new Error("Ton streak est actif ! Pas besoin de le récupérer.");
     }
 
@@ -47,11 +51,14 @@ export const recoverStreak = createServerFn({ method: "POST" })
       failWithClientError("recoverStreak: failed to spend coins", spendErr, spendErr.message);
     }
 
-    // Restore streak to 1 (they still need to study today to keep it)
+    // Restore the streak to its pre-break value (still held in current_streak until
+    // the next award_xp would reset it), floored at 1, and mark today active so it
+    // holds — the player keeps the streak they paid to save instead of dropping to 1.
+    const restoredStreak = Math.max(profile.current_streak ?? 0, 1);
     const { error: updateErr } = await supabase
       .from("profiles")
       .update({
-        current_streak: 1,
+        current_streak: restoredStreak,
         last_active_date: getTodayUtc(),
       })
       .eq("id", userId);
@@ -62,7 +69,7 @@ export const recoverStreak = createServerFn({ method: "POST" })
 
     return {
       success: true,
-      newStreak: 1,
+      newStreak: restoredStreak,
       coinsSpent: STREAK_RECOVERY_COST,
       remainingCoins: (profile.yahia_coins ?? 0) - STREAK_RECOVERY_COST,
     };
