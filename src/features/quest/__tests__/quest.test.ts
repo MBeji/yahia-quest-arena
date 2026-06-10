@@ -485,26 +485,34 @@ describe("gamification.quest — submitAttempt", () => {
   });
 
   it("returns scored result with review", async () => {
-    const questionsData = [
-      { id: Q1_ID, prompt: "2+2?", correct_option: "4", explanation: "Basic math" },
-      { id: Q2_ID, prompt: "3+3?", correct_option: "6", explanation: null },
+    // The end-of-quest correction now comes from the get_attempt_review SECURITY
+    // DEFINER RPC (snake_case rows), not a direct client read of questions.
+    const reviewRows = [
+      { question_id: Q1_ID, prompt: "2+2?", correct_option: "4", explanation: "Basic math" },
+      { question_id: Q2_ID, prompt: "3+3?", correct_option: "6", explanation: null },
     ];
 
-    mockFrom.mockImplementation(() => mockQuery(questionsData));
-    mockRpc.mockReturnValue({
-      data: {
-        correct: 2,
-        total: 2,
-        scorePct: 100,
-        xpEarned: 50,
-        coinsEarned: 10,
-        durationSeconds: 45,
-        profile: { xp: 250 },
-        unlockedBadges: [
-          { code: "first_win", name: "First Win", rarity: "common", iconName: null },
-        ],
-      },
-      error: null,
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") return mockQuery({ mode: "practice" });
+      return mockQuery([]);
+    });
+    mockRpc.mockImplementation((name: string) => {
+      if (name === "get_attempt_review") return { data: reviewRows, error: null };
+      return {
+        data: {
+          correct: 2,
+          total: 2,
+          scorePct: 100,
+          xpEarned: 50,
+          coinsEarned: 10,
+          durationSeconds: 45,
+          profile: { xp: 250 },
+          unlockedBadges: [
+            { code: "first_win", name: "First Win", rarity: "common", iconName: null },
+          ],
+        },
+        error: null,
+      };
     });
 
     const { submitAttempt } = await import("@/features/quest");
@@ -723,18 +731,21 @@ describe("gamification.quest — submitAttempt", () => {
     ).rejects.toThrow("Too many submissions");
   });
 
-  it("throws on questions fetch error", async () => {
-    mockFrom.mockImplementation(() => mockQuery(null, { message: "Questions DB error" }));
-
+  it("degrades to an empty review (no throw) when get_attempt_review fails", async () => {
+    mockFrom.mockImplementation(() => mockQuery([]));
+    mockRpc.mockImplementation((name: string) =>
+      name === "get_attempt_review"
+        ? { data: null, error: { message: "review RPC down" } }
+        : { data: { correct: 1, total: 1, scorePct: 100, unlockedBadges: [] }, error: null },
+    );
     const { submitAttempt } = await import("@/features/quest");
-
-    await expect(
-      (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
-        sessionId: SESSION_ID,
-        exerciseId: EXERCISE_ID,
-        answers: [{ questionId: Q1_ID, choice: "4" }],
-      }),
-    ).rejects.toThrow("Impossible de charger les questions.");
+    const res = (await (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
+      sessionId: SESSION_ID,
+      exerciseId: EXERCISE_ID,
+      answers: [{ questionId: Q1_ID, choice: "4" }],
+    })) as Record<string, unknown>;
+    expect(res.scorePct).toBe(100);
+    expect((res.review as unknown[]).length).toBe(0);
   });
 
   it("throws on submit RPC error", async () => {

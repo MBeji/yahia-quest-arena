@@ -500,30 +500,17 @@ export const submitAttempt = createServerFn({ method: "POST" })
       throw new Error("Too many submissions. Please slow down.");
     }
 
-    const { data: questions, error: questionErr } = await supabase
-      .from("questions")
-      .select("id,prompt,correct_option,explanation")
-      .eq("exercise_id", data.exerciseId);
-    if (questionErr) {
-      failWithClientError(
-        "quest.submitAttempt",
-        questionErr,
-        "Impossible de charger les questions.",
-      );
-    }
-
-    // Comprehension quizzes must be validated by the student alone: we never
-    // return the correct answers / explanations to the client for a quiz, so they
-    // cannot be memorised and the quiz re-passed blindly. The score + pass/fail
-    // are still returned. Practice/boss keep the full end-of-quest correction.
+    // Comprehension quizzes are validated by the student alone: we never return
+    // the correct answers / explanations for a quiz, so they cannot be memorised
+    // and the quiz re-passed blindly. Practice/boss get the full end-of-quest
+    // correction, built AFTER submit from the get_attempt_review SECURITY DEFINER
+    // RPC (the answer key is no longer client-readable — GAP-020).
     const { data: exerciseRow } = await supabase
       .from("exercises")
       .select("mode")
       .eq("id", data.exerciseId)
       .single();
     const isQuiz = (exerciseRow as { mode?: string } | null)?.mode === "quiz";
-
-    const questionMap = new Map((questions ?? []).map((q) => [q.id, q]));
 
     type ReviewItem = {
       questionId: string;
@@ -533,20 +520,6 @@ export const submitAttempt = createServerFn({ method: "POST" })
       isCorrect: boolean;
       explanation: string | null;
     };
-    const review: ReviewItem[] = isQuiz
-      ? []
-      : data.answers.map((answer) => {
-          const question = questionMap.get(answer.questionId);
-
-          return {
-            questionId: answer.questionId,
-            prompt: question?.prompt ?? "Question",
-            selectedChoice: answer.choice,
-            correctChoice: question?.correct_option ?? "",
-            isCorrect: question?.correct_option === answer.choice,
-            explanation: question?.explanation ?? null,
-          };
-        });
     // Ensure today's daily objective & this week's weekly quest rows exist
     // before the atomic RPC increments them (they are created on demand, so a
     // first-of-the-day submission isn't lost). Best-effort: never block a submit.
@@ -563,6 +536,41 @@ export const submitAttempt = createServerFn({ method: "POST" })
         submitErr,
         "Impossible d'enregistrer votre tentative.",
       );
+    }
+
+    // Build the end-of-quest correction from the SECURITY DEFINER review RPC. It
+    // returns the answer key only for the caller's now-completed session, and only
+    // for non-quiz exercises — so the key is never client-readable before/around
+    // answering (GAP-020). We zip the caller's answers against it.
+    let review: ReviewItem[] = [];
+    if (!isQuiz) {
+      const { data: reviewRows } = await supabase.rpc("get_attempt_review", {
+        p_session_id: data.sessionId,
+      });
+      const rows = Array.isArray(reviewRows)
+        ? (reviewRows as Array<{
+            question_id: string;
+            prompt: string;
+            correct_option: string;
+            explanation: string | null;
+          }>)
+        : [];
+      const byId = new Map(rows.map((r) => [r.question_id, r]));
+      // Degrade cleanly: if the review RPC returned nothing (e.g. transient error),
+      // surface the score without a half-built correction rather than failing.
+      if (byId.size > 0) {
+        review = data.answers.map((answer) => {
+          const q = byId.get(answer.questionId);
+          return {
+            questionId: answer.questionId,
+            prompt: q?.prompt ?? "Question",
+            selectedChoice: answer.choice,
+            correctChoice: q?.correct_option ?? "",
+            isCorrect: q?.correct_option === answer.choice,
+            explanation: q?.explanation ?? null,
+          };
+        });
+      }
     }
 
     const atomic = parseAtomicSubmitResponse(submitData);
