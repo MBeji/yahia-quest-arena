@@ -1,9 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
-import { useAuth } from "@/features/auth";
+import { useMyRole } from "@/features/auth";
 import { BetaRequestsAdmin } from "@/features/subscription";
-import { supabase } from "@/shared/integrations/supabase/client";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/admin/beta-requests")({
@@ -13,19 +11,9 @@ export const Route = createFileRoute("/_authenticated/admin/beta-requests")({
 
 function AdminBetaRequestsPage() {
   const t = useT();
-  const { user } = useAuth();
+  const { role, isAdmin } = useMyRole();
 
-  const { data: role = null } = useQuery({
-    queryKey: ["me-role", user?.id],
-    enabled: !!user,
-    staleTime: 5 * 60_000,
-    queryFn: async () => {
-      const { data } = await supabase.from("profiles").select("role").eq("id", user!.id).single();
-      return data?.role ?? null;
-    },
-  });
-
-  if (role !== null && role !== "admin") {
+  if (role !== null && !isAdmin) {
     return (
       <div className="mx-auto max-w-2xl px-6 py-12 text-center">
         <h1 className="font-display text-2xl font-bold">{t.subscription.accessDenied}</h1>
@@ -47,7 +35,7 @@ function AdminBetaRequestsPage() {
       >
         <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.common.backToHall}
       </Link>
-      {role === "admin" && <BetaRequestsAdmin />}
+      {isAdmin && <BetaRequestsAdmin />}
     </div>
   );
 }
