@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Chapter Boss ⭐⭐⭐: The Past Simple",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Put the words in the correct order: (you / did / where / go)",
+      "options": [
+        { "id": "a", "text": "Where did you go?" },
+        { "id": "b", "text": "Where you did go?" },
+        { "id": "c", "text": "Where did you went?" },
+        { "id": "d", "text": "Where went you?" }
+      ],
+      "correctOption": "a",
+      "explanation": "A past question with an action verb is: question word + did + subject + base verb → Where did you go? \"Where you did go\" misplaces did, \"did you went\" double-marks the past, and \"Where went you?\" has no helper did.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "They didn't come to the party." },
+        { "id": "b", "text": "I saw her yesterday." },
+        { "id": "c", "text": "We didn't went home early." },
+        { "id": "d", "text": "Did you call me last night?" }
+      ],
+      "correctOption": "c",
+      "explanation": "The error is (c): after didn't the verb must be the base form — We didn't go home, not \"didn't went\". The past is already carried by didn't. (a), (b) and (d) are all correct.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "What is the past simple of \"make\"?",
+      "options": [
+        { "id": "a", "text": "maked" },
+        { "id": "b", "text": "made" },
+        { "id": "c", "text": "maded" },
+        { "id": "d", "text": "mades" }
+      ],
+      "correctOption": "b",
+      "explanation": "make is irregular: its past is made (She made a cake). \"maked\" and \"maded\" wrongly add -ed, and \"mades\" is not a verb form at all.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "They won the game. Choose the correct short answer to \"Did they win the game?\"",
+      "options": [
+        { "id": "a", "text": "Yes, they win." },
+        { "id": "b", "text": "Yes, they won." },
+        { "id": "c", "text": "Yes, they did." },
+        { "id": "d", "text": "Yes, they didn't." }
+      ],
+      "correctOption": "c",
+      "explanation": "A short answer to a past question reuses the helper did: Did they win? — Yes, they did. \"they win\" drops the past, \"they won\" repeats the main verb instead of the helper, and \"they didn't\" would mean they lost.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"He ___ that he was very busy at work.\"",
+      "options": [
+        { "id": "a", "text": "sayed" },
+        { "id": "b", "text": "sed" },
+        { "id": "c", "text": "says" },
+        { "id": "d", "text": "said" }
+      ],
+      "correctOption": "d",
+      "explanation": "say is irregular: past = said (pronounced /sed/). The correct spelling is said — not the phonetic \"sed\" or the regular \"sayed\" — and \"says\" is the present tense.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choose the correct question.",
+      "options": [
+        { "id": "a", "text": "Did she found her keys?" },
+        { "id": "b", "text": "Did she find her keys?" },
+        { "id": "c", "text": "Did she finds her keys?" },
+        { "id": "d", "text": "She did find her keys." }
+      ],
+      "correctOption": "b",
+      "explanation": "A past yes/no question is Did + subject + base verb: Did she find her keys? \"found\" and \"finds\" wrongly change the base verb, and (d) is a statement, not a question.",
+      "difficulty": 3
+    }
+  ]
+}

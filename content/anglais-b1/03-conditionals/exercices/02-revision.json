@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Review: First & Second Conditional",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complete the second conditional: \"If she had more money, she ___ a new car.\"",
+      "options": [
+        { "id": "a", "text": "will buy" },
+        { "id": "b", "text": "would buy" },
+        { "id": "c", "text": "buys" },
+        { "id": "d", "text": "bought" }
+      ],
+      "correctOption": "b",
+      "explanation": "She does not have the money now, so this is the imaginary second conditional: if + past simple (had), then would + base verb — she would buy a car. \"will buy\" is the real-future first conditional, and \"buys/bought\" leave out the modal would.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete the if-clause of a second conditional: \"If I ___ you, I would apologise.\"",
+      "options": [
+        { "id": "a", "text": "am" },
+        { "id": "b", "text": "will be" },
+        { "id": "c", "text": "were" },
+        { "id": "d", "text": "would be" }
+      ],
+      "correctOption": "c",
+      "explanation": "To give advice we use the fixed second-conditional phrase If I were you (were is used for every subject here): If I were you, I would apologise. \"am\" is the present simple, while \"will be\" and \"would be\" wrongly put a modal inside the if-clause.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which sentence is a correct FIRST conditional?",
+      "options": [
+        { "id": "a", "text": "If I will see him, I tell him." },
+        { "id": "b", "text": "If I saw him, I will tell him." },
+        { "id": "c", "text": "If I see him, I would tell him." },
+        { "id": "d", "text": "If I see him, I will tell him." }
+      ],
+      "correctOption": "d",
+      "explanation": "The first conditional is if + present simple, then will + base: If I see him, I will tell him. Option (a) wrongly puts will in the if-clause, (b) mixes a past if-clause with will, and (c) mixes a present if-clause with would.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete the if-clause of a second conditional: \"If we ___ near the beach, we would swim every day.\"",
+      "options": [
+        { "id": "a", "text": "lived" },
+        { "id": "b", "text": "live" },
+        { "id": "c", "text": "will live" },
+        { "id": "d", "text": "would live" }
+      ],
+      "correctOption": "a",
+      "explanation": "Living near the beach is imaginary, so the second-conditional if-clause uses the past simple: If we lived near the beach… The modal would goes in the result only, so \"will live\" and \"would live\" are wrong, and \"live\" (present) would start a different conditional.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "After would, which verb form is correct? \"If he had time, he would ___ more often.\"",
+      "options": [
+        { "id": "a", "text": "travels" },
+        { "id": "b", "text": "travelled" },
+        { "id": "c", "text": "to travel" },
+        { "id": "d", "text": "travel" }
+      ],
+      "correctOption": "d",
+      "explanation": "After would we always use the bare base verb: he would travel more often. \"travels\" adds a wrong -s, \"travelled\" is the past form, and \"to travel\" wrongly keeps to — none of these follow would.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choose the sentence that talks about a REAL, likely future plan.",
+      "options": [
+        { "id": "a", "text": "If I were rich, I would help everyone." },
+        { "id": "b", "text": "If I finish early, I will call you." },
+        { "id": "c", "text": "If I won the race, I would be proud." },
+        { "id": "d", "text": "If I had wings, I would fly home." }
+      ],
+      "correctOption": "b",
+      "explanation": "A real, likely future uses the first conditional (if + present, will + base): If I finish early, I will call you. Options (a), (c) and (d) are second conditionals (if + past, would + base) about imaginary or unlikely situations, not a real plan.",
+      "difficulty": 3
+    }
+  ]
+}

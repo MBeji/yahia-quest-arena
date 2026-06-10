@@ -1,0 +1,12 @@
+{
+  "id": "anglais-a1",
+  "nameFr": "Anglais — Débutant (A1)",
+  "description": "Build a rock-solid English foundation, from the simplest forms upward: the verb to be, the present simple, articles and plurals, everyday vocabulary, and asking questions. Beginner level (CEFR A1).",
+  "attribute": "Agilité",
+  "colorToken": "subject-english",
+  "icon": "Globe",
+  "displayOrder": 1,
+  "contentLanguage": "en",
+  "themeId": "anglais",
+  "gradeSlug": null
+}

@@ -1,0 +1,65 @@
+{
+  "title": "Comprehension Check ⭐",
+  "questions": [
+    {
+      "prompt": "Complete: \"They ___ at school yesterday.\"",
+      "options": [
+        { "id": "a", "text": "was" },
+        { "id": "b", "text": "were" },
+        { "id": "c", "text": "are" },
+        { "id": "d", "text": "been" }
+      ],
+      "correctOption": "b",
+      "explanation": "You/we/they take were in the past: They were at school. I/he/she/it take was. Are is the present, and been is the past participle (used after have), not the simple past.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"Yesterday I ___ football with my friends.\"",
+      "options": [
+        { "id": "a", "text": "play" },
+        { "id": "b", "text": "playd" },
+        { "id": "c", "text": "played" },
+        { "id": "d", "text": "plaied" }
+      ],
+      "correctOption": "c",
+      "explanation": "Regular verbs add -ed: play → played. Play ends in a vowel + y, so we keep the y and simply add -ed (only consonant + y becomes -ied, like study → studied). \"playd\" and \"plaied\" are misspellings.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"She ___ to the market this morning.\"",
+      "options": [
+        { "id": "a", "text": "went" },
+        { "id": "b", "text": "goed" },
+        { "id": "c", "text": "gone" },
+        { "id": "d", "text": "goes" }
+      ],
+      "correctOption": "a",
+      "explanation": "go is irregular — its past is went, with no -ed: She went to the market. \"goed\" wrongly applies the regular rule, \"gone\" is the past participle (have gone), and \"goes\" is the present tense.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete the negative: \"He ___ his homework last night.\"",
+      "options": [
+        { "id": "a", "text": "didn't did" },
+        { "id": "b", "text": "not did" },
+        { "id": "c", "text": "didn't done" },
+        { "id": "d", "text": "didn't do" }
+      ],
+      "correctOption": "d",
+      "explanation": "Negatives use didn't + the BASE verb: He didn't do his homework. The past is already carried by didn't, so the main verb stays as the base form do — never \"didn't did\" or \"didn't done\".",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete the question: \"___ you see the film last weekend?\"",
+      "options": [
+        { "id": "a", "text": "Was" },
+        { "id": "b", "text": "Did" },
+        { "id": "c", "text": "Do" },
+        { "id": "d", "text": "Were" }
+      ],
+      "correctOption": "b",
+      "explanation": "Past questions begin with Did + subject + base verb: Did you see the film? Was/Were ask about the verb to be, not about an action, and Do is the present tense, not the past.",
+      "difficulty": 2
+    }
+  ]
+}

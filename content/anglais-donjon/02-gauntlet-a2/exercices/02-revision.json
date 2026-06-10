@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Gauntlet A2: Mixed Drills",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Grammar — Now or habit? \"My father usually drives to work, but today he ___ the train.\"",
+      "options": [
+        { "id": "a", "text": "takes" },
+        { "id": "b", "text": "is taking" },
+        { "id": "c", "text": "take" },
+        { "id": "d", "text": "are taking" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"today\" marks a temporary action against the usual habit, so use the present continuous: today he is taking the train. \"usually drives\" is the habit (simple), but \"today\" switches us to the continuous; \"takes\"/\"take\" are simple, and \"are taking\" uses the plural be with he.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Vocabulary — Choose the opposite: \"This suitcase isn't heavy at all — in fact it's very ___.\"",
+      "options": [
+        { "id": "a", "text": "big" },
+        { "id": "b", "text": "old" },
+        { "id": "c", "text": "light" },
+        { "id": "d", "text": "expensive" }
+      ],
+      "correctOption": "c",
+      "explanation": "The opposite of heavy is light, so a case that isn't heavy is very light. Big, old and expensive are real adjectives, but none is the opposite of heavy, so they don't fit the contrast the sentence builds.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Spelling — Choose the correct superlative: \"That was the ___ day of my whole holiday.\"",
+      "options": [
+        { "id": "a", "text": "happyest" },
+        { "id": "b", "text": "most happy" },
+        { "id": "c", "text": "happier" },
+        { "id": "d", "text": "happiest" }
+      ],
+      "correctOption": "d",
+      "explanation": "happy ends in consonant + y, so the superlative changes y to i and adds -est: the happiest day. \"happyest\" keeps the y wrongly, \"most happy\" treats a short -y adjective as long (it isn't), and \"happier\" is the comparative (for two things).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Reading — Read: \"Last Saturday Omar and his friends played football in the park. After the game they were thirsty, so they bought cold drinks.\"\nHow did the friends feel after the game?",
+      "options": [
+        { "id": "a", "text": "They were thirsty." },
+        { "id": "b", "text": "They were cold." },
+        { "id": "c", "text": "They were bored." },
+        { "id": "d", "text": "They were afraid." }
+      ],
+      "correctOption": "a",
+      "explanation": "The text says \"they were thirsty\", which is why they bought cold drinks, so (a) is correct. Read for the exact detail: cold (b) describes the drinks, not the boys, and bored (c) and afraid (d) are never mentioned in the passage.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Grammar — Quantifier: \"Hurry up! We don't have ___ time before the bus leaves.\"",
+      "options": [
+        { "id": "a", "text": "many" },
+        { "id": "b", "text": "a few" },
+        { "id": "c", "text": "much" },
+        { "id": "d", "text": "some" }
+      ],
+      "correctOption": "c",
+      "explanation": "time is uncountable, so its amount word is much, and in a negative it fits naturally: we don't have much time. many and a few need countable plural nouns, and some is normally used in affirmatives, not negatives.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Grammar — Future: \"A: There's no milk left for the coffee. B: Oh, I ___ buy some on my way home.\" (deciding as you speak)",
+      "options": [
+        { "id": "a", "text": "am going to" },
+        { "id": "b", "text": "will" },
+        { "id": "c", "text": "will to" },
+        { "id": "d", "text": "going to" }
+      ],
+      "correctOption": "b",
+      "explanation": "B reacts to the news and decides at that moment, so use will + base verb: I will buy some. \"am going to\" would suggest a plan made earlier, \"will to\" wrongly adds to after will, and \"going to\" alone is missing the be (am).",
+      "difficulty": 3
+    }
+  ]
+}

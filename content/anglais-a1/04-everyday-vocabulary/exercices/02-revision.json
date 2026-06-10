@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Review: Everyday Words",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Which word means the daughter of your brother or sister?",
+      "options": [
+        { "id": "a", "text": "aunt" },
+        { "id": "b", "text": "cousin" },
+        { "id": "c", "text": "niece" },
+        { "id": "d", "text": "nephew" }
+      ],
+      "correctOption": "c",
+      "explanation": "Your niece is the daughter of your brother or sister; the son would be your nephew. An aunt is your parent's sister, and a cousin is the child of your aunt or uncle. Niece (girl) and nephew (boy) are a gender pair — don't swap them.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Find the intruder (the word that is NOT a colour).",
+      "options": [
+        { "id": "a", "text": "window" },
+        { "id": "b", "text": "yellow" },
+        { "id": "c", "text": "brown" },
+        { "id": "d", "text": "grey" }
+      ],
+      "correctOption": "a",
+      "explanation": "Yellow, brown and grey are all colours. A window is an object in a house, so it is the intruder. Note that grey is the British spelling; American English writes it gray.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete the common phrase: \"a ___ of bread\".",
+      "options": [
+        { "id": "a", "text": "glass" },
+        { "id": "b", "text": "cup" },
+        { "id": "c", "text": "bottle" },
+        { "id": "d", "text": "slice" }
+      ],
+      "correctOption": "d",
+      "explanation": "We cut bread into pieces, so we say a slice of bread (or a piece of bread). A glass and a bottle hold drinks like water, and a cup holds tea or coffee — none of those goes with bread.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which word is a synonym of \"cook\" (a person who makes food)?",
+      "options": [
+        { "id": "a", "text": "farmer" },
+        { "id": "b", "text": "chef" },
+        { "id": "c", "text": "driver" },
+        { "id": "d", "text": "nurse" }
+      ],
+      "correctOption": "b",
+      "explanation": "A chef is another word for a cook — a person whose job is to make food. A farmer grows crops, a driver drives, and a nurse helps sick people, so those are different jobs.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "The opposite of \"expensive\" is …",
+      "options": [
+        { "id": "a", "text": "old" },
+        { "id": "b", "text": "difficult" },
+        { "id": "c", "text": "cheap" },
+        { "id": "d", "text": "small" }
+      ],
+      "correctOption": "c",
+      "explanation": "The opposite of expensive (costs a lot of money) is cheap (costs little money). Old is the opposite of new, difficult is the opposite of easy, and small is the opposite of big.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which word belongs to the field \"school objects\"?",
+      "options": [
+        { "id": "a", "text": "milk" },
+        { "id": "b", "text": "engineer" },
+        { "id": "c", "text": "Monday" },
+        { "id": "d", "text": "pencil" }
+      ],
+      "correctOption": "d",
+      "explanation": "A pencil is a school object you write with. Milk is a drink, an engineer is a job, and Monday is a day of the week, so none of those belongs to school objects.",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "👑 Gauntlet A2 Elite ⭐⭐⭐⭐: The Final Trial",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Reading — Read: \"Last winter Youssef broke his leg while skiing. He stayed at home for a month and couldn't play football. His friends visited him every weekend.\"\nWhich sentence is TRUE?",
+      "options": [
+        { "id": "a", "text": "Youssef hurt his leg last winter." },
+        { "id": "b", "text": "Youssef broke his arm." },
+        { "id": "c", "text": "He played football at home." },
+        { "id": "d", "text": "Nobody visited him." }
+      ],
+      "correctOption": "a",
+      "explanation": "The text says he \"broke his leg\" last winter, so (a) is true (to break your leg = to hurt it). It was his leg, not his arm (b); he \"couldn't play football\" (c is false); and his friends visited every weekend, so (d) contradicts the text.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Grammar — Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "We didn't go to the market yesterday." },
+        { "id": "b", "text": "She is reading a book at the moment." },
+        { "id": "c", "text": "They will going to move house next year." },
+        { "id": "d", "text": "He bought a new bike last week." }
+      ],
+      "correctOption": "c",
+      "explanation": "The error is (c): you can't stack two futures — say \"They are going to move\" or \"They will move\", never \"will going to\". (a) is a correct past negative (didn't + base), (b) a correct present continuous (now), and (d) a correct irregular past (bought).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Spelling — Find the INCORRECT word.",
+      "options": [
+        { "id": "a", "text": "hottest" },
+        { "id": "b", "text": "easiest" },
+        { "id": "c", "text": "biggest" },
+        { "id": "d", "text": "funnyest" }
+      ],
+      "correctOption": "d",
+      "explanation": "The error is (d): funny ends in consonant + y, so the y becomes i — funniest, not \"funnyest\". The correct ones follow their rules: hot doubles the t (hottest), easy changes y to i (easiest), and big doubles the g (biggest).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Vocabulary — Choose the word that best completes the sentence: \"The first question was easy, but the last one was really ___.\"",
+      "options": [
+        { "id": "a", "text": "cheap" },
+        { "id": "b", "text": "difficult" },
+        { "id": "c", "text": "quiet" },
+        { "id": "d", "text": "early" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"but\" signals a contrast with easy, so the missing word is its opposite, difficult: easy ↔ difficult. Cheap, quiet and early are real adjectives, but none is the opposite of easy, so they break the contrast the sentence sets up.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Grammar — Quantifiers: \"There were ___ guests at the wedding, but only ___ of them danced.\"",
+      "options": [
+        { "id": "a", "text": "many / a few" },
+        { "id": "b", "text": "a little / many" },
+        { "id": "c", "text": "much / a little" },
+        { "id": "d", "text": "a great deal / a few" }
+      ],
+      "correctOption": "a",
+      "explanation": "guests is countable and plural, so both gaps need countable quantifiers: many guests, and a few of them danced. So it is many / a few. much, a little and a great deal are for uncountable nouns and don't fit countable guests.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Reading — Read: \"It's 7 o'clock in the morning. Lina is at the bus stop with her schoolbag. She is looking at her watch and the bus isn't here yet.\"\nWhat is Lina probably doing?",
+      "options": [
+        { "id": "a", "text": "She is sleeping at home." },
+        { "id": "b", "text": "She is cooking breakfast." },
+        { "id": "c", "text": "She is playing in the park." },
+        { "id": "d", "text": "She is waiting for the bus." }
+      ],
+      "correctOption": "d",
+      "explanation": "The clues — at the bus stop, with her schoolbag, looking at her watch, the bus not here yet — point to an action in progress now: she is waiting for the bus (d). \"sleeping at home\", \"cooking breakfast\" and \"playing in the park\" all contradict \"is at the bus stop\".",
+      "difficulty": 3
+    }
+  ]
+}

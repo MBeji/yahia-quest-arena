@@ -1,0 +1,12 @@
+{
+  "id": "anglais-a2",
+  "nameFr": "Anglais — Élémentaire (A2)",
+  "description": "Step up from beginner: the past simple, present continuous, the future (going to & will), comparatives & superlatives, and quantifiers. Elementary level (CEFR A2), building on the A1 foundations.",
+  "attribute": "Agilité",
+  "colorToken": "subject-english",
+  "icon": "Globe",
+  "displayOrder": 2,
+  "contentLanguage": "en",
+  "themeId": "anglais",
+  "gradeSlug": null
+}

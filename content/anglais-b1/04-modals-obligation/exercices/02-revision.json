@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Review: Obligation & Advice",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complete: \"The museum is free, so you ___ pay anything to enter.\"",
+      "options": [
+        { "id": "a", "text": "mustn't" },
+        { "id": "b", "text": "must" },
+        { "id": "c", "text": "don't have to" },
+        { "id": "d", "text": "have to" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"It's free\" means paying is not necessary, so we use don't have to: you don't have to pay. \"mustn't\" would forbid paying, and \"must / have to\" would make paying obligatory — the opposite of free.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which sentence gives ADVICE (not an obligation)?",
+      "options": [
+        { "id": "a", "text": "You must show your passport at the border." },
+        { "id": "b", "text": "Drivers have to stop at a red light." },
+        { "id": "c", "text": "You mustn't touch the paintings." },
+        { "id": "d", "text": "You should try the local food while you're here." }
+      ],
+      "correctOption": "d",
+      "explanation": "should expresses advice — a good idea, not a rule: You should try the local food. \"must\" and \"have to\" (a, b) state obligations, and \"mustn't\" (c) states a prohibition.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"My sister ___ wake up at 5 a.m. because her train leaves early.\"",
+      "options": [
+        { "id": "a", "text": "have to" },
+        { "id": "b", "text": "has to" },
+        { "id": "c", "text": "must to" },
+        { "id": "d", "text": "should to" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"My sister\" is third person singular (= she), so have to becomes has to: My sister has to wake up at 5 a.m. \"have to\" doesn't agree, and \"must to / should to\" wrongly add to after the modal.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "You must to finish your dinner." },
+        { "id": "b", "text": "She has to leave early today." },
+        { "id": "c", "text": "We should call them tonight." },
+        { "id": "d", "text": "They mustn't be late." }
+      ],
+      "correctOption": "a",
+      "explanation": "The error is (a): must is followed by the base verb with no to — You must finish your dinner. (b), (c) and (d) are all correct (has to + base, should + base, mustn't + base).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"You ___ ride a bike without a helmet — it's dangerous.\"",
+      "options": [
+        { "id": "a", "text": "don't have to" },
+        { "id": "b", "text": "have to" },
+        { "id": "c", "text": "shouldn't" },
+        { "id": "d", "text": "must" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"it's dangerous\" signals advice against doing it, so we use shouldn't: You shouldn't ride a bike without a helmet. \"don't have to\" means it's optional, while \"have to / must\" would make riding without a helmet obligatory.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete the question: \"___ I have to book a ticket in advance?\"",
+      "options": [
+        { "id": "a", "text": "Must" },
+        { "id": "b", "text": "Do" },
+        { "id": "c", "text": "Have" },
+        { "id": "d", "text": "Should to" }
+      ],
+      "correctOption": "b",
+      "explanation": "have to forms questions with do/does: Do I have to book a ticket? \"Must\" would not combine with \"have to\" here, \"Have I have to\" is wrong, and \"Should to\" adds a wrong to after should.",
+      "difficulty": 3
+    }
+  ]
+}

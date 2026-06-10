@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Gauntlet B1: Mixed Drills",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Grammar — Past continuous: \"___ we were walking home, we met an old friend.\"",
+      "options": [
+        { "id": "a", "text": "When" },
+        { "id": "b", "text": "While" },
+        { "id": "c", "text": "Since" },
+        { "id": "d", "text": "During" }
+      ],
+      "correctOption": "b",
+      "explanation": "while introduces the long action in progress (we were walking): While we were walking home… The short event (we met a friend) is in the past simple. \"when\" goes with the short action, \"since\" marks a start point, and \"during\" is followed by a noun, not a clause.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Vocabulary — Choose the opposite: \"The first exercise was difficult, but this one is quite ___.\"",
+      "options": [
+        { "id": "a", "text": "heavy" },
+        { "id": "b", "text": "loud" },
+        { "id": "c", "text": "easy" },
+        { "id": "d", "text": "tall" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"but\" signals a contrast with difficult, so the missing word is its opposite, easy: difficult ↔ easy. Heavy, loud and tall are real adjectives, but none is the opposite of difficult, so they break the contrast the sentence sets up.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Grammar — First conditional: \"If you press this green button, the machine ___ immediately.\"",
+      "options": [
+        { "id": "a", "text": "started" },
+        { "id": "b", "text": "would start" },
+        { "id": "c", "text": "will start" },
+        { "id": "d", "text": "starting" }
+      ],
+      "correctOption": "c",
+      "explanation": "This is a real, possible result, so the first conditional uses will + base verb: the machine will start. \"would start\" is the imaginary second conditional, \"started\" is the past simple, and \"starting\" is not a finite verb form here.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Reading — Read: \"Leila has visited many countries, but she has never been to Japan. Next spring, she is finally going there for two weeks.\"\nWhich country has Leila NOT visited yet?",
+      "options": [
+        { "id": "a", "text": "Japan." },
+        { "id": "b", "text": "Italy." },
+        { "id": "c", "text": "Every country." },
+        { "id": "d", "text": "None — she has visited them all." }
+      ],
+      "correctOption": "a",
+      "explanation": "The text says she \"has never been to Japan\", so Japan is the one she hasn't visited yet (a). She has visited many countries, just not Japan, so \"every country\" (c) and \"all of them\" (d) are wrong, and Italy (b) is never mentioned.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Spelling — Choose the correct past participle: \"She has ___ three letters to the company this week.\"",
+      "options": [
+        { "id": "a", "text": "wrote" },
+        { "id": "b", "text": "written" },
+        { "id": "c", "text": "writed" },
+        { "id": "d", "text": "writing" }
+      ],
+      "correctOption": "b",
+      "explanation": "write is irregular: write → wrote (past) → written (participle). After has we use the participle: She has written three letters. \"wrote\" is the past simple, \"writed\" is not a word, and \"writing\" is the -ing form, which needs a form of be.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Grammar — Relative clause: \"That's the cafe ___ owner makes the best coffee in town.\"",
+      "options": [
+        { "id": "a", "text": "who" },
+        { "id": "b", "text": "which" },
+        { "id": "c", "text": "where" },
+        { "id": "d", "text": "whose" }
+      ],
+      "correctOption": "d",
+      "explanation": "whose shows possession — it replaces its here (its owner): the cafe whose owner makes the best coffee. \"who\" is for a person doing the action, \"which\" would need a verb after it (the cafe which sells coffee), and \"where\" marks a place inside the clause, not an owner.",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Gauntlet B1 Boss ⭐⭐⭐: Mixed Mastery",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Grammar — Present perfect vs past simple: \"We ___ this film two days ago, so let's watch something else.\"",
+      "options": [
+        { "id": "a", "text": "have watched" },
+        { "id": "b", "text": "watched" },
+        { "id": "c", "text": "have watch" },
+        { "id": "d", "text": "has watched" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"two days ago\" is a finished time, so we use the past simple: We watched this film two days ago. The present perfect can't take a finished-time marker (so \"have watched\" is wrong), \"have watch\" lacks the participle, and \"has watched\" is the wrong subject form for we.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Grammar — Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "If you don't water plants, they die." },
+        { "id": "b", "text": "She was reading when the lights went out." },
+        { "id": "c", "text": "You should call the doctor tomorrow." },
+        { "id": "d", "text": "If I will see her, I'll give her the message." }
+      ],
+      "correctOption": "d",
+      "explanation": "The error is (d): never put will in the if-clause — it should be If I see her, I'll give her the message. (a) is a correct zero conditional, (b) correctly interrupts a past-continuous action with a past-simple event, and (c) is correct advice with should + base.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Vocabulary — Complete the collocation: \"Before you sign anything, you need to ___ an important decision.\"",
+      "options": [
+        { "id": "a", "text": "do" },
+        { "id": "b", "text": "take" },
+        { "id": "c", "text": "make" },
+        { "id": "d", "text": "have" }
+      ],
+      "correctOption": "c",
+      "explanation": "In English we make a decision, not \"do\" or \"have\" one: you need to make an important decision. This is a fixed collocation — make goes with decision, plan and mistake, while do goes with homework or the housework.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Reading — Read: \"The ground outside is completely wet and there are puddles everywhere, but the sky is clear and bright now. People are closing their umbrellas.\"\nWhat has just happened?",
+      "options": [
+        { "id": "a", "text": "It has just rained." },
+        { "id": "b", "text": "It has been sunny all day." },
+        { "id": "c", "text": "There has been a sandstorm." },
+        { "id": "d", "text": "It has started to snow." }
+      ],
+      "correctOption": "a",
+      "explanation": "The clues — wet ground, puddles, a now-clear sky and people closing umbrellas — show it has just rained (a). \"sunny all day\" can't explain the wet ground and umbrellas (b), and a sandstorm (c) or snow (d) don't fit puddles and umbrellas.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Grammar — Modals: \"The test starts at exactly nine, so you ___ be late, or they won't let you in.\"",
+      "options": [
+        { "id": "a", "text": "don't have to" },
+        { "id": "b", "text": "should" },
+        { "id": "c", "text": "don't need to" },
+        { "id": "d", "text": "mustn't" }
+      ],
+      "correctOption": "d",
+      "explanation": "Being late is not allowed (they won't let you in), so we use mustn't (prohibition): you mustn't be late. The trap is \"don't have to\"/\"don't need to\", which mean it's optional — but here lateness is forbidden, not a free choice, and \"should\" is only advice.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Spelling — Choose the correct -ing form: \"I'm always ___ where I put my keys.\"",
+      "options": [
+        { "id": "a", "text": "forgeting" },
+        { "id": "b", "text": "forgettting" },
+        { "id": "c", "text": "forgetting" },
+        { "id": "d", "text": "forgetteing" }
+      ],
+      "correctOption": "c",
+      "explanation": "forget is stressed on the last syllable and ends in one vowel + one consonant, so the t doubles before -ing: forgetting. \"forgeting\" keeps only one t, \"forgettting\" has one too many, and \"forgetteing\" wrongly inserts an e.",
+      "difficulty": 3
+    }
+  ]
+}

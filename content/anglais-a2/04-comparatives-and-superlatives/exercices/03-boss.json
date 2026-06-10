@@ -1,0 +1,85 @@
+{
+  "title": "⚔️ Chapter Boss ⭐⭐⭐: Comparatives & Superlatives",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Complete: \"The Nile is ___ river in Africa.\"",
+      "options": [
+        { "id": "a", "text": "longer" },
+        { "id": "b", "text": "the longer" },
+        { "id": "c", "text": "the longest" },
+        { "id": "d", "text": "longest" }
+      ],
+      "correctOption": "c",
+      "explanation": "Picking the top of a whole group (in Africa) needs the superlative with the: the longest river. \"longer\"/\"the longer\" are comparative (two things), and a superlative must keep the, so \"longest\" alone is incomplete.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "This phone is better than that one." },
+        { "id": "b", "text": "She is the happiest person I know." },
+        { "id": "c", "text": "Gold is more expensive than silver." },
+        { "id": "d", "text": "He is more taller than his father." }
+      ],
+      "correctOption": "d",
+      "explanation": "The error is (d): tall is a short adjective, so the comparative is just taller than — adding more on top double-marks the comparison (more + -er). (a) uses the irregular better, (b) the superlative the happiest, and (c) more for a long adjective — all correct.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Put the words in the correct order: (the / it / film / boring / most / is)",
+      "options": [
+        { "id": "a", "text": "It is most the boring film." },
+        { "id": "b", "text": "It is the most boring film." },
+        { "id": "c", "text": "It is the boring most film." },
+        { "id": "d", "text": "It is more boring the film." }
+      ],
+      "correctOption": "b",
+      "explanation": "Boring is a long adjective, so its superlative is the most + adjective + noun: the most boring film. The is followed straight by most, then the adjective, then the noun, so \"most the\" and \"boring most\" are out of order, and \"more boring\" is the comparative, not the superlative.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"My grades this term are ___ than last term.\"",
+      "options": [
+        { "id": "a", "text": "better" },
+        { "id": "b", "text": "the best" },
+        { "id": "c", "text": "gooder" },
+        { "id": "d", "text": "more good" }
+      ],
+      "correctOption": "a",
+      "explanation": "Good is irregular: its comparative is better, and the word than confirms we compare two things: better than last term. \"the best\" is the superlative (no than), and \"gooder\"/\"more good\" invent a regular form that does not exist.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"My bag isn't ___ heavy ___ yours; yours weighs more.\"",
+      "options": [
+        { "id": "a", "text": "more … than" },
+        { "id": "b", "text": "so … then" },
+        { "id": "c", "text": "as … as" },
+        { "id": "d", "text": "the … est" }
+      ],
+      "correctOption": "c",
+      "explanation": "To say two things are not equal we use not as + adjective + as: isn't as heavy as yours. \"more … than\" would compare them but doesn't fit this not-equal frame, \"then\" is a time word (not than), and \"the …est\" is the superlative pattern, not a comparison of two bags.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which sentence is correct?",
+      "options": [
+        { "id": "a", "text": "Today is worse than yesterday, but tomorrow will be the worse day." },
+        { "id": "b", "text": "Today is worse than yesterday, but tomorrow will be the worst day." },
+        { "id": "c", "text": "Today is worst than yesterday, but tomorrow will be the worst day." },
+        {
+          "id": "d",
+          "text": "Today is more worse than yesterday, but tomorrow will be the worst day."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Bad is irregular: comparative worse (with than) and superlative the worst (the top of a group). Only (b) gets both right. (a) uses the comparative worse where the superlative the worst is needed, (c) uses the superlative worst with than, and (d) double-marks the comparative with more worse.",
+      "difficulty": 3
+    }
+  ]
+}

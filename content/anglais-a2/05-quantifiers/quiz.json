@@ -1,0 +1,65 @@
+{
+  "title": "Comprehension Check ⭐",
+  "questions": [
+    {
+      "prompt": "Complete: \"I have ___ money in my pocket.\"",
+      "options": [
+        { "id": "a", "text": "some" },
+        { "id": "b", "text": "any" },
+        { "id": "c", "text": "many" },
+        { "id": "d", "text": "a few" }
+      ],
+      "correctOption": "a",
+      "explanation": "In an affirmative sentence we use some: I have some money. Any belongs to negatives and questions, many goes with countable plurals (not money), and a few is also for countable nouns.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"How ___ books are there on the shelf?\"",
+      "options": [
+        { "id": "a", "text": "much" },
+        { "id": "b", "text": "many" },
+        { "id": "c", "text": "a lot" },
+        { "id": "d", "text": "few" }
+      ],
+      "correctOption": "b",
+      "explanation": "Books is countable and plural, so we ask How many books…?. How much is for uncountable nouns (How much water?), and \"how a lot\" / \"how few\" are not correct question forms.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"There isn't ___ bread left.\"",
+      "options": [
+        { "id": "a", "text": "some" },
+        { "id": "b", "text": "many" },
+        { "id": "c", "text": "any" },
+        { "id": "d", "text": "a few" }
+      ],
+      "correctOption": "c",
+      "explanation": "After a negative (isn't) we use any: There isn't any bread. Some is for affirmatives, and many / a few go with countable nouns, while bread is uncountable.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"We need ___ milk for the recipe.\"",
+      "options": [
+        { "id": "a", "text": "a few" },
+        { "id": "b", "text": "a little" },
+        { "id": "c", "text": "many" },
+        { "id": "d", "text": "a lot" }
+      ],
+      "correctOption": "b",
+      "explanation": "Milk is uncountable, so a small amount is a little milk. A few and many are for countable nouns, and \"a lot\" needs of before a noun (a lot of milk).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which sentence uses the uncountable noun correctly?",
+      "options": [
+        { "id": "a", "text": "She gave me many informations." },
+        { "id": "b", "text": "She gave me much advices." },
+        { "id": "c", "text": "She gave me some breads." },
+        { "id": "d", "text": "She gave me a lot of information." }
+      ],
+      "correctOption": "d",
+      "explanation": "Information is uncountable: it has no plural and works with a lot of — a lot of information. \"informations\", \"advices\" and \"breads\" are all wrong because these nouns are uncountable and never take an -s.",
+      "difficulty": 2
+    }
+  ]
+}

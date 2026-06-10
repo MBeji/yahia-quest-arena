@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Gauntlet: Mixed Drills",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Grammar — Complete: \"My brother ___ football every weekend.\"",
+      "options": [
+        { "id": "a", "text": "play" },
+        { "id": "b", "text": "are playing" },
+        { "id": "c", "text": "playing" },
+        { "id": "d", "text": "plays" }
+      ],
+      "correctOption": "d",
+      "explanation": "In the present simple, he/she/it adds -s: my brother plays football. \"Play\" misses the third-person -s, \"playing\" needs a form of be, and \"are playing\" uses are with a singular subject — it should be is, and the habit \"every weekend\" calls for the present simple anyway.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Spelling — Choose the correctly spelled plural of \"brush\".",
+      "options": [
+        { "id": "a", "text": "brushs" },
+        { "id": "b", "text": "brushies" },
+        { "id": "c", "text": "brushes" },
+        { "id": "d", "text": "brushs'" }
+      ],
+      "correctOption": "c",
+      "explanation": "Nouns ending in -sh add -es: brush → brushes (the -es makes the extra syllable easy to say). \"Brushs\" forgets the -es rule, \"brushies\" wrongly applies the y → ies pattern, and the apostrophe form shows possession, not a plural. Compare dish → dishes, glass → glasses.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Vocabulary — Complete the collocation: \"She bought a ___ of water at the shop.\"",
+      "options": [
+        { "id": "a", "text": "bottle" },
+        { "id": "b", "text": "loaf" },
+        { "id": "c", "text": "slice" },
+        { "id": "d", "text": "bar" }
+      ],
+      "correctOption": "a",
+      "explanation": "Water you buy or carry comes in a bottle, so we say a bottle of water. A loaf and a slice go with bread (a loaf of bread), and a bar goes with chocolate or soap — none of those is a container for a drink you take from a shop.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Reading — Read: \"Ali and Omar are brothers. Ali likes red. Omar likes blue.\"\nWhat colour does Omar like?",
+      "options": [
+        { "id": "a", "text": "He likes red." },
+        { "id": "b", "text": "He likes blue." },
+        { "id": "c", "text": "He likes green." },
+        { "id": "d", "text": "They like the same colour." }
+      ],
+      "correctOption": "b",
+      "explanation": "The text says \"Omar likes blue\", so blue is the answer. Watch the trap in (a): red is Ali's colour, not Omar's. Green (c) is never mentioned, and (d) contradicts the text, which gives the brothers two different colours.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Grammar — Complete: \"___ two windows in this room.\"",
+      "options": [
+        { "id": "a", "text": "There is" },
+        { "id": "b", "text": "It is" },
+        { "id": "c", "text": "There be" },
+        { "id": "d", "text": "There are" }
+      ],
+      "correctOption": "d",
+      "explanation": "Two windows is plural, so use there are: There are two windows. There is is for one thing (there is a window), \"there be\" is not a finite form, and it is cannot introduce a plural like this.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Spelling — Choose the correctly spelled plural of \"person\".",
+      "options": [
+        { "id": "a", "text": "people" },
+        { "id": "b", "text": "persons" },
+        { "id": "c", "text": "peoples" },
+        { "id": "d", "text": "personies" }
+      ],
+      "correctOption": "a",
+      "explanation": "Person has an irregular plural: person → people (no -s rule applies in everyday English). \"Persons\" is only used in very formal or legal English; \"peoples\" doubles the plural (people is already plural, so it takes no final -s, except to mean separate nations); and \"personies\" invents an ending that does not exist.",
+      "difficulty": 3
+    }
+  ]
+}

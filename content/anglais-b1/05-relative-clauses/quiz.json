@@ -1,0 +1,65 @@
+{
+  "title": "Comprehension Check ⭐",
+  "questions": [
+    {
+      "prompt": "Complete: \"The doctor ___ treated me was very kind.\"",
+      "options": [
+        { "id": "a", "text": "who" },
+        { "id": "b", "text": "which" },
+        { "id": "c", "text": "where" },
+        { "id": "d", "text": "whose" }
+      ],
+      "correctOption": "a",
+      "explanation": "Use who for people: the doctor who treated me. \"which\" is for things, not people; \"where\" is for places; and \"whose\" shows possession (the doctor whose car…), which is not the meaning here.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"That's the village ___ my grandparents live.\"",
+      "options": [
+        { "id": "a", "text": "which" },
+        { "id": "b", "text": "who" },
+        { "id": "c", "text": "that" },
+        { "id": "d", "text": "where" }
+      ],
+      "correctOption": "d",
+      "explanation": "Use where for a place (= in which): the village where my grandparents live. \"which\"/\"that\" would need the place as an object (the village that I visited), and \"who\" is only for people.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"I met a girl ___ brother plays for the national team.\"",
+      "options": [
+        { "id": "a", "text": "who" },
+        { "id": "b", "text": "which" },
+        { "id": "c", "text": "whose" },
+        { "id": "d", "text": "who's" }
+      ],
+      "correctOption": "c",
+      "explanation": "whose shows possession — it replaces her here (her brother): a girl whose brother plays. \"who\" would need a verb after it (a girl who plays), \"which\" is for things, and \"who's\" means \"who is\".",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"This is the bridge ___ connects the two parts of the city.\"",
+      "options": [
+        { "id": "a", "text": "who" },
+        { "id": "b", "text": "which" },
+        { "id": "c", "text": "where" },
+        { "id": "d", "text": "whose" }
+      ],
+      "correctOption": "b",
+      "explanation": "A bridge is a thing, so use which (the doer of \"connects\"): the bridge which connects the two parts. \"who\" is only for people, \"where\" marks a place inside the clause, and \"whose\" shows possession.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which sentence is correct?",
+      "options": [
+        { "id": "a", "text": "The book what I bought is interesting." },
+        { "id": "b", "text": "The book who I bought is interesting." },
+        { "id": "c", "text": "The book where I bought is interesting." },
+        { "id": "d", "text": "The book that I bought is interesting." }
+      ],
+      "correctOption": "d",
+      "explanation": "For a thing, use that (or which): the book that I bought. Never use \"what\" as a relative pronoun (a) — a very common error; \"who\" (b) is for people; and \"where\" (c) is for places, not a thing.",
+      "difficulty": 2
+    }
+  ]
+}

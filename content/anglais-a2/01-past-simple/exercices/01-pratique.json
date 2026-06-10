@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Practice: Was/Were & Regular Verbs",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complete: \"Last year we ___ in Sousse on holiday.\"",
+      "options": [
+        { "id": "a", "text": "was" },
+        { "id": "b", "text": "were" },
+        { "id": "c", "text": "are" },
+        { "id": "d", "text": "been" }
+      ],
+      "correctOption": "b",
+      "explanation": "We takes were in the past: Last year we were in Sousse. Was goes with I/he/she/it, are is the present, and been is the past participle, not the simple past.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"I ___ very tired after the match.\"",
+      "options": [
+        { "id": "a", "text": "was" },
+        { "id": "b", "text": "were" },
+        { "id": "c", "text": "am" },
+        { "id": "d", "text": "been" }
+      ],
+      "correctOption": "a",
+      "explanation": "I takes was in the past: I was very tired. Were is for you/we/they, am is the present, and been needs an auxiliary like have before it.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"She ___ the window because it was cold.\"",
+      "options": [
+        { "id": "a", "text": "close" },
+        { "id": "b", "text": "closeed" },
+        { "id": "c", "text": "closed" },
+        { "id": "d", "text": "closd" }
+      ],
+      "correctOption": "c",
+      "explanation": "close already ends in -e, so we add only -d: closed. We never write \"closeed\" (double e) or \"closd\" (missing e). \"close\" alone is the base form, not the past.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"They ___ for the exam all weekend.\"",
+      "options": [
+        { "id": "a", "text": "studyed" },
+        { "id": "b", "text": "studed" },
+        { "id": "c", "text": "studies" },
+        { "id": "d", "text": "studied" }
+      ],
+      "correctOption": "d",
+      "explanation": "study ends in consonant + y, so the y becomes -ied: studied. \"studyed\" keeps the y wrongly, \"studed\" drops a letter, and \"studies\" is the present he/she/it form.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"The taxi ___ in front of the house.\"",
+      "options": [
+        { "id": "a", "text": "stoped" },
+        { "id": "b", "text": "stopt" },
+        { "id": "c", "text": "stopped" },
+        { "id": "d", "text": "stopd" }
+      ],
+      "correctOption": "c",
+      "explanation": "stop has one short vowel + one consonant, so we double the p before -ed: stopped. \"stoped\" forgets to double, and \"stopt\"/\"stopd\" are not English spellings.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"He ___ at school yesterday; he was ill at home.\"",
+      "options": [
+        { "id": "a", "text": "weren't" },
+        { "id": "b", "text": "wasn't" },
+        { "id": "c", "text": "didn't" },
+        { "id": "d", "text": "isn't" }
+      ],
+      "correctOption": "b",
+      "explanation": "He takes was, so the negative is wasn't: He wasn't at school. Weren't is for you/we/they, didn't is for action verbs (not to be), and isn't is the present.",
+      "difficulty": 2
+    }
+  ]
+}

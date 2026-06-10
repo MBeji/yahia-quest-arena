@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Practice: Present Continuous",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complete: \"I ___ my homework right now.\"",
+      "options": [
+        { "id": "a", "text": "doing" },
+        { "id": "b", "text": "do" },
+        { "id": "c", "text": "am doing" },
+        { "id": "d", "text": "is doing" }
+      ],
+      "correctOption": "c",
+      "explanation": "The present continuous is be + verb-ing, and with I the form of be is am: I am doing. \"doing\" alone has no be, \"is doing\" uses the wrong be for I, and \"do\" is the present simple (for habits, not for right now).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"Look! It ___ outside.\"",
+      "options": [
+        { "id": "a", "text": "is raining" },
+        { "id": "b", "text": "are raining" },
+        { "id": "c", "text": "raining" },
+        { "id": "d", "text": "rains" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Look!\" tells us it is happening now, so use the present continuous. With it the form is is + -ing: it is raining. \"are raining\" uses the plural be wrongly, \"raining\" has no be, and \"rains\" is the present simple (a general habit).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "What is the correct -ing form of \"run\"?",
+      "options": [
+        { "id": "a", "text": "runing" },
+        { "id": "b", "text": "running" },
+        { "id": "c", "text": "runnning" },
+        { "id": "d", "text": "runeing" }
+      ],
+      "correctOption": "b",
+      "explanation": "run has one short vowel + one consonant, so we double the n before -ing: running. \"runing\" forgets to double, \"runnning\" has too many n's, and \"runeing\" adds an extra e that does not belong.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"She ___ a letter to her friend.\"",
+      "options": [
+        { "id": "a", "text": "are writing" },
+        { "id": "b", "text": "am writing" },
+        { "id": "c", "text": "is write" },
+        { "id": "d", "text": "is writing" }
+      ],
+      "correctOption": "d",
+      "explanation": "With she the form of be is is, and the continuous keeps the -ing: she is writing. \"are writing\" uses the plural be, \"am writing\" is only for I, and \"is write\" drops the -ing the continuous needs.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"We ___ to music in the garden.\"",
+      "options": [
+        { "id": "a", "text": "is listening" },
+        { "id": "b", "text": "are listening" },
+        { "id": "c", "text": "listening" },
+        { "id": "d", "text": "am listening" }
+      ],
+      "correctOption": "b",
+      "explanation": "With we the form of be is are, plus the -ing form: we are listening. \"is listening\" is singular (he/she/it), \"am listening\" is only for I, and \"listening\" alone is missing the verb be.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which is the correct -ing form of \"have\" (as in eating) in \"They ___ lunch now.\"?",
+      "options": [
+        { "id": "a", "text": "are having" },
+        { "id": "b", "text": "are haveing" },
+        { "id": "c", "text": "are have" },
+        { "id": "d", "text": "having" }
+      ],
+      "correctOption": "a",
+      "explanation": "have ends in a silent -e, so we drop the e before -ing: having. With they the be is are: they are having lunch. \"are haveing\" keeps the e wrongly, \"are have\" forgets the -ing, and \"having\" alone has no be.",
+      "difficulty": 2
+    }
+  ]
+}

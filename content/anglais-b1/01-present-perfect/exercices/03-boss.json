@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Chapter Boss ⭐⭐⭐: The Present Perfect",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Complete: \"I ___ to Paris last year.\"",
+      "options": [
+        { "id": "a", "text": "have gone" },
+        { "id": "b", "text": "went" },
+        { "id": "c", "text": "have been" },
+        { "id": "d", "text": "has gone" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"last year\" is a finished time, so we use the past simple: I went to Paris last year. The present perfect (have gone/been) cannot take a finished-time marker, and \"has gone\" is the wrong subject form for I.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "I have seen him yesterday." },
+        { "id": "b", "text": "She has just left the office." },
+        { "id": "c", "text": "They have lived here for years." },
+        { "id": "d", "text": "Have you finished yet?" }
+      ],
+      "correctOption": "a",
+      "explanation": "The error is (a): \"yesterday\" is a finished time, so it needs the past simple — I saw him yesterday, not \"have seen\". (b), (c) and (d) all use the present perfect correctly (just, for years, yet).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"She has ___ three novels so far.\"",
+      "options": [
+        { "id": "a", "text": "wrote" },
+        { "id": "b", "text": "writed" },
+        { "id": "c", "text": "written" },
+        { "id": "d", "text": "write" }
+      ],
+      "correctOption": "c",
+      "explanation": "write is irregular: write → wrote (past) → written (participle). After has we use the participle: She has written. \"wrote\" is the past simple, \"writed\" is not a word, and \"write\" is the base form.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"We ___ in this house since 2018.\"",
+      "options": [
+        { "id": "a", "text": "lived" },
+        { "id": "b", "text": "have lived" },
+        { "id": "c", "text": "live" },
+        { "id": "d", "text": "had lived" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"since 2018\" describes a period from the past up to now, which takes the present perfect: We have lived here since 2018. \"lived\" (past simple) and \"had lived\" (past perfect) cut the link to now, and \"live\" is the present simple.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "You have been to Egypt. Choose the correct short answer to \"Have you ever been to Egypt?\"",
+      "options": [
+        { "id": "a", "text": "Yes, I did." },
+        { "id": "b", "text": "Yes, I am." },
+        { "id": "c", "text": "Yes, I was." },
+        { "id": "d", "text": "Yes, I have." }
+      ],
+      "correctOption": "d",
+      "explanation": "A present-perfect question is answered with the same auxiliary: Have you…? — Yes, I have. \"I did\" answers a past-simple question, and \"I am / I was\" answer questions with the verb to be, not the present perfect.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "She has gone to the shop, but she's back now." },
+        { "id": "b", "text": "He has been to Japan twice." },
+        { "id": "c", "text": "They have gone home; they left an hour ago." },
+        { "id": "d", "text": "I have been very busy this week." }
+      ],
+      "correctOption": "a",
+      "explanation": "The error is (a): \"has gone\" means she is still away, which contradicts \"she's back now\" — it should be has been (visited and returned). (b), (c) and (d) use been/gone correctly for their meanings.",
+      "difficulty": 3
+    }
+  ]
+}

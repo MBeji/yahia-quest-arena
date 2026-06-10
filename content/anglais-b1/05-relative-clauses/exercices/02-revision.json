@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Review: Where, Whose & That",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complete: \"This is the restaurant ___ we had dinner last week.\"",
+      "options": [
+        { "id": "a", "text": "which" },
+        { "id": "b", "text": "where" },
+        { "id": "c", "text": "who" },
+        { "id": "d", "text": "whose" }
+      ],
+      "correctOption": "b",
+      "explanation": "Use where for a place (= in which): the restaurant where we had dinner. \"which\" would need the place as an object (the restaurant which we liked), \"who\" is for people, and \"whose\" shows possession.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"He's the writer ___ books sell millions of copies.\"",
+      "options": [
+        { "id": "a", "text": "whose" },
+        { "id": "b", "text": "who" },
+        { "id": "c", "text": "which" },
+        { "id": "d", "text": "where" }
+      ],
+      "correctOption": "a",
+      "explanation": "whose shows possession — it replaces his here (his books): the writer whose books sell. \"who\" needs a verb after it (the writer who writes), \"which\" is for things, and \"where\" is for places.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"That's the stadium ___ the final was played.\"",
+      "options": [
+        { "id": "a", "text": "who" },
+        { "id": "b", "text": "whose" },
+        { "id": "c", "text": "which" },
+        { "id": "d", "text": "where" }
+      ],
+      "correctOption": "d",
+      "explanation": "Use where for a place (= in which): the stadium where the final was played. \"who\" is for people, \"whose\" shows possession, and bare \"which\" would need the place as an object (the stadium which they built).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"That's the neighbour ___ dog barks all night.\"",
+      "options": [
+        { "id": "a", "text": "who" },
+        { "id": "b", "text": "who's" },
+        { "id": "c", "text": "whose" },
+        { "id": "d", "text": "which" }
+      ],
+      "correctOption": "c",
+      "explanation": "whose shows possession (his/her dog): the neighbour whose dog barks. \"who's\" means \"who is\" (the neighbour who's angry), \"who\" needs a verb directly after it, and \"which\" is for things, not a person.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Combine into one sentence: \"I visited a museum. The museum had no entrance fee.\"",
+      "options": [
+        { "id": "a", "text": "I visited a museum where had no entrance fee." },
+        { "id": "b", "text": "I visited a museum which had no entrance fee." },
+        { "id": "c", "text": "I visited a museum who had no entrance fee." },
+        { "id": "d", "text": "I visited a museum whose had no entrance fee." }
+      ],
+      "correctOption": "b",
+      "explanation": "The museum is a thing and the subject of \"had\", so use which: a museum which had no entrance fee. \"where\" can't be the subject of \"had\" (a), \"who\" is for people (c), and \"whose\" needs a noun after it (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "The hotel where we stayed was cheap." },
+        { "id": "b", "text": "The friend whose car we borrowed lives in Tunis." },
+        { "id": "c", "text": "The pen where I write with is broken." },
+        { "id": "d", "text": "The street where I grew up has changed a lot." }
+      ],
+      "correctOption": "c",
+      "explanation": "In (c), \"the pen where I write with\" is wrong: a pen is a thing, so use which or that (the pen which I write with). \"where\" is only for places. (a), (b) and (d) use where and whose correctly.",
+      "difficulty": 3
+    }
+  ]
+}

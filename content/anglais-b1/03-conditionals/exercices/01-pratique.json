@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Practice: Zero & First Conditional",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complete the zero conditional: \"If you mix blue and yellow, you ___ green.\"",
+      "options": [
+        { "id": "a", "text": "get" },
+        { "id": "b", "text": "will get" },
+        { "id": "c", "text": "would get" },
+        { "id": "d", "text": "got" }
+      ],
+      "correctOption": "a",
+      "explanation": "Mixing blue and yellow is always true, so this is the zero conditional: both clauses use the present simple — you get green. \"will get\" and \"would get\" belong to the first and second conditionals, and \"got\" is the past simple.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete the first conditional: \"If you study tonight, you ___ the test.\"",
+      "options": [
+        { "id": "a", "text": "pass" },
+        { "id": "b", "text": "will pass" },
+        { "id": "c", "text": "would pass" },
+        { "id": "d", "text": "passed" }
+      ],
+      "correctOption": "b",
+      "explanation": "This is a real, possible future, so the first conditional uses will + base verb in the result: you will pass the test. \"would pass\" is the imaginary second conditional, while \"pass\" and \"passed\" leave out the modal will.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete the if-clause: \"If it ___ tomorrow, we will cancel the picnic.\"",
+      "options": [
+        { "id": "a", "text": "will rain" },
+        { "id": "b", "text": "would rain" },
+        { "id": "c", "text": "rains" },
+        { "id": "d", "text": "rained" }
+      ],
+      "correctOption": "c",
+      "explanation": "In the first conditional the if-clause stays in the present simple, even about the future: If it rains tomorrow… The word \"will\" goes in the result only, so \"will rain\" and \"would rain\" are wrong here, and \"rained\" (past) would start a different conditional.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete the zero conditional: \"If water ___ 100°C, it boils.\"",
+      "options": [
+        { "id": "a", "text": "will reach" },
+        { "id": "b", "text": "reaches" },
+        { "id": "c", "text": "reach" },
+        { "id": "d", "text": "reached" }
+      ],
+      "correctOption": "b",
+      "explanation": "This is a scientific fact (zero conditional), so the if-clause uses the present simple with the third-person -s: If water reaches 100°C… \"will reach\" adds a wrong future, \"reach\" misses the -s after water, and \"reached\" is the past simple.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete the result: \"If we don't leave now, we ___ the train.\"",
+      "options": [
+        { "id": "a", "text": "miss" },
+        { "id": "b", "text": "would miss" },
+        { "id": "c", "text": "missed" },
+        { "id": "d", "text": "will miss" }
+      ],
+      "correctOption": "d",
+      "explanation": "This is a likely future consequence, so the first conditional result uses will + base verb: we will miss the train. \"would miss\" is for imaginary situations, and \"miss/missed\" drop the modal will needed in the result.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "After will, which verb form is correct? \"If you ask her, she will ___ you.\"",
+      "options": [
+        { "id": "a", "text": "helps" },
+        { "id": "b", "text": "to help" },
+        { "id": "c", "text": "helped" },
+        { "id": "d", "text": "help" }
+      ],
+      "correctOption": "d",
+      "explanation": "After will we always use the bare base verb: she will help you. \"helps\" wrongly adds -s, \"to help\" wrongly adds to, and \"helped\" is the past form — none of these follow will.",
+      "difficulty": 2
+    }
+  ]
+}

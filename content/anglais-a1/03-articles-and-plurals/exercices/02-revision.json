@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Review: Articles & Plurals",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Choose the correct article: \"We waited for ___ hour.\"",
+      "options": [
+        { "id": "a", "text": "an" },
+        { "id": "b", "text": "a" },
+        { "id": "c", "text": "the" },
+        { "id": "d", "text": "(no article)" }
+      ],
+      "correctOption": "a",
+      "explanation": "Use an before a VOWEL SOUND, not just a vowel letter: an hour, because the h is silent and the word starts with the vowel sound /aʊ/. \"a hour\" is therefore wrong.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "What is the correct plural of \"watch\"?",
+      "options": [
+        { "id": "a", "text": "watchs" },
+        { "id": "b", "text": "watchies" },
+        { "id": "c", "text": "watches" },
+        { "id": "d", "text": "watch" }
+      ],
+      "correctOption": "c",
+      "explanation": "Nouns ending in -ch take -es: watch → watches. \"watchs\" forgets the -es needed after ch, and the -ies rule applies only to a consonant + y ending, not to ch.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Fill the gap: \"___ is essential for all living things.\"",
+      "options": [
+        { "id": "a", "text": "A water" },
+        { "id": "b", "text": "Water" },
+        { "id": "c", "text": "An water" },
+        { "id": "d", "text": "The waters" }
+      ],
+      "correctOption": "b",
+      "explanation": "Water is an uncountable noun used here in a general sense, so it takes no article and no plural: Water is essential. You cannot say \"a water\" or \"an water\", and \"the waters\" would mean specific bodies of water.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "What is the correct plural of \"knife\"?",
+      "options": [
+        { "id": "a", "text": "knifes" },
+        { "id": "b", "text": "knifies" },
+        { "id": "c", "text": "knife" },
+        { "id": "d", "text": "knives" }
+      ],
+      "correctOption": "d",
+      "explanation": "Some nouns ending in -fe change f to v and add -s: knife → knives (like life → lives, wife → wives). \"knifes\" keeps the f, which is the typical mistake here.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT plural.",
+      "options": [
+        { "id": "a", "text": "buses" },
+        { "id": "b", "text": "mans" },
+        { "id": "c", "text": "leaves" },
+        { "id": "d", "text": "cities" }
+      ],
+      "correctOption": "b",
+      "explanation": "The wrong one is \"mans\": man has an irregular plural, man → men. The others are correct — bus → buses (-es after s), leaf → leaves (-f → -ves), and city → cities (consonant + y → -ies).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choose the correct article: \"He is ___ honest man, everyone trusts him.\"",
+      "options": [
+        { "id": "a", "text": "a" },
+        { "id": "b", "text": "the" },
+        { "id": "c", "text": "an" },
+        { "id": "d", "text": "(no article)" }
+      ],
+      "correctOption": "c",
+      "explanation": "In honest the h is silent, so the word begins with the vowel sound /ɒ/ and takes an: an honest man. Compare \"a house\", where the h is pronounced — the sound, not the letter, decides.",
+      "difficulty": 3
+    }
+  ]
+}

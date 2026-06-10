@@ -1,0 +1,65 @@
+{
+  "title": "Comprehension Check ⭐",
+  "questions": [
+    {
+      "prompt": "Choose the correct article: \"I ate ___ apple for breakfast.\"",
+      "options": [
+        { "id": "a", "text": "a" },
+        { "id": "b", "text": "an" },
+        { "id": "c", "text": "the" },
+        { "id": "d", "text": "(no article)" }
+      ],
+      "correctOption": "b",
+      "explanation": "Apple begins with a vowel sound /æ/, so it takes an: an apple. We use a before a consonant sound, and the would mean a specific apple already known, which a first mention is not.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choose the correct article: \"She is ___ university student.\"",
+      "options": [
+        { "id": "a", "text": "an" },
+        { "id": "b", "text": "the" },
+        { "id": "c", "text": "a" },
+        { "id": "d", "text": "(no article)" }
+      ],
+      "correctOption": "c",
+      "explanation": "Use a or an by SOUND, not letter: university starts with a /j/ \"yoo\" sound, which is a consonant sound, so it takes a (a university). The vowel letter u tricks many learners into writing \"an university\".",
+      "difficulty": 2
+    },
+    {
+      "prompt": "What is the correct plural of \"city\"?",
+      "options": [
+        { "id": "a", "text": "citys" },
+        { "id": "b", "text": "cityes" },
+        { "id": "c", "text": "cities" },
+        { "id": "d", "text": "cityies" }
+      ],
+      "correctOption": "c",
+      "explanation": "When a noun ends in a consonant + y, the y changes to -ies: city → cities. \"citys\" forgets the spelling change, and the other forms double up the ending wrongly.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "What is the correct plural of \"child\"?",
+      "options": [
+        { "id": "a", "text": "childs" },
+        { "id": "b", "text": "childes" },
+        { "id": "c", "text": "childer" },
+        { "id": "d", "text": "children" }
+      ],
+      "correctOption": "d",
+      "explanation": "Child has an irregular plural: child → children. It does not follow the -s rule, so \"childs\" is wrong, and the other forms are invented endings.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choose the correct sentence about cats in general.",
+      "options": [
+        { "id": "a", "text": "A cats are independent." },
+        { "id": "b", "text": "Cats are independent." },
+        { "id": "c", "text": "The cats are independent." },
+        { "id": "d", "text": "An cats are independent." }
+      ],
+      "correctOption": "b",
+      "explanation": "For a general truth about a whole group, use a plural with no article (zero article): Cats are independent. You cannot put a/an before a plural, and the would point to specific, known cats, not cats in general.",
+      "difficulty": 2
+    }
+  ]
+}

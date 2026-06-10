@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Chapter Boss ⭐⭐⭐: Conditionals",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Match the clause: \"If I had a car, ___\"",
+      "options": [
+        { "id": "a", "text": "I will drive to work." },
+        { "id": "b", "text": "I drive to work." },
+        { "id": "c", "text": "I would drive to work." },
+        { "id": "d", "text": "I would to drive to work." }
+      ],
+      "correctOption": "c",
+      "explanation": "The if-clause \"If I had…\" is past simple, which signals the second conditional, so the result must be would + base verb: I would drive to work. \"will drive\" mixes in the first conditional, \"I drive\" drops the modal, and \"would to drive\" wrongly adds to after would.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "If it will snow, we will stay home." },
+        { "id": "b", "text": "If you press this button, the machine stops." },
+        { "id": "c", "text": "If I had time, I would help you." },
+        { "id": "d", "text": "If she calls, I will answer." }
+      ],
+      "correctOption": "a",
+      "explanation": "The error is (a): you must never put will in the if-clause — it should be If it snows, we will stay home. (b) is a correct zero conditional, (c) a correct second conditional, and (d) a correct first conditional.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"If you ___ harder, you would get better marks.\"",
+      "options": [
+        { "id": "a", "text": "will work" },
+        { "id": "b", "text": "work" },
+        { "id": "c", "text": "would work" },
+        { "id": "d", "text": "worked" }
+      ],
+      "correctOption": "d",
+      "explanation": "The result \"would get\" tells us this is the second conditional, so the if-clause needs the past simple: If you worked harder… The modal goes in the result only, so \"will work\" and \"would work\" are wrong, and \"work\" (present) would not match \"would get\".",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choose the correct FIRST conditional.",
+      "options": [
+        { "id": "a", "text": "If the weather is nice, we would go hiking." },
+        { "id": "b", "text": "If the weather is nice, we will go hiking." },
+        { "id": "c", "text": "If the weather will be nice, we go hiking." },
+        { "id": "d", "text": "If the weather were nice, we will go hiking." }
+      ],
+      "correctOption": "b",
+      "explanation": "A real future plan uses the first conditional: if + present simple, then will + base — If the weather is nice, we will go hiking. (a) wrongly uses would, (c) puts will in the if-clause, and (d) mixes a past if-clause with will.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete the zero conditional: \"If you ___ plants regularly, they grow well.\"",
+      "options": [
+        { "id": "a", "text": "will water" },
+        { "id": "b", "text": "would water" },
+        { "id": "c", "text": "water" },
+        { "id": "d", "text": "watered" }
+      ],
+      "correctOption": "c",
+      "explanation": "This is a general truth (zero conditional), so both clauses use the present simple: If you water plants regularly, they grow well. \"will water\" and \"would water\" wrongly add a modal, and \"watered\" is the past simple, not used for a permanent fact.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "If I were you, I would see a doctor." },
+        { "id": "b", "text": "If you heat metal, it expands." },
+        { "id": "c", "text": "If we leave now, we will be on time." },
+        { "id": "d", "text": "If I won the prize, I will buy a house." }
+      ],
+      "correctOption": "d",
+      "explanation": "The error is (d): it mixes conditionals — a past if-clause (won) needs would, not will, so it should be If I won the prize, I would buy a house. (a) is a correct second conditional, (b) a correct zero conditional, and (c) a correct first conditional.",
+      "difficulty": 3
+    }
+  ]
+}

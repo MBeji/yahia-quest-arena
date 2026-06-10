@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Chapter Boss ⭐⭐⭐: Mustn't vs Don't Have To",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Complete: \"This medicine is dangerous for children. You ___ leave it where they can reach it.\"",
+      "options": [
+        { "id": "a", "text": "mustn't" },
+        { "id": "b", "text": "don't have to" },
+        { "id": "c", "text": "should" },
+        { "id": "d", "text": "have to" }
+      ],
+      "correctOption": "a",
+      "explanation": "Leaving dangerous medicine within reach must be prevented, so we use mustn't (it is forbidden): You mustn't leave it where they can reach it. The trap is \"don't have to\", which would mean it's merely optional — the opposite of a safety ban.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"It's Saturday tomorrow, so I ___ get up early. I can sleep in.\"",
+      "options": [
+        { "id": "a", "text": "mustn't" },
+        { "id": "b", "text": "must" },
+        { "id": "c", "text": "have to" },
+        { "id": "d", "text": "don't have to" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"I can sleep in\" shows getting up early is not necessary, so we use don't have to: I don't have to get up early. The trap is \"mustn't\": that would forbid getting up early, but here it's simply optional — not banned.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "\"You mustn't park here\" means:",
+      "options": [
+        { "id": "a", "text": "You can park here if you want to." },
+        { "id": "b", "text": "Parking here is a good idea." },
+        { "id": "c", "text": "Parking here is forbidden; don't do it." },
+        { "id": "d", "text": "You don't need to park here." }
+      ],
+      "correctOption": "c",
+      "explanation": "mustn't expresses prohibition: \"You mustn't park here\" = parking here is forbidden, so don't do it. Options (a) and (d) describe a free choice (that would be don't have to), and (b) describes advice (should).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the sentence that means parking is OPTIONAL (you can, but you don't need to).",
+      "options": [
+        { "id": "a", "text": "You mustn't park here." },
+        { "id": "b", "text": "You don't have to park here." },
+        { "id": "c", "text": "You must park here." },
+        { "id": "d", "text": "You should park here." }
+      ],
+      "correctOption": "b",
+      "explanation": "don't have to means it isn't necessary, so it's optional: You don't have to park here = you can if you want. \"mustn't\" forbids it (a), \"must\" makes it obligatory (c), and \"should\" recommends it (d).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Find the INCORRECT sentence (watch the form after the modal).",
+      "options": [
+        { "id": "a", "text": "Visitors mustn't feed the animals." },
+        { "id": "b", "text": "You don't have to come if you're busy." },
+        { "id": "c", "text": "He has to renew his passport." },
+        { "id": "d", "text": "She must to apologise to her teacher." }
+      ],
+      "correctOption": "d",
+      "explanation": "The error is (d): must is followed by the base verb with no to — She must apologise. (a), (b) and (c) are all correct: mustn't + base (prohibition), don't have to + base (optional), and has to + base (obligation).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Your friend says: \"I don't have to wear a tie at work, but I mustn't wear jeans.\" Which is TRUE?",
+      "options": [
+        { "id": "a", "text": "Wearing a tie is optional, but jeans are forbidden." },
+        { "id": "b", "text": "A tie is forbidden, but jeans are optional." },
+        { "id": "c", "text": "Both a tie and jeans are forbidden." },
+        { "id": "d", "text": "Both a tie and jeans are required." }
+      ],
+      "correctOption": "a",
+      "explanation": "don't have to wear a tie = wearing a tie is optional; mustn't wear jeans = jeans are forbidden. So (a) is true. The pair contrasts the two modals: don't have to (not necessary) versus mustn't (not allowed) — they are opposites, not synonyms.",
+      "difficulty": 3
+    }
+  ]
+}

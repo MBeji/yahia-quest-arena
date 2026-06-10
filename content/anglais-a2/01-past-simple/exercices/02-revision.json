@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Review: Irregular Verbs, Negatives & Time",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complete: \"We ___ a great time at the party.\"",
+      "options": [
+        { "id": "a", "text": "haved" },
+        { "id": "b", "text": "had" },
+        { "id": "c", "text": "has" },
+        { "id": "d", "text": "haded" }
+      ],
+      "correctOption": "b",
+      "explanation": "have is irregular: its past is had (We had a great time). There is no \"haved\" or \"haded\" — irregular verbs never take -ed — and \"has\" is the present he/she/it form.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"I ___ a really good film last night.\"",
+      "options": [
+        { "id": "a", "text": "saw" },
+        { "id": "b", "text": "seed" },
+        { "id": "c", "text": "seen" },
+        { "id": "d", "text": "sawed" }
+      ],
+      "correctOption": "a",
+      "explanation": "see is irregular: past = saw (I saw a film). \"seed\"/\"sawed\" wrongly add -ed, and \"seen\" is the past participle (used with have: I have seen it).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"She ___ the message, so she didn't reply.\"",
+      "options": [
+        { "id": "a", "text": "didn't saw" },
+        { "id": "b", "text": "not saw" },
+        { "id": "c", "text": "didn't seen" },
+        { "id": "d", "text": "didn't see" }
+      ],
+      "correctOption": "d",
+      "explanation": "After didn't, the verb returns to its base form: She didn't see the message. \"didn't saw\" and \"didn't seen\" keep a past form wrongly, and \"not saw\" is missing the helper did.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"We moved to this town three years ___.\"",
+      "options": [
+        { "id": "a", "text": "before" },
+        { "id": "b", "text": "ago" },
+        { "id": "c", "text": "last" },
+        { "id": "d", "text": "since" }
+      ],
+      "correctOption": "b",
+      "explanation": "ago means \"in the past, counting back from now\" and follows the time: three years ago. \"before\" needs a reference point (before 2010), \"last\" comes before a noun (last year), and \"since\" marks a starting point (since 2010).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"He ___ a new phone for his birthday.\"",
+      "options": [
+        { "id": "a", "text": "getted" },
+        { "id": "b", "text": "gotten" },
+        { "id": "c", "text": "got" },
+        { "id": "d", "text": "gets" }
+      ],
+      "correctOption": "c",
+      "explanation": "get is irregular: past = got (He got a new phone). \"getted\" invents an -ed form, \"gotten\" is a past participle (mainly US English, used with have), and \"gets\" is the present.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        { "id": "a", "text": "She took the bus to work." },
+        { "id": "b", "text": "She taked the bus to work." },
+        { "id": "c", "text": "She tooked the bus to work." },
+        { "id": "d", "text": "She did took the bus to work." }
+      ],
+      "correctOption": "a",
+      "explanation": "take is irregular: past = took, used on its own in an affirmative sentence: She took the bus. \"taked\"/\"tooked\" are wrong forms, and \"did took\" double-marks the past (did already makes it past, so the verb would be the base: she did take, for emphasis only).",
+      "difficulty": 3
+    }
+  ]
+}

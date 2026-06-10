@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Review: For/Since, Just/Already/Yet, Gone/Been",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complete: \"I have known her ___ five years.\"",
+      "options": [
+        { "id": "a", "text": "since" },
+        { "id": "b", "text": "for" },
+        { "id": "c", "text": "ago" },
+        { "id": "d", "text": "from" }
+      ],
+      "correctOption": "b",
+      "explanation": "Use for with a length of time: for five years. \"since\" needs a starting point (since 2019), \"ago\" goes with the past simple (five years ago), and \"from\" needs a matching \"to\" (from… to…).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"They have been married ___ 2010.\"",
+      "options": [
+        { "id": "a", "text": "for" },
+        { "id": "b", "text": "during" },
+        { "id": "c", "text": "since" },
+        { "id": "d", "text": "by" }
+      ],
+      "correctOption": "c",
+      "explanation": "2010 is a point when something started, so we use since: since 2010. \"for\" needs a duration (for ten years), \"during\" needs an event, and \"by\" means \"not later than\", a different idea.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"We've ___ eaten, so we're not hungry.\"",
+      "options": [
+        { "id": "a", "text": "yet" },
+        { "id": "b", "text": "ever" },
+        { "id": "c", "text": "already" },
+        { "id": "d", "text": "since" }
+      ],
+      "correctOption": "c",
+      "explanation": "already shows something happened sooner than expected, in affirmatives: We've already eaten. \"yet\" is for questions/negatives, \"ever\" asks about experience, and \"since\" marks a start point.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"My parents have ___ to Italy; they're still there now.\"",
+      "options": [
+        { "id": "a", "text": "been" },
+        { "id": "b", "text": "gone" },
+        { "id": "c", "text": "went" },
+        { "id": "d", "text": "being" }
+      ],
+      "correctOption": "b",
+      "explanation": "have gone means they travelled there and are still away: they're still there now → have gone. \"have been\" would mean they visited and came back, \"went\" is the past simple (no have), and \"being\" is not a participle of go.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"Has the postman come ___?\"",
+      "options": [
+        { "id": "a", "text": "already" },
+        { "id": "b", "text": "ever" },
+        { "id": "c", "text": "since" },
+        { "id": "d", "text": "yet" }
+      ],
+      "correctOption": "d",
+      "explanation": "In a question about something we expect to happen, we use yet at the end: Has the postman come yet? \"already\" belongs to affirmatives, \"ever\" asks about a whole life, and \"since\" marks a start point.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"I ___ never eaten octopus in my life.\"",
+      "options": [
+        { "id": "a", "text": "have" },
+        { "id": "b", "text": "has" },
+        { "id": "c", "text": "am" },
+        { "id": "d", "text": "didn't" }
+      ],
+      "correctOption": "a",
+      "explanation": "Experience uses the present perfect: I have never eaten octopus. With I the auxiliary is have (has is for he/she/it). \"am\" doesn't form the present perfect, and \"didn't\" would need the past simple without never+participle.",
+      "difficulty": 3
+    }
+  ]
+}

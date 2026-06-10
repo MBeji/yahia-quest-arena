@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Review: While & When",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complete: \"I was having a shower ___ the phone rang.\"",
+      "options": [
+        { "id": "a", "text": "when" },
+        { "id": "b", "text": "while" },
+        { "id": "c", "text": "since" },
+        { "id": "d", "text": "during" }
+      ],
+      "correctOption": "a",
+      "explanation": "when introduces the short, completed action (the phone rang) that interrupts the long one: …when the phone rang. \"while\" goes with the long action in progress, \"since\" marks a start point, and \"during\" is followed by a noun, not a clause.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"___ we were driving home, we saw an accident.\"",
+      "options": [
+        { "id": "a", "text": "When" },
+        { "id": "b", "text": "While" },
+        { "id": "c", "text": "For" },
+        { "id": "d", "text": "Until" }
+      ],
+      "correctOption": "b",
+      "explanation": "while introduces the long action in progress (we were driving): While we were driving home… The short event (we saw an accident) is in the past simple. \"For\" marks a length of time and \"until\" marks an end point, neither of which fits here.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"While she was studying, he ___ TV.\"",
+      "options": [
+        { "id": "a", "text": "watched" },
+        { "id": "b", "text": "watch" },
+        { "id": "c", "text": "was watching" },
+        { "id": "d", "text": "watches" }
+      ],
+      "correctOption": "c",
+      "explanation": "When two long actions happen in parallel, both take the past continuous: While she was studying, he was watching TV. \"watched\" (past simple) would suggest a single short event, \"watch/watches\" are present forms.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"They ___ dinner when the guests arrived.\"",
+      "options": [
+        { "id": "a", "text": "had" },
+        { "id": "b", "text": "was having" },
+        { "id": "c", "text": "are having" },
+        { "id": "d", "text": "were having" }
+      ],
+      "correctOption": "d",
+      "explanation": "The long background action in progress takes the past continuous, and with they we use were: They were having dinner when the guests arrived. \"was having\" is the wrong agreement, \"had\" loses the in-progress sense, and \"are having\" is present.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which sentence describes two actions happening at the same time?",
+      "options": [
+        { "id": "a", "text": "I was sleeping when the storm started." },
+        { "id": "b", "text": "While Dad was cooking, Mum was setting the table." },
+        { "id": "c", "text": "She was reading when the door slammed." },
+        { "id": "d", "text": "We were leaving when it began to snow." }
+      ],
+      "correctOption": "b",
+      "explanation": "Two long actions in parallel use the past continuous in both halves: While Dad was cooking, Mum was setting the table. The other three each pair a long action (past continuous) with a single short interruption (past simple), so they are not two simultaneous ongoing actions.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"While I ___ for the bus, it started to rain.\"",
+      "options": [
+        { "id": "a", "text": "waited" },
+        { "id": "b", "text": "wait" },
+        { "id": "c", "text": "am waiting" },
+        { "id": "d", "text": "was waiting" }
+      ],
+      "correctOption": "d",
+      "explanation": "After while, the long action in progress takes the past continuous: While I was waiting for the bus… The short event (it started to rain) is past simple. \"waited\" is past simple, \"wait\" is the base, and \"am waiting\" is present.",
+      "difficulty": 3
+    }
+  ]
+}

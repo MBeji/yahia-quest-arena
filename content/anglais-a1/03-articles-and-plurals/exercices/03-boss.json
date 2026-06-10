@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Chapter Boss ⭐⭐⭐: Articles & Plurals",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Choose the correct article: \"I found ___ one-euro coin on the floor.\"",
+      "options": [
+        { "id": "a", "text": "a" },
+        { "id": "b", "text": "an" },
+        { "id": "c", "text": "the" },
+        { "id": "d", "text": "(no article)" }
+      ],
+      "correctOption": "a",
+      "explanation": "One starts with a /w/ \"wuh\" sound, which is a consonant sound, so it takes a: a one-euro coin. The letter o tempts learners toward \"an\", but the SOUND is what matters.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "What is the correct plural of \"tooth\"?",
+      "options": [
+        { "id": "a", "text": "tooths" },
+        { "id": "b", "text": "toothes" },
+        { "id": "c", "text": "teeth" },
+        { "id": "d", "text": "teeths" }
+      ],
+      "correctOption": "c",
+      "explanation": "Tooth is irregular: tooth → teeth (the oo becomes ee, like foot → feet). \"tooths\" applies the regular -s wrongly, and \"teeths\" adds -s to a form that is already plural.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT plural.",
+      "options": [
+        { "id": "a", "text": "mice" },
+        { "id": "b", "text": "feet" },
+        { "id": "c", "text": "people" },
+        { "id": "d", "text": "mans" }
+      ],
+      "correctOption": "d",
+      "explanation": "The wrong one is mans: man is irregular and its plural is men, never mans. The others are correct irregulars — mouse → mice, foot → feet, and person → people.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Fill the gap with the right article: \"I bought ___ car yesterday. ___ car is red.\"",
+      "options": [
+        { "id": "a", "text": "the … A" },
+        { "id": "b", "text": "a … The" },
+        { "id": "c", "text": "a … A" },
+        { "id": "d", "text": "the … The" }
+      ],
+      "correctOption": "b",
+      "explanation": "First mention uses a (one of many): I bought a car. The second mention is now known to both speakers, so it switches to the: The car is red. Going \"a → the\" as a thing becomes specific is the core article pattern.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choose the fully correct sentence.",
+      "options": [
+        { "id": "a", "text": "There are three childs in the garden." },
+        { "id": "b", "text": "There are three children in the garden." },
+        { "id": "c", "text": "There are three child in the garden." },
+        { "id": "d", "text": "There are three childrens in the garden." }
+      ],
+      "correctOption": "b",
+      "explanation": "Child is irregular: its plural is children, with no extra -s. \"childs\" uses the regular rule wrongly, \"child\" stays singular after three, and \"childrens\" double-marks an already-plural word.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "Dogs are loyal animals." },
+        { "id": "b", "text": "The moon is bright tonight." },
+        { "id": "c", "text": "She gave me a good advice." },
+        { "id": "d", "text": "I like music." }
+      ],
+      "correctOption": "c",
+      "explanation": "The error is (c): advice is uncountable, so it takes no a/an — say she gave me good advice (or a piece of advice). The others are right: a general plural (Dogs…), a unique the (The moon), and an uncountable with zero article (music).",
+      "difficulty": 3
+    }
+  ]
+}

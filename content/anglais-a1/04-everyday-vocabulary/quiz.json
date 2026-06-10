@@ -1,0 +1,65 @@
+{
+  "title": "Comprehension Check ⭐",
+  "questions": [
+    {
+      "prompt": "Which word means the sister of your mother or father?",
+      "options": [
+        { "id": "a", "text": "aunt" },
+        { "id": "b", "text": "uncle" },
+        { "id": "c", "text": "niece" },
+        { "id": "d", "text": "cousin" }
+      ],
+      "correctOption": "a",
+      "explanation": "Your aunt is the sister of your mother or father (or your uncle's wife). An uncle is the brother of a parent (male), a niece is your brother's or sister's daughter, and a cousin is the child of an aunt or uncle. Aunt and uncle are a gender pair, so don't mix them up.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Find the odd one out.",
+      "options": [
+        { "id": "a", "text": "red" },
+        { "id": "b", "text": "blue" },
+        { "id": "c", "text": "green" },
+        { "id": "d", "text": "table" }
+      ],
+      "correctOption": "d",
+      "explanation": "Red, blue and green are colours; table is a piece of furniture (an object), so it is the odd one out. Grouping words by their field — colours, objects, jobs — helps you learn and remember them.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete the common phrase: \"a ___ of water\".",
+      "options": [
+        { "id": "a", "text": "slice" },
+        { "id": "b", "text": "glass" },
+        { "id": "c", "text": "loaf" },
+        { "id": "d", "text": "piece" }
+      ],
+      "correctOption": "b",
+      "explanation": "Water is a drink, so you measure it with a container: a glass of water. A slice or a loaf goes with bread, and \"a piece of water\" is not natural English. Pick the word that matches the food or drink.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "The opposite of \"big\" is …",
+      "options": [
+        { "id": "a", "text": "tall" },
+        { "id": "b", "text": "long" },
+        { "id": "c", "text": "small" },
+        { "id": "d", "text": "old" }
+      ],
+      "correctOption": "c",
+      "explanation": "The opposite of big is small. Tall and long describe size in one direction (height or length) but are not the true opposite of big, and old is the opposite of new, not big.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which word is a job (a person's work)?",
+      "options": [
+        { "id": "a", "text": "bread" },
+        { "id": "b", "text": "window" },
+        { "id": "c", "text": "Tuesday" },
+        { "id": "d", "text": "nurse" }
+      ],
+      "correctOption": "d",
+      "explanation": "A nurse is a job — a person who helps sick people, like a doctor. Bread is food, a window is an object at home, and Tuesday is a day of the week, so none of those is a job.",
+      "difficulty": 2
+    }
+  ]
+}

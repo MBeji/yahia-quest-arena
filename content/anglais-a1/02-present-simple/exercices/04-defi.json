@@ -1,0 +1,82 @@
+{
+  "title": "👑 Elite Challenge ⭐⭐⭐⭐: Present Simple",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Read: \"Nadia is a nurse. She works at night and sleeps during the day. She never drinks coffee.\" Which sentence is TRUE?",
+      "options": [
+        { "id": "a", "text": "Nadia works at night." },
+        { "id": "b", "text": "Nadia sleeps at night." },
+        { "id": "c", "text": "Nadia drinks coffee every morning." },
+        { "id": "d", "text": "Nadia works during the day." }
+      ],
+      "correctOption": "a",
+      "explanation": "The text says \"She works at night\", so (a) is true (note the third-person -s: works, sleeps, drinks). (b) and (d) reverse her schedule — she sleeps during the day and works at night — and (c) contradicts \"She never drinks coffee.\"",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "Does she get up early?" },
+        { "id": "b", "text": "He doesn't watch TV." },
+        { "id": "c", "text": "They study every day." },
+        { "id": "d", "text": "Does your brother plays tennis?" }
+      ],
+      "correctOption": "d",
+      "explanation": "The error is (d): after the auxiliary does, the main verb stays in its base form, so it must be \"Does your brother play tennis?\" The -s belongs on does, not on the main verb. (a), (b) and (c) are all correct.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"He is ___ tired after his night shift.\"",
+      "options": [
+        { "id": "a", "text": "tired usually" },
+        { "id": "b", "text": "usually being" },
+        { "id": "c", "text": "usually" },
+        { "id": "d", "text": "use to" }
+      ],
+      "correctOption": "c",
+      "explanation": "With the verb be, the frequency adverb goes AFTER the verb: He is usually tired. This is the one exception — with ordinary verbs the adverb goes before (He usually finishes late), but after be it follows it. \"being\" and \"use to\" are not present-simple forms here.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choose the fully correct sentence.",
+      "options": [
+        { "id": "a", "text": "My mother go to the market on Fridays." },
+        { "id": "b", "text": "My mother goes to the market on Fridays." },
+        { "id": "c", "text": "My mother goes always to the market on Fridays." },
+        { "id": "d", "text": "My mother does goes to the market on Fridays." }
+      ],
+      "correctOption": "b",
+      "explanation": "\"My mother\" = she, and go takes -es: My mother goes to the market. (a) forgets the -s, (c) misplaces \"always\" (it must come before the verb: always goes), and (d) wrongly adds does to an affirmative sentence and keeps the -s.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"Either Sami or his brothers ___ the shop in the morning.\"",
+      "options": [
+        { "id": "a", "text": "opens" },
+        { "id": "b", "text": "is opening" },
+        { "id": "c", "text": "to open" },
+        { "id": "d", "text": "open" }
+      ],
+      "correctOption": "d",
+      "explanation": "With \"either … or …\", the verb agrees with the nearest subject — here \"his brothers\" (plural), so use the base verb: open. \"opens\" would agree with a singular subject (the trap is the nearby \"Sami\"), and \"is opening\"/\"to open\" are not present-simple forms.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which question-and-answer pair is completely correct?",
+      "options": [
+        { "id": "a", "text": "\"Does he live here?\" — \"Yes, he do.\"" },
+        { "id": "b", "text": "\"Do they work here?\" — \"Yes, they does.\"" },
+        { "id": "c", "text": "\"Does she study French?\" — \"No, she doesn't.\"" },
+        { "id": "d", "text": "\"Do you like tea?\" — \"Yes, I likes.\"" }
+      ],
+      "correctOption": "c",
+      "explanation": "Only (c) is correct: a question with Does is answered with does/doesn't — No, she doesn't. (a) mismatches the auxiliary (he → does, so \"Yes, he does\"), (b) uses does with they (should be \"they do\"), and (d) repeats the main verb instead of the auxiliary (should be \"Yes, I do\").",
+      "difficulty": 3
+    }
+  ]
+}

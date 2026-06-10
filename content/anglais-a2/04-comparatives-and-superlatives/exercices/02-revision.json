@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Review: Comparatives & Superlatives",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complete: \"This is ___ book in the whole library.\"",
+      "options": [
+        { "id": "a", "text": "more old" },
+        { "id": "b", "text": "older" },
+        { "id": "c", "text": "the oldest" },
+        { "id": "d", "text": "oldest" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"In the whole library\" marks the top of a group, so use the superlative with the: the oldest book. \"older\" is the comparative (for two things), \"more old\" misuses more on a short adjective, and a superlative needs the, so \"oldest\" alone is incomplete.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"Of all my friends, Sami is ___.\"",
+      "options": [
+        { "id": "a", "text": "the funniest" },
+        { "id": "b", "text": "the funnyest" },
+        { "id": "c", "text": "funnier" },
+        { "id": "d", "text": "the most funny" }
+      ],
+      "correctOption": "a",
+      "explanation": "Funny ends in consonant + y, so the superlative is the funniest (y → i, then -est). \"the funnyest\" keeps the y wrongly, \"funnier\" is the comparative, and \"the most funny\" treats a short -y adjective as long, which it isn't.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"A plane is ___ way to travel between countries.\"",
+      "options": [
+        { "id": "a", "text": "more fast" },
+        { "id": "b", "text": "faster" },
+        { "id": "c", "text": "fastest" },
+        { "id": "d", "text": "the fastest" }
+      ],
+      "correctOption": "d",
+      "explanation": "There is no than here and we mean the top way of all, so use the superlative: the fastest way. \"faster\" needs a than (two things), \"more fast\" misuses more on a short adjective, and a superlative needs the, so \"fastest\" alone is wrong.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"Health is ___ than money.\"",
+      "options": [
+        { "id": "a", "text": "importanter" },
+        { "id": "b", "text": "more important" },
+        { "id": "c", "text": "the most important" },
+        { "id": "d", "text": "most important" }
+      ],
+      "correctOption": "b",
+      "explanation": "Important is a long adjective, so the comparative is more important than. \"importanter\" wrongly adds -er to a long adjective, and \"the most important\"/\"most important\" are superlatives, which don't go with than.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"That was ___ meal I have ever eaten.\"",
+      "options": [
+        { "id": "a", "text": "the goodest" },
+        { "id": "b", "text": "the better" },
+        { "id": "c", "text": "the best" },
+        { "id": "d", "text": "the most good" }
+      ],
+      "correctOption": "c",
+      "explanation": "Good is irregular: its superlative is the best (the best meal I have ever eaten). \"the goodest\" and \"the most good\" invent a regular form that doesn't exist, and \"the better\" is the comparative form, used for two things, not the top of a group.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which sentence is correct?",
+      "options": [
+        { "id": "a", "text": "She is the most tallest in her class." },
+        { "id": "b", "text": "She is the tallest in her class." },
+        { "id": "c", "text": "She is tallest in her class." },
+        { "id": "d", "text": "She is more tallest in her class." }
+      ],
+      "correctOption": "b",
+      "explanation": "Tall is short, so the superlative is the tallest in her class. \"the most tallest\" double-marks it (most + -est), \"more tallest\" mixes comparative and superlative, and \"tallest\" without the is incomplete — a superlative needs the.",
+      "difficulty": 3
+    }
+  ]
+}

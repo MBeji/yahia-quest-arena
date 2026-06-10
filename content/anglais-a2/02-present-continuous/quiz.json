@@ -1,0 +1,65 @@
+{
+  "title": "Comprehension Check ⭐",
+  "questions": [
+    {
+      "prompt": "Complete: \"Listen! The baby ___ in the next room.\"",
+      "options": [
+        { "id": "a", "text": "cries" },
+        { "id": "b", "text": "is crying" },
+        { "id": "c", "text": "cry" },
+        { "id": "d", "text": "are crying" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Listen!\" signals something happening now, so use the present continuous (am/is/are + -ing). The baby = it, so the form is is crying. \"cries\"/\"cry\" are the present simple (habits), and \"are crying\" uses the wrong form of be for a singular subject.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"My father ___ to work by bus every day.\"",
+      "options": [
+        { "id": "a", "text": "is going" },
+        { "id": "b", "text": "go" },
+        { "id": "c", "text": "goes" },
+        { "id": "d", "text": "are going" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"every day\" signals a habit, so use the present simple. With he/she/it the verb takes -s: my father goes. \"is going\"/\"are going\" are the continuous (for now, not habits), and \"go\" forgets the -s needed after he/she/it.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "What is the correct -ing form of \"make\"?",
+      "options": [
+        { "id": "a", "text": "making" },
+        { "id": "b", "text": "makeing" },
+        { "id": "c", "text": "makking" },
+        { "id": "d", "text": "maing" }
+      ],
+      "correctOption": "a",
+      "explanation": "make ends in a silent -e, so we drop the e before -ing: making. \"makeing\" wrongly keeps the e, \"makking\" doubles the wrong letter, and \"maing\" drops too much.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete the negative: \"They ___ TV at the moment; they're asleep.\"",
+      "options": [
+        { "id": "a", "text": "don't watch" },
+        { "id": "b", "text": "isn't watching" },
+        { "id": "c", "text": "aren't watch" },
+        { "id": "d", "text": "aren't watching" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"at the moment\" needs the present continuous, and the negative is aren't (they) + the -ing form: they aren't watching. \"isn't\" is singular, \"aren't watch\" drops the -ing, and \"don't watch\" is the present simple (for habits, not now).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which sentence is correct?",
+      "options": [
+        { "id": "a", "text": "I am wanting a glass of water." },
+        { "id": "b", "text": "I want a glass of water." },
+        { "id": "c", "text": "I am want a glass of water." },
+        { "id": "d", "text": "I wanting a glass of water." }
+      ],
+      "correctOption": "b",
+      "explanation": "want is a stative verb (it names a desire, not an action), so it stays in the present simple even about now: I want a glass of water. We don't say \"am wanting\"; \"am want\" mixes two forms, and \"I wanting\" has no verb be and no reason for -ing.",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Chapter Boss ⭐⭐⭐: Everyday Words",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Your mother's mother is your …",
+      "options": [
+        { "id": "a", "text": "aunt" },
+        { "id": "b", "text": "niece" },
+        { "id": "c", "text": "cousin" },
+        { "id": "d", "text": "grandmother" }
+      ],
+      "correctOption": "d",
+      "explanation": "Your mother's mother (or your father's mother) is your grandmother; her husband is your grandfather. An aunt is your parent's sister, a niece is your sibling's daughter, and a cousin is your aunt's or uncle's child — all one generation closer than a grandparent.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the intruder (the word that is NOT a member of the family).",
+      "options": [
+        { "id": "a", "text": "daughter" },
+        { "id": "b", "text": "doctor" },
+        { "id": "c", "text": "son" },
+        { "id": "d", "text": "cousin" }
+      ],
+      "correctOption": "b",
+      "explanation": "Daughter, son and cousin are all members of a family. Doctor is a job, so it is the intruder. The trap is that doctor sounds a little like daughter, but they belong to different fields — family versus jobs.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete the common phrase: \"a ___ of milk\".",
+      "options": [
+        { "id": "a", "text": "slice" },
+        { "id": "b", "text": "loaf" },
+        { "id": "c", "text": "glass" },
+        { "id": "d", "text": "piece" }
+      ],
+      "correctOption": "c",
+      "explanation": "Milk is a drink you pour, so we say a glass of milk. A slice, a loaf and a piece go with solid food like bread — you can never say \"a piece of milk\". Match the measure word to whether the thing is a drink or a solid.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which word is a synonym of \"difficult\"?",
+      "options": [
+        { "id": "a", "text": "hard" },
+        { "id": "b", "text": "easy" },
+        { "id": "c", "text": "fast" },
+        { "id": "d", "text": "cheap" }
+      ],
+      "correctOption": "a",
+      "explanation": "Hard is a synonym of difficult (not easy to do): a hard quest is a difficult quest. Easy is its opposite, fast is the opposite of slow, and cheap is the opposite of expensive — so only hard means the same as difficult.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Put these in counting order. Which number is the ordinal \"third\"?",
+      "options": [
+        { "id": "a", "text": "one" },
+        { "id": "b", "text": "two" },
+        { "id": "c", "text": "free" },
+        { "id": "d", "text": "three" }
+      ],
+      "correctOption": "d",
+      "explanation": "The ordinal third refers to position number three: first (1), second (2), third (3). One and two are the cardinal numbers before it, and \"free\" is a different word (it means costing no money), not a number — a common spelling and sound trap.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Find the intruder (the word that is NOT a drink).",
+      "options": [
+        { "id": "a", "text": "water" },
+        { "id": "b", "text": "rice" },
+        { "id": "c", "text": "coffee" },
+        { "id": "d", "text": "tea" }
+      ],
+      "correctOption": "b",
+      "explanation": "Water, coffee and tea are all drinks. Rice is a food you eat, so it is the intruder. The trap is that all four are things you have at meals, but only rice is eaten, not drunk.",
+      "difficulty": 3
+    }
+  ]
+}

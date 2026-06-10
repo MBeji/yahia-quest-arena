@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Practice: going to & will",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complete: \"She ___ start a new job next month.\" (a plan already decided)",
+      "options": [
+        { "id": "a", "text": "is go to" },
+        { "id": "b", "text": "is going to" },
+        { "id": "c", "text": "are going to" },
+        { "id": "d", "text": "going to" }
+      ],
+      "correctOption": "b",
+      "explanation": "With she, be going to is is going to + base verb: She is going to start a new job. \"are going to\" is for you/we/they, \"going to\" alone drops the be, and \"is go to\" mangles the verb form.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"The bag is heavy. I ___ carry it for you.\" (you decide right now)",
+      "options": [
+        { "id": "a", "text": "am carry" },
+        { "id": "b", "text": "carry" },
+        { "id": "c", "text": "'ll carry" },
+        { "id": "d", "text": "'ll to carry" }
+      ],
+      "correctOption": "c",
+      "explanation": "An offer decided as you speak uses will (short form 'll) + base verb: I'll carry it. \"'ll to carry\" wrongly adds to after will, \"carry\" alone is the present, and \"am carry\" is not a real form.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"They ___ buy a new car. They've saved enough money.\"",
+      "options": [
+        { "id": "a", "text": "are going to" },
+        { "id": "b", "text": "is going to" },
+        { "id": "c", "text": "going to" },
+        { "id": "d", "text": "will to" }
+      ],
+      "correctOption": "a",
+      "explanation": "With they, be going to is are going to: They are going to buy a new car. \"is going to\" is singular (he/she/it), \"going to\" drops the be (are), and \"will to\" is never correct — will takes no to.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete the prediction: \"I think it ___ be sunny tomorrow.\" (just my opinion)",
+      "options": [
+        { "id": "a", "text": "is going" },
+        { "id": "b", "text": "will to" },
+        { "id": "c", "text": "going to" },
+        { "id": "d", "text": "will" }
+      ],
+      "correctOption": "d",
+      "explanation": "A prediction based on opinion or belief (\"I think…\") uses will + base verb: it will be sunny. \"will to\" adds an extra to, while \"is going\" and \"going to\" are both broken going-to forms here.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete the negative: \"We ___ go to the beach; the weather is too bad.\"",
+      "options": [
+        { "id": "a", "text": "are going to" },
+        { "id": "b", "text": "aren't going to" },
+        { "id": "c", "text": "isn't going to" },
+        { "id": "d", "text": "don't going to" }
+      ],
+      "correctOption": "b",
+      "explanation": "The negative of going to puts not on be: We aren't going to go. \"isn't going to\" is singular (he/she/it), \"don't going to\" uses the wrong helper, and \"are going to\" is affirmative, not negative.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"A: I forgot my pen. B: No problem, I ___ lend you one.\"",
+      "options": [
+        { "id": "a", "text": "am going to" },
+        { "id": "b", "text": "going to" },
+        { "id": "c", "text": "will" },
+        { "id": "d", "text": "will to" }
+      ],
+      "correctOption": "c",
+      "explanation": "B offers help on the spot, deciding as they speak, so use will + base verb: I'll lend you one. \"am going to\" would imply a pre-made plan, \"going to\" alone is incomplete, and \"will to\" adds an incorrect to.",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Review: Negatives, Questions & There Is/Are",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Choose the correct negative of \"They are at home.\"",
+      "options": [
+        { "id": "a", "text": "They aren't at home." },
+        { "id": "b", "text": "They not are at home." },
+        { "id": "c", "text": "They isn't at home." },
+        { "id": "d", "text": "They don't at home." }
+      ],
+      "correctOption": "a",
+      "explanation": "The negative of are not contracts to aren't: They aren't at home. \"not are\" has the wrong order, isn't is singular (he/she/it), and don't belongs to ordinary verbs, not to be.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Make a yes/no question from \"She is a teacher.\"",
+      "options": [
+        { "id": "a", "text": "She is a teacher?" },
+        { "id": "b", "text": "Is she a teacher?" },
+        { "id": "c", "text": "Does she be a teacher?" },
+        { "id": "d", "text": "Is a teacher she?" }
+      ],
+      "correctOption": "b",
+      "explanation": "Invert subject and verb: She is → Is she a teacher? With to be you never add do/does (so \"Does she be\" is wrong), and the subject she must follow the verb directly.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "You ARE tired. Choose the correct short answer to \"Are you tired?\"",
+      "options": [
+        { "id": "a", "text": "Yes, I'm." },
+        { "id": "b", "text": "Yes, you are." },
+        { "id": "c", "text": "Yes, I am." },
+        { "id": "d", "text": "Yes, am I." }
+      ],
+      "correctOption": "c",
+      "explanation": "A positive short answer is not contracted, so \"Yes, I'm\" is wrong — say Yes, I am. The person answering is I (not you), and the order is subject + verb, not \"am I\".",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"___ three apples in the basket.\"",
+      "options": [
+        { "id": "a", "text": "There is" },
+        { "id": "b", "text": "It is" },
+        { "id": "c", "text": "There be" },
+        { "id": "d", "text": "There are" }
+      ],
+      "correctOption": "d",
+      "explanation": "Three apples is plural, so use there are: There are three apples in the basket. There is is for one thing, \"there be\" is not a finite form, and it is cannot introduce a plural like this.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"The cat is licking ___ paws.\"",
+      "options": [
+        { "id": "a", "text": "it's" },
+        { "id": "b", "text": "its" },
+        { "id": "c", "text": "its'" },
+        { "id": "d", "text": "it is" }
+      ],
+      "correctOption": "b",
+      "explanation": "The paws belong to the cat, so use the possessive its (no apostrophe): its paws. The trap it's always means it is; \"its'\" does not exist; and \"it is paws\" is ungrammatical.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete the pair: \"___ your parents teachers?\" — \"No, they ___.\"",
+      "options": [
+        { "id": "a", "text": "Is / isn't" },
+        { "id": "b", "text": "Do / don't" },
+        { "id": "c", "text": "Are / aren't" },
+        { "id": "d", "text": "Are / isn't" }
+      ],
+      "correctOption": "c",
+      "explanation": "Parents is plural, so the question is Are…? and the short answer is they aren't: \"Are your parents teachers? — No, they aren't.\" Is/isn't is singular, and do/don't is for ordinary verbs, not to be.",
+      "difficulty": 3
+    }
+  ]
+}

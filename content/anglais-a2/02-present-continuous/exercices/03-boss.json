@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Chapter Boss ⭐⭐⭐: Present Continuous vs Simple",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Put the words in the correct order: (you / what / are / doing)",
+      "options": [
+        { "id": "a", "text": "What you are doing?" },
+        { "id": "b", "text": "What are doing you?" },
+        { "id": "c", "text": "What are you doing?" },
+        { "id": "d", "text": "What do you doing?" }
+      ],
+      "correctOption": "c",
+      "explanation": "A present-continuous question is: question word + be + subject + verb-ing → What are you doing? \"What you are doing\" keeps statement order (no inversion), \"What are doing you\" misplaces the subject, and \"What do you doing\" mixes in do, which the continuous never uses.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"My sister ___ the answer, so ask her.\"",
+      "options": [
+        { "id": "a", "text": "is knowing" },
+        { "id": "b", "text": "are knowing" },
+        { "id": "c", "text": "know" },
+        { "id": "d", "text": "knows" }
+      ],
+      "correctOption": "d",
+      "explanation": "know is a stative verb (it names a mental state, not an action), so it stays in the present simple even now: she knows. The common trap is \"is knowing\" — but stative verbs are not used in the continuous. \"are knowing\" also uses the continuous, and \"know\" forgets the -s after she.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "Every morning I am drinking coffee." },
+        { "id": "b", "text": "Right now I am drinking coffee." },
+        { "id": "c", "text": "I usually drink coffee at breakfast." },
+        { "id": "d", "text": "Look — she is drinking my coffee!" }
+      ],
+      "correctOption": "a",
+      "explanation": "The error is (a): \"Every morning\" signals a habit, which takes the present simple — Every morning I drink coffee, not \"am drinking\". (b) and (d) correctly use the continuous for a now-action (right now, Look), and (c) correctly uses the simple for a habit (usually).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete the negative: \"It's a holiday, so the shops ___ today.\"",
+      "options": [
+        { "id": "a", "text": "don't open" },
+        { "id": "b", "text": "aren't opening" },
+        { "id": "c", "text": "isn't opening" },
+        { "id": "d", "text": "not opening" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"today\" marks a temporary situation, so use the present continuous; the negative is aren't (the shops = they) + -ing: the shops aren't opening. \"isn't\" is singular, \"don't open\" is the present simple (a general habit), and \"not opening\" is missing the verb be.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choose the fully correct sentence.",
+      "options": [
+        { "id": "a", "text": "He is wanting a new bike for his birthday." },
+        { "id": "b", "text": "Listen! The teacher is speak now." },
+        { "id": "c", "text": "They playing in the garden at the moment." },
+        { "id": "d", "text": "She is studying for her exam this week." }
+      ],
+      "correctOption": "d",
+      "explanation": "Only (d) is fully correct: \"this week\" is temporary, so present continuous (is + studying, keeping the y). (a) puts the stative verb want in the continuous (should be \"He wants\"), (b) drops the -ing (should be \"is speaking\"), and (c) is missing the verb be (should be \"They are playing\").",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"Water ___ at 100 degrees Celsius — that's a scientific fact.\"",
+      "options": [
+        { "id": "a", "text": "boils" },
+        { "id": "b", "text": "is boiling" },
+        { "id": "c", "text": "are boiling" },
+        { "id": "d", "text": "boil" }
+      ],
+      "correctOption": "a",
+      "explanation": "A general truth or scientific fact always takes the present simple, with -s after water (= it): water boils. \"is boiling\"/\"are boiling\" are the continuous (for water boiling right now, in a pot), and \"boil\" forgets the -s after a singular subject.",
+      "difficulty": 3
+    }
+  ]
+}

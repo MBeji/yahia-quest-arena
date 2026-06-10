@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Chapter Boss ⭐⭐⭐: The Future",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "I'm going to call her tonight." },
+        { "id": "b", "text": "She'll be here soon." },
+        { "id": "c", "text": "We will going to leave at six." },
+        { "id": "d", "text": "Are you going to help me?" }
+      ],
+      "correctOption": "c",
+      "explanation": "The error is (c): you can't stack two futures — say either \"We are going to leave\" or \"We will leave\", never \"will going to\". (a), (b) and (d) are all correct (going-to plan, will prediction, going-to question).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Put the words in the correct order: (you / are / what / going / do / to)",
+      "options": [
+        { "id": "a", "text": "What are going you to do?" },
+        { "id": "b", "text": "What are you going to do?" },
+        { "id": "c", "text": "What you are going to do?" },
+        { "id": "d", "text": "What going to you are do?" }
+      ],
+      "correctOption": "b",
+      "explanation": "A going-to question is: question word + be + subject + going to + base verb → What are you going to do? \"What you are going to do?\" keeps statement order (no inversion), and the other two scramble be, the subject and going to.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"This box is too heavy for you. Don't worry — I ___ help you with it.\"",
+      "options": [
+        { "id": "a", "text": "am help" },
+        { "id": "b", "text": "going to help" },
+        { "id": "c", "text": "will helping" },
+        { "id": "d", "text": "will help" }
+      ],
+      "correctOption": "d",
+      "explanation": "Offering help in the moment uses will + base verb: I will help you. \"will helping\" wrongly uses -ing, \"going to help\" is missing the be (am), and \"am help\" is not a real form. After will, the verb stays in its base form.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "It's going to rains this evening." },
+        { "id": "b", "text": "I think they will win the match." },
+        { "id": "c", "text": "We aren't going to travel this year." },
+        { "id": "d", "text": "Will you be at home tonight?" }
+      ],
+      "correctOption": "a",
+      "explanation": "The error is (a): after going to the verb must be the base form — \"It's going to rain\", not \"rains\". The third-person -s never appears on a base verb in the future. (b), (c) and (d) are all correct.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete the negative: \"A: Is Tom coming? B: No, he ___ come; he changed his plans last week.\"",
+      "options": [
+        { "id": "a", "text": "won't to" },
+        { "id": "b", "text": "isn't going to" },
+        { "id": "c", "text": "don't going to" },
+        { "id": "d", "text": "not going to" }
+      ],
+      "correctOption": "b",
+      "explanation": "A plan that changed earlier is negated with be going to: he isn't going to come. \"not going to\" is missing the be (isn't), \"don't going to\" uses the wrong helper, and \"won't to\" wrongly adds to after won't.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choose the fully correct sentence.",
+      "options": [
+        { "id": "a", "text": "I'm going to visit my aunt, and I think I will to stay two days." },
+        { "id": "b", "text": "I will visiting my aunt, and I think I'm going stay two days." },
+        { "id": "c", "text": "I'm going to visit my aunt, and I think I'll stay two days." },
+        { "id": "d", "text": "I going to visit my aunt, and I think I will stay to two days." }
+      ],
+      "correctOption": "c",
+      "explanation": "Only (c) is fully correct: a planned visit (going to + base verb) plus an opinion (I'll stay). (a) adds a wrong to after will, (b) uses \"will visiting\" and drops to in \"going stay\", and (d) drops the be in \"I going to\" and misplaces to.",
+      "difficulty": 3
+    }
+  ]
+}

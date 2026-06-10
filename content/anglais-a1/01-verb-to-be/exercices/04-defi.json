@@ -1,0 +1,82 @@
+{
+  "title": "👑 Elite Challenge ⭐⭐⭐⭐: The Verb To Be",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Read: \"Lina and Omar are in the same class. Lina is from Sfax. Omar is from Tunis.\" Which sentence is TRUE?",
+      "options": [
+        { "id": "a", "text": "Lina and Omar are classmates." },
+        { "id": "b", "text": "Lina is from Tunis." },
+        { "id": "c", "text": "Omar isn't a student." },
+        { "id": "d", "text": "They are in different classes." }
+      ],
+      "correctOption": "a",
+      "explanation": "\"In the same class\" means they are classmates (are, because Lina and Omar = they). (b) swaps the cities — Lina is from Sfax. (c) contradicts the text — being in a class, Omar is a student. (d) contradicts \"the same class\".",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "There is a museum near the school." },
+        { "id": "b", "text": "There are two museums near the school." },
+        { "id": "c", "text": "Is there a museum near the school?" },
+        { "id": "d", "text": "There are a museum near the school." }
+      ],
+      "correctOption": "d",
+      "explanation": "The error is (d): with a singular noun (a museum) you must use there is, not there are. The word a signals one thing. (a), (b) and (c) all match the verb to the number correctly.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "\"Where are your keys?\" Choose the most natural reply.",
+      "options": [
+        { "id": "a", "text": "They're on the table." },
+        { "id": "b", "text": "Their on the table." },
+        { "id": "c", "text": "There on the table." },
+        { "id": "d", "text": "It's on the table." }
+      ],
+      "correctOption": "a",
+      "explanation": "Keys is plural = they, so the reply is They're (they are) on the table. \"Their\" is possessive and \"There\" shows place — neither can mean they are. \"It's\" is singular and cannot stand for plural keys.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"Everyone in the two teams ___ ready to play.\"",
+      "options": [
+        { "id": "a", "text": "are" },
+        { "id": "b", "text": "is" },
+        { "id": "c", "text": "am" },
+        { "id": "d", "text": "be" }
+      ],
+      "correctOption": "b",
+      "explanation": "Everyone is grammatically singular and takes is, even though it refers to many people and \"teams\" is plural: Everyone ... is ready. The nearby plural teams is a deliberate trap.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choose the fully correct sentence.",
+      "options": [
+        { "id": "a", "text": "I amn't your teacher." },
+        { "id": "b", "text": "I aren't your teacher." },
+        { "id": "c", "text": "I'm not your teacher." },
+        { "id": "d", "text": "I not am your teacher." }
+      ],
+      "correctOption": "c",
+      "explanation": "With I, the only negative form is I'm not (I'm not your teacher): there is no \"amn't\", and aren't is for you/we/they. \"I not am\" has the wrong word order — not goes after the verb.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which question-and-answer pair is completely correct?",
+      "options": [
+        { "id": "a", "text": "\"Are you a doctor?\" — \"Yes, I'm.\"" },
+        { "id": "b", "text": "\"Is he French?\" — \"No, he isn't.\"" },
+        { "id": "c", "text": "\"Are they here?\" — \"Yes, they is.\"" },
+        { "id": "d", "text": "\"Am I late?\" — \"No, you not.\"" }
+      ],
+      "correctOption": "b",
+      "explanation": "Only (b) is correct: Is he…? — No, he isn't. (a) wrongly contracts a positive short answer (it must be \"Yes, I am\"). (c) uses singular is with they (should be \"they are\"). (d) has no verb (should be \"No, you aren't / you're not\").",
+      "difficulty": 3
+    }
+  ]
+}

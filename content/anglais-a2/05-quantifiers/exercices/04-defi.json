@@ -1,0 +1,82 @@
+{
+  "title": "👑 Elite Challenge ⭐⭐⭐⭐: Quantifiers",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Read: \"We're almost ready to cook. We have a lot of vegetables and a few eggs, but there isn't much oil and we don't have any rice.\"\nWhich sentence is TRUE?",
+      "options": [
+        { "id": "a", "text": "There is plenty of oil." },
+        { "id": "b", "text": "They have no rice." },
+        { "id": "c", "text": "They have a lot of eggs." },
+        { "id": "d", "text": "They have only a little vegetables." }
+      ],
+      "correctOption": "b",
+      "explanation": "\"We don't have any rice\" means they have no rice, so (b) is true. (a) is false — there isn't much oil; (c) overstates it — only a few eggs; and (d) is wrong twice — they have a lot of vegetables, and vegetables (countable) would take a few, not a little.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "How many pieces of furniture are there?" },
+        { "id": "b", "text": "There isn't much furniture in the room." },
+        { "id": "c", "text": "We bought some new furnitures." },
+        { "id": "d", "text": "There is a lot of furniture here." }
+      ],
+      "correctOption": "c",
+      "explanation": "The error is (c): furniture is uncountable, so it has no plural — never \"furnitures\". To count it we say pieces of furniture (a). (b) and (d) correctly use much and a lot of with the uncountable noun.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"There were ___ people at the concert, but ___ of them stayed until the end.\"",
+      "options": [
+        { "id": "a", "text": "much / a little" },
+        { "id": "b", "text": "many / few" },
+        { "id": "c", "text": "a little / many" },
+        { "id": "d", "text": "a great deal / a few" }
+      ],
+      "correctOption": "b",
+      "explanation": "People is countable and plural, so both gaps need countable quantifiers: many people, and few of them (meaning \"not many\"). So it is many / few. Much, a little and a great deal are for uncountable nouns and don't fit people.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choose the fully correct sentence.",
+      "options": [
+        { "id": "a", "text": "I don't have some money, so I can't buy many bread." },
+        { "id": "b", "text": "I don't have many money, so I can't buy any breads." },
+        { "id": "c", "text": "I haven't any money, so I can't buy a few bread." },
+        { "id": "d", "text": "I don't have any money, so I can't buy much bread." }
+      ],
+      "correctOption": "d",
+      "explanation": "In negatives we use any (any money), and bread is uncountable, so we measure it with much (much bread): that is (d). (a) wrongly uses some in a negative and many with bread; (b) uses many with the uncountable money and pluralizes bread; (c) uses a few with uncountable bread.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"There is ___ traffic this morning, so the bus will be late.\"",
+      "options": [
+        { "id": "a", "text": "a lot of" },
+        { "id": "b", "text": "many" },
+        { "id": "c", "text": "a few" },
+        { "id": "d", "text": "a great number of" }
+      ],
+      "correctOption": "a",
+      "explanation": "Traffic is uncountable, and a lot of works with uncountable nouns: a lot of traffic. Many, a few and a great number of all require countable plural nouns, which traffic is not (we never say \"traffics\").",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"Sami had very little money left. He counted his coins: he had just enough for one ticket, but not for a drink as well.\"\nWhich statement is TRUE?",
+      "options": [
+        { "id": "a", "text": "Sami had a lot of money." },
+        { "id": "b", "text": "Sami could buy a ticket and a drink." },
+        { "id": "c", "text": "Sami had almost no money left." },
+        { "id": "d", "text": "Sami had many money." }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Very little money\" means almost none, so (c) is true. (a) says the opposite; (b) contradicts \"not for a drink as well\"; and (d) is ungrammatical anyway — money is uncountable, so it takes much/little, never \"many money\".",
+      "difficulty": 3
+    }
+  ]
+}

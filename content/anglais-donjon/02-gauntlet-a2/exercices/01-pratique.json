@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Gauntlet A2: Warm-up",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Grammar — Complete the past simple: \"Yesterday my sister ___ a cake for the party.\"",
+      "options": [
+        { "id": "a", "text": "bakes" },
+        { "id": "b", "text": "baked" },
+        { "id": "c", "text": "baking" },
+        { "id": "d", "text": "bake" }
+      ],
+      "correctOption": "b",
+      "explanation": "bake is a regular verb ending in -e, so we add only -d for the past: baked. With \"yesterday\" we need the past, so \"bakes\"/\"bake\" (present) and \"baking\" (the -ing form, which needs be) are all wrong.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Spelling — Choose the correct -ing form: \"Look! The dog ___ across the field.\"",
+      "options": [
+        { "id": "a", "text": "is runing" },
+        { "id": "b", "text": "is runeing" },
+        { "id": "c", "text": "is running" },
+        { "id": "d", "text": "is run" }
+      ],
+      "correctOption": "c",
+      "explanation": "run has one short vowel + one consonant, so we double the n before -ing: running. \"is runing\" forgets to double the n, \"is runeing\" adds a wrong e, and \"is run\" drops the -ing the continuous needs.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Vocabulary — Which word is the odd one out?",
+      "options": [
+        { "id": "a", "text": "apple" },
+        { "id": "b", "text": "banana" },
+        { "id": "c", "text": "carrot" },
+        { "id": "d", "text": "orange" }
+      ],
+      "correctOption": "c",
+      "explanation": "Apple, banana and orange are all fruits, but a carrot is a vegetable, so it is the odd one out. Sort by meaning: the set looks like \"food\", but only the fruits belong together.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Reading — Read: \"Karim got up early on Sunday. He went to the bakery and bought fresh bread for breakfast.\"\nWhere did Karim go?",
+      "options": [
+        { "id": "a", "text": "To the bakery." },
+        { "id": "b", "text": "To school." },
+        { "id": "c", "text": "To the cinema." },
+        { "id": "d", "text": "To the beach." }
+      ],
+      "correctOption": "a",
+      "explanation": "The text says \"He went to the bakery\", so that is the answer. A reading answer must come from the text: school, cinema and beach are real places but are never mentioned, so they cannot be correct.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Grammar — Future: \"I've already decided — next summer I ___ visit my uncle in Sfax.\" (a plan)",
+      "options": [
+        { "id": "a", "text": "will to" },
+        { "id": "b", "text": "am going to" },
+        { "id": "c", "text": "going to" },
+        { "id": "d", "text": "go to" }
+      ],
+      "correctOption": "b",
+      "explanation": "A plan you already decided uses be going to + base verb: I am going to visit. \"will to\" is never correct (will takes no to), \"going to\" alone drops the be (am), and \"go to\" is the present, not a future plan.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Spelling — Choose the correctly spelled past form: \"He ___ very hard for the test last week.\"",
+      "options": [
+        { "id": "a", "text": "studyed" },
+        { "id": "b", "text": "studed" },
+        { "id": "c", "text": "studies" },
+        { "id": "d", "text": "studied" }
+      ],
+      "correctOption": "d",
+      "explanation": "study ends in consonant + y, so the y becomes -ied in the past: studied. \"studyed\" keeps the y wrongly, \"studed\" drops a letter, and \"studies\" is the present he/she/it form, not the past.",
+      "difficulty": 2
+    }
+  ]
+}

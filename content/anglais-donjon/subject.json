@@ -1,0 +1,12 @@
+{
+  "id": "anglais-donjon",
+  "nameFr": "Anglais — Donjon (tout le thème)",
+  "description": "The English Gauntlet: a mixed challenge where every question comes from a different strand — grammar, vocabulary, reading, spelling — climbing from easy to elite. Test the whole language at once, not just one chapter.",
+  "attribute": "Polyvalence",
+  "colorToken": "subject-english",
+  "icon": "Swords",
+  "displayOrder": 9,
+  "contentLanguage": "en",
+  "themeId": "anglais",
+  "gradeSlug": null
+}

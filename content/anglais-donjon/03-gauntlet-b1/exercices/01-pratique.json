@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Gauntlet B1: Warm-up",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Grammar — Present perfect: \"I ___ already read that book, so I'll lend it to you.\"",
+      "options": [
+        { "id": "a", "text": "has" },
+        { "id": "b", "text": "have" },
+        { "id": "c", "text": "am" },
+        { "id": "d", "text": "was" }
+      ],
+      "correctOption": "b",
+      "explanation": "With I the present perfect auxiliary is have + participle: I have already read it. \"has\" is only for he/she/it, \"am\" doesn't form the present perfect, and \"was\" is the past simple of be.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Spelling — Choose the correct -ing form: \"The children were ___ in the pool all afternoon.\"",
+      "options": [
+        { "id": "a", "text": "swiming" },
+        { "id": "b", "text": "swimming" },
+        { "id": "c", "text": "swimeing" },
+        { "id": "d", "text": "swimmming" }
+      ],
+      "correctOption": "b",
+      "explanation": "swim has one short vowel + one consonant, so the m doubles before -ing: swimming. \"swiming\" keeps only one m, \"swimeing\" adds a wrong e, and \"swimmming\" has one m too many.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Vocabulary — Which word is the odd one out?",
+      "options": [
+        { "id": "a", "text": "doctor" },
+        { "id": "b", "text": "nurse" },
+        { "id": "c", "text": "hospital" },
+        { "id": "d", "text": "dentist" }
+      ],
+      "correctOption": "c",
+      "explanation": "Doctor, nurse and dentist are all people who work in health, but a hospital is a place, so it is the odd one out. Sort by meaning: three are jobs, while hospital is where they work.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Grammar — Obligation: \"At my school we ___ wear a uniform every day; it's a strict rule.\"",
+      "options": [
+        { "id": "a", "text": "don't have to" },
+        { "id": "b", "text": "shouldn't" },
+        { "id": "c", "text": "have" },
+        { "id": "d", "text": "have to" }
+      ],
+      "correctOption": "d",
+      "explanation": "A strict rule is an obligation, and with we we use have to + base verb: we have to wear a uniform. \"don't have to\" would make it optional, \"shouldn't\" advises against it, and \"have\" alone (without to) doesn't express the rule.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Reading — Read: \"Yesterday it was raining hard. Sami was waiting at the bus stop without an umbrella, so he got completely wet.\"\nWhy did Sami get wet?",
+      "options": [
+        { "id": "a", "text": "He had no umbrella in the rain." },
+        { "id": "b", "text": "He fell into a river." },
+        { "id": "c", "text": "He was swimming." },
+        { "id": "d", "text": "He washed his car." }
+      ],
+      "correctOption": "a",
+      "explanation": "The text says it was raining and he was waiting \"without an umbrella\", so he got wet from the rain (a). A reading answer must come from the text: a river, swimming and washing a car are never mentioned.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Spelling — Choose the correct past participle: \"We have ___ all the sandwiches; there are none left.\"",
+      "options": [
+        { "id": "a", "text": "ate" },
+        { "id": "b", "text": "eated" },
+        { "id": "c", "text": "eaten" },
+        { "id": "d", "text": "eat" }
+      ],
+      "correctOption": "c",
+      "explanation": "eat is irregular: eat → ate (past) → eaten (participle). After have we use the participle: We have eaten them. \"ate\" is the past simple, \"eated\" is not a word, and \"eat\" is the base form.",
+      "difficulty": 2
+    }
+  ]
+}

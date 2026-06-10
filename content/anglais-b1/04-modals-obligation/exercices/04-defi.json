@@ -1,0 +1,82 @@
+{
+  "title": "👑 Elite Challenge ⭐⭐⭐⭐: Modals of Obligation",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Read the sign: \"STAFF ONLY. Visitors must report to reception. Photography is not permitted. You do not need to sign out when you leave.\"\nWhich sentence is TRUE?",
+      "options": [
+        { "id": "a", "text": "Visitors don't have to report to reception." },
+        { "id": "b", "text": "Visitors mustn't take photographs." },
+        { "id": "c", "text": "Visitors must sign out when they leave." },
+        { "id": "d", "text": "Visitors should avoid reception." }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Photography is not permitted\" is a prohibition, so \"Visitors mustn't take photographs\" (b) is true. Reporting to reception is required, not optional (a is false); signing out is not needed, so it isn't obligatory (c); and nothing advises avoiding reception (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"When I was a child, I ___ go to bed at eight, even at weekends.\"",
+      "options": [
+        { "id": "a", "text": "must" },
+        { "id": "b", "text": "have to" },
+        { "id": "c", "text": "had to" },
+        { "id": "d", "text": "must to" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"When I was a child\" is in the past, and the past of must / have to is had to: I had to go to bed at eight. must has no past form of its own, \"have to\" is present, and \"must to\" wrongly adds to.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT sentence (one has a doubled or wrong particle).",
+      "options": [
+        { "id": "a", "text": "You don't have to to wait for me." },
+        { "id": "b", "text": "She mustn't forget her passport." },
+        { "id": "c", "text": "We should book the tickets early." },
+        { "id": "d", "text": "He has to work this weekend." }
+      ],
+      "correctOption": "a",
+      "explanation": "The error is (a): \"don't have to\" already contains one to, so the base verb follows directly — You don't have to wait for me (not \"to to wait\"). (b), (c) and (d) are correct: mustn't + base, should + base, and has to + base.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"At Karim's new job, the rules are clear. He must arrive by 9 a.m. He mustn't use his phone at his desk. He doesn't have to wear a suit, but he should look tidy.\"\nWhich statement is TRUE?",
+      "options": [
+        { "id": "a", "text": "Karim can arrive whenever he likes." },
+        { "id": "b", "text": "Using his phone at his desk is optional." },
+        { "id": "c", "text": "Wearing a suit is forbidden." },
+        { "id": "d", "text": "Wearing a suit is optional, but looking tidy is advised." }
+      ],
+      "correctOption": "d",
+      "explanation": "\"doesn't have to wear a suit\" makes the suit optional, and \"should look tidy\" is advice, so (d) is true. He must arrive by 9 (a is false); the phone is forbidden, not optional (b); and the suit is optional, not forbidden (c) — note mustn't would have made it forbidden.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"It's a surprise party for Lina, so we ___ tell her about it!\"",
+      "options": [
+        { "id": "a", "text": "don't have to" },
+        { "id": "b", "text": "should" },
+        { "id": "c", "text": "mustn't" },
+        { "id": "d", "text": "have to" }
+      ],
+      "correctOption": "c",
+      "explanation": "To keep the surprise, telling Lina must be prevented, so we use mustn't (it's forbidden): we mustn't tell her. The trap is \"don't have to\", which would only mean telling her is optional — but a surprise depends on not telling at all.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"Sofia feels tired and stressed lately. She drinks coffee all day and rarely sleeps before midnight. Her doctor gave her some advice.\"\nWhat did the doctor most likely say?",
+      "options": [
+        { "id": "a", "text": "You mustn't sleep at night." },
+        { "id": "b", "text": "You should drink less coffee and sleep earlier." },
+        { "id": "c", "text": "You have to drink coffee all day." },
+        { "id": "d", "text": "You don't have to rest at all." }
+      ],
+      "correctOption": "b",
+      "explanation": "A doctor gives advice with should: \"You should drink less coffee and sleep earlier\" (b) fits Sofia's problem. (a) forbids sleeping at night (the opposite of good advice), (c) tells her to keep the harmful habit, and (d) says rest is optional — none of which helps a tired, stressed patient.",
+      "difficulty": 3
+    }
+  ]
+}

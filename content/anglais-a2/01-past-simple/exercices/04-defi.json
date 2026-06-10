@@ -1,0 +1,82 @@
+{
+  "title": "👑 Elite Challenge ⭐⭐⭐⭐: The Past Simple",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Read: \"Last summer, Yassine visited his grandparents in Bizerte. He stayed for two weeks. He helped his grandfather in the garden and learned to swim.\"\nWhich sentence is TRUE?",
+      "options": [
+        { "id": "a", "text": "He stayed for two months." },
+        { "id": "b", "text": "Yassine visited his grandparents in Bizerte." },
+        { "id": "c", "text": "He taught his grandfather to swim." },
+        { "id": "d", "text": "He went in winter." }
+      ],
+      "correctOption": "b",
+      "explanation": "The text says \"Yassine visited his grandparents in Bizerte\", so (b) is true. He stayed two weeks, not months (a); he learned to swim himself — he didn't teach his grandfather (c); and it was last summer, not winter (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "She didn't understand the question." },
+        { "id": "b", "text": "We went to the cinema on Friday." },
+        { "id": "c", "text": "Did he brought his book?" },
+        { "id": "d", "text": "They were very happy with the result." }
+      ],
+      "correctOption": "c",
+      "explanation": "The error is (c): after did the verb must be the base form — Did he bring his book?, not \"brought\". (a), (b) and (d) are all correct past-simple sentences (didn't + base, an irregular past, and were).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"I ___ my keys two days ago, and I still can't find them.\"",
+      "options": [
+        { "id": "a", "text": "losed" },
+        { "id": "b", "text": "lost" },
+        { "id": "c", "text": "lose" },
+        { "id": "d", "text": "loosed" }
+      ],
+      "correctOption": "b",
+      "explanation": "lose is irregular: its past is lost (I lost my keys). \"losed\" and \"loosed\" are not real forms, and \"lose\" is the base/present, which doesn't fit the time marker \"two days ago\".",
+      "difficulty": 3
+    },
+    {
+      "prompt": "You were NOT at the meeting. Choose the correct short answer to \"Were you at the meeting?\"",
+      "options": [
+        { "id": "a", "text": "No, I wasn't." },
+        { "id": "b", "text": "No, I weren't." },
+        { "id": "c", "text": "No, I didn't." },
+        { "id": "d", "text": "No, I am not." }
+      ],
+      "correctOption": "a",
+      "explanation": "With I the past of to be is was, so the negative short answer is No, I wasn't. \"weren't\" doesn't agree with I, \"didn't\" is for action verbs (not to be), and \"I am not\" is present, not past.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"___ did the film start?\" (you want to know the time)",
+      "options": [
+        { "id": "a", "text": "Where" },
+        { "id": "b", "text": "Who" },
+        { "id": "c", "text": "Why" },
+        { "id": "d", "text": "What time" }
+      ],
+      "correctOption": "d",
+      "explanation": "To ask about a time, use What time (or When): What time did the film start? Where asks for a place, Who for a person, and Why for a reason — none of them asks for a time.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"Nadia woke up late. She missed the bus and arrived at work at ten. Her boss was not happy.\"\nWhy was the boss probably unhappy?",
+      "options": [
+        { "id": "a", "text": "Because Nadia was late for work." },
+        { "id": "b", "text": "Because Nadia woke up early." },
+        { "id": "c", "text": "Because the bus was empty." },
+        { "id": "d", "text": "Because Nadia finished all her work." }
+      ],
+      "correctOption": "a",
+      "explanation": "The clues — Nadia missed the bus and arrived at ten, and the boss was not happy — point to lateness: the boss was unhappy because she was late (a). She woke up late, not early (b); nothing says the bus was empty (c); and she didn't finish her work (d).",
+      "difficulty": 3
+    }
+  ]
+}

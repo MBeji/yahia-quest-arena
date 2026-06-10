@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Practice: Everyday Words",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Which word means a brother of your mother or father?",
+      "options": [
+        { "id": "a", "text": "cousin" },
+        { "id": "b", "text": "uncle" },
+        { "id": "c", "text": "nephew" },
+        { "id": "d", "text": "grandfather" }
+      ],
+      "correctOption": "b",
+      "explanation": "Your uncle is the brother of your mother or father. A cousin is the child of an aunt or uncle, a nephew is your brother's or sister's son, and a grandfather is your parent's father. Remember that aunt (female) and uncle (male) are a pair.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Find the odd one out.",
+      "options": [
+        { "id": "a", "text": "Monday" },
+        { "id": "b", "text": "Friday" },
+        { "id": "c", "text": "apple" },
+        { "id": "d", "text": "Sunday" }
+      ],
+      "correctOption": "c",
+      "explanation": "Monday, Friday and Sunday are days of the week; apple is a food, so it is the odd one out. Days of the week are always written with a capital letter in English.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete the common phrase: \"a ___ of tea\".",
+      "options": [
+        { "id": "a", "text": "cup" },
+        { "id": "b", "text": "slice" },
+        { "id": "c", "text": "key" },
+        { "id": "d", "text": "loaf" }
+      ],
+      "correctOption": "a",
+      "explanation": "We drink tea from a cup, so we say a cup of tea. A slice and a loaf go with bread, and a key is an object that opens a door — none of those fits a hot drink.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which word is a colour?",
+      "options": [
+        { "id": "a", "text": "chair" },
+        { "id": "b", "text": "doctor" },
+        { "id": "c", "text": "Tuesday" },
+        { "id": "d", "text": "purple" }
+      ],
+      "correctOption": "d",
+      "explanation": "Purple is a colour. A chair is an object you sit on, a doctor is a job, and Tuesday is a day of the week, so none of those is a colour.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Find the intruder (the word that is NOT a job).",
+      "options": [
+        { "id": "a", "text": "teacher" },
+        { "id": "b", "text": "farmer" },
+        { "id": "c", "text": "bread" },
+        { "id": "d", "text": "nurse" }
+      ],
+      "correctOption": "c",
+      "explanation": "A teacher, a farmer and a nurse are all jobs — work that people do. Bread is a food, so it is the intruder here. Sorting words into fields like jobs and food makes them easier to remember.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "The opposite of \"hot\" is …",
+      "options": [
+        { "id": "a", "text": "warm" },
+        { "id": "b", "text": "cold" },
+        { "id": "c", "text": "fast" },
+        { "id": "d", "text": "small" }
+      ],
+      "correctOption": "b",
+      "explanation": "The opposite of hot is cold. Warm means a little hot (it is close, but not the opposite), fast is the opposite of slow, and small is the opposite of big.",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "title": "Comprehension Check ⭐",
+  "questions": [
+    {
+      "prompt": "Grammar — Present perfect: \"Be careful — he ___ broken his arm, so he can't play today.\"",
+      "options": [
+        { "id": "a", "text": "have" },
+        { "id": "b", "text": "has" },
+        { "id": "c", "text": "is" },
+        { "id": "d", "text": "had" }
+      ],
+      "correctOption": "b",
+      "explanation": "A past action with a result now (he can't play) takes the present perfect, and with he the auxiliary is has + participle: he has broken his arm. \"have\" is for I/you/we/they, \"is\" doesn't form the present perfect, and \"had\" is the past perfect.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Vocabulary — Which word is the odd one out?",
+      "options": [
+        { "id": "a", "text": "thunder" },
+        { "id": "b", "text": "lightning" },
+        { "id": "c", "text": "fog" },
+        { "id": "d", "text": "ceiling" }
+      ],
+      "correctOption": "d",
+      "explanation": "Thunder, lightning and fog are all weather words, but a ceiling is part of a room, so it is the odd one out. Sort the set by meaning: three belong to the weather, while ceiling belongs to a building.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Spelling — Choose the correct -ing form: \"She was ___ for clothes when I saw her in town.\"",
+      "options": [
+        { "id": "a", "text": "shoping" },
+        { "id": "b", "text": "shopping" },
+        { "id": "c", "text": "shoppping" },
+        { "id": "d", "text": "shopeing" }
+      ],
+      "correctOption": "b",
+      "explanation": "shop has one short vowel + one consonant, so the p doubles before -ing: shopping. \"shoping\" forgets to double the p, \"shoppping\" adds one too many, and \"shopeing\" wrongly inserts an e.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Reading — Read: \"Nadia moved to Tunis in 2019 and still lives there. She has worked at the same school since she arrived.\"\nWhere does Nadia live now?",
+      "options": [
+        { "id": "a", "text": "In Tunis." },
+        { "id": "b", "text": "In Sfax." },
+        { "id": "c", "text": "In Paris." },
+        { "id": "d", "text": "She has left the country." }
+      ],
+      "correctOption": "a",
+      "explanation": "The text says she moved to Tunis and \"still lives there\", so she lives in Tunis now (a). Read for the detail: Sfax and Paris are never mentioned, and \"still lives there\" tells us she has not left (d is wrong).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Grammar — Advice: \"You've had a headache all day. You ___ rest and drink some water.\"",
+      "options": [
+        { "id": "a", "text": "mustn't" },
+        { "id": "b", "text": "don't have to" },
+        { "id": "c", "text": "should" },
+        { "id": "d", "text": "should to" }
+      ],
+      "correctOption": "c",
+      "explanation": "This is friendly advice, so we use should + base verb: You should rest. \"should to\" is wrong (no to after should), \"mustn't\" would forbid resting, and \"don't have to\" only says it's optional rather than recommended.",
+      "difficulty": 1
+    }
+  ]
+}

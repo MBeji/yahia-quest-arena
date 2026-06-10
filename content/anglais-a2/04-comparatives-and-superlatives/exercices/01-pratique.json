@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Practice: Comparatives",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complete: \"My brother is ___ than me.\"",
+      "options": [
+        { "id": "a", "text": "old" },
+        { "id": "b", "text": "older" },
+        { "id": "c", "text": "more old" },
+        { "id": "d", "text": "oldest" }
+      ],
+      "correctOption": "b",
+      "explanation": "Old is a short adjective, so the comparative adds -er: older than. \"old\" is the base form (no comparison), \"more old\" wrongly puts more on a short adjective, and \"oldest\" is the superlative (and would need the).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"A train is ___ than a bicycle.\"",
+      "options": [
+        { "id": "a", "text": "more fast" },
+        { "id": "b", "text": "fast" },
+        { "id": "c", "text": "faster" },
+        { "id": "d", "text": "fastest" }
+      ],
+      "correctOption": "c",
+      "explanation": "Fast is short, so the comparative is faster than. \"more fast\" doubles up on a short adjective, \"fast\" is the plain base form, and \"fastest\" is the superlative form, which needs the and doesn't take than.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"This box is ___ than that one.\"",
+      "options": [
+        { "id": "a", "text": "heavier" },
+        { "id": "b", "text": "heavyer" },
+        { "id": "c", "text": "more heavy" },
+        { "id": "d", "text": "heaviest" }
+      ],
+      "correctOption": "a",
+      "explanation": "Heavy ends in consonant + y, so the y becomes i before -er: heavier than. \"heavyer\" keeps the y wrongly, \"more heavy\" treats a two-syllable -y adjective as long (it isn't), and \"heaviest\" is the superlative.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"Maths is ___ than English for me.\"",
+      "options": [
+        { "id": "a", "text": "difficulter" },
+        { "id": "b", "text": "more difficulter" },
+        { "id": "c", "text": "most difficult" },
+        { "id": "d", "text": "more difficult" }
+      ],
+      "correctOption": "d",
+      "explanation": "Difficult is a long adjective (three syllables), so the comparative is more difficult than. \"difficulter\" wrongly adds -er to a long adjective, \"more difficulter\" double-marks it, and \"most difficult\" is the superlative, which can't follow than.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"The weather today is ___ than yesterday.\"",
+      "options": [
+        { "id": "a", "text": "more bad" },
+        { "id": "b", "text": "worse" },
+        { "id": "c", "text": "badder" },
+        { "id": "d", "text": "worst" }
+      ],
+      "correctOption": "b",
+      "explanation": "Bad is irregular: its comparative is worse (worse than yesterday). \"more bad\" and \"badder\" both invent a regular form that doesn't exist, and \"worst\" is the superlative (the worst), which doesn't take than.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which sentence is correct?",
+      "options": [
+        { "id": "a", "text": "She is more taller than her sister." },
+        { "id": "b", "text": "She is more tall than her sister." },
+        { "id": "c", "text": "She is taller than her sister." },
+        { "id": "d", "text": "She is taller then her sister." }
+      ],
+      "correctOption": "c",
+      "explanation": "Tall is short, so the comparative is taller, and a comparison uses than: taller than her sister. \"more taller\" double-marks the comparison, \"more tall\" misuses more on a short adjective, and \"then\" is a time word, not the comparison word than.",
+      "difficulty": 3
+    }
+  ]
+}

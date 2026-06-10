@@ -1,0 +1,82 @@
+{
+  "title": "👑 Gauntlet B1 Elite ⭐⭐⭐⭐: The Final Trial",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Reading — Read: \"Omar has played the guitar since he was ten. He has given many concerts, but he has never recorded an album. This year, he is saving money to make his first one.\"\nWhich sentence is TRUE?",
+      "options": [
+        { "id": "a", "text": "Omar started playing the guitar as a child." },
+        { "id": "b", "text": "Omar has already recorded several albums." },
+        { "id": "c", "text": "Omar has never performed in public." },
+        { "id": "d", "text": "Omar gave up the guitar this year." }
+      ],
+      "correctOption": "a",
+      "explanation": "\"since he was ten\" means he began as a child, so (a) is true. He has never recorded an album (b is false), he has given many concerts, so he has performed (c is false), and he is saving to make an album, not giving up (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Grammar — Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "The book which I borrowed was fascinating." },
+        { "id": "b", "text": "If I had more time, I would learn to paint." },
+        { "id": "c", "text": "I have seen that play last weekend." },
+        { "id": "d", "text": "They were arguing when the teacher walked in." }
+      ],
+      "correctOption": "c",
+      "explanation": "The error is (c): \"last weekend\" is a finished time, so it needs the past simple — I saw that play last weekend, not \"have seen\". (a) uses which correctly for a thing, (b) is a correct second conditional, and (d) correctly interrupts a long past action with a short one.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Grammar — Second conditional: \"If I ___ better at maths, I would help you with this problem.\"",
+      "options": [
+        { "id": "a", "text": "will be" },
+        { "id": "b", "text": "am" },
+        { "id": "c", "text": "would be" },
+        { "id": "d", "text": "were" }
+      ],
+      "correctOption": "d",
+      "explanation": "The result \"would help\" signals the imaginary second conditional, so the if-clause uses the past simple, and with the verb be we use were for every subject: If I were better at maths… \"am\" is the present, while \"will be\" and \"would be\" wrongly put a modal inside the if-clause.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Spelling — Find the INCORRECT word.",
+      "options": [
+        { "id": "a", "text": "better" },
+        { "id": "b", "text": "gooder" },
+        { "id": "c", "text": "worse" },
+        { "id": "d", "text": "further" }
+      ],
+      "correctOption": "b",
+      "explanation": "The error is (b): good is irregular, so its comparative is better, not \"gooder\". The other three are correct comparatives — bad → worse, far → further (and well → better) — irregular forms you must learn by heart.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Grammar — Relative clauses: \"The journalist ___ wrote the article interviewed a scientist ___ research could change medicine.\"",
+      "options": [
+        { "id": "a", "text": "which … who" },
+        { "id": "b", "text": "who … whose" },
+        { "id": "c", "text": "whose … which" },
+        { "id": "d", "text": "where … whose" }
+      ],
+      "correctOption": "b",
+      "explanation": "The journalist is a person doing the action (who wrote), and the scientist owns the research (whose research). So: who … whose. The other pairs mismatch — a person doing an action is never \"which/where/whose\" here, and \"research\" belongs to the scientist, which needs whose, not which.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Vocabulary — Choose the word that best completes the sentence: \"He spoke so ___ that nobody at the back could hear him.\"",
+      "options": [
+        { "id": "a", "text": "quietly" },
+        { "id": "b", "text": "clearly" },
+        { "id": "c", "text": "loudly" },
+        { "id": "d", "text": "quickly" }
+      ],
+      "correctOption": "a",
+      "explanation": "If nobody at the back could hear him, he must have spoken quietly: he spoke so quietly that nobody could hear. \"loudly\" and \"clearly\" would make him easy to hear (the opposite), and \"quickly\" is about speed, not volume, so it doesn't explain why they couldn't hear.",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Review: Quantifiers",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complete: \"There are ___ eggs left, just enough for breakfast.\"",
+      "options": [
+        { "id": "a", "text": "a few" },
+        { "id": "b", "text": "a little" },
+        { "id": "c", "text": "much" },
+        { "id": "d", "text": "any" }
+      ],
+      "correctOption": "a",
+      "explanation": "Eggs is a countable plural, so a small number is a few eggs. A little and much go with uncountable nouns, and any would need a negative or a question, not this affirmative.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"Add ___ salt to the soup — not too much.\"",
+      "options": [
+        { "id": "a", "text": "a few" },
+        { "id": "b", "text": "many" },
+        { "id": "c", "text": "a number of" },
+        { "id": "d", "text": "a little" }
+      ],
+      "correctOption": "d",
+      "explanation": "Salt is uncountable, so a small amount is a little salt. A few, many and a number of all need countable plural nouns, which salt is not.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"How ___ sugar do you take in your coffee?\"",
+      "options": [
+        { "id": "a", "text": "much" },
+        { "id": "b", "text": "many" },
+        { "id": "c", "text": "few" },
+        { "id": "d", "text": "lot" }
+      ],
+      "correctOption": "a",
+      "explanation": "Sugar is uncountable, so we ask How much sugar…?. How many is for countable plurals (How many spoons?), and \"how few\" / \"how lot\" are not correct question forms.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"I have ___ homework tonight, so I can't go out.\"",
+      "options": [
+        { "id": "a", "text": "many" },
+        { "id": "b", "text": "a few" },
+        { "id": "c", "text": "a lot of" },
+        { "id": "d", "text": "a number of" }
+      ],
+      "correctOption": "c",
+      "explanation": "Homework is uncountable, and a lot of works with both countable and uncountable nouns: a lot of homework. Many, a few and a number of all require countable plurals, which homework is not.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choose the sentence with the correct quantifier.",
+      "options": [
+        { "id": "a", "text": "We don't have many time." },
+        { "id": "b", "text": "We don't have much friends." },
+        { "id": "c", "text": "We don't have much time." },
+        { "id": "d", "text": "We don't have any times." }
+      ],
+      "correctOption": "c",
+      "explanation": "Time is uncountable, so it pairs with much: We don't have much time. \"many time\" mismatches (many needs a countable plural), \"much friends\" mismatches the other way, and \"times\" wrongly pluralizes the uncountable noun time.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"She speaks ___ languages: English, French and Arabic.\"",
+      "options": [
+        { "id": "a", "text": "much" },
+        { "id": "b", "text": "several" },
+        { "id": "c", "text": "a little" },
+        { "id": "d", "text": "a great deal of" }
+      ],
+      "correctOption": "b",
+      "explanation": "Languages is a countable plural, so several languages fits (it means \"more than two\"). Much, a little and a great deal of all go with uncountable nouns, so they cannot describe a list of separate languages.",
+      "difficulty": 3
+    }
+  ]
+}

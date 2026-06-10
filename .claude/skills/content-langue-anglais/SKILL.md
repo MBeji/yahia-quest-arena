@@ -19,14 +19,16 @@ written **in English** (immersion). Read the content-engine skill and especially
 
 ## Specifics
 
-- **Theme/subjects**: `themeId: "anglais"`. Use level/strand subjects with suffixed ids, e.g.
-  `anglais-a1`, `anglais-a2`, `anglais-grammar`, `anglais-vocab`; sequence with `displayOrder`.
-  `nameFr` labels them in French for the catalogue; the content is English. Leave `isPremium` off —
-  premium is decided **per parcours**, not by this legacy subject flag, and `anglais` is a free
-  `libre` parcours today.
-- **Chapters**: one grammar point / tense / vocabulary field / reading skill each. cours.md teaches
-  the rule with many example sentences and a forms/conjugation table; quiz.json (5 Q) checks the core
-  rule; exercises drill it.
+- **Theme/subjects**: `themeId: "anglais"`, `contentLanguage: "en"`, `gradeSlug: null`. Follow the
+  two-axis model in `content-engine/references/language-track.md`: **one subject per CEFR level** —
+  `anglais-a1` (Débutant), `anglais-a2`, `anglais-b1`, `anglais-b2`, `anglais-c1` — sequenced by
+  `displayOrder`, **plus one dedicated `anglais-donjon`** subject (the whole-theme mixed gauntlet).
+  Build levels bottom-up (finish A1 first). `nameFr` is the French catalogue label; the content is
+  English. Leave `isPremium` off (`anglais` is a free `libre` parcours; premium is per parcours).
+- **Chapters**: one competence each (a grammar point / tense / vocabulary field / reading skill),
+  ordered simplest→most complex within the level (~5 per level). cours.md teaches the rule with many
+  example sentences and a forms/conjugation table; quiz.json (5 Q) checks the core rule; exercises
+  drill it via the ascending ladder (01-pratique → 02-revision → 03-boss → 04-defi; see language-track.md).
 - **Question types that fit**: fill-in-the-gap, pick the correct form/tense, spot-the-error
   (use "find the error" prompts — they exempt the contradiction QA check), choose the right
   translation/meaning, identify the function.

@@ -1,0 +1,82 @@
+{
+  "title": "👑 Elite Challenge ⭐⭐⭐⭐: Questions & Reading",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Read: \"Sara is a teacher. She lives in Tunis. She has two children.\"\nWhere does Sara live?",
+      "options": [
+        { "id": "a", "text": "In Tunis." },
+        { "id": "b", "text": "She is a teacher." },
+        { "id": "c", "text": "She has two children." },
+        { "id": "d", "text": "In Sfax." }
+      ],
+      "correctOption": "a",
+      "explanation": "A Where question asks for a place, and the text says \"She lives in Tunis\", so the answer is In Tunis. \"She is a teacher\" gives her job and \"She has two children\" her family — neither is a place — and Sfax is not in the text.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT question.",
+      "options": [
+        { "id": "a", "text": "How many books do you read?" },
+        { "id": "b", "text": "How much money do you have?" },
+        { "id": "c", "text": "How much books do you read?" },
+        { "id": "d", "text": "How many friends do you have?" }
+      ],
+      "correctOption": "c",
+      "explanation": "The error is (c): books is countable, so it needs how many, not how much — How many books do you read? How much is reserved for uncountable nouns like money (b). (a) and (d) use how many with countable nouns correctly.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"Karim works in a big hospital. He wears a white coat. He helps sick people every day.\"\nWhat is Karim's job, most probably?",
+      "options": [
+        { "id": "a", "text": "He is a farmer." },
+        { "id": "b", "text": "He is a doctor." },
+        { "id": "c", "text": "He is a driver." },
+        { "id": "d", "text": "He is a cook." }
+      ],
+      "correctOption": "b",
+      "explanation": "This is an inference: working in a hospital, wearing a white coat and helping sick people all point to a doctor. The text does not say \"doctor\" directly, but the clues support it. A farmer, driver or cook would not match all three details.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"Lina gets up at six. She goes to school at seven. She comes home at four.\"\nWhich question can you NOT answer from the text?",
+      "options": [
+        { "id": "a", "text": "When does Lina get up?" },
+        { "id": "b", "text": "When does Lina go to school?" },
+        { "id": "c", "text": "How does Lina go to school?" },
+        { "id": "d", "text": "When does Lina come home?" }
+      ],
+      "correctOption": "c",
+      "explanation": "The text gives three times (six, seven, four) but never says HOW Lina travels, so \"How does Lina go to school?\" cannot be answered. The other three questions each match a time stated in the text. Never infer beyond what the words support.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choose the question-and-answer pair that matches correctly.",
+      "options": [
+        { "id": "a", "text": "\"Where do you work?\" — \"At nine o'clock.\"" },
+        { "id": "b", "text": "\"When do you start?\" — \"In an office.\"" },
+        { "id": "c", "text": "\"Why are you late?\" — \"Because the bus was full.\"" },
+        { "id": "d", "text": "\"Who is she?\" — \"In the kitchen.\"" }
+      ],
+      "correctOption": "c",
+      "explanation": "Only (c) matches: Why asks for a reason, answered by \"Because the bus was full\". (a) answers Where with a time, (b) answers When with a place, and (d) answers Who with a place instead of a person.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choose the fully correct question.",
+      "options": [
+        { "id": "a", "text": "Where does your father works?" },
+        { "id": "b", "text": "Where your father works?" },
+        { "id": "c", "text": "What does your father does?" },
+        { "id": "d", "text": "What time does your father go to work?" }
+      ],
+      "correctOption": "d",
+      "explanation": "Only (d) is correct: question word + does + subject + base verb gives What time does your father go to work? (a) double-marks the verb (does ... works); (b) drops the helper does; (c) repeats does instead of the base form do — it should be What does your father do?",
+      "difficulty": 3
+    }
+  ]
+}

@@ -24,12 +24,18 @@ is a **free `libre` parcours** today; premium is decided per parcours, not by th
 
 ## Specifics
 
-- **Theme/subjects**: `themeId: "francais"`. Level/strand subjects with suffixed ids, e.g.
-  `francais-grammaire`, `francais-conjugaison`, `francais-vocab`, or `fr-mastery` (existing);
-  sequence with `displayOrder`. Leave `isPremium` off — the `francais` parcours is free today, and
-  premium is gated per parcours (not by this legacy flag).
-- **Chapters**: one rule / tense / vocabulary field / comprehension skill each. cours.md teaches the
-  rule with many example sentences and a conjugation/forms table; quiz.json (5 Q); exercises drill it.
+- **Theme/subjects**: `themeId: "francais"`, `contentLanguage: "fr"`, `gradeSlug: null`. Follow the
+  two-axis model in `content-engine/references/language-track.md`: **one subject per CEFR level** —
+  `francais-a1` (Débutant), `francais-a2`, `francais-b1`, `francais-b2`, `francais-c1` — sequenced by
+  `displayOrder`, **plus one dedicated `francais-donjon`** subject (the whole-theme mixed gauntlet).
+  The existing `fr-mastery` is a legacy single-subject perfecting module under this theme: keep it and
+  complement it with the level subjects + donjon (it can be folded into the level model later — don't
+  rename/delete its slugs without sign-off, as that re-keys its UUIDs). Leave `isPremium` off (free
+  `libre` parcours; premium is per parcours).
+- **Chapters**: one competence each (a rule / tense / vocabulary field / comprehension skill), ordered
+  simplest→most complex within the level (~5 per level). cours.md teaches the rule with many example
+  sentences and a conjugation/forms table; quiz.json (5 Q); exercises drill it via the ascending ladder
+  (01-pratique → 02-revision → 03-boss → 04-defi; see language-track.md).
 - **Question types**: gap-fill, pick the correct form/agreement/conjugation, spot-the-error
   (use "find the error" prompts), choose the right meaning/synonym, identify the function.
 - **Distractors = real interference errors** (homophone confusions like a/à, ses/ces, wrong
