@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: أوّلُ خطوات مع المغناطيس",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "المغنطُ يجذبُ:",
+      "options": [
+        { "id": "a", "text": "المسمارَ الحديديّ" },
+        { "id": "b", "text": "قطعةَ الخشب" },
+        { "id": "c", "text": "كأسَ الزجاج" },
+        { "id": "d", "text": "الورقة" }
+      ],
+      "correctOption": "a",
+      "explanation": "المغنطُ يجذبُ الموادَّ الحديديّة كالمسمار، لا الخشبَ ولا الزجاجَ ولا الورق.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أيُّ مادّةٍ لا يجذبُها المغنط؟",
+      "options": [
+        { "id": "a", "text": "الخشب" },
+        { "id": "b", "text": "الحديد" },
+        { "id": "c", "text": "الفولاذ" },
+        { "id": "d", "text": "مسمارٌ حديديّ" }
+      ],
+      "correctOption": "a",
+      "explanation": "لا يجذبُ المغنطُ الخشبَ؛ فهو يجذبُ الموادَّ الحديديّة (الحديد والفولاذ) فقط.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم قطبًا لهذا المغنط؟ <svg viewBox=\"0 0 100 100\"><rect x=\"20\" y=\"42\" width=\"60\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"50\" y1=\"42\" x2=\"50\" y2=\"62\" stroke=\"currentColor\" stroke-width=\"1.3\"/><text x=\"31\" y=\"57\" font-size=\"13\" fill=\"#ef4444\">N</text><text x=\"63\" y=\"57\" font-size=\"13\" fill=\"currentColor\">S</text></svg>",
+      "options": [
+        { "id": "a", "text": "قطبان" },
+        { "id": "b", "text": "قطبٌ واحد" },
+        { "id": "c", "text": "أربعة أقطاب" },
+        { "id": "d", "text": "ثلاثة أقطاب" }
+      ],
+      "correctOption": "a",
+      "explanation": "نرى قطبين: الشماليّ (N) والجنوبيّ (S)، فلكلّ مغنطٍ قطبان.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما رمزُ القطب الشماليّ للمغنط؟",
+      "options": [
+        { "id": "a", "text": "N" },
+        { "id": "b", "text": "S" },
+        { "id": "c", "text": "W" },
+        { "id": "d", "text": "E" }
+      ],
+      "correctOption": "a",
+      "explanation": "يُرمَزُ للقطب الشماليّ بـ N وللقطب الجنوبيّ بـ S.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أين تكونُ قوّةُ الجذب أكبرَ في المغنط؟",
+      "options": [
+        { "id": "a", "text": "عند القطبين" },
+        { "id": "b", "text": "في الوسط" },
+        { "id": "c", "text": "لا تختلفُ في كلّ مكان" },
+        { "id": "d", "text": "خارج المغنط فقط" }
+      ],
+      "correctOption": "a",
+      "explanation": "قوّةُ الجذب أكبرُ عند قطبي المغنط منها في وسطه.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "البوصلةُ أداةٌ تشيرُ إلى:",
+      "options": [
+        { "id": "a", "text": "الشمال" },
+        { "id": "b", "text": "الأسفل" },
+        { "id": "c", "text": "أقرب مغنط فقط" },
+        { "id": "d", "text": "الشمس" }
+      ],
+      "correctOption": "a",
+      "explanation": "البوصلةُ إبرةٌ ممغنطةٌ تشيرُ إلى الشمال، فتساعدُ على تحديد الجهات.",
+      "difficulty": 2
+    }
+  ]
+}
