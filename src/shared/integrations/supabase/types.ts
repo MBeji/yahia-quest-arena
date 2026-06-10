@@ -1404,6 +1404,15 @@ export type Database = {
         Args: { p_duration_seconds: number; p_run_id: string };
         Returns: Json;
       };
+      get_attempt_review: {
+        Args: { p_session_id: string };
+        Returns: {
+          correct_option: string;
+          explanation: string | null;
+          prompt: string;
+          question_id: string;
+        }[];
+      };
       get_best_scores_by_exercise: {
         Args: { p_subject: string };
         Returns: {

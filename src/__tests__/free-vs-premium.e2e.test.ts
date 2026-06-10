@@ -213,6 +213,11 @@ describe("FREE vs PREMIUM E2E: free user opens a beginner mission", () => {
     mockRpc.mockImplementation(
       rpcByName({
         ensure_daily_weekly_goals: { data: null },
+        // The correction now comes from the get_attempt_review RPC (GAP-020), not a
+        // direct client read of questions.correct_option.
+        get_attempt_review: {
+          data: [{ question_id: Q, prompt: "2+2?", correct_option: "4", explanation: "x" }],
+        },
         submit_exercise_attempt: {
           data: {
             correct: 1,
