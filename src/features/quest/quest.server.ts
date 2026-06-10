@@ -337,95 +337,34 @@ export const getExercise = createServerFn({ method: "GET" })
   });
 
 // ---------- Start a secure exercise session ----------
+// The start gate is server-authoritative inside the start_exercise_session
+// SECURITY DEFINER RPC (GAP-021): it enforces the per-parcours premium gate and
+// the school comprehension-quiz gate, then inserts the session as the owner —
+// direct client INSERTs on exercise_sessions are revoked, so a session can no
+// longer be forged to bypass either gate. This wrapper just invokes the RPC and
+// maps its raised gate signals to the localized client messages.
 export const startExerciseSession = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) => z.object({ exerciseId: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
-    const { supabase, userId } = context;
+    const { supabase } = context;
 
-    // Enforce the comprehension-quiz gate: practice/boss exercises cannot be
-    // started until the chapter's quiz is passed. Quizzes themselves are open.
-    const { data: ex, error: exError } = await supabase
-      .from("exercises")
-      .select("id, mode, difficulty, chapter_id, subjects(grade_id)")
-      .eq("id", data.exerciseId)
-      .single();
-    if (exError) {
-      failWithClientError(
-        "quest.startExerciseSession",
-        exError,
-        "Impossible de démarrer la session.",
-      );
-    }
-
-    // Parcours entitlement gate (server-authoritative): resolve_exercise_access
-    // resolves the exercise's parcours, premium status, the caller's entitlement,
-    // and whether the exercise is inside the free preview, then returns `allowed`.
-    const { data: accessRows, error: accessError } = await supabase.rpc("resolve_exercise_access", {
-      p_exercise: data.exerciseId,
+    const { data: rows, error } = await supabase.rpc("start_exercise_session", {
+      p_exercise_id: data.exerciseId,
     });
-    if (accessError) {
-      logger.warn("quest.startExerciseSession: resolve_exercise_access failed", {
-        exerciseId: data.exerciseId,
-        error: accessError.message,
-      });
-    }
-    const access = Array.isArray(accessRows) ? accessRows[0] : accessRows;
-    // Fail closed: if access is unknown (RPC error) or not allowed, block.
-    if (!access || access.allowed !== true) {
-      failWithClientError(
-        "quest.startExerciseSession",
-        null,
-        access?.reason === "PARCOURS_COMING_SOON"
-          ? PARCOURS_COMING_SOON_MESSAGE
-          : PARCOURS_LOCKED_MESSAGE,
-      );
-    }
-
-    // The comprehension-quiz gate applies only to the school program (subjects
-    // bound to a grade). Non-school themes (culture-générale, muscle-cerveau/IQ,
-    // language tracks) have no theory to validate, so they are never quiz-gated.
-    const subjectRel = ex.subjects as
-      | { grade_id?: string | null }
-      | { grade_id?: string | null }[]
-      | null;
-    const subjectRow = Array.isArray(subjectRel) ? subjectRel[0] : subjectRel;
-    const isSchoolSubject = (subjectRow?.grade_id ?? null) !== null;
-
-    if (isSchoolSubject && ex.mode !== "quiz" && ex.chapter_id) {
-      const { data: quiz } = await supabase
-        .from("exercises")
-        .select("id")
-        .eq("chapter_id", ex.chapter_id)
-        .eq("mode", "quiz")
-        .maybeSingle();
-      // Only gate when a quiz actually exists for the chapter (graceful for
-      // legacy chapters without one).
-      if (quiz) {
-        const { data: passed } = await supabase
-          .from("attempts")
-          .select("duration_seconds,total_count")
-          .eq("user_id", userId)
-          .eq("exercise_id", quiz.id)
-          .gte("score_pct", QUIZ_PASS_THRESHOLD_PCT);
-        // The qualifying quiz pass must not be rushed (>= 4s/question), otherwise
-        // a fast random pass could unlock the chapter without comprehension.
-        const genuinelyPassed = (passed ?? []).some(
-          (r) => (r.duration_seconds ?? 0) >= (r.total_count ?? 0) * MIN_SECONDS_PER_QUESTION,
-        );
-        if (!genuinelyPassed) {
-          failWithClientError("quest.startExerciseSession", null, QUIZ_LOCKED_MESSAGE);
-        }
-      }
-    }
-
-    const { data: session, error } = await supabase
-      .from("exercise_sessions")
-      .insert({ user_id: userId, exercise_id: data.exerciseId })
-      .select("id,started_at")
-      .single();
 
     if (error) {
+      // The RPC raises a stable token per gate; surface the matching message.
+      const signal = error.message ?? "";
+      if (signal.includes("PARCOURS_COMING_SOON")) {
+        failWithClientError("quest.startExerciseSession", null, PARCOURS_COMING_SOON_MESSAGE);
+      }
+      if (signal.includes("PARCOURS_LOCKED")) {
+        failWithClientError("quest.startExerciseSession", null, PARCOURS_LOCKED_MESSAGE);
+      }
+      if (signal.includes("QUIZ_LOCKED")) {
+        failWithClientError("quest.startExerciseSession", null, QUIZ_LOCKED_MESSAGE);
+      }
       failWithClientError(
         "quest.startExerciseSession",
         error,
@@ -433,8 +372,13 @@ export const startExerciseSession = createServerFn({ method: "POST" })
       );
     }
 
+    const session = rows?.[0];
+    if (!session) {
+      failWithClientError("quest.startExerciseSession", null, "Impossible de démarrer la session.");
+    }
+
     return {
-      sessionId: session.id,
+      sessionId: session.session_id,
       startedAt: session.started_at,
     };
   });

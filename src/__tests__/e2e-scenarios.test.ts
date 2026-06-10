@@ -144,26 +144,14 @@ describe("END-TO-END: student completes a quest", () => {
     >;
     expect(exercise).toHaveProperty("questions");
 
-    // 3) Start a secure session (access granted by the server, quiz passed).
-    let exCalls = 0;
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises") {
-        exCalls += 1;
-        return exCalls === 1
-          ? mockQuery({
-              id: "ex1",
-              mode: "practice",
-              chapter_id: "ch1",
-              subjects: { grade_id: "g-1" },
-            })
-          : mockQuery({ id: "quiz1" });
-      }
-      if (table === "attempts")
-        return mockQuery([{ id: "att1", duration_seconds: 60, total_count: 6 }]);
-      return mockQuery({ id: "sess1", started_at: "2026-06-03T00:00:00Z" });
-    });
+    // 3) Start a secure session — the start_exercise_session RPC enforces access +
+    //    the quiz gate server-side and returns the created session.
     mockRpc.mockImplementation(
-      rpcByName({ resolve_exercise_access: { data: [{ allowed: true }] } }),
+      rpcByName({
+        start_exercise_session: {
+          data: [{ session_id: "sess1", started_at: "2026-06-03T00:00:00Z" }],
+        },
+      }),
     );
     const session = (await (quest.startExerciseSession as unknown as Fn)({ exerciseId: EX })) as {
       sessionId: string;
@@ -210,47 +198,21 @@ describe("END-TO-END: premium-parcours gating of an élite challenge", () => {
   it("blocks an unentitled user on a locked mission, then allows an entitled one", async () => {
     const { startExerciseSession } = await import("@/features/quest");
 
-    // No entitlement, outside the free preview → server denies → "Parcours premium".
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises")
-        return mockQuery({
-          id: "ex1",
-          mode: "challenge",
-          difficulty: 4,
-          chapter_id: "ch1",
-          subjects: { grade_id: "g-1" },
-        });
-      return mockQuery({ id: "sess1", started_at: "t" });
-    });
+    // No entitlement, outside the free preview → the RPC raises PARCOURS_LOCKED.
     mockRpc.mockImplementation(
-      rpcByName({
-        resolve_exercise_access: { data: [{ allowed: false, reason: "PARCOURS_LOCKED" }] },
-      }),
+      rpcByName({ start_exercise_session: { error: { message: "PARCOURS_LOCKED" } } }),
     );
     await expect((startExerciseSession as unknown as Fn)({ exerciseId: EX })).rejects.toThrow(
       /Parcours premium/,
     );
 
-    // Entitled (server grants access) + quiz passed → session starts.
-    let exCalls = 0;
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises") {
-        exCalls += 1;
-        return exCalls === 1
-          ? mockQuery({
-              id: "ex1",
-              mode: "challenge",
-              chapter_id: "ch1",
-              subjects: { grade_id: "g-1" },
-            })
-          : mockQuery({ id: "quiz1" });
-      }
-      if (table === "attempts")
-        return mockQuery([{ id: "att1", duration_seconds: 60, total_count: 6 }]);
-      return mockQuery({ id: "sess1", started_at: "2026-06-03T00:00:00Z" });
-    });
+    // Entitled + quiz passed → the RPC returns the created session.
     mockRpc.mockImplementation(
-      rpcByName({ resolve_exercise_access: { data: [{ allowed: true }] } }),
+      rpcByName({
+        start_exercise_session: {
+          data: [{ session_id: "sess1", started_at: "2026-06-03T00:00:00Z" }],
+        },
+      }),
     );
     const session = (await (startExerciseSession as unknown as Fn)({ exerciseId: EX })) as {
       sessionId: string;
