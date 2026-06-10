@@ -35,6 +35,8 @@ skill and especially `content-engine/references/language-track.md` before writin
   meaning, identify the function (موقع الكلمة).
 - **Distractors = real interference errors** (confusing الكسرة vs الياء, wrong case ending, wrong
   derived form). Explanations name the rule and why distractors fail (≥25 chars).
+- **Numbers stay standard**: any digit, date, or quantity uses Western digits (0–9), never
+  Arabic-Indic (٠١٢٣) — see `content-engine/references/math-and-notation.md`.
 
 ## Sourcing
 

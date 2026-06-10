@@ -39,6 +39,9 @@ Consequences you must respect:
   instruction** — never trilingual. See `references/themes-and-trilingual.md`.
 - **Indicate difficulty on every mission and quiz.** Each exercise (mission) and the quiz must show
   its difficulty level in its title, using the standard scale in `references/rewards-and-modes.md`.
+- **Numbers & equations are standard in every language.** Western digits (0–9) and standard LTR
+  mathematical notation everywhere — **including Arabic content** (Arabic prose around standard
+  math, never Arabic-Indic digits or arabized formulas). Hard rule: `references/math-and-notation.md`.
 
 ## What you do (and where you stop)
 
@@ -47,10 +50,13 @@ Run, in order:
 
 1. Gather inputs (theme, grade if school, subject, chapter, language — see each wrapper skill).
 2. Scaffold and write the files (see Workflow below), following the schema, quality bar, and style.
-3. `npm run content:check` — validates all authored content against Zod. Must pass (writes nothing).
-4. `npm run content:qa:strict` — answer-key heuristics; must report **0 errors** (warnings are
+3. **Self-verification pass** — re-solve every question blind, verify keys/explanations/key balance/
+   notation per the protocol in `references/quality-bar.md` ("Self-verification protocol"). The
+   automated checks below catch structure, not correctness — this pass is what guarantees quality.
+4. `npm run content:check` — validates all authored content against Zod. Must pass (writes nothing).
+5. `npm run content:qa:strict` — answer-key heuristics; must report **0 errors** (warnings are
    advisory but fix the easy ones).
-5. **Stop. Report** what you created and the exact follow-up the human runs:
+6. **Stop. Report** what you created and the exact follow-up the human runs:
    `npm run content:build` → review the generated SQL in `supabase/migrations/` → apply the
    migration to the DB **before** deploying dependent code (the DB-before-deploy rule), then commit
    as a PR. Do **not** run `content:build`/apply or push unless explicitly asked.
@@ -76,14 +82,36 @@ A chapter directory `content/<subject>/NN-<slug>/` requires all of: `chapter.jso
    **6 questions each**, 4 options, ramping per-question difficulty. Each exercise title shows its
    difficulty (⭐ scale) — see `references/rewards-and-modes.md` and `references/style-guide.md`.
 5. **Quality** — every question must clear the bar in `references/quality-bar.md` before you run the
-   checks (real distractors, explanation ≥25 chars that justifies the key and why wrong options fail).
+   checks (real distractors, explanation ≥25 chars that justifies the key and why wrong options fail),
+   then run the self-verification protocol (same file) before the automated checks.
+
+## Partial deliverables (course only, quiz only, exercises by difficulty)
+
+Not every request is a full chapter. Handle partial asks **inside an existing chapter** without
+re-keying anything:
+
+- **Course/summary only** — (re)write `cours.md` + `resume.md` for an existing chapter; don't touch
+  quiz/exercises. Keep the quiz consistent with the new course (update it if a notion moved).
+- **Quiz only** — (re)write `quiz.json`; it must be answerable from `cours.md` alone (it gates
+  comprehension of the course, not of the exercises).
+- **Add exercises at a given difficulty** — add new `exercices/NN-<slug>.json` files at the **next
+  free `NN`/`displayOrder`** with the canonical mode/reward combo for that difficulty
+  (`rewards-and-modes.md`). **Never renumber or rename existing exercise files** (slug = identity →
+  delete+recreate), and never duplicate questions already covered in the chapter's other exercises.
+- **Audit/fix existing content** — that's the dedicated **`content-audit`** skill (verification
+  pass + severity-ranked report; fixes only on request).
+
+Whatever the slice, the same gates apply: quality bar → self-verification → `content:check` →
+`content:qa:strict` → stop and report.
 
 ## Reference files — read before writing
 
 - `references/content-schema.md` — exact file shapes + every Zod constraint + file layout + reserved
   `quiz` slug. **Read before writing any file.**
-- `references/quality-bar.md` — the QA gates (Zod hard-fails + `content:qa` heuristics) and the
-  pedagogical bar each question must meet. Read before writing questions.
+- `references/quality-bar.md` — the QA gates (Zod hard-fails + `content:qa` heuristics), the
+  pedagogical bar, question craft, and the self-verification protocol. Read before writing questions.
+- `references/math-and-notation.md` — **hard rule**: Western digits + standard LTR equations/units
+  in all languages, including Arabic. Read before writing any math/science or number-bearing content.
 - `references/style-guide.md` — the gamified RPG/manga voice, `cours.md`/`resume.md` skeletons,
   per-language tone, and the rule that prompts/options/explanations stay clean and emoji-free.
 - `references/rewards-and-modes.md` — modes, difficulty tiers, the premium gate, the canonical

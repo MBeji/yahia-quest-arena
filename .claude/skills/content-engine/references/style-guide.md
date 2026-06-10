@@ -62,8 +62,11 @@ Every title carries its **difficulty indicator** (⭐ scale from `rewards-and-mo
 
 ## Per-language voice
 
-- **Arabic** (`ar`): full Arabic, RTL; Arabic punctuation (، ؛). Math content is authored in Arabic
-  with LaTeX/Unicode symbols. Grammar explanations cite the full إعراب (محلّ، علامة، نيابة).
+- **Arabic** (`ar`): full Arabic, RTL; Arabic punctuation (، ؛). **Numbers and equations stay
+  standard**: Western digits (0–9) and standard LTR formulas/units exactly as in French/English
+  content — never Arabic-Indic digits (٠١٢٣), never arabized notation. The Arabic prose wraps the
+  standard math (see `math-and-notation.md`). Grammar explanations cite the full إعراب
+  (محلّ، علامة، نيابة).
 - **French** (`fr`): clear standard French, guillemets « », accents correct.
 - **English** (`en`): clear standard English.
 
