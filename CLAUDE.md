@@ -156,12 +156,17 @@ Claude Code skills under [`.claude/skills/`](./.claude/skills/). `content-engine
 (schema, quality bar, reward table, RPG style, trilingual model, validate-then-stop workflow) in its
 `references/`; thin per-program wrappers defer to it: `content-ecole-tn` (national school program,
 **faithful to the official curriculum**), `content-culture-generale` and `content-muscle-cerveau`
-(trilingual FR/EN/AR → three sibling subjects), and `content-langue-{anglais,francais,arabe}`
-(immersion, one per language). Skills produce **files only** (then run `content:check` +
-`content:qa:strict`); you review the diff, then build/apply. **Non-school** programs are trilingual =
-three sibling subjects (one `contentLanguage` each) under one theme; **school** content (`ecole-tn`)
-stays in the subject's **official language of instruction** (monolingual). Every mission/quiz
-indicates its difficulty level (⭐ scale) in its title. There is no per-record translation.
+(trilingual FR/EN/AR → three sibling subjects), `content-iq-training` (visual IQ/reasoning, SVG
+figures), and `content-langue-{anglais,francais,arabe}` (immersion, one per language).
+`content-audit` is the review counterpart: it audits **existing** content (re-solves every question,
+checks keys/distractors/notation/calibration) and produces a severity-ranked report. Skills produce
+**files only** (then run `content:check` + `content:qa:strict`); you review the diff, then build/apply.
+**Non-school** programs are trilingual = three sibling subjects (one `contentLanguage` each) under one
+theme; **school** content (`ecole-tn`) stays in the subject's **official language of instruction**
+(monolingual). Every mission/quiz indicates its difficulty level (⭐ scale) in its title. There is no
+per-record translation. **Notation is standard in every language**: Western digits (0–9), LTR
+equations, SI units — including Arabic content (Arabic prose around standard math; never
+Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
 
 ## Conventions
 

@@ -1,5 +1,5 @@
 {
-  "title": "⚔️ زعيم الفصل: الأشعّة والانسحاب — المعركة الكبرى",
+  "title": "⚔️ زعيم الفصل ⭐⭐⭐: الأشعّة والانسحاب — المعركة الكبرى",
   "difficulty": 3,
   "mode": "boss",
   "xpReward": 120,
@@ -7,75 +7,75 @@
   "displayOrder": 2,
   "questions": [
     {
-      "prompt": "ABCD متوازي أضلاع. بسّط التعبير: $\\overrightarrow{CA} + \\overrightarrow{AB} + \\overrightarrow{BD}$",
+      "prompt": "ABCD متوازي أضلاع. بسّط مجموع الأشعّة: CA + AB + BD",
       "options": [
-        { "id": "a", "text": "$\\overrightarrow{CD}$" },
-        { "id": "b", "text": "$\\overrightarrow{AD}$" },
-        { "id": "c", "text": "$\\overrightarrow{CB}$" },
-        { "id": "d", "text": "$\\overrightarrow{0}$" }
+        { "id": "a", "text": "CD" },
+        { "id": "b", "text": "AD" },
+        { "id": "c", "text": "CB" },
+        { "id": "d", "text": "الشعاع الصفري" }
       ],
       "correctOption": "a",
-      "explanation": "نطبّق شال تدريجيًا: $\\overrightarrow{CA} + \\overrightarrow{AB} = \\overrightarrow{CB}$، ثمّ $\\overrightarrow{CB} + \\overrightarrow{BD} = \\overrightarrow{CD}$. النتيجة هي $\\overrightarrow{CD}$.",
+      "explanation": "نطبّق شال تدريجيًا: CA + AB = CB، ثمّ CB + BD = CD. النتيجة هي الشعاع CD.",
       "difficulty": 2
     },
     {
-      "prompt": "O هو منتصف [AC] في متوازي الأضلاع ABCD. ما ناتج $\\overrightarrow{BA} + \\overrightarrow{BC}$؟",
+      "prompt": "في متوازي الأضلاع ABCD، ما ناتج مجموع الشعاعين BA + BC؟",
       "options": [
-        { "id": "a", "text": "$\\overrightarrow{BD}$" },
-        { "id": "b", "text": "$2\\overrightarrow{BO}$" },
-        { "id": "c", "text": "$\\overrightarrow{AC}$" },
-        { "id": "d", "text": "$\\overrightarrow{0}$" }
+        { "id": "a", "text": "BD" },
+        { "id": "b", "text": "DB" },
+        { "id": "c", "text": "AC" },
+        { "id": "d", "text": "الشعاع الصفري" }
       ],
-      "correctOption": "b",
-      "explanation": "لأيّ نقطة O منتصف [AC]: $\\overrightarrow{BA} + \\overrightarrow{BC} = 2\\overrightarrow{BO}$. هذه النتيجة عامّة: مجموع شعاعين من نقطة إلى طرفَي قطعة يساوي ضعف الشعاع من تلك النقطة إلى المنتصف.",
+      "correctOption": "a",
+      "explanation": "بقاعدة متوازي الأضلاع: مجموع شعاعين من نفس المنشأ يساوي شعاع قطر متوازي الأضلاع المبنيّ عليهما. هنا BA + BC = BD (القطر المنطلق من B). الخطأ الشائع: عكس المنحى فاختيار DB، أو الخلط مع القطر الآخر AC.",
       "difficulty": 3
     },
     {
-      "prompt": "A وB وC ثلاث نقاط بحيث $\\overrightarrow{AB} + \\overrightarrow{CA} = \\overrightarrow{u}$. ما هو $\\overrightarrow{u}$؟",
+      "prompt": "A وB وC ثلاث نقاط، والشعاع u يحقّق: AB + CA = u. ما هو الشعاع u؟",
       "options": [
-        { "id": "a", "text": "$\\overrightarrow{CB}$" },
-        { "id": "b", "text": "$\\overrightarrow{BC}$" },
-        { "id": "c", "text": "$\\overrightarrow{AC}$" },
-        { "id": "d", "text": "$\\overrightarrow{0}$" }
+        { "id": "a", "text": "CB" },
+        { "id": "b", "text": "BC" },
+        { "id": "c", "text": "AC" },
+        { "id": "d", "text": "الشعاع الصفري" }
       ],
       "correctOption": "a",
-      "explanation": "نرتّب الشعاعين: $\\overrightarrow{CA} + \\overrightarrow{AB}$ (الجمع تبديلي)، فبتطبيق شال: $\\overrightarrow{CA} + \\overrightarrow{AB} = \\overrightarrow{CB}$. إذن $\\overrightarrow{u} = \\overrightarrow{CB}$.",
+      "explanation": "نرتّب الشعاعين (الجمع تبديلي): CA + AB، فبتطبيق شال: CA + AB = CB. إذن u = CB.",
       "difficulty": 2
     },
     {
-      "prompt": "صورة المثلث ABC بالانسحاب ذي الشعاع $\\overrightarrow{AB}$ هي المثلث A'B'C'. ماذا يساوي $\\overrightarrow{AA'}$؟",
+      "prompt": "صورة المثلث ABC بالانسحاب ذي الشعاع AB هي المثلث A'B'C'. ماذا يساوي الشعاع AA'؟",
       "options": [
-        { "id": "a", "text": "$\\overrightarrow{AC}$" },
-        { "id": "b", "text": "$\\overrightarrow{BA}$" },
-        { "id": "c", "text": "$\\overrightarrow{AB}$" },
-        { "id": "d", "text": "$\\overrightarrow{0}$" }
+        { "id": "a", "text": "AC" },
+        { "id": "b", "text": "BA" },
+        { "id": "c", "text": "AB" },
+        { "id": "d", "text": "الشعاع الصفري" }
       ],
       "correctOption": "c",
-      "explanation": "في الانسحاب ذي الشعاع $\\overrightarrow{AB}$، كلّ نقطة M تنتقل بحيث $\\overrightarrow{MM'} = \\overrightarrow{AB}$. وبما أنّ A تنتقل إلى A'، فإنّ $\\overrightarrow{AA'} = \\overrightarrow{AB}$. أمّا الخيارات الأخرى فخاطئة: $\\overrightarrow{BA}$ معاكسٌ له، و$\\overrightarrow{AC}$ شعاعٌ آخر، و$\\overrightarrow{0}$ يعني انعدام الانتقال.",
+      "explanation": "في الانسحاب ذي الشعاع AB، كلّ نقطة M تنتقل بحيث MM' = AB. وبما أنّ A تنتقل إلى A'، فإنّ AA' = AB. أمّا الخيارات الأخرى فخاطئة: BA معاكسٌ له، وAC شعاعٌ آخر، والشعاع الصفري يعني انعدام الانتقال.",
       "difficulty": 2
     },
     {
-      "prompt": "الشعاع $\\overrightarrow{v}$ بحيث $\\overrightarrow{AB} + \\overrightarrow{v} = \\overrightarrow{AC}$. ما هو $\\overrightarrow{v}$؟",
+      "prompt": "الشعاع v يحقّق: AB + v = AC. ما هو الشعاع v؟",
       "options": [
-        { "id": "a", "text": "$\\overrightarrow{AB}$" },
-        { "id": "b", "text": "$\\overrightarrow{BC}$" },
-        { "id": "c", "text": "$\\overrightarrow{CA}$" },
-        { "id": "d", "text": "$\\overrightarrow{CB}$" }
+        { "id": "a", "text": "AB" },
+        { "id": "b", "text": "BC" },
+        { "id": "c", "text": "CA" },
+        { "id": "d", "text": "CB" }
       ],
       "correctOption": "b",
-      "explanation": "من المعادلة: $\\overrightarrow{v} = \\overrightarrow{AC} - \\overrightarrow{AB} = \\overrightarrow{AC} + \\overrightarrow{BA}$. بشال: $\\overrightarrow{BA} + \\overrightarrow{AC} = \\overrightarrow{BC}$. إذن $\\overrightarrow{v} = \\overrightarrow{BC}$.",
+      "explanation": "نعزل v: v = AC − AB = AC + BA (لأنّ معاكس AB هو BA). بالترتيب وتطبيق شال: BA + AC = BC. إذن v = BC. التحقّق: AB + BC = AC ✓. الخطأ الشائع: عكس المنحى فاختيار CB — عوّض دائمًا في المساواة الأصلية للتأكّد.",
       "difficulty": 3
     },
     {
-      "prompt": "ABCDEF سداسي منتظم مركزه O. ما ناتج $\\overrightarrow{AB} + \\overrightarrow{CD} + \\overrightarrow{EF}$؟",
+      "prompt": "ABCDEF سداسي منتظم مركزه O. ما ناتج مجموع الأشعّة AB + CD + EF؟",
       "options": [
-        { "id": "a", "text": "$3\\overrightarrow{AB}$" },
-        { "id": "b", "text": "$\\overrightarrow{AD}$" },
-        { "id": "c", "text": "$\\overrightarrow{0}$" },
-        { "id": "d", "text": "$\\overrightarrow{AE}$" }
+        { "id": "a", "text": "AC" },
+        { "id": "b", "text": "AD" },
+        { "id": "c", "text": "الشعاع الصفري" },
+        { "id": "d", "text": "AE" }
       ],
       "correctOption": "c",
-      "explanation": "في السداسي المنتظم: $\\overrightarrow{AB} = \\overrightarrow{DC}$ لكن $\\overrightarrow{CD} = -\\overrightarrow{DC}$. بالنظر بالتناظر: $\\overrightarrow{AB}$، $\\overrightarrow{CD}$، $\\overrightarrow{EF}$ ثلاثة أشعّة متساوية الطول ومتوزّعة بزوايا 120° فيما بينها، مجموعها $\\overrightarrow{0}$.",
+      "explanation": "الأشعّة الثلاثة AB وCD وEF متساوية الطول (أضلاع السداسي المنتظم) ومنحياتها متباعدة بـ 120° فيما بينها بالتناظر الدوراني. إذا رسمناها متسلسلة (طرف كلّ شعاع منشأ الذي يليه) أغلقت مثلّثًا، ومجموع أشعّة مسار مغلق هو الشعاع الصفري. الخطأ الشائع: الظنّ أنّ الأشعّة الثلاثة متوازية بالمنحى نفسه — منحياتها مختلفة فلا يصحّ جمع أطوالها.",
       "difficulty": 3
     }
   ]

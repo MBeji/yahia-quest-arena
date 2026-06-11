@@ -1,5 +1,5 @@
 {
-  "title": "تمرين تدريبي: نظرية طاليس (مراجعة شاملة)",
+  "title": "📝 تدريب ⭐⭐⭐: نظرية طاليس (مراجعة شاملة)",
   "difficulty": 3,
   "mode": "boss",
   "xpReward": 120,
@@ -7,75 +7,75 @@
   "displayOrder": 5,
   "questions": [
     {
-      "prompt": "في مثلّث ABC، (MN) ∥ (BC) مع AM = 3 cm وAB = 9 cm وBC = 12 cm. ما طول MN؟",
+      "prompt": "في مثلّث ABC، (MN) ∥ (BC) مع M على [AB] وN على [AC]. إذا كان MN = 6 cm وBC = 9 cm وAB = 12 cm، فما طول AM؟",
       "options": [
-        { "id": "a", "text": "4 cm" },
-        { "id": "b", "text": "6 cm" },
-        { "id": "c", "text": "3 cm" },
-        { "id": "d", "text": "8 cm" }
+        { "id": "a", "text": "6 cm" },
+        { "id": "b", "text": "8 cm" },
+        { "id": "c", "text": "9 cm" },
+        { "id": "d", "text": "18 cm" }
       ],
-      "correctOption": "a",
-      "explanation": "نسبة التشابه = AM/AB = 3/9 = 1/3. بنظرية طاليس: MN/BC = 1/3، إذن MN = 12 × (1/3) = 4 cm.",
+      "correctOption": "b",
+      "explanation": "بنظرية طاليس: AM/AB = MN/BC = 6/9 = 2/3. إذن AM = AB × (2/3) = 12 × (2/3) = 8 cm. الخطأ الشائع: قلب النسبة (AM = 12 × 9/6 = 18) — وهو مستحيل لأنّ M على [AB] فلا بدّ أن يكون AM أصغر من AB = 12.",
       "difficulty": 2
     },
     {
       "prompt": "في مثلّث ABC، (MN) ∥ (BC) مع AM = 4 cm وMB = 6 cm وAN = 5 cm. ما طول NC؟",
       "options": [
-        { "id": "a", "text": "7.5 cm" },
-        { "id": "b", "text": "6 cm" },
-        { "id": "c", "text": "5 cm" },
-        { "id": "d", "text": "3.33 cm" }
+        { "id": "a", "text": "3,33 cm" },
+        { "id": "b", "text": "5 cm" },
+        { "id": "c", "text": "6 cm" },
+        { "id": "d", "text": "7,5 cm" }
       ],
-      "correctOption": "a",
-      "explanation": "بنظرية طاليس: AM/MB = AN/NC، أي 4/6 = 5/NC. بالتقاطع: 4 × NC = 6 × 5 = 30، إذن NC = 30 ÷ 4 = 7.5 cm.",
+      "correctOption": "d",
+      "explanation": "بنظرية طاليس: AM/MB = AN/NC، أي 4/6 = 5/NC. بالتقاطع: 4 × NC = 6 × 5 = 30، إذن NC = 30 ÷ 4 = 7,5 cm. الخطأ الشائع: قلب النسبة وكتابة NC = AN × AM/MB = 5 × 4/6 ≈ 3,33 — بما أنّ MB > AM فلا بدّ أن يكون NC > AN.",
       "difficulty": 3
     },
     {
-      "prompt": "في وضعية الفراشة، يتقاطع مستقيمان في O مع (AB) ∥ (CD). إذا كان OA = 3 cm وOB = 4 cm وOC = 9 cm، فما طول OD؟",
+      "prompt": "في وضعية الفراشة، يتقاطع مستقيمان في O مع (AB) ∥ (CD). إذا كان OA = 4 cm وOB = 5 cm وOD = 15 cm، فما طول OC؟",
       "options": [
-        { "id": "a", "text": "12 cm" },
-        { "id": "b", "text": "6.75 cm" },
-        { "id": "c", "text": "10 cm" },
-        { "id": "d", "text": "16 cm" }
+        { "id": "a", "text": "9 cm" },
+        { "id": "b", "text": "10 cm" },
+        { "id": "c", "text": "12 cm" },
+        { "id": "d", "text": "18,75 cm" }
       ],
-      "correctOption": "a",
-      "explanation": "في وضعية الفراشة بنظرية طاليس: OA/OC = OB/OD. إذن 3/9 = 4/OD، بالتقاطع 3 × OD = 9 × 4 = 36، فـ OD = 12 cm.",
+      "correctOption": "c",
+      "explanation": "في وضعية الفراشة بنظرية طاليس: OA/OC = OB/OD = 5/15 = 1/3. إذن 4/OC = 1/3، ومنه OC = 4 × 3 = 12 cm. التحقّق: 4/12 = 5/15 = 1/3 ✓. الخطأ الشائع: قلب الاقتران بين الأطوال (OC = OB × OD/OA = 18,75)، أو التفكير الجمعي بطرح OD − OB = 10 — العلاقة في طاليس تناسبية لا جمعية.",
       "difficulty": 2
     },
     {
-      "prompt": "في مثلّث ABC، M على [AB] وN على [AC] مع AM = 2 cm، AB = 5 cm، AN = 3 cm، AC = 8 cm. هل (MN) ∥ (BC)؟",
+      "prompt": "في مثلّث ABC، M على [AB] وN على [AC] مع AM = 3 cm، AB = 7 cm، AN = 4 cm، AC = 9 cm. هل (MN) ∥ (BC)؟",
       "options": [
-        { "id": "a", "text": "لا، لأنّ AM/AB = 2/5 ≠ AN/AC = 3/8" },
-        { "id": "b", "text": "نعم، لأنّ AM/AB = AN/AC" },
-        { "id": "c", "text": "نعم، لأنّ AM + AN = 5" },
-        { "id": "d", "text": "لا يمكن التحديد" }
+        { "id": "a", "text": "لا، لأنّ 3/7 ≠ 4/9" },
+        { "id": "b", "text": "لا، لأنّ AM ≠ AN" },
+        { "id": "c", "text": "نعم، لأنّ 3/7 = 4/9" },
+        { "id": "d", "text": "نعم، لأنّ النسبتين متقاربتان والفرق مهمَل" }
       ],
       "correctOption": "a",
-      "explanation": "نقارن النسبتَين: AM/AB = 2/5 = 0.4، وAN/AC = 3/8 = 0.375. بما أنّهما غير متساويتين فحسب النظرية العكسية (MN) ليست موازية لـ (BC).",
+      "explanation": "نقارن بالجداء التقاطعي: 3 × 9 = 27 و7 × 4 = 28، فـ 3/7 ≠ 4/9، إذن بحسب النظرية العكسية (MN) غير موازٍ لـ (BC). الخطأ الشائع: الاكتفاء بالتقريب — 3/7 ≈ 0,429 و4/9 ≈ 0,444 متقاربان، لكنّ عكس طاليس يتطلّب تساويًا تامًّا لا تقريبيًّا.",
       "difficulty": 2
     },
     {
       "prompt": "في مثلّث ABC، (MN) ∥ (BC) مع AM = 4 cm، AN = 6 cm، NC = 9 cm. ما طول AB؟",
       "options": [
-        { "id": "a", "text": "10 cm" },
-        { "id": "b", "text": "6 cm" },
-        { "id": "c", "text": "13 cm" },
-        { "id": "d", "text": "8 cm" }
+        { "id": "a", "text": "6 cm" },
+        { "id": "b", "text": "8 cm" },
+        { "id": "c", "text": "10 cm" },
+        { "id": "d", "text": "13 cm" }
       ],
-      "correctOption": "a",
-      "explanation": "AC = AN + NC = 6 + 9 = 15 cm. بنظرية طاليس: AM/AB = AN/AC، أي 4/AB = 6/15 = 2/5. بالتقاطع: 2 × AB = 4 × 5 = 20، إذن AB = 10 cm.",
+      "correctOption": "c",
+      "explanation": "AC = AN + NC = 6 + 9 = 15 cm. بنظرية طاليس: AM/AB = AN/AC، أي 4/AB = 6/15 = 2/5. بالتقاطع: 2 × AB = 4 × 5 = 20، إذن AB = 10 cm. الخطأ الشائع: استعمال AN/NC بدل AN/AC (4/AB = 6/9 يعطي AB = 6) — يجب أوّلًا حساب الضلع الكامل AC.",
       "difficulty": 3
     },
     {
       "prompt": "في مثلّث PQR، (ST) ∥ (QR) مع PS = 2x وPQ = 12 cm وPT = x + 1 وPR = 8 cm. ما قيمة x؟",
       "options": [
-        { "id": "a", "text": "x = 3" },
+        { "id": "a", "text": "x = 1,5" },
         { "id": "b", "text": "x = 2" },
-        { "id": "c", "text": "x = 4" },
-        { "id": "d", "text": "x = 1.5" }
+        { "id": "c", "text": "x = 3" },
+        { "id": "d", "text": "x = 4" }
       ],
-      "correctOption": "a",
-      "explanation": "بنظرية طاليس: PS/PQ = PT/PR، أي 2x/12 = (x+1)/8. بالتقاطع: 8 × 2x = 12 × (x+1) → 16x = 12x + 12 → 4x = 12 → x = 3. التحقّق: PS=6، PT=4؛ 6/12 = 1/2 و4/8 = 1/2 ✓.",
+      "correctOption": "c",
+      "explanation": "بنظرية طاليس: PS/PQ = PT/PR، أي 2x/12 = (x+1)/8. بالتقاطع: 8 × 2x = 12 × (x+1) → 16x = 12x + 12 → 4x = 12 → x = 3. التحقّق: PS=6، PT=4؛ 6/12 = 1/2 و4/8 = 1/2 ✓. الخطأ الشائع: مساواة الطولين PS = PT (أي 2x = x + 1) بدل مساواة النسبتين — التوازي يعني تناسب الأطوال لا تساويها.",
       "difficulty": 3
     }
   ]

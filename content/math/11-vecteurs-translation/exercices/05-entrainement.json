@@ -1,5 +1,5 @@
 {
-  "title": "تمرين تدريبي: الأشعّة والانسحاب (مراجعة شاملة)",
+  "title": "📝 تدريب ⭐⭐⭐: الأشعّة والانسحاب (مراجعة شاملة)",
   "difficulty": 3,
   "mode": "boss",
   "xpReward": 120,
@@ -7,84 +7,75 @@
   "displayOrder": 5,
   "questions": [
     {
-      "prompt": "بسّط بتطبيق علاقة شال: $\\overrightarrow{AB} + \\overrightarrow{BC}$",
+      "prompt": "أكمل التفكيك وفق علاقة شال بإدخال النقطة M: الشعاع AC = ؟",
       "options": [
-        { "id": "a", "text": "$\\overrightarrow{AC}$" },
-        { "id": "b", "text": "$\\overrightarrow{CA}$" },
-        { "id": "c", "text": "$\\overrightarrow{BA}$" },
-        { "id": "d", "text": "$\\overrightarrow{0}$" }
+        { "id": "a", "text": "AM + MC" },
+        { "id": "b", "text": "AM + CM" },
+        { "id": "c", "text": "MA + MC" },
+        { "id": "d", "text": "MA + CM" }
       ],
       "correctOption": "a",
-      "explanation": "علاقة شال: $\\overrightarrow{AB} + \\overrightarrow{BC} = \\overrightarrow{AC}$ (النقطة الوسطى B تختفي).",
+      "explanation": "علاقة شال تُقرأ أيضًا بالعكس: يمكن تفكيك أيّ شعاع بإدخال نقطة وسيطة: AC = AM + MC (من A إلى M ثمّ من M إلى C). الترتيب مهمّ: طرف الشعاع الأوّل يجب أن يكون منشأ الثاني.",
       "difficulty": 1
     },
     {
-      "prompt": "بسّط: $\\overrightarrow{AB} + \\overrightarrow{BC} + \\overrightarrow{CA}$",
+      "prompt": "بسّط مجموع الأشعّة: AB + BC + CD + DA",
       "options": [
-        { "id": "a", "text": "$\\overrightarrow{0}$" },
-        { "id": "b", "text": "$\\overrightarrow{AC}$" },
-        { "id": "c", "text": "$\\overrightarrow{AA}$ يساوي $\\overrightarrow{AB}$" },
-        { "id": "d", "text": "$\\overrightarrow{CA}$" }
+        { "id": "a", "text": "AD" },
+        { "id": "b", "text": "الشعاع الصفري" },
+        { "id": "c", "text": "AC" },
+        { "id": "d", "text": "DA" }
       ],
-      "correctOption": "a",
-      "explanation": "بشال تدريجيًا: $\\overrightarrow{AB} + \\overrightarrow{BC} = \\overrightarrow{AC}$، ثمّ $\\overrightarrow{AC} + \\overrightarrow{CA} = \\overrightarrow{AA} = \\overrightarrow{0}$. مجموع أشعّة دورة مغلقة دائمًا الشعاع المعدوم.",
+      "correctOption": "b",
+      "explanation": "بشال تدريجيًا: AB + BC = AC، ثمّ AC + CD = AD، ثمّ AD + DA = AA = الشعاع الصفري. مسار مغلق يبدأ وينتهي في A مجموعه دائمًا الشعاع الصفري. التوقّف عند AD يعني نسيان الحدّ الأخير.",
       "difficulty": 2
     },
     {
-      "prompt": "ABCD متوازي أضلاع. أيّ مساواة صحيحة دائمًا؟",
+      "prompt": "الرباعي ABCD يحقّق المساواة الشعاعية AB = DC. ماذا نستنتج عن قطريه [AC] و[BD]؟",
       "options": [
-        { "id": "a", "text": "$\\overrightarrow{AB} = \\overrightarrow{DC}$" },
-        { "id": "b", "text": "$\\overrightarrow{AB} = \\overrightarrow{CD}$" },
-        { "id": "c", "text": "$\\overrightarrow{AB} = \\overrightarrow{BC}$" },
-        { "id": "d", "text": "$\\overrightarrow{AC} = \\overrightarrow{BD}$" }
+        { "id": "a", "text": "متعامدان" },
+        { "id": "b", "text": "متساويان في الطول" },
+        { "id": "c", "text": "لهما المنتصف نفسه" },
+        { "id": "d", "text": "لا توجد بينهما علاقة خاصّة" }
       ],
-      "correctOption": "a",
-      "explanation": "في متوازي الأضلاع ABCD يكون الضلعان [AB] و[DC] متوازيَين ومتساويَين وبالاتّجاه نفسه، إذن $\\overrightarrow{AB} = \\overrightarrow{DC}$. أمّا $\\overrightarrow{CD}$ فهو الشعاع المعاكس.",
+      "correctOption": "c",
+      "explanation": "AB = DC يعني أنّ ABCD متوازي أضلاع، وفي متوازي الأضلاع يتقاطع القطران [AC] و[BD] في منتصف كلّ منهما — أي لهما المنتصف نفسه. أمّا التعامد فخاصّ بالمعيّن، وتساوي الطول خاصّ بالمستطيل.",
       "difficulty": 2
     },
     {
-      "prompt": "في الانسحاب الذي شعاعه $\\overrightarrow{u}$، صورة النقطة A هي A'. ما العلاقة بين النقاط؟",
+      "prompt": "في الانسحاب ذي الشعاع u، النقطة N هي صورة النقطة P (أي P هي سابقة N). أيّ علاقة شعاعية صحيحة؟",
       "options": [
-        { "id": "a", "text": "$\\overrightarrow{AA'} = \\overrightarrow{u}$" },
-        { "id": "b", "text": "$\\overrightarrow{A'A} = \\overrightarrow{u}$" },
-        { "id": "c", "text": "$\\overrightarrow{AA'} = \\overrightarrow{0}$" },
-        { "id": "d", "text": "$\\overrightarrow{AA'} = 2\\overrightarrow{u}$" }
+        { "id": "a", "text": "NP = u" },
+        { "id": "b", "text": "PN = الشعاع الصفري" },
+        { "id": "c", "text": "N = P" },
+        { "id": "d", "text": "PN = u" }
       ],
-      "correctOption": "a",
-      "explanation": "تعريف الانسحاب ذي الشعاع $\\overrightarrow{u}$: كلّ نقطة M وصورتها M' تحقّقان $\\overrightarrow{MM'} = \\overrightarrow{u}$. إذن للنقطة A: $\\overrightarrow{AA'} = \\overrightarrow{u}$.",
+      "correctOption": "d",
+      "explanation": "تعريف الانسحاب: الشعاع ينطلق من السابقة نحو الصورة، إذن PN = u. الخطأ الشائع: قلب المنحى وكتابة NP = u — للعودة من الصورة إلى سابقتها نستعمل الشعاع المعاكس −u.",
       "difficulty": 2
     },
     {
-      "prompt": "I منتصف القطعة [AB]. أيّ مساواة صحيحة؟",
+      "prompt": "I منتصف القطعة [AB]. أيّ مساواة شعاعية صحيحة؟",
       "options": [
-        {
-          "id": "a",
-          "text": "$\\overrightarrow{IA} + \\overrightarrow{IB} = \\overrightarrow{0}$"
-        },
-        { "id": "b", "text": "$\\overrightarrow{IA} = \\overrightarrow{IB}$" },
-        { "id": "c", "text": "$\\overrightarrow{AI} = \\overrightarrow{BI}$" },
-        {
-          "id": "d",
-          "text": "$\\overrightarrow{IA} + \\overrightarrow{IB} = \\overrightarrow{AB}$"
-        }
+        { "id": "a", "text": "IA + IB = الشعاع الصفري" },
+        { "id": "b", "text": "IA = IB" },
+        { "id": "c", "text": "AI = BI" },
+        { "id": "d", "text": "IA + IB = AB" }
       ],
       "correctOption": "a",
-      "explanation": "بما أنّ I منتصف [AB] فإنّ $\\overrightarrow{IA}$ و$\\overrightarrow{IB}$ متساويان في الطول ومتعاكسان في الاتّجاه، أي $\\overrightarrow{IB} = -\\overrightarrow{IA}$، ومجموعهما $\\overrightarrow{0}$.",
+      "explanation": "بما أنّ I منتصف [AB] فإنّ الشعاعين IA وIB متساويان في الطول ومتعاكسان في المنحى، أي IB هو معاكس IA، ومجموعهما الشعاع الصفري. الخطأ الشائع: كتابة IA = IB — الطولان متساويان لكنّ المنحيين متعاكسان فالشعاعان غير متساويين.",
       "difficulty": 3
     },
     {
-      "prompt": "بسّط: $\\overrightarrow{AB} - \\overrightarrow{CB}$",
+      "prompt": "بسّط الفرق بين الشعاعين: AB − CB",
       "options": [
-        { "id": "a", "text": "$\\overrightarrow{AC}$" },
-        { "id": "b", "text": "$\\overrightarrow{CA}$" },
-        {
-          "id": "c",
-          "text": "$\\overrightarrow{AB} + \\overrightarrow{BC}$ يساوي $\\overrightarrow{0}$"
-        },
-        { "id": "d", "text": "$\\overrightarrow{BA}$" }
+        { "id": "a", "text": "BA" },
+        { "id": "b", "text": "AC" },
+        { "id": "c", "text": "CA" },
+        { "id": "d", "text": "CB" }
       ],
-      "correctOption": "a",
-      "explanation": "نحوّل الطرح إلى جمع بالشعاع المعاكس: $\\overrightarrow{AB} - \\overrightarrow{CB} = \\overrightarrow{AB} + \\overrightarrow{BC}$ (لأنّ $-\\overrightarrow{CB} = \\overrightarrow{BC}$). بشال: $= \\overrightarrow{AC}$.",
+      "correctOption": "b",
+      "explanation": "نحوّل الطرح إلى جمع بالشعاع المعاكس: AB − CB = AB + BC (لأنّ معاكس CB هو BC). بشال: AB + BC = AC. الخطأ الشائع: نسيان قلب الحرفين عند أخذ المعاكس، أو عكس المنحى في النهاية فاختيار CA.",
       "difficulty": 3
     }
   ]

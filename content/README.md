@@ -36,12 +36,20 @@ content/
 - **`quiz.json`** (obligatoire) : `title?` + `questions[]` (même forme que les
   questions d'exercice). Compilé en exercice `mode='quiz'` ; l'élève doit le
   réussir (≥ `QUIZ_PASS_THRESHOLD_PCT`) pour débloquer les exercices du chapitre.
-- **exercice `*.json`** : `title`, `difficulty` (1-3), `mode`
-  (`practice` | `boss`), `xpReward`, `rewardCoins`, `displayOrder`, et
-  `questions[]` : `{ prompt, options:[{id,text}], correctOption, explanation }`.
+- **exercice `*.json`** : `title`, `difficulty` (1-4), `mode`
+  (`practice` | `boss` | `challenge`), `xpReward`, `rewardCoins`, `displayOrder`, et
+  `questions[]` : `{ prompt, options:[{id,text}], correctOption, explanation, difficulty? (1-3) }`.
 
 Tout est validé par Zod (`src/shared/content/schema.ts`). Un fichier invalide
 n'atteint jamais la base.
+
+**Notation standard dans toutes les langues** : chiffres occidentaux (0-9),
+équations en notation internationale (LTR), unités SI — y compris dans le
+contenu en arabe (prose arabe autour de maths standard ; jamais de chiffres
+arabes-orientaux ٠١٢٣). Règle complète :
+`.claude/skills/content-engine/references/math-and-notation.md`. La barre de
+qualité des questions (distracteurs, explications, équilibre des clés,
+auto-vérification) : `.claude/skills/content-engine/references/quality-bar.md`.
 
 ## Commandes
 

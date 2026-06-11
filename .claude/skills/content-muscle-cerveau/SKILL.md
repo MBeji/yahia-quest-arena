@@ -38,6 +38,9 @@ then drills it.
 - Explanations show the **method/steps to reach the answer**, not just the answer — the teaching is
   the technique (≥25 chars; worked steps on hard items per quality-bar.md).
 - Calibrate the difficulty ramp; keep free progression at difficulty 1–2, boss/challenge at 3–4.
+- **Numbers and operations stay standard in all three languages** — Western digits (0–9) and
+  standard notation in the Arabic version too (essential for calcul mental / sequences):
+  `content-engine/references/math-and-notation.md`.
 
 ## Multilingual workflow — native per language (no translation)
 

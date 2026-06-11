@@ -48,6 +48,12 @@ subject+grade):
   SVT, informatique) switch to **French** (`fr`); humanities (arabe, histoire-géo, philosophie,
   éducation islamique) stay **Arabic** (`ar`); language subjects in their own language.
 
+**Math/science in Arabic stays standard.** When the medium of instruction is Arabic (math, physique,
+SVT in basic education), the **digits, equations, formulas, and units remain in standard
+international notation** — Western digits (0–9), LTR formulas, SI units — exactly as in
+French/English content. Arabic prose wraps standard math; never Arabic-Indic digits or arabized
+notation. Hard rule: `content-engine/references/math-and-notation.md`.
+
 ## Fidelity workflow (the part that makes this track different)
 
 1. **Anchor to the official program.** Use the official curriculum as ground truth: the

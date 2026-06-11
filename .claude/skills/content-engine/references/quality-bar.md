@@ -52,6 +52,53 @@ balance, or difficulty distribution — you own those by judgment (below).
   (see content-ecole-tn).
 - **Language purity**: write entirely in the subject's `contentLanguage`. The only non-content-language
   tokens allowed are math/LaTeX symbols, folder slugs, `mode` values, and source URLs.
+- **Standard notation everywhere**: Western digits (0–9) and standard LTR equations/units in **all**
+  languages — Arabic content never uses Arabic-Indic digits or arabized formulas. Hard rule; see
+  `math-and-notation.md`.
+
+## Question craft — what an irreproachable QCM item looks like
+
+Beyond the distractor/explanation rules above, every item must pass these craft checks:
+
+- **One stem, one task, one defensible answer.** The prompt asks exactly one thing and is
+  self-contained (solvable without seeing the options first, for computation items). If two options
+  could be argued correct, rewrite the item.
+- **No meta-options.** Never "all of the above", "none of the above", "a and b", "I don't know".
+  Four real, independent candidate answers.
+- **Negative stems are rare and bolded.** Prefer positive phrasing; if you must ask "which is
+  **not**…", bold/emphasize the negation so it cannot be skimmed past (and remember such prompts
+  exempt the contradiction check — don't overuse them).
+- **Homogeneous options.** Same grammatical form, same order of magnitude of length and detail.
+  The correct answer must not be recognizable as the longest, most precise, or most hedged option.
+- **Deterministic option order.** Sort numeric options ascending (or descending — consistently);
+  order text options logically (chronological, alphabetical, or by length). Randomizing the *key*
+  is the engine's job via your key balance — the *display* order should look deliberate.
+- **No option leaks.** An option must not be contradicted or confirmed by the wording of the stem
+  or of another option; distractors must not overlap (two options that mean the same thing).
+- **Difficulty tag is honest.** A d1 question is answerable by a student who just read the course;
+  a d3 question requires combining ≥2 notions or a multi-step computation. Don't tag for ordering
+  convenience.
+
+## Self-verification protocol — run it BEFORE `content:check`/`content:qa`
+
+The automated layers catch structure, not correctness. Before running the checks, do a **blind
+verification pass** over every file you wrote:
+
+1. **Re-solve every question yourself, without looking at `correctOption`**, then compare. Any
+   mismatch = fix the item (don't just flip the key — understand which was wrong).
+2. **Re-read each explanation against the key**: it must assert the keyed option and only that one,
+   restate the computed value (numeric answers), and not accidentally validate a distractor.
+3. **Tally the answer key** across each exercise and across the chapter: no letter > ~40% of items,
+   every letter used at least once per exercise where possible.
+4. **Scan for duplicates / near-duplicates** (same fact or computation re-asked with cosmetic
+   changes) within and across the chapter's exercises and quiz.
+5. **Scan notation**: zero Arabic-Indic digits, true minus `−` in formulas, standard units
+   (see `math-and-notation.md`).
+6. **Check the ramp**: per-question difficulty is non-decreasing within each exercise and matches
+   the exercise tier; the quiz stays at d1–2.
+
+Only after this pass run `content:check` and `content:qa:strict`. To audit *existing* content with
+the same rigor, use the **`content-audit`** skill.
 
 ## Non-academic content — every correction is a mini-lesson
 
