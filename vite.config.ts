@@ -17,10 +17,13 @@ export default defineConfig({
       rollupOptions: {
         output: {
           manualChunks(id) {
-            // Locale catalogs (fr/en/ar + provider) — one parallel-loaded, independently
-            // cached chunk with its own budget, so growing the translations (GAP-010)
-            // never eats the index chunk's budget.
-            if (id.includes("/src/lib/i18n/")) return "i18n";
+            // Locale catalogs (fr/en/ar) — one parallel-loaded, independently cached
+            // chunk with its own budget, so growing the translations (GAP-010) never
+            // eats the index chunk's budget. ONLY the pure-data catalogs: pulling the
+            // provider/context/hooks in too made the chunk import React back from the
+            // index chunk, creating an i18n⇄index cycle whose TDZ crash killed the
+            // whole client bundle in production (login regression).
+            if (/\/src\/lib\/i18n\/(fr|en|ar)\.ts$/.test(id)) return "i18n";
             if (!id.includes("node_modules")) return;
 
             if (id.includes("@tanstack/")) return "vendor-tanstack";
