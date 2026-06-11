@@ -17,6 +17,10 @@ export default defineConfig({
       rollupOptions: {
         output: {
           manualChunks(id) {
+            // Locale catalogs (fr/en/ar + provider) — one parallel-loaded, independently
+            // cached chunk with its own budget, so growing the translations (GAP-010)
+            // never eats the index chunk's budget.
+            if (id.includes("/src/lib/i18n/")) return "i18n";
             if (!id.includes("node_modules")) return;
 
             if (id.includes("@tanstack/")) return "vendor-tanstack";

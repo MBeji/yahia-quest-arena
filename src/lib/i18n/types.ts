@@ -11,6 +11,7 @@ export type TranslationKeys = {
   // Common
   common: {
     backToHall: string;
+    back: string;
     loading: string;
     retry: string;
     home: string;
@@ -55,6 +56,21 @@ export type TranslationKeys = {
     toastLinked: string;
     googleNotConfigured: string;
     googleFailed: string;
+    // Error messages (friendlyAuthError + form validation)
+    passwordTooShort: string;
+    errorInvalidLogin: string;
+    errorEmailNotConfirmed: string;
+    errorAccountExists: string;
+    errorRateLimit: string;
+    errorSignupDisabled: string;
+    errorGeneric: string;
+    googleCallbackIncomplete: string;
+    // Email-confirmation interstitial
+    emailSentTitle: string;
+    emailSentBody1: string;
+    emailSentBody2: string;
+    emailSentSpam: string;
+    emailSentEdit: string;
   };
   // Landing
   landing: {
@@ -407,6 +423,82 @@ export type TranslationKeys = {
     switchError: string;
     failedLoad: string;
     empty: string;
+  };
+  // Onboarding (intent + parcours pick)
+  onboarding: {
+    intentTitle: string;
+    intentSubtitle: string;
+    concoursTitle: string;
+    concoursDesc: string;
+    exploreTitle: string;
+    exploreDesc: string;
+    parcoursTitleConcours: string;
+    parcoursTitleLibre: string;
+    parcoursSubtitleConcours: string;
+    parcoursSubtitleLibre: string;
+    saving: string;
+    saveError: string;
+  };
+  // Leaderboard page chrome
+  leaderboard: {
+    titleGradient: string;
+    titleRest: string;
+    globalTab: string;
+    subtitleGlobal: string;
+    subtitleSubject: string;
+    loading: string;
+    youChip: string;
+    lvl: string;
+    emptyGlobal: string;
+    emptySubject: string;
+  };
+  // Parent / admin follow-up report
+  parentReport: {
+    adminTitle: string;
+    title: string;
+    adminSubtitle: string;
+    subtitle: string;
+    linkTitle: string;
+    codePlaceholder: string;
+    relationPlaceholder: string;
+    linkCta: string;
+    linking: string;
+    linkHint: string;
+    linkSuccess: string;
+    linkFailed: string;
+    defaultStudentName: string;
+    adminEmptyTitle: string;
+    adminEmptyDesc: string;
+    linkFirstHint: string;
+    prevPage: string;
+    nextPage: string;
+    pageLabel: string;
+    classLabel: string;
+    classNone: string;
+    memberSince: string;
+    timeTotal: string;
+    exercisesLabel: string;
+    avgScore: string;
+    activeDays: string;
+    trendPrefix: string;
+    trendSuffix: string;
+    activityTitle: string;
+    today: string;
+    perSubjectTitle: string;
+    exSuffix: string;
+    lastActivity: string;
+    noActivity: string;
+    seriousness: string;
+    verdictExcellent: string;
+    verdictExcellentDesc: string;
+    verdictGood: string;
+    verdictGoodDesc: string;
+    verdictAverage: string;
+    verdictAverageDesc: string;
+    verdictNeedsImprovement: string;
+    verdictNeedsImprovementDesc: string;
+    verdictInactive: string;
+    verdictInactiveDesc: string;
   };
   // Playful explainability hover hints
   explain: {

@@ -5,13 +5,13 @@ export class ParentReportPage {
   constructor(private readonly page: Page) {}
 
   get codeInput(): Locator {
-    return this.page.getByPlaceholder(/code eleve/i);
+    return this.page.getByPlaceholder(/code [ée]l[èe]ve|student code/i);
   }
   get relationInput(): Locator {
     return this.page.getByPlaceholder(/relation/i);
   }
   get associer(): Locator {
-    return this.page.getByRole("button", { name: /associer/i });
+    return this.page.getByRole("button", { name: /associer|^link$/i });
   }
   /** A linked student row/name in the parent's view. */
   student(name: string): Locator {

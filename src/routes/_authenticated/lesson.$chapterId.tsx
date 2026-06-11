@@ -14,9 +14,11 @@ import {
   FileText,
 } from "lucide-react";
 import { getChapterLesson } from "@/features/quest";
+import { buildLessonLabels, type LessonContentLang } from "@/features/quest/lesson-labels";
 import { isRtlText } from "@/shared/lib/utils";
 import { renderMarkdown } from "@/shared/lib/markdown";
 import { useState } from "react";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/lesson/$chapterId")({
   head: () => ({ meta: [{ title: "Leçon · XP Scholars" }] }),
@@ -26,6 +28,7 @@ export const Route = createFileRoute("/_authenticated/lesson/$chapterId")({
 function LessonPage() {
   const { chapterId } = Route.useParams();
   const navigate = useNavigate();
+  const t = useT();
   const fetchLesson = useServerFn(getChapterLesson);
   const { data, isLoading } = useQuery({
     queryKey: ["lesson", chapterId],
@@ -39,7 +42,7 @@ function LessonPage() {
       <div className="grid min-h-[60vh] place-items-center">
         <div className="flex flex-col items-center gap-3">
           <div className="h-10 w-10 animate-spin rounded-full border-2 border-[color:var(--gold)] border-t-transparent" />
-          <span className="text-sm text-muted-foreground">Loading lesson…</span>
+          <span className="text-sm text-muted-foreground">{t.common.loading}</span>
         </div>
       </div>
     );
@@ -58,6 +61,15 @@ function LessonPage() {
   const isRtlSubject =
     subjectData?.content_language === "ar" || (content ? isRtlText(content) : false);
   const isRtl = isRtlSubject;
+  // Lesson chrome follows the LESSON's content language (not the UI locale),
+  // mirroring quest-labels: an Arabic lesson keeps Arabic nav, a French one French.
+  const contentLang: LessonContentLang =
+    subjectData?.content_language === "ar" || subjectData?.content_language === "en"
+      ? subjectData.content_language
+      : isRtl
+        ? "ar"
+        : "fr";
+  const labels = buildLessonLabels(contentLang);
 
   const currentIdx = allChapters.findIndex((c) => c.id === chapterId);
   const prevChapter = currentIdx > 0 ? allChapters[currentIdx - 1] : null;
@@ -67,16 +79,14 @@ function LessonPage() {
     return (
       <div className="mx-auto max-w-3xl px-6 py-12 text-center">
         <Scroll className="mx-auto h-16 w-16 text-muted-foreground/40" />
-        <h1 className="mt-4 font-display text-2xl font-bold">Lesson coming soon</h1>
-        <p className="mt-2 text-muted-foreground">
-          This chapter's lesson is being prepared by the scholars.
-        </p>
+        <h1 className="mt-4 font-display text-2xl font-bold">{labels.comingSoonTitle}</h1>
+        <p className="mt-2 text-muted-foreground">{labels.comingSoonBody}</p>
         <Link
           to="/subject/$subjectId"
           params={{ subjectId: chapter.subject_id }}
           className="mt-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
         >
-          <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> Back to subject
+          <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {labels.backToSubject}
         </Link>
       </div>
     );
@@ -94,7 +104,7 @@ function LessonPage() {
           params={{ subjectId: chapter.subject_id }}
           className="inline-flex items-center gap-1.5 rounded-lg border border-border/50 bg-black/60 px-3 py-2 text-sm text-muted-foreground backdrop-blur-sm transition hover:border-[color:var(--gold)]/40 hover:text-foreground"
         >
-          <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {subjectData?.name_fr ?? "Retour"}
+          <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {subjectData?.name_fr ?? t.common.back}
         </Link>
 
         {/* Chapter progress indicator */}
@@ -126,7 +136,7 @@ function LessonPage() {
                   : "border-border/50 bg-black/60 text-muted-foreground hover:border-[color:var(--neon-gold)]/40 hover:text-foreground"
               }`}
             >
-              <FileText className="h-4 w-4" /> ملخّص
+              <FileText className="h-4 w-4" /> {labels.summaryBtn}
             </button>
           )}
 
@@ -136,7 +146,7 @@ function LessonPage() {
               onClick={() => setTocOpen(!tocOpen)}
               className="inline-flex items-center gap-1.5 rounded-lg border border-border/50 bg-black/60 px-3 py-2 text-sm text-muted-foreground backdrop-blur-sm transition hover:border-[color:var(--gold)]/40 hover:text-foreground"
             >
-              <List className="h-4 w-4" /> فهرس
+              <List className="h-4 w-4" /> {labels.tocBtn}
             </button>
           )}
         </div>
@@ -148,10 +158,10 @@ function LessonPage() {
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-4 rounded-2xl border border-[color:var(--gold)]/30 bg-black/80 p-4 backdrop-blur-xl"
-          dir="rtl"
+          dir={isRtl ? "rtl" : undefined}
         >
           <h3 className="mb-3 flex items-center gap-2 font-display text-sm font-bold text-[color:var(--gold)]">
-            <List className="h-4 w-4" /> فهرس الدرس
+            <List className="h-4 w-4" /> {labels.tocTitle}
           </h3>
           <div className="grid gap-1.5 sm:grid-cols-2">
             {headings.map((h, i) => (
@@ -178,7 +188,7 @@ function LessonPage() {
           dir={isRtl ? "rtl" : undefined}
         >
           <h3 className="mb-3 flex items-center gap-2 font-display text-sm font-bold text-[color:var(--neon-gold)]">
-            <FileText className="h-4 w-4" /> ملخّص الدرس
+            <FileText className="h-4 w-4" /> {labels.summaryTitle}
           </h3>
           <div
             className="lesson-content prose prose-invert max-w-none text-sm"
@@ -209,7 +219,7 @@ function LessonPage() {
             <div className="flex-1">
               <div className="flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-[color:var(--gold)]">
                 <Sparkles className="h-3 w-3" />
-                {subjectData?.name_fr ?? "Lesson"}
+                {subjectData?.name_fr ?? ""}
                 <span className="text-muted-foreground">·</span>
                 <span className="text-muted-foreground">
                   Ch. {currentIdx + 1}/{allChapters.length}
@@ -244,7 +254,7 @@ function LessonPage() {
                 <ChevronLeft className="h-4 w-4 transition group-hover:-translate-x-0.5 rtl:-scale-x-100 rtl:group-hover:translate-x-0.5" />
                 <div className="text-right" dir={isRtlText(prevChapter.title) ? "rtl" : undefined}>
                   <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                    السابق
+                    {labels.prev}
                   </div>
                   <div className="font-semibold line-clamp-1">{prevChapter.title}</div>
                 </div>
@@ -258,7 +268,7 @@ function LessonPage() {
               params={{ subjectId: chapter.subject_id }}
               className="hidden items-center gap-1.5 rounded-lg border border-border/50 px-3 py-2 text-xs text-muted-foreground transition hover:border-[color:var(--gold)]/40 hover:text-foreground sm:inline-flex"
             >
-              <List className="h-3.5 w-3.5" /> كل الفصول
+              <List className="h-3.5 w-3.5" /> {labels.allChapters}
             </Link>
 
             {nextChapter ? (
@@ -269,7 +279,7 @@ function LessonPage() {
               >
                 <div dir={isRtlText(nextChapter.title) ? "rtl" : undefined}>
                   <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                    التالي
+                    {labels.next}
                   </div>
                   <div className="font-semibold line-clamp-1">{nextChapter.title}</div>
                 </div>
@@ -281,7 +291,7 @@ function LessonPage() {
                 params={{ subjectId: chapter.subject_id }}
                 className="group flex items-center gap-2 rounded-xl border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/10 px-4 py-3 text-sm font-semibold text-[color:var(--neon-gold)] transition hover:bg-[color:var(--neon-gold)]/20"
               >
-                🏆 أنهيت كل الدروس!
+                {labels.finishedAll}
               </Link>
             )}
           </div>
@@ -294,10 +304,11 @@ function LessonPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
         className="mt-6 rounded-2xl border border-border/50 bg-black/60 p-5 backdrop-blur-xl"
-        dir="rtl"
+        dir={isRtl ? "rtl" : undefined}
       >
         <h3 className="mb-3 flex items-center gap-2 font-display text-sm font-bold text-[color:var(--gold)]">
-          <BookOpen className="h-4 w-4" /> جميع فصول {subjectData?.name_fr}
+          <BookOpen className="h-4 w-4" />{" "}
+          {labels.allChaptersOf.replace("{subject}", subjectData?.name_fr ?? "")}
         </h3>
         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {allChapters.map((c, i) => (
