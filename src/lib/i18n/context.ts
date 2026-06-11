@@ -1,11 +1,12 @@
 import { createContext } from "react";
 import type { Locale, TranslationKeys } from "./types";
-import { en } from "./en";
+import { fr } from "./fr";
 
 export const STORAGE_KEY = "xp-scholars-locale";
 /** Cookie name mirrors the locale so the SSR shell can set <html lang/dir>. */
 export const LOCALE_COOKIE = "xp-scholars-locale";
-export const DEFAULT_LOCALE: Locale = "en";
+/** French-first: the product targets the Tunisian market (GAP-010). */
+export const DEFAULT_LOCALE: Locale = "fr";
 
 export function isLocale(value: string | null | undefined): value is Locale {
   return value === "en" || value === "fr" || value === "ar";
@@ -37,7 +38,7 @@ export type I18nContextValue = {
 
 export const I18nContext = createContext<I18nContextValue>({
   locale: DEFAULT_LOCALE,
-  t: en,
+  t: fr,
   setLocale: () => {},
   dir: "ltr",
 });

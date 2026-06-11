@@ -28,6 +28,34 @@ export type TranslationKeys = {
     errorTitle: string;
     errorFallback: string;
   };
+  // Auth screen (login / signup)
+  auth: {
+    titleSignup: string;
+    titleLogin: string;
+    subtitleSignup: string;
+    subtitleLogin: string;
+    googleCta: string;
+    sessionRemembered: string;
+    or: string;
+    roleLabel: string;
+    roleStudent: string;
+    roleParent: string;
+    heroNameLabel: string;
+    allianceCodeLabel: string;
+    allianceCodeHint: string;
+    emailLabel: string;
+    passwordLabel: string;
+    submitSignup: string;
+    submitLogin: string;
+    hasAccountPrompt: string;
+    noAccountPrompt: string;
+    switchToSignup: string;
+    toastSignupSuccess: string;
+    toastLoginSuccess: string;
+    toastLinked: string;
+    googleNotConfigured: string;
+    googleFailed: string;
+  };
   // Landing
   landing: {
     navSystem: string;
@@ -125,6 +153,36 @@ export type TranslationKeys = {
     notAttempted: string;
     failedLoad: string;
     failedLoadDesc: string;
+    // Badges & Academy Shop (dashboard sections)
+    badgesTitle: string;
+    badgeTag: string;
+    badgeDefaultReason: string;
+    badgeEarnedOn: string;
+    badgesEmpty: string;
+    shopTitle: string;
+    shopDefaultDesc: string;
+    shopEquipped: string;
+    shopOwned: string;
+    shopInStock: string;
+    shopBuy: string;
+    shopEquip: string;
+    shopActivate: string;
+    armedPassive: string;
+    armedQuest: string;
+    radarTitle: string;
+    radarCaption: string;
+    inventoryTitle: string;
+    inventoryEmpty: string;
+    // Shop / streak action toasts
+    purchaseSuccess: string;
+    purchaseFailed: string;
+    equipSuccess: string;
+    equipFailed: string;
+    itemArmedPassive: string;
+    itemArmedQuest: string;
+    activationFailed: string;
+    streakRecovered: string;
+    recoveryFailed: string;
   };
   // Quest
   quest: {
@@ -196,6 +254,12 @@ export type TranslationKeys = {
     correctMsg: string;
     wrongMsg: string;
     depth: string;
+    // Run lifecycle error toasts
+    errorSavingRun: string;
+    noMoreQuestions: string;
+    failedLoadQuestions: string;
+    failedStartRun: string;
+    failedValidateAnswer: string;
   };
   // Subscription / premium
   subscription: {

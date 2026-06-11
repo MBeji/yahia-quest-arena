@@ -14,6 +14,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { I18nProvider, useT } from "@/lib/i18n";
 import type { Locale } from "@/lib/i18n";
 import { DEFAULT_LOCALE, dirForLocale, localeFromCookieHeader } from "@/lib/i18n/context";
+import { fr } from "@/lib/i18n/fr";
 import { ThemeProvider, useTheme, DEFAULT_THEME, themeFromCookieHeader } from "@/lib/theme";
 import type { Theme } from "@/lib/theme";
 
@@ -75,19 +76,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { title: "XP Scholars — The Shonen Academy for the 6th & 9th Grade National Exams" },
-      {
-        name: "description",
-        content:
-          "Prep for the Tunisian 6th and 9th grade national exams in RPG mode — plus a free academy: General Knowledge, Brain Training and Languages. XP, streaks, duels and bosses.",
-      },
+      // head() is route-static (no per-request locale), so the document meta uses
+      // the default-locale (FR) catalog. Per-locale head = future i18n increment.
+      { title: fr.meta.title },
+      { name: "description", content: fr.meta.description },
       { name: "author", content: "XP Scholars" },
-      { property: "og:title", content: "XP Scholars — National Exams & Free Academy" },
-      {
-        property: "og:description",
-        content:
-          "6th & 9th grade exam prep + a free academy (General Knowledge, Brain Training, Languages), shonen style.",
-      },
+      { property: "og:title", content: fr.meta.ogTitle },
+      { property: "og:description", content: fr.meta.ogDescription },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       // PWA / mobile install

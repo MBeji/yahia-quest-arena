@@ -43,25 +43,25 @@ describe("i18n system", () => {
     document.documentElement.lang = "en";
   });
 
-  it("defaults to English locale", () => {
+  it("defaults to French locale (French-first product, GAP-010)", () => {
     render(
       <I18nProvider>
         <TestConsumer />
       </I18nProvider>,
     );
 
-    expect(screen.getByTestId("locale").textContent).toBe("en");
+    expect(screen.getByTestId("locale").textContent).toBe("fr");
     expect(screen.getByTestId("dir").textContent).toBe("ltr");
   });
 
-  it("provides English translations by default", () => {
+  it("provides French translations by default", () => {
     render(
       <I18nProvider>
         <TestConsumer />
       </I18nProvider>,
     );
 
-    expect(screen.getByTestId("loading").textContent).toBe("Loading…");
+    expect(screen.getByTestId("loading").textContent).toBe("Chargement…");
   });
 
   it("switches to French locale", () => {
@@ -124,7 +124,7 @@ describe("i18n system", () => {
     expect(screen.getByTestId("locale").textContent).toBe("ar");
   });
 
-  it("falls back to English for invalid stored locale", () => {
+  it("falls back to French for invalid stored locale", () => {
     localStorage.setItem("xp-scholars-locale", "invalid");
 
     render(
@@ -133,7 +133,7 @@ describe("i18n system", () => {
       </I18nProvider>,
     );
 
-    expect(screen.getByTestId("locale").textContent).toBe("en");
+    expect(screen.getByTestId("locale").textContent).toBe("fr");
   });
 
   it("each locale has landing keys defined", async () => {

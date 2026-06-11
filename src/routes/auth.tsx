@@ -8,14 +8,15 @@ import { useServerFn } from "@tanstack/react-start";
 import { linkStudentByCode } from "@/features/parent-report";
 import { bootstrapProfile } from "@/features/auth";
 import { Label } from "@/components/ui/label";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Join the Academy · XP Scholars" },
+      { title: "Rejoindre l'Académie · XP Scholars" },
       {
         name: "description",
-        content: "Create your hero and start preparing for the 9th grade exam.",
+        content: "Crée ton héros et commence ta préparation aux concours nationaux.",
       },
     ],
   }),
@@ -26,6 +27,7 @@ export const Route = createFileRoute("/auth")({
 function AuthPage() {
   const { mode } = Route.useSearch();
   const navigate = useNavigate();
+  const t = useT();
   const isSignup = mode === "signup";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -113,11 +115,11 @@ function AuthPage() {
     e.preventDefault();
     setFormError("");
     if (password.length < 8) {
+      // Auth ERROR messages (this one + friendlyAuthError) stay French pending
+      // dedicated keys — full auth-error i18n is a later increment (GAP-010 C).
       const msg = "Le mot de passe doit contenir au moins 8 caractères.";
       setPasswordError(msg);
       setFormError(msg);
-      // TODO(review #32): route toast/inline auth strings through useT() once an
-      // `auth` i18n namespace with these keys exists (no keys today; do not edit i18n files).
       toast.error(msg);
       return;
     }
@@ -149,8 +151,9 @@ function AuthPage() {
               data: { studentCode: allianceCode.trim(), relationLabel: "parent" },
             });
             if (linkRes.linked) {
-              // TODO(review #32): use useT() once an `auth` i18n key exists.
-              toast.success(`Linked with ${linkRes.student.displayName ?? "student"}.`);
+              toast.success(
+                t.auth.toastLinked.replace("{name}", linkRes.student.displayName ?? "élève"),
+              );
             }
           }
         }
@@ -161,14 +164,12 @@ function AuthPage() {
           setEmailSent(true);
           return;
         }
-        // TODO(review #32): use useT() once an `auth` i18n key exists.
-        toast.success("Hero created! Welcome to the academy.");
+        toast.success(t.auth.toastSignupSuccess);
         navigate({ to: "/dashboard" });
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        // TODO(review #32): use useT() once an `auth` i18n key exists.
-        toast.success("Welcome back, warrior.");
+        toast.success(t.auth.toastLoginSuccess);
         navigate({ to: "/dashboard" });
       }
     } catch (err) {
@@ -195,12 +196,10 @@ function AuthPage() {
 
     if (error) {
       const message = error.message.toLowerCase();
-      // TODO(review #32): route these strings through useT() once an `auth` i18n
-      // namespace with matching keys exists (none today; do not edit i18n files).
       const friendly =
         message.includes("provider") || message.includes("oauth")
-          ? "Google provider n'est pas configuré dans Supabase Auth."
-          : `Google sign-in failed: ${error.message}`;
+          ? t.auth.googleNotConfigured
+          : t.auth.googleFailed.replace("{message}", error.message);
       setFormError(friendly);
       toast.error(friendly);
       setBusy(false);
@@ -267,12 +266,10 @@ function AuthPage() {
           className="w-full glass-gold rounded-2xl p-8 shadow-gold"
         >
           <h1 className="font-display text-2xl font-bold">
-            {isSignup ? "Forge your hero" : "Welcome back, warrior"}
+            {isSignup ? t.auth.titleSignup : t.auth.titleLogin}
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            {isSignup
-              ? "A few seconds to enter the arena."
-              : "Resume your quest where you left off."}
+            {isSignup ? t.auth.subtitleSignup : t.auth.subtitleLogin}
           </p>
 
           <button
@@ -299,22 +296,23 @@ function AuthPage() {
                 d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.83C6.71 7.31 9.14 5.38 12 5.38z"
               />
             </svg>
-            Continue with Google
+            {t.auth.googleCta}
           </button>
 
           <p className="mt-2 text-center text-xs text-muted-foreground">
-            Session remembered on this browser so you don&apos;t re-enter credentials every time.
+            {t.auth.sessionRemembered}
           </p>
 
           <div className="my-5 flex items-center gap-3 text-xs uppercase tracking-widest text-muted-foreground">
-            <span className="h-px flex-1 bg-border" /> or <span className="h-px flex-1 bg-border" />
+            <span className="h-px flex-1 bg-border" /> {t.auth.or}{" "}
+            <span className="h-px flex-1 bg-border" />
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-3">
             {isSignup && (
               <div className="rounded-xl border border-border/60 bg-black/30 p-3">
                 <div className="mb-2 text-xs uppercase tracking-wider text-muted-foreground">
-                  Choose your Guild Role
+                  {t.auth.roleLabel}
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   <button
@@ -322,14 +320,14 @@ function AuthPage() {
                     onClick={() => setRole("student")}
                     className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${role === "student" ? "bg-[color:var(--gold)]/15 text-[color:var(--gold)] border border-[color:var(--gold)]/40" : "bg-black/40 text-muted-foreground border border-border/50 hover:text-foreground"}`}
                   >
-                    Eleve · Hero
+                    {t.auth.roleStudent}
                   </button>
                   <button
                     type="button"
                     onClick={() => setRole("parent")}
                     className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${role === "parent" ? "bg-[color:var(--gold)]/15 text-[color:var(--gold)] border border-[color:var(--gold)]/40" : "bg-black/40 text-muted-foreground border border-border/50 hover:text-foreground"}`}
                   >
-                    Parent · Mentor
+                    {t.auth.roleParent}
                   </button>
                 </div>
               </div>
@@ -338,7 +336,7 @@ function AuthPage() {
             {isSignup && (
               <div className="relative">
                 <Label htmlFor="auth-name" className="sr-only">
-                  Hero name
+                  {t.auth.heroNameLabel}
                 </Label>
                 <UserIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <input
@@ -347,7 +345,7 @@ function AuthPage() {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Hero name"
+                  placeholder={t.auth.heroNameLabel}
                   className="w-full rounded-lg border border-input bg-black/50 py-2.5 pl-10 pr-3 text-sm focus:border-[color:var(--gold)] focus:outline-none"
                 />
               </div>
@@ -356,25 +354,25 @@ function AuthPage() {
             {isSignup && role === "parent" && (
               <div className="relative">
                 <Label htmlFor="auth-alliance-code" className="sr-only">
-                  Alliance Code eleve (optionnel)
+                  {t.auth.allianceCodeLabel}
                 </Label>
                 <input
                   id="auth-alliance-code"
                   type="text"
                   value={allianceCode}
                   onChange={(e) => setAllianceCode(e.target.value)}
-                  placeholder="Alliance Code eleve (optionnel)"
+                  placeholder={t.auth.allianceCodeLabel}
                   aria-describedby="auth-alliance-code-hint"
                   className="w-full rounded-lg border border-input bg-black/50 py-2.5 px-3 text-sm focus:border-[color:var(--gold)] focus:outline-none"
                 />
                 <p id="auth-alliance-code-hint" className="mt-1 text-xs text-muted-foreground">
-                  Entre le code de ton enfant pour lier les comptes maintenant.
+                  {t.auth.allianceCodeHint}
                 </p>
               </div>
             )}
             <div className="relative">
               <Label htmlFor="auth-email" className="sr-only">
-                Email
+                {t.auth.emailLabel}
               </Label>
               <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <input
@@ -383,13 +381,13 @@ function AuthPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
+                placeholder={t.auth.emailLabel}
                 className="w-full rounded-lg border border-input bg-black/50 py-2.5 pl-10 pr-3 text-sm focus:border-[color:var(--gold)] focus:outline-none"
               />
             </div>
             <div className="relative">
               <Label htmlFor="auth-password" className="sr-only">
-                Password (min 8 characters)
+                {t.auth.passwordLabel}
               </Label>
               <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <input
@@ -402,7 +400,7 @@ function AuthPage() {
                   setPassword(e.target.value);
                   if (passwordError) setPasswordError("");
                 }}
-                placeholder="Password (min 8 characters)"
+                placeholder={t.auth.passwordLabel}
                 aria-invalid={passwordError ? true : undefined}
                 aria-describedby={passwordError ? "auth-password-error" : undefined}
                 className="w-full rounded-lg border border-input bg-black/50 py-2.5 pl-10 pr-3 text-sm focus:border-[color:var(--gold)] focus:outline-none"
@@ -429,18 +427,18 @@ function AuthPage() {
               className="flex w-full items-center justify-center gap-2 rounded-lg bg-[image:var(--gradient-gold)] py-2.5 text-sm font-bold text-black shadow-gold transition hover:opacity-90 disabled:opacity-60"
             >
               {busy && <Loader2 className="h-4 w-4 animate-spin" />}
-              {isSignup ? "Forge my hero" : "Enter the arena"}
+              {isSignup ? t.auth.submitSignup : t.auth.submitLogin}
             </button>
           </form>
 
           <p className="mt-5 text-center text-xs text-muted-foreground">
-            {isSignup ? "Already a hero? " : "No hero yet? "}
+            {isSignup ? t.auth.hasAccountPrompt : t.auth.noAccountPrompt}
             <Link
               to="/auth"
               search={{ mode: isSignup ? "login" : "signup" }}
               className="font-semibold text-[color:var(--gold)] hover:underline"
             >
-              {isSignup ? "Sign in" : "Create an account"}
+              {isSignup ? t.common.signIn : t.auth.switchToSignup}
             </Link>
           </p>
         </motion.div>

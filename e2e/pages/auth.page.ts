@@ -16,7 +16,7 @@ export class AuthPage {
   get google(): Locator {
     return this.page.getByRole("button", { name: /google/i });
   }
-  /** Page heading ("Welcome back, warrior" / "Forge your hero"). */
+  /** Page heading ("Bon retour, guerrier" / "Forge ton héros"). */
   get heading(): Locator {
     return this.page.getByRole("heading", { level: 1 });
   }
@@ -28,9 +28,11 @@ export class AuthPage {
   get nameField(): Locator {
     return this.page.locator("#auth-name");
   }
-  /** The bottom link that switches between login and signup. */
+  /** The bottom link that switches between login and signup (FR default, EN tolerated). */
   get toggleModeLink(): Locator {
-    return this.page.getByRole("link", { name: /create an account|sign in/i });
+    return this.page.getByRole("link", {
+      name: /créer un compte|connexion|create an account|sign in/i,
+    });
   }
 
   async goto(mode: "login" | "signup" = "login"): Promise<void> {

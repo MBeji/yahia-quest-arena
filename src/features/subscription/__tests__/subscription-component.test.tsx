@@ -18,6 +18,9 @@ import {
   type AdminParcoursOption,
 } from "../components/parcours-entitlements-admin";
 import { ADMIN_CONTACT_PHONE } from "@/shared/constants/subscription";
+// Components render with the default-locale catalog (FR) when no provider wraps
+// them; assert via catalog keys so tests survive locale-default changes.
+import { fr } from "@/lib/i18n/fr";
 
 describe("SubscriptionPaywall", () => {
   it("surfaces the per-parcours admin contact phone (no time-based plans)", () => {
@@ -73,13 +76,19 @@ describe("ParcoursEntitlementsAdmin", () => {
       />,
     );
 
-    fireEvent.change(screen.getByLabelText("User ID"), {
+    fireEvent.change(screen.getByLabelText(fr.subscription.grantUserId), {
       target: { value: "11111111-1111-1111-1111-111111111111" },
     });
-    fireEvent.change(screen.getByLabelText("Parcours"), { target: { value: "concours-6eme" } });
-    fireEvent.change(screen.getByLabelText("Source"), { target: { value: "gift" } });
-    fireEvent.change(screen.getByLabelText("Duration (months)"), { target: { value: "3" } });
-    fireEvent.click(screen.getByText("Grant"));
+    fireEvent.change(screen.getByLabelText(fr.subscription.grantParcours), {
+      target: { value: "concours-6eme" },
+    });
+    fireEvent.change(screen.getByLabelText(fr.subscription.grantSource), {
+      target: { value: "gift" },
+    });
+    fireEvent.change(screen.getByLabelText(fr.subscription.grantMonths), {
+      target: { value: "3" },
+    });
+    fireEvent.click(screen.getByText(fr.subscription.grant));
 
     expect(onGrant).toHaveBeenCalledWith({
       userId: "11111111-1111-1111-1111-111111111111",
@@ -102,7 +111,7 @@ describe("ParcoursEntitlementsAdmin", () => {
       />,
     );
 
-    fireEvent.click(screen.getByText("Grant"));
+    fireEvent.click(screen.getByText(fr.subscription.grant));
     expect(onGrant).not.toHaveBeenCalled();
   });
 
@@ -120,10 +129,10 @@ describe("ParcoursEntitlementsAdmin", () => {
     );
 
     const activeRow = screen.getByText("Active Hero").closest("tr") as HTMLElement;
-    fireEvent.click(within(activeRow).getByText("Revoke"));
+    fireEvent.click(within(activeRow).getByText(fr.subscription.revoke));
     expect(onRevoke).toHaveBeenCalledWith("u-active", "concours-9eme");
 
     const inactiveRow = screen.getByText("Idle Hero").closest("tr") as HTMLElement;
-    expect(within(inactiveRow).getByText("Revoke").closest("button")).toBeDisabled();
+    expect(within(inactiveRow).getByText(fr.subscription.revoke).closest("button")).toBeDisabled();
   });
 });

@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import heroImg from "@/assets/hero-warrior.jpg";
 import { useT } from "@/lib/i18n";
+import { fr } from "@/lib/i18n/fr";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -30,18 +31,12 @@ const GoldenHeroCanvas = lazy(() => import("@/components/landing/golden-hero-can
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "XP Scholars — The Shonen Academy for the 6th & 9th Grade National Exams" },
-      {
-        name: "description",
-        content:
-          "Prep for the Tunisian 6th and 9th grade national exams in RPG mode — plus a free academy: General Knowledge, Brain Training and Languages. XP, streaks, duels and bosses.",
-      },
-      { property: "og:title", content: "XP Scholars — National Exams & Free Academy" },
-      {
-        property: "og:description",
-        content:
-          "6th & 9th grade exam prep + a free academy (General Knowledge, Brain Training, Languages), shonen style.",
-      },
+      // Route-static head (no per-request locale): default-locale (FR) catalog,
+      // mirroring __root.tsx. Per-locale head = future i18n increment.
+      { title: fr.meta.title },
+      { name: "description", content: fr.meta.description },
+      { property: "og:title", content: fr.meta.ogTitle },
+      { property: "og:description", content: fr.meta.ogDescription },
     ],
   }),
   component: Landing,

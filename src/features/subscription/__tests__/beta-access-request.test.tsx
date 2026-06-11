@@ -12,6 +12,9 @@ vi.mock("../beta-access.server", () => ({
 
 import { getMyBetaRequest } from "../beta-access.server";
 import { BetaAccessRequest } from "../components/beta-access-request";
+// Components render with the default-locale catalog (FR) when no provider wraps
+// them; assert via catalog keys so tests survive locale-default changes.
+import { fr } from "@/lib/i18n/fr";
 
 const mockGetMine = getMyBetaRequest as unknown as ReturnType<typeof vi.fn>;
 
@@ -26,16 +29,16 @@ describe("BetaAccessRequest", () => {
   it("shows the request CTA when the user has no request", async () => {
     mockGetMine.mockResolvedValue(null);
     renderWithClient(<BetaAccessRequest />);
-    await waitFor(() => expect(screen.getByText(/Request free access/i)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(fr.betaAccess.cta)).toBeInTheDocument());
   });
 
   it("opens the form (name/email fields) when the CTA is clicked", async () => {
     mockGetMine.mockResolvedValue(null);
     renderWithClient(<BetaAccessRequest />);
-    const cta = await screen.findByText(/Request free access/i);
+    const cta = await screen.findByText(fr.betaAccess.cta);
     fireEvent.click(cta);
-    expect(screen.getByText(/^Name$/)).toBeInTheDocument();
-    expect(screen.getByText(/^Email$/)).toBeInTheDocument();
+    expect(screen.getByText(fr.betaAccess.nameLabel)).toBeInTheDocument();
+    expect(screen.getByText(fr.betaAccess.emailLabel)).toBeInTheDocument();
   });
 
   it("shows the pending status (not the form) when a request already exists", async () => {
@@ -49,7 +52,7 @@ describe("BetaAccessRequest", () => {
       reviewedAt: null,
     });
     renderWithClient(<BetaAccessRequest />);
-    await waitFor(() => expect(screen.getByText("Pending")).toBeInTheDocument());
-    expect(screen.queryByText(/Request free access/i)).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText(fr.betaAccess.statusPending)).toBeInTheDocument());
+    expect(screen.queryByText(fr.betaAccess.cta)).not.toBeInTheDocument();
   });
 });

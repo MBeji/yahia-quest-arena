@@ -21,7 +21,7 @@ import { isRtlText } from "@/shared/lib/utils";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/subject/$subjectId")({
-  head: () => ({ meta: [{ title: "Quests · XP Scholars" }] }),
+  head: () => ({ meta: [{ title: "Quêtes · XP Scholars" }] }),
   component: SubjectPage,
 });
 

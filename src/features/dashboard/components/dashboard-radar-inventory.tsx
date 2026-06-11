@@ -22,11 +22,6 @@ type InventoryItem = {
   isHintConsumable?: boolean;
 };
 
-/** Armed-badge label per arming slot (passive streak shield vs next-quest item). */
-function armedLabel(armSlot: "next-quest" | "passive" | null): string {
-  return armSlot === "passive" ? "Actif · protège ta série" : "Actif · prochaine quête";
-}
-
 type DashboardRadarInventoryProps = {
   radarData: RadarPoint[];
   inventory: InventoryItem[];
@@ -47,12 +42,15 @@ export function DashboardRadarInventory({
   onActivate,
 }: DashboardRadarInventoryProps) {
   const t = useT();
+  /** Armed-badge label per arming slot (passive streak shield vs next-quest item). */
+  const armedLabel = (armSlot: "next-quest" | "passive" | null): string =>
+    armSlot === "passive" ? t.dashboard.armedPassive : t.dashboard.armedQuest;
   const avatarEmoji = avatarEmojiForSlug(avatarSlug);
   const initials = (displayName ?? "").trim().slice(0, 2).toUpperCase() || "?";
   return (
     <>
       <h2 className="mb-4 flex items-center gap-2 font-display text-xl font-bold">
-        <Trophy className="h-5 w-5 text-[color:var(--neon-gold)]" /> Success Radar
+        <Trophy className="h-5 w-5 text-[color:var(--neon-gold)]" /> {t.dashboard.radarTitle}
       </h2>
       <div className="rounded-2xl border border-border/50 bg-card/60 p-4 backdrop-blur-md">
         <div className="h-72 w-full">
@@ -74,14 +72,14 @@ export function DashboardRadarInventory({
           </ResponsiveContainer>
         </div>
         <p className="px-2 pb-2 text-center text-xs text-muted-foreground">
-          Your average scores by attribute.
+          {t.dashboard.radarCaption}
         </p>
       </div>
 
       <div className="mt-6 rounded-2xl border border-border/50 bg-black/60 p-4 backdrop-blur-md">
         <div className="mb-3 flex items-center justify-between gap-2">
           <h3 className="flex items-center gap-2 font-display text-lg font-bold">
-            <Backpack className="h-4 w-4 text-[color:var(--gold)]" /> Inventory
+            <Backpack className="h-4 w-4 text-[color:var(--gold)]" /> {t.dashboard.inventoryTitle}
           </h3>
           <Avatar className="h-9 w-9 border border-[color:var(--gold)]/40">
             <AvatarFallback
@@ -109,7 +107,7 @@ export function DashboardRadarInventory({
                     </div>
                     {item.isEquipped && (
                       <div className="text-xs uppercase tracking-widest text-[color:var(--success)]">
-                        Equipped
+                        {t.dashboard.shopEquipped}
                       </div>
                     )}
                   </div>
@@ -124,10 +122,10 @@ export function DashboardRadarInventory({
                       <button
                         disabled={isActivatePending}
                         onClick={() => onActivate(item.code)}
-                        aria-label={`Activer ${item.name}`}
+                        aria-label={`${t.dashboard.shopActivate} ${item.name}`}
                         className="rounded-lg bg-[image:var(--gradient-gold)] px-3 py-1.5 text-xs font-bold text-black shadow-gold disabled:opacity-40"
                       >
-                        Activer
+                        {t.dashboard.shopActivate}
                       </button>
                     )}
                   </div>
@@ -145,7 +143,7 @@ export function DashboardRadarInventory({
             ))
           ) : (
             <div className="rounded-xl bg-background/30 p-4 text-sm text-muted-foreground">
-              Your inventory is still empty.
+              {t.dashboard.inventoryEmpty}
             </div>
           )}
         </div>
