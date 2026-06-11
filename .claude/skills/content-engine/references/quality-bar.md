@@ -71,8 +71,8 @@ Beyond the distractor/explanation rules above, every item must pass these craft 
 - **Homogeneous options.** Same grammatical form, same order of magnitude of length and detail.
   The correct answer must not be recognizable as the longest, most precise, or most hedged option.
 - **Deterministic option order.** Sort numeric options ascending (or descending — consistently);
-  order text options logically (chronological, alphabetical, or by length). Randomizing the *key*
-  is the engine's job via your key balance — the *display* order should look deliberate.
+  order text options logically (chronological, alphabetical, or by length). Randomizing the _key_
+  is the engine's job via your key balance — the _display_ order should look deliberate.
 - **No option leaks.** An option must not be contradicted or confirmed by the wording of the stem
   or of another option; distractors must not overlap (two options that mean the same thing).
 - **Difficulty tag is honest.** A d1 question is answerable by a student who just read the course;
@@ -92,12 +92,14 @@ verification pass** over every file you wrote:
    every letter used at least once per exercise where possible.
 4. **Scan for duplicates / near-duplicates** (same fact or computation re-asked with cosmetic
    changes) within and across the chapter's exercises and quiz.
-5. **Scan notation**: zero Arabic-Indic digits, true minus `−` in formulas, standard units
-   (see `math-and-notation.md`).
+5. **Scan notation**: zero Arabic-Indic digits, true minus `−` in formulas, standard units, and —
+   in `ar` content — **no plain space inside grouped numbers** (`\d \d{3}` outside `<svg>` must be
+   zero; use U+00A0, else the bidi algorithm swaps the groups at render time — see
+   `math-and-notation.md`).
 6. **Check the ramp**: per-question difficulty is non-decreasing within each exercise and matches
    the exercise tier; the quiz stays at d1–2.
 
-Only after this pass run `content:check` and `content:qa:strict`. To audit *existing* content with
+Only after this pass run `content:check` and `content:qa:strict`. To audit _existing_ content with
 the same rigor, use the **`content-audit`** skill.
 
 ## Non-academic content — every correction is a mini-lesson
