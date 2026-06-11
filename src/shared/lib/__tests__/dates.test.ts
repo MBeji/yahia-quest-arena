@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getCurrentWeekStartUtc, getTodayUtc } from "@/shared/lib/dates";
+import { getCurrentWeekStartUtc, getTodayUtc, getYesterdayUtc } from "@/shared/lib/dates";
 
 describe("getTodayUtc", () => {
   it("formats a date as YYYY-MM-DD in UTC", () => {
@@ -14,6 +14,27 @@ describe("getTodayUtc", () => {
     const input = new Date("2026-06-02T00:00:00Z");
     const before = input.getTime();
     getTodayUtc(input);
+    expect(input.getTime()).toBe(before);
+  });
+});
+
+describe("getYesterdayUtc", () => {
+  it("returns the day before in UTC", () => {
+    expect(getYesterdayUtc(new Date("2026-06-02T13:45:00Z"))).toBe("2026-06-01");
+  });
+
+  it("handles month boundaries", () => {
+    expect(getYesterdayUtc(new Date("2026-06-01T00:00:00Z"))).toBe("2026-05-31");
+  });
+
+  it("uses UTC fields, not local time", () => {
+    expect(getYesterdayUtc(new Date("2026-06-02T23:30:00Z"))).toBe("2026-06-01");
+  });
+
+  it("does not mutate the input", () => {
+    const input = new Date("2026-06-02T00:00:00Z");
+    const before = input.getTime();
+    getYesterdayUtc(input);
     expect(input.getTime()).toBe(before);
   });
 });

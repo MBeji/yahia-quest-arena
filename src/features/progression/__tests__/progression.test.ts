@@ -61,46 +61,69 @@ function mockQuery(data: unknown, error: unknown = null) {
 // recoverStreak
 // =============================================================================
 describe("gamification.progression — recoverStreak", () => {
+  // Dates relative to the real clock the server fn reads (getTodayUtc/getYesterdayUtc).
+  const TODAY = new Date().toISOString().slice(0, 10);
+  const YESTERDAY = new Date(Date.now() - 86_400_000).toISOString().slice(0, 10);
+  const BROKEN = "2020-01-01"; // far enough back that the streak is always broken
+
   beforeEach(() => {
     vi.resetModules();
     mockFrom.mockReset();
     mockRpc.mockReset();
   });
 
-  it("recovers streak for 15 coins", async () => {
+  function armProfile(profile: Record<string, unknown>) {
     mockFrom.mockImplementation(() => {
-      const chain = mockQuery({
-        id: "user-123",
-        yahia_coins: 50,
-        current_streak: 0,
-        longest_streak: 7,
-        last_active_date: "2026-05-30",
-      });
+      const chain = mockQuery(profile);
       chain.update = vi.fn().mockReturnValue(mockQuery(null));
       return chain;
+    });
+  }
+
+  it("recovers a broken streak and PRESERVES its pre-break value (not reset to 1)", async () => {
+    armProfile({
+      id: "user-123",
+      yahia_coins: 50,
+      current_streak: 10,
+      longest_streak: 10,
+      last_active_date: BROKEN,
     });
     mockRpc.mockResolvedValue({ data: null, error: null });
 
     const { recoverStreak } = await import("@/features/progression");
-    const result = await (recoverStreak as unknown as () => Promise<unknown>)();
-
-    const r = result as Record<string, unknown>;
+    const r = (await (recoverStreak as unknown as () => Promise<unknown>)()) as Record<
+      string,
+      unknown
+    >;
     expect(r.success).toBe(true);
-    expect(r.newStreak).toBe(1);
+    expect(r.newStreak).toBe(10);
     expect(r.coinsSpent).toBe(15);
     expect(r.remainingCoins).toBe(35);
   });
 
-  it("rejects when streak is already active", async () => {
-    mockFrom.mockImplementation(() =>
-      mockQuery({
-        id: "user-123",
-        yahia_coins: 50,
-        current_streak: 3,
-        longest_streak: 7,
-        last_active_date: "2026-06-01",
-      }),
+  it("rejects when the streak was counted today (still active)", async () => {
+    armProfile({
+      id: "user-123",
+      yahia_coins: 50,
+      current_streak: 3,
+      longest_streak: 7,
+      last_active_date: TODAY,
+    });
+
+    const { recoverStreak } = await import("@/features/progression");
+    await expect((recoverStreak as unknown as () => Promise<unknown>)()).rejects.toThrow(
+      "streak est actif",
     );
+  });
+
+  it("rejects when the streak was counted yesterday (still alive)", async () => {
+    armProfile({
+      id: "user-123",
+      yahia_coins: 50,
+      current_streak: 4,
+      longest_streak: 7,
+      last_active_date: YESTERDAY,
+    });
 
     const { recoverStreak } = await import("@/features/progression");
     await expect((recoverStreak as unknown as () => Promise<unknown>)()).rejects.toThrow(
@@ -109,15 +132,13 @@ describe("gamification.progression — recoverStreak", () => {
   });
 
   it("rejects when no previous streak exists", async () => {
-    mockFrom.mockImplementation(() =>
-      mockQuery({
-        id: "user-123",
-        yahia_coins: 50,
-        current_streak: 0,
-        longest_streak: 0,
-        last_active_date: null,
-      }),
-    );
+    armProfile({
+      id: "user-123",
+      yahia_coins: 50,
+      current_streak: 0,
+      longest_streak: 0,
+      last_active_date: null,
+    });
 
     const { recoverStreak } = await import("@/features/progression");
     await expect((recoverStreak as unknown as () => Promise<unknown>)()).rejects.toThrow(
@@ -126,15 +147,13 @@ describe("gamification.progression — recoverStreak", () => {
   });
 
   it("rejects when insufficient coins", async () => {
-    mockFrom.mockImplementation(() =>
-      mockQuery({
-        id: "user-123",
-        yahia_coins: 5,
-        current_streak: 0,
-        longest_streak: 7,
-        last_active_date: "2026-05-30",
-      }),
-    );
+    armProfile({
+      id: "user-123",
+      yahia_coins: 5,
+      current_streak: 7,
+      longest_streak: 7,
+      last_active_date: BROKEN,
+    });
 
     const { recoverStreak } = await import("@/features/progression");
     await expect((recoverStreak as unknown as () => Promise<unknown>)()).rejects.toThrow(
@@ -143,15 +162,13 @@ describe("gamification.progression — recoverStreak", () => {
   });
 
   it("throws on spend_coins RPC error", async () => {
-    mockFrom.mockImplementation(() =>
-      mockQuery({
-        id: "user-123",
-        yahia_coins: 50,
-        current_streak: 0,
-        longest_streak: 7,
-        last_active_date: "2026-05-30",
-      }),
-    );
+    armProfile({
+      id: "user-123",
+      yahia_coins: 50,
+      current_streak: 7,
+      longest_streak: 7,
+      last_active_date: BROKEN,
+    });
     mockRpc.mockResolvedValue({ data: null, error: { message: "Insufficient funds" } });
 
     const { recoverStreak } = await import("@/features/progression");
