@@ -1,5 +1,5 @@
 {
-  "title": "⚔️ زعيم الفصل: الأشعّة والانسحاب — المعركة الكبرى",
+  "title": "⚔️ زعيم الفصل ⭐⭐⭐: الأشعّة والانسحاب — المعركة الكبرى",
   "difficulty": 3,
   "mode": "boss",
   "xpReward": 120,
@@ -19,15 +19,15 @@
       "difficulty": 2
     },
     {
-      "prompt": "O هو منتصف [AC] في متوازي الأضلاع ABCD. ما ناتج $\\overrightarrow{BA} + \\overrightarrow{BC}$؟",
+      "prompt": "في متوازي الأضلاع ABCD، ما ناتج $\\overrightarrow{BA} + \\overrightarrow{BC}$؟",
       "options": [
         { "id": "a", "text": "$\\overrightarrow{BD}$" },
-        { "id": "b", "text": "$2\\overrightarrow{BO}$" },
+        { "id": "b", "text": "$\\overrightarrow{DB}$" },
         { "id": "c", "text": "$\\overrightarrow{AC}$" },
         { "id": "d", "text": "$\\overrightarrow{0}$" }
       ],
-      "correctOption": "b",
-      "explanation": "لأيّ نقطة O منتصف [AC]: $\\overrightarrow{BA} + \\overrightarrow{BC} = 2\\overrightarrow{BO}$. هذه النتيجة عامّة: مجموع شعاعين من نقطة إلى طرفَي قطعة يساوي ضعف الشعاع من تلك النقطة إلى المنتصف.",
+      "correctOption": "a",
+      "explanation": "بقاعدة متوازي الأضلاع: مجموع شعاعين من نفس المبدأ يساوي شعاع قطر متوازي الأضلاع المبنيّ عليهما. هنا $\\overrightarrow{BA} + \\overrightarrow{BC} = \\overrightarrow{BD}$ (القطر المنطلق من B). الخطأ الشائع: عكس المنحى فاختيار $\\overrightarrow{DB}$، أو الخلط مع القطر الآخر $\\overrightarrow{AC}$.",
       "difficulty": 3
     },
     {

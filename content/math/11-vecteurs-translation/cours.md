@@ -21,7 +21,7 @@
 
 $$ \overrightarrow{AB} = \overrightarrow{CD} \iff \text{نفس الاتجاه + نفس المنحى + نفس الطول} $$
 
-**نتيجة هندسية**: $\overrightarrow{AB} = \overrightarrow{CD}$ إذا وفقط إذا كان ABDC متوازي أضلاع (أو كانت المنتصفين متشاركتين).
+**نتيجة هندسية**: $\overrightarrow{AB} = \overrightarrow{CD}$ إذا وفقط إذا كان ABDC متوازي أضلاع (أي إذا كان للقطعتَين [AD] و[BC] المنتصف نفسه).
 
 مثال: إذا كان ABCD متوازي أضلاع فإنّ $\overrightarrow{AB} = \overrightarrow{DC}$ و $\overrightarrow{AD} = \overrightarrow{BC}$.
 
@@ -86,7 +86,7 @@ $$\overrightarrow{AB} + \overrightarrow{BC} = \overrightarrow{AC} \quad \Rightar
 
 ABCD متوازي أضلاع $\iff$ $\overrightarrow{AB} = \overrightarrow{DC}$
 
-وهذا يعادل: $\overrightarrow{AB} = \overrightarrow{DC}$ أي النقاط A وB وC وD تُشكّل متوازي أضلاع بهذا الترتيب.
+معنى ذلك أنّ الضلعَين [AB] و[DC] متوازيان ومتساويان في الطول وبالمنحى نفسه.
 
 **النتائج:**
 

@@ -1,44 +1,44 @@
 {
-  "title": "📝 سبر تطبيقي: مسألة هندسية ومسألة واقعية",
+  "title": "⭐⭐ 📝 سبر تطبيقي: مسألة هندسية ومسألة واقعية",
   "difficulty": 2,
   "mode": "practice",
-  "xpReward": 50,
-  "rewardCoins": 10,
+  "xpReward": 75,
+  "rewardCoins": 15,
   "displayOrder": 1,
   "questions": [
     {
       "prompt": "المسألة الأولى (هندسة): ABC مثلّث قائم في A حيث AB = 8 cm وAC = 6 cm.\n\nالسؤال (1): احسب طول الوتر BC.",
       "options": [
-        { "id": "a", "text": "10 cm" },
-        { "id": "b", "text": "14 cm" },
-        { "id": "c", "text": "$\\sqrt{28}$ cm" },
-        { "id": "d", "text": "7 cm" }
+        { "id": "a", "text": "7 cm" },
+        { "id": "b", "text": "10 cm" },
+        { "id": "c", "text": "14 cm" },
+        { "id": "d", "text": "$\\sqrt{28}$ cm" }
       ],
-      "correctOption": "a",
+      "correctOption": "b",
       "explanation": "بنظرية فيثاغورس في المثلّث القائم في A: $BC^2 = AB^2 + AC^2 = 8^2 + 6^2 = 64 + 36 = 100$، إذن $BC = \\sqrt{100} = 10$ cm. الخطأ الشائع (b): جمع الضلعين $8+6$ مباشرةً.",
       "difficulty": 1
     },
     {
       "prompt": "تابع المسألة الأولى: M نقطة من [AB] وN نقطة من [AC] بحيث (MN) ∥ (BC) وAM = 4 cm.\n\nالسؤال (2): احسب طول MN.",
       "options": [
-        { "id": "a", "text": "5 cm" },
-        { "id": "b", "text": "6 cm" },
-        { "id": "c", "text": "4 cm" },
-        { "id": "d", "text": "2,5 cm" }
+        { "id": "a", "text": "2,5 cm" },
+        { "id": "b", "text": "4 cm" },
+        { "id": "c", "text": "5 cm" },
+        { "id": "d", "text": "6 cm" }
       ],
-      "correctOption": "a",
+      "correctOption": "c",
       "explanation": "بما أنّ (MN) ∥ (BC) نطبّق نظرية طاليس: $\\frac{MN}{BC} = \\frac{AM}{AB} = \\frac{4}{8} = \\frac{1}{2}$. إذن $MN = BC \\times \\frac{1}{2} = 10 \\times \\frac{1}{2} = 5$ cm. (استثمرنا قيمة $BC=10$ من السؤال السابق.)",
       "difficulty": 2
     },
     {
       "prompt": "تابع المسألة الأولى (نفس المعطيات: AM = 4 cm، (MN) ∥ (BC)).\n\nالسؤال (3): احسب طول AN.",
       "options": [
-        { "id": "a", "text": "3 cm" },
-        { "id": "b", "text": "2 cm" },
+        { "id": "a", "text": "2 cm" },
+        { "id": "b", "text": "3 cm" },
         { "id": "c", "text": "4 cm" },
         { "id": "d", "text": "4,5 cm" }
       ],
-      "correctOption": "a",
+      "correctOption": "b",
       "explanation": "بنظرية طاليس: $\\frac{AN}{AC} = \\frac{AM}{AB} = \\frac{1}{2}$. إذن $AN = AC \\times \\frac{1}{2} = 6 \\times \\frac{1}{2} = 3$ cm. الخطأ الشائع: الخلط بين AN وMN.",
       "difficulty": 2
     },
@@ -57,24 +57,24 @@
     {
       "prompt": "تابع المسألة الثانية: $\\begin{cases} 3x + 2y = 13 \\\\ 2x + 2y = 10 \\end{cases}$\n\nالسؤال (2): ما ثمن الكرّاسة الواحدة $x$؟",
       "options": [
-        { "id": "a", "text": "3 دنانير" },
-        { "id": "b", "text": "2 دينار" },
+        { "id": "a", "text": "2 دينار" },
+        { "id": "b", "text": "3 دنانير" },
         { "id": "c", "text": "4 دنانير" },
         { "id": "d", "text": "5 دنانير" }
       ],
-      "correctOption": "a",
+      "correctOption": "b",
       "explanation": "نطرح المعادلة الثانية من الأولى: $(3x+2y)-(2x+2y) = 13-10$، إذن $x = 3$. ثمن الكرّاسة 3 دنانير. التحقّق يأتي في السؤال التالي.",
       "difficulty": 2
     },
     {
       "prompt": "تابع المسألة الثانية (وجدنا $x = 3$).\n\nالسؤال (3): ما ثمن القلم الواحد $y$؟ (وتحقّق من النتيجتَين)",
       "options": [
-        { "id": "a", "text": "2 دينار" },
-        { "id": "b", "text": "3 دنانير" },
-        { "id": "c", "text": "1 دينار" },
+        { "id": "a", "text": "1 دينار" },
+        { "id": "b", "text": "2 دينار" },
+        { "id": "c", "text": "3 دنانير" },
         { "id": "d", "text": "4 دنانير" }
       ],
-      "correctOption": "a",
+      "correctOption": "b",
       "explanation": "نعوّض $x=3$ في $2x + 2y = 10$: $6 + 2y = 10$، إذن $2y = 4$ و$y = 2$ دينار. التحقّق في المعادلة الأولى: $3(3) + 2(2) = 9 + 4 = 13$ ✓. إذن الكرّاسة بـ 3 دنانير والقلم بدينارَين.",
       "difficulty": 2
     }

@@ -1,5 +1,5 @@
 {
-  "title": "⚔️ زعيم الفصل: نظرية طاليس والأطوال المجهولة",
+  "title": "⚔️ زعيم الفصل ⭐⭐⭐: نظرية طاليس والأطوال المجهولة",
   "difficulty": 3,
   "mode": "boss",
   "xpReward": 120,
@@ -12,22 +12,22 @@
         { "id": "a", "text": "4 cm" },
         { "id": "b", "text": "5 cm" },
         { "id": "c", "text": "6 cm" },
-        { "id": "d", "text": "4.5 cm" }
+        { "id": "d", "text": "4,5 cm" }
       ],
       "correctOption": "b",
       "explanation": "AB = AM + MB = 6 + 4 = 10 cm. نسبة التشابه = AM/AB = 6/10 = 3/5. إذن MN/BC = 3/5، ومنه BC = MN ÷ (3/5) = 3 × 5/3 = 5 cm.",
       "difficulty": 2
     },
     {
-      "prompt": "في مثلّث DEF، (MN) ∥ (EF) مع DM = 5 cm وME = 3 cm وNF = 1.8 cm. أوجد DN = x.",
+      "prompt": "في مثلّث DEF، (MN) ∥ (EF) مع DM = 5 cm وME = 3 cm وNF = 1,8 cm. أوجد DN = x.",
       "options": [
         { "id": "a", "text": "x = 2 cm" },
-        { "id": "b", "text": "x = 2.5 cm" },
+        { "id": "b", "text": "x = 2,5 cm" },
         { "id": "c", "text": "x = 3 cm" },
         { "id": "d", "text": "x = 4 cm" }
       ],
       "correctOption": "c",
-      "explanation": "DE = DM + ME = 5 + 3 = 8 cm. DF = DN + NF = x + 1.8. نظرية طاليس: DM/DE = DN/DF. إذن 5/8 = x/(x + 1.8). بالتقاطع: 8x = 5(x + 1.8) = 5x + 9. ومنه 3x = 9، أي x = 3 cm.",
+      "explanation": "DE = DM + ME = 5 + 3 = 8 cm. DF = DN + NF = x + 1,8. نظرية طاليس: DM/DE = DN/DF. إذن 5/8 = x/(x + 1,8). بالتقاطع: 8x = 5(x + 1,8) = 5x + 9. ومنه 3x = 9، أي x = 3 cm.",
       "difficulty": 3
     },
     {
@@ -35,11 +35,11 @@
       "options": [
         { "id": "a", "text": "6 cm" },
         { "id": "b", "text": "7 cm" },
-        { "id": "c", "text": "7.5 cm" },
+        { "id": "c", "text": "7,5 cm" },
         { "id": "d", "text": "8 cm" }
       ],
       "correctOption": "c",
-      "explanation": "بنظرية طاليس في وضعية الفراشة: OA/OC = AB/CD. إذن 4/6 = 5/CD، ومنه CD = 5 × 6/4 = 30/4 = 7.5 cm.",
+      "explanation": "بنظرية طاليس في وضعية الفراشة: OA/OC = AB/CD. إذن 4/6 = 5/CD، ومنه CD = 5 × 6/4 = 30/4 = 7,5 cm.",
       "difficulty": 2
     },
     {

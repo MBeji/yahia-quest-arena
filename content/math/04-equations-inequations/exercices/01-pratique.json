@@ -1,5 +1,5 @@
 {
-  "title": "تمرين: حلّ المعادلات والمتراجحات",
+  "title": "⭐⭐ تمرين: حلّ المعادلات والمتراجحات",
   "difficulty": 2,
   "mode": "practice",
   "xpReward": 75,
@@ -9,48 +9,48 @@
     {
       "prompt": "ما حلّ المعادلة: 2x + 5 = 13 ؟",
       "options": [
-        { "id": "a", "text": "x = 4" },
-        { "id": "b", "text": "x = 9" },
-        { "id": "c", "text": "x = 3" },
-        { "id": "d", "text": "x = 8" }
+        { "id": "a", "text": "x = 3" },
+        { "id": "b", "text": "x = 4" },
+        { "id": "c", "text": "x = 8" },
+        { "id": "d", "text": "x = 9" }
       ],
-      "correctOption": "a",
+      "correctOption": "b",
       "explanation": "2x + 5 = 13 → 2x = 13 − 5 = 8 → x = 4. تحقّق: 2(4) + 5 = 13 ✓",
       "difficulty": 1
     },
     {
       "prompt": "ما حلّ المعادلة: 5x − 3 = 3x + 7 ؟",
       "options": [
-        { "id": "a", "text": "x = 2" },
-        { "id": "b", "text": "x = 5" },
-        { "id": "c", "text": "x = 1" },
+        { "id": "a", "text": "x = 1" },
+        { "id": "b", "text": "x = 2" },
+        { "id": "c", "text": "x = 5" },
         { "id": "d", "text": "x = 10" }
       ],
-      "correctOption": "b",
+      "correctOption": "c",
       "explanation": "5x − 3 = 3x + 7 → 5x − 3x = 7 + 3 → 2x = 10 → x = 5. تحقّق: 5(5)−3 = 22 و 3(5)+7 = 22 ✓",
       "difficulty": 2
     },
     {
       "prompt": "بتطبيق مبدأ الجداء المعدوم، ما حلول المعادلة (x − 4)(x + 2) = 0 ؟",
       "options": [
-        { "id": "a", "text": "x = 4 أو x = 2" },
-        { "id": "b", "text": "x = 4 أو x = −2" },
+        { "id": "a", "text": "x = 4 أو x = −2" },
+        { "id": "b", "text": "x = 4 أو x = 2" },
         { "id": "c", "text": "x = −4 أو x = 2" },
         { "id": "d", "text": "x = −4 أو x = −2" }
       ],
-      "correctOption": "b",
+      "correctOption": "a",
       "explanation": "a × b = 0 ⟺ a = 0 أو b = 0. إمّا x − 4 = 0 فـ x = 4، وإمّا x + 2 = 0 فـ x = −2.",
       "difficulty": 2
     },
     {
       "prompt": "ما حلّ المتراجحة: 3x + 6 > 0 ؟",
       "options": [
-        { "id": "a", "text": "x > −2" },
-        { "id": "b", "text": "x < −2" },
-        { "id": "c", "text": "x > 2" },
-        { "id": "d", "text": "x < 2" }
+        { "id": "a", "text": "x < −2" },
+        { "id": "b", "text": "x < 2" },
+        { "id": "c", "text": "x > −2" },
+        { "id": "d", "text": "x > 2" }
       ],
-      "correctOption": "a",
+      "correctOption": "c",
       "explanation": "3x + 6 > 0 → 3x > −6 → نقسم على 3 (موجب، لا قلب) → x > −2. الحلّ: x ∈ ]−2 ، +∞[.",
       "difficulty": 2
     },
@@ -69,12 +69,12 @@
     {
       "prompt": "ما حلّ المعادلة: 3(x − 2) = 2x + 1 ؟",
       "options": [
-        { "id": "a", "text": "x = 5" },
-        { "id": "b", "text": "x = 7" },
-        { "id": "c", "text": "x = 3" },
-        { "id": "d", "text": "x = 1" }
+        { "id": "a", "text": "x = 1" },
+        { "id": "b", "text": "x = 3" },
+        { "id": "c", "text": "x = 5" },
+        { "id": "d", "text": "x = 7" }
       ],
-      "correctOption": "b",
+      "correctOption": "d",
       "explanation": "3(x − 2) = 2x + 1 → 3x − 6 = 2x + 1 → 3x − 2x = 1 + 6 → x = 7. تحقّق: 3(7−2) = 15 و 2(7)+1 = 15 ✓",
       "difficulty": 2
     }

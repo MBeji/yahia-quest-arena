@@ -1,9 +1,9 @@
 {
-  "title": "تمرين: الأشعّة وعلاقة شال",
+  "title": "⭐⭐ تمرين: الأشعّة وعلاقة شال",
   "difficulty": 2,
   "mode": "practice",
-  "xpReward": 65,
-  "rewardCoins": 13,
+  "xpReward": 75,
+  "rewardCoins": 15,
   "displayOrder": 1,
   "questions": [
     {
@@ -34,12 +34,12 @@
       "prompt": "ما ناتج $\\overrightarrow{AB} + \\overrightarrow{BA}$؟",
       "options": [
         { "id": "a", "text": "$2\\overrightarrow{AB}$" },
-        { "id": "b", "text": "$\\overrightarrow{AA}$" },
+        { "id": "b", "text": "$\\overrightarrow{BA}$" },
         { "id": "c", "text": "$\\overrightarrow{0}$" },
         { "id": "d", "text": "$\\overrightarrow{AB}$" }
       ],
       "correctOption": "c",
-      "explanation": "بتطبيق شال: $\\overrightarrow{AB} + \\overrightarrow{BA} = \\overrightarrow{AA} = \\overrightarrow{0}$. أي أنّ $\\overrightarrow{BA} = -\\overrightarrow{AB}$ وهو الشعاع المعاكس.",
+      "explanation": "بتطبيق شال: $\\overrightarrow{AB} + \\overrightarrow{BA} = \\overrightarrow{AA} = \\overrightarrow{0}$. فالشعاع $\\overrightarrow{BA} = -\\overrightarrow{AB}$ هو الشعاع المعاكس، ومجموع شعاع ومعاكسه هو الشعاع الصفري — لا $\\overrightarrow{AB}$ ولا $\\overrightarrow{BA}$.",
       "difficulty": 1
     },
     {

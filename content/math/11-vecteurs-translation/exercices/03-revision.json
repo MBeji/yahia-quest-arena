@@ -1,5 +1,5 @@
 {
-  "title": "تمرين مراجعة: الأشعّة والانسحاب (نمط امتحان)",
+  "title": "⭐⭐ تمرين مراجعة: الأشعّة والانسحاب (نمط امتحان)",
   "difficulty": 2,
   "mode": "practice",
   "xpReward": 70,
@@ -60,10 +60,10 @@
         { "id": "a", "text": "$\\overrightarrow{0}$" },
         { "id": "b", "text": "$\\overrightarrow{AC}$" },
         { "id": "c", "text": "$2\\overrightarrow{AB}$" },
-        { "id": "d", "text": "$\\overrightarrow{AA}$" }
+        { "id": "d", "text": "$\\overrightarrow{CA}$" }
       ],
       "correctOption": "a",
-      "explanation": "بتطبيق شال تدريجيًا: $\\overrightarrow{AB} + \\overrightarrow{BC} = \\overrightarrow{AC}$، ثمّ $\\overrightarrow{AC} + \\overrightarrow{CA} = \\overrightarrow{AA} = \\overrightarrow{0}$. مجموع الأشعّة على مضلّع مغلق يساوي دائمًا $\\overrightarrow{0}$.",
+      "explanation": "بتطبيق شال تدريجيًا: $\\overrightarrow{AB} + \\overrightarrow{BC} = \\overrightarrow{AC}$، ثمّ $\\overrightarrow{AC} + \\overrightarrow{CA} = \\overrightarrow{AA} = \\overrightarrow{0}$. مجموع الأشعّة على مضلّع مغلق يساوي دائمًا $\\overrightarrow{0}$ — التوقّف عند $\\overrightarrow{AC}$ أو $\\overrightarrow{CA}$ يعني نسيان الحدّ الأخير من المجموع.",
       "difficulty": 2
     },
     {
