@@ -7,75 +7,75 @@
   "displayOrder": 1,
   "questions": [
     {
-      "prompt": "ما ناتج $\\overrightarrow{AB} + \\overrightarrow{BC}$ وفق علاقة شال؟",
+      "prompt": "ما ناتج مجموع الشعاعين AB + BC وفق علاقة شال؟",
       "options": [
-        { "id": "a", "text": "$\\overrightarrow{AC}$" },
-        { "id": "b", "text": "$\\overrightarrow{CA}$" },
-        { "id": "c", "text": "$\\overrightarrow{BA}$" },
-        { "id": "d", "text": "$\\overrightarrow{0}$" }
+        { "id": "a", "text": "AC" },
+        { "id": "b", "text": "CA" },
+        { "id": "c", "text": "BA" },
+        { "id": "d", "text": "الشعاع الصفري" }
       ],
       "correctOption": "a",
-      "explanation": "علاقة شال تنصّ على: $\\overrightarrow{AB} + \\overrightarrow{BC} = \\overrightarrow{AC}$. نتتبّع الحروف: نبدأ من A وننتهي في C مرورًا بـ B.",
+      "explanation": "علاقة شال تنصّ على: AB + BC = AC. نتتبّع الحروف: نبدأ من A وننتهي في C مرورًا بـ B.",
       "difficulty": 1
     },
     {
-      "prompt": "ABCD متوازي أضلاع. أيّ من المساواات التالية صحيحة؟",
+      "prompt": "ABCD متوازي أضلاع. أيّ من المساواات الشعاعية التالية صحيحة؟",
       "options": [
-        { "id": "a", "text": "$\\overrightarrow{AB} = \\overrightarrow{CD}$" },
-        { "id": "b", "text": "$\\overrightarrow{AB} = \\overrightarrow{DC}$" },
-        { "id": "c", "text": "$\\overrightarrow{AB} = \\overrightarrow{CB}$" },
-        { "id": "d", "text": "$\\overrightarrow{AD} = \\overrightarrow{CB}$" }
+        { "id": "a", "text": "AB = CD" },
+        { "id": "b", "text": "AB = DC" },
+        { "id": "c", "text": "AB = CB" },
+        { "id": "d", "text": "AD = CB" }
       ],
       "correctOption": "b",
-      "explanation": "في متوازي الأضلاع ABCD: الضلعان AB وDC متوازيان ومتساويان في الطول ونفس المنحى، إذن $\\overrightarrow{AB} = \\overrightarrow{DC}$. انتبه: $\\overrightarrow{CD}$ معاكس المنحى لـ $\\overrightarrow{DC}$.",
+      "explanation": "في متوازي الأضلاع ABCD: الضلعان AB وDC متوازيان ومتساويان في الطول وبالمنحى نفسه، إذن AB = DC. انتبه: الشعاع CD معاكس المنحى للشعاع DC.",
       "difficulty": 2
     },
     {
-      "prompt": "ما ناتج $\\overrightarrow{AB} + \\overrightarrow{BA}$؟",
+      "prompt": "ما ناتج مجموع الشعاعين AB + BA؟",
       "options": [
-        { "id": "a", "text": "$2\\overrightarrow{AB}$" },
-        { "id": "b", "text": "$\\overrightarrow{BA}$" },
-        { "id": "c", "text": "$\\overrightarrow{0}$" },
-        { "id": "d", "text": "$\\overrightarrow{AB}$" }
+        { "id": "a", "text": "2AB" },
+        { "id": "b", "text": "BA" },
+        { "id": "c", "text": "الشعاع الصفري" },
+        { "id": "d", "text": "AB" }
       ],
       "correctOption": "c",
-      "explanation": "بتطبيق شال: $\\overrightarrow{AB} + \\overrightarrow{BA} = \\overrightarrow{AA} = \\overrightarrow{0}$. فالشعاع $\\overrightarrow{BA} = -\\overrightarrow{AB}$ هو الشعاع المعاكس، ومجموع شعاع ومعاكسه هو الشعاع الصفري — لا $\\overrightarrow{AB}$ ولا $\\overrightarrow{BA}$.",
+      "explanation": "بتطبيق شال: AB + BA = AA = الشعاع الصفري. فالشعاع BA هو معاكس الشعاع AB، ومجموع شعاع ومعاكسه هو الشعاع الصفري — لا AB ولا BA.",
       "difficulty": 1
     },
     {
-      "prompt": "M نقطة في المستوي. صورتها بالانسحاب ذي الشعاع $\\overrightarrow{AB}$ هي النقطة M' التي تحقّق:",
+      "prompt": "M نقطة في المستوي. صورتها بالانسحاب ذي الشعاع AB هي النقطة M' التي تحقّق:",
       "options": [
-        { "id": "a", "text": "$\\overrightarrow{M'M} = \\overrightarrow{AB}$" },
-        { "id": "b", "text": "$\\overrightarrow{MM'} = \\overrightarrow{AB}$" },
-        { "id": "c", "text": "$MM' = 0$" },
-        { "id": "d", "text": "$M' = M$" }
+        { "id": "a", "text": "M'M = AB (شعاعان)" },
+        { "id": "b", "text": "MM' = AB (شعاعان)" },
+        { "id": "c", "text": "MM' = 0 (طول)" },
+        { "id": "d", "text": "M' = M" }
       ],
       "correctOption": "b",
-      "explanation": "الانسحاب ذو الشعاع $\\overrightarrow{AB}$ ينقل كلّ نقطة M إلى M' بحيث $\\overrightarrow{MM'} = \\overrightarrow{AB}$. المنشأ هو M والطرف هو M'.",
+      "explanation": "الانسحاب ذو الشعاع AB ينقل كلّ نقطة M إلى M' بحيث يكون الشعاع MM' مساويًا للشعاع AB. المنشأ هو M والطرف هو M'.",
       "difficulty": 2
     },
     {
-      "prompt": "ما ناتج $\\overrightarrow{AB} + \\overrightarrow{BC} + \\overrightarrow{CD}$؟",
+      "prompt": "ما ناتج مجموع الأشعّة AB + BC + CD؟",
       "options": [
-        { "id": "a", "text": "$\\overrightarrow{BD}$" },
-        { "id": "b", "text": "$\\overrightarrow{AC}$" },
-        { "id": "c", "text": "$\\overrightarrow{AD}$" },
-        { "id": "d", "text": "$\\overrightarrow{0}$" }
+        { "id": "a", "text": "BD" },
+        { "id": "b", "text": "AC" },
+        { "id": "c", "text": "AD" },
+        { "id": "d", "text": "الشعاع الصفري" }
       ],
       "correctOption": "c",
-      "explanation": "نطبّق شال تدريجيًا: $\\overrightarrow{AB} + \\overrightarrow{BC} = \\overrightarrow{AC}$، ثمّ $\\overrightarrow{AC} + \\overrightarrow{CD} = \\overrightarrow{AD}$.",
+      "explanation": "نطبّق شال تدريجيًا: AB + BC = AC، ثمّ AC + CD = AD.",
       "difficulty": 2
     },
     {
-      "prompt": "ABCD متوازي أضلاع مركزه O. ما ناتج $\\overrightarrow{OA} + \\overrightarrow{OC}$؟",
+      "prompt": "ABCD متوازي أضلاع مركزه O. ما ناتج مجموع الشعاعين OA + OC؟",
       "options": [
-        { "id": "a", "text": "$\\overrightarrow{AC}$" },
-        { "id": "b", "text": "$2\\overrightarrow{OC}$" },
-        { "id": "c", "text": "$\\overrightarrow{OB}$" },
-        { "id": "d", "text": "$\\overrightarrow{0}$" }
+        { "id": "a", "text": "AC" },
+        { "id": "b", "text": "2OC" },
+        { "id": "c", "text": "OB" },
+        { "id": "d", "text": "الشعاع الصفري" }
       ],
       "correctOption": "d",
-      "explanation": "O هو منتصف [AC] في متوازي الأضلاع، إذن $\\overrightarrow{OA} = -\\overrightarrow{OC}$، ومنه $\\overrightarrow{OA} + \\overrightarrow{OC} = \\overrightarrow{0}$.",
+      "explanation": "O هو منتصف [AC] في متوازي الأضلاع، إذن الشعاع OA هو معاكس الشعاع OC، ومنه OA + OC = الشعاع الصفري. الخطأ الشائع: محاولة تطبيق شال على OA + OC رغم أنّ طرف الأوّل (A) ليس منشأ الثاني (O) — شال يصلح لـ AO + OC = AC لا لهذا المجموع.",
       "difficulty": 3
     }
   ]
