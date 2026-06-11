@@ -7,75 +7,75 @@
   "displayOrder": 4,
   "questions": [
     {
-      "prompt": "A وB وC وD أربع نقاط. بسّط التعبير التالي: $\\overrightarrow{AB} - \\overrightarrow{CB} + \\overrightarrow{DC} - \\overrightarrow{DA}$",
+      "prompt": "A وB وC وD أربع نقاط. بسّط مجموع الأشعّة: AB − DB + DC",
       "options": [
-        { "id": "a", "text": "$\\overrightarrow{BD}$" },
-        { "id": "b", "text": "$2\\overrightarrow{AC}$" },
-        { "id": "c", "text": "$\\overrightarrow{AC}$" },
-        { "id": "d", "text": "$\\overrightarrow{0}$" }
+        { "id": "a", "text": "AD" },
+        { "id": "b", "text": "AC" },
+        { "id": "c", "text": "BC" },
+        { "id": "d", "text": "CA" }
       ],
       "correctOption": "b",
-      "explanation": "نحوّل الطرح إلى جمع: $\\overrightarrow{AB} - \\overrightarrow{CB} = \\overrightarrow{AB} + \\overrightarrow{BC}$ وبشال: $= \\overrightarrow{AC}$. كذلك $\\overrightarrow{DC} - \\overrightarrow{DA} = \\overrightarrow{DC} + \\overrightarrow{AD}$ وبشال ($\\overrightarrow{AD} + \\overrightarrow{DC}$): $= \\overrightarrow{AC}$. إذن المجموع الكلّي $= \\overrightarrow{AC} + \\overrightarrow{AC} = 2\\overrightarrow{AC}$.",
+      "explanation": "نحوّل الطرح إلى جمع بالشعاع المعاكس: −DB = BD، فالمجموع يصبح AB + BD + DC. بشال: AB + BD = AD، ثمّ AD + DC = AC. إذن الناتج هو AC. الخطأ الشائع: نسيان قلب الحرفين عند أخذ المعاكس فيتعطّل تسلسل شال، أو التوقّف عند AD بإهمال الحدّ الأخير.",
       "difficulty": 3
     },
     {
-      "prompt": "M نقطة في المستوي. صورة M بالانسحاب ذي الشعاع $\\overrightarrow{AB}$ هي M'، وصورة M' بالانسحاب ذي الشعاع $\\overrightarrow{BC}$ هي M''. ما هو $\\overrightarrow{MM''}$؟",
+      "prompt": "M نقطة في المستوي. صورة M بالانسحاب ذي الشعاع AB هي M'، وصورة M' بالانسحاب ذي الشعاع BC هي M''. ما هو الشعاع MM''؟",
       "options": [
-        { "id": "a", "text": "$\\overrightarrow{AB}$" },
-        { "id": "b", "text": "$\\overrightarrow{MB}$" },
-        { "id": "c", "text": "$\\overrightarrow{AC}$" },
-        { "id": "d", "text": "$\\overrightarrow{BC}$" }
+        { "id": "a", "text": "AB" },
+        { "id": "b", "text": "MB" },
+        { "id": "c", "text": "AC" },
+        { "id": "d", "text": "BC" }
       ],
       "correctOption": "c",
-      "explanation": "من تعريف الانسحاب: $\\overrightarrow{MM'} = \\overrightarrow{AB}$ و $\\overrightarrow{M'M''} = \\overrightarrow{BC}$. بتطبيق شال: $\\overrightarrow{MM''} = \\overrightarrow{MM'} + \\overrightarrow{M'M''} = \\overrightarrow{AB} + \\overrightarrow{BC} = \\overrightarrow{AC}$. إذن تركيب انسحابَين متتاليَين يعطي انسحابًا شعاعه مجموع الشعاعَين الأصليَّين.",
+      "explanation": "من تعريف الانسحاب: MM' = AB وM'M'' = BC. بتطبيق شال: MM'' = MM' + M'M'' = AB + BC = AC. إذن تركيب انسحابَين متتاليَين يعطي انسحابًا شعاعه مجموع الشعاعَين. الخطأ الشائع: الاكتفاء بأحد الشعاعين AB أو BC دون تركيب الانسحابَين.",
       "difficulty": 3
     },
     {
-      "prompt": "A وB وC وD وE خمس نقاط. بسّط: $\\overrightarrow{AC} - \\overrightarrow{BC} + \\overrightarrow{BD} - \\overrightarrow{ED}$",
+      "prompt": "A وB وC وD وE خمس نقاط. بسّط: AC − BC + BD − ED",
       "options": [
-        { "id": "a", "text": "$\\overrightarrow{AB}$" },
-        { "id": "b", "text": "$\\overrightarrow{CE}$" },
-        { "id": "c", "text": "$\\overrightarrow{AD}$" },
-        { "id": "d", "text": "$\\overrightarrow{AE}$" }
+        { "id": "a", "text": "AB" },
+        { "id": "b", "text": "CE" },
+        { "id": "c", "text": "AD" },
+        { "id": "d", "text": "AE" }
       ],
       "correctOption": "d",
-      "explanation": "نحوّل الطرح إلى جمع: $\\overrightarrow{AC} - \\overrightarrow{BC} = \\overrightarrow{AC} + \\overrightarrow{CB}$، وبشال ($\\overrightarrow{AC} + \\overrightarrow{CB} = \\overrightarrow{AB}$). ثمّ $\\overrightarrow{BD} - \\overrightarrow{ED} = \\overrightarrow{BD} + \\overrightarrow{DE}$، وبشال $= \\overrightarrow{BE}$. الناتج الكلّي: $\\overrightarrow{AB} + \\overrightarrow{BE} = \\overrightarrow{AE}$ (شال مرّة أخرى). إذن النتيجة هي $\\overrightarrow{AE}$.",
+      "explanation": "نحوّل الطرح إلى جمع: AC − BC = AC + CB، وبشال: AC + CB = AB. ثمّ BD − ED = BD + DE، وبشال: BD + DE = BE. الناتج الكلّي: AB + BE = AE (شال مرّة أخرى). إذن النتيجة هي AE. الخطأ الشائع: التوقّف عند AB ونسيان الشطر الثاني من التعبير.",
       "difficulty": 3
     },
     {
-      "prompt": "M نقطة. صورتها بالانسحاب ذي الشعاع $\\overrightarrow{u}$ هي M'، ثمّ صورة M' بالانسحاب ذي الشعاع $-\\overrightarrow{u}$ هي M''. ماذا يساوي $\\overrightarrow{MM''}$؟",
+      "prompt": "M نقطة. صورتها بالانسحاب ذي الشعاع u هي M'، ثمّ صورة M' بالانسحاب ذي الشعاع المعاكس −u هي M''. ماذا يساوي الشعاع MM''؟",
       "options": [
-        { "id": "a", "text": "$\\overrightarrow{0}$" },
-        { "id": "b", "text": "$2\\overrightarrow{u}$" },
-        { "id": "c", "text": "$\\overrightarrow{u}$" },
-        { "id": "d", "text": "$-\\overrightarrow{u}$" }
+        { "id": "a", "text": "الشعاع الصفري" },
+        { "id": "b", "text": "2u" },
+        { "id": "c", "text": "u" },
+        { "id": "d", "text": "−u" }
       ],
       "correctOption": "a",
-      "explanation": "من تعريف الانسحاب: $\\overrightarrow{MM'} = \\overrightarrow{u}$ و $\\overrightarrow{M'M''} = -\\overrightarrow{u}$. بتطبيق شال: $\\overrightarrow{MM''} = \\overrightarrow{MM'} + \\overrightarrow{M'M''} = \\overrightarrow{u} + (-\\overrightarrow{u}) = \\overrightarrow{0}$. هذا يعني أنّ M'' = M: تطبيق انسحاب ثمّ انسحابه المعاكس يعيد النقطة إلى مكانها. الانسحاب ذو الشعاع $-\\overrightarrow{u}$ هو الانسحاب المعكوس للانسحاب ذي الشعاع $\\overrightarrow{u}$.",
+      "explanation": "من تعريف الانسحاب: MM' = u وM'M'' = −u. بتطبيق شال: MM'' = MM' + M'M'' = u + (−u) = الشعاع الصفري. هذا يعني أنّ M'' = M: تطبيق انسحاب ثمّ معاكسه يعيد كلّ نقطة إلى مكانها. الخطأ الشائع: جمع الطولين فاختيار 2u — الشعاعان متعاكسان فيُلغي أحدهما الآخر.",
       "difficulty": 3
     },
     {
-      "prompt": "ABCD متوازي أضلاع مركزه O، وI منتصف [AB]. ما هو $\\overrightarrow{OA} + \\overrightarrow{OB}$؟",
+      "prompt": "ABCD متوازي أضلاع مركزه O. بسّط مجموع الأشعّة: AO + OC + CB",
       "options": [
-        { "id": "a", "text": "$\\overrightarrow{OC}$" },
-        { "id": "b", "text": "$2\\overrightarrow{OI}$" },
-        { "id": "c", "text": "$\\overrightarrow{0}$" },
-        { "id": "d", "text": "$\\overrightarrow{AB}$" }
+        { "id": "a", "text": "AC" },
+        { "id": "b", "text": "AB" },
+        { "id": "c", "text": "AD" },
+        { "id": "d", "text": "الشعاع الصفري" }
       ],
       "correctOption": "b",
-      "explanation": "I منتصف [AB]، فبالخاصيّة العامّة للمنتصف: لأيّ نقطة O، $\\overrightarrow{OA} + \\overrightarrow{OB} = 2\\overrightarrow{OI}$. التحقّق: $\\overrightarrow{OA} + \\overrightarrow{OB} = \\overrightarrow{OI} + \\overrightarrow{IA} + \\overrightarrow{OI} + \\overrightarrow{IB} = 2\\overrightarrow{OI} + (\\overrightarrow{IA} + \\overrightarrow{IB})$، ولأنّ I منتصف [AB] فـ$\\overrightarrow{IA} + \\overrightarrow{IB} = \\overrightarrow{0}$، إذن الناتج $= 2\\overrightarrow{OI}$. (الخيار c خطأ لأنّ O مركز القطريَّين وليس قطعة [AB].)",
+      "explanation": "بشال مباشرة: AO + OC = AC (المرور بالنقطة O لا يغيّر شيئًا)، ثمّ AC + CB = AB. كون O مركز متوازي الأضلاع معلومةٌ فخّ لا حاجة إليها هنا. الخطأ الشائع: الظنّ أنّ المرور بالمركز يجعل المجموع صفريًا، أو التوقّف عند AC بإهمال الحدّ الأخير.",
       "difficulty": 3
     },
     {
-      "prompt": "ABDE متوازي أضلاع، وC منتصف [AE]. احسب: $\\overrightarrow{CA} + \\overrightarrow{CB} + \\overrightarrow{CD} + \\overrightarrow{CE}$",
+      "prompt": "ABCD متوازي أضلاع. بسّط مجموع الأشعّة: AB + CD + AD",
       "options": [
-        { "id": "a", "text": "$2\\overrightarrow{AB}$" },
-        { "id": "b", "text": "$\\overrightarrow{0}$" },
-        { "id": "c", "text": "$2\\overrightarrow{AE}$" },
-        { "id": "d", "text": "$\\overrightarrow{BD}$" }
+        { "id": "a", "text": "AD" },
+        { "id": "b", "text": "AC" },
+        { "id": "c", "text": "DB" },
+        { "id": "d", "text": "الشعاع الصفري" }
       ],
       "correctOption": "a",
-      "explanation": "لأنّ C منتصف [AE]: $\\overrightarrow{CA} + \\overrightarrow{CE} = \\overrightarrow{0}$ (خاصيّة المنتصف). الآن نحسب $\\overrightarrow{CB} + \\overrightarrow{CD}$: بشال $\\overrightarrow{CB} = \\overrightarrow{CA} + \\overrightarrow{AB}$ و $\\overrightarrow{CD} = \\overrightarrow{CE} + \\overrightarrow{ED}$. لأنّ ABDE متوازي أضلاع فـ$\\overrightarrow{ED} = \\overrightarrow{AB}$، إذن $\\overrightarrow{CD} = \\overrightarrow{CE} + \\overrightarrow{AB}$. المجموع: $\\overrightarrow{CB} + \\overrightarrow{CD} = (\\overrightarrow{CA} + \\overrightarrow{AB}) + (\\overrightarrow{CE} + \\overrightarrow{AB}) = (\\overrightarrow{CA} + \\overrightarrow{CE}) + 2\\overrightarrow{AB} = \\overrightarrow{0} + 2\\overrightarrow{AB} = 2\\overrightarrow{AB}$. الناتج الكلّي: $\\overrightarrow{0} + 2\\overrightarrow{AB} = 2\\overrightarrow{AB}$.",
+      "explanation": "في متوازي الأضلاع ABCD: AB = DC، فمعاكسه CD = BA. إذن AB + CD = AB + BA = الشعاع الصفري، ويبقى من المجموع AD فقط. الخطأ الشائع: الظنّ أنّ المجموع كلّه صفري — الشعاع الثالث AD لا يُلغيه شيء.",
       "difficulty": 3
     }
   ]
