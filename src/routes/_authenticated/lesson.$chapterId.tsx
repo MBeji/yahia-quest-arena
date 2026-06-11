@@ -19,7 +19,7 @@ import { renderMarkdown } from "@/shared/lib/markdown";
 import { useState } from "react";
 
 export const Route = createFileRoute("/_authenticated/lesson/$chapterId")({
-  head: () => ({ meta: [{ title: "Lesson · XP Scholars" }] }),
+  head: () => ({ meta: [{ title: "Leçon · XP Scholars" }] }),
   component: LessonPage,
 });
 

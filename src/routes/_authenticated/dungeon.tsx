@@ -33,7 +33,7 @@ import { RichField, OptionContent } from "@/components/ui/svg-figure";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/dungeon")({
-  head: () => ({ meta: [{ title: "Dungeon · XP Scholars" }] }),
+  head: () => ({ meta: [{ title: "Donjon · XP Scholars" }] }),
   component: DungeonPage,
 });
 

@@ -46,7 +46,7 @@ import { ExplainHint } from "@/components/ui/explain-hint";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/quest/$exerciseId")({
-  head: () => ({ meta: [{ title: "Quest · XP Scholars" }] }),
+  head: () => ({ meta: [{ title: "Quête · XP Scholars" }] }),
   component: QuestPage,
 });
 

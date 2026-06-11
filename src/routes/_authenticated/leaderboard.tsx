@@ -8,7 +8,7 @@ import { getLeaderboard, getSubjects, getSubjectLeaderboard } from "@/features/d
 import { isRtlText } from "@/shared/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/leaderboard")({
-  head: () => ({ meta: [{ title: "Leaderboard · XP Scholars" }] }),
+  head: () => ({ meta: [{ title: "Classement · XP Scholars" }] }),
   component: LeaderboardPage,
 });
 

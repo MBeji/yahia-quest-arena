@@ -24,7 +24,7 @@ import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/parent-report")({
-  head: () => ({ meta: [{ title: "Parent Report · XP Scholars" }] }),
+  head: () => ({ meta: [{ title: "Suivi parental · XP Scholars" }] }),
   component: ParentReport,
 });
 

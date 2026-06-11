@@ -12,10 +12,10 @@ import { Label } from "@/components/ui/label";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Join the Academy · XP Scholars" },
+      { title: "Rejoindre l'Académie · XP Scholars" },
       {
         name: "description",
-        content: "Create your hero and start preparing for the 9th grade exam.",
+        content: "Crée ton héros et commence ta préparation aux concours nationaux.",
       },
     ],
   }),

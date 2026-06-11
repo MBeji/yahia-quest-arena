@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
-import { en } from "@/lib/i18n/en";
+import { fr } from "@/lib/i18n/fr";
 
 // Route-level guard for GAP-017: an admin must reach each /admin console, a
 // non-admin must be refused, and there must be no access-denied flash while the
@@ -112,7 +112,7 @@ describe("admin console route guards (GAP-017)", () => {
       h.role = ADMIN;
       renderPage(pageFor(SUBSCRIPTIONS));
 
-      expect(screen.queryByText(en.subscription.accessDenied)).not.toBeInTheDocument();
+      expect(screen.queryByText(fr.subscription.accessDenied)).not.toBeInTheDocument();
       // The entitlements panel mounts once the (mocked) list query resolves.
       expect(await screen.findByTestId("parcours-entitlements-admin")).toBeInTheDocument();
     });
@@ -127,7 +127,7 @@ describe("admin console route guards (GAP-017)", () => {
       };
       renderPage(pageFor(SUBSCRIPTIONS));
 
-      expect(screen.getByText(en.subscription.accessDenied)).toBeInTheDocument();
+      expect(screen.getByText(fr.subscription.accessDenied)).toBeInTheDocument();
       expect(screen.queryByTestId("parcours-entitlements-admin")).not.toBeInTheDocument();
     });
   });
@@ -138,7 +138,7 @@ describe("admin console route guards (GAP-017)", () => {
       renderPage(pageFor(BETA));
 
       expect(screen.getByTestId("beta-requests-admin")).toBeInTheDocument();
-      expect(screen.queryByText(en.subscription.accessDenied)).not.toBeInTheDocument();
+      expect(screen.queryByText(fr.subscription.accessDenied)).not.toBeInTheDocument();
     });
 
     it("refuses a non-admin (parent)", () => {
@@ -151,7 +151,7 @@ describe("admin console route guards (GAP-017)", () => {
       };
       renderPage(pageFor(BETA));
 
-      expect(screen.getByText(en.subscription.accessDenied)).toBeInTheDocument();
+      expect(screen.getByText(fr.subscription.accessDenied)).toBeInTheDocument();
       expect(screen.queryByTestId("beta-requests-admin")).not.toBeInTheDocument();
     });
   });
@@ -162,7 +162,7 @@ describe("admin console route guards (GAP-017)", () => {
       renderPage(pageFor(REPORTS));
 
       expect(screen.getByTestId("content-reports-admin")).toBeInTheDocument();
-      expect(screen.queryByText(en.subscription.accessDenied)).not.toBeInTheDocument();
+      expect(screen.queryByText(fr.subscription.accessDenied)).not.toBeInTheDocument();
     });
 
     it("refuses a non-admin", () => {
@@ -175,7 +175,7 @@ describe("admin console route guards (GAP-017)", () => {
       };
       renderPage(pageFor(REPORTS));
 
-      expect(screen.getByText(en.subscription.accessDenied)).toBeInTheDocument();
+      expect(screen.getByText(fr.subscription.accessDenied)).toBeInTheDocument();
       expect(screen.queryByTestId("content-reports-admin")).not.toBeInTheDocument();
     });
   });
@@ -192,7 +192,7 @@ describe("admin console route guards (GAP-017)", () => {
     };
     renderPage(pageFor(BETA));
 
-    expect(screen.queryByText(en.subscription.accessDenied)).not.toBeInTheDocument();
+    expect(screen.queryByText(fr.subscription.accessDenied)).not.toBeInTheDocument();
     expect(screen.queryByTestId("beta-requests-admin")).not.toBeInTheDocument();
   });
 });

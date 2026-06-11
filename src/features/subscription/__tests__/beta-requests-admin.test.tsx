@@ -12,6 +12,9 @@ vi.mock("../beta-access.server", () => ({
 
 import { listBetaRequests, reviewBetaRequest } from "../beta-access.server";
 import { BetaRequestsAdmin } from "../components/beta-requests-admin";
+// Components render with the default-locale catalog (FR) when no provider wraps
+// them; assert via catalog keys so tests survive locale-default changes.
+import { fr } from "@/lib/i18n/fr";
 
 const mockList = listBetaRequests as unknown as ReturnType<typeof vi.fn>;
 const mockReview = reviewBetaRequest as unknown as ReturnType<typeof vi.fn>;
@@ -42,21 +45,21 @@ describe("BetaRequestsAdmin", () => {
     renderWithClient(<BetaRequestsAdmin />);
     await waitFor(() => expect(screen.getByText("Yahia")).toBeInTheDocument());
     expect(screen.getByText("y@example.com")).toBeInTheDocument();
-    expect(screen.getByText("Approve")).toBeInTheDocument();
-    expect(screen.getByText("Reject")).toBeInTheDocument();
+    expect(screen.getByText(fr.betaAccess.approve)).toBeInTheDocument();
+    expect(screen.getByText(fr.betaAccess.reject)).toBeInTheDocument();
   });
 
   it("shows the empty state when there are no requests", async () => {
     mockList.mockResolvedValue({ requests: [] });
     renderWithClient(<BetaRequestsAdmin />);
-    await waitFor(() => expect(screen.getByText("No requests yet.")).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(fr.betaAccess.empty)).toBeInTheDocument());
   });
 
   it("calls reviewBetaRequest(approve) when Approve is clicked", async () => {
     mockList.mockResolvedValue({ requests: [PENDING] });
     mockReview.mockResolvedValue({ ok: true });
     renderWithClient(<BetaRequestsAdmin />);
-    const approve = await screen.findByText("Approve");
+    const approve = await screen.findByText(fr.betaAccess.approve);
     fireEvent.click(approve);
     await waitFor(() =>
       expect(mockReview).toHaveBeenCalledWith({ data: { requestId: "r1", approve: true } }),
