@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { getParcours } from "@/features/dashboard";
 import { setCurrentParcours } from "@/features/auth";
+import { useT } from "@/lib/i18n";
 
 type Parcours = {
   id: string;
@@ -63,6 +64,7 @@ const colorVar = (token: string) => `var(--subject-${token.replace(/^subject-/, 
 // Step 0 — "Que veux-tu faire ?": pick an intent.
 // ---------------------------------------------------------------------------
 function IntentStep({ onSelect }: { onSelect: (intent: Intent) => void }) {
+  const t = useT();
   const choices: {
     id: Intent;
     title: string;
@@ -72,15 +74,15 @@ function IntentStep({ onSelect }: { onSelect: (intent: Intent) => void }) {
   }[] = [
     {
       id: "concours",
-      title: "Je prépare un concours",
-      description: "Entraîne-toi pour le concours national et vise la victoire.",
+      title: t.onboarding.concoursTitle,
+      description: t.onboarding.concoursDesc,
       icon: <Trophy className="h-8 w-8" />,
       color: "var(--gold)",
     },
     {
       id: "explorer",
-      title: "J'explore librement",
-      description: "Découvre les thèmes à ton rythme, sans pression.",
+      title: t.onboarding.exploreTitle,
+      description: t.onboarding.exploreDesc,
       icon: <Compass className="h-8 w-8" />,
       color: "var(--gold)",
     },
@@ -94,8 +96,8 @@ function IntentStep({ onSelect }: { onSelect: (intent: Intent) => void }) {
       className="space-y-6"
     >
       <div>
-        <h2 className="font-display text-3xl font-bold">Que veux-tu faire ?</h2>
-        <p className="mt-2 text-muted-foreground">Choisis ta voie, jeune aspirant.</p>
+        <h2 className="font-display text-3xl font-bold">{t.onboarding.intentTitle}</h2>
+        <p className="mt-2 text-muted-foreground">{t.onboarding.intentSubtitle}</p>
       </div>
 
       <div className="grid gap-4">
@@ -139,6 +141,7 @@ function ParcoursCard({
   isSaving: boolean;
   onSelect: () => void;
 }) {
+  const t = useT();
   const Icon = ICONS[parcours.icon] ?? Sword;
   const color = colorVar(parcours.color);
   const isComingSoon = parcours.status === "coming_soon";
@@ -164,12 +167,12 @@ function ParcoursCard({
             <h3 className="font-display text-lg font-bold">{parcours.name_fr}</h3>
             {parcours.is_premium && (
               <span className="inline-flex items-center gap-1 rounded-full bg-[color:var(--gold)]/20 px-2 py-0.5 text-xs font-semibold text-[color:var(--gold)]">
-                <Trophy className="h-3 w-3" /> Premium
+                <Trophy className="h-3 w-3" /> {t.explorer.premium}
               </span>
             )}
             {isComingSoon && (
               <span className="inline-flex items-center gap-1 rounded-full bg-muted/40 px-2 py-0.5 text-xs font-semibold text-muted-foreground">
-                <Clock className="h-3 w-3" /> Bientôt disponible
+                <Clock className="h-3 w-3" /> {t.explorer.comingSoon}
               </span>
             )}
           </div>
@@ -197,6 +200,7 @@ function ParcoursStep({
   onSelect: (id: string) => void;
   onPrev: () => void;
 }) {
+  const t = useT();
   const visible =
     intent === "concours"
       ? parcours.filter((p) => p.kind === "concours")
@@ -211,12 +215,14 @@ function ParcoursStep({
     >
       <div>
         <h2 className="font-display text-3xl font-bold">
-          {intent === "concours" ? "Quel concours prépares-tu ?" : "Quel thème veux-tu explorer ?"}
+          {intent === "concours"
+            ? t.onboarding.parcoursTitleConcours
+            : t.onboarding.parcoursTitleLibre}
         </h2>
         <p className="mt-2 text-muted-foreground">
           {intent === "concours"
-            ? "Choisis ton épreuve — tu pourras explorer les autres parcours ensuite."
-            : "Lance-toi dans l'aventure de ton choix."}
+            ? t.onboarding.parcoursSubtitleConcours
+            : t.onboarding.parcoursSubtitleLibre}
         </p>
       </div>
 
@@ -231,11 +237,11 @@ function ParcoursStep({
         </div>
       ) : isError ? (
         <div className="rounded-2xl border-2 border-[color:var(--gold)]/30 bg-black/50 p-8 text-center text-sm text-muted-foreground">
-          Impossible de charger les parcours. Réessaie plus tard.
+          {t.explorer.failedLoad}
         </div>
       ) : visible.length === 0 ? (
         <div className="rounded-2xl border-2 border-[color:var(--gold)]/30 bg-black/50 p-8 text-center text-sm text-muted-foreground">
-          Aucun parcours disponible pour le moment.
+          {t.explorer.empty}
         </div>
       ) : (
         <div className="grid gap-4">
@@ -252,10 +258,12 @@ function ParcoursStep({
 
       <div className="flex gap-3">
         <Button onClick={onPrev} variant="outline" className="gap-2" disabled={isSaving}>
-          <ChevronLeft className="h-4 w-4" /> Retour
+          <ChevronLeft className="h-4 w-4" /> {t.common.back}
         </Button>
         {isSaving && (
-          <span className="ml-auto self-center text-sm text-muted-foreground">Enregistrement…</span>
+          <span className="ml-auto self-center text-sm text-muted-foreground">
+            {t.onboarding.saving}
+          </span>
         )}
       </div>
     </motion.div>
@@ -269,6 +277,7 @@ export const Route = createFileRoute("/_authenticated/onboarding")({
 function OnboardingComponent() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const t = useT();
   const [step, setStep] = useState<0 | 1>(0);
   const [intent, setIntent] = useState<Intent | null>(null);
 
@@ -300,7 +309,7 @@ function OnboardingComponent() {
     },
     onError: () => {
       // Graceful: never trap the aspirant in onboarding.
-      toast.error("Impossible d'enregistrer ton parcours. Réessaie.");
+      toast.error(t.onboarding.saveError);
     },
   });
 

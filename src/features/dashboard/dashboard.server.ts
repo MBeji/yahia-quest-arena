@@ -378,29 +378,42 @@ export const getParcours = createServerFn({ method: "GET" })
     return { parcours: enriched };
   });
 
-// ---------- Subjects, optionally scoped to a theme and/or grade ----------
-// No filter → every subject (backward compatible). Callers pass `themeId`
-// (and `gradeId` for the school theme) to browse one branch of the catalogue.
-export const getSubjects = createServerFn({ method: "GET" })
+// ---------- Subjects of the caller's ACTIVE parcours (leaderboard tabs) ----------
+// The leaderboard offers one tab per subject of the active parcours only (GAP-018):
+// listing every academy subject produced ~30 tabs, with homonym subjects across
+// grades (e.g. "Mathématiques" in 9ème AND 6ème) indistinguishable. Scoping to the
+// parcours both trims the tab row and removes the ambiguity (one grade → one
+// subject per name). Same resolution as getDashboard: profile → parcours →
+// subjects of its (theme, grade) pair. No parcours (pre-onboarding) → empty list,
+// the page then shows the Global tab alone.
+export const getLeaderboardSubjects = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) =>
-    z
-      .object({
-        themeId: z.string().min(1).optional(),
-        gradeId: z.string().uuid().optional(),
-      })
-      .parse(d ?? {}),
-  )
-  .handler(async ({ data, context }) => {
-    const { supabase } = context;
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("current_parcours_id")
+      .eq("id", userId)
+      .maybeSingle();
+    const parcoursId = profile?.current_parcours_id ?? null;
+    if (!parcoursId) return { subjects: [] };
+
+    const { data: par } = await supabase
+      .from("parcours")
+      .select("theme_id,grade_id")
+      .eq("id", parcoursId)
+      .maybeSingle();
+    if (!par) return { subjects: [] };
+
     let query = supabase
       .from("subjects")
-      .select("id,name_fr,color_token,icon,content_language,theme_id,grade_id")
+      .select("id,name_fr,color_token,icon,content_language")
+      .eq("theme_id", par.theme_id)
       .order("display_order");
-    if (data.themeId) query = query.eq("theme_id", data.themeId);
-    if (data.gradeId) query = query.eq("grade_id", data.gradeId);
+    query = par.grade_id ? query.eq("grade_id", par.grade_id) : query.is("grade_id", null);
     const { data: rows, error } = await query;
-    if (error) failWithClientError("getSubjects", error, DASHBOARD_ERROR_FR);
+    if (error) failWithClientError("getLeaderboardSubjects", error, DASHBOARD_ERROR_FR);
     return { subjects: rows ?? [] };
   });
 

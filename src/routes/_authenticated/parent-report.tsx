@@ -22,6 +22,7 @@ import {
 import { getLinkedStudents, getStudentReport, linkStudentByCode } from "@/features/parent-report";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { useI18n, useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/parent-report")({
   head: () => ({ meta: [{ title: "Suivi parental · XP Scholars" }] }),
@@ -29,6 +30,7 @@ export const Route = createFileRoute("/_authenticated/parent-report")({
 });
 
 function ParentReport() {
+  const t = useT();
   const queryClient = useQueryClient();
   const getStudentsFn = useServerFn(getLinkedStudents);
   const getReportFn = useServerFn(getStudentReport);
@@ -57,12 +59,17 @@ function ParentReport() {
   const linkMutation = useMutation({
     mutationFn: () => linkByCodeFn({ data: { studentCode, relationLabel } }),
     onSuccess: (res) => {
-      toast.success(`Alliance reussie avec ${res.student.displayName ?? "l'eleve"}.`);
+      toast.success(
+        t.parentReport.linkSuccess.replace(
+          "{name}",
+          res.student.displayName ?? t.parentReport.defaultStudentName,
+        ),
+      );
       setStudentCode("");
       queryClient.invalidateQueries({ queryKey: ["parent-students"] });
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "Link failed");
+      toast.error(error instanceof Error ? error.message : t.parentReport.linkFailed);
     },
   });
 
@@ -94,10 +101,8 @@ function ParentReport() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center">
         <Users className="w-16 h-16 text-muted-foreground mb-4" />
-        <h2 className="text-xl font-bold text-white mb-2">Aucun eleve inscrit</h2>
-        <p className="text-muted-foreground max-w-md">
-          Aucun compte eleve n'existe encore dans la plateforme.
-        </p>
+        <h2 className="text-xl font-bold text-white mb-2">{t.parentReport.adminEmptyTitle}</h2>
+        <p className="text-muted-foreground max-w-md">{t.parentReport.adminEmptyDesc}</p>
       </div>
     );
   }
@@ -107,12 +112,12 @@ function ParentReport() {
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
         <h1 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
           <Activity className="w-7 h-7 text-[color:var(--gold)]" />
-          {isAdmin ? "Admin — Suivi des élèves" : "Rapport de suivi"}
+          {isAdmin ? t.parentReport.adminTitle : t.parentReport.title}
         </h1>
         <p className="text-muted-foreground mt-1">
           {isAdmin
-            ? `${students.length} élève(s) inscrits — sélectionnez pour voir le détail`
-            : "Vue d'ensemble de l'activité de votre enfant"}
+            ? t.parentReport.adminSubtitle.replace("{n}", String(students.length))
+            : t.parentReport.subtitle}
         </p>
       </motion.div>
 
@@ -120,19 +125,19 @@ function ParentReport() {
         <div className="mb-6 rounded-xl border border-[color:var(--gold)]/40 bg-black/30 p-4">
           <div className="mb-3 flex items-center gap-2 text-[color:var(--champagne)]">
             <LinkIcon className="h-4 w-4" />
-            <span className="font-semibold">Associer un eleve via Alliance Code</span>
+            <span className="font-semibold">{t.parentReport.linkTitle}</span>
           </div>
           <div className="grid gap-2 md:grid-cols-[1fr,180px,auto]">
             <input
               value={studentCode}
               onChange={(e) => setStudentCode(e.target.value)}
-              placeholder="Code eleve"
+              placeholder={t.parentReport.codePlaceholder}
               className="rounded-lg border border-[color:var(--gold)]/30 bg-black/70 px-3 py-2 text-sm text-white placeholder:text-muted-foreground focus:border-[color:var(--gold)] focus:outline-none"
             />
             <input
               value={relationLabel}
               onChange={(e) => setRelationLabel(e.target.value)}
-              placeholder="Relation (parent)"
+              placeholder={t.parentReport.relationPlaceholder}
               className="rounded-lg border border-[color:var(--gold)]/30 bg-black/70 px-3 py-2 text-sm text-white placeholder:text-muted-foreground focus:border-[color:var(--gold)] focus:outline-none"
             />
             <button
@@ -141,12 +146,10 @@ function ParentReport() {
               onClick={() => linkMutation.mutate()}
               className="rounded-lg bg-[image:var(--gradient-gold)] px-4 py-2 text-sm font-semibold text-black hover:opacity-90 disabled:opacity-50"
             >
-              {linkMutation.isPending ? "Liaison..." : "Associer"}
+              {linkMutation.isPending ? t.parentReport.linking : t.parentReport.linkCta}
             </button>
           </div>
-          <p className="mt-2 text-xs text-muted-foreground">
-            L'eleve trouve son code dans son dashboard.
-          </p>
+          <p className="mt-2 text-xs text-muted-foreground">{t.parentReport.linkHint}</p>
         </div>
       )}
 
@@ -163,7 +166,7 @@ function ParentReport() {
                   : "bg-black/50 text-muted-foreground hover:bg-black/70 border border-[color:var(--gold)]/30 hover:border-[color:var(--gold)]/60"
               }`}
             >
-              {s.display_name ?? "Élève"}
+              {s.display_name ?? t.parentReport.defaultStudentName}
             </button>
           ))}
 
@@ -175,11 +178,15 @@ function ParentReport() {
                 disabled={pagination.page <= 1}
                 className="rounded-md border border-[color:var(--gold)]/30 bg-black/70 px-3 py-1.5 text-xs font-semibold text-[color:var(--champagne)] disabled:opacity-40"
               >
-                Prec
+                {t.parentReport.prevPage}
               </button>
               <span className="text-xs text-muted-foreground">
-                Page {pagination.page} /{" "}
-                {Math.max(1, Math.ceil(pagination.total / pagination.pageSize))}
+                {t.parentReport.pageLabel
+                  .replace("{page}", String(pagination.page))
+                  .replace(
+                    "{total}",
+                    String(Math.max(1, Math.ceil(pagination.total / pagination.pageSize))),
+                  )}
               </span>
               <button
                 type="button"
@@ -187,7 +194,7 @@ function ParentReport() {
                 disabled={!pagination.hasMore}
                 className="rounded-md border border-[color:var(--gold)]/30 bg-black/70 px-3 py-1.5 text-xs font-semibold text-[color:var(--champagne)] disabled:opacity-40"
               >
-                Suiv
+                {t.parentReport.nextPage}
               </button>
             </div>
           )}
@@ -196,7 +203,7 @@ function ParentReport() {
 
       {!isAdmin && students.length === 0 && (
         <div className="rounded-xl border border-border/50 bg-black/50 p-8 text-center text-muted-foreground">
-          Associez votre premier eleve avec son Alliance Code pour debloquer le suivi.
+          {t.parentReport.linkFirstHint}
         </div>
       )}
 
@@ -214,6 +221,7 @@ function ParentReport() {
 type ReportData = Awaited<ReturnType<typeof getStudentReport>>;
 
 function ReportContent({ report }: { report: ReportData }) {
+  const { t, locale } = useI18n();
   const { student, summary, subjectStats, dailyActivity } = report;
 
   return (
@@ -228,15 +236,19 @@ function ReportContent({ report }: { report: ReportData }) {
           <div>
             <h2 className="text-xl font-bold text-white">{student.displayName}</h2>
             <p className="text-muted-foreground text-sm mt-1">
-              Classe: {student.heroClass ?? "Non choisie"} · Membre depuis{" "}
-              {new Date(student.createdAt).toLocaleDateString("fr-FR")}
+              {t.parentReport.classLabel} {student.heroClass ?? t.parentReport.classNone} ·{" "}
+              {t.parentReport.memberSince} {new Date(student.createdAt).toLocaleDateString(locale)}
             </p>
           </div>
           <div className="flex items-center gap-4">
-            <StatBadge icon={<Trophy className="w-4 h-4" />} label="Niveau" value={student.level} />
+            <StatBadge
+              icon={<Trophy className="w-4 h-4" />}
+              label={t.dashboard.levelLabel}
+              value={student.level}
+            />
             <StatBadge
               icon={<Flame className="w-4 h-4" />}
-              label="Streak"
+              label={t.quest.streakLabel}
               value={`${student.currentStreak}j`}
             />
           </div>
@@ -250,22 +262,22 @@ function ReportContent({ report }: { report: ReportData }) {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <MetricCard
           icon={<Clock className="w-5 h-5 text-blue-400" />}
-          label="Temps total"
+          label={t.parentReport.timeTotal}
           value={formatTime(summary.totalTimeMinutes)}
         />
         <MetricCard
           icon={<BookOpen className="w-5 h-5 text-green-400" />}
-          label="Exercices"
+          label={t.parentReport.exercisesLabel}
           value={String(summary.totalExercises)}
         />
         <MetricCard
           icon={<Target className="w-5 h-5 text-yellow-400" />}
-          label="Score moyen"
+          label={t.parentReport.avgScore}
           value={`${summary.avgScore}%`}
         />
         <MetricCard
           icon={<Calendar className="w-5 h-5 text-purple-400" />}
-          label="Jours actifs (7j)"
+          label={t.parentReport.activeDays}
           value={`${summary.daysActiveThisWeek}/7`}
         />
       </div>
@@ -280,7 +292,7 @@ function ReportContent({ report }: { report: ReportData }) {
           <Minus className="w-5 h-5 text-muted-foreground" />
         )}
         <span className="text-muted-foreground">
-          Tendance des scores:{" "}
+          {t.parentReport.trendPrefix}{" "}
           <span
             className={
               summary.scoreTrend > 0
@@ -293,7 +305,7 @@ function ReportContent({ report }: { report: ReportData }) {
             {summary.scoreTrend > 0 ? "+" : ""}
             {summary.scoreTrend}%
           </span>{" "}
-          par rapport aux exercices précédents
+          {t.parentReport.trendSuffix}
         </span>
       </div>
 
@@ -301,7 +313,7 @@ function ReportContent({ report }: { report: ReportData }) {
       <div className="bg-black/50 border border-border/50 rounded-xl p-4">
         <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
           <Calendar className="w-5 h-5 text-[color:var(--gold)]" />
-          Activité des 30 derniers jours
+          {t.parentReport.activityTitle}
         </h3>
         <div className="flex items-end gap-[2px] h-32 overflow-x-auto">
           {dailyActivity.map((day) => {
@@ -325,7 +337,7 @@ function ReportContent({ report }: { report: ReportData }) {
         </div>
         <div className="flex justify-between mt-2 text-xs text-muted-foreground">
           <span>{dailyActivity[0]?.date}</span>
-          <span>Aujourd'hui</span>
+          <span>{t.parentReport.today}</span>
         </div>
       </div>
 
@@ -334,7 +346,7 @@ function ReportContent({ report }: { report: ReportData }) {
         <div className="bg-black/50 border border-border/50 rounded-xl p-4">
           <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
             <BookOpen className="w-5 h-5 text-green-400" />
-            Performance par matière
+            {t.parentReport.perSubjectTitle}
           </h3>
           <div className="space-y-3">
             {subjectStats.map((s) => (
@@ -348,7 +360,7 @@ function ReportContent({ report }: { report: ReportData }) {
                 </div>
                 <div className="w-12 text-right text-sm text-muted-foreground">{s.avgScore}%</div>
                 <div className="w-20 text-right text-xs text-muted-foreground">
-                  {s.attempts} ex.
+                  {s.attempts} {t.parentReport.exSuffix}
                 </div>
               </div>
             ))}
@@ -358,52 +370,53 @@ function ReportContent({ report }: { report: ReportData }) {
 
       {/* Last active */}
       <div className="text-center text-sm text-muted-foreground py-4">
-        Dernière activité:{" "}
+        {t.parentReport.lastActivity}{" "}
         {student.lastActiveDate
-          ? new Date(student.lastActiveDate).toLocaleDateString("fr-FR", {
+          ? new Date(student.lastActiveDate).toLocaleDateString(locale, {
               day: "numeric",
               month: "long",
               year: "numeric",
             })
-          : "Aucune activité"}
+          : t.parentReport.noActivity}
       </div>
     </div>
   );
 }
 
 function VerdictCard({ score, verdict }: { score: number; verdict: string }) {
+  const t = useT();
   const config = {
     excellent: {
-      label: "Excellent",
-      desc: "Votre enfant est très assidu et progresse rapidement !",
+      label: t.parentReport.verdictExcellent,
+      desc: t.parentReport.verdictExcellentDesc,
       color: "text-green-400",
       bg: "from-green-900/30 to-emerald-900/30 border-green-700/30",
       icon: <Star className="w-6 h-6 text-green-400" />,
     },
     good: {
-      label: "Bien",
-      desc: "Bonne régularité. Quelques efforts supplémentaires seront bénéfiques.",
+      label: t.parentReport.verdictGood,
+      desc: t.parentReport.verdictGoodDesc,
       color: "text-blue-400",
       bg: "from-blue-900/30 to-cyan-900/30 border-blue-700/30",
       icon: <CheckCircle className="w-6 h-6 text-blue-400" />,
     },
     average: {
-      label: "Moyen",
-      desc: "Activité irrégulière. Encouragez des sessions plus fréquentes.",
+      label: t.parentReport.verdictAverage,
+      desc: t.parentReport.verdictAverageDesc,
       color: "text-yellow-400",
       bg: "from-yellow-900/30 to-amber-900/30 border-yellow-700/30",
       icon: <AlertTriangle className="w-6 h-6 text-yellow-400" />,
     },
     needs_improvement: {
-      label: "À améliorer",
-      desc: "Peu d'activité récente. Un suivi rapproché est recommandé.",
+      label: t.parentReport.verdictNeedsImprovement,
+      desc: t.parentReport.verdictNeedsImprovementDesc,
       color: "text-orange-400",
       bg: "from-orange-900/30 to-red-900/30 border-orange-700/30",
       icon: <AlertTriangle className="w-6 h-6 text-orange-400" />,
     },
     inactive: {
-      label: "Inactif",
-      desc: "Aucune activité détectée. Vérifiez que l'élève utilise la plateforme.",
+      label: t.parentReport.verdictInactive,
+      desc: t.parentReport.verdictInactiveDesc,
       color: "text-red-400",
       bg: "from-red-900/30 to-rose-900/30 border-red-700/30",
       icon: <AlertTriangle className="w-6 h-6 text-red-400" />,
@@ -422,7 +435,9 @@ function VerdictCard({ score, verdict }: { score: number; verdict: string }) {
       <div className="flex-1">
         <div className="flex items-center gap-3">
           <span className={`text-lg font-bold ${c.color}`}>{c.label}</span>
-          <span className="text-sm text-muted-foreground">Score d'assiduité: {score}/100</span>
+          <span className="text-sm text-muted-foreground">
+            {t.parentReport.seriousness} {score}/100
+          </span>
         </div>
         <p className="text-muted-foreground text-sm mt-1">{c.desc}</p>
       </div>

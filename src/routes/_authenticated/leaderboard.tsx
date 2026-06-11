@@ -4,8 +4,13 @@ import { useServerFn } from "@tanstack/react-start";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { ArrowLeft, Crown, Flame, Medal, Zap } from "lucide-react";
-import { getLeaderboard, getSubjects, getSubjectLeaderboard } from "@/features/dashboard";
+import {
+  getLeaderboard,
+  getLeaderboardSubjects,
+  getSubjectLeaderboard,
+} from "@/features/dashboard";
 import { isRtlText } from "@/shared/lib/utils";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/leaderboard")({
   head: () => ({ meta: [{ title: "Classement · XP Scholars" }] }),
@@ -28,14 +33,18 @@ type Player = {
 };
 
 function LeaderboardPage() {
+  const t = useT();
   const fetchLeaderboard = useServerFn(getLeaderboard);
-  const fetchSubjects = useServerFn(getSubjects);
+  const fetchSubjects = useServerFn(getLeaderboardSubjects);
   const fetchSubjectLeaderboard = useServerFn(getSubjectLeaderboard);
 
   const [tab, setTab] = useState<string>(GLOBAL);
 
+  // Tabs are scoped to the ACTIVE parcours' subjects (GAP-018) — not the whole
+  // academy catalogue — so the row stays short and homonym subjects across grades
+  // ("Mathématiques" 9ème vs 6ème) can't collide.
   const subjectsQuery = useQuery({
-    queryKey: ["subjects-list"],
+    queryKey: ["leaderboard-subjects"],
     queryFn: () => fetchSubjects(),
   });
   const globalQuery = useQuery({
@@ -64,17 +73,18 @@ function LeaderboardPage() {
         to="/dashboard"
         className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
       >
-        <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> Back to hall
+        <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.common.backToHall}
       </Link>
 
       <div className="mb-6 text-center">
         <h1 className="font-display text-4xl font-bold">
-          <span className="text-gradient-gold">Classement</span> de l&apos;Académie
+          <span className="text-gradient-gold">{t.leaderboard.titleGradient}</span>{" "}
+          {t.leaderboard.titleRest}
         </h1>
         <p className="mt-2 text-muted-foreground">
           {isGlobal
-            ? "Les héros les plus puissants du concours"
-            : `Classement par XP · ${activeSubject?.name_fr ?? ""}`}
+            ? t.leaderboard.subtitleGlobal
+            : t.leaderboard.subtitleSubject.replace("{subject}", activeSubject?.name_fr ?? "")}
         </p>
       </div>
 
@@ -89,13 +99,14 @@ function LeaderboardPage() {
               : "border-border/50 bg-black/40 text-muted-foreground hover:text-foreground"
           }`}
         >
-          🌍 Global
+          {t.leaderboard.globalTab}
         </button>
         {subjects.map((s) => {
           const active = s.id === tab;
           return (
             <button
               key={s.id}
+              data-testid="leaderboard-subject-tab"
               onClick={() => setTab(s.id)}
               dir={isRtlText(s.name_fr) ? "rtl" : undefined}
               className={`rounded-full border px-4 py-1.5 text-sm font-semibold transition ${
@@ -112,7 +123,7 @@ function LeaderboardPage() {
 
       {isLoading ? (
         <div className="grid min-h-[30vh] place-items-center text-sm text-muted-foreground">
-          Loading leaderboard…
+          {t.leaderboard.loading}
         </div>
       ) : (
         <>
@@ -139,7 +150,9 @@ function LeaderboardPage() {
                   <div className="flex items-center gap-1 font-display text-lg font-bold text-[color:var(--neon-gold)]">
                     <Zap className="h-4 w-4" /> {myRank.xp} XP
                   </div>
-                  <div className="text-xs text-muted-foreground">Lvl {myRank.level}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {t.leaderboard.lvl} {myRank.level}
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -174,7 +187,9 @@ function LeaderboardPage() {
                       <div className="text-sm font-bold truncate max-w-[100px]">
                         {player.displayName}
                       </div>
-                      <div className="text-xs text-muted-foreground">Lvl {player.level}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {t.leaderboard.lvl} {player.level}
+                      </div>
                     </div>
                     <div
                       className={`mt-2 w-full ${heights[i]} rounded-t-xl bg-gradient-to-t ${colors[i]} opacity-30`}
@@ -218,12 +233,12 @@ function LeaderboardPage() {
                     <span className="font-semibold truncate">{player.displayName}</span>
                     {player.isMe && (
                       <span className="rounded-full bg-[color:var(--gold)]/20 px-2 py-0.5 text-[10px] font-bold uppercase text-[color:var(--gold)]">
-                        You
+                        {t.leaderboard.youChip}
                       </span>
                     )}
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    {player.heroClass} · Lvl {player.level}
+                    {player.heroClass} · {t.leaderboard.lvl} {player.level}
                   </div>
                 </div>
 
@@ -243,9 +258,7 @@ function LeaderboardPage() {
 
           {leaderboard.length === 0 && (
             <div className="mt-12 text-center text-muted-foreground">
-              {isGlobal
-                ? "Aucun héros inscrit pour l'instant."
-                : "Aucun score dans cette matière pour l'instant."}
+              {isGlobal ? t.leaderboard.emptyGlobal : t.leaderboard.emptySubject}
             </div>
           )}
         </>

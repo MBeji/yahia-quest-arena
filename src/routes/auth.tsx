@@ -9,6 +9,19 @@ import { linkStudentByCode } from "@/features/parent-report";
 import { bootstrapProfile } from "@/features/auth";
 import { Label } from "@/components/ui/label";
 import { useT } from "@/lib/i18n";
+import type { TranslationKeys } from "@/lib/i18n/types";
+
+/** Map a raw Supabase auth error to a localized, user-actionable message. */
+function friendlyAuthError(t: TranslationKeys, err: unknown): string {
+  const msg = err instanceof Error ? err.message.toLowerCase() : "";
+  if (msg.includes("invalid login")) return t.auth.errorInvalidLogin;
+  if (msg.includes("email not confirmed")) return t.auth.errorEmailNotConfirmed;
+  if (msg.includes("user already registered")) return t.auth.errorAccountExists;
+  if (msg.includes("rate limit") || msg.includes("too many")) return t.auth.errorRateLimit;
+  if (msg.includes("password")) return t.auth.passwordTooShort;
+  if (msg.includes("signup_disabled")) return t.auth.errorSignupDisabled;
+  return t.auth.errorGeneric;
+}
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -56,11 +69,10 @@ function AuthPage() {
       hash.get("error");
     if (oauthError) {
       const raw = decodeURIComponent(oauthError);
-      const friendly = friendlyAuthError(new Error(raw));
+      const friendly = friendlyAuthError(t, new Error(raw));
       // For OAuth, show the raw provider/Supabase message when it isn't a known
       // case — it's far more actionable than a generic fallback for debugging.
-      const shown =
-        friendly === "Erreur d'authentification. Réessaie." ? `Google : ${raw}` : friendly;
+      const shown = friendly === t.auth.errorGeneric ? `Google : ${raw}` : friendly;
       setFormError(shown);
       toast.error(shown);
       window.history.replaceState({}, "", "/auth");
@@ -83,8 +95,7 @@ function AuthPage() {
       timer = setTimeout(() => {
         supabase.auth.getSession().then(({ data }) => {
           if (!data.session) {
-            const m =
-              "La connexion Google n'a pas pu être finalisée. Réessaie — et vérifie que ce compte n'est pas déjà inscrit par email/mot de passe.";
+            const m = t.auth.googleCallbackIncomplete;
             setFormError(m);
             toast.error(m);
           }
@@ -96,28 +107,13 @@ function AuthPage() {
       authSub.subscription.unsubscribe();
       if (timer) clearTimeout(timer);
     };
-  }, [navigate]);
-
-  function friendlyAuthError(err: unknown): string {
-    const msg = err instanceof Error ? err.message.toLowerCase() : "";
-    if (msg.includes("invalid login")) return "Email ou mot de passe incorrect.";
-    if (msg.includes("email not confirmed"))
-      return "Vérifie ta boîte mail pour confirmer ton compte.";
-    if (msg.includes("user already registered")) return "Ce compte existe déjà. Connecte-toi.";
-    if (msg.includes("rate limit") || msg.includes("too many"))
-      return "Trop de tentatives. Réessaie dans quelques minutes.";
-    if (msg.includes("password")) return "Le mot de passe doit contenir au moins 8 caractères.";
-    if (msg.includes("signup_disabled")) return "L'inscription est temporairement désactivée.";
-    return "Erreur d'authentification. Réessaie.";
-  }
+  }, [navigate, t]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setFormError("");
     if (password.length < 8) {
-      // Auth ERROR messages (this one + friendlyAuthError) stay French pending
-      // dedicated keys — full auth-error i18n is a later increment (GAP-010 C).
-      const msg = "Le mot de passe doit contenir au moins 8 caractères.";
+      const msg = t.auth.passwordTooShort;
       setPasswordError(msg);
       setFormError(msg);
       toast.error(msg);
@@ -173,7 +169,7 @@ function AuthPage() {
         navigate({ to: "/dashboard" });
       }
     } catch (err) {
-      const message = friendlyAuthError(err);
+      const message = friendlyAuthError(t, err);
       setFormError(message);
       toast.error(message);
     } finally {
@@ -221,14 +217,14 @@ function AuthPage() {
             <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-2xl bg-[color:var(--gold)]/20 border border-[color:var(--gold)]/40">
               <MailCheck className="h-8 w-8 text-[color:var(--gold)]" />
             </div>
-            <h1 className="font-display text-2xl font-bold">Confirme ton email</h1>
+            <h1 className="font-display text-2xl font-bold">{t.auth.emailSentTitle}</h1>
             <p className="mt-3 text-sm text-muted-foreground">
-              Un lien d&apos;activation a été envoyé à{" "}
+              {t.auth.emailSentBody1}{" "}
               <span className="font-semibold text-foreground">{sentTo}</span>.<br />
-              Clique sur le lien pour activer ton compte et accéder à l&apos;arène.
+              {t.auth.emailSentBody2}
             </p>
             <div className="mt-6 rounded-xl border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 p-4 text-xs text-muted-foreground">
-              📬 Vérifie aussi tes spams si tu ne vois pas l&apos;email dans ta boîte principale.
+              {t.auth.emailSentSpam}
             </div>
             <button
               type="button"
@@ -238,7 +234,7 @@ function AuthPage() {
               }}
               className="mt-6 text-xs text-[color:var(--gold)] hover:underline"
             >
-              ← Modifier l&apos;adresse email
+              {t.auth.emailSentEdit}
             </button>
           </motion.div>
         </div>
