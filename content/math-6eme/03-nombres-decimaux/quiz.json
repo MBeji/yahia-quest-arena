@@ -6,7 +6,7 @@
       "options": [
         { "id": "a", "text": "25" },
         { "id": "b", "text": "84" },
-        { "id": "c", "text": "2 584" },
+        { "id": "c", "text": "2 584" },
         { "id": "d", "text": "0,84" }
       ],
       "correctOption": "a",

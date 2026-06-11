@@ -45,7 +45,11 @@ Work file by file. For every question:
    (= **[BLOCKER]**), unsorted numeric options = **[MINOR]** unless they leak the key.
 5. **Notation** — scan for Arabic-Indic digits `[٠-٩]` (must be zero — **[MAJOR]**), hyphen-as-minus
    in formulas, letter `x` as multiplication sign, non-SI units, LaTeX delimiters inside question
-   strings (**[MINOR]**). Standard digits/equations apply in **all** languages including Arabic.
+   strings (**[MINOR]**). In `ar` content, a **plain space between digit groups** (`\d \d{3}`
+   outside `<svg>`) = **[MAJOR]**: the bidi algorithm swaps the groups at render time (`38 461`
+   displays as `461 38`) — it must be a NO-BREAK SPACE U+00A0. Audit the **rendered** form, not
+   just the source: any RTL string mixing digit runs with neutral separators is suspect. Standard
+   digits/equations apply in **all** languages including Arabic.
 6. **Language purity** — content not in the subject's `contentLanguage` (beyond math symbols,
    slugs, `mode`, URLs) = **[MAJOR]**.
 7. **Factual accuracy** — for culture-générale/sciences/history claims, spot-check non-trivial

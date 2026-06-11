@@ -10,7 +10,7 @@ the precedent: Arabic prose around standard math. Never "arabize" the math itsel
 - Always `0 1 2 3 4 5 6 7 8 9`. **Never Arabic-Indic digits** (`٠١٢٣٤٥٦٧٨٩`) — not in prompts,
   options, explanations, titles, cours.md, resume.md, or SVG figures. This applies to Arabic
   content too (math, sciences, but also dates and quantities in arabe/culture-générale).
-- The QA tooling only *folds* Arabic-Indic digits for comparison; it does not reject them — you
+- The QA tooling only _folds_ Arabic-Indic digits for comparison; it does not reject them — you
   enforce this rule at authoring time, and `content-audit` flags violations in existing content.
 
 ## Equations & expressions — standard international notation, LTR
@@ -22,7 +22,7 @@ the precedent: Arabic prose around standard math. Never "arabize" the math itsel
   (never the letter x), `÷` or fraction bars, `=`, `≠`, `<`, `>`, `≤`, `≥`, `√`, `π`, `∈`, `⊂`,
   `⟺`, `→`. Exponents as `x²`, `10³` (Unicode superscripts) or LaTeX in cours.md.
 - **Keep each formula a contiguous LTR run** inside RTL text: never interleave Arabic words
-  *inside* an equation; write the Arabic sentence, then the full expression, then resume Arabic
+  _inside_ an equation; write the Arabic sentence, then the full expression, then resume Arabic
   (as the production math content does). In cours.md, put substantial formulas on their own line.
 - **Units & scientific symbols stay standard SI**: `cm`, `m²`, `kg`, `g/mol`, `%`, `°C`, `km/h` —
   never transliterated, in any language.
@@ -39,7 +39,13 @@ the precedent: Arabic prose around standard math. Never "arabize" the math itsel
 ## Decimal separator & locale details
 
 - `fr` and `ar` content: decimal **comma** (`3,5`) — the Tunisian school convention. `en` content:
-  decimal **point** (`3.5`). Thousands: prefer a thin/regular space (`12 500`) in fr/ar, comma in en.
+  decimal **point** (`3.5`).
+- **Thousands separator — bidi-critical in Arabic.** In `ar` content, group digits with a
+  **NO-BREAK SPACE U+00A0** (`38 461`), **never a plain space**: in RTL text a plain space is
+  bidi-neutral, so `38 461` renders as `461 38` (the groups swap) even though the source is
+  correct. U+00A0 has bidi class CS (common number separator), which keeps the whole number a
+  single LTR run. In `fr` (LTR) a plain or no-break space both render fine — prefer U+00A0 for
+  consistency; in `en` use the comma (`12,500`).
 - Intervals, set notation, function notation follow the official textbook convention of the
   subject's grade (e.g. `]−2 ; +∞[`); keep the notation itself standard/LTR even in Arabic prose.
 - Worked computations in explanations chain standard notation with `→` and end with the
@@ -48,5 +54,6 @@ the precedent: Arabic prose around standard math. Never "arabize" the math itsel
 ## Self-check before running QA
 
 Scan every file you wrote for `[٠-٩]` (must be zero matches), for hyphens used as minus signs in
-formulas, and for the letter `x` used as a multiplication sign. The `content-audit` skill performs
-the same scan on existing content.
+formulas, for the letter `x` used as a multiplication sign, and — **in `ar` content** — for a
+plain space between digit groups (regex `\d \d{3}` outside `<svg>` markup, must be zero: use
+U+00A0). The `content-audit` skill performs the same scans on existing content.
