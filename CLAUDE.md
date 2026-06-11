@@ -158,8 +158,11 @@ Claude Code skills under [`.claude/skills/`](./.claude/skills/). `content-engine
 **faithful to the official curriculum**), `content-culture-generale` and `content-muscle-cerveau`
 (trilingual FR/EN/AR → three sibling subjects), `content-iq-training` (visual IQ/reasoning, SVG
 figures), and `content-langue-{anglais,francais,arabe}` (immersion, one per language).
-`content-audit` is the review counterpart: it audits **existing** content (re-solves every question,
-checks keys/distractors/notation/calibration) and produces a severity-ranked report. Skills produce
+`content-cours` specializes in lesson texts (writes/rewrites `cours.md`/`resume.md` against the
+course-quality bar: clarté, compréhension, exhaustivité — every tested notion must be taught —
+expérience pédagogique). `content-audit` is the review counterpart: it audits **existing** content
+(re-solves every question, checks keys/distractors/notation/calibration, and grades courses/summaries
+against the same course-quality bar) and produces a severity-ranked report. Skills produce
 **files only** (then run `content:check` + `content:qa:strict`); you review the diff, then build/apply.
 **Non-school** programs are trilingual = three sibling subjects (one `contentLanguage` each) under one
 theme; **school** content (`ecole-tn`) stays in the subject's **official language of instruction**
