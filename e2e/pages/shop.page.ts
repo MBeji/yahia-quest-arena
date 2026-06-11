@@ -14,17 +14,17 @@ export class ShopPage {
   get items(): Locator {
     return this.section.getByTestId("shop-item");
   }
-  /** "Buy" buttons (aria-label="Buy <name>"); disabled when unaffordable. */
+  /** Buy buttons (aria-label="Acheter <name>" / "Buy <name>"); disabled when unaffordable. */
   get buyButtons(): Locator {
-    return this.section.getByRole("button", { name: /^Buy/i });
+    return this.section.getByRole("button", { name: /^(Acheter|Buy)/i });
   }
-  /** "Activer" buttons for armable consumables the user owns. */
+  /** Activate buttons for armable consumables the user owns. */
   get activateButtons(): Locator {
-    return this.section.getByRole("button", { name: /^Activer/i });
+    return this.section.getByRole("button", { name: /^(Activer|Activate)/i });
   }
-  /** Ownership chips ("In stock x…", "Owned", "Equipped"). */
+  /** Ownership chips ("En stock x…", "Possédé", "Équipé" — FR default, EN tolerated). */
   get ownedBadges(): Locator {
-    return this.section.getByText(/In stock|Owned|Equipped/);
+    return this.section.getByText(/En stock|Possédé|Équipé|In stock|Owned|Equipped/);
   }
   /** Armed chips ("Actif · …") shown after a consumable is activated. */
   get activeBadges(): Locator {

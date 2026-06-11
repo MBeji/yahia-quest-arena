@@ -95,8 +95,7 @@ function DungeonPage() {
       setTotalAnswered(res.totalAnswered);
       qc.invalidateQueries({ queryKey: ["dashboard"] });
     },
-    // TODO(review #32): no i18n key for this fallback yet — add t.dungeon.errorSavingRun.
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Error saving run"),
+    onError: (e) => toast.error(e instanceof Error ? e.message : t.dungeon.errorSavingRun),
   });
 
   const answerMutation = useMutation({
@@ -114,9 +113,7 @@ function DungeonPage() {
         setFloor(res.currentFloor);
         const newQuestions = res.questions ?? [];
         if (newQuestions.length === 0) {
-          // TODO(review #32): no i18n key for this dungeon toast yet — add
-          // t.dungeon.noMoreQuestions and switch to it.
-          toast.error("No more questions available in the dungeon. Finalizing your run...");
+          toast.error(t.dungeon.noMoreQuestions);
           return false;
         }
         const shuffledQuestions: DungeonQuestion[] = newQuestions.map((question) => ({
@@ -128,14 +125,13 @@ function DungeonPage() {
         setCurrentIdx(0);
         return true;
       } catch {
-        // TODO(review #32): no i18n key for this toast yet — add t.dungeon.failedLoadQuestions.
-        toast.error("Failed to load dungeon questions");
+        toast.error(t.dungeon.failedLoadQuestions);
         return false;
       } finally {
         setLoading(false);
       }
     },
-    [fetchQuestions],
+    [fetchQuestions, t.dungeon.failedLoadQuestions, t.dungeon.noMoreQuestions],
   );
 
   async function startDungeon() {
@@ -165,8 +161,7 @@ function DungeonPage() {
       }
     } catch (error) {
       setState("lobby");
-      // TODO(review #32): no i18n key for this fallback yet — add t.dungeon.failedStartRun.
-      toast.error(error instanceof Error ? error.message : "Failed to start dungeon run");
+      toast.error(error instanceof Error ? error.message : t.dungeon.failedStartRun);
     }
   }
 
@@ -208,8 +203,7 @@ function DungeonPage() {
       setShowFeedback(false);
       setSelected(null);
       setAnswerWasCorrect(null);
-      // TODO(review #32): no i18n key for this fallback yet — add t.dungeon.failedValidateAnswer.
-      toast.error(error instanceof Error ? error.message : "Failed to validate answer");
+      toast.error(error instanceof Error ? error.message : t.dungeon.failedValidateAnswer);
     }
   }
 

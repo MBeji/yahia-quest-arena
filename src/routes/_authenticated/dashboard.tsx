@@ -197,59 +197,48 @@ function Dashboard() {
   const purchaseMutation = useMutation({
     mutationFn: (payload: { itemCode: string }) => purchaseItem({ data: payload }),
     onSuccess: (res) => {
-      // TODO(review #32): hardcoded English toast — no matching i18n key exists yet
-      // (e.g. t.dashboard.purchaseSuccess with a {name} placeholder). Add the key to the
-      // i18n files (fr/en/ar/types), then switch to useT(). i18n files are out of scope here.
-      toast.success(`${res.purchasedItemName} added to inventory.`);
+      toast.success(t.dashboard.purchaseSuccess.replace("{name}", res.purchasedItemName));
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
-    // TODO(review #32): hardcoded English fallback — needs an i18n key (e.g.
-    // t.dashboard.purchaseFailed) added to the i18n files before it can use useT().
-    onError: (error) => toast.error(error instanceof Error ? error.message : "Purchase failed"),
+    onError: (error) =>
+      toast.error(error instanceof Error ? error.message : t.dashboard.purchaseFailed),
   });
 
   const equipMutation = useMutation({
     mutationFn: (payload: { itemCode: string }) => equipSkin({ data: payload }),
     onSuccess: (res) => {
-      // TODO(review #32): hardcoded English toast — no matching i18n key exists yet
-      // (e.g. t.dashboard.equipSuccess with a {name} placeholder). Add it to the i18n
-      // files, then switch to useT(). i18n files are out of scope here.
-      toast.success(`${res.itemName} equipped.`);
+      toast.success(t.dashboard.equipSuccess.replace("{name}", res.itemName));
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
-    // TODO(review #32): hardcoded English fallback — needs an i18n key (e.g.
-    // t.dashboard.equipFailed) added to the i18n files before it can use useT().
-    onError: (error) => toast.error(error instanceof Error ? error.message : "Equip failed"),
+    onError: (error) =>
+      toast.error(error instanceof Error ? error.message : t.dashboard.equipFailed),
   });
 
   const activateMutation = useMutation({
     mutationFn: (payload: { itemCode: string }) => activateItem({ data: payload }),
     onSuccess: (res) => {
-      // TODO(review #32): hardcoded toast — no matching i18n key exists yet. Add a key
-      // (e.g. t.dashboard.itemArmed with {name}/{slot} placeholders), then switch to useT().
-      const suffix =
-        res.slot === "passive" ? "activé · protège ta série." : "activé · prochaine quête.";
-      toast.success(`${res.itemName} ${suffix}`);
+      const template =
+        res.slot === "passive" ? t.dashboard.itemArmedPassive : t.dashboard.itemArmedQuest;
+      toast.success(template.replace("{name}", res.itemName));
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
-    onError: (error) => toast.error(error instanceof Error ? error.message : "Activation failed"),
+    onError: (error) =>
+      toast.error(error instanceof Error ? error.message : t.dashboard.activationFailed),
   });
 
   const recoverStreakFn = useServerFn(recoverStreak);
   const streakRecoveryMutation = useMutation({
     mutationFn: () => recoverStreakFn(),
     onSuccess: (res) => {
-      // TODO(review #32): hardcoded English sentence — t.dashboard.days/day exist but the
-      // surrounding "Streak recovered! You now have …" text has no i18n key. Add a key with a
-      // {n}/{unit} placeholder to the i18n files, then switch to useT(). i18n files out of scope.
       toast.success(
-        `🔥 Streak recovered! You now have ${res.newStreak} ${res.newStreak > 1 ? t.dashboard.days : t.dashboard.day}.`,
+        t.dashboard.streakRecovered
+          .replace("{n}", String(res.newStreak))
+          .replace("{unit}", res.newStreak > 1 ? t.dashboard.days : t.dashboard.day),
       );
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
-    // TODO(review #32): hardcoded English fallback — needs an i18n key (e.g.
-    // t.dashboard.recoveryFailed) added to the i18n files before it can use useT().
-    onError: (error) => toast.error(error instanceof Error ? error.message : "Recovery failed"),
+    onError: (error) =>
+      toast.error(error instanceof Error ? error.message : t.dashboard.recoveryFailed),
   });
 
   if (isError) {

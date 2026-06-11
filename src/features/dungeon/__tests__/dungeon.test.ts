@@ -99,7 +99,7 @@ describe("dungeon — startDungeonRun", () => {
 
     const { startDungeonRun } = await import("@/features/dungeon");
     await expect((startDungeonRun as unknown as AnyFn)()).rejects.toThrow(
-      /too many dungeon starts/i,
+      /Trop de départs de donjon/i,
     );
     expect(mockRpc).not.toHaveBeenCalled();
   });
@@ -115,7 +115,7 @@ describe("dungeon — startDungeonRun", () => {
     const err = await (startDungeonRun as unknown as AnyFn)().catch((e: unknown) => e);
 
     expect(err).toBeInstanceOf(Error);
-    expect((err as Error).message).toBe("Dungeon run initialization failed.");
+    expect((err as Error).message).toBe("Impossible de démarrer la course.");
     // The raw RPC message must not leak to the client.
     expect((err as Error).message).not.toMatch(/column foo missing/);
   });
@@ -124,7 +124,9 @@ describe("dungeon — startDungeonRun", () => {
     mockRpc.mockImplementation(rpcResponder({ start_dungeon_run: { data: null, error: null } }));
 
     const { startDungeonRun } = await import("@/features/dungeon");
-    await expect((startDungeonRun as unknown as AnyFn)()).rejects.toThrow(/initialization failed/i);
+    await expect((startDungeonRun as unknown as AnyFn)()).rejects.toThrow(
+      /Impossible de démarrer/i,
+    );
   });
 });
 
@@ -209,7 +211,7 @@ describe("dungeon — getDungeonQuestions (parser branches)", () => {
       data: { runId: RUN_ID, batchSize: 5 },
     }).catch((e: unknown) => e);
 
-    expect((err as Error).message).toBe("Failed to load dungeon questions.");
+    expect((err as Error).message).toBe("Impossible de charger les questions du donjon.");
     expect((err as Error).message).not.toMatch(/db exploded/);
   });
 
@@ -226,7 +228,7 @@ describe("dungeon — getDungeonQuestions (parser branches)", () => {
     const { getDungeonQuestions } = await import("@/features/dungeon");
     await expect(
       (getDungeonQuestions as unknown as AnyFn)({ data: { runId: RUN_ID, batchSize: 5 } }),
-    ).rejects.toThrow(/too many requests/i);
+    ).rejects.toThrow(/Trop de requêtes/i);
   });
 });
 
@@ -328,7 +330,7 @@ describe("dungeon — submitDungeonAnswer (parser branches)", () => {
       data: { runId: RUN_ID, questionId: QUESTION_ID, choice: "a" },
     }).catch((e: unknown) => e);
 
-    expect((err as Error).message).toBe("Failed to validate answer.");
+    expect((err as Error).message).toBe("Impossible de valider la réponse.");
     expect((err as Error).message).not.toMatch(/constraint violation/);
   });
 
@@ -349,7 +351,7 @@ describe("dungeon — submitDungeonAnswer (parser branches)", () => {
       (submitDungeonAnswer as unknown as AnyFn)({
         data: { runId: RUN_ID, questionId: QUESTION_ID, choice: "a" },
       }),
-    ).rejects.toThrow(/too many answers/i);
+    ).rejects.toThrow(/Trop de réponses/i);
   });
 });
 
@@ -416,7 +418,7 @@ describe("dungeon — submitDungeonRun (finalize parser)", () => {
       data: { runId: RUN_ID, durationSeconds: 0 },
     }).catch((e: unknown) => e);
 
-    expect((err as Error).message).toBe("Failed to finalize the dungeon run.");
+    expect((err as Error).message).toBe("Impossible de finaliser la course.");
     expect((err as Error).message).not.toMatch(/rollback details/);
   });
 
@@ -426,7 +428,7 @@ describe("dungeon — submitDungeonRun (finalize parser)", () => {
     const { submitDungeonRun } = await import("@/features/dungeon");
     await expect(
       (submitDungeonRun as unknown as AnyFn)({ data: { runId: RUN_ID, durationSeconds: 0 } }),
-    ).rejects.toThrow(/too many submissions/i);
+    ).rejects.toThrow(/Trop d'envois/i);
   });
 });
 

@@ -1,6 +1,7 @@
 import { Loader2, Shield, ShoppingBag } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { avatarEmojiForSlug } from "@/shared/lib/avatar";
+import { useI18n } from "@/lib/i18n";
 
 type Badge = {
   code: string;
@@ -25,11 +26,6 @@ type ShopItem = {
   isActive: boolean;
 };
 
-/** Armed-badge label per arming slot (passive streak shield vs next-quest item). */
-function armedLabel(armSlot: "next-quest" | "passive" | null): string {
-  return armSlot === "passive" ? "Actif · protège ta série" : "Actif · prochaine quête";
-}
-
 type DashboardBadgesShopProps = {
   badges: Badge[];
   shopItems: ShopItem[];
@@ -53,11 +49,16 @@ export function DashboardBadgesShop({
   onEquip,
   onActivate,
 }: DashboardBadgesShopProps) {
+  const { t, locale } = useI18n();
+  /** Armed-badge label per arming slot (passive streak shield vs next-quest item). */
+  const armedLabel = (armSlot: "next-quest" | "passive" | null): string =>
+    armSlot === "passive" ? t.dashboard.armedPassive : t.dashboard.armedQuest;
+
   return (
     <>
       <section className="mt-8">
         <h2 className="mb-4 flex items-center gap-2 font-display text-xl font-bold">
-          <Shield className="h-5 w-5 text-[color:var(--neon-gold)]" /> Hero Badges
+          <Shield className="h-5 w-5 text-[color:var(--neon-gold)]" /> {t.dashboard.badgesTitle}
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {badges.length > 0 ? (
@@ -74,20 +75,21 @@ export function DashboardBadgesShop({
                     </div>
                   </div>
                   <div className="rounded-full bg-[color:var(--neon-gold)]/15 px-3 py-1 text-xs font-bold text-[color:var(--neon-gold)]">
-                    Badge
+                    {t.dashboard.badgeTag}
                   </div>
                 </div>
                 <div className="mt-3 text-sm text-muted-foreground">
-                  {badge.awardedReason ?? "Reward unlocked."}
+                  {badge.awardedReason ?? t.dashboard.badgeDefaultReason}
                 </div>
                 <div className="mt-3 text-xs uppercase tracking-widest text-muted-foreground">
-                  Earned · {new Date(badge.awardedAt).toLocaleDateString("en-US")}
+                  {t.dashboard.badgeEarnedOn} ·{" "}
+                  {new Date(badge.awardedAt).toLocaleDateString(locale)}
                 </div>
               </div>
             ))
           ) : (
             <div className="rounded-2xl border border-dashed border-border/50 bg-card/40 p-6 text-sm text-muted-foreground">
-              No badges unlocked yet. Keep completing quests to fill your collection.
+              {t.dashboard.badgesEmpty}
             </div>
           )}
         </div>
@@ -95,7 +97,7 @@ export function DashboardBadgesShop({
 
       <section className="mt-8" data-testid="shop">
         <h2 className="mb-4 flex items-center gap-2 font-display text-xl font-bold">
-          <ShoppingBag className="h-5 w-5 text-[color:var(--gold)]" /> Academy Shop
+          <ShoppingBag className="h-5 w-5 text-[color:var(--gold)]" /> {t.dashboard.shopTitle}
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {shopItems.map((item) => {
@@ -137,16 +139,16 @@ export function DashboardBadgesShop({
                   </div>
                 </div>
                 <p className="mt-3 text-sm text-muted-foreground">
-                  {item.description ?? "Academy item."}
+                  {item.description ?? t.dashboard.shopDefaultDesc}
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {item.isOwned && (
                     <div className="rounded-full bg-[color:var(--success)]/15 px-3 py-1 text-xs font-bold text-[color:var(--success)]">
                       {item.itemType === "skin"
                         ? item.isEquipped
-                          ? "Equipped"
-                          : "Owned"
-                        : `In stock x${item.quantity}`}
+                          ? t.dashboard.shopEquipped
+                          : t.dashboard.shopOwned
+                        : t.dashboard.shopInStock.replace("{n}", String(item.quantity))}
                     </div>
                   )}
                   {item.isActive && (
@@ -159,26 +161,26 @@ export function DashboardBadgesShop({
                   <button
                     disabled={!canBuy || isBusy || availableCoins < item.priceCoins}
                     onClick={() => onPurchase(item.code)}
-                    aria-label={`Buy ${item.name}`}
+                    aria-label={`${t.dashboard.shopBuy} ${item.name}`}
                     className="flex-1 rounded-lg border border-border bg-black/50 px-4 py-2.5 text-sm font-semibold disabled:opacity-40"
                   >
                     {isPurchasePending ? (
                       <Loader2 className="mx-auto h-4 w-4 animate-spin" />
                     ) : (
-                      "Buy"
+                      t.dashboard.shopBuy
                     )}
                   </button>
                   {canEquip && (
                     <button
                       disabled={isBusy}
                       onClick={() => onEquip(item.code)}
-                      aria-label={`Equip ${item.name}`}
+                      aria-label={`${t.dashboard.shopEquip} ${item.name}`}
                       className="flex-1 rounded-lg bg-[image:var(--gradient-gold)] px-4 py-2.5 text-sm font-bold text-black shadow-gold disabled:opacity-40"
                     >
                       {isEquipPending ? (
                         <Loader2 className="mx-auto h-4 w-4 animate-spin" />
                       ) : (
-                        "Equip"
+                        t.dashboard.shopEquip
                       )}
                     </button>
                   )}
@@ -186,13 +188,13 @@ export function DashboardBadgesShop({
                     <button
                       disabled={isBusy}
                       onClick={() => onActivate(item.code)}
-                      aria-label={`Activer ${item.name}`}
+                      aria-label={`${t.dashboard.shopActivate} ${item.name}`}
                       className="flex-1 rounded-lg bg-[image:var(--gradient-gold)] px-4 py-2.5 text-sm font-bold text-black shadow-gold disabled:opacity-40"
                     >
                       {isActivatePending ? (
                         <Loader2 className="mx-auto h-4 w-4 animate-spin" />
                       ) : (
-                        "Activer"
+                        t.dashboard.shopActivate
                       )}
                     </button>
                   )}

@@ -69,11 +69,11 @@ function LeaderboardPage() {
 
       <div className="mb-6 text-center">
         <h1 className="font-display text-4xl font-bold">
-          <span className="text-gradient-gold">Academy</span> Leaderboard
+          <span className="text-gradient-gold">Classement</span> de l&apos;Académie
         </h1>
         <p className="mt-2 text-muted-foreground">
           {isGlobal
-            ? "The most powerful heroes of the exam"
+            ? "Les héros les plus puissants du concours"
             : `Classement par XP · ${activeSubject?.name_fr ?? ""}`}
         </p>
       </div>
@@ -244,7 +244,7 @@ function LeaderboardPage() {
           {leaderboard.length === 0 && (
             <div className="mt-12 text-center text-muted-foreground">
               {isGlobal
-                ? "No heroes registered yet."
+                ? "Aucun héros inscrit pour l'instant."
                 : "Aucun score dans cette matière pour l'instant."}
             </div>
           )}

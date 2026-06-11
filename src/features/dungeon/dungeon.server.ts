@@ -117,7 +117,7 @@ export const startDungeonRun = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
 
     if (await isRateLimited(supabase, `dungeon_start_${userId}`, 5, 30_000)) {
-      throw new Error("Too many dungeon starts. Please slow down.");
+      throw new Error("Trop de départs de donjon. Ralentis un peu.");
     }
 
     const { data, error } = await supabase.rpc("start_dungeon_run");
@@ -130,12 +130,12 @@ export const startDungeonRun = createServerFn({ method: "POST" })
       failWithClientError(
         "dungeon.startDungeonRun: start_dungeon_run RPC failed",
         error,
-        "Dungeon run initialization failed.",
+        "Impossible de démarrer la course.",
       );
     }
 
     const runId = typeof data === "string" ? data : "";
-    if (!runId) throw new Error("Dungeon run initialization failed.");
+    if (!runId) throw new Error("Impossible de démarrer la course.");
 
     return {
       runId,
@@ -209,7 +209,7 @@ export const getDungeonQuestions = createServerFn({ method: "GET" })
 
     // Rate limit: max 10 requests per 10 seconds per user
     if (await isRateLimited(supabase, `dungeon_q_${userId}`, 10, 10_000)) {
-      throw new Error("Too many requests. Please slow down.");
+      throw new Error("Trop de requêtes. Ralentis un peu.");
     }
 
     const { data: payload, error } = await supabase.rpc("get_dungeon_questions", {
@@ -220,7 +220,7 @@ export const getDungeonQuestions = createServerFn({ method: "GET" })
       failWithClientError(
         "dungeon.getDungeonQuestions: get_dungeon_questions RPC failed",
         error,
-        "Failed to load dungeon questions.",
+        "Impossible de charger les questions du donjon.",
       );
     }
 
@@ -242,7 +242,7 @@ export const submitDungeonAnswer = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
 
     if (await isRateLimited(supabase, `dungeon_answer_${userId}`, 40, 60_000)) {
-      throw new Error("Too many answers submitted. Please slow down.");
+      throw new Error("Trop de réponses envoyées. Ralentis un peu.");
     }
 
     const { data: payload, error } = await supabase.rpc("submit_dungeon_answer", {
@@ -254,7 +254,7 @@ export const submitDungeonAnswer = createServerFn({ method: "POST" })
       failWithClientError(
         "dungeon.submitDungeonAnswer: submit_dungeon_answer RPC failed",
         error,
-        "Failed to validate answer.",
+        "Impossible de valider la réponse.",
       );
     }
 
@@ -279,7 +279,7 @@ export const submitDungeonRun = createServerFn({ method: "POST" })
 
     // Rate limit: max 3 run submissions per 30 seconds
     if (await isRateLimited(supabase, `dungeon_run_${userId}`, 3, 30_000)) {
-      throw new Error("Too many submissions. Please wait.");
+      throw new Error("Trop d'envois. Patiente un peu.");
     }
 
     const { data: payload, error } = await supabase.rpc("finalize_dungeon_run", {
@@ -290,7 +290,7 @@ export const submitDungeonRun = createServerFn({ method: "POST" })
       failWithClientError(
         "dungeon.submitDungeonRun: finalize_dungeon_run RPC failed",
         error,
-        "Failed to finalize the dungeon run.",
+        "Impossible de finaliser la course.",
       );
     }
 

@@ -124,7 +124,7 @@ function QuestPage() {
       qc.invalidateQueries({ queryKey: ["dashboard"] });
       qc.invalidateQueries({ queryKey: ["subject"] });
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Error"),
+    onError: (e) => toast.error(e instanceof Error ? e.message : t.errors.errorFallback),
   });
 
   // Sync the available reveal charges once the exercise (and the user's hint
@@ -149,7 +149,7 @@ function QuestPage() {
         setHintsRemaining((n) => Math.max(0, n - 1));
       }
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Error"),
+    onError: (e) => toast.error(e instanceof Error ? e.message : t.errors.errorFallback),
   });
 
   const questions = useMemo(() => data?.questions ?? [], [data?.questions]);

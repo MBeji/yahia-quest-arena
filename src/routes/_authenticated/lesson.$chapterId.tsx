@@ -94,7 +94,7 @@ function LessonPage() {
           params={{ subjectId: chapter.subject_id }}
           className="inline-flex items-center gap-1.5 rounded-lg border border-border/50 bg-black/60 px-3 py-2 text-sm text-muted-foreground backdrop-blur-sm transition hover:border-[color:var(--gold)]/40 hover:text-foreground"
         >
-          <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {subjectData?.name_fr ?? "Back"}
+          <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {subjectData?.name_fr ?? "Retour"}
         </Link>
 
         {/* Chapter progress indicator */}
