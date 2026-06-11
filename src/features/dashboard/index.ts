@@ -5,9 +5,9 @@ export {
   getDashboard,
   getDashboardSecondary,
   getLeaderboard,
+  getLeaderboardSubjects,
   getParcours,
   getSprint2Dashboard,
-  getSubjects,
   getSubjectLeaderboard,
 } from "./dashboard.server";
 export {

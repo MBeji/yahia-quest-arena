@@ -4,7 +4,11 @@ import { useServerFn } from "@tanstack/react-start";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { ArrowLeft, Crown, Flame, Medal, Zap } from "lucide-react";
-import { getLeaderboard, getSubjects, getSubjectLeaderboard } from "@/features/dashboard";
+import {
+  getLeaderboard,
+  getLeaderboardSubjects,
+  getSubjectLeaderboard,
+} from "@/features/dashboard";
 import { isRtlText } from "@/shared/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/leaderboard")({
@@ -29,13 +33,16 @@ type Player = {
 
 function LeaderboardPage() {
   const fetchLeaderboard = useServerFn(getLeaderboard);
-  const fetchSubjects = useServerFn(getSubjects);
+  const fetchSubjects = useServerFn(getLeaderboardSubjects);
   const fetchSubjectLeaderboard = useServerFn(getSubjectLeaderboard);
 
   const [tab, setTab] = useState<string>(GLOBAL);
 
+  // Tabs are scoped to the ACTIVE parcours' subjects (GAP-018) — not the whole
+  // academy catalogue — so the row stays short and homonym subjects across grades
+  // ("Mathématiques" 9ème vs 6ème) can't collide.
   const subjectsQuery = useQuery({
-    queryKey: ["subjects-list"],
+    queryKey: ["leaderboard-subjects"],
     queryFn: () => fetchSubjects(),
   });
   const globalQuery = useQuery({
@@ -96,6 +103,7 @@ function LeaderboardPage() {
           return (
             <button
               key={s.id}
+              data-testid="leaderboard-subject-tab"
               onClick={() => setTab(s.id)}
               dir={isRtlText(s.name_fr) ? "rtl" : undefined}
               className={`rounded-full border px-4 py-1.5 text-sm font-semibold transition ${

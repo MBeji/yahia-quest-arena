@@ -49,6 +49,7 @@ function mockQuery(data: unknown, error: unknown = null) {
   chain.gt = vi.fn().mockReturnValue(chain);
   chain.gte = vi.fn().mockReturnValue(chain);
   chain.lte = vi.fn().mockReturnValue(chain);
+  chain.is = vi.fn().mockReturnValue(chain);
   chain.order = vi.fn().mockReturnValue(chain);
   chain.limit = vi.fn().mockReturnValue(chain);
   chain.single = vi.fn().mockReturnValue(result);
@@ -554,42 +555,55 @@ describe("gamification.dashboard — getDashboardSecondary", () => {
   });
 });
 
-describe("gamification.dashboard — getSubjects", () => {
+describe("gamification.dashboard — getLeaderboardSubjects", () => {
   beforeEach(() => {
     vi.resetModules();
     mockFrom.mockReset();
     mockRpc.mockReset();
   });
 
-  it("returns the ordered subjects list", async () => {
-    const subjects = [
-      { id: "math", name_fr: "Mathématiques", color_token: "subject-math" },
-      { id: "french", name_fr: "Français", color_token: "subject-french" },
-    ];
-    mockFrom.mockImplementation(() => mockQuery(subjects));
+  it("returns only the active parcours' subjects (school parcours: theme + grade)", async () => {
+    const subjects = [{ id: "math-9", name_fr: "Mathématiques", color_token: "subject-math" }];
+    const subjectsChain = mockQuery(subjects);
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "profiles") return mockQuery({ current_parcours_id: "concours-9eme" });
+      if (table === "parcours") return mockQuery({ theme_id: "ecole-tn", grade_id: "g-9" });
+      return subjectsChain;
+    });
 
-    const { getSubjects } = await import("@/features/dashboard");
-    const result = (await (getSubjects as unknown as (d?: unknown) => Promise<unknown>)()) as {
-      subjects: unknown[];
-    };
+    const { getLeaderboardSubjects } = await import("@/features/dashboard");
+    const result = (await (
+      getLeaderboardSubjects as unknown as (d?: unknown) => Promise<unknown>
+    )()) as { subjects: unknown[] };
 
     expect(result.subjects).toEqual(subjects);
+    expect(subjectsChain.eq).toHaveBeenCalledWith("theme_id", "ecole-tn");
+    expect(subjectsChain.eq).toHaveBeenCalledWith("grade_id", "g-9");
   });
 
-  it("getSubjects scopes by theme and grade when both are provided", async () => {
-    const subjects = [{ id: "math-bac", name_fr: "Mathématiques", theme_id: "ecole-tn" }];
-    const chain = mockQuery(subjects);
-    mockFrom.mockImplementation(() => chain);
+  it("scopes to null-grade subjects for a non-school (exploration) parcours", async () => {
+    const subjectsChain = mockQuery([{ id: "cg-fr", name_fr: "Histoire" }]);
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "profiles") return mockQuery({ current_parcours_id: "culture-generale" });
+      if (table === "parcours") return mockQuery({ theme_id: "culture-generale", grade_id: null });
+      return subjectsChain;
+    });
 
-    const { getSubjects } = await import("@/features/dashboard");
-    const result = (await (getSubjects as unknown as (d: unknown) => Promise<unknown>)({
-      themeId: "ecole-tn",
-      gradeId: "11111111-1111-1111-1111-111111111111",
-    })) as { subjects: unknown[] };
+    const { getLeaderboardSubjects } = await import("@/features/dashboard");
+    await (getLeaderboardSubjects as unknown as (d?: unknown) => Promise<unknown>)();
 
-    expect(result.subjects).toEqual(subjects);
-    expect(chain.eq).toHaveBeenCalledWith("theme_id", "ecole-tn");
-    expect(chain.eq).toHaveBeenCalledWith("grade_id", "11111111-1111-1111-1111-111111111111");
+    expect(subjectsChain.is).toHaveBeenCalledWith("grade_id", null);
+  });
+
+  it("returns an empty list when the student has no active parcours (pre-onboarding)", async () => {
+    mockFrom.mockImplementation(() => mockQuery({ current_parcours_id: null }));
+
+    const { getLeaderboardSubjects } = await import("@/features/dashboard");
+    const result = (await (
+      getLeaderboardSubjects as unknown as (d?: unknown) => Promise<unknown>
+    )()) as { subjects: unknown[] };
+
+    expect(result.subjects).toEqual([]);
   });
 });
 
@@ -773,12 +787,16 @@ describe("gamification.dashboard — branch coverage (error/empty paths)", () =>
     ).rejects.toThrow(/tableau de bord/i);
   });
 
-  it("getSubjects throws a generic message on error", async () => {
-    mockFrom.mockImplementation(() => mockQuery(null, { message: "subjects error" }));
-    const { getSubjects } = await import("@/features/dashboard");
-    await expect((getSubjects as unknown as (d?: unknown) => Promise<unknown>)()).rejects.toThrow(
-      /tableau de bord/i,
-    );
+  it("getLeaderboardSubjects throws a generic message on a subjects fetch error", async () => {
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "profiles") return mockQuery({ current_parcours_id: "concours-9eme" });
+      if (table === "parcours") return mockQuery({ theme_id: "ecole-tn", grade_id: "g-9" });
+      return mockQuery(null, { message: "subjects error" });
+    });
+    const { getLeaderboardSubjects } = await import("@/features/dashboard");
+    await expect(
+      (getLeaderboardSubjects as unknown as (d?: unknown) => Promise<unknown>)(),
+    ).rejects.toThrow(/tableau de bord/i);
   });
 
   it("getSprint2Dashboard throws on weekly-quests error and on spaced-rep error", async () => {

@@ -22,18 +22,15 @@ test.describe("Leaderboard", () => {
     expect(rendered).toBeTruthy();
   });
 
-  test("can switch to a per-subject ranking", async ({ leaderboard, adminDb }) => {
-    const { data } = await adminDb.client
-      .from("subjects")
-      .select("name_fr")
-      .order("display_order")
-      .limit(1)
-      .maybeSingle();
-    const name = (data?.name_fr as string | undefined) ?? null;
-    test.skip(!name, "No subject in the test project to build a leaderboard tab.");
-
+  test("can switch to a per-subject ranking", async ({ leaderboard }) => {
     await leaderboard.goto();
-    await leaderboard.subjectTab(name as string).click();
+    // Tabs are scoped to the ACTIVE parcours' subjects (GAP-018), so pick whatever
+    // subject tab actually renders instead of querying the whole catalogue.
+    await expect(leaderboard.globalTab).toBeVisible();
+    const tabCount = await leaderboard.subjectTabs.count();
+    test.skip(tabCount === 0, "The seeded user's parcours has no subject tabs.");
+
+    await leaderboard.subjectTabs.first().click();
     // The board re-renders for the subject (heading persists, no crash).
     await expect(leaderboard.heading).toBeVisible();
     await leaderboard.globalTab.click();

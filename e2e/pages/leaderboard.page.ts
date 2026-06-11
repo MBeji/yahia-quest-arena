@@ -5,7 +5,7 @@ export class LeaderboardPage {
   constructor(private readonly page: Page) {}
 
   get heading(): Locator {
-    return this.page.getByRole("heading", { name: /leaderboard/i });
+    return this.page.getByRole("heading", { name: /classement|leaderboard/i });
   }
   /** One row per ranked player in the full ranking list. */
   get rows(): Locator {
@@ -21,7 +21,11 @@ export class LeaderboardPage {
   }
   /** Empty-state message shown when no hero has any XP yet. */
   get emptyState(): Locator {
-    return this.page.getByText(/no heroes registered yet|aucun score/i);
+    return this.page.getByText(/aucun héros inscrit|aucun score|no heroes registered yet/i);
+  }
+  /** All subject tabs — scoped to the active parcours' subjects (GAP-018). */
+  get subjectTabs(): Locator {
+    return this.page.getByTestId("leaderboard-subject-tab");
   }
   /** A subject tab, located by the subject's display name. */
   subjectTab(name: string): Locator {
