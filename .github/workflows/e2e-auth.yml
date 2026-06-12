@@ -130,6 +130,9 @@ jobs:
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.TEST_SUPABASE_ANON_KEY }}
           SUPABASE_URL: ${{ env.TEST_SUPABASE_URL }}
           SUPABASE_PUBLISHABLE_KEY: ${{ secrets.TEST_SUPABASE_ANON_KEY }}
+          # The adminDb fixture (e2e/helpers/db.ts) needs the service-role key at
+          # SPEC runtime too — locally .env.test provides it; CI must as well.
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.TEST_SUPABASE_SERVICE_ROLE_KEY }}
           E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}
         run: npm run test:e2e:auth
 
