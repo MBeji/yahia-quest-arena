@@ -60,7 +60,12 @@ jobs:
           sudo apt-get install -y -qq postgresql-common >/dev/null
           yes | sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh >/dev/null
           sudo apt-get install -y -qq postgresql-client-17 >/dev/null
-          pg_dump --version
+          # Le runner embarque un cluster PG16 : le wrapper /usr/bin/pg_dump résout vers 16
+          # malgré l'install du 17 → imposer les binaires 17 pour les étapes suivantes.
+          echo "/usr/lib/postgresql/17/bin" >> "$GITHUB_PATH"
+          V=$(/usr/lib/postgresql/17/bin/pg_dump --version)
+          echo "$V"
+          echo "$V" | grep -q " 17\." || { echo "::error::pg_dump 17 introuvable après install."; exit 1; }
 
       - name: Dump (public + auth) + contrôle d'intégrité
         run: |
