@@ -1,0 +1,118 @@
+# Sauvegarde quotidienne de la base (palier 0 — Supabase Free n'a AUCUN backup géré).
+# - schedule : dump PROD chaque nuit -> artefact privé (rétention 14 j, ~quota 500 Mo).
+# - workflow_dispatch : dump manuel de test|prod, avec option "drill" qui restaure le
+#   dump dans un Postgres 17 jetable (conteneur du runner) et vérifie les invariants —
+#   c'est le test de restauration, sans toucher ni TEST ni PROD.
+# Couverture : schémas public + auth (données app + comptes). Hors périmètre : fichiers
+# Storage (non utilisés), config Vercel, code (= git). Runbook : docs/backup-restore-runbook.md
+name: db-backup
+
+on:
+  schedule:
+    - cron: "30 2 * * *" # 03:30 Tunis — cible prod
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Base à sauvegarder"
+        type: choice
+        options: [test, prod]
+        default: test
+      drill:
+        description: "Drill : restaurer dans un Postgres jetable + vérifier les invariants"
+        type: boolean
+        default: false
+
+concurrency:
+  group: db-backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Résoudre la cible (+ garde anti-croisement test/prod)
+        env:
+          TEST_URL: ${{ secrets.TEST_SUPABASE_DB_URL }}
+          PROD_URL: ${{ secrets.PROD_SUPABASE_DB_URL }}
+        run: |
+          TARGET="${{ github.event.inputs.target || 'prod' }}"
+          case "$TARGET" in
+            test) DB_URL="$TEST_URL" ;;
+            prod) DB_URL="$PROD_URL" ;;
+          esac
+          if [ -z "$DB_URL" ]; then
+            echo "::error::Secret ${TARGET^^}_SUPABASE_DB_URL manquant (Settings > Secrets > Actions)."
+            exit 1
+          fi
+          # Le secret de l'un ne doit jamais pointer sur le projet de l'autre.
+          case "$TARGET" in
+            test) echo "$DB_URL" | grep -q "fasrenmmrkqjoobrztbp" && { echo "::error::TEST_SUPABASE_DB_URL pointe sur la PROD."; exit 1; } ;;
+            prod) echo "$DB_URL" | grep -q "pqegdnwdtbjtplcthxyp" && { echo "::error::PROD_SUPABASE_DB_URL pointe sur le TEST."; exit 1; } ;;
+          esac
+          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
+          echo "DB_URL=$DB_URL" >> "$GITHUB_ENV"
+          echo "STAMP=$(date -u +%Y%m%d-%H%M%S)" >> "$GITHUB_ENV"
+
+      - name: Installer postgresql-client-17 (le serveur est en 17.x)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-common >/dev/null
+          yes | sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh >/dev/null
+          sudo apt-get install -y -qq postgresql-client-17 >/dev/null
+          pg_dump --version
+
+      - name: Dump (public + auth) + contrôle d'intégrité
+        run: |
+          FILE="db-${TARGET}-${STAMP}.dump"
+          pg_dump "$DB_URL" -Fc --schema=public --schema=auth -f "$FILE"
+          OBJECTS=$(pg_restore --list "$FILE" | wc -l)
+          SIZE=$(ls -lh "$FILE" | awk '{print $5}')
+          echo "FILE=$FILE" >> "$GITHUB_ENV"
+          echo "### Dump \`$FILE\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Taille : **$SIZE** — objets listés : **$OBJECTS**" >> "$GITHUB_STEP_SUMMARY"
+          [ "$OBJECTS" -gt 50 ] || { echo "::error::Dump suspect ($OBJECTS objets)."; exit 1; }
+
+      - name: Drill de restauration (Postgres 17 jetable)
+        if: ${{ github.event.inputs.drill == 'true' }}
+        run: |
+          docker run -d --name drillpg -e POSTGRES_PASSWORD=drill -p 55432:5432 postgres:17
+          for i in $(seq 1 30); do
+            docker exec drillpg pg_isready -U postgres && break
+            sleep 1
+          done
+          RESTORE_URL="postgresql://postgres:drill@localhost:55432/postgres"
+          docker exec drillpg psql -U postgres -c 'CREATE EXTENSION IF NOT EXISTS pgcrypto; CREATE EXTENSION IF NOT EXISTS "uuid-ossp";'
+          # --no-owner/--no-privileges : les rôles Supabase (anon/authenticated/...) n'existent
+          # pas dans un Postgres vanilla ; on valide structure + données, pas les GRANTs.
+          set +e
+          pg_restore --no-owner --no-privileges -d "$RESTORE_URL" "$FILE" 2> restore-errors.log
+          RESTORE_EXIT=$?
+          set -e
+          ERRORS=$(grep -c "^pg_restore: error:" restore-errors.log || true)
+          echo "pg_restore exit=$RESTORE_EXIT, erreurs=$ERRORS (GRANTs/owners attendus en vanilla)"
+          tail -5 restore-errors.log || true
+          # Invariants : les données critiques sont là et requêtables.
+          docker exec drillpg psql -U postgres -v ON_ERROR_STOP=1 -tA -c "
+            SELECT 'profiles='||count(*) FROM public.profiles
+            UNION ALL SELECT 'subjects='||count(*) FROM public.subjects
+            UNION ALL SELECT 'exercises='||count(*) FROM public.exercises
+            UNION ALL SELECT 'questions='||count(*) FROM public.questions
+            UNION ALL SELECT 'auth_users='||count(*) FROM auth.users
+            UNION ALL SELECT 'rpc_start_session='||count(*) FROM pg_proc WHERE proname='start_exercise_session';" | tee invariants.txt
+          echo "### Drill de restauration" >> "$GITHUB_STEP_SUMMARY"
+          sed 's/^/- /' invariants.txt >> "$GITHUB_STEP_SUMMARY"
+          # Échec si une table critique est vide ou si la RPC manque.
+          for k in profiles subjects exercises questions auth_users rpc_start_session; do
+            v=$(grep "^$k=" invariants.txt | cut -d= -f2)
+            [ -n "$v" ] && [ "$v" -gt 0 ] || { echo "::error::Invariant $k=$v — drill ÉCHOUÉ."; exit 1; }
+          done
+          echo "- ✅ Invariants OK — le dump est restaurable." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publier l'artefact (rétention 14 j)
+        uses: actions/upload-artifact@v4
+        with:
+          name: db-${{ env.TARGET }}-${{ env.STAMP }}
+          path: ${{ env.FILE }}
+          retention-days: 14
+          if-no-files-found: error
