@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { normalizeDbUrl } from "../_env.mjs";
+import { normalizeDbUrl, normalizeSupabaseUrl } from "../_env.mjs";
 
 // Regression net for the nightly e2e-auth failure: `supabase db push` (Go)
 // rejects a connection string whose password holds raw special characters
@@ -33,5 +33,26 @@ describe("normalizeDbUrl", () => {
     expect(normalizeDbUrl(`postgresql://${HOST}`)).toBe(`postgresql://${HOST}`);
     expect(normalizeDbUrl("")).toBe("");
     expect(normalizeDbUrl(undefined)).toBe(undefined);
+  });
+});
+
+// Same job for the Supabase API URL: supabase-js rejects scheme-less / quoted /
+// padded values ("Invalid supabaseUrl") — the nightly seeding failure.
+describe("normalizeSupabaseUrl", () => {
+  it("leaves a clean URL unchanged", () => {
+    expect(normalizeSupabaseUrl("https://abc.supabase.co")).toBe("https://abc.supabase.co");
+  });
+
+  it("adds the missing https scheme", () => {
+    expect(normalizeSupabaseUrl("abc.supabase.co")).toBe("https://abc.supabase.co");
+  });
+
+  it("strips whitespace, wrapping quotes and trailing slash", () => {
+    expect(normalizeSupabaseUrl('  "https://abc.supabase.co/"\n')).toBe("https://abc.supabase.co");
+  });
+
+  it("passes through empty input", () => {
+    expect(normalizeSupabaseUrl("")).toBe("");
+    expect(normalizeSupabaseUrl(undefined)).toBe(undefined);
   });
 });

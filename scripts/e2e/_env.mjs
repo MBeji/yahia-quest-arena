@@ -26,6 +26,25 @@ if (existsSync(envTestPath)) {
 export const PROD_REFS = ["fasrenmmrkqjoobrztbp"];
 
 /**
+ * Normalize a Supabase API URL pasted from the dashboard: trim whitespace and
+ * accidental wrapping quotes, add the https:// scheme when missing, drop a
+ * trailing slash. supabase-js hard-rejects scheme-less URLs ("Invalid
+ * supabaseUrl") — the exact failure that broke the nightly e2e-auth seeding.
+ */
+export function normalizeSupabaseUrl(raw) {
+  if (!raw) return raw;
+  let url = raw.trim().replace(/^['"]|['"]$/g, "");
+  if (url && !/^https?:\/\//i.test(url)) url = `https://${url}`;
+  return url.replace(/\/+$/, "");
+}
+
+// Side effect: every e2e script reads these straight from process.env — fix
+// them once here so seed/reset/doctor all see a well-formed URL.
+for (const key of ["SUPABASE_URL", "TEST_SUPABASE_URL", "VITE_SUPABASE_URL"]) {
+  if (process.env[key]) process.env[key] = normalizeSupabaseUrl(process.env[key]);
+}
+
+/**
  * Normalize a Postgres connection string whose PASSWORD may contain raw
  * special characters (`#`, `@`, `%`, spaces…). The Supabase CLI (Go) rejects
  * such URLs with "invalid userinfo" — the exact failure that broke the nightly

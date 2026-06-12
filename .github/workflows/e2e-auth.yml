@@ -46,6 +46,21 @@ jobs:
             echo "has_db_url=true" >> "$GITHUB_OUTPUT"
           fi
 
+      # The dashboard URL is often pasted scheme-less or with stray quotes /
+      # whitespace; supabase-js hard-rejects that ("Invalid supabaseUrl"), which
+      # killed the nightly at the seeding step. Normalize ONCE here — every later
+      # step (seed, reset, the Playwright dev server) reads env.TEST_SUPABASE_URL.
+      # (The e2e scripts also self-normalize via scripts/e2e/_env.mjs for local runs.)
+      - name: Normalize TEST project URL
+        if: steps.guard.outputs.configured == 'true'
+        env:
+          RAW_TEST_SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
+        run: |
+          url="$(printf '%s' "$RAW_TEST_SUPABASE_URL" | tr -d '\r\n' | xargs)"
+          url="${url%\"}"; url="${url#\"}"; url="${url%\'}"; url="${url#\'}"
+          case "$url" in http://*|https://*) ;; *) url="https://$url" ;; esac
+          echo "TEST_SUPABASE_URL=${url%/}" >> "$GITHUB_ENV"
+
       - name: Setup Node
         if: steps.guard.outputs.configured == 'true'
         uses: actions/setup-node@v5
@@ -90,7 +105,7 @@ jobs:
       - name: Seed test users
         if: steps.guard.outputs.configured == 'true'
         env:
-          SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
+          SUPABASE_URL: ${{ env.TEST_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.TEST_SUPABASE_SERVICE_ROLE_KEY }}
           E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}
         run: npm run e2e:seed
@@ -100,7 +115,7 @@ jobs:
       - name: Reset gameplay state
         if: steps.guard.outputs.configured == 'true'
         env:
-          SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
+          SUPABASE_URL: ${{ env.TEST_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.TEST_SUPABASE_SERVICE_ROLE_KEY }}
         run: node scripts/e2e/reset-gameplay.mjs
 
@@ -108,9 +123,9 @@ jobs:
         if: steps.guard.outputs.configured == 'true'
         env:
           CI: "true"
-          VITE_SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
+          VITE_SUPABASE_URL: ${{ env.TEST_SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.TEST_SUPABASE_ANON_KEY }}
-          SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
+          SUPABASE_URL: ${{ env.TEST_SUPABASE_URL }}
           SUPABASE_PUBLISHABLE_KEY: ${{ secrets.TEST_SUPABASE_ANON_KEY }}
           E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}
         run: npm run test:e2e:auth
