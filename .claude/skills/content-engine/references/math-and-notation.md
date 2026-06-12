@@ -37,7 +37,10 @@ raw markup to the student, and inline `$…$` shows its dollar signs literally. 
   `2x − 3 = 7`, `x ≥ −3`, `√(25 × 2) = 5√2`, `(xB − xA ; yB − yA)` all read fine as-is.
 - **`$$ … $$` is allowed in cours.md only as a display-block marker** (the renderer turns it into
   a centered, LTR-isolated `lesson-math` block) — but its **content must be plain Unicode**, never
-  LaTeX. Inline `$…$` is forbidden (not processed; dollars render).
+  LaTeX, and the **whole block must sit on a single line** (`$$ formula $$`): the renderer's regex
+  doesn't span lines, so a multi-line block renders as literal `$$` paragraphs. One formula per
+  block; stack several single-line blocks for a system of equations. Inline `$…$` is forbidden
+  (not processed; dollars render).
 - **Plain-Unicode equivalents** (match the production question conventions):
   `\sqrt{50}` → `√50`; `\sqrt{25 × 2}` → `√(25 × 2)` (parenthesize multi-term radicands);
   `\frac{a}{b}` → `a/b` with parentheses as needed (`(xA + xB)/2`); subscripts as plain letters
