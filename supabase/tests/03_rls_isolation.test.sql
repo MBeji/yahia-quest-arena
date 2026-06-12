@@ -72,16 +72,16 @@ SELECT is(
   'RLS: an unfiltered attempts scan returns ONLY the caller''s rows'
 );
 
--- Sanity: a direct UPDATE of B's attempt affects zero rows (no peer write).
-WITH upd AS (
-  UPDATE public.attempts SET xp_earned = 99999
-   WHERE user_id = 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'
-  RETURNING 1
-)
-SELECT is(
-  (SELECT count(*)::int FROM upd),
-  0,
-  'RLS: user A canNOT UPDATE user B''s attempts'
+-- Sanity: a direct UPDATE on attempts is rejected OUTRIGHT — since
+-- 20260610160000_revoke_gameplay_table_writes the client roles have no write
+-- grants at all on the gameplay tables (writes are SECURITY DEFINER RPC-only),
+-- so this fails with 42501 before RLS even applies.
+SELECT throws_ok(
+  $$ UPDATE public.attempts SET xp_earned = 99999
+       WHERE user_id = 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb' $$,
+  '42501',
+  NULL,
+  'grants: a direct UPDATE on attempts is rejected (writes are RPC-only)'
 );
 
 RESET ROLE;
