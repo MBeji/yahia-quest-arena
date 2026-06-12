@@ -115,7 +115,8 @@ jobs:
           echo "- ✅ Invariants OK — le dump est restaurable." >> "$GITHUB_STEP_SUMMARY"
 
       - name: Publier l'artefact (rétention 14 j)
-        uses: actions/upload-artifact@v4
+        # v7 = runtime Node 24 (Node 20 forcé obsolète sur les runners le 2026-06-16).
+        uses: actions/upload-artifact@v7
         with:
           name: db-${{ env.TARGET }}-${{ env.STAMP }}
           path: ${{ env.FILE }}
