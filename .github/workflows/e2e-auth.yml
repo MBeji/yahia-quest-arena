@@ -46,21 +46,6 @@ jobs:
             echo "has_db_url=true" >> "$GITHUB_OUTPUT"
           fi
 
-      # The dashboard URL is often pasted scheme-less or with stray quotes /
-      # whitespace; supabase-js hard-rejects that ("Invalid supabaseUrl"), which
-      # killed the nightly at the seeding step. Normalize ONCE here — every later
-      # step (seed, reset, the Playwright dev server) reads env.TEST_SUPABASE_URL.
-      # (The e2e scripts also self-normalize via scripts/e2e/_env.mjs for local runs.)
-      - name: Normalize TEST project URL
-        if: steps.guard.outputs.configured == 'true'
-        env:
-          RAW_TEST_SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
-        run: |
-          url="$(printf '%s' "$RAW_TEST_SUPABASE_URL" | tr -d '\r\n' | xargs)"
-          url="${url%\"}"; url="${url#\"}"; url="${url%\'}"; url="${url#\'}"
-          case "$url" in http://*|https://*) ;; *) url="https://$url" ;; esac
-          echo "TEST_SUPABASE_URL=${url%/}" >> "$GITHUB_ENV"
-
       - name: Setup Node
         if: steps.guard.outputs.configured == 'true'
         uses: actions/setup-node@v5
@@ -71,6 +56,24 @@ jobs:
       - name: Install dependencies
         if: steps.guard.outputs.configured == 'true'
         run: npm ci --no-audit --no-fund
+
+      # The secret is often pasted scheme-less, quoted, padded — or is the
+      # POSTGRES connection string altogether (seen in the nightly: supabase-js
+      # then resolves hostname "postgresql"). normalizeSupabaseUrl fixes all of
+      # those (deriving https://<ref>.supabase.co from a DB URI's project ref);
+      # every later step (seed, reset, the Playwright dev server) reads the
+      # normalized env.TEST_SUPABASE_URL.
+      - name: Normalize TEST project URL
+        if: steps.guard.outputs.configured == 'true'
+        env:
+          RAW_TEST_SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
+        run: |
+          url="$(node --input-type=module -e 'const m = await import("./scripts/e2e/_env.mjs"); process.stdout.write(m.normalizeSupabaseUrl(process.env.RAW_TEST_SUPABASE_URL) ?? "")')"
+          if ! printf '%s' "$url" | grep -qE '^https://'; then
+            echo "::error::TEST_SUPABASE_URL is not a usable Supabase API URL — set the secret to https://<ref>.supabase.co (Project Settings → API)."
+            exit 1
+          fi
+          echo "TEST_SUPABASE_URL=$url" >> "$GITHUB_ENV"
 
       - name: Cache Playwright browsers
         if: steps.guard.outputs.configured == 'true'

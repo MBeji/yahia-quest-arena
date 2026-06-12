@@ -55,4 +55,23 @@ describe("normalizeSupabaseUrl", () => {
     expect(normalizeSupabaseUrl("")).toBe("");
     expect(normalizeSupabaseUrl(undefined)).toBe(undefined);
   });
+
+  it("derives the API URL from a mistakenly-pasted pooler connection string", () => {
+    expect(
+      normalizeSupabaseUrl(
+        "postgresql://postgres.abcdef123:p%40ss@aws-0-eu-west-1.pooler.supabase.com:5432/postgres",
+      ),
+    ).toBe("https://abcdef123.supabase.co");
+  });
+
+  it("derives the API URL from a direct db.<ref> connection string", () => {
+    expect(
+      normalizeSupabaseUrl("postgres://postgres:pass@db.xyz987.supabase.co:5432/postgres"),
+    ).toBe("https://xyz987.supabase.co");
+  });
+
+  it("returns an unrecognizable DB URI as-is (caller fails loudly)", () => {
+    const odd = "postgresql://admin:pass@my-own-host.example.com:5432/db";
+    expect(normalizeSupabaseUrl(odd)).toBe(odd);
+  });
 });

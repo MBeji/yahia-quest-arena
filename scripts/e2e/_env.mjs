@@ -30,10 +30,29 @@ export const PROD_REFS = ["fasrenmmrkqjoobrztbp"];
  * accidental wrapping quotes, add the https:// scheme when missing, drop a
  * trailing slash. supabase-js hard-rejects scheme-less URLs ("Invalid
  * supabaseUrl") — the exact failure that broke the nightly e2e-auth seeding.
+ *
+ * Common misconfiguration: the POSTGRES connection string pasted where the API
+ * URL belongs. The project ref is recoverable from it (pooler username
+ * `postgres.<ref>` or direct host `db.<ref>.supabase.co`), so derive
+ * `https://<ref>.supabase.co` instead of failing on hostname "postgresql".
  */
 export function normalizeSupabaseUrl(raw) {
   if (!raw) return raw;
   let url = raw.trim().replace(/^['"]|['"]$/g, "");
+  const pg = url.match(/^postgres(?:ql)?:\/\/([^@]*)@([^/:?]+)/i);
+  if (pg) {
+    const user = pg[1].split(":")[0];
+    const ref =
+      user.match(/^postgres\.([a-z0-9]+)$/i)?.[1] ??
+      pg[2].match(/^db\.([a-z0-9]+)\.supabase\.co$/i)?.[1];
+    if (ref) {
+      console.warn(
+        `[e2e] The Supabase URL is a Postgres connection string — derived the API URL https://${ref}.supabase.co from its project ref. Fix the variable/secret.`,
+      );
+      return `https://${ref}.supabase.co`;
+    }
+    return url; // unrecognizable DB URI: let the caller fail loudly
+  }
   if (url && !/^https?:\/\//i.test(url)) url = `https://${url}`;
   return url.replace(/\/+$/, "");
 }
