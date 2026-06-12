@@ -20,20 +20,31 @@ the precedent: Arabic prose around standard math. Never "arabize" the math itsel
   `ما حلّ المعادلة: 2x + 5 = 13 ؟` — the Arabic question surrounds a standard equation.
 - **Operators/symbols**: true minus `−` (U+2212, not the hyphen `-`), `×` for multiplication
   (never the letter x), `÷` or fraction bars, `=`, `≠`, `<`, `>`, `≤`, `≥`, `√`, `π`, `∈`, `⊂`,
-  `⟺`, `→`. Exponents as `x²`, `10³` (Unicode superscripts) or LaTeX in cours.md.
+  `⟺`, `→`. Exponents as `x²`, `10³` (Unicode superscripts).
 - **Keep each formula a contiguous LTR run** inside RTL text: never interleave Arabic words
   _inside_ an equation; write the Arabic sentence, then the full expression, then resume Arabic
   (as the production math content does). In cours.md, put substantial formulas on their own line.
 - **Units & scientific symbols stay standard SI**: `cm`, `m²`, `kg`, `g/mol`, `%`, `°C`, `km/h` —
   never transliterated, in any language.
 
-## Where LaTeX vs plain Unicode
+## No LaTeX anywhere — the app has no math renderer
 
-- **cours.md**: display formulas may use `$$ … $$` LaTeX blocks (rendered); inline math uses plain
-  Unicode symbols.
-- **Question strings** (prompt/options/explanation in quiz.json and exercises): **plain Unicode
-  math only** — no LaTeX delimiters; they are rendered as plain text. `2x − 3 = 7`, `x ≥ −3`,
-  `√49 = 7` all read fine as-is.
+The markdown renderer (`src/shared/lib/markdown.ts`) is a plain-text pipeline: it does **not**
+render LaTeX. Any `\sqrt{…}`, `\frac{…}{…}`, `\overrightarrow{…}`, `\begin{pmatrix}`… displays as
+raw markup to the student, and inline `$…$` shows its dollar signs literally. Therefore:
+
+- **Everything is plain Unicode math** — cours.md, resume.md, question strings, SVG labels alike.
+  `2x − 3 = 7`, `x ≥ −3`, `√(25 × 2) = 5√2`, `(xB − xA ; yB − yA)` all read fine as-is.
+- **`$$ … $$` is allowed in cours.md only as a display-block marker** (the renderer turns it into
+  a centered, LTR-isolated `lesson-math` block) — but its **content must be plain Unicode**, never
+  LaTeX. Inline `$…$` is forbidden (not processed; dollars render).
+- **Plain-Unicode equivalents** (match the production question conventions):
+  `\sqrt{50}` → `√50`; `\sqrt{25 × 2}` → `√(25 × 2)` (parenthesize multi-term radicands);
+  `\frac{a}{b}` → `a/b` with parentheses as needed (`(xA + xB)/2`); subscripts as plain letters
+  (`xA`, `yB`); `\overrightarrow{AB}` → bare `AB` with the word for "vector" in prose
+  (e.g. `الشعاع AB`); `\begin{pmatrix} x \\ y \end{pmatrix}` → `(x ; y)`; `\boxed{X}` → `**X**`;
+  `\times` → `×`; `\le`/`\ge` → `≤`/`≥`; `\parallel` → `∥`; `\implies` → `⟹`; `\iff` → `⟺`;
+  `\sin`/`\cos`/`\tan` → `sin`/`cos`/`tan`; `x^2` → `x²`.
 - **SVG figures**: numbers and labels inside `<text>` use Western digits and standard symbols.
 
 ## Decimal separator & locale details
@@ -54,6 +65,8 @@ the precedent: Arabic prose around standard math. Never "arabize" the math itsel
 ## Self-check before running QA
 
 Scan every file you wrote for `[٠-٩]` (must be zero matches), for hyphens used as minus signs in
-formulas, for the letter `x` used as a multiplication sign, and — **in `ar` content** — for a
-plain space between digit groups (regex `\d \d{3}` outside `<svg>` markup, must be zero: use
-U+00A0). The `content-audit` skill performs the same scans on existing content.
+formulas, for the letter `x` used as a multiplication sign, for **LaTeX residue** (regex
+`\\[a-zA-Z]+` — zero matches in any content file) and **inline dollar math** (`$…$` outside
+`$$ … $$` display blocks — zero matches), and — **in `ar` content** — for a plain space between
+digit groups (regex `\d \d{3}` outside `<svg>` markup, must be zero: use U+00A0). The
+`content-audit` skill performs the same scans on existing content.

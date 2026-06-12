@@ -49,8 +49,11 @@ Work file by file. For every question:
    correct-answer-is-longest giveaways, ambiguous stems with two defensible answers
    (= **[BLOCKER]**), unsorted numeric options = **[MINOR]** unless they leak the key.
 5. **Notation** — scan for Arabic-Indic digits `[٠-٩]` (must be zero — **[MAJOR]**), hyphen-as-minus
-   in formulas, letter `x` as multiplication sign, non-SI units, LaTeX delimiters inside question
-   strings (**[MINOR]**). In `ar` content, a **plain space between digit groups** (`\d \d{3}`
+   in formulas, letter `x` as multiplication sign, non-SI units. **LaTeX anywhere = rendered raw**
+   (the app has no math renderer — see `math-and-notation.md`): any `\command` (regex `\\[a-zA-Z]+`)
+   in question strings **or** cours.md/resume.md = **[MAJOR]**; inline `$…$` (dollars display
+   literally) = **[MAJOR]**; `$$ … $$` blocks are legal only with plain-Unicode content.
+   In `ar` content, a **plain space between digit groups** (`\d \d{3}`
    outside `<svg>`) = **[MAJOR]**: the bidi algorithm swaps the groups at render time (`38 461`
    displays as `461 38`) — it must be a NO-BREAK SPACE U+00A0. Audit the **rendered** form, not
    just the source: any RTL string mixing digit runs with neutral separators is suspect. Standard
@@ -97,7 +100,8 @@ severity mapping). Per chapter:
    (one bullet per section, bolded concept + essence, no invented material).
 5. **Factual & notation pass** — re-derive every worked example and formula in the course
    (wrong result = **[BLOCKER]**); run the notation scans (Arabic-Indic digits, bidi-unsafe
-   `\d \d{3}` in ar, hyphen-minus); check language purity.
+   `\d \d{3}` in ar, hyphen-minus, LaTeX residue `\\[a-zA-Z]+` and inline `$…$` — both render
+   raw); check language purity.
 
 Report one line per axis per chapter with the findings that drove it, then the severity list.
 Fix mode: course rewrites are UUID-safe (in-place `cours.md`/`resume.md` edits); large rewrites
