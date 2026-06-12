@@ -8,10 +8,10 @@
 
 للشعاع $\overrightarrow{AB}$ أربع خصائص:
 
-- **المنشأ (point de départ)**: النقطة A، وهي نقطة الانطلاق.
-- **الاتجاه (direction)**: المستقيم الحامل للشعاع (أي المستقيم AB).
-- **المنحى (sens)**: من A نحو B (وهو عكس منحى $\overrightarrow{BA}$).
-- **الطول (norme)**: هو طول القطعة [AB]، ويُكتب $\|\overrightarrow{AB}\|$.
+- **المنشأ**: النقطة A، وهي نقطة الانطلاق.
+- **الاتجاه**: المستقيم الحامل للشعاع (أي المستقيم AB).
+- **المنحى**: من A نحو B (وهو عكس منحى $\overrightarrow{BA}$).
+- **الطول**: هو طول القطعة [AB]، ويُكتب $\|\overrightarrow{AB}\|$.
 
 > 🗡️ لا تخلط بين $\overrightarrow{AB}$ و $\overrightarrow{BA}$: لهما نفس الاتجاه والطول، لكنّهما متعاكسا المنحى!
 
@@ -33,7 +33,9 @@ $$ \overrightarrow{AB} = \overrightarrow{CD} \iff \text{نفس الاتجاه + 
 
 $$ \overrightarrow{MM'} = \overrightarrow{u} $$
 
-نقول إنّ M' هي **صورة** النقطة M بالانسحاب ذي الشعاع $\overrightarrow{u}$.
+نقول إنّ M' هي **صورة** النقطة M بالانسحاب ذي الشعاع $\overrightarrow{u}$. وعكسيًّا، نقول إنّ M هي **سابقة** النقطة M' بهذا الانسحاب: للعودة من الصورة إلى السابقة ننسحب بالشعاع المعاكس $-\overrightarrow{u}$.
+
+**مثال محلول:** لتكن A وB نقطتين بحيث AB = 3 cm. صورة النقطة M بالانسحاب ذي الشعاع $\overrightarrow{AB}$ هي النقطة M' التي تحقّق $\overrightarrow{MM'} = \overrightarrow{AB}$: نرسم انطلاقًا من M، موازيًا لـ (AB) وفي منحى B، القطعة [MM'] بطول 3 cm — فيكون الرباعي ABM'M متوازي أضلاع.
 
 **خصائص الانسحاب:**
 
@@ -42,15 +44,16 @@ $$ \overrightarrow{MM'} = \overrightarrow{u} $$
 - صورة مستقيم هي مستقيم **موازٍ** له.
 - صورة قطعة هي قطعة مساوية لها في الطول.
 
-| الصورة بالانسحاب $\overrightarrow{u} = \overrightarrow{AB}$ | الشكل الأصلي | ملاحظة                 |
-| ----------------------------------------------------------- | ------------ | ---------------------- |
-| نقطة M' بحيث $\overrightarrow{MM'} = \overrightarrow{u}$    | نقطة M       | MM' = AB               |
-| مستقيم موازٍ للمستقيم (d)                                   | مستقيم (d)   | تحفّظ الموازاة         |
-| مثلّث مساوٍ في الشكل والحجم                                 | مثلّث        | تحفّظ الأطوال والزوايا |
+| الصورة بالانسحاب $\overrightarrow{u} = \overrightarrow{AB}$ | الشكل الأصلي                | ملاحظة                 |
+| ----------------------------------------------------------- | --------------------------- | ---------------------- |
+| نقطة M' بحيث $\overrightarrow{MM'} = \overrightarrow{u}$    | نقطة M                      | MM' = AB               |
+| مستقيم موازٍ للمستقيم (d)                                   | مستقيم (d)                  | تحفّظ الموازاة         |
+| مثلّث مساوٍ في الشكل والحجم                                 | مثلّث                       | تحفّظ الأطوال والزوايا |
+| دائرة مركزها I' (صورة I) وبنفس نصف القطر r                  | دائرة مركزها I ونصف قطرها r | تحفّظ نصف القطر        |
 
 ## 🔮 جمع الأشعّة وعلاقة شال (Chasles)
 
-**قاعدة شال (relation de Chasles):**
+**قاعدة شال (Chasles):**
 
 $$\boxed{\overrightarrow{AB} + \overrightarrow{BC} = \overrightarrow{AC}}$$
 
@@ -66,7 +69,13 @@ $$\overrightarrow{AB} + \overrightarrow{BA} = \overrightarrow{AA} = \overrightar
 
 إذن $\overrightarrow{BA} = -\overrightarrow{AB}$ (الشعاع المعاكس يُعكس المنحى فقط).
 
-> 🏆 حيلة البطل: عندما تجد مجموعًا من الأشعّة، اربط الطرف الثاني للشعاع الأوّل بمنشأ الشعاع الثاني — وإذا تطابقا تطبق شال مباشرة!
+**طرح شعاعين:** طرحُ شعاعٍ هو جمعُ معاكسِه:
+
+$$\overrightarrow{u} - \overrightarrow{v} = \overrightarrow{u} + (-\overrightarrow{v})$$
+
+**مثال محلول:** $\overrightarrow{AC} - \overrightarrow{AB} = \overrightarrow{AC} + \overrightarrow{BA} = \overrightarrow{BA} + \overrightarrow{AC} = \overrightarrow{BC}$ بعلاقة شال.
+
+> 🏆 حيلة البطل: عندما تجد مجموعًا من الأشعّة، اربط طرف الشعاع الأوّل بمنشأ الشعاع الثاني — وإذا تطابقا تطبق شال مباشرة!
 
 ## 🧮 تبسيط مجموع أشعّة باستخدام شال
 
@@ -75,6 +84,12 @@ $$\overrightarrow{AB} + \overrightarrow{BA} = \overrightarrow{AA} = \overrightar
 لحساب $\overrightarrow{AB} + \overrightarrow{BC} + \overrightarrow{CD}$: نطبّق شال تدريجيًا:
 
 $$\overrightarrow{AB} + \overrightarrow{BC} = \overrightarrow{AC} \quad \Rightarrow \quad \overrightarrow{AC} + \overrightarrow{CD} = \overrightarrow{AD}$$
+
+**مبدأ المسار المغلق:** مجموع أشعّة مسار يعود إلى نقطة انطلاقه هو الشعاع الصفري:
+
+$$\overrightarrow{AB} + \overrightarrow{BC} + \overrightarrow{CA} = \overrightarrow{AC} + \overrightarrow{CA} = \overrightarrow{0}$$
+
+وفي الأشكال المركّبة (كالسداسي المنتظم)، عوّض كلّ شعاع بشعاع يساويه قبل التجميع، حتى تتسلسل الحروف ويُغلق المسار.
 
 **مثال محلول:** إذا كان ABCD متوازي أضلاع ومركزه O، احسب $\overrightarrow{OA} + \overrightarrow{OC}$.
 
@@ -94,4 +109,12 @@ ABCD متوازي أضلاع $\iff$ $\overrightarrow{AB} = \overrightarrow{DC}$
 - مركز متوازي الأضلاع O هو منتصف كلّ من [AC] و [BD]
 - $\overrightarrow{OA} + \overrightarrow{OB} + \overrightarrow{OC} + \overrightarrow{OD} = \overrightarrow{0}$ إذا كان O المركز
 
+**قاعدة متوازي الأضلاع للجمع:** مجموع شعاعين لهما **نفس المنشأ** هو شعاع قطر متوازي الأضلاع المبنيّ عليهما. في متوازي الأضلاع ABCD:
+
+$$\overrightarrow{BA} + \overrightarrow{BC} = \overrightarrow{BD}$$
+
+**مثال:** بما أنّ $\overrightarrow{BC} = \overrightarrow{AD}$، فإنّ $\overrightarrow{BA} + \overrightarrow{BC} = \overrightarrow{BA} + \overrightarrow{AD} = \overrightarrow{BD}$ بعلاقة شال.
+
 > 🗡️ ملخّص القتال: علاقة شال = سلاحك الأوّل؛ الشعاع المعاكس = درعك؛ متوازي الأضلاع = ميدانك.
+
+> 🏆 اجتزت بوّابة الأشعّة: شال، المعاكس، الطرح، وقاعدة متوازي الأضلاع كلّها في جعبتك. في الفصل القادم يدخل الشعاع المعلّمَ — وتتحوّل الهندسة كلّها إلى حساب!
