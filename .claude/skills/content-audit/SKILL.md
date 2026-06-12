@@ -5,12 +5,15 @@ description: >-
   re-solving every question, check distractor quality, explanation correctness,
   difficulty calibration, answer-key balance, duplicates, standard math/digit
   notation (Western digits everywhere, including Arabic), language purity, and
-  factual accuracy. Produces a severity-ranked report; applies fixes only on
-  request. Use whenever the user asks to "auditer", "vérifier", "review", "QA"
-  the pedagogical content, a subject, a chapter, or the quizzes/exercises — e.g.
-  "audite le contenu de maths 9ème", "vérifie les quiz de culture générale",
-  "y a-t-il des erreurs dans les corrigés ?". Defers to the content-engine skill
-  for the schema, quality bar, and notation rules.
+  factual accuracy — AND audit the lesson texts (cours.md / resume.md) against
+  the course-quality bar: clarity, ease of understanding, completeness (every
+  tested notion taught), learning experience. Produces a severity-ranked report;
+  applies fixes only on request. Use whenever the user asks to "auditer",
+  "vérifier", "review", "QA" the pedagogical content, a subject, a chapter, the
+  quizzes/exercises, or the courses/summaries — e.g. "audite le contenu de maths
+  9ème", "vérifie les quiz de culture générale", "le cours est-il clair et
+  complet ?", "audite les résumés". Defers to the content-engine skill for the
+  schema, quality bar, course-quality bar, and notation rules.
 ---
 
 # content-audit — pedagogical verification of existing content
@@ -25,6 +28,8 @@ all. This skill is the deep net — a human-grade review of content that already
 
 - **Scope**: a subject (`content/<subject>/`), a chapter, a theme's subjects, or the whole catalogue.
   Large scopes: fan out one sub-agent per subject and consolidate.
+- **Axis**: **items** (questions/keys — the checklist below), **courses** (cours.md/resume.md —
+  the course audit below), or **both** (default). "Audite les cours/résumés" → courses only.
 - **Mode**: **report-only** (default) or **report + fix** (only when the user explicitly asks for
   fixes).
 
@@ -71,6 +76,32 @@ Per exercise / chapter:
 
 Also run `npm run content:check` and `npm run content:qa` over the scope and fold their findings in
 (they're fast and catch regressions in files you didn't open).
+
+## The course & summary audit (axis: courses)
+
+Grade each chapter's `cours.md` + `resume.md` against
+`content-engine/references/course-quality.md` (read it first — it defines the four axes and the
+severity mapping). Per chapter:
+
+1. **Exhaustivité (golden rule first)** — extract the list of notions/edge cases the chapter's
+   quiz + exercises test, and point each to the course section that teaches it. Any
+   tested-but-untaught notion = **[MAJOR]**. Then check full official-scope coverage (school) or
+   `chapter.json` scope (non-school), and flag off-program additions.
+2. **Clarté** — one notion per section, terms defined at first use in the official terminology,
+   grade-calibrated sentences, formulas displayed on their own line, tables for classifications.
+3. **Facilité de compréhension** — concrete example before each rule, **a worked example for
+   every rule** (a rule without one = **[MAJOR]**), simple→complex ordering, ≤1 new notion per
+   section, `> ⚠️` traps placed where the confusion is born.
+4. **Expérience pédagogique** — style-guide skeleton (epigraph, emoji sections, callouts,
+   closing), motivation, length 50–75 lines, and **resume.md as a standalone revision tool**
+   (one bullet per section, bolded concept + essence, no invented material).
+5. **Factual & notation pass** — re-derive every worked example and formula in the course
+   (wrong result = **[BLOCKER]**); run the notation scans (Arabic-Indic digits, bidi-unsafe
+   `\d \d{3}` in ar, hyphen-minus); check language purity.
+
+Report one line per axis per chapter with the findings that drove it, then the severity list.
+Fix mode: course rewrites are UUID-safe (in-place `cours.md`/`resume.md` edits); large rewrites
+belong to the **`content-cours`** skill — hand off rather than improvising a new course inline.
 
 ## Report format (the deliverable)
 

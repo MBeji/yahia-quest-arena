@@ -90,8 +90,9 @@ A chapter directory `content/<subject>/NN-<slug>/` requires all of: `chapter.jso
 Not every request is a full chapter. Handle partial asks **inside an existing chapter** without
 re-keying anything:
 
-- **Course/summary only** — (re)write `cours.md` + `resume.md` for an existing chapter; don't touch
-  quiz/exercises. Keep the quiz consistent with the new course (update it if a notion moved).
+- **Course/summary only** — the specialized **`content-cours`** skill owns this (quality bar:
+  `references/course-quality.md`); it (re)writes `cours.md` + `resume.md` in place without touching
+  quiz/exercises, and reports if the quiz needs adjusting after a scope change.
 - **Quiz only** — (re)write `quiz.json`; it must be answerable from `cours.md` alone (it gates
   comprehension of the course, not of the exercises).
 - **Add exercises at a given difficulty** — add new `exercices/NN-<slug>.json` files at the **next
@@ -112,6 +113,9 @@ Whatever the slice, the same gates apply: quality bar → self-verification → 
   pedagogical bar, question craft, and the self-verification protocol. Read before writing questions.
 - `references/math-and-notation.md` — **hard rule**: Western digits + standard LTR equations/units
   in all languages, including Arabic. Read before writing any math/science or number-bearing content.
+- `references/course-quality.md` — the lesson-text bar (clarté, compréhension, exhaustivité,
+  expérience pédagogique) for `cours.md`/`resume.md`, incl. the golden rule (every tested notion
+  must be taught). Read before writing any course or summary.
 - `references/style-guide.md` — the gamified RPG/manga voice, `cours.md`/`resume.md` skeletons,
   per-language tone, and the rule that prompts/options/explanations stay clean and emoji-free.
 - `references/rewards-and-modes.md` — modes, difficulty tiers, the premium gate, the canonical
