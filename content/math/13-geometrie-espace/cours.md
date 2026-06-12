@@ -34,6 +34,10 @@ $$V = 5 \times 3 \times 4 = 60 \text{ cm}^3$$
 
 $$S_{\text{قاعدة}} = \frac{1}{2} \times 3 \times 4 = 6 \text{ cm}^2 \quad \Rightarrow \quad V = 6 \times 10 = 60 \text{ cm}^3$$
 
+**صيغة مفيدة — مساحة المثلّث المتقايس الأضلاع** (تظهر كثيرًا كقاعدة موشور):
+
+$$S = \frac{\sqrt{3}}{4} a^2 \quad ; \quad a = 6 \text{ cm} \Rightarrow S = \frac{\sqrt{3}}{4} \times 36 = 9\sqrt{3} \approx 15,59 \text{ cm}^2$$
+
 ## 🛡️ الأسطوانة — حجمها ومساحتها الجانبية
 
 **الأسطوانة** قاعدتها دائرتان نصف قطر كلٍّ منهما r وارتفاعها h.
