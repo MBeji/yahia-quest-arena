@@ -74,7 +74,13 @@ PITR only if an RPO < 24 h is ever required (paid add-on — decide on real stak
 
 ## Secrets required (GitHub → Settings → Secrets → Actions)
 
-| Secret                 | Value                                                        | Status                        |
-| ---------------------- | ------------------------------------------------------------ | ----------------------------- |
-| `PROD_SUPABASE_DB_URL` | Supabase prod → Connect → **Session pooler** URI (port 5432) | ⚠️ to add (Mohamed)           |
-| `TEST_SUPABASE_DB_URL` | already used by `e2e-auth.yml` self-provisioning             | present if e2e CI provisioned |
+| Secret                 | Value                                                        | Status                             |
+| ---------------------- | ------------------------------------------------------------ | ---------------------------------- |
+| `PROD_SUPABASE_DB_URL` | Supabase prod → Connect → **Session pooler** URI (port 5432) | ✅ set, drill-validated 2026-06-12 |
+| `TEST_SUPABASE_DB_URL` | already used by `e2e-auth.yml` self-provisioning             | ✅ set, drill-validated 2026-06-12 |
+
+Pooler URI gotchas (each cost a failed run): the user MUST be `postgres.<project-ref>` (bare
+`postgres` → "no tenant identifier"); any special character in the password MUST be
+percent-encoded (`*` → `%2A`, `@` → `%40`, …) — or keep a generated alphanumeric password.
+A wrong password fails as `password authentication failed for user "postgres"` even when the
+tenant suffix is correct (the pooler strips the suffix before auth).
