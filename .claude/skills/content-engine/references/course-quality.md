@@ -15,9 +15,10 @@ or unteachable, every downstream question becomes unfair. Both the authoring ski
   textbook doesn't use).
 - **Short sentences, active voice.** Target ≤ 20 words per sentence in explanatory prose;
   one idea per sentence. Vocabulary calibrated to the grade (a 6ème course reads simpler than Bac).
-- **Formulas isolated.** Display formulas on their own line (`$$ … $$`); never bury a formula
-  mid-sentence. Notation per `math-and-notation.md` (standard digits/LTR everywhere, U+00A0 in
-  Arabic grouped numbers).
+- **Formulas isolated.** Display formulas on their own line (`$$ … $$` blocks — **plain Unicode
+  inside, never LaTeX**: the app has no math renderer); never bury a formula mid-sentence.
+  Notation per `math-and-notation.md` (standard digits/LTR everywhere, no `\commands`, no inline
+  `$…$`, U+00A0 in Arabic grouped numbers).
 - **Tables for structure.** Any classification/taxonomy/conjugation with ≥3 cases becomes a
   markdown table, not a paragraph.
 

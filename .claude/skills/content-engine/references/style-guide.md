@@ -21,8 +21,10 @@ like a credible exam — no emojis, no slang.
 2. A blockquote epigraph: `> 💡 «a punchy maxim that motivates the chapter»`
 3. 5–7 `##` sections, each led by a thematic emoji (🏰 ⚡ 🛡️ 🔮 🧮 🧪 📐). Bold every key term;
    italicize example phrases.
-4. Use **markdown tables** for taxonomies/classifications, and `$$ … $$` LaTeX for formulas (literal
-   Unicode math symbols inline — ⊂ ≤ √ π — are fine).
+4. Use **markdown tables** for taxonomies/classifications, and `$$ … $$` display blocks for key
+   formulas — **plain Unicode math inside, never LaTeX**, and **single-line only**
+   (`$$ formula $$`; multi-line blocks don't render — see `math-and-notation.md`). Inline math is
+   bare Unicode (⊂ ≤ √ π x²), never `$…$`.
 5. Mid-course callouts: `> 🗡️` for a key tip, `> ⚠️` for a classic trap.
 6. Closing `> 🏆` blockquote that frames the chapter as cleared and teases the next one.
 

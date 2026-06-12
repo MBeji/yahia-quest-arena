@@ -8,7 +8,7 @@
 
 الشرط الجوهري لتطبيق نظرية طاليس:
 
-$$ (MN) \parallel (BC) $$
+$$ (MN) ∥ (BC) $$
 
 أي أنّ المستقيم الذي يمرّ بـ M وN **يوازي** الضلعَ BC.
 
@@ -18,27 +18,27 @@ $$ (MN) \parallel (BC) $$
 
 إذا كانت M نقطة من [AB] و N نقطة من [AC] بحيث (MN) ∥ (BC)، فإنّ:
 
-$$ \frac{AM}{AB} = \frac{AN}{AC} = \frac{MN}{BC} $$
+$$ AM/AB = AN/AC = MN/BC $$
 
 **قراءة النسب**: كلّ نسبة تمثّل «الجزء على الكلّ» في الضلع المقابل. النسب الثلاث متساوية.
 
 **مثال محسوب**: في مثلّث ABC حيث AB = 10 cm و AC = 8 cm و BC = 6 cm. المستقيم (MN) ∥ (BC) يقطع [AB] في M حيث AM = 4 cm.
 
-- $\frac{AM}{AB} = \frac{4}{10} = \frac{2}{5}$
-- إذن: $AN = AC \times \frac{2}{5} = 8 \times \frac{2}{5} = 3,2 \text{ cm}$
-- وأيضًا: $MN = BC \times \frac{2}{5} = 6 \times \frac{2}{5} = 2,4 \text{ cm}$
+- AM/AB = 4/10 = 2/5
+- إذن: AN = AC × 2/5 = 8 × 2/5 = 3,2 cm
+- وأيضًا: MN = BC × 2/5 = 6 × 2/5 = 2,4 cm
 
 ## 🛡️ شكل «الجزء على الجزء المتبقّي»
 
 يمكن كذلك كتابة نسبة مكمِّلة تربط الجزأين على الضلعين أنفسهما:
 
-$$ \frac{AM}{MB} = \frac{AN}{NC} $$
+$$ AM/MB = AN/NC $$
 
 هذا الشكل مفيد حين يُعطى MB أو NC مباشرةً في التمرين.
 
 **مثال محسوب**: M على [AB] بحيث AM = 6 و MB = 4، وN على [AC] بحيث AN = 9، و(MN) ∥ (BC). أوجد NC.
 
-$$\frac{AM}{MB} = \frac{AN}{NC} \implies \frac{6}{4} = \frac{9}{NC} \implies NC = \frac{9 \times 4}{6} = 6$$
+$$ AM/MB = AN/NC ⟹ 6/4 = 9/NC ⟹ NC = (9 × 4)/6 = 6 $$
 
 تحقّق: 6/4 = 1,5 و 9/6 = 1,5 ✓
 
@@ -48,7 +48,7 @@ $$\frac{AM}{MB} = \frac{AN}{NC} \implies \frac{6}{4} = \frac{9}{NC} \implies NC 
 
 إذا كانت M نقطة من [AB] و N نقطة من [AC] وتحقّقت:
 
-$$ \frac{AM}{AB} = \frac{AN}{AC} $$
+$$ AM/AB = AN/AC $$
 
 فإنّ **(MN) ∥ (BC)**.
 
@@ -56,7 +56,9 @@ $$ \frac{AM}{AB} = \frac{AN}{AC} $$
 
 **مثال**: في مثلّث ABC، M على [AB] بحيث AM = 3 و AB = 9، وN على [AC] بحيث AN = 2 و AC = 6.
 
-$$\frac{AM}{AB} = \frac{3}{9} = \frac{1}{3} \qquad \frac{AN}{AC} = \frac{2}{6} = \frac{1}{3}$$
+$$ AM/AB = 3/9 = 1/3 $$
+
+$$ AN/AC = 2/6 = 1/3 $$
 
 النسبتان متساويتان، إذن **(MN) ∥ (BC)**. ✓
 
@@ -77,11 +79,13 @@ $$\frac{AM}{AB} = \frac{3}{9} = \frac{1}{3} \qquad \frac{AN}{AC} = \frac{2}{6} =
 
 **مثال كامل**: في مثلّث DEF، (MN) ∥ (EF)، DM = 6 cm، ME = 4 cm، DN = x، NF = 3 cm. أوجد x.
 
-$$\frac{DM}{DE} = \frac{DN}{DF}$$
+$$ DM/DE = DN/DF $$
 
-$$DE = DM + ME = 6 + 4 = 10 \text{ cm}, \quad DF = DN + NF = x + 3$$
+$$ DE = DM + ME = 6 + 4 = 10 cm $$
 
-$$\frac{6}{10} = \frac{x}{x + 3} \implies 6(x + 3) = 10x \implies 6x + 18 = 10x \implies x = 4,5 \text{ cm}$$
+$$ DF = DN + NF = x + 3 $$
+
+$$ 6/10 = x/(x + 3) ⟹ 6(x + 3) = 10x ⟹ 6x + 18 = 10x ⟹ x = 4,5 cm $$
 
 ## 🧮 وضعية طاليس بشكل تقاطع (Configuration papillon)
 
@@ -91,11 +95,11 @@ $$\frac{6}{10} = \frac{x}{x + 3} \implies 6(x + 3) = 10x \implies 6x + 18 = 10x 
 
 تطبّق النظرية بنفس الطريقة:
 
-$$ \frac{OA}{OC} = \frac{OB}{OD} = \frac{AB}{CD} $$
+$$ OA/OC = OB/OD = AB/CD $$
 
 **مثال محسوب**: OA = 4 و OC = 8 و AB = 5، و(AB) ∥ (CD). أوجد CD.
 
-$$\frac{OA}{OC} = \frac{4}{8} = \frac{1}{2} = \frac{AB}{CD} \implies CD = 2 \times AB = 2 \times 5 = 10$$
+$$ OA/OC = 4/8 = 1/2 = AB/CD ⟹ CD = 2 × AB = 2 × 5 = 10 $$
 
 > 💡 الفرق الوحيد: الرأس هنا هو O نقطة التقاطع، وليس رأس المثلّث الأصلي. الفراشة وضعية ثانية **مشروعة تمامًا** لطاليس: النقاط هنا على جانبين متقابلين من O، فتحذير «داخل الضلعين» الخاصّ بوضعية المثلّث لا ينطبق عليها.
 
