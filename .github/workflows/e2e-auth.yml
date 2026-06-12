@@ -74,11 +74,18 @@ jobs:
         if: steps.guard.outputs.configured == 'true' && steps.guard.outputs.has_db_url == 'true'
         uses: supabase/setup-cli@v1
         with:
-          version: latest
+          # Pinned: an unpinned "latest" bump (17.6.1.132 → .134 image) silently
+          # broke the local-stack grants on 2026-06-07. Bump deliberately.
+          version: 2.106.0
 
+      # Goes through the e2e script (not raw `supabase db push`) so the DB URL is
+      # normalized first: a raw password with special characters used to fail with
+      # "invalid userinfo". The script also re-checks the prod-ref safety net.
       - name: Apply migrations + content to TEST project
         if: steps.guard.outputs.configured == 'true' && steps.guard.outputs.has_db_url == 'true'
-        run: supabase db push --db-url "${{ secrets.TEST_SUPABASE_DB_URL }}" --include-all
+        env:
+          TEST_SUPABASE_DB_URL: ${{ secrets.TEST_SUPABASE_DB_URL }}
+        run: npm run e2e:db:push
 
       - name: Seed test users
         if: steps.guard.outputs.configured == 'true'
@@ -110,7 +117,7 @@ jobs:
 
       - name: Upload Playwright report
         if: ${{ steps.guard.outputs.configured == 'true' && !cancelled() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: playwright-report-auth
           path: playwright-report/

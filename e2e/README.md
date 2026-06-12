@@ -113,6 +113,9 @@ workflow skips green until they exist):
 
 With `TEST_SUPABASE_DB_URL` set, the workflow self-provisions the schema+content
 each run; without it, applying migrations to the TEST project is a one-time prereq.
+A raw (un-encoded) password in the URI is fine: `e2e:db:push` percent-encodes the
+userinfo automatically before calling the Supabase CLI (`normalizeDbUrl` in
+`scripts/e2e/_env.mjs`) — a malformed URI used to fail CI with "invalid userinfo".
 
 Seeded accounts (all password `E2E_USER_PASSWORD`):
 `student.free@`, `student.premium@`, `parent@`, `admin@e2e.xpscholars.test`.

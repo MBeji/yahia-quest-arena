@@ -5,7 +5,7 @@
  *
  *   npm run e2e:doctor
  */
-import "./_env.mjs";
+import { normalizeDbUrl } from "./_env.mjs";
 
 const mask = (v) => (v ? `${v.slice(0, 6)}…${v.slice(-4)} (len ${v.length})` : "(missing)");
 
@@ -31,6 +31,13 @@ for (const key of OPTIONAL) {
   const val = process.env[key];
   console.log(
     `${val ? "✓" : "•"} ${key.padEnd(30)} ${val ? mask(val) : "(optional — for npm run e2e:db:push)"}`,
+  );
+}
+
+const dbUrl = process.env.TEST_SUPABASE_DB_URL;
+if (dbUrl && normalizeDbUrl(dbUrl) !== dbUrl) {
+  console.log(
+    "ℹ TEST_SUPABASE_DB_URL has special characters in the password — e2e:db:push will percent-encode it automatically.",
   );
 }
 
