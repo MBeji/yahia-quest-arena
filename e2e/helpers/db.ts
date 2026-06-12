@@ -297,27 +297,38 @@ export function createAdminDb(): AdminDb {
       return data.id as string;
     },
     async grantEntitlement(userId: string, parcoursId: string, months?: number) {
-      // Service-role bypasses is_admin(), so admin_grant_parcours succeeds here.
-      // Omit p_expires_at for a perpetual grant (the RPC defaults it to NULL).
-      let expiry: string | undefined;
+      // NOT via admin_grant_parcours: its is_admin() guard keys off auth.uid(),
+      // which is NULL for a service-role call -> 'Unauthorized'. The service key
+      // bypasses RLS, so write the live-grant slot directly (clear + insert,
+      // idempotent). Omit months for a perpetual grant.
+      let expiry: string | null = null;
       if (typeof months === "number") {
         const d = new Date();
         d.setMonth(d.getMonth() + months);
         expiry = d.toISOString();
       }
-      const { error } = await client.rpc("admin_grant_parcours", {
-        p_user: userId,
-        p_parcours: parcoursId,
-        p_source: "purchase",
-        ...(expiry ? { p_expires_at: expiry } : {}),
+      const del = await client
+        .from("parcours_entitlements")
+        .delete()
+        .eq("user_id", userId)
+        .eq("parcours_id", parcoursId);
+      if (del.error) throw new Error(`grantEntitlement: ${del.error.message}`);
+      const ins = await client.from("parcours_entitlements").insert({
+        user_id: userId,
+        parcours_id: parcoursId,
+        source: "purchase",
+        expires_at: expiry,
       });
-      if (error) throw new Error(`grantEntitlement: ${error.message}`);
+      if (ins.error) throw new Error(`grantEntitlement: ${ins.error.message}`);
     },
     async revokeEntitlement(userId: string, parcoursId: string) {
-      const { error } = await client.rpc("admin_revoke_parcours", {
-        p_user: userId,
-        p_parcours: parcoursId,
-      });
+      // Same service-role constraint as grantEntitlement: soft-revoke directly.
+      const { error } = await client
+        .from("parcours_entitlements")
+        .update({ revoked_at: new Date().toISOString() })
+        .eq("user_id", userId)
+        .eq("parcours_id", parcoursId)
+        .is("revoked_at", null);
       if (error) throw new Error(`revokeEntitlement: ${error.message}`);
     },
     async hasEntitlement(userId: string, parcoursId: string) {
