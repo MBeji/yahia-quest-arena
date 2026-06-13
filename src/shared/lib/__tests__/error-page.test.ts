@@ -14,10 +14,12 @@ describe("renderErrorPage", () => {
     expect(html).toContain("Something went wrong");
   });
 
-  it("contains retry button", () => {
+  it("offers a CSP-safe retry link (no inline event handler)", () => {
     const html = renderErrorPage();
     expect(html).toContain("Try again");
-    expect(html).toContain("location.reload()");
+    // GAP-022: a nonce-based CSP blocks inline handlers — reload via empty href.
+    expect(html).not.toContain("onclick");
+    expect(html).toContain('href=""');
   });
 
   it("contains home link", () => {

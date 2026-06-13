@@ -127,7 +127,12 @@ writeFileSync(
     {
       version: 3,
       routes: [
-        // Security headers on every response (then continue routing)
+        // Static security headers on every response (then continue routing).
+        // The Content-Security-Policy is deliberately NOT here: it needs a
+        // per-request nonce so script-src can drop 'unsafe-inline' (GAP-022), and
+        // Build Output headers are static. It is set on each HTML response by the
+        // SSR function instead — see src/router.tsx + src/shared/lib/csp.ts.
+        // (CSP on static assets is inert; only HTML documents need it.)
         {
           src: "/(.*)",
           headers: {
@@ -136,26 +141,6 @@ writeFileSync(
             "Referrer-Policy": "strict-origin-when-cross-origin",
             "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
             "Permissions-Policy": "camera=(), microphone=(), geolocation=(), browsing-topics=()",
-            "Content-Security-Policy": [
-              "default-src 'self'",
-              // TODO(review #6): replace with nonce-based CSP. TanStack Start emits
-              // inline hydration scripts (serialized router + query state), so a
-              // per-request nonce must be generated in the SSR handler AND echoed in
-              // both the <script nonce> tags and this CSP header. Vercel's Build
-              // Output config.json headers are STATIC (not per-request), so the nonce
-              // cannot live here — it would have to be injected from src/server.ts on
-              // each response. Until that is wired without breaking hydration, keep
-              // 'unsafe-inline' so the app stays functional.
-              "script-src 'self' 'unsafe-inline'",
-              "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: blob: https:",
-              "font-src 'self' data:",
-              "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
-              "frame-ancestors 'none'",
-              "base-uri 'self'",
-              "form-action 'self'",
-              "object-src 'none'",
-            ].join("; "),
           },
           continue: true,
         },
