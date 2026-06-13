@@ -106,12 +106,18 @@ jobs:
         run: |
           f="$RUNNER_TEMP/claude-execution-output.json"
           if [ ! -f "$f" ]; then
-            echo "::error::Claude execution output missing — the regression-guard sweep did not run."
+            echo "::error::Claude execution output missing — the sweep did not run."
             exit 1
           fi
-          if grep -q '"is_error": *true' "$f"; then
-            echo "::error::regression-guard failed at the Claude level (e.g. 401 auth) — failing the job so a broken guard is never a silent green."
-            grep -o '"result": *"[^"]*"' "$f" | head -1 || true
-            exit 1
+          # Parse ONLY the final SDK result object's is_error. Do NOT grep the whole
+          # file: the sweep's own report text can contain the literal string
+          # 'is_error=true' (e.g. describing a bug), which a naive grep mis-flags.
+          # jq -s slurps the concatenated JSON events; require an explicit false.
+          err=$(jq -s 'map(select(.type=="result")) | last | .is_error' "$f" 2>/dev/null || echo parse_error)
+          if [ "$err" = "false" ]; then
+            echo "Sweep OK — the SDK result reported is_error=false."
+            exit 0
           fi
-          echo "Sweep ran without a Claude-level error."
+          echo "::error::regression-guard did not cleanly succeed (is_error=$err) — failing so a broken guard is never a silent green."
+          jq -rs 'map(select(.type=="result")) | last | .result // "(no result message)"' "$f" 2>/dev/null || true
+          exit 1
