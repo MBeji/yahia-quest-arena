@@ -143,6 +143,8 @@ export type TranslationKeys = {
     day: string;
     longestStreak: string;
     levelLabel: string;
+    noQuestTarget: string;
+    xpProgress: string;
     allianceCode: string;
     allianceCopy: string;
     allianceCopied: string;
@@ -236,6 +238,11 @@ export type TranslationKeys = {
     needsWork: string;
     yourAnswer: string;
     correctAnswer: string;
+    resultScore: string;
+    serverValidatedTime: string;
+    questionN: string;
+    potionXpApplied: string;
+    potionCoinsApplied: string;
   };
   // Level up
   levelUp: {
