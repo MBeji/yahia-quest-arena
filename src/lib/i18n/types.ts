@@ -64,6 +64,7 @@ export type TranslationKeys = {
     errorRateLimit: string;
     errorSignupDisabled: string;
     errorGeneric: string;
+    oauthErrorPrefix: string;
     googleCallbackIncomplete: string;
     // Email-confirmation interstitial
     emailSentTitle: string;
@@ -80,6 +81,9 @@ export type TranslationKeys = {
     signIn: string;
     joinAcademy: string;
     badge: string;
+    heroAlt: string;
+    enableAnimations: string;
+    reduceAnimations: string;
     heroTitle1: string;
     heroTitle2: string;
     heroTitle3: string;
@@ -143,6 +147,8 @@ export type TranslationKeys = {
     day: string;
     longestStreak: string;
     levelLabel: string;
+    noQuestTarget: string;
+    xpProgress: string;
     allianceCode: string;
     allianceCopy: string;
     allianceCopied: string;
@@ -185,6 +191,8 @@ export type TranslationKeys = {
     shopActivate: string;
     armedPassive: string;
     armedQuest: string;
+    itemTypes: { skin: string; potion: string; booster: string; shield: string };
+    rarities: { common: string; rare: string; epic: string; legendary: string };
     radarTitle: string;
     radarCaption: string;
     inventoryTitle: string;
@@ -236,6 +244,11 @@ export type TranslationKeys = {
     needsWork: string;
     yourAnswer: string;
     correctAnswer: string;
+    resultScore: string;
+    serverValidatedTime: string;
+    questionN: string;
+    potionXpApplied: string;
+    potionCoinsApplied: string;
   };
   // Level up
   levelUp: {
@@ -276,6 +289,15 @@ export type TranslationKeys = {
     failedLoadQuestions: string;
     failedStartRun: string;
     failedValidateAnswer: string;
+    enterDungeonAria: string;
+    locked: string;
+    dailyLimitReached: string;
+    levelLocked: string;
+    prereqLocked: string;
+    subjectsStarted: string;
+    chaptersStarted: string;
+    keepTraining: string;
+    runsToday: string;
   };
   // Subscription / premium
   subscription: {

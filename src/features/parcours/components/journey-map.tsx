@@ -49,12 +49,8 @@ export function JourneyMap({ nodes, profile }: JourneyMapProps) {
             <TrackRow key={n.id} side={nodeSide(i)} index={i}>
               {n.state === "locked" ? (
                 node
-              ) : n.state === "premium-locked" ? (
-                <Link to="/subject/$subjectId" params={{ subjectId: n.id }} aria-label={n.nameFr}>
-                  {node}
-                </Link>
               ) : (
-                <Link to="/parcours/$subjectId" params={{ subjectId: n.id }} aria-label={n.nameFr}>
+                <Link to="/subject/$subjectId" params={{ subjectId: n.id }} aria-label={n.nameFr}>
                   {node}
                 </Link>
               )}

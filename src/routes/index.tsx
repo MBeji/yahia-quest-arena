@@ -149,7 +149,7 @@ function Landing() {
           className="fixed bottom-4 right-4 z-50 flex items-center gap-1.5 rounded-full glass-gold px-3 py-1.5 text-[11px] font-semibold text-champagne backdrop-blur-md transition hover:scale-105"
         >
           <Sparkle className="h-3.5 w-3.5" />
-          {reduceAnims ? "Activer les animations" : "Réduire les animations"}
+          {reduceAnims ? t.landing.enableAnimations : t.landing.reduceAnimations}
         </button>
 
         {/* NAV */}
@@ -259,7 +259,7 @@ function Landing() {
                     <GoldGlow />
                     <img
                       src={heroImg}
-                      alt="Shonen warrior wielding a katana made of equations"
+                      alt={t.landing.heroAlt}
                       width={1600}
                       height={1280}
                       className="h-full w-full object-cover opacity-70 mix-blend-luminosity"

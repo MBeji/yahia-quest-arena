@@ -33,7 +33,7 @@ export function HeroStatChips({ level, currentStreak, xp, coins, heroClass }: He
             data-testid="stat-level"
             className="rounded-full bg-[color:var(--gold)]/20 px-3 py-1 text-sm font-bold text-[color:var(--gold)]"
           >
-            Lvl {level}
+            {t.dashboard.levelLabel} {level}
           </span>
         </ExplainHint>
         <ExplainHint text={t.explain.streak} label={t.dashboard.longestStreak}>
@@ -58,7 +58,7 @@ export function HeroStatChips({ level, currentStreak, xp, coins, heroClass }: He
             data-testid="stat-coins"
             className="flex items-center gap-1 rounded-full border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/10 px-3 py-1 text-sm font-bold text-[color:var(--gold)]"
           >
-            <Sparkles className="h-4 w-4" /> {coins} Coins
+            <Sparkles className="h-4 w-4" /> {coins} {t.quest.coinsLabel}
           </span>
         </ExplainHint>
       </div>

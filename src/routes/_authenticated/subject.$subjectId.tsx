@@ -80,6 +80,14 @@ function SubjectPage() {
     elite: { ar: "تحدّي النخبة", fr: "Défi élite", en: "Elite challenge" }[lang],
     premium: { ar: "مدفوع", fr: "Premium", en: "Premium" }[lang],
     premiumLock: { ar: "للفتح", fr: "À débloquer", en: "Unlock" }[lang],
+    attribute: { ar: "الخاصية", fr: "Attribut", en: "Attribute" }[lang],
+    boss: { ar: "زعيم", fr: "Boss", en: "Boss" }[lang],
+    difficulty: { ar: "الصعوبة", fr: "Difficulté", en: "Difficulty" }[lang],
+    noQuests: {
+      ar: "لا توجد تمارين بعد.",
+      fr: "Pas encore de quêtes.",
+      en: "No quests yet.",
+    }[lang],
   };
 
   return (
@@ -88,7 +96,7 @@ function SubjectPage() {
         to="/dashboard"
         className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
       >
-        <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> Heroes Hall
+        <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.common.backToHall}
       </Link>
 
       <div className="relative overflow-hidden rounded-3xl border border-border/50 bg-black/60 p-8 backdrop-blur-xl">
@@ -98,7 +106,7 @@ function SubjectPage() {
         />
         <div className="relative">
           <div className="text-xs uppercase tracking-[0.3em]" style={{ color }}>
-            Attribute · {subject.attribute}
+            {L.attribute} · {subject.attribute}
           </div>
           <h1 className="mt-1 font-display text-4xl font-bold sm:text-5xl">{subject.name_fr}</h1>
           {subject.description && (
@@ -254,7 +262,7 @@ function SubjectPage() {
                           {ex.title}
                           {isBoss && (
                             <span className="rounded-full bg-destructive/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-destructive">
-                              Boss
+                              {L.boss}
                             </span>
                           )}
                           {isChallenge && (
@@ -265,7 +273,7 @@ function SubjectPage() {
                         </div>
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">
                           <span>
-                            Difficulty {ex.difficulty}/{isChallenge ? 4 : 3}
+                            {L.difficulty} {ex.difficulty}/{isChallenge ? 4 : 3}
                           </span>
                           <span className="flex items-center gap-0.5 text-[color:var(--neon-gold)]">
                             <Zap className="h-3 w-3" />
@@ -323,7 +331,7 @@ function SubjectPage() {
                   );
                 })}
                 {realEx.length === 0 && (
-                  <div className="text-xs italic text-muted-foreground">No quests yet.</div>
+                  <div className="text-xs italic text-muted-foreground">{L.noQuests}</div>
                 )}
               </div>
             </motion.section>

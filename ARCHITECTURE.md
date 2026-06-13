@@ -31,7 +31,7 @@ src/
 │   ├── parent-report/  ← Family link + parent progress report
 │   ├── subscription/   ← Premium parcours entitlements + beta access + admin RPCs
 │   ├── content-report/ ← User-flagged content errors ("Signaler une erreur") + admin triage
-│   └── parcours/       ← Gamified journey-map / adventure-path over subjects & chapters
+│   └── parcours/       ← Gamified journey-map: world map of subjects (/parcours); nodes route to /subject/$id
 │
 │   (Leaderboard has no feature folder — `getLeaderboard` lives in dashboard.server.ts.
 │    Onboarding has no feature folder — it is an inline route at

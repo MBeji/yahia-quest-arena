@@ -39,7 +39,6 @@ import { filterSubjectsByLocale } from "@/shared/lib/subject-locale";
 import { xpToNextLevel, xpWithinLevel } from "@/shared/lib/level";
 import { HeroAvatar } from "@/features/dashboard/components/hero-avatar";
 import { HeroStatChips } from "@/features/dashboard/components/hero-stat-chips";
-import { LanguageSwitcher } from "@/components/ui/language-switcher";
 
 const DashboardRadarInventory = lazy(() =>
   import("@/features/dashboard/components/dashboard-radar-inventory").then((mod) => ({
@@ -322,9 +321,7 @@ function Dashboard() {
       return;
     }
 
-    // TODO(review #32): hardcoded English toast — needs an i18n key (e.g.
-    // t.dashboard.noQuestTarget) added to the i18n files before it can use useT().
-    toast.info("No quest target available yet. Complete one subject quest first.");
+    toast.info(t.dashboard.noQuestTarget);
   }
 
   return (
@@ -360,7 +357,9 @@ function Dashboard() {
               />
               <div className="mt-4">
                 <div className="mb-1 flex justify-between text-xs text-muted-foreground">
-                  <span>Level {profile.level}</span>
+                  <span>
+                    {t.dashboard.levelLabel} {profile.level}
+                  </span>
                   <span>
                     {xpInLevel} / {xpInLevel + xpToNext} XP
                   </span>
@@ -368,7 +367,7 @@ function Dashboard() {
                 <div
                   className="h-2.5 overflow-hidden rounded-full bg-secondary"
                   role="progressbar"
-                  aria-label="XP Progress"
+                  aria-label={t.dashboard.xpProgress}
                   aria-valuenow={Math.round(xpPct)}
                   aria-valuemin={0}
                   aria-valuemax={100}

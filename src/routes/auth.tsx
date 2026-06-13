@@ -72,7 +72,8 @@ function AuthPage() {
       const friendly = friendlyAuthError(t, new Error(raw));
       // For OAuth, show the raw provider/Supabase message when it isn't a known
       // case — it's far more actionable than a generic fallback for debugging.
-      const shown = friendly === t.auth.errorGeneric ? `Google : ${raw}` : friendly;
+      const shown =
+        friendly === t.auth.errorGeneric ? t.auth.oauthErrorPrefix.replace("{msg}", raw) : friendly;
       setFormError(shown);
       toast.error(shown);
       window.history.replaceState({}, "", "/auth");

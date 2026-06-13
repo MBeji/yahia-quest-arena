@@ -12,6 +12,7 @@ import {
   List,
   CheckCircle2,
   FileText,
+  Swords,
 } from "lucide-react";
 import { getChapterLesson } from "@/features/quest";
 import { buildLessonLabels, type LessonContentLang } from "@/features/quest/lesson-labels";
@@ -241,6 +242,18 @@ function LessonPage() {
           dir={isRtl ? "rtl" : undefined}
           dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }}
         />
+
+        {/* Primary CTA: course → quiz/exercises. The subject page is the hub that
+            presents the comprehension quiz-gate and the chapter's exercises. */}
+        <div className="border-t border-border/40 px-6 py-5 sm:px-8">
+          <Link
+            to="/subject/$subjectId"
+            params={{ subjectId: chapter.subject_id }}
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-[image:var(--gradient-gold)] px-6 py-3.5 text-base font-bold text-black shadow-gold transition-transform hover:scale-[1.02]"
+          >
+            <Swords className="h-5 w-5" /> {labels.goToExercises}
+          </Link>
+        </div>
 
         {/* Bottom navigation */}
         <div className="border-t border-border/40 bg-gradient-to-r from-[color:var(--gold)]/5 to-[color:var(--gold)]/5 px-6 py-5 sm:px-8">

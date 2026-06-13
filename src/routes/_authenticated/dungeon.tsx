@@ -284,30 +284,32 @@ function DungeonPage() {
             </div>
 
             {accessQuery.isLoading || !access ? (
-              <div className="mt-8 text-sm text-muted-foreground">…</div>
+              <div className="mt-8 text-sm text-muted-foreground">{t.common.loading}</div>
             ) : access.reason === "SUBSCRIPTION" ? (
               <SubscriptionPaywall />
             ) : !access.canAccess ? (
               <div className="mx-auto mt-8 max-w-sm rounded-2xl border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/5 p-5 text-left">
                 <div className="flex items-center gap-2 font-display font-bold text-[color:var(--neon-gold)]">
-                  <Lock className="h-5 w-5" /> Donjon verrouillé
+                  <Lock className="h-5 w-5" /> {t.dungeon.locked}
                 </div>
                 <p className="mt-2 text-sm text-muted-foreground">
                   {access.reason === "DAILY_LIMIT"
-                    ? `Limite quotidienne atteinte (${access.maxRunsPerDay} run${
-                        access.maxRunsPerDay > 1 ? "s" : ""
-                      }/jour). Reviens demain.`
+                    ? t.dungeon.dailyLimitReached.replace("{max}", String(access.maxRunsPerDay))
                     : access.reason === "LEVEL"
-                      ? "Monte de niveau pour débloquer le Donjon."
-                      : "Le Donjon exige d'avoir déjà progressé dans plusieurs matières et chapitres."}
+                      ? t.dungeon.levelLocked
+                      : t.dungeon.prereqLocked}
                 </p>
                 {access.reason === "PREREQ" && (
                   <div className="mt-3 space-y-1 text-xs text-muted-foreground">
                     <div>
-                      Matières entamées : {access.subjectsDone}/{access.requiredSubjects}
+                      {t.dungeon.subjectsStarted
+                        .replace("{done}", String(access.subjectsDone))
+                        .replace("{required}", String(access.requiredSubjects))}
                     </div>
                     <div>
-                      Chapitres entamés : {access.chaptersDone}/{access.requiredChapters}
+                      {t.dungeon.chaptersStarted
+                        .replace("{done}", String(access.chaptersDone))
+                        .replace("{required}", String(access.requiredChapters))}
                     </div>
                   </div>
                 )}
@@ -315,20 +317,22 @@ function DungeonPage() {
                   to="/dashboard"
                   className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-border/50 px-4 py-2 text-sm font-semibold text-foreground hover:bg-black/60"
                 >
-                  Continuer à m'entraîner
+                  {t.dungeon.keepTraining}
                 </Link>
               </div>
             ) : (
               <>
                 <button
                   onClick={startDungeon}
-                  aria-label="Enter the infinite dungeon mode"
+                  aria-label={t.dungeon.enterDungeonAria}
                   className="mt-8 inline-flex items-center gap-2 rounded-lg bg-[image:var(--gradient-gold)] px-8 py-3.5 text-base font-bold text-black shadow-gold transition-transform hover:scale-105"
                 >
                   <Skull className="h-5 w-5" /> {t.dungeon.enterDungeon}
                 </button>
                 <div className="mt-3 text-xs text-muted-foreground">
-                  Runs aujourd'hui : {access.runsToday}/{access.maxRunsPerDay}
+                  {t.dungeon.runsToday
+                    .replace("{n}", String(access.runsToday))
+                    .replace("{max}", String(access.maxRunsPerDay))}
                 </div>
               </>
             )}
@@ -523,12 +527,11 @@ function DungeonPage() {
           exit={{ opacity: 0, x: -30 }}
           transition={{ duration: 0.25 }}
           className="rounded-3xl border border-[color:var(--gold)]/30 bg-black/60 p-6 backdrop-blur-xl sm:p-8"
-          dir={
-            subjectInfo &&
-            (subjectInfo.color_token === "math" || subjectInfo.color_token === "arabic")
-              ? "rtl"
-              : undefined
-          }
+          // Only Arabic content is RTL. Math uses standard LTR notation (project
+          // rule), so it must NOT be forced RTL. Full unification on the subject's
+          // content_language is pending a get_dungeon_questions RPC change to carry
+          // it in the payload; until then the color_token is the only signal here.
+          dir={subjectInfo && subjectInfo.color_token === "arabic" ? "rtl" : undefined}
         >
           <RichField
             raw={currentQuestion.prompt}

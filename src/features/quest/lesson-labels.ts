@@ -19,6 +19,8 @@ export type LessonLabels = {
   /** Contains a {subject} placeholder. */
   allChaptersOf: string;
   finishedAll: string;
+  /** Primary CTA from the lesson to the chapter's quiz & exercises. */
+  goToExercises: string;
 };
 
 export function buildLessonLabels(lang: LessonContentLang): LessonLabels {
@@ -54,6 +56,11 @@ export function buildLessonLabels(lang: LessonContentLang): LessonLabels {
       ar: "🏆 أنهيت كل الدروس!",
       fr: "🏆 Tu as terminé toutes les leçons !",
       en: "🏆 You finished every lesson!",
+    }[lang],
+    goToExercises: {
+      ar: "🧠 إلى الاختبار والتمارين",
+      fr: "🧠 Passer au quiz et aux exercices",
+      en: "🧠 Go to the quiz & exercises",
     }[lang],
   };
 }

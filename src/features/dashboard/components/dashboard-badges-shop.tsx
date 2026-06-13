@@ -53,6 +53,12 @@ export function DashboardBadgesShop({
   /** Armed-badge label per arming slot (passive streak shield vs next-quest item). */
   const armedLabel = (armSlot: "next-quest" | "passive" | null): string =>
     armSlot === "passive" ? t.dashboard.armedPassive : t.dashboard.armedQuest;
+  // Localized labels for the technical enum strings, with a graceful fallback to
+  // the raw value so an unmapped type/rarity still renders (just untranslated).
+  const itemTypeLabel = (type: string): string =>
+    (t.dashboard.itemTypes as Record<string, string>)[type] ?? type;
+  const rarityLabel = (rarity: string): string =>
+    (t.dashboard.rarities as Record<string, string>)[rarity] ?? rarity;
 
   return (
     <>
@@ -71,7 +77,7 @@ export function DashboardBadgesShop({
                   <div>
                     <div className="font-display text-lg font-bold">{badge.name}</div>
                     <div className="text-xs uppercase tracking-widest text-[color:var(--neon-gold)]">
-                      {badge.rarity}
+                      {rarityLabel(badge.rarity)}
                     </div>
                   </div>
                   <div className="rounded-full bg-[color:var(--neon-gold)]/15 px-3 py-1 text-xs font-bold text-[color:var(--neon-gold)]">
@@ -130,12 +136,12 @@ export function DashboardBadgesShop({
                     <div>
                       <div className="font-display text-lg font-bold">{item.name}</div>
                       <div className="text-xs uppercase tracking-widest text-[color:var(--gold)]">
-                        {item.itemType}
+                        {itemTypeLabel(item.itemType)}
                       </div>
                     </div>
                   </div>
                   <div className="rounded-full bg-[color:var(--gold)]/10 px-3 py-1 text-xs font-bold text-[color:var(--gold)]">
-                    {item.priceCoins} Coins
+                    {item.priceCoins} {t.quest.coinsLabel}
                   </div>
                 </div>
                 <p className="mt-3 text-sm text-muted-foreground">

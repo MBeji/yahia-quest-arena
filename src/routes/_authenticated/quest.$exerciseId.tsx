@@ -176,9 +176,13 @@ function QuestPage() {
   const current = questions[idx];
   const progress = useMemo(() => (total > 0 ? (idx / total) * 100 : 0), [idx, total]);
   const isBoss = data?.exercise?.mode === "boss";
-  const subjectInfo = data?.exercise?.subjects as { color_token?: string } | null;
-  // Only Arabic content is RTL; math/other subjects are LTR.
-  const isRtlSubject = subjectInfo?.color_token === "arabic";
+  const subjectInfo = data?.exercise?.subjects as {
+    color_token?: string;
+    content_language?: string;
+  } | null;
+  // RTL follows the subject's content language (Arabic), consistent with the
+  // subject and lesson screens — never the color_token, which is cosmetic.
+  const isRtlSubject = subjectInfo?.content_language === "ar";
 
   // Boss mode: timer
   const [bossTimer, setBossTimer] = useState(0);
@@ -442,11 +446,14 @@ function QuestPage() {
                   .replace("{correct}", String(result.correct))
                   .replace("{total}", String(result.total))}
               >
-                {result.correct} / {result.total} correct answers · {Math.round(result.scorePct)}%
+                {t.quest.resultScore
+                  .replace("{correct}", String(result.correct))
+                  .replace("{total}", String(result.total))
+                  .replace("{pct}", String(Math.round(result.scorePct)))}
               </ExplainHint>
             </p>
             <p className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">
-              Server-validated time · {result.durationSeconds}s
+              {t.quest.serverValidatedTime.replace("{n}", String(result.durationSeconds))}
             </p>
             {isQuiz && (
               <div
@@ -477,8 +484,14 @@ function QuestPage() {
             {result.potionApplied && (
               <div className="mt-6 rounded-xl border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/10 p-3 text-center text-sm font-bold text-[color:var(--gold)]">
                 {result.potionApplied.xpMultiplier > 1
-                  ? `Potion XP ×${result.potionApplied.xpMultiplier} appliquée !`
-                  : `Potion Pièces ×${result.potionApplied.coinMultiplier} appliquée !`}
+                  ? t.quest.potionXpApplied.replace(
+                      "{x}",
+                      String(result.potionApplied.xpMultiplier),
+                    )
+                  : t.quest.potionCoinsApplied.replace(
+                      "{x}",
+                      String(result.potionApplied.coinMultiplier),
+                    )}
               </div>
             )}
             <QuestRewardGrid
@@ -533,7 +546,7 @@ function QuestPage() {
                       <div className="flex items-start justify-between gap-4">
                         <div>
                           <div className="text-xs uppercase tracking-widest text-muted-foreground">
-                            Question {reviewIndex + 1}
+                            {t.quest.questionN.replace("{n}", String(reviewIndex + 1))}
                           </div>
                           <RichField raw={item.prompt} className="mt-1 font-semibold" />
                         </div>
@@ -677,7 +690,9 @@ function QuestPage() {
       <div className="mb-6">
         <div className="mb-2 flex items-center justify-between text-xs uppercase tracking-widest text-muted-foreground">
           <span>
-            Question {idx + 1} / {total}
+            {t.quest.questionOf
+              .replace("{current}", String(idx + 1))
+              .replace("{total}", String(total))}
           </span>
           {!isBoss && <span className="text-[color:var(--gold)]">{data.exercise.title}</span>}
         </div>
