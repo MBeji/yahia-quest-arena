@@ -1,0 +1,94 @@
+name: Regression guard (daily test sweep)
+
+# Autonomous daily reconciliation of the test suites with the day's changes,
+# driven by the repo skill .claude/skills/regression-guard. It updates STALE
+# tests (selector/locale/route drift), ADDS missing coverage, and reports REAL
+# bugs — opening a reviewable PR for test updates and a tracking issue per bug.
+# It NEVER pushes to main and NEVER weakens a test to hide a defect.
+#
+# Runs at 23:00 UTC (00:00 Tunisia), i.e. end of day and before the nightly
+# build (01:00 UTC / 02:00 Tunisia) validates main.
+#
+# Prereq: repository secret ANTHROPIC_API_KEY. Without it the job SKIPS
+# gracefully (stays green), so it never nags before it's configured.
+# schedule only fires on the default branch (main) — takes effect once merged.
+
+on:
+  schedule:
+    - cron: "0 23 * * *"
+  workflow_dispatch:
+
+# Needed so the guard can open a branch + PR and file tracking issues.
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+# One sweep at a time.
+concurrency:
+  group: regression-guard
+  cancel-in-progress: false
+
+jobs:
+  guard:
+    name: Daily regression sweep
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check the Anthropic API key is configured
+        id: guard
+        run: |
+          if [ -z "${{ secrets.ANTHROPIC_API_KEY }}" ]; then
+            echo "ANTHROPIC_API_KEY not set — skipping the regression guard."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout (full history for diff/branch context)
+        if: steps.guard.outputs.configured == 'true'
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        if: steps.guard.outputs.configured == 'true'
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        if: steps.guard.outputs.configured == 'true'
+        run: npm ci --no-audit --no-fund
+
+      - name: Run the regression-guard sweep
+        if: steps.guard.outputs.configured == 'true'
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt: |
+            Run the /regression-guard skill for yahia-quest-arena.
+
+            Scope the changes merged to `main` in roughly the last 26 hours, reconcile
+            the Vitest / pgTAP / Playwright suites with them, and run `npm run verify`.
+
+            Then produce two SEPARATE outputs, per the skill:
+              1. Test updates and added coverage -> open ONE draft pull request
+                 against `main` (branch `claude/regression-guard-<date>`), with a body
+                 that explains, per change, which commit it tracks and shows the gate
+                 is green. Use conventional-commit messages (test:, fix(test):).
+              2. Each genuine bug (a test correctly catching wrong behaviour) -> open a
+                 tracking GitHub issue (one per bug) with repro, expected vs actual, the
+                 failing assertion, and the suspected commit. Do NOT edit/skip/relax a
+                 test to make a real bug pass.
+
+            Hard rules: NEVER push to `main`; NEVER weaken/disable a test or lower
+            coverage to go green; if you cannot tell a stale test from a real bug, treat
+            it as a real bug and report it. If everything is already green and covered,
+            open no PR and post a short "all green" summary in the job log instead.
+          claude_args: |
+            --model claude-sonnet-4-6
+            --max-turns 40
+            --allowedTools "Bash,Read,Edit,Write,Glob,Grep"
