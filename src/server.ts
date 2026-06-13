@@ -3,6 +3,7 @@ import "@/shared/lib/error-capture";
 import { consumeLastCapturedError } from "@/shared/lib/error-capture";
 import { renderErrorPage } from "@/shared/lib/error-page";
 import { logger } from "@/shared/lib/logger";
+import { handlePushCron } from "@/features/notifications/notifications.cron.server";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -72,6 +73,18 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
 
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
+    // Scheduled push dispatch (Vercel Cron → GET /api/cron/notify). Handled
+    // before the SSR handler: it carries its own auth (CRON_SECRET) and returns
+    // JSON rather than the branded HTML error page.
+    if (new URL(request.url).pathname === "/api/cron/notify") {
+      try {
+        return await handlePushCron(request);
+      } catch (error) {
+        logger.error("Push cron dispatch failed", { error });
+        return new Response("error", { status: 500 });
+      }
+    }
+
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);

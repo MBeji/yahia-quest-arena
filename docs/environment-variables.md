@@ -47,3 +47,22 @@ npm run dev
 ```
 
 `.env` is gitignored and must never be committed.
+
+## Web Push notifications
+
+Scheduled push (streak reminders) needs a VAPID keypair and a cron secret:
+
+| Variable                | Scope                 | Notes                                      |
+| ----------------------- | --------------------- | ------------------------------------------ |
+| `VAPID_PUBLIC_KEY`      | server (runtime)      | Web Push VAPID public key                  |
+| `VAPID_PRIVATE_KEY`     | server only (runtime) | **secret** — VAPID private key             |
+| `VAPID_SUBJECT`         | server (runtime)      | `mailto:` contact (VAPID requirement)      |
+| `VITE_VAPID_PUBLIC_KEY` | client (build time)   | same public key (browser subscribe)        |
+| `CRON_SECRET`           | server only (runtime) | **secret** — guards `GET /api/cron/notify` |
+
+1. Generate the keypair once: `npx web-push generate-vapid-keys`.
+2. Set the five variables in Vercel → Settings → Environment Variables.
+   `VITE_VAPID_PUBLIC_KEY` must equal `VAPID_PUBLIC_KEY`; rebuild so it inlines.
+3. The cron route is declared in `vercel.json` (`crons`); Vercel automatically
+   sends `Authorization: Bearer $CRON_SECRET` on each scheduled run, which
+   `src/server.ts` → `handlePushCron` verifies.

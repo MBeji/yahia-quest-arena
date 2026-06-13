@@ -396,6 +396,17 @@ export type TranslationKeys = {
     updated: string;
     updateError: string;
   };
+  // Push notifications (enable card)
+  pushNotifications: {
+    cardTitle: string;
+    cardDesc: string;
+    enable: string;
+    enabling: string;
+    enabled: string;
+    disable: string;
+    blocked: string;
+    errorGeneric: string;
+  };
   // Layout
   layout: {
     heroesHall: string;

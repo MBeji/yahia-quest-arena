@@ -386,6 +386,16 @@ export const en: TranslationKeys = {
     updated: "Report updated.",
     updateError: "Failed to process the report.",
   },
+  pushNotifications: {
+    cardTitle: "Quest reminders",
+    cardDesc: "Get an alert when your streak is at risk so you never break your run.",
+    enable: "Enable notifications",
+    enabling: "Enabling…",
+    enabled: "Notifications enabled",
+    disable: "Disable",
+    blocked: "Notifications are blocked. Allow them in your browser settings.",
+    errorGeneric: "Couldn't enable notifications. Try again.",
+  },
   layout: {
     heroesHall: "Heroes Hall",
     parcours: "Adventure",

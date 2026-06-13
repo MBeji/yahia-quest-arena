@@ -28,6 +28,7 @@ import {
 } from "@/features/dashboard";
 import { purchaseShopItem, equipInventorySkin, activateInventoryItem } from "@/features/shop";
 import { recoverStreak } from "@/features/progression";
+import { EnablePushCard } from "@/features/notifications";
 import { SubjectPathCard } from "@/features/dashboard/components/subject-path-card";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useReducedMotion } from "motion/react";
@@ -435,6 +436,9 @@ function Dashboard() {
           />
           <MotivationalQuote />
         </motion.div>
+
+        {/* Push opt-in — self-hides when push is unavailable in this browser. */}
+        <EnablePushCard />
 
         {/* STREAK RECOVERY BANNER */}
         {profile.current_streak === 0 && (profile.longest_streak ?? 0) > 0 && (

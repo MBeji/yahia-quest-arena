@@ -382,6 +382,16 @@ export const ar: TranslationKeys = {
     updated: "تم تحديث البلاغ.",
     updateError: "فشل معالجة البلاغ.",
   },
+  pushNotifications: {
+    cardTitle: "تذكيرات المهام",
+    cardDesc: "احصل على تنبيه عندما تكون سلسلتك في خطر حتى لا تنقطع سلسلتك أبدًا.",
+    enable: "تفعيل الإشعارات",
+    enabling: "جارٍ التفعيل…",
+    enabled: "الإشعارات مفعّلة",
+    disable: "إيقاف",
+    blocked: "الإشعارات محظورة. اسمح بها من إعدادات المتصفح.",
+    errorGeneric: "تعذّر تفعيل الإشعارات. حاول مرة أخرى.",
+  },
   layout: {
     heroesHall: "قاعة الأبطال",
     parcours: "المسار",

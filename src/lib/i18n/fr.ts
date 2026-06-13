@@ -387,6 +387,16 @@ export const fr: TranslationKeys = {
     updated: "Signalement mis à jour.",
     updateError: "Échec du traitement du signalement.",
   },
+  pushNotifications: {
+    cardTitle: "Rappels de quête",
+    cardDesc: "Reçois une alerte quand ton streak est en danger pour ne jamais casser ta série.",
+    enable: "Activer les notifications",
+    enabling: "Activation…",
+    enabled: "Notifications activées",
+    disable: "Désactiver",
+    blocked: "Notifications bloquées. Autorise-les dans les réglages de ton navigateur.",
+    errorGeneric: "Impossible d'activer les notifications. Réessaie.",
+  },
   layout: {
     heroesHall: "Hall des Héros",
     parcours: "Parcours",

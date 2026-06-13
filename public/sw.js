@@ -70,3 +70,56 @@ self.addEventListener("fetch", (event) => {
     );
   }
 });
+
+// --- Web Push ----------------------------------------------------------------
+// The cron sender posts a JSON payload: { title, body, url, tag }. We render a
+// notification; clicking it focuses an existing tab (navigating it to `url`) or
+// opens a new one. Kept defensive: a malformed/empty payload still shows a
+// sane default rather than throwing inside the push event.
+self.addEventListener("push", (event) => {
+  let payload = {};
+  try {
+    payload = event.data ? event.data.json() : {};
+  } catch {
+    payload = {};
+  }
+
+  const title = payload.title || "XP Scholars";
+  const options = {
+    body: payload.body || "",
+    icon: "/icons/icon-192.png",
+    badge: "/icons/icon-192.png",
+    tag: payload.tag || "xp-scholars",
+    data: { url: payload.url || "/" },
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const targetUrl = (event.notification.data && event.notification.data.url) || "/";
+
+  event.waitUntil(
+    (async () => {
+      const allClients = await self.clients.matchAll({
+        type: "window",
+        includeUncontrolled: true,
+      });
+      for (const client of allClients) {
+        if ("focus" in client) {
+          await client.focus();
+          if ("navigate" in client) {
+            try {
+              await client.navigate(targetUrl);
+            } catch {
+              // Navigation can reject (cross-origin / unsupported) — focusing is enough.
+            }
+          }
+          return;
+        }
+      }
+      if (self.clients.openWindow) await self.clients.openWindow(targetUrl);
+    })(),
+  );
+});
