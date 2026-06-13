@@ -300,7 +300,9 @@ export const getExercise = createServerFn({ method: "GET" })
     const [ex, qs, hintInv] = await Promise.all([
       supabase
         .from("exercises")
-        .select("*, subjects(id,name_fr,color_token,icon), chapters(id,title,subject_id)")
+        .select(
+          "*, subjects(id,name_fr,color_token,icon,content_language), chapters(id,title,subject_id)",
+        )
         .eq("id", data.exerciseId)
         .single(),
       supabase

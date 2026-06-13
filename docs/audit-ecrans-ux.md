@@ -43,9 +43,14 @@ tous les écrans, et sur **deux ruptures du parcours pédagogique central**.
    liens, dans un scroll horizontal à scrollbar cachée. Cœur de cible = enfants. Échec
    WCAG 2.4.4 / 4.1.2. Le hook `use-mobile` existe mais n'est pas branché sur la shell.
 
-5. 🟠 **`name_fr` affiché quelle que soit la langue.** Les noms de matières/parcours sont
-   rendus en français partout (dashboard, onboarding, leaderboard, donjon, subject,
-   lesson…), y compris en UI arabe RTL. Régression i18n la plus répandue de l'app.
+5. ⚠️ **`name_fr` affiché quelle que soit la langue.** ~~Régression i18n~~ — **requalifié
+   après enquête (F3)** : le pipeline de contenu ne remplit **que** `name_fr` (les colonnes
+   `name_en`/`name_ar` restent NULL), et y stocke le nom dans la langue du contenu du sujet.
+   `name_fr` est donc le **nom canonique**, déjà dans la bonne langue pour la plupart des
+   sujets. Le vrai problème est que **certains** sujets AR/EN ont un nom français saisi dans
+   `name_fr` (ex. un sujet arabe nommé « Mathématiques »). **Ce n'est pas corrigeable en pur
+   code** — il faut peupler `name_en`/`name_ar` (ou corriger les `nameFr`) dans `content/` +
+   étendre l'INSERT du pipeline. Tâche de **données**, hors d'un correctif code. Non traité.
 
 ---
 
@@ -360,8 +365,12 @@ leaderboard · parent-report (parent/admin) · admin/\* (admin).
 
 ### P1 — important (🟠)
 
-7. Résoudre `name_fr` → nom localisé partout (F3).
-8. Unifier la détection RTL sur `content_language` (F4).
+7. ⚠️ ~~Résoudre `name_fr` → nom localisé~~ (F3) — **non corrigeable en code** : seul
+   `name_fr` est peuplé (cf. §1.5). Nécessite un travail de **données** dans `content/`.
+8. ✅ **Unifier la détection RTL sur `content_language`** (F4) — _quête : fait_
+   (`getExercise` renvoie désormais `content_language`, RTL basé dessus). _Donjon : partiel_
+   — le forçage erroné « math → RTL » retiré ; l'unification complète attend que la RPC
+   `get_dungeon_questions` porte `content_language` (migration DB).
 9. Corriger le lien/libellé « Admin » → `/parent-report` (`_authenticated.tsx:146-149`).
 10. `DailyXpWidget` : XP réel du jour + `dailyGoal` issu de `gamification.ts`.
 11. Unifier les seuils de complétude (40/60/étoiles) sur le gate XP 60%.

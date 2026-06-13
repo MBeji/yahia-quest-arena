@@ -527,12 +527,11 @@ function DungeonPage() {
           exit={{ opacity: 0, x: -30 }}
           transition={{ duration: 0.25 }}
           className="rounded-3xl border border-[color:var(--gold)]/30 bg-black/60 p-6 backdrop-blur-xl sm:p-8"
-          dir={
-            subjectInfo &&
-            (subjectInfo.color_token === "math" || subjectInfo.color_token === "arabic")
-              ? "rtl"
-              : undefined
-          }
+          // Only Arabic content is RTL. Math uses standard LTR notation (project
+          // rule), so it must NOT be forced RTL. Full unification on the subject's
+          // content_language is pending a get_dungeon_questions RPC change to carry
+          // it in the payload; until then the color_token is the only signal here.
+          dir={subjectInfo && subjectInfo.color_token === "arabic" ? "rtl" : undefined}
         >
           <RichField
             raw={currentQuestion.prompt}

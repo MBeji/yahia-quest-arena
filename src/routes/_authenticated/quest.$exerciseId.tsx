@@ -176,9 +176,13 @@ function QuestPage() {
   const current = questions[idx];
   const progress = useMemo(() => (total > 0 ? (idx / total) * 100 : 0), [idx, total]);
   const isBoss = data?.exercise?.mode === "boss";
-  const subjectInfo = data?.exercise?.subjects as { color_token?: string } | null;
-  // Only Arabic content is RTL; math/other subjects are LTR.
-  const isRtlSubject = subjectInfo?.color_token === "arabic";
+  const subjectInfo = data?.exercise?.subjects as {
+    color_token?: string;
+    content_language?: string;
+  } | null;
+  // RTL follows the subject's content language (Arabic), consistent with the
+  // subject and lesson screens — never the color_token, which is cosmetic.
+  const isRtlSubject = subjectInfo?.content_language === "ar";
 
   // Boss mode: timer
   const [bossTimer, setBossTimer] = useState(0);
