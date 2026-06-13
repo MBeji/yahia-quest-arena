@@ -22,11 +22,10 @@ tous les écrans, et sur **deux ruptures du parcours pédagogique central**.
 
 ### Les 5 problèmes structurants
 
-1. 🔴 **Deux fils de navigation parallèles et incohérents** vers le même contenu : le menu
-   « Parcours » (`/parcours` → `/parcours/$subjectId`, carte zigzag) et le « Heroes Hall »
-   du dashboard (→ `/subject/$subjectId`, liste de chapitres). Designs, vocabulaire **et
-   logiques de déverrouillage différents** → un même chapitre peut apparaître _verrouillé_
-   sur la carte et _ouvert_ dans la liste. L'app ment à l'élève sur sa progression.
+1. ✅ ~~**Deux fils de navigation parallèles et incohérents**~~ — **résolu (F1)** : le
+   zigzag chapitre `/parcours/$subjectId` (`SubjectPath`/`buildChapterNodes`) a été supprimé.
+   La carte de monde `/parcours` route désormais tous ses nœuds vers l'unique écran chapitre
+   `/subject/$subjectId` (celui au quiz-gate riche). Un seul fil, une seule logique de lock.
 
 2. 🔴 **La leçon ne mène jamais au quiz ni aux exercices.** Le modèle pédagogique est
    `cours → quiz de compréhension → exercices`, mais l'écran `lesson.$chapterId` n'a
@@ -348,8 +347,8 @@ leaderboard · parent-report (parent/admin) · admin/\* (admin).
 
 ### P0 — à traiter en premier (🔴)
 
-1. **Unifier le fil chapitre** : fusionner `/parcours/$subjectId` et `/subject/$subjectId`
-   ou partager la logique de lock de `journey.ts`. (F1)
+1. ✅ **Unifier le fil chapitre** — _fait_ : `/parcours/$subjectId` supprimé, la carte
+   `/parcours` pointe vers l'unique `/subject/$subjectId`. (F1)
 2. ✅ **Ajouter un CTA « Passer le quiz / Commencer les exercices »** en bas de la leçon
    (vers la page matière qui porte le quiz-gate). _Traité._ (F2)
 3. ✅ **Externaliser le bloc « Donjon verrouillé »** en clés i18n. _Traité_ (les autres

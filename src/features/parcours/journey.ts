@@ -4,7 +4,7 @@
  * (getDashboard / getSubject) and pass the results to presentational components,
  * so this feature never imports another feature.
  */
-import { FREE_PREVIEW_MAX_DIFFICULTY, XP_PER_LEVEL } from "@/shared/constants/gamification";
+import { XP_PER_LEVEL } from "@/shared/constants/gamification";
 
 /** Visual state of a path node. */
 export type NodeState = "done" | "current" | "open" | "locked" | "premium-locked";
@@ -17,16 +17,6 @@ export type SubjectNode = {
   isPremium: boolean;
   attempts: number;
   avg: number;
-  state: NodeState;
-};
-
-export type ChapterNode = {
-  id: string;
-  title: string;
-  xpReward: number;
-  total: number;
-  completed: number;
-  hasPremium: boolean;
   state: NodeState;
 };
 
@@ -99,56 +89,6 @@ export function buildSubjectNodes(
       avg: Math.round(st.avg),
       state,
     };
-  });
-}
-
-type ChapterLike = { id: string; title: string };
-type ExerciseLike = {
-  id: string;
-  chapter_id: string;
-  mode: string;
-  difficulty: number;
-  xp_reward: number;
-};
-
-/**
- * Per-subject chapter path. A chapter unlocks once the previous chapter's
- * comprehension quiz is passed (mirrors the server gate); the first not-yet-done
- * unlocked chapter is the "current" one. PASS_PCT mirrors the dashboard's
- * "completed" heuristic.
- */
-export function buildChapterNodes(
-  chapters: ChapterLike[],
-  exercises: ExerciseLike[],
-  quizPassedByChapter: Record<string, boolean>,
-  bestByExercise: Record<string, number>,
-  passPct = 40,
-): ChapterNode[] {
-  let unlocked = true;
-  let currentAssigned = false;
-
-  return chapters.map((c) => {
-    const exs = exercises.filter((e) => e.chapter_id === c.id && e.mode !== "quiz");
-    const total = exs.length;
-    const completed = exs.filter((e) => (bestByExercise[e.id] ?? 0) >= passPct).length;
-    const xpReward = exs.reduce((sum, e) => sum + (e.xp_reward ?? 0), 0);
-    const hasPremium = exs.some((e) => (e.difficulty ?? 0) > FREE_PREVIEW_MAX_DIFFICULTY);
-    const allDone = total > 0 && completed === total;
-    // No quiz for the chapter → not a blocker (defaults to passed).
-    const quizPassed = quizPassedByChapter[c.id] ?? true;
-
-    let state: NodeState;
-    if (!unlocked) state = "locked";
-    else if (allDone) state = "done";
-    else if (!currentAssigned) {
-      state = "current";
-      currentAssigned = true;
-    } else state = "open";
-
-    // The next chapter unlocks when this one's quiz is passed (or it's complete).
-    if (!(quizPassed || allDone)) unlocked = false;
-
-    return { id: c.id, title: c.title, xpReward, total, completed, hasPremium, state };
   });
 }
 

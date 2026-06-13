@@ -94,14 +94,16 @@ describe("JourneyMap", () => {
     }
   });
 
-  it("links unlocked subjects to the journey, premium to the paywall, and leaves locked unlinked", () => {
+  it("links every non-locked subject to the unified subject screen, leaving locked unlinked", () => {
     const { container } = render(
       <JourneyMap nodes={nodes} profile={{ level: 1, xp: 0, heroClass: "Novice" }} />,
     );
     const hrefs = Array.from(container.querySelectorAll("a")).map((a) => a.getAttribute("href"));
-    // Unlocked → /parcours/$subjectId ; premium → /subject/$subjectId ; locked → no link.
-    expect(hrefs).toContain("/parcours/$subjectId");
-    expect(hrefs).toContain("/subject/$subjectId");
+    // After the F1 merge there is a single chapter screen: all non-locked nodes
+    // (done/current/open AND premium-locked) point to /subject/$subjectId; the
+    // locked node ("Arabe") renders no link.
+    expect(hrefs).toEqual(["/subject/$subjectId", "/subject/$subjectId", "/subject/$subjectId"]);
+    expect(hrefs).not.toContain("/parcours/$subjectId");
     expect(screen.getByText("Premium")).toBeInTheDocument();
   });
 });

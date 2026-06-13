@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildSubjectNodes, buildChapterNodes, xpProgress, nodeSide } from "../journey";
+import { buildSubjectNodes, xpProgress, nodeSide } from "../journey";
 
 describe("xpProgress", () => {
   it("computes progress within the 200 XP/level curve", () => {
@@ -61,40 +61,5 @@ describe("buildSubjectNodes", () => {
     expect(buildSubjectNodes(subj, stats, new Set(["frm"]))[1].state).toBe("premium-locked");
     // …and not locked when the set is empty (entitled / free).
     expect(buildSubjectNodes(subj, stats, new Set())[1].state).toBe("open");
-  });
-});
-
-describe("buildChapterNodes", () => {
-  const chapters = [
-    { id: "c1", title: "Ch1" },
-    { id: "c2", title: "Ch2" },
-    { id: "c3", title: "Ch3" },
-  ];
-  const exercises = [
-    { id: "e1", chapter_id: "c1", mode: "practice", difficulty: 1, xp_reward: 50 },
-    { id: "e2", chapter_id: "c1", mode: "boss", difficulty: 3, xp_reward: 120 },
-    { id: "e3", chapter_id: "c2", mode: "practice", difficulty: 2, xp_reward: 50 },
-    { id: "q1", chapter_id: "c1", mode: "quiz", difficulty: 1, xp_reward: 20 },
-  ];
-
-  it("done → current → locked across the chapter gate", () => {
-    const nodes = buildChapterNodes(
-      chapters,
-      exercises,
-      { c1: true, c2: false, c3: true },
-      { e1: 100, e2: 100, e3: 0 },
-    );
-    expect(nodes.map((n) => n.state)).toEqual(["done", "current", "locked"]);
-  });
-
-  it("computes xpReward (excluding the quiz) and flags premium content", () => {
-    const nodes = buildChapterNodes(chapters, exercises, {}, {});
-    expect(nodes[0].xpReward).toBe(170); // 50 + 120 (quiz's 20 excluded)
-    expect(nodes[0].total).toBe(2);
-    // Premium content = anything past the free preview (difficulty > 1): c1 has a
-    // difficulty-3 boss, c2 a difficulty-2 practice; c3 (empty) has none.
-    expect(nodes[0].hasPremium).toBe(true);
-    expect(nodes[1].hasPremium).toBe(true);
-    expect(nodes[2].hasPremium).toBe(false);
   });
 });
