@@ -42,7 +42,6 @@
     ]
   },
   "dependencies": {
-    "@cloudflare/vite-plugin": "^1.25.5",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
@@ -104,6 +103,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.3",
+    "@cloudflare/vite-plugin": "^1.25.5",
     "@eslint/js": "^9.32.0",
     "@lovable.dev/vite-tanstack-config": "^1.7.0",
     "@playwright/test": "^1.60.0",
@@ -132,5 +132,10 @@
     "typescript-eslint": "^8.56.1",
     "vite": "^7.3.1",
     "vitest": "^4.1.7"
+  },
+  "overrides": {
+    "vite": {
+      "esbuild": "^0.28.1"
+    }
   }
 }

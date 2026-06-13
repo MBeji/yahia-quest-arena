@@ -87,18 +87,22 @@ async function main() {
     if (error) throw error;
 
     // Premium = a live entitlement on both premium Concours parcours (perpetual).
-    // The service-role key bypasses is_admin(), so admin_grant_parcours succeeds.
-    // The grant is an idempotent upsert against the live-grant slot, so re-seeding
-    // is safe. Free accounts get no entitlement (the model dropped subscription_*).
+    // NOT via admin_grant_parcours: its is_admin() guard keys off auth.uid(),
+    // which is NULL for a service-role call -> 'Unauthorized'. The service key
+    // bypasses RLS instead, so write the live-grant slot directly (clear, then
+    // insert = idempotent re-seed). Free accounts get no entitlement.
     if (u.premium) {
       for (const parcoursId of ["concours-9eme", "concours-6eme"]) {
-        const { error } = await admin.rpc("admin_grant_parcours", {
-          p_user: id,
-          p_parcours: parcoursId,
-          p_source: "purchase",
-          p_expires_at: null,
-        });
-        if (error) throw error;
+        const del = await admin
+          .from("parcours_entitlements")
+          .delete()
+          .eq("user_id", id)
+          .eq("parcours_id", parcoursId);
+        if (del.error) throw del.error;
+        const ins = await admin
+          .from("parcours_entitlements")
+          .insert({ user_id: id, parcours_id: parcoursId, source: "purchase", expires_at: null });
+        if (ins.error) throw ins.error;
       }
     }
 

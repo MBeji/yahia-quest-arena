@@ -13,9 +13,11 @@
  * ⚠️ TEST project only — the prod ref is rejected by _env.mjs.
  */
 import { execSync } from "node:child_process";
-import "./_env.mjs";
+import { normalizeDbUrl } from "./_env.mjs";
 
-const DB_URL = process.env.TEST_SUPABASE_DB_URL ?? process.env.SUPABASE_DB_URL;
+// Percent-encode a raw password in the URI so the Supabase CLI (Go) accepts it
+// ("invalid userinfo" guard — see normalizeDbUrl).
+const DB_URL = normalizeDbUrl(process.env.TEST_SUPABASE_DB_URL ?? process.env.SUPABASE_DB_URL);
 
 if (!DB_URL) {
   console.error(
@@ -33,9 +35,20 @@ if (!DB_URL) {
 // binary; force the public registry just for this CLI fetch (see e2e/README.md).
 const env = { ...process.env, npm_config_registry: "https://registry.npmjs.org" };
 
+// Prefer a CLI already on PATH (CI installs it via supabase/setup-cli); fall
+// back to npx for local runs without a global install.
+const cli = (() => {
+  try {
+    execSync("supabase --version", { stdio: "ignore" });
+    return "supabase";
+  } catch {
+    return "npx --yes supabase";
+  }
+})();
+
 console.log("[e2e] Applying migrations to the TEST project via `supabase db push`…");
 try {
-  execSync(`npx --yes supabase db push --db-url "${DB_URL}" --include-all`, {
+  execSync(`${cli} db push --db-url "${DB_URL}" --include-all`, {
     stdio: "inherit",
     env,
   });

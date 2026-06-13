@@ -273,6 +273,13 @@ When unsure about scope or a destructive action, ask before proceeding.
   and don't widen `include` to dilute the metric with vendored/glue code.
 - Some server fns defensively tolerate missing RPCs (e.g. `get_best_scores_by_exercise`
   falls back to empty) — keep that graceful-degradation pattern.
+- **New tables need EXPLICIT grants.** The base migrations carry almost no `GRANT`s, and
+  the CI local stack (db-tests.yml) stopped applying Supabase's default table privileges
+  (supabase/postgres ≥ 17.6.1.134): a `CREATE TABLE` without its own
+  `GRANT SELECT … TO authenticated` works on cloud but breaks the nightly pgTAP suite on a
+  fresh DB. The end-state baseline lives in `20260612221000_baseline_table_grants.sql`;
+  every new table migration must ship its own grants. The Supabase CLI is **version-pinned**
+  in `db-tests.yml` / `e2e-auth.yml` — bump deliberately, with a green run.
 - **E2E ≠ unit gate.** Playwright specs (`e2e/`, run via `e2e.yml` / `e2e-auth.yml`) hit a
   **dedicated TEST Supabase project** with seeded users (`scripts/e2e/`), not the unit-test
   mocks. They are not part of `npm run verify`/`ci:verify`; don't point them at prod.

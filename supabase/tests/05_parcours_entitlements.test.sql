@@ -63,7 +63,7 @@ INSERT INTO public.exercises (id, chapter_id, subject_id, title, xp_reward, diff
 VALUES
   ('e1111111-1111-1111-1111-111111111111', 'c1111111-1111-1111-1111-111111111111', 'pe-prem', 'P d1',   50, 1, 'practice'),
   ('e3333333-3333-3333-3333-333333333333', 'c1111111-1111-1111-1111-111111111111', 'pe-prem', 'P d3',   50, 3, 'practice'),
-  ('eqqqqqqq-qqqq-qqqq-qqqq-qqqqqqqqqqqq', 'c1111111-1111-1111-1111-111111111111', 'pe-prem', 'P quiz', 50, 2, 'quiz'),
+  ('e2222222-2222-2222-2222-222222222222', 'c1111111-1111-1111-1111-111111111111', 'pe-prem', 'P quiz', 50, 2, 'quiz'),
   ('efffffff-ffff-ffff-ffff-ffffffffffff', 'c2222222-2222-2222-2222-222222222222', 'pe-free', 'F d3',   50, 3, 'practice');
 
 -- Direct entitlement rows (writes normally go through admin RPCs; superuser
@@ -133,7 +133,7 @@ SELECT is(
   'PARCOURS_LOCKED', 'access: premium difficulty-3 without a grant -> PARCOURS_LOCKED');
 
 SELECT ok(
-  (SELECT is_preview FROM public.resolve_exercise_access('eqqqqqqq-qqqq-qqqq-qqqq-qqqqqqqqqqqq')),
+  (SELECT is_preview FROM public.resolve_exercise_access('e2222222-2222-2222-2222-222222222222')),
   'access: the chapter comprehension quiz is in the free preview');
 
 SELECT ok(

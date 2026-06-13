@@ -57,6 +57,24 @@ jobs:
         if: steps.guard.outputs.configured == 'true'
         run: npm ci --no-audit --no-fund
 
+      # The secret is often pasted scheme-less, quoted, padded — or is the
+      # POSTGRES connection string altogether (seen in the nightly: supabase-js
+      # then resolves hostname "postgresql"). normalizeSupabaseUrl fixes all of
+      # those (deriving https://<ref>.supabase.co from a DB URI's project ref);
+      # every later step (seed, reset, the Playwright dev server) reads the
+      # normalized env.TEST_SUPABASE_URL.
+      - name: Normalize TEST project URL
+        if: steps.guard.outputs.configured == 'true'
+        env:
+          RAW_TEST_SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
+        run: |
+          url="$(node --input-type=module -e 'const m = await import("./scripts/e2e/_env.mjs"); process.stdout.write(m.normalizeSupabaseUrl(process.env.RAW_TEST_SUPABASE_URL) ?? "")')"
+          if ! printf '%s' "$url" | grep -qE '^https://'; then
+            echo "::error::TEST_SUPABASE_URL is not a usable Supabase API URL — set the secret to https://<ref>.supabase.co (Project Settings → API)."
+            exit 1
+          fi
+          echo "TEST_SUPABASE_URL=$url" >> "$GITHUB_ENV"
+
       - name: Cache Playwright browsers
         if: steps.guard.outputs.configured == 'true'
         uses: actions/cache@v4
@@ -74,16 +92,23 @@ jobs:
         if: steps.guard.outputs.configured == 'true' && steps.guard.outputs.has_db_url == 'true'
         uses: supabase/setup-cli@v1
         with:
-          version: latest
+          # Pinned: an unpinned "latest" bump (17.6.1.132 → .134 image) silently
+          # broke the local-stack grants on 2026-06-07. Bump deliberately.
+          version: 2.106.0
 
+      # Goes through the e2e script (not raw `supabase db push`) so the DB URL is
+      # normalized first: a raw password with special characters used to fail with
+      # "invalid userinfo". The script also re-checks the prod-ref safety net.
       - name: Apply migrations + content to TEST project
         if: steps.guard.outputs.configured == 'true' && steps.guard.outputs.has_db_url == 'true'
-        run: supabase db push --db-url "${{ secrets.TEST_SUPABASE_DB_URL }}" --include-all
+        env:
+          TEST_SUPABASE_DB_URL: ${{ secrets.TEST_SUPABASE_DB_URL }}
+        run: npm run e2e:db:push
 
       - name: Seed test users
         if: steps.guard.outputs.configured == 'true'
         env:
-          SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
+          SUPABASE_URL: ${{ env.TEST_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.TEST_SUPABASE_SERVICE_ROLE_KEY }}
           E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}
         run: npm run e2e:seed
@@ -93,7 +118,7 @@ jobs:
       - name: Reset gameplay state
         if: steps.guard.outputs.configured == 'true'
         env:
-          SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
+          SUPABASE_URL: ${{ env.TEST_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.TEST_SUPABASE_SERVICE_ROLE_KEY }}
         run: node scripts/e2e/reset-gameplay.mjs
 
@@ -101,16 +126,19 @@ jobs:
         if: steps.guard.outputs.configured == 'true'
         env:
           CI: "true"
-          VITE_SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
+          VITE_SUPABASE_URL: ${{ env.TEST_SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.TEST_SUPABASE_ANON_KEY }}
-          SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
+          SUPABASE_URL: ${{ env.TEST_SUPABASE_URL }}
           SUPABASE_PUBLISHABLE_KEY: ${{ secrets.TEST_SUPABASE_ANON_KEY }}
+          # The adminDb fixture (e2e/helpers/db.ts) needs the service-role key at
+          # SPEC runtime too — locally .env.test provides it; CI must as well.
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.TEST_SUPABASE_SERVICE_ROLE_KEY }}
           E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}
         run: npm run test:e2e:auth
 
       - name: Upload Playwright report
         if: ${{ steps.guard.outputs.configured == 'true' && !cancelled() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: playwright-report-auth
           path: playwright-report/

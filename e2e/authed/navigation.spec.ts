@@ -3,14 +3,16 @@ import { STORAGE_STATE } from "../helpers/users";
 
 // The authenticated nav shell routes correctly. Driven from the leaderboard page
 // (the banner is identical on every authed page, and it's lighter than the 3D
-// dashboard). Scoped to the header so body links with similar names don't clash.
+// dashboard). Targeted by href, not link text, so it stays robust to the UI
+// locale (the labels are translated; the FR-default switch — GAP-010 — renamed
+// them "Aventure"/"Donjon"/"Hall des Héros").
 test.use({ storageState: STORAGE_STATE.free });
 
 const NAV = [
-  { name: /adventure/i, url: /\/parcours/ },
-  { name: /themes/i, url: /\/themes/ },
-  { name: /dungeon/i, url: /\/dungeon/ },
-  { name: /heroes hall/i, url: /\/dashboard/ },
+  { href: "/parcours", url: /\/parcours/ },
+  { href: "/themes", url: /\/themes/ },
+  { href: "/dungeon", url: /\/dungeon/ },
+  { href: "/dashboard", url: /\/dashboard/ },
 ];
 
 test.describe("Primary navigation", () => {
@@ -19,7 +21,7 @@ test.describe("Primary navigation", () => {
   for (const item of NAV) {
     test(`nav → ${item.url.source}`, async ({ leaderboard, page }) => {
       await leaderboard.goto();
-      await page.getByRole("banner").getByRole("link", { name: item.name }).first().click();
+      await page.getByRole("banner").locator(`a[href="${item.href}"]`).first().click();
       await expect(page).toHaveURL(item.url);
     });
   }
