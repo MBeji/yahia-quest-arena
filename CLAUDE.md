@@ -180,7 +180,12 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
     requires a live entitlement; free preview = comprehension quiz + difficulty-1), provisioned via
     `admin_grant_parcours`; beta-access requests; the out-of-band (phone) paywall component.
   - **`content-report/`** — user-flagged content errors ("Signaler une erreur") + admin triage.
-  - **`parcours/`** — gamified journey-map / adventure-path UI over subjects & chapters.
+  - **`parcours/`** — gamified journey-map / adventure-path UI: a world map of **subjects**
+    (`JourneyMap`/`buildSubjectNodes` at `/parcours`). Every map node routes to the single
+    chapter screen `/subject/$subjectId` (which carries the quiz-gate + exercises). The
+    earlier per-subject zigzag chapter map (`/parcours/$subjectId`, `SubjectPath`,
+    `buildChapterNodes`) was removed — it duplicated `/subject/$subjectId` with a divergent
+    unlock logic; there is now **one** chapter screen.
 
   (Leaderboard has no feature folder — `getLeaderboard` lives in `dashboard.server.ts`.
   Onboarding has no feature folder — it is an inline route at `routes/_authenticated/onboarding.tsx`.)
