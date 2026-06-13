@@ -9,8 +9,11 @@ name: Regression guard (daily test sweep)
 # Runs at 23:00 UTC (00:00 Tunisia), i.e. end of day and before the nightly
 # build (01:00 UTC / 02:00 Tunisia) validates main.
 #
-# Prereq: repository secret ANTHROPIC_API_KEY. Without it the job SKIPS
-# gracefully (stays green), so it never nags before it's configured.
+# Prereq: repository secret CLAUDE_CODE_OAUTH_TOKEN — generate it locally with
+# `claude setup-token` (uses your Claude Max subscription; no pay-per-token API
+# bill; 1-year token, rotate yearly). Without it the job SKIPS gracefully (stays
+# green), so it never nags before it's configured. To use a pay-per-token Console
+# API key instead, swap the secret/input below for anthropic_api_key.
 # schedule only fires on the default branch (main) — takes effect once merged.
 
 on:
@@ -35,11 +38,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - name: Check the Anthropic API key is configured
+      - name: Check the Claude OAuth token is configured
         id: guard
         run: |
-          if [ -z "${{ secrets.ANTHROPIC_API_KEY }}" ]; then
-            echo "ANTHROPIC_API_KEY not set — skipping the regression guard."
+          if [ -z "${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}" ]; then
+            echo "CLAUDE_CODE_OAUTH_TOKEN not set — skipping the regression guard."
             echo "configured=false" >> "$GITHUB_OUTPUT"
           else
             echo "configured=true" >> "$GITHUB_OUTPUT"
@@ -66,7 +69,7 @@ jobs:
         if: steps.guard.outputs.configured == 'true'
         uses: anthropics/claude-code-action@v1
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           prompt: |
             Run the /regression-guard skill for yahia-quest-arena.
