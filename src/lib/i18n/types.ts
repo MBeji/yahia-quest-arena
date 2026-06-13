@@ -64,6 +64,7 @@ export type TranslationKeys = {
     errorRateLimit: string;
     errorSignupDisabled: string;
     errorGeneric: string;
+    oauthErrorPrefix: string;
     googleCallbackIncomplete: string;
     // Email-confirmation interstitial
     emailSentTitle: string;
@@ -80,6 +81,9 @@ export type TranslationKeys = {
     signIn: string;
     joinAcademy: string;
     badge: string;
+    heroAlt: string;
+    enableAnimations: string;
+    reduceAnimations: string;
     heroTitle1: string;
     heroTitle2: string;
     heroTitle3: string;
@@ -187,6 +191,8 @@ export type TranslationKeys = {
     shopActivate: string;
     armedPassive: string;
     armedQuest: string;
+    itemTypes: { skin: string; potion: string; booster: string; shield: string };
+    rarities: { common: string; rare: string; epic: string; legendary: string };
     radarTitle: string;
     radarCaption: string;
     inventoryTitle: string;

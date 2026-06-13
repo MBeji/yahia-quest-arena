@@ -73,6 +73,13 @@ carte une simple vue alternative qui **partage la même logique de lock** que `j
 
 ### 🔴 F2 — Chaînes codées en dur (i18n cassée hors FR/EN)
 
+> ✅ **Largement traité.** Externalisés en clés i18n FR/EN/AR : bloc verrou du donjon ;
+> écran matière (Heroes Hall, Attribut, Boss, Difficulté, Pas de quêtes) ; écran quête
+> (score, temps serveur, Question N, potions, en-tête) ; dashboard (toast noQuestTarget,
+> Niveau, aria XP) ; chips héros (Niveau, Coins) ; boutique (itemType/rarity mappés avec
+> fallback, Coins) ; auth (préfixe Google) ; landing (toggle reduce-motion, alt du héros).
+> _Restent_ : quelques `min-h`/contrastes et le formatage de dates admin (cf. P2).
+
 La parité des clés est bonne (447 FR / 445 EN / 445 AR), donc tout ce qui suit est du
 littéral à externaliser :
 
