@@ -53,8 +53,10 @@ tous les écrans, et sur **deux ruptures du parcours pédagogique central**.
 ## 2. Fils rouges transversaux
 
 ### 🔴 F1 — Deux écrans pour une même matière
+
 `subject.$subjectId.tsx` (liste classique) et `parcours.$subjectId.tsx` (carte d'aventure)
 affichent les **mêmes chapitres** avec :
+
 - des **logiques de lock divergentes** — carte : un chapitre se déverrouille au quiz du
   précédent (`journey.ts:120-153`) ; liste : aucun lock inter-chapitres
   (`subject.$subjectId.tsx:115-116`).
@@ -66,28 +68,31 @@ affichent les **mêmes chapitres** avec :
 carte une simple vue alternative qui **partage la même logique de lock** que `journey.ts`.
 
 ### 🔴 F2 — Chaînes codées en dur (i18n cassée hors FR/EN)
+
 La parité des clés est bonne (447 FR / 445 EN / 445 AR), donc tout ce qui suit est du
 littéral à externaliser :
 
-| Écran | Localisation | Exemple |
-|---|---|---|
-| Donjon (bloc verrou) | `dungeon.tsx:293-318, 331` | tout le bloc « Donjon verrouillé » en FR brut |
-| Dashboard | `dashboard.tsx:325-327` | `toast.info("No quest target available yet…")` |
-| Subject | `subject.$subjectId.tsx:91,100,257,268,326` | « Heroes Hall », « Attribute », « Boss », « Difficulty », « No quests yet. » |
-| Quest | `quest.$exerciseId.tsx:445,449,480-481,536,680` | résultats EN + « Potion XP ×N appliquée ! » FR |
-| Hero header | `hero-stat-chips.tsx:36,53,61`, `dashboard.tsx:363,372,513` | « Lvl », « XP », « Coins », « Level », « XP Progress » |
-| Boutique | `dashboard-badges-shop.tsx:75,101,133,138` | `itemType`/`rarity` bruts, « Coins » |
-| Auth | `auth.tsx:75` | préfixe « Google : » concaténé |
-| Landing | `index.tsx:151-153,262` | toggle reduce-motion FR, `alt` image EN |
-| Onboarding/Shell | `onboarding.tsx`, `_authenticated.tsx:88-90` | « Loading… » non i18n |
+| Écran                | Localisation                                                | Exemple                                                                      |
+| -------------------- | ----------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| Donjon (bloc verrou) | `dungeon.tsx:293-318, 331`                                  | tout le bloc « Donjon verrouillé » en FR brut                                |
+| Dashboard            | `dashboard.tsx:325-327`                                     | `toast.info("No quest target available yet…")`                               |
+| Subject              | `subject.$subjectId.tsx:91,100,257,268,326`                 | « Heroes Hall », « Attribute », « Boss », « Difficulty », « No quests yet. » |
+| Quest                | `quest.$exerciseId.tsx:445,449,480-481,536,680`             | résultats EN + « Potion XP ×N appliquée ! » FR                               |
+| Hero header          | `hero-stat-chips.tsx:36,53,61`, `dashboard.tsx:363,372,513` | « Lvl », « XP », « Coins », « Level », « XP Progress »                       |
+| Boutique             | `dashboard-badges-shop.tsx:75,101,133,138`                  | `itemType`/`rarity` bruts, « Coins »                                         |
+| Auth                 | `auth.tsx:75`                                               | préfixe « Google : » concaténé                                               |
+| Landing              | `index.tsx:151-153,262`                                     | toggle reduce-motion FR, `alt` image EN                                      |
+| Onboarding/Shell     | `onboarding.tsx`, `_authenticated.tsx:88-90`                | « Loading… » non i18n                                                        |
 
 ### 🟠 F3 — `name_fr` au lieu du nom localisé
+
 Récurrent : `dashboard.tsx:513`, `onboarding.tsx:155,167,296`, `leaderboard.tsx:87,111,118`,
 `dungeon.tsx:505`, `subject.$subjectId.tsx:103`, `lesson.$chapterId.tsx:222`,
 `parcours.$subjectId.tsx:42`, `subject-path-card.tsx:84`, `parcours-hub.tsx:88`.
 En arabe (RTL) un nom français apparaît au milieu d'une UI arabe.
 
 ### 🟠 F4 — Détection RTL incohérente (3 mécanismes)
+
 - `quest.$exerciseId.tsx:181` → `color_token === "arabic"`
 - `dungeon.tsx:526-531` → `color_token === "math" || "arabic"` (« math » forcé RTL est
   douteux : notation standard LTR)
@@ -97,6 +102,7 @@ Un subject arabe dont le `color_token` diffère sera LTR dans la quête mais RTL
 **Recommandation :** s'appuyer partout sur `content_language`.
 
 ### 🟠 F5 — Identité de marque incohérente
+
 Logo `Crown` sur le landing (`index.tsx:160`) vs `Sparkles` sur l'auth (`auth.tsx:251`) et
 la shell (`_authenticated.tsx:111`). Uniformiser.
 
@@ -105,6 +111,7 @@ la shell (`_authenticated.tsx:111`). Uniformiser.
 ## 3. Audit par écran
 
 ### 3.1 Landing publique — `index.tsx`
+
 - 🟠 Pas de nav mobile : ancres `#features/#subjects/#ranks` en `hidden md:flex`, aucune
   alternative sous `md`.
 - 🟠 Contrastes à valider : `text-muted-foreground` / `text-champagne/70` sur fond noir
@@ -116,6 +123,7 @@ la shell (`_authenticated.tsx:111`). Uniformiser.
 - 🟢 Hiérarchie claire ; toggle reduce-motion avec `aria-pressed`.
 
 ### 3.2 Auth (login/signup) — `auth.tsx`
+
 - 🟠 **Couleur d'erreur = doré** (couleur de marque/succès), `auth.tsx:405,415` → signal
   d'échec affaibli. Utiliser une teinte destructive.
 - 🟠 Formulaire **placeholder-as-label** : tous les `<Label>` sont `sr-only`, plus de label
@@ -131,6 +139,7 @@ la shell (`_authenticated.tsx:111`). Uniformiser.
   `<title>` login vs signup.
 
 ### 3.3 Onboarding — `onboarding.tsx`
+
 - 🔴 Nom de parcours **exclusivement `name_fr`** (`:155,167,296`), y compris en `aria-label`
   — régression i18n sur un écran trilingue.
 - 🟠 Écart consigne↔code : **pas d'étape grade ni hero class** (2 étapes : intent →
@@ -145,6 +154,7 @@ la shell (`_authenticated.tsx:111`). Uniformiser.
 - 🟡 RTL : animations `x: 20 / x: -20` et chevrons non inversés en arabe.
 
 ### 3.4 Shell authentifié + navigation — `_authenticated.tsx`
+
 - 🔴 Libellés masqués sous `lg` → icônes muettes sans `aria-label` sur mobile/tablette
   (`:117-179`). Pas de nav mobile dédiée (`use-mobile` non branché).
 - 🟠 **Lien « Admin » pointe vers `/parent-report`** (`:146-149`) — trompeur ; doublon
@@ -157,6 +167,7 @@ la shell (`_authenticated.tsx:111`). Uniformiser.
   de parcours actif dans la barre.
 
 ### 3.5 Dashboard — `dashboard.tsx`
+
 - 🔴 Toast « No quest target available yet… » en anglais brut (`:325-327`, TODO connu).
 - 🟠 `DailyXpWidget` : `dailyGoal={100}` **hardcodé** et `xpToday` = somme des objectifs
   cochés (pas l'XP réel du jour) → la barre ne reflète pas la progression réelle
@@ -168,6 +179,7 @@ la shell (`_authenticated.tsx:111`). Uniformiser.
 - 🟢 Barre XP `role="progressbar"` complète ; lazy-load des sections ; états vides présents.
 
 ### 3.6 Explorer / hub parcours — `themes.tsx`
+
 - 🟠 Triple vocabulaire pour un même écran : URL `/themes`, onglet « Explorer », titre
   « Choisis ton parcours ». Le modèle `themes → grades → subjects` n'apparaît jamais.
 - 🟠 Le clic **switche le parcours actif puis redirige sans confirmation ni toast** (`:43`)
@@ -177,6 +189,7 @@ la shell (`_authenticated.tsx:111`). Uniformiser.
 - 🟢 Seul écran avec un skeleton vraiment soigné.
 
 ### 3.7 Carte d'aventure — `parcours.tsx` / `parcours.$subjectId.tsx`
+
 - 🔴 Doublon avec `/subject/$subjectId` (cf. F1).
 - 🟠 **Aucun état d'erreur** (`parcours.tsx:27`, `parcours.$subjectId.tsx:28`) → blocage
   « Chargement… » infini si la requête échoue.
@@ -188,6 +201,7 @@ la shell (`_authenticated.tsx:111`). Uniformiser.
   entitlement/parcours).
 
 ### 3.8 Détail matière — `subject.$subjectId.tsx`
+
 - 🟠 Panachage FR/EN (cf. F2) + `name_fr` (cf. F3).
 - 🟠 **Seuils de complétude divergents** : « completed » ≥ 40% (`:117`), étoiles 40/70/90
   (`:210`), gate XP serveur 60%. Un exercice « complété » peut n'avoir jamais rapporté
@@ -198,15 +212,18 @@ la shell (`_authenticated.tsx:111`). Uniformiser.
   verrouillés avec cadenas + explication. États error/loading présents.
 
 ### 3.9 Leçon — `lesson.$chapterId.tsx`
+
 - 🔴 **Aucun CTA vers le quiz/exercices** (cf. F2, point #2) — deadend pédagogique majeur
   (`:245-298`).
-- 🟠 **Ancres TOC mortes** : le sommaire cible `id="section-{i}"` (`:170`) qui n'est jamais
-  posé dans le HTML rendu (`:96` ne capte que les `h2`). Les liens ne défilent vers rien.
+- ~~🟠 Ancres TOC mortes~~ — **infirmé après vérification** : `renderMarkdown`
+  (`src/shared/lib/markdown.ts`) injecte bien `id="section-{i}"` sur chaque `<h2>` et
+  DOMPurify autorise l'attribut `id` (`ALLOWED_ATTR`). Les ancres du sommaire fonctionnent.
 - 🟡 `name_fr` dans le header (`:222`) ; dots de progression sans `aria-label`.
 - 🟢 Meilleur loading de l'app ; état vide soigné ; gestion `content_language`/RTL propre ;
   riche navigation inter-chapitres.
 
 ### 3.10 Quête QCM — `quest.$exerciseId.tsx`
+
 - 🟠 Panachage FR/EN (cf. F2) + RTL via `color_token` (cf. F4).
 - 🟠 Barre de progression `idx/total` (`:177`) → 0% sur Q1, jamais pleine.
 - 🟠 Bouton « Quête suivante » **disparaît silencieusement** si `siblingSubjectQuery`
@@ -218,6 +235,7 @@ la shell (`_authenticated.tsx:111`). Uniformiser.
   « Quête suivante » bien pensé.
 
 ### 3.11 Donjon — `dungeon.tsx`
+
 - 🔴 Tout le bloc « Donjon verrouillé » en **français codé en dur** (`:293-318,331`).
 - 🟠 RTL via `color_token` fragile (cf. F4) ; `name_fr` (cf. F3).
 - 🟡 Trois libellés pour la même destination `/dashboard` (« Hall des héros » / « Retour au
@@ -227,6 +245,7 @@ la shell (`_authenticated.tsx:111`). Uniformiser.
   non-couleur (icône + sr-only).
 
 ### 3.12 Classement — `leaderboard.tsx`
+
 - 🟠 `name_fr` sur onglets/sous-titre (cf. F3) — `isRtlText(s.name_fr)` ne passera jamais
   en RTL.
 - 🟡 Lignes de classement en `<div>` plutôt que `<ul role="list">` ; streak en couleur sans
@@ -234,6 +253,7 @@ la shell (`_authenticated.tsx:111`). Uniformiser.
 - 🟢 Carte « mon rang » + chip « Toi » → repérage clair ; protection contre fuite d'UUID.
 
 ### 3.13 Rapport parent — `parent-report.tsx`
+
 - 🔴 **Seul écran sans lien de retour** (`backToHall` absent) — deadend de navigation.
 - 🟠 Bar chart d'activité non accessible (tooltip `title` HTML, pas focusable clavier).
 - 🟡 Suffixe « j » (jours) en dur (`:253`) ; `title` du graphe en dur FR (`:326`) ;
@@ -242,6 +262,7 @@ la shell (`_authenticated.tsx:111`). Uniformiser.
   clair ; auto-sélection du premier élève.
 
 ### 3.14 Admin (abonnements / bêta / signalements)
+
 - 🟠 Actions destructives **sans confirmation** (revoke/reject) —
   `parcours-entitlements-admin.tsx:214`, `beta-requests-admin.tsx:144`.
 - 🟠 Titre d'exercice signalé **non cliquable** vers `/quest/$exerciseId`
@@ -252,6 +273,7 @@ la shell (`_authenticated.tsx:111`). Uniformiser.
 - 🟢 Garde-fous admin homogènes ; badges compteurs « en attente » dans nav et titres.
 
 ### 3.15 Boutique & inventaire (pas d'écran dédié)
+
 - 🟠 **Aucun écran `/shop`** : tout vit dans le dashboard (`dashboard-badges-shop.tsx`,
   `dashboard-radar-inventory.tsx`). Pas de lien direct possible vers la boutique.
 - 🟠 Inventaire **tronqué à 4 items** sans « voir tout » → items au-delà invisibles et
@@ -263,6 +285,7 @@ la shell (`_authenticated.tsx:111`). Uniformiser.
 - 🟢 Bons `aria-label` sur buy/equip/activate ; labels d'armement i18n.
 
 ### 3.16 Paywall premium — `subscription-paywall.tsx`
+
 - 🟠 **Périmètre ambigu** : rendu dans le donjon, il laisse croire qu'on paie « juste » le
   donjon alors que c'est l'entitlement parcours concours. Préciser ce qui est débloqué.
 - 🟡 Double lien retour quand rendu dans le donjon (`:39` vs `dungeon.tsx:238`) ; pas de
@@ -271,11 +294,13 @@ la shell (`_authenticated.tsx:111`). Uniformiser.
   intégrée.
 
 ### 3.17 Signalement de contenu — `report-error-button.tsx`
+
 - 🟡 Validation ≥ 5 caractères sans feedback sur le bouton désactivé ; textarea sans `dir`
   auto à la saisie.
 - 🟢 CTA discret, confirmation « envoyé », i18n complet.
 
 ### 3.18 Shell racine — `__root.tsx`
+
 - 🟠 `ErrorComponent` utilise `console.error` direct (`:45`) au lieu du logger structuré
   (convention projet).
 - 🟡 Meta document figées en FR (`:80-94`) ; le lien retour 404 fait un full reload
@@ -287,20 +312,20 @@ la shell (`_authenticated.tsx:111`). Uniformiser.
 ## 4. Carte de navigation & deadends
 
 **Accessible depuis la barre de nav :** dashboard · parcours · themes · dungeon ·
-leaderboard · parent-report (parent/admin) · admin/* (admin).
+leaderboard · parent-report (parent/admin) · admin/\* (admin).
 
 **Contextuel (hors nav) :** subject · lesson · quest · onboarding · parcours/$subjectId.
 
-| Problème | Sévérité |
-|---|---|
-| `parent-report` sans lien de retour | 🔴 |
-| Leçon → aucun lien vers quiz/exercices | 🔴 |
-| Carte d'aventure → aucun lien vers les exercices | 🔴 |
-| Bouton « Quête suivante » disparaît si query frère échoue | 🟠 |
-| Carte d'aventure bloquée sur « Chargement… » si erreur | 🟠 |
-| Logo → `/dashboard` renvoie admin/parent en aller-retour | 🟠 |
-| Pas de `/shop` linkable | 🟠 |
-| Objectif « subject » sans sujet attribué → impasse silencieuse (toast EN) | 🟠 |
+| Problème                                                                  | Sévérité |
+| ------------------------------------------------------------------------- | -------- |
+| `parent-report` sans lien de retour                                       | 🔴       |
+| Leçon → aucun lien vers quiz/exercices                                    | 🔴       |
+| Carte d'aventure → aucun lien vers les exercices                          | 🔴       |
+| Bouton « Quête suivante » disparaît si query frère échoue                 | 🟠       |
+| Carte d'aventure bloquée sur « Chargement… » si erreur                    | 🟠       |
+| Logo → `/dashboard` renvoie admin/parent en aller-retour                  | 🟠       |
+| Pas de `/shop` linkable                                                   | 🟠       |
+| Objectif « subject » sans sujet attribué → impasse silencieuse (toast EN) | 🟠       |
 
 ---
 
@@ -322,18 +347,20 @@ leaderboard · parent-report (parent/admin) · admin/* (admin).
 ## 6. Backlog priorisé (recommandations actionnables)
 
 ### P0 — à traiter en premier (🔴)
+
 1. **Unifier le fil chapitre** : fusionner `/parcours/$subjectId` et `/subject/$subjectId`
    ou partager la logique de lock de `journey.ts`. (F1)
-2. **Ajouter un CTA « Passer le quiz / Commencer les exercices »** en bas de
-   `lesson.$chapterId.tsx:245-298`. (F2)
-3. **Externaliser le bloc « Donjon verrouillé »** et les autres littéraux du tableau F2 en
-   clés i18n.
-4. **Nav mobile** : rendre les libellés visibles dès `sm` **ou** ajouter `aria-label`+
-   `title` sur chaque `<Link>` ; brancher `use-mobile` (hamburger / bottom-bar).
-5. **Corriger les ancres TOC** de la leçon (`lesson.$chapterId.tsx:96,170`).
-6. **Ajouter un lien de retour** au rapport parent.
+2. ✅ **Ajouter un CTA « Passer le quiz / Commencer les exercices »** en bas de la leçon
+   (vers la page matière qui porte le quiz-gate). _Traité._ (F2)
+3. ✅ **Externaliser le bloc « Donjon verrouillé »** en clés i18n. _Traité_ (les autres
+   littéraux du tableau F2 restent à faire).
+4. ✅ **Nav** : `aria-label`+`title` sur chaque `<Link>` icône. _Traité._ (Une vraie nav
+   mobile hamburger/bottom-bar reste à concevoir.)
+5. ~~Corriger les ancres TOC~~ — **infirmé** : les ancres fonctionnent déjà (cf. §3.9).
+6. ✅ **Ajouter un lien de retour** au rapport parent. _Traité._
 
 ### P1 — important (🟠)
+
 7. Résoudre `name_fr` → nom localisé partout (F3).
 8. Unifier la détection RTL sur `content_language` (F4).
 9. Corriger le lien/libellé « Admin » → `/parent-report` (`_authenticated.tsx:146-149`).
@@ -350,6 +377,7 @@ leaderboard · parent-report (parent/admin) · admin/* (admin).
 19. Uniformiser le logo (Crown vs Sparkles).
 
 ### P2 — finitions (🟡)
+
 20. i18n : « Loading… », « XP Progress », suffixe « j », « Coins », `itemType`/`rarity`,
     toggle reduce-motion, `alt` hero, « Google : », dates admin via locale i18n.
 21. a11y : `aria-busy`/`role="status"` sur skeletons ; `aria-label` sur dots/badges ;

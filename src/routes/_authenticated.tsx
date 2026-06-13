@@ -86,7 +86,7 @@ function AuthenticatedLayout() {
     return (
       <div className="app-shell grid min-h-screen place-items-center bg-black-deep">
         <div className="font-display text-sm uppercase tracking-widest text-champagne/70">
-          Loading…
+          {t.common.loading}
         </div>
       </div>
     );
@@ -115,43 +115,97 @@ function AuthenticatedLayout() {
             </span>
           </Link>
           <nav className="flex min-w-0 items-center gap-1 overflow-x-auto sm:gap-2 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <Link to="/dashboard" className={NAV_LINK} activeProps={NAV_ACTIVE}>
+            <Link
+              to="/dashboard"
+              className={NAV_LINK}
+              activeProps={NAV_ACTIVE}
+              aria-label={t.layout.heroesHall}
+              title={t.layout.heroesHall}
+            >
               <LayoutDashboard className="h-4 w-4 shrink-0" />{" "}
               <span className="hidden lg:inline">{t.layout.heroesHall}</span>
             </Link>
-            <Link to="/parcours" className={NAV_LINK} activeProps={NAV_ACTIVE}>
+            <Link
+              to="/parcours"
+              className={NAV_LINK}
+              activeProps={NAV_ACTIVE}
+              aria-label={t.layout.parcours}
+              title={t.layout.parcours}
+            >
               <Map className="h-4 w-4 shrink-0" />{" "}
               <span className="hidden lg:inline">{t.layout.parcours}</span>
             </Link>
-            <Link to="/themes" className={NAV_LINK} activeProps={NAV_ACTIVE}>
+            <Link
+              to="/themes"
+              className={NAV_LINK}
+              activeProps={NAV_ACTIVE}
+              aria-label={t.layout.themes}
+              title={t.layout.themes}
+            >
               <Compass className="h-4 w-4 shrink-0" />{" "}
               <span className="hidden lg:inline">{t.layout.themes}</span>
             </Link>
-            <Link to="/dungeon" className={NAV_LINK} activeProps={NAV_ACTIVE}>
+            <Link
+              to="/dungeon"
+              className={NAV_LINK}
+              activeProps={NAV_ACTIVE}
+              aria-label={t.layout.dungeon}
+              title={t.layout.dungeon}
+            >
               <Swords className="h-4 w-4 shrink-0" />{" "}
               <span className="hidden lg:inline">{t.layout.dungeon}</span>
             </Link>
-            <Link to="/leaderboard" className={NAV_LINK} activeProps={NAV_ACTIVE}>
+            <Link
+              to="/leaderboard"
+              className={NAV_LINK}
+              activeProps={NAV_ACTIVE}
+              aria-label={t.layout.ranking}
+              title={t.layout.ranking}
+            >
               <Crown className="h-4 w-4 shrink-0" />{" "}
               <span className="hidden lg:inline">{t.layout.ranking}</span>
             </Link>
             {userRole === "parent" && (
-              <Link to="/parent-report" className={NAV_LINK} activeProps={NAV_ACTIVE}>
+              <Link
+                to="/parent-report"
+                className={NAV_LINK}
+                activeProps={NAV_ACTIVE}
+                aria-label={t.layout.parentReport}
+                title={t.layout.parentReport}
+              >
                 <ClipboardList className="h-4 w-4 shrink-0" />{" "}
                 <span className="hidden lg:inline">{t.layout.parentReport}</span>
               </Link>
             )}
             {userRole === "admin" && (
               <>
-                <Link to="/parent-report" className={NAV_LINK} activeProps={NAV_ACTIVE}>
+                <Link
+                  to="/parent-report"
+                  className={NAV_LINK}
+                  activeProps={NAV_ACTIVE}
+                  aria-label={t.layout.admin}
+                  title={t.layout.admin}
+                >
                   <ClipboardList className="h-4 w-4 shrink-0" />{" "}
                   <span className="hidden lg:inline">{t.layout.admin}</span>
                 </Link>
-                <Link to="/admin/subscriptions" className={NAV_LINK} activeProps={NAV_ACTIVE}>
+                <Link
+                  to="/admin/subscriptions"
+                  className={NAV_LINK}
+                  activeProps={NAV_ACTIVE}
+                  aria-label={t.layout.subscriptions}
+                  title={t.layout.subscriptions}
+                >
                   <CreditCard className="h-4 w-4 shrink-0" />{" "}
                   <span className="hidden lg:inline">{t.layout.subscriptions}</span>
                 </Link>
-                <Link to="/admin/beta-requests" className={NAV_LINK} activeProps={NAV_ACTIVE}>
+                <Link
+                  to="/admin/beta-requests"
+                  className={NAV_LINK}
+                  activeProps={NAV_ACTIVE}
+                  aria-label={t.layout.betaRequests}
+                  title={t.layout.betaRequests}
+                >
                   <FlaskConical className="h-4 w-4 shrink-0" />{" "}
                   <span className="hidden lg:inline">{t.layout.betaRequests}</span>
                   {pendingBeta > 0 && (
@@ -160,7 +214,13 @@ function AuthenticatedLayout() {
                     </span>
                   )}
                 </Link>
-                <Link to="/admin/content-reports" className={NAV_LINK} activeProps={NAV_ACTIVE}>
+                <Link
+                  to="/admin/content-reports"
+                  className={NAV_LINK}
+                  activeProps={NAV_ACTIVE}
+                  aria-label={t.layout.contentReports}
+                  title={t.layout.contentReports}
+                >
                   <Flag className="h-4 w-4 shrink-0" />{" "}
                   <span className="hidden lg:inline">{t.layout.contentReports}</span>
                   {openReports > 0 && (

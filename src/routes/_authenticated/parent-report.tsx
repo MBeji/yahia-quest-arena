@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion } from "motion/react";
@@ -18,6 +18,7 @@ import {
   CheckCircle,
   Star,
   Link as LinkIcon,
+  ArrowLeft,
 } from "lucide-react";
 import { getLinkedStudents, getStudentReport, linkStudentByCode } from "@/features/parent-report";
 import { useEffect, useMemo, useState } from "react";
@@ -110,6 +111,12 @@ function ParentReport() {
   return (
     <div className="min-h-screen p-4 md:p-8 max-w-6xl mx-auto">
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
+        <Link
+          to="/dashboard"
+          className="mb-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition hover:text-foreground"
+        >
+          <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.common.backToHall}
+        </Link>
         <h1 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
           <Activity className="w-7 h-7 text-[color:var(--gold)]" />
           {isAdmin ? t.parentReport.adminTitle : t.parentReport.title}

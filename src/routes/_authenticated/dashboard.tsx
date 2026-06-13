@@ -39,7 +39,6 @@ import { filterSubjectsByLocale } from "@/shared/lib/subject-locale";
 import { xpToNextLevel, xpWithinLevel } from "@/shared/lib/level";
 import { HeroAvatar } from "@/features/dashboard/components/hero-avatar";
 import { HeroStatChips } from "@/features/dashboard/components/hero-stat-chips";
-import { LanguageSwitcher } from "@/components/ui/language-switcher";
 
 const DashboardRadarInventory = lazy(() =>
   import("@/features/dashboard/components/dashboard-radar-inventory").then((mod) => ({

@@ -276,6 +276,15 @@ export type TranslationKeys = {
     failedLoadQuestions: string;
     failedStartRun: string;
     failedValidateAnswer: string;
+    enterDungeonAria: string;
+    locked: string;
+    dailyLimitReached: string;
+    levelLocked: string;
+    prereqLocked: string;
+    subjectsStarted: string;
+    chaptersStarted: string;
+    keepTraining: string;
+    runsToday: string;
   };
   // Subscription / premium
   subscription: {
