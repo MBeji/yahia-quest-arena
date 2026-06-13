@@ -114,7 +114,7 @@ function AuthenticatedLayout() {
               XP <span className="text-gradient-gold">SCHOLARS</span>
             </span>
           </Link>
-          <nav className="flex min-w-0 items-center gap-1 overflow-x-auto sm:gap-2 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <nav className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto sm:gap-2 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <Link
               to="/dashboard"
               className={NAV_LINK}
@@ -231,13 +231,19 @@ function AuthenticatedLayout() {
                 </Link>
               </>
             )}
+          </nav>
+          {/* Account actions are pinned OUTSIDE the scrollable nav (shrink-0) so the
+              language / theme / sign-out controls stay in view even when the link
+              list overflows — e.g. the admin nav, where sign-out used to scroll off
+              the right edge and become unreachable. */}
+          <div className="flex shrink-0 items-center gap-1 sm:gap-2">
             <LanguageSwitcher />
             <ThemeSwitcher />
             <button onClick={signOut} className={NAV_LINK} aria-label={t.layout.signOut}>
               <LogOut className="h-4 w-4 shrink-0" />{" "}
               <span className="hidden lg:inline">{t.layout.signOut}</span>
             </button>
-          </nav>
+          </div>
         </div>
       </header>
       <main className="relative z-10 pb-[env(safe-area-inset-bottom)]">
