@@ -246,10 +246,12 @@ function Landing() {
               initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.9, delay: 0.1 }}
-              className="relative"
+              // The pulsing glow lives here, on a non-clipping wrapper: the inner
+              // card is overflow-hidden, which would clip a glow placed on it.
+              className="relative animate-gold-pulse rounded-[2rem]"
             >
               <div className="absolute -inset-6 rounded-[2rem] bg-[radial-gradient(circle_at_center,oklch(0.83_0.15_86/0.25),transparent_65%)] blur-2xl" />
-              <div className="animate-gold-pulse relative aspect-square overflow-hidden rounded-[2rem] border-gold bg-black/40">
+              <div className="relative aspect-square overflow-hidden rounded-[2rem] border-gold bg-black/40">
                 {show3D ? (
                   <Suspense fallback={<GoldGlow />}>
                     <GoldenHeroCanvas />

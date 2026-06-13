@@ -211,8 +211,10 @@ function LeaderboardPage() {
                 data-testid="leaderboard-row"
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.02 }}
-                className={`flex items-center gap-4 rounded-xl border p-4 transition ${
+                // Cap the stagger so a long board doesn't cascade for seconds; rows
+                // past the first screenful all share the same short delay.
+                transition={{ delay: Math.min(i, 12) * 0.02 }}
+                className={`list-row-cv flex items-center gap-4 rounded-xl border p-4 transition ${
                   player.isMe
                     ? "border-[color:var(--gold)]/50 bg-[color:var(--gold)]/10"
                     : "border-border/50 bg-black/40 hover:bg-black/60"

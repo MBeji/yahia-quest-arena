@@ -52,6 +52,53 @@ export const Route = createFileRoute("/_authenticated/quest/$exerciseId")({
 
 type Answer = { questionId: string; choice: string };
 
+/**
+ * Boss-mode per-question countdown. Owns its own 1 Hz state so the ticking
+ * re-renders only this chip, not the (large) QuestPage tree. Resets whenever the
+ * question changes; fires `onTimeout` at zero (the parent auto-submits). The
+ * callback is read through a ref so its identity can change every render without
+ * restarting the interval.
+ */
+function BossCountdown({
+  active,
+  questionIndex,
+  onTimeout,
+}: {
+  active: boolean;
+  questionIndex: number;
+  onTimeout: () => void;
+}) {
+  const [seconds, setSeconds] = useState(BOSS_TIME_PER_QUESTION_S);
+  const onTimeoutRef = useRef(onTimeout);
+  onTimeoutRef.current = onTimeout;
+
+  useEffect(() => {
+    if (!active) return;
+    setSeconds(BOSS_TIME_PER_QUESTION_S);
+    const id = setInterval(() => {
+      setSeconds((s) => {
+        if (s <= 1) {
+          onTimeoutRef.current();
+          return BOSS_TIME_PER_QUESTION_S;
+        }
+        return s - 1;
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [active, questionIndex]);
+
+  return (
+    <div className="flex items-center gap-2 rounded-full bg-black/60 px-3 py-1.5 text-sm font-bold">
+      <Timer className="h-4 w-4 text-destructive" />
+      <span
+        className={seconds <= 5 ? "text-destructive animate-pulse" : "text-[color:var(--gold)]"}
+      >
+        {seconds}s
+      </span>
+    </div>
+  );
+}
+
 function QuestPage() {
   const { exerciseId } = Route.useParams();
   const t = useT();
@@ -184,9 +231,8 @@ function QuestPage() {
   // subject and lesson screens — never the color_token, which is cosmetic.
   const isRtlSubject = subjectInfo?.content_language === "ar";
 
-  // Boss mode: timer
-  const [bossTimer, setBossTimer] = useState(0);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  // Boss mode: the per-question countdown lives in <BossCountdown> so its 1 Hz
+  // tick re-renders only that chip, not the whole QuestPage tree.
   const feedbackTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const answeredQuestionRef = useRef<string | null>(null);
   // The exercise id we've already started (or attempted to start) a session for.
@@ -194,50 +240,39 @@ function QuestPage() {
   // mission the server refuses) does NOT retry in a loop and spam an error toast
   // on every render. resetRun() clears it so replays / navigation start fresh.
   const sessionStartedForRef = useRef<string | null>(null);
-  // Refs to avoid stale closures in setInterval
+  // Refs so the boss-timeout callback reads live values at fire time (avoids
+  // stale closures without restarting <BossCountdown>'s interval).
   const selectedRef = useRef(selected);
   const answersRef = useRef(answers);
   const idxRef = useRef(idx);
   const totalRef = useRef(total);
   const currentRef = useRef(current);
+  const sessionIdRef = useRef(sessionId);
   selectedRef.current = selected;
   answersRef.current = answers;
   idxRef.current = idx;
   totalRef.current = total;
   currentRef.current = current;
+  sessionIdRef.current = sessionId;
 
-  useEffect(() => {
-    if (!isBoss || !sessionId || result) return;
-    setBossTimer(BOSS_TIME_PER_QUESTION_S);
-    if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(() => {
-      setBossTimer((t) => {
-        if (t <= 1) {
-          // Auto-submit with no answer if time runs out
-          if (!selectedRef.current) {
-            const autoAnswer: Answer = {
-              questionId: currentRef.current?.id ?? "",
-              choice: "__timeout__",
-            };
-            const nextAnswers = [...answersRef.current, autoAnswer];
-            if (idxRef.current + 1 >= totalRef.current) {
-              mutation.mutate({ sessionId: sessionId!, exerciseId, answers: nextAnswers });
-            } else {
-              setAnswers(nextAnswers);
-              setIdx((i) => i + 1);
-              setSelected(null);
-            }
-          }
-          return BOSS_TIME_PER_QUESTION_S;
-        }
-        return t - 1;
-      });
-    }, 1000);
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
+  // Auto-submit a __timeout__ answer when the boss per-question timer expires.
+  // Reads live state via refs, so the identity churn from `mutation` never
+  // restarts <BossCountdown>'s interval.
+  const handleBossTimeout = useCallback(() => {
+    if (selectedRef.current) return; // already answered → the normal flow submits it
+    const autoAnswer: Answer = {
+      questionId: currentRef.current?.id ?? "",
+      choice: "__timeout__",
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isBoss, sessionId, idx, result]);
+    const nextAnswers = [...answersRef.current, autoAnswer];
+    if (idxRef.current + 1 >= totalRef.current) {
+      mutation.mutate({ sessionId: sessionIdRef.current!, exerciseId, answers: nextAnswers });
+    } else {
+      setAnswers(nextAnswers);
+      setIdx((i) => i + 1);
+      setSelected(null);
+    }
+  }, [exerciseId, mutation]);
 
   useEffect(() => {
     return () => {
@@ -269,7 +304,6 @@ function QuestPage() {
     setShowConfetti(false);
     setShowLevelUp(false);
     setSessionId(null);
-    setBossTimer(0);
     setRevealedHints({});
     setHintsRemaining(hintCharges);
   }, [resetSessionMutation, hintCharges]);
@@ -656,16 +690,11 @@ function QuestPage() {
                 <div className="font-display text-lg font-bold">{data.exercise.title}</div>
               </div>
             </div>
-            <div className="flex items-center gap-2 rounded-full bg-black/60 px-3 py-1.5 text-sm font-bold">
-              <Timer className="h-4 w-4 text-destructive" />
-              <span
-                className={
-                  bossTimer <= 5 ? "text-destructive animate-pulse" : "text-[color:var(--gold)]"
-                }
-              >
-                {bossTimer}s
-              </span>
-            </div>
+            <BossCountdown
+              active={isBoss && Boolean(sessionId) && !result}
+              questionIndex={idx}
+              onTimeout={handleBossTimeout}
+            />
           </div>
           {/* Boss HP Bar */}
           <div className="mt-4">

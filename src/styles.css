@@ -334,7 +334,9 @@ html.light ::-webkit-scrollbar-thumb:hover {
   }
   .glass {
     background: oklch(0.18 0.05 275 / 0.55);
-    backdrop-filter: blur(16px);
+    /* 10px (was 16px): backdrop-filter is a per-frame compositor cost; smaller
+       radius keeps the glass look while easing repaint on low-end devices. */
+    backdrop-filter: blur(10px);
     border: 1px solid oklch(0.66 0.27 295 / 0.25);
   }
   .scanline::after {
@@ -364,7 +366,7 @@ html.light ::-webkit-scrollbar-thumb:hover {
   }
   .glass-gold {
     background: oklch(0.18 0.02 86 / 0.4);
-    backdrop-filter: blur(16px);
+    backdrop-filter: blur(10px);
     border: 1px solid oklch(0.83 0.15 86 / 0.22);
   }
   .bg-gold-grid {
@@ -384,34 +386,45 @@ html.light ::-webkit-scrollbar-thumb:hover {
     background-position: 200% center;
   }
 }
-@keyframes gold-pulse {
+/* Glow pulse. We animate the OPACITY of a fixed-shadow pseudo-element rather than
+   box-shadow itself: box-shadow is not GPU-composited, so animating it repaints
+   the element every frame. opacity is composited (cheap). The pseudo carries no
+   background and is pointer-events:none, so its shadow only shows OUTSIDE the
+   element and never covers the content. Hosts must not be `overflow:hidden`
+   (that would clip the glow) — put the class on a non-clipping wrapper instead. */
+@keyframes glow-opacity {
   0%,
   100% {
-    box-shadow: 0 0 30px oklch(0.83 0.15 86 / 0.3);
+    opacity: 0.5;
   }
   50% {
-    box-shadow:
-      0 0 55px oklch(0.83 0.15 86 / 0.6),
-      0 0 110px oklch(0.92 0.12 96 / 0.25);
+    opacity: 1;
   }
 }
-.animate-gold-pulse {
-  animation: gold-pulse 3s ease-in-out infinite;
-}
-
-@keyframes pulse-neon {
-  0%,
-  100% {
-    box-shadow: 0 0 20px oklch(0.66 0.27 295 / 0.45);
-  }
-  50% {
-    box-shadow:
-      0 0 40px oklch(0.66 0.27 295 / 0.8),
-      0 0 80px oklch(0.7 0.27 335 / 0.4);
-  }
-}
+.animate-gold-pulse,
 .animate-pulse-neon {
-  animation: pulse-neon 2.4s ease-in-out infinite;
+  position: relative;
+}
+.animate-gold-pulse::after,
+.animate-pulse-neon::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  will-change: opacity;
+  animation: glow-opacity 3s ease-in-out infinite;
+}
+.animate-gold-pulse::after {
+  box-shadow:
+    0 0 55px oklch(0.83 0.15 86 / 0.6),
+    0 0 110px oklch(0.92 0.12 96 / 0.25);
+}
+.animate-pulse-neon::after {
+  box-shadow:
+    0 0 40px oklch(0.66 0.27 295 / 0.8),
+    0 0 80px oklch(0.7 0.27 335 / 0.4);
+  animation-duration: 2.4s;
 }
 
 @keyframes flame-flicker {
@@ -681,4 +694,34 @@ html.light ::-webkit-scrollbar-thumb:hover {
 }
 .animate-drift {
   animation: drift 20s linear infinite;
+}
+
+/* =====================================================
+  List-row containment — skip layout/paint AND any
+  per-row animation (e.g. the streak flame) for rows
+  scrolled off-screen. Used by long lists (leaderboard).
+  ===================================================== */
+.list-row-cv {
+  content-visibility: auto;
+  /* Estimated row box so the scrollbar stays stable before first paint;
+     `auto` lets the browser remember the real size after it renders once. */
+  contain-intrinsic-size: auto 72px;
+}
+
+/* =====================================================
+  Reduced motion. Respect the OS/user setting: neutralize
+  animations and transitions (also kills the always-on
+  `infinite` keyframes — gold-pulse, pulse-neon, flame,
+  gold-sheen, float, drift, shimmer — cutting continuous
+  compositor work on low-end devices).
+  ===================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
