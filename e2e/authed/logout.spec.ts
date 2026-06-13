@@ -20,3 +20,25 @@ test.describe("Logout", () => {
     }).toPass({ timeout: 30_000 });
   });
 });
+
+// Regression net: the admin role has the MOST nav links (dashboard, parcours,
+// themes, dungeon, ranking, admin, subscriptions, beta, content-reports). Those
+// links live in a horizontally-scrollable nav with a hidden scrollbar; the
+// account actions (language, theme, SIGN-OUT) must stay pinned OUTSIDE it, or
+// sign-out scrolls off the right edge and becomes unreachable (it did). We assert
+// the button is actually within the viewport, not merely present — toBeInViewport
+// fails when it overflows off-screen, which a plain toBeVisible would not catch.
+test.describe("Logout — sign-out stays reachable with the full admin nav", () => {
+  test.use({ storageState: STORAGE_STATE.admin });
+  test.describe.configure({ timeout: 60_000 });
+
+  test("the sign-out button is within the viewport despite the admin nav width", async ({
+    leaderboard,
+    page,
+  }) => {
+    await leaderboard.goto();
+    const signOut = page.getByRole("banner").getByRole("button", { name: /sign out|déconnexion/i });
+    await expect(signOut).toBeVisible();
+    await expect(signOut).toBeInViewport();
+  });
+});
