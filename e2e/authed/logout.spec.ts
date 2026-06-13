@@ -11,7 +11,8 @@ test.describe("Logout", () => {
 
   test("signing out returns to the auth screen", async ({ leaderboard, page }) => {
     await leaderboard.goto();
-    const signOut = page.getByRole("banner").getByRole("button", { name: /sign out/i });
+    // FR default (GAP-010) labels it "Déconnexion"; EN "Sign out".
+    const signOut = page.getByRole("banner").getByRole("button", { name: /sign out|déconnexion/i });
     // Retry to beat the hydration window (the sign-out handler must be attached).
     await expect(async () => {
       await signOut.click();

@@ -52,7 +52,9 @@ export class QuestPage {
     return this.page.getByRole("button", { name: /^send$|^envoyer$/i });
   }
   get reportSent(): Locator {
-    return this.page.getByText(/report sent|rapport envoyé|thanks/i).first();
+    // FR default (GAP-010): "Merci ! Signalement envoyé." — match on "signalement
+    // envoyé", not "rapport"; EN: "Thanks! Report sent."
+    return this.page.getByText(/report sent|signalement envoyé|thanks|merci/i).first();
   }
 
   async goto(id: string): Promise<void> {

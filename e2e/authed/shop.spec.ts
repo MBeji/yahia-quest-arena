@@ -42,10 +42,11 @@ test.describe("Academy shop", () => {
     // it stays fast/robust under full-suite load (no bulk-buy loop).
     const card = shop.section.locator('[data-item-code="potion_coins"]');
     await expect(card).toBeVisible({ timeout: 15_000 });
-    await card.getByRole("button", { name: /^Buy/i }).click();
+    // Bilingual labels (FR default since GAP-010): "Acheter"/"Buy", "Activer"/"Activate".
+    await card.getByRole("button", { name: /^(Acheter|Buy)/i }).click();
 
     // Once owned, the potion becomes armable → "Activer" appears in its card.
-    await card.getByRole("button", { name: /^Activer/i }).click({ timeout: 15_000 });
+    await card.getByRole("button", { name: /^(Activer|Activate)/i }).click({ timeout: 15_000 });
     await expect(shop.activeBadges.first()).toBeVisible({ timeout: 15_000 });
   });
 });
