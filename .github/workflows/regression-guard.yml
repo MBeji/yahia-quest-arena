@@ -95,3 +95,23 @@ jobs:
             --model claude-sonnet-4-6
             --max-turns 40
             --allowedTools "Bash,Read,Edit,Write,Glob,Grep"
+
+      # No silent green: the action step exits 0 even when Claude itself errored
+      # (e.g. a 401 auth failure does is_error=true at $0 / 0 turns). Read the
+      # saved execution log and FAIL the job on is_error, so a broken guard is
+      # visibly red instead of a misleading pass. Skips with the rest when the
+      # token is absent (graceful-skip path stays green).
+      - name: Fail loudly if the sweep errored
+        if: ${{ always() && steps.guard.outputs.configured == 'true' }}
+        run: |
+          f="$RUNNER_TEMP/claude-execution-output.json"
+          if [ ! -f "$f" ]; then
+            echo "::error::Claude execution output missing — the regression-guard sweep did not run."
+            exit 1
+          fi
+          if grep -q '"is_error": *true' "$f"; then
+            echo "::error::regression-guard failed at the Claude level (e.g. 401 auth) — failing the job so a broken guard is never a silent green."
+            grep -o '"result": *"[^"]*"' "$f" | head -1 || true
+            exit 1
+          fi
+          echo "Sweep ran without a Claude-level error."
