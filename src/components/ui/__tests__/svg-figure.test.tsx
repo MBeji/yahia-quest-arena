@@ -23,6 +23,16 @@ describe("figure rendering — visible on a light surface", () => {
     expect(container.querySelector("svg")).not.toBeNull();
   });
 
+  it("RichField gives the figure a definite width so a viewBox-only SVG can't collapse", () => {
+    const { container } = render(<RichField raw={DARK_INK} />);
+    const figure = container.querySelector("svg")?.parentElement ?? null;
+    // a definite container width + the svg filling it (w-full/h-auto) drives the
+    // viewBox ratio to a real, visible size instead of the 300x150 default.
+    expect(surface(figure)).toMatch(/\bw-64\b/);
+    expect(surface(figure)).toMatch(/\[&>svg\]:w-full/);
+    expect(surface(figure)).toMatch(/\[&>svg\]:h-auto/);
+  });
+
   it("OptionContent draws an option figure on the same light surface", () => {
     const { container } = render(<OptionContent raw={TRIANGLE} />);
     const figure = container.querySelector("svg")?.parentElement ?? null;

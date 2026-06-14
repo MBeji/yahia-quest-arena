@@ -3,12 +3,16 @@ import { extractFigure, sanitizeSvg } from "@/shared/lib/figure";
 import { isRtlText } from "@/shared/lib/utils";
 
 /**
- * "Paper" surface every figure is drawn on. Authored SVGs use dark ink
- * (`#1f2937`, `#222`, `currentColor`, …) on the assumption of a light
- * background — like a printed worksheet. The app's default theme is dark, so
- * without this a figure would be dark-on-dark and effectively invisible. We
- * always render figures on a white surface with dark default text, so both the
- * hardcoded-dark and `currentColor` strokes stay visible on every theme.
+ * "Paper" surface every figure is drawn on. Two problems are solved here:
+ *
+ *  1. Contrast — authored SVGs use dark ink (`#1f2937`, `#222`, `currentColor`,
+ *     …) assuming a light, worksheet-like background. The app's default theme is
+ *     dark, so a bare figure is dark-on-dark and invisible. We always draw on a
+ *     white surface with dark default text, visible on every theme.
+ *  2. Size — the figures carry only a `viewBox` (no width/height), so a browser
+ *     gives them the default 300×150 replaced size (or collapses them), not the
+ *     viewBox ratio. We give the figure a DEFINITE width and let the SVG fill it
+ *     (`w-full h-auto`), so the viewBox ratio drives a correct, visible size.
  */
 const FIGURE_SURFACE = "rounded-xl bg-white text-slate-900 ring-1 ring-black/10";
 
@@ -44,7 +48,7 @@ export function RichField({
         <div className="my-3 flex justify-center">
           <SvgFigure
             markup={svg}
-            className={`block p-3 shadow-sm ${FIGURE_SURFACE} [&>svg]:h-auto [&>svg]:max-h-64 [&>svg]:max-w-full`}
+            className={`block w-64 max-w-full p-3 shadow-sm ${FIGURE_SURFACE} [&>svg]:block [&>svg]:h-auto [&>svg]:w-full`}
           />
         </div>
       ) : null}
@@ -61,7 +65,7 @@ export function OptionContent({ raw }: { raw: string }) {
       {svg ? (
         <SvgFigure
           markup={svg}
-          className={`inline-flex items-center p-1.5 ${FIGURE_SURFACE} [&>svg]:h-16 [&>svg]:w-16`}
+          className={`inline-flex items-center justify-center p-1.5 ${FIGURE_SURFACE} [&>svg]:block [&>svg]:h-16 [&>svg]:w-16`}
         />
       ) : null}
     </>
