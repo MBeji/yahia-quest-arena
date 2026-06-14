@@ -1,3 +1,5 @@
+import { captureException } from "./monitoring";
+
 type LogLevel = "info" | "warn" | "error";
 
 type LogMeta = Record<string, unknown>;
@@ -35,6 +37,10 @@ function write(level: LogLevel, message: string, meta?: LogMeta) {
   const line = JSON.stringify(payload);
   if (level === "error") {
     console.error(line);
+    // Forward to Sentry (no-op without a DSN). The Error object, if any, is
+    // conventionally passed as meta.error; the rest becomes scrubbed context.
+    const { error, ...rest } = (meta ?? {}) as { error?: unknown } & LogMeta;
+    captureException(message, error, { source: "logger", extra: rest });
     return;
   }
 
