@@ -114,3 +114,59 @@ describe("auditQuestion — contradiction check", () => {
     expect(flags.some((f) => /right answer|wrong/.test(f.msg))).toBe(false);
   });
 });
+
+describe("auditQuestion — figure-dependent prompt", () => {
+  const svg = '<svg viewBox="0 0 10 10"><rect x="0" y="0" width="5" height="5"/></svg>';
+
+  it("errors when the prompt references a figure but no <svg> is present (FR)", () => {
+    const flags = auditQuestion(
+      base({ prompt: "Quel est l'angle de la figure ci-dessous ?" }),
+      "w",
+    );
+    expect(flags.some((f) => f.level === "error" && /references a figure/.test(f.msg))).toBe(true);
+  });
+
+  it("errors on an Arabic figure reference with no figure", () => {
+    const flags = auditQuestion(
+      base({ prompt: "ما نوعُ المثلّث المبيّن في الشكل حسب زواياه؟" }),
+      "w",
+    );
+    expect(flags.some((f) => f.level === "error" && /references a figure/.test(f.msg))).toBe(true);
+  });
+
+  it("does NOT flag when the figure ships in the prompt", () => {
+    const flags = auditQuestion(
+      base({ prompt: `ما نوعُ المثلّث المبيّن في الشكل حسب زواياه؟ ${svg}` }),
+      "w",
+    );
+    expect(flags.some((f) => /references a figure/.test(f.msg))).toBe(false);
+  });
+
+  it("does NOT flag when the figure ships inside an option", () => {
+    const flags = auditQuestion(
+      base({
+        prompt: "Quelle pièce complète la figure ci-dessous ?",
+        options: [
+          { id: "a", text: svg },
+          { id: "b", text: "Autre" },
+        ],
+      }),
+      "w",
+    );
+    expect(flags.some((f) => /references a figure/.test(f.msg))).toBe(false);
+  });
+
+  it("does NOT flag non-visual uses of 'figure' / 'schéma'", () => {
+    expect(
+      auditQuestion(base({ prompt: "Identifie la figure de style dans cette phrase." }), "w").some(
+        (f) => /references a figure/.test(f.msg),
+      ),
+    ).toBe(false);
+    expect(
+      auditQuestion(
+        base({ prompt: "Quel élément du schéma narratif rompt l'équilibre ?" }),
+        "w",
+      ).some((f) => /references a figure/.test(f.msg)),
+    ).toBe(false);
+  });
+});
