@@ -12,6 +12,9 @@
  *           option as the right answer, or calls the correct option wrong on a
  *           non-"find-the-error" question (the class that slipped past structural
  *           QA). Warn-only: the deep net is cross-agent corrigé review.
+ *   [error] figure referenced but absent     → the prompt points the student at
+ *           an adjacent figure ("ci-dessous", "الشكل المجاور", "shown below"…)
+ *           but no <svg> ships anywhere in the question, so it is unanswerable.
  */
 
 export type QAOption = { id: string; text: string };
@@ -47,6 +50,15 @@ const INTRUDER_PROMPT =
 // Kept deliberately narrow to avoid false positives on legitimate distractor talk.
 const SAYS_CORRECT =
   /(?:la\s+)?bonne\s+réponse\s+est\s+(?:l['’]option\s+|la\s+proposition\s+)?\(?([a-f])\)?|l['’]option\s+\(?([a-f])\)?\s+est\s+(?:la\s+bonne|correcte?|juste|exacte?)|option\s+\(?([a-f])\)?\s+is\s+(?:the\s+)?correct/gi;
+
+// Deictic phrases that unambiguously point at an ACCOMPANYING figure. Kept
+// narrow on purpose: bare "figure"/"schéma" are excluded because they are far
+// more often non-visual in this catalogue ("figure de style", "schéma
+// narratif", "figure de proue"). Only location-bearing deixis qualifies.
+const FIGURE_REFERENCE =
+  /ci-?dessous|ci-?contre|ci-?après|shown\s+(?:below|above)|(?:figure|diagram|picture)\s+(?:below|above)|الشكل\s+(?:المجاور|التالي|المقابل)|كما\s+في\s+الشكل|المبيّن\s+في\s+الشكل|في\s+الشكل\s+المجاور|الرسم\s+(?:المجاور|التالي)/i;
+
+const SVG_BLOCK = /<svg[\s\S]*?<\/svg>/i;
 
 const buildSaysWrong = (letter: string) =>
   new RegExp(
@@ -108,6 +120,22 @@ export function auditQuestion(q: QAQuestion, where: string): Flag[] {
       where,
       msg: `explanation calls the correct option "${q.correctOption}" wrong`,
     });
+  }
+
+  // 5) figure-dependent prompt with no figure shipped → unanswerable.
+  //   The prompt sends the student to an adjacent figure but no <svg> is present
+  //   anywhere in the question (prompt or any option). A figure may legitimately
+  //   live in the options (e.g. "which piece completes it?"), so the whole
+  //   question is scanned before flagging.
+  if (FIGURE_REFERENCE.test(q.prompt)) {
+    const hasFigure = SVG_BLOCK.test(q.prompt) || q.options.some((o) => SVG_BLOCK.test(o.text));
+    if (!hasFigure) {
+      flags.push({
+        level: "error",
+        where,
+        msg: "prompt references a figure but no <svg> is present (unanswerable without it)",
+      });
+    }
   }
 
   return flags;
