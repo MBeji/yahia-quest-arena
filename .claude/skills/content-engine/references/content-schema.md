@@ -82,15 +82,29 @@ visual answer options). The renderer splits the field into its text and the SVG,
 normally. No schema/DB change is needed (it is just markup inside the string), and it round-trips
 through the pipeline unchanged.
 
+**The rendering contract (author to it):** the renderer always draws the figure on a **white "paper"
+surface** (white background, dark default text colour), sized to a **definite width** the renderer
+controls — ~256px max for a prompt, a ~64px box for an option — and scaled by the SVG's **`viewBox`**.
+So: author every figure as if it sits **on white paper**, and let the `viewBox` (not width/height
+attributes) drive the size.
+
 Rules for authoring figures:
 
 - **Self-contained SVG only.** Use a `viewBox`, and drawing primitives: `path`, `rect`, `circle`,
   `ellipse`, `line`, `polyline`, `polygon`, `g`, `text`, `tspan`, gradients/patterns. **Forbidden /
   stripped:** `<script>`, `<style>`, `<foreignObject>`, `<a>`, `<image>`, `<use>`, any `on*` handler,
   any `href`/`xlink:href`, external URLs. No raster images — vectors only.
+- **Always set a `viewBox`** (e.g. `viewBox="0 0 100 100"`) and **do not rely on `width`/`height`
+  attributes** for sizing — the renderer controls the on-screen size. A `viewBox`-less SVG has no
+  aspect ratio and collapses.
+- **Ink dark on the white paper.** Draw with dark, opaque strokes/fills — `currentColor` (preferred:
+  it inherits the dark default text colour), `#1f2937`, `#222`, `#0f172a`, or other saturated/dark
+  hues. **Never make the figure's primary marks white or near-white** (`#fff`, very light greys/
+  pastels): on the white surface they are invisible. Light tones are fine only as _fills inside_
+  dark-outlined shapes, never as the only ink.
 - **One `<svg>` per field.** A figure-only option is just its `<svg>` (no text needed); a stimulus is
   `prompt` text + one `<svg>`.
-- Keep figures compact and legible (a `viewBox` around `0 0 100 100`–ish, explicit `stroke`/`fill`,
+- Keep figures compact and legible (a `viewBox` around `0 0 100 100`–ish, explicit dark `stroke`/`fill`,
   readable when scaled to ~64px for options / ~256px max for prompts).
 - The answer to a visual item must be **unambiguous and derivable from the figure alone**.
 
