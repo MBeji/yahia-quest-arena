@@ -96,28 +96,12 @@ jobs:
             --max-turns 40
             --allowedTools "Bash,Read,Edit,Write,Glob,Grep"
 
-      # No silent green: the action step exits 0 even when Claude itself errored
-      # (e.g. a 401 auth failure does is_error=true at $0 / 0 turns). Read the
-      # saved execution log and FAIL the job on is_error, so a broken guard is
-      # visibly red instead of a misleading pass. Skips with the rest when the
+      # No silent green AND no false red: the action step exits 0 even when Claude
+      # itself errored (a 401 auth failure → result.is_error=true at $0 / 1 turn).
+      # A dedicated, unit-tested parser inspects ONLY the final result event's
+      # is_error — robust to the real log mixing non-JSON lines between events
+      # (which broke the earlier inline `jq -s`). Skips with the rest when the
       # token is absent (graceful-skip path stays green).
       - name: Fail loudly if the sweep errored
         if: ${{ always() && steps.guard.outputs.configured == 'true' }}
-        run: |
-          f="$RUNNER_TEMP/claude-execution-output.json"
-          if [ ! -f "$f" ]; then
-            echo "::error::Claude execution output missing — the sweep did not run."
-            exit 1
-          fi
-          # Parse ONLY the final SDK result object's is_error. Do NOT grep the whole
-          # file: the sweep's own report text can contain the literal string
-          # 'is_error=true' (e.g. describing a bug), which a naive grep mis-flags.
-          # jq -s slurps the concatenated JSON events; require an explicit false.
-          err=$(jq -s 'map(select(.type=="result")) | last | .is_error' "$f" 2>/dev/null || echo parse_error)
-          if [ "$err" = "false" ]; then
-            echo "Sweep OK — the SDK result reported is_error=false."
-            exit 0
-          fi
-          echo "::error::regression-guard did not cleanly succeed (is_error=$err) — failing so a broken guard is never a silent green."
-          jq -rs 'map(select(.type=="result")) | last | .result // "(no result message)"' "$f" 2>/dev/null || true
-          exit 1
+        run: python3 .github/scripts/check-claude-result.py "$RUNNER_TEMP/claude-execution-output.json"
