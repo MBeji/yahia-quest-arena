@@ -289,6 +289,7 @@ export type TranslationKeys = {
     failedLoadQuestions: string;
     failedStartRun: string;
     failedValidateAnswer: string;
+    loadAccessError: string;
     enterDungeonAria: string;
     locked: string;
     dailyLimitReached: string;
