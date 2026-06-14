@@ -281,6 +281,7 @@ export const en: TranslationKeys = {
     failedLoadQuestions: "Failed to load dungeon questions",
     failedStartRun: "Failed to start the dungeon run",
     failedValidateAnswer: "Failed to validate the answer",
+    loadAccessError: "Couldn't check Dungeon access. Check your connection and try again.",
     enterDungeonAria: "Enter the infinite dungeon mode",
     locked: "Dungeon locked",
     dailyLimitReached: "Daily limit reached ({max}/day). Come back tomorrow.",

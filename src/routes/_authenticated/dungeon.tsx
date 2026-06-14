@@ -283,7 +283,23 @@ function DungeonPage() {
               </div>
             </div>
 
-            {accessQuery.isLoading || !access ? (
+            {accessQuery.isError ? (
+              // A failed access check must not strand the lobby on an endless
+              // spinner — surface the error and offer a retry.
+              <div className="mx-auto mt-8 max-w-sm rounded-2xl border border-destructive/40 bg-destructive/5 p-5 text-left">
+                <div className="flex items-center gap-2 font-display font-bold text-destructive">
+                  <XCircle className="h-5 w-5" /> {t.dungeon.loadAccessError}
+                </div>
+                <button
+                  onClick={() => accessQuery.refetch()}
+                  disabled={accessQuery.isFetching}
+                  className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-border/50 px-4 py-2 text-sm font-semibold text-foreground hover:bg-black/60 disabled:opacity-50"
+                >
+                  {accessQuery.isFetching && <Loader2 className="h-4 w-4 animate-spin" />}
+                  {t.common.retry}
+                </button>
+              </div>
+            ) : accessQuery.isLoading || !access ? (
               <div className="mt-8 text-sm text-muted-foreground">{t.common.loading}</div>
             ) : access.reason === "SUBSCRIPTION" ? (
               <SubscriptionPaywall />

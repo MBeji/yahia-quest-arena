@@ -277,6 +277,7 @@ export const ar: TranslationKeys = {
     failedLoadQuestions: "تعذر تحميل أسئلة الزنزانة",
     failedStartRun: "تعذر بدء الجولة",
     failedValidateAnswer: "تعذر التحقق من الإجابة",
+    loadAccessError: "تعذّر التحقق من الوصول إلى الزنزانة. تحقق من اتصالك وأعد المحاولة.",
     enterDungeonAria: "ادخل وضع الزنزانة اللانهائية",
     locked: "الزنزانة مقفلة",
     dailyLimitReached: "بلغت الحدّ اليومي ({max}/يوم). عُد غدًا.",

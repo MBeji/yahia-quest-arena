@@ -282,6 +282,7 @@ export const fr: TranslationKeys = {
     failedLoadQuestions: "Impossible de charger les questions du donjon",
     failedStartRun: "Impossible de démarrer la course",
     failedValidateAnswer: "Impossible de valider la réponse",
+    loadAccessError: "Impossible de vérifier l'accès au Donjon. Vérifie ta connexion et réessaie.",
     enterDungeonAria: "Entrer dans le mode donjon infini",
     locked: "Donjon verrouillé",
     dailyLimitReached: "Limite quotidienne atteinte ({max}/jour). Reviens demain.",
