@@ -15,6 +15,9 @@
  *   [error] figure referenced but absent     → the prompt points the student at
  *           an adjacent figure ("ci-dessous", "الشكل المجاور", "shown below"…)
  *           but no <svg> ships anywhere in the question, so it is unanswerable.
+ *   [error] <svg> without a viewBox          → the renderer relies on the
+ *           viewBox for the aspect ratio on its fixed-width surface; without it
+ *           the figure collapses to a dot/blank.
  */
 
 export type QAOption = { id: string; text: string };
@@ -135,6 +138,23 @@ export function auditQuestion(q: QAQuestion, where: string): Flag[] {
         where,
         msg: "prompt references a figure but no <svg> is present (unanswerable without it)",
       });
+    }
+  }
+
+  // 6) every embedded <svg> must carry a viewBox. The renderer draws figures on
+  //   a fixed-width white surface and relies on the viewBox for the aspect ratio;
+  //   a viewBox-less SVG has no intrinsic ratio and collapses to a dot/blank.
+  //   (See content-engine content-schema.md "rendering contract".)
+  const fields = [q.prompt, q.explanation, ...q.options.map((o) => o.text)];
+  for (const raw of fields) {
+    for (const tag of raw.match(/<svg\b[^>]*>/gi) ?? []) {
+      if (!/\bviewBox=/i.test(tag)) {
+        flags.push({
+          level: "error",
+          where,
+          msg: "<svg> figure has no viewBox (will collapse when rendered)",
+        });
+      }
     }
   }
 

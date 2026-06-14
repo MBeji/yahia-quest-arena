@@ -156,6 +156,24 @@ describe("auditQuestion — figure-dependent prompt", () => {
     expect(flags.some((f) => /references a figure/.test(f.msg))).toBe(false);
   });
 
+  it("errors on an <svg> figure that has no viewBox (would collapse)", () => {
+    const flags = auditQuestion(
+      base({ prompt: 'Quelle figure ? <svg><rect x="0" y="0" width="5" height="5"/></svg>' }),
+      "w",
+    );
+    expect(flags.some((f) => f.level === "error" && /no viewBox/.test(f.msg))).toBe(true);
+  });
+
+  it("does NOT flag an <svg> figure that has a viewBox", () => {
+    const flags = auditQuestion(
+      base({
+        prompt: 'Quelle figure ? <svg viewBox="0 0 10 10"><rect width="5" height="5"/></svg>',
+      }),
+      "w",
+    );
+    expect(flags.some((f) => /viewBox/.test(f.msg))).toBe(false);
+  });
+
   it("does NOT flag non-visual uses of 'figure' / 'schéma'", () => {
     expect(
       auditQuestion(base({ prompt: "Identifie la figure de style dans cette phrase." }), "w").some(

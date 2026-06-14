@@ -80,8 +80,11 @@ First read the content-engine skill and its references (`.claude/skills/content-
 
 Follow content-schema.md "Figures (inline SVG)": one self-contained `<svg viewBox="…">` per field,
 drawing primitives only (no script/style/foreignObject/href/image/use). Keep them compact and legible
-(≈`0 0 100 100`, explicit `stroke`/`fill`), readable at ~64px (options) / ~256px (prompt). For a matrix,
-draw the 3×3 grid with a clearly empty cell (a "?"); make each option a small standalone `<svg>`.
+(≈`0 0 100 100`, **always a `viewBox`, no width/height — the renderer sizes them**), readable at ~64px
+(options) / ~256px (prompt). **Figures render on a white "paper" surface, so ink them dark**
+(`currentColor` or dark hues like `#1f2937`/`#222`); never use white/near-white as the primary mark, or
+it vanishes on the white background. For a matrix, draw the 3×3 grid with a clearly empty cell (a "?");
+make each option a small standalone `<svg>`.
 Numbers inside figures and in number-sequence items use **Western digits (0–9) in all languages,
 including Arabic** (`content-engine/references/math-and-notation.md`) — this also keeps figures
 reusable across the three sibling subjects.

@@ -76,6 +76,11 @@ Per exercise / chapter:
     `rewards-and-modes.md`; quiz stays d1–2; titles carry the ⭐ indicator = **[MINOR]** each.
 11. **Course/quiz coherence** — the quiz is answerable from `cours.md` alone; `resume.md` mirrors
     the course; SVG figures are self-contained and unambiguous.
+12. **Figures render visibly** (see `content-schema.md` "rendering contract") — every `<svg>` has a
+    `viewBox` (no `viewBox` → collapses = **[MAJOR]**); the primary ink is dark (`currentColor` or
+    dark hues) so it shows on the white "paper" surface — an SVG whose only strokes/fills are
+    white/near-white is invisible = **[MAJOR]**. A prompt/option that references a figure but ships
+    none = **[BLOCKER]** (also caught by `content:qa --strict`).
 
 Also run `npm run content:check` and `npm run content:qa` over the scope and fold their findings in
 (they're fast and catch regressions in files you didn't open).
