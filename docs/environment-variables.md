@@ -77,6 +77,24 @@ npm run dev
 
 `.env` is gitignored and must never be committed.
 
+## Error monitoring (Sentry) — optional
+
+Error reporting (`src/shared/lib/monitoring.ts`, hooked into `logger.error` + browser
+error handlers) is **off unless a DSN is set** — clean local/preview, no events leave the
+machine. It is dependency-free (posts Sentry envelopes via `fetch`), so it works in both the
+Worker and Node runtimes and adds **nothing** to the client bundle.
+
+| Variable          | Scope                   | Notes                                                             |
+| ----------------- | ----------------------- | ----------------------------------------------------------------- |
+| `VITE_SENTRY_DSN` | client + server (build) | Sentry **DSN** (not a secret — it ships in the client bundle).    |
+| `SENTRY_DSN`      | server (runtime)        | Optional server-runtime fallback (same value, no rebuild needed). |
+
+The DSN is per-project: Sentry → Project → Settings → **Client Keys (DSN)**. Use a project in
+the **EU** data region (INPDP / minors compliance, GAP-003). Events are **PII-scrubbed**
+(e-mails redacted, `token`/`secret`/`password`/`email`/`key` extra fields redacted) and tagged
+with the release (`VERCEL_GIT_COMMIT_SHA`) and environment. Set `VITE_SENTRY_DSN` in Vercel →
+Settings → Environment Variables (Production), then redeploy without build cache.
+
 ## Web Push notifications
 
 Scheduled push (streak reminders) needs a VAPID keypair and a cron secret:
