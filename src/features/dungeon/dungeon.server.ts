@@ -199,7 +199,7 @@ export const getDungeonQuestions = createServerFn({ method: "GET" })
   .inputValidator((d) =>
     z
       .object({
-        runId: z.string().uuid(),
+        runId: z.guid(),
         batchSize: z.number().min(1).max(20).default(5),
       })
       .parse(d),
@@ -232,8 +232,8 @@ export const submitDungeonAnswer = createServerFn({ method: "POST" })
   .inputValidator((d) =>
     z
       .object({
-        runId: z.string().uuid(),
-        questionId: z.string().uuid(),
+        runId: z.guid(),
+        questionId: z.guid(),
         choice: z.string().min(1).max(32),
       })
       .parse(d),
@@ -269,7 +269,7 @@ export const submitDungeonRun = createServerFn({ method: "POST" })
   .inputValidator((d) =>
     z
       .object({
-        runId: z.string().uuid(),
+        runId: z.guid(),
         durationSeconds: z.number().min(0),
       })
       .parse(d),

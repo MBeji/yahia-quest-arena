@@ -260,7 +260,7 @@ export const getSubject = createServerFn({ method: "GET" })
 // ---------- Get chapter lesson content ----------
 export const getChapterLesson = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ chapterId: z.string().uuid() }).parse(d))
+  .inputValidator((d) => z.object({ chapterId: z.guid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
     const { data: chapter, error } = await supabase
@@ -294,7 +294,7 @@ export const getChapterLesson = createServerFn({ method: "GET" })
 // ---------- Get exercise + questions ----------
 export const getExercise = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ exerciseId: z.string().uuid() }).parse(d))
+  .inputValidator((d) => z.object({ exerciseId: z.guid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
     const [ex, qs, hintInv] = await Promise.all([
@@ -347,7 +347,7 @@ export const getExercise = createServerFn({ method: "GET" })
 // maps its raised gate signals to the localized client messages.
 export const startExerciseSession = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ exerciseId: z.string().uuid() }).parse(d))
+  .inputValidator((d) => z.object({ exerciseId: z.guid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
 
@@ -394,7 +394,7 @@ export const startExerciseSession = createServerFn({ method: "POST" })
 // arm/slot system.
 export const revealHint = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ questionId: z.string().uuid() }).parse(d))
+  .inputValidator((d) => z.object({ questionId: z.guid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
@@ -429,10 +429,10 @@ export const submitAttempt = createServerFn({ method: "POST" })
   .inputValidator((d) =>
     z
       .object({
-        sessionId: z.string().uuid(),
-        exerciseId: z.string().uuid(),
+        sessionId: z.guid(),
+        exerciseId: z.guid(),
         answers: z
-          .array(z.object({ questionId: z.string().uuid(), choice: z.string() }))
+          .array(z.object({ questionId: z.guid(), choice: z.string() }))
           .min(1)
           .max(100),
       })

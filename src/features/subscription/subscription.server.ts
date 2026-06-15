@@ -47,7 +47,7 @@ export const grantParcoursEntitlement = createServerFn({ method: "POST" })
   .inputValidator((d) =>
     z
       .object({
-        userId: z.string().uuid(),
+        userId: z.guid(),
         parcoursId: z.string().trim().min(1),
         source: z.enum(PARCOURS_ENTITLEMENT_SOURCES).default("purchase"),
         // An explicit expiry (ISO timestamp) or null = perpetual.
@@ -85,7 +85,7 @@ export const grantParcoursEntitlement = createServerFn({ method: "POST" })
 export const revokeParcoursEntitlement = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) =>
-    z.object({ userId: z.string().uuid(), parcoursId: z.string().trim().min(1) }).parse(d),
+    z.object({ userId: z.guid(), parcoursId: z.string().trim().min(1) }).parse(d),
   )
   .handler(async ({ data, context }) => {
     const { supabase } = context;

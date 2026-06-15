@@ -252,7 +252,7 @@ export const getLinkedStudents = createServerFn({ method: "GET" })
  */
 export const getStudentReport = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => z.object({ studentId: z.string().uuid() }).parse(d))
+  .inputValidator((d: unknown) => z.object({ studentId: z.guid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
 
