@@ -80,7 +80,6 @@ export default defineConfig(async ({ command, mode }) => {
             )
               return "vendor-three";
             if (id.includes("lucide-react")) return "vendor-icons";
-            if (id.includes("recharts") || id.includes("d3-")) return "vendor-charts";
             if (id.includes("motion")) return "vendor-motion";
             if (id.includes("@supabase/")) return "vendor-supabase";
             if (id.includes("@radix-ui/")) return "vendor-radix";
