@@ -32,7 +32,7 @@ and tackle a timed "dungeon" boss mode. Shonen/RPG manga aesthetic, trilingual (
   (see "Premium gate" under Data model); the free preview is the comprehension quiz + difficulty-1.
   The dashboard is scoped to the active parcours; the Explorer (`/themes`) lets a student switch.
 
-**Stack**: Vite 7 · TanStack Start (SSR + file routing + server fns) · React 19 · TanStack Query 5 · Supabase (Postgres + Auth + RLS) · Tailwind 4 / Radix-shadcn · **deploys to Vercel** — push to `main` auto-deploys prod via `scripts/build-vercel.mjs` (`vercel.json`). A Cloudflare Workers config also exists, but Vercel is the live target. Package manager: **bun** (`bun.lock`), npm scripts work too. Tests: Vitest 4 + Testing Library (unit) and Playwright (e2e).
+**Stack**: Vite 8 · TanStack Start (SSR + file routing + server fns) · React 19 · TanStack Query 5 · Supabase (Postgres + Auth + RLS) · Tailwind 4 / Radix-shadcn · **deploys to Vercel** — push to `main` auto-deploys prod via `scripts/build-vercel.mjs` (`vercel.json`). A Cloudflare Workers config also exists, but Vercel is the live target. Package manager: **npm** (`package-lock.json`). Tests: Vitest 4 + Testing Library (unit) and Playwright (e2e).
 
 ## Essential commands
 
@@ -268,9 +268,12 @@ When unsure about scope or a destructive action, ask before proceeding.
   edit with care.
 - Env vars required at runtime: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` (set in the deploy
   platform). Missing → middleware throws a descriptive error.
-- The Vite/TanStack/Cloudflare/Tailwind plugin scaffold is provided by
-  `@lovable.dev/vite-tanstack-config` (see `vite.config.ts`) — a meta-plugin; don't add its
-  bundled plugins manually or the build breaks with duplicates.
+- The Vite config is **inline** in `vite.config.ts` (de-vendored from the former
+  `@lovable.dev/vite-tanstack-config` — the project now has **zero Lovable dependency**). It wires
+  TanStack Start + React + Tailwind + tsconfig-paths, plus `@cloudflare/vite-plugin` **at build
+  time only** (produces the Worker bundle `scripts/build-vercel.mjs` repackages for Vercel). Don't
+  drop the React/Query `dedupe` or the `VITE_*` env `define` (inlines Supabase/Sentry/VAPID into
+  both bundles).
 - **Coverage is scoped to owned code** (`features/`, `shared/`, `lib/`, `hooks/`) in
   `vitest.config.ts`; vendored shadcn UI (`components/ui`), thin route wrappers,
   barrels, generated files, and SSR entry glue are excluded by design. Thresholds are

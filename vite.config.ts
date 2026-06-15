@@ -1,18 +1,73 @@
-// @lovable.dev/vite-tanstack-config already includes the following — do NOT add them manually
-// or the app will break with duplicate plugins:
-//   - tanstackStart, viteReact, tailwindcss, tsConfigPaths, cloudflare (build-only),
-//     componentTagger (dev-only), VITE_* env injection, @ path alias, React/TanStack dedupe,
-//     error logger plugins, and sandbox detection (port/host/strictPort).
-// You can pass additional config via defineConfig({ vite: { ... } }) if needed.
-import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+// Vite config — de-vendored from @lovable.dev/vite-tanstack-config.
+//
+// This inlines exactly the plugins + settings the (removed) Lovable meta-plugin
+// assembled, MINUS its editor/sandbox-only pieces (componentTagger, hmr-gate,
+// dev-server bridge, dev SSR/server-fn error overlays) which only ran inside the
+// Lovable editor and are inert here. Load-bearing parts kept verbatim:
+//   - VITE_* env injection via loadEnv → `define` (inlined into BOTH the client
+//     and the Cloudflare-Worker SSR bundle — carries Supabase/Sentry/VAPID; do
+//     not drop or prod env wiring breaks).
+//   - @cloudflare/vite-plugin (build only) → produces the Worker bundle that
+//     scripts/build-vercel.mjs repackages into the Vercel function. The whole
+//     deploy pipeline depends on it; removing it is a separate lot (GAP-007).
+//   - tanstackStart: server entry → src/server.ts (our SSR 500 wrapper) +
+//     importProtection tuned so the app's pervasive `*.server.ts` files build.
+//   - React/Query dedupe, `@` alias, dev server on :: / 8080 (Playwright + DX),
+//     and the manualChunks split (i18n + vendor chunks, bundle-budget managed).
+import { fileURLToPath } from "node:url";
+import { cloudflare } from "@cloudflare/vite-plugin";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import tailwindcss from "@tailwindcss/vite";
+import viteReact from "@vitejs/plugin-react";
+import { defineConfig, loadEnv } from "vite";
+import tsConfigPaths from "vite-tsconfig-paths";
 
-// Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
-// @cloudflare/vite-plugin builds from this — wrangler.jsonc main alone is insufficient.
-export default defineConfig({
-  tanstackStart: {
-    server: { entry: "server" },
-  },
-  vite: {
+export default defineConfig(({ command, mode }) => {
+  // Inline VITE_*-prefixed env into every bundle (mirrors the meta-plugin).
+  const env = loadEnv(mode, process.cwd(), "VITE_");
+  const define = Object.fromEntries(
+    Object.entries(env).map(([key, value]) => [`import.meta.env.${key}`, JSON.stringify(value)]),
+  );
+
+  return {
+    define,
+    resolve: {
+      alias: {
+        "@": fileURLToPath(new URL("./src", import.meta.url)),
+      },
+      dedupe: [
+        "react",
+        "react-dom",
+        "react/jsx-runtime",
+        "react/jsx-dev-runtime",
+        "@tanstack/react-query",
+        "@tanstack/query-core",
+      ],
+    },
+    server: {
+      host: "::",
+      port: 8080,
+      watch: {
+        awaitWriteFinish: { stabilityThreshold: 1000, pollInterval: 100 },
+      },
+    },
+    plugins: [
+      tailwindcss(),
+      tsConfigPaths({ projects: ["./tsconfig.json"] }),
+      tanstackStart({
+        importProtection: {
+          behavior: "error",
+          client: {
+            files: ["**/server/**"],
+            specifiers: ["server-only"],
+          },
+        },
+        server: { entry: "server" },
+      }),
+      viteReact(),
+      // Build only: the Cloudflare Worker bundle that build-vercel.mjs adapts.
+      ...(command === "build" ? [cloudflare({ viteEnvironment: { name: "ssr" } })] : []),
+    ],
     build: {
       rollupOptions: {
         output: {
@@ -45,5 +100,5 @@ export default defineConfig({
         },
       },
     },
-  },
+  };
 });
