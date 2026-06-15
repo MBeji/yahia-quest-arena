@@ -8,7 +8,7 @@ import { setCurrentParcours } from "@/features/auth";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/themes")({
-  head: () => ({ meta: [{ title: "Explorer · XP Scholars" }] }),
+  head: () => ({ meta: [{ title: "Explorer · Na9ra Nal3ab" }] }),
   component: ExplorerPage,
 });
 

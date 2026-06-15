@@ -19,7 +19,7 @@ import {
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/admin/subscriptions")({
-  head: () => ({ meta: [{ title: "Abonnements · XP Scholars" }] }),
+  head: () => ({ meta: [{ title: "Abonnements · Na9ra Nal3ab" }] }),
   component: AdminSubscriptionsPage,
 });
 

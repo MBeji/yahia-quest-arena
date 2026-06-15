@@ -22,7 +22,7 @@ import { useState } from "react";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/lesson/$chapterId")({
-  head: () => ({ meta: [{ title: "Leçon · XP Scholars" }] }),
+  head: () => ({ meta: [{ title: "Leçon · Na9ra Nal3ab" }] }),
   component: LessonPage,
 });
 

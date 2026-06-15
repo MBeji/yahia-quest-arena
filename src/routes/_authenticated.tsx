@@ -114,7 +114,7 @@ function AuthenticatedLayout() {
               <Sparkles className="h-4 w-4 text-black" />
             </div>
             <span className="hidden font-display text-base font-bold tracking-wider sm:inline">
-              XP <span className="text-gradient-gold">SCHOLARS</span>
+              Na9ra <span className="text-gradient-gold">Nal3ab</span>
             </span>
           </Link>
           <nav className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto sm:gap-2 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">

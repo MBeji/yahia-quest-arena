@@ -54,7 +54,7 @@ const DashboardBadgesShop = lazy(() =>
 );
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  head: () => ({ meta: [{ title: "Hall des Héros · XP Scholars" }] }),
+  head: () => ({ meta: [{ title: "Hall des Héros · Na9ra Nal3ab" }] }),
   component: Dashboard,
 });
 

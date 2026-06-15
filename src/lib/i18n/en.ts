@@ -2,10 +2,10 @@ import type { TranslationKeys } from "./types";
 
 export const en: TranslationKeys = {
   meta: {
-    title: "XP Scholars — The Shonen Academy for the 6th & 9th Grade National Exams",
+    title: "Na9ra Nal3ab — The Shonen Academy for the 6th & 9th Grade National Exams",
     description:
       "Prep for the Tunisian 6th and 9th grade national exams in RPG mode — plus a free academy: General Knowledge, Brain Training and Languages. XP, streaks, duels and bosses.",
-    ogTitle: "XP Scholars — National Exams & Free Academy",
+    ogTitle: "Na9ra Nal3ab — National Exams & Free Academy",
     ogDescription:
       "6th & 9th grade exam prep + a free academy (General Knowledge, Brain Training, Languages), shonen style.",
   },
@@ -85,7 +85,7 @@ export const en: TranslationKeys = {
     heroTitle2: "Legend",
     heroTitle3: "of the National Exams",
     heroDesc:
-      "XP Scholars turns your study sessions into manga quests. Prep for the 6th and 9th grade national exams, and freely explore General Knowledge, Brain Training and Languages. Earn XP, ignite your streak and defeat Chapter Bosses.",
+      "Na9ra Nal3ab turns your study sessions into manga quests. Prep for the 6th and 9th grade national exams, and freely explore General Knowledge, Brain Training and Languages. Earn XP, ignite your streak and defeat Chapter Bosses.",
     ctaStart: "Start my quest",
     ctaLogin: "I already have a hero",
     statSubjects: "Subjects",
@@ -139,7 +139,7 @@ export const en: TranslationKeys = {
     rankLegend: "S-Rank Legend",
   },
   dashboard: {
-    title: "Heroes Hall · XP Scholars",
+    title: "Heroes Hall · Na9ra Nal3ab",
     heroClass: "",
     days: "days",
     day: "day",
@@ -205,7 +205,7 @@ export const en: TranslationKeys = {
     recoveryFailed: "Recovery failed",
   },
   quest: {
-    title: "Quest · XP Scholars",
+    title: "Quest · Na9ra Nal3ab",
     preparing: "Preparing the arena…",
     leaveQuest: "Leave quest",
     bossFight: "⚔️ Boss Fight",

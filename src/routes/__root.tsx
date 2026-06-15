@@ -80,7 +80,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       // the default-locale (FR) catalog. Per-locale head = future i18n increment.
       { title: fr.meta.title },
       { name: "description", content: fr.meta.description },
-      { name: "author", content: "XP Scholars" },
+      { name: "author", content: "Na9ra Nal3ab" },
       { property: "og:title", content: fr.meta.ogTitle },
       { property: "og:description", content: fr.meta.ogDescription },
       { property: "og:type", content: "website" },
@@ -90,7 +90,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
-      { name: "apple-mobile-web-app-title", content: "XP Scholars" },
+      { name: "apple-mobile-web-app-title", content: "Na9ra Nal3ab" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

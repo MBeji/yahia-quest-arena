@@ -5,7 +5,7 @@ import { ContentReportsAdmin } from "@/features/content-report";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/admin/content-reports")({
-  head: () => ({ meta: [{ title: "Signalements · XP Scholars" }] }),
+  head: () => ({ meta: [{ title: "Signalements · Na9ra Nal3ab" }] }),
   component: AdminContentReportsPage,
 });
 

@@ -5,7 +5,7 @@ export class LandingPage {
   constructor(private readonly page: Page) {}
 
   get brand(): Locator {
-    return this.page.getByRole("link", { name: /XP\s*SCHOLARS/i }).first();
+    return this.page.getByRole("link", { name: /Na9ra\s*Nal3ab/i }).first();
   }
   get signupCta(): Locator {
     return this.page.locator('a[href="/signup"]').first();

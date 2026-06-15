@@ -8,7 +8,7 @@ test.describe("Landing page", () => {
   test("renders the hero, sections and auth CTAs", async ({ page, landing }) => {
     await landing.goto();
 
-    await expect(page).toHaveTitle(/XP Scholars/i);
+    await expect(page).toHaveTitle(/Na9ra Nal3ab/i);
     await expect(landing.brand).toBeVisible();
     await expect(landing.signupCta).toBeVisible();
     await expect(landing.loginCta).toBeVisible();

@@ -159,8 +159,18 @@ function Landing() {
               <div className="relative grid h-10 w-10 place-items-center rounded-lg bg-[image:var(--gradient-gold)] shadow-gold">
                 <Crown className="h-5 w-5 text-black" />
               </div>
-              <span className="font-display text-xl font-bold tracking-wider">
-                XP <span className="text-gradient-gold gold-sheen">SCHOLARS</span>
+              <span className="flex flex-col leading-none">
+                <span className="font-display text-xl font-bold tracking-wider">
+                  Na9ra <span className="text-gradient-gold gold-sheen">Nal3ab</span>
+                </span>
+                <span
+                  lang="ar"
+                  dir="rtl"
+                  aria-hidden="true"
+                  className="font-display text-sm font-semibold tracking-wide text-gradient-gold gold-sheen"
+                >
+                  نقرا نلعب
+                </span>
               </span>
             </Link>
             <nav className="hidden items-center gap-8 text-sm text-muted-foreground md:flex">
@@ -380,7 +390,11 @@ function Landing() {
         </section>
 
         <footer className="border-t border-[color:var(--gold)]/15 py-8 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} XP Scholars · {t.landing.footer}
+          © {new Date().getFullYear()} Na9ra Nal3ab ·{" "}
+          <span lang="ar" dir="rtl">
+            نقرا نلعب
+          </span>{" "}
+          · {t.landing.footer}
         </footer>
       </main>
     </MotionConfig>

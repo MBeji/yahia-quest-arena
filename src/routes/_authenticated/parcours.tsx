@@ -6,7 +6,7 @@ import { JourneyMap, buildSubjectNodes } from "@/features/parcours";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/parcours")({
-  head: () => ({ meta: [{ title: "Parcours · XP Scholars" }] }),
+  head: () => ({ meta: [{ title: "Parcours · Na9ra Nal3ab" }] }),
   component: ParcoursPage,
 });
 

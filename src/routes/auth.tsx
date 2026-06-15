@@ -26,7 +26,7 @@ function friendlyAuthError(t: TranslationKeys, err: unknown): string {
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Rejoindre l'Académie · XP Scholars" },
+      { title: "Rejoindre l'Académie · Na9ra Nal3ab" },
       {
         name: "description",
         content: "Crée ton héros et commence ta préparation aux concours nationaux.",
@@ -252,7 +252,7 @@ function AuthPage() {
             <Sparkles className="h-5 w-5 text-black" />
           </div>
           <span className="font-display text-xl font-bold tracking-wider">
-            XP <span className="text-gradient-gold">SCHOLARS</span>
+            Na9ra <span className="text-gradient-gold">Nal3ab</span>
           </span>
         </Link>
 

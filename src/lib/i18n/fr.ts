@@ -2,10 +2,10 @@ import type { TranslationKeys } from "./types";
 
 export const fr: TranslationKeys = {
   meta: {
-    title: "XP Scholars — L'Académie Shonen des concours nationaux 6ème & 9ème",
+    title: "Na9ra Nal3ab — L'Académie Shonen des concours nationaux 6ème & 9ème",
     description:
       "Prépare les concours nationaux tunisiens de 6ème et 9ème en mode RPG — plus une académie gratuite : Culture Générale, Muscle ton Cerveau et Langues. XP, streaks, duels et boss.",
-    ogTitle: "XP Scholars — Concours nationaux & Académie gratuite",
+    ogTitle: "Na9ra Nal3ab — Concours nationaux & Académie gratuite",
     ogDescription:
       "Prépa concours 6ème & 9ème + une académie gratuite (Culture Générale, QI, Langues), façon shonen.",
   },
@@ -85,7 +85,7 @@ export const fr: TranslationKeys = {
     heroTitle2: "Légende",
     heroTitle3: "des concours nationaux",
     heroDesc:
-      "XP Scholars transforme tes révisions en quêtes manga. Prépare les concours nationaux 6ème et 9ème, et explore gratuitement Culture Générale, Muscle ton Cerveau et les Langues. Gagne de l'XP, enflamme ton streak et bats les Boss de chapitre.",
+      "Na9ra Nal3ab transforme tes révisions en quêtes manga. Prépare les concours nationaux 6ème et 9ème, et explore gratuitement Culture Générale, Muscle ton Cerveau et les Langues. Gagne de l'XP, enflamme ton streak et bats les Boss de chapitre.",
     ctaStart: "Commencer ma quête",
     ctaLogin: "J'ai déjà un héros",
     statSubjects: "Matières",
@@ -139,7 +139,7 @@ export const fr: TranslationKeys = {
     rankLegend: "Légende S-Rank",
   },
   dashboard: {
-    title: "Hall des Héros · XP Scholars",
+    title: "Hall des Héros · Na9ra Nal3ab",
     heroClass: "",
     days: "jours",
     day: "jour",
@@ -206,7 +206,7 @@ export const fr: TranslationKeys = {
     recoveryFailed: "Récupération impossible",
   },
   quest: {
-    title: "Quête · XP Scholars",
+    title: "Quête · Na9ra Nal3ab",
     preparing: "Préparation de l'arène…",
     leaveQuest: "Quitter la quête",
     bossFight: "⚔️ Combat de Boss",

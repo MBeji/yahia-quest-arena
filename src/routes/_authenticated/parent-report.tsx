@@ -26,7 +26,7 @@ import { toast } from "sonner";
 import { useI18n, useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/parent-report")({
-  head: () => ({ meta: [{ title: "Suivi parental · XP Scholars" }] }),
+  head: () => ({ meta: [{ title: "Suivi parental · Na9ra Nal3ab" }] }),
   component: ParentReport,
 });
 

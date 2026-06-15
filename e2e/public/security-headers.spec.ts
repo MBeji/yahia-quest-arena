@@ -66,7 +66,7 @@ test.describe("Content-Security-Policy (nonce)", () => {
 
     await landing.goto();
     // Hydration markers: an interactive CTA must be present and the title set.
-    await expect(page).toHaveTitle(/XP Scholars/i);
+    await expect(page).toHaveTitle(/Na9ra Nal3ab/i);
     await expect(landing.signupCta).toBeVisible();
 
     const cspErrors = violations.filter((v) =>
