@@ -6,7 +6,6 @@ const clientAssetsDir = join(process.cwd(), "dist", "client", "assets");
 const BUDGETS = {
   "index-": 450 * 1024,
   "i18n-": 80 * 1024,
-  "vendor-charts-": 390 * 1024,
   "vendor-supabase-": 240 * 1024,
   "vendor-motion-": 150 * 1024,
   "dashboard-": 30 * 1024,

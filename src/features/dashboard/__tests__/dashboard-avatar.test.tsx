@@ -1,17 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, beforeAll } from "vitest";
+import { describe, it, expect } from "vitest";
 import { DashboardRadarInventory } from "../components/dashboard-radar-inventory";
 import { DashboardBadgesShop } from "../components/dashboard-badges-shop";
-
-// recharts' ResponsiveContainer (used by the radar) needs ResizeObserver,
-// which jsdom does not provide.
-beforeAll(() => {
-  globalThis.ResizeObserver = class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  };
-});
 
 describe("equipped skin rendering", () => {
   it("shows the equipped skin glyph in the inventory avatar", () => {
@@ -72,5 +62,28 @@ describe("equipped skin rendering", () => {
       />,
     );
     expect(screen.getByText("👑")).toBeInTheDocument();
+  });
+});
+
+describe("mastery radar (SVG)", () => {
+  it("renders one labelled axis per attribute with an accessible summary", () => {
+    render(
+      <DashboardRadarInventory
+        radarData={[
+          { subject: "Force", value: 80 },
+          { subject: "Esprit", value: 40 },
+          { subject: "Sagesse", value: 60 },
+        ]}
+        inventory={[]}
+        avatarSlug={null}
+        displayName="Yahia"
+        isActivatePending={false}
+        onActivate={() => {}}
+      />,
+    );
+    expect(screen.getByText("Force")).toBeInTheDocument();
+    expect(screen.getByText("Esprit")).toBeInTheDocument();
+    expect(screen.getByText("Sagesse")).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: /Force: 80/ })).toBeInTheDocument();
   });
 });
