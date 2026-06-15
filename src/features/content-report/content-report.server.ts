@@ -26,8 +26,8 @@ export const reportContentError = createServerFn({ method: "POST" })
   .inputValidator((d) =>
     z
       .object({
-        exerciseId: z.string().uuid().optional(),
-        questionId: z.string().uuid().optional(),
+        exerciseId: z.guid().optional(),
+        questionId: z.guid().optional(),
         message: z.string().trim().min(5).max(1000),
       })
       .parse(d),
@@ -90,7 +90,7 @@ export const getOpenReportsCount = createServerFn({ method: "GET" })
 export const resolveContentReport = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) =>
-    z.object({ reportId: z.string().uuid(), status: z.enum(["resolved", "dismissed"]) }).parse(d),
+    z.object({ reportId: z.guid(), status: z.enum(["resolved", "dismissed"]) }).parse(d),
   )
   .handler(async ({ data, context }) => {
     const { supabase } = context;
