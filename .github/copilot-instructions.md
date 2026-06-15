@@ -2,7 +2,7 @@
 applyTo: "**"
 ---
 
-# Copilot instructions — XP Scholars
+# Copilot instructions — Na9ra Nal3ab
 
 ## Canonical sources (read these first)
 
