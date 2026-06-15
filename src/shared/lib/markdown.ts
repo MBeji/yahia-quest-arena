@@ -1,4 +1,5 @@
 import DOMPurify from "dompurify";
+import { isolateLtrRunsHtml } from "@/shared/lib/bidi";
 
 /** Simple markdown-to-HTML renderer for lesson content */
 export function renderMarkdown(md: string): string {
@@ -60,6 +61,10 @@ export function renderMarkdown(md: string): string {
       return `<p>${line}</p>`;
     })
     .join("\n");
+
+  // Keep inline math (`√64`, `√(25 × 2) = 5√2`, …) a contiguous LTR run inside
+  // RTL prose; `$$ … $$` display blocks are already isolated via CSS.
+  html = isolateLtrRunsHtml(html);
 
   return DOMPurify.sanitize(html, {
     ALLOWED_TAGS: [

@@ -1,6 +1,7 @@
 import { createElement, type ElementType } from "react";
 import { extractFigure, sanitizeSvg } from "@/shared/lib/figure";
 import { isRtlText } from "@/shared/lib/utils";
+import { isolateLtrRuns } from "@/shared/lib/bidi";
 
 /**
  * "Paper" surface every figure is drawn on. Two problems are solved here:
@@ -42,7 +43,11 @@ export function RichField({
   return (
     <>
       {text
-        ? createElement(As, { className, dir: isRtlText(text) ? "rtl" : undefined }, text)
+        ? createElement(
+            As,
+            { className, dir: isRtlText(text) ? "rtl" : undefined },
+            isolateLtrRuns(text),
+          )
         : null}
       {svg ? (
         <div className="my-3 flex justify-center">
@@ -61,7 +66,7 @@ export function OptionContent({ raw }: { raw: string }) {
   const { text, svg } = extractFigure(raw);
   return (
     <>
-      {text ? <span>{text}</span> : null}
+      {text ? <span>{isolateLtrRuns(text)}</span> : null}
       {svg ? (
         <SvgFigure
           markup={svg}
