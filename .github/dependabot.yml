@@ -10,3 +10,15 @@ updates:
     commit-message:
       prefix: chore
       include: scope
+    # Routine minor + patch bumps land in ONE grouped PR instead of one-per-package
+    # (avoids the 6-separate-PRs fragmentation). Majors still come individually.
+    groups:
+      npm-minor-and-patch:
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # @types/node tracks the runtime Node major (CI + Vercel on Node 22); no major bumps.
+      - dependency-name: "@types/node"
+        update-types:
+          - version-update:semver-major
