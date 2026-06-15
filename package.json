@@ -116,7 +116,7 @@
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "@types/three": "^0.180.0",
-    "@vitejs/plugin-react": "^5.0.4",
+    "@vitejs/plugin-react": "^6.0.2",
     "@vitest/coverage-v8": "^4.1.7",
     "dotenv": "^17.4.2",
     "eslint": "^9.32.0",
@@ -131,12 +131,10 @@
     "prettier": "^3.7.3",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.56.1",
-    "vite": "^7.3.1",
+    "vite": "^8.0.16",
     "vitest": "^4.1.7"
   },
   "overrides": {
-    "vite": {
-      "esbuild": "^0.28.1"
-    }
+    "esbuild": "^0.28.1"
   }
 }
