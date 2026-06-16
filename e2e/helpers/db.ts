@@ -109,7 +109,12 @@ export function createAdminDb(): AdminDb {
         .select("id")
         .eq("is_premium", false)
         .not("grade_id", "is", null)
+        // `id` is a deterministic tiebreaker: several school subjects can share
+        // the lowest display_order (e.g. 9ème-Math and 6ème-Math both at 1), and
+        // without it Postgres returns an arbitrary one — making the chosen quiz
+        // (and so the whole test) non-deterministic from run to run.
         .order("display_order")
+        .order("id")
         .limit(1)
         .maybeSingle();
       if (error) throw new Error(`schoolSubjectId: ${error.message}`);
