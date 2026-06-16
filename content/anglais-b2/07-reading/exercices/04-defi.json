@@ -1,0 +1,112 @@
+{
+  "title": "👑 Elite Challenge ⭐⭐⭐⭐: Reading Comprehension: Argument and Inference",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Read:\n\"The city's new museum attracted 400,000 visitors in its first year — a figure the mayor called 'proof that culture pays'. What the press release omitted was that the museum had spent £12 million on a marketing campaign targeting tourists, and that local residents, priced out by the £18 entry fee, accounted for fewer than 8% of visitors.\"\n\nWhat does the writer imply about the mayor's claim?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The visitor figures are inaccurate and were invented for political purposes."
+        },
+        {
+          "id": "b",
+          "text": "The success was bought rather than organic, and excluded the local community it was meant to serve."
+        },
+        {
+          "id": "c",
+          "text": "A £12 million marketing budget is always justified by high visitor numbers."
+        },
+        {
+          "id": "d",
+          "text": "The mayor was correct: 400,000 visitors proves culture is financially viable."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "The writer does not question the 400,000 figure — but reveals what it cost (a £12m campaign) and who it excluded (locals at 8%). The implication is that the \"success\" was manufactured by heavy spending and bypassed the community, undermining the mayor's framing. The figures are not called inaccurate (a), the budget is presented as problematic not justified (c), and the writer clearly challenges the mayor's conclusion (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read:\n\"Automation, its champions tell us, will liberate workers from dangerous and repetitive tasks, freeing them for creative, fulfilling roles. History, however, has a habit of being less tidy than economic models. The textile workers of nineteenth-century England were not, in the main, redeployed as artists.\"\n\nWhat does the writer imply by referring to nineteenth-century textile workers?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The nineteenth century is a perfect model for understanding modern automation."
+        },
+        {
+          "id": "b",
+          "text": "Historical evidence suggests displaced workers do not automatically find better jobs."
+        },
+        {
+          "id": "c",
+          "text": "Automation in the nineteenth century was more disruptive than today's automation."
+        },
+        { "id": "d", "text": "Artists benefit most from economic disruption." }
+      ],
+      "correctOption": "b",
+      "explanation": "The ironic remark — \"were not, in the main, redeployed as artists\" — implies that the optimistic promise of workers moving to creative roles did not materialise historically, casting doubt on whether it will this time. This is an inference: the writer does not say modern automation is identical to historical cases (a — history is invoked as a caution, not a perfect model), does not compare the degree of disruption (c), and says nothing about artists benefiting (d).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read:\n\"The **equivocal** results of the trial left investors uncertain about the drug's future. Some analysts argued the data warranted further study; others felt it was sufficient for regulatory approval.\"\n\nThe word \"equivocal\" most likely means:",
+      "options": [
+        { "id": "a", "text": "ambiguous and open to different interpretations" },
+        { "id": "b", "text": "clearly positive and promising" },
+        { "id": "c", "text": "deliberately falsified" },
+        { "id": "d", "text": "highly technical and difficult to understand" }
+      ],
+      "correctOption": "a",
+      "explanation": "The results left investors \"uncertain\" and analysts split — some wanted more study, others thought the data was enough. This division shows the results could be read either way: ambiguous, or equivocal. Clearly positive results (b) would not leave analysts divided. Falsified (c) is not implied — the debate is about interpretation, not integrity. Technical difficulty (d) is a different reason for uncertainty not supported by the text.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read:\n\"Commentators have praised the reform as bold and necessary. Bold it may be. Whether it is necessary depends entirely on what problem one believes the education system faces — and on that question, the commentators are conspicuously silent.\"\n\nWhat is the writer's implied criticism of the commentators?",
+      "options": [
+        { "id": "a", "text": "They are paid by the government to support the reform." },
+        { "id": "b", "text": "They use the word 'bold' incorrectly." },
+        {
+          "id": "c",
+          "text": "They endorse the reform without establishing what problem it is meant to solve."
+        },
+        { "id": "d", "text": "They are too cautious in their praise of the reform." }
+      ],
+      "correctOption": "c",
+      "explanation": "The writer concedes \"bold it may be\" but says \"necessary\" depends on identifying the problem — and the commentators are \"conspicuously silent\" on that question. The implication is they have praised the solution without examining what it is a solution to. There is no suggestion of being paid (a), no claim of misusing \"bold\" (b), and the criticism is that they are too uncritical, not too cautious (d).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read:\n\"Reported crime fell for the fifth consecutive year, according to official police figures. Separately, the Crime Survey of England and Wales — which asks households directly about their experiences — recorded a 9% rise in incidents over the same period.\"\n\nWhich conclusion is best supported by BOTH sets of figures together?",
+      "options": [
+        { "id": "a", "text": "Crime has fallen significantly over five years." },
+        {
+          "id": "b",
+          "text": "Police figures and victim surveys measure the same thing and produce consistent results."
+        },
+        { "id": "c", "text": "The official police figures are fraudulent." },
+        {
+          "id": "d",
+          "text": "There is a discrepancy between reported crime and experienced crime, suggesting under-reporting to police."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Police figures record reported crime; the household survey records experienced crime. A fall in one and a rise in the other most logically implies that more crimes are occurring but fewer are being reported to police — under-reporting. Crime has not clearly fallen (a — one measure rose). The two measures produce contradictory, not consistent, results (b). The text gives no basis for calling the figures fraudulent (c — discrepancy has an innocent explanation).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read:\n\"The novelist's latest work has been described by reviewers as 'challenging', 'uncompromising', and 'not for the casual reader'. Sales figures suggest these descriptions were accurate: the book sold 1,200 copies in its first three months — a fraction of her previous novel's 85,000.\"\n\nWhat tone does the writer adopt toward the novel's commercial failure?",
+      "options": [
+        { "id": "a", "text": "Openly dismissive of the novel's literary quality" },
+        { "id": "b", "text": "Sympathetic and defensive of the author" },
+        { "id": "c", "text": "Drily ironic — presenting facts that speak for themselves" },
+        { "id": "d", "text": "Enthusiastic about the novel's artistic ambition" }
+      ],
+      "correctOption": "c",
+      "explanation": "The writer quotes the reviews (\"challenging\", \"uncompromising\", \"not for the casual reader\") and then notes that the sales numbers confirmed these labels — letting the juxtaposition make the point without explicit comment. This is a dry, ironic tone: the facts are arranged to speak for themselves. The writer does not call the novel bad (a), does not defend the author (b), and does not praise the ambition (d) — the register is detached and wry.",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "title": "⭐ Practice: Inference Strategies",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Read: \"The minister declined to comment on the report's findings.\"\nWhat can be inferred?",
+      "options": [
+        { "id": "a", "text": "The report's findings may be unfavourable to the minister." },
+        { "id": "b", "text": "The minister fully agreed with the report." },
+        { "id": "c", "text": "The report contained no significant findings." },
+        { "id": "d", "text": "The minister had not read the report." }
+      ],
+      "correctOption": "a",
+      "explanation": "Declining to comment on a report typically implies the findings are awkward, embarrassing, or inconvenient for the person declining. Option (b) contradicts the inference — if the minister agreed, a comment of support would be expected. Option (c) is not supported; declining to comment implies significance, not insignificance. Option (d) is possible but the text does not support it.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Read: \"The programme was introduced with great fanfare. Within a year, it had been quietly discontinued.\"\nWhat does 'quietly' imply?",
+      "options": [
+        { "id": "a", "text": "The decision was made quickly and without debate." },
+        { "id": "b", "text": "The discontinuation was announced at a private ceremony." },
+        {
+          "id": "c",
+          "text": "The programme was a great success and was replaced by a better one."
+        },
+        {
+          "id": "d",
+          "text": "The programme ended without the attention its launch received, suggesting it failed."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "'Quietly discontinued' contrasts with 'great fanfare' at the launch — the contrast implies the programme was dropped without publicity, strongly suggesting failure or embarrassment. Option (b) misreads 'quietly' as a description of a formal event. Option (c) invents a success narrative the text does not support. Option (a) confuses 'quietly' (without attention) with 'quickly' (speed).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Read: \"The CEO's statement was notably brief.\"\nWhat does 'notably' signal about the writer's view?",
+      "options": [
+        { "id": "a", "text": "The writer praises the CEO for being concise." },
+        { "id": "b", "text": "The writer is simply reporting a neutral fact." },
+        {
+          "id": "c",
+          "text": "The writer is noting that the brevity is significant or surprising."
+        },
+        { "id": "d", "text": "The writer considers brevity a positive quality here." }
+      ],
+      "correctOption": "c",
+      "explanation": "'Notably' is an adverb that signals the writer considers the brevity worth remarking on — implying it is surprising, unexpected, or telling (perhaps the CEO was being evasive). Options (a) and (d) assume a positive tone not supported by the word choice. Option (b) is wrong — 'notably' is a loaded word that introduces an evaluative stance, not a neutral report.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Read: \"The government's fiscal measures — tax adjustments, expenditure reviews, and debt restructuring — were announced last week.\"\nWhat does 'fiscal' most likely mean here?",
+      "options": [
+        { "id": "a", "text": "Related to military spending" },
+        { "id": "b", "text": "Environmental" },
+        { "id": "c", "text": "Social" },
+        { "id": "d", "text": "Related to government finance and taxation" }
+      ],
+      "correctOption": "d",
+      "explanation": "The example clue — tax adjustments, expenditure reviews, debt restructuring — all relate to government finance and revenue. This lets you infer that 'fiscal' means relating to government finance and taxation. None of the examples relate to the military, the environment, or social policy.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Read: \"Researchers published their findings last month. They were immediately challenged by three independent labs.\"\nWhat does 'They' refer to?",
+      "options": [
+        { "id": "a", "text": "The months" },
+        { "id": "b", "text": "The findings" },
+        { "id": "c", "text": "The independent labs" },
+        { "id": "d", "text": "The researchers" }
+      ],
+      "correctOption": "b",
+      "explanation": "The pronoun 'They' refers back to the most recent noun phrase that fits the context: 'their findings'. It is the findings (not the researchers) that were challenged — researchers challenge; findings are challenged. Option (d) would mean the researchers were challenged, but researchers challenge findings, not the other way around. Option (c) is impossible — the labs are the ones doing the challenging. Option (a) is grammatically absurd.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: \"Two approaches were considered: complete automation and gradual digitisation. The former was deemed too costly.\"\nWhich approach was too costly?",
+      "options": [
+        { "id": "a", "text": "Neither — the text says they were affordable." },
+        { "id": "b", "text": "Both approaches equally" },
+        { "id": "c", "text": "Complete automation" },
+        { "id": "d", "text": "Gradual digitisation" }
+      ],
+      "correctOption": "c",
+      "explanation": "'The former' refers to the first of two items mentioned: complete automation (first) and gradual digitisation (second). So 'the former was deemed too costly' means complete automation was too costly. 'The latter' would refer to gradual digitisation. Options (d) and (b) misapply the reference. Option (a) directly contradicts the text.",
+      "difficulty": 2
+    }
+  ]
+}

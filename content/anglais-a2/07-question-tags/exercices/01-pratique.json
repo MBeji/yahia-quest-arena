@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Practice: Building Question Tags",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complete: \"You are a student, ___ you?\"",
+      "options": [
+        { "id": "a", "text": "aren't" },
+        { "id": "b", "text": "isn't" },
+        { "id": "c", "text": "don't" },
+        { "id": "d", "text": "are" }
+      ],
+      "correctOption": "a",
+      "explanation": "Positive statement (you are) → negative tag: aren't you? \"isn't\" is for he/she/it, not you. \"don't\" belongs to main verbs, not the verb be. \"are\" would be a positive tag, which is wrong after a positive statement.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"They can't swim, ___ they?\"",
+      "options": [
+        { "id": "a", "text": "can't" },
+        { "id": "b", "text": "can" },
+        { "id": "c", "text": "do" },
+        { "id": "d", "text": "aren't" }
+      ],
+      "correctOption": "b",
+      "explanation": "Negative statement (can't) → positive tag: can they? \"can't\" would repeat the negative — wrong rule. \"do\" is used for main verbs, not for the modal can. \"aren't\" uses the wrong auxiliary (be instead of can).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"He doesn't like fish, ___ he?\"",
+      "options": [
+        { "id": "a", "text": "doesn't" },
+        { "id": "b", "text": "isn't" },
+        { "id": "c", "text": "does" },
+        { "id": "d", "text": "is" }
+      ],
+      "correctOption": "c",
+      "explanation": "Negative statement (doesn't like) → positive tag: does he? \"doesn't\" would repeat the negative. \"is/isn't\" use the wrong auxiliary — the main verb is like, so the tag uses do/does, not be.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"She called you last night, ___ she?\"",
+      "options": [
+        { "id": "a", "text": "doesn't" },
+        { "id": "b", "text": "wasn't" },
+        { "id": "c", "text": "did" },
+        { "id": "d", "text": "didn't" }
+      ],
+      "correctOption": "d",
+      "explanation": "Positive past-simple statement (called) → negative past tag: didn't she? The main verb called uses did/didn't in the tag. \"doesn't\" is present tense. \"wasn't\" belongs to the verb be. \"did\" would be a positive tag — wrong after a positive statement.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"You haven't seen this film, ___ you?\"",
+      "options": [
+        { "id": "a", "text": "haven't" },
+        { "id": "b", "text": "didn't" },
+        { "id": "c", "text": "have" },
+        { "id": "d", "text": "has" }
+      ],
+      "correctOption": "c",
+      "explanation": "Negative statement (haven't seen) → positive tag: have you? \"haven't\" repeats the negative. \"didn't\" is past simple — but the statement uses the present perfect (haven't). \"has\" is for he/she/it, not you.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"I am the last one here, ___ I?\"",
+      "options": [
+        { "id": "a", "text": "amn't" },
+        { "id": "b", "text": "am not" },
+        { "id": "c", "text": "isn't" },
+        { "id": "d", "text": "aren't" }
+      ],
+      "correctOption": "d",
+      "explanation": "The special tag for I am is aren't I — there is no \"amn't I\" in standard English. \"am not\" is the full form, which is not used in tags. \"isn't\" uses he/she/it, not I.",
+      "difficulty": 2
+    }
+  ]
+}

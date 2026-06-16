@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Practice: In, On, At (Place & Time)",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complete: \"My books are ___ the shelf.\"",
+      "options": [
+        { "id": "a", "text": "on" },
+        { "id": "b", "text": "at" },
+        { "id": "c", "text": "in" },
+        { "id": "d", "text": "into" }
+      ],
+      "correctOption": "a",
+      "explanation": "A shelf is a surface, so we use on: the books are on the shelf. \"in\" would mean inside the shelf (a closed space), \"at\" marks a specific point (not a surface), and \"into\" describes movement entering a space.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"The film starts ___ 8 pm.\"",
+      "options": [
+        { "id": "a", "text": "in" },
+        { "id": "b", "text": "on" },
+        { "id": "c", "text": "at" },
+        { "id": "d", "text": "from" }
+      ],
+      "correctOption": "c",
+      "explanation": "Clock times take at: the film starts at 8 pm. \"in\" is for months and years, \"on\" is for days and dates, and \"from\" marks a starting point of movement, not a clock time.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"She lives ___ a small village in the south.\"",
+      "options": [
+        { "id": "a", "text": "at" },
+        { "id": "b", "text": "on" },
+        { "id": "c", "text": "into" },
+        { "id": "d", "text": "in" }
+      ],
+      "correctOption": "d",
+      "explanation": "We use in for enclosed spaces, towns and countries: she lives in a small village. \"at\" marks a specific point or address, \"on\" marks a surface, and \"into\" shows entering movement.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"The concert is ___ Saturday evening.\"",
+      "options": [
+        { "id": "a", "text": "in" },
+        { "id": "b", "text": "at" },
+        { "id": "c", "text": "on" },
+        { "id": "d", "text": "by" }
+      ],
+      "correctOption": "c",
+      "explanation": "Days of the week take on: on Saturday evening. \"in\" is for months and years (in July), \"at\" is for clock times (at noon), and \"by\" means not later than — a different idea.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"I'll meet you ___ the bus stop.\"",
+      "options": [
+        { "id": "a", "text": "in" },
+        { "id": "b", "text": "at" },
+        { "id": "c", "text": "on" },
+        { "id": "d", "text": "into" }
+      ],
+      "correctOption": "b",
+      "explanation": "A bus stop is a specific point, so we use at: I'll meet you at the bus stop. \"in\" is for spaces you are inside (in a room), \"on\" is for surfaces, and \"into\" describes movement entering a space.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"My grandmother was born ___ 1955.\"",
+      "options": [
+        { "id": "a", "text": "on" },
+        { "id": "b", "text": "at" },
+        { "id": "c", "text": "from" },
+        { "id": "d", "text": "in" }
+      ],
+      "correctOption": "d",
+      "explanation": "Years take in: born in 1955. \"on\" is for days and dates (on 3rd April), \"at\" is for clock times (at noon), and \"from\" shows a starting point of movement.",
+      "difficulty": 2
+    }
+  ]
+}

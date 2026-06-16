@@ -1,0 +1,97 @@
+{
+  "title": "⚔️ Chapter Boss ⭐⭐⭐: Reading Comprehension: Argument and Inference",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Read:\n\"Remote work was once a privilege reserved for a fortunate few. The pandemic forced organisations worldwide to abandon that assumption overnight. What followed surprised even the most ardent sceptics: productivity held firm, collaboration adapted, and in many sectors, output actually increased. The office, it seems, was never quite as indispensable as its architects imagined.\"\n\nWhat is the writer's main argument?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Remote work proves that the traditional office is less necessary than believed."
+        },
+        { "id": "b", "text": "The pandemic caused enormous disruption to the workplace." },
+        { "id": "c", "text": "Productivity always increases when people work from home." },
+        { "id": "d", "text": "Sceptics were right to doubt remote working." }
+      ],
+      "correctOption": "a",
+      "explanation": "The final sentence — \"The office was never quite as indispensable as its architects imagined\" — is the central claim the paragraph builds towards: the traditional office is less essential than assumed. The pandemic's disruption (b) is context, not the argument. \"Always increases\" (c) overstates what the text says (\"in many sectors\", \"actually increased\"). The sceptics were proved wrong, not right (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read:\n\"The charity's annual report celebrated a record year for donations. Buried on page 47, however, was a table showing that administrative costs had risen by 34% and that the proportion of funds reaching front-line services had fallen for the third consecutive year.\"\n\nWhat does the writer imply?",
+      "options": [
+        { "id": "a", "text": "The charity is fraudulent and should be investigated." },
+        { "id": "b", "text": "Record donations automatically improve front-line services." },
+        {
+          "id": "c",
+          "text": "The charity's public messaging obscures a less favourable financial picture."
+        },
+        { "id": "d", "text": "Administrative costs are unimportant compared to total donations." }
+      ],
+      "correctOption": "c",
+      "explanation": "The contrast between the celebrated headline (record donations) and the buried table (rising admin costs, falling proportion to services) implies the charity's public face conceals a less flattering reality. The writer does not accuse the charity of fraud (a — this is an inference too far), does not suggest donations automatically help services (b — the text implies the opposite), and does not minimise admin costs (d — the detail about them rising is presented as significant).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read:\n\"A leading nutritionist recently declared sugar 'the tobacco of our time'. The comparison is **arresting** but imprecise: tobacco has no safe level of consumption and no nutritional value, whereas moderate sugar intake is both harmless and, for active individuals, necessary.\"\n\nThe word \"arresting\" most likely means:",
+      "options": [
+        { "id": "a", "text": "legally problematic" },
+        { "id": "b", "text": "striking and attention-grabbing" },
+        { "id": "c", "text": "factually accurate" },
+        { "id": "d", "text": "deeply irresponsible" }
+      ],
+      "correctOption": "b",
+      "explanation": "The writer says the comparison is \"arresting but imprecise\" — acknowledging it has impact while pointing out it is inaccurate. \"Arresting\" here means striking or attention-grabbing (it catches your attention), not legally problematic (a — wrong register entirely), not accurate (c — the writer immediately calls it imprecise), and not irresponsible (d — the writer's tone is analytical, not moral).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read:\n\"Tech companies insist their recommendation algorithms simply reflect what users want to see. What this framing conveniently omits is that users' preferences were themselves shaped by years of exposure to those same algorithms. Calling the result 'user choice' is a little like crediting a riverbank for the shape of the river.\"\n\nWhat does the writer imply about the tech companies' claim?",
+      "options": [
+        { "id": "a", "text": "The claim is straightforwardly true." },
+        {
+          "id": "b",
+          "text": "The claim is circular: algorithms shaped the preferences they now claim to reflect."
+        },
+        { "id": "c", "text": "Users genuinely prefer the content the algorithms select." },
+        { "id": "d", "text": "Rivers are a poor analogy for technology." }
+      ],
+      "correctOption": "b",
+      "explanation": "The writer argues that the companies' claim is circular: they say they reflect user preferences, but those preferences were created by the algorithms in the first place. The river analogy makes this concrete — the riverbank shapes the river, then takes credit for the river's shape. The claim is not straightforwardly true (a — the writer's whole point is to challenge it), users do not \"genuinely\" prefer content in a free sense (c — their preferences were manufactured), and the writer endorses the river analogy rather than criticising it (d).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read:\n\"Critics of standardised testing argue that it rewards rote memorisation over genuine understanding. Supporters counter that it provides a consistent, objective benchmark that reduces the influence of teacher bias. Both positions have merit. What neither camp adequately addresses is the question of what, precisely, education is for.\"\n\nWhat is the writer's implied criticism of the debate?",
+      "options": [
+        { "id": "a", "text": "Standardised tests are clearly superior to teacher assessment." },
+        {
+          "id": "b",
+          "text": "Both sides in the debate miss the more fundamental question about the purpose of education."
+        },
+        { "id": "c", "text": "Teacher bias is not a real problem in education." },
+        { "id": "d", "text": "Rote memorisation is an effective learning strategy." }
+      ],
+      "correctOption": "b",
+      "explanation": "The final sentence — \"What neither camp adequately addresses is the question of what, precisely, education is for\" — is the writer's implicit criticism: both sides argue about method while ignoring the deeper question of purpose. The writer does not favour tests (a — \"both positions have merit\" is balanced), does not dismiss teacher bias (c — it is presented as a real concern), and does not endorse rote memorisation (d — it is mentioned as a criticism of tests).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read:\n\"The study found that students who slept fewer than six hours performed significantly worse on memory tasks than those who slept eight hours. The researchers concluded that sleep deprivation impairs academic performance. Schools should therefore abolish early morning start times.\"\n\nWhich statement identifies a FACT in the passage?",
+      "options": [
+        { "id": "a", "text": "Sleep deprivation impairs academic performance." },
+        { "id": "b", "text": "Schools should abolish early morning start times." },
+        { "id": "c", "text": "Early morning start times cause sleep deprivation." },
+        {
+          "id": "d",
+          "text": "Students sleeping under six hours performed worse on memory tasks than those sleeping eight hours."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "\"Students who slept fewer than six hours performed significantly worse on memory tasks\" is the directly measured, verifiable finding from the study — a fact. The conclusion that \"sleep deprivation impairs academic performance\" (a) is an interpretation of the data. \"Schools should abolish early morning start times\" (b) is a policy opinion. \"Early morning start times cause sleep deprivation\" (c) is an assumed causal link not established in the passage.",
+      "difficulty": 3
+    }
+  ]
+}

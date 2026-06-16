@@ -1,0 +1,154 @@
+{
+  "title": "👑 Elite Challenge ⭐⭐⭐⭐: Reading: Critical Inference and Tone",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Read: \"The historian's account is meticulous, exhaustively sourced, and almost entirely wrong.\"\nWhat is the primary rhetorical effect of this sentence?",
+      "options": [
+        {
+          "id": "a",
+          "text": "It praises the historian's diligence and accuracy."
+        },
+        {
+          "id": "b",
+          "text": "It offers a balanced view of the historian's strengths and weaknesses."
+        },
+        {
+          "id": "c",
+          "text": "It uses a delayed reversal to make a damning critical verdict more emphatic."
+        },
+        {
+          "id": "d",
+          "text": "It hedges the writer's opinion to avoid controversy."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "The sentence accumulates praise (meticulous, exhaustively sourced) then destroys it in four words (\"almost entirely wrong\"). This delayed reversal is a rhetorical device that makes the final verdict more emphatic by contrast — the higher the praise, the harder the fall. It is not balanced (balance would qualify rather than negate) and it does not hedge (the verdict is blunt).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: \"Successive governments have promised investment in infrastructure. Successive governments have broken that promise. The roads speak for themselves.\"\nWhat does \"the roads speak for themselves\" imply?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The roads are in excellent condition and prove the promises were kept."
+        },
+        {
+          "id": "b",
+          "text": "The physical state of the roads provides visible evidence that the promises were broken."
+        },
+        {
+          "id": "c",
+          "text": "The writer does not know the condition of the roads."
+        },
+        {
+          "id": "d",
+          "text": "The roads have been the subject of speeches by politicians."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Speak for themselves\" means the evidence is so obvious it needs no further comment. Given the preceding pattern of broken promises, the implication is that the roads are in poor condition — visible proof of repeated failure. This is a pragmatic inference: the writer invites the reader to draw the conclusion rather than stating it. Options (a) and (c) misread the ironic structure; (d) takes the metaphor literally.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: \"Dr Laine writes with the authority of someone who has spent forty years in the field and the clarity of someone who has spent forty years explaining it to people who have not.\"\nWhat quality of Dr Laine's writing does this sentence praise?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The rare combination of deep expertise and genuine accessibility"
+        },
+        {
+          "id": "b",
+          "text": "Speed and productivity"
+        },
+        {
+          "id": "c",
+          "text": "A tendency to oversimplify complex ideas"
+        },
+        {
+          "id": "d",
+          "text": "An academic style that only specialists can appreciate"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "The parallel structure (\"authority of someone who… clarity of someone who…\") explicitly links two qualities that are often in tension: expert authority and the ability to explain clearly to non-experts. The sentence praises the combination of both. Oversimplification (c) would be a criticism; inaccessibility (d) is the opposite of what is stated; speed (a) is not mentioned.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: \"The charity's annual report opens with a photograph of smiling children and closes with a page of financial disclaimers printed in a font size that rewards only the most determined reader.\"\nWhat is the writer implying about the charity?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The charity is transparent and well-run."
+        },
+        {
+          "id": "b",
+          "text": "The charity uses emotional imagery to distract from financial information it does not want scrutinised."
+        },
+        {
+          "id": "c",
+          "text": "The charity's designers chose a small font for aesthetic reasons."
+        },
+        {
+          "id": "d",
+          "text": "The charity's financial position is excellent and requires no scrutiny."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "The contrast between the emotive opening (smiling children) and the near-invisible financial disclaimers is not neutral description — the phrase \"rewards only the most determined reader\" is ironic, implying the small print is deliberately discouraging. The implication is that the emotional imagery is a distraction from financial information the charity prefers not to be read. Options (a), (c), and (d) all ignore the critical irony.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"The novel's ending has been called ambiguous. It is, rather, perfectly clear — to anyone willing to sit with discomfort long enough to accept what the author is actually saying.\"\nWhat does the writer imply about readers who find the ending ambiguous?",
+      "options": [
+        {
+          "id": "a",
+          "text": "They are correct — the ending is genuinely unclear."
+        },
+        {
+          "id": "b",
+          "text": "The writer agrees that the author's meaning is impossible to determine."
+        },
+        {
+          "id": "c",
+          "text": "They are more sophisticated readers than those who find it clear."
+        },
+        {
+          "id": "d",
+          "text": "They are unwilling to confront the difficult truth the ending contains."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "The phrase \"to anyone willing to sit with discomfort\" implies that those who call the ending ambiguous are avoiding discomfort — they resist accepting the author's meaning because it is unsettling. The writer is politely but firmly accusing such readers of motivated misreading. This is a pragmatic inference: the writer does not state this directly but makes it clear through the conditional phrasing.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"In the third act, the playwright gives the antagonist the most eloquent speech in the play. Every argument he makes is compelling. Every argument he makes is wrong.\"\nWhat is the playwright's likely purpose in giving the antagonist such an eloquent speech?",
+      "options": [
+        {
+          "id": "a",
+          "text": "To suggest the antagonist is the true hero of the play."
+        },
+        {
+          "id": "b",
+          "text": "To confuse the audience about the play's moral position."
+        },
+        {
+          "id": "c",
+          "text": "To dramatise how dangerous and persuasive wrong ideas can be when well-argued."
+        },
+        {
+          "id": "d",
+          "text": "To demonstrate that the playwright agrees with the antagonist."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "The juxtaposition of \"compelling\" and \"wrong\" in identical sentence structures is the key. The playwright is not endorsing the antagonist or creating confusion for its own sake — the structural repetition forces the audience to hold both truths simultaneously: the argument is persuasive AND it is wrong. This is a sophisticated dramatic technique for exploring how ideas seduce even when they are false. Options (a) and (d) misread the critical framing; (b) mistakes deliberate complexity for confusion.",
+      "difficulty": 3
+    }
+  ]
+}

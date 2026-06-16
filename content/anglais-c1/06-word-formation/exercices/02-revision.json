@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Review: Negative Prefixes and Word Families",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complete with the correct negative form: \"The instructions were completely ___.\" (base word: LEGIBLE)",
+      "options": [
+        { "id": "a", "text": "unlegible" },
+        { "id": "b", "text": "dislegible" },
+        { "id": "c", "text": "illegible" },
+        { "id": "d", "text": "mislegible" }
+      ],
+      "correctOption": "c",
+      "explanation": "The prefix il- is used before roots starting with l: il- + legible = illegible. The prefix un- applies to general adjectives but not to Latin-origin forms starting with l; dis- and mis- are not used to negate adjectives in this way.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"She completely ___ what I was trying to say.\" (base word: UNDERSTAND)",
+      "options": [
+        { "id": "a", "text": "disunderstood" },
+        { "id": "b", "text": "inunderstood" },
+        { "id": "c", "text": "ununderstood" },
+        { "id": "d", "text": "misunderstood" }
+      ],
+      "correctOption": "d",
+      "explanation": "The prefix mis- attaches to verbs to mean 'do something wrongly or incorrectly': misunderstood. The prefixes dis-, in-, and un- do not collocate with 'understood' — only mis- gives the meaning of 'failed to understand correctly'.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choose the correctly formed word: the noun from PRODUCE meaning 'the rate of output per unit of input'.",
+      "options": [
+        { "id": "a", "text": "production" },
+        { "id": "b", "text": "productivity" },
+        { "id": "c", "text": "productiveness" },
+        { "id": "d", "text": "produceness" }
+      ],
+      "correctOption": "b",
+      "explanation": "Productivity (-ity suffix) specifically means the rate or efficiency of output — the standard economic term. 'Production' means the process or act of producing (not the rate). 'Productiveness' is a valid but rare alternative; 'produceness' is not a word.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"His behaviour was wholly ___ for a professional.\" (base word: APPROPRIATE)",
+      "options": [
+        { "id": "a", "text": "inappropriately" },
+        { "id": "b", "text": "misappropriate" },
+        { "id": "c", "text": "inappropriate" },
+        { "id": "d", "text": "unappropriate" }
+      ],
+      "correctOption": "c",
+      "explanation": "After 'was wholly' a predicate adjective is needed: inappropriate (in- + appropriate). 'Inappropriately' is an adverb and cannot follow 'was wholly' as a predicative. 'Misappropriate' means to steal/use wrongly (a verb). 'Unappropriate' is not standard — the accepted negative form is inappropriate.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the ERROR in this sentence: \"The scientist's discover of a new compound was widely celebrated.\"",
+      "options": [
+        { "id": "a", "text": "\"widely\" should be \"wide\"" },
+        { "id": "b", "text": "\"celebrated\" should be \"celebratory\"" },
+        { "id": "c", "text": "\"discover\" should be \"discovery\"" },
+        { "id": "d", "text": "\"scientist's\" should be \"scientific\"" }
+      ],
+      "correctOption": "c",
+      "explanation": "The gap after the possessive 'scientist's' needs a noun: discovery (discover → discovery). 'Discover' is a verb and cannot follow a possessive. 'Widely' correctly modifies the past participle 'celebrated' (adverb + adjective), and 'scientist's' is a correct possessive form.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete the sentence: \"The report highlighted the ___ of the current system.\" (base word: EFFICIENT — use the NEGATIVE noun form)",
+      "options": [
+        { "id": "a", "text": "inefficiency" },
+        { "id": "b", "text": "unefficiency" },
+        { "id": "c", "text": "disefficiency" },
+        { "id": "d", "text": "inefficientness" }
+      ],
+      "correctOption": "a",
+      "explanation": "The negative noun from 'efficient' is inefficiency: in- (negative prefix for this Latin-origin adjective) + efficient → inefficient → inefficiency (-cy suffix). 'Unefficiency' uses the wrong prefix, 'disefficiency' is not a word, and 'inefficientness' is non-standard.",
+      "difficulty": 3
+    }
+  ]
+}

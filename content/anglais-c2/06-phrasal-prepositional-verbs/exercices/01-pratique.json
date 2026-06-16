@@ -1,0 +1,154 @@
+{
+  "title": "⭐ Practice: Meaning and Form",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complete: \"I simply cannot ___ his constant interruptions any longer.\" (= tolerate)",
+      "options": [
+        {
+          "id": "a",
+          "text": "put up with"
+        },
+        {
+          "id": "b",
+          "text": "put up on"
+        },
+        {
+          "id": "c",
+          "text": "put out with"
+        },
+        {
+          "id": "d",
+          "text": "put off with"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Put up with means to tolerate or endure something unpleasant. The three particles are fixed: put + up + with. Changing any particle — on, out, or off — produces either a different verb or a non-existent one.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"Many activists are calling for the death penalty to be ___.\" (= abolished)",
+      "options": [
+        {
+          "id": "a",
+          "text": "done out with"
+        },
+        {
+          "id": "b",
+          "text": "done away from"
+        },
+        {
+          "id": "c",
+          "text": "done away with"
+        },
+        {
+          "id": "d",
+          "text": "done up with"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Do away with means to abolish or eliminate. It is a fixed three-part verb: done away with in the passive here. The preposition is always with — from, out, or up produce non-existent forms.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choose the correct word order: the object is a pronoun.",
+      "options": [
+        {
+          "id": "a",
+          "text": "She turned down it."
+        },
+        {
+          "id": "b",
+          "text": "She turned it down."
+        },
+        {
+          "id": "c",
+          "text": "She it turned down."
+        },
+        {
+          "id": "d",
+          "text": "She down turned it."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "With a separable phrasal verb, a pronoun object must go between the verb and the particle: turned it down. Placing the pronoun after the particle (turned down it) is ungrammatical for pronouns, even though noun objects can go either side.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"Young athletes often ___ the champions they watched as children.\" (= admire and respect)",
+      "options": [
+        {
+          "id": "a",
+          "text": "look down on"
+        },
+        {
+          "id": "b",
+          "text": "look up to"
+        },
+        {
+          "id": "c",
+          "text": "look after"
+        },
+        {
+          "id": "d",
+          "text": "look into"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Look up to means to admire and respect someone. Look down on is the opposite — to regard as inferior. Look after means to care for, and look into means to investigate — entirely distinct verbs sharing only the base look.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which sentence is grammatically correct?",
+      "options": [
+        {
+          "id": "a",
+          "text": "She looked after them carefully."
+        },
+        {
+          "id": "b",
+          "text": "She looked them after carefully."
+        },
+        {
+          "id": "c",
+          "text": "She looked carefully after them."
+        },
+        {
+          "id": "d",
+          "text": "She after looked them carefully."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Look after is a prepositional verb and is always inseparable — the object follows the full verb phrase: looked after them. Inserting the object or an adverb between look and after breaks the verb, which is ungrammatical.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"We ___ a series of bureaucratic obstacles when trying to register.\" (= encountered)",
+      "options": [
+        {
+          "id": "a",
+          "text": "came down against"
+        },
+        {
+          "id": "b",
+          "text": "came up with"
+        },
+        {
+          "id": "c",
+          "text": "came out against"
+        },
+        {
+          "id": "d",
+          "text": "came up against"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Come up against means to encounter a problem or obstacle. Come up with means to devise or produce an idea — a very different meaning. Come out against means to publicly oppose, and come down against is not a standard verb.",
+      "difficulty": 2
+    }
+  ]
+}

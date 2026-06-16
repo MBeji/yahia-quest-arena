@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Practice: Suffixes and Word Classes",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complete the sentence with the correct form: \"Her ___ of the problem impressed everyone.\" (base word: AWARE)",
+      "options": [
+        { "id": "a", "text": "awareness" },
+        { "id": "b", "text": "aware" },
+        { "id": "c", "text": "awared" },
+        { "id": "d", "text": "awarity" }
+      ],
+      "correctOption": "a",
+      "explanation": "The gap follows a possessive ('Her') and needs a noun: awareness (-ness suffix). 'Aware' is an adjective, 'awared' is not a word, and 'awarity' is not a real form — the correct noun is awareness.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"The company needs to ___ its procedures.\" (base word: MODERN)",
+      "options": [
+        { "id": "a", "text": "modernly" },
+        { "id": "b", "text": "modernity" },
+        { "id": "c", "text": "modernise" },
+        { "id": "d", "text": "modernous" }
+      ],
+      "correctOption": "c",
+      "explanation": "The gap is the main verb after 'to', so a verb is needed: modernise (-ise suffix). 'Modernly' is an adverb, 'modernity' is a noun, and 'modernous' is not a word.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"The results were ___ promising.\" (base word: REMARK)",
+      "options": [
+        { "id": "a", "text": "remarkable" },
+        { "id": "b", "text": "remark" },
+        { "id": "c", "text": "remarkably" },
+        { "id": "d", "text": "remarkful" }
+      ],
+      "correctOption": "c",
+      "explanation": "The gap modifies the adjective 'promising', so an adverb is needed: remarkably (-ly suffix added to the adjective remarkable). 'Remarkable' is an adjective, 'remark' is a noun/verb, and 'remarkful' is not a real word.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"The city saw rapid ___ in the 1990s.\" (base word: DEVELOP)",
+      "options": [
+        { "id": "a", "text": "developer" },
+        { "id": "b", "text": "developing" },
+        { "id": "c", "text": "developed" },
+        { "id": "d", "text": "development" }
+      ],
+      "correctOption": "d",
+      "explanation": "The gap follows an adjective ('rapid') and needs a noun: development (-ment suffix). 'Developer' means a person or company, 'developing' is a gerund/adjective, and 'developed' is a past participle — none fit the 'rapid ___ in the 1990s' pattern as well as development.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"Driving too fast is extremely ___.\" (base word: DANGER)",
+      "options": [
+        { "id": "a", "text": "danger" },
+        { "id": "b", "text": "dangerously" },
+        { "id": "c", "text": "dangerness" },
+        { "id": "d", "text": "dangerous" }
+      ],
+      "correctOption": "d",
+      "explanation": "After 'extremely' (an adverb of degree) the gap modifies the linking verb 'is' and needs a predicate adjective: dangerous (-ous suffix). 'Dangerously' is an adverb and cannot follow 'extremely is', 'danger' is a noun, and 'dangerness' is not a word.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"The manager's ___ led to costly errors.\" (base word: DECIDE)",
+      "options": [
+        { "id": "a", "text": "decisive" },
+        { "id": "b", "text": "indecision" },
+        { "id": "c", "text": "decided" },
+        { "id": "d", "text": "deciding" }
+      ],
+      "correctOption": "b",
+      "explanation": "The gap follows a possessive ('manager's') and needs a noun that makes sense before 'led to costly errors': indecision (in- + decide + -ion) means the failure to make decisions. 'Decisive' is an adjective, 'decided' is a past participle, and 'deciding' is a gerund — all are incorrect word classes here.",
+      "difficulty": 2
+    }
+  ]
+}

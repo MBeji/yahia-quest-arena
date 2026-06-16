@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Chapter Boss ⭐⭐⭐: Reading Comprehension: Everyday Texts",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Read the email:\n\"Dear Mr Larbi,\nThank you for your application. We would like to invite you for an interview on Monday 15th at 10 am at our office (3rd floor, City Tower).\nPlease reply to confirm you can attend.\nKind regards,\nHR Team — Nova Tech\"\n\nWhat is the purpose of this email?",
+      "options": [
+        { "id": "a", "text": "To offer Mr Larbi a job." },
+        { "id": "b", "text": "To invite Mr Larbi to a job interview." },
+        { "id": "c", "text": "To reject Mr Larbi's application." },
+        { "id": "d", "text": "To ask Mr Larbi to send his CV." }
+      ],
+      "correctOption": "b",
+      "explanation": "The email says \"invite you for an interview\" — not a job offer, not a rejection, and not a request for a CV. Skim the first two lines: the purpose is an invitation to an interview.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Read the email:\n\"Dear Mr Larbi,\nThank you for your application. We would like to invite you for an interview on Monday 15th at 10 am at our office (3rd floor, City Tower).\nPlease reply to confirm you can attend.\nKind regards,\nHR Team — Nova Tech\"\n\nWhat does Mr Larbi need to do after reading the email?",
+      "options": [
+        { "id": "a", "text": "Go to the office immediately." },
+        { "id": "b", "text": "Send a new application." },
+        { "id": "c", "text": "Reply to confirm he can come." },
+        { "id": "d", "text": "Call the HR team." }
+      ],
+      "correctOption": "c",
+      "explanation": "The instruction is: \"Please reply to confirm you can attend.\" The interview is on Monday (not immediately). There is no request for a new application or a phone call — just a reply by email to confirm attendance.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read the story:\n\"Every morning, Mrs Park walks to the market near her house. She buys fresh vegetables and sometimes flowers. On rainy days, she drives instead. Last Tuesday, it was sunny, but she still chose to drive because she had a heavy bag from the day before.\"\n\nWhy did Mrs Park drive last Tuesday?",
+      "options": [
+        { "id": "a", "text": "It was raining." },
+        { "id": "b", "text": "The market was far away." },
+        { "id": "c", "text": "She had a heavy bag." },
+        { "id": "d", "text": "She was late." }
+      ],
+      "correctOption": "c",
+      "explanation": "The text says: \"it was sunny, but she still chose to drive because she had a heavy bag from the day before.\" It was NOT raining. The market is near her house (not far). Being late is not mentioned — the reason given is the heavy bag.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read the notice:\n\"FITNESS FIRST GYM\nNew members this month get a FREE personal training session.\nMonthly membership: £30.\nStudents with a valid student card: £20.\nFamily passes (up to 4 people): £60.\"\n\nA student wants to join. How much will they pay per month?",
+      "options": [
+        { "id": "a", "text": "£20." },
+        { "id": "b", "text": "£30." },
+        { "id": "c", "text": "£0 — it is free for students." },
+        { "id": "d", "text": "£60." }
+      ],
+      "correctOption": "a",
+      "explanation": "Scan for student rate: \"Students with a valid student card: £20.\" The standard rate is £30. £60 is for a family pass. The gym is not free for students — the free item is only a personal training session, not the membership.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read the story:\n\"Ahmed found an old map in his grandfather's attic. The map showed a forest with a big X marked on it. He was intrigued — he decided to go and look for whatever was there.\"\n\nWhat does \"intrigued\" most likely mean?",
+      "options": [
+        { "id": "a", "text": "Frightened and confused." },
+        { "id": "b", "text": "Bored and uninterested." },
+        { "id": "c", "text": "Curious and interested." },
+        { "id": "d", "text": "Angry and surprised." }
+      ],
+      "correctOption": "c",
+      "explanation": "The effect of being intrigued is that Ahmed \"decided to go and look\" — he took action because he was curious. Being frightened or angry would not typically make someone investigate. Being bored would lead to the opposite action. Intrigued means curious and interested.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read the notice:\n\"IMPORTANT: From 1st September, the school canteen will only accept payments by card. Cash will not be accepted. Students who don't have a card should speak to the school office before 31st August.\"\n\nWhich sentence is FALSE according to the notice?",
+      "options": [
+        { "id": "a", "text": "The change starts on 1st September." },
+        { "id": "b", "text": "Students without a card should contact the office." },
+        { "id": "c", "text": "Card payment will be required in the canteen." },
+        { "id": "d", "text": "Students can still pay with cash after 1st September." }
+      ],
+      "correctOption": "d",
+      "explanation": "The notice says \"Cash will not be accepted\" from 1st September — so (b) is false. (a) The change starts on 1st September ✓. (c) Students without a card should speak to the office ✓. (d) Only card payments will be accepted ✓. (b) directly contradicts the notice.",
+      "difficulty": 3
+    }
+  ]
+}

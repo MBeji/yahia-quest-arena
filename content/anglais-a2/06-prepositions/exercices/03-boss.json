@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Chapter Boss ⭐⭐⭐: Prepositions of Place and Time",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Complete: \"The note is ___ the door.\"",
+      "options": [
+        { "id": "a", "text": "in" },
+        { "id": "b", "text": "into" },
+        { "id": "c", "text": "on" },
+        { "id": "d", "text": "at" }
+      ],
+      "correctOption": "c",
+      "explanation": "A note stuck on a surface uses on: the note is on the door. \"in\" means inside, \"into\" shows entry movement, and \"at\" marks a specific location point (at the door = near the entrance, not attached to its surface).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "My exam is on 12th May." },
+        { "id": "b", "text": "Call me at midnight." },
+        { "id": "c", "text": "She was born in March." },
+        { "id": "d", "text": "I'll see you on next Monday." }
+      ],
+      "correctOption": "d",
+      "explanation": "The error is (d): no preposition is used before next/last/this/every — say \"next Monday\", not \"on next Monday\". The other sentences correctly use on a date (12th May), at a fixed time point (midnight), and in a month (March).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"She walked quickly ___ the building without stopping.\"",
+      "options": [
+        { "id": "a", "text": "into" },
+        { "id": "b", "text": "at" },
+        { "id": "c", "text": "to" },
+        { "id": "d", "text": "in" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"into\" shows movement entering an enclosed space: she walked into the building. \"to\" points to a destination from outside but does not confirm entry, \"in\" describes position inside (not entry), and \"at\" is a static point.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"He lives ___ 34 Green Lane.\"",
+      "options": [
+        { "id": "a", "text": "on" },
+        { "id": "b", "text": "in" },
+        { "id": "c", "text": "at" },
+        { "id": "d", "text": "by" }
+      ],
+      "correctOption": "c",
+      "explanation": "Specific addresses take at: he lives at 34 Green Lane. \"on\" is used for streets without a number (on Green Lane — you're on the street), \"in\" is for areas and cities (in London), and \"by\" means beside.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"The train leaves ___ noon. We must arrive ___ the station before that.\"",
+      "options": [
+        { "id": "a", "text": "in / at" },
+        { "id": "b", "text": "at / at" },
+        { "id": "c", "text": "on / in" },
+        { "id": "d", "text": "at / in" }
+      ],
+      "correctOption": "b",
+      "explanation": "Clock times and fixed points both take at: the train leaves at noon, and we must arrive at the station. \"in\" is for months/years/parts of the day, and \"on\" is for days and dates — neither fits clock times or specific locations here.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "They came from Italy last summer." },
+        { "id": "b", "text": "She arrived in the city at midnight." },
+        { "id": "c", "text": "I'm sleeping in the sofa tonight." },
+        { "id": "d", "text": "He put the keys on the table." }
+      ],
+      "correctOption": "c",
+      "explanation": "The error is (c): a sofa is a surface, so we sleep on the sofa, not \"in the sofa\" (which would mean inside it). The correct sentences use from for origin, in a city (larger area) and at for clock time, and on a surface for the keys.",
+      "difficulty": 3
+    }
+  ]
+}

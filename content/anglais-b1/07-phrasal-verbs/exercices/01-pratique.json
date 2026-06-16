@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Practice: Phrasal Verbs",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complete: \"I need to ___ at six o'clock for my early flight.\"",
+      "options": [
+        { "id": "a", "text": "get up" },
+        { "id": "b", "text": "give up" },
+        { "id": "c", "text": "turn off" },
+        { "id": "d", "text": "put off" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Get up\" means to rise from bed: I need to get up at six. \"Give up\" means to stop trying, \"turn off\" means to switch something off, and \"put off\" means to postpone — none of these fit waking up early for a flight.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"She has decided to ___ smoking. She hasn't had a cigarette in weeks.\"",
+      "options": [
+        { "id": "a", "text": "find out" },
+        { "id": "b", "text": "look after" },
+        { "id": "c", "text": "give up" },
+        { "id": "d", "text": "run into" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Give up\" means to stop or quit: she has given up smoking. \"Find out\" means to discover, \"look after\" means to take care of, and \"run into\" means to meet by chance. Quitting a habit is always \"give up\".",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"Can you ___ the lights? It's dark in here.\"",
+      "options": [
+        { "id": "a", "text": "put off" },
+        { "id": "b", "text": "set off" },
+        { "id": "c", "text": "get up" },
+        { "id": "d", "text": "turn on" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"Turn on\" means to activate or switch on: turn on the lights. \"Turn off\" would switch them off. \"Put off\" means to postpone, \"set off\" means to begin a journey, and \"get up\" means to rise from bed.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"My grandmother ___ my little brother when my parents are at work.\"",
+      "options": [
+        { "id": "a", "text": "looks after" },
+        { "id": "b", "text": "finds out" },
+        { "id": "c", "text": "gives up" },
+        { "id": "d", "text": "sets off" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Look after\" means to take care of someone: my grandmother looks after my brother. \"Find out\" means to discover, \"give up\" means to quit, and \"set off\" means to begin a journey — none of these fit taking care of a child.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"We've ___ milk. Can you go to the shop?\"",
+      "options": [
+        { "id": "a", "text": "put off" },
+        { "id": "b", "text": "run out of" },
+        { "id": "c", "text": "looked up" },
+        { "id": "d", "text": "turned on" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Run out of\" means to have no more of something: we've run out of milk. \"Put off\" means to postpone, \"look up\" means to search for information, and \"turn on\" means to switch something on — none of these describe having no more milk.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"Don't ___ your homework. Do it now!\"",
+      "options": [
+        { "id": "a", "text": "run into" },
+        { "id": "b", "text": "get up" },
+        { "id": "c", "text": "put off" },
+        { "id": "d", "text": "find out" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Put off\" means to delay or postpone: don't put off your homework. \"Run into\" means to meet by chance, \"get up\" means to rise from bed, and \"find out\" means to discover — none of these fit the idea of not delaying a task.",
+      "difficulty": 2
+    }
+  ]
+}
