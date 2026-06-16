@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Practice: Future Continuous and Future Perfect Forms",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complete: \"This time tomorrow, she ___ on the beach.\"",
+      "options": [
+        { "id": "a", "text": "will relax" },
+        { "id": "b", "text": "will be relaxing" },
+        { "id": "c", "text": "will have relaxed" },
+        { "id": "d", "text": "is relaxing" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"This time tomorrow\" points to a moment when the action will be in progress, so we use the future continuous: will be relaxing. \"will relax\" is a simple prediction without the in-progress meaning, \"will have relaxed\" means it will be finished by then, and \"is relaxing\" is the present continuous.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"By Friday, the team ___ the report.\"",
+      "options": [
+        { "id": "a", "text": "will be finishing" },
+        { "id": "b", "text": "finishes" },
+        { "id": "c", "text": "will have finished" },
+        { "id": "d", "text": "is going to finish" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"By Friday\" is a deadline — the action will be completed before that point, so we use the future perfect: will have finished. \"will be finishing\" means in progress at that moment (not done), \"finishes\" is present simple, and \"is going to finish\" states intention without the by-deadline completion sense.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"___ he be waiting for us when we land?\"",
+      "options": [
+        { "id": "a", "text": "Does" },
+        { "id": "b", "text": "Is" },
+        { "id": "c", "text": "Will" },
+        { "id": "d", "text": "Has" }
+      ],
+      "correctOption": "c",
+      "explanation": "The future continuous question form is Will + subject + be + verb-ing: Will he be waiting? \"Does\" makes a present-simple question, \"Is\" makes a present-continuous question, and \"Has\" starts a present-perfect question — none are future continuous.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"I ___ this city for ten years by the time I retire.\"",
+      "options": [
+        { "id": "a", "text": "will have been living in" },
+        { "id": "b", "text": "will be living in" },
+        { "id": "c", "text": "have lived in" },
+        { "id": "d", "text": "lived in" }
+      ],
+      "correctOption": "a",
+      "explanation": "The sentence stresses how long a continuous action will have lasted by a future point (retirement), so we use the future perfect continuous: will have been living in. \"will be living in\" only says it will be in progress at that moment without stressing duration, \"have lived in\" is the present perfect, and \"lived in\" is past simple.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"She ___ arrive at noon — she's still at work.\"",
+      "options": [
+        { "id": "a", "text": "won't" },
+        { "id": "b", "text": "won't have" },
+        { "id": "c", "text": "isn't going" },
+        { "id": "d", "text": "won't be" }
+      ],
+      "correctOption": "d",
+      "explanation": "The negative future continuous is won't be + verb-ing: She won't be arriving at noon. \"won't\" alone needs the base verb (won't arrive), which changes the meaning to a simple negative prediction. \"won't have\" starts the future perfect negative, and \"isn't going\" is present continuous used for the future — different structure.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"By midnight, the surgeons ___ for twelve hours straight.\"",
+      "options": [
+        { "id": "a", "text": "will operate" },
+        { "id": "b", "text": "will have been operating" },
+        { "id": "c", "text": "will be operated" },
+        { "id": "d", "text": "will have operated" }
+      ],
+      "correctOption": "b",
+      "explanation": "The focus is on *how long* the continuous action will have lasted by midnight — that's the future perfect continuous: will have been operating. \"will operate\" is a simple future prediction, \"will be operated\" is a passive future continuous (wrong meaning — the surgeons are doing the operating), and \"will have operated\" (future perfect) stresses completion but not duration.",
+      "difficulty": 2
+    }
+  ]
+}

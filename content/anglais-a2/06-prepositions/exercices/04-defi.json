@@ -1,0 +1,82 @@
+{
+  "title": "👑 Elite Challenge ⭐⭐⭐⭐: Prepositions of Place and Time",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Read: \"Leila has a meeting at 10 o'clock on Thursday. She works in the city centre, at a law firm on King Street. After work, she goes to the gym.\"\nWhich sentence is TRUE?",
+      "options": [
+        { "id": "a", "text": "Leila's meeting is in the morning on Friday." },
+        { "id": "b", "text": "Her office is at 10 King Street." },
+        { "id": "c", "text": "She works at a law firm in the city centre." },
+        { "id": "d", "text": "She goes into the gym before work." }
+      ],
+      "correctOption": "c",
+      "explanation": "The text says she works \"in the city centre, at a law firm\" — (c) correctly restates both. The meeting is on Thursday (not Friday), her address is on King Street (not a number given), and she goes to the gym after work, not before.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "I usually travel by bus on weekdays." },
+        { "id": "b", "text": "She arrived to Paris late at night." },
+        { "id": "c", "text": "The book is on the desk, next to the lamp." },
+        { "id": "d", "text": "We'll meet at the entrance at 6 pm." }
+      ],
+      "correctOption": "b",
+      "explanation": "The error is (b): arrive is followed by in (for a city) or at (for a specific place), never arrive to — she arrived in Paris. (a) correctly uses on weekdays, (c) correctly uses on the desk (surface), and (d) correctly uses at the entrance and at 6 pm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"Please put your phone ___ your bag during the exam.\"",
+      "options": [
+        { "id": "a", "text": "on" },
+        { "id": "b", "text": "at" },
+        { "id": "c", "text": "into" },
+        { "id": "d", "text": "in" }
+      ],
+      "correctOption": "d",
+      "explanation": "A bag is a container, so we use in: put your phone in your bag. \"into\" would suggest actively dropping it inside (movement entering), which is less natural here for a simple resting state. \"on\" is for surfaces, and \"at\" marks a point.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"The festival takes place ___ the main square ___ July every year.\"",
+      "options": [
+        { "id": "a", "text": "in / at" },
+        { "id": "b", "text": "at / on" },
+        { "id": "c", "text": "in / in" },
+        { "id": "d", "text": "at / in" }
+      ],
+      "correctOption": "d",
+      "explanation": "The main square is a specific named location → at the main square; a month takes in → in July. So at / in is correct. \"in the main square\" suggests an enclosed area, but a public square uses at. \"on / in\" and \"in / at\" don't match the location + month pattern.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "She flew from Cairo to London last night." },
+        { "id": "b", "text": "He's on his way to the hospital." },
+        { "id": "c", "text": "We arrived in the airport at midnight." },
+        { "id": "d", "text": "The meeting room is on the second floor." }
+      ],
+      "correctOption": "c",
+      "explanation": "The error is (c): an airport is a specific place, so use arrived at the airport, not \"in the airport\". \"in\" is for arriving in a city or country (arrived in London). (a) correctly uses from/to for a journey, (b) uses on his way to (fixed phrase), and (d) uses on the second floor (floor = surface level).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"Could you put those files ___ the cabinet, please? ___ the second drawer, ___ the left.\"",
+      "options": [
+        { "id": "a", "text": "into / In / on" },
+        { "id": "b", "text": "on / At / in" },
+        { "id": "c", "text": "at / On / at" },
+        { "id": "d", "text": "in / In / at" }
+      ],
+      "correctOption": "a",
+      "explanation": "You put files into a cabinet (movement entering), they go in the second drawer (inside a compartment), and on the left (surface/side). \"into / In / on\" fits all three. \"on / At / in\" doesn't work — you don't put files on a cabinet here, and \"At\" is wrong for a drawer.",
+      "difficulty": 3
+    }
+  ]
+}

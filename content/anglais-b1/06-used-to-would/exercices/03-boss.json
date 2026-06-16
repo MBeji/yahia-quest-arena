@@ -1,0 +1,154 @@
+{
+  "title": "⚔️ Chapter Boss ⭐⭐⭐: Past Habits: Used to and Would",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        {
+          "id": "a",
+          "text": "I used to live near the sea."
+        },
+        {
+          "id": "b",
+          "text": "We would visit my aunt every summer."
+        },
+        {
+          "id": "c",
+          "text": "She would have a red bicycle as a child."
+        },
+        {
+          "id": "d",
+          "text": "Did you use to play the piano?"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "The error is (c): \"have\" (possess) is a state verb, so \"would\" cannot be used. The correct form is: She used to have a red bicycle. (a) and (b) are correct — used to for a state, would for a repeated action. (d) correctly drops the -d after did.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"I ___ wake up at 6 a.m. every day when I was training for the marathon.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "am used to"
+        },
+        {
+          "id": "b",
+          "text": "would"
+        },
+        {
+          "id": "c",
+          "text": "get used to"
+        },
+        {
+          "id": "d",
+          "text": "was used to"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Waking up every day at 6 a.m. is a repeated past action (action verb), so \"would\" is correct: I would wake up at 6 a.m. every day. \"am/was used to\" and \"get used to\" mean accustomed to — a different idea — and both need -ing after them.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"After a few weeks, the new students ___ waking up early for lectures.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "got used to"
+        },
+        {
+          "id": "b",
+          "text": "would"
+        },
+        {
+          "id": "c",
+          "text": "used to"
+        },
+        {
+          "id": "d",
+          "text": "were used to be"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "The context describes becoming accustomed to something (after a few weeks, a process), so \"get used to + -ing\" in the past is correct: they got used to waking up early. \"used to\" describes a finished past habit, \"would\" describes repeated actions, and \"were used to be\" is ungrammatical (it should be \"were used to being\").",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"___ she use to walk to school, or did she take the bus?\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "Has"
+        },
+        {
+          "id": "b",
+          "text": "Was"
+        },
+        {
+          "id": "c",
+          "text": "Would"
+        },
+        {
+          "id": "d",
+          "text": "Did"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "The question form of \"used to\" is: Did + subject + use to + verb? — Did she use to walk to school? \"Has\" forms the present perfect, \"Was\" starts a past-continuous question, and \"Would\" needs a different word order: Would she walk to school? — which is also possible but doesn't fit the \"use to\" that follows.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"My teacher ___ give us extra homework on Fridays — we dreaded it every week.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "was used to"
+        },
+        {
+          "id": "b",
+          "text": "used to"
+        },
+        {
+          "id": "c",
+          "text": "would"
+        },
+        {
+          "id": "d",
+          "text": "got used to"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Giving homework every Friday is a repeated past action (action verb \"give\"), and the narrative tone (\"we dreaded it every week\") suits the nostalgic \"would\" for vivid storytelling: would give. \"used to give\" is also grammatically valid, but (c) is the target here as the more natural narrative choice. \"was/got used to\" mean accustomed to.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"I think I ___ speak English better when I was in London — I've lost some fluency.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "used to"
+        },
+        {
+          "id": "b",
+          "text": "would"
+        },
+        {
+          "id": "c",
+          "text": "am used to"
+        },
+        {
+          "id": "d",
+          "text": "get used to"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Speaking English better in London was a past state (a capability that is no longer true now — \"I've lost some fluency\"). Since it's a state, not a repeated action, only \"used to\" is correct: I used to speak English better. \"would\" is for past repeated actions, not states, and \"am/get used to\" mean accustomed to.",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "title": "⭐⭐ Review: Inference and Authorial Stance",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Read: \"The novelist does not tell us that the narrator is unreliable. She merely has him contradict himself three times in two pages.\"\nWhat can we infer about the narrator?",
+      "options": [
+        { "id": "a", "text": "The narrator is honest but forgetful." },
+        { "id": "b", "text": "The narrator cannot be fully trusted." },
+        { "id": "c", "text": "The novelist made an error in the text." },
+        { "id": "d", "text": "The narrator is a reliable guide to events." }
+      ],
+      "correctOption": "b",
+      "explanation": "The passage states that the novelist does not tell us directly — she shows through contradiction. Three self-contradictions in two pages is a classic literary device for establishing an unreliable narrator. The word \"merely\" signals the novelist's deliberate craft. Forgetfulness (a), authorial error (c), and reliability (d) are all contradicted by the structural signal of repeated contradiction.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Read: \"The study suggests that sleep deprivation may impair cognitive function.\"\nWhich of the following is a valid inference from this sentence?",
+      "options": [
+        { "id": "a", "text": "Sleep deprivation definitely causes cognitive impairment." },
+        { "id": "b", "text": "The study proves that sleep deprivation has no effect." },
+        { "id": "c", "text": "Cognitive function is unaffected by sleep." },
+        {
+          "id": "d",
+          "text": "The evidence points towards a possible link, but the writer is not certain."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "The hedging words \"suggests\" and \"may\" signal that the writer presents this as a possibility, not a proven fact. Option (a) removes the hedge and overstates the claim. Options (b) and (c) reverse the meaning entirely. A valid inference must respect the epistemic weight of the language — here, cautious and qualified.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Read: \"The architecture of the new civic centre has been described as 'bold'. One might equally call it bewildering.\"\nWhat is the writer's attitude toward the building?",
+      "options": [
+        { "id": "a", "text": "Enthusiastic admiration" },
+        { "id": "b", "text": "Sceptical and mildly critical, expressed through irony" },
+        { "id": "c", "text": "Complete indifference" },
+        { "id": "d", "text": "Uncertain — the writer cannot decide" }
+      ],
+      "correctOption": "b",
+      "explanation": "The writer puts \"bold\" in quotation marks — a signal of distance or scepticism about the label — and immediately counters it with \"bewildering\", a word with clearly negative connotations. The phrase \"one might equally call it\" is an ironic understatement. The writer is not indifferent or genuinely undecided; the irony reveals a quietly critical stance.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: \"No sooner had the ink dried on the peace agreement than hostilities resumed.\"\nWhat does this sentence imply?",
+      "options": [
+        { "id": "a", "text": "The peace agreement was signed very slowly." },
+        { "id": "b", "text": "The peace agreement lasted a long time before breaking down." },
+        { "id": "c", "text": "The peace agreement failed almost immediately after being signed." },
+        { "id": "d", "text": "The hostilities were caused by the ink on the agreement." }
+      ],
+      "correctOption": "c",
+      "explanation": "\"No sooner … than\" is a near-simultaneous sequence structure: the second event follows the first almost instantly. \"The ink dried\" is a metonym for the agreement being finalised. Together they imply the peace lasted almost no time at all before hostilities resumed — immediate failure. Options (a), (b), and (d) misread the idiom or take it literally.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: \"The exhibition received rave reviews from critics who had, one suspects, been invited to the opening night.\"\nWhat is the writer implying about the critics?",
+      "options": [
+        { "id": "a", "text": "The critics are very well-connected in the art world." },
+        {
+          "id": "b",
+          "text": "The critics' positive reviews may be biased because they were wined and dined."
+        },
+        { "id": "c", "text": "The opening night was a spectacular event." },
+        { "id": "d", "text": "The writer attended the opening night and enjoyed it." }
+      ],
+      "correctOption": "b",
+      "explanation": "The phrase \"one suspects\" injects the writer's scepticism through an impersonal construction. The implication is that critics invited to an opening night receive hospitality that may colour their judgment — their \"rave reviews\" are therefore unreliable. The writer is not celebrating the event (c) or admitting personal attendance (d); rather, they are subtly impugning the critics' independence.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"The minister spoke at length about the importance of transparency. He did not, however, release the figures.\"\nWhat is the primary rhetorical effect of the second sentence?",
+      "options": [
+        {
+          "id": "a",
+          "text": "It contradicts the minister's stated values, exposing hypocrisy through juxtaposition."
+        },
+        { "id": "b", "text": "It provides additional context about the minister's speech." },
+        { "id": "c", "text": "It praises the minister's commitment to transparency." },
+        { "id": "d", "text": "It explains why the figures were not available." }
+      ],
+      "correctOption": "a",
+      "explanation": "The short second sentence creates a stark contrast — talking about transparency while withholding information is a contradiction. The adversative \"however\" foregrounds the gap between word and deed. The effect is to expose hypocrisy without stating it explicitly. This is a structural inference: the meaning emerges from the juxtaposition, not from any single word.",
+      "difficulty": 3
+    }
+  ]
+}

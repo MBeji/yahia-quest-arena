@@ -1,0 +1,85 @@
+{
+  "title": "⚔️ Chapter Boss ⭐⭐⭐: Reading Comprehension: Texts and Inference",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Read the article:\n\"Every year, thousands of young people in Europe take a gap year before university. They travel, volunteer, or work abroad. Research shows that students who take a gap year often perform better academically than those who go straight to university, possibly because they are more motivated and mature.\"\n\nWhat is the MAIN IDEA of the article?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Gap years are more popular in Europe than in other parts of the world."
+        },
+        { "id": "b", "text": "Taking a gap year can have academic benefits for students." },
+        { "id": "c", "text": "Young people enjoy travelling before starting university." },
+        { "id": "d", "text": "Research on gap years is unreliable." }
+      ],
+      "correctOption": "b",
+      "explanation": "The article's central point is that gap years can benefit students academically — they often perform better (b). Comparing Europe to other regions is not mentioned (a), enjoying travel is a detail not the main claim (c), and the text treats the research as valid, not unreliable (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read the story:\n\"Lina pushed open the door of her old school. The corridors smelled of paint and chalk, exactly as she remembered. A small girl ran past her, laughing. Lina smiled — it felt like stepping back twenty years.\"\n\nWhat can we INFER about Lina?",
+      "options": [
+        { "id": "a", "text": "Lina feels nostalgic because she used to study at this school." },
+        { "id": "b", "text": "Lina is visiting the school for the first time." },
+        { "id": "c", "text": "Lina works as a teacher at the school." },
+        { "id": "d", "text": "Lina dislikes children." }
+      ],
+      "correctOption": "a",
+      "explanation": "The smells that were \"exactly as she remembered\" and the phrase \"stepping back twenty years\" strongly suggest Lina studied there long ago and feels nostalgic (a). She is clearly not visiting for the first time (b). There is no evidence she is a teacher (c), and her smile when the girl runs past contradicts disliking children (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read the notice:\n\"The swimming pool will be closed for maintenance from Monday 3rd to Friday 7th. Members wishing to swim during this period are welcome to use the Eastside Sports Centre pool free of charge. Please bring your membership card.\"\n\nStatement: \"Members must pay to use the Eastside Sports Centre pool during the closure.\"\nTrue, False, or Not Given?",
+      "options": [
+        { "id": "a", "text": "True" },
+        { "id": "b", "text": "Not Given" },
+        { "id": "c", "text": "False" },
+        { "id": "d", "text": "True, but only for new members" }
+      ],
+      "correctOption": "c",
+      "explanation": "The notice states members can use the Eastside pool \"free of charge\" during the closure — so the statement that they must pay is False. Not Given would mean the text is silent on the topic, but it explicitly says \"free of charge\". Option (d) introduces a distinction (new vs existing members) that is not in the text.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read the sentence:\n\"The new policy was met with fierce opposition from the majority of the committee members, who felt it was both premature and poorly thought out.\"\nWhat does PREMATURE most likely mean in this context?",
+      "options": [
+        { "id": "a", "text": "Too expensive" },
+        { "id": "b", "text": "Too detailed" },
+        { "id": "c", "text": "Too early / introduced before the right time" },
+        { "id": "d", "text": "Too popular" }
+      ],
+      "correctOption": "c",
+      "explanation": "The committee members criticised the policy on two grounds: it was premature AND poorly thought out. \"Poorly thought out\" means not planned well. \"Premature\" adds a separate idea, suggesting it was introduced before the right time — too soon. Nothing in the sentence points to cost (a), detail (b), or popularity (d).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read the article extract:\n\"Despite living in the city for fifteen years, Omar still found the noise overwhelming on some days. He would often put on headphones and close his eyes on the metro, imagining the quiet fields of his village.\"\n\nWhat does this paragraph SUGGEST about Omar?",
+      "options": [
+        { "id": "a", "text": "Omar plans to move back to his village very soon." },
+        { "id": "b", "text": "Omar is afraid of travelling on the metro." },
+        { "id": "c", "text": "Omar has fully adapted to city life and enjoys the noise." },
+        { "id": "d", "text": "Omar sometimes misses the quietness of where he grew up." }
+      ],
+      "correctOption": "d",
+      "explanation": "Omar imagines \"the quiet fields of his village\" to escape the overwhelming city noise — this suggests he misses the peace of his rural origins (d). There is no mention of plans to move back (a), and the text explicitly says he finds the noise overwhelming, so he has NOT fully adapted (c). He uses headphones as a coping strategy, not from fear of the metro (b).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read the email:\n\"Dear Ms Hariri,\nI am writing to express my dissatisfaction with the laptop I purchased from your store last week. The screen flickers constantly and the keyboard sticks. I have tried all the suggested troubleshooting steps, but the problems persist. I would like either a full refund or a replacement.\"\n\nWhat is the WRITER'S purpose?",
+      "options": [
+        { "id": "a", "text": "To recommend the store to other customers" },
+        { "id": "b", "text": "To report a technical fault and request a solution" },
+        { "id": "c", "text": "To ask for troubleshooting advice for the laptop" },
+        { "id": "d", "text": "To apologise for returning a product" }
+      ],
+      "correctOption": "b",
+      "explanation": "The writer describes two faults (flickering screen, sticky keyboard), explains they've already tried troubleshooting, and requests a refund or replacement (b). The tone is the opposite of a recommendation (a). The writer has already tried the troubleshooting steps — they are not asking for more advice (c). There is no apology in the email (d).",
+      "difficulty": 3
+    }
+  ]
+}

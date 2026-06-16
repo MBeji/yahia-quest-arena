@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Chapter Boss ⭐⭐⭐: Phrasal Verbs",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "Can you look after the dog this weekend?" },
+        { "id": "b", "text": "She looked the baby after all afternoon." },
+        { "id": "c", "text": "He picked her up at the airport." },
+        { "id": "d", "text": "I ran into him accidentally last night." }
+      ],
+      "correctOption": "b",
+      "explanation": "The error is (b): \"look after\" is inseparable — the object must always come after the full phrasal verb, never in the middle. The correct sentence is: She looked after the baby all afternoon. (a) and (d) use inseparable verbs correctly, and (c) correctly places the pronoun between verb and particle.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"We need to ___ a solution to this problem quickly.\"",
+      "options": [
+        { "id": "a", "text": "come up with" },
+        { "id": "b", "text": "run out of" },
+        { "id": "c", "text": "put off" },
+        { "id": "d", "text": "look after" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Come up with\" means to think of or produce an idea/solution: we need to come up with a solution. \"Run out of\" means to have no more, \"put off\" means to postpone, and \"look after\" means to take care of someone — none of these fit producing an idea.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choose the CORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "She looked him after carefully." },
+        { "id": "b", "text": "Turn off it, please." },
+        { "id": "c", "text": "They gave up their plans it." },
+        { "id": "d", "text": "She looked after him carefully." }
+      ],
+      "correctOption": "d",
+      "explanation": "\"Look after\" is inseparable, so the object always follows the full phrasal verb: she looked after him (d) is correct. (a) splits an inseparable verb — wrong. (b) should be \"Turn it off\" — pronoun must go between verb and particle. (c) is ungrammatical.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"The light was already on, so she ___ before leaving.\"",
+      "options": [
+        { "id": "a", "text": "turned off it" },
+        { "id": "b", "text": "found it out" },
+        { "id": "c", "text": "put it off" },
+        { "id": "d", "text": "turned it off" }
+      ],
+      "correctOption": "d",
+      "explanation": "To switch off an electric device: turn off. Since the object is a pronoun (it), it goes between verb and particle: she turned it off (d). (a) incorrectly places the pronoun after the particle. (b) \"found it out\" is not natural English for this context — the idiom is \"found out the truth\". (c) \"put off\" means to postpone.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"She's training for a marathon every day — I admire that she hasn't ___ yet.\"",
+      "options": [
+        { "id": "a", "text": "put it off" },
+        { "id": "b", "text": "run out of it" },
+        { "id": "c", "text": "given up" },
+        { "id": "d", "text": "set off" }
+      ],
+      "correctOption": "c",
+      "explanation": "The context is about persisting with a challenging activity — not quitting. \"Give up\" means to stop trying: she hasn't given up. \"Put off\" means to postpone, \"run out of\" means to have no more of something, and \"set off\" means to begin a journey.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"He ___ an old university friend while shopping at the market.\"",
+      "options": [
+        { "id": "a", "text": "found out" },
+        { "id": "b", "text": "looked after" },
+        { "id": "c", "text": "ran into" },
+        { "id": "d", "text": "set off" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Run into\" means to meet someone unexpectedly or by chance: he ran into an old friend. \"Find out\" means to discover information, \"look after\" means to take care of someone, and \"set off\" means to begin a journey. An unexpected meeting is always \"run into\".",
+      "difficulty": 3
+    }
+  ]
+}

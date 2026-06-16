@@ -1,0 +1,77 @@
+{
+  "title": "Comprehension Check ⭐",
+  "questions": [
+    {
+      "prompt": "What is the difference between what a text 'states' and what it 'implies'?",
+      "options": [
+        { "id": "a", "text": "Stated = written in the title; implied = written in the body." },
+        { "id": "b", "text": "Stated = formal language; implied = informal language." },
+        {
+          "id": "c",
+          "text": "Stated = a fact; implied = an opinion the reader adds from personal knowledge."
+        },
+        {
+          "id": "d",
+          "text": "Stated = expressed directly in words; implied = suggested without being said outright."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "A stated point is expressed directly in the text using explicit words. An implied point is suggested by the text without being said outright — the reader must infer it. Option (a) confuses location with directness. Option (c) wrongly brings in the reader's personal knowledge — inference must come from the text. Option (b) confuses implication with register.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "A writer uses the phrase 'some researchers claim that…'. What does this signal about the writer's stance?",
+      "options": [
+        { "id": "a", "text": "The writer is distancing themselves and may not share the view." },
+        { "id": "b", "text": "The writer fully agrees with those researchers." },
+        { "id": "c", "text": "The writer is summarising a point they have already made." },
+        { "id": "d", "text": "The writer is presenting the most important finding of the text." }
+      ],
+      "correctOption": "a",
+      "explanation": "Verbs like 'claim', 'argue', and 'suggest' used with a third-person subject signal that the writer is reporting another's view — often to distance themselves from it or to challenge it later. 'Claim' in particular implies scepticism. Option (b) is the opposite of what distancing language signals. Options (c) and (d) misread the function of this kind of attribution.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Read: \"The results are, at best, inconclusive.\"\nWhat tone does 'at best' signal?",
+      "options": [
+        { "id": "a", "text": "Concession — the writer agrees the results are strong." },
+        { "id": "b", "text": "Enthusiasm — the writer is impressed by the results." },
+        {
+          "id": "c",
+          "text": "Scepticism — the writer implies the results may be even weaker than inconclusive."
+        },
+        { "id": "d", "text": "Neutrality — the writer is presenting both sides fairly." }
+      ],
+      "correctOption": "c",
+      "explanation": "'At best' is a hedging phrase meaning 'in the most favourable interpretation'. Saying the results are 'at best inconclusive' implies that a less charitable reading would be worse — scepticism or understated criticism. Option (b) misreads the tone entirely. Option (d) ignores the critical undertone. Option (a) mistakes the concessive phrase for agreement.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which technique is being used here?\n\"The proposal was audacious — not the cautious incrementalism the board had come to expect.\"",
+      "options": [
+        { "id": "a", "text": "Synonym clue — 'audacious' is restated using different words." },
+        {
+          "id": "b",
+          "text": "Contrast clue — 'audacious' is contrasted with 'cautious incrementalism'."
+        },
+        { "id": "c", "text": "Apposition clue — 'audacious' is defined in parentheses." },
+        { "id": "d", "text": "Example clue — specific instances of 'audacious' are listed." }
+      ],
+      "correctOption": "b",
+      "explanation": "The sentence sets 'audacious' against its opposite — 'cautious incrementalism' — letting the reader infer the meaning of 'audacious' (bold, daring) by contrast. This is a contrast clue. Option (c) describes apposition (a definition inserted with dashes or commas), which is not the case here. Options (a) and (d) do not apply — no synonym restates the word, and no examples are listed.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: \"Two reforms were debated: full privatisation and partial regulation. The latter proved politically unworkable.\"\nWhat does 'the latter' refer to?",
+      "options": [
+        { "id": "a", "text": "The political process" },
+        { "id": "b", "text": "Both reforms together" },
+        { "id": "c", "text": "Full privatisation" },
+        { "id": "d", "text": "Partial regulation" }
+      ],
+      "correctOption": "d",
+      "explanation": "'The latter' always refers to the second of two previously mentioned items. The two items are 'full privatisation' (first) and 'partial regulation' (second). Therefore 'the latter' = partial regulation. 'The former' would refer to full privatisation. Option (b) would be expressed as 'both' or 'neither'. Option (a) is not listed as one of the two items.",
+      "difficulty": 2
+    }
+  ]
+}

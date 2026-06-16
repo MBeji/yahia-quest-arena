@@ -1,0 +1,68 @@
+{
+  "title": "Comprehension Check ⭐",
+  "questions": [
+    {
+      "prompt": "Complete: \"When I was a child, I ___ hate vegetables.\"",
+      "options": [
+        { "id": "a", "text": "used to" },
+        { "id": "b", "text": "was used to" },
+        { "id": "c", "text": "would" },
+        { "id": "d", "text": "got used to" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"hate\" is a state verb, so only \"used to\" works here: I used to hate vegetables. \"would\" cannot be used with state verbs like hate, and \"was/got used to\" means accustomed to, which is a different structure.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"Every evening, my father ___ read us a story.\"",
+      "options": [
+        { "id": "a", "text": "was used to" },
+        { "id": "b", "text": "got used to" },
+        { "id": "c", "text": "would" },
+        { "id": "d", "text": "is used to" }
+      ],
+      "correctOption": "c",
+      "explanation": "Reading a story is a repeated past action (not a state), so \"would\" is correct: my father would read us a story. \"be/get used to\" means accustomed and takes -ing after it, which is a completely different idea.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which sentence is CORRECT?",
+      "options": [
+        { "id": "a", "text": "I would have a dog when I was young." },
+        { "id": "b", "text": "She used to be very quiet as a teenager." },
+        { "id": "c", "text": "Did you used to live here?" },
+        { "id": "d", "text": "We would know each other at school." }
+      ],
+      "correctOption": "b",
+      "explanation": "\"be\" is a state verb, so only \"used to\" works: She used to be very quiet. \"would have\" and \"would know\" are wrong because have and know are state verbs. \"Did you used to\" is wrong — the -d drops in questions: Did you use to.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"She is ___ working night shifts now.\"",
+      "options": [
+        { "id": "a", "text": "used to" },
+        { "id": "b", "text": "used to be" },
+        { "id": "c", "text": "get used to" },
+        { "id": "d", "text": "used to working" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"be used to + -ing\" expresses being accustomed: she is used to working. The full phrase here is \"used to working\". \"used to\" alone (without be) is the past-habit structure, and \"get used to\" means becoming accustomed, not already there.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "What is the KEY difference between \"I used to work late\" and \"I am used to working late\"?",
+      "options": [
+        { "id": "a", "text": "The first is present, the second is past." },
+        {
+          "id": "b",
+          "text": "The first describes a past habit (now stopped); the second means I am accustomed to it now."
+        },
+        { "id": "c", "text": "They mean exactly the same thing." },
+        { "id": "d", "text": "The first is more formal than the second." }
+      ],
+      "correctOption": "b",
+      "explanation": "\"used to work late\" describes a past habit that has stopped. \"am used to working late\" means it is normal for me now — I am accustomed to it. They look similar but have very different meanings: past habit vs present familiarity.",
+      "difficulty": 2
+    }
+  ]
+}

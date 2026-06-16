@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Review: Contrast and Signal Words",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complete: \"Don't worry — by the time you arrive, I ___ everything.\"",
+      "options": [
+        { "id": "a", "text": "will prepare" },
+        { "id": "b", "text": "will be preparing" },
+        { "id": "c", "text": "will have prepared" },
+        { "id": "d", "text": "am preparing" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"By the time you arrive\" signals a deadline, so the action will be completed before then: will have prepared (future perfect). \"will be preparing\" means it will still be in progress, \"will prepare\" is a bare future prediction, and \"am preparing\" is the present continuous.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choose the sentence that uses will be + -ing to make a POLITE enquiry.",
+      "options": [
+        { "id": "a", "text": "Will you use the car tomorrow?" },
+        { "id": "b", "text": "Are you going to use the car tomorrow?" },
+        { "id": "c", "text": "Will you be using the car tomorrow?" },
+        { "id": "d", "text": "Do you use the car tomorrow?" }
+      ],
+      "correctOption": "c",
+      "explanation": "The future continuous (will you be using?) softens the question by framing it as asking about someone's plans rather than making a demand. \"Will you use?\" is more direct, \"Are you going to use?\" asks about intention, and \"Do you use?\" is present simple — none are the future continuous polite form.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"At 10 tomorrow morning, the board ___ the results.\"",
+      "options": [
+        { "id": "a", "text": "will be discussing" },
+        { "id": "b", "text": "will have discussed" },
+        { "id": "c", "text": "discusses" },
+        { "id": "d", "text": "will discuss having" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"At 10 tomorrow morning\" is a moment when the action will be in progress, so we use the future continuous: will be discussing. \"will have discussed\" means finished by then (but at 10 it is ongoing), \"discusses\" is present simple, and \"will discuss having\" is not a grammatical future form.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"By the time she ___, the train will have left.\"",
+      "options": [
+        { "id": "a", "text": "will arrive" },
+        { "id": "b", "text": "arrives" },
+        { "id": "c", "text": "is arriving" },
+        { "id": "d", "text": "will have arrived" }
+      ],
+      "correctOption": "b",
+      "explanation": "After \"by the time\" in a future sentence, the subordinate clause takes the present simple: by the time she arrives. This is the same rule as with when/if in future sentences. Using \"will arrive\" or \"will have arrived\" in the subordinate clause is a very common error at B2.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "By noon, she will have submitted her application." },
+        { "id": "b", "text": "This time next week, I will be flying to Tokyo." },
+        { "id": "c", "text": "By the time he will arrive, we will have eaten." },
+        { "id": "d", "text": "They will have been renovating the house for a year by June." }
+      ],
+      "correctOption": "c",
+      "explanation": "The error is in the third option: after \"by the time\" the subordinate clause must use the present simple, not a future form — it should be \"by the time he arrives\". The other sentences correctly use the future perfect (a), future continuous (b), and future perfect continuous (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"In six months, she ___ this company for a decade.\"",
+      "options": [
+        { "id": "a", "text": "will run" },
+        { "id": "b", "text": "will be running" },
+        { "id": "c", "text": "will have run" },
+        { "id": "d", "text": "will have been running" }
+      ],
+      "correctOption": "d",
+      "explanation": "The sentence focuses on the *duration* of a continuous activity up to a future point (six months from now), which is the future perfect continuous: will have been running. \"will run\" is a bare future prediction, \"will be running\" says in progress at that moment without stressing duration, and \"will have run\" (future perfect) stresses completion, not ongoing duration.",
+      "difficulty": 3
+    }
+  ]
+}

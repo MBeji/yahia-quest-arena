@@ -1,0 +1,74 @@
+{
+  "title": "Comprehension Check ⭐",
+  "questions": [
+    {
+      "prompt": "What should you do BEFORE reading a B1 comprehension text?",
+      "options": [
+        { "id": "a", "text": "Read the text slowly from start to finish." },
+        { "id": "b", "text": "Read all the questions first to know what to look for." },
+        { "id": "c", "text": "Look up every unknown word in a dictionary." },
+        { "id": "d", "text": "Translate the whole text into your first language." }
+      ],
+      "correctOption": "b",
+      "explanation": "The first strategy is to read the questions before the text so you know exactly what information to hunt for. Reading slowly from start to finish wastes time, and looking up every word or translating the whole text are inefficient strategies at B1 level.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "What is an INFERENCE in reading comprehension?",
+      "options": [
+        { "id": "a", "text": "A piece of information stated directly in the text." },
+        { "id": "b", "text": "A translation of a difficult word." },
+        {
+          "id": "c",
+          "text": "A logical conclusion drawn from clues in the text, not stated directly."
+        },
+        { "id": "d", "text": "The title of the article." }
+      ],
+      "correctOption": "c",
+      "explanation": "An inference is a conclusion you draw from textual clues — it is implied but not directly written. Direct information is a specific detail, not an inference. Translating a word and identifying the title are separate reading skills.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "You see the word \"reluctant\" in a text: \"Despite the rain, she reluctantly went outside.\"\nWhat does \"reluctant\" most likely mean?",
+      "options": [
+        { "id": "a", "text": "Enthusiastically" },
+        { "id": "b", "text": "Unwillingly / not wanting to" },
+        { "id": "c", "text": "Quickly" },
+        { "id": "d", "text": "Happily" }
+      ],
+      "correctOption": "b",
+      "explanation": "The word \"despite\" signals a contrast: even though she did not want to go out (because of the rain), she went. \"Reluctantly\" therefore means unwillingly — not enthusiastically, quickly, or happily. Contrast words like despite are key context clues for vocabulary guessing.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "In a True/False/Not Given question, the text says: \"The café opens at 9 a.m. on weekdays.\"\nStatement: \"The café is open on Saturdays.\"\nWhich is correct?",
+      "options": [
+        { "id": "a", "text": "True" },
+        { "id": "b", "text": "False" },
+        { "id": "c", "text": "Not Given" },
+        { "id": "d", "text": "Cannot be decided" }
+      ],
+      "correctOption": "c",
+      "explanation": "The text only mentions weekday hours — it says nothing about Saturdays. The answer is Not Given, not False. False would require the text to say it is closed on Saturdays. Not Given means the text is silent on the topic, so we cannot conclude either way.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which answer is most likely a DISTRACTOR for a \"main idea\" question about an article titled \"How City Cycling Changed My Life\"?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The writer's experiences of cycling in the city transformed her daily routine and wellbeing."
+        },
+        { "id": "b", "text": "The writer bought a red bicycle in March." },
+        {
+          "id": "c",
+          "text": "The article explores how one person's life improved through urban cycling."
+        },
+        { "id": "d", "text": "The writer describes a personal journey of change through cycling." }
+      ],
+      "correctOption": "b",
+      "explanation": "A distractor for a main-idea question picks a true but too-narrow detail from the text. Buying a red bicycle in March may be mentioned in the article, but it is a specific detail, not the central idea. Options (a), (c) and (d) all capture the broad personal-change-through-cycling theme of the article.",
+      "difficulty": 2
+    }
+  ]
+}
