@@ -27,7 +27,15 @@ export default tseslint.config(
       "react-refresh": reactRefresh,
     },
     rules: {
-      ...reactHooks.configs.recommended.rules,
+      // eslint-plugin-react-hooks v7's `recommended` now bundles the React Compiler
+      // rules (react-hooks/immutability, purity, set-state-in-effect, …). Those assume
+      // you've adopted the React Compiler and flag valid, intentional patterns in this
+      // codebase (R3F `useFrame` per-frame mutation, SSR-hydration `setState` in effect,
+      // one-time `Math.random` particle init). Adopting them is a separate, deliberate
+      // migration — not a side effect of a version bump — so we keep exactly the classic
+      // hooks coverage we had on v5 (rules-of-hooks + exhaustive-deps).
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
       "no-restricted-imports": [
         "error",
         {

@@ -204,11 +204,9 @@ export const getSubject = createServerFn({ method: "GET" })
     }
 
     // Parcours access context for premium gating of missions on the page.
-    let viewer: { level: number; isPremium: boolean; hasEntitlement: boolean } = {
-      level: 0,
-      isPremium: false,
-      hasEntitlement: true,
-    };
+    // Assigned on every path below (both try branches + the catch's locked-safe default),
+    // so it needs no initializer — and an unread one trips eslint's no-useless-assignment.
+    let viewer: { level: number; isPremium: boolean; hasEntitlement: boolean };
     try {
       const themeId = (subj.data as { theme_id?: string | null }).theme_id ?? null;
       const gradeId = (subj.data as { grade_id?: string | null }).grade_id ?? null;
