@@ -1,0 +1,82 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : se présenter et mots courants",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Lis : « Je m'appelle Sami, j'ai vingt et un ans et j'habite à Sfax. » Quel âge a Sami ?",
+      "options": [
+        { "id": "a", "text": "12 ans" },
+        { "id": "b", "text": "21 ans" },
+        { "id": "c", "text": "20 ans" },
+        { "id": "d", "text": "31 ans" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Vingt et un » se décompose en vingt (20) + un (1) = 21. Sami a donc 21 ans. Ne confonds pas avec douze (12), vingt (20) seul, ou trente et un (31).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Range ces nombres dans l'ordre croissant : trente, quinze, soixante, quarante. Lequel vient en dernier (le plus grand) ?",
+      "options": [
+        { "id": "a", "text": "quinze" },
+        { "id": "b", "text": "trente" },
+        { "id": "c", "text": "quarante" },
+        { "id": "d", "text": "soixante" }
+      ],
+      "correctOption": "d",
+      "explanation": "Dans l'ordre croissant : quinze (15) < trente (30) < quarante (40) < soixante (60). Le plus grand est donc soixante (60). C'est le seul des quatre qui dépasse 50.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Associe la situation à la bonne formule : tu bouscules quelqu'un sans le vouloir. Tu dis…",
+      "options": [
+        { "id": "a", "text": "Pardon !" },
+        { "id": "b", "text": "Bonjour !" },
+        { "id": "c", "text": "Merci !" },
+        { "id": "d", "text": "À demain !" }
+      ],
+      "correctOption": "a",
+      "explanation": "Quand on bouscule quelqu'un, on s'excuse en disant « Pardon ! » (ou « Excusez-moi ! »). « Bonjour » salue, « Merci » remercie, et « À demain » sert à partir : aucun ne convient pour s'excuser.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lis : « Mon père a une sœur. Cette sœur a un fils, Karim. » Karim et toi êtes…",
+      "options": [
+        { "id": "a", "text": "frères" },
+        { "id": "b", "text": "père et fils" },
+        { "id": "c", "text": "cousins" },
+        { "id": "d", "text": "grand-père et petit-fils" }
+      ],
+      "correctOption": "c",
+      "explanation": "La sœur de ton père est ta tante, et le fils de ta tante est ton cousin : Karim et toi êtes donc cousins. Vous n'êtes pas frères (vous n'avez pas les mêmes parents), ni d'une génération différente comme père/fils ou grand-père/petit-fils.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète le mini-dialogue. — Bonjour, ___ ? — Je m'appelle Inès.",
+      "options": [
+        { "id": "a", "text": "quel âge as-tu" },
+        { "id": "b", "text": "où habites-tu" },
+        { "id": "c", "text": "quelle heure est-il" },
+        { "id": "d", "text": "comment tu t'appelles" }
+      ],
+      "correctOption": "d",
+      "explanation": "La réponse « Je m'appelle Inès » donne un nom : la question posée était donc « comment tu t'appelles ? ». « Quel âge as-tu » appelle un âge, « où habites-tu » une ville, et « quelle heure est-il » une heure — aucun ne s'accorde avec la réponse.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Trouve l'intrus (le mot qui n'appartient PAS au même champ que les autres).",
+      "options": [
+        { "id": "a", "text": "lundi" },
+        { "id": "b", "text": "bleu" },
+        { "id": "c", "text": "jeudi" },
+        { "id": "d", "text": "dimanche" }
+      ],
+      "correctOption": "b",
+      "explanation": "Lundi, jeudi et dimanche sont des jours de la semaine ; bleu est une couleur, c'est donc l'intrus. Le piège : tous les mots sont courts et familiers, mais trois forment un même champ (les jours) et un seul en sort.",
+      "difficulty": 3
+    }
+  ]
+}

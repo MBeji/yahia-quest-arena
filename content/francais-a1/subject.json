@@ -1,0 +1,12 @@
+{
+  "id": "francais-a1",
+  "nameFr": "Français — Débutant (A1 · DELF A1)",
+  "description": "Construis des bases solides en français, des formes les plus simples vers le haut : être et avoir, le présent des verbes en -er, les articles et le genre des noms, le vocabulaire du quotidien, poser une question et lire un texte court. Niveau débutant (CECRL A1), aligné sur le DELF A1.",
+  "attribute": "Agilité",
+  "colorToken": "subject-french",
+  "icon": "Languages",
+  "displayOrder": 1,
+  "contentLanguage": "fr",
+  "themeId": "francais",
+  "gradeSlug": null
+}

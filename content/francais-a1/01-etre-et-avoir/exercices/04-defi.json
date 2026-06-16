@@ -1,0 +1,82 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : être et avoir au présent",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Complète avec les bonnes formes : « Nous ___ fatigués et vous ___ soif. »",
+      "options": [
+        { "id": "a", "text": "avons … êtes" },
+        { "id": "b", "text": "sommes … avons" },
+        { "id": "c", "text": "sommes … avez" },
+        { "id": "d", "text": "êtes … avez" }
+      ],
+      "correctOption": "c",
+      "explanation": "« être fatigué » est un état (être) et « avoir soif » une expression (avoir) : Nous sommes fatigués et vous avez soif. Il faut « sommes » avec nous et « avez » avec vous. « avons » mélangerait avoir avec le mauvais sujet.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "Mon frère est 15 ans." },
+        { "id": "b", "text": "Mes parents sont tunisiens." },
+        { "id": "c", "text": "On a un grand jardin." },
+        { "id": "d", "text": "Tu n'as pas de stylo." }
+      ],
+      "correctOption": "a",
+      "explanation": "L'erreur est (a) : l'âge se dit avec avoir, donc « Mon frère a 15 ans », jamais « est 15 ans ». Les phrases (b), (c) et (d) sont correctes : être pour la nationalité, avoir pour la possession, et la négation « n'as pas de ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "Elles ont deux chats." },
+        { "id": "b", "text": "Vous êtes en retard." },
+        { "id": "c", "text": "Je n'ai pas peur." },
+        { "id": "d", "text": "Il a content." }
+      ],
+      "correctOption": "d",
+      "explanation": "L'erreur est (d) : « content » est un état, donc on emploie être → « Il est content », pas « Il a content ». Les phrases (a), (b) et (c) sont justes : avoir pour la possession, être pour l'état « en retard », et « avoir peur » à la négative.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choisis les bons homophones : « Il ___ un vélo ___ il va ___ l'école. »",
+      "options": [
+        { "id": "a", "text": "à … et … a" },
+        { "id": "b", "text": "a … et … à" },
+        { "id": "c", "text": "a … est … à" },
+        { "id": "d", "text": "à … est … a" }
+      ],
+      "correctOption": "b",
+      "explanation": "Il faut le verbe avoir « a », la conjonction « et » (= aussi), puis la préposition « à » : Il a un vélo et il va à l'école. « à » (préposition) ne peut pas être le verbe, et « est » (être) ne relie pas deux idées comme « et ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choisis les bonnes formes : « ___ sœurs ___ médecins. »",
+      "options": [
+        { "id": "a", "text": "Ses … sont" },
+        { "id": "b", "text": "Ses … ont" },
+        { "id": "c", "text": "Ces … sont" },
+        { "id": "d", "text": "Ses … son" }
+      ],
+      "correctOption": "a",
+      "explanation": "Il faut le possessif pluriel « Ses » (les siennes) puis le verbe être « sont » : Ses sœurs sont médecins. « ont » est le verbe avoir, « son » est singulier, et « Ces » est un démonstratif, pas un possessif — le sens « ses sœurs à elle » demande « Ses ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Mets à la forme négative : « Nous avons des amis ici. »",
+      "options": [
+        { "id": "a", "text": "Nous n'avons pas des amis ici." },
+        { "id": "b", "text": "Nous avons pas d'amis ici." },
+        { "id": "c", "text": "Nous n'avons pas d'amis ici." },
+        { "id": "d", "text": "Nous ne sommes pas d'amis ici." }
+      ],
+      "correctOption": "c",
+      "explanation": "À la négative, avoir encadre « ne … pas » et « des » devient « d' » devant une voyelle : Nous n'avons pas d'amis ici. La forme (a) garde « des » à tort, (b) oublie le « n' », et (d) remplace avoir par être.",
+      "difficulty": 3
+    }
+  ]
+}

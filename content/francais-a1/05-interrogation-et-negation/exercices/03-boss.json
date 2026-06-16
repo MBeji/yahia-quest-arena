@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : questions et négation",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Quelle question correspond à la réponse « Parce que je suis malade. » ?",
+      "options": [
+        { "id": "a", "text": "Où es-tu ?" },
+        { "id": "b", "text": "Quand pars-tu ?" },
+        { "id": "c", "text": "Pourquoi ne viens-tu pas ?" },
+        { "id": "d", "text": "Comment vas-tu à l'école ?" }
+      ],
+      "correctOption": "c",
+      "explanation": "Une réponse qui commence par « Parce que… » donne une raison, donc le mot interrogatif est « pourquoi » : Pourquoi ne viens-tu pas ? « Où » demande un lieu, « quand » un moment et « comment » une manière — aucun n'appelle une raison.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « ___ coûtent ces livres ? »",
+      "options": [
+        { "id": "a", "text": "Comment" },
+        { "id": "b", "text": "Qui" },
+        { "id": "c", "text": "Quand" },
+        { "id": "d", "text": "Combien" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Combien » interroge sur une quantité ou un prix : Combien coûtent ces livres ? « Comment » demande une manière, « qui » une personne et « quand » un moment — aucun ne convient à un prix.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve la question INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "Est-ce que viens-tu demain ?" },
+        { "id": "b", "text": "Est-ce que tu viens demain ?" },
+        { "id": "c", "text": "Viens-tu demain ?" },
+        { "id": "d", "text": "Tu viens demain ?" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'erreur est (a) : on ne combine jamais « est-ce que » avec une inversion. Il faut dire « Est-ce que tu viens demain ? » (ordre normal) ou « Viens-tu demain ? » (inversion seule). (b), (c) et (d) sont des registres corrects.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "Je ne parle pas espagnol." },
+        { "id": "b", "text": "Je ne mange pas une pomme." },
+        { "id": "c", "text": "Elle n'a pas de frère." },
+        { "id": "d", "text": "Nous ne sommes pas prêts." }
+      ],
+      "correctOption": "b",
+      "explanation": "L'erreur est (b) : après la négation, l'article « une » devient « de » → « Je ne mange pas de pomme ». (a) et (d) n'ont pas d'article à transformer, et (c) applique correctement le passage à « de ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète à l'inversion : « ___ allez-vous aujourd'hui ? » (on attend « Très bien »)",
+      "options": [
+        { "id": "a", "text": "Où" },
+        { "id": "b", "text": "Quand" },
+        { "id": "c", "text": "Combien" },
+        { "id": "d", "text": "Comment" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Comment » interroge sur l'état : « Comment allez-vous ? » appelle la réponse « Très bien ». « Où » demande un lieu, « quand » un moment et « combien » une quantité, qui ne correspondent pas à « Très bien ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle est la forme négative correcte de « Tu as un chien. » ?",
+      "options": [
+        { "id": "a", "text": "Tu n'as pas un chien." },
+        { "id": "b", "text": "Tu as ne pas de chien." },
+        { "id": "c", "text": "Tu n'as pas de chien." },
+        { "id": "d", "text": "Tu ne as pas de chien." }
+      ],
+      "correctOption": "c",
+      "explanation": "Deux règles s'appliquent : « ne » s'élide en « n' » devant « as », et l'article « un » devient « de » → Tu n'as pas de chien. « pas un chien » (a) garde l'article, (b) place mal « ne » et (d) n'élide pas « ne ».",
+      "difficulty": 3
+    }
+  ]
+}

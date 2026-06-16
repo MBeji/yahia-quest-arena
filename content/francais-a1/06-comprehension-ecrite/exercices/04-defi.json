@@ -1,0 +1,82 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : lire un texte simple",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Lis l'horaire :\n« Cinéma Étoile\nFilm : 14 h, 17 h et 20 h.\nPrix : 8 euros. »\n\nÀ combien d'heures différentes le film passe-t-il ?",
+      "options": [
+        { "id": "a", "text": "Une fois" },
+        { "id": "b", "text": "Deux fois" },
+        { "id": "c", "text": "Quatre fois" },
+        { "id": "d", "text": "Trois fois" }
+      ],
+      "correctOption": "d",
+      "explanation": "L'horaire donne trois heures : 14 h, 17 h et 20 h. Le film passe donc trois fois. Le 8 est le prix en euros, ce n'est pas un nombre de séances.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lis le courriel :\n« Bonjour, votre table est réservée pour 4 personnes, samedi à 20 h, au restaurant Le Jardin. Merci ! »\n\nPour combien de personnes est la réservation ?",
+      "options": [
+        { "id": "a", "text": "Pour 20 personnes" },
+        { "id": "b", "text": "Pour 4 personnes" },
+        { "id": "c", "text": "Pour 2 personnes" },
+        { "id": "d", "text": "Pour 8 personnes" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le courriel dit « pour 4 personnes » : la réservation est donc pour 4 personnes. Le 20 est l'heure (20 h), pas le nombre de personnes ; 2 et 8 ne sont pas dans le texte.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lis l'annonce :\n« À vendre : table en bois, 60 euros. Deux chaises, 20 euros chaque. À retirer à Marseille. »\n\nCombien coûtent les deux chaises ensemble ?",
+      "options": [
+        { "id": "a", "text": "40 euros" },
+        { "id": "b", "text": "20 euros" },
+        { "id": "c", "text": "60 euros" },
+        { "id": "d", "text": "80 euros" }
+      ],
+      "correctOption": "a",
+      "explanation": "Chaque chaise coûte 20 euros, donc deux chaises coûtent 20 + 20 = 40 euros ✓. Le piège courant est de prendre 20 euros (une seule chaise) ou 60 euros (le prix de la table).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lis le SMS :\n« Le match commence à 15 h. Arrive 30 minutes avant pour trouver une place. »\n\nÀ quelle heure faut-il arriver ?",
+      "options": [
+        { "id": "a", "text": "À 15 h" },
+        { "id": "b", "text": "À 15 h 30" },
+        { "id": "c", "text": "À 14 h 30" },
+        { "id": "d", "text": "À 13 h" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le match est à 15 h et il faut arriver 30 minutes avant : 15 h moins 30 minutes = 14 h 30 ✓. Le piège courant est de prendre 15 h (l'heure du match) ou 15 h 30 (30 minutes après au lieu d'avant).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lis la carte postale :\n« Coucou ! Je suis à la montagne. Il neige beaucoup et il fait froid. Je fais du ski tous les jours. C'est super ! Hugo »\n\nQuel temps fait-il là où est Hugo ?",
+      "options": [
+        { "id": "a", "text": "Il fait chaud" },
+        { "id": "b", "text": "Il pleut" },
+        { "id": "c", "text": "Il y a du soleil" },
+        { "id": "d", "text": "Il neige et il fait froid" }
+      ],
+      "correctOption": "d",
+      "explanation": "Hugo écrit « Il neige beaucoup et il fait froid » : le temps est donc à la neige et au froid. Le piège courant est de choisir « chaud », qui est le contraire de ce que dit le texte ; la pluie et le soleil ne sont pas cités.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lis l'affichette :\n« BIBLIOTHÈQUE\nOuverte : mardi, jeudi et vendredi.\nHoraires : 10 h – 17 h. »\n\nLequel de ces jours la bibliothèque est-elle OUVERTE ?",
+      "options": [
+        { "id": "a", "text": "Le lundi" },
+        { "id": "b", "text": "Le jeudi" },
+        { "id": "c", "text": "Le mercredi" },
+        { "id": "d", "text": "Le dimanche" }
+      ],
+      "correctOption": "b",
+      "explanation": "L'affichette liste « mardi, jeudi et vendredi » : la bibliothèque est donc ouverte le jeudi. Le lundi, le mercredi et le dimanche ne sont pas dans la liste des jours d'ouverture.",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : articles, genre et pluriel",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Choisis la bonne suite : « J'ai acheté ___ voiture hier. ___ voiture est rouge. »",
+      "options": [
+        { "id": "a", "text": "la … Une" },
+        { "id": "b", "text": "une … Une" },
+        { "id": "c", "text": "une … La" },
+        { "id": "d", "text": "la … La" }
+      ],
+      "correctOption": "c",
+      "explanation": "La première mention d'une chose inconnue prend l'indéfini « une » : j'ai acheté une voiture. La seconde mention est maintenant connue des deux interlocuteurs, donc on passe au défini « la » : la voiture est rouge. Ce passage « une → la » est le cœur du système des articles.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel est le pluriel correct de « un journal » ?",
+      "options": [
+        { "id": "a", "text": "des journals" },
+        { "id": "b", "text": "des journaux" },
+        { "id": "c", "text": "des journal" },
+        { "id": "d", "text": "les journals" }
+      ],
+      "correctOption": "b",
+      "explanation": "Les noms en -al forment leur pluriel en -aux : un journal → des journaux (comme animal → animaux). La forme régulière « journals » applique à tort la règle du -s.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve le groupe nominal INCORRECT.",
+      "options": [
+        { "id": "a", "text": "des châteaux" },
+        { "id": "b", "text": "les cheveux" },
+        { "id": "c", "text": "des oiseaux" },
+        { "id": "d", "text": "des chevals" }
+      ],
+      "correctOption": "d",
+      "explanation": "La forme fautive est « des chevals » : « cheval » est un nom en -al, son pluriel est « chevaux ». Les autres sont corrects — château → châteaux (-eau), cheveu → cheveux (-eu) et oiseau → oiseaux (-eau).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "Je regarde le table dans la salle." },
+        { "id": "b", "text": "Les enfants jouent dans le jardin." },
+        { "id": "c", "text": "L'école ouvre à huit heures." },
+        { "id": "d", "text": "J'ai un ami à Paris." }
+      ],
+      "correctOption": "a",
+      "explanation": "L'erreur est « le table » : « table » est féminin, donc on dit « la table », pas « le table ». Les autres phrases sont correctes — les enfants (pluriel), l'école (élision devant voyelle) et un ami (masculin singulier).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choisis la phrase entièrement correcte.",
+      "options": [
+        { "id": "a", "text": "Il y a trois animals dans le parc." },
+        { "id": "b", "text": "Il y a trois animaux dans le parc." },
+        { "id": "c", "text": "Il y a trois animal dans le parc." },
+        { "id": "d", "text": "Il y a trois animaux dans la parc." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Animal » est un nom en -al, donc son pluriel est « animaux » : trois animaux. La forme « animals » est fautive, « animal » reste au singulier après « trois », et « la parc » est une erreur de genre (parc est masculin : le parc).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choisis la bonne suite : « Je connais ___ homme. ___ homme est médecin. »",
+      "options": [
+        { "id": "a", "text": "l' … Un" },
+        { "id": "b", "text": "un … Un" },
+        { "id": "c", "text": "un … L'" },
+        { "id": "d", "text": "l' … L'" }
+      ],
+      "correctOption": "c",
+      "explanation": "La première mention prend l'indéfini « un » (un homme parmi d'autres), puis la seconde, désormais connue, prend le défini, qui s'élide en « l' » devant le h muet : l'homme est médecin. On ne dit jamais « le homme », d'où l'élision.",
+      "difficulty": 3
+    }
+  ]
+}
