@@ -24,19 +24,19 @@
     {
       "prompt": "Choose the sentence with the best formal register for an academic essay.",
       "options": [
-        { "id": "a", "text": "The economy grew a lot, but there was still a lot of inequality." },
         {
-          "id": "b",
+          "id": "a",
           "text": "The economy grew significantly; however, income inequality persisted."
         },
+        { "id": "b", "text": "The economy grew a lot, but there was still a lot of inequality." },
         {
           "id": "c",
           "text": "The economy grew significantly; so, income inequality was still a big thing."
         },
         { "id": "d", "text": "The economy grew significantly though inequality didn't go away." }
       ],
-      "correctOption": "b",
-      "explanation": "Option (b) is the most formal: \"significantly\" (precise adverb), semicolon + \"however\" (formal contrast connector), and formal vocabulary (\"income inequality persisted\"). Option (a) uses vague and informal language (\"a lot\", \"still a lot\"). Option (c) uses \"so\" (informal) and \"a big thing\" (very informal). Option (d) omits punctuation and uses colloquial phrasing (\"didn't go away\").",
+      "correctOption": "a",
+      "explanation": "Option (a) is the most formal: \"significantly\" (precise adverb), semicolon + \"however\" (formal contrast connector), and formal vocabulary (\"income inequality persisted\"). Option (b) uses vague and informal language (\"a lot\", \"still a lot\"). Option (c) uses \"so\" (informal) and \"a big thing\" (very informal). Option (d) omits punctuation and uses colloquial phrasing (\"didn't go away\").",
       "difficulty": 2
     },
     {
@@ -78,11 +78,11 @@
     {
       "prompt": "Read: \"The negotiations were described as productive. On the contrary, analysts noted that no binding agreement was reached.\"\nIs 'on the contrary' used correctly here?",
       "options": [
-        { "id": "a", "text": "Yes — it correctly contrasts the two views of the negotiations." },
         {
-          "id": "b",
+          "id": "a",
           "text": "No — it should be 'By contrast' since two different perspectives are being compared, not a denial of the first sentence."
         },
+        { "id": "b", "text": "Yes — it correctly contrasts the two views of the negotiations." },
         {
           "id": "c",
           "text": "Yes — 'on the contrary' and 'by contrast' are interchangeable in this context."
@@ -92,7 +92,7 @@
           "text": "No — it should be 'Nevertheless', as the analysts were conceding the productivity."
         }
       ],
-      "correctOption": "b",
+      "correctOption": "a",
       "explanation": "\"On the contrary\" is used to DENY what was just stated — to say it is simply wrong. Here, the analysts are presenting an opposing perspective/analysis, not outright saying the negotiations were NOT productive. \"By contrast\" introduces a different view from a different source without a full denial. So \"By contrast, analysts noted that…\" is more precise. Option (c) is wrong — they are not interchangeable. Option (d) is wrong — \"Nevertheless\" would concede the productivity claim, then add something anyway.",
       "difficulty": 3
     },

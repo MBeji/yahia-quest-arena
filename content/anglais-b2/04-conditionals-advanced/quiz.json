@@ -5,12 +5,12 @@
       "prompt": "Complete the third conditional: \"If she ___ harder, she would have passed.\"",
       "options": [
         { "id": "a", "text": "studied" },
-        { "id": "b", "text": "had studied" },
+        { "id": "b", "text": "would have studied" },
         { "id": "c", "text": "has studied" },
-        { "id": "d", "text": "would have studied" }
+        { "id": "d", "text": "had studied" }
       ],
-      "correctOption": "b",
-      "explanation": "The third conditional uses 'if + past perfect' in the if-clause: 'had studied'. Option (a) uses past simple, which is correct for the second conditional (unreal present), not the third. Option (c) uses present perfect, which has no place in a conditional if-clause. Option (d) uses 'would have', which belongs in the result clause, never in the if-clause.",
+      "correctOption": "d",
+      "explanation": "The third conditional uses 'if + past perfect' in the if-clause: 'had studied'. Option (a) uses past simple, which is correct for the second conditional (unreal present), not the third. Option (c) uses present perfect, which has no place in a conditional if-clause. Option (b) uses 'would have', which belongs in the result clause, never in the if-clause.",
       "difficulty": 1
     },
     {
@@ -29,12 +29,12 @@
       "prompt": "\"Unless you hurry, you'll be late.\" This means the same as:",
       "options": [
         { "id": "a", "text": "If you hurry, you'll be late." },
-        { "id": "b", "text": "If you don't hurry, you'll be late." },
+        { "id": "b", "text": "If you hurry, you won't be late." },
         { "id": "c", "text": "Unless you don't hurry, you'll be late." },
-        { "id": "d", "text": "If you hurry, you won't be late." }
+        { "id": "d", "text": "If you don't hurry, you'll be late." }
       ],
-      "correctOption": "b",
-      "explanation": "'Unless' means 'if … not', so 'Unless you hurry' = 'If you don't hurry, you'll be late'. Option (a) reverses the condition — 'if you hurry' would mean being on time. Option (c) doubles the negative ('unless … don't'), which is incorrect. Option (d) changes both the condition and the result.",
+      "correctOption": "d",
+      "explanation": "'Unless' means 'if … not', so 'Unless you hurry' = 'If you don't hurry, you'll be late'. Option (a) reverses the condition — 'if you hurry' would mean being on time. Option (c) doubles the negative ('unless … don't'), which is incorrect. Option (b) changes both the condition and the result.",
       "difficulty": 2
     },
     {

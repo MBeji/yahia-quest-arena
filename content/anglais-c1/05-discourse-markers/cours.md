@@ -8,16 +8,17 @@
 
 At C1, choosing the **right marker for the right relationship** AND the **right register** is essential.
 
-## ⚡ Six core relationships and their markers
+## ⚡ Seven core relationships and their markers
 
-| Relationship             | Formal markers                                      | Informal equivalents     |
-| ------------------------ | --------------------------------------------------- | ------------------------ |
-| **Contrast**             | _however, whereas, while, by contrast_              | _but, though_            |
-| **Concession**           | _nevertheless, nonetheless, albeit, even so_        | _still, anyway_          |
-| **Addition**             | _moreover, furthermore, in addition, besides_       | _also, and, too_         |
-| **Result / Consequence** | _therefore, thus, hence, consequently, thereby_     | _so_                     |
-| **Clarification**        | _namely, that is to say, in other words_            | _I mean, like_           |
-| **Exemplification**      | _for instance, for example, such as, to illustrate_ | _(same — less elevated)_ |
+| Relationship                 | Formal markers                                      | Informal equivalents     |
+| ---------------------------- | --------------------------------------------------- | ------------------------ |
+| **Contrast**                 | _however, whereas, while, by contrast_              | _but, though_            |
+| **Concession**               | _nevertheless, nonetheless, albeit, even so_        | _still, anyway_          |
+| **Addition**                 | _moreover, furthermore, in addition, as well as_    | _also, and, too_         |
+| **Result / Consequence**     | _therefore, thus, hence, consequently, thereby_     | _so_                     |
+| **Clarification**            | _namely, that is to say, in other words_            | _I mean, like_           |
+| **Exemplification**          | _for instance, for example, such as, to illustrate_ | _(same — less elevated)_ |
+| **Emphasis / Reinforcement** | _in fact, indeed, as a matter of fact_              | _really, actually_       |
 
 ## 🛡️ Contrast vs Concession — the critical distinction
 
@@ -82,5 +83,18 @@ _"So you enjoyed the film?" — "On the contrary, I found it tedious."_
 _The northern region grew by 15%. **By contrast**, the south declined._
 
 > ⚠️ Trap: Do NOT use "on the contrary" simply to add a contrasting point — it specifically **contradicts** what was just said.
+
+## 💎 In fact, indeed — emphasis & reinforcement
+
+Use **in fact**, **indeed** and **as a matter of fact** to _reinforce_ or _intensify_ the previous statement — not to contrast it. They confirm what was said and often push it further:
+_The experiment was a success. **In fact**, the results were far better than expected._
+_She is talented; **indeed**, she is the finest player of her generation._
+
+> 🗡️ Tip: **in fact** strengthens (the point is even truer than implied); **however** contrasts (a different point). Never swap them — _"In fact"_ after a contradicting clause is wrong.
+
+## ➕ As well as — addition without "and"
+
+**As well as** adds a second element and, when it links verbs, takes the **-ing** form:
+_The reform was expensive **as well as** difficult to maintain._ — _**As well as** funding the project, the council managed it._
 
 > 🏆 Quest complete! You have mastered C1 discourse cohesion — the final weapon in your advanced English arsenal. Your writing is now structured, nuanced, and register-precise. Level up! ⚔️

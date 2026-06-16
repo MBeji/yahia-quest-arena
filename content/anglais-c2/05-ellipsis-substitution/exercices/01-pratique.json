@@ -9,12 +9,12 @@
     {
       "prompt": "Complete: 'Would you like a coffee?' — 'Yes, I'd love ___.'",
       "options": [
-        { "id": "a", "text": "so" },
-        { "id": "b", "text": "one" },
+        { "id": "a", "text": "one" },
+        { "id": "b", "text": "so" },
         { "id": "c", "text": "it" },
         { "id": "d", "text": "such" }
       ],
-      "correctOption": "b",
+      "correctOption": "a",
       "explanation": "\"One\" is the nominal substitute for a countable noun (a coffee → one). \"So\" substitutes a whole clause (I think so). \"It\" would refer to a specific previously mentioned coffee, not an offer of one. \"Such\" is a formal demonstrative that replaces a noun phrase in a different way.",
       "difficulty": 1
     },
@@ -55,15 +55,15 @@
       "difficulty": 2
     },
     {
-      "prompt": "Complete: \"She didn't enjoy the lecture, and ___ did most of her classmates.\"",
+      "prompt": "Complete: \"She didn't enjoy the lecture, and ___ did her classmates — they all found it dull.\"",
       "options": [
-        { "id": "a", "text": "neither" },
-        { "id": "b", "text": "so" },
-        { "id": "c", "text": "nor" },
-        { "id": "d", "text": "Both neither and nor are correct." }
+        { "id": "a", "text": "so" },
+        { "id": "b", "text": "yet" },
+        { "id": "c", "text": "neither" },
+        { "id": "d", "text": "too" }
       ],
-      "correctOption": "d",
-      "explanation": "Both \"neither did most of her classmates\" and \"nor did most of her classmates\" are correct ways to express negative agreement — they are interchangeable. \"So did\" would express positive agreement, which contradicts \"didn't enjoy\".",
+      "correctOption": "c",
+      "explanation": "\"Neither did her classmates\" expresses negative agreement — they also did not enjoy the lecture. Note that \"Nor did her classmates\" is equally correct. \"So did\" would signal positive agreement (she enjoyed it, and so did they) — the opposite of the meaning. \"Yet\" is a contrast marker; \"too\" follows positive statements only.",
       "difficulty": 2
     },
     {

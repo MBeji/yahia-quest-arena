@@ -5,11 +5,11 @@
       "prompt": "Grammar — Past perfect: \"By the time the ambulance arrived, the doctors ___ already started treatment.\"",
       "options": [
         { "id": "a", "text": "have" },
-        { "id": "b", "text": "had" },
-        { "id": "c", "text": "were" },
+        { "id": "b", "text": "were" },
+        { "id": "c", "text": "had" },
         { "id": "d", "text": "did" }
       ],
-      "correctOption": "b",
+      "correctOption": "c",
       "explanation": "\"By the time\" signals that one past action was completed before another, so we use the past perfect: the doctors had already started. \"have\" is present perfect (wrong tense), \"were\" would begin a continuous form (needs -ing), and \"did\" is the past simple auxiliary (no participle follows it).",
       "difficulty": 1
     },

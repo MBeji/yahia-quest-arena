@@ -10,11 +10,11 @@
       "prompt": "Grammar — Unreal past: \"I'd rather you ___ that to the press without asking me first.\"",
       "options": [
         { "id": "a", "text": "don't say" },
-        { "id": "b", "text": "hadn't said" },
-        { "id": "c", "text": "won't say" },
-        { "id": "d", "text": "not say" }
+        { "id": "b", "text": "won't say" },
+        { "id": "c", "text": "not say" },
+        { "id": "d", "text": "hadn't said" }
       ],
-      "correctOption": "b",
+      "correctOption": "d",
       "explanation": "I'd rather + subject + past perfect expresses a wish that a past action had not happened (regret about the past): I'd rather you hadn't said that. \"don't say\" is a present wish about the future (I'd rather you don't say it — semi-acceptable in informal speech, but doesn't fit the past context of \"to the press\" already). \"won't say\" after I'd rather is non-standard. \"not say\" is the form used in I'd rather not say myself (no subject), not when another subject follows.",
       "difficulty": 2
     },

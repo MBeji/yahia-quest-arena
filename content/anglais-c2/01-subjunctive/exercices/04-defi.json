@@ -82,15 +82,15 @@
       "prompt": "Read: \"It's high time somebody spoke up about these working conditions. Were an employee to raise concerns formally, they would be entitled to full legal protection. I'd rather the union took the lead on this.\"\nWhat do the three highlighted structures have in common?",
       "options": [
         { "id": "a", "text": "They all use the mandative subjunctive." },
+        { "id": "b", "text": "They all require the same verb form — the past simple." },
         {
-          "id": "b",
+          "id": "c",
           "text": "They all express a hypothetical or unreal situation through a past or subjunctive form."
         },
-        { "id": "c", "text": "They all require the same verb form — the past simple." },
         { "id": "d", "text": "They all invert subject and auxiliary." }
       ],
-      "correctOption": "b",
-      "explanation": "\"It's high time somebody spoke\" (unreal past), \"Were an employee to raise\" (past subjunctive inversion), and \"I'd rather the union took\" (unreal past) all use a non-present verb form to signal that the situation is hypothetical or not yet real. (a) is wrong — none uses the mandative subjunctive (those appear after demand/insist/etc.). (c) is partly right but imprecise — \"were\" is past subjunctive, not past simple. (d) is wrong — only the second structure inverts.",
+      "correctOption": "c",
+      "explanation": "\"It's high time somebody spoke\" (unreal past), \"Were an employee to raise\" (past subjunctive inversion), and \"I'd rather the union took\" (unreal past) all use a non-present verb form to signal that the situation is hypothetical or not yet real. (a) is wrong — none uses the mandative subjunctive (those appear after demand/insist/etc.). (b) is partly right but imprecise — \"were\" is past subjunctive, not past simple. (d) is wrong — only the second structure inverts.",
       "difficulty": 3
     }
   ]

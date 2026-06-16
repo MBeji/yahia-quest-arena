@@ -41,12 +41,12 @@
       "prompt": "What does \"the tip of the iceberg\" mean in context?",
       "options": [
         { "id": "a", "text": "The most important and visible part of a problem." },
-        { "id": "b", "text": "A small, visible sign of a much larger hidden problem." },
-        { "id": "c", "text": "A cold, unwelcoming atmosphere." },
-        { "id": "d", "text": "A dangerous situation with no solution." }
+        { "id": "b", "text": "A cold, unwelcoming atmosphere." },
+        { "id": "c", "text": "A dangerous situation with no solution." },
+        { "id": "d", "text": "A small, visible sign of a much larger hidden problem." }
       ],
-      "correctOption": "b",
-      "explanation": "\"The tip of the iceberg\" refers to the small visible portion of an iceberg above water — used figuratively to mean the visible sign of a much larger hidden problem. (a) is almost the opposite; (c) and (d) invent meanings not supported by the course.",
+      "correctOption": "d",
+      "explanation": "\"The tip of the iceberg\" refers to the small visible portion of an iceberg above water — used figuratively to mean the visible sign of a much larger hidden problem. (a) is almost the opposite; (b) and (c) invent meanings not supported by the course.",
       "difficulty": 2
     },
     {

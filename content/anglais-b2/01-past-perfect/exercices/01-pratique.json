@@ -10,12 +10,12 @@
       "prompt": "Complete the sentence: 'When I arrived, the film ___ already started.'",
       "options": [
         { "id": "a", "text": "was" },
-        { "id": "b", "text": "has" },
-        { "id": "c", "text": "had" },
+        { "id": "b", "text": "had" },
+        { "id": "c", "text": "has" },
         { "id": "d", "text": "were" }
       ],
-      "correctOption": "c",
-      "explanation": "'Had already started' is the past perfect. The film's starting happened BEFORE I arrived — that earlier past event requires 'had + past participle'. 'Was' is past simple of 'be'; 'has' is present perfect; 'were' does not fit the singular 'film'.",
+      "correctOption": "b",
+      "explanation": "'Had already started' is the past perfect. The film's starting happened BEFORE I arrived — that earlier past event requires 'had + past participle'. 'Was' is past simple of 'be'; 'has' is present perfect (wrong tense); 'were' does not fit the singular 'film'.",
       "difficulty": 1
     },
     {
@@ -69,12 +69,12 @@
     {
       "prompt": "Complete the sentence: 'She was tired because she ___ been working all night.'",
       "options": [
-        { "id": "a", "text": "has" },
+        { "id": "a", "text": "had" },
         { "id": "b", "text": "was" },
-        { "id": "c", "text": "had" },
+        { "id": "c", "text": "has" },
         { "id": "d", "text": "is" }
       ],
-      "correctOption": "c",
+      "correctOption": "a",
       "explanation": "'Had been working' is the past perfect continuous: 'had + been + verb-ing'. It emphasises the duration of the working (all night) as an ongoing activity that happened before another past state ('she was tired'). 'Has been working' is present perfect continuous; 'was' and 'is' cannot form the past perfect continuous.",
       "difficulty": 3
     }

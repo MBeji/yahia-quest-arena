@@ -73,7 +73,18 @@ _Reported:_ _He asked me **where I lived**._ (NOT: _~~where did I live~~_)
 
 > ⚠️ Trap: The word order inside a reported question is **subject → verb**, just like a normal statement. Never keep the inverted _did/does/was_ structure.
 
-## ⚔️ 6. Reported Commands
+## 🔮 6. Reporting Conditionals
+
+When a conditional is embedded in reported speech, the **same backshift rules apply** to each verb:
+
+| Direct speech                               | Reported speech                                                                    |
+| ------------------------------------------- | ---------------------------------------------------------------------------------- |
+| _"If you work hard, you **will** succeed."_ | _He said if I **worked** hard, I **would** succeed._                               |
+| _"If she **studied**, she **would** pass."_ | _He said if she **studied**, she **would** pass._ (no change — already past forms) |
+
+> 🗡️ Tip: The first conditional (_if + present, will_) backshifts to a second-conditional pattern (_if + past, would_) in reported speech.
+
+## ⚔️ 7. Reported Commands
 
 For orders, requests and advice, use a **to-infinitive** (or **not to + infinitive** for negatives):
 
@@ -83,7 +94,7 @@ For orders, requests and advice, use a **to-infinitive** (or **not to + infiniti
 
 **tell** is used for direct commands; **ask** is used for polite requests.
 
-## 🌀 7. When NOT to Backshift
+## 🌀 8. When NOT to Backshift
 
 If the reported information is **still true at the time of reporting**, you may keep the original tense:
 

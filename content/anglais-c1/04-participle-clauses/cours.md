@@ -26,6 +26,9 @@ _She sat at her desk, **reading the report**._ (= while she was reading)
 **Result (consequence follows logically):**
 _The storm intensified, **knocking out the power lines**._ (= and knocked out…)
 
+**Negative — put `not` before the participle:**
+_**Not knowing** what to do, she called her mentor._ (= because she did not know)
+
 > ⚠️ Trap — Dangling Participle: The -ing clause MUST share its subject with the main clause. _~~Walking through the market, the aroma struck him~~_ is wrong — the aroma cannot walk! The correct version: **Walking through the market, he noticed an aroma.**
 
 ## 🔮 Type 2: Past Participle Clause
@@ -73,6 +76,13 @@ Relative clauses can be shortened using participles:
 
 Participle clauses are **formal and literary** — common in academic essays, official reports, and quality journalism. They are rare in everyday speech. Overusing them in casual writing sounds stiff.
 
-> ⚠️ Trap: A participle clause with a DIFFERENT subject from the main clause is always wrong (dangling participle): _~~Having reviewed the evidence, the verdict seemed clear~~_ — WHO reviewed it? The verdict? Correct: **Having reviewed the evidence, the jury found the verdict clear.**
+> ⚠️ Trap: A participle clause whose IMPLIED subject does not match the main-clause subject is a dangling participle (wrong): _~~Having reviewed the evidence, the verdict seemed clear~~_ — WHO reviewed it? The verdict? Correct: **Having reviewed the evidence, the jury found the verdict clear.**
+
+## 🌀 The absolute construction (an explicit different subject)
+
+There is one formal exception: an **absolute construction** states its OWN subject before the participle, so it is not dangling. It adds background or an accompanying circumstance:
+_**The investigation having concluded**, the jury delivered its verdict._ — _The committee recommended action, **its recommendations subsequently adopted by the board**._ — _**The weather being fine**, we set off early._
+
+> 🗡️ Tip: the difference is an overt subject. _Having concluded, the jury…_ (no subject before the participle → the subject must be the jury). _The investigation having concluded, the jury…_ (overt subject → a valid absolute clause).
 
 > 🏆 Gate cleared! You can now compress and tighten any sentence like a pro. Final chapter: **Discourse Markers and Cohesion** — the glue that holds advanced writing together.

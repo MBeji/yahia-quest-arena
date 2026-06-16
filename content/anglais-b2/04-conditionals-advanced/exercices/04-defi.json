@@ -33,16 +33,16 @@
     {
       "prompt": "Which sentence demonstrates the most natural use of a mixed conditional (past condition → present consequence)?",
       "options": [
-        { "id": "a", "text": "If I had learnt to code at school, I would have got a better job." },
         {
-          "id": "b",
+          "id": "a",
           "text": "If I had learnt to code at school, I would be earning more money now."
         },
+        { "id": "b", "text": "If I had learnt to code at school, I would have got a better job." },
         { "id": "c", "text": "If I learn to code, I will get a better job." },
         { "id": "d", "text": "If I learned to code, I would get a better job." }
       ],
-      "correctOption": "b",
-      "explanation": "Mixed Conditional A links a past unrealised condition (if + past perfect: 'had learnt… at school') to a present result (would + base: 'would be… now'). 'Now' is the key signal. Option (a) is a pure third conditional — past condition, past result ('would have got'). Option (c) is a first conditional (real future). Option (d) is a second conditional (present hypothetical).",
+      "correctOption": "a",
+      "explanation": "Mixed Conditional A links a past unrealised condition (if + past perfect: 'had learnt… at school') to a present result (would + base: 'would be… now'). 'Now' is the key signal. Option (b) is a pure third conditional — past condition, past result ('would have got'). Option (c) is a first conditional (real future). Option (d) is a second conditional (present hypothetical).",
       "difficulty": 3
     },
     {
@@ -51,16 +51,16 @@
         { "id": "a", "text": "If she hadn't overslept, she would have attended the lecture." },
         {
           "id": "b",
-          "text": "If she went to bed earlier, she would have made it to the lecture yesterday."
+          "text": "If she had gone to bed earlier, she would have attended the lecture."
         },
         { "id": "c", "text": "If she goes to bed earlier, she will make it to her lectures." },
         {
           "id": "d",
-          "text": "If she had gone to bed earlier, she would have attended the lecture."
+          "text": "If she went to bed earlier, she would have made it to the lecture yesterday."
         }
       ],
-      "correctOption": "b",
-      "explanation": "Mixed B captures a present habit/state (she doesn't go to bed early — present condition: 'if + past simple') that caused a past result (she missed the lecture: 'would + have + pp'). Option (a) is a pure third conditional focusing on the oversleeping event, not her general night-owl nature. Option (c) is a first conditional — a real future suggestion, not a mixed conditional about what happened. Option (d) is a pure third conditional: both condition ('had gone') and result ('would have attended') are past — this doesn't highlight her ongoing habit as the cause.",
+      "correctOption": "d",
+      "explanation": "Mixed B captures a present habit/state (she doesn't go to bed early — present condition: 'if + past simple') that caused a past result (she missed the lecture: 'would + have + pp'). Option (a) is a pure third conditional focusing on the oversleeping event, not her general night-owl nature. Option (c) is a first conditional — a real future suggestion, not a mixed conditional about what happened. Option (b) is a pure third conditional: both condition ('had gone') and result ('would have attended') are past — this doesn't highlight her ongoing habit as the cause.",
       "difficulty": 3
     },
     {

@@ -47,7 +47,7 @@
       "options": [
         {
           "id": "a",
-          "text": "Omar said he had spoken to the director there that day and that the director had told him he could start the new job that week."
+          "text": "Omar said he had spoken to the director there today and that the director told him he could start the new job this week."
         },
         {
           "id": "b",
@@ -55,39 +55,39 @@
         },
         {
           "id": "c",
-          "text": "Omar said he had spoken to the director there today and that the director told him he could start the new job this week."
+          "text": "Omar said he had spoken to the director there that day and that the director had told him he could start the new job that week."
         },
         {
           "id": "d",
           "text": "Omar told he had spoken to the director and he can start the job that week."
         }
       ],
-      "correctOption": "a",
-      "explanation": "Option (a) applies all backshifts correctly: 'spoke' → 'had spoken', 'told' → 'had told', 'can' → 'could'; and all time/place shifts: 'here' → 'there', 'today' → 'that day', 'this week' → 'that week'. Option (b) applies no changes at all. Option (c) shifts 'here/today/this week' but inconsistently backshifts ('told' stays in past simple and 'could' is correct but 'today' is not shifted). Option (d) uses 'told' without an object and skips 'spoke'.",
+      "correctOption": "c",
+      "explanation": "Option (c) applies all backshifts correctly: 'spoke' → 'had spoken', 'told' → 'had told', 'can' → 'could'; and all time/place shifts: 'here' → 'there', 'today' → 'that day', 'this week' → 'that week'. Option (b) applies no changes at all. Option (a) shifts 'here' → 'there' but inconsistently keeps 'today' and 'this week' unshifted, and 'told' stays in past simple. Option (d) uses 'told' without an object and skips the full backshift.",
       "difficulty": 3
     },
     {
       "prompt": "Direct: \"Where have you put my keys?\" → She asked him ___.",
       "options": [
-        { "id": "a", "text": "where he had put her keys" },
+        { "id": "a", "text": "where did he put her keys" },
         { "id": "b", "text": "where had he put her keys" },
         { "id": "c", "text": "where he has put her keys" },
-        { "id": "d", "text": "where did he put her keys" }
+        { "id": "d", "text": "where he had put her keys" }
       ],
-      "correctOption": "a",
-      "explanation": "Present perfect ('have put') backshifts to past perfect ('had put'); pronouns shift: 'you' → 'he', 'my' → 'her'; statement order is restored. Option (b) keeps inverted order ('had he'). Option (c) keeps present perfect without backshift. Option (d) uses 'did' — the auxiliary for past simple questions — and inverted order, both wrong in reported speech.",
+      "correctOption": "d",
+      "explanation": "Present perfect ('have put') backshifts to past perfect ('had put'); pronouns shift: 'you' → 'he', 'my' → 'her'; statement order is restored. Option (b) keeps inverted order ('had he'). Option (c) keeps present perfect without backshift. Option (a) uses 'did' — the auxiliary for past simple questions — and inverted order, both wrong in reported speech.",
       "difficulty": 3
     },
     {
       "prompt": "A journalist writes: \"The minister ___ that the new law ___ jobs and ___ the economy.\" (direct: \"This law will create jobs and boost the economy.\")\nWhich option fills all three gaps correctly?",
       "options": [
         { "id": "a", "text": "said / will create / will boost" },
-        { "id": "b", "text": "told / would create / would boost" },
-        { "id": "c", "text": "said / would create / would boost" },
+        { "id": "b", "text": "said / would create / would boost" },
+        { "id": "c", "text": "told / would create / would boost" },
         { "id": "d", "text": "told that / would create / would boost" }
       ],
-      "correctOption": "c",
-      "explanation": "'Said' takes no personal object and is correct here (no 'us/them' follows). 'Will' backshifts to 'would' for both verbs. Option (a) keeps 'will' — no backshift. Option (b) uses 'told' without a personal object, which is wrong. Option (d) uses 'told that' — 'told' needs an object ('told us that'), not a direct 'that' clause.",
+      "correctOption": "b",
+      "explanation": "'Said' takes no personal object and is correct here (no 'us/them' follows). 'Will' backshifts to 'would' for both verbs. Option (a) keeps 'will' — no backshift. Option (c) uses 'told' without a personal object, which is wrong. Option (d) uses 'told that' — 'told' needs an object ('told us that'), not a direct 'that' clause.",
       "difficulty": 3
     }
   ]

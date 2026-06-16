@@ -22,12 +22,12 @@
       "prompt": "Identify the METAPHOR in the following group of sentences.",
       "options": [
         { "id": "a", "text": "The stock market crashed like a falling house of cards." },
-        { "id": "b", "text": "The negotiations were a battlefield from start to finish." },
-        { "id": "c", "text": "She was as bold as brass when she walked into the interview." },
-        { "id": "d", "text": "The office was as quiet as a library during the exam." }
+        { "id": "b", "text": "She was as bold as brass when she walked into the interview." },
+        { "id": "c", "text": "The office was as quiet as a library during the exam." },
+        { "id": "d", "text": "The negotiations were a battlefield from start to finish." }
       ],
-      "correctOption": "b",
-      "explanation": "\"The negotiations were a battlefield\" is a metaphor — it says one thing (negotiations) IS another (battlefield) without using like or as. (a) and (d) use as…as or like, making them similes. (c) as bold as brass is also a simile. Only (b) makes the implicit identification that defines a metaphor.",
+      "correctOption": "d",
+      "explanation": "\"The negotiations were a battlefield\" is a metaphor — it says one thing (negotiations) IS another (battlefield) without using like or as. (a) and (c) use as…as or like, making them similes. (b) as bold as brass is also a simile. Only (d) makes the implicit identification that defines a metaphor.",
       "difficulty": 2
     },
     {

@@ -33,13 +33,13 @@
     {
       "prompt": "Which sentence uses a SIMILE (not a metaphor)?",
       "options": [
-        { "id": "a", "text": "The news was a bombshell." },
+        { "id": "a", "text": "The exam was like climbing a mountain." },
         { "id": "b", "text": "She has a heart of stone." },
         { "id": "c", "text": "The city never sleeps." },
-        { "id": "d", "text": "The exam was like climbing a mountain." }
+        { "id": "d", "text": "The news was a bombshell." }
       ],
-      "correctOption": "d",
-      "explanation": "A simile makes an explicit comparison using like or as: \"like climbing a mountain\". (a) a bombshell, (b) a heart of stone, and (c) never sleeps are all metaphors — they describe one thing as another without using like or as.",
+      "correctOption": "a",
+      "explanation": "A simile makes an explicit comparison using like or as: \"like climbing a mountain\". (b) a heart of stone, (c) never sleeps, and (d) a bombshell are all metaphors — they describe one thing as another without using like or as.",
       "difficulty": 2
     },
     {

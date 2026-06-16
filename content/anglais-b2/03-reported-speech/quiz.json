@@ -16,13 +16,13 @@
     {
       "prompt": "Which sentence correctly uses 'say' and 'tell'?",
       "options": [
-        { "id": "a", "text": "She told that she was ready." },
+        { "id": "a", "text": "She told me that she was ready." },
         { "id": "b", "text": "She said me that she was ready." },
-        { "id": "c", "text": "She told me that she was ready." },
+        { "id": "c", "text": "She told that she was ready." },
         { "id": "d", "text": "She said to told me she was ready." }
       ],
-      "correctOption": "c",
-      "explanation": "'Tell' requires a personal object: 'told me' is correct. Option (a) is wrong because 'told' needs an object before 'that'. Option (b) is wrong because 'said' cannot take a direct personal object — 'said me' is not English. Option (d) is grammatically incoherent.",
+      "correctOption": "a",
+      "explanation": "'Tell' requires a personal object: 'told me' is correct. Option (c) is wrong because 'told' needs an object before 'that'. Option (b) is wrong because 'said' cannot take a direct personal object — 'said me' is not English. Option (d) is grammatically incoherent.",
       "difficulty": 1
     },
     {

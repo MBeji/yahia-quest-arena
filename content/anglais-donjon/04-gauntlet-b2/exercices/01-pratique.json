@@ -46,23 +46,23 @@
       "prompt": "Grammar — Reported speech: \"He said, 'I can swim very well.' \" What did he say?",
       "options": [
         { "id": "a", "text": "He said he can swim very well." },
-        { "id": "b", "text": "He said he could swim very well." },
-        { "id": "c", "text": "He said he swam very well." },
+        { "id": "b", "text": "He said he swam very well." },
+        { "id": "c", "text": "He said he could swim very well." },
         { "id": "d", "text": "He said he will swim very well." }
       ],
-      "correctOption": "b",
-      "explanation": "In reported speech, the modal can back-shifts to could: he said he could swim very well. (a) keeps can without back-shifting — only possible in informal immediate reporting. (c) uses the past simple swam, which changes the meaning. (d) uses will, which is not a back-shift of can.",
+      "correctOption": "c",
+      "explanation": "In reported speech, the modal can back-shifts to could: he said he could swim very well. (a) keeps can without back-shifting — only possible in informal immediate reporting. (b) uses the past simple swam, which changes the meaning. (d) uses will, which is not a back-shift of can.",
       "difficulty": 1
     },
     {
       "prompt": "Usage — Gerund or infinitive: \"I hope ___ you at the conference next week.\"",
       "options": [
-        { "id": "a", "text": "seeing" },
-        { "id": "b", "text": "to see" },
-        { "id": "c", "text": "see" },
-        { "id": "d", "text": "saw" }
+        { "id": "a", "text": "to see" },
+        { "id": "b", "text": "see" },
+        { "id": "c", "text": "saw" },
+        { "id": "d", "text": "seeing" }
       ],
-      "correctOption": "b",
+      "correctOption": "a",
       "explanation": "hope is always followed by the infinitive: I hope to see you. Contrast this with enjoy, which takes -ing (I enjoy seeing you). \"see\" (bare infinitive) comes after modals, not after hope. \"saw\" is the past simple — no tense marker is needed here since hope already carries the time.",
       "difficulty": 1
     },

@@ -34,12 +34,12 @@
       "prompt": "Grammar — Reported speech: \"The manager told us, 'The meeting will be rescheduled.' \" What did she tell us?",
       "options": [
         { "id": "a", "text": "The manager told us the meeting will be rescheduled." },
-        { "id": "b", "text": "The manager told us the meeting would be rescheduled." },
-        { "id": "c", "text": "The manager told us the meeting would have been rescheduled." },
-        { "id": "d", "text": "The manager told us the meeting had been rescheduled." }
+        { "id": "b", "text": "The manager told us the meeting would have been rescheduled." },
+        { "id": "c", "text": "The manager told us the meeting had been rescheduled." },
+        { "id": "d", "text": "The manager told us the meeting would be rescheduled." }
       ],
-      "correctOption": "b",
-      "explanation": "Reported speech back-shifts will → would and keeps the passive (will be → would be): the meeting would be rescheduled. (a) keeps will — valid only in informal immediate speech (same day), but the standard back-shift is required here. (c) would have been rescheduled is the third-conditional result form — a different meaning (now impossible). (d) had been rescheduled implies it had already happened — no back-shift from a prediction.",
+      "correctOption": "d",
+      "explanation": "Reported speech back-shifts will → would and keeps the passive (will be → would be): the meeting would be rescheduled. (a) keeps will — valid only in informal immediate speech (same day), but the standard back-shift is required here. (b) would have been rescheduled is the third-conditional result form — a different meaning (now impossible). (c) had been rescheduled implies it had already happened — no back-shift from a prediction.",
       "difficulty": 3
     },
     {

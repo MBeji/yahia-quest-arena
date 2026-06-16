@@ -22,7 +22,7 @@
       "difficulty": 2
     },
     {
-      "prompt": "Find the TWO errors in this paragraph: \"What she realised was that she had misjudged the situation. It was this realisation what prompted her to change strategy.\"\n\nWhich answer correctly identifies them?",
+      "prompt": "Find the error in this paragraph: \"What she realised was that she had misjudged the situation. It was this realisation what prompted her to change strategy.\"\n\nWhich answer correctly identifies it?",
       "options": [
         {
           "id": "a",
@@ -49,12 +49,12 @@
       "prompt": "Complete for maximum emphasis in a formal speech: \"I am not asking for loyalty or obedience. ___ is your honesty.\"",
       "options": [
         { "id": "a", "text": "It is what I ask" },
-        { "id": "b", "text": "All that I ask" },
+        { "id": "b", "text": "The only thing what I ask for" },
         { "id": "c", "text": "What I ask for" },
         { "id": "d", "text": "All I ask for" }
       ],
       "correctOption": "d",
-      "explanation": "\"All I ask for is your honesty\" is an All-cleft — it limits and focuses the request dramatically, ideal for a formal speech. The complete sentence: All I ask for is your honesty. Option (c) produces a Wh-cleft: \"What I ask for is your honesty\" — also correct, but \"All\" adds the limiting nuance (nothing more, just honesty) which makes it more rhetorically powerful. Option (a) leaves a dangling clause. Option (b) adds \"that\" which is redundant in the All-cleft.",
+      "explanation": "\"All I ask for is your honesty\" is an All-cleft — it limits and focuses the request dramatically, ideal for a formal speech after rejecting loyalty and obedience. Option (c) produces a Wh-cleft: \"What I ask for is your honesty\" — grammatical, but \"All\" adds the limiting nuance (nothing more, just honesty) that the contrast demands, so it is the stronger answer. Option (a) leaves a dangling clause (\"It is what I ask is…\"). Option (b) uses \"what\" after a noun (\"The only thing what I ask for…\"), which is ungrammatical — after a noun the relative must be \"that\" or \"which\", never \"what\".",
       "difficulty": 3
     },
     {

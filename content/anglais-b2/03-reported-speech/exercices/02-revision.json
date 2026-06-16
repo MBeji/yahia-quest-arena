@@ -10,12 +10,12 @@
       "prompt": "Report the question: \"Do you like coffee?\" → She asked me ___ coffee.",
       "options": [
         { "id": "a", "text": "do I like" },
-        { "id": "b", "text": "if I liked" },
+        { "id": "b", "text": "whether did I like" },
         { "id": "c", "text": "if I like" },
-        { "id": "d", "text": "whether did I like" }
+        { "id": "d", "text": "if I liked" }
       ],
-      "correctOption": "b",
-      "explanation": "Yes/no reported questions use 'if' or 'whether' and restore subject-verb order with tense backshift: 'if I liked'. Option (a) keeps the question inversion and present tense. Option (c) keeps the present tense 'like' and so misses the required backshift to 'liked'. Option (d) wrongly keeps the auxiliary 'did' after 'whether'.",
+      "correctOption": "d",
+      "explanation": "Yes/no reported questions use 'if' or 'whether' and restore subject-verb order with tense backshift: 'if I liked'. Option (a) keeps the question inversion and present tense. Option (c) keeps the present tense 'like' and so misses the required backshift to 'liked'. Option (b) wrongly keeps the auxiliary 'did' after 'whether'.",
       "difficulty": 1
     },
     {
@@ -57,13 +57,13 @@
     {
       "prompt": "Report the question: \"Are you coming to the party?\" → He asked her ___.",
       "options": [
-        { "id": "a", "text": "was she coming to the party" },
-        { "id": "b", "text": "if she was coming to the party" },
+        { "id": "a", "text": "if she was coming to the party" },
+        { "id": "b", "text": "was she coming to the party" },
         { "id": "c", "text": "if was she coming to the party" },
         { "id": "d", "text": "whether she comes to the party" }
       ],
-      "correctOption": "b",
-      "explanation": "Yes/no reported questions use 'if/whether' + subject-verb order + backshift: 'if she was coming to the party'. Option (a) is missing 'if/whether' and keeps the inverted order. Option (c) keeps the inverted word order after 'if'. Option (d) has the correct structure but forgets to backshift ('comes' should be 'was coming').",
+      "correctOption": "a",
+      "explanation": "Yes/no reported questions use 'if/whether' + subject-verb order + backshift: 'if she was coming to the party'. Option (b) is missing 'if/whether' and keeps the inverted order. Option (c) keeps the inverted word order after 'if'. Option (d) has the correct structure but forgets to backshift ('comes' should be 'was coming').",
       "difficulty": 2
     },
     {

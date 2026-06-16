@@ -31,15 +31,15 @@
       "difficulty": 2
     },
     {
-      "prompt": "Read: \"Several anomalies were found in the data. ___ anomalies had been present since the original dataset was compiled.\"\nWhich is the BEST choice for the gap?",
+      "prompt": "Read: \"Several anomalies were found in the data. ___ anomalies had been present since the original dataset was compiled.\"\nWhich word creates a FORMAL substitution meaning 'anomalies of that kind' — as opposed to pointing to the specific ones just mentioned?",
       "options": [
         { "id": "a", "text": "These" },
         { "id": "b", "text": "Such" },
         { "id": "c", "text": "Some" },
-        { "id": "d", "text": "Both These and Such are correct." }
+        { "id": "d", "text": "Those" }
       ],
-      "correctOption": "d",
-      "explanation": "Both \"These anomalies\" (demonstrative pronoun pointing back to the specific anomalies just mentioned) and \"Such anomalies\" (formal substitution meaning anomalies of that kind) are correct and create good cohesion. \"Some\" would imply only a portion of the anomalies, not the specific ones just referenced.",
+      "correctOption": "b",
+      "explanation": "\"Such\" is the formal substitution that generalises: 'Such anomalies' = anomalies of that kind, a category. \"These\" is also cohesive but points to the specific anomalies already mentioned (demonstrative reference, not formal substitution). \"Some\" implies only a subset. \"Those\" refers back to distant or previously mentioned specifics, similar to 'these' but more distanced.",
       "difficulty": 2
     },
     {
@@ -51,23 +51,23 @@
         },
         {
           "id": "b",
-          "text": "Many animals migrate seasonally. For instance, the Arctic tern travels from pole to pole."
-        },
-        {
-          "id": "c",
           "text": "Many animals migrate seasonally. Nevertheless, the Arctic tern travels from pole to pole."
         },
         {
-          "id": "d",
+          "id": "c",
           "text": "Many animals migrate seasonally. However, the Arctic tern travels from pole to pole."
+        },
+        {
+          "id": "d",
+          "text": "Many animals migrate seasonally. For instance, the Arctic tern travels from pole to pole."
         }
       ],
-      "correctOption": "b",
+      "correctOption": "d",
       "explanation": "\"For instance\" introduces a specific example — perfect for illustrating the general claim about seasonal migration. \"Consequently\" signals a result (wrong); \"Nevertheless\" signals contrast (wrong — the tern's migration is not a contrasting exception); \"However\" also signals contrast (also wrong).",
       "difficulty": 2
     },
     {
-      "prompt": "Read: \"The CEO announced a restructuring plan. The plan involved redundancies. The redundancies were unexpected. The unexpected redundancies shocked employees.\"\nWhich rewrite BEST uses cohesive devices and reference to avoid repetition?",
+      "prompt": "Read: \"The CEO announced a restructuring plan. The plan involved redundancies. The redundancies were unexpected. The unexpected redundancies shocked employees.\"\nWhich rewrite is the MOST concise while correctly using BOTH a demonstrative reference AND a participial clause?",
       "options": [
         {
           "id": "a",
@@ -81,10 +81,13 @@
           "id": "c",
           "text": "The CEO announced a restructuring plan involving redundancies. These proved unexpected and shocked employees."
         },
-        { "id": "d", "text": "All three options (a), (b), and (c) are valid rewrites." }
+        {
+          "id": "d",
+          "text": "The CEO announced a restructuring plan. Redundancies were announced. They were unexpected. Employees were shocked."
+        }
       ],
-      "correctOption": "d",
-      "explanation": "All three rewrites correctly use cohesive devices: (a) uses \"these\" (demonstrative reference); (b) uses \"This\" (demonstrative) and \"which\" (relative clause); (c) uses \"These\" (demonstrative) and a participial clause. All three eliminate unnecessary repetition while maintaining clear meaning. At C2, multiple valid cohesion strategies exist — recognising them all is the mastery point.",
+      "correctOption": "c",
+      "explanation": "Option (c) is the most concise rewrite: a participial clause (\"involving redundancies\") is embedded in the first sentence, then \"These\" provides demonstrative reference back to the redundancies without repetition. (a) is cohesive but uses three clauses where two suffice; (b) uses a relative clause (which is good) but keeps the structure in two sentences; (d) fails entirely — it breaks the sentences into even shorter clauses without reducing repetition. (c) achieves the highest density of cohesion in the fewest words.",
       "difficulty": 3
     },
     {

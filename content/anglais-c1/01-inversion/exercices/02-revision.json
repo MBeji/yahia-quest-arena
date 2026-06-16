@@ -9,13 +9,13 @@
     {
       "prompt": "Find the INCORRECT sentence.",
       "options": [
-        { "id": "a", "text": "Never have I read a more gripping novel." },
+        { "id": "a", "text": "Hardly I had sat down when the phone rang." },
         { "id": "b", "text": "Rarely does he make such a mistake." },
-        { "id": "c", "text": "Hardly I had sat down when the phone rang." },
+        { "id": "c", "text": "Never have I read a more gripping novel." },
         { "id": "d", "text": "No sooner had she left than it began to rain." }
       ],
-      "correctOption": "c",
-      "explanation": "Option (c) is wrong: \"Hardly\" triggers inversion, so the auxiliary must come before the subject — Hardly had I sat down when… (not \"I had sat down\"). Options (a), (b), and (d) all correctly apply inversion after their respective negative adverbials.",
+      "correctOption": "a",
+      "explanation": "Option (a) is wrong: \"Hardly\" triggers inversion, so the auxiliary must come before the subject — Hardly had I sat down when… (not \"I had sat down\"). Options (b), (c), and (d) all correctly apply inversion after their respective negative adverbials.",
       "difficulty": 1
     },
     {
@@ -70,11 +70,11 @@
       "prompt": "Complete: \"Such ___ her shock that she couldn't speak for a moment.\"",
       "options": [
         { "id": "a", "text": "is" },
-        { "id": "b", "text": "was" },
+        { "id": "b", "text": "has been" },
         { "id": "c", "text": "had been" },
-        { "id": "d", "text": "has been" }
+        { "id": "d", "text": "was" }
       ],
-      "correctOption": "b",
+      "correctOption": "d",
       "explanation": "\"Such was…\" is the inverted form of \"Her shock was so great…\" in the past: Such was her shock that she couldn't speak. The past tense was matches the past context (couldn't speak). \"is\" would make it present, \"had been\" implies a past-before-past, and \"has been\" links to now — none fit the simple past narrative.",
       "difficulty": 3
     }

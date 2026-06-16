@@ -39,7 +39,7 @@
         { "id": "d", "text": "has been presented / was opened" }
       ],
       "correctOption": "a",
-      "explanation": "Both actions are in the future ('next week'), so both require the future passive 'will be + past participle': 'will be presented' and 'will be opened'. Option A mixes past passive with future. Option C uses present and present perfect — wrong for a future event. Option D uses present perfect and past — neither matches a future ceremony.",
+      "explanation": "Both actions are in the future ('next week'), so both require the future passive 'will be + past participle': 'will be presented' and 'will be opened'. Option B ('was presented / will be opened') mixes past passive with future for the first gap. Option C ('is presented / has been opened') uses present and present perfect — wrong for a future event. Option D ('has been presented / was opened') uses present perfect and past — neither matches a future ceremony.",
       "difficulty": 2
     },
     {
@@ -84,7 +84,7 @@
         { "id": "d", "text": "have been made / have been saved" }
       ],
       "correctOption": "d",
-      "explanation": "'Have been made' and 'have been saved' (present perfect passive) are correct. 'In recent decades' refers to a period continuing up to now — the present perfect is the natural tense for recent changes with relevance to the present. Option A (past simple passive) would work with a finished time expression ('last decade'). Option C (present simple) does not match the sense of ongoing change. Option D (past perfect) would require an additional past reference point.",
+      "explanation": "'Have been made' and 'have been saved' (present perfect passive) are correct. 'In recent decades' refers to a period continuing up to now — the present perfect is the natural tense for recent changes with relevance to the present. Option A ('were made / were saved' — past simple passive) would work with a finished time expression ('last decade') but not 'in recent decades'. Option B ('are made / are saved' — present simple) does not match the sense of ongoing change from the past. Option C ('had been made / had been saved' — past perfect) would require a further past reference point and is too remote.",
       "difficulty": 3
     }
   ]

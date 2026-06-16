@@ -69,12 +69,12 @@
     {
       "prompt": "Usage — Discourse markers: \"The evidence strongly suggested fraud. ___ no charges were ever brought against the company.\"",
       "options": [
-        { "id": "a", "text": "Therefore," },
-        { "id": "b", "text": "Moreover," },
-        { "id": "c", "text": "However," },
+        { "id": "a", "text": "However," },
+        { "id": "b", "text": "Therefore," },
+        { "id": "c", "text": "Moreover," },
         { "id": "d", "text": "Hence," }
       ],
-      "correctOption": "c",
+      "correctOption": "a",
       "explanation": "Evidence of fraud but no charges is a contradiction — a concessive link is needed: However (= in spite of the evidence). \"Therefore\" and \"Hence\" both signal a logical result — they would imply the evidence caused the charges not to be brought (illogical without further explanation). \"Moreover\" adds a further point in the same direction, but there is a clear contrast here.",
       "difficulty": 3
     }

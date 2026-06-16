@@ -43,7 +43,7 @@ _All I ask is **your patience**._
 _All she wanted was **to be left alone**._
 _All he did was **complain**._
 
-> ⚠️ Trap: "All I did was complain" does NOT need _to_ before the verb — the base form (bare infinitive) follows _was_ directly when the focused element is a verb action: \*All he did was **argue\***, not ~~argue~~.
+> ⚠️ Trap: "All I did was complain" does NOT need _to_ before the verb — the base form (bare infinitive) follows _was_ directly when the focused element is a verb action: _All he did was **argue**_, not ~~to argue~~.
 
 ## 🧭 Reverse Wh-cleft (end-focus)
 

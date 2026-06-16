@@ -73,7 +73,7 @@
       ],
       "correctOption": "b",
       "explanation": "In academic writing, the passive 'The results were analysed' is preferred over 'We analysed the results' because it creates impersonal, objective-sounding prose — the focus is on the process, not on the researchers. This is the standard convention in scientific reporting. Option A is a misunderstanding — length is not the goal. Option C is false — the passive is a stylistic choice, not a grammar rule. Option D is incorrect — good academic writing aims for clarity.",
-      "difficulty": 2
+      "difficulty": 3
     },
     {
       "prompt": "Read the error-correction task: 'The new shopping centre was opened last week. It was visited by thousands of people on the first day. The car park was become full within an hour.' What needs fixing?",

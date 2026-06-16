@@ -33,13 +33,13 @@
     {
       "prompt": "Grammar — Modal of past deduction: \"The exam paper was left on the desk all night. Anyone ___ the answers.\"",
       "options": [
-        { "id": "a", "text": "could have seen" },
-        { "id": "b", "text": "must see" },
-        { "id": "c", "text": "should have seen" },
-        { "id": "d", "text": "can't have seen" }
+        { "id": "a", "text": "must see" },
+        { "id": "b", "text": "can't have seen" },
+        { "id": "c", "text": "could have seen" },
+        { "id": "d", "text": "should have seen" }
       ],
-      "correctOption": "a",
-      "explanation": "Anyone could have seen (past ability/possibility) — the exposure made it possible for someone to see the answers. \"must see\" is a present obligation (no past reference). \"should have seen\" implies someone was expected or obliged to see the answers. \"can't have seen\" expresses certainty that nobody saw — but the paper being left out makes seeing possible, not impossible.",
+      "correctOption": "c",
+      "explanation": "Anyone could have seen (past ability/possibility) — the exposure made it possible for someone to see the answers. \"must see\" is a present obligation (no past reference). \"can't have seen\" expresses certainty that nobody saw — but the paper being left out makes seeing possible, not impossible. \"should have seen\" implies someone was expected or obliged to see the answers.",
       "difficulty": 3
     },
     {
@@ -66,19 +66,19 @@
         { "id": "d", "text": "The scientists had a very big success, and they broke through." }
       ],
       "correctOption": "a",
-      "explanation": "Nominalisation converts the verb achieve into the noun achievement, and the sentence becomes more compact and formal: The scientists' achievement of a breakthrough marked a turning point. (a) uses breakthrough as an adjective incorrectly. (b) is a correct passive nominalisation but wordy and awkward (\"was made by\" is a pseudo-passive). (d) is informal paraphrase, not nominalisation.",
+      "explanation": "Nominalisation converts the verb achieve into the noun achievement, and the sentence becomes more compact and formal: The scientists' achievement of a breakthrough marked a turning point — this is (a), the correct answer. (b) \"did a breakthrough thing\" uses breakthrough as an adjective modifier and \"did\" as a light verb — neither is a nominalisation and it reads as ungrammatical. (c) \"The achievement of a breakthrough was made by the scientists\" is a passive nominalisation but is wordy and awkward (\"was made by\" is a pseudo-passive that adds no clarity). (d) is informal paraphrase with no nominalisation whatsoever.",
       "difficulty": 3
     },
     {
       "prompt": "Usage — Discourse cohesion: \"Choose the option in which all discourse markers are used correctly.\"",
       "options": [
-        { "id": "a", "text": "The study was small; moreover, its findings were surprising." },
-        { "id": "b", "text": "She trained hard. However she won the race." },
-        { "id": "c", "text": "The plan failed. Therefore, it had been well-funded." },
-        { "id": "d", "text": "Although the results were poor but the team didn't give up." }
+        { "id": "a", "text": "She trained hard. However she won the race." },
+        { "id": "b", "text": "The plan failed. Therefore, it had been well-funded." },
+        { "id": "c", "text": "Although the results were poor but the team didn't give up." },
+        { "id": "d", "text": "The study was small; moreover, its findings were surprising." }
       ],
-      "correctOption": "a",
-      "explanation": "(a) is correct: moreover links a small size to surprising findings as two related noteworthy points (the smallness makes the findings more surprising — a compound idea). (b) needs a comma after However: However, she won. (c) makes a logical error: Therefore signals a result, but the plan failing and being well-funded are not in a cause-result relationship — Nevertheless would fit. (d) doubles the concession word: Although and but cannot both appear in the same clause — remove but (Although the results were poor, the team didn't give up).",
+      "correctOption": "d",
+      "explanation": "(d) is correct: moreover links a small size to surprising findings as two related noteworthy points (the smallness makes the findings more surprising — a compound idea). (a) needs a comma after However: However, she won. (b) makes a logical error: Therefore signals a result, but the plan failing and being well-funded are not in a cause-result relationship — Nevertheless would fit. (c) doubles the concession word: Although and but cannot both appear in the same clause — remove but (Although the results were poor, the team didn't give up).",
       "difficulty": 3
     }
   ]

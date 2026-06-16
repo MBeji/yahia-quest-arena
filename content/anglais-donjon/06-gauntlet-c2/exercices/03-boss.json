@@ -31,7 +31,7 @@
       "difficulty": 2
     },
     {
-      "prompt": "Usage — Confusable words: \"As a ___ observer with no financial stake in either company, she was the ideal person to mediate.\"",
+      "prompt": "Usage — Confusable words: \"The C2 word meaning 'having no personal stake in the outcome' (and therefore free from bias) — as opposed to 'not curious or caring' — is ___.\"",
       "options": [
         { "id": "a", "text": "uninterested" },
         { "id": "b", "text": "disinterested" },
@@ -39,7 +39,7 @@
         { "id": "d", "text": "impartial" }
       ],
       "correctOption": "b",
-      "explanation": "disinterested means impartial — having no personal stake in the outcome, which makes someone ideal to mediate. This is tested at C2 because it is widely confused with uninterested. \"uninterested\" means not curious or caring — an uninterested mediator would do a terrible job. \"indifferent\" means having no preference or concern — too apathetic for a mediator. \"impartial\" is also correct in meaning, but the question specifically asks for the C2 near-synonym \"disinterested\" as the precise term that matches the \"no financial stake\" clue.",
+      "explanation": "disinterested means having no personal stake in the outcome — etymologically 'without self-interest', not 'without interest'. This C2 confusable is widely misused: \"uninterested\" means not curious or caring (the opposite of what you want in a mediator). \"indifferent\" implies apathy or lack of preference — a mediator must be engaged, not apathetic. \"impartial\" is a near-synonym but does not carry the specific 'no financial/personal stake' nuance that disinterested uniquely encodes; the question targets the confusable pair disinterested/uninterested, not the synonym impartial.",
       "difficulty": 3
     },
     {
@@ -75,7 +75,7 @@
         { "id": "d", "text": "Their failure to respond to warnings…" }
       ],
       "correctOption": "d",
-      "explanation": "Their failure to respond to warnings nominalises the verb fail → failure and compresses the clause into a noun phrase, which is concise and formal. (b) uses a heavy that-clause and keeps the continuous aspect unnecessarily — not a clean nominalisation. (c) splits the structure awkwardly and is not more formal. (d) is a convoluted passive that adds words without adding clarity.",
+      "explanation": "Their failure to respond to warnings nominalises the verb fail → failure and compresses the clause into a clean noun phrase — concise and formal: this is (d), the correct answer. (a) \"The fact that they were failing to respond…\" is a heavy that-clause with unnecessary continuous aspect — not a nominalisation. (b) \"They did not respond, failing with the warnings…\" splits the structure awkwardly and is not more formal than the original. (c) \"The warnings were not responded to by them, failing…\" is a convoluted passive that adds words without adding clarity.",
       "difficulty": 3
     }
   ]

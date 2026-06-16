@@ -34,12 +34,12 @@
       "prompt": "Which sentence correctly uses 'wish' to express annoyance at someone else's behaviour?",
       "options": [
         { "id": "a", "text": "I wish he stopped talking." },
-        { "id": "b", "text": "I wish he would stop talking." },
+        { "id": "b", "text": "I wish he had stopped talking." },
         { "id": "c", "text": "I wish he stops talking." },
-        { "id": "d", "text": "I wish he had stopped talking." }
+        { "id": "d", "text": "I wish he would stop talking." }
       ],
-      "correctOption": "b",
-      "explanation": "To express annoyance at someone's repeated behaviour, use 'wish + would + base verb': 'I wish he would stop talking'. Option (a) uses past simple — this expresses a present wish (I want him to be a non-talker), but for annoyance about an ongoing habit, 'would' is the natural choice. Option (c) keeps the present tense — grammatically wrong. Option (d) uses past perfect — this expresses regret that he didn't stop in the past.",
+      "correctOption": "d",
+      "explanation": "To express annoyance at someone's repeated behaviour, use 'wish + would + base verb': 'I wish he would stop talking'. Option (a) uses past simple — this expresses a present wish (I want him to be a non-talker), but for annoyance about an ongoing habit, 'would' is the natural choice. Option (c) keeps the present tense — grammatically wrong. Option (b) uses past perfect — this expresses regret that he didn't stop in the past.",
       "difficulty": 2
     },
     {
@@ -58,12 +58,12 @@
       "prompt": "Which sentence correctly uses 'provided that'?",
       "options": [
         { "id": "a", "text": "I will lend you the money provided that you will pay me back." },
-        { "id": "b", "text": "I will lend you the money provided that you pay me back." },
-        { "id": "c", "text": "I would lend you the money provided that you paid me back." },
+        { "id": "b", "text": "I would lend you the money provided that you paid me back." },
+        { "id": "c", "text": "I will lend you the money provided that you pay me back." },
         { "id": "d", "text": "I lend you the money provided that you paid me back." }
       ],
-      "correctOption": "b",
-      "explanation": "'Provided that' introduces a condition with the present simple in the condition clause: 'provided that you pay me back'. Option (a) wrongly puts 'will' inside the condition clause — just like 'if', 'provided that' takes present simple for future conditions. Option (c) is a second conditional — grammatically possible, but the question asks about the standard 'provided that' construction. Option (d) drops 'will' from the result clause, making it a statement rather than a conditional promise.",
+      "correctOption": "c",
+      "explanation": "'Provided that' introduces a condition with the present simple in the condition clause: 'provided that you pay me back'. Option (a) wrongly puts 'will' inside the condition clause — just like 'if', 'provided that' takes present simple for future conditions. Option (b) is a second conditional — grammatically possible, but the question asks about the standard 'provided that' construction. Option (d) drops 'will' from the result clause, making it a statement rather than a conditional promise.",
       "difficulty": 2
     },
     {

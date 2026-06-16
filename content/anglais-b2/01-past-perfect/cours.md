@@ -106,6 +106,13 @@ When two past events are linked, the LATER one uses past simple, not past perfec
 - WRONG: _After she had finished, she had gone home._
 - RIGHT: _After she had finished, she went home._
 
+**Trap 4 — "It was the first time…" pattern.**
+After _it was the first time / it was the only time_ in a past context, use the **past perfect**:
+
+- _It was the first time Anna **had ever performed** on stage._ (Compare: _It IS the first time she HAS performed_ — present context uses present perfect.)
+
+> 🗡️ Tip: The tense of the main clause controls what follows: **was → had** (past perfect); **is → has** (present perfect).
+
 ---
 
 ## 🏆 Boss Preview

@@ -33,31 +33,31 @@
     {
       "prompt": "Which of the following is a formal academic sentence that uses hedging language?",
       "options": [
-        { "id": "a", "text": "The data is definitely proof that the theory is right." },
         {
-          "id": "b",
+          "id": "a",
           "text": "Evidence suggests that the intervention may have contributed to improved outcomes."
         },
+        { "id": "b", "text": "The data is definitely proof that the theory is right." },
         { "id": "c", "text": "I think the results show the theory is probably right." },
         { "id": "d", "text": "It's pretty clear the data backs up the theory." }
       ],
-      "correctOption": "b",
-      "explanation": "Option (b) uses hedging language (suggests, may have contributed) and impersonal construction (Evidence suggests…), with formal vocabulary (intervention, outcomes). (a) is overconfident and lacks hedging; (c) uses first person (I think); (d) uses informal vocabulary (pretty clear, backs up).",
+      "correctOption": "a",
+      "explanation": "Option (a) uses hedging language (suggests, may have contributed) and impersonal construction (Evidence suggests…), with formal vocabulary (intervention, outcomes). (b) is overconfident and lacks hedging; (c) uses first person (I think); (d) uses informal vocabulary (pretty clear, backs up).",
       "difficulty": 2
     },
     {
       "prompt": "Which feature makes this sentence LESS formal: \"We think it's important to carry out more research.\"",
       "options": [
-        { "id": "a", "text": "The use of the verb \"think\"." },
+        { "id": "a", "text": "The use of a complete sentence." },
+        { "id": "b", "text": "The word \"research\"." },
+        { "id": "c", "text": "The use of the verb \"think\"." },
         {
-          "id": "b",
-          "text": "The use of first person (\"We\") and the contraction (\"it's\") and phrasal verb (\"carry out\")."
-        },
-        { "id": "c", "text": "The use of a complete sentence." },
-        { "id": "d", "text": "The word \"research\"." }
+          "id": "d",
+          "text": "The use of first person (\"We\"), the contraction (\"it's\"), and the phrasal verb (\"carry out\")."
+        }
       ],
-      "correctOption": "b",
-      "explanation": "Three informal features combine: first-person We, the contraction it's (formal = it is), and the phrasal verb carry out (formal = conduct). \"Research\" is perfectly formal; having a complete sentence is not informal. The bundled answer (b) correctly identifies all three informal markers.",
+      "correctOption": "d",
+      "explanation": "Three informal features combine: first-person We, the contraction it's (formal = it is), and the phrasal verb carry out (formal = conduct). \"Research\" is perfectly formal; having a complete sentence is not informal. Option (d) correctly identifies all three informal markers together.",
       "difficulty": 2
     },
     {
@@ -79,11 +79,11 @@
       "prompt": "Read: \"The implementation of sustainable energy policies has been identified as a priority at the national level.\"\nWhich word in this sentence is an example of nominalisation?",
       "options": [
         { "id": "a", "text": "sustainable" },
-        { "id": "b", "text": "identified" },
-        { "id": "c", "text": "implementation" },
-        { "id": "d", "text": "national" }
+        { "id": "b", "text": "national" },
+        { "id": "c", "text": "identified" },
+        { "id": "d", "text": "implementation" }
       ],
-      "correctOption": "c",
+      "correctOption": "d",
       "explanation": "\"Implementation\" is the nominalisation of the verb \"implement\" — a noun formed from a verb by adding the suffix -ation. \"Sustainable\" is an adjective (derived from a verb but functioning adjectivally here); \"identified\" is a past participle verb; \"national\" is an adjective derived from a noun.",
       "difficulty": 3
     }
