@@ -3,17 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion, AnimatePresence } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  ArrowLeft,
-  Loader2,
-  Trophy,
-  Skull,
-  Heart,
-  Timer,
-  BookOpen,
-  Check,
-  Crown,
-} from "lucide-react";
+import { ArrowLeft, Loader2, Trophy, Skull, Heart, BookOpen, Check, Crown } from "lucide-react";
 import { toast } from "sonner";
 import {
   computeNextExerciseId,
@@ -24,11 +14,7 @@ import {
   startExerciseSession,
   submitAttempt,
 } from "@/features/quest";
-import {
-  BOSS_TIME_PER_QUESTION_S,
-  PASS_THRESHOLD_PCT,
-  QUIZ_PASS_THRESHOLD_PCT,
-} from "@/shared/constants/gamification";
+import { PASS_THRESHOLD_PCT, QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
 import { isRtlText, isMathExpression } from "@/shared/lib/utils";
 import { shuffleOptions, type BaseOption, type DisplayOption } from "@/shared/lib/question-utils";
 import { RichField, OptionContent } from "@/components/ui/svg-figure";
@@ -37,6 +23,7 @@ import { QuestResultActions } from "@/features/quest/components/quest-result-act
 import { QuestRewardGrid } from "@/features/quest/components/quest-reward-grid";
 import { QuizLockScreen } from "@/features/quest/components/quiz-lock-screen";
 import { QuestHintButton } from "@/features/quest/components/quest-hint-button";
+import { BossCountdown } from "@/features/quest/components/boss-countdown";
 import { buildQuestLabels, type QuestContentLang } from "@/features/quest/quest-labels";
 import { ReportErrorButton } from "@/features/content-report";
 import { Confetti } from "@/features/quest/components/confetti";
@@ -51,53 +38,6 @@ export const Route = createFileRoute("/_authenticated/quest/$exerciseId")({
 });
 
 type Answer = { questionId: string; choice: string };
-
-/**
- * Boss-mode per-question countdown. Owns its own 1 Hz state so the ticking
- * re-renders only this chip, not the (large) QuestPage tree. Resets whenever the
- * question changes; fires `onTimeout` at zero (the parent auto-submits). The
- * callback is read through a ref so its identity can change every render without
- * restarting the interval.
- */
-function BossCountdown({
-  active,
-  questionIndex,
-  onTimeout,
-}: {
-  active: boolean;
-  questionIndex: number;
-  onTimeout: () => void;
-}) {
-  const [seconds, setSeconds] = useState(BOSS_TIME_PER_QUESTION_S);
-  const onTimeoutRef = useRef(onTimeout);
-  onTimeoutRef.current = onTimeout;
-
-  useEffect(() => {
-    if (!active) return;
-    setSeconds(BOSS_TIME_PER_QUESTION_S);
-    const id = setInterval(() => {
-      setSeconds((s) => {
-        if (s <= 1) {
-          onTimeoutRef.current();
-          return BOSS_TIME_PER_QUESTION_S;
-        }
-        return s - 1;
-      });
-    }, 1000);
-    return () => clearInterval(id);
-  }, [active, questionIndex]);
-
-  return (
-    <div className="flex items-center gap-2 rounded-full bg-black/60 px-3 py-1.5 text-sm font-bold">
-      <Timer className="h-4 w-4 text-destructive" />
-      <span
-        className={seconds <= 5 ? "text-destructive animate-pulse" : "text-[color:var(--gold)]"}
-      >
-        {seconds}s
-      </span>
-    </div>
-  );
-}
 
 function QuestPage() {
   const { exerciseId } = Route.useParams();
