@@ -15,6 +15,20 @@ name: E2E (authenticated)
 
 on:
   workflow_call:
+    inputs:
+      ref:
+        description: Git ref (branch/SHA) to test. Empty = the triggering ref (default).
+        type: string
+        required: false
+        default: ""
+    outputs:
+      ran:
+        description: >-
+          "true" when the authed suite actually executed (test secrets present),
+          "false" when it gracefully skipped. Callers that gate on real coverage
+          (e.g. the upgrade guard's auto-merge) must require this, since a
+          graceful skip still reports the job result as success.
+        value: ${{ jobs.e2e-auth.outputs.ran }}
   workflow_dispatch:
 
 concurrency:
@@ -25,9 +39,15 @@ jobs:
   e2e-auth:
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    outputs:
+      ran: ${{ steps.guard.outputs.configured }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          # Empty (the default) checks out the triggering ref, so existing callers
+          # (nightly.yml) are unaffected; the upgrade guard passes its branch here.
+          ref: ${{ inputs.ref }}
 
       - name: Check test secrets are configured
         id: guard

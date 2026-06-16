@@ -212,6 +212,14 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
   `npm run test:e2e:auth` (`authed-chromium`), `npm run test:e2e:install` (install the
   browser). Authenticated runs are seeded via `scripts/e2e/seed-test-users.mjs`. E2E is
   separate from the Vitest unit/integration gate.
+- **Nightly automations (GitHub Actions + repo skills).** Three scheduled guards run
+  in sequence each night, all gracefully skipping without `CLAUDE_CODE_OAUTH_TOKEN`:
+  `regression-guard.yml` (23:00 UTC → skill `regression-guard`: reconciles tests, opens a
+  PR + bug issues), `nightly.yml` (01:00 UTC: full E2E + pgTAP, tracking issue), then
+  `upgrade-guard.yml` (after a green nightly → skill `upgrade-guard`: stack upgrades —
+  auto-merges the patch/minor lot only when the full gate + E2E + pgTAP are green, one PR
+  per major, never bundled). None ever push to `main` directly (only `automerge` merges a
+  fully-green patch/minor PR). Cadence + traps: `docs/dependency-maintenance.md`.
 - **Policy docs (`docs/*.md`).** Topic-specific rules referenced from here:
   `docs/environment-variables.md`, `docs/logging-standard.md`, `docs/xss-rendering-policy.md`,
   `docs/release-tagging-policy.md`, `docs/dependency-maintenance.md`. These defer to
