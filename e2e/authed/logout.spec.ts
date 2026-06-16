@@ -2,8 +2,7 @@ import { test, expect } from "../fixtures";
 import { STORAGE_STATE } from "../helpers/users";
 
 // Logging out clears the session and the auth guard bounces back to /auth. Driven
-// from the lighter leaderboard page (same nav banner) to avoid the dashboard's 3D
-// radar WebGL stalls.
+// from the lighter leaderboard page (same nav banner).
 test.use({ storageState: STORAGE_STATE.free });
 
 test.describe("Logout", () => {
