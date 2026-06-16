@@ -1,0 +1,154 @@
+{
+  "title": "⭐ Entraînement : lire des textes du quotidien",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Lis le courriel :\n« Bonjour Sami,\nJe t'écris pour t'inviter à mon anniversaire samedi à 18 h, chez moi. Apporte juste ta bonne humeur ! Réponds-moi vite. À bientôt, Maya »\n\nQui organise l'anniversaire ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Le courriel ne le dit pas."
+        },
+        {
+          "id": "b",
+          "text": "Sami."
+        },
+        {
+          "id": "c",
+          "text": "Un ami de Sami."
+        },
+        {
+          "id": "d",
+          "text": "Maya."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Maya écrit « mon anniversaire » et signe à la fin : c'est donc elle qui l'organise. Sami est le destinataire (« Bonjour Sami »), pas l'auteur.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lis l'annonce :\n« PISCINE MUNICIPALE\nOuverte tous les jours de 9 h à 20 h.\nTarif adulte : 5 euros. Enfant : 3 euros. »\n\nCombien paie un enfant pour entrer ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "5 euros."
+        },
+        {
+          "id": "b",
+          "text": "9 euros."
+        },
+        {
+          "id": "c",
+          "text": "8 euros."
+        },
+        {
+          "id": "d",
+          "text": "3 euros."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "L'annonce indique « Enfant : 3 euros » : un enfant paie donc 3 euros. 5 euros est le tarif adulte, et 9 correspond à l'heure d'ouverture, pas au prix.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lis le SMS :\n« Coucou ! Je suis déjà au café. Je t'ai gardé une place près de la fenêtre. Viens quand tu veux ! — Théo »\n\nOù se trouve Théo ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "À la maison."
+        },
+        {
+          "id": "b",
+          "text": "Au cinéma."
+        },
+        {
+          "id": "c",
+          "text": "Au café."
+        },
+        {
+          "id": "d",
+          "text": "Au travail."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Théo écrit « Je suis déjà au café » : il se trouve donc au café. La maison, le cinéma et le travail ne sont pas mentionnés dans le message.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lis le programme :\n« JOURNÉE DU SPORT\n9 h : course à pied\n11 h : match de football\n14 h : tournoi de natation\n16 h : remise des prix »\n\nQuelle activité a lieu l'après-midi à 14 h ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "La course à pied."
+        },
+        {
+          "id": "b",
+          "text": "Le match de football."
+        },
+        {
+          "id": "c",
+          "text": "Le tournoi de natation."
+        },
+        {
+          "id": "d",
+          "text": "La remise des prix."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Le programme indique « 14 h : tournoi de natation » : c'est l'activité de 14 h. La course (9 h) et le football (11 h) ont lieu le matin, et la remise des prix est à 16 h.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lis la publicité :\n« NOUVEAU ! Boulangerie Le Bon Pain. Pains frais tous les matins. Venez goûter nos croissants ! Ouverture à 7 h. »\n\nPourquoi cette publicité a-t-elle été écrite ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Pour annoncer une fermeture."
+        },
+        {
+          "id": "b",
+          "text": "Pour chercher un employé."
+        },
+        {
+          "id": "c",
+          "text": "Pour donner une recette de pain."
+        },
+        {
+          "id": "d",
+          "text": "Pour attirer des clients dans la boulangerie."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "La publicité invite « Venez goûter nos croissants ! » : son but est d'attirer des clients. Elle n'annonce pas de fermeture, ne donne pas de recette et ne cherche pas d'employé.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lis la phrase :\n« Le restaurant était bondé : il n'y avait plus une seule table libre. »\n\nQue veut dire le mot « bondé » ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Très cher."
+        },
+        {
+          "id": "b",
+          "text": "Très grand."
+        },
+        {
+          "id": "c",
+          "text": "Fermé."
+        },
+        {
+          "id": "d",
+          "text": "Plein de monde."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« Bondé » est expliqué par « plus une seule table libre » : cela veut dire plein de monde. La taille, l'ouverture ou le prix ne sont pas en cause ici.",
+      "difficulty": 2
+    }
+  ]
+}

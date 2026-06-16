@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Complète : « Le matin, je ___ à sept heures. »",
+      "options": [
+        { "id": "a", "text": "me lève" },
+        { "id": "b", "text": "se lève" },
+        { "id": "c", "text": "lève" },
+        { "id": "d", "text": "te lève" }
+      ],
+      "correctOption": "a",
+      "explanation": "Avec « je », le pronom réfléchi est « me » : je me lève. « se lève » est pour il/elle, « te lève » est pour tu, et « lève » oublie le pronom réfléchi obligatoire.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Tu ___ les dents après le repas. »",
+      "options": [
+        { "id": "a", "text": "se brosses" },
+        { "id": "b", "text": "te brosses" },
+        { "id": "c", "text": "me brosses" },
+        { "id": "d", "text": "te brosse" }
+      ],
+      "correctOption": "b",
+      "explanation": "Avec « tu », le pronom est « te » et le verbe prend -es : tu te brosses. « se brosses » utilise le mauvais pronom, « me brosses » est pour je, et « te brosse » oublie le -s de la deuxième personne.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choisis la phrase correcte.",
+      "options": [
+        { "id": "a", "text": "Je me appelle Sami." },
+        { "id": "b", "text": "Je m'appelle Sami." },
+        { "id": "c", "text": "Je se appelle Sami." },
+        { "id": "d", "text": "Je appelle Sami." }
+      ],
+      "correctOption": "b",
+      "explanation": "« appelle » commence par une voyelle, donc « me » s'élide en « m' » : je m'appelle. « je me appelle » oublie l'élision obligatoire, « je se appelle » prend le mauvais pronom, et « je appelle » oublie le pronom réfléchi.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Nous ___ dans le parc le dimanche. »",
+      "options": [
+        { "id": "a", "text": "se promenons" },
+        { "id": "b", "text": "nous promenez" },
+        { "id": "c", "text": "nous promenons" },
+        { "id": "d", "text": "vous promenons" }
+      ],
+      "correctOption": "c",
+      "explanation": "Avec « nous », le pronom réfléchi est aussi « nous » et le verbe prend -ons : nous nous promenons. « se promenons » utilise le mauvais pronom, « nous promenez » et « vous promenons » mélangent les terminaisons de nous et vous.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Mets à la forme négative : « Il se couche tôt. »",
+      "options": [
+        { "id": "a", "text": "Il se ne couche pas tôt." },
+        { "id": "b", "text": "Il ne couche se pas tôt." },
+        { "id": "c", "text": "Il ne se couche pas tôt." },
+        { "id": "d", "text": "Il ne se couche tôt pas." }
+      ],
+      "correctOption": "c",
+      "explanation": "La négation encadre le pronom et le verbe ensemble : ne + se couche + pas → Il ne se couche pas tôt. Les autres séparent le pronom du verbe ou placent « pas » au mauvais endroit.",
+      "difficulty": 2
+    }
+  ]
+}

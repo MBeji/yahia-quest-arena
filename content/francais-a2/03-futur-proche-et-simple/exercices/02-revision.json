@@ -1,0 +1,85 @@
+{
+  "title": "⭐⭐ Révision : le futur",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complète au futur simple : « Quand tu seras grand, tu ___ ce que tu veux. » (faire)",
+      "options": [
+        { "id": "a", "text": "fairas" },
+        { "id": "b", "text": "feras" },
+        { "id": "c", "text": "faireras" },
+        { "id": "d", "text": "vas faire" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le verbe faire a un radical irrégulier au futur : fer-, donc tu feras. « fairas » et « faireras » appliquent à tort l'infinitif, et « vas faire » est du futur proche alors qu'on demande le futur simple.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète au futur simple : « L'été prochain, nous ___ à la mer. » (aller)",
+      "options": [
+        { "id": "a", "text": "allerons" },
+        { "id": "b", "text": "allons" },
+        { "id": "c", "text": "irons" },
+        { "id": "d", "text": "irerons" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le futur simple du verbe aller utilise le radical irrégulier ir- : nous irons. « allerons » applique à tort l'infinitif, « allons » est le présent, et « irerons » double les terminaisons.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase est correcte au futur proche ?",
+      "options": [
+        { "id": "a", "text": "Elle va prendre le bus." },
+        { "id": "b", "text": "Elle va prend le bus." },
+        { "id": "c", "text": "Elle vont prendre le bus." },
+        { "id": "d", "text": "Elle va prendra le bus." }
+      ],
+      "correctOption": "a",
+      "explanation": "Le futur proche = aller au présent + infinitif : elle va prendre. « va prend » et « va prendra » mettent un verbe conjugué au lieu de l'infinitif, et « vont » est la forme de ils/elles, pas de elle.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète au futur simple : « Demain, j'___ le temps de t'aider. » (avoir)",
+      "options": [
+        { "id": "a", "text": "avrai" },
+        { "id": "b", "text": "aurai" },
+        { "id": "c", "text": "aurais" },
+        { "id": "d", "text": "avoirai" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le verbe avoir a le radical irrégulier aur- au futur : j'aurai. « aurais » est le conditionnel, « avrai » et « avoirai » ne sont pas des formes existantes du futur de avoir.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète au futur simple : « Plus tard, ils ___ médecins. » (être)",
+      "options": [
+        { "id": "a", "text": "seraient" },
+        { "id": "b", "text": "êtront" },
+        { "id": "c", "text": "vont être" },
+        { "id": "d", "text": "seront" }
+      ],
+      "correctOption": "d",
+      "explanation": "Le verbe être prend le radical ser- au futur ; avec ils, la terminaison est -ont : ils seront. « seraient » est le conditionnel, « êtront » applique à tort l'infinitif, et « vont être » est du futur proche.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase exprime correctement une prévision lointaine ?",
+      "options": [
+        { "id": "a", "text": "Dans cent ans, les robots font tout le travail." },
+        {
+          "id": "b",
+          "text": "Dans cent ans, les robots vont faire tout le travail tout à l'heure."
+        },
+        { "id": "c", "text": "Dans cent ans, les robots feront tout le travail." },
+        { "id": "d", "text": "Dans cent ans, les robots faisaient tout le travail." }
+      ],
+      "correctOption": "c",
+      "explanation": "Une prévision lointaine se met au futur simple : les robots feront (radical fer- de faire). Le présent (a) ne situe pas dans l'avenir, (b) mélange futur proche et « tout à l'heure » (proche), incohérent avec « dans cent ans », et (d) est à l'imparfait (passé).",
+      "difficulty": 2
+    }
+  ]
+}

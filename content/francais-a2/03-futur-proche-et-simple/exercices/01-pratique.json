@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Entraînement : le futur",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complète au futur proche : « Tu ___ tes devoirs maintenant. » (faire)",
+      "options": [
+        { "id": "a", "text": "va faire" },
+        { "id": "b", "text": "vas faire" },
+        { "id": "c", "text": "vas fais" },
+        { "id": "d", "text": "feras" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le futur proche = aller au présent + infinitif ; avec tu, aller donne vas : tu vas faire. « va faire » est la forme de il/elle, « vas fais » garde un verbe conjugué au lieu de l'infinitif, et « feras » est du futur simple.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète au futur simple : « Demain, il ___ ses amis. » (inviter)",
+      "options": [
+        { "id": "a", "text": "invitera" },
+        { "id": "b", "text": "inviteras" },
+        { "id": "c", "text": "invitra" },
+        { "id": "d", "text": "va inviter" }
+      ],
+      "correctOption": "a",
+      "explanation": "Au futur simple, il prend la terminaison -a : inviter + -a → il invitera. « inviteras » est la forme de tu, « invitra » oublie le e de l'infinitif, et « va inviter » est du futur proche (pas demandé ici).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète au futur proche : « Nous ___ au cinéma ce soir. » (aller)",
+      "options": [
+        { "id": "a", "text": "vont aller" },
+        { "id": "b", "text": "irons" },
+        { "id": "c", "text": "allons aller" },
+        { "id": "d", "text": "allons allons" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le futur proche du verbe aller = aller au présent + l'infinitif aller : nous allons aller. « vont aller » est la forme de ils, « irons » est du futur simple, et « allons allons » répète une forme conjuguée.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète au futur simple : « Vous ___ la maison l'an prochain. » (vendre)",
+      "options": [
+        { "id": "a", "text": "venderez" },
+        { "id": "b", "text": "vendez" },
+        { "id": "c", "text": "vendrons" },
+        { "id": "d", "text": "vendrez" }
+      ],
+      "correctOption": "d",
+      "explanation": "Pour les verbes en -re, on enlève le e avant la terminaison : vendre → vendr- + -ez → vous vendrez. « venderez » garde le e à tort, « vendez » est le présent, et « vendrons » est la forme de nous.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Mets au futur proche négatif : « Je ___ ce soir. » (sortir)",
+      "options": [
+        { "id": "a", "text": "vais ne pas sortir" },
+        { "id": "b", "text": "ne sortirai pas" },
+        { "id": "c", "text": "ne vais pas sortir" },
+        { "id": "d", "text": "ne vais sortir pas" }
+      ],
+      "correctOption": "c",
+      "explanation": "Au futur proche, on encadre aller par ne … pas, puis l'infinitif : je ne vais pas sortir. « ne sortirai pas » est du futur simple, « vais ne pas » et « ne vais sortir pas » placent mal ne et pas autour du verbe aller.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète au futur simple : « En 2030, on ___ sur Mars. » (voyager)",
+      "options": [
+        { "id": "a", "text": "voyageras" },
+        { "id": "b", "text": "va voyager" },
+        { "id": "c", "text": "voyagerons" },
+        { "id": "d", "text": "voyagera" }
+      ],
+      "correctOption": "d",
+      "explanation": "Une prévision lointaine se met au futur simple ; avec on (= il), la terminaison est -a : on voyagera. « voyageras » est pour tu, « va voyager » est du futur proche, et « voyagerons » est la forme de nous.",
+      "difficulty": 2
+    }
+  ]
+}

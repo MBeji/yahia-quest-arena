@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Complète : « Quand j'étais petit, je ___ au parc tous les jours. »",
+      "options": [
+        { "id": "a", "text": "joue" },
+        { "id": "b", "text": "jouais" },
+        { "id": "c", "text": "ai joué" },
+        { "id": "d", "text": "jouerai" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Tous les jours » indique une habitude passée : on emploie l'imparfait, je jouais. « joue » est le présent, « ai joué » le passé composé (action unique), et « jouerai » le futur.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Pour former l'imparfait, sur quelle forme prend-on le radical ?",
+      "options": [
+        { "id": "a", "text": "Sur l'infinitif du verbe" },
+        { "id": "b", "text": "Sur la forme « je » du présent" },
+        { "id": "c", "text": "Sur la forme « nous » du présent" },
+        { "id": "d", "text": "Sur le participe passé" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le radical de l'imparfait vient de la forme « nous » au présent, sans -ons : nous parlons → parl-. On ajoute ensuite -ais, -ais, -ait, -ions, -iez, -aient.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle est la terminaison de l'imparfait avec « ils / elles » ?",
+      "options": [
+        { "id": "a", "text": "-aient" },
+        { "id": "b", "text": "-ait" },
+        { "id": "c", "text": "-ais" },
+        { "id": "d", "text": "-ent" }
+      ],
+      "correctOption": "a",
+      "explanation": "Avec ils/elles, l'imparfait prend -aient : ils parlaient. La terminaison est muette (on entend « parlait »). « -ait » est pour il/elle et « -ais » pour je/tu.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Il ___ beau et nous ___ contents. »",
+      "options": [
+        { "id": "a", "text": "faisait / étions" },
+        { "id": "b", "text": "a fait / avons été" },
+        { "id": "c", "text": "faisait / étaient" },
+        { "id": "d", "text": "faisais / étions" }
+      ],
+      "correctOption": "a",
+      "explanation": "Description du passé → imparfait : il faisait beau, nous étions contents. « a fait / avons été » est le passé composé, « étaient » est pour ils, et « faisais » est pour je/tu.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans « Je lisais quand tu es arrivé », pourquoi « lisais » est-il à l'imparfait ?",
+      "options": [
+        { "id": "a", "text": "C'est l'action soudaine et ponctuelle" },
+        { "id": "b", "text": "C'est l'action en cours, le décor de la scène" },
+        { "id": "c", "text": "C'est une action future" },
+        { "id": "d", "text": "C'est une action terminée et unique" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Je lisais » est l'action en cours qui sert de décor ; « tu es arrivé » (passé composé) est l'événement ponctuel qui interrompt. L'imparfait pose le fond, le passé composé marque l'action soudaine.",
+      "difficulty": 2
+    }
+  ]
+}

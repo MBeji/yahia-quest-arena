@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Entraînement : prépositions de lieu et de temps",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complète : « Le livre est ___ la table. »",
+      "options": [
+        { "id": "a", "text": "dans" },
+        { "id": "b", "text": "à" },
+        { "id": "c", "text": "sur" },
+        { "id": "d", "text": "chez" }
+      ],
+      "correctOption": "c",
+      "explanation": "On emploie « sur » pour une surface : le livre est sur la table. « dans » signifierait à l'intérieur, « à » marque un lieu précis sans idée de surface, et « chez » ne s'emploie qu'avec une personne.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Ce week-end, je vais ___ Tunis. »",
+      "options": [
+        { "id": "a", "text": "en" },
+        { "id": "b", "text": "à" },
+        { "id": "c", "text": "au" },
+        { "id": "d", "text": "dans" }
+      ],
+      "correctOption": "b",
+      "explanation": "Devant un nom de ville, on utilise « à » : à Tunis. « en » s'emploie pour les pays féminins (en France), « au » pour les pays masculins (au Maroc), et « dans » indique un espace fermé, pas une ville.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Le train part ___ midi. »",
+      "options": [
+        { "id": "a", "text": "à" },
+        { "id": "b", "text": "en" },
+        { "id": "c", "text": "dans" },
+        { "id": "d", "text": "sur" }
+      ],
+      "correctOption": "a",
+      "explanation": "On indique une heure précise avec « à » : à midi. « en » s'emploie pour une année ou une saison, « dans » pour un moment futur (dans une heure), et « sur » est une préposition de lieu, pas de temps.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Mon frère habite ___ Maroc. »",
+      "options": [
+        { "id": "a", "text": "en" },
+        { "id": "b", "text": "à" },
+        { "id": "c", "text": "aux" },
+        { "id": "d", "text": "au" }
+      ],
+      "correctOption": "d",
+      "explanation": "Le Maroc est un pays masculin, donc on emploie « au » : au Maroc. « en » s'utilise pour les pays féminins, « à » pour les villes, et « aux » seulement pour les pays au pluriel (aux États-Unis).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Le chien dort ___ le canapé. »",
+      "options": [
+        { "id": "a", "text": "chez" },
+        { "id": "b", "text": "sous" },
+        { "id": "c", "text": "en" },
+        { "id": "d", "text": "à" }
+      ],
+      "correctOption": "b",
+      "explanation": "« sous » indique la position en dessous : le chien dort sous le canapé. « chez » s'emploie avec une personne, « en » devant un pays ou une saison, et « à » marque un lieu précis, sans idée de « en dessous ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « J'ai rendez-vous ___ le coiffeur cet après-midi. »",
+      "options": [
+        { "id": "a", "text": "chez" },
+        { "id": "b", "text": "à" },
+        { "id": "c", "text": "dans" },
+        { "id": "d", "text": "en" }
+      ],
+      "correctOption": "a",
+      "explanation": "On emploie « chez » devant une personne ou un métier : chez le coiffeur. « à » s'emploierait devant un lieu (à la pharmacie), « dans » devant un espace fermé, et « en » devant un pays ou une saison.",
+      "difficulty": 2
+    }
+  ]
+}

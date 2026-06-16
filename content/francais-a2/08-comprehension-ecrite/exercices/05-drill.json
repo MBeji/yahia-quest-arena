@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill : lecture rapide tous textes",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Lis le SMS :\n« Salut ! Le film commence à 20 h 30, mais arrive vers 20 h pour qu'on ait de bonnes places. À tout à l'heure ! »\n\nÀ quelle heure faut-il arriver au cinéma ?",
+      "options": [
+        { "id": "a", "text": "À 20 h." },
+        { "id": "b", "text": "À 20 h 30." },
+        { "id": "c", "text": "À 21 h." },
+        { "id": "d", "text": "À 19 h 30." }
+      ],
+      "correctOption": "a",
+      "explanation": "Le SMS demande « arrive vers 20 h » : il faut donc arriver à 20 h. 20 h 30 est l'heure du début du film, pas de l'arrivée conseillée.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lis l'annonce :\n« MARCHÉ DE NOËL\nDu 1er au 24 décembre, place de la Mairie.\nArtisanat, gourmandises et animations pour enfants. »\n\nQu'est-ce qu'on trouve à ce marché ?",
+      "options": [
+        { "id": "a", "text": "Des voitures d'occasion." },
+        { "id": "b", "text": "De l'artisanat et des gourmandises." },
+        { "id": "c", "text": "Des cours de langue." },
+        { "id": "d", "text": "Des animaux à adopter." }
+      ],
+      "correctOption": "b",
+      "explanation": "L'annonce cite « Artisanat, gourmandises et animations pour enfants » : on y trouve de l'artisanat et des gourmandises. Les voitures, les cours et les animaux ne sont pas mentionnés.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lis le courriel :\n« Bonjour,\nÀ partir du mois prochain, notre boulangerie ouvrira aussi le dimanche matin. Nous espérons vous y accueillir nombreux ! »\n\nLa boulangerie ouvre-t-elle déjà le dimanche aujourd'hui ?",
+      "options": [
+        { "id": "a", "text": "Oui, depuis toujours." },
+        { "id": "b", "text": "Oui, mais seulement l'après-midi." },
+        { "id": "c", "text": "Le courriel ne le dit pas." },
+        { "id": "d", "text": "Non, seulement à partir du mois prochain." }
+      ],
+      "correctOption": "d",
+      "explanation": "Le futur « ouvrira aussi le dimanche » et « à partir du mois prochain » montrent que ce n'est pas encore le cas : cela commencera plus tard. C'est un projet, pas un fait déjà réalisé.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lis le message de forum :\n« Bonjour, je voudrais offrir un cadeau à ma sœur qui aime beaucoup cuisiner. Avez-vous des idées de cadeaux utiles et pas trop chers ? Merci ! »\n\nQuel type de cadeau cherche l'auteur ?",
+      "options": [
+        { "id": "a", "text": "Un cadeau pour quelqu'un qui aime cuisiner." },
+        { "id": "b", "text": "Un cadeau pour un enfant." },
+        { "id": "c", "text": "Un cadeau de sport." },
+        { "id": "d", "text": "Un cadeau très cher et de luxe." }
+      ],
+      "correctOption": "a",
+      "explanation": "L'auteur précise que sa sœur « aime beaucoup cuisiner » : il cherche donc un cadeau lié à la cuisine. Il veut quelque chose « pas trop cher », ce qui exclut le cadeau de luxe ; l'enfant et le sport ne sont pas évoqués.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lis le règlement :\n« PISCINE — CONSIGNES\n- Le bonnet de bain est obligatoire.\n- Il est interdit de courir au bord du bassin.\n- Les enfants doivent être accompagnés d'un adulte. »\n\nUn enfant peut-il aller seul à la piscine d'après ces consignes ?",
+      "options": [
+        { "id": "a", "text": "Oui, sans condition." },
+        { "id": "b", "text": "Oui, s'il sait nager." },
+        { "id": "c", "text": "Non, il doit être accompagné d'un adulte." },
+        { "id": "d", "text": "Le règlement ne parle pas des enfants." }
+      ],
+      "correctOption": "c",
+      "explanation": "La consigne dit « Les enfants doivent être accompagnés d'un adulte » : un enfant ne peut donc pas venir seul. Le fait de savoir nager n'est pas mentionné comme condition, et le règlement parle bien des enfants.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lis la phrase :\n« Après cette longue marche en montagne, nous étions affamés et nous avons tout mangé. »\n\nQue veut dire le mot « affamés » ?",
+      "options": [
+        { "id": "a", "text": "Très fatigués." },
+        { "id": "b", "text": "Avoir très faim." },
+        { "id": "c", "text": "Très contents." },
+        { "id": "d", "text": "Perdus." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Affamés » est lié à « nous avons tout mangé » : le mot veut dire avoir très faim. La fatigue, la joie ou le fait d'être perdu n'expliquent pas le fait de tout manger.",
+      "difficulty": 2
+    }
+  ]
+}

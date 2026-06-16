@@ -1,0 +1,82 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : le futur",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Lis : « Mes valises sont faites, mon billet est réservé : je pars dans une heure. » Quelle phrase décrit le mieux la situation ?",
+      "options": [
+        { "id": "a", "text": "Je prenais l'avion dans une heure." },
+        { "id": "b", "text": "Je prends souvent l'avion." },
+        { "id": "c", "text": "Un jour, je prendrai peut-être l'avion." },
+        { "id": "d", "text": "Je vais prendre l'avion dans une heure." }
+      ],
+      "correctOption": "d",
+      "explanation": "Le projet est sûr et tout proche (valises faites, billet réservé, départ dans une heure), donc le futur proche convient : je vais prendre l'avion. (a) est l'imparfait (passé), (b) le présent d'habitude, et (c) un futur simple vague qui contredit la certitude du texte.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "Nous viendrons te voir samedi." },
+        { "id": "b", "text": "Tu sauras la vérité bientôt." },
+        { "id": "c", "text": "Elle va devra travailler ce week-end." },
+        { "id": "d", "text": "Je voudrai un café après le repas." }
+      ],
+      "correctOption": "c",
+      "explanation": "L'erreur est en (c) : on ne cumule pas futur proche et futur simple ; il faut « elle va devoir » (proche) ou « elle devra » (simple). Les autres sont correctes : viendr- (venir), saur- (savoir), voudr- (vouloir).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète au futur simple avec le bon radical : « Le mois prochain, vous ___ vos résultats et vous ___ choisir une école. » (voir / devoir)",
+      "options": [
+        { "id": "a", "text": "verrez / devrez" },
+        { "id": "b", "text": "voirez / devrez" },
+        { "id": "c", "text": "voyez / devez" },
+        { "id": "d", "text": "verrez / devoirez" }
+      ],
+      "correctOption": "a",
+      "explanation": "Voir prend le radical verr- et devoir le radical devr- ; avec vous : vous verrez, vous devrez. « voirez » et « devoirez » appliquent à tort l'infinitif, et « voyez / devez » est le présent, pas le futur.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lis : « Karim a fini ses études et a accepté un poste à Tunis ; il commence lundi. » Quelle affirmation est VRAIE ?",
+      "options": [
+        { "id": "a", "text": "Il ne travaillera jamais à Tunis." },
+        { "id": "b", "text": "Il va commencer son travail à Tunis lundi." },
+        { "id": "c", "text": "Il va reprendre ses études." },
+        { "id": "d", "text": "Il travaillait déjà à Tunis l'an dernier." }
+      ],
+      "correctOption": "b",
+      "explanation": "Karim a accepté un poste et commence lundi : le projet proche et sûr se dit au futur proche, il va commencer. (a) et (c) contredisent le texte (il a fini ses études et accepté le poste), et (d) est à l'imparfait (passé), ce que le texte ne dit pas.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choisis la phrase entièrement correcte.",
+      "options": [
+        { "id": "a", "text": "Quand j'aurai fini, je viendrai et je fairai le ménage." },
+        { "id": "b", "text": "Quand j'aurais fini, je viendrai et je ferai le ménage." },
+        { "id": "c", "text": "Quand j'aurai fini, je viendrai et je ferai le ménage." },
+        { "id": "d", "text": "Quand j'aurai fini, je venirai et je ferai le ménage." }
+      ],
+      "correctOption": "c",
+      "explanation": "Seule (c) enchaîne trois futurs corrects : aurai (aur-), viendrai (viendr-), ferai (fer-). (a) écrit « fairai » au lieu de ferai, (b) met « aurais » (conditionnel), et (d) écrit « venirai » au lieu de viendrai. Le piège courant est d'oublier ces radicaux irréguliers.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lis : « Le ciel est tout noir et le vent se lève. » Quelle suite est la plus naturelle ?",
+      "options": [
+        { "id": "a", "text": "Il pleuvra peut-être dans plusieurs années." },
+        { "id": "b", "text": "Il va pleuvoir d'un instant à l'autre." },
+        { "id": "c", "text": "Il pleuvait d'un instant à l'autre." },
+        { "id": "d", "text": "Il pleut chaque jour à cette heure." }
+      ],
+      "correctOption": "b",
+      "explanation": "On observe un signe immédiat (ciel noir, vent), donc on prévoit un événement tout proche au futur proche : il va pleuvoir. (a) au futur simple parle d'un avenir lointain incohérent, (c) est l'imparfait (passé), et (d) le présent d'habitude — aucun ne traduit l'imminence.",
+      "difficulty": 3
+    }
+  ]
+}
