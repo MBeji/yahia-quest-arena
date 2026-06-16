@@ -71,8 +71,10 @@ function QuestPage() {
 
   const [idx, setIdx] = useState(0);
   const [answers, setAnswers] = useState<Answer[]>([]);
+  // The chosen option for the current question. It is freely changeable until the
+  // student clicks "Valider": selecting only highlights a choice — nothing is
+  // recorded or advanced until validation. There is NO auto-advance on select.
   const [selected, setSelected] = useState<string | null>(null);
-  const [showFeedback, setShowFeedback] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [showLevelUp, setShowLevelUp] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -173,7 +175,6 @@ function QuestPage() {
 
   // Boss mode: the per-question countdown lives in <BossCountdown> so its 1 Hz
   // tick re-renders only that chip, not the whole QuestPage tree.
-  const feedbackTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const answeredQuestionRef = useRef<string | null>(null);
   // The exercise id we've already started (or attempted to start) a session for.
   // This guards the start effect so a rejected start (e.g. a premium-locked
@@ -195,14 +196,17 @@ function QuestPage() {
   currentRef.current = current;
   sessionIdRef.current = sessionId;
 
-  // Auto-submit a __timeout__ answer when the boss per-question timer expires.
-  // Reads live state via refs, so the identity churn from `mutation` never
-  // restarts <BossCountdown>'s interval.
+  // Boss mode keeps its time pressure: when the per-question timer expires we
+  // commit whatever the student has currently selected, or a `__timeout__` answer
+  // if they didn't pick one. This is the only automatic advance left — a *timeout*,
+  // not a passage on select. Reads live state via refs, so the identity churn from
+  // `mutation` never restarts <BossCountdown>'s interval.
   const handleBossTimeout = useCallback(() => {
-    if (selectedRef.current) return; // already answered → the normal flow submits it
+    if (answeredQuestionRef.current === currentRef.current?.id) return;
+    answeredQuestionRef.current = currentRef.current?.id ?? null;
     const autoAnswer: Answer = {
       questionId: currentRef.current?.id ?? "",
-      choice: "__timeout__",
+      choice: selectedRef.current ?? "__timeout__",
     };
     const nextAnswers = [...answersRef.current, autoAnswer];
     if (idxRef.current + 1 >= totalRef.current) {
@@ -211,14 +215,9 @@ function QuestPage() {
       setAnswers(nextAnswers);
       setIdx((i) => i + 1);
       setSelected(null);
+      answeredQuestionRef.current = null;
     }
   }, [exerciseId, mutation]);
-
-  useEffect(() => {
-    return () => {
-      if (feedbackTimeoutRef.current) clearTimeout(feedbackTimeoutRef.current);
-    };
-  }, []);
 
   // Boss HP: starts at 100%, decreases per answered question
   const bossHp = useMemo(() => {
@@ -227,10 +226,6 @@ function QuestPage() {
   }, [isBoss, total, idx]);
 
   const resetRun = useCallback(() => {
-    if (feedbackTimeoutRef.current) {
-      clearTimeout(feedbackTimeoutRef.current);
-      feedbackTimeoutRef.current = null;
-    }
     answeredQuestionRef.current = null;
     // Allow the next exercise (or a replay of this one) to start a fresh session,
     // and clear any prior start error so it can't leak into the new run's render.
@@ -240,7 +235,6 @@ function QuestPage() {
     setIdx(0);
     setAnswers([]);
     setSelected(null);
-    setShowFeedback(false);
     setShowConfetti(false);
     setShowLevelUp(false);
     setSessionId(null);
@@ -271,7 +265,7 @@ function QuestPage() {
     (choice: string) => {
       if (!sessionId || !current?.id) return;
 
-      // Prevent duplicate processing when auto-advance and manual button race.
+      // Prevent duplicate processing when a boss timeout and the manual button race.
       if (answeredQuestionRef.current === current.id) return;
       answeredQuestionRef.current = current.id;
 
@@ -285,45 +279,44 @@ function QuestPage() {
       setAnswers(nextAnswers);
       setIdx((i) => i + 1);
       setSelected(null);
-      setShowFeedback(false);
       answeredQuestionRef.current = null;
     },
     [answers, current?.id, exerciseId, idx, mutation, sessionId, total],
   );
 
-  const advanceNow = useCallback(() => {
-    if (!selected || !sessionId || !showFeedback) return;
-    if (feedbackTimeoutRef.current) {
-      clearTimeout(feedbackTimeoutRef.current);
-      feedbackTimeoutRef.current = null;
-    }
+  // The sole validation path: records the selected choice and advances. Enabled
+  // only once an option is selected; the student can re-pick freely until then.
+  const validate = useCallback(() => {
+    if (!selected || !sessionId) return;
     advanceWithChoice(selected);
-  }, [advanceWithChoice, selected, sessionId, showFeedback]);
+  }, [advanceWithChoice, selected, sessionId]);
 
-  // Keyboard shortcuts: 1-4 to select answer, Enter/Space to advance
+  // Keyboard shortcuts: 1-4 / A-D (re)select an answer — freely changeable —
+  // and Enter/Space validates the current selection.
   useEffect(() => {
     if (result) return;
     function handleKeyDown(e: KeyboardEvent) {
       // Prevent if focus is on an input or button (unless it's the body)
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
 
-      const optionsList = current ? (shuffledOptionsByQuestionId.get(current.id) ?? []) : [];
-
-      if (!showFeedback) {
-        const num = parseInt(e.key, 10);
-        if (num >= 1 && num <= optionsList.length) {
-          e.preventDefault();
-          handleSelect(optionsList[num - 1].id);
-        }
-        // A, B, C, D keys
-        const letterIdx = "abcd".indexOf(e.key.toLowerCase());
-        if (letterIdx >= 0 && letterIdx < optionsList.length) {
-          e.preventDefault();
-          handleSelect(optionsList[letterIdx].id);
-        }
-      } else if (e.key === "Enter" || e.key === " ") {
+      if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        advanceNow();
+        validate();
+        return;
+      }
+
+      const optionsList = current ? (shuffledOptionsByQuestionId.get(current.id) ?? []) : [];
+      const num = parseInt(e.key, 10);
+      if (num >= 1 && num <= optionsList.length) {
+        e.preventDefault();
+        setSelected(optionsList[num - 1].id);
+        return;
+      }
+      // A, B, C, D keys
+      const letterIdx = "abcd".indexOf(e.key.toLowerCase());
+      if (letterIdx >= 0 && letterIdx < optionsList.length) {
+        e.preventDefault();
+        setSelected(optionsList[letterIdx].id);
       }
     }
     window.addEventListener("keydown", handleKeyDown);
@@ -573,17 +566,10 @@ function QuestPage() {
   // error keeps `isError` set, surfaces its toast, and falls through below.
   if (!sessionId && !sessionMutation.isError) return preparingScreen;
 
+  // Selecting only highlights a choice; the student can change it freely until
+  // they click "Valider". No recording, no auto-advance here.
   function handleSelect(optId: string) {
-    if (showFeedback) return; // prevent changing during feedback
     setSelected(optId);
-    setShowFeedback(true);
-
-    if (feedbackTimeoutRef.current) clearTimeout(feedbackTimeoutRef.current);
-
-    // Auto-advance after showing feedback
-    feedbackTimeoutRef.current = setTimeout(() => {
-      advanceWithChoice(optId);
-    }, 1800);
   }
 
   const options = current ? (shuffledOptionsByQuestionId.get(current.id) ?? []) : [];
@@ -695,20 +681,15 @@ function QuestPage() {
           <div className="mt-6 space-y-3" role="radiogroup" aria-label={current.prompt}>
             {options.map((opt) => {
               const isSel = selected === opt.id;
-              let cls = isBoss
-                ? "border-destructive/20 bg-black/40 hover:border-destructive/60 hover:bg-destructive/10"
-                : "border-border bg-black/40 hover:border-(--gold)/60 hover:bg-black/70";
-              if (showFeedback) {
-                if (isSel) {
-                  cls = isBoss
-                    ? "border-destructive bg-destructive/20"
-                    : "border-(--gold) bg-(--gold)/15";
-                } else cls = "border-border/30 bg-black/20 opacity-50";
-              } else if (isSel) {
-                cls = isBoss
+              // Selected option is highlighted; the rest stay fully interactive so
+              // the student can change their mind until they validate.
+              const cls = isSel
+                ? isBoss
                   ? "border-destructive bg-destructive/20"
-                  : "border-(--gold) bg-(--gold)/15";
-              }
+                  : "border-(--gold) bg-(--gold)/15"
+                : isBoss
+                  ? "border-destructive/20 bg-black/40 hover:border-destructive/60 hover:bg-destructive/10"
+                  : "border-border bg-black/40 hover:border-(--gold)/60 hover:bg-black/70";
               return (
                 <button
                   key={opt.id}
@@ -716,8 +697,7 @@ function QuestPage() {
                   role="radio"
                   aria-checked={isSel}
                   onClick={() => handleSelect(opt.id)}
-                  disabled={showFeedback}
-                  className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left text-sm transition-all duration-200 ${cls} ${showFeedback ? "cursor-default" : "active:scale-[0.97]"}`}
+                  className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left text-sm transition-all duration-200 active:scale-[0.97] ${cls}`}
                 >
                   <span
                     className="flex items-center gap-3"
@@ -730,13 +710,12 @@ function QuestPage() {
                     </span>
                     <OptionContent raw={opt.text} />
                   </span>
-                  {/* Non-color indicator: the quest screen only reveals the recorded
-                      choice (correctness is shown in the end-of-quest review), so mark
-                      the selected option with an icon + screen-reader text. */}
-                  {showFeedback && isSel && (
+                  {/* Non-color indicator: mark the currently selected (not yet
+                      validated) choice with an icon + screen-reader text. */}
+                  {isSel && (
                     <span className="flex shrink-0 items-center gap-1">
                       <Check className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">{t.quest.yourAnswer}</span>
+                      <span className="sr-only">{t.quest.selectedAnswer}</span>
                     </span>
                   )}
                 </button>
@@ -744,11 +723,9 @@ function QuestPage() {
             })}
           </div>
 
-          {!showFeedback && (
-            <div className="mt-3 text-center text-xs text-muted-foreground/60 hidden sm:block">
-              {t.quest.keyboardHint.replace("{keys1}", "1-4").replace("{keys2}", "A-D")}
-            </div>
-          )}
+          <div className="mt-3 text-center text-xs text-muted-foreground/60 hidden sm:block">
+            {t.quest.keyboardHint.replace("{keys1}", "1-4").replace("{keys2}", "A-D")}
+          </div>
 
           {canUseHints && current && (
             <QuestHintButton
@@ -763,21 +740,11 @@ function QuestPage() {
             />
           )}
 
-          {showFeedback && (
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-4 rounded-xl border border-(--gold)/30 bg-(--gold)/10 p-4 text-sm text-[color:var(--gold)]"
-            >
-              <p>{isQuiz ? QL.quizRecorded : t.quest.feedbackMsg}</p>
-            </motion.div>
-          )}
-
           <div className="mt-6 flex justify-end">
             <button
               data-testid="quest-submit"
-              disabled={!showFeedback || mutation.isPending || sessionMutation.isPending}
-              onClick={advanceNow}
+              disabled={!selected || mutation.isPending || sessionMutation.isPending}
+              onClick={validate}
               className={`inline-flex items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-bold shadow-gold transition disabled:opacity-40 ${
                 isBoss
                   ? "bg-linear-to-r from-destructive to-[color:var(--gold)] text-primary-foreground"

@@ -218,6 +218,7 @@ export type TranslationKeys = {
     bossStrike: string;
     questionOf: string;
     feedbackMsg: string;
+    selectedAnswer: string;
     nextQuestion: string;
     finishQuest: string;
     bossAttack: string;
@@ -280,6 +281,7 @@ export type TranslationKeys = {
     floor: string;
     oneHp: string;
     warning: string;
+    validate: string;
     correctMsg: string;
     wrongMsg: string;
     depth: string;
