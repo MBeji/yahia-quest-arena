@@ -141,11 +141,31 @@ export class QuestPage {
       const correctText = byPrompt.get(prompt);
       const option =
         correctText && correctText.length > 0
-          ? this.options.filter({ hasText: correctText }).first()
+          ? this.options.nth(await this.correctOptionIndex(correctText))
           : this.options.first();
       // Pause before selecting so total per-question time (pause + ~1.8s
       // auto-advance) exceeds MIN_SECONDS_PER_QUESTION (4s) → attempt isn't void.
       await this.answerCurrent(option, preSelectPauseMs);
     }
+  }
+
+  /**
+   * Index of the rendered option matching the answer-key text. Arabic options
+   * isolate their inline LTR math runs with Unicode directional isolates
+   * (U+2066 LRI … U+2069 PDI — see src/shared/lib/bidi.ts), so the rendered text
+   * no longer contains the raw answer-key string as a contiguous substring (e.g.
+   * "ax + b = 0 حيث a ≠ 0" renders as "⁦ax + b = 0 ⁩حيث⁦ a ≠ 0⁩"). Strip the
+   * isolates before matching; fall back to the first option when none match.
+   */
+  private async correctOptionIndex(correctText: string): Promise<number> {
+    // Directional isolates are U+2066 (LRI) … U+2069 (PDI). Matched by code
+    // point rather than a literal-char regex so no invisible chars live in source.
+    const stripIsolates = (s: string): string =>
+      [...s]
+        .filter((c) => (c.codePointAt(0) ?? 0) < 0x2066 || (c.codePointAt(0) ?? 0) > 0x2069)
+        .join("");
+    const texts = await this.options.allInnerTexts();
+    const idx = texts.findIndex((t) => stripIsolates(t).includes(correctText));
+    return idx >= 0 ? idx : 0;
   }
 }
