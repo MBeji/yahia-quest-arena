@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill: Asking Questions & Reading",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Which question word asks about a REASON?",
+      "options": [
+        { "id": "a", "text": "What" },
+        { "id": "b", "text": "Whose" },
+        { "id": "c", "text": "Why" },
+        { "id": "d", "text": "How many" }
+      ],
+      "correctOption": "c",
+      "explanation": "Why asks for a reason and expects an answer starting with Because: Why are you tired? — Because I didn't sleep. What asks for a thing, whose asks for an owner, and how many asks for a number — none of these asks for a reason.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"___ old are you?\" — \"I am fourteen.\"",
+      "options": [
+        { "id": "a", "text": "What" },
+        { "id": "b", "text": "How" },
+        { "id": "c", "text": "When" },
+        { "id": "d", "text": "Where" }
+      ],
+      "correctOption": "b",
+      "explanation": "To ask about age in English, use How old: How old are you? — I am fourteen. \"What old\" is not English (we cannot say \"what old\"), when asks for a time, and where asks for a place — neither fits an age answer.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"___ does your brother go to school?\" — \"On foot.\"",
+      "options": [
+        { "id": "a", "text": "How" },
+        { "id": "b", "text": "What" },
+        { "id": "c", "text": "When" },
+        { "id": "d", "text": "Where" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"On foot\" describes the way of travelling, so the question word is how: How does your brother go to school? What asks for a thing, when asks for a time, and where asks for a place — none of those is answered by \"on foot\".",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choose the correct question: \"___ colour is your bag?\"",
+      "options": [
+        { "id": "a", "text": "How" },
+        { "id": "b", "text": "Where" },
+        { "id": "c", "text": "When" },
+        { "id": "d", "text": "What" }
+      ],
+      "correctOption": "d",
+      "explanation": "Colour is a thing, so we use What: What colour is your bag? The phrase \"what colour\" is a fixed pattern in English. How asks about manner or condition, where about place, and when about time — none fits a question about colour.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT question.",
+      "options": [
+        { "id": "a", "text": "What does he do every morning?" },
+        { "id": "b", "text": "How many sisters does she have?" },
+        { "id": "c", "text": "Why does he late?" },
+        { "id": "d", "text": "Where do they live?" }
+      ],
+      "correctOption": "c",
+      "explanation": "The error is (c): late is an adjective, not a verb, so the question needs the verb to be — Why is he late? You cannot use does with an adjective (\"does he late\" has no main verb). Sentences (a), (b) and (d) all form their questions correctly with do/does.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"Ahmed sells fruit at the market. He opens his stall at seven in the morning. He sells oranges, apples and bananas.\"\nWhat does Ahmed sell?",
+      "options": [
+        { "id": "a", "text": "He sells vegetables." },
+        { "id": "b", "text": "He sells clothes." },
+        { "id": "c", "text": "He opens at nine." },
+        { "id": "d", "text": "He sells fruit." }
+      ],
+      "correctOption": "d",
+      "explanation": "The text says \"Ahmed sells fruit\", so the answer is He sells fruit (d). He sells oranges, apples and bananas (all fruit, not vegetables). \"He sells clothes\" and \"He opens at nine\" are not in the text — he opens at seven, not nine, and clothes are not mentioned.",
+      "difficulty": 3
+    }
+  ]
+}

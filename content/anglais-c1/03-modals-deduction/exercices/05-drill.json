@@ -1,0 +1,94 @@
+{
+  "title": "⭐⭐ Drill: Modals of Deduction",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "The conference room is booked all day and a dozen delegates arrived this morning. Complete: \"There ___ an important summit today.\"",
+      "options": [
+        { "id": "a", "text": "can't be" },
+        { "id": "b", "text": "must be" },
+        { "id": "c", "text": "should be" },
+        { "id": "d", "text": "would be" }
+      ],
+      "correctOption": "b",
+      "explanation": "Two strong pieces of evidence — a fully booked room and arriving delegates — point to a near-certain positive conclusion: There must be an important summit today. \"Can't be\" signals near-certain negation, contradicting the evidence. \"Should be\" expresses expectation from a schedule or plan, not a deduction drawn from observed evidence. \"Would be\" introduces a conditional meaning not supported by an if-clause.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "The package is sealed and undamaged. Complete: \"Someone ___ tampered with it.\"",
+      "options": [
+        { "id": "a", "text": "must have" },
+        { "id": "b", "text": "should have" },
+        { "id": "c", "text": "couldn't have" },
+        { "id": "d", "text": "might have" }
+      ],
+      "correctOption": "c",
+      "explanation": "A sealed, undamaged package provides strong evidence that no tampering occurred: couldn't have tampered (near-certain negative past deduction). \"Must have\" is near-certain positive — the opposite conclusion. \"Should have\" expresses advice or expectation about the past, not a deduction from evidence. \"Might have\" expresses mere possibility — too weak and in the wrong direction given the evidence.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which sentence correctly expresses a near-certain POSITIVE past deduction?",
+      "options": [
+        { "id": "a", "text": "The lights were still on at midnight — they must have worked late." },
+        {
+          "id": "b",
+          "text": "The lights were still on at midnight — they can't have worked late."
+        },
+        {
+          "id": "c",
+          "text": "The lights were still on at midnight — they had to have worked late."
+        },
+        {
+          "id": "d",
+          "text": "The lights were still on at midnight — they should have worked late."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Lights on at midnight is concrete evidence of late work: they must have worked late — near-certain positive past deduction (must have + past participle). Option (b) \"can't have\" expresses near-certain negation, contradicting the evidence. Option (c) \"had to have\" is not standard English — the correct obligation form is \"had to\"; the correct past deduction form is \"must have\". Option (d) \"should have\" expresses advisability about the past, not a deduction from evidence.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"She spent three years studying marine biology. She ___ know a great deal about coral reef ecosystems.\"",
+      "options": [
+        { "id": "a", "text": "can't" },
+        { "id": "b", "text": "must" },
+        { "id": "c", "text": "might not" },
+        { "id": "d", "text": "should" }
+      ],
+      "correctOption": "b",
+      "explanation": "Three years of specialist study is compelling evidence for a near-certain positive deduction about current knowledge: She must know a great deal. \"Can't\" is near-certain negative — the opposite of what the evidence suggests. \"Might not\" expresses uncertain negation, which also contradicts three years of focused study. \"Should\" expresses expectation or advisability, not evidence-based deduction.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "The roads are flooded — it must have rained heavily last night." },
+        { "id": "b", "text": "No one picked up the parcel — it might still be at the depot." },
+        {
+          "id": "c",
+          "text": "She left her passport at home — she mustn't have boarded the flight."
+        },
+        { "id": "d", "text": "The engine is ice-cold — the car can't have been driven today." }
+      ],
+      "correctOption": "c",
+      "explanation": "Option (c) is wrong: \"mustn't have\" is not used for past negative deduction. The standard form for near-certain negative past deduction is \"can't have\" or \"couldn't have\": She can't have boarded the flight. \"Mustn't\" expresses prohibition. Options (a), (b), and (d) correctly use must have (near-certain positive past), might (possibility), and can't have (near-certain negative past).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "A formal investigation report states: \"Access to the server room was logged at 03:14. The chief technician clocked out at 22:00. Given that only two people hold access credentials, ___ responsible.\"",
+      "options": [
+        { "id": "a", "text": "the chief technician must have been" },
+        { "id": "b", "text": "the chief technician might have been" },
+        { "id": "c", "text": "the other credential holder may have been" },
+        { "id": "d", "text": "neither person can have been" }
+      ],
+      "correctOption": "c",
+      "explanation": "If only two people hold credentials and the chief technician left at 22:00, the 03:14 access must belong to the other credential holder. However, a formal investigation report hedges conclusions pending further verification: the other credential holder may have been responsible (formal possibility — may rather than might is preferred in written formal contexts). Option (a) leaps to near-certainty about the chief technician — but the chief technician left at 22:00, making this illogical. Option (b) also points to the wrong person. Option (d) is a near-certain negative that contradicts the evidence (someone accessed the server room).",
+      "difficulty": 3
+    }
+  ]
+}

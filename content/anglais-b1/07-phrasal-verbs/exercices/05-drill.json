@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill: Phrasal Verbs",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complete: \"The flight was delayed, so we ___ at midnight instead of nine.\"",
+      "options": [
+        { "id": "a", "text": "set off" },
+        { "id": "b", "text": "put off" },
+        { "id": "c", "text": "gave up" },
+        { "id": "d", "text": "looked after" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Set off\" means to begin a journey or depart: we set off at midnight. \"Put off\" means to postpone (the subject here is the passengers, not the event), \"gave up\" means to stop trying, and \"looked after\" means to take care of someone — none fit departing on a journey.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"Could you ___ the radio? I'm trying to concentrate.\"",
+      "options": [
+        { "id": "a", "text": "turn on" },
+        { "id": "b", "text": "turn off" },
+        { "id": "c", "text": "run out of" },
+        { "id": "d", "text": "come up with" }
+      ],
+      "correctOption": "b",
+      "explanation": "Turning off removes sound so you can concentrate: could you turn off the radio? \"Turn on\" would make the noise louder, \"run out of\" means to have no more of something, and \"come up with\" means to think of an idea — none fit silencing an interruption.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choose the CORRECT sentence with a pronoun object.",
+      "options": [
+        { "id": "a", "text": "I looked it up in the dictionary." },
+        { "id": "b", "text": "I looked up it in the dictionary." },
+        { "id": "c", "text": "I up looked it in the dictionary." },
+        { "id": "d", "text": "I looked in it up the dictionary." }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Look up\" is a separable phrasal verb. When the object is a pronoun, it must go between verb and particle: I looked it up. Placing the pronoun after the particle (\"looked up it\") is incorrect with pronouns. The other options have impossible word orders.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"She ___ her keys for twenty minutes before she found them in her coat pocket.\"",
+      "options": [
+        { "id": "a", "text": "looked after" },
+        { "id": "b", "text": "looked up" },
+        { "id": "c", "text": "looked for" },
+        { "id": "d", "text": "looked forward to" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Look for\" means to search for something: she looked for her keys. \"Look after\" means to care for someone, \"look up\" means to search for information in a reference source, and \"look forward to\" means to feel excited about a future event — none describe physically searching for an object.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"Don't ___ the cat while we're away — our neighbour will do it.\"",
+      "options": [
+        { "id": "a", "text": "find out" },
+        { "id": "b", "text": "run out of" },
+        { "id": "c", "text": "worry about" },
+        { "id": "d", "text": "give up" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Worry about\" means to feel anxious about something: don't worry about the cat. \"Find out\" means to discover information, \"run out of\" means to have no more of something, and \"give up\" means to stop trying — none fit feeling anxious about an animal's welfare.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "We finally came up with a plan." },
+        { "id": "b", "text": "She is looking forward to her holiday." },
+        { "id": "c", "text": "He ran into his old teacher at the café." },
+        { "id": "d", "text": "They looked after it the project all week." }
+      ],
+      "correctOption": "d",
+      "explanation": "The error is in the last option: \"look after\" is an inseparable phrasal verb — the object must always follow the complete phrasal verb, never interrupt it. It should be: They looked after the project all week. The first option (come up with + noun), second (look forward to + noun), and third (run into + noun) all place the object correctly after the full phrasal verb.",
+      "difficulty": 3
+    }
+  ]
+}

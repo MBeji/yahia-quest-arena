@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill: The Subjunctive and Unreal Past",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complete: \"The board demands that every director ___ a conflict-of-interest declaration before voting.\"",
+      "options": [
+        { "id": "a", "text": "signs" },
+        { "id": "b", "text": "sign" },
+        { "id": "c", "text": "signed" },
+        { "id": "d", "text": "will sign" }
+      ],
+      "correctOption": "b",
+      "explanation": "After a mandative verb like demand, the that-clause requires the present subjunctive — the bare base form with no -s and no auxiliary: every director sign. Adding -s (signs) is the classic subjunctive error; signed is past indicative; will sign introduces a future auxiliary that is never used in the subjunctive.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"It's about time the council ___ something about the potholes — the roads have been dangerous for months.\"",
+      "options": [
+        { "id": "a", "text": "does" },
+        { "id": "b", "text": "do" },
+        { "id": "c", "text": "did" },
+        { "id": "d", "text": "will do" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"It's about time\" (like \"it's high time\") signals that something is overdue and takes the past tense — the unreal past — in the following clause: the council did something. The present tense does or do and the future will do are all incorrect after this fixed expression.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"___ they to withdraw their bid, the entire procurement process would need to be restarted.\"",
+      "options": [
+        { "id": "a", "text": "Should" },
+        { "id": "b", "text": "Had" },
+        { "id": "c", "text": "Were" },
+        { "id": "d", "text": "Would" }
+      ],
+      "correctOption": "c",
+      "explanation": "The inverted form of \"If they were to withdraw\" is \"Were they to withdraw\" — using were + subject + to-infinitive. Should inverts \"if + should\" and works with a bare infinitive (Should they withdraw), but the to-infinitive slot here signals were. Had inverts a past perfect. Would can never begin an inverted conditional.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which sentence correctly uses the mandative subjunctive?",
+      "options": [
+        { "id": "a", "text": "She urged that he should apologises at once." },
+        { "id": "b", "text": "It is essential that the submission be received by noon." },
+        { "id": "c", "text": "We propose that the committee is restructured." },
+        { "id": "d", "text": "The rules stipulate that each candidate submits a portfolio." }
+      ],
+      "correctOption": "b",
+      "explanation": "Only the second option is correct: essential that the submission be received uses the passive present subjunctive (base form of be). The first option combines two errors: should and the third-person -s on apologises. The third has is instead of be. The fourth has submits — the subjunctive requires submit (no -s).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"He speaks as though he ___ the sole authority on the matter — yet he has published nothing.\"",
+      "options": [
+        { "id": "a", "text": "is" },
+        { "id": "b", "text": "be" },
+        { "id": "c", "text": "was" },
+        { "id": "d", "text": "were" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"As though\" introducing an unreal comparison takes the past subjunctive were (for all persons) in formal written English: as though he were. Is treats the claim as real fact. Was is colloquially acceptable but were is the correct C2 formal form. Be is the present subjunctive, not used in this as-though structure.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the sentence that contains an error in a subjunctive or unreal-past structure.",
+      "options": [
+        { "id": "a", "text": "Had the pilot been warned, the incident could have been avoided." },
+        { "id": "b", "text": "I'd rather the children didn't hear this conversation." },
+        { "id": "c", "text": "It is vital that the witness be interviewed before the hearing." },
+        { "id": "d", "text": "Should she arrives early, ask her to wait in the lobby." }
+      ],
+      "correctOption": "d",
+      "explanation": "The error is in the last option: after Should in an inverted conditional, the verb must be in the base form — Should she arrive early. Adding -s (arrives) is ungrammatical. The first option correctly uses the past-perfect inversion Had the pilot been. The second correctly uses I'd rather + different subject + past tense (didn't). The third correctly uses the mandative subjunctive be interviewed.",
+      "difficulty": 3
+    }
+  ]
+}

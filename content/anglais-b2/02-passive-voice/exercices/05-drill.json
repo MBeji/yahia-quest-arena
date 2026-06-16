@@ -1,0 +1,154 @@
+{
+  "title": "⭐⭐ Drill: Passive Voice",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Choose the correct passive transformation: 'The government is currently reviewing the tax law.' →",
+      "options": [
+        {
+          "id": "a",
+          "text": "The tax law is reviewed currently."
+        },
+        {
+          "id": "b",
+          "text": "The tax law was being reviewed."
+        },
+        {
+          "id": "c",
+          "text": "The tax law is being reviewed."
+        },
+        {
+          "id": "d",
+          "text": "The tax law has been reviewed."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "The active verb 'is reviewing' is present continuous, so the passive is 'is being + past participle': 'is being reviewed'. 'Is reviewed' is present simple passive — wrong tense. 'Was being reviewed' is past continuous passive. 'Has been reviewed' is present perfect passive. The word 'currently' also signals an ongoing action, confirming the continuous form.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which sentence correctly uses the FUTURE passive?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The results are announced next week."
+        },
+        {
+          "id": "b",
+          "text": "The results are being announced next week."
+        },
+        {
+          "id": "c",
+          "text": "The results have been announced next week."
+        },
+        {
+          "id": "d",
+          "text": "The results will be announced next week."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "'Will be announced' is the future passive (will + be + past participle). 'Are announced' is present simple passive — it could suggest a routine but does not convey the future sense of 'next week' as clearly. 'Have been announced' is present perfect passive — incompatible with 'next week'. 'Are being announced' is present continuous passive, which can suggest a future arrangement but is less standard for a future event than 'will be'.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Identify the sentence where the by-agent should be KEPT (it carries essential information).",
+      "options": [
+        {
+          "id": "a",
+          "text": "The fire was extinguished by firefighters."
+        },
+        {
+          "id": "b",
+          "text": "The speed record was broken by Usain Bolt in 2009."
+        },
+        {
+          "id": "c",
+          "text": "The packages were sorted by the warehouse staff overnight."
+        },
+        {
+          "id": "d",
+          "text": "The report was typed by a secretary."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "'By Usain Bolt' is essential — the identity of the record holder is the key information, and omitting it would lose a significant fact. In option A, stating 'by firefighters' is expected and adds little. In option C, warehouse staff sorting packages is self-evident. In option D, secretaries typing documents is obvious in an office context.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: 'The new product line ___ in Asia in 2019 and ___ to Europe two years later.' Choose the correct pair of passive forms.",
+      "options": [
+        {
+          "id": "a",
+          "text": "is launched / is introduced"
+        },
+        {
+          "id": "b",
+          "text": "has been launched / has been introduced"
+        },
+        {
+          "id": "c",
+          "text": "was launched / was introduced"
+        },
+        {
+          "id": "d",
+          "text": "was launched / has been introduced"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Both events have specific past dates (2019 and two years later — both finished), so both require past simple passive: 'was launched / was introduced'. 'Is launched / is introduced' are present simple — wrong for past events. 'Has been launched / has been introduced' are present perfect — incompatible with specific finished past dates. The mixed option D incorrectly uses present perfect for the second event despite its equally specific past time.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which sentence is INCORRECT?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The bridge was designed by a team of engineers."
+        },
+        {
+          "id": "b",
+          "text": "The accident was happened on the motorway."
+        },
+        {
+          "id": "c",
+          "text": "Three suspects have been arrested so far."
+        },
+        {
+          "id": "d",
+          "text": "The proposal will be considered at the next meeting."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "'Was happened' is impossible — 'happen' is an intransitive verb with no object, so it cannot be passivised. The correct sentence is 'The accident happened on the motorway' (active, past simple). Options A, C, and D all correctly passivise transitive verbs: design, arrest, and consider.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: 'The vaccine ___ by a team of international researchers over five years, and millions of doses ___ since its approval.' Which pair correctly contrasts the historical event with the ongoing result?",
+      "options": [
+        {
+          "id": "a",
+          "text": "was developed / have been administered"
+        },
+        {
+          "id": "b",
+          "text": "was developed / were administered"
+        },
+        {
+          "id": "c",
+          "text": "has been developed / have been administered"
+        },
+        {
+          "id": "d",
+          "text": "is developed / are administered"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "The development is a completed historical event (past simple passive 'was developed'). The administration is an ongoing result from that point until now, signalled by 'since its approval' (present perfect passive 'have been administered'). Option B uses past simple for both — 'were administered' cannot follow 'since'. Option C applies present perfect to the development, but a completed historical process without a present-time focus takes past simple. Option D uses present tenses — wrong for historical events.",
+      "difficulty": 3
+    }
+  ]
+}

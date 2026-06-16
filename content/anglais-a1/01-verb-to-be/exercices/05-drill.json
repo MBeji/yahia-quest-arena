@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill: The Verb To Be",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complete: \"My two sisters ___ nurses at the local hospital.\"",
+      "options": [
+        { "id": "a", "text": "is" },
+        { "id": "b", "text": "are" },
+        { "id": "c", "text": "am" },
+        { "id": "d", "text": "be" }
+      ],
+      "correctOption": "b",
+      "explanation": "My two sisters refers to more than one person, so it takes are: My two sisters are nurses. Is is for a single he/she/it subject, am is only for I, and be is the base form — not a present-tense form on its own.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"Leila is tired. ___ is in bed.\"",
+      "options": [
+        { "id": "a", "text": "He" },
+        { "id": "b", "text": "They" },
+        { "id": "c", "text": "We" },
+        { "id": "d", "text": "She" }
+      ],
+      "correctOption": "d",
+      "explanation": "Leila is a girl's name, so the correct pronoun to replace it is she: She is in bed. He replaces a man's name, they replaces a group of people or things, and we includes the speaker — none of those fits Leila alone.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choose the correct negative contraction: \"The classroom ___ very clean today.\"",
+      "options": [
+        { "id": "a", "text": "isn't" },
+        { "id": "b", "text": "aren't" },
+        { "id": "c", "text": "don't" },
+        { "id": "d", "text": "not is" }
+      ],
+      "correctOption": "a",
+      "explanation": "The classroom is singular (it), so the negative is isn't: The classroom isn't very clean today. Aren't is for you/we/they, don't belongs to ordinary verbs (not to be), and \"not is\" puts not before the verb — the wrong order.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "The weather is cold today." },
+        { "id": "b", "text": "Omar and Sana are cousins." },
+        { "id": "c", "text": "I are very happy." },
+        { "id": "d", "text": "There are five students in the room." }
+      ],
+      "correctOption": "c",
+      "explanation": "The error is (c): I takes am, not are — the correct form is I am very happy. Sentences (a), (b) and (d) all use the right form of to be: is with a singular subject, are with two people joined by and, and are with the plural five students.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Your answer is YES. Choose the correct short answer to \"Are your parents at home?\"",
+      "options": [
+        { "id": "a", "text": "Yes, they're." },
+        { "id": "b", "text": "Yes, they are." },
+        { "id": "c", "text": "Yes, them are." },
+        { "id": "d", "text": "Yes, are they." }
+      ],
+      "correctOption": "b",
+      "explanation": "A positive short answer with are is not contracted, so say Yes, they are (not Yes, they're). \"Them\" is an object pronoun, never the subject of a short answer; and \"are they\" is question order, not an answer.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"The quality of these shoes ___ really good.\"",
+      "options": [
+        { "id": "a", "text": "are" },
+        { "id": "b", "text": "am" },
+        { "id": "c", "text": "is" },
+        { "id": "d", "text": "were" }
+      ],
+      "correctOption": "c",
+      "explanation": "The real subject is the quality (singular), not shoes — the phrase \"of these shoes\" is just a modifier. So the verb is is: The quality of these shoes is really good. This is the same trap as \"The price of books is…\" — find the head noun before picking the verb form.",
+      "difficulty": 3
+    }
+  ]
+}
