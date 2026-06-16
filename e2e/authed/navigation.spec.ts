@@ -30,7 +30,7 @@ test.describe("Primary navigation", () => {
     await leaderboard.goto();
     await page
       .getByRole("banner")
-      .getByRole("link", { name: /xp\s*scholars/i })
+      .getByRole("link", { name: /na9ra\s*nal3ab/i })
       .click();
     await expect(page).toHaveURL(/\/dashboard/);
   });
