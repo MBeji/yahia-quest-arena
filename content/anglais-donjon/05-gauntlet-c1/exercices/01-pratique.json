@@ -45,12 +45,12 @@
     {
       "prompt": "Vocabulary — Choose the correct discourse marker: \"The results were promising. ___, further testing is needed before we draw conclusions.\"",
       "options": [
-        { "id": "a", "text": "Moreover" },
-        { "id": "b", "text": "Therefore" },
-        { "id": "c", "text": "Nevertheless" },
+        { "id": "a", "text": "Nevertheless" },
+        { "id": "b", "text": "Moreover" },
+        { "id": "c", "text": "Therefore" },
         { "id": "d", "text": "Namely" }
       ],
-      "correctOption": "c",
+      "correctOption": "a",
       "explanation": "Promising results but further testing is needed — this is a concession (despite the good results, we still need more testing). Nevertheless signals this contrast. \"Moreover\" adds a further positive point. \"Therefore\" signals a logical result (which would mean the results cause the need for testing, losing the contrast). \"Namely\" introduces a list or specification.",
       "difficulty": 1
     },

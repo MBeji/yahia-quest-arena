@@ -74,4 +74,6 @@ _She **could have** taken the back stairs — we don't know._
 
 > ⚠️ Trap: Do NOT use **must have** for obligation in the past — that role belongs to **had to**: _She had to stay late_ (obligation). _She must have stayed late_ (deduction from evidence).
 
+> ⚠️ Trap: **should have + past participle** is NOT a deduction — it expresses expectation or criticism about something that did **not** happen: _He should have called_ (= it was advisable / I expected it, but he didn't). When you are inferring from evidence, use _must have / can't have / might have_ — never _should have_.
+
 > 🏆 Gate cleared! You now reason about the past with precision. Next: **Participle Clauses** — compressing whole time, reason, and result clauses into elegant reduced forms.

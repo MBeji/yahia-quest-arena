@@ -50,7 +50,7 @@
       ],
       "correctOption": "d",
       "explanation": "Contractions (it's, don't) and phrasal verbs (look into, give up) are markers of informal/colloquial register. Passive voice, hedging, and complex noun phrases are all features of formal/academic writing, not informal speech.",
-      "difficulty": 1
+      "difficulty": 2
     },
     {
       "prompt": "Rewrite to increase formality: \"We need to look into why sales have gone down.\"\nChoose the BEST formal version.",

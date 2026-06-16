@@ -46,11 +46,11 @@
       "prompt": "Usage — Ellipsis and substitution: \"She signed the contract immediately; he ___ the following week.\"",
       "options": [
         { "id": "a", "text": "did it so" },
-        { "id": "b", "text": "did so" },
-        { "id": "c", "text": "so did" },
+        { "id": "b", "text": "so did" },
+        { "id": "c", "text": "did so" },
         { "id": "d", "text": "did the same so" }
       ],
-      "correctOption": "b",
+      "correctOption": "c",
       "explanation": "did so substitutes the entire verb phrase signed the contract: he did so [signed the contract] the following week. This is verbal substitution with do so (formal/written register). \"did it so\" inserts an unnecessary pronoun and adverb. \"so did\" is the inverted form used for adding agreement (So did he — he also signed it), not for a substitution in a sequential narrative with a time marker. \"did the same so\" is not a grammatical substitution form.",
       "difficulty": 3
     },

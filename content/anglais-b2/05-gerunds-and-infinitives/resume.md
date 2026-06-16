@@ -14,5 +14,5 @@
   - **go on doing** (continue same activity) vs **go on to do** (move to next activity)
 - **Prepositions always take the gerund** — _good at solving, without saying, interested in learning, thank you for helping_.
 - ⚠️ **"to" as a preposition** also takes the gerund: _look forward to seeing_ (NOT _to see_), _be used to working_ (NOT _to work_), _object to paying_.
-- **make / let** → bare infinitive (no _to_): _She made me wait. Let him go._
+- **make / let / would rather** → bare infinitive (no _to_): _She made me wait. Let him go. I would rather stay home._
 - ⚠️ **used to do** (past habit) ≠ **be used to doing** (be accustomed to) — the second is a preposition phrase and takes the gerund.

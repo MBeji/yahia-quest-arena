@@ -81,12 +81,12 @@
     {
       "prompt": "Read: \"Many economists predicted a recession, but others didn't.\"\nWhat is the FULL form of the ellipsis in \"but others didn't\"?",
       "options": [
-        { "id": "a", "text": "but others didn't predict a recession" },
-        { "id": "b", "text": "but others didn't believe in economics" },
+        { "id": "a", "text": "but others didn't believe in economics" },
+        { "id": "b", "text": "but others didn't have a prediction" },
         { "id": "c", "text": "but others didn't say so" },
-        { "id": "d", "text": "but others didn't have a prediction" }
+        { "id": "d", "text": "but others didn't predict a recession" }
       ],
-      "correctOption": "a",
+      "correctOption": "d",
       "explanation": "The ellipsis omits the verb phrase \"predict a recession\" — recoverable from the first clause. The full form is: \"many economists predicted a recession, but others didn't [predict a recession]\". This is verbal ellipsis after an auxiliary (didn't), the most common pattern. The other options introduce content not present in the original sentence.",
       "difficulty": 3
     }

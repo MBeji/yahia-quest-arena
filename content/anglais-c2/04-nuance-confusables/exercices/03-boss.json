@@ -27,12 +27,12 @@
     {
       "prompt": "Complete with the most precise word: \"The committee, which ___ three senior managers and two independent advisors, met yesterday.\"",
       "options": [
-        { "id": "a", "text": "is comprised of" },
-        { "id": "b", "text": "composes" },
-        { "id": "c", "text": "comprises" },
+        { "id": "a", "text": "comprises" },
+        { "id": "b", "text": "is comprised of" },
+        { "id": "c", "text": "composes" },
         { "id": "d", "text": "is composed by" }
       ],
-      "correctOption": "c",
+      "correctOption": "a",
       "explanation": "\"Comprises\" is the formally correct active verb: the committee comprises [its members]. \"Is comprised of\" is widely used but criticised in formal writing — the preferred form avoids the passive. \"Composes\" reverses the logic (members compose the committee, not the other way round here). \"Is composed by\" uses the wrong preposition (by instead of of).",
       "difficulty": 2
     },

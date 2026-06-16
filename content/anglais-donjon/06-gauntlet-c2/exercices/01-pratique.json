@@ -22,11 +22,11 @@
       "prompt": "Vocabulary — Idiom: \"Don't tell anyone about the surprise party — I don't want you to ___.\"",
       "options": [
         { "id": "a", "text": "bite the bullet" },
-        { "id": "b", "text": "let the cat out of the bag" },
-        { "id": "c", "text": "burn your bridges" },
-        { "id": "d", "text": "miss the boat" }
+        { "id": "b", "text": "burn your bridges" },
+        { "id": "c", "text": "miss the boat" },
+        { "id": "d", "text": "let the cat out of the bag" }
       ],
-      "correctOption": "b",
+      "correctOption": "d",
       "explanation": "Let the cat out of the bag means to reveal a secret inadvertently — exactly the risk with a surprise party. \"Bite the bullet\" means to endure something unpleasant. \"Burn your bridges\" means to destroy a relationship or opportunity permanently. \"Miss the boat\" means to lose an opportunity by being too late — none of these is about revealing a secret.",
       "difficulty": 1
     },

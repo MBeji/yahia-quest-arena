@@ -28,12 +28,12 @@
     {
       "prompt": "Complete with the correct formal inverted conditional: \"___ I to discover any irregularities, I would report them immediately.\"",
       "options": [
-        { "id": "a", "text": "Should" },
+        { "id": "a", "text": "Were" },
         { "id": "b", "text": "Would" },
-        { "id": "c", "text": "Were" },
+        { "id": "c", "text": "Should" },
         { "id": "d", "text": "Had" }
       ],
-      "correctOption": "c",
+      "correctOption": "a",
       "explanation": "The inverted equivalent of \"If I were to discover…\" is \"Were I to discover…\" — using were + subject + to-infinitive. \"Would\" cannot begin an inverted conditional. \"Should\" inverts \"if + should\" and would work with \"Should I discover…\", but the to-infinitive slot here signals were. \"Had\" inverts a past perfect (Had I discovered…).",
       "difficulty": 2
     },
@@ -47,7 +47,7 @@
       ],
       "correctOption": "c",
       "explanation": "\"It's high time\" is followed by a past-tense form (the unreal past) to signal that something is overdue: It's high time you took your test. The present tense take, the -ing form, and the to-infinitive are all incorrect in this structure.",
-      "difficulty": 1
+      "difficulty": 2
     },
     {
       "prompt": "Complete: \"I'd rather you ___ me the truth straight away.\"",

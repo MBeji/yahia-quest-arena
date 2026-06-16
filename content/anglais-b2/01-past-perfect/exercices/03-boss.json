@@ -9,12 +9,12 @@
     {
       "prompt": "Read the passage: 'Maya opened the fridge. There was nothing inside. She ___  forgotten to go shopping.' Which form best completes the sentence?",
       "options": [
-        { "id": "a", "text": "forgot" },
+        { "id": "a", "text": "had forgotten" },
         { "id": "b", "text": "has forgotten" },
-        { "id": "c", "text": "had forgotten" },
+        { "id": "c", "text": "forgot" },
         { "id": "d", "text": "was forgetting" }
       ],
-      "correctOption": "c",
+      "correctOption": "a",
       "explanation": "'Had forgotten' (past perfect) is correct. The forgetting happened BEFORE she opened the fridge and found it empty — the past perfect explains the cause of the earlier situation. 'Forgot' (past simple) would suggest the forgetting happened at the same moment as opening the fridge. 'Has forgotten' is present perfect — wrong in a fully past narrative. 'Was forgetting' (past continuous) implies an ongoing process of forgetting, which is illogical here.",
       "difficulty": 2
     },
@@ -35,10 +35,10 @@
       "options": [
         { "id": "a", "text": "was" },
         { "id": "b", "text": "took place" },
-        { "id": "c", "text": "had taken place" },
-        { "id": "d", "text": "has taken place" }
+        { "id": "c", "text": "has taken place" },
+        { "id": "d", "text": "had taken place" }
       ],
-      "correctOption": "c",
+      "correctOption": "d",
       "explanation": "'Had taken place' (past perfect) is correct. The concert happened the previous evening — BEFORE the moment when 'we got there'. The past perfect links this earlier event to the discovery. 'Was' doesn't convey the completed earlier event. 'Took place' (past simple) is possible but less precise — it does not clearly signal the relationship between the two past events. 'Has taken place' (present perfect) is incorrect in a fully past context.",
       "difficulty": 3
     },
@@ -51,7 +51,7 @@
         { "id": "d", "text": "She sent the email after she wrote it." }
       ],
       "correctOption": "a",
-      "explanation": "The earlier action (writing) takes the past perfect 'had written'; the later action (sending) takes the past simple 'sent'. This correctly follows the rule: past perfect for the first event, past simple for the second. Option A uses past perfect for the LATER action (sent) — wrong. Option C reverses the logic (suggests she had written AFTER sending — impossible). Option D (both past simple) is grammatically possible but less precise about sequence.",
+      "explanation": "The earlier action (writing) takes the past perfect 'had written'; the later action (sending) takes the past simple 'sent'. This correctly follows the rule: past perfect for the first event, past simple for the second. Option B ('had sent… had written') uses past perfect for the LATER action (sending) — wrong. Option C reverses the logic: 'had written AFTER she sent it' — the order is impossible here. Option D (both past simple: 'sent… wrote') is grammatically possible but less precise about sequence.",
       "difficulty": 3
     },
     {
@@ -72,7 +72,7 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "'By the time' introduces the reference point (the later past event) — which should be in the PAST SIMPLE: 'By the time the ambulance arrived'. The past perfect 'had recovered' correctly shows the earlier event (the patient recovering before the ambulance got there). Using past perfect for the reference point ('by the time + past perfect') is a common learner error. Options A, C, and D are all incorrect diagnoses.",
+      "explanation": "'By the time' introduces the reference point (the later past event) — which should be in the PAST SIMPLE: 'By the time the ambulance arrived'. The past perfect 'had recovered' correctly shows the earlier event (the patient recovering before the ambulance got there). Using past perfect for the reference point ('by the time + past perfect') is a common learner error. Options A, B, and C are all incorrect diagnoses: A claims both past perfects are fine; B wrongly changes 'had recovered'; C invents a rule about ambulances.",
       "difficulty": 3
     },
     {

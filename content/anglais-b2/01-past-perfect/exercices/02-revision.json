@@ -39,7 +39,7 @@
         { "id": "d", "text": "He couldn't pay for dinner because he was losing his wallet." }
       ],
       "correctOption": "a",
-      "explanation": "'Had lost' (past perfect) clearly signals that the wallet loss (event 1) happened BEFORE the dinner problem (event 2). Option A (past simple) is grammatically possible but less precise — the sequence is ambiguous. Option C (present perfect) is incorrect in a fully past narrative. Option D (past continuous) changes the meaning entirely — losing would be in progress, which is illogical.",
+      "explanation": "'Had lost' (past perfect) clearly signals that the wallet loss (event 1) happened BEFORE the dinner problem (event 2). Option B ('lost' — past simple) is grammatically possible but less precise — the sequence is ambiguous. Option C ('has lost' — present perfect) is incorrect in a fully past narrative. Option D ('was losing' — past continuous) changes the meaning entirely — losing would be in progress, which is illogical.",
       "difficulty": 2
     },
     {
@@ -63,7 +63,7 @@
         { "id": "d", "text": "She passed the exam because she had studied hard." }
       ],
       "correctOption": "d",
-      "explanation": "The earlier action (studying) takes the past perfect 'had studied'; the later result (passing) takes the past simple 'passed'. This is the standard pattern: past perfect for the first event, past simple for the second. Option A is acceptable but less precise. Option B uses past perfect for both actions (incorrect — the later action should be past simple). Option D reverses the logic incorrectly.",
+      "explanation": "The earlier action (studying) takes the past perfect 'had studied'; the later result (passing) takes the past simple 'passed'. This is the standard pattern: past perfect for the first event, past simple for the second. Option A ('had passed… had studied') uses past perfect for both actions — incorrect, the later action (passing) should be past simple. Option B ('had passed… studied') also uses past perfect for the later action (passing) — wrong. Option C ('passed… studied') uses past simple for both — grammatically acceptable but less precise about cause and effect.",
       "difficulty": 2
     },
     {

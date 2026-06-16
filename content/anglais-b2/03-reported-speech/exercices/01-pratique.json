@@ -9,13 +9,13 @@
     {
       "prompt": "Complete the reported statement: She said, \"I work in a hospital.\" → She said she ___ in a hospital.",
       "options": [
-        { "id": "a", "text": "works" },
+        { "id": "a", "text": "worked" },
         { "id": "b", "text": "work" },
-        { "id": "c", "text": "worked" },
+        { "id": "c", "text": "works" },
         { "id": "d", "text": "has worked" }
       ],
-      "correctOption": "c",
-      "explanation": "Backshift rule: present simple ('work') shifts to past simple ('worked') in reported speech. 'Works' keeps the present tense, which is not backshifted. 'Work' is missing the past form. 'Has worked' is present perfect, not the correct backshift of present simple.",
+      "correctOption": "a",
+      "explanation": "Backshift rule: present simple ('work') shifts to past simple ('worked') in reported speech. 'Works' keeps the present tense, which is not backshifted. 'Work' is the base form without the past ending. 'Has worked' is present perfect, not the correct backshift of present simple.",
       "difficulty": 1
     },
     {
@@ -35,10 +35,10 @@
       "options": [
         { "id": "a", "text": "will" },
         { "id": "b", "text": "shall" },
-        { "id": "c", "text": "would" },
-        { "id": "d", "text": "could" }
+        { "id": "c", "text": "could" },
+        { "id": "d", "text": "would" }
       ],
-      "correctOption": "c",
+      "correctOption": "d",
       "explanation": "'Will' shifts to 'would' in reported speech. 'Will' is the unbackshifted original. 'Shall' is a different modal that doesn't result from backshifting 'will'. 'Could' is the backshift of 'can', not 'will'.",
       "difficulty": 1
     },
@@ -57,13 +57,13 @@
     {
       "prompt": "Find the correctly backshifted reported sentence.",
       "options": [
-        { "id": "a", "text": "He said he must go home immediately." },
+        { "id": "a", "text": "He said he had to go home immediately." },
         { "id": "b", "text": "He said he musted go home immediately." },
-        { "id": "c", "text": "He said he had to go home immediately." },
+        { "id": "c", "text": "He said he must go home immediately." },
         { "id": "d", "text": "He said he has to go home immediately." }
       ],
-      "correctOption": "c",
-      "explanation": "'Must' shifts to 'had to' in reported speech. Option (a) keeps 'must' without backshifting. Option (b) incorrectly adds '-ed' to 'must', which is not a word. Option (d) uses 'has to' (present), which is not the backshifted form.",
+      "correctOption": "a",
+      "explanation": "'Must' shifts to 'had to' in reported speech. Option (c) keeps 'must' without backshifting. Option (b) incorrectly adds '-ed' to 'must', which is not a word. Option (d) uses 'has to' (present), which is not the backshifted form.",
       "difficulty": 2
     },
     {

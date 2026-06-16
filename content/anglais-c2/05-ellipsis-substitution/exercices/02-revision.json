@@ -11,10 +11,10 @@
       "options": [
         { "id": "a", "text": "Furthermore" },
         { "id": "b", "text": "Therefore" },
-        { "id": "c", "text": "Nevertheless" },
-        { "id": "d", "text": "In addition" }
+        { "id": "c", "text": "In addition" },
+        { "id": "d", "text": "Nevertheless" }
       ],
-      "correctOption": "c",
+      "correctOption": "d",
       "explanation": "A contrast is needed: disappointing results vs remaining optimistic. \"Nevertheless\" (= despite this) signals the contrast perfectly. \"Furthermore\" and \"In addition\" add information (wrong relationship). \"Therefore\" signals a result (wrong direction — the optimism is not caused by the disappointment).",
       "difficulty": 1
     },
@@ -36,25 +36,25 @@
     {
       "prompt": "Choose the BEST cohesive device for this gap: \"Many students struggle with time management. ___, they often perform well in individual tasks.\"",
       "options": [
-        { "id": "a", "text": "Consequently" },
+        { "id": "a", "text": "Admittedly" },
         { "id": "b", "text": "In conclusion" },
-        { "id": "c", "text": "Admittedly" },
+        { "id": "c", "text": "Consequently" },
         { "id": "d", "text": "In addition" }
       ],
-      "correctOption": "c",
+      "correctOption": "a",
       "explanation": "\"Admittedly\" signals a concession — acknowledging a true weakness (time management struggles) while pointing out a contrasting strength (good individual performance). It fits the concessive relationship. \"Consequently\" signals a result (wrong direction); \"In conclusion\" would only come at the end of an argument; \"In addition\" adds information without the needed contrast.",
       "difficulty": 2
     },
     {
-      "prompt": "Read: \"A new regulation was introduced last month. ___ regulation requires all firms to disclose their environmental impact.\"\nWhich word BEST fills the gap to maintain cohesion?",
+      "prompt": "Read: \"A new regulation was introduced last month. ___ regulation requires all firms to disclose their environmental impact.\"\nWhich word creates the STRONGEST cohesive link back to the regulation just mentioned?",
       "options": [
         { "id": "a", "text": "A" },
-        { "id": "b", "text": "This" },
-        { "id": "c", "text": "The" },
-        { "id": "d", "text": "Both The and This are correct." }
+        { "id": "b", "text": "Any" },
+        { "id": "c", "text": "This" },
+        { "id": "d", "text": "Some" }
       ],
-      "correctOption": "d",
-      "explanation": "Both \"The\" (definite article, signalling the specific regulation already mentioned) and \"This\" (demonstrative, pointing back to the just-mentioned regulation) correctly create a reference chain. \"A\" would reintroduce it as if unrelated, breaking the chain — making it seem like a different regulation.",
+      "correctOption": "c",
+      "explanation": "\"This\" (demonstrative determiner) creates the strongest cohesive link, explicitly pointing back to the just-mentioned regulation. The definite article \"The\" also creates a valid reference chain by signalling a previously known entity. \"A\" reintroduces the noun as if unrelated, breaking the chain. \"Any\" and \"Some\" are indefinite and introduce new instances rather than referring back.",
       "difficulty": 2
     },
     {

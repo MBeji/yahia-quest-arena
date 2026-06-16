@@ -21,11 +21,11 @@
         { "id": "d", "text": "The passive is required after 'in 1947'." }
       ],
       "correctOption": "a",
-      "explanation": "The passive 'were discovered' focuses on the scrolls (the topic) rather than on the discoverers. This is a classic reason for using the passive: the receiver of the action is more important than the agent. Option A is incorrect — the passive is often clearer when the agent is unknown or less important. Option C is wrong — the scrolls are passive recipients. Option D is false — no tense is 'required' by a time expression.",
+      "explanation": "The passive 'were discovered' focuses on the scrolls (the topic) rather than on the discoverers. This is a classic reason for using the passive: the receiver of the action is more important than the agent. Option B is incorrect — the active is not always clearer; when the topic is the scrolls, passive keeps the focus. Option C is wrong — the scrolls are passive recipients of the finding action, not performers. Option D is false — no tense is 'required' by a time expression alone.",
       "difficulty": 2
     },
     {
-      "prompt": "Choose the ACTIVE version of: 'The committee has approved the new budget.'",
+      "prompt": "Choose the correct PASSIVE version of: 'The committee has approved the new budget.'",
       "options": [
         { "id": "a", "text": "The new budget was approved by the committee." },
         { "id": "b", "text": "The new budget will be approved by the committee." },
@@ -33,7 +33,7 @@
         { "id": "d", "text": "The new budget is approved by the committee." }
       ],
       "correctOption": "c",
-      "explanation": "The active 'The committee has approved' (present perfect) becomes the passive 'The new budget has been approved by the committee' (has/have been + past participle). Option A (was approved) is past simple passive. Option B (will be approved) is future passive. Option D (is approved) is present simple passive.",
+      "explanation": "The active 'The committee has approved' (present perfect active) becomes 'The new budget has been approved by the committee' in the passive (has/have been + past participle). Option A ('was approved') is past simple passive — would correspond to 'The committee approved'. Option B ('will be approved') is future passive. Option D ('is approved') is present simple passive.",
       "difficulty": 2
     },
     {
@@ -60,7 +60,7 @@
         { "id": "d", "text": "The article was written by Maria for the school magazine." }
       ],
       "correctOption": "d",
-      "explanation": "In 'The article was written by Maria', we already know who did it (Maria is named as the agent). The active 'Maria wrote the article for the school magazine' is more direct and natural. When the agent is identified and important, the active voice is usually preferred. Options A, C, and D all have good reasons for the passive: A (unknown/unnamed responsible party), C (unknown cause), D (no specific agent — general truth).",
+      "explanation": "In 'The article was written by Maria', we already know who did it (Maria is named as the agent). The active 'Maria wrote the article for the school magazine' is more direct and natural. When the agent is identified and important, the active voice is usually preferred. Options A, B, and C all have good reasons for the passive: A uses passive because the responsible party is unnamed; B uses passive because the parcel's fate (lost in transit) is the focus; C uses passive because no single doer exists for a general truth.",
       "difficulty": 2
     },
     {
@@ -96,8 +96,8 @@
         { "id": "d", "text": "A new policy has been introduced by the government." }
       ],
       "correctOption": "c",
-      "explanation": "'Was happened' is grammatically impossible — 'happen' is an intransitive verb with no object, so it cannot be passivised. The correct sentence is 'The meeting happened in the conference room' (active). Options A, C, and D all correctly passivise transitive verbs: announce (A), sign (C), introduce (D).",
-      "difficulty": 2
+      "explanation": "'Was happened' is grammatically impossible — 'happen' is an intransitive verb with no object, so it cannot be passivised. The correct sentence is 'The meeting happened in the conference room' (active). Options A, B, and D all correctly passivise transitive verbs: announce (A), sign (B), introduce (D).",
+      "difficulty": 3
     }
   ]
 }

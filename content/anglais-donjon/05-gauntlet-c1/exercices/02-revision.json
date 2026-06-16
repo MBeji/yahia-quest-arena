@@ -57,12 +57,12 @@
     {
       "prompt": "Vocabulary — Choose the most precise C1 collocation: \"The two theories ___ a remarkable resemblance to each other.\"",
       "options": [
-        { "id": "a", "text": "make" },
-        { "id": "b", "text": "carry" },
-        { "id": "c", "text": "bear" },
+        { "id": "a", "text": "bear" },
+        { "id": "b", "text": "make" },
+        { "id": "c", "text": "carry" },
         { "id": "d", "text": "have" }
       ],
-      "correctOption": "c",
+      "correctOption": "a",
       "explanation": "The fixed C1 collocation is bear a resemblance: the theories bear a remarkable resemblance to each other. While \"have a resemblance\" is used informally, it is not the precise idiomatic collocation. \"make\" and \"carry\" are never used with resemblance in standard English.",
       "difficulty": 2
     },

@@ -92,7 +92,7 @@ _Thank you **for helping** me._
 
 ## 🗡️ Tips and traps
 
-> 🗡️ Tip: After **make** and **let**, use the **bare infinitive** (no _to_): _She made me **wait**._ _Let him **go**._ But after **be made to**, the _to_ returns: _I was made **to wait**._
+> 🗡️ Tip: After **make**, **let**, and **would rather**, use the **bare infinitive** (no _to_): _She made me **wait**._ _Let him **go**._ _I would rather **stay** home than go out._ But after **be made to**, the _to_ returns: _I was made **to wait**._
 
 > ⚠️ Trap: Don't confuse **used to do** (past habit, no longer true: _I used to play tennis_) with **be/get used to doing** (be accustomed to: _I'm used to working nights_). The second one is a preposition phrase → always gerund.
 

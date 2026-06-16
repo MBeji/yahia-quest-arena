@@ -9,13 +9,13 @@
     {
       "prompt": "Complete the mixed conditional: \"If I had taken that scholarship, I ___ in Paris right now.\"",
       "options": [
-        { "id": "a", "text": "would have been" },
-        { "id": "b", "text": "would be" },
+        { "id": "a", "text": "would be" },
+        { "id": "b", "text": "would have been" },
         { "id": "c", "text": "had been" },
         { "id": "d", "text": "was" }
       ],
-      "correctOption": "b",
-      "explanation": "This is Mixed Conditional A: past condition (if + past perfect) → present result (would + base verb). 'Would be' correctly expresses the present consequence of a past unchosen action. Option (a) 'would have been' is the pure third conditional result — it implies a past consequence, but 'right now' signals a present one. Option (c) is past perfect — wrong in the result clause. Option (d) is past simple — no modal, no conditional meaning.",
+      "correctOption": "a",
+      "explanation": "This is Mixed Conditional A: past condition (if + past perfect) → present result (would + base verb). 'Would be' correctly expresses the present consequence of a past unchosen action. Option (b) 'would have been' is the pure third conditional result — it implies a past consequence, but 'right now' signals a present one. Option (c) is past perfect — wrong in the result clause. Option (d) is past simple — no modal, no conditional meaning.",
       "difficulty": 2
     },
     {
@@ -46,12 +46,12 @@
       "prompt": "Read: \"Sara is brilliant but very disorganised. She didn't submit her project on time and failed the module.\" Which sentence BEST describes the situation?",
       "options": [
         { "id": "a", "text": "If she were more organised, she would pass the module." },
-        { "id": "b", "text": "If she had been more organised, she would have passed the module." },
-        { "id": "c", "text": "If she had been more organised, she would pass the module now." },
+        { "id": "b", "text": "If she had been more organised, she would pass the module now." },
+        { "id": "c", "text": "If she had been more organised, she would have passed the module." },
         { "id": "d", "text": "Unless she is organised, she will fail." }
       ],
-      "correctOption": "b",
-      "explanation": "The text describes a past event (she failed) caused by a past condition (she wasn't organised then). A pure third conditional captures this: 'If she had been more organised, she would have passed.' Option (a) is a second conditional — implies she's not organised now and would pass in the future, missing the past event. Option (c) is a mixed conditional A — implies she's not organised now with a present result, but the text says she already failed. Option (d) is a first conditional about the future, which doesn't reflect the past situation.",
+      "correctOption": "c",
+      "explanation": "The text describes a past event (she failed) caused by a past condition (she wasn't organised then). A pure third conditional captures this: 'If she had been more organised, she would have passed.' Option (a) is a second conditional — implies she's not organised now and would pass in the future, missing the past event. Option (b) is a mixed conditional A — implies she's not organised now with a present result, but the text says she already failed. Option (d) is a first conditional about the future, which doesn't reflect the past situation.",
       "difficulty": 3
     },
     {

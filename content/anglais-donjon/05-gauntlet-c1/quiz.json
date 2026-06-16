@@ -52,12 +52,12 @@
     {
       "prompt": "Usage — Discourse markers: \"The plan was expensive; ___, it was approved by the board.\"",
       "options": [
-        { "id": "a", "text": "therefore" },
-        { "id": "b", "text": "furthermore" },
-        { "id": "c", "text": "nevertheless" },
+        { "id": "a", "text": "nevertheless" },
+        { "id": "b", "text": "therefore" },
+        { "id": "c", "text": "furthermore" },
         { "id": "d", "text": "as a result" }
       ],
-      "correctOption": "c",
+      "correctOption": "a",
       "explanation": "The two facts contrast (expensive BUT approved), so a concessive connector is needed: nevertheless (= despite that). \"therefore\" and \"as a result\" show consequence — they would imply it was approved because it was expensive, which reverses the logical surprise. \"furthermore\" adds a further point, but there is no addition here — there is a contrast.",
       "difficulty": 2
     }

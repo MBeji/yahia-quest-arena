@@ -27,7 +27,7 @@
         { "id": "d", "text": "The doctor warned me not to eat salt." }
       ],
       "correctOption": "d",
-      "explanation": "warn + object + not to-infinitive is the standard reported-speech structure for a prohibition: warned me not to eat salt. (a) omits the object and doesn't back-shift the modal properly. (c) uses would, changing the meaning from prohibition to prediction. (d) uses the bare infinitive after that — correct in subjunctive contexts but not standard for reported warnings in British English.",
+      "explanation": "warn + object + not to-infinitive is the standard reported-speech structure for a prohibition: warned me not to eat salt. (a) omits the object and doesn't back-shift the modal properly. (b) uses would, changing the meaning from prohibition to prediction. (c) uses the bare subjunctive-style infinitive after that — grammatical in American English but not the standard form for reported warnings in British English.",
       "difficulty": 2
     },
     {
@@ -64,7 +64,7 @@
       ],
       "correctOption": "c",
       "explanation": "The error is (c): in English we make a decision, never \"do a decision\" — this is a false-friend calque. (a) draw a conclusion is correct (you draw logical conclusions from evidence). (b) raise awareness is a standard B2 collocation. (d) carry out an investigation is the fixed formal phrase.",
-      "difficulty": 2
+      "difficulty": 3
     },
     {
       "prompt": "Grammar — Find the INCORRECT sentence.",

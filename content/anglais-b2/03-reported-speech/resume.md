@@ -6,5 +6,6 @@
 - **Time-word shifts** — _now → then_, _today → that day_, _yesterday → the day before_, _tomorrow → the next day_, _here → there_, _this → that_.
 - **say vs. tell** — _say_ takes no personal object (_she said she was ready_); _tell_ always needs one (_she told me she was ready_). ⚠️ Never _~~she said me~~_.
 - **Reported questions** — use _if/whether_ for yes/no questions; keep the wh-word for open questions; always restore **subject → verb** order, no inversion, no question mark (_He asked me where I lived_).
+- **Reporting conditionals** — backshift applies to each verb: first conditional (_if + present, will_) becomes second-conditional pattern (_if + past, would_) in reported speech (_"If you work, you will pass" → he said if I worked, I would pass_).
 - **Reported commands** — use **tell/ask + object + to-infinitive**: _He told me to sit down. She asked me not to shout._
 - ⚠️ **No-backshift exception** — if the reported fact is still true now, you may keep the original tense (_She said the Earth is round_). When in doubt, backshift is always correct.

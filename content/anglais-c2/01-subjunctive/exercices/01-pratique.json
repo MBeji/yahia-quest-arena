@@ -71,10 +71,10 @@
       "options": [
         { "id": "a", "text": "was" },
         { "id": "b", "text": "is" },
-        { "id": "c", "text": "be" },
-        { "id": "d", "text": "has been" }
+        { "id": "c", "text": "has been" },
+        { "id": "d", "text": "be" }
       ],
-      "correctOption": "c",
+      "correctOption": "d",
       "explanation": "Propose triggers the mandative subjunctive: the contract be renegotiated. The base form of to be is be — not was, is, or has been. Even in a past-tense sentence (proposed), the subjunctive verb in the that-clause stays in the base form.",
       "difficulty": 2
     }

@@ -45,25 +45,25 @@
     {
       "prompt": "Complete with the correct result: \"If they hadn't missed the meeting, the deal ___.\"",
       "options": [
-        { "id": "a", "text": "might close" },
+        { "id": "a", "text": "might have been closed" },
         { "id": "b", "text": "was closed" },
-        { "id": "c", "text": "might have been closed" },
+        { "id": "c", "text": "might close" },
         { "id": "d", "text": "would close" }
       ],
-      "correctOption": "c",
-      "explanation": "The third conditional result can use 'could/might/would + have + past participle': 'might have been closed' correctly uses a passive past participle. Option (a) drops 'have' — 'might close' is present/future. Option (b) is a simple past passive with no modal. Option (d) uses 'would + base', which is the second conditional.",
+      "correctOption": "a",
+      "explanation": "The third conditional result can use 'could/might/would + have + past participle': 'might have been closed' correctly uses a passive past participle. Option (c) drops 'have' — 'might close' is present/future. Option (b) is a simple past passive with no modal. Option (d) uses 'would + base', which is the second conditional.",
       "difficulty": 2
     },
     {
       "prompt": "Choose the sentence that expresses a PAST regret using the third conditional.",
       "options": [
-        { "id": "a", "text": "If I had more money, I would buy a car." },
+        { "id": "a", "text": "If I had had more money, I would have bought a car." },
         { "id": "b", "text": "If I have more money, I will buy a car." },
-        { "id": "c", "text": "If I had had more money, I would have bought a car." },
+        { "id": "c", "text": "If I had more money, I would buy a car." },
         { "id": "d", "text": "If I would have money, I would buy a car." }
       ],
-      "correctOption": "c",
-      "explanation": "A past regret uses the third conditional: 'If I had had more money, I would have bought a car.' Option (a) is the second conditional (present/future hypothetical). Option (b) is the first conditional (real future). Option (d) is wrong because 'would' cannot go in the if-clause.",
+      "correctOption": "a",
+      "explanation": "A past regret uses the third conditional: 'If I had had more money, I would have bought a car.' Option (c) is the second conditional (present/future hypothetical). Option (b) is the first conditional (real future). Option (d) is wrong because 'would' cannot go in the if-clause.",
       "difficulty": 2
     },
     {

@@ -7,7 +7,7 @@
   "displayOrder": 4,
   "questions": [
     {
-      "prompt": "Read: \"The village was deserted. Every house was locked. Food was left half-eaten on tables. Animals roamed freely.\"\n\nChoose ALL the valid deductions.",
+      "prompt": "Read: \"The village was deserted. Every house was locked. Food was left half-eaten on tables. Animals roamed freely.\"\n\nWhich set of deductions is best calibrated to the evidence — near-certain where the evidence is strong, hedged where it is not?",
       "options": [
         {
           "id": "a",
@@ -24,8 +24,8 @@
         }
       ],
       "correctOption": "d",
-      "explanation": "Option (d) is the best pair: strong evidence (half-eaten food, animals loose) → must have left in a hurry (near-certain). The reason is uncertain → might have been frightened (speculation). Option (a) is close but \"can't have had time\" is a stronger deduction while half-eaten food is strong but not conclusive about preparation. Option (b) contradicts \"deserted\" — a planned festival doesn't leave food half-eaten. Option (c) contradicts the evidence — houses were locked, consistent with people locking up as they fled.",
-      "difficulty": 2
+      "explanation": "Option (d) is calibrated correctly: the strong evidence (half-eaten food, animals loose) justifies must have left in a hurry (near-certain), while the reason stays hedged — might have been frightened (speculation). Option (a) overstates certainty: can't have had time to prepare is a near-certain claim the evidence does not fully support. Option (b) contradicts \"deserted\" — a planned festival doesn't leave food half-eaten. Option (c) contradicts the evidence — the locked houses are consistent with people locking up as they fled.",
+      "difficulty": 3
     },
     {
       "prompt": "Find the error in reasoning: \"The report was submitted at 11:58 p.m. The deadline was midnight. She must have not finished on time.\"",
@@ -76,11 +76,11 @@
       "prompt": "Complete this detective's reasoning in a formal report: \"The victim's phone showed a call made at 10:15 p.m. The coroner places time of death between 9:00 and 10:00 p.m. Therefore, the call ___ made by the victim.\"",
       "options": [
         { "id": "a", "text": "might not have been" },
-        { "id": "b", "text": "can't have been" },
-        { "id": "c", "text": "must not have been" },
+        { "id": "b", "text": "must not have been" },
+        { "id": "c", "text": "can't have been" },
         { "id": "d", "text": "couldn't be" }
       ],
-      "correctOption": "b",
+      "correctOption": "c",
       "explanation": "If death occurred between 9:00–10:00 p.m. and the call was at 10:15 p.m., it is logically impossible for the victim to have made that call: The call can't have been made by the victim. \"Might not have been\" is too weak — the timeline makes it impossible, not just uncertain. \"Must not have been\" is not standard for past deduction of impossibility. \"Couldn't be\" is present tense — wrong for this past forensic context.",
       "difficulty": 3
     },

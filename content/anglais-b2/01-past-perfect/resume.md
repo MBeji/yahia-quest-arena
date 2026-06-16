@@ -10,3 +10,4 @@
 - **Trap 1 — No isolation:** Never use past perfect without a reference point in the past. Always pair it with a past simple anchor.
 - **Trap 2 — Not the same as present perfect:** Present perfect (`have + past participle`) links to NOW; past perfect links to another past moment.
 - **Trap 3 — Don't double up:** The later action takes the past simple, not the past perfect (_After she had eaten, she **went** home_ — not _had gone_).
+- **Trap 4 — "First time" pattern:** _It **was** the first time she **had** performed_ (past context → past perfect). Compare: _It **is** the first time she **has** performed_ (present context → present perfect).
