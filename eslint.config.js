@@ -51,5 +51,15 @@ export default tseslint.config(
       "react-refresh/only-export-components": "off",
     },
   },
+  {
+    // TanStack Start route files must `export const Route = createFileRoute(...)`.
+    // Newer eslint-plugin-react-refresh no longer treats that PascalCase const as a
+    // component, so only-export-components flags the route's local component(s).
+    // Route HMR is handled by the router, not Fast Refresh, so the rule is noise here.
+    files: ["src/routes/**/*.{ts,tsx}"],
+    rules: {
+      "react-refresh/only-export-components": "off",
+    },
+  },
   eslintPluginPrettier,
 );
