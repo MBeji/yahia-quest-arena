@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Practice: Negative Adverbials & Inversion",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complete: \"Never ___ I witnessed such bravery in my life.\"",
+      "options": [
+        { "id": "a", "text": "did" },
+        { "id": "b", "text": "have" },
+        { "id": "c", "text": "was" },
+        { "id": "d", "text": "had" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Never\" fronted triggers inversion. The base sentence is \"I have never witnessed…\" so the auxiliary is \"have\": Never have I witnessed… \"did\" would require the base verb (witnessed → witness), \"was\" is the wrong auxiliary, and \"had\" would be past perfect — inappropriate here without a past reference.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"Seldom ___ she so happy as on her graduation day.\"",
+      "options": [
+        { "id": "a", "text": "has been" },
+        { "id": "b", "text": "had been" },
+        { "id": "c", "text": "was" },
+        { "id": "d", "text": "did be" }
+      ],
+      "correctOption": "c",
+      "explanation": "The base sentence is \"She was seldom so happy\" — a simple past with the verb be, so inversion places was before the subject: Seldom was she so happy. \"has been\" (present perfect) and \"had been\" (past perfect) don't match the past-simple context. \"did be\" is never correct.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which word correctly completes the pairing? \"Hardly had we left ___ the storm began.\"",
+      "options": [
+        { "id": "a", "text": "than" },
+        { "id": "b", "text": "that" },
+        { "id": "c", "text": "when" },
+        { "id": "d", "text": "before" }
+      ],
+      "correctOption": "c",
+      "explanation": "Hardly always pairs with \"when\": Hardly had we left when the storm began. Only \"No sooner\" pairs with \"than\". \"That\" is used in result clauses (so…that), and \"before\" does not collocate with Hardly in this inverted structure.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choose the correctly inverted sentence.",
+      "options": [
+        { "id": "a", "text": "Rarely I have visited such a stunning place." },
+        { "id": "b", "text": "Rarely I visited such a stunning place." },
+        { "id": "c", "text": "Rarely did I have visited such a stunning place." },
+        { "id": "d", "text": "Rarely have I visited such a stunning place." }
+      ],
+      "correctOption": "d",
+      "explanation": "Inversion means the auxiliary comes before the subject: Rarely have I visited… Option (a) keeps normal order (I have — no inversion), (b) has no auxiliary inversion at all (simple past, no auxiliary fronted), and (c) wrongly combines did + have + past participle — you cannot mix two auxiliaries this way.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"Not until ___ did the team understand the full impact.\"",
+      "options": [
+        { "id": "a", "text": "the results published" },
+        { "id": "b", "text": "the results had been published" },
+        { "id": "c", "text": "publishing the results" },
+        { "id": "d", "text": "the results were published" }
+      ],
+      "correctOption": "b",
+      "explanation": "The subordinate clause after \"Not until\" describes what happened first, so it uses the past perfect (had been published): Not until the results had been published did the team understand… The main clause then inverts (did…the team understand). Option (d) uses past simple — grammatically possible in informal contexts but (b) is more precise and natural at C1. Options (a) and (c) are incomplete clauses.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"So ___ the explosion that windows shattered three streets away.\"",
+      "options": [
+        { "id": "a", "text": "powerful it was" },
+        { "id": "b", "text": "was powerful" },
+        { "id": "c", "text": "powerful was it" },
+        { "id": "d", "text": "powerful was" }
+      ],
+      "correctOption": "d",
+      "explanation": "In \"So + adjective + inversion\" the pattern is: So powerful was the explosion that… The adjective follows So, then the inverted verb (was), then the noun phrase (no pronoun \"it\" inserted). Option (a) keeps normal order after the adjective (it was — no inversion), (b) puts the verb before the adjective — wrong word order, and (c) inserts \"it\" which is not used in this inverted structure.",
+      "difficulty": 2
+    }
+  ]
+}

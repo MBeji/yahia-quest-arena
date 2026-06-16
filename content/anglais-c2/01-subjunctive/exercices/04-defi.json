@@ -1,0 +1,97 @@
+{
+  "title": "👑 Elite Challenge ⭐⭐⭐⭐: The Subjunctive and Unreal Past",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Read: \"The board of directors insists that the CEO present a revised strategy. Were the plan to fail, the entire leadership team would be held accountable. It is imperative that no detail be overlooked.\"\nWhich statement about the subjunctives in this extract is TRUE?",
+      "options": [
+        {
+          "id": "a",
+          "text": "\"Present\" and \"be overlooked\" are both examples of the mandative subjunctive."
+        },
+        {
+          "id": "b",
+          "text": "\"Were the plan to fail\" uses the same subjunctive form as \"insists that he present\"."
+        },
+        { "id": "c", "text": "\"Be overlooked\" is the only subjunctive form in the text." },
+        { "id": "d", "text": "\"Present\" is the present continuous, not the subjunctive." }
+      ],
+      "correctOption": "a",
+      "explanation": "Both present (after insists that the CEO) and be overlooked (after it is imperative that) are mandative subjunctives — bare base forms in that-clauses after a demanding/imperative trigger. \"Were the plan to fail\" is the past subjunctive in an inverted conditional, a different though related form. (b) is false because they use different subjunctive forms. (c) is false — present is also subjunctive. (d) is false — present here is subjunctive, not continuous.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the sentence that contains an error in the use of the unreal past or subjunctive.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Had the scientist published her findings sooner, the treatment might have been approved."
+        },
+        { "id": "b", "text": "It's high time the authorities took these complaints seriously." },
+        { "id": "c", "text": "Were I in your position, I would seek legal advice immediately." },
+        { "id": "d", "text": "I'd rather you don't mention this to anyone outside the team." }
+      ],
+      "correctOption": "d",
+      "explanation": "The error is (d): \"I'd rather you\" with a different subject requires the past tense — I'd rather you didn't mention. Using the present tense don't is incorrect. (a) Had the scientist published is a correct past-perfect inversion; (b) it's high time + past (took) is correct; (c) were I in your position is correct past subjunctive.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete with the most natural and formally correct option: \"___ anyone ask about the merger, our official position is that no decision has been reached.\"",
+      "options": [
+        { "id": "a", "text": "Were" },
+        { "id": "b", "text": "Had" },
+        { "id": "c", "text": "Should" },
+        { "id": "d", "text": "Would" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Should anyone ask\" is the inverted form of \"If anyone should ask\" — a present/future possibility expressed formally. \"Were\" would need to + infinitive (Were anyone to ask). \"Had\" would require a past participle (Had anyone asked). \"Would\" cannot invert. Only Should fits a present/future open condition.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choose the sentence in which the subjunctive or unreal past is used with the most precise and formal register.",
+      "options": [
+        { "id": "a", "text": "The manager suggested that he should apologise to the client." },
+        { "id": "b", "text": "The manager suggested that he apologise to the client." },
+        { "id": "c", "text": "The manager suggested that he apologises to the client." },
+        { "id": "d", "text": "The manager suggested that he will apologise to the client." }
+      ],
+      "correctOption": "b",
+      "explanation": "The purest, most formal subjunctive is the bare base form: he apologise (no -s, no auxiliary). (a) he should apologise is a grammatically acceptable less formal alternative but not the subjunctive itself. (c) he apologises incorrectly adds -s. (d) he will apologise uses the future indicative, which is ungrammatical in this structure.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Find the sentence with an error in a subjunctive or unreal-past structure.",
+      "options": [
+        { "id": "a", "text": "Supposing she were to refuse, what would our next move be?" },
+        {
+          "id": "b",
+          "text": "It is essential that every candidate submits a portfolio by Friday."
+        },
+        { "id": "c", "text": "Had I been warned, I wouldn't have signed the contract." },
+        { "id": "d", "text": "I'd sooner we started the meeting without him." }
+      ],
+      "correctOption": "b",
+      "explanation": "The error is (b): after \"it is essential that\", the mandative subjunctive requires the bare base form — every candidate submit (not submits). Adding -s is the classic subjunctive error. (a) uses supposing + were to correctly (unreal future); (c) uses had + past participle correctly (past-perfect inversion); (d) uses I'd sooner + past tense correctly (unreal past with a different subject).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"It's high time somebody spoke up about these working conditions. Were an employee to raise concerns formally, they would be entitled to full legal protection. I'd rather the union took the lead on this.\"\nWhat do the three highlighted structures have in common?",
+      "options": [
+        { "id": "a", "text": "They all use the mandative subjunctive." },
+        {
+          "id": "b",
+          "text": "They all express a hypothetical or unreal situation through a past or subjunctive form."
+        },
+        { "id": "c", "text": "They all require the same verb form — the past simple." },
+        { "id": "d", "text": "They all invert subject and auxiliary." }
+      ],
+      "correctOption": "b",
+      "explanation": "\"It's high time somebody spoke\" (unreal past), \"Were an employee to raise\" (past subjunctive inversion), and \"I'd rather the union took\" (unreal past) all use a non-present verb form to signal that the situation is hypothetical or not yet real. (a) is wrong — none uses the mandative subjunctive (those appear after demand/insist/etc.). (c) is partly right but imprecise — \"were\" is past subjunctive, not past simple. (d) is wrong — only the second structure inverts.",
+      "difficulty": 3
+    }
+  ]
+}

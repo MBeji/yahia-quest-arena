@@ -1,0 +1,91 @@
+{
+  "title": "⭐⭐ Review: Nominalisation and Tone",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Which sentence uses nominalisation CORRECTLY to increase formality?",
+      "options": [
+        { "id": "a", "text": "They failed to implement the plan quickly." },
+        { "id": "b", "text": "The failure to implement the plan resulted in significant delays." },
+        { "id": "c", "text": "They didn't do the plan and it took forever." },
+        { "id": "d", "text": "The plan was not implemented in a quick way." }
+      ],
+      "correctOption": "b",
+      "explanation": "Option (b) nominalises \"failed\" → \"the failure\" and uses impersonal construction (no named subject They). \"Resulted in\" is also a formal verb. (a) is verb-heavy and personal; (c) is informal; (d) avoids contractions but \"in a quick way\" is informal where \"promptly\" or \"in a timely manner\" would be formal.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Nominalise the verb in brackets to complete the sentence formally: \"The [decide] to restructure the department surprised many employees.\"",
+      "options": [
+        { "id": "a", "text": "deciding" },
+        { "id": "b", "text": "decided" },
+        { "id": "c", "text": "decision" },
+        { "id": "d", "text": "decide" }
+      ],
+      "correctOption": "c",
+      "explanation": "The nominalisation of \"decide\" is \"decision\" — a noun that can head the subject noun phrase: \"The decision to restructure…\". \"Deciding\" is a gerund (acceptable but less formal than the full nominalisation). \"Decided\" is the past tense and \"decide\" is the base form — neither can be a noun here.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which of the following is a formal academic sentence that uses hedging language?",
+      "options": [
+        { "id": "a", "text": "The data is definitely proof that the theory is right." },
+        {
+          "id": "b",
+          "text": "Evidence suggests that the intervention may have contributed to improved outcomes."
+        },
+        { "id": "c", "text": "I think the results show the theory is probably right." },
+        { "id": "d", "text": "It's pretty clear the data backs up the theory." }
+      ],
+      "correctOption": "b",
+      "explanation": "Option (b) uses hedging language (suggests, may have contributed) and impersonal construction (Evidence suggests…), with formal vocabulary (intervention, outcomes). (a) is overconfident and lacks hedging; (c) uses first person (I think); (d) uses informal vocabulary (pretty clear, backs up).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which feature makes this sentence LESS formal: \"We think it's important to carry out more research.\"",
+      "options": [
+        { "id": "a", "text": "The use of the verb \"think\"." },
+        {
+          "id": "b",
+          "text": "The use of first person (\"We\") and the contraction (\"it's\") and phrasal verb (\"carry out\")."
+        },
+        { "id": "c", "text": "The use of a complete sentence." },
+        { "id": "d", "text": "The word \"research\"." }
+      ],
+      "correctOption": "b",
+      "explanation": "Three informal features combine: first-person We, the contraction it's (formal = it is), and the phrasal verb carry out (formal = conduct). \"Research\" is perfectly formal; having a complete sentence is not informal. The bundled answer (b) correctly identifies all three informal markers.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the MOST formal version of: \"The manager got angry when he found out about the delay.\"",
+      "options": [
+        { "id": "a", "text": "The manager got angry after finding out the delay." },
+        { "id": "b", "text": "The manager blew a fuse on discovering the delay." },
+        {
+          "id": "c",
+          "text": "The manager expressed considerable displeasure upon learning of the delay."
+        },
+        { "id": "d", "text": "The manager was pretty mad when he found out about the delay." }
+      ],
+      "correctOption": "c",
+      "explanation": "Option (c) nominalises the emotion (displeasure), uses formal vocabulary (considerable, upon learning of), and eliminates contractions and informal phrasal verbs. (a) still uses \"got angry\" and \"finding out\"; (b) uses the idiom \"blew a fuse\" which is informal; (d) adds the informal hedge \"pretty mad\".",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: \"The implementation of sustainable energy policies has been identified as a priority at the national level.\"\nWhich word in this sentence is an example of nominalisation?",
+      "options": [
+        { "id": "a", "text": "sustainable" },
+        { "id": "b", "text": "identified" },
+        { "id": "c", "text": "implementation" },
+        { "id": "d", "text": "national" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Implementation\" is the nominalisation of the verb \"implement\" — a noun formed from a verb by adding the suffix -ation. \"Sustainable\" is an adjective (derived from a verb but functioning adjectivally here); \"identified\" is a past participle verb; \"national\" is an adjective derived from a noun.",
+      "difficulty": 3
+    }
+  ]
+}

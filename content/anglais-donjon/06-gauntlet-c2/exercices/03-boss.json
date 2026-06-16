@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Gauntlet C2 Boss ⭐⭐⭐: Mixed Mastery",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Grammar — Subjunctive: \"The judge demanded that all evidence ___ re-examined by an independent expert.\"",
+      "options": [
+        { "id": "a", "text": "was" },
+        { "id": "b", "text": "is" },
+        { "id": "c", "text": "be" },
+        { "id": "d", "text": "were" }
+      ],
+      "correctOption": "c",
+      "explanation": "demand triggers the mandative subjunctive in the that-clause: the base form be (passive: be + re-examined) for all subjects. \"was\" is past indicative or past hypothetical (not the mandative subjunctive). \"is\" is present indicative — drops the subjunctive. \"were\" is the hypothetical/conditional subjunctive (If I were…; I wish it were…) — a different use; it would mean the evidence hypothetically was examined, not that the judge commands it.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Vocabulary — Figurative language: \"The economy is bleeding jobs at an alarming rate.\" What technique does this sentence use?",
+      "options": [
+        { "id": "a", "text": "Metonymy" },
+        { "id": "b", "text": "Simile" },
+        { "id": "c", "text": "Metaphor" },
+        { "id": "d", "text": "Hyperbole" }
+      ],
+      "correctOption": "c",
+      "explanation": "Bleeding applied to the economy is a metaphor — the economy is compared to a living body losing blood, conveying rapid loss without using like or as. Metonymy would replace one thing with a closely associated concept (e.g., The White House announced). A simile uses like or as (The economy is like a patient bleeding out). Hyperbole is deliberate exaggeration for effect (I've told you a million times) — bleeding here is not an exaggeration but a vivid figurative substitution.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Usage — Confusable words: \"As a ___ observer with no financial stake in either company, she was the ideal person to mediate.\"",
+      "options": [
+        { "id": "a", "text": "uninterested" },
+        { "id": "b", "text": "disinterested" },
+        { "id": "c", "text": "indifferent" },
+        { "id": "d", "text": "impartial" }
+      ],
+      "correctOption": "b",
+      "explanation": "disinterested means impartial — having no personal stake in the outcome, which makes someone ideal to mediate. This is tested at C2 because it is widely confused with uninterested. \"uninterested\" means not curious or caring — an uninterested mediator would do a terrible job. \"indifferent\" means having no preference or concern — too apathetic for a mediator. \"impartial\" is also correct in meaning, but the question specifically asks for the C2 near-synonym \"disinterested\" as the precise term that matches the \"no financial stake\" clue.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Usage — Ellipsis: \"Choose the sentence in which ellipsis is used CORRECTLY.\"",
+      "options": [
+        { "id": "a", "text": "Some students passed the exam, and some did not." },
+        { "id": "b", "text": "She left early because tired." },
+        { "id": "c", "text": "He decided to leave, and so she." },
+        { "id": "d", "text": "The report was finished, but not presented." }
+      ],
+      "correctOption": "a",
+      "explanation": "(a) is correct: …and some did not [pass the exam] — the omitted material (pass the exam) is fully recoverable. (b) is incorrect: because tired omits the subject and auxiliary (because she was tired) — this ellipsis is ungrammatical in standard English. (c) should be so did she (inversion required after so: so + auxiliary + subject). (d) omits was — the full form would be but [the report] was not presented — strictly, the subject is recoverable but the auxiliary was is also omitted; however this is actually a common and accepted gapping structure. (a) remains the cleanest, unambiguous correct example.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Grammar — Formulaic subjunctive: \"___ that as it may, we still need to find a solution.\"",
+      "options": [
+        { "id": "a", "text": "Being" },
+        { "id": "b", "text": "Is" },
+        { "id": "c", "text": "Was" },
+        { "id": "d", "text": "Be" }
+      ],
+      "correctOption": "d",
+      "explanation": "Be that as it may is a fixed formulaic subjunctive meaning 'even if that is true': the base form be is used, not the indicative is/was or the participle being. This is a fossilised C2 formula that appears in formal and written English. \"Being\" starts a participle clause and would mean something different. \"Is\" and \"was\" are indicative — they break the subjunctive mood of the formula.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Usage — Register: \"Which option nominalises correctly and raises the register of 'They failed to respond to warnings'?\"",
+      "options": [
+        { "id": "a", "text": "The fact that they were failing to respond to warnings…" },
+        { "id": "b", "text": "They did not respond, failing with the warnings…" },
+        { "id": "c", "text": "The warnings were not responded to by them, failing…" },
+        { "id": "d", "text": "Their failure to respond to warnings…" }
+      ],
+      "correctOption": "d",
+      "explanation": "Their failure to respond to warnings nominalises the verb fail → failure and compresses the clause into a noun phrase, which is concise and formal. (b) uses a heavy that-clause and keeps the continuous aspect unnecessarily — not a clean nominalisation. (c) splits the structure awkwardly and is not more formal. (d) is a convoluted passive that adds words without adding clarity.",
+      "difficulty": 3
+    }
+  ]
+}

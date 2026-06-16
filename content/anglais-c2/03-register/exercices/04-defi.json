@@ -1,0 +1,112 @@
+{
+  "title": "👑 Elite Challenge ⭐⭐⭐⭐: Register, Formality and Nominalisation",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Read this paragraph: \"The government needs to look into why the economy got worse. They should come up with a plan to deal with rising prices and find out what caused the problem.\"\nWhich is the BEST fully formal rewrite?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The government requires to look into the economic deterioration, devise a plan to deal with inflation, and ascertain the cause."
+        },
+        {
+          "id": "b",
+          "text": "An investigation into the causes of economic deterioration is required. The government must devise a strategy to address inflation and ascertain its root causes."
+        },
+        {
+          "id": "c",
+          "text": "The government should investigate the economy getting worse and come up with solutions for rising prices."
+        },
+        {
+          "id": "d",
+          "text": "It is necessary for the government to look into economic problems and find out about prices."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Option (b) achieves the most complete transformation: nominalisation (investigation, deterioration, causes), formal impersonal passive (is required), Latinate verbs (devise, address, ascertain), and formal noun phrase (root causes). (a) incorrectly writes \"requires to\" (should be \"is required\") and mixes levels; (c) still uses \"come up with\" and \"getting worse\"; (d) still uses phrasal verb \"look into\" and \"find out about\".",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the sentence where register is INCONSISTENT within the same sentence.",
+      "options": [
+        {
+          "id": "a",
+          "text": "The Board of Directors has resolved to commence proceedings forthwith."
+        },
+        {
+          "id": "b",
+          "text": "Further analysis of the data is required prior to the formulation of recommendations."
+        },
+        { "id": "c", "text": "The implementation of the new framework has been kind of slow." },
+        {
+          "id": "d",
+          "text": "I would be grateful if you could provide clarification at your earliest convenience."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "\"The implementation of the new framework\" is highly formal (nominalisation, Latinate), but \"has been kind of slow\" is very colloquial (kind of, slow rather than \"gradual\" or \"delayed\"). This register clash within one sentence is the error. (a), (b), and (d) are consistently formal throughout.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which transformation of \"We decided to give up the project\" is the MOST complete and formally accurate?",
+      "options": [
+        { "id": "a", "text": "We made a decision to give up the project." },
+        { "id": "b", "text": "A decision was made to abandon the project." },
+        { "id": "c", "text": "The decision for project abandonment was made by us." },
+        { "id": "d", "text": "It was decided by the team to give up the project." }
+      ],
+      "correctOption": "b",
+      "explanation": "Option (b) achieves the optimal transformation: nominalisation (decision), impersonal passive (was made), and Latinate single-word verb (abandon, replacing the phrasal \"give up\"). The actor (we) is removed entirely — perfect for formal writing. (a) nominalises but keeps \"give up\"; (c) is awkward (\"for project abandonment\") and unnecessarily names the actor; (d) keeps the phrasal \"give up\" and names the actor.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"The analysis of patient outcomes following the implementation of the revised protocol indicates a statistically significant improvement in recovery rates.\"\nHow many nominalisations does this sentence contain?",
+      "options": [
+        { "id": "a", "text": "Two (analysis, improvement)" },
+        { "id": "b", "text": "Three (analysis, implementation, improvement)" },
+        { "id": "c", "text": "Four (analysis, outcomes, implementation, improvement)" },
+        { "id": "d", "text": "Five (analysis, outcomes, implementation, improvement, recovery)" }
+      ],
+      "correctOption": "c",
+      "explanation": "Four nominalisations: \"analysis\" (from \"analyse\"), \"outcomes\" (from \"occur\" / \"come out\"), \"implementation\" (from \"implement\"), and \"improvement\" (from \"improve\"). \"Recovery\" derives from \"recover\" (also a nominalisation) — making it five if included — but \"recovery\" in medical contexts is a conventional noun, not always counted as a functional nominalisation. \"Rates\" is not a nominalisation. The intended answer is (c) for the four clear process nominalisations.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which sentence INCORRECTLY attempts to replace a phrasal verb with a formal equivalent?",
+      "options": [
+        { "id": "a", "text": "The audit revealed that costs had been significantly understated." },
+        { "id": "b", "text": "The committee resolved to defer the matter to the next session." },
+        { "id": "c", "text": "The proposal was relinquished by the majority of board members." },
+        {
+          "id": "d",
+          "text": "The report was examined and all findings were corroborated by independent reviewers."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Relinquished\" means to voluntarily give up control or possession of something — it replaces \"give up\" in the sense of releasing something held. But \"the proposal was relinquished\" is semantically odd: proposals are rejected, withdrawn, or abandoned — not relinquished. The formal word is used incorrectly in context. (a), (b), and (d) all use formal vocabulary accurately and appropriately.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read two versions of the same content:\nVersion A: \"Scientists found out that the drug can make inflammation go down.\"\nVersion B: \"The discovery that the drug facilitates a reduction in inflammation has significant implications for treatment.\"\nWhich statement BEST explains what makes Version B more formal?",
+      "options": [
+        { "id": "a", "text": "Version B is longer, which always makes writing more formal." },
+        {
+          "id": "b",
+          "text": "Version B uses nominalisations (discovery, reduction), Latinate verbs (facilitates), removes the actor (scientists), and eliminates informal phrasal constructions (find out, go down)."
+        },
+        { "id": "c", "text": "Version B avoids the word 'drug', which is informal." },
+        {
+          "id": "d",
+          "text": "Version B uses the passive voice in every clause, which is the main marker of formality."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Option (b) gives the complete and accurate explanation: nominalisation (discovery, reduction), Latinate/formal verbs (facilitates), removal of the personal agent (Scientists → implied via discovery), and elimination of informal phrasal constructions (find out → discovery; go down → reduction). Length alone does not determine formality (a); \"drug\" is standard in medical writing (c); not every clause is passive in Version B (d).",
+      "difficulty": 3
+    }
+  ]
+}

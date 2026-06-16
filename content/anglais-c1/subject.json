@@ -1,0 +1,12 @@
+{
+  "id": "anglais-c1",
+  "nameFr": "Anglais — Autonome (C1)",
+  "description": "Reach C1 mastery with five advanced structures: inversion for emphasis, cleft sentences, modals of deduction, participle clauses, and discourse markers for cohesion — CEFR C1, building on A1–B2 with nuance, register, and complex syntax.",
+  "attribute": "Agilité",
+  "colorToken": "subject-english",
+  "icon": "Globe",
+  "displayOrder": 5,
+  "contentLanguage": "en",
+  "themeId": "anglais",
+  "gradeSlug": null
+}

@@ -1,0 +1,71 @@
+{
+  "title": "Comprehension Check ⭐",
+  "questions": [
+    {
+      "prompt": "What is ellipsis in grammar?",
+      "options": [
+        { "id": "a", "text": "Adding extra words to make a sentence more emphatic." },
+        {
+          "id": "b",
+          "text": "Omitting words that are predictable from context to make language more concise."
+        },
+        { "id": "c", "text": "Replacing a noun with a pronoun." },
+        { "id": "d", "text": "Using connectors such as however and furthermore." }
+      ],
+      "correctOption": "b",
+      "explanation": "Ellipsis is the deliberate omission of words that are understood from context — making language more natural and concise without loss of meaning. Replacing a noun with a pronoun (c) is substitution or reference; adding words (a) is the opposite of ellipsis; connectors (d) describe cohesive devices.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"She submitted her essay on time, but I didn't manage to do ___.\"",
+      "options": [
+        { "id": "a", "text": "so" },
+        { "id": "b", "text": "it" },
+        { "id": "c", "text": "one" },
+        { "id": "d", "text": "such" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Do so\" replaces the entire verb phrase \"submit my essay on time\" — the standard substitution for a repeated verb phrase. \"It\" would need a clear noun referent, not a whole verb phrase. \"One\" replaces a countable noun. \"Such\" is a formal demonstrative, not used in this structure.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"I'm not sure if the meeting has been rescheduled — I believe ___.\"",
+      "options": [
+        { "id": "a", "text": "not" },
+        { "id": "b", "text": "so" },
+        { "id": "c", "text": "one" },
+        { "id": "d", "text": "neither" }
+      ],
+      "correctOption": "b",
+      "explanation": "When you believe or think something is true (affirmative), use \"so\": I believe so = I believe it has been rescheduled. \"Not\" would mean I believe it has NOT been rescheduled, which contradicts the uncertainty (I'm not sure). \"One\" replaces nouns; \"neither\" expresses negative agreement — neither fits here.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT use of cohesive device.",
+      "options": [
+        { "id": "a", "text": "The proposal was accepted; however, implementation was delayed." },
+        {
+          "id": "b",
+          "text": "The results were positive. Furthermore, they exceeded all expectations."
+        },
+        { "id": "c", "text": "The plan was approved, however it was never carried out." },
+        { "id": "d", "text": "Costs rose sharply. As a result, the project was cancelled." }
+      ],
+      "correctOption": "c",
+      "explanation": "\"However\" is a conjunctive adverb, not a conjunction — it cannot join two independent clauses with just a comma. This is called a comma splice. The correct form is a semicolon before it (as in option a) or a full stop before it (starting a new sentence). (a), (b), and (d) all use cohesive devices correctly.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"She hasn't seen the film yet. ___ have I.\"",
+      "options": [
+        { "id": "a", "text": "Neither" },
+        { "id": "b", "text": "So" },
+        { "id": "c", "text": "Nor" },
+        { "id": "d", "text": "Both Neither and Nor are correct." }
+      ],
+      "correctOption": "d",
+      "explanation": "Both \"Neither have I\" and \"Nor have I\" are correct ways to express negative agreement — both are standard and interchangeable. \"So have I\" would express positive agreement (incorrect here since she hasn't seen it). The question tests whether learners know that neither and nor are both valid.",
+      "difficulty": 2
+    }
+  ]
+}

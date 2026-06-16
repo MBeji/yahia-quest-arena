@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Chapter Boss ⭐⭐⭐: The Subjunctive and Unreal Past",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "I suggest that he take a different approach." },
+        { "id": "b", "text": "It is necessary that all documents be signed." },
+        { "id": "c", "text": "The manager demanded that she works overtime." },
+        { "id": "d", "text": "We recommend that the policy be reviewed annually." }
+      ],
+      "correctOption": "c",
+      "explanation": "The error is (c): after demand + that, the subjunctive base form is required — she work, not she works. (a) take, (b) be signed, and (d) be reviewed are all correct subjunctive forms (bare base, no -s, no auxiliary).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"___ this information to reach the press, the consequences would be catastrophic.\"",
+      "options": [
+        { "id": "a", "text": "Should" },
+        { "id": "b", "text": "Were" },
+        { "id": "c", "text": "Had" },
+        { "id": "d", "text": "Would" }
+      ],
+      "correctOption": "b",
+      "explanation": "The full non-inverted version is \"If this information were to reach the press…\" — an unreal future condition using were to. The inverted form drops if and puts Were first: Were this information to reach… \"Should\" inverts \"If…should\"; \"Had\" inverts past perfect; \"Would\" cannot invert.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: \"If only I had revised more thoroughly, I would have passed the exam.\"\nChoose the EQUIVALENT sentence.",
+      "options": [
+        { "id": "a", "text": "Had I revised more thoroughly, I would have passed the exam." },
+        { "id": "b", "text": "Should I revise more thoroughly, I will pass the exam." },
+        { "id": "c", "text": "Were I to revise more thoroughly, I would pass the exam." },
+        { "id": "d", "text": "I'd rather I revised more thoroughly to pass the exam." }
+      ],
+      "correctOption": "a",
+      "explanation": "\"If only I had revised\" is a past-perfect unreal condition; the inverted equivalent is \"Had I revised more thoroughly…\" with the same result clause. (b) is a future possibility (wrong tense relationship). (c) is an unreal future, not past. (d) misuses I'd rather.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"I'd sooner we ___ the meeting until next week.\"",
+      "options": [
+        { "id": "a", "text": "postpone" },
+        { "id": "b", "text": "will postpone" },
+        { "id": "c", "text": "postponed" },
+        { "id": "d", "text": "had postponed" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"I'd sooner\" (= I'd rather) followed by a different subject takes the past tense: I'd sooner we postponed. The present tense postpone, the future will postpone, and the past perfect had postponed are all incorrect in this fixed structure.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which option correctly transforms the sentence into a formal inverted conditional?\n\"If there should be any questions, please contact our helpdesk.\"",
+      "options": [
+        { "id": "a", "text": "Were there any questions, please contact our helpdesk." },
+        { "id": "b", "text": "Had there been any questions, please contact our helpdesk." },
+        { "id": "c", "text": "Would there be any questions, please contact our helpdesk." },
+        { "id": "d", "text": "Should there be any questions, please contact our helpdesk." }
+      ],
+      "correctOption": "d",
+      "explanation": "\"If there should be\" inverts to \"Should there be\" — keeping the present/future meaning. (a) Were there inverts a were-conditional (unreal present); (b) Had there been inverts a past perfect (past unreal); (c) Would cannot invert. Only (d) is the correct transformation.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete with the most formal and grammatically precise option: \"It is crucial that the witness ___ the truth and nothing but the truth.\"",
+      "options": [
+        { "id": "a", "text": "will tell" },
+        { "id": "b", "text": "tell" },
+        { "id": "c", "text": "tells" },
+        { "id": "d", "text": "should tell" }
+      ],
+      "correctOption": "b",
+      "explanation": "The adjective crucial triggers the mandative subjunctive: the witness tell (bare base form). \"Will tell\" is a future indicative, \"tells\" is third-person present indicative (adds -s, which is wrong in the subjunctive), and \"should tell\" is an informal alternative — grammatically acceptable but not the purest subjunctive form expected at C2.",
+      "difficulty": 3
+    }
+  ]
+}

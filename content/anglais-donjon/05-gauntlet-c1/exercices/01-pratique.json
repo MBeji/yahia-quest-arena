@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Gauntlet C1: Warm-up",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Grammar — Inversion: \"Never ___ such a beautiful sunset.\"",
+      "options": [
+        { "id": "a", "text": "I have seen" },
+        { "id": "b", "text": "I saw" },
+        { "id": "c", "text": "have I seen" },
+        { "id": "d", "text": "I had seen" }
+      ],
+      "correctOption": "c",
+      "explanation": "When a negative adverb like Never fronts a sentence, the subject and auxiliary invert (like a question): Never have I seen…. \"I have seen\" is normal SVO order — no inversion. \"I saw\" is past simple with no inversion. \"I had seen\" is also non-inverted. The pattern is Never + auxiliary + subject + main verb.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Grammar — Cleft sentence: \"It was the president ___ announced the new policy.\"",
+      "options": [
+        { "id": "a", "text": "which" },
+        { "id": "b", "text": "who" },
+        { "id": "c", "text": "what" },
+        { "id": "d", "text": "whom" }
+      ],
+      "correctOption": "b",
+      "explanation": "An it-cleft highlighting a person uses who: It was the president who announced the policy. \"which\" is for things. \"what\" opens a wh-cleft (What I need is…) — it cannot follow it was with a noun. \"whom\" is the object form and cannot be used when the highlighted noun is the subject of the relative clause.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Grammar — Modal of deduction (past): \"She's wet from head to toe. She ___ caught in the storm.\"",
+      "options": [
+        { "id": "a", "text": "could be" },
+        { "id": "b", "text": "must be" },
+        { "id": "c", "text": "should have been" },
+        { "id": "d", "text": "must have been" }
+      ],
+      "correctOption": "d",
+      "explanation": "We are deducing a past event (she got wet earlier) from present evidence (she is wet now). Past deduction = must have been + participle: She must have been caught in the storm. \"must be\" deduces a present state, but \"caught\" is a past participle — the event was past, not ongoing. \"should have been\" implies she was supposed to be caught (obligation in the past), which makes no sense. \"could be\" is a present possibility.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Vocabulary — Choose the correct discourse marker: \"The results were promising. ___, further testing is needed before we draw conclusions.\"",
+      "options": [
+        { "id": "a", "text": "Moreover" },
+        { "id": "b", "text": "Therefore" },
+        { "id": "c", "text": "Nevertheless" },
+        { "id": "d", "text": "Namely" }
+      ],
+      "correctOption": "c",
+      "explanation": "Promising results but further testing is needed — this is a concession (despite the good results, we still need more testing). Nevertheless signals this contrast. \"Moreover\" adds a further positive point. \"Therefore\" signals a logical result (which would mean the results cause the need for testing, losing the contrast). \"Namely\" introduces a list or specification.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Grammar — Participle clause: \"___ by the unexpected news, the shareholders demanded an emergency meeting.\"",
+      "options": [
+        { "id": "a", "text": "Having shock" },
+        { "id": "b", "text": "Shocking" },
+        { "id": "c", "text": "Being shock" },
+        { "id": "d", "text": "Shocked" }
+      ],
+      "correctOption": "d",
+      "explanation": "The shareholders received the action of the news (they were shocked), so the passive past participle is needed: Shocked by the unexpected news…. \"Shocking\" would be an active -ing participle — it would mean the shareholders were the ones doing the shocking. \"Having shock\" incorrectly uses the noun shock instead of the participle shocked. \"Being shock\" also uses the noun and is not grammatical.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Spelling — Choose the correctly spelled word that fills the gap: \"His sudden disappearance was an extremely puzzling ___.\"",
+      "options": [
+        { "id": "a", "text": "ocurrence" },
+        { "id": "b", "text": "occurence" },
+        { "id": "c", "text": "occurrence" },
+        { "id": "d", "text": "occurrance" }
+      ],
+      "correctOption": "c",
+      "explanation": "occurrence doubles both the c and the r: oc-cur-rence. The root is occur (double-r when the stress is on the final syllable before a vowel suffix), and -ence is the standard noun ending. \"ocurrence\" omits one c; \"occurence\" omits one r; \"occurrance\" uses the wrong suffix -rance.",
+      "difficulty": 2
+    }
+  ]
+}

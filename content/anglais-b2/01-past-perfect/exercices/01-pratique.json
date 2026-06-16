@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Practice: Past Perfect Form",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complete the sentence: 'When I arrived, the film ___ already started.'",
+      "options": [
+        { "id": "a", "text": "was" },
+        { "id": "b", "text": "has" },
+        { "id": "c", "text": "had" },
+        { "id": "d", "text": "were" }
+      ],
+      "correctOption": "c",
+      "explanation": "'Had already started' is the past perfect. The film's starting happened BEFORE I arrived — that earlier past event requires 'had + past participle'. 'Was' is past simple of 'be'; 'has' is present perfect; 'were' does not fit the singular 'film'.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete the sentence: 'She ___ never flown before that trip.'",
+      "options": [
+        { "id": "a", "text": "has" },
+        { "id": "b", "text": "have" },
+        { "id": "c", "text": "hadn't" },
+        { "id": "d", "text": "had" }
+      ],
+      "correctOption": "d",
+      "explanation": "'Had never flown' is the affirmative past perfect with 'never'. The reference point is 'that trip' (a past event), so we need past perfect, not present perfect ('has/have'). 'Hadn't' would make the sentence 'she hadn't never flown' — a double negative, which is incorrect.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete the sentence: 'They ___ finished dinner before the guests arrived.'",
+      "options": [
+        { "id": "a", "text": "have" },
+        { "id": "b", "text": "had" },
+        { "id": "c", "text": "were" },
+        { "id": "d", "text": "has" }
+      ],
+      "correctOption": "b",
+      "explanation": "'Had finished' is the past perfect. 'Before the guests arrived' tells us the dinner was completed first — 'had + past participle' shows this earlier-past action. 'Have/has' are present perfect; 'were' is past simple of 'be'.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "By the time we left, she had already called." },
+        { "id": "b", "text": "He had never tried sushi before that evening." },
+        { "id": "c", "text": "I had visited London last summer." },
+        { "id": "d", "text": "After they had spoken, he felt much better." }
+      ],
+      "correctOption": "c",
+      "explanation": "'I had visited London last summer' is incorrect. 'Last summer' is a simple past time reference with no other past event to connect to — the past perfect cannot stand alone. The correct form is 'I visited London last summer'. Options A, B, and D all correctly anchor the past perfect to another past event or reference point.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete the sentence: 'He realised he ___ forgotten his passport.'",
+      "options": [
+        { "id": "a", "text": "had" },
+        { "id": "b", "text": "have" },
+        { "id": "c", "text": "was" },
+        { "id": "d", "text": "has" }
+      ],
+      "correctOption": "a",
+      "explanation": "'Had forgotten' is the past perfect. The forgetting happened BEFORE he realised — 'had + past participle' shows this sequence. 'Have/has' are present perfect forms; 'was' is the past simple of 'be' and cannot combine with 'forgotten' to form the past perfect.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete the sentence: 'She was tired because she ___ been working all night.'",
+      "options": [
+        { "id": "a", "text": "has" },
+        { "id": "b", "text": "was" },
+        { "id": "c", "text": "had" },
+        { "id": "d", "text": "is" }
+      ],
+      "correctOption": "c",
+      "explanation": "'Had been working' is the past perfect continuous: 'had + been + verb-ing'. It emphasises the duration of the working (all night) as an ongoing activity that happened before another past state ('she was tired'). 'Has been working' is present perfect continuous; 'was' and 'is' cannot form the past perfect continuous.",
+      "difficulty": 3
+    }
+  ]
+}

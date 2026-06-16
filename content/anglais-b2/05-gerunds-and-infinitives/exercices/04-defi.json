@@ -1,0 +1,82 @@
+{
+  "title": "👑 Elite Challenge ⭐⭐⭐⭐: Gerunds and Infinitives",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Complete: \"The teacher made all the students ___ their essays again.\"",
+      "options": [
+        { "id": "a", "text": "to rewrite" },
+        { "id": "b", "text": "rewriting" },
+        { "id": "c", "text": "rewrite" },
+        { "id": "d", "text": "to rewriting" }
+      ],
+      "correctOption": "c",
+      "explanation": "After \"make\" (causative), use the bare infinitive — no \"to\": made the students rewrite. \"to rewrite\" is the to-infinitive, which cannot follow make in an active sentence. Note: in the passive, \"to\" returns (The students were made to rewrite). \"rewriting\" is a gerund, and \"to rewriting\" is never correct.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"I'm not used to ___ up before six in the morning.\"",
+      "options": [
+        { "id": "a", "text": "get" },
+        { "id": "b", "text": "getting" },
+        { "id": "c", "text": "to get" },
+        { "id": "d", "text": "got" }
+      ],
+      "correctOption": "b",
+      "explanation": "In \"be used to\", the word \"to\" is a preposition meaning accustomed to — so it must be followed by the gerund: used to getting up. Don't confuse this with \"used to do\" (past habit) where \"to\" is an infinitive marker. \"get\" and \"to get\" treat \"to\" as an infinitive marker (wrong here), and \"got\" is the past tense.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"She tried ___ earlier, but the traffic was just as bad.\"",
+      "options": [
+        { "id": "a", "text": "to leave" },
+        { "id": "b", "text": "leaving" },
+        { "id": "c", "text": "leave" },
+        { "id": "d", "text": "to leaving" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"try doing\" (gerund) means experiment with something as a possible solution: she tried leaving earlier (as an experiment to avoid traffic). \"try to do\" (infinitive) means make an effort — but if she succeeded in leaving earlier and it still didn't help, the gerund fits. The context implies she experimented. \"leave\" and \"to leaving\" are both grammatically incorrect here.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"The company regrets ___ that this product line has been discontinued.\"",
+      "options": [
+        { "id": "a", "text": "to announce" },
+        { "id": "b", "text": "announcing" },
+        { "id": "c", "text": "announce" },
+        { "id": "d", "text": "having announced" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"regret to do\" (infinitive) is used in formal or official contexts to introduce bad news being delivered now: regrets to announce. \"regret doing\" (gerund) expresses sorrow about something already done in the past, which doesn't fit — the announcement is happening in the present statement. \"announce\" is missing \"to\", and \"having announced\" refers to a past completed action.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "Let the children play in the garden for an hour." },
+        { "id": "b", "text": "I would rather stay home than go out tonight." },
+        { "id": "c", "text": "They helped us move all the boxes upstairs." },
+        { "id": "d", "text": "She made her assistant to send all the emails." }
+      ],
+      "correctOption": "d",
+      "explanation": "Sentence (d) is incorrect. After \"make\" (causative) in the active, use the bare infinitive — no \"to\": She made her assistant send all the emails. (a) is correct: after \"let\", use the bare infinitive (let the children play). (b) is correct: \"would rather\" takes the bare infinitive. (c) is correct: \"help\" can take the bare infinitive.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: \"Mia had been running her own business for years. After winning an award, she went on to expand into three new markets and later gave a TED Talk about her journey.\"\nWhat is the best interpretation of Mia's actions?",
+      "options": [
+        { "id": "a", "text": "Mia continued expanding into the same markets after the award." },
+        { "id": "b", "text": "Mia stopped expanding when she gave the TED Talk." },
+        { "id": "c", "text": "Mia moved on to new activities after winning the award." },
+        { "id": "d", "text": "Mia regretted expanding into three new markets." }
+      ],
+      "correctOption": "c",
+      "explanation": "\"went on to expand\" (go on + infinitive) means she moved on to a new activity — expanding into new markets — after the award. This is distinct from \"went on expanding\" (continuing the same activity). (a) wrongly implies the same markets, (b) contradicts the text (she gave a talk after expanding, not instead), and (d) introduces regret not mentioned in the passage.",
+      "difficulty": 3
+    }
+  ]
+}

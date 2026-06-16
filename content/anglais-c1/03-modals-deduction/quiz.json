@@ -1,0 +1,65 @@
+{
+  "title": "Comprehension Check ⭐",
+  "questions": [
+    {
+      "prompt": "She arrived two hours ago and hasn't eaten since this morning. Complete: \"She ___ be starving by now.\"",
+      "options": [
+        { "id": "a", "text": "can't" },
+        { "id": "b", "text": "must" },
+        { "id": "c", "text": "couldn't" },
+        { "id": "d", "text": "might not" }
+      ],
+      "correctOption": "b",
+      "explanation": "Strong evidence (no food for hours) leads to a near-certain positive deduction: She must be starving. \"Can't\" and \"couldn't\" signal near-certain negatives — the opposite of what the evidence suggests. \"Might not\" expresses uncertain negation, also contradicting the context.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete the past deduction: \"No one answered the door. They ___ gone out.\"",
+      "options": [
+        { "id": "a", "text": "must" },
+        { "id": "b", "text": "must have" },
+        { "id": "c", "text": "had to" },
+        { "id": "d", "text": "should have" }
+      ],
+      "correctOption": "b",
+      "explanation": "Past deduction requires modal + have + past participle: They must have gone out. \"Must\" alone (a) only works for present deduction (+ base verb). \"Had to\" expresses past obligation, not deduction. \"Should have\" expresses what was advisable but didn't happen — a different meaning entirely.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "The safe was locked and the code was only known to three people. Complete: \"An outsider ___ opened it.\"",
+      "options": [
+        { "id": "a", "text": "must have" },
+        { "id": "b", "text": "might have" },
+        { "id": "c", "text": "couldn't have" },
+        { "id": "d", "text": "should have" }
+      ],
+      "correctOption": "c",
+      "explanation": "Since only three insiders knew the code, it was **impossible** for an outsider to open the safe: couldn't have + past participle. \"Must have\" would mean they almost certainly did — wrong. \"Might have\" expresses possibility — contradicts the locked-code evidence. \"Should have\" is about advisability, not possibility.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which sentence correctly expresses a near-certain NEGATIVE past deduction?",
+      "options": [
+        { "id": "a", "text": "She must not have passed the exam — she looks devastated." },
+        { "id": "b", "text": "She can't have passed the exam — she looks devastated." },
+        { "id": "c", "text": "She mustn't have passed the exam — she looks devastated." },
+        { "id": "d", "text": "She hadn't passed the exam — she looks devastated." }
+      ],
+      "correctOption": "b",
+      "explanation": "For near-certain negative past deduction, the correct form is **can't have + past participle**: She can't have passed. Option (a) \"must not have\" is not standard for deduction — it sounds like prohibition. Option (c) \"mustn't have\" is the contraction of must not — equally wrong for past deduction. Option (d) uses the past perfect as a statement of fact, not a deduction.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"I'm not sure where Sara is. She ___ gone to the library — she mentioned it earlier.\"",
+      "options": [
+        { "id": "a", "text": "must have" },
+        { "id": "b", "text": "can't have" },
+        { "id": "c", "text": "couldn't have" },
+        { "id": "d", "text": "might have" }
+      ],
+      "correctOption": "d",
+      "explanation": "The speaker is uncertain (\"I'm not sure\") but has weak evidence (she mentioned the library): might have gone expresses possibility without certainty. \"Must have\" would claim near-certainty, which contradicts \"I'm not sure\". \"Can't have\" and \"couldn't have\" express near-certain negation — the opposite of the intended meaning.",
+      "difficulty": 2
+    }
+  ]
+}

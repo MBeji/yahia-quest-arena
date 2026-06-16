@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Practice: Modal Forms & Present Deductions",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "The café is empty and the chairs are on the tables. Complete: \"It ___ closed.\"",
+      "options": [
+        { "id": "a", "text": "must be" },
+        { "id": "b", "text": "can't be" },
+        { "id": "c", "text": "should be" },
+        { "id": "d", "text": "would be" }
+      ],
+      "correctOption": "a",
+      "explanation": "The evidence (empty café, chairs up) points strongly to a positive conclusion: It must be closed. \"Can't be\" signals near-certain negation — wrong here. \"Should be\" expresses expectation or advice, not deduction from evidence. \"Would be\" expresses a conditional, not an evidence-based deduction.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "He just ran a marathon. Complete: \"He ___ exhausted — he just ran 42 kilometres!\"",
+      "options": [
+        { "id": "a", "text": "might be" },
+        { "id": "b", "text": "can't be" },
+        { "id": "c", "text": "must be" },
+        { "id": "d", "text": "could be" }
+      ],
+      "correctOption": "c",
+      "explanation": "Strong, undeniable evidence (just ran 42km) makes this a near-certain deduction: He must be exhausted. \"Might be\" and \"could be\" suggest mere possibility, which understates the certainty. \"Can't be\" is a near-certain negative — the opposite meaning.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Her office light is off and the door is locked. What is the most likely deduction?",
+      "options": [
+        { "id": "a", "text": "She must be working late." },
+        { "id": "b", "text": "She can't be in her office." },
+        { "id": "c", "text": "She must not be in her office." },
+        { "id": "d", "text": "She should be in her office." }
+      ],
+      "correctOption": "b",
+      "explanation": "A dark, locked office is strong evidence she is NOT there: She can't be in her office — near-certain negative deduction. Option (a) is the opposite conclusion. Option (c) \"must not be\" is less idiomatic for deduction — \"can't be\" is the standard near-certain negative. Option (d) \"should be\" expresses expectation from a schedule or rule, not an evidence-based deduction.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete the present deduction: \"I can hear music from next door at 3 a.m. The neighbours ___ having a party.\"",
+      "options": [
+        { "id": "a", "text": "had to be" },
+        { "id": "b", "text": "must be" },
+        { "id": "c", "text": "should be" },
+        { "id": "d", "text": "can be" }
+      ],
+      "correctOption": "b",
+      "explanation": "Audible evidence (loud music at 3 a.m.) makes a near-certain deduction appropriate: must be having a party. \"Had to be\" is a past obligation structure. \"Should be\" is about expectation — not evidence-based deduction. \"Can be\" expresses general possibility, not a specific current deduction from evidence.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Identify the INCORRECT use of a modal of deduction.",
+      "options": [
+        { "id": "a", "text": "The roads are icy — it must be very cold outside." },
+        { "id": "b", "text": "She won every game — she can't be a beginner." },
+        { "id": "c", "text": "He's never been here — he might know the way." },
+        { "id": "d", "text": "The project is half done — they could be halfway through." }
+      ],
+      "correctOption": "c",
+      "explanation": "Option (c) is contradictory: if he has never been here, it is unlikely he knows the way — so \"might know\" (possibility) clashes with the evidence. A logical deduction would be: He can't know the way (near-certain negative). Options (a), (b), and (d) all match their evidence correctly: icy roads → cold (must), winning every game → not a beginner (can't), project half done → halfway through (could).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete with the most precise modal: \"The test results show complete recovery. The treatment ___ be working.\"",
+      "options": [
+        { "id": "a", "text": "could" },
+        { "id": "b", "text": "might" },
+        { "id": "c", "text": "must" },
+        { "id": "d", "text": "should" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Complete recovery\" shown by test results is strong, concrete evidence pointing to a near-certain conclusion: The treatment must be working. \"Could\" and \"might\" express mere possibility — too weak for such definitive test results. \"Should\" expresses expected or advisable outcomes, not evidence-based deduction.",
+      "difficulty": 2
+    }
+  ]
+}

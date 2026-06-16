@@ -1,0 +1,94 @@
+{
+  "title": "👑 Elite Challenge ⭐⭐⭐⭐: Nuance and Confusable Words",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Read: \"The policy change effected a significant reduction in carbon emissions.\"\nWhich statement about the use of \"effected\" is CORRECT?",
+      "options": [
+        { "id": "a", "text": "It is wrong — it should be \"affected\"." },
+        { "id": "b", "text": "It is wrong — it should be \"had an effect on\"." },
+        {
+          "id": "c",
+          "text": "It is correct — \"effect\" can be used as a formal verb meaning to bring about or cause."
+        },
+        { "id": "d", "text": "It is wrong — \"effected\" is not a real English word." }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Effect\" can function as a rare, formal verb meaning to bring about or cause: \"to effect a change\" = to make a change happen. The sentence correctly uses \"effected a significant reduction\" to mean brought about a reduction. \"Affected\" would mean had an impact on (a different meaning). This is a genuine C2-level distinction taught in the cours.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the sentence with the SUBTLEST collocation error.",
+      "options": [
+        {
+          "id": "a",
+          "text": "The study provides strong evidence for the link between diet and health."
+        },
+        { "id": "b", "text": "She gave a deep speech about her experiences." },
+        { "id": "c", "text": "The committee reached a unanimous decision." },
+        { "id": "d", "text": "He raised a valid concern about the budget." }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Gave a deep speech\" is the error. The adjective that collocates with speech in this context is \"profound\", \"moving\", \"powerful\", or \"heartfelt\" — not \"deep\". \"Deep\" collocates with thought, sleep, breath, or concern, but not speech in this way. (a) strong evidence, (c) unanimous decision, and (d) raised a concern are all standard collocations.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"The historical victory of 1966 is still celebrated today. It was a historic moment for the nation.\"\nAre these two uses of \"historic\" and \"historical\" correct?",
+      "options": [
+        { "id": "a", "text": "Yes, both are correct — they mean the same thing." },
+        { "id": "b", "text": "No — both should be \"historic\"." },
+        {
+          "id": "c",
+          "text": "No — \"historical\" in the first sentence is wrong; \"the historic victory\" is correct. \"Historic\" in the second sentence is also correct."
+        },
+        {
+          "id": "d",
+          "text": "No — \"historic\" in the second sentence is wrong; it should be \"historical\"."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Historical\" means relating to or belonging to history in general (a historical novel, historical records). \"Historic\" means significant or landmark — something that makes history. A victory in 1966 that is still celebrated is a landmark event: the correct adjective is \"historic\". The second use (a historic moment for the nation) is correct. So the first sentence uses \"historical\" incorrectly — it should be \"historic\".",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"The committee ___ seven members: three from the legal sector, two economists, and two scientists.\"\nChoose the MOST formally precise option.",
+      "options": [
+        { "id": "a", "text": "is comprised of" },
+        { "id": "b", "text": "is made up of" },
+        { "id": "c", "text": "is composed by" },
+        { "id": "d", "text": "comprises" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"Comprises\" is the formally preferred active form: the whole (committee) comprises its parts (the members). \"Is comprised of\" reverses the passive incorrectly in prescriptive formal usage — many style guides reject it. \"Is made up of\" is informal. \"Is composed by\" uses the wrong preposition; the correct passive is \"is composed of\".",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which sentence contains a CONNOTATION error — a word whose implied feeling contradicts the intended positive meaning?",
+      "options": [
+        { "id": "a", "text": "She is renowned for her compassionate approach to patient care." },
+        { "id": "b", "text": "He is celebrated for his innovative research methods." },
+        { "id": "c", "text": "The professor is notorious for inspiring generations of students." },
+        { "id": "d", "text": "The architect is admired for her minimalist design philosophy." }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Notorious\" implies fame for something bad or disreputable. Inspiring students is a positive quality — the correct words would be \"renowned\", \"celebrated\", or \"admired\". The other three sentences use words with positive or neutral connotations that correctly match the positive qualities described.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: \"Despite her outwardly ___ demeanour, she was deeply ___ to the suffering around her — often moved to tears by small acts of injustice.\"\nChoose the BEST pair.",
+      "options": [
+        { "id": "a", "text": "sensitive / sensible" },
+        { "id": "b", "text": "sensible / sensitive" },
+        { "id": "c", "text": "disinterested / continuous" },
+        { "id": "d", "text": "notorious / sensible" }
+      ],
+      "correctOption": "b",
+      "explanation": "The contrast \"outwardly [calm/practical] demeanour\" vs \"deeply [emotionally reactive] to suffering\" requires: sensible (showing good, practical judgement — the outward appearance) and sensitive (easily and deeply affected emotionally — the inner reality). This contrast is exactly what the confusable pair teaches. The other options are semantically incoherent in context.",
+      "difficulty": 3
+    }
+  ]
+}

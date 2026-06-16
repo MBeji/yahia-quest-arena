@@ -1,0 +1,94 @@
+{
+  "title": "👑 Elite Challenge ⭐⭐⭐⭐: Reported Speech",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Read: The teacher announced: \"The Earth orbits the Sun.\" Which reported form is MOST appropriate?",
+      "options": [
+        { "id": "a", "text": "The teacher said the Earth orbited the Sun." },
+        { "id": "b", "text": "The teacher said the Earth orbits the Sun." },
+        { "id": "c", "text": "The teacher said the Earth had orbited the Sun." },
+        { "id": "d", "text": "The teacher said the Earth will orbit the Sun." }
+      ],
+      "correctOption": "b",
+      "explanation": "This is a scientific fact (still true now), so no backshift is needed — 'the Earth orbits the Sun' is the most natural and correct form. Option (a) applies backshift, which is grammatically acceptable but less natural for a permanent truth. Option (c) uses past perfect, implying the Earth no longer orbits — wrong. Option (d) uses future will, which distorts the meaning entirely.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Direct: \"If you work hard, you will succeed.\" → My mentor told me that if I ___ hard, I ___ succeed.",
+      "options": [
+        { "id": "a", "text": "worked / would" },
+        { "id": "b", "text": "work / will" },
+        { "id": "c", "text": "had worked / would have" },
+        { "id": "d", "text": "worked / will" }
+      ],
+      "correctOption": "a",
+      "explanation": "In reported speech, the first conditional backshifts: 'work' → 'worked' (past simple) and 'will succeed' → 'would succeed'. Option (b) keeps both tenses in the present/future — no backshift. Option (c) uses past perfect and 'would have', which reports a third conditional (past regret), not the original first conditional. Option (d) mixes backshifted 'worked' with unbackshifted 'will' — inconsistent.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Find the sentence where the choice between 'say' and 'tell' is WRONG.",
+      "options": [
+        { "id": "a", "text": "He told us the meeting was cancelled." },
+        { "id": "b", "text": "She said nothing for a long time." },
+        { "id": "c", "text": "They told that the price had increased." },
+        { "id": "d", "text": "He said he would think about it." }
+      ],
+      "correctOption": "c",
+      "explanation": "'Tell' always requires a personal object before 'that': 'They told us that the price had increased' or 'They said that the price had increased'. 'Told that…' without an object is grammatically wrong. Option (a) correctly uses 'told us'. Option (b) correctly uses 'said' without an object. Option (d) correctly uses 'said' followed by a clause.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"Omar called Sana last night. He said: 'I spoke to the director here today and he told me I can start the new job this week.'\" What is the correctly reported version of Omar's words?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Omar said he had spoken to the director there that day and that the director had told him he could start the new job that week."
+        },
+        {
+          "id": "b",
+          "text": "Omar said he spoke to the director here today and he told him he can start the new job this week."
+        },
+        {
+          "id": "c",
+          "text": "Omar said he had spoken to the director there today and that the director told him he could start the new job this week."
+        },
+        {
+          "id": "d",
+          "text": "Omar told he had spoken to the director and he can start the job that week."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Option (a) applies all backshifts correctly: 'spoke' → 'had spoken', 'told' → 'had told', 'can' → 'could'; and all time/place shifts: 'here' → 'there', 'today' → 'that day', 'this week' → 'that week'. Option (b) applies no changes at all. Option (c) shifts 'here/today/this week' but inconsistently backshifts ('told' stays in past simple and 'could' is correct but 'today' is not shifted). Option (d) uses 'told' without an object and skips 'spoke'.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Direct: \"Where have you put my keys?\" → She asked him ___.",
+      "options": [
+        { "id": "a", "text": "where he had put her keys" },
+        { "id": "b", "text": "where had he put her keys" },
+        { "id": "c", "text": "where he has put her keys" },
+        { "id": "d", "text": "where did he put her keys" }
+      ],
+      "correctOption": "a",
+      "explanation": "Present perfect ('have put') backshifts to past perfect ('had put'); pronouns shift: 'you' → 'he', 'my' → 'her'; statement order is restored. Option (b) keeps inverted order ('had he'). Option (c) keeps present perfect without backshift. Option (d) uses 'did' — the auxiliary for past simple questions — and inverted order, both wrong in reported speech.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "A journalist writes: \"The minister ___ that the new law ___ jobs and ___ the economy.\" (direct: \"This law will create jobs and boost the economy.\")\nWhich option fills all three gaps correctly?",
+      "options": [
+        { "id": "a", "text": "said / will create / will boost" },
+        { "id": "b", "text": "told / would create / would boost" },
+        { "id": "c", "text": "said / would create / would boost" },
+        { "id": "d", "text": "told that / would create / would boost" }
+      ],
+      "correctOption": "c",
+      "explanation": "'Said' takes no personal object and is correct here (no 'us/them' follows). 'Will' backshifts to 'would' for both verbs. Option (a) keeps 'will' — no backshift. Option (b) uses 'told' without a personal object, which is wrong. Option (d) uses 'told that' — 'told' needs an object ('told us that'), not a direct 'that' clause.",
+      "difficulty": 3
+    }
+  ]
+}

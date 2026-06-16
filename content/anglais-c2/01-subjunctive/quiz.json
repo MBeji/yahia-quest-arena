@@ -1,0 +1,65 @@
+{
+  "title": "Comprehension Check ⭐",
+  "questions": [
+    {
+      "prompt": "Complete: \"The committee insists that every delegate ___ present at the vote.\"",
+      "options": [
+        { "id": "a", "text": "is" },
+        { "id": "b", "text": "be" },
+        { "id": "c", "text": "was" },
+        { "id": "d", "text": "should be" }
+      ],
+      "correctOption": "b",
+      "explanation": "After a mandative verb like insist, the that-clause takes the present subjunctive — the bare base form with no -s and no auxiliary: every delegate be. \"is\" is ordinary indicative, \"was\" is past indicative, and \"should be\" is a less formal alternative but not the subjunctive itself.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which sentence uses the subjunctive CORRECTLY?",
+      "options": [
+        { "id": "a", "text": "I suggest that he goes home immediately." },
+        { "id": "b", "text": "It is vital that she submits the form today." },
+        { "id": "c", "text": "The judge ordered that the prisoner be released." },
+        { "id": "d", "text": "They demand that he is paid at once." }
+      ],
+      "correctOption": "c",
+      "explanation": "Option (c) correctly uses the present subjunctive be released (base form). (a) has the error goes — should be go; (b) has submits — should be submit; (d) has is paid — should be be paid. Only (c) uses the bare base form throughout.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete with the correct formal inverted conditional: \"___ I to discover any irregularities, I would report them immediately.\"",
+      "options": [
+        { "id": "a", "text": "Should" },
+        { "id": "b", "text": "Would" },
+        { "id": "c", "text": "Were" },
+        { "id": "d", "text": "Had" }
+      ],
+      "correctOption": "c",
+      "explanation": "The inverted equivalent of \"If I were to discover…\" is \"Were I to discover…\" — using were + subject + to-infinitive. \"Would\" cannot begin an inverted conditional. \"Should\" inverts \"if + should\" and would work with \"Should I discover…\", but the to-infinitive slot here signals were. \"Had\" inverts a past perfect (Had I discovered…).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"It's high time you ___ your driving test — you keep putting it off.\"",
+      "options": [
+        { "id": "a", "text": "take" },
+        { "id": "b", "text": "taking" },
+        { "id": "c", "text": "took" },
+        { "id": "d", "text": "to take" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"It's high time\" is followed by a past-tense form (the unreal past) to signal that something is overdue: It's high time you took your test. The present tense take, the -ing form, and the to-infinitive are all incorrect in this structure.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"I'd rather you ___ me the truth straight away.\"",
+      "options": [
+        { "id": "a", "text": "tell" },
+        { "id": "b", "text": "told" },
+        { "id": "c", "text": "to tell" },
+        { "id": "d", "text": "telling" }
+      ],
+      "correctOption": "b",
+      "explanation": "When I'd rather refers to someone else's action, the following clause takes the past tense (unreal past): I'd rather you told me. The present tense tell, the to-infinitive, and -ing are all wrong here. (With the same subject — I'd rather go — you use the bare infinitive, but here the subjects differ.)",
+      "difficulty": 2
+    }
+  ]
+}
