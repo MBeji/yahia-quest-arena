@@ -1,0 +1,154 @@
+{
+  "title": "⭐⭐ Drill: Participle Clauses",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Reduce the relative clause: \"The letter which was sent by the director arrived this morning.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "The letter sent by the director arrived this morning."
+        },
+        {
+          "id": "b",
+          "text": "The letter having sent by the director arrived this morning."
+        },
+        {
+          "id": "c",
+          "text": "The letter sending by the director arrived this morning."
+        },
+        {
+          "id": "d",
+          "text": "The letter to send by the director arrived this morning."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Which was sent\" is a passive relative clause — it reduces to a past participle: sent by the director. The past participle preserves the passive meaning (the letter was sent by the director). \"Sending\" is the active present participle — wrong, since the letter doesn't send itself. \"Having sent\" is the active perfect participle — also wrong for a passive clause. \"To send\" is a to-infinitive, which changes meaning and is not a reduced relative here.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Identify the type and function: \"Turning the corner, the team spotted the finish line.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "Past participle clause — passive meaning"
+        },
+        {
+          "id": "b",
+          "text": "Perfect participle clause — action prior to the main clause"
+        },
+        {
+          "id": "c",
+          "text": "Reduced passive relative clause — modifying a noun"
+        },
+        {
+          "id": "d",
+          "text": "Present participle clause — simultaneous action"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "\"Turning the corner\" is a present participle clause (-ing form) expressing an action happening at the same time as the main clause (spotting the finish line). Both actions are simultaneous. It is not past participle (no passive meaning — the team turned the corner, not the corner was turned). It is not perfect participle (no \"having\"). It is not a reduced relative clause — it modifies the whole event, not a noun.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Find the DANGLING participle.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Having reviewed the contract, the lawyer signed it."
+        },
+        {
+          "id": "b",
+          "text": "Inspired by the speech, the volunteers signed up immediately."
+        },
+        {
+          "id": "c",
+          "text": "Crossing the finish line, the crowd erupted in applause."
+        },
+        {
+          "id": "d",
+          "text": "Not understanding the task, she asked her supervisor for help."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Option (c) is a dangling participle: \"Crossing the finish line\" implies the crowd was crossing it, but the crowd was watching, not running. The subject of the main clause (the crowd) cannot cross the finish line. A corrected version would be: Crossing the finish line, the runner heard the crowd erupt in applause. Options (a), (b), and (d) correctly share the participle subject with the main clause subject (the lawyer, the volunteers, she).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete to show the first action: \"___ all available evidence, the investigators published their final report.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "Being examined"
+        },
+        {
+          "id": "b",
+          "text": "Examining"
+        },
+        {
+          "id": "c",
+          "text": "Having examined"
+        },
+        {
+          "id": "d",
+          "text": "To examine"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "The investigators examined the evidence FIRST, then published the report — two sequential actions. Use having + past participle to mark the prior completed action: Having examined all available evidence, the investigators published their final report. \"Examining\" (present participle) would imply both actions were simultaneous. \"Being examined\" is passive — the investigators did not examine themselves. \"To examine\" is a to-infinitive expressing purpose, not sequence.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"___ in multiple languages, the instruction manual reached a global audience.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "Writing"
+        },
+        {
+          "id": "b",
+          "text": "Written"
+        },
+        {
+          "id": "c",
+          "text": "Having written"
+        },
+        {
+          "id": "d",
+          "text": "To write"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Written in multiple languages\" is a past participle clause expressing an adverbial meaning (because it was written in multiple languages). The past participle carries the passive sense — the manual was written by someone, not that it wrote something. \"Writing\" (active present participle) would imply the manual is actively writing — impossible. \"Having written\" implies the manual wrote something in the past. \"To write\" changes the meaning to purpose (in order to write).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which sentence most effectively reduces this pair for a formal report? \"The board reviewed the proposals carefully. It then selected three for further development.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "Reviewed carefully, the board selected three proposals for further development."
+        },
+        {
+          "id": "b",
+          "text": "Having carefully reviewed the proposals, the board selected three for further development."
+        },
+        {
+          "id": "c",
+          "text": "Reviewing the proposals carefully, three were selected for further development."
+        },
+        {
+          "id": "d",
+          "text": "The board, reviewing the proposals carefully, had selected three for further development."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "The review came FIRST; the selection followed. Use having + past participle for the prior active action with consistent subject (the board): Having carefully reviewed the proposals, the board selected three for further development. Option (a) uses a bare past participle (\"Reviewed\") which is passive — implies the board was reviewed, not that it reviewed. Option (c) is a dangling participle — \"three\" cannot review proposals. Option (d) uses \"had selected\" (past perfect) which implies an even earlier past event and shifts the emphasis incorrectly.",
+      "difficulty": 3
+    }
+  ]
+}

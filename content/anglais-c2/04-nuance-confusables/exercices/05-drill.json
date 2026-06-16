@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill: Nuance and Confusable Words",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complete: \"The editorial ___ that the minister had misled parliament, without stating it directly.\"",
+      "options": [
+        { "id": "a", "text": "inferred" },
+        { "id": "b", "text": "implied" },
+        { "id": "c", "text": "affected" },
+        { "id": "d", "text": "effected" }
+      ],
+      "correctOption": "b",
+      "explanation": "The editorial (as writer/speaker) implies — it puts meaning in indirectly without stating it. The reader infers — takes meaning out from what they read. Inferred is therefore the wrong direction. Affected means to have an impact on; effected (as a verb) means to bring about — neither fits the meaning of suggesting something indirectly.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"We need ___ volunteers for this project — not a constant stream, just someone willing to help now and again.\"",
+      "options": [
+        { "id": "a", "text": "continual" },
+        { "id": "b", "text": "continuous" },
+        { "id": "c", "text": "historic" },
+        { "id": "d", "text": "principal" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Continual\" means recurring at intervals with breaks — fitting the context of helping \"now and again\". \"Continuous\" means without any interruption at all, which contradicts \"not a constant stream\". Historic means significant or landmark; principal means main — neither relates to frequency of volunteering.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which sentence uses \"fewer\" and \"less\" INCORRECTLY?",
+      "options": [
+        { "id": "a", "text": "There are fewer options than we expected." },
+        { "id": "b", "text": "We have less time to prepare than last year." },
+        { "id": "c", "text": "Less volunteers turned up than were promised." },
+        { "id": "d", "text": "Fewer errors were found in the second draft." }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Volunteers\" is a countable noun, so fewer is required: fewer volunteers. Less is correct only with uncountable nouns (less time, less water). The other three sentences all apply the rule correctly: fewer options (countable), less time (uncountable), fewer errors (countable).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"The wine's subtle oak notes perfectly ___ the richness of the aged cheese.\"",
+      "options": [
+        { "id": "a", "text": "complimented" },
+        { "id": "b", "text": "implied" },
+        { "id": "c", "text": "complemented" },
+        { "id": "d", "text": "composed" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Complemented\" (verb from complement) means to go well with or complete — exactly the relationship between wine notes and cheese. \"Complimented\" means to pay verbal praise, which cannot apply to flavours. \"Implied\" is about indirect suggestion; \"composed\" is about making up a whole. The spelling difference (compliMENT vs compLEMENT) is the classic trap here.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: \"She was ___ about the outcome — she had no stake in either side and simply wanted a fair process.\"\nWhich word BEST completes the sentence?",
+      "options": [
+        { "id": "a", "text": "uninterested" },
+        { "id": "b", "text": "sensible" },
+        { "id": "c", "text": "notorious" },
+        { "id": "d", "text": "disinterested" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"Disinterested\" means impartial — having no personal stake in the outcome, which fits someone who simply wants fairness. \"Uninterested\" means bored or indifferent, which contradicts the active desire for a fair process. \"Sensible\" means showing good judgement but does not convey impartiality. \"Notorious\" means famous for something negative — entirely wrong here.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the sentence with a COLLOCATION error.",
+      "options": [
+        { "id": "a", "text": "The government pledged to raise awareness of the health risks." },
+        { "id": "b", "text": "She reached a decision after weighing all the evidence." },
+        { "id": "c", "text": "They did a historic mistake by ignoring the warning signs." },
+        { "id": "d", "text": "The team committed a serious foul in the closing minutes." }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Did a historic mistake\" contains two errors: the correct collocation is make a mistake (not do), and the correct adjective is historical (relating to the past) or simply a serious mistake. \"Historic\" means landmark or significant and does not collocate naturally with mistake. Raise awareness, reach a decision, and commit a foul are all standard collocations.",
+      "difficulty": 3
+    }
+  ]
+}

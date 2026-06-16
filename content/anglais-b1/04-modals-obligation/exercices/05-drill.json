@@ -1,0 +1,154 @@
+{
+  "title": "⭐⭐ Drill: Modals of Obligation",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complete: \"Children ___ cross the road without looking both ways. It's dangerous.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "should"
+        },
+        {
+          "id": "b",
+          "text": "must"
+        },
+        {
+          "id": "c",
+          "text": "don't have to"
+        },
+        {
+          "id": "d",
+          "text": "mustn't"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Crossing without looking is forbidden and dangerous, so we use mustn't: children mustn't cross without looking. \"should\" gives soft advice (not a prohibition), \"must\" would make the dangerous action obligatory, and \"don't have to\" means it is simply optional.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"It's a free event, so you ___ buy a ticket.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "must"
+        },
+        {
+          "id": "b",
+          "text": "mustn't"
+        },
+        {
+          "id": "c",
+          "text": "have to"
+        },
+        {
+          "id": "d",
+          "text": "don't have to"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "A free event means buying a ticket is not necessary: you don't have to buy one. \"must\" and \"have to\" would make buying obligatory (the opposite), and \"mustn't\" would forbid buying — neither fits a free, optional entry.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"You look pale. I think you ___ go home and rest.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "should"
+        },
+        {
+          "id": "b",
+          "text": "have"
+        },
+        {
+          "id": "c",
+          "text": "must to"
+        },
+        {
+          "id": "d",
+          "text": "mustn't"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "This is friendly advice based on how someone looks, so we use should + base verb: you should go home. \"must to\" adds a wrong to, bare \"have\" cannot express advice here, and \"mustn't\" would forbid going home — the opposite of the intended meaning.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        {
+          "id": "a",
+          "text": "We must leave before midnight."
+        },
+        {
+          "id": "b",
+          "text": "She doesn't have to come if she's busy."
+        },
+        {
+          "id": "c",
+          "text": "He should to call his parents more often."
+        },
+        {
+          "id": "d",
+          "text": "You mustn't take photos in this gallery."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "The error is in the third option: should is a modal and is followed by the bare infinitive with no to — He should call his parents. The first option (must + base) and fourth option (mustn't + base) are correct, as is the second (doesn't have to + base).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read the signs: \"NO PARKING 8–10 a.m. · SPEED LIMIT 30 mph · HELMETS RECOMMENDED\"\nWhich modal best completes: \"You ___ wear a helmet — it is not legally required but is strongly advised.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "must"
+        },
+        {
+          "id": "b",
+          "text": "should"
+        },
+        {
+          "id": "c",
+          "text": "mustn't"
+        },
+        {
+          "id": "d",
+          "text": "have to"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Recommended\" means it is a good idea but not a law, so should fits: you should wear a helmet. \"must\" and \"have to\" express legal obligation (the sign says it is NOT legally required), and \"mustn't\" would forbid wearing a helmet — completely the wrong meaning.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"When I was ten, I ___ do the washing-up every evening — that was my chore.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "must"
+        },
+        {
+          "id": "b",
+          "text": "have to"
+        },
+        {
+          "id": "c",
+          "text": "had to"
+        },
+        {
+          "id": "d",
+          "text": "must to"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "\"When I was ten\" places the obligation in the past. The past form of must / have to is had to: I had to do the washing-up. \"must\" has no past form of its own, \"have to\" is the present form, and \"must to\" wrongly adds to after must.",
+      "difficulty": 3
+    }
+  ]
+}
