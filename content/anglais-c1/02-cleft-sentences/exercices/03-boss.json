@@ -1,0 +1,91 @@
+{
+  "title": "⚔️ Chapter Boss ⭐⭐⭐: Cleft Sentences",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Find the INCORRECT cleft sentence.",
+      "options": [
+        { "id": "a", "text": "It was the novel's ending that divided critics." },
+        { "id": "b", "text": "What I value above all is integrity." },
+        { "id": "c", "text": "It was because she worked hard what she succeeded." },
+        { "id": "d", "text": "It was only after the crash that we understood." }
+      ],
+      "correctOption": "c",
+      "explanation": "Option (c) is wrong: in an It-cleft the linker after the focused element is \"that\" (or who for persons), never \"what\": It was because she worked hard **that** she succeeded. \"What\" begins a Wh-cleft (What she did was work hard…) — it cannot serve as the It-cleft linker. Options (a), (b), and (d) are all correctly formed clefts.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete the It-cleft to focus on the time: \"They finally signed the treaty in 1995. → It was ___ that they finally signed the treaty.\"",
+      "options": [
+        { "id": "a", "text": "1995" },
+        { "id": "b", "text": "in 1995" },
+        { "id": "c", "text": "when 1995" },
+        { "id": "d", "text": "at 1995" }
+      ],
+      "correctOption": "b",
+      "explanation": "When fronting a time expression as the focused element in an It-cleft, the preposition is retained: It was **in 1995** that they finally signed the treaty. Dropping \"in\" (option a) creates a bare year which sounds incomplete. \"when 1995\" (c) is ungrammatical. \"at 1995\" (d) uses the wrong preposition for years.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which sentence best paraphrases: \"The lack of communication, not the workload, caused burnout among staff.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "What caused burnout among staff was the lack of communication, not the workload."
+        },
+        { "id": "b", "text": "All caused burnout was the lack of communication." },
+        { "id": "c", "text": "It was what the lack of communication that caused burnout." },
+        {
+          "id": "d",
+          "text": "What the lack of communication caused was burnout that there was among staff."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "A Wh-cleft is ideal for identifying a cause: What caused burnout among staff was the lack of communication, not the workload. This structure places the context first and the key information last, with the contrast naturally appended. Option (b) uses \"All\" incorrectly — All-clefts need a subject between All and the verb (All [subject] did…). Options (c) and (d) are grammatically incoherent.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"The government did not reduce taxes. What it did was raise public spending.\"\n\nWhat is the function of the cleft in the second sentence?",
+      "options": [
+        { "id": "a", "text": "It describes a sequence of events." },
+        {
+          "id": "b",
+          "text": "It contrasts the government's actual action against an implied expectation or claim."
+        },
+        { "id": "c", "text": "It softens the criticism of government policy." },
+        { "id": "d", "text": "It emphasises that the information is unimportant." }
+      ],
+      "correctOption": "b",
+      "explanation": "The Wh-cleft \"What it did was raise public spending\" contrasts what actually happened against the implied expectation (reducing taxes). Clefts are a key tool for pragmatic contrast and correction in discourse — placing the real information in the focused slot. It does not describe sequence (a), does not soften (c — it actually highlights the contrast sharply), and emphasis always signals importance, not unimportance (d).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choose the sentence with the correct verb agreement in an It-cleft.",
+      "options": [
+        { "id": "a", "text": "It is the students who decides the pace of learning." },
+        { "id": "b", "text": "It are the students who decide the pace of learning." },
+        { "id": "c", "text": "It is the students who decide the pace of learning." },
+        { "id": "d", "text": "It was the students who decides the pace of learning." }
+      ],
+      "correctOption": "c",
+      "explanation": "In an It-cleft, the verb in the relative clause (who decide) agrees with the focused element (the students — plural), not with \"it\": It is the students who decide… Option (a) uses \"decides\" (singular) incorrectly. Option (b) wrongly makes \"It are\" plural. Option (d) mixes past \"was\" with present \"decides\" — a tense inconsistency.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Transform using a cleft: \"Everyone was surprised by her composure.\" Focus on WHAT surprised everyone.",
+      "options": [
+        { "id": "a", "text": "It was everyone that her composure surprised." },
+        { "id": "b", "text": "What surprised everyone was her composure." },
+        { "id": "c", "text": "All surprised everyone was her composure." },
+        { "id": "d", "text": "Her composure is that surprised everyone." }
+      ],
+      "correctOption": "b",
+      "explanation": "To focus on WHAT surprised everyone, a Wh-cleft is ideal: What surprised everyone was her composure — the wh-clause sets the context (What surprised everyone) and the focused element (her composure) comes last. Option (a) is an It-cleft but focuses on the wrong element (everyone = who was affected, not what caused the surprise). Option (c) uses All incorrectly. Option (d) is not a standard English structure.",
+      "difficulty": 3
+    }
+  ]
+}

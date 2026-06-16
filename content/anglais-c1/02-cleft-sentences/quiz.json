@@ -1,0 +1,65 @@
+{
+  "title": "Comprehension Check ⭐",
+  "questions": [
+    {
+      "prompt": "Which sentence is an It-cleft?",
+      "options": [
+        { "id": "a", "text": "What I need is a long rest." },
+        { "id": "b", "text": "It was Karim who reported the error." },
+        { "id": "c", "text": "All I want is peace." },
+        { "id": "d", "text": "It is important to study." }
+      ],
+      "correctOption": "b",
+      "explanation": "An It-cleft has the structure It + be + [focused element] + that/who + rest of clause. Option (b) focuses on Karim (who). Option (a) is a Wh-cleft (What…). Option (c) is an All-cleft. Option (d) uses anticipatory it (no focused element after that/who) — it is NOT a cleft.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete the Wh-cleft: \"___ he did was apologise.\"",
+      "options": [
+        { "id": "a", "text": "That" },
+        { "id": "b", "text": "It" },
+        { "id": "c", "text": "What" },
+        { "id": "d", "text": "All what" }
+      ],
+      "correctOption": "c",
+      "explanation": "A Wh-cleft starts with a wh-word (What, Where, When…): What he did was apologise. \"That\" makes a different structure (a relative clause or result clause). \"It\" starts an It-cleft, not a Wh-cleft. \"All what\" is never used — the correct limiting cleft is simply \"All he did was…\".",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete the It-cleft: \"It was ___ that first inspired him to become a doctor.\"",
+      "options": [
+        { "id": "a", "text": "what his father" },
+        { "id": "b", "text": "his father" },
+        { "id": "c", "text": "it was his father" },
+        { "id": "d", "text": "who his father" }
+      ],
+      "correctOption": "b",
+      "explanation": "In an It-cleft: It + was + [focused element] + that/who + rest. The focused element is simply \"his father\" — no need for an extra \"what\" or repeated \"it was\". Option (d) wrongly adds \"who\" before the noun (who comes after the focused element, not before it in a correctly formed cleft).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete the All-cleft: \"All she did was ___ at the ceiling.\"",
+      "options": [
+        { "id": "a", "text": "to stare" },
+        { "id": "b", "text": "staring" },
+        { "id": "c", "text": "stare" },
+        { "id": "d", "text": "stared" }
+      ],
+      "correctOption": "c",
+      "explanation": "After \"All [subject] did was\" the focused verb uses the bare infinitive (no to): All she did was stare. \"to stare\" (to-infinitive) is the most common learner error here. \"staring\" (gerund/present participle) and \"stared\" (past tense) are both wrong after was in this All-cleft structure.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which sentence correctly uses an It-cleft to focus on the time?",
+      "options": [
+        { "id": "a", "text": "It was when the policy changed that everything improved." },
+        { "id": "b", "text": "What changed was the policy." },
+        { "id": "c", "text": "All they did was change the policy." },
+        { "id": "d", "text": "The policy is what changed everything." }
+      ],
+      "correctOption": "a",
+      "explanation": "To focus on a time, an It-cleft uses: It was + time/when-phrase + that + rest: It was when the policy changed that everything improved. Option (b) is a Wh-cleft focusing on what changed. Option (c) is an All-cleft focusing on an action. Option (d) is a reverse Wh-cleft focusing on the policy — not the time.",
+      "difficulty": 2
+    }
+  ]
+}

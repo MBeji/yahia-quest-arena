@@ -1,0 +1,74 @@
+{
+  "title": "Comprehension Check ⭐",
+  "questions": [
+    {
+      "prompt": "Complete: \"The experiment was a success. ___, the results were far better than expected.\"",
+      "options": [
+        { "id": "a", "text": "Nevertheless" },
+        { "id": "b", "text": "However" },
+        { "id": "c", "text": "In fact" },
+        { "id": "d", "text": "Whereas" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"In fact\" introduces information that reinforces or intensifies what was just said — the results being even better than expected amplifies the success. \"Nevertheless\" and \"However\" signal contrast or concession — inappropriate when the second sentence agrees with and strengthens the first. \"Whereas\" joins two contrasting clauses in a single sentence — cannot begin a new sentence here.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"___ the rising costs, the project was completed on time.\"",
+      "options": [
+        { "id": "a", "text": "Despite" },
+        { "id": "b", "text": "However" },
+        { "id": "c", "text": "Nevertheless" },
+        { "id": "d", "text": "Although" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Despite\" is followed by a noun phrase (the rising costs) — correct. \"However\" and \"Nevertheless\" require a full clause (subject + verb) — they cannot precede a bare noun phrase. \"Although\" is a subordinating conjunction that must be followed by a full clause: Although costs rose, the project was completed on time. The prompt only has a noun phrase, so \"Although\" does not fit.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "The north prospered, whereas the south struggled." },
+        { "id": "b", "text": "The plan was risky; nevertheless, they proceeded." },
+        { "id": "c", "text": "Despite she was tired, she finished the work." },
+        { "id": "d", "text": "The report was delayed; consequently, the meeting was postponed." }
+      ],
+      "correctOption": "c",
+      "explanation": "Option (c) is wrong: \"Despite\" cannot be followed by a finite clause (she was tired). Use \"Despite being tired\" or \"Despite her tiredness\" or \"Although she was tired\". Options (a), (b), and (d) correctly use whereas (contrast, one sentence), nevertheless (concession, full clause), and consequently (result).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"The new system cut processing time by 40%, ___ saving the company thousands of hours annually.\"",
+      "options": [
+        { "id": "a", "text": "thereby" },
+        { "id": "b", "text": "thus" },
+        { "id": "c", "text": "therefore" },
+        { "id": "d", "text": "so" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Thereby\" is followed by a present participle (-ing): thereby **saving** the company… It expresses a result embedded in the same clause. \"Thus\", \"therefore\", and \"so\" all introduce a new full clause (subject + verb) — they do not directly precede a bare -ing verb without a subject.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choose the sentence where 'on the contrary' is used CORRECTLY.",
+      "options": [
+        { "id": "a", "text": "Exports grew by 8%. On the contrary, imports declined." },
+        {
+          "id": "b",
+          "text": "\"Was the speech well received?\" — \"On the contrary, it caused an outcry.\""
+        },
+        {
+          "id": "c",
+          "text": "The economy improved last year. On the contrary, unemployment fell."
+        },
+        {
+          "id": "d",
+          "text": "Wages rose in the private sector. On the contrary, they stagnated in the public sector."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "\"On the contrary\" specifically DENIES the previous statement and asserts the opposite. In option (b), someone implies the speech was well received; the reply denies this entirely. Options (a), (c), and (d) use it to add a contrasting or additional point — for those, use \"by contrast\", \"however\", or \"whereas\" instead. On the contrary ≠ a general contrast marker.",
+      "difficulty": 2
+    }
+  ]
+}

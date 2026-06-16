@@ -1,0 +1,82 @@
+{
+  "title": "👑 Gauntlet B2 Elite ⭐⭐⭐⭐: The Final Trial",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Grammar — Past perfect: \"Read: 'The team celebrated because they ___ won the championship for the first time in twenty years.' \" Which form is correct?",
+      "options": [
+        { "id": "a", "text": "just have" },
+        { "id": "b", "text": "just had to" },
+        { "id": "c", "text": "have just" },
+        { "id": "d", "text": "had just" }
+      ],
+      "correctOption": "d",
+      "explanation": "The celebration (past simple) is the later event; winning happened just before it, so the past perfect is required. The adverb just slots between had and the participle: had just won. \"just have\" and \"have just\" are present-perfect forms (wrong tense in a past narrative). \"just had to\" means they were obliged to, which changes the meaning entirely.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Grammar — Mixed conditional: \"If I ___ born in France, I ___ French now.\"",
+      "options": [
+        { "id": "a", "text": "was … would speak" },
+        { "id": "b", "text": "had been … would speak" },
+        { "id": "c", "text": "had been … would have spoken" },
+        { "id": "d", "text": "was … would have spoken" }
+      ],
+      "correctOption": "b",
+      "explanation": "A mixed conditional: the past cause (birth) uses had been (past perfect), and the present result uses would speak (not would have spoken — that would be a pure third conditional with a past result). (a) was … would speak is the second conditional (imaginary present, not a birth). (c) had been … would have spoken is a pure third conditional (past result). (d) was … would have spoken mixes the wrong forms.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Grammar — Reported speech: \"The manager told us, 'The meeting will be rescheduled.' \" What did she tell us?",
+      "options": [
+        { "id": "a", "text": "The manager told us the meeting will be rescheduled." },
+        { "id": "b", "text": "The manager told us the meeting would be rescheduled." },
+        { "id": "c", "text": "The manager told us the meeting would have been rescheduled." },
+        { "id": "d", "text": "The manager told us the meeting had been rescheduled." }
+      ],
+      "correctOption": "b",
+      "explanation": "Reported speech back-shifts will → would and keeps the passive (will be → would be): the meeting would be rescheduled. (a) keeps will — valid only in informal immediate speech (same day), but the standard back-shift is required here. (c) would have been rescheduled is the third-conditional result form — a different meaning (now impossible). (d) had been rescheduled implies it had already happened — no back-shift from a prediction.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Usage — Gerunds & infinitives: \"Try as they might, the engineers couldn't stop the leak. They tried ___ a new sealant, but it didn't work either.\"",
+      "options": [
+        { "id": "a", "text": "to use" },
+        { "id": "b", "text": "used" },
+        { "id": "c", "text": "using" },
+        { "id": "d", "text": "use" }
+      ],
+      "correctOption": "c",
+      "explanation": "try + -ing means 'experiment with an action to see if it helps': they tried using a new sealant (and it didn't work). try + to-infinitive means 'make an effort to do something' — here the engineers aren't effortfully attempting to use it; they're experimenting with it. This is the classic meaning-change pair. \"used\" is the past simple, and \"use\" is the bare infinitive (requires a modal).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Vocabulary — Choose the sentence that uses the word CORRECTLY.",
+      "options": [
+        { "id": "a", "text": "She succeeded to pass the exam." },
+        { "id": "b", "text": "She succeeded in passing the exam." },
+        { "id": "c", "text": "She succeeded at passing the exam." },
+        { "id": "d", "text": "She succeeded passing the exam." }
+      ],
+      "correctOption": "b",
+      "explanation": "succeed is followed by in + gerund: she succeeded in passing. (a) succeed + to-infinitive is a very common B2 error (calque from French/Arabic). (c) at is the preposition for good at something, not for succeed. (d) omits the preposition entirely — succeed cannot directly precede an -ing form without in.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Grammar — Passive + past perfect combined: \"The letter ___ long before we asked for a copy.\"",
+      "options": [
+        { "id": "a", "text": "has been destroyed" },
+        { "id": "b", "text": "was destroyed" },
+        { "id": "c", "text": "had been destroyed" },
+        { "id": "d", "text": "would be destroyed" }
+      ],
+      "correctOption": "c",
+      "explanation": "We need a passive that places destruction before another past action (we asked). That is the past-perfect passive: had been destroyed. \"has been destroyed\" is present perfect passive (wrong tense — no link to a later past action). \"was destroyed\" is past simple passive (makes it simultaneous with asking, losing the prior-to relationship). \"would be destroyed\" is a conditional form, which doesn't fit a factual statement.",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "title": "⭐⭐ Review: Connotation and Collocation",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Choose the word with a POSITIVE connotation to fill the gap: \"She was ___ about money, always making sure nothing was wasted.\"",
+      "options": [
+        { "id": "a", "text": "miserly" },
+        { "id": "b", "text": "stingy" },
+        { "id": "c", "text": "thrifty" },
+        { "id": "d", "text": "tight-fisted" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Thrifty\" means careful and economical with money — a positive quality. \"Miserly\" and \"stingy\" imply an unpleasant reluctance to spend. \"Tight-fisted\" is informal and also negative. Only \"thrifty\" carries a positive connotation for the same behaviour.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Find the INCORRECT collocation.",
+      "options": [
+        { "id": "a", "text": "commit a crime" },
+        { "id": "b", "text": "reach a conclusion" },
+        { "id": "c", "text": "raise awareness" },
+        { "id": "d", "text": "make a research" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"Make a research\" is incorrect — the correct collocation is \"do research\" or \"carry out research\". You cannot say \"make research\". The other collocations are all standard: commit a crime, reach a conclusion, and raise awareness are all fixed and correct.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"The new dessert perfectly ___ the flavour of the main course — it was a brilliant pairing.\"",
+      "options": [
+        { "id": "a", "text": "complimented" },
+        { "id": "b", "text": "complemented" },
+        { "id": "c", "text": "implied" },
+        { "id": "d", "text": "composed" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Complement\" (verb) means to complete or go well together with — a perfect description of a food pairing. \"Compliment\" (verb) means to express praise; you can compliment a person but not a flavour. \"Implied\" and \"composed\" make no sense in this context.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which sentence uses the word \"notorious\" INCORRECTLY?",
+      "options": [
+        { "id": "a", "text": "The area is notorious for its high crime rate." },
+        { "id": "b", "text": "She is notorious for arriving late to every meeting." },
+        { "id": "c", "text": "He is notorious for his groundbreaking contributions to medicine." },
+        { "id": "d", "text": "The company is notorious for its poor customer service." }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Notorious\" means famous specifically for something negative or bad. Being famous for \"groundbreaking contributions to medicine\" is a positive achievement — the correct word is \"renowned\" or \"celebrated\". (a), (b), and (d) all use \"notorious\" correctly for negative associations (crime, lateness, poor service).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"The ___ cause of the delay was a technical fault in the signalling system.\"",
+      "options": [
+        { "id": "a", "text": "principle" },
+        { "id": "b", "text": "principal" },
+        { "id": "c", "text": "continual" },
+        { "id": "d", "text": "historic" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Principal\" (adjective) means main or most important: the principal cause. \"Principle\" is a noun meaning a rule or belief (a principle of fairness) — it cannot function as an adjective meaning main. \"Continual\" means recurring; \"historic\" means significant/landmark — neither fits the meaning of 'main cause'.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choose the option that corrects the collocation error: \"The government is trying to rise awareness about mental health.\"",
+      "options": [
+        { "id": "a", "text": "The government is trying to raise awareness about mental health." },
+        { "id": "b", "text": "The government is trying to arise awareness about mental health." },
+        {
+          "id": "c",
+          "text": "The government is trying to rise the awareness about mental health."
+        },
+        { "id": "d", "text": "The government is trying to make awareness about mental health." }
+      ],
+      "correctOption": "a",
+      "explanation": "The correct collocation is \"raise awareness\" — raise is transitive (takes an object). \"Rise\" is intransitive (prices rise, the sun rises) and cannot take an object like \"awareness\". \"Arise\" has a different meaning (to come up/occur). \"Make awareness\" is not a collocation in English.",
+      "difficulty": 2
+    }
+  ]
+}

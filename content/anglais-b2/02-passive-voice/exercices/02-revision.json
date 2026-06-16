@@ -1,0 +1,103 @@
+{
+  "title": "⭐⭐ Review: Active vs Passive & By-Agent",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Why is the passive voice MORE APPROPRIATE here? 'The ancient scrolls ___ in a desert cave in 1947.'",
+      "options": [
+        {
+          "id": "a",
+          "text": "The passive is used because we want to focus on what was found, not who found it."
+        },
+        {
+          "id": "b",
+          "text": "Archaeologists discovered the ancient scrolls — the active is always clearer."
+        },
+        { "id": "c", "text": "The passive is used because the scrolls performed the action." },
+        { "id": "d", "text": "The passive is required after 'in 1947'." }
+      ],
+      "correctOption": "a",
+      "explanation": "The passive 'were discovered' focuses on the scrolls (the topic) rather than on the discoverers. This is a classic reason for using the passive: the receiver of the action is more important than the agent. Option A is incorrect — the passive is often clearer when the agent is unknown or less important. Option C is wrong — the scrolls are passive recipients. Option D is false — no tense is 'required' by a time expression.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choose the ACTIVE version of: 'The committee has approved the new budget.'",
+      "options": [
+        { "id": "a", "text": "The new budget was approved by the committee." },
+        { "id": "b", "text": "The new budget will be approved by the committee." },
+        { "id": "c", "text": "The new budget has been approved by the committee." },
+        { "id": "d", "text": "The new budget is approved by the committee." }
+      ],
+      "correctOption": "c",
+      "explanation": "The active 'The committee has approved' (present perfect) becomes the passive 'The new budget has been approved by the committee' (has/have been + past participle). Option A (was approved) is past simple passive. Option B (will be approved) is future passive. Option D (is approved) is present simple passive.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: 'Our roof ___ during the storm last night.' Which form fits BEST, and why?",
+      "options": [
+        { "id": "a", "text": "was damaged — formal written style is needed here." },
+        {
+          "id": "b",
+          "text": "got damaged — informal register, implies an unwanted accidental event."
+        },
+        { "id": "c", "text": "is damaged — present simple is always neutral." },
+        { "id": "d", "text": "has been damaged — present perfect because we can see it now." }
+      ],
+      "correctOption": "b",
+      "explanation": "'Got damaged' (get-passive) is the most natural spoken choice: it implies the damage was unexpected and unwanted, and it fits the informal/conversational register of talking about your own home. Option A ('was damaged') is correct but more formal. Option C ('is damaged') is present simple — wrong tense for last night. Option D ('has been damaged') could work to emphasise the current result, but 'last night' as a specific past time reference makes past forms more natural.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the sentence where the passive voice is UNNECESSARY and the active would be more natural.",
+      "options": [
+        { "id": "a", "text": "Mistakes were made during the project." },
+        { "id": "b", "text": "The parcel was lost in transit." },
+        { "id": "c", "text": "English is spoken in over 50 countries." },
+        { "id": "d", "text": "The article was written by Maria for the school magazine." }
+      ],
+      "correctOption": "d",
+      "explanation": "In 'The article was written by Maria', we already know who did it (Maria is named as the agent). The active 'Maria wrote the article for the school magazine' is more direct and natural. When the agent is identified and important, the active voice is usually preferred. Options A, C, and D all have good reasons for the passive: A (unknown/unnamed responsible party), C (unknown cause), D (no specific agent — general truth).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which sentence correctly uses passive voice to maintain topic continuity?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The drug was developed in the 1980s. Doctors tested it in clinical trials. Patients benefited from it."
+        },
+        {
+          "id": "b",
+          "text": "The drug was developed in the 1980s. It was tested in clinical trials. It is now used worldwide."
+        },
+        {
+          "id": "c",
+          "text": "Researchers developed the drug. Doctors tested it. Patients benefited."
+        },
+        {
+          "id": "d",
+          "text": "The drug was developed. Researchers then tested it. Patients took it."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Option B maintains 'the drug / it' as the consistent subject throughout all three sentences, using passives ('was developed', 'was tested', 'is used'). This is the key paragraph-level reason to use passive: keeping the same topic as subject for coherence. Options A and D switch subjects mid-paragraph (doctors, patients). Option C uses active throughout but shifts agents each sentence, which is less coherent.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which sentence is INCORRECT?",
+      "options": [
+        { "id": "a", "text": "The winner was announced at midnight." },
+        { "id": "b", "text": "The documents will be signed tomorrow." },
+        { "id": "c", "text": "The meeting was happened in the conference room." },
+        { "id": "d", "text": "A new policy has been introduced by the government." }
+      ],
+      "correctOption": "c",
+      "explanation": "'Was happened' is grammatically impossible — 'happen' is an intransitive verb with no object, so it cannot be passivised. The correct sentence is 'The meeting happened in the conference room' (active). Options A, C, and D all correctly passivise transitive verbs: announce (A), sign (C), introduce (D).",
+      "difficulty": 2
+    }
+  ]
+}

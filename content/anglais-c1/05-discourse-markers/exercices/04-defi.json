@@ -1,0 +1,109 @@
+{
+  "title": "👑 Elite Challenge ⭐⭐⭐⭐: Discourse Markers and Cohesion",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Read: \"Unemployment fell to its lowest level in a decade. The housing market, however, remained stagnant. Moreover, consumer confidence continued to slide.\"\n\nWhat is the logical structure of this passage?",
+      "options": [
+        { "id": "a", "text": "Claim → result → further result" },
+        { "id": "b", "text": "Positive finding → contrast → additional negative" },
+        { "id": "c", "text": "Concession → addition → result" },
+        { "id": "d", "text": "Definition → example → conclusion" }
+      ],
+      "correctOption": "b",
+      "explanation": "Sentence 1 is a positive finding (unemployment fell). \"However\" introduces a contrasting point (housing stagnant). \"Moreover\" adds a further negative point (consumer confidence falling). Structure: positive → contrast (however) → additional negative (moreover). Option (a) confuses \"however\" as a result marker — it is a contrast marker. Option (c) says the first point is a concession — it is a positive finding, not a concession. Option (d) invents a definition-example structure where none exists.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the error in this academic sentence: \"The research yielded inconclusive results; nevertheless, the methodology was sound, thereby the team decided to extend the study.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "\"Nevertheless\" should be \"However\" — there is no concession here."
+        },
+        {
+          "id": "b",
+          "text": "\"thereby the team decided\" is wrong — \"thereby\" must be followed by a present participle (-ing), not a full clause."
+        },
+        { "id": "c", "text": "The semicolon after \"results\" should be a comma." },
+        { "id": "d", "text": "\"sound\" should be followed by a comma and \"therefore\"." }
+      ],
+      "correctOption": "b",
+      "explanation": "The error is with \"thereby\": thereby must be followed by a present participle, not a full clause (\"the team decided\" has a subject + finite verb). Correct: \"…the methodology was sound, thereby **prompting** the team to extend the study.\" OR use a different connector: \"…; **therefore**, the team decided to extend the study.\" Option (a) is debatable — \"nevertheless\" could work here (conceding the inconclusive results while affirming the methodology). Option (c) is a matter of style. Option (d) suggests an unnecessary restructure.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choose the version that is most cohesive AND most appropriate for a formal academic essay.",
+      "options": [
+        {
+          "id": "a",
+          "text": "The intervention worked well. But a lot of people weren't included in the study, so it's hard to say if the results apply to everyone."
+        },
+        {
+          "id": "b",
+          "text": "The intervention proved effective; however, the limited sample size meant the findings could not be broadly generalised."
+        },
+        {
+          "id": "c",
+          "text": "The intervention was effective. Nevertheless, the sample was small. Therefore we can't say the results are universal."
+        },
+        {
+          "id": "d",
+          "text": "Although the intervention worked, the sample was limited, and so the results might not apply broadly."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Option (b) achieves the best formal register and cohesion: \"proved effective\" (precise verb), semicolon + \"however\" (formal contrast, single well-structured sentence), \"limited sample size\" (precise noun phrase), \"broadly generalised\" (formal vocabulary). Option (a) is too informal (\"a lot of\", \"hard to say\", \"everyone\"). Option (c) creates three short choppy sentences — poor cohesion. Option (d) is acceptable but \"so\" is informal and \"might not apply broadly\" is vaguer than \"could not be broadly generalised\".",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete the complex academic sentence: \"The policy reform was ambitious, ___ limited in scope, ___ targeting only three of the seven sectors identified as critical.\"",
+      "options": [
+        { "id": "a", "text": "albeit … thereby" },
+        { "id": "b", "text": "however … thus" },
+        { "id": "c", "text": "nevertheless … thereby" },
+        { "id": "d", "text": "although … consequently" }
+      ],
+      "correctOption": "a",
+      "explanation": "Gap 1: \"albeit limited in scope\" — \"albeit\" + adjective phrase = perfect concessive qualifier in a single clause: ambitious, albeit limited. Gap 2: \"thereby targeting only three sectors\" — \"thereby\" + present participle = embedded result. Together: The policy reform was ambitious, albeit limited in scope, thereby targeting only three of the seven critical sectors. Option (b): \"however\" starts a new clause — doesn't fit mid-sentence. \"thus\" + -ing is non-standard. Option (c): \"nevertheless\" is a connector for a new sentence, not a mid-clause qualifier. Option (d): \"although\" needs a full finite clause after it — cannot precede just an adjective phrase.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read this argument: \"Critics claim the austerity measures were necessary to restore fiscal balance. ___, public services were cut to unsustainable levels. ___, vulnerable communities bore the greatest burden.\"\n\nChoose the best pair of discourse markers.",
+      "options": [
+        { "id": "a", "text": "Moreover … In addition" },
+        { "id": "b", "text": "Nevertheless … Consequently" },
+        { "id": "c", "text": "However … Furthermore" },
+        { "id": "d", "text": "On the contrary … Therefore" }
+      ],
+      "correctOption": "c",
+      "explanation": "The argument challenges the critics' claim: Gap 1 — introduce a contrasting negative consequence: **However**, public services were cut unsustainably. Gap 2 — add a further related negative point: **Furthermore**, vulnerable communities bore the greatest burden. Option (a) \"Moreover … In addition\" are both addition markers — they would make all three sentences add to the SAME direction, losing the contrast with the critics' claim. Option (b) \"Nevertheless\" concedes the necessity and then qualifies — implies partial agreement, too soft for this rebuttal. Option (d) \"On the contrary\" would fully deny the critics — too strong, and \"Therefore\" makes the burden a result of cuts — actually logical but loses the additive second step.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which sentence contains a REGISTER MISMATCH (formal marker in informal context OR informal marker in formal context)?",
+      "options": [
+        { "id": "a", "text": "\"I'm knackered. Furthermore, I haven't eaten since breakfast.\"" },
+        {
+          "id": "b",
+          "text": "\"The data indicates a correlation; however, causation has not been established.\""
+        },
+        {
+          "id": "c",
+          "text": "\"The economy contracted in Q3; consequently, the central bank revised its forecast.\""
+        },
+        {
+          "id": "d",
+          "text": "\"Voter turnout declined significantly; moreover, abstention rates reached a historic high.\""
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Option (a) mixes informal vocabulary (\"knackered\" — British slang for exhausted) with a formal connector (\"Furthermore\"). In casual speech, you would say: \"I'm knackered. Also, I haven't eaten…\" or replace \"knackered\" with \"exhausted\" for a formal register. Options (b), (c), and (d) all correctly combine formal vocabulary with formal discourse markers — no mismatch.",
+      "difficulty": 3
+    }
+  ]
+}

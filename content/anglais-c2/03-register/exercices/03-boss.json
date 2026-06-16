@@ -1,0 +1,106 @@
+{
+  "title": "⚔️ Chapter Boss ⭐⭐⭐: Register, Formality and Nominalisation",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Find the sentence that CLASHES in register — mixing formal and informal elements inappropriately.",
+      "options": [
+        {
+          "id": "a",
+          "text": "The board has resolved to defer the vote pending further consultation."
+        },
+        {
+          "id": "b",
+          "text": "We are pleased to inform you that your application has been successful."
+        },
+        {
+          "id": "c",
+          "text": "The investigation found loads of problems with the procurement process."
+        },
+        {
+          "id": "d",
+          "text": "Further analysis of the data is required before a conclusion can be reached."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Loads of problems\" is colloquial and clashes with the formal context of an \"investigation\" and a \"procurement process\". A formal sentence would say \"a significant number of issues\" or \"numerous irregularities\". (a), (b), and (d) maintain consistent formal register throughout.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which is the BEST formal transformation of: \"They came up with a plan to deal with the crisis.\"?",
+      "options": [
+        { "id": "a", "text": "They devised a strategy to address the crisis." },
+        { "id": "b", "text": "They came up with a strategy to address the crisis." },
+        { "id": "c", "text": "They devised a plan to deal with the crisis." },
+        { "id": "d", "text": "A plan was come up with to deal with the crisis." }
+      ],
+      "correctOption": "a",
+      "explanation": "Option (a) replaces both informal elements: \"came up with\" → \"devised\" (Latinate) and \"deal with\" → \"address\" (formal). (b) still uses \"came up with\"; (c) still uses \"deal with\"; (d) is grammatically broken — phrasal verbs generally cannot be passivised in this way.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which sentence demonstrates the MOST effective use of nominalisation for academic writing?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Researchers discovered that the drug significantly reduced inflammation."
+        },
+        {
+          "id": "b",
+          "text": "The discovery that the drug significantly reduces inflammation has important implications."
+        },
+        {
+          "id": "c",
+          "text": "The researchers' discovery of a significant reduction in inflammation has implications."
+        },
+        {
+          "id": "d",
+          "text": "It has been discovered that inflammation is significantly reduced by the drug."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Option (c) shows the most complete nominalisation: \"discovered\" → \"discovery\" and \"reduced\" → \"reduction\", creating a dense noun phrase typical of high-level academic prose. (b) nominalises \"discovered\" but leaves \"reduces\" as a verb; (a) uses no nominalisation; (d) uses passive voice but no nominalisation.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read this formal letter extract: \"We regret to inform you that your request has been declined. Should you wish to appeal this decision, you are invited to do so in writing within 30 days.\"\nWhich feature is NOT present in this extract?",
+      "options": [
+        { "id": "a", "text": "A phrasal verb" },
+        { "id": "b", "text": "Passive voice" },
+        { "id": "c", "text": "Inverted conditional (Should you wish)" },
+        { "id": "d", "text": "A nominalisation (decision)" }
+      ],
+      "correctOption": "a",
+      "explanation": "There is no phrasal verb in this extract. It contains: a passive (has been declined, are invited), an inverted conditional (Should you wish), and a nominalisation (decision). The extract is consistently formal throughout and avoids phrasal verbs entirely.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Select the word that BEST fills the gap to maintain formal academic register: \"The study ___ that further investment in renewable energy is warranted.\"",
+      "options": [
+        { "id": "a", "text": "proves" },
+        { "id": "b", "text": "makes clear" },
+        { "id": "c", "text": "shows" },
+        { "id": "d", "text": "indicates" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"Indicates\" is the most precisely academic and formally appropriate verb here — it hedges slightly (suggesting evidence points in a direction) rather than making an overconfident claim. \"Proves\" is too strong (science rarely proves definitively). \"Shows\" is neutral but less formal. \"Makes clear\" is a phrasal-verb-like construction that lowers the register.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Find the INCORRECTLY nominalised sentence.",
+      "options": [
+        { "id": "a", "text": "The development of the project took two years." },
+        { "id": "b", "text": "The analyse of the results showed clear trends." },
+        { "id": "c", "text": "Further investigation is required." },
+        { "id": "d", "text": "The implementation of the policy was delayed." }
+      ],
+      "correctOption": "b",
+      "explanation": "\"The analyse\" is incorrect — the nominalisation of \"analyse\" (verb) is \"analysis\" (noun), not \"analyse\". So the sentence should read: \"The analysis of the results showed clear trends.\" (a), (c), and (d) all use correct nominalisations: development, investigation, implementation.",
+      "difficulty": 3
+    }
+  ]
+}

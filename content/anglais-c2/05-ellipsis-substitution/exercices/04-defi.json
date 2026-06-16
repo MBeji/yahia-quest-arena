@@ -1,0 +1,94 @@
+{
+  "title": "👑 Elite Challenge ⭐⭐⭐⭐: Ellipsis, Substitution and Cohesion",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Read this passage: \"Three candidates were shortlisted. The first was highly experienced but lacked communication skills. The second had strong interpersonal skills but insufficient technical knowledge. The third possessed both qualities.\"\nWhich cohesive technique is used to structure the second and third sentences?",
+      "options": [
+        { "id": "a", "text": "Lexical repetition of the word \"candidate\"." },
+        {
+          "id": "b",
+          "text": "Ordinal reference (The first / The second / The third) creating a parallel structure."
+        },
+        { "id": "c", "text": "Substitution with \"one\" and \"ones\" throughout." },
+        { "id": "d", "text": "Ellipsis — each candidate's name is omitted." }
+      ],
+      "correctOption": "b",
+      "explanation": "The passage uses ordinal demonstrative reference (The first, The second, The third) to create a neat parallel structure that links back to the three shortlisted candidates without repeating \"candidate\" each time. This is a sophisticated cohesion strategy. There is no \"one/ones\" substitution (c); the candidates have no names to omit (d); and \"candidate\" is deliberately not repeated (a).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the version that uses ellipsis MOST effectively (most natural, native-sounding).",
+      "options": [
+        { "id": "a", "text": "I thought the presentation was excellent, and so did she." },
+        {
+          "id": "b",
+          "text": "I thought the presentation was excellent, and she thought the presentation was excellent too."
+        },
+        {
+          "id": "c",
+          "text": "I thought the presentation was excellent, and she did think it was excellent too."
+        },
+        { "id": "d", "text": "I thought the presentation was excellent, as did she think." }
+      ],
+      "correctOption": "a",
+      "explanation": "\"So did she\" is the most economical and natural form: it replaces the entire clause (thought the presentation was excellent) with a two-word substitution + inversion. (b) repeats everything unnecessarily. (c) is acceptable but redundant (\"did think\" is unnecessarily emphatic and \"it was excellent\" is extra). (d) is ungrammatical — \"so did she think\" breaks the inversion rule.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: \"The report recommended three measures. ___, it stressed the need for ongoing monitoring.\"\nWhich cohesive device BEST fills the gap?",
+      "options": [
+        { "id": "a", "text": "Therefore" },
+        { "id": "b", "text": "Conversely" },
+        { "id": "c", "text": "In addition" },
+        { "id": "d", "text": "As a result" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"In addition\" signals that an extra recommendation is being layered onto the three already mentioned — this is additive cohesion. \"Therefore\" and \"As a result\" both signal a consequence, but the stress on monitoring is not a consequence of the three measures — it is a fourth recommendation alongside them. \"Conversely\" signals contrast, which is wrong here.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: \"Is the new infrastructure plan likely to succeed?\" — \"I very much doubt ___.\"",
+      "options": [
+        { "id": "a", "text": "so" },
+        { "id": "b", "text": "it" },
+        { "id": "c", "text": "not" },
+        { "id": "d", "text": "one" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Doubt so\" = I doubt it will succeed (negative stance toward an affirmative proposition). After doubt, the clausal substitute is \"so\" for a positive/affirmative proposition: I doubt so (= I think it probably won't). \"Not\" follows positive verbs expressing hope or belief — I hope not, I believe not — but doubt already carries the negative sense; \"doubt not\" is redundant and non-standard. \"It\" would refer to a specific noun, not a clause. \"One\" replaces nouns.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read this paragraph and identify the COHESION PROBLEM:\n\"The committee submitted its final report in March. However, the committee made several additional recommendations. The additional recommendations were not included in the final report. The final report was distributed to all stakeholders.\"\nWhat is the main cohesion weakness?",
+      "options": [
+        { "id": "a", "text": "The cohesive device However is used incorrectly." },
+        {
+          "id": "b",
+          "text": "Key nouns (the committee, the final report, the additional recommendations) are repeated excessively instead of using reference chains, substitution, or ellipsis."
+        },
+        { "id": "c", "text": "The paragraph is too short and needs more detail." },
+        { "id": "d", "text": "The passive voice is missing and this reduces cohesion." }
+      ],
+      "correctOption": "b",
+      "explanation": "The main problem is excessive, clunky repetition of the same noun phrases (the committee, the final report, the additional recommendations) without using reference chains (it, they, these), substitution (such recommendations, these), or ellipsis. A native writer would replace repeated nouns with pronouns and demonstratives. \"However\" is used correctly to introduce contrast; length and passive voice are not cohesion issues.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"Many economists predicted a recession, but others didn't.\"\nWhat is the FULL form of the ellipsis in \"but others didn't\"?",
+      "options": [
+        { "id": "a", "text": "but others didn't predict a recession" },
+        { "id": "b", "text": "but others didn't believe in economics" },
+        { "id": "c", "text": "but others didn't say so" },
+        { "id": "d", "text": "but others didn't have a prediction" }
+      ],
+      "correctOption": "a",
+      "explanation": "The ellipsis omits the verb phrase \"predict a recession\" — recoverable from the first clause. The full form is: \"many economists predicted a recession, but others didn't [predict a recession]\". This is verbal ellipsis after an auxiliary (didn't), the most common pattern. The other options introduce content not present in the original sentence.",
+      "difficulty": 3
+    }
+  ]
+}

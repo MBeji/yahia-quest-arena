@@ -1,0 +1,68 @@
+{
+  "title": "Comprehension Check ⭐",
+  "questions": [
+    {
+      "prompt": "Which word is the MOST formal equivalent of the phrasal verb \"find out\"?",
+      "options": [
+        { "id": "a", "text": "discover" },
+        { "id": "b", "text": "get" },
+        { "id": "c", "text": "ascertain" },
+        { "id": "d", "text": "look up" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Ascertain\" is the most formal equivalent — a Latinate word used in legal and official writing. \"Discover\" is neutral but not the most formal choice. \"Get\" is informal; \"look up\" is another phrasal verb, equally informal.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "What is nominalisation?",
+      "options": [
+        { "id": "a", "text": "Replacing nouns with pronouns to avoid repetition." },
+        {
+          "id": "b",
+          "text": "Converting verbs or adjectives into nouns to create a more formal, impersonal style."
+        },
+        { "id": "c", "text": "Adding -ing to a verb to make it continuous." },
+        { "id": "d", "text": "Giving objects proper names in academic writing." }
+      ],
+      "correctOption": "b",
+      "explanation": "Nominalisation is the conversion of verbs or adjectives into nouns (decide → decision; significant → significance) to achieve a more formal, impersonal, and abstract style typical of academic and bureaucratic writing. The other options describe unrelated grammar processes.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which sentence is written in the MOST formal register?",
+      "options": [
+        { "id": "a", "text": "We looked into the problem and found out what went wrong." },
+        { "id": "b", "text": "The investigation led to the identification of the root cause." },
+        { "id": "c", "text": "They kind of checked the issue and sort of figured it out." },
+        { "id": "d", "text": "We looked at the problem and saw what happened." }
+      ],
+      "correctOption": "b",
+      "explanation": "Option (b) uses nominalisation (investigation, identification), Latinate vocabulary, and impersonal passive constructions — the hallmarks of formal register. (a) uses phrasal verbs (looked into, found out); (c) is informal with hedges (kind of, sort of); (d) is neutral but verb-heavy and personal.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which of these is a feature of INFORMAL register?",
+      "options": [
+        { "id": "a", "text": "Passive voice constructions" },
+        { "id": "b", "text": "Complex noun phrases" },
+        { "id": "c", "text": "Hedging language (it has been suggested that…)" },
+        { "id": "d", "text": "Contractions and phrasal verbs" }
+      ],
+      "correctOption": "d",
+      "explanation": "Contractions (it's, don't) and phrasal verbs (look into, give up) are markers of informal/colloquial register. Passive voice, hedging, and complex noun phrases are all features of formal/academic writing, not informal speech.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Rewrite to increase formality: \"We need to look into why sales have gone down.\"\nChoose the BEST formal version.",
+      "options": [
+        { "id": "a", "text": "An investigation into the decline in sales is required." },
+        { "id": "b", "text": "We should check why sales got worse." },
+        { "id": "c", "text": "We kind of need to find out about the sales going down." },
+        { "id": "d", "text": "It's important to look at the drop in sales." }
+      ],
+      "correctOption": "a",
+      "explanation": "Option (a) uses nominalisation (investigation, decline) and an impersonal passive construction (is required) — fully formal. (b) replaces one phrasal verb with another informal one (got worse); (c) is informal with hedges; (d) still uses a phrasal verb (look at) and contraction (it's), which lower the register.",
+      "difficulty": 2
+    }
+  ]
+}

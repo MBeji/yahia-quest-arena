@@ -1,0 +1,94 @@
+{
+  "title": "⭐⭐ Review: Contrast, Concession & Result in Context",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "Despite the economic downturn, sales remained strong." },
+        { "id": "b", "text": "Despite the fact that profits fell, the company survived." },
+        { "id": "c", "text": "Despite profits fell, the company survived." },
+        { "id": "d", "text": "Despite falling profits, the company survived." }
+      ],
+      "correctOption": "c",
+      "explanation": "Option (c) is wrong: \"Despite\" cannot be followed directly by a subject + verb (profits fell). After \"Despite\" use a noun phrase (option d) or \"the fact that\" + clause (option b) or a gerund: Despite falling profits. Options (a), (b), and (d) are all grammatically correct — three valid ways to use \"despite\" before different noun/clause types.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"The negotiations were tense. ___, both parties reached an agreement by midnight.\"",
+      "options": [
+        { "id": "a", "text": "Therefore" },
+        { "id": "b", "text": "Consequently" },
+        { "id": "c", "text": "Nevertheless" },
+        { "id": "d", "text": "Moreover" }
+      ],
+      "correctOption": "c",
+      "explanation": "The second sentence concedes that despite tense negotiations, an agreement was reached — a concessive relationship (even so / despite that). \"Nevertheless\" is correct. \"Therefore\" and \"Consequently\" signal a result — but reaching an agreement because of tension doesn't make logical sense. \"Moreover\" adds a supporting point, not a concessive one.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choose the most appropriate discourse marker: \"The first draft was rough. ___, it contained the core of an excellent idea.\"",
+      "options": [
+        { "id": "a", "text": "Furthermore" },
+        { "id": "b", "text": "Nonetheless" },
+        { "id": "c", "text": "Consequently" },
+        { "id": "d", "text": "Namely" }
+      ],
+      "correctOption": "b",
+      "explanation": "The second sentence concedes that despite being rough, it had value — a classic concession: Nonetheless, it contained the core of an excellent idea. \"Furthermore\" adds a point in the same direction as the first — wrong here since the second point contrasts with the first. \"Consequently\" signals a result (roughness caused the good idea? — illogical). \"Namely\" introduces a specification or clarification — not applicable here.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"The algorithm was streamlined, ___ reducing processing time by half.\"",
+      "options": [
+        { "id": "a", "text": "thus" },
+        { "id": "b", "text": "therefore" },
+        { "id": "c", "text": "thereby" },
+        { "id": "d", "text": "consequently" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Thereby\" + present participle (-ing) is used to embed a result in the same clause: thereby reducing processing time. \"Thus\", \"therefore\", and \"consequently\" all need to introduce a new clause with a subject + verb — they cannot precede a bare -ing verb without a subject. Compare: The algorithm was streamlined; **thus**, processing time was reduced by half (full clause with thus).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which sentence correctly distinguishes 'on the contrary' from 'by contrast'?",
+      "options": [
+        {
+          "id": "a",
+          "text": "I didn't dislike the film. On the contrary, I hated it. | Exports grew. By contrast, imports fell."
+        },
+        {
+          "id": "b",
+          "text": "I hated the film. On the contrary, the soundtrack was excellent. | Exports grew. By contrast, it was a great year."
+        },
+        {
+          "id": "c",
+          "text": "I didn't dislike the film. By contrast, I hated it. | Exports grew. On the contrary, imports fell."
+        },
+        {
+          "id": "d",
+          "text": "I loved the film. On the contrary, the reviews were mixed. | Exports grew. By contrast, the economy improved."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Option (a) uses both markers correctly: \"On the contrary, I hated it\" DENIES the implied claim (that the speaker didn't strongly dislike it) — on the contrary = denial. \"By contrast, imports fell\" introduces a parallel opposite without denial — exports and imports are two different things being compared. Option (c) reverses them. Option (b) uses on the contrary to add a separate point about the soundtrack — not a denial. Option (d) uses on the contrary when there is no clear denial being made.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete this academic paragraph for maximum formal register and cohesion: \"The study yielded significant results. ___, some limitations must be acknowledged. The sample size was small, ___ meaning the findings cannot be generalised.\"",
+      "options": [
+        { "id": "a", "text": "However … thereby" },
+        { "id": "b", "text": "But … so" },
+        { "id": "c", "text": "Nevertheless … thereby" },
+        { "id": "d", "text": "Although … thus" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"However\" introduces a contrasting point (significant results — but there are limitations): correct and formal. \"Thereby meaning\" + participle is the correct embedded-result structure: the small sample thereby meaning the findings cannot be generalised. Option (b) \"But\" and \"so\" are too informal for academic writing. Option (c) \"Nevertheless\" concedes and overrides — here we are acknowledging a genuine limitation, not overriding it, so \"However\" is more precise. Option (d) \"Although\" needs to join two clauses in one sentence — it cannot begin a new sentence here.",
+      "difficulty": 3
+    }
+  ]
+}

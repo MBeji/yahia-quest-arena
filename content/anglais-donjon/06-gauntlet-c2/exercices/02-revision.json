@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Gauntlet C2: Mixed Drills",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Grammar — Unreal past: \"I'd rather you ___ that to the press without asking me first.\"",
+      "options": [
+        { "id": "a", "text": "don't say" },
+        { "id": "b", "text": "hadn't said" },
+        { "id": "c", "text": "won't say" },
+        { "id": "d", "text": "not say" }
+      ],
+      "correctOption": "b",
+      "explanation": "I'd rather + subject + past perfect expresses a wish that a past action had not happened (regret about the past): I'd rather you hadn't said that. \"don't say\" is a present wish about the future (I'd rather you don't say it — semi-acceptable in informal speech, but doesn't fit the past context of \"to the press\" already). \"won't say\" after I'd rather is non-standard. \"not say\" is the form used in I'd rather not say myself (no subject), not when another subject follows.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Vocabulary — Idiom in context: \"Read: 'We all knew the project was failing, but nobody at the meeting mentioned the declining sales figures or the missed deadlines. The manager spoke only of future opportunities.' What problem does the text describe?\"",
+      "options": [
+        { "id": "a", "text": "Beating around the bush." },
+        { "id": "b", "text": "Going the extra mile." },
+        { "id": "c", "text": "The elephant in the room." },
+        { "id": "d", "text": "Burning bridges." }
+      ],
+      "correctOption": "c",
+      "explanation": "The elephant in the room is a problem everyone is aware of but nobody wants to address directly — the failing project, missed deadlines, and declining sales that nobody mentioned in the meeting. \"Beating around the bush\" means to avoid saying something directly (about individual speech, not a collective avoidance). \"Going the extra mile\" means making extra effort. \"Burning bridges\" means destroying relationships permanently.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Usage — Nominalisation: \"The most formal academic version of 'scientists have recently discovered that…' is:\"",
+      "options": [
+        { "id": "a", "text": "Scientists made a recent discovery that…" },
+        { "id": "b", "text": "The recent discovery by scientists that…" },
+        { "id": "c", "text": "Scientists did a discovery recently that…" },
+        { "id": "d", "text": "The scientists found out recently that…" }
+      ],
+      "correctOption": "b",
+      "explanation": "Full nominalisation converts the verb phrase have recently discovered into the noun group The recent discovery by scientists — most formal and common in academic writing as a sentence opener. (a) made a discovery is a semi-nominalised light-verb construction — more formal than the original but less so than (b). (c) did a discovery is ungrammatical in English. (d) found out is a phrasal verb — informal register.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Usage — Confusable: \"A ___ rain fell on the city throughout the winter, never stopping for more than an hour.\"",
+      "options": [
+        { "id": "a", "text": "continual" },
+        { "id": "b", "text": "repetitive" },
+        { "id": "c", "text": "constant" },
+        { "id": "d", "text": "continuous" }
+      ],
+      "correctOption": "d",
+      "explanation": "The phrase \"never stopping for more than an hour\" describes rain without any break — that is continuous (unbroken). \"continual\" means repeated at intervals with pauses (a continual cough = one that keeps coming back). \"constant\" is close in meaning but less precise about the unbroken quality. \"repetitive\" describes something done over and over in an identical way — it focuses on sameness, not unbrokenness.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Grammar — Ellipsis: \"She works harder than any of her colleagues ___.\"",
+      "options": [
+        { "id": "a", "text": "are working" },
+        { "id": "b", "text": "do" },
+        { "id": "c", "text": "working" },
+        { "id": "d", "text": "they work" }
+      ],
+      "correctOption": "b",
+      "explanation": "After a comparative than-clause, ellipsis drops the repeated verb phrase: …than any of her colleagues do [work hard]. The auxiliary do substitutes for the full verb phrase. \"are working\" would imply a present continuous (parallel with a simple present main clause — mismatch). \"working\" is an -ing form with no auxiliary. \"they work\" repeats the subject unnecessarily and is not the natural ellipsis form.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Spelling — Choose the word spelled correctly: \"The ambassador's role as a ___ between the two governments was vital.\"",
+      "options": [
+        { "id": "a", "text": "liason" },
+        { "id": "b", "text": "laiason" },
+        { "id": "c", "text": "liaison" },
+        { "id": "d", "text": "liaision" }
+      ],
+      "correctOption": "c",
+      "explanation": "liaison: li-ai-son — three vowels in a row (i-a-i) followed by son. It comes from French. \"liason\" omits the second i. \"laiason\" transposes the i and the a. \"liaision\" inserts a rogue i before son. Tip: li-AI-son — the AI is in the middle.",
+      "difficulty": 3
+    }
+  ]
+}

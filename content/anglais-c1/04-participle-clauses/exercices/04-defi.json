@@ -1,0 +1,130 @@
+{
+  "title": "👑 Elite Challenge ⭐⭐⭐⭐: Participle Clauses",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Read: \"The commission examined the data for months. They published a landmark report. Their findings changed policy across the continent.\"\n\nWhich single sentence best reduces all three using participle clauses?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Having examined the data for months and published a landmark report, the commission changed policy across the continent with their findings."
+        },
+        {
+          "id": "b",
+          "text": "Examining the data for months, the commission published a landmark report, changing policy across the continent."
+        },
+        {
+          "id": "c",
+          "text": "Having examined the data for months, the commission published a landmark report, changing policy across the continent."
+        },
+        {
+          "id": "d",
+          "text": "The data having been examined, the commission published a landmark report changing the continent's policy."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Option (c) correctly uses having examined for the prior action (months of examination came first), then the simple past (published) for the main event, then changing (present participle) for the immediate result. Option (b) uses \"Examining\" (present participle) which wrongly implies simultaneous examination and publication. Option (a) tries to compress too much into the perfect participle — \"having published\" would work but \"with their findings\" is loose. Option (d) uses an absolute clause (\"the data having been examined\") — grammatical but awkward here, and \"the continent's policy\" is imprecise.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the error in this formal passage: \"Written in the margins of ancient manuscripts, scholars often discover important historical clues.\"",
+      "options": [
+        { "id": "a", "text": "\"Written\" should be \"Writing\" — active participle is needed." },
+        {
+          "id": "b",
+          "text": "This is a dangling participle — the scholars did not write the notes; the clues or notes were written. The subject of the main clause must match."
+        },
+        {
+          "id": "c",
+          "text": "\"often discover\" should be in the past tense — \"often discovered\"."
+        },
+        {
+          "id": "d",
+          "text": "There is no error — \"Written in the margins\" correctly modifies \"scholars\"."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "The sentence says \"Written in the margins of ancient manuscripts, scholars often discover…\" — but the scholars didn't write the notes. The past participle \"Written\" refers to the notes/clues, not the scholars. Correct version: \"Written in the margins of ancient manuscripts, **the clues** often help scholars discover historical details.\" This is a classic dangling participle error in formal prose.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choose the sentence that correctly uses a participle clause to compress BOTH a condition AND a result.",
+      "options": [
+        { "id": "a", "text": "Left unattended, the fire spread rapidly through the building." },
+        {
+          "id": "b",
+          "text": "Having left unattended, the fire spread rapidly through the building."
+        },
+        { "id": "c", "text": "Leaving unattended, the fire spread rapidly through the building." },
+        { "id": "d", "text": "Being left unattended, it caused the fire to spread rapidly." }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Left unattended\" is a past participle clause expressing condition (= if left / because it was left unattended): Left unattended, the fire spread rapidly. The fire was left (passive) — past participle is correct. Option (b) \"Having left\" implies the fire actively left something — wrong, and changes the meaning. Option (c) \"Leaving\" is active present participle — the fire didn't leave anything unattended. Option (d) shifts the fire to a pronoun (it) and adds a passive restructure that is awkward and unclear.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete this literary sentence: \"___ the summit after three days of climbing, the mountaineer surveyed the world below with quiet pride.\"",
+      "options": [
+        { "id": "a", "text": "Reaching" },
+        { "id": "b", "text": "Reached" },
+        { "id": "c", "text": "Having reached" },
+        { "id": "d", "text": "To reach" }
+      ],
+      "correctOption": "c",
+      "explanation": "Three days of climbing culminated in reaching the summit — this happened FIRST, then she surveyed the world. Use having + past participle for the completed prior action: Having reached the summit… Option (a) \"Reaching\" implies she reached the summit and surveyed at the same moment — less precise for this narrative. Option (b) \"Reached\" as a bare past participle here would imply a passive: \"The summit being reached\" — not what is intended (she reached it actively). Option (d) is a to-infinitive — used for purpose or result, not sequence.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which sentence most effectively reduces this paragraph for a formal report? \"The committee identified three critical gaps. It recommended urgent action. The recommendations were adopted by the board.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "Having identified three critical gaps and recommended urgent action, the committee's recommendations were adopted by the board."
+        },
+        {
+          "id": "b",
+          "text": "Identifying three critical gaps, the committee recommended urgent action, which was adopted by the board."
+        },
+        {
+          "id": "c",
+          "text": "Having identified three critical gaps, the committee recommended urgent action, its recommendations subsequently adopted by the board."
+        },
+        {
+          "id": "d",
+          "text": "Having identified three critical gaps, the committee recommended urgent action, having been adopted by the board."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Option (c) is the most elegant and correct: having identified (prior action) → recommended (main action) → its recommendations subsequently adopted by the board (absolute participle clause using the passive past participle \"adopted\" with a different subject \"its recommendations\"). This correctly handles the change of subject for the adoption step. Option (a) creates a dangling issue — \"the committee's recommendations were adopted\" after a clause about the committee makes the committee the implicit subject of the passive — awkward. Option (b) uses \"identifying\" (simultaneous) but the identification came before the recommendation. Option (d) misapplies \"having been adopted\" — this implies the committee was adopted, not the recommendations.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"The species was thought to be extinct. Researchers rediscovered it in a remote valley in 2019.\"\n\nWhich sentence best reduces the first clause as a participle and maintains formal register?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Thinking to be extinct, researchers rediscovered the species in a remote valley in 2019."
+        },
+        {
+          "id": "b",
+          "text": "Thought to be extinct, the species was rediscovered by researchers in a remote valley in 2019."
+        },
+        {
+          "id": "c",
+          "text": "Having thought to be extinct, the species was rediscovered by researchers in 2019."
+        },
+        {
+          "id": "d",
+          "text": "Being thought extinct, researchers made the rediscovery in a remote valley in 2019."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Was thought to be extinct\" is a passive clause — it reduces to a past participle: Thought to be extinct, the species… The subject of the main clause (the species) matches what was thought to be extinct. Option (a) is dangling: \"Thinking to be extinct\" implies the researchers thought themselves to be extinct — absurd. Option (c) \"Having thought\" implies the species did the thinking — wrong subject. Option (d) is dangling: \"Being thought extinct\" should modify the species, but the main clause makes researchers the subject.",
+      "difficulty": 3
+    }
+  ]
+}

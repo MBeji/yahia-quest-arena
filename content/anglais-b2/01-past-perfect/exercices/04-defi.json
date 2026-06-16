@@ -1,0 +1,88 @@
+{
+  "title": "👑 Elite Challenge ⭐⭐⭐⭐: The Past Perfect",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Read: 'The detective noticed the window ___ been broken from the inside, which meant the intruder ___ already in the house.' Choose the pair that fills both gaps correctly.",
+      "options": [
+        { "id": "a", "text": "has / was" },
+        { "id": "b", "text": "had / had been" },
+        { "id": "c", "text": "was / has been" },
+        { "id": "d", "text": "had / was" }
+      ],
+      "correctOption": "b",
+      "explanation": "Both gaps require past perfect to show events that occurred BEFORE the detective's discovery. 'Had been broken' (past perfect passive) and 'had been' (past perfect of 'be') correctly sequence both facts as earlier-past. Option D ('had / was') is almost correct but 'was already in the house' (past simple) doesn't clearly show the intruder was inside BEFORE the detective arrived — past perfect 'had been' is more precise. Options A and C mix tenses incorrectly.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Four students describe a past experience. Which student uses the past perfect INCORRECTLY?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Ana: 'I had already submitted my essay when the teacher extended the deadline.'"
+        },
+        {
+          "id": "b",
+          "text": "Ben: 'By the time I learned to drive, my brother had owned a car for three years.'"
+        },
+        { "id": "c", "text": "Cara: 'I had studied French for ten years ago.'" },
+        { "id": "d", "text": "Dan: 'When she called, I had just stepped out of the shower.'" }
+      ],
+      "correctOption": "c",
+      "explanation": "Cara's sentence is wrong: 'I had studied French for ten years ago' combines the past perfect with 'ago', which always requires the past simple ('I studied French ten years ago'). The past perfect cannot be used with 'ago' — it needs a past event anchor, not a time-ago reference. Ana (A), Ben (B), and Dan (D) all correctly anchor their past perfects to another past event or time reference.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read the passage: 'Sarah felt terrible. She realised she ___ been rude to her colleague earlier, and he ___ already left the office without speaking to her.' Which pair is correct?",
+      "options": [
+        { "id": "a", "text": "had / had" },
+        { "id": "b", "text": "has / had" },
+        { "id": "c", "text": "had / has" },
+        { "id": "d", "text": "was / had" }
+      ],
+      "correctOption": "a",
+      "explanation": "Both gaps need 'had': 'had been rude' (past perfect — the rudeness happened before she realised it) and 'had already left' (past perfect — the colleague left before she realised). Both earlier-past events require past perfect in this fully past narrative. Options B and C mix in the present perfect 'has', which is wrong in a past context. Option D ('was rude') would be past simple/continuous and doesn't fit the 'realised' structure.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which of the following sentences is AMBIGUOUS without the past perfect — i.e., the past perfect is NECESSARY to avoid misunderstanding?",
+      "options": [
+        { "id": "a", "text": "She woke up and then she got dressed." },
+        { "id": "b", "text": "After the rain stopped, they went outside." },
+        { "id": "c", "text": "He was nervous because he spoke in public." },
+        { "id": "d", "text": "Before she left, she locked the door." }
+      ],
+      "correctOption": "c",
+      "explanation": "'He was nervous because he spoke in public' is ambiguous: did he speak (causing his nervousness), or was he nervous at the moment of speaking? 'Had spoken' would clarify he was nervous AFTER the speaking event. Options A and D are ordered sequentially with connectors (then/before) that already make the order clear. Option B uses 'after' which signals sequence — past perfect is optional but not necessary.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete with the correct form: 'The athletes ___ been training for months, so they were confident when the competition finally arrived.'",
+      "options": [
+        { "id": "a", "text": "were" },
+        { "id": "b", "text": "had" },
+        { "id": "c", "text": "have" },
+        { "id": "d", "text": "has" }
+      ],
+      "correctOption": "b",
+      "explanation": "'Had been training' is the past perfect continuous: 'had + been + verb-ing'. It emphasises the extended duration of training (for months) as a process that happened BEFORE the competition arrived. 'Were been training' is impossible ('were' + 'been' is not a valid English structure). 'Have/has been training' is present perfect continuous — wrong in a past narrative anchored to 'the competition finally arrived'.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: 'It was the first time Anna ___ ever performed on stage.' Which form is correct?",
+      "options": [
+        { "id": "a", "text": "had ever performed" },
+        { "id": "b", "text": "has ever performed" },
+        { "id": "c", "text": "ever performed" },
+        { "id": "d", "text": "was ever performing" }
+      ],
+      "correctOption": "a",
+      "explanation": "After 'It was the first time…' in a past context, the past perfect 'had ever performed' is required — it refers to her entire experience up to that past moment. Compare: 'It IS the first time she HAS performed' (present). When the main verb is 'was', the subordinate clause takes past perfect. Options B ('has performed') is present perfect — wrong when the main verb is 'was'. Option C (bare past simple) is a common learner error. Option D (past continuous) changes the meaning.",
+      "difficulty": 3
+    }
+  ]
+}

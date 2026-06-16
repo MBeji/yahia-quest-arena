@@ -1,0 +1,91 @@
+{
+  "title": "⚔️ Chapter Boss ⭐⭐⭐: The Past Perfect",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Read the passage: 'Maya opened the fridge. There was nothing inside. She ___  forgotten to go shopping.' Which form best completes the sentence?",
+      "options": [
+        { "id": "a", "text": "forgot" },
+        { "id": "b", "text": "has forgotten" },
+        { "id": "c", "text": "had forgotten" },
+        { "id": "d", "text": "was forgetting" }
+      ],
+      "correctOption": "c",
+      "explanation": "'Had forgotten' (past perfect) is correct. The forgetting happened BEFORE she opened the fridge and found it empty — the past perfect explains the cause of the earlier situation. 'Forgot' (past simple) would suggest the forgetting happened at the same moment as opening the fridge. 'Has forgotten' is present perfect — wrong in a fully past narrative. 'Was forgetting' (past continuous) implies an ongoing process of forgetting, which is illogical here.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which sentence uses the past perfect continuous CORRECTLY?",
+      "options": [
+        { "id": "a", "text": "He had been understood the problem for years." },
+        { "id": "b", "text": "She had been running for 30 minutes when it started to rain." },
+        { "id": "c", "text": "They had been arrive late to every meeting." },
+        { "id": "d", "text": "I had been known him since childhood." }
+      ],
+      "correctOption": "b",
+      "explanation": "'Had been running for 30 minutes' correctly uses past perfect continuous (had + been + -ing) to show an ongoing activity before another past event (rain starting). Option A is wrong: 'understand' is a stative verb and cannot be used in continuous form. Option C misuses 'arrive' — the base form after 'been' must end in -ing ('had been arriving'). Option D: 'know' is stative and cannot be continuous.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Passage: 'The concert hall was empty when we got there. We checked our tickets — the event ___ the previous evening.' What is the correct form?",
+      "options": [
+        { "id": "a", "text": "was" },
+        { "id": "b", "text": "took place" },
+        { "id": "c", "text": "had taken place" },
+        { "id": "d", "text": "has taken place" }
+      ],
+      "correctOption": "c",
+      "explanation": "'Had taken place' (past perfect) is correct. The concert happened the previous evening — BEFORE the moment when 'we got there'. The past perfect links this earlier event to the discovery. 'Was' doesn't convey the completed earlier event. 'Took place' (past simple) is possible but less precise — it does not clearly signal the relationship between the two past events. 'Has taken place' (present perfect) is incorrect in a fully past context.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Transform to correctly express sequence: 'First she wrote the email. Then she sent it.' Choose the best single sentence.",
+      "options": [
+        { "id": "a", "text": "She sent the email after she had written it." },
+        { "id": "b", "text": "She had sent the email after she had written it." },
+        { "id": "c", "text": "She had written the email after she sent it." },
+        { "id": "d", "text": "She sent the email after she wrote it." }
+      ],
+      "correctOption": "a",
+      "explanation": "The earlier action (writing) takes the past perfect 'had written'; the later action (sending) takes the past simple 'sent'. This correctly follows the rule: past perfect for the first event, past simple for the second. Option A uses past perfect for the LATER action (sent) — wrong. Option C reverses the logic (suggests she had written AFTER sending — impossible). Option D (both past simple) is grammatically possible but less precise about sequence.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Spot the error: 'By the time the ambulance had arrived, the patient had recovered.' What is wrong?",
+      "options": [
+        { "id": "a", "text": "Nothing is wrong — both past perfects are correct." },
+        {
+          "id": "b",
+          "text": "'had recovered' should be 'has recovered' — it refers to a current state."
+        },
+        {
+          "id": "c",
+          "text": "'had arrived' should be 'has arrived' — ambulances are present-perfect subjects."
+        },
+        {
+          "id": "d",
+          "text": "'had arrived' should be 'arrived' — the arrival is the later reference point, not the earlier event."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "'By the time' introduces the reference point (the later past event) — which should be in the PAST SIMPLE: 'By the time the ambulance arrived'. The past perfect 'had recovered' correctly shows the earlier event (the patient recovering before the ambulance got there). Using past perfect for the reference point ('by the time + past perfect') is a common learner error. Options A, C, and D are all incorrect diagnoses.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: 'James looked at the whiteboard. The teacher ___ already ___ the answer, but James had missed the explanation.' Which form fills both gaps?",
+      "options": [
+        { "id": "a", "text": "was / writing" },
+        { "id": "b", "text": "has / written" },
+        { "id": "c", "text": "had / written" },
+        { "id": "d", "text": "did / write" }
+      ],
+      "correctOption": "c",
+      "explanation": "'Had already written' (past perfect) shows that the teacher finished writing the answer BEFORE James looked at the board. The word 'already' is a strong signal for the past perfect. 'Was writing' (past continuous) would imply the teacher was still in the process of writing — but 'already' suggests completion. 'Has written' is present perfect — wrong tense. 'Did write' is a past simple emphatic form that doesn't work with 'already' in this structure.",
+      "difficulty": 3
+    }
+  ]
+}
