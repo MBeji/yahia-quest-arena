@@ -165,11 +165,21 @@ function DungeonPage() {
     }
   }
 
-  async function handleSelect(optId: string) {
-    if (showFeedback || answerMutation.isPending || !currentQuestion || !runId) return;
+  // Selecting only highlights a choice; it is freely changeable until the
+  // player commits with "Valider". No answer is sent to the server here — which
+  // means a misclick can no longer end the run.
+  function handleSelect(optId: string) {
+    if (showFeedback || answerMutation.isPending) return;
+    setSelected(optId);
+  }
+
+  // The sole commit path: submits the currently selected choice. A wrong answer
+  // still ends the run — but only once the player has deliberately validated.
+  async function validate() {
+    if (showFeedback || answerMutation.isPending || !currentQuestion || !runId || !selected) return;
+    const optId = selected;
     const selectedOption = currentQuestion.options.find((opt) => opt.id === optId);
 
-    setSelected(optId);
     setShowFeedback(true);
     setAnswerWasCorrect(null);
 
@@ -629,6 +639,21 @@ function DungeonPage() {
                 </span>
               )}
             </motion.div>
+          )}
+
+          {!showFeedback && (
+            <div className="mt-6 flex justify-end">
+              <button
+                type="button"
+                data-testid="dungeon-validate"
+                disabled={!selected || answerMutation.isPending}
+                onClick={validate}
+                className="inline-flex items-center gap-2 rounded-lg bg-[image:var(--gradient-gold)] px-6 py-2.5 text-sm font-bold text-black shadow-gold transition disabled:opacity-40"
+              >
+                {answerMutation.isPending && <Loader2 className="h-4 w-4 animate-spin" />}
+                {t.dungeon.validate}
+              </button>
+            </div>
           )}
         </motion.div>
       </AnimatePresence>

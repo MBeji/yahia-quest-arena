@@ -62,30 +62,26 @@ export class QuestPage {
   }
 
   /**
-   * Answer the current question and wait for the quest to move on. The quest
-   * AUTO-ADVANCES ~1.8s after a choice is recorded, so we select the option
+   * Answer the current question and wait for the quest to move on. Validation is
+   * MANUAL: selecting an option only highlights it (freely changeable), and
+   * nothing advances until the "Valider" button is clicked. We select the option
    * (retrying to beat the post-navigation hydration race — a lost click leaves the
-   * radios enabled) and then wait for the next question or the results screen,
-   * rather than racing the auto-advance with the submit button. `preSelectPauseMs`
-   * paces arrival→choice so a graded run clears the server's "too fast" anti-farm
-   * floor (≥4s/question; auto-advance alone is ~1.8s, which would be void).
+   * submit button disabled), click submit, then wait for the next question or the
+   * results screen. `preSelectPauseMs` paces arrival→choice so a graded run clears
+   * the server's "too fast" anti-farm floor (≥4s/question).
    */
   private async answerCurrent(option: Locator, preSelectPauseMs = 0): Promise<void> {
     const before = (await this.radioGroup.getAttribute("aria-label").catch(() => null)) ?? "";
     if (preSelectPauseMs > 0) await this.page.waitForTimeout(preSelectPauseMs);
     await expect(async () => {
-      if (
-        await this.options
-          .first()
-          .isEnabled()
-          .catch(() => false)
-      ) {
-        await option.click();
-      }
-      // A recorded choice puts the question into feedback state → radios disabled.
-      await expect(this.options.first()).toBeDisabled({ timeout: 1000 });
+      await option.click();
+      // The chosen option is marked selected, which enables the submit button.
+      await expect(option).toHaveAttribute("aria-checked", "true", { timeout: 1000 });
+      await expect(this.submit).toBeEnabled({ timeout: 1000 });
     }).toPass({ timeout: 15_000 });
-    // Wait for the auto-advance: the prompt changes, or the results screen appears.
+    // Validation is the only way to advance: click "Valider".
+    await this.submit.click();
+    // Wait for the advance: the prompt changes, or the results screen appears.
     await expect
       .poll(
         async () => {
@@ -131,7 +127,7 @@ export class QuestPage {
    */
   async answerAllCorrectly(
     answerKey: { prompt: string; correctText: string }[],
-    preSelectPauseMs = 3000,
+    preSelectPauseMs = 4500,
   ): Promise<void> {
     const byPrompt = new Map(answerKey.map((k) => [k.prompt, k.correctText]));
     const maxQuestions = answerKey.length + 5; // safety cap
@@ -143,8 +139,9 @@ export class QuestPage {
         correctText && correctText.length > 0
           ? this.options.nth(await this.correctOptionIndex(correctText))
           : this.options.first();
-      // Pause before selecting so total per-question time (pause + ~1.8s
-      // auto-advance) exceeds MIN_SECONDS_PER_QUESTION (4s) → attempt isn't void.
+      // Pause before selecting so per-question time exceeds
+      // MIN_SECONDS_PER_QUESTION (4s) → attempt isn't void. Validation is manual
+      // now (no auto-advance), so the whole budget must come from this pause.
       await this.answerCurrent(option, preSelectPauseMs);
     }
   }
