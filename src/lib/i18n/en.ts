@@ -484,7 +484,7 @@ export const en: TranslationKeys = {
   },
   discover: {
     heading: "Discover our programs",
-    subtitle: "Pick your path: hover a program, then click to enter.",
+    subtitle: "Pick your path: hover a program, then click to explore.",
     center: "Our programs",
     enter: "Enter",
     back: "Back",
@@ -500,6 +500,25 @@ export const en: TranslationKeys = {
     hintLanguages: "{count} languages",
     hintSoon: "Soon",
     hintExplore: "Explore",
+    backToPrograms: "Back to programs",
+    start: "Start",
+    comingSoonTitle: "Coming soon",
+    comingSoonDesc:
+      "This program is under construction. Tell us if you're interested so we can prioritize it.",
+    familyDesc: {
+      tunisien: "The official Tunisian school curriculum, from 1st grade to the Baccalaureate.",
+      langues: "Progress in English, French and Arabic, level by level (CEFR).",
+      culture: "Broaden your general knowledge: history, geography, science, arts and more.",
+      cerveau: "Logic, memory, mental math: train your brain every day.",
+      ib: "The International Baccalaureate is coming soon.",
+    },
+  },
+  flagship: {
+    badge: "National exam",
+    sectionTitle: "Our flagship exams",
+    bannerTitle: "Prepare for your national exam",
+    bannerSubtitle: "The flagship 6th- & 9th-grade tracks — aim for the exam.",
+    bannerCta: "Explore the exams",
   },
   leaderboard: {
     titleGradient: "Academy",

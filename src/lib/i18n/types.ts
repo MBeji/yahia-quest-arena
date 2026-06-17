@@ -519,6 +519,26 @@ export type TranslationKeys = {
     hintLanguages: string;
     hintSoon: string;
     hintExplore: string;
+    // Category page (one dedicated page per root program)
+    backToPrograms: string;
+    start: string;
+    comingSoonTitle: string;
+    comingSoonDesc: string;
+    familyDesc: {
+      tunisien: string;
+      langues: string;
+      culture: string;
+      cerveau: string;
+      ib: string;
+    };
+  };
+  // Flagship national-concours highlight (6ème + 9ème) across hub / category / dashboard
+  flagship: {
+    badge: string;
+    sectionTitle: string;
+    bannerTitle: string;
+    bannerSubtitle: string;
+    bannerCta: string;
   };
   // Leaderboard page chrome
   leaderboard: {

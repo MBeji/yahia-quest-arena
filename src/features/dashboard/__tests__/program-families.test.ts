@@ -1,5 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { buildPrograms, type ProgramParcours } from "../program-families";
+import {
+  buildPrograms,
+  flagshipConcours,
+  flagshipLabel,
+  type ProgramParcours,
+} from "../program-families";
 
 const P = (over: Partial<ProgramParcours> & { id: string; theme_id: string }): ProgramParcours => ({
   name_fr: over.id,
@@ -92,5 +97,39 @@ describe("buildPrograms", () => {
     )!;
     expect(ib.parcours).toBeNull();
     expect(ib.total).toBe(0);
+  });
+});
+
+describe("flagshipConcours", () => {
+  it("returns the premium school concours, ordered by grade (6ème before 9ème)", () => {
+    const flagships = flagshipConcours([
+      ...CATALOGUE,
+      P({
+        id: "concours-6eme",
+        theme_id: "ecole-tn",
+        grade_cycle: "primaire",
+        grade_order: 6,
+        is_premium: true,
+      }),
+    ]);
+    expect(flagships.map((p) => p.id)).toEqual(["concours-6eme", "concours-9eme"]);
+  });
+
+  it("ignores non-school premium and free school parcours", () => {
+    expect(
+      flagshipConcours([
+        P({ id: "anglais", theme_id: "anglais", is_premium: true }),
+        P({ id: "ecole-7eme-base", theme_id: "ecole-tn", grade_order: 7 }),
+      ]),
+    ).toEqual([]);
+  });
+});
+
+describe("flagshipLabel", () => {
+  it("drops the verbose 'Préparation Concours' prefix so the class reads clearly", () => {
+    expect(flagshipLabel("Préparation Concours 9ème")).toBe("9ème");
+    expect(flagshipLabel("Préparation Concours Bac")).toBe("Bac");
+    expect(flagshipLabel("Préparation 6ème")).toBe("6ème");
+    expect(flagshipLabel("9ème")).toBe("9ème");
   });
 });

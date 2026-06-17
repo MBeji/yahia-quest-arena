@@ -427,6 +427,19 @@ html.light ::-webkit-scrollbar-thumb:hover {
   animation-duration: 2.4s;
 }
 
+/* Flagship crown: a slow continuous rotation for the gold shine that turns behind
+   the site crown emblem marking the 2 concours phares (6ème, 9ème). Pairs with
+   .animate-gold-pulse (the blink). Disabled under prefers-reduced-motion below. */
+@keyframes flagship-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate-flagship-spin {
+  animation: flagship-spin 7s linear infinite;
+  will-change: transform;
+}
+
 @keyframes flame-flicker {
   0%,
   100% {
