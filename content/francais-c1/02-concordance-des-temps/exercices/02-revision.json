@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision : la concordance des temps",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complétez : « Nous espérions qu'il ___ avant la nuit. » (postériorité, principale au passé)",
+      "options": [
+        { "id": "a", "text": "arrivera" },
+        { "id": "b", "text": "arriverait" },
+        { "id": "c", "text": "arrive" },
+        { "id": "d", "text": "arrivait" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Nous espérions » est au passé ; la postériorité s'exprime alors par le conditionnel présent, futur du passé : « arriverait ». Le futur « arrivera » se garde après un présent ; « arrive » et « arrivait » marquent le simultané.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complétez : « Le guide a expliqué que le musée ___ la veille. » (antériorité, principale au passé)",
+      "options": [
+        { "id": "a", "text": "avait fermé" },
+        { "id": "b", "text": "ferme" },
+        { "id": "c", "text": "a fermé" },
+        { "id": "d", "text": "fermerait" }
+      ],
+      "correctOption": "a",
+      "explanation": "Après « a expliqué » (passé), l'antériorité se rend par le plus-que-parfait : « avait fermé ». Le passé composé « a fermé » correspondrait à une principale au présent ; « ferme » est simultané au présent et « fermerait » exprime la postériorité.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complétez : « J'étais content qu'elle ___ son examen. » (subjonctif, action antérieure)",
+      "options": [
+        { "id": "a", "text": "réussisse" },
+        { "id": "b", "text": "a réussi" },
+        { "id": "c", "text": "ait réussi" },
+        { "id": "d", "text": "réussissait" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Être content que » impose le subjonctif ; l'action étant antérieure (la réussite précède le contentement), on emploie le subjonctif passé : « ait réussi ». « Réussisse » (subjonctif présent) marquerait le simultané ; « a réussi » et « réussissait » sont des indicatifs.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complétez : « Je voulais qu'il ___ avec nous au cinéma. » (subjonctif, principale au passé)",
+      "options": [
+        { "id": "a", "text": "venait" },
+        { "id": "b", "text": "vienne" },
+        { "id": "c", "text": "viendrait" },
+        { "id": "d", "text": "viendra" }
+      ],
+      "correctOption": "b",
+      "explanation": "En français courant, le subjonctif présent se maintient même après une principale au passé : « Je voulais qu'il vienne ». « Venait » (imparfait de l'indicatif) calque à tort la concordance de l'indicatif ; « viendrait » et « viendra » sont des indicatifs et ne conviennent pas après « vouloir que ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Identifiez la phrase CORRECTE.",
+      "options": [
+        { "id": "a", "text": "Il a dit qu'il viendra demain." },
+        { "id": "b", "text": "Il a dit qu'il vient le lendemain." },
+        { "id": "c", "text": "Il a dit qu'il venait demain." },
+        { "id": "d", "text": "Il a dit qu'il viendrait le lendemain." }
+      ],
+      "correctOption": "d",
+      "explanation": "Après « il a dit » (passé), la postériorité demande le conditionnel (« viendrait »), et le marqueur « demain » devient « le lendemain ». En (a) le futur ne s'accorde pas avec le passé ; en (c) le présent est fautif ; en (d) « venait » ne marque pas la postériorité et « demain » n'est pas reporté.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complétez : « Elle remarqua que le ciel ___ depuis l'aube. » (antériorité, principale au passé simple)",
+      "options": [
+        { "id": "a", "text": "s'éclaircit" },
+        { "id": "b", "text": "s'éclaircissait" },
+        { "id": "c", "text": "s'était éclairci" },
+        { "id": "d", "text": "s'éclaircirait" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Remarqua » est un passé simple (principale au passé) ; l'action de la subordonnée, achevée avant ce moment, se met au plus-que-parfait : « s'était éclairci ». L'imparfait « s'éclaircissait » marquerait un processus simultané, et le conditionnel « s'éclaircirait » une postériorité.",
+      "difficulty": 2
+    }
+  ]
+}

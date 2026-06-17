@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Quel est le nom dérivé du verbe « construire » ?",
+      "options": [
+        { "id": "a", "text": "la construction" },
+        { "id": "b", "text": "le construisement" },
+        { "id": "c", "text": "le construisage" },
+        { "id": "d", "text": "la construiture" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Construire » donne « la construction » (suffixe -tion). Les formes ✗construisement, ✗construisage et ✗construiture n'existent pas : le suffixe est fixé par l'usage, et c'est -tion qui s'attache ici.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel est le genre du nom « augmentation » ?",
+      "options": [
+        { "id": "a", "text": "masculin : un augmentation" },
+        { "id": "b", "text": "féminin : une augmentation" },
+        { "id": "c", "text": "les deux sont corrects" },
+        { "id": "d", "text": "neutre" }
+      ],
+      "correctOption": "b",
+      "explanation": "Les noms en -tion/-ation sont féminins : « une augmentation », « la construction », « la disparition ». Le français n'a pas de neutre, et le genre des dérivés en -tion est régulier : toujours féminin.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Nominalisez : « Le suspect a été arrêté. »",
+      "options": [
+        { "id": "a", "text": "L'arrêtation du suspect" },
+        { "id": "b", "text": "L'arrestation du suspect" },
+        { "id": "c", "text": "L'arrêtement du suspect" },
+        { "id": "d", "text": "L'arrêtage du suspect" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le nom dérivé du verbe « arrêter » (au sens d'appréhender) est « l'arrestation ». Les formes ✗arrêtation, ✗arrêtement et ✗arrêtage ne sont pas attestées : c'est « arrestation » qu'utilise notamment le style journalistique.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel nom dérive de l'adjectif « rapide » ?",
+      "options": [
+        { "id": "a", "text": "la rapidesse" },
+        { "id": "b", "text": "la rapideur" },
+        { "id": "c", "text": "la rapidité" },
+        { "id": "d", "text": "le rapidement" }
+      ],
+      "correctOption": "c",
+      "explanation": "L'adjectif « rapide » donne le nom de qualité « la rapidité » (suffixe -ité, féminin). ✗rapidesse et ✗rapideur n'existent pas, et « rapidement » est un adverbe, pas un nom : le suffixe correct est -ité.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel titre de presse nominalise correctement « Les prix ont augmenté » ?",
+      "options": [
+        { "id": "a", "text": "Augmenter les prix" },
+        { "id": "b", "text": "Les prix augmentent fort" },
+        { "id": "c", "text": "Hausse des prix" },
+        { "id": "d", "text": "Prix augmentés" }
+      ],
+      "correctOption": "c",
+      "explanation": "Un titre nominalisé supprime le verbe conjugué au profit d'un groupe nominal : « Hausse des prix ». « Augmenter les prix » garde un infinitif, « Les prix augmentent » garde un verbe conjugué, et « Prix augmentés » est un participe : seul « Hausse » est un vrai nom.",
+      "difficulty": 1
+    }
+  ]
+}

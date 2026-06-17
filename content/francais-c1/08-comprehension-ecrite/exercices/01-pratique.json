@@ -1,0 +1,154 @@
+{
+  "title": "⭐ Entraînement : implicite, énonciation et ton",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Lisez l'extrait :\n« Les chantres de la dérégulation aiment à présenter l'État comme un poids mort, une bureaucratie tatillonne dont l'économie ne se libérerait qu'en s'en débarrassant. À les entendre, le marché, livré à lui-même, saurait toujours s'autoréguler. L'histoire récente, des krachs financiers aux scandales sanitaires, invite pourtant à plus de circonspection. »\n\nQuelle est la thèse de l'auteur ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "L'État est un poids mort dont l'économie devrait se débarrasser."
+        },
+        {
+          "id": "b",
+          "text": "Le marché livré à lui-même s'autorégule toujours efficacement."
+        },
+        {
+          "id": "c",
+          "text": "Les scandales sanitaires n'ont aucun rapport avec l'économie."
+        },
+        {
+          "id": "d",
+          "text": "La confiance aveugle dans l'autorégulation du marché doit être nuancée par l'expérience."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Les deux premières phrases rapportent la voix des « chantres de la dérégulation » ; le « pourtant » de la dernière phrase introduit la position de l'auteur, qui invite à « plus de circonspection ». Les options a et b reprennent la voix adverse réfutée ; d contredit le texte.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« La municipalité a tenu, une fois encore, à saluer son engagement « exemplaire » en faveur de la propreté. Les riverains, eux, contemplent depuis des mois les mêmes monceaux d'ordures au pied des immeubles. »\n\nQuel est le ton de ce passage ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Admiratif et reconnaissant envers la municipalité."
+        },
+        {
+          "id": "b",
+          "text": "Ironique : l'éloge officiel est démenti par la réalité décrite."
+        },
+        {
+          "id": "c",
+          "text": "Purement descriptif et sans aucune prise de position."
+        },
+        {
+          "id": "d",
+          "text": "Nostalgique d'une époque plus propre."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Les guillemets autour d'« exemplaire » et le contraste avec « les mêmes monceaux d'ordures » signalent que l'auteur ne partage pas l'éloge officiel : c'est de l'ironie. Le ton n'est ni admiratif, ni neutre, ni nostalgique.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« On reproche volontiers aux réseaux sociaux d'abrutir leurs usagers. Pourtant, jamais le débat public, la circulation des savoirs et la mobilisation citoyenne n'ont été aussi accessibles au plus grand nombre. Le problème ne tient peut-être pas à l'outil, mais à l'usage que nous en faisons. »\n\nQuelle est l'idée principale ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Le défaut vient de notre usage des réseaux, plus que des réseaux eux-mêmes."
+        },
+        {
+          "id": "b",
+          "text": "Les réseaux sociaux abrutissent effectivement tous leurs usagers."
+        },
+        {
+          "id": "c",
+          "text": "Le débat public a totalement disparu avec les réseaux sociaux."
+        },
+        {
+          "id": "d",
+          "text": "Il faudrait interdire purement et simplement les réseaux sociaux."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Après « Pourtant », l'auteur conteste le reproche et conclut que « le problème… tient à l'usage que nous en faisons ». L'option b reprend l'accusation réfutée ; c et d ne figurent pas dans le texte.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Il est vrai que la numérisation des services publics a simplifié bien des démarches. Toutefois, elle a aussi laissé sur le bord du chemin tous ceux que l'écran intimide ou que la connexion fait défaut. »\n\nQuelle est la fonction de « Il est vrai que… Toutefois » ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Il introduit la conclusion finale du raisonnement."
+        },
+        {
+          "id": "b",
+          "text": "Il exprime une cause expliquant la numérisation."
+        },
+        {
+          "id": "c",
+          "text": "Il met en doute l'existence même de la numérisation."
+        },
+        {
+          "id": "d",
+          "text": "Il concède un avantage avant d'introduire l'objection centrale de l'auteur."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« Il est vrai que… Toutefois » est un couple concessif : l'auteur accorde un mérite à la numérisation, puis « Toutefois » introduit sa véritable objection (l'exclusion des plus fragiles). Ce n'est ni une conclusion, ni une cause, ni un doute.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Le rapport indique que les émissions de la région ont baissé de 12 % en cinq ans. Pour les uns, c'est la preuve éclatante d'une transition réussie ; pour les autres, un recul trop lent au regard de l'urgence climatique. »\n\nQu'est-ce qui, dans cet extrait, relève du FAIT ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Les émissions de la région ont baissé de 12 % en cinq ans."
+        },
+        {
+          "id": "b",
+          "text": "C'est la preuve éclatante d'une transition réussie."
+        },
+        {
+          "id": "c",
+          "text": "C'est un recul trop lent au regard de l'urgence climatique."
+        },
+        {
+          "id": "d",
+          "text": "La transition régionale est globalement un échec."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "« –12 % en cinq ans » est une donnée chiffrée vérifiable : un fait. « Preuve éclatante » et « recul trop lent » sont deux jugements opposés (opinions) ; l'option d est une prise de position absente du texte.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Après bien des promesses, la rénovation du quartier a enfin été votée. Reste à voir si les crédits suivront, ou si ce projet rejoindra le cimetière des plans d'urbanisme jamais sortis des cartons. »\n\nQue suggère la dernière phrase ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Que la rénovation sera certainement menée à bien."
+        },
+        {
+          "id": "b",
+          "text": "Que les promesses passées ont toutes été tenues."
+        },
+        {
+          "id": "c",
+          "text": "Que le projet a finalement été abandonné par la mairie."
+        },
+        {
+          "id": "d",
+          "text": "Que l'auteur doute de la réalisation effective du projet, faute de financement."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« Reste à voir si les crédits suivront » et l'image du « cimetière des plans… jamais sortis des cartons » expriment un doute sur l'aboutissement. Le texte dit pourtant que la rénovation a été votée (pas abandonnée), après des promesses non tenues.",
+      "difficulty": 2
+    }
+  ]
+}

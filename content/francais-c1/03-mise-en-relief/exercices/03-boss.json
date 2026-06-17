@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : la mise en relief",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "Ce dont je rêve, c'est d'un long voyage." },
+        { "id": "b", "text": "Ce que j'ai besoin, c'est de repos." },
+        { "id": "c", "text": "Ce qui m'inquiète, c'est son silence." },
+        { "id": "d", "text": "Ce que je préfère, c'est lire le soir." }
+      ],
+      "correctOption": "b",
+      "explanation": "La phrase fautive est (b) : « avoir besoin » se construit avec « de », donc il faut « ce dont » et non « ce que ». Il faut dire : Ce dont j'ai besoin, c'est de repos. En (a) « rêver de » → ce dont ✓ ; (c) « inquiéter » a un sujet → ce qui ✓ ; (d) « préférer » a un COD → ce que ✓.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Mets en relief le sujet « ses parents » dans : « Ses parents ont financé ses études. »",
+      "options": [
+        { "id": "a", "text": "C'est ses parents qu'ont financé ses études." },
+        { "id": "b", "text": "Ce sont ses parents qu'ont financé ses études." },
+        { "id": "c", "text": "Ce dont ses parents ont financé, ce sont ses études." },
+        { "id": "d", "text": "Ce sont ses parents qui ont financé ses études." }
+      ],
+      "correctOption": "d",
+      "explanation": "Avec un élément pluriel, « c'est » devient « ce sont », et le sujet se met en relief par « qui » : Ce sont ses parents qui ont financé ses études. Le relatif est « qui » (sujet de « ont financé »), jamais « qu' » : (a) et (b) emploient « qu' » à la place de « qui ». Le verbe de la relative s'accorde au pluriel (« ont »). ✓ Piège courant : confondre l'extraction du sujet (qui) avec celle d'un complément (que).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète l'accord : « C'est toi et moi qui ___ chargés de l'organisation. »",
+      "options": [
+        { "id": "a", "text": "es" },
+        { "id": "b", "text": "êtes" },
+        { "id": "c", "text": "sont" },
+        { "id": "d", "text": "sommes" }
+      ],
+      "correctOption": "d",
+      "explanation": "« toi et moi » équivaut à « nous » (1ʳᵉ personne du pluriel l'emporte) ; après « qui », le verbe s'accorde donc à « sommes » : C'est toi et moi qui sommes chargés. ✓ Règle : moi + toi = nous → 1ʳᵉ pl. Pièges : « êtes » (si on s'arrêtait à « toi ») ou « sont » (accord fautif à la 3ᵉ pers.).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle phrase emploie correctement la reprise pronominale dans une dislocation ?",
+      "options": [
+        { "id": "a", "text": "Ce dossier, je lui ai relu hier soir." },
+        { "id": "b", "text": "Ce dossier, j'en ai relu hier soir." },
+        { "id": "c", "text": "Ce dossier, je l'ai relu hier soir." },
+        { "id": "d", "text": "Ce dossier, j'y ai relu hier soir." }
+      ],
+      "correctOption": "c",
+      "explanation": "« ce dossier » est le COD de « relire » ; un COD se reprend par « le/la/les » (ici « l' ») : Ce dossier, je l'ai relu hier soir. ✓ Pièges : « lui » (a) reprend un COI (à qqn) ; « en » (b) un complément en « de » ; « y » (d) un complément en « à »/un lieu — aucun ne convient pour un COD.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Pour corriger fermement (« ce n'est pas le prix, c'est la qualité »), quelle structure d'extraction est correcte ?",
+      "options": [
+        { "id": "a", "text": "Ce n'est pas le prix mais la qualité qui a décidé." },
+        { "id": "b", "text": "Ce n'est pas le prix mais la qualité qu'a décidé." },
+        { "id": "c", "text": "Ce n'est pas le prix dont la qualité a décidé." },
+        { "id": "d", "text": "Ce que n'est pas le prix, c'est la qualité a décidé." }
+      ],
+      "correctOption": "a",
+      "explanation": "Pour contraster deux sujets, on emploie l'extraction négative « ce n'est pas X mais Y qui… » : Ce n'est pas le prix mais la qualité qui a décidé. ✓ « qualité » est sujet de « décider » → relatif « qui », jamais « qu' » (b). « dont » (c) et la forme (d) cassent la structure.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « ___ il habite, c'est dans un petit village du Sud. »",
+      "options": [
+        { "id": "a", "text": "Ce que" },
+        { "id": "b", "text": "Ce dont" },
+        { "id": "c", "text": "Là où" },
+        { "id": "d", "text": "C'est où" }
+      ],
+      "correctOption": "c",
+      "explanation": "Pour mettre en relief un lieu avec une tournure annonçant l'élément, on emploie « là où … c'est » : Là où il habite, c'est dans un petit village. ✓ « habiter » indique un lieu, pas un COD (« ce que ») ni un complément en « de » (« ce dont ») ; « c'est où » serait une question, non une mise en relief.",
+      "difficulty": 3
+    }
+  ]
+}

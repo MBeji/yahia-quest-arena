@@ -1,0 +1,154 @@
+{
+  "title": "⭐⭐ Révision : connecteurs et articulation du discours",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complétez : « ___ tu connais déjà ces données, je passe directement à l'analyse. » (cause présentée comme une condition admise)",
+      "options": [
+        {
+          "id": "a",
+          "text": "Qui plus est"
+        },
+        {
+          "id": "b",
+          "text": "Eu égard à"
+        },
+        {
+          "id": "c",
+          "text": "De sorte que"
+        },
+        {
+          "id": "d",
+          "text": "Dans la mesure où"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« Dans la mesure où » + indicatif introduit une cause posée comme condition admise (« puisque, dès lors que c'est le cas »). « Eu égard à » se construit avec un nom, pas une proposition ; « de sorte que » marque la conséquence ou le but ; « qui plus est » est une addition.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choisissez la phrase correcte avec « eu égard à ».",
+      "options": [
+        {
+          "id": "a",
+          "text": "Eu égard à il a beaucoup travaillé, on lui accorde une prime."
+        },
+        {
+          "id": "b",
+          "text": "Eu égard à ses efforts, on lui accorde une prime."
+        },
+        {
+          "id": "c",
+          "text": "Eu égard à qu'il a travaillé, on lui accorde une prime."
+        },
+        {
+          "id": "d",
+          "text": "Eu égard qu'il travaille, on lui accorde une prime."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "« Eu égard à » (registre très soutenu) se construit avec un nom ou un groupe nominal : « eu égard à ses efforts ». Il ne peut être suivi d'une proposition à verbe conjugué (a, c, d), qui exigerait « étant donné qu'il a travaillé ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complétez : « Certes, la méthode est lente ; ___, elle reste la plus fiable. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "autrement dit"
+        },
+        {
+          "id": "b",
+          "text": "à titre d'exemple"
+        },
+        {
+          "id": "c",
+          "text": "néanmoins"
+        },
+        {
+          "id": "d",
+          "text": "en outre"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Le balancier « certes… » appelle un connecteur de réfutation : « néanmoins » (on admet puis on objecte). « Autrement dit » reformule, « à titre d'exemple » illustre, « en outre » ajoute un argument dans le même sens — aucun ne réfute la concession.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complétez : « Les indicateurs ont progressé ; ___ la reprise reste fragile. » (on maintient une réserve malgré le progrès)",
+      "options": [
+        {
+          "id": "a",
+          "text": "en d'autres termes"
+        },
+        {
+          "id": "b",
+          "text": "par conséquent"
+        },
+        {
+          "id": "c",
+          "text": "dès lors"
+        },
+        {
+          "id": "d",
+          "text": "il n'en demeure pas moins que"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« Il n'en demeure pas moins que » (+ indicatif) maintient un fait malgré ce qui précède : valeur concessive soutenue. « Par conséquent » et « dès lors » marqueraient une conséquence (l'inverse du sens voulu) ; « en d'autres termes » reformulerait.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouvez la phrase où « d'autant que » est employé CORRECTEMENT.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Il est tard, d'autant que nous partons."
+        },
+        {
+          "id": "b",
+          "text": "Je l'aide volontiers, d'autant qu'il est seul."
+        },
+        {
+          "id": "c",
+          "text": "Il pleut, d'autant que nous restons."
+        },
+        {
+          "id": "d",
+          "text": "D'autant que le bilan est mauvais, on conclut."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "« D'autant que » renforce une cause (« et ce, d'autant plus que… ») : en (b), la solitude renforce la raison d'aider. En (a), (c) et (d), on attend une conséquence (« donc »), valeur que « d'autant que » ne peut pas exprimer.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complétez : « Le contrat n'a pas été signé ; ___, le projet est suspendu. » (conséquence, registre soutenu)",
+      "options": [
+        {
+          "id": "a",
+          "text": "à savoir"
+        },
+        {
+          "id": "b",
+          "text": "voire"
+        },
+        {
+          "id": "c",
+          "text": "dans la mesure où"
+        },
+        {
+          "id": "d",
+          "text": "partant"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« Partant » signifie « par suite, donc » : connecteur de conséquence soutenu. « À savoir » reformule, « voire » gradue (« et même »), « dans la mesure où » introduit une cause — aucun n'exprime la conséquence attendue.",
+      "difficulty": 3
+    }
+  ]
+}

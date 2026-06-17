@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Entraînement : la concordance des temps",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complétez : « Elle dit qu'elle ___ fatiguée. » (simultané, principale au présent)",
+      "options": [
+        { "id": "a", "text": "est" },
+        { "id": "b", "text": "était" },
+        { "id": "c", "text": "sera" },
+        { "id": "d", "text": "serait" }
+      ],
+      "correctOption": "a",
+      "explanation": "Principale au présent (« elle dit ») + simultanéité : on garde le présent dans la subordonnée, « est ». L'imparfait « était » s'emploierait après un passé, et le conditionnel « serait » exprimerait une postériorité du passé.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complétez : « Il pense qu'ils ___ hier. » (antériorité, principale au présent)",
+      "options": [
+        { "id": "a", "text": "partiront" },
+        { "id": "b", "text": "partaient" },
+        { "id": "c", "text": "sont partis" },
+        { "id": "d", "text": "étaient partis" }
+      ],
+      "correctOption": "c",
+      "explanation": "Avec une principale au présent (« il pense »), l'antériorité se rend au passé composé : « sont partis ». Le plus-que-parfait « étaient partis » appartiendrait à une principale au passé, le futur « partiront » et l'imparfait « partaient » ne marquent pas l'antériorité accomplie.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complétez : « Je savais qu'elle ___ la vérité. » (simultané, principale au passé)",
+      "options": [
+        { "id": "a", "text": "connaît" },
+        { "id": "b", "text": "connaissait" },
+        { "id": "c", "text": "connaîtra" },
+        { "id": "d", "text": "connaisse" }
+      ],
+      "correctOption": "b",
+      "explanation": "Après « je savais » (passé) et pour une action simultanée, on emploie l'imparfait : « connaissait ». Le présent « connaît » et le futur « connaîtra » supposeraient un présent en principale ; « connaisse » est un subjonctif que « savoir » affirmatif n'appelle pas.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complétez : « Tu m'avais promis que tu ___. » (postériorité, principale au passé)",
+      "options": [
+        { "id": "a", "text": "reviens" },
+        { "id": "b", "text": "revenais" },
+        { "id": "c", "text": "reviendras" },
+        { "id": "d", "text": "reviendrais" }
+      ],
+      "correctOption": "d",
+      "explanation": "Après une principale au passé (« tu m'avais promis »), la postériorité se rend par le conditionnel présent, futur du passé : « reviendrais ». Le futur « reviendras » se garde après un présent ; « reviens » et « revenais » expriment le simultané, non l'à-venir.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complétez : « Je souhaite qu'il ___ heureux. » (subjonctif, action simultanée/postérieure)",
+      "options": [
+        { "id": "a", "text": "est" },
+        { "id": "b", "text": "sera" },
+        { "id": "c", "text": "soit" },
+        { "id": "d", "text": "était" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Souhaiter que » impose le subjonctif ; pour le simultané/postérieur, c'est le subjonctif présent : « soit ». « Est » et « était » sont des indicatifs, et le subjonctif ne possède pas de futur : « sera » est donc exclu.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complétez : « Il a déclaré qu'il ___ déçu de l'accueil. » (simultané, principale au passé)",
+      "options": [
+        { "id": "a", "text": "est" },
+        { "id": "b", "text": "était" },
+        { "id": "c", "text": "serait" },
+        { "id": "d", "text": "soit" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Il a déclaré » est au passé ; pour le simultané on emploie l'imparfait : « était ». Le présent « est » exigerait une principale au présent, le conditionnel « serait » marquerait la postériorité, et « soit » (subjonctif) n'est pas appelé par « déclarer » affirmatif.",
+      "difficulty": 2
+    }
+  ]
+}

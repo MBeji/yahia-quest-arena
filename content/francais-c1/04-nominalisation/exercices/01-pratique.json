@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Entraînement : la nominalisation",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Quel nom dérive du verbe « développer » ?",
+      "options": [
+        { "id": "a", "text": "la développation" },
+        { "id": "b", "text": "le développement" },
+        { "id": "c", "text": "le développage" },
+        { "id": "d", "text": "la développure" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Développer » donne « le développement » (suffixe -ment, masculin). ✗développation, ✗développage et ✗développure n'existent pas : le verbe sélectionne le suffixe -ment.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel nom dérive du verbe « recycler » ?",
+      "options": [
+        { "id": "a", "text": "le recyclage" },
+        { "id": "b", "text": "la recyclation" },
+        { "id": "c", "text": "le recyclement" },
+        { "id": "d", "text": "la recyclure" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Recycler » donne « le recyclage » (suffixe -age, masculin). Les formes ✗recyclation, ✗recyclement et ✗recyclure ne sont pas attestées : c'est -age qui s'applique ici, comme dans lavage, passage.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel est le genre du nom « développement » ?",
+      "options": [
+        { "id": "a", "text": "neutre" },
+        { "id": "b", "text": "féminin : une développement" },
+        { "id": "c", "text": "les deux sont admis" },
+        { "id": "d", "text": "masculin : un développement" }
+      ],
+      "correctOption": "d",
+      "explanation": "Les noms en -ment sont masculins : « un développement », « le changement », « le mouvement ». On dit donc « le développement », jamais ✗la développement.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel nom dérive de l'adjectif « lent » ?",
+      "options": [
+        { "id": "a", "text": "la lenteté" },
+        { "id": "b", "text": "la lentise" },
+        { "id": "c", "text": "la lenteur" },
+        { "id": "d", "text": "la lentesse" }
+      ],
+      "correctOption": "c",
+      "explanation": "L'adjectif « lent » donne « la lenteur » (suffixe -eur, féminin). ✗lenteté, ✗lentise et ✗lentesse n'existent pas : le couple à mémoriser est lent → lenteur, comme grand → grandeur.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Nominalisez : « Le magasin va ouvrir. »",
+      "options": [
+        { "id": "a", "text": "L'ouverture du magasin" },
+        { "id": "b", "text": "L'ouvrement du magasin" },
+        { "id": "c", "text": "L'ouvrage du magasin" },
+        { "id": "d", "text": "L'ouvration du magasin" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Ouvrir » donne « l'ouverture » (suffixe -ure, féminin). ✗ouvrement et ✗ouvration n'existent pas ; « ouvrage » existe mais désigne un travail ou un livre, pas l'action d'ouvrir.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel nom (dérivé sans suffixe) correspond au verbe « choisir » ?",
+      "options": [
+        { "id": "a", "text": "le choisissement" },
+        { "id": "b", "text": "la choisition" },
+        { "id": "c", "text": "le choix" },
+        { "id": "d", "text": "le choisissage" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Choisir » donne « le choix », un dérivé sans suffixe formé sur le radical. ✗choisissement, ✗choisition et ✗choisissage sont inventés : certains verbes nominalisent sans suffixe (choisir → le choix, refuser → le refus).",
+      "difficulty": 2
+    }
+  ]
+}

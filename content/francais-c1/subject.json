@@ -1,0 +1,12 @@
+{
+  "id": "francais-c1",
+  "nameFr": "Français — Autonome (C1 · DALF C1)",
+  "description": "Vise l'autonomie : maîtrise l'accord du participe passé dans les cas difficiles, la concordance des temps, la mise en relief, la nominalisation, les connecteurs avancés et l'articulation du discours, les registres de langue, les expressions idiomatiques et le lexique soutenu, et la lecture de textes complexes. Niveau autonome (CECRL C1), aligné sur le DALF C1.",
+  "attribute": "Agilité",
+  "colorToken": "subject-french",
+  "icon": "Languages",
+  "displayOrder": 5,
+  "contentLanguage": "fr",
+  "themeId": "francais",
+  "gradeSlug": null
+}

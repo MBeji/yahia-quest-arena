@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Entraînement : expressions imagées et lexique soutenu",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Que signifie « mettre la charrue avant les bœufs » ?",
+      "options": [
+        { "id": "a", "text": "Travailler très dur aux champs." },
+        { "id": "b", "text": "Préparer soigneusement un projet." },
+        { "id": "c", "text": "Faire les choses dans le mauvais ordre." },
+        { "id": "d", "text": "Avancer plus vite que prévu." }
+      ],
+      "correctOption": "c",
+      "explanation": "« Mettre la charrue avant les bœufs » signifie inverser l'ordre logique des étapes, commencer par ce qui devrait venir ensuite. L'image : les bœufs tirent la charrue, les placer derrière est absurde. L'option (a) prend l'image au pied de la lettre ; (b) et (d) inventent des sens contraires.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "« Après des mois de désaccord, ils ont fini par couper la poire en deux. » Que veut dire l'expression ?",
+      "options": [
+        { "id": "a", "text": "Faire un compromis, partager équitablement." },
+        { "id": "b", "text": "Se séparer définitivement." },
+        { "id": "c", "text": "Partager un repas ensemble." },
+        { "id": "d", "text": "Choisir la moins bonne solution." }
+      ],
+      "correctOption": "a",
+      "explanation": "« Couper la poire en deux » signifie trouver un compromis en partageant la différence. Le contexte (« après des mois de désaccord ») confirme l'idée d'accord négocié. L'option (b) est le contraire ; (c) prend l'image au sens propre ; (d) ajoute un jugement absent de l'expression.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel mot soutenu signifie « la bienveillance indulgente, la clémence » ?",
+      "options": [
+        { "id": "a", "text": "L'acharnement." },
+        { "id": "b", "text": "L'amertume." },
+        { "id": "c", "text": "La méfiance." },
+        { "id": "d", "text": "La mansuétude." }
+      ],
+      "correctOption": "d",
+      "explanation": "« La mansuétude » désigne une douceur indulgente, une disposition à pardonner. L'« acharnement » (a) est au contraire l'obstination, parfois cruelle ; l'amertume (b) et la méfiance (c) sont des sentiments négatifs sans rapport avec l'indulgence.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Ses promesses étaient ___ : elles n'avaient pour but que de nous tromper. »",
+      "options": [
+        { "id": "a", "text": "fortuites" },
+        { "id": "b", "text": "fallacieuses" },
+        { "id": "c", "text": "imminentes" },
+        { "id": "d", "text": "éminentes" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Fallacieux » signifie trompeur, destiné à induire en erreur — exactement le sens donné par « tromper ». « Fortuit » (a) signifie dû au hasard ; « imminent » (c) signifie très proche ; « éminent » (d) signifie remarquable. Seul (b) correspond au piège tendu.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Que signifie « un coup d'épée dans l'eau » ?",
+      "options": [
+        { "id": "a", "text": "Une action vaine, sans aucun effet." },
+        { "id": "b", "text": "Une attaque soudaine et violente." },
+        { "id": "c", "text": "Une décision risquée mais payante." },
+        { "id": "d", "text": "Un effort partagé entre plusieurs personnes." }
+      ],
+      "correctOption": "a",
+      "explanation": "« Un coup d'épée dans l'eau » désigne une tentative inutile, qui ne produit aucun résultat — comme frapper l'eau sans rien atteindre. L'option (b) retient l'idée de violence mais oublie l'inefficacité ; (c) et (d) inventent des sens absents de l'image.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel verbe soutenu signifie « se révéler exact à l'usage » ?",
+      "options": [
+        { "id": "a", "text": "Escompter." },
+        { "id": "b", "text": "Susciter." },
+        { "id": "c", "text": "S'avérer." },
+        { "id": "d", "text": "Déroger." }
+      ],
+      "correctOption": "c",
+      "explanation": "« S'avérer » signifie se révéler vrai, exact à l'usage (le radical vient du latin verus, « vrai ») : le projet s'est avéré rentable. « Escompter » (a) = espérer ; « susciter » (b) = faire naître ; « déroger » (d) = manquer à une règle. Aucun de ces trois ne porte l'idée de « se révéler ».",
+      "difficulty": 2
+    }
+  ]
+}

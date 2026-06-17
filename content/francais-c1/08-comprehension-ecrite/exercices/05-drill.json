@@ -1,0 +1,103 @@
+{
+  "title": "⭐⭐ Drill : révision globale de la lecture C1",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Lisez l'extrait :\n« On présente la voiture autonome comme la fin des accidents de la route. Pourtant, déléguer la conduite à un algorithme, c'est aussi lui déléguer, en cas de drame, des choix que nul n'a jamais voulu trancher à froid. »\n\nQuelle est la thèse de l'auteur ?",
+      "options": [
+        { "id": "a", "text": "La voiture autonome supprimera tous les accidents de la route." },
+        {
+          "id": "b",
+          "text": "Confier la conduite à un algorithme soulève des dilemmes moraux qu'on préfère ne pas affronter."
+        },
+        { "id": "c", "text": "Les algorithmes sont incapables de conduire un véhicule." },
+        { "id": "d", "text": "Il faudrait interdire toute forme d'automobile." }
+      ],
+      "correctOption": "b",
+      "explanation": "Le « Pourtant » introduit la position de l'auteur : déléguer la conduite revient à déléguer « des choix que nul n'a voulu trancher à froid », soit des dilemmes moraux esquivés. L'option a reprend la promesse contestée ; c et d ne figurent pas dans le texte.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« La direction se réjouit, dans un communiqué « historique », d'avoir « préservé l'emploi » : trois cents postes seulement supprimés, là où le marché en aurait justifié le double. »\n\nQuel est le ton de ce passage ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Ironique : la satisfaction officielle est minée par le nombre de postes supprimés."
+        },
+        { "id": "b", "text": "Élogieux envers la direction et sa gestion sociale." },
+        { "id": "c", "text": "Neutre et purement factuel." },
+        { "id": "d", "text": "Inquiet pour l'avenir financier du marché." }
+      ],
+      "correctOption": "a",
+      "explanation": "Les guillemets autour d'« historique » et de « préservé l'emploi », suivis de « trois cents postes seulement supprimés », signalent une distance ironique : l'auteur démonte l'autosatisfaction officielle. Le ton n'est ni élogieux, ni neutre, ni centré sur le marché.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Ce label « éco-responsable », apposé sur des produits acheminés à l'autre bout du monde, en dit long sur le pouvoir des mots à rassurer le consommateur sans rien changer à ses pratiques. »\n\nQue signalent les guillemets autour d'« éco-responsable » ?",
+      "options": [
+        { "id": "a", "text": "Une citation exacte d'un texte de loi sur l'écologie." },
+        { "id": "b", "text": "L'insistance admirative de l'auteur sur la qualité du label." },
+        { "id": "c", "text": "Une mise à distance critique : l'auteur juge le label trompeur." },
+        { "id": "d", "text": "Une simple convention typographique sans valeur particulière." }
+      ],
+      "correctOption": "c",
+      "explanation": "Les guillemets de distance, renforcés par « rassurer… sans rien changer », montrent que l'auteur tient le label pour trompeur. Ce ne sont ni une citation légale, ni une marque d'admiration, ni un détail typographique neutre.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« On loue la mobilité comme une chance offerte à chacun de se réinventer. Or, pour beaucoup, changer sans cesse de ville et d'emploi n'est pas une liberté choisie, mais une précarité subie sous un nom plus flatteur. »\n\nQuelle est la fonction du connecteur « Or » ?",
+      "options": [
+        { "id": "a", "text": "Il renforce l'éloge de la mobilité comme liberté." },
+        {
+          "id": "b",
+          "text": "Il introduit un fait qui retourne l'éloge en critique de la précarité."
+        },
+        {
+          "id": "c",
+          "text": "Il ajoute un exemple allant dans le même sens que la première phrase."
+        },
+        { "id": "d", "text": "Il conclut le raisonnement de manière apaisée." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Or » oppose à l'éloge de la mobilité une réalité contraire (« une précarité subie sous un nom plus flatteur »), faisant basculer le propos vers la critique. Il ne renforce pas l'éloge, n'ajoute pas un exemple concordant et n'apaise pas la conclusion.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« §1 : on s'alarme de la baisse du niveau en orthographe. §2 (introduit par « À y regarder de plus près ») : les mêmes lamentations se lisent, mot pour mot, dans des chroniques vieilles d'un siècle. §3 : « Peut-être chaque génération a-t-elle besoin de croire qu'elle assiste, la première, au crépuscule de la langue. »\n\nQuelle est la portée du troisième paragraphe ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Il confirme que le niveau en orthographe s'effondre réellement aujourd'hui."
+        },
+        { "id": "b", "text": "Il propose une méthode pour enseigner l'orthographe." },
+        {
+          "id": "c",
+          "text": "Il généralise par une hypothèse : ce déclin annoncé serait surtout une croyance que chaque génération renouvelle."
+        },
+        { "id": "d", "text": "Il accuse les chroniqueurs du passé d'avoir menti." }
+      ],
+      "correctOption": "c",
+      "explanation": "Après le constat (§1) relativisé par l'argument historique (§2), le §3 généralise par une hypothèse (« Peut-être chaque génération… ») : le « crépuscule de la langue » serait une croyance récurrente. Le texte met donc en doute l'effondrement (a) ; il ne propose pas de méthode (b) et n'accuse personne de mensonge (d).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Sans doute le bénévolat est-il admirable. Mais lorsqu'un État se repose sur la bonne volonté de quelques-uns pour assurer ce qu'il devrait garantir à tous, l'admiration cède la place à une question plus gênante : à qui profite, au juste, cette générosité que l'on encense ? »\n\nQuelle est l'attitude de l'auteur envers le bénévolat ?",
+      "options": [
+        { "id": "a", "text": "Une condamnation du bénévolat, jugé inutile et néfaste." },
+        { "id": "b", "text": "Une admiration sans réserve pour les bénévoles." },
+        { "id": "c", "text": "Une indifférence totale à la question sociale." },
+        {
+          "id": "d",
+          "text": "Une admiration tempérée d'une réserve critique sur le désengagement de l'État qu'il masque."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« Sans doute… admirable. Mais… » concède la valeur du bénévolat puis introduit la réserve : l'État s'en sert pour se désengager. L'auteur ne condamne pas le bénévolat (a), ne l'admire pas sans réserve (b) et ne se montre pas indifférent (c).",
+      "difficulty": 3
+    }
+  ]
+}
