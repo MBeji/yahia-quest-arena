@@ -1,0 +1,91 @@
+{
+  "title": "⭐⭐ Révision : polyphonie, nuance et procédés",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Lisez l'extrait :\n« Qu'on se rassure : tout est sous contrôle, comme l'étaient, paraît-il, le Titanic et ses canots. »\n\nQuel effet produit la comparaison finale ?",
+      "options": [
+        { "id": "a", "text": "Elle détruit par l'ironie l'assurance affichée au début." },
+        { "id": "b", "text": "Elle renforce sincèrement le sentiment de sécurité." },
+        { "id": "c", "text": "Elle propose une information historique neutre." },
+        { "id": "d", "text": "Elle félicite les responsables de leur prévoyance." }
+      ],
+      "correctOption": "a",
+      "explanation": "Comparer le « contrôle » au Titanic, symbole de catastrophe, retourne l'assurance initiale en ironie : « qu'on se rassure » dit le contraire de son sens. La phrase ne rassure pas (b), n'est pas neutre (c) et ne félicite personne (d).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Il est vrai que la technique a soulagé bien des peines. Reste qu'elle a aussi engendré des servitudes que nul n'avait prévues. »\n\nQuelle est la fonction de « Reste que » ?",
+      "options": [
+        { "id": "a", "text": "Il confirme et prolonge l'éloge de la technique." },
+        { "id": "b", "text": "Il signale un exemple illustrant la première phrase." },
+        { "id": "c", "text": "Il introduit l'objection qui porte la vraie thèse de l'auteur." },
+        { "id": "d", "text": "Il marque une conclusion résumant les deux idées à égalité." }
+      ],
+      "correctOption": "c",
+      "explanation": "« Il est vrai que… Reste que… » est une concession suivie d'une objection : la thèse de l'auteur (les « servitudes » imprévues) suit « Reste que ». Ce n'est ni un prolongement de l'éloge (a), ni un exemple (b), ni une synthèse équilibrée (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Vite des lois, vite des chiffres, vite des promesses ; lentement, très lentement, des résultats. »\n\nQue souligne le contraste de rythme entre les deux parties ?",
+      "options": [
+        { "id": "a", "text": "L'efficacité remarquable de l'action publique." },
+        {
+          "id": "b",
+          "text": "L'écart entre l'empressement des annonces et la rareté des effets réels."
+        },
+        { "id": "c", "text": "La nécessité d'écrire davantage de lois." },
+        { "id": "d", "text": "Une simple préférence stylistique sans portée critique." }
+      ],
+      "correctOption": "b",
+      "explanation": "L'accumulation rapide (« vite… vite… vite ») opposée au tempo traînant (« lentement, très lentement, des résultats ») met en relief le décalage entre l'agitation affichée et l'absence d'effets. Le procédé est critique, et non un éloge (a) ni un détail gratuit (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« On voudrait nous faire croire que choisir, c'est forcément consommer. »\n\nL'auteur adhère-t-il à l'idée que « choisir, c'est consommer » ?",
+      "options": [
+        { "id": "a", "text": "Oui, il la présente comme sa conviction profonde." },
+        { "id": "b", "text": "Il l'attribue à un philosophe qu'il admire." },
+        { "id": "c", "text": "Il reste indécis et ne tranche pas." },
+        {
+          "id": "d",
+          "text": "Non : « on voudrait nous faire croire » la rejette comme une manipulation."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "La formule « on voudrait nous faire croire que… » dénonce une assertion comme illusoire et manipulatrice : l'auteur s'en désolidarise. Il ne l'épouse donc pas (a), ne l'attribue à aucune autorité admirée (b) et ne reste pas neutre (c).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Admettons, pour la beauté du raisonnement, que l'argent fasse le bonheur. Il faudrait alors que les plus riches fussent aussi les plus heureux — ce que l'expérience, hélas, dément avec constance. »\n\nQuel est le mouvement argumentatif de ce passage ?",
+      "options": [
+        { "id": "a", "text": "Il pose une hypothèse pour mieux la réfuter par ses conséquences." },
+        { "id": "b", "text": "L'auteur défend que l'argent fait réellement le bonheur." },
+        { "id": "c", "text": "Il décrit sans jugement la vie des plus riches." },
+        { "id": "d", "text": "Il propose un programme pour enrichir les plus heureux." }
+      ],
+      "correctOption": "a",
+      "explanation": "« Admettons… que » pose une hypothèse de travail, puis l'auteur en tire une conséquence (« les plus riches… les plus heureux ») que l'expérience « dément » : c'est un raisonnement par l'absurde. Il ne soutient donc pas l'idée (b), ne décrit pas neutrement (c) et ne propose aucun programme (d).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« La liberté qu'on nous vante n'est, le plus souvent, que la liberté du renard libre dans le poulailler libre. »\n\nQue dénonce cette formule ?",
+      "options": [
+        { "id": "a", "text": "Que toute liberté est par nature dangereuse pour les animaux." },
+        { "id": "b", "text": "Que les poulaillers manquent de surveillance." },
+        {
+          "id": "c",
+          "text": "Qu'une liberté formelle, sans limites, livre le faible à la merci du fort."
+        },
+        { "id": "d", "text": "Que l'auteur défend la liberté totale du commerce." }
+      ],
+      "correctOption": "c",
+      "explanation": "L'image du « renard libre dans le poulailler libre » montre qu'une liberté identique pour tous, sans protection du faible, profite en réalité au prédateur : c'est une critique de la liberté purement formelle. La lecture littérale (a, b) manque la métaphore, et l'auteur ne fait pas l'éloge de cette liberté (d).",
+      "difficulty": 3
+    }
+  ]
+}

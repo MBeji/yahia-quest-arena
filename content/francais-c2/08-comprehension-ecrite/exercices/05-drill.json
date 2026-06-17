@@ -1,0 +1,91 @@
+{
+  "title": "⭐⭐ Drill : révision globale de la lecture experte",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Lisez l'extrait :\n« Il n'a toujours pas compris la leçon. »\n\nQue présuppose la formule « toujours pas » ?",
+      "options": [
+        { "id": "a", "text": "Qu'on attendait de lui, depuis un certain temps, qu'il comprenne." },
+        { "id": "b", "text": "Qu'il a parfaitement compris dès le début." },
+        { "id": "c", "text": "Que la leçon était d'une simplicité enfantine." },
+        { "id": "d", "text": "Qu'il n'a jamais assisté au cours." }
+      ],
+      "correctOption": "a",
+      "explanation": "« Toujours pas » présuppose une attente durable et inaccomplie : on espérait depuis un moment qu'il comprenne. Ce présupposé survit à la négation. Les options b, c et d introduisent des informations que la phrase ne contient pas.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Certains prétendent que la culture se porte à merveille. »\n\nQue marque le verbe « prétendent » sur la position de l'auteur ?",
+      "options": [
+        { "id": "a", "text": "Qu'il partage entièrement ce diagnostic optimiste." },
+        { "id": "b", "text": "Qu'il prend ses distances et met en doute l'affirmation rapportée." },
+        { "id": "c", "text": "Qu'il cite un texte de loi sur la culture." },
+        { "id": "d", "text": "Qu'il félicite ceux qui défendent la culture." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Prétendre » jette le doute sur ce qui est affirmé et désigne une voix dont l'auteur se démarque. Il ne valide donc pas l'optimisme (a), ne cite aucune loi (c) et ne félicite personne (d).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Le débat fut, comment dire, d'une hauteur de vue remarquable : on s'y traita de tous les noms avec une éloquence rare. »\n\nQuel est le ton de la phrase ?",
+      "options": [
+        { "id": "a", "text": "Admiratif : le débat fut d'un niveau intellectuel élevé." },
+        { "id": "b", "text": "Neutre et purement informatif." },
+        { "id": "c", "text": "Ironique : l'éloge contraste avec la bassesse des échanges." },
+        { "id": "d", "text": "Indigné et solennel, sans aucune distance." }
+      ],
+      "correctOption": "c",
+      "explanation": "L'éloge (« hauteur de vue remarquable », « éloquence rare ») est démenti par les faits (« on s'y traita de tous les noms ») : c'est une antiphrase ironique. Le ton n'est donc ni admiratif (a), ni neutre (b), et l'hésitation feinte (« comment dire ») écarte la solennité (d).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Certes, la vitesse a rapproché les hommes. Toutefois, elle les a aussi rendus incapables d'attendre, donc de désirer vraiment. »\n\nOù se trouve la thèse défendue par l'auteur ?",
+      "options": [
+        { "id": "a", "text": "Dans la première phrase : la vitesse est un bienfait sans réserve." },
+        { "id": "b", "text": "Nulle part : les deux idées s'équilibrent et s'annulent." },
+        {
+          "id": "c",
+          "text": "Après « Toutefois » : la vitesse abolit l'attente et appauvrit le désir."
+        },
+        { "id": "d", "text": "Dans une idée étrangère aux deux phrases." }
+      ],
+      "correctOption": "c",
+      "explanation": "« Certes… Toutefois… » est une concession suivie d'une objection : la thèse de l'auteur suit « Toutefois » (la vitesse ruine l'attente et le désir). La première phrase est seulement concédée (a), et l'auteur n'est pas neutre (b).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Il aurait, selon la rumeur, financé l'opération de ses propres deniers. »\n\nQue signale le conditionnel « aurait financé » ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Une donnée rapportée que l'auteur n'assume pas comme un fait établi."
+        },
+        { "id": "b", "text": "Une certitude prouvée par des documents." },
+        { "id": "c", "text": "Une action qui se déroulera dans le futur." },
+        { "id": "d", "text": "Un ordre adressé au lecteur." }
+      ],
+      "correctOption": "a",
+      "explanation": "Le conditionnel d'information, renforcé par « selon la rumeur », marque une donnée non assumée : l'auteur la rapporte sans la garantir. Ce n'est donc ni une certitude (b), ni un futur (c), ni un ordre (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« On lui offrit la liberté de choisir entre se soumettre et disparaître. »\n\nQuelle est la portée de l'expression « la liberté de choisir » dans ce contexte ?",
+      "options": [
+        { "id": "a", "text": "Une liberté authentique, ouvrant un large éventail de possibles." },
+        {
+          "id": "b",
+          "text": "Une liberté ironique : le « choix » se réduit à deux issues également contraintes."
+        },
+        { "id": "c", "text": "Une offre généreuse faite de bonne foi." },
+        { "id": "d", "text": "Une simple invitation à réfléchir longuement." }
+      ],
+      "correctOption": "b",
+      "explanation": "Présenter comme « liberté de choisir » un dilemme entre « se soumettre » et « disparaître » est une antiphrase ironique : aucune des deux issues n'est libre. Ce n'est donc ni une vraie liberté (a), ni une offre sincère (c), ni une invitation à la réflexion (d) ; l'ironie dénonce une contrainte déguisée.",
+      "difficulty": 3
+    }
+  ]
+}

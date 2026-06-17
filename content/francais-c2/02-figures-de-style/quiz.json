@@ -1,0 +1,71 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Quelle figure de style reconnaît-on dans : « Cet homme est un lion » ?",
+      "options": [
+        { "id": "a", "text": "Une comparaison" },
+        { "id": "b", "text": "Une métaphore" },
+        { "id": "c", "text": "Une métonymie" },
+        { "id": "d", "text": "Une litote" }
+      ],
+      "correctOption": "b",
+      "explanation": "C'est une métaphore : on identifie l'homme à un lion sans outil de comparaison. Avec « comme » (« fort comme un lion »), ce serait une comparaison ; la métaphore, elle, supprime l'outil.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle est la différence essentielle entre la comparaison et la métaphore ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "La comparaison emploie un outil (comme, tel) ; la métaphore n'en emploie pas."
+        },
+        {
+          "id": "b",
+          "text": "La métaphore emploie un outil (comme, tel) ; la comparaison n'en emploie pas."
+        },
+        { "id": "c", "text": "La comparaison oppose deux idées ; la métaphore les répète." },
+        { "id": "d", "text": "La comparaison atténue une réalité ; la métaphore l'exagère." }
+      ],
+      "correctOption": "a",
+      "explanation": "La comparaison rapproche deux termes au moyen d'un outil (comme, tel, semblable à) ; la métaphore opère le même rapprochement mais sans outil. L'option b inverse les deux définitions ; c et d décrivent d'autres figures.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans « Il n'est pas mauvais » pour dire qu'il est très bon, de quelle figure s'agit-il ?",
+      "options": [
+        { "id": "a", "text": "Une hyperbole" },
+        { "id": "b", "text": "Un euphémisme" },
+        { "id": "c", "text": "Une litote" },
+        { "id": "d", "text": "Une antithèse" }
+      ],
+      "correctOption": "c",
+      "explanation": "C'est une litote : on dit moins (« pas mauvais ») pour faire entendre plus (« très bon »), souvent par la négation. L'euphémisme, lui, adoucirait une réalité pénible ; l'hyperbole exagérerait.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel exemple illustre une métonymie ?",
+      "options": [
+        { "id": "a", "text": "Une obscure clarté tombe des étoiles." },
+        { "id": "b", "text": "Il est rusé comme un renard." },
+        { "id": "c", "text": "Le vent hurlait dans la nuit." },
+        { "id": "d", "text": "Boire un verre entre amis." }
+      ],
+      "correctOption": "d",
+      "explanation": "« Boire un verre » est une métonymie : on nomme le contenant (le verre) pour le contenu (la boisson), par un lien logique. L'option a est un oxymore, b une comparaison, c une personnification.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans « une obscure clarté », quelle figure unit deux mots contradictoires dans un même groupe ?",
+      "options": [
+        { "id": "a", "text": "L'antithèse" },
+        { "id": "b", "text": "L'hyperbole" },
+        { "id": "c", "text": "La gradation" },
+        { "id": "d", "text": "L'oxymore" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Obscure clarté » est un oxymore : deux termes de sens opposé sont soudés dans un même syntagme. L'antithèse, elle, étalerait l'opposition sur des termes distincts (« ici l'ombre, là la lumière »).",
+      "difficulty": 2
+    }
+  ]
+}

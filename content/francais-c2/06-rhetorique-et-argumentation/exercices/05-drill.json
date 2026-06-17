@@ -1,0 +1,103 @@
+{
+  "title": "⭐⭐ Drill : rhétorique et argumentation",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "« On ne peut nier que l'adversaire a du métier ; reste qu'il se trompe lourdement sur le fond. » Quel procédé reconnais-tu ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Une concession rhétorique, qui accorde un point pour mieux réfuter ensuite."
+        },
+        { "id": "b", "text": "Une prétérition, qui feint de taire ce qu'elle dit." },
+        { "id": "c", "text": "Une question rhétorique." },
+        { "id": "d", "text": "Un argument d'autorité." }
+      ],
+      "correctOption": "a",
+      "explanation": "« On ne peut nier que… reste que… » est une variante de la concession rhétorique : on admet un point (le métier de l'adversaire) avant de le réfuter sur le fond. Ce n'est pas une prétérition (rien n'est feint comme tu), ni une question rhétorique, ni un argument d'autorité.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "« Vous prétendez que ce vin est bon parce qu'il est cher, et qu'il est cher parce qu'il est bon. » Quel défaut de raisonnement est dénoncé ?",
+      "options": [
+        { "id": "a", "text": "Une généralisation hâtive." },
+        { "id": "b", "text": "Une pente glissante." },
+        {
+          "id": "c",
+          "text": "Une pétition de principe : chaque terme se justifie par l'autre, sans preuve extérieure."
+        },
+        { "id": "d", "text": "Un ad hominem." }
+      ],
+      "correctOption": "c",
+      "explanation": "Le raisonnement est circulaire : le prix prouve la qualité et la qualité prouve le prix, sans aucune preuve indépendante — c'est la pétition de principe. Ce n'est pas une généralisation hâtive (aucune induction sur des cas), ni une pente glissante (aucune chaîne de conséquences), ni un ad hominem (aucune attaque de personne).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle est la différence de fonction entre l'ironie et la modalisation ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "L'ironie nuance l'affirmation ; la modalisation raille l'adversaire."
+        },
+        {
+          "id": "b",
+          "text": "L'ironie disqualifie en disant le contraire de ce qu'on pense ; la modalisation nuance en marquant la prudence."
+        },
+        { "id": "c", "text": "Les deux servent à donner un exemple concret." },
+        { "id": "d", "text": "L'ironie impose une réponse ; la modalisation invoque une autorité." }
+      ],
+      "correctOption": "b",
+      "explanation": "L'ironie (antiphrase) dit le contraire de ce qu'on pense pour railler et disqualifier ; la modalisation (il semblerait, sans doute…) nuance le propos en marquant le degré de certitude. L'option (a) inverse les deux fonctions. Ni l'une ni l'autre ne sert à illustrer (c), et aucune n'impose une réponse ou n'invoque une autorité (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "« Voyez les Romains : ils ont conquis le monde par la discipline. Une nation, comme une armée, ne s'élève que par l'ordre. » Quels procédés sont combinés ?",
+      "options": [
+        { "id": "a", "text": "Un contre-exemple suivi d'une modalisation." },
+        { "id": "b", "text": "Une prétérition suivie d'un faux dilemme." },
+        {
+          "id": "c",
+          "text": "Un exemple (les Romains) renforcé par une analogie (nation / armée)."
+        },
+        { "id": "d", "text": "Une question rhétorique suivie d'une concession." }
+      ],
+      "correctOption": "c",
+      "explanation": "L'énoncé appuie d'abord la thèse par un cas concret — l'exemple des Romains — puis la généralise par une analogie entre la nation et l'armée. Ce n'est pas un contre-exemple (l'exemple appuie, il ne réfute pas), ni une prétérition/faux dilemme (b), ni une question rhétorique/concession (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "« Ou bien on interdit complètement les écrans aux enfants, ou bien on sacrifie leur avenir. » Quel sophisme reconnais-tu ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Un faux dilemme : deux options extrêmes sont posées comme seules possibles."
+        },
+        { "id": "b", "text": "Un homme de paille." },
+        { "id": "c", "text": "Une pétition de principe." },
+        { "id": "d", "text": "Un argument d'autorité." }
+      ],
+      "correctOption": "a",
+      "explanation": "« Ou bien… ou bien… » enferme le débat dans deux choix extrêmes (interdiction totale ou avenir sacrifié) en ignorant tout usage modéré : c'est le faux dilemme. Ce n'est pas un homme de paille (aucune thèse adverse déformée), ni une pétition de principe (aucune circularité), ni un argument d'autorité.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "« Mon honorable contradicteur soutient, paraît-il, qu'il faudrait tout privatiser, jusqu'aux trottoirs. Une telle extravagance se réfute d'elle-même. » Quel procédé fautif est employé ?",
+      "options": [
+        { "id": "a", "text": "Une modalisation honnête de la thèse adverse." },
+        { "id": "b", "text": "Un contre-exemple rigoureux." },
+        { "id": "c", "text": "Une concession rhétorique." },
+        {
+          "id": "d",
+          "text": "Un homme de paille : la thèse adverse est caricaturée (« jusqu'aux trottoirs ») pour être réfutée facilement."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "La position adverse est gonflée jusqu'à l'absurde (« tout privatiser, jusqu'aux trottoirs ») afin d'être balayée sans effort : c'est l'homme de paille. Le « paraît-il » ne rend pas la reformulation honnête (a) — il l'insinue. Ce n'est ni un contre-exemple (b), ni une concession qui accorderait un point réel (c).",
+      "difficulty": 3
+    }
+  ]
+}

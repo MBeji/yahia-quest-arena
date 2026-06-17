@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Entraînement : mots savants et précision lexicale",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Que signifie l'adjectif « abscons » ?",
+      "options": [
+        { "id": "a", "text": "Absent, qui manque à l'appel" },
+        { "id": "b", "text": "Obscur, difficile à comprendre" },
+        { "id": "c", "text": "Lumineux, parfaitement clair" },
+        { "id": "d", "text": "Ancien, qui date d'autrefois" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Abscons » qualifie un propos obscur, difficile à comprendre, souvent par excès d'abstraction. « Lumineux / clair » en est l'antonyme exact (définition inversée) ; « absent » trompe par la ressemblance sonore et « ancien » est sans rapport.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel mot correspond à cette définition : « négligence grave, manque total de soin » ?",
+      "options": [
+        { "id": "a", "text": "l'incurie" },
+        { "id": "b", "text": "la pénurie" },
+        { "id": "c", "text": "l'inertie" },
+        { "id": "d", "text": "la curie" }
+      ],
+      "correctOption": "a",
+      "explanation": "« L'incurie » désigne une négligence coupable, un manque total de soin. « La pénurie » est un manque de ressources, « l'inertie » une absence de mouvement, « la curie » une instance ecclésiastique : aucun ne désigne la négligence.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Que signifie « velléitaire » ?",
+      "options": [
+        { "id": "a", "text": "Énergique, qui mène tout à son terme" },
+        { "id": "b", "text": "Coléreux, prompt à s'emporter" },
+        { "id": "c", "text": "Qui forme des intentions sans jamais les réaliser" },
+        { "id": "d", "text": "Très rapide, expéditif" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Velléitaire » se dit de celui qui veut sans agir, qui forme des projets qu'il ne mène jamais à bien. « Énergique / qui mène tout à terme » en est l'inverse exact ; « coléreux » et « rapide » sont sans rapport avec le manque de volonté.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans la série « ferme / obstiné / buté », lequel a la connotation la plus péjorative ?",
+      "options": [
+        { "id": "a", "text": "ferme" },
+        { "id": "b", "text": "constant" },
+        { "id": "c", "text": "résolu" },
+        { "id": "d", "text": "buté" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Buté » est le plus péjoratif : il dénote un entêtement stupide et fermé. « Ferme », « constant » et « résolu » sont mélioratifs ou neutres : ils louent la détermination, non l'entêtement aveugle.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Que signifie l'adjectif « prégnant » ?",
+      "options": [
+        { "id": "a", "text": "Qui s'impose fortement à l'esprit, marquant" },
+        { "id": "b", "text": "Sur le point de se produire, imminent" },
+        { "id": "c", "text": "Lourd, difficile à porter" },
+        { "id": "d", "text": "Lié à la grossesse" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Prégnant » qualifie ce qui s'impose à l'esprit et y laisse une empreinte forte : une image prégnante. Le sens « grossesse » est un anglicisme fautif (de pregnant) ; « imminent » et « lourd » détournent le mot vers d'autres idées.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle discipline répond à la question « Que doit-on faire ? Qu'est-ce qu'une action juste ? »",
+      "options": [
+        { "id": "a", "text": "l'ontologie" },
+        { "id": "b", "text": "l'éthique" },
+        { "id": "c", "text": "l'épistémologie" },
+        { "id": "d", "text": "la philologie" }
+      ],
+      "correctOption": "b",
+      "explanation": "L'éthique étudie le bien, le mal et l'action juste : « que doit-on faire ? ». L'ontologie étudie l'être, l'épistémologie la connaissance, et la philologie l'étude des textes et des langues : aucune ne porte sur le devoir d'agir.",
+      "difficulty": 2
+    }
+  ]
+}

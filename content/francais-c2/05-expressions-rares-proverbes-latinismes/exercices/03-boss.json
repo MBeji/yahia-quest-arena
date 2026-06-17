@@ -1,0 +1,94 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : pièges de sens et faux voisins",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Que signifie « une victoire à la Pyrrhus » ?",
+      "options": [
+        { "id": "a", "text": "Une victoire éclatante et glorieuse." },
+        { "id": "b", "text": "Une victoire obtenue par la ruse plutôt que par la force." },
+        { "id": "c", "text": "Une victoire facile, sans véritable adversaire." },
+        { "id": "d", "text": "Une victoire si coûteuse qu'elle équivaut presque à une défaite." }
+      ],
+      "correctOption": "d",
+      "explanation": "Le roi Pyrrhus battit Rome au prix de pertes telles qu'il aurait dit : « Encore une victoire comme celle-là et je suis perdu. » Une « victoire à la Pyrrhus » est donc ruineuse. Le piège courant est (a) : on croit à un triomphe alors que l'expression dit l'inverse.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lequel de ces énoncés emploie « a posteriori » correctement ?",
+      "options": [
+        { "id": "a", "text": "A posteriori, sans rien connaître du sujet, il a tranché aussitôt." },
+        {
+          "id": "b",
+          "text": "A posteriori, avec le recul, on comprend que la décision était la bonne."
+        },
+        {
+          "id": "c",
+          "text": "A posteriori, c'est-à-dire en gros et sans précision, le coût sera élevé."
+        },
+        {
+          "id": "d",
+          "text": "A posteriori, par pur hasard, ils se sont retrouvés au même endroit."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "« A posteriori » signifie « après coup, à la lumière de l'expérience » : (b) l'emploie correctement avec « avec le recul ». (a) décrit en fait « a priori », (c) confond avec « grosso modo », (d) avec « fortuitement ». Le piège courant est de confondre a priori (avant) et a posteriori (après).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "« Ses avertissements répétés sont restés lettre morte : c'était _____. » Quelle expression complète le mieux la phrase ?",
+      "options": [
+        { "id": "a", "text": "prêcher dans le désert" },
+        { "id": "b", "text": "tenir le haut du pavé" },
+        { "id": "c", "text": "battre la campagne" },
+        { "id": "d", "text": "couper la poire en deux" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Prêcher dans le désert », c'est parler sans être écouté ni suivi : cela colle à « avertissements restés lettre morte ». (b) signifie dominer, (c) divaguer, (d) faire un compromis — aucune ne rend l'idée d'un discours vain.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Que signifie le proverbe « Qui sème le vent récolte la tempête » ?",
+      "options": [
+        { "id": "a", "text": "Les efforts finissent toujours par être récompensés." },
+        { "id": "b", "text": "On ne peut rien contre les forces de la nature." },
+        {
+          "id": "c",
+          "text": "Celui qui provoque le désordre en subit des conséquences amplifiées."
+        },
+        { "id": "d", "text": "Il faut agir au bon moment pour réussir." }
+      ],
+      "correctOption": "c",
+      "explanation": "Le proverbe avertit : provoquer un petit mal (« le vent ») entraîne un châtiment bien plus grand (« la tempête »). La clé est l'amplification. Le piège courant est (a), qui inverse le sens : ce proverbe vise une conséquence néfaste, non une récompense.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans « Le maintien du statu quo arrange les deux camps », que signifie « statu quo » ?",
+      "options": [
+        { "id": "a", "text": "Un retour à la situation antérieure." },
+        { "id": "b", "text": "L'état actuel des choses, conservé sans changement." },
+        { "id": "c", "text": "Un nouvel équilibre négocié entre les parties." },
+        { "id": "d", "text": "Une réforme progressive et concertée." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Statu quo » (du latin « in statu quo ante », l'état où l'on était) désigne l'état présent maintenu tel quel. Le piège courant est (a) ou (c) : maintenir le statu quo, ce n'est ni revenir en arrière ni renégocier, c'est simplement ne rien changer.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "« Promettre la lune avant même d'avoir le contrat, c'est _____. » Quel proverbe complète le mieux la phrase ?",
+      "options": [
+        { "id": "a", "text": "mettre la charrue avant les bœufs" },
+        { "id": "b", "text": "donner sa langue au chat" },
+        { "id": "c", "text": "vendre la peau de l'ours avant de l'avoir tué" },
+        { "id": "d", "text": "se perdre en conjectures" }
+      ],
+      "correctOption": "c",
+      "explanation": "Promettre un résultat avant d'avoir le contrat, c'est se prévaloir d'un gain non encore acquis : « vendre la peau de l'ours avant de l'avoir tué ». Le piège courant est (a), proche par l'idée de précipitation, mais qui vise l'ordre des étapes, non un avantage présumé ; (b) et (d) sont hors sujet.",
+      "difficulty": 3
+    }
+  ]
+}

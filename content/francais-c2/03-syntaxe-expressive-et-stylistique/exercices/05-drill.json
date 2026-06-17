@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill : la syntaxe expressive",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Que désigne la périphrase « le roi des animaux » ?",
+      "options": [
+        { "id": "a", "text": "L'aigle." },
+        { "id": "b", "text": "Le lion." },
+        { "id": "c", "text": "L'éléphant." },
+        { "id": "d", "text": "Le loup." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Le roi des animaux » est la périphrase consacrée du lion, symbole de force et de royauté. Elle ne désigne ni l'aigle (« roi des airs »), ni l'éléphant, ni le loup.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans « Un curieux personnage entra », que signifie « curieux » antéposé ?",
+      "options": [
+        { "id": "a", "text": "Qui aime s'informer." },
+        { "id": "b", "text": "Indiscret." },
+        { "id": "c", "text": "Étrange, singulier." },
+        { "id": "d", "text": "Savant." }
+      ],
+      "correctOption": "c",
+      "explanation": "Antéposé, « un curieux personnage » signifie « étrange, singulier » (sens figuré). Postposé, « un personnage curieux » signifierait « qui aime s'informer ». La place de l'adjectif change le sens.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve la phrase incorrecte.",
+      "options": [
+        { "id": "a", "text": "Peut-être réussira-t-il." },
+        { "id": "b", "text": "Peut-être qu'il réussira." },
+        { "id": "c", "text": "Peut-être il réussira-t-il." },
+        { "id": "d", "text": "Sans doute réussira-t-elle." }
+      ],
+      "correctOption": "c",
+      "explanation": "« Peut-être il réussira-t-il » double le pronom sujet (il… -il), ce qui est fautif. Les formes correctes sont l'inversion seule (peut-être réussira-t-il) ou « peut-être que » sans inversion (peut-être qu'il réussira).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase repose sur un rythme binaire (deux membres équilibrés) ?",
+      "options": [
+        { "id": "a", "text": "Je suis venu, j'ai vu, j'ai vaincu." },
+        { "id": "b", "text": "Pas de nouvelles, bonnes nouvelles." },
+        { "id": "c", "text": "Un souffle, une ombre, un rien." },
+        { "id": "d", "text": "Il faut manger pour vivre, et non vivre pour manger." }
+      ],
+      "correctOption": "d",
+      "explanation": "« Manger pour vivre / vivre pour manger » oppose deux membres symétriques : c'est un rythme binaire (ici un chiasme). La phrase a est ternaire, b est une phrase nominale elliptique, c est une gradation ternaire.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel énoncé est une phrase nominale exclamative ?",
+      "options": [
+        { "id": "a", "text": "Quelle magnifique victoire !" },
+        { "id": "b", "text": "Nous avons gagné !" },
+        { "id": "c", "text": "Comme nous avons gagné !" },
+        { "id": "d", "text": "Il a remporté la victoire." }
+      ],
+      "correctOption": "a",
+      "explanation": "« Quelle magnifique victoire ! » ne comporte aucun verbe conjugué : c'est une phrase nominale (exclamative), vive et concise. Les phrases b, c et d s'organisent toutes autour d'un verbe (avons gagné, a remporté).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Que désignent respectivement « un homme seul » et « un seul homme » ?",
+      "options": [
+        { "id": "a", "text": "Solitaire / un unique homme." },
+        { "id": "b", "text": "Un unique homme / solitaire." },
+        { "id": "c", "text": "Célibataire / un homme isolé." },
+        { "id": "d", "text": "Un unique homme / un homme triste." }
+      ],
+      "correctOption": "a",
+      "explanation": "Postposé, « un homme seul » = solitaire, isolé. Antéposé, « un seul homme » = un unique homme. C'est encore la place de l'adjectif qui distingue le sens « solitaire » du sens « unique ».",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : nuances lexicales et paronymes",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Complétez : « Son ___ pour la peinture s'est révélée très tôt. »",
+      "options": [
+        { "id": "a", "text": "inclinaison" },
+        { "id": "b", "text": "inclination" },
+        { "id": "c", "text": "acception" },
+        { "id": "d", "text": "conjecture" }
+      ],
+      "correctOption": "b",
+      "explanation": "Une « inclination » est un penchant, un goût, une disposition affective (une inclination pour les arts). L'« inclinaison » est un état penché ou un angle (l'inclinaison d'un toit). Le piège courant : confondre les deux paronymes ; ici, seul le sentiment (inclination) convient.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complétez : « Cet attentat a été ___ par un groupe inconnu. »",
+      "options": [
+        { "id": "a", "text": "perpétué" },
+        { "id": "b", "text": "infligé" },
+        { "id": "c", "text": "perpétré" },
+        { "id": "d", "text": "amorcé" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Perpétrer » = commettre (un crime, un attentat). « Perpétuer » signifie faire durer, transmettre (perpétuer une tradition) : le confondre est la faute classique. « Infliger » = imposer une peine ; « amorcer » = enclencher.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choisissez la phrase au sens le plus juste pour : « il dépense tout son argent sans compter ».",
+      "options": [
+        { "id": "a", "text": "C'est un fils prodigue." },
+        { "id": "b", "text": "C'est un fils prodige." },
+        { "id": "c", "text": "C'est un fils prolixe." },
+        { "id": "d", "text": "C'est un fils prolifique." }
+      ],
+      "correctOption": "a",
+      "explanation": "« Prodigue » = qui dépense sans compter (l'enfant prodigue de la parabole). « Prodige » désigne un être ou un fait extraordinaire (un enfant prodige = surdoué) : tout autre sens. « Prolixe » = trop bavard ; « prolifique » = qui produit beaucoup.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans laquelle de ces phrases « conséquent » est-il employé correctement ?",
+      "options": [
+        { "id": "a", "text": "Il a touché un héritage conséquent." },
+        { "id": "b", "text": "Une somme conséquente a été dépensée." },
+        { "id": "c", "text": "Les dégâts sont conséquents." },
+        { "id": "d", "text": "Il est resté conséquent avec ses principes." }
+      ],
+      "correctOption": "d",
+      "explanation": "Au sens exact, « conséquent » = qui agit avec logique, en accord avec ses idées (rester conséquent avec ses principes). Dans (a), (b) et (c), « conséquent » est employé au sens fautif de « important, considérable » : il faudrait écrire « un héritage important », « une somme considérable », « des dégâts importants ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complétez : « Le deuil l'a profondément ___ ; il ne s'en est jamais remis. »",
+      "options": [
+        { "id": "a", "text": "infligé" },
+        { "id": "b", "text": "invoqué" },
+        { "id": "c", "text": "recouvré" },
+        { "id": "d", "text": "affligé" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Affliger » = accabler de chagrin, plonger dans la peine (le deuil l'a affligé). « Infliger » = imposer une peine à autrui (on inflige une amende) : le piège paronymique le plus fréquent du C2. « Invoquer » = appeler à l'aide ; « recouvrer » = retrouver.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quel mot complète le mieux : « Le manque d'eau potable reste le principal ___ de ce projet humanitaire » ?",
+      "options": [
+        { "id": "a", "text": "souci" },
+        { "id": "b", "text": "écueil" },
+        { "id": "c", "text": "travers" },
+        { "id": "d", "text": "défaut" }
+      ],
+      "correctOption": "b",
+      "explanation": "Un « écueil » est un obstacle majeur qui menace de faire échouer l'entreprise : le mot juste pour le principal obstacle d'un projet. Un « souci » est une préoccupation morale ; un « travers » un petit défaut de caractère ; un « défaut » une imperfection — aucun ne dit l'obstacle redoutable.",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : mots savants et précision lexicale",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Que signifie l'adjectif « obvie » ?",
+      "options": [
+        { "id": "a", "text": "Évident, qui se présente immédiatement à l'esprit" },
+        { "id": "b", "text": "Détourné, qui contourne un obstacle" },
+        { "id": "c", "text": "Caché, qu'il faut deviner" },
+        { "id": "d", "text": "Ennuyeux, qui lasse vite" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Obvie » signifie évident, qui s'impose de lui-même (le sens obvie d'un texte). Le piège : on le confond avec « obvier » (parer à un risque), d'où le distracteur « détourné/contourner ». « Caché » est l'antonyme exact, « ennuyeux » est sans rapport.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel mot correspond à cette définition : « fait de découvrir par hasard ce que l'on ne cherchait pas » ?",
+      "options": [
+        { "id": "a", "text": "la perspicacité" },
+        { "id": "b", "text": "la sérendipité" },
+        { "id": "c", "text": "la sagacité" },
+        { "id": "d", "text": "la curiosité" }
+      ],
+      "correctOption": "b",
+      "explanation": "« La sérendipité » est la découverte heureuse et fortuite (la pénicilline en est l'exemple type). « La perspicacité » et « la sagacité » désignent au contraire la finesse d'esprit volontaire, et « la curiosité » le désir de savoir : aucune n'inclut le hasard.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choisis l'emploi RIGOUREUX. Pour parler d'un commentateur qui interprète en détail un passage donné de l'Énéide, on dit qu'il en fait :",
+      "options": [
+        { "id": "a", "text": "l'herméneutique" },
+        { "id": "b", "text": "la téléologie" },
+        { "id": "c", "text": "l'exégèse" },
+        { "id": "d", "text": "l'ontologie" }
+      ],
+      "correctOption": "c",
+      "explanation": "On fait l'exégèse d'un texte précis : le commentaire interprétatif appliqué à un passage donné. Le piège courant : « herméneutique » désigne la science générale de l'interprétation, pas l'analyse d'un texte particulier. « Téléologie » (les fins) et « ontologie » (l'être) sont hors sujet.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Que signifie « pusillanime » ?",
+      "options": [
+        { "id": "a", "text": "Généreux jusqu'à la prodigalité" },
+        { "id": "b", "text": "D'une grandeur d'âme remarquable" },
+        { "id": "c", "text": "Doté d'une mémoire exceptionnelle" },
+        { "id": "d", "text": "Qui manque de courage, craintif et sans audace" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Pusillanime » (littéralement « à l'âme petite ») signifie craintif, sans courage. Le piège : son antonyme exact est « magnanime » (grandeur d'âme), proposé en (b) pour tromper. « Généreux » et « bonne mémoire » sont des sens étrangers.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quel mot correspond à cette définition : « qui change sans cesse de forme, aux aspects multiples et changeants » ?",
+      "options": [
+        { "id": "a", "text": "monolithique" },
+        { "id": "b", "text": "pléthorique" },
+        { "id": "c", "text": "protéiforme" },
+        { "id": "d", "text": "homogène" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Protéiforme » (du dieu Protée, qui changeait de forme) qualifie ce qui prend des aspects multiples et changeants. « Monolithique » et « homogène » désignent au contraire l'uniformité ; « pléthorique » signifie surabondant : une intensité, non une variabilité de forme.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Que signifie le verbe « réifier » ?",
+      "options": [
+        { "id": "a", "text": "Rétablir quelque chose dans son état antérieur" },
+        { "id": "b", "text": "Transformer une idée abstraite en chose, la traiter comme un objet" },
+        { "id": "c", "text": "Réfuter point par point un raisonnement" },
+        { "id": "d", "text": "Répéter inutilement la même idée" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Réifier » (du latin res, la chose) consiste à traiter une abstraction comme un objet concret : réifier le travail humain. Le piège : la ressemblance avec « rétablir » ou « réfuter ». « Répéter » correspondrait à une tautologie, sens étranger.",
+      "difficulty": 3
+    }
+  ]
+}

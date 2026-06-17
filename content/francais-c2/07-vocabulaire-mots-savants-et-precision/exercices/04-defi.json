@@ -1,0 +1,82 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : mots savants et précision lexicale",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Quel mot correspond à cette définition : « flatteur servile, qui encense quelqu'un avec un excès complaisant » ?",
+      "options": [
+        { "id": "a", "text": "un thuriféraire" },
+        { "id": "b", "text": "un détracteur" },
+        { "id": "c", "text": "un dépositaire" },
+        { "id": "d", "text": "un dignitaire" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Un thuriféraire » (à l'origine, celui qui porte l'encensoir) désigne par image un flatteur servile. « Un détracteur » en est l'exact opposé (il dénigre) ; « dépositaire » et « dignitaire » trompent par la sonorité mais désignent l'un un gardien, l'autre un haut personnage.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Distingue le sens exact. Une « dichotomie » désigne :",
+      "options": [
+        { "id": "a", "text": "une contradiction interne d'un même raisonnement" },
+        { "id": "b", "text": "une division nette en deux parties opposées" },
+        { "id": "c", "text": "une accumulation de nuances intermédiaires" },
+        { "id": "d", "text": "une répétition d'un mot à valeur d'insistance" }
+      ],
+      "correctOption": "b",
+      "explanation": "Une « dichotomie » est une division en deux termes tranchés et opposés (corps/esprit). Le piège : (c) propose l'inverse exact (le continuum des nuances). (a) décrit une antinomie ou une aporie, (d) une figure de répétition : sens voisins mais distincts.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choisis l'emploi le plus RIGOUREUX. Pour qualifier la dégradation lente et fatale d'un régime politique miné par la corruption, le terme exact est :",
+      "options": [
+        { "id": "a", "text": "sa résurgence" },
+        { "id": "b", "text": "son effervescence" },
+        { "id": "c", "text": "sa déliquescence" },
+        { "id": "d", "text": "sa prééminence" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Déliquescence » nomme précisément la décomposition progressive d'une institution. Le piège courant : choisir un mot savant à connotation forte mais de sens inverse. « Résurgence » = réapparition, « effervescence » = agitation vive, « prééminence » = supériorité : tous contredisent l'idée de déclin.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quel mot correspond à cette définition : « modèle de pensée dominant, cadre de référence partagé par une communauté à une époque donnée » ?",
+      "options": [
+        { "id": "a", "text": "un paradigme" },
+        { "id": "b", "text": "un paradoxe" },
+        { "id": "c", "text": "un parangon" },
+        { "id": "d", "text": "un palimpseste" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Un paradigme » est un modèle de pensée de référence (le paradigme scientifique d'une époque). Le piège : trois paronymes savants. « Paradoxe » = idée contraire au sens commun, « parangon » = modèle de perfection, « palimpseste » = parchemin réécrit : sens distincts.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Distingue les disciplines. L'étude des fins, des buts et de la finalité d'un être ou d'une action relève de :",
+      "options": [
+        { "id": "a", "text": "l'épistémologie" },
+        { "id": "b", "text": "l'ontologie" },
+        { "id": "c", "text": "l'étymologie" },
+        { "id": "d", "text": "la téléologie" }
+      ],
+      "correctOption": "d",
+      "explanation": "La téléologie (du grec telos, la fin) étudie les buts et la finalité (« vers quelle fin ? »). Le piège : l'épistémologie porte sur la connaissance, l'ontologie sur l'être, l'étymologie sur l'origine des mots : aucune ne traite de la finalité.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choisis le mot dont le sens est exactement « revirement complet d'opinion, rétractation de ce que l'on soutenait ». Attention au piège du sens voisin.",
+      "options": [
+        { "id": "a", "text": "une diatribe" },
+        { "id": "b", "text": "une apologie" },
+        { "id": "c", "text": "une palinodie" },
+        { "id": "d", "text": "une digression" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Une palinodie » est le fait de se dédire, de retourner complètement son opinion. Le piège courant : confondre avec d'autres genres de discours. « Diatribe » = critique violente, « apologie » = défense élogieuse, « digression » = écart hors du sujet : aucun n'est un reniement.",
+      "difficulty": 3
+    }
+  ]
+}
