@@ -82,6 +82,26 @@ export type Program = {
   comingSoon: boolean;
 };
 
+/**
+ * The flagship national-concours parcours — the premium school tracks (6ème,
+ * 9ème), ordered by grade. These are the paid headline products, surfaced
+ * prominently across the app (hub node, category page, dashboard banner). Pure.
+ */
+export function flagshipConcours(parcours: ProgramParcours[]): ProgramParcours[] {
+  return parcours
+    .filter((p) => p.theme_id === "ecole-tn" && p.is_premium)
+    .sort((a, b) => (a.grade_order ?? 0) - (b.grade_order ?? 0));
+}
+
+/**
+ * Compact display label for a flagship concours — drops the verbose, redundant
+ * "Préparation Concours " prefix so the class itself reads clearly next to the
+ * "Concours national" badge ("Préparation Concours 9ème" → "9ème", "…Bac" → "Bac").
+ */
+export function flagshipLabel(nameFr: string): string {
+  return nameFr.replace(/^Préparation\s+Concours\s+/i, "").replace(/^Préparation\s+/i, "");
+}
+
 /** Group the parcours catalogue into the 5 root programs (pure, order-stable). */
 export function buildPrograms(parcours: ProgramParcours[]): Program[] {
   return PROGRAM_FAMILIES.map((fam) => {

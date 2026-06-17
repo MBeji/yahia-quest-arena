@@ -25,11 +25,13 @@ import {
   formatQuestType,
   resolveDailyAction,
   resolveWeeklyAction,
+  FlagshipConcoursBanner,
 } from "@/features/dashboard";
 import { purchaseShopItem, equipInventorySkin, activateInventoryItem } from "@/features/shop";
 import { recoverStreak } from "@/features/progression";
 import { EnablePushCard } from "@/features/notifications";
 import { SubjectPathCard } from "@/features/dashboard/components/subject-path-card";
+import { MotivationalQuote } from "@/features/dashboard/components/motivational-quote";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useReducedMotion } from "motion/react";
 
@@ -125,24 +127,6 @@ function DailyXpWidget({
           </div>
         )}
       </div>
-    </div>
-  );
-}
-
-function MotivationalQuote() {
-  const t = useT();
-  const dayIndex = new Date().getDate() % t.quotes.length;
-  const quote = t.quotes[dayIndex];
-
-  return (
-    <div className="flex flex-col justify-center rounded-2xl border border-[color:var(--gold)]/20 bg-black/40 p-5 backdrop-blur-md">
-      <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--gold)] mb-3">
-        {t.dashboard.quoteLabel}
-      </div>
-      <blockquote className="font-display text-base font-medium italic leading-relaxed">
-        «&nbsp;{quote.text}&nbsp;»
-      </blockquote>
-      <cite className="mt-2 text-xs not-italic text-muted-foreground">— {quote.author}</cite>
     </div>
   );
 }
@@ -419,6 +403,9 @@ function Dashboard() {
             </div>
           </div>
         </motion.div>
+
+        {/* FLAGSHIP CONCOURS BANNER — 6ème / 9ème, detectable right after login. */}
+        <FlagshipConcoursBanner />
 
         {/* TODAY'S PROGRESS + MOTIVATION */}
         <motion.div

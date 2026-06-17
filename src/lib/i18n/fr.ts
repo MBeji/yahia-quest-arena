@@ -485,7 +485,7 @@ export const fr: TranslationKeys = {
   },
   discover: {
     heading: "Découvrir nos programmes",
-    subtitle: "Choisis ta voie : survole un programme, puis clique pour entrer.",
+    subtitle: "Choisis ta voie : survole un programme, puis clique pour explorer.",
     center: "Nos programmes",
     enter: "Entrer",
     back: "Retour",
@@ -501,6 +501,26 @@ export const fr: TranslationKeys = {
     hintLanguages: "{count} langues",
     hintSoon: "Bientôt",
     hintExplore: "Explorer",
+    backToPrograms: "Retour aux programmes",
+    start: "Commencer",
+    comingSoonTitle: "Bientôt disponible",
+    comingSoonDesc:
+      "Ce programme est en cours de construction. Dis-nous s'il t'intéresse pour qu'on le priorise.",
+    familyDesc: {
+      tunisien:
+        "Le programme scolaire officiel tunisien, de la 1ère année de base au Baccalauréat.",
+      langues: "Progresse en anglais, français et arabe, niveau par niveau (CECRL).",
+      culture: "Élargis ta culture générale : histoire, géographie, sciences, arts et plus encore.",
+      cerveau: "Logique, mémoire, calcul mental : muscle ton cerveau au quotidien.",
+      ib: "Le Baccalauréat International arrive bientôt.",
+    },
+  },
+  flagship: {
+    badge: "Concours national",
+    sectionTitle: "Nos concours phares",
+    bannerTitle: "Prépare ton concours national",
+    bannerSubtitle: "Les parcours phares 6ème & 9ème — vise l'examen.",
+    bannerCta: "Découvrir les concours",
   },
   leaderboard: {
     titleGradient: "Classement",

@@ -21,6 +21,7 @@ import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authentic
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
 import { Route as AuthenticatedDungeonRouteImport } from './routes/_authenticated/dungeon'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedThemesFamilyIdRouteImport } from './routes/_authenticated/themes_.$familyId'
 import { Route as AuthenticatedSubjectSubjectIdRouteImport } from './routes/_authenticated/subject.$subjectId'
 import { Route as AuthenticatedQuestExerciseIdRouteImport } from './routes/_authenticated/quest.$exerciseId'
 import { Route as AuthenticatedLessonChapterIdRouteImport } from './routes/_authenticated/lesson.$chapterId'
@@ -90,6 +91,12 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedThemesFamilyIdRoute =
+  AuthenticatedThemesFamilyIdRouteImport.update({
+    id: '/themes_/$familyId',
+    path: '/themes/$familyId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedSubjectSubjectIdRoute =
   AuthenticatedSubjectSubjectIdRouteImport.update({
     id: '/subject/$subjectId',
@@ -152,6 +159,7 @@ export interface FileRoutesByFullPath {
   '/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
   '/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
+  '/themes/$familyId': typeof AuthenticatedThemesFamilyIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -172,6 +180,7 @@ export interface FileRoutesByTo {
   '/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
   '/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
+  '/themes/$familyId': typeof AuthenticatedThemesFamilyIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -194,6 +203,7 @@ export interface FileRoutesById {
   '/_authenticated/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
   '/_authenticated/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/_authenticated/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
+  '/_authenticated/themes_/$familyId': typeof AuthenticatedThemesFamilyIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -216,6 +226,7 @@ export interface FileRouteTypes {
     | '/lesson/$chapterId'
     | '/quest/$exerciseId'
     | '/subject/$subjectId'
+    | '/themes/$familyId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -236,6 +247,7 @@ export interface FileRouteTypes {
     | '/lesson/$chapterId'
     | '/quest/$exerciseId'
     | '/subject/$subjectId'
+    | '/themes/$familyId'
   id:
     | '__root__'
     | '/'
@@ -257,6 +269,7 @@ export interface FileRouteTypes {
     | '/_authenticated/lesson/$chapterId'
     | '/_authenticated/quest/$exerciseId'
     | '/_authenticated/subject/$subjectId'
+    | '/_authenticated/themes_/$familyId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -353,6 +366,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/themes_/$familyId': {
+      id: '/_authenticated/themes_/$familyId'
+      path: '/themes/$familyId'
+      fullPath: '/themes/$familyId'
+      preLoaderRoute: typeof AuthenticatedThemesFamilyIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/subject/$subjectId': {
       id: '/_authenticated/subject/$subjectId'
       path: '/subject/$subjectId'
@@ -420,6 +440,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedLessonChapterIdRoute: typeof AuthenticatedLessonChapterIdRoute
   AuthenticatedQuestExerciseIdRoute: typeof AuthenticatedQuestExerciseIdRoute
   AuthenticatedSubjectSubjectIdRoute: typeof AuthenticatedSubjectSubjectIdRoute
+  AuthenticatedThemesFamilyIdRoute: typeof AuthenticatedThemesFamilyIdRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
@@ -438,6 +459,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedLessonChapterIdRoute: AuthenticatedLessonChapterIdRoute,
   AuthenticatedQuestExerciseIdRoute: AuthenticatedQuestExerciseIdRoute,
   AuthenticatedSubjectSubjectIdRoute: AuthenticatedSubjectSubjectIdRoute,
+  AuthenticatedThemesFamilyIdRoute: AuthenticatedThemesFamilyIdRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(

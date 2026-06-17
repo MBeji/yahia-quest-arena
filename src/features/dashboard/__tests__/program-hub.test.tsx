@@ -31,8 +31,6 @@ vi.mock("@/lib/i18n", () => ({
       heading: "Discover our programs",
       subtitle: "Pick your path.",
       center: "Our programs",
-      enter: "Enter",
-      back: "Back",
       families: {
         tunisien: "Tunisian school program",
         langues: "Languages",
@@ -47,19 +45,7 @@ vi.mock("@/lib/i18n", () => ({
       hintExplore: "Explore",
     },
     cycles: { primaire: "Primary", college: "Middle", secondaire: "High" },
-    parcoursInterest: {
-      cta: "I'm interested",
-      interested: "Interested ✓",
-      count: "{count} interested",
-      underConstruction: "Under construction",
-    },
-    explorer: {
-      premium: "Premium",
-      unlocked: "Unlocked",
-      switching: "Switching…",
-      failedLoad: "failed",
-      empty: "empty",
-    },
+    explorer: { failedLoad: "failed", empty: "empty" },
   }),
 }));
 
@@ -102,71 +88,58 @@ const CATALOGUE: ProgramParcours[] = [
 ];
 
 function setup(over: Partial<React.ComponentProps<typeof ProgramHub>> = {}) {
-  const onSelect = vi.fn();
-  const onToggle = vi.fn();
+  const onOpen = vi.fn();
   render(
-    <ProgramHub
-      parcours={CATALOGUE}
-      isPending={false}
-      isError={false}
-      isSwitching={false}
-      onSelect={onSelect}
-      interest={{ counts: {}, mine: new Set(), togglingId: null, onToggle }}
-      {...over}
-    />,
+    <ProgramHub parcours={CATALOGUE} isPending={false} isError={false} onOpen={onOpen} {...over} />,
   );
-  return { onSelect, onToggle };
+  return { onOpen };
 }
 
 describe("ProgramHub (Découvrir)", () => {
-  it("renders the 5 root program nodes", () => {
+  it("renders the 5 root program nodes — and nothing else is interactive", () => {
     setup();
     expect(screen.getByRole("button", { name: "Tunisian school program" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Languages" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "General knowledge" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Brain training" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "IB" })).toBeInTheDocument();
+    // Only the 5 nodes are clickable — no sub-menu / enter / vote buttons on the hub.
+    expect(screen.getAllByRole("button")).toHaveLength(5);
   });
 
-  it("enters a single-parcours program directly on click (no petals)", () => {
-    const { onSelect } = setup();
-    fireEvent.click(screen.getByRole("button", { name: "General knowledge" }));
-    expect(onSelect).toHaveBeenCalledWith("culture-generale");
-    // No star/petals for an enter-kind program.
-    expect(screen.queryByText("Primary")).not.toBeInTheDocument();
-  });
-
-  it("reveals the 3 languages and enters one on click", () => {
-    const { onSelect } = setup();
+  it("opens the dedicated category page for the clicked program (no in-place entry)", () => {
+    const { onOpen } = setup();
     fireEvent.click(screen.getByRole("button", { name: "Languages" }));
-    expect(screen.getByRole("button", { name: /Anglais/ })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Français/ })).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: /Arabe/ }));
-    expect(onSelect).toHaveBeenCalledWith("arabe");
-  });
-
-  it("fans cycles → classes as a star for the school program", () => {
-    const { onSelect } = setup();
-    fireEvent.click(screen.getByRole("button", { name: "Tunisian school program" }));
-    // Cycle petals (only cycles with classes → Middle).
-    fireEvent.click(screen.getByRole("button", { name: /Middle/ }));
-    // Available class enters; coming-soon class shows a vote petal.
-    fireEvent.click(screen.getByRole("button", { name: /9ème/ }));
-    expect(onSelect).toHaveBeenCalledWith("concours-9eme");
-    expect(screen.getByRole("button", { name: /I'm interested/ })).toBeInTheDocument();
-  });
-
-  it("offers a vote petal (not entry) for the coming-soon IB program", () => {
-    const { onSelect, onToggle } = setup();
+    expect(onOpen).toHaveBeenCalledWith("langues");
+    fireEvent.click(screen.getByRole("button", { name: "General knowledge" }));
+    expect(onOpen).toHaveBeenCalledWith("culture");
     fireEvent.click(screen.getByRole("button", { name: "IB" }));
-    const vote = screen.getByRole("button", { name: /I'm interested/ });
-    fireEvent.click(vote);
-    expect(onToggle).toHaveBeenCalledWith("ib");
-    expect(onSelect).not.toHaveBeenCalled();
+    expect(onOpen).toHaveBeenCalledWith("ib");
   });
 
-  it("shows the switching hint", () => {
-    setup({ isSwitching: true });
-    expect(screen.getByText("Switching…")).toBeInTheDocument();
+  it("reveals NON-clickable sub-menu previews on hover (desktop)", () => {
+    setup();
+    // Before hover: previews are hidden.
+    expect(screen.queryByText("Anglais")).not.toBeInTheDocument();
+    fireEvent.mouseEnter(screen.getByRole("button", { name: "Languages" }));
+    // Preview chips appear…
+    expect(screen.getByText("Anglais")).toBeInTheDocument();
+    expect(screen.getByText("Français")).toBeInTheDocument();
+    // …but are illustration only — not buttons, and the node count stays at 5.
+    expect(screen.queryByRole("button", { name: "Anglais" })).not.toBeInTheDocument();
+    expect(screen.getAllByRole("button")).toHaveLength(5);
+  });
+
+  it("shows loading / error / empty states", () => {
+    const { rerender } = render(
+      <ProgramHub parcours={[]} isPending isError={false} onOpen={vi.fn()} />,
+    );
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+
+    rerender(<ProgramHub parcours={[]} isPending={false} isError onOpen={vi.fn()} />);
+    expect(screen.getByText("failed")).toBeInTheDocument();
+
+    rerender(<ProgramHub parcours={[]} isPending={false} isError={false} onOpen={vi.fn()} />);
+    expect(screen.getByText("empty")).toBeInTheDocument();
   });
 });
