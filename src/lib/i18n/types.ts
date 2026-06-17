@@ -510,6 +510,11 @@ export type TranslationKeys = {
       cerveau: string;
       ib: string;
     };
+    langShort: {
+      anglais: string;
+      francais: string;
+      arabe: string;
+    };
     hintClasses: string;
     hintLanguages: string;
     hintSoon: string;

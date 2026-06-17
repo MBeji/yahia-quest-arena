@@ -8,17 +8,17 @@ import {
   Award,
   Sparkles,
   ChevronRight,
-  ChevronLeft,
   ArrowRight,
   Crown,
   Lock,
   Clock,
+  Heart,
+  Loader2,
 } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { buildPrograms, type Program, type ProgramParcours } from "../program-families";
 import type { ParcoursInterestState } from "../use-parcours-interest";
-import { ParcoursInterestButton } from "./parcours-interest-button";
 
 const ICONS: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
   GraduationCap,
@@ -30,13 +30,33 @@ const ICONS: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> 
 
 const colorVar = (token: string) => `var(--subject-${token.replace(/^subject-/, "")})`;
 
-/** Node centres on a circle, in stage-percentage coordinates (first node at top). */
-function nodePositions(n: number, radius = 34): { x: number; y: number }[] {
+type Pt = { x: number; y: number };
+
+/** Program-node centres on a circle, in stage-percentage coords (first at top). */
+function nodePositions(n: number, radius = 28): Pt[] {
   return Array.from({ length: n }, (_, i) => {
     const a = ((-90 + i * (360 / n)) * Math.PI) / 180;
     return { x: 50 + radius * Math.cos(a), y: 50 + radius * Math.sin(a) };
   });
 }
+
+/** Sub-item ("petal") centres, fanned in a star around the active node, facing out. */
+function petalPositions(node: Pt, count: number, distance = 15): Pt[] {
+  if (count <= 0) return [];
+  const out = Math.atan2(node.y - 50, node.x - 50);
+  const step = count > 1 ? Math.min((150 * Math.PI) / 180 / (count - 1), (44 * Math.PI) / 180) : 0;
+  const start = out - (step * (count - 1)) / 2;
+  return Array.from({ length: count }, (_, j) => {
+    const a = start + step * j;
+    return { x: node.x + distance * Math.cos(a), y: node.y + distance * Math.sin(a) };
+  });
+}
+
+/** What the active program currently fans out as petals. */
+type Petal =
+  | { kind: "enter"; key: string; label: string; parcours: ProgramParcours }
+  | { kind: "vote"; key: string; label: string; parcours: ProgramParcours }
+  | { kind: "drill"; key: string; label: string; cycle: string; count: number };
 
 function ProgramNode({
   program,
@@ -44,6 +64,7 @@ function ProgramNode({
   hint,
   pos,
   isActive,
+  dimmed,
   disabled,
   onActivate,
   onHover,
@@ -51,8 +72,9 @@ function ProgramNode({
   program: Program;
   label: string;
   hint: string;
-  pos: { x: number; y: number };
+  pos: Pt;
   isActive: boolean;
+  dimmed: boolean;
   disabled: boolean;
   onActivate: () => void;
   onHover: () => void;
@@ -70,18 +92,19 @@ function ProgramNode({
       aria-expanded={program.kind === "enter" ? undefined : isActive}
       whileHover={disabled ? undefined : { scale: 1.05 }}
       whileTap={disabled ? undefined : { scale: 0.96 }}
-      className="absolute flex w-[26%] -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1.5 text-center disabled:opacity-60"
+      animate={{ opacity: dimmed ? 0.35 : 1 }}
+      className="absolute z-10 flex w-[24%] -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1 text-center"
       style={{ left: `${pos.x}%`, top: `${pos.y}%` }}
     >
       <span
-        className={`grid aspect-square w-[68%] place-items-center rounded-full border-2 backdrop-blur-md transition ${
+        className={`grid aspect-square w-[64%] place-items-center rounded-full border-2 backdrop-blur-md transition ${
           isActive ? "border-[color:var(--gold)]" : "border-border/50"
         } ${soon ? "border-dashed" : ""}`}
         style={{ background: `color-mix(in oklab, ${color} 22%, rgba(0,0,0,0.55))` }}
       >
         <Icon className="h-1/2 w-1/2" style={{ color: soon ? undefined : color }} />
       </span>
-      <span className="font-display text-xs font-bold leading-tight sm:text-sm">{label}</span>
+      <span className="font-display text-[11px] font-bold leading-tight sm:text-sm">{label}</span>
       <span className="inline-flex items-center gap-0.5 text-[10px] text-muted-foreground">
         {soon ? <Clock className="h-2.5 w-2.5" /> : null}
         {hint}
@@ -91,179 +114,103 @@ function ProgramNode({
   );
 }
 
-/** A selectable / votable sub-parcours row inside the disclosure panel. */
-function SubCard({
-  parcours,
-  isSwitching,
-  onSelect,
+function PetalButton({
+  petal,
+  pos,
   interest,
+  isSwitching,
+  onEnter,
+  onDrill,
 }: {
-  parcours: ProgramParcours;
-  isSwitching: boolean;
-  onSelect: (id: string) => void;
+  petal: Petal;
+  pos: Pt;
   interest: ParcoursInterestState;
+  isSwitching: boolean;
+  onEnter: (id: string) => void;
+  onDrill: (cycle: string) => void;
 }) {
   const t = useT();
-  const soon = parcours.status === "coming_soon";
-  const lockedPremium = parcours.is_premium && !parcours.hasEntitlement;
+  const base =
+    "absolute z-20 max-w-[150px] -translate-x-1/2 -translate-y-1/2 rounded-full border bg-black/70 px-3 py-1.5 text-center text-[11px] font-bold backdrop-blur-md transition disabled:opacity-60";
+  const style = { left: `${pos.x}%`, top: `${pos.y}%` } as const;
 
-  if (soon) {
+  if (petal.kind === "vote") {
+    const interested = interest.mine.has(petal.parcours.id);
+    const pending = interest.togglingId === petal.parcours.id;
     return (
-      <div className="rounded-xl border border-border/50 bg-black/40 p-4">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="font-display text-sm font-bold">{parcours.name_fr}</span>
-          <span className="inline-flex items-center gap-1 rounded-full bg-muted/40 px-2 py-0.5 text-[11px] font-semibold text-muted-foreground">
-            <Clock className="h-3 w-3" /> {t.parcoursInterest.underConstruction}
-          </span>
-        </div>
-        <ParcoursInterestButton
-          count={interest.counts[parcours.id] ?? 0}
-          interested={interest.mine.has(parcours.id)}
-          isPending={interest.togglingId === parcours.id}
-          onToggle={() => interest.onToggle(parcours.id)}
-        />
-      </div>
+      <motion.button
+        type="button"
+        initial={{ opacity: 0, scale: 0.6 }}
+        animate={{ opacity: 1, scale: 1 }}
+        onClick={() => interest.onToggle(petal.parcours.id)}
+        disabled={pending}
+        aria-pressed={interested}
+        aria-label={`${interested ? t.parcoursInterest.interested : t.parcoursInterest.cta} — ${petal.label}`}
+        title={petal.label}
+        className={`${base} inline-flex items-center gap-1 ${
+          interested
+            ? "border-[color:var(--gold)]/70 text-[color:var(--gold)]"
+            : "border-border/60 text-champagne hover:border-[color:var(--gold)]/60"
+        }`}
+        style={style}
+      >
+        {pending ? (
+          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+        ) : (
+          <Heart className={`h-3.5 w-3.5 ${interested ? "fill-current" : ""}`} />
+        )}
+        {interest.counts[petal.parcours.id] ?? 0}
+      </motion.button>
     );
   }
 
+  if (petal.kind === "drill") {
+    return (
+      <motion.button
+        type="button"
+        initial={{ opacity: 0, scale: 0.6 }}
+        animate={{ opacity: 1, scale: 1 }}
+        onClick={() => onDrill(petal.cycle)}
+        aria-label={petal.label}
+        className={`${base} inline-flex items-center gap-1 border-border/60 text-champagne hover:border-[color:var(--gold)]/60`}
+        style={style}
+      >
+        {petal.label} <span className="text-muted-foreground">{petal.count}</span>
+      </motion.button>
+    );
+  }
+
+  // enter
+  const soon = petal.parcours.status === "coming_soon";
+  const locked = petal.parcours.is_premium && !petal.parcours.hasEntitlement;
   return (
-    <button
+    <motion.button
       type="button"
-      onClick={() => onSelect(parcours.id)}
-      disabled={isSwitching}
-      className="flex items-center justify-between gap-2 rounded-xl border border-border/50 bg-black/40 p-4 text-left transition hover:border-[color:var(--gold)]/60 disabled:opacity-60"
+      initial={{ opacity: 0, scale: 0.6 }}
+      animate={{ opacity: 1, scale: 1 }}
+      onClick={() => onEnter(petal.parcours.id)}
+      disabled={isSwitching || soon}
+      aria-label={petal.label}
+      title={petal.label}
+      className={`${base} inline-flex items-center gap-1 border-border/60 text-champagne hover:border-[color:var(--gold)]/60`}
+      style={style}
     >
-      <span className="flex flex-wrap items-center gap-2">
-        <span className="font-display text-sm font-bold">{parcours.name_fr}</span>
-        {lockedPremium ? (
-          <span className="inline-flex items-center gap-1 rounded-full bg-[color:var(--neon-gold)]/15 px-2 py-0.5 text-[11px] font-semibold text-[color:var(--neon-gold)]">
-            <Lock className="h-3 w-3" /> {t.explorer.premium}
-          </span>
-        ) : parcours.is_premium ? (
-          <span className="inline-flex items-center gap-1 rounded-full bg-[color:var(--gold)]/20 px-2 py-0.5 text-[11px] font-semibold text-[color:var(--gold)]">
-            <Crown className="h-3 w-3" /> {t.explorer.unlocked}
-          </span>
-        ) : null}
-      </span>
-      <span className="inline-flex shrink-0 items-center gap-1 text-xs text-[color:var(--gold)]">
-        {t.discover.enter} <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
-      </span>
-    </button>
-  );
-}
-
-/** Disclosure panel: the active program's sub-parcours (languages / cycles → classes / vote). */
-function DisclosurePanel({
-  program,
-  label,
-  cycle,
-  setCycle,
-  isSwitching,
-  onSelect,
-  interest,
-}: {
-  program: Program;
-  label: string;
-  cycle: string | null;
-  setCycle: (c: string | null) => void;
-  isSwitching: boolean;
-  onSelect: (id: string) => void;
-  interest: ParcoursInterestState;
-}) {
-  const t = useT();
-  const cycleLabel = (c: string) =>
-    c === "primaire" ? t.cycles.primaire : c === "college" ? t.cycles.college : t.cycles.secondaire;
-
-  const selectedCycle = program.cycles.find((c) => c.cycle === cycle) ?? null;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="mx-auto mt-6 max-w-3xl rounded-2xl border border-[color:var(--gold)]/30 bg-black/50 p-5 backdrop-blur-md"
-    >
-      <div className="mb-4 flex items-center gap-2">
-        {program.kind === "school" && selectedCycle ? (
-          <button
-            type="button"
-            onClick={() => setCycle(null)}
-            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
-          >
-            <ChevronLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.discover.back}
-          </button>
-        ) : null}
-        <h2 className="font-display text-lg font-bold">
-          {label}
-          {program.kind === "school" && selectedCycle
-            ? ` · ${cycleLabel(selectedCycle.cycle)}`
-            : ""}
-        </h2>
-      </div>
-
-      {program.kind === "languages" ? (
-        <div className="grid gap-3 sm:grid-cols-3">
-          {program.languages.map((p) => (
-            <SubCard
-              key={p.id}
-              parcours={p}
-              isSwitching={isSwitching}
-              onSelect={onSelect}
-              interest={interest}
-            />
-          ))}
-        </div>
+      {locked ? <Lock className="h-3 w-3 shrink-0 text-[color:var(--neon-gold)]" /> : null}
+      {!locked && petal.parcours.is_premium ? (
+        <Crown className="h-3 w-3 shrink-0 text-[color:var(--gold)]" />
       ) : null}
-
-      {program.kind === "coming_soon" && program.parcours ? (
-        <SubCard
-          parcours={program.parcours}
-          isSwitching={isSwitching}
-          onSelect={onSelect}
-          interest={interest}
-        />
-      ) : null}
-
-      {program.kind === "school" && !selectedCycle ? (
-        <div className="grid gap-3 sm:grid-cols-3">
-          {program.cycles.map((c) => (
-            <button
-              key={c.cycle}
-              type="button"
-              onClick={() => setCycle(c.cycle)}
-              className="flex items-center justify-between gap-2 rounded-xl border border-border/50 bg-black/40 p-4 text-left transition hover:border-[color:var(--gold)]/60"
-            >
-              <span className="font-display text-sm font-bold">{cycleLabel(c.cycle)}</span>
-              <span className="text-xs text-muted-foreground">
-                {c.classes.length} <ChevronRight className="inline h-3.5 w-3.5" />
-              </span>
-            </button>
-          ))}
-        </div>
-      ) : null}
-
-      {program.kind === "school" && selectedCycle ? (
-        <div className="grid gap-3 sm:grid-cols-2">
-          {selectedCycle.classes.map((p) => (
-            <SubCard
-              key={p.id}
-              parcours={p}
-              isSwitching={isSwitching}
-              onSelect={onSelect}
-              interest={interest}
-            />
-          ))}
-        </div>
-      ) : null}
-    </motion.div>
+      <span className="min-w-0 truncate">{petal.label}</span>
+      <ArrowRight className="h-3 w-3 shrink-0 text-[color:var(--gold)] rtl:-scale-x-100" />
+    </motion.button>
   );
 }
 
 /**
  * "Découvrir nos programmes" — a circular hub of the 5 root programs with
- * progressive disclosure. Hover (desktop) / tap (mobile) a program to reveal its
- * sub-parcours; click an available one to enter (switches the active parcours),
- * or vote for a coming-soon one. Pure presentation: data + mutations come from the
- * route (`themes.tsx`).
+ * progressive disclosure. Hover (desktop) / tap (mobile) a program to fan its
+ * sub-parcours out as a STAR of petals around its node; click an available one
+ * to enter (switches the active parcours), or vote for a coming-soon one. Pure
+ * presentation: data + mutations come from the route (`themes.tsx`).
  */
 export function ProgramHub({
   parcours,
@@ -288,7 +235,8 @@ export function ProgramHub({
 
   const programs = buildPrograms(parcours);
   const positions = nodePositions(programs.length);
-  const active = programs.find((p) => p.id === activeId) ?? null;
+  const activeIndex = programs.findIndex((p) => p.id === activeId);
+  const active = activeIndex >= 0 ? programs[activeIndex] : null;
 
   const familyLabel = (id: string) => t.discover.families[id as keyof typeof t.discover.families];
   const familyHint = (p: Program) =>
@@ -299,14 +247,72 @@ export function ProgramHub({
         : p.comingSoon
           ? t.discover.hintSoon
           : t.discover.hintExplore;
+  const cycleLabel = (c: string) =>
+    c === "primaire" ? t.cycles.primaire : c === "college" ? t.cycles.college : t.cycles.secondaire;
+  // Compact petal label: short language name, or the class name minus its long
+  // "année de base / secondaire / Préparation" boilerplate so pills stay small.
+  const shortLabel = (p: ProgramParcours) =>
+    p.theme_id === "anglais"
+      ? t.discover.langShort.anglais
+      : p.theme_id === "francais"
+        ? t.discover.langShort.francais
+        : p.theme_id === "arabe"
+          ? t.discover.langShort.arabe
+          : p.name_fr
+              .replace(/^Préparation\s+/i, "")
+              .replace(/\s+année de base$/i, "")
+              .replace(/\s+année secondaire$/i, " sec.");
+
+  // Petals the active program currently fans out.
+  const petals: Petal[] = !active
+    ? []
+    : active.kind === "languages"
+      ? active.languages.map(
+          (p): Petal => ({ kind: "enter", key: p.id, label: shortLabel(p), parcours: p }),
+        )
+      : active.kind === "coming_soon" && active.parcours
+        ? [
+            {
+              kind: "vote",
+              key: active.parcours.id,
+              label: shortLabel(active.parcours),
+              parcours: active.parcours,
+            },
+          ]
+        : active.kind === "school"
+          ? cycle
+            ? (active.cycles.find((c) => c.cycle === cycle)?.classes ?? []).map(
+                (p): Petal =>
+                  p.status === "coming_soon"
+                    ? { kind: "vote", key: p.id, label: shortLabel(p), parcours: p }
+                    : { kind: "enter", key: p.id, label: shortLabel(p), parcours: p },
+              )
+            : active.cycles.map(
+                (c): Petal => ({
+                  kind: "drill",
+                  key: c.cycle,
+                  label: cycleLabel(c.cycle),
+                  cycle: c.cycle,
+                  count: c.classes.length,
+                }),
+              )
+          : [];
+
+  const petalPos = active ? petalPositions(positions[activeIndex], petals.length) : [];
 
   const activate = (p: Program) => {
     if (p.kind === "enter" && p.parcours) {
       onSelect(p.parcours.id);
       return;
     }
+    if (p.id === activeId) {
+      // Clicking the open program steps back: school cycle → cycles, else collapse.
+      if (p.kind === "school" && cycle) setCycle(null);
+      else setActiveId(null);
+      return;
+    }
     setCycle(null);
-    setActiveId((prev) => (prev === p.id ? null : p.id));
+    setActiveId(p.id);
   };
 
   return (
@@ -326,57 +332,79 @@ export function ProgramHub({
       ) : programs.every((p) => p.total === 0) ? (
         <p className="text-center text-sm text-muted-foreground">{t.explorer.empty}</p>
       ) : (
-        <>
-          <div className="relative mx-auto aspect-square w-full max-w-[460px]">
-            <motion.div
+        <div className="relative mx-auto aspect-square w-full max-w-[480px] overflow-visible">
+          {active && petalPos.length > 0 ? (
+            <svg
+              className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
               aria-hidden
-              className="absolute inset-[6%] rounded-full border border-dashed border-[color:var(--gold)]/25"
-              animate={reduce || isMobile || active ? { rotate: 0 } : { rotate: 360 }}
-              transition={{ duration: 60, ease: "linear", repeat: Infinity }}
-            />
-            <div
-              aria-hidden
-              className="absolute inset-[28%] grid place-items-center rounded-full border border-[color:var(--gold)]/20 bg-black/40 text-center backdrop-blur-md"
             >
-              <span className="px-2">
-                <Sparkles className="mx-auto h-5 w-5 text-[color:var(--gold)]" />
-                <span className="mt-1 block font-display text-[11px] font-bold leading-tight text-champagne/80">
-                  {t.discover.center}
-                </span>
+              {petalPos.map((pt, i) => (
+                <line
+                  key={petals[i].key}
+                  x1={positions[activeIndex].x}
+                  y1={positions[activeIndex].y}
+                  x2={pt.x}
+                  y2={pt.y}
+                  stroke="var(--gold)"
+                  strokeWidth={0.35}
+                  opacity={0.4}
+                />
+              ))}
+            </svg>
+          ) : null}
+
+          <motion.div
+            aria-hidden
+            className="absolute inset-[6%] rounded-full border border-dashed border-[color:var(--gold)]/25"
+            animate={reduce || isMobile || active ? { rotate: 0 } : { rotate: 360 }}
+            transition={{ duration: 60, ease: "linear", repeat: Infinity }}
+          />
+          <div
+            aria-hidden
+            className="absolute inset-[30%] grid place-items-center rounded-full border border-[color:var(--gold)]/20 bg-black/40 text-center backdrop-blur-md"
+          >
+            <span className="px-2">
+              <Sparkles className="mx-auto h-5 w-5 text-[color:var(--gold)]" />
+              <span className="mt-1 block font-display text-[11px] font-bold leading-tight text-champagne/80">
+                {t.discover.center}
               </span>
-            </div>
-            {programs.map((p, i) => (
-              <ProgramNode
-                key={p.id}
-                program={p}
-                label={familyLabel(p.id)}
-                hint={familyHint(p)}
-                pos={positions[i]}
-                isActive={activeId === p.id}
-                disabled={isSwitching}
-                onActivate={() => activate(p)}
-                onHover={() => {
-                  if (!isMobile && p.kind !== "enter") {
-                    setCycle(null);
-                    setActiveId(p.id);
-                  }
-                }}
-              />
-            ))}
+            </span>
           </div>
 
-          {active ? (
-            <DisclosurePanel
-              program={active}
-              label={familyLabel(active.id)}
-              cycle={cycle}
-              setCycle={setCycle}
-              isSwitching={isSwitching}
-              onSelect={onSelect}
-              interest={interest}
+          {programs.map((p, i) => (
+            <ProgramNode
+              key={p.id}
+              program={p}
+              label={familyLabel(p.id)}
+              hint={familyHint(p)}
+              pos={positions[i]}
+              isActive={activeId === p.id}
+              dimmed={active !== null && activeId !== p.id}
+              disabled={isSwitching}
+              onActivate={() => activate(p)}
+              onHover={() => {
+                if (!isMobile && p.kind !== "enter") {
+                  setCycle(null);
+                  setActiveId(p.id);
+                }
+              }}
             />
-          ) : null}
-        </>
+          ))}
+
+          {petals.map((petal, i) => (
+            <PetalButton
+              key={petal.key}
+              petal={petal}
+              pos={petalPos[i]}
+              interest={interest}
+              isSwitching={isSwitching}
+              onEnter={onSelect}
+              onDrill={setCycle}
+            />
+          ))}
+        </div>
       )}
     </div>
   );
