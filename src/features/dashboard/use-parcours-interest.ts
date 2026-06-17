@@ -7,7 +7,14 @@ import {
   getParcoursInterestCounts,
   toggleParcoursInterest,
 } from "./parcours-interest.server";
-import type { ParcoursInterestState } from "./components/parcours-hub";
+
+/** Per-parcours interest state, threaded from a route into the catalogue UI. */
+export type ParcoursInterestState = {
+  counts: Record<string, number>;
+  mine: Set<string>;
+  togglingId: string | null;
+  onToggle: (id: string) => void;
+};
 
 const MINE_KEY = ["my-parcours-interests"] as const;
 const COUNTS_KEY = ["parcours-interest-counts"] as const;

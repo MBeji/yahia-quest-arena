@@ -399,7 +399,7 @@ export const ar: TranslationKeys = {
   layout: {
     heroesHall: "قاعة الأبطال",
     parcours: "المسار",
-    themes: "استكشاف",
+    themes: "اكتشف",
     dungeon: "الزنزانة",
     ranking: "الترتيب",
     parentReport: "التقرير",
@@ -476,6 +476,24 @@ export const ar: TranslationKeys = {
     colProgram: "البرنامج",
     colInterest: "المهتمّون",
     empty: "لا يوجد اهتمام مُسجَّل بعد.",
+  },
+  discover: {
+    heading: "اكتشف برامجنا",
+    subtitle: "اختر طريقك: مرّر فوق برنامج ثم اضغط للدخول.",
+    center: "برامجنا",
+    enter: "دخول",
+    back: "رجوع",
+    families: {
+      tunisien: "البرنامج الرسمي التونسي",
+      langues: "اللغات",
+      culture: "الثقافة العامة",
+      cerveau: "تمرين الدماغ",
+      ib: "IB — البكالوريا الدولية",
+    },
+    hintClasses: "{count} أقسام",
+    hintLanguages: "{count} لغات",
+    hintSoon: "قريباً",
+    hintExplore: "استكشاف",
   },
   leaderboard: {
     titleGradient: "ترتيب",
