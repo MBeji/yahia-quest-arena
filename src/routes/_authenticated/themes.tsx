@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { getParcours } from "@/features/dashboard";
+import { getParcours, useParcoursInterest } from "@/features/dashboard";
 import { ParcoursHub, type ParcoursHubItem } from "@/features/dashboard/components/parcours-hub";
 import { setCurrentParcours } from "@/features/auth";
 import { useT } from "@/lib/i18n";
@@ -32,6 +32,7 @@ function ExplorerPage() {
   });
 
   const parcours = (data?.parcours as ParcoursHubItem[]) ?? [];
+  const interest = useParcoursInterest();
 
   const switchMutation = useMutation({
     mutationFn: (parcoursId: string) => saveParcours({ data: { parcoursId } }),
@@ -54,6 +55,7 @@ function ExplorerPage() {
       isError={isError}
       isSwitching={switchMutation.isPending}
       onSelect={(id) => switchMutation.mutate(id)}
+      interest={interest}
     />
   );
 }

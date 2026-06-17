@@ -718,6 +718,35 @@ export type Database = {
           },
         ];
       };
+      parcours_interest: {
+        Row: {
+          created_at: string;
+          id: string;
+          parcours_id: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          parcours_id: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          parcours_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "parcours_interest_parcours_id_fkey";
+            columns: ["parcours_id"];
+            isOneToOne: false;
+            referencedRelation: "parcours";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       parent_student_links: {
         Row: {
           created_at: string;
@@ -1369,6 +1398,18 @@ export type Database = {
       admin_revoke_parcours: {
         Args: { p_parcours: string; p_user: string };
         Returns: undefined;
+      };
+      parcours_interest_counts: {
+        Args: never;
+        Returns: {
+          interest_count: number;
+          name_fr: string;
+          parcours_id: string;
+        }[];
+      };
+      toggle_parcours_interest: {
+        Args: { p_parcours: string };
+        Returns: boolean;
       };
       award_badge_if_new: {
         Args: { p_badge_code: string; p_reason: string; p_user: string };

@@ -216,8 +216,8 @@ describe("dashboard.parcours — getParcours catalogue", () => {
 
     expect(chain.order).toHaveBeenCalledWith("display_order");
     expect(result.parcours).toEqual([
-      { ...concours, hasEntitlement: false },
-      { ...libre, hasEntitlement: true },
+      { ...concours, grade_cycle: null, grade_order: null, hasEntitlement: false },
+      { ...libre, grade_cycle: null, grade_order: null, hasEntitlement: true },
     ]);
     // Entitlement RPC is queried only for the premium parcours.
     expect(mockRpc).toHaveBeenCalledTimes(1);
@@ -248,7 +248,40 @@ describe("dashboard.parcours — getParcours catalogue", () => {
       parcours: Array<Record<string, unknown>>;
     };
 
-    expect(result.parcours).toEqual([{ ...concours, hasEntitlement: true }]);
+    expect(result.parcours).toEqual([
+      { ...concours, grade_cycle: null, grade_order: null, hasEntitlement: true },
+    ]);
+  });
+
+  it("enriches a school parcours with its grade's cycle + order", async () => {
+    const concours = {
+      id: "concours-9eme",
+      name_fr: "Préparation Concours 9ème",
+      kind: "concours",
+      is_premium: false,
+      status: "available",
+      display_order: 1,
+      icon: "GraduationCap",
+      color: "subject-math",
+      theme_id: "ecole-tn",
+      grade_id: "g9",
+    };
+    mockFrom.mockImplementation((table: string) =>
+      table === "grades"
+        ? mockQuery([{ id: "g9", cycle: "college", display_order: 9 }])
+        : mockQuery([concours]),
+    );
+
+    const { getParcours } = await import("@/features/dashboard");
+    const result = (await (getParcours as unknown as Fn)()) as {
+      parcours: Array<Record<string, unknown>>;
+    };
+
+    expect(result.parcours[0]).toMatchObject({
+      id: "concours-9eme",
+      grade_cycle: "college",
+      grade_order: 9,
+    });
   });
 
   it("throws a generic message on error", async () => {

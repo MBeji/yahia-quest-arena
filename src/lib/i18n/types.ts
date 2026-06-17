@@ -422,6 +422,7 @@ export type TranslationKeys = {
     subscriptions: string;
     betaRequests: string;
     contentReports: string;
+    parcoursInterest: string;
     signOut: string;
     logoutToast: string;
   };
@@ -474,6 +475,26 @@ export type TranslationKeys = {
     parcoursSubtitleLibre: string;
     saving: string;
     saveError: string;
+  };
+  // School cycle group labels (programme scolaire)
+  cycles: {
+    primaire: string;
+    college: string;
+    secondaire: string;
+  };
+  // Interest votes on coming-soon parcours (+ admin ranking)
+  parcoursInterest: {
+    cta: string;
+    interested: string;
+    count: string;
+    underConstruction: string;
+    toggleError: string;
+    loadError: string;
+    adminTitle: string;
+    adminDesc: string;
+    colProgram: string;
+    colInterest: string;
+    empty: string;
   };
   // Leaderboard page chrome
   leaderboard: {
