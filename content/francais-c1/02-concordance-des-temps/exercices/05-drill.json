@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill : la concordance des temps",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complétez : « Nous savons qu'elle ___ son rapport la semaine dernière. » (antériorité, principale au présent)",
+      "options": [
+        { "id": "a", "text": "a rendu" },
+        { "id": "b", "text": "avait rendu" },
+        { "id": "c", "text": "rendra" },
+        { "id": "d", "text": "rendait" }
+      ],
+      "correctOption": "a",
+      "explanation": "Principale au présent (« nous savons ») + antériorité accomplie : passé composé, « a rendu ». Le plus-que-parfait « avait rendu » appartiendrait à une principale au passé ; « rendra » est un futur et « rendait » un imparfait, qui ne marquent pas l'antériorité.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complétez : « Il pensait que la pluie ___ bientôt. » (postériorité, principale au passé)",
+      "options": [
+        { "id": "a", "text": "cessera" },
+        { "id": "b", "text": "cesserait" },
+        { "id": "c", "text": "cesse" },
+        { "id": "d", "text": "cessait" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Il pensait » est au passé ; la postériorité se rend par le conditionnel présent, futur du passé : « cesserait ». Le futur « cessera » se garde après un présent ; « cesse » et « cessait » expriment le simultané, pas l'à-venir.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complétez : « Je doute qu'il ___ déjà terminé son travail. » (subjonctif, action antérieure)",
+      "options": [
+        { "id": "a", "text": "a" },
+        { "id": "b", "text": "aura" },
+        { "id": "c", "text": "ait" },
+        { "id": "d", "text": "avait" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Douter que » impose le subjonctif ; l'action étant antérieure (« déjà terminé »), c'est le subjonctif passé, dont l'auxiliaire est « ait » : « qu'il ait terminé ». « A » est l'indicatif présent, « aura » le futur, « avait » l'imparfait — aucun n'est un subjonctif.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Identifiez la phrase CORRECTE.",
+      "options": [
+        { "id": "a", "text": "Elle voulait que je lui disais la vérité." },
+        { "id": "b", "text": "Elle voulait que je lui dise la vérité." },
+        { "id": "c", "text": "Elle voulait que je lui dirais la vérité." },
+        { "id": "d", "text": "Elle voulait que je lui dirai la vérité." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Vouloir que » exige le subjonctif, maintenu au présent même après un passé : « que je lui dise ». « Disais » est un imparfait de l'indicatif (calque fautif de la concordance indicative) ; « dirais » et « dirai » sont des indicatifs et ne conviennent pas.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complétez : « Il jura qu'il ___ innocent et qu'il ne ___ jamais menti. » (simultané puis antériorité, principale au passé)",
+      "options": [
+        { "id": "a", "text": "est / a" },
+        { "id": "b", "text": "serait / aurait" },
+        { "id": "c", "text": "était / a" },
+        { "id": "d", "text": "était / avait" }
+      ],
+      "correctOption": "d",
+      "explanation": "Après « il jura » (passé simple), le simultané se met à l'imparfait (« était ») et l'antériorité au plus-que-parfait (« avait menti »). Le présent « est / a » ne s'accorde pas au passé ; le conditionnel « serait / aurait » exprimerait une postériorité, non l'état présent et le fait antérieur.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans la phrase soutenue « Je craignais qu'il n'eût oublié », à quel mode et temps est « eût oublié » ?",
+      "options": [
+        { "id": "a", "text": "Plus-que-parfait du subjonctif (registre littéraire)" },
+        { "id": "b", "text": "Conditionnel passé" },
+        { "id": "c", "text": "Plus-que-parfait de l'indicatif" },
+        { "id": "d", "text": "Subjonctif passé courant" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Eût oublié » (auxiliaire au subjonctif imparfait + participe) est un plus-que-parfait du subjonctif, employé en style soutenu après un passé ; en français courant on dirait « qu'il ait oublié ». Le conditionnel passé serait « aurait oublié », et le plus-que-parfait de l'indicatif « avait oublié ».",
+      "difficulty": 3
+    }
+  ]
+}

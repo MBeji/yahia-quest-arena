@@ -1,0 +1,109 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : ironie, voix et structure dense",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Lisez l'extrait :\n« Nos experts en prospective, dont la perspicacité n'a d'égale que leur talent pour se tromper d'une décennie sur deux, nous promettent désormais une intelligence artificielle bienveillante, sobre et créatrice d'emplois. On voudrait les croire. On se souvient seulement qu'ils nous avaient déjà promis, en leur temps, la fin du travail, la paix par le commerce et la démocratie par le câble. »\n\nQuel est le ton dominant de ce passage ?",
+      "options": [
+        { "id": "a", "text": "Ironique et désabusé à l'égard des prévisions des experts." },
+        { "id": "b", "text": "Admiratif devant la perspicacité des experts." },
+        { "id": "c", "text": "Strictement informatif sur l'intelligence artificielle." },
+        { "id": "d", "text": "Optimiste quant à l'avenir promis par les experts." }
+      ],
+      "correctOption": "a",
+      "explanation": "La louange « dont la perspicacité n'a d'égale que leur talent pour se tromper » est une antiphrase, et la liste des promesses non tenues confirme le scepticisme : le ton est ironique et désabusé. Il n'y a ni admiration réelle, ni neutralité, ni optimisme.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Que la culture soit devenue une industrie, nul ne le contestera plus. Le malheur n'est pas qu'elle se vende — elle l'a toujours fait —, mais qu'elle ait fini par calquer ses formes sur celles de n'importe quelle marchandise : standardisées, testées sur des panels, conçues pour ne déplaire à personne et, par là même, pour ne marquer durablement personne. »\n\nQuelle est la thèse de l'auteur ?",
+      "options": [
+        { "id": "a", "text": "La culture n'a jamais dû se vendre et devrait rester gratuite." },
+        {
+          "id": "b",
+          "text": "La marchandisation appauvrit la culture en la standardisant pour ne déplaire à personne."
+        },
+        { "id": "c", "text": "Les panels de test garantissent une culture de meilleure qualité." },
+        { "id": "d", "text": "La culture est désormais accessible à tous grâce à l'industrie." }
+      ],
+      "correctOption": "b",
+      "explanation": "L'auteur précise que le problème n'est pas la vente (« elle l'a toujours fait ») mais le calque sur la marchandise standardisée, « conçue pour ne marquer durablement personne » : c'est une critique de l'appauvrissement. L'option a se trompe de cible (l'auteur ne condamne pas la vente) ; c et d inversent ou ajoutent au propos.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Il pleuvait sur la ville comme il avait toujours plu, et les passants pressaient le pas vers des destinations qui, à les voir si affairés, semblaient toutes capitales. Lui seul, sous l'auvent du café, regardait s'écouler ce ruissellement d'existences, songeant que parmi tous ces gens si sûrs d'aller quelque part, aucun peut-être ne savait vraiment où. »\n\nQuelle vision du monde se dégage de ce passage littéraire ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Une célébration enthousiaste de l'énergie urbaine et de ses certitudes."
+        },
+        { "id": "b", "text": "Une description météorologique sans portée sur les personnages." },
+        { "id": "c", "text": "Un éloge de la ponctualité et de la rigueur des passants." },
+        {
+          "id": "d",
+          "text": "Un regard mélancolique et distancié sur l'agitation humaine, jugée peut-être sans véritable but."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Le contraste entre l'« affairé » des passants « si sûrs d'aller quelque part » et le doute final (« aucun peut-être ne savait vraiment où ») installe un regard mélancolique et distancié de l'observateur. Ce n'est ni une célébration, ni une simple notation météo, ni un éloge de la ponctualité.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« On objectera que la liberté d'expression doit protéger même les propos les plus odieux, sans quoi elle ne serait qu'un mot. L'argument a sa force. Reste qu'une société qui, au nom de cette liberté, laisse prospérer l'appel à la haine finit par sacrifier la liberté de ceux que cette haine vise à réduire au silence. »\n\nComment l'auteur traite-t-il l'objection qu'il rapporte ?",
+      "options": [
+        { "id": "a", "text": "Il l'adopte intégralement comme sa propre conclusion." },
+        { "id": "b", "text": "Il la rejette d'emblée comme absurde et sans intérêt." },
+        {
+          "id": "c",
+          "text": "Il lui reconnaît une part de validité, puis la dépasse en montrant ses effets pervers."
+        },
+        { "id": "d", "text": "Il l'ignore et change complètement de sujet." }
+      ],
+      "correctOption": "c",
+      "explanation": "« L'argument a sa force » concède une part de validité ; « Reste que… » introduit le dépassement : laisser prospérer la haine sacrifie la liberté des victimes. C'est une concession suivie d'une réfutation nuancée, ni adhésion totale, ni rejet pur, ni abandon du sujet.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« §1 : on s'émeut, à juste titre, de la disparition des petits commerces. §2 : mais l'on oublie que ces mêmes commerces, hier, furent accusés d'avoir tué les marchés et les artisans qui les précédaient. §3 : « Peut-être ne pleurons-nous jamais que le monde de notre enfance, en le confondant avec un âge d'or. »\n\nQuelle est la portée du troisième paragraphe ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Il affirme qu'il existait réellement un âge d'or du commerce, désormais perdu."
+        },
+        {
+          "id": "b",
+          "text": "Il généralise la réflexion : notre nostalgie tiendrait moins aux faits qu'à notre rapport au passé."
+        },
+        { "id": "c", "text": "Il propose un plan concret pour sauver les petits commerces." },
+        { "id": "d", "text": "Il accuse les artisans d'avoir détruit les marchés." }
+      ],
+      "correctOption": "b",
+      "explanation": "Après le constat (§1) et sa relativisation historique (§2), le §3 généralise par une hypothèse (« Peut-être ne pleurons-nous jamais que le monde de notre enfance ») : la nostalgie viendrait de notre rapport au passé. Au contraire, le texte met en doute l'idée d'un « âge d'or » ; il ne propose pas de plan et n'accuse pas les artisans.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Sans doute la transparence est-elle une vertu démocratique. Mais à force d'exiger que tout soit exposé, surveillé, archivé, ne risque-t-on pas de confondre la lumière qui éclaire avec celle qui aveugle, et de faire de la défiance généralisée le seul lien qui nous reste ? »\n\nQue suggère l'opposition entre « la lumière qui éclaire » et « celle qui aveugle » ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Que la transparence est toujours bénéfique, quelle que soit son intensité."
+        },
+        {
+          "id": "b",
+          "text": "Qu'il faudrait supprimer toute forme de transparence dans la vie publique."
+        },
+        {
+          "id": "c",
+          "text": "Que poussée à l'excès, la transparence peut se retourner en surveillance et en défiance, perdant sa vertu."
+        },
+        { "id": "d", "text": "Que l'éclairage public des villes consomme trop d'énergie." }
+      ],
+      "correctOption": "c",
+      "explanation": "La métaphore oppose la transparence utile (« qui éclaire ») à son excès nuisible (« qui aveugle »), prolongée par « la défiance généralisée » : l'auteur avertit qu'à l'excès la transparence se dénature. Il ne la dit ni toujours bénéfique (a), ni à supprimer (b) ; d prend la métaphore au sens littéral.",
+      "difficulty": 3
+    }
+  ]
+}

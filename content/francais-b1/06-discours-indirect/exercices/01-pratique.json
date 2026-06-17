@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Entraînement : le discours indirect",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complète : Elle dit : « Je travaille. » → Elle dit ___ elle travaille.",
+      "options": [
+        { "id": "a", "text": "si" },
+        { "id": "b", "text": "qu'" },
+        { "id": "c", "text": "ce que" },
+        { "id": "d", "text": "de" }
+      ],
+      "correctOption": "b",
+      "explanation": "Une phrase déclarative se rapporte avec « que » (« qu' » devant voyelle) : Elle dit qu'elle travaille. « Si » est réservé aux questions oui/non, « ce que » à « qu'est-ce que », et « de » à l'impératif.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : Il demande : « Est-ce que tu pars ? » → Il demande ___ tu pars.",
+      "options": [
+        { "id": "a", "text": "que" },
+        { "id": "b", "text": "ce que" },
+        { "id": "c", "text": "si" },
+        { "id": "d", "text": "où" }
+      ],
+      "correctOption": "c",
+      "explanation": "C'est une question fermée (réponse oui/non) : on la rapporte avec « si ». Il demande si tu pars. « Que » sert aux déclaratives, « ce que » à « qu'est-ce que », et « où » est un lieu absent ici.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : Elle demande : « Quand reviens-tu ? » → Elle demande ___ tu reviens.",
+      "options": [
+        { "id": "a", "text": "quand" },
+        { "id": "b", "text": "si" },
+        { "id": "c", "text": "que" },
+        { "id": "d", "text": "ce que" }
+      ],
+      "correctOption": "a",
+      "explanation": "Avec un mot interrogatif, on le conserve : « quand » reste « quand », et on rétablit l'ordre sujet + verbe (tu reviens). « Si » effacerait l'idée de temps ; « que » et « ce que » ne conviennent pas à une question de temps.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : Le professeur dit : « Écoutez ! » → Le professeur dit ___ écouter.",
+      "options": [
+        { "id": "a", "text": "que" },
+        { "id": "b", "text": "si" },
+        { "id": "c", "text": "qu'on" },
+        { "id": "d", "text": "d'" }
+      ],
+      "correctOption": "d",
+      "explanation": "Un ordre (impératif) se rapporte avec « de + infinitif » (« d' » devant voyelle) : le professeur dit d'écouter. « Que » et « si » introduiraient un verbe conjugué, pas un ordre transformé en infinitif.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : Marie dit : « J'adore mon métier. » → Marie dit qu'elle adore ___ métier.",
+      "options": [
+        { "id": "a", "text": "mon" },
+        { "id": "b", "text": "son" },
+        { "id": "c", "text": "ton" },
+        { "id": "d", "text": "leur" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le possessif change avec le locuteur : le « mon » de Marie devient « son » quand c'est toi qui rapportes. Garder « mon » signifierait que Marie adore TON métier ; « ton » et « leur » désignent d'autres personnes.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : Il demande : « Qu'est-ce que tu manges ? » → Il demande ___ je mange.",
+      "options": [
+        { "id": "a", "text": "que" },
+        { "id": "b", "text": "ce qui" },
+        { "id": "c", "text": "ce que" },
+        { "id": "d", "text": "si" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Qu'est-ce que » (complément d'objet) se transforme en « ce que » : Il demande ce que je mange. « Ce qui » correspondrait à « qu'est-ce qui » (sujet) ; « que » seul et « si » ne conviennent pas.",
+      "difficulty": 2
+    }
+  ]
+}

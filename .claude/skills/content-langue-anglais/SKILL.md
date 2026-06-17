@@ -20,15 +20,20 @@ written **in English** (immersion). Read the content-engine skill and especially
 ## Specifics
 
 - **Theme/subjects**: `themeId: "anglais"`, `contentLanguage: "en"`, `gradeSlug: null`. Follow the
-  two-axis model in `content-engine/references/language-track.md`: **one subject per CEFR level** —
-  `anglais-a1` (Débutant), `anglais-a2`, `anglais-b1`, `anglais-b2`, `anglais-c1` — sequenced by
-  `displayOrder`, **plus one dedicated `anglais-donjon`** subject (the whole-theme mixed gauntlet).
-  Build levels bottom-up (finish A1 first). `nameFr` is the French catalogue label; the content is
-  English. Leave `isPremium` off (`anglais` is a free `libre` parcours; premium is per parcours).
-- **Chapters**: one competence each (a grammar point / tense / vocabulary field / reading skill),
-  ordered simplest→most complex within the level (~5 per level). cours.md teaches the rule with many
-  example sentences and a forms/conjugation table; quiz.json (5 Q) checks the core rule; exercises
-  drill it via the ascending ladder (01-pratique → 02-revision → 03-boss → 04-defi; see language-track.md).
+  two-axis model in `content-engine/references/language-track.md`: **one subject per CEFR level, the
+  full A1→C2 ladder** — `anglais-a1` (Débutant) … `anglais-c2` (Maîtrise), six subjects sequenced by
+  `displayOrder` — **plus one dedicated `anglais-donjon`** subject (`01-donjon` opener + one
+  `NN-gauntlet-{band}` chapter per level, `gauntlet-a2`…`gauntlet-c2`). This is the shipped reference
+  English track — match its shape. Build levels bottom-up (finish A1 first). `nameFr` is the French
+  catalogue label; the content is English. Leave `isPremium` off (`anglais` is a free `libre` parcours;
+  premium is per parcours).
+- **Chapters**: one competence each, ordered simplest→most complex within the level (**~5–8 per
+  level**). Beyond grammar/tense chapters, **every level ships a vocabulary chapter** (everyday vocab,
+  phrasal verbs, idioms, confusables, word-formation) **and a dedicated reading-comprehension chapter**
+  (`…-reading` / `-reading-inference` / `-reading-critical` as the band rises). cours.md teaches the
+  rule with many example sentences and a forms/conjugation table; quiz.json (5 Q) checks the core rule;
+  exercises drill it via the ascending ladder (01-pratique → 02-revision → 03-boss → 04-defi → **05-drill**,
+  the cumulative whole-chapter consolidation rung; see language-track.md).
 - **Question types that fit**: fill-in-the-gap, pick the correct form/tense, spot-the-error
   (use "find the error" prompts — they exempt the contradiction QA check), choose the right
   translation/meaning, identify the function.

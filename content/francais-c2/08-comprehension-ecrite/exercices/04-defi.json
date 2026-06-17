@@ -1,0 +1,106 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : lecture critique de textes maîtres",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Lisez l'extrait :\n« Le tyran moderne n'a plus besoin de bâillonner : il lui suffit d'assourdir. À quoi bon interdire une parole quand on peut la noyer sous mille autres, également criées, également vaines ? »\n\nQuelle est l'idée maîtresse de ce passage ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "La censure brutale reste l'arme la plus efficace des pouvoirs actuels."
+        },
+        { "id": "b", "text": "Toutes les paroles publiques se valent et méritent d'être criées." },
+        { "id": "c", "text": "Il faut multiplier les paroles pour échapper au tyran." },
+        {
+          "id": "d",
+          "text": "Le contrôle ne passe plus par l'interdiction mais par la saturation du bruit."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "L'opposition « bâillonner / assourdir » et la question rhétorique (« à quoi bon interdire… quand on peut la noyer ») désignent une censure par excès de bruit, non par silence. L'auteur dénonce ce procédé, il ne défend ni la censure brute (a), ni l'équivalence des paroles (b), ni la surenchère (c).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Heureux temps que le nôtre, où l'on peut tout dire — pourvu, naturellement, que cela ne dérange personne d'important. »\n\nComment fonctionne l'ironie de cette phrase ?",
+      "options": [
+        { "id": "a", "text": "L'éloge initial est sincère et la fin le confirme pleinement." },
+        { "id": "b", "text": "La phrase loue sans réserve la liberté d'expression actuelle." },
+        {
+          "id": "c",
+          "text": "La restriction finale ruine l'éloge en révélant une liberté en trompe-l'œil."
+        },
+        { "id": "d", "text": "L'auteur regrette qu'on ne puisse rien dire du tout." }
+      ],
+      "correctOption": "c",
+      "explanation": "« Heureux temps… où l'on peut tout dire » pose un éloge que la restriction « pourvu… que cela ne dérange personne d'important » annule aussitôt : la liberté vantée est factice. L'éloge n'est donc ni sincère (a, b), et l'auteur ne dit pas qu'on ne peut rien dire (d) : il dénonce une liberté conditionnelle.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Puisque les sondages disent le peuple satisfait, et que le peuple, c'est nous, il faut bien conclure que nous sommes satisfaits — quoi que nous en éprouvions par ailleurs. »\n\nQuelle faille logique l'auteur met-il en scène (et raille) ?",
+      "options": [
+        { "id": "a", "text": "Un raisonnement valide menant à une conclusion vraie." },
+        {
+          "id": "b",
+          "text": "Un syllogisme truqué qui impose une conclusion contre l'expérience vécue."
+        },
+        { "id": "c", "text": "Une simple description neutre de l'opinion publique." },
+        { "id": "d", "text": "Une réfutation rigoureuse de la méthode des sondages." }
+      ],
+      "correctOption": "b",
+      "explanation": "Le passage mime un syllogisme (« le peuple est satisfait ; le peuple, c'est nous ; donc nous sommes satisfaits ») dont la chute « quoi que nous en éprouvions » avoue qu'il écrase le ressenti réel : l'auteur raille ce raisonnement truqué. Il ne le valide pas (a), ne décrit pas neutrement (c) et ne mène pas une réfutation méthodique (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Elle avait, disait-on, tout pour être heureuse. On le disait surtout devant elle, et elle souriait, comme on signe un reçu. »\n\nQue révèle la comparaison « comme on signe un reçu » ?",
+      "options": [
+        { "id": "a", "text": "Que le personnage éprouve un bonheur sincère et débordant." },
+        {
+          "id": "b",
+          "text": "Que son sourire est une formalité vide, accusant réception d'un bonheur prescrit."
+        },
+        { "id": "c", "text": "Qu'elle s'apprête à conclure une transaction commerciale." },
+        { "id": "d", "text": "Que l'entourage doute de la réalité de sa fortune." }
+      ],
+      "correctOption": "b",
+      "explanation": "La comparaison mécanique et administrative (« comme on signe un reçu ») vide le sourire de toute joie : c'est un assentiment de pure forme à un bonheur que les autres décrètent (« disait-on… surtout devant elle »). Le sens littéral (c) est exclu, et le texte suggère l'inverse d'un bonheur sincère (a) ; d détourne vers la fortune.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« §1 — On s'indigne que la machine remplace l'homme. §2 — On oubliait, hier, de s'indigner qu'elle l'épuisât. §3 — Peut-être ne défendons-nous jamais le travail que lorsqu'il vient à manquer, l'ayant maudit tant qu'il abondait. »\n\nQuelle est la portée du troisième paragraphe ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Il affirme que le travail à la machine était un âge d'or à préserver."
+        },
+        { "id": "b", "text": "Il propose un plan technique pour limiter l'automatisation." },
+        {
+          "id": "c",
+          "text": "Il généralise par une hypothèse : notre attachement au travail tiendrait à sa rareté plus qu'à sa valeur."
+        },
+        { "id": "d", "text": "Il accuse les machines d'avoir détruit la dignité ouvrière." }
+      ],
+      "correctOption": "c",
+      "explanation": "Après le constat (§1) et sa relativisation historique (§2 : on ne s'indignait pas quand la machine « l'épuisait »), le §3 généralise par une hypothèse (« Peut-être ne défendons-nous… que lorsqu'il vient à manquer ») : l'attachement naîtrait de la rareté. Le texte ne célèbre aucun âge d'or (a), ne propose pas de plan (b) et n'accuse pas frontalement les machines (d).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Soit, concédons-le sans peine : jamais l'humanité n'a tant produit de savoir. Mais qu'avons-nous fait de tout ce clair savoir, sinon des nuits plus sombres et des armes plus sûres ? Le progrès des lumières, parfois, n'éclaire que le chemin du gouffre. »\n\nQuel est le mouvement d'ensemble de l'argumentation ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Une concession suivie d'un retournement : le savoir accru ne garantit pas un progrès moral, et peut servir le pire."
+        },
+        { "id": "b", "text": "Un éloge continu et sans réserve du progrès scientifique." },
+        { "id": "c", "text": "Une démonstration que le savoir doit être interdit." },
+        { "id": "d", "text": "Une description neutre de l'histoire des sciences." }
+      ],
+      "correctOption": "a",
+      "explanation": "« Soit, concédons-le… Mais… » concède l'essor du savoir pour mieux le retourner ; la métaphore finale (« n'éclaire que le chemin du gouffre ») dissocie progrès intellectuel et progrès moral. C'est donc l'inverse d'un éloge sans réserve (b) ; l'auteur n'interdit pas le savoir (c) et ne reste pas neutre (d).",
+      "difficulty": 3
+    }
+  ]
+}

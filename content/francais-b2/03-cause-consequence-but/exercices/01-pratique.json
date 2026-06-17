@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Entraînement : la cause, la conséquence et le but",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complète : « ___ ses efforts, elle a obtenu une bourse. » (résultat positif)",
+      "options": [
+        { "id": "a", "text": "À cause de" },
+        { "id": "b", "text": "Grâce à" },
+        { "id": "c", "text": "Faute de" },
+        { "id": "d", "text": "Parce que" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Grâce à » + nom marque une cause positive : grâce à ses efforts. « À cause de » serait négatif/neutre, « faute de » signifie un manque, et « parce que » exige un verbe conjugué, pas un nom.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Je révise beaucoup ___ réussir le DELF. » (même sujet)",
+      "options": [
+        { "id": "a", "text": "pour" },
+        { "id": "b", "text": "pour que" },
+        { "id": "c", "text": "afin que" },
+        { "id": "d", "text": "parce que" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le sujet est le même (je révise / je réussis) → « pour » + infinitif : pour réussir. « Pour que » et « afin que » s'emploient quand les sujets diffèrent (+ subjonctif). « Parce que » exprimerait une cause, pas un but.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle phrase est CORRECTE ?",
+      "options": [
+        { "id": "a", "text": "Le match est annulé parce que la neige." },
+        { "id": "b", "text": "Le match est annulé en raison de la neige." },
+        { "id": "c", "text": "Le match est annulé donc la neige." },
+        { "id": "d", "text": "Le match est annulé grâce à la neige." }
+      ],
+      "correctOption": "b",
+      "explanation": "Devant le nom « la neige », on emploie « en raison de » (cause, registre formel). « Parce que » exige un verbe conjugué ; « donc » introduit une conséquence ; « grâce à » serait positif, ce qui ne convient pas à une annulation.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Il pleuvait, ___ nous avons annulé la sortie. »",
+      "options": [
+        { "id": "a", "text": "car" },
+        { "id": "b", "text": "puisque" },
+        { "id": "c", "text": "c'est pourquoi" },
+        { "id": "d", "text": "pour que" }
+      ],
+      "correctOption": "c",
+      "explanation": "La seconde proposition est la conséquence du fait qu'il pleuvait → « c'est pourquoi » (conséquence). « Car » et « puisque » introduisent une cause, et « pour que » un but au subjonctif.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « ___ tu es déjà au courant, je ne répète pas. » (cause connue de l'interlocuteur)",
+      "options": [
+        { "id": "a", "text": "Puisque" },
+        { "id": "b", "text": "Pour que" },
+        { "id": "c", "text": "À cause de" },
+        { "id": "d", "text": "Si bien que" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Puisque » introduit une cause déjà connue, évidente pour l'interlocuteur : puisque tu es au courant. « Pour que » marque un but, « à cause de » exige un nom, et « si bien que » introduit une conséquence.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Elle parle bas ___ que le bébé. » (deux sujets, but : éviter de réveiller)",
+      "options": [
+        { "id": "a", "text": "de peur de réveiller" },
+        { "id": "b", "text": "de peur que le bébé se réveille" },
+        { "id": "c", "text": "de peur que le bébé se réveillera" },
+        { "id": "d", "text": "à cause de réveiller" }
+      ],
+      "correctOption": "b",
+      "explanation": "Deux sujets (elle / le bébé) → « de peur que » + subjonctif : de peur que le bébé se réveille. La forme (c) met le futur, interdit ici. L'option (a) supposerait le même sujet, et « à cause de » + verbe est incorrect.",
+      "difficulty": 2
+    }
+  ]
+}

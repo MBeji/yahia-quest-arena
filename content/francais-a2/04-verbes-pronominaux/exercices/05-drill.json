@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill : les verbes pronominaux",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complète : « Je ___ après une longue journée. » (se reposer)",
+      "options": [
+        { "id": "a", "text": "se repose" },
+        { "id": "b", "text": "me repose" },
+        { "id": "c", "text": "te repose" },
+        { "id": "d", "text": "me reposes" }
+      ],
+      "correctOption": "b",
+      "explanation": "Avec « je », le pronom est « me » et le verbe prend -e : je me repose. « se repose » est pour il/elle, « te repose » est pour tu, et « me reposes » ajoute un -s qui n'existe pas à la première personne.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choisis la phrase correcte.",
+      "options": [
+        { "id": "a", "text": "Elles se promènent au bord de la mer." },
+        { "id": "b", "text": "Elles se promène au bord de la mer." },
+        { "id": "c", "text": "Elles te promènent au bord de la mer." },
+        { "id": "d", "text": "Elles promènent au bord de la mer." }
+      ],
+      "correctOption": "a",
+      "explanation": "Avec « elles », le pronom est « se » et le verbe prend -ent : elles se promènent. « se promène » oublie le pluriel, « te promènent » prend le mauvais pronom, et « promènent » oublie le pronom réfléchi.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète avec élision : « Mon frère ___ Karim. » (s'appeler)",
+      "options": [
+        { "id": "a", "text": "se appelle" },
+        { "id": "b", "text": "s'appellent" },
+        { "id": "c", "text": "s'appelle" },
+        { "id": "d", "text": "t'appelle" }
+      ],
+      "correctOption": "c",
+      "explanation": "« mon frère » = il, donc « se » s'élide en « s' » devant la voyelle : il s'appelle. « se appelle » oublie l'élision, « s'appellent » est au pluriel, et « t'appelle » est pour tu.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Mets à la forme négative : « Vous vous couchez tard. »",
+      "options": [
+        { "id": "a", "text": "Vous vous ne couchez pas tard." },
+        { "id": "b", "text": "Vous ne vous couchez pas tard." },
+        { "id": "c", "text": "Vous ne couchez vous pas tard." },
+        { "id": "d", "text": "Vous vous couchez ne pas tard." }
+      ],
+      "correctOption": "b",
+      "explanation": "La négation encadre le pronom et le verbe : ne + vous couchez + pas → Vous ne vous couchez pas tard. « ne » se place avant le pronom réfléchi ; les autres séparent mal le pronom ou placent « pas » au mauvais endroit.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Le matin, nous ___ les dents ensemble. » (se brosser)",
+      "options": [
+        { "id": "a", "text": "se brossons" },
+        { "id": "b", "text": "nous brossez" },
+        { "id": "c", "text": "vous brossons" },
+        { "id": "d", "text": "nous brossons" }
+      ],
+      "correctOption": "d",
+      "explanation": "Avec « nous », le pronom réfléchi est « nous » et le verbe prend -ons : nous nous brossons. « se brossons » prend le mauvais pronom, et les autres mélangent les terminaisons de nous et vous.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "Tu te dépêches le matin." },
+        { "id": "b", "text": "Il s'habille avant de partir." },
+        { "id": "c", "text": "Je me amuse pendant les vacances." },
+        { "id": "d", "text": "Elles se reposent le dimanche." }
+      ],
+      "correctOption": "c",
+      "explanation": "L'erreur est (c) : devant la voyelle de « amuse », « me » doit s'élider en « m' » → je m'amuse. Les autres sont correctes : tu te dépêches, il s'habille (h muet), elles se reposent.",
+      "difficulty": 2
+    }
+  ]
+}

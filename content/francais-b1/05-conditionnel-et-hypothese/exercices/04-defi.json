@@ -1,0 +1,82 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : le conditionnel et l'hypothèse",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Lis : « Karim n'a pas révisé. Il dit : “Si j'avais révisé, j'aurais réussi l'examen.” » Quelle affirmation est VRAIE ?",
+      "options": [
+        { "id": "a", "text": "Karim a réussi l'examen." },
+        { "id": "b", "text": "Karim regrette de ne pas avoir révisé." },
+        { "id": "c", "text": "Karim est sûr de réussir le prochain examen." },
+        { "id": "d", "text": "Karim révise en ce moment." }
+      ],
+      "correctOption": "b",
+      "explanation": "L'irréel du passé (si + plus-que-parfait → conditionnel passé) exprime un regret sur une action non réalisée : Karim n'a pas révisé et le regrette. Il n'a donc pas réussi (a faux), la phrase ne parle ni d'un futur examen (c) ni d'une révision en cours (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lis : « Le journaliste annonce : “D'après nos sources, l'usine fermerait l'an prochain.” » Que signifie le conditionnel ici ?",
+      "options": [
+        { "id": "a", "text": "Une demande polie de l'usine." },
+        { "id": "b", "text": "Un conseil donné à l'usine." },
+        { "id": "c", "text": "Un souhait du journaliste." },
+        { "id": "d", "text": "Une information non confirmée." }
+      ],
+      "correctOption": "d",
+      "explanation": "Le conditionnel journalistique (« fermerait », « d'après nos sources ») marque une information non vérifiée, présentée avec prudence. Ce n'est ni une demande polie, ni un conseil, ni un souhait : c'est le conditionnel d'information.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "Si j'avais le temps, je lirais davantage." },
+        { "id": "b", "text": "Si tu viens, on ira au cinéma." },
+        { "id": "c", "text": "Si elle avait travaillé, elle aurait réussi." },
+        { "id": "d", "text": "Si j'aurais de l'argent, je t'aiderais." }
+      ],
+      "correctOption": "d",
+      "explanation": "La faute est en (d) : « si j'aurais » est interdit, car le conditionnel ne suit jamais « si ». Il faut « si j'avais de l'argent ». (a) est un irréel du présent, (b) un potentiel et (c) un irréel du passé, tous corrects.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète l'irréel du passé : « Si nous étions partis plus tôt, nous ___ l'avion. »",
+      "options": [
+        { "id": "a", "text": "n'aurions pas raté" },
+        { "id": "b", "text": "ne raterions pas" },
+        { "id": "c", "text": "ne raterons pas" },
+        { "id": "d", "text": "ne ratons pas" }
+      ],
+      "correctOption": "a",
+      "explanation": "« étions partis » est un plus-que-parfait : l'irréel du passé exige le conditionnel passé, donc « nous n'aurions pas raté ». « ne raterions pas » est un conditionnel présent (irréel du présent), « ne raterons pas » un futur et « ne ratons pas » un présent.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Une amie dit : « Je suis épuisée par mon travail. » Quel conseil est correctement formulé au conditionnel ?",
+      "options": [
+        { "id": "a", "text": "Tu devras prendre des vacances." },
+        { "id": "b", "text": "Tu dois prendre des vacances." },
+        { "id": "c", "text": "Tu devrais prendre des vacances." },
+        { "id": "d", "text": "Tu devrais prendras des vacances." }
+      ],
+      "correctOption": "c",
+      "explanation": "Le conseil poli se formule au conditionnel présent : « tu devrais » (radical devr- + -ais). « tu devras » est le futur, « tu dois » le présent (obligation directe), et « tu devrais prendras » accumule deux verbes conjugués, ce qui est agrammatical.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète correctement ce système mixte : « Si tu avais écouté mes conseils, tu ___ aujourd'hui plus tranquille. »",
+      "options": [
+        { "id": "a", "text": "seras" },
+        { "id": "b", "text": "serais" },
+        { "id": "c", "text": "aurais été" },
+        { "id": "d", "text": "étais" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le « si » est au plus-que-parfait (cause passée), mais « aujourd'hui » situe la conséquence dans le présent : on emploie donc le conditionnel présent « tu serais ». « seras » (futur) et « étais » (imparfait) sont interdits, et « aurais été » conviendrait pour une conséquence passée, pas présente.",
+      "difficulty": 3
+    }
+  ]
+}

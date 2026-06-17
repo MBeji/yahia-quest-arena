@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Choisis l'article correct : « J'ai ___ chien à la maison. »",
+      "options": [
+        { "id": "a", "text": "une" },
+        { "id": "b", "text": "un" },
+        { "id": "c", "text": "la" },
+        { "id": "d", "text": "des" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Chien » est un nom masculin singulier, donc on emploie l'article indéfini « un » : un chien. La forme « une » est féminine, « la » est un article défini féminin, et « des » serait un pluriel.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choisis l'article correct : « ___ table est dans la cuisine. »",
+      "options": [
+        { "id": "a", "text": "Le" },
+        { "id": "b", "text": "L'" },
+        { "id": "c", "text": "La" },
+        { "id": "d", "text": "Un" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Table » est un nom féminin qui commence par une consonne, donc l'article défini est « la » : la table. « Le » est masculin, « l' » ne s'emploie que devant une voyelle ou un h muet, et « un » est un article indéfini.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choisis la bonne forme : « ___ ami de Marie est gentil. »",
+      "options": [
+        { "id": "a", "text": "L'" },
+        { "id": "b", "text": "Le" },
+        { "id": "c", "text": "La" },
+        { "id": "d", "text": "Les" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Ami » commence par la voyelle « a », donc « le » devient « l' » par élision : l'ami. On n'écrit jamais « le ami », et « la » serait une erreur de genre car « ami » est masculin (le féminin est « amie »).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel est le pluriel correct de « un chat » ?",
+      "options": [
+        { "id": "a", "text": "un chats" },
+        { "id": "b", "text": "les chat" },
+        { "id": "c", "text": "le chats" },
+        { "id": "d", "text": "des chats" }
+      ],
+      "correctOption": "d",
+      "explanation": "Au pluriel, le nom prend un -s (chat → chats) et l'article indéfini « un » devient « des » : des chats. On ne garde pas « un » au pluriel, et l'article et le nom doivent porter la marque du pluriel ensemble.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel est le pluriel correct de « un gâteau » ?",
+      "options": [
+        { "id": "a", "text": "des gâteaus" },
+        { "id": "b", "text": "des gâteaux" },
+        { "id": "c", "text": "des gâteau" },
+        { "id": "d", "text": "les gâteaus" }
+      ],
+      "correctOption": "b",
+      "explanation": "Les noms en -eau forment leur pluriel en -eaux : un gâteau → des gâteaux. La forme régulière « gâteaus » est fautive, car les noms en -eau ne prennent pas un simple -s.",
+      "difficulty": 2
+    }
+  ]
+}

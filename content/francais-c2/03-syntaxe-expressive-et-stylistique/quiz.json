@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Dans la phrase « Ainsi parla le sage », quel procédé de syntaxe expressive est employé ?",
+      "options": [
+        { "id": "a", "text": "L'inversion stylistique du sujet après un adverbe en tête." },
+        { "id": "b", "text": "La dislocation du sujet repris par un pronom." },
+        { "id": "c", "text": "L'ellipse du verbe principal." },
+        { "id": "d", "text": "La périphrase désignant le sage." }
+      ],
+      "correctOption": "a",
+      "explanation": "Après l'adverbe « ainsi » en tête de phrase, le sujet « le sage » passe après le verbe « parla » : c'est l'inversion stylistique du sujet, fréquente en style soutenu. Il n'y a ni pronom de reprise (dislocation), ni verbe omis (ellipse), ni expression descriptive (périphrase).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Que signifie « un grand homme » (adjectif antéposé) ?",
+      "options": [
+        { "id": "a", "text": "Un homme de haute taille." },
+        { "id": "b", "text": "Un homme illustre, remarquable." },
+        { "id": "c", "text": "Un homme âgé." },
+        { "id": "d", "text": "Un homme robuste." }
+      ],
+      "correctOption": "b",
+      "explanation": "Antéposé, « grand » prend un sens figuré et valorisant : un grand homme est un homme illustre (Victor Hugo est un grand homme). Le sens de taille — « de haute taille » — correspond à l'adjectif postposé : un homme grand.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle expression désigne le soleil par périphrase ?",
+      "options": [
+        { "id": "a", "text": "L'astre des nuits." },
+        { "id": "b", "text": "La Ville Lumière." },
+        { "id": "c", "text": "L'astre du jour." },
+        { "id": "d", "text": "Le roi des animaux." }
+      ],
+      "correctOption": "c",
+      "explanation": "« L'astre du jour » est la périphrase consacrée du soleil. « L'astre des nuits » désigne la lune, « la Ville Lumière » désigne Paris et « le roi des animaux » désigne le lion.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "La phrase « À chacun son métier » illustre quel procédé ?",
+      "options": [
+        { "id": "a", "text": "L'inversion du sujet." },
+        { "id": "b", "text": "La gradation ternaire." },
+        { "id": "c", "text": "La périphrase savante." },
+        { "id": "d", "text": "L'ellipse stylistique du verbe." }
+      ],
+      "correctOption": "d",
+      "explanation": "Le verbe est sous-entendu (« à chacun revient son métier ») : c'est une ellipse stylistique, qui donne au proverbe sa concision et sa frappe. Aucun sujet n'est inversé, il n'y a ni trois membres croissants ni expression descriptive.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase emploie correctement l'inversion après « peut-être » ?",
+      "options": [
+        { "id": "a", "text": "Peut-être il acceptera notre offre." },
+        { "id": "b", "text": "Peut-être acceptera-t-il notre offre." },
+        { "id": "c", "text": "Peut-être il acceptera-t-il notre offre." },
+        { "id": "d", "text": "Peut-être qu'acceptera-t-il notre offre." }
+      ],
+      "correctOption": "b",
+      "explanation": "Après « peut-être » en tête, soit on inverse (peut-être acceptera-t-il), soit on ajoute « que » sans inverser (peut-être qu'il acceptera). « Peut-être il acceptera » (a) est fautif ; (c) double le pronom ; (d) combine à tort « que » et l'inversion.",
+      "difficulty": 2
+    }
+  ]
+}

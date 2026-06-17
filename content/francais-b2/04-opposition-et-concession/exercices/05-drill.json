@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill : opposition et concession",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complète : « ___ ses promesses, le maire n'a rien changé. »",
+      "options": [
+        { "id": "a", "text": "Bien que" },
+        { "id": "b", "text": "En dépit de" },
+        { "id": "c", "text": "Tandis que" },
+        { "id": "d", "text": "Au lieu de" }
+      ],
+      "correctOption": "b",
+      "explanation": "« En dépit de » (= malgré) se construit avec un nom : « en dépit de ses promesses ». « Bien que » demande un subjonctif, « tandis que » un verbe à l'indicatif, et « au lieu de » un infinitif — aucun ne précède directement le nom « ses promesses ».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète au bon mode : « Quoique la tâche ___ difficile, nous la terminerons. »",
+      "options": [
+        { "id": "a", "text": "soit" },
+        { "id": "b", "text": "est" },
+        { "id": "c", "text": "sera" },
+        { "id": "d", "text": "serait" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Quoique » (concession) exige le subjonctif : « quoique la tâche soit difficile ». L'indicatif « est », le futur « sera » et le conditionnel « serait » sont incorrects après cette conjonction, exactement comme après « bien que ».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle phrase exprime une OPPOSITION et non une concession ?",
+      "options": [
+        { "id": "a", "text": "Bien qu'il soit calme, il s'est emporté." },
+        { "id": "b", "text": "Malgré son calme, il s'est emporté." },
+        { "id": "c", "text": "L'aîné est calme, tandis que le cadet est turbulent." },
+        { "id": "d", "text": "Il a beau rester calme, on le provoque." }
+      ],
+      "correctOption": "c",
+      "explanation": "« Tandis que » oppose deux personnes aux comportements parallèles (calme / turbulent) : opposition. Les phrases (b), (c) et (d) sont concessives : un obstacle (le calme) franchi par un résultat contraire (s'emporter, être provoqué).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "Contrairement à ses habitudes, il est arrivé tôt." },
+        { "id": "b", "text": "Au lieu de dormir, elle a révisé." },
+        { "id": "c", "text": "Malgré sa fatigue, elle a révisé." },
+        { "id": "d", "text": "Contrairement à dormir, elle a révisé." }
+      ],
+      "correctOption": "d",
+      "explanation": "La faute est en (d) : « contrairement à » se construit avec un NOM ou un pronom, pas avec un verbe à l'infinitif. Pour opposer une action, on dit « au lieu de dormir » (b). Les phrases (a) et (c) sont correctes (contrairement à + nom, malgré + nom).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « ___ il fasse beau, nous restons à l'intérieur pour réviser. »",
+      "options": [
+        { "id": "a", "text": "Parce qu'" },
+        { "id": "b", "text": "Bien qu'" },
+        { "id": "c", "text": "Puisqu'" },
+        { "id": "d", "text": "Dès qu'" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le sens est concessif (le beau temps devrait nous faire sortir, mais non) et le verbe « fasse » est au subjonctif : seul « bien que » convient. « Parce que » et « puisque » expriment la cause (+ indicatif), et « dès que » le temps (+ indicatif).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Reformule « Malgré sa préparation, il a eu le trac » avec une proposition concessive correcte.",
+      "options": [
+        { "id": "a", "text": "Bien qu'il se soit préparé, il a eu le trac." },
+        { "id": "b", "text": "Malgré qu'il se soit préparé, il a eu le trac." },
+        { "id": "c", "text": "Bien qu'il s'est préparé, il a eu le trac." },
+        { "id": "d", "text": "Alors qu'il se soit préparé, il a eu le trac." }
+      ],
+      "correctOption": "a",
+      "explanation": "Pour transformer « malgré + nom » en proposition, on emploie « bien que + subjonctif » : « bien qu'il se soit préparé ». (b) « malgré que » est fautif, (c) met l'indicatif « s'est » après « bien que » (faute), et (d) emploie « alors que » au subjonctif (incorrect).",
+      "difficulty": 3
+    }
+  ]
+}

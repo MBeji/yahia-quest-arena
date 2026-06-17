@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill : la mise en relief",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complète : « C'est cette chanson ___ me rappelle mon enfance. »",
+      "options": [
+        { "id": "a", "text": "que" },
+        { "id": "b", "text": "qui" },
+        { "id": "c", "text": "dont" },
+        { "id": "d", "text": "qu'elle" }
+      ],
+      "correctOption": "b",
+      "explanation": "« cette chanson » est le sujet de « rappeler » (qu'est-ce qui me rappelle ?). On met le sujet en relief avec « c'est … qui » : C'est cette chanson qui me rappelle mon enfance. « que » servirait pour un COD ; « dont » pour un complément en « de ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « ___ je suis fier, c'est de mon équipe. »",
+      "options": [
+        { "id": "a", "text": "Ce que" },
+        { "id": "b", "text": "Ce qui" },
+        { "id": "c", "text": "Ce dont" },
+        { "id": "d", "text": "Ce à quoi" }
+      ],
+      "correctOption": "c",
+      "explanation": "« être fier de » se construit avec « de » ; la mise en relief reprend la préposition par « ce dont » : Ce dont je suis fier, c'est de mon équipe. « ce que » (COD) est le piège ; « ce qui » sert au sujet ; « ce à quoi » à un verbe en « à ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète l'accord : « C'est moi qui ___ rangé la salle. »",
+      "options": [
+        { "id": "a", "text": "a" },
+        { "id": "b", "text": "as" },
+        { "id": "c", "text": "ai" },
+        { "id": "d", "text": "ont" }
+      ],
+      "correctOption": "c",
+      "explanation": "Après « c'est moi qui », l'auxiliaire s'accorde à la 1ʳᵉ personne du singulier : C'est moi qui ai rangé la salle. « a » (3ᵉ pers.) est le piège habituel ; « as » est la 2ᵉ pers. ; « ont » la 3ᵉ du pluriel.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase met correctement en relief le complément « avec patience » ?",
+      "options": [
+        { "id": "a", "text": "C'est avec patience qu'il a tout expliqué." },
+        { "id": "b", "text": "C'est avec patience qui il a tout expliqué." },
+        { "id": "c", "text": "Ce dont il a tout expliqué, c'est la patience." },
+        { "id": "d", "text": "C'est avec patience dont il a tout expliqué." }
+      ],
+      "correctOption": "a",
+      "explanation": "Un complément de manière se met en relief avec « c'est … que » : C'est avec patience qu'il a tout expliqué. « qui » est réservé au sujet ; « dont » à un complément en « de », ce qui ne correspond pas à « avec patience ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "Ce film, je l'ai trouvé bouleversant." },
+        { "id": "b", "text": "À tes amis, tu peux leur faire confiance." },
+        { "id": "c", "text": "De ce sujet, j'en ai déjà parlé." },
+        { "id": "d", "text": "Ce livre, je lui ai lu en une nuit." }
+      ],
+      "correctOption": "d",
+      "explanation": "La phrase fautive est (d) : « ce livre » est un COD de « lire », il se reprend par « l' » et non « lui » (réservé au COI). Il faut dire : Ce livre, je l'ai lu en une nuit. En (a) COD → l' ✓ ; (b) COI à+personne → leur ✓ ; (c) complément en « de » → en ✓.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète la dislocation par anticipation : « ___, je le respecte énormément. »",
+      "options": [
+        { "id": "a", "text": "À cet écrivain" },
+        { "id": "b", "text": "Cet écrivain" },
+        { "id": "c", "text": "De cet écrivain" },
+        { "id": "d", "text": "En cet écrivain" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le pronom de reprise « le » est un COD ; l'élément anticipé doit donc être un COD, sans préposition : Cet écrivain, je le respecte énormément. « À/De/En cet écrivain » introduiraient un complément prépositionnel, qui se reprendrait par lui/en/y, pas par « le ».",
+      "difficulty": 3
+    }
+  ]
+}

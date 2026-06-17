@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill : les pronoms compléments",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complète : « Tu regardes la télévision ? — Oui, je ___ regarde le soir. »",
+      "options": [
+        { "id": "a", "text": "lui" },
+        { "id": "b", "text": "la" },
+        { "id": "c", "text": "y" },
+        { "id": "d", "text": "en" }
+      ],
+      "correctOption": "b",
+      "explanation": "« regarder quelque chose » est un COD : « la télévision » (féminin) → « la ». Je la regarde. « lui » serait un COI, « y » remplace à + chose et « en » remplace de + chose.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Tu réponds à ton professeur ? — Oui, je ___ réponds poliment. »",
+      "options": [
+        { "id": "a", "text": "le" },
+        { "id": "b", "text": "y" },
+        { "id": "c", "text": "lui" },
+        { "id": "d", "text": "en" }
+      ],
+      "correctOption": "c",
+      "explanation": "« répondre à quelqu'un » est un COI : « à ton professeur » → « lui ». Je lui réponds. « le » serait un COD, et « y » ne remplace jamais une personne.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Tu joues au tennis ? — Oui, j'___ joue chaque semaine. »",
+      "options": [
+        { "id": "a", "text": "y" },
+        { "id": "b", "text": "le" },
+        { "id": "c", "text": "en" },
+        { "id": "d", "text": "lui" }
+      ],
+      "correctOption": "a",
+      "explanation": "« jouer à quelque chose » : « au tennis » = « à + chose » → « y ». J'y joue. « en » remplacerait « de + chose » (jouer d'un instrument), « le » est un COD et « lui » un COI.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Tu manges des légumes ? — Oui, j'___ mange beaucoup. »",
+      "options": [
+        { "id": "a", "text": "les" },
+        { "id": "b", "text": "y" },
+        { "id": "c", "text": "leur" },
+        { "id": "d", "text": "en" }
+      ],
+      "correctOption": "d",
+      "explanation": "Avec un partitif ou une quantité (« des légumes », « beaucoup »), on emploie « en ». J'en mange beaucoup. « les » s'emploierait avec un nom défini précis, sans idée de quantité.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Cette lettre, je ___ ai écrite hier. »",
+      "options": [
+        { "id": "a", "text": "lui" },
+        { "id": "b", "text": "l'" },
+        { "id": "c", "text": "y" },
+        { "id": "d", "text": "en" }
+      ],
+      "correctOption": "b",
+      "explanation": "« cette lettre » est un COD féminin placé avant le verbe : on emploie « la », élidé en « l' » devant la voyelle, d'où l'accord « écrite ». Je l'ai écrite. « lui » serait un COI (pas d'accord), « y » et « en » sont exclus ici.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Impératif affirmatif : « Cette idée est bonne : pense ___ ! » (penser à cette idée)",
+      "options": [
+        { "id": "a", "text": "y" },
+        { "id": "b", "text": "lui" },
+        { "id": "c", "text": "la" },
+        { "id": "d", "text": "en" }
+      ],
+      "correctOption": "a",
+      "explanation": "« penser à quelque chose » → « y ». À l'impératif affirmatif, le pronom suit le verbe avec un trait d'union : penses-y ! (on ajoute un -s euphonique devant « y »). « lui » exclut les choses, « la » est un COD et « en » remplace « de + chose ».",
+      "difficulty": 3
+    }
+  ]
+}

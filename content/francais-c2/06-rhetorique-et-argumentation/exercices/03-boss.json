@@ -1,0 +1,109 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : rhétorique et argumentation",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "« Il semblerait que cette politique ait eu quelques effets positifs ; reste à savoir s'ils dureront. » Quelle est la fonction dominante de cet énoncé ?",
+      "options": [
+        { "id": "a", "text": "Disqualifier l'adversaire en l'attaquant personnellement." },
+        { "id": "b", "text": "Nuancer le propos par la modalisation et la prudence." },
+        { "id": "c", "text": "Imposer une réponse par une question rhétorique." },
+        { "id": "d", "text": "Réfuter totalement la thèse adverse." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Il semblerait que », « quelques », « reste à savoir » sont des marques de modalisation : l'auteur affirme avec prudence et prend ses distances, sans nier ni attaquer. La fonction est donc de nuancer. Aucun adversaire n'est attaqué (a), aucune question n'est posée (c), et la thèse n'est pas réfutée mais tempérée (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Un orateur déclare : « Nos opposants prétendent qu'il faut tout réguler ; or réguler à l'excès, c'est étouffer la liberté. » Pourquoi ce raisonnement est-il fautif ?",
+      "options": [
+        { "id": "a", "text": "Il est valable : il réfute correctement la thèse adverse." },
+        { "id": "b", "text": "C'est une pétition de principe : la conclusion est posée d'avance." },
+        {
+          "id": "c",
+          "text": "C'est un homme de paille : la thèse adverse (réguler) est déformée en « tout réguler à l'excès »."
+        },
+        { "id": "d", "text": "C'est une modalisation excessive." }
+      ],
+      "correctOption": "c",
+      "explanation": "La position adverse (« réguler ») est gonflée en une version extrême et caricaturale (« tout réguler à l'excès »), plus facile à abattre : c'est l'homme de paille. Le raisonnement n'est donc pas valable (a). Il n'y a pas de circularité (b), et il ne s'agit pas de modalisation (d), qui nuancerait au lieu de déformer.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "« Bravo, vraiment, quelle brillante idée d'avoir tout misé sur un seul fournisseur ! » Quels procédé ET fonction sont combinés ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Ironie par antiphrase, dont la fonction est de disqualifier la décision en la raillant."
+        },
+        {
+          "id": "b",
+          "text": "Argument d'autorité, dont la fonction est d'appuyer par le prestige."
+        },
+        {
+          "id": "c",
+          "text": "Concession rhétorique, dont la fonction est de désamorcer une objection."
+        },
+        { "id": "d", "text": "Analogie, dont la fonction est de rendre l'abstrait concret." }
+      ],
+      "correctOption": "a",
+      "explanation": "L'éloge apparent (« brillante idée ») contredit le contexte (un choix risqué) : c'est l'ironie par antiphrase, qui sert ici à disqualifier la décision en la tournant en dérision. Il n'y a ni autorité invoquée (b), ni concession « certes… mais » (c), ni comparaison entre deux domaines (d).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quel énoncé contient une pétition de principe (raisonnement circulaire) ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "« Ce témoin est fiable, car son récit concorde avec trois preuves matérielles. »"
+        },
+        {
+          "id": "b",
+          "text": "« Ce témoin est fiable, parce qu'il dit la vérité — et il dit la vérité parce qu'il est fiable. »"
+        },
+        { "id": "c", "text": "« Ce témoin est fiable selon l'expert mandaté par le tribunal. »" },
+        {
+          "id": "d",
+          "text": "« Ce témoin est fiable, certes nerveux, mais cohérent du début à la fin. »"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "L'option (b) tourne en rond : la fiabilité prouve la vérité, et la vérité prouve la fiabilité — chaque terme s'appuie sur l'autre sans preuve extérieure. C'est la pétition de principe. (a) repose sur des preuves matérielles (argument valable), (c) est un argument d'autorité, (d) une concession rhétorique.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "« Comment pourrions-nous, en conscience, tourner le dos à ceux qui souffrent ? » Quels procédé ET fonction sont à l'œuvre ?",
+      "options": [
+        { "id": "a", "text": "Prétérition ; fonction : taire en feignant de parler." },
+        { "id": "b", "text": "Faux dilemme ; fonction : réduire le choix à deux options." },
+        { "id": "c", "text": "Contre-exemple ; fonction : réfuter une généralisation." },
+        {
+          "id": "d",
+          "text": "Question rhétorique ; fonction : persuader en sollicitant l'émotion morale du lecteur."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "La fausse question impose sa réponse (« non, nous ne le pouvons pas ») et joue sur l'émotion morale : c'est une question rhétorique à visée persuasive (par l'affect, non par la preuve). La prétérition feint de taire (a), le faux dilemme impose deux options (b), le contre-exemple réfute une règle (c) — aucun ici.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "« Tous nos concurrents échouent à cause d'une mauvaise gestion. Prenez Alpha : elle a fait faillite l'an dernier. » Quel défaut affecte ce raisonnement ?",
+      "options": [
+        { "id": "a", "text": "Aucun : l'exemple Alpha prouve rigoureusement la règle générale." },
+        { "id": "b", "text": "Une concession rhétorique mal placée." },
+        {
+          "id": "c",
+          "text": "Une généralisation hâtive : un seul exemple ne prouve pas une règle valant pour tous."
+        },
+        { "id": "d", "text": "Une modalisation insuffisante." }
+      ],
+      "correctOption": "c",
+      "explanation": "Un exemple unique (Alpha) ne suffit pas à établir une règle universelle (« tous… à cause d'une mauvaise gestion ») : conclure ainsi est une généralisation hâtive — l'exemple illustre, il ne démontre pas une loi générale. Le raisonnement n'est donc pas rigoureux (a) ; il ne s'agit ni d'une concession (b) ni d'un défaut de modalisation (d).",
+      "difficulty": 3
+    }
+  ]
+}

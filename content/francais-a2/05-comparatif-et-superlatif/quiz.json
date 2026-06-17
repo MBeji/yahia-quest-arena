@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Complète : « Paul est ___ Marie ; il mesure dix centimètres de plus. »",
+      "options": [
+        { "id": "a", "text": "plus grand que" },
+        { "id": "b", "text": "plus grand de" },
+        { "id": "c", "text": "le plus grand" },
+        { "id": "d", "text": "plus de grand que" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le comparatif de supériorité d'un adjectif se construit avec « plus … que » : plus grand que Marie. « de » au lieu de « que » est incorrect dans une comparaison, « le plus grand » est le superlatif (tout un groupe), et « plus de » sert à comparer une quantité (un nom), pas une qualité.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Elle court ___ toi : vous arrivez en même temps. »",
+      "options": [
+        { "id": "a", "text": "plus vite que" },
+        { "id": "b", "text": "aussi vite que" },
+        { "id": "c", "text": "aussi vite de" },
+        { "id": "d", "text": "autant vite que" }
+      ],
+      "correctOption": "b",
+      "explanation": "Pour exprimer l'égalité avec un adverbe, on emploie « aussi … que » : aussi vite que toi. « plus vite que » marque la supériorité (ici on dit qu'ils sont égaux), « de » ne s'emploie pas dans la comparaison, et « autant » s'utilise avec un nom (autant de), pas avec un adverbe.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « J'ai ___ toi : regarde, ma bibliothèque est plus remplie. »",
+      "options": [
+        { "id": "a", "text": "plus livres que" },
+        { "id": "b", "text": "plus que livres de" },
+        { "id": "c", "text": "plus de livres que" },
+        { "id": "d", "text": "plus grand de livres" }
+      ],
+      "correctOption": "c",
+      "explanation": "Pour comparer une quantité (un nom), on utilise « plus de + nom … que » : plus de livres que toi. « plus livres que » oublie le « de » obligatoire devant le nom, et les autres formes mélangent l'ordre des mots ou un adjectif là où il faut un nom.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « C'est ___ ville du pays : huit millions d'habitants. »",
+      "options": [
+        { "id": "a", "text": "plus grande" },
+        { "id": "b", "text": "la plus grande" },
+        { "id": "c", "text": "le plus grand" },
+        { "id": "d", "text": "la plus grande que" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le superlatif désigne le sommet d'un groupe avec un article défini accordé : la plus grande ville (ville est féminin). « plus grande » sans article n'est qu'un comparatif incomplet, « le plus grand » ne s'accorde pas au féminin, et le superlatif n'emploie pas « que » mais « de » (du pays).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Cette potion est ___ l'autre : elle soigne mieux. »",
+      "options": [
+        { "id": "a", "text": "plus bonne que" },
+        { "id": "b", "text": "plus bien que" },
+        { "id": "c", "text": "mieux que" },
+        { "id": "d", "text": "meilleure que" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Bon » est irrégulier : son comparatif est « meilleur », accordé au féminin meilleure que l'autre (potion est féminin). « plus bonne » est interdit (on ne dit jamais « plus bon »), « plus bien » n'existe pas, et « mieux » est le comparatif de l'adverbe « bien », pas de l'adjectif « bon ».",
+      "difficulty": 2
+    }
+  ]
+}

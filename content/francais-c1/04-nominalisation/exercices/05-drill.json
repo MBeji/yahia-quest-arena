@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill : la nominalisation",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Quel nom dérive du verbe « laver » ?",
+      "options": [
+        { "id": "a", "text": "le lavage" },
+        { "id": "b", "text": "le lavement" },
+        { "id": "c", "text": "la lavation" },
+        { "id": "d", "text": "la lavure" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Laver » donne « le lavage » (suffixe -age, masculin). ✗lavation n'existe pas ; « lavement » existe mais a un sens médical, et « lavure » désigne une eau sale : le nom d'action courant est « lavage ».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel est le genre du nom « disparition » ?",
+      "options": [
+        { "id": "a", "text": "masculin : un disparition" },
+        { "id": "b", "text": "féminin : une disparition" },
+        { "id": "c", "text": "les deux sont admis" },
+        { "id": "d", "text": "neutre" }
+      ],
+      "correctOption": "b",
+      "explanation": "Les noms en -tion sont féminins : « une disparition », « la disparition ». On dit donc « une disparition inquiétante », jamais ✗un disparition.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Nominalisez : « Le public a accueilli chaleureusement l'artiste. »",
+      "options": [
+        { "id": "a", "text": "L'accueillement de l'artiste" },
+        { "id": "b", "text": "L'accueil de l'artiste" },
+        { "id": "c", "text": "L'accueillage de l'artiste" },
+        { "id": "d", "text": "L'accueillition de l'artiste" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Accueillir » nominalise sans suffixe en « l'accueil » (masculin), formé sur le radical. ✗accueillement, ✗accueillage et ✗accueillition sont inventés.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel nom dérive de l'adjectif « grand » ?",
+      "options": [
+        { "id": "a", "text": "la grandité" },
+        { "id": "b", "text": "la grandesse" },
+        { "id": "c", "text": "la grandise" },
+        { "id": "d", "text": "la grandeur" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Grand » donne « la grandeur » (suffixe -eur, féminin), comme lent → la lenteur, doux → la douceur. ✗grandité, ✗grandesse et ✗grandise n'existent pas.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouvez l'intrus : un seul couple verbe → nom est INCORRECT.",
+      "options": [
+        { "id": "a", "text": "passer → le passage" },
+        { "id": "b", "text": "monter → la montée" },
+        { "id": "c", "text": "vendre → la vendition" },
+        { "id": "d", "text": "appeler → l'appel" }
+      ],
+      "correctOption": "c",
+      "explanation": "L'intrus est « vendre → la vendition » : le nom correct est « la vente » (dérivé sans suffixe régulier). Les autres sont justes : le passage (-age), la montée (-ée), l'appel (dérivé sans suffixe).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Nominalisez le titre : « Les routes ont été dégradées par le gel. »",
+      "options": [
+        { "id": "a", "text": "Dégradement des routes par le gel" },
+        { "id": "b", "text": "Dégradage des routes par le gel" },
+        { "id": "c", "text": "Dégradure des routes par le gel" },
+        { "id": "d", "text": "Dégradation des routes par le gel" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Dégrader » donne « la dégradation » (suffixe -ation, féminin). ✗dégradement, ✗dégradage et ✗dégradure ne sont pas attestés : le nom d'action est « dégradation », fréquent dans les titres de presse.",
+      "difficulty": 3
+    }
+  ]
+}

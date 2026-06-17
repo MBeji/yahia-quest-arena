@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Entraînement : les verbes en -er au présent",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complète : « Je ___ la télé le soir. »",
+      "options": [
+        { "id": "a", "text": "regardes" },
+        { "id": "b", "text": "regarde" },
+        { "id": "c", "text": "regardent" },
+        { "id": "d", "text": "regarder" }
+      ],
+      "correctOption": "b",
+      "explanation": "Avec « je », le verbe du 1er groupe prend -e : je regarde. « regardes » est la forme de tu, « regardent » celle de ils/elles, et « regarder » est l'infinitif.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Vous ___ très bien. »",
+      "options": [
+        { "id": "a", "text": "chante" },
+        { "id": "b", "text": "chantes" },
+        { "id": "c", "text": "chantez" },
+        { "id": "d", "text": "chantent" }
+      ],
+      "correctOption": "c",
+      "explanation": "Avec « vous », la terminaison du 1er groupe est -ez : vous chantez. « chante » est pour je/il/elle, « chantes » pour tu, et « chantent » pour ils/elles.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Nous ___ le football. »",
+      "options": [
+        { "id": "a", "text": "aime" },
+        { "id": "b", "text": "aimes" },
+        { "id": "c", "text": "aiment" },
+        { "id": "d", "text": "aimons" }
+      ],
+      "correctOption": "d",
+      "explanation": "Avec « nous », on ajoute -ons : nous aimons le football. « aime » est pour je/il/elle, « aimes » pour tu, et « aiment » pour ils/elles.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Tu ___ à Paris. »",
+      "options": [
+        { "id": "a", "text": "habites" },
+        { "id": "b", "text": "habite" },
+        { "id": "c", "text": "habitent" },
+        { "id": "d", "text": "habiter" }
+      ],
+      "correctOption": "a",
+      "explanation": "Avec « tu », on écrit -es : tu habites. Le -s est muet mais obligatoire à l'écrit. « habite » est la forme de il/elle, « habitent » celle de ils/elles, et « habiter » l'infinitif.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Il ___ dans une école. »",
+      "options": [
+        { "id": "a", "text": "travailles" },
+        { "id": "b", "text": "travaillent" },
+        { "id": "c", "text": "travaillons" },
+        { "id": "d", "text": "travaille" }
+      ],
+      "correctOption": "d",
+      "explanation": "Avec « il » (il/elle/on), la terminaison est -e : il travaille. « travailles » est pour tu, « travaillent » pour ils/elles, et « travaillons » pour nous.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Ils ___ au parc. »",
+      "options": [
+        { "id": "a", "text": "joue" },
+        { "id": "b", "text": "jouent" },
+        { "id": "c", "text": "joues" },
+        { "id": "d", "text": "jouez" }
+      ],
+      "correctOption": "b",
+      "explanation": "Avec « ils », la terminaison est -ent : ils jouent. Le -ent est muet (on entend « joue ») mais il faut l'écrire. « joue » est pour il/elle, « joues » pour tu, et « jouez » pour vous.",
+      "difficulty": 2
+    }
+  ]
+}

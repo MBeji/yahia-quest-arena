@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Entraînement : le subjonctif présent",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complète : « Il faut que je ___ le bus à huit heures. » (prendre)",
+      "options": [
+        { "id": "a", "text": "prends" },
+        { "id": "b", "text": "prenne" },
+        { "id": "c", "text": "prendrai" },
+        { "id": "d", "text": "prendre" }
+      ],
+      "correctOption": "b",
+      "explanation": "Après « il faut que » (obligation) on emploie le subjonctif. Radical de « ils prennent » + -e : que je prenne. « prends » est l'indicatif présent, « prendrai » le futur, « prendre » l'infinitif.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Je veux que tu ___ avec nous au cinéma. » (venir)",
+      "options": [
+        { "id": "a", "text": "viennes" },
+        { "id": "b", "text": "viens" },
+        { "id": "c", "text": "viendras" },
+        { "id": "d", "text": "venir" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Je veux que » exprime la volonté et appelle le subjonctif. Radical de « ils viennent » + -es : que tu viennes. « viens » est l'indicatif, « viendras » le futur, « venir » l'infinitif.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel est le subjonctif présent de finir avec « qu'il » ?",
+      "options": [
+        { "id": "a", "text": "qu'il finit" },
+        { "id": "b", "text": "qu'il finira" },
+        { "id": "c", "text": "qu'il finisse" },
+        { "id": "d", "text": "qu'il finissait" }
+      ],
+      "correctOption": "c",
+      "explanation": "On part du radical de « ils finissent » (finiss-) et on ajoute -e : qu'il finisse. « finit » est l'indicatif présent, « finira » le futur, « finissait » l'imparfait.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Il est nécessaire que nous ___ tôt demain. » (partir)",
+      "options": [
+        { "id": "a", "text": "partons" },
+        { "id": "b", "text": "partirons" },
+        { "id": "c", "text": "partons tôt" },
+        { "id": "d", "text": "partions" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Il est nécessaire que » impose le subjonctif. Radical de « ils partent » + -ions : que nous partions. « partons » est l'indicatif présent, « partirons » le futur ; la forme subjonctive « nous » ressemble à l'imparfait, c'est normal.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Il faut que vous ___ patients. » (être)",
+      "options": [
+        { "id": "a", "text": "êtes" },
+        { "id": "b", "text": "soyez" },
+        { "id": "c", "text": "serez" },
+        { "id": "d", "text": "soyiez" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Il faut que » + subjonctif. Le verbe être est irrégulier : que vous soyez. « êtes » est l'indicatif présent, « serez » le futur, et « soyiez » n'existe pas.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Je voudrais que tu ___ la vérité. » (dire)",
+      "options": [
+        { "id": "a", "text": "dis" },
+        { "id": "b", "text": "diras" },
+        { "id": "c", "text": "dises" },
+        { "id": "d", "text": "disais" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Je voudrais que » exprime la volonté et appelle le subjonctif. Radical de « ils disent » + -es : que tu dises. « dis » est l'indicatif, « diras » le futur, « disais » l'imparfait.",
+      "difficulty": 2
+    }
+  ]
+}

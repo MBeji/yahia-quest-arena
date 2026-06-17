@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill : les pronoms relatifs",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complète : « La musicienne ___ joue ce soir est très célèbre. »",
+      "options": [
+        { "id": "a", "text": "que" },
+        { "id": "b", "text": "qui" },
+        { "id": "c", "text": "dont" },
+        { "id": "d", "text": "où" }
+      ],
+      "correctOption": "b",
+      "explanation": "« qui » est sujet : c'est la musicienne qui joue, un verbe (joue) suit le pronom. « que » serait un COD (suivi d'un sujet), « dont » s'emploie avec « de », et « où » marque le lieu ou le temps.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « C'est l'hôtel ___ nous avons passé nos vacances. »",
+      "options": [
+        { "id": "a", "text": "où" },
+        { "id": "b", "text": "qui" },
+        { "id": "c", "text": "que" },
+        { "id": "d", "text": "dont" }
+      ],
+      "correctOption": "a",
+      "explanation": "« où » marque le lieu : l'hôtel où nous avons passé nos vacances. « que » serait un COD (l'hôtel que je recommande), « qui » un sujet, et « dont » remplacerait un complément en « de ».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Le mot ___ je ne connais pas le sens revient souvent. »",
+      "options": [
+        { "id": "a", "text": "que" },
+        { "id": "b", "text": "qui" },
+        { "id": "c", "text": "dont" },
+        { "id": "d", "text": "où" }
+      ],
+      "correctOption": "c",
+      "explanation": "On dit le sens DU mot, donc « dont » remplace ce complément du nom (le sens de lui) : le mot dont je ne connais pas le sens. « que » serait le COD direct du verbe, « qui » un sujet, et « où » marque le lieu ou le temps.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Les photos que nous avons ___ sont superbes. »",
+      "options": [
+        { "id": "a", "text": "pris" },
+        { "id": "b", "text": "prise" },
+        { "id": "c", "text": "prit" },
+        { "id": "d", "text": "prises" }
+      ],
+      "correctOption": "d",
+      "explanation": "Avec avoir, le participe s'accorde avec le COD placé avant : « que » reprend « les photos » (féminin pluriel), donc « prises ». ✓ « pris » oublie l'accord, « prise » oublie le pluriel, et « prit » est une forme du passé simple, fausse ici.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Tu te souviens de l'année ___ on a déménagé ? »",
+      "options": [
+        { "id": "a", "text": "où" },
+        { "id": "b", "text": "qui" },
+        { "id": "c", "text": "que" },
+        { "id": "d", "text": "dont" }
+      ],
+      "correctOption": "a",
+      "explanation": "Pour marquer le temps, on emploie « où » (= pendant laquelle) : l'année où on a déménagé. On ne dit pas « l'année que » dans ce sens temporel. « qui » serait un sujet et « dont » un complément en « de ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve la phrase incorrecte.",
+      "options": [
+        { "id": "a", "text": "L'élève qui a répondu a gagné un point." },
+        { "id": "b", "text": "Le quartier dont j'habite est animé." },
+        { "id": "c", "text": "La tarte que ma mère a faite était délicieuse." },
+        { "id": "d", "text": "Le jour où je l'ai rencontré, il pleuvait." }
+      ],
+      "correctOption": "b",
+      "explanation": "La deuxième phrase est fausse : on habite DANS un quartier, pas « de » un quartier, donc « dont » est incorrect ; il faut « où » (le quartier où j'habite). « dont » ne sert qu'avec « de ». Les autres sont correctes : qui sujet, que avec accord (faite) et où pour le temps.",
+      "difficulty": 3
+    }
+  ]
+}

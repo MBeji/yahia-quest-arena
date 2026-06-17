@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : les pronoms compléments",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Complète à l'impératif affirmatif : « Ces exercices sont importants : ___ ! » (faire les exercices)",
+      "options": [
+        { "id": "a", "text": "les fais" },
+        { "id": "b", "text": "leur fais" },
+        { "id": "c", "text": "fais-les" },
+        { "id": "d", "text": "fais-leur" }
+      ],
+      "correctOption": "c",
+      "explanation": "À l'impératif affirmatif, le pronom passe APRÈS le verbe avec un trait d'union : Fais-les ! « les fais » garde l'ordre du présent (faux à l'impératif affirmatif), et « leur » serait un COI, alors que « faire qqch » exige un COD.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « J'ai rencontré ces actrices au festival. → Je ___ ai ___ . »",
+      "options": [
+        { "id": "a", "text": "les … rencontrées" },
+        { "id": "b", "text": "leur … rencontré" },
+        { "id": "c", "text": "les … rencontré" },
+        { "id": "d", "text": "lui … rencontrées" }
+      ],
+      "correctOption": "a",
+      "explanation": "« rencontrer quelqu'un » est un COD : « ces actrices » → « les ». Placé AVANT l'auxiliaire avoir, le COD impose l'accord : Je les ai rencontrées (féminin pluriel). « rencontré » (c) oublie l'accord, et « leur / lui » seraient des COI, faux ici.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Trouve la phrase CORRECTE.",
+      "options": [
+        { "id": "a", "text": "Je leur ai parlés hier soir." },
+        { "id": "b", "text": "Je leur ai parlé hier soir." },
+        { "id": "c", "text": "Je les ai parlé hier soir." },
+        { "id": "d", "text": "Je leur ai parlées hier soir." }
+      ],
+      "correctOption": "b",
+      "explanation": "« parler à quelqu'un » est un COI (« leur »), et le participe ne s'accorde JAMAIS avec un COI : Je leur ai parlé (invariable). « parlés / parlées » accordent à tort, et « les » serait un COD, impossible avec « parler à ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète avec deux pronoms : « Tu donnes ton adresse à Léa ? — Oui, je ___ donne. »",
+      "options": [
+        { "id": "a", "text": "lui la" },
+        { "id": "b", "text": "la lui" },
+        { "id": "c", "text": "lui l'" },
+        { "id": "d", "text": "y la" }
+      ],
+      "correctOption": "b",
+      "explanation": "« donner qqch (COD) à qqn (COI) » : l'adresse → « la », à Léa → « lui ». L'ordre fixe place le/la/les AVANT lui/leur : Je la lui donne. « lui la » inverse l'ordre, et « y » ne remplace pas une personne.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "Les fleurs que j'ai achetées sont belles." },
+        { "id": "b", "text": "Je l'ai vue partir ce matin." },
+        { "id": "c", "text": "Nous leur avons écrit une lettre." },
+        { "id": "d", "text": "Cette histoire, je la ai oubliée." }
+      ],
+      "correctOption": "d",
+      "explanation": "L'erreur est (d) : devant la voyelle, « la » doit s'élider → « je l'ai oubliée ». Les autres sont correctes : « que … achetées » (COD avant → accord), « l'ai vue » (COD féminin avant → accord), « leur avons écrit » (COI → pas d'accord).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Tu as parlé de ton voyage à tes amis ? — Oui, je ___ ai parlé. »",
+      "options": [
+        { "id": "a", "text": "leur en" },
+        { "id": "b", "text": "en leur" },
+        { "id": "c", "text": "y leur" },
+        { "id": "d", "text": "les en" }
+      ],
+      "correctOption": "a",
+      "explanation": "« parler de qqch (en) à qqn (leur) » : de ton voyage → « en », à tes amis → « leur ». L'ordre fixe place lui/leur AVANT en : Je leur en ai parlé. « en leur » inverse l'ordre, et « les » serait un COD, faux avec « parler à ».",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill : l'imparfait",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complète : « D'habitude, tu ___ tôt le matin. »",
+      "options": [
+        { "id": "a", "text": "te levait" },
+        { "id": "b", "text": "te lèves" },
+        { "id": "c", "text": "te levaient" },
+        { "id": "d", "text": "te levais" }
+      ],
+      "correctOption": "d",
+      "explanation": "« D'habitude » = habitude passée → imparfait, et avec « tu » la terminaison est -ais : tu te levais. « te levait » est pour il/elle, « te lèves » est le présent, et « te levaient » pour ils/elles.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Le village ___ calme et les rues ___ vides. »",
+      "options": [
+        { "id": "a", "text": "était / étaient" },
+        { "id": "b", "text": "était / était" },
+        { "id": "c", "text": "étaient / étaient" },
+        { "id": "d", "text": "a été / ont été" }
+      ],
+      "correctOption": "a",
+      "explanation": "Description du passé à l'imparfait : « le village » (singulier) → était, « les rues » (pluriel) → étaient. Le piège (b) oublie l'accord au pluriel, et (d) emploie le passé composé d'une action ponctuelle.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve la forme INCORRECTE de l'imparfait.",
+      "options": [
+        { "id": "a", "text": "nous buvions" },
+        { "id": "b", "text": "vous écriviez" },
+        { "id": "c", "text": "je prennais" },
+        { "id": "d", "text": "elle voyait" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le radical vient de « nous prenons » → pren-, donc je prenais (un seul n), pas « prennais ». Les autres sont correctes : nous buvions (nous buvons), vous écriviez (nous écrivons), elle voyait (nous voyons).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « À cette époque, il ___ marcher une heure pour aller à l'école. »",
+      "options": [
+        { "id": "a", "text": "faut" },
+        { "id": "b", "text": "fallait" },
+        { "id": "c", "text": "fallais" },
+        { "id": "d", "text": "a fallu" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Il faut » devient « il fallait » à l'imparfait (forme à mémoriser), employée ici pour décrire une nécessité habituelle dans le passé. « faut » est le présent, « fallais » n'existe pas, et « a fallu » serait une nécessité ponctuelle.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Ils ___ de la musique pendant qu'elle ___ . »",
+      "options": [
+        { "id": "a", "text": "écoutaient / dansait" },
+        { "id": "b", "text": "écoutait / dansait" },
+        { "id": "c", "text": "écoutaient / dansaient" },
+        { "id": "d", "text": "ont écouté / a dansé" }
+      ],
+      "correctOption": "a",
+      "explanation": "Deux actions en cours et parallèles dans le passé → imparfait : « ils » écoutaient (-aient) et « elle » dansait (-ait). Le piège (c) met « dansaient » (ils) au lieu de « dansait » (elle), et (d) emploie le passé composé.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Quand nous ___ à la campagne, nous ___ les oiseaux. »",
+      "options": [
+        { "id": "a", "text": "étions / écoutait" },
+        { "id": "b", "text": "étions / écoutions" },
+        { "id": "c", "text": "étaient / écoutions" },
+        { "id": "d", "text": "avons été / écoutions" }
+      ],
+      "correctOption": "b",
+      "explanation": "Description et habitude au passé → imparfait, et avec « nous » la terminaison est -ions : nous étions / nous écoutions. Le piège (a) met « écoutait » (il), (c) met « étaient » (ils), et (d) glisse un passé composé.",
+      "difficulty": 2
+    }
+  ]
+}

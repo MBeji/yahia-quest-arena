@@ -1,0 +1,154 @@
+{
+  "title": "⭐ Entraînement : connecteurs et articulation du discours",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Quelle est la valeur logique de « en outre » ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Reformulation d'une idée."
+        },
+        {
+          "id": "b",
+          "text": "Opposition entre deux faits."
+        },
+        {
+          "id": "c",
+          "text": "Conséquence d'un fait."
+        },
+        {
+          "id": "d",
+          "text": "Addition d'un argument, registre soutenu."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« En outre » ajoute un argument supplémentaire dans un registre soutenu (= de plus). Il ne marque ni l'opposition (mais, en revanche), ni la conséquence (donc), ni la reformulation (autrement dit).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complétez : « La séance est reportée ; ___, elle n'aura pas lieu cette semaine. » (on redit l'idée plus clairement)",
+      "options": [
+        {
+          "id": "a",
+          "text": "à titre d'exemple"
+        },
+        {
+          "id": "b",
+          "text": "néanmoins"
+        },
+        {
+          "id": "c",
+          "text": "autrement dit"
+        },
+        {
+          "id": "d",
+          "text": "en particulier"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "« Autrement dit » reformule : la seconde proposition redit la première en plus clair. « À titre d'exemple » et « en particulier » illustrent ; « néanmoins » concède, ce qui changerait le sens en y opposant une réserve.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complétez : « De nombreux pays sont concernés, ___ ceux du bassin méditerranéen. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "c'est-à-dire"
+        },
+        {
+          "id": "b",
+          "text": "en d'autres termes"
+        },
+        {
+          "id": "c",
+          "text": "notamment"
+        },
+        {
+          "id": "d",
+          "text": "à savoir"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "On cite un exemple parmi un ensemble : « notamment » (illustration). « C'est-à-dire », « en d'autres termes » et « à savoir » sont des reformulations, qui sous-entendraient à tort que les pays méditerranéens sont exactement « de nombreux pays ».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complétez avec un connecteur de conclusion : « Les avis divergent ; ___, la prudence s'impose. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "à savoir"
+        },
+        {
+          "id": "b",
+          "text": "par ailleurs"
+        },
+        {
+          "id": "c",
+          "text": "qui plus est"
+        },
+        {
+          "id": "d",
+          "text": "en définitive"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« En définitive » referme le raisonnement et annonce le bilan : connecteur de conclusion. « Par ailleurs » et « qui plus est » ajoutent un argument ; « à savoir » reformule. Aucun ne conclut.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans « C'est une maladresse, voire une faute », que signifie « voire » ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Ou bien, au choix entre deux termes équivalents."
+        },
+        {
+          "id": "b",
+          "text": "C'est-à-dire, en précisant le même terme."
+        },
+        {
+          "id": "c",
+          "text": "Et même, en renchérissant vers un terme plus fort."
+        },
+        {
+          "id": "d",
+          "text": "Cependant, en opposant les deux termes."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "« Voire » exprime une gradation : « une faute » est plus grave que « une maladresse ». Ce n'est pas un choix d'équivalents, ni une reformulation (c'est-à-dire), ni une opposition (cependant).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel couple structure correctement une énumération équilibrée ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "d'une part… en revanche"
+        },
+        {
+          "id": "b",
+          "text": "non seulement… c'est-à-dire"
+        },
+        {
+          "id": "c",
+          "text": "d'une part… d'autre part"
+        },
+        {
+          "id": "d",
+          "text": "d'abord… néanmoins"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Le couple corrélatif « d'une part… d'autre part » présente deux faces équilibrées. Les autres mêlent un terme structurant à un connecteur d'une autre famille (opposition « en revanche », reformulation « c'est-à-dire », concession « néanmoins »), ce qui rompt la corrélation.",
+      "difficulty": 2
+    }
+  ]
+}

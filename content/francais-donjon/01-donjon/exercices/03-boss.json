@@ -1,0 +1,154 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : tout le français",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Conjugaison — Complétez : « Si j'avais plus de temps, je ___ davantage. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "voyage"
+        },
+        {
+          "id": "b",
+          "text": "voyagerai"
+        },
+        {
+          "id": "c",
+          "text": "voyagerait"
+        },
+        {
+          "id": "d",
+          "text": "voyagerais"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Dans une hypothèse « si + imparfait », la principale se met au conditionnel présent : je voyagerais. « Voyagerai » est le futur (employé après « si + présent »), « voyage » le présent, et « voyagerait » s'accorderait avec il/elle, pas avec « je ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Grammaire — Mettez à la voix passive : « Le jury a récompensé les meilleurs élèves. » →",
+      "options": [
+        {
+          "id": "a",
+          "text": "Les meilleurs élèves ont récompensé le jury."
+        },
+        {
+          "id": "b",
+          "text": "Les meilleurs élèves ont été récompensés par le jury."
+        },
+        {
+          "id": "c",
+          "text": "Les meilleurs élèves sont récompensés le jury."
+        },
+        {
+          "id": "d",
+          "text": "Le jury a été récompensé par les élèves."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "À la voix passive, le COD devient sujet et l'auxiliaire être garde le temps de l'actif (passé composé) : « ont été récompensés par le jury », avec accord du participe au masculin pluriel. (a) et (d) inversent les rôles, et (c) oublie « par » et le bon auxiliaire.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Conjugaison — Transposez au discours indirect : « Elle a dit : “Je viendrai demain.” » →",
+      "options": [
+        {
+          "id": "a",
+          "text": "Elle a dit qu'elle viendra demain."
+        },
+        {
+          "id": "b",
+          "text": "Elle a dit qu'elle viendrait le lendemain."
+        },
+        {
+          "id": "c",
+          "text": "Elle a dit qu'elle vient demain."
+        },
+        {
+          "id": "d",
+          "text": "Elle a dit qu'elle est venue demain."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Après un verbe introducteur au passé, le futur devient conditionnel et « demain » devient « le lendemain » : qu'elle viendrait le lendemain. (a) garde le futur, (c) le présent, et (d) introduit un passé composé incohérent avec une action à venir.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Vocabulaire — Choisissez le connecteur logique correct : « Il a beaucoup travaillé ; ___, il a réussi son examen. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "par conséquent"
+        },
+        {
+          "id": "b",
+          "text": "pourtant"
+        },
+        {
+          "id": "c",
+          "text": "en revanche"
+        },
+        {
+          "id": "d",
+          "text": "néanmoins"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Le travail est la cause et la réussite la conséquence logique : « par conséquent » exprime cette relation. « Pourtant », « en revanche » et « néanmoins » marquent l'opposition, ce qui contredirait le lien naturel cause → effet de la phrase.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Grammaire — Choisissez le pronom relatif composé correct : « C'est le projet ___ je pense depuis des mois. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "duquel"
+        },
+        {
+          "id": "b",
+          "text": "laquelle"
+        },
+        {
+          "id": "c",
+          "text": "auquel"
+        },
+        {
+          "id": "d",
+          "text": "lequel"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "On dit « penser à quelque chose », donc le relatif reprend « à » : à + lequel = auquel (projet, masculin singulier). « Duquel » correspond à « de », « lequel » seul oublie la préposition, et « laquelle » serait féminin.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Orthographe — Choisissez la phrase correctement orthographiée.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Quel que soit ton choix, je te soutiendrai."
+        },
+        {
+          "id": "b",
+          "text": "Quelque soit ta décision, je t'accompagnerai."
+        },
+        {
+          "id": "c",
+          "text": "Quelle que soit ton objectif, je t'épaulerai."
+        },
+        {
+          "id": "d",
+          "text": "Quels que soit tes projets, je te suivrai."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Devant le verbe « être », « quel que » s'écrit en deux mots et s'accorde avec le sujet qui suit : « choix » étant masculin singulier, on écrit « quel que soit ton choix » (a). « Quelque » en un seul mot est un déterminant et ne convient pas ; « quelle que » exigerait un nom féminin (or « objectif » est masculin) ; « quels que soit » ne respecte pas l'accord du verbe, qui devrait être « soient ».",
+      "difficulty": 3
+    }
+  ]
+}

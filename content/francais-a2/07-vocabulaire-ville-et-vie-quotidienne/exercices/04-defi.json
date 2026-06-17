@@ -1,0 +1,154 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : la ville et la vie quotidienne",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "« La librairie est ___ de la mairie : juste à l'angle, là où les deux rues se croisent. » Quelle expression de lieu convient ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "en face"
+        },
+        {
+          "id": "b",
+          "text": "au coin"
+        },
+        {
+          "id": "c",
+          "text": "jusqu'à"
+        },
+        {
+          "id": "d",
+          "text": "tout droit"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "« Au coin de » désigne l'angle, là où deux rues se croisent, ce que confirme la phrase. « En face de » veut dire de l'autre côté ; « jusqu'à » marque une limite à atteindre ; « tout droit » est une direction, pas un emplacement.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choisis la phrase entièrement correcte.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Je vais à la pharmacie acheter une ordonnance."
+        },
+        {
+          "id": "b",
+          "text": "Le médecin me donne une ordonnance pour acheter des médicaments."
+        },
+        {
+          "id": "c",
+          "text": "Le médecin me vend des médicaments à la banque."
+        },
+        {
+          "id": "d",
+          "text": "J'achète mes médicaments à la poste avec une caisse."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Le médecin écrit l'ordonnance (le papier) ; on l'apporte ensuite à la pharmacie pour acheter les médicaments. On n'« achète » pas une ordonnance (a), le médecin ne vend pas à la banque (c), et on n'achète pas de médicaments à la poste (d).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quel mot n'appartient PAS au champ lexical de l'argent et des achats ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "le prix"
+        },
+        {
+          "id": "b",
+          "text": "la monnaie"
+        },
+        {
+          "id": "c",
+          "text": "la caisse"
+        },
+        {
+          "id": "d",
+          "text": "l'ordonnance"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Le prix, la monnaie et la caisse appartiennent au monde des achats et de l'argent. L'ordonnance est le papier du médecin (champ de la santé) : c'est elle qui ne va pas avec les autres.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Mini-dialogue : « — Pardon, pour aller à la gare ? — ___, puis tournez à gauche ; elle est en face du musée. » Quelle réponse est cohérente ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Allez tout droit jusqu'au feu"
+        },
+        {
+          "id": "b",
+          "text": "Payez à la caisse"
+        },
+        {
+          "id": "c",
+          "text": "Prenez rendez-vous"
+        },
+        {
+          "id": "d",
+          "text": "Faites les courses"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Pour indiquer un chemin, on combine des directions : « allez tout droit jusqu'au feu, puis tournez à gauche ». Payer, prendre rendez-vous et faire les courses ne donnent aucune direction et n'ont pas leur place ici.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "« Après le travail, je ___ avec mes amis : on va au cinéma. » Quel verbe exprime le mieux quitter la maison pour s'amuser ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "traverse"
+        },
+        {
+          "id": "b",
+          "text": "paie"
+        },
+        {
+          "id": "c",
+          "text": "sors"
+        },
+        {
+          "id": "d",
+          "text": "soigne"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "« Sortir » (je sors) veut dire quitter la maison pour s'amuser, ce que confirme « on va au cinéma ». Traverser concerne une rue, payer concerne l'argent, et soigner concerne la santé : aucun ne décrit une soirée entre amis.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle association lieu ↔ action est FAUSSE ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "la boucherie → acheter de la viande"
+        },
+        {
+          "id": "b",
+          "text": "la bibliothèque → emprunter des livres"
+        },
+        {
+          "id": "c",
+          "text": "le commissariat → acheter des fruits"
+        },
+        {
+          "id": "d",
+          "text": "la gare → prendre le train"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Le commissariat, c'est la police : on n'y achète pas de fruits (ça, c'est le marché). Les trois autres associations sont justes : viande à la boucherie, livres à la bibliothèque, train à la gare.",
+      "difficulty": 3
+    }
+  ]
+}

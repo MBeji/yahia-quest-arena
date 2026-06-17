@@ -1,0 +1,154 @@
+{
+  "title": "⭐⭐ Révision : la voix passive",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Mets au passif imparfait : « Chaque été, les villageois décoraient la place. » → « Chaque été, la place ___ par les villageois. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "est décorée"
+        },
+        {
+          "id": "b",
+          "text": "était décorée"
+        },
+        {
+          "id": "c",
+          "text": "a été décorée"
+        },
+        {
+          "id": "d",
+          "text": "sera décorée"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "L'actif est à l'imparfait (« décoraient », action répétée), donc le passif est « était + participe » : était décorée, accordé au féminin singulier. « Est décorée » est le présent et « a été décorée » le passé composé.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Mets au passif plus-que-parfait : « Quand je suis arrivé, on avait déjà fermé les portes. » → « Quand je suis arrivé, les portes ___. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "avaient déjà été fermées"
+        },
+        {
+          "id": "b",
+          "text": "ont déjà été fermées"
+        },
+        {
+          "id": "c",
+          "text": "étaient déjà fermées"
+        },
+        {
+          "id": "d",
+          "text": "avaient déjà fermé"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Le plus-que-parfait passif est « avait été + participe » : avaient déjà été fermées (accord au féminin pluriel). L'option b est un passé composé ; l'option c (imparfait passif) ne traduit pas l'antériorité ; l'option d est de l'actif.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choisis la préposition correcte : « Cette région est connue ___ tous les touristes pour ses plages. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "par"
+        },
+        {
+          "id": "b",
+          "text": "de"
+        },
+        {
+          "id": "c",
+          "text": "des"
+        },
+        {
+          "id": "d",
+          "text": "à"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "« Connaître » est un verbe d'état qui introduit l'agent par « de » : connue de tous les touristes. « Par » s'emploie pour une action concrète. « Des » est la contraction de + les, mais ici « tous les » impose « de » sans contraction.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Les résultats seront annoncés demain."
+        },
+        {
+          "id": "b",
+          "text": "La décision a été prise hier."
+        },
+        {
+          "id": "c",
+          "text": "Les invités sont accueillis à l'entrée."
+        },
+        {
+          "id": "d",
+          "text": "Le problème a été obéi par les élèves."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« Obéir » est transitif indirect (on obéit À quelqu'un), il n'a pas de COD et ne peut donc pas se mettre au passif : « a été obéi » est impossible. Les phrases a, b et c passivent correctement des verbes transitifs directs (annoncer, prendre, accueillir).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Reformule avec « se faire » : « Pierre a été grondé par sa mère. » → « Pierre ___ par sa mère. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "a fait gronder"
+        },
+        {
+          "id": "b",
+          "text": "s'est fait grondé"
+        },
+        {
+          "id": "c",
+          "text": "se fait gronder"
+        },
+        {
+          "id": "d",
+          "text": "s'est fait gronder"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« Se faire + infinitif » est une alternative au passif : s'est fait gronder. Après « faire », le verbe reste à l'infinitif (« gronder », jamais « grondé »). « Se fait » serait le présent, et « a fait gronder » signifierait que Pierre est l'auteur.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase exprime correctement un passif pronominal ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Ce vin se boit frais."
+        },
+        {
+          "id": "b",
+          "text": "Ce vin est se boit frais."
+        },
+        {
+          "id": "c",
+          "text": "Ce vin se est bu frais."
+        },
+        {
+          "id": "d",
+          "text": "Ce vin a se boit frais."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Le passif pronominal se forme avec « se » + verbe à la forme active : « ce vin se boit frais » (= ce vin est bu frais / on le boit frais). Les autres formes mélangent à tort « être » ou « avoir » avec le pronom « se », ce qui n'existe pas.",
+      "difficulty": 2
+    }
+  ]
+}

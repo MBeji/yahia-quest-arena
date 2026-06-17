@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Entraînement : se présenter et mots courants",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Pour donner ton nom, tu dis : « Je ___ Yahia. »",
+      "options": [
+        { "id": "a", "text": "habite" },
+        { "id": "b", "text": "m'appelle" },
+        { "id": "c", "text": "ai" },
+        { "id": "d", "text": "suis" }
+      ],
+      "correctOption": "b",
+      "explanation": "Pour donner son nom, on dit « Je m'appelle… ». « Habite » sert à dire la ville (J'habite à Tunis), « ai » sert à donner l'âge (J'ai dix ans), et « suis » sert à la nationalité ou la profession (Je suis élève).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Trouve l'intrus.",
+      "options": [
+        { "id": "a", "text": "lundi" },
+        { "id": "b", "text": "mardi" },
+        { "id": "c", "text": "rouge" },
+        { "id": "d", "text": "vendredi" }
+      ],
+      "correctOption": "c",
+      "explanation": "Lundi, mardi et vendredi sont des jours de la semaine ; rouge est une couleur, c'est donc l'intrus. En français, les jours s'écrivent en minuscule.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Pour remercier quelqu'un, on dit…",
+      "options": [
+        { "id": "a", "text": "Merci" },
+        { "id": "b", "text": "Pardon" },
+        { "id": "c", "text": "Bonsoir" },
+        { "id": "d", "text": "Au revoir" }
+      ],
+      "correctOption": "a",
+      "explanation": "On dit « Merci » pour remercier. « Pardon » sert à s'excuser, « Bonsoir » à saluer le soir, et « Au revoir » à partir. Pour demander poliment, on ajoute « s'il vous plaît ».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel mot est une couleur ?",
+      "options": [
+        { "id": "a", "text": "frère" },
+        { "id": "b", "text": "juin" },
+        { "id": "c", "text": "merci" },
+        { "id": "d", "text": "jaune" }
+      ],
+      "correctOption": "d",
+      "explanation": "Jaune est une couleur. Frère est un mot de la famille, juin est un mois de l'année, et merci est une formule de politesse, donc aucun des trois n'est une couleur.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « J'habite ___ Tunis. »",
+      "options": [
+        { "id": "a", "text": "de" },
+        { "id": "b", "text": "en" },
+        { "id": "c", "text": "à" },
+        { "id": "d", "text": "ans" }
+      ],
+      "correctOption": "c",
+      "explanation": "Devant le nom d'une ville, on utilise « à » : J'habite à Tunis. « En » s'emploie plutôt devant un pays féminin (en France), « de » indique l'origine, et « ans » sert pour l'âge (j'ai dix ans).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve l'intrus (le mot qui n'est PAS un membre de la famille).",
+      "options": [
+        { "id": "a", "text": "mère" },
+        { "id": "b", "text": "août" },
+        { "id": "c", "text": "fils" },
+        { "id": "d", "text": "sœur" }
+      ],
+      "correctOption": "b",
+      "explanation": "Mère, fils et sœur sont des membres de la famille. Août est un mois de l'année, c'est donc l'intrus. Ranger les mots par champ (famille, mois, couleurs) aide à mieux les mémoriser.",
+      "difficulty": 2
+    }
+  ]
+}

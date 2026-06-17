@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision : se présenter et mots courants",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Quelle question sert à demander le nom de quelqu'un ?",
+      "options": [
+        { "id": "a", "text": "Quel âge as-tu ?" },
+        { "id": "b", "text": "Où habites-tu ?" },
+        { "id": "c", "text": "Quelle heure est-il ?" },
+        { "id": "d", "text": "Comment tu t'appelles ?" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Comment tu t'appelles ? » (ou la forme polie « Comment vous appelez-vous ? ») sert à demander le nom. « Quel âge as-tu ? » demande l'âge, et « Où habites-tu ? » demande la ville.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète ce mini-dialogue. — Bonjour ! — ___, je voudrais un café, s'il vous plaît.",
+      "options": [
+        { "id": "a", "text": "Au revoir" },
+        { "id": "b", "text": "Bonjour" },
+        { "id": "c", "text": "Merci" },
+        { "id": "d", "text": "Pardon" }
+      ],
+      "correctOption": "b",
+      "explanation": "Quand on te dit « Bonjour ! », tu réponds par « Bonjour » à ton tour. « Au revoir » sert à partir, « Merci » à remercier, et « Pardon » à s'excuser : aucun ne convient pour répondre à une salutation.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel nombre s'écrit « cinquante » ?",
+      "options": [
+        { "id": "a", "text": "15" },
+        { "id": "b", "text": "40" },
+        { "id": "c", "text": "50" },
+        { "id": "d", "text": "60" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Cinquante » est le nombre 50. Ne le confonds pas avec « quinze » (15) qui commence pareil, « quarante » (40) ou « soixante » (60). On l'écrit avec qu : cinquante.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve l'intrus (le mot qui n'est PAS un mois).",
+      "options": [
+        { "id": "a", "text": "mercredi" },
+        { "id": "b", "text": "mars" },
+        { "id": "c", "text": "avril" },
+        { "id": "d", "text": "octobre" }
+      ],
+      "correctOption": "a",
+      "explanation": "Mars, avril et octobre sont des mois de l'année. Mercredi est un jour de la semaine, c'est donc l'intrus. Le piège : mercredi et mars commencent par les mêmes lettres, mais l'un est un jour et l'autre un mois.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Pour t'excuser ou attirer l'attention de quelqu'un poliment, tu dis…",
+      "options": [
+        { "id": "a", "text": "Salut" },
+        { "id": "b", "text": "Excusez-moi" },
+        { "id": "c", "text": "Bonsoir" },
+        { "id": "d", "text": "Merci" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Excusez-moi » (comme « pardon ») sert à s'excuser ou à attirer poliment l'attention. « Salut » est une salutation familière, « Bonsoir » salue le soir, et « Merci » remercie.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "La fille de ton père et de ta mère est ta…",
+      "options": [
+        { "id": "a", "text": "mère" },
+        { "id": "b", "text": "fille" },
+        { "id": "c", "text": "grand-mère" },
+        { "id": "d", "text": "sœur" }
+      ],
+      "correctOption": "d",
+      "explanation": "La fille de tes parents (la même que toi) est ta sœur. Ta mère est celle qui t'élève, ta fille serait ton propre enfant, et ta grand-mère est la mère de ton parent. Frère (garçon) et sœur (fille) forment une paire.",
+      "difficulty": 2
+    }
+  ]
+}

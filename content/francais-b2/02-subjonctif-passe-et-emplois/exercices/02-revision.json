@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision : présent ou passé du subjonctif",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complète : « Je suis ravi que tu ___ ton diplôme la semaine dernière. » (obtenir)",
+      "options": [
+        { "id": "a", "text": "obtiennes" },
+        { "id": "b", "text": "aies obtenu" },
+        { "id": "c", "text": "as obtenu" },
+        { "id": "d", "text": "obtiendras" }
+      ],
+      "correctOption": "b",
+      "explanation": "Indice « la semaine dernière » = action antérieure → subjonctif passé : que tu aies obtenu. « obtiennes » est le présent (action à venir), « as obtenu » l'indicatif, « obtiendras » le futur.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choisis la bonne forme : « Nous attendons que le train ___ pour monter. » (arriver)",
+      "options": [
+        { "id": "a", "text": "arrive" },
+        { "id": "b", "text": "soit arrivé" },
+        { "id": "c", "text": "arrivera" },
+        { "id": "d", "text": "est arrivé" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'arrivée du train est postérieure à l'attente : on emploie le subjonctif présent : que le train arrive. Le subjonctif passé « soit arrivé » signifierait que le train est déjà là. « arrivera » et « est arrivé » sont à l'indicatif.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Bien qu'elle ___ tout révisé hier, elle reste inquiète. » (réviser)",
+      "options": [
+        { "id": "a", "text": "révise" },
+        { "id": "b", "text": "a révisé" },
+        { "id": "c", "text": "révisait" },
+        { "id": "d", "text": "ait révisé" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Bien que » impose le subjonctif, et « hier » impose l'antériorité → subjonctif passé : bien qu'elle ait révisé. « a révisé » et « révisait » sont à l'indicatif, « révise » est le subjonctif présent (action non passée).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Il est possible qu'ils ___ déjà ce matin. » (se réveiller)",
+      "options": [
+        { "id": "a", "text": "se soient réveillés" },
+        { "id": "b", "text": "se sont réveillés" },
+        { "id": "c", "text": "se réveillent" },
+        { "id": "d", "text": "se réveilleront" }
+      ],
+      "correctOption": "a",
+      "explanation": "Verbe pronominal + action déjà accomplie (« déjà ce matin ») → subjonctif passé avec être : qu'ils se soient réveillés, participe accordé au masculin pluriel. « se sont réveillés » est l'indicatif, « se réveillent » le présent, « se réveilleront » le futur.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "Je crains qu'il ne soit déjà parti." },
+        { "id": "b", "text": "Je veux que tu sois là demain." },
+        { "id": "c", "text": "Je suis surpris qu'elle a réussi l'examen hier." },
+        { "id": "d", "text": "Il est dommage que nous ayons perdu ce match." }
+      ],
+      "correctOption": "c",
+      "explanation": "Erreur dans (c) : après « je suis surpris que » (sentiment) et avec une action passée, il faut le subjonctif passé qu'elle ait réussi, non l'indicatif « a réussi ». Les phrases (a), (b) et (d) emploient correctement le subjonctif (passé ou présent).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Avant que vous ne ___ , laissez-moi vous remercier. » (partir, action future)",
+      "options": [
+        { "id": "a", "text": "soyez partis" },
+        { "id": "b", "text": "partez" },
+        { "id": "c", "text": "partirez" },
+        { "id": "d", "text": "partiez" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Avant que » impose le subjonctif et l'action est encore à venir → subjonctif présent : avant que vous ne partiez. Le « ne » est explétif (il ne nie pas). « soyez partis » est le passé, « partez » et « partirez » sont l'indicatif.",
+      "difficulty": 3
+    }
+  ]
+}

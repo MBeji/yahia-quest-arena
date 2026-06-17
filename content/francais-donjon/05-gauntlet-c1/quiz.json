@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Grammaire — Accord du participe passé : « Les lettres qu'elle a ___ hier sont déjà parties. »",
+      "options": [
+        { "id": "a", "text": "écrit" },
+        { "id": "b", "text": "écrites" },
+        { "id": "c", "text": "écrite" },
+        { "id": "d", "text": "écrits" }
+      ],
+      "correctOption": "b",
+      "explanation": "Avec l'auxiliaire « avoir », le participe s'accorde avec le COD placé avant : ici « que » reprend « les lettres » (féminin pluriel), donc « écrites ». « écrit » oublie l'accord, « écrite » oublie le pluriel, « écrits » met un masculin alors que « lettres » est féminin.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Conjugaison — Concordance des temps : « Il m'a affirmé hier qu'il ___ le lendemain. »",
+      "options": [
+        { "id": "a", "text": "viendra" },
+        { "id": "b", "text": "vienne" },
+        { "id": "c", "text": "viendrait" },
+        { "id": "d", "text": "venait" }
+      ],
+      "correctOption": "c",
+      "explanation": "La principale est au passé (« a affirmé ») et la subordonnée exprime un fait postérieur : on emploie le conditionnel présent, futur du passé, soit « viendrait ». « viendra » (futur) ne suit pas un passé, « vienne » est un subjonctif injustifié, « venait » (imparfait) dirait la simultanéité, pas la postériorité.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Stylistique — Mise en relief : « ___ je redoute le plus, c'est l'échec. »",
+      "options": [
+        { "id": "a", "text": "Ce que" },
+        { "id": "b", "text": "Ce qui" },
+        { "id": "c", "text": "Ce dont" },
+        { "id": "d", "text": "Qu'est-ce que" }
+      ],
+      "correctOption": "a",
+      "explanation": "« redouter » est transitif direct : son objet est repris par « ce que » (COD) : « Ce que je redoute, c'est… ». « Ce qui » serait sujet (ce qui me fait peur), « ce dont » remplacerait un complément en « de » (avoir peur DE), « Qu'est-ce que » est une tournure interrogative, pas une mise en relief.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Vocabulaire — Nominalisation : quel groupe nominal correspond à « les prix ont augmenté » ?",
+      "options": [
+        { "id": "a", "text": "l'augmentage des prix" },
+        { "id": "b", "text": "l'augmentement des prix" },
+        { "id": "c", "text": "l'augmentition des prix" },
+        { "id": "d", "text": "l'augmentation des prix" }
+      ],
+      "correctOption": "d",
+      "explanation": "Le verbe « augmenter » se nominalise en « augmentation » (suffixe -tion) : « l'augmentation des prix ». Les autres formes sont des suffixes inexistants pour ce verbe : « -age », « -ement » et « -ition » ne s'appliquent pas ici et ne figurent dans aucun dictionnaire.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Vocabulaire — Connecteur logique : « Le projet est coûteux ; ___, le conseil l'a approuvé. »",
+      "options": [
+        { "id": "a", "text": "par conséquent" },
+        { "id": "b", "text": "néanmoins" },
+        { "id": "c", "text": "en outre" },
+        { "id": "d", "text": "à savoir" }
+      ],
+      "correctOption": "b",
+      "explanation": "Les deux faits s'opposent (coûteux MAIS approuvé) : il faut un connecteur de concession, « néanmoins ». « par conséquent » marque la conséquence (l'approbation serait due au coût, ce qui inverse la logique), « en outre » ajoute un argument, « à savoir » introduit une précision.",
+      "difficulty": 2
+    }
+  ]
+}

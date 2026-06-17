@@ -1,0 +1,100 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : lecture critique des textes argumentatifs",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Lisez l'extrait d'éditorial :\n« Voilà donc qu'on nous propose, pour « sauver la planète », de culpabiliser le consommateur à chaque geste : ton sac, ton trajet, ta douche. Pendant ce temps, une poignée d'industries continue d'émettre, en toute quiétude, l'essentiel des gaz à effet de serre. La vertu individuelle a bon dos quand elle dispense de regarder les vrais responsables. »\n\nQuelle est la thèse de l'éditorialiste ?",
+      "options": [
+        { "id": "a", "text": "Les gestes individuels suffisent à sauver la planète." },
+        {
+          "id": "b",
+          "text": "Centrer le débat sur la culpabilité individuelle détourne l'attention des principaux pollueurs."
+        },
+        { "id": "c", "text": "Il ne sert à rien de protéger la planète." },
+        { "id": "d", "text": "Les industries ne polluent pas réellement." }
+      ],
+      "correctOption": "b",
+      "explanation": "L'expression « a bon dos » et l'opposition entre le consommateur culpabilisé et « une poignée d'industries… en toute quiétude » montrent que l'auteur dénonce un détournement d'attention vers l'individu. L'option a reprend la cible de sa critique ; c et d sont des contresens (il défend l'écologie et accuse les industries).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Les nostalgiques de « l'école d'autrefois » oublient opportunément qu'à l'époque tant vantée, une part importante des enfants quittait le système sans le moindre diplôme. La mémoire, décidément, est une grande nettoyeuse. »\n\nQue signifie l'image finale « la mémoire est une grande nettoyeuse » ?",
+      "options": [
+        { "id": "a", "text": "La mémoire conserve fidèlement tous les détails du passé." },
+        { "id": "b", "text": "Il faut nettoyer régulièrement ses souvenirs." },
+        {
+          "id": "c",
+          "text": "La mémoire efface les aspects négatifs du passé et en garde une image embellie."
+        },
+        { "id": "d", "text": "Le passé était objectivement meilleur que le présent." }
+      ],
+      "correctOption": "c",
+      "explanation": "L'auteur rappelle un fait gênant (les enfants sans diplôme) « oublié opportunément » : la métaphore de la « nettoyeuse » dit que la mémoire gomme le négatif et embellit le passé. C'est l'inverse d'une conservation fidèle, et l'auteur conteste justement que le passé fût meilleur.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Que les algorithmes nous recommandent des films, passe encore. Qu'ils décident demain de qui obtient un crédit, un emploi, une libération conditionnelle, sans que nul ne puisse expliquer pourquoi — voilà qui devrait nous tenir éveillés la nuit. »\n\nQuel est le point de vue de l'auteur sur les algorithmes de décision ?",
+      "options": [
+        { "id": "a", "text": "Il les approuve sans réserve dans tous les domaines." },
+        { "id": "b", "text": "Il les juge utiles uniquement pour les décisions de justice." },
+        { "id": "c", "text": "Il y est totalement indifférent." },
+        { "id": "d", "text": "Il s'inquiète de leur usage dans des décisions graves et opaques." }
+      ],
+      "correctOption": "d",
+      "explanation": "L'auteur tolère les recommandations de films (« passe encore ») mais s'alarme de décisions lourdes et inexplicables (« devrait nous tenir éveillés la nuit ») : il dénonce l'opacité dans les choix graves. Il n'approuve pas sans réserve, n'est pas indifférent, et ne réserve pas son inquiétude à la justice seule.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Certes, le projet de rénovation embellira le quartier ; nul ne le conteste. Mais lorsqu'on apprend que les loyers doubleront et que les commerçants historiques devront partir, on est en droit de se demander : embellir, pour qui, exactement ? »\n\nQuelle est la fonction de la question finale (« embellir, pour qui ? ») ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "C'est une question rhétorique qui suggère que la rénovation profitera surtout à de nouveaux arrivants, pas aux habitants actuels."
+        },
+        {
+          "id": "b",
+          "text": "C'est une vraie demande d'information que l'auteur pose par ignorance."
+        },
+        { "id": "c", "text": "Elle prouve que l'auteur approuve pleinement le projet." },
+        { "id": "d", "text": "Elle indique que le projet a été abandonné." }
+      ],
+      "correctOption": "a",
+      "explanation": "La concession (« Certes… nul ne le conteste ») prépare le « Mais » qui révèle les perdants (loyers doublés, commerçants chassés) ; la question rhétorique « pour qui ? » sous-entend que d'autres en profiteront. Ce n'est pas une vraie question, ni une approbation, ni une annonce d'abandon.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« On célèbre l'essor du bénévolat comme une preuve de générosité retrouvée. L'analyse est flatteuse. Elle l'est peut-être trop : et si cette « générosité » comblait surtout le vide laissé par des services publics qui, faute de moyens, ont cessé d'assurer ce qu'ils devaient ? »\n\nQuel sous-entendu porte cet extrait ?",
+      "options": [
+        { "id": "a", "text": "Le bénévolat est inutile et devrait disparaître." },
+        { "id": "b", "text": "Les services publics sont parfaitement financés." },
+        {
+          "id": "c",
+          "text": "L'essor du bénévolat pourrait masquer un désengagement de l'État plutôt qu'un surcroît de générosité."
+        },
+        { "id": "d", "text": "La générosité des citoyens a réellement augmenté de façon certaine." }
+      ],
+      "correctOption": "c",
+      "explanation": "« L'est peut-être trop » et l'hypothèse au conditionnel (« et si… comblait… ») sous-entendent que le bénévolat compenserait le retrait des services publics, plus qu'une vraie générosité. L'auteur ne condamne pas le bénévolat (a), conteste le bon financement public (b) et doute de l'explication par la générosité (d).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Les défenseurs du projet avancent qu'il créera des emplois — argument imparable, semble-t-il. Mais ces emplois seront précaires, mal payés, et disparaîtront sitôt les subventions épuisées. Présenter cela comme un progrès social relève moins de l'analyse que de la publicité. »\n\nComment l'auteur traite-t-il l'argument « cela créera des emplois » ?",
+      "options": [
+        { "id": "a", "text": "Il l'accepte comme une preuve décisive en faveur du projet." },
+        {
+          "id": "b",
+          "text": "Il le cite comme contre-argument, puis le démonte en montrant la précarité de ces emplois."
+        },
+        { "id": "c", "text": "Il l'ignore complètement." },
+        { "id": "d", "text": "Il affirme qu'aucun emploi ne sera créé." }
+      ],
+      "correctOption": "b",
+      "explanation": "L'auteur rapporte l'argument adverse (« créera des emplois — argument imparable, semble-t-il »), avec un « semble-t-il » déjà sceptique, puis le réfute par le « Mais » (emplois précaires, éphémères) et le qualifie de « publicité ». Il ne l'accepte donc pas, ne l'ignore pas, et ne nie pas toute création d'emploi : il en conteste la valeur.",
+      "difficulty": 3
+    }
+  ]
+}

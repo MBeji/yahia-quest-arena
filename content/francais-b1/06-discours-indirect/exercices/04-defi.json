@@ -1,0 +1,133 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : le discours indirect",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Transforme : Hier, elle m'a dit : « Je t'appellerai demain et nous déjeunerons ensemble. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "Hier, elle m'a dit qu'elle m'appellerait demain et que nous déjeunerions ensemble."
+        },
+        {
+          "id": "b",
+          "text": "Hier, elle m'a dit qu'elle m'appellera le lendemain et que nous déjeunerons ensemble."
+        },
+        {
+          "id": "c",
+          "text": "Hier, elle m'a dit qu'elle m'appellerait le lendemain et que nous déjeunerions ensemble."
+        },
+        {
+          "id": "d",
+          "text": "Hier, elle m'a dit qu'elle m'appelait le lendemain et que nous déjeunions ensemble."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Les deux futurs (« appellerai », « déjeunerons ») deviennent des conditionnels (« appellerait », « déjeunerions »), et « demain » devient « le lendemain ». L'option (a) oublie le marqueur ; (b) garde les futurs ; (d) emploie l'imparfait au lieu du conditionnel. Le piège : un seul conditionnel suffit rarement, il faut traiter chaque verbe.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Transforme : Il a demandé : « Qu'est-ce qui s'est passé et qui a appelé la police ? »",
+      "options": [
+        { "id": "a", "text": "Il a demandé ce que s'était passé et qui avait appelé la police." },
+        { "id": "b", "text": "Il a demandé ce qui s'est passé et qui a appelé la police." },
+        {
+          "id": "c",
+          "text": "Il a demandé qu'est-ce qui s'était passé et qui avait appelé la police."
+        },
+        { "id": "d", "text": "Il a demandé ce qui s'était passé et qui avait appelé la police." }
+      ],
+      "correctOption": "d",
+      "explanation": "« Qu'est-ce qui » (sujet) → « ce qui » ; « qui » se conserve ; les deux passés composés reculent en plus-que-parfait (« s'était passé », « avait appelé »). L'option (a) confond avec « ce que » ; (b) oublie la concordance ; (c) garde « qu'est-ce qui ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Transforme : La mère a dit à ses enfants : « Rangez votre chambre et ne faites pas de bruit ! »",
+      "options": [
+        {
+          "id": "a",
+          "text": "La mère a dit à ses enfants de ranger leur chambre et de ne pas faire de bruit."
+        },
+        {
+          "id": "b",
+          "text": "La mère a dit à ses enfants de ranger votre chambre et de ne pas faire de bruit."
+        },
+        {
+          "id": "c",
+          "text": "La mère a dit à ses enfants qu'ils rangent leur chambre et ne font pas de bruit."
+        },
+        {
+          "id": "d",
+          "text": "La mère a dit à ses enfants de ranger leur chambre et de ne faire pas de bruit."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Deux ordres → « de + infinitif » ; le possessif « votre » devient « leur » (point de vue de la mère qui rapporte) ; la négation correcte est « ne pas faire ». L'option (b) garde « votre » ; (c) transforme les ordres en constats ; (d) place mal la négation (« ne faire pas »).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Transforme : Elle a dit : « Aujourd'hui je suis fatiguée, hier j'ai trop travaillé et demain je me reposerai. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "Elle a dit que ce jour-là elle était fatiguée, que la veille elle a trop travaillé et que le lendemain elle se reposerait."
+        },
+        {
+          "id": "b",
+          "text": "Elle a dit que ce jour-là elle était fatiguée, que la veille elle avait trop travaillé et que le lendemain elle se reposerait."
+        },
+        {
+          "id": "c",
+          "text": "Elle a dit qu'aujourd'hui elle était fatiguée, qu'hier elle avait trop travaillé et que demain elle se reposerait."
+        },
+        {
+          "id": "d",
+          "text": "Elle a dit que ce jour-là elle est fatiguée, que la veille elle avait trop travaillé et que le lendemain elle se reposera."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Trois temps reculent : présent « suis » → imparfait « était » ; passé composé « ai travaillé » → plus-que-parfait « avait travaillé » ; futur « reposerai » → conditionnel « reposerait ». Et trois marqueurs : aujourd'hui → ce jour-là, hier → la veille, demain → le lendemain. L'option (a) oublie le recul du passé composé ; (c) garde les marqueurs d'origine ; (d) garde un présent et un futur.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Transforme : Le client a demandé : « Est-ce que vous acceptez les cartes et combien coûte la livraison ? »",
+      "options": [
+        {
+          "id": "a",
+          "text": "Le client a demandé si nous acceptions les cartes et combien coûte la livraison."
+        },
+        {
+          "id": "b",
+          "text": "Le client a demandé que nous acceptions les cartes et combien coûtait la livraison."
+        },
+        {
+          "id": "c",
+          "text": "Le client a demandé si nous acceptions les cartes et combien coûtait la livraison."
+        },
+        {
+          "id": "d",
+          "text": "Le client a demandé si nous acceptions les cartes et combien coûte-t-elle la livraison."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Question fermée → « si » ; question avec mot interrogatif « combien » → on garde « combien » sans inversion ; les deux présents reculent en imparfait (« acceptions », « coûtait »). L'option (a) oublie le recul de « coûte » ; (b) emploie « que » au lieu de « si » ; (d) garde une inversion (« coûte-t-elle »).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle phrase rapporte CORRECTEMENT : Il a dit : « Mon frère viendra me chercher maintenant. » ?",
+      "options": [
+        { "id": "a", "text": "Il a dit que son frère viendrait le chercher à ce moment-là." },
+        { "id": "b", "text": "Il a dit que mon frère viendrait le chercher à ce moment-là." },
+        { "id": "c", "text": "Il a dit que son frère viendra me chercher maintenant." },
+        { "id": "d", "text": "Il a dit que son frère venait le chercher à ce moment-là." }
+      ],
+      "correctOption": "a",
+      "explanation": "Quatre ajustements : « mon » → « son », futur « viendra » → conditionnel « viendrait », « me » → « le », « maintenant » → « à ce moment-là ». L'option (b) garde « mon » ; (c) ne transforme rien ; (d) met un imparfait au lieu du conditionnel.",
+      "difficulty": 3
+    }
+  ]
+}

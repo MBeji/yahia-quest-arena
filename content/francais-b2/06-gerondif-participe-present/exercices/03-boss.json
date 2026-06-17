@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : le gérondif et le participe présent",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Complétez : « Il est sorti ___ saluer personne. »",
+      "options": [
+        { "id": "a", "text": "sans saluant" },
+        { "id": "b", "text": "en ne saluant" },
+        { "id": "c", "text": "sans saluer" },
+        { "id": "d", "text": "ne saluant" }
+      ],
+      "correctOption": "c",
+      "explanation": "Après la préposition « sans », on emploie l'infinitif, pas le participe présent : « sans saluer personne ». « sans saluant » est fautif ; un gérondif négatif (« en ne saluant ») serait lourd et « ne saluant » est incomplet.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choisissez la phrase CORRECTE.",
+      "options": [
+        { "id": "a", "text": "Ce sont des arguments convaincant." },
+        { "id": "b", "text": "Ce sont des arguments convaincants." },
+        { "id": "c", "text": "Ce sont des arguments convainquants." },
+        { "id": "d", "text": "Ce sont des arguments en convainquant." }
+      ],
+      "correctOption": "b",
+      "explanation": "« convaincants » est l'adjectif verbal : il s'accorde avec « arguments » (masculin pluriel) et s'écrit avec c. (a) oublie l'accord, (c) utilise l'orthographe du participe présent (avec qu) et (d) introduit un gérondif absurde.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Réécrivez « Il a obtenu le poste parce qu'il avait insisté » en gardant l'idée de moyen.",
+      "options": [
+        { "id": "a", "text": "Il a obtenu le poste en insistant." },
+        { "id": "b", "text": "Il a obtenu le poste insistant." },
+        { "id": "c", "text": "Il a obtenu le poste, insistante." },
+        { "id": "d", "text": "Il a obtenu le poste à insister." }
+      ],
+      "correctOption": "a",
+      "explanation": "Le gérondif « en insistant » exprime le moyen (= grâce au fait qu'il a insisté). « insistant » seul serait un participe présent sans « en », « insistante » un accord impossible et « à insister » n'a pas ce sens.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans « une remarque provocante », quelle est la nature et l'orthographe correcte de « provocante » ?",
+      "options": [
+        { "id": "a", "text": "Gérondif : en provoquant." },
+        { "id": "b", "text": "Participe présent invariable, écrit avec qu : provoquant." },
+        { "id": "c", "text": "Adjectif verbal écrit avec qu : provoquante." },
+        { "id": "d", "text": "Adjectif verbal accordé, écrit avec c : provocante." }
+      ],
+      "correctOption": "d",
+      "explanation": "Ici la forme qualifie « remarque » : c'est l'adjectif verbal, accordé et écrit avec c → « provocante ». Le participe présent s'écrirait « provoquant » (avec qu) et resterait invariable, mais le contexte exige bien l'adjectif.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Trouvez la phrase où le gérondif est EMPLOYÉ DE FAÇON FAUTIVE.",
+      "options": [
+        { "id": "a", "text": "En lisant le contrat, j'ai remarqué une erreur." },
+        { "id": "b", "text": "En arrivant à la gare, le train était déjà parti." },
+        { "id": "c", "text": "Tu progresseras en t'entraînant tous les jours." },
+        { "id": "d", "text": "Il s'est endormi en regardant la télévision." }
+      ],
+      "correctOption": "b",
+      "explanation": "Dans (b), le sujet du gérondif (celui qui arrive) n'est pas le sujet du verbe principal « le train » : le train n'arrive pas, il est déjà parti. Il faudrait « Quand je suis arrivé… ». Dans (a), (c) et (d), le sujet est bien partagé entre les deux verbes.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complétez : « ___ leurs preuves, ces méthodes sont désormais recommandées. » (= qui ont fait)",
+      "options": [
+        { "id": "a", "text": "Ayant fait" },
+        { "id": "b", "text": "En ayant fait" },
+        { "id": "c", "text": "Ayants fait" },
+        { "id": "d", "text": "Avant fait" }
+      ],
+      "correctOption": "a",
+      "explanation": "« ayant fait » est le participe présent composé (ayant + participe passé), invariable, exprimant ici une cause antérieure (= comme elles ont fait leurs preuves). « ayants » est un accord fautif, « avant fait » est une faute et le gérondif n'a pas de sens ici.",
+      "difficulty": 3
+    }
+  ]
+}

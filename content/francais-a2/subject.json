@@ -1,0 +1,12 @@
+{
+  "id": "francais-a2",
+  "nameFr": "Français — Élémentaire (A2 · DELF A2)",
+  "description": "Passe au niveau élémentaire : raconte au passé (passé composé et imparfait), parle de l'avenir (futur proche et futur simple), décris ta routine avec les verbes pronominaux, compare, situe dans l'espace et le temps, enrichis ton vocabulaire de la ville et lis des textes courts. Niveau élémentaire (CECRL A2), aligné sur le DELF A2.",
+  "attribute": "Agilité",
+  "colorToken": "subject-french",
+  "icon": "Languages",
+  "displayOrder": 2,
+  "contentLanguage": "fr",
+  "themeId": "francais",
+  "gradeSlug": null
+}

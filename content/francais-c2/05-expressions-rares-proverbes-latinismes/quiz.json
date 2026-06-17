@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Que signifie le proverbe « Qui trop embrasse mal étreint » ?",
+      "options": [
+        { "id": "a", "text": "Qui entreprend trop de choses à la fois échoue dans toutes." },
+        { "id": "b", "text": "Qui aime trop fort finit par étouffer l'autre." },
+        { "id": "c", "text": "Il faut savoir saisir sa chance quand elle se présente." },
+        { "id": "d", "text": "La douceur obtient plus que la force." }
+      ],
+      "correctOption": "a",
+      "explanation": "« Qui trop embrasse mal étreint » : « embrasser » a ici le sens ancien de « prendre dans ses bras, englober » ; vouloir tout englober, c'est mal tenir l'ensemble. L'option (b) prend l'image au pied de la lettre ; (c) et (d) sont d'autres sagesses sans rapport.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans « Il a réagi a priori, sans avoir examiné le dossier », que signifie « a priori » ?",
+      "options": [
+        { "id": "a", "text": "Après une longue réflexion." },
+        { "id": "b", "text": "À contrecœur, malgré lui." },
+        { "id": "c", "text": "Au premier abord, avant tout examen." },
+        { "id": "d", "text": "En dernier recours, faute de mieux." }
+      ],
+      "correctOption": "c",
+      "explanation": "« A priori » signifie « au premier abord, avant examen » ; le contexte « sans avoir examiné le dossier » le confirme. Son contraire est « a posteriori » (après coup), qui correspondrait plutôt à l'idée de (a).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Que désigne « le talon d'Achille » de quelqu'un ?",
+      "options": [
+        { "id": "a", "text": "Son atout le plus précieux." },
+        { "id": "b", "text": "Son point faible, vulnérable." },
+        { "id": "c", "text": "Sa rapidité, son agilité." },
+        { "id": "d", "text": "Son orgueil démesuré." }
+      ],
+      "correctOption": "b",
+      "explanation": "Achille, invulnérable sauf au talon par lequel sa mère l'avait tenu, mourut d'une flèche reçue à cet endroit. « Le talon d'Achille » désigne donc le point faible. (a) en est l'inverse ; (c) et (d) détournent l'image.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel proverbe conseille de ne pas se réjouir d'un avantage qu'on ne possède pas encore ?",
+      "options": [
+        { "id": "a", "text": "Petit à petit l'oiseau fait son nid." },
+        { "id": "b", "text": "La nuit porte conseil." },
+        { "id": "c", "text": "Qui sème le vent récolte la tempête." },
+        { "id": "d", "text": "Il ne faut pas vendre la peau de l'ours avant de l'avoir tué." }
+      ],
+      "correctOption": "d",
+      "explanation": "« Il ne faut pas vendre la peau de l'ours… » met en garde contre l'anticipation d'un gain incertain. (a) vante la persévérance, (b) le recul avant de décider, (c) les conséquences amplifiées d'un acte néfaste.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans « C'est une condition sine qua non de l'accord », que signifie « sine qua non » ?",
+      "options": [
+        { "id": "a", "text": "Une condition secondaire, négociable." },
+        { "id": "b", "text": "Une condition indispensable, sans laquelle rien n'est possible." },
+        { "id": "c", "text": "Une condition provisoire, temporaire." },
+        { "id": "d", "text": "Une condition implicite, sous-entendue." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Sine qua non » signifie littéralement « sans laquelle non » : une condition absolument nécessaire, faute de laquelle la chose ne peut exister. Elle est donc tout sauf secondaire (a) ou provisoire (c).",
+      "difficulty": 2
+    }
+  ]
+}

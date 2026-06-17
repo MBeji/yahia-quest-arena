@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Conjugaison — Complétez : « Hier, nous ___ au cinéma. »",
+      "options": [
+        { "id": "a", "text": "allons" },
+        { "id": "b", "text": "sommes allés" },
+        { "id": "c", "text": "irons" },
+        { "id": "d", "text": "allions" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Hier » situe l'action dans le passé : on emploie le passé composé, « nous sommes allés » (auxiliaire être + participe). « Allons » est le présent, « irons » le futur, et « allions » l'imparfait, qui exprimerait une habitude, pas un fait ponctuel daté.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Grammaire — Choisissez le bon article : « Je voudrais ___ eau, s'il vous plaît. »",
+      "options": [
+        { "id": "a", "text": "le" },
+        { "id": "b", "text": "un" },
+        { "id": "c", "text": "de l'" },
+        { "id": "d", "text": "des" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Eau » est ici une quantité indéterminée d'un nom non comptable : on emploie l'article partitif « de l' » (devant voyelle). « Le » désigne une eau précise, « un » suppose un objet comptable, et « des » est le partitif pluriel, qui ne convient pas à « eau » au singulier.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Vocabulaire — Quel est l'intrus de cette série ?",
+      "options": [
+        { "id": "a", "text": "joyeux" },
+        { "id": "b", "text": "content" },
+        { "id": "c", "text": "heureux" },
+        { "id": "d", "text": "triste" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Joyeux », « content » et « heureux » expriment tous le bonheur, alors que « triste » exprime le contraire : c'est l'intrus. Le piège est qu'il s'agit aussi d'une émotion ; il faut trier par le sens (positif/négatif), pas par la catégorie générale.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lecture — Lisez : « Léa habite à Tunis. Elle travaille dans une banque et rentre chez elle à dix-huit heures. »\nOù travaille Léa ?",
+      "options": [
+        { "id": "a", "text": "Dans une banque." },
+        { "id": "b", "text": "À Tunis." },
+        { "id": "c", "text": "À l'école." },
+        { "id": "d", "text": "À dix-huit heures." }
+      ],
+      "correctOption": "a",
+      "explanation": "Le texte dit explicitement « Elle travaille dans une banque » : c'est le lieu de travail. « À Tunis » est son lieu d'habitation, « à dix-huit heures » est une heure (pas un lieu), et « à l'école » n'est jamais mentionné — la réponse doit venir du texte.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Orthographe — Choisissez la forme correcte : « Il ___ allé à Paris. »",
+      "options": [
+        { "id": "a", "text": "à" },
+        { "id": "b", "text": "a" },
+        { "id": "c", "text": "as" },
+        { "id": "d", "text": "ah" }
+      ],
+      "correctOption": "b",
+      "explanation": "Ici « a » est le verbe avoir (auxiliaire du passé composé) : on peut le remplacer par « avait ». « À » avec accent est une préposition, « as » est la 2ᵉ personne (tu as), et « ah » est une interjection : aucun ne convient avec « il ».",
+      "difficulty": 2
+    }
+  ]
+}

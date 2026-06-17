@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Complète : « La chaise ___ je suis assis est cassée. »",
+      "options": [
+        { "id": "a", "text": "sur laquelle" },
+        { "id": "b", "text": "sur lequel" },
+        { "id": "c", "text": "sur lesquelles" },
+        { "id": "d", "text": "qui" }
+      ],
+      "correctOption": "a",
+      "explanation": "Après la préposition « sur », on emploie un pronom composé accordé à l'antécédent : « la chaise » est féminin singulier, donc « sur laquelle ». « sur lequel » est masculin, « sur lesquelles » est un pluriel, et « qui » après préposition est réservé aux personnes.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Voici le projet ___ je pense depuis longtemps. »",
+      "options": [
+        { "id": "a", "text": "à lequel" },
+        { "id": "b", "text": "auquel" },
+        { "id": "c", "text": "à laquelle" },
+        { "id": "d", "text": "auxquels" }
+      ],
+      "correctOption": "b",
+      "explanation": "On dit penser À quelque chose ; « à » se contracte avec « lequel » (masculin singulier, comme « le projet ») et donne « auquel » : le projet auquel je pense. « à lequel » n'existe pas, « à laquelle » est féminin, et « auxquels » est un pluriel.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Les collègues ___ je travaille sont sympathiques. »",
+      "options": [
+        { "id": "a", "text": "avec lequel" },
+        { "id": "b", "text": "dont" },
+        { "id": "c", "text": "avec qui" },
+        { "id": "d", "text": "auxquels" }
+      ],
+      "correctOption": "c",
+      "explanation": "Pour des personnes après une préposition, « avec qui » est la tournure naturelle : les collègues avec qui je travaille. « avec lequel » serait un masculin singulier (incorrect pour un pluriel), « dont » s'emploie avec « de », et « auxquels » conviendrait à penser à, pas à travailler avec.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « C'est une décision ___ tu dois réfléchir sérieusement. »",
+      "options": [
+        { "id": "a", "text": "auquel" },
+        { "id": "b", "text": "à lequel" },
+        { "id": "c", "text": "dont" },
+        { "id": "d", "text": "à laquelle" }
+      ],
+      "correctOption": "d",
+      "explanation": "On dit réfléchir À quelque chose ; « décision » est féminin singulier, donc « à laquelle » (le féminin singulier ne se contracte pas). « auquel » serait un masculin, « à lequel » n'existe pas, et « dont » s'emploie avec « de », pas avec « à ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Le château ___ s'étend un grand parc appartient à la commune. »",
+      "options": [
+        { "id": "a", "text": "dont" },
+        { "id": "b", "text": "au pied duquel" },
+        { "id": "c", "text": "au pied dont" },
+        { "id": "d", "text": "au pied de laquelle" }
+      ],
+      "correctOption": "b",
+      "explanation": "La locution « au pied de » se termine par « de » : on emploie alors « duquel » accordé à « le château » (masculin singulier), d'où « au pied duquel ». « dont » est interdit dans une locution prépositionnelle, « au pied dont » est impossible, et « de laquelle » serait un féminin.",
+      "difficulty": 2
+    }
+  ]
+}

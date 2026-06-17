@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision : comparatif et superlatif",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complète : « Cette tour est ___ château : elle est la plus haute de la région. »",
+      "options": [
+        { "id": "a", "text": "la plus haute du" },
+        { "id": "b", "text": "plus haute que le" },
+        { "id": "c", "text": "le plus haut du" },
+        { "id": "d", "text": "la plus haute que le" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le superlatif s'accorde avec le nom (tour, féminin) et se complète par « de » : la plus haute du château. « le plus haut » ne s'accorde pas au féminin, et le superlatif n'emploie pas « que » mais « de ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve la phrase CORRECTE.",
+      "options": [
+        { "id": "a", "text": "Cette épée est plus bonne que l'autre." },
+        { "id": "b", "text": "Cette épée est meilleure que l'autre." },
+        { "id": "c", "text": "Cette épée est plus meilleure que l'autre." },
+        { "id": "d", "text": "Cette épée est mieux que l'autre." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Bon » étant irrégulier, son comparatif est « meilleur », accordé au féminin : meilleure que l'autre. « plus bonne » et « plus meilleure » doublent ou inventent une marque interdite, et « mieux » est le comparatif de l'adverbe « bien », pas de l'adjectif « bon ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Il y a ___ joueurs ___ dans l'autre équipe : nous sommes onze, eux aussi. »",
+      "options": [
+        { "id": "a", "text": "plus de … que" },
+        { "id": "b", "text": "autant … que" },
+        { "id": "c", "text": "aussi de … que" },
+        { "id": "d", "text": "autant de … que" }
+      ],
+      "correctOption": "d",
+      "explanation": "Comparer une quantité égale de joueurs (un nom) demande « autant de … que » : autant de joueurs que dans l'autre équipe. « plus de » marque la supériorité, « autant … que » oublie le « de » devant le nom, et « aussi de » n'existe pas.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « De tous les boucliers, c'est ___ : il ne coûte presque rien. »",
+      "options": [
+        { "id": "a", "text": "moins cher" },
+        { "id": "b", "text": "le moins cher que" },
+        { "id": "c", "text": "moins de cher" },
+        { "id": "d", "text": "le moins cher" }
+      ],
+      "correctOption": "d",
+      "explanation": "Le superlatif d'infériorité prend l'article défini : le moins cher de tous. « moins cher » seul n'est qu'un comparatif, le superlatif n'emploie pas « que », et « moins de » s'utilise devant un nom pour une quantité, pas devant un adjectif.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Mon frère dessine ___ moi : ses dessins sont superbes. »",
+      "options": [
+        { "id": "a", "text": "plus bien que" },
+        { "id": "b", "text": "meilleur que" },
+        { "id": "c", "text": "mieux que" },
+        { "id": "d", "text": "plus mieux que" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Dessiner » est modifié par un adverbe ; le comparatif de « bien » est « mieux » : il dessine mieux que moi. « plus bien » et « plus mieux » sont interdits, et « meilleur » est l'adjectif (il qualifie un nom, pas un verbe).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Le nouveau cinéma n'est pas ___ grand ___ l'ancien : l'ancien avait plus de places. »",
+      "options": [
+        { "id": "a", "text": "plus … que" },
+        { "id": "b", "text": "aussi … que" },
+        { "id": "c", "text": "aussi … de" },
+        { "id": "d", "text": "autant … que" }
+      ],
+      "correctOption": "b",
+      "explanation": "Pour dire que deux choses ne sont pas égales, on emploie « pas aussi … que » : pas aussi grand que l'ancien. « plus … que » ne suit pas naturellement la négation ici, « de » ne remplace pas « que », et « autant » se réserve aux quantités (un nom).",
+      "difficulty": 2
+    }
+  ]
+}

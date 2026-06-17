@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision : tout le français",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Conjugaison — Complétez à l'imparfait : « Quand j'étais petit, je ___ souvent chez ma grand-mère. »",
+      "options": [
+        { "id": "a", "text": "vais" },
+        { "id": "b", "text": "suis allé" },
+        { "id": "c", "text": "allais" },
+        { "id": "d", "text": "irai" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Souvent » et le cadre « quand j'étais petit » décrivent une habitude passée : on emploie l'imparfait, « j'allais ». « Vais » est le présent, « irai » le futur, et « suis allé » (passé composé) exprimerait un fait unique, pas une habitude répétée.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Grammaire — Remplacez le complément : « Je donne le livre à Paul. » →",
+      "options": [
+        { "id": "a", "text": "Je le donne." },
+        { "id": "b", "text": "Je lui donne le livre." },
+        { "id": "c", "text": "Je le lui donne." },
+        { "id": "d", "text": "Je leur donne." }
+      ],
+      "correctOption": "c",
+      "explanation": "« Le livre » (COD) devient « le » et « à Paul » (COI singulier) devient « lui » : Je le lui donne. « Je le donne » oublie Paul, « je lui donne le livre » garde le COD, et « leur » serait un pluriel, alors que Paul est une seule personne.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Vocabulaire — Quel mot est le synonyme de « rapide » ?",
+      "options": [
+        { "id": "a", "text": "lent" },
+        { "id": "b", "text": "véloce" },
+        { "id": "c", "text": "lourd" },
+        { "id": "d", "text": "calme" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Véloce » signifie « qui va vite » : c'est le synonyme de rapide. « Lent » en est l'antonyme, tandis que « lourd » et « calme » désignent d'autres qualités sans rapport avec la vitesse.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Grammaire — Choisissez le bon pronom relatif : « Voici la ville ___ je suis né. »",
+      "options": [
+        { "id": "a", "text": "que" },
+        { "id": "b", "text": "qui" },
+        { "id": "c", "text": "dont" },
+        { "id": "d", "text": "où" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Où » introduit un complément de lieu : la ville où je suis né. « Qui » remplace un sujet, « que » un COD, et « dont » remplace un complément introduit par « de » — aucun n'exprime le lieu attendu ici.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Conjugaison — Complétez : « Il faut que tu ___ tes devoirs. »",
+      "options": [
+        { "id": "a", "text": "fais" },
+        { "id": "b", "text": "fasses" },
+        { "id": "c", "text": "feras" },
+        { "id": "d", "text": "ferais" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Il faut que » exige le subjonctif présent : que tu fasses. « Fais » est l'indicatif présent, « feras » le futur, et « ferais » le conditionnel ; après une expression de nécessité, seul le subjonctif est correct.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lecture — Lisez : « Sofiane est arrivé en retard parce que son train avait été annulé. Il s'est excusé auprès de son chef. »\nPourquoi Sofiane était-il en retard ?",
+      "options": [
+        { "id": "a", "text": "Son train avait été annulé." },
+        { "id": "b", "text": "Il s'est excusé." },
+        { "id": "c", "text": "Son chef était absent." },
+        { "id": "d", "text": "Il a oublié l'heure." }
+      ],
+      "correctOption": "a",
+      "explanation": "Le texte donne la cause avec « parce que son train avait été annulé » : c'est la raison du retard. « Il s'est excusé » est une conséquence, et l'absence du chef ou l'oubli de l'heure ne sont jamais mentionnés dans le passage.",
+      "difficulty": 2
+    }
+  ]
+}

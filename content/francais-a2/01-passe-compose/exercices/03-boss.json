@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : le passé composé",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Complète : « Tu ___ ton cadeau hier ? »",
+      "options": [
+        { "id": "a", "text": "as voir" },
+        { "id": "b", "text": "as vu" },
+        { "id": "c", "text": "es vu" },
+        { "id": "d", "text": "as vue" }
+      ],
+      "correctOption": "b",
+      "explanation": "Voir se conjugue avec avoir et son participe irrégulier est « vu » : tu as vu. « as voir » garde l'infinitif, « es vu » utilise le mauvais auxiliaire, et « vue » ajoute un accord interdit avec l'auxiliaire avoir.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Elles ___ par la grande porte. »",
+      "options": [
+        { "id": "a", "text": "ont entrées" },
+        { "id": "b", "text": "sont entré" },
+        { "id": "c", "text": "sont entrées" },
+        { "id": "d", "text": "sont entrés" }
+      ],
+      "correctOption": "c",
+      "explanation": "Entrer se conjugue avec être et le participe s'accorde avec le sujet. « Elles » est féminin pluriel, donc « sont entrées » (-es). « ont entrées » utilise le mauvais auxiliaire, « entré » oublie l'accord et « entrés » met un masculin.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Nous ___ rester à la maison à cause de la pluie. »",
+      "options": [
+        { "id": "a", "text": "avons dû" },
+        { "id": "b", "text": "sommes dû" },
+        { "id": "c", "text": "avons devu" },
+        { "id": "d", "text": "avons dus" }
+      ],
+      "correctOption": "a",
+      "explanation": "Devoir se conjugue avec avoir et son participe irrégulier est « dû » (avec accent circonflexe) : nous avons dû. « devu » applique à tort la règle régulière, « dus » ajoute un accord interdit avec avoir, et « sommes dû » utilise le mauvais auxiliaire.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve la phrase CORRECTE.",
+      "options": [
+        { "id": "a", "text": "Elle a venue me voir hier." },
+        { "id": "b", "text": "Ils sont fait leurs devoirs." },
+        { "id": "c", "text": "J'ai prendu une bonne décision." },
+        { "id": "d", "text": "Nous sommes restés à la plage." }
+      ],
+      "correctOption": "d",
+      "explanation": "Seule « Nous sommes restés à la plage » est correcte : rester se conjugue avec être et le participe s'accorde avec le sujet pluriel. « a venue » utilise le mauvais auxiliaire, « sont fait » aussi (faire prend avoir), et « prendu » est un participe inventé (il faut « pris »).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Ma sœur et moi, nous ___ au sommet de la montagne. »",
+      "options": [
+        { "id": "a", "text": "avons monté" },
+        { "id": "b", "text": "sommes montés" },
+        { "id": "c", "text": "sommes monté" },
+        { "id": "d", "text": "sommes montées" }
+      ],
+      "correctOption": "b",
+      "explanation": "Monter (verbe de mouvement, sans complément d'objet ici) se conjugue avec être, et le participe s'accorde avec le sujet « nous », masculin pluriel par défaut (un groupe mixte) : sommes montés. « avons monté » utilise le mauvais auxiliaire, « monté » oublie le pluriel et « montées » impose un féminin.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Hier matin, les filles ___ avant de partir à l'école. »",
+      "options": [
+        { "id": "a", "text": "ont lavées" },
+        { "id": "b", "text": "se sont lavés" },
+        { "id": "c", "text": "se sont lavées" },
+        { "id": "d", "text": "ont se lavé" }
+      ],
+      "correctOption": "c",
+      "explanation": "Se laver est un verbe pronominal : il se conjugue avec être et le participe s'accorde avec le sujet. « Les filles » est féminin pluriel, donc « se sont lavées ». Les pronominaux n'utilisent jamais avoir (« ont lavées », « ont se lavé » sont faux), et « lavés » met un masculin.",
+      "difficulty": 3
+    }
+  ]
+}

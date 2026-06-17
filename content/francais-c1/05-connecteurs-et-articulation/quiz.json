@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Quelle valeur logique le connecteur « voire » exprime-t-il dans : « C'est une démarche difficile, voire impossible » ?",
+      "options": [
+        { "id": "a", "text": "Une gradation : il renchérit, va plus loin que le premier terme." },
+        { "id": "b", "text": "Une reformulation : il redit la même idée autrement." },
+        { "id": "c", "text": "Une opposition : il contredit le premier terme." },
+        { "id": "d", "text": "Une conséquence : il en tire un effet." }
+      ],
+      "correctOption": "a",
+      "explanation": "« Voire » marque une gradation (« et même ») : « impossible » est plus fort que « difficile ». Ce n'est pas une reformulation (autrement dit), ni une opposition (mais), ni une conséquence (donc).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complétez : « Plusieurs disciplines sont concernées, ___ les mathématiques et la physique. »",
+      "options": [
+        { "id": "a", "text": "c'est-à-dire" },
+        { "id": "b", "text": "autrement dit" },
+        { "id": "c", "text": "notamment" },
+        { "id": "d", "text": "en d'autres termes" }
+      ],
+      "correctOption": "c",
+      "explanation": "On donne des exemples parmi un ensemble : il faut un connecteur d'illustration, « notamment ». « C'est-à-dire », « autrement dit » et « en d'autres termes » sont des reformulations : ils annonceraient que les maths et la physique sont l'équivalent exact de « plusieurs disciplines », ce qui est faux.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel connecteur introduit l'argument le plus fort, dans un registre soutenu ?",
+      "options": [
+        { "id": "a", "text": "et aussi" },
+        { "id": "b", "text": "qui plus est" },
+        { "id": "c", "text": "du coup" },
+        { "id": "d", "text": "et puis" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Qui plus est » ajoute un argument encore plus décisif, dans un registre soutenu. « Et aussi » et « et puis » sont neutres ou familiers ; « du coup » est familier et marque une conséquence, pas une addition renforcée.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complétez correctement : « Il a parlé fort, de sorte que tout le monde ___. » (on constate un fait accompli)",
+      "options": [
+        { "id": "a", "text": "entende" },
+        { "id": "b", "text": "entendît" },
+        { "id": "c", "text": "ait entendu" },
+        { "id": "d", "text": "a entendu" }
+      ],
+      "correctOption": "d",
+      "explanation": "« De sorte que » + indicatif exprime la conséquence (le résultat a réellement eu lieu) : « a entendu ». Le subjonctif (« entende », « entendît », « ait entendu ») donnerait au connecteur la valeur de but (l'intention), ce qui ne correspond pas à un fait accompli.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase emploie correctement une tournure de concession soutenue ?",
+      "options": [
+        { "id": "a", "text": "Force est de constater que les résultats soient décevants." },
+        { "id": "b", "text": "Il n'en demeure pas moins que la situation reste fragile." },
+        { "id": "c", "text": "Certes le coût est élevé, c'est-à-dire le bénéfice le justifie." },
+        { "id": "d", "text": "Quoi qu'il en soit, du coup on abandonne le projet." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Il n'en demeure pas moins que » se construit à l'indicatif (« reste ») et pose un fait malgré ce qui précède : correct. En (a) il faut l'indicatif (« sont »), pas le subjonctif. En (c) le balancier de concession appelle « néanmoins/mais », non une reformulation. En (d), « du coup » est familier et inadapté au registre soutenu.",
+      "difficulty": 2
+    }
+  ]
+}

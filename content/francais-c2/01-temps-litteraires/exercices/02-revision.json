@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision : les temps littéraires",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Quel est le passé simple de « venir » à la 3ᵉ personne du singulier ?",
+      "options": [
+        { "id": "a", "text": "il venait" },
+        { "id": "b", "text": "il viendra" },
+        { "id": "c", "text": "il vînt" },
+        { "id": "d", "text": "il vint" }
+      ],
+      "correctOption": "d",
+      "explanation": "Le passé simple de « venir » est « il vint », sans accent. « il vînt » (avec circonflexe) est le subjonctif imparfait ; « il venait » est l'imparfait et « il viendra » le futur.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complétez : « Il ___ la lettre, la ___, puis la jeta au feu. »",
+      "options": [
+        { "id": "a", "text": "lisait … relisait" },
+        { "id": "b", "text": "lut … relut" },
+        { "id": "c", "text": "lira … relira" },
+        { "id": "d", "text": "lût … relût" }
+      ],
+      "correctOption": "b",
+      "explanation": "La suite d'actions ponctuelles du récit appelle le passé simple : « lut … relut » (verbe « lire »). L'imparfait « lisait … relisait » exprimerait la durée, et « lût … relût » sont des subjonctifs imparfaits hors contexte.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complétez en registre soutenu : « Le roi voulut qu'on ___ les portes. »",
+      "options": [
+        { "id": "a", "text": "fermât" },
+        { "id": "b", "text": "ferma" },
+        { "id": "c", "text": "fermerait" },
+        { "id": "d", "text": "fermait" }
+      ],
+      "correctOption": "a",
+      "explanation": "Après une principale au passé (« voulut »), la concordance littéraire impose le subjonctif imparfait : « fermât » (accent circonflexe). « ferma » est un passé simple de l'indicatif, qui n'a pas sa place après « vouloir que ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouvez la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "Il prit la route dès l'aube." },
+        { "id": "b", "text": "Elle fit ses adieux et partit." },
+        { "id": "c", "text": "Le messager vînt annoncer la nouvelle." },
+        { "id": "d", "text": "Ils durent rebrousser chemin." }
+      ],
+      "correctOption": "c",
+      "explanation": "La forme correcte dans une principale est le passé simple « vint » (sans circonflexe) : « Le messager vint annoncer la nouvelle. » « vînt » est un subjonctif imparfait, réservé à une subordonnée. Les phrases (a), (b) et (d) emploient correctement « prit », « fit/partit » et « durent ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel est le passé simple de « faire » à la 3ᵉ personne du pluriel ?",
+      "options": [
+        { "id": "a", "text": "ils faisaient" },
+        { "id": "b", "text": "ils feront" },
+        { "id": "c", "text": "ils fissent" },
+        { "id": "d", "text": "ils firent" }
+      ],
+      "correctOption": "d",
+      "explanation": "Le passé simple de « faire » au pluriel est « ils firent ». « ils fissent » est le subjonctif imparfait, « ils faisaient » l'imparfait et « ils feront » le futur.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complétez : « Dès qu'elle ___ partie, le silence retomba. »",
+      "options": [
+        { "id": "a", "text": "était" },
+        { "id": "b", "text": "fut" },
+        { "id": "c", "text": "fût" },
+        { "id": "d", "text": "a été" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le passé antérieur des verbes avec « être » se forme avec l'auxiliaire au passé simple : « fut partie », en corrélation avec le passé simple « retomba ». « était partie » serait un plus-que-parfait, et « fût » (circonflexe) un subjonctif imparfait.",
+      "difficulty": 3
+    }
+  ]
+}

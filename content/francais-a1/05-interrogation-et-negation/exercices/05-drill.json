@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill : questions et négation",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Quel mot interrogatif demande un MOMENT ?",
+      "options": [
+        { "id": "a", "text": "Où" },
+        { "id": "b", "text": "Comment" },
+        { "id": "c", "text": "Quand" },
+        { "id": "d", "text": "Qui" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Quand » interroge sur un moment (Quand arrives-tu ? — Demain). « Où » demande un lieu, « comment » une manière et « qui » une personne. Chaque mot interrogatif attend un type de réponse différent.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choisis la question correcte à l'inversion pour « Vous êtes prêts. »",
+      "options": [
+        { "id": "a", "text": "Êtes-vous prêts ?" },
+        { "id": "b", "text": "Vous êtes-vous prêts ?" },
+        { "id": "c", "text": "Êtes vous prêts ?" },
+        { "id": "d", "text": "Est-ce que êtes-vous prêts ?" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'inversion met le verbe avant le pronom avec un trait d'union : Êtes-vous prêts ? « Vous êtes-vous » (b) double le sujet, (c) oublie le trait d'union, et (d) combine « est-ce que » avec une inversion, ce qui est interdit.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « ___ couleurs préfères-tu ? »",
+      "options": [
+        { "id": "a", "text": "Quel" },
+        { "id": "b", "text": "Quelle" },
+        { "id": "c", "text": "Quels" },
+        { "id": "d", "text": "Quelles" }
+      ],
+      "correctOption": "d",
+      "explanation": "« couleurs » est féminin pluriel, donc l'adjectif interrogatif est « quelles » : Quelles couleurs préfères-tu ? « Quel » et « quelle » sont singuliers, et « quels » est masculin, ce qui ne s'accorde pas avec « couleurs ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Mets à la forme négative : « Nous avons des questions. »",
+      "options": [
+        { "id": "a", "text": "Nous n'avons pas des questions." },
+        { "id": "b", "text": "Nous n'avons pas de questions." },
+        { "id": "c", "text": "Nous avons pas de questions." },
+        { "id": "d", "text": "Nous ne avons pas de questions." }
+      ],
+      "correctOption": "b",
+      "explanation": "Après la négation, « des » devient « de », et « ne » s'élide en « n' » devant « avons » : Nous n'avons pas de questions. « pas des questions » (a) garde l'article, (c) oublie « ne » et (d) n'élide pas « ne ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle question correspond à la réponse « En bus. » ?",
+      "options": [
+        { "id": "a", "text": "Où vas-tu ?" },
+        { "id": "b", "text": "Quand pars-tu ?" },
+        { "id": "c", "text": "Comment vas-tu à l'école ?" },
+        { "id": "d", "text": "Combien de bus prends-tu ?" }
+      ],
+      "correctOption": "c",
+      "explanation": "« En bus » indique une manière de se déplacer, donc la question est « Comment vas-tu à l'école ? ». « Où » demande un lieu, « quand » un moment et « combien de bus » un nombre — aucun n'appelle « En bus » comme moyen.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "Il ne aime pas le café." },
+        { "id": "b", "text": "Il n'aime pas le café." },
+        { "id": "c", "text": "Elle ne mange pas de viande." },
+        { "id": "d", "text": "Tu ne viens pas avec nous." }
+      ],
+      "correctOption": "a",
+      "explanation": "L'erreur est (a) : devant la voyelle de « aime », « ne » doit s'élider en « n' » → « Il n'aime pas le café » (b). (c) et (d) sont corrects car « mange » et « viens » commencent par une consonne, donc « ne » reste entier.",
+      "difficulty": 2
+    }
+  ]
+}

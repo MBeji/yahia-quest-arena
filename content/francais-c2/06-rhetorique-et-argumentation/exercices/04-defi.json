@@ -1,0 +1,115 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : rhétorique et argumentation",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "« Je laisse de côté ses innombrables manquements, sur lesquels il serait trop long de s'étendre, pour ne retenir que ce dernier scandale. » Quel procédé structure cette phrase, et quelle en est la fonction ?",
+      "options": [
+        { "id": "a", "text": "Une modalisation, qui atténue la charge contre l'adversaire." },
+        {
+          "id": "b",
+          "text": "Une prétérition, qui évoque les fautes en feignant de les passer sous silence pour les rendre présentes à l'esprit."
+        },
+        { "id": "c", "text": "Une concession rhétorique, qui accorde un point avant de réfuter." },
+        { "id": "d", "text": "Une analogie, qui éclaire par une comparaison." }
+      ],
+      "correctOption": "b",
+      "explanation": "Annoncer qu'on « laisse de côté » des fautes tout en les nommant est la prétérition : elle insinue et accable l'adversaire sous couvert de discrétion. Ce n'est pas une modalisation (rien n'est atténué : l'accusation est appuyée), ni une concession « certes… mais » (a/c), ni une analogie (aucune comparaison, d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Un débatteur affirme : « Mon adversaire n'a aucune légitimité à parler d'écologie : il prend l'avion. Sa proposition de taxe carbone est donc absurde. » Quel est précisément le vice de ce raisonnement ?",
+      "options": [
+        { "id": "a", "text": "Aucun : l'incohérence personnelle invalide bien la proposition." },
+        { "id": "b", "text": "Un faux dilemme, car deux options seulement sont posées." },
+        {
+          "id": "c",
+          "text": "Un ad hominem (ici tu quoque) : l'incohérence de la personne ne dit rien de la valeur de sa proposition."
+        },
+        { "id": "d", "text": "Une pétition de principe, car la conclusion est supposée d'avance." }
+      ],
+      "correctOption": "c",
+      "explanation": "Conclure de l'incohérence personnelle de l'auteur (il prend l'avion) à la fausseté de sa thèse (la taxe carbone) est un ad hominem dans sa variante « tu quoque » : on vise la personne, pas l'argument. Le comportement de l'orateur ne change rien à la valeur logique de la proposition (a est donc faux). Ce n'est ni un faux dilemme (b) ni une pétition de principe (d).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "« Certes, certains diront que la liberté d'expression a des limites — et ils n'ont pas tort en théorie ; mais qui, sérieusement, accepterait qu'on bâillonne la presse ? » Quels DEUX procédés successifs sont enchaînés ?",
+      "options": [
+        { "id": "a", "text": "Une analogie, puis un argument d'autorité." },
+        {
+          "id": "b",
+          "text": "Une concession rhétorique (certes… n'ont pas tort), puis une question rhétorique (qui accepterait… ?)."
+        },
+        { "id": "c", "text": "Une prétérition, puis un contre-exemple." },
+        { "id": "d", "text": "Une modalisation, puis un faux dilemme." }
+      ],
+      "correctOption": "b",
+      "explanation": "L'énoncé concède d'abord un point à l'adversaire (« certes… ils n'ont pas tort ») — concession rhétorique — puis bascule par une question rhétorique (« qui accepterait… ? ») dont la réponse (« personne ») est imposée pour emporter l'adhésion. Il n'y a ni analogie/autorité (a), ni prétérition/contre-exemple (c), ni faux dilemme (d) : la limite n'est pas réduite à deux options.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Parmi ces quatre répliques à la thèse « il faut investir dans l'éducation », laquelle est un argument valable, et non un sophisme ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "« Investir dans l'éducation ? Donc vous voulez ruiner l'État en dépenses inutiles ! »"
+        },
+        {
+          "id": "b",
+          "text": "« C'est vous qui le dites, et vous n'avez même pas fait d'études. »"
+        },
+        {
+          "id": "c",
+          "text": "« Investir dans l'éducation est justifié : les pays qui l'ont fait montrent, données à l'appui, une hausse durable de leur productivité. »"
+        },
+        {
+          "id": "d",
+          "text": "« Soit on investit tout dans l'éducation, soit on accepte la décadence du pays. »"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "L'option (c) fonde la conclusion sur des preuves comparatives et chiffrées : c'est un argument valable. (a) est un homme de paille (la thèse est caricaturée en « ruiner l'État »), (b) un ad hominem (attaque de la personne), (d) un faux dilemme (deux options extrêmes posées comme seules possibles).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "« Si nous tolérons une seule exception au règlement, plus personne ne le respectera, l'institution perdra toute autorité, et ce sera l'anarchie complète. » Pourquoi ce raisonnement, bien que persuasif, n'est-il pas valable ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "C'est une pente glissante : la chaîne catastrophique est affirmée sans être démontrée."
+        },
+        {
+          "id": "b",
+          "text": "C'est une concession rhétorique, valable car elle admet un point adverse."
+        },
+        {
+          "id": "c",
+          "text": "C'est un argument d'autorité, valable car il invoque l'institution."
+        },
+        { "id": "d", "text": "C'est un contre-exemple, valable car il réfute une règle générale." }
+      ],
+      "correctOption": "a",
+      "explanation": "Le raisonnement enchaîne une cascade de conséquences extrêmes (une exception → désobéissance générale → perte d'autorité → anarchie) sans prouver chaque maillon : c'est la pente glissante, un sophisme rhétoriquement efficace mais logiquement infondé. Ce n'est ni une concession (b), ni un argument d'autorité (c), ni un contre-exemple (d) — et aucun de ces trois n'est ici « valable ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "« La démocratie est le meilleur régime, car le meilleur régime est nécessairement celui qui repose sur le peuple — et c'est précisément la démocratie. » Quel sophisme se cache sous cette formulation soignée ?",
+      "options": [
+        { "id": "a", "text": "Une généralisation hâtive." },
+        { "id": "b", "text": "Un homme de paille." },
+        { "id": "c", "text": "Une analogie trompeuse." },
+        {
+          "id": "d",
+          "text": "Une pétition de principe : la conclusion à prouver est déjà supposée dans les prémisses."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "La démonstration tourne en cercle : on définit « le meilleur régime » comme celui qui repose sur le peuple (donc la démocratie), pour conclure que la démocratie est le meilleur régime — la conclusion est cachée dans la prémisse. C'est la pétition de principe. Il n'y a ni induction sur des cas (a), ni déformation d'une thèse adverse (b), ni comparaison entre deux domaines (c).",
+      "difficulty": 3
+    }
+  ]
+}

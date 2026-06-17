@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : la syntaxe expressive",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Trouve la phrase incorrecte.",
+      "options": [
+        { "id": "a", "text": "À peine fut-il sorti que la pluie tomba." },
+        { "id": "b", "text": "Aussi décida-t-il de partir." },
+        { "id": "c", "text": "Peut-être qu'il acceptera." },
+        { "id": "d", "text": "À peine il était sorti que la pluie tomba." }
+      ],
+      "correctOption": "d",
+      "explanation": "Après « à peine » en tête, l'inversion du sujet est requise en style soutenu : « à peine fut-il sorti que… ». « À peine il était sorti » est fautif (pas d'inversion). Les phrases a, b (aussi = donc, avec inversion) et c (peut-être que sans inversion) sont correctes.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Pourquoi « mes propres mains » et « des mains propres » ne sont-ils pas synonymes ?",
+      "options": [
+        { "id": "a", "text": "Antéposé, propre = « à moi » ; postposé, propre = « lavées »." },
+        { "id": "b", "text": "Antéposé, propre = « lavées » ; postposé, propre = « à moi »." },
+        { "id": "c", "text": "Les deux signifient « lavées »." },
+        { "id": "d", "text": "Les deux signifient « qui m'appartiennent »." }
+      ],
+      "correctOption": "a",
+      "explanation": "Antéposé, « propre » exprime l'appartenance ou l'insistance : « mes propres mains » = mes mains à moi. Postposé, il reprend son sens concret : « des mains propres » = lavées. L'ordre inverse le sens, piège classique de C2.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Laquelle de ces périphrases est MAL interprétée ?",
+      "options": [
+        { "id": "a", "text": "« Le septième art » = le cinéma." },
+        { "id": "b", "text": "« L'astre des nuits » = la lune." },
+        { "id": "c", "text": "« L'astre du jour » = la lune." },
+        { "id": "d", "text": "« Le roi des animaux » = le lion." }
+      ],
+      "correctOption": "c",
+      "explanation": "« L'astre du jour » désigne le soleil, pas la lune (la lune, c'est « l'astre des nuits »). Les interprétations a, b et d sont exactes. Mal décoder une périphrase est une faute de lecture de niveau C2.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle phrase emploie une ellipse fautive (élément non récupérable sans ambiguïté) ?",
+      "options": [
+        { "id": "a", "text": "Pierre aime le thé, et Marie le café." },
+        { "id": "b", "text": "Pierre boit du thé et Marie une." },
+        { "id": "c", "text": "À chacun son métier." },
+        { "id": "d", "text": "Les uns travaillent, les autres se reposent." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Marie une » est fautif : « une » ne peut reprendre « du thé » (massif, non comptable) ; il faudrait « Marie aussi » ou « Marie en boit ». Dans a, l'ellipse du verbe « aime » est claire ; c est un proverbe elliptique correct ; d juxtapose deux propositions complètes.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Trouve la phrase incorrecte.",
+      "options": [
+        { "id": "a", "text": "Ainsi parla le maître." },
+        { "id": "b", "text": "Ainsi le maître parla-t-il." },
+        { "id": "c", "text": "Ainsi il parla le maître." },
+        { "id": "d", "text": "Ainsi le maître parla." }
+      ],
+      "correctOption": "c",
+      "explanation": "« Ainsi il parla le maître » est fautif : « il » et « le maître » désignent le même sujet, doublé à tort. Les formes correctes sont l'inversion simple (a : ainsi parla le maître), l'inversion complexe (b : sujet nominal + reprise pronominale après le verbe) ou l'ordre direct (d).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans « un ancien élève » et « un château ancien », pourquoi « ancien » diffère-t-il ?",
+      "options": [
+        { "id": "a", "text": "Antéposé = « vieux » ; postposé = « d'autrefois »." },
+        { "id": "b", "text": "Antéposé = « d'autrefois, ex- » ; postposé = « vieux, antique »." },
+        { "id": "c", "text": "Les deux signifient « vieux »." },
+        { "id": "d", "text": "Les deux signifient « ex- »." }
+      ],
+      "correctOption": "b",
+      "explanation": "Antéposé, « un ancien élève » = quelqu'un qui fut élève autrefois (sens « ex- »). Postposé, « un château ancien » = un château vieux, antique. L'antéposition donne le sens temporel relatif, la postposition le sens « âgé », d'où la nécessité de bien placer l'adjectif.",
+      "difficulty": 3
+    }
+  ]
+}

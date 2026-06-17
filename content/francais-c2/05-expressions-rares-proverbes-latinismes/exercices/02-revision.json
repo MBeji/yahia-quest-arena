@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision : locutions latines et culturèmes",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Dans « Les parties ont fini par trouver un modus vivendi », que désigne « modus vivendi » ?",
+      "options": [
+        { "id": "a", "text": "Une rupture définitive des relations." },
+        { "id": "b", "text": "Un mode de vie luxueux." },
+        { "id": "c", "text": "Un arrangement permettant de coexister malgré les désaccords." },
+        { "id": "d", "text": "Une décision imposée par une autorité." }
+      ],
+      "correctOption": "c",
+      "explanation": "« Modus vivendi » (littéralement « manière de vivre ») désigne un compromis qui permet à des parties opposées de cohabiter. C'est l'inverse d'une rupture (a) ; ce n'est ni un train de vie (b) ni une imposition unilatérale (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Que désigne « un travail de Romain » ?",
+      "options": [
+        { "id": "a", "text": "Une tâche colossale, exigeant un effort considérable." },
+        { "id": "b", "text": "Un travail bâclé, fait à la hâte." },
+        { "id": "c", "text": "Une besogne répétitive et ennuyeuse." },
+        { "id": "d", "text": "Un ouvrage d'une grande finesse artistique." }
+      ],
+      "correctOption": "a",
+      "explanation": "L'expression renvoie aux grands ouvrages des Romains (routes, aqueducs) : « un travail de Romain » est une œuvre énorme et ardue. Elle ne dit rien de la qualité (d) ni de la monotonie (c), et certainement pas de la négligence (b).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans « De facto, c'est lui qui dirige l'entreprise, même sans titre officiel », que signifie « de facto » ?",
+      "options": [
+        { "id": "a", "text": "Selon la loi, en droit." },
+        { "id": "b", "text": "Temporairement, en attendant mieux." },
+        { "id": "c", "text": "Avec l'accord de tous." },
+        { "id": "d", "text": "Dans les faits, en pratique." }
+      ],
+      "correctOption": "d",
+      "explanation": "« De facto » signifie « de fait, dans la réalité », par opposition à « de jure » (« de droit »). Le contexte « même sans titre officiel » le confirme : la réalité prime sur la situation juridique (a).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Que signifie « jeter feu et flamme » ?",
+      "options": [
+        { "id": "a", "text": "Briller par son talent et son éclat." },
+        { "id": "b", "text": "Manifester une violente colère, s'emporter." },
+        { "id": "c", "text": "Prendre tous les risques sans réfléchir." },
+        { "id": "d", "text": "Détruire tout sur son passage." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Jeter feu et flamme », c'est exprimer une colère véhémente, fulminer. L'image du feu peut évoquer l'éclat (a) ou la destruction (d), mais l'expression figée vise précisément l'emportement furieux.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans « A fortiori, si même les experts échouent, un amateur n'a aucune chance », que marque « a fortiori » ?",
+      "options": [
+        { "id": "a", "text": "À plus forte raison, avec une raison encore plus grande." },
+        { "id": "b", "text": "Par hasard, fortuitement." },
+        { "id": "c", "text": "En définitive, pour finir." },
+        { "id": "d", "text": "Contrairement à ce qu'on attendait." }
+      ],
+      "correctOption": "a",
+      "explanation": "« A fortiori » introduit un argument plus fort encore : si une chose vaut dans un cas difficile, elle vaut à plus forte raison dans un cas plus facile. (b) confond avec « fortuit », (c) avec « in fine ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Que désigne « le supplice de Tantale » ?",
+      "options": [
+        { "id": "a", "text": "Une douleur physique insupportable." },
+        { "id": "b", "text": "Une punition aussi longue qu'injuste." },
+        { "id": "c", "text": "La frustration d'un bien désiré, tout proche mais inaccessible." },
+        { "id": "d", "text": "Un châtiment exemplaire destiné à dissuader." }
+      ],
+      "correctOption": "c",
+      "explanation": "Tantale, condamné, voyait l'eau et les fruits se dérober dès qu'il les approchait. « Le supplice de Tantale » désigne précisément cette frustration d'un objet désiré, accessible en apparence mais toujours hors d'atteinte. (a), (b) et (d) évoquent la souffrance ou la punition en général, sans cette nuance d'inaccessibilité.",
+      "difficulty": 3
+    }
+  ]
+}

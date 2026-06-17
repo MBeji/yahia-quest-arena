@@ -1,0 +1,9 @@
+{
+  "title": "Compréhension écrite : lire un texte simple",
+  "description": "Apprends à lire et à comprendre de courts textes du quotidien en français : cartes postales, SMS, courriels, petites annonces, menus, horaires et affichettes. Tu vas repérer l'idée principale, trouver un détail précis (un prix, une heure, un jour, un lieu, un nom) et deviner le sens d'un mot grâce au contexte. Niveau débutant (CECRL A1), aligné sur l'épreuve de compréhension écrite du DELF A1.",
+  "displayOrder": 6,
+  "sources": [
+    "CECRL niveau A1 (Conseil de l'Europe, Cadre européen commun de référence pour les langues)",
+    "Référentiel DELF A1 (France Éducation international)"
+  ]
+}

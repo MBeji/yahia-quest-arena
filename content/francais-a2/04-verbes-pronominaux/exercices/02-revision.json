@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision : les verbes pronominaux",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complète : « Nous ___ avant de manger. » (se laver les mains)",
+      "options": [
+        { "id": "a", "text": "se lavons" },
+        { "id": "b", "text": "nous lavons" },
+        { "id": "c", "text": "vous lavons" },
+        { "id": "d", "text": "nous lavez" }
+      ],
+      "correctOption": "b",
+      "explanation": "Avec « nous », le pronom réfléchi est « nous » et le verbe prend -ons : nous nous lavons. « se lavons » prend le mauvais pronom, et les autres mélangent les formes de nous et vous.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choisis la phrase correcte.",
+      "options": [
+        { "id": "a", "text": "Ils se reposent le week-end." },
+        { "id": "b", "text": "Ils se repose le week-end." },
+        { "id": "c", "text": "Ils me reposent le week-end." },
+        { "id": "d", "text": "Ils reposent le week-end." }
+      ],
+      "correctOption": "a",
+      "explanation": "Avec « ils », le pronom est « se » et le verbe prend -ent : ils se reposent. « se repose » oublie le -ent du pluriel, « me reposent » prend le mauvais pronom, et « reposent » oublie le pronom réfléchi.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Mets à la forme négative : « Je me dépêche. »",
+      "options": [
+        { "id": "a", "text": "Je me ne dépêche pas." },
+        { "id": "b", "text": "Je ne dépêche me pas." },
+        { "id": "c", "text": "Je ne me dépêche pas." },
+        { "id": "d", "text": "Je me dépêche ne pas." }
+      ],
+      "correctOption": "c",
+      "explanation": "La négation encadre le pronom et le verbe : ne + me dépêche + pas → Je ne me dépêche pas. Les autres séparent le pronom du verbe ou placent « pas » au mauvais endroit.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Comment est-ce que tu ___ ? » (s'appeler)",
+      "options": [
+        { "id": "a", "text": "te appelles" },
+        { "id": "b", "text": "s'appelles" },
+        { "id": "c", "text": "t'appelle" },
+        { "id": "d", "text": "t'appelles" }
+      ],
+      "correctOption": "d",
+      "explanation": "« appeler » commence par une voyelle, donc « te » s'élide en « t' », et avec tu le verbe prend -es : tu t'appelles. « te appelles » oublie l'élision, « s'appelles » prend le mauvais pronom, et « t'appelle » oublie le -s de tu.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Le soir, vous ___ tard. » (se coucher)",
+      "options": [
+        { "id": "a", "text": "vous couchez" },
+        { "id": "b", "text": "se couchez" },
+        { "id": "c", "text": "vous couchons" },
+        { "id": "d", "text": "vous couche" }
+      ],
+      "correctOption": "a",
+      "explanation": "Avec « vous », le pronom est « vous » et le verbe prend -ez : vous vous couchez. « se couchez » prend le mauvais pronom, « vous couchons » utilise la terminaison de nous, et « vous couche » oublie le -ez.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase a une élision correcte ?",
+      "options": [
+        { "id": "a", "text": "Tu se habilles vite." },
+        { "id": "b", "text": "Elle s'habille vite." },
+        { "id": "c", "text": "Elle se habille vite." },
+        { "id": "d", "text": "Je se amuse beaucoup." }
+      ],
+      "correctOption": "b",
+      "explanation": "Devant le h muet de « habiller », « se » s'élide en « s' » : elle s'habille. « se habille » oublie l'élision, « tu se habilles » prend en plus le mauvais pronom, et « je se amuse » cumule mauvais pronom et oubli d'élision.",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Il dit : « Je suis fatigué. » Quelle est la transformation correcte au discours indirect ?",
+      "options": [
+        { "id": "a", "text": "Il dit je suis fatigué." },
+        { "id": "b", "text": "Il dit si il est fatigué." },
+        { "id": "c", "text": "Il dit qu'il est fatigué." },
+        { "id": "d", "text": "Il dit qu'il était fatigué." }
+      ],
+      "correctOption": "c",
+      "explanation": "Une phrase déclarative se rapporte avec « que » : Il dit qu'il est fatigué. Le pronom « je » devient « il ». L'option (b) confond « si » (réservé aux questions oui/non) avec « que ». L'option (d) met un imparfait alors que le verbe introducteur est au présent : aucun recul des temps.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Il demande : « Tu viens ? » Quelle est la transformation correcte ?",
+      "options": [
+        { "id": "a", "text": "Il demande que tu viens." },
+        { "id": "b", "text": "Il demande si tu viens." },
+        { "id": "c", "text": "Il demande ce que tu viens." },
+        { "id": "d", "text": "Il demande tu viens ?" }
+      ],
+      "correctOption": "b",
+      "explanation": "Une question fermée (réponse oui/non) se rapporte avec « si » : Il demande si tu viens. L'option (a) emploie « que », réservé aux phrases déclaratives. L'option (c) utilise « ce que », réservé à « qu'est-ce que ». L'option (d) garde la forme interrogative directe, interdite au discours indirect.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Elle demande : « Où habites-tu ? » Quelle est la transformation correcte ?",
+      "options": [
+        { "id": "a", "text": "Elle demande où tu habites." },
+        { "id": "b", "text": "Elle demande si tu habites." },
+        { "id": "c", "text": "Elle demande où habites-tu." },
+        { "id": "d", "text": "Elle demande que tu habites." }
+      ],
+      "correctOption": "a",
+      "explanation": "Avec un mot interrogatif (où), on garde ce mot et on revient à l'ordre sujet + verbe : Elle demande où tu habites. L'option (c) conserve l'inversion « habites-tu », interdite ici. L'option (b) emploie « si », qui efface l'information « où ». L'option (d) confond avec « que ».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Il dit : « Sortez ! » Quelle est la transformation correcte de cet ordre ?",
+      "options": [
+        { "id": "a", "text": "Il dit que vous sortez." },
+        { "id": "b", "text": "Il dit si vous sortez." },
+        { "id": "c", "text": "Il dit vous sortez." },
+        { "id": "d", "text": "Il dit de sortir." }
+      ],
+      "correctOption": "d",
+      "explanation": "Un ordre (impératif) se rapporte avec « de + infinitif » : Il dit de sortir. L'option (a) emploie « que » + indicatif, ce qui transforme l'ordre en simple constat. L'option (b) utilise « si », réservé aux questions. L'option (c) oublie le mot de liaison.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Il a dit : « Je suis prêt. » (verbe introducteur au passé) Quelle est la transformation correcte ?",
+      "options": [
+        { "id": "a", "text": "Il a dit qu'il est prêt." },
+        { "id": "b", "text": "Il a dit qu'il était prêt." },
+        { "id": "c", "text": "Il a dit qu'il sera prêt." },
+        { "id": "d", "text": "Il a dit qu'il a été prêt." }
+      ],
+      "correctOption": "b",
+      "explanation": "Le verbe introducteur étant au passé (a dit), on applique la concordance : le présent « est » devient imparfait « était ». L'option (a) oublie le recul du temps. L'option (c) introduit un futur absent de l'original. L'option (d) met un passé composé au lieu de l'imparfait.",
+      "difficulty": 2
+    }
+  ]
+}

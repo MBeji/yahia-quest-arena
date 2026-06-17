@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Quel mot interrogatif demande un LIEU ?",
+      "options": [
+        { "id": "a", "text": "Où" },
+        { "id": "b", "text": "Quand" },
+        { "id": "c", "text": "Comment" },
+        { "id": "d", "text": "Pourquoi" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Où » interroge sur un lieu (Où habites-tu ? — À Tunis). « Quand » demande un moment, « comment » une manière et « pourquoi » une raison. Chaque mot interrogatif attend un type de réponse différent.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choisis la question correcte au registre courant : « ___ tu viens ? »",
+      "options": [
+        { "id": "a", "text": "Viens-tu" },
+        { "id": "b", "text": "Est-ce que" },
+        { "id": "c", "text": "Que est-ce que" },
+        { "id": "d", "text": "Est-ce-que tu viens-tu" }
+      ],
+      "correctOption": "b",
+      "explanation": "Au registre courant, on ajoute « est-ce que » devant l'ordre normal sujet + verbe : Est-ce que tu viens ? « Viens-tu » est l'inversion (registre soutenu), et on ne combine jamais « est-ce que » avec une inversion.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle est la forme négative de « Je parle anglais. » ?",
+      "options": [
+        { "id": "a", "text": "Je parle ne pas anglais." },
+        { "id": "b", "text": "Je ne pas parle anglais." },
+        { "id": "c", "text": "Je ne parle pas anglais." },
+        { "id": "d", "text": "Je parle pas ne anglais." }
+      ],
+      "correctOption": "c",
+      "explanation": "« ne … pas » encadre le verbe conjugué : ne avant, pas après → Je ne parle pas anglais. Les autres formes placent mal « ne » ou « pas » autour du verbe.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « ___ heure est-il ? »",
+      "options": [
+        { "id": "a", "text": "Quel" },
+        { "id": "b", "text": "Quelle" },
+        { "id": "c", "text": "Quels" },
+        { "id": "d", "text": "Quelles" }
+      ],
+      "correctOption": "b",
+      "explanation": "« heure » est un nom féminin singulier, donc l'adjectif interrogatif s'accorde : Quelle heure est-il ? « Quel » est masculin, « quels » et « quelles » sont au pluriel, ce qui ne convient pas à « heure » singulier féminin.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Mets à la forme négative : « J'ai une voiture. »",
+      "options": [
+        { "id": "a", "text": "Je n'ai pas une voiture." },
+        { "id": "b", "text": "Je ai pas de voiture." },
+        { "id": "c", "text": "Je n'ai pas de voiture." },
+        { "id": "d", "text": "Je n'ai de pas voiture." }
+      ],
+      "correctOption": "c",
+      "explanation": "Après la négation, l'article indéfini « une » devient « de », et « ne » s'élide en « n' » devant la voyelle de « ai » : Je n'ai pas de voiture. Garder « pas une » (a) est une erreur fréquente, et (b) oublie le n', (d) place mal « de ».",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : subjonctif d'expert",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Complète : « Quoiqu'ils ___ tout tenté la veille, le projet a échoué. » (tenter)",
+      "options": [
+        { "id": "a", "text": "ont tenté" },
+        { "id": "b", "text": "tentent" },
+        { "id": "c", "text": "avaient tenté" },
+        { "id": "d", "text": "aient tenté" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Quoique » (= bien que) impose le subjonctif et « la veille » impose l'antériorité → subjonctif passé : quoiqu'ils aient tenté. « ont tenté » et « avaient tenté » sont l'indicatif ; « tentent » est le présent, qui ne marque pas l'action accomplie.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choisis : « C'est bien la chose la plus étrange qui me ___ depuis des années. » (arriver)",
+      "options": [
+        { "id": "a", "text": "est arrivée" },
+        { "id": "b", "text": "arrivait" },
+        { "id": "c", "text": "soit arrivée" },
+        { "id": "d", "text": "soit arrivé" }
+      ],
+      "correctOption": "c",
+      "explanation": "Superlatif (« la plus étrange ») + action passée → subjonctif passé, et le participe s'accorde avec « la chose » (féminin) puisque l'auxiliaire est être : qui me soit arrivée. « est arrivée » est l'indicatif, « arrivait » l'imparfait, et « soit arrivé » oublie l'accord au féminin.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Je préfère prévenir maintenant, de peur qu'il n'y ___ un malentendu plus tard. » (avoir)",
+      "options": [
+        { "id": "a", "text": "ait" },
+        { "id": "b", "text": "a" },
+        { "id": "c", "text": "aura" },
+        { "id": "d", "text": "avait" }
+      ],
+      "correctOption": "a",
+      "explanation": "« De peur que » (locution de crainte, comme « avant que ») impose le subjonctif présent pour une action redoutée à venir : de peur qu'il n'y ait. Le « n' » est explétif. « a », « aura » et « avait » sont à l'indicatif.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Trouve la SEULE phrase correcte.",
+      "options": [
+        { "id": "a", "text": "Je doute qu'elle a compris la consigne." },
+        { "id": "b", "text": "C'est le meilleur conseil qu'on m'ait jamais donné." },
+        { "id": "c", "text": "Après qu'elle soit revenue, on a dîné." },
+        { "id": "d", "text": "Je cherche quelqu'un qui sait réparer ça, mais je ne sais pas qui." }
+      ],
+      "correctOption": "b",
+      "explanation": "Seule (b) est correcte : superlatif « le meilleur » + action passée → subjonctif passé qu'on m'ait donné. (a) demande le subjonctif passé « ait compris » après « je doute » ; (c) demande l'indicatif après « après que » (est revenue) ; (d) demande le subjonctif « qui sache » pour une personne recherchée et non identifiée.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Il est le seul à qui je ___ confiance depuis cet incident. » (faire)",
+      "options": [
+        { "id": "a", "text": "fais" },
+        { "id": "b", "text": "ferai" },
+        { "id": "c", "text": "faisais" },
+        { "id": "d", "text": "fasse" }
+      ],
+      "correctOption": "d",
+      "explanation": "Après « le seul », la relative se met au subjonctif ; l'action de faire confiance est durable et actuelle → subjonctif présent : à qui je fasse confiance. Le piège est l'indicatif « fais », fréquent à l'oral mais non conforme au registre soigné attendu après « le seul ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Bien que la décision ___ déjà avant la réunion, on en a longuement débattu. » (prendre, voix passive)",
+      "options": [
+        { "id": "a", "text": "ait été prise" },
+        { "id": "b", "text": "a été prise" },
+        { "id": "c", "text": "soit prise" },
+        { "id": "d", "text": "était prise" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Bien que » impose le subjonctif ; au passif et avec une action antérieure (« déjà avant »), on emploie le subjonctif passé du passif : ait été prise (avoir été + participe accordé au féminin). « a été prise » et « était prise » sont l'indicatif ; « soit prise » est le subjonctif présent, qui ne marque pas l'antériorité.",
+      "difficulty": 3
+    }
+  ]
+}

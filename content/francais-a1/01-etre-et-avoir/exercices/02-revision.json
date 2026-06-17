@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision : être et avoir au présent",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Choisis la bonne forme : « On ___ en retard. »",
+      "options": [
+        { "id": "a", "text": "es" },
+        { "id": "b", "text": "sont" },
+        { "id": "c", "text": "est" },
+        { "id": "d", "text": "êtes" }
+      ],
+      "correctOption": "c",
+      "explanation": "« on » se conjugue comme il/elle, donc être devient « est » : On est en retard. « es » va avec tu, « sont » avec ils/elles, et « êtes » avec vous.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choisis la bonne forme : « Vous ___ raison. »",
+      "options": [
+        { "id": "a", "text": "avez" },
+        { "id": "b", "text": "êtes" },
+        { "id": "c", "text": "avons" },
+        { "id": "d", "text": "ont" }
+      ],
+      "correctOption": "a",
+      "explanation": "« avoir raison » est une expression avec avoir : Vous avez raison. « avez » est la forme de avoir avec vous. « êtes » est le verbe être, « avons » va avec nous, et « ont » avec ils/elles.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choisis l'homophone correct : « Il ___ faim. »",
+      "options": [
+        { "id": "a", "text": "à" },
+        { "id": "b", "text": "est" },
+        { "id": "c", "text": "es" },
+        { "id": "d", "text": "a" }
+      ],
+      "correctOption": "d",
+      "explanation": "« avoir faim » utilise le verbe avoir : Il a faim. « a » est le verbe avoir avec il/elle/on. « à » est une préposition de direction (aller à Tunis), tandis que « est » et « es » sont des formes du verbe être.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choisis l'homophone correct : « Ils ___ trois enfants. »",
+      "options": [
+        { "id": "a", "text": "on" },
+        { "id": "b", "text": "ont" },
+        { "id": "c", "text": "sont" },
+        { "id": "d", "text": "son" }
+      ],
+      "correctOption": "b",
+      "explanation": "Posséder trois enfants, c'est avoir : Ils ont trois enfants. « ont » est le verbe avoir avec ils/elles. « on » signifie « nous », « sont » est le verbe être, et « son » est un possessif (le sien).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choisis l'homophone correct : « Tu ___ mon meilleur ami. »",
+      "options": [
+        { "id": "a", "text": "et" },
+        { "id": "b", "text": "est" },
+        { "id": "c", "text": "es" },
+        { "id": "d", "text": "ai" }
+      ],
+      "correctOption": "c",
+      "explanation": "Avec « tu », le verbe être s'écrit « es » : Tu es mon meilleur ami. « et » signifie « aussi », « est » va avec il/elle/on, et « ai » est le verbe avoir avec je.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choisis l'homophone correct : « ___ a gagné le match. »",
+      "options": [
+        { "id": "a", "text": "On" },
+        { "id": "b", "text": "Ont" },
+        { "id": "c", "text": "Son" },
+        { "id": "d", "text": "Sont" }
+      ],
+      "correctOption": "a",
+      "explanation": "Ici le sujet (= nous) s'écrit « On » : On a gagné le match. « Ont » est le verbe avoir (ils ont), « Son » est un possessif (son sac), et « Sont » est le verbe être (ils sont) — aucun n'est un sujet.",
+      "difficulty": 2
+    }
+  ]
+}

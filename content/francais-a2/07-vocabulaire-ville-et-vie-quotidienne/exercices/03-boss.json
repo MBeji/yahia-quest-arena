@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : la ville et la vie quotidienne",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Mini-dialogue : « — Combien ___ ce livre ? — Douze euros. » Quel mot manque ?",
+      "options": [
+        { "id": "a", "text": "ça coûte" },
+        { "id": "b", "text": "ça paie" },
+        { "id": "c", "text": "ça rend" },
+        { "id": "d", "text": "ça vend" }
+      ],
+      "correctOption": "a",
+      "explanation": "Pour demander le prix, on dit « Combien ça coûte ? ». « Payer », c'est donner l'argent ; « rendre la monnaie », c'est ce que fait le marchand ; « vendre » se dit du commerçant, pas du client.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "« Allez tout droit, puis ___ la rue au feu et la banque sera en face. » Quel verbe complète l'indication ?",
+      "options": [
+        { "id": "a", "text": "payez" },
+        { "id": "b", "text": "traversez" },
+        { "id": "c", "text": "habitez" },
+        { "id": "d", "text": "sortez" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Traverser la rue » signifie passer de l'autre côté. Le piège courant est de choisir « tourner », mais tourner ne mentionne pas la rue à franchir ; payer, habiter et sortir n'ont rien à voir avec une indication de chemin.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle phrase emploie correctement « avoir mal à » ?",
+      "options": [
+        { "id": "a", "text": "J'ai mal aux gorge." },
+        { "id": "b", "text": "Je suis mal à la gorge." },
+        { "id": "c", "text": "J'ai mal à la gorge." },
+        { "id": "d", "text": "J'ai mal à le dos." }
+      ],
+      "correctOption": "c",
+      "explanation": "On dit « avoir mal à » + partie du corps : j'ai mal à la gorge (féminin singulier). « Aux » est un pluriel (aux dents), « être mal » n'existe pas dans ce sens, et « à le » se contracte toujours en « au » (j'ai mal au dos).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Trouve l'intrus parmi ces actions de la routine et des loisirs.",
+      "options": [
+        { "id": "a", "text": "faire les courses" },
+        { "id": "b", "text": "aller au cinéma" },
+        { "id": "c", "text": "prendre rendez-vous" },
+        { "id": "d", "text": "rendre la monnaie" }
+      ],
+      "correctOption": "d",
+      "explanation": "Faire les courses, aller au cinéma et prendre rendez-vous sont des activités de la vie quotidienne. « Rendre la monnaie » est une action du commerçant à la caisse : c'est l'intrus.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Au guichet : « Je voudrais déposer de l'argent sur mon compte. » Où es-tu ?",
+      "options": [
+        { "id": "a", "text": "à la banque" },
+        { "id": "b", "text": "à la poste" },
+        { "id": "c", "text": "à la pharmacie" },
+        { "id": "d", "text": "au musée" }
+      ],
+      "correctOption": "a",
+      "explanation": "On dépose ou retire de l'argent sur un compte à la banque. La poste envoie le courrier, la pharmacie vend des médicaments, et le musée présente des œuvres ; aucun ne gère un compte bancaire.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "« Je dois ___ chez le médecin pour mardi prochain. » Quelle expression convient ?",
+      "options": [
+        { "id": "a", "text": "faire les courses" },
+        { "id": "b", "text": "prendre rendez-vous" },
+        { "id": "c", "text": "rendre la monnaie" },
+        { "id": "d", "text": "traverser la rue" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Prendre rendez-vous » signifie fixer un horaire pour voir le médecin. Le piège courant est « faire les courses » (acheter à manger), mais on ne fait pas de courses chez un médecin ; rendre la monnaie et traverser la rue n'ont aucun rapport.",
+      "difficulty": 3
+    }
+  ]
+}

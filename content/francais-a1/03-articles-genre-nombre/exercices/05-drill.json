@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill : articles, genre et pluriel",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Choisis l'article correct : « Je mange ___ pomme. »",
+      "options": [
+        { "id": "a", "text": "un" },
+        { "id": "b", "text": "le" },
+        { "id": "c", "text": "une" },
+        { "id": "d", "text": "des" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Pomme » est un nom féminin singulier, donc l'article indéfini est « une » : une pomme. La forme « un » est masculine, « le » est un défini masculin, et « des » serait un pluriel.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choisis la bonne forme : « ___ ami de Sophie arrive demain. »",
+      "options": [
+        { "id": "a", "text": "Le" },
+        { "id": "b", "text": "L'" },
+        { "id": "c", "text": "La" },
+        { "id": "d", "text": "Un" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Ami » commence par la voyelle « a », donc « le » devient « l' » par élision : l'ami. On n'écrit jamais « le ami », et « la » serait une erreur de genre (ami est masculin).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel est le pluriel correct de « un château » ?",
+      "options": [
+        { "id": "a", "text": "des châteaux" },
+        { "id": "b", "text": "des châteaus" },
+        { "id": "c", "text": "des château" },
+        { "id": "d", "text": "les châteaus" }
+      ],
+      "correctOption": "a",
+      "explanation": "Les noms en -eau forment leur pluriel en -eaux : un château → des châteaux. La forme régulière « châteaus » avec un simple -s est fautive.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choisis l'article correct : « ___ cheveux de Léa sont longs. »",
+      "options": [
+        { "id": "a", "text": "Le" },
+        { "id": "b", "text": "La" },
+        { "id": "c", "text": "Un" },
+        { "id": "d", "text": "Les" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Cheveux » est au pluriel (cheveu → cheveux, nom en -eu), donc l'article défini est « les » : les cheveux. « Le »/« la » sont des définis singuliers et « un » un indéfini singulier.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choisis la phrase entièrement correcte.",
+      "options": [
+        { "id": "a", "text": "Il y a deux journals sur la table." },
+        { "id": "b", "text": "Il y a deux journaux sur la table." },
+        { "id": "c", "text": "Il y a deux journaux sur le table." },
+        { "id": "d", "text": "Il y a deux journal sur la table." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Journal » est un nom en -al, donc son pluriel est « journaux » : deux journaux. La forme « journals » est fautive, « journal » reste singulier après « deux », et « le table » est une erreur de genre (table est féminin : la table).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "L'école est fermée le dimanche." },
+        { "id": "b", "text": "Les animaux dorment la nuit." },
+        { "id": "c", "text": "J'ai mangé un bon gâteaux." },
+        { "id": "d", "text": "La lune brille dans le ciel." }
+      ],
+      "correctOption": "c",
+      "explanation": "L'erreur est « un bon gâteaux » : après l'article singulier « un », le nom doit rester au singulier (« un gâteau »), le -eaux étant la marque du pluriel. Les autres phrases sont correctes — l'école (élision), les animaux (pluriel en -aux) et la lune (féminin singulier).",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : comparatif et superlatif",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Complète : « C'est ___ joueuse ___ tournoi : personne ne la bat. »",
+      "options": [
+        { "id": "a", "text": "la meilleure … du" },
+        { "id": "b", "text": "le meilleur … du" },
+        { "id": "c", "text": "la plus bonne … du" },
+        { "id": "d", "text": "la meilleure … que le" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le superlatif de « bon » est « le/la meilleur(e) », accordé au féminin et complété par « de » : la meilleure joueuse du tournoi. « le meilleur » ne s'accorde pas au féminin, « la plus bonne » est interdit (jamais « plus bon »), et le superlatif n'emploie pas « que » mais « de ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "Elle a plus de courage que son frère." },
+        { "id": "b", "text": "Ce livre est moins cher que l'autre." },
+        { "id": "c", "text": "Il chante mieux que toi." },
+        { "id": "d", "text": "Cette route est plus longue de l'autre." }
+      ],
+      "correctOption": "d",
+      "explanation": "L'erreur est en (d) : le comparatif se construit avec « que », pas « de » ; il faut plus longue que l'autre. (a) compare une quantité avec « plus de … que », (b) utilise « moins … que », et (c) emploie correctement « mieux » (comparatif de « bien ») : ces trois phrases sont justes.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Remets les mots dans l'ordre : (la / ville / du / c'est / plus / pays / animée)",
+      "options": [
+        { "id": "a", "text": "C'est la ville plus animée du pays." },
+        { "id": "b", "text": "C'est la plus animée ville du pays." },
+        { "id": "c", "text": "C'est la ville la plus animée du pays." },
+        { "id": "d", "text": "C'est la plus ville animée du pays." }
+      ],
+      "correctOption": "c",
+      "explanation": "Quand l'adjectif suit le nom, le superlatif répète l'article : la ville la plus animée du pays. « la ville plus animée » oublie le second article, et placer « plus animée » avant le nom est ici incorrect avec cet adjectif qui se met après le nom.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « J'ai ___ devoirs ___ ma sœur, mais je travaille ___ elle, donc je finis avant. »",
+      "options": [
+        { "id": "a", "text": "autant de … que … plus vite que" },
+        { "id": "b", "text": "autant … que … plus vite que" },
+        { "id": "c", "text": "aussi de … que … plus vite de" },
+        { "id": "d", "text": "autant de … que … aussi vite que" }
+      ],
+      "correctOption": "a",
+      "explanation": "Quantité égale de devoirs (nom) : « autant de … que » ; rapidité supérieure (adverbe) : « plus vite que ». Donc autant de devoirs que ma sœur … plus vite qu'elle. « autant … que » oublie le « de » devant le nom, « aussi vite que » marquerait l'égalité (or je finis avant), et « de » ne remplace pas « que ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Trouve la phrase CORRECTE.",
+      "options": [
+        { "id": "a", "text": "C'est la plus bonne idée de la journée." },
+        { "id": "b", "text": "C'est la meilleure idée de la journée." },
+        { "id": "c", "text": "C'est la plus meilleure idée de la journée." },
+        { "id": "d", "text": "C'est le meilleur idée de la journée." }
+      ],
+      "correctOption": "b",
+      "explanation": "Le superlatif de « bon » est « le/la meilleur(e) », accordé au féminin : la meilleure idée. « la plus bonne » et « la plus meilleure » sont interdits (jamais « plus bon » ni « plus meilleur »), et « le meilleur » ne s'accorde pas avec « idée », qui est féminin.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Cette équipe joue ___ que la nôtre, mais elle marque ___ buts ___ nous. »",
+      "options": [
+        { "id": "a", "text": "meilleur … moins de … que" },
+        { "id": "b", "text": "mieux … moins … que" },
+        { "id": "c", "text": "mieux … moins de … que" },
+        { "id": "d", "text": "plus bien … moins de … de" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Jouer » prend l'adverbe « mieux » (comparatif de « bien ») ; pour la quantité de buts (nom), c'est « moins de … que » : joue mieux … moins de buts que nous. « meilleur » est l'adjectif, « moins … que » oublie le « de » devant le nom, et « plus bien » est interdit comme « de » à la place de « que ».",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : les verbes pronominaux",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Remets les mots dans l'ordre : (te / tu / habilles / t' ) → choisis la phrase correcte.",
+      "options": [
+        { "id": "a", "text": "Tu t'habilles." },
+        { "id": "b", "text": "Tu te habilles." },
+        { "id": "c", "text": "Tu s'habilles." },
+        { "id": "d", "text": "Te tu habilles." }
+      ],
+      "correctOption": "a",
+      "explanation": "Devant le h muet, « te » s'élide en « t' » et le pronom reste devant le verbe : tu t'habilles. « te habilles » oublie l'élision, « s'habilles » prend le mauvais pronom, et « te tu habilles » inverse l'ordre.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase a un sens RÉFLÉCHI correct (le sujet agit sur lui-même) ?",
+      "options": [
+        { "id": "a", "text": "Il me lave." },
+        { "id": "b", "text": "Il te lave." },
+        { "id": "c", "text": "Il se lave." },
+        { "id": "d", "text": "Il lave." }
+      ],
+      "correctOption": "c",
+      "explanation": "« Il se lave » est réfléchi : il lave lui-même. « Il me lave » veut dire qu'il lave moi, « il te lave » qu'il lave toi (sens différent), et « il lave » n'a pas de pronom donc n'est pas pronominal.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "Je me lève à sept heures." },
+        { "id": "b", "text": "Nous nous promenons le soir." },
+        { "id": "c", "text": "Vous se reposez après l'école." },
+        { "id": "d", "text": "Elles se brossent les dents." }
+      ],
+      "correctOption": "c",
+      "explanation": "L'erreur est (c) : avec « vous » le pronom réfléchi est « vous », donc on dit vous vous reposez, pas « vous se reposez ». Les phrases (a), (b) et (d) utilisent le bon pronom et la bonne terminaison.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Mets à la forme négative : « Nous nous amusons. »",
+      "options": [
+        { "id": "a", "text": "Nous nous amusons ne pas." },
+        { "id": "b", "text": "Nous nous ne amusons pas." },
+        { "id": "c", "text": "Nous ne nous amusons pas pas." },
+        { "id": "d", "text": "Nous ne nous amusons pas." }
+      ],
+      "correctOption": "d",
+      "explanation": "La négation encadre le pronom et le verbe : ne + nous amusons + pas → Nous ne nous amusons pas. Le piège courant est de placer « ne » après le pronom ou de mal poser « pas » ; ici « ne » vient avant le pronom réfléchi.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choisis la phrase entièrement correcte.",
+      "options": [
+        { "id": "a", "text": "Je me appelle Lina et je se lève tôt." },
+        { "id": "b", "text": "Tu t'habilles et tu te dépêches." },
+        { "id": "c", "text": "Il s'amuse mais il ne se couche pas tôt pas." },
+        { "id": "d", "text": "Nous se promenons et nous reposons." }
+      ],
+      "correctOption": "b",
+      "explanation": "Seule (b) est correcte : tu t'habilles (élision) et tu te dépêches (bon pronom + -es). (a) oublie l'élision (m'appelle) et met le mauvais pronom (je me lève), (c) double « pas », et (d) prend le mauvais pronom (nous nous) et oublie le pronom au second verbe.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Ils ___ très tôt parce qu'ils travaillent. » (se lever)",
+      "options": [
+        { "id": "a", "text": "se lèvent" },
+        { "id": "b", "text": "se lève" },
+        { "id": "c", "text": "me lèvent" },
+        { "id": "d", "text": "se lèves" }
+      ],
+      "correctOption": "a",
+      "explanation": "Avec « ils », le pronom est « se » et le verbe prend -ent : ils se lèvent. « se lève » oublie le -ent du pluriel, « me lèvent » prend le mauvais pronom, et « se lèves » utilise la terminaison de tu.",
+      "difficulty": 3
+    }
+  ]
+}

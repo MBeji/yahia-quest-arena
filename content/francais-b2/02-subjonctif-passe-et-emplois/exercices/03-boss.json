@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : les emplois avancés",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Complète : « C'est la plus belle ville que je ___ jamais visitée. » (visiter)",
+      "options": [
+        { "id": "a", "text": "ai" },
+        { "id": "b", "text": "aie" },
+        { "id": "c", "text": "avais" },
+        { "id": "d", "text": "aurai" }
+      ],
+      "correctOption": "b",
+      "explanation": "Après un superlatif (« la plus belle »), la relative passe au subjonctif passé : que je aie visitée. À l'écrit B2 c'est aie (subjonctif), non ai (indicatif). « avais » est l'imparfait, « aurai » le futur.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Il est sorti sans que personne ne s'en ___ . » (apercevoir, action simultanée)",
+      "options": [
+        { "id": "a", "text": "aperçoit" },
+        { "id": "b", "text": "soit aperçu" },
+        { "id": "c", "text": "aperçoive" },
+        { "id": "d", "text": "apercevait" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Sans que » impose toujours le subjonctif ; l'action est simultanée à la sortie → subjonctif présent : sans que personne ne s'en aperçoive. « aperçoit » et « apercevait » sont l'indicatif, et le passé « soit aperçu » n'est pas justifié ici.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choisis le bon mode : « Je cherche un assistant qui ___ parler trois langues. » (savoir)",
+      "options": [
+        { "id": "a", "text": "sait" },
+        { "id": "b", "text": "saura" },
+        { "id": "c", "text": "savait" },
+        { "id": "d", "text": "sache" }
+      ],
+      "correctOption": "d",
+      "explanation": "L'assistant est recherché, pas encore trouvé : la relative de souhait se met au subjonctif présent : qui sache parler. Le piège est de mettre l'indicatif « sait », qui décrirait une personne réelle et identifiée.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Nous resterons ici jusqu'à ce que la pluie ___ . » (cesser, action future)",
+      "options": [
+        { "id": "a", "text": "cessera" },
+        { "id": "b", "text": "cessait" },
+        { "id": "c", "text": "cesse" },
+        { "id": "d", "text": "ait cessé" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Jusqu'à ce que » impose le subjonctif et l'action de cesser est postérieure → subjonctif présent : jusqu'à ce que la pluie cesse. Le piège courant est « cessera » (futur de l'indicatif), interdit après cette conjonction ; « ait cessé » suggérerait à tort une fin déjà advenue.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "Après qu'il soit parti, nous avons rangé la salle." },
+        { "id": "b", "text": "Bien qu'elle ait travaillé dur, elle a échoué." },
+        { "id": "c", "text": "C'est le seul ami qui me comprenne vraiment." },
+        { "id": "d", "text": "Je l'aiderai à moins qu'il ne refuse." }
+      ],
+      "correctOption": "a",
+      "explanation": "Erreur dans (a) : « après que » se construit avec l'indicatif, non le subjonctif → après qu'il est parti. Le piège classique est de l'aligner sur « avant que » (qui, lui, prend le subjonctif). Les phrases (b), (c) et (d) emploient correctement le subjonctif.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « C'est le dernier roman qu'il ___ avant de mourir. » (écrire)",
+      "options": [
+        { "id": "a", "text": "a écrit" },
+        { "id": "b", "text": "écrivait" },
+        { "id": "c", "text": "écrira" },
+        { "id": "d", "text": "ait écrit" }
+      ],
+      "correctOption": "d",
+      "explanation": "Après « le dernier » (comme un superlatif), la relative passe au subjonctif, et l'action est antérieure → subjonctif passé : qu'il ait écrit. Le piège est l'indicatif « a écrit », acceptable en langue courante mais non conforme au registre B2 attendu ; « écrivait » et « écrira » ne situent pas correctement l'action.",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Conjugaison — Temps littéraires : quel est le passé simple du verbe « venir » à la 3ᵉ personne du singulier ?",
+      "options": [
+        { "id": "a", "text": "il venait" },
+        { "id": "b", "text": "il vint" },
+        { "id": "c", "text": "il viendra" },
+        { "id": "d", "text": "il est venu" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le passé simple de « venir » à la 3ᵉ personne du singulier est « il vint » (radical en -in-). « il venait » est l'imparfait. « il viendra » est le futur. « il est venu » est le passé composé, temps du discours et non du récit littéraire.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Stylistique — Figures de style : quelle figure reconnaît-on dans « Cette épée est un éclair » (sans outil de comparaison) ?",
+      "options": [
+        { "id": "a", "text": "une comparaison" },
+        { "id": "b", "text": "une métaphore" },
+        { "id": "c", "text": "une litote" },
+        { "id": "d", "text": "une hyperbole" }
+      ],
+      "correctOption": "b",
+      "explanation": "C'est une métaphore : on identifie l'épée à un éclair sans mot-outil (« comme », « tel »). La comparaison, elle, garderait l'outil : « rapide comme l'éclair ». La litote dit moins pour suggérer plus ; l'hyperbole exagère.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Vocabulaire — Paronymes savants : « Le juge lui a ___ une lourde peine. » Quel verbe convient ?",
+      "options": [
+        { "id": "a", "text": "affligé" },
+        { "id": "b", "text": "infligé" },
+        { "id": "c", "text": "infligée" },
+        { "id": "d", "text": "infligeait" }
+      ],
+      "correctOption": "b",
+      "explanation": "On « inflige » une peine (imposer une punition) : « le juge lui a infligé une peine ». « affliger » signifie attrister, ce qui ne convient pas ici. La forme « infligée » serait un accord fautif (le COD « peine » est placé après le verbe). « infligeait » est un imparfait incompatible avec « a ___ ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lecture — Expressions : que signifie le proverbe « Qui trop embrasse mal étreint » ?",
+      "options": [
+        { "id": "a", "text": "Qui aime sincèrement réussit toujours." },
+        { "id": "b", "text": "À vouloir tout faire à la fois, on échoue partout." },
+        { "id": "c", "text": "Il faut se montrer affectueux pour être aimé." },
+        { "id": "d", "text": "Mieux vaut agir tard que jamais." }
+      ],
+      "correctOption": "b",
+      "explanation": "Le proverbe signifie qu'en entreprenant trop de choses à la fois, on ne réussit aucune : il faut concentrer ses efforts. « embrasser » y a son sens ancien de « saisir, entourer ». Les autres propositions détournent le sens vers l'affection, sans rapport avec l'idée de dispersion.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Rhétorique — Procédés : dans « Certes, ce plan est audacieux, mais il est trop risqué », quel procédé argumentatif l'auteur emploie-t-il d'abord ?",
+      "options": [
+        { "id": "a", "text": "la concession" },
+        { "id": "b", "text": "l'hyperbole" },
+        { "id": "c", "text": "la question rhétorique" },
+        { "id": "d", "text": "l'anaphore" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Certes… mais… » est une concession : on admet un point adverse (l'audace) pour mieux le réfuter ensuite. L'hyperbole est une exagération ; la question rhétorique n'attend pas de réponse ; l'anaphore est une répétition en tête de phrases.",
+      "difficulty": 1
+    }
+  ]
+}
