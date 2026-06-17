@@ -495,6 +495,7 @@ export const en: TranslationKeys = {
       cerveau: "Brain training",
       ib: "IB — International Baccalaureate",
     },
+    langShort: { anglais: "English", francais: "French", arabe: "Arabic" },
     hintClasses: "{count} classes",
     hintLanguages: "{count} languages",
     hintSoon: "Soon",

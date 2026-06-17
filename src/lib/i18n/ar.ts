@@ -490,6 +490,7 @@ export const ar: TranslationKeys = {
       cerveau: "تمرين الدماغ",
       ib: "IB — البكالوريا الدولية",
     },
+    langShort: { anglais: "الإنجليزية", francais: "الفرنسية", arabe: "العربية" },
     hintClasses: "{count} أقسام",
     hintLanguages: "{count} لغات",
     hintSoon: "قريباً",

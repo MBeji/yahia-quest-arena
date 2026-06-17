@@ -40,6 +40,7 @@ vi.mock("@/lib/i18n", () => ({
         cerveau: "Brain training",
         ib: "IB",
       },
+      langShort: { anglais: "Anglais", francais: "Français", arabe: "Arabe" },
       hintClasses: "{count} classes",
       hintLanguages: "{count} languages",
       hintSoon: "Soon",
@@ -127,11 +128,11 @@ describe("ProgramHub (Découvrir)", () => {
     expect(screen.getByRole("button", { name: "IB" })).toBeInTheDocument();
   });
 
-  it("enters a single-parcours program directly on click (no panel)", () => {
+  it("enters a single-parcours program directly on click (no petals)", () => {
     const { onSelect } = setup();
     fireEvent.click(screen.getByRole("button", { name: "General knowledge" }));
     expect(onSelect).toHaveBeenCalledWith("culture-generale");
-    // No disclosure panel (no cycle labels) for an enter-kind program.
+    // No star/petals for an enter-kind program.
     expect(screen.queryByText("Primary")).not.toBeInTheDocument();
   });
 
@@ -144,23 +145,23 @@ describe("ProgramHub (Découvrir)", () => {
     expect(onSelect).toHaveBeenCalledWith("arabe");
   });
 
-  it("reveals cycles → classes for the school program", () => {
+  it("fans cycles → classes as a star for the school program", () => {
     const { onSelect } = setup();
     fireEvent.click(screen.getByRole("button", { name: "Tunisian school program" }));
-    // Cycle chooser (only cycles with classes → Middle).
+    // Cycle petals (only cycles with classes → Middle).
     fireEvent.click(screen.getByRole("button", { name: /Middle/ }));
-    // Available class enters; coming-soon class shows a vote.
+    // Available class enters; coming-soon class shows a vote petal.
     fireEvent.click(screen.getByRole("button", { name: /9ème/ }));
     expect(onSelect).toHaveBeenCalledWith("concours-9eme");
     expect(screen.getByRole("button", { name: /I'm interested/ })).toBeInTheDocument();
   });
 
-  it("offers a vote (not entry) for the coming-soon IB program", () => {
-    const { onSelect } = setup();
+  it("offers a vote petal (not entry) for the coming-soon IB program", () => {
+    const { onSelect, onToggle } = setup();
     fireEvent.click(screen.getByRole("button", { name: "IB" }));
-    expect(screen.getByText("Under construction")).toBeInTheDocument();
     const vote = screen.getByRole("button", { name: /I'm interested/ });
     fireEvent.click(vote);
+    expect(onToggle).toHaveBeenCalledWith("ib");
     expect(onSelect).not.toHaveBeenCalled();
   });
 
