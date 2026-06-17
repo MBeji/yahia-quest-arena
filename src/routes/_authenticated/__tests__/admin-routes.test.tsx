@@ -57,6 +57,9 @@ vi.mock("@/features/content-report", () => ({
 
 vi.mock("@/features/dashboard", () => ({
   getParcours: vi.fn(() => Promise.resolve({ parcours: [] })),
+  getParcoursInterestCounts: vi.fn(() => Promise.resolve({ counts: [] })),
+  ParcoursInterestAdmin: () =>
+    React.createElement("div", { "data-testid": "parcours-interest-admin" }),
 }));
 
 vi.mock("@tanstack/react-start", () => ({
@@ -70,10 +73,12 @@ vi.mock("sonner", () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 import "../admin.subscriptions";
 import "../admin.beta-requests";
 import "../admin.content-reports";
+import "../admin.parcours-interest";
 
 const SUBSCRIPTIONS = "/_authenticated/admin/subscriptions";
 const BETA = "/_authenticated/admin/beta-requests";
 const REPORTS = "/_authenticated/admin/content-reports";
+const INTEREST = "/_authenticated/admin/parcours-interest";
 
 function pageFor(path: string): React.ComponentType {
   const Component = h.components[path];
@@ -177,6 +182,30 @@ describe("admin console route guards (GAP-017)", () => {
 
       expect(screen.getByText(fr.subscription.accessDenied)).toBeInTheDocument();
       expect(screen.queryByTestId("content-reports-admin")).not.toBeInTheDocument();
+    });
+  });
+
+  describe("/admin/parcours-interest", () => {
+    it("lets an admin into the program-interest ranking", async () => {
+      h.role = ADMIN;
+      renderPage(pageFor(INTEREST));
+
+      expect(screen.queryByText(fr.subscription.accessDenied)).not.toBeInTheDocument();
+      expect(await screen.findByTestId("parcours-interest-admin")).toBeInTheDocument();
+    });
+
+    it("refuses a non-admin", () => {
+      h.role = {
+        role: "student",
+        isAdmin: false,
+        currentParcoursId: "x",
+        hasProfile: true,
+        isLoaded: true,
+      };
+      renderPage(pageFor(INTEREST));
+
+      expect(screen.getByText(fr.subscription.accessDenied)).toBeInTheDocument();
+      expect(screen.queryByTestId("parcours-interest-admin")).not.toBeInTheDocument();
     });
   });
 

@@ -17,6 +17,7 @@ import {
   CreditCard,
   FlaskConical,
   Flag,
+  TrendingUp,
 } from "lucide-react";
 import { supabase } from "@/shared/integrations/supabase/client";
 import { toast } from "sonner";
@@ -231,6 +232,16 @@ function AuthenticatedLayout() {
                       {openReports}
                     </span>
                   )}
+                </Link>
+                <Link
+                  to="/admin/parcours-interest"
+                  className={NAV_LINK}
+                  activeProps={NAV_ACTIVE}
+                  aria-label={t.layout.parcoursInterest}
+                  title={t.layout.parcoursInterest}
+                >
+                  <TrendingUp className="h-4 w-4 shrink-0" />{" "}
+                  <span className="hidden lg:inline">{t.layout.parcoursInterest}</span>
                 </Link>
               </>
             )}

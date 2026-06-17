@@ -25,6 +25,7 @@ import { Route as AuthenticatedSubjectSubjectIdRouteImport } from './routes/_aut
 import { Route as AuthenticatedQuestExerciseIdRouteImport } from './routes/_authenticated/quest.$exerciseId'
 import { Route as AuthenticatedLessonChapterIdRouteImport } from './routes/_authenticated/lesson.$chapterId'
 import { Route as AuthenticatedAdminSubscriptionsRouteImport } from './routes/_authenticated/admin.subscriptions'
+import { Route as AuthenticatedAdminParcoursInterestRouteImport } from './routes/_authenticated/admin.parcours-interest'
 import { Route as AuthenticatedAdminContentReportsRouteImport } from './routes/_authenticated/admin.content-reports'
 import { Route as AuthenticatedAdminBetaRequestsRouteImport } from './routes/_authenticated/admin.beta-requests'
 
@@ -113,6 +114,12 @@ const AuthenticatedAdminSubscriptionsRoute =
     path: '/admin/subscriptions',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedAdminParcoursInterestRoute =
+  AuthenticatedAdminParcoursInterestRouteImport.update({
+    id: '/admin/parcours-interest',
+    path: '/admin/parcours-interest',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedAdminContentReportsRoute =
   AuthenticatedAdminContentReportsRouteImport.update({
     id: '/admin/content-reports',
@@ -140,6 +147,7 @@ export interface FileRoutesByFullPath {
   '/themes': typeof AuthenticatedThemesRoute
   '/admin/beta-requests': typeof AuthenticatedAdminBetaRequestsRoute
   '/admin/content-reports': typeof AuthenticatedAdminContentReportsRoute
+  '/admin/parcours-interest': typeof AuthenticatedAdminParcoursInterestRoute
   '/admin/subscriptions': typeof AuthenticatedAdminSubscriptionsRoute
   '/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
   '/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
@@ -159,6 +167,7 @@ export interface FileRoutesByTo {
   '/themes': typeof AuthenticatedThemesRoute
   '/admin/beta-requests': typeof AuthenticatedAdminBetaRequestsRoute
   '/admin/content-reports': typeof AuthenticatedAdminContentReportsRoute
+  '/admin/parcours-interest': typeof AuthenticatedAdminParcoursInterestRoute
   '/admin/subscriptions': typeof AuthenticatedAdminSubscriptionsRoute
   '/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
   '/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
@@ -180,6 +189,7 @@ export interface FileRoutesById {
   '/_authenticated/themes': typeof AuthenticatedThemesRoute
   '/_authenticated/admin/beta-requests': typeof AuthenticatedAdminBetaRequestsRoute
   '/_authenticated/admin/content-reports': typeof AuthenticatedAdminContentReportsRoute
+  '/_authenticated/admin/parcours-interest': typeof AuthenticatedAdminParcoursInterestRoute
   '/_authenticated/admin/subscriptions': typeof AuthenticatedAdminSubscriptionsRoute
   '/_authenticated/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
   '/_authenticated/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
@@ -201,6 +211,7 @@ export interface FileRouteTypes {
     | '/themes'
     | '/admin/beta-requests'
     | '/admin/content-reports'
+    | '/admin/parcours-interest'
     | '/admin/subscriptions'
     | '/lesson/$chapterId'
     | '/quest/$exerciseId'
@@ -220,6 +231,7 @@ export interface FileRouteTypes {
     | '/themes'
     | '/admin/beta-requests'
     | '/admin/content-reports'
+    | '/admin/parcours-interest'
     | '/admin/subscriptions'
     | '/lesson/$chapterId'
     | '/quest/$exerciseId'
@@ -240,6 +252,7 @@ export interface FileRouteTypes {
     | '/_authenticated/themes'
     | '/_authenticated/admin/beta-requests'
     | '/_authenticated/admin/content-reports'
+    | '/_authenticated/admin/parcours-interest'
     | '/_authenticated/admin/subscriptions'
     | '/_authenticated/lesson/$chapterId'
     | '/_authenticated/quest/$exerciseId'
@@ -368,6 +381,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSubscriptionsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/admin/parcours-interest': {
+      id: '/_authenticated/admin/parcours-interest'
+      path: '/admin/parcours-interest'
+      fullPath: '/admin/parcours-interest'
+      preLoaderRoute: typeof AuthenticatedAdminParcoursInterestRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/admin/content-reports': {
       id: '/_authenticated/admin/content-reports'
       path: '/admin/content-reports'
@@ -395,6 +415,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedThemesRoute: typeof AuthenticatedThemesRoute
   AuthenticatedAdminBetaRequestsRoute: typeof AuthenticatedAdminBetaRequestsRoute
   AuthenticatedAdminContentReportsRoute: typeof AuthenticatedAdminContentReportsRoute
+  AuthenticatedAdminParcoursInterestRoute: typeof AuthenticatedAdminParcoursInterestRoute
   AuthenticatedAdminSubscriptionsRoute: typeof AuthenticatedAdminSubscriptionsRoute
   AuthenticatedLessonChapterIdRoute: typeof AuthenticatedLessonChapterIdRoute
   AuthenticatedQuestExerciseIdRoute: typeof AuthenticatedQuestExerciseIdRoute
@@ -411,6 +432,8 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedThemesRoute: AuthenticatedThemesRoute,
   AuthenticatedAdminBetaRequestsRoute: AuthenticatedAdminBetaRequestsRoute,
   AuthenticatedAdminContentReportsRoute: AuthenticatedAdminContentReportsRoute,
+  AuthenticatedAdminParcoursInterestRoute:
+    AuthenticatedAdminParcoursInterestRoute,
   AuthenticatedAdminSubscriptionsRoute: AuthenticatedAdminSubscriptionsRoute,
   AuthenticatedLessonChapterIdRoute: AuthenticatedLessonChapterIdRoute,
   AuthenticatedQuestExerciseIdRoute: AuthenticatedQuestExerciseIdRoute,

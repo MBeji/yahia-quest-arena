@@ -364,14 +364,26 @@ export const getParcours = createServerFn({ method: "GET" })
     if (error) failWithClientError("getParcours", error, DASHBOARD_ERROR_FR);
     const rows = data ?? [];
 
+    // Enrich each parcours with its grade's cycle + pedagogical order so the
+    // school group can be grouped by cycle (primaire/collège/secondaire) and
+    // ordered 1ère année → Bac. One cheap lookup beats N embedded joins.
+    const { data: gradeRows } = await supabase.from("grades").select("id,cycle,display_order");
+    const gradeById = new Map((gradeRows ?? []).map((g) => [g.id, g]));
+
     const enriched = await Promise.all(
       rows.map(async (p) => {
-        if (!p.is_premium) return { ...p, hasEntitlement: true };
+        const grade = p.grade_id ? gradeById.get(p.grade_id) : undefined;
+        const base = {
+          ...p,
+          grade_cycle: grade?.cycle ?? null,
+          grade_order: grade?.display_order ?? null,
+        };
+        if (!p.is_premium) return { ...base, hasEntitlement: true };
         const { data: ent } = await supabase.rpc("has_parcours_entitlement", {
           p_user: userId,
           p_parcours: p.id,
         });
-        return { ...p, hasEntitlement: ent === true };
+        return { ...base, hasEntitlement: ent === true };
       }),
     );
 
