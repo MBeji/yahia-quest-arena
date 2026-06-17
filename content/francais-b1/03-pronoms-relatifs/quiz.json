@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Complète : « L'homme ___ parle est mon voisin. »",
+      "options": [
+        { "id": "a", "text": "qui" },
+        { "id": "b", "text": "que" },
+        { "id": "c", "text": "où" },
+        { "id": "d", "text": "dont" }
+      ],
+      "correctOption": "a",
+      "explanation": "« qui » est sujet de la relative : c'est l'homme qui fait l'action de parler, et un verbe le suit directement (qui parle). « que » serait un COD (suivi d'un sujet), « où » marque le lieu, et « dont » remplace un complément en « de ».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Le livre ___ je lis est passionnant. »",
+      "options": [
+        { "id": "a", "text": "qui" },
+        { "id": "b", "text": "que" },
+        { "id": "c", "text": "où" },
+        { "id": "d", "text": "dont" }
+      ],
+      "correctOption": "b",
+      "explanation": "« que » est COD : je lis le livre, donc un sujet (je) suit le pronom. « qui » serait suivi d'un verbe (le livre qui plaît), « où » marque le lieu ou le temps, et « dont » s'emploie avec « de ».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « La ville ___ j'habite est au bord de la mer. »",
+      "options": [
+        { "id": "a", "text": "que" },
+        { "id": "b", "text": "qui" },
+        { "id": "c", "text": "où" },
+        { "id": "d", "text": "dont" }
+      ],
+      "correctOption": "c",
+      "explanation": "« où » marque le lieu (= dans laquelle) : la ville où j'habite. « que » serait un COD (la ville que je visite), « qui » un sujet, et « dont » remplacerait un complément en « de ».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « C'est le film ___ je parle depuis hier. »",
+      "options": [
+        { "id": "a", "text": "que" },
+        { "id": "b", "text": "qui" },
+        { "id": "c", "text": "où" },
+        { "id": "d", "text": "dont" }
+      ],
+      "correctOption": "d",
+      "explanation": "On dit parler DE quelque chose, donc « dont » remplace ce complément en « de » : le film dont je parle. « que » conviendrait à un verbe direct (le film que je regarde), « qui » serait un sujet, et « où » marque le lieu ou le temps.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve la phrase incorrecte.",
+      "options": [
+        { "id": "a", "text": "L'ami que j'invite arrive ce soir." },
+        { "id": "b", "text": "L'ami que vient ce soir est sympathique." },
+        { "id": "c", "text": "Le jour où il est né, il neigeait." },
+        { "id": "d", "text": "Le projet dont je suis fier est terminé." }
+      ],
+      "correctOption": "b",
+      "explanation": "La phrase incorrecte est la deuxième : un verbe (vient) suit le pronom, il faut donc « qui » (sujet), pas « que » : l'ami qui vient. Les autres sont correctes : « que » COD, « où » temps et « dont » avec l'adjectif fier de.",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Complète au conditionnel présent : « J'___ visiter le Japon un jour. »",
+      "options": [
+        { "id": "a", "text": "aimerais" },
+        { "id": "b", "text": "aimerai" },
+        { "id": "c", "text": "aime" },
+        { "id": "d", "text": "aimais" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le conditionnel présent se forme avec le radical du futur (aimer-) + les terminaisons de l'imparfait (-ais) : j'aimerais. « aimerai » est le futur simple, « aime » le présent et « aimais » l'imparfait.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle phrase exprime une demande polie ?",
+      "options": [
+        { "id": "a", "text": "Je veux un café." },
+        { "id": "b", "text": "Je voudrais un café, s'il vous plaît." },
+        { "id": "c", "text": "Je voulais un café." },
+        { "id": "d", "text": "Je voudrai un café." }
+      ],
+      "correctOption": "b",
+      "explanation": "Le conditionnel « je voudrais » adoucit la demande : c'est la formule de politesse. « je veux » (présent) est trop direct, « je voulais » est l'imparfait, et « je voudrai » est le futur, pas le conditionnel.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète l'hypothèse réelle : « Si tu ___ demain, nous irons au cinéma. »",
+      "options": [
+        { "id": "a", "text": "viendrais" },
+        { "id": "b", "text": "viendras" },
+        { "id": "c", "text": "viens" },
+        { "id": "d", "text": "venais" }
+      ],
+      "correctOption": "c",
+      "explanation": "Dans l'hypothèse potentielle, on a si + présent → futur : Si tu viens, nous irons. Après « si » on ne met jamais de futur (« viendras ») ni de conditionnel (« viendrais ») ; « venais » (imparfait) introduirait l'irréel du présent.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète l'hypothèse imaginaire : « Si j'avais le temps, je ___ ce livre. »",
+      "options": [
+        { "id": "a", "text": "lirai" },
+        { "id": "b", "text": "lis" },
+        { "id": "c", "text": "lisais" },
+        { "id": "d", "text": "lirais" }
+      ],
+      "correctOption": "d",
+      "explanation": "C'est l'irréel du présent : si + imparfait (avais) → conditionnel présent dans la conséquence, donc « je lirais ». « lirai » est le futur, « lis » le présent et « lisais » l'imparfait, qui ne conviennent pas ici.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase est correcte ?",
+      "options": [
+        { "id": "a", "text": "Si je serais riche, je voyagerais." },
+        { "id": "b", "text": "Si j'étais riche, je voyagerais." },
+        { "id": "c", "text": "Si j'aurais le temps, je viendrais." },
+        { "id": "d", "text": "Si je voudrais, je partirais." }
+      ],
+      "correctOption": "b",
+      "explanation": "Règle d'or : après « si » d'hypothèse, jamais de conditionnel. L'irréel du présent est si + imparfait → conditionnel : Si j'étais riche, je voyagerais. Les options (a), (c) et (d) commettent la faute classique « si je serais / si j'aurais / si je voudrais ».",
+      "difficulty": 2
+    }
+  ]
+}

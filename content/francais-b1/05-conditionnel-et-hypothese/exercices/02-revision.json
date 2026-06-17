@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision : le conditionnel et l'hypothèse",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complète au conditionnel présent : « À ta place, je ___ plus prudent. »",
+      "options": [
+        { "id": "a", "text": "serai" },
+        { "id": "b", "text": "serais" },
+        { "id": "c", "text": "suis" },
+        { "id": "d", "text": "étais" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le radical du futur d'être est ser- ; avec -ais on obtient « je serais » (conseil). « serai » est le futur, « suis » le présent et « étais » l'imparfait.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Identifie l'emploi : « Selon la radio, le ministre serait à l'étranger. »",
+      "options": [
+        { "id": "a", "text": "Un conseil" },
+        { "id": "b", "text": "Une demande polie" },
+        { "id": "c", "text": "Un souhait" },
+        { "id": "d", "text": "Une information non confirmée" }
+      ],
+      "correctOption": "d",
+      "explanation": "Le conditionnel sert ici à donner une information non vérifiée (« selon la radio »). Ce n'est ni un conseil, ni une demande polie, ni un souhait : c'est le conditionnel d'information journalistique.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète l'hypothèse réelle : « Si vous ___ ce soir, on commandera une pizza. »",
+      "options": [
+        { "id": "a", "text": "venez" },
+        { "id": "b", "text": "viendrez" },
+        { "id": "c", "text": "viendriez" },
+        { "id": "d", "text": "veniez" }
+      ],
+      "correctOption": "a",
+      "explanation": "Hypothèse potentielle : si + présent (« si vous venez ») → futur dans la conséquence (« on commandera »). Après « si » on ne met ni futur (« viendrez ») ni conditionnel (« viendriez ») ; « veniez » serait l'irréel du présent.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète l'irréel du présent : « Si nous ___ plus d'argent, nous voyagerions. »",
+      "options": [
+        { "id": "a", "text": "aurons" },
+        { "id": "b", "text": "aurions" },
+        { "id": "c", "text": "avions" },
+        { "id": "d", "text": "avons" }
+      ],
+      "correctOption": "c",
+      "explanation": "La conséquence « voyagerions » est au conditionnel : c'est l'irréel du présent, donc si + imparfait → « si nous avions ». « aurons » est le futur, « aurions » le conditionnel (interdit après si) et « avons » le présent.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase est correcte ?",
+      "options": [
+        { "id": "a", "text": "Si tu auras le temps, appelle-moi." },
+        { "id": "b", "text": "Si tu as le temps, appelle-moi." },
+        { "id": "c", "text": "Si tu aurais le temps, appelle-moi." },
+        { "id": "d", "text": "Si tu aies le temps, appelle-moi." }
+      ],
+      "correctOption": "b",
+      "explanation": "Après « si » d'hypothèse, on emploie le présent : « Si tu as le temps ». Le futur (« auras ») et le conditionnel (« aurais ») sont interdits après « si », et le subjonctif (« aies ») ne s'emploie pas après « si » de condition.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète au conditionnel : « J'___ bien un verre d'eau. »",
+      "options": [
+        { "id": "a", "text": "prendrai" },
+        { "id": "b", "text": "prends" },
+        { "id": "c", "text": "prenais" },
+        { "id": "d", "text": "prendrais" }
+      ],
+      "correctOption": "d",
+      "explanation": "Pour adoucir une demande, on emploie le conditionnel : « je prendrais bien ». Le radical du futur prendr- + -ais donne prendrais. « prendrai » est le futur, « prends » le présent et « prenais » l'imparfait.",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Entraînement : le conditionnel et l'hypothèse",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complète au conditionnel présent : « Nous ___ partir plus tôt. »",
+      "options": [
+        { "id": "a", "text": "aimerons" },
+        { "id": "b", "text": "aimons" },
+        { "id": "c", "text": "aimerions" },
+        { "id": "d", "text": "aimions" }
+      ],
+      "correctOption": "c",
+      "explanation": "Conditionnel présent = radical du futur (aimer-) + terminaison de l'imparfait (-ions) : nous aimerions. « aimerons » est le futur, « aimons » le présent et « aimions » l'imparfait.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète au conditionnel présent : « Tu ___ te reposer un peu. »",
+      "options": [
+        { "id": "a", "text": "devrais" },
+        { "id": "b", "text": "devras" },
+        { "id": "c", "text": "dois" },
+        { "id": "d", "text": "devais" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le radical du futur de devoir est devr- ; avec la terminaison -ais on obtient « tu devrais », qui exprime le conseil. « devras » est le futur, « dois » le présent et « devais » l'imparfait.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle phrase exprime un conseil au conditionnel ?",
+      "options": [
+        { "id": "a", "text": "Il faut partir maintenant." },
+        { "id": "b", "text": "Il faudrait partir maintenant." },
+        { "id": "c", "text": "Il faudra partir maintenant." },
+        { "id": "d", "text": "Il fallait partir maintenant." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Il faudrait » est le conditionnel de falloir et adoucit l'ordre en conseil. « Il faut » est le présent (obligation directe), « il faudra » le futur et « il fallait » l'imparfait.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète l'hypothèse : « Si tu ___ faim, prends un fruit. »",
+      "options": [
+        { "id": "a", "text": "auras" },
+        { "id": "b", "text": "aurais" },
+        { "id": "c", "text": "aurai" },
+        { "id": "d", "text": "as" }
+      ],
+      "correctOption": "d",
+      "explanation": "Après « si » d'hypothèse, jamais de futur ni de conditionnel : on emploie le présent, « si tu as faim ». « auras » est le futur, « aurais » le conditionnel et « aurai » la 1re personne du futur.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète au conditionnel présent : « ___-vous m'aider, s'il vous plaît ? »",
+      "options": [
+        { "id": "a", "text": "Pourriez" },
+        { "id": "b", "text": "Pourrez" },
+        { "id": "c", "text": "Pouvez" },
+        { "id": "d", "text": "Pouviez" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le radical du futur de pouvoir est pourr- ; avec -iez on a « pourriez-vous », formule de politesse. « pourrez » est le futur, « pouvez » le présent et « pouviez » l'imparfait.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète l'irréel du présent : « Si j'étais toi, je ___ à la maison. »",
+      "options": [
+        { "id": "a", "text": "resterai" },
+        { "id": "b", "text": "reste" },
+        { "id": "c", "text": "resterais" },
+        { "id": "d", "text": "restais" }
+      ],
+      "correctOption": "c",
+      "explanation": "Irréel du présent : si + imparfait (étais) → conditionnel présent, donc « je resterais ». « resterai » est le futur, « reste » le présent et « restais » l'imparfait, qui ne suivent pas l'imparfait après « si ».",
+      "difficulty": 2
+    }
+  ]
+}

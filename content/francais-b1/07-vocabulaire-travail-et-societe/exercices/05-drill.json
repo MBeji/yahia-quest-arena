@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill : le travail et la société",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complétez : « J'ai signé un ___ : je suis embauché pour une durée indéterminée. »",
+      "options": [
+        { "id": "a", "text": "CDD" },
+        { "id": "b", "text": "CV" },
+        { "id": "c", "text": "CDI" },
+        { "id": "d", "text": "salaire" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le « CDI » est le contrat à durée indéterminée (sans date de fin), contrairement au « CDD » (déterminée). Le CV est le document de candidature, et le salaire est l'argent reçu chaque mois.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel verbe complète : « Pour protéger la planète, chacun doit ___ ses efforts. »",
+      "options": [
+        { "id": "a", "text": "faire" },
+        { "id": "b", "text": "prendre" },
+        { "id": "c", "text": "donner" },
+        { "id": "d", "text": "jouer" }
+      ],
+      "correctOption": "a",
+      "explanation": "La collocation correcte est « faire des efforts ». On « prend » une décision et on « joue » un rôle, mais avec « efforts » seul le verbe « faire » convient en français standard.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouvez l'intrus : trois mots concernent l'environnement, lequel n'a aucun rapport ?",
+      "options": [
+        { "id": "a", "text": "la pollution" },
+        { "id": "b", "text": "les déchets" },
+        { "id": "c", "text": "l'entretien" },
+        { "id": "d", "text": "le climat" }
+      ],
+      "correctOption": "c",
+      "explanation": "« L'entretien » (d'embauche) appartient au monde du travail, pas à l'environnement. La pollution, les déchets et le climat relèvent tous de l'écologie. L'intrus est donc l'entretien.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complétez : « Pour utiliser ce site, tu dois d'abord te ___ avec ton mot de passe. »",
+      "options": [
+        { "id": "a", "text": "publier" },
+        { "id": "b", "text": "informer" },
+        { "id": "c", "text": "connecter" },
+        { "id": "d", "text": "soutenir" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Se connecter », c'est entrer dans un compte ou un site avec ses identifiants. « Publier » c'est rendre public un contenu, « s'informer » c'est chercher des nouvelles, et « soutenir » c'est défendre une idée.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel mot signifie « espérer » ?",
+      "options": [
+        { "id": "a", "text": "douter de quelque chose" },
+        { "id": "b", "text": "souhaiter que quelque chose de bon arrive" },
+        { "id": "c", "text": "critiquer une idée" },
+        { "id": "d", "text": "renvoyer un salarié" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Espérer », c'est souhaiter qu'une bonne chose se réalise. « Douter » exprime au contraire l'incertitude, « critiquer » le jugement négatif, et « licencier » (renvoyer un salarié) appartient au travail.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complétez : « Si tout le monde ___ l'eau, on en aura assez pour tous. »",
+      "options": [
+        { "id": "a", "text": "gaspille" },
+        { "id": "b", "text": "pollue" },
+        { "id": "c", "text": "licencie" },
+        { "id": "d", "text": "économise" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Économiser » l'eau, c'est en utiliser le moins possible pour la préserver. « Gaspiller » et « polluer » nuisent à la ressource, et « licencier » concerne le travail — aucun ne convient ici.",
+      "difficulty": 2
+    }
+  ]
+}

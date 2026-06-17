@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill : le subjonctif présent",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complète : « Il faut que tu ___ tes clés. » (chercher)",
+      "options": [
+        { "id": "a", "text": "cherches" },
+        { "id": "b", "text": "cherche" },
+        { "id": "c", "text": "chercheras" },
+        { "id": "d", "text": "chercher" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Il faut que » impose le subjonctif. Radical de « ils cherchent » + -es : que tu cherches. « cherche » est la forme de je/il, « chercheras » le futur, « chercher » l'infinitif.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choisis le bon mode : « Je crois qu'elle ___ raison. » (avoir)",
+      "options": [
+        { "id": "a", "text": "ait" },
+        { "id": "b", "text": "a" },
+        { "id": "c", "text": "aie" },
+        { "id": "d", "text": "ayant" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Je crois que » (opinion affirmée) se construit avec l'indicatif : elle a raison. Le subjonctif « ait/aie » ne s'emploierait qu'à la forme négative (je ne crois pas qu'elle ait raison).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Il est possible qu'ils ___ en vacances. » (aller)",
+      "options": [
+        { "id": "a", "text": "aillent" },
+        { "id": "b", "text": "vont" },
+        { "id": "c", "text": "iront" },
+        { "id": "d", "text": "allaient" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Il est possible que » exprime la possibilité → subjonctif. Le verbe aller est irrégulier : qu'ils aillent. « vont » est l'indicatif, « iront » le futur, « allaient » l'imparfait.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Je suis content que nous ___ ensemble. » (travailler)",
+      "options": [
+        { "id": "a", "text": "travaillons" },
+        { "id": "b", "text": "travaillerons" },
+        { "id": "c", "text": "travaillions" },
+        { "id": "d", "text": "travaillions ensemble" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Je suis content que » exprime un sentiment → subjonctif. Radical de « ils travaillent » + -ions : que nous travaillions. « travaillons » est l'indicatif, « travaillerons » le futur ; la forme subjonctive « nous » ressemble à l'imparfait, c'est normal.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve la phrase CORRECTE.",
+      "options": [
+        { "id": "a", "text": "Bien qu'il pleut, nous sortons." },
+        { "id": "b", "text": "Bien qu'il pleuve, nous sortons." },
+        { "id": "c", "text": "Bien qu'il pleuvra, nous sortons." },
+        { "id": "d", "text": "Bien qu'il pleuvait, nous sortons." }
+      ],
+      "correctOption": "b",
+      "explanation": "La conjonction « bien que » impose le subjonctif : bien qu'il pleuve. La (a) garde l'indicatif « pleut », la (c) le futur « pleuvra », la (d) l'imparfait « pleuvait ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Il exige que je ___ tout de suite. » (répondre)",
+      "options": [
+        { "id": "a", "text": "réponds" },
+        { "id": "b", "text": "répondrai" },
+        { "id": "c", "text": "répondais" },
+        { "id": "d", "text": "réponde" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Exiger que » exprime l'obligation → subjonctif. Radical de « ils répondent » + -e : que je réponde. « réponds » est l'indicatif, « répondrai » le futur, « répondais » l'imparfait.",
+      "difficulty": 2
+    }
+  ]
+}

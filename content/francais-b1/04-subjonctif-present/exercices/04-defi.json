@@ -1,0 +1,82 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : le subjonctif présent",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Complète : « Je suis surpris que tu ___ déjà tout compris. » (avoir)",
+      "options": [
+        { "id": "a", "text": "as" },
+        { "id": "b", "text": "auras" },
+        { "id": "c", "text": "aies" },
+        { "id": "d", "text": "avais" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Je suis surpris que » exprime un sentiment → subjonctif. Le verbe avoir est irrégulier : que tu aies. « as » est l'indicatif, « auras » le futur, « avais » l'imparfait.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "Je pense qu'il viendra demain." },
+        { "id": "b", "text": "Il faut qu'il vienne demain." },
+        { "id": "c", "text": "Je ne crois pas qu'il vienne demain." },
+        { "id": "d", "text": "J'espère qu'il vienne demain." }
+      ],
+      "correctOption": "d",
+      "explanation": "« Espérer que » se construit avec l'indicatif : on dit « j'espère qu'il viendra », pas « qu'il vienne ». Les autres sont correctes : « je pense que » + indicatif (a), « il faut que » + subjonctif (b), « je ne crois pas que » + subjonctif (c).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choisis le bon mode : « Il est probable qu'il ___ malade ; on verra demain. » (être)",
+      "options": [
+        { "id": "a", "text": "soit" },
+        { "id": "b", "text": "est" },
+        { "id": "c", "text": "sera" },
+        { "id": "d", "text": "était" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le piège courant : « il est probable que » exprime une quasi-certitude → indicatif (il est malade), alors que « il est possible que » appellerait le subjonctif. « soit » serait le subjonctif, « sera » le futur, « était » l'imparfait.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Nous resterons à condition que vous ___ d'accord. » (être)",
+      "options": [
+        { "id": "a", "text": "êtes" },
+        { "id": "b", "text": "serez" },
+        { "id": "c", "text": "soyez" },
+        { "id": "d", "text": "étiez" }
+      ],
+      "correctOption": "c",
+      "explanation": "La conjonction « à condition que » impose le subjonctif. Le verbe être donne « que vous soyez ». « êtes » est l'indicatif, « serez » le futur, « étiez » l'imparfait.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Pars avant qu'il ne ___ trop tard. » (faire)",
+      "options": [
+        { "id": "a", "text": "fait" },
+        { "id": "b", "text": "fera" },
+        { "id": "c", "text": "faisait" },
+        { "id": "d", "text": "fasse" }
+      ],
+      "correctOption": "d",
+      "explanation": "La conjonction « avant que » impose le subjonctif (avec un « ne » explétif facultatif) : avant qu'il ne fasse trop tard. Le verbe faire est irrégulier : qu'il fasse. « fait » est l'indicatif, « fera » le futur, « faisait » l'imparfait.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Trouve la phrase CORRECTE.",
+      "options": [
+        { "id": "a", "text": "Je veux que tu sois à l'heure et que tu fasses un effort." },
+        { "id": "b", "text": "Je veux que tu es à l'heure et que tu fais un effort." },
+        { "id": "c", "text": "Je veux que tu seras à l'heure et que tu feras un effort." },
+        { "id": "d", "text": "Je veux que tu soies à l'heure et que tu fais un effort." }
+      ],
+      "correctOption": "a",
+      "explanation": "« Je veux que » impose le subjonctif aux deux verbes : que tu sois (être) et que tu fasses (faire). La (b) garde l'indicatif (es, fais), la (c) le futur (seras, feras), et la (d) écrit « soies », forme inexistante (c'est « sois »).",
+      "difficulty": 3
+    }
+  ]
+}

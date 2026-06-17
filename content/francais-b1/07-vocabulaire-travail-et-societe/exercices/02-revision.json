@@ -1,0 +1,154 @@
+{
+  "title": "⭐⭐ Révision : le travail et la société",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Quel verbe est le contraire de « gaspiller » ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "polluer"
+        },
+        {
+          "id": "b",
+          "text": "économiser"
+        },
+        {
+          "id": "c",
+          "text": "trier"
+        },
+        {
+          "id": "d",
+          "text": "jeter"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "« Économiser », c'est utiliser le moins possible (eau, énergie, argent) ; c'est l'inverse de « gaspiller », qui veut dire perdre ou utiliser inutilement. « Polluer », « trier » et « jeter » ne sont pas l'antonyme de gaspiller.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Trouvez l'intrus : trois de ces mots concernent le travail, lequel n'a aucun rapport ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "un poste"
+        },
+        {
+          "id": "b",
+          "text": "un entretien"
+        },
+        {
+          "id": "c",
+          "text": "un collègue"
+        },
+        {
+          "id": "d",
+          "text": "le recyclage"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« Le recyclage » appartient au champ de l'environnement, pas du travail. Un poste, un entretien et un collègue sont tous liés au monde de l'emploi. L'intrus est donc le recyclage.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complétez : « Mon oncle a perdu son travail : il est au ___ depuis trois mois. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "salaire"
+        },
+        {
+          "id": "b",
+          "text": "chômage"
+        },
+        {
+          "id": "c",
+          "text": "contrat"
+        },
+        {
+          "id": "d",
+          "text": "climat"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "« Être au chômage » signifie ne plus avoir d'emploi. Le salaire est l'argent du travail, le contrat est l'accord signé, et le climat concerne l'environnement — aucun ne décrit l'absence de travail.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle est la bonne collocation ? « Nous devons ___ une décision rapidement. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "faire une décision"
+        },
+        {
+          "id": "b",
+          "text": "donner une décision"
+        },
+        {
+          "id": "c",
+          "text": "prendre une décision"
+        },
+        {
+          "id": "d",
+          "text": "jouer une décision"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "En français, on dit « prendre une décision », jamais « faire » ni « donner » une décision. C'est une collocation fixe. « Jouer un rôle » existe, mais pas « jouer une décision ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complétez : « Avant de ___ cette information, vérifie qu'elle est vraie. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "partager"
+        },
+        {
+          "id": "b",
+          "text": "trier"
+        },
+        {
+          "id": "c",
+          "text": "embaucher"
+        },
+        {
+          "id": "d",
+          "text": "économiser"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "« Partager » une information, c'est la diffuser à d'autres, souvent en ligne. « Trier » concerne les déchets, « embaucher » le travail, et « économiser » l'argent ou l'énergie.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel verbe signifie « quitter son emploi de sa propre volonté » ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "licencier"
+        },
+        {
+          "id": "b",
+          "text": "embaucher"
+        },
+        {
+          "id": "c",
+          "text": "postuler"
+        },
+        {
+          "id": "d",
+          "text": "démissionner"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« Démissionner », c'est partir de son emploi par sa propre décision. « Licencier » se fait à l'initiative du patron, « embaucher » c'est engager, et « postuler » c'est se porter candidat.",
+      "difficulty": 2
+    }
+  ]
+}

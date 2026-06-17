@@ -1,0 +1,12 @@
+{
+  "id": "francais-b1",
+  "nameFr": "Français — Intermédiaire (B1 · DELF B1)",
+  "description": "Atteins le niveau intermédiaire : maîtrise le plus-que-parfait, les pronoms compléments, les pronoms relatifs, le subjonctif présent, le conditionnel et l'hypothèse, le discours indirect, enrichis ton vocabulaire du travail et de la société, et comprends des textes argumentatifs. Niveau intermédiaire (CECRL B1), aligné sur le DELF B1.",
+  "attribute": "Agilité",
+  "colorToken": "subject-french",
+  "icon": "Languages",
+  "displayOrder": 3,
+  "contentLanguage": "fr",
+  "themeId": "francais",
+  "gradeSlug": null
+}
