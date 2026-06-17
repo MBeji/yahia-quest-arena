@@ -8,7 +8,10 @@ const BUDGETS = {
   "i18n-": 80 * 1024,
   "vendor-supabase-": 240 * 1024,
   "vendor-motion-": 150 * 1024,
-  "dashboard-": 30 * 1024,
+  // Dashboard route chunk. Bumped 30→32 KB for the flagship-concours banner
+  // integration (the banner trio is lazy-loaded into its own chunk; only the
+  // small lazy glue lands here). Heavy sections (radar/3D, badges/shop) stay lazy.
+  "dashboard-": 32 * 1024,
 };
 
 function bytesToKb(bytes) {
