@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Quelle est la transformation passive correcte de « Le jardinier arrose les fleurs » ?",
+      "options": [
+        { "id": "a", "text": "Les fleurs sont arrosées par le jardinier." },
+        { "id": "b", "text": "Les fleurs sont arrosé par le jardinier." },
+        { "id": "c", "text": "Les fleurs ont arrosé le jardinier." },
+        { "id": "d", "text": "Les fleurs étaient arrosées par le jardinier." }
+      ],
+      "correctOption": "a",
+      "explanation": "Le COD « les fleurs » devient sujet et le participe s'accorde au féminin pluriel : « arrosées ». L'option b oublie l'accord. L'option c inverse les rôles (contresens). L'option d change le temps (imparfait), alors que l'actif est au présent.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Avec quel auxiliaire se forme toujours la voix passive ?",
+      "options": [
+        { "id": "a", "text": "avoir" },
+        { "id": "b", "text": "être" },
+        { "id": "c", "text": "aller" },
+        { "id": "d", "text": "faire" }
+      ],
+      "correctOption": "b",
+      "explanation": "La voix passive se construit toujours avec l'auxiliaire « être » + participe passé. C'est « être » qui porte le temps (est fait, sera fait, a été fait). « Avoir » sert à former les temps composés de l'actif, pas le passif.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans « La maison a été vendue », à quel temps est cette phrase passive ?",
+      "options": [
+        { "id": "a", "text": "présent" },
+        { "id": "b", "text": "imparfait" },
+        { "id": "c", "text": "passé composé" },
+        { "id": "d", "text": "futur simple" }
+      ],
+      "correctOption": "c",
+      "explanation": "« a été » correspond au passé composé de l'auxiliaire être, donc le passif est au passé composé (= on a vendu la maison). Le présent serait « est vendue », l'imparfait « était vendue » et le futur « sera vendue ».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel verbe NE peut PAS se mettre à la voix passive ?",
+      "options": [
+        { "id": "a", "text": "construire (une maison)" },
+        { "id": "b", "text": "lire (un livre)" },
+        { "id": "c", "text": "dormir" },
+        { "id": "d", "text": "réparer (une voiture)" }
+      ],
+      "correctOption": "c",
+      "explanation": "Seuls les verbes transitifs directs (avec un COD) se mettent au passif. « Dormir » est intransitif : il n'a pas de COD, donc pas de passif possible. Construire, lire et réparer ont un COD et acceptent le passif.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Ce professeur est aimé ___ tous ses élèves. »",
+      "options": [
+        { "id": "a", "text": "de" },
+        { "id": "b", "text": "par" },
+        { "id": "c", "text": "à" },
+        { "id": "d", "text": "pour" }
+      ],
+      "correctOption": "a",
+      "explanation": "Les verbes de sentiment comme « aimer » introduisent le complément d'agent avec « de » : aimé de tous. « Par » s'emploie pour les actions concrètes (réparé par). « À » et « pour » n'introduisent jamais le complément d'agent.",
+      "difficulty": 2
+    }
+  ]
+}

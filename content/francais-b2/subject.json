@@ -1,0 +1,12 @@
+{
+  "id": "francais-b2",
+  "nameFr": "Français — Intermédiaire avancé (B2 · DELF B2)",
+  "description": "Atteins l'autonomie avancée : maîtrise la voix passive, le subjonctif passé et ses emplois avancés, l'expression de la cause, la conséquence, le but, l'opposition et la concession, les pronoms relatifs composés, le gérondif et le participe présent, le vocabulaire de l'opinion et du débat, et la compréhension de textes argumentatifs. Niveau intermédiaire avancé (CECRL B2), aligné sur le DELF B2.",
+  "attribute": "Agilité",
+  "colorToken": "subject-french",
+  "icon": "Languages",
+  "displayOrder": 4,
+  "contentLanguage": "fr",
+  "themeId": "francais",
+  "gradeSlug": null
+}

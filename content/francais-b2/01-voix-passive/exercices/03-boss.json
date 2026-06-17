@@ -1,0 +1,94 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : la voix passive",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Mets cette phrase au passif : « Le président inaugurera le nouveau musée en présence des journalistes. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "Le nouveau musée est inauguré par le président en présence des journalistes."
+        },
+        {
+          "id": "b",
+          "text": "Le nouveau musée a été inauguré par le président en présence des journalistes."
+        },
+        {
+          "id": "c",
+          "text": "Le nouveau musée sera inauguré de le président en présence des journalistes."
+        },
+        {
+          "id": "d",
+          "text": "Le nouveau musée sera inauguré par le président en présence des journalistes."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "L'actif est au futur (« inaugurera »), donc passif au futur : sera inauguré, agent introduit par « par » (action concrète). L'option a est au présent, l'option b au passé composé, et l'option c emploie « de » au lieu de « par ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Trouve la phrase où l'accord du participe est FAUX.",
+      "options": [
+        { "id": "a", "text": "Les preuves ont été examinées par le juge." },
+        { "id": "b", "text": "Cette loi a été votée l'an dernier." },
+        { "id": "c", "text": "Les documents ont été signé par le notaire." },
+        { "id": "d", "text": "Les rues étaient désertées le dimanche." }
+      ],
+      "correctOption": "c",
+      "explanation": "Au passif, le participe s'accorde toujours avec le sujet : « les documents » (masculin pluriel) exige « signés », pas « signé ». Le piège courant est d'oublier l'accord après « ont été ». Les phrases a, b et d accordent correctement (examinées, votée, désertées).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle phrase n'est PAS une voix passive ?",
+      "options": [
+        { "id": "a", "text": "Le coureur a été dépassé dans le dernier virage." },
+        { "id": "b", "text": "La fillette est tombée de vélo." },
+        { "id": "c", "text": "Le tableau a été restauré par un expert." },
+        { "id": "d", "text": "La porte est ouverte par le concierge chaque matin." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Est tombée » est un passé composé actif de « tomber » (verbe de mouvement avec auxiliaire être) : le test « tombée par qui ? » n'a aucun sens, donc ce n'est pas un passif. Les phrases a, c et d sont de vrais passifs (dépassé par, restauré par, ouverte par).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choisis la préposition correcte : « Le vieux sage était respecté ___ tout le village mais critiqué ___ ses rivaux. »",
+      "options": [
+        { "id": "a", "text": "par … de" },
+        { "id": "b", "text": "de … de" },
+        { "id": "c", "text": "de … par" },
+        { "id": "d", "text": "par … par" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Respecter » (sentiment) prend « de » : respecté de tout le village. « Critiquer » (action concrète, attaque ponctuelle) prend « par » : critiqué par ses rivaux. La bonne combinaison est donc « de … par ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Reformule sans passif, avec « on » : « Ma voiture a été volée cette nuit. »",
+      "options": [
+        { "id": "a", "text": "On a volé ma voiture cette nuit." },
+        { "id": "b", "text": "On a été volé ma voiture cette nuit." },
+        { "id": "c", "text": "On a volée ma voiture cette nuit." },
+        { "id": "d", "text": "Ma voiture on a volé cette nuit." }
+      ],
+      "correctOption": "a",
+      "explanation": "Avec « on », la phrase redevient active : « On a volé ma voiture » (le COD revient après le verbe, sans accord avec lui). L'option b ajoute « été » à tort ; l'option c accorde le participe alors que le COD est placé après ; l'option d est mal construite.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Mets au passif présent : « On répare actuellement la route. »",
+      "options": [
+        { "id": "a", "text": "La route a été réparée actuellement." },
+        { "id": "b", "text": "La route était réparée actuellement." },
+        { "id": "c", "text": "La route sera réparée actuellement." },
+        { "id": "d", "text": "La route est réparée actuellement." }
+      ],
+      "correctOption": "d",
+      "explanation": "L'actif est au présent (« répare »), donc passif au présent : est réparée, accordé au féminin. Comme l'agent est « on » (indéfini), on l'omet. Les options a, b et c changent le temps (passé composé, imparfait, futur), incompatible avec « actuellement ».",
+      "difficulty": 2
+    }
+  ]
+}

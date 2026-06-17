@@ -1,0 +1,91 @@
+{
+  "title": "⭐⭐ Drill : opinions et débat",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complétez : « L'étude ___ clairement le lien entre les deux phénomènes, chiffres à l'appui. »",
+      "options": [
+        { "id": "a", "text": "prétend" },
+        { "id": "b", "text": "concède" },
+        { "id": "c", "text": "démontre" },
+        { "id": "d", "text": "nuance" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Démontrer » = prouver par un raisonnement ou des faits, ce que confirme « chiffres à l'appui ». « Prétendre » affirmerait sans preuve, « concéder » accorderait un point adverse, et « nuancer » atténuerait l'affirmation : aucun ne correspond à une preuve établie.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel mot désigne « un accord général partagé par les parties en présence » ?",
+      "options": [
+        { "id": "a", "text": "une polémique" },
+        { "id": "b", "text": "une objection" },
+        { "id": "c", "text": "un enjeu" },
+        { "id": "d", "text": "un consensus" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Un consensus » est un accord général entre les parties. « Une polémique » est au contraire une dispute vive, « une objection » une raison opposée à une thèse, et « un enjeu » ce qui est en jeu : seul le consensus exprime l'accord partagé.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complétez : « ___, ce projet est ambitieux ; ___ il manque encore de financement. » (concession puis opposition)",
+      "options": [
+        { "id": "a", "text": "Certes … mais" },
+        { "id": "b", "text": "En effet … par ailleurs" },
+        { "id": "c", "text": "En somme … donc" },
+        { "id": "d", "text": "D'une part … en effet" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Certes… mais » concède une qualité (« ambitieux ») avant d'opposer une limite (« manque de financement ») : c'est le schéma argumentatif du DELF B2. « En effet » confirme, « en somme » résume, et « d'une part » appelle « d'autre part » : aucun n'enchaîne concession puis opposition.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel mot complète : « Une catastrophe semblait ___ : tout indiquait qu'elle surviendrait dans les heures suivantes. » ?",
+      "options": [
+        { "id": "a", "text": "éminente" },
+        { "id": "b", "text": "imminente" },
+        { "id": "c", "text": "notoire" },
+        { "id": "d", "text": "originelle" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Imminent » = qui va arriver très bientôt, ce que confirme « dans les heures suivantes ». « Éminent » qualifie ce qui est remarquable, « notoire » ce qui est connu de tous, et « originel » ce qui remonte aux origines : seul « imminent » exprime la proximité dans le temps.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouvez l'INTRUS : trois de ces verbes servent à contester une idée ; lequel sert à l'appuyer ?",
+      "options": [
+        { "id": "a", "text": "réfuter" },
+        { "id": "b", "text": "remettre en cause" },
+        { "id": "c", "text": "contester" },
+        { "id": "d", "text": "soutenir" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Soutenir » sert à défendre et appuyer une idée, à l'inverse des trois autres. « Réfuter » démontre qu'un argument est faux, « remettre en cause » conteste, et « contester » s'oppose : tous trois attaquent une thèse, alors que « soutenir » la défend.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choisissez la phrase correcte du point de vue de la collocation et du paronyme.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Avant de trancher, il faut peser le pour et le contre de chaque option."
+        },
+        {
+          "id": "b",
+          "text": "Avant de trancher, il faut compter le pour et le contre de chaque option."
+        },
+        { "id": "c", "text": "Avant de trancher, il faut peser le davantage de chaque option." },
+        {
+          "id": "d",
+          "text": "Avant de trancher, il faut mesurer le pour et le contre de chaque option."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "La collocation figée est « peser le pour et le contre » (= évaluer avantages et inconvénients). « Compter » et « mesurer le pour et le contre » ne sont pas consacrés, et « le davantage » confond l'adverbe « davantage » (= plus) avec « avantage » (= bénéfice). Seule (a) respecte la collocation et le bon mot.",
+      "difficulty": 3
+    }
+  ]
+}

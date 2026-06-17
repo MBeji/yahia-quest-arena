@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Entraînement : les pronoms relatifs composés",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complète : « Le stylo ___ j'écris est un cadeau. »",
+      "options": [
+        { "id": "a", "text": "avec lequel" },
+        { "id": "b", "text": "avec laquelle" },
+        { "id": "c", "text": "avec lesquels" },
+        { "id": "d", "text": "avec qui" }
+      ],
+      "correctOption": "a",
+      "explanation": "Après la préposition « avec », on accorde le pronom composé à l'antécédent : « le stylo » est masculin singulier, donc « avec lequel ». « avec laquelle » est féminin, « avec lesquels » un pluriel, et « avec qui » est réservé aux personnes.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « La maison ___ il habite est ancienne. »",
+      "options": [
+        { "id": "a", "text": "dans lequel" },
+        { "id": "b", "text": "dans laquelle" },
+        { "id": "c", "text": "dans lesquelles" },
+        { "id": "d", "text": "dans qui" }
+      ],
+      "correctOption": "b",
+      "explanation": "Après « dans », on emploie un pronom composé accordé : « la maison » est féminin singulier, donc « dans laquelle ». « dans lequel » est masculin, « dans lesquelles » un pluriel, et « dans qui » est impossible (jamais « qui » pour une chose).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Les raisons ___ j'ai accepté sont personnelles. »",
+      "options": [
+        { "id": "a", "text": "pour lequel" },
+        { "id": "b", "text": "pour laquelle" },
+        { "id": "c", "text": "pour lesquelles" },
+        { "id": "d", "text": "pour lesquels" }
+      ],
+      "correctOption": "c",
+      "explanation": "Après « pour », on accorde au pluriel féminin « les raisons » : « pour lesquelles ». « pour lesquels » serait un masculin pluriel, « pour lequel » et « pour laquelle » sont des singuliers — tous fautifs ici.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Voici les amis ___ je pars en vacances. »",
+      "options": [
+        { "id": "a", "text": "avec lequel" },
+        { "id": "b", "text": "avec laquelle" },
+        { "id": "c", "text": "dont" },
+        { "id": "d", "text": "avec qui" }
+      ],
+      "correctOption": "d",
+      "explanation": "Pour des personnes après une préposition, « avec qui » est la tournure naturelle : les amis avec qui je pars. « avec lequel » et « avec laquelle » sont des singuliers, et « dont » s'emploie avec « de », pas avec « avec ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Le défi ___ il fait face est immense. »",
+      "options": [
+        { "id": "a", "text": "à lequel" },
+        { "id": "b", "text": "auquel" },
+        { "id": "c", "text": "à laquelle" },
+        { "id": "d", "text": "auxquels" }
+      ],
+      "correctOption": "b",
+      "explanation": "On dit faire face À quelque chose ; « à » se contracte avec « lequel » (masculin singulier, « le défi ») et donne « auquel ». « à lequel » n'existe pas, « à laquelle » est féminin, et « auxquels » est un pluriel.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve la phrase incorrecte.",
+      "options": [
+        { "id": "a", "text": "La table sur laquelle je pose mes livres est solide." },
+        { "id": "b", "text": "Les outils avec lesquels il travaille sont neufs." },
+        { "id": "c", "text": "Le crayon avec qui je dessine est usé." },
+        { "id": "d", "text": "La salle dans laquelle nous étudions est calme." }
+      ],
+      "correctOption": "c",
+      "explanation": "La phrase incorrecte est la troisième : un crayon est une chose, donc « avec qui » est impossible ; il faut « avec lequel » (le crayon avec lequel je dessine). « qui » après préposition ne s'emploie que pour les personnes. Les autres accordent correctement le pronom composé.",
+      "difficulty": 2
+    }
+  ]
+}

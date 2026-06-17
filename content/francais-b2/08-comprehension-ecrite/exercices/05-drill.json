@@ -1,0 +1,94 @@
+{
+  "title": "⭐⭐ Drill : révision globale de la compréhension écrite",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Lisez l'extrait :\n« On présente souvent la suppression des notes à l'école comme un progrès évident. Pourtant, sans repère chiffré, certains élèves peinent à mesurer leurs progrès, et certains parents naviguent à vue. La question mérite mieux qu'un slogan. »\n\nQuelle est la position de l'auteur ?",
+      "options": [
+        { "id": "a", "text": "Il défend sans réserve la suppression des notes." },
+        { "id": "b", "text": "Il réclame le retour immédiat des notes partout." },
+        { "id": "c", "text": "Il estime que le sujet est sans intérêt." },
+        { "id": "d", "text": "Il invite à la prudence et refuse de trancher par un simple slogan." }
+      ],
+      "correctOption": "d",
+      "explanation": "Le « Pourtant » et « La question mérite mieux qu'un slogan » montrent que l'auteur nuance l'idée reçue sans la rejeter en bloc : il appelle à la réflexion. Il ne défend pas l'option a (la voix initiale), ne réclame pas le retour des notes, et ne juge pas le sujet sans intérêt.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Le concert, paraît-il, fut « inoubliable ». Inoubliable, en effet, pour les quelques spectateurs qui, faute de chauffage, ont passé la soirée à grelotter dans une salle à moitié vide. »\n\nQuel est le ton de cet extrait ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Ironique : « inoubliable » est repris pour se moquer de l'événement raté."
+        },
+        { "id": "b", "text": "Élogieux et reconnaissant envers les organisateurs." },
+        { "id": "c", "text": "Strictement factuel et sans jugement." },
+        { "id": "d", "text": "Nostalgique et ému." }
+      ],
+      "correctOption": "a",
+      "explanation": "L'auteur reprend « inoubliable » entre guillemets puis le retourne (« inoubliable… pour grelotter dans une salle à moitié vide ») : ce décalage entre l'éloge et la réalité est ironique. Il n'y a ni éloge sincère, ni neutralité, ni nostalgie.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Le rapport indique que 60 % des sondés se disent favorables à la mesure. Pour ses promoteurs, c'est un plébiscite ; pour ses opposants, c'est l'aveu que près de la moitié des gens n'en veulent pas. »\n\nDans cet extrait, qu'est-ce qui relève du FAIT ?",
+      "options": [
+        { "id": "a", "text": "La mesure est un plébiscite." },
+        { "id": "b", "text": "60 % des sondés se disent favorables à la mesure." },
+        { "id": "c", "text": "Près de la moitié des gens rejettent la mesure par principe." },
+        { "id": "d", "text": "La mesure est mauvaise pour le pays." }
+      ],
+      "correctOption": "b",
+      "explanation": "« 60 % des sondés se disent favorables » est une donnée d'enquête vérifiable : un fait. « Plébiscite » et « aveu que près de la moitié n'en veulent pas » sont deux interprétations opposées du même chiffre (opinions) ; l'option d est un jugement absent du texte.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Bien que la fréquentation des bibliothèques ait reculé, il serait hâtif d'y voir la mort du livre : jamais on n'a tant emprunté de livres numériques ni écouté de livres audio. »\n\nQuelle est la fonction de « Bien que » au début de la phrase ?",
+      "options": [
+        { "id": "a", "text": "Il exprime une cause directe du recul des bibliothèques." },
+        { "id": "b", "text": "Il annonce la conclusion finale de l'auteur." },
+        {
+          "id": "c",
+          "text": "Il introduit une concession : un fait défavorable que l'auteur reconnaît avant de le nuancer."
+        },
+        { "id": "d", "text": "Il marque une simple addition de deux idées équivalentes." }
+      ],
+      "correctOption": "c",
+      "explanation": "« Bien que » est un connecteur de concession : l'auteur admet le recul des bibliothèques, puis le relativise (« il serait hâtif… ») en citant le numérique et l'audio. Ce n'est ni une cause, ni une conclusion, ni une simple addition.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« À en croire la brochure, ce quartier neuf serait un « havre de verdure ». Sur place, trois arbres rachitiques tentent de survivre entre deux parkings de béton. »\n\nQue suggère le contraste entre les deux phrases ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Que la réalité dément la promesse publicitaire du « havre de verdure »."
+        },
+        { "id": "b", "text": "Que le quartier est effectivement très végétalisé." },
+        { "id": "c", "text": "Que la brochure dit la stricte vérité." },
+        { "id": "d", "text": "Que l'auteur recommande chaleureusement ce quartier." }
+      ],
+      "correctOption": "a",
+      "explanation": "Le « havre de verdure » de la brochure est démenti par « trois arbres rachitiques » entre des parkings de béton : le contraste révèle l'écart entre la promesse et la réalité. Le quartier n'est donc pas verdoyant, la brochure ne dit pas vrai, et l'auteur ne le recommande pas.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Les partisans de la réforme parlent de modernisation. Ses détracteurs, de démantèlement. Entre les deux, l'usager, lui, attend surtout de savoir si son bureau de poste sera encore ouvert le mois prochain. »\n\nQue sous-entend la dernière phrase à propos du débat ?",
+      "options": [
+        { "id": "a", "text": "Que l'usager soutient pleinement la réforme." },
+        { "id": "b", "text": "Que le bureau de poste a déjà fermé définitivement." },
+        { "id": "c", "text": "Que les détracteurs ont forcément tort." },
+        {
+          "id": "d",
+          "text": "Que, derrière les grands mots des deux camps, c'est l'inquiétude concrète de l'usager qui compte."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "En opposant « modernisation » et « démantèlement » à la question très concrète de l'usager (« son bureau encore ouvert le mois prochain »), l'auteur sous-entend que les étiquettes des deux camps comptent moins que la réalité vécue. L'usager ne prend pas parti, le bureau n'est pas dit fermé, et le texte ne tranche pas en faveur d'un camp.",
+      "difficulty": 2
+    }
+  ]
+}
