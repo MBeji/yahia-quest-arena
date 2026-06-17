@@ -322,7 +322,7 @@ export function ProgramCategory({
       <header className="mb-8 flex flex-col items-center gap-3 text-center">
         <span
           className="grid h-16 w-16 place-items-center rounded-2xl border-2 border-[color:var(--gold)]/40 backdrop-blur-md"
-          style={{ background: `color-mix(in oklab, ${color} 22%, rgba(0,0,0,0.55))` }}
+          style={{ background: `color-mix(in oklab, ${color} 22%, var(--hub-node-bg))` }}
         >
           <Icon className="h-8 w-8" style={{ color: program.comingSoon ? undefined : color }} />
         </span>

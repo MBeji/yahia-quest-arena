@@ -88,7 +88,7 @@ function ProgramNode({
               ? "border-[color:var(--gold)]/70 shadow-gold"
               : "border-border/50"
         } ${soon ? "border-dashed" : ""}`}
-        style={{ background: `color-mix(in oklab, ${color} 22%, rgba(0,0,0,0.55))` }}
+        style={{ background: `color-mix(in oklab, ${color} 22%, var(--hub-node-bg))` }}
       >
         <Icon className="h-1/2 w-1/2" style={{ color: soon ? undefined : color }} />
         {flagship ? (
