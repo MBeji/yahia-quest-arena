@@ -496,6 +496,25 @@ export type TranslationKeys = {
     colInterest: string;
     empty: string;
   };
+  // "Découvrir" hub (circular catalogue of the 5 root programs)
+  discover: {
+    heading: string;
+    subtitle: string;
+    center: string;
+    enter: string;
+    back: string;
+    families: {
+      tunisien: string;
+      langues: string;
+      culture: string;
+      cerveau: string;
+      ib: string;
+    };
+    hintClasses: string;
+    hintLanguages: string;
+    hintSoon: string;
+    hintExplore: string;
+  };
   // Leaderboard page chrome
   leaderboard: {
     titleGradient: string;

@@ -403,7 +403,7 @@ export const en: TranslationKeys = {
   layout: {
     heroesHall: "Heroes Hall",
     parcours: "Adventure",
-    themes: "Explorer",
+    themes: "Discover",
     dungeon: "Dungeon",
     ranking: "Ranking",
     parentReport: "Report",
@@ -481,6 +481,24 @@ export const en: TranslationKeys = {
     colProgram: "Program",
     colInterest: "Interested",
     empty: "No interest registered yet.",
+  },
+  discover: {
+    heading: "Discover our programs",
+    subtitle: "Pick your path: hover a program, then click to enter.",
+    center: "Our programs",
+    enter: "Enter",
+    back: "Back",
+    families: {
+      tunisien: "Tunisian school program",
+      langues: "Languages",
+      culture: "General knowledge",
+      cerveau: "Brain training",
+      ib: "IB — International Baccalaureate",
+    },
+    hintClasses: "{count} classes",
+    hintLanguages: "{count} languages",
+    hintSoon: "Soon",
+    hintExplore: "Explore",
   },
   leaderboard: {
     titleGradient: "Academy",
