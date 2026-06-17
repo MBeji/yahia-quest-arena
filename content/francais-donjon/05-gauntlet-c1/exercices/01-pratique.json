@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Entraînement : le défi C1",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Conjugaison — Concordance des temps : « Elle savait qu'il ___ très occupé ce jour-là. »",
+      "options": [
+        { "id": "a", "text": "est" },
+        { "id": "b", "text": "sera" },
+        { "id": "c", "text": "était" },
+        { "id": "d", "text": "soit" }
+      ],
+      "correctOption": "c",
+      "explanation": "La principale est au passé (« savait ») et la subordonnée exprime un fait simultané : on emploie l'imparfait, « était ». « est » (présent) et « sera » (futur) ne suivent pas un verbe au passé, et « soit » est un subjonctif que « savoir » affirmatif n'exige pas.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Grammaire — Accord du participe passé : « La voiture qu'il a ___ est neuve. »",
+      "options": [
+        { "id": "a", "text": "acheté" },
+        { "id": "b", "text": "achetée" },
+        { "id": "c", "text": "achetés" },
+        { "id": "d", "text": "achetées" }
+      ],
+      "correctOption": "b",
+      "explanation": "Avec « avoir », le participe s'accorde avec le COD placé avant : « que » reprend « la voiture » (féminin singulier), d'où « achetée ». « acheté » oublie l'accord, « achetés » et « achetées » mettent un pluriel injustifié.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Vocabulaire — Registre soutenu : quel mot appartient au registre soutenu pour dire « manger » ?",
+      "options": [
+        { "id": "a", "text": "bouffer" },
+        { "id": "b", "text": "becter" },
+        { "id": "c", "text": "grailler" },
+        { "id": "d", "text": "se restaurer" }
+      ],
+      "correctOption": "d",
+      "explanation": "« se restaurer » relève du registre soutenu. « bouffer », « becter » et « grailler » sont familiers ou argotiques et seraient déplacés dans un écrit formel. Le registre courant neutre serait simplement « manger ».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Stylistique — Mise en relief : « ___ ton courage qui force l'admiration. »",
+      "options": [
+        { "id": "a", "text": "C'est" },
+        { "id": "b", "text": "Ce que" },
+        { "id": "c", "text": "Ce dont" },
+        { "id": "d", "text": "Il est" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'extraction d'un élément (le sujet « ton courage ») se fait avec « c'est … qui » : « C'est ton courage qui force l'admiration. » « Ce que » et « ce dont » introduisent une pseudo-clivée qui se referme par « c'est », « Il est » serait une tournure impersonnelle inadaptée ici.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Vocabulaire — Connecteur logique : « Il a beaucoup travaillé ; ___, il a réussi son examen. »",
+      "options": [
+        { "id": "a", "text": "néanmoins" },
+        { "id": "b", "text": "en outre" },
+        { "id": "c", "text": "par conséquent" },
+        { "id": "d", "text": "autrement dit" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le travail entraîne logiquement la réussite : c'est un rapport de conséquence, « par conséquent ». « néanmoins » marquerait une opposition, « en outre » une addition, « autrement dit » une reformulation — aucun ne convient à un lien de cause à effet.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Orthographe — Lexique soutenu : « Pour combler ce manque, il faut ___ ce défaut. »",
+      "options": [
+        { "id": "a", "text": "pallier à" },
+        { "id": "b", "text": "pallier" },
+        { "id": "c", "text": "palier" },
+        { "id": "d", "text": "pallié" }
+      ],
+      "correctOption": "b",
+      "explanation": "« pallier » est transitif direct : on pallie quelque chose, sans préposition — « pallier ce défaut ». « pallier à » est une faute fréquente, « palier » (un seul l) désigne une marche d'escalier, et « pallié » serait un participe passé, ici injustifié.",
+      "difficulty": 2
+    }
+  ]
+}

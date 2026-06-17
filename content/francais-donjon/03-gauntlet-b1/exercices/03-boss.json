@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : la bande B1",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Vocabulaire — Complète la collocation : « Avant l'examen, il faut ___ des efforts pour réviser. »",
+      "options": [
+        { "id": "a", "text": "prendre" },
+        { "id": "b", "text": "donner" },
+        { "id": "c", "text": "faire" },
+        { "id": "d", "text": "mettre" }
+      ],
+      "correctOption": "c",
+      "explanation": "La collocation figée est « faire des efforts ». On dit « prendre une décision » mais « faire des efforts » : le verbe n'est pas interchangeable. « donner » et « mettre » ne s'emploient pas avec « efforts » dans ce sens.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Conjugaison — Hypothèse, irréel du passé : « Si tu m'avais prévenu, je ___ t'aider. »",
+      "options": [
+        { "id": "a", "text": "aurais pu" },
+        { "id": "b", "text": "pourrais" },
+        { "id": "c", "text": "aurai pu" },
+        { "id": "d", "text": "pouvais" }
+      ],
+      "correctOption": "a",
+      "explanation": "Si + plus-que-parfait (« avais prévenu ») exprime l'irréel du passé et appelle le conditionnel passé : « j'aurais pu ». « pourrais » est le conditionnel présent (irréel du présent), « aurai pu » est le futur antérieur, et « pouvais » l'imparfait.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Grammaire — Doubles pronoms : « Tu donnes ce cadeau à Paul ? — Oui, je ___ donne. »",
+      "options": [
+        { "id": "a", "text": "lui le" },
+        { "id": "b", "text": "le lui en" },
+        { "id": "c", "text": "y le" },
+        { "id": "d", "text": "le lui" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Le cadeau » est COD (le) et « à Paul » est COI (lui) ; l'ordre fixe place le COD avant le COI de 3e personne : « je le lui donne ». « lui le » inverse l'ordre, « y » remplacerait une chose, et « en » n'a pas lieu d'être ici.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Conjugaison — Subjonctif présent : « Bien qu'il ___ malade, il est venu travailler. »",
+      "options": [
+        { "id": "a", "text": "est" },
+        { "id": "b", "text": "soit" },
+        { "id": "c", "text": "était" },
+        { "id": "d", "text": "serait" }
+      ],
+      "correctOption": "b",
+      "explanation": "La conjonction « bien que » entraîne toujours le subjonctif : « bien qu'il soit malade ». « est » et « était » sont à l'indicatif (présent et imparfait), et « serait » est le conditionnel — aucun n'est admis après « bien que ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lecture — Lis : « Karim avait économisé pendant deux ans. Quand il a enfin acheté sa voiture, il n'a pas eu besoin d'emprunter. »\nQu'est-ce qui est VRAI ?",
+      "options": [
+        { "id": "a", "text": "Karim a emprunté de l'argent à la banque." },
+        { "id": "b", "text": "Karim a acheté sa voiture sans avoir épargné." },
+        { "id": "c", "text": "Karim a payé sa voiture grâce à ses économies." },
+        { "id": "d", "text": "Karim a renoncé à acheter une voiture." }
+      ],
+      "correctOption": "c",
+      "explanation": "Le texte dit qu'il « avait économisé pendant deux ans » et n'a « pas eu besoin d'emprunter » : il a donc payé avec ses économies (c). Il n'a pas emprunté (a faux), il avait bien épargné (b faux), et il a acheté la voiture (d faux).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Orthographe — Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "Si j'aurais su, je serais resté." },
+        { "id": "b", "text": "Je voudrais un café, s'il vous plaît." },
+        { "id": "c", "text": "Quand il sera prêt, nous partirons." },
+        { "id": "d", "text": "Il faut que nous fassions vite." }
+      ],
+      "correctOption": "a",
+      "explanation": "L'erreur est (a) : après « si », jamais de conditionnel — il faut « Si j'avais su, je serais resté ». (b) est un conditionnel de politesse correct, (c) un futur après « quand » correct, et (d) un subjonctif correct après « il faut que ».",
+      "difficulty": 3
+    }
+  ]
+}

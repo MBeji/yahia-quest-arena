@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : la bande B2",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Conjugaison — Subjonctif passé : « Pars avant qu'il ne ___ trop tard. »",
+      "options": [
+        { "id": "a", "text": "est" },
+        { "id": "b", "text": "sera" },
+        { "id": "c", "text": "serait" },
+        { "id": "d", "text": "soit" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Avant que » impose le subjonctif présent ici : « avant qu'il ne soit trop tard ». ✓ Le piège courant est de mettre l'indicatif « est » ou le futur « sera » par analogie avec le sens futur, mais la conjonction « avant que » bloque l'indicatif. « serait » est un conditionnel, exclu lui aussi.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Grammaire — Voix passive (temps composé) : « Les résultats ___ par le comité depuis ce matin. »",
+      "options": [
+        { "id": "a", "text": "ont été publiés" },
+        { "id": "b", "text": "ont publié" },
+        { "id": "c", "text": "sont publiant" },
+        { "id": "d", "text": "avaient publié" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Depuis ce matin » appelle le passé composé, et les résultats subissent l'action : passif au passé composé = avoir été + participe = « ont été publiés ». ✓ « ont publié » et « avaient publié » sont actifs (les résultats ne publient pas) ; « sont publiant » n'existe pas en français.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Grammaire — Pronom relatif composé : « La colline au sommet ___ se dresse un château. »",
+      "options": [
+        { "id": "a", "text": "dont" },
+        { "id": "b", "text": "que" },
+        { "id": "c", "text": "de laquelle" },
+        { "id": "d", "text": "à laquelle" }
+      ],
+      "correctOption": "c",
+      "explanation": "Après une locution prépositionnelle en « de » (au sommet de), on emploie le relatif composé, pas « dont » : « au sommet de laquelle ». ✓ Le piège courant est de mettre « dont », mais « dont » est interdit quand la préposition « de » est déjà incluse dans une locution. « à laquelle » correspondrait à « à », non à « de ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Grammaire — Gérondif vs participe présent : « ___ très matinale, elle est rarement fatiguée le soir. » (cause)",
+      "options": [
+        { "id": "a", "text": "En étant" },
+        { "id": "b", "text": "Étant" },
+        { "id": "c", "text": "Été" },
+        { "id": "d", "text": "Pour être" }
+      ],
+      "correctOption": "b",
+      "explanation": "Pour exprimer la cause par une circonstance, on emploie le participe présent seul : « Étant très matinale, elle… ». ✓ Le gérondif « en étant » insisterait sur la simultanéité, pas sur la cause ; « Été » est un participe passé ; « Pour être » exprimerait le but.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Vocabulaire — Paronymes : choisis le mot juste. « Un danger ___ menace la ville : l'éruption est attendue d'une heure à l'autre. »",
+      "options": [
+        { "id": "a", "text": "éminent" },
+        { "id": "b", "text": "imminent" },
+        { "id": "c", "text": "immanent" },
+        { "id": "d", "text": "éminemment" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Imminent » signifie « sur le point de se produire » : un danger imminent. ✓ Le piège courant est « éminent », qui veut dire « remarquable, supérieur » (un savant éminent). « Immanent » est un terme philosophique (présent dans la nature même), et « éminemment » est un adverbe.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lecture — Compréhension argumentative : « Certes, la mesure coûte cher ; en revanche, elle sauve des vies. » Quelle est la position du locuteur ?",
+      "options": [
+        { "id": "a", "text": "Il défend la mesure tout en admettant un inconvénient." },
+        { "id": "b", "text": "Il rejette totalement la mesure." },
+        { "id": "c", "text": "Il reste neutre, sans prendre parti." },
+        { "id": "d", "text": "Il pense que la mesure est inutile et coûteuse." }
+      ],
+      "correctOption": "a",
+      "explanation": "« Certes… en revanche » est un mouvement de concession-opposition : on admet d'abord un point (le coût) pour mieux faire valoir l'argument fort (sauver des vies). ✓ Le locuteur soutient donc la mesure. Le piège est de s'arrêter au « coûte cher » et de croire qu'il la rejette, alors que « en revanche » renverse l'argumentation en sa faveur.",
+      "difficulty": 3
+    }
+  ]
+}

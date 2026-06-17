@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Entraînement : la bande C2",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Conjugaison — Temps littéraires : quel est le passé simple de « finir » à la 3ᵉ personne du singulier ?",
+      "options": [
+        { "id": "a", "text": "il finit" },
+        { "id": "b", "text": "il finissait" },
+        { "id": "c", "text": "il finira" },
+        { "id": "d", "text": "il a fini" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le passé simple de « finir » (2ᵉ groupe) à la 3ᵉ personne du singulier est « il finit ». « il finissait » est l'imparfait. « il finira » est le futur. « il a fini » est le passé composé, temps du discours et non du récit.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Stylistique — Figures de style : « Il n'est pas mécontent du résultat » pour dire qu'il en est très satisfait. De quelle figure s'agit-il ?",
+      "options": [
+        { "id": "a", "text": "une hyperbole" },
+        { "id": "b", "text": "une métaphore" },
+        { "id": "c", "text": "une litote" },
+        { "id": "d", "text": "une comparaison" }
+      ],
+      "correctOption": "c",
+      "explanation": "La litote consiste à dire moins pour faire entendre plus, souvent par une double négation atténuée : « pas mécontent » = très content. L'hyperbole, au contraire, exagère. La métaphore identifie deux réalités ; la comparaison utilise un outil (« comme »).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Vocabulaire — Paronymes savants : « Un savant ___ a présidé le colloque. » Quel adjectif convient pour dire « remarquable » ?",
+      "options": [
+        { "id": "a", "text": "imminent" },
+        { "id": "b", "text": "immanent" },
+        { "id": "c", "text": "émanent" },
+        { "id": "d", "text": "éminent" }
+      ],
+      "correctOption": "d",
+      "explanation": "« éminent » signifie remarquable, supérieur : « un savant éminent ». « imminent » signifie tout proche (un danger imminent). « immanent » est un terme philosophique (qui est contenu dans la nature même d'un être). « émanent » n'est pas un adjectif usuel ici. C'est un paronyme classique du C2.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lecture — Locutions latines : dans « Il a jugé l'affaire a priori, sans étudier le dossier », que signifie « a priori » ?",
+      "options": [
+        { "id": "a", "text": "d'après l'expérience acquise" },
+        { "id": "b", "text": "avant tout examen des faits" },
+        { "id": "c", "text": "en dernier recours" },
+        { "id": "d", "text": "de manière définitive" }
+      ],
+      "correctOption": "b",
+      "explanation": "« a priori » signifie « avant tout examen », au départ, sur la base d'idées préconçues : ici, juger sans avoir lu le dossier. Son opposé est « a posteriori » (après l'expérience), ce qui correspond à la proposition (a). Les autres sens ne conviennent pas à la locution.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Grammaire — Syntaxe expressive : que désigne l'expression « un grand homme » (adjectif antéposé) ?",
+      "options": [
+        { "id": "a", "text": "un homme illustre, remarquable" },
+        { "id": "b", "text": "un homme de haute taille" },
+        { "id": "c", "text": "un homme âgé" },
+        { "id": "d", "text": "un homme corpulent" }
+      ],
+      "correctOption": "a",
+      "explanation": "Antéposé, l'adjectif « grand » prend un sens figuré, moral : « un grand homme » est un homme illustre. Postposé, « un homme grand » désigne sa taille. La place de l'adjectif modifie le sens : c'est un point de stylistique essentiel au C2.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Rhétorique — Procédés : « Faut-il vraiment rappeler que la liberté est précieuse ? » Quel procédé l'auteur utilise-t-il ?",
+      "options": [
+        { "id": "a", "text": "une concession" },
+        { "id": "b", "text": "une litote" },
+        { "id": "c", "text": "un chiasme" },
+        { "id": "d", "text": "une question rhétorique" }
+      ],
+      "correctOption": "d",
+      "explanation": "C'est une question rhétorique : elle n'attend pas de réponse et affirme avec force une évidence (la liberté est précieuse). La concession admet un point adverse ; la litote atténue ; le chiasme croise l'ordre des termes (AB/BA).",
+      "difficulty": 2
+    }
+  ]
+}

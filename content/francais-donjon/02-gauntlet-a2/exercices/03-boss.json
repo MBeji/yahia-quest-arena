@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : la bande A2",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Conjugaison — Complète au passé composé avec un verbe pronominal : « Ce matin, ils ___ très tôt. »",
+      "options": [
+        { "id": "a", "text": "se sont levés" },
+        { "id": "b", "text": "s'ont levés" },
+        { "id": "c", "text": "se sont levé" },
+        { "id": "d", "text": "se sont levées" }
+      ],
+      "correctOption": "a",
+      "explanation": "Les verbes pronominaux se conjuguent avec être, et le participe s'accorde avec le sujet : « ils » est masculin pluriel → se sont levés. « s'ont » (b) est faux (l'auxiliaire est être, pas avoir), « levé » (c) oublie l'accord pluriel, et « levées » (d) est le féminin pluriel.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Orthographe — Trouve la phrase SANS faute.",
+      "options": [
+        { "id": "a", "text": "Elle va a l'école." },
+        { "id": "b", "text": "Il a manger une pomme." },
+        { "id": "c", "text": "Ou est ta sœur ?" },
+        { "id": "d", "text": "Où vas-tu ce soir ?" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Où vas-tu ce soir ? » est correcte : « où » (avec accent) interroge sur le lieu. (a) confond « a » (verbe) et « à » (préposition), (b) met l'infinitif « manger » au lieu du participe « mangé », et (c) écrit « ou » (conjonction) au lieu de « où » (lieu).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Grammaire — Complète au superlatif : « C'est ___ haute montagne du pays. »",
+      "options": [
+        { "id": "a", "text": "plus" },
+        { "id": "b", "text": "très" },
+        { "id": "c", "text": "la plus" },
+        { "id": "d", "text": "le plus" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le superlatif s'accorde avec le nom : « montagne » est féminin singulier → la plus haute montagne. « plus » seul est un comparatif incomplet, « très » est un intensif (pas un superlatif), et « le plus » est la forme masculine.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Conjugaison — Complète au futur simple : « Quand tu seras grand, tu ___ médecin. »",
+      "options": [
+        { "id": "a", "text": "es" },
+        { "id": "b", "text": "seras" },
+        { "id": "c", "text": "vas être" },
+        { "id": "d", "text": "étais" }
+      ],
+      "correctOption": "b",
+      "explanation": "Une prévision lointaine, après « quand tu seras grand », demande le futur simple du verbe être : tu seras médecin. « es » est le présent, « étais » l'imparfait, et le futur proche « vas être » (c) conviendrait à un projet immédiat, pas à une prévision lointaine.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Grammaire — Mets à la forme négative avec « ne… jamais » : « Il regarde la télévision. »",
+      "options": [
+        { "id": "a", "text": "Il ne regarde la télévision." },
+        { "id": "b", "text": "Il regarde jamais la télévision." },
+        { "id": "c", "text": "Il ne regarde jamais la télévision." },
+        { "id": "d", "text": "Il ne jamais regarde la télévision." }
+      ],
+      "correctOption": "c",
+      "explanation": "La négation « ne… jamais » encadre le verbe conjugué : Il ne regarde jamais la télévision. (a) oublie « jamais », (b) supprime « ne », et (d) place mal « jamais » avant le verbe au lieu de l'après.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lecture — Lis : « Sofia voulait offrir un cadeau à son frère. Elle avait peu d'argent, juste assez pour un livre, mais pas assez pour le jeu vidéo qu'il aimait. » Que pouvait acheter Sofia ?",
+      "options": [
+        { "id": "a", "text": "Un livre." },
+        { "id": "b", "text": "Le jeu vidéo." },
+        { "id": "c", "text": "Le livre et le jeu vidéo." },
+        { "id": "d", "text": "Rien du tout." }
+      ],
+      "correctOption": "a",
+      "explanation": "Le texte dit qu'elle avait « juste assez pour un livre, mais pas assez pour le jeu vidéo », donc elle pouvait acheter un livre (a). Elle ne pouvait pas s'offrir le jeu (b et c sont exclus), et « peu d'argent » signifie qu'elle en avait un peu, donc pas « rien du tout » (d).",
+      "difficulty": 3
+    }
+  ]
+}
