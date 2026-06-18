@@ -2,15 +2,21 @@ name: CI
 
 on:
   pull_request:
+  push:
+    branches: [main]
   workflow_dispatch:
 
-# PR-only (a push to main lands via an already-CI'd PR, so re-running on the merge
-# commit just burns free-tier Actions minutes). `pull_request` tests the merge
-# result, so main is still covered. Use "Run workflow" to check main on demand.
-# Cancel superseded runs on the same ref so rapid pushes don't stack runners.
+# Runs on PRs (tests the merge result) and on pushes to main (a green signal on
+# the default branch). Cancel superseded runs on the same ref so rapid pushes
+# don't stack runners; "Run workflow" is available for an on-demand run.
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
+
+# Least privilege: CI only reads the repo (no write scopes). On a public repo a
+# fork-PR token is read-only anyway, but make it explicit and default-proof.
+permissions:
+  contents: read
 
 jobs:
   verify:

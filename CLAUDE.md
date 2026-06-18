@@ -212,13 +212,15 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
   `npm run test:e2e:auth` (`authed-chromium`), `npm run test:e2e:install` (install the
   browser). Authenticated runs are seeded via `scripts/e2e/seed-test-users.mjs`. E2E is
   separate from the Vitest unit/integration gate.
-- **Scheduled automations (GitHub Actions + repo skills).** Three guards run in a
-  **weekly** chain (throttled to fit the free-tier GitHub Actions minutes — each holds a
-  runner for many minutes), all gracefully skipping without `CLAUDE_CODE_OAUTH_TOKEN`:
-  `regression-guard.yml` (**Sat** 23:00 UTC → skill `regression-guard`: reconciles
-  tests, opens a PR + bug issues), `nightly.yml` (**Sun** 01:00 UTC, **weekly**: full E2E +
-  pgTAP, tracking issue), then `upgrade-guard.yml` (**Sun**, after that nightly's green
-  run → skill `upgrade-guard`: stack upgrades —
+- **Scheduled automations (GitHub Actions + repo skills).** Run on a schedule, all
+  gracefully skipping without `CLAUDE_CODE_OAUTH_TOKEN`. The E2E/pgTAP nightly runs
+  **every night**; the two Claude-agent guards run **2×/week** (each holds a runner for
+  many minutes — keeps their PR/issue noise reasonable; the repo is public so Actions
+  minutes are unlimited & free):
+  `regression-guard.yml` (**Mon+Thu** 23:00 UTC → skill `regression-guard`: reconciles
+  tests, opens a PR + bug issues), `nightly.yml` (01:00 UTC, **every night**: full E2E +
+  pgTAP, tracking issue), then `upgrade-guard.yml` (**Tue+Fri**, after that night's green
+  nightly → skill `upgrade-guard`: stack upgrades —
   auto-merges the patch/minor lot only when the full gate + E2E + pgTAP are green, one PR
   per major, never bundled). None ever push to `main` directly (only `automerge` merges a
   fully-green patch/minor PR). Cadence + traps: `docs/dependency-maintenance.md`.

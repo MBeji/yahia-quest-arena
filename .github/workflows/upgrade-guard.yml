@@ -60,13 +60,13 @@ jobs:
       patch_minor_branch: ${{ steps.out.outputs.patch_minor_branch }}
       patch_minor_pr: ${{ steps.out.outputs.patch_minor_pr }}
     steps:
-      # Token gate + cadence gate. The nightly now runs WEEKLY (Sunday 01:00 UTC);
-      # this sweep is the most expensive job in the repo (a Claude agent holds a
-      # runner for many minutes), so it only proceeds on the Sunday the scheduled
-      # nightly fires. A manual workflow_dispatch always runs. Off-day runs (e.g. a
-      # manual nightly dispatch on another day) stop here in seconds, before any
-      # costly step. Skipped == configured=false (same path as a missing token):
-      # the downstream e2e/pgtap/automerge jobs already gate on it.
+      # Token gate + cadence gate. The nightly completes every night, but this
+      # sweep is the most expensive job in the repo (a Claude agent holds a runner
+      # for many minutes), so we throttle it to 2×/week — Tue + Fri (UTC), the
+      # mornings after the regression guard's Mon/Thu 23:00 → nightly 01:00 chain.
+      # A manual workflow_dispatch always runs. Off-day runs stop here in seconds,
+      # before any costly step. Skipped == configured=false (same path as a missing
+      # token): the downstream e2e/pgtap/automerge jobs already gate on it.
       - name: Check token + upgrade cadence
         id: guard
         run: |
@@ -76,8 +76,8 @@ jobs:
             exit 0
           fi
           dow="$(date -u +%u)"  # 1=Mon … 7=Sun
-          if [ "${{ github.event_name }}" != "workflow_dispatch" ] && [ "$dow" != "7" ]; then
-            echo "Not a scheduled upgrade day (UTC dow=$dow; sweep runs weekly on Sunday) — skipping. Use 'Run workflow' to force it."
+          if [ "${{ github.event_name }}" != "workflow_dispatch" ] && [ "$dow" != "2" ] && [ "$dow" != "5" ]; then
+            echo "Not a scheduled upgrade day (UTC dow=$dow; sweep runs Tue/Fri) — skipping. Use 'Run workflow' to force it."
             echo "configured=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
