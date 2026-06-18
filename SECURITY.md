@@ -1,21 +1,30 @@
 # Security Policy
 
-## Supported Versions
+## Reporting a vulnerability
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+**Please do not open a public issue for security problems.**
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+Report vulnerabilities privately via GitHub's **[Report a vulnerability](https://github.com/MBeji/yahia-quest-arena/security/advisories/new)**
+button (repository **Security** tab → *Advisories* → *Report a vulnerability*). This opens a
+private advisory visible only to the maintainer. We aim to acknowledge a report within a few days.
 
-## Reporting a Vulnerability
+## Scope
 
-Use this section to tell people how to report a vulnerability.
+This is a learning-platform web app (TanStack Start + Supabase). Particularly relevant:
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+- Authentication / session handling and Supabase **Row-Level Security** (RLS) bypasses.
+- The `SECURITY DEFINER` SQL RPCs (scoring, rewards, entitlements) and their grants.
+- The per-parcours premium **entitlement** checks (`resolve_exercise_access`, `has_parcours_entitlement`).
+- Server functions (`*.server.ts`) and their input validation.
+
+### Out of scope
+
+- The Supabase **anon / publishable key** and project ref are **public by design** — RLS is the
+  protection boundary. Their presence in client code or git history is not a vulnerability.
+- Findings that require an already-compromised account or physical access.
+
+## Secrets
+
+Runtime secrets (service-role keys, database URLs, tokens) live in **GitHub Actions secrets** and
+the deploy platform — never in the repository. If you believe a *real* secret has been committed,
+report it privately as above so it can be rotated.
