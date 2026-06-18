@@ -1,5 +1,5 @@
-# Sauvegarde hebdomadaire de la base (palier 0 — Supabase Free n'a AUCUN backup géré).
-# - schedule : dump PROD chaque dimanche -> artefact privé (rétention 14 j, ~quota 500 Mo).
+# Sauvegarde quotidienne de la base (palier 0 — Supabase Free n'a AUCUN backup géré).
+# - schedule : dump PROD chaque nuit -> artefact privé (rétention 14 j, ~quota 500 Mo).
 # - workflow_dispatch : dump manuel de test|prod, avec option "drill" qui restaure le
 #   dump dans un Postgres 17 jetable (conteneur du runner) et vérifie les invariants —
 #   c'est le test de restauration, sans toucher ni TEST ni PROD.
@@ -9,10 +9,10 @@ name: db-backup
 
 on:
   schedule:
-    # Hebdomadaire — dimanche 02:30 UTC (03:30 Tunis). Réduit du quotidien pour
-    # tenir dans le tier gratuit GitHub Actions ; lancer un dump à la demande
-    # (workflow_dispatch) avant un changement risqué ou un go-live.
-    - cron: "30 2 * * 0" # dimanche 03:30 Tunis — cible prod
+    # Quotidien — 02:30 UTC (03:30 Tunis). Repo public → Actions gratuit illimité,
+    # donc dump PROD chaque nuit (Supabase Free n'a aucun backup managé → fenêtre
+    # de perte ≤ 24 h). Lancer aussi à la demande (workflow_dispatch) au besoin.
+    - cron: "30 2 * * *" # 03:30 Tunis — cible prod
   workflow_dispatch:
     inputs:
       target:
