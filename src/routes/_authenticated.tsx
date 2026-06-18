@@ -102,6 +102,19 @@ function AuthenticatedLayout() {
     navigate({ to: "/" });
   }
 
+  // Single source of truth for the primary student destinations — rendered both
+  // inline in the desktop top nav and in the mobile bottom tab bar.
+  const primaryNav = [
+    { to: "/dashboard", Icon: LayoutDashboard, label: t.layout.heroesHall },
+    { to: "/parcours", Icon: Map, label: t.layout.parcours },
+    { to: "/themes", Icon: Compass, label: t.layout.themes },
+    { to: "/dungeon", Icon: Swords, label: t.layout.dungeon },
+    { to: "/leaderboard", Icon: Crown, label: t.layout.ranking },
+  ] as const;
+  // Hide the bottom tab bar on immersive play/flow screens so it never overlaps
+  // an in-screen sticky CTA (quiz submit, lesson nav, dungeon HUD, onboarding).
+  const immersive = /^\/(quest|dungeon|lesson|onboarding)/.test(location.pathname);
+
   return (
     <div className="app-shell relative min-h-screen bg-black-deep">
       <GoldAmbient />
@@ -119,56 +132,22 @@ function AuthenticatedLayout() {
             </span>
           </Link>
           <nav className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto sm:gap-2 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <Link
-              to="/dashboard"
-              className={NAV_LINK}
-              activeProps={NAV_ACTIVE}
-              aria-label={t.layout.heroesHall}
-              title={t.layout.heroesHall}
-            >
-              <LayoutDashboard className="h-4 w-4 shrink-0" />{" "}
-              <span className="hidden lg:inline">{t.layout.heroesHall}</span>
-            </Link>
-            <Link
-              to="/parcours"
-              className={NAV_LINK}
-              activeProps={NAV_ACTIVE}
-              aria-label={t.layout.parcours}
-              title={t.layout.parcours}
-            >
-              <Map className="h-4 w-4 shrink-0" />{" "}
-              <span className="hidden lg:inline">{t.layout.parcours}</span>
-            </Link>
-            <Link
-              to="/themes"
-              className={NAV_LINK}
-              activeProps={NAV_ACTIVE}
-              aria-label={t.layout.themes}
-              title={t.layout.themes}
-            >
-              <Compass className="h-4 w-4 shrink-0" />{" "}
-              <span className="hidden lg:inline">{t.layout.themes}</span>
-            </Link>
-            <Link
-              to="/dungeon"
-              className={NAV_LINK}
-              activeProps={NAV_ACTIVE}
-              aria-label={t.layout.dungeon}
-              title={t.layout.dungeon}
-            >
-              <Swords className="h-4 w-4 shrink-0" />{" "}
-              <span className="hidden lg:inline">{t.layout.dungeon}</span>
-            </Link>
-            <Link
-              to="/leaderboard"
-              className={NAV_LINK}
-              activeProps={NAV_ACTIVE}
-              aria-label={t.layout.ranking}
-              title={t.layout.ranking}
-            >
-              <Crown className="h-4 w-4 shrink-0" />{" "}
-              <span className="hidden lg:inline">{t.layout.ranking}</span>
-            </Link>
+            {/* Primary destinations: inline on desktop; on mobile/tablet they
+                live in the fixed bottom tab bar (rendered below the shell). */}
+            <div className="hidden items-center gap-1 sm:gap-2 lg:flex">
+              {primaryNav.map(({ to, Icon, label }) => (
+                <Link
+                  key={to}
+                  to={to}
+                  className={NAV_LINK}
+                  activeProps={NAV_ACTIVE}
+                  aria-label={label}
+                  title={label}
+                >
+                  <Icon className="h-4 w-4 shrink-0" /> <span>{label}</span>
+                </Link>
+              ))}
+            </div>
             {userRole === "parent" && (
               <Link
                 to="/parent-report"
@@ -260,9 +239,35 @@ function AuthenticatedLayout() {
           </div>
         </div>
       </header>
-      <main className="relative z-10 pb-[env(safe-area-inset-bottom)]">
+      <main
+        className={
+          immersive
+            ? "relative z-10 pb-[env(safe-area-inset-bottom)]"
+            : "relative z-10 pb-[calc(4.5rem+env(safe-area-inset-bottom))] lg:pb-[env(safe-area-inset-bottom)]"
+        }
+      >
         <Outlet />
       </main>
+      {/* Mobile/tablet bottom tab bar — primary navigation for touch. Hidden on
+          desktop (lg) where the top nav carries the same destinations, and on
+          immersive screens to avoid overlapping their in-screen CTAs. */}
+      {!immersive && (
+        <nav className="fixed inset-x-0 bottom-0 z-30 flex items-stretch justify-around border-t border-[color:var(--gold)]/15 bg-black/80 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden">
+          {primaryNav.map(({ to, Icon, label }) => (
+            <Link
+              key={to}
+              to={to}
+              aria-label={label}
+              title={label}
+              className="flex min-h-[52px] flex-1 flex-col items-center justify-center gap-0.5 px-1 py-1.5 text-[10px] font-semibold leading-tight text-muted-foreground transition"
+              activeProps={{ className: "text-[color:var(--gold)]" }}
+            >
+              <Icon className="h-5 w-5 shrink-0" />
+              <span className="max-w-full truncate">{label}</span>
+            </Link>
+          ))}
+        </nav>
+      )}
     </div>
   );
 }

@@ -167,7 +167,7 @@ function Landing() {
                   lang="ar"
                   dir="rtl"
                   aria-hidden="true"
-                  className="font-display text-sm font-semibold tracking-wide text-gradient-gold gold-sheen"
+                  className="font-arabic text-sm font-semibold text-gradient-gold gold-sheen"
                 >
                   نقرا نلعب
                 </span>
@@ -391,7 +391,7 @@ function Landing() {
 
         <footer className="border-t border-[color:var(--gold)]/15 py-8 text-center text-xs text-muted-foreground">
           © {new Date().getFullYear()} Na9ra Nal3ab ·{" "}
-          <span lang="ar" dir="rtl">
+          <span lang="ar" dir="rtl" className="font-arabic">
             نقرا نلعب
           </span>{" "}
           · {t.landing.footer}
