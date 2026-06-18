@@ -2,8 +2,15 @@ name: CI
 
 on:
   pull_request:
-  push:
-    branches: [main]
+  workflow_dispatch:
+
+# PR-only (a push to main lands via an already-CI'd PR, so re-running on the merge
+# commit just burns free-tier Actions minutes). `pull_request` tests the merge
+# result, so main is still covered. Use "Run workflow" to check main on demand.
+# Cancel superseded runs on the same ref so rapid pushes don't stack runners.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   verify:

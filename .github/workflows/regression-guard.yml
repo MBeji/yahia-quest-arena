@@ -6,8 +6,10 @@ name: Regression guard (daily test sweep)
 # bugs — opening a reviewable PR for test updates and a tracking issue per bug.
 # It NEVER pushes to main and NEVER weakens a test to hide a defect.
 #
-# Runs at 23:00 UTC (00:00 Tunisia), i.e. end of day and before the nightly
-# build (01:00 UTC / 02:00 Tunisia) validates main.
+# Runs weekly — Saturday at 23:00 UTC (00:00 Tunisia), just before the Sunday
+# 01:00 nightly build validates main. Throttled from daily to 1×/week to cap
+# GitHub Actions minutes — the Claude sweep holds a runner for many minutes — so
+# use the "Run workflow" button to launch it any other day.
 #
 # Prereq: repository secret CLAUDE_CODE_OAUTH_TOKEN — generate it locally with
 # `claude setup-token` (uses your Claude Max subscription; no pay-per-token API
@@ -18,7 +20,9 @@ name: Regression guard (daily test sweep)
 
 on:
   schedule:
-    - cron: "0 23 * * *"
+    # Weekly — Saturday 23:00 UTC, just before the Sunday 01:00 nightly. Throttled
+    # to 1×/week to cap free-tier Actions minutes; use "Run workflow" any other day.
+    - cron: "0 23 * * 6"
   workflow_dispatch:
 
 # Needed so the guard can open a branch + PR and file tracking issues.
