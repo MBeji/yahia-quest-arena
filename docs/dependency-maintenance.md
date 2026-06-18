@@ -6,18 +6,21 @@ Keep runtime and dev dependencies secure and up to date with predictable operati
 
 ## Cadence
 
-- **Nightly (automated): the upgrade guard** — see "Automation" below. This is now
-  the primary path; the manual cadence below is the fallback / oversight layer.
+- **Weekly (automated): the upgrade guard** (Sun UTC, after the weekly nightly) — see
+  "Automation" below. This is now the primary path; the manual cadence below is the
+  fallback / oversight layer.
 - Monthly: review outdated packages and security advisories (Dependabot still opens
   its monthly PRs as a backstop).
 - Weekly: triage any guard PRs/issues and Dependabot PRs.
 - Immediate: patch high/critical vulnerabilities.
 
-## Automation (nightly upgrade guard)
+## Automation (weekly upgrade guard)
 
 The `.claude/skills/upgrade-guard` skill, run by `.github/workflows/upgrade-guard.yml`,
-performs this Process automatically every night **after the Nightly tests pass** (so it
-only upgrades from a known-green baseline). It covers npm runtime + dev deps,
+performs this Process automatically **on Sun (UTC), after the weekly Nightly tests pass**
+(so it only upgrades from a known-green baseline). It was throttled from nightly to
+weekly to cap GitHub Actions minutes — the agent holds a runner for many minutes; a
+manual `workflow_dispatch` runs it any other day. It covers npm runtime + dev deps,
 TypeScript, the Node toolchain, the pinned Supabase CLI, and the GitHub Actions.
 
 - **Patch + minor** are applied as one lot, the full gate + E2E (public + authed) +

@@ -12,8 +12,10 @@ name: Nightly tests
 
 on:
   schedule:
-    # 01:00 UTC == 02:00 in Tunisia (Africa/Tunis is UTC+1, no DST) — 2 AM local.
-    - cron: "0 1 * * *"
+    # Weekly — Sunday 01:00 UTC (02:00 Tunisia, UTC+1 no DST). Throttled from
+    # nightly to cap GitHub Actions minutes (free tier); use "Run workflow"
+    # (workflow_dispatch) for an on-demand full run any other day.
+    - cron: "0 1 * * 0"
   workflow_dispatch:
 
 # `report` opens/updates a tracking issue; the called suites only read contents.
