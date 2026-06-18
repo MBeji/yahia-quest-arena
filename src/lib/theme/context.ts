@@ -2,7 +2,7 @@ import { createContext } from "react";
 
 /**
  * UI colour scheme. `dark` is the original Shonen Neon arena (default); `light`
- * is the professional "ivory & gold" variant. These are NOT the curriculum
+ * is the clean Atome-style variant (white canvas + electric-lime accent). These are NOT the curriculum
  * `themes` table (that is content organisation) — this is purely the visual skin.
  */
 export type Theme = "dark" | "light";
