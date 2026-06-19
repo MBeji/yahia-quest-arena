@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة (نمط امتحان): الضرب",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "ما جداء 6 × 8؟",
+      "options": [
+        { "id": "a", "text": "42" },
+        { "id": "b", "text": "48" },
+        { "id": "c", "text": "54" },
+        { "id": "d", "text": "56" }
+      ],
+      "correctOption": "b",
+      "explanation": "6 × 8 = 48 حسب جدول الضرب.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما جداء 47 × 10؟",
+      "options": [
+        { "id": "a", "text": "47" },
+        { "id": "b", "text": "407" },
+        { "id": "c", "text": "470" },
+        { "id": "d", "text": "4 700" }
+      ],
+      "correctOption": "c",
+      "explanation": "للضرب في 10 نضيف صفرًا واحدًا على يمين العدد: 47 × 10 = 470.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما جداء 213 × 3؟",
+      "options": [
+        { "id": "a", "text": "609" },
+        { "id": "b", "text": "619" },
+        { "id": "c", "text": "629" },
+        { "id": "d", "text": "639" }
+      ],
+      "correctOption": "d",
+      "explanation": "نضرب من اليمين: 3 × 3 = 9، 1 × 3 = 3، 2 × 3 = 6. الجداء 639.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما جداء 4 × 250؟",
+      "options": [
+        { "id": "a", "text": "900" },
+        { "id": "b", "text": "1 000" },
+        { "id": "c", "text": "1 040" },
+        { "id": "d", "text": "1 250" }
+      ],
+      "correctOption": "b",
+      "explanation": "4 × 250 = 4 × 25 × 10 = 100 × 10 = 1 000.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ناتج 1 × 587؟",
+      "options": [
+        { "id": "a", "text": "0" },
+        { "id": "b", "text": "1" },
+        { "id": "c", "text": "587" },
+        { "id": "d", "text": "588" }
+      ],
+      "correctOption": "c",
+      "explanation": "العدد 1 هو العنصر المحايد للضرب، فالضرب فيه لا يغيّر العدد: 1 × 587 = 587.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما جداء 32 × 20؟",
+      "options": [
+        { "id": "a", "text": "640" },
+        { "id": "b", "text": "620" },
+        { "id": "c", "text": "320" },
+        { "id": "d", "text": "6 400" }
+      ],
+      "correctOption": "a",
+      "explanation": "32 × 20 = 32 × 2 × 10 = 64 × 10 = 640.",
+      "difficulty": 2
+    }
+  ]
+}
