@@ -1,7 +1,7 @@
 {
   "title": "الأعداد من 0 إلى 9",
   "description": "قراءة وكتابة الأعداد من 0 إلى 9، العدّ، التعبير عن الكمّيّات، العدد الذي يلي والعدد الذي يسبق",
-  "displayOrder": 1,
+  "displayOrder": 4,
   "sources": [
     "Programme officiel de mathématiques — 1ère année de l'enseignement de base (CNP, Ministère de l'Éducation, Tunisie)",
     "Manuel scolaire de mathématiques — 1ère année de base (CNP, Tunisie)"

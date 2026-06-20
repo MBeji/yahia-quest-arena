@@ -1,0 +1,9 @@
+{
+  "title": "المجموعات",
+  "description": "تكوين مجموعة وتعيين عناصرها وتمثيلها، المجموعة الفارغة، التصنيف حسب خاصية، ومقارنة عناصر مجموعتين (أكثر/أقل/على قدر)",
+  "displayOrder": 3,
+  "sources": [
+    "CNP — كتاب المعلّم، الرياضيات، السنة الأولى من التعليم الأساسي (guide méthodologique, code 502107), القسم المرجعي : المجموعات (pages 6-8)",
+    "Programme officiel de mathématiques — 1ère année de l'enseignement de base (CNP, Ministère de l'Éducation, Tunisie)"
+  ]
+}

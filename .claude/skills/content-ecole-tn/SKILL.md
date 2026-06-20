@@ -22,11 +22,35 @@ First, **read the content-engine skill and its references** (`.claude/skills/con
 define the file schema, quality bar, reward table, RPG style, and the validate-then-stop workflow.
 This skill only adds the school-specific rules.
 
+## Official-program sources — precedence (CNP is the single source of truth)
+
+The authoritative scope is the **national CNP program**, captured as the downloaded **CNP corpus**
+(official student textbooks + teacher guides). Start with the index at
+[`references/programmes-officiels/`](references/programmes-officiels/) → its
+[`README.md`](references/programmes-officiels/README.md) (precedence policy, CNP-corpus location +
+`CATALOGUE.md`, subject-`id` convention). Precedence, for any grade+subject:
+
+1. **CNP corpus** (`YahiaAcademy/cnp-officiel/`, sibling of the repo) — **the single source of truth**:
+   the student **manuel** = the content/scope; the **teacher guide** (_guide méthodologique_ /
+   الدليل المرجعي) = the official program (competencies, progression). `CATALOGUE.md` maps grade×subject →
+   file. (The CNP PDFs are scans — read by page-range.)
+2. **Taybah school files** (`programmes-officiels/taybah/<gradeSlug>.md`) — **verification + detail
+   complement** only: the kids' school **trimester sequencing** and a cross-check. **Never** use them to
+   contradict or narrow the CNP scope — flag divergences, don't silently follow them.
+
 ## Inputs to confirm before writing
 
-- **Grade** → the `gradeSlug` (e.g. `9eme-base`, `bac`). See `content-engine/references/themes-and-trilingual.md`.
-- **Subject** → an existing school subject id (`math`, `svt`, `sciences-vie-terre`, `arabic`,
-  `french`, `english`, `histoire-geo`, …) or a new one under `themeId: "ecole-tn"`.
+- **Grade + subject → CNP reference (authoritative)** → locate the grade+subject's CNP files in the
+  corpus via `programmes-officiels/CATALOGUE.md` (student manuel = scope; teacher guide = program). This
+  sets the authoritative scope.
+- **Grade** → the `gradeSlug` (e.g. `1ere-base`, `9eme-base`, `bac`). See `content-engine/references/themes-and-trilingual.md`.
+- **School (verification, optional)** → if the content targets a specific school (e.g. _Taybah Primaire_),
+  use `programmes-officiels/<école>/<gradeSlug>.md` to cross-check and to follow its **trimester
+  sequencing** — a complement to the CNP scope, never overriding it.
+- **Subject** → the school subject `id`, **grade-suffixed to stay unique** (`math-1ere`, `arabic-1ere`,
+  `eveil-scientifique-1ere`, `education-islamique-1ere`, `french-1ere`, `english-1ere` — see the
+  programmes-officiels README); the bare `math`/`svt`/`arabic`/`french`/`english` ids are 9ème's. New
+  subject ids live under `themeId: "ecole-tn"`.
 - **Language** → the subject's official language of instruction (see the Language section) — one
   language, never trilingual.
 - **Chapter** → which official-program chapter/theme, and its `displayOrder`.
@@ -56,11 +80,13 @@ notation. Hard rule: `content-engine/references/math-and-notation.md`.
 
 ## Fidelity workflow (the part that makes this track different)
 
-1. **Anchor to the official program.** Use the official curriculum as ground truth: the
-   `Programme.pdf` / `Programme.docx` at the repository's parent folder if present, and/or the
-   official CNP program for that grade+subject (verify via web search — `tunisiecollege.net`,
-   `tadris.tn`, edunet/CNP). Establish the exact list of chapters and notions the official program
-   covers for this grade+subject.
+1. **Anchor to the CNP program (source of truth).** Ground truth, in order: **(a)** the **CNP corpus**
+   (`YahiaAcademy/cnp-officiel/` — the grade+subject's student manuel for scope, teacher guide /
+   الدليل المرجعي for the official program & progression; find files via `programmes-officiels/CATALOGUE.md`);
+   **(b)** the **Taybah school file** (`programmes-officiels/<école>/<gradeSlug>.md`) as **verification +
+   trimester sequencing** complement; **(c)** web only to fill genuine gaps (`tunisiecollege.net`,
+   `tadris.tn`, edunet/CNP). Establish the exact notions the chapter must cover for this grade+subject —
+   faithful to the CNP. (CNP PDFs are scans → read by page-range; heed the Taybah files' `[?]`/`[sic]` markers.)
 2. **Map your chapter to the syllabus.** Cover the official notions for that chapter — no more, no
    less. Match the official vocabulary and notation.
 3. **Flag anything off-program.** If you're tempted to add a notion that isn't in the official

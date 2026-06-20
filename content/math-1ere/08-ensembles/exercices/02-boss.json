@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ زعيم الفصل ⭐⭐⭐: تحدّي المجموعات",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "ما هي المجموعة؟",
+      "options": [
+        { "id": "a", "text": "تجمّعٌ لأشياء نعرفها جيّدًا" },
+        { "id": "b", "text": "عددٌ كبير" },
+        { "id": "c", "text": "رسمٌ ملوّن" },
+        { "id": "d", "text": "خطٌّ مغلق فقط" }
+      ],
+      "correctOption": "a",
+      "explanation": "المجموعة تجمّعٌ لأشياء معروفة، وكلُّ شيءٍ فيها عنصر.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم عنصرًا في هذه المجموعة؟ <svg viewBox=\"0 0 175 70\"><rect x=\"5\" y=\"5\" width=\"165\" height=\"60\" rx=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><circle cx=\"28\" cy=\"35\" r=\"9\" fill=\"currentColor\"/><circle cx=\"55\" cy=\"35\" r=\"9\" fill=\"currentColor\"/><circle cx=\"82\" cy=\"35\" r=\"9\" fill=\"currentColor\"/><circle cx=\"109\" cy=\"35\" r=\"9\" fill=\"currentColor\"/><circle cx=\"136\" cy=\"35\" r=\"9\" fill=\"currentColor\"/></svg>",
+      "options": [
+        { "id": "a", "text": "4" },
+        { "id": "b", "text": "5" },
+        { "id": "c", "text": "6" },
+        { "id": "d", "text": "3" }
+      ],
+      "correctOption": "b",
+      "explanation": "نَعُدّ العناصر داخل الإطار حتّى آخرها: عددها 5.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيٌّ من المجموعات التالية فارغةٌ؟",
+      "options": [
+        { "id": "a", "text": "مجموعة أصابع اليد" },
+        { "id": "b", "text": "مجموعة أيّام الأسبوع" },
+        { "id": "c", "text": "مجموعة الأبقار الطائرة" },
+        { "id": "d", "text": "مجموعة ألوان قوس قزح" }
+      ],
+      "correctOption": "c",
+      "explanation": "الأبقار الطائرة لا وجودَ لها، فمجموعتها فارغة { }. أمّا الباقي ففيه عناصر.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ما العلاقة بين المجموعتين A و B؟ <svg viewBox=\"0 0 270 90\"><text x=\"12\" y=\"20\" font-size=\"15\" fill=\"currentColor\">A</text><rect x=\"8\" y=\"26\" width=\"115\" height=\"55\" rx=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><circle cx=\"30\" cy=\"53\" r=\"8\" fill=\"currentColor\"/><circle cx=\"62\" cy=\"53\" r=\"8\" fill=\"currentColor\"/><circle cx=\"94\" cy=\"53\" r=\"8\" fill=\"currentColor\"/><text x=\"150\" y=\"20\" font-size=\"15\" fill=\"currentColor\">B</text><rect x=\"147\" y=\"26\" width=\"115\" height=\"55\" rx=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><circle cx=\"170\" cy=\"53\" r=\"8\" fill=\"currentColor\"/><circle cx=\"202\" cy=\"53\" r=\"8\" fill=\"currentColor\"/><circle cx=\"234\" cy=\"53\" r=\"8\" fill=\"currentColor\"/></svg>",
+      "options": [
+        { "id": "a", "text": "A فيها أكثر" },
+        { "id": "b", "text": "B فيها أكثر" },
+        { "id": "c", "text": "لا يمكن المقارنة" },
+        { "id": "d", "text": "هما على قدر" }
+      ],
+      "correctOption": "d",
+      "explanation": "نَصِل عناصر A بعناصر B واحدًا بواحد فتنتهيان معًا (3 و3)، فهما على قدر.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "نُكوّن مجموعة المثلّثات. أيُّ عنصرٍ **دخيلٌ** لا ينتمي إليها؟",
+      "options": [
+        { "id": "a", "text": "مثلّثٌ أحمر" },
+        { "id": "b", "text": "مربّعٌ" },
+        { "id": "c", "text": "مثلّثٌ صغير" },
+        { "id": "d", "text": "مثلّثٌ كبير" }
+      ],
+      "correctOption": "b",
+      "explanation": "الخاصية هي الشكل: مثلّثاتٌ فقط. المربّعُ دخيلٌ لأنّه ليس مثلّثًا (لونه وحجمه لا يهمّان).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "مجموعة A فيها 4 عناصر. نَصِل كلَّ عنصرٍ من B بعنصرٍ من A، فيبقى في A عنصرٌ واحدٌ بلا وصل. كم عنصرًا في B؟",
+      "options": [
+        { "id": "a", "text": "3" },
+        { "id": "b", "text": "4" },
+        { "id": "c", "text": "5" },
+        { "id": "d", "text": "2" }
+      ],
+      "correctOption": "a",
+      "explanation": "بقي في A عنصرٌ واحد بلا وصل، فعناصر B أقلُّ من A بواحد: B فيها 3 عناصر (لأنّ 4 ناقص 1 يساوي 3).",
+      "difficulty": 3
+    }
+  ]
+}
