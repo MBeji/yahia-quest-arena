@@ -22,11 +22,29 @@ First, **read the content-engine skill and its references** (`.claude/skills/con
 define the file schema, quality bar, reward table, RPG style, and the validate-then-stop workflow.
 This skill only adds the school-specific rules.
 
+## The official school-program references (read these — they are the ground truth)
+
+The schools' **actual announced programs** are extracted, per grade and per trimester, under
+[`references/programmes-officiels/`](references/programmes-officiels/) — start with its
+[`README.md`](references/programmes-officiels/README.md) (index, precedence policy, subject-`id`
+convention, age-adaptation note). When a file exists for the grade+subject you're authoring (e.g.
+`programmes-officiels/taybah/1ere-base.md`), **it is authoritative**: match its notions, official
+terminology, and **trimester split** exactly. The generic national program (CNP) is only a fallback
+(grades with no school file) and a complement (terminology/examples) — **never** a license to widen scope
+beyond what the school announces.
+
 ## Inputs to confirm before writing
 
-- **Grade** → the `gradeSlug` (e.g. `9eme-base`, `bac`). See `content-engine/references/themes-and-trilingual.md`.
-- **Subject** → an existing school subject id (`math`, `svt`, `sciences-vie-terre`, `arabic`,
-  `french`, `english`, `histoire-geo`, …) or a new one under `themeId: "ecole-tn"`.
+- **School** → which school's program applies (e.g. _Taybah Primaire_) → the
+  `programmes-officiels/<école>/` folder. If the family's school is unknown, ask; fall back to the generic
+  CNP only when no school program is available.
+- **Grade** → the `gradeSlug` (e.g. `1ere-base`, `9eme-base`, `bac`). See `content-engine/references/themes-and-trilingual.md`.
+- **Trimester** → which trimester (T1/T2/T3) the chapter belongs to, per the school program's split. Keep
+  the chapter within its trimester's scope; order `displayOrder` T1 → T2 → T3.
+- **Subject** → the school subject `id`, **grade-suffixed to stay unique** (`math-1ere`, `arabic-1ere`,
+  `eveil-scientifique-1ere`, `education-islamique-1ere`, `french-1ere`, `english-1ere` — see the
+  programmes-officiels README); the bare `math`/`svt`/`arabic`/`french`/`english` ids are 9ème's. New
+  subject ids live under `themeId: "ecole-tn"`.
 - **Language** → the subject's official language of instruction (see the Language section) — one
   language, never trilingual.
 - **Chapter** → which official-program chapter/theme, and its `displayOrder`.
@@ -56,11 +74,13 @@ notation. Hard rule: `content-engine/references/math-and-notation.md`.
 
 ## Fidelity workflow (the part that makes this track different)
 
-1. **Anchor to the official program.** Use the official curriculum as ground truth: the
-   `Programme.pdf` / `Programme.docx` at the repository's parent folder if present, and/or the
-   official CNP program for that grade+subject (verify via web search — `tunisiecollege.net`,
-   `tadris.tn`, edunet/CNP). Establish the exact list of chapters and notions the official program
-   covers for this grade+subject.
+1. **Anchor to the school program (precedence).** Ground truth, in order: **(a)** the school's own
+   program — `references/programmes-officiels/<école>/<gradeSlug>.md` — when it exists: take the exact
+   notions, official terminology, and **trimester** for this grade+subject from it; **(b)** otherwise the
+   generic CNP program (`Programme.pdf`/`Programme.docx` in the parent folder, `programme-9eme-annee-tunisie.md`,
+   or web — `tunisiecollege.net`, `tadris.tn`, edunet/CNP). Establish the exact list of notions the chapter
+   must cover for this grade+subject+trimester — **no more than the school announces**. (Heed the source
+   file's `[?]` OCR-uncertain and `[sic]` markers — verify those against the original if a chapter leans on them.)
 2. **Map your chapter to the syllabus.** Cover the official notions for that chapter — no more, no
    less. Match the official vocabulary and notation.
 3. **Flag anything off-program.** If you're tempted to add a notion that isn't in the official

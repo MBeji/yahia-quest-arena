@@ -34,12 +34,13 @@ official scope + language of instruction).
 
 ## Workflow
 
-1. **Establish the scope to cover.** School content: the official chapter scope (program
-   wrapper, sources). Non-school: `chapter.json` description. Then — critical —
-   **read the chapter's `quiz.json` and every `exercices/*.json` FIRST** and extract the list of
-   notions/edge cases they test: the course must teach all of them (golden rule, no orphan
-   tested notion). If an item tests something genuinely off-scope, flag it in the report instead
-   of silently teaching off-program material.
+1. **Establish the scope to cover.** School content: the official chapter scope from the **school
+   program** — `content-ecole-tn/references/programmes-officiels/<école>/<gradeSlug>.md` for this
+   grade+subject+trimester (authoritative; CNP only as fallback) — plus `chapter.json` sources. Non-school:
+   `chapter.json` description. Then — critical — **read the chapter's `quiz.json` and every
+   `exercices/*.json` FIRST** and extract the list of notions/edge cases they test: the course must teach
+   all of them (golden rule, no orphan tested notion). If an item tests something genuinely off-scope, flag
+   it in the report instead of silently teaching off-program material.
 2. **Plan the sections**: 5–7 sections, one notion each, simple → complexe, each new notion
    anchored on the previous. Place the `> ⚠️` traps where the confusion is born (mirror the
    exercises' distractors).
