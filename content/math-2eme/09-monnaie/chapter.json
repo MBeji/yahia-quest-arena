@@ -1,0 +1,9 @@
+{
+  "title": "النقود",
+  "description": "القطع النقدية بالمليم (5 إلى 200 مي) والدينار (1 د = 1000 مي) ونصف الدينار، تمثيل مبلغ وبأقلّ عدد من القطع، جمع المبالغ ومقارنتها",
+  "displayOrder": 8,
+  "sources": [
+    "CNP — كتاب المعلّم، الرياضيات، السنة الثانية من التعليم الأساسي (guide méthodologique, code 502205), مكوّن نظام قيس : النقود",
+    "Programme officiel de mathématiques — 2ème année de l'enseignement de base (CNP, Ministère de l'Éducation, Tunisie)"
+  ]
+}
