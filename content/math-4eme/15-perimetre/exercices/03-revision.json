@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة (نمط امتحان): المحيط",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "كيف نحسب محيط المربّع؟",
+      "options": [
+        { "id": "a", "text": "2 × الضلع" },
+        { "id": "b", "text": "4 × الضلع" },
+        { "id": "c", "text": "الضلع × الضلع" },
+        { "id": "d", "text": "الضلع + 4" }
+      ],
+      "correctOption": "b",
+      "explanation": "محيط المربّع = 4 × الضلع.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما محيط مربّعٍ ضلعه 7 cm؟",
+      "options": [
+        { "id": "a", "text": "14 cm" },
+        { "id": "b", "text": "49 cm" },
+        { "id": "c", "text": "28 cm" },
+        { "id": "d", "text": "11 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "محيط المربّع = 4 × 7 = 28 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما محيط مستطيلٍ طوله 10 cm وعرضه 5 cm؟",
+      "options": [
+        { "id": "a", "text": "30 cm" },
+        { "id": "b", "text": "50 cm" },
+        { "id": "c", "text": "15 cm" },
+        { "id": "d", "text": "20 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "محيط المستطيل = 2 × (10 + 5) = 2 × 15 = 30 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما محيط مثلّثٍ أضلاعه 6 cm و 6 cm و 6 cm؟",
+      "options": [
+        { "id": "a", "text": "6 cm" },
+        { "id": "b", "text": "12 cm" },
+        { "id": "c", "text": "36 cm" },
+        { "id": "d", "text": "18 cm" }
+      ],
+      "correctOption": "d",
+      "explanation": "المحيط = 6 + 6 + 6 = 18 cm (مثلّثٌ متساوي الأضلاع).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "محيط مربّعٍ يساوي 24 cm. ما طول ضلعه؟",
+      "options": [
+        { "id": "a", "text": "6 cm" },
+        { "id": "b", "text": "8 cm" },
+        { "id": "c", "text": "12 cm" },
+        { "id": "d", "text": "4 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "الضلع = المحيط ÷ 4 = 24 ÷ 4 = 6 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما محيط مستطيلٍ طوله 5 cm وعرضه 5 cm؟",
+      "options": [
+        { "id": "a", "text": "10 cm" },
+        { "id": "b", "text": "20 cm" },
+        { "id": "c", "text": "25 cm" },
+        { "id": "d", "text": "15 cm" }
+      ],
+      "correctOption": "b",
+      "explanation": "محيط المستطيل = 2 × (5 + 5) = 2 × 10 = 20 cm. (وبما أنّ الطول = العرض فهو مربّع: 4 × 5 = 20 cm أيضًا.)",
+      "difficulty": 2
+    }
+  ]
+}

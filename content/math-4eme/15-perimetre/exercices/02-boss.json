@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ زعيم الفصل ⭐⭐⭐: سيّد المحيطات",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "ما محيط مستطيلٍ طوله 9 cm وعرضه 4 cm؟",
+      "options": [
+        { "id": "a", "text": "26 cm" },
+        { "id": "b", "text": "13 cm" },
+        { "id": "c", "text": "36 cm" },
+        { "id": "d", "text": "22 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "محيط المستطيل = 2 × (9 + 4) = 2 × 13 = 26 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "محيط مربّعٍ يساوي 32 cm. ما طول ضلعه؟",
+      "options": [
+        { "id": "a", "text": "4 cm" },
+        { "id": "b", "text": "8 cm" },
+        { "id": "c", "text": "16 cm" },
+        { "id": "d", "text": "28 cm" }
+      ],
+      "correctOption": "b",
+      "explanation": "الضلع = المحيط ÷ 4 = 32 ÷ 4 = 8 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما محيط مثلّثٍ أضلاعه 7 cm و 8 cm و 10 cm؟",
+      "options": [
+        { "id": "a", "text": "15 cm" },
+        { "id": "b", "text": "80 cm" },
+        { "id": "c", "text": "17 cm" },
+        { "id": "d", "text": "25 cm" }
+      ],
+      "correctOption": "d",
+      "explanation": "محيط المثلّث = 7 + 8 + 10 = 25 cm.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "محيط مستطيلٍ 20 cm وطوله 6 cm. ما عرضه؟",
+      "options": [
+        { "id": "a", "text": "14 cm" },
+        { "id": "b", "text": "7 cm" },
+        { "id": "c", "text": "4 cm" },
+        { "id": "d", "text": "10 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "نصف المحيط = 20 ÷ 2 = 10 cm (الطول + العرض)، فالعرض = 10 − 6 = 4 cm.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ما محيط مربّعٍ ضلعه 12 cm؟",
+      "options": [
+        { "id": "a", "text": "24 cm" },
+        { "id": "b", "text": "48 cm" },
+        { "id": "c", "text": "144 cm" },
+        { "id": "d", "text": "16 cm" }
+      ],
+      "correctOption": "b",
+      "explanation": "محيط المربّع = 4 × 12 = 48 cm.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "مثلّثٌ متساوي الساقين ساقاه 6 cm وقاعدته 5 cm. ما محيطه؟",
+      "options": [
+        { "id": "a", "text": "11 cm" },
+        { "id": "b", "text": "16 cm" },
+        { "id": "c", "text": "17 cm" },
+        { "id": "d", "text": "18 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "المحيط = 6 + 6 + 5 = 17 cm (الساقان متساويان والقاعدة مختلفة).",
+      "difficulty": 3
+    }
+  ]
+}

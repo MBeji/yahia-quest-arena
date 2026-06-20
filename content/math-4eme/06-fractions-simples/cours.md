@@ -27,7 +27,7 @@
 
 نمثّل الكسر برسمٍ مجزّأٍ نُلوّن منه عدد الأجزاء المساوي للبسط:
 
-<svg viewBox="0 0 120 40"><rect x="2" y="2" width="116" height="36" fill="none" stroke="currentColor" stroke-width="2"/><line x1="31" y1="2" x2="31" y2="38" stroke="currentColor" stroke-width="2"/><line x1="60" y1="2" x2="60" y2="38" stroke="currentColor" stroke-width="2"/><line x1="89" y1="2" x2="89" y2="38" stroke="currentColor" stroke-width="2"/><rect x="2" y="2" width="29" height="36" fill="currentColor"/><rect x="31" y="2" width="29" height="36" fill="currentColor"/><rect x="60" y="2" width="29" height="36" fill="currentColor"/></svg>
+<svg viewBox="0 0 120 40"><rect x="2" y="2" width="116" height="36" fill="none" stroke="currentColor" stroke-width="2"/><line x1="31" y1="2" x2="31" y2="38" stroke="currentColor" stroke-width="2"/><line x1="60" y1="2" x2="60" y2="38" stroke="currentColor" stroke-width="2"/><line x1="89" y1="2" x2="89" y2="38" stroke="currentColor" stroke-width="2"/><rect x="2" y="2" width="29" height="36" fill="currentColor"/><rect x="31" y="2" width="29" height="36" fill="currentColor"/><rect x="60" y="2" width="29" height="36" fill="currentColor"/></svg>
 
 في هذا الشريط قُسّمت الوحدة إلى **4 أجزاءٍ** متساوية، لُوّن منها **3**، فالجزء الملوّن يمثّل الكسر 3/4.
 

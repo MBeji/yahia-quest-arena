@@ -39,7 +39,7 @@ $$1 h = 60 min$$
 
 تشير **العقرب الصغير** إلى الساعات و**العقرب الكبير** إلى الدقائق. في الشكل التالي تشير الساعة إلى **الثالثة تمامًا** (3:00):
 
-<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="50" cy="50" r="2.5" fill="currentColor"/><text x="50" y="18" font-size="11" text-anchor="middle" fill="currentColor">12</text><text x="86" y="54" font-size="11" text-anchor="middle" fill="currentColor">3</text><text x="50" y="92" font-size="11" text-anchor="middle" fill="currentColor">6</text><text x="14" y="54" font-size="11" text-anchor="middle" fill="currentColor">9</text><line x1="50" y1="50" x2="72" y2="50" stroke="currentColor" stroke-width="3"/><line x1="50" y1="50" x2="50" y2="22" stroke="currentColor" stroke-width="2"/></svg>
+<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="50" cy="50" r="2.5" fill="currentColor"/><text x="50" y="18" font-size="11" text-anchor="middle" fill="currentColor">12</text><text x="86" y="54" font-size="11" text-anchor="middle" fill="currentColor">3</text><text x="50" y="92" font-size="11" text-anchor="middle" fill="currentColor">6</text><text x="14" y="54" font-size="11" text-anchor="middle" fill="currentColor">9</text><line x1="50" y1="50" x2="72" y2="50" stroke="currentColor" stroke-width="3"/><line x1="50" y1="50" x2="50" y2="22" stroke="currentColor" stroke-width="2"/></svg>
 
 ## ⚡ حساب المدّة
 
