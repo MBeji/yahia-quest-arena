@@ -114,7 +114,17 @@ Pour créer ou réaligner le contenu d'un couple **(niveau, matière)** sur le C
      `nameFr` natif (`الرياضيات`…). Auto-vérification (re-solve à l'aveugle, équilibre des clés, notation, golden rule).
 5. **Valider** : `npm run content:check` (Zod) + `npm run content:qa:strict` (**0 erreur**).
    (Worktree sans `node_modules` : jonction de l'étape 1, ou `node --experimental-strip-types <repo>/scripts/content/build.ts --check` avec cwd=worktree.)
-6. **Committer + PR** (un commit par sujet) : `feat(content): <sujet> — réalignement CNP`, push, `gh pr create`.
-   Nettoyer : retirer la jonction (`rmdir <chemin>\node_modules`) **avant** `git worktree remove`.
+6. **Régénérer la migration SQL** ⚠️ **indispensable** — `content:check` _valide mais n'écrit rien_ ; sans
+   cette étape le contenu **ne touche jamais la base**. `npm run content:build -- --subject <id>` → écrit
+   `supabase/migrations/<ts>_generated_<id>_content.sql` (une migration **idempotente** par sujet, upserts
+   déterministes UUIDv5). La committer **avec** les fichiers `content/`.
+7. **Committer + PR** (un commit par sujet, fichiers `content/` **+ migration générée**) :
+   `feat(content): <sujet> — réalignement CNP`, push, `gh pr create`.
+8. **Déployer la migration en prod** — **manuel, AVANT le merge** (CLAUDE.md §7 / `.github/workflows/migration-gate.yml`) :
+   pousser sur `main` auto-déploie le **code** (Vercel) **mais pas la base**. Appliquer le
+   `*_generated_*_content.sql` à la base Supabase de prod (SQL editor ou `supabase db push`), **puis** poser
+   le label **`migration-applied`** sur la PR (le gate l'exige). Idempotent → ré-application sans risque.
+9. **Nettoyer** : retirer la jonction (`rmdir <chemin>\node_modules`) **avant** `git worktree remove`.
 
-> Références éprouvées : PR #161 (`math-1ere`), #162 (`math-2eme`).
+> Références éprouvées : PR #161 (`math-1ere`), #162 (`math-2eme`). ⚠️ Leur migration générée est sur `main`
+> mais **n'a pas été appliquée en prod** (label `migration-applied` absent) — à appliquer (cf. étape 8).
