@@ -28,6 +28,12 @@ like a credible exam — no emojis, no slang.
 5. Mid-course callouts: `> 🗡️` for a key tip, `> ⚠️` for a classic trap.
 6. Closing `> 🏆` blockquote that frames the chapter as cleared and teases the next one.
 
+> **Chapter number is app-rendered — never hand-write it.** The app shows a bold, centered chapter
+> marker in the subject's language — **«الفصل N» / «Chapitre N» / «Chapter N»**, auto-numbered from the
+> chapter's `displayOrder` — at the top of the lesson and in the subject's chapter list. So the `# H1`
+> (and `chapter.json` `title`) is the chapter's **epic title only, in the subject's language** — do
+> **not** prefix it with "Chapitre N" / "الفصل N" yourself, or it doubles up.
+
 ## resume.md skeleton (~7–10 lines)
 
 `# 📜 <Résumé / ملخّص>: <Title>` then a flat bullet list, one bullet per cours section: a bolded

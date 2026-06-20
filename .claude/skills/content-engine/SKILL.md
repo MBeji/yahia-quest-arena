@@ -37,6 +37,10 @@ Consequences you must respect:
   trilingual as three sibling subjects, **each generated natively in its language (not translated)**;
   **school** content (`ecole-tn`) is authored only in the subject's **official language of
   instruction** — never trilingual. See `references/themes-and-trilingual.md`.
+- **Subject display name is native.** `subject.json` `nameFr` is the subject's display name **in its
+  own `contentLanguage`** (ar → `الرياضيات`, en → `English`, fr → `Français`) — never French for an
+  ar/en subject. The field name is legacy (kept for DB compat); the value is native. No
+  `(FR)`/`(EN)`/`(AR)` suffix on trilingual siblings. See `references/content-schema.md`.
 - **Indicate difficulty on every mission and quiz.** Each exercise (mission) and the quiz must show
   its difficulty level in its title, using the standard scale in `references/rewards-and-modes.md`.
 - **Numbers & equations are standard in every language.** Western digits (0–9) and standard LTR
@@ -72,6 +76,9 @@ A chapter directory `content/<subject>/NN-<slug>/` requires all of: `chapter.jso
    for fields; `references/themes-and-trilingual.md` for `themeId`/`gradeSlug`/`contentLanguage`).
 2. **Course** — `cours.md`: the full lesson, in the subject's one language, in the RPG style of
    `references/style-guide.md` (~50–75 lines). **`resume.md`**: a tight bullet summary mirroring it.
+   The app renders the bold, centered chapter marker («الفصل N» / «Chapitre N» / «Chapter N»,
+   auto-numbered) — so the `# H1` and `chapter.json` `title` carry the chapter's epic title only,
+   never a hand-written "Chapitre N" (see `references/style-guide.md`).
 3. **Quiz** — `quiz.json`: the comprehension gate. **5 questions** (3–10 allowed), 4 options
    (`a`–`d`), difficulty 1–2, short explanations. For **school-program** subjects, students must pass
    at **≥80%** to unlock the chapter's exercises; **non-school themes don't gate** (the quiz is an

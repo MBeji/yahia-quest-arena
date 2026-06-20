@@ -24,8 +24,9 @@ written **in English** (immersion). Read the content-engine skill and especially
   full A1→C2 ladder** — `anglais-a1` (Débutant) … `anglais-c2` (Maîtrise), six subjects sequenced by
   `displayOrder` — **plus one dedicated `anglais-donjon`** subject (`01-donjon` opener + one
   `NN-gauntlet-{band}` chapter per level, `gauntlet-a2`…`gauntlet-c2`). This is the shipped reference
-  English track — match its shape. Build levels bottom-up (finish A1 first). `nameFr` is the French
-  catalogue label; the content is English. Leave `isPremium` off (`anglais` is a free `libre` parcours;
+  English track — match its shape. Build levels bottom-up (finish A1 first). `nameFr` is the catalogue
+  label **in English** (e.g. "English — Beginner (A1)"), like the content — the field name is legacy,
+  not a French requirement. Leave `isPremium` off (`anglais` is a free `libre` parcours;
   premium is per parcours).
 - **Chapters**: one competence each, ordered simplest→most complex within the level (**~5–8 per
   level**). Beyond grammar/tense chapters, **every level ships a vocabulary chapter** (everyday vocab,
