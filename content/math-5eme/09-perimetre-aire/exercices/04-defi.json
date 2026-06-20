@@ -1,0 +1,82 @@
+{
+  "title": "👑 تحدّي النخبة ⭐⭐⭐⭐: ألغاز المحيط والمساحة",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "مساحة مربّعٍ تساوي 49 cm². ما طول ضلعه؟",
+      "options": [
+        { "id": "a", "text": "7 cm" },
+        { "id": "b", "text": "24 cm" },
+        { "id": "c", "text": "12 cm" },
+        { "id": "d", "text": "14 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "مساحة المربّع = الضلع × الضلع. نبحث عن عددٍ ضربُه في نفسه يساوي 49: هو 7 لأنّ 7 × 7 = 49. إذن الضلع = 7 cm.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "مستطيلٌ مساحته 24 cm² وطوله 6 cm. ما عرضه؟ <svg viewBox=\"0 0 100 100\"><rect x=\"16\" y=\"36\" width=\"68\" height=\"28\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><text x=\"38\" y=\"31\" font-size=\"10\" fill=\"currentColor\">6 cm</text><text x=\"4\" y=\"54\" font-size=\"10\" fill=\"currentColor\">?</text></svg>",
+      "options": [
+        { "id": "a", "text": "18 cm" },
+        { "id": "b", "text": "4 cm" },
+        { "id": "c", "text": "144 cm" },
+        { "id": "d", "text": "12 cm" }
+      ],
+      "correctOption": "b",
+      "explanation": "المساحة = الطول × العرض، فالعرض = المساحة ÷ الطول = 24 ÷ 6 = 4 cm.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "حقلٌ مربّعٌ ضلعه 30 m. نريد إحاطته بسياج. كم مترًا من السياج يلزم؟",
+      "options": [
+        { "id": "a", "text": "900 m" },
+        { "id": "b", "text": "60 m" },
+        { "id": "c", "text": "120 m" },
+        { "id": "d", "text": "120 m²" }
+      ],
+      "correctOption": "c",
+      "explanation": "طول السياج = محيط المربّع = 4 × 30 = 120 m. أمّا 900 فهو مساحة الحقل (30 × 30) لا السياج.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "غرفةٌ مستطيلة طولها 5 m وعرضها 4 m. نريد تبليط أرضها. ما مساحتها؟",
+      "options": [
+        { "id": "a", "text": "18 m²" },
+        { "id": "b", "text": "9 m²" },
+        { "id": "c", "text": "20 m²" },
+        { "id": "d", "text": "20 m" }
+      ],
+      "correctOption": "c",
+      "explanation": "مساحة المستطيل = الطول × العرض = 5 × 4 = 20 m². أمّا 18 فهو المحيط.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "مستطيلٌ محيطه 30 cm وطوله 9 cm. ما عرضه؟",
+      "options": [
+        { "id": "a", "text": "21 cm" },
+        { "id": "b", "text": "12 cm" },
+        { "id": "c", "text": "15 cm" },
+        { "id": "d", "text": "6 cm" }
+      ],
+      "correctOption": "d",
+      "explanation": "نصف المحيط = 30 ÷ 2 = 15 cm = الطول + العرض، فالعرض = 15 − 9 = 6 cm.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "مربّعٌ ضلعه 5 cm. كم تزيد مساحته (بالعدد) عن محيطه؟",
+      "options": [
+        { "id": "a", "text": "5" },
+        { "id": "b", "text": "10" },
+        { "id": "c", "text": "0" },
+        { "id": "d", "text": "45" }
+      ],
+      "correctOption": "a",
+      "explanation": "المساحة = 5 × 5 = 25 (بالـ cm²)، والمحيط = 4 × 5 = 20 (بالـ cm). الفرق بالعدد = 25 − 20 = 5، مع التذكير بأنّ الوحدتين مختلفتان.",
+      "difficulty": 3
+    }
+  ]
+}

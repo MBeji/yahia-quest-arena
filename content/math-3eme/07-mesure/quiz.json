@@ -1,0 +1,65 @@
+{
+  "title": "اختبار فهم الدرس ⭐",
+  "questions": [
+    {
+      "prompt": "كم سنتيمترًا (cm) في المتر الواحد (1 m)؟",
+      "options": [
+        { "id": "a", "text": "10 cm" },
+        { "id": "b", "text": "1 000 cm" },
+        { "id": "c", "text": "100 cm" },
+        { "id": "d", "text": "60 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "العلاقة الأساسيّة هي 1 m = 100 cm. نحفظها جيّدًا: المتر فيه مئة سنتيمتر، وليس عشرة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم غرامًا (g) في الكيلوغرام الواحد (1 kg)؟",
+      "options": [
+        { "id": "a", "text": "1 000 g" },
+        { "id": "b", "text": "100 g" },
+        { "id": "c", "text": "500 g" },
+        { "id": "d", "text": "10 g" }
+      ],
+      "correctOption": "a",
+      "explanation": "العلاقة هي 1 kg = 1 000 g. الكيلوغرام الواحد يساوي ألف غرام.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم دقيقة (min) في الساعة الواحدة (1 h)؟",
+      "options": [
+        { "id": "a", "text": "100 min" },
+        { "id": "b", "text": "24 min" },
+        { "id": "c", "text": "30 min" },
+        { "id": "d", "text": "60 min" }
+      ],
+      "correctOption": "d",
+      "explanation": "العلاقة هي 1 h = 60 min. الساعة الواحدة فيها ستّون دقيقة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم مليمًا (م) في الدينار الواحد (1 دينار)؟",
+      "options": [
+        { "id": "a", "text": "100 م" },
+        { "id": "b", "text": "1 000 م" },
+        { "id": "c", "text": "10 م" },
+        { "id": "d", "text": "500 م" }
+      ],
+      "correctOption": "b",
+      "explanation": "العلاقة الأساسيّة للنقود التونسيّة هي 1 دينار = 1 000 مليم.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم تساوي المسافة 1 m و 30 cm بالـ cm؟",
+      "options": [
+        { "id": "a", "text": "31 cm" },
+        { "id": "b", "text": "40 cm" },
+        { "id": "c", "text": "130 cm" },
+        { "id": "d", "text": "103 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "نحوّل المتر أوّلًا: 1 m = 100 cm، ثمّ نجمع 100 + 30 = 130 cm.",
+      "difficulty": 2
+    }
+  ]
+}

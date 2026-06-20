@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ زعيم الفصل ⭐⭐⭐: سيّد الأشكال",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "ما نوع المثلّث في الشكل التالي؟ <svg viewBox=\"0 0 100 100\"><polygon points=\"20,20 20,85 85,85\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\"/><polyline points=\"20,72 33,72 33,85\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/></svg>",
+      "options": [
+        { "id": "a", "text": "متساوي الأضلاع" },
+        { "id": "b", "text": "متساوي الساقين" },
+        { "id": "c", "text": "قائم" },
+        { "id": "d", "text": "أيّ مثلّث" }
+      ],
+      "correctOption": "c",
+      "explanation": "تظهر علامة الزاوية القائمة عند أحد رؤوس المثلّث، فهو مثلّثٌ قائم.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "دائرةٌ قطرها 14 سم، فما طول شعاعها؟",
+      "options": [
+        { "id": "a", "text": "28 سم" },
+        { "id": "b", "text": "7 سم" },
+        { "id": "c", "text": "14 سم" },
+        { "id": "d", "text": "10 سم" }
+      ],
+      "correctOption": "b",
+      "explanation": "الشعاع = القطر ÷ 2 = 14 ÷ 2 = 7 سم، لأنّ القطر يساوي ضعف الشعاع.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ رباعيٍّ زواياه الأربع قائمة لكنّ أضلاعه ليست كلّها متساوية؟",
+      "options": [
+        { "id": "a", "text": "المربّع" },
+        { "id": "b", "text": "المعيّن" },
+        { "id": "c", "text": "متوازي الأضلاع المائل" },
+        { "id": "d", "text": "المستطيل" }
+      ],
+      "correctOption": "d",
+      "explanation": "المستطيل له 4 زوايا قائمة وأضلاعه المتقابلة متساوية (طولٌ وعرض مختلفان)، فليست كلّ أضلاعه متساوية كالمربّع.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما نوع الزاوية التي قياسها 120 درجة؟",
+      "options": [
+        { "id": "a", "text": "منفرجة" },
+        { "id": "b", "text": "حادّة" },
+        { "id": "c", "text": "قائمة" },
+        { "id": "d", "text": "مستقيمة" }
+      ],
+      "correctOption": "a",
+      "explanation": "120 درجة أكبر من 90 وأقلّ من 180، فهي زاويةٌ منفرجة.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ما نوع الرباعيّ في الشكل التالي؟ <svg viewBox=\"0 0 100 100\"><polygon points=\"50,15 85,50 50,85 15,50\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\"/></svg>",
+      "options": [
+        { "id": "a", "text": "مستطيل" },
+        { "id": "b", "text": "معيّن" },
+        { "id": "c", "text": "مربّع بزوايا قائمة" },
+        { "id": "d", "text": "أيّ رباعيّ" }
+      ],
+      "correctOption": "b",
+      "explanation": "الشكل رباعيٌّ أضلاعه الأربعة متساوية وزواياه ليست قائمة، فهو معيّن.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "إذا كان (D1) ∥ (D2) و (D2) ⊥ (D3)، فما علاقة (D1) بـ (D3)؟",
+      "options": [
+        { "id": "a", "text": "متوازيان" },
+        { "id": "b", "text": "منطبقان" },
+        { "id": "c", "text": "متعامدان" },
+        { "id": "d", "text": "لا يمكن تحديد العلاقة" }
+      ],
+      "correctOption": "c",
+      "explanation": "إذا وازى مستقيمٌ آخرَ، وكان الآخر عموديًّا على ثالث، فإنّ الأوّل عموديٌّ على الثالث: (D1) ⊥ (D3).",
+      "difficulty": 3
+    }
+  ]
+}

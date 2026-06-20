@@ -1,0 +1,82 @@
+{
+  "title": "👑 تحدّي النخبة ⭐⭐⭐⭐: ألغاز الأعداد إلى 9",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "أنا عددٌ أكبر من 4 وأصغر من 6. من أكون؟",
+      "options": [
+        { "id": "a", "text": "4" },
+        { "id": "b", "text": "5" },
+        { "id": "c", "text": "6" },
+        { "id": "d", "text": "7" }
+      ],
+      "correctOption": "b",
+      "explanation": "العدد الوحيد الأكبر من 4 والأصغر من 6 هو 5.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "عندي 3 حلوى، أعطتني أمّي 2 أخرى. كم صار لديّ؟",
+      "options": [
+        { "id": "a", "text": "4" },
+        { "id": "b", "text": "6" },
+        { "id": "c", "text": "5" },
+        { "id": "d", "text": "3" }
+      ],
+      "correctOption": "c",
+      "explanation": "أبدأ بـ 3 ثمّ أَعُدّ 2 أخرى: 3 ثمّ 4 ثمّ 5. صار لديّ 5 حلوى.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ما العدد المفقود؟ 9، 8، …، 6",
+      "options": [
+        { "id": "a", "text": "7" },
+        { "id": "b", "text": "5" },
+        { "id": "c", "text": "10" },
+        { "id": "d", "text": "4" }
+      ],
+      "correctOption": "a",
+      "explanation": "هنا نَعُدّ تنازليًّا: 9، 8، 7، 6. العدد المفقود بين 8 و 6 هو 7.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "كان في القفص 6 عصافير، طار 3. كم بقي؟",
+      "options": [
+        { "id": "a", "text": "2" },
+        { "id": "b", "text": "4" },
+        { "id": "c", "text": "9" },
+        { "id": "d", "text": "3" }
+      ],
+      "correctOption": "d",
+      "explanation": "أبدأ بـ 6 وأنقص 3 طارت: 6 ثمّ 5 ثمّ 4 ثمّ 3. بقي 3 عصافير.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "رتّب الأعداد 5 و 2 و 8 و 0 من الأكبر إلى الأصغر.",
+      "options": [
+        { "id": "a", "text": "0، 2، 5، 8" },
+        { "id": "b", "text": "8، 5، 2، 0" },
+        { "id": "c", "text": "8، 2، 5، 0" },
+        { "id": "d", "text": "2، 0، 5، 8" }
+      ],
+      "correctOption": "b",
+      "explanation": "من الأكبر إلى الأصغر: 8 ثمّ 5 ثمّ 2 ثمّ 0. إذن الترتيب 8، 5، 2، 0.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "عددٌ يأتي مباشرةً بعد 6 ومباشرةً قبل 8. ما هو؟",
+      "options": [
+        { "id": "a", "text": "6" },
+        { "id": "b", "text": "8" },
+        { "id": "c", "text": "7" },
+        { "id": "d", "text": "9" }
+      ],
+      "correctOption": "c",
+      "explanation": "العدد الذي يأتي بعد 6 هو 7، وهو نفسه الذي يأتي قبل 8. إذن العدد هو 7.",
+      "difficulty": 3
+    }
+  ]
+}

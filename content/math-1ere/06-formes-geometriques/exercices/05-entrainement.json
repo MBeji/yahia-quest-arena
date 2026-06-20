@@ -1,0 +1,82 @@
+{
+  "title": "📝 تدريب ⭐⭐⭐: مراجعة شاملة للأشكال",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "ما اسم هذا الشكل؟ <svg viewBox=\"0 0 100 100\"><polygon points=\"50,18 82,82 18,82\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"4\"/></svg>",
+      "options": [
+        { "id": "a", "text": "مثلّث" },
+        { "id": "b", "text": "مربّع" },
+        { "id": "c", "text": "دائرة" },
+        { "id": "d", "text": "مستطيل" }
+      ],
+      "correctOption": "a",
+      "explanation": "الشكل له 3 أضلاع و 3 زوايا، فهو مثلّث.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم زاوية للمستطيل؟",
+      "options": [
+        { "id": "a", "text": "3" },
+        { "id": "b", "text": "4" },
+        { "id": "c", "text": "0" },
+        { "id": "d", "text": "2" }
+      ],
+      "correctOption": "b",
+      "explanation": "المستطيل له 4 زوايا و 4 أضلاع، مثل المربّع.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "شكلٌ له 3 أضلاع. ما هو؟",
+      "options": [
+        { "id": "a", "text": "المربّع" },
+        { "id": "b", "text": "الدائرة" },
+        { "id": "c", "text": "المثلّث" },
+        { "id": "d", "text": "المستطيل" }
+      ],
+      "correctOption": "c",
+      "explanation": "الشكل ذو 3 أضلاع و 3 زوايا هو المثلّث.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ هذه الأشياء يشبه المستطيل؟",
+      "options": [
+        { "id": "a", "text": "الساعة المستديرة" },
+        { "id": "b", "text": "قطعة البيتزا" },
+        { "id": "c", "text": "كرة القدم" },
+        { "id": "d", "text": "الباب" }
+      ],
+      "correctOption": "d",
+      "explanation": "الباب شكله مستطيل (4 أضلاع، ضلعان طويلان وضلعان قصيران)، أمّا الساعة والكرة فمستديرتان.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم ضلعًا في مربّعين معًا؟",
+      "options": [
+        { "id": "a", "text": "8" },
+        { "id": "b", "text": "6" },
+        { "id": "c", "text": "4" },
+        { "id": "d", "text": "16" }
+      ],
+      "correctOption": "a",
+      "explanation": "لكلّ مربّع 4 أضلاع، فمربّعان لهما 4 + 4 = 8 أضلاع.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "أنا شكلٌ لي 4 أضلاع لكنّها ليست كلّها متساوية. ما أنا؟",
+      "options": [
+        { "id": "a", "text": "المثلّث" },
+        { "id": "b", "text": "الدائرة" },
+        { "id": "c", "text": "المستطيل" },
+        { "id": "d", "text": "المربّع" }
+      ],
+      "correctOption": "c",
+      "explanation": "الشكل ذو 4 أضلاع غير المتساوية كلّها (ضلعان طويلان وضلعان قصيران) هو المستطيل، لا المربّع.",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: أوّل خطوات في القيس",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "كم مليمترًا (mm) في السنتيمتر الواحد (1 cm)؟",
+      "options": [
+        { "id": "a", "text": "100 mm" },
+        { "id": "b", "text": "1 000 mm" },
+        { "id": "c", "text": "10 mm" },
+        { "id": "d", "text": "5 mm" }
+      ],
+      "correctOption": "c",
+      "explanation": "العلاقة هي 1 cm = 10 mm. السنتيمتر الواحد فيه عشرة مليمترات.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم مترًا (m) في الكيلومتر الواحد (1 km)؟",
+      "options": [
+        { "id": "a", "text": "100 m" },
+        { "id": "b", "text": "1 000 m" },
+        { "id": "c", "text": "10 m" },
+        { "id": "d", "text": "500 m" }
+      ],
+      "correctOption": "b",
+      "explanation": "العلاقة هي 1 km = 1 000 m. الكيلومتر الواحد يساوي ألف متر.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم يساوي نصف الكيلوغرام بالغرام؟",
+      "options": [
+        { "id": "a", "text": "500 g" },
+        { "id": "b", "text": "250 g" },
+        { "id": "c", "text": "100 g" },
+        { "id": "d", "text": "50 g" }
+      ],
+      "correctOption": "a",
+      "explanation": "بما أنّ 1 kg = 1 000 g، فإنّ نصف الكيلوغرام = 1 000 ÷ 2 = 500 g.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم ثانية (s) في الدقيقة الواحدة (1 min)؟",
+      "options": [
+        { "id": "a", "text": "100 s" },
+        { "id": "b", "text": "24 s" },
+        { "id": "c", "text": "30 s" },
+        { "id": "d", "text": "60 s" }
+      ],
+      "correctOption": "d",
+      "explanation": "العلاقة هي 1 min = 60 s. الدقيقة الواحدة فيها ستّون ثانية.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم يومًا (jours) في الأسبوع الواحد (1 semaine)؟",
+      "options": [
+        { "id": "a", "text": "5 أيّام" },
+        { "id": "b", "text": "7 أيّام" },
+        { "id": "c", "text": "30 يومًا" },
+        { "id": "d", "text": "24 يومًا" }
+      ],
+      "correctOption": "b",
+      "explanation": "العلاقة هي 1 semaine = 7 jours. الأسبوع الواحد فيه سبعة أيّام.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "دفع طفلٌ 1 د (= 1 000 م) لشراء عصيرٍ ثمنه 700 م. كم باقيه؟",
+      "options": [
+        { "id": "a", "text": "700 م" },
+        { "id": "b", "text": "400 م" },
+        { "id": "c", "text": "300 م" },
+        { "id": "d", "text": "1 700 م" }
+      ],
+      "correctOption": "c",
+      "explanation": "الباقي = المبلغ المدفوع − ثمن السلعة = 1 000 − 700 = 300 م.",
+      "difficulty": 2
+    }
+  ]
+}

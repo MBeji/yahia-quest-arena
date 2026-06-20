@@ -1,0 +1,65 @@
+{
+  "title": "اختبار فهم الدرس ⭐",
+  "questions": [
+    {
+      "prompt": "كم مترًا في 3 km؟",
+      "options": [
+        { "id": "a", "text": "3 000 m" },
+        { "id": "b", "text": "300 m" },
+        { "id": "c", "text": "30 m" },
+        { "id": "d", "text": "30 000 m" }
+      ],
+      "correctOption": "a",
+      "explanation": "نعرف أنّ 1 km = 1 000 m، فننزل من الكيلومتر إلى المتر بالضرب في 1 000: 3 × 1 000 = 3 000 m.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم غرامًا في 2 kg؟",
+      "options": [
+        { "id": "a", "text": "20 g" },
+        { "id": "b", "text": "200 g" },
+        { "id": "c", "text": "2 000 g" },
+        { "id": "d", "text": "20 000 g" }
+      ],
+      "correctOption": "c",
+      "explanation": "نعرف أنّ 1 kg = 1 000 g، فننزل من الكيلوغرام إلى الغرام بالضرب في 1 000: 2 × 1 000 = 2 000 g.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم ميليلترًا في 1,5 L؟",
+      "options": [
+        { "id": "a", "text": "15 mL" },
+        { "id": "b", "text": "1 500 mL" },
+        { "id": "c", "text": "150 mL" },
+        { "id": "d", "text": "15 000 mL" }
+      ],
+      "correctOption": "b",
+      "explanation": "نعرف أنّ 1 L = 1 000 mL، فنضرب في 1 000: 1,5 × 1 000 = 1 500 mL. الضرب في 1 000 يُزحزح الفاصلة ثلاث مراتب.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم دقيقة في 2 h 15 min؟",
+      "options": [
+        { "id": "a", "text": "135 min" },
+        { "id": "b", "text": "215 min" },
+        { "id": "c", "text": "150 min" },
+        { "id": "d", "text": "75 min" }
+      ],
+      "correctOption": "a",
+      "explanation": "الساعة 60 دقيقة، فـ 2 h = 2 × 60 = 120 min، ونضيف 15 min: 120 + 15 = 135 min. ليست 215 لأنّ الساعة 60 دقيقة لا 100.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم كيلوغرامًا في 2 500 g؟",
+      "options": [
+        { "id": "a", "text": "25 kg" },
+        { "id": "b", "text": "250 kg" },
+        { "id": "c", "text": "2,5 kg" },
+        { "id": "d", "text": "0,25 kg" }
+      ],
+      "correctOption": "c",
+      "explanation": "نصعد من الغرام إلى الكيلوغرام بالقسمة على 1 000 لأنّ 1 kg = 1 000 g: 2 500 ÷ 1 000 = 2,5 kg.",
+      "difficulty": 2
+    }
+  ]
+}

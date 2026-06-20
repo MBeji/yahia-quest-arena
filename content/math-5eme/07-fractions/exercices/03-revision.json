@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة (نمط امتحان): الكسور",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "في الكسر 7/10، ما هو المقام؟",
+      "options": [
+        { "id": "a", "text": "7" },
+        { "id": "b", "text": "17" },
+        { "id": "c", "text": "10" },
+        { "id": "d", "text": "3" }
+      ],
+      "correctOption": "c",
+      "explanation": "المقام هو العدد المكتوب تحت الخطّ، أي 10، والبسط هو 7.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما قيمة 2/5 من 20؟",
+      "options": [
+        { "id": "a", "text": "4" },
+        { "id": "b", "text": "8" },
+        { "id": "c", "text": "10" },
+        { "id": "d", "text": "40" }
+      ],
+      "correctOption": "b",
+      "explanation": "نقسم على المقام ثمّ نضرب في البسط: 20 ÷ 5 = 4، ثمّ 4 × 2 = 8. إذن 2/5 من 20 يساوي 8.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "بضرب البسط والمقام في 2، أيّ كسرٍ يساوي 3/5؟",
+      "options": [
+        { "id": "a", "text": "3/10" },
+        { "id": "b", "text": "5/3" },
+        { "id": "c", "text": "6/5" },
+        { "id": "d", "text": "6/10" }
+      ],
+      "correctOption": "d",
+      "explanation": "نضرب البسط والمقام معًا في 2: (3 × 2)/(5 × 2) = 6/10. إذن 3/5 = 6/10.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ كسرٍ ممّا يلي أصغر من 1؟",
+      "options": [
+        { "id": "a", "text": "4/9" },
+        { "id": "b", "text": "9/4" },
+        { "id": "c", "text": "5/5" },
+        { "id": "d", "text": "7/3" }
+      ],
+      "correctOption": "a",
+      "explanation": "الكسر أصغر من 1 إذا كان بسطه أصغر من مقامه. في 4/9 البسط 4 أصغر من المقام 9، إذن 4/9 < 1.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما الكسر الناتج عن اختزال 4/8؟",
+      "options": [
+        { "id": "a", "text": "4/2" },
+        { "id": "b", "text": "2/4" },
+        { "id": "c", "text": "1/2" },
+        { "id": "d", "text": "1/4" }
+      ],
+      "correctOption": "c",
+      "explanation": "نقسم البسط والمقام على 4: (4 ÷ 4)/(8 ÷ 4) = 1/2. إذن 4/8 = 1/2.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما الكتابة العشرية للكسر 3/10؟",
+      "options": [
+        { "id": "a", "text": "3,10" },
+        { "id": "b", "text": "0,3" },
+        { "id": "c", "text": "0,03" },
+        { "id": "d", "text": "0,13" }
+      ],
+      "correctOption": "b",
+      "explanation": "الكسر 3/10 يعني 3 أعشار، أي 0,3. إذن 3/10 = 0,3.",
+      "difficulty": 2
+    }
+  ]
+}

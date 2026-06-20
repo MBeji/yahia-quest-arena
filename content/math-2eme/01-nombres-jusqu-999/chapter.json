@@ -1,0 +1,9 @@
+{
+  "title": "الأعداد إلى 999",
+  "description": "نظام العدّ العشري، الرتب الثلاث (آحاد، عشرات، مئات)، قراءة وكتابة الأعداد إلى 999، التفكيك وقيمة الرقم حسب موضعه",
+  "displayOrder": 1,
+  "sources": [
+    "Programme officiel de mathématiques — 2ème année de l'enseignement de base (CNP, Ministère de l'Éducation, Tunisie)",
+    "Manuel scolaire de mathématiques — 2ème année de base (CNP, Tunisie)"
+  ]
+}

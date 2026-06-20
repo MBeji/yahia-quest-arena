@@ -1,0 +1,65 @@
+{
+  "title": "اختبار فهم الدرس ⭐",
+  "questions": [
+    {
+      "prompt": "كيف نحسب مساحة المربّع؟",
+      "options": [
+        { "id": "a", "text": "4 × الضلع" },
+        { "id": "b", "text": "الضلع + الضلع" },
+        { "id": "c", "text": "الضلع × الضلع" },
+        { "id": "d", "text": "2 × الضلع" }
+      ],
+      "correctOption": "c",
+      "explanation": "مساحة المربّع = الضلع × الضلع. أمّا 4 × الضلع فهو المحيط، فانتبه إلى التمييز بينهما.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما مساحة المستطيل الذي طوله 6 cm وعرضه 4 cm؟ <svg viewBox=\"0 0 100 100\"><rect x=\"15\" y=\"32\" width=\"60\" height=\"40\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><text x=\"33\" y=\"27\" font-size=\"10\" fill=\"currentColor\">6 cm</text><text x=\"2\" y=\"55\" font-size=\"10\" fill=\"currentColor\">4</text></svg>",
+      "options": [
+        { "id": "a", "text": "24 cm²" },
+        { "id": "b", "text": "20 cm²" },
+        { "id": "c", "text": "10 cm²" },
+        { "id": "d", "text": "24 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "مساحة المستطيل = الطول × العرض = 6 × 4 = 24 cm². لاحظ أنّ وحدة المساحة هي cm² وليست cm.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما محيط مربّعٍ ضلعه 7 cm؟",
+      "options": [
+        { "id": "a", "text": "14 cm" },
+        { "id": "b", "text": "28 cm" },
+        { "id": "c", "text": "49 cm" },
+        { "id": "d", "text": "21 cm" }
+      ],
+      "correctOption": "b",
+      "explanation": "محيط المربّع = 4 × الضلع = 4 × 7 = 28 cm. أمّا 49 فهو المساحة (7 × 7) وليس المحيط.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم سنتيمترًا مربّعًا في المتر المربّع الواحد؟",
+      "options": [
+        { "id": "a", "text": "100 cm²" },
+        { "id": "b", "text": "1 000 cm²" },
+        { "id": "c", "text": "10 000 cm²" },
+        { "id": "d", "text": "1 000 000 cm²" }
+      ],
+      "correctOption": "c",
+      "explanation": "بما أنّ 1 m = 100 cm، فإنّ 1 m² = 100 × 100 = 10 000 cm². نضرب طول التحويل في نفسه لأنّها مساحة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "مستطيلٌ طوله 5 cm وعرضه 3 cm. ما محيطه؟",
+      "options": [
+        { "id": "a", "text": "8 cm" },
+        { "id": "b", "text": "15 cm" },
+        { "id": "c", "text": "15 cm²" },
+        { "id": "d", "text": "16 cm" }
+      ],
+      "correctOption": "d",
+      "explanation": "محيط المستطيل = 2 × (الطول + العرض) = 2 × (5 + 3) = 2 × 8 = 16 cm. أمّا 15 فهو المساحة (5 × 3) وليس المحيط.",
+      "difficulty": 2
+    }
+  ]
+}

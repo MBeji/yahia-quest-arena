@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: أوّل خطوات في التناظر المحوري",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "الشكل المتناظر عند طيّه على محوره:",
+      "options": [
+        { "id": "a", "text": "يختلف نصفاه" },
+        { "id": "b", "text": "ينطبق نصفاه تمامًا" },
+        { "id": "c", "text": "يكبر حجمه" },
+        { "id": "d", "text": "يصغر حجمه" }
+      ],
+      "correctOption": "b",
+      "explanation": "عند الطيّ على محور التناظر ينطبق نصفا الشكل أحدهما على الآخر تمامًا.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم محور تناظرٍ للمربّع؟",
+      "options": [
+        { "id": "a", "text": "1" },
+        { "id": "b", "text": "2" },
+        { "id": "c", "text": "4" },
+        { "id": "d", "text": "0" }
+      ],
+      "correctOption": "c",
+      "explanation": "للمربّع 4 محاور تناظر: محوران عبر منتصفات الأضلاع ومحوران قطريّان.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما نظير نقطةٍ تقع على محور التناظر نفسه؟",
+      "options": [
+        { "id": "a", "text": "النقطة نفسها" },
+        { "id": "b", "text": "نقطةٌ بعيدة عنها" },
+        { "id": "c", "text": "لا نظير لها" },
+        { "id": "d", "text": "منتصف المحور" }
+      ],
+      "correctOption": "a",
+      "explanation": "النقطة الواقعة على المحور بُعدها عنه صفر، فنظيرها هو نفسها.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم محور تناظرٍ للدائرة؟",
+      "options": [
+        { "id": "a", "text": "1" },
+        { "id": "b", "text": "2" },
+        { "id": "c", "text": "4" },
+        { "id": "d", "text": "عددٌ لا نهائيّ" }
+      ],
+      "correctOption": "d",
+      "explanation": "للدائرة عددٌ لا نهائيّ من محاور التناظر، لأنّ كلّ قطرٍ فيها محورُ تناظر.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "في الشكل التالي، ما العلاقة بين بُعدَي A و A' عن المحور المتقطّع؟ <svg viewBox=\"0 0 100 100\"><line x1=\"50\" y1=\"10\" x2=\"50\" y2=\"90\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-dasharray=\"4 3\"/><circle cx=\"22\" cy=\"50\" r=\"3\" fill=\"currentColor\"/><circle cx=\"78\" cy=\"50\" r=\"3\" fill=\"currentColor\"/><text x=\"14\" y=\"46\" font-size=\"11\" fill=\"currentColor\">A</text><text x=\"80\" y=\"46\" font-size=\"11\" fill=\"currentColor\">A'</text></svg>",
+      "options": [
+        { "id": "a", "text": "بُعد A أكبر" },
+        { "id": "b", "text": "بُعد A' أكبر" },
+        { "id": "c", "text": "متساويان" },
+        { "id": "d", "text": "لا يمكن المعرفة" }
+      ],
+      "correctOption": "c",
+      "explanation": "النقطتان متناظرتان بالنسبة للمحور، فبُعداهما عنه متساويان (المحور في منتصف القطعة الواصلة بينهما).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم محور تناظرٍ للمثلّث متساوي الأضلاع؟",
+      "options": [
+        { "id": "a", "text": "3" },
+        { "id": "b", "text": "1" },
+        { "id": "c", "text": "0" },
+        { "id": "d", "text": "2" }
+      ],
+      "correctOption": "a",
+      "explanation": "للمثلّث متساوي الأضلاع 3 محاور تناظر، واحدٌ لكلّ ضلعٍ (يمرّ بالرأس المقابل ومنتصف الضلع).",
+      "difficulty": 2
+    }
+  ]
+}

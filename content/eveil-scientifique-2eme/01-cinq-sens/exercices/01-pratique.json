@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: أتعرّف على حواسّي",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "بأيّ عضوٍ نشمّ رائحة الورد؟",
+      "options": [
+        { "id": "a", "text": "العين" },
+        { "id": "b", "text": "الأنف" },
+        { "id": "c", "text": "الأذن" },
+        { "id": "d", "text": "اللسان" }
+      ],
+      "correctOption": "b",
+      "explanation": "نشمّ الروائح بحاسّة الشمّ، وعضوها الأنف.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "حاسّة البصر عضوها:",
+      "options": [
+        { "id": "a", "text": "اللسان" },
+        { "id": "b", "text": "الجلد" },
+        { "id": "c", "text": "العين" },
+        { "id": "d", "text": "الأذن" }
+      ],
+      "correctOption": "c",
+      "explanation": "حاسّة البصر هي التي نرى بها، وعضوها العين.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "بأيّ حاسّةٍ نعرف أنّ الماء ساخنٌ أو بارد؟",
+      "options": [
+        { "id": "a", "text": "حاسّة اللمس" },
+        { "id": "b", "text": "حاسّة السمع" },
+        { "id": "c", "text": "حاسّة البصر" },
+        { "id": "d", "text": "حاسّة الشمّ" }
+      ],
+      "correctOption": "a",
+      "explanation": "نعرف أنّ الماء ساخنٌ أو بارد بحاسّة اللمس عن طريق الجلد.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "عضو حاسّة السمع هو:",
+      "options": [
+        { "id": "a", "text": "الأنف" },
+        { "id": "b", "text": "اللسان" },
+        { "id": "c", "text": "العين" },
+        { "id": "d", "text": "الأذن" }
+      ],
+      "correctOption": "d",
+      "explanation": "نسمع الأصوات بحاسّة السمع، وعضوها الأذن.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "بأيّ عضوٍ نتذوّق الطعام؟",
+      "options": [
+        { "id": "a", "text": "اللسان" },
+        { "id": "b", "text": "الأذن" },
+        { "id": "c", "text": "العين" },
+        { "id": "d", "text": "الأنف" }
+      ],
+      "correctOption": "a",
+      "explanation": "نتذوّق الطعام بحاسّة الذوق، وعضوها اللسان.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ هذه الأعضاء نلمس به الأشياء؟",
+      "options": [
+        { "id": "a", "text": "العين" },
+        { "id": "b", "text": "الجلد" },
+        { "id": "c", "text": "الأذن" },
+        { "id": "d", "text": "الأنف" }
+      ],
+      "correctOption": "b",
+      "explanation": "نلمس الأشياء بحاسّة اللمس، وعضوها الجلد.",
+      "difficulty": 2
+    }
+  ]
+}

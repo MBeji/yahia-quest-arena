@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة (نمط امتحان): الطرح في حدود 999",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "في العمليّة 9 − 4 = 5، ما هو «الفرق»؟",
+      "options": [
+        { "id": "a", "text": "4" },
+        { "id": "b", "text": "5" },
+        { "id": "c", "text": "9" },
+        { "id": "d", "text": "13" }
+      ],
+      "correctOption": "b",
+      "explanation": "الفرق هو نتيجة الطرح، أي 5؛ والمطروح منه هو 9، والمطروح هو 4.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما نتيجة 75 − 23؟",
+      "options": [
+        { "id": "a", "text": "42" },
+        { "id": "b", "text": "48" },
+        { "id": "c", "text": "52" },
+        { "id": "d", "text": "98" }
+      ],
+      "correctOption": "c",
+      "explanation": "الآحاد 5 − 3 = 2، والعشرات 7 − 2 = 5. إذن 75 − 23 = 52.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما نتيجة 268 − 0؟",
+      "options": [
+        { "id": "a", "text": "0" },
+        { "id": "b", "text": "26" },
+        { "id": "c", "text": "260" },
+        { "id": "d", "text": "268" }
+      ],
+      "correctOption": "d",
+      "explanation": "طرح الصفر لا يغيّر العدد، فإنّ 268 − 0 = 268.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما نتيجة 81 − 6؟",
+      "options": [
+        { "id": "a", "text": "73" },
+        { "id": "b", "text": "75" },
+        { "id": "c", "text": "85" },
+        { "id": "d", "text": "87" }
+      ],
+      "correctOption": "b",
+      "explanation": "الآحاد 1 أصغر من 6 فنستلف عشرةً: 11 − 6 = 5، والعشرات تصير 7. إذن 81 − 6 = 75.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما نتيجة 94 − 47؟",
+      "options": [
+        { "id": "a", "text": "47" },
+        { "id": "b", "text": "53" },
+        { "id": "c", "text": "57" },
+        { "id": "d", "text": "63" }
+      ],
+      "correctOption": "a",
+      "explanation": "الآحاد 4 أصغر من 7 فنستلف عشرةً: 14 − 7 = 7، والعشرات 8 − 4 = 4. إذن 94 − 47 = 47.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما نتيجة 8 − 8؟",
+      "options": [
+        { "id": "a", "text": "0" },
+        { "id": "b", "text": "1" },
+        { "id": "c", "text": "8" },
+        { "id": "d", "text": "16" }
+      ],
+      "correctOption": "a",
+      "explanation": "طرح العدد من نفسه يعطي 0 دائمًا، فإنّ 8 − 8 = 0.",
+      "difficulty": 2
+    }
+  ]
+}

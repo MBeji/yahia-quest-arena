@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة (نمط امتحان): القيس",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "كم ديسيمترًا (dm) في المسافة 1 m؟",
+      "options": [
+        { "id": "a", "text": "100 dm" },
+        { "id": "b", "text": "10 dm" },
+        { "id": "c", "text": "1 000 dm" },
+        { "id": "d", "text": "5 dm" }
+      ],
+      "correctOption": "b",
+      "explanation": "العلاقة هي 1 m = 10 dm. المتر الواحد فيه عشرة ديسيمترات.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم تساوي المسافة 2 m بالسنتيمتر (cm)؟",
+      "options": [
+        { "id": "a", "text": "20 cm" },
+        { "id": "b", "text": "2 000 cm" },
+        { "id": "c", "text": "200 cm" },
+        { "id": "d", "text": "102 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "بما أنّ 1 m = 100 cm، فإنّ 2 m = 2 × 100 = 200 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم يساوي ربع الكيلوغرام بالغرام؟",
+      "options": [
+        { "id": "a", "text": "250 g" },
+        { "id": "b", "text": "500 g" },
+        { "id": "c", "text": "750 g" },
+        { "id": "d", "text": "25 g" }
+      ],
+      "correctOption": "a",
+      "explanation": "بما أنّ 1 kg = 1 000 g، فإنّ ربع الكيلوغرام = 1 000 ÷ 4 = 250 g.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم ساعة (h) في اليوم الكامل (1 jour)؟",
+      "options": [
+        { "id": "a", "text": "60 h" },
+        { "id": "b", "text": "12 h" },
+        { "id": "c", "text": "7 h" },
+        { "id": "d", "text": "24 h" }
+      ],
+      "correctOption": "d",
+      "explanation": "العلاقة هي 1 jour = 24 h. اليوم الكامل فيه أربع وعشرون ساعة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم تساوي الكتلة 3 kg بالغرام (g)؟",
+      "options": [
+        { "id": "a", "text": "300 g" },
+        { "id": "b", "text": "3 000 g" },
+        { "id": "c", "text": "30 g" },
+        { "id": "d", "text": "3 300 g" }
+      ],
+      "correctOption": "b",
+      "explanation": "بما أنّ 1 kg = 1 000 g، فإنّ 3 kg = 3 × 1 000 = 3 000 g.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "اشترى ولدٌ قلمًا بـ 350 م ودفع 500 م. كم باقيه؟",
+      "options": [
+        { "id": "a", "text": "850 م" },
+        { "id": "b", "text": "250 م" },
+        { "id": "c", "text": "150 م" },
+        { "id": "d", "text": "350 م" }
+      ],
+      "correctOption": "c",
+      "explanation": "الباقي = المبلغ المدفوع − ثمن السلعة = 500 − 350 = 150 م.",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "title": "المقارنة والترتيب والتدوير",
+  "description": "مقارنة الأعداد إلى 9999 بالرموز < و > و =، ترتيبها تصاعديًّا وتنازليًّا، وتدويرها إلى أقرب عشرة أو مئة أو ألف",
+  "displayOrder": 2,
+  "sources": [
+    "Programme officiel de mathématiques — 3ème année de l'enseignement de base (CNP, Ministère de l'Éducation, Tunisie)",
+    "Manuel scolaire de mathématiques — 3ème année de base (CNP, Tunisie)"
+  ]
+}

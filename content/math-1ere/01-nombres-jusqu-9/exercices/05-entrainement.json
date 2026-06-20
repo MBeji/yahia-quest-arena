@@ -1,0 +1,82 @@
+{
+  "title": "📝 تدريب ⭐⭐⭐: مراجعة شاملة للأعداد إلى 9",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "كم مثلّثًا هنا؟ 🔺🔺🔺🔺🔺🔺🔺",
+      "options": [
+        { "id": "a", "text": "6" },
+        { "id": "b", "text": "7" },
+        { "id": "c", "text": "8" },
+        { "id": "d", "text": "5" }
+      ],
+      "correctOption": "b",
+      "explanation": "نَعُدّ المثلّثات واحدًا واحدًا: 1، 2، 3، 4، 5، 6، 7. عددها 7 مثلّثات.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما العدد الذي يلي العدد 0؟",
+      "options": [
+        { "id": "a", "text": "1" },
+        { "id": "b", "text": "0" },
+        { "id": "c", "text": "2" },
+        { "id": "d", "text": "9" }
+      ],
+      "correctOption": "a",
+      "explanation": "العدد الذي يلي 0 يأتي بعده مباشرة، أي 1 (أكبر بواحد).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما العدد المفقود؟ 5، …، 7، 8",
+      "options": [
+        { "id": "a", "text": "4" },
+        { "id": "b", "text": "9" },
+        { "id": "c", "text": "6" },
+        { "id": "d", "text": "5" }
+      ],
+      "correctOption": "c",
+      "explanation": "نَعُدّ بالترتيب: 5، 6، 7، 8. العدد المفقود بين 5 و 7 هو 6.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ عدد هو الأكبر؟",
+      "options": [
+        { "id": "a", "text": "6" },
+        { "id": "b", "text": "3" },
+        { "id": "c", "text": "9" },
+        { "id": "d", "text": "8" }
+      ],
+      "correctOption": "c",
+      "explanation": "من بين 6 و 3 و 9 و 8 الأكبر هو 9 (آخر عدد في العدّ).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "عددٌ أكبر من 7 وأصغر من 9. ما هو؟",
+      "options": [
+        { "id": "a", "text": "7" },
+        { "id": "b", "text": "8" },
+        { "id": "c", "text": "9" },
+        { "id": "d", "text": "6" }
+      ],
+      "correctOption": "b",
+      "explanation": "العدد الوحيد الأكبر من 7 والأصغر من 9 هو 8.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "رتّب الأعداد 3 و 9 و 0 من الأصغر إلى الأكبر.",
+      "options": [
+        { "id": "a", "text": "9، 3، 0" },
+        { "id": "b", "text": "3، 0، 9" },
+        { "id": "c", "text": "0، 9، 3" },
+        { "id": "d", "text": "0، 3، 9" }
+      ],
+      "correctOption": "d",
+      "explanation": "من الأصغر إلى الأكبر: 0 ثمّ 3 ثمّ 9. إذن الترتيب 0، 3، 9.",
+      "difficulty": 3
+    }
+  ]
+}

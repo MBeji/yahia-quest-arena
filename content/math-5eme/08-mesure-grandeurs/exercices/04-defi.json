@@ -1,0 +1,82 @@
+{
+  "title": "👑 تحدّي النخبة ⭐⭐⭐⭐: ألغاز القيس والتحويلات",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "ساحةٌ كتلة رمالها 1 t 250 kg، أُفرغ منها 800 kg. كم بقي بالكيلوغرام؟",
+      "options": [
+        { "id": "a", "text": "550 kg" },
+        { "id": "b", "text": "450 kg" },
+        { "id": "c", "text": "1 050 kg" },
+        { "id": "d", "text": "2 050 kg" }
+      ],
+      "correctOption": "b",
+      "explanation": "نوحّد الوحدة: 1 t = 1 000 kg، فالكتلة 1 000 + 250 = 1 250 kg، ثمّ نطرح: 1 250 − 800 = 450 kg.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "قارورتان: الأولى 1,2 L والثانية 750 mL. ما مجموع سعتهما بالميليلتر؟",
+      "options": [
+        { "id": "a", "text": "1 950 mL" },
+        { "id": "b", "text": "8 700 mL" },
+        { "id": "c", "text": "762 mL" },
+        { "id": "d", "text": "2 700 mL" }
+      ],
+      "correctOption": "a",
+      "explanation": "نوحّد الوحدة: 1,2 L = 1 200 mL، ثمّ نجمع: 1 200 + 750 = 1 950 mL.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "حُوّل 2 350 m إلى الكيلومتر والمتر. ما الكتابة الصحيحة؟",
+      "options": [
+        { "id": "a", "text": "23 km و 50 m" },
+        { "id": "b", "text": "2 km و 35 m" },
+        { "id": "c", "text": "2 km و 350 m" },
+        { "id": "d", "text": "235 km" }
+      ],
+      "correctOption": "c",
+      "explanation": "كلّ 1 000 m تساوي 1 km، ففي 2 350 m عدد الكيلومترات 2 ويبقى 350 m، أي 2 km و 350 m.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "فيلمٌ مدّته 95 min. كم تساوي بالساعة والدقيقة؟",
+      "options": [
+        { "id": "a", "text": "9 h 5 min" },
+        { "id": "b", "text": "1 h 45 min" },
+        { "id": "c", "text": "2 h 35 min" },
+        { "id": "d", "text": "1 h 35 min" }
+      ],
+      "correctOption": "d",
+      "explanation": "الساعة 60 دقيقة، ففي 95 min ساعةٌ واحدة (60 min) ويبقى 95 − 60 = 35 min، أي 1 h 35 min.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "تَقطع جَولةٌ مسافة 3 km و 500 m ذهابًا، ومثلها إيابًا. كم المسافة الكاملة بالمتر؟",
+      "options": [
+        { "id": "a", "text": "3 500 m" },
+        { "id": "b", "text": "7 000 m" },
+        { "id": "c", "text": "6 500 m" },
+        { "id": "d", "text": "70 000 m" }
+      ],
+      "correctOption": "b",
+      "explanation": "الذهاب 3 km 500 m = 3 000 + 500 = 3 500 m، والإياب مثله 3 500 m، فالمجموع 3 500 + 3 500 = 7 000 m.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "كيس دقيقٍ كتلته 5 kg، وُزِّع في أكياسٍ صغيرة كتلة كلٍّ منها 250 g. كم كيسًا صغيرًا نحصل عليه؟",
+      "options": [
+        { "id": "a", "text": "2 كيس" },
+        { "id": "b", "text": "200 كيس" },
+        { "id": "c", "text": "20 كيسًا" },
+        { "id": "d", "text": "50 كيسًا" }
+      ],
+      "correctOption": "c",
+      "explanation": "نوحّد الوحدة: 5 kg = 5 000 g، ثمّ نقسم على كتلة الكيس الصغير: 5 000 ÷ 250 = 20 كيسًا.",
+      "difficulty": 3
+    }
+  ]
+}

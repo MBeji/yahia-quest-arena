@@ -1,0 +1,82 @@
+{
+  "title": "🛡️ مراجعة ⭐⭐: أُصنّفُ الحيوانات",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "أيّ حيوانٍ أليف؟",
+      "options": [
+        { "id": "a", "text": "البقرة" },
+        { "id": "b", "text": "الأسد" },
+        { "id": "c", "text": "الذئب" },
+        { "id": "d", "text": "الغزال" }
+      ],
+      "correctOption": "a",
+      "explanation": "البقرة حيوانٌ أليفٌ يعيش في المزرعة قرب الإنسان.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أيّ حيوانٍ برّيّ؟",
+      "options": [
+        { "id": "a", "text": "الدجاجة" },
+        { "id": "b", "text": "الغزال" },
+        { "id": "c", "text": "الكلب" },
+        { "id": "d", "text": "القطّة" }
+      ],
+      "correctOption": "b",
+      "explanation": "الغزال حيوانٌ برّيٌّ يعيش في الطبيعة بعيدًا عن الإنسان.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أين يعيش الأرنب؟",
+      "options": [
+        { "id": "a", "text": "في الماء" },
+        { "id": "b", "text": "في الهواء" },
+        { "id": "c", "text": "في جحرٍ تحت الأرض" },
+        { "id": "d", "text": "في عشٍّ بالشجرة" }
+      ],
+      "correctOption": "c",
+      "explanation": "الأرنب يحفر جحرًا في الأرض ويعيش فيه.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ جملةٍ صحيحة؟",
+      "options": [
+        { "id": "a", "text": "الأسد يأكل العشب" },
+        { "id": "b", "text": "السمكة تعيش في الشجرة" },
+        { "id": "c", "text": "البقرة تأكل اللحم" },
+        { "id": "d", "text": "العصفور يطير ويبني عشًّا في الشجرة" }
+      ],
+      "correctOption": "d",
+      "explanation": "العصفور يطير ويبني عشًّا في الشجرة، أمّا الأسد فيأكل اللحم والسمكة تعيش في الماء.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ماذا تعطينا الدجاجة؟",
+      "options": [
+        { "id": "a", "text": "البيض" },
+        { "id": "b", "text": "الصوف" },
+        { "id": "c", "text": "العسل" },
+        { "id": "d", "text": "الحرير" }
+      ],
+      "correctOption": "a",
+      "explanation": "الدجاجة حيوانٌ أليفٌ يعطينا البيض.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ماذا يأكل الذئب؟",
+      "options": [
+        { "id": "a", "text": "العشب" },
+        { "id": "b", "text": "الجزر" },
+        { "id": "c", "text": "النباتات" },
+        { "id": "d", "text": "اللحم" }
+      ],
+      "correctOption": "d",
+      "explanation": "الذئب حيوانٌ برّيٌّ يأكل اللحم.",
+      "difficulty": 2
+    }
+  ]
+}

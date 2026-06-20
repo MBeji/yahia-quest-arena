@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ زعيم الفصل ⭐⭐⭐: سيّد التحويلات",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "كم سنتيمترًا في 4,5 m؟",
+      "options": [
+        { "id": "a", "text": "45 cm" },
+        { "id": "b", "text": "4 500 cm" },
+        { "id": "c", "text": "450 cm" },
+        { "id": "d", "text": "4,5 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "ننزل من المتر إلى السنتيمتر رتبتين، أي نضرب في 100: 4,5 × 100 = 450 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم كيلوغرامًا في 3 200 g؟",
+      "options": [
+        { "id": "a", "text": "32 kg" },
+        { "id": "b", "text": "3,2 kg" },
+        { "id": "c", "text": "0,32 kg" },
+        { "id": "d", "text": "320 kg" }
+      ],
+      "correctOption": "b",
+      "explanation": "نصعد من الغرام إلى الكيلوغرام بالقسمة على 1 000 لأنّ 1 kg = 1 000 g: 3 200 ÷ 1 000 = 3,2 kg.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم دقيقة في 3 h 20 min؟",
+      "options": [
+        { "id": "a", "text": "320 min" },
+        { "id": "b", "text": "180 min" },
+        { "id": "c", "text": "80 min" },
+        { "id": "d", "text": "200 min" }
+      ],
+      "correctOption": "d",
+      "explanation": "3 h = 3 × 60 = 180 min، ونضيف 20 min: 180 + 20 = 200 min. ليست 320 لأنّ الساعة 60 دقيقة لا 100.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "حوصلة عصيرٍ سعتها 2 L، مُلئت منها 750 mL. كم بقي منها بالميليلتر؟",
+      "options": [
+        { "id": "a", "text": "1 250 mL" },
+        { "id": "b", "text": "1 750 mL" },
+        { "id": "c", "text": "1 350 mL" },
+        { "id": "d", "text": "250 mL" }
+      ],
+      "correctOption": "a",
+      "explanation": "نوحّد الوحدة: 2 L = 2 000 mL، ثمّ نطرح ما أُخذ: 2 000 − 750 = 1 250 mL.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "كم ميليلترًا في 0,4 L؟",
+      "options": [
+        { "id": "a", "text": "40 mL" },
+        { "id": "b", "text": "4 mL" },
+        { "id": "c", "text": "400 mL" },
+        { "id": "d", "text": "4 000 mL" }
+      ],
+      "correctOption": "c",
+      "explanation": "نضرب في 1 000 لأنّ 1 L = 1 000 mL: 0,4 × 1 000 = 400 mL.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "مسافةٌ طولها 1 km 500 m. كم تساوي بالمتر؟",
+      "options": [
+        { "id": "a", "text": "1 050 m" },
+        { "id": "b", "text": "1 500 m" },
+        { "id": "c", "text": "15 000 m" },
+        { "id": "d", "text": "150 m" }
+      ],
+      "correctOption": "b",
+      "explanation": "نحوّل الكيلومتر إلى متر: 1 km = 1 000 m، ثمّ نضيف 500 m: 1 000 + 500 = 1 500 m.",
+      "difficulty": 2
+    }
+  ]
+}

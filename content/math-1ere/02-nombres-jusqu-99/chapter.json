@@ -1,0 +1,9 @@
+{
+  "title": "الأعداد إلى 99",
+  "description": "العشرات والآحاد، قراءة وكتابة الأعداد إلى 99، تكوين العشرة، تفكيك عدد إلى عشرات وآحاد",
+  "displayOrder": 2,
+  "sources": [
+    "Programme officiel de mathématiques — 1ère année de l'enseignement de base (CNP, Ministère de l'Éducation, Tunisie)",
+    "Manuel scolaire de mathématiques — 1ère année de base (CNP, Tunisie)"
+  ]
+}

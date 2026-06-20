@@ -1,0 +1,9 @@
+{
+  "title": "ضرب الأعداد العشرية",
+  "description": "ضرب عددٍ عشريّ في عددٍ صحيح بوضع العمليّة وإحصاء أرقام الفاصلة، الضرب في 10 و100 و1000 بإزاحة الفاصلة نحو اليمين، وحلّ مسائل (الثمن الجمليّ وغيرها)",
+  "displayOrder": 5,
+  "sources": [
+    "Programme officiel de mathématiques — 5ème année de l'enseignement de base (CNP, Ministère de l'Éducation, Tunisie)",
+    "Manuel scolaire de mathématiques — 5ème année de base (CNP, Tunisie)"
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة (نمط امتحان): المحيط والمساحة",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "ما مساحة مربّعٍ ضلعه 8 cm؟ <svg viewBox=\"0 0 100 100\"><rect x=\"25\" y=\"25\" width=\"50\" height=\"50\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><text x=\"42\" y=\"20\" font-size=\"10\" fill=\"currentColor\">8 cm</text></svg>",
+      "options": [
+        { "id": "a", "text": "32 cm²" },
+        { "id": "b", "text": "64 cm²" },
+        { "id": "c", "text": "16 cm²" },
+        { "id": "d", "text": "64 cm" }
+      ],
+      "correctOption": "b",
+      "explanation": "مساحة المربّع = الضلع × الضلع = 8 × 8 = 64 cm². أمّا 32 فهو المحيط (4 × 8).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما محيط مستطيلٍ طوله 10 cm وعرضه 4 cm؟",
+      "options": [
+        { "id": "a", "text": "28 cm" },
+        { "id": "b", "text": "14 cm" },
+        { "id": "c", "text": "40 cm" },
+        { "id": "d", "text": "28 cm²" }
+      ],
+      "correctOption": "a",
+      "explanation": "محيط المستطيل = 2 × (10 + 4) = 2 × 14 = 28 cm. أمّا 40 فهو المساحة (10 × 4).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما مساحة مستطيلٍ طوله 9 cm وعرضه 6 cm؟",
+      "options": [
+        { "id": "a", "text": "30 cm²" },
+        { "id": "b", "text": "15 cm²" },
+        { "id": "c", "text": "54 cm²" },
+        { "id": "d", "text": "54 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "مساحة المستطيل = الطول × العرض = 9 × 6 = 54 cm².",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما محيط مثلّثٍ متساوي الأضلاع طول ضلعه 6 cm؟",
+      "options": [
+        { "id": "a", "text": "12 cm" },
+        { "id": "b", "text": "18 cm" },
+        { "id": "c", "text": "36 cm" },
+        { "id": "d", "text": "6 cm" }
+      ],
+      "correctOption": "b",
+      "explanation": "أضلاع المثلّث الثلاثة متساوية، فالمحيط = 3 × 6 = 18 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "مساحةٌ قدرها 5 m². كم تساوي بالـ cm²؟",
+      "options": [
+        { "id": "a", "text": "500 cm²" },
+        { "id": "b", "text": "5 000 cm²" },
+        { "id": "c", "text": "50 000 cm²" },
+        { "id": "d", "text": "50 cm²" }
+      ],
+      "correctOption": "c",
+      "explanation": "بما أنّ 1 m² = 10 000 cm²، فإنّ 5 m² = 5 × 10 000 = 50 000 cm².",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ جملةٍ صحيحة عن المحيط والمساحة؟",
+      "options": [
+        { "id": "a", "text": "المحيط يُقاس بالـ cm² والمساحة بالـ cm" },
+        { "id": "b", "text": "المحيط هو السطح داخل الشكل" },
+        { "id": "c", "text": "المساحة دائمًا أكبر من المحيط" },
+        { "id": "d", "text": "المحيط طولٌ حول الشكل، والمساحة سطحٌ داخله" }
+      ],
+      "correctOption": "d",
+      "explanation": "المحيط هو الطريق حول الشكل ويُقاس بالـ cm، والمساحة هي السطح داخله وتُقاس بالـ cm². لا يوجد قانونٌ يجعل أحدهما دائمًا أكبر.",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة (نمط امتحان): القيس والتحويلات",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "كم ميليمترًا في 5 cm؟",
+      "options": [
+        { "id": "a", "text": "5 mm" },
+        { "id": "b", "text": "500 mm" },
+        { "id": "c", "text": "55 mm" },
+        { "id": "d", "text": "50 mm" }
+      ],
+      "correctOption": "d",
+      "explanation": "نعرف أنّ 1 cm = 10 mm، فنضرب في 10: 5 × 10 = 50 mm.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم كيلوغرامًا في 4 t؟",
+      "options": [
+        { "id": "a", "text": "40 kg" },
+        { "id": "b", "text": "400 kg" },
+        { "id": "c", "text": "4 000 kg" },
+        { "id": "d", "text": "40 000 kg" }
+      ],
+      "correctOption": "c",
+      "explanation": "نعرف أنّ 1 t = 1 000 kg، فنضرب في 1 000: 4 × 1 000 = 4 000 kg.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم لترًا في 3 000 mL؟",
+      "options": [
+        { "id": "a", "text": "3 L" },
+        { "id": "b", "text": "30 L" },
+        { "id": "c", "text": "0,3 L" },
+        { "id": "d", "text": "300 L" }
+      ],
+      "correctOption": "a",
+      "explanation": "نصعد من الميليلتر إلى اللتر بالقسمة على 1 000 لأنّ 1 L = 1 000 mL: 3 000 ÷ 1 000 = 3 L.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم دقيقة في 4 h؟",
+      "options": [
+        { "id": "a", "text": "400 min" },
+        { "id": "b", "text": "240 min" },
+        { "id": "c", "text": "40 min" },
+        { "id": "d", "text": "120 min" }
+      ],
+      "correctOption": "b",
+      "explanation": "الساعة 60 دقيقة، فـ 4 h = 4 × 60 = 240 min.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم مترًا في 2,5 km؟",
+      "options": [
+        { "id": "a", "text": "250 m" },
+        { "id": "b", "text": "25 m" },
+        { "id": "c", "text": "25 000 m" },
+        { "id": "d", "text": "2 500 m" }
+      ],
+      "correctOption": "d",
+      "explanation": "نضرب في 1 000 لأنّ 1 km = 1 000 m: 2,5 × 1 000 = 2 500 m.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم غرامًا في 0,5 kg؟",
+      "options": [
+        { "id": "a", "text": "5 g" },
+        { "id": "b", "text": "50 g" },
+        { "id": "c", "text": "500 g" },
+        { "id": "d", "text": "5 000 g" }
+      ],
+      "correctOption": "c",
+      "explanation": "نضرب في 1 000 لأنّ 1 kg = 1 000 g: 0,5 × 1 000 = 500 g (نصف كيلوغرام).",
+      "difficulty": 2
+    }
+  ]
+}

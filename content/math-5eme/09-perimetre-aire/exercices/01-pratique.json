@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: أوّل خطوات في المحيط والمساحة",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "ما محيط مربّعٍ ضلعه 4 cm؟",
+      "options": [
+        { "id": "a", "text": "8 cm" },
+        { "id": "b", "text": "16 cm" },
+        { "id": "c", "text": "12 cm" },
+        { "id": "d", "text": "16 cm²" }
+      ],
+      "correctOption": "b",
+      "explanation": "محيط المربّع = 4 × الضلع = 4 × 4 = 16 cm. الوحدة هي cm لأنّ المحيط طول.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما مساحة مربّعٍ ضلعه 3 cm؟",
+      "options": [
+        { "id": "a", "text": "12 cm²" },
+        { "id": "b", "text": "9 cm²" },
+        { "id": "c", "text": "6 cm²" },
+        { "id": "d", "text": "9 cm" }
+      ],
+      "correctOption": "b",
+      "explanation": "مساحة المربّع = الضلع × الضلع = 3 × 3 = 9 cm². الوحدة مربّعة لأنّها مساحة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما مساحة مستطيلٍ طوله 5 cm وعرضه 2 cm؟ <svg viewBox=\"0 0 100 100\"><rect x=\"18\" y=\"38\" width=\"64\" height=\"26\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><text x=\"38\" y=\"33\" font-size=\"10\" fill=\"currentColor\">5 cm</text><text x=\"4\" y=\"54\" font-size=\"10\" fill=\"currentColor\">2</text></svg>",
+      "options": [
+        { "id": "a", "text": "7 cm²" },
+        { "id": "b", "text": "14 cm²" },
+        { "id": "c", "text": "10 cm²" },
+        { "id": "d", "text": "10 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "مساحة المستطيل = الطول × العرض = 5 × 2 = 10 cm².",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما محيط مستطيلٍ طوله 7 cm وعرضه 3 cm؟",
+      "options": [
+        { "id": "a", "text": "10 cm" },
+        { "id": "b", "text": "21 cm" },
+        { "id": "c", "text": "20 cm" },
+        { "id": "d", "text": "14 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "محيط المستطيل = 2 × (الطول + العرض) = 2 × (7 + 3) = 2 × 10 = 20 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما محيط مثلّثٍ أضلاعه 3 cm و 4 cm و 5 cm؟",
+      "options": [
+        { "id": "a", "text": "12 cm" },
+        { "id": "b", "text": "60 cm" },
+        { "id": "c", "text": "9 cm" },
+        { "id": "d", "text": "12 cm²" }
+      ],
+      "correctOption": "a",
+      "explanation": "محيط المثلّث = مجموع أضلاعه = 3 + 4 + 5 = 12 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ وحدةٍ تُستعمل لقياس المساحة؟",
+      "options": [
+        { "id": "a", "text": "cm²" },
+        { "id": "b", "text": "m" },
+        { "id": "c", "text": "cm" },
+        { "id": "d", "text": "km" }
+      ],
+      "correctOption": "a",
+      "explanation": "المساحة تُقاس بوحدات مربّعة مثل cm² و m²، أمّا cm و m و km فوحدات طولٍ تُستعمل للمحيط.",
+      "difficulty": 2
+    }
+  ]
+}

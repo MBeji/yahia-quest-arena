@@ -1,0 +1,12 @@
+{
+  "id": "math-1ere",
+  "nameFr": "Mathématiques",
+  "description": "الأنشطة العددية والهندسة والتموقع في الفضاء وفق برنامج الرياضيات للسنة الأولى من التعليم الأساسي",
+  "attribute": "Force",
+  "colorToken": "subject-math",
+  "icon": "Calculator",
+  "displayOrder": 1,
+  "contentLanguage": "ar",
+  "themeId": "ecole-tn",
+  "gradeSlug": "1ere-base"
+}
