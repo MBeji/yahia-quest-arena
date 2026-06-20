@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ زعيم الفصل ⭐⭐⭐: سيّد المسافات",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "كيف نكتب 250 cm بالمتر والسنتيمتر؟",
+      "options": [
+        { "id": "a", "text": "2 m و 50 cm" },
+        { "id": "b", "text": "25 m" },
+        { "id": "c", "text": "2 m و 5 cm" },
+        { "id": "d", "text": "250 m" }
+      ],
+      "correctOption": "a",
+      "explanation": "كلّ 100 cm تساوي 1 m، فـ 250 cm = 200 cm + 50 cm = 2 m و 50 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما نتيجة 1 m 20 cm + 60 cm؟",
+      "options": [
+        { "id": "a", "text": "1 m 26 cm" },
+        { "id": "b", "text": "1 m 80 cm" },
+        { "id": "c", "text": "80 cm" },
+        { "id": "d", "text": "2 m 60 cm" }
+      ],
+      "correctOption": "b",
+      "explanation": "نوحّد الوحدة: 1 m 20 cm = 120 cm، ثمّ 120 cm + 60 cm = 180 cm = 1 m 80 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم مترًا يساوي 3 km 200 m؟",
+      "options": [
+        { "id": "a", "text": "320" },
+        { "id": "b", "text": "3 002" },
+        { "id": "c", "text": "32 000" },
+        { "id": "d", "text": "3 200" }
+      ],
+      "correctOption": "d",
+      "explanation": "3 km = 3 000 m، فإنّ 3 km 200 m = 3 000 + 200 = 3 200 m.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ما نتيجة 5 m − 75 cm؟",
+      "options": [
+        { "id": "a", "text": "4 m 75 cm" },
+        { "id": "b", "text": "4 m 5 cm" },
+        { "id": "c", "text": "4 m 25 cm" },
+        { "id": "d", "text": "425 m" }
+      ],
+      "correctOption": "c",
+      "explanation": "نوحّد الوحدة: 5 m = 500 cm، ثمّ 500 cm − 75 cm = 425 cm = 4 m 25 cm.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "كم سنتيمترًا يساوي 60 mm؟",
+      "options": [
+        { "id": "a", "text": "600 cm" },
+        { "id": "b", "text": "6 cm" },
+        { "id": "c", "text": "60 cm" },
+        { "id": "d", "text": "16 cm" }
+      ],
+      "correctOption": "b",
+      "explanation": "بما أنّ 1 cm = 10 mm، نقسم على 10: 60 mm = 60 ÷ 10 = 6 cm.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "سياجٌ طوله 8 m، قُصّ منه طولٌ قدره 250 cm. كم بقي منه؟",
+      "options": [
+        { "id": "a", "text": "5 m 75 cm" },
+        { "id": "b", "text": "6 m" },
+        { "id": "c", "text": "5 m 50 cm" },
+        { "id": "d", "text": "550 m" }
+      ],
+      "correctOption": "c",
+      "explanation": "نوحّد الوحدة: 8 m = 800 cm، و 250 cm منها، فيبقى 800 − 250 = 550 cm = 5 m 50 cm.",
+      "difficulty": 3
+    }
+  ]
+}

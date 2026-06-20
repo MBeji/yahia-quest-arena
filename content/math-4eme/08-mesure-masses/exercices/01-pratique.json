@@ -1,0 +1,154 @@
+{
+  "title": "⭐ تمرين: أوّل خطوات في قيس الكتل",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "كم غرامًا في الكيلوغرام الواحد؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "100"
+        },
+        {
+          "id": "b",
+          "text": "1 000"
+        },
+        {
+          "id": "c",
+          "text": "10 000"
+        },
+        {
+          "id": "d",
+          "text": "10"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "الكيلوغرام الواحد يساوي ألف غرام: 1 kg = 1 000 g (العلاقة الأساسية بين الوحدتين).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أيّ وحدةٍ هي الأنسب لوزن تفّاحة؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "كيلوغرام (kg)"
+        },
+        {
+          "id": "b",
+          "text": "كيلومتر (km)"
+        },
+        {
+          "id": "c",
+          "text": "غرام (g)"
+        },
+        {
+          "id": "d",
+          "text": "لتر (L)"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "التفّاحة خفيفة (نحو 150 g)، فالوحدة المناسبة هي الغرام (g).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم غرامًا يساوي 2 kg؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "2 000"
+        },
+        {
+          "id": "b",
+          "text": "200"
+        },
+        {
+          "id": "c",
+          "text": "20 000"
+        },
+        {
+          "id": "d",
+          "text": "22"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "بما أنّ 1 kg = 1 000 g، فإنّ 2 kg = 2 × 1 000 = 2 000 g.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم غرامًا يساوي 5 kg؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "50"
+        },
+        {
+          "id": "b",
+          "text": "500"
+        },
+        {
+          "id": "c",
+          "text": "55"
+        },
+        {
+          "id": "d",
+          "text": "5 000"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "بما أنّ 1 kg = 1 000 g، فإنّ 5 kg = 5 × 1 000 = 5 000 g.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم غرامًا يساوي ربع كيلو؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "25"
+        },
+        {
+          "id": "b",
+          "text": "2 500"
+        },
+        {
+          "id": "c",
+          "text": "250"
+        },
+        {
+          "id": "d",
+          "text": "750"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "ربع الكيلوغرام = ربع 1 000 g = 250 g.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم كيلوغرامًا يساوي 1 000 g؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "1"
+        },
+        {
+          "id": "b",
+          "text": "10"
+        },
+        {
+          "id": "c",
+          "text": "100"
+        },
+        {
+          "id": "d",
+          "text": "1 000"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "1 000 g = 1 kg (العلاقة الأساسية).",
+      "difficulty": 2
+    }
+  ]
+}

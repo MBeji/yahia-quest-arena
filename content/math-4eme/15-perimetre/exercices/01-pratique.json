@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: أوّل خطوات في حساب المحيط",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "كيف نحسب محيط المربّع؟",
+      "options": [
+        { "id": "a", "text": "الضلع + الضلع" },
+        { "id": "b", "text": "4 × الضلع" },
+        { "id": "c", "text": "2 × الضلع" },
+        { "id": "d", "text": "الضلع × الضلع" }
+      ],
+      "correctOption": "b",
+      "explanation": "محيط المربّع = 4 × الضلع (لأنّ أضلاعه الأربعة متساوية).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما محيط مربّعٍ ضلعه 3 cm؟",
+      "options": [
+        { "id": "a", "text": "6 cm" },
+        { "id": "b", "text": "9 cm" },
+        { "id": "c", "text": "12 cm" },
+        { "id": "d", "text": "3 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "محيط المربّع = 4 × 3 = 12 cm.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما محيط مثلّثٍ أضلاعه 2 cm و 3 cm و 4 cm؟",
+      "options": [
+        { "id": "a", "text": "9 cm" },
+        { "id": "b", "text": "24 cm" },
+        { "id": "c", "text": "12 cm" },
+        { "id": "d", "text": "14 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "محيط المثلّث = 2 + 3 + 4 = 9 cm.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما محيط مستطيلٍ طوله 6 cm وعرضه 2 cm؟",
+      "options": [
+        { "id": "a", "text": "12 cm" },
+        { "id": "b", "text": "8 cm" },
+        { "id": "c", "text": "18 cm" },
+        { "id": "d", "text": "16 cm" }
+      ],
+      "correctOption": "d",
+      "explanation": "محيط المستطيل = 2 × (6 + 2) = 2 × 8 = 16 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما محيط مربّعٍ ضلعه 10 cm؟",
+      "options": [
+        { "id": "a", "text": "20 cm" },
+        { "id": "b", "text": "100 cm" },
+        { "id": "c", "text": "40 cm" },
+        { "id": "d", "text": "14 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "محيط المربّع = 4 × 10 = 40 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما محيط مثلّثٍ متساوي الأضلاع ضلعه 5 cm؟",
+      "options": [
+        { "id": "a", "text": "15 cm" },
+        { "id": "b", "text": "10 cm" },
+        { "id": "c", "text": "20 cm" },
+        { "id": "d", "text": "8 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "أضلاعه الثلاثة متساوية، فالمحيط = 3 × 5 = 15 cm.",
+      "difficulty": 2
+    }
+  ]
+}

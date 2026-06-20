@@ -1,0 +1,82 @@
+{
+  "title": "👑 تحدّي النخبة ⭐⭐⭐⭐: ألغاز السعة",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "ما الترتيب التصاعديّ الصحيح للسعات 1 L و 900 mL و 1 500 mL و 2 L؟",
+      "options": [
+        { "id": "a", "text": "1 L < 900 mL < 1 500 mL < 2 L" },
+        { "id": "b", "text": "900 mL < 1 L < 1 500 mL < 2 L" },
+        { "id": "c", "text": "900 mL < 1 500 mL < 1 L < 2 L" },
+        { "id": "d", "text": "900 mL < 1 L < 2 L < 1 500 mL" }
+      ],
+      "correctOption": "b",
+      "explanation": "نوحّد بالميليلتر: 1 L = 1 000 mL، 2 L = 2 000 mL. فالترتيب 900 mL < 1 000 mL < 1 500 mL < 2 000 mL، أي 900 mL < 1 L < 1 500 mL < 2 L.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم مليلترًا يساوي 3 L 50 mL؟",
+      "options": [
+        { "id": "a", "text": "350" },
+        { "id": "b", "text": "3 500" },
+        { "id": "c", "text": "3 050" },
+        { "id": "d", "text": "3 005" }
+      ],
+      "correctOption": "c",
+      "explanation": "3 L = 3 000 mL، فإنّ 3 L 50 mL = 3 000 + 50 = 3 050 mL. (احذر: ليست 3 500.)",
+      "difficulty": 3
+    },
+    {
+      "prompt": "إناءٌ سعته 8 L. سُكب منه 2 L 500 mL مرّتين. كم بقي؟",
+      "options": [
+        { "id": "a", "text": "5 L" },
+        { "id": "b", "text": "6 L" },
+        { "id": "c", "text": "2 L 500 mL" },
+        { "id": "d", "text": "3 L" }
+      ],
+      "correctOption": "d",
+      "explanation": "المسكوب = 2 × 2 L 500 mL = 5 L. فيبقى 8 L − 5 L = 3 L.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ما السعة المجهولة في: ? + 750 mL = 2 L؟",
+      "options": [
+        { "id": "a", "text": "1 L 250 mL" },
+        { "id": "b", "text": "1 L 750 mL" },
+        { "id": "c", "text": "2 L 750 mL" },
+        { "id": "d", "text": "1 L 50 mL" }
+      ],
+      "correctOption": "a",
+      "explanation": "نوحّد بالميليلتر: 2 L = 2 000 mL، فإنّ ? = 2 000 − 750 = 1 250 mL = 1 L 250 mL.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "كم سنتيلترًا يساوي 3 L؟",
+      "options": [
+        { "id": "a", "text": "30" },
+        { "id": "b", "text": "3 000" },
+        { "id": "c", "text": "300" },
+        { "id": "d", "text": "33" }
+      ],
+      "correctOption": "c",
+      "explanation": "بما أنّ 1 L = 100 cL، فإنّ 3 L = 3 × 100 = 300 cL.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "نوزّع 6 L عصيرٍ في كؤوسٍ سعة كلٍّ منها 250 mL. كم كأسًا نملأ؟",
+      "options": [
+        { "id": "a", "text": "24" },
+        { "id": "b", "text": "12" },
+        { "id": "c", "text": "6" },
+        { "id": "d", "text": "30" }
+      ],
+      "correctOption": "a",
+      "explanation": "نوحّد بالميليلتر: 6 L = 6 000 mL، ثمّ 6 000 ÷ 250 = 24 كأسًا.",
+      "difficulty": 3
+    }
+  ]
+}

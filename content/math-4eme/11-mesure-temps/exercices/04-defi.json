@@ -1,0 +1,82 @@
+{
+  "title": "👑 تحدّي النخبة ⭐⭐⭐⭐: ألغاز الزمن",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "ما الترتيب التصاعديّ الصحيح للمدد 1 h و 50 min و 90 min و 2 h؟",
+      "options": [
+        { "id": "a", "text": "1 h < 50 min < 90 min < 2 h" },
+        { "id": "b", "text": "50 min < 1 h < 90 min < 2 h" },
+        { "id": "c", "text": "50 min < 90 min < 1 h < 2 h" },
+        { "id": "d", "text": "50 min < 1 h < 2 h < 90 min" }
+      ],
+      "correctOption": "b",
+      "explanation": "نوحّد بالدقيقة: 1 h = 60 min، 2 h = 120 min. فالترتيب 50 < 60 < 90 < 120، أي 50 min < 1 h < 90 min < 2 h.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم دقيقةً يساوي 3 h 15 min؟",
+      "options": [
+        { "id": "a", "text": "315" },
+        { "id": "b", "text": "180" },
+        { "id": "c", "text": "195" },
+        { "id": "d", "text": "345" }
+      ],
+      "correctOption": "c",
+      "explanation": "3 h = 180 min، فإنّ 3 h 15 min = 180 + 15 = 195 min. (احذر: ليست 315.)",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ما مدّة الفترة من الساعة 7:45 إلى الساعة 9:30؟",
+      "options": [
+        { "id": "a", "text": "2 h 15 min" },
+        { "id": "b", "text": "1 h 15 min" },
+        { "id": "c", "text": "2 h 45 min" },
+        { "id": "d", "text": "1 h 45 min" }
+      ],
+      "correctOption": "d",
+      "explanation": "من 7:45 إلى 8:45 ساعة، ومن 8:45 إلى 9:30 يبقى 45 min، فالمدّة 1 h 45 min.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "يغادر قطارٌ في الساعة 10:20، وتدوم الرحلة 2 h 50 min. متى يصل؟",
+      "options": [
+        { "id": "a", "text": "13:10" },
+        { "id": "b", "text": "12:70" },
+        { "id": "c", "text": "12:10" },
+        { "id": "d", "text": "13:00" }
+      ],
+      "correctOption": "a",
+      "explanation": "10:20 + 2 h = 12:20، ثمّ + 50 min: 12:20 + 40 min = 13:00 ثمّ + 10 min = 13:10.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "كيف نكتب 200 s بالدقيقة والثانية؟",
+      "options": [
+        { "id": "a", "text": "2 min 0 s" },
+        { "id": "b", "text": "20 min" },
+        { "id": "c", "text": "3 min 20 s" },
+        { "id": "d", "text": "3 min 2 s" }
+      ],
+      "correctOption": "c",
+      "explanation": "200 s = 180 s + 20 s = 3 min 20 s (لأنّ 180 s = 3 min).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "كم دقيقةً في ربع ساعة؟",
+      "options": [
+        { "id": "a", "text": "15" },
+        { "id": "b", "text": "25" },
+        { "id": "c", "text": "40" },
+        { "id": "d", "text": "20" }
+      ],
+      "correctOption": "a",
+      "explanation": "ربع الساعة = ربع 60 min = 15 min.",
+      "difficulty": 3
+    }
+  ]
+}

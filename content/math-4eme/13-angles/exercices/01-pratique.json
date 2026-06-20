@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: أوّل خطوات في الزوايا",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "بأيّ أداةٍ نتحقّق من أنّ زاويةً قائمة؟",
+      "options": [
+        { "id": "a", "text": "الفرجار" },
+        { "id": "b", "text": "الكوس" },
+        { "id": "c", "text": "المسطرة وحدها" },
+        { "id": "d", "text": "القلم" }
+      ],
+      "correctOption": "b",
+      "explanation": "نستعمل الكوس لأنّ أحد أركانه زاويةٌ قائمة، فنطابقه على الزاوية للتحقّق.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما نوع الزاوية في الشكل التالي؟ <svg viewBox=\"0 0 100 100\"><line x1=\"20\" y1=\"80\" x2=\"90\" y2=\"80\" stroke=\"currentColor\" stroke-width=\"3\"/><line x1=\"20\" y1=\"80\" x2=\"78\" y2=\"28\" stroke=\"currentColor\" stroke-width=\"3\"/><circle cx=\"20\" cy=\"80\" r=\"2.5\" fill=\"currentColor\"/></svg>",
+      "options": [
+        { "id": "a", "text": "قائمة" },
+        { "id": "b", "text": "منفرجة" },
+        { "id": "c", "text": "حادّة" },
+        { "id": "d", "text": "مستقيمة" }
+      ],
+      "correctOption": "c",
+      "explanation": "انفتاح الزاوية ضيّقٌ أقلّ من الرّكن القائم، فهي زاويةٌ حادّة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم ضلعًا للزاوية؟",
+      "options": [
+        { "id": "a", "text": "ضلعان" },
+        { "id": "b", "text": "ضلعٌ واحد" },
+        { "id": "c", "text": "ثلاثة أضلاع" },
+        { "id": "d", "text": "لا أضلاع لها" }
+      ],
+      "correctOption": "a",
+      "explanation": "للزاوية ضلعان هما نصفا المستقيم اللذان يلتقيان في الرأس.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم درجةً تساوي الزاوية القائمة؟",
+      "options": [
+        { "id": "a", "text": "30" },
+        { "id": "b", "text": "45" },
+        { "id": "c", "text": "180" },
+        { "id": "d", "text": "90" }
+      ],
+      "correctOption": "d",
+      "explanation": "الزاوية القائمة قياسها 90 درجة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما نوع الزاوية في الشكل التالي؟ <svg viewBox=\"0 0 100 100\"><line x1=\"50\" y1=\"80\" x2=\"95\" y2=\"80\" stroke=\"currentColor\" stroke-width=\"3\"/><line x1=\"50\" y1=\"80\" x2=\"12\" y2=\"30\" stroke=\"currentColor\" stroke-width=\"3\"/><circle cx=\"50\" cy=\"80\" r=\"2.5\" fill=\"currentColor\"/></svg>",
+      "options": [
+        { "id": "a", "text": "قائمة" },
+        { "id": "b", "text": "حادّة" },
+        { "id": "c", "text": "منفرجة" },
+        { "id": "d", "text": "مستقيمة" }
+      ],
+      "correctOption": "c",
+      "explanation": "انفتاح الزاوية واسعٌ أكبر من الرّكن القائم وأقلّ من المستقيمة، فهي زاويةٌ منفرجة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "الزاوية الحادّة هي التي:",
+      "options": [
+        { "id": "a", "text": "أصغر من القائمة" },
+        { "id": "b", "text": "أكبر من القائمة" },
+        { "id": "c", "text": "تساوي القائمة" },
+        { "id": "d", "text": "تساوي 180 درجة" }
+      ],
+      "correctOption": "a",
+      "explanation": "الزاوية الحادّة انفتاحها أقلّ من 90 درجة، فهي أصغر من القائمة.",
+      "difficulty": 2
+    }
+  ]
+}
