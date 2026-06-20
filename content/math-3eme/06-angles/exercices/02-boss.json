@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ زعيم الفصل ⭐⭐⭐: معركة الزوايا",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "ما نوع هذه الزاوية؟ <svg viewBox=\"0 0 120 90\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"60\" y1=\"75\" x2=\"112\" y2=\"75\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"60\" y1=\"75\" x2=\"22\" y2=\"22\" stroke=\"currentColor\" stroke-width=\"2.5\"/><circle cx=\"60\" cy=\"75\" r=\"3\" fill=\"currentColor\"/></svg>",
+      "options": [
+        { "id": "a", "text": "حادّة" },
+        { "id": "b", "text": "قائمة" },
+        { "id": "c", "text": "منفرجة" },
+        { "id": "d", "text": "ليست زاوية" }
+      ],
+      "correctOption": "c",
+      "explanation": "الفتحة أوسع من ركن الورقة (الضلع الثاني تجاوز العمودي)، فالزاوية منفرجة. الخطأ الشائع: ظنّها قائمة دون مقارنتها بركن الورقة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "زاويتان لهما نفس الفتحة، لكنّ ضلعَي الأولى أطول. أيّهما أكبر؟",
+      "options": [
+        { "id": "a", "text": "الأولى (ذات الضلعين الأطول)" },
+        { "id": "b", "text": "الثانية (ذات الضلعين الأقصر)" },
+        { "id": "c", "text": "لا نستطيع المقارنة" },
+        { "id": "d", "text": "هما متساويتان" }
+      ],
+      "correctOption": "d",
+      "explanation": "طول الضلعين لا يغيّر الزاوية؛ ما دامت الفتحة واحدة فالزاويتان متساويتان. الخطأ الشائع: ظنّ أنّ الضلع الأطول يصنع زاويةً أكبر.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيٌّ من هذه الزوايا قائمة؟",
+      "options": [
+        { "id": "a", "text": "<svg viewBox=\"0 0 90 80\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"18\" y1=\"65\" x2=\"82\" y2=\"65\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"18\" y1=\"65\" x2=\"70\" y2=\"40\" stroke=\"currentColor\" stroke-width=\"2.5\"/><circle cx=\"18\" cy=\"65\" r=\"3\" fill=\"currentColor\"/></svg>" },
+        { "id": "b", "text": "<svg viewBox=\"0 0 90 80\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"18\" y1=\"65\" x2=\"82\" y2=\"65\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"18\" y1=\"65\" x2=\"18\" y2=\"8\" stroke=\"currentColor\" stroke-width=\"2.5\"/><polyline points=\"18,50 33,50 33,65\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><circle cx=\"18\" cy=\"65\" r=\"3\" fill=\"currentColor\"/></svg>" },
+        { "id": "c", "text": "<svg viewBox=\"0 0 90 80\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"48\" y1=\"65\" x2=\"84\" y2=\"65\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"48\" y1=\"65\" x2=\"10\" y2=\"24\" stroke=\"currentColor\" stroke-width=\"2.5\"/><circle cx=\"48\" cy=\"65\" r=\"3\" fill=\"currentColor\"/></svg>" },
+        { "id": "d", "text": "<svg viewBox=\"0 0 90 80\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"18\" y1=\"65\" x2=\"82\" y2=\"65\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"18\" y1=\"65\" x2=\"60\" y2=\"50\" stroke=\"currentColor\" stroke-width=\"2.5\"/><circle cx=\"18\" cy=\"65\" r=\"3\" fill=\"currentColor\"/></svg>" }
+      ],
+      "correctOption": "b",
+      "explanation": "الزاوية القائمة وحدها تحمل المربّع الصغير وضلعاها متعامدان (b). أمّا a وd فحادّتان (فتحة ضيّقة) وc منفرجة (فتحة واسعة).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "في المربّع، ما نوع كلّ زاويةٍ من زواياه الأربع؟",
+      "options": [
+        { "id": "a", "text": "كلّها قائمة" },
+        { "id": "b", "text": "كلّها حادّة" },
+        { "id": "c", "text": "كلّها منفرجة" },
+        { "id": "d", "text": "بعضها حادّ وبعضها منفرج" }
+      ],
+      "correctOption": "a",
+      "explanation": "أركان المربّع كأركان الورقة، فكلّ زواياه الأربع قائمة. الخطأ الشائع: الخلط بين تساوي الأضلاع ونوع الزاوية.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "زاويةٌ نطابق عليها ركن الكوس فيبقى ضلعٌ من الزاوية خارج الكوس (الفتحة أوسع من الكوس). ما نوعها؟",
+      "options": [
+        { "id": "a", "text": "قائمة" },
+        { "id": "b", "text": "حادّة" },
+        { "id": "c", "text": "منفرجة" },
+        { "id": "d", "text": "لا يمكن تحديدها" }
+      ],
+      "correctOption": "c",
+      "explanation": "إذا تجاوزت فتحة الزاوية ركن الكوس فهي أكبر من القائمة، أي منفرجة. الخطأ الشائع: ظنّ كلّ زاويةٍ نقيسها بالكوس قائمة.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "رتّب الزوايا الثلاث من الأصغر فتحةً إلى الأكبر:",
+      "options": [
+        { "id": "a", "text": "حادّة، ثمّ قائمة، ثمّ منفرجة" },
+        { "id": "b", "text": "قائمة، ثمّ حادّة، ثمّ منفرجة" },
+        { "id": "c", "text": "منفرجة، ثمّ قائمة، ثمّ حادّة" },
+        { "id": "d", "text": "حادّة، ثمّ منفرجة، ثمّ قائمة" }
+      ],
+      "correctOption": "a",
+      "explanation": "الحادّة أصغر من القائمة، والمنفرجة أكبر منها، فالترتيب التصاعدي: حادّة ثمّ قائمة ثمّ منفرجة. الخطأ الشائع: وضع القائمة في غير موضعها الوسط.",
+      "difficulty": 3
+    }
+  ]
+}
