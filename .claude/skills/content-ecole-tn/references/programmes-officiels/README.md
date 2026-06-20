@@ -1,95 +1,92 @@
-# Programmes officiels des écoles — index & mode d'emploi
+# Programmes officiels — index & mode d'emploi
 
-Ce dossier contient les **programmes officiels réellement annoncés par les écoles** des élèves, extraits
-fidèlement de leurs documents (plans trimestriels, manuels, photos). Ils sont la **source de vérité
-prioritaire** pour générer et auditer le contenu `ecole-tn` : on s'aligne sur ce que l'école enseigne
-réellement, trimestre par trimestre — pas seulement sur le programme national générique.
+## 🎯 Source de vérité : le programme national CNP
 
-> Alimenté **au fil de l'eau** : chaque fois qu'un nouveau programme de classe est fourni, on ajoute /
-> complète un fichier ici (voir « Ajouter un programme » en bas).
+La **référence ultime (single source of truth)** pour le scope des cours et exercices `ecole-tn` est le
+**programme national tunisien du CNP**, matérialisé par le **corpus CNP téléchargé** (manuels scolaires
+officiels + guides de l'enseignant). Les fichiers d'école (Taybah) servent de **vérification** et de
+**complément de détail / séquençage** — **jamais** à contredire ni restreindre le scope CNP.
 
-## Politique de précédence (ce que les skills doivent suivre)
+### Précédence (à suivre par les skills `content-ecole-tn` / `content-cours` / `content-audit`)
 
-Pour un couple **(grade, matière)** donné, la vérité de scope se lit dans cet ordre :
+Pour un couple **(niveau, matière)** :
 
-1. **Programme de l'école** = `programmes-officiels/<école>/<gradeSlug>.md` (ce dossier). **Autoritaire
-   quand il existe** : couvre les notions de ce niveau/cette matière, **découpées par trimestre**.
-2. **Programme national tunisien (CNP) générique** — `Programme.pdf` / `Programme.docx` (dossier parent)
-   - `programme-9eme-annee-tunisie.md` + vérification web (tadris.tn, edunet/CNP). Sert de **repli**
-     (grades sans fichier école) et de **complément** (terminologie, exemples), **jamais** pour élargir
-     le scope au-delà de ce que l'école annonce.
+1. **Corpus CNP = autorité.** Le **manuel élève** = le contenu/scope ; le **guide enseignant**
+   (guide méthodologique / الدليل المرجعي) = le **programme officiel** (compétences, progression).
+2. **Fichiers école (Taybah) = vérification + séquençage par trimestre + complément de détail.** Signaler
+   les divergences ; ne jamais sortir du scope CNP pour suivre l'école.
+3. **Web** (tadris.tn, tunisiecollege.net) seulement pour combler un manque ponctuel.
 
-Règle d'or : **ne pas dépasser le programme de l'école** pour ce niveau. Une notion hors-programme ou
-d'un autre trimestre/niveau se signale (rapport), elle ne s'ajoute pas en silence. Voir les skills
-`content-ecole-tn`, `content-cours`, `content-audit`.
+## 📚 Le corpus CNP (téléchargé)
 
-## Index des programmes disponibles
+- **Emplacement** : `YahiaAcademy/cnp-officiel/` — dossier **frère du repo**, **hors git** (~2.8 GB).
+- **Contenu** : **346 PDF** — base (1ère→9ème) + secondaire (1ère→4ème), **élève** (manuels) **et**
+  **enseignant** (guides méthodologiques / أدلة مرجعية = le programme détaillé).
+- **Index** : `cnp-officiel/CATALOGUE.md` (lisible, groupé par niveau/matière) ; bruts :
+  `cnp-officiel/catalogue.csv`, `cnp-officiel/index.csv`.
+- **Arborescence** : `cnp-officiel/manuels/<asasi|secondaire>/c<classe>/<eleve|enseignant>/<code>P<NN>.pdf`.
+- **Décodage du code** (6 chiffres) : chiffre 1 = rôle/cycle (1 = base-élève, 5 = base-enseignant,
+  2 = secondaire) · chiffres 2-3 = **matière** (01 arabe, 02 maths, 03 éveil, 05 SVT, 06 géo, 07 histoire,
+  08 arts/tech/musique, 11 sociales/islamique/civique, 12 EPS, 21 français, 22 maths-fr, 23 physique,
+  24 chimie, 25 SVT, 33 informatique, 41 anglais…) · chiffre 4 = **classe**.
+- 📖 **Lire le corpus** : les manuels sont des scans et les guides ont une couche-texte cassée (mojibake)
+  → `pdftotext` est **inutile**. On **rasterise en PNG puis on lit en vision** (outil Read). Helper :
+  **`bash cnp-officiel/render.sh <pdf> <p_début> <p_fin> [dpi]`** → écrit `cnp-officiel/_render/<nom>-NNN.png`
+  à ouvrir avec l'outil Read. (poppler installé sous `YahiaAcademy/_tools/poppler/`.) Le **guide enseignant**
+  porte le **programme détaillé** (compétences, progression) — c'est la pièce à lire en priorité pour le scope.
+- **Re-télécharger / compléter** : `bash cnp-officiel/_dl-manuels.sh` (résumable, met à jour les index).
 
-### École : **Taybah Primaire** (`taybah/`) — année scolaire 2025-2026
+## 🏫 Fichiers école (vérification / séquençage) — Taybah Primaire
 
-| Niveau             | gradeSlug   | Fichier                                    | Couverture            | Statut                                      |
-| ------------------ | ----------- | ------------------------------------------ | --------------------- | ------------------------------------------- |
-| 1ère année de base | `1ere-base` | [taybah/1ere-base.md](taybah/1ere-base.md) | 6 matières · T1+T2+T3 | ✅ complet                                  |
-| 2ème année de base | `2eme-base` | [taybah/2eme-base.md](taybah/2eme-base.md) | 6 matières · T1+T2+T3 | ✅ complet (FR : module 6 absent des plans) |
-| 3ème année de base | `3eme-base` | [taybah/3eme-base.md](taybah/3eme-base.md) | 6 matières · T1+T2+T3 | ✅ complet (arabe = قواعد+إنتاج seulement)  |
-| 5ème année de base | `5eme-base` | [taybah/5eme-base.md](taybah/5eme-base.md) | 6 matières · T1+T3    | ⚠️ partiel — **T2 manquant**                |
+Transcriptions fidèles des plans trimestriels de l'école — à utiliser **en vérification** et pour le
+**découpage par trimestre**, pas comme autorité de scope :
 
-Matières Taybah primaire (mêmes 6 à chaque niveau) : **اللغة العربية** (arabe), **التربية الإسلامية**
-(éducation islamique), **الرياضيات** (maths), **الإيقاظ العلمي** (éveil scientifique), **Français**,
-**English**. Chaque fichier détaille les notions par matière puis par trimestre, avec une section
-« Notes d'extraction » (divergences entre versions, passages OCR incertains `[?]`, coquilles source `[sic]`).
+| Niveau             | gradeSlug   | Fichier                                    | Couverture                          |
+| ------------------ | ----------- | ------------------------------------------ | ----------------------------------- |
+| 1ère année de base | `1ere-base` | [taybah/1ere-base.md](taybah/1ere-base.md) | 6 matières · T1+T2+T3               |
+| 2ème année de base | `2eme-base` | [taybah/2eme-base.md](taybah/2eme-base.md) | 6 matières · T1+T2+T3               |
+| 3ème année de base | `3eme-base` | [taybah/3eme-base.md](taybah/3eme-base.md) | 6 matières · T1+T2+T3               |
+| 5ème année de base | `5eme-base` | [taybah/5eme-base.md](taybah/5eme-base.md) | 6 matières · T1+T3 (⚠️ T2 manquant) |
 
-## Convention d'identifiants de sujets (`subject.json` `id`) — IMPORTANT
+> ⚠️ **Conflit Taybah vs CNP** : l'audit a montré que le contenu primaire existant (généré ex-CNP
+> générique) diverge du plan Taybah sur le **séquençage** — ex. la **soustraction** est une notion de
+> **2ème année** dans le programme national, pas de 1ère (vérifié). Règle : **le CNP fait foi pour le
+> _quoi_ / le _niveau_** ; Taybah éclaire le **_quand_ / le trimestre**.
 
-Les `id` de sujet sont **uniques dans tout le catalogue** et constituent l'identité (renommer = supprimer
+## 🆔 Convention d'identifiants de sujets (`subject.json` `id`)
 
-- recréer). La colonne « id sujet suggéré » des fichiers de programme donne la **matière**, pas l'id
-  final : il faut **suffixer par le niveau** pour éviter la collision avec les sujets déjà en base.
+Les `id` sont **uniques dans tout le catalogue** (identité ; renommer = supprimer+recréer). Primaire =
+matière **suffixée par le niveau** (les ids bruts `math`/`arabic`/… sont ceux de la 9ème) :
 
-* 9ème (le plus peuplé) utilise les **ids bruts** : `math`, `arabic`, `french`, `english`, `svt`.
-* 6ème utilise le suffixe `-6eme` : `math-6eme`, `eveil-scientifique-6eme`.
-* **Primaire (ces programmes Taybah)** → suffixe `-1ere` / `-2eme` / `-3eme` / `-5eme` :
+| Matière                | contentLanguage | id 1ère                    | id 2ème        | id 3ème        | id 5ème        |
+| ---------------------- | --------------- | -------------------------- | -------------- | -------------- | -------------- |
+| الرياضيات (maths)      | `ar`            | `math-1ere`                | `math-2eme`    | `math-3eme`    | `math-5eme`    |
+| اللغة العربية (arabe)  | `ar`            | `arabic-1ere`              | `arabic-2eme`  | `arabic-3eme`  | `arabic-5eme`  |
+| التربية الإسلامية      | `ar`            | `education-islamique-1ere` | …              | …              | …              |
+| الإيقاظ العلمي (éveil) | `ar`            | `eveil-scientifique-1ere`  | …              | …              | …              |
+| Français               | `fr`            | `french-1ere`              | `french-2eme`  | `french-3eme`  | `french-5eme`  |
+| English                | `en`            | `english-1ere`             | `english-2eme` | `english-3eme` | `english-5eme` |
 
-| Matière                             | contentLanguage | id 1ère                    | id 2ème        | id 3ème        | id 5ème        |
-| ----------------------------------- | --------------- | -------------------------- | -------------- | -------------- | -------------- |
-| الرياضيات (maths)                   | `ar`            | `math-1ere`                | `math-2eme`    | `math-3eme`    | `math-5eme`    |
-| اللغة العربية (arabe)               | `ar`            | `arabic-1ere`              | `arabic-2eme`  | `arabic-3eme`  | `arabic-5eme`  |
-| التربية الإسلامية (éduc. islamique) | `ar`            | `education-islamique-1ere` | …              | …              | …              |
-| الإيقاظ العلمي (éveil scientifique) | `ar`            | `eveil-scientifique-1ere`  | …              | …              | …              |
-| Français                            | `fr`            | `french-1ere`              | `french-2eme`  | `french-3eme`  | `french-5eme`  |
-| English                             | `en`            | `english-1ere`             | `english-2eme` | `english-3eme` | `english-5eme` |
+> ⚠️ `math-1ere..5eme` et `eveil-scientifique-1ere..5eme` **existent déjà sur `main`** (générés ex-CNP
+> générique, source à réaligner sur le corpus CNP). `themeId="ecole-tn"`, `gradeSlug="1ere-base"…`,
+> notation maths standard même en arabe (chiffres 0-9, LTR).
 
-- `themeId` = `"ecole-tn"` ; `gradeSlug` = `"1ere-base"` (etc.) ; `contentLanguage` = colonne ci-dessus
-  (jamais trilingue pour l'école). Les grades `1ere-base`…`5eme-base` sont **déjà seedés** côté DB.
-- Maths/sciences en arabe : **notation standard** (chiffres 0-9, formules LTR) même en prose arabe
-  (`content-engine/references/math-and-notation.md`).
-- `education-islamique-*` est un **nouveau sujet** (n'existe pas encore en base) ; `eveil-scientifique-*`
-  suit le précédent `eveil-scientifique-6eme`.
+## 🧒 Adapter à l'âge (primaire)
 
-## Adapter le contenu à l'âge (primaire)
+Niveaux jeunes (1ère ≈ 6-7 ans, souvent non-lecteurs) : privilégier les **figures SVG** (compter, comparer,
+associer image↔nombre), énoncés **très courts** ; garder la progression du programme ; RPG dans les
+**titres** seulement, énoncés/options/explications sobres.
 
-Ces niveaux sont jeunes (1ère ≈ 6-7 ans) et souvent **non-lecteurs autonomes**. Pour que le format QCM
-reste pédagogique :
+## ⚠️ Manques connus
 
-- privilégier les **figures SVG** (compter des objets, comparer des tailles, associer image↔nombre) plutôt
-  que des énoncés textuels longs ; énoncés **très courts**, vocabulaire minimal ;
-- garder la **progression du programme** (ex. 1ère T1 maths = nombres 0→9, ensembles, repérage espace) ;
-- la touche RPG reste **dans les titres** ; les énoncés/options/explications restent sobres et clairs.
+- **Programmes officiels « standalone »** : Edunet (`البرامج الرسمية`) **bloque l'accès automatisé** (403,
+  WAF). Les **guides enseignant** du corpus CNP couvrent le programme ; pour les booklets formels →
+  navigateur (Chrome MCP) ou fourniture manuelle.
+- **Taybah** : 5ème T2 manquant ; niveaux 4ème/6ème non fournis.
+- Corpus CNP = **scans** (lisibilité par page-range/OCR).
 
-## Ajouter un programme (au fil de l'eau)
+## ➕ Ajouter une source (au fil de l'eau)
 
-1. Créer/compléter `programmes-officiels/<école>/<gradeSlug>.md` (1 fichier par niveau, matières ×
-   trimestres) en **transcription fidèle** : terminologie d'origine, chiffres latins 0-9 même en arabe,
-   `[sic]` pour les coquilles source, `[?]` pour l'incertain, liste des fichiers source en bas.
-2. Ajouter la ligne dans l'index ci-dessus (école / gradeSlug / fichier / couverture / statut).
-3. Si nouvelle école : créer le sous-dossier `<école>/` et une nouvelle section d'index.
-
-## Manques connus à compléter (à réclamer aux écoles)
-
-- **Taybah 5ème** : tout le **Trimestre 2** (toutes matières) ; colonnes English « Objectives »/« Skills »
-  partielles ; modules français 4-5 (probable T2) ; matières jamais photographiées (éduc. civique,
-  histoire-géo, éveil technologique, EPS, arts, informatique).
-- **Taybah 2ème** : **Module 6** de français absent des plans (T2 = modules 4-5, T3 = modules 7-8).
-- **Niveaux manquants** : 4ème et 6ème année primaire Taybah non fournis.
-- Voir la section « Notes d'extraction » de chaque fichier pour les passages OCR `[?]` à revérifier sur
-  l'original (notamment 3ème éveil scientifique, et « جذاء » = très probablement « جداء »).
+1. **CNP** : `bash cnp-officiel/_dl-manuels.sh` (résumable) → puis régénérer `cnp-officiel/CATALOGUE.md`.
+2. **École** : `programmes-officiels/<école>/<gradeSlug>.md` (transcription fidèle : terminologie d'origine,
+   chiffres latins 0-9 même en arabe, `[sic]`/`[?]`, fichiers source en bas) + ligne dans la table ci-dessus.

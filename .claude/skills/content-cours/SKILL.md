@@ -34,9 +34,11 @@ official scope + language of instruction).
 
 ## Workflow
 
-1. **Establish the scope to cover.** School content: the official chapter scope from the **school
-   program** — `content-ecole-tn/references/programmes-officiels/<école>/<gradeSlug>.md` for this
-   grade+subject+trimester (authoritative; CNP only as fallback) — plus `chapter.json` sources. Non-school:
+1. **Establish the scope to cover.** School content: the authoritative scope is the **CNP program** —
+   the CNP corpus for this grade+subject (`content-ecole-tn/references/programmes-officiels/CATALOGUE.md`
+   → `cnp-officiel/`: student manuel = scope, teacher guide = program), with the Taybah school file
+   (`programmes-officiels/<école>/<gradeSlug>.md`) as a secondary cross-check / trimester sequencing —
+   plus `chapter.json` sources. Non-school:
    `chapter.json` description. Then — critical — **read the chapter's `quiz.json` and every
    `exercices/*.json` FIRST** and extract the list of notions/edge cases they test: the course must teach
    all of them (golden rule, no orphan tested notion). If an item tests something genuinely off-scope, flag

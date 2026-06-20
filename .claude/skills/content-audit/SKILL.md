@@ -62,11 +62,12 @@ Work file by file. For every question:
    slugs, `mode`, URLs) = **[MAJOR]**.
 7. **Factual accuracy** — for culture-générale/sciences/history claims, spot-check non-trivial
    facts via web search; wrong fact = **[BLOCKER]**, missing `sources[]` for verified claims =
-   **[MINOR]**. For `ecole-tn`, also check **syllabus fidelity against the school program**: open
-   `content-ecole-tn/references/programmes-officiels/<école>/<gradeSlug>.md` for this subject and verify
-   every notion is in the official scope for that grade — **and ideally the right trimester**. Off-program,
-   wrong-grade, or wrong-trimester notions = **[MAJOR]**; if no school file exists for the grade, fall back
-   to the generic CNP (precedence per that folder's README).
+   **[MINOR]**. For `ecole-tn`, also check **syllabus fidelity against the CNP program** (the source of
+   truth): the CNP corpus for this grade+subject (`content-ecole-tn/references/programmes-officiels/CATALOGUE.md`
+   → `cnp-officiel/`: student manuel + teacher guide). Every notion must be in the official CNP scope for
+   that grade — off-program or wrong-grade notions = **[MAJOR]**. The Taybah school file
+   (`programmes-officiels/<école>/<gradeSlug>.md`) is a secondary cross-check / trimester sequencing, not
+   the authority.
 
 Per exercise / chapter:
 
@@ -97,8 +98,9 @@ severity mapping). Per chapter:
 1. **Exhaustivité (golden rule first)** — extract the list of notions/edge cases the chapter's
    quiz + exercises test, and point each to the course section that teaches it. Any
    tested-but-untaught notion = **[MAJOR]**. Then check full official-scope coverage — school content
-   against the **school program** (`content-ecole-tn/references/programmes-officiels/<école>/<gradeSlug>.md`,
-   right grade+subject+trimester), else `chapter.json` scope — and flag off-program / wrong-trimester additions.
+   against the **CNP program** (source of truth: the CNP corpus for this grade+subject via
+   `content-ecole-tn/references/programmes-officiels/CATALOGUE.md`; Taybah files only as a secondary
+   cross-check), else `chapter.json` scope — and flag off-program additions.
 2. **Clarté** — one notion per section, terms defined at first use in the official terminology,
    grade-calibrated sentences, formulas displayed on their own line, tables for classifications.
 3. **Facilité de compréhension** — concrete example before each rule, **a worked example for
