@@ -72,5 +72,7 @@ Rules:
   many-subjects-one-theme + per-subject `contentLanguage` shape is supported. But those are _distinct
   syllabi_, not parallel translations of one program. The sibling-_translation_ pattern here has no
   production example yet — it is the prescribed pattern for trilingual standalone themes.
-- `nameFr` is always French even on the `-en`/`-ar` subjects (it's the only display-name field), but
-  the _content_ is in the subject's language.
+- `nameFr` is the only display-name field, but you write it in the subject's **own language**: the
+  `-ar` sibling gets an Arabic name, the `-en` sibling an English name, the `-fr` sibling a French one
+  (the field name is legacy — the value is native, not French). Do **not** add a `(FR)`/`(EN)`/`(AR)`
+  suffix — the different words/scripts already disambiguate the siblings.

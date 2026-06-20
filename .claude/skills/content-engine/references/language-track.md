@@ -22,20 +22,21 @@ or test themselves on **the whole language at once** in the Donjon.
 Model proficiency as **separate subjects, one per CEFR level**, so a learner picks their level and
 climbs from the simplest to the most complex. Subject `id` = `{lang}-{level}`:
 
-| level | subject id (anglais) | nameFr (display — always French)    | displayOrder |
-| ----- | -------------------- | ----------------------------------- | ------------ |
-| A1    | `anglais-a1`         | Anglais — Débutant (A1)             | 1            |
-| A2    | `anglais-a2`         | Anglais — Élémentaire (A2)          | 2            |
-| B1    | `anglais-b1`         | Anglais — Intermédiaire (B1)        | 3            |
-| B2    | `anglais-b2`         | Anglais — Intermédiaire avancé (B2) | 4            |
-| C1    | `anglais-c1`         | Anglais — Autonome (C1)             | 5            |
-| C2    | `anglais-c2`         | Anglais — Maîtrise (C2)             | 6            |
+| level | subject id (anglais) | nameFr (display — in the subject's language) | displayOrder |
+| ----- | -------------------- | -------------------------------------------- | ------------ |
+| A1    | `anglais-a1`         | English — Beginner (A1)                      | 1            |
+| A2    | `anglais-a2`         | English — Elementary (A2)                    | 2            |
+| B1    | `anglais-b1`         | English — Intermediate (B1)                  | 3            |
+| B2    | `anglais-b2`         | English — Upper-Intermediate (B2)            | 4            |
+| C1    | `anglais-c1`         | English — Advanced (C1)                      | 5            |
+| C2    | `anglais-c2`         | English — Mastery (C2)                       | 6            |
 
 **Author the full CEFR ladder A1→C2** (six levels). The reference English program shipped all six
 (`anglais-a1`…`anglais-c2`); a complete track is A1 through C2, not A1–C1. Same `{lang}-{level}` shape
 for `francais-*` and `arabe-*` (for Arabic use ascending bands such as مبتدئ / متوسط / متقدّم, keeping
-the slug as `arabe-a1`, `arabe-a2`, …). `nameFr` is always French — it is the only display field —
-even though the content is in the target language.
+the slug as `arabe-a1`, `arabe-a2`, …). `nameFr` is the only display field, and you write it **in the
+subject's target language** (an `anglais-*` subject gets an English name, an `arabe-*` an Arabic one) —
+the field name is legacy, not a French requirement.
 
 - **Chapters = competences**, ordered simplest→most complex within the level. **~5–8 chapters per
   level** (the reference English levels run 5–8; A1 stays small, mid/high bands are richer). Each level
@@ -55,8 +56,9 @@ In addition to the per-chapter path, every language gets **one dedicated "Donjon
 the whole language in a single varied gauntlet — _questions sur tout le thème_, not tied to one
 chapter. This mirrors the `culture-generale-dungeon-*` precedent.
 
-- Subject `id` = `{lang}-donjon` (e.g. `anglais-donjon`); `nameFr` e.g. "Anglais — Donjon (tout le
-  thème)"; `attribute: "Polyvalence"`, `icon: "Swords"`, a high `displayOrder` (after the levels).
+- Subject `id` = `{lang}-donjon` (e.g. `anglais-donjon`); `nameFr` in the track's language, e.g.
+  "English — Gauntlet (whole theme)"; `attribute: "Polyvalence"`, `icon: "Swords"`, a high
+  `displayOrder` (after the levels).
 - The donjon's chapters **interleave competences** — each question is tagged with its strand in the
   prompt: `"Grammar — …"`, `"Vocabulary — …"`, `"Reading — …"`, `"Spelling — …"` (localized to the
   content language).

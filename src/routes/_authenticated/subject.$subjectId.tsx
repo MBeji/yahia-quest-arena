@@ -88,6 +88,7 @@ function SubjectPage() {
       fr: "Pas encore de quêtes.",
       en: "No quests yet.",
     }[lang],
+    chapterWord: { ar: "الفصل", fr: "Chapitre", en: "Chapter" }[lang],
   };
 
   return (
@@ -132,6 +133,11 @@ function SubjectPage() {
               transition={{ delay: ci * 0.05 }}
             >
               <div className="mb-3">
+                {/* Bold chapter marker in the subject's language (الفصل N /
+                    Chapitre N / Chapter N) so each new chapter reads clearly. */}
+                <div className="mb-1 text-sm font-bold uppercase tracking-wider" style={{ color }}>
+                  {L.chapterWord} {ci + 1}
+                </div>
                 <div className="flex items-center justify-between gap-3">
                   <h2
                     className="font-display text-xl font-bold"

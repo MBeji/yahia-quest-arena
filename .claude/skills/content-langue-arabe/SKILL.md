@@ -24,8 +24,9 @@ skill and especially `content-engine/references/language-track.md` before writin
   two-axis model in `content-engine/references/language-track.md`: **one subject per level** —
   `arabe-a1` (مبتدئ), `arabe-a2`, `arabe-b1`, `arabe-b2`, `arabe-c1` (CEFR-style ascending bands) —
   sequenced by `displayOrder`, **plus one dedicated `arabe-donjon`** subject (the whole-theme mixed
-  gauntlet, تحدٍّ شامل). Build levels bottom-up. `nameFr` is the French catalogue label; the content
-  is Arabic. Leave `isPremium` off (free `libre` parcours; premium is per parcours).
+  gauntlet, تحدٍّ شامل). Build levels bottom-up. `nameFr` is the catalogue label **in Arabic** (e.g.
+  "العربية — مبتدئ"), like the content — the field name is legacy, not a French requirement. Leave
+  `isPremium` off (free `libre` parcours; premium is per parcours).
 - **Chapters**: one competence each (نحو / صرف / إملاء / مفردات / قراءة), ordered simplest→most complex
   within the level (~5 per level). cours.md teaches the rule with many italicized example sentences and
   a forms table; quiz.json (5 Q); exercises drill it via the ascending ladder (see language-track.md).
