@@ -136,7 +136,11 @@ Whatever the slice, the same gates apply: quality bar → self-verification → 
 
 Generate from model knowledge first, then verify and enrich facts with web search/fetch, recording
 the URLs/references you used in each `chapter.json` `sources[]` (traceability). Be especially careful
-with factual claims in culture-générale and with fidelity to the official syllabus in `content-ecole-tn`.
+with factual claims in culture-générale and with fidelity to the official syllabus in `content-ecole-tn`
+— for school content the authoritative scope is the **national CNP program**, captured as the downloaded
+CNP corpus (student manuels + teacher guides) indexed under
+`content-ecole-tn/references/programmes-officiels/` (see that folder's README; the school-specific Taybah
+files there are a secondary cross-check), so defer to `content-ecole-tn` for school work.
 
 ## Report format
 
