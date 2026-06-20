@@ -1,0 +1,154 @@
+{
+  "title": "⭐ تمرين: أوّل خطوات في قيس السعة",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "كم مليلترًا في اللتر الواحد؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "100"
+        },
+        {
+          "id": "b",
+          "text": "1 000"
+        },
+        {
+          "id": "c",
+          "text": "10 000"
+        },
+        {
+          "id": "d",
+          "text": "10"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "اللتر الواحد يساوي ألف ميليلتر: 1 L = 1 000 mL (العلاقة الأساسية بين الوحدتين).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أيّ وحدةٍ هي الأنسب لقياس ملعقة دواء؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "لتر (L)"
+        },
+        {
+          "id": "b",
+          "text": "كيلومتر (km)"
+        },
+        {
+          "id": "c",
+          "text": "ميليلتر (mL)"
+        },
+        {
+          "id": "d",
+          "text": "غرام (g)"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "كمّية الدواء في ملعقةٍ صغيرة جدًّا، فالوحدة المناسبة هي الميليلتر (mL).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم مليلترًا يساوي 2 L؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "2 000"
+        },
+        {
+          "id": "b",
+          "text": "200"
+        },
+        {
+          "id": "c",
+          "text": "20 000"
+        },
+        {
+          "id": "d",
+          "text": "22"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "بما أنّ 1 L = 1 000 mL، فإنّ 2 L = 2 × 1 000 = 2 000 mL.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم مليلترًا يساوي 5 L؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "50"
+        },
+        {
+          "id": "b",
+          "text": "500"
+        },
+        {
+          "id": "c",
+          "text": "55"
+        },
+        {
+          "id": "d",
+          "text": "5 000"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "بما أنّ 1 L = 1 000 mL، فإنّ 5 L = 5 × 1 000 = 5 000 mL.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم مليلترًا يساوي ربع لتر؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "25"
+        },
+        {
+          "id": "b",
+          "text": "2 500"
+        },
+        {
+          "id": "c",
+          "text": "250"
+        },
+        {
+          "id": "d",
+          "text": "750"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "ربع اللتر = ربع 1 000 mL = 250 mL.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم لترًا يساوي 1 000 mL؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "1"
+        },
+        {
+          "id": "b",
+          "text": "10"
+        },
+        {
+          "id": "c",
+          "text": "100"
+        },
+        {
+          "id": "d",
+          "text": "1 000"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "1 000 mL = 1 L (العلاقة الأساسية).",
+      "difficulty": 2
+    }
+  ]
+}

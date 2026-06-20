@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ زعيم الفصل ⭐⭐⭐: سيّد القوارير",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "كيف نكتب 1 500 mL باللتر والميليلتر؟",
+      "options": [
+        { "id": "a", "text": "1 L 500 mL" },
+        { "id": "b", "text": "15 L" },
+        { "id": "c", "text": "1 L 50 mL" },
+        { "id": "d", "text": "150 L" }
+      ],
+      "correctOption": "a",
+      "explanation": "كلّ 1 000 mL تساوي 1 L، فـ 1 500 mL = 1 000 mL + 500 mL = 1 L 500 mL.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم مليلترًا يساوي 2 L 300 mL؟",
+      "options": [
+        { "id": "a", "text": "230" },
+        { "id": "b", "text": "2 300" },
+        { "id": "c", "text": "23 000" },
+        { "id": "d", "text": "2 003" }
+      ],
+      "correctOption": "b",
+      "explanation": "2 L = 2 000 mL، فإنّ 2 L 300 mL = 2 000 + 300 = 2 300 mL.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما نتيجة 3 L − 800 mL؟",
+      "options": [
+        { "id": "a", "text": "2 L 800 mL" },
+        { "id": "b", "text": "2 L 8 mL" },
+        { "id": "c", "text": "2 L 20 mL" },
+        { "id": "d", "text": "2 L 200 mL" }
+      ],
+      "correctOption": "d",
+      "explanation": "نوحّد الوحدة: 3 L = 3 000 mL، ثمّ 3 000 − 800 = 2 200 mL = 2 L 200 mL.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "قارورةٌ فيها 1 L 250 mL عصير، أُضيف إليها 750 mL. كم صارت سعتها؟",
+      "options": [
+        { "id": "a", "text": "1 L 750 mL" },
+        { "id": "b", "text": "2 L 500 mL" },
+        { "id": "c", "text": "2 L" },
+        { "id": "d", "text": "3 L" }
+      ],
+      "correctOption": "c",
+      "explanation": "نوحّد بالميليلتر: 1 L 250 mL = 1 250 mL، ثمّ 1 250 + 750 = 2 000 mL = 2 L.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "كم سنتيلترًا يساوي 1 L؟",
+      "options": [
+        { "id": "a", "text": "10" },
+        { "id": "b", "text": "100" },
+        { "id": "c", "text": "1 000" },
+        { "id": "d", "text": "10 000" }
+      ],
+      "correctOption": "b",
+      "explanation": "1 L = 100 cL (لأنّ 1 L = 1 000 mL وكلّ cL = 10 mL).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ثلاث قواريرَ سعة كلٍّ منها 2 L. ما السعة الإجمالية؟",
+      "options": [
+        { "id": "a", "text": "5 L" },
+        { "id": "b", "text": "2 L" },
+        { "id": "c", "text": "6 L" },
+        { "id": "d", "text": "600 mL" }
+      ],
+      "correctOption": "c",
+      "explanation": "السعة الإجمالية = عدد القوارير × سعة الواحدة = 3 × 2 = 6 L.",
+      "difficulty": 3
+    }
+  ]
+}

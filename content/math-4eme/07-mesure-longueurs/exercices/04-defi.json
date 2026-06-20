@@ -1,0 +1,82 @@
+{
+  "title": "👑 تحدّي النخبة ⭐⭐⭐⭐: ألغاز الأطوال",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "ما الترتيب التصاعديّ الصحيح للأطوال 1 m و 90 cm و 1 km و 950 mm؟",
+      "options": [
+        { "id": "a", "text": "90 cm < 950 mm < 1 m < 1 km" },
+        { "id": "b", "text": "950 mm < 90 cm < 1 m < 1 km" },
+        { "id": "c", "text": "90 cm < 1 m < 950 mm < 1 km" },
+        { "id": "d", "text": "1 m < 90 cm < 950 mm < 1 km" }
+      ],
+      "correctOption": "a",
+      "explanation": "نوحّد بالميليمتر: 90 cm = 900 mm، 950 mm، 1 m = 1 000 mm، 1 km = 1 000 000 mm. فالترتيب 90 cm < 950 mm < 1 m < 1 km.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم سنتيمترًا يساوي 3 m 4 cm؟",
+      "options": [
+        { "id": "a", "text": "34" },
+        { "id": "b", "text": "304" },
+        { "id": "c", "text": "340" },
+        { "id": "d", "text": "3 004" }
+      ],
+      "correctOption": "b",
+      "explanation": "3 m = 300 cm، فإنّ 3 m 4 cm = 300 + 4 = 304 cm. (احذر: ليست 340.)",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ملعبٌ طوله 100 m. جرى عدّاءٌ 6 أطوالٍ كاملة منه. كم مترًا قطع؟",
+      "options": [
+        { "id": "a", "text": "60 m" },
+        { "id": "b", "text": "300 m" },
+        { "id": "c", "text": "1 200 m" },
+        { "id": "d", "text": "600 m" }
+      ],
+      "correctOption": "d",
+      "explanation": "المسافة = عدد الأطوال × طول الواحد = 6 × 100 = 600 m.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ما نتيجة 12 mm + 8 mm + 5 cm (بالميليمتر)؟",
+      "options": [
+        { "id": "a", "text": "25 mm" },
+        { "id": "b", "text": "70 cm" },
+        { "id": "c", "text": "70 mm" },
+        { "id": "d", "text": "7 mm" }
+      ],
+      "correctOption": "c",
+      "explanation": "نوحّد بالميليمتر: 5 cm = 50 mm، ثمّ 12 + 8 + 50 = 70 mm (أي 7 cm).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "أيّهما أطول: 2 m 30 cm أم 250 cm؟",
+      "options": [
+        { "id": "a", "text": "2 m 30 cm" },
+        { "id": "b", "text": "250 cm" },
+        { "id": "c", "text": "هما متساويان" },
+        { "id": "d", "text": "لا يمكن المقارنة" }
+      ],
+      "correctOption": "b",
+      "explanation": "نوحّد الوحدة: 2 m 30 cm = 230 cm، و 230 cm < 250 cm. إذن 250 cm أطول.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ما نتيجة 5 km − 1 200 m (بالمتر)؟",
+      "options": [
+        { "id": "a", "text": "3 800 m" },
+        { "id": "b", "text": "4 800 m" },
+        { "id": "c", "text": "3 200 m" },
+        { "id": "d", "text": "6 200 m" }
+      ],
+      "correctOption": "a",
+      "explanation": "نوحّد الوحدة: 5 km = 5 000 m، ثمّ 5 000 − 1 200 = 3 800 m.",
+      "difficulty": 3
+    }
+  ]
+}
