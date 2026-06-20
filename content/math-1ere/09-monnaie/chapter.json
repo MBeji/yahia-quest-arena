@@ -1,0 +1,9 @@
+{
+  "title": "النقود",
+  "description": "التعرّف على القطع النقدية المتداولة (1، 2، 5، 10، 20، 50 مي)، تمثيل مبلغ بالقطع المناسبة أو بأقلّ عدد من القطع، ومقارنة المبالغ",
+  "displayOrder": 8,
+  "sources": [
+    "CNP — كتاب المعلّم، الرياضيات، السنة الأولى من التعليم الأساسي (guide méthodologique, code 502107), مكوّن نظام قيس : النقود",
+    "Programme officiel de mathématiques — 1ère année de l'enseignement de base (CNP, Ministère de l'Éducation, Tunisie)"
+  ]
+}

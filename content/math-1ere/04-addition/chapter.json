@@ -1,7 +1,7 @@
 {
   "title": "الجمع",
-  "description": "الجمع في حدود 99، بدون احتفاظ ومع احتفاظ، معنى الجمع وعلامة +، الجمع بالعدّ التصاعدي",
-  "displayOrder": 4,
+  "description": "الجمع في حدود 99 بدون احتفاظ، معنى الجمع وعلامة +، الجمع بالعدّ التصاعدي",
+  "displayOrder": 7,
   "sources": [
     "Programme officiel de mathématiques — 1ère année de l'enseignement de base (CNP, Ministère de l'Éducation, Tunisie)",
     "Manuel scolaire de mathématiques — 1ère année de base (CNP, Tunisie)"
