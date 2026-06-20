@@ -90,3 +90,31 @@ associer image↔nombre), énoncés **très courts** ; garder la progression du 
 1. **CNP** : `bash cnp-officiel/_dl-manuels.sh` (résumable) → puis régénérer `cnp-officiel/CATALOGUE.md`.
 2. **École** : `programmes-officiels/<école>/<gradeSlug>.md` (transcription fidèle : terminologie d'origine,
    chiffres latins 0-9 même en arabe, `[sic]`/`[?]`, fichiers source en bas) + ligne dans la table ci-dessus.
+
+## 🛠️ Recette de création / réalignement de contenu (méthode à suivre)
+
+Pour créer ou réaligner le contenu d'un couple **(niveau, matière)** sur le CNP — produit `cours.md` +
+`resume.md` + `quiz.json` + `exercices/*.json` (les **missions**) :
+
+1. **Isoler le travail** (repo multi-sessions — ne JAMAIS toucher au WIP non commité des autres sessions) :
+   worktree sur `main` + jonction `node_modules` (pour que validation et hooks fonctionnent) :
+   - `git worktree add -b feat/<sujet>-cnp <chemin> origin/main`
+   - jonction (Windows, sans admin, PowerShell) : `New-Item -ItemType Junction -Path <chemin>\node_modules -Target <repo>\node_modules`
+2. **Lire le programme CNP** (source de vérité) : repérer le **guide enseignant** du (niveau, matière) dans
+   `cnp-officiel/CATALOGUE.md`, puis `bash cnp-officiel/render.sh <guide.pdf> <p1> <p2>` → ouvrir les PNG de
+   `cnp-officiel/_render/` avec l'outil **Read** (vision ; les PDF sont des scans). Établir le scope exact
+   (notions, terminologie, séquence). `taybah/<gradeSlug>.md` sert de **vérification** / séquençage par trimestre.
+3. **Auditer l'existant** (si réalignement) : pour chaque chapitre → **couvert** / **manquant** /
+   **hors-programme** (notion d'un autre niveau). Vérifier avant de retirer (ex. soustraction = 2ème, pas 1ère).
+4. **Générer / corriger** chapitre par chapitre selon **`content-engine`** :
+   - `cours.md` (~50-75 l, style RPG, **figures SVG** pour le primaire, chiffres latins même en arabe),
+     `resume.md` (bijection cours↔résumé), `quiz.json` (5 q, d1-2, gate), `exercices/*.json` = **missions**
+     (`01-pratique` d1, `02-boss` d3, +`03-revision`/`04-defi`/`05` au besoin).
+   - ajouter les chapitres manquants, retirer/flaguer le hors-programme, **réordonner** (`displayOrder`),
+     `nameFr` natif (`الرياضيات`…). Auto-vérification (re-solve à l'aveugle, équilibre des clés, notation, golden rule).
+5. **Valider** : `npm run content:check` (Zod) + `npm run content:qa:strict` (**0 erreur**).
+   (Worktree sans `node_modules` : jonction de l'étape 1, ou `node --experimental-strip-types <repo>/scripts/content/build.ts --check` avec cwd=worktree.)
+6. **Committer + PR** (un commit par sujet) : `feat(content): <sujet> — réalignement CNP`, push, `gh pr create`.
+   Nettoyer : retirer la jonction (`rmdir <chemin>\node_modules`) **avant** `git worktree remove`.
+
+> Références éprouvées : PR #161 (`math-1ere`), #162 (`math-2eme`).
