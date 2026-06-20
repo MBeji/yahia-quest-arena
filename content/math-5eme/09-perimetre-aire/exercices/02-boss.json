@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ زعيم الفصل ⭐⭐⭐: حارس المحيط والمساحة",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "مستطيلٌ طوله 8 cm وعرضه 5 cm. ما مساحته؟ <svg viewBox=\"0 0 100 100\"><rect x=\"14\" y=\"34\" width=\"72\" height=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><text x=\"40\" y=\"29\" font-size=\"10\" fill=\"currentColor\">8 cm</text><text x=\"3\" y=\"54\" font-size=\"10\" fill=\"currentColor\">5</text></svg>",
+      "options": [
+        { "id": "a", "text": "26 cm²" },
+        { "id": "b", "text": "13 cm²" },
+        { "id": "c", "text": "40 cm²" },
+        { "id": "d", "text": "40 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "مساحة المستطيل = الطول × العرض = 8 × 5 = 40 cm². أمّا 26 فهو المحيط.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما محيط نفس المستطيل (طوله 8 cm وعرضه 5 cm)؟",
+      "options": [
+        { "id": "a", "text": "26 cm" },
+        { "id": "b", "text": "40 cm" },
+        { "id": "c", "text": "13 cm" },
+        { "id": "d", "text": "16 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "محيط المستطيل = 2 × (8 + 5) = 2 × 13 = 26 cm. لاحظ أنّ المحيط والمساحة مفهومان مختلفان لنفس الشكل.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "مربّعٌ ضلعه 6 cm. كم تساوي مساحته؟",
+      "options": [
+        { "id": "a", "text": "24 cm²" },
+        { "id": "b", "text": "12 cm²" },
+        { "id": "c", "text": "36 cm" },
+        { "id": "d", "text": "36 cm²" }
+      ],
+      "correctOption": "d",
+      "explanation": "مساحة المربّع = الضلع × الضلع = 6 × 6 = 36 cm². أمّا 24 فهو المحيط (4 × 6).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم مترًا مربّعًا في الكيلومتر المربّع الواحد؟",
+      "options": [
+        { "id": "a", "text": "1 000 m²" },
+        { "id": "b", "text": "1 000 000 m²" },
+        { "id": "c", "text": "10 000 m²" },
+        { "id": "d", "text": "100 000 m²" }
+      ],
+      "correctOption": "b",
+      "explanation": "بما أنّ 1 km = 1 000 m، فإنّ 1 km² = 1 000 × 1 000 = 1 000 000 m². نضرب طول التحويل في نفسه.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "مساحةٌ قدرها 2 m². كم تساوي بالـ cm²؟",
+      "options": [
+        { "id": "a", "text": "200 cm²" },
+        { "id": "b", "text": "2 000 cm²" },
+        { "id": "c", "text": "20 000 cm²" },
+        { "id": "d", "text": "20 cm²" }
+      ],
+      "correctOption": "c",
+      "explanation": "بما أنّ 1 m² = 10 000 cm²، فإنّ 2 m² = 2 × 10 000 = 20 000 cm².",
+      "difficulty": 3
+    },
+    {
+      "prompt": "مثلّثٌ أضلاعه 9 cm و 12 cm و 8 cm. ما محيطه؟",
+      "options": [
+        { "id": "a", "text": "29 cm" },
+        { "id": "b", "text": "21 cm" },
+        { "id": "c", "text": "864 cm" },
+        { "id": "d", "text": "29 cm²" }
+      ],
+      "correctOption": "a",
+      "explanation": "محيط المثلّث = مجموع أضلاعه = 9 + 12 + 8 = 29 cm.",
+      "difficulty": 3
+    }
+  ]
+}

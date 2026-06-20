@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: أوّل خطوات في عالَم القيس",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "كم سنتيمترًا في 1 m؟",
+      "options": [
+        { "id": "a", "text": "100 cm" },
+        { "id": "b", "text": "10 cm" },
+        { "id": "c", "text": "1 000 cm" },
+        { "id": "d", "text": "1 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "نعرف أنّ 1 m = 100 cm. ننزل من المتر إلى السنتيمتر رتبتين، أي نضرب في 100، فيكون المتر 100 سنتيمتر.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم غرامًا في 3 kg؟",
+      "options": [
+        { "id": "a", "text": "30 g" },
+        { "id": "b", "text": "3 000 g" },
+        { "id": "c", "text": "300 g" },
+        { "id": "d", "text": "30 000 g" }
+      ],
+      "correctOption": "b",
+      "explanation": "نعرف أنّ 1 kg = 1 000 g، فنضرب في 1 000: 3 × 1 000 = 3 000 g.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم ميليلترًا في 1 L؟",
+      "options": [
+        { "id": "a", "text": "10 mL" },
+        { "id": "b", "text": "100 mL" },
+        { "id": "c", "text": "1 000 mL" },
+        { "id": "d", "text": "10 000 mL" }
+      ],
+      "correctOption": "c",
+      "explanation": "نعرف أنّ 1 L = 1 000 mL؛ فاللتر يساوي ألف ميليلتر مباشرةً.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم ثانية في 1 min؟",
+      "options": [
+        { "id": "a", "text": "10 s" },
+        { "id": "b", "text": "100 s" },
+        { "id": "c", "text": "30 s" },
+        { "id": "d", "text": "60 s" }
+      ],
+      "correctOption": "d",
+      "explanation": "وحدات الزمن ليست عشرية: 1 min = 60 s. الدقيقة ستّون ثانية وليست عشرًا أو مئة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم مترًا في 2 km؟",
+      "options": [
+        { "id": "a", "text": "200 m" },
+        { "id": "b", "text": "2 000 m" },
+        { "id": "c", "text": "20 m" },
+        { "id": "d", "text": "20 000 m" }
+      ],
+      "correctOption": "b",
+      "explanation": "نعرف أنّ 1 km = 1 000 m، فنضرب في 1 000: 2 × 1 000 = 2 000 m.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم ميليمترًا في 1 cm؟",
+      "options": [
+        { "id": "a", "text": "10 mm" },
+        { "id": "b", "text": "100 mm" },
+        { "id": "c", "text": "1 mm" },
+        { "id": "d", "text": "1 000 mm" }
+      ],
+      "correctOption": "a",
+      "explanation": "نعرف أنّ 1 cm = 10 mm؛ ننزل من السنتيمتر إلى الميليمتر رتبةً واحدة بالضرب في 10.",
+      "difficulty": 1
+    }
+  ]
+}

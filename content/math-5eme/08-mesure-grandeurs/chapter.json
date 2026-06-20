@@ -1,0 +1,9 @@
+{
+  "title": "القيس",
+  "description": "وحدات الطول (km, m, dm, cm, mm) والكتلة (t, kg, g) والسعة (L, dL, cL, mL) والزمن (يوم، ساعة، دقيقة، ثانية)، والتحويل بين الوحدات بجدول التحويل (الضرب والقسمة على 10 و100 و1000) مع الأعداد العشرية، وحلّ مسائل بسيطة",
+  "displayOrder": 8,
+  "sources": [
+    "Programme officiel de mathématiques — 5ème année de l'enseignement de base (CNP, Ministère de l'Éducation, Tunisie)",
+    "Manuel scolaire de mathématiques — 5ème année de base (CNP, Tunisie)"
+  ]
+}

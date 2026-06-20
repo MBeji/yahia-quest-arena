@@ -1,0 +1,82 @@
+{
+  "title": "📝 تدريب ⭐⭐⭐: مراجعة شاملة للقيس",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "كم سنتيمترًا في 7 dm؟",
+      "options": [
+        { "id": "a", "text": "7 cm" },
+        { "id": "b", "text": "700 cm" },
+        { "id": "c", "text": "70 cm" },
+        { "id": "d", "text": "0,7 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "نعرف أنّ 1 dm = 10 cm، فنضرب في 10: 7 × 10 = 70 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم كيلوغرامًا في 1,5 t؟",
+      "options": [
+        { "id": "a", "text": "1 500 kg" },
+        { "id": "b", "text": "150 kg" },
+        { "id": "c", "text": "15 kg" },
+        { "id": "d", "text": "15 000 kg" }
+      ],
+      "correctOption": "a",
+      "explanation": "نضرب في 1 000 لأنّ 1 t = 1 000 kg: 1,5 × 1 000 = 1 500 kg.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم ثانية في 5 min؟",
+      "options": [
+        { "id": "a", "text": "50 s" },
+        { "id": "b", "text": "500 s" },
+        { "id": "c", "text": "55 s" },
+        { "id": "d", "text": "300 s" }
+      ],
+      "correctOption": "d",
+      "explanation": "الدقيقة 60 ثانية، فـ 5 min = 5 × 60 = 300 s.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم لترًا في 250 cL؟",
+      "options": [
+        { "id": "a", "text": "25 L" },
+        { "id": "b", "text": "2,5 L" },
+        { "id": "c", "text": "0,25 L" },
+        { "id": "d", "text": "250 L" }
+      ],
+      "correctOption": "b",
+      "explanation": "نصعد من السنتيلتر إلى اللتر بالقسمة على 100 لأنّ 1 L = 100 cL: 250 ÷ 100 = 2,5 L.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "علبتان: كتلة الأولى 1 kg 300 g وكتلة الثانية 700 g. ما مجموع كتلتيهما بالغرام؟",
+      "options": [
+        { "id": "a", "text": "1 000 g" },
+        { "id": "b", "text": "1 370 g" },
+        { "id": "c", "text": "2 000 g" },
+        { "id": "d", "text": "8 000 g" }
+      ],
+      "correctOption": "c",
+      "explanation": "نوحّد الوحدة: 1 kg 300 g = 1 000 + 300 = 1 300 g، ثمّ نجمع: 1 300 + 700 = 2 000 g (أي 2 kg).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "كم مترًا في 0,8 km؟",
+      "options": [
+        { "id": "a", "text": "800 m" },
+        { "id": "b", "text": "80 m" },
+        { "id": "c", "text": "8 m" },
+        { "id": "d", "text": "8 000 m" }
+      ],
+      "correctOption": "a",
+      "explanation": "نضرب في 1 000 لأنّ 1 km = 1 000 m: 0,8 × 1 000 = 800 m.",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "🛡️ مراجعة ⭐⭐: أُطابقُ الحاسّة بعضوها",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "حاسّة البصر عضوها...",
+      "options": [
+        { "id": "a", "text": "العين" },
+        { "id": "b", "text": "الأذن" },
+        { "id": "c", "text": "اللسان" },
+        { "id": "d", "text": "الأنف" }
+      ],
+      "correctOption": "a",
+      "explanation": "عضو حاسّة البصر هو العين، نرى بها الأشياء.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "حاسّة السمع عضوها...",
+      "options": [
+        { "id": "a", "text": "اللسان" },
+        { "id": "b", "text": "الأذن" },
+        { "id": "c", "text": "العين" },
+        { "id": "d", "text": "الجلد" }
+      ],
+      "correctOption": "b",
+      "explanation": "عضو حاسّة السمع هو الأذن، نسمع بها الأصوات.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "حاسّة الذوق عضوها...",
+      "options": [
+        { "id": "a", "text": "العين" },
+        { "id": "b", "text": "الأنف" },
+        { "id": "c", "text": "اللسان" },
+        { "id": "d", "text": "الأذن" }
+      ],
+      "correctOption": "c",
+      "explanation": "عضو حاسّة الذوق هو اللسان، نتذوّق به الطعام.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ جملةٍ صحيحة؟",
+      "options": [
+        { "id": "a", "text": "نشمّ باللسان" },
+        { "id": "b", "text": "نسمع بالعين" },
+        { "id": "c", "text": "نرى بالأذن" },
+        { "id": "d", "text": "نلمس بالجلد" }
+      ],
+      "correctOption": "d",
+      "explanation": "الصحيح أنّنا نلمس بالجلد، ونشمّ بالأنف، ونسمع بالأذن، ونرى بالعين.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما الذي نعرفه بحاسّة اللمس؟",
+      "options": [
+        { "id": "a", "text": "اللون" },
+        { "id": "b", "text": "الصوت" },
+        { "id": "c", "text": "الناعم والخشن والحارّ والبارد" },
+        { "id": "d", "text": "الرائحة" }
+      ],
+      "correctOption": "c",
+      "explanation": "بحاسّة اللمس نعرف هل الشيء ناعمٌ أم خشن، حارٌّ أم بارد.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "حاسّة الشمّ عضوها...",
+      "options": [
+        { "id": "a", "text": "اللسان" },
+        { "id": "b", "text": "العين" },
+        { "id": "c", "text": "الأذن" },
+        { "id": "d", "text": "الأنف" }
+      ],
+      "correctOption": "d",
+      "explanation": "عضو حاسّة الشمّ هو الأنف، نشمّ به الروائح.",
+      "difficulty": 2
+    }
+  ]
+}

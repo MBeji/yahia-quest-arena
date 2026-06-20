@@ -1,0 +1,9 @@
+{
+  "title": "المحيط والمساحة",
+  "description": "حساب محيط المربّع والمستطيل والمثلّث، حساب مساحة المربّع والمستطيل، وحدات المساحة (cm²، m²، km²) وتحويلاتها البسيطة، والتمييز بين المحيط والمساحة",
+  "displayOrder": 9,
+  "sources": [
+    "Programme officiel de mathématiques — 5ème année de l'enseignement de base (CNP, Ministère de l'Éducation, Tunisie)",
+    "Manuel scolaire de mathématiques — 5ème année de base (CNP, Tunisie)"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "title": "الأعداد الكبيرة",
+  "description": "قراءة وكتابة الأعداد الكبيرة إلى الملايين، الأصناف الثلاثة (صنف الوحدات، صنف الآلاف، صنف الملايين)، قيمة الرقم حسب رتبته، والمقارنة والترتيب بين الأعداد الكبيرة",
+  "displayOrder": 1,
+  "sources": [
+    "Programme officiel de mathématiques — 5ème année de l'enseignement de base (CNP, Ministère de l'Éducation, Tunisie)",
+    "Manuel scolaire de mathématiques — 5ème année de base (CNP, Tunisie)"
+  ]
+}

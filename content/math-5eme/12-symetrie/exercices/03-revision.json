@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة (نمط امتحان): التناظر المحوري",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "محور التناظر يقسم الشكل إلى:",
+      "options": [
+        { "id": "a", "text": "نصفين مختلفين" },
+        { "id": "b", "text": "نصفين متطابقين" },
+        { "id": "c", "text": "ثلاثة أجزاء" },
+        { "id": "d", "text": "لا يقسمه" }
+      ],
+      "correctOption": "b",
+      "explanation": "محور التناظر يقسم الشكل إلى نصفين متطابقين، كلٌّ منهما نظير الآخر.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم محور تناظرٍ للمربّع في الشكل التالي؟ <svg viewBox=\"0 0 100 100\"><rect x=\"25\" y=\"25\" width=\"50\" height=\"50\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"50\" y1=\"15\" x2=\"50\" y2=\"85\" stroke=\"currentColor\" stroke-width=\"1\" stroke-dasharray=\"4 3\"/><line x1=\"15\" y1=\"50\" x2=\"85\" y2=\"50\" stroke=\"currentColor\" stroke-width=\"1\" stroke-dasharray=\"4 3\"/><line x1=\"18\" y1=\"18\" x2=\"82\" y2=\"82\" stroke=\"currentColor\" stroke-width=\"1\" stroke-dasharray=\"4 3\"/><line x1=\"82\" y1=\"18\" x2=\"18\" y2=\"82\" stroke=\"currentColor\" stroke-width=\"1\" stroke-dasharray=\"4 3\"/></svg>",
+      "options": [
+        { "id": "a", "text": "1" },
+        { "id": "b", "text": "2" },
+        { "id": "c", "text": "4" },
+        { "id": "d", "text": "0" }
+      ],
+      "correctOption": "c",
+      "explanation": "للمربّع 4 محاور تناظر: محوران عبر منتصفات الأضلاع ومحوران قطريّان، كما تظهر الخطوط المتقطّعة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "بالنسبة لنقطةٍ ونظيرها عن محور، يقع المحور في:",
+      "options": [
+        { "id": "a", "text": "منتصف القطعة الواصلة بينهما" },
+        { "id": "b", "text": "عند إحدى النقطتين" },
+        { "id": "c", "text": "خارج القطعة الواصلة" },
+        { "id": "d", "text": "بعيدًا عن النقطتين" }
+      ],
+      "correctOption": "a",
+      "explanation": "المحور عموديٌّ على القطعة الواصلة بين النقطة ونظيرها، ويمرّ بمنتصفها.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم محور تناظرٍ للمستطيل غير المربّع؟",
+      "options": [
+        { "id": "a", "text": "4" },
+        { "id": "b", "text": "1" },
+        { "id": "c", "text": "0" },
+        { "id": "d", "text": "2" }
+      ],
+      "correctOption": "d",
+      "explanation": "للمستطيل محوران للتناظر يمرّان بمنتصفات الأضلاع المتقابلة (الإجابة: 2).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم محور تناظرٍ للمثلّث متساوي الأضلاع؟",
+      "options": [
+        { "id": "a", "text": "3" },
+        { "id": "b", "text": "1" },
+        { "id": "c", "text": "2" },
+        { "id": "d", "text": "0" }
+      ],
+      "correctOption": "a",
+      "explanation": "للمثلّث متساوي الأضلاع 3 محاور تناظر، واحدٌ لكلّ ضلع.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما نظير نقطةٍ واقعة على محور التناظر؟",
+      "options": [
+        { "id": "a", "text": "نقطةٌ أخرى بعيدة" },
+        { "id": "b", "text": "هي نفسها" },
+        { "id": "c", "text": "لا نظير لها" },
+        { "id": "d", "text": "منتصف المحور" }
+      ],
+      "correctOption": "b",
+      "explanation": "النقطة الواقعة على المحور نظيرها هو نفسها، لأنّ بُعدها عن المحور صفر.",
+      "difficulty": 2
+    }
+  ]
+}

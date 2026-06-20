@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: النهار والليل",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "متى نرى الشمس؟",
+      "options": [
+        { "id": "a", "text": "في النهار" },
+        { "id": "b", "text": "في الليل" },
+        { "id": "c", "text": "أثناء النوم" },
+        { "id": "d", "text": "أبدًا" }
+      ],
+      "correctOption": "a",
+      "explanation": "نرى الشمس في النهار، فهي تنير الدنيا.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "متى نرى النجوم؟",
+      "options": [
+        { "id": "a", "text": "في الصباح" },
+        { "id": "b", "text": "في الليل" },
+        { "id": "c", "text": "في الظهر" },
+        { "id": "d", "text": "أبدًا" }
+      ],
+      "correctOption": "b",
+      "explanation": "نرى النجوم في الليل عندما تكون السماء مظلمة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ماذا نفعل عادةً في النهار؟",
+      "options": [
+        { "id": "a", "text": "ننام طوال الوقت" },
+        { "id": "b", "text": "نبقى في الظلام" },
+        { "id": "c", "text": "نلعب وندرس" },
+        { "id": "d", "text": "لا شيء" }
+      ],
+      "correctOption": "c",
+      "explanation": "في النهار نلعب وندرس ونعمل لأنّه وقت الضوء والنشاط.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ماذا نفعل عادةً في الليل؟",
+      "options": [
+        { "id": "a", "text": "نذهب إلى المدرسة" },
+        { "id": "b", "text": "نلعب في الملعب" },
+        { "id": "c", "text": "نعمل في الحقل" },
+        { "id": "d", "text": "ننام ونرتاح" }
+      ],
+      "correctOption": "d",
+      "explanation": "في الليل ننام ونرتاح لنستعيد نشاطنا.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كيف تكون السماء في النهار المشمس؟",
+      "options": [
+        { "id": "a", "text": "زرقاء ومضيئة" },
+        { "id": "b", "text": "مظلمة" },
+        { "id": "c", "text": "سوداء" },
+        { "id": "d", "text": "فيها نجوم" }
+      ],
+      "correctOption": "a",
+      "explanation": "في النهار المشمس تكون السماء زرقاء ومضيئة بفضل الشمس.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما الذي يضيء السماء في الليل؟",
+      "options": [
+        { "id": "a", "text": "الشمس" },
+        { "id": "b", "text": "القمر والنجوم" },
+        { "id": "c", "text": "قوس قزح" },
+        { "id": "d", "text": "لا شيء" }
+      ],
+      "correctOption": "b",
+      "explanation": "في الليل يضيء القمر والنجوم السماء بنورٍ خافت.",
+      "difficulty": 1
+    }
+  ]
+}

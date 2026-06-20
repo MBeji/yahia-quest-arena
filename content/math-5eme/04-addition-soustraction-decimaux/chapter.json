@@ -1,0 +1,9 @@
+{
+  "title": "جمع وطرح الأعداد العشرية",
+  "description": "تقنية جمع وطرح الأعداد العشرية بمحاذاة الفواصل والرتب، الاحتفاظ والاستلاف، إكمال الجزء العشري بالأصفار، حلّ مسائل بسيطة في الأثمان والأطوال، وتقدير رتبة المقدار للتثبّت من النتيجة",
+  "displayOrder": 4,
+  "sources": [
+    "Programme officiel de mathématiques — 5ème année de l'enseignement de base (CNP, Ministère de l'Éducation, Tunisie)",
+    "Manuel scolaire de mathématiques — 5ème année de base (CNP, Tunisie)"
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: أوّل خطوات في ضرب العشريات",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "ما حاصل 1,2 × 4؟",
+      "options": [
+        { "id": "a", "text": "0,48" },
+        { "id": "b", "text": "48" },
+        { "id": "c", "text": "4,8" },
+        { "id": "d", "text": "5,2" }
+      ],
+      "correctOption": "c",
+      "explanation": "نضرب 12 × 4 = 48، وفي 1,2 رقمٌ واحد بعد الفاصلة، فنترك رقمًا واحدًا: الجداء 4,8.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما حاصل 2,5 × 10؟",
+      "options": [
+        { "id": "a", "text": "0,25" },
+        { "id": "b", "text": "250" },
+        { "id": "c", "text": "2,50" },
+        { "id": "d", "text": "25" }
+      ],
+      "correctOption": "d",
+      "explanation": "عند الضرب في 10 نُزيح الفاصلة خانةً واحدة نحو اليمين: 2,5 يصبح 25.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما حاصل 0,3 × 6؟",
+      "options": [
+        { "id": "a", "text": "0,18" },
+        { "id": "b", "text": "1,8" },
+        { "id": "c", "text": "18" },
+        { "id": "d", "text": "6,3" }
+      ],
+      "correctOption": "b",
+      "explanation": "نضرب 3 × 6 = 18، وفي 0,3 رقمٌ واحد بعد الفاصلة، فنترك رقمًا واحدًا: الجداء 1,8.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما حاصل 4,7 × 100؟",
+      "options": [
+        { "id": "a", "text": "470" },
+        { "id": "b", "text": "47" },
+        { "id": "c", "text": "4 700" },
+        { "id": "d", "text": "0,047" }
+      ],
+      "correctOption": "a",
+      "explanation": "عند الضرب في 100 نُزيح الفاصلة خانتين نحو اليمين ونُكمل بصفرٍ عند الحاجة: 4,7 يصبح 470.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما حاصل 3,2 × 2؟",
+      "options": [
+        { "id": "a", "text": "0,64" },
+        { "id": "b", "text": "64" },
+        { "id": "c", "text": "6,4" },
+        { "id": "d", "text": "5,2" }
+      ],
+      "correctOption": "c",
+      "explanation": "نضرب 32 × 2 = 64، وفي 3,2 رقمٌ واحد بعد الفاصلة، فنترك رقمًا واحدًا: الجداء 6,4.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما حاصل 1,5 × 3؟",
+      "options": [
+        { "id": "a", "text": "3,5" },
+        { "id": "b", "text": "4,5" },
+        { "id": "c", "text": "45" },
+        { "id": "d", "text": "0,45" }
+      ],
+      "correctOption": "b",
+      "explanation": "نضرب 15 × 3 = 45، وفي 1,5 رقمٌ واحد بعد الفاصلة، فنترك رقمًا واحدًا: الجداء 4,5.",
+      "difficulty": 2
+    }
+  ]
+}

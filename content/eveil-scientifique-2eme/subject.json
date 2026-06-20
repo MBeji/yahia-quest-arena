@@ -1,0 +1,12 @@
+{
+  "id": "eveil-scientifique-2eme",
+  "nameFr": "Éveil scientifique",
+  "description": "نكتشفُ معًا حواسّنا الخمس، ونتعلّم النظافة والصحّة والتغذية السليمة، ونتعرّف على الحيوانات والنباتات والماء في الطبيعة والفصول الأربعة، وفق برنامج الإيقاظ العلمي للسنة الثانية من التعليم الأساسي",
+  "attribute": "Observation",
+  "colorToken": "subject-svt",
+  "icon": "Microscope",
+  "displayOrder": 2,
+  "contentLanguage": "ar",
+  "themeId": "ecole-tn",
+  "gradeSlug": "2eme-base"
+}
