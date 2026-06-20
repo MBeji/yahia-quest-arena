@@ -1,0 +1,12 @@
+{
+  "id": "math-2eme",
+  "nameFr": "Mathématiques",
+  "description": "الأنشطة العددية والحساب والقيس والهندسة وفق برنامج الرياضيات للسنة الثانية من التعليم الأساسي",
+  "attribute": "Force",
+  "colorToken": "subject-math",
+  "icon": "Calculator",
+  "displayOrder": 1,
+  "contentLanguage": "ar",
+  "themeId": "ecole-tn",
+  "gradeSlug": "2eme-base"
+}

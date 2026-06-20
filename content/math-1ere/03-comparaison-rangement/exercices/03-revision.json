@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة (نمط امتحان): المقارنة والترتيب",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "ما الرمز المناسب؟ 5 … 9",
+      "options": [
+        { "id": "a", "text": ">" },
+        { "id": "b", "text": "<" },
+        { "id": "c", "text": "=" },
+        { "id": "d", "text": "+" }
+      ],
+      "correctOption": "b",
+      "explanation": "العدد 5 أصغر من 9، فالرمز المناسب هو <: نكتب 5 < 9.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما الرمز المناسب؟ 8 … 8",
+      "options": [
+        { "id": "a", "text": "=" },
+        { "id": "b", "text": ">" },
+        { "id": "c", "text": "<" },
+        { "id": "d", "text": "×" }
+      ],
+      "correctOption": "a",
+      "explanation": "العددان متساويان (8 و 8)، فالرمز المناسب هو =: نكتب 8 = 8.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما الرمز المناسب؟ 60 … 50",
+      "options": [
+        { "id": "a", "text": "<" },
+        { "id": "b", "text": "=" },
+        { "id": "c", "text": ">" },
+        { "id": "d", "text": "−" }
+      ],
+      "correctOption": "c",
+      "explanation": "العدد 60 فيه 6 عشرات، و 50 فيه 5 عشرات، فـ 60 أكبر: نكتب 60 > 50.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما الترتيب التصاعدي للأعداد 17 و 7 و 71؟",
+      "options": [
+        { "id": "a", "text": "71، 17، 7" },
+        { "id": "b", "text": "7، 17، 71" },
+        { "id": "c", "text": "7، 71، 17" },
+        { "id": "d", "text": "17، 7، 71" }
+      ],
+      "correctOption": "b",
+      "explanation": "تصاعديًّا من الأصغر: 7 (آحاد فقط)، ثمّ 17 (عشرة)، ثمّ 71 (سبع عشرات). إذن 7، 17، 71.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما الرمز المناسب؟ 28 … 24",
+      "options": [
+        { "id": "a", "text": "<" },
+        { "id": "b", "text": "=" },
+        { "id": "c", "text": ">" },
+        { "id": "d", "text": "+" }
+      ],
+      "correctOption": "c",
+      "explanation": "تساوت العشرات (2 و 2)، فننظر إلى الآحاد: 8 أكبر من 4. إذن 28 > 24.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ عدد هو الأصغر؟",
+      "options": [
+        { "id": "a", "text": "45" },
+        { "id": "b", "text": "54" },
+        { "id": "c", "text": "44" },
+        { "id": "d", "text": "40" }
+      ],
+      "correctOption": "d",
+      "explanation": "نقارن العشرات: 45 و 44 و 40 فيها 4 عشرات؛ ثمّ الآحاد: 0 أصغر من 4 و 5. إذن الأصغر هو 40.",
+      "difficulty": 2
+    }
+  ]
+}

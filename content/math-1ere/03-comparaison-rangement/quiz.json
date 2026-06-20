@@ -1,0 +1,65 @@
+{
+  "title": "اختبار فهم الدرس ⭐",
+  "questions": [
+    {
+      "prompt": "ما الرمز المناسب؟ 8 … 5",
+      "options": [
+        { "id": "a", "text": ">" },
+        { "id": "b", "text": "<" },
+        { "id": "c", "text": "=" },
+        { "id": "d", "text": "+" }
+      ],
+      "correctOption": "a",
+      "explanation": "العدد 8 أكبر من 5، فالرمز المناسب هو >: نكتب 8 > 5.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما الرمز المناسب؟ 3 … 7",
+      "options": [
+        { "id": "a", "text": ">" },
+        { "id": "b", "text": "<" },
+        { "id": "c", "text": "=" },
+        { "id": "d", "text": "−" }
+      ],
+      "correctOption": "b",
+      "explanation": "العدد 3 أصغر من 7، فالرمز المناسب هو <: نكتب 3 < 7.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما الرمز المناسب؟ 6 … 6",
+      "options": [
+        { "id": "a", "text": ">" },
+        { "id": "b", "text": "<" },
+        { "id": "c", "text": "=" },
+        { "id": "d", "text": "×" }
+      ],
+      "correctOption": "c",
+      "explanation": "العددان متساويان (6 و 6)، فالرمز المناسب هو =: نكتب 6 = 6.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أيّ عدد هو الأكبر؟",
+      "options": [
+        { "id": "a", "text": "19" },
+        { "id": "b", "text": "21" },
+        { "id": "c", "text": "18" },
+        { "id": "d", "text": "12" }
+      ],
+      "correctOption": "b",
+      "explanation": "نقارن العشرات: 21 فيه عشرتان، والبقيّة فيها عشرة واحدة. إذن الأكبر هو 21.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما الترتيب التصاعدي للأعداد 5 و 2 و 9؟",
+      "options": [
+        { "id": "a", "text": "9، 5، 2" },
+        { "id": "b", "text": "5، 2، 9" },
+        { "id": "c", "text": "2، 5، 9" },
+        { "id": "d", "text": "2، 9، 5" }
+      ],
+      "correctOption": "c",
+      "explanation": "تصاعديًّا من الأصغر إلى الأكبر: 2 ثمّ 5 ثمّ 9. إذن 2، 5، 9.",
+      "difficulty": 2
+    }
+  ]
+}

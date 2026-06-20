@@ -1,0 +1,65 @@
+{
+  "title": "اختبار فهم الدرس ⭐",
+  "questions": [
+    {
+      "prompt": "كم يساوي 8 − 3؟",
+      "options": [
+        { "id": "a", "text": "4" },
+        { "id": "b", "text": "5" },
+        { "id": "c", "text": "11" },
+        { "id": "d", "text": "6" }
+      ],
+      "correctOption": "b",
+      "explanation": "نبدأ من 8 ونَعُدّ تنازليًّا 3 خطوات: 7، 6، 5. إذن 8 − 3 = 5.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم يساوي 6 − 0؟",
+      "options": [
+        { "id": "a", "text": "0" },
+        { "id": "b", "text": "60" },
+        { "id": "c", "text": "6" },
+        { "id": "d", "text": "5" }
+      ],
+      "correctOption": "c",
+      "explanation": "العدد 0 لا يغيّر شيئًا في الطرح، فـ 6 − 0 = 6.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم يساوي 7 − 7؟",
+      "options": [
+        { "id": "a", "text": "0" },
+        { "id": "b", "text": "7" },
+        { "id": "c", "text": "14" },
+        { "id": "d", "text": "1" }
+      ],
+      "correctOption": "a",
+      "explanation": "طرح العدد من نفسه يعطي 0، فـ 7 − 7 = 0.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم يساوي 49 − 25؟",
+      "options": [
+        { "id": "a", "text": "14" },
+        { "id": "b", "text": "34" },
+        { "id": "c", "text": "24" },
+        { "id": "d", "text": "26" }
+      ],
+      "correctOption": "c",
+      "explanation": "نطرح الآحاد: 9 − 5 = 4، والعشرات: 4 − 2 = 2. إذن 49 − 25 = 24.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "عندي 9 بالونات، انفجر 4. كم بقي؟",
+      "options": [
+        { "id": "a", "text": "13" },
+        { "id": "b", "text": "6" },
+        { "id": "c", "text": "4" },
+        { "id": "d", "text": "5" }
+      ],
+      "correctOption": "d",
+      "explanation": "نطرح ما انفجر: 9 − 4 = 5. بقي 5 بالونات.",
+      "difficulty": 2
+    }
+  ]
+}

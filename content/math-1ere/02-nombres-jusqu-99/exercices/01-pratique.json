@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: عشرات وآحاد",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "كم عشرة في العدد 20؟",
+      "options": [
+        { "id": "a", "text": "2" },
+        { "id": "b", "text": "20" },
+        { "id": "c", "text": "1" },
+        { "id": "d", "text": "0" }
+      ],
+      "correctOption": "a",
+      "explanation": "العدد 20 فيه عشرتان (2 عشرات) و 0 آحاد. إذن عدد العشرات هو 2.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما رقم العشرات في العدد 53؟",
+      "options": [
+        { "id": "a", "text": "3" },
+        { "id": "b", "text": "5" },
+        { "id": "c", "text": "8" },
+        { "id": "d", "text": "0" }
+      ],
+      "correctOption": "b",
+      "explanation": "في العدد 53 الرقم 5 عشرات والرقم 3 آحاد. إذن رقم العشرات هو 5.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم عدد العشرات والآحاد في العدد 10؟",
+      "options": [
+        { "id": "a", "text": "0 عشرة و 10 آحاد" },
+        { "id": "b", "text": "1 عشرة و 0 آحاد" },
+        { "id": "c", "text": "10 عشرات و 0 آحاد" },
+        { "id": "d", "text": "1 عشرة و 1 آحاد" }
+      ],
+      "correctOption": "b",
+      "explanation": "العدد 10 هو عشرة واحدة بلا آحاد، أي 1 عشرة و 0 آحاد.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كيف نقرأ العدد 40؟",
+      "options": [
+        { "id": "a", "text": "أربعة" },
+        { "id": "b", "text": "أربعة عشر" },
+        { "id": "c", "text": "أربعون" },
+        { "id": "d", "text": "أربعمئة" }
+      ],
+      "correctOption": "c",
+      "explanation": "العدد 40 فيه 4 عشرات و 0 آحاد، فنقرأه «أربعون».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما تفكيك العدد 35؟",
+      "options": [
+        { "id": "a", "text": "50 + 3" },
+        { "id": "b", "text": "3 + 5" },
+        { "id": "c", "text": "30 + 5" },
+        { "id": "d", "text": "35 + 5" }
+      ],
+      "correctOption": "c",
+      "explanation": "العدد 35 فيه 3 عشرات (30) و 5 آحاد، فتفكيكه 30 + 5.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما رقم الآحاد في العدد 90؟",
+      "options": [
+        { "id": "a", "text": "9" },
+        { "id": "b", "text": "90" },
+        { "id": "c", "text": "1" },
+        { "id": "d", "text": "0" }
+      ],
+      "correctOption": "d",
+      "explanation": "العدد 90 فيه 9 عشرات و 0 آحاد. إذن رقم الآحاد هو 0.",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: أوّل خطوات الطرح",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "كم يساوي 5 − 2؟",
+      "options": [
+        { "id": "a", "text": "3" },
+        { "id": "b", "text": "7" },
+        { "id": "c", "text": "2" },
+        { "id": "d", "text": "4" }
+      ],
+      "correctOption": "a",
+      "explanation": "نبدأ من 5 ونَعُدّ تنازليًّا 2 خطوة: 4، 3. إذن 5 − 2 = 3.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم يساوي 9 − 1؟",
+      "options": [
+        { "id": "a", "text": "10" },
+        { "id": "b", "text": "8" },
+        { "id": "c", "text": "7" },
+        { "id": "d", "text": "9" }
+      ],
+      "correctOption": "b",
+      "explanation": "نبدأ من 9 ونَعُدّ تنازليًّا خطوة واحدة: 8. إذن 9 − 1 = 8.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم يساوي 4 − 0؟",
+      "options": [
+        { "id": "a", "text": "0" },
+        { "id": "b", "text": "40" },
+        { "id": "c", "text": "4" },
+        { "id": "d", "text": "5" }
+      ],
+      "correctOption": "c",
+      "explanation": "العدد 0 لا يغيّر شيئًا في الطرح، فـ 4 − 0 = 4.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم يساوي 8 − 8؟",
+      "options": [
+        { "id": "a", "text": "16" },
+        { "id": "b", "text": "8" },
+        { "id": "c", "text": "0" },
+        { "id": "d", "text": "1" }
+      ],
+      "correctOption": "c",
+      "explanation": "طرح العدد من نفسه يعطي 0، فـ 8 − 8 = 0.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم يساوي 7 − 4؟",
+      "options": [
+        { "id": "a", "text": "3" },
+        { "id": "b", "text": "11" },
+        { "id": "c", "text": "4" },
+        { "id": "d", "text": "2" }
+      ],
+      "correctOption": "a",
+      "explanation": "نبدأ من 7 ونَعُدّ تنازليًّا 4 خطوات: 6، 5، 4، 3. إذن 7 − 4 = 3.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "عندي 6 أقلام، أعطيت 2 لصديقي. كم بقي؟",
+      "options": [
+        { "id": "a", "text": "8" },
+        { "id": "b", "text": "3" },
+        { "id": "c", "text": "5" },
+        { "id": "d", "text": "4" }
+      ],
+      "correctOption": "d",
+      "explanation": "نطرح ما أعطيت: 6 − 2 = 4. بقي 4 أقلام.",
+      "difficulty": 2
+    }
+  ]
+}
