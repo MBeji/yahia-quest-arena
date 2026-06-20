@@ -1,0 +1,65 @@
+{
+  "title": "اختبار فهم الدرس ⭐",
+  "questions": [
+    {
+      "prompt": "الخطّ الذي له طرفان غير متّصلين (فيه فتحة) يُسمّى…",
+      "options": [
+        { "id": "a", "text": "خطًّا مفتوحًا" },
+        { "id": "b", "text": "خطًّا مغلقًا" },
+        { "id": "c", "text": "نقطة" },
+        { "id": "d", "text": "زاوية" }
+      ],
+      "correctOption": "a",
+      "explanation": "الخطّ المفتوح له طرفان غير متّصلين، أي فيه فتحة، ولا يحيط بمكان.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "هل هذا الخطّ مفتوحٌ أم مغلق؟ <svg viewBox=\"0 0 130 80\"><ellipse cx=\"65\" cy=\"40\" rx=\"50\" ry=\"28\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\"/></svg>",
+      "options": [
+        { "id": "a", "text": "مفتوح" },
+        { "id": "b", "text": "مغلق" },
+        { "id": "c", "text": "ليس خطًّا" },
+        { "id": "d", "text": "نقطة" }
+      ],
+      "correctOption": "b",
+      "explanation": "الخطّ يدور ويعود إلى بدايته دون فتحة، فهو خطٌّ مغلق.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "هل هذا الخطّ مفتوحٌ أم مغلق؟ <svg viewBox=\"0 0 140 60\"><path d=\"M10,30 Q40,5 70,30 Q100,55 130,30\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\"/></svg>",
+      "options": [
+        { "id": "a", "text": "مفتوح" },
+        { "id": "b", "text": "مغلق" },
+        { "id": "c", "text": "دائرة" },
+        { "id": "d", "text": "مربّع" }
+      ],
+      "correctOption": "a",
+      "explanation": "للخطّ طرفان غير متّصلين وفيه فتحة، فهو خطٌّ مفتوح.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "الخطّ المغلق يفصل المكان بين…",
+      "options": [
+        { "id": "a", "text": "الكبير والصغير" },
+        { "id": "b", "text": "الطويل والقصير" },
+        { "id": "c", "text": "الداخل والخارج" },
+        { "id": "d", "text": "اليمين واليسار" }
+      ],
+      "correctOption": "c",
+      "explanation": "الخطّ المغلق يفصل بين ما هو داخله وما هو خارجه (وما هو على الخطّ نفسه).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "النقطة الموضّحة: هل هي داخل الخطّ المغلق أم خارجه؟ <svg viewBox=\"0 0 130 80\"><ellipse cx=\"65\" cy=\"40\" rx=\"50\" ry=\"28\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\"/><circle cx=\"65\" cy=\"40\" r=\"5\" fill=\"currentColor\"/></svg>",
+      "options": [
+        { "id": "a", "text": "خارج الخطّ" },
+        { "id": "b", "text": "داخل الخطّ" },
+        { "id": "c", "text": "على الخطّ" },
+        { "id": "d", "text": "لا يمكن أن نعرف" }
+      ],
+      "correctOption": "b",
+      "explanation": "النقطة محصورةٌ داخل الخطّ المغلق، فهي داخل الخطّ.",
+      "difficulty": 2
+    }
+  ]
+}
