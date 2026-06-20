@@ -213,6 +213,13 @@ function LessonPage() {
         {/* Header */}
         <div className="relative border-b border-border/40 bg-gradient-to-r from-[color:var(--gold)]/10 to-[color:var(--gold)]/10 px-6 py-6 sm:px-8">
           <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-[color:var(--gold)]/20 blur-3xl" />
+          {/* Bold, centered marker that clearly flags each new chapter, in the
+              subject's own language (الفصل N / Chapitre N / Chapter N). */}
+          <div className="relative mb-4 text-center">
+            <span className="inline-block rounded-full border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/10 px-5 py-1.5 font-display text-lg font-bold tracking-wide text-[color:var(--gold)] sm:text-xl">
+              {labels.chapterWord} {currentIdx + 1}
+            </span>
+          </div>
           <div className="relative flex items-center gap-4">
             <div className="grid h-14 w-14 place-items-center rounded-2xl bg-[image:var(--gradient-gold)] shadow-gold">
               <BookOpen className="h-7 w-7 text-black" />
@@ -223,7 +230,7 @@ function LessonPage() {
                 {subjectData?.name_fr ?? ""}
                 <span className="text-muted-foreground">·</span>
                 <span className="text-muted-foreground">
-                  Ch. {currentIdx + 1}/{allChapters.length}
+                  {currentIdx + 1}/{allChapters.length}
                 </span>
               </div>
               <h1

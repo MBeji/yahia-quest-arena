@@ -21,6 +21,9 @@ export type LessonLabels = {
   finishedAll: string;
   /** Primary CTA from the lesson to the chapter's quiz & exercises. */
   goToExercises: string;
+  /** Localized word for "chapter" (الفصل / Chapitre / Chapter); rendered as
+   *  the bold, centered "<chapterWord> N" marker that opens each lesson. */
+  chapterWord: string;
 };
 
 export function buildLessonLabels(lang: LessonContentLang): LessonLabels {
@@ -62,5 +65,6 @@ export function buildLessonLabels(lang: LessonContentLang): LessonLabels {
       fr: "🧠 Passer au quiz et aux exercices",
       en: "🧠 Go to the quiz & exercises",
     }[lang],
+    chapterWord: { ar: "الفصل", fr: "Chapitre", en: "Chapter" }[lang],
   };
 }

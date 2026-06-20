@@ -1,6 +1,6 @@
 {
   "id": "culture-generale-dungeon-fr",
-  "nameFr": "Culture générale — Donjon multi-thèmes (FR)",
+  "nameFr": "Culture générale — Donjon multi-thèmes",
   "description": "Donjon de culture générale où chaque question vient d'un domaine différent (histoire, géographie, politique, économie, sciences, arts) : un gantelet de connaissances variées en français.",
   "attribute": "Polyvalence",
   "colorToken": "subject-math",

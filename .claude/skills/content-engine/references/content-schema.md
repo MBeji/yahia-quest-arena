@@ -30,7 +30,7 @@ content/
 | Field             | Type         | Required    | Constraint                                                                           |
 | ----------------- | ------------ | ----------- | ------------------------------------------------------------------------------------ |
 | `id`              | string       | yes         | kebab-case `^[a-z][a-z0-9-]*$`, unique. Becomes `subjects.id` literally              |
-| `nameFr`          | string       | yes         | non-empty. **Only display name** — always French, even for ar/en subjects            |
+| `nameFr`          | string       | yes         | non-empty. The only display name — write it in the subject's **own `contentLanguage`** (ar→`الرياضيات`, en→`English`, fr→`Français`). Field name is legacy (DB compat); the value is native, not French |
 | `description`     | string       | yes         | non-empty                                                                            |
 | `attribute`       | string       | yes         | non-empty (RPG attribute label, e.g. "Force", "Logique")                             |
 | `colorToken`      | string       | yes         | non-empty, maps to a CSS var (e.g. `subject-math`)                                   |
@@ -41,7 +41,9 @@ content/
 | `gradeSlug`       | string\|null | no (→null)  | school subjects only (e.g. `9eme-base`); `null` for standalone themes                |
 | `isPremium`       | boolean      | no (→false) | **legacy/secondary** — premium is now decided **per parcours**, not by this flag     |
 
-There is **no** `nameEn`/`nameAr`. There is **no** per-language text anywhere.
+There is **no** `nameEn`/`nameAr` — `nameFr` is the single display-name field, and you write it in the
+subject's `contentLanguage` (the "Fr" in the name is legacy only). There is **no** per-language text
+anywhere else.
 
 > **Premium is per-parcours, not per-subject.** Access is governed by the parcours a subject resolves
 > to (its theme+grade) and enforced server-side by `resolve_exercise_access` — not by `isPremium`. The

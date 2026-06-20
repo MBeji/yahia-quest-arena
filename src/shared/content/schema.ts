@@ -19,6 +19,12 @@ const sourceRefSchema = z.string().min(3, "a source reference must be at least 3
 /** `subject.json` — maps onto the `subjects` table (one per subject). */
 export const subjectMetaSchema = z.object({
   id: z.string().regex(/^[a-z][a-z0-9-]*$/, "subject id must be kebab-case (e.g. 'math')"),
+  /**
+   * The subject's display name, written in its OWN `contentLanguage`
+   * (ar → "الرياضيات", en → "English", fr → "Français"). The field name is
+   * legacy — it predates multilingual subjects — and is kept only for
+   * DB/column compatibility (`subjects.name_fr`); the value is native, not French.
+   */
   nameFr: z.string().min(1),
   description: z.string().min(1),
   attribute: z.string().min(1),
