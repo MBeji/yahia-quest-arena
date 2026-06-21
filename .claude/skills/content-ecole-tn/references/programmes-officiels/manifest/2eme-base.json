@@ -1,0 +1,54 @@
+{
+  "grade": "2eme-base",
+  "sealed": false,
+  "source": "CNP — programme national 2ème année de base (guides enseignant, cnp-officiel/). Chapitres math = programme réaligné (#162). Vérif. séquençage : taybah/2eme-base.md.",
+  "note": "sealed=false : seul math-2eme est codifié+autorisé. Les 5 autres matières sont attendues (→ rapportées 'manquantes') ; transcrire leurs chapitres depuis le guide CNP puis sceller le niveau quand il est complet.",
+  "subjects": [
+    {
+      "id": "math-2eme",
+      "name": "الرياضيات",
+      "contentLanguage": "ar",
+      "chapters": [
+        { "slug": "08-ensembles", "notion": "المجموعات" },
+        { "slug": "01-nombres-jusqu-999", "notion": "الأعداد إلى 999" },
+        { "slug": "02-comparaison-rangement", "notion": "المقارنة والترتيب" },
+        { "slug": "03-addition", "notion": "الجمع" },
+        { "slug": "04-soustraction", "notion": "الطرح" },
+        { "slug": "05-introduction-multiplication", "notion": "مدخل الضرب" },
+        { "slug": "06-mesure-longueurs-temps", "notion": "القيس: الأطوال والزمن" },
+        { "slug": "09-monnaie", "notion": "النقود" },
+        { "slug": "07-formes-lignes", "notion": "الأشكال والخطوط" }
+      ]
+    },
+    {
+      "id": "arabic-2eme",
+      "name": "اللغة العربية",
+      "contentLanguage": "ar",
+      "chapters": []
+    },
+    {
+      "id": "education-islamique-2eme",
+      "name": "التربية الإسلامية",
+      "contentLanguage": "ar",
+      "chapters": []
+    },
+    {
+      "id": "eveil-scientifique-2eme",
+      "name": "الإيقاظ العلمي",
+      "contentLanguage": "ar",
+      "chapters": []
+    },
+    {
+      "id": "french-2eme",
+      "name": "Français",
+      "contentLanguage": "fr",
+      "chapters": []
+    },
+    {
+      "id": "english-2eme",
+      "name": "English",
+      "contentLanguage": "en",
+      "chapters": []
+    }
+  ]
+}

@@ -9,7 +9,7 @@ applied. The guardrails below enforce that. (Background: CLAUDE.md §7.)
 | Check                | Workflow / job                                                    | What it guarantees                                                                                                                                                                 |
 | -------------------- | ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `verify`             | `.github/workflows/ci.yml` → job `verify`                         | lint + typecheck + tests&nbsp;+ coverage + build + bundle budget + runtime dep audit all pass                                                                                      |
-| `Migration presence` | `.github/workflows/migration-gate.yml` → job `migration-presence` | a PR that adds a `supabase/migrations/*.sql` carries the `migration-applied` label (human ack the migration was applied to prod **before** merge)                                  |
+| `Migration presence` | `.github/workflows/migration-gate.yml` → job `migration-presence` | informational: surfaces which `supabase/migrations/*.sql` a PR adds — they **auto-apply** to prod on merge via `db-migrate-prod.yml`. Always green; the name is kept so the ruleset's required-check contract is unchanged                                  |
 | `pgTAP suite`        | `.github/workflows/db-tests.yml` → job `pgTAP suite`              | the real migrations apply against a Supabase-local Postgres and the DB invariants hold (economy-RPC grants locked down, role-escalation blocked, RLS isolation, scoring/anti-rush) |
 | `e2e`                | `.github/workflows/e2e.yml` → job `e2e`                           | the public Playwright journeys (landing + logged-out auth redirects) pass — no backend required, runs on every PR                                                                  |
 
@@ -69,12 +69,19 @@ administrators) · ✅ Block force pushes · ✅ Restrict deletions.
 
 ## The deploy-ordering workflow (how a migration PR flows)
 
-1. Open the PR. If it adds `supabase/migrations/*.sql`, the `Migration presence` check
-   **fails** until acked.
-2. Apply the migration to the **production** Supabase DB (SQL editor or `supabase db push`).
-3. Add the **`migration-applied`** label → the check re-runs and goes green.
-4. Merge → Vercel deploys code against a schema that already supports it. No more
-   "code deployed before its migration" incidents.
+Prod migrations **auto-apply** on merge — nobody runs SQL by hand (CLAUDE.md §7).
+
+1. Open the PR. The `Migration presence` check lists any `supabase/migrations/*.sql`
+   it adds (informational, always green); the `pgTAP suite` check proves they apply
+   cleanly on a fresh DB.
+2. Merge → `db-migrate-prod.yml` takes a pre-apply `pg_dump` backup of prod, then
+   `supabase db push` applies the new migration(s) to production (prod-ref guard,
+   reuses `PROD_SUPABASE_DB_URL`). Vercel deploys the code in parallel.
+3. Additive migrations are safe ahead of their code, so this order holds. Ship a
+   **destructive** migration (DROP/REVOKE) in a separate merge **after** the
+   dependent code is gone.
+4. Manual control when needed: `gh workflow run db-migrate-prod.yml` (or the Actions
+   tab) with mode `push` / read-only `list` / one-time `repair-all`.
 
 ## Authenticated E2E (remaining human action)
 

@@ -91,6 +91,27 @@ associer image↔nombre), énoncés **très courts** ; garder la progression du 
 2. **École** : `programmes-officiels/<école>/<gradeSlug>.md` (transcription fidèle : terminologie d'origine,
    chiffres latins 0-9 même en arabe, `[sic]`/`[?]`, fichiers source en bas) + ligne dans la table ci-dessus.
 
+## 🧭 Manifeste de programme & audit de conformité (`content:audit`)
+
+Le **manifeste** code, par niveau, le **programme officiel attendu** — c'est lui qui rend la **conformité**
+et la **couverture** vérifiables automatiquement (le `content:check` ne sait pas ce qui _devrait_ exister).
+Fichier `manifest/<gradeSlug>.json` (validé par Zod, schéma `src/shared/content/program-manifest.ts`) :
+
+- `grade` (= `gradeSlug`) · `sealed` (`false` = rapport conseil ; `true` = niveau déclaré **complet** → le gate
+  CI strict s'y applique) · `source`/`note` ;
+- `subjects[]` : `id` (matière suffixée par niveau), `contentLanguage`, et `chapters[]` = `{ slug, notion }` en
+  **ordre du programme**, transcrits du **guide enseignant CNP**. `chapters: []` = liste **pas encore codifiée**
+  (l'audit vérifie alors présence + complétude, sans couverture de chapitres → pas de faux « manquant »).
+
+**Outil** : **`npm run content:audit`** (rapport) · **`npm run content:audit:strict`** (n'échoue **que** sur un
+niveau **scellé** ayant des constats — câblé dans `ci:verify`). Il diffe `content/` ↔ manifestes et signale, par
+niveau/matière : **matières manquantes**, **chapitres manquants / hors-programme**, **chapitres incomplets**
+(cours + résumé + quiz + **≥1 mission**, note si pas de boss), écarts de **langue**. Manifestes seedés :
+`1ere-base`, `2eme-base` (seul math codifié ; les autres matières ressortent « manquantes » — c'est voulu).
+
+**Sceller un niveau** : quand toutes les matières + chapitres sont présents et complets, passer `sealed: true`
+→ tout écart futur casse la CI (gate **opt-in**).
+
 ## 🛠️ Recette de création / réalignement de contenu (méthode à suivre)
 
 Pour créer ou réaligner le contenu d'un couple **(niveau, matière)** sur le CNP — produit `cours.md` +
@@ -104,6 +125,7 @@ Pour créer ou réaligner le contenu d'un couple **(niveau, matière)** sur le C
    `cnp-officiel/CATALOGUE.md`, puis `bash cnp-officiel/render.sh <guide.pdf> <p1> <p2>` → ouvrir les PNG de
    `cnp-officiel/_render/` avec l'outil **Read** (vision ; les PDF sont des scans). Établir le scope exact
    (notions, terminologie, séquence). `taybah/<gradeSlug>.md` sert de **vérification** / séquençage par trimestre.
+   **Codifier** la liste des chapitres (slug + notion, ordre du programme) dans **`manifest/<gradeSlug>.json`** (cf. § Manifeste) — c'est ce qui rend la couverture vérifiable.
 3. **Auditer l'existant** (si réalignement) : pour chaque chapitre → **couvert** / **manquant** /
    **hors-programme** (notion d'un autre niveau). Vérifier avant de retirer (ex. soustraction = 2ème, pas 1ère).
 4. **Générer / corriger** chapitre par chapitre selon **`content-engine`** :
@@ -114,7 +136,18 @@ Pour créer ou réaligner le contenu d'un couple **(niveau, matière)** sur le C
      `nameFr` natif (`الرياضيات`…). Auto-vérification (re-solve à l'aveugle, équilibre des clés, notation, golden rule).
 5. **Valider** : `npm run content:check` (Zod) + `npm run content:qa:strict` (**0 erreur**).
    (Worktree sans `node_modules` : jonction de l'étape 1, ou `node --experimental-strip-types <repo>/scripts/content/build.ts --check` avec cwd=worktree.)
-6. **Committer + PR** (un commit par sujet) : `feat(content): <sujet> — réalignement CNP`, push, `gh pr create`.
-   Nettoyer : retirer la jonction (`rmdir <chemin>\node_modules`) **avant** `git worktree remove`.
+   Puis **`npm run content:audit`** : conformité au programme + **couverture** (matières/chapitres) + complétude vs le manifeste (cf. § Manifeste).
+6. **Régénérer la migration SQL** ⚠️ **indispensable** — `content:check` _valide mais n'écrit rien_ ; sans
+   cette étape le contenu **ne touche jamais la base**. `npm run content:build -- --subject <id>` → écrit
+   `supabase/migrations/<ts>_generated_<id>_content.sql` (une migration **idempotente** par sujet, upserts
+   déterministes UUIDv5). La committer **avec** les fichiers `content/`.
+7. **Committer + PR** (un commit par sujet, fichiers `content/` **+ migration générée**) :
+   `feat(content): <sujet> — réalignement CNP`, push, `gh pr create`.
+8. **Déployer la migration en prod** — **manuel, AVANT le merge** (CLAUDE.md §7 / `.github/workflows/migration-gate.yml`) :
+   pousser sur `main` auto-déploie le **code** (Vercel) **mais pas la base**. Appliquer le
+   `*_generated_*_content.sql` à la base Supabase de prod (SQL editor ou `supabase db push`), **puis** poser
+   le label **`migration-applied`** sur la PR (le gate l'exige). Idempotent → ré-application sans risque.
+9. **Nettoyer** : retirer la jonction (`rmdir <chemin>\node_modules`) **avant** `git worktree remove`.
 
-> Références éprouvées : PR #161 (`math-1ere`), #162 (`math-2eme`).
+> Références éprouvées : PR #161 (`math-1ere`), #162 (`math-2eme`). ⚠️ Leur migration générée est sur `main`
+> mais **n'a pas été appliquée en prod** (label `migration-applied` absent) — à appliquer (cf. étape 8).

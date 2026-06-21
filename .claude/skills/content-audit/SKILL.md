@@ -24,6 +24,45 @@ all. This skill is the deep net — a human-grade review of content that already
 `content/`, applying the same bar the authoring skills must meet
 (`content-engine/references/quality-bar.md` and `references/math-and-notation.md` — read both first).
 
+## Conformité au programme & couverture (`content:audit`) — école-tn
+
+The per-item checklist below audits what **exists**; it cannot see what is **missing**. For `ecole-tn`
+content, run **`npm run content:audit`** first: it diffs the content tree against the per-grade
+**program manifests** (`content-ecole-tn/references/programmes-officiels/manifest/<gradeSlug>.json` — a
+declarative transcription of the official CNP program) and reports, per grade + subject, **missing
+subjects**, **missing / off-program chapters**, and **incomplete chapters** (a chapter lacking course +
+summary + quiz + **at least one mission**), plus language mismatches. Advisory by default; `--strict`
+fails only on a **sealed** grade. This is the coverage/conformity net — the rest of this skill is the
+per-item correctness net. (Format + how to seal a grade: the programmes-officiels README, § Manifeste.)
+
+## Dérouler un audit complet de niveau (runbook) — uniquement sur contenu **figé**
+
+⚠️ **N'auditer qu'un contenu figé.** Tant qu'une session génère/réaligne un (niveau, matière), tout audit
+produit une **worklist périmée**. Lancer ce runbook seulement quand la génération du périmètre est
+**terminée et mergée sur `main`** (aucun worktree `_wt-*` actif sur ce sujet).
+
+1. **Figer le périmètre** : worktree isolé sur `main` à jour ; noter l'**empreinte** du contenu —
+   `git rev-parse --short HEAD`. Elle date la validité du rapport.
+2. **Couverture** : `npm run content:audit` (matières/chapitres manquants, hors-programme, incomplets vs manifeste).
+3. **Audit pédagogique par item** : fan-out **un sous-agent par matière** (lecture seule, **aucun fix**). Prompt type :
+
+   > Lis `content-audit/SKILL.md` + `content-engine/references/{quality-bar,math-and-notation,course-quality}.md`.
+   > Audite TOUS les chapitres de `<matière>` (chapter.json, cours.md, resume.md, quiz.json, exercices/\*.json).
+   > **Re-résous CHAQUE question à l'aveugle** puis compare à `correctOption`. Vérifie notation (chiffres latins,
+   > pas de LaTeX, bidi-safe, SVG `viewBox`), pureté de langue, qualité du cours (golden rule, exemple par règle,
+   > miroir résumé↔cours), et **conformité au programme** vs `manifest/<grade>.json` + `taybah/<grade>.md`.
+   > Rends un rapport classé par sévérité (BLOCKER/MAJOR/MINOR) : `fichier` + `locator` + défaut + correction proposée.
+   > Indique le nombre de questions re-résolues. NE MODIFIE RIEN.
+
+   Consolider les retours (+ la sortie `content:audit`) en **un seul** rapport.
+
+4. **Persister** : `programmes-officiels/audit/<AAAA-MM-JJ>-<scope>.md`, **en-tête tamponné** de l'empreinte
+   (« valide au commit `<SHA>` — ré-auditer si le contenu a bougé »). C'est la worklist remise à la session de correction.
+5. **Boucle de correction** (autre session) : appliquer les fix → re-`content:audit` + `content:qa:strict` →
+   `content:build` → appliquer la migration → **sceller** le niveau (`sealed:true`) une fois conforme + complet.
+
+Exemple : `programmes-officiels/audit/2026-06-21-primaire-math.md`.
+
 ## Inputs
 
 - **Scope**: a subject (`content/<subject>/`), a chapter, a theme's subjects, or the whole catalogue.
