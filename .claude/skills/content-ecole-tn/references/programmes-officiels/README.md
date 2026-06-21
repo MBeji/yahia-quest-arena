@@ -134,20 +134,30 @@ Pour créer ou réaligner le contenu d'un couple **(niveau, matière)** sur le C
      (`01-pratique` d1, `02-boss` d3, +`03-revision`/`04-defi`/`05` au besoin).
    - ajouter les chapitres manquants, retirer/flaguer le hors-programme, **réordonner** (`displayOrder`),
      `nameFr` natif (`الرياضيات`…). Auto-vérification (re-solve à l'aveugle, équilibre des clés, notation, golden rule).
+     **Chiffres en arabe** : grouper les milliers en **U+00A0** de façon **cohérente** (options ↔ énoncés ↔
+     explications) — sinon `content:qa` signale « valeur non reprise » (son extracteur de nombres coupe sur
+     l'espace insécable) ; re-scanner `\d \d{3}` **après** écriture (l'outil d'écriture aplatit parfois
+     l'U+00A0 → réinjecter). **Difficulté de _question_ ≤ 3** même dans `04-defi` (le palier 4 porte sur
+     l'_exercice_, pas la question).
 5. **Valider** : `npm run content:check` (Zod) + `npm run content:qa:strict` (**0 erreur**).
    (Worktree sans `node_modules` : jonction de l'étape 1, ou `node --experimental-strip-types <repo>/scripts/content/build.ts --check` avec cwd=worktree.)
    Puis **`npm run content:audit`** : conformité au programme + **couverture** (matières/chapitres) + complétude vs le manifeste (cf. § Manifeste).
 6. **Régénérer la migration SQL** ⚠️ **indispensable** — `content:check` _valide mais n'écrit rien_ ; sans
    cette étape le contenu **ne touche jamais la base**. `npm run content:build -- --subject <id>` → écrit
    `supabase/migrations/<ts>_generated_<id>_content.sql` (une migration **idempotente** par sujet, upserts
-   déterministes UUIDv5). La committer **avec** les fichiers `content/`.
+   déterministes UUIDv5). **Garder l'horodatage par défaut (neuf)** : pour _mettre à jour_ un sujet déjà en
+   prod il faut une **nouvelle** version — ne réutilise **jamais** `--timestamp <existant>` (même nom qu'une
+   migration déjà appliquée → `db push` la **saute** « up to date » → le contenu n'atteint pas la prod). Ne
+   pas supprimer les anciennes migrations générées du sujet (casse l'historique ; `math`/`math-6eme` en
+   cumulent déjà plusieurs). La committer **avec** les fichiers `content/`.
 7. **Committer + PR** (un commit par sujet, fichiers `content/` **+ migration générée**) :
    `feat(content): <sujet> — réalignement CNP`, push, `gh pr create`.
-8. **Déployer la migration en prod** — **manuel, AVANT le merge** (CLAUDE.md §7 / `.github/workflows/migration-gate.yml`) :
-   pousser sur `main` auto-déploie le **code** (Vercel) **mais pas la base**. Appliquer le
-   `*_generated_*_content.sql` à la base Supabase de prod (SQL editor ou `supabase db push`), **puis** poser
-   le label **`migration-applied`** sur la PR (le gate l'exige). Idempotent → ré-application sans risque.
+8. **La migration s'applique en prod automatiquement au merge** (CLAUDE.md §7 / `.github/workflows/db-migrate-prod.yml`) —
+   **jamais à la main**, plus de label. Le merge sur `main` déclenche `db-migrate-prod` (backup `pg_dump` →
+   `supabase db push`) qui applique les migrations _pending_. **Vérifier le log** du run : il doit afficher
+   `Applying migration <ts>_generated_<id>…` — **pas** « Remote database is up to date » (= migration sautée, cf. piège horodatage étape 6).
 9. **Nettoyer** : retirer la jonction (`rmdir <chemin>\node_modules`) **avant** `git worktree remove`.
 
-> Références éprouvées : PR #161 (`math-1ere`), #162 (`math-2eme`). ⚠️ Leur migration générée est sur `main`
-> mais **n'a pas été appliquée en prod** (label `migration-applied` absent) — à appliquer (cf. étape 8).
+> Références éprouvées : `math-1ere`→`math-4eme` (#161, #162, #167, #174). **Leçon migration** : #167/#174 ont
+> régénéré **en place (même horodatage)** → sautés par `db push` ; corrigés par **#175** (horodatage neuf) qui a
+> réellement appliqué le contenu en prod — d'où le garde-fou de l'étape 6.

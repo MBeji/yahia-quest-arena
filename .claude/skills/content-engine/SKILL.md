@@ -60,10 +60,11 @@ Run, in order:
 4. `npm run content:check` — validates all authored content against Zod. Must pass (writes nothing).
 5. `npm run content:qa:strict` — answer-key heuristics; must report **0 errors** (warnings are
    advisory but fix the easy ones).
-6. **Stop. Report** what you created and the exact follow-up the human runs:
-   `npm run content:build` → review the generated SQL in `supabase/migrations/` → apply the
-   migration to the DB **before** deploying dependent code (the DB-before-deploy rule), then commit
-   as a PR. Do **not** run `content:build`/apply or push unless explicitly asked.
+6. **Stop and report** — or, when asked to ship a PR, run `npm run content:build` (keep the **default
+   fresh timestamp**; never reuse an existing one — a same-name migration is skipped by `db push` as
+   already-applied, so the update never reaches prod) and commit the generated
+   `supabase/migrations/*_generated_<id>_content.sql` **with** the `content/` files. It **auto-applies
+   to prod on merge** via `db-migrate-prod.yml` (never apply by hand). Do **not** push unless explicitly asked.
 
 Never weaken the gate to make content "pass" (no lowering thresholds, no skipping QA).
 
