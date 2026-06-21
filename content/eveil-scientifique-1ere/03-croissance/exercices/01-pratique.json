@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: نتعلّم النموّ",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "أيّ هذه كائنٌ حيٌّ يكبر؟",
+      "options": [
+        { "id": "a", "text": "طفل" },
+        { "id": "b", "text": "حجر" },
+        { "id": "c", "text": "كرسيّ" },
+        { "id": "d", "text": "كأس" }
+      ],
+      "correctOption": "a",
+      "explanation": "الطفل كائنٌ حيٌّ ينمو ويكبر، أمّا الحجر والكرسيّ والكأس فلا تنمو.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "الرضيع صغيرٌ جدًّا، وهو يشرب:",
+      "options": [
+        { "id": "a", "text": "القهوة" },
+        { "id": "b", "text": "الحليب" },
+        { "id": "c", "text": "الماء المالح" },
+        { "id": "d", "text": "العصير الحارّ" }
+      ],
+      "correctOption": "b",
+      "explanation": "الرضيع صغيرٌ جدًّا فيشرب الحليب.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كلّما كبر الإنسان:",
+      "options": [
+        { "id": "a", "text": "نقص طوله" },
+        { "id": "b", "text": "صار حجرًا" },
+        { "id": "c", "text": "زاد طوله ووزنه" },
+        { "id": "d", "text": "بقي رضيعًا" }
+      ],
+      "correctOption": "c",
+      "explanation": "كلّما كبر الإنسان زاد طوله وزاد وزنه.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "العجل الصغير عندما يكبر يصير:",
+      "options": [
+        { "id": "a", "text": "حصانًا" },
+        { "id": "b", "text": "خروفًا" },
+        { "id": "c", "text": "دجاجة" },
+        { "id": "d", "text": "بقرة" }
+      ],
+      "correctOption": "d",
+      "explanation": "العجل صغير البقرة؛ فإذا كبر صار بقرة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ماذا نضع في التربة لتنبت نبتة جديدة؟",
+      "options": [
+        { "id": "a", "text": "حجرًا" },
+        { "id": "b", "text": "بذرة" },
+        { "id": "c", "text": "مسمارًا" },
+        { "id": "d", "text": "كأسًا" }
+      ],
+      "correctOption": "b",
+      "explanation": "نضع البذرة في التربة ونسقيها فتنبت نبتة جديدة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ شيءٍ لا ينمو ولا يكبر؟",
+      "options": [
+        { "id": "a", "text": "القطّة" },
+        { "id": "b", "text": "الشجرة" },
+        { "id": "c", "text": "الحجر" },
+        { "id": "d", "text": "الطفل" }
+      ],
+      "correctOption": "c",
+      "explanation": "الحجر جماد لا ينمو، أمّا القطّة والشجرة والطفل فكائنات حيّة تنمو.",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة: أصنّف تنقّل الحيوانات",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "كيف يتنقّل الحصان؟",
+      "options": [
+        { "id": "a", "text": "بالطيران" },
+        { "id": "b", "text": "بالسباحة" },
+        { "id": "c", "text": "بالمشي والجري بأرجله" },
+        { "id": "d", "text": "بالزحف" }
+      ],
+      "correctOption": "c",
+      "explanation": "الحصان له أربع أرجل يمشي ويجري بها على الأرض.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما الذي يساعد الطائر على الطيران؟",
+      "options": [
+        { "id": "a", "text": "ذيله" },
+        { "id": "b", "text": "جناحاه" },
+        { "id": "c", "text": "بطنه" },
+        { "id": "d", "text": "أسنانه" }
+      ],
+      "correctOption": "b",
+      "explanation": "الطائر يطير بجناحيه، مثل العصفور والحمامة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أيّ حيوانٍ يتنقّل بالزحف؟",
+      "options": [
+        { "id": "a", "text": "الأرنب" },
+        { "id": "b", "text": "العصفور" },
+        { "id": "c", "text": "السمكة" },
+        { "id": "d", "text": "الثعبان" }
+      ],
+      "correctOption": "d",
+      "explanation": "الثعبان ليس له أرجل، فهو يزحف على بطنه.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "حيوانٌ يعيش في الماء ويتنقّل فيه. كيف يتنقّل؟",
+      "options": [
+        { "id": "a", "text": "بالسباحة" },
+        { "id": "b", "text": "بالطيران" },
+        { "id": "c", "text": "بالقفز" },
+        { "id": "d", "text": "بالمشي" }
+      ],
+      "correctOption": "a",
+      "explanation": "من يعيش في الماء ويتنقّل فيه يسبح، مثل السمكة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ مجموعةٍ كلّها حيوانات تمشي بأرجلها؟",
+      "options": [
+        { "id": "a", "text": "السمكة، الثعبان" },
+        { "id": "b", "text": "القطّ، الحصان، الأرنب" },
+        { "id": "c", "text": "العصفور، الحمامة" },
+        { "id": "d", "text": "السمكة، الحلزون" }
+      ],
+      "correctOption": "b",
+      "explanation": "القطّ والحصان والأرنب لها أرجل تمشي وتجري وتقفز بها على الأرض.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "انظر إلى هذا الحيوان. كيف يتنقّل؟ <svg viewBox=\"0 0 130 70\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M14 50 q18 -26 36 0 q18 26 36 0 q12 -18 28 -8\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"6\" stroke-linecap=\"round\"/><circle cx=\"116\" cy=\"36\" r=\"2\" fill=\"currentColor\" stroke=\"none\"/></svg>",
+      "options": [
+        { "id": "a", "text": "بالطيران" },
+        { "id": "b", "text": "بالسباحة" },
+        { "id": "c", "text": "بالزحف على بطنه" },
+        { "id": "d", "text": "بالقفز" }
+      ],
+      "correctOption": "c",
+      "explanation": "الصورة ثعبان طويل لا أرجل له، فهو يتنقّل بالزحف على بطنه.",
+      "difficulty": 2
+    }
+  ]
+}
