@@ -121,10 +121,10 @@ function parseAtomicSubmitResponse(payload: unknown): AtomicSubmitResponse {
 
 // ---------- Get a subject with chapters & exercises ----------
 export const getSubject = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
+  .middleware([optionalSupabaseAuth])
   .inputValidator((d) => z.object({ subjectId: z.string() }).parse(d))
   .handler(async ({ data, context }) => {
-    const { supabase } = context;
+    const { supabase, userId } = context;
     const [subj, chaps, exs] = await Promise.all([
       supabase.from("subjects").select("*").eq("id", data.subjectId).single(),
       supabase.from("chapters").select("*").eq("subject_id", data.subjectId).order("display_order"),
@@ -138,26 +138,28 @@ export const getSubject = createServerFn({ method: "GET" })
       failWithClientError("quest.getSubject", subj.error, "Impossible de charger la matière.");
     }
 
-    // Best scores RPC — graceful fallback if it fails, but log it so a broken
-    // RPC never silently hides completion progress again.
+    // Best scores are an account concept; anonymous visitors have none. Graceful
+    // fallback if the RPC fails, logged so a broken RPC never silently hides progress.
     let bestScoresData: unknown[] = [];
-    try {
-      const bestScores = await supabase.rpc("get_best_scores_by_exercise", {
-        p_subject: data.subjectId,
-      });
-      if (bestScores.error) {
-        logger.warn("quest.getSubject: get_best_scores_by_exercise failed", {
-          subjectId: data.subjectId,
-          error: bestScores.error.message,
+    if (userId) {
+      try {
+        const bestScores = await supabase.rpc("get_best_scores_by_exercise", {
+          p_subject: data.subjectId,
         });
-      } else if (Array.isArray(bestScores.data)) {
-        bestScoresData = bestScores.data;
+        if (bestScores.error) {
+          logger.warn("quest.getSubject: get_best_scores_by_exercise failed", {
+            subjectId: data.subjectId,
+            error: bestScores.error.message,
+          });
+        } else if (Array.isArray(bestScores.data)) {
+          bestScoresData = bestScores.data;
+        }
+      } catch (err) {
+        logger.warn("quest.getSubject: get_best_scores_by_exercise threw", {
+          subjectId: data.subjectId,
+          error: errorMessage(err),
+        });
       }
-    } catch (err) {
-      logger.warn("quest.getSubject: get_best_scores_by_exercise threw", {
-        subjectId: data.subjectId,
-        error: errorMessage(err),
-      });
     }
 
     const best: Record<string, number> = {};
@@ -182,11 +184,11 @@ export const getSubject = createServerFn({ method: "GET" })
       if (quiz.chapter_id) quizPassedByChapter[quiz.chapter_id] = !isSchoolSubject;
     }
     const quizIds = quizExercises.map((e) => e.id);
-    if (isSchoolSubject && quizIds.length > 0) {
+    if (isSchoolSubject && quizIds.length > 0 && userId) {
       const { data: passedRows } = await supabase
         .from("attempts")
         .select("exercise_id,duration_seconds,total_count")
-        .eq("user_id", context.userId)
+        .eq("user_id", userId)
         .in("exercise_id", quizIds)
         .gte("score_pct", QUIZ_PASS_THRESHOLD_PCT);
       // A quiz only counts as passed if the qualifying attempt was not rushed
@@ -209,42 +211,47 @@ export const getSubject = createServerFn({ method: "GET" })
     // Assigned on every path below (both try branches + the catch's locked-safe default),
     // so it needs no initializer — and an unread one trips eslint's no-useless-assignment.
     let viewer: { level: number; isPremium: boolean; hasEntitlement: boolean };
-    try {
-      const themeId = (subj.data as { theme_id?: string | null }).theme_id ?? null;
-      const gradeId = (subj.data as { grade_id?: string | null }).grade_id ?? null;
-      const [viewerProfile, parcoursIdRes] = await Promise.all([
-        supabase.from("profiles").select("level").eq("id", context.userId).maybeSingle(),
-        themeId
-          ? // resolve_subject_parcours matches grade_id with IS NOT DISTINCT FROM, so a
-            // null grade is valid (grade-agnostic themes resolve their own parcours); the
-            // generated arg type narrows p_grade to string, hence the cast on the nullable.
-            supabase.rpc("resolve_subject_parcours", {
-              p_theme: themeId,
-              p_grade: gradeId as string,
-            })
-          : Promise.resolve({ data: null as string | null }),
-      ]);
-      const level = viewerProfile.data?.level ?? 0;
-      const parcoursId = (parcoursIdRes as { data?: string | null }).data ?? null;
-      if (parcoursId) {
-        const [parcoursRow, entRes] = await Promise.all([
-          supabase.from("parcours").select("is_premium").eq("id", parcoursId).maybeSingle(),
-          supabase.rpc("has_parcours_entitlement", {
-            p_user: context.userId,
-            p_parcours: parcoursId,
-          }),
+    if (!userId) {
+      // Anonymous visitor: the public catalogue is open (premium is being retired).
+      viewer = { level: 0, isPremium: false, hasEntitlement: true };
+    } else {
+      try {
+        const themeId = (subj.data as { theme_id?: string | null }).theme_id ?? null;
+        const gradeId = (subj.data as { grade_id?: string | null }).grade_id ?? null;
+        const [viewerProfile, parcoursIdRes] = await Promise.all([
+          supabase.from("profiles").select("level").eq("id", userId).maybeSingle(),
+          themeId
+            ? // resolve_subject_parcours matches grade_id with IS NOT DISTINCT FROM, so a
+              // null grade is valid (grade-agnostic themes resolve their own parcours); the
+              // generated arg type narrows p_grade to string, hence the cast on the nullable.
+              supabase.rpc("resolve_subject_parcours", {
+                p_theme: themeId,
+                p_grade: gradeId as string,
+              })
+            : Promise.resolve({ data: null as string | null }),
         ]);
-        const isPremium = parcoursRow.data?.is_premium ?? false;
-        viewer = { level, isPremium, hasEntitlement: isPremium ? entRes.data === true : true };
-      } else {
-        viewer = { level, isPremium: false, hasEntitlement: true };
+        const level = viewerProfile.data?.level ?? 0;
+        const parcoursId = (parcoursIdRes as { data?: string | null }).data ?? null;
+        if (parcoursId) {
+          const [parcoursRow, entRes] = await Promise.all([
+            supabase.from("parcours").select("is_premium").eq("id", parcoursId).maybeSingle(),
+            supabase.rpc("has_parcours_entitlement", {
+              p_user: userId,
+              p_parcours: parcoursId,
+            }),
+          ]);
+          const isPremium = parcoursRow.data?.is_premium ?? false;
+          viewer = { level, isPremium, hasEntitlement: isPremium ? entRes.data === true : true };
+        } else {
+          viewer = { level, isPremium: false, hasEntitlement: true };
+        }
+      } catch (err) {
+        logger.warn("quest.getSubject: parcours access fetch failed", {
+          subjectId: data.subjectId,
+          error: errorMessage(err),
+        });
+        viewer = { level: 0, isPremium: true, hasEntitlement: false }; // safe default: show locked
       }
-    } catch (err) {
-      logger.warn("quest.getSubject: parcours access fetch failed", {
-        subjectId: data.subjectId,
-        error: errorMessage(err),
-      });
-      viewer = { level: 0, isPremium: true, hasEntitlement: false }; // safe default: show locked
     }
 
     return {
@@ -386,11 +393,11 @@ export const checkAnswersPublic = createServerFn({ method: "POST" })
 
 // ---------- Get exercise + questions ----------
 export const getExercise = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
+  .middleware([optionalSupabaseAuth])
   .inputValidator((d) => z.object({ exerciseId: z.guid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const [ex, qs, hintInv] = await Promise.all([
+    const [ex, qs] = await Promise.all([
       supabase
         .from("exercises")
         .select(
@@ -403,28 +410,29 @@ export const getExercise = createServerFn({ method: "GET" })
         .select("id,prompt,options,display_order")
         .eq("exercise_id", data.exerciseId)
         .order("display_order"),
-      // Total reveal charges the user owns (hint consumables: booster_hint /
-      // potion_rappel). Each owned unit = one reveal, so we sum the quantities.
-      // Mirrors the consume_hint RPC's eligibility filter.
-      supabase
-        .from("inventory_items")
-        .select("quantity, item:shop_items!inner(item_type, effect_payload)")
-        .eq("student_user_id", userId)
-        .in("shop_items.item_type", ["booster", "potion"]),
     ]);
     if (ex.error) {
       failWithClientError("quest.getExercise", ex.error, "Impossible de charger l'exercice.");
     }
 
+    // Hint consumables are an account perk; anonymous practice has none. Each owned
+    // unit = one reveal, so we sum the quantities (mirrors consume_hint's filter).
     let hintCharges = 0;
-    for (const row of hintInv.data ?? []) {
-      const item = (row as { item?: { effect_payload?: unknown } | null }).item;
-      const payload =
-        item?.effect_payload && typeof item.effect_payload === "object"
-          ? (item.effect_payload as Record<string, unknown>)
-          : {};
-      if ("hints" in payload || "hintBoost" in payload) {
-        hintCharges += Number((row as { quantity?: number }).quantity ?? 0);
+    if (userId) {
+      const { data: hintInv } = await supabase
+        .from("inventory_items")
+        .select("quantity, item:shop_items!inner(item_type, effect_payload)")
+        .eq("student_user_id", userId)
+        .in("shop_items.item_type", ["booster", "potion"]);
+      for (const row of hintInv ?? []) {
+        const item = (row as { item?: { effect_payload?: unknown } | null }).item;
+        const payload =
+          item?.effect_payload && typeof item.effect_payload === "object"
+            ? (item.effect_payload as Record<string, unknown>)
+            : {};
+        if ("hints" in payload || "hintBoost" in payload) {
+          hintCharges += Number((row as { quantity?: number }).quantity ?? 0);
+        }
       }
     }
 
