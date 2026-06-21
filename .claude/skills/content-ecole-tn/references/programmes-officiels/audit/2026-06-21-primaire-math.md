@@ -1,6 +1,7 @@
 # Rapport d'audit — contenu primaire **math** (1ère + 2ème)
 
-> **Généré** : 2026-06-21 · **Périmètre** : `math-1ere` + `math-2eme` (contenu réaligné, en prod).
+> **Généré** : 2026-06-21 · **Empreinte** : audité à `main@67242b3` — **ré-auditer si le contenu a bougé depuis**.
+> **Périmètre** : `math-1ere` + `math-2eme` (contenu réaligné, en prod).
 > **Méthode** : `content:audit` (couverture/conformité structurelle) + audit pédagogique `content-audit`
 > (re-résolution **à l'aveugle** de chaque question, vérif. notation/langue/cours/SVG, conformité CNP).
 > **Lecture seule — aucune correction appliquée ici.** Ce document est la **worklist** pour la session de
@@ -14,10 +15,10 @@
 - **Le défaut dominant = conformité de niveau** : plusieurs chapitres enseignent/testent des notions du **niveau supérieur**.
 - **Verdict : fix-first** (corriger avant diffusion/scellage) — non bloquant (rien de faux), mais hors-programme.
 
-| Matière | Questions | BLOCKER | MAJOR | MINOR |
-| --- | --- | --- | --- | --- |
-| math-1ere | 261 | 0 | 3 | 4 |
-| math-2eme | 279 | 0 | 4 | 9 |
+| Matière   | Questions | BLOCKER | MAJOR | MINOR |
+| --------- | --------- | ------- | ----- | ----- |
+| math-1ere | 261       | 0       | 3     | 4     |
+| math-2eme | 279       | 0       | 4     | 9     |
 
 ---
 
@@ -49,6 +50,7 @@ encore inscrits au manifeste).
 > (CNP/Taybah = « آلية الجمع **دون احتفاظ** ») **et** non enseignée dans son propre cours (golden-rule rompue en série).
 
 ### 04-addition — `[MAJOR ×2] [MINOR ×1]`
+
 - **[MAJOR]** Hors-programme + tested-but-untaught : items **à retenue** dont l'explication déroule un algorithme jamais
   vu en cours — `exercices/02-boss.json` q3 (28+6), q4 (45+17), q6 (19+19) ; `03-revision.json` q5 (16+7) ;
   `04-defi.json` q2 (25+25), q3 (14+9+6), q5 (38+14) ; `05-entrainement.json` q1 (9+6), q3 (47+8), q5 (26+17).
@@ -59,16 +61,19 @@ encore inscrits au manifeste).
   aucun exemple de franchissement de la dizaine → ajouter 1 exemple travaillé (مكمّل 10) si on les garde.
 
 ### 07-reperage-espace — `[MAJOR ×1] [MINOR ×1]`
+
 - **[MAJOR]** `cours.md` (clôture `> 🏆`, ≈ l.44) liste « …الجمع، **الطرح**، الأشكال… » — référence à la **soustraction**,
   inexistante en 1ère. → retirer « الطرح ».
 - **[MINOR]** Récit « البوّابة الأخيرة » contredit `displayOrder: 1` (chapitre en tête de l'année) → harmoniser.
 
 ### 01-nombres-jusqu-9 — `[MINOR ×1]`
+
 - **[MINOR]** `02-boss.json` q4 (5 doigts, on cache 2) et `04-defi.json` q4 (6 oiseaux, 3 s'envolent) : situations de
-  **retrait** (lisibles « soustraction »). Acceptables en *comptage à rebours* sans signe `−`, mais reformuler en
+  **retrait** (lisibles « soustraction »). Acceptables en _comptage à rebours_ sans signe `−`, mais reformuler en
   « كم بقي / كم أرى » (égrenage) pour écarter toute lecture soustraction.
 
 ### Chapitres propres
+
 `02-nombres-jusqu-99`, `03-comparaison-rangement`, `06-formes-geometriques`, `08-ensembles`, `09-monnaie`, `10-lignes` — **✓ aucun constat**.
 
 ---
@@ -79,6 +84,7 @@ encore inscrits au manifeste).
 > complètes, et l'**arrondi à la dizaine**.
 
 ### 04-soustraction — `[MAJOR ×1] [MINOR ×1]`
+
 - **[MAJOR]** **Soustraction avec emprunt (الطرح مع الاستلاف) = hors-programme 2ème** (CNP/Taybah : « طرح **دون زيادة
   ولا تفكيك** » sur les 3 trimestres ; l'emprunt est en **3ème**). Concerné : `cours.md` §⚡ (section استلاف) + `resume.md` ;
   `quiz.json` q4 (52−27) ; `01-pratique` q6 (43−18) ; `02-boss` q1/q2/q4 (60−24, 345−128, 503−287) ; `03-revision` q4/q5
@@ -87,6 +93,7 @@ encore inscrits au manifeste).
 - **[MINOR]** `02-boss.json` q4 (503−287) : double emprunt à travers un zéro + explication escamotée (disparaît avec le fix ci-dessus).
 
 ### 05-introduction-multiplication — `[MAJOR ×1] [MINOR ×2]`
+
 - **[MAJOR]** **Tables complètes 2/3/4/5 jusqu'à ×9 mémorisées/drillées = 3ème**, au-delà du « مدخل » (introduction)
   prévu en 2ème (sens × = addition réitérée, signe ×, éventuellement le double). Concerné : `cours.md` §🔮 et §⚡ (tables) ;
   `02-boss` (4×7, 5×6, 3×9, 4×8, 5×9) ; `03-revision` q4/q5 (3×7, 4×6) ; `04-defi` q3/q5 (facteur manquant) ;
@@ -96,24 +103,29 @@ encore inscrits au manifeste).
 - **[MINOR]** `04-defi.json` q6 : « لكلّ دجاجةٍ **رِجلين** » → duel nominatif « **رِجلان** » (fait correct, coquille grammaticale).
 
 ### 02-comparaison-rangement — `[MAJOR ×1] [MINOR ×1]`
+
 - **[MAJOR]** **Arrondi à la dizaine (التدوير) = hors-programme 2ème** (ni التدوير ni arrondi dans la liste CNP/Taybah ;
   notion 3ème). Concerné : `cours.md` §🛡️ + `quiz` q5 + items d'arrondi de `01`…`05` (47→50, 85→90, 32→30, 156→160) +
   bornes d'arrondi `04-defi` q5 / `05` q5. → retirer la section + les ~6 questions, ou déplacer en 3ème.
 - **[MINOR]** `04-defi` q5 & `05-entrainement` q5 : même type « plus grand nombre qui s'arrondit à X » (quasi-doublon, dépend de la notion hors-programme).
 
 ### 01-nombres-jusqu-999 — `[MINOR ×2]`
+
 - **[MINOR]** `04-defi.json` q1 (clé 507) et q6 (clé 507) : même nombre-réponse dans le même exercice → diversifier (705/750).
 - **[MINOR]** `04-defi.json` q6 : distracteur « 057 » (zéro initial, écriture non standard) → ou « 75 ».
 
 ### 06-mesure-longueurs-temps — `[MINOR ×2]`
+
 - **[MINOR]** `cours.md` §🛡️ « الشهر ≈ 4 أسابيع / ≈ 30 يومًا » absent de `resume.md` (et non testé) → ajouter au résumé ou retirer.
 - **[MINOR]** Ordre d'affichage à confirmer (`displayOrder` mesure=7, monnaie=8, formes=9 vs ordre manifeste). Sans impact contenu.
 
 ### 07-formes-lignes — `[MINOR ×1]`
+
 - **[MINOR]** Chapitre géométrie **sans aucune figure SVG** (questions purement verbales). Pas de BLOCKER (aucune question
   ne référence une figure absente) mais faible pour 7-8 ans → ajouter des SVG (formes + types de lignes, `viewBox` + encre sombre).
 
 ### Chapitres propres
+
 `03-addition` (avec/sans retenue = conforme 2ème), `08-ensembles`, `09-monnaie` — **✓ aucun constat**.
 
 ---
