@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة (نمط امتحان): رحلة السوائل",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "كم مليلترًا (mL) يساوي نصف لتر؟",
+      "options": [
+        { "id": "a", "text": "50 mL" },
+        { "id": "b", "text": "250 mL" },
+        { "id": "c", "text": "500 mL" },
+        { "id": "d", "text": "1000 mL" }
+      ],
+      "correctOption": "c",
+      "explanation": "نصف اللتر هو نصف 1000 mL: 1000 ÷ 2 = 500. إذن نصف لتر = 500 mL.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم صنتيلترًا (cL) يساوي ربع لتر؟",
+      "options": [
+        { "id": "a", "text": "25 cL" },
+        { "id": "b", "text": "50 cL" },
+        { "id": "c", "text": "250 cL" },
+        { "id": "d", "text": "75 cL" }
+      ],
+      "correctOption": "a",
+      "explanation": "اللتر فيه 100 cL، وربعه هو 100 ÷ 4 = 25. إذن ربع لتر = 25 cL.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم صنتيلترًا (cL) يساوي 5 L؟",
+      "options": [
+        { "id": "a", "text": "50 cL" },
+        { "id": "b", "text": "500 cL" },
+        { "id": "c", "text": "5000 cL" },
+        { "id": "d", "text": "105 cL" }
+      ],
+      "correctOption": "b",
+      "explanation": "نضرب عدد اللترات في 100: 5 × 100 = 500. إذن 5 L = 500 cL.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "بأيّ وحدةٍ من الأفضل أن نقيس سعة صهريجٍ كبير لماء الريّ؟",
+      "options": [
+        { "id": "a", "text": "اللتر (L)" },
+        { "id": "b", "text": "المليلتر (mL)" },
+        { "id": "c", "text": "الصنتيلتر (cL)" },
+        { "id": "d", "text": "الغرام (g)" }
+      ],
+      "correctOption": "a",
+      "explanation": "الصهريج سعته كبيرة جدًّا، فنختار وحدةً كبيرة وهي اللتر (L)؛ لو اخترنا mL لكان العدد ضخمًا جدًّا.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "إناءان: الأوّل 1 L والثاني 800 mL. أيّهما أكبر سعةً؟",
+      "options": [
+        { "id": "a", "text": "الثاني (800 mL)" },
+        { "id": "b", "text": "الأوّل (1 L)" },
+        { "id": "c", "text": "متساويان" },
+        { "id": "d", "text": "لا يمكن المقارنة" }
+      ],
+      "correctOption": "b",
+      "explanation": "نوحّد الوحدة: 1 L = 1000 mL. وبما أنّ 1000 أكبر من 800، فإنّ الإناء الأوّل (1 L) أكبر سعةً.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "سعةٌ تساوي 2300 mL. كم تساوي باللترات والمليلترات؟",
+      "options": [
+        { "id": "a", "text": "2 L و 3 mL" },
+        { "id": "b", "text": "2 L و 300 mL" },
+        { "id": "c", "text": "23 L" },
+        { "id": "d", "text": "3 L و 2 mL" }
+      ],
+      "correctOption": "b",
+      "explanation": "2300 mL = 2000 mL + 300 mL، و 2000 mL = 2 L. إذن 2300 mL = 2 L و 300 mL.",
+      "difficulty": 2
+    }
+  ]
+}

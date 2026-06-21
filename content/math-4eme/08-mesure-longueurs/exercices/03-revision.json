@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة (نمط امتحان): قيس الأطوال",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "أكمل: 1 m = … dm",
+      "options": [
+        { "id": "a", "text": "100 dm" },
+        { "id": "b", "text": "10 dm" },
+        { "id": "c", "text": "1 000 dm" },
+        { "id": "d", "text": "1 dm" }
+      ],
+      "correctOption": "b",
+      "explanation": "من العلاقات المرجعيّة: 1 m = 10 dm. فنملأ الفراغ بـ 10 dm.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "بأيّ وحدةٍ نقيس سُمك ورقةٍ رقيقة؟",
+      "options": [
+        { "id": "a", "text": "الكيلومتر (km)" },
+        { "id": "b", "text": "المتر (m)" },
+        { "id": "c", "text": "الديكامتر (dam)" },
+        { "id": "d", "text": "المليمتر (mm)" }
+      ],
+      "correctOption": "d",
+      "explanation": "سُمك الورقة صغيرٌ جدًّا، فنقيسه بأصغر وحدة وهي المليمتر (mm).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم صنتيمترًا يساوي 7 m؟",
+      "options": [
+        { "id": "a", "text": "700 cm" },
+        { "id": "b", "text": "70 cm" },
+        { "id": "c", "text": "707 cm" },
+        { "id": "d", "text": "7 000 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "للتحويل من m إلى cm نضرب في 100: 7 × 100 = 700. إذن 7 m = 700 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم كيلومترًا يساوي 8 000 m؟",
+      "options": [
+        { "id": "a", "text": "80 km" },
+        { "id": "b", "text": "800 km" },
+        { "id": "c", "text": "8 km" },
+        { "id": "d", "text": "8 000 km" }
+      ],
+      "correctOption": "c",
+      "explanation": "للتحويل من m إلى km نقسم على 1 000: 8 000 ÷ 1 000 = 8. إذن 8 000 m = 8 km.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "مثلّثٌ أضلاعه 12 cm و 18 cm و 20 cm. ما محيطه؟",
+      "options": [
+        { "id": "a", "text": "40 cm" },
+        { "id": "b", "text": "50 cm" },
+        { "id": "c", "text": "30 cm" },
+        { "id": "d", "text": "60 cm" }
+      ],
+      "correctOption": "b",
+      "explanation": "المحيط هو مجموع أطوال الأضلاع بنفس الوحدة: 12 + 18 + 20 = 50. إذن المحيط 50 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم مترًا يساوي 30 dm؟",
+      "options": [
+        { "id": "a", "text": "3 m" },
+        { "id": "b", "text": "30 m" },
+        { "id": "c", "text": "300 m" },
+        { "id": "d", "text": "33 m" }
+      ],
+      "correctOption": "a",
+      "explanation": "الديسيمتر أصغر من المتر بدرجة، فللتحويل من dm إلى m نقسم على 10: 30 ÷ 10 = 3. إذن 30 dm = 3 m.",
+      "difficulty": 2
+    }
+  ]
+}

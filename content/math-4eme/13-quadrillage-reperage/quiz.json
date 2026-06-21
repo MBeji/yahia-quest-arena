@@ -1,0 +1,65 @@
+{
+  "title": "اختبار فهم الدرس ⭐",
+  "questions": [
+    {
+      "prompt": "ما موضع العقدة المعلّمة بالنقطة السوداء؟ <svg viewBox=\"0 0 130 110\"><line x1=\"20\" y1=\"20\" x2=\"110\" y2=\"20\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"20\" y1=\"50\" x2=\"110\" y2=\"50\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"20\" y1=\"80\" x2=\"110\" y2=\"80\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"20\" y1=\"20\" x2=\"20\" y2=\"80\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"50\" y1=\"20\" x2=\"50\" y2=\"80\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"80\" y1=\"20\" x2=\"80\" y2=\"80\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"110\" y1=\"20\" x2=\"110\" y2=\"80\" stroke=\"#9ca3af\" stroke-width=\"1\"/><text x=\"8\" y=\"24\" font-size=\"9\" fill=\"currentColor\">1</text><text x=\"8\" y=\"54\" font-size=\"9\" fill=\"currentColor\">2</text><text x=\"8\" y=\"84\" font-size=\"9\" fill=\"currentColor\">3</text><text x=\"18\" y=\"14\" font-size=\"9\" fill=\"currentColor\">1</text><text x=\"48\" y=\"14\" font-size=\"9\" fill=\"currentColor\">2</text><text x=\"78\" y=\"14\" font-size=\"9\" fill=\"currentColor\">3</text><text x=\"108\" y=\"14\" font-size=\"9\" fill=\"currentColor\">4</text><circle cx=\"80\" cy=\"50\" r=\"4.5\" fill=\"currentColor\"/></svg>",
+      "options": [
+        { "id": "a", "text": "(1، 2)" },
+        { "id": "b", "text": "(3، 2)" },
+        { "id": "c", "text": "(2، 3)" },
+        { "id": "d", "text": "(2، 2)" }
+      ],
+      "correctOption": "c",
+      "explanation": "نقرأ السطر أوّلًا ثمّ العمود. العقدة على السطر 2 (نزلنا سطرين من الأعلى) والعمود 3 (تقدّمنا ثلاثة أعمدة من اليسار)، فموضعها (2، 3).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "في الشبكة، ماذا نسمّي نقطة تقاطع خطٍّ أفقيٍّ مع خطٍّ عموديّ؟",
+      "options": [
+        { "id": "a", "text": "الخانة" },
+        { "id": "b", "text": "العقدة" },
+        { "id": "c", "text": "العمود" },
+        { "id": "d", "text": "السطر" }
+      ],
+      "correctOption": "b",
+      "explanation": "العقدة هي نقطة تقاطع خطٍّ أفقيٍّ مع خطٍّ عموديّ. أمّا الخانة فهي المربّع الصغير المحصور بين أربع عقد، ونتنقّل دائمًا على العقد.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم خطوةً في هذا المسلك السميك؟ <svg viewBox=\"0 0 130 110\"><line x1=\"20\" y1=\"20\" x2=\"110\" y2=\"20\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"20\" y1=\"50\" x2=\"110\" y2=\"50\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"20\" y1=\"80\" x2=\"110\" y2=\"80\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"20\" y1=\"20\" x2=\"20\" y2=\"80\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"50\" y1=\"20\" x2=\"50\" y2=\"80\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"80\" y1=\"20\" x2=\"80\" y2=\"80\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"110\" y1=\"20\" x2=\"110\" y2=\"80\" stroke=\"#9ca3af\" stroke-width=\"1\"/><polyline points=\"20,20 50,20 80,20 80,50\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3.5\"/><circle cx=\"20\" cy=\"20\" r=\"4\" fill=\"currentColor\"/><circle cx=\"80\" cy=\"50\" r=\"4\" fill=\"currentColor\"/></svg>",
+      "options": [
+        { "id": "a", "text": "خطوتان" },
+        { "id": "b", "text": "5 خطوات" },
+        { "id": "c", "text": "3 خطوات" },
+        { "id": "d", "text": "4 خطوات" }
+      ],
+      "correctOption": "c",
+      "explanation": "نعدّ القطع بين العقد لا العقد نفسها: من العقدة الأولى نتقدّم عقدتين أفقيًّا (خطوتان) ثمّ ننزل عقدةً واحدة (خطوة). المجموع 2 + 1 = 3 خطوات.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم خطوةً في أقصر مسلكٍ من العقدة (1، 1) إلى العقدة (1، 4)؟",
+      "options": [
+        { "id": "a", "text": "خطوتان" },
+        { "id": "b", "text": "5 خطوات" },
+        { "id": "c", "text": "3 خطوات" },
+        { "id": "d", "text": "4 خطوات" }
+      ],
+      "correctOption": "c",
+      "explanation": "العقدتان على نفس السطر (1)، فلا نزول. فرق الأعمدة: 4 − 1 = 3، فالمسافة 3 خطوات أفقيًّا فقط.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "العقدة على السطر 3 والعمود 1. ما موضعها؟",
+      "options": [
+        { "id": "a", "text": "(3، 1)" },
+        { "id": "b", "text": "(1، 3)" },
+        { "id": "c", "text": "(3، 3)" },
+        { "id": "d", "text": "(1، 1)" }
+      ],
+      "correctOption": "a",
+      "explanation": "نكتب السطر أوّلًا ثمّ العمود: السطر 3 ثمّ العمود 1، أي (3، 1). الزوج (1، 3) معكوسٌ وخاطئ لأنّه يقلب السطر بالعمود.",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: أوّل خطوات في عالَم الضرب",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "أيّ عمليّة ضربٍ توافق الجمع 6 + 6 + 6 + 6؟",
+      "options": [
+        { "id": "a", "text": "6 × 6" },
+        { "id": "b", "text": "6 + 4" },
+        { "id": "c", "text": "4 × 6" },
+        { "id": "d", "text": "6 × 0" }
+      ],
+      "correctOption": "c",
+      "explanation": "العدد 6 مكتوبٌ 4 مرّات، فالجمع المتكرّر 6 + 6 + 6 + 6 = 4 × 6 = 24.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم يساوي 8 × 10؟",
+      "options": [
+        { "id": "a", "text": "80" },
+        { "id": "b", "text": "18" },
+        { "id": "c", "text": "800" },
+        { "id": "d", "text": "8" }
+      ],
+      "correctOption": "a",
+      "explanation": "عند الضرب في 10 نضيف صفرًا واحدًا إلى يمين العدد، فـ 8 × 10 = 80.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم يساوي 53 × 1؟",
+      "options": [
+        { "id": "a", "text": "0" },
+        { "id": "b", "text": "53" },
+        { "id": "c", "text": "54" },
+        { "id": "d", "text": "530" }
+      ],
+      "correctOption": "b",
+      "explanation": "كلّ عددٍ مضروبٍ في 1 يبقى كما هو، فـ 53 × 1 = 53.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما جداء 123 × 2 بالضرب المنصوب؟",
+      "options": [
+        { "id": "a", "text": "246" },
+        { "id": "b", "text": "125" },
+        { "id": "c", "text": "242" },
+        { "id": "d", "text": "264" }
+      ],
+      "correctOption": "a",
+      "explanation": "نضرب كلّ رقمٍ في 2: 3 × 2 = 6، و2 × 2 = 4، و1 × 2 = 2، فالجداء 123 × 2 = 246.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم يساوي 7 × 0؟",
+      "options": [
+        { "id": "a", "text": "7" },
+        { "id": "b", "text": "70" },
+        { "id": "c", "text": "0" },
+        { "id": "d", "text": "1" }
+      ],
+      "correctOption": "c",
+      "explanation": "كلّ عددٍ مضروبٍ في 0 يساوي 0، فـ 7 × 0 = 0 وليس 7.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم يساوي 3 × 40؟",
+      "options": [
+        { "id": "a", "text": "43" },
+        { "id": "b", "text": "12" },
+        { "id": "c", "text": "1 200" },
+        { "id": "d", "text": "120" }
+      ],
+      "correctOption": "d",
+      "explanation": "نضرب الرقمين غير الصفريّين 3 × 4 = 12 ثمّ نضيف صفر العدد 40، فـ 3 × 40 = 120.",
+      "difficulty": 2
+    }
+  ]
+}

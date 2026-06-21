@@ -1,0 +1,82 @@
+{
+  "title": "📝 تدريب ⭐⭐⭐: قيس الزمن (مراجعة شاملة)",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "كم دقيقةً في نصف ساعة؟",
+      "options": [
+        { "id": "a", "text": "15 min" },
+        { "id": "b", "text": "30 min" },
+        { "id": "c", "text": "50 min" },
+        { "id": "d", "text": "60 min" }
+      ],
+      "correctOption": "b",
+      "explanation": "نصف الساعة = 60 ÷ 2 = 30 min. وليست 50 min لأنّ الساعة 60 دقيقة لا 100.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم تساوي 120 min بالساعات؟",
+      "options": [
+        { "id": "a", "text": "1 h" },
+        { "id": "b", "text": "12 h" },
+        { "id": "c", "text": "2 h" },
+        { "id": "d", "text": "120 h" }
+      ],
+      "correctOption": "c",
+      "explanation": "نقسم على 60 للتحويل من الدقائق إلى الساعات: 120 ÷ 60 = 2. إذن 120 min = 2 h.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما الشهر الذي يأتي بعد ديسمبر؟",
+      "options": [
+        { "id": "a", "text": "نوفمبر" },
+        { "id": "b", "text": "فيفري" },
+        { "id": "c", "text": "مارس" },
+        { "id": "d", "text": "جانفي" }
+      ],
+      "correctOption": "d",
+      "explanation": "ديسمبر آخر شهرٍ في السنة، وبعده تبدأ سنةٌ جديدة بشهر جانفي. إذن بعد ديسمبر يأتي جانفي.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "بدأت اللعبة في 5 h 35 ودامت 30 min. متى انتهت؟",
+      "options": [
+        { "id": "a", "text": "6 h 05" },
+        { "id": "b", "text": "5 h 65" },
+        { "id": "c", "text": "6 h 35" },
+        { "id": "d", "text": "5 h 05" }
+      ],
+      "correctOption": "a",
+      "explanation": "من 5 h 35 إلى 6 h 00 = 25 min، يبقى 30 − 25 = 5 min بعد السادسة. إذن النهاية 6 h 05. الخطأ الشائع كتابة 5 h 65، والساعة لا تتجاوز 60 دقيقة.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "العقرب الكبير على 4 يعني مرور كم دقيقة؟",
+      "options": [
+        { "id": "a", "text": "4 دقائق" },
+        { "id": "b", "text": "15 دقيقة" },
+        { "id": "c", "text": "20 دقيقة" },
+        { "id": "d", "text": "40 دقيقة" }
+      ],
+      "correctOption": "c",
+      "explanation": "كلّ تدريجةٍ كبيرة = 5 دقائق، والعقرب على 4 يعني 4 × 5 = 20 دقيقة. الخطأ الشائع قراءة 4 دقائق مباشرةً.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "مباراةٌ من 16 h 45 إلى 17 h 30. كم دامت؟",
+      "options": [
+        { "id": "a", "text": "85 min" },
+        { "id": "b", "text": "45 min" },
+        { "id": "c", "text": "15 min" },
+        { "id": "d", "text": "30 min" }
+      ],
+      "correctOption": "b",
+      "explanation": "المدّة على حصان الساعة: من 16 h 45 إلى 17 h 00 = 15 min، ثمّ إلى 17 h 30 = 30 min، المجموع 15 + 30 = 45 min. الخطأ الشائع جمع 45 و 30 لتصير 85؛ والصحيح 45 min.",
+      "difficulty": 3
+    }
+  ]
+}

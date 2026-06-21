@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة (نمط امتحان): الضرب من كلّ الأبواب",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "بخاصيّة التوزيعية، كم يساوي 7 × (10 + 3)؟",
+      "options": [
+        { "id": "a", "text": "70" },
+        { "id": "b", "text": "91" },
+        { "id": "c", "text": "73" },
+        { "id": "d", "text": "21" }
+      ],
+      "correctOption": "b",
+      "explanation": "نوزّع الضرب على الجمع: 7 × 10 + 7 × 3 = 70 + 21 = 91.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم يساوي 26 × 10؟",
+      "options": [
+        { "id": "a", "text": "260" },
+        { "id": "b", "text": "36" },
+        { "id": "c", "text": "2 600" },
+        { "id": "d", "text": "206" }
+      ],
+      "correctOption": "a",
+      "explanation": "عند الضرب في 10 نضيف صفرًا واحدًا إلى يمين العدد، فـ 26 × 10 = 260.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "بخاصيّة التبديلية، إذا كان 8 × 9 = 72 فكم يساوي 9 × 8؟",
+      "options": [
+        { "id": "a", "text": "17" },
+        { "id": "b", "text": "81" },
+        { "id": "c", "text": "72" },
+        { "id": "d", "text": "64" }
+      ],
+      "correctOption": "c",
+      "explanation": "ترتيب العاملَين لا يُغيّر الجداء: 9 × 8 = 8 × 9 = 72.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما جداء 142 × 3 بالضرب المنصوب؟",
+      "options": [
+        { "id": "a", "text": "326" },
+        { "id": "b", "text": "145" },
+        { "id": "c", "text": "426" },
+        { "id": "d", "text": "423" }
+      ],
+      "correctOption": "c",
+      "explanation": "3 × 2 = 6؛ 3 × 4 = 12 نكتب 2 ونحتفظ بـ 1؛ 3 × 1 = 3 + 1 = 4. الجداء 142 × 3 = 426.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم يساوي 6 × 500؟",
+      "options": [
+        { "id": "a", "text": "300" },
+        { "id": "b", "text": "3 000" },
+        { "id": "c", "text": "506" },
+        { "id": "d", "text": "30 000" }
+      ],
+      "correctOption": "b",
+      "explanation": "نضرب الرقمين غير الصفريّين 6 × 5 = 30 ثمّ نضيف صفرَي العدد 500، فـ 6 × 500 = 3 000.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم يساوي 15 × 20؟",
+      "options": [
+        { "id": "a", "text": "35" },
+        { "id": "b", "text": "30" },
+        { "id": "c", "text": "300" },
+        { "id": "d", "text": "3 000" }
+      ],
+      "correctOption": "c",
+      "explanation": "نضرب 15 × 2 = 30 ثمّ نضيف صفر العدد 20، فـ 15 × 20 = 300.",
+      "difficulty": 2
+    }
+  ]
+}

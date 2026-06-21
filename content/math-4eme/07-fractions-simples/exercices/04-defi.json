@@ -1,0 +1,154 @@
+{
+  "title": "👑 تحدّي النخبة ⭐⭐⭐⭐: ألغاز الكسور",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "أنا كسرٌ بسطي 3 ومقامي 4. أيّ شكلٍ يمثّلني؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"40\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><path d=\"M50 50 L50 10 A40 40 0 1 0 90 50 Z\" fill=\"#d1d5db\" stroke=\"currentColor\" stroke-width=\"2\"/><line x1=\"10\" y1=\"50\" x2=\"90\" y2=\"50\" stroke=\"currentColor\" stroke-width=\"2\"/><line x1=\"50\" y1=\"10\" x2=\"50\" y2=\"90\" stroke=\"currentColor\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"40\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><path d=\"M50 50 L90 50 A40 40 0 0 0 50 10 Z\" fill=\"#d1d5db\" stroke=\"currentColor\" stroke-width=\"2\"/><line x1=\"10\" y1=\"50\" x2=\"90\" y2=\"50\" stroke=\"currentColor\" stroke-width=\"2\"/><line x1=\"50\" y1=\"10\" x2=\"50\" y2=\"90\" stroke=\"currentColor\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"40\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><path d=\"M50 50 L50 10 A40 40 0 0 1 90 50 Z\" fill=\"#d1d5db\" stroke=\"currentColor\" stroke-width=\"2\"/><line x1=\"10\" y1=\"50\" x2=\"90\" y2=\"50\" stroke=\"currentColor\" stroke-width=\"2\"/><line x1=\"50\" y1=\"10\" x2=\"50\" y2=\"90\" stroke=\"currentColor\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"40\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"10\" y1=\"50\" x2=\"90\" y2=\"50\" stroke=\"currentColor\" stroke-width=\"2\"/></svg>"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "بسط 3 ومقام 4 يعني 3 أجزاء ملوّنة من 4 متساوية، وهذا الشكل (a). الشكل (b) جزءٌ واحد (1/4)، و(c) جزءٌ واحد، و(d) قُسم نصفين بلا تلوينٍ صحيح. الخطأ الشائع: تلوين جزءٍ واحد بدل ثلاثة.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "في فصلٍ 24 تلميذًا، 1/4 منهم يلبسون نظّارات. كم تلميذًا يلبس نظّارات؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "4"
+        },
+        {
+          "id": "b",
+          "text": "8"
+        },
+        {
+          "id": "c",
+          "text": "6"
+        },
+        {
+          "id": "d",
+          "text": "20"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "1/4 من 24 = 24 ÷ 4 = 6، ثمّ × 1 = 6 تلاميذ. الخطأ الشائع: إعطاء 4 (المقام) مباشرةً أو قسمة على البسط؛ نقسم على المقام أوّلًا.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "كيسٌ فيه 20 حبّة سكاكر. أخذ سامي 1/5 وأخذت لينا 1/4 من الكيس. من أخذ أكثر؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "سامي (5 حبّات مقابل 4)"
+        },
+        {
+          "id": "b",
+          "text": "لينا (5 حبّات مقابل 4)"
+        },
+        {
+          "id": "c",
+          "text": "أخذا العدد نفسه"
+        },
+        {
+          "id": "d",
+          "text": "سامي (10 مقابل 4)"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "نصيب سامي 1/5 من 20 = 20 ÷ 5 = 4، ونصيب لينا 1/4 من 20 = 20 ÷ 4 = 5. فلينا أخذت 5 وسامي 4، فلينا أكثر. الخطأ الشائع: ظنّ أنّ المقام الأكبر (5) يعطي نصيبًا أكبر.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "حديقةٌ مساحتها 30 م². زُرع 1/3 منها وردًا والباقي عشبًا. كم متّرًا مربّعًا من العشب؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "10 م²"
+        },
+        {
+          "id": "b",
+          "text": "3 م²"
+        },
+        {
+          "id": "c",
+          "text": "27 م²"
+        },
+        {
+          "id": "d",
+          "text": "20 م²"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "الورد 1/3 من 30 = 30 ÷ 3 = 10 م²، فالعشب الباقي 30 − 10 = 20 م². الخطأ الشائع: إعطاء نصيب الورد (10) بدل الباقي المطلوب (20).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "كسرٌ مقامه 7، وهو أكبر من 4/7 وأصغر من 6/7. ما هو؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "5/7"
+        },
+        {
+          "id": "b",
+          "text": "3/7"
+        },
+        {
+          "id": "c",
+          "text": "7/7"
+        },
+        {
+          "id": "d",
+          "text": "4/7"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "المقام واحد (7)، فنبحث عن بسطٍ بين 4 و6، وهو 5، فالكسر 5/7: نعم 4/7 < 5/7 < 6/7. الخطأ الشائع: اختيار طرفٍ من الطرفين بدل ما بينهما.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "لوحةٌ قُسمت إلى 8 أجزاء متساوية، لُوّن منها 5. ما الكسر الملوّن، وما الكسر غير الملوّن؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "الملوّن 3/8 وغير الملوّن 5/8"
+        },
+        {
+          "id": "b",
+          "text": "الملوّن 8/5 وغير الملوّن 8/3"
+        },
+        {
+          "id": "c",
+          "text": "الملوّن 5/8 وغير الملوّن 3/8"
+        },
+        {
+          "id": "d",
+          "text": "الملوّن 5/8 وغير الملوّن 5/8"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "الملوّن 5 أجزاء من 8، أي 5/8. غير الملوّن 8 − 5 = 3 أجزاء، أي 3/8. الخطأ الشائع: قلب الكسر إلى 8/5، أو خلط الملوّن بغير الملوّن.",
+      "difficulty": 3
+    }
+  ]
+}

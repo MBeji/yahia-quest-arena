@@ -1,0 +1,82 @@
+{
+  "title": "👑 تحدّي النخبة ⭐⭐⭐⭐: ألغاز الزمن",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "كم ثانيةً في 5 min؟",
+      "options": [
+        { "id": "a", "text": "50 s" },
+        { "id": "b", "text": "150 s" },
+        { "id": "c", "text": "300 s" },
+        { "id": "d", "text": "500 s" }
+      ],
+      "correctOption": "c",
+      "explanation": "نضرب عدد الدقائق في 60: 5 × 60 = 300. إذن 5 min = 300 s.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "حصّةٌ بدأت في 8 h 50 وانتهت في 9 h 35. كم دامت؟",
+      "options": [
+        { "id": "a", "text": "85 min" },
+        { "id": "b", "text": "45 min" },
+        { "id": "c", "text": "15 min" },
+        { "id": "d", "text": "35 min" }
+      ],
+      "correctOption": "b",
+      "explanation": "المدّة على حصان الساعة: من 8 h 50 إلى 9 h 00 = 10 min، ثمّ إلى 9 h 35 = 35 min، المجموع 10 + 35 = 45 min. الخطأ الشائع جمع 50 و 35 لتصير 85؛ والصحيح 45 min.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "بدأت رحلةٌ في 2 h 30 ودامت ساعةً ونصفًا. متى انتهت؟",
+      "options": [
+        { "id": "a", "text": "4 h 00" },
+        { "id": "b", "text": "3 h 30" },
+        { "id": "c", "text": "3 h 00" },
+        { "id": "d", "text": "4 h 30" }
+      ],
+      "correctOption": "a",
+      "explanation": "ساعة ونصف = 90 min = 60 min + 30 min. نضيف ساعةً: 2 h 30 ← 3 h 30، ثمّ 30 min: 3 h 30 ← 4 h 00. إذن النهاية 4 h 00.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "شهر أفريل فيه 30 يومًا. إذا بدأ يوم سفرٍ في 25 أفريل ودام 7 أيّام، ففي أيّ يومٍ ينتهي؟",
+      "options": [
+        { "id": "a", "text": "32 أفريل" },
+        { "id": "b", "text": "1 ماي" },
+        { "id": "c", "text": "5 ماي" },
+        { "id": "d", "text": "2 ماي" }
+      ],
+      "correctOption": "d",
+      "explanation": "من 25 أفريل إلى نهاية الشهر (30 أفريل) = 5 أيّام، يبقى 7 − 5 = 2 يوم في ماي. إذن ينتهي في 2 ماي. الخطأ الشائع كتابة 32 أفريل، والشهر لا يتجاوز 30 يومًا.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "كم دقيقةً في 3 h و 20 min؟",
+      "options": [
+        { "id": "a", "text": "320 min" },
+        { "id": "b", "text": "180 min" },
+        { "id": "c", "text": "200 min" },
+        { "id": "d", "text": "80 min" }
+      ],
+      "correctOption": "c",
+      "explanation": "نحوّل الساعات أوّلًا: 3 × 60 = 180 min، ثمّ نضيف 20: 180 + 20 = 200. إذن 3 h و 20 min = 200 min.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "وصل القطار في 11 h 10 وكان قد سافر 40 min. متى انطلق؟",
+      "options": [
+        { "id": "a", "text": "11 h 50" },
+        { "id": "b", "text": "10 h 30" },
+        { "id": "c", "text": "10 h 70" },
+        { "id": "d", "text": "11 h 30" }
+      ],
+      "correctOption": "b",
+      "explanation": "نرجع 40 min قبل 11 h 10: نرجع 10 min أوّلًا إلى 11 h 00، يبقى 40 − 10 = 30 min نرجعها إلى 10 h 30. إذن انطلق في 10 h 30. الخطأ الشائع كتابة 10 h 70، والساعة 60 دقيقة لا أكثر.",
+      "difficulty": 3
+    }
+  ]
+}

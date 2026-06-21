@@ -1,0 +1,154 @@
+{
+  "title": "⭐⭐ تمرين مراجعة (نمط امتحان): الكسور البسيطة",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "ما الكسر الذي يمثّله الجزء الملوّن؟ <svg viewBox=\"0 0 100 60\"><rect x=\"8\" y=\"15\" width=\"84\" height=\"30\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><rect x=\"8\" y=\"15\" width=\"42\" height=\"30\" fill=\"#d1d5db\" stroke=\"currentColor\" stroke-width=\"2\"/><line x1=\"29\" y1=\"15\" x2=\"29\" y2=\"45\" stroke=\"currentColor\" stroke-width=\"2\"/><line x1=\"50\" y1=\"15\" x2=\"50\" y2=\"45\" stroke=\"currentColor\" stroke-width=\"2\"/><line x1=\"71\" y1=\"15\" x2=\"71\" y2=\"45\" stroke=\"currentColor\" stroke-width=\"2\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "4/2"
+        },
+        {
+          "id": "b",
+          "text": "2/4"
+        },
+        {
+          "id": "c",
+          "text": "2/2"
+        },
+        {
+          "id": "d",
+          "text": "1/4"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "الشريط 4 أجزاء متساوية، والملوّن منها 2، فالكسر 2/4 (البسط 2 والمقام 4).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "في الكسر 7/10، ما هو المقام؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "7"
+        },
+        {
+          "id": "b",
+          "text": "17"
+        },
+        {
+          "id": "c",
+          "text": "10"
+        },
+        {
+          "id": "d",
+          "text": "3"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "المقام هو العدد تحت الخطّ (عدد الأجزاء كلّها)، وهو 10. والبسط 7 هو عدد الأجزاء المأخوذة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما هو 1/2 من 14 تلميذًا؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "7"
+        },
+        {
+          "id": "b",
+          "text": "2"
+        },
+        {
+          "id": "c",
+          "text": "28"
+        },
+        {
+          "id": "d",
+          "text": "12"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "نقسم على المقام: 14 ÷ 2 = 7، ثمّ نضرب في البسط 1، فالجواب 7 تلاميذ.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما هو 1/3 من 18 حبّة؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "3"
+        },
+        {
+          "id": "b",
+          "text": "9"
+        },
+        {
+          "id": "c",
+          "text": "54"
+        },
+        {
+          "id": "d",
+          "text": "6"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "نقسم على المقام: 18 ÷ 3 = 6، ثمّ نضرب في البسط 1، فالجواب 6 حبّات.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "رتّب من الأصغر إلى الأكبر: 2/9 ، 5/9 ، 1/9.",
+      "options": [
+        {
+          "id": "a",
+          "text": "1/9 ، 2/9 ، 5/9"
+        },
+        {
+          "id": "b",
+          "text": "5/9 ، 2/9 ، 1/9"
+        },
+        {
+          "id": "c",
+          "text": "2/9 ، 1/9 ، 5/9"
+        },
+        {
+          "id": "d",
+          "text": "1/9 ، 5/9 ، 2/9"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "المقام واحد (9)، فنرتّب حسب البسط من الأصغر: 1 ثمّ 2 ثمّ 5، أي 1/9 ، 2/9 ، 5/9.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ جملةٍ صحيحة عن الكسر 1/4؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "هو 4 أجزاء من جزءٍ واحد"
+        },
+        {
+          "id": "b",
+          "text": "هو جزءٌ واحد من 4 أجزاء متساوية، ويساوي رُبع الوحدة"
+        },
+        {
+          "id": "c",
+          "text": "هو أكبر من 1/2"
+        },
+        {
+          "id": "d",
+          "text": "مقامه 1 وبسطه 4"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "1/4 هو جزءٌ واحد (البسط 1) من 4 أجزاء متساوية (المقام 4)، أي رُبع الوحدة، وهو أصغر من النصف لأنّ الأجزاء أكثر فهي أصغر.",
+      "difficulty": 2
+    }
+  ]
+}
