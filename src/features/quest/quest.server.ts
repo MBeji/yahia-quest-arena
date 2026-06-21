@@ -1,7 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
+import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
-import { isRateLimited } from "@/shared/lib/rate-limit";
+import { optionalSupabaseAuth } from "@/shared/integrations/supabase/optional-auth-middleware";
+import { isRateLimited, isRateLimitedLocal } from "@/shared/lib/rate-limit";
 import { MIN_SECONDS_PER_QUESTION, QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
 import { errorMessage, failWithClientError } from "@/shared/lib/safe-error";
 import { logger } from "@/shared/lib/logger";
@@ -257,7 +259,7 @@ export const getSubject = createServerFn({ method: "GET" })
 
 // ---------- Get chapter lesson content ----------
 export const getChapterLesson = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
+  .middleware([optionalSupabaseAuth])
   .inputValidator((d) => z.object({ chapterId: z.guid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
@@ -287,6 +289,99 @@ export const getChapterLesson = createServerFn({ method: "GET" })
     }));
 
     return { chapter, allChapters };
+  });
+
+// ---------- Public practice correction (anonymous-capable) ----------
+export type PracticeReviewItem = {
+  questionId: string;
+  selectedChoice: string;
+  isCorrect: boolean;
+  correctChoice: string | null;
+  explanation: string | null;
+};
+
+function clientIpKey(): string {
+  try {
+    const headers = getRequest()?.headers;
+    const forwarded = headers?.get("x-forwarded-for");
+    return forwarded?.split(",")[0]?.trim() || headers?.get("x-real-ip") || "unknown";
+  } catch {
+    return "unknown";
+  }
+}
+
+/**
+ * Public, stateless correction for anonymous (or signed-in) practice. Calls the
+ * SECURITY DEFINER check_answers RPC — no session, no attempt, no XP. Returns the
+ * per-question correction for admin practice/boss exercises; comprehension quizzes
+ * and parent content yield an empty, non-reviewable result.
+ */
+export const checkAnswersPublic = createServerFn({ method: "POST" })
+  .middleware([optionalSupabaseAuth])
+  .inputValidator((d) =>
+    z
+      .object({
+        exerciseId: z.guid(),
+        answers: z
+          .array(z.object({ questionId: z.guid(), choice: z.string() }))
+          .min(1)
+          .max(100),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+
+    // Anti-abuse. Signed-in callers use the persistent limiter (keyed by user);
+    // anonymous ones use a best-effort in-memory limiter by IP (check_rate_limit
+    // requires auth.uid()). A distributed anon limiter is a Transverse follow-up.
+    const limited = userId
+      ? await isRateLimited(supabase, `check_answers_${userId}`, 30, 60_000)
+      : isRateLimitedLocal(`check_answers_ip_${clientIpKey()}`, 30, 60_000);
+    if (limited) {
+      throw new Error("Trop de requêtes. Réessaie dans un instant.");
+    }
+
+    const { data: rows, error } = await supabase.rpc("check_answers", {
+      p_exercise_id: data.exerciseId,
+      p_answers: data.answers,
+    });
+    if (error) {
+      failWithClientError(
+        "quest.checkAnswersPublic",
+        error,
+        "Impossible de corriger l'entraînement.",
+      );
+    }
+
+    const list = Array.isArray(rows)
+      ? (rows as Array<{
+          question_id: string;
+          is_correct: boolean;
+          correct_option: string | null;
+          explanation: string | null;
+        }>)
+      : [];
+    const byId = new Map(list.map((row) => [row.question_id, row]));
+
+    const review: PracticeReviewItem[] = [];
+    for (const answer of data.answers) {
+      const row = byId.get(answer.questionId);
+      if (!row) continue;
+      review.push({
+        questionId: answer.questionId,
+        selectedChoice: answer.choice,
+        isCorrect: row.is_correct,
+        correctChoice: row.correct_option,
+        explanation: row.explanation,
+      });
+    }
+
+    const total = review.length;
+    const correct = review.filter((item) => item.isCorrect).length;
+    const scorePct = total > 0 ? Math.round((correct / total) * 100) : 0;
+
+    return { reviewable: total > 0, correct, total, scorePct, review };
   });
 
 // ---------- Get exercise + questions ----------

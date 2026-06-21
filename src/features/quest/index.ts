@@ -8,6 +8,7 @@ export {
   startExerciseSession,
   submitAttempt,
   revealHint,
+  checkAnswersPublic,
 } from "./quest.server";
 export { computeNextExerciseId } from "./next-exercise";
 export { noXpReason } from "./no-xp-reason";
