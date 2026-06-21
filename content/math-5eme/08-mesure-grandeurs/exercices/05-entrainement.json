@@ -1,5 +1,5 @@
 {
-  "title": "📝 تدريب ⭐⭐⭐: مراجعة شاملة للقيس",
+  "title": "📝 تدريب ⭐⭐⭐ على القيس (مراجعة شاملة)",
   "difficulty": 3,
   "mode": "boss",
   "xpReward": 120,
@@ -7,76 +7,76 @@
   "displayOrder": 5,
   "questions": [
     {
-      "prompt": "كم سنتيمترًا في 7 dm؟",
+      "prompt": "كم صنتيمترًا يساوي 4,5 m؟",
       "options": [
-        { "id": "a", "text": "7 cm" },
-        { "id": "b", "text": "700 cm" },
-        { "id": "c", "text": "70 cm" },
-        { "id": "d", "text": "0,7 cm" }
+        { "id": "a", "text": "45 cm" },
+        { "id": "b", "text": "4 500 cm" },
+        { "id": "c", "text": "450 cm" },
+        { "id": "d", "text": "45 000 cm" }
       ],
       "correctOption": "c",
-      "explanation": "نعرف أنّ 1 dm = 10 cm، فنضرب في 10: 7 × 10 = 70 cm.",
+      "explanation": "بين m و cm خانتان فالعامل 100: 4,5 × 100 = 450. إذن 4,5 m = 450 cm. الخطأ الشائع 45 cm من الضرب في 10 بدل 100.",
       "difficulty": 2
     },
     {
-      "prompt": "كم كيلوغرامًا في 1,5 t؟",
+      "prompt": "كم كيلوغرامًا يساوي 2 500 g؟",
       "options": [
-        { "id": "a", "text": "1 500 kg" },
-        { "id": "b", "text": "150 kg" },
-        { "id": "c", "text": "15 kg" },
-        { "id": "d", "text": "15 000 kg" }
-      ],
-      "correctOption": "a",
-      "explanation": "نضرب في 1 000 لأنّ 1 t = 1 000 kg: 1,5 × 1 000 = 1 500 kg.",
-      "difficulty": 2
-    },
-    {
-      "prompt": "كم ثانية في 5 min؟",
-      "options": [
-        { "id": "a", "text": "50 s" },
-        { "id": "b", "text": "500 s" },
-        { "id": "c", "text": "55 s" },
-        { "id": "d", "text": "300 s" }
-      ],
-      "correctOption": "d",
-      "explanation": "الدقيقة 60 ثانية، فـ 5 min = 5 × 60 = 300 s.",
-      "difficulty": 2
-    },
-    {
-      "prompt": "كم لترًا في 250 cL؟",
-      "options": [
-        { "id": "a", "text": "25 L" },
-        { "id": "b", "text": "2,5 L" },
-        { "id": "c", "text": "0,25 L" },
-        { "id": "d", "text": "250 L" }
+        { "id": "a", "text": "25 kg" },
+        { "id": "b", "text": "2,5 kg" },
+        { "id": "c", "text": "0,25 kg" },
+        { "id": "d", "text": "250 kg" }
       ],
       "correctOption": "b",
-      "explanation": "نصعد من السنتيلتر إلى اللتر بالقسمة على 100 لأنّ 1 L = 100 cL: 250 ÷ 100 = 2,5 L.",
-      "difficulty": 3
+      "explanation": "من g إلى kg نصعد ثلاث خانات فنقسم على 1000: 2 500 ÷ 1 000 = 2,5. إذن 2 500 g = 2,5 kg. الخطأ الشائع القسمة على 100 (25 kg) بدل 1000.",
+      "difficulty": 2
     },
     {
-      "prompt": "علبتان: كتلة الأولى 1 kg 300 g وكتلة الثانية 700 g. ما مجموع كتلتيهما بالغرام؟",
+      "prompt": "كم صنتيلترًا يساوي 0,75 L؟",
       "options": [
-        { "id": "a", "text": "1 000 g" },
-        { "id": "b", "text": "1 370 g" },
-        { "id": "c", "text": "2 000 g" },
-        { "id": "d", "text": "8 000 g" }
-      ],
-      "correctOption": "c",
-      "explanation": "نوحّد الوحدة: 1 kg 300 g = 1 000 + 300 = 1 300 g، ثمّ نجمع: 1 300 + 700 = 2 000 g (أي 2 kg).",
-      "difficulty": 3
-    },
-    {
-      "prompt": "كم مترًا في 0,8 km؟",
-      "options": [
-        { "id": "a", "text": "800 m" },
-        { "id": "b", "text": "80 m" },
-        { "id": "c", "text": "8 m" },
-        { "id": "d", "text": "8 000 m" }
+        { "id": "a", "text": "75 cL" },
+        { "id": "b", "text": "7,5 cL" },
+        { "id": "c", "text": "750 cL" },
+        { "id": "d", "text": "0,75 cL" }
       ],
       "correctOption": "a",
-      "explanation": "نضرب في 1 000 لأنّ 1 km = 1 000 m: 0,8 × 1 000 = 800 m.",
+      "explanation": "من L إلى cL ننزل خانتين فنضرب في 100: 0,75 × 100 = 75. إذن 0,75 L = 75 cL. الخطأ الشائع 7,5 cL من الضرب في 10 بدل 100.",
       "difficulty": 2
+    },
+    {
+      "prompt": "أيّ المقدارين أكبر: 0,8 kg أم 850 g؟",
+      "options": [
+        { "id": "a", "text": "0,8 kg" },
+        { "id": "b", "text": "متساويان" },
+        { "id": "c", "text": "لا يمكن المقارنة" },
+        { "id": "d", "text": "850 g" }
+      ],
+      "correctOption": "d",
+      "explanation": "نوحّد الوحدة: 0,8 kg = 0,8 × 1 000 = 800 g. ونقارن: LTR: 850 > 800. إذن 850 g أكبر من 0,8 kg. الخطأ الشائع مقارنة 0,8 بـ 850 دون توحيد الوحدة.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "مسافةٌ يقطعها عدّاءٌ 1 250 m. كم تساوي بالكيلومترات والأمتار؟",
+      "options": [
+        { "id": "a", "text": "1 km و25 m" },
+        { "id": "b", "text": "1 km و250 m" },
+        { "id": "c", "text": "12 km و50 m" },
+        { "id": "d", "text": "125 km" }
+      ],
+      "correctOption": "b",
+      "explanation": "1 250 m = 1 000 m + 250 m، و 1 000 m = 1 km. إذن 1 250 m = 1 km و250 m. الخطأ الشائع 1 km و25 m من خطأٍ في رتبة العدد الباقي.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ركضت سلمى 1,5 km صباحًا و800 m مساءً. كم مترًا قطعت جملةً؟",
+      "options": [
+        { "id": "a", "text": "950 m" },
+        { "id": "b", "text": "1 580 m" },
+        { "id": "c", "text": "2 300 m" },
+        { "id": "d", "text": "9 500 m" }
+      ],
+      "correctOption": "c",
+      "explanation": "نوحّد الوحدة: 1,5 km = 1 500 m، ثمّ نجمع: 1 500 + 800 = 2 300. إذن قطعت 2 300 m. الخطأ الشائع جمع 150 + 800 من تحويل 1,5 km إلى 150 m (×100) بدل 1 500 m (×1000).",
+      "difficulty": 3
     }
   ]
 }
