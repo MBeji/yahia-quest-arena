@@ -1,0 +1,117 @@
+name: db-migrate-prod
+
+# THE sanctioned way to apply Supabase migrations to PRODUCTION (CLAUDE.md §7).
+# Nobody runs prod migrations by hand anymore: author the migration, merge it,
+# this workflow applies it. Credentials never leave GitHub secrets.
+#
+#   push (main, supabase/migrations/**) -> auto-apply pending migrations to prod
+#   workflow_dispatch                   -> manual: push | list (read-only) | repair-all
+#
+# Safety: a fresh pg_dump of prod is taken & uploaded BEFORE any apply; the
+# scripts/db/push-prod.mjs guard refuses to run unless the URL targets prod (and
+# never test); the pending list is printed before AND after. Reuses the existing
+# PROD_SUPABASE_DB_URL secret (same one db-backup.yml uses).
+
+on:
+  push:
+    branches: [main]
+    paths: ["supabase/migrations/**"]
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "push = apply pending · list = read-only diff · repair-all = one-time bootstrap (mark all local as applied)"
+        type: choice
+        options: [push, list, repair-all]
+        default: push
+
+# Never let two prod migration runs overlap.
+concurrency:
+  group: db-migrate-prod
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  migrate:
+    name: Apply migrations to prod
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      MODE: ${{ github.event.inputs.mode || 'push' }}
+      PROD_SUPABASE_DB_URL: ${{ secrets.PROD_SUPABASE_DB_URL }}
+    steps:
+      - name: Guard — prod secret present
+        run: |
+          if [ -z "${PROD_SUPABASE_DB_URL}" ]; then
+            echo "::error::Secret PROD_SUPABASE_DB_URL manquant (Settings > Secrets and variables > Actions)."
+            exit 1
+          fi
+          echo "Mode: ${MODE}"
+
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install the Supabase CLI
+        # Pinned to the same version as db-tests.yml / e2e-auth.yml for a
+        # deterministic toolchain. Bump deliberately, with a green run.
+        uses: supabase/setup-cli@v1
+        with:
+          version: 2.106.0
+
+      # --- Pre-apply safety net: a fresh prod dump (skipped for read-only list) ---
+      - name: Install postgresql-client-17 (prod runs Postgres 17.x)
+        if: ${{ env.MODE != 'list' }}
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-common >/dev/null
+          yes | sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh >/dev/null
+          sudo apt-get install -y -qq postgresql-client-17 >/dev/null
+          echo "/usr/lib/postgresql/17/bin" >> "$GITHUB_PATH"
+
+      - name: Backup prod (pg_dump public+auth) BEFORE applying
+        if: ${{ env.MODE != 'list' }}
+        run: |
+          set -euo pipefail
+          STAMP="$(date -u +%Y%m%d-%H%M%S)"
+          FILE="prod-pre-migration-${STAMP}.dump"
+          pg_dump "${PROD_SUPABASE_DB_URL}" -Fc --schema=public --schema=auth -f "$FILE"
+          OBJECTS=$(pg_restore --list "$FILE" | wc -l)
+          echo "STAMP=$STAMP" >> "$GITHUB_ENV"
+          echo "FILE=$FILE" >> "$GITHUB_ENV"
+          echo "### Pre-migration backup \`$FILE\` — $OBJECTS objects" >> "$GITHUB_STEP_SUMMARY"
+          # Abort the whole run if the dump looks empty/broken — never apply on top
+          # of a backup we couldn't trust.
+          [ "$OBJECTS" -gt 50 ] || { echo "::error::Dump suspect ($OBJECTS objets) — abort avant migration."; exit 1; }
+
+      - name: Upload pre-migration backup (retention 14 j)
+        if: ${{ env.MODE != 'list' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: prod-pre-migration-${{ env.STAMP }}
+          path: ${{ env.FILE }}
+          retention-days: 14
+          if-no-files-found: error
+
+      # --- Pending diff (read-only) — always shown first ---
+      - name: Pending migrations (before)
+        run: node scripts/db/push-prod.mjs --mode list
+
+      # --- Apply / bootstrap ---
+      - name: Apply pending migrations (db push)
+        if: ${{ env.MODE == 'push' }}
+        run: node scripts/db/push-prod.mjs --mode push
+
+      - name: Bootstrap — mark all local migrations as applied (repair-all)
+        if: ${{ env.MODE == 'repair-all' }}
+        run: node scripts/db/push-prod.mjs --mode repair-all
+
+      # --- Confirm the post-apply state ---
+      - name: Pending migrations (after)
+        if: ${{ env.MODE != 'list' }}
+        run: node scripts/db/push-prod.mjs --mode list
