@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة (نمط امتحان): قياس الأسوار",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "كم زاوية قائمة للمربّع؟",
+      "options": [
+        { "id": "a", "text": "زاويتان" },
+        { "id": "b", "text": "3 زوايا" },
+        { "id": "c", "text": "4 زوايا" },
+        { "id": "d", "text": "لا زوايا قائمة له" }
+      ],
+      "correctOption": "c",
+      "explanation": "المربّع له 4 أضلاع متساوية و4 زوايا قائمة، مثل المستطيل تمامًا.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "مربّعٌ ضلعه 8 cm. ما محيطه؟",
+      "options": [
+        { "id": "a", "text": "16 cm" },
+        { "id": "b", "text": "24 cm" },
+        { "id": "c", "text": "32 cm" },
+        { "id": "d", "text": "64 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "محيط المربّع = الضلع × 4 = 8 × 4 = 32 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "مستطيلٌ طوله 10 cm وعرضه 4 cm. ما محيطه؟",
+      "options": [
+        { "id": "a", "text": "14 cm" },
+        { "id": "b", "text": "28 cm" },
+        { "id": "c", "text": "40 cm" },
+        { "id": "d", "text": "24 cm" }
+      ],
+      "correctOption": "b",
+      "explanation": "المحيط = (الطول + العرض) × 2 = (10 + 4) × 2 = 14 × 2 = 28 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "مثلّثٌ أطوال أضلاعه 5 cm و6 cm و7 cm. ما محيطه؟",
+      "options": [
+        { "id": "a", "text": "18 cm" },
+        { "id": "b", "text": "17 cm" },
+        { "id": "c", "text": "210 cm" },
+        { "id": "d", "text": "11 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "محيط المضلّع = مجموع أطوال أضلاعه = 5 + 6 + 7 = 18 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما محيط هذا المستطيل؟<svg viewBox=\"0 0 150 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"20\" y=\"24\" width=\"110\" height=\"52\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><text x=\"75\" y=\"17\" font-size=\"11\" fill=\"currentColor\" text-anchor=\"middle\">9 cm</text><text x=\"10\" y=\"54\" font-size=\"11\" fill=\"currentColor\" text-anchor=\"middle\">5 cm</text></svg>",
+      "options": [
+        { "id": "a", "text": "14 cm" },
+        { "id": "b", "text": "28 cm" },
+        { "id": "c", "text": "45 cm" },
+        { "id": "d", "text": "18 cm" }
+      ],
+      "correctOption": "b",
+      "explanation": "الطول 9 cm والعرض 5 cm. المحيط = (9 + 5) × 2 = 14 × 2 = 28 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ عبارةٍ صحيحة عن المربّع والمستطيل؟",
+      "options": [
+        { "id": "a", "text": "كلّ مستطيلٍ هو مربّع" },
+        { "id": "b", "text": "المربّع لا زوايا قائمة له" },
+        { "id": "c", "text": "للمستطيل 3 أضلاع" },
+        { "id": "d", "text": "كلّ مربّعٍ هو مستطيل" }
+      ],
+      "correctOption": "d",
+      "explanation": "المربّع حالة خاصّة من المستطيل (له 4 زوايا قائمة وزيادةً كلّ أضلاعه متساوية)، فكلّ مربّعٍ مستطيل، وليس العكس.",
+      "difficulty": 2
+    }
+  ]
+}
