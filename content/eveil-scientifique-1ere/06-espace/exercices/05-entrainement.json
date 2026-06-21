@@ -1,0 +1,82 @@
+{
+  "title": "📝 تدريب ⭐⭐⭐ المواقع والمقارنات (مراجعة شاملة)",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "ما عكس كلمة «فوق»؟",
+      "options": [
+        { "id": "a", "text": "أمام" },
+        { "id": "b", "text": "تحت" },
+        { "id": "c", "text": "يمين" },
+        { "id": "d", "text": "قرب" }
+      ],
+      "correctOption": "b",
+      "explanation": "عكس فوق هو تحت: فوق في الأعلى، وتحت في الأسفل.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما عكس كلمة «داخل»؟",
+      "options": [
+        { "id": "a", "text": "أعلى" },
+        { "id": "b", "text": "أطول" },
+        { "id": "c", "text": "خارج" },
+        { "id": "d", "text": "يسار" }
+      ],
+      "correctOption": "c",
+      "explanation": "عكس داخل هو خارج: داخل في الدّاخل، وخارج في الخارج.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أين النجمة بالنسبة إلى الصندوق؟ <svg viewBox=\"0 0 130 90\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"30\" y=\"24\" width=\"54\" height=\"46\" stroke=\"#1f2937\" stroke-width=\"2\" fill=\"none\"/><polygon points=\"57,30 61,40 72,40 63,47 66,58 57,51 48,58 51,47 42,40 53,40\" stroke=\"#1f2937\" stroke-width=\"2\" fill=\"#1f2937\"/></svg>",
+      "options": [
+        { "id": "a", "text": "داخل الصندوق" },
+        { "id": "b", "text": "خارج الصندوق" },
+        { "id": "c", "text": "فوق الصندوق" },
+        { "id": "d", "text": "تحت الصندوق" }
+      ],
+      "correctOption": "a",
+      "explanation": "النجمة محاطة بجوانب الصندوق، فهي داخل الصندوق.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "أيّ شكلٍ أكبر؟ <svg viewBox=\"0 0 150 80\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"16\" y=\"40\" width=\"24\" height=\"24\" stroke=\"#1f2937\" stroke-width=\"2\" fill=\"#e5e7eb\"/><rect x=\"86\" y=\"14\" width=\"52\" height=\"52\" stroke=\"#1f2937\" stroke-width=\"2\" fill=\"#e5e7eb\"/></svg>",
+      "options": [
+        { "id": "a", "text": "المربّع الصغير على اليسار" },
+        { "id": "b", "text": "هما متساويان" },
+        { "id": "c", "text": "لا يوجد مربّع كبير" },
+        { "id": "d", "text": "المربّع الكبير على اليمين" }
+      ],
+      "correctOption": "d",
+      "explanation": "المربّع على اليمين أوسع، فهو الأكبر، والمربّع على اليسار أصغر منه.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "أين القلم بالنسبة إلى الكتاب؟ <svg viewBox=\"0 0 150 90\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"30\" y=\"30\" width=\"50\" height=\"38\" stroke=\"#1f2937\" stroke-width=\"2\" fill=\"#e5e7eb\"/><rect x=\"96\" y=\"42\" width=\"40\" height=\"10\" stroke=\"#1f2937\" stroke-width=\"2\" fill=\"#9ca3af\"/></svg>",
+      "options": [
+        { "id": "a", "text": "يسار الكتاب" },
+        { "id": "b", "text": "يمين الكتاب" },
+        { "id": "c", "text": "فوق الكتاب" },
+        { "id": "d", "text": "تحت الكتاب" }
+      ],
+      "correctOption": "b",
+      "explanation": "القلم على الجهة اليمنى من الكتاب، فهو يمين الكتاب.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "بيتٌ قريبٌ منك وبيتٌ بعيد. إلى أيّهما تصل أسرع مشيًا؟",
+      "options": [
+        { "id": "a", "text": "البيت البعيد" },
+        { "id": "b", "text": "لا فرق بينهما" },
+        { "id": "c", "text": "البيت القريب" },
+        { "id": "d", "text": "لا أصل إلى أيّ بيت" }
+      ],
+      "correctOption": "c",
+      "explanation": "البيت القريب أقصر مسافةً، فتصل إليه أسرع من البيت البعيد.",
+      "difficulty": 3
+    }
+  ]
+}

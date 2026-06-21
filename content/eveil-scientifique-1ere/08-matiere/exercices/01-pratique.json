@@ -1,0 +1,154 @@
+{
+  "title": "⭐ تمرين: أتعرّف على خصائص الأشياء",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "البرتقالة شكلها:",
+      "options": [
+        {
+          "id": "a",
+          "text": "كرة"
+        },
+        {
+          "id": "b",
+          "text": "مكعّب"
+        },
+        {
+          "id": "c",
+          "text": "أسطوانة"
+        },
+        {
+          "id": "d",
+          "text": "مربّع"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "البرتقالة مستديرة، فشكلها كرة مثل كرة القدم.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "انظر إلى الشكل. ما اسمه؟<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"30,40 70,40 70,80 30,80\" fill=\"#e5e7eb\" stroke=\"#1f2937\" stroke-width=\"3\"/><polygon points=\"30,40 45,25 85,25 70,40\" fill=\"#d1d5db\" stroke=\"#1f2937\" stroke-width=\"3\"/><polygon points=\"70,40 85,25 85,65 70,80\" fill=\"#cbd1d9\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "كرة"
+        },
+        {
+          "id": "b",
+          "text": "مكعّب"
+        },
+        {
+          "id": "c",
+          "text": "أسطوانة"
+        },
+        {
+          "id": "d",
+          "text": "دائرة"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "هذا الشكل له ستّة وجوهٍ مربّعة مثل حبّة النرد، فهو مكعّب.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "الحليب الذي نشربه في الصباح هو:",
+      "options": [
+        {
+          "id": "a",
+          "text": "صلب"
+        },
+        {
+          "id": "b",
+          "text": "حجر"
+        },
+        {
+          "id": "c",
+          "text": "سائل"
+        },
+        {
+          "id": "d",
+          "text": "خشب"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "الحليب يجري ويأخذ شكل الكوب، فهو سائل.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أيّ هذه الأشياء لونه أخضر عادةً؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "الفحم"
+        },
+        {
+          "id": "b",
+          "text": "الثلج"
+        },
+        {
+          "id": "c",
+          "text": "الموزة"
+        },
+        {
+          "id": "d",
+          "text": "العشب"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "العشب لونه أخضر، والفحم أسود، والثلج أبيض، والموزة صفراء.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "الإسفنج طريٌّ ينضغط بسهولة، فهو:",
+      "options": [
+        {
+          "id": "a",
+          "text": "ليّن"
+        },
+        {
+          "id": "b",
+          "text": "صلب"
+        },
+        {
+          "id": "c",
+          "text": "خشن"
+        },
+        {
+          "id": "d",
+          "text": "سائل"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "ما ينضغط بسهولة تحت اليد يكون ليّنًا، مثل الإسفنج والعجين.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "الحجر قاسٍ لا ينضغط، فهو:",
+      "options": [
+        {
+          "id": "a",
+          "text": "ليّن"
+        },
+        {
+          "id": "b",
+          "text": "صلب"
+        },
+        {
+          "id": "c",
+          "text": "سائل"
+        },
+        {
+          "id": "d",
+          "text": "أملس دائمًا"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "الحجر قاسٍ لا ينضغط، فهو صلب.",
+      "difficulty": 2
+    }
+  ]
+}
