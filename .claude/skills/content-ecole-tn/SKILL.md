@@ -105,6 +105,9 @@ conventions. Exam-year grades (6ème/9ème/Bac) should reflect real exam (concou
 
 ## Then validate and stop
 
-`npm run content:check` → `npm run content:qa:strict` → report (files created, grade/subject,
-official-program coverage, anything flagged off-program, QA results, and the build/apply/PR steps for
-the human). Do not build/apply or push unless asked.
+`npm run content:check` → `npm run content:qa:strict` → `npm run content:audit` (program conformance &
+coverage vs the grade manifest under `references/programmes-officiels/manifest/` — flags missing
+subjects/chapters, off-program chapters, and incomplete chapters; codify the chapter list there while
+reading the CNP guide) → report (files created, grade/subject, official-program coverage, anything
+flagged off-program, QA + audit results, and the build/apply/PR steps for the human). Do not build/apply
+or push unless asked.
