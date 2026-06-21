@@ -252,13 +252,22 @@ the project stays regression- and debt-free while being improved by AI.
    the feature's `__tests__/`. Coverage must not regress.
 6. **Small, reviewable commits.** Branch off `main`; commit/push only when asked.
    Conventional-commit style messages (`feat:`, `fix:`, `test:`, `chore:`…).
-7. **DB ↔ code changes are coordinated.** Pushing to `main` **auto-deploys to
-   Vercel production**. So when a code change depends on a new Supabase migration
-   (new table/column/RPC, or revoked grants), the migration MUST be applied to the
-   DB **before** the code is pushed/deployed — otherwise prod runs code against a
-   schema that doesn't support it. Order: apply migration → verify → then push code.
-   Migrations are not auto-applied by the repo; apply them via the Supabase SQL
-   editor or `supabase db push`.
+7. **DB ↔ code changes are coordinated — prod migrations auto-apply, never by
+   hand.** Pushing to `main` auto-deploys to Vercel **and** auto-applies any new
+   `supabase/migrations/**` to the production Supabase DB via
+   [`db-migrate-prod.yml`](.github/workflows/db-migrate-prod.yml) (it takes a
+   pre-apply `pg_dump` backup, guards that the target really is prod, then runs
+   `supabase db push`; it reuses the existing `PROD_SUPABASE_DB_URL` secret — no
+   credentials ever leave GitHub). **Do NOT apply prod migrations manually** (no
+   SQL editor, no local `db push`): author the migration, merge it, the workflow
+   applies it. It can also be dispatched by hand — `push` / read-only `list` /
+   one-time `repair-all` — from the Actions tab or
+   `gh workflow run db-migrate-prod.yml`. Additive migrations are safe ahead of
+   the code that uses them, so the order still holds: land the migration (it
+   applies on merge) → then the dependent code. Ship a **destructive** migration
+   (DROP/REVOKE) in a **separate** merge, **after** the code that stopped using the
+   old shape is live. The `pgTAP suite` check proves every migration applies
+   cleanly on a fresh DB before merge.
 
 When unsure about scope or a destructive action, ask before proceeding.
 

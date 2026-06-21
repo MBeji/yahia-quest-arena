@@ -65,6 +65,7 @@ parents n'est jamais touché).
 
 ## Workflow DB ↔ code
 
-Le SQL généré doit être **appliqué à la base avant** que le code dépendant ne
-soit déployé (voir `CLAUDE.md` §7). Ordre : `content:build` → relire le SQL →
-appliquer la migration (SQL editor ou `supabase db push`) → pousser le code.
+Le SQL généré est **appliqué automatiquement à la prod au merge sur `main`**
+(workflow `db-migrate-prod.yml`, voir `CLAUDE.md` §7) — on n'applique **jamais**
+à la main. Ordre : `content:build` → relire le SQL → ouvrir la PR → merge (la
+migration part en prod toute seule) → le code dépendant suit.
