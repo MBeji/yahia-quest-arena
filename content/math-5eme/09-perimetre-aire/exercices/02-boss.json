@@ -1,5 +1,5 @@
 {
-  "title": "⚔️ زعيم الفصل ⭐⭐⭐: حارس المحيط والمساحة",
+  "title": "⚔️ زعيم الفصل ⭐⭐⭐: معركة المحيط والمساحة",
   "difficulty": 3,
   "mode": "boss",
   "xpReward": 120,
@@ -7,75 +7,75 @@
   "displayOrder": 2,
   "questions": [
     {
-      "prompt": "مستطيلٌ طوله 8 cm وعرضه 5 cm. ما مساحته؟ <svg viewBox=\"0 0 100 100\"><rect x=\"14\" y=\"34\" width=\"72\" height=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><text x=\"40\" y=\"29\" font-size=\"10\" fill=\"currentColor\">8 cm</text><text x=\"3\" y=\"54\" font-size=\"10\" fill=\"currentColor\">5</text></svg>",
+      "prompt": "ما مساحة مستطيلٍ طوله 12 cm وعرضه 5 cm؟",
       "options": [
-        { "id": "a", "text": "26 cm²" },
-        { "id": "b", "text": "13 cm²" },
-        { "id": "c", "text": "40 cm²" },
-        { "id": "d", "text": "40 cm" }
+        { "id": "a", "text": "17 cm²" },
+        { "id": "b", "text": "34 cm²" },
+        { "id": "c", "text": "60 cm²" },
+        { "id": "d", "text": "60 cm" }
       ],
       "correctOption": "c",
-      "explanation": "مساحة المستطيل = الطول × العرض = 8 × 5 = 40 cm². أمّا 26 فهو المحيط.",
+      "explanation": "مساحة المستطيل = الطول × العرض = 12 × 5 = 60 cm². الخطأ الشائع: جمع الطول والعرض (12 + 5 = 17) بدل ضربهما، وهذا حسابُ نصف المحيط لا المساحة.",
       "difficulty": 2
     },
     {
-      "prompt": "ما محيط نفس المستطيل (طوله 8 cm وعرضه 5 cm)؟",
+      "prompt": "مربّعٌ طول ضلعه 6 m. ما الفرق بين محيطه ومساحته (عددًا)؟",
       "options": [
-        { "id": "a", "text": "26 cm" },
-        { "id": "b", "text": "40 cm" },
-        { "id": "c", "text": "13 cm" },
-        { "id": "d", "text": "16 cm" }
+        { "id": "a", "text": "المحيط 24 m والمساحة 36 m²" },
+        { "id": "b", "text": "المحيط 36 m والمساحة 24 m²" },
+        { "id": "c", "text": "المحيط 24 m² والمساحة 36 m" },
+        { "id": "d", "text": "المحيط 12 m والمساحة 36 m²" }
       ],
       "correctOption": "a",
-      "explanation": "محيط المستطيل = 2 × (8 + 5) = 2 × 13 = 26 cm. لاحظ أنّ المحيط والمساحة مفهومان مختلفان لنفس الشكل.",
+      "explanation": "المحيط = الضلع × 4 = 6 × 4 = 24 m، والمساحة = الضلع × الضلع = 6 × 6 = 36 m². الخطأ الشائع: قلب العمليّتين أو الخلط بين الوحدتين؛ المحيط وحدته m والمساحة وحدتها m².",
       "difficulty": 2
     },
     {
-      "prompt": "مربّعٌ ضلعه 6 cm. كم تساوي مساحته؟",
+      "prompt": "ما مساحة هذا المستطيل؟ <svg viewBox=\"0 0 100 100\"><rect x=\"12\" y=\"32\" width=\"76\" height=\"42\" fill=\"#e5e7eb\" stroke=\"currentColor\" stroke-width=\"2.5\"/><text x=\"38\" y=\"27\" font-size=\"10\" fill=\"currentColor\">9 cm</text><text x=\"2\" y=\"56\" font-size=\"10\" fill=\"currentColor\">4 cm</text></svg>",
       "options": [
-        { "id": "a", "text": "24 cm²" },
-        { "id": "b", "text": "12 cm²" },
+        { "id": "a", "text": "13 cm²" },
+        { "id": "b", "text": "26 cm²" },
         { "id": "c", "text": "36 cm" },
         { "id": "d", "text": "36 cm²" }
       ],
       "correctOption": "d",
-      "explanation": "مساحة المربّع = الضلع × الضلع = 6 × 6 = 36 cm². أمّا 24 فهو المحيط (4 × 6).",
-      "difficulty": 2
-    },
-    {
-      "prompt": "كم مترًا مربّعًا في الكيلومتر المربّع الواحد؟",
-      "options": [
-        { "id": "a", "text": "1 000 m²" },
-        { "id": "b", "text": "1 000 000 m²" },
-        { "id": "c", "text": "10 000 m²" },
-        { "id": "d", "text": "100 000 m²" }
-      ],
-      "correctOption": "b",
-      "explanation": "بما أنّ 1 km = 1 000 m، فإنّ 1 km² = 1 000 × 1 000 = 1 000 000 m². نضرب طول التحويل في نفسه.",
+      "explanation": "من الرسم الطول 9 cm والعرض 4 cm، فالمساحة = الطول × العرض = 9 × 4 = 36 cm². الخطأ الشائع: حساب المحيط (9 + 4) × 2 = 26 cm بدل المساحة المطلوبة، أو نسيان أنّ وحدة المساحة مربّعة (cm² لا cm).",
       "difficulty": 3
     },
     {
-      "prompt": "مساحةٌ قدرها 2 m². كم تساوي بالـ cm²؟",
+      "prompt": "أرضيّة غرفةٍ مربّعةٍ طول ضلعها 5 m. نريد تبليطها كاملةً. ما المساحة التي نغطّيها؟",
       "options": [
-        { "id": "a", "text": "200 cm²" },
-        { "id": "b", "text": "2 000 cm²" },
-        { "id": "c", "text": "20 000 cm²" },
-        { "id": "d", "text": "20 cm²" }
+        { "id": "a", "text": "10 m²" },
+        { "id": "b", "text": "20 m²" },
+        { "id": "c", "text": "25 m²" },
+        { "id": "d", "text": "25 m" }
       ],
       "correctOption": "c",
-      "explanation": "بما أنّ 1 m² = 10 000 cm²، فإنّ 2 m² = 2 × 10 000 = 20 000 cm².",
+      "explanation": "البلاط يغطّي السطح فنحسب المساحة = الضلع × الضلع = 5 × 5 = 25 m². الخطأ الشائع: حساب المحيط 5 × 4 = 20 m، لكنّ المحيط للسياج لا للبلاط، والبلاط مساحةٌ بوحدة m².",
       "difficulty": 3
     },
     {
-      "prompt": "مثلّثٌ أضلاعه 9 cm و 12 cm و 8 cm. ما محيطه؟",
+      "prompt": "ما مساحة هذا الشكل المركّب على شكل حرف L؟ <svg viewBox=\"0 0 110 100\"><polygon points=\"15,15 60,15 60,50 95,50 95,85 15,85\" fill=\"#e5e7eb\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"15\" y1=\"50\" x2=\"60\" y2=\"50\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-dasharray=\"4 3\"/><text x=\"32\" y=\"11\" font-size=\"8\" fill=\"currentColor\">5 cm</text><text x=\"2\" y=\"35\" font-size=\"8\" fill=\"currentColor\">4 cm</text><text x=\"44\" y=\"71\" font-size=\"8\" fill=\"currentColor\">8 cm</text><text x=\"2\" y=\"71\" font-size=\"8\" fill=\"currentColor\">3 cm</text></svg>",
       "options": [
-        { "id": "a", "text": "29 cm" },
-        { "id": "b", "text": "21 cm" },
-        { "id": "c", "text": "864 cm" },
-        { "id": "d", "text": "29 cm²" }
+        { "id": "a", "text": "24 cm²" },
+        { "id": "b", "text": "44 cm²" },
+        { "id": "c", "text": "20 cm²" },
+        { "id": "d", "text": "40 cm²" }
+      ],
+      "correctOption": "b",
+      "explanation": "نقسّم الشكل بالخطّ المتقطّع إلى مستطيلين: علويٌّ 5 × 4 = 20 cm²، وسفليٌّ 8 × 3 = 24 cm². المساحة = 20 + 24 = 44 cm². الخطأ الشائع: حساب مستطيلٍ واحدٍ فقط (20 أو 24) ونسيان جمع الجزأين.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "مستطيلٌ مساحته 48 cm² وطوله 8 cm. ما عرضه؟",
+      "options": [
+        { "id": "a", "text": "6 cm" },
+        { "id": "b", "text": "40 cm" },
+        { "id": "c", "text": "16 cm" },
+        { "id": "d", "text": "384 cm" }
       ],
       "correctOption": "a",
-      "explanation": "محيط المثلّث = مجموع أضلاعه = 9 + 12 + 8 = 29 cm.",
+      "explanation": "بما أنّ المساحة = الطول × العرض، فالعرض = المساحة ÷ الطول = 48 ÷ 8 = 6 cm. تحقّق: 8 × 6 = 48 cm² ✓. الخطأ الشائع: طرح الطول من المساحة (48 − 8 = 40) بدل القسمة عليه.",
       "difficulty": 3
     }
   ]

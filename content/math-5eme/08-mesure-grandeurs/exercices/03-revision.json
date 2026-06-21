@@ -1,81 +1,81 @@
 {
-  "title": "⭐⭐ تمرين مراجعة (نمط امتحان): القيس والتحويلات",
+  "title": "⭐⭐ تمرين مراجعة (نمط امتحان): القيس والتحويل",
   "difficulty": 2,
   "mode": "practice",
-  "xpReward": 70,
+  "xpReward": 75,
   "rewardCoins": 15,
   "displayOrder": 3,
   "questions": [
     {
-      "prompt": "كم ميليمترًا في 5 cm؟",
+      "prompt": "كم مليمترًا يساوي 1 m؟",
       "options": [
-        { "id": "a", "text": "5 mm" },
-        { "id": "b", "text": "500 mm" },
-        { "id": "c", "text": "55 mm" },
-        { "id": "d", "text": "50 mm" }
-      ],
-      "correctOption": "d",
-      "explanation": "نعرف أنّ 1 cm = 10 mm، فنضرب في 10: 5 × 10 = 50 mm.",
-      "difficulty": 1
-    },
-    {
-      "prompt": "كم كيلوغرامًا في 4 t؟",
-      "options": [
-        { "id": "a", "text": "40 kg" },
-        { "id": "b", "text": "400 kg" },
-        { "id": "c", "text": "4 000 kg" },
-        { "id": "d", "text": "40 000 kg" }
-      ],
-      "correctOption": "c",
-      "explanation": "نعرف أنّ 1 t = 1 000 kg، فنضرب في 1 000: 4 × 1 000 = 4 000 kg.",
-      "difficulty": 1
-    },
-    {
-      "prompt": "كم لترًا في 3 000 mL؟",
-      "options": [
-        { "id": "a", "text": "3 L" },
-        { "id": "b", "text": "30 L" },
-        { "id": "c", "text": "0,3 L" },
-        { "id": "d", "text": "300 L" }
-      ],
-      "correctOption": "a",
-      "explanation": "نصعد من الميليلتر إلى اللتر بالقسمة على 1 000 لأنّ 1 L = 1 000 mL: 3 000 ÷ 1 000 = 3 L.",
-      "difficulty": 2
-    },
-    {
-      "prompt": "كم دقيقة في 4 h؟",
-      "options": [
-        { "id": "a", "text": "400 min" },
-        { "id": "b", "text": "240 min" },
-        { "id": "c", "text": "40 min" },
-        { "id": "d", "text": "120 min" }
+        { "id": "a", "text": "100 mm" },
+        { "id": "b", "text": "1 000 mm" },
+        { "id": "c", "text": "10 mm" },
+        { "id": "d", "text": "10 000 mm" }
       ],
       "correctOption": "b",
-      "explanation": "الساعة 60 دقيقة، فـ 4 h = 4 × 60 = 240 min.",
-      "difficulty": 2
+      "explanation": "بين m و mm ثلاث خانات فالعامل 1000: 1 × 1 000 = 1 000. إذن 1 m = 1 000 mm.",
+      "difficulty": 1
     },
     {
-      "prompt": "كم مترًا في 2,5 km؟",
+      "prompt": "كم كيلوغرامًا يساوي 3 t؟",
       "options": [
-        { "id": "a", "text": "250 m" },
-        { "id": "b", "text": "25 m" },
-        { "id": "c", "text": "25 000 m" },
-        { "id": "d", "text": "2 500 m" }
+        { "id": "a", "text": "3 000 kg" },
+        { "id": "b", "text": "300 kg" },
+        { "id": "c", "text": "30 kg" },
+        { "id": "d", "text": "30 000 kg" }
       ],
-      "correctOption": "d",
-      "explanation": "نضرب في 1 000 لأنّ 1 km = 1 000 m: 2,5 × 1 000 = 2 500 m.",
-      "difficulty": 2
+      "correctOption": "a",
+      "explanation": "العامل بين t و kg هو 1000، نضرب: 3 × 1 000 = 3 000. إذن 3 t = 3 000 kg.",
+      "difficulty": 1
     },
     {
-      "prompt": "كم غرامًا في 0,5 kg؟",
+      "prompt": "أيّ وحدةٍ نختار لقياس سُمك دفتر؟",
       "options": [
-        { "id": "a", "text": "5 g" },
-        { "id": "b", "text": "50 g" },
-        { "id": "c", "text": "500 g" },
-        { "id": "d", "text": "5 000 g" }
+        { "id": "a", "text": "المتر (m)" },
+        { "id": "b", "text": "الكيلومتر (km)" },
+        { "id": "c", "text": "الميليمتر (mm)" },
+        { "id": "d", "text": "اللتر (L)" }
       ],
       "correctOption": "c",
-      "explanation": "نضرب في 1 000 لأنّ 1 kg = 1 000 g: 0,5 × 1 000 = 500 g (نصف كيلوغرام).",
+      "explanation": "سُمك الدفتر صغيرٌ جدًّا، فنختار الوحدة الصغيرة وهي الميليمتر (mm)، مثل 8 mm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم لترًا يساوي 3 000 mL؟",
+      "options": [
+        { "id": "a", "text": "30 L" },
+        { "id": "b", "text": "300 L" },
+        { "id": "c", "text": "0,3 L" },
+        { "id": "d", "text": "3 L" }
+      ],
+      "correctOption": "d",
+      "explanation": "من mL إلى L نصعد ثلاث خانات فنقسم على 1000: 3 000 ÷ 1 000 = 3. إذن 3 000 mL = 3 L.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "حقيبةٌ كتلتها 2 kg ووُضع فيها كتابٌ كتلته 500 g. ما الكتلة الجمليّة بالغرامات؟",
+      "options": [
+        { "id": "a", "text": "700 g" },
+        { "id": "b", "text": "2 500 g" },
+        { "id": "c", "text": "250 g" },
+        { "id": "d", "text": "520 g" }
+      ],
+      "correctOption": "b",
+      "explanation": "نوحّد الوحدة أوّلًا: 2 kg = 2 000 g، ثمّ نجمع: 2 000 + 500 = 2 500. إذن الكتلة الجمليّة 2 500 g.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم مترًا يساوي 7,3 km؟",
+      "options": [
+        { "id": "a", "text": "73 m" },
+        { "id": "b", "text": "730 m" },
+        { "id": "c", "text": "7 300 m" },
+        { "id": "d", "text": "73 000 m" }
+      ],
+      "correctOption": "c",
+      "explanation": "بين km و m ثلاث خانات فالعامل 1000: 7,3 × 1 000 = 7 300. إذن 7,3 km = 7 300 m.",
       "difficulty": 2
     }
   ]

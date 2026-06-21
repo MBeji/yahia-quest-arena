@@ -1,5 +1,5 @@
 {
-  "title": "⭐ تمرين: أوّل خطوات في الهندسة",
+  "title": "⭐ تمرين: أوّلُ خطوات في الهندسة",
   "difficulty": 1,
   "mode": "practice",
   "xpReward": 50,
@@ -7,31 +7,31 @@
   "displayOrder": 1,
   "questions": [
     {
-      "prompt": "ما الرمز الذي يدلّ على التوازي؟",
+      "prompt": "ما رمزُ التعامد بين مستقيمين؟",
       "options": [
-        { "id": "a", "text": "⊥" },
-        { "id": "b", "text": "∥" },
+        { "id": "a", "text": "∥" },
+        { "id": "b", "text": "⊥" },
         { "id": "c", "text": "=" },
-        { "id": "d", "text": "×" }
+        { "id": "d", "text": "+" }
       ],
       "correctOption": "b",
-      "explanation": "نرمز للتوازي بـ ∥ بين مستقيمين لا يتقاطعان. أمّا ⊥ فهو رمز التعامد.",
+      "explanation": "رمزُ التعامد هو ⊥، أمّا ∥ فهو رمزُ التوازي.",
       "difficulty": 1
     },
     {
-      "prompt": "كم ضلعًا للمثلّث؟",
+      "prompt": "ماذا يمثّل هذا الشكل؟ <svg viewBox=\"0 0 100 100\"><line x1=\"8\" y1=\"38\" x2=\"92\" y2=\"38\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"8\" y1=\"66\" x2=\"92\" y2=\"66\" stroke=\"currentColor\" stroke-width=\"2.5\"/><polyline points=\"46,32 53,38 46,44\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"1.6\"/><polyline points=\"46,60 53,66 46,72\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"1.6\"/></svg>",
       "options": [
-        { "id": "a", "text": "4 أضلاع" },
-        { "id": "b", "text": "ضلعان" },
-        { "id": "c", "text": "3 أضلاع" },
-        { "id": "d", "text": "5 أضلاع" }
+        { "id": "a", "text": "مثلّث" },
+        { "id": "b", "text": "زاوية قائمة" },
+        { "id": "c", "text": "مستقيمان متعامدان" },
+        { "id": "d", "text": "مستقيمان متوازيان" }
       ],
-      "correctOption": "c",
-      "explanation": "المثلّث مضلّعٌ له 3 أضلاع و3 رؤوس و3 زوايا.",
+      "correctOption": "d",
+      "explanation": "المستقيمان لا يتقاطعان والسهمان المتماثلان يدلّان على التوازي، فهما متوازيان.",
       "difficulty": 1
     },
     {
-      "prompt": "ما نوع الزاوية في الشكل التالي؟ <svg viewBox=\"0 0 100 100\"><line x1=\"20\" y1=\"80\" x2=\"90\" y2=\"80\" stroke=\"currentColor\" stroke-width=\"3\"/><line x1=\"20\" y1=\"80\" x2=\"78\" y2=\"28\" stroke=\"currentColor\" stroke-width=\"3\"/><circle cx=\"20\" cy=\"80\" r=\"2.5\" fill=\"currentColor\"/></svg>",
+      "prompt": "ما نوعُ هذه الزاوية؟ <svg viewBox=\"0 0 100 100\"><line x1=\"50\" y1=\"82\" x2=\"95\" y2=\"82\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"50\" y1=\"82\" x2=\"89\" y2=\"60\" stroke=\"currentColor\" stroke-width=\"2.5\"/><circle cx=\"50\" cy=\"82\" r=\"2.5\" fill=\"currentColor\"/></svg>",
       "options": [
         { "id": "a", "text": "حادّة" },
         { "id": "b", "text": "قائمة" },
@@ -39,43 +39,43 @@
         { "id": "d", "text": "مستقيمة" }
       ],
       "correctOption": "a",
-      "explanation": "انفتاح الزاوية ضيّقٌ أقلّ من الرّكن القائم، فهي زاويةٌ حادّة.",
+      "explanation": "الفتحةُ صغيرةٌ وأقلّ من 90°، فالزاوية حادّة.",
       "difficulty": 1
     },
     {
-      "prompt": "كم زاويةً قائمة للمربّع؟",
+      "prompt": "كم ضلعًا للرباعيّ؟",
       "options": [
-        { "id": "a", "text": "1" },
-        { "id": "b", "text": "2" },
-        { "id": "c", "text": "3" },
-        { "id": "d", "text": "4" }
+        { "id": "a", "text": "3" },
+        { "id": "b", "text": "4" },
+        { "id": "c", "text": "5" },
+        { "id": "d", "text": "6" }
       ],
-      "correctOption": "d",
-      "explanation": "للمربّع 4 زوايا قائمة و4 أضلاع متساوية.",
+      "correctOption": "b",
+      "explanation": "الرباعيُّ مضلّعٌ له 4 أضلاع و4 رؤوس (مثل المربّع والمستطيل والمعيّن ومتوازي الأضلاع).",
       "difficulty": 1
     },
     {
-      "prompt": "ما اسم القطعة التي تصل مركز الدائرة بأيّ نقطةٍ عليها؟",
+      "prompt": "مثلّثٌ أطوالُ أضلاعه 4 cm و4 cm و6 cm. ما نوعُه حسب الأضلاع؟",
       "options": [
-        { "id": "a", "text": "القطر" },
-        { "id": "b", "text": "الوتر" },
-        { "id": "c", "text": "الشعاع" },
-        { "id": "d", "text": "المحيط" }
+        { "id": "a", "text": "متساوي الأضلاع" },
+        { "id": "b", "text": "مختلف الأضلاع" },
+        { "id": "c", "text": "متساوي الساقين" },
+        { "id": "d", "text": "قائم الزاوية" }
       ],
       "correctOption": "c",
-      "explanation": "القطعة التي تصل المركز بنقطةٍ على الدائرة تُسمّى الشعاع، وكلّ الأشعّة متساوية.",
+      "explanation": "له ضلعان متساويان فقط (4 = 4) والثالث مختلف، فهو متساوي الساقين.",
       "difficulty": 2
     },
     {
-      "prompt": "ما العلاقة بين المستقيمين في الشكل التالي؟ <svg viewBox=\"0 0 100 100\"><line x1=\"10\" y1=\"35\" x2=\"90\" y2=\"35\" stroke=\"currentColor\" stroke-width=\"3\"/><line x1=\"10\" y1=\"65\" x2=\"90\" y2=\"65\" stroke=\"currentColor\" stroke-width=\"3\"/></svg>",
+      "prompt": "دائرةٌ قطرُها 12 cm. ما طولُ شعاعها؟",
       "options": [
-        { "id": "a", "text": "متوازيان" },
-        { "id": "b", "text": "متعامدان" },
-        { "id": "c", "text": "متقاطعان" },
-        { "id": "d", "text": "منطبقان" }
+        { "id": "a", "text": "24 cm" },
+        { "id": "b", "text": "12 cm" },
+        { "id": "c", "text": "6 cm" },
+        { "id": "d", "text": "10 cm" }
       ],
-      "correctOption": "a",
-      "explanation": "المستقيمان أفقيّان لا يتقاطعان ويحفظان نفس المسافة بينهما، فهما متوازيان (∥).",
+      "correctOption": "c",
+      "explanation": "الشعاعُ نصفُ القطر: r = d ÷ 2 = 12 ÷ 2 = 6 cm.",
       "difficulty": 2
     }
   ]

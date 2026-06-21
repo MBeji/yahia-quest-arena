@@ -1,5 +1,5 @@
 {
-  "title": "📝 تدريب ⭐⭐⭐: مراجعة شاملة للمحيط والمساحة",
+  "title": "📝 تدريب ⭐⭐⭐: المحيط والمساحة (مراجعة شاملة)",
   "difficulty": 3,
   "mode": "boss",
   "xpReward": 120,
@@ -7,75 +7,75 @@
   "displayOrder": 5,
   "questions": [
     {
-      "prompt": "ما محيط مربّعٍ ضلعه 9 cm؟",
-      "options": [
-        { "id": "a", "text": "36 cm" },
-        { "id": "b", "text": "81 cm" },
-        { "id": "c", "text": "18 cm" },
-        { "id": "d", "text": "36 cm²" }
-      ],
-      "correctOption": "a",
-      "explanation": "محيط المربّع = 4 × الضلع = 4 × 9 = 36 cm. أمّا 81 فهو المساحة (9 × 9).",
-      "difficulty": 2
-    },
-    {
-      "prompt": "ما مساحة مستطيلٍ طوله 7 cm وعرضه 5 cm؟ <svg viewBox=\"0 0 100 100\"><rect x=\"15\" y=\"34\" width=\"70\" height=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><text x=\"40\" y=\"29\" font-size=\"10\" fill=\"currentColor\">7 cm</text><text x=\"3\" y=\"54\" font-size=\"10\" fill=\"currentColor\">5</text></svg>",
-      "options": [
-        { "id": "a", "text": "24 cm²" },
-        { "id": "b", "text": "12 cm²" },
-        { "id": "c", "text": "35 cm²" },
-        { "id": "d", "text": "35 cm" }
-      ],
-      "correctOption": "c",
-      "explanation": "مساحة المستطيل = الطول × العرض = 7 × 5 = 35 cm². أمّا 24 فهو المحيط.",
-      "difficulty": 2
-    },
-    {
-      "prompt": "مثلّثٌ محيطه 24 cm، وضلعان منه 7 cm و 9 cm. ما طول الضلع الثالث؟",
-      "options": [
-        { "id": "a", "text": "16 cm" },
-        { "id": "b", "text": "8 cm" },
-        { "id": "c", "text": "40 cm" },
-        { "id": "d", "text": "6 cm" }
-      ],
-      "correctOption": "b",
-      "explanation": "مجموع الضلعين = 7 + 9 = 16 cm، فالضلع الثالث = المحيط − 16 = 24 − 16 = 8 cm.",
-      "difficulty": 3
-    },
-    {
-      "prompt": "كم سنتيمترًا مربّعًا تساوي 3 m²؟",
-      "options": [
-        { "id": "a", "text": "300 cm²" },
-        { "id": "b", "text": "3 000 cm²" },
-        { "id": "c", "text": "30 000 cm²" },
-        { "id": "d", "text": "30 cm²" }
-      ],
-      "correctOption": "c",
-      "explanation": "بما أنّ 1 m² = 10 000 cm²، فإنّ 3 m² = 3 × 10 000 = 30 000 cm².",
-      "difficulty": 3
-    },
-    {
-      "prompt": "محيط مربّعٍ يساوي 48 cm. ما طول ضلعه؟",
+      "prompt": "ما محيط مربّعٍ طول ضلعه 12 cm؟",
       "options": [
         { "id": "a", "text": "24 cm" },
-        { "id": "b", "text": "16 cm" },
-        { "id": "c", "text": "8 cm" },
-        { "id": "d", "text": "12 cm" }
+        { "id": "b", "text": "48 cm" },
+        { "id": "c", "text": "144 cm" },
+        { "id": "d", "text": "48 cm²" }
       ],
-      "correctOption": "d",
-      "explanation": "ضلع المربّع = المحيط ÷ 4 = 48 ÷ 4 = 12 cm.",
+      "correctOption": "b",
+      "explanation": "محيط المربّع = الضلع × 4 = 12 × 4 = 48 cm. الخطأ الشائع: حساب 12 × 12 = 144 وهو المساحة لا المحيط؛ والمحيط وحدته cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما مساحة مستطيلٍ طوله 7 m وعرضه 5 m؟",
+      "options": [
+        { "id": "a", "text": "12 m²" },
+        { "id": "b", "text": "24 m²" },
+        { "id": "c", "text": "35 m²" },
+        { "id": "d", "text": "35 m" }
+      ],
+      "correctOption": "c",
+      "explanation": "مساحة المستطيل = الطول × العرض = 7 × 5 = 35 m². الخطأ الشائع: جمع 7 + 5 = 12 بدل الضرب، أو نسيان أنّ وحدة المساحة مربّعة (m²).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما محيط هذا المستطيل؟ <svg viewBox=\"0 0 100 100\"><rect x=\"12\" y=\"32\" width=\"76\" height=\"42\" fill=\"#e5e7eb\" stroke=\"currentColor\" stroke-width=\"2.5\"/><text x=\"38\" y=\"27\" font-size=\"10\" fill=\"currentColor\">14 cm</text><text x=\"2\" y=\"56\" font-size=\"10\" fill=\"currentColor\">6 cm</text></svg>",
+      "options": [
+        { "id": "a", "text": "20 cm" },
+        { "id": "b", "text": "40 cm" },
+        { "id": "c", "text": "84 cm" },
+        { "id": "d", "text": "40 cm²" }
+      ],
+      "correctOption": "b",
+      "explanation": "من الرسم الطول 14 cm والعرض 6 cm، فالمحيط = (14 + 6) × 2 = 20 × 2 = 40 cm. الخطأ الشائع: حساب المساحة 14 × 6 = 84 cm² بدل المحيط المطلوب.",
       "difficulty": 3
     },
     {
-      "prompt": "مستطيلٌ طوله 12 cm وعرضه 8 cm. ما الفرق بين عددِ مساحته وعددِ محيطه؟",
+      "prompt": "مستطيلٌ مساحته 72 cm² وطوله 9 cm. ما عرضه؟",
       "options": [
-        { "id": "a", "text": "56" },
-        { "id": "b", "text": "40" },
-        { "id": "c", "text": "136" },
-        { "id": "d", "text": "0" }
+        { "id": "a", "text": "8 cm" },
+        { "id": "b", "text": "63 cm" },
+        { "id": "c", "text": "36 cm" },
+        { "id": "d", "text": "648 cm" }
       ],
       "correctOption": "a",
-      "explanation": "المساحة = 12 × 8 = 96 (cm²)، والمحيط = 2 × (12 + 8) = 2 × 20 = 40 (cm). الفرق بالعدد = 96 − 40 = 56، والوحدتان مختلفتان.",
+      "explanation": "العرض = المساحة ÷ الطول = 72 ÷ 9 = 8 cm. تحقّق: 9 × 8 = 72 cm² ✓. الخطأ الشائع: طرح الطول من المساحة (72 − 9 = 63) بدل القسمة عليه.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ما مساحة هذا الشكل المركّب على شكل حرف L؟ <svg viewBox=\"0 0 110 100\"><polygon points=\"15,15 55,15 55,55 95,55 95,85 15,85\" fill=\"#e5e7eb\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"55\" y1=\"55\" x2=\"15\" y2=\"55\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-dasharray=\"4 3\"/><text x=\"30\" y=\"11\" font-size=\"8\" fill=\"currentColor\">4 cm</text><text x=\"2\" y=\"38\" font-size=\"8\" fill=\"currentColor\">4 cm</text><text x=\"50\" y=\"75\" font-size=\"8\" fill=\"currentColor\">8 cm</text><text x=\"2\" y=\"75\" font-size=\"8\" fill=\"currentColor\">3 cm</text></svg>",
+      "options": [
+        { "id": "a", "text": "16 cm²" },
+        { "id": "b", "text": "24 cm²" },
+        { "id": "c", "text": "40 cm²" },
+        { "id": "d", "text": "32 cm²" }
+      ],
+      "correctOption": "c",
+      "explanation": "نقسّم بالخطّ المتقطّع إلى مستطيلين: علويٌّ 4 × 4 = 16 cm²، وسفليٌّ 8 × 3 = 24 cm². المساحة = 16 + 24 = 40 cm². الخطأ الشائع: حساب جزءٍ واحدٍ فقط ونسيان جمع المستطيلين.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "قاعةٌ مستطيلةٌ طولها 8 m وعرضها 5 m. نريد وضع شريطٍ زخرفيٍّ حول حافّتها وفرشَ سجّادٍ يغطّي أرضها. ما طول الشريط وما مساحة السجّاد؟",
+      "options": [
+        { "id": "a", "text": "الشريط 26 m والسجّاد 40 m²" },
+        { "id": "b", "text": "الشريط 40 m والسجّاد 26 m²" },
+        { "id": "c", "text": "الشريط 13 m والسجّاد 40 m²" },
+        { "id": "d", "text": "الشريط 26 m² والسجّاد 40 m" }
+      ],
+      "correctOption": "a",
+      "explanation": "الشريط يحيط بالحافّة فهو محيطٌ = (8 + 5) × 2 = 26 m. والسجّاد يغطّي السطح فهو مساحةٌ = 8 × 5 = 40 m². الخطأ الشائع: قلب المقدارين (محيط للسجّاد ومساحة للشريط) أو الخلط بين وحدتي m وm².",
       "difficulty": 3
     }
   ]
