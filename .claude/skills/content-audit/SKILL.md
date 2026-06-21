@@ -24,6 +24,17 @@ all. This skill is the deep net — a human-grade review of content that already
 `content/`, applying the same bar the authoring skills must meet
 (`content-engine/references/quality-bar.md` and `references/math-and-notation.md` — read both first).
 
+## Conformité au programme & couverture (`content:audit`) — école-tn
+
+The per-item checklist below audits what **exists**; it cannot see what is **missing**. For `ecole-tn`
+content, run **`npm run content:audit`** first: it diffs the content tree against the per-grade
+**program manifests** (`content-ecole-tn/references/programmes-officiels/manifest/<gradeSlug>.json` — a
+declarative transcription of the official CNP program) and reports, per grade + subject, **missing
+subjects**, **missing / off-program chapters**, and **incomplete chapters** (a chapter lacking course +
+summary + quiz + **at least one mission**), plus language mismatches. Advisory by default; `--strict`
+fails only on a **sealed** grade. This is the coverage/conformity net — the rest of this skill is the
+per-item correctness net. (Format + how to seal a grade: the programmes-officiels README, § Manifeste.)
+
 ## Inputs
 
 - **Scope**: a subject (`content/<subject>/`), a chapter, a theme's subjects, or the whole catalogue.
