@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: أوّل أسوار المملكة",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "كم ضلعًا للمربّع؟",
+      "options": [
+        { "id": "a", "text": "3 أضلاع" },
+        { "id": "b", "text": "4 أضلاع" },
+        { "id": "c", "text": "5 أضلاع" },
+        { "id": "d", "text": "ضلعان" }
+      ],
+      "correctOption": "b",
+      "explanation": "المربّع شكلٌ له 4 أضلاع متساوية و4 زوايا قائمة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "في المستطيل، أيّ الأضلاع متساوية؟",
+      "options": [
+        { "id": "a", "text": "الأضلاع المتقابلة فقط" },
+        { "id": "b", "text": "كلّ الأضلاع الأربعة" },
+        { "id": "c", "text": "لا شيء منها متساوٍ" },
+        { "id": "d", "text": "ثلاثة أضلاع فقط" }
+      ],
+      "correctOption": "a",
+      "explanation": "في المستطيل الأضلاع المتقابلة فقط متساوية: ضلعان طويلان (الطول) وضلعان قصيران (العرض).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "مربّعٌ ضلعه 3 cm. ما محيطه؟",
+      "options": [
+        { "id": "a", "text": "9 cm" },
+        { "id": "b", "text": "6 cm" },
+        { "id": "c", "text": "12 cm" },
+        { "id": "d", "text": "7 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "محيط المربّع = الضلع × 4 = 3 × 4 = 12 cm. (أو 3 + 3 + 3 + 3 = 12 cm.)",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما العدد الذي نضرب فيه ضلع المربّع لنحصل على محيطه؟",
+      "options": [
+        { "id": "a", "text": "2" },
+        { "id": "b", "text": "3" },
+        { "id": "c", "text": "4" },
+        { "id": "d", "text": "5" }
+      ],
+      "correctOption": "c",
+      "explanation": "للمربّع 4 أضلاع متساوية، فمحيطه = الضلع × 4.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما محيط هذا المستطيل؟<svg viewBox=\"0 0 150 70\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"22\" y=\"22\" width=\"108\" height=\"36\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><text x=\"76\" y=\"16\" font-size=\"11\" fill=\"currentColor\" text-anchor=\"middle\">6 cm</text><text x=\"11\" y=\"44\" font-size=\"11\" fill=\"currentColor\" text-anchor=\"middle\">2 cm</text></svg>",
+      "options": [
+        { "id": "a", "text": "8 cm" },
+        { "id": "b", "text": "10 cm" },
+        { "id": "c", "text": "12 cm" },
+        { "id": "d", "text": "16 cm" }
+      ],
+      "correctOption": "d",
+      "explanation": "الطول 6 cm والعرض 2 cm. المحيط = (6 + 2) × 2 = 8 × 2 = 16 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "مستطيلٌ طوله 5 cm وعرضه 3 cm. ما محيطه؟",
+      "options": [
+        { "id": "a", "text": "8 cm" },
+        { "id": "b", "text": "13 cm" },
+        { "id": "c", "text": "15 cm" },
+        { "id": "d", "text": "16 cm" }
+      ],
+      "correctOption": "d",
+      "explanation": "المحيط = (الطول + العرض) × 2 = (5 + 3) × 2 = 8 × 2 = 16 cm.",
+      "difficulty": 2
+    }
+  ]
+}

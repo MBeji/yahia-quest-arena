@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ زعيم الفصل ⭐⭐⭐: حصار المحيط",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "شكلٌ له 4 زوايا قائمة، ضلعان طويلان متساويان وضلعان قصيران متساويان. ما هو؟",
+      "options": [
+        { "id": "a", "text": "المربّع" },
+        { "id": "b", "text": "المستطيل" },
+        { "id": "c", "text": "المثلّث" },
+        { "id": "d", "text": "الدائرة" }
+      ],
+      "correctOption": "b",
+      "explanation": "المستطيل له 4 زوايا قائمة وأضلاعه المتقابلة فقط متساوية (طولان وعرضان). أمّا المربّع فكلّ أضلاعه متساوية.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "مستطيلٌ طوله 7 cm وعرضه 3 cm. ما محيطه؟",
+      "options": [
+        { "id": "a", "text": "10 cm" },
+        { "id": "b", "text": "21 cm" },
+        { "id": "c", "text": "20 cm" },
+        { "id": "d", "text": "14 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "المحيط = (7 + 3) × 2 = 10 × 2 = 20 cm. الخطأ الشائع: التوقّف عند 7 + 3 = 10 ونسيان الضرب في 2، لأنّ للمستطيل ضلعين بكلّ قياس.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما محيط هذا المربّع؟<svg viewBox=\"0 0 110 100\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"25\" y=\"22\" width=\"58\" height=\"58\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><text x=\"54\" y=\"16\" font-size=\"11\" fill=\"currentColor\" text-anchor=\"middle\">7 cm</text></svg>",
+      "options": [
+        { "id": "a", "text": "14 cm" },
+        { "id": "b", "text": "21 cm" },
+        { "id": "c", "text": "28 cm" },
+        { "id": "d", "text": "49 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "الشكل مربّع، فكلّ أضلاعه 7 cm. المحيط = 7 × 4 = 28 cm. الخطأ الشائع: ضرب 7 × 7 = 49 (ذلك ليس المحيط).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "مربّعٌ محيطه 20 cm. ما طول ضلعه؟",
+      "options": [
+        { "id": "a", "text": "4 cm" },
+        { "id": "b", "text": "10 cm" },
+        { "id": "c", "text": "16 cm" },
+        { "id": "d", "text": "5 cm" }
+      ],
+      "correctOption": "d",
+      "explanation": "محيط المربّع = الضلع × 4، فالضلع = 20 ÷ 4 = 5 cm. تحقّق: 5 × 4 = 20 cm. ✓ الخطأ الشائع: طرح 4 بدل القسمة عليها.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "حديقةٌ مستطيلةٌ طولها 9 m وعرضها 6 m، نريد سياجًا حولها. كم مترًا من السياج نحتاج؟",
+      "options": [
+        { "id": "a", "text": "15 m" },
+        { "id": "b", "text": "30 m" },
+        { "id": "c", "text": "24 m" },
+        { "id": "d", "text": "54 m" }
+      ],
+      "correctOption": "b",
+      "explanation": "طول السياج = محيط المستطيل = (9 + 6) × 2 = 15 × 2 = 30 m. الخطأ الشائع: ضرب 9 × 6 = 54 (ذلك ليس المحيط).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "مستطيلٌ طوله 8 cm، ومحيطه 24 cm. ما عرضه؟",
+      "options": [
+        { "id": "a", "text": "4 cm" },
+        { "id": "b", "text": "16 cm" },
+        { "id": "c", "text": "12 cm" },
+        { "id": "d", "text": "3 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "المحيط = (الطول + العرض) × 2. فمجموع الطول والعرض = 24 ÷ 2 = 12، والعرض = 12 − 8 = 4 cm. تحقّق: (8 + 4) × 2 = 24 cm. ✓",
+      "difficulty": 3
+    }
+  ]
+}
