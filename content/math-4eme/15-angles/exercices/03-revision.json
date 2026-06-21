@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة (نمط امتحان): الزوايا",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "ما الذي يحدّد كِبَر الزاوية؟",
+      "options": [
+        { "id": "a", "text": "طول الضلعين" },
+        { "id": "b", "text": "لون الضلعين" },
+        { "id": "c", "text": "موضع الرأس على الورقة" },
+        { "id": "d", "text": "اتّساع الفتحة بين الضلعين" }
+      ],
+      "correctOption": "d",
+      "explanation": "كِبَر الزاوية يتعلّق باتّساع الفتحة بين الضلعين فقط، لا بطولهما ولا بموضعهما.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ركن الكتاب زاويته تامّة كالركن. ما نوعها؟",
+      "options": [
+        { "id": "a", "text": "قائمة" },
+        { "id": "b", "text": "منفرجة" },
+        { "id": "c", "text": "حادّة" },
+        { "id": "d", "text": "مستقيمة" }
+      ],
+      "correctOption": "a",
+      "explanation": "ركن الكتاب زاوية قائمة قيسها 90°، نتحقّق منها بتطبيق الكوس على الركن.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما نوع هذه الزاوية؟ <svg viewBox=\"0 0 100 100\"><line x1=\"50\" y1=\"82\" x2=\"95\" y2=\"82\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"50\" y1=\"82\" x2=\"73\" y2=\"42.2\" stroke=\"currentColor\" stroke-width=\"2.5\"/><circle cx=\"50\" cy=\"82\" r=\"2.8\" fill=\"currentColor\"/></svg>",
+      "options": [
+        { "id": "a", "text": "حادّة" },
+        { "id": "b", "text": "قائمة" },
+        { "id": "c", "text": "منفرجة" },
+        { "id": "d", "text": "مستقيمة" }
+      ],
+      "correctOption": "a",
+      "explanation": "الفتحة أصغر من زاوية الركن القائم، فالزاوية حادّة. لا يوجد مربّعٌ عند الرأس فهي ليست قائمة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "في المربّع، ما نوع كلّ زاوية من زواياه الأربع؟",
+      "options": [
+        { "id": "a", "text": "حادّة" },
+        { "id": "b", "text": "قائمة" },
+        { "id": "c", "text": "منفرجة" },
+        { "id": "d", "text": "مستقيمة" }
+      ],
+      "correctOption": "b",
+      "explanation": "كلّ زوايا المربّع الأربع قائمة (90°)، ونتأكّد بتطبيق الكوس على كلّ ركن.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما نوع هذه الزاوية؟ <svg viewBox=\"0 0 100 100\"><line x1=\"50\" y1=\"82\" x2=\"95\" y2=\"82\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"50\" y1=\"82\" x2=\"10.2\" y2=\"59\" stroke=\"currentColor\" stroke-width=\"2.5\"/><circle cx=\"50\" cy=\"82\" r=\"2.8\" fill=\"currentColor\"/></svg>",
+      "options": [
+        { "id": "a", "text": "حادّة" },
+        { "id": "b", "text": "قائمة" },
+        { "id": "c", "text": "منفرجة" },
+        { "id": "d", "text": "مستقيمة" }
+      ],
+      "correctOption": "c",
+      "explanation": "الفتحة واسعة وأكبر من زاوية الركن القائم وأصغر من نصف الدورة، فالزاوية منفرجة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "الزاوية المستقيمة ضعف الزاوية القائمة. فإذا كانت القائمة 90°، فكم قيس المستقيمة؟",
+      "options": [
+        { "id": "a", "text": "90°" },
+        { "id": "b", "text": "أصغر من القائمة" },
+        { "id": "c", "text": "مثل القائمة تمامًا" },
+        { "id": "d", "text": "180°" }
+      ],
+      "correctOption": "d",
+      "explanation": "ضعف القائمة هو 90° + 90° = 180°، وهو قيس الزاوية المستقيمة (نصف دورة).",
+      "difficulty": 2
+    }
+  ]
+}

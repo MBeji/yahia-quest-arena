@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ زعيم الفصل ⭐⭐⭐: سيّد الزمن",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "كم ثانيةً في 3 min؟",
+      "options": [
+        { "id": "a", "text": "90 s" },
+        { "id": "b", "text": "30 s" },
+        { "id": "c", "text": "180 s" },
+        { "id": "d", "text": "300 s" }
+      ],
+      "correctOption": "c",
+      "explanation": "نضرب عدد الدقائق في 60: 3 × 60 = 180. إذن 3 min = 180 s.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم تساوي 90 min بالساعات والدقائق؟",
+      "options": [
+        { "id": "a", "text": "9 h" },
+        { "id": "b", "text": "1 h و 30 min" },
+        { "id": "c", "text": "1 h و 90 min" },
+        { "id": "d", "text": "2 h" }
+      ],
+      "correctOption": "b",
+      "explanation": "90 min = 60 min + 30 min، و 60 min = 1 h. إذن 90 min = 1 h و 30 min.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "الساعة تعرض 10 h 45. أين العقرب الكبير؟",
+      "options": [
+        { "id": "a", "text": "على 3" },
+        { "id": "b", "text": "على 6" },
+        { "id": "c", "text": "على 12" },
+        { "id": "d", "text": "على 9" }
+      ],
+      "correctOption": "d",
+      "explanation": "كلّ تدريجةٍ كبيرة = 5 دقائق، و 45 ÷ 5 = 9. فالعقرب الكبير على 9 عند 45 دقيقة (ثلاثة أرباع).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "رحلةٌ انطلقت في 8 h 40 ووصلت في 9 h 20. كم دامت؟",
+      "options": [
+        { "id": "a", "text": "40 min" },
+        { "id": "b", "text": "20 min" },
+        { "id": "c", "text": "80 min" },
+        { "id": "d", "text": "60 min" }
+      ],
+      "correctOption": "a",
+      "explanation": "المدّة على حصان الساعة: من 8 h 40 إلى 9 h 00 = 20 min، ثمّ إلى 9 h 20 = 20 min، المجموع 20 + 20 = 40 min. الخطأ الشائع طرح الأرقام مباشرةً (20 − 40) أو جمعها لتصير 80؛ والصحيح 40 min.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "كم يومًا في 3 أسابيع؟",
+      "options": [
+        { "id": "a", "text": "10 أيّام" },
+        { "id": "b", "text": "30 يومًا" },
+        { "id": "c", "text": "21 يومًا" },
+        { "id": "d", "text": "37 يومًا" }
+      ],
+      "correctOption": "c",
+      "explanation": "نضرب عدد الأسابيع في 7: 3 × 7 = 21. إذن 3 أسابيع = 21 يومًا.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "بدأت الحصّة في 9 h 15 ودامت 50 min. متى انتهت؟",
+      "options": [
+        { "id": "a", "text": "9 h 65" },
+        { "id": "b", "text": "10 h 05" },
+        { "id": "c", "text": "9 h 55" },
+        { "id": "d", "text": "10 h 15" }
+      ],
+      "correctOption": "b",
+      "explanation": "من 9 h 15 إلى 10 h 00 = 45 min، يبقى 50 − 45 = 5 min بعد العاشرة. إذن النهاية 10 h 05. الخطأ الشائع كتابة 9 h 65، والساعة لا تتجاوز 60 دقيقة.",
+      "difficulty": 3
+    }
+  ]
+}

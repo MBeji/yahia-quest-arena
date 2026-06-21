@@ -1,0 +1,65 @@
+{
+  "title": "اختبار فهم الدرس ⭐",
+  "questions": [
+    {
+      "prompt": "كم دقيقةً في الساعة الواحدة؟",
+      "options": [
+        { "id": "a", "text": "30 min" },
+        { "id": "b", "text": "60 min" },
+        { "id": "c", "text": "100 min" },
+        { "id": "d", "text": "12 min" }
+      ],
+      "correctOption": "b",
+      "explanation": "العلاقة الأساسيّة هي 1 h = 60 min. فالساعة الواحدة فيها 60 دقيقة، وليست 100.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم ثانيةً في الدقيقة الواحدة؟",
+      "options": [
+        { "id": "a", "text": "10 s" },
+        { "id": "b", "text": "30 s" },
+        { "id": "c", "text": "60 s" },
+        { "id": "d", "text": "100 s" }
+      ],
+      "correctOption": "c",
+      "explanation": "العلاقة هي 1 min = 60 s. فالدقيقة الواحدة فيها 60 ثانية، مثل الساعة مع الدقائق.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم ساعةً في اليوم الواحد؟",
+      "options": [
+        { "id": "a", "text": "12 h" },
+        { "id": "b", "text": "24 h" },
+        { "id": "c", "text": "60 h" },
+        { "id": "d", "text": "7 h" }
+      ],
+      "correctOption": "b",
+      "explanation": "اليوم الواحد فيه 24 ساعة: نهارٌ وليل. إذن الجواب 24 h.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم تساوي نصف ساعة بالدقائق؟",
+      "options": [
+        { "id": "a", "text": "15 min" },
+        { "id": "b", "text": "20 min" },
+        { "id": "c", "text": "30 min" },
+        { "id": "d", "text": "50 min" }
+      ],
+      "correctOption": "c",
+      "explanation": "نصف الساعة = 60 ÷ 2 = 30 min. وليست 50 min لأنّ الساعة 60 دقيقة لا 100.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم شهرًا في السنة الواحدة؟",
+      "options": [
+        { "id": "a", "text": "7 أشهر" },
+        { "id": "b", "text": "10 أشهر" },
+        { "id": "c", "text": "365 شهرًا" },
+        { "id": "d", "text": "12 شهرًا" }
+      ],
+      "correctOption": "d",
+      "explanation": "السنة فيها 12 شهرًا (من جانفي إلى ديسمبر)، وهي تساوي 365 يومًا. إذن عدد الأشهر 12.",
+      "difficulty": 2
+    }
+  ]
+}

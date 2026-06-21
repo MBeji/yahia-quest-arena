@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ زعيم الفصل ⭐⭐⭐: سيّد اللتر",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "كم مليلترًا (mL) يساوي 4 L؟",
+      "options": [
+        { "id": "a", "text": "40 mL" },
+        { "id": "b", "text": "400 mL" },
+        { "id": "c", "text": "4000 mL" },
+        { "id": "d", "text": "1004 mL" }
+      ],
+      "correctOption": "c",
+      "explanation": "نضرب عدد اللترات في 1000: 4 × 1000 = 4000. إذن 4 L = 4000 mL.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم لترًا (L) يساوي 5000 mL؟",
+      "options": [
+        { "id": "a", "text": "5 L" },
+        { "id": "b", "text": "50 L" },
+        { "id": "c", "text": "500 L" },
+        { "id": "d", "text": "5000 L" }
+      ],
+      "correctOption": "a",
+      "explanation": "نقسم على 1000 للتحويل من mL إلى L: 5000 ÷ 1000 = 5. إذن 5000 mL = 5 L.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما مجموع السعتين 30 cL + 25 cL؟",
+      "options": [
+        { "id": "a", "text": "55 cL" },
+        { "id": "b", "text": "5 cL" },
+        { "id": "c", "text": "550 cL" },
+        { "id": "d", "text": "3025 cL" }
+      ],
+      "correctOption": "a",
+      "explanation": "السعتان بنفس الوحدة (cL)، فنجمع العددين: 30 + 25 = 55. إذن المجموع 55 cL.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم مليلترًا (mL) يساوي 1 cL؟",
+      "options": [
+        { "id": "a", "text": "1 mL" },
+        { "id": "b", "text": "10 mL" },
+        { "id": "c", "text": "100 mL" },
+        { "id": "d", "text": "1000 mL" }
+      ],
+      "correctOption": "b",
+      "explanation": "اللتر فيه 100 cL وفيه 1000 mL، فكلّ 1 cL يساوي 1000 ÷ 100 = 10 mL. الخطأ الشائع هو قول 1 cL = 1 mL بالخلط بين cL و mL.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "قارورة فيها 1 L من العصير، شُرِب منها 300 mL. كم بقي بالمليلتر؟",
+      "options": [
+        { "id": "a", "text": "700 mL" },
+        { "id": "b", "text": "300 mL" },
+        { "id": "c", "text": "1300 mL" },
+        { "id": "d", "text": "997 mL" }
+      ],
+      "correctOption": "a",
+      "explanation": "نوحّد الوحدة أوّلًا: 1 L = 1000 mL. ثمّ نطرح: 1000 − 300 = 700. إذن البقيّة 700 mL. الخطأ الشائع هو طرح 300 من 1 مباشرةً دون تحويل اللتر.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "سعةٌ تساوي 1500 mL. كم تساوي باللترات والمليلترات؟",
+      "options": [
+        { "id": "a", "text": "1 L و 5 mL" },
+        { "id": "b", "text": "1 L و 500 mL" },
+        { "id": "c", "text": "15 L" },
+        { "id": "d", "text": "5 L و 1 mL" }
+      ],
+      "correctOption": "b",
+      "explanation": "1500 mL = 1000 mL + 500 mL، و 1000 mL = 1 L. إذن 1500 mL = 1 L و 500 mL. الخطأ الشائع هو الخلط بين 5 mL و 500 mL عند التفكيك.",
+      "difficulty": 3
+    }
+  ]
+}
