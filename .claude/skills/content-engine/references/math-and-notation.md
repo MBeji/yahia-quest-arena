@@ -73,3 +73,13 @@ formulas, for the letter `x` used as a multiplication sign, for **LaTeX residue*
 `$$ … $$` display blocks — zero matches), and — **in `ar` content** — for a plain space between
 digit groups (regex `\d \d{3}` outside `<svg>` markup, must be zero: use U+00A0). The
 `content-audit` skill performs the same scans on existing content.
+
+**Two recurring U+00A0 traps** (seen authoring multi-digit Arabic content):
+
+1. **The file-write path can silently flatten U+00A0 → a plain space.** So re-run the `\d \d{3}` scan
+   _after_ writing each file and re-inject U+00A0 (e.g. a byte-level rewrite) wherever a plain space
+   reappeared — otherwise the bidi swap ships.
+2. **Group consistently across option, prompt and explanation.** An _option_ left ungrouped (`308000`)
+   while its prompt/explanation is grouped (`308 000`) trips `content:qa`'s «answer value not echoed»
+   warning — that check's number-extractor splits on the U+00A0, so the two forms no longer match.
+   Group (or leave ungrouped) the **same way** everywhere in a question.

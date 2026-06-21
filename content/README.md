@@ -69,3 +69,11 @@ Le SQL généré est **appliqué automatiquement à la prod au merge sur `main`*
 (workflow `db-migrate-prod.yml`, voir `CLAUDE.md` §7) — on n'applique **jamais**
 à la main. Ordre : `content:build` → relire le SQL → ouvrir la PR → merge (la
 migration part en prod toute seule) → le code dépendant suit.
+
+**Mettre à jour un sujet déjà en prod** : `content:build` écrit une migration à **horodatage neuf**
+(comportement par défaut) — la garder telle quelle. Régénérer **en place** (même horodatage via
+`--timestamp <existant>`) ne sert à rien en prod : `db push` la voit comme **déjà appliquée** et la
+**saute** (log « Remote database is up to date »), donc le nouveau contenu n'atteint jamais la base.
+Vérifier le log du run `db-migrate-prod` : il doit lister `Applying migration <ts>_generated_<id>…`. Les
+anciennes migrations générées du sujet restent (les supprimer casse l'historique ; `math`/`math-6eme` en
+cumulent déjà plusieurs, c'est attendu).
