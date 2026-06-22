@@ -99,11 +99,16 @@ Rules for authoring figures:
 - **Always set a `viewBox`** (e.g. `viewBox="0 0 100 100"`) and **do not rely on `width`/`height`
   attributes** for sizing — the renderer controls the on-screen size. A `viewBox`-less SVG has no
   aspect ratio and collapses.
-- **Ink dark on the white paper.** Draw with dark, opaque strokes/fills — `currentColor` (preferred:
-  it inherits the dark default text colour), `#1f2937`, `#222`, `#0f172a`, or other saturated/dark
-  hues. **Never make the figure's primary marks white or near-white** (`#fff`, very light greys/
-  pastels): on the white surface they are invisible. Light tones are fine only as _fills inside_
-  dark-outlined shapes, never as the only ink.
+- **Dark ink on the white paper for outlines.** Draw strokes/outlines with dark, opaque ink —
+  `currentColor` (preferred: it inherits the dark default text colour), `#1f2937`, `#222`, `#0f172a`.
+  **Never make the figure's primary marks white or near-white** (`#fff`, very light greys/pastels):
+  on the white surface they are invisible.
+- **Colour is encouraged — especially for young grades.** Fills survive sanitization and render in
+  colour, so fill shapes with bright, saturated hues _inside_ their dark outlines (a green tree, an
+  orange fish, a yellow sun, a red apple, a blue water drop). The only rule is **colour fills, dark
+  outline** — keep a dark `stroke` so every shape stays legible on the white paper. For primary
+  (≈ 1ère–3ème) prefer playful, recognizable, colourful illustrations over bare grey geometry; for
+  abstract geometry (angles, axes, number lines, older maths) neutral dark ink is fine.
 - **One `<svg>` per field.** A figure-only option is just its `<svg>` (no text needed); a stimulus is
   `prompt` text + one `<svg>`.
 - Keep figures compact and legible (a `viewBox` around `0 0 100 100`–ish, explicit dark `stroke`/`fill`,
