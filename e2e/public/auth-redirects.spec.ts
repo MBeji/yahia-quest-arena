@@ -41,11 +41,13 @@ test.describe("Content routes are public — no login wall (C8 pivot)", () => {
   for (const path of PUBLIC_CONTENT_ROUTES) {
     test(`${path} renders the public shell without redirecting to /auth`, async ({ page }) => {
       await page.goto(path);
-      // The "Extras" nav link only exists in the PublicHeader — it is absent from
-      // the authenticated shell AND from the /auth page. Its presence proves we
-      // are on the public (`_public`) coquille and were not bounced to login,
-      // and it survives a post-hydration guard redirect (which would unmount it).
-      await expect(page.locator('header a[href="/extras"]')).toBeVisible({ timeout: 15_000 });
+      // The account CTA lives only in the PublicHeader — absent from the
+      // authenticated shell. Unlike the catalogue nav (hidden < sm), it is visible
+      // at EVERY viewport (so this holds on the public-mobile project too). Its
+      // presence, together with the not-/auth check, proves we are on the public
+      // (`_public`) coquille and were not bounced to login — and it would unmount
+      // on a post-hydration guard redirect.
+      await expect(page.locator('header a[href="/signup"]')).toBeVisible({ timeout: 15_000 });
       await expect(page).not.toHaveURL(/\/auth/);
     });
   }
