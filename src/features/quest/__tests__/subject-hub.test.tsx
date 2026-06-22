@@ -42,22 +42,44 @@ const exercises = [
 describe("SubjectHub", () => {
   it("renders the subject header and one card per chapter with a read-course link", () => {
     const { container } = render(
-      <SubjectHub subject={subject} chapters={chapters} exercises={exercises} />,
+      <SubjectHub
+        subject={subject}
+        chapters={chapters}
+        exercises={exercises}
+        isAuthenticated={false}
+      />,
     );
     expect(screen.getByRole("heading", { level: 1, name: "Mathématiques" })).toBeInTheDocument();
     expect(screen.getByText("Logique")).toBeInTheDocument();
     expect(screen.getAllByRole("heading", { level: 2 })).toHaveLength(2);
-    // one "Lire le cours" → public reader per chapter
     expect(container.querySelectorAll('a[href="/chapitre/$chapterId"]')).toHaveLength(2);
   });
 
-  it("lists each chapter's exercises under it, linking to the quest screen", () => {
+  it("anonymous: non-quiz exercises link to public practice, the quiz to the gated quest", () => {
     const { container } = render(
-      <SubjectHub subject={subject} chapters={chapters} exercises={exercises} />,
+      <SubjectHub
+        subject={subject}
+        chapters={chapters}
+        exercises={exercises}
+        isAuthenticated={false}
+      />,
+    );
+    // e2 + e3 (normal) → free practice; e1 (quiz) stays the connected gate.
+    expect(container.querySelectorAll('a[href="/exercice/$exerciseId"]')).toHaveLength(2);
+    expect(container.querySelectorAll('a[href="/quest/$exerciseId"]')).toHaveLength(1);
+  });
+
+  it("authenticated: every exercise links to the scored quest (XP)", () => {
+    const { container } = render(
+      <SubjectHub
+        subject={subject}
+        chapters={chapters}
+        exercises={exercises}
+        isAuthenticated={true}
+      />,
     );
     expect(container.querySelectorAll('a[href="/quest/$exerciseId"]')).toHaveLength(3);
-    expect(screen.getByText(/Quiz : les nombres/)).toBeInTheDocument();
-    expect(screen.getByText(/Additionner/)).toBeInTheDocument();
+    expect(container.querySelectorAll('a[href="/exercice/$exerciseId"]')).toHaveLength(0);
   });
 
   it("renders an Arabic subject right-to-left", () => {
@@ -66,6 +88,7 @@ describe("SubjectHub", () => {
         subject={{ ...subject, name_fr: "الرياضيات", content_language: "ar" }}
         chapters={[{ id: "c1", title: "الأعداد", description: null }]}
         exercises={[]}
+        isAuthenticated={false}
       />,
     );
     expect(container.querySelector('div[dir="rtl"]')).not.toBeNull();

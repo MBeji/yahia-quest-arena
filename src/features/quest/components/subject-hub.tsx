@@ -30,17 +30,21 @@ export type SubjectHubExercise = {
  * (each → its public course reader) and their exercises. No gameplay progress
  * (stars/streaks are the connected Jeu register, L2) and no premium locks (the
  * pivot is free; anon `getSubject` already returns `hasEntitlement: true`).
- * Exercises link to the quest screen — anonymous practice is opened in L1.5.
+ * Exercise links are auth-aware (L1.5): a signed-in visitor goes to the scored
+ * quest (`/quest`, XP); an anonymous one goes to free practice (`/exercice`).
+ * The comprehension quiz is always the connected gate (`/quest`).
  * i18n keys land in the L1.6 sweep; copy is FR literals here.
  */
 export function SubjectHub({
   subject,
   chapters,
   exercises,
+  isAuthenticated,
 }: {
   subject: SubjectHubSubject;
   chapters: SubjectHubChapter[];
   exercises: SubjectHubExercise[];
+  isAuthenticated: boolean;
 }) {
   const isRtl = subject.content_language === "ar";
 
@@ -93,28 +97,36 @@ export function SubjectHub({
 
               {chapEx.length > 0 && (
                 <ul className="mt-4 divide-y divide-border border-t border-border">
-                  {chapEx.map((ex) => (
-                    <li key={ex.id}>
-                      <Link
-                        to="/quest/$exerciseId"
-                        params={{ exerciseId: ex.id }}
-                        className="flex items-center justify-between gap-3 py-2.5 text-sm transition hover:text-primary"
-                      >
-                        <span className="truncate" dir={isRtlText(ex.title) ? "rtl" : "ltr"}>
-                          {ex.mode === "quiz" ? "🧠 " : ""}
-                          {ex.title}
-                        </span>
-                        <span className="flex shrink-0 items-center gap-2 text-xs text-muted-foreground">
-                          <span>Niv. {ex.difficulty}</span>
-                          <span className="flex items-center gap-0.5 text-primary">
-                            <Zap className="h-3 w-3" />
-                            {ex.xp_reward}
+                  {chapEx.map((ex) => {
+                    // Auth-aware: signed-in → scored quest (XP); anon → free
+                    // practice. The comprehension quiz stays the connected gate.
+                    const exerciseTo =
+                      ex.mode === "quiz" || isAuthenticated
+                        ? "/quest/$exerciseId"
+                        : "/exercice/$exerciseId";
+                    return (
+                      <li key={ex.id}>
+                        <Link
+                          to={exerciseTo}
+                          params={{ exerciseId: ex.id }}
+                          className="flex items-center justify-between gap-3 py-2.5 text-sm transition hover:text-primary"
+                        >
+                          <span className="truncate" dir={isRtlText(ex.title) ? "rtl" : "ltr"}>
+                            {ex.mode === "quiz" ? "🧠 " : ""}
+                            {ex.title}
                           </span>
-                          <ChevronRight className="h-4 w-4 rtl:-scale-x-100" />
-                        </span>
-                      </Link>
-                    </li>
-                  ))}
+                          <span className="flex shrink-0 items-center gap-2 text-xs text-muted-foreground">
+                            <span>Niv. {ex.difficulty}</span>
+                            <span className="flex items-center gap-0.5 text-primary">
+                              <Zap className="h-3 w-3" />
+                              {ex.xp_reward}
+                            </span>
+                            <ChevronRight className="h-4 w-4 rtl:-scale-x-100" />
+                          </span>
+                        </Link>
+                      </li>
+                    );
+                  })}
                 </ul>
               )}
             </section>

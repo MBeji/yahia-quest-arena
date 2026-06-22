@@ -26,6 +26,7 @@ import { Route as AuthenticatedDungeonRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as PublicNiveauParcoursIdRouteImport } from './routes/_public/niveau.$parcoursId'
 import { Route as PublicMatiereSubjectIdRouteImport } from './routes/_public/matiere.$subjectId'
+import { Route as PublicExerciceExerciseIdRouteImport } from './routes/_public/exercice.$exerciseId'
 import { Route as PublicChapitreChapterIdRouteImport } from './routes/_public/chapitre.$chapterId'
 import { Route as AuthenticatedThemesFamilyIdRouteImport } from './routes/_authenticated/themes_.$familyId'
 import { Route as AuthenticatedSubjectSubjectIdRouteImport } from './routes/_authenticated/subject.$subjectId'
@@ -121,6 +122,12 @@ const PublicMatiereSubjectIdRoute = PublicMatiereSubjectIdRouteImport.update({
   path: '/matiere/$subjectId',
   getParentRoute: () => PublicRoute,
 } as any)
+const PublicExerciceExerciseIdRoute =
+  PublicExerciceExerciseIdRouteImport.update({
+    id: '/exercice/$exerciseId',
+    path: '/exercice/$exerciseId',
+    getParentRoute: () => PublicRoute,
+  } as any)
 const PublicChapitreChapterIdRoute = PublicChapitreChapterIdRouteImport.update({
   id: '/chapitre/$chapterId',
   path: '/chapitre/$chapterId',
@@ -198,6 +205,7 @@ export interface FileRoutesByFullPath {
   '/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
   '/themes/$familyId': typeof AuthenticatedThemesFamilyIdRoute
   '/chapitre/$chapterId': typeof PublicChapitreChapterIdRoute
+  '/exercice/$exerciseId': typeof PublicExerciceExerciseIdRoute
   '/matiere/$subjectId': typeof PublicMatiereSubjectIdRoute
   '/niveau/$parcoursId': typeof PublicNiveauParcoursIdRoute
 }
@@ -224,6 +232,7 @@ export interface FileRoutesByTo {
   '/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
   '/themes/$familyId': typeof AuthenticatedThemesFamilyIdRoute
   '/chapitre/$chapterId': typeof PublicChapitreChapterIdRoute
+  '/exercice/$exerciseId': typeof PublicExerciceExerciseIdRoute
   '/matiere/$subjectId': typeof PublicMatiereSubjectIdRoute
   '/niveau/$parcoursId': typeof PublicNiveauParcoursIdRoute
 }
@@ -253,6 +262,7 @@ export interface FileRoutesById {
   '/_authenticated/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
   '/_authenticated/themes_/$familyId': typeof AuthenticatedThemesFamilyIdRoute
   '/_public/chapitre/$chapterId': typeof PublicChapitreChapterIdRoute
+  '/_public/exercice/$exerciseId': typeof PublicExerciceExerciseIdRoute
   '/_public/matiere/$subjectId': typeof PublicMatiereSubjectIdRoute
   '/_public/niveau/$parcoursId': typeof PublicNiveauParcoursIdRoute
 }
@@ -281,6 +291,7 @@ export interface FileRouteTypes {
     | '/subject/$subjectId'
     | '/themes/$familyId'
     | '/chapitre/$chapterId'
+    | '/exercice/$exerciseId'
     | '/matiere/$subjectId'
     | '/niveau/$parcoursId'
   fileRoutesByTo: FileRoutesByTo
@@ -307,6 +318,7 @@ export interface FileRouteTypes {
     | '/subject/$subjectId'
     | '/themes/$familyId'
     | '/chapitre/$chapterId'
+    | '/exercice/$exerciseId'
     | '/matiere/$subjectId'
     | '/niveau/$parcoursId'
   id:
@@ -335,6 +347,7 @@ export interface FileRouteTypes {
     | '/_authenticated/subject/$subjectId'
     | '/_authenticated/themes_/$familyId'
     | '/_public/chapitre/$chapterId'
+    | '/_public/exercice/$exerciseId'
     | '/_public/matiere/$subjectId'
     | '/_public/niveau/$parcoursId'
   fileRoutesById: FileRoutesById
@@ -469,6 +482,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicMatiereSubjectIdRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_public/exercice/$exerciseId': {
+      id: '/_public/exercice/$exerciseId'
+      path: '/exercice/$exerciseId'
+      fullPath: '/exercice/$exerciseId'
+      preLoaderRoute: typeof PublicExerciceExerciseIdRouteImport
+      parentRoute: typeof PublicRoute
+    }
     '/_public/chapitre/$chapterId': {
       id: '/_public/chapitre/$chapterId'
       path: '/chapitre/$chapterId'
@@ -580,6 +600,7 @@ interface PublicRouteChildren {
   PublicExtrasRoute: typeof PublicExtrasRoute
   PublicProgrammeRoute: typeof PublicProgrammeRoute
   PublicChapitreChapterIdRoute: typeof PublicChapitreChapterIdRoute
+  PublicExerciceExerciseIdRoute: typeof PublicExerciceExerciseIdRoute
   PublicMatiereSubjectIdRoute: typeof PublicMatiereSubjectIdRoute
   PublicNiveauParcoursIdRoute: typeof PublicNiveauParcoursIdRoute
 }
@@ -588,6 +609,7 @@ const PublicRouteChildren: PublicRouteChildren = {
   PublicExtrasRoute: PublicExtrasRoute,
   PublicProgrammeRoute: PublicProgrammeRoute,
   PublicChapitreChapterIdRoute: PublicChapitreChapterIdRoute,
+  PublicExerciceExerciseIdRoute: PublicExerciceExerciseIdRoute,
   PublicMatiereSubjectIdRoute: PublicMatiereSubjectIdRoute,
   PublicNiveauParcoursIdRoute: PublicNiveauParcoursIdRoute,
 }

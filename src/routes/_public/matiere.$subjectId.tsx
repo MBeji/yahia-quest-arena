@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getSubject } from "@/features/quest";
+import { useAuth } from "@/features/auth";
 import { SubjectHub } from "@/features/quest/components/subject-hub";
 
 /**
@@ -16,6 +17,7 @@ export const Route = createFileRoute("/_public/matiere/$subjectId")({
 
 function MatierePage() {
   const { subjectId } = Route.useParams();
+  const { user } = useAuth();
   const fetchSubject = useServerFn(getSubject);
   const { data, isLoading, isError } = useQuery({
     queryKey: ["subject", subjectId],
@@ -38,5 +40,12 @@ function MatierePage() {
     );
   }
 
-  return <SubjectHub subject={data.subject} chapters={data.chapters} exercises={data.exercises} />;
+  return (
+    <SubjectHub
+      subject={data.subject}
+      chapters={data.chapters}
+      exercises={data.exercises}
+      isAuthenticated={!!user}
+    />
+  );
 }
