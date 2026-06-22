@@ -26,6 +26,18 @@ export interface AdminDb {
    */
   nonSchoolSubjectId(): Promise<string>;
   /**
+   * A non-premium school subject in a NON-concours grade (`grades.is_concours_national
+   * = false`), so its parcours is FREE — the comprehension-quiz gate is the ONLY gate
+   * (no entitlement paywall in play). Lets a test isolate the quiz gate cleanly.
+   */
+  freeSchoolSubjectId(): Promise<string>;
+  /**
+   * A (quiz, mission) pair in the SAME chapter of a subject — the lowest-display_order
+   * chapter that has both a comprehension quiz and a non-quiz mission. Null when no
+   * such chapter exists. Lets a test prove the quiz gate locks/unlocks that mission.
+   */
+  chapterQuizAndMission(subjectId: string): Promise<{ quizId: string; missionId: string } | null>;
+  /**
    * A free-accessible exercise of a subject: a non-quiz mission at difficulty
    * <= 2 (no premium-difficulty gate), lowest display order.
    */
@@ -133,6 +145,48 @@ export function createAdminDb(): AdminDb {
       if (error) throw new Error(`nonSchoolSubjectId: ${error.message}`);
       if (!data) throw new Error("No free non-school subject (grade_id null) in the test project.");
       return data.id as string;
+    },
+    async freeSchoolSubjectId() {
+      // Non-concours grades resolve to FREE parcours (the premium concours parcours
+      // are the national-exam years), so the only gate left is the chapter quiz.
+      const { data: grades, error: gErr } = await client
+        .from("grades")
+        .select("id")
+        .eq("is_concours_national", false);
+      if (gErr) throw new Error(`freeSchoolSubjectId(grades): ${gErr.message}`);
+      const gradeIds = (grades ?? []).map((g) => g.id as string);
+      if (gradeIds.length === 0)
+        throw new Error("No non-concours grade in the test project (apply migrations?).");
+      const { data, error } = await client
+        .from("subjects")
+        .select("id")
+        .eq("is_premium", false)
+        .in("grade_id", gradeIds)
+        .order("display_order")
+        .order("id")
+        .limit(1)
+        .maybeSingle();
+      if (error) throw new Error(`freeSchoolSubjectId: ${error.message}`);
+      if (!data)
+        throw new Error(
+          "No free non-concours school subject in the test project (apply content?).",
+        );
+      return data.id as string;
+    },
+    async chapterQuizAndMission(subjectId: string) {
+      const { data, error } = await client
+        .from("exercises")
+        .select("id, chapter_id, mode")
+        .eq("subject_id", subjectId)
+        .order("display_order");
+      if (error) throw new Error(`chapterQuizAndMission: ${error.message}`);
+      const rows = data ?? [];
+      for (const r of rows) {
+        if (r.mode !== "quiz") continue;
+        const mission = rows.find((x) => x.chapter_id === r.chapter_id && x.mode !== "quiz");
+        if (mission) return { quizId: r.id as string, missionId: mission.id as string };
+      }
+      return null;
     },
     async freeExerciseId(subjectId: string) {
       const { data, error } = await client

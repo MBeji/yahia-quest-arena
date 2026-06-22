@@ -5,7 +5,9 @@ export class DashboardPage {
   constructor(private readonly page: Page) {}
 
   get subjectCards(): Locator {
-    return this.page.locator('a[href^="/subject/"]');
+    // Dashboard subject cards now link to the public subject hub `/matiere/$id`
+    // (chantier C8 renamed `/subject` → `/matiere`).
+    return this.page.locator('a[href^="/matiere/"]');
   }
   /** Daily-objective progress like "x / 3". */
   get dailyGoal(): Locator {

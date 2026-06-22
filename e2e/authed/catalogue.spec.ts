@@ -11,9 +11,10 @@ test.describe("Catalogue navigation", () => {
     await expect(dashboard.subjectCards.first()).toBeVisible();
 
     await dashboard.openFirstSubject();
-    await expect(page).toHaveURL(/\/subject\//);
-    // The subject page always exposes at least one mission link (the quiz tile);
-    // allow for the subject content fetch on a cold server.
+    // The subject hub moved to the public Référence register at /matiere (C8 rename).
+    await expect(page).toHaveURL(/\/matiere\//);
+    // For a signed-in visitor the hub exposes scored-quest links (the quiz tile +
+    // each chapter's missions); allow for the subject content fetch on a cold server.
     await expect(page.locator('a[href^="/quest/"]').first()).toBeVisible({ timeout: 15_000 });
   });
 });

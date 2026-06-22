@@ -19,14 +19,14 @@ test.describe("Content families", () => {
     }
   });
 
-  test("a non-school family is playable with no theory gate", async ({ subject, adminDb }) => {
+  test("a non-school family subject lists its missions", async ({ subject, adminDb }) => {
     const cultureId = await adminDb.subjectIdByTheme("culture-generale");
     test.skip(!cultureId, "culture-générale content not applied to the test project.");
 
     await subject.goto(cultureId as string);
-    // Missions are directly available…
-    await expect(subject.missionLinks.first()).toBeVisible();
-    // …and nothing is locked behind a comprehension quiz (non-school rule).
-    await expect(subject.lockedMissions).toHaveCount(0);
+    // The hub lists the subject's missions. That non-school missions have NO quiz
+    // gate is asserted server-side in quiz-gate.spec ("non-school opens directly");
+    // the Référence hub itself shows no visual lock (that gameplay layer is L2).
+    await expect(subject.missionLinks.first()).toBeVisible({ timeout: 15_000 });
   });
 });

@@ -1,37 +1,61 @@
 import { test, expect } from "../fixtures";
 import { STORAGE_STATE } from "../helpers/users";
 
-// The comprehension-quiz gate must apply to the SCHOOL program only. Non-school
-// themes (culture-générale, muscle-cerveau/IQ, language tracks) expose their
-// missions directly. Assumes a fresh free account (CI runs reset-gameplay first,
-// so no quiz has been passed yet).
+/**
+ * Comprehension-quiz gate — SCHOOL program only, enforced SERVER-SIDE (chantier C8).
+ *
+ * The matiere hub is the public « Référence » register now: it shows no per-mission
+ * visual lock (that gameplay layer is deferred to L2). The gate itself is unchanged
+ * and lives in the server (`startExerciseSession`): opening a school mission before
+ * its chapter quiz is passed yields the quiz-lock screen on `/quest`; passing the
+ * quiz unlocks the chapter's missions. Non-school subjects have no quiz gate.
+ *
+ * We pick a FREE (non-concours) school subject so the ONLY gate in play is the quiz
+ * (no per-parcours entitlement paywall). Lock + unlock run SERIALLY on the same
+ * chapter so the unlock (the only test here that mutates state by passing the quiz)
+ * runs after the lock assertion. CI runs reset-gameplay first (no quiz passed yet).
+ */
 test.use({ storageState: STORAGE_STATE.free });
 
-test.describe("Comprehension-quiz gate — school program only", () => {
-  test("a school subject locks its missions until the quiz is passed", async ({
-    subject,
+test.describe.serial("Comprehension-quiz gate — school program (server-side)", () => {
+  test("a school chapter's mission is quiz-locked until its quiz is passed", async ({
+    quest,
     adminDb,
-    page,
   }) => {
-    const id = await adminDb.schoolSubjectId();
-    await subject.goto(id);
+    const subjectId = await adminDb.freeSchoolSubjectId();
+    const pair = await adminDb.chapterQuizAndMission(subjectId);
+    test.skip(!pair, "No chapter with both a quiz and a mission on the test project.");
+    if (!pair) return; // narrow the type (test.skip already aborted when null)
 
-    // Page loaded: the always-clickable quiz tile(s) are present.
-    await expect(page.locator('a[href^="/quest/"]').first()).toBeVisible({ timeout: 15_000 });
-    // Fresh free user → no quiz passed → at least one locked mission tile.
-    await expect(subject.lockedMissions.first()).toBeVisible();
-    expect(await subject.lockedMissions.count()).toBeGreaterThan(0);
+    await quest.goto(pair.missionId);
+    await expect(quest.quizLock).toBeVisible({ timeout: 15_000 });
   });
 
-  test("a non-school subject never locks missions on the quiz", async ({
-    subject,
-    adminDb,
-    page,
-  }) => {
-    const id = await adminDb.nonSchoolSubjectId();
-    await subject.goto(id);
+  test("passing the chapter quiz unlocks its missions", async ({ quest, adminDb }) => {
+    test.setTimeout(150_000);
+    const subjectId = await adminDb.freeSchoolSubjectId();
+    const pair = await adminDb.chapterQuizAndMission(subjectId);
+    test.skip(!pair, "No chapter with both a quiz and a mission on the test project.");
+    if (!pair) return; // narrow the type (test.skip already aborted when null)
 
-    await expect(page.locator('a[href^="/quest/"]').first()).toBeVisible({ timeout: 15_000 });
-    await expect(subject.lockedMissions).toHaveCount(0);
+    // Pass the chapter's comprehension quiz (answer everything correctly, paced past
+    // the anti-farm floor so the ≥80% pass registers).
+    const key = await adminDb.answerKey(pair.quizId);
+    await quest.goto(pair.quizId);
+    await quest.answerAllCorrectly(key);
+    await expect(quest.score).toBeVisible({ timeout: 15_000 });
+
+    // The same chapter's mission now opens to the QCM (no quiz-lock).
+    await quest.goto(pair.missionId);
+    await expect(quest.options.first()).toBeVisible({ timeout: 20_000 });
+  });
+});
+
+test.describe("Non-school missions have no quiz gate", () => {
+  test("a non-school mission opens directly to the QCM", async ({ quest, adminDb }) => {
+    const subjectId = await adminDb.nonSchoolSubjectId();
+    const missionId = await adminDb.freeExerciseId(subjectId);
+    await quest.goto(missionId);
+    await expect(quest.options.first()).toBeVisible({ timeout: 20_000 });
   });
 });
