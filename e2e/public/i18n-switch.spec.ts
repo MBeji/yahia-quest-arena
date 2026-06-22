@@ -16,24 +16,24 @@ test.describe("Dynamic language switch + RTL", () => {
     await nav.changeLanguage("English");
     await expect(html).toHaveAttribute("lang", "en");
     await expect(html).toHaveAttribute("dir", "ltr");
-    await expect(landing.signupCta).toContainText(/Join/i);
+    await expect(landing.signupCta).toContainText(/create my account/i);
 
     // → French: still LTR, CTA text translated, no navigation/reload.
     await nav.changeLanguage("Français");
     await expect(html).toHaveAttribute("lang", "fr");
     await expect(html).toHaveAttribute("dir", "ltr");
-    await expect(landing.signupCta).toContainText(/Rejoindre/i);
+    await expect(landing.signupCta).toContainText(/créer mon compte/i);
     await expect(nav.languageTrigger).toContainText("FR");
 
     // → Arabic: document flips to RTL and the CTA shows Arabic text.
     await nav.changeLanguage("العربية");
     await expect(html).toHaveAttribute("lang", "ar");
     await expect(html).toHaveAttribute("dir", "rtl");
-    await expect(landing.signupCta).toContainText("انضم");
+    await expect(landing.signupCta).toContainText("إنشاء");
 
     // → back to English: RTL is cleared again.
     await nav.changeLanguage("English");
     await expect(html).toHaveAttribute("dir", "ltr");
-    await expect(landing.signupCta).toContainText(/Join/i);
+    await expect(landing.signupCta).toContainText(/create my account/i);
   });
 });

@@ -15,6 +15,10 @@ export const DEVICE_VIEWPORTS = [
   { name: "Desktop 1080p", width: 1920, height: 1080 },
 ] as const;
 
+/** The Tailwind `sm` breakpoint — the public Référence header reveals its
+ *  catalogue nav (Programme/Extras) at/above this width (hidden below). */
+export const SM_BREAKPOINT = 640;
+
 /** The Tailwind `md` breakpoint — desktop nav appears at/above this width. */
 export const MD_BREAKPOINT = 768;
 
