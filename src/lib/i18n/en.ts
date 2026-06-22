@@ -2,12 +2,12 @@ import type { TranslationKeys } from "./types";
 
 export const en: TranslationKeys = {
   meta: {
-    title: "Na9ra Nal3ab — The Shonen Academy for the 6th & 9th Grade National Exams",
+    title: "Na9ra Nal3ab — all of Tunisia's school curriculum, for free",
     description:
-      "Prep for the Tunisian 6th and 9th grade national exams in RPG mode — plus a free academy: General Knowledge, Brain Training and Languages. XP, streaks, duels and bosses.",
-    ogTitle: "Na9ra Nal3ab — National Exams & Free Academy",
+      "Courses, summaries and corrected exercises for the whole Tunisian school curriculum, from 1st grade to the Baccalauréat. Free and open access, no sign-up — for the whole family.",
+    ogTitle: "Na9ra Nal3ab — the Tunisian school curriculum, free and open",
     ogDescription:
-      "6th & 9th grade exam prep + a free academy (General Knowledge, Brain Training, Languages), shonen style.",
+      "The full official programme, from primary school to the Bac: courses, summaries and corrected exercises, for free.",
   },
   common: {
     backToHall: "Back to hall",
