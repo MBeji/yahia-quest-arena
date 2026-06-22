@@ -44,9 +44,12 @@ for (const maybeUrl of [process.env.SUPABASE_URL, process.env.VITE_SUPABASE_URL]
  * Playwright end-to-end config — runs REAL browser journeys against the app.
  * NOT runnable in the restricted build sandbox (it blocks the browser download).
  *
- * Two tiers of tests:
+ * Three tiers of tests:
  *  • PUBLIC (landing + logged-out auth redirects): need no real backend, run in
  *    the standard `E2E` workflow with dummy Supabase env.  → projects: public-*
+ *  • PUBLIC-ANON (logged-out C8 content journeys): no login, but need the real
+ *    TEST backend (anon reads real catalogue/course/exercise data). Run in the
+ *    `E2E (authenticated)` workflow.  → project: public-anon-chromium
  *  • AUTHENTICATED (free/premium/admin/parent journeys): need the TEST Supabase
  *    project + seeded users. The `setup` project logs each role in through the
  *    UI and saves its storage state; the `authed-*` project reuses it.
@@ -63,9 +66,15 @@ for (const maybeUrl of [process.env.SUPABASE_URL, process.env.VITE_SUPABASE_URL]
 // not Vite's 5173. Override with PORT or PLAYWRIGHT_BASE_URL if a run needs to.
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://localhost:${process.env.PORT ?? 8080}`;
 
-// Folder-based convention: drop a public spec in e2e/public/ or an authed spec
-// in e2e/authed/ and it's picked up automatically — no config change needed.
-const PUBLIC_SPECS = /public\/.*\.spec\.ts/;
+// Folder-based convention: drop a spec in the right folder and it's picked up
+// automatically — no config change needed.
+//   • e2e/public/      — backendless (dummy Supabase): SSR/landing/auth smoke.
+//   • e2e/public-anon/  — LOGGED-OUT but needs the real TEST backend (anon reads
+//                         real content): the C8 public content journeys.
+//   • e2e/authed/      — logged-in journeys against the TEST backend.
+// `public/` must NOT match `public-anon/`, so anchor it to a literal slash.
+const PUBLIC_SPECS = /public\/[^/]*\.spec\.ts$/;
+const PUBLIC_ANON_SPECS = /public-anon\/.*\.spec\.ts/;
 const AUTHED_SPECS = /authed\/.*\.spec\.ts/;
 
 export default defineConfig({
@@ -93,6 +102,16 @@ export default defineConfig({
     // ---- Public (no backend) ----
     { name: "public-chromium", testMatch: PUBLIC_SPECS, use: { ...devices["Desktop Chrome"] } },
     { name: "public-mobile", testMatch: PUBLIC_SPECS, use: { ...devices["Pixel 7"] } },
+
+    // ---- Public-anon (LOGGED OUT, but needs the real TEST backend) ----
+    // The C8 content journeys: an anonymous visitor reads real catalogue/course/
+    // exercise data. No `setup` dependency and no storageState → logged out; but
+    // runs in the e2e-auth workflow because it needs the TEST project's anon reads.
+    {
+      name: "public-anon-chromium",
+      testMatch: PUBLIC_ANON_SPECS,
+      use: { ...devices["Desktop Chrome"] },
+    },
 
     // ---- Authenticated (needs the test Supabase project + seeded users) ----
     { name: "setup", testMatch: /auth\.setup\.ts/, use: { ...devices["Desktop Chrome"] } },

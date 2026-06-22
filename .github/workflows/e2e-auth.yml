@@ -142,7 +142,7 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.TEST_SUPABASE_SERVICE_ROLE_KEY }}
         run: node scripts/e2e/reset-gameplay.mjs
 
-      - name: Run authenticated E2E
+      - name: Run E2E (public-anon journeys + authenticated)
         if: steps.guard.outputs.configured == 'true'
         env:
           CI: "true"
@@ -154,7 +154,12 @@ jobs:
           # SPEC runtime too — locally .env.test provides it; CI must as well.
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.TEST_SUPABASE_SERVICE_ROLE_KEY }}
           E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}
-        run: npm run test:e2e:auth
+        # One Playwright run (one dev server, one HTML report) covering BOTH the
+        # logged-out public content journeys (public-anon) and the authenticated
+        # journeys — both need the real TEST backend (anon reads + seeded users).
+        # `setup` (login) runs automatically as authed-chromium's dependency;
+        # public-anon-chromium has no dependency and no storageState (stays anon).
+        run: npx playwright test --project=public-anon-chromium --project=authed-chromium
 
       - name: Upload Playwright report
         if: ${{ steps.guard.outputs.configured == 'true' && !cancelled() }}

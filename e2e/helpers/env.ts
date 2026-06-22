@@ -14,6 +14,12 @@ export const SUPABASE_URL = process.env.SUPABASE_URL ?? process.env.VITE_SUPABAS
 /** Service-role key — privileged, server/CI only; never shipped to the browser. */
 export const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
 
+/** Anon/publishable key — the browser-safe key. Used by the public-anon tier to
+ *  probe the anon REST surface directly and assert the RLS invariants (the same
+ *  key the app ships to anonymous visitors). */
+export const SUPABASE_ANON_KEY =
+  process.env.SUPABASE_PUBLISHABLE_KEY ?? process.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? "";
+
 /** Resolve the admin (service-role) config, failing fast with a clear message. */
 export function requireAdminEnv(): { url: string; serviceRoleKey: string } {
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
@@ -22,4 +28,14 @@ export function requireAdminEnv(): { url: string; serviceRoleKey: string } {
     );
   }
   return { url: SUPABASE_URL, serviceRoleKey: SUPABASE_SERVICE_ROLE_KEY };
+}
+
+/** Resolve the public (anon) config for direct REST probes, failing fast. */
+export function requirePublicEnv(): { url: string; anonKey: string } {
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    throw new Error(
+      "[e2e] SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY are required for the anon REST probes. See e2e/README.md.",
+    );
+  }
+  return { url: SUPABASE_URL, anonKey: SUPABASE_ANON_KEY };
 }
