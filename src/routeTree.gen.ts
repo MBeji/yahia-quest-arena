@@ -14,7 +14,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as PublicIndexRouteImport } from './routes/_public/index'
 import { Route as PublicProgrammeRouteImport } from './routes/_public/programme'
 import { Route as PublicExtrasRouteImport } from './routes/_public/extras'
 import { Route as AuthenticatedThemesRouteImport } from './routes/_authenticated/themes'
@@ -60,10 +60,10 @@ const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
 } as any)
 const PublicProgrammeRoute = PublicProgrammeRouteImport.update({
   id: '/programme',
@@ -183,7 +183,7 @@ const AuthenticatedAdminBetaRequestsRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof PublicIndexRoute
   '/auth': typeof AuthRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
@@ -210,7 +210,7 @@ export interface FileRoutesByFullPath {
   '/niveau/$parcoursId': typeof PublicNiveauParcoursIdRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/': typeof PublicIndexRoute
   '/auth': typeof AuthRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
@@ -238,7 +238,6 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/_public': typeof PublicRouteWithChildren
   '/auth': typeof AuthRoute
@@ -253,6 +252,7 @@ export interface FileRoutesById {
   '/_authenticated/themes': typeof AuthenticatedThemesRoute
   '/_public/extras': typeof PublicExtrasRoute
   '/_public/programme': typeof PublicProgrammeRoute
+  '/_public/': typeof PublicIndexRoute
   '/_authenticated/admin/beta-requests': typeof AuthenticatedAdminBetaRequestsRoute
   '/_authenticated/admin/content-reports': typeof AuthenticatedAdminContentReportsRoute
   '/_authenticated/admin/parcours-interest': typeof AuthenticatedAdminParcoursInterestRoute
@@ -323,7 +323,6 @@ export interface FileRouteTypes {
     | '/niveau/$parcoursId'
   id:
     | '__root__'
-    | '/'
     | '/_authenticated'
     | '/_public'
     | '/auth'
@@ -338,6 +337,7 @@ export interface FileRouteTypes {
     | '/_authenticated/themes'
     | '/_public/extras'
     | '/_public/programme'
+    | '/_public/'
     | '/_authenticated/admin/beta-requests'
     | '/_authenticated/admin/content-reports'
     | '/_authenticated/admin/parcours-interest'
@@ -353,7 +353,6 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   PublicRoute: typeof PublicRouteWithChildren
   AuthRoute: typeof AuthRoute
@@ -398,12 +397,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/_public/': {
+      id: '/_public/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PublicIndexRouteImport
+      parentRoute: typeof PublicRoute
     }
     '/_public/programme': {
       id: '/_public/programme'
@@ -599,6 +598,7 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 interface PublicRouteChildren {
   PublicExtrasRoute: typeof PublicExtrasRoute
   PublicProgrammeRoute: typeof PublicProgrammeRoute
+  PublicIndexRoute: typeof PublicIndexRoute
   PublicChapitreChapterIdRoute: typeof PublicChapitreChapterIdRoute
   PublicExerciceExerciseIdRoute: typeof PublicExerciceExerciseIdRoute
   PublicMatiereSubjectIdRoute: typeof PublicMatiereSubjectIdRoute
@@ -608,6 +608,7 @@ interface PublicRouteChildren {
 const PublicRouteChildren: PublicRouteChildren = {
   PublicExtrasRoute: PublicExtrasRoute,
   PublicProgrammeRoute: PublicProgrammeRoute,
+  PublicIndexRoute: PublicIndexRoute,
   PublicChapitreChapterIdRoute: PublicChapitreChapterIdRoute,
   PublicExerciceExerciseIdRoute: PublicExerciceExerciseIdRoute,
   PublicMatiereSubjectIdRoute: PublicMatiereSubjectIdRoute,
@@ -618,7 +619,6 @@ const PublicRouteWithChildren =
   PublicRoute._addFileChildren(PublicRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   PublicRoute: PublicRouteWithChildren,
   AuthRoute: AuthRoute,
