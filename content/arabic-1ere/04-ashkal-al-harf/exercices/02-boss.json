@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ زعيم الفصل ⭐⭐⭐: حارس الأشكال الثلاثة",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "ما هذا الحرف في أشكاله الثلاثة؟ <svg viewBox=\"0 0 300 120\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"8\" y=\"14\" width=\"84\" height=\"92\" rx=\"14\" fill=\"#bbf7d0\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"50\" y=\"78\" font-size=\"50\" text-anchor=\"middle\" fill=\"#15803d\" stroke=\"none\">بـ</text><rect x=\"108\" y=\"14\" width=\"84\" height=\"92\" rx=\"14\" fill=\"#fde68a\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"150\" y=\"78\" font-size=\"50\" text-anchor=\"middle\" fill=\"#b45309\" stroke=\"none\">ـبـ</text><rect x=\"208\" y=\"14\" width=\"84\" height=\"92\" rx=\"14\" fill=\"#bfdbfe\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"250\" y=\"78\" font-size=\"50\" text-anchor=\"middle\" fill=\"#1d4ed8\" stroke=\"none\">ـب</text></svg>",
+      "options": [
+        { "id": "a", "text": "الحرف ت" },
+        { "id": "b", "text": "الحرف ب" },
+        { "id": "c", "text": "الحرف ن" },
+        { "id": "d", "text": "الحرف ث" }
+      ],
+      "correctOption": "b",
+      "explanation": "الأشكال بـ و ـبـ و ـب كلّها للحرف ب (نقطةٌ واحدةٌ تحته). الفخّ الشائع هو الخلط مع ت و ث، والنقطة تحت الحرف علامة ب.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ شكلٍ للحرف ع حين يكون في وسط الكلمة؟",
+      "options": [
+        { "id": "a", "text": "ع" },
+        { "id": "b", "text": "عـ" },
+        { "id": "c", "text": "ـعـ" },
+        { "id": "d", "text": "ـع" }
+      ],
+      "correctOption": "c",
+      "explanation": "في وسط الكلمة يتّصل الحرف ع بما قبله وبما بعده، فيكتب ـعـ. الفخّ الشائع هو اختيار عـ (شكل الأوّل) بدل شكل الوسط.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "في كلمة «جَمَل»، أين يقع الحرف ج؟",
+      "options": [
+        { "id": "a", "text": "أوّل الكلمة" },
+        { "id": "b", "text": "وسط الكلمة" },
+        { "id": "c", "text": "آخر الكلمة" },
+        { "id": "d", "text": "غير موجود" }
+      ],
+      "correctOption": "a",
+      "explanation": "كلمة جَمَل تبدأ بالحرف ج، فهو في أوّل الكلمة. أمّا م ففي الوسط، و ل ففي الآخر.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "في أيّ كلمةٍ يقع الحرف س في آخرها؟",
+      "options": [
+        { "id": "a", "text": "سَمَك" },
+        { "id": "b", "text": "مِسْطَرة" },
+        { "id": "c", "text": "عَلَم" },
+        { "id": "d", "text": "شَمْس" }
+      ],
+      "correctOption": "d",
+      "explanation": "كلمة شَمْس تنتهي بالحرف س، فهو في آخرها. الفخّ الشائع هو سَمَك التي يقع فيها س في أوّلها، و مِسْطَرة في وسطها.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "في كلمة «نَهْر»، أين يقع الحرف ه؟",
+      "options": [
+        { "id": "a", "text": "أوّل الكلمة" },
+        { "id": "b", "text": "وسط الكلمة" },
+        { "id": "c", "text": "آخر الكلمة" },
+        { "id": "d", "text": "غير موجود" }
+      ],
+      "correctOption": "b",
+      "explanation": "في كلمة نَهْر يأتي الحرف ه بين ن و ر، فهو في وسط الكلمة. الفخّ الشائع هو ظنّ ه آخر الكلمة، لكنّ الآخر هو ر.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "في أيّ كلمةٍ يقع الحرف م في أوّلها؟",
+      "options": [
+        { "id": "a", "text": "مَوْز" },
+        { "id": "b", "text": "قَمَر" },
+        { "id": "c", "text": "عَلَم" },
+        { "id": "d", "text": "سَمَك" }
+      ],
+      "correctOption": "a",
+      "explanation": "كلمة مَوْز تبدأ بالحرف م، فهو في أوّلها. الفخّ الشائع: في قَمَر و سَمَك يقع م في الوسط، وفي عَلَم في الآخر.",
+      "difficulty": 3
+    }
+  ]
+}
