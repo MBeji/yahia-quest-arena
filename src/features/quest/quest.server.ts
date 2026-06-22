@@ -295,7 +295,18 @@ export const getChapterLesson = createServerFn({ method: "GET" })
       hasLesson: !!s.lesson_content,
     }));
 
-    return { chapter, allChapters };
+    // Target for the course reader's single « practise this chapter » CTA: the
+    // chapter's first non-quiz exercise (real practice — the comprehension quiz
+    // is the connected gate, not practice). null → nothing to practise → no CTA.
+    // The reader links it auth-aware (signed-in → /quest, anon → /exercice).
+    const { data: chapterExercises } = await supabase
+      .from("exercises")
+      .select("id, mode, display_order")
+      .eq("chapter_id", data.chapterId)
+      .order("display_order");
+    const practiceExerciseId = (chapterExercises ?? []).find((e) => e.mode !== "quiz")?.id ?? null;
+
+    return { chapter, allChapters, practiceExerciseId };
   });
 
 // ---------- Public practice correction (anonymous-capable) ----------

@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getChapterLesson } from "@/features/quest";
+import { useAuth } from "@/features/auth";
 import { LessonReader } from "@/features/quest/components/lesson-reader";
 
 /**
@@ -16,6 +17,7 @@ export const Route = createFileRoute("/_public/chapitre/$chapterId")({
 
 function ChapitrePage() {
   const { chapterId } = Route.useParams();
+  const { user } = useAuth();
   const fetchLesson = useServerFn(getChapterLesson);
   const { data, isLoading } = useQuery({
     queryKey: ["lesson", chapterId],
@@ -31,6 +33,12 @@ function ChapitrePage() {
   }
 
   return (
-    <LessonReader chapterId={chapterId} chapter={data.chapter} allChapters={data.allChapters} />
+    <LessonReader
+      chapterId={chapterId}
+      chapter={data.chapter}
+      allChapters={data.allChapters}
+      practiceExerciseId={data.practiceExerciseId}
+      isAuthenticated={!!user}
+    />
   );
 }

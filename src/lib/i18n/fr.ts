@@ -606,6 +606,7 @@ export const fr: TranslationKeys = {
       summaryTab: "Résumé",
       print: "Imprimer",
       courseSoon: "Le cours de ce chapitre arrive bientôt.",
+      practiceCta: "S’entraîner sur ce chapitre",
       inviteTitle: "Apprends en jouant",
       inviteDesc:
         "Crée ton compte gratuit pour t’entraîner sur les exercices, gagner des XP et sauvegarder ta progression. Lire le cours reste toujours libre.",
@@ -618,6 +619,7 @@ export const fr: TranslationKeys = {
     },
     practice: {
       back: "Retour à la matière",
+      reviewCourse: "Revoir le cours",
       modeKicker: "Mode entraînement",
       subtitle: "Réponds aux questions puis corrige-toi — sans compte, sans note enregistrée.",
       scoreCorrect: "{correct} sur {total} bonnes réponses",

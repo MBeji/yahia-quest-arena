@@ -624,6 +624,7 @@ export type TranslationKeys = {
       summaryTab: string;
       print: string;
       courseSoon: string;
+      practiceCta: string;
       inviteTitle: string;
       inviteDesc: string;
       inviteCta: string;
@@ -635,6 +636,7 @@ export type TranslationKeys = {
     };
     practice: {
       back: string;
+      reviewCourse: string;
       modeKicker: string;
       subtitle: string;
       scoreCorrect: string;

@@ -1,9 +1,18 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { BookOpen, ChevronLeft, ChevronRight, FileText, Printer, ScrollText } from "lucide-react";
+import {
+  BookOpen,
+  ChevronLeft,
+  ChevronRight,
+  Dumbbell,
+  FileText,
+  Printer,
+  ScrollText,
+} from "lucide-react";
 import { renderMarkdown } from "@/shared/lib/markdown";
 import { isRtlText } from "@/shared/lib/utils";
 import { useT } from "@/lib/i18n";
+import { exerciseRouteFor } from "../exercise-route";
 
 export type LessonReaderChapter = {
   title: string;
@@ -24,18 +33,25 @@ export type LessonReaderSibling = {
  * Public course reader — « Référence » register (chantier C8, L1.4). Purely
  * presentational: the route fetches the lesson (anon-capable `getChapterLesson`,
  * L0.4a) and passes it in. Editorial light + teal reading skin, Cours/Résumé
- * toggle, print, soft account invite — reading never requires an account.
- * Content direction is pinned explicitly so LTR content reads correctly even
- * under an Arabic UI. Copy is i18n (fr/en/ar).
+ * toggle, print, soft account invite — reading never requires an account. A
+ * single « practise this chapter » CTA links to the chapter's first non-quiz
+ * exercise (auth-aware: signed-in → scored quest, anon → free practice) so a
+ * reader can go straight from the lesson to its exercises instead of bouncing
+ * back to the subject hub (GAP-044). Content direction is pinned explicitly so
+ * LTR content reads correctly even under an Arabic UI. Copy is i18n (fr/en/ar).
  */
 export function LessonReader({
   chapterId,
   chapter,
   allChapters,
+  practiceExerciseId = null,
+  isAuthenticated = false,
 }: {
   chapterId: string;
   chapter: LessonReaderChapter;
   allChapters: LessonReaderSibling[];
+  practiceExerciseId?: string | null;
+  isAuthenticated?: boolean;
 }) {
   const t = useT();
   const [showSummary, setShowSummary] = useState(false);
@@ -118,6 +134,19 @@ export function LessonReader({
         <div className="rounded-2xl border border-dashed border-border bg-card px-6 py-12 text-center">
           <ScrollText className="mx-auto h-12 w-12 text-muted-foreground/40" />
           <p className="mt-3 text-muted-foreground">{t.public.reader.courseSoon}</p>
+        </div>
+      )}
+
+      {practiceExerciseId && (
+        <div className="mt-10 print:hidden">
+          <Link
+            to={exerciseRouteFor(isAuthenticated)}
+            params={{ exerciseId: practiceExerciseId }}
+            data-testid="lesson-practice-cta"
+            className="flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+          >
+            <Dumbbell className="h-4 w-4" /> {t.public.reader.practiceCta}
+          </Link>
         </div>
       )}
 

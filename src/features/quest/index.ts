@@ -12,3 +12,4 @@ export {
 } from "./quest.server";
 export { computeNextExerciseId } from "./next-exercise";
 export { noXpReason } from "./no-xp-reason";
+export { exerciseRouteFor } from "./exercise-route";

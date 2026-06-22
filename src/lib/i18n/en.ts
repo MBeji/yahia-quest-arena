@@ -603,6 +603,7 @@ export const en: TranslationKeys = {
       summaryTab: "Summary",
       print: "Print",
       courseSoon: "The lesson for this chapter is coming soon.",
+      practiceCta: "Practise this chapter",
       inviteTitle: "Learn by playing",
       inviteDesc:
         "Create your free account to practise on the exercises, earn XP and save your progress. Reading the lesson is always free.",
@@ -615,6 +616,7 @@ export const en: TranslationKeys = {
     },
     practice: {
       back: "Back to the subject",
+      reviewCourse: "Review the lesson",
       modeKicker: "Practice mode",
       subtitle: "Answer the questions then check yourself — no account, no score saved.",
       scoreCorrect: "{correct} of {total} correct",

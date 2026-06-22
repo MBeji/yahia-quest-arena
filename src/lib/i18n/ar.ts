@@ -599,6 +599,7 @@ export const ar: TranslationKeys = {
       summaryTab: "الملخّص",
       print: "طباعة",
       courseSoon: "درس هذا الفصل قريبًا.",
+      practiceCta: "تدرّب على هذا الفصل",
       inviteTitle: "تعلّم وأنت تلعب",
       inviteDesc:
         "أنشئ حسابك المجاني للتدرّب على التمارين وكسب نقاط الخبرة وحفظ تقدّمك. قراءة الدرس تبقى دائمًا مجانية.",
@@ -611,6 +612,7 @@ export const ar: TranslationKeys = {
     },
     practice: {
       back: "العودة إلى المادة",
+      reviewCourse: "مراجعة الدرس",
       modeKicker: "وضع التدريب",
       subtitle: "أجب عن الأسئلة ثم صحّح نفسك — بدون حساب، بدون نتيجة محفوظة.",
       scoreCorrect: "{correct} من {total} إجابات صحيحة",

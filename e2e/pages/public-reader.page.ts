@@ -27,6 +27,10 @@ export class LessonReaderPage {
   get printButton(): Locator {
     return this.page.getByTestId("lesson-print");
   }
+  /** The « practise this chapter » CTA — present when the chapter has a non-quiz exercise. */
+  get practiceCta(): Locator {
+    return this.page.getByTestId("lesson-practice-cta");
+  }
   /** The soft account invitation (an upsell to play, never a wall). */
   get accountInvite(): Locator {
     return this.page.locator('aside a[href="/signup"]');
