@@ -71,11 +71,33 @@ matière **suffixée par le niveau** (les ids bruts `math`/`arabic`/… sont ceu
 > générique, source à réaligner sur le corpus CNP). `themeId="ecole-tn"`, `gradeSlug="1ere-base"…`,
 > notation maths standard même en arabe (chiffres 0-9, LTR).
 
-## 🧒 Adapter à l'âge (primaire)
+## 🧒 Adapter à l'âge de l'élève
 
-Niveaux jeunes (1ère ≈ 6-7 ans, souvent non-lecteurs) : privilégier les **figures SVG** (compter, comparer,
-associer image↔nombre), énoncés **très courts** ; garder la progression du programme ; RPG dans les
-**titres** seulement, énoncés/options/explications sobres.
+Le contenu doit « parler » à l'âge de l'élève. Calibrer **longueur de phrase, vocabulaire, densité de
+figures et ton** par tranche :
+
+| Niveaux                 | Âge                       | Calibrage                                                                                                                                                                                  |
+| ----------------------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1ère–2ème**           | ≈ 6-8 ans, peu-lecteurs   | Phrases **très courtes** (5-10 mots), vocabulaire concret du quotidien, **une figure SVG par question** (compter, comparer, associer image↔nombre/mot). Aucun paragraphe dense.            |
+| **3ème–5ème**           | ≈ 8-11 ans                | Phrases courtes, **un** raisonnement à la fois, figures fréquentes (géométrie/sciences), exemple concret avant la règle.                                                                   |
+| **6ème–9ème (collège)** | ≈ 11-15 ans               | Registre scolaire standard, vocabulaire disciplinaire, figures là où elles aident (géométrie, schémas).                                                                                    |
+| **Secondaire / Bac**    | ≈ 15-18 ans               | Rigueur et terminologie d'examen, démarches complètes, phrasé proche des annales.                                                                                                          |
+
+Règles transverses :
+
+- **Matière en arabe ⇒ TOUT en arabe**, y compris le **`nameFr` de la matière** (`الرياضيات`,
+  `الإيقاظ العلمي`, `اللغة العربية`…) **et le `title` de chaque chapitre**. Jamais de nom français pour
+  une matière `ar` (bug corrigé 2026-06-22 : éveil 1→5 affichaient « Éveil scientifique », math 3→5
+  « Mathématiques »). **Auto-check** : pour tout sujet `contentLanguage:"ar"`, le `nameFr` et chaque
+  `chapter.json` `title` doivent contenir des lettres arabes (`[؀-ۿ]`). Seuls **chiffres et notation**
+  restent latins (cf. `content-engine/references/math-and-notation.md`).
+- **Petites classes = images ludiques et colorées.** Pour 1ère–3ème, dessiner des **illustrations SVG
+  gaies et colorées** (contour foncé + remplissage vif : poisson orange, arbre vert, soleil jaune,
+  pomme rouge, goutte bleue) plutôt que de la géométrie grise — la couleur passe le sanitizer (règle
+  « Colour is encouraged » de `content-engine/references/content-schema.md`). Une figure par question,
+  lisible à petite taille (~64-256 px).
+- **Progression du programme conservée** quel que soit l'âge ; le RPG reste dans les **titres**
+  (énoncés / options / explications sobres).
 
 ## ⚠️ Manques connus
 
