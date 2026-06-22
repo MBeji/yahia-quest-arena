@@ -1,0 +1,82 @@
+{
+  "title": "📝 تدريب ⭐⭐⭐: مراجعة شاملة للمقاطع والكلمة",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "كم مقطعًا في كلمة «دار»؟",
+      "options": [
+        { "id": "a", "text": "1" },
+        { "id": "b", "text": "2" },
+        { "id": "c", "text": "3" },
+        { "id": "d", "text": "4" }
+      ],
+      "correctOption": "a",
+      "explanation": "كلمة دار مقطعٌ واحدٌ طويل «دار»، فعددها 1. ننطقها في نبضةٍ واحدة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أيّ كلمةٍ نحصل عليها من المقاطع: «قَ» + «مَ» + «ر»؟",
+      "options": [
+        { "id": "a", "text": "مَقَر" },
+        { "id": "b", "text": "رَمَق" },
+        { "id": "c", "text": "قَمَر" },
+        { "id": "d", "text": "قَلَم" }
+      ],
+      "correctOption": "c",
+      "explanation": "نصِل «قَ» + «مَ» + «ر» على الترتيب فنحصل على كلمة قَمَر، وهو الذي يضيء ليلًا.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم مقطعًا في كلمة «قَطْرَة»؟ <svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M60 30 q-8 14 -8 24 q0 14 16 14 q16 0 16 -14 q0 -10 -8 -24 q-4 -8 -8 -8 q-4 0 -8 8 z\" fill=\"#38bdf8\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>",
+      "options": [
+        { "id": "a", "text": "1" },
+        { "id": "b", "text": "2" },
+        { "id": "c", "text": "3" },
+        { "id": "d", "text": "4" }
+      ],
+      "correctOption": "b",
+      "explanation": "كلمة قَطْرَة فيها مقطعان: «قَطْ» + «رَة»، فعددها 2.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما اسم هذه الصورة؟ <svg viewBox=\"0 0 140 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M30 40 q6 44 44 56 q34 10 44 -6 q-30 6 -54 -16 q-22 -22 -22 -36 z\" fill=\"#facc15\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M30 40 q-4 -8 2 -12\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M114 84 q8 0 8 -8\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\" stroke-linecap=\"round\"/></svg>",
+      "options": [
+        { "id": "a", "text": "سَمَكَة" },
+        { "id": "b", "text": "تُفّاحة" },
+        { "id": "c", "text": "قَمَر" },
+        { "id": "d", "text": "مَوْز" }
+      ],
+      "correctOption": "d",
+      "explanation": "الصورة موزةٌ صفراء، نقرأ «مَوْ + ز» = مَوْز، وهي فاكهة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ كلمةٍ نحصل عليها من المقاطع: «سَ» + «مَ» + «كَة»؟",
+      "options": [
+        { "id": "a", "text": "سَمَكَة" },
+        { "id": "b", "text": "مَسَكَة" },
+        { "id": "c", "text": "كَمَسَة" },
+        { "id": "d", "text": "سَكَمَة" }
+      ],
+      "correctOption": "a",
+      "explanation": "نصِل «سَ» + «مَ» + «كَة» على الترتيب فنحصل على سَمَكَة. الفخّ الشائع هو تبديل ترتيب المقاطع، فتضيع الكلمة.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "أيّ زوجٍ صحيحٌ بين الكلمة وعدد مقاطعها؟",
+      "options": [
+        { "id": "a", "text": "مَوْز ← 1" },
+        { "id": "b", "text": "قَمَر ← 2" },
+        { "id": "c", "text": "تُفّاحة ← 2" },
+        { "id": "d", "text": "سَمَكَة ← 3" }
+      ],
+      "correctOption": "d",
+      "explanation": "سَمَكَة = «سَ + مَ + كَة» = 3 مقاطع، فالزوج صحيح. الفخّ الشائع: مَوْز مقطعان، وقَمَر ثلاثة، وتُفّاحة ثلاثة.",
+      "difficulty": 3
+    }
+  ]
+}

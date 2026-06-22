@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة: الحروف وأصواتها",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "ما هذا الحرف؟ <svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"108\" height=\"108\" rx=\"16\" fill=\"#c7d2fe\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"60\" y=\"86\" font-size=\"72\" text-anchor=\"middle\" fill=\"#4338ca\" stroke=\"none\">د</text></svg>",
+      "options": [
+        { "id": "a", "text": "الحرف د" },
+        { "id": "b", "text": "الحرف ر" },
+        { "id": "c", "text": "الحرف ل" },
+        { "id": "d", "text": "الحرف م" }
+      ],
+      "correctOption": "a",
+      "explanation": "هذا هو الحرف د، وصوته «دْ» كما في كلمة دار، وليست له نقطة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "بأيّ حرفٍ تبدأ كلمة «ليمون»؟",
+      "options": [
+        { "id": "a", "text": "الحرف م" },
+        { "id": "b", "text": "الحرف ب" },
+        { "id": "c", "text": "الحرف ل" },
+        { "id": "d", "text": "الحرف س" }
+      ],
+      "correctOption": "c",
+      "explanation": "أوّل صوتٍ في كلمة ليمون هو «لـْ»، فهي تبدأ بالحرف ل.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أيّ حرفٍ له نقطتان فوقه؟",
+      "options": [
+        { "id": "a", "text": "الحرف ب" },
+        { "id": "b", "text": "الحرف ت" },
+        { "id": "c", "text": "الحرف د" },
+        { "id": "d", "text": "الحرف س" }
+      ],
+      "correctOption": "b",
+      "explanation": "الحرف ت له نقطتان فوقه. أمّا ب فنقطةٌ واحدةٌ تحته، و د و س فلا نقط لهما.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "بأيّ حرفٍ تبدأ هذه الكلمة؟ <svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M40 44 q20 -16 40 0 q14 12 8 36 q-6 22 -28 26 q-22 -4 -28 -26 q-6 -24 8 -36 z\" fill=\"#ef4444\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M60 40 q2 -14 16 -18\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M60 40 q-6 -10 -18 -8\" fill=\"#22c55e\" stroke=\"#1f2937\" stroke-width=\"2\"/></svg>",
+      "options": [
+        { "id": "a", "text": "الحرف س" },
+        { "id": "b", "text": "الحرف م" },
+        { "id": "c", "text": "الحرف ل" },
+        { "id": "d", "text": "الحرف ت" }
+      ],
+      "correctOption": "d",
+      "explanation": "هذه تفّاحة، وأوّل صوتٍ فيها «تـْ»، فهي تبدأ بالحرف ت.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ كلمةٍ تبدأ بالحرف س؟",
+      "options": [
+        { "id": "a", "text": "سمكة" },
+        { "id": "b", "text": "موز" },
+        { "id": "c", "text": "دار" },
+        { "id": "d", "text": "ليمون" }
+      ],
+      "correctOption": "a",
+      "explanation": "كلمة سمكة تبدأ بصوت «سـْ»، فهي التي تبدأ بالحرف س.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "الحرف الذي ليست له نقطة هو:",
+      "options": [
+        { "id": "a", "text": "الحرف ت" },
+        { "id": "b", "text": "الحرف ب" },
+        { "id": "c", "text": "الحرف ل" },
+        { "id": "d", "text": "الحرف ث" }
+      ],
+      "correctOption": "c",
+      "explanation": "الحرف ل ليست له نقطة. أمّا ت فنقطتان، و ب فنقطةٌ واحدة، و ث فثلاث نقط.",
+      "difficulty": 2
+    }
+  ]
+}

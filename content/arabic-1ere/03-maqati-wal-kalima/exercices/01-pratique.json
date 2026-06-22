@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: أبني الكلمة وأعدّ مقاطعها",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "ما اسم هذه الصورة؟ <svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M40 44 q20 -16 40 0 q14 12 8 36 q-6 22 -28 26 q-22 -4 -28 -26 q-6 -24 8 -36 z\" fill=\"#ef4444\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M60 40 q2 -14 16 -18\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M60 40 q-6 -10 -18 -8\" fill=\"#22c55e\" stroke=\"#1f2937\" stroke-width=\"2\"/></svg>",
+      "options": [
+        { "id": "a", "text": "تُفّاحة" },
+        { "id": "b", "text": "مَوْز" },
+        { "id": "c", "text": "سَمَكَة" },
+        { "id": "d", "text": "دار" }
+      ],
+      "correctOption": "a",
+      "explanation": "الصورة تفّاحةٌ حمراء، نقرأ الكلمة «تُفْ + فا + حَة» = تُفّاحة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم مقطعًا في كلمة «مَوْز»؟ <svg viewBox=\"0 0 140 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M30 40 q6 44 44 56 q34 10 44 -6 q-30 6 -54 -16 q-22 -22 -22 -36 z\" fill=\"#facc15\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M30 40 q-4 -8 2 -12\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M114 84 q8 0 8 -8\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\" stroke-linecap=\"round\"/></svg>",
+      "options": [
+        { "id": "a", "text": "1" },
+        { "id": "b", "text": "2" },
+        { "id": "c", "text": "3" },
+        { "id": "d", "text": "4" }
+      ],
+      "correctOption": "b",
+      "explanation": "كلمة مَوْز فيها مقطعان: «مَوْ» + «ز»، فعددها 2.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أيّ كلمةٍ نحصل عليها من المقطعين: «دا» + «ر»؟",
+      "options": [
+        { "id": "a", "text": "نار" },
+        { "id": "b", "text": "رَدّ" },
+        { "id": "c", "text": "دَرْب" },
+        { "id": "d", "text": "دار" }
+      ],
+      "correctOption": "d",
+      "explanation": "نصِل «دا» بـ «ر» فنحصل على كلمة دار، وهي البيت الذي نسكن فيه.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم مقطعًا في كلمة «سَمَكَة»؟ <svg viewBox=\"0 0 140 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M24 60 q26 -30 70 -16 q22 8 22 16 q0 8 -22 16 q-44 14 -70 -16 z\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M94 44 l24 16 l-24 16 z\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><circle cx=\"44\" cy=\"54\" r=\"4\" fill=\"#1f2937\" stroke=\"none\"/></svg>",
+      "options": [
+        { "id": "a", "text": "1" },
+        { "id": "b", "text": "2" },
+        { "id": "c", "text": "3" },
+        { "id": "d", "text": "4" }
+      ],
+      "correctOption": "c",
+      "explanation": "كلمة سَمَكَة فيها ثلاثة مقاطع: «سَ» + «مَ» + «كَة»، فعددها 3.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ كلمةٍ نحصل عليها من المقاطع: «قَ» + «مَ» + «ر»؟",
+      "options": [
+        { "id": "a", "text": "قَمَر" },
+        { "id": "b", "text": "قَلَم" },
+        { "id": "c", "text": "رَمَق" },
+        { "id": "d", "text": "مَقَر" }
+      ],
+      "correctOption": "a",
+      "explanation": "نصِل «قَ» + «مَ» + «ر» على الترتيب فنحصل على كلمة قَمَر، وهو الذي يضيء ليلًا.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم مقطعًا في كلمة «شَمْس»؟ <svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"60\" cy=\"60\" r=\"26\" fill=\"#facc15\" stroke=\"#1f2937\" stroke-width=\"3\"/><g stroke=\"#f59e0b\" stroke-width=\"4\" stroke-linecap=\"round\"><line x1=\"60\" y1=\"14\" x2=\"60\" y2=\"26\"/><line x1=\"60\" y1=\"94\" x2=\"60\" y2=\"106\"/><line x1=\"14\" y1=\"60\" x2=\"26\" y2=\"60\"/><line x1=\"94\" y1=\"60\" x2=\"106\" y2=\"60\"/><line x1=\"28\" y1=\"28\" x2=\"37\" y2=\"37\"/><line x1=\"83\" y1=\"83\" x2=\"92\" y2=\"92\"/><line x1=\"92\" y1=\"28\" x2=\"83\" y2=\"37\"/><line x1=\"37\" y1=\"83\" x2=\"28\" y2=\"92\"/></g></svg>",
+      "options": [
+        { "id": "a", "text": "1" },
+        { "id": "b", "text": "2" },
+        { "id": "c", "text": "3" },
+        { "id": "d", "text": "4" }
+      ],
+      "correctOption": "b",
+      "explanation": "كلمة شَمْس فيها مقطعان: «شَمْ» + «س»، فعددها 2.",
+      "difficulty": 2
+    }
+  ]
+}
