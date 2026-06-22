@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedThemesRouteImport } from './routes/_authenticated/themes'
@@ -21,6 +22,7 @@ import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authentic
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
 import { Route as AuthenticatedDungeonRouteImport } from './routes/_authenticated/dungeon'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as PublicChapitreChapterIdRouteImport } from './routes/_public/chapitre.$chapterId'
 import { Route as AuthenticatedThemesFamilyIdRouteImport } from './routes/_authenticated/themes_.$familyId'
 import { Route as AuthenticatedSubjectSubjectIdRouteImport } from './routes/_authenticated/subject.$subjectId'
 import { Route as AuthenticatedQuestExerciseIdRouteImport } from './routes/_authenticated/quest.$exerciseId'
@@ -43,6 +45,10 @@ const LoginRoute = LoginRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PublicRoute = PublicRouteImport.update({
+  id: '/_public',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
@@ -90,6 +96,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRoute,
+} as any)
+const PublicChapitreChapterIdRoute = PublicChapitreChapterIdRouteImport.update({
+  id: '/chapitre/$chapterId',
+  path: '/chapitre/$chapterId',
+  getParentRoute: () => PublicRoute,
 } as any)
 const AuthenticatedThemesFamilyIdRoute =
   AuthenticatedThemesFamilyIdRouteImport.update({
@@ -160,6 +171,7 @@ export interface FileRoutesByFullPath {
   '/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
   '/themes/$familyId': typeof AuthenticatedThemesFamilyIdRoute
+  '/chapitre/$chapterId': typeof PublicChapitreChapterIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -181,11 +193,13 @@ export interface FileRoutesByTo {
   '/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
   '/themes/$familyId': typeof AuthenticatedThemesFamilyIdRoute
+  '/chapitre/$chapterId': typeof PublicChapitreChapterIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/_public': typeof PublicRouteWithChildren
   '/auth': typeof AuthRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
@@ -204,6 +218,7 @@ export interface FileRoutesById {
   '/_authenticated/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/_authenticated/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
   '/_authenticated/themes_/$familyId': typeof AuthenticatedThemesFamilyIdRoute
+  '/_public/chapitre/$chapterId': typeof PublicChapitreChapterIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -227,6 +242,7 @@ export interface FileRouteTypes {
     | '/quest/$exerciseId'
     | '/subject/$subjectId'
     | '/themes/$familyId'
+    | '/chapitre/$chapterId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -248,10 +264,12 @@ export interface FileRouteTypes {
     | '/quest/$exerciseId'
     | '/subject/$subjectId'
     | '/themes/$familyId'
+    | '/chapitre/$chapterId'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/_public'
     | '/auth'
     | '/login'
     | '/signup'
@@ -270,11 +288,13 @@ export interface FileRouteTypes {
     | '/_authenticated/quest/$exerciseId'
     | '/_authenticated/subject/$subjectId'
     | '/_authenticated/themes_/$familyId'
+    | '/_public/chapitre/$chapterId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  PublicRoute: typeof PublicRouteWithChildren
   AuthRoute: typeof AuthRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
@@ -301,6 +321,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PublicRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -365,6 +392,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRoute
+    }
+    '/_public/chapitre/$chapterId': {
+      id: '/_public/chapitre/$chapterId'
+      path: '/chapitre/$chapterId'
+      fullPath: '/chapitre/$chapterId'
+      preLoaderRoute: typeof PublicChapitreChapterIdRouteImport
+      parentRoute: typeof PublicRoute
     }
     '/_authenticated/themes_/$familyId': {
       id: '/_authenticated/themes_/$familyId'
@@ -466,9 +500,21 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
   AuthenticatedRouteChildren,
 )
 
+interface PublicRouteChildren {
+  PublicChapitreChapterIdRoute: typeof PublicChapitreChapterIdRoute
+}
+
+const PublicRouteChildren: PublicRouteChildren = {
+  PublicChapitreChapterIdRoute: PublicChapitreChapterIdRoute,
+}
+
+const PublicRouteWithChildren =
+  PublicRoute._addFileChildren(PublicRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  PublicRoute: PublicRouteWithChildren,
   AuthRoute: AuthRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,

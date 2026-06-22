@@ -173,7 +173,7 @@ function SubjectPage() {
                   </p>
                 )}
                 <Link
-                  to="/lesson/$chapterId"
+                  to="/chapitre/$chapterId"
                   params={{ chapterId: c.id }}
                   className="mt-2 inline-flex items-center gap-1.5 rounded-lg border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/10 px-3 py-1.5 text-xs font-semibold text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/20"
                 >

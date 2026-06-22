@@ -33,7 +33,7 @@ export function QuizLockScreen({
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           {chapterId && (
             <Link
-              to="/lesson/$chapterId"
+              to="/chapitre/$chapterId"
               params={{ chapterId }}
               className="inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-5 py-2.5 text-sm font-bold text-black shadow-gold hover:scale-105"
             >

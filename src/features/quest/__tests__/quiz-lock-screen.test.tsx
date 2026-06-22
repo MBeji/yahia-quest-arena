@@ -24,7 +24,7 @@ describe("QuizLockScreen", () => {
     );
     expect(screen.getByText("Locked")).toBeInTheDocument();
     expect(screen.getByText("Pass the quiz first")).toBeInTheDocument();
-    expect(container.querySelector('a[href="/lesson/$chapterId"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/chapitre/$chapterId"]')).not.toBeNull();
     expect(container.querySelector('a[href="/subject/$subjectId"]')).not.toBeNull();
     // No RTL direction unless requested.
     expect(container.querySelector('[dir="rtl"]')).toBeNull();
@@ -42,7 +42,7 @@ describe("QuizLockScreen", () => {
         rtl
       />,
     );
-    expect(container.querySelector('a[href="/lesson/$chapterId"]')).toBeNull();
+    expect(container.querySelector('a[href="/chapitre/$chapterId"]')).toBeNull();
     expect(container.querySelector('a[href="/subject/$subjectId"]')).toBeNull();
     expect(container.querySelector('[dir="rtl"]')).not.toBeNull();
   });

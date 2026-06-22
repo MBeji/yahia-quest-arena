@@ -434,7 +434,7 @@ function QuestPage() {
                 {passed ? QL.quizPassedBanner : QL.quizFailedBanner}
                 {!passed && chapterId && (
                   <Link
-                    to="/lesson/$chapterId"
+                    to="/chapitre/$chapterId"
                     params={{ chapterId }}
                     className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-4 py-2 text-xs font-bold text-black shadow-gold hover:scale-105"
                   >
