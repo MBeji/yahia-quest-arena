@@ -50,7 +50,7 @@ jobs:
           echo "Mode: ${MODE}"
 
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Setup Node 22
         uses: actions/setup-node@v4
