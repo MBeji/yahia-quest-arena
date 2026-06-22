@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useT } from "@/lib/i18n";
+import { LanguageSwitcher } from "@/components/ui/language-switcher";
 
 /**
  * Header of the public (Référence register) shell. Sober, content-first: the
@@ -25,7 +26,10 @@ export function PublicHeader() {
               نقرا نلعب
             </span>
           </Link>
-          <nav className="flex items-center gap-0.5 sm:gap-1" aria-label={t.public.header.navAria}>
+          <nav
+            className="hidden items-center gap-0.5 sm:flex sm:gap-1"
+            aria-label={t.public.header.navAria}
+          >
             <Link
               to="/programme"
               className="rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground sm:px-3"
@@ -41,6 +45,7 @@ export function PublicHeader() {
           </nav>
         </div>
         <div className="flex items-center gap-1 sm:gap-2">
+          <LanguageSwitcher />
           <Link
             to="/login"
             className="hidden rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground sm:inline-block"
