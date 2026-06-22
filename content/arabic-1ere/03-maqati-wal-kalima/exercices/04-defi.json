@@ -7,7 +7,7 @@
   "displayOrder": 4,
   "questions": [
     {
-      "prompt": "أيّ صورةٍ اسمها «سَمَكَة»؟",
+      "prompt": "أيّ صورةٍ اسمها «سَمَكة»؟",
       "options": [
         { "id": "a", "text": "<svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M40 44 q20 -16 40 0 q14 12 8 36 q-6 22 -28 26 q-22 -4 -28 -26 q-6 -24 8 -36 z\" fill=\"#ef4444\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M60 40 q2 -14 16 -18\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>" },
         { "id": "b", "text": "<svg viewBox=\"0 0 140 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M24 60 q26 -30 70 -16 q22 8 22 16 q0 8 -22 16 q-44 14 -70 -16 z\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M94 44 l24 16 l-24 16 z\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><circle cx=\"44\" cy=\"54\" r=\"4\" fill=\"#1f2937\" stroke=\"none\"/></svg>" },
@@ -15,11 +15,11 @@
         { "id": "d", "text": "<svg viewBox=\"0 0 140 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M30 40 q6 44 44 56 q34 10 44 -6 q-30 6 -54 -16 q-22 -22 -22 -36 z\" fill=\"#facc15\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M30 40 q-4 -8 2 -12\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\" stroke-linecap=\"round\"/></svg>" }
       ],
       "correctOption": "b",
-      "explanation": "الصورة (ب) سمكةٌ برتقالية، نقرأ «سَ + مَ + كَة» = سَمَكَة. أمّا (أ) تفّاحة و(ج) شمس و(د) موز.",
+      "explanation": "الصورة (ب) سمكةٌ برتقالية، نقرأ «سَ + مَ + كة» = سَمَكة. أمّا (أ) تفّاحة و(ج) شمس و(د) موز.",
       "difficulty": 2
     },
     {
-      "prompt": "أيّ صورةٍ اسمها «مَوْز»؟",
+      "prompt": "أيّ صورةٍ اسمها «موز»؟",
       "options": [
         { "id": "a", "text": "<svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"60\" cy=\"60\" r=\"24\" fill=\"#facc15\" stroke=\"#1f2937\" stroke-width=\"3\"/><g stroke=\"#f59e0b\" stroke-width=\"4\" stroke-linecap=\"round\"><line x1=\"60\" y1=\"16\" x2=\"60\" y2=\"28\"/><line x1=\"60\" y1=\"92\" x2=\"60\" y2=\"104\"/><line x1=\"16\" y1=\"60\" x2=\"28\" y2=\"60\"/><line x1=\"92\" y1=\"60\" x2=\"104\" y2=\"60\"/></g></svg>" },
         { "id": "b", "text": "<svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M40 44 q20 -16 40 0 q14 12 8 36 q-6 22 -28 26 q-22 -4 -28 -26 q-6 -24 8 -36 z\" fill=\"#ef4444\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M60 40 q2 -14 16 -18\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>" },
@@ -27,23 +27,23 @@
         { "id": "d", "text": "<svg viewBox=\"0 0 140 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M30 40 q6 44 44 56 q34 10 44 -6 q-30 6 -54 -16 q-22 -22 -22 -36 z\" fill=\"#facc15\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M30 40 q-4 -8 2 -12\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M114 84 q8 0 8 -8\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\" stroke-linecap=\"round\"/></svg>" }
       ],
       "correctOption": "d",
-      "explanation": "الصورة (د) موزةٌ صفراء، نقرأ «مَوْ + ز» = مَوْز. أمّا (أ) شمس و(ب) تفّاحة و(ج) قطرة ماء.",
+      "explanation": "الصورة (د) موزةٌ صفراء، اسمها موز وهو مقطعٌ واحد. أمّا (أ) شمس و(ب) تفّاحة و(ج) قطرة ماء.",
       "difficulty": 2
     },
     {
-      "prompt": "أيّ كلمةٍ نحصل عليها من المقاطع: «سَ» + «مَ» + «كَة»؟",
+      "prompt": "أيّ كلمةٍ نحصل عليها من المقاطع: «سَ» + «مَ» + «كة»؟",
       "options": [
-        { "id": "a", "text": "سَمَكَة" },
-        { "id": "b", "text": "مَكَسَة" },
-        { "id": "c", "text": "كَسَمَة" },
-        { "id": "d", "text": "سَكَمَة" }
+        { "id": "a", "text": "سَمَكة" },
+        { "id": "b", "text": "مَكَسة" },
+        { "id": "c", "text": "كَسَمة" },
+        { "id": "d", "text": "سَكَمة" }
       ],
       "correctOption": "a",
-      "explanation": "نصِل «سَ» + «مَ» + «كَة» على الترتيب فنحصل على سَمَكَة. الفخّ الشائع هو بعثرة ترتيب المقاطع، فتضيع الكلمة.",
+      "explanation": "نصِل «سَ» + «مَ» + «كة» على الترتيب فنحصل على سَمَكة. الفخّ الشائع هو بعثرة ترتيب المقاطع، فتضيع الكلمة.",
       "difficulty": 3
     },
     {
-      "prompt": "أيّ صورةٍ اسمها «شَمْس»؟",
+      "prompt": "أيّ صورةٍ اسمها «شمس»؟",
       "options": [
         { "id": "a", "text": "<svg viewBox=\"0 0 140 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M24 60 q26 -30 70 -16 q22 8 22 16 q0 8 -22 16 q-44 14 -70 -16 z\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M94 44 l24 16 l-24 16 z\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><circle cx=\"44\" cy=\"54\" r=\"4\" fill=\"#1f2937\" stroke=\"none\"/></svg>" },
         { "id": "b", "text": "<svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M60 30 q-8 14 -8 24 q0 14 16 14 q16 0 16 -14 q0 -10 -8 -24 q-4 -8 -8 -8 q-4 0 -8 8 z\" fill=\"#38bdf8\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>" },
@@ -51,11 +51,11 @@
         { "id": "d", "text": "<svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M40 44 q20 -16 40 0 q14 12 8 36 q-6 22 -28 26 q-22 -4 -28 -26 q-6 -24 8 -36 z\" fill=\"#ef4444\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M60 40 q2 -14 16 -18\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>" }
       ],
       "correctOption": "c",
-      "explanation": "الصورة (ج) شمسٌ صفراء بأشعّتها، نقرأ «شَمْ + س» = شَمْس. أمّا (أ) سمكة و(ب) قطرة ماء و(د) تفّاحة.",
+      "explanation": "الصورة (ج) شمسٌ صفراء بأشعّتها، فاسمها شمس. أمّا (أ) سمكة و(ب) قطرة ماء و(د) تفّاحة.",
       "difficulty": 3
     },
     {
-      "prompt": "أيّ كلمةٍ نحصل عليها من المقاطع: «قَ» + «مَ» + «ر»؟",
+      "prompt": "أيّ كلمةٍ نحصل عليها من المقطعين: «قَ» + «مَر»؟",
       "options": [
         { "id": "a", "text": "قَمَر" },
         { "id": "b", "text": "رَقَم" },
@@ -63,19 +63,19 @@
         { "id": "d", "text": "قَرَم" }
       ],
       "correctOption": "a",
-      "explanation": "نصِل «قَ» + «مَ» + «ر» على الترتيب فنحصل على قَمَر يضيء ليلًا. الفخّ الشائع هو تبديل ترتيب الحروف فتصير رَقَم أو مَرَق.",
+      "explanation": "نصِل «قَ» بـ «مَر» على الترتيب فنحصل على قَمَر يضيء ليلًا. الفخّ الشائع هو تبديل ترتيب الحروف فتصير رَقَم أو مَرَق.",
       "difficulty": 3
     },
     {
       "prompt": "كلّ هذه الكلمات مقاطعها 2، إلّا واحدة. ما **الكلمة المختلفة**؟",
       "options": [
-        { "id": "a", "text": "مَوْز" },
-        { "id": "b", "text": "شَمْس" },
-        { "id": "c", "text": "بَطَّة" },
-        { "id": "d", "text": "سَمَكَة" }
+        { "id": "a", "text": "قَمَر" },
+        { "id": "b", "text": "قَلَم" },
+        { "id": "c", "text": "بَطّة" },
+        { "id": "d", "text": "سَمَكة" }
       ],
       "correctOption": "d",
-      "explanation": "سَمَكَة فيها ثلاثة مقاطع «سَ + مَ + كَة»، فهي المختلفة. أمّا مَوْز وشَمْس وبَطَّة فكلٌّ منها مقطعان.",
+      "explanation": "سَمَكة فيها ثلاثة مقاطع «سَ + مَ + كة»، فهي المختلفة. أمّا قَمَر «قَ + مَر» وقَلَم «قَ + لَم» وبَطّة «بَطْ + طة» فكلٌّ منها مقطعان.",
       "difficulty": 3
     }
   ]

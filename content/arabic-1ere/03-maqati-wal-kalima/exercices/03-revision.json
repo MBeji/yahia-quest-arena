@@ -7,43 +7,43 @@
   "displayOrder": 3,
   "questions": [
     {
-      "prompt": "كم مقطعًا في كلمة «مَوْز»؟ <svg viewBox=\"0 0 140 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M30 40 q6 44 44 56 q34 10 44 -6 q-30 6 -54 -16 q-22 -22 -22 -36 z\" fill=\"#facc15\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M30 40 q-4 -8 2 -12\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M114 84 q8 0 8 -8\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\" stroke-linecap=\"round\"/></svg>",
+      "prompt": "كم مقطعًا في كلمة «موز»؟ <svg viewBox=\"0 0 140 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M30 40 q6 44 44 56 q34 10 44 -6 q-30 6 -54 -16 q-22 -22 -22 -36 z\" fill=\"#facc15\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M30 40 q-4 -8 2 -12\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M114 84 q8 0 8 -8\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\" stroke-linecap=\"round\"/></svg>",
       "options": [
         { "id": "a", "text": "1" },
         { "id": "b", "text": "2" },
         { "id": "c", "text": "3" },
         { "id": "d", "text": "4" }
       ],
-      "correctOption": "b",
-      "explanation": "كلمة مَوْز فيها مقطعان: «مَوْ» + «ز»، فعددها 2.",
+      "correctOption": "a",
+      "explanation": "كلمة موز مقطعٌ واحد ننطقه دفعةً واحدة، فعددها 1. الحرف الساكن في آخرها يُغلق المقطع ولا يكون مقطعًا وحده.",
       "difficulty": 1
     },
     {
-      "prompt": "أيّ كلمةٍ نحصل عليها من المقطعين: «دا» + «ر»؟",
+      "prompt": "أيّ كلمةٍ نحصل عليها من المقطعين: «قَ» + «لَم»؟",
       "options": [
-        { "id": "a", "text": "دار" },
-        { "id": "b", "text": "رَدّ" },
-        { "id": "c", "text": "نار" },
-        { "id": "d", "text": "دَرْب" }
+        { "id": "a", "text": "لَقَم" },
+        { "id": "b", "text": "قَلَم" },
+        { "id": "c", "text": "مَلَق" },
+        { "id": "d", "text": "قَمَر" }
       ],
-      "correctOption": "a",
-      "explanation": "نصِل «دا» بـ «ر» فنحصل على كلمة دار، وهي البيت الذي نسكن فيه.",
+      "correctOption": "b",
+      "explanation": "نصِل «قَ» بـ «لَم» فنحصل على كلمة قَلَم نكتب به.",
       "difficulty": 1
     },
     {
       "prompt": "ما اسم هذه الصورة؟ <svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M40 44 q20 -16 40 0 q14 12 8 36 q-6 22 -28 26 q-22 -4 -28 -26 q-6 -24 8 -36 z\" fill=\"#ef4444\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M60 40 q2 -14 16 -18\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M60 40 q-6 -10 -18 -8\" fill=\"#22c55e\" stroke=\"#1f2937\" stroke-width=\"2\"/></svg>",
       "options": [
-        { "id": "a", "text": "مَوْز" },
-        { "id": "b", "text": "سَمَكَة" },
+        { "id": "a", "text": "موز" },
+        { "id": "b", "text": "سَمَكة" },
         { "id": "c", "text": "دار" },
         { "id": "d", "text": "تُفّاحة" }
       ],
       "correctOption": "d",
-      "explanation": "الصورة تفّاحةٌ حمراء، نقرأ الكلمة «تُفْ + فا + حَة» = تُفّاحة.",
+      "explanation": "الصورة تفّاحةٌ حمراء، نقرأ الكلمة «تُفْ + فا + حة» = تُفّاحة.",
       "difficulty": 2
     },
     {
-      "prompt": "كم مقطعًا في كلمة «سَمَكَة»؟ <svg viewBox=\"0 0 140 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M24 60 q26 -30 70 -16 q22 8 22 16 q0 8 -22 16 q-44 14 -70 -16 z\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M94 44 l24 16 l-24 16 z\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><circle cx=\"44\" cy=\"54\" r=\"4\" fill=\"#1f2937\" stroke=\"none\"/></svg>",
+      "prompt": "كم مقطعًا في كلمة «سَمَكة»؟ <svg viewBox=\"0 0 140 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M24 60 q26 -30 70 -16 q22 8 22 16 q0 8 -22 16 q-44 14 -70 -16 z\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M94 44 l24 16 l-24 16 z\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><circle cx=\"44\" cy=\"54\" r=\"4\" fill=\"#1f2937\" stroke=\"none\"/></svg>",
       "options": [
         { "id": "a", "text": "1" },
         { "id": "b", "text": "2" },
@@ -51,11 +51,11 @@
         { "id": "d", "text": "4" }
       ],
       "correctOption": "c",
-      "explanation": "كلمة سَمَكَة فيها ثلاثة مقاطع: «سَ» + «مَ» + «كَة»، فعددها 3.",
+      "explanation": "كلمة سَمَكة فيها ثلاثة مقاطع: «سَ» + «مَ» + «كة»، فعددها 3.",
       "difficulty": 2
     },
     {
-      "prompt": "أيّ كلمةٍ نحصل عليها من المقاطع: «قَ» + «مَ» + «ر»؟",
+      "prompt": "أيّ كلمةٍ نحصل عليها من المقطعين: «قَ» + «مَر»؟",
       "options": [
         { "id": "a", "text": "قَمَر" },
         { "id": "b", "text": "مَقَر" },
@@ -63,19 +63,19 @@
         { "id": "d", "text": "قَلَم" }
       ],
       "correctOption": "a",
-      "explanation": "نصِل «قَ» + «مَ» + «ر» على الترتيب فنحصل على كلمة قَمَر، وهو الذي يضيء ليلًا.",
+      "explanation": "نصِل «قَ» بـ «مَر» على الترتيب فنحصل على كلمة قَمَر، وهو الذي يضيء ليلًا.",
       "difficulty": 2
     },
     {
       "prompt": "أيّ زوجٍ صحيحٌ بين الكلمة وعدد مقاطعها؟",
       "options": [
-        { "id": "a", "text": "سَمَكَة ← 2" },
-        { "id": "b", "text": "دار ← 3" },
+        { "id": "a", "text": "سَمَكة ← 2" },
+        { "id": "b", "text": "قَمَر ← 3" },
         { "id": "c", "text": "تُفّاحة ← 2" },
-        { "id": "d", "text": "مَوْز ← 2" }
+        { "id": "d", "text": "موز ← 1" }
       ],
       "correctOption": "d",
-      "explanation": "مَوْز = «مَوْ» + «ز» = 2 مقطعان، فالزوج صحيح. أمّا سَمَكَة فثلاثة، ودار مقطعٌ واحد، وتُفّاحة ثلاثة.",
+      "explanation": "موز = «موز» = مقطعٌ واحد، فالزوج صحيح. أمّا سَمَكة فثلاثة، وقَمَر مقطعان، وتُفّاحة ثلاثة.",
       "difficulty": 2
     }
   ]
