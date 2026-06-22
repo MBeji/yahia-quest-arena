@@ -104,6 +104,5 @@ describe("JourneyMap", () => {
     // locked node ("Arabe") renders no link.
     expect(hrefs).toEqual(["/matiere/$subjectId", "/matiere/$subjectId", "/matiere/$subjectId"]);
     expect(hrefs).not.toContain("/parcours/$subjectId");
-    expect(screen.getByText("Premium")).toBeInTheDocument();
   });
 });

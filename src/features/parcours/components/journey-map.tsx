@@ -39,7 +39,6 @@ export function JourneyMap({ nodes, profile }: JourneyMapProps) {
               state={n.state}
               title={n.nameFr}
               sublabel={sublabel}
-              badge={n.isPremium ? t.parcours.premium : undefined}
               icon={n.icon}
               color={color}
               clickable={n.state !== "locked"}
