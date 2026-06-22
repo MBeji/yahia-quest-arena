@@ -73,72 +73,6 @@ export type TranslationKeys = {
     emailSentSpam: string;
     emailSentEdit: string;
   };
-  // Landing
-  landing: {
-    navSystem: string;
-    navSubjects: string;
-    navRanks: string;
-    signIn: string;
-    joinAcademy: string;
-    badge: string;
-    heroAlt: string;
-    enableAnimations: string;
-    reduceAnimations: string;
-    heroTitle1: string;
-    heroTitle2: string;
-    heroTitle3: string;
-    heroDesc: string;
-    ctaStart: string;
-    ctaLogin: string;
-    statSubjects: string;
-    statQuests: string;
-    statStreak: string;
-    heroOverlayLevel: string;
-    heroOverlayName: string;
-    featuresLabel: string;
-    featuresTitle1: string;
-    featuresTitle2: string;
-    subjectsLabel: string;
-    subjectsTitle1: string;
-    subjectsTitle2: string;
-    attributePrefix: string;
-    ranksLabel: string;
-    ranksTitle1: string;
-    ranksTitle2: string;
-    ranksCta: string;
-    footer: string;
-    // Features
-    featureXpTitle: string;
-    featureXpDesc: string;
-    featureStreakTitle: string;
-    featureStreakDesc: string;
-    featureRadarTitle: string;
-    featureRadarDesc: string;
-    featureArenaTitle: string;
-    featureArenaDesc: string;
-    featureBossTitle: string;
-    featureBossDesc: string;
-    featureCurriculumTitle: string;
-    featureCurriculumDesc: string;
-    // Subjects
-    subjectMath: string;
-    subjectFrench: string;
-    subjectArabic: string;
-    subjectScience: string;
-    subjectEnglish: string;
-    attrStrength: string;
-    attrSpirit: string;
-    attrWisdom: string;
-    attrObservation: string;
-    attrAgility: string;
-    // Ranks
-    rankCivilian: string;
-    rankAspirant: string;
-    rankWarrior: string;
-    rankMaster: string;
-    rankElite: string;
-    rankLegend: string;
-  };
   // Dashboard
   dashboard: {
     title: string;
@@ -438,7 +372,6 @@ export type TranslationKeys = {
     review: string;
     locked: string;
     lockedHint: string;
-    premium: string;
     premiumHint: string;
     done: string;
     current: string;
@@ -454,7 +387,6 @@ export type TranslationKeys = {
     concoursTitle: string;
     libreTitle: string;
     unlocked: string;
-    premium: string;
     comingSoon: string;
     switching: string;
     switchError: string;

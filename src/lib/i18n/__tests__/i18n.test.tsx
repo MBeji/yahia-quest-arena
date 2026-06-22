@@ -11,7 +11,7 @@ function TestConsumer() {
       <span data-testid="locale">{locale}</span>
       <span data-testid="dir">{dir}</span>
       <span data-testid="loading">{t.common.loading}</span>
-      <span data-testid="landing-nav">{t.landing.navSystem}</span>
+      <span data-testid="public-nav">{t.public.header.programme}</span>
       <button data-testid="switch-fr" onClick={() => setLocale("fr")} />
       <button data-testid="switch-ar" onClick={() => setLocale("ar")} />
       <button data-testid="switch-en" onClick={() => setLocale("en")} />
@@ -136,14 +136,14 @@ describe("i18n system", () => {
     expect(screen.getByTestId("locale").textContent).toBe("fr");
   });
 
-  it("each locale has landing keys defined", async () => {
+  it("each locale has public-screen keys defined", async () => {
     const { en } = await import("@/lib/i18n/en");
     const { fr } = await import("@/lib/i18n/fr");
     const { ar } = await import("@/lib/i18n/ar");
 
-    expect(en.landing.navSystem).toBeTruthy();
-    expect(fr.landing.navSystem).toBeTruthy();
-    expect(ar.landing.navSystem).toBeTruthy();
+    expect(en.public.landing.heroTitle).toBeTruthy();
+    expect(fr.public.landing.heroTitle).toBeTruthy();
+    expect(ar.public.landing.heroTitle).toBeTruthy();
   });
 
   it("the three locale dictionaries share the exact same key structure", async () => {
@@ -181,7 +181,9 @@ describe("i18n system", () => {
       expect(d.dashboard.noQuestTarget).toBeTruthy();
       expect(d.dashboard.itemTypes.skin).toBeTruthy();
       expect(d.dashboard.rarities.common).toBeTruthy();
-      expect(d.landing.heroAlt).toBeTruthy();
+      expect(d.public.landing.heroTitle).toBeTruthy();
+      expect(d.public.practice.checkCta).toBeTruthy();
+      expect(d.public.subject.chapter).toContain("{n}");
       expect(d.auth.oauthErrorPrefix).toContain("{msg}");
     }
   });
