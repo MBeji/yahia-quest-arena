@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: أتعرّف على التكاثر والنموّ",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "من أيّ جزءٍ من النبات تتكوّن الثمرة؟",
+      "options": [
+        { "id": "a", "text": "من الجذر" },
+        { "id": "b", "text": "من الزهرة" },
+        { "id": "c", "text": "من الورقة" },
+        { "id": "d", "text": "من الساق" }
+      ],
+      "correctOption": "b",
+      "explanation": "من الزهرة تتكوّن الثمرة، وفي الثمرة توجد البذور.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ماذا يوجد داخل الثمرة؟",
+      "options": [
+        { "id": "a", "text": "بذورٌ (حبوب)" },
+        { "id": "b", "text": "ريش" },
+        { "id": "c", "text": "حليب" },
+        { "id": "d", "text": "رمل" }
+      ],
+      "correctOption": "a",
+      "explanation": "داخل الثمرة توجد البذور (الحبوب)، ومنها تنبت نباتاتٌ جديدة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ماذا نزرع في التربة لتنبت نبتةٌ جديدة؟",
+      "options": [
+        { "id": "a", "text": "ورقةً" },
+        { "id": "b", "text": "حجرًا" },
+        { "id": "c", "text": "بذرةً" },
+        { "id": "d", "text": "ريشةً" }
+      ],
+      "correctOption": "c",
+      "explanation": "نزرع البذرة في التربة فتنبت وتعطي نبتةً جديدة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كيف تحصل الدجاجة على كتاكيت؟",
+      "options": [
+        { "id": "a", "text": "تلد كتكوتًا حيًّا" },
+        { "id": "b", "text": "تُزهر" },
+        { "id": "c", "text": "تشرب الحليب" },
+        { "id": "d", "text": "تضع بيضًا يخرج منه الكتكوت" }
+      ],
+      "correctOption": "d",
+      "explanation": "الدجاجة حيوانٌ بيوضٌ تضع بيضًا، وبعد الحضانة يخرج منه الكتكوت.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "من أين يخرج الكتكوت؟ <svg viewBox=\"0 0 200 110\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"0\" width=\"200\" height=\"110\" fill=\"#fff8e6\" stroke=\"#e0a400\" stroke-width=\"2\"/><g stroke=\"#5a3210\" stroke-width=\"2\"><path d=\"M70 38 l8 -8 l6 8 l8 -8 l6 8 l8 -8 l4 8 z\" fill=\"#fdf3d6\"/><path d=\"M70 84 l8 8 l6 -8 l8 8 l6 -8 l8 8 l4 -8 z\" fill=\"#fdf3d6\"/><circle cx=\"100\" cy=\"61\" r=\"20\" fill=\"#ffd23f\"/><path d=\"M118 59 l10 -3 l-9 8 z\" fill=\"#e0533a\"/></g><circle cx=\"106\" cy=\"55\" r=\"3\" fill=\"#1f2937\" stroke=\"none\"/></svg>",
+      "options": [
+        { "id": "a", "text": "من البيضة" },
+        { "id": "b", "text": "من الزهرة" },
+        { "id": "c", "text": "من البذرة" },
+        { "id": "d", "text": "من الماء" }
+      ],
+      "correctOption": "a",
+      "explanation": "الصورة كتكوتٌ أصفر يخرج من قشرة البيضة المكسورة، فالكتكوت يخرج من البيضة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "الكتكوت عندما يكبر يصبح:",
+      "options": [
+        { "id": "a", "text": "بقرةً" },
+        { "id": "b", "text": "بذرةً" },
+        { "id": "c", "text": "دجاجةً" },
+        { "id": "d", "text": "سمكةً" }
+      ],
+      "correctOption": "c",
+      "explanation": "ينمو الكتكوت ويكبر حتّى يصبح دجاجةً مثل أمّه.",
+      "difficulty": 2
+    }
+  ]
+}
