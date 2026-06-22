@@ -60,7 +60,7 @@ jobs:
       - name: Install the Supabase CLI
         # Pinned to the same version as db-tests.yml / e2e-auth.yml for a
         # deterministic toolchain. Bump deliberately, with a green run.
-        uses: supabase/setup-cli@v1
+        uses: supabase/setup-cli@v2
         with:
           version: 2.106.0
 

@@ -110,7 +110,7 @@ jobs:
       # connection string is available. Idempotent — only pushes new migrations.
       - name: Set up Supabase CLI
         if: steps.guard.outputs.configured == 'true' && steps.guard.outputs.has_db_url == 'true'
-        uses: supabase/setup-cli@v1
+        uses: supabase/setup-cli@v2
         with:
           # Pinned: an unpinned "latest" bump (17.6.1.132 → .134 image) silently
           # broke the local-stack grants on 2026-06-07. Bump deliberately.
