@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft, Check, Loader2, RotateCcw, Sparkles, X, Zap } from "lucide-react";
+import { ArrowLeft, BookOpen, Check, Loader2, RotateCcw, Sparkles, X, Zap } from "lucide-react";
 import { RichField, OptionContent } from "@/components/ui/svg-figure";
 import { isMathExpression, isRtlText } from "@/shared/lib/utils";
 import { shuffleOptions, type BaseOption } from "@/shared/lib/question-utils";
@@ -21,6 +21,7 @@ export type PracticeExerciseInfo = {
   id: string;
   title: string;
   subject_id: string | null;
+  chapter_id?: string | null;
   subjects?: { content_language?: string | null } | null;
 };
 
@@ -99,15 +100,27 @@ export function PracticeExercise({
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6" dir={isRtl ? "rtl" : "ltr"}>
-      {exercise.subject_id ? (
-        <Link
-          to="/matiere/$subjectId"
-          params={{ subjectId: exercise.subject_id }}
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition hover:text-primary"
-        >
-          <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.public.practice.back}
-        </Link>
-      ) : null}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+        {exercise.subject_id ? (
+          <Link
+            to="/matiere/$subjectId"
+            params={{ subjectId: exercise.subject_id }}
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition hover:text-primary"
+          >
+            <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.public.practice.back}
+          </Link>
+        ) : null}
+        {exercise.chapter_id ? (
+          <Link
+            to="/chapitre/$chapterId"
+            params={{ chapterId: exercise.chapter_id }}
+            data-testid="practice-review-course"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition hover:text-primary"
+          >
+            <BookOpen className="h-4 w-4" /> {t.public.practice.reviewCourse}
+          </Link>
+        ) : null}
+      </div>
 
       <header className="mb-6 mt-3">
         <div className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">

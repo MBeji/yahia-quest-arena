@@ -2,12 +2,12 @@ import type { TranslationKeys } from "./types";
 
 export const fr: TranslationKeys = {
   meta: {
-    title: "Na9ra Nal3ab — L'Académie Shonen des concours nationaux 6ème & 9ème",
+    title: "Na9ra Nal3ab — tous les cours de l'école tunisienne, gratuitement",
     description:
-      "Prépare les concours nationaux tunisiens de 6ème et 9ème en mode RPG — plus une académie gratuite : Culture Générale, Muscle ton Cerveau et Langues. XP, streaks, duels et boss.",
-    ogTitle: "Na9ra Nal3ab — Concours nationaux & Académie gratuite",
+      "Cours, résumés et exercices corrigés de toute l'école tunisienne, de la 1re année au Baccalauréat. Accès libre, gratuit, sans inscription — pour toute la famille.",
+    ogTitle: "Na9ra Nal3ab — l'école tunisienne, gratuite et en accès libre",
     ogDescription:
-      "Prépa concours 6ème & 9ème + une académie gratuite (Culture Générale, QI, Langues), façon shonen.",
+      "Tout le programme officiel, du Primaire au Bac : cours, résumés et exercices corrigés, gratuitement.",
   },
   common: {
     backToHall: "Retour au hall",
@@ -606,6 +606,7 @@ export const fr: TranslationKeys = {
       summaryTab: "Résumé",
       print: "Imprimer",
       courseSoon: "Le cours de ce chapitre arrive bientôt.",
+      practiceCta: "S’entraîner sur ce chapitre",
       inviteTitle: "Apprends en jouant",
       inviteDesc:
         "Crée ton compte gratuit pour t’entraîner sur les exercices, gagner des XP et sauvegarder ta progression. Lire le cours reste toujours libre.",
@@ -618,6 +619,7 @@ export const fr: TranslationKeys = {
     },
     practice: {
       back: "Retour à la matière",
+      reviewCourse: "Revoir le cours",
       modeKicker: "Mode entraînement",
       subtitle: "Réponds aux questions puis corrige-toi — sans compte, sans note enregistrée.",
       scoreCorrect: "{correct} sur {total} bonnes réponses",
