@@ -10,8 +10,11 @@ import { type Page, type Locator } from "@playwright/test";
 export class LessonReaderPage {
   constructor(private readonly page: Page) {}
 
+  /** The reader's own page title. Scoped to the article header so a `# ` heading
+   *  inside the lesson markdown (rendered as `<h1 class="lesson-h1">`) doesn't make
+   *  this resolve to two elements. */
   get heading(): Locator {
-    return this.page.getByRole("heading", { level: 1 });
+    return this.page.locator("article header h1");
   }
   /** The rendered course/summary markdown body. */
   get content(): Locator {
