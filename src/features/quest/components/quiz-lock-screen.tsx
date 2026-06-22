@@ -42,7 +42,7 @@ export function QuizLockScreen({
           )}
           {subjectId && (
             <Link
-              to="/subject/$subjectId"
+              to="/matiere/$subjectId"
               params={{ subjectId }}
               className="rounded-lg border border-border bg-black/50 px-5 py-2.5 text-sm font-semibold hover:bg-black/80"
             >

@@ -50,7 +50,7 @@ export function JourneyMap({ nodes, profile }: JourneyMapProps) {
               {n.state === "locked" ? (
                 node
               ) : (
-                <Link to="/subject/$subjectId" params={{ subjectId: n.id }} aria-label={n.nameFr}>
+                <Link to="/matiere/$subjectId" params={{ subjectId: n.id }} aria-label={n.nameFr}>
                   {node}
                 </Link>
               )}

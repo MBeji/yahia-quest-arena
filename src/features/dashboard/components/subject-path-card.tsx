@@ -58,7 +58,7 @@ export function SubjectPathCard(props: {
 
   return (
     <Link
-      to="/subject/$subjectId"
+      to="/matiere/$subjectId"
       params={{ subjectId: subject.id }}
       className={`group relative block overflow-hidden rounded-2xl border bg-black/60 p-5 backdrop-blur-md transition hover:-translate-y-1 ${
         premiumLocked

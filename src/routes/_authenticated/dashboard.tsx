@@ -309,7 +309,7 @@ function Dashboard() {
     }
 
     if (continueSubject) {
-      navigate({ to: "/subject/$subjectId", params: { subjectId: continueSubject.id } });
+      navigate({ to: "/matiere/$subjectId", params: { subjectId: continueSubject.id } });
       return;
     }
 
@@ -497,7 +497,7 @@ function Dashboard() {
           {/* Continue subject button - secondary */}
           {continueSubject && (
             <Link
-              to="/subject/$subjectId"
+              to="/matiere/$subjectId"
               params={{ subjectId: continueSubject.id }}
               className="group flex items-center justify-between gap-4 rounded-2xl border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 p-4 backdrop-blur-md transition hover:border-[color:var(--gold)]/60 hover:bg-[color:var(--gold)]/10 sm:p-5"
             >

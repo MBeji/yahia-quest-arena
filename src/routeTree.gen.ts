@@ -22,6 +22,7 @@ import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authentic
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
 import { Route as AuthenticatedDungeonRouteImport } from './routes/_authenticated/dungeon'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as PublicMatiereSubjectIdRouteImport } from './routes/_public/matiere.$subjectId'
 import { Route as PublicChapitreChapterIdRouteImport } from './routes/_public/chapitre.$chapterId'
 import { Route as AuthenticatedThemesFamilyIdRouteImport } from './routes/_authenticated/themes_.$familyId'
 import { Route as AuthenticatedSubjectSubjectIdRouteImport } from './routes/_authenticated/subject.$subjectId'
@@ -96,6 +97,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRoute,
+} as any)
+const PublicMatiereSubjectIdRoute = PublicMatiereSubjectIdRouteImport.update({
+  id: '/matiere/$subjectId',
+  path: '/matiere/$subjectId',
+  getParentRoute: () => PublicRoute,
 } as any)
 const PublicChapitreChapterIdRoute = PublicChapitreChapterIdRouteImport.update({
   id: '/chapitre/$chapterId',
@@ -172,6 +178,7 @@ export interface FileRoutesByFullPath {
   '/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
   '/themes/$familyId': typeof AuthenticatedThemesFamilyIdRoute
   '/chapitre/$chapterId': typeof PublicChapitreChapterIdRoute
+  '/matiere/$subjectId': typeof PublicMatiereSubjectIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -194,6 +201,7 @@ export interface FileRoutesByTo {
   '/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
   '/themes/$familyId': typeof AuthenticatedThemesFamilyIdRoute
   '/chapitre/$chapterId': typeof PublicChapitreChapterIdRoute
+  '/matiere/$subjectId': typeof PublicMatiereSubjectIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -219,6 +227,7 @@ export interface FileRoutesById {
   '/_authenticated/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
   '/_authenticated/themes_/$familyId': typeof AuthenticatedThemesFamilyIdRoute
   '/_public/chapitre/$chapterId': typeof PublicChapitreChapterIdRoute
+  '/_public/matiere/$subjectId': typeof PublicMatiereSubjectIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -243,6 +252,7 @@ export interface FileRouteTypes {
     | '/subject/$subjectId'
     | '/themes/$familyId'
     | '/chapitre/$chapterId'
+    | '/matiere/$subjectId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -265,6 +275,7 @@ export interface FileRouteTypes {
     | '/subject/$subjectId'
     | '/themes/$familyId'
     | '/chapitre/$chapterId'
+    | '/matiere/$subjectId'
   id:
     | '__root__'
     | '/'
@@ -289,6 +300,7 @@ export interface FileRouteTypes {
     | '/_authenticated/subject/$subjectId'
     | '/_authenticated/themes_/$familyId'
     | '/_public/chapitre/$chapterId'
+    | '/_public/matiere/$subjectId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -392,6 +404,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRoute
+    }
+    '/_public/matiere/$subjectId': {
+      id: '/_public/matiere/$subjectId'
+      path: '/matiere/$subjectId'
+      fullPath: '/matiere/$subjectId'
+      preLoaderRoute: typeof PublicMatiereSubjectIdRouteImport
+      parentRoute: typeof PublicRoute
     }
     '/_public/chapitre/$chapterId': {
       id: '/_public/chapitre/$chapterId'
@@ -502,10 +521,12 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 
 interface PublicRouteChildren {
   PublicChapitreChapterIdRoute: typeof PublicChapitreChapterIdRoute
+  PublicMatiereSubjectIdRoute: typeof PublicMatiereSubjectIdRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
   PublicChapitreChapterIdRoute: PublicChapitreChapterIdRoute,
+  PublicMatiereSubjectIdRoute: PublicMatiereSubjectIdRoute,
 }
 
 const PublicRouteWithChildren =

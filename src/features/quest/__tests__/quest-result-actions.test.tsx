@@ -30,7 +30,7 @@ describe("QuestResultActions", () => {
     const { container } = render(
       <QuestResultActions subjectId={null} nextExerciseId={null} onReplay={() => {}} />,
     );
-    expect(container.querySelector('a[href="/subject/$subjectId"]')).toBeNull();
+    expect(container.querySelector('a[href="/matiere/$subjectId"]')).toBeNull();
     // Back-to-hall link is always present.
     expect(container.querySelector('a[href="/dashboard"]')).not.toBeNull();
   });

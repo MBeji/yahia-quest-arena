@@ -355,7 +355,7 @@ function QuestPage() {
           <SubscriptionPaywall />
           {exSubjectId && (
             <Link
-              to="/subject/$subjectId"
+              to="/matiere/$subjectId"
               params={{ subjectId: exSubjectId }}
               className="mt-5 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
             >
@@ -585,7 +585,7 @@ function QuestPage() {
     <div className="mx-auto max-w-2xl px-6 py-8" dir={isRtlSubject ? "rtl" : undefined}>
       {exSubjectId ? (
         <Link
-          to="/subject/$subjectId"
+          to="/matiere/$subjectId"
           params={{ subjectId: exSubjectId }}
           className={leaveQuestClass}
         >
