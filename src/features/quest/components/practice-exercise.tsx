@@ -123,7 +123,10 @@ export function PracticeExercise({
       </header>
 
       {corrected && (
-        <div className="mb-6 rounded-2xl border border-primary/30 bg-primary/[0.04] p-5 text-center">
+        <div
+          data-testid="practice-score"
+          className="mb-6 rounded-2xl border border-primary/30 bg-primary/[0.04] p-5 text-center"
+        >
           <div className="font-display text-3xl font-bold text-primary">{result.scorePct}%</div>
           <p className="mt-1 text-sm text-muted-foreground">
             {t.public.practice.scoreCorrect
@@ -227,6 +230,7 @@ export function PracticeExercise({
         <div className="mt-6 flex flex-col items-center gap-2">
           <button
             type="button"
+            data-testid="practice-check"
             disabled={!allAnswered || isChecking}
             onClick={onCorrect}
             className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90 disabled:opacity-40"

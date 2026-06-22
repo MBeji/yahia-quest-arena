@@ -78,6 +78,7 @@ export function LessonReader({
           <div className="inline-flex rounded-lg border border-border bg-secondary p-0.5">
             <button
               type="button"
+              data-testid="lesson-tab-course"
               onClick={() => setShowSummary(false)}
               className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
                 !showingSummary ? "bg-card text-primary shadow-sm" : "text-muted-foreground"
@@ -87,6 +88,7 @@ export function LessonReader({
             </button>
             <button
               type="button"
+              data-testid="lesson-tab-summary"
               onClick={() => setShowSummary(true)}
               className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
                 showingSummary ? "bg-card text-primary shadow-sm" : "text-muted-foreground"
@@ -98,6 +100,7 @@ export function LessonReader({
         )}
         <button
           type="button"
+          data-testid="lesson-print"
           onClick={() => window.print()}
           className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground transition hover:border-primary/40 hover:text-primary"
         >

@@ -128,6 +128,7 @@ export function PublicLanding() {
             <Link
               key={p.title}
               to="/programme"
+              data-testid="persona-door"
               className="group rounded-2xl border border-border bg-card p-6 transition hover:border-primary/60 hover:shadow-sm"
             >
               <span className="grid h-12 w-12 place-items-center rounded-xl bg-secondary text-primary">
@@ -157,6 +158,7 @@ export function PublicLanding() {
             <Link
               key={c.name}
               to="/programme"
+              data-testid="cycle-card"
               className="rounded-2xl border border-border bg-card p-6 transition hover:border-primary/60 hover:shadow-sm"
             >
               <div className="font-display text-xl font-bold">{c.name}</div>
@@ -187,7 +189,7 @@ export function PublicLanding() {
       </section>
 
       {/* SECTION JEU — le seul bloc registre « Jeu » (doré), promesse secondaire */}
-      <section className="bg-[#15120d] text-amber-50">
+      <section data-testid="game-block" className="bg-[#15120d] text-amber-50">
         <div className="mx-auto grid max-w-5xl items-center gap-8 px-4 py-14 sm:px-6 lg:grid-cols-2">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full bg-amber-400/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-amber-300">

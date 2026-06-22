@@ -14,6 +14,7 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test --project=public-chromium --project=public-mobile",
     "test:e2e:auth": "playwright test --project=authed-chromium",
+    "test:e2e:public-anon": "playwright test --project=public-anon-chromium",
     "test:e2e:install": "playwright install chromium",
     "e2e:doctor": "node scripts/e2e/check-env.mjs",
     "e2e:db:push": "node scripts/e2e/setup-test-db.mjs",
