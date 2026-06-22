@@ -15,6 +15,8 @@ import { I18nProvider, useT } from "@/lib/i18n";
 import type { Locale } from "@/lib/i18n";
 import { DEFAULT_LOCALE, dirForLocale, localeFromCookieHeader } from "@/lib/i18n/context";
 import { fr } from "@/lib/i18n/fr";
+import { en } from "@/lib/i18n/en";
+import { ar } from "@/lib/i18n/ar";
 import { ThemeProvider, useTheme, DEFAULT_THEME, themeFromCookieHeader } from "@/lib/theme";
 import type { Theme } from "@/lib/theme";
 
@@ -72,40 +74,47 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      // head() is route-static (no per-request locale), so the document meta uses
-      // the default-locale (FR) catalog. Per-locale head = future i18n increment.
-      { title: fr.meta.title },
-      { name: "description", content: fr.meta.description },
-      { name: "author", content: "Na9ra Nal3ab" },
-      { property: "og:title", content: fr.meta.ogTitle },
-      { property: "og:description", content: fr.meta.ogDescription },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      // PWA / mobile install
-      { name: "theme-color", content: "#0a0a0a" },
-      { name: "mobile-web-app-capable", content: "yes" },
-      { name: "apple-mobile-web-app-capable", content: "yes" },
-      { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
-      { name: "apple-mobile-web-app-title", content: "Na9ra Nal3ab" },
-    ],
-    links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "manifest", href: "/manifest.webmanifest" },
-      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
-      { rel: "icon", href: "/icons/icon-192.png", type: "image/png", sizes: "192x192" },
-      { rel: "apple-touch-icon", href: "/icons/apple-touch-icon.png" },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@600;700&family=Orbitron:wght@500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap",
-      },
-    ],
-  }),
+  head: () => {
+    // Per-request locale for the document meta: getShellLocale() reads the
+    // persisted cookie at SSR (and document.cookie on the client), so the
+    // <title>/description/OG match the visitor's language for crawlers and social
+    // shares. head() is a closure evaluated at render time, after the module is
+    // fully initialised, so it can reference getShellLocale (defined below).
+    const locale = getShellLocale();
+    const m = ({ fr, en, ar }[locale] ?? fr).meta;
+    return {
+      meta: [
+        { charSet: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
+        { title: m.title },
+        { name: "description", content: m.description },
+        { name: "author", content: "Na9ra Nal3ab" },
+        { property: "og:title", content: m.ogTitle },
+        { property: "og:description", content: m.ogDescription },
+        { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary_large_image" },
+        // PWA / mobile install
+        { name: "theme-color", content: "#0a0a0a" },
+        { name: "mobile-web-app-capable", content: "yes" },
+        { name: "apple-mobile-web-app-capable", content: "yes" },
+        { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
+        { name: "apple-mobile-web-app-title", content: "Na9ra Nal3ab" },
+      ],
+      links: [
+        { rel: "stylesheet", href: appCss },
+        { rel: "manifest", href: "/manifest.webmanifest" },
+        { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+        { rel: "icon", href: "/icons/icon-192.png", type: "image/png", sizes: "192x192" },
+        { rel: "apple-touch-icon", href: "/icons/apple-touch-icon.png" },
+        { rel: "preconnect", href: "https://fonts.googleapis.com" },
+        { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@600;700&family=Orbitron:wght@500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap",
+        },
+      ],
+    };
+  },
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
