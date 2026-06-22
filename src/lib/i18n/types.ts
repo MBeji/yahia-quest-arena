@@ -73,72 +73,6 @@ export type TranslationKeys = {
     emailSentSpam: string;
     emailSentEdit: string;
   };
-  // Landing
-  landing: {
-    navSystem: string;
-    navSubjects: string;
-    navRanks: string;
-    signIn: string;
-    joinAcademy: string;
-    badge: string;
-    heroAlt: string;
-    enableAnimations: string;
-    reduceAnimations: string;
-    heroTitle1: string;
-    heroTitle2: string;
-    heroTitle3: string;
-    heroDesc: string;
-    ctaStart: string;
-    ctaLogin: string;
-    statSubjects: string;
-    statQuests: string;
-    statStreak: string;
-    heroOverlayLevel: string;
-    heroOverlayName: string;
-    featuresLabel: string;
-    featuresTitle1: string;
-    featuresTitle2: string;
-    subjectsLabel: string;
-    subjectsTitle1: string;
-    subjectsTitle2: string;
-    attributePrefix: string;
-    ranksLabel: string;
-    ranksTitle1: string;
-    ranksTitle2: string;
-    ranksCta: string;
-    footer: string;
-    // Features
-    featureXpTitle: string;
-    featureXpDesc: string;
-    featureStreakTitle: string;
-    featureStreakDesc: string;
-    featureRadarTitle: string;
-    featureRadarDesc: string;
-    featureArenaTitle: string;
-    featureArenaDesc: string;
-    featureBossTitle: string;
-    featureBossDesc: string;
-    featureCurriculumTitle: string;
-    featureCurriculumDesc: string;
-    // Subjects
-    subjectMath: string;
-    subjectFrench: string;
-    subjectArabic: string;
-    subjectScience: string;
-    subjectEnglish: string;
-    attrStrength: string;
-    attrSpirit: string;
-    attrWisdom: string;
-    attrObservation: string;
-    attrAgility: string;
-    // Ranks
-    rankCivilian: string;
-    rankAspirant: string;
-    rankWarrior: string;
-    rankMaster: string;
-    rankElite: string;
-    rankLegend: string;
-  };
   // Dashboard
   dashboard: {
     title: string;
@@ -438,7 +372,6 @@ export type TranslationKeys = {
     review: string;
     locked: string;
     lockedHint: string;
-    premium: string;
     premiumHint: string;
     done: string;
     current: string;
@@ -454,7 +387,6 @@ export type TranslationKeys = {
     concoursTitle: string;
     libreTitle: string;
     unlocked: string;
-    premium: string;
     comingSoon: string;
     switching: string;
     switchError: string;
@@ -611,6 +543,112 @@ export type TranslationKeys = {
     questResultXp: string;
     questResultScore: string;
     lockedChapter: string;
+  };
+  // Public « Référence » register (chantier C8): landing, catalogue, level page,
+  // course reader, subject hub, anonymous practice + shared public chrome.
+  public: {
+    header: {
+      homeAria: string;
+      navAria: string;
+      programme: string;
+      extras: string;
+      login: string;
+      signup: string;
+    };
+    footer: { tagline: string };
+    landing: {
+      freeBadge: string;
+      heroTitle: string;
+      heroSubtitle: string;
+      ctaProgramme: string;
+      ctaExtras: string;
+      personaStudentTitle: string;
+      personaStudentDesc: string;
+      personaParentTitle: string;
+      personaParentDesc: string;
+      personaTeacherTitle: string;
+      personaTeacherDesc: string;
+      personaCta: string;
+      cyclesTitle: string;
+      cyclesSubtitle: string;
+      proofCoursesTitle: string;
+      proofCoursesDesc: string;
+      proofExercisesTitle: string;
+      proofExercisesDesc: string;
+      proofConformTitle: string;
+      proofConformDesc: string;
+      gameKicker: string;
+      gameTitle: string;
+      gameDesc: string;
+      gameFeatXp: string;
+      gameFeatBadges: string;
+      gameFeatRanking: string;
+      gameCta: string;
+    };
+    cycles: {
+      primaire: string;
+      college: string;
+      lycee: string;
+      primaireYears: string;
+      collegeYears: string;
+      lyceeYears: string;
+      concours6: string;
+      concours9: string;
+      bac: string;
+    };
+    catalogue: {
+      programmeKicker: string;
+      programmeTitle: string;
+      programmeDesc: string;
+      programmeEmpty: string;
+      extrasLinkQuestion: string;
+      extrasLinkCta: string;
+      extrasKicker: string;
+      extrasTitle: string;
+      extrasDesc: string;
+      extrasEmpty: string;
+      cardComingSoon: string;
+      cardContent: string;
+      cardConcoursBadge: string;
+    };
+    niveau: {
+      backProgramme: string;
+      backExtras: string;
+      chooseSubject: string;
+      comingSoonTitle: string;
+      comingSoonDesc: string;
+    };
+    reader: {
+      defaultSubject: string;
+      courseTab: string;
+      summaryTab: string;
+      print: string;
+      courseSoon: string;
+      inviteTitle: string;
+      inviteDesc: string;
+      inviteCta: string;
+    };
+    subject: {
+      chapter: string;
+      readCourse: string;
+      level: string;
+    };
+    practice: {
+      back: string;
+      modeKicker: string;
+      subtitle: string;
+      scoreCorrect: string;
+      questionN: string;
+      correctAria: string;
+      yourAnswerAria: string;
+      checkError: string;
+      checkCta: string;
+      answerAllHint: string;
+      restart: string;
+      questCta: string;
+      inviteDesc: string;
+      inviteCta: string;
+    };
   };
   // Motivational quotes
   quotes: Array<{ text: string; author: string }>;

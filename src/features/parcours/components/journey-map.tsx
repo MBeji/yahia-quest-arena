@@ -39,7 +39,6 @@ export function JourneyMap({ nodes, profile }: JourneyMapProps) {
               state={n.state}
               title={n.nameFr}
               sublabel={sublabel}
-              badge={n.isPremium ? t.parcours.premium : undefined}
               icon={n.icon}
               color={color}
               clickable={n.state !== "locked"}
@@ -50,7 +49,7 @@ export function JourneyMap({ nodes, profile }: JourneyMapProps) {
               {n.state === "locked" ? (
                 node
               ) : (
-                <Link to="/subject/$subjectId" params={{ subjectId: n.id }} aria-label={n.nameFr}>
+                <Link to="/matiere/$subjectId" params={{ subjectId: n.id }} aria-label={n.nameFr}>
                   {node}
                 </Link>
               )}

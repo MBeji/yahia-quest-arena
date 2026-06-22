@@ -1473,6 +1473,15 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      check_answers: {
+        Args: { p_answers: Json; p_exercise_id: string };
+        Returns: {
+          correct_option: string | null;
+          explanation: string | null;
+          is_correct: boolean;
+          question_id: string;
+        }[];
+      };
       check_rate_limit: {
         Args: { p_key: string; p_max_requests: number; p_window_ms: number };
         Returns: boolean;

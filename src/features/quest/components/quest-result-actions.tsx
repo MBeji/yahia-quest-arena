@@ -23,7 +23,7 @@ export function QuestResultActions({
         {t.common.backToHall}
       </Link>
       {subjectId && (
-        <Link to="/subject/$subjectId" params={{ subjectId }} className={SECONDARY}>
+        <Link to="/matiere/$subjectId" params={{ subjectId }} className={SECONDARY}>
           {t.quest.backToSubject}
         </Link>
       )}

@@ -100,10 +100,9 @@ describe("JourneyMap", () => {
     );
     const hrefs = Array.from(container.querySelectorAll("a")).map((a) => a.getAttribute("href"));
     // After the F1 merge there is a single chapter screen: all non-locked nodes
-    // (done/current/open AND premium-locked) point to /subject/$subjectId; the
+    // (done/current/open AND premium-locked) point to /matiere/$subjectId; the
     // locked node ("Arabe") renders no link.
-    expect(hrefs).toEqual(["/subject/$subjectId", "/subject/$subjectId", "/subject/$subjectId"]);
+    expect(hrefs).toEqual(["/matiere/$subjectId", "/matiere/$subjectId", "/matiere/$subjectId"]);
     expect(hrefs).not.toContain("/parcours/$subjectId");
-    expect(screen.getByText("Premium")).toBeInTheDocument();
   });
 });

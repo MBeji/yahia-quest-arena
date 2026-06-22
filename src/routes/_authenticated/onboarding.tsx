@@ -165,11 +165,6 @@ function ParcoursCard({
       <div className="flex-1">
         <div className="flex flex-wrap items-center gap-2">
           <h3 className="font-display text-lg font-bold">{parcours.name_fr}</h3>
-          {parcours.is_premium && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-[color:var(--gold)]/20 px-2 py-0.5 text-xs font-semibold text-[color:var(--gold)]">
-              <Trophy className="h-3 w-3" /> {t.explorer.premium}
-            </span>
-          )}
           {isComingSoon && (
             <span className="inline-flex items-center gap-1 rounded-full bg-muted/40 px-2 py-0.5 text-xs font-semibold text-muted-foreground">
               <Clock className="h-3 w-3" /> {t.parcoursInterest.underConstruction}

@@ -48,6 +48,9 @@ vi.mock("@tanstack/react-start", () => ({
 vi.mock("@/shared/integrations/supabase/auth-middleware", () => ({
   requireSupabaseAuth: "mock-middleware",
 }));
+vi.mock("@/shared/integrations/supabase/optional-auth-middleware", () => ({
+  optionalSupabaseAuth: "mock-optional-middleware",
+}));
 vi.mock("@/shared/lib/logger", () => ({
   logger: { error: vi.fn(), warn: vi.fn(), info: vi.fn(), debug: vi.fn() },
 }));

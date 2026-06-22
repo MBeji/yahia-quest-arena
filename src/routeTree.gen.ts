@@ -12,8 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as PublicIndexRouteImport } from './routes/_public/index'
+import { Route as PublicProgrammeRouteImport } from './routes/_public/programme'
+import { Route as PublicExtrasRouteImport } from './routes/_public/extras'
 import { Route as AuthenticatedThemesRouteImport } from './routes/_authenticated/themes'
 import { Route as AuthenticatedParentReportRouteImport } from './routes/_authenticated/parent-report'
 import { Route as AuthenticatedParcoursRouteImport } from './routes/_authenticated/parcours'
@@ -21,6 +24,10 @@ import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authentic
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
 import { Route as AuthenticatedDungeonRouteImport } from './routes/_authenticated/dungeon'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as PublicNiveauParcoursIdRouteImport } from './routes/_public/niveau.$parcoursId'
+import { Route as PublicMatiereSubjectIdRouteImport } from './routes/_public/matiere.$subjectId'
+import { Route as PublicExerciceExerciseIdRouteImport } from './routes/_public/exercice.$exerciseId'
+import { Route as PublicChapitreChapterIdRouteImport } from './routes/_public/chapitre.$chapterId'
 import { Route as AuthenticatedThemesFamilyIdRouteImport } from './routes/_authenticated/themes_.$familyId'
 import { Route as AuthenticatedSubjectSubjectIdRouteImport } from './routes/_authenticated/subject.$subjectId'
 import { Route as AuthenticatedQuestExerciseIdRouteImport } from './routes/_authenticated/quest.$exerciseId'
@@ -45,14 +52,28 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PublicRoute = PublicRouteImport.update({
+  id: '/_public',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicProgrammeRoute = PublicProgrammeRouteImport.update({
+  id: '/programme',
+  path: '/programme',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicExtrasRoute = PublicExtrasRouteImport.update({
+  id: '/extras',
+  path: '/extras',
+  getParentRoute: () => PublicRoute,
 } as any)
 const AuthenticatedThemesRoute = AuthenticatedThemesRouteImport.update({
   id: '/themes',
@@ -90,6 +111,27 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRoute,
+} as any)
+const PublicNiveauParcoursIdRoute = PublicNiveauParcoursIdRouteImport.update({
+  id: '/niveau/$parcoursId',
+  path: '/niveau/$parcoursId',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicMatiereSubjectIdRoute = PublicMatiereSubjectIdRouteImport.update({
+  id: '/matiere/$subjectId',
+  path: '/matiere/$subjectId',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicExerciceExerciseIdRoute =
+  PublicExerciceExerciseIdRouteImport.update({
+    id: '/exercice/$exerciseId',
+    path: '/exercice/$exerciseId',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicChapitreChapterIdRoute = PublicChapitreChapterIdRouteImport.update({
+  id: '/chapitre/$chapterId',
+  path: '/chapitre/$chapterId',
+  getParentRoute: () => PublicRoute,
 } as any)
 const AuthenticatedThemesFamilyIdRoute =
   AuthenticatedThemesFamilyIdRouteImport.update({
@@ -141,7 +183,7 @@ const AuthenticatedAdminBetaRequestsRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof PublicIndexRoute
   '/auth': typeof AuthRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
@@ -152,6 +194,8 @@ export interface FileRoutesByFullPath {
   '/parcours': typeof AuthenticatedParcoursRoute
   '/parent-report': typeof AuthenticatedParentReportRoute
   '/themes': typeof AuthenticatedThemesRoute
+  '/extras': typeof PublicExtrasRoute
+  '/programme': typeof PublicProgrammeRoute
   '/admin/beta-requests': typeof AuthenticatedAdminBetaRequestsRoute
   '/admin/content-reports': typeof AuthenticatedAdminContentReportsRoute
   '/admin/parcours-interest': typeof AuthenticatedAdminParcoursInterestRoute
@@ -160,9 +204,13 @@ export interface FileRoutesByFullPath {
   '/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
   '/themes/$familyId': typeof AuthenticatedThemesFamilyIdRoute
+  '/chapitre/$chapterId': typeof PublicChapitreChapterIdRoute
+  '/exercice/$exerciseId': typeof PublicExerciceExerciseIdRoute
+  '/matiere/$subjectId': typeof PublicMatiereSubjectIdRoute
+  '/niveau/$parcoursId': typeof PublicNiveauParcoursIdRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/': typeof PublicIndexRoute
   '/auth': typeof AuthRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
@@ -173,6 +221,8 @@ export interface FileRoutesByTo {
   '/parcours': typeof AuthenticatedParcoursRoute
   '/parent-report': typeof AuthenticatedParentReportRoute
   '/themes': typeof AuthenticatedThemesRoute
+  '/extras': typeof PublicExtrasRoute
+  '/programme': typeof PublicProgrammeRoute
   '/admin/beta-requests': typeof AuthenticatedAdminBetaRequestsRoute
   '/admin/content-reports': typeof AuthenticatedAdminContentReportsRoute
   '/admin/parcours-interest': typeof AuthenticatedAdminParcoursInterestRoute
@@ -181,11 +231,15 @@ export interface FileRoutesByTo {
   '/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
   '/themes/$familyId': typeof AuthenticatedThemesFamilyIdRoute
+  '/chapitre/$chapterId': typeof PublicChapitreChapterIdRoute
+  '/exercice/$exerciseId': typeof PublicExerciceExerciseIdRoute
+  '/matiere/$subjectId': typeof PublicMatiereSubjectIdRoute
+  '/niveau/$parcoursId': typeof PublicNiveauParcoursIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/_public': typeof PublicRouteWithChildren
   '/auth': typeof AuthRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
@@ -196,6 +250,9 @@ export interface FileRoutesById {
   '/_authenticated/parcours': typeof AuthenticatedParcoursRoute
   '/_authenticated/parent-report': typeof AuthenticatedParentReportRoute
   '/_authenticated/themes': typeof AuthenticatedThemesRoute
+  '/_public/extras': typeof PublicExtrasRoute
+  '/_public/programme': typeof PublicProgrammeRoute
+  '/_public/': typeof PublicIndexRoute
   '/_authenticated/admin/beta-requests': typeof AuthenticatedAdminBetaRequestsRoute
   '/_authenticated/admin/content-reports': typeof AuthenticatedAdminContentReportsRoute
   '/_authenticated/admin/parcours-interest': typeof AuthenticatedAdminParcoursInterestRoute
@@ -204,6 +261,10 @@ export interface FileRoutesById {
   '/_authenticated/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/_authenticated/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
   '/_authenticated/themes_/$familyId': typeof AuthenticatedThemesFamilyIdRoute
+  '/_public/chapitre/$chapterId': typeof PublicChapitreChapterIdRoute
+  '/_public/exercice/$exerciseId': typeof PublicExerciceExerciseIdRoute
+  '/_public/matiere/$subjectId': typeof PublicMatiereSubjectIdRoute
+  '/_public/niveau/$parcoursId': typeof PublicNiveauParcoursIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -219,6 +280,8 @@ export interface FileRouteTypes {
     | '/parcours'
     | '/parent-report'
     | '/themes'
+    | '/extras'
+    | '/programme'
     | '/admin/beta-requests'
     | '/admin/content-reports'
     | '/admin/parcours-interest'
@@ -227,6 +290,10 @@ export interface FileRouteTypes {
     | '/quest/$exerciseId'
     | '/subject/$subjectId'
     | '/themes/$familyId'
+    | '/chapitre/$chapterId'
+    | '/exercice/$exerciseId'
+    | '/matiere/$subjectId'
+    | '/niveau/$parcoursId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -240,6 +307,8 @@ export interface FileRouteTypes {
     | '/parcours'
     | '/parent-report'
     | '/themes'
+    | '/extras'
+    | '/programme'
     | '/admin/beta-requests'
     | '/admin/content-reports'
     | '/admin/parcours-interest'
@@ -248,10 +317,14 @@ export interface FileRouteTypes {
     | '/quest/$exerciseId'
     | '/subject/$subjectId'
     | '/themes/$familyId'
+    | '/chapitre/$chapterId'
+    | '/exercice/$exerciseId'
+    | '/matiere/$subjectId'
+    | '/niveau/$parcoursId'
   id:
     | '__root__'
-    | '/'
     | '/_authenticated'
+    | '/_public'
     | '/auth'
     | '/login'
     | '/signup'
@@ -262,6 +335,9 @@ export interface FileRouteTypes {
     | '/_authenticated/parcours'
     | '/_authenticated/parent-report'
     | '/_authenticated/themes'
+    | '/_public/extras'
+    | '/_public/programme'
+    | '/_public/'
     | '/_authenticated/admin/beta-requests'
     | '/_authenticated/admin/content-reports'
     | '/_authenticated/admin/parcours-interest'
@@ -270,11 +346,15 @@ export interface FileRouteTypes {
     | '/_authenticated/quest/$exerciseId'
     | '/_authenticated/subject/$subjectId'
     | '/_authenticated/themes_/$familyId'
+    | '/_public/chapitre/$chapterId'
+    | '/_public/exercice/$exerciseId'
+    | '/_public/matiere/$subjectId'
+    | '/_public/niveau/$parcoursId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  PublicRoute: typeof PublicRouteWithChildren
   AuthRoute: typeof AuthRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
@@ -303,6 +383,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PublicRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -310,12 +397,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/_public/': {
+      id: '/_public/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PublicIndexRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/programme': {
+      id: '/_public/programme'
+      path: '/programme'
+      fullPath: '/programme'
+      preLoaderRoute: typeof PublicProgrammeRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/extras': {
+      id: '/_public/extras'
+      path: '/extras'
+      fullPath: '/extras'
+      preLoaderRoute: typeof PublicExtrasRouteImport
+      parentRoute: typeof PublicRoute
     }
     '/_authenticated/themes': {
       id: '/_authenticated/themes'
@@ -365,6 +466,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRoute
+    }
+    '/_public/niveau/$parcoursId': {
+      id: '/_public/niveau/$parcoursId'
+      path: '/niveau/$parcoursId'
+      fullPath: '/niveau/$parcoursId'
+      preLoaderRoute: typeof PublicNiveauParcoursIdRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/matiere/$subjectId': {
+      id: '/_public/matiere/$subjectId'
+      path: '/matiere/$subjectId'
+      fullPath: '/matiere/$subjectId'
+      preLoaderRoute: typeof PublicMatiereSubjectIdRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/exercice/$exerciseId': {
+      id: '/_public/exercice/$exerciseId'
+      path: '/exercice/$exerciseId'
+      fullPath: '/exercice/$exerciseId'
+      preLoaderRoute: typeof PublicExerciceExerciseIdRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/chapitre/$chapterId': {
+      id: '/_public/chapitre/$chapterId'
+      path: '/chapitre/$chapterId'
+      fullPath: '/chapitre/$chapterId'
+      preLoaderRoute: typeof PublicChapitreChapterIdRouteImport
+      parentRoute: typeof PublicRoute
     }
     '/_authenticated/themes_/$familyId': {
       id: '/_authenticated/themes_/$familyId'
@@ -466,9 +595,32 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
   AuthenticatedRouteChildren,
 )
 
+interface PublicRouteChildren {
+  PublicExtrasRoute: typeof PublicExtrasRoute
+  PublicProgrammeRoute: typeof PublicProgrammeRoute
+  PublicIndexRoute: typeof PublicIndexRoute
+  PublicChapitreChapterIdRoute: typeof PublicChapitreChapterIdRoute
+  PublicExerciceExerciseIdRoute: typeof PublicExerciceExerciseIdRoute
+  PublicMatiereSubjectIdRoute: typeof PublicMatiereSubjectIdRoute
+  PublicNiveauParcoursIdRoute: typeof PublicNiveauParcoursIdRoute
+}
+
+const PublicRouteChildren: PublicRouteChildren = {
+  PublicExtrasRoute: PublicExtrasRoute,
+  PublicProgrammeRoute: PublicProgrammeRoute,
+  PublicIndexRoute: PublicIndexRoute,
+  PublicChapitreChapterIdRoute: PublicChapitreChapterIdRoute,
+  PublicExerciceExerciseIdRoute: PublicExerciceExerciseIdRoute,
+  PublicMatiereSubjectIdRoute: PublicMatiereSubjectIdRoute,
+  PublicNiveauParcoursIdRoute: PublicNiveauParcoursIdRoute,
+}
+
+const PublicRouteWithChildren =
+  PublicRoute._addFileChildren(PublicRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  PublicRoute: PublicRouteWithChildren,
   AuthRoute: AuthRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,

@@ -40,8 +40,17 @@ vi.mock("@/shared/integrations/supabase/auth-middleware", () => ({
   requireSupabaseAuth: "mock-middleware",
 }));
 
+vi.mock("@/shared/integrations/supabase/optional-auth-middleware", () => ({
+  optionalSupabaseAuth: "mock-optional-middleware",
+}));
+
+vi.mock("@tanstack/react-start/server", () => ({
+  getRequest: vi.fn(() => ({ headers: new Headers() })),
+}));
+
 vi.mock("@/shared/lib/rate-limit", () => ({
   isRateLimited: vi.fn().mockResolvedValue(false),
+  isRateLimitedLocal: vi.fn().mockReturnValue(false),
 }));
 
 vi.mock("@/shared/lib/logger", () => ({
