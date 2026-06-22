@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, BookOpen, ChevronRight } from "lucide-react";
+import { useT } from "@/lib/i18n";
 import { isRtlText } from "@/shared/lib/utils";
 
 /**
@@ -7,7 +8,7 @@ import { isRtlText } from "@/shared/lib/utils";
  * route fetches a parcours + its subjects (anon `getParcoursSubjects`). Lists the
  * subjects of one level/track, each → its public subject hub (`/matiere/$subjectId`).
  * A `coming_soon` (or otherwise empty) parcours shows a "bientôt" state. No gameplay
- * and no premium lock (free pivot). FR literals here → i18n sweep in L1.6.
+ * and no premium lock (free pivot). Copy is i18n (fr/en/ar).
  */
 
 export type ParcoursSubjectsParcours = {
@@ -31,6 +32,7 @@ export function ParcoursSubjects({
   parcours: ParcoursSubjectsParcours;
   subjects: ParcoursSubjectsSubject[];
 }) {
+  const t = useT();
   const isExtra = parcours.kind === "libre";
 
   return (
@@ -39,7 +41,8 @@ export function ParcoursSubjects({
         to={isExtra ? "/extras" : "/programme"}
         className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition hover:text-primary"
       >
-        <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {isExtra ? "Extras" : "Programme"}
+        <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" />{" "}
+        {isExtra ? t.public.niveau.backExtras : t.public.niveau.backProgramme}
       </Link>
 
       <header className="mb-8 mt-3">
@@ -49,17 +52,13 @@ export function ParcoursSubjects({
         >
           {parcours.name_fr}
         </h1>
-        <p className="mt-2 text-muted-foreground">
-          Choisis une matière pour lire le cours, réviser le résumé et t’entraîner.
-        </p>
+        <p className="mt-2 text-muted-foreground">{t.public.niveau.chooseSubject}</p>
       </header>
 
       {subjects.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-border bg-card p-8 text-center">
-          <p className="font-display text-lg font-bold">Contenu bientôt disponible</p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Ce niveau est en cours de préparation. Reviens bientôt&nbsp;!
-          </p>
+          <p className="font-display text-lg font-bold">{t.public.niveau.comingSoonTitle}</p>
+          <p className="mt-1 text-sm text-muted-foreground">{t.public.niveau.comingSoonDesc}</p>
         </div>
       ) : (
         <ul className="grid gap-3 sm:grid-cols-2">

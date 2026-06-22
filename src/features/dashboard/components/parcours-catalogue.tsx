@@ -11,6 +11,7 @@ import {
   Trophy,
   type LucideIcon,
 } from "lucide-react";
+import { useT } from "@/lib/i18n";
 import { buildPrograms, flagshipLabel, type ProgramParcours } from "../program-families";
 
 /**
@@ -23,24 +24,11 @@ import { buildPrograms, flagshipLabel, type ProgramParcours } from "../program-f
  *   • <ExtrasCatalogue/> — the optional `libre` tracks (langues, culture générale,
  *     muscle-cerveau), independent of the school programme.
  * Available parcours link to their level page (`/niveau/$parcoursId`). No gameplay and
- * no premium lock (the pivot is free). FR literals here → i18n sweep in L1.6.
+ * no premium lock (the pivot is free). Copy is i18n (fr/en/ar).
  */
 
 /** getParcours rows carry `kind` on top of the hub's ProgramParcours subset. */
 export type CatalogueParcours = ProgramParcours & { kind: string };
-
-const CYCLE_LABEL: Record<string, string> = {
-  primaire: "Primaire",
-  college: "Collège",
-  secondaire: "Lycée",
-};
-
-/** The national exam that closes each cycle — shown as the section's destination. */
-const CYCLE_CONCOURS: Record<string, string> = {
-  primaire: "Concours 6ème",
-  college: "Concours 9ème",
-  secondaire: "Baccalauréat",
-};
 
 /** Extras icon per standalone theme. */
 const THEME_ICON: Record<string, LucideIcon> = {
@@ -65,6 +53,7 @@ function ParcoursCard({
   highlight?: boolean;
   badge?: string;
 }) {
+  const t = useT();
   const soon = parcours.status === "coming_soon";
   const cls = `flex items-center gap-3 rounded-2xl border p-4 text-left transition ${
     highlight ? "border-primary/40 bg-primary/[0.04]" : "border-border bg-card"
@@ -90,11 +79,11 @@ function ParcoursCard({
         </span>
         {soon ? (
           <span className="mt-0.5 inline-flex items-center gap-1 text-xs text-muted-foreground">
-            <Clock className="h-3 w-3" /> Bientôt disponible
+            <Clock className="h-3 w-3" /> {t.public.catalogue.cardComingSoon}
           </span>
         ) : (
           <span className="mt-0.5 block text-xs text-muted-foreground">
-            Cours · résumés · exercices
+            {t.public.catalogue.cardContent}
           </span>
         )}
       </span>
@@ -119,38 +108,46 @@ function ParcoursCard({
 }
 
 export function ProgrammeCatalogue({ parcours }: { parcours: CatalogueParcours[] }) {
+  const t = useT();
   const school = buildPrograms(parcours).find((p) => p.kind === "school");
   const cycles = school?.cycles ?? [];
+
+  // Cycle labels (the public register uses « Lycée » for the secondaire cycle).
+  const cycleLabel: Record<string, string> = {
+    primaire: t.public.cycles.primaire,
+    college: t.public.cycles.college,
+    secondaire: t.public.cycles.lycee,
+  };
+  const cycleConcours: Record<string, string> = {
+    primaire: t.public.cycles.concours6,
+    college: t.public.cycles.concours9,
+    secondaire: t.public.cycles.bac,
+  };
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
       <header className="mb-8">
         <div className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
-          Programme officiel
+          {t.public.catalogue.programmeKicker}
         </div>
         <h1 className="mt-1 font-display text-3xl font-bold leading-tight sm:text-4xl">
-          Toute l’école tunisienne
+          {t.public.catalogue.programmeTitle}
         </h1>
-        <p className="mt-2 text-muted-foreground">
-          De la 1ère année de base au Baccalauréat, en trois cycles — chacun préparant son concours
-          national. Cours, résumés et exercices en accès libre, sans compte.
-        </p>
+        <p className="mt-2 text-muted-foreground">{t.public.catalogue.programmeDesc}</p>
       </header>
 
       {cycles.length === 0 ? (
         <p className="text-center text-sm text-muted-foreground">
-          Catalogue indisponible pour le moment.
+          {t.public.catalogue.programmeEmpty}
         </p>
       ) : (
         <div className="space-y-10">
           {cycles.map((c) => (
             <section key={c.cycle}>
               <div className="mb-3 flex items-baseline justify-between gap-3">
-                <h2 className="font-display text-xl font-bold">
-                  {CYCLE_LABEL[c.cycle] ?? c.cycle}
-                </h2>
+                <h2 className="font-display text-xl font-bold">{cycleLabel[c.cycle] ?? c.cycle}</h2>
                 <span className="text-xs font-semibold text-muted-foreground">
-                  → {CYCLE_CONCOURS[c.cycle] ?? ""}
+                  → {cycleConcours[c.cycle] ?? ""}
                 </span>
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
@@ -163,7 +160,7 @@ export function ProgrammeCatalogue({ parcours }: { parcours: CatalogueParcours[]
                       label={concours ? flagshipLabel(p.name_fr) : p.name_fr}
                       icon={concours ? Trophy : GraduationCap}
                       highlight={concours}
-                      badge={concours ? "Concours" : undefined}
+                      badge={concours ? t.public.catalogue.cardConcoursBadge : undefined}
                     />
                   );
                 })}
@@ -174,14 +171,12 @@ export function ProgrammeCatalogue({ parcours }: { parcours: CatalogueParcours[]
       )}
 
       <div className="mt-12 rounded-2xl border border-border bg-card p-5 text-center">
-        <p className="text-sm text-muted-foreground">
-          Envie d’aller plus loin que le programme&nbsp;?
-        </p>
+        <p className="text-sm text-muted-foreground">{t.public.catalogue.extrasLinkQuestion}</p>
         <Link
           to="/extras"
           className="mt-2 inline-flex items-center gap-1.5 font-semibold text-primary hover:underline"
         >
-          Découvrir les extras <ChevronRight className="h-4 w-4 rtl:-scale-x-100" />
+          {t.public.catalogue.extrasLinkCta} <ChevronRight className="h-4 w-4 rtl:-scale-x-100" />
         </Link>
       </div>
     </div>
@@ -189,6 +184,7 @@ export function ProgrammeCatalogue({ parcours }: { parcours: CatalogueParcours[]
 }
 
 export function ExtrasCatalogue({ parcours }: { parcours: CatalogueParcours[] }) {
+  const t = useT();
   // getParcours returns rows already ordered by display_order; filtering preserves it.
   const extras = parcours.filter((p) => p.kind === "libre");
 
@@ -196,17 +192,18 @@ export function ExtrasCatalogue({ parcours }: { parcours: CatalogueParcours[] })
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
       <header className="mb-8">
         <div className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
-          Au-delà du programme
+          {t.public.catalogue.extrasKicker}
         </div>
-        <h1 className="mt-1 font-display text-3xl font-bold leading-tight sm:text-4xl">Extras</h1>
-        <p className="mt-2 text-muted-foreground">
-          Des parcours optionnels pour aller plus loin : langues, culture générale, jeux de logique.
-          Indépendants du programme scolaire.
-        </p>
+        <h1 className="mt-1 font-display text-3xl font-bold leading-tight sm:text-4xl">
+          {t.public.catalogue.extrasTitle}
+        </h1>
+        <p className="mt-2 text-muted-foreground">{t.public.catalogue.extrasDesc}</p>
       </header>
 
       {extras.length === 0 ? (
-        <p className="text-center text-sm text-muted-foreground">Aucun extra pour le moment.</p>
+        <p className="text-center text-sm text-muted-foreground">
+          {t.public.catalogue.extrasEmpty}
+        </p>
       ) : (
         <div className="grid gap-3 sm:grid-cols-2">
           {extras.map((p) => (

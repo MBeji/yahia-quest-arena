@@ -4,6 +4,7 @@ import { ArrowLeft, Check, Loader2, RotateCcw, Sparkles, X, Zap } from "lucide-r
 import { RichField, OptionContent } from "@/components/ui/svg-figure";
 import { isMathExpression, isRtlText } from "@/shared/lib/utils";
 import { shuffleOptions, type BaseOption } from "@/shared/lib/question-utils";
+import { useT } from "@/lib/i18n";
 import type { PracticeReviewItem } from "@/features/quest/quest.server";
 
 /**
@@ -13,7 +14,7 @@ import type { PracticeReviewItem } from "@/features/quest/quest.server";
  * the public `check_answers` RPC. Nothing is recorded, no XP — the account is the
  * upsell (XP/save/leaderboard). Presentational: the route owns the data
  * (`getExercise`) and the `checkAnswers` caller (`checkAnswersPublic`); this
- * component holds only the local answer/review UI state. FR literals → i18n L1.6.
+ * component holds only the local answer/review UI state. Copy is i18n (fr/en/ar).
  */
 
 export type PracticeExerciseInfo = {
@@ -47,6 +48,7 @@ export function PracticeExercise({
     answers: { questionId: string; choice: string }[];
   }) => Promise<CheckAnswersResult>;
 }) {
+  const t = useT();
   const isRtl = exercise.subjects?.content_language === "ar";
   // Shuffle once per question set (stable across re-renders; reset re-shuffles via runKey).
   const [runKey, setRunKey] = useState(0);
@@ -103,13 +105,13 @@ export function PracticeExercise({
           params={{ subjectId: exercise.subject_id }}
           className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition hover:text-primary"
         >
-          <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> Retour à la matière
+          <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.public.practice.back}
         </Link>
       ) : null}
 
       <header className="mb-6 mt-3">
         <div className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
-          Mode entraînement
+          {t.public.practice.modeKicker}
         </div>
         <h1
           className="mt-1 font-display text-2xl font-bold leading-tight sm:text-3xl"
@@ -117,17 +119,16 @@ export function PracticeExercise({
         >
           {exercise.title}
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Réponds aux questions puis corrige-toi — sans compte, sans note enregistrée.
-        </p>
+        <p className="mt-2 text-sm text-muted-foreground">{t.public.practice.subtitle}</p>
       </header>
 
       {corrected && (
         <div className="mb-6 rounded-2xl border border-primary/30 bg-primary/[0.04] p-5 text-center">
           <div className="font-display text-3xl font-bold text-primary">{result.scorePct}%</div>
           <p className="mt-1 text-sm text-muted-foreground">
-            {result.correct} / {result.total} bonne{result.correct > 1 ? "s" : ""} réponse
-            {result.correct > 1 ? "s" : ""}
+            {t.public.practice.scoreCorrect
+              .replace("{correct}", String(result.correct))
+              .replace("{total}", String(result.total))}
           </p>
         </div>
       )}
@@ -136,10 +137,11 @@ export function PracticeExercise({
         {questions.map((q, qi) => {
           const opts = optionsByQuestion.get(q.id) ?? [];
           const review = reviewByQuestion.get(q.id);
+          const questionLabel = t.public.practice.questionN.replace("{n}", String(qi + 1));
           return (
             <section key={q.id} className="rounded-2xl border border-border bg-card p-5">
               <div className="text-xs font-bold uppercase tracking-wider text-primary">
-                Question {qi + 1}
+                {questionLabel}
               </div>
               <RichField
                 raw={q.prompt}
@@ -147,7 +149,7 @@ export function PracticeExercise({
                 className="mt-1 font-display text-lg font-semibold"
               />
 
-              <div className="mt-4 space-y-2.5" role="radiogroup" aria-label={`Question ${qi + 1}`}>
+              <div className="mt-4 space-y-2.5" role="radiogroup" aria-label={questionLabel}>
                 {opts.map((opt) => {
                   const selected = selections[q.id] === opt.id;
                   const isCorrectOpt = corrected && review && opt.id === review.correctChoice;
@@ -188,11 +190,14 @@ export function PracticeExercise({
                       {isCorrectOpt && (
                         <Check
                           className="h-5 w-5 shrink-0 text-emerald-600"
-                          aria-label="Bonne réponse"
+                          aria-label={t.public.practice.correctAria}
                         />
                       )}
                       {isWrongPick && (
-                        <X className="h-5 w-5 shrink-0 text-destructive" aria-label="Ta réponse" />
+                        <X
+                          className="h-5 w-5 shrink-0 text-destructive"
+                          aria-label={t.public.practice.yourAnswerAria}
+                        />
                       )}
                       {selected && !corrected && (
                         <Check className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
@@ -215,9 +220,7 @@ export function PracticeExercise({
       </div>
 
       {failed && (
-        <p className="mt-4 text-center text-sm text-destructive">
-          Impossible de corriger pour le moment. Réessaie dans un instant.
-        </p>
+        <p className="mt-4 text-center text-sm text-destructive">{t.public.practice.checkError}</p>
       )}
 
       {!corrected ? (
@@ -229,12 +232,10 @@ export function PracticeExercise({
             className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90 disabled:opacity-40"
           >
             {isChecking && <Loader2 className="h-4 w-4 animate-spin" />}
-            Corriger mes réponses
+            {t.public.practice.checkCta}
           </button>
           {!allAnswered && (
-            <p className="text-xs text-muted-foreground">
-              Réponds à toutes les questions pour corriger.
-            </p>
+            <p className="text-xs text-muted-foreground">{t.public.practice.answerAllHint}</p>
           )}
         </div>
       ) : (
@@ -245,7 +246,7 @@ export function PracticeExercise({
               onClick={onReset}
               className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-5 py-2.5 text-sm font-semibold transition hover:border-primary/60"
             >
-              <RotateCcw className="h-4 w-4" /> Recommencer
+              <RotateCcw className="h-4 w-4" /> {t.public.practice.restart}
             </button>
           </div>
 
@@ -255,20 +256,17 @@ export function PracticeExercise({
               params={{ exerciseId: exercise.id }}
               className="flex items-center justify-center gap-2 rounded-2xl border border-primary/30 bg-primary/[0.04] p-4 text-sm font-semibold text-primary transition hover:bg-primary/10"
             >
-              <Zap className="h-4 w-4" /> Refaire en mode quête pour gagner des XP
+              <Zap className="h-4 w-4" /> {t.public.practice.questCta}
             </Link>
           ) : (
             <div className="rounded-2xl border border-primary/30 bg-primary/[0.04] p-5 text-center">
               <Sparkles className="mx-auto h-6 w-6 text-primary" />
-              <p className="mt-2 text-sm font-semibold">
-                Crée un compte pour gagner des XP, sauvegarder ta progression et grimper au
-                classement.
-              </p>
+              <p className="mt-2 text-sm font-semibold">{t.public.practice.inviteDesc}</p>
               <Link
                 to="/signup"
                 className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
               >
-                Créer mon compte
+                {t.public.practice.inviteCta}
               </Link>
             </div>
           )}

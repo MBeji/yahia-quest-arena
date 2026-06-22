@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { BookOpen, ChevronRight, Zap } from "lucide-react";
+import { useT } from "@/lib/i18n";
 import { isRtlText } from "@/shared/lib/utils";
 
 export type SubjectHubSubject = {
@@ -33,7 +34,7 @@ export type SubjectHubExercise = {
  * Exercise links are auth-aware (L1.5): a signed-in visitor goes to the scored
  * quest (`/quest`, XP); an anonymous one goes to free practice (`/exercice`).
  * The comprehension quiz is always the connected gate (`/quest`).
- * i18n keys land in the L1.6 sweep; copy is FR literals here.
+ * Copy is i18n (fr/en/ar).
  */
 export function SubjectHub({
   subject,
@@ -46,6 +47,7 @@ export function SubjectHub({
   exercises: SubjectHubExercise[];
   isAuthenticated: boolean;
 }) {
+  const t = useT();
   const isRtl = subject.content_language === "ar";
 
   return (
@@ -71,7 +73,7 @@ export function SubjectHub({
           return (
             <section key={c.id} className="rounded-2xl border border-border bg-card p-5">
               <div className="text-xs font-bold uppercase tracking-wider text-primary">
-                Chapitre {ci + 1}
+                {t.public.subject.chapter.replace("{n}", String(ci + 1))}
               </div>
               <h2
                 className="mt-1 font-display text-xl font-bold"
@@ -92,7 +94,7 @@ export function SubjectHub({
                 params={{ chapterId: c.id }}
                 className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
               >
-                <BookOpen className="h-4 w-4" /> Lire le cours
+                <BookOpen className="h-4 w-4" /> {t.public.subject.readCourse}
               </Link>
 
               {chapEx.length > 0 && (
@@ -116,7 +118,9 @@ export function SubjectHub({
                             {ex.title}
                           </span>
                           <span className="flex shrink-0 items-center gap-2 text-xs text-muted-foreground">
-                            <span>Niv. {ex.difficulty}</span>
+                            <span>
+                              {t.public.subject.level.replace("{n}", String(ex.difficulty))}
+                            </span>
                             <span className="flex items-center gap-0.5 text-primary">
                               <Zap className="h-3 w-3" />
                               {ex.xp_reward}

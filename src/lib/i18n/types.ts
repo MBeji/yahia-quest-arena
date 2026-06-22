@@ -612,6 +612,112 @@ export type TranslationKeys = {
     questResultScore: string;
     lockedChapter: string;
   };
+  // Public « Référence » register (chantier C8): landing, catalogue, level page,
+  // course reader, subject hub, anonymous practice + shared public chrome.
+  public: {
+    header: {
+      homeAria: string;
+      navAria: string;
+      programme: string;
+      extras: string;
+      login: string;
+      signup: string;
+    };
+    footer: { tagline: string };
+    landing: {
+      freeBadge: string;
+      heroTitle: string;
+      heroSubtitle: string;
+      ctaProgramme: string;
+      ctaExtras: string;
+      personaStudentTitle: string;
+      personaStudentDesc: string;
+      personaParentTitle: string;
+      personaParentDesc: string;
+      personaTeacherTitle: string;
+      personaTeacherDesc: string;
+      personaCta: string;
+      cyclesTitle: string;
+      cyclesSubtitle: string;
+      proofCoursesTitle: string;
+      proofCoursesDesc: string;
+      proofExercisesTitle: string;
+      proofExercisesDesc: string;
+      proofConformTitle: string;
+      proofConformDesc: string;
+      gameKicker: string;
+      gameTitle: string;
+      gameDesc: string;
+      gameFeatXp: string;
+      gameFeatBadges: string;
+      gameFeatRanking: string;
+      gameCta: string;
+    };
+    cycles: {
+      primaire: string;
+      college: string;
+      lycee: string;
+      primaireYears: string;
+      collegeYears: string;
+      lyceeYears: string;
+      concours6: string;
+      concours9: string;
+      bac: string;
+    };
+    catalogue: {
+      programmeKicker: string;
+      programmeTitle: string;
+      programmeDesc: string;
+      programmeEmpty: string;
+      extrasLinkQuestion: string;
+      extrasLinkCta: string;
+      extrasKicker: string;
+      extrasTitle: string;
+      extrasDesc: string;
+      extrasEmpty: string;
+      cardComingSoon: string;
+      cardContent: string;
+      cardConcoursBadge: string;
+    };
+    niveau: {
+      backProgramme: string;
+      backExtras: string;
+      chooseSubject: string;
+      comingSoonTitle: string;
+      comingSoonDesc: string;
+    };
+    reader: {
+      defaultSubject: string;
+      courseTab: string;
+      summaryTab: string;
+      print: string;
+      courseSoon: string;
+      inviteTitle: string;
+      inviteDesc: string;
+      inviteCta: string;
+    };
+    subject: {
+      chapter: string;
+      readCourse: string;
+      level: string;
+    };
+    practice: {
+      back: string;
+      modeKicker: string;
+      subtitle: string;
+      scoreCorrect: string;
+      questionN: string;
+      correctAria: string;
+      yourAnswerAria: string;
+      checkError: string;
+      checkCta: string;
+      answerAllHint: string;
+      restart: string;
+      questCta: string;
+      inviteDesc: string;
+      inviteCta: string;
+    };
+  };
   // Motivational quotes
   quotes: Array<{ text: string; author: string }>;
 };

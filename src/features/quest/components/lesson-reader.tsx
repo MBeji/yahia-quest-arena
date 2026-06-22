@@ -3,6 +3,7 @@ import { useState } from "react";
 import { BookOpen, ChevronLeft, ChevronRight, FileText, Printer, ScrollText } from "lucide-react";
 import { renderMarkdown } from "@/shared/lib/markdown";
 import { isRtlText } from "@/shared/lib/utils";
+import { useT } from "@/lib/i18n";
 
 export type LessonReaderChapter = {
   title: string;
@@ -25,7 +26,7 @@ export type LessonReaderSibling = {
  * L0.4a) and passes it in. Editorial light + teal reading skin, Cours/Résumé
  * toggle, print, soft account invite — reading never requires an account.
  * Content direction is pinned explicitly so LTR content reads correctly even
- * under an Arabic UI. i18n keys land in the L1.6 sweep; copy is FR literals here.
+ * under an Arabic UI. Copy is i18n (fr/en/ar).
  */
 export function LessonReader({
   chapterId,
@@ -36,6 +37,7 @@ export function LessonReader({
   chapter: LessonReaderChapter;
   allChapters: LessonReaderSibling[];
 }) {
+  const t = useT();
   const [showSummary, setShowSummary] = useState(false);
 
   const content = chapter.lesson_content;
@@ -56,7 +58,7 @@ export function LessonReader({
       <header className="mb-6" dir={isRtl ? "rtl" : "ltr"}>
         <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
           <BookOpen className="h-3.5 w-3.5 shrink-0" />
-          <span className="truncate">{subjectData?.name_fr ?? "Cours"}</span>
+          <span className="truncate">{subjectData?.name_fr ?? t.public.reader.defaultSubject}</span>
           {allChapters.length > 0 && (
             <span className="text-muted-foreground">
               · {currentIdx + 1}/{allChapters.length}
@@ -81,7 +83,7 @@ export function LessonReader({
                 !showingSummary ? "bg-card text-primary shadow-sm" : "text-muted-foreground"
               }`}
             >
-              Cours
+              {t.public.reader.courseTab}
             </button>
             <button
               type="button"
@@ -90,7 +92,7 @@ export function LessonReader({
                 showingSummary ? "bg-card text-primary shadow-sm" : "text-muted-foreground"
               }`}
             >
-              Résumé
+              {t.public.reader.summaryTab}
             </button>
           </div>
         )}
@@ -99,7 +101,7 @@ export function LessonReader({
           onClick={() => window.print()}
           className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground transition hover:border-primary/40 hover:text-primary"
         >
-          <Printer className="h-4 w-4" /> Imprimer
+          <Printer className="h-4 w-4" /> {t.public.reader.print}
         </button>
       </div>
 
@@ -112,7 +114,7 @@ export function LessonReader({
       ) : (
         <div className="rounded-2xl border border-dashed border-border bg-card px-6 py-12 text-center">
           <ScrollText className="mx-auto h-12 w-12 text-muted-foreground/40" />
-          <p className="mt-3 text-muted-foreground">Le cours de ce chapitre arrive bientôt.</p>
+          <p className="mt-3 text-muted-foreground">{t.public.reader.courseSoon}</p>
         </div>
       )}
 
@@ -145,16 +147,17 @@ export function LessonReader({
 
       <aside className="mt-12 rounded-2xl border border-primary/20 bg-secondary px-6 py-7 text-center print:hidden">
         <FileText className="mx-auto h-6 w-6 text-primary" />
-        <h2 className="mt-2 font-display text-lg font-bold text-foreground">Apprends en jouant</h2>
+        <h2 className="mt-2 font-display text-lg font-bold text-foreground">
+          {t.public.reader.inviteTitle}
+        </h2>
         <p className="mx-auto mt-1 max-w-md text-sm text-muted-foreground">
-          Crée ton compte gratuit pour t’entraîner sur les exercices, gagner des XP et sauvegarder
-          ta progression. Lire le cours reste toujours libre.
+          {t.public.reader.inviteDesc}
         </p>
         <Link
           to="/signup"
           className="mt-4 inline-flex items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
         >
-          Créer mon compte gratuit
+          {t.public.reader.inviteCta}
         </Link>
       </aside>
     </article>
