@@ -1,0 +1,82 @@
+{
+  "title": "👑 تحدّي النخبة ⭐⭐⭐⭐: بطل المواقع والأشكال",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "أيّ بطاقةٍ تُظهر الحرف ع في أوّل الكلمة؟",
+      "options": [
+        { "id": "a", "text": "<svg viewBox=\"0 0 110 110\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"98\" height=\"98\" rx=\"16\" fill=\"#fde68a\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"55\" y=\"74\" font-size=\"54\" text-anchor=\"middle\" fill=\"#b45309\" stroke=\"none\">ـعـ</text></svg>" },
+        { "id": "b", "text": "<svg viewBox=\"0 0 110 110\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"98\" height=\"98\" rx=\"16\" fill=\"#bbf7d0\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"55\" y=\"74\" font-size=\"54\" text-anchor=\"middle\" fill=\"#15803d\" stroke=\"none\">عـ</text></svg>" },
+        { "id": "c", "text": "<svg viewBox=\"0 0 110 110\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"98\" height=\"98\" rx=\"16\" fill=\"#bfdbfe\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"55\" y=\"74\" font-size=\"54\" text-anchor=\"middle\" fill=\"#1d4ed8\" stroke=\"none\">ـع</text></svg>" },
+        { "id": "d", "text": "<svg viewBox=\"0 0 110 110\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"98\" height=\"98\" rx=\"16\" fill=\"#fbcfe8\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"55\" y=\"74\" font-size=\"54\" text-anchor=\"middle\" fill=\"#be185d\" stroke=\"none\">ع</text></svg>" }
+      ],
+      "correctOption": "b",
+      "explanation": "البطاقة (ب) فيها عـ، وهو شكل ع في أوّل الكلمة (يتّصل بما بعده فقط). أمّا ـعـ ففي الوسط، و ـع ففي الآخر، و ع منفصل.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ بطاقةٍ تُظهر الحرف م في آخر الكلمة؟",
+      "options": [
+        { "id": "a", "text": "<svg viewBox=\"0 0 110 110\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"98\" height=\"98\" rx=\"16\" fill=\"#bbf7d0\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"55\" y=\"74\" font-size=\"54\" text-anchor=\"middle\" fill=\"#15803d\" stroke=\"none\">مـ</text></svg>" },
+        { "id": "b", "text": "<svg viewBox=\"0 0 110 110\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"98\" height=\"98\" rx=\"16\" fill=\"#fde68a\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"55\" y=\"74\" font-size=\"54\" text-anchor=\"middle\" fill=\"#b45309\" stroke=\"none\">ـمـ</text></svg>" },
+        { "id": "c", "text": "<svg viewBox=\"0 0 110 110\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"98\" height=\"98\" rx=\"16\" fill=\"#fbcfe8\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"55\" y=\"74\" font-size=\"54\" text-anchor=\"middle\" fill=\"#be185d\" stroke=\"none\">م</text></svg>" },
+        { "id": "d", "text": "<svg viewBox=\"0 0 110 110\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"98\" height=\"98\" rx=\"16\" fill=\"#bfdbfe\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"55\" y=\"74\" font-size=\"54\" text-anchor=\"middle\" fill=\"#1d4ed8\" stroke=\"none\">ـم</text></svg>" }
+      ],
+      "correctOption": "d",
+      "explanation": "البطاقة (د) فيها ـم، وهو شكل م في آخر الكلمة (يتّصل بما قبله فقط) كما في عَلَم. أمّا مـ ففي الأوّل، و ـمـ ففي الوسط.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "في كلمة «بَاب»، أين يقع الحرف ب **الأخير**؟",
+      "options": [
+        { "id": "a", "text": "أوّل الكلمة" },
+        { "id": "b", "text": "وسط الكلمة" },
+        { "id": "c", "text": "آخر الكلمة" },
+        { "id": "d", "text": "غير موجود" }
+      ],
+      "correctOption": "c",
+      "explanation": "كلمة بَاب فيها ب مرّتين: الأوّل في أوّلها، والأخير في آخرها. الفخّ الشائع هو اختيار أوّل الكلمة بسبب الحرف الأوّل، لكنّ السؤال عن الأخير.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "في أيّ كلمةٍ يقع الحرف ع في وسطها؟",
+      "options": [
+        { "id": "a", "text": "شَمْعة" },
+        { "id": "b", "text": "عَلَم" },
+        { "id": "c", "text": "جَمَل" },
+        { "id": "d", "text": "قَمَر" }
+      ],
+      "correctOption": "a",
+      "explanation": "في كلمة شَمْعة يأتي الحرف ع بين م و ة، فهو في وسطها. الفخّ الشائع هو عَلَم التي يقع فيها ع في أوّلها؛ أمّا جَمَل و قَمَر فلا ع فيهما.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "أريد الحرف م في أوّل كلمةٍ ثمّ في آخر كلمة. أيّ زوجِ كلماتٍ يحقّق ذلك على الترتيب؟",
+      "options": [
+        { "id": "a", "text": "مَوْز ثمّ عَلَم" },
+        { "id": "b", "text": "قَمَر ثمّ سَمَك" },
+        { "id": "c", "text": "عَلَم ثمّ مَوْز" },
+        { "id": "d", "text": "سَمَك ثمّ قَمَر" }
+      ],
+      "correctOption": "a",
+      "explanation": "في مَوْز يقع م في أوّلها، وفي عَلَم يقع م في آخرها، فالزوج (أ) صحيح. الفخّ الشائع: في قَمَر و سَمَك يقع م في الوسط، وفي عَلَم ثمّ مَوْز انقلب الترتيب.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "في كلمة «سَمَك»، ما موقع الحروف س ثمّ م ثمّ ك على الترتيب؟",
+      "options": [
+        { "id": "a", "text": "أوّل، آخر، وسط" },
+        { "id": "b", "text": "وسط، أوّل، آخر" },
+        { "id": "c", "text": "أوّل، وسط، آخر" },
+        { "id": "d", "text": "آخر، وسط، أوّل" }
+      ],
+      "correctOption": "c",
+      "explanation": "في سَمَك: س في أوّلها، م في وسطها، ك في آخرها، فالترتيب أوّل، وسط، آخر. الفخّ الشائع هو قلب مواقع س و ك في الطرفين.",
+      "difficulty": 3
+    }
+  ]
+}

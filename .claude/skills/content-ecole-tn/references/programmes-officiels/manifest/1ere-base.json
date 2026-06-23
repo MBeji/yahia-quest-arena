@@ -24,7 +24,16 @@
       "id": "arabic-1ere",
       "name": "اللغة العربية",
       "contentLanguage": "ar",
-      "chapters": []
+      "chapters": [
+        { "slug": "01-aswat-wal-huruf", "notion": "التعرّف على الأصوات والحروف" },
+        { "slug": "02-sawt-awwal", "notion": "الصوت الأوّل في الكلمة" },
+        { "slug": "03-maqati-wal-kalima", "notion": "المقاطع وقراءة الكلمة" },
+        { "slug": "04-ashkal-al-harf", "notion": "أشكال الحرف (أوّل، وسط، آخر)" },
+        { "slug": "05-al-khatt-wal-kitaba", "notion": "الخطّ والكتابة والنسخ" },
+        { "slug": "06-al-istima-wal-fahm", "notion": "الاستماع وفهم المسموع" },
+        { "slug": "07-at-tabir-ash-shafawi", "notion": "التعبير الشفوي" },
+        { "slug": "08-al-jumla", "notion": "قراءة الجملة البسيطة وفهمها" }
+      ]
     },
     {
       "id": "education-islamique-1ere",

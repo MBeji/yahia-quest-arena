@@ -1,0 +1,82 @@
+{
+  "title": "👑 تحدّي النخبة ⭐⭐⭐⭐: صائد الأصوات الماهر",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "أيّ صورةٍ اسمها يبدأ بالحرف ن؟",
+      "options": [
+        { "id": "a", "text": "<svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M40 44 q20 -16 40 0 q14 12 8 36 q-6 22 -28 26 q-22 -4 -28 -26 q-6 -24 8 -36 z\" fill=\"#ef4444\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M60 40 q2 -14 16 -18\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>" },
+        { "id": "b", "text": "<svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M60 12 l13 30 l33 3 l-25 22 l8 33 l-29 -18 l-29 18 l8 -33 l-25 -22 l33 -3 z\" fill=\"#facc15\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>" },
+        { "id": "c", "text": "<svg viewBox=\"0 0 140 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M24 60 q26 -30 70 -16 q22 8 22 16 q0 8 -22 16 q-44 14 -70 -16 z\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M94 44 l24 16 l-24 16 z\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><circle cx=\"44\" cy=\"54\" r=\"4\" fill=\"#1f2937\" stroke=\"none\"/></svg>" },
+        { "id": "d", "text": "<svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"60\" cy=\"60\" r=\"24\" fill=\"#facc15\" stroke=\"#1f2937\" stroke-width=\"3\"/><g stroke=\"#f59e0b\" stroke-width=\"4\" stroke-linecap=\"round\"><line x1=\"60\" y1=\"16\" x2=\"60\" y2=\"28\"/><line x1=\"60\" y1=\"92\" x2=\"60\" y2=\"104\"/><line x1=\"16\" y1=\"60\" x2=\"28\" y2=\"60\"/><line x1=\"92\" y1=\"60\" x2=\"104\" y2=\"60\"/></g></svg>" }
+      ],
+      "correctOption": "b",
+      "explanation": "الصورة (ب) نجمة، وتبدأ بصوت «نـْ» (الحرف ن). أمّا (أ) تفّاحة بـ ت، و(ج) سمكة بـ س، و(د) شمس بـ ش.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ صورةٍ اسمها يبدأ بالحرف ع؟",
+      "options": [
+        { "id": "a", "text": "<svg viewBox=\"0 0 120 130\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"48\" cy=\"58\" r=\"12\" fill=\"#a855f7\" stroke=\"#1f2937\" stroke-width=\"3\"/><circle cx=\"72\" cy=\"58\" r=\"12\" fill=\"#a855f7\" stroke=\"#1f2937\" stroke-width=\"3\"/><circle cx=\"60\" cy=\"78\" r=\"12\" fill=\"#a855f7\" stroke=\"#1f2937\" stroke-width=\"3\"/><circle cx=\"42\" cy=\"80\" r=\"12\" fill=\"#a855f7\" stroke=\"#1f2937\" stroke-width=\"3\"/><circle cx=\"78\" cy=\"80\" r=\"12\" fill=\"#a855f7\" stroke=\"#1f2937\" stroke-width=\"3\"/><circle cx=\"60\" cy=\"100\" r=\"12\" fill=\"#a855f7\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M60 46 q4 -16 18 -22\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>" },
+        { "id": "b", "text": "<svg viewBox=\"0 0 120 130\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M52 44 l16 0 l-4 60 q-4 10 -8 0 z\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M60 44 q-2 -14 -16 -16\" fill=\"#22c55e\" stroke=\"#1f2937\" stroke-width=\"2\"/><path d=\"M60 44 q2 -16 16 -16\" fill=\"#22c55e\" stroke=\"#1f2937\" stroke-width=\"2\"/></svg>" },
+        { "id": "c", "text": "<svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"60\" cy=\"60\" r=\"42\" fill=\"#22c55e\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M18 60 q42 -22 84 0\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M18 60 q42 22 84 0\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\"/><line x1=\"60\" y1=\"18\" x2=\"60\" y2=\"102\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>" },
+        { "id": "d", "text": "<svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M60 30 q-8 14 -8 24 q0 14 16 14 q16 0 16 -14 q0 -10 -8 -24 q-4 -8 -8 -8 q-4 0 -8 8 z\" fill=\"#38bdf8\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>" }
+      ],
+      "correctOption": "a",
+      "explanation": "الصورة (أ) عنب، ويبدأ بصوت «عـْ» (الحرف ع). أمّا (ب) جزر بـ ج، و(ج) كرة بـ ك، و(د) قطرة ماء بـ ق.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كلمة «وردة» وكلمة «هلال». أيّ الحرفين تبدآن بهما على الترتيب؟",
+      "options": [
+        { "id": "a", "text": "ه ثمّ و" },
+        { "id": "b", "text": "و ثمّ و" },
+        { "id": "c", "text": "و ثمّ ه" },
+        { "id": "d", "text": "ه ثمّ ه" }
+      ],
+      "correctOption": "c",
+      "explanation": "وردة تبدأ بصوت «وْ» (الحرف و)، وهلال يبدأ بصوت «هـْ» (الحرف ه). فالترتيب الصحيح هو و ثمّ ه.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "اسمٌ فيه ثلاثة حروف: ن ثمّ ا ثمّ ر. ما هذه الكلمة؟",
+      "options": [
+        { "id": "a", "text": "دار" },
+        { "id": "b", "text": "جار" },
+        { "id": "c", "text": "بار" },
+        { "id": "d", "text": "نار" }
+      ],
+      "correctOption": "d",
+      "explanation": "الحروف ن + ا + ر تكوّن كلمة «نار». أوّل صوتٍ فيها «نـْ»، وهو يدلّ على الحرف ن.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "أيّ مجموعةٍ كلماتها كلّها تبدأ بحروفٍ ليست لها نقط؟",
+      "options": [
+        { "id": "a", "text": "عنب، حوت" },
+        { "id": "b", "text": "نجمة، جزر" },
+        { "id": "c", "text": "جزر، نار" },
+        { "id": "d", "text": "نجمة، عنب" }
+      ],
+      "correctOption": "a",
+      "explanation": "عنب تبدأ بـ ع، وحوت تبدأ بـ ح، وكلاهما بلا نقط. أمّا ن ففوقه نقطة، و ج فتحته نقطة، لذلك بقيّة المجموعات خاطئة.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "أكتب أوّل حرفٍ من كلمة «جزر» ثمّ أوّل حرفٍ من كلمة «حوت». ما هما؟",
+      "options": [
+        { "id": "a", "text": "ح ثمّ ج" },
+        { "id": "b", "text": "ج ثمّ ح" },
+        { "id": "c", "text": "ج ثمّ ج" },
+        { "id": "d", "text": "ح ثمّ ح" }
+      ],
+      "correctOption": "b",
+      "explanation": "جزر تبدأ بـ ج (نقطةٌ تحته)، وحوت تبدأ بـ ح (لا نقطة له). الفخّ الشائع هو الخلط بينهما بسبب تشابه الشكل.",
+      "difficulty": 3
+    }
+  ]
+}

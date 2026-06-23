@@ -1,0 +1,65 @@
+{
+  "title": "اختبار فهم الدرس ⭐",
+  "questions": [
+    {
+      "prompt": "كم كلمةً في هذه الجملة: «البنتُ تقرأ»؟",
+      "options": [
+        { "id": "a", "text": "2" },
+        { "id": "b", "text": "3" },
+        { "id": "c", "text": "4" },
+        { "id": "d", "text": "5" }
+      ],
+      "correctOption": "a",
+      "explanation": "الجملةُ «البنتُ تقرأ» فيها كلمتان بينهما فراغٌ واحد: البنتُ، تقرأ. فعددُ كلماتها 2.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أيّ جملةٍ تصفُ هذه الصورة؟ <svg viewBox=\"0 0 200 130\" xmlns=\"http://www.w3.org/2000/svg\"><ellipse cx=\"78\" cy=\"84\" rx=\"40\" ry=\"26\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><circle cx=\"44\" cy=\"58\" r=\"22\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M28 42 l-6 -16 l16 8 z\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M60 42 l6 -16 l-16 8 z\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><circle cx=\"38\" cy=\"56\" r=\"3\" fill=\"#1f2937\" stroke=\"none\"/><circle cx=\"52\" cy=\"56\" r=\"3\" fill=\"#1f2937\" stroke=\"none\"/><path d=\"M118 96 h44 v-22 h-44 z\" fill=\"#bfdbfe\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M120 76 q20 -10 40 0\" fill=\"none\" stroke=\"#38bdf8\" stroke-width=\"6\"/></svg>",
+      "options": [
+        { "id": "a", "text": "الولدُ يلعبُ بالكرة" },
+        { "id": "b", "text": "العصفورُ يطيرُ في السّماء" },
+        { "id": "c", "text": "القطّةُ تشربُ الحليبَ" },
+        { "id": "d", "text": "الأمُّ تطبخُ الطّعامَ" }
+      ],
+      "correctOption": "c",
+      "explanation": "في الصورة قطّةٌ أمام وعاءٍ فيه حليب، فالجملةُ المناسبة هي «القطّةُ تشربُ الحليبَ».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم كلمةً في هذه الجملة: «الطّفلُ يلعبُ بالكرة»؟",
+      "options": [
+        { "id": "a", "text": "2" },
+        { "id": "b", "text": "3" },
+        { "id": "c", "text": "4" },
+        { "id": "d", "text": "5" }
+      ],
+      "correctOption": "b",
+      "explanation": "أعدُّ الكلمات بين الفراغات: الطّفلُ، يلعبُ، بالكرة. فعددُ كلمات الجملة 3.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما الكلمةُ الناقصةُ في الجملة: «الولدُ ... التّفّاحةَ»؟",
+      "options": [
+        { "id": "a", "text": "فوق" },
+        { "id": "b", "text": "كبيرة" },
+        { "id": "c", "text": "بيتٌ" },
+        { "id": "d", "text": "يأكلُ" }
+      ],
+      "correctOption": "d",
+      "explanation": "الجملةُ تحتاجُ فعلًا يدلُّ على ما يفعله الولد بالتّفّاحة، فنقول «الولدُ يأكلُ التّفّاحةَ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "في جملة «الشّمسُ فوق الدّار»، مَن فوق الدّار؟",
+      "options": [
+        { "id": "a", "text": "الشّمس" },
+        { "id": "b", "text": "الدّار" },
+        { "id": "c", "text": "الولد" },
+        { "id": "d", "text": "القطّة" }
+      ],
+      "correctOption": "a",
+      "explanation": "الجملةُ تخبرنا أنّ الشّمسَ فوق الدّار، فالذي فوق الدّار هو الشّمس.",
+      "difficulty": 2
+    }
+  ]
+}
