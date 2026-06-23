@@ -555,7 +555,7 @@ export type TranslationKeys = {
       login: string;
       signup: string;
     };
-    footer: { tagline: string };
+    footer: { tagline: string; rights: string; legalLink: string };
     landing: {
       freeBadge: string;
       heroTitle: string;
@@ -658,6 +658,22 @@ export type TranslationKeys = {
       questCta: string;
       inviteDesc: string;
       inviteCta: string;
+    };
+    print: { copyrightNotice: string };
+    legal: {
+      title: string;
+      intro: string;
+      ipTitle: string;
+      ipBody: string;
+      useTitle: string;
+      useBody: string;
+      brandTitle: string;
+      brandBody: string;
+      contactTitle: string;
+      contactBody: string;
+      lawTitle: string;
+      lawBody: string;
+      updated: string;
     };
   };
   // Motivational quotes

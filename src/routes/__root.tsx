@@ -89,6 +89,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { title: m.title },
         { name: "description", content: m.description },
         { name: "author", content: "Na9ra Nal3ab" },
+        { name: "copyright", content: `© ${new Date().getFullYear()} Na9ra Nal3ab` },
+        { property: "og:site_name", content: "Na9ra Nal3ab" },
         { property: "og:title", content: m.ogTitle },
         { property: "og:description", content: m.ogDescription },
         { property: "og:type", content: "website" },
