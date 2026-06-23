@@ -24,7 +24,16 @@
       "id": "arabic-2eme",
       "name": "اللغة العربية",
       "contentLanguage": "ar",
-      "chapters": []
+      "chapters": [
+        { "slug": "01-huruf-mutassila-munfasila", "notion": "الحروف المتّصلة والمنفصلة" },
+        { "slug": "02-harakat-wa-tanwin", "notion": "الحركات والتنوين والشدّة" },
+        { "slug": "03-maqati-wa-madd", "notion": "المقاطع وحروف المدّ" },
+        { "slug": "04-qiraa-kalimat-jumal", "notion": "قراءة الكلمات والجمل" },
+        { "slug": "05-fahm-nass-qasir", "notion": "فهم النصّ القصير" },
+        { "slug": "06-ithra-mufradat", "notion": "إثراء المفردات" },
+        { "slug": "07-tarkib-jumla", "notion": "تركيب الجملة وترتيبها" },
+        { "slug": "08-imla-wa-kitaba", "notion": "الإملاء والكتابة" }
+      ]
     },
     {
       "id": "education-islamique-2eme",
