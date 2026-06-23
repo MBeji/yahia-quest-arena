@@ -3,8 +3,20 @@ import { describe, it, expect, vi } from "vitest";
 import React from "react";
 
 vi.mock("@tanstack/react-router", () => ({
-  Link: ({ children, to }: { children: React.ReactNode; to: string }) =>
-    React.createElement("a", { href: to }, children),
+  Link: ({
+    children,
+    to,
+    params,
+  }: {
+    children: React.ReactNode;
+    to: string;
+    params?: Record<string, string>;
+  }) =>
+    React.createElement(
+      "a",
+      { href: params ? to.replace(/\$(\w+)/g, (_m, k: string) => params[k] ?? `$${k}`) : to },
+      children,
+    ),
 }));
 vi.mock("@/hooks/use-mobile", () => ({ useIsMobile: () => true }));
 vi.mock("@/components/landing/golden-hero-canvas", () => ({ default: () => null }));
@@ -28,6 +40,19 @@ describe("PublicLanding", () => {
     expect(screen.getByText("Primaire")).toBeInTheDocument();
     expect(screen.getByText("Collège")).toBeInTheDocument();
     expect(screen.getByText("Lycée")).toBeInTheDocument();
+  });
+
+  it("highlights the two transverse language tracks with their CEFR ladder", () => {
+    const { container } = render(<PublicLanding />);
+    // Two language cards, each deep-linking to its public level page.
+    expect(container.querySelectorAll('a[href^="/niveau/"]')).toHaveLength(2);
+    expect(container.querySelector('a[href="/niveau/francais"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/niveau/anglais"]')).not.toBeNull();
+    // The full A1 → C2 CEFR ladder is surfaced on both cards (6 levels × 2).
+    expect(screen.getAllByText("A1")).toHaveLength(2);
+    expect(screen.getAllByText("C2")).toHaveLength(2);
+    // International-standard alignment is shown (FR locale → CECRL + DELF/DALF).
+    expect(screen.getByText(/DELF/)).toBeInTheDocument();
   });
 
   it("keeps the game register as a single secondary block with a signup CTA", () => {

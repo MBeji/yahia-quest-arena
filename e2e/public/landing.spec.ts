@@ -25,6 +25,8 @@ test.describe("Landing page (Référence register)", () => {
     // The 3 persona doors and the 3 parcours-cycle cards.
     await expect(landing.personaDoors).toHaveCount(3);
     await expect(landing.cycleCards).toHaveCount(3);
+    // The 2 transverse language tracks (Français / Anglais), surfaced by the homepage.
+    await expect(landing.langueCards).toHaveCount(2);
     // The single Jeu (RPG) block — the only place the game register surfaces.
     await expect(landing.gameBlock).toBeAttached();
   });

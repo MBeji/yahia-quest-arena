@@ -557,6 +557,15 @@ export const ar: TranslationKeys = {
       gameFeatBadges: "أوسمة وأصناف الأبطال",
       gameFeatRanking: "ترتيب وسلاسل يومية",
       gameCta: "إنشاء حسابي المجاني",
+      languesKicker: "ميزة شاملة",
+      languesTitle: "عزّز فرنسيتك وإنجليزيتك، في مستواك الحقيقي",
+      languesSubtitle:
+        "مساران متوافقان مع المعايير الدولية — لتعزيز اللغة بصرف النظر عن قسمك، من المبتدئ إلى المتقدّم.",
+      languesCta: "اطّلع على المستويات",
+      languesFrName: "الفرنسية",
+      languesFrStandard: "متوافق مع الإطار الأوروبي المرجعي · DELF / DALF",
+      languesEnName: "الإنجليزية",
+      languesEnStandard: "متوافق مع الإطار الأوروبي المرجعي · Cambridge / IELTS",
     },
     cycles: {
       primaire: "ابتدائي",
