@@ -561,6 +561,15 @@ export const en: TranslationKeys = {
       gameFeatBadges: "Badges & hero classes",
       gameFeatRanking: "Leaderboard & daily streaks",
       gameCta: "Create my free account",
+      languesKicker: "A cross-cutting strength",
+      languesTitle: "Strengthen your French and English, at your real level",
+      languesSubtitle:
+        "Two tracks aligned with international standards — to strengthen the language regardless of your school class, from beginner to advanced.",
+      languesCta: "See the levels",
+      languesFrName: "French",
+      languesFrStandard: "Aligned with the CEFR · DELF / DALF",
+      languesEnName: "English",
+      languesEnStandard: "Aligned with the CEFR · Cambridge / IELTS",
     },
     cycles: {
       primaire: "Primary",

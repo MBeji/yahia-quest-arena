@@ -584,6 +584,14 @@ export type TranslationKeys = {
       gameFeatBadges: string;
       gameFeatRanking: string;
       gameCta: string;
+      languesKicker: string;
+      languesTitle: string;
+      languesSubtitle: string;
+      languesCta: string;
+      languesFrName: string;
+      languesFrStandard: string;
+      languesEnName: string;
+      languesEnStandard: string;
     };
     cycles: {
       primaire: string;

@@ -41,6 +41,10 @@ export class LandingPage {
   get cycleCards(): Locator {
     return this.page.getByTestId("cycle-card");
   }
+  /** The 2 transverse language cards (Français / Anglais), CEFR-aligned. */
+  get langueCards(): Locator {
+    return this.page.getByTestId("langue-card");
+  }
   /** The single "apprends en jouant" (Jeu register) block — the only RPG surface. */
   get gameBlock(): Locator {
     return this.page.getByTestId("game-block");
