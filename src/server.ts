@@ -4,6 +4,7 @@ import { consumeLastCapturedError } from "@/shared/lib/error-capture";
 import { renderErrorPage } from "@/shared/lib/error-page";
 import { logger } from "@/shared/lib/logger";
 import { handlePushCron } from "@/features/notifications/notifications.cron.server";
+import { generateSitemap } from "@/shared/lib/sitemap";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -81,6 +82,25 @@ export default {
         return await handlePushCron(request);
       } catch (error) {
         logger.error("Push cron dispatch failed", { error });
+        return new Response("error", { status: 500 });
+      }
+    }
+
+    // Public sitemap for search engines, generated from the anon-visible
+    // catalogue and served as XML outside the SSR/router path. Edge-cached for an
+    // hour so a crawler fetch doesn't re-query the catalogue every time.
+    if (new URL(request.url).pathname === "/sitemap.xml") {
+      try {
+        const xml = await generateSitemap();
+        return new Response(xml, {
+          status: 200,
+          headers: {
+            "content-type": "application/xml; charset=utf-8",
+            "cache-control": "public, max-age=3600, s-maxage=3600",
+          },
+        });
+      } catch (error) {
+        logger.error("Sitemap generation failed", { error });
         return new Response("error", { status: 500 });
       }
     }
