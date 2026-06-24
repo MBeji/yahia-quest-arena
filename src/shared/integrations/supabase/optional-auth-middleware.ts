@@ -1,51 +1,14 @@
 import { createMiddleware } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
-import { createClient } from "@supabase/supabase-js";
-import type { Database } from "./types";
 import { logger } from "@/shared/lib/logger";
-
-type SupabaseEnv = { url: string; key: string };
-
-function readSupabaseEnv(): SupabaseEnv {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_PUBLISHABLE_KEY;
-
-  if (!url || !key) {
-    const missing = [
-      ...(!url ? ["SUPABASE_URL"] : []),
-      ...(!key ? ["SUPABASE_PUBLISHABLE_KEY"] : []),
-    ];
-    const message = `Missing Supabase environment variable(s): ${missing.join(", ")}. Set them in your deployment environment.`;
-    logger.error("Supabase optional-auth middleware misconfiguration", { missing });
-    throw new Error(message);
-  }
-
-  return { url, key };
-}
-
-const SUPABASE_AUTH_OPTIONS = {
-  storage: undefined,
-  persistSession: false,
-  autoRefreshToken: false,
-} as const;
-
-function createAnonymousClient({ url, key }: SupabaseEnv) {
-  return createClient<Database>(url, key, { auth: { ...SUPABASE_AUTH_OPTIONS } });
-}
-
-function createAuthenticatedClient({ url, key }: SupabaseEnv, token: string) {
-  return createClient<Database>(url, key, {
-    global: { headers: { Authorization: `Bearer ${token}` } },
-    auth: { ...SUPABASE_AUTH_OPTIONS },
-  });
-}
+import { createAuthedSupabaseClient, createPublicSupabaseClient } from "./public-client";
 
 /**
  * Context injected by {@link optionalSupabaseAuth}. `userId` is the authenticated
  * user's id, or `null` for an anonymous visitor — handlers MUST branch on it.
  */
 export type OptionalAuthContext = {
-  supabase: ReturnType<typeof createAnonymousClient>;
+  supabase: ReturnType<typeof createPublicSupabaseClient>;
   userId: string | null;
 };
 
@@ -62,13 +25,12 @@ export type OptionalAuthContext = {
  */
 export const optionalSupabaseAuth = createMiddleware({ type: "function" }).server(
   async ({ next }) => {
-    const env = readSupabaseEnv();
     const authHeader = getRequest()?.headers?.get("authorization");
 
     if (authHeader?.startsWith("Bearer ")) {
       const token = authHeader.slice("Bearer ".length);
       if (token) {
-        const supabase = createAuthenticatedClient(env, token);
+        const supabase = createAuthedSupabaseClient(token);
         const { data, error } = await supabase.auth.getClaims(token);
         if (!error && data?.claims?.sub) {
           const context: OptionalAuthContext = { supabase, userId: data.claims.sub };
@@ -79,7 +41,7 @@ export const optionalSupabaseAuth = createMiddleware({ type: "function" }).serve
     }
 
     const context: OptionalAuthContext = {
-      supabase: createAnonymousClient(env),
+      supabase: createPublicSupabaseClient(),
       userId: null,
     };
     return next({ context });
