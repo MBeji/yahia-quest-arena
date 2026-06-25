@@ -98,13 +98,26 @@ describe("ExtrasCatalogue", () => {
       grade_cycle: null,
       grade_order: null,
     }),
+    p({
+      id: "arabe",
+      name_fr: "Arabe",
+      kind: "libre",
+      theme_id: "arabe",
+      grade_cycle: null,
+      grade_order: null,
+    }),
   ];
 
   it("shows only the libre tracks, each linking to its level page", () => {
     const { container } = render(<ExtrasCatalogue parcours={parcours} />);
     expect(screen.getByText("Anglais")).toBeInTheDocument();
     expect(screen.getByText("Culture Générale")).toBeInTheDocument();
-    // 3 parcours in, 2 libre → 2 cards/links (the school concours is excluded).
+    // 4 parcours in, 3 libre, but the Arabic track is excluded → 2 cards/links.
     expect(container.querySelectorAll('a[href="/niveau/$parcoursId"]')).toHaveLength(2);
+  });
+
+  it("excludes the Arabic language track from the extras menu", () => {
+    render(<ExtrasCatalogue parcours={parcours} />);
+    expect(screen.queryByText("Arabe")).not.toBeInTheDocument();
   });
 });
