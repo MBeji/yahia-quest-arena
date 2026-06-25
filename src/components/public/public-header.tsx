@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useT } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
+import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 
 /**
  * Header of the public (Référence register) shell. Sober, content-first: the
@@ -45,6 +46,7 @@ export function PublicHeader() {
           </nav>
         </div>
         <div className="flex items-center gap-1 sm:gap-2">
+          <ThemeSwitcher />
           <LanguageSwitcher />
           <Link
             to="/login"

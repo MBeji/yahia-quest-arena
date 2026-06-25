@@ -26,6 +26,15 @@ describe("PublicHeader", () => {
     expect(screen.getByRole("button", { name: /change language/i })).toBeInTheDocument();
   });
 
+  it("exposes the dark/light theme switcher so the public pages share the game theme", () => {
+    renderHeader();
+    // The shared ThemeSwitcher toggle — the public shell follows the same
+    // noir/gold ↔ light game theme as the rest of the app (no pinned palette).
+    expect(
+      screen.getByRole("button", { name: /switch to (light|dark) theme/i }),
+    ).toBeInTheDocument();
+  });
+
   it("links to the catalogue (programme + extras) and the account CTAs", () => {
     const { container } = renderHeader();
     expect(container.querySelector('a[href="/programme"]')).not.toBeNull();

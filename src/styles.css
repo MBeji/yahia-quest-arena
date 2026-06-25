@@ -518,57 +518,18 @@ html.light *:focus-visible {
 }
 
 /* =====================================================
-  Référence register — public, content-first reading skin (chantier C8).
-  A class-scoped LIGHT + TEAL (#0F6E56) palette, INDEPENDENT of the
-  html.dark/light game theme: public/content screens render in this register
-  whatever the visitor's game-theme toggle (double-registre « Na9ra / Nal3ab »).
-  Redefining the design tokens here re-skins every semantic Tailwind utility
-  (bg-background, text-foreground, text-primary, border-border, …); retinting
-  the Jeu neon/gold tokens to teal makes the shared .lesson-content typography
-  render as clean editorial teal-on-white with no per-element override.
+  Lesson typography shared bits — link + inline code. These used to live under
+  the public-only `.register-reference` skin; the public pages now follow the
+  global dark (noir/gold) / light game theme like the rest of the app, so these
+  rules apply to `.lesson-content` everywhere and read against whichever theme
+  is active (tokens resolve per the html.dark / html.light palette).
   ===================================================== */
-.register-reference {
-  color-scheme: light;
-
-  /* Surfaces — near-white canvas, pure-white cards */
-  --background: oklch(0.985 0.008 165);
-  --foreground: oklch(0.26 0.03 175);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.26 0.03 175);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.26 0.03 175);
-
-  /* Brand — teal #0F6E56 leads */
-  --primary: #0f6e56;
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.965 0.018 165);
-  --secondary-foreground: oklch(0.3 0.04 175);
-  --muted: oklch(0.965 0.012 165);
-  --muted-foreground: oklch(0.48 0.025 172);
-  --accent: #0f6e56;
-  --accent-foreground: oklch(0.99 0 0);
-
-  --destructive: oklch(0.57 0.22 25);
-  --destructive-foreground: oklch(0.99 0 0);
-
-  --border: oklch(0.9 0.015 168);
-  --input: oklch(0.9 0.015 168);
-  --ring: #0f6e56;
-
-  /* Retint the Jeu neon/gold tokens to teal so .lesson-content reads Reference */
-  --neon-violet: #0f6e56;
-  --neon-magenta: #15876a;
-  --neon-gold: #0b5a47;
-  --gold: #0f6e56;
-  --gold-bright: #15876a;
-  --gold-deep: #0b5a47;
-}
-.register-reference .lesson-content a {
+.lesson-content a {
   color: var(--primary);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
-.register-reference .lesson-content code {
+.lesson-content code {
   background: var(--secondary);
   border-radius: 0.3rem;
   padding: 0.1em 0.35em;

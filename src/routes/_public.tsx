@@ -3,11 +3,11 @@ import { PublicHeader } from "@/components/public/public-header";
 import { PublicFooter } from "@/components/public/public-footer";
 
 /**
- * Public coquille — the « Référence » register (chantier C8). UNLIKE
- * `_authenticated`, this layout has NO auth guard: its content (courses,
- * catalogue, exercises) is readable by anyone, no login. The `.register-reference`
- * wrapper pins the light + teal palette by CONTEXT, independent of the visitor's
- * game-theme (dark/light) toggle.
+ * Public coquille. UNLIKE `_authenticated`, this layout has NO auth guard: its
+ * content (courses, catalogue, exercises) is readable by anyone, no login. The
+ * public pages now follow the SAME dark (noir/gold) / light game theme as the rest
+ * of the app, driven by the global theme switcher in the header — there is no longer
+ * a separate, context-pinned palette here.
  */
 export const Route = createFileRoute("/_public")({
   component: PublicLayout,
@@ -15,7 +15,7 @@ export const Route = createFileRoute("/_public")({
 
 function PublicLayout() {
   return (
-    <div className="register-reference flex min-h-screen flex-col bg-background text-foreground">
+    <div className="flex min-h-screen flex-col bg-background text-foreground">
       <PublicHeader />
       <main className="flex-1">
         <Outlet />
