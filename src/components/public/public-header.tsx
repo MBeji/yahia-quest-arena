@@ -1,15 +1,20 @@
 import { Link } from "@tanstack/react-router";
 import { useT } from "@/lib/i18n";
+import { useAuth } from "@/features/auth";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 
 /**
- * Header of the public (Référence register) shell. Sober, content-first: the
- * brand returns home, and a single primary CTA invites account creation — the
- * account is for play/XP/saving, never to read. Copy is i18n (fr/en/ar).
+ * Header of the public (Référence register) shell. Sober, content-first, and
+ * AUTH-AWARE: a signed-in visitor — who now reaches public content via the
+ * converged « Découvrir » nav, a course link, etc. — sees a link back to their
+ * space, never the login/signup CTAs (which would wrongly read as "logged out").
+ * Copy is i18n (fr/en/ar).
  */
 export function PublicHeader() {
   const t = useT();
+  const { user } = useAuth();
+  const isAuthed = user != null;
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-card/90 backdrop-blur print:hidden">
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-4 py-3 sm:gap-3 sm:px-6">
@@ -48,18 +53,29 @@ export function PublicHeader() {
         <div className="flex items-center gap-1 sm:gap-2">
           <LanguageSwitcher />
           <ThemeSwitcher />
-          <Link
-            to="/login"
-            className="hidden rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground sm:inline-block"
-          >
-            {t.public.header.login}
-          </Link>
-          <Link
-            to="/signup"
-            className="rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition hover:opacity-90 sm:px-4"
-          >
-            {t.public.header.signup}
-          </Link>
+          {isAuthed ? (
+            <Link
+              to="/dashboard"
+              className="rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition hover:opacity-90 sm:px-4"
+            >
+              {t.public.header.account}
+            </Link>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="hidden rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground sm:inline-block"
+              >
+                {t.public.header.login}
+              </Link>
+              <Link
+                to="/signup"
+                className="rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition hover:opacity-90 sm:px-4"
+              >
+                {t.public.header.signup}
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>

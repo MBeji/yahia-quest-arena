@@ -561,6 +561,7 @@ export type TranslationKeys = {
       extras: string;
       login: string;
       signup: string;
+      account: string;
     };
     footer: { tagline: string; rights: string; legalLink: string };
     landing: {
