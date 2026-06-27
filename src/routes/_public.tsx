@@ -1,6 +1,8 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { PublicHeader } from "@/components/public/public-header";
 import { PublicFooter } from "@/components/public/public-footer";
+import { PrintMark } from "@/components/public/print-mark";
+import { usePublicContentProtection } from "@/shared/lib/content-protection";
 
 /**
  * Public coquille — the « Référence » register (chantier C8). UNLIKE
@@ -14,6 +16,7 @@ export const Route = createFileRoute("/_public")({
 });
 
 function PublicLayout() {
+  usePublicContentProtection();
   return (
     <div className="register-reference flex min-h-screen flex-col bg-background text-foreground">
       <PublicHeader />
@@ -21,6 +24,7 @@ function PublicLayout() {
         <Outlet />
       </main>
       <PublicFooter />
+      <PrintMark />
     </div>
   );
 }

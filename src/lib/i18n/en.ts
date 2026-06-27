@@ -530,7 +530,11 @@ export const en: TranslationKeys = {
       login: "Log in",
       signup: "Create my account",
     },
-    footer: { tagline: "100% free · all of Tunisian school" },
+    footer: {
+      tagline: "100% free · all of Tunisian school",
+      rights: "All rights reserved",
+      legalLink: "Legal notice",
+    },
     landing: {
       freeBadge: "100% free · no sign-up",
       heroTitle: "Every lesson of the Tunisian school. From Year 1 to the Bac.",
@@ -639,6 +643,30 @@ export const en: TranslationKeys = {
       questCta: "Replay in quest mode to earn XP",
       inviteDesc: "Create an account to earn XP, save your progress and climb the leaderboard.",
       inviteCta: "Create my account",
+    },
+    print: {
+      copyrightNotice:
+        "na9ranal3ab.tn · Intellectual property. Reproduction and distribution prohibited without permission.",
+    },
+    legal: {
+      title: "Legal notice & intellectual property",
+      intro:
+        "Na9ra Nal3ab (نقرا نلعب) — a free educational platform for the Tunisian school curriculum.",
+      ipTitle: "Intellectual property",
+      ipBody:
+        "All content (lessons, summaries, quizzes, exercises, texts, illustrations), the visual identity and the platform code are the exclusive property of Na9ra Nal3ab and protected by copyright. Any reproduction, distribution, resale or reuse, in whole or in part, without prior written permission is prohibited.",
+      useTitle: "Terms of use",
+      useBody:
+        "Content may be freely consulted for personal, non-commercial educational purposes. The following are prohibited: automated extraction (scraping, crawling), bulk copying or downloading, use of the content to train artificial-intelligence models, and any unauthorized automated access to the service.",
+      brandTitle: "Trademark",
+      brandBody:
+        "“Na9ra Nal3ab” / “نقرا نلعب” and the associated logo are distinctive signs of the platform; their use without permission is prohibited.",
+      contactTitle: "Contact & reporting",
+      contactBody:
+        "Permission requests, reports of misuse or unauthorized reproduction: contact@na9ranal3ab.tn.",
+      lawTitle: "Governing law",
+      lawBody: "This notice is governed by Tunisian law.",
+      updated: "Last updated: June 2026.",
     },
   },
   quotes: [

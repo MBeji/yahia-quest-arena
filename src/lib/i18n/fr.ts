@@ -532,7 +532,11 @@ export const fr: TranslationKeys = {
       login: "Connexion",
       signup: "Créer mon compte",
     },
-    footer: { tagline: "100 % gratuit · toute l’école tunisienne" },
+    footer: {
+      tagline: "100 % gratuit · toute l’école tunisienne",
+      rights: "Tous droits réservés",
+      legalLink: "Mentions légales",
+    },
     landing: {
       freeBadge: "100 % gratuit · sans inscription",
       heroTitle: "Tous les cours de l’école tunisienne. De la 1re année au Bac.",
@@ -643,6 +647,30 @@ export const fr: TranslationKeys = {
       inviteDesc:
         "Crée un compte pour gagner des XP, sauvegarder ta progression et grimper au classement.",
       inviteCta: "Créer mon compte",
+    },
+    print: {
+      copyrightNotice:
+        "na9ranal3ab.tn · Propriété intellectuelle. Reproduction et diffusion interdites sans autorisation.",
+    },
+    legal: {
+      title: "Mentions légales & propriété intellectuelle",
+      intro:
+        "Na9ra Nal3ab (نقرا نلعب) — plateforme éducative gratuite dédiée au programme scolaire tunisien.",
+      ipTitle: "Propriété intellectuelle",
+      ipBody:
+        "L’ensemble des contenus (cours, résumés, quiz, exercices, textes, illustrations), l’identité visuelle et le code de la plateforme sont la propriété exclusive de Na9ra Nal3ab et protégés par le droit d’auteur. Toute reproduction, diffusion, revente ou réutilisation, totale ou partielle, sans autorisation écrite préalable, est interdite.",
+      useTitle: "Conditions d’utilisation",
+      useBody:
+        "Le contenu est librement consultable à des fins pédagogiques personnelles et non commerciales. Sont notamment interdits : l’extraction automatisée (scraping, crawling), la copie ou le téléchargement en masse, l’usage des contenus pour entraîner des modèles d’intelligence artificielle, et tout accès automatisé non autorisé au service.",
+      brandTitle: "Marque",
+      brandBody:
+        "« Na9ra Nal3ab » / « نقرا نلعب » et le logo associé sont des signes distinctifs de la plateforme ; leur usage sans autorisation est prohibé.",
+      contactTitle: "Contact & signalement",
+      contactBody:
+        "Demande d’autorisation, signalement d’un usage abusif ou d’une reproduction non autorisée : contact@na9ranal3ab.tn.",
+      lawTitle: "Droit applicable",
+      lawBody: "Les présentes mentions sont régies par le droit tunisien.",
+      updated: "Dernière mise à jour : juin 2026.",
     },
   },
   quotes: [

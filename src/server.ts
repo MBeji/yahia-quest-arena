@@ -4,6 +4,7 @@ import { consumeLastCapturedError } from "@/shared/lib/error-capture";
 import { renderErrorPage } from "@/shared/lib/error-page";
 import { logger } from "@/shared/lib/logger";
 import { handlePushCron } from "@/features/notifications/notifications.cron.server";
+import { guardRequest } from "@/shared/lib/bot-guard";
 import { generateSitemap } from "@/shared/lib/sitemap";
 
 type ServerEntry = {
@@ -104,6 +105,12 @@ export default {
         return new Response("error", { status: 500 });
       }
     }
+
+    // Discriminant bot guard (anti-scraping): refuse declared AI/scraper agents
+    // and cap per-IP bursts before any SSR work. Search/social crawlers pass
+    // through (kept indexable for SEO). See src/shared/lib/bot-guard.ts.
+    const guardResponse = guardRequest(request);
+    if (guardResponse) return guardResponse;
 
     try {
       const handler = await getServerEntry();

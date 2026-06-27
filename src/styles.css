@@ -844,3 +844,61 @@ html.light *:focus-visible {
     scroll-behavior: auto !important;
   }
 }
+
+/* =====================================================
+  Protection de la propriété intellectuelle (Couches 3 & 5)
+  ===================================================== */
+
+/* Dissuasion light-touch : les images de la coquille publique ne se glissent ni
+   ne s'ouvrent au clic droit (la sélection de TEXTE reste permise — a11y/SEO). */
+.register-reference img {
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+/* Marquage à l'impression — le « téléchargement » réel = Ctrl+P / Enregistrer en
+   PDF. <PrintMark/> rend ces deux blocs `hidden` (display:none) à l'écran ; ils
+   ne réapparaissent qu'à l'impression : filigrane de marque + pied copyright/IP. */
+@media print {
+  .register-reference {
+    color: #000;
+    background: #fff;
+  }
+  /* Les titres en dégradé-clip s'impriment en noir plein (les fonds ne sont pas
+     imprimés par défaut → sinon texte invisible). */
+  .register-reference .lesson-content .lesson-h1 {
+    -webkit-text-fill-color: currentColor;
+    color: #000;
+    background: none;
+  }
+  .print-watermark {
+    display: flex !important;
+    position: fixed;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(-30deg);
+    font-family: var(--font-display);
+    font-size: 5rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: rgba(0, 0, 0, 0.07);
+    z-index: 9999;
+    pointer-events: none;
+  }
+  .print-copyright {
+    display: block !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 6px 12px;
+    font-size: 9px;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.6);
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
+  }
+  @page {
+    margin: 1.4cm;
+  }
+}
