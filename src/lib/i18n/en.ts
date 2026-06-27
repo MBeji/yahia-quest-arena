@@ -572,6 +572,7 @@ export const en: TranslationKeys = {
       gameFeatBadges: "Badges & hero classes",
       gameFeatRanking: "Leaderboard & daily streaks",
       gameCta: "Create my free account",
+      gameCtaAuthed: "Keep playing",
       languesKicker: "A cross-cutting strength",
       languesTitle: "Strengthen your French and English, at your real level",
       languesSubtitle:
