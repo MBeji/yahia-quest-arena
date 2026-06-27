@@ -66,9 +66,12 @@ export function SubjectPathCard(props: {
           : "border-border/50 hover:border-[color:var(--gold)]/60"
       }`}
     >
+      {/* Opaque card-surface chip (not a translucent gold tint) so the text always
+          meets contrast over the subject-colour blob — readable in all 3 themes
+          (the gold token is dark teal under Référence). */}
       {premiumLocked && (
-        <div className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full bg-[color:var(--neon-gold)]/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[color:var(--neon-gold)]">
-          <Lock className="h-3 w-3" />
+        <div className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-[color:var(--gold)]/50 bg-card px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-foreground shadow-sm">
+          <Lock className="h-3 w-3 text-[color:var(--gold)]" />
           Premium
         </div>
       )}
