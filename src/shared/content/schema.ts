@@ -54,6 +54,34 @@ export const subjectMetaSchema = z.object({
 });
 export type SubjectMeta = z.infer<typeof subjectMetaSchema>;
 
+/**
+ * Expand a manuel page-range expression into a sorted, de-duplicated list of
+ * 1-based page numbers. Single pages and inclusive ranges, comma-separated:
+ *   "12"            → [12]
+ *   "12-15"         → [12, 13, 14, 15]
+ *   "12-15, 18, 20" → [12, 13, 14, 15, 18, 20]
+ * Throws on a malformed token or a descending range (start > end).
+ */
+export function parseManuelPages(pages: string): number[] {
+  const out: number[] = [];
+  for (const raw of pages.split(",")) {
+    const seg = raw.trim();
+    if (seg === "") continue;
+    const range = seg.match(/^(\d+)\s*-\s*(\d+)$/);
+    if (range) {
+      const start = Number(range[1]);
+      const end = Number(range[2]);
+      if (start > end) throw new Error(`manuel page range "${seg}" is descending (start > end)`);
+      for (let p = start; p <= end; p++) out.push(p);
+    } else if (/^\d+$/.test(seg)) {
+      out.push(Number(seg));
+    } else {
+      throw new Error(`manuel page token "${seg}" is not a page number or range`);
+    }
+  }
+  return [...new Set(out)].sort((a, b) => a - b);
+}
+
 /** `chapter.json` — maps onto a row in `chapters`. */
 export const chapterMetaSchema = z.object({
   title: z.string().min(1),
@@ -61,6 +89,33 @@ export const chapterMetaSchema = z.object({
   displayOrder: z.number().int().positive(),
   /** Provenance: URLs / repos / books the chapter was built from. */
   sources: z.array(sourceRefSchema).default([]),
+  /**
+   * Optional link to the official student textbook (manuel élève): the CNP
+   * book `code` plus the `pages` covering this chapter (a 1-based range
+   * expression — "12-15", "12, 14-16"). Compiled into the `chapters.manuel_ref`
+   * JSONB column and surfaced as a login-gated "Pages du manuel" gallery under
+   * the course. Both fields are required when `manuel` is present.
+   */
+  manuel: z
+    .object({
+      code: z.string().regex(/^[A-Za-z0-9_-]+$/, "manuel.code must be an alphanumeric book code"),
+      pages: z.string().min(1),
+    })
+    .refine(
+      (m) => {
+        try {
+          const ps = parseManuelPages(m.pages);
+          return ps.length > 0 && ps.every((p) => p >= 1);
+        } catch {
+          return false;
+        }
+      },
+      {
+        message: "manuel.pages must be a 1-based page range like '12-15' or '12, 14-16'",
+        path: ["pages"],
+      },
+    )
+    .optional(),
 });
 export type ChapterMeta = z.infer<typeof chapterMetaSchema>;
 

@@ -59,8 +59,29 @@ anywhere else.
 | `description`  | string   | yes      | non-empty                                                              |
 | `displayOrder` | number   | yes      | positive integer                                                       |
 | `sources`      | string[] | no (→[]) | each ref ≥3 chars — URLs/citations you actually used (hybrid sourcing) |
+| `manuel`       | object   | no       | `{ code, pages }` — official student-textbook pages covering this chapter (see below) |
 
 `cours.md` and `resume.md` are separate files, not fields.
+
+### `manuel` — official student-textbook (manuel élève) pages
+
+For school content (`content-ecole-tn`), a chapter MAY link to the pages of the **official CNP
+student textbook** that cover it, so the app can show them under the course (login-gated
+"Pages du manuel" gallery). Shape:
+
+```json
+"manuel": { "code": "103304", "pages": "12-15" }
+```
+
+| Field   | Type   | Constraint                                                                                  |
+| ------- | ------ | ------------------------------------------------------------------------------------------- |
+| `code`  | string | alphanumeric `[A-Za-z0-9_-]+` — the CNP **manuel élève** book code (not the teacher guide)   |
+| `pages` | string | 1-based page expression: a single page, an inclusive range, or a comma list — `"12"`, `"12-15"`, `"12-15, 18, 20-21"` |
+
+The build expands `pages` into a sorted, de-duplicated `pageNumbers[]` and stores
+`{ code, pages, pageNumbers }` in `chapters.manuel_ref` (JSONB). Optional and additive — omit it
+when the mapping is unknown. The page **images** are served from a separate access-controlled
+bucket; this field carries only the metadata.
 
 ## Question object (shared by quiz.json and exercise files)
 
