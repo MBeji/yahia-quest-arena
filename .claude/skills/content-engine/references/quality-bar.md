@@ -63,8 +63,20 @@ Beyond the distractor/explanation rules above, every item must pass these craft 
 - **One stem, one task, one defensible answer.** The prompt asks exactly one thing and is
   self-contained (solvable without seeing the options first, for computation items). If two options
   could be argued correct, rewrite the item.
-- **No meta-options.** Never "all of the above", "none of the above", "a and b", "I don't know".
-  Four real, independent candidate answers.
+- **Linguistically well-formed and idiomatic.** Every prompt and option must read as natural,
+  grammatically correct prose in the content language — read each one aloud; if a native speaker
+  would stumble, rewrite it. In Arabic in particular: correct agreement, and **dual pronouns
+  (`هما`, `بينهما`, `كلاهما`) only when there are exactly two referents** — never a dangling dual
+  over an enumerated set of three or more. The question clause must parse unambiguously on first
+  read, with a clear referent. ✗ `ثلاثة أعمدة … أيّها بينهما في الطول؟` (dual `هما` over three
+  columns — incoherent) → ✓ `… أيّها ليس الأقصر ولا الأطول؟`. Avoid calque/translationese
+  constructions (e.g. the bare `لا واحد` for "none" — write idiomatic `لا شيء` / `ولا واحد منها`,
+  or better, a real distractor).
+- **No meta-options.** Never options that reference the *other options* — "all of the above",
+  "none of the above" / "aucune de ces réponses" / "لا شيء ممّا سبق", "a and b", "I don't know".
+  Four real, independent candidate answers. (A substantive "nothing / zero / none-of-the-world"
+  answer — `لا شيء` meaning *nothing happens*, `0`, `aucun jour` — is a legitimate real answer, not
+  a meta-option; the ban is only on options that defer to the answer list itself.)
 - **Negative stems are rare and bolded.** Prefer positive phrasing; if you must ask "which is
   **not**…", bold/emphasize the negation so it cannot be skimmed past (and remember such prompts
   exempt the contradiction check — don't overuse them).

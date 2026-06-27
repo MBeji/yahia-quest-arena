@@ -11,8 +11,12 @@ officiels + guides de l'enseignant). Les fichiers d'école (Taybah) servent de *
 
 Pour un couple **(niveau, matière)** :
 
-1. **Corpus CNP = autorité.** Le **manuel élève** = le contenu/scope ; le **guide enseignant**
-   (guide méthodologique / الدليل المرجعي) = le **programme officiel** (compétences, progression).
+0. **`programme/<niveau>/<matière>.md` (transcription) = source de scope de référence — À LIRE EN PREMIER**,
+   si elle existe : transcription **fidèle** du guide enseignant, en texte structuré (plus besoin de relire
+   les scans). Spec : [`programme/README.md`](programme/README.md) · work-list : [`programme/_INDEX.md`](programme/_INDEX.md).
+1. **Corpus CNP (scans) = autorité ultime + fallback** pour les couples non encore transcrits. Le **guide
+   enseignant** (guide méthodologique / الدليل المرجعي) = le **programme** (compétences, progression) ; le
+   **manuel élève** = contenu/exemples. Render→vision. Toute transcription reste **revérifiable ici**.
 2. **Fichiers école (Taybah) = vérification + séquençage par trimestre + complément de détail.** Signaler
    les divergences ; ne jamais sortir du scope CNP pour suivre l'école.
 3. **Web** (tadris.tn, tunisiecollege.net) seulement pour combler un manque ponctuel.
