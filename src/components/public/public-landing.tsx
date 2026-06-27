@@ -25,7 +25,7 @@ import { useT } from "@/lib/i18n";
  * (étude §5.1): the family promise, 3 persona doors (élève/parent/enseignant), a
  * 3-parcours preview, proof of free, and ONE secondary « apprends en jouant » block —
  * the only place the Jeu (gold) register appears, where the 3D hero now lives. Rendered
- * inside the `_public` coquille (header/footer + `.register-reference`). Copy is i18n.
+ * inside the `_public` coquille (header/footer + `.public-shell`). Copy is i18n.
  */
 
 // three.js loads only here, only on desktop with motion enabled (the one game block).

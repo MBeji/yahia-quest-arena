@@ -347,6 +347,12 @@ export const ar: TranslationKeys = {
     signOut: "تسجيل الخروج",
     logoutToast: "إلى اللقاء، أيها المحارب.",
   },
+  theme: {
+    label: "السمة",
+    reference: "مرجعي",
+    light: "فاتح",
+    dark: "داكن",
+  },
   parcours: {
     worldTitle: "خريطة المغامرة",
     worldSubtitle: "اختر مسارك، افتح المناطق وكن أسطورة.",
