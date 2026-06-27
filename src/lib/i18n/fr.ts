@@ -575,6 +575,7 @@ export const fr: TranslationKeys = {
       gameFeatBadges: "Badges & classes de héros",
       gameFeatRanking: "Classement & séries quotidiennes",
       gameCta: "Créer mon compte gratuit",
+      gameCtaAuthed: "Continuer à jouer",
       languesKicker: "Un atout transverse",
       languesTitle: "Renforce ton français et ton anglais, à ton vrai niveau",
       languesSubtitle:

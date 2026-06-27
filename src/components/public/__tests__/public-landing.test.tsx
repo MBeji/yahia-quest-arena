@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
 
 vi.mock("@tanstack/react-router", () => ({
@@ -20,10 +20,17 @@ vi.mock("@tanstack/react-router", () => ({
 }));
 vi.mock("@/hooks/use-mobile", () => ({ useIsMobile: () => true }));
 vi.mock("@/components/landing/golden-hero-canvas", () => ({ default: () => null }));
+// The landing's game-block CTA is auth-aware; drive both states.
+const mockUseAuth = vi.fn();
+vi.mock("@/features/auth", () => ({ useAuth: () => mockUseAuth() }));
 
 import { PublicLanding } from "../public-landing";
 
 describe("PublicLanding", () => {
+  beforeEach(() => {
+    mockUseAuth.mockReturnValue({ user: null, session: null, loading: false });
+  });
+
   it("leads with the free family promise and routes into the public catalogue", () => {
     const { container } = render(<PublicLanding />);
     expect(screen.getByRole("heading", { level: 1 }).textContent).toMatch(/école tunisienne/i);
@@ -59,5 +66,14 @@ describe("PublicLanding", () => {
     const { container } = render(<PublicLanding />);
     expect(screen.getByText(/Apprends en jouant/)).toBeInTheDocument();
     expect(container.querySelector('a[href="/signup"]')).not.toBeNull();
+  });
+
+  it("signed-in: the game block CTA routes to the dashboard, never signup", () => {
+    mockUseAuth.mockReturnValue({ user: { id: "u1" }, session: {}, loading: false });
+    const { container } = render(<PublicLanding />);
+    expect(container.querySelector('a[href="/dashboard"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/signup"]')).toBeNull();
+    // The catalogue entry stays available to a signed-in visitor.
+    expect(container.querySelector('a[href="/programme"]')).not.toBeNull();
   });
 });

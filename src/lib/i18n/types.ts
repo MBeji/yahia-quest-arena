@@ -592,6 +592,7 @@ export type TranslationKeys = {
       gameFeatBadges: string;
       gameFeatRanking: string;
       gameCta: string;
+      gameCtaAuthed: string;
       languesKicker: string;
       languesTitle: string;
       languesSubtitle: string;

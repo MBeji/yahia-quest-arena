@@ -568,6 +568,7 @@ export const ar: TranslationKeys = {
       gameFeatBadges: "أوسمة وأصناف الأبطال",
       gameFeatRanking: "ترتيب وسلاسل يومية",
       gameCta: "إنشاء حسابي المجاني",
+      gameCtaAuthed: "تابع اللعب",
       languesKicker: "ميزة شاملة",
       languesTitle: "عزّز فرنسيتك وإنجليزيتك، في مستواك الحقيقي",
       languesSubtitle:

@@ -16,6 +16,7 @@ import {
   Zap,
 } from "lucide-react";
 import heroImg from "@/assets/hero-warrior.jpg";
+import { useAuth } from "@/features/auth";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useT } from "@/lib/i18n";
 
@@ -36,6 +37,8 @@ const CEFR_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
 export function PublicLanding() {
   const t = useT();
+  const { user } = useAuth();
+  const isAuthed = user != null;
   const isMobile = useIsMobile();
   const [mounted, setMounted] = useState(false);
   const [reduce, setReduce] = useState(false);
@@ -279,11 +282,14 @@ export function PublicLanding() {
                 <Star className="h-4 w-4 text-amber-400" /> {t.public.landing.gameFeatRanking}
               </li>
             </ul>
+            {/* Auth-aware CTA: a signed-in visitor already has an account → send them to
+                their gameplay home, not the signup page (mirrors the auth-aware header). */}
             <Link
-              to="/signup"
+              to={isAuthed ? "/dashboard" : "/signup"}
               className="mt-7 inline-flex items-center gap-2 rounded-lg bg-amber-400 px-6 py-3 text-base font-bold text-[#15120d] transition hover:bg-amber-300"
             >
-              {t.public.landing.gameCta} <ArrowRight className="h-5 w-5 rtl:-scale-x-100" />
+              {isAuthed ? t.public.landing.gameCtaAuthed : t.public.landing.gameCta}{" "}
+              <ArrowRight className="h-5 w-5 rtl:-scale-x-100" />
             </Link>
           </div>
           <div className="relative aspect-square overflow-hidden rounded-3xl border border-amber-400/20 bg-black/40">
