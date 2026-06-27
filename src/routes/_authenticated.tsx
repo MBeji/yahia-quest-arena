@@ -25,6 +25,7 @@ import { useT } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 import { GoldAmbient } from "@/components/visual/gold-ambient";
+import { AccountHud } from "@/components/account-hud";
 
 const NAV_LINK =
   "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground transition hover:bg-[color:var(--gold)]/10 hover:text-champagne";
@@ -230,6 +231,7 @@ function AuthenticatedLayout() {
               list overflows — e.g. the admin nav, where sign-out used to scroll off
               the right edge and become unreachable. */}
           <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+            <AccountHud />
             <LanguageSwitcher />
             <ThemeSwitcher />
             <button onClick={signOut} className={NAV_LINK} aria-label={t.layout.signOut}>

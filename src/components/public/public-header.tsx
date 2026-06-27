@@ -3,6 +3,7 @@ import { useT } from "@/lib/i18n";
 import { useAuth } from "@/features/auth";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
+import { AccountHud } from "@/components/account-hud";
 
 /**
  * Header of the public (Référence register) shell. Sober, content-first, and
@@ -54,12 +55,7 @@ export function PublicHeader() {
           <LanguageSwitcher />
           <ThemeSwitcher />
           {isAuthed ? (
-            <Link
-              to="/dashboard"
-              className="rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition hover:opacity-90 sm:px-4"
-            >
-              {t.public.header.account}
-            </Link>
+            <AccountHud />
           ) : (
             <>
               <Link

@@ -13,6 +13,13 @@ vi.mock("@tanstack/react-router", () => ({
 const mockUseAuth = vi.fn();
 vi.mock("@/features/auth", () => ({ useAuth: () => mockUseAuth() }));
 
+// The signed-in branch renders <AccountHud/> (its own tested unit); stub it to a
+// plain dashboard link so this spec stays focused on the header's auth branching.
+vi.mock("@/components/account-hud", () => ({
+  AccountHud: () =>
+    React.createElement("a", { href: "/dashboard", "data-testid": "account-hud" }, "hud"),
+}));
+
 import { I18nProvider } from "@/lib/i18n";
 import { PublicHeader } from "../public-header";
 
