@@ -31,6 +31,27 @@ export class NavBar {
     await option.click();
   }
 
+  /** The button that opens the theme menu (3-way picker, both shells). */
+  get themeTrigger(): Locator {
+    return this.page.getByTestId("theme-trigger");
+  }
+
+  /**
+   * Open the theme menu and pick a theme by its stable value (locale-independent
+   * `data-theme-value`). Same retry-open pattern as `changeLanguage` so it is
+   * robust to the post-SSR hydration window.
+   */
+  async changeTheme(value: "reference" | "light" | "dark"): Promise<void> {
+    const option = this.page.locator(`[data-theme-value="${value}"]`);
+    await expect(async () => {
+      if (!(await option.isVisible().catch(() => false))) {
+        await this.themeTrigger.click();
+      }
+      await expect(option).toBeVisible({ timeout: 1500 });
+    }).toPass({ timeout: 15_000 });
+    await option.click();
+  }
+
   /** Current document direction — "rtl" only when Arabic is active. */
   async htmlDir(): Promise<string | null> {
     return this.page.locator("html").getAttribute("dir");

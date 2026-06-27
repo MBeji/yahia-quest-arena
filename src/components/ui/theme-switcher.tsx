@@ -43,6 +43,7 @@ export function ThemeSwitcher({ className = "" }: { className?: string }) {
         aria-label={t.theme.label}
         aria-haspopup="menu"
         aria-expanded={open}
+        data-testid="theme-trigger"
       >
         <CurrentIcon className="h-3.5 w-3.5" />
       </button>
@@ -60,6 +61,7 @@ export function ThemeSwitcher({ className = "" }: { className?: string }) {
                 type="button"
                 role="menuitemradio"
                 aria-checked={active}
+                data-theme-value={value}
                 onClick={() => {
                   setTheme(value);
                   setOpen(false);
