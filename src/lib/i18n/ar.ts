@@ -611,6 +611,8 @@ export const ar: TranslationKeys = {
       chooseSubject: "اختر مادة لقراءة الدرس ومراجعة الملخّص والتدرّب.",
       comingSoonTitle: "المحتوى قريبًا",
       comingSoonDesc: "هذا المستوى قيد الإعداد. عُد قريبًا!",
+      choose: "اختيار هذا المسار",
+      choosing: "جارٍ الاختيار…",
     },
     reader: {
       defaultSubject: "درس",
