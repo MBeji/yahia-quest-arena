@@ -29,12 +29,17 @@
 <Démarche recommandée par le guide, savoir-faire attendus, pièges/erreurs fréquentes signalés, types d'activités. Pour les langues : ordre d'introduction des lettres/sons, etc. Pour l'éducation islamique : سور/آيات au programme (texte exact), أذكار, école malikite. Pour les maths/sciences : notations, unités.>
 
 ## 4. Chapitrage retenu (→ alimente `manifest/<niveau>.json`)
-| # | slug | notion (محور) |
-|---|------|---------------|
-| 1 | `NN-slug` | <notion> |
+| # | slug | notion (محور) | manuel élève (code · pages) |
+|---|------|---------------|------------------------------|
+| 1 | `NN-slug` | <notion> | `<code>` · p.12–15 |
+
+> La dernière colonne alimente le champ `chapter.manuel = { code, pages }` (cf.
+> `content-engine/references/content-schema.md`). Repérer, dans le **manuel élève** (pas le guide
+> enseignant), les pages qui couvrent chaque chapitre ; `pages` accepte page seule / plage / liste
+> (`"12"`, `"12-15"`, `"12-15, 18"`). Laisser vide si le manuel élève n'est pas disponible.
 
 ## 5. Sources croisées
-- **Manuel élève** : `<code>` — « <titre> » (contenu/exemples officiels, si dispo).
+- **Manuel élève** : `<code>` — « <titre> » (contenu/exemples officiels + **pages par chapitre**, cf. §4, si dispo).
 - **Taybah** (`taybah/<niveau>.md`) : séquençage trimestriel (vérification).
 - **Divergences signalées** : <le cas échéant, avec page>.
 

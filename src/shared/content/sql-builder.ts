@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { parseManuelPages } from "./schema.ts";
 import type { LoadedSubject } from "./schema.ts";
 
 /**
@@ -185,18 +186,30 @@ export function buildMigrationSql(subject: LoadedSubject): string {
   // --- Chapters (upsert) ---
   for (const chapter of chapters) {
     const id = chapterId(subjectId, chapter.slug);
+    // Optional manuel link: store the authored {code, pages} plus the expanded
+    // pageNumbers so the UI/render pipeline never re-parses the range. NULL when
+    // unset, so re-upserting a chapter that lost its manuel link clears it.
+    const manuel = chapter.meta.manuel;
+    const manuelSql = manuel
+      ? sqlJson({
+          code: manuel.code,
+          pages: manuel.pages,
+          pageNumbers: parseManuelPages(manuel.pages),
+        })
+      : "NULL";
     out.push(
-      "INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order) VALUES",
+      "INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order, manuel_ref) VALUES",
       `  (${sqlString(id)}, ${sqlString(subjectId)}, ${sqlString(chapter.meta.title)}, ${sqlString(
         chapter.meta.description,
-      )}, ${sqlString(chapter.lesson)}, ${sqlString(chapter.summary)}, ${chapter.meta.displayOrder})`,
+      )}, ${sqlString(chapter.lesson)}, ${sqlString(chapter.summary)}, ${chapter.meta.displayOrder}, ${manuelSql})`,
       "ON CONFLICT (id) DO UPDATE SET",
       "  subject_id = EXCLUDED.subject_id,",
       "  title = EXCLUDED.title,",
       "  description = EXCLUDED.description,",
       "  lesson_content = EXCLUDED.lesson_content,",
       "  summary = EXCLUDED.summary,",
-      "  display_order = EXCLUDED.display_order;",
+      "  display_order = EXCLUDED.display_order,",
+      "  manuel_ref = EXCLUDED.manuel_ref;",
       "",
     );
   }
