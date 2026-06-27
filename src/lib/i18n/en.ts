@@ -535,6 +535,7 @@ export const en: TranslationKeys = {
       extras: "Extras",
       login: "Log in",
       signup: "Create my account",
+      account: "My space",
     },
     footer: {
       tagline: "100% free · all of Tunisian school",

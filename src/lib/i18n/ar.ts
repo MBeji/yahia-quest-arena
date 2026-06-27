@@ -532,6 +532,7 @@ export const ar: TranslationKeys = {
       extras: "إضافات",
       login: "تسجيل الدخول",
       signup: "إنشاء حسابي",
+      account: "مساحتي",
     },
     footer: {
       tagline: "مجاني 100٪ · كل المدرسة التونسية",
