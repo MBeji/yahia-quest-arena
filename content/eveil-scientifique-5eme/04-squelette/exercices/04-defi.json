@@ -127,7 +127,7 @@
       "difficulty": 3
     },
     {
-      "prompt": "في الصورة ثلاثة عظام (1، 2، 3). أيّها العظم المسطّح؟ <svg viewBox=\"0 0 220 90\" xmlns=\"http://www.w3.org/2000/svg\"><g stroke=\"#1f2937\" stroke-width=\"3\"><rect x=\"20\" y=\"16\" width=\"14\" height=\"54\" rx=\"5\" fill=\"#fde68a\"/><circle cx=\"27\" cy=\"14\" r=\"7\" fill=\"#fde68a\"/><circle cx=\"27\" cy=\"72\" r=\"7\" fill=\"#fde68a\"/></g><text x=\"40\" y=\"46\" font-size=\"12\" fill=\"#1f2937\">1</text><rect x=\"95\" y=\"34\" width=\"26\" height=\"24\" rx=\"5\" fill=\"#fcd34d\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"104\" y=\"78\" font-size=\"12\" fill=\"#1f2937\">2</text><ellipse cx=\"180\" cy=\"45\" rx=\"34\" ry=\"20\" fill=\"#fef3c7\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"176\" y=\"80\" font-size=\"12\" fill=\"#1f2937\">3</text></svg>",
+      "prompt": "في الصورة ثلاثة عظام (1 ; 2 ; 3). أيّها العظم المسطّح؟ <svg viewBox=\"0 0 220 90\" xmlns=\"http://www.w3.org/2000/svg\"><g stroke=\"#1f2937\" stroke-width=\"3\"><rect x=\"20\" y=\"16\" width=\"14\" height=\"54\" rx=\"5\" fill=\"#fde68a\"/><circle cx=\"27\" cy=\"14\" r=\"7\" fill=\"#fde68a\"/><circle cx=\"27\" cy=\"72\" r=\"7\" fill=\"#fde68a\"/></g><text x=\"40\" y=\"46\" font-size=\"12\" fill=\"#1f2937\">1</text><rect x=\"95\" y=\"34\" width=\"26\" height=\"24\" rx=\"5\" fill=\"#fcd34d\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"104\" y=\"78\" font-size=\"12\" fill=\"#1f2937\">2</text><ellipse cx=\"180\" cy=\"45\" rx=\"34\" ry=\"20\" fill=\"#fef3c7\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"176\" y=\"80\" font-size=\"12\" fill=\"#1f2937\">3</text></svg>",
       "options": [
         {
           "id": "a",

@@ -94,11 +94,30 @@ Work file by file. For every question:
    literally) = **[MAJOR]**; `$$ … $$` blocks are legal only with plain-Unicode content.
    In `ar` content, a **plain space between digit groups** (`\d \d{3}`
    outside `<svg>`) = **[MAJOR]**: the bidi algorithm swaps the groups at render time (`38 461`
-   displays as `461 38`) — it must be a NO-BREAK SPACE U+00A0. Audit the **rendered** form, not
-   just the source: any RTL string mixing digit runs with neutral separators is suspect. Standard
-   digits/equations apply in **all** languages including Arabic.
-6. **Language purity** — content not in the subject's `contentLanguage` (beyond math symbols,
-   slugs, `mode`, URLs) = **[MAJOR]**.
+   displays as `461 38`) — it must be a NO-BREAK SPACE U+00A0. Also in `ar` content, an **Arabic
+   radicand** (regex `[√∛∜](?:[؀-ۿ]|\([^)]*[؀-ۿ])` — e.g. `√(المساحة)`, `√المساحة`) = **[MAJOR]**:
+   Arabic inside the radical fragments the LTR isolate and renders scrambled; rewrite as a
+   number/symbol (`√(S)`, `√32`) or the root in words (`جذر المساحة`). And the **Arabic comma `،`
+   (U+060C) used as a separator inside a math bracket group** — a set `{−4 ، 4}`, interval
+   `]−1 ، 4[`, tuple `(3 ، 4 ، 5)`, coordinates `(x ، y)` = **[MAJOR]**: the Arabic comma breaks
+   the LTR run so the notation renders scrambled (`{−4 ، 4}` → `4}،{−4`); it must be `;` (preferred)
+   or a Latin `,`. An Arabic comma in ordinary prose, or inside a bracket holding real Arabic words,
+   is fine — only comma-separated **notation** inside brackets is flagged. Note the **inverse**
+   non-issue: plain arithmetic with an Arabic unit (`10 مي + 2 مي = ؟`, `5 د + 200 مي`) renders
+   **correctly** natively — do NOT flag it, and do NOT "fix" it by isolating. Audit the **rendered**
+   form, not just the source: any RTL string mixing digit runs with neutral separators is suspect.
+   Standard digits/equations apply in **all** languages including Arabic.
+6. **Language purity & coherence** — content not in the subject's `contentLanguage` (beyond math
+   symbols, slugs, `mode`, URLs) = **[MAJOR]**. Beyond purity, **read every prompt and option aloud
+   in the content language and judge its coherence** (no regex catches this — it is the auditor's
+   job): grammatical correctness, **agreement** (Arabic: gender, and dual `هما`/`بينهما`/`كلاهما`
+   only with exactly two referents — a dual over an enumerated set of three+ is incoherent, e.g.
+   `ثلاثة أعمدة … أيّها بينهما؟` = **[MAJOR]**), clear pronoun referents, an unambiguous question
+   clause, and idiomatic phrasing free of calques/translationese (the bare `لا واحد` for "none" is a
+   calque = **[MINOR]**; prefer `لا شيء` / `ولا واحد منها` or a real distractor). A question whose
+   wording does not parse cleanly = **[MAJOR]** even when the keyed answer is correct. Distinguish a
+   **substantive** "nothing/zero" answer (`لا شيء` = *nothing happens*, legitimate) from a banned
+   **meta-option** that defers to the other options (`لا شيء ممّا سبق`, "none of the above").
 7. **Factual accuracy** — for culture-générale/sciences/history claims, spot-check non-trivial
    facts via web search; wrong fact = **[BLOCKER]**, missing `sources[]` for verified claims =
    **[MINOR]**. For `ecole-tn`, also check **syllabus fidelity against the CNP program** (the source of
