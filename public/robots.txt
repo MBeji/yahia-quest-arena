@@ -60,5 +60,5 @@ User-agent: Barkrowler
 User-agent: SerpstatBot
 Disallow: /
 
-# Sitemap (à activer avec le domaine + chantier SEO) :
-# Sitemap: https://na9ranal3ab.tn/sitemap.xml
+# Sitemap (généré dynamiquement — voir src/shared/lib/sitemap.ts) :
+Sitemap: https://na9ranal3ab.tn/sitemap.xml
