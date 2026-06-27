@@ -205,8 +205,9 @@ function RootComponent() {
   );
 }
 
-/** Toaster whose colour scheme follows the active UI theme. */
+/** Toaster whose colour scheme follows the active UI theme. `reference` and
+ *  `light` are light-family registers; only `dark` is a dark scheme. */
 function ThemedToaster() {
   const { theme } = useTheme();
-  return <Toaster richColors theme={theme} position="top-center" />;
+  return <Toaster richColors theme={theme === "dark" ? "dark" : "light"} position="top-center" />;
 }

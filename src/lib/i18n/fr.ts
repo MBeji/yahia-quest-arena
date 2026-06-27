@@ -349,6 +349,12 @@ export const fr: TranslationKeys = {
     signOut: "Déconnexion",
     logoutToast: "À bientôt, guerrier.",
   },
+  theme: {
+    label: "Thème",
+    reference: "Référence",
+    light: "Clair",
+    dark: "Sombre",
+  },
   parcours: {
     worldTitle: "Carte de l'aventure",
     worldSubtitle: "Choisis ta voie, débloque les régions et deviens une légende.",

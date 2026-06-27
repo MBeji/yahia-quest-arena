@@ -348,6 +348,12 @@ export const en: TranslationKeys = {
     signOut: "Sign out",
     logoutToast: "See you soon, warrior.",
   },
+  theme: {
+    label: "Theme",
+    reference: "Reference",
+    light: "Light",
+    dark: "Dark",
+  },
   parcours: {
     worldTitle: "Adventure Map",
     worldSubtitle: "Choose your path, unlock regions and become a legend.",

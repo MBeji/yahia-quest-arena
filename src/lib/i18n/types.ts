@@ -360,6 +360,13 @@ export type TranslationKeys = {
     signOut: string;
     logoutToast: string;
   };
+  // Theme picker (visual skin)
+  theme: {
+    label: string;
+    reference: string;
+    light: string;
+    dark: string;
+  };
   // Adventure path / journey map
   parcours: {
     worldTitle: string;
