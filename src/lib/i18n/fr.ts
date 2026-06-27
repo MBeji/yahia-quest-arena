@@ -618,6 +618,8 @@ export const fr: TranslationKeys = {
       chooseSubject: "Choisis une matière pour lire le cours, réviser le résumé et t’entraîner.",
       comingSoonTitle: "Contenu bientôt disponible",
       comingSoonDesc: "Ce niveau est en cours de préparation. Reviens bientôt !",
+      choose: "Choisir ce parcours",
+      choosing: "Sélection…",
     },
     reader: {
       defaultSubject: "Cours",

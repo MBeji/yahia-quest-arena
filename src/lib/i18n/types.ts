@@ -632,6 +632,8 @@ export type TranslationKeys = {
       chooseSubject: string;
       comingSoonTitle: string;
       comingSoonDesc: string;
+      choose: string;
+      choosing: string;
     };
     reader: {
       defaultSubject: string;

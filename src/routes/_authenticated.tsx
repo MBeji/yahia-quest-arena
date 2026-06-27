@@ -107,7 +107,7 @@ function AuthenticatedLayout() {
   const primaryNav = [
     { to: "/dashboard", Icon: LayoutDashboard, label: t.layout.heroesHall },
     { to: "/parcours", Icon: Map, label: t.layout.parcours },
-    { to: "/themes", Icon: Compass, label: t.layout.themes },
+    { to: "/programme", Icon: Compass, label: t.layout.themes },
     { to: "/dungeon", Icon: Swords, label: t.layout.dungeon },
     { to: "/leaderboard", Icon: Crown, label: t.layout.ranking },
   ] as const;

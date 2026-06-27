@@ -615,6 +615,8 @@ export const en: TranslationKeys = {
       chooseSubject: "Pick a subject to read the lesson, review the summary and practise.",
       comingSoonTitle: "Content coming soon",
       comingSoonDesc: "This level is being prepared. Come back soon!",
+      choose: "Choose this track",
+      choosing: "Selecting…",
     },
     reader: {
       defaultSubject: "Lesson",
