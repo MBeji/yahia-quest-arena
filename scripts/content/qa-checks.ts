@@ -18,6 +18,24 @@
  *   [error] <svg> without a viewBox          → the renderer relies on the
  *           viewBox for the aspect ratio on its fixed-width surface; without it
  *           the figure collapses to a dot/blank.
+ *   [error] Arabic radicand of a radical      → Arabic script right after `√`
+ *           (or inside its `√(…)` operand) splits the LTR isolate the radical
+ *           needs, so it cannot be rendered. Plain arithmetic with Arabic units
+ *           (`10 مي + 2 مي`) and a trailing unit (`√64 سم`) are fine — native
+ *           bidi orders them — and are deliberately NOT flagged. See
+ *           `content-engine` math-and-notation.md.
+ *   [error] Arabic comma in math notation     → a set/interval/tuple bracket
+ *           group that separates with the Arabic comma «،» (U+060C) — `{−4 ، 4}`,
+ *           `]−1 ، 4[` — breaks the LTR run in RTL and renders scrambled. Must use
+ *           «;» (preferred) or a Latin «,». A bracket group containing real Arabic
+ *           prose is not notation and is left alone.
+ *   [warn]  meta-option / "none" calque       → an option that defers to the
+ *           other options ("none of the above" / "aucune de ces réponses" /
+ *           "لا شيء ممّا سبق") breaks the four-independent-candidates rule, and the
+ *           bare calque `لا واحد`/`لا واحدة` is non-idiomatic Arabic for "none".
+ *           A *substantive* "nothing/zero" answer (`لا شيء`, `aucun jour`) is
+ *           legitimate and NOT flagged. Deep grammatical coherence is the
+ *           `content-audit` (human/LLM) pass; this only catches the lexical slice.
  */
 
 export type QAOption = { id: string; text: string };
@@ -62,6 +80,70 @@ const FIGURE_REFERENCE =
   /ci-?dessous|ci-?contre|ci-?après|shown\s+(?:below|above)|(?:figure|diagram|picture)\s+(?:below|above)|الشكل\s+(?:المجاور|التالي|المقابل)|كما\s+في\s+الشكل|المبيّن\s+في\s+الشكل|في\s+الشكل\s+المجاور|الرسم\s+(?:المجاور|التالي)/i;
 
 const SVG_BLOCK = /<svg[\s\S]*?<\/svg>/i;
+
+const ARABIC_LETTER = "\\u0600-\\u06FF\\u0750-\\u077F\\u08A0-\\u08FF\\uFB50-\\uFDFF\\uFE70-\\uFEFF";
+// A radical whose *radicand* is Arabic script — Arabic right after the radical
+// (`√مساحة`) or inside its bracketed operand (`√(2 مي)`). The radical needs an
+// LTR isolate, but Arabic embedded in it splits the run and it cannot render.
+// Deliberately narrow to stay false-positive-free: a trailing unit separated by
+// a space (`√64 سم`) renders fine and is NOT matched, and a plain Arabic
+// parenthetical with a number (`(الشكل 3)`, `(سنة 2024)`) is never a radicand.
+const RADICAL_OVER_ARABIC = new RegExp(
+  `[√∛∜](?:[${ARABIC_LETTER}]|\\([^)]*[${ARABIC_LETTER}][^)]*\\))`,
+  "u",
+);
+
+/** True when `s` embeds Arabic script as the radicand of a radical (unrenderable in RTL). */
+export function hasBidiFragileMath(s: string): boolean {
+  return RADICAL_OVER_ARABIC.test(s);
+}
+
+// Arabic LETTERS only (U+0621+), so the Arabic comma U+060C and other low
+// punctuation are NOT treated as prose — a bracket group whose only Arabic char
+// is the comma is pure math notation.
+const ARABIC_PROSE =
+  "\\u0621-\\u064A\\u066E-\\u06FF\\u0750-\\u077F\\u08A0-\\u08FF\\uFB50-\\uFDFF\\uFE70-\\uFEFF";
+const ARABIC_PROSE_RE = new RegExp(`[${ARABIC_PROSE}]`, "u");
+// Any bracketed group: set `{…}`, interval `]…[`/`[…]`, tuple `(…)`.
+const BRACKET_GROUP = /[[\]{}()][^[\]{}()\n]*[[\]{}()]/gu;
+
+/**
+ * True when `s` contains math notation (a set/interval/tuple bracket group) that
+ * uses the **Arabic comma `،` (U+060C)** as its separator. The Arabic comma is an
+ * Arabic char, so it breaks the LTR run: `{−4 ، 4}` / `]−1 ، 4[` render scrambled
+ * in RTL. Math notation must separate with `;` (preferred) or a Latin `,`. A
+ * group that contains real Arabic *prose* (e.g. `(الشكل، إلخ)`) is left alone —
+ * that is a sentence, not notation.
+ */
+export function hasArabicCommaInMath(s: string): boolean {
+  for (const m of s.matchAll(BRACKET_GROUP)) {
+    const g = m[0];
+    if (g.includes("،") && /[0-9A-Za-z]/.test(g) && !ARABIC_PROSE_RE.test(g)) return true;
+  }
+  return false;
+}
+
+// Bare non-idiomatic calque of "none" used as a whole option (`لا واحد`/`لا واحدة`).
+// The idiomatic `لا شيء` and `ولا واحد منها` are NOT matched, nor is `لا شيء` as a
+// substantive answer — only the standalone bare calque.
+const NONE_CALQUE = /^لا\s+واحدة?$/u;
+// Meta-options that defer to the *other options* rather than answer the question.
+// Kept narrow (and length-gated by the caller) so a substantive "nothing/zero"
+// answer or a quotation that merely contains "كلّ ما سبق" is not caught.
+const META_OPTION =
+  /لا\s*شيء\s+ممّ?ا\s+(?:سبق|ذكر)|(?:كلّ?|جميع)\s+(?:ما\s+(?:سبق|ذكر)|الأجوبة|الإجابات)|aucune?\s+(?:de\s+ces\s+r[ée]ponses|des\s+(?:deux|r[ée]ponses))|toutes?\s+(?:ces\s+)?r[ée]ponses|(?:none|all)\s+of\s+the\s+above|both\s+a\s+and\s+b/iu;
+
+/**
+ * Classify a single option's text as a banned meta-option, the bare "none" calque,
+ * or neither. `length`-gated meta detection keeps long quotations/substantive
+ * answers out of the net.
+ */
+export function classifyOption(text: string): "meta" | "calque" | null {
+  const t = text.trim();
+  if (NONE_CALQUE.test(t)) return "calque";
+  if (t.length <= 40 && META_OPTION.test(t)) return "meta";
+  return null;
+}
 
 const buildSaysWrong = (letter: string) =>
   new RegExp(
@@ -155,6 +237,47 @@ export function auditQuestion(q: QAQuestion, where: string): Flag[] {
           msg: "<svg> figure has no viewBox (will collapse when rendered)",
         });
       }
+    }
+  }
+
+  // 7) bidi-fragile math: Arabic script inside an LTR-isolated construct
+  //   (radical operand or bracketed group). Unrenderable — see header.
+  for (const [field, raw] of [
+    ["prompt", q.prompt] as const,
+    ["explanation", q.explanation] as const,
+    ...q.options.map((o) => [`option ${o.id}`, o.text] as const),
+  ]) {
+    if (hasBidiFragileMath(raw)) {
+      flags.push({
+        level: "error",
+        where,
+        msg: `Arabic script as the radicand of a radical (√) in ${field} — will mis-render in RTL; write the operand as a number/symbol`,
+      });
+    }
+    if (hasArabicCommaInMath(raw)) {
+      flags.push({
+        level: "error",
+        where,
+        msg: `math notation uses the Arabic comma «،» as a separator in ${field} — breaks the LTR run in RTL; use «;» (e.g. «{−4 ; 4}», «]−1 ; 4[»)`,
+      });
+    }
+  }
+
+  // 8) meta-options & the non-idiomatic "none" calque (warn — quality, not structure).
+  for (const o of q.options) {
+    const kind = classifyOption(o.text);
+    if (kind === "meta") {
+      flags.push({
+        level: "warn",
+        where,
+        msg: `option "${o.id}" is a meta-option ("none/all of the above"); use four real, independent candidates`,
+      });
+    } else if (kind === "calque") {
+      flags.push({
+        level: "warn",
+        where,
+        msg: `option "${o.id}" "${o.text}" is a non-idiomatic calque for "none"; use «لا شيء» / «ولا واحد منها» or a real distractor`,
+      });
     }
   }
 
