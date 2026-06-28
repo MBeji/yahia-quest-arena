@@ -627,6 +627,12 @@ export const ar: TranslationKeys = {
       inviteDesc:
         "أنشئ حسابك المجاني للتدرّب على التمارين وكسب نقاط الخبرة وحفظ تقدّمك. قراءة الدرس تبقى دائمًا مجانية.",
       inviteCta: "إنشاء حسابي المجاني",
+      manuelTitle: "صفحات الكتاب المدرسي",
+      manuelHint: "صفحات كتاب التلميذ الرسمي التي تغطّي هذا الفصل.",
+      manuelPage: "صفحة",
+      manuelOpen: "تكبير الصفحة",
+      manuelPrev: "السابقة",
+      manuelNext: "التالية",
     },
     subject: {
       chapter: "الفصل {n}",

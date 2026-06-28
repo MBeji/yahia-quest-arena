@@ -634,6 +634,12 @@ export const fr: TranslationKeys = {
       inviteDesc:
         "Crée ton compte gratuit pour t’entraîner sur les exercices, gagner des XP et sauvegarder ta progression. Lire le cours reste toujours libre.",
       inviteCta: "Créer mon compte gratuit",
+      manuelTitle: "Pages du manuel",
+      manuelHint: "Les pages du manuel élève officiel qui couvrent ce chapitre.",
+      manuelPage: "Page",
+      manuelOpen: "Agrandir la page",
+      manuelPrev: "Précédente",
+      manuelNext: "Suivante",
     },
     subject: {
       chapter: "Chapitre {n}",

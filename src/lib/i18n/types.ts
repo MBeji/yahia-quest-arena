@@ -647,6 +647,12 @@ export type TranslationKeys = {
       inviteTitle: string;
       inviteDesc: string;
       inviteCta: string;
+      manuelTitle: string;
+      manuelHint: string;
+      manuelPage: string;
+      manuelOpen: string;
+      manuelPrev: string;
+      manuelNext: string;
     };
     subject: {
       chapter: string;
