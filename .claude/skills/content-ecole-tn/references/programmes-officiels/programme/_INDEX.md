@@ -17,12 +17,12 @@
 
 ## 2eme-base
 
-| ☐   | matière   | code guide | fichier cible                      | titre                                 |
-| --- | --------- | ---------- | ---------------------------------- | ------------------------------------- |
-| [ ] | arabe     | `501207`   | `programme/2eme-base/arabe.md`     | Guide méthodologique — Anissi (أنيسي) |
-| [ ] | eveil     | `503204`   | `programme/2eme-base/eveil.md`     | الدليل المرجعي في الإيقاظ العلمي      |
-| [ ] | islamique | `511202`   | `programme/2eme-base/islamique.md` | الدليل المرجعي في التربية الإسلامية   |
-| [ ] | maths     | `502205`   | `programme/2eme-base/maths.md`     | Guide méthodologique_Math             |
+| ☐   | matière   | code guide | fichier cible                      | titre                                      |
+| --- | --------- | ---------- | ---------------------------------- | ------------------------------------------ |
+| [~] | arabe     | `501207`   | `programme/2eme-base/arabe.md`     | Guide méthodologique — Massarati (مساراتي) |
+| [~] | eveil     | `503204`   | `programme/2eme-base/eveil.md`     | الدليل المرجعي في الإيقاظ العلمي           |
+| [~] | islamique | `511202`   | `programme/2eme-base/islamique.md` | الدليل المرجعي في التربية الإسلامية        |
+| [~] | maths     | `502205`   | `programme/2eme-base/maths.md`     | Guide méthodologique_Math                  |
 
 ## 3eme-base
 
