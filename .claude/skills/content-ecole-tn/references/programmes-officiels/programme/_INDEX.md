@@ -42,24 +42,24 @@
 
 | ☐   | matière   | code guide | fichier cible                      | titre                                  |
 | --- | --------- | ---------- | ---------------------------------- | -------------------------------------- |
-| [ ] | arabe     | `501404`   | `programme/4eme-base/arabe.md`     | الدليل المرجعي في تدريس اللغة العربية  |
-| [ ] | eveil     | `503404`   | `programme/4eme-base/eveil.md`     | الدليل المرجعي في الإيقاظ العلمي       |
+| [~] | arabe     | `501404`   | `programme/4eme-base/arabe.md`     | الدليل المرجعي في تدريس اللغة العربية  |
+| [~] | eveil     | `503404`   | `programme/4eme-base/eveil.md`     | الدليل المرجعي في الإيقاظ العلمي       |
 | [~] | francais  | `521415`   | `programme/4eme-base/francais.md`  | الدليل المرجعي في تدريس اللغة الفرنسية |
 | [~] | islamique | `511405`   | `programme/4eme-base/islamique.md` | الدليل المرجعي في التربية الإسلامية    |
-| [ ] | maths     | `502403`   | `programme/4eme-base/maths.md`     | الدليل المرجعي في الرياضيات            |
+| [~] | maths     | `502403`   | `programme/4eme-base/maths.md`     | الدليل المرجعي في الرياضيات            |
 
 ## 5eme-base
 
 | ☐   | matière           | code guide | fichier cible                              | titre                                  |
 | --- | ----------------- | ---------- | ------------------------------------------ | -------------------------------------- |
-| [ ] | arabe             | `501505`   | `programme/5eme-base/arabe.md`             | الدليل المرجعي في تدريس اللغة العربية  |
+| [~] | arabe             | `501505`   | `programme/5eme-base/arabe.md`             | الدليل المرجعي في تدريس اللغة العربية  |
 | [ ] | arts-tech-musique | `508501`   | `programme/5eme-base/arts-tech-musique.md` | الدليل المرجعي في التربية التكنولوجية  |
 | [ ] | arts-tech-musique | `508502`   | `programme/5eme-base/arts-tech-musique.md` | الدليل المرجعي في التربية التشكيلية    |
 | [ ] | arts-tech-musique | `508503`   | `programme/5eme-base/arts-tech-musique.md` | الدليل المرجعي في التربية الموسيقية    |
-| [ ] | eveil             | `503504`   | `programme/5eme-base/eveil.md`             | الدليل المرجعي في الإيقاظ العلمي       |
+| [~] | eveil             | `503504`   | `programme/5eme-base/eveil.md`             | الدليل المرجعي في الإيقاظ العلمي       |
 | [~] | francais          | `521513`   | `programme/5eme-base/francais.md`          | الدليل المرجعي في تدريس اللغة الفرنسية |
 | [~] | islamique         | `511505`   | `programme/5eme-base/islamique.md`         | الدليل المرجعي في التربية الإسلامية    |
-| [ ] | maths             | `502503`   | `programme/5eme-base/maths.md`             | الدليل المرجعي في الرياضيات            |
+| [~] | maths             | `502503`   | `programme/5eme-base/maths.md`             | الدليل المرجعي في الرياضيات            |
 
 ## 6eme-base
 
