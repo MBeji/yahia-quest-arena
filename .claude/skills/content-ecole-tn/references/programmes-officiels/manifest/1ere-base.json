@@ -39,13 +39,32 @@
       "id": "education-islamique-1ere",
       "name": "التربية الإسلامية",
       "contentLanguage": "ar",
-      "chapters": []
+      "chapters": [
+        { "slug": "01-sourate-al-fatiha", "notion": "سورة الفاتحة" },
+        { "slug": "02-sourate-al-ikhlas", "notion": "سورة الإخلاص (+ الإيمان بالله ورسوله ﷺ)" },
+        { "slug": "03-adab-al-jouloos", "notion": "آداب الجلوس في القسم" },
+        { "slug": "04-birr-al-walidayn", "notion": "برّ الوالدين" },
+        { "slug": "05-sourate-an-nas-al-falaq", "notion": "سورتا النّاس والفلق" },
+        { "slug": "06-adab-attahiyya", "notion": "آداب التّحيّة" },
+        { "slug": "07-sourate-an-nasr-al-kawthar", "notion": "سورتا النّصر والكوثر" },
+        { "slug": "08-annadhafa", "notion": "النّظافة" }
+      ]
     },
     {
       "id": "eveil-scientifique-1ere",
       "name": "الإيقاظ العلمي",
       "contentLanguage": "ar",
-      "chapters": []
+      "chapters": [
+        { "slug": "01-cinq-sens", "notion": "الحواسّ الخمس" },
+        { "slug": "02-alimentation", "notion": "التغذية" },
+        { "slug": "03-croissance", "notion": "النموّ" },
+        { "slug": "04-animaux", "notion": "تنقّل الحيوانات" },
+        { "slug": "05-respiration", "notion": "التنفّس" },
+        { "slug": "06-espace", "notion": "التموقّع في الفضاء" },
+        { "slug": "07-temps", "notion": "الزّمن" },
+        { "slug": "08-matiere", "notion": "المادّة" },
+        { "slug": "09-force", "notion": "القوّة (الدفع والجذب)" }
+      ]
     },
     {
       "id": "french-1ere",
