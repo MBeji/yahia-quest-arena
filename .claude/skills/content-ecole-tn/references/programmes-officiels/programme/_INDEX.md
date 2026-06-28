@@ -28,15 +28,15 @@
 
 | ☐   | matière           | code guide | fichier cible                              | titre                                                                  |
 | --- | ----------------- | ---------- | ------------------------------------------ | ---------------------------------------------------------------------- |
-| [ ] | arabe             | `501305`   | `programme/3eme-base/arabe.md`             | الدليل المرجعي في تدريس اللغة العربية                                  |
+| [~] | arabe             | `501305`   | `programme/3eme-base/arabe.md`             | الدليل المرجعي في تدريس اللغة العربية                                  |
 | [ ] | arts-tech-musique | `508302`   | `programme/3eme-base/arts-tech-musique.md` | الدليل المرجعي في التربية التقنية                                      |
 | [ ] | arts-tech-musique | `508305`   | `programme/3eme-base/arts-tech-musique.md` | الدليل المرجعي في التربية التشكيلية                                    |
 | [ ] | arts-tech-musique | `508306`   | `programme/3eme-base/arts-tech-musique.md` | الدليل المرجعي في التربية الموسيقية                                    |
 | [ ] | eps               | `512301`   | `programme/3eme-base/eps.md`               | الدليل المرجعي في التربية البدنية                                      |
-| [ ] | eveil             | `503304`   | `programme/3eme-base/eveil.md`             | الدليل المرجعي في الإيقاظ العلمي                                       |
+| [~] | eveil             | `503304`   | `programme/3eme-base/eveil.md`             | الدليل المرجعي في الإيقاظ العلمي                                       |
 | [~] | francais          | `521326`   | `programme/3eme-base/francais.md`          | J’apprends le français - Je joue et je projette - Guide méthodologique |
-| [ ] | islamique         | `511309`   | `programme/3eme-base/islamique.md`         | الدليل المرجعي في التربية الإسلامية                                    |
-| [ ] | maths             | `502304`   | `programme/3eme-base/maths.md`             | الدليل المرجعي في الرياضيات                                            |
+| [~] | islamique         | `511309`   | `programme/3eme-base/islamique.md`         | الدليل المرجعي في التربية الإسلامية                                    |
+| [~] | maths             | `502304`   | `programme/3eme-base/maths.md`             | الدليل المرجعي في الرياضيات                                            |
 
 ## 4eme-base
 
