@@ -50,7 +50,7 @@ produit une **worklist périmée**. Lancer ce runbook seulement quand la génér
    > Audite TOUS les chapitres de `<matière>` (chapter.json, cours.md, resume.md, quiz.json, exercices/\*.json).
    > **Re-résous CHAQUE question à l'aveugle** puis compare à `correctOption`. Vérifie notation (chiffres latins,
    > pas de LaTeX, bidi-safe, SVG `viewBox`), pureté de langue, qualité du cours (golden rule, exemple par règle,
-   > miroir résumé↔cours), et **conformité au programme** vs `manifest/<grade>.json` + `taybah/<grade>.md`.
+   > miroir résumé↔cours), et **conformité au programme** vs `programme/<grade>/<matière>.md` + `manifest/<grade>.json` + `taybah/<grade>.md`.
    > Rends un rapport classé par sévérité (BLOCKER/MAJOR/MINOR) : `fichier` + `locator` + défaut + correction proposée.
    > Indique le nombre de questions re-résolues. NE MODIFIE RIEN.
 
@@ -121,9 +121,11 @@ Work file by file. For every question:
 7. **Factual accuracy** — for culture-générale/sciences/history claims, spot-check non-trivial
    facts via web search; wrong fact = **[BLOCKER]**, missing `sources[]` for verified claims =
    **[MINOR]**. For `ecole-tn`, also check **syllabus fidelity against the CNP program** (the source of
-   truth): the CNP corpus for this grade+subject (`content-ecole-tn/references/programmes-officiels/CATALOGUE.md`
-   → `cnp-officiel/`: student manuel + teacher guide). Every notion must be in the official CNP scope for
-   that grade — off-program or wrong-grade notions = **[MAJOR]**. The Taybah school file
+   truth), read via the **programme transcription**
+   `content-ecole-tn/references/programmes-officiels/programme/<gradeSlug>/<matière>.md` (consume it; the
+   `cnp-officiel/` scans are the ultimate authority but reading them is the persistence session's job —
+   `CATALOGUE.md` maps grade×subject → file for traceability). Every notion must be in the official CNP
+   scope for that grade — off-program or wrong-grade notions = **[MAJOR]**. The Taybah school file
    (`programmes-officiels/<école>/<gradeSlug>.md`) is a secondary cross-check / trimester sequencing, not
    the authority.
 
@@ -156,9 +158,10 @@ severity mapping). Per chapter:
 1. **Exhaustivité (golden rule first)** — extract the list of notions/edge cases the chapter's
    quiz + exercises test, and point each to the course section that teaches it. Any
    tested-but-untaught notion = **[MAJOR]**. Then check full official-scope coverage — school content
-   against the **CNP program** (source of truth: the CNP corpus for this grade+subject via
-   `content-ecole-tn/references/programmes-officiels/CATALOGUE.md`; Taybah files only as a secondary
-   cross-check), else `chapter.json` scope — and flag off-program additions.
+   against the **CNP program** (source of truth: the programme transcription
+   `content-ecole-tn/references/programmes-officiels/programme/<gradeSlug>/<matière>.md` — consume it,
+   scanning the corpus is the persistence session's job; Taybah files only as a secondary cross-check),
+   else `chapter.json` scope — and flag off-program additions.
 2. **Clarté** — one notion per section, terms defined at first use in the official terminology,
    grade-calibrated sentences, formulas displayed on their own line, tables for classifications.
 3. **Facilité de compréhension** — concrete example before each rule, **a worked example for
