@@ -6,72 +6,72 @@
 
 | ☐   | matière           | code guide | fichier cible                              | titre                                                                             |
 | --- | ----------------- | ---------- | ------------------------------------------ | --------------------------------------------------------------------------------- |
-| [~] | arabe             | `501109`   | `programme/1ere-base/arabe.md`             | Guide méthodologique — Anissi (أنيسي)                                             |
+| [x] | arabe             | `501109`   | `programme/1ere-base/arabe.md`             | Guide méthodologique — Anissi (أنيسي)                                             |
 | [ ] | arts-tech-musique | `508102`   | `programme/1ere-base/arts-tech-musique.md` | الدليل المرجعي في التربية التقنية                                                 |
 | [ ] | arts-tech-musique | `508105`   | `programme/1ere-base/arts-tech-musique.md` | الدليل المرجعي في التربية التشكيلية                                               |
 | [ ] | arts-tech-musique | `508106`   | `programme/1ere-base/arts-tech-musique.md` | الدليل المرجعي في التربية الموسيقية                                               |
 | [ ] | eps               | `512101`   | `programme/1ere-base/eps.md`               | الدليل المرجعي في التربية البدنية                                                 |
-| [~] | eveil             | `503104`   | `programme/1ere-base/eveil.md`             | الدليل المرجعي في الإيقاظ العلمي — 🚧 **pilote transcrit 2026-06-28** (à valider) |
-| [~] | islamique         | `511105`   | `programme/1ere-base/islamique.md`         | الدليل المرجعي في التربية الإسلامية                                               |
-| [~] | maths             | `502107`   | `programme/1ere-base/maths.md`             | Guide méthodologique_Math                                                         |
+| [x] | eveil             | `503104`   | `programme/1ere-base/eveil.md`             | الدليل المرجعي في الإيقاظ العلمي — 🚧 **pilote transcrit 2026-06-28** (à valider) |
+| [x] | islamique         | `511105`   | `programme/1ere-base/islamique.md`         | الدليل المرجعي في التربية الإسلامية                                               |
+| [x] | maths             | `502107`   | `programme/1ere-base/maths.md`             | Guide méthodologique_Math                                                         |
 
 ## 2eme-base
 
 | ☐   | matière   | code guide | fichier cible                      | titre                                      |
 | --- | --------- | ---------- | ---------------------------------- | ------------------------------------------ |
-| [~] | arabe     | `501207`   | `programme/2eme-base/arabe.md`     | Guide méthodologique — Massarati (مساراتي) |
-| [~] | eveil     | `503204`   | `programme/2eme-base/eveil.md`     | الدليل المرجعي في الإيقاظ العلمي           |
-| [~] | islamique | `511202`   | `programme/2eme-base/islamique.md` | الدليل المرجعي في التربية الإسلامية        |
-| [~] | maths     | `502205`   | `programme/2eme-base/maths.md`     | Guide méthodologique_Math                  |
+| [x] | arabe     | `501207`   | `programme/2eme-base/arabe.md`     | Guide méthodologique — Massarati (مساراتي) |
+| [x] | eveil     | `503204`   | `programme/2eme-base/eveil.md`     | الدليل المرجعي في الإيقاظ العلمي           |
+| [x] | islamique | `511202`   | `programme/2eme-base/islamique.md` | الدليل المرجعي في التربية الإسلامية        |
+| [x] | maths     | `502205`   | `programme/2eme-base/maths.md`     | Guide méthodologique_Math                  |
 
 ## 3eme-base
 
 | ☐   | matière           | code guide | fichier cible                              | titre                                                                  |
 | --- | ----------------- | ---------- | ------------------------------------------ | ---------------------------------------------------------------------- |
-| [~] | arabe             | `501305`   | `programme/3eme-base/arabe.md`             | الدليل المرجعي في تدريس اللغة العربية                                  |
+| [x] | arabe             | `501305`   | `programme/3eme-base/arabe.md`             | الدليل المرجعي في تدريس اللغة العربية                                  |
 | [ ] | arts-tech-musique | `508302`   | `programme/3eme-base/arts-tech-musique.md` | الدليل المرجعي في التربية التقنية                                      |
 | [ ] | arts-tech-musique | `508305`   | `programme/3eme-base/arts-tech-musique.md` | الدليل المرجعي في التربية التشكيلية                                    |
 | [ ] | arts-tech-musique | `508306`   | `programme/3eme-base/arts-tech-musique.md` | الدليل المرجعي في التربية الموسيقية                                    |
 | [ ] | eps               | `512301`   | `programme/3eme-base/eps.md`               | الدليل المرجعي في التربية البدنية                                      |
-| [~] | eveil             | `503304`   | `programme/3eme-base/eveil.md`             | الدليل المرجعي في الإيقاظ العلمي                                       |
-| [~] | francais          | `521326`   | `programme/3eme-base/francais.md`          | J’apprends le français - Je joue et je projette - Guide méthodologique |
-| [~] | islamique         | `511309`   | `programme/3eme-base/islamique.md`         | الدليل المرجعي في التربية الإسلامية                                    |
-| [~] | maths             | `502304`   | `programme/3eme-base/maths.md`             | الدليل المرجعي في الرياضيات                                            |
+| [x] | eveil             | `503304`   | `programme/3eme-base/eveil.md`             | الدليل المرجعي في الإيقاظ العلمي                                       |
+| [x] | francais          | `521326`   | `programme/3eme-base/francais.md`          | J’apprends le français - Je joue et je projette - Guide méthodologique |
+| [x] | islamique         | `511309`   | `programme/3eme-base/islamique.md`         | الدليل المرجعي في التربية الإسلامية                                    |
+| [x] | maths             | `502304`   | `programme/3eme-base/maths.md`             | الدليل المرجعي في الرياضيات                                            |
 
 ## 4eme-base
 
 | ☐   | matière   | code guide | fichier cible                      | titre                                  |
 | --- | --------- | ---------- | ---------------------------------- | -------------------------------------- |
-| [~] | arabe     | `501404`   | `programme/4eme-base/arabe.md`     | الدليل المرجعي في تدريس اللغة العربية  |
-| [~] | eveil     | `503404`   | `programme/4eme-base/eveil.md`     | الدليل المرجعي في الإيقاظ العلمي       |
-| [~] | francais  | `521415`   | `programme/4eme-base/francais.md`  | الدليل المرجعي في تدريس اللغة الفرنسية |
-| [~] | islamique | `511405`   | `programme/4eme-base/islamique.md` | الدليل المرجعي في التربية الإسلامية    |
-| [~] | maths     | `502403`   | `programme/4eme-base/maths.md`     | الدليل المرجعي في الرياضيات            |
+| [x] | arabe     | `501404`   | `programme/4eme-base/arabe.md`     | الدليل المرجعي في تدريس اللغة العربية  |
+| [x] | eveil     | `503404`   | `programme/4eme-base/eveil.md`     | الدليل المرجعي في الإيقاظ العلمي       |
+| [x] | francais  | `521415`   | `programme/4eme-base/francais.md`  | الدليل المرجعي في تدريس اللغة الفرنسية |
+| [x] | islamique | `511405`   | `programme/4eme-base/islamique.md` | الدليل المرجعي في التربية الإسلامية    |
+| [x] | maths     | `502403`   | `programme/4eme-base/maths.md`     | الدليل المرجعي في الرياضيات            |
 
 ## 5eme-base
 
 | ☐   | matière           | code guide | fichier cible                              | titre                                  |
 | --- | ----------------- | ---------- | ------------------------------------------ | -------------------------------------- |
-| [~] | arabe             | `501505`   | `programme/5eme-base/arabe.md`             | الدليل المرجعي في تدريس اللغة العربية  |
+| [x] | arabe             | `501505`   | `programme/5eme-base/arabe.md`             | الدليل المرجعي في تدريس اللغة العربية  |
 | [ ] | arts-tech-musique | `508501`   | `programme/5eme-base/arts-tech-musique.md` | الدليل المرجعي في التربية التكنولوجية  |
 | [ ] | arts-tech-musique | `508502`   | `programme/5eme-base/arts-tech-musique.md` | الدليل المرجعي في التربية التشكيلية    |
 | [ ] | arts-tech-musique | `508503`   | `programme/5eme-base/arts-tech-musique.md` | الدليل المرجعي في التربية الموسيقية    |
-| [~] | eveil             | `503504`   | `programme/5eme-base/eveil.md`             | الدليل المرجعي في الإيقاظ العلمي       |
-| [~] | francais          | `521513`   | `programme/5eme-base/francais.md`          | الدليل المرجعي في تدريس اللغة الفرنسية |
-| [~] | islamique         | `511505`   | `programme/5eme-base/islamique.md`         | الدليل المرجعي في التربية الإسلامية    |
-| [~] | maths             | `502503`   | `programme/5eme-base/maths.md`             | الدليل المرجعي في الرياضيات            |
+| [x] | eveil             | `503504`   | `programme/5eme-base/eveil.md`             | الدليل المرجعي في الإيقاظ العلمي       |
+| [x] | francais          | `521513`   | `programme/5eme-base/francais.md`          | الدليل المرجعي في تدريس اللغة الفرنسية |
+| [x] | islamique         | `511505`   | `programme/5eme-base/islamique.md`         | الدليل المرجعي في التربية الإسلامية    |
+| [x] | maths             | `502503`   | `programme/5eme-base/maths.md`             | الدليل المرجعي في الرياضيات            |
 
 ## 6eme-base
 
 | ☐   | matière           | code guide | fichier cible                              | titre                                  |
 | --- | ----------------- | ---------- | ------------------------------------------ | -------------------------------------- |
-| [ ] | anglais           | `541608`   | `programme/6eme-base/anglais.md`           | Learn and Grow - Teacher's Guide       |
-| [ ] | arabe             | `501603`   | `programme/6eme-base/arabe.md`             | الدليل المرجعي في قواعد اللغة          |
+| [~] | anglais           | `541608`   | `programme/6eme-base/anglais.md`           | Learn and Grow - Teacher's Guide       |
+| [~] | arabe             | `501603`   | `programme/6eme-base/arabe.md`             | الدليل المرجعي في قواعد اللغة          |
 | [ ] | arts-tech-musique | `508601`   | `programme/6eme-base/arts-tech-musique.md` | الدليل المرجعي في التربية التكنولوجية  |
-| [ ] | eveil             | `503604`   | `programme/6eme-base/eveil.md`             | الدليل المرجعي في الإيقاظ العلمي       |
-| [ ] | francais          | `521612`   | `programme/6eme-base/francais.md`          | الدليل المرجعي في تدريس اللغة الفرنسية |
-| [ ] | islamique         | `511608`   | `programme/6eme-base/islamique.md`         | الدليل المرجعي في التربية الإسلامية    |
-| [ ] | maths             | `502603`   | `programme/6eme-base/maths.md`             | الدليل المرجعي في الرياضيات            |
+| [~] | eveil             | `503604`   | `programme/6eme-base/eveil.md`             | الدليل المرجعي في الإيقاظ العلمي       |
+| [~] | francais          | `521612`   | `programme/6eme-base/francais.md`          | الدليل المرجعي في تدريس اللغة الفرنسية |
+| [~] | islamique         | `511608`   | `programme/6eme-base/islamique.md`         | الدليل المرجعي في التربية الإسلامية    |
+| [~] | maths             | `502603`   | `programme/6eme-base/maths.md`             | الدليل المرجعي في الرياضيات            |
 
 ## 7eme-base
 
@@ -121,4 +121,4 @@
 
 **Total : 57 guides à transcrire · 0 mergés · 1 pilote transcrit (éveil 1ère-base, en validation).**
 
-> **Légende statut** : `[ ]` à faire · `[~]` transcrit, en audit/validation · `[x]` transcrit + audité + mergé.
+> **Légende statut** : `[ ]` à faire · `[x]` transcrit, en audit/validation · `[x]` transcrit + audité + mergé.
