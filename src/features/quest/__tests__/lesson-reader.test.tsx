@@ -8,6 +8,11 @@ vi.mock("@tanstack/react-router", () => ({
     React.createElement("a", { href: to }, children),
 }));
 
+// The « Pages du manuel » section self-fetches (useQuery + a gated server fn); stub it
+// so the presentational reader can be tested without a QueryClient. It has its own
+// test (manuel-pages-section.test.tsx).
+vi.mock("../components/manuel-pages-section", () => ({ ManuelPagesSection: () => null }));
+
 import { LessonReader, type LessonReaderChapter } from "../components/lesson-reader";
 
 const chapter: LessonReaderChapter = {

@@ -13,6 +13,7 @@ import { renderMarkdown } from "@/shared/lib/markdown";
 import { isRtlText } from "@/shared/lib/utils";
 import { useT } from "@/lib/i18n";
 import { exerciseRouteFor } from "../exercise-route";
+import { ManuelPagesSection } from "./manuel-pages-section";
 
 export type LessonReaderChapter = {
   title: string;
@@ -136,6 +137,8 @@ export function LessonReader({
           <p className="mt-3 text-muted-foreground">{t.public.reader.courseSoon}</p>
         </div>
       )}
+
+      <ManuelPagesSection chapterId={chapterId} isAuthenticated={isAuthenticated} />
 
       {practiceExerciseId && (
         <div className="mt-10 print:hidden">

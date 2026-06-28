@@ -631,6 +631,12 @@ export const en: TranslationKeys = {
       inviteDesc:
         "Create your free account to practise on the exercises, earn XP and save your progress. Reading the lesson is always free.",
       inviteCta: "Create my free account",
+      manuelTitle: "Textbook pages",
+      manuelHint: "The official student-textbook pages covering this chapter.",
+      manuelPage: "Page",
+      manuelOpen: "Enlarge page",
+      manuelPrev: "Previous",
+      manuelNext: "Next",
     },
     subject: {
       chapter: "Chapter {n}",
