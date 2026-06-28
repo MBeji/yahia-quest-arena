@@ -33,8 +33,10 @@ Pour un couple **(niveau, matière)** :
   2 = secondaire) · chiffres 2-3 = **matière** (01 arabe, 02 maths, 03 éveil, 05 SVT, 06 géo, 07 histoire,
   08 arts/tech/musique, 11 sociales/islamique/civique, 12 EPS, 21 français, 22 maths-fr, 23 physique,
   24 chimie, 25 SVT, 33 informatique, 41 anglais…) · chiffre 4 = **classe**.
-- 📖 **Lire le corpus** : les manuels sont des scans et les guides ont une couche-texte cassée (mojibake)
-  → `pdftotext` est **inutile**. On **rasterise en PNG puis on lit en vision** (outil Read). Helper :
+- 📖 **Lire le corpus** (⚠️ **réservé à la session « couche de persistance »** : la génération consomme la
+  transcription `programme/…`, elle ne scanne pas) : les manuels sont des scans et les guides ont une
+  couche-texte cassée (mojibake) → `pdftotext` est **inutile**. On **rasterise en PNG puis on lit en vision**
+  (outil Read). Helper :
   **`bash cnp-officiel/render.sh <pdf> <p_début> <p_fin> [dpi]`** → écrit `cnp-officiel/_render/<nom>-NNN.png`
   à ouvrir avec l'outil Read. (poppler installé sous `YahiaAcademy/_tools/poppler/`.) Le **guide enseignant**
   porte le **programme détaillé** (compétences, progression) — c'est la pièce à lire en priorité pour le scope.
@@ -147,11 +149,16 @@ Pour créer ou réaligner le contenu d'un couple **(niveau, matière)** sur le C
    worktree sur `main` + jonction `node_modules` (pour que validation et hooks fonctionnent) :
    - `git worktree add -b feat/<sujet>-cnp <chemin> origin/main`
    - jonction (Windows, sans admin, PowerShell) : `New-Item -ItemType Junction -Path <chemin>\node_modules -Target <repo>\node_modules`
-2. **Lire le programme CNP** (source de vérité) : repérer le **guide enseignant** du (niveau, matière) dans
-   `cnp-officiel/CATALOGUE.md`, puis `bash cnp-officiel/render.sh <guide.pdf> <p1> <p2>` → ouvrir les PNG de
-   `cnp-officiel/_render/` avec l'outil **Read** (vision ; les PDF sont des scans). Établir le scope exact
-   (notions, terminologie, séquence). `taybah/<gradeSlug>.md` sert de **vérification** / séquençage par trimestre.
-   **Codifier** la liste des chapitres (slug + notion, ordre du programme) dans **`manifest/<gradeSlug>.json`** (cf. § Manifeste) — c'est ce qui rend la couverture vérifiable.
+2. **Lire le programme — via la transcription (PAS de scan ici)** : la source de scope est
+   **`programme/<gradeSlug>/<matière>.md`** (transcription fidèle du guide enseignant, produite **une fois**
+   par la session « couche de persistance »). La **consommer** ; établir le scope exact (notions,
+   terminologie, séquence, bornes incl./excl.). `taybah/<gradeSlug>.md` sert de **vérification** / séquençage
+   par trimestre. ⛔ **Ne PAS `render.sh`→vision les scans CNP depuis la session de génération** — le scan est
+   le travail de la session de persistance (elle transcrit une fois ; on consomme, zéro double-scan). Si
+   `programme/<gradeSlug>/<matière>.md` **n'existe pas encore**, le couple est **bloqué sur la couche de
+   persistance** : vérifier/attendre via `programme/_INDEX.md` (demander sa transcription) — jamais scanner en
+   contournement. **Codifier** la liste des chapitres (slug + notion, ordre du programme) dans
+   **`manifest/<gradeSlug>.json`** (cf. § Manifeste) — c'est ce qui rend la couverture vérifiable.
 3. **Auditer l'existant** (si réalignement) : pour chaque chapitre → **couvert** / **manquant** /
    **hors-programme** (notion d'un autre niveau). Vérifier avant de retirer (ex. soustraction = 2ème, pas 1ère).
 4. **Générer / corriger** chapitre par chapitre selon **`content-engine`** :
