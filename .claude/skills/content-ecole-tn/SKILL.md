@@ -22,27 +22,41 @@ First, **read the content-engine skill and its references** (`.claude/skills/con
 define the file schema, quality bar, reward table, RPG style, and the validate-then-stop workflow.
 This skill only adds the school-specific rules.
 
-## Official-program sources — precedence (CNP is the single source of truth)
+## Official-program sources — precedence (consume the transcription; CNP = source of truth)
 
-The authoritative scope is the **national CNP program**, captured as the downloaded **CNP corpus**
-(official student textbooks + teacher guides). Start with the index at
-[`references/programmes-officiels/`](references/programmes-officiels/) → its
+The authoritative scope is the **national CNP program**. It is now **transcribed once** into a
+**persistence layer** (`references/programmes-officiels/programme/<gradeSlug>/<matière>.md`) by a
+dedicated session, so generation **consumes that transcription instead of re-reading the scans**.
+Start with the index at [`references/programmes-officiels/`](references/programmes-officiels/) → its
 [`README.md`](references/programmes-officiels/README.md) (precedence policy, CNP-corpus location +
 `CATALOGUE.md`, subject-`id` convention). Precedence, for any grade+subject:
 
-1. **CNP corpus** (`YahiaAcademy/cnp-officiel/`, sibling of the repo) — **the single source of truth**:
-   the student **manuel** = the content/scope; the **teacher guide** (_guide méthodologique_ /
-   الدليل المرجعي) = the official program (competencies, progression). `CATALOGUE.md` maps grade×subject →
-   file. (The CNP PDFs are scans — read by page-range.)
-2. **Taybah school files** (`programmes-officiels/taybah/<gradeSlug>.md`) — **verification + detail
+1. **Programme transcription — READ FIRST** —
+   `references/programmes-officiels/programme/<gradeSlug>/<matière>.md`, if it exists: a faithful,
+   structured transcription of the teacher guide (scope, محاور, progression, in/out-of-scope bornes).
+   **This is the scope source for generation.** Spec + work-list:
+   [`programme/README.md`](references/programmes-officiels/programme/README.md) ·
+   [`programme/_INDEX.md`](references/programmes-officiels/programme/_INDEX.md).
+   ⛔ **Do NOT render→vision the CNP scans from the generation track** — scanning is owned by the
+   persistence-layer session (it transcribes once; we consume, avoiding duplicate vision work). If the
+   transcription for the (grade, subject) is **not yet produced**, the unit is **blocked on the
+   persistence layer**: check `programme/_INDEX.md` and request/await its transcription — never scan as a
+   workaround.
+2. **CNP corpus scans** (`YahiaAcademy/cnp-officiel/`, sibling of the repo) — the **ultimate authority**
+   and the source the transcription is made from (student **manuel** = content/scope; **teacher guide** /
+   الدليل المرجعي = program; `CATALOGUE.md` maps grade×subject → file). Re-verifiable here via the
+   transcription's cited pages. **Reading the scans is the persistence session's job, not generation's.**
+3. **Taybah school files** (`programmes-officiels/taybah/<gradeSlug>.md`) — **verification + detail
    complement** only: the kids' school **trimester sequencing** and a cross-check. **Never** use them to
    contradict or narrow the CNP scope — flag divergences, don't silently follow them.
 
 ## Inputs to confirm before writing
 
-- **Grade + subject → CNP reference (authoritative)** → locate the grade+subject's CNP files in the
-  corpus via `programmes-officiels/CATALOGUE.md` (student manuel = scope; teacher guide = program). This
-  sets the authoritative scope.
+- **Grade + subject → scope source (authoritative)** → read
+  `programmes-officiels/programme/<gradeSlug>/<matière>.md` (the persistence transcription); this sets the
+  authoritative scope. If it doesn't exist yet, the unit is blocked on the persistence layer
+  (`programme/_INDEX.md`) — don't scan the corpus here. (`programmes-officiels/CATALOGUE.md` maps
+  grade×subject → the underlying CNP files, for traceability.)
 - **Grade** → the `gradeSlug` (e.g. `1ere-base`, `9eme-base`, `bac`). See `content-engine/references/themes-and-trilingual.md`.
 - **School (verification, optional)** → if the content targets a specific school (e.g. _Taybah Primaire_),
   use `programmes-officiels/<école>/<gradeSlug>.md` to cross-check and to follow its **trimester
@@ -80,13 +94,15 @@ notation. Hard rule: `content-engine/references/math-and-notation.md`.
 
 ## Fidelity workflow (the part that makes this track different)
 
-1. **Anchor to the CNP program (source of truth).** Ground truth, in order: **(a)** the **CNP corpus**
-   (`YahiaAcademy/cnp-officiel/` — the grade+subject's student manuel for scope, teacher guide /
-   الدليل المرجعي for the official program & progression; find files via `programmes-officiels/CATALOGUE.md`);
+1. **Anchor to the CNP program (source of truth) — via the transcription.** Ground truth, in order:
+   **(a)** the **programme transcription** `programmes-officiels/programme/<gradeSlug>/<matière>.md`
+   (faithful render of the teacher guide — scope, محاور, progression, in/out-of-scope bornes);
    **(b)** the **Taybah school file** (`programmes-officiels/<école>/<gradeSlug>.md`) as **verification +
    trimester sequencing** complement; **(c)** web only to fill genuine gaps (`tunisiecollege.net`,
-   `tadris.tn`, edunet/CNP). Establish the exact notions the chapter must cover for this grade+subject —
-   faithful to the CNP. (CNP PDFs are scans → read by page-range; heed the Taybah files' `[?]`/`[sic]` markers.)
+   `tadris.tn`, edunet/CNP). Establish the exact notions the chapter must cover — faithful to the CNP.
+   ⛔ **Don't render→vision the CNP scans here** — that's the persistence session's job (consume its
+   transcription). If `programme/<gradeSlug>/<matière>.md` is missing, stop: the unit is blocked on the
+   persistence layer (`programme/_INDEX.md`). Heed the Taybah files' `[?]`/`[sic]` markers.
 2. **Map your chapter to the syllabus.** Cover the official notions for that chapter — no more, no
    less. Match the official vocabulary and notation.
 3. **Flag anything off-program.** If you're tempted to add a notion that isn't in the official
