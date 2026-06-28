@@ -92,6 +92,44 @@ international notation** — Western digits (0–9), LTR formulas, SI units — 
 French/English content. Arabic prose wraps standard math; never Arabic-Indic digits or arabized
 notation. Hard rule: `content-engine/references/math-and-notation.md`.
 
+## Texte coranique — رواية قالون عن نافع (مصحف الجمهورية التونسية), jamais حفص
+
+**Toute آية du Coran dans le contenu scolaire — éducation islamique en premier lieu, mais aussi toute
+citation coranique dans une autre matière (arabe, etc.) — doit suivre la رواية قالون عن نافع, soit le
+مصحف الجمهورية التونسية, lecture officielle de la Tunisie.** Ce n'est **ni حفص** (le défaut mondial des
+polices et des claviers/IME — donc le piège : taper « de mémoire » produit du حفص) **ni ورش** (le reste
+du Maghreb : Algérie/Maroc/Afrique de l'Ouest). Triple confirmation CNP : guides التربية الإسلامية
+**1ère** (`511105`, p. 11), **4ème** (`511405`, p. 11), **5ème** (`511505`, p. 17) — prescription noir
+sur blanc « اعتماد مصحف الجمهورية التونسية (رواية قالون) ». Voir la mémoire
+`reference_tunisia_quran_qaloun.md`.
+
+**Règle d'or : copie chaque آية caractère par caractère depuis une source قالون faisant autorité —
+jamais de mémoire, jamais depuis un مصحف حفص/ورش.** Source machine de référence : les données **KFGQPC
+(مجمع الملك فهد) رواية قالون** (miroir `thetruetruth/quran-data-kfgqpc` →
+`qaloon/data/QaloonData_v10.json`).
+
+**Méthode (génération ET audit de l'existant).** Récupère les corpus قالون **et** حفص (KFGQPC) ;
+calcule l'ensemble des différences _farsh_ par sourate (squelette consonantique + voyelles courtes +
+hamza, en neutralisant le seul bruit typographique : sukūn, `ٱ` vs `اِ۬`, ya-barree `ے`, alif suscrit
+`ـٰ`, ordre tanwīn/alif) ; puis contrôle le contenu **à ces points précis**. Pour les petites classes
+le texte est en **imlāʾī simplifié** : garde ce style (pas de conversion en rasm ʿuthmānī complet),
+mais suis la lecture قالون à chaque point _farsh_. Une citation coranique non vocalisée est neutre si
+la divergence ne porte que sur une voyelle (ex. `فهو`).
+
+**Ancres de contrôle connues (قالون, juzʾ ʿamma + Fātiḥa)** — si le contenu montre la forme حفص, c'est faux :
+
+| Sourate:āya                      | حفص (faux ici)       | قالون (correct)                                |
+| -------------------------------- | -------------------- | ---------------------------------------------- |
+| الفاتحة 1:4                      | مَٰلِكِ (مالك)       | **مَلِكِ** يومِ الدين                          |
+| الإخلاص 112:4                    | كُفُوًا              | ولم يكن له **كُفُؤًا** أحد                     |
+| الماعون 107:1 / العلق 96:9,11,13 | أَرَأَيْتَ           | **أَرَايْتَ**                                  |
+| الشمس 91:15                      | وَلَا يخاف           | **فَلَا** يخاف عقباها                          |
+| الهمزة 104:2 ; 104:8             | يَحْسَبُ ; مُؤْصَدَة | **يَحْسِبُ** ; **مُوصَدَة**                    |
+| القارعة 101:7                    | فَهُوَ               | **فَهْوَ** (إسكان الهاء ; neutre en imlāʾī nu) |
+
+La **notation reste standard** (chiffres 0–9, etc. — règle ci-dessus) ; cette règle ne concerne que le
+**rasm / la lecture** du texte coranique, pas les chiffres ni les équations.
+
 ## Fidelity workflow (the part that makes this track different)
 
 1. **Anchor to the CNP program (source of truth) — via the transcription.** Ground truth, in order:
