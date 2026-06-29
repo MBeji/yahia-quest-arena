@@ -1,0 +1,128 @@
+name: Content audit (pedagogical sweep)
+
+# Autonomous pedagogical audit of the content that recently changed on `main`,
+# driven by the repo skill .claude/skills/content-audit. It RE-SOLVES every
+# question, checks answer keys / distractors / explanations / difficulty
+# calibration / answer-key balance, standard math+digit notation (incl. Arabic
+# RTL), language purity, and — for ecole-tn — program conformity & coverage
+# (`npm run content:audit` vs the CNP manifests). It reports findings as tracking
+# ISSUES (one per BLOCKER/MAJOR); it is REVIEW-ONLY and NEVER edits content.
+#
+# This is the correctness net the deterministic gates can't be: `content:check`
+# and `content:qa:strict` (now in ci.yml) catch STRUCTURE, but a wrong answer
+# key, a misleading explanation, or an off-syllabus notion passes them all — and
+# content is the core value proposition. (#219: éducation islamique 1ère–3ème
+# shipped in the wrong Quranic riwaya, caught only by a later human sweep.)
+#
+# Runs Wed + Sat at 22:07 UTC (23:07 Tunisia), 2×/week — it fans out a sub-agent
+# per subject and holds a runner for many minutes, so twice a week keeps the
+# issue noise reasonable; use "Run workflow" to launch it any other day.
+#
+# Prereq: repository secret CLAUDE_CODE_OAUTH_TOKEN (same one the regression /
+# upgrade guards use — `claude setup-token`). Without it the job SKIPS gracefully
+# (stays green), so it never nags before it's configured.
+# schedule only fires on the default branch (main) — takes effect once merged.
+
+on:
+  schedule:
+    # Wed + Sat at 22:07 UTC. Off the other guards (regression Mon/Thu 23:00,
+    # upgrade Tue/Fri, nightly daily 01:00) so runners don't contend.
+    - cron: "7 22 * * 3,6"
+  workflow_dispatch:
+
+# Read the repo + open tracking issues. No write to contents (review-only: it
+# never commits a content change) and no PRs (findings are issues, not fixes).
+permissions:
+  contents: read
+  issues: write
+
+# One audit at a time.
+concurrency:
+  group: content-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    name: Pedagogical content audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Check the Claude OAuth token is configured
+        id: guard
+        run: |
+          if [ -z "${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}" ]; then
+            echo "CLAUDE_CODE_OAUTH_TOKEN not set — skipping the content audit."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout (full history for diff context)
+        if: steps.guard.outputs.configured == 'true'
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        if: steps.guard.outputs.configured == 'true'
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        if: steps.guard.outputs.configured == 'true'
+        run: npm ci --no-audit --no-fund
+
+      - name: Run the content-audit sweep
+        if: steps.guard.outputs.configured == 'true'
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt: |
+            Run the /content-audit skill for yahia-quest-arena.
+
+            SCOPE — audit only what recently changed, to keep the run bounded:
+            list the subjects whose files under `content/**` were modified on
+            `main` in roughly the last 4 days
+            (`git log --since="4 days ago" --name-only --pretty=format: -- content`
+            then map the touched paths back to their subject dir). If nothing under
+            `content/` changed, audit nothing and post a short "no content changed —
+            nothing to audit" summary in the job log.
+
+            For each changed subject, follow the skill's per-item runbook:
+              • For ecole-tn subjects, run `npm run content:audit` first for
+                coverage/conformity vs the CNP manifest.
+              • RE-SOLVE every question blind, then compare to `correctOption`;
+                check distractors, explanation agreement, difficulty calibration,
+                answer-key balance, duplicates, standard notation (Western digits
+                even in Arabic, LTR equations, bidi-safe, SVG viewBox), language
+                purity, and factual / syllabus accuracy. Also grade cours.md /
+                resume.md against the course-quality bar.
+
+            OUTPUT — review only, never edit content:
+              • Open ONE tracking GitHub issue per BLOCKER or MAJOR finding
+                (label `content-audit`), titled with the subject + defect, body
+                carrying the `file` + `locator`, the defect, and a PROPOSED fix.
+                Before opening, list existing open `content-audit` issues and do
+                NOT duplicate one already filed for the same locator.
+              • MINOR findings: aggregate into the job-log summary, no issue.
+              • If everything audited is clean, open no issue and post a short
+                "all clean" summary instead.
+
+            Hard rules: NEVER modify content/ or push a commit; this is a review.
+            Report the number of questions re-solved per subject. If you cannot
+            verify a key with confidence, file it as a finding rather than passing
+            it silently.
+          claude_args: |
+            --model claude-sonnet-4-6
+            --max-turns 60
+            --allowedTools "Bash,Read,Glob,Grep"
+
+      # Same loud-fail guard the regression guard uses: claude-code-action exits 0
+      # even when Claude itself errored (e.g. a 401 → is_error=true at 1 turn).
+      # The shared parser inspects only the final result event's is_error.
+      - name: Fail loudly if the audit errored
+        if: ${{ always() && steps.guard.outputs.configured == 'true' }}
+        run: python3 .github/scripts/check-claude-result.py "$RUNNER_TEMP/claude-execution-output.json"

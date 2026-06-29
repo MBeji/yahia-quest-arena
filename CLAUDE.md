@@ -214,7 +214,7 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
   separate from the Vitest unit/integration gate.
 - **Scheduled automations (GitHub Actions + repo skills).** Run on a schedule, all
   gracefully skipping without `CLAUDE_CODE_OAUTH_TOKEN`. The E2E/pgTAP nightly runs
-  **every night**; the two Claude-agent guards run **2×/week** (each holds a runner for
+  **every night**; the three Claude-agent guards run **2×/week** (each holds a runner for
   many minutes — keeps their PR/issue noise reasonable; the repo is public so Actions
   minutes are unlimited & free):
   `regression-guard.yml` (**Mon+Thu** 23:00 UTC → skill `regression-guard`: reconciles
@@ -222,7 +222,10 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
   pgTAP, tracking issue), then `upgrade-guard.yml` (**Tue+Fri**, after that night's green
   nightly → skill `upgrade-guard`: stack upgrades —
   auto-merges the patch/minor lot only when the full gate + E2E + pgTAP are green, one PR
-  per major, never bundled). None ever push to `main` directly (only `automerge` merges a
+  per major, never bundled), and `content-audit.yml` (**Wed+Sat** 22:07 UTC → skill
+  `content-audit`: re-solves every question in the content changed that week, opens one
+  tracking issue per BLOCKER/MAJOR — review-only, the correctness net the deterministic
+  content gate can't be). None ever push to `main` directly (only `automerge` merges a
   fully-green patch/minor PR). Cadence + traps: `docs/dependency-maintenance.md`.
 - **Policy docs (`docs/*.md`).** Topic-specific rules referenced from here:
   `docs/environment-variables.md`, `docs/logging-standard.md`, `docs/xss-rendering-policy.md`,
@@ -322,7 +325,10 @@ When unsure about scope or a destructive action, ask before proceeding.
   **dedicated TEST Supabase project** with seeded users (`scripts/e2e/`), not the unit-test
   mocks. They are not part of `npm run verify`/`ci:verify`; don't point them at prod.
 - **CI workflow runs a subset.** `.github/workflows/ci.yml` runs lint + typecheck +
-  test:coverage + build:check + audit:deps — it does **not** run `content:qa:strict` (only the
-  local `ci:verify` script does). Run `content:qa:strict` yourself when touching `content/`.
+  test:coverage + **content:check + content:qa:strict** + build:check + audit:deps. The content
+  gate is now enforced on every PR (it used to be local-only via `ci:verify`); `content:qa:strict`
+  fails CI on any `[error]` (warnings still only surface). `content:qa:strict` catches **structure/
+  notation**, not **correctness** — a wrong answer key passes it; that's what the scheduled
+  `content-audit.yml` sweep is for (below).
 - The Copilot guide (`.github/copilot-instructions.md`) still references `@/shared/ui/` for UI
   primitives — that move never happened; use `@/components/ui/*` (same drift noted above).
