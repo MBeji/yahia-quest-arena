@@ -51,6 +51,7 @@ function ExercicePage() {
 
   const ex = data.exercise;
   const subjectId = (ex.subject_id as string | null) ?? null;
+  const chapterId = (ex.chapter_id as string | null) ?? null;
 
   // The comprehension quiz is the connected gate (the public RPC refuses to
   // correct it). Invite to play it with an account rather than fake-practice it.
@@ -95,6 +96,7 @@ function ExercicePage() {
         id: ex.id,
         title: ex.title,
         subject_id: subjectId,
+        chapter_id: chapterId,
         subjects: (ex.subjects as { content_language?: string | null } | null) ?? null,
       }}
       questions={questions}

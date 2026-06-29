@@ -295,7 +295,87 @@ export const getChapterLesson = createServerFn({ method: "GET" })
       hasLesson: !!s.lesson_content,
     }));
 
-    return { chapter, allChapters };
+    // Target for the course reader's single « practise this chapter » CTA: the
+    // chapter's first non-quiz exercise (real practice — the comprehension quiz
+    // is the connected gate, not practice). null → nothing to practise → no CTA.
+    // The reader links it auth-aware (signed-in → /quest, anon → /exercice).
+    const { data: chapterExercises } = await supabase
+      .from("exercises")
+      .select("id, mode, display_order")
+      .eq("chapter_id", data.chapterId)
+      .order("display_order");
+    const practiceExerciseId = (chapterExercises ?? []).find((e) => e.mode !== "quiz")?.id ?? null;
+
+    return { chapter, allChapters, practiceExerciseId };
+  });
+
+// ---------- Manuel élève pages (login-gated) ----------
+
+/** A single official-textbook page available to display under a chapter. */
+export type ManuelPage = { page: number; url: string };
+
+/** Private Storage bucket holding the watermarked manuel-élève page images. */
+const MANUEL_PAGES_BUCKET = "manuel-pages";
+/** Signed-URL lifetime — long enough to read the gallery, short enough to expire. */
+const MANUEL_SIGNED_URL_TTL_SECONDS = 60 * 60;
+
+/** Shape of `chapters.manuel_ref` we rely on (the build also stores `pages`). */
+const manuelRefSchema = z.object({
+  code: z.string().regex(/^[A-Za-z0-9_-]+$/),
+  pageNumbers: z.array(z.number().int().positive()).min(1),
+});
+
+/**
+ * Resolve the official student-textbook (manuel élève) pages for a chapter into
+ * **signed URLs**, gated to authenticated users. Returns `{ pages: [] }` when the
+ * chapter has no `manuel_ref`, the data is malformed, or signing fails — the UI
+ * simply hides the « Pages du manuel » section. The images live in a private
+ * bucket (RLS = authenticated read); URLs are minted with the caller's JWT, so
+ * anonymous visitors can neither call this nor read the objects.
+ */
+export const getManuelPageUrls = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ chapterId: z.guid() }).parse(d))
+  .handler(async ({ data, context }): Promise<{ pages: ManuelPage[] }> => {
+    const { supabase } = context;
+
+    const { data: chapter, error } = await supabase
+      .from("chapters")
+      .select("manuel_ref")
+      .eq("id", data.chapterId)
+      .single();
+    if (error || !chapter) {
+      logger.warn("quest.getManuelPageUrls: chapter not found", { chapterId: data.chapterId });
+      return { pages: [] };
+    }
+
+    const parsed = manuelRefSchema.safeParse(chapter.manuel_ref);
+    if (!parsed.success) return { pages: [] }; // no manuel link (or malformed) → hide the section
+
+    const { code, pageNumbers } = parsed.data;
+    // Map each storage path back to its page number; de-dupe defensively.
+    const pageByPath = new Map(pageNumbers.map((p) => [`${code}/${p}.webp`, p]));
+    const paths = [...pageByPath.keys()];
+
+    const { data: signed, error: signError } = await supabase.storage
+      .from(MANUEL_PAGES_BUCKET)
+      .createSignedUrls(paths, MANUEL_SIGNED_URL_TTL_SECONDS);
+    if (signError || !signed) {
+      logger.warn("quest.getManuelPageUrls: failed to sign manuel page urls", {
+        chapterId: data.chapterId,
+      });
+      return { pages: [] };
+    }
+
+    const pages: ManuelPage[] = signed
+      .flatMap((s) => {
+        if (s.error || !s.signedUrl || !s.path) return [];
+        const page = pageByPath.get(s.path);
+        return page ? [{ page, url: s.signedUrl }] : [];
+      })
+      .sort((a, b) => a.page - b.page);
+
+    return { pages };
   });
 
 // ---------- Public practice correction (anonymous-capable) ----------

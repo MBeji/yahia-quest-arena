@@ -2,7 +2,13 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { exerciseSchema, questionSchema, subjectMetaSchema } from "../schema.ts";
+import {
+  chapterMetaSchema,
+  exerciseSchema,
+  parseManuelPages,
+  questionSchema,
+  subjectMetaSchema,
+} from "../schema.ts";
 import { ContentValidationError, loadAllSubjects, loadSubject } from "../loader.ts";
 import {
   buildMigrationSql,
@@ -172,6 +178,52 @@ describe("schema validation", () => {
   });
 });
 
+describe("manuel page mapping", () => {
+  it("expands single pages, ranges, and comma lists (sorted, de-duped)", () => {
+    expect(parseManuelPages("12")).toEqual([12]);
+    expect(parseManuelPages("12-15")).toEqual([12, 13, 14, 15]);
+    expect(parseManuelPages("12-15, 18, 20-21")).toEqual([12, 13, 14, 15, 18, 20, 21]);
+    expect(parseManuelPages("20, 12, 12-13")).toEqual([12, 13, 20]);
+  });
+
+  it("throws on a descending range or a malformed token", () => {
+    expect(() => parseManuelPages("15-12")).toThrow();
+    expect(() => parseManuelPages("12-")).toThrow();
+    expect(() => parseManuelPages("abc")).toThrow();
+  });
+
+  it("accepts a chapter with a well-formed manuel link, and makes it optional", () => {
+    expect(
+      chapterMetaSchema.safeParse({
+        title: "t",
+        description: "d",
+        displayOrder: 1,
+        manuel: { code: "103304", pages: "12-15, 18" },
+      }).success,
+    ).toBe(true);
+    // A chapter without a manuel link still validates (optional field).
+    expect(
+      chapterMetaSchema.safeParse({ title: "t", description: "d", displayOrder: 1 }).success,
+    ).toBe(true);
+  });
+
+  it("rejects a manuel with an invalid page expression or code", () => {
+    const base = { title: "t", description: "d", displayOrder: 1 };
+    expect(
+      chapterMetaSchema.safeParse({ ...base, manuel: { code: "x", pages: "15-12" } }).success,
+    ).toBe(false);
+    expect(
+      chapterMetaSchema.safeParse({ ...base, manuel: { code: "x", pages: "0" } }).success,
+    ).toBe(false);
+    expect(
+      chapterMetaSchema.safeParse({ ...base, manuel: { code: "x", pages: "abc" } }).success,
+    ).toBe(false);
+    expect(
+      chapterMetaSchema.safeParse({ ...base, manuel: { code: "bad code", pages: "12" } }).success,
+    ).toBe(false);
+  });
+});
+
 describe("deterministic ids", () => {
   it("produces a valid, stable v5 uuid", () => {
     const a = uuidV5("math/01-foo");
@@ -217,7 +269,13 @@ describe("buildMigrationSql", () => {
     chapters: [
       {
         slug: "01-foo",
-        meta: { title: "الفصل", description: "d", displayOrder: 1, sources: [] },
+        meta: {
+          title: "الفصل",
+          description: "d",
+          displayOrder: 1,
+          sources: [],
+          manuel: { code: "103304", pages: "12-15" },
+        },
         lesson: "# cours",
         summary: "## résumé",
         quiz: {
@@ -279,6 +337,30 @@ describe("buildMigrationSql", () => {
   it("stores lesson and summary on the chapter", () => {
     expect(sql).toContain("lesson_content");
     expect(sql).toContain("summary");
+  });
+
+  it("emits the chapter manuel_ref as jsonb with expanded page numbers", () => {
+    expect(sql).toContain("display_order, manuel_ref) VALUES");
+    expect(sql).toContain('"code":"103304"');
+    expect(sql).toContain('"pages":"12-15"');
+    expect(sql).toContain('"pageNumbers":[12,13,14,15]');
+    expect(sql).toContain("manuel_ref = EXCLUDED.manuel_ref");
+  });
+
+  it("emits manuel_ref NULL for a chapter without a manuel link", () => {
+    const noManuel = buildMigrationSql({
+      meta: subject.meta,
+      chapters: [
+        {
+          ...subject.chapters[0],
+          meta: { title: "t", description: "d", displayOrder: 1, sources: [] },
+        },
+      ],
+    });
+    // Column is always present; the value is the SQL literal NULL (no payload).
+    expect(noManuel).toContain("display_order, manuel_ref) VALUES");
+    expect(noManuel).toMatch(/, 1, NULL\)/);
+    expect(noManuel).not.toContain('"code":');
   });
 
   it("prunes stale admin content without touching parent content", () => {

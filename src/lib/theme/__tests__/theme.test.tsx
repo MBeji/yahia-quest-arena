@@ -4,11 +4,11 @@ import { ThemeProvider, useTheme } from "@/lib/theme";
 import { isTheme, themeFromCookieHeader, DEFAULT_THEME } from "@/lib/theme/context";
 
 function TestConsumer() {
-  const { theme, setTheme, toggleTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   return (
     <div>
       <span data-testid="theme">{theme}</span>
-      <button data-testid="toggle" onClick={() => toggleTheme()} />
+      <button data-testid="set-reference" onClick={() => setTheme("reference")} />
       <button data-testid="set-light" onClick={() => setTheme("light")} />
       <button data-testid="set-dark" onClick={() => setTheme("dark")} />
     </div>
@@ -27,13 +27,14 @@ function clearCookies() {
 function resetThemeState() {
   localStorage.clear();
   clearCookies();
-  document.documentElement.classList.remove("dark", "light");
+  document.documentElement.classList.remove("dark", "light", "reference");
 }
 
 describe("theme context helpers", () => {
-  it("isTheme accepts only the two known themes", () => {
+  it("isTheme accepts only the three known themes", () => {
     expect(isTheme("dark")).toBe(true);
     expect(isTheme("light")).toBe(true);
+    expect(isTheme("reference")).toBe(true);
     expect(isTheme("solarized")).toBe(false);
     expect(isTheme(null)).toBe(false);
     expect(isTheme(undefined)).toBe(false);
@@ -42,6 +43,7 @@ describe("theme context helpers", () => {
   it("themeFromCookieHeader parses the theme cookie", () => {
     expect(themeFromCookieHeader("xp-scholars-theme=light")).toBe("light");
     expect(themeFromCookieHeader("foo=bar; xp-scholars-theme=dark; baz=1")).toBe("dark");
+    expect(themeFromCookieHeader("xp-scholars-theme=reference")).toBe("reference");
   });
 
   it("themeFromCookieHeader falls back to the default", () => {
@@ -56,17 +58,17 @@ describe("ThemeProvider", () => {
   beforeEach(resetThemeState);
   afterEach(resetThemeState);
 
-  it("defaults to the dark theme", () => {
+  it("defaults to the reference theme", () => {
     render(
       <ThemeProvider>
         <TestConsumer />
       </ThemeProvider>,
     );
-    expect(screen.getByTestId("theme").textContent).toBe("dark");
-    expect(document.documentElement.classList.contains("dark")).toBe(true);
+    expect(screen.getByTestId("theme").textContent).toBe("reference");
+    expect(document.documentElement.classList.contains("reference")).toBe(true);
   });
 
-  it("toggles between dark and light and reflects the <html> class", () => {
+  it("switches between the three themes and reflects a single <html> class", () => {
     render(
       <ThemeProvider>
         <TestConsumer />
@@ -74,18 +76,26 @@ describe("ThemeProvider", () => {
     );
 
     act(() => {
-      fireEvent.click(screen.getByTestId("toggle"));
+      fireEvent.click(screen.getByTestId("set-light"));
     });
     expect(screen.getByTestId("theme").textContent).toBe("light");
     expect(document.documentElement.classList.contains("light")).toBe(true);
+    expect(document.documentElement.classList.contains("reference")).toBe(false);
     expect(document.documentElement.classList.contains("dark")).toBe(false);
 
     act(() => {
-      fireEvent.click(screen.getByTestId("toggle"));
+      fireEvent.click(screen.getByTestId("set-dark"));
     });
     expect(screen.getByTestId("theme").textContent).toBe("dark");
     expect(document.documentElement.classList.contains("dark")).toBe(true);
     expect(document.documentElement.classList.contains("light")).toBe(false);
+
+    act(() => {
+      fireEvent.click(screen.getByTestId("set-reference"));
+    });
+    expect(screen.getByTestId("theme").textContent).toBe("reference");
+    expect(document.documentElement.classList.contains("reference")).toBe(true);
+    expect(document.documentElement.classList.contains("dark")).toBe(false);
   });
 
   it("persists the chosen theme to localStorage and cookie", () => {
@@ -118,7 +128,7 @@ describe("ThemeProvider", () => {
   });
 
   it("restores the theme from the cookie when localStorage is empty", () => {
-    document.cookie = "xp-scholars-theme=light; path=/";
+    document.cookie = "xp-scholars-theme=dark; path=/";
 
     render(
       <ThemeProvider>
@@ -126,7 +136,7 @@ describe("ThemeProvider", () => {
       </ThemeProvider>,
     );
 
-    expect(screen.getByTestId("theme").textContent).toBe("light");
+    expect(screen.getByTestId("theme").textContent).toBe("dark");
   });
 
   it("falls back to the default for an invalid stored theme", () => {
@@ -138,7 +148,7 @@ describe("ThemeProvider", () => {
       </ThemeProvider>,
     );
 
-    expect(screen.getByTestId("theme").textContent).toBe("dark");
+    expect(screen.getByTestId("theme").textContent).toBe("reference");
   });
 
   it("setTheme applies the requested theme directly", () => {
@@ -154,8 +164,8 @@ describe("ThemeProvider", () => {
     expect(screen.getByTestId("theme").textContent).toBe("dark");
 
     act(() => {
-      fireEvent.click(screen.getByTestId("set-light"));
+      fireEvent.click(screen.getByTestId("set-reference"));
     });
-    expect(screen.getByTestId("theme").textContent).toBe("light");
+    expect(screen.getByTestId("theme").textContent).toBe("reference");
   });
 });

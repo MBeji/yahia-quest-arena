@@ -203,6 +203,13 @@ These are paid-for lessons; violating them re-breaks production or the gate.
   green pgTAP run (`db-tests.yml`) and keep the explicit `baseline_table_grants` intact.
 - **`content:qa:strict` lives in `ci:verify`, not `ci.yml`.** The in-session
   `ci:verify` you run already covers it — don't assume the PR's `ci.yml` did.
+- **Upgrades never re-author content.** If a bump touches the content pipeline
+  (`src/shared/content/**`, `scripts/content/**`, the Zod schema), keep behaviour
+  identical: the **combined-source rule** for school content — official CNP =
+  **teacher guide + manuel élève** (student textbook = indispensable complement;
+  one source ⇒ reference, several ⇒ combine all), defined in `content-ecole-tn`
+  and its `programmes-officiels/` README — must still hold. A migration that would
+  weaken or drop it is **out of scope** for an upgrade; flag it, don't absorb it.
 
 ## Division of labour (skill vs workflow)
 

@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: حواسّي وأعضائي",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "بأيّ عضوٍ نسمع الأصوات؟",
+      "options": [
+        { "id": "a", "text": "العين" },
+        { "id": "b", "text": "الأذن" },
+        { "id": "c", "text": "اللسان" },
+        { "id": "d", "text": "الأنف" }
+      ],
+      "correctOption": "b",
+      "explanation": "الأذن هي عضو السمع، نسمع بها الأصوات.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "نُدرك رائحة الورد بحاسّة…",
+      "options": [
+        { "id": "a", "text": "الشمّ" },
+        { "id": "b", "text": "السمع" },
+        { "id": "c", "text": "الذوق" },
+        { "id": "d", "text": "الإبصار" }
+      ],
+      "correctOption": "a",
+      "explanation": "الشمّ حاسّةٌ عضوها الأنف، نُدرك بها الروائح مثل رائحة الورد.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "الجلد هو عضو حاسّة…",
+      "options": [
+        { "id": "a", "text": "الذوق" },
+        { "id": "b", "text": "السمع" },
+        { "id": "c", "text": "اللمس" },
+        { "id": "d", "text": "الشمّ" }
+      ],
+      "correctOption": "c",
+      "explanation": "الجلد عضو اللمس، نُحسّ به الملمس والحرارة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أيّ حاسّةٍ نستعملها لنعرف لون الثوب؟",
+      "options": [
+        { "id": "a", "text": "السمع" },
+        { "id": "b", "text": "اللمس" },
+        { "id": "c", "text": "الشمّ" },
+        { "id": "d", "text": "الإبصار" }
+      ],
+      "correctOption": "d",
+      "explanation": "نعرف الألوان بحاسّة الإبصار، وعضوها العين.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما الذي يحمي حاسّة الإبصار؟",
+      "options": [
+        { "id": "a", "text": "القراءة في الظلام" },
+        { "id": "b", "text": "القراءة في ضوءٍ كافٍ" },
+        { "id": "c", "text": "الاقتراب كثيرًا من الشاشة" },
+        { "id": "d", "text": "النظر إلى الشمس مباشرة" }
+      ],
+      "correctOption": "b",
+      "explanation": "القراءة في ضوءٍ كافٍ تريح العين وتحمي الإبصار، أمّا الظلام فيُتعبها.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "انظر إلى هذا العضو. ما الحاسّة التي يقوم بها؟ <svg viewBox=\"0 0 120 80\" xmlns=\"http://www.w3.org/2000/svg\"><ellipse cx=\"60\" cy=\"40\" rx=\"46\" ry=\"24\" fill=\"#ffffff\" stroke=\"#1f2937\" stroke-width=\"3\"/><circle cx=\"60\" cy=\"40\" r=\"18\" fill=\"#34d399\" stroke=\"#1f2937\" stroke-width=\"2\"/><circle cx=\"60\" cy=\"40\" r=\"7\" fill=\"#1f2937\"/></svg>",
+      "options": [
+        { "id": "a", "text": "السمع" },
+        { "id": "b", "text": "الشمّ" },
+        { "id": "c", "text": "الإبصار" },
+        { "id": "d", "text": "الذوق" }
+      ],
+      "correctOption": "c",
+      "explanation": "الصورة عينٌ، وهي عضو الإبصار الذي نرى به الأشكال والألوان.",
+      "difficulty": 2
+    }
+  ]
+}

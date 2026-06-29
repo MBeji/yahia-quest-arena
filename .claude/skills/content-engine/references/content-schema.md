@@ -27,19 +27,19 @@ content/
 
 ## subject.json
 
-| Field             | Type         | Required    | Constraint                                                                           |
-| ----------------- | ------------ | ----------- | ------------------------------------------------------------------------------------ |
-| `id`              | string       | yes         | kebab-case `^[a-z][a-z0-9-]*$`, unique. Becomes `subjects.id` literally              |
+| Field             | Type         | Required    | Constraint                                                                                                                                                                                              |
+| ----------------- | ------------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`              | string       | yes         | kebab-case `^[a-z][a-z0-9-]*$`, unique. Becomes `subjects.id` literally                                                                                                                                 |
 | `nameFr`          | string       | yes         | non-empty. The only display name — write it in the subject's **own `contentLanguage`** (ar→`الرياضيات`, en→`English`, fr→`Français`). Field name is legacy (DB compat); the value is native, not French |
-| `description`     | string       | yes         | non-empty                                                                            |
-| `attribute`       | string       | yes         | non-empty (RPG attribute label, e.g. "Force", "Logique")                             |
-| `colorToken`      | string       | yes         | non-empty, maps to a CSS var (e.g. `subject-math`)                                   |
-| `icon`            | string       | yes         | non-empty, a lucide icon name (e.g. `GraduationCap`)                                 |
-| `displayOrder`    | number       | yes         | positive integer                                                                     |
-| `contentLanguage` | enum         | yes         | `"ar"` \| `"fr"` \| `"en"` — the one language the content is written in (drives RTL) |
-| `themeId`         | string       | yes         | kebab-case, FK → an existing `themes.id` (see themes-and-trilingual.md)              |
-| `gradeSlug`       | string\|null | no (→null)  | school subjects only (e.g. `9eme-base`); `null` for standalone themes                |
-| `isPremium`       | boolean      | no (→false) | **legacy/secondary** — premium is now decided **per parcours**, not by this flag     |
+| `description`     | string       | yes         | non-empty                                                                                                                                                                                               |
+| `attribute`       | string       | yes         | non-empty (RPG attribute label, e.g. "Force", "Logique")                                                                                                                                                |
+| `colorToken`      | string       | yes         | non-empty, maps to a CSS var (e.g. `subject-math`)                                                                                                                                                      |
+| `icon`            | string       | yes         | non-empty, a lucide icon name (e.g. `GraduationCap`)                                                                                                                                                    |
+| `displayOrder`    | number       | yes         | positive integer                                                                                                                                                                                        |
+| `contentLanguage` | enum         | yes         | `"ar"` \| `"fr"` \| `"en"` — the one language the content is written in (drives RTL)                                                                                                                    |
+| `themeId`         | string       | yes         | kebab-case, FK → an existing `themes.id` (see themes-and-trilingual.md)                                                                                                                                 |
+| `gradeSlug`       | string\|null | no (→null)  | school subjects only (e.g. `9eme-base`); `null` for standalone themes                                                                                                                                   |
+| `isPremium`       | boolean      | no (→false) | **legacy/secondary** — premium is now decided **per parcours**, not by this flag                                                                                                                        |
 
 There is **no** `nameEn`/`nameAr` — `nameFr` is the single display-name field, and you write it in the
 subject's `contentLanguage` (the "Fr" in the name is legacy only). There is **no** per-language text
@@ -53,14 +53,35 @@ anywhere else.
 
 ## chapter.json
 
-| Field          | Type     | Required | Constraint                                                             |
-| -------------- | -------- | -------- | ---------------------------------------------------------------------- |
-| `title`        | string   | yes      | non-empty (in the subject's language)                                  |
-| `description`  | string   | yes      | non-empty                                                              |
-| `displayOrder` | number   | yes      | positive integer                                                       |
-| `sources`      | string[] | no (→[]) | each ref ≥3 chars — URLs/citations you actually used (hybrid sourcing) |
+| Field          | Type     | Required | Constraint                                                                            |
+| -------------- | -------- | -------- | ------------------------------------------------------------------------------------- |
+| `title`        | string   | yes      | non-empty (in the subject's language)                                                 |
+| `description`  | string   | yes      | non-empty                                                                             |
+| `displayOrder` | number   | yes      | positive integer                                                                      |
+| `sources`      | string[] | no (→[]) | each ref ≥3 chars — URLs/citations you actually used (hybrid sourcing)                |
+| `manuel`       | object   | no       | `{ code, pages }` — official student-textbook pages covering this chapter (see below) |
 
 `cours.md` and `resume.md` are separate files, not fields.
+
+### `manuel` — official student-textbook (manuel élève) pages
+
+For school content (`content-ecole-tn`), a chapter MAY link to the pages of the **official CNP
+student textbook** that cover it, so the app can show them under the course (login-gated
+"Pages du manuel" gallery). Shape:
+
+```json
+"manuel": { "code": "103304", "pages": "12-15" }
+```
+
+| Field   | Type   | Constraint                                                                                                            |
+| ------- | ------ | --------------------------------------------------------------------------------------------------------------------- |
+| `code`  | string | alphanumeric `[A-Za-z0-9_-]+` — the CNP **manuel élève** book code (not the teacher guide)                            |
+| `pages` | string | 1-based page expression: a single page, an inclusive range, or a comma list — `"12"`, `"12-15"`, `"12-15, 18, 20-21"` |
+
+The build expands `pages` into a sorted, de-duplicated `pageNumbers[]` and stores
+`{ code, pages, pageNumbers }` in `chapters.manuel_ref` (JSONB). Optional and additive — omit it
+when the mapping is unknown. The page **images** are served from a separate access-controlled
+bucket; this field carries only the metadata.
 
 ## Question object (shared by quiz.json and exercise files)
 
@@ -99,11 +120,16 @@ Rules for authoring figures:
 - **Always set a `viewBox`** (e.g. `viewBox="0 0 100 100"`) and **do not rely on `width`/`height`
   attributes** for sizing — the renderer controls the on-screen size. A `viewBox`-less SVG has no
   aspect ratio and collapses.
-- **Ink dark on the white paper.** Draw with dark, opaque strokes/fills — `currentColor` (preferred:
-  it inherits the dark default text colour), `#1f2937`, `#222`, `#0f172a`, or other saturated/dark
-  hues. **Never make the figure's primary marks white or near-white** (`#fff`, very light greys/
-  pastels): on the white surface they are invisible. Light tones are fine only as _fills inside_
-  dark-outlined shapes, never as the only ink.
+- **Dark ink on the white paper for outlines.** Draw strokes/outlines with dark, opaque ink —
+  `currentColor` (preferred: it inherits the dark default text colour), `#1f2937`, `#222`, `#0f172a`.
+  **Never make the figure's primary marks white or near-white** (`#fff`, very light greys/pastels):
+  on the white surface they are invisible.
+- **Colour is encouraged — especially for young grades.** Fills survive sanitization and render in
+  colour, so fill shapes with bright, saturated hues _inside_ their dark outlines (a green tree, an
+  orange fish, a yellow sun, a red apple, a blue water drop). The only rule is **colour fills, dark
+  outline** — keep a dark `stroke` so every shape stays legible on the white paper. For primary
+  (≈ 1ère–3ème) prefer playful, recognizable, colourful illustrations over bare grey geometry; for
+  abstract geometry (angles, axes, number lines, older maths) neutral dark ink is fine.
 - **One `<svg>` per field.** A figure-only option is just its `<svg>` (no text needed); a stimulus is
   `prompt` text + one `<svg>`.
 - Keep figures compact and legible (a `viewBox` around `0 0 100 100`–ish, explicit dark `stroke`/`fill`,

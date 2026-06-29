@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: أصطاد أوّل صوت",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "ما هذا الحرف؟ <svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"108\" height=\"108\" rx=\"16\" fill=\"#bfdbfe\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"60\" y=\"86\" font-size=\"72\" text-anchor=\"middle\" fill=\"#1d4ed8\" stroke=\"none\">ن</text></svg>",
+      "options": [
+        { "id": "a", "text": "الحرف ن" },
+        { "id": "b", "text": "الحرف ب" },
+        { "id": "c", "text": "الحرف ت" },
+        { "id": "d", "text": "الحرف ل" }
+      ],
+      "correctOption": "a",
+      "explanation": "هذا هو الحرف ن، وفوقه نقطةٌ واحدة، وصوته «نـْ» كما في كلمة نجمة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما هذا الحرف؟ <svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"108\" height=\"108\" rx=\"16\" fill=\"#fed7aa\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"60\" y=\"86\" font-size=\"72\" text-anchor=\"middle\" fill=\"#c2410c\" stroke=\"none\">ك</text></svg>",
+      "options": [
+        { "id": "a", "text": "الحرف ل" },
+        { "id": "b", "text": "الحرف ك" },
+        { "id": "c", "text": "الحرف م" },
+        { "id": "d", "text": "الحرف ن" }
+      ],
+      "correctOption": "b",
+      "explanation": "هذا هو الحرف ك، وصوته «كـْ» كما في كلمة كرة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "بأيّ حرفٍ تبدأ هذه الكلمة؟ <svg viewBox=\"0 0 120 130\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M52 44 l16 0 l-4 60 q-4 10 -8 0 z\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M60 44 q-2 -14 -16 -16\" fill=\"#22c55e\" stroke=\"#1f2937\" stroke-width=\"2\"/><path d=\"M60 44 q2 -16 16 -16\" fill=\"#22c55e\" stroke=\"#1f2937\" stroke-width=\"2\"/><line x1=\"54\" y1=\"60\" x2=\"66\" y2=\"60\" stroke=\"#1f2937\" stroke-width=\"2\"/><line x1=\"53\" y1=\"74\" x2=\"65\" y2=\"74\" stroke=\"#1f2937\" stroke-width=\"2\"/></svg>",
+      "options": [
+        { "id": "a", "text": "الحرف م" },
+        { "id": "b", "text": "الحرف ل" },
+        { "id": "c", "text": "الحرف ج" },
+        { "id": "d", "text": "الحرف ب" }
+      ],
+      "correctOption": "c",
+      "explanation": "هذا جزر، وأوّل صوتٍ فيه «جـْ»، فهو يبدأ بالحرف ج.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "بأيّ حرفٍ تبدأ كلمة «وردة»؟",
+      "options": [
+        { "id": "a", "text": "الحرف م" },
+        { "id": "b", "text": "الحرف د" },
+        { "id": "c", "text": "الحرف ر" },
+        { "id": "d", "text": "الحرف و" }
+      ],
+      "correctOption": "d",
+      "explanation": "أوّل صوتٍ في كلمة وردة هو «وْ»، فهي تبدأ بالحرف و.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "بأيّ حرفٍ تبدأ هذه الكلمة؟ <svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M60 12 l13 30 l33 3 l-25 22 l8 33 l-29 -18 l-29 18 l8 -33 l-25 -22 l33 -3 z\" fill=\"#facc15\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>",
+      "options": [
+        { "id": "a", "text": "الحرف ن" },
+        { "id": "b", "text": "الحرف م" },
+        { "id": "c", "text": "الحرف س" },
+        { "id": "d", "text": "الحرف ت" }
+      ],
+      "correctOption": "a",
+      "explanation": "هذه نجمة، وأوّل صوتٍ فيها «نـْ»، فهي تبدأ بالحرف ن.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "بأيّ حرفٍ تبدأ كلمة «هلال»؟",
+      "options": [
+        { "id": "a", "text": "الحرف ل" },
+        { "id": "b", "text": "الحرف ه" },
+        { "id": "c", "text": "الحرف م" },
+        { "id": "d", "text": "الحرف ع" }
+      ],
+      "correctOption": "b",
+      "explanation": "أوّل صوتٍ في كلمة هلال هو «هـْ»، فهي تبدأ بالحرف ه.",
+      "difficulty": 2
+    }
+  ]
+}

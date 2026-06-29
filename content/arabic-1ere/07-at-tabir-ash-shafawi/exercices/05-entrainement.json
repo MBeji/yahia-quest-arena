@@ -1,0 +1,82 @@
+{
+  "title": "📝 تدريب ⭐⭐⭐: مراجعة شاملة للكلام",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "ما اسم هذه الصورة؟ <svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><g stroke=\"#1f2937\" stroke-width=\"3\"><ellipse cx=\"60\" cy=\"40\" rx=\"12\" ry=\"16\" fill=\"#ef4444\"/><ellipse cx=\"40\" cy=\"50\" rx=\"12\" ry=\"16\" fill=\"#ef4444\"/><ellipse cx=\"80\" cy=\"50\" rx=\"12\" ry=\"16\" fill=\"#ef4444\"/><ellipse cx=\"48\" cy=\"66\" rx=\"12\" ry=\"16\" fill=\"#ef4444\"/><ellipse cx=\"72\" cy=\"66\" rx=\"12\" ry=\"16\" fill=\"#ef4444\"/></g><circle cx=\"60\" cy=\"54\" r=\"11\" fill=\"#facc15\" stroke=\"#1f2937\" stroke-width=\"3\"/><line x1=\"60\" y1=\"64\" x2=\"60\" y2=\"108\" stroke=\"#16a34a\" stroke-width=\"4\"/><path d=\"M60 86 q16 -2 22 -14 q-16 0 -22 14 z\" fill=\"#22c55e\" stroke=\"#1f2937\" stroke-width=\"2\"/></svg>",
+      "options": [
+        { "id": "a", "text": "شمس" },
+        { "id": "b", "text": "تفّاحة" },
+        { "id": "c", "text": "وردة" },
+        { "id": "d", "text": "سمكة" }
+      ],
+      "correctOption": "c",
+      "explanation": "في الصورة وردةٌ لها أوراقٌ وساقٌ خضراء وورقة، فاسمها «وردة».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ماذا تقول لأصدقائك عند دخول الملعب صباحًا؟",
+      "options": [
+        { "id": "a", "text": "صباح الخير" },
+        { "id": "b", "text": "تصبحون على خير" },
+        { "id": "c", "text": "مع السلامة" },
+        { "id": "d", "text": "آسف" }
+      ],
+      "correctOption": "a",
+      "explanation": "تحيّة الصباح هي «صباح الخير». أمّا «تصبحون على خير» فتُقال عند النوم في الليل.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أيّ كلمةٍ تُكمل الجملة: «العصفور ...»؟",
+      "options": [
+        { "id": "a", "text": "يموء" },
+        { "id": "b", "text": "يسبح" },
+        { "id": "c", "text": "يقرأ" },
+        { "id": "d", "text": "يطير" }
+      ],
+      "correctOption": "d",
+      "explanation": "العصفور له جناحان فهو «يطير». المُواء للقطّة، والسباحة للسمكة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما لون قطرة الماء؟ <svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M60 24 q-14 24 -14 40 q0 22 28 22 q28 0 28 -22 q0 -16 -14 -40 q-7 -12 -14 -12 q-7 0 -14 12 z\" fill=\"#38bdf8\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>",
+      "options": [
+        { "id": "a", "text": "أحمر" },
+        { "id": "b", "text": "أزرق" },
+        { "id": "c", "text": "أصفر" },
+        { "id": "d", "text": "أخضر" }
+      ],
+      "correctOption": "b",
+      "explanation": "قطرة الماء في الصورة زرقاء، فلونها «أزرق». الكلمة التي تصف الشيء قد تدلّ على لونه.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما اسم هذه الصورة؟ <svg viewBox=\"0 0 140 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M24 60 q26 -30 70 -16 q22 8 22 16 q0 8 -22 16 q-44 14 -70 -16 z\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M94 44 l24 16 l-24 16 z\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><circle cx=\"44\" cy=\"54\" r=\"4\" fill=\"#1f2937\" stroke=\"none\"/></svg>",
+      "options": [
+        { "id": "a", "text": "قطّة" },
+        { "id": "b", "text": "عصفور" },
+        { "id": "c", "text": "سمكة" },
+        { "id": "d", "text": "وردة" }
+      ],
+      "correctOption": "c",
+      "explanation": "في الصورة سمكةٌ لها ذيلٌ تعيش في الماء، فاسمها «سمكة». الفخّ الشائع هو الخلط مع العصفور؛ لكنّ الذيل وغياب الجناح علامة السمكة.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ساعدك زميلك في حمل حقيبتك. ماذا تقول له؟",
+      "options": [
+        { "id": "a", "text": "شكرًا" },
+        { "id": "b", "text": "صباح الخير" },
+        { "id": "c", "text": "تصبح على خير" },
+        { "id": "d", "text": "آسف" }
+      ],
+      "correctOption": "a",
+      "explanation": "عندما يصنع أحدٌ لك معروفًا تشكره وتقول «شكرًا». الفخّ الشائع هو قول «آسف»، لكنّها تُقال عند الاعتذار لا عند الشكر.",
+      "difficulty": 3
+    }
+  ]
+}
