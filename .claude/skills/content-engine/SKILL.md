@@ -146,6 +146,15 @@ CNP corpus (student manuels + teacher guides) indexed under
 `content-ecole-tn/references/programmes-officiels/` (see that folder's README; the school-specific Taybah
 files there are a secondary cross-check), so defer to `content-ecole-tn` for school work.
 
+**Source-combination rule (whenever a unit has more than one authoritative source).** Use **all**
+available sources, combined — a single available source is the reference; **several ⇒ combine them all**,
+never drop one. The instantiation that matters most is school content: the official CNP sources are the
+**teacher guide** (program: scope/progression/bornes) **and** the **manuel élève** (student textbook:
+lessons, examples, exercises, depth) — the manuel élève is an **indispensable complement**, not optional,
+at every grade. On a scope divergence the higher-authority source wins (for `ecole-tn`, the teacher
+guide). The mechanics live in `content-ecole-tn` and its `programmes-officiels/` README — defer there for
+school work; this is the shared principle every program skill follows when its track has multiple sources.
+
 ## Report format
 
 When done, report: the subject(s)/chapter(s)/files created, languages produced, question counts,

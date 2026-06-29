@@ -7,16 +7,27 @@ La **référence ultime (single source of truth)** pour le scope des cours et ex
 officiels + guides de l'enseignant). Les fichiers d'école (Taybah) servent de **vérification** et de
 **complément de détail / séquençage** — **jamais** à contredire ni restreindre le scope CNP.
 
+> **⭐ Sources officielles combinées (à TOUS les niveaux).** Une source CNP n'est pas le seul guide
+> enseignant : le **manuel élève** est un **complément INDISPENSABLE** au guide pour un contenu plus complet
+> et de meilleure qualité. **Guide enseignant** = le programme (scope, compétences, progression, bornes) ;
+> **manuel élève** = le contenu réellement enseigné (leçons, exemples, exercices, profondeur, vocabulaire en
+> situation). **Règle de combinaison** : une seule source disponible ⇒ elle fait référence ; **plusieurs
+> sources ⇒ les combiner toutes** (jamais ignorer le manuel élève quand il existe). En cas de divergence de
+> scope, le guide enseignant fait foi ; signaler l'écart. Cette règle vaut pour les **deux couches** :
+> persistance (transcription `programme/…`) **et** génération/audit.
+
 ### Précédence (à suivre par les skills `content-ecole-tn` / `content-cours` / `content-audit`)
 
 Pour un couple **(niveau, matière)** :
 
-0. **`programme/<niveau>/<matière>.md` (transcription) = source de scope de référence — À LIRE EN PREMIER**,
-   si elle existe : transcription **fidèle** du guide enseignant, en texte structuré (plus besoin de relire
-   les scans). Spec : [`programme/README.md`](programme/README.md) · work-list : [`programme/_INDEX.md`](programme/_INDEX.md).
-1. **Corpus CNP (scans) = autorité ultime + fallback** pour les couples non encore transcrits. Le **guide
-   enseignant** (guide méthodologique / الدليل المرجعي) = le **programme** (compétences, progression) ; le
-   **manuel élève** = contenu/exemples. Render→vision. Toute transcription reste **revérifiable ici**.
+0. **`programme/<niveau>/<matière>.md` (transcription) = source de scope + de contenu de référence — À LIRE
+   EN PREMIER**, si elle existe : transcription **fidèle et combinée** du guide enseignant **et** du manuel
+   élève, en texte structuré (plus besoin de relire les scans). Spec : [`programme/README.md`](programme/README.md)
+   · work-list : [`programme/_INDEX.md`](programme/_INDEX.md).
+1. **Corpus CNP (scans) = autorité ultime + fallback** pour les couples non encore transcrits. **Deux sources
+   à lire et combiner** : le **guide enseignant** (guide méthodologique / الدليل المرجعي) = le **programme**
+   (compétences, progression, bornes) ; le **manuel élève** = contenu/exemples/exercices/profondeur.
+   Render→vision **les deux**. Toute transcription reste **revérifiable ici**.
 2. **Fichiers école (Taybah) = vérification + séquençage par trimestre + complément de détail.** Signaler
    les divergences ; ne jamais sortir du scope CNP pour suivre l'école.
 3. **Web** (tadris.tn, tunisiecollege.net) seulement pour combler un manque ponctuel.
@@ -38,8 +49,11 @@ Pour un couple **(niveau, matière)** :
   couche-texte cassée (mojibake) → `pdftotext` est **inutile**. On **rasterise en PNG puis on lit en vision**
   (outil Read). Helper :
   **`bash cnp-officiel/render.sh <pdf> <p_début> <p_fin> [dpi]`** → écrit `cnp-officiel/_render/<nom>-NNN.png`
-  à ouvrir avec l'outil Read. (poppler installé sous `YahiaAcademy/_tools/poppler/`.) Le **guide enseignant**
-  porte le **programme détaillé** (compétences, progression) — c'est la pièce à lire en priorité pour le scope.
+  à ouvrir avec l'outil Read. (poppler installé sous `YahiaAcademy/_tools/poppler/`.) Lire **les deux sources
+  et les combiner** : le **guide enseignant** porte le **programme détaillé** (compétences, progression,
+  bornes — la pièce à lire en priorité pour le **scope**) ; le **manuel élève** porte le **contenu** (leçons,
+  exemples, exercices, profondeur) — complément **indispensable** pour un contenu complet. Une seule source
+  dispo ⇒ référence ; plusieurs ⇒ combiner (cf. « Sources officielles combinées » ci-dessus).
 - **Re-télécharger / compléter** : `bash cnp-officiel/_dl-manuels.sh` (résumable, met à jour les index).
 
 ## 🏫 Fichiers école (vérification / séquençage) — Taybah Primaire
@@ -82,12 +96,12 @@ matière **suffixée par le niveau** (les ids bruts `math`/`arabic`/… sont ceu
 Le contenu doit « parler » à l'âge de l'élève. Calibrer **longueur de phrase, vocabulaire, densité de
 figures et ton** par tranche :
 
-| Niveaux                 | Âge                       | Calibrage                                                                                                                                                                                  |
-| ----------------------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **1ère–2ème**           | ≈ 6-8 ans, peu-lecteurs   | Phrases **très courtes** (5-10 mots), vocabulaire concret du quotidien, **une figure SVG par question** (compter, comparer, associer image↔nombre/mot). Aucun paragraphe dense.            |
-| **3ème–5ème**           | ≈ 8-11 ans                | Phrases courtes, **un** raisonnement à la fois, figures fréquentes (géométrie/sciences), exemple concret avant la règle.                                                                   |
-| **6ème–9ème (collège)** | ≈ 11-15 ans               | Registre scolaire standard, vocabulaire disciplinaire, figures là où elles aident (géométrie, schémas).                                                                                    |
-| **Secondaire / Bac**    | ≈ 15-18 ans               | Rigueur et terminologie d'examen, démarches complètes, phrasé proche des annales.                                                                                                          |
+| Niveaux                 | Âge                     | Calibrage                                                                                                                                                                       |
+| ----------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1ère–2ème**           | ≈ 6-8 ans, peu-lecteurs | Phrases **très courtes** (5-10 mots), vocabulaire concret du quotidien, **une figure SVG par question** (compter, comparer, associer image↔nombre/mot). Aucun paragraphe dense. |
+| **3ème–5ème**           | ≈ 8-11 ans              | Phrases courtes, **un** raisonnement à la fois, figures fréquentes (géométrie/sciences), exemple concret avant la règle.                                                        |
+| **6ème–9ème (collège)** | ≈ 11-15 ans             | Registre scolaire standard, vocabulaire disciplinaire, figures là où elles aident (géométrie, schémas).                                                                         |
+| **Secondaire / Bac**    | ≈ 15-18 ans             | Rigueur et terminologie d'examen, démarches complètes, phrasé proche des annales.                                                                                               |
 
 Règles transverses :
 
@@ -149,10 +163,11 @@ Pour créer ou réaligner le contenu d'un couple **(niveau, matière)** sur le C
    worktree sur `main` + jonction `node_modules` (pour que validation et hooks fonctionnent) :
    - `git worktree add -b feat/<sujet>-cnp <chemin> origin/main`
    - jonction (Windows, sans admin, PowerShell) : `New-Item -ItemType Junction -Path <chemin>\node_modules -Target <repo>\node_modules`
-2. **Lire le programme — via la transcription (PAS de scan ici)** : la source de scope est
-   **`programme/<gradeSlug>/<matière>.md`** (transcription fidèle du guide enseignant, produite **une fois**
-   par la session « couche de persistance »). La **consommer** ; établir le scope exact (notions,
-   terminologie, séquence, bornes incl./excl.). `taybah/<gradeSlug>.md` sert de **vérification** / séquençage
+2. **Lire le programme — via la transcription (PAS de scan ici)** : la source de scope **et de contenu** est
+   **`programme/<gradeSlug>/<matière>.md`** (transcription fidèle **combinant guide enseignant + manuel élève**,
+   produite **une fois** par la session « couche de persistance »). La **consommer** ; établir le scope exact
+   (notions, terminologie, séquence, bornes incl./excl.) **et** récupérer les exemples/exercices/profondeur du
+   **manuel élève** que la transcription a combinés (complément indispensable). `taybah/<gradeSlug>.md` sert de **vérification** / séquençage
    par trimestre. ⛔ **Ne PAS `render.sh`→vision les scans CNP depuis la session de génération** — le scan est
    le travail de la session de persistance (elle transcrit une fois ; on consomme, zéro double-scan). Si
    `programme/<gradeSlug>/<matière>.md` **n'existe pas encore**, le couple est **bloqué sur la couche de
@@ -160,12 +175,15 @@ Pour créer ou réaligner le contenu d'un couple **(niveau, matière)** sur le C
    contournement. **Codifier** la liste des chapitres (slug + notion, ordre du programme) dans
    **`manifest/<gradeSlug>.json`** (cf. § Manifeste) — c'est ce qui rend la couverture vérifiable.
 3. **Auditer l'existant** (si réalignement) : pour chaque chapitre → **couvert** / **manquant** /
-   **hors-programme** (notion d'un autre niveau). Vérifier avant de retirer (ex. soustraction = 2ème, pas 1ère).
+   **hors-programme** (notion d'un autre niveau) **/ plus pauvre que le manuel élève** (exemples ou profondeur
+   officiels manquants → à enrichir). Vérifier avant de retirer (ex. soustraction = 2ème, pas 1ère).
 4. **Générer / corriger** chapitre par chapitre selon **`content-engine`** :
    - `cours.md` (~50-75 l, style RPG, **figures SVG** pour le primaire, chiffres latins même en arabe),
      `resume.md` (bijection cours↔résumé), `quiz.json` (5 q, d1-2, gate), `exercices/*.json` = **missions**
      (`01-pratique` d1, `02-boss` d3, +`03-revision`/`04-defi`/`05` au besoin).
-   - ajouter les chapitres manquants, retirer/flaguer le hors-programme, **réordonner** (`displayOrder`),
+   - ajouter les chapitres manquants, retirer/flaguer le hors-programme, **enrichir** avec les exemples/
+     exercices du **manuel élève** (source combinée — ne pas livrer plus pauvre que le manuel officiel),
+     **réordonner** (`displayOrder`),
      `nameFr` natif (`الرياضيات`…). Auto-vérification (re-solve à l'aveugle, équilibre des clés, notation, golden rule).
      **Chiffres en arabe** : grouper les milliers en **U+00A0** de façon **cohérente** (options ↔ énoncés ↔
      explications) — sinon `content:qa` signale « valeur non reprise » (son extracteur de nombres coupe sur

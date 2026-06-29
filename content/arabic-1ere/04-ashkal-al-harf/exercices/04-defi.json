@@ -9,10 +9,22 @@
     {
       "prompt": "أيّ بطاقةٍ تُظهر الحرف ع في أوّل الكلمة؟",
       "options": [
-        { "id": "a", "text": "<svg viewBox=\"0 0 110 110\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"98\" height=\"98\" rx=\"16\" fill=\"#fde68a\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"55\" y=\"74\" font-size=\"54\" text-anchor=\"middle\" fill=\"#b45309\" stroke=\"none\">ـعـ</text></svg>" },
-        { "id": "b", "text": "<svg viewBox=\"0 0 110 110\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"98\" height=\"98\" rx=\"16\" fill=\"#bbf7d0\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"55\" y=\"74\" font-size=\"54\" text-anchor=\"middle\" fill=\"#15803d\" stroke=\"none\">عـ</text></svg>" },
-        { "id": "c", "text": "<svg viewBox=\"0 0 110 110\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"98\" height=\"98\" rx=\"16\" fill=\"#bfdbfe\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"55\" y=\"74\" font-size=\"54\" text-anchor=\"middle\" fill=\"#1d4ed8\" stroke=\"none\">ـع</text></svg>" },
-        { "id": "d", "text": "<svg viewBox=\"0 0 110 110\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"98\" height=\"98\" rx=\"16\" fill=\"#fbcfe8\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"55\" y=\"74\" font-size=\"54\" text-anchor=\"middle\" fill=\"#be185d\" stroke=\"none\">ع</text></svg>" }
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 110 110\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"98\" height=\"98\" rx=\"16\" fill=\"#fde68a\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"55\" y=\"74\" font-size=\"54\" text-anchor=\"middle\" fill=\"#b45309\" stroke=\"none\">ـعـ</text></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 110 110\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"98\" height=\"98\" rx=\"16\" fill=\"#bbf7d0\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"55\" y=\"74\" font-size=\"54\" text-anchor=\"middle\" fill=\"#15803d\" stroke=\"none\">عـ</text></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 110 110\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"98\" height=\"98\" rx=\"16\" fill=\"#bfdbfe\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"55\" y=\"74\" font-size=\"54\" text-anchor=\"middle\" fill=\"#1d4ed8\" stroke=\"none\">ـع</text></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 110 110\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"98\" height=\"98\" rx=\"16\" fill=\"#fbcfe8\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"55\" y=\"74\" font-size=\"54\" text-anchor=\"middle\" fill=\"#be185d\" stroke=\"none\">ع</text></svg>"
+        }
       ],
       "correctOption": "b",
       "explanation": "البطاقة (ب) فيها عـ، وهو شكل ع في أوّل الكلمة (يتّصل بما بعده فقط). أمّا ـعـ ففي الوسط، و ـع ففي الآخر، و ع منفصل.",
@@ -21,10 +33,22 @@
     {
       "prompt": "أيّ بطاقةٍ تُظهر الحرف م في آخر الكلمة؟",
       "options": [
-        { "id": "a", "text": "<svg viewBox=\"0 0 110 110\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"98\" height=\"98\" rx=\"16\" fill=\"#bbf7d0\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"55\" y=\"74\" font-size=\"54\" text-anchor=\"middle\" fill=\"#15803d\" stroke=\"none\">مـ</text></svg>" },
-        { "id": "b", "text": "<svg viewBox=\"0 0 110 110\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"98\" height=\"98\" rx=\"16\" fill=\"#fde68a\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"55\" y=\"74\" font-size=\"54\" text-anchor=\"middle\" fill=\"#b45309\" stroke=\"none\">ـمـ</text></svg>" },
-        { "id": "c", "text": "<svg viewBox=\"0 0 110 110\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"98\" height=\"98\" rx=\"16\" fill=\"#fbcfe8\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"55\" y=\"74\" font-size=\"54\" text-anchor=\"middle\" fill=\"#be185d\" stroke=\"none\">م</text></svg>" },
-        { "id": "d", "text": "<svg viewBox=\"0 0 110 110\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"98\" height=\"98\" rx=\"16\" fill=\"#bfdbfe\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"55\" y=\"74\" font-size=\"54\" text-anchor=\"middle\" fill=\"#1d4ed8\" stroke=\"none\">ـم</text></svg>" }
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 110 110\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"98\" height=\"98\" rx=\"16\" fill=\"#bbf7d0\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"55\" y=\"74\" font-size=\"54\" text-anchor=\"middle\" fill=\"#15803d\" stroke=\"none\">مـ</text></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 110 110\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"98\" height=\"98\" rx=\"16\" fill=\"#fde68a\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"55\" y=\"74\" font-size=\"54\" text-anchor=\"middle\" fill=\"#b45309\" stroke=\"none\">ـمـ</text></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 110 110\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"98\" height=\"98\" rx=\"16\" fill=\"#fbcfe8\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"55\" y=\"74\" font-size=\"54\" text-anchor=\"middle\" fill=\"#be185d\" stroke=\"none\">م</text></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 110 110\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"98\" height=\"98\" rx=\"16\" fill=\"#bfdbfe\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"55\" y=\"74\" font-size=\"54\" text-anchor=\"middle\" fill=\"#1d4ed8\" stroke=\"none\">ـم</text></svg>"
+        }
       ],
       "correctOption": "d",
       "explanation": "البطاقة (د) فيها ـم، وهو شكل م في آخر الكلمة (يتّصل بما قبله فقط) كما في عَلَم. أمّا مـ ففي الأوّل، و ـمـ ففي الوسط.",

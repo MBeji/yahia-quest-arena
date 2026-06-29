@@ -29,12 +29,24 @@ The authoritative scope is the **national CNP program**. It is now **transcribed
 dedicated session, so generation **consumes that transcription instead of re-reading the scans**.
 Start with the index at [`references/programmes-officiels/`](references/programmes-officiels/) → its
 [`README.md`](references/programmes-officiels/README.md) (precedence policy, CNP-corpus location +
-`CATALOGUE.md`, subject-`id` convention). Precedence, for any grade+subject:
+`CATALOGUE.md`, subject-`id` convention).
+
+> **⭐ Combined official sources (every grade).** A CNP unit is **not** just the teacher guide: the
+> **manuel élève** (student textbook) is an **indispensable complement** to the teacher guide for fuller,
+> higher-quality content. **Teacher guide** = the program (scope, compétences, progression, bornes);
+> **manuel élève** = the content actually taught (lessons, examples, exercises, depth, vocabulary in
+> context). **Combination rule** (both layers — persistence transcription **and** generation): one source
+> available ⇒ it is the reference; **several ⇒ combine them all** (never ignore the manuel élève when it
+> exists). On a scope divergence, the teacher guide wins; flag the gap. The transcription you consume below
+> already merges both — so generation inherits the combined content.
+
+Precedence, for any grade+subject:
 
 1. **Programme transcription — READ FIRST** —
    `references/programmes-officiels/programme/<gradeSlug>/<matière>.md`, if it exists: a faithful,
-   structured transcription of the teacher guide (scope, محاور, progression, in/out-of-scope bornes).
-   **This is the scope source for generation.** Spec + work-list:
+   structured transcription **combining the teacher guide (scope, محاور, progression, in/out-of-scope
+   bornes) AND the manuel élève (lessons, examples, exercises, depth)**. **This is the scope + content
+   source for generation.** Spec + work-list:
    [`programme/README.md`](references/programmes-officiels/programme/README.md) ·
    [`programme/_INDEX.md`](references/programmes-officiels/programme/_INDEX.md).
    ⛔ **Do NOT render→vision the CNP scans from the generation track** — scanning is owned by the
@@ -43,9 +55,10 @@ Start with the index at [`references/programmes-officiels/`](references/programm
    persistence layer**: check `programme/_INDEX.md` and request/await its transcription — never scan as a
    workaround.
 2. **CNP corpus scans** (`YahiaAcademy/cnp-officiel/`, sibling of the repo) — the **ultimate authority**
-   and the source the transcription is made from (student **manuel** = content/scope; **teacher guide** /
-   الدليل المرجعي = program; `CATALOGUE.md` maps grade×subject → file). Re-verifiable here via the
-   transcription's cited pages. **Reading the scans is the persistence session's job, not generation's.**
+   and the **two sources** the transcription is made from, **combined**: **teacher guide** / الدليل
+   المرجعي = program (scope/progression); student **manuel élève** = content/examples/exercises/depth;
+   `CATALOGUE.md` maps grade×subject → both files. Re-verifiable here via the transcription's cited pages
+   (per source). **Reading the scans is the persistence session's job, not generation's.**
 3. **Taybah school files** (`programmes-officiels/taybah/<gradeSlug>.md`) — **verification + detail
    complement** only: the kids' school **trimester sequencing** and a cross-check. **Never** use them to
    contradict or narrow the CNP scope — flag divergences, don't silently follow them.
@@ -134,8 +147,9 @@ La **notation reste standard** (chiffres 0–9, etc. — règle ci-dessus) ; cet
 
 1. **Anchor to the CNP program (source of truth) — via the transcription.** Ground truth, in order:
    **(a)** the **programme transcription** `programmes-officiels/programme/<gradeSlug>/<matière>.md`
-   (faithful render of the teacher guide — scope, محاور, progression, in/out-of-scope bornes);
-   **(b)** the **Taybah school file** (`programmes-officiels/<école>/<gradeSlug>.md`) as **verification +
+   (faithful render **combining** the teacher guide — scope, محاور, progression, in/out-of-scope bornes —
+   **and the manuel élève** — lessons, examples, exercises, depth; one source ⇒ reference, several ⇒
+   combined); **(b)** the **Taybah school file** (`programmes-officiels/<école>/<gradeSlug>.md`) as **verification +
    trimester sequencing** complement; **(c)** web only to fill genuine gaps (`tunisiecollege.net`,
    `tadris.tn`, edunet/CNP). Establish the exact notions the chapter must cover — faithful to the CNP.
    ⛔ **Don't render→vision the CNP scans here** — that's the persistence session's job (consume its
