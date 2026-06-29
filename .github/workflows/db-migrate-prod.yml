@@ -31,6 +31,11 @@ concurrency:
 
 permissions:
   contents: read
+  # Open/update a tracking issue when an auto-apply fails. A back-dated migration
+  # (#97) made `db push` abort on EVERY push to `main` for ~2 weeks while the
+  # failure stayed buried in the Actions log — prod silently fell behind code.
+  # This surfaces it the same day (#227/#229).
+  issues: write
 
 jobs:
   migrate:
@@ -115,3 +120,70 @@ jobs:
       - name: Pending migrations (after)
         if: ${{ env.MODE != 'list' }}
         run: node scripts/db/push-prod.mjs --mode list
+
+      # --- Surface a failed auto-apply (never let it stay buried in the log) ---
+      # Only for the automatic push trigger: a manual dispatch has a human watching.
+      - name: Report apply outcome on a tracking issue
+        if: ${{ always() && github.event_name == 'push' }}
+        uses: actions/github-script@v9
+        env:
+          JOB_STATUS: ${{ job.status }}
+        with:
+          script: |
+            const failed = process.env.JOB_STATUS !== 'success';
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const date = new Date().toISOString().slice(0, 10);
+            const LABEL = 'prod-migration-failure';
+
+            try {
+              await github.rest.issues.getLabel({ ...context.repo, name: LABEL });
+            } catch {
+              await github.rest.issues.createLabel({
+                ...context.repo,
+                name: LABEL,
+                color: 'b60205',
+                description: "Échec de l'auto-apply des migrations en production",
+              });
+            }
+
+            const existing = await github.rest.issues.listForRepo({
+              ...context.repo,
+              state: 'open',
+              labels: LABEL,
+            });
+
+            if (failed) {
+              let body = `### 🛑 Auto-apply des migrations en PRODUCTION en échec — ${date}\n\n`;
+              body += `\`db-migrate-prod\` a échoué sur le push \`${context.sha.slice(0, 7)}\`. `;
+              body += `Tant que ce job échoue, **la prod est en retard sur le code** `;
+              body += `(une migration mal horodatée bloque \`supabase db push\`, et toutes `;
+              body += `les migrations suivantes restent en attente derrière elle).\n\n`;
+              body += `**À faire** : ouvrir le run, lire l'erreur \`db push\`, corriger l'ordre `;
+              body += `(re-horodater la migration fautive pour qu'elle trie APRÈS la dernière `;
+              body += `appliquée), puis re-déclencher le workflow. Voir CLAUDE.md §7.\n\n`;
+              body += `[Voir le run complet](${runUrl})\n`;
+
+              const title = '🛑 Auto-apply migrations prod en échec';
+              if (existing.data.length > 0) {
+                const n = existing.data[0].number;
+                await github.rest.issues.update({ ...context.repo, issue_number: n, title });
+                await github.rest.issues.createComment({ ...context.repo, issue_number: n, body });
+              } else {
+                await github.rest.issues.create({ ...context.repo, title, body, labels: [LABEL] });
+              }
+              core.setFailed('Prod migration auto-apply failed — see the tracking issue.');
+            } else {
+              // Apply succeeded: close any open failure issue with a recovery note.
+              for (const issue of existing.data) {
+                await github.rest.issues.createComment({
+                  ...context.repo,
+                  issue_number: issue.number,
+                  body: `✅ Auto-apply repassé au vert le ${date} ([run](${runUrl})) — fermeture automatique.`,
+                });
+                await github.rest.issues.update({
+                  ...context.repo,
+                  issue_number: issue.number,
+                  state: 'closed',
+                });
+              }
+            }

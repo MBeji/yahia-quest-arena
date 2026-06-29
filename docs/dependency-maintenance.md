@@ -7,12 +7,17 @@ Keep runtime and dev dependencies secure and up to date with predictable operati
 ## Cadence
 
 - **Twice-weekly (automated): the upgrade guard** (Tue + Fri UTC) — see "Automation"
-  below. This is now the primary path; the manual cadence below is the fallback /
-  oversight layer.
-- Monthly: review outdated packages and security advisories (Dependabot still opens
-  its monthly PRs as a backstop).
-- Weekly: triage any guard PRs/issues and Dependabot PRs.
-- Immediate: patch high/critical vulnerabilities.
+  below. This is the **single owner of routine version bumps**; the manual cadence
+  below is the fallback / oversight layer.
+- **Dependabot is security-only.** `.github/dependabot.yml` sets
+  `open-pull-requests-limit: 0` on both ecosystems, which disables Dependabot's
+  routine _version_-update PRs (now owned by the guard, to stop the duplicate,
+  lockfile-conflicting PRs of #225/#226) while leaving Dependabot _security_ updates
+  on — the fast lane for vulnerability advisories that shouldn't wait for a green
+  nightly.
+- Monthly: review outdated packages and security advisories.
+- Weekly: triage any guard PRs/issues and Dependabot security PRs.
+- Immediate: patch high/critical vulnerabilities (Dependabot security PR or manual).
 
 ## Automation (twice-weekly upgrade guard)
 
