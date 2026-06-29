@@ -54,7 +54,11 @@ balance, or difficulty distribution — you own those by judgment (below).
   dense and abstract. Defects even when the notion is on-syllabus: vocabulary above the grade, adult or
   irrelevant scenarios for young children (taxes, mortgages, workplace), numbers/abstraction past the
   grade's range, a childish or condescending register for teens, or any mature/unsafe theme for the age.
-- **Balance the answer key** — spread `correctOption` across a/b/c/d; don't let it sit on one letter.
+- **Balance the answer key** — spread `correctOption` across a/b/c/d as a tidiness habit, but know it
+  is cosmetic: the engine **shuffles option order at display** (per-attempt Fisher-Yates), so the key
+  letter is never player-visible. The leak that survives shuffling is **content-based** — never let the
+  correct option be recognisable as the longest, most-detailed, or only-one-with-a-justification answer
+  (see "Homogeneous options" below). That is the rule that actually matters.
 - **No duplicate or near-duplicate questions** within or across a chapter's exercises.
 - **Respect the anti-rush floor**: an attempt under `4s × question count` earns nothing and doesn't
   satisfy the gate, so keep enough questions (quiz 5, exercise 6) that a genuine attempt clears it.

@@ -158,8 +158,19 @@ Work file by file. For every question:
 
 Per exercise / chapter:
 
-8. **Answer-key balance** — tally `correctOption` letters; one letter > ~40% of an exercise =
-   **[MINOR]**, a constant letter = **[MAJOR]**.
+8. **Answer-key balance & content-based leaks.** First the key fact: **the engine shuffles option
+   order at display time** (`shuffleOptions`, a per-attempt Fisher-Yates, in both the quest exercise
+   route and the dungeon — `src/shared/lib/question-utils.ts`). So the **letter** a `correctOption`
+   sits on is _not_ player-visible: a constant or skewed key letter is **not** a giveaway — it is
+   only authoring tidiness, **[MINOR]** at most (many subjects deliberately author the correct option
+   first; that is fine). Do **not** flag "all keys are `a`" as a [MAJOR]. What shuffling does **not**
+   hide is a **content-based leak**, and that is the real defect to hunt: the correct option being the
+   **longest / most-detailed / most-hedged / only one carrying a parenthetical justification** while
+   the distractors are bare — a test-wise pupil then picks the key by shape, not knowledge. A single
+   such item = **[MAJOR]**; a chapter-wide pattern (e.g. the key carries "(ظرف زمان) منصوب" while
+   distractors are one-word labels in most items) = **[MAJOR]**, called out once for the whole
+   exercise/chapter. Fix by homogenising option length/detail (strip the parenthetical into the
+   `explanation`, or add an equivalent one to each distractor).
 9. **Duplicates** — same fact/computation re-asked with cosmetic changes, within or across the
    chapter's quiz + exercises = **[MAJOR]**.
 10. **Difficulty calibration** — per-question difficulty honest and non-decreasing within the
