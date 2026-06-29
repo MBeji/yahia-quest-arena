@@ -309,6 +309,15 @@ When unsure about scope or a destructive action, ask before proceeding.
   fresh DB. The end-state baseline lives in `20260612221000_baseline_table_grants.sql`;
   every new table migration must ship its own grants. The Supabase CLI is **version-pinned**
   in `db-tests.yml` / `e2e-auth.yml` — bump deliberately, with a green run.
+- **Migrations must be in timestamp order — a back-dated file jams prod.** Supabase applies
+  migrations in 14-digit-timestamp order and refuses to insert one _before_ the last-applied
+  remote migration (without `--include-all`), so a new migration whose `YYYYMMDDHHMMSS_` prefix
+  sorts at/before a migration already on `main` makes `supabase db push` abort — silently
+  stalling every later migration and leaving **prod behind code** (this cost #97 → #227 → #229).
+  The **`Migration order`** PR check (`migration-gate.yml` → `scripts/db/check-migration-order.mjs`)
+  now fails such a PR pre-merge; when it fires, re-timestamp the file to sort _after_ the newest
+  existing migration. If an auto-apply ever does fail, `db-migrate-prod.yml` opens a
+  **`prod-migration-failure`** tracking issue (auto-closed on the next green apply).
 - **E2E ≠ unit gate.** Playwright specs (`e2e/`, run via `e2e.yml` / `e2e-auth.yml`) hit a
   **dedicated TEST Supabase project** with seeded users (`scripts/e2e/`), not the unit-test
   mocks. They are not part of `npm run verify`/`ci:verify`; don't point them at prod.
