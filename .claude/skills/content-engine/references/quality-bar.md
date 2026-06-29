@@ -72,10 +72,10 @@ Beyond the distractor/explanation rules above, every item must pass these craft 
   columns — incoherent) → ✓ `… أيّها ليس الأقصر ولا الأطول؟`. Avoid calque/translationese
   constructions (e.g. the bare `لا واحد` for "none" — write idiomatic `لا شيء` / `ولا واحد منها`,
   or better, a real distractor).
-- **No meta-options.** Never options that reference the *other options* — "all of the above",
+- **No meta-options.** Never options that reference the _other options_ — "all of the above",
   "none of the above" / "aucune de ces réponses" / "لا شيء ممّا سبق", "a and b", "I don't know".
   Four real, independent candidate answers. (A substantive "nothing / zero / none-of-the-world"
-  answer — `لا شيء` meaning *nothing happens*, `0`, `aucun jour` — is a legitimate real answer, not
+  answer — `لا شيء` meaning _nothing happens_, `0`, `aucun jour` — is a legitimate real answer, not
   a meta-option; the ban is only on options that defer to the answer list itself.)
 - **Negative stems are rare and bolded.** Prefer positive phrasing; if you must ask "which is
   **not**…", bold/emphasize the negation so it cannot be skimmed past (and remember such prompts

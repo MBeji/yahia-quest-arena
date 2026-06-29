@@ -116,7 +116,7 @@ Work file by file. For every question:
    clause, and idiomatic phrasing free of calques/translationese (the bare `لا واحد` for "none" is a
    calque = **[MINOR]**; prefer `لا شيء` / `ولا واحد منها` or a real distractor). A question whose
    wording does not parse cleanly = **[MAJOR]** even when the keyed answer is correct. Distinguish a
-   **substantive** "nothing/zero" answer (`لا شيء` = *nothing happens*, legitimate) from a banned
+   **substantive** "nothing/zero" answer (`لا شيء` = _nothing happens_, legitimate) from a banned
    **meta-option** that defers to the other options (`لا شيء ممّا سبق`, "none of the above").
 7. **Factual accuracy** — for culture-générale/sciences/history claims, spot-check non-trivial
    facts via web search; wrong fact = **[BLOCKER]**, missing `sources[]` for verified claims =

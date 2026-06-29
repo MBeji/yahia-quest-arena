@@ -9,10 +9,22 @@
     {
       "prompt": "أيّ سهمٍ يبيّن الاتّجاه الصحيح لكتابة العربية؟",
       "options": [
-        { "id": "a", "text": "<svg viewBox=\"0 0 120 60\" xmlns=\"http://www.w3.org/2000/svg\"><polyline points=\"20,30 100,30\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"6\" stroke-linecap=\"round\"/><polygon points=\"100,30 82,19 82,41\" fill=\"#2563eb\" stroke=\"#1f2937\" stroke-width=\"2\"/></svg>" },
-        { "id": "b", "text": "<svg viewBox=\"0 0 60 120\" xmlns=\"http://www.w3.org/2000/svg\"><polyline points=\"30,20 30,100\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"6\" stroke-linecap=\"round\"/><polygon points=\"30,100 19,82 41,82\" fill=\"#2563eb\" stroke=\"#1f2937\" stroke-width=\"2\"/></svg>" },
-        { "id": "c", "text": "<svg viewBox=\"0 0 60 120\" xmlns=\"http://www.w3.org/2000/svg\"><polyline points=\"30,100 30,20\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"6\" stroke-linecap=\"round\"/><polygon points=\"30,20 19,38 41,38\" fill=\"#2563eb\" stroke=\"#1f2937\" stroke-width=\"2\"/></svg>" },
-        { "id": "d", "text": "<svg viewBox=\"0 0 120 60\" xmlns=\"http://www.w3.org/2000/svg\"><polyline points=\"100,30 20,30\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"6\" stroke-linecap=\"round\"/><polygon points=\"20,30 38,19 38,41\" fill=\"#2563eb\" stroke=\"#1f2937\" stroke-width=\"2\"/></svg>" }
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 120 60\" xmlns=\"http://www.w3.org/2000/svg\"><polyline points=\"20,30 100,30\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"6\" stroke-linecap=\"round\"/><polygon points=\"100,30 82,19 82,41\" fill=\"#2563eb\" stroke=\"#1f2937\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 60 120\" xmlns=\"http://www.w3.org/2000/svg\"><polyline points=\"30,20 30,100\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"6\" stroke-linecap=\"round\"/><polygon points=\"30,100 19,82 41,82\" fill=\"#2563eb\" stroke=\"#1f2937\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 60 120\" xmlns=\"http://www.w3.org/2000/svg\"><polyline points=\"30,100 30,20\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"6\" stroke-linecap=\"round\"/><polygon points=\"30,20 19,38 41,38\" fill=\"#2563eb\" stroke=\"#1f2937\" stroke-width=\"2\"/></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 120 60\" xmlns=\"http://www.w3.org/2000/svg\"><polyline points=\"100,30 20,30\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"6\" stroke-linecap=\"round\"/><polygon points=\"20,30 38,19 38,41\" fill=\"#2563eb\" stroke=\"#1f2937\" stroke-width=\"2\"/></svg>"
+        }
       ],
       "correctOption": "d",
       "explanation": "السهم (د) يشير من اليمين إلى اليسار، وهو اتّجاه كتابة العربية. الفخّ الشائع هو اختيار (أ) المتّجه يسارًا كالفرنسية.",

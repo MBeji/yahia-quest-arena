@@ -82,12 +82,12 @@ matière **suffixée par le niveau** (les ids bruts `math`/`arabic`/… sont ceu
 Le contenu doit « parler » à l'âge de l'élève. Calibrer **longueur de phrase, vocabulaire, densité de
 figures et ton** par tranche :
 
-| Niveaux                 | Âge                       | Calibrage                                                                                                                                                                                  |
-| ----------------------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **1ère–2ème**           | ≈ 6-8 ans, peu-lecteurs   | Phrases **très courtes** (5-10 mots), vocabulaire concret du quotidien, **une figure SVG par question** (compter, comparer, associer image↔nombre/mot). Aucun paragraphe dense.            |
-| **3ème–5ème**           | ≈ 8-11 ans                | Phrases courtes, **un** raisonnement à la fois, figures fréquentes (géométrie/sciences), exemple concret avant la règle.                                                                   |
-| **6ème–9ème (collège)** | ≈ 11-15 ans               | Registre scolaire standard, vocabulaire disciplinaire, figures là où elles aident (géométrie, schémas).                                                                                    |
-| **Secondaire / Bac**    | ≈ 15-18 ans               | Rigueur et terminologie d'examen, démarches complètes, phrasé proche des annales.                                                                                                          |
+| Niveaux                 | Âge                     | Calibrage                                                                                                                                                                       |
+| ----------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1ère–2ème**           | ≈ 6-8 ans, peu-lecteurs | Phrases **très courtes** (5-10 mots), vocabulaire concret du quotidien, **une figure SVG par question** (compter, comparer, associer image↔nombre/mot). Aucun paragraphe dense. |
+| **3ème–5ème**           | ≈ 8-11 ans              | Phrases courtes, **un** raisonnement à la fois, figures fréquentes (géométrie/sciences), exemple concret avant la règle.                                                        |
+| **6ème–9ème (collège)** | ≈ 11-15 ans             | Registre scolaire standard, vocabulaire disciplinaire, figures là où elles aident (géométrie, schémas).                                                                         |
+| **Secondaire / Bac**    | ≈ 15-18 ans             | Rigueur et terminologie d'examen, démarches complètes, phrasé proche des annales.                                                                                               |
 
 Règles transverses :
 
