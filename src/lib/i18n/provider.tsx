@@ -17,6 +17,10 @@ const translations: Record<Locale, TranslationKeys> = { en, fr, ar };
 
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 year
 
+function writeLocaleCookie(locale: Locale): void {
+  document.cookie = `${LOCALE_COOKIE}=${locale}; path=/; max-age=${COOKIE_MAX_AGE}; SameSite=Lax`;
+}
+
 function getInitialLocale(): Locale {
   if (typeof window === "undefined") return DEFAULT_LOCALE;
   // localStorage is the primary client-side preference (setLocale writes both it and
@@ -38,13 +42,22 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
 
   // Apply the persisted locale (localStorage, then cookie) after mount.
   useEffect(() => {
-    setLocaleState(getInitialLocale());
+    const initial = getInitialLocale();
+    setLocaleState(initial);
+    // One-time migration (review #8): legacy users who only have the localStorage
+    // value (set before the cookie existed) would otherwise flash the default locale
+    // on every SSR load until their next setLocale call writes the cookie. Mirror the
+    // resolved locale into the cookie whenever it's missing/stale so the SSR shell
+    // reads the right <html lang/dir> from the next request onward.
+    if (localeFromCookieHeader(document.cookie) !== initial) {
+      writeLocaleCookie(initial);
+    }
   }, []);
 
   const setLocale = useCallback((newLocale: Locale) => {
     setLocaleState(newLocale);
     localStorage.setItem(STORAGE_KEY, newLocale);
-    document.cookie = `${LOCALE_COOKIE}=${newLocale}; path=/; max-age=${COOKIE_MAX_AGE}; SameSite=Lax`;
+    writeLocaleCookie(newLocale);
     // Update document direction for Arabic
     document.documentElement.dir = dirForLocale(newLocale);
     document.documentElement.lang = newLocale;

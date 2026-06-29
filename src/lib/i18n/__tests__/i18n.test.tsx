@@ -136,6 +136,23 @@ describe("i18n system", () => {
     expect(screen.getByTestId("locale").textContent).toBe("fr");
   });
 
+  // Review #8: legacy users who only have the localStorage preference (set before the
+  // cookie existed) must have it mirrored into the cookie on first mount, so the SSR
+  // shell paints the right <html lang/dir> on the next request (no flash of default).
+  it("mirrors a localStorage-only locale into the cookie on mount", () => {
+    localStorage.setItem("xp-scholars-locale", "ar");
+    expect(document.cookie).not.toContain("xp-scholars-locale=ar");
+
+    render(
+      <I18nProvider>
+        <TestConsumer />
+      </I18nProvider>,
+    );
+
+    expect(screen.getByTestId("locale").textContent).toBe("ar");
+    expect(document.cookie).toContain("xp-scholars-locale=ar");
+  });
+
   it("each locale has public-screen keys defined", async () => {
     const { en } = await import("@/lib/i18n/en");
     const { fr } = await import("@/lib/i18n/fr");
