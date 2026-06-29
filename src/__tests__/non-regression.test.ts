@@ -593,7 +593,7 @@ describe("NON-REGRESSION: Data shape contracts", () => {
     expect(typeof result.bestByExercise).toBe("object");
   });
 
-  it("getExercise returns { exercise, questions, hintCharges }", async () => {
+  it("getExercise returns { exercise, questions, hintCharges, chapterQuizId }", async () => {
     mockFrom.mockImplementation((table: string) => {
       if (table === "exercises") return mockQuery({ id: "ex1", title: "E" });
       if (table === "questions") return mockQuery([]);
@@ -605,7 +605,12 @@ describe("NON-REGRESSION: Data shape contracts", () => {
       exerciseId: "11111111-1111-1111-1111-111111111111",
     })) as Record<string, unknown>;
 
-    expect(Object.keys(result).sort()).toEqual(["exercise", "hintCharges", "questions"]);
+    expect(Object.keys(result).sort()).toEqual([
+      "chapterQuizId",
+      "exercise",
+      "hintCharges",
+      "questions",
+    ]);
     expect(result.questions).toBeInstanceOf(Array);
     expect(result.hintCharges).toBe(0);
   });

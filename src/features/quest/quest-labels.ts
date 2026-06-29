@@ -7,6 +7,7 @@ export type QuestContentLang = "ar" | "fr" | "en";
 export type QuestLabels = {
   lockedTitle: string;
   lockedBody: string;
+  takeQuiz: string;
   review: string;
   back: string;
   quizPassedBanner: string;
@@ -26,6 +27,11 @@ export function buildQuestLabels(qlang: QuestContentLang): QuestLabels {
       ar: "عليك أوّلًا اجتياز اختبار فهم الدرس بنجاح للوصول إلى التمارين. عُد لمراجعة الدرس ثمّ أعِد المحاولة.",
       fr: "Tu dois d'abord réussir le quiz de compréhension du chapitre pour accéder aux exercices. Relis le cours, puis réessaie.",
       en: "You must first pass the chapter comprehension quiz to unlock the exercises. Review the lesson, then try again.",
+    }[qlang],
+    takeQuiz: {
+      ar: "🧠 إجراء اختبار الفهم",
+      fr: "🧠 Passer le quiz de compréhension",
+      en: "🧠 Take the comprehension quiz",
     }[qlang],
     review: { ar: "📖 مراجعة الدرس", fr: "📖 Réviser le cours", en: "📖 Review the lesson" }[qlang],
     back: { ar: "العودة إلى المادة", fr: "Retour à la matière", en: "Back to subject" }[qlang],
