@@ -1,6 +1,9 @@
 import { describe, it, expect } from "vitest";
 import {
   auditQuestion,
+  classifyOption,
+  hasArabicCommaInMath,
+  hasBidiFragileMath,
   norm,
   numbersIn,
   type QAQuestion,
@@ -186,5 +189,144 @@ describe("auditQuestion — figure-dependent prompt", () => {
         "w",
       ).some((f) => /references a figure/.test(f.msg)),
     ).toBe(false);
+  });
+});
+
+describe("auditQuestion — bidi-fragile math (Arabic radicand)", () => {
+  it("errors when Arabic is the radicand directly after √", () => {
+    const flags = auditQuestion(base({ prompt: "احسب √مساحة المربّع" }), "w");
+    expect(flags.some((f) => f.level === "error" && /radicand/.test(f.msg))).toBe(true);
+  });
+
+  it("errors when Arabic sits inside a √(…) operand, in any field", () => {
+    expect(hasBidiFragileMath("√(2 مي)")).toBe(true);
+    const flags = auditQuestion(
+      base({
+        options: [
+          { id: "a", text: "√(٢ مي)" },
+          { id: "b", text: "4" },
+        ],
+        correctOption: "b",
+      }),
+      "w",
+    );
+    expect(flags.some((f) => f.level === "error" && /radicand/.test(f.msg))).toBe(true);
+  });
+
+  it("does NOT flag plain arithmetic with Arabic units (renders natively)", () => {
+    expect(hasBidiFragileMath("10 مي + 2 مي + 2 مي = ؟")).toBe(false);
+    const flags = auditQuestion(
+      base({
+        prompt: "10 مي + 2 مي + 2 مي = ؟",
+        options: [
+          { id: "a", text: "14 مي" },
+          { id: "b", text: "12 مي" },
+        ],
+        correctOption: "a",
+        explanation: "نجمع المبالغ: 10 + 2 + 2 = 14 مي.",
+      }),
+      "w",
+    );
+    expect(flags.some((f) => /radicand/.test(f.msg))).toBe(false);
+  });
+
+  it("does NOT flag a radical with a numeric radicand and a trailing Arabic unit", () => {
+    expect(hasBidiFragileMath("√64 سم")).toBe(false);
+    expect(hasBidiFragileMath("الناتج √(25 × 2) كبير")).toBe(false);
+  });
+
+  it("does NOT flag a plain Arabic parenthetical that contains a number", () => {
+    expect(hasBidiFragileMath("(الشكل 3)")).toBe(false);
+    expect(hasBidiFragileMath("(سنة 2024)")).toBe(false);
+  });
+});
+
+describe("classifyOption — meta-options & 'none' calque", () => {
+  it("flags the bare non-idiomatic 'none' calque", () => {
+    expect(classifyOption("لا واحد")).toBe("calque");
+    expect(classifyOption("لا واحدة")).toBe("calque");
+  });
+
+  it("flags meta-options that defer to the other options (ar/fr/en)", () => {
+    expect(classifyOption("لا شيء ممّا سبق")).toBe("meta");
+    expect(classifyOption("كلّ ما سبق")).toBe("meta");
+    expect(classifyOption("Aucune de ces réponses")).toBe("meta");
+    expect(classifyOption("Aucun des deux n'est correct.")).toBe("meta");
+    expect(classifyOption("None of the above")).toBe("meta");
+    expect(classifyOption("All of the above")).toBe("meta");
+  });
+
+  it("does NOT flag a substantive 'nothing/zero/none-of-the-world' answer", () => {
+    expect(classifyOption("لا شيء")).toBe(null); // "nothing happens" — real answer
+    expect(classifyOption("لا شيء منها")).toBe(null);
+    expect(classifyOption("ولا واحد منها")).toBe(null); // idiomatic
+    expect(classifyOption("Aucun jour")).toBe(null);
+    expect(classifyOption("Aucune créature ne porte de chapeau.")).toBe(null);
+    expect(classifyOption("0")).toBe(null);
+  });
+
+  it("does NOT flag a long quotation that merely contains 'كلّ ما سبق'", () => {
+    expect(
+      classifyOption("«ونستنتج من كلّ ما سبق أنّ الحرّية والمسؤولية وجهان لعملة واحدة.»"),
+    ).toBe(null);
+  });
+
+  it("surfaces the meta/calque finding through auditQuestion as a warning", () => {
+    const flags = auditQuestion(
+      base({
+        options: [
+          { id: "a", text: "القصير" },
+          { id: "b", text: "الطويل" },
+          { id: "c", text: "المتوسّط" },
+          { id: "d", text: "لا واحد" },
+        ],
+        correctOption: "c",
+      }),
+      "w",
+    );
+    expect(flags.some((f) => f.level === "warn" && /calque/.test(f.msg))).toBe(true);
+  });
+});
+
+describe("hasArabicCommaInMath — interval/set separator", () => {
+  it("flags the Arabic comma «،» inside sets, intervals and tuples", () => {
+    expect(hasArabicCommaInMath("{−4 ، 4}")).toBe(true);
+    expect(hasArabicCommaInMath("]−1 ، 4[")).toBe(true);
+    expect(hasArabicCommaInMath("[−1 ، 4]")).toBe(true);
+    expect(hasArabicCommaInMath("(3، 4، 5)")).toBe(true);
+    expect(hasArabicCommaInMath("{a، b، c}")).toBe(true);
+    expect(hasArabicCommaInMath("]−∞ ، −3[")).toBe(true);
+  });
+
+  it("does NOT flag math notation that uses «;» or a Latin «,»", () => {
+    expect(hasArabicCommaInMath("{−4 ; 4}")).toBe(false);
+    expect(hasArabicCommaInMath("]−1 ; 4[")).toBe(false);
+    expect(hasArabicCommaInMath("{−4, 4}")).toBe(false);
+    expect(hasArabicCommaInMath("(3 ; 4 ; 5)")).toBe(false);
+  });
+
+  it("does NOT flag a bracket group that holds real Arabic prose", () => {
+    expect(hasArabicCommaInMath("(انظر الشكل، ثمّ أجب)")).toBe(false);
+    expect(hasArabicCommaInMath("(pH=2، حمضي جدًّا)")).toBe(false);
+  });
+
+  it("does NOT flag an Arabic comma used as ordinary sentence punctuation", () => {
+    expect(hasArabicCommaInMath("الحلّ هو 4، ثمّ نتحقّق")).toBe(false);
+    // even next to function calls in prose, when the comma is outside a group
+    expect(hasArabicCommaInMath("M(O) = 32 g/mol، M(N) = 14 g/mol")).toBe(false);
+  });
+
+  it("surfaces as an error through auditQuestion", () => {
+    const flags = auditQuestion(
+      base({
+        options: [
+          { id: "a", text: "{−4 ، 4}" },
+          { id: "b", text: "{4}" },
+        ],
+        correctOption: "a",
+      }),
+      "w",
+    );
+    expect(flags.some((f) => f.level === "error" && /Arabic comma/.test(f.msg))).toBe(true);
   });
 });

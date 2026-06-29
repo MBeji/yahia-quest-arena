@@ -1,0 +1,12 @@
+{
+  "id": "arabic-3eme",
+  "nameFr": "اللغة العربية",
+  "description": "نقرأ نصوصًا قصيرةً ونفهمها، ونبني الجملة الاسمية والفعلية، ونميّز المفرد والمثنّى والجمع والمذكّر والمؤنّث، ونصرّف الأفعال في الأزمنة، ونتعلّم الضمائر وقواعد الإملاء ونُثري معجمنا، وفق برنامج اللغة العربية للسنة الثالثة من التعليم الأساسي",
+  "attribute": "Esprit",
+  "colorToken": "subject-arabic",
+  "icon": "Languages",
+  "displayOrder": 3,
+  "contentLanguage": "ar",
+  "themeId": "ecole-tn",
+  "gradeSlug": "3eme-base"
+}

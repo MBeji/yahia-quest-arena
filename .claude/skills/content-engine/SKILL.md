@@ -37,10 +37,13 @@ Consequences you must respect:
   trilingual as three sibling subjects, **each generated natively in its language (not translated)**;
   **school** content (`ecole-tn`) is authored only in the subject's **official language of
   instruction** — never trilingual. See `references/themes-and-trilingual.md`.
-- **Subject display name is native.** `subject.json` `nameFr` is the subject's display name **in its
-  own `contentLanguage`** (ar → `الرياضيات`, en → `English`, fr → `Français`) — never French for an
-  ar/en subject. The field name is legacy (kept for DB compat); the value is native. No
-  `(FR)`/`(EN)`/`(AR)` suffix on trilingual siblings. See `references/content-schema.md`.
+- **Subject display name is native — and so is every chapter title.** `subject.json` `nameFr` is the
+  subject's display name **in its own `contentLanguage`** (ar → `الرياضيات`, en → `English`, fr →
+  `Français`) — never French for an ar/en subject; the field name is legacy (DB compat), the value is
+  native. Each `chapter.json` `title` is likewise in the subject's language. No `(FR)`/`(EN)`/`(AR)`
+  suffix on trilingual siblings. **Self-check:** for an `ar` subject, `nameFr` and every chapter
+  `title` must contain Arabic letters (`[؀-ۿ]`) — only digits/notation stay Latin. See
+  `references/content-schema.md`.
 - **Indicate difficulty on every mission and quiz.** Each exercise (mission) and the quiz must show
   its difficulty level in its title, using the standard scale in `references/rewards-and-modes.md`.
 - **Numbers & equations are standard in every language.** Western digits (0–9) and standard LTR
@@ -142,6 +145,15 @@ with factual claims in culture-générale and with fidelity to the official syll
 CNP corpus (student manuels + teacher guides) indexed under
 `content-ecole-tn/references/programmes-officiels/` (see that folder's README; the school-specific Taybah
 files there are a secondary cross-check), so defer to `content-ecole-tn` for school work.
+
+**Source-combination rule (whenever a unit has more than one authoritative source).** Use **all**
+available sources, combined — a single available source is the reference; **several ⇒ combine them all**,
+never drop one. The instantiation that matters most is school content: the official CNP sources are the
+**teacher guide** (program: scope/progression/bornes) **and** the **manuel élève** (student textbook:
+lessons, examples, exercises, depth) — the manuel élève is an **indispensable complement**, not optional,
+at every grade. On a scope divergence the higher-authority source wins (for `ecole-tn`, the teacher
+guide). The mechanics live in `content-ecole-tn` and its `programmes-officiels/` README — defer there for
+school work; this is the shared principle every program skill follows when its track has multiple sources.
 
 ## Report format
 
