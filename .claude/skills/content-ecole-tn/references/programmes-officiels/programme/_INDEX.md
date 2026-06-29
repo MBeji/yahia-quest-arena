@@ -77,9 +77,9 @@
 
 | ☐   | matière  | code guide | fichier cible                     | titre                              |
 | --- | -------- | ---------- | --------------------------------- | ---------------------------------- |
-| [ ] | anglais  | `541702`   | `programme/7eme-base/anglais.md`  | الدليل المرجعي في اللغة الانقليزية |
-| [ ] | arabe    | `501701`   | `programme/7eme-base/arabe.md`    | الدليل المرجعي في النحو العربي     |
-| [ ] | francais | `521702`   | `programme/7eme-base/francais.md` | الدليل المرجعي في اللغة الفرنسية   |
+| [~] | anglais  | `541702`   | `programme/7eme-base/anglais.md`  | الدليل المرجعي في اللغة الانقليزية |
+| [~] | arabe    | `501701`   | `programme/7eme-base/arabe.md`    | الدليل المرجعي في النحو العربي     |
+| [~] | francais | `521702`   | `programme/7eme-base/francais.md` | الدليل المرجعي في اللغة الفرنسية   |
 
 ## 8eme-base
 
