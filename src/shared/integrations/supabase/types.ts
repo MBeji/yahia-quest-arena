@@ -137,6 +137,7 @@ export type Database = {
           display_order: number;
           id: string;
           lesson_content: string | null;
+          manuel_ref: Json | null;
           subject_id: string;
           summary: string | null;
           title: string;
@@ -146,6 +147,7 @@ export type Database = {
           display_order?: number;
           id?: string;
           lesson_content?: string | null;
+          manuel_ref?: Json | null;
           subject_id: string;
           summary?: string | null;
           title: string;
@@ -155,6 +157,7 @@ export type Database = {
           display_order?: number;
           id?: string;
           lesson_content?: string | null;
+          manuel_ref?: Json | null;
           subject_id?: string;
           summary?: string | null;
           title?: string;

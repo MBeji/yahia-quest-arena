@@ -1,0 +1,12 @@
+{
+  "id": "arabic-1ere",
+  "nameFr": "اللغة العربية",
+  "description": "نتعلّم القراءة والكتابة معًا: نتعرّف على الأصوات والحروف، ونقرأ المقاطع والكلمات، ونرسم الحروف، ونستمع ونتكلّم ونبني جملًا بسيطة، وفق برنامج اللغة العربية (طريقة أنيسي) للسنة الأولى من التعليم الأساسي",
+  "attribute": "Esprit",
+  "colorToken": "subject-arabic",
+  "icon": "Languages",
+  "displayOrder": 1,
+  "contentLanguage": "ar",
+  "themeId": "ecole-tn",
+  "gradeSlug": "1ere-base"
+}

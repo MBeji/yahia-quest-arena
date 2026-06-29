@@ -4,13 +4,13 @@
     {
       "prompt": "ما موضع العقدة المعلّمة بالنقطة السوداء؟ <svg viewBox=\"0 0 130 110\"><line x1=\"20\" y1=\"20\" x2=\"110\" y2=\"20\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"20\" y1=\"50\" x2=\"110\" y2=\"50\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"20\" y1=\"80\" x2=\"110\" y2=\"80\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"20\" y1=\"20\" x2=\"20\" y2=\"80\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"50\" y1=\"20\" x2=\"50\" y2=\"80\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"80\" y1=\"20\" x2=\"80\" y2=\"80\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"110\" y1=\"20\" x2=\"110\" y2=\"80\" stroke=\"#9ca3af\" stroke-width=\"1\"/><text x=\"8\" y=\"24\" font-size=\"9\" fill=\"currentColor\">1</text><text x=\"8\" y=\"54\" font-size=\"9\" fill=\"currentColor\">2</text><text x=\"8\" y=\"84\" font-size=\"9\" fill=\"currentColor\">3</text><text x=\"18\" y=\"14\" font-size=\"9\" fill=\"currentColor\">1</text><text x=\"48\" y=\"14\" font-size=\"9\" fill=\"currentColor\">2</text><text x=\"78\" y=\"14\" font-size=\"9\" fill=\"currentColor\">3</text><text x=\"108\" y=\"14\" font-size=\"9\" fill=\"currentColor\">4</text><circle cx=\"80\" cy=\"50\" r=\"4.5\" fill=\"currentColor\"/></svg>",
       "options": [
-        { "id": "a", "text": "(1، 2)" },
-        { "id": "b", "text": "(3، 2)" },
-        { "id": "c", "text": "(2، 3)" },
-        { "id": "d", "text": "(2، 2)" }
+        { "id": "a", "text": "(1 ; 2)" },
+        { "id": "b", "text": "(3 ; 2)" },
+        { "id": "c", "text": "(2 ; 3)" },
+        { "id": "d", "text": "(2 ; 2)" }
       ],
       "correctOption": "c",
-      "explanation": "نقرأ السطر أوّلًا ثمّ العمود. العقدة على السطر 2 (نزلنا سطرين من الأعلى) والعمود 3 (تقدّمنا ثلاثة أعمدة من اليسار)، فموضعها (2، 3).",
+      "explanation": "نقرأ السطر أوّلًا ثمّ العمود. العقدة على السطر 2 (نزلنا سطرين من الأعلى) والعمود 3 (تقدّمنا ثلاثة أعمدة من اليسار)، فموضعها (2 ; 3).",
       "difficulty": 1
     },
     {
@@ -38,7 +38,7 @@
       "difficulty": 2
     },
     {
-      "prompt": "كم خطوةً في أقصر مسلكٍ من العقدة (1، 1) إلى العقدة (1، 4)؟",
+      "prompt": "كم خطوةً في أقصر مسلكٍ من العقدة (1 ; 1) إلى العقدة (1 ; 4)؟",
       "options": [
         { "id": "a", "text": "خطوتان" },
         { "id": "b", "text": "5 خطوات" },
@@ -52,13 +52,13 @@
     {
       "prompt": "العقدة على السطر 3 والعمود 1. ما موضعها؟",
       "options": [
-        { "id": "a", "text": "(3، 1)" },
-        { "id": "b", "text": "(1، 3)" },
-        { "id": "c", "text": "(3، 3)" },
-        { "id": "d", "text": "(1، 1)" }
+        { "id": "a", "text": "(3 ; 1)" },
+        { "id": "b", "text": "(1 ; 3)" },
+        { "id": "c", "text": "(3 ; 3)" },
+        { "id": "d", "text": "(1 ; 1)" }
       ],
       "correctOption": "a",
-      "explanation": "نكتب السطر أوّلًا ثمّ العمود: السطر 3 ثمّ العمود 1، أي (3، 1). الزوج (1، 3) معكوسٌ وخاطئ لأنّه يقلب السطر بالعمود.",
+      "explanation": "نكتب السطر أوّلًا ثمّ العمود: السطر 3 ثمّ العمود 1، أي (3 ; 1). الزوج (1 ; 3) معكوسٌ وخاطئ لأنّه يقلب السطر بالعمود.",
       "difficulty": 2
     }
   ]

@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft, BookOpen, ChevronRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, ChevronRight } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { isRtlText } from "@/shared/lib/utils";
 
@@ -28,12 +28,20 @@ export type ParcoursSubjectsSubject = {
 export function ParcoursSubjects({
   parcours,
   subjects,
+  isAuthenticated = false,
+  onChoose,
+  isChoosing = false,
 }: {
   parcours: ParcoursSubjectsParcours;
   subjects: ParcoursSubjectsSubject[];
+  /** When signed in, offer to make this the active parcours (replaces the old /themes switch). */
+  isAuthenticated?: boolean;
+  onChoose?: () => void;
+  isChoosing?: boolean;
 }) {
   const t = useT();
   const isExtra = parcours.kind === "libre";
+  const canChoose = isAuthenticated && onChoose != null && subjects.length > 0;
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
@@ -53,6 +61,17 @@ export function ParcoursSubjects({
           {parcours.name_fr}
         </h1>
         <p className="mt-2 text-muted-foreground">{t.public.niveau.chooseSubject}</p>
+        {canChoose && (
+          <button
+            type="button"
+            onClick={onChoose}
+            disabled={isChoosing}
+            className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition hover:opacity-90 disabled:opacity-60"
+          >
+            {isChoosing ? t.public.niveau.choosing : t.public.niveau.choose}
+            <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
+          </button>
+        )}
       </header>
 
       {subjects.length === 0 ? (

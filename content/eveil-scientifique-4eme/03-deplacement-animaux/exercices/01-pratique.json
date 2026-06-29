@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: كيف وأين يتنقّل الحيوان؟",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "كيف يتنقّل الحصان برّا؟",
+      "options": [
+        { "id": "a", "text": "بالسباحة" },
+        { "id": "b", "text": "بالجري بأطرافه" },
+        { "id": "c", "text": "بالطيران" },
+        { "id": "d", "text": "بالزحف على بطنه" }
+      ],
+      "correctOption": "b",
+      "explanation": "الحصان حيوانٌ برّيّ له أربعة أطراف قويّة يجري بها.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أيّ حيوانٍ يتنقّل جوّا؟",
+      "options": [
+        { "id": "a", "text": "السمكة" },
+        { "id": "b", "text": "الثعبان" },
+        { "id": "c", "text": "الحمامة" },
+        { "id": "d", "text": "الحصان" }
+      ],
+      "correctOption": "c",
+      "explanation": "الحمامة لها جناحان تطير بهما جوّا.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "الثعبان ليس له أطراف. كيف يتنقّل برّا؟",
+      "options": [
+        { "id": "a", "text": "بالزحف على بطنه" },
+        { "id": "b", "text": "بالطيران" },
+        { "id": "c", "text": "بالسباحة فقط" },
+        { "id": "d", "text": "بالقفز العالي" }
+      ],
+      "correctOption": "a",
+      "explanation": "الثعبان ليس له أطراف، فيزحف على بطنه قريبًا من الأرض.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما العضو الذي تستعمله السمكة للسباحة؟",
+      "options": [
+        { "id": "a", "text": "الجناح" },
+        { "id": "b", "text": "الأذن" },
+        { "id": "c", "text": "الزعانف والذيل" },
+        { "id": "d", "text": "القرن" }
+      ],
+      "correctOption": "c",
+      "explanation": "السمكة تسبح بزعانفها وذيلها اللذين يتكيّفان مع الماء.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "في أيّ وسطٍ يتنقّل العصفور؟",
+      "options": [
+        { "id": "a", "text": "بحرا" },
+        { "id": "b", "text": "تحت الأرض" },
+        { "id": "c", "text": "في الماء" },
+        { "id": "d", "text": "جوّا" }
+      ],
+      "correctOption": "d",
+      "explanation": "العصفور يتنقّل جوّا (في الهواء) بالطيران.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "انظر إلى هذا الحيوان. كيف يتنقّل؟ <svg viewBox=\"0 0 120 80\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M30 40 q26 -22 56 0 q-26 22 -56 0 z\" fill=\"#38bdf8\" stroke=\"#1f2937\" stroke-width=\"3\" stroke-linejoin=\"round\"/><path d=\"M30 40 l-16 -12 l0 24 z\" fill=\"#0ea5e9\" stroke=\"#1f2937\" stroke-width=\"3\" stroke-linejoin=\"round\"/><circle cx=\"78\" cy=\"36\" r=\"3\" fill=\"#1f2937\"/><line x1=\"8\" y1=\"68\" x2=\"112\" y2=\"68\" stroke=\"#0ea5e9\" stroke-width=\"3\" stroke-dasharray=\"6 5\"/></svg>",
+      "options": [
+        { "id": "a", "text": "بالسباحة بحرا" },
+        { "id": "b", "text": "بالطيران جوّا" },
+        { "id": "c", "text": "بالزحف برّا" },
+        { "id": "d", "text": "بالقفز برّا" }
+      ],
+      "correctOption": "a",
+      "explanation": "الصورة سمكة لها ذيلٌ وتعيش في الماء، فهي تتنقّل بالسباحة بحرا.",
+      "difficulty": 2
+    }
+  ]
+}
