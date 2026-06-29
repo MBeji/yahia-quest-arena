@@ -3,9 +3,12 @@ name: content-audit
 description: >-
   Pedagogical audit of EXISTING content under content/ — verify answer keys by
   re-solving every question, check distractor quality, explanation correctness,
-  difficulty calibration, answer-key balance, duplicates, standard math/digit
-  notation (Western digits everywhere, including Arabic), language purity, and
-  factual accuracy — AND audit the lesson texts (cours.md / resume.md) against
+  question clarity & cognitive load, age/grade-appropriateness (vocabulary,
+  context, number range vs the pupil's age), correct rendering/display (SVG
+  figures, bidi-safe notation), difficulty calibration, answer-key balance,
+  duplicates, standard math/digit notation (Western digits everywhere, including
+  Arabic), language purity, and factual accuracy — AND audit the lesson texts
+  (cours.md / resume.md) against
   the course-quality bar: clarity, ease of understanding, completeness (every
   tested notion taught), learning experience. Produces a severity-ranked report;
   applies fixes only on request. Use whenever the user asks to "auditer",
@@ -49,8 +52,10 @@ produit une **worklist périmée**. Lancer ce runbook seulement quand la génér
    > Lis `content-audit/SKILL.md` + `content-engine/references/{quality-bar,math-and-notation,course-quality}.md`.
    > Audite TOUS les chapitres de `<matière>` (chapter.json, cours.md, resume.md, quiz.json, exercices/\*.json).
    > **Re-résous CHAQUE question à l'aveugle** puis compare à `correctOption`. Vérifie notation (chiffres latins,
-   > pas de LaTeX, bidi-safe, SVG `viewBox`), pureté de langue, qualité du cours (golden rule, exemple par règle,
-   > miroir résumé↔cours), et **conformité au programme** vs `programme/<grade>/<matière>.md` + `manifest/<grade>.json` + `taybah/<grade>.md`.
+   > pas de LaTeX, bidi-safe, SVG `viewBox`), **clarté de l'énoncé & charge cognitive**, **conformité à l'âge**
+   > (vocabulaire, contexte, ordre de grandeur des nombres vs le niveau/âge), pureté de langue, qualité du cours
+   > (golden rule, exemple par règle, miroir résumé↔cours), et **conformité au programme** vs
+   > `programme/<grade>/<matière>.md` + `manifest/<grade>.json` + `taybah/<grade>.md`.
    > Rends un rapport classé par sévérité (BLOCKER/MAJOR/MINOR) : `fichier` + `locator` + défaut + correction proposée.
    > Indique le nombre de questions re-résolues. NE MODIFIE RIEN.
 
@@ -87,6 +92,12 @@ Work file by file. For every question:
 4. **Question craft** — meta-options ("all of the above"…), un-emphasized negative stems,
    correct-answer-is-longest giveaways, ambiguous stems with two defensible answers
    (= **[BLOCKER]**), unsorted numeric options = **[MINOR]** unless they leak the key.
+   4b. **Clarity & cognitive load** — read the stem once at a learner's pace. It must land on the first
+   pass: as short as the task allows (one sentence where possible), no nested or back-referencing
+   clauses that force a re-read, no data irrelevant to the answer, no undefined symbol/abbreviation, a
+   single interpretation. A prompt that is correct and on-syllabus but **convoluted, padded, or only
+   disambiguated once you read the options** = **[MAJOR]** (rewrite the phrasing or split the task);
+   a stem genuinely open to two readings = **[BLOCKER]** (overlaps item 4's double-answer rule).
 5. **Notation** — scan for Arabic-Indic digits `[٠-٩]` (must be zero — **[MAJOR]**), hyphen-as-minus
    in formulas, letter `x` as multiplication sign, non-SI units. **LaTeX anywhere = rendered raw**
    (the app has no math renderer — see `math-and-notation.md`): any `\command` (regex `\\[a-zA-Z]+`)
@@ -131,6 +142,19 @@ Work file by file. For every question:
    — the manuel élève is an indispensable complement, not optional. The Taybah school file
    (`programmes-officiels/<école>/<gradeSlug>.md`) is a secondary cross-check / trimester sequencing, not
    the authority.
+   7b. **Age / grade appropriateness** — distinct from syllabus scope (item 7) and difficulty calibration
+   (item 10): does the item _read_ as written for the learner's developmental stage? Judge the
+   vocabulary level, sentence length, the real-world context/scenario it leans on, the magnitude of the
+   numbers, and the cognitive load against the audience — the **school grade** (primary
+   `1ère…6ème année de base` ≈ 6–12 yo, collège `7ème…9ème` ≈ 12–15, secondary through `Bac` ≈ 15–18)
+   or, for non-school themes, the **declared level** (CEFR band for languages, the difficulty tier
+   elsewhere). Flag, even when the notion is on-syllabus and the key is right: vocabulary clearly above
+   the grade, an **adult or irrelevant scenario for young children** (taxes, mortgages, the workplace,
+   driving) where a familiar one (animals, toys, the classroom, sharing snacks) was needed, numbers or
+   abstraction past the grade's range, a **childish/condescending register for teens**, or any mature or
+   age-unsafe theme = **[MAJOR]** (→ **[BLOCKER]** only if the mismatch makes the item unanswerable or
+   the theme is genuinely inappropriate for the age). A subtle register slip a child would still parse =
+   **[MINOR]**. This is presentation/accessibility, not whether the notion belongs in the program.
 
 Per exercise / chapter:
 
@@ -190,11 +214,13 @@ belong to the **`content-cours`** skill — hand off rather than improvising a n
 
 A severity-ranked report, per subject/chapter:
 
-- **[BLOCKER]** wrong key, contradicting explanation, factually false, ambiguous double-answer —
+- **[BLOCKER]** wrong key, contradicting explanation, factually false, ambiguous double-answer,
+  a figure referenced but missing, or an age mismatch that makes the item unanswerable/unsafe —
   with file path, question locator (e.g. `exercices/02-boss.json q4`), the defect, and the proposed
   correction.
-- **[MAJOR]** weak distractors, non-teaching explanations, notation violations, duplicates,
-  off-syllabus, language impurity.
+- **[MAJOR]** weak distractors, non-teaching explanations, notation/rendering violations, duplicates,
+  off-syllabus, language impurity, **convoluted/ambiguous stem (clarity)**, **off-age vocabulary,
+  context, or number range for the grade**.
 - **[MINOR]** key balance, ordering, ⭐ titles, thin sources.
 - A summary table: questions audited / blockers / majors / minors per chapter, plus an overall
   verdict (ship / fix-first).
