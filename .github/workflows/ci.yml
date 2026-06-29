@@ -44,6 +44,17 @@ jobs:
       - name: Unit tests + coverage
         run: npm run test:coverage
 
+      # Content gate (was local-only via ci:verify; now enforced on every PR).
+      # content:check proves the authored content/ still compiles to the committed
+      # migrations (catches an edit that forgot `content:build`); content:qa:strict
+      # runs the correctness heuristics (key/explanation agreement, RTL/notation,
+      # meta-option distractors) and fails on any [error].
+      - name: Content build is in sync
+        run: npm run content:check
+
+      - name: Content quality (strict)
+        run: npm run content:qa:strict
+
       - name: Build + bundle budgets
         run: npm run build:check
 
