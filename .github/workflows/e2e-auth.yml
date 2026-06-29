@@ -114,7 +114,7 @@ jobs:
         with:
           # Pinned: an unpinned "latest" bump (17.6.1.132 → .134 image) silently
           # broke the local-stack grants on 2026-06-07. Bump deliberately.
-          version: 2.106.0
+          version: 2.107.0
 
       # Goes through the e2e script (not raw `supabase db push`) so the DB URL is
       # normalized first: a raw password with special characters used to fail with
