@@ -1,6 +1,6 @@
 # `_INDEX.md` — work-list de transcription du programme CNP
 
-> Une ligne par **guide-programme** (الدليل المرجعي / guide méthodologique). Cocher `[x]` quand `programme/<niveau>/<matière>.md` est transcrit + audité + mergé. Les مدونة القسم / bandes dessinées / manuels élève sont des **enrichissements optionnels** (non listés ici).
+> Une ligne par couple (niveau, matière), repérée par son **guide-programme** (الدليل المرجعي / guide méthodologique). Cocher `[x]` quand `programme/<niveau>/<matière>.md` est transcrit + audité + mergé. **Chaque transcription combine le guide enseignant ET le manuel élève** (le manuel élève est un **complément indispensable**, pas optionnel — cf. `README.md` « Sources combinées » ; quand une seule source existe, c'est la référence). Repérer le manuel élève correspondant dans `cnp-officiel/CATALOGUE.md` (même matière×classe, dossier `eleve/`). Les مدونة القسم / bandes dessinées restent des enrichissements optionnels (non listés ici).
 
 ## 1ere-base
 

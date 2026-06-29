@@ -49,7 +49,10 @@ plus, for genuine defects, a **tracking issue** — a human stays in the loop.
   - `src/features/**`, `src/lib/**`, `src/hooks/**`, `src/shared/**` → **Vitest** unit/integration.
   - `supabase/migrations/**`, RPCs, RLS, grants → **pgTAP** (`supabase/tests/*.sql`).
   - routes / UI shell / user journeys → **Playwright e2e** (`e2e/`), public vs authed.
-  - `content/**` → content QA (`content:qa:strict`) — not behaviour tests, flag separately.
+  - `content/**` → content QA (`content:qa:strict`) — not behaviour tests, flag separately. Pedagogical
+    fidelity (scope, and **completeness vs the combined CNP sources — teacher guide + manuel élève**, the
+    student textbook being an indispensable complement) is **`content-audit`**'s job, not this skill's —
+    point school-content drift there rather than encoding it as a unit test.
 - Ignore pure docs/comment changes.
 
 ### 2. Run the gate and the slow suites to see current truth
@@ -121,4 +124,5 @@ related code, the i18n catalogs, the route, or asking via the PR.
 - Tests travel with the code they cover; coverage must not regress.
 - Defers to: **`verify`** (the gate), **`code-review`** (reading the diff for
   correctness). For content changes, run **`content:qa:strict`** rather than
-  inventing behaviour tests.
+  inventing behaviour tests; for pedagogical fidelity and completeness vs the
+  **combined CNP sources (teacher guide + manuel élève)**, defer to **`content-audit`**.
