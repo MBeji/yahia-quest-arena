@@ -397,8 +397,11 @@ leaderboard · parent-report (parent/admin) · admin/\* (admin).
     toggle reduce-motion, `alt` hero, « Google : », dates admin via locale i18n.
 21. a11y : `aria-busy`/`role="status"` sur skeletons ; `aria-label` sur dots/badges ;
     `<ul role="list">` au classement ; respecter `prefers-reduced-motion`.
-22. Supprimer l'import mort `LanguageSwitcher` (`dashboard.tsx:42`).
-23. `console.error` → logger structuré (`__root.tsx:45`).
+22. ✅ Supprimer l'import mort `LanguageSwitcher` (`dashboard.tsx:42`). _Déjà fait_ —
+    `LanguageSwitcher` n'est plus importé que dans `public-header.tsx` et
+    `_authenticated.tsx`, où il est réellement utilisé.
+23. ✅ `console.error` → logger structuré (`__root.tsx`). _Traité_ — le boundary d'erreur
+    racine utilise désormais `logger.error("Root error boundary caught an error", { error })`.
 24. Liens légaux au footer du landing ; meta document par-locale.
 25. Vocabulaire : « Abonnement requis » → entitlement/parcours.
 

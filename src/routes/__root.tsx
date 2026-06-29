@@ -19,6 +19,7 @@ import { en } from "@/lib/i18n/en";
 import { ar } from "@/lib/i18n/ar";
 import { ThemeProvider, useTheme, DEFAULT_THEME, themeFromCookieHeader } from "@/lib/theme";
 import type { Theme } from "@/lib/theme";
+import { logger } from "@/shared/lib/logger";
 
 import appCss from "../styles.css?url";
 
@@ -44,7 +45,7 @@ function NotFoundComponent() {
 }
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
-  console.error(error);
+  logger.error("Root error boundary caught an error", { error });
   const router = useRouter();
   const t = useT();
   return (
