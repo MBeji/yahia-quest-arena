@@ -348,6 +348,12 @@ export const en: TranslationKeys = {
     signOut: "Sign out",
     logoutToast: "See you soon, warrior.",
   },
+  theme: {
+    label: "Theme",
+    reference: "Reference",
+    light: "Light",
+    dark: "Dark",
+  },
   parcours: {
     worldTitle: "Adventure Map",
     worldSubtitle: "Choose your path, unlock regions and become a legend.",
@@ -529,8 +535,13 @@ export const en: TranslationKeys = {
       extras: "Extras",
       login: "Log in",
       signup: "Create my account",
+      account: "My space",
     },
-    footer: { tagline: "100% free · all of Tunisian school" },
+    footer: {
+      tagline: "100% free · all of Tunisian school",
+      rights: "All rights reserved",
+      legalLink: "Legal notice",
+    },
     landing: {
       freeBadge: "100% free · no sign-up",
       heroTitle: "Every lesson of the Tunisian school. From Year 1 to the Bac.",
@@ -561,6 +572,16 @@ export const en: TranslationKeys = {
       gameFeatBadges: "Badges & hero classes",
       gameFeatRanking: "Leaderboard & daily streaks",
       gameCta: "Create my free account",
+      gameCtaAuthed: "Keep playing",
+      languesKicker: "A cross-cutting strength",
+      languesTitle: "Strengthen your French and English, at your real level",
+      languesSubtitle:
+        "Two tracks aligned with international standards — to strengthen the language regardless of your school class, from beginner to advanced.",
+      languesCta: "See the levels",
+      languesFrName: "French",
+      languesFrStandard: "Aligned with the CEFR · DELF / DALF",
+      languesEnName: "English",
+      languesEnStandard: "Aligned with the CEFR · Cambridge / IELTS",
     },
     cycles: {
       primaire: "Primary",
@@ -596,6 +617,8 @@ export const en: TranslationKeys = {
       chooseSubject: "Pick a subject to read the lesson, review the summary and practise.",
       comingSoonTitle: "Content coming soon",
       comingSoonDesc: "This level is being prepared. Come back soon!",
+      choose: "Choose this track",
+      choosing: "Selecting…",
     },
     reader: {
       defaultSubject: "Lesson",
@@ -603,10 +626,17 @@ export const en: TranslationKeys = {
       summaryTab: "Summary",
       print: "Print",
       courseSoon: "The lesson for this chapter is coming soon.",
+      practiceCta: "Practise this chapter",
       inviteTitle: "Learn by playing",
       inviteDesc:
         "Create your free account to practise on the exercises, earn XP and save your progress. Reading the lesson is always free.",
       inviteCta: "Create my free account",
+      manuelTitle: "Textbook pages",
+      manuelHint: "The official student-textbook pages covering this chapter.",
+      manuelPage: "Page",
+      manuelOpen: "Enlarge page",
+      manuelPrev: "Previous",
+      manuelNext: "Next",
     },
     subject: {
       chapter: "Chapter {n}",
@@ -615,6 +645,7 @@ export const en: TranslationKeys = {
     },
     practice: {
       back: "Back to the subject",
+      reviewCourse: "Review the lesson",
       modeKicker: "Practice mode",
       subtitle: "Answer the questions then check yourself — no account, no score saved.",
       scoreCorrect: "{correct} of {total} correct",
@@ -628,6 +659,30 @@ export const en: TranslationKeys = {
       questCta: "Replay in quest mode to earn XP",
       inviteDesc: "Create an account to earn XP, save your progress and climb the leaderboard.",
       inviteCta: "Create my account",
+    },
+    print: {
+      copyrightNotice:
+        "na9ranal3ab.tn · Intellectual property. Reproduction and distribution prohibited without permission.",
+    },
+    legal: {
+      title: "Legal notice & intellectual property",
+      intro:
+        "Na9ra Nal3ab (نقرا نلعب) — a free educational platform for the Tunisian school curriculum.",
+      ipTitle: "Intellectual property",
+      ipBody:
+        "All content (lessons, summaries, quizzes, exercises, texts, illustrations), the visual identity and the platform code are the exclusive property of Na9ra Nal3ab and protected by copyright. Any reproduction, distribution, resale or reuse, in whole or in part, without prior written permission is prohibited.",
+      useTitle: "Terms of use",
+      useBody:
+        "Content may be freely consulted for personal, non-commercial educational purposes. The following are prohibited: automated extraction (scraping, crawling), bulk copying or downloading, use of the content to train artificial-intelligence models, and any unauthorized automated access to the service.",
+      brandTitle: "Trademark",
+      brandBody:
+        "“Na9ra Nal3ab” / “نقرا نلعب” and the associated logo are distinctive signs of the platform; their use without permission is prohibited.",
+      contactTitle: "Contact & reporting",
+      contactBody:
+        "Permission requests, reports of misuse or unauthorized reproduction: contact@na9ranal3ab.tn.",
+      lawTitle: "Governing law",
+      lawBody: "This notice is governed by Tunisian law.",
+      updated: "Last updated: June 2026.",
     },
   },
   quotes: [

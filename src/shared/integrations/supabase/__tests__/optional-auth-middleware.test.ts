@@ -81,10 +81,9 @@ describe("optionalSupabaseAuth", () => {
       "Missing Supabase environment variable(s)",
     );
 
-    expect(mockLoggerError).toHaveBeenCalledWith(
-      "Supabase optional-auth middleware misconfiguration",
-      { missing: ["SUPABASE_URL", "SUPABASE_PUBLISHABLE_KEY"] },
-    );
+    expect(mockLoggerError).toHaveBeenCalledWith("Supabase public client misconfiguration", {
+      missing: ["SUPABASE_URL", "SUPABASE_PUBLISHABLE_KEY"],
+    });
     expect(mockCreateClient).not.toHaveBeenCalled();
   });
 

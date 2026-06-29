@@ -1,0 +1,82 @@
+{
+  "title": "📝 تدريب ⭐⭐⭐: مراجعة شاملة لأوّل الأصوات",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "ما هذا الحرف؟ <svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"108\" height=\"108\" rx=\"16\" fill=\"#c7d2fe\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"60\" y=\"86\" font-size=\"72\" text-anchor=\"middle\" fill=\"#4338ca\" stroke=\"none\">و</text></svg>",
+      "options": [
+        { "id": "a", "text": "الحرف و" },
+        { "id": "b", "text": "الحرف م" },
+        { "id": "c", "text": "الحرف ه" },
+        { "id": "d", "text": "الحرف ن" }
+      ],
+      "correctOption": "a",
+      "explanation": "هذا هو الحرف و، وصوته «وْ» كما في كلمة وردة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "بأيّ حرفٍ تبدأ كلمة «هلال»؟",
+      "options": [
+        { "id": "a", "text": "الحرف ل" },
+        { "id": "b", "text": "الحرف ه" },
+        { "id": "c", "text": "الحرف ع" },
+        { "id": "d", "text": "الحرف و" }
+      ],
+      "correctOption": "b",
+      "explanation": "أوّل صوتٍ في كلمة هلال هو «هـْ»، فهي تبدأ بالحرف ه.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أيّ حرفٍ فوقه نقطةٌ واحدة؟",
+      "options": [
+        { "id": "a", "text": "الحرف ح" },
+        { "id": "b", "text": "الحرف ع" },
+        { "id": "c", "text": "الحرف ن" },
+        { "id": "d", "text": "الحرف ك" }
+      ],
+      "correctOption": "c",
+      "explanation": "الحرف ن فوقه نقطةٌ واحدة. أمّا ح و ع و ك فلا نقط لها فوقها.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "بأيّ حرفٍ تبدأ هذه الكلمة؟ <svg viewBox=\"0 0 120 130\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M52 44 l16 0 l-4 60 q-4 10 -8 0 z\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M60 44 q-2 -14 -16 -16\" fill=\"#22c55e\" stroke=\"#1f2937\" stroke-width=\"2\"/><path d=\"M60 44 q2 -16 16 -16\" fill=\"#22c55e\" stroke=\"#1f2937\" stroke-width=\"2\"/><line x1=\"54\" y1=\"60\" x2=\"66\" y2=\"60\" stroke=\"#1f2937\" stroke-width=\"2\"/><line x1=\"53\" y1=\"74\" x2=\"65\" y2=\"74\" stroke=\"#1f2937\" stroke-width=\"2\"/></svg>",
+      "options": [
+        { "id": "a", "text": "الحرف ح" },
+        { "id": "b", "text": "الحرف ع" },
+        { "id": "c", "text": "الحرف ن" },
+        { "id": "d", "text": "الحرف ج" }
+      ],
+      "correctOption": "d",
+      "explanation": "هذا جزر، وأوّل صوتٍ فيه «جـْ»، فهو يبدأ بالحرف ج. الفخّ الشائع هو الخلط بين ج و ح، والفرق نقطةٌ تحت ج.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ زوجٍ صحيحٌ بين الكلمة وأوّل حرفٍ فيها؟",
+      "options": [
+        { "id": "a", "text": "عنب ← ع" },
+        { "id": "b", "text": "وردة ← ه" },
+        { "id": "c", "text": "نجمة ← م" },
+        { "id": "d", "text": "كرة ← ل" }
+      ],
+      "correctOption": "a",
+      "explanation": "عنب تبدأ بصوت «عـْ» (الحرف ع)، وهو الزوج الصحيح. أمّا وردة فبـ و، ونجمة فبـ ن، وكرة فبـ ك.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "أيّ عبارةٍ **خاطئة**؟",
+      "options": [
+        { "id": "a", "text": "الحرف ح لا نقطة له" },
+        { "id": "b", "text": "الحرف ج لا نقطة له" },
+        { "id": "c", "text": "الحرف ن فوقه نقطةٌ واحدة" },
+        { "id": "d", "text": "الحرف ع لا نقطة له" }
+      ],
+      "correctOption": "b",
+      "explanation": "العبارة الخاطئة هي أنّ ج لا نقطة له؛ فالحرف ج تحته نقطةٌ واحدة، وهو الذي يفرّقه عن ح بلا نقطة.",
+      "difficulty": 3
+    }
+  ]
+}

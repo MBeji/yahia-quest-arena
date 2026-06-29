@@ -37,10 +37,13 @@ Consequences you must respect:
   trilingual as three sibling subjects, **each generated natively in its language (not translated)**;
   **school** content (`ecole-tn`) is authored only in the subject's **official language of
   instruction** — never trilingual. See `references/themes-and-trilingual.md`.
-- **Subject display name is native.** `subject.json` `nameFr` is the subject's display name **in its
-  own `contentLanguage`** (ar → `الرياضيات`, en → `English`, fr → `Français`) — never French for an
-  ar/en subject. The field name is legacy (kept for DB compat); the value is native. No
-  `(FR)`/`(EN)`/`(AR)` suffix on trilingual siblings. See `references/content-schema.md`.
+- **Subject display name is native — and so is every chapter title.** `subject.json` `nameFr` is the
+  subject's display name **in its own `contentLanguage`** (ar → `الرياضيات`, en → `English`, fr →
+  `Français`) — never French for an ar/en subject; the field name is legacy (DB compat), the value is
+  native. Each `chapter.json` `title` is likewise in the subject's language. No `(FR)`/`(EN)`/`(AR)`
+  suffix on trilingual siblings. **Self-check:** for an `ar` subject, `nameFr` and every chapter
+  `title` must contain Arabic letters (`[؀-ۿ]`) — only digits/notation stay Latin. See
+  `references/content-schema.md`.
 - **Indicate difficulty on every mission and quiz.** Each exercise (mission) and the quiz must show
   its difficulty level in its title, using the standard scale in `references/rewards-and-modes.md`.
 - **Numbers & equations are standard in every language.** Western digits (0–9) and standard LTR

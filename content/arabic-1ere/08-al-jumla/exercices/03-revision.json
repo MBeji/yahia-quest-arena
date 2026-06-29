@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة: الجملةُ ومعناها",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "كم كلمةً في هذه الجملة: «القطّةُ تشربُ الحليبَ»؟",
+      "options": [
+        { "id": "a", "text": "2" },
+        { "id": "b", "text": "3" },
+        { "id": "c", "text": "4" },
+        { "id": "d", "text": "5" }
+      ],
+      "correctOption": "b",
+      "explanation": "أعدُّ الكلمات بين الفراغات: القطّةُ، تشربُ، الحليبَ. فعددُ كلمات الجملة 3.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أيّ جملةٍ تصفُ هذه الصورة؟ <svg viewBox=\"0 0 200 130\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"48\" cy=\"40\" r=\"20\" fill=\"#facc15\" stroke=\"#1f2937\" stroke-width=\"3\"/><g stroke=\"#f59e0b\" stroke-width=\"4\" stroke-linecap=\"round\"><line x1=\"48\" y1=\"8\" x2=\"48\" y2=\"18\"/><line x1=\"14\" y1=\"40\" x2=\"24\" y2=\"40\"/><line x1=\"24\" y1=\"20\" x2=\"31\" y2=\"27\"/></g><path d=\"M104 116 v-44 l40 -26 l40 26 v44 z\" fill=\"#fde68a\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M100 74 l44 -28 l44 28\" fill=\"#ef4444\" stroke=\"#1f2937\" stroke-width=\"3\"/><rect x=\"132\" y=\"92\" width=\"24\" height=\"24\" fill=\"#92400e\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>",
+      "options": [
+        { "id": "a", "text": "العصفورُ فوق الشّجرة" },
+        { "id": "b", "text": "القطّةُ تشربُ الحليبَ" },
+        { "id": "c", "text": "الطّفلُ يلعبُ بالكرة" },
+        { "id": "d", "text": "الشّمسُ فوق الدّار" }
+      ],
+      "correctOption": "d",
+      "explanation": "في الصورة شمسٌ في الأعلى ودارٌ تحتها، فالجملةُ المناسبة هي «الشّمسُ فوق الدّار».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "في جملة «الطّفلُ يلعبُ بالكرة»، مَن يلعبُ بالكرة؟",
+      "options": [
+        { "id": "a", "text": "الطّفل" },
+        { "id": "b", "text": "الكرة" },
+        { "id": "c", "text": "القطّة" },
+        { "id": "d", "text": "العصفور" }
+      ],
+      "correctOption": "a",
+      "explanation": "الجملةُ تخبرنا أنّ الطّفلَ يلعبُ بالكرة، فالذي يلعبُ هو الطّفل، والكرةُ هي ما يلعبُ بها.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما الكلمةُ الناقصةُ في الجملة: «البنتُ ... الكتابَ»؟",
+      "options": [
+        { "id": "a", "text": "فوق" },
+        { "id": "b", "text": "صغيرٌ" },
+        { "id": "c", "text": "تقرأُ" },
+        { "id": "d", "text": "دارٌ" }
+      ],
+      "correctOption": "c",
+      "explanation": "الجملةُ تحتاجُ فعلًا يدلُّ على ما تفعله البنتُ بالكتاب، فنقول «البنتُ تقرأُ الكتابَ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم كلمةً في هذه الجملة: «العصفورُ يطيرُ فوق الشّجرة»؟",
+      "options": [
+        { "id": "a", "text": "2" },
+        { "id": "b", "text": "3" },
+        { "id": "c", "text": "4" },
+        { "id": "d", "text": "5" }
+      ],
+      "correctOption": "c",
+      "explanation": "أعدُّ الكلمات بين الفراغات: العصفورُ، يطيرُ، فوق، الشّجرة. فعددُ كلمات الجملة 4.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ جملةٍ تصفُ هذه الصورة؟ <svg viewBox=\"0 0 200 130\" xmlns=\"http://www.w3.org/2000/svg\"><ellipse cx=\"78\" cy=\"84\" rx=\"40\" ry=\"26\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><circle cx=\"44\" cy=\"58\" r=\"22\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M28 42 l-6 -16 l16 8 z\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M60 42 l6 -16 l-16 8 z\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><circle cx=\"38\" cy=\"56\" r=\"3\" fill=\"#1f2937\" stroke=\"none\"/><circle cx=\"52\" cy=\"56\" r=\"3\" fill=\"#1f2937\" stroke=\"none\"/><path d=\"M118 96 h44 v-22 h-44 z\" fill=\"#bfdbfe\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M120 76 q20 -10 40 0\" fill=\"none\" stroke=\"#38bdf8\" stroke-width=\"6\"/></svg>",
+      "options": [
+        { "id": "a", "text": "القطّةُ تشربُ الحليبَ" },
+        { "id": "b", "text": "الكلبُ يشربُ الحليبَ" },
+        { "id": "c", "text": "القطّةُ تأكلُ التّفّاحةَ" },
+        { "id": "d", "text": "البنتُ تقرأُ الكتابَ" }
+      ],
+      "correctOption": "a",
+      "explanation": "في الصورة قطّةٌ تشربُ من وعاءٍ فيه حليب، فالجملةُ الصحيحة «القطّةُ تشربُ الحليبَ» وليست الكلب ولا التّفّاحة.",
+      "difficulty": 2
+    }
+  ]
+}

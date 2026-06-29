@@ -16,10 +16,5 @@ export function FlagshipConcoursBanner() {
   const fetchParcours = useServerFn(getParcours);
   const { data } = useQuery({ queryKey: ["explorer-parcours"], queryFn: () => fetchParcours() });
   const flagships = flagshipConcours((data?.parcours as ProgramParcours[]) ?? []);
-  return (
-    <FlagshipBanner
-      flagships={flagships}
-      onOpen={() => navigate({ to: "/themes/$familyId", params: { familyId: "tunisien" } })}
-    />
-  );
+  return <FlagshipBanner flagships={flagships} onOpen={() => navigate({ to: "/programme" })} />;
 }

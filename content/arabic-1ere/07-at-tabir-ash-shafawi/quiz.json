@@ -1,0 +1,65 @@
+{
+  "title": "اختبار فهم الدرس ⭐",
+  "questions": [
+    {
+      "prompt": "ما اسم هذه الصورة؟ <svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><ellipse cx=\"60\" cy=\"78\" rx=\"30\" ry=\"26\" fill=\"#fbbf24\" stroke=\"#1f2937\" stroke-width=\"3\"/><circle cx=\"60\" cy=\"44\" r=\"22\" fill=\"#fbbf24\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M42 30 l-6 -16 l16 8 z\" fill=\"#fbbf24\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M78 30 l6 -16 l-16 8 z\" fill=\"#fbbf24\" stroke=\"#1f2937\" stroke-width=\"3\"/><circle cx=\"52\" cy=\"44\" r=\"3\" fill=\"#1f2937\" stroke=\"none\"/><circle cx=\"68\" cy=\"44\" r=\"3\" fill=\"#1f2937\" stroke=\"none\"/><path d=\"M60 50 l-4 5 l8 0 z\" fill=\"#f97316\" stroke=\"#1f2937\" stroke-width=\"2\"/><line x1=\"40\" y1=\"52\" x2=\"24\" y2=\"49\" stroke=\"#1f2937\" stroke-width=\"2\"/><line x1=\"40\" y1=\"56\" x2=\"24\" y2=\"58\" stroke=\"#1f2937\" stroke-width=\"2\"/><line x1=\"80\" y1=\"52\" x2=\"96\" y2=\"49\" stroke=\"#1f2937\" stroke-width=\"2\"/><line x1=\"80\" y1=\"56\" x2=\"96\" y2=\"58\" stroke=\"#1f2937\" stroke-width=\"2\"/></svg>",
+      "options": [
+        { "id": "a", "text": "عصفور" },
+        { "id": "b", "text": "سمكة" },
+        { "id": "c", "text": "قطّة" },
+        { "id": "d", "text": "كرة" }
+      ],
+      "correctOption": "c",
+      "explanation": "في الصورة قطّةٌ لها أُذنان وشاربان، فاسمها «قطّة».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ماذا أقول عندما أدخل القسم في الصباح؟",
+      "options": [
+        { "id": "a", "text": "صباح الخير" },
+        { "id": "b", "text": "تصبح على خير" },
+        { "id": "c", "text": "مع السلامة" },
+        { "id": "d", "text": "إلى اللقاء" }
+      ],
+      "correctOption": "a",
+      "explanation": "عند الدخول في الصباح أُحيّي وأقول «صباح الخير». أمّا «تصبح على خير» فتُقال عند النوم.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أيّ كلمةٍ تُكمل الجملة: «القطّة ...»؟",
+      "options": [
+        { "id": "a", "text": "تطير" },
+        { "id": "b", "text": "تموء" },
+        { "id": "c", "text": "تسبح" },
+        { "id": "d", "text": "تقرأ" }
+      ],
+      "correctOption": "b",
+      "explanation": "صوت القطّة هو المُواء، فنقول «القطّة تموء». الطيران للعصفور، والسباحة للسمكة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما لون الشمس؟ <svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"60\" cy=\"60\" r=\"26\" fill=\"#facc15\" stroke=\"#1f2937\" stroke-width=\"3\"/><g stroke=\"#f59e0b\" stroke-width=\"4\" stroke-linecap=\"round\"><line x1=\"60\" y1=\"14\" x2=\"60\" y2=\"26\"/><line x1=\"60\" y1=\"94\" x2=\"60\" y2=\"106\"/><line x1=\"14\" y1=\"60\" x2=\"26\" y2=\"60\"/><line x1=\"94\" y1=\"60\" x2=\"106\" y2=\"60\"/><line x1=\"28\" y1=\"28\" x2=\"37\" y2=\"37\"/><line x1=\"83\" y1=\"83\" x2=\"92\" y2=\"92\"/><line x1=\"92\" y1=\"28\" x2=\"83\" y2=\"37\"/><line x1=\"37\" y1=\"83\" x2=\"28\" y2=\"92\"/></g></svg>",
+      "options": [
+        { "id": "a", "text": "أزرق" },
+        { "id": "b", "text": "أخضر" },
+        { "id": "c", "text": "أسود" },
+        { "id": "d", "text": "أصفر" }
+      ],
+      "correctOption": "d",
+      "explanation": "الشمس في الصورة صفراء، فلونها «أصفر». الكلمة التي تصف الشيء قد تدلّ على لونه.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أعطاك صديقك هديّة. ماذا تقول له؟",
+      "options": [
+        { "id": "a", "text": "صباح الخير" },
+        { "id": "b", "text": "شكرًا" },
+        { "id": "c", "text": "آسف" },
+        { "id": "d", "text": "مع السلامة" }
+      ],
+      "correctOption": "b",
+      "explanation": "عندما يُعطيك أحدٌ شيئًا تقول «شكرًا»، فهي كلمة الذوق المناسبة عند تلقّي الهديّة.",
+      "difficulty": 2
+    }
+  ]
+}
