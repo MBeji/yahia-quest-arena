@@ -1,0 +1,85 @@
+{
+  "title": "⭐⭐ Review: Cohesive Devices and Reference Chains",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Choose the CORRECT cohesive device to join these two sentences: \"The results were disappointing. ___, the team remained optimistic.\"",
+      "options": [
+        { "id": "a", "text": "Furthermore" },
+        { "id": "b", "text": "Therefore" },
+        { "id": "c", "text": "In addition" },
+        { "id": "d", "text": "Nevertheless" }
+      ],
+      "correctOption": "d",
+      "explanation": "A contrast is needed: disappointing results vs remaining optimistic. \"Nevertheless\" (= despite this) signals the contrast perfectly. \"Furthermore\" and \"In addition\" add information (wrong relationship). \"Therefore\" signals a result (wrong direction — the optimism is not caused by the disappointment).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Find the sentence that INCORRECTLY uses a cohesive device.",
+      "options": [
+        {
+          "id": "a",
+          "text": "The deadline passed; consequently, the penalty clause was triggered."
+        },
+        { "id": "b", "text": "Sales increased in Q1. Moreover, they rose further in Q2." },
+        { "id": "c", "text": "The policy was a success, however it was soon abandoned." },
+        { "id": "d", "text": "The project ran over budget. As a result, funding was cut." }
+      ],
+      "correctOption": "c",
+      "explanation": "\"However\" is a conjunctive adverb — it cannot join two independent clauses with only a comma (comma splice). It needs either a semicolon before it (\"…budget; however, it…\") or a new sentence. (a) correctly uses a semicolon before consequently; (b) uses a new sentence before Moreover; (d) uses a new sentence before As a result.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choose the BEST cohesive device for this gap: \"Many students struggle with time management. ___, they often perform well in individual tasks.\"",
+      "options": [
+        { "id": "a", "text": "Admittedly" },
+        { "id": "b", "text": "In conclusion" },
+        { "id": "c", "text": "Consequently" },
+        { "id": "d", "text": "In addition" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Admittedly\" signals a concession — acknowledging a true weakness (time management struggles) while pointing out a contrasting strength (good individual performance). It fits the concessive relationship. \"Consequently\" signals a result (wrong direction); \"In conclusion\" would only come at the end of an argument; \"In addition\" adds information without the needed contrast.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: \"A new regulation was introduced last month. ___ regulation requires all firms to disclose their environmental impact.\"\nWhich word creates the STRONGEST cohesive link back to the regulation just mentioned?",
+      "options": [
+        { "id": "a", "text": "A" },
+        { "id": "b", "text": "Any" },
+        { "id": "c", "text": "This" },
+        { "id": "d", "text": "Some" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"This\" (demonstrative determiner) creates the strongest cohesive link, explicitly pointing back to the just-mentioned regulation. The definite article \"The\" also creates a valid reference chain by signalling a previously known entity. \"A\" reintroduces the noun as if unrelated, breaking the chain. \"Any\" and \"Some\" are indefinite and introduce new instances rather than referring back.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Identify the function of the cohesive device: \"The proposal was well-researched. Furthermore, it was supported by compelling data.\"",
+      "options": [
+        { "id": "a", "text": "Contrast" },
+        { "id": "b", "text": "Addition" },
+        { "id": "c", "text": "Cause and result" },
+        { "id": "d", "text": "Concession" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Furthermore\" signals addition — it introduces an extra point that reinforces or adds to what came before. Both sentences present positive qualities of the proposal; the second adds to the first. There is no contrast, cause-effect relationship, or concession here.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: \"She had intended to apply for the post, but in the end decided not to.\"\nWhat is omitted after \"decided not to\" (what does the ellipsis stand for)?",
+      "options": [
+        { "id": "a", "text": "to apply for the post" },
+        { "id": "b", "text": "to do it" },
+        { "id": "c", "text": "applying" },
+        { "id": "d", "text": "the post" }
+      ],
+      "correctOption": "a",
+      "explanation": "The full version would be: \"…decided not to [apply for the post]\". The ellipsis omits the entire infinitive phrase that has already been stated. \"Decided not to\" is verbal ellipsis — the omitted material (apply for the post) is recoverable from the earlier clause. This is a classic clausal/verbal ellipsis pattern.",
+      "difficulty": 3
+    }
+  ]
+}

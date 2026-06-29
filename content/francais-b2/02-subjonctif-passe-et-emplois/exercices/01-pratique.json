@@ -1,0 +1,154 @@
+{
+  "title": "⭐ Entraînement : le subjonctif passé",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complète : « Je doute qu'il ___ son travail avant midi. » (finir, action déjà accomplie)",
+      "options": [
+        {
+          "id": "a",
+          "text": "ait fini"
+        },
+        {
+          "id": "b",
+          "text": "finisse"
+        },
+        {
+          "id": "c",
+          "text": "a fini"
+        },
+        {
+          "id": "d",
+          "text": "finira"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "L'action est antérieure : on emploie le subjonctif passé = avoir au subjonctif présent + participe passé : qu'il ait fini. « finisse » est le subjonctif présent, « a fini » l'indicatif, « finira » le futur.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Nous sommes heureux qu'elle ___ à la fête samedi dernier. » (venir)",
+      "options": [
+        {
+          "id": "a",
+          "text": "vienne"
+        },
+        {
+          "id": "b",
+          "text": "soit venue"
+        },
+        {
+          "id": "c",
+          "text": "est venue"
+        },
+        {
+          "id": "d",
+          "text": "soit venu"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Action passée (« samedi dernier ») + verbe venir → subjonctif passé avec être : qu'elle soit venue, le participe s'accordant au féminin. « vienne » est le présent, « est venue » l'indicatif, et « soit venu » ne s'accorde pas avec « elle ».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel est le subjonctif passé du verbe parler avec « que j' » ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "que je parle"
+        },
+        {
+          "id": "b",
+          "text": "que j'ai parlé"
+        },
+        {
+          "id": "c",
+          "text": "que j'aie parlé"
+        },
+        {
+          "id": "d",
+          "text": "que j'avais parlé"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Le subjonctif passé = avoir au subjonctif présent (que j'aie) + participe passé (parlé) : que j'aie parlé. « que je parle » est le subjonctif présent, « que j'ai parlé » l'indicatif, « que j'avais parlé » le plus-que-parfait.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Il faut que tu ___ tes valises avant ce soir. » (faire, action à venir)",
+      "options": [
+        {
+          "id": "a",
+          "text": "aies fait"
+        },
+        {
+          "id": "b",
+          "text": "fasses"
+        },
+        {
+          "id": "c",
+          "text": "fais"
+        },
+        {
+          "id": "d",
+          "text": "feras"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "L'action reste à accomplir (postérieure) : on garde le subjonctif présent du verbe faire : que tu fasses. Le subjonctif passé « aies fait » exprimerait une action déjà terminée. « fais » et « feras » sont l'indicatif.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Je suis désolé que vous ___ attendre si longtemps hier. » (devoir)",
+      "options": [
+        {
+          "id": "a",
+          "text": "deviez"
+        },
+        {
+          "id": "b",
+          "text": "avez dû"
+        },
+        {
+          "id": "c",
+          "text": "ayez dû"
+        },
+        {
+          "id": "d",
+          "text": "devrez"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Action passée (« hier ») après un sentiment → subjonctif passé avec avoir : que vous ayez dû. « deviez » est le subjonctif présent, « avez dû » l'indicatif, et « devrez » le futur.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Elle regrette que nous ___ si tôt l'an dernier. » (partir)",
+      "options": [
+        {
+          "id": "a",
+          "text": "partions"
+        },
+        {
+          "id": "b",
+          "text": "sommes partis"
+        },
+        {
+          "id": "c",
+          "text": "soyons partis"
+        },
+        {
+          "id": "d",
+          "text": "ayons partis"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Action antérieure + verbe partir (auxiliaire être) → subjonctif passé : que nous soyons partis. « partions » est le présent, « sommes partis » l'indicatif, et « ayons partis » utilise le mauvais auxiliaire (partir se conjugue avec être).",
+      "difficulty": 2
+    }
+  ]
+}

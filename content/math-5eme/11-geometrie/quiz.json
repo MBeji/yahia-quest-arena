@@ -1,0 +1,65 @@
+{
+  "title": "اختبار فهم الدرس ⭐",
+  "questions": [
+    {
+      "prompt": "ما رمزُ التوازي بين مستقيمين؟",
+      "options": [
+        { "id": "a", "text": "⊥" },
+        { "id": "b", "text": "∥" },
+        { "id": "c", "text": "=" },
+        { "id": "d", "text": "×" }
+      ],
+      "correctOption": "b",
+      "explanation": "رمزُ التوازي هو ∥، أمّا ⊥ فهو رمزُ التعامد بين مستقيمين.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما نوعُ هذه الزاوية؟ <svg viewBox=\"0 0 100 100\"><line x1=\"50\" y1=\"82\" x2=\"95\" y2=\"82\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"50\" y1=\"82\" x2=\"50\" y2=\"33\" stroke=\"currentColor\" stroke-width=\"2.5\"/><rect x=\"50\" y=\"72\" width=\"10\" height=\"10\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"1.5\"/><circle cx=\"50\" cy=\"82\" r=\"2.5\" fill=\"currentColor\"/></svg>",
+      "options": [
+        { "id": "a", "text": "حادّة" },
+        { "id": "b", "text": "منفرجة" },
+        { "id": "c", "text": "قائمة" },
+        { "id": "d", "text": "مستقيمة" }
+      ],
+      "correctOption": "c",
+      "explanation": "المربّعُ الصغير عند الرأس علامةُ الزاوية القائمة التي قيسُها 90°.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "مثلّثٌ أطوالُ أضلاعه 6 cm و6 cm و6 cm. ما نوعُه حسب الأضلاع؟",
+      "options": [
+        { "id": "a", "text": "مختلف الأضلاع" },
+        { "id": "b", "text": "متساوي الساقين" },
+        { "id": "c", "text": "قائم الزاوية" },
+        { "id": "d", "text": "متساوي الأضلاع" }
+      ],
+      "correctOption": "d",
+      "explanation": "أضلاعُه الثلاثة متساوية (6 = 6 = 6)، فهو متساوي الأضلاع.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "في متوازي الأضلاع، الأضلاعُ المتقابلة:",
+      "options": [
+        { "id": "a", "text": "متوازية ومتساوية" },
+        { "id": "b", "text": "متعامدة دائمًا" },
+        { "id": "c", "text": "مختلفة الأطوال" },
+        { "id": "d", "text": "غيرُ متوازية" }
+      ],
+      "correctOption": "a",
+      "explanation": "من خاصيات متوازي الأضلاع أنّ كلَّ ضلعين متقابلين متوازيان ومتساويان في الطول.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "دائرةٌ شعاعُها 7 cm. ما طولُ قطرها؟",
+      "options": [
+        { "id": "a", "text": "7 cm" },
+        { "id": "b", "text": "14 cm" },
+        { "id": "c", "text": "3,5 cm" },
+        { "id": "d", "text": "21 cm" }
+      ],
+      "correctOption": "b",
+      "explanation": "القطرُ ضعفُ الشعاع: d = 2 × r = 2 × 7 = 14 cm.",
+      "difficulty": 2
+    }
+  ]
+}

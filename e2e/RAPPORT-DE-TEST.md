@@ -1,4 +1,4 @@
-# Rapport de test E2E — XP Scholars
+# Rapport de test E2E — Na9ra Nal3ab
 
 > Plan de non-régression / bug-bounty couvrant les fonctionnalités majeures :
 > affichage & responsive, parcours pédagogiques, gamification, programmes hors-école,

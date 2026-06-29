@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill : révision globale de la lecture",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Lis l'article :\n« La lecture sur papier résiste mieux qu'on ne le pensait. Malgré l'essor des liseuses, la majorité des Français déclarent encore préférer tenir un vrai livre entre les mains, pour le plaisir du toucher et l'absence d'écran. »\n\nQuelle est l'idée principale de l'article ?",
+      "options": [
+        { "id": "a", "text": "Les liseuses ont fait disparaître le livre papier." },
+        { "id": "b", "text": "Beaucoup de Français préfèrent encore le livre papier." },
+        { "id": "c", "text": "Les Français ne lisent plus du tout." },
+        { "id": "d", "text": "Le papier est moins cher que les liseuses." }
+      ],
+      "correctOption": "b",
+      "explanation": "Le texte affirme que « la majorité des Français déclarent encore préférer tenir un vrai livre » : c'est l'idée centrale. Le connecteur « Malgré » montre que le papier résiste à la liseuse, ce qui contredit l'idée d'une disparition ; le prix n'est pas évoqué.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lis le message de forum :\n« Bonjour ! Je pars étudier à Lyon en septembre et je cherche une colocation pas trop chère, proche du campus. Si quelqu'un a un plan ou un bon site à conseiller, je suis preneur. Merci d'avance ! »\n\nQue cherche l'auteur du message ?",
+      "options": [
+        { "id": "a", "text": "Un emploi à Lyon." },
+        { "id": "b", "text": "Une colocation près du campus." },
+        { "id": "c", "text": "Un cours de français." },
+        { "id": "d", "text": "Un billet de train." }
+      ],
+      "correctOption": "b",
+      "explanation": "L'auteur écrit « je cherche une colocation pas trop chère, proche du campus » : c'est sa demande. Il ne cherche ni emploi, ni cours, ni billet de train ; il faut s'en tenir à ce que dit le texte.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lis l'avis :\n« Service interminable, plats tièdes et addition salée : je ne remettrai pas les pieds dans ce café. »\n\nQuel est le ton de cet avis ?",
+      "options": [
+        { "id": "a", "text": "Positif" },
+        { "id": "b", "text": "Neutre" },
+        { "id": "c", "text": "Négatif" },
+        { "id": "d", "text": "Enthousiaste" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Interminable », « tièdes », « salée » et « je ne remettrai pas les pieds » sont des critiques nettes : le ton est négatif. Un ton positif ou enthousiaste emploierait des mots élogieux ; un ton neutre décrirait sans juger.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lis le courriel :\n« Bonjour,\nSuite à votre demande, je vous confirme que l'atelier de poterie aura bien lieu samedi, mais l'horaire change : il commencera à 14 h au lieu de 10 h. Merci de votre compréhension. »\n\nQuelle information l'auteur veut-il surtout transmettre ?",
+      "options": [
+        { "id": "a", "text": "L'atelier est annulé." },
+        { "id": "b", "text": "Le lieu de l'atelier a changé." },
+        { "id": "c", "text": "L'atelier est complet." },
+        { "id": "d", "text": "L'horaire de l'atelier a changé." }
+      ],
+      "correctOption": "d",
+      "explanation": "Le courriel confirme que l'atelier « aura bien lieu » mais que « l'horaire change : il commencera à 14 h au lieu de 10 h » : l'essentiel est le changement d'heure. L'atelier n'est ni annulé ni complet, et le lieu n'est pas mentionné comme modifié.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lis le texte informatif :\n« Trier ses déchets demande un petit effort, mais le geste compte : recycler une tonne de papier permet d'économiser des arbres et de l'eau. C'est pourquoi de plus en plus de communes facilitent le tri avec des bacs de couleur. »\n\nPourquoi les communes installent-elles des bacs de couleur ?",
+      "options": [
+        { "id": "a", "text": "Pour décorer les rues." },
+        { "id": "b", "text": "Pour faciliter le tri des déchets." },
+        { "id": "c", "text": "Pour vendre du papier recyclé." },
+        { "id": "d", "text": "Pour interdire le recyclage." }
+      ],
+      "correctOption": "b",
+      "explanation": "Le connecteur de conséquence « C'est pourquoi » relie les bénéfices du tri à l'action des communes qui « facilitent le tri avec des bacs de couleur ». L'objectif est donc de faciliter le tri, non de décorer, de vendre ou d'interdire.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lis la phrase :\n« Le sentier était tellement escarpé que même les marcheurs expérimentés devaient s'aider des mains pour grimper. »\nQue signifie « escarpé » ici ?",
+      "options": [
+        { "id": "a", "text": "Très pentu et difficile à gravir." },
+        { "id": "b", "text": "Tout plat et facile." },
+        { "id": "c", "text": "Très large." },
+        { "id": "d", "text": "Couvert de fleurs." }
+      ],
+      "correctOption": "a",
+      "explanation": "L'indice « devaient s'aider des mains pour grimper », même pour des marcheurs expérimentés, montre une forte pente : « escarpé » signifie très pentu et difficile à gravir. Un chemin plat ou large ne demanderait pas un tel effort.",
+      "difficulty": 2
+    }
+  ]
+}

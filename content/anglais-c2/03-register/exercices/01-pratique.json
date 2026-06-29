@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Practice: Formal vs Informal Vocabulary",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Choose the MOST formal equivalent of \"put off\" (to delay).",
+      "options": [
+        { "id": "a", "text": "push back" },
+        { "id": "b", "text": "postpone" },
+        { "id": "c", "text": "hold off" },
+        { "id": "d", "text": "wait on" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Postpone\" is the single Latinate verb used in formal writing. \"Push back\" and \"hold off\" are phrasal verbs — informal. \"Wait on\" is also informal and has a different primary meaning (to serve someone). In a formal letter or report, always prefer postpone.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which word is the MOST colloquial (informal) substitute for \"require\"?",
+      "options": [
+        { "id": "a", "text": "necessitate" },
+        { "id": "b", "text": "demand" },
+        { "id": "c", "text": "need" },
+        { "id": "d", "text": "mandate" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Need\" is the most colloquial and everyday option. \"Necessitate\" and \"mandate\" are more formal than \"require\". \"Demand\" is formal too and implies a stronger requirement. Only \"need\" clearly belongs to informal/everyday register.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choose the FORMAL replacement for the phrasal verb in: \"The committee set up a new working group.\"",
+      "options": [
+        { "id": "a", "text": "The committee started up a new working group." },
+        { "id": "b", "text": "The committee put together a new working group." },
+        { "id": "c", "text": "The committee established a new working group." },
+        { "id": "d", "text": "The committee got going a new working group." }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Establish\" is the formal Latinate equivalent of \"set up\". (a) \"started up\" is still a phrasal verb; (b) \"put together\" is an informal phrasal verb; (d) \"got going\" is colloquial and grammatically weak. Only (c) raises the register correctly.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which sentence is MOST appropriate for a formal business email?",
+      "options": [
+        { "id": "a", "text": "I'm writing to find out about your prices." },
+        { "id": "b", "text": "I am writing to enquire about your pricing structure." },
+        { "id": "c", "text": "Just checking what you charge for this stuff." },
+        { "id": "d", "text": "Could you tell me what things cost?" }
+      ],
+      "correctOption": "b",
+      "explanation": "Option (b) avoids contractions (\"I am\"), uses a formal verb (\"enquire\"), and includes a precise noun phrase (\"pricing structure\"). (a) uses a contraction (I'm) and a phrasal verb (find out); (c) is very colloquial (stuff, just checking); (d) uses vague language (things, cost).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which word correctly replaces \"a lot of\" in formal writing?",
+      "options": [
+        { "id": "a", "text": "loads of" },
+        { "id": "b", "text": "tons of" },
+        { "id": "c", "text": "heaps of" },
+        { "id": "d", "text": "a considerable number of" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"A considerable number of\" (or \"a significant number of\") is the formal replacement. \"Loads of\", \"tons of\", and \"heaps of\" are all highly colloquial and inappropriate in academic or formal writing.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT formal-to-informal pairing.",
+      "options": [
+        { "id": "a", "text": "investigate → look into" },
+        { "id": "b", "text": "conclude → wind up" },
+        { "id": "c", "text": "postpone → put off" },
+        { "id": "d", "text": "require → give up" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"Require\" → \"give up\" is wrong: \"give up\" means to abandon or stop, not to need or require. The correct informal equivalent of require is \"need\". The other pairings are all accurate: investigate/look into, conclude/wind up, and postpone/put off are correct formal-informal pairs.",
+      "difficulty": 2
+    }
+  ]
+}

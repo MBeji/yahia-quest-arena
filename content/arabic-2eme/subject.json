@@ -1,0 +1,12 @@
+{
+  "id": "arabic-2eme",
+  "nameFr": "اللغة العربية",
+  "description": "نُتقن الحروف المتّصلة والمنفصلة والحركات والتنوين والشدّة، ونركّب المقاطع لنقرأ كلماتٍ وجملًا أطول، ونفهم نصوصًا قصيرة، ونُثري مفرداتنا، ونرتّب الجمل، ونبدأ الإملاء والكتابة، وفق برنامج اللغة العربية للسنة الثانية من التعليم الأساسي (طريقة «عربية»)",
+  "attribute": "Esprit",
+  "colorToken": "subject-arabic",
+  "icon": "Languages",
+  "displayOrder": 1,
+  "contentLanguage": "ar",
+  "themeId": "ecole-tn",
+  "gradeSlug": "2eme-base"
+}

@@ -1,0 +1,82 @@
+{
+  "title": "📝 تدريب ⭐⭐⭐ على الهندسة (مراجعة شاملة)",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "كم رأسًا للمثلّث؟",
+      "options": [
+        { "id": "a", "text": "4" },
+        { "id": "b", "text": "3" },
+        { "id": "c", "text": "2" },
+        { "id": "d", "text": "6" }
+      ],
+      "correctOption": "b",
+      "explanation": "للمثلّث 3 رؤوس، وكذلك 3 أضلاع و3 زوايا.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما اسمُ القطعة الملوّنة (من المركز إلى نقطةٍ على الدائرة)؟ <svg viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><circle cx=\"50\" cy=\"50\" r=\"2.5\" fill=\"currentColor\"/><line x1=\"50\" y1=\"50\" x2=\"82\" y2=\"50\" stroke=\"#1f2937\" stroke-width=\"2.5\"/><text x=\"60\" y=\"45\" font-size=\"12\" fill=\"currentColor\">r</text></svg>",
+      "options": [
+        { "id": "a", "text": "الشعاع" },
+        { "id": "b", "text": "القطر" },
+        { "id": "c", "text": "الموسّط" },
+        { "id": "d", "text": "الزاوية" }
+      ],
+      "correctOption": "a",
+      "explanation": "القطعةُ تصلُ المركزَ بنقطةٍ واحدة على الدائرة، فهي الشعاع (r)؛ القطرُ يمرّ بالمركز ويصل نقطتين.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم قيسُ الزاوية المستقيمة؟",
+      "options": [
+        { "id": "a", "text": "90°" },
+        { "id": "b", "text": "45°" },
+        { "id": "c", "text": "180°" },
+        { "id": "d", "text": "360°" }
+      ],
+      "correctOption": "c",
+      "explanation": "الزاويةُ المستقيمة ضلعاها على استقامةٍ واحدة وقيسُها 180°.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "بأيّ أداةٍ نرسم دائرةً بشعاعٍ معطى؟",
+      "options": [
+        { "id": "a", "text": "المنقلة" },
+        { "id": "b", "text": "الكوس" },
+        { "id": "c", "text": "المسطرة وحدَها" },
+        { "id": "d", "text": "البركار" }
+      ],
+      "correctOption": "d",
+      "explanation": "نرسم الدائرةَ بالبركار: نثبّت إبرتَه في المركز ونفتحه بطول الشعاع ثمّ ندير.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما طبيعةُ هذين المستقيمين؟ <svg viewBox=\"0 0 100 100\"><line x1=\"20\" y1=\"20\" x2=\"20\" y2=\"84\" stroke=\"currentColor\" stroke-width=\"2.5\"/><line x1=\"12\" y1=\"58\" x2=\"90\" y2=\"58\" stroke=\"currentColor\" stroke-width=\"2.5\"/><rect x=\"20\" y=\"48\" width=\"10\" height=\"10\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"1.5\"/></svg>",
+      "options": [
+        { "id": "a", "text": "متوازيان" },
+        { "id": "b", "text": "متعامدان" },
+        { "id": "c", "text": "متقاطعان وغيرُ متعامدين" },
+        { "id": "d", "text": "منفصلان" }
+      ],
+      "correctOption": "b",
+      "explanation": "المربّعُ الصغير عند التقاطع يدلّ على زاوية قائمة (90°)، فالمستقيمان متعامدان.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "أيُّ مجموعةٍ من الرباعيّات زواياها كلُّها قائمة؟",
+      "options": [
+        { "id": "a", "text": "المربّع والمستطيل" },
+        { "id": "b", "text": "المعيّن ومتوازي الأضلاع" },
+        { "id": "c", "text": "المعيّن والمستطيل" },
+        { "id": "d", "text": "متوازي الأضلاع والمربّع" }
+      ],
+      "correctOption": "a",
+      "explanation": "المربّعُ والمستطيلُ وحدَهما زواياهما الأربعة قائمة؛ أمّا المعيّنُ ومتوازي الأضلاع فزواياهما ليست قائمة (وإن كانت أضلاعُهما متوازية).",
+      "difficulty": 3
+    }
+  ]
+}

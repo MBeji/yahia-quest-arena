@@ -1,0 +1,88 @@
+{
+  "title": "⭐⭐ Drill: Reading Comprehension",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Read the notice:\n\"GYM NOTICE\nThe gym will open one hour later than usual on Saturday 22nd due to a staff event. Normal Sunday hours apply. Members with a Saturday-only pass may attend Sunday at no extra charge.\"\n\nWhat time does the gym USUALLY open on Saturdays?",
+      "options": [
+        { "id": "a", "text": "The text does not say." },
+        { "id": "b", "text": "One hour earlier than on Sunday" },
+        { "id": "c", "text": "At the same time as Sunday" },
+        { "id": "d", "text": "One hour later than on Sunday" }
+      ],
+      "correctOption": "a",
+      "explanation": "The notice only states the gym will open one hour later than usual — it never gives the usual Saturday opening time. Choosing any specific hour would be guessing. The Sunday hours are mentioned as a comparison, but no actual times appear, so this is Not Given in the text.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Read the article extract:\n\"Sleep experts recommend that adults get between seven and nine hours of sleep per night. However, a recent survey found that more than half of adults in the country regularly sleep fewer than six hours. Experts warn that sleep deprivation can affect memory, mood, and physical health.\"\n\nWhat is the article MAINLY about?",
+      "options": [
+        { "id": "a", "text": "The benefits of sleeping nine hours a night" },
+        { "id": "b", "text": "How to improve the quality of your sleep" },
+        {
+          "id": "c",
+          "text": "The gap between recommended and actual sleep hours, and its consequences"
+        },
+        { "id": "d", "text": "Why surveys about sleep are unreliable" }
+      ],
+      "correctOption": "c",
+      "explanation": "The extract presents the recommended amount (seven to nine hours), shows the reality (fewer than six hours), and warns about the consequences. The main idea is the gap between the two, and its health effects. Nine hours as a single benefit (first option) is too narrow, tips for improving sleep are never given, and the text treats the survey as valid rather than questioning it.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Read the story:\n\"Nour stared at her phone. The message was from her best friend: 'I'm moving to Canada next month.' She put the phone down on the table and sat very still.\"\n\nWhat can we INFER about Nour?",
+      "options": [
+        { "id": "a", "text": "Nour is happy because her friend is getting a great opportunity." },
+        { "id": "b", "text": "Nour is shocked or upset by the unexpected news." },
+        { "id": "c", "text": "Nour already knew her friend was moving." },
+        { "id": "d", "text": "Nour is planning to move to Canada too." }
+      ],
+      "correctOption": "b",
+      "explanation": "Nour goes very still and puts her phone down — a physical reaction that signals shock or emotional distress at unexpected news. There is no sign of happiness or excitement (no smile, no positive reaction). Nothing suggests she already knew (she received a message), and moving to Canada herself is never mentioned.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Read the sentence:\n\"The atmosphere at the awards ceremony was electric, with the audience cheering every announcement.\"\nWhat does ELECTRIC most likely mean here?",
+      "options": [
+        { "id": "a", "text": "Powered by electricity" },
+        { "id": "b", "text": "Very exciting and full of energy" },
+        { "id": "c", "text": "Silent and formal" },
+        { "id": "d", "text": "Boring and predictable" }
+      ],
+      "correctOption": "b",
+      "explanation": "The context — an awards ceremony with a cheering audience — is clearly positive and energetic. \"Electric\" here is a metaphor meaning full of excitement and energy. The literal meaning (powered by electricity) does not fit an atmosphere. \"Silent and formal\" and \"boring\" are the opposite of what the cheering audience suggests.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read the article extract:\n\"The coastal village of Sandcroft has been affected by rising sea levels for over a decade. Several homes have already been abandoned, and experts predict that without action, the entire village could be submerged by 2060. Local residents are divided: some want to build sea defences, while others believe it is time to relocate.\"\n\nStatement: \"All Sandcroft residents agree that sea defences are the best solution.\"\nTrue, False, or Not Given?",
+      "options": [
+        { "id": "a", "text": "True" },
+        { "id": "b", "text": "False" },
+        { "id": "c", "text": "Not Given" },
+        { "id": "d", "text": "True — the experts agree too" }
+      ],
+      "correctOption": "b",
+      "explanation": "The text explicitly says residents are divided — some want sea defences, others want to relocate. The statement that all residents agree on sea defences is therefore False. Not Given would mean the text is silent, but the text directly contradicts the statement. The experts discuss submersion, not a preferred solution.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read the email:\n\"Dear Mr Hassan,\nThank you for attending yesterday's interview. We were impressed by your experience and communication skills. However, we have decided to offer the position to another candidate whose qualifications more closely match our current requirements.\nWe will keep your details on file and will contact you should a suitable vacancy arise.\nBest wishes, The Recruitment Team\"\n\nWhat is the WRITER'S purpose?",
+      "options": [
+        { "id": "a", "text": "To invite Mr Hassan to a second interview" },
+        { "id": "b", "text": "To offer Mr Hassan a different position immediately" },
+        {
+          "id": "c",
+          "text": "To inform Mr Hassan that he did not get the job, while leaving the door open"
+        },
+        { "id": "d", "text": "To criticise Mr Hassan's performance at the interview" }
+      ],
+      "correctOption": "c",
+      "explanation": "The email politely declines to offer Mr Hassan the position but says they will keep his details and contact him about future vacancies — rejecting him while leaving the door open. There is no invitation to a second interview, no immediate alternative offer, and the tone is positive about his skills, not critical.",
+      "difficulty": 3
+    }
+  ]
+}

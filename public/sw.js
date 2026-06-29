@@ -1,5 +1,5 @@
 /**
- * XP Scholars service worker — conservative, SSR/auth-safe.
+ * Na9ra Nal3ab service worker — conservative, SSR/auth-safe.
  *
  * - Immutable, content-hashed build assets (/assets/*) → cache-first (fast repeat
  *   visits, works offline once cached).
@@ -84,7 +84,7 @@ self.addEventListener("push", (event) => {
     payload = {};
   }
 
-  const title = payload.title || "XP Scholars";
+  const title = payload.title || "Na9ra Nal3ab";
   const options = {
     body: payload.body || "",
     icon: "/icons/icon-192.png",

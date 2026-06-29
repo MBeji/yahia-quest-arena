@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill: Inversion for Emphasis",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complete: \"Scarcely ___ the ship left port when the storm struck.\"",
+      "options": [
+        { "id": "a", "text": "did" },
+        { "id": "b", "text": "has" },
+        { "id": "c", "text": "had" },
+        { "id": "d", "text": "was" }
+      ],
+      "correctOption": "c",
+      "explanation": "Scarcely triggers inversion with the past perfect: Scarcely had the ship left port when… The main event (the storm) is also past, so the past perfect auxiliary had is correct. \"Did\" would need a base verb (leave, not left). \"Has\" is present perfect — wrong for a completed past narrative. \"Was\" does not collocate with the following verb left in this structure.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"So ___ the conditions that the race was called off.\"",
+      "options": [
+        { "id": "a", "text": "terrible were" },
+        { "id": "b", "text": "were terrible" },
+        { "id": "c", "text": "terrible they were" },
+        { "id": "d", "text": "were the terrible" }
+      ],
+      "correctOption": "a",
+      "explanation": "The \"So + adjective + inversion\" pattern requires: So + adjective (terrible) + inverted verb (were) + subject (the conditions) + that… So the correct answer is \"terrible were\". \"Were terrible\" places the verb before the adjective — wrong order. \"Terrible they were\" inserts the subject pronoun between adjective and verb, which is not used in this inverted structure. \"Were the terrible\" is not grammatical.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which sentence uses 'Only when' correctly?",
+      "options": [
+        { "id": "a", "text": "Only when did the fire brigade arrive the building was saved." },
+        { "id": "b", "text": "Only when the fire brigade arrived, the building was saved." },
+        { "id": "c", "text": "Only when the fire brigade arrived was the building saved." },
+        { "id": "d", "text": "Only when was the fire brigade arriving the building saved." }
+      ],
+      "correctOption": "c",
+      "explanation": "With \"Only when\", inversion applies to the MAIN clause, not the when-clause: Only when [the fire brigade arrived] was the building saved (auxiliary before subject). Option (a) wrongly inverts inside the when-clause (\"did… arrive\"). Option (b) has normal order in the main clause — no inversion, which is wrong after the fronted only when. Option (d) inverts both clauses, which is never correct.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"Not only ___ the experiment, but she also published her findings within a month.\"",
+      "options": [
+        { "id": "a", "text": "she completed" },
+        { "id": "b", "text": "she did complete" },
+        { "id": "c", "text": "completed she" },
+        { "id": "d", "text": "did she complete" }
+      ],
+      "correctOption": "d",
+      "explanation": "After \"Not only\" the first clause must invert: auxiliary (did) + subject (she) + base verb (complete). This gives: Not only did she complete the experiment… Option (a) keeps normal subject-first order — no inversion. Option (b) also keeps subject before auxiliary — still no inversion. Option (c) inverts without the do-auxiliary — this is not grammatical in modern English for action verbs.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"Such ___ his influence that the whole industry changed direction.\"",
+      "options": [
+        { "id": "a", "text": "is" },
+        { "id": "b", "text": "was" },
+        { "id": "c", "text": "had been" },
+        { "id": "d", "text": "would be" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Such was…\" is the inverted past form: Such was his influence that… The verb must be in the simple past to match the past narrative (the industry changed direction — also past simple). \"Is\" makes it present, breaking the narrative tense. \"Had been\" signals past-before-past (past perfect), implying a prior event not expressed here. \"Would be\" introduces a conditional that has no supporting if-clause.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "A safety notice reads: \"___ tampering with the emergency exits. Doing so may endanger lives.\" Which opening is most appropriate AND correctly formed?",
+      "options": [
+        { "id": "a", "text": "Not only should you refrain from" },
+        { "id": "b", "text": "On no account should passengers engage in" },
+        { "id": "c", "text": "Never you should be involved in" },
+        { "id": "d", "text": "Rarely do passengers consider" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"On no account should passengers engage in tampering with the emergency exits\" is correctly formed (\"On no account\" + modal inversion: should + subject) and idiomatically appropriate for a formal safety notice expressing absolute prohibition. Option (a) produces \"Not only should you refrain from tampering…\" — grammatically inverted but the \"Not only\" structure requires a second clause (\"but also…\") which is absent. Option (c) puts the subject before the modal (\"Never you should\") — no inversion. Option (d) \"Rarely\" softens the prohibition to a habit observation — wrong for a safety notice demanding total compliance.",
+      "difficulty": 3
+    }
+  ]
+}

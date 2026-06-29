@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision : la ville et la vie quotidienne",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Associe le lieu à l'action : où emprunte-t-on des livres ?",
+      "options": [
+        { "id": "a", "text": "à la bibliothèque" },
+        { "id": "b", "text": "à la banque" },
+        { "id": "c", "text": "à la boulangerie" },
+        { "id": "d", "text": "au musée" }
+      ],
+      "correctOption": "a",
+      "explanation": "On emprunte des livres à la bibliothèque. À la banque on gère son argent, à la boulangerie on achète du pain, et au musée on regarde des œuvres d'art.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Le marchand te rend 3 euros après ton achat. Ces pièces, c'est…",
+      "options": [
+        { "id": "a", "text": "le prix" },
+        { "id": "b", "text": "la caisse" },
+        { "id": "c", "text": "la monnaie" },
+        { "id": "d", "text": "l'ordonnance" }
+      ],
+      "correctOption": "c",
+      "explanation": "L'argent que le marchand te rend s'appelle la monnaie. Le prix, c'est combien coûte l'objet ; la caisse, c'est l'endroit où l'on paie ; l'ordonnance vient du médecin.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète le mini-dialogue : « — Pardon, où est la pharmacie ? — Elle est ___ de la poste, juste à côté. »",
+      "options": [
+        { "id": "a", "text": "tout droit" },
+        { "id": "b", "text": "à côté" },
+        { "id": "c", "text": "jusqu'à" },
+        { "id": "d", "text": "traversez" }
+      ],
+      "correctOption": "b",
+      "explanation": "« À côté de » signifie tout près, juste à côté. « Tout droit » indique une direction, « jusqu'à » marque une limite à atteindre, et « traversez » est un ordre (passer de l'autre côté).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve l'intrus.",
+      "options": [
+        { "id": "a", "text": "la boulangerie" },
+        { "id": "b", "text": "la boucherie" },
+        { "id": "c", "text": "l'épicerie" },
+        { "id": "d", "text": "l'hôpital" }
+      ],
+      "correctOption": "d",
+      "explanation": "La boulangerie, la boucherie et l'épicerie sont des commerces où l'on achète à manger. L'hôpital est un lieu de santé où l'on se fait soigner : c'est l'intrus.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Que veut dire l'expression « faire les courses » ?",
+      "options": [
+        { "id": "a", "text": "courir vite" },
+        { "id": "b", "text": "aller acheter à manger" },
+        { "id": "c", "text": "faire du sport" },
+        { "id": "d", "text": "prendre rendez-vous" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Faire les courses », c'est aller acheter de la nourriture (au marché ou au supermarché). Attention à ne pas confondre avec « faire une course à pied », qui veut dire courir.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Tu es très malade et tu dois te faire soigner d'urgence. Où vas-tu ?",
+      "options": [
+        { "id": "a", "text": "à la mairie" },
+        { "id": "b", "text": "au commissariat" },
+        { "id": "c", "text": "à l'hôpital" },
+        { "id": "d", "text": "à la gare" }
+      ],
+      "correctOption": "c",
+      "explanation": "Quand on est très malade, on va à l'hôpital pour se faire soigner. La mairie gère les papiers, le commissariat est la police, et la gare sert aux trains.",
+      "difficulty": 2
+    }
+  ]
+}

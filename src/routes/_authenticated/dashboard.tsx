@@ -30,6 +30,7 @@ import { purchaseShopItem, equipInventorySkin, activateInventoryItem } from "@/f
 import { recoverStreak } from "@/features/progression";
 import { EnablePushCard } from "@/features/notifications";
 import { SubjectPathCard } from "@/features/dashboard/components/subject-path-card";
+import { MotivationalQuote } from "@/features/dashboard/components/motivational-quote";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useReducedMotion } from "motion/react";
 
@@ -53,8 +54,16 @@ const DashboardBadgesShop = lazy(() =>
   })),
 );
 
+// Lazy so the flagship banner trio (crown SVG + banner) stays out of the initial
+// dashboard chunk; it's query-gated anyway, so there's no perceptible delay.
+const FlagshipConcoursBanner = lazy(() =>
+  import("@/features/dashboard/components/flagship-concours-banner").then((mod) => ({
+    default: mod.FlagshipConcoursBanner,
+  })),
+);
+
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  head: () => ({ meta: [{ title: "Hall des Héros · XP Scholars" }] }),
+  head: () => ({ meta: [{ title: "Hall des Héros · Na9ra Nal3ab" }] }),
   component: Dashboard,
 });
 
@@ -125,24 +134,6 @@ function DailyXpWidget({
           </div>
         )}
       </div>
-    </div>
-  );
-}
-
-function MotivationalQuote() {
-  const t = useT();
-  const dayIndex = new Date().getDate() % t.quotes.length;
-  const quote = t.quotes[dayIndex];
-
-  return (
-    <div className="flex flex-col justify-center rounded-2xl border border-[color:var(--gold)]/20 bg-black/40 p-5 backdrop-blur-md">
-      <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--gold)] mb-3">
-        {t.dashboard.quoteLabel}
-      </div>
-      <blockquote className="font-display text-base font-medium italic leading-relaxed">
-        «&nbsp;{quote.text}&nbsp;»
-      </blockquote>
-      <cite className="mt-2 text-xs not-italic text-muted-foreground">— {quote.author}</cite>
     </div>
   );
 }
@@ -318,7 +309,7 @@ function Dashboard() {
     }
 
     if (continueSubject) {
-      navigate({ to: "/subject/$subjectId", params: { subjectId: continueSubject.id } });
+      navigate({ to: "/matiere/$subjectId", params: { subjectId: continueSubject.id } });
       return;
     }
 
@@ -420,6 +411,11 @@ function Dashboard() {
           </div>
         </motion.div>
 
+        {/* FLAGSHIP CONCOURS BANNER — 6ème / 9ème, detectable right after login. */}
+        <Suspense fallback={null}>
+          <FlagshipConcoursBanner />
+        </Suspense>
+
         {/* TODAY'S PROGRESS + MOTIVATION */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
@@ -501,7 +497,7 @@ function Dashboard() {
           {/* Continue subject button - secondary */}
           {continueSubject && (
             <Link
-              to="/subject/$subjectId"
+              to="/matiere/$subjectId"
               params={{ subjectId: continueSubject.id }}
               className="group flex items-center justify-between gap-4 rounded-2xl border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 p-4 backdrop-blur-md transition hover:border-[color:var(--gold)]/60 hover:bg-[color:var(--gold)]/10 sm:p-5"
             >

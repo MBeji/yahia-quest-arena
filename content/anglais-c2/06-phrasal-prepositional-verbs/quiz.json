@@ -1,0 +1,68 @@
+{
+  "title": "Comprehension Check ⭐",
+  "questions": [
+    {
+      "prompt": "Which sentence uses a three-part phrasal verb correctly?",
+      "options": [
+        { "id": "a", "text": "I can't put the noise up with." },
+        { "id": "b", "text": "I can't put up with the noise." },
+        { "id": "c", "text": "I can't put up the noise with." },
+        { "id": "d", "text": "I can't with put up the noise." }
+      ],
+      "correctOption": "b",
+      "explanation": "Three-part phrasal verbs are always inseparable — the particles stay together immediately after the verb: put up with + object. Splitting the particles, as in the other options, is never grammatical.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"She ___ anyone who didn't go to university.\" (= regards as inferior)",
+      "options": [
+        { "id": "a", "text": "looks up to" },
+        { "id": "b", "text": "looks after" },
+        { "id": "c", "text": "looks into" },
+        { "id": "d", "text": "looks down on" }
+      ],
+      "correctOption": "d",
+      "explanation": "Look down on means to regard someone as inferior or less important. Look up to means to admire, look after means to care for, and look into means to investigate — three entirely different meanings carried by the particle.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "The phrasal verb in \"Turn it down\" is separable. Why must the pronoun go between the verb and particle?",
+      "options": [
+        { "id": "a", "text": "Because the verb is irregular." },
+        {
+          "id": "b",
+          "text": "Because pronoun objects must go between the verb and particle in separable phrasal verbs."
+        },
+        { "id": "c", "text": "Because \"it\" is a reflexive pronoun." },
+        { "id": "d", "text": "Because \"turn down\" is an inseparable verb." }
+      ],
+      "correctOption": "b",
+      "explanation": "When the object of a separable phrasal verb is a pronoun, it must sit between the verb and its particle: turn it down, pick it up, hand it in. Saying \"Turn down it\" is ungrammatical. This rule does not apply to noun objects, which can go either position.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which single-word formal equivalent matches the phrasal verb \"do away with\"?",
+      "options": [
+        { "id": "a", "text": "postpone" },
+        { "id": "b", "text": "investigate" },
+        { "id": "c", "text": "abolish" },
+        { "id": "d", "text": "establish" }
+      ],
+      "correctOption": "c",
+      "explanation": "Do away with means to abolish or eliminate something. Postpone matches put off, investigate matches look into, and establish matches set up — each multi-word verb has its own formal Latinate equivalent.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"Despite the pressure, he ___ cheating and was never punished.\" (= escaped without punishment)",
+      "options": [
+        { "id": "a", "text": "got away from" },
+        { "id": "b", "text": "got away of" },
+        { "id": "c", "text": "got away with" },
+        { "id": "d", "text": "got away on" }
+      ],
+      "correctOption": "c",
+      "explanation": "Get away with means to do something wrong and escape punishment. The preposition is fixed: with, not from, of, or on. Choosing the wrong particle produces a different verb or nonsense — the particle is not interchangeable.",
+      "difficulty": 2
+    }
+  ]
+}

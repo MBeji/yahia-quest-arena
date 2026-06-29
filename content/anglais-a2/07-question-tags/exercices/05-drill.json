@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill: Question Tags",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complete: \"The food was delicious, ___ it?\"",
+      "options": [
+        { "id": "a", "text": "wasn't" },
+        { "id": "b", "text": "isn't" },
+        { "id": "c", "text": "weren't" },
+        { "id": "d", "text": "didn't" }
+      ],
+      "correctOption": "a",
+      "explanation": "Positive past statement with was (singular it) → negative past tag: wasn't it? Isn't is present tense. Weren't is plural (they were). Didn't is the tag for past-simple action verbs, not for the verb be.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"We should leave soon, ___ we?\"",
+      "options": [
+        { "id": "a", "text": "don't" },
+        { "id": "b", "text": "shouldn't" },
+        { "id": "c", "text": "won't" },
+        { "id": "d", "text": "aren't" }
+      ],
+      "correctOption": "b",
+      "explanation": "Positive modal statement (should) → negative modal tag with the same modal: shouldn't we? Don't belongs to main verbs, not to the modal should. Won't uses a different modal (will). Aren't uses the verb be, which is wrong here.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"She doesn't speak Arabic, ___ she?\"",
+      "options": [
+        { "id": "a", "text": "doesn't" },
+        { "id": "b", "text": "isn't" },
+        { "id": "c", "text": "does" },
+        { "id": "d", "text": "did" }
+      ],
+      "correctOption": "c",
+      "explanation": "Negative present-simple statement (doesn't) → positive tag: does she? Doesn't would repeat the negative, which breaks the rule. Isn't uses the wrong auxiliary — the main verb is speak, so the tag uses do/does, not be. Did is past tense, but the statement is in the present.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Find the INCORRECT question tag.",
+      "options": [
+        { "id": "a", "text": "You can play the guitar, can't you?" },
+        { "id": "b", "text": "He wasn't at home, was he?" },
+        { "id": "c", "text": "They will come to dinner, won't they?" },
+        { "id": "d", "text": "She studied hard, doesn't she?" }
+      ],
+      "correctOption": "d",
+      "explanation": "The error is in the fourth sentence: studied is a past-simple verb, so the tag must use did/didn't — She studied hard, didn't she? Doesn't is present tense and does not match the past studied. The first three are all correct: can't you (positive modal → negative), was he (negative past be → positive), won't they (positive will → negative).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Your teacher says: \"You have done the homework, haven't you?\" You HAVE done it. What do you reply?",
+      "options": [
+        { "id": "a", "text": "Yes, I have done." },
+        { "id": "b", "text": "No, I have." },
+        { "id": "c", "text": "Yes, I have." },
+        { "id": "d", "text": "Yes, I did." }
+      ],
+      "correctOption": "c",
+      "explanation": "The reality is that you did do the homework, so the answer is affirmative: Yes, I have — echoing the present perfect auxiliary. Yes, I have done adds the main verb, which short answers never include. No, I have contradicts itself. Yes, I did uses the wrong tense (simple past instead of present perfect).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"Nobody told us about the meeting, ___ they?\"",
+      "options": [
+        { "id": "a", "text": "did" },
+        { "id": "b", "text": "didn't" },
+        { "id": "c", "text": "do" },
+        { "id": "d", "text": "were" }
+      ],
+      "correctOption": "a",
+      "explanation": "Nobody is a negative word, so the statement is already negative → the tag must be positive: did they? Didn't would create a double negative, which is the wrong tag rule. Do is present tense. Were uses the verb be — but told is a past-simple action verb, so the tag uses did.",
+      "difficulty": 3
+    }
+  ]
+}

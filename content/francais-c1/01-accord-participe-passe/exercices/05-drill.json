@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill : l'accord du participe passé",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complète : « Elle s'est ___ de longues heures avant l'examen. » (verbe : se préparer, réfléchi)",
+      "options": [
+        { "id": "a", "text": "préparée" },
+        { "id": "b", "text": "préparé" },
+        { "id": "c", "text": "préparés" },
+        { "id": "d", "text": "préparées" }
+      ],
+      "correctOption": "a",
+      "explanation": "Sans complément qui suit, « se » est COD (elle prépare elle-même) : on accorde avec le sujet féminin singulier, « préparée ». « De longues heures » est un complément de temps, pas un COD, donc il n'empêche pas l'accord.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Les musiciens que nous avons ___ jouer nous ont enchantés. » (verbe : voir)",
+      "options": [
+        { "id": "a", "text": "vu" },
+        { "id": "b", "text": "vue" },
+        { "id": "c", "text": "vus" },
+        { "id": "d", "text": "vues" }
+      ],
+      "correctOption": "c",
+      "explanation": "Participe + infinitif : « les musiciens » font l'action de jouer, donc le COD antéposé fait l'action de l'infinitif et l'on accorde, « vus » (masculin pluriel). On écrirait « vu » seulement si le COD subissait l'action, comme dans « la symphonie que nous avons vu jouer ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "Les villes que j'ai visitées étaient superbes." },
+        { "id": "b", "text": "Elle s'est offert un beau voyage." },
+        { "id": "c", "text": "Des conseils, il m'en a donnés plusieurs." },
+        { "id": "d", "text": "Elle s'est évanouie de joie." }
+      ],
+      "correctOption": "c",
+      "explanation": "« Il m'en a donnés » est faux : le COD antéposé est « en », donc le participe reste invariable (« donné »). Les autres sont correctes : accord avec le COD antéposé (a), invariabilité car le COD « un voyage » suit (b), et accord au sujet d'un essentiellement pronominal (d).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « La décision qu'il a ___ prendre l'a soulagé. » (verbe : laisser ; « laisser prendre »)",
+      "options": [
+        { "id": "a", "text": "laissée" },
+        { "id": "b", "text": "laissés" },
+        { "id": "c", "text": "laissées" },
+        { "id": "d", "text": "laissé" }
+      ],
+      "correctOption": "d",
+      "explanation": "Suivant les rectifications de 1990, « laissé + infinitif » reste invariable : « la décision qu'il a laissé prendre ». Le bloc « laissé prendre » empêche l'accord, même avec le COD féminin « la décision » placé avant. Le piège est d'accorder en « laissée ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Quelles épreuves ils ont ___ pour en arriver là ! » (verbe : traverser)",
+      "options": [
+        { "id": "a", "text": "traversé" },
+        { "id": "b", "text": "traversée" },
+        { "id": "c", "text": "traversées" },
+        { "id": "d", "text": "traversés" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le COD « quelles épreuves » (féminin pluriel) est placé avant l'auxiliaire « avoir » : on accorde, « traversées ». Il ne faut pas confondre avec le pronom « en » : ici le COD est un vrai groupe nominal antéposé, donc l'accord est requis.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Ils se sont ___ en silence avant la cérémonie. » (verbe : se regarder, réciproque)",
+      "options": [
+        { "id": "a", "text": "regardé" },
+        { "id": "b", "text": "regardée" },
+        { "id": "c", "text": "regardées" },
+        { "id": "d", "text": "regardés" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Regarder » est transitif direct (regarder quelqu'un) : dans l'emploi réciproque, « se » est COD, donc on accorde avec le sujet « ils » (masculin pluriel), « regardés ». À l'inverse de « se parler » (COI, invariable), tout dépend de la construction directe ou indirecte du verbe.",
+      "difficulty": 3
+    }
+  ]
+}

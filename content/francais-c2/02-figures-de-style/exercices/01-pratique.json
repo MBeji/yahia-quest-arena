@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Entraînement : les figures de style",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Quelle figure reconnaît-on dans : « Il est rusé comme un renard » ?",
+      "options": [
+        { "id": "a", "text": "Une comparaison" },
+        { "id": "b", "text": "Une métaphore" },
+        { "id": "c", "text": "Une métonymie" },
+        { "id": "d", "text": "Un oxymore" }
+      ],
+      "correctOption": "a",
+      "explanation": "C'est une comparaison : l'outil « comme » rapproche l'homme et le renard. Sans cet outil (« c'est un renard »), on aurait une métaphore. La présence de l'outil est le critère décisif.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle figure reconnaît-on dans : « La ville dort sous la lune » ?",
+      "options": [
+        { "id": "a", "text": "Une litote" },
+        { "id": "b", "text": "Une personnification" },
+        { "id": "c", "text": "Une hyperbole" },
+        { "id": "d", "text": "Une synecdoque" }
+      ],
+      "correctOption": "b",
+      "explanation": "C'est une personnification : on prête une action humaine (« dormir ») à une chose, la ville. Ce n'est ni une litote (dire moins pour plus), ni une hyperbole (exagération), ni une synecdoque (la partie pour le tout).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel exemple illustre une hyperbole ?",
+      "options": [
+        { "id": "a", "text": "Il n'est pas très malin." },
+        { "id": "b", "text": "Le soir, l'astre du jour disparaît." },
+        { "id": "c", "text": "Je meurs de faim, j'avalerais un bœuf entier." },
+        { "id": "d", "text": "Une voile glissait à l'horizon." }
+      ],
+      "correctOption": "c",
+      "explanation": "« J'avalerais un bœuf entier » est une hyperbole : une exagération volontaire pour frapper l'esprit. L'option a est une litote, b une périphrase (l'astre du jour = le soleil), d une synecdoque (la voile pour le bateau).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle figure reconnaît-on dans : « Il nous a quittés » pour annoncer une mort ?",
+      "options": [
+        { "id": "a", "text": "Une litote" },
+        { "id": "b", "text": "Une hyperbole" },
+        { "id": "c", "text": "Une métonymie" },
+        { "id": "d", "text": "Un euphémisme" }
+      ],
+      "correctOption": "d",
+      "explanation": "C'est un euphémisme : on atténue une réalité pénible (la mort) par une formule adoucie. La litote dirait moins pour suggérer plus d'intensité ; ici on cherche surtout à ménager, ce qui caractérise l'euphémisme.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel exemple illustre une métaphore ?",
+      "options": [
+        { "id": "a", "text": "Ses yeux brillaient comme des étoiles." },
+        { "id": "b", "text": "Cette femme est une perle." },
+        { "id": "c", "text": "Il a lu tout un Balzac cet été." },
+        { "id": "d", "text": "Je vis, je meurs." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Cette femme est une perle » est une métaphore : on identifie la femme à une perle sans outil de comparaison. L'option a est une comparaison (« comme »), c une métonymie (l'auteur pour l'œuvre), d une antithèse.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle figure reconnaît-on dans : « Une voile à l'horizon » pour désigner un bateau ?",
+      "options": [
+        { "id": "a", "text": "Une métaphore" },
+        { "id": "b", "text": "Une périphrase" },
+        { "id": "c", "text": "Une synecdoque" },
+        { "id": "d", "text": "Une comparaison" }
+      ],
+      "correctOption": "c",
+      "explanation": "C'est une synecdoque : on nomme la partie (la voile) pour désigner le tout (le bateau). Ce n'est pas une métaphore (pas d'analogie) ni une comparaison (pas d'outil) ; la périphrase, elle, remplacerait le mot par une expression descriptive entière.",
+      "difficulty": 2
+    }
+  ]
+}

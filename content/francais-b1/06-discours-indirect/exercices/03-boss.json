@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : le discours indirect",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Transforme : Elle a dit : « Aujourd'hui, je me sens bien. »",
+      "options": [
+        { "id": "a", "text": "Elle a dit qu'aujourd'hui elle se sent bien." },
+        { "id": "b", "text": "Elle a dit qu'aujourd'hui elle se sentait bien." },
+        { "id": "c", "text": "Elle a dit que la veille elle se sentait bien." },
+        { "id": "d", "text": "Elle a dit que ce jour-là elle se sentait bien." }
+      ],
+      "correctOption": "d",
+      "explanation": "Au passé, deux transformations : le présent « se sens » devient imparfait « se sentait », et « aujourd'hui » devient « ce jour-là ». L'option (a) ne change rien ; (b) garde « aujourd'hui » ; (c) confond avec « la veille » (transformation de « hier »). Le piège courant : transformer le verbe mais oublier le marqueur de temps.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Transforme : Il a annoncé : « J'ai rencontré le directeur hier. »",
+      "options": [
+        { "id": "a", "text": "Il a annoncé qu'il avait rencontré le directeur le lendemain." },
+        { "id": "b", "text": "Il a annoncé qu'il avait rencontré le directeur la veille." },
+        { "id": "c", "text": "Il a annoncé qu'il a rencontré le directeur la veille." },
+        { "id": "d", "text": "Il a annoncé qu'il rencontrait le directeur la veille." }
+      ],
+      "correctOption": "b",
+      "explanation": "Le passé composé « ai rencontré » devient plus-que-parfait « avait rencontré », et « hier » devient « la veille ». L'option (a) confond « hier » avec « le lendemain » (qui transforme « demain ») ; (c) oublie le recul du temps ; (d) met un imparfait à la place du plus-que-parfait.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Transforme : Elle a demandé : « Pourquoi est-ce que tu pleures ? »",
+      "options": [
+        { "id": "a", "text": "Elle a demandé pourquoi est-ce que je pleurais." },
+        { "id": "b", "text": "Elle a demandé si je pleurais." },
+        { "id": "c", "text": "Elle a demandé pourquoi je pleurais." },
+        { "id": "d", "text": "Elle a demandé ce que je pleurais." }
+      ],
+      "correctOption": "c",
+      "explanation": "Le mot interrogatif « pourquoi » se conserve, « est-ce que » disparaît, on revient à l'ordre sujet + verbe, et le présent « pleures » devient imparfait « pleurais ». L'option (a) garde « est-ce que » ; (b) emploie « si » et perd l'idée de cause ; (d) confond avec « ce que ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Transforme : Le médecin a dit au patient : « Ne fumez plus ! »",
+      "options": [
+        { "id": "a", "text": "Le médecin a dit au patient de ne plus fumer." },
+        { "id": "b", "text": "Le médecin a dit au patient qu'il ne fume plus." },
+        { "id": "c", "text": "Le médecin a dit au patient de ne fumer plus." },
+        { "id": "d", "text": "Le médecin a dit au patient s'il ne fumait plus." }
+      ],
+      "correctOption": "a",
+      "explanation": "Un ordre négatif se rapporte avec « de + ne plus + infinitif » : de ne plus fumer (la négation entoure l'infinitif). L'option (c) place mal « plus » (on dit « ne plus fumer », pas « ne fumer plus »). L'option (b) transforme l'ordre en constat ; (d) emploie « si », réservé aux questions.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Transforme : Il a dit : « Mes amis viendront me voir demain. »",
+      "options": [
+        { "id": "a", "text": "Il a dit que ses amis viendront le voir demain." },
+        { "id": "b", "text": "Il a dit que mes amis viendraient le voir le lendemain." },
+        { "id": "c", "text": "Il a dit que ses amis venaient le voir le lendemain." },
+        { "id": "d", "text": "Il a dit que ses amis viendraient le voir le lendemain." }
+      ],
+      "correctOption": "d",
+      "explanation": "Trois transformations : « mes » → « ses », le futur « viendront » → conditionnel « viendraient », « me » → « le », et « demain » → « le lendemain ». L'option (a) garde le futur et « demain » ; (b) garde « mes » ; (c) met un imparfait au lieu du conditionnel.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Transforme : Elle a demandé : « Qu'est-ce que tu feras maintenant ? »",
+      "options": [
+        { "id": "a", "text": "Elle a demandé ce que je ferai maintenant." },
+        { "id": "b", "text": "Elle a demandé ce que je ferais à ce moment-là." },
+        { "id": "c", "text": "Elle a demandé ce qui je ferais à ce moment-là." },
+        { "id": "d", "text": "Elle a demandé si je ferais à ce moment-là." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Qu'est-ce que » (objet) → « ce que » ; le futur « feras » → conditionnel « ferais » ; « maintenant » → « à ce moment-là ». L'option (a) garde le futur et « maintenant » ; (c) emploie « ce qui » (sujet) à la place de « ce que » ; (d) emploie « si », réservé aux questions fermées.",
+      "difficulty": 3
+    }
+  ]
+}

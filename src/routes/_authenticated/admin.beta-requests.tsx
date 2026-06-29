@@ -5,7 +5,7 @@ import { BetaRequestsAdmin } from "@/features/subscription";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/admin/beta-requests")({
-  head: () => ({ meta: [{ title: "Demandes bêta · XP Scholars" }] }),
+  head: () => ({ meta: [{ title: "Demandes bêta · Na9ra Nal3ab" }] }),
   component: AdminBetaRequestsPage,
 });
 

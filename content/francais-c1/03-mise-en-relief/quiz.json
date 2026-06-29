@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Pour mettre en relief le SUJET de la phrase « Marie a téléphoné », on écrit :",
+      "options": [
+        { "id": "a", "text": "C'est Marie qu'a téléphoné." },
+        { "id": "b", "text": "C'est Marie qui a téléphoné." },
+        { "id": "c", "text": "C'est Marie dont a téléphoné." },
+        { "id": "d", "text": "Ce que Marie a téléphoné." }
+      ],
+      "correctOption": "b",
+      "explanation": "On met le sujet en relief avec « c'est … qui ». Comme Marie est le sujet (elle fait l'action de téléphoner), le relatif est « qui » : C'est Marie qui a téléphoné. « que » (a) servirait pour un complément, pas pour le sujet ; « dont » et « ce que » sont ici hors construction.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « C'est ce roman ___ je préfère. »",
+      "options": [
+        { "id": "a", "text": "qui" },
+        { "id": "b", "text": "dont" },
+        { "id": "c", "text": "que" },
+        { "id": "d", "text": "qu'il" }
+      ],
+      "correctOption": "c",
+      "explanation": "« ce roman » est le COD de « préférer » (je préfère quoi ? ce roman). On met un COD en relief avec « c'est … que » : C'est ce roman que je préfère. « qui » s'emploie pour le sujet ; « dont » pour un complément en « de » ; « qu'il » introduirait un autre sujet.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle phrase met correctement en relief le LIEU « à Paris » ?",
+      "options": [
+        { "id": "a", "text": "C'est à Paris qu'il habite." },
+        { "id": "b", "text": "C'est à Paris qui il habite." },
+        { "id": "c", "text": "C'est à Paris dont il habite." },
+        { "id": "d", "text": "Ce qui à Paris il habite." }
+      ],
+      "correctOption": "a",
+      "explanation": "Un complément de lieu se met en relief avec « c'est … que » : C'est à Paris qu'il habite (« que » s'élide en « qu' » devant la voyelle). « qui » est réservé au sujet ; « dont » remplace un complément en « de » ; la forme (d) est agrammaticale.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « ___ je veux, c'est partir en voyage. »",
+      "options": [
+        { "id": "a", "text": "Ce qui" },
+        { "id": "b", "text": "Ce dont" },
+        { "id": "c", "text": "Ce que" },
+        { "id": "d", "text": "C'est que" }
+      ],
+      "correctOption": "c",
+      "explanation": "« vouloir » se construit avec un COD (je veux quoi ?). On emploie donc « ce que … c'est » : Ce que je veux, c'est partir en voyage. « ce qui » servirait pour un sujet ; « ce dont » pour un verbe en « de » (avoir besoin de…) ; « c'est que » ne convient pas en tête.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète l'accord : « C'est moi qui ___ responsable du projet. »",
+      "options": [
+        { "id": "a", "text": "est" },
+        { "id": "b", "text": "suis" },
+        { "id": "c", "text": "es" },
+        { "id": "d", "text": "sont" }
+      ],
+      "correctOption": "b",
+      "explanation": "Après « c'est moi qui », le verbe s'accorde avec « moi » (1ʳᵉ personne du singulier) : C'est moi qui suis responsable. « est » (3ᵉ pers., piège fréquent) est fautif ; « es » est la 2ᵉ personne ; « sont » la 3ᵉ du pluriel.",
+      "difficulty": 2
+    }
+  ]
+}

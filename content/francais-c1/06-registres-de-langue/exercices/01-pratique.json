@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Entraînement : les registres de langue",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Quel est l'équivalent COURANT (neutre) du verbe familier « bosser » ?",
+      "options": [
+        { "id": "a", "text": "œuvrer" },
+        { "id": "b", "text": "bûcher" },
+        { "id": "c", "text": "trimer" },
+        { "id": "d", "text": "travailler" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Travailler » est le verbe courant et neutre. « Bosser », « trimer » et « bûcher » sont familiers. « Œuvrer » serait, lui, soutenu. L'échelle : bosser (familier) → travailler (courant) → œuvrer (soutenu).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel mot appartient au registre FAMILIER pour désigner l'argent ?",
+      "options": [
+        { "id": "a", "text": "les fonds" },
+        { "id": "b", "text": "les deniers" },
+        { "id": "c", "text": "l'argent" },
+        { "id": "d", "text": "le fric" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Le fric » est familier. « L'argent » est courant, tandis que « les fonds » et « les deniers » relèvent du soutenu. On a donc : fric (familier) → argent (courant) → fonds/deniers (soutenu).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel est l'équivalent SOUTENU du verbe « manger » ?",
+      "options": [
+        { "id": "a", "text": "bouffer" },
+        { "id": "b", "text": "grailler" },
+        { "id": "c", "text": "se restaurer" },
+        { "id": "d", "text": "casser la croûte" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Se restaurer » (ou « se sustenter ») appartient au registre soutenu. « Bouffer », « grailler » et « casser la croûte » sont familiers. L'échelle : bouffer (familier) → manger (courant) → se restaurer (soutenu).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans une phrase soignée, par quoi remplace-t-on le mot familier « un truc » ?",
+      "options": [
+        { "id": "a", "text": "un machin" },
+        { "id": "b", "text": "un bidule" },
+        { "id": "c", "text": "une chose" },
+        { "id": "d", "text": "un schmilblick" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Une chose » est le terme courant et neutre qui remplace le familier « un truc » (et son équivalent soutenu serait « un objet, un élément »). « Machin », « bidule » et « schmilblick » sont tout aussi familiers que « truc ».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle interrogation relève du registre COURANT (ni familier, ni soutenu) ?",
+      "options": [
+        { "id": "a", "text": "Tu pars quand ?" },
+        { "id": "b", "text": "Est-ce que tu pars bientôt ?" },
+        { "id": "c", "text": "Pars-tu prochainement ?" },
+        { "id": "d", "text": "Tu pars, là ?" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Est-ce que tu pars bientôt ? » est le tour courant. L'intonation seule (« Tu pars quand ? », « Tu pars, là ? ») est familière, et l'inversion (« Pars-tu… ? ») est soutenue.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase appartient sans ambiguïté au registre FAMILIER ?",
+      "options": [
+        { "id": "a", "text": "Nous ne savons pas s'il viendra." },
+        { "id": "b", "text": "Nous ignorons s'il sera présent." },
+        { "id": "c", "text": "Il convient d'attendre sa venue." },
+        { "id": "d", "text": "On sait pas s'il vient." }
+      ],
+      "correctOption": "d",
+      "explanation": "« On sait pas s'il vient » cumule deux marques familières : « on » pour « nous » et l'omission du « ne » de la négation. Les options (a) et (b) sont courantes/soutenues, et (c) (« il convient de ») est franchement soutenue.",
+      "difficulty": 2
+    }
+  ]
+}

@@ -38,6 +38,35 @@ publishable key, service_role key).
 > ⚠️ Never put `SUPABASE_SERVICE_ROLE_KEY` (or any secret) into a `VITE_*`
 > variable — it would be shipped in the client bundle.
 
+## Auth redirect / Site URL (Supabase Dashboard)
+
+The post-login destination after **Google OAuth** and **email confirmation** is
+controlled by the Supabase project's **URL configuration**, _not_ by env vars or
+code. The app already passes the right target dynamically
+(`${window.location.origin}/auth` for OAuth, `…/dashboard` for email signup — see
+`src/routes/auth.tsx`), but Supabase only honours that target when it matches the
+allow-listed **Redirect URLs**. Otherwise it falls back to the configured **Site
+URL**.
+
+**Symptom:** you sign in from the live domain but land on a different/old Vercel
+URL afterwards → the Site URL still points at the old domain, and the live domain
+is missing from Redirect URLs.
+
+**Fix:** Supabase Dashboard → **Authentication → URL Configuration**:
+
+1. **Site URL** → the live production domain (e.g. `https://<app>.vercel.app`).
+2. **Redirect URLs** → add a pattern for every domain that must work:
+   - `https://<app>.vercel.app/**` (production)
+   - `http://localhost:8080/**` (local dev — the dev/Playwright port, see `playwright.config.ts`)
+   - any preview/custom domain you also sign in from.
+
+> The Google OAuth client's **Authorized redirect URI** is the Supabase callback
+> (`https://<project-ref>.supabase.co/auth/v1/callback`), which does **not** change
+> when the Vercel domain changes — only the two Supabase settings above do.
+
+This config lives in the hosted project (it is **not** in `supabase/config.toml`),
+so it must be updated in the Dashboard whenever the production domain changes.
+
 ## Local development
 
 ```bash
@@ -47,6 +76,24 @@ npm run dev
 ```
 
 `.env` is gitignored and must never be committed.
+
+## Error monitoring (Sentry) — optional
+
+Error reporting (`src/shared/lib/monitoring.ts`, hooked into `logger.error` + browser
+error handlers) is **off unless a DSN is set** — clean local/preview, no events leave the
+machine. It is dependency-free (posts Sentry envelopes via `fetch`), so it works in both the
+Worker and Node runtimes and adds **nothing** to the client bundle.
+
+| Variable          | Scope                   | Notes                                                             |
+| ----------------- | ----------------------- | ----------------------------------------------------------------- |
+| `VITE_SENTRY_DSN` | client + server (build) | Sentry **DSN** (not a secret — it ships in the client bundle).    |
+| `SENTRY_DSN`      | server (runtime)        | Optional server-runtime fallback (same value, no rebuild needed). |
+
+The DSN is per-project: Sentry → Project → Settings → **Client Keys (DSN)**. Use a project in
+the **EU** data region (INPDP / minors compliance, GAP-003). Events are **PII-scrubbed**
+(e-mails redacted, `token`/`secret`/`password`/`email`/`key` extra fields redacted) and tagged
+with the release (`VERCEL_GIT_COMMIT_SHA`) and environment. Set `VITE_SENTRY_DSN` in Vercel →
+Settings → Environment Variables (Production), then redeploy without build cache.
 
 ## Web Push notifications
 

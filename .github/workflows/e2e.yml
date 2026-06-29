@@ -4,6 +4,12 @@ name: E2E
 # build (see nightly.yml) and can be triggered on demand from the Actions tab.
 on:
   workflow_call:
+    inputs:
+      ref:
+        description: Git ref (branch/SHA) to test. Empty = the triggering ref (default).
+        type: string
+        required: false
+        default: ""
   workflow_dispatch:
 
 # Newer pushes cancel in-flight runs for the same ref.
@@ -26,6 +32,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          # Empty (the default) checks out the triggering ref, so existing callers
+          # (nightly.yml) are unaffected; the upgrade guard passes its branch here.
+          ref: ${{ inputs.ref }}
 
       - name: Setup Node
         uses: actions/setup-node@v5

@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Choisis la bonne forme : « Je ___ élève. »",
+      "options": [
+        { "id": "a", "text": "suis" },
+        { "id": "b", "text": "es" },
+        { "id": "c", "text": "est" },
+        { "id": "d", "text": "ai" }
+      ],
+      "correctOption": "a",
+      "explanation": "Avec le sujet « je », le verbe être se conjugue « suis » : Je suis élève. « es » va avec tu, « est » avec il/elle/on, et « ai » est le verbe avoir, pas être.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choisis la bonne forme : « Nous ___ une grande famille. »",
+      "options": [
+        { "id": "a", "text": "sont" },
+        { "id": "b", "text": "êtes" },
+        { "id": "c", "text": "sommes" },
+        { "id": "d", "text": "est" }
+      ],
+      "correctOption": "c",
+      "explanation": "Avec « nous », le verbe être devient « sommes » : Nous sommes une grande famille. « êtes » va avec vous, « sont » avec ils/elles, et « est » avec il/elle/on.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choisis la bonne forme : « J'___ un chien. »",
+      "options": [
+        { "id": "a", "text": "suis" },
+        { "id": "b", "text": "ai" },
+        { "id": "c", "text": "es" },
+        { "id": "d", "text": "as" }
+      ],
+      "correctOption": "b",
+      "explanation": "La possession s'exprime avec avoir : J'ai un chien. « ai » est la forme de avoir avec « je » (devenu j' devant la voyelle). « suis » et « es » sont des formes du verbe être, et « as » va avec tu.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Comment dit-on son âge en français ? « ___ 12 ans. »",
+      "options": [
+        { "id": "a", "text": "Je suis" },
+        { "id": "b", "text": "Je es" },
+        { "id": "c", "text": "J'es" },
+        { "id": "d", "text": "J'ai" }
+      ],
+      "correctOption": "d",
+      "explanation": "En français, on exprime l'âge avec avoir : J'ai 12 ans. On ne dit jamais « je suis 12 ans » (c'est une erreur fréquente). « Je es » et « J'es » sont en plus mal conjugués.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choisis la bonne forme : « Tu ___ mon ami. »",
+      "options": [
+        { "id": "a", "text": "et" },
+        { "id": "b", "text": "ai" },
+        { "id": "c", "text": "es" },
+        { "id": "d", "text": "est" }
+      ],
+      "correctOption": "c",
+      "explanation": "Avec « tu », le verbe être s'écrit « es » : Tu es mon ami. Attention aux homophones : « et » signifie « aussi », « est » va avec il/elle/on, et « ai » est le verbe avoir avec je.",
+      "difficulty": 2
+    }
+  ]
+}

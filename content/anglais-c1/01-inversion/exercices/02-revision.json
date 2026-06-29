@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Review: Inversion Structures in Context",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "Hardly I had sat down when the phone rang." },
+        { "id": "b", "text": "Rarely does he make such a mistake." },
+        { "id": "c", "text": "Never have I read a more gripping novel." },
+        { "id": "d", "text": "No sooner had she left than it began to rain." }
+      ],
+      "correctOption": "a",
+      "explanation": "Option (a) is wrong: \"Hardly\" triggers inversion, so the auxiliary must come before the subject — Hardly had I sat down when… (not \"I had sat down\"). Options (b), (c), and (d) all correctly apply inversion after their respective negative adverbials.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Transform to the inverted form. Base: \"She had no sooner opened the email than she gasped.\" Which inversion is correct?",
+      "options": [
+        { "id": "a", "text": "No sooner she had opened the email than she gasped." },
+        { "id": "b", "text": "No sooner had she opened the email than she gasped." },
+        { "id": "c", "text": "No sooner had she opened the email when she gasped." },
+        { "id": "d", "text": "No sooner did she open the email that she gasped." }
+      ],
+      "correctOption": "b",
+      "explanation": "Correct inversion with No sooner: auxiliary (had) before subject (she), then the past participle (opened), then \"than\": No sooner had she opened the email than she gasped. Option (a) lacks inversion, (c) wrongly uses \"when\" instead of \"than\", and (d) uses \"that\" — another error — and switches the tense unnecessarily.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"Not only ___ the match, but they also set a new record.\"",
+      "options": [
+        { "id": "a", "text": "they won" },
+        { "id": "b", "text": "they did win" },
+        { "id": "c", "text": "did they win" },
+        { "id": "d", "text": "won they" }
+      ],
+      "correctOption": "c",
+      "explanation": "After \"Not only\" inversion is required: did (auxiliary) + they (subject) + win (base verb): Not only did they win the match… Option (a) keeps normal order without inversion, (b) also has wrong order (subject before auxiliary), and (d) inverts verb and subject but without the do-auxiliary — not grammatical in English.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choose the sentence that correctly uses 'Under no circumstances'.",
+      "options": [
+        { "id": "a", "text": "Under no circumstances you should leave the building." },
+        { "id": "b", "text": "Under no circumstances you leave the building." },
+        { "id": "c", "text": "Under no circumstances should you leave the building." },
+        { "id": "d", "text": "Under no circumstances leave you the building." }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Under no circumstances\" triggers modal inversion: should (auxiliary) before you (subject): Under no circumstances should you leave… Options (a) and (b) retain normal subject-first order, which is wrong after a fronted negative. Option (d) has the right word order idea but puts the bare infinitive (leave) in the wrong place.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which sentence uses 'Only then' correctly?",
+      "options": [
+        { "id": "a", "text": "Only then the mystery was solved." },
+        { "id": "b", "text": "Only then was the mystery solved." },
+        { "id": "c", "text": "Only then solved the mystery was." },
+        { "id": "d", "text": "Only then did the mystery solve was." }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Only then\" fronted triggers inversion: was (auxiliary) before the subject (the mystery): Only then was the mystery solved. Option (a) has no inversion, (c) puts the participle first which is not English word order, and (d) is grammatically incoherent.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"Such ___ her shock that she couldn't speak for a moment.\"",
+      "options": [
+        { "id": "a", "text": "is" },
+        { "id": "b", "text": "has been" },
+        { "id": "c", "text": "had been" },
+        { "id": "d", "text": "was" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"Such was…\" is the inverted form of \"Her shock was so great…\" in the past: Such was her shock that she couldn't speak. The past tense was matches the past context (couldn't speak). \"is\" would make it present, \"had been\" implies a past-before-past, and \"has been\" links to now — none fit the simple past narrative.",
+      "difficulty": 3
+    }
+  ]
+}

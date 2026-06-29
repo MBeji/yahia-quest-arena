@@ -1,0 +1,154 @@
+{
+  "title": "⭐ تمرين: أوّل خطوات مع الكسور",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "ما الكسر الذي يمثّله الجزء الملوّن؟ <svg viewBox=\"0 0 100 60\"><rect x=\"10\" y=\"15\" width=\"80\" height=\"30\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><rect x=\"10\" y=\"15\" width=\"40\" height=\"30\" fill=\"#d1d5db\" stroke=\"currentColor\" stroke-width=\"2\"/><line x1=\"50\" y1=\"15\" x2=\"50\" y2=\"45\" stroke=\"currentColor\" stroke-width=\"2\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "1/4"
+        },
+        {
+          "id": "b",
+          "text": "2/1"
+        },
+        {
+          "id": "c",
+          "text": "1/2"
+        },
+        {
+          "id": "d",
+          "text": "1/3"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "الشريط مقسومٌ إلى جزأين متساويين، والملوّن جزءٌ واحد، فالكسر 1/2 (نصف).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما الكسر الذي يمثّله الجزء الملوّن؟ <svg viewBox=\"0 0 100 60\"><rect x=\"8\" y=\"15\" width=\"84\" height=\"30\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><rect x=\"8\" y=\"15\" width=\"28\" height=\"30\" fill=\"#d1d5db\" stroke=\"currentColor\" stroke-width=\"2\"/><line x1=\"36\" y1=\"15\" x2=\"36\" y2=\"45\" stroke=\"currentColor\" stroke-width=\"2\"/><line x1=\"64\" y1=\"15\" x2=\"64\" y2=\"45\" stroke=\"currentColor\" stroke-width=\"2\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "1/3"
+        },
+        {
+          "id": "b",
+          "text": "1/2"
+        },
+        {
+          "id": "c",
+          "text": "3/1"
+        },
+        {
+          "id": "d",
+          "text": "2/3"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "الشريط مقسومٌ إلى 3 أجزاء متساوية، والملوّن جزءٌ واحد، فالكسر 1/3 (ثلث).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كيف نقرأ الكسر 1/4؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "نِصف"
+        },
+        {
+          "id": "b",
+          "text": "ثُلث"
+        },
+        {
+          "id": "c",
+          "text": "أربعة"
+        },
+        {
+          "id": "d",
+          "text": "رُبع (واحد على أربعة)"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "الكسر 1/4 يُقرأ «رُبع» أو «واحد على أربعة»: جزءٌ واحد من 4 أجزاء متساوية.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "في الكسر 2/5، ما هو البسط؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "5"
+        },
+        {
+          "id": "b",
+          "text": "2"
+        },
+        {
+          "id": "c",
+          "text": "7"
+        },
+        {
+          "id": "d",
+          "text": "3"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "البسط هو العدد فوق الخطّ (عدد الأجزاء المأخوذة)، وهو هنا 2. أمّا 5 فهو المقام.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "قُسمت وحدةٌ إلى 10 أجزاء متساوية. ما اسم الجزء الواحد، وكيف يُكتب؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "عُشر، ويُكتب 1/10"
+        },
+        {
+          "id": "b",
+          "text": "ربع، ويُكتب 1/4"
+        },
+        {
+          "id": "c",
+          "text": "عُشر، ويُكتب 10/1"
+        },
+        {
+          "id": "d",
+          "text": "نصف، ويُكتب 1/2"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "تقسيم الوحدة إلى 10 أجزاء متساوية يجعل كلّ جزءٍ عُشرًا، ويُكتب 1/10 (البسط 1 فوق والمقام 10 تحت).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما الكسر الذي يمثّله الجزء الملوّن؟ <svg viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"40\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><path d=\"M50 50 L50 10 A40 40 0 0 1 90 50 Z\" fill=\"#d1d5db\" stroke=\"currentColor\" stroke-width=\"2\"/><line x1=\"10\" y1=\"50\" x2=\"90\" y2=\"50\" stroke=\"currentColor\" stroke-width=\"2\"/><line x1=\"50\" y1=\"10\" x2=\"50\" y2=\"90\" stroke=\"currentColor\" stroke-width=\"2\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "3/4"
+        },
+        {
+          "id": "b",
+          "text": "1/2"
+        },
+        {
+          "id": "c",
+          "text": "1/4"
+        },
+        {
+          "id": "d",
+          "text": "1/3"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "القرص مقسومٌ إلى 4 أجزاء متساوية، والملوّن جزءٌ واحد فقط، فالكسر 1/4.",
+      "difficulty": 2
+    }
+  ]
+}

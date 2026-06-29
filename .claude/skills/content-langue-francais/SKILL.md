@@ -25,17 +25,22 @@ is a **free `libre` parcours** today; premium is decided per parcours, not by th
 ## Specifics
 
 - **Theme/subjects**: `themeId: "francais"`, `contentLanguage: "fr"`, `gradeSlug: null`. Follow the
-  two-axis model in `content-engine/references/language-track.md`: **one subject per CEFR level** —
-  `francais-a1` (Débutant), `francais-a2`, `francais-b1`, `francais-b2`, `francais-c1` — sequenced by
-  `displayOrder`, **plus one dedicated `francais-donjon`** subject (the whole-theme mixed gauntlet).
+  two-axis model in `content-engine/references/language-track.md`: **one subject per CEFR level, the
+  full A1→C2 ladder** — `francais-a1` (Débutant) … `francais-c2` (Maîtrise), six subjects sequenced by
+  `displayOrder` — **plus one dedicated `francais-donjon`** subject (`01-donjon` opener + one
+  `NN-gauntlet-{band}` chapter per level, `gauntlet-a2`…`gauntlet-c2`). **Mirror the shipped English
+  track** (`content/anglais-*`) as the proven blueprint for shape, chapter mix and the rollout phases.
   The existing `fr-mastery` is a legacy single-subject perfecting module under this theme: keep it and
   complement it with the level subjects + donjon (it can be folded into the level model later — don't
   rename/delete its slugs without sign-off, as that re-keys its UUIDs). Leave `isPremium` off (free
   `libre` parcours; premium is per parcours).
-- **Chapters**: one competence each (a rule / tense / vocabulary field / comprehension skill), ordered
-  simplest→most complex within the level (~5 per level). cours.md teaches the rule with many example
-  sentences and a conjugation/forms table; quiz.json (5 Q); exercises drill it via the ascending ladder
-  (01-pratique → 02-revision → 03-boss → 04-defi; see language-track.md).
+- **Chapters**: one competence each, ordered simplest→most complex within the level (**~5–8 per
+  level**). Beyond grammaire/conjugaison chapters, **every level ships a vocabulary chapter** (champ
+  lexical, expressions idiomatiques, paronymes/faux-amis, formation des mots) **and a dedicated
+  reading-comprehension chapter** (compréhension d'un court texte, montant en finesse avec la bande).
+  cours.md teaches the rule with many example sentences and a conjugation/forms table; quiz.json (5 Q);
+  exercises drill it via the ascending ladder (01-pratique → 02-revision → 03-boss → 04-defi →
+  **05-drill**, the cumulative whole-chapter consolidation rung; see language-track.md).
 - **Question types**: gap-fill, pick the correct form/agreement/conjugation, spot-the-error
   (use "find the error" prompts), choose the right meaning/synonym, identify the function.
 - **Distractors = real interference errors** (homophone confusions like a/à, ses/ces, wrong

@@ -7,13 +7,15 @@ import { STORAGE_STATE } from "../helpers/users";
 test.use({ storageState: STORAGE_STATE.free });
 
 test.describe("Content report", () => {
-  test("flag a question from the results screen", async ({ subject, quest, adminDb, page }) => {
+  test("flag a question from the results screen", async ({ quest, adminDb }) => {
     test.setTimeout(60_000);
-    await subject.goto(await adminDb.schoolSubjectId());
-
-    // First accessible mission on a school subject = the comprehension quiz.
-    await subject.missionLinks.first().click();
-    await expect(page).toHaveURL(/\/quest\//);
+    // Open the comprehension quiz directly — it's always accessible (no quiz/premium
+    // gate), so we reliably reach the results screen. (The Référence matiere hub no
+    // longer surfaces an "always-open first mission"; all exercise tiles are quest
+    // links, some gated, so we don't click the first one blindly.)
+    const subjectId = await adminDb.schoolSubjectId();
+    const quizId = await adminDb.quizExerciseId(subjectId);
+    await quest.goto(quizId);
 
     await quest.answerAll();
     await expect(quest.score).toBeVisible({ timeout: 15_000 });

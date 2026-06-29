@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Gauntlet B2 Boss ⭐⭐⭐: Mixed Mastery",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Grammar — Mixed conditional: \"If he had taken better care of his health, he ___ in hospital now.\"",
+      "options": [
+        { "id": "a", "text": "wouldn't be" },
+        { "id": "b", "text": "wouldn't have been" },
+        { "id": "c", "text": "wouldn't be having" },
+        { "id": "d", "text": "hadn't been" }
+      ],
+      "correctOption": "a",
+      "explanation": "A mixed conditional pairs a past if-clause (had taken — past perfect) with a present result: he wouldn't be in hospital now. \"wouldn't have been\" is the pure third conditional result (past result, not present). \"wouldn't be having\" adds an unnecessary continuous aspect. \"hadn't been\" is another if-clause construction, not a result clause.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Grammar — Reported speech: \"The doctor warned, 'You must not eat salt.' \" What did the doctor say?",
+      "options": [
+        { "id": "a", "text": "The doctor warned he must not eat salt." },
+        { "id": "b", "text": "The doctor warned me I would not eat salt." },
+        { "id": "c", "text": "The doctor warned that I not eat salt." },
+        { "id": "d", "text": "The doctor warned me not to eat salt." }
+      ],
+      "correctOption": "d",
+      "explanation": "warn + object + not to-infinitive is the standard reported-speech structure for a prohibition: warned me not to eat salt. (a) omits the object and doesn't back-shift the modal properly. (b) uses would, changing the meaning from prohibition to prediction. (c) uses the bare subjunctive-style infinitive after that — grammatical in American English but not the standard form for reported warnings in British English.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Usage — Gerunds & infinitives: \"I remember ___ the front door when I left — so why is it open?\"",
+      "options": [
+        { "id": "a", "text": "to lock" },
+        { "id": "b", "text": "lock" },
+        { "id": "c", "text": "locking" },
+        { "id": "d", "text": "locked" }
+      ],
+      "correctOption": "c",
+      "explanation": "remember + -ing refers to a memory of a past action (I recall doing it): I remember locking the door. remember + to-infinitive means 'not to forget to do it in the future' — a completely different meaning. \"lock\" (bare infinitive) needs a modal. \"locked\" is the past participle (no auxiliary present).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Grammar — Passive voice: \"More than a million trees ___ by the charity since 2010.\"",
+      "options": [
+        { "id": "a", "text": "have been planted" },
+        { "id": "b", "text": "have planted" },
+        { "id": "c", "text": "are planted" },
+        { "id": "d", "text": "were planted" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Since 2010\" triggers the present perfect, and the trees are the receiver of planting, so the present-perfect passive is required: have been planted. \"are planted\" is a present simple passive (habitual, no time span). \"have planted\" is active (trees don't plant themselves). \"were planted\" is a past simple passive — past simple can't be used with since in this continuous-up-to-now sense.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Vocabulary — Find the INCORRECT collocation: which phrase does NOT exist in standard English?",
+      "options": [
+        { "id": "a", "text": "draw a conclusion" },
+        { "id": "b", "text": "raise awareness" },
+        { "id": "c", "text": "do a decision" },
+        { "id": "d", "text": "carry out an investigation" }
+      ],
+      "correctOption": "c",
+      "explanation": "The error is (c): in English we make a decision, never \"do a decision\" — this is a false-friend calque. (a) draw a conclusion is correct (you draw logical conclusions from evidence). (b) raise awareness is a standard B2 collocation. (d) carry out an investigation is the fixed formal phrase.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Grammar — Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "She admitted stealing the money." },
+        { "id": "b", "text": "They suggested to go to the cinema." },
+        { "id": "c", "text": "He managed to finish the report on time." },
+        { "id": "d", "text": "We decided to leave early." }
+      ],
+      "correctOption": "b",
+      "explanation": "The error is (b): suggest is followed by a gerund, not an infinitive — They suggested going to the cinema. (a) is correct: admit + -ing (She admitted stealing). (c) is correct: manage + to-infinitive (He managed to finish). (d) is correct: decide + to-infinitive (We decided to leave).",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Selon le cours, qu'appelle-t-on l'« énonciation polyphonique » d'un texte C1 ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Le fait que l'auteur fasse entendre plusieurs voix, notamment une voix adverse qu'il cite pour la réfuter."
+        },
+        {
+          "id": "b",
+          "text": "Le fait qu'un texte soit toujours écrit à la première personne du pluriel."
+        },
+        { "id": "c", "text": "Le fait qu'un texte soit lu à voix haute par plusieurs lecteurs." },
+        { "id": "d", "text": "Le fait que l'auteur n'ait aucune opinion personnelle." }
+      ],
+      "correctOption": "a",
+      "explanation": "Le cours définit la polyphonie comme la présence de plusieurs voix : l'auteur cite souvent une voix adverse pour mieux la contester. Confondre cette voix rapportée avec sa position est l'erreur n°1.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« On nous assure que ce traité protégera l'environnement. Or aucun de ses articles n'est contraignant. »\n\nQuelle est la fonction du connecteur « Or » ?",
+      "options": [
+        { "id": "a", "text": "Il confirme l'idée de la première phrase." },
+        {
+          "id": "b",
+          "text": "Il introduit un fait gênant qui fait basculer le raisonnement contre cette idée."
+        },
+        { "id": "c", "text": "Il exprime une simple addition d'exemples." },
+        { "id": "d", "text": "Il marque la conclusion définitive de l'auteur." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Or » introduit le fait gênant (« aucun article n'est contraignant ») qui contredit l'assurance affichée : il fait basculer le raisonnement, comme l'indique le cours. Il n'ajoute, ni ne confirme, ni ne conclut.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Le ministre a, dans sa grande générosité, accordé aux hôpitaux un budget tout juste suffisant pour ne pas fermer. »\n\nQuel procédé l'auteur emploie-t-il ?",
+      "options": [
+        { "id": "a", "text": "Un éloge sincère de la générosité du ministre." },
+        { "id": "b", "text": "Une description strictement neutre et chiffrée." },
+        {
+          "id": "c",
+          "text": "L'ironie : l'éloge est démenti par la maigreur du budget décrite ensuite."
+        },
+        { "id": "d", "text": "Une hypothèse prudente sur l'avenir des hôpitaux." }
+      ],
+      "correctOption": "c",
+      "explanation": "« Dans sa grande générosité » loue, mais « tout juste suffisant pour ne pas fermer » dément l'éloge : ce décalage est une antiphrase ironique. Ce n'est ni un compliment sincère, ni une donnée neutre.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« La réforme aurait, selon ses détracteurs, fragilisé les plus modestes. »\n\nQue signale le verbe au conditionnel « aurait fragilisé » ?",
+      "options": [
+        { "id": "a", "text": "Un fait établi et assumé par l'auteur." },
+        {
+          "id": "b",
+          "text": "Une affirmation que l'auteur rapporte sans la prendre à son compte."
+        },
+        { "id": "c", "text": "Un ordre adressé au lecteur." },
+        { "id": "d", "text": "Une action future certaine." }
+      ],
+      "correctOption": "b",
+      "explanation": "Le conditionnel et « selon ses détracteurs » marquent une donnée non assumée : l'auteur attribue le propos à d'autres sans le valider. Le cours rappelle qu'une telle affirmation n'est pas un fait du texte.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Derrière la façade rutilante de la start-up nation, bien des jeunes diplômés enchaînent les stages sans lendemain. »\n\nQue désigne ici « la façade rutilante » ?",
+      "options": [
+        { "id": "a", "text": "Le mur extérieur d'un immeuble d'entreprise." },
+        {
+          "id": "b",
+          "text": "Une image flatteuse et trompeuse qui masque une réalité moins reluisante."
+        },
+        { "id": "c", "text": "Une vitrine de magasin récemment repeinte." },
+        { "id": "d", "text": "Un panneau publicitaire lumineux." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Derrière la façade… bien des jeunes… » oppose l'apparence séduisante à la réalité : « façade rutilante » est un sens figuré désignant une image trompeuse. Le sens littéral (mur, vitrine, panneau) est exclu par le contexte.",
+      "difficulty": 1
+    }
+  ]
+}

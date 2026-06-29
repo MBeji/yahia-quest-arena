@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Gauntlet B2: Warm-up",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Grammar — Past perfect: \"When I got to the station, the train ___ already left.\"",
+      "options": [
+        { "id": "a", "text": "had" },
+        { "id": "b", "text": "was" },
+        { "id": "c", "text": "has" },
+        { "id": "d", "text": "did" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"When I got to the station\" is the later past event, so the earlier event (the train leaving) takes the past perfect: the train had already left. \"has\" is present perfect (wrong tense), \"was\" would need an -ing form to make a past continuous, and \"did\" is the past-simple auxiliary for questions/negatives, not affirmatives.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Grammar — Passive voice: \"The new library ___ by a famous architect.\"",
+      "options": [
+        { "id": "a", "text": "designed" },
+        { "id": "b", "text": "was designed" },
+        { "id": "c", "text": "has design" },
+        { "id": "d", "text": "is designing" }
+      ],
+      "correctOption": "b",
+      "explanation": "The library is the receiver of the action, so a passive is required: was designed (past tense of be + participle). \"designed\" alone is an active past simple (the library can't design anything). \"has design\" is not a correct tense (participle must be designed), and \"is designing\" is active present continuous.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Vocabulary — Choose the correct collocation: \"The scientists decided to ___ further research into the disease.\"",
+      "options": [
+        { "id": "a", "text": "make" },
+        { "id": "b", "text": "do" },
+        { "id": "c", "text": "run" },
+        { "id": "d", "text": "carry out" }
+      ],
+      "correctOption": "d",
+      "explanation": "At B2, the precise collocation is carry out research (or conduct research). \"do research\" is also acceptable in informal English, but \"carry out\" is the formal fixed expression tested here. \"make research\" is a false-friend calque (common non-native error), and \"run research\" is not standard English.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Grammar — Reported speech: \"He said, 'I can swim very well.' \" What did he say?",
+      "options": [
+        { "id": "a", "text": "He said he can swim very well." },
+        { "id": "b", "text": "He said he swam very well." },
+        { "id": "c", "text": "He said he could swim very well." },
+        { "id": "d", "text": "He said he will swim very well." }
+      ],
+      "correctOption": "c",
+      "explanation": "In reported speech, the modal can back-shifts to could: he said he could swim very well. (a) keeps can without back-shifting — only possible in informal immediate reporting. (b) uses the past simple swam, which changes the meaning. (d) uses will, which is not a back-shift of can.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Usage — Gerund or infinitive: \"I hope ___ you at the conference next week.\"",
+      "options": [
+        { "id": "a", "text": "to see" },
+        { "id": "b", "text": "see" },
+        { "id": "c", "text": "saw" },
+        { "id": "d", "text": "seeing" }
+      ],
+      "correctOption": "a",
+      "explanation": "hope is always followed by the infinitive: I hope to see you. Contrast this with enjoy, which takes -ing (I enjoy seeing you). \"see\" (bare infinitive) comes after modals, not after hope. \"saw\" is the past simple — no tense marker is needed here since hope already carries the time.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Spelling — Choose the correct past participle: \"A solution to the water crisis has finally been ___.\"",
+      "options": [
+        { "id": "a", "text": "founded" },
+        { "id": "b", "text": "find" },
+        { "id": "c", "text": "finded" },
+        { "id": "d", "text": "found" }
+      ],
+      "correctOption": "d",
+      "explanation": "find is irregular: find → found (past & participle). In the present-perfect passive (has been + participle) the form is found. \"founded\" means to establish an organisation — a different verb (he founded the company). \"find\" is the base form, and \"finded\" does not exist.",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : expressions idiomatiques et lexique soutenu",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "« Devant les preuves accablantes, l'accusé a fini par donner sa langue au chat. » Pourquoi cette phrase est-elle un contresens ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "« Donner sa langue au chat » signifie renoncer à deviner une devinette, non avouer une faute."
+        },
+        { "id": "b", "text": "L'expression ne s'emploie qu'à propos d'enfants." },
+        {
+          "id": "c",
+          "text": "L'expression devrait être « donner sa langue aux chats » au pluriel."
+        },
+        { "id": "d", "text": "L'expression signifie au contraire « parler abondamment »." }
+      ],
+      "correctOption": "a",
+      "explanation": "« Donner sa langue au chat » signifie uniquement renoncer à trouver la réponse à une énigme, et non avouer ou capituler face à des preuves. Le contexte judiciaire appellerait « passer aux aveux ». L'option (c) invente un pluriel inexistant ; (b) et (d) attribuent à l'expression des restrictions ou des sens qu'elle n'a pas.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel verbe complète correctement : « En accordant cette faveur, le directeur a ___ au règlement intérieur. » ?",
+      "options": [
+        { "id": "a", "text": "exacerbé" },
+        { "id": "b", "text": "escompté" },
+        { "id": "c", "text": "dérogé" },
+        { "id": "d", "text": "suscité" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Déroger à » signifie s'écarter d'une règle, y faire exception — exactement le sens d'accorder une faveur contraire au règlement. Le verbe se construit avec « à », d'où « dérogé au règlement ». « Exacerber » (a) = intensifier ; « escompter » (b) = espérer ; « susciter » (d) = faire naître : aucun ne convient ici.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve l'intrus : trois de ces expressions évoquent l'échec ou la difficulté ; laquelle ne le fait PAS ?",
+      "options": [
+        { "id": "a", "text": "Un coup d'épée dans l'eau." },
+        { "id": "b", "text": "Tirer son épingle du jeu." },
+        { "id": "c", "text": "Battre de l'aile." },
+        { "id": "d", "text": "Prendre des vessies pour des lanternes." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Tirer son épingle du jeu » exprime au contraire la réussite : se sortir adroitement d'une situation difficile. Les trois autres relèvent de l'échec ou de l'erreur : un coup d'épée dans l'eau (action vaine), battre de l'aile (péricliter), prendre des vessies pour des lanternes (se tromper grossièrement). L'intrus est donc (b).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "« Le succès de ce produit, c'est bien ; mais le revers de la médaille, c'est la rupture de stock. » Quel sens prend ici « le revers de la médaille » ?",
+      "options": [
+        { "id": "a", "text": "Une récompense méritée." },
+        { "id": "b", "text": "Un retournement complet de situation." },
+        { "id": "c", "text": "Une seconde chance offerte." },
+        { "id": "d", "text": "L'aspect négatif d'une chose par ailleurs positive." }
+      ],
+      "correctOption": "d",
+      "explanation": "« Le revers de la médaille » désigne l'inconvénient qui accompagne un avantage — ici, la rupture de stock causée par le succès. La structure « c'est bien ; mais… » signale cette opposition. L'option (a) ne retient que le côté positif ; (b) confond avec un renversement total ; (c) invente un sens d'opportunité.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle phrase emploie « s'avérer » de façon irréprochable au niveau C1 ?",
+      "options": [
+        { "id": "a", "text": "La rumeur s'est avérée inexacte après vérification." },
+        { "id": "b", "text": "La rumeur s'est avérée fausse après vérification." },
+        { "id": "c", "text": "La rumeur s'est avérée vraie après vérification." },
+        { "id": "d", "text": "La rumeur s'est avérée à fausse après vérification." }
+      ],
+      "correctOption": "a",
+      "explanation": "« S'avérer » porte déjà l'idée du vrai, si bien que « s'avérer vraie » (c) est un pléonasme et « s'avérer fausse » (b) une contradiction interne tolérée mais déconseillée à l'écrit C1. On préfère « s'avérer inexacte » (a). La construction (d) avec « à » est agrammaticale.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "« Laissons cela : nous avons d'autres chats à fouetter. » Que veut dire cette expression ?",
+      "options": [
+        { "id": "a", "text": "Nous devons être plus sévères." },
+        { "id": "b", "text": "Nous manquons de temps libre." },
+        { "id": "c", "text": "Nous avons des préoccupations plus importantes." },
+        { "id": "d", "text": "Nous aimons les tâches difficiles." }
+      ],
+      "correctOption": "c",
+      "explanation": "« Avoir d'autres chats à fouetter » signifie avoir des affaires plus pressantes ou plus importantes à régler. Le « laissons cela » du contexte confirme qu'on écarte un sujet secondaire. L'option (a) prend l'image du fouet au sens de sévérité ; (b) et (d) inventent des sens absents de la locution.",
+      "difficulty": 3
+    }
+  ]
+}

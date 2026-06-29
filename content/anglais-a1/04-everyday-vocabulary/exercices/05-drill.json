@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill: Everyday Vocabulary",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Which word means the son of your brother or sister?",
+      "options": [
+        { "id": "a", "text": "nephew" },
+        { "id": "b", "text": "niece" },
+        { "id": "c", "text": "cousin" },
+        { "id": "d", "text": "grandfather" }
+      ],
+      "correctOption": "a",
+      "explanation": "Your nephew is the son of your brother or sister; the daughter would be your niece. A cousin is the child of your aunt or uncle, and a grandfather is your parent's father. Nephew (boy) and niece (girl) are a gender pair — keep them apart.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Find the odd one out.",
+      "options": [
+        { "id": "a", "text": "pilot" },
+        { "id": "b", "text": "baker" },
+        { "id": "c", "text": "black" },
+        { "id": "d", "text": "engineer" }
+      ],
+      "correctOption": "c",
+      "explanation": "Pilot, baker and engineer are all jobs — work that people do. Black is a colour, so it is the odd one out. Grouping words by field (jobs, colours, foods) is a useful memory trick.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete the common phrase: \"a ___ of juice\".",
+      "options": [
+        { "id": "a", "text": "loaf" },
+        { "id": "b", "text": "slice" },
+        { "id": "c", "text": "piece" },
+        { "id": "d", "text": "bottle" }
+      ],
+      "correctOption": "d",
+      "explanation": "Juice is a drink you pour, so we say a bottle of juice (or a glass of juice). A loaf, a slice and a piece all go with solid foods like bread or cake — they cannot hold a liquid like juice.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "The opposite of \"early\" is …",
+      "options": [
+        { "id": "a", "text": "fast" },
+        { "id": "b", "text": "late" },
+        { "id": "c", "text": "new" },
+        { "id": "d", "text": "cheap" }
+      ],
+      "correctOption": "b",
+      "explanation": "The opposite of early (before the expected time) is late (after the expected time): I am early / I am late. Fast is the opposite of slow, new is the opposite of old, and cheap is the opposite of expensive — none of those means the same as late.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which word belongs to the field \"colours\"?",
+      "options": [
+        { "id": "a", "text": "pink" },
+        { "id": "b", "text": "cousin" },
+        { "id": "c", "text": "pilot" },
+        { "id": "d", "text": "Friday" }
+      ],
+      "correctOption": "a",
+      "explanation": "Pink is a colour. Cousin is a family word, pilot is a job, and Friday is a day of the week, so none of those is a colour. Colours at A1 include red, blue, green, yellow, orange, black, white, brown, grey and pink.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: \"My father has one brother. That brother has a daughter named Yasmine.\"\nWhat is Yasmine to me?",
+      "options": [
+        { "id": "a", "text": "my sister" },
+        { "id": "b", "text": "my niece" },
+        { "id": "c", "text": "my aunt" },
+        { "id": "d", "text": "my cousin" }
+      ],
+      "correctOption": "d",
+      "explanation": "My father's brother is my uncle, and the child of my uncle is my cousin. Yasmine is a girl, but cousin is the same word for boys and girls. A niece would be my own sibling's daughter, a sister shares my parents, and an aunt is a parent's sister — so only cousin fits the daughter of an uncle.",
+      "difficulty": 3
+    }
+  ]
+}

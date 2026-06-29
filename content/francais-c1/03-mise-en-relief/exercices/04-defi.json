@@ -1,0 +1,91 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : la mise en relief",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "C'est moi qui suis le plus concerné par cette décision." },
+        { "id": "b", "text": "C'est eux qui ont voté contre le projet." },
+        { "id": "c", "text": "C'est nous qui ont le plus travaillé." },
+        { "id": "d", "text": "C'est toi qui as proposé cette idée." }
+      ],
+      "correctOption": "c",
+      "explanation": "La phrase fautive est (c) : après « c'est nous qui », le verbe doit s'accorder à la 1ʳᵉ personne du pluriel : C'est nous qui avons le plus travaillé. ✓ (a) moi → suis ✓ ; (d) toi → as ✓ ; (b) « eux » est une 3ᵉ pers. pl., donc « ont » est correct (l'usage soutenu préférerait « ce sont eux », mais l'accord du verbe reste juste).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Repère et corrige l'erreur : « Ce que je tiens le plus, c'est à ma liberté. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "« Ce que » doit devenir « Ce à quoi » : Ce à quoi je tiens le plus, c'est ma liberté."
+        },
+        {
+          "id": "b",
+          "text": "« Ce que » doit devenir « Ce dont » : Ce dont je tiens le plus, c'est ma liberté."
+        },
+        {
+          "id": "c",
+          "text": "« c'est à » doit devenir « c'est de » : Ce que je tiens, c'est de ma liberté."
+        },
+        { "id": "d", "text": "La phrase est correcte." }
+      ],
+      "correctOption": "a",
+      "explanation": "« tenir à qqch » se construit avec « à » : la tournure correcte est « ce à quoi … c'est » : Ce à quoi je tiens le plus, c'est ma liberté. ✓ « ce que » (COD) et « ce dont » (verbe en « de ») ne reprennent pas la préposition « à ». Piège courant : oublier que la préposition du verbe commande le relatif (à → à quoi, de → dont).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Pour annoncer puis identifier avec emphase, complète : « ___ ce roman, c'est sa fin inattendue. »",
+      "options": [
+        { "id": "a", "text": "Ce que m'a marqué dans" },
+        { "id": "b", "text": "Ce dont m'a marqué" },
+        { "id": "c", "text": "C'est qui m'a marqué dans" },
+        { "id": "d", "text": "Ce qui m'a marqué dans" }
+      ],
+      "correctOption": "d",
+      "explanation": "« marquer » a un sujet (qu'est-ce qui m'a marqué ?) ; on emploie « ce qui … c'est » : Ce qui m'a marqué dans ce roman, c'est sa fin inattendue. ✓ « ce que » (a) servirait pour un COD, « ce dont » (b) pour un verbe en « de » ; la forme (c) est agrammaticale.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle phrase combine correctement extraction et contraste pour un écrit soutenu ?",
+      "options": [
+        { "id": "a", "text": "Ce n'est pas par hasard mais par mérite qu'elle a été promue." },
+        { "id": "b", "text": "Ce n'est pas par hasard mais par mérite qui elle a été promue." },
+        { "id": "c", "text": "Ce dont elle a été promue, ce n'est pas le hasard." },
+        { "id": "d", "text": "C'est par mérite dont elle a été promue, pas par hasard." }
+      ],
+      "correctOption": "a",
+      "explanation": "On contraste deux compléments de manière avec « ce n'est pas X mais Y que… » : Ce n'est pas par hasard mais par mérite qu'elle a été promue. ✓ Ce sont des compléments (pas le sujet) → relatif « que/qu' », jamais « qui » (b). « dont » (c, d) ne convient pas : « être promue par » n'est pas une construction en « de ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Repère la dislocation dont la reprise pronominale est CORRECTE.",
+      "options": [
+        { "id": "a", "text": "Ce projet ambitieux, je le crois vraiment." },
+        { "id": "b", "text": "Ce projet ambitieux, j'en crois vraiment." },
+        { "id": "c", "text": "Ce projet ambitieux, j'y crois vraiment." },
+        { "id": "d", "text": "Ce projet ambitieux, je lui crois vraiment." }
+      ],
+      "correctOption": "c",
+      "explanation": "« croire à qqch » (avoir foi en) se construit avec « à » + chose ; il se reprend par « y » : Ce projet ambitieux, j'y crois vraiment. ✓ « le » (a) reprendrait un COD (croire qqch = être d'avis), sens différent ; « en » (b) un complément en « de » ; « lui » (d) un COI personne. Piège : distinguer « croire qqch » (COD → le) de « croire à qqch » (→ y).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète l'accord dans cette phrase soignée : « C'est l'une d'entre vous qui ___ désignée. »",
+      "options": [
+        { "id": "a", "text": "serez" },
+        { "id": "b", "text": "sera" },
+        { "id": "c", "text": "seront" },
+        { "id": "d", "text": "serons" }
+      ],
+      "correctOption": "b",
+      "explanation": "L'antécédent de « qui » est « l'une » (singulier), pas « vous » : le verbe se met au singulier : C'est l'une d'entre vous qui sera désignée. ✓ Le complément « d'entre vous » n'impose pas le pluriel. Pièges : « serez » (accord avec vous), « seront » (pluriel), « serons » (1ʳᵉ pers.) sont tous fautifs.",
+      "difficulty": 3
+    }
+  ]
+}

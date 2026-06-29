@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Complète au futur proche : « Ce soir, je ___ un film. »",
+      "options": [
+        { "id": "a", "text": "vais regarder" },
+        { "id": "b", "text": "vais regarde" },
+        { "id": "c", "text": "va regarder" },
+        { "id": "d", "text": "allerai regarder" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le futur proche se forme avec aller au présent + infinitif : je vais regarder. « vais regarde » garde un verbe conjugué au lieu de l'infinitif, « va regarder » utilise la forme de il/elle, et « allerai » n'existe pas (le futur de aller est j'irai).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle est la forme du futur simple de « parler » à la première personne (je) ?",
+      "options": [
+        { "id": "a", "text": "je parlrai" },
+        { "id": "b", "text": "je parlerai" },
+        { "id": "c", "text": "je parlais" },
+        { "id": "d", "text": "je parlera" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le futur simple = infinitif + terminaison : parler + -ai → je parlerai. « parlrai » oublie le e de l'infinitif, « parlais » est l'imparfait, et « parlera » est la forme de il/elle.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Mets cette phrase au futur proche à la forme négative : « Je ___ manger maintenant. »",
+      "options": [
+        { "id": "a", "text": "vais ne pas" },
+        { "id": "b", "text": "ne mange pas vais" },
+        { "id": "c", "text": "ne vais pas" },
+        { "id": "d", "text": "vais pas ne" }
+      ],
+      "correctOption": "c",
+      "explanation": "À la négation, on encadre le verbe aller par ne … pas : je ne vais pas manger. Les autres placent mal ne et pas ; au futur proche, la négation entoure aller, pas l'infinitif.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel est le futur simple correct du verbe « être » à la première personne (je) ?",
+      "options": [
+        { "id": "a", "text": "j'êtrai" },
+        { "id": "b", "text": "j'aurai" },
+        { "id": "c", "text": "j'étais" },
+        { "id": "d", "text": "je serai" }
+      ],
+      "correctOption": "d",
+      "explanation": "Le verbe être a un radical irrégulier au futur : ser-, donc je serai. « j'êtrai » applique à tort l'infinitif, « j'aurai » est le futur de avoir, et « j'étais » est l'imparfait de être.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase exprime un projet proche et sûr (futur proche) ?",
+      "options": [
+        { "id": "a", "text": "Nous partirons un jour à l'étranger." },
+        { "id": "b", "text": "Nous allons partir dans dix minutes." },
+        { "id": "c", "text": "Nous partons souvent le matin." },
+        { "id": "d", "text": "Nous partions chaque été." }
+      ],
+      "correctOption": "b",
+      "explanation": "Le futur proche (aller + infinitif) marque un projet proche et certain : nous allons partir dans dix minutes. La phrase (a) est au futur simple (avenir lointain), (c) est au présent (habitude), et (d) à l'imparfait (passé).",
+      "difficulty": 2
+    }
+  ]
+}

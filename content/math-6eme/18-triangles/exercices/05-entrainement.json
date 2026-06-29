@@ -27,11 +27,11 @@
         { "id": "d", "text": "منفرج الزاوية" }
       ],
       "correctOption": "b",
-      "explanation": "الأضلاعُ الثلاثة متساوية (9، 9، 9)، فهو متساوي الأضلاع.",
+      "explanation": "الأضلاعُ الثلاثة متساوية (9 ; 9 ; 9)، فهو متساوي الأضلاع.",
       "difficulty": 2
     },
     {
-      "prompt": "ما نوعُ هذا المثلّث حسب زواياه؟ <svg viewBox=\"0 0 100 100\"><polygon points=\"25,75 25,28 78,75\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><rect x=\"25\" y=\"65\" width=\"10\" height=\"10\" fill=\"none\" stroke=\"#ef4444\" stroke-width=\"1.5\"/></svg>",
+      "prompt": "ما نوعُ المثلّث المبيّن في الشكل حسب زواياه؟ <svg viewBox=\"0 0 100 100\"><polygon points=\"25,75 25,28 78,75\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><rect x=\"25\" y=\"65\" width=\"10\" height=\"10\" fill=\"none\" stroke=\"#ef4444\" stroke-width=\"1.5\"/></svg>",
       "options": [
         { "id": "a", "text": "حادّ الزوايا" },
         { "id": "b", "text": "منفرج الزاوية" },

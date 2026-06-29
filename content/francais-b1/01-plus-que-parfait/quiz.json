@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Complète : « Quand je suis arrivé, le train ___ déjà parti. »",
+      "options": [
+        { "id": "a", "text": "est" },
+        { "id": "b", "text": "était" },
+        { "id": "c", "text": "a" },
+        { "id": "d", "text": "avait" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le verbe « partir » se conjugue avec l'auxiliaire être. Au plus-que-parfait, l'auxiliaire est à l'imparfait : « était parti ». « Est parti » serait du passé composé ; « a / avait » sont des formes de avoir, mauvais auxiliaire pour partir.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Comment se forme le plus-que-parfait ?",
+      "options": [
+        { "id": "a", "text": "auxiliaire au présent + participe passé" },
+        { "id": "b", "text": "auxiliaire au futur + participe passé" },
+        { "id": "c", "text": "auxiliaire à l'imparfait + participe passé" },
+        { "id": "d", "text": "auxiliaire au passé composé + participe passé" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le plus-que-parfait = auxiliaire (avoir ou être) à l'imparfait + participe passé, par exemple « j'avais mangé ». Avec l'auxiliaire au présent, on obtient le passé composé (« j'ai mangé »), pas le plus-que-parfait.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle phrase est au plus-que-parfait ?",
+      "options": [
+        { "id": "a", "text": "Elle a mangé une pomme." },
+        { "id": "b", "text": "Elle mangeait une pomme." },
+        { "id": "c", "text": "Elle avait mangé une pomme." },
+        { "id": "d", "text": "Elle mange une pomme." }
+      ],
+      "correctOption": "c",
+      "explanation": "« Elle avait mangé » a l'auxiliaire avoir à l'imparfait (avait) + participe passé : c'est le plus-que-parfait. « A mangé » est du passé composé, « mangeait » de l'imparfait, et « mange » du présent.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Elle ___ levée tôt ce matin-là. »",
+      "options": [
+        { "id": "a", "text": "s'était" },
+        { "id": "b", "text": "s'avait" },
+        { "id": "c", "text": "était" },
+        { "id": "d", "text": "avait" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Se lever » est un verbe pronominal : il se conjugue toujours avec être. Au plus-que-parfait, on obtient « elle s'était levée », avec l'accord du participe avec le sujet féminin. « S'avait / avait » sont impossibles car les pronominaux ne prennent jamais avoir.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Le plus-que-parfait exprime une action qui se passe…",
+      "options": [
+        { "id": "a", "text": "après une autre action passée" },
+        { "id": "b", "text": "avant une autre action passée" },
+        { "id": "c", "text": "en même temps que le moment présent" },
+        { "id": "d", "text": "dans le futur" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le plus-que-parfait est le « passé du passé » : il marque l'antériorité, c'est-à-dire une action arrivée avant une autre action passée (« Il avait fini quand je suis arrivé »). Il ne concerne ni le présent ni le futur.",
+      "difficulty": 2
+    }
+  ]
+}

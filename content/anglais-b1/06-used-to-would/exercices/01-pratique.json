@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Practice: Used to and Would",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complete: \"I ___ play outside until dark when I was a kid.\"",
+      "options": [
+        { "id": "a", "text": "used to" },
+        { "id": "b", "text": "am used to" },
+        { "id": "c", "text": "get used to" },
+        { "id": "d", "text": "was used to" }
+      ],
+      "correctOption": "a",
+      "explanation": "Playing outside is a repeated past habit that no longer happens, so \"used to\" is correct: I used to play outside. \"am/was used to\" and \"get used to\" mean accustomed to, which is a different idea.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"My grandmother ___ bake bread every Sunday morning.\"",
+      "options": [
+        { "id": "a", "text": "got used to" },
+        { "id": "b", "text": "is used to" },
+        { "id": "c", "text": "would" },
+        { "id": "d", "text": "used to be" }
+      ],
+      "correctOption": "c",
+      "explanation": "Baking bread is a repeated past action (not a state), so \"would\" fits perfectly: she would bake bread every Sunday. \"got/is used to\" means accustomed to and takes -ing. \"used to be\" adds \"be\" which doesn't fit before \"bake\".",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"He ___ have long hair when he was a student.\"",
+      "options": [
+        { "id": "a", "text": "would" },
+        { "id": "b", "text": "used to" },
+        { "id": "c", "text": "was used to" },
+        { "id": "d", "text": "is used to" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"have\" (possess) is a state verb, so \"would\" cannot be used — only \"used to\" works: He used to have long hair. \"was/is used to\" means accustomed to, not a past habit.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"Did you ___ walk to school?\"",
+      "options": [
+        { "id": "a", "text": "used to" },
+        { "id": "b", "text": "use to" },
+        { "id": "c", "text": "would" },
+        { "id": "d", "text": "using to" }
+      ],
+      "correctOption": "b",
+      "explanation": "In questions with did, the -d disappears: Did you use to walk to school? This is the standard question form. \"used to\" keeps the -d which is wrong after did, and \"using to\" / \"would\" do not fit this question structure.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"She is slowly ___ living alone.\"",
+      "options": [
+        { "id": "a", "text": "used to" },
+        { "id": "b", "text": "would" },
+        { "id": "c", "text": "getting used to" },
+        { "id": "d", "text": "use to" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"get used to + -ing\" means to become accustomed to something: she is getting used to living alone. \"used to\" alone describes a past habit (finished), and \"would\" describes repeated past actions, neither of which fits this present-progressive context.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"We ___ spend our summers at the beach when the children were small.\"",
+      "options": [
+        { "id": "a", "text": "are used to" },
+        { "id": "b", "text": "used to" },
+        { "id": "c", "text": "got used to" },
+        { "id": "d", "text": "use to" }
+      ],
+      "correctOption": "b",
+      "explanation": "Spending summers at the beach is a past repeated habit now finished, so \"used to\" is correct: We used to spend our summers at the beach. \"are/got used to\" means accustomed to, and \"use to\" is only correct after did in a question.",
+      "difficulty": 2
+    }
+  ]
+}

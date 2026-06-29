@@ -1,0 +1,12 @@
+{
+  "id": "francais-donjon",
+  "nameFr": "Français — Donjon (tout le thème)",
+  "description": "Le Donjon du français : un défi mêlé où chaque question vient d'un domaine différent — grammaire, conjugaison, vocabulaire, lecture, orthographe — du plus simple au plus redoutable. Teste toute la langue d'un coup, et plus seulement un chapitre.",
+  "attribute": "Polyvalence",
+  "colorToken": "subject-french",
+  "icon": "Swords",
+  "displayOrder": 9,
+  "contentLanguage": "fr",
+  "themeId": "francais",
+  "gradeSlug": null
+}

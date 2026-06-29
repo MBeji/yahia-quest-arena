@@ -127,7 +127,6 @@ function QuestPageTestHarness({
   const [idx, setIdx] = React.useState(0);
   const [answers, setAnswers] = React.useState<Answer[]>([]);
   const [selected, setSelected] = React.useState<string | null>(null);
-  const [showFeedback, setShowFeedback] = React.useState(false);
   const [currentResult, setCurrentResult] = React.useState(result);
 
   const shuffledOptions = React.useMemo(
@@ -140,13 +139,13 @@ function QuestPageTestHarness({
   const progress = total > 0 ? (idx / total) * 100 : 0;
   const options = current ? (shuffledOptions.get(current.id) ?? []) : [];
 
+  // Selecting only highlights a choice — freely changeable, no auto-advance.
   function handleSelect(optId: string) {
-    if (showFeedback) return;
     setSelected(optId);
-    setShowFeedback(true);
   }
 
-  function advanceNow() {
+  // Validation is the only way to record the answer and advance.
+  function validate() {
     if (!selected || !current) return;
     const newAnswers = [...answers, { questionId: current.id, choice: selected }];
     setAnswers(newAnswers);
@@ -157,7 +156,6 @@ function QuestPageTestHarness({
     } else {
       setIdx(idx + 1);
       setSelected(null);
-      setShowFeedback(false);
     }
   }
 
@@ -197,16 +195,15 @@ function QuestPageTestHarness({
           <button
             key={opt.id}
             onClick={() => handleSelect(opt.id)}
-            disabled={showFeedback}
+            aria-checked={selected === opt.id}
             data-testid={`option-${opt.displayId}`}
           >
             {opt.displayId}: {opt.text}
           </button>
         ))}
       </div>
-      {showFeedback && <div data-testid="feedback">Reponse enregistree.</div>}
-      <button data-testid="next-button" disabled={!showFeedback} onClick={advanceNow}>
-        {idx + 1 >= total ? "Finish quest" : "Next question"}
+      <button data-testid="next-button" disabled={!selected} onClick={validate}>
+        {idx + 1 >= total ? "Finish quest" : "Validate"}
       </button>
     </div>
   );
@@ -243,22 +240,29 @@ describe("QuestPage Component", () => {
       expect(screen.getByTestId("option-D")).toBeInTheDocument();
     });
 
-    it("shows feedback after selecting an answer", () => {
+    it("marks the option as selected without auto-advancing", () => {
       const Wrapper = createWrapper();
       render(React.createElement(Wrapper, null, React.createElement(QuestPageTestHarness)));
       fireEvent.click(screen.getByTestId("option-A"));
-      expect(screen.getByTestId("feedback")).toHaveTextContent("Reponse enregistree.");
+      expect(screen.getByTestId("option-A")).toHaveAttribute("aria-checked", "true");
+      // Still on the same question — no automatic passage.
+      expect(screen.getByTestId("question-prompt")).toHaveTextContent("What is 2+2?");
+      expect(screen.getByText(/Question 1 \/ 2/)).toBeInTheDocument();
     });
 
-    it("disables options after selection", () => {
+    it("keeps options selectable so the answer can be changed before validating", () => {
       const Wrapper = createWrapper();
       render(React.createElement(Wrapper, null, React.createElement(QuestPageTestHarness)));
       fireEvent.click(screen.getByTestId("option-A"));
-      expect(screen.getByTestId("option-A")).toBeDisabled();
-      expect(screen.getByTestId("option-B")).toBeDisabled();
+      expect(screen.getByTestId("option-A")).toHaveAttribute("aria-checked", "true");
+      // Change the choice — allowed until validation.
+      fireEvent.click(screen.getByTestId("option-B"));
+      expect(screen.getByTestId("option-A")).toHaveAttribute("aria-checked", "false");
+      expect(screen.getByTestId("option-B")).toHaveAttribute("aria-checked", "true");
+      expect(screen.getByTestId("option-B")).toBeEnabled();
     });
 
-    it("advances to the next question after clicking Next", () => {
+    it("advances to the next question only after clicking Validate", () => {
       const Wrapper = createWrapper();
       render(React.createElement(Wrapper, null, React.createElement(QuestPageTestHarness)));
       fireEvent.click(screen.getByTestId("option-A"));

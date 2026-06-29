@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Lis le SMS :\n« Salut ! On se retrouve à 18 h devant le cinéma. À tout à l'heure ! »\n\nÀ quelle heure est le rendez-vous ?",
+      "options": [
+        { "id": "a", "text": "À 18 h" },
+        { "id": "b", "text": "À 8 h" },
+        { "id": "c", "text": "À 16 h" },
+        { "id": "d", "text": "À 19 h" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le SMS dit « On se retrouve à 18 h » : le rendez-vous est donc à 18 h. Les autres heures (8 h, 16 h, 19 h) ne sont pas écrites dans le message.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lis l'affichette :\n« BOULANGERIE — Fermé le lundi. Ouvert du mardi au dimanche. »\n\nQuel jour la boulangerie est-elle fermée ?",
+      "options": [
+        { "id": "a", "text": "Le dimanche" },
+        { "id": "b", "text": "Le mardi" },
+        { "id": "c", "text": "Le lundi" },
+        { "id": "d", "text": "Le samedi" }
+      ],
+      "correctOption": "c",
+      "explanation": "L'affichette indique « Fermé le lundi » : la boulangerie est donc fermée le lundi. Le mardi, le samedi et le dimanche, elle est ouverte (« du mardi au dimanche »).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lis la petite annonce :\n« Vélo bleu à vendre. Bon état. Prix : 50 euros. Téléphone : 06 12 34 56 78. »\n\nCombien coûte le vélo ?",
+      "options": [
+        { "id": "a", "text": "6 euros" },
+        { "id": "b", "text": "50 euros" },
+        { "id": "c", "text": "15 euros" },
+        { "id": "d", "text": "56 euros" }
+      ],
+      "correctOption": "b",
+      "explanation": "L'annonce dit « Prix : 50 euros » : le vélo coûte donc 50 euros. Les nombres 6, 15 et 56 viennent du numéro de téléphone, pas du prix.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lis le message :\n« Bonjour, je m'appelle Sofia. Je suis espagnole et j'habite à Madrid. »\n\nOù habite Sofia ?",
+      "options": [
+        { "id": "a", "text": "En Espagne, mais on ne sait pas où" },
+        { "id": "b", "text": "À Barcelone" },
+        { "id": "c", "text": "À Paris" },
+        { "id": "d", "text": "À Madrid" }
+      ],
+      "correctOption": "d",
+      "explanation": "Sofia écrit « j'habite à Madrid » : elle habite donc à Madrid. Barcelone et Paris ne sont pas citées, et le texte donne bien la ville, donc l'option (a) est fausse.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lis la phrase :\n« J'ai très soif, je bois un grand verre d'eau. »\n\nQue veut dire le mot « soif » ?",
+      "options": [
+        { "id": "a", "text": "Avoir besoin de manger" },
+        { "id": "b", "text": "Avoir besoin de boire" },
+        { "id": "c", "text": "Avoir froid" },
+        { "id": "d", "text": "Être fatigué" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le mot « soif » est lié à « je bois un verre d'eau » : il veut donc dire avoir besoin de boire. « Manger » correspondrait à la faim, et le froid ou la fatigue n'ont aucun lien avec boire de l'eau.",
+      "difficulty": 2
+    }
+  ]
+}

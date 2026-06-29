@@ -1,0 +1,85 @@
+{
+  "title": "⭐⭐ Review: Inference and Vocabulary in Context",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Read the extract:\n\"Maria opened her laptop and stared at the blank document. She had promised her editor the article by noon. It was now 11:45 a.m.\"\n\nWhat can we INFER about Maria?",
+      "options": [
+        { "id": "a", "text": "Maria has already sent the article." },
+        { "id": "b", "text": "Maria is running out of time and has not finished the article." },
+        { "id": "c", "text": "Maria's editor has cancelled the deadline." },
+        { "id": "d", "text": "Maria does not like writing articles." }
+      ],
+      "correctOption": "b",
+      "explanation": "The blank document at 11:45 a.m. with a noon deadline shows Maria has not finished the article and has very little time left (b). She clearly hasn't sent it (a is false), there is no mention of the editor cancelling (c), and disliking writing is not implied — she is under pressure, not showing dislike (d).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Read the sentence:\n\"Although the film received mixed reviews, it was a box-office triumph.\"\nWhat does TRIUMPH most likely mean here?",
+      "options": [
+        { "id": "a", "text": "Failure" },
+        { "id": "b", "text": "Surprise" },
+        { "id": "c", "text": "Great success" },
+        { "id": "d", "text": "Disappointment" }
+      ],
+      "correctOption": "c",
+      "explanation": "The word \"although\" signals a contrast: despite mixed reviews (negative), it was a box-office triumph (positive). The contrast tells us triumph is something positive — a great success. Failure and disappointment are the opposite, and surprise does not capture the meaning of commercial success.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Read the email:\n\"Dear Customer,\nThank you for your order. Unfortunately, the item you requested is currently out of stock. We expect it to be available again in approximately two weeks. You may cancel your order or choose to wait. Please reply to confirm your preference.\nRegards, The Shop Team\"\n\nWhat does the shop want the customer to do?",
+      "options": [
+        { "id": "a", "text": "Visit the shop in person" },
+        { "id": "b", "text": "Call a customer service number" },
+        { "id": "c", "text": "Send a reply confirming whether to cancel or wait" },
+        { "id": "d", "text": "Choose a different item immediately" }
+      ],
+      "correctOption": "c",
+      "explanation": "The last sentence asks the customer to \"reply to confirm your preference\" — meaning cancel or wait. There is no mention of visiting the shop, calling a number, or choosing a different item.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read the sentence:\n\"The scientist was meticulous in her work, checking every measurement three times before recording it.\"\nWhat does METICULOUS most likely mean?",
+      "options": [
+        { "id": "a", "text": "Fast" },
+        { "id": "b", "text": "Careless" },
+        { "id": "c", "text": "Bored" },
+        { "id": "d", "text": "Very careful and precise" }
+      ],
+      "correctOption": "d",
+      "explanation": "The context — checking every measurement three times — describes extreme care and precision. \"Meticulous\" therefore means very careful and precise. The behaviour described is the opposite of fast, careless, or bored.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read the article extract:\n\"The town of Greenvale has seen its population double in the last decade, largely thanks to a new technology company that moved its headquarters there in 2015.\"\n\nStatement: \"The technology company was founded in Greenvale.\"\nIs this True, False, or Not Given?",
+      "options": [
+        { "id": "a", "text": "True" },
+        { "id": "b", "text": "Not Given" },
+        { "id": "c", "text": "False" },
+        { "id": "d", "text": "Cannot be determined from any source" }
+      ],
+      "correctOption": "b",
+      "explanation": "The text says the company \"moved its headquarters there\" — it came from somewhere else. But where it was originally founded is not mentioned. The answer is Not Given, not False: the text doesn't say it was NOT founded in Greenvale, it simply doesn't say where it was founded.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read the story extract:\n\"Youssef smiled as he stepped off the stage. His hands were still shaking, but the audience had clapped for what felt like forever.\"\n\nWhat is the most likely INFERENCE?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Youssef was nervous before but feels relieved and pleased after a successful performance."
+        },
+        { "id": "b", "text": "Youssef hurt his hands on the stage." },
+        { "id": "c", "text": "The audience was bored and left early." },
+        { "id": "d", "text": "Youssef forgot his lines and felt embarrassed." }
+      ],
+      "correctOption": "a",
+      "explanation": "Youssef's shaking hands suggest pre-performance nerves, but his smile and the long applause indicate success and relief (a). Shaking hands from an injury is not implied, the audience clearly applauded at length (not bored or leaving early), and forgetting lines would not produce a smile and prolonged applause.",
+      "difficulty": 3
+    }
+  ]
+}

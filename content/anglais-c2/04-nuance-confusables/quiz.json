@@ -1,0 +1,65 @@
+{
+  "title": "Comprehension Check ⭐",
+  "questions": [
+    {
+      "prompt": "Complete: \"The new policy will greatly ___ the number of available jobs.\"",
+      "options": [
+        { "id": "a", "text": "effect" },
+        { "id": "b", "text": "affect" },
+        { "id": "c", "text": "infer" },
+        { "id": "d", "text": "imply" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Affect\" is the verb meaning to have an impact on: the policy will affect jobs. \"Effect\" is normally a noun (the effect of the policy); it can be a rare formal verb meaning to bring about, but \"affect\" is the standard verb here. \"Infer\" and \"imply\" are about communication, not impact on a situation.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Who IMPLIES and who INFERS?\n\"She never said the meeting was cancelled, but I could tell from her tone.\"\nShe ___ it; he ___ it from her tone.",
+      "options": [
+        { "id": "a", "text": "inferred / implied" },
+        { "id": "b", "text": "implied / inferred" },
+        { "id": "c", "text": "implied / implied" },
+        { "id": "d", "text": "inferred / inferred" }
+      ],
+      "correctOption": "b",
+      "explanation": "The speaker/writer implies (puts the meaning in indirectly); the listener/reader infers (takes the meaning out from evidence). She implied it; he inferred it from her tone. Mnemonic: writers imply; readers infer.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which sentence uses 'comprise' or 'compose' CORRECTLY?",
+      "options": [
+        { "id": "a", "text": "The research team is composed of twelve scientists." },
+        { "id": "b", "text": "The research team is comprised of twelve scientists." },
+        { "id": "c", "text": "The research team is composed by twelve scientists." },
+        { "id": "d", "text": "The research team composes twelve scientists." }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Is composed of\" is the correct passive form — using the preposition of. (b) \"is comprised of\" reverses the logic and is widely criticised in formal writing — the active \"comprises\" is preferred. (c) \"is composed by\" uses the wrong preposition (by indicates agent in passive, not composition). (d) \"composes twelve scientists\" reverses the direction incorrectly.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"She has ___ interruptions from her neighbour all week — it keeps stopping and starting.\"",
+      "options": [
+        { "id": "a", "text": "continuous" },
+        { "id": "b", "text": "historical" },
+        { "id": "c", "text": "continual" },
+        { "id": "d", "text": "principal" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Continual\" means recurring frequently but with breaks — which fits \"keeps stopping and starting\". \"Continuous\" means without any interruption at all. \"Historical\" and \"principal\" are entirely unrelated to the meaning required here.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"You should ___ more research before reaching a conclusion.\"",
+      "options": [
+        { "id": "a", "text": "make" },
+        { "id": "b", "text": "have" },
+        { "id": "c", "text": "take" },
+        { "id": "d", "text": "do" }
+      ],
+      "correctOption": "d",
+      "explanation": "The correct collocation is \"do research\" — not make, have, or take. \"Make research\" is a very common non-native error. \"Do\" is the fixed collocate for research, homework, and similar intellectual activities.",
+      "difficulty": 2
+    }
+  ]
+}

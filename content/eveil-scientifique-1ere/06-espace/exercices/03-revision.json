@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة: المواقع والمقارنات",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "القلم فوق المكتب. أين المكتب بالنسبة إلى القلم؟",
+      "options": [
+        { "id": "a", "text": "فوقه" },
+        { "id": "b", "text": "تحته" },
+        { "id": "c", "text": "داخله" },
+        { "id": "d", "text": "أمامه" }
+      ],
+      "correctOption": "b",
+      "explanation": "إذا كان القلم فوق المكتب، فالمكتب تحت القلم.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أين توجد الكرة بالنسبة إلى الكرسيّ؟ <svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><g stroke=\"#1f2937\" stroke-width=\"2\" fill=\"none\"><rect x=\"40\" y=\"34\" width=\"40\" height=\"8\"/><line x1=\"44\" y1=\"42\" x2=\"44\" y2=\"86\"/><line x1=\"76\" y1=\"42\" x2=\"76\" y2=\"86\"/><line x1=\"76\" y1=\"34\" x2=\"76\" y2=\"14\"/></g><circle cx=\"60\" cy=\"100\" r=\"12\" stroke=\"#1f2937\" stroke-width=\"2\" fill=\"#9ca3af\"/></svg>",
+      "options": [
+        { "id": "a", "text": "تحت الكرسيّ" },
+        { "id": "b", "text": "فوق الكرسيّ" },
+        { "id": "c", "text": "خلف الكرسيّ" },
+        { "id": "d", "text": "يمين الكرسيّ" }
+      ],
+      "correctOption": "a",
+      "explanation": "الكرة في الأسفل بين أرجل الكرسيّ، فهي تحت الكرسيّ.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ بيتٍ بعيدٌ عن الطفل؟ <svg viewBox=\"0 0 200 90\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"10\" y1=\"76\" x2=\"195\" y2=\"76\" stroke=\"#1f2937\" stroke-width=\"2\"/><g stroke=\"#1f2937\" stroke-width=\"2\" fill=\"none\"><circle cx=\"40\" cy=\"50\" r=\"7\"/><line x1=\"40\" y1=\"57\" x2=\"40\" y2=\"74\"/></g><rect x=\"58\" y=\"48\" width=\"28\" height=\"28\" stroke=\"#1f2937\" stroke-width=\"2\" fill=\"#e5e7eb\"/><rect x=\"160\" y=\"48\" width=\"28\" height=\"28\" stroke=\"#1f2937\" stroke-width=\"2\" fill=\"#e5e7eb\"/></svg>",
+      "options": [
+        { "id": "a", "text": "البيت القريب من الطفل" },
+        { "id": "b", "text": "الطفل نفسه" },
+        { "id": "c", "text": "البيتان قريبان" },
+        { "id": "d", "text": "البيت البعيد على اليمين" }
+      ],
+      "correctOption": "d",
+      "explanation": "الطفل على اليسار، والبيت على اليمين بعيدٌ عنه، أمّا البيت الملاصق له فقريب.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ كأسٍ فيه ماءٌ أعلى (أكثر ارتفاعًا)؟ <svg viewBox=\"0 0 150 100\" xmlns=\"http://www.w3.org/2000/svg\"><g stroke=\"#1f2937\" stroke-width=\"2\" fill=\"none\"><rect x=\"30\" y=\"20\" width=\"34\" height=\"70\"/><rect x=\"96\" y=\"20\" width=\"34\" height=\"70\"/></g><rect x=\"32\" y=\"34\" width=\"30\" height=\"54\" fill=\"#9ca3af\" stroke=\"none\"/><rect x=\"98\" y=\"66\" width=\"30\" height=\"22\" fill=\"#9ca3af\" stroke=\"none\"/></svg>",
+      "options": [
+        { "id": "a", "text": "الكأس القليل على اليمين" },
+        { "id": "b", "text": "الكأسان متساويان" },
+        { "id": "c", "text": "الكأس الممتلئ على اليسار" },
+        { "id": "d", "text": "لا يوجد ماء" }
+      ],
+      "correctOption": "c",
+      "explanation": "الماء في الكأس على اليسار يصل إلى ارتفاعٍ أعلى، فهو الأكثر.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "في صفّ المدرسة، سعيد أمام أمين. من خلف سعيد؟",
+      "options": [
+        { "id": "a", "text": "أمين" },
+        { "id": "b", "text": "سعيد نفسه" },
+        { "id": "c", "text": "لا أحد" },
+        { "id": "d", "text": "المعلّم فقط" }
+      ],
+      "correctOption": "a",
+      "explanation": "إذا كان سعيد أمام أمين، فأمين خلف سعيد.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ خطٍّ أطول؟ <svg viewBox=\"0 0 150 80\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"20\" y1=\"34\" x2=\"130\" y2=\"34\" stroke=\"#1f2937\" stroke-width=\"3\"/><line x1=\"20\" y1=\"58\" x2=\"68\" y2=\"58\" stroke=\"#1f2937\" stroke-width=\"3\"/></svg>",
+      "options": [
+        { "id": "a", "text": "الخطّ القصير في الأسفل" },
+        { "id": "b", "text": "هما متساويان" },
+        { "id": "c", "text": "لا يوجد خطّ" },
+        { "id": "d", "text": "الخطّ الطويل في الأعلى" }
+      ],
+      "correctOption": "d",
+      "explanation": "الخطّ في الأعلى يمتدّ أكثر، فهو أطول من الخطّ الذي في الأسفل.",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Entraînement : les temps littéraires",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Quel est le passé simple de « finir » à la 3ᵉ personne du singulier ?",
+      "options": [
+        { "id": "a", "text": "il finissait" },
+        { "id": "b", "text": "il finira" },
+        { "id": "c", "text": "il finit" },
+        { "id": "d", "text": "il a fini" }
+      ],
+      "correctOption": "c",
+      "explanation": "Les verbes du 2ᵉ groupe font leur passé simple en -it à la 3ᵉ personne du singulier : « il finit ». « il finissait » est l'imparfait, « il finira » le futur et « il a fini » le passé composé.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complétez le récit : « Le chevalier ___ son épée et s'élança. »",
+      "options": [
+        { "id": "a", "text": "tira" },
+        { "id": "b", "text": "tirait" },
+        { "id": "c", "text": "tirera" },
+        { "id": "d", "text": "tirât" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le récit enchaîne des actions ponctuelles au passé simple : « tira » (1ᵉ groupe, finale -a sans accent). « tirait » serait une description à l'imparfait, et « tirât » est un subjonctif imparfait qui ne convient pas dans une principale.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel est le passé simple de « être » à la 3ᵉ personne du singulier ?",
+      "options": [
+        { "id": "a", "text": "il était" },
+        { "id": "b", "text": "il fut" },
+        { "id": "c", "text": "il fût" },
+        { "id": "d", "text": "il a été" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le passé simple de « être » est « il fut », sans accent circonflexe. « il était » est l'imparfait, « il fût » le subjonctif imparfait (avec circonflexe), et « il a été » le passé composé.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans « La forêt ___ sombre quand l'enfant ___ », quels temps conviennent ?",
+      "options": [
+        { "id": "a", "text": "fut … entrait" },
+        { "id": "b", "text": "était … entrait" },
+        { "id": "c", "text": "fut … entra" },
+        { "id": "d", "text": "était … entra" }
+      ],
+      "correctOption": "d",
+      "explanation": "La description du décor se met à l'imparfait (« était sombre », arrière-plan) et l'action ponctuelle au passé simple (« entra », premier plan). « était … entra » respecte cette répartition ; les autres combinaisons mélangent les rôles.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complétez : « Quand il ___ tout rangé, il s'assit enfin. »",
+      "options": [
+        { "id": "a", "text": "avait" },
+        { "id": "b", "text": "a" },
+        { "id": "c", "text": "eut" },
+        { "id": "d", "text": "eût" }
+      ],
+      "correctOption": "c",
+      "explanation": "Devant le passé simple « s'assit », l'antériorité immédiate se rend par le passé antérieur : « eut rangé » (auxiliaire « avoir » au passé simple). « avait » donnerait un plus-que-parfait, et « eût » (circonflexe) serait un subjonctif imparfait.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel est le passé simple de « parler » à la 3ᵉ personne du pluriel ?",
+      "options": [
+        { "id": "a", "text": "ils parlèrent" },
+        { "id": "b", "text": "ils parlaient" },
+        { "id": "c", "text": "ils parleront" },
+        { "id": "d", "text": "ils parlassent" }
+      ],
+      "correctOption": "a",
+      "explanation": "Au pluriel, le passé simple du 1ᵉ groupe se forme en -èrent : « ils parlèrent ». « ils parlaient » est l'imparfait, « ils parleront » le futur, et « ils parlassent » le subjonctif imparfait pluriel.",
+      "difficulty": 2
+    }
+  ]
+}

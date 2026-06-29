@@ -1,0 +1,154 @@
+{
+  "title": "⭐ تمرين: مبادئ الوحدات والتحويل",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "بأيّ وحدةٍ نقيس كتلة تلميذ؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "الكيلوغرام (kg)"
+        },
+        {
+          "id": "b",
+          "text": "الغرام (g)"
+        },
+        {
+          "id": "c",
+          "text": "اللتر (L)"
+        },
+        {
+          "id": "d",
+          "text": "الميليمتر (mm)"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "كتلة تلميذٍ كبيرة نسبيًّا، فنختار الكيلوغرام (kg) حتّى يكون العدد معقولًا، مثل 35 kg.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم صنتيلترًا يساوي 1 L؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "10 cL"
+        },
+        {
+          "id": "b",
+          "text": "1 000 cL"
+        },
+        {
+          "id": "c",
+          "text": "100 cL"
+        },
+        {
+          "id": "d",
+          "text": "60 cL"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "العلاقة الأساسيّة للسعة هي 1 L = 100 cL. فاللتر الواحد يساوي 100 صنتيلتر.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم مليمترًا يساوي 5 cm؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "5 mm"
+        },
+        {
+          "id": "b",
+          "text": "50 mm"
+        },
+        {
+          "id": "c",
+          "text": "500 mm"
+        },
+        {
+          "id": "d",
+          "text": "15 mm"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "بين cm و mm خانةٌ واحدة فالعامل 10، نضرب: 5 × 10 = 50. إذن 5 cm = 50 mm.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم غرامًا يساوي 2 kg؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "20 g"
+        },
+        {
+          "id": "b",
+          "text": "102 g"
+        },
+        {
+          "id": "c",
+          "text": "200 g"
+        },
+        {
+          "id": "d",
+          "text": "2 000 g"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "العامل بين kg و g هو 1000، نضرب: 2 × 1 000 = 2 000. إذن 2 kg = 2 000 g.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم مترًا يساوي 400 cm؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "40 m"
+        },
+        {
+          "id": "b",
+          "text": "40 000 m"
+        },
+        {
+          "id": "c",
+          "text": "4 m"
+        },
+        {
+          "id": "d",
+          "text": "4 000 m"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "من cm إلى m نصعد خانتين فنقسم على 100: 400 ÷ 100 = 4. إذن 400 cm = 4 m.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم ثانيةً في الدقيقة الواحدة؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "60 ثانية"
+        },
+        {
+          "id": "b",
+          "text": "10 ثوانٍ"
+        },
+        {
+          "id": "c",
+          "text": "100 ثانية"
+        },
+        {
+          "id": "d",
+          "text": "24 ثانية"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "وحدات الزمن ليست عشريّة: الدقيقة الواحدة تساوي 60 ثانية، تمامًا كما أنّ الساعة 60 دقيقة.",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill: Cleft Sentences",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Identify the cleft type: \"It was the funding gap that ultimately delayed the project.\"",
+      "options": [
+        { "id": "a", "text": "Wh-cleft (pseudo-cleft)" },
+        { "id": "b", "text": "All-cleft" },
+        { "id": "c", "text": "It-cleft" },
+        { "id": "d", "text": "Reverse Wh-cleft" }
+      ],
+      "correctOption": "c",
+      "explanation": "An It-cleft has the structure It + be + [focused element] + that/who + rest of clause. Here: It was + the funding gap (focus) + that + ultimately delayed the project. A Wh-cleft would begin with What…. An All-cleft would begin with All…. A reverse Wh-cleft would put the focused element first followed by is/was + what-clause.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete the Wh-cleft: \"___ the delegates achieved was a preliminary framework, not a binding treaty.\"",
+      "options": [
+        { "id": "a", "text": "That" },
+        { "id": "b", "text": "What" },
+        { "id": "c", "text": "It" },
+        { "id": "d", "text": "All what" }
+      ],
+      "correctOption": "b",
+      "explanation": "A Wh-cleft begins with a wh-clause as subject: What the delegates achieved was a preliminary framework. \"That\" would form a different clause type, not a Wh-cleft. \"It\" starts an It-cleft, which requires a following that/who. \"All what\" is never correct — the correct limiting cleft uses simply \"All\" without \"what\".",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choose the sentence that correctly uses a cleft to focus on the PLACE.",
+      "options": [
+        { "id": "a", "text": "What the treaty was signed was in Geneva." },
+        { "id": "b", "text": "All they signed was in Geneva." },
+        { "id": "c", "text": "It was in Geneva that the treaty was signed." },
+        { "id": "d", "text": "Geneva is what signed the treaty." }
+      ],
+      "correctOption": "c",
+      "explanation": "To focus on the place, use an It-cleft with the prepositional phrase as the focused element: It was in Geneva that the treaty was signed. The preposition in is retained with the place name. Option (a) forms a Wh-cleft but the word order is wrong (what + place is unusual). Option (b) uses All-cleft inappropriately — it focuses on action, not location. Option (d) inverts meaning (Geneva signed the treaty) and is not a cleft.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT cleft sentence.",
+      "options": [
+        { "id": "a", "text": "What she objected to was the lack of transparency." },
+        { "id": "b", "text": "It was because of poor planning that the launch failed." },
+        { "id": "c", "text": "It is the budget that needs reviewing." },
+        { "id": "d", "text": "What I did was to consider all the options." }
+      ],
+      "correctOption": "d",
+      "explanation": "Option (d) is wrong: after \"All/What [subject] did was\", the verb takes the bare infinitive, not the to-infinitive. Correct: What I did was consider all the options. The use of \"to consider\" (to-infinitive) after \"did was\" is the classic learner error for this cleft type. Options (a), (b), and (c) are all correctly formed — a Wh-cleft, an It-cleft with a because-clause, and an It-cleft in the present tense.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Rewrite using an All-cleft to capture \"She didn't argue or protest — she simply resigned.\" Which version is correct?",
+      "options": [
+        { "id": "a", "text": "All what she did was resigning." },
+        { "id": "b", "text": "All she did was resign." },
+        { "id": "c", "text": "All she did was to resign." },
+        { "id": "d", "text": "All did she was resign." }
+      ],
+      "correctOption": "b",
+      "explanation": "The All-cleft structure is: All + subject + did + was + bare infinitive. So: All she did was resign. \"All what she did\" inserts an incorrect \"what\" — it should be just \"All\". \"To resign\" (to-infinitive) after \"did was\" is the common error — the bare infinitive is required. \"All did she was\" wrongly applies inversion inside the cleft — no inversion occurs in an All-cleft.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete the formal academic sentence to identify the cause: \"Many observers blamed mismanagement. However, ___ that derailed the project was the sudden withdrawal of government funding.\"",
+      "options": [
+        { "id": "a", "text": "it was what" },
+        { "id": "b", "text": "all what" },
+        { "id": "c", "text": "what" },
+        { "id": "d", "text": "it" }
+      ],
+      "correctOption": "c",
+      "explanation": "The sentence is a Wh-cleft: What + [relative clause] + was + [focused element]: What derailed the project was the sudden withdrawal of government funding. Only \"what\" correctly heads this structure. \"It was what\" would create a double-frame error (It-cleft + Wh-cleft merged). \"All what\" is never standard. \"It\" would require the It-cleft structure with that/who: It was [element] that derailed the project — but the sentence as given continues with \"that derailed\", so the slot before \"that\" needs the focused element, not just \"it\".",
+      "difficulty": 3
+    }
+  ]
+}

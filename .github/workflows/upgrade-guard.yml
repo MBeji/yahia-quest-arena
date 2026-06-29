@@ -1,0 +1,245 @@
+name: Upgrade guard (nightly stack upgrade)
+
+# Autonomous nightly STACK-UPGRADE sweep, driven by the repo skill
+# .claude/skills/upgrade-guard. It detects available upgrades across the whole
+# stack (npm runtime + dev deps, TypeScript, the Node toolchain, the pinned
+# Supabase CLI, GitHub Actions), then:
+#   * applies PATCH + MINOR as ONE lot on a branch, runs the in-session gate, and
+#     opens a PR — which THIS workflow then validates with the full slow suite
+#     (E2E public + E2E authed + pgTAP) and AUTO-MERGES if all green;
+#   * applies each MAJOR in isolation (one PR per major, never bundled), or opens
+#     a tracking issue when a major's gate stays red — majors are NEVER auto-merged.
+# It NEVER weakens the gate and NEVER merges by itself (the deterministic
+# `automerge` job does that, only for a fully-green patch/minor PR).
+#
+# Trigger: it runs *after* the Nightly tests workflow finishes SUCCESSFULLY, so it
+# only ever upgrades from a known-green baseline ("juste après la CI + E2E
+# complets"). `workflow_run` (like `schedule`) only fires from the default branch
+# (main) — takes effect once this file is merged to main. Use the "Run workflow"
+# button (workflow_dispatch) any time to launch it manually.
+#
+# Prereq: repository secret CLAUDE_CODE_OAUTH_TOKEN (same one regression-guard
+# uses — `claude setup-token`). Without it the job SKIPS gracefully (stays green).
+# The TEST_SUPABASE_* / E2E_USER_PASSWORD secrets let the authed E2E + pgTAP gate
+# the auto-merge; when absent those suites skip and the patch/minor PR is simply
+# left for manual merge (the safe default).
+
+on:
+  workflow_run:
+    workflows: ["Nightly tests"]
+    types: [completed]
+  workflow_dispatch:
+
+# The guard pushes upgrade branches, opens PRs, and files tracking issues.
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+# One sweep at a time (a slow run can overlap the next night's trigger).
+concurrency:
+  group: upgrade-guard
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    name: Detect + apply upgrades
+    # Only after a GREEN nightly, or a manual dispatch. A red/cancelled nightly
+    # means the baseline isn't trustworthy — don't build upgrades on it.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    # Headroom for: changelog reading + applying the patch/minor lot + each major,
+    # each running `npm run ci:verify` in-session. The slow E2E/pgTAP suites are
+    # SEPARATE jobs, so they don't count against this.
+    timeout-minutes: 60
+    outputs:
+      configured: ${{ steps.guard.outputs.configured }}
+      has_patch_minor: ${{ steps.out.outputs.has_patch_minor }}
+      patch_minor_branch: ${{ steps.out.outputs.patch_minor_branch }}
+      patch_minor_pr: ${{ steps.out.outputs.patch_minor_pr }}
+    steps:
+      # Token gate + cadence gate. The nightly completes every night, but this
+      # sweep is the most expensive job in the repo (a Claude agent holds a runner
+      # for many minutes), so we throttle it to 2×/week — Tue + Fri (UTC), the
+      # mornings after the regression guard's Mon/Thu 23:00 → nightly 01:00 chain.
+      # A manual workflow_dispatch always runs. Off-day runs stop here in seconds,
+      # before any costly step. Skipped == configured=false (same path as a missing
+      # token): the downstream e2e/pgtap/automerge jobs already gate on it.
+      - name: Check token + upgrade cadence
+        id: guard
+        run: |
+          if [ -z "${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}" ]; then
+            echo "CLAUDE_CODE_OAUTH_TOKEN not set — skipping the upgrade guard."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          dow="$(date -u +%u)"  # 1=Mon … 7=Sun
+          if [ "${{ github.event_name }}" != "workflow_dispatch" ] && [ "$dow" != "2" ] && [ "$dow" != "5" ]; then
+            echo "Not a scheduled upgrade day (UTC dow=$dow; sweep runs Tue/Fri) — skipping. Use 'Run workflow' to force it."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "configured=true" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout main (full history for branch/diff context)
+        if: steps.guard.outputs.configured == 'true'
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        if: steps.guard.outputs.configured == 'true'
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies (validate the current lockfile)
+        if: steps.guard.outputs.configured == 'true'
+        run: npm ci --no-audit --no-fund
+
+      - name: Run the upgrade-guard sweep
+        if: steps.guard.outputs.configured == 'true'
+        uses: anthropics/claude-code-action@v1
+        env:
+          # The skill writes its machine-readable verdict here; the next step turns
+          # it into job outputs that gate the slow suites + auto-merge.
+          UPGRADE_GUARD_RESULT: ${{ runner.temp }}/upgrade-guard-result.json
+          # Authenticates Claude's `gh` calls (open PRs / issues, push branches).
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt: |
+            Run the /upgrade-guard skill for yahia-quest-arena.
+
+            You are on a clean `main`, immediately after a GREEN nightly build, so
+            the baseline is trustworthy. Detect available upgrades across the whole
+            stack (npm runtime + dev deps, TypeScript, the Node toolchain, the
+            pinned Supabase CLI, and the GitHub Actions), then act per the skill:
+
+              1. PATCH + MINOR as ONE lot on branch `claude/upgrade-patch-minor-<date>`:
+                 `npm update` within ranges, full lockfile install (npm 10, NEVER 11),
+                 then `npm run ci:verify` in-session. If green, open ONE PR (label
+                 `dependencies`) and record has_patch_minor=true + the branch + PR
+                 number in the result file. If you cannot make the whole lot green,
+                 hold the offending package back (record it) or open a DRAFT
+                 `needs-review` PR and set has_patch_minor=false — never weaken the gate.
+
+              2. Each MAJOR in ISOLATION on its own branch (NEVER bundle two majors;
+                 the TanStack router/start/router-plugin/react-query set counts as ONE
+                 major). Read its changelog first. If you make it green, open ONE PR
+                 labelled `dependencies` + `major` + `needs-review` (NOT auto-merged).
+                 If it stays red after a reasonable effort, open a tracking ISSUE
+                 describing the breaking change + what failed — do NOT open a broken PR.
+
+            Honour every repo trap in the skill (npm 10 lockfile, global esbuild
+            override on Vite 8, react-hooks 7 recommended, react-refresh on
+            src/routes/**, do-not-touch motion/LazyMotion, the Lovable meta-plugin,
+            Supabase CLI pin → validate pgTAP).
+
+            HARD RULES: NEVER weaken/disable a test, lower coverage, or `--no-verify`
+            to go green. NEVER merge or push to `main` — only push `claude/upgrade-*`
+            branches and open PRs/issues; the workflow auto-merges the patch/minor PR
+            itself once the slow suites pass. Use conventional-commit messages with the
+            `Co-Authored-By` trailer. WRITE the result file to the path in the
+            `UPGRADE_GUARD_RESULT` env var (schema in the skill). If the stack is
+            already up to date, open nothing, set has_patch_minor=false, and post a
+            short "already up to date — here's what I checked" summary.
+          claude_args: |
+            --model claude-sonnet-4-6
+            --max-turns 60
+            --allowedTools "Bash,Read,Edit,Write,Glob,Grep,WebFetch,WebSearch"
+
+      # Turn the skill's result file into job outputs. Runs even if the sweep
+      # errored (so downstream skips cleanly); absence of the file => nothing to do.
+      - name: Export sweep outputs
+        id: out
+        if: ${{ always() && steps.guard.outputs.configured == 'true' }}
+        run: |
+          set -euo pipefail
+          f="$RUNNER_TEMP/upgrade-guard-result.json"
+          if [ -f "$f" ] && jq -e . "$f" >/dev/null 2>&1; then
+            echo "has_patch_minor=$(jq -r '.has_patch_minor // false' "$f")" >> "$GITHUB_OUTPUT"
+            echo "patch_minor_branch=$(jq -r '.patch_minor_branch // ""' "$f")" >> "$GITHUB_OUTPUT"
+            echo "patch_minor_pr=$(jq -r '.patch_minor_pr // ""' "$f")" >> "$GITHUB_OUTPUT"
+            echo "Sweep result:"; jq '{has_patch_minor, patch_minor_branch, patch_minor_pr, summary}' "$f"
+          else
+            echo "No (valid) result file — treating as nothing to validate/merge."
+            echo "has_patch_minor=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # No silent green AND no false red: the action step exits 0 even when Claude
+      # itself errored (e.g. a 401 → is_error=true at 1 turn). The shared parser
+      # inspects ONLY the final result event's is_error. (Same guard as
+      # regression-guard.yml.)
+      - name: Fail loudly if the sweep errored
+        if: ${{ always() && steps.guard.outputs.configured == 'true' }}
+        run: python3 .github/scripts/check-claude-result.py "$RUNNER_TEMP/claude-execution-output.json"
+
+  # --- Validate the patch/minor branch with the full slow suite -----------------
+  # These reuse the canonical suite workflows, pointed at the upgrade branch via
+  # their `ref` input. They run ONLY when the sweep produced a green patch/minor lot.
+
+  e2e:
+    name: E2E (public) — upgrade branch
+    needs: apply
+    if: needs.apply.outputs.has_patch_minor == 'true'
+    uses: ./.github/workflows/e2e.yml
+    with:
+      ref: ${{ needs.apply.outputs.patch_minor_branch }}
+
+  e2e-auth:
+    name: E2E (authenticated) — upgrade branch
+    needs: apply
+    if: needs.apply.outputs.has_patch_minor == 'true'
+    uses: ./.github/workflows/e2e-auth.yml
+    with:
+      ref: ${{ needs.apply.outputs.patch_minor_branch }}
+    secrets: inherit
+
+  pgtap:
+    name: DB integration (pgTAP) — upgrade branch
+    needs: apply
+    if: needs.apply.outputs.has_patch_minor == 'true'
+    uses: ./.github/workflows/db-tests.yml
+    with:
+      ref: ${{ needs.apply.outputs.patch_minor_branch }}
+
+  # --- Auto-merge the patch/minor PR, only when ALL slow suites are green --------
+  automerge:
+    name: Auto-merge patch/minor (all green)
+    needs: [apply, e2e, e2e-auth, pgtap]
+    # All three suites must be GREEN, and the authed suite must have ACTUALLY run
+    # (its `ran` output) — a graceful skip on missing TEST secrets reports success
+    # but validates nothing, so it must NOT unlock an auto-merge to prod.
+    if: >-
+      needs.apply.outputs.has_patch_minor == 'true' &&
+      needs.e2e.result == 'success' &&
+      needs.e2e-auth.result == 'success' &&
+      needs.e2e-auth.outputs.ran == 'true' &&
+      needs.pgtap.result == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Squash-merge the patch/minor PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ needs.apply.outputs.patch_minor_pr }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          if [ -z "${PR:-}" ]; then
+            echo "No PR number recorded — nothing to merge."
+            exit 0
+          fi
+          echo "Full gate + E2E (public + authed) + pgTAP green — squash-merging PR #$PR."
+          gh pr comment "$PR" --repo "$REPO" --body \
+            "🤖 Guard nocturne : gate complet + E2E (public + authentifié) + pgTAP verts sur la branche. Auto-merge (squash) en cours." || true
+          if ! gh pr merge "$PR" --repo "$REPO" --squash --delete-branch; then
+            echo "::warning title=Auto-merge bloqué::Impossible d'auto-merger la PR #$PR (protection de branche ou conflit ?). Laissée ouverte pour merge manuel."
+          fi

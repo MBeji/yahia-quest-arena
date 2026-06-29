@@ -1,4 +1,4 @@
-# Audit UX/UI des écrans — yahia-quest-arena (XP Scholars)
+# Audit UX/UI des écrans — yahia-quest-arena (Na9ra Nal3ab)
 
 > Audit en **lecture seule** des ~18 écrans de l'application : cohérence, contenu,
 > affichage, lucidité (expérience utilisateur), navigation et parcours utilisateur.

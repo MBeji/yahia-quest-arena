@@ -1,0 +1,65 @@
+{
+  "title": "Comprehension Check ⭐",
+  "questions": [
+    {
+      "prompt": "Complete the inverted sentence: \"___ have I seen such determination.\"",
+      "options": [
+        { "id": "a", "text": "Rarely" },
+        { "id": "b", "text": "Often" },
+        { "id": "c", "text": "Sometimes" },
+        { "id": "d", "text": "Usually" }
+      ],
+      "correctOption": "a",
+      "explanation": "Inversion is triggered by a negative or restrictive adverbial placed at the front. Only \"Rarely\" is a negative adverbial that triggers auxiliary inversion. \"Often\", \"Sometimes\", and \"Usually\" are positive adverbials and do not trigger inversion.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"No sooner had the match ended ___ the crowd rushed onto the pitch.\"",
+      "options": [
+        { "id": "a", "text": "when" },
+        { "id": "b", "text": "than" },
+        { "id": "c", "text": "that" },
+        { "id": "d", "text": "but" }
+      ],
+      "correctOption": "b",
+      "explanation": "The fixed pairing is No sooner…than. \"when\" goes with Hardly/Scarcely, \"that\" is used in result clauses (so…that), and \"but\" belongs to Not only…but also. No sooner always partners with than.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"Hardly ___ I arrived when the director called me into the office.\"",
+      "options": [
+        { "id": "a", "text": "have" },
+        { "id": "b", "text": "did" },
+        { "id": "c", "text": "had" },
+        { "id": "d", "text": "was" }
+      ],
+      "correctOption": "c",
+      "explanation": "The main verb arrived is in the past simple, so the correct auxiliary in the inverted clause is had (past perfect): Hardly had I arrived when… The past perfect is used because this event happened just before another past event. \"have\" is present perfect, \"did\" is past simple, and \"was\" doesn't fit.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which sentence correctly uses inversion with 'Not only'?",
+      "options": [
+        { "id": "a", "text": "Not only she won the prize, but she also gave a speech." },
+        { "id": "b", "text": "Not only did she win the prize, but she also gave a speech." },
+        { "id": "c", "text": "Not only did she won the prize, but she also gave a speech." },
+        { "id": "d", "text": "Not only she did win the prize, but she also gave a speech." }
+      ],
+      "correctOption": "b",
+      "explanation": "After 'Not only', inversion is required: auxiliary (did) before subject (she), then the base verb (win): Not only did she win… Option (a) has no inversion, (c) wrongly uses the past participle won after did, and (d) puts the subject before the auxiliary.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"___ no circumstances should you share your login details.\"",
+      "options": [
+        { "id": "a", "text": "In" },
+        { "id": "b", "text": "On" },
+        { "id": "c", "text": "Under" },
+        { "id": "d", "text": "At" }
+      ],
+      "correctOption": "c",
+      "explanation": "The fixed expression that triggers inversion is \"Under no circumstances\": Under no circumstances should you… It is always \"under\" — not in, on, or at. This expression is used in formal notices to mean \"in no situation whatsoever\".",
+      "difficulty": 2
+    }
+  ]
+}

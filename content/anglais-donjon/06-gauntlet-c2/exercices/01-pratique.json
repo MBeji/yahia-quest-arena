@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Gauntlet C2: Warm-up",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Grammar — Subjunctive: \"The board recommended that the CEO ___ the decision immediately.\"",
+      "options": [
+        { "id": "a", "text": "reverses" },
+        { "id": "b", "text": "reversed" },
+        { "id": "c", "text": "reverse" },
+        { "id": "d", "text": "reversing" }
+      ],
+      "correctOption": "c",
+      "explanation": "After recommend + that, the mandative subjunctive uses the base form (infinitive) for all persons, so even for third-person singular the CEO, no -s is added: that the CEO reverse. \"reverses\" is the third-person indicative (not the subjunctive). \"reversed\" is past indicative. \"reversing\" is the gerund/participle and cannot follow that in this construction.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Vocabulary — Idiom: \"Don't tell anyone about the surprise party — I don't want you to ___.\"",
+      "options": [
+        { "id": "a", "text": "bite the bullet" },
+        { "id": "b", "text": "burn your bridges" },
+        { "id": "c", "text": "miss the boat" },
+        { "id": "d", "text": "let the cat out of the bag" }
+      ],
+      "correctOption": "d",
+      "explanation": "Let the cat out of the bag means to reveal a secret inadvertently — exactly the risk with a surprise party. \"Bite the bullet\" means to endure something unpleasant. \"Burn your bridges\" means to destroy a relationship or opportunity permanently. \"Miss the boat\" means to lose an opportunity by being too late — none of these is about revealing a secret.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Usage — Confusable words: \"The new contract will ___ all existing agreements.\"",
+      "options": [
+        { "id": "a", "text": "supersede" },
+        { "id": "b", "text": "supercede" },
+        { "id": "c", "text": "surpass" },
+        { "id": "d", "text": "superior" }
+      ],
+      "correctOption": "a",
+      "explanation": "Supersede means to replace or make obsolete — the correct legal/formal term here. Note the spelling: supersede ends in -sede, not -cede (a very common error). \"supercede\" is a misspelling. \"surpass\" means to exceed or do better than (performance, not replacement). \"superior\" is an adjective, not a verb.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Grammar — Unreal past: \"It's high time this city ___ its public transport system.\"",
+      "options": [
+        { "id": "a", "text": "modernises" },
+        { "id": "b", "text": "would modernise" },
+        { "id": "c", "text": "has modernised" },
+        { "id": "d", "text": "modernised" }
+      ],
+      "correctOption": "d",
+      "explanation": "It's (high) time + past simple expresses a present wish or mild criticism that something should already have happened: It's high time this city modernised its transport. The past form here has a present/future meaning (unreal past). \"modernises\" (present simple) breaks the unreal-past rule. \"would modernise\" is used in It's time for someone else's behaviour (It's time you would… is wrong — no conditional modal). \"has modernised\" is present perfect — wrong form after It's time.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Usage — Register: \"Which sentence is MOST appropriate for a formal academic report?\"",
+      "options": [
+        { "id": "a", "text": "The team looked into the problem." },
+        { "id": "b", "text": "The team investigated the problem." },
+        { "id": "c", "text": "The team checked out the problem." },
+        { "id": "d", "text": "The team had a good look at the problem." }
+      ],
+      "correctOption": "b",
+      "explanation": "investigate is the formal single-word verb appropriate for academic writing. \"look into\" is a neutral phrasal verb — acceptable in semi-formal writing but not ideal in academic reports. \"check out\" is informal/colloquial. \"had a good look at\" is informal and wordy. At C2 you choose investigate over look into without hesitation in formal writing.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Spelling — Choose the correctly spelled word: \"Booking hotels for 200 guests requires careful ___.\"",
+      "options": [
+        { "id": "a", "text": "accomodation" },
+        { "id": "b", "text": "accommodation" },
+        { "id": "c", "text": "accomadation" },
+        { "id": "d", "text": "acommodation" }
+      ],
+      "correctOption": "b",
+      "explanation": "accommodation has two c's and two m's: ac-com-mo-da-tion. A useful mnemonic: the hotel has a double bed in a double room (two c's, two m's). \"accomodation\" has only one m. \"accomadation\" swaps the second o for an a. \"acommodation\" has only one c.",
+      "difficulty": 2
+    }
+  ]
+}

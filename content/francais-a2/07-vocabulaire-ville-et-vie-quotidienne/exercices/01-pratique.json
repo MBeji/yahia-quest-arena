@@ -1,0 +1,154 @@
+{
+  "title": "⭐ Entraînement : la ville et la vie quotidienne",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Où vas-tu pour prendre le train ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "à la gare"
+        },
+        {
+          "id": "b",
+          "text": "à la mairie"
+        },
+        {
+          "id": "c",
+          "text": "à la poste"
+        },
+        {
+          "id": "d",
+          "text": "à la banque"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "On prend le train à la gare. La mairie sert aux papiers officiels, la poste à envoyer du courrier, et la banque à gérer son argent.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Pour acheter des médicaments, tu vas…",
+      "options": [
+        {
+          "id": "a",
+          "text": "à la boucherie"
+        },
+        {
+          "id": "b",
+          "text": "au commissariat"
+        },
+        {
+          "id": "c",
+          "text": "à la bibliothèque"
+        },
+        {
+          "id": "d",
+          "text": "à la pharmacie"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "On achète les médicaments à la pharmacie. La boucherie vend de la viande, la bibliothèque prête des livres, et le commissariat, c'est la police.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Pour aller à droite, vous ___ à droite. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "traversez"
+        },
+        {
+          "id": "b",
+          "text": "allez tout droit"
+        },
+        {
+          "id": "c",
+          "text": "tournez"
+        },
+        {
+          "id": "d",
+          "text": "payez"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "On dit « tourner à droite » ou « tourner à gauche » pour changer de direction. Traverser, c'est passer de l'autre côté de la rue ; aller tout droit, c'est ne pas tourner.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Trouve l'intrus.",
+      "options": [
+        {
+          "id": "a",
+          "text": "la tête"
+        },
+        {
+          "id": "b",
+          "text": "le bras"
+        },
+        {
+          "id": "c",
+          "text": "la jambe"
+        },
+        {
+          "id": "d",
+          "text": "le marché"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "La tête, le bras et la jambe sont des parties du corps ; le marché est un lieu de la ville où l'on achète des fruits et des légumes. C'est donc l'intrus.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "À la caisse du supermarché, qu'est-ce qu'on fait ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "on dort"
+        },
+        {
+          "id": "b",
+          "text": "on lit"
+        },
+        {
+          "id": "c",
+          "text": "on nage"
+        },
+        {
+          "id": "d",
+          "text": "on paie"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "À la caisse, on paie ses achats (verbe payer). Le marchand rend ensuite la monnaie si nécessaire. Les autres actions n'ont rien à voir avec un magasin.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "« J'ai mal ___ ventre. » Quel mot complète la phrase ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "à la"
+        },
+        {
+          "id": "b",
+          "text": "à le"
+        },
+        {
+          "id": "c",
+          "text": "le"
+        },
+        {
+          "id": "d",
+          "text": "au"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« Ventre » est masculin, donc à + le = au : j'ai mal au ventre. On dit « à la » devant un mot féminin (à la tête) et jamais « à le », qui se contracte toujours en « au ».",
+      "difficulty": 2
+    }
+  ]
+}

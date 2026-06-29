@@ -1,6 +1,6 @@
 {
   "id": "svt",
-  "nameFr": "Sciences physiques",
+  "nameFr": "العلوم الفيزيائية",
   "description": "الضوء والكهرباء والكيمياء وفق برنامج العلوم الفيزيائية للسنة التاسعة أساسي",
   "attribute": "Observation",
   "colorToken": "subject-svt",

@@ -1,0 +1,112 @@
+{
+  "title": "👑 Elite Challenge ⭐⭐⭐⭐: Modals of Deduction",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Read: \"The village was deserted. Every house was locked. Food was left half-eaten on tables. Animals roamed freely.\"\n\nWhich set of deductions is best calibrated to the evidence — near-certain where the evidence is strong, hedged where it is not?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The inhabitants must have left in a hurry; they can't have had time to prepare."
+        },
+        { "id": "b", "text": "The inhabitants might have planned a festival and returned later." },
+        {
+          "id": "c",
+          "text": "The inhabitants couldn't have left; someone must have locked the doors from outside."
+        },
+        {
+          "id": "d",
+          "text": "The inhabitants must have left in a hurry; they might have been frightened."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Option (d) is calibrated correctly: the strong evidence (half-eaten food, animals loose) justifies must have left in a hurry (near-certain), while the reason stays hedged — might have been frightened (speculation). Option (a) overstates certainty: can't have had time to prepare is a near-certain claim the evidence does not fully support. Option (b) contradicts \"deserted\" — a planned festival doesn't leave food half-eaten. Option (c) contradicts the evidence — the locked houses are consistent with people locking up as they fled.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Find the error in reasoning: \"The report was submitted at 11:58 p.m. The deadline was midnight. She must have not finished on time.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "\"must have not\" should be \"mustn't have\" — the contraction is wrong."
+        },
+        {
+          "id": "b",
+          "text": "The modal contradicts the evidence — 11:58 p.m. is before midnight, so she DID finish on time. It should be \"She must have finished just in time.\""
+        },
+        { "id": "c", "text": "The tense is wrong — it should be \"must not finish\" (present)." },
+        {
+          "id": "d",
+          "text": "\"must have not\" should be \"couldn't have\" — the form is incorrect."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "The logical error is in the conclusion: 11:58 p.m. is before the midnight deadline, so she DID submit on time. The deduction should be positive: She must have finished just in time. The reasoning is flawed — the evidence proves she met the deadline, yet the sentence claims the opposite. This tests whether you can identify both the grammar of modal deduction AND the logic of matching modal to evidence.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete the formal incident report: \"The fire alarm was triggered at 02:47. Given the absence of any visible fire, the activation ___ caused by a sensor malfunction.\"",
+      "options": [
+        { "id": "a", "text": "must be" },
+        { "id": "b", "text": "may have been" },
+        { "id": "c", "text": "should have been" },
+        { "id": "d", "text": "had to be" }
+      ],
+      "correctOption": "b",
+      "explanation": "A formal incident report about a past event (the alarm triggered) that lacks certainty (\"Given the absence of visible fire\" implies we are inferring, not certain) uses the formal past possibility: may have been caused. \"Must be\" is present deduction — wrong for past. \"Should have been\" implies the malfunction was expected — not the intended meaning. \"Had to be\" suggests obligation — not a deduction.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Rank the deductions from most to least certain (strongest = near-certainty; weakest = mere possibility):\n1. She must have known about the plan.\n2. She could have known about the plan.\n3. She can't have known about the plan.\n4. She might have known about the plan.\n\nWhich ranking is correct?",
+      "options": [
+        { "id": "a", "text": "1 (most certain positive) → 4 → 2 → 3 (most certain negative)" },
+        { "id": "b", "text": "3 (most certain) → 1 → 4 → 2 (least certain)" },
+        { "id": "c", "text": "1 (most certain positive) → 2 → 4 → 3 (most certain negative)" },
+        { "id": "d", "text": "4 → 2 → 1 → 3" }
+      ],
+      "correctOption": "a",
+      "explanation": "Certainty scale: **must have** = near-certain YES (1) → **might have** = possible (4) → **could have** = logically possible/slightly more tentative (2) → **can't have** = near-certain NO (3). The scale runs from near-certain positive through decreasing positive possibility to near-certain negative. Option (c) reverses the order of might/could — might is slightly stronger than could in terms of speaker commitment. Option (b) starts with the negative. Option (d) is random.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete this detective's reasoning in a formal report: \"The victim's phone showed a call made at 10:15 p.m. The coroner places time of death between 9:00 and 10:00 p.m. Therefore, the call ___ made by the victim.\"",
+      "options": [
+        { "id": "a", "text": "might not have been" },
+        { "id": "b", "text": "must not have been" },
+        { "id": "c", "text": "can't have been" },
+        { "id": "d", "text": "couldn't be" }
+      ],
+      "correctOption": "c",
+      "explanation": "If death occurred between 9:00–10:00 p.m. and the call was at 10:15 p.m., it is logically impossible for the victim to have made that call: The call can't have been made by the victim. \"Might not have been\" is too weak — the timeline makes it impossible, not just uncertain. \"Must not have been\" is not standard for past deduction of impossibility. \"Couldn't be\" is present tense — wrong for this past forensic context.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"The document was stamped with yesterday's date, but the director claims he signed it three weeks ago.\"\n\nWhich pair of deductions best captures the ambiguity?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The stamp must have been added yesterday; the director couldn't have signed it three weeks ago."
+        },
+        {
+          "id": "b",
+          "text": "The stamp might have been added later; the director may have signed it earlier and the stamp applied afterwards."
+        },
+        {
+          "id": "c",
+          "text": "The director must have lied; the document can't have been signed three weeks ago."
+        },
+        {
+          "id": "d",
+          "text": "The document couldn't have been stamped yesterday; the director must be correct."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "A document conflict without further evidence calls for possibility modals, not certainty. Option (b) correctly uses might have been and may have to express two possible explanations without over-committing: the stamp might have been applied later, and the signing may have occurred earlier. Option (a) jumps to near-certainty — inappropriate when the evidence is genuinely ambiguous. Option (c) rushes to accuse the director — not supported by the available evidence alone. Option (d) wrongly dismisses the visible stamp evidence.",
+      "difficulty": 3
+    }
+  ]
+}

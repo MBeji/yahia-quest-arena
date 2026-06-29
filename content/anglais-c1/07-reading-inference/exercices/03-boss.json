@@ -1,0 +1,109 @@
+{
+  "title": "⚔️ Chapter Boss ⭐⭐⭐: Reading: Inference and Implication",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Read: \"The audit found the company's accounts to be, in all material respects, accurate. The auditors did, however, note several areas requiring further scrutiny.\"\nWhat can be inferred about the audit's overall conclusion?",
+      "options": [
+        { "id": "a", "text": "The company refused to cooperate with the auditors." },
+        { "id": "b", "text": "The auditors concluded the accounts were fraudulent." },
+        { "id": "c", "text": "The accounts are broadly sound but not entirely without concern." },
+        {
+          "id": "d",
+          "text": "The accounts are completely flawless and require no further attention."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "'In all material respects, accurate' is a qualified endorsement, not a clean bill of health — 'material respects' means in the significant ways, leaving open the possibility of minor issues. The concessive 'however' followed by 'areas requiring further scrutiny' confirms concerns remain. Option (d) reads 'accurate' as absolute, ignoring the qualification and the however-clause. Option (b) inverts the finding entirely. Option (a) introduces a claim not present in the text.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: \"The reform was welcomed by the opposition — hardly their usual response to government initiatives.\"\nWhat tone does 'hardly their usual response' signal?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The writer is noting that the opposition's support is remarkable and unusual."
+        },
+        { "id": "b", "text": "The writer implies the reform is of poor quality." },
+        { "id": "c", "text": "The writer is suggesting the opposition is being dishonest." },
+        { "id": "d", "text": "The writer is criticising the opposition for being inconsistent." }
+      ],
+      "correctOption": "a",
+      "explanation": "'Hardly their usual response' signals that welcoming a government initiative is unexpected for the opposition — the writer is marking this as noteworthy or surprising. The tone is wry observation, not criticism or accusation. Option (d) reads criticism into what is a neutral, observational aside. Option (c) invents dishonesty where none is implied. Option (b) is the opposite of what the sentence says.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: \"The study examined the effects of sleep deprivation on cognitive performance. A significant decline was observed in participants who slept fewer than five hours. Those who slept seven to nine hours showed no such decline.\"\nWhich conclusion is best supported by inference?",
+      "options": [
+        { "id": "a", "text": "All participants in the study suffered cognitive decline." },
+        {
+          "id": "b",
+          "text": "The study proves that sleep is the only factor affecting cognition."
+        },
+        {
+          "id": "c",
+          "text": "Sleeping more than nine hours improves cognitive performance above baseline."
+        },
+        {
+          "id": "d",
+          "text": "Sleep deprivation of under five hours is associated with reduced cognitive performance."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "The text directly supports option (d): a significant decline was observed in those sleeping under five hours, and those sleeping seven to nine hours showed no such decline. Option (c) goes beyond the text — sleeping over nine hours is not mentioned. Option (a) contradicts the text (the seven-to-nine-hour group showed no decline). Option (b) introduces 'only factor', which is far too strong and not stated or implied.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: \"The chancellor's speech was passionate and detailed. Critics, however, argued that passion is no substitute for a credible plan.\"\nWhat does the writer imply about the chancellor's speech?",
+      "options": [
+        { "id": "a", "text": "The writer dismisses the critics as wrong." },
+        { "id": "b", "text": "The writer is fully neutral and takes no position." },
+        { "id": "c", "text": "The writer believes the speech was both passionate and credible." },
+        {
+          "id": "d",
+          "text": "The writer implies the speech may have lacked a credible plan, though the criticism is attributed to others."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "By reporting the critics' view without rebutting it — and by using the concessive 'however' — the writer implies sympathy with, or at least openness to, the criticism. The structure 'praised X; however, critics said Y' typically signals the writer's stance leans toward Y. Option (c) ignores the however-clause and the critics' point. Option (a) inverts the implied stance. Option (b) is too strong — the structure of the sentence reveals a lean.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"The exhibition attracted record numbers of visitors. The organisers described it as 'a triumph for public engagement with the arts'. Several works were, nonetheless, removed following complaints.\"\nWhich inference is most strongly supported?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The exhibition's success was undermined or complicated by the controversy over removed works."
+        },
+        { "id": "b", "text": "The complaints came from the artists whose works were shown." },
+        { "id": "c", "text": "The removal of works was unrelated to the exhibition's success." },
+        {
+          "id": "d",
+          "text": "The organisers removed the works voluntarily to improve the exhibition."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "'Nonetheless' is a concessive marker: it signals that despite the success (record visitors, organisers' praise), something happened that qualifies or complicates that picture — works removed after complaints. The juxtaposition implies the triumph was not complete. Option (c) ignores the cohesive function of 'nonetheless' — it specifically links the contrast. Option (d) contradicts the text (complaints prompted removal). Option (b) introduces who complained — the text does not specify.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"Professor Ellis's new book has attracted considerable attention. Some reviewers have praised its ambition. Others have questioned whether its ambition is matched by its rigour.\"\nWhat does 'whether its ambition is matched by its rigour' imply?",
+      "options": [
+        { "id": "a", "text": "The reviewers are uncertain whether the book has been widely read." },
+        {
+          "id": "b",
+          "text": "The reviewers are suggesting the book may be ambitious but lack sufficient scholarly rigour."
+        },
+        { "id": "c", "text": "The reviewers think the book is both ambitious and rigorous." },
+        { "id": "d", "text": "The reviewers are praising the book's academic standards." }
+      ],
+      "correctOption": "b",
+      "explanation": "Questioning whether ambition is 'matched by rigour' implies the critics suspect it is not — that the book overreaches without the scholarly depth to support it. This is a classic nuanced critical formulation: praising one quality (ambition) while implying another (rigour) is deficient. Option (c) misreads doubt as confirmation. Option (d) inverts the critique into praise. Option (a) conflates 'attention' with 'rigour' — readership is not the issue here.",
+      "difficulty": 3
+    }
+  ]
+}

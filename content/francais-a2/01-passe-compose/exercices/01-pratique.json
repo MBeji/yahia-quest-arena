@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Entraînement : le passé composé",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complète : « Hier soir, j'___ une pizza au restaurant. »",
+      "options": [
+        { "id": "a", "text": "mange" },
+        { "id": "b", "text": "suis mangé" },
+        { "id": "c", "text": "ai mangé" },
+        { "id": "d", "text": "ai mangée" }
+      ],
+      "correctOption": "c",
+      "explanation": "Manger se conjugue avec avoir et son participe passé est « mangé » (verbe en -er → -é) : j'ai mangé. On n'accorde pas avec le sujet quand l'auxiliaire est avoir, donc pas de « mangée ».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel est le participe passé du verbe « parler » ?",
+      "options": [
+        { "id": "a", "text": "parlé" },
+        { "id": "b", "text": "parler" },
+        { "id": "c", "text": "parlu" },
+        { "id": "d", "text": "parli" }
+      ],
+      "correctOption": "a",
+      "explanation": "Les verbes en -er forment leur participe passé en -é : parler → parlé. « parler » est l'infinitif, « parlu » et « parli » appliquent à tort des terminaisons d'autres groupes.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Tu ___ tes devoirs avant de jouer. »",
+      "options": [
+        { "id": "a", "text": "es fini" },
+        { "id": "b", "text": "as fini" },
+        { "id": "c", "text": "as finit" },
+        { "id": "d", "text": "as finis" }
+      ],
+      "correctOption": "b",
+      "explanation": "Finir se conjugue avec avoir et son participe passé est « fini » (verbe en -ir → -i) : tu as fini. « es fini » utilise le mauvais auxiliaire, « finit » est le présent et « finis » ajoute un accord inutile (pas d'accord avec le sujet avec avoir).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Elle ___ chez le médecin ce matin. »",
+      "options": [
+        { "id": "a", "text": "a allé" },
+        { "id": "b", "text": "a allée" },
+        { "id": "c", "text": "est allé" },
+        { "id": "d", "text": "est allée" }
+      ],
+      "correctOption": "d",
+      "explanation": "Aller se conjugue avec être et le participe s'accorde avec le sujet. « Elle » est féminin singulier, donc « est allée ». « a allé » et « a allée » utilisent le mauvais auxiliaire ; « est allé » oublie l'accord féminin.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Nous ___ le bus à huit heures. »",
+      "options": [
+        { "id": "a", "text": "avons prendu" },
+        { "id": "b", "text": "sommes pris" },
+        { "id": "c", "text": "avons pris" },
+        { "id": "d", "text": "avons prit" }
+      ],
+      "correctOption": "c",
+      "explanation": "Prendre se conjugue avec avoir et son participe passé irrégulier est « pris » : nous avons pris. « prendu » applique à tort la règle régulière, « prit » est le passé simple écrit, et « sommes pris » utilise le mauvais auxiliaire.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Mes amis ___ à la fête samedi dernier. »",
+      "options": [
+        { "id": "a", "text": "ont venu" },
+        { "id": "b", "text": "sont venus" },
+        { "id": "c", "text": "sont venu" },
+        { "id": "d", "text": "sont venues" }
+      ],
+      "correctOption": "b",
+      "explanation": "Venir se conjugue avec être et le participe s'accorde avec le sujet. « Mes amis » est masculin pluriel, donc « sont venus » avec -s. « ont venu » utilise le mauvais auxiliaire, « sont venu » oublie le pluriel et « sont venues » met un féminin.",
+      "difficulty": 2
+    }
+  ]
+}

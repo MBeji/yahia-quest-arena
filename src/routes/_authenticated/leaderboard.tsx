@@ -13,7 +13,7 @@ import { isRtlText } from "@/shared/lib/utils";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/leaderboard")({
-  head: () => ({ meta: [{ title: "Classement · XP Scholars" }] }),
+  head: () => ({ meta: [{ title: "Classement · Na9ra Nal3ab" }] }),
   component: LeaderboardPage,
 });
 

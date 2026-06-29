@@ -1,0 +1,97 @@
+{
+  "title": "⭐⭐ Révision : rhétorique et argumentation",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "« Soit tu es avec nous, soit tu es contre nous. » Quel sophisme reconnais-tu ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Le faux dilemme : on réduit à deux options alors qu'il en existe d'autres."
+        },
+        { "id": "b", "text": "La pente glissante : un premier pas mène à une catastrophe." },
+        { "id": "c", "text": "L'homme de paille : on déforme la thèse adverse." },
+        { "id": "d", "text": "La pétition de principe : on suppose acquis ce qu'il faut prouver." }
+      ],
+      "correctOption": "a",
+      "explanation": "Réduire artificiellement le choix à deux possibilités exclusives (avec/contre), alors qu'une position nuancée ou neutre existe, est un faux dilemme. La pente glissante prédit une chaîne fatale ; l'homme de paille caricature l'adversaire ; la pétition de principe tourne en rond — aucun ne correspond ici.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle est la fonction de la concession rhétorique dans « Certes, il est talentueux, mais il manque de rigueur » ?",
+      "options": [
+        { "id": "a", "text": "Renoncer à sa propre thèse au profit de celle de l'adversaire." },
+        { "id": "b", "text": "Désamorcer une objection prévisible pour mieux imposer sa thèse." },
+        { "id": "c", "text": "Poser une question dont la réponse est imposée." },
+        { "id": "d", "text": "Illustrer la thèse par un exemple concret." }
+      ],
+      "correctOption": "b",
+      "explanation": "En accordant d'abord un point (« certes, talentueux »), l'auteur désamorce l'objection prévisible et paraît équitable, ce qui rend plus convaincante la réfutation qui suit (« mais… rigueur »). Il ne renonce pas à sa thèse (a) : la concession est un tremplin. Ce n'est ni une question rhétorique (c) ni un exemple (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "« Tu veux baisser les impôts ? Donc tu veux supprimer les hôpitaux et les écoles ! » Quel sophisme est commis ?",
+      "options": [
+        { "id": "a", "text": "L'argument d'autorité." },
+        { "id": "b", "text": "Le contre-exemple." },
+        { "id": "c", "text": "La concession rhétorique." },
+        {
+          "id": "d",
+          "text": "L'homme de paille : on déforme la thèse adverse en une version caricaturale."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "On remplace la thèse réelle (baisser les impôts) par une caricature facile à abattre (supprimer hôpitaux et écoles), puis on réfute cette caricature : c'est l'homme de paille. Ce n'est pas un argument d'autorité, ni un contre-exemple (aucune règle réfutée), ni une concession (on n'accorde rien à l'adversaire).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase repose sur un argument valable plutôt que sur un sophisme ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "« Ce médicament est efficace : trois essais cliniques contrôlés le confirment. »"
+        },
+        { "id": "b", "text": "« Ce médicament est efficace : mon voisin va beaucoup mieux. »" },
+        { "id": "c", "text": "« Ce médicament est efficace, car il l'est, c'est bien connu. »" },
+        { "id": "d", "text": "« Ce médicament est efficace : son détracteur est un charlatan. »" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'option (a) fonde la conclusion sur des preuves suffisantes et pertinentes (essais cliniques contrôlés) : c'est un argument valable. (b) est une généralisation hâtive (un seul cas), (c) une pétition de principe (raisonnement circulaire), (d) un ad hominem (attaque de la personne).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "« Si on autorise les trottinettes, bientôt les voitures rouleront sur les trottoirs et ce sera le chaos. » Quel sophisme reconnais-tu ?",
+      "options": [
+        { "id": "a", "text": "Le faux dilemme." },
+        {
+          "id": "b",
+          "text": "La pente glissante : un premier pas mènerait fatalement à une catastrophe."
+        },
+        { "id": "c", "text": "La pétition de principe." },
+        { "id": "d", "text": "L'analogie valable." }
+      ],
+      "correctOption": "b",
+      "explanation": "Prétendre qu'une mesure limitée déclenchera une chaîne inévitable de conséquences désastreuses, sans le démontrer, est la pente glissante. Ce n'est pas un faux dilemme (aucune alternative binaire), ni une pétition de principe (pas de circularité), ni une analogie (aucune comparaison entre deux domaines).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "« Un seul cygne noir suffit à prouver que l'affirmation « tous les cygnes sont blancs » est fausse. » Quel procédé est ici en jeu ?",
+      "options": [
+        { "id": "a", "text": "L'exemple, qui illustre et appuie une thèse." },
+        { "id": "b", "text": "La modalisation, qui nuance l'affirmation." },
+        {
+          "id": "c",
+          "text": "Le contre-exemple, qui réfute une affirmation générale par un cas unique."
+        },
+        { "id": "d", "text": "L'argument d'autorité, qui invoque un expert." }
+      ],
+      "correctOption": "c",
+      "explanation": "Un cas unique (le cygne noir) suffit à invalider une affirmation universelle (« tous les cygnes sont blancs ») : c'est la fonction du contre-exemple. À l'inverse, l'exemple (a) appuie une thèse au lieu de la détruire. Ce n'est ni une modalisation (b) ni un argument d'autorité (d).",
+      "difficulty": 3
+    }
+  ]
+}

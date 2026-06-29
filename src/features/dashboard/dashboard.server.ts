@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
+import { optionalSupabaseAuth } from "@/shared/integrations/supabase/optional-auth-middleware";
 import {
   DASHBOARD_RECENT_LIMIT,
   LEADERBOARD_LIMIT,
@@ -353,8 +354,12 @@ export const getLeaderboard = createServerFn({ method: "GET" })
 // premium parcours the result of the `has_parcours_entitlement` RPC for the caller.
 // The Explorer hub + onboarding read this to drive the Crown/Lock badges; the server
 // gate (`resolve_exercise_access`) stays authoritative — this only shapes the UI.
+// Anon-capable (chantier C8): the public catalogue (`/programme`, `/extras`) reads it
+// without a session. An anonymous visitor holds no entitlement, so every parcours is
+// returned `hasEntitlement: true` (the public register has no premium lock — the pivot
+// is free) and the RPC is skipped. Authenticated behaviour is unchanged.
 export const getParcours = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
+  .middleware([optionalSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
     const { data, error } = await supabase
@@ -364,18 +369,67 @@ export const getParcours = createServerFn({ method: "GET" })
     if (error) failWithClientError("getParcours", error, DASHBOARD_ERROR_FR);
     const rows = data ?? [];
 
+    // Enrich each parcours with its grade's cycle + pedagogical order so the
+    // school group can be grouped by cycle (primaire/collège/secondaire) and
+    // ordered 1ère année → Bac. One cheap lookup beats N embedded joins.
+    const { data: gradeRows } = await supabase.from("grades").select("id,cycle,display_order");
+    const gradeById = new Map((gradeRows ?? []).map((g) => [g.id, g]));
+
     const enriched = await Promise.all(
       rows.map(async (p) => {
-        if (!p.is_premium) return { ...p, hasEntitlement: true };
+        const grade = p.grade_id ? gradeById.get(p.grade_id) : undefined;
+        const base = {
+          ...p,
+          grade_cycle: grade?.cycle ?? null,
+          grade_order: grade?.display_order ?? null,
+        };
+        // Free parcours — and every parcours for an anonymous visitor — carry no
+        // lock in the public register; skip the entitlement RPC (anon has none).
+        if (!p.is_premium || !userId) return { ...base, hasEntitlement: true };
         const { data: ent } = await supabase.rpc("has_parcours_entitlement", {
           p_user: userId,
           p_parcours: p.id,
         });
-        return { ...p, hasEntitlement: ent === true };
+        return { ...base, hasEntitlement: ent === true };
       }),
     );
 
     return { parcours: enriched };
+  });
+
+// ---------- Subjects of one parcours (public drill: catalogue → level → subjects) ----------
+// Anon-capable (chantier C8). The public catalogue drills a parcours/level down to its
+// subjects, each linking to the public subject hub (`/matiere/$subjectId`). A parcours
+// pins a (theme, grade) pair — grade is null for the `libre` extras — and subjects are
+// filtered exactly like getDashboard's active-parcours scoping. No gameplay and no
+// premium lock here (free pivot); the server gate stays authoritative on `/quest`. A
+// `coming_soon` parcours simply has no subjects yet → the page shows its "bientôt" state.
+export const getParcoursSubjects = createServerFn({ method: "GET" })
+  .middleware([optionalSupabaseAuth])
+  .inputValidator((d) => z.object({ parcoursId: z.string().min(1) }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+
+    const { data: parcours, error: parErr } = await supabase
+      .from("parcours")
+      .select("id,name_fr,kind,is_premium,status,theme_id,grade_id")
+      .eq("id", data.parcoursId)
+      .maybeSingle();
+    if (parErr) failWithClientError("getParcoursSubjects.parcours", parErr, DASHBOARD_ERROR_FR);
+    if (!parcours) return { parcours: null, subjects: [] };
+
+    let query = supabase
+      .from("subjects")
+      .select("id,name_fr,attribute,description,content_language")
+      .eq("theme_id", parcours.theme_id)
+      .order("display_order");
+    query = parcours.grade_id
+      ? query.eq("grade_id", parcours.grade_id)
+      : query.is("grade_id", null);
+    const { data: subjects, error } = await query;
+    if (error) failWithClientError("getParcoursSubjects.subjects", error, DASHBOARD_ERROR_FR);
+
+    return { parcours, subjects: subjects ?? [] };
   });
 
 // ---------- Subjects of the caller's ACTIVE parcours (leaderboard tabs) ----------

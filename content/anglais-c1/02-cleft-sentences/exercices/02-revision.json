@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Review: Cleft Sentences in Context",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Find the INCORRECT cleft sentence.",
+      "options": [
+        { "id": "a", "text": "It was the director who approved the budget." },
+        { "id": "b", "text": "What we need is more time." },
+        { "id": "c", "text": "It is patience what he lacks." },
+        { "id": "d", "text": "All she wanted was to be understood." }
+      ],
+      "correctOption": "c",
+      "explanation": "Option (c) is wrong: an It-cleft uses \"that\" or \"who\", not \"what\": It is patience **that** he lacks. \"What\" introduces a Wh-cleft which has a different structure (What he lacks is patience). Options (a), (b), and (d) are all correctly formed clefts.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete to contrast: \"It wasn't the price ___ put them off — it was the complexity.\"",
+      "options": [
+        { "id": "a", "text": "which" },
+        { "id": "b", "text": "what" },
+        { "id": "c", "text": "that" },
+        { "id": "d", "text": "who" }
+      ],
+      "correctOption": "c",
+      "explanation": "In an It-cleft focusing on a thing (the price), the linker is \"that\": It wasn't the price **that** put them off. \"What\" is used to begin a Wh-cleft, not as a linker after the focused element. \"Which\" is a defining relative pronoun, not used in cleft construction. \"Who\" is for persons only.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Rewrite as a Wh-cleft: \"The company desperately needs investment.\"",
+      "options": [
+        { "id": "a", "text": "It is investment that the company desperately needs." },
+        { "id": "b", "text": "What the company desperately needs is investment." },
+        { "id": "c", "text": "All the company needs is to invest desperately." },
+        { "id": "d", "text": "Investment is all what the company needs." }
+      ],
+      "correctOption": "b",
+      "explanation": "A Wh-cleft: What [clause] is [focus]: What the company desperately needs is investment. Option (a) is an It-cleft (also correct meaning, but asks for Wh-cleft). Option (c) is an All-cleft and also changes the meaning. Option (d) uses \"all what\" which is never correct.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which sentence uses a reverse Wh-cleft correctly?",
+      "options": [
+        { "id": "a", "text": "A reliable partner is what every business needs." },
+        { "id": "b", "text": "What every business needs a reliable partner." },
+        { "id": "c", "text": "It is a reliable partner what every business needs." },
+        { "id": "d", "text": "Every business is what needs a reliable partner." }
+      ],
+      "correctOption": "a",
+      "explanation": "A reverse Wh-cleft: [focused element] + is/was + what-clause: A reliable partner is what every business needs. Option (b) lacks the verb (is) after the Wh-clause. Option (c) wrongly uses \"what\" in an It-cleft frame (should be \"that\"). Option (d) puts \"every business\" as the subject of the cleft, which is nonsensical.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete the academic It-cleft for correction: \"Many believe price caused the failure. In fact, ___ that caused the failure.\"",
+      "options": [
+        { "id": "a", "text": "it was not price but poor management" },
+        { "id": "b", "text": "what was not price but poor management" },
+        { "id": "c", "text": "it is not the price, poor management" },
+        { "id": "d", "text": "not the price it was, but poor management" }
+      ],
+      "correctOption": "a",
+      "explanation": "The It-cleft for contrasting/correcting: It was not [X] but [Y] that caused the failure: It was not price but poor management that caused the failure. Option (b) starts with \"what\" — a Wh-cleft structure, but then uses \"was not price\" which is ungrammatical here. Options (c) and (d) disrupt the cleft formula.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"She didn't shout or threaten. She simply resigned.\" Which cleft sentence best captures 'she simply resigned'?",
+      "options": [
+        { "id": "a", "text": "It was resigning simply that she did." },
+        { "id": "b", "text": "What she did was to resign." },
+        { "id": "c", "text": "All she did was resign." },
+        { "id": "d", "text": "It was she who resigned simply." }
+      ],
+      "correctOption": "c",
+      "explanation": "An All-cleft is perfect for contrasting what someone actually did: All she did was resign. The bare infinitive (resign, not to resign) is required after All…did was. Option (b) uses \"to resign\" which is the common error. Option (a) is not natural English word order. Option (d) focuses awkwardly on the person and the adverb placement is unnatural.",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "title": "⭐⭐ Drill: Discourse Markers",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complete: \"The solar panels were installed last spring. ___, the building's energy bills fell by 30%.\"",
+      "options": [
+        { "id": "a", "text": "Nevertheless" },
+        { "id": "b", "text": "Whereas" },
+        { "id": "c", "text": "Consequently" },
+        { "id": "d", "text": "On the contrary" }
+      ],
+      "correctOption": "c",
+      "explanation": "The solar panels caused the bills to fall — a direct result. \"Consequently\" is the correct result marker here. \"Nevertheless\" introduces a concession (something happening despite an obstacle) — no obstacle is mentioned. \"Whereas\" joins two contrasting clauses in a single sentence and cannot open a new sentence. \"On the contrary\" denies the previous statement and asserts the opposite — inappropriate when the second sentence is a natural consequence.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "Despite the heavy traffic, she arrived on time." },
+        { "id": "b", "text": "Despite the fact that traffic was heavy, she arrived on time." },
+        { "id": "c", "text": "Despite traffic being heavy, she arrived on time." },
+        { "id": "d", "text": "Despite traffic was heavy, she arrived on time." }
+      ],
+      "correctOption": "d",
+      "explanation": "Option (d) is wrong: \"Despite\" cannot be followed directly by a subject + finite verb (traffic was heavy). After \"Despite\" use a noun phrase (option a), \"the fact that\" + clause (option b), or a gerund phrase (option c — \"traffic being heavy\"). All three correct options use grammatically valid structures after \"despite\"; option (d) does not.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"The documentary was long and slow-paced. ___, it offered a profound meditation on loss.\"",
+      "options": [
+        { "id": "a", "text": "Furthermore" },
+        { "id": "b", "text": "Therefore" },
+        { "id": "c", "text": "Namely" },
+        { "id": "d", "text": "Nonetheless" }
+      ],
+      "correctOption": "d",
+      "explanation": "The second sentence concedes that despite the film's weaknesses (long and slow-paced), it had genuine value — a classic concessive relationship. \"Nonetheless\" (meaning even so / despite that) is correct. \"Furthermore\" adds a point in the same direction — wrong here, as the two sentences pull in opposite directions. \"Therefore\" signals a result — a slow documentary does not logically result in profundity. \"Namely\" introduces a specification or list — not applicable here.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"The scheme was costly, ___ effective in reducing reoffending rates.\"",
+      "options": [
+        { "id": "a", "text": "although" },
+        { "id": "b", "text": "albeit" },
+        { "id": "c", "text": "nevertheless" },
+        { "id": "d", "text": "however" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Albeit\" + adjective/adverb/noun phrase is the correct mid-clause concessive structure: costly, albeit effective. It acknowledges the cost while asserting the effectiveness within a single clause. \"Although\" requires a full finite clause (subject + verb) after it — it cannot precede a bare adjective like \"effective\". \"Nevertheless\" and \"however\" are sentence connectors that must introduce a new clause, not modify within the same clause.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which sentence correctly uses 'thereby'?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The committee voted to extend the deadline, thereby the project was saved."
+        },
+        {
+          "id": "b",
+          "text": "The committee voted to extend the deadline; thereby, they saved the project."
+        },
+        {
+          "id": "c",
+          "text": "The committee voted to extend the deadline, thereby saving the project."
+        },
+        {
+          "id": "d",
+          "text": "The committee voted to extend the deadline. Thereby the project was saved."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Thereby\" must be followed by a present participle (-ing form) to embed a result in the same clause: thereby saving the project. Option (a) follows \"thereby\" with a full clause (the project was saved) — this is the classic error. Option (b) uses a semicolon and treats \"thereby\" like \"therefore\" — incorrect, as \"thereby\" does not introduce an independent clause. Option (d) starts a new sentence with \"Thereby\" — it cannot stand as a sentence connector the way \"therefore\" or \"consequently\" can.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: \"Critics praised the novel's structure. ___, the characterisation was seen as underdeveloped. ___ the author was shortlisted for three awards.\"  Choose the pair that best fits both gaps.",
+      "options": [
+        { "id": "a", "text": "Moreover … Consequently" },
+        { "id": "b", "text": "However … Nevertheless" },
+        { "id": "c", "text": "Therefore … Furthermore" },
+        { "id": "d", "text": "On the contrary … Nonetheless" }
+      ],
+      "correctOption": "b",
+      "explanation": "Gap 1: the second sentence introduces a weakness contrasting with the praise — \"However\" (contrast) is correct. Gap 2: despite mixed reviews, the author was still shortlisted — a concession: \"Nevertheless\" (even so) is correct. Option (a) uses \"Moreover\" (addition in the same direction) for a contrast — wrong. Option (c) makes the characterisation criticism a result of praise — illogical. Option (d): \"On the contrary\" would deny the praise entirely, but the critics did praise the structure — the issue is only with characterisation, not a full denial.",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Review: Emails & Simple Stories",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Read the email:\n\"Hi Nadia,\nI'm organising a small birthday dinner for Mum next Saturday at 7 pm.\nCould you come and help me cook? We need to keep it a surprise!\nLove, Hana\"\n\nWhy is Hana writing to Nadia?",
+      "options": [
+        { "id": "a", "text": "To invite Nadia to a restaurant." },
+        { "id": "b", "text": "To ask Nadia to buy a birthday cake." },
+        { "id": "c", "text": "To ask Nadia to help cook for their mum's surprise dinner." },
+        { "id": "d", "text": "To tell Nadia about Mum's favourite recipe." }
+      ],
+      "correctOption": "c",
+      "explanation": "The main request is: \"Could you come and help me cook?\" It is a home dinner (not a restaurant). Buying a cake is not mentioned. No recipe is shared — the email just asks for help cooking a surprise dinner for their mum.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Read the story:\n\"Tom woke up late. He ran to the bus stop, but the bus had already left. He was annoyed, but then he saw his neighbour, Mrs Chen, in her car. She smiled and offered him a lift.\"\n\nHow did Tom get to his destination?",
+      "options": [
+        { "id": "a", "text": "He got a lift from his neighbour." },
+        { "id": "b", "text": "He took the bus." },
+        { "id": "c", "text": "He walked." },
+        { "id": "d", "text": "He called a taxi." }
+      ],
+      "correctOption": "a",
+      "explanation": "The text says Mrs Chen \"offered him a lift\" — so Tom got a lift from his neighbour. He missed the bus (it had already left), there is no mention of walking or a taxi.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Read the story:\n\"Tom woke up late. He ran to the bus stop, but the bus had already left. He was annoyed, but then he saw his neighbour, Mrs Chen, in her car. She smiled and offered him a lift.\"\n\nHow did Tom feel after missing the bus?",
+      "options": [
+        { "id": "a", "text": "Happy." },
+        { "id": "b", "text": "Frightened." },
+        { "id": "c", "text": "Relaxed." },
+        { "id": "d", "text": "Annoyed." }
+      ],
+      "correctOption": "d",
+      "explanation": "The text says \"He was annoyed\" after the bus left. He felt better when Mrs Chen helped him, but his immediate feeling was annoyance. Happy, frightened, and relaxed are not mentioned as his reaction to missing the bus.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Read the notice:\n\"SPORTS CENTRE — SPECIAL OFFER\nJoin this month and get the first two weeks FREE.\nMonthly fee after that: £25.\nOffer ends 30th June.\nCall us on 0800 111 222 to sign up.\"\n\nHow much does a member pay per month after the free trial?",
+      "options": [
+        { "id": "a", "text": "Nothing — it is always free." },
+        { "id": "b", "text": "£25." },
+        { "id": "c", "text": "£30." },
+        { "id": "d", "text": "£50." }
+      ],
+      "correctOption": "b",
+      "explanation": "Scan for the monthly fee: \"Monthly fee after that: £25.\" The first two weeks are free, but the ongoing cost is £25. £30 and £50 are not mentioned. \"Always free\" contradicts the monthly fee stated in the notice.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read the text:\n\"Zara is studying for her exams. She is very diligent — she studies for four hours every day and never misses a class.\"\n\nWhat does \"diligent\" mean? Use context clues.",
+      "options": [
+        { "id": "a", "text": "Very lazy." },
+        { "id": "b", "text": "Very nervous." },
+        { "id": "c", "text": "Very hardworking." },
+        { "id": "d", "text": "Very unhappy." }
+      ],
+      "correctOption": "c",
+      "explanation": "The context clues are the examples: four hours of study every day and never misses a class. This behaviour is the opposite of lazy and has nothing to do with being nervous or unhappy. Diligent means hardworking and consistent.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read the email:\n\"Dear Students,\nThe class trip to the science museum is on Thursday 8th.\nPlease bring your student card and £5 for lunch.\nWe leave at 9 am from the main gate.\nMr Salim\"\n\nWhich sentence is TRUE according to the email?",
+      "options": [
+        { "id": "a", "text": "The trip is on Friday." },
+        { "id": "b", "text": "Students must pay £10 for lunch." },
+        { "id": "c", "text": "The bus leaves at 9 am from the main gate." },
+        { "id": "d", "text": "Students should bring their student card and £5." }
+      ],
+      "correctOption": "d",
+      "explanation": "The email says: \"bring your student card and £5 for lunch\" — (d) is true. The trip is on Thursday (not Friday). The lunch cost is £5 (not £10). The email says \"we leave at 9 am from the main gate\" — it mentions leaving, not specifically a bus, so (c) adds an assumption.",
+      "difficulty": 3
+    }
+  ]
+}

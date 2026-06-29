@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: مسطرتي وساعتي",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "بأيّ وحدةٍ نقيس طول طاولةٍ كبيرة؟",
+      "options": [
+        { "id": "a", "text": "المتر (m)" },
+        { "id": "b", "text": "الصنتيمتر (cm)" },
+        { "id": "c", "text": "الساعة" },
+        { "id": "d", "text": "الأسبوع" }
+      ],
+      "correctOption": "a",
+      "explanation": "الطاولة شيءٌ كبير، فنقيسها بالوحدة الكبيرة وهي المتر (m).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "قلمٌ ينتهي عند العلامة 9 على المسطرة، وبدايته عند 0. ما طوله؟",
+      "options": [
+        { "id": "a", "text": "0 cm" },
+        { "id": "b", "text": "5 cm" },
+        { "id": "c", "text": "9 cm" },
+        { "id": "d", "text": "90 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "نضع البداية عند 0 ونقرأ الرقم عند النهاية، وهو 9. إذن طول القلم 9 cm.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم صنتيمترًا في المتر الواحد؟",
+      "options": [
+        { "id": "a", "text": "10 cm" },
+        { "id": "b", "text": "100 cm" },
+        { "id": "c", "text": "200 cm" },
+        { "id": "d", "text": "1000 cm" }
+      ],
+      "correctOption": "b",
+      "explanation": "العلاقة الأساسيّة 1 m = 100 cm. فالمتر الواحد يساوي 100 صنتيمتر.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أيّ الطولين أطول: 7 cm أم 4 cm؟",
+      "options": [
+        { "id": "a", "text": "4 cm" },
+        { "id": "b", "text": "7 cm" },
+        { "id": "c", "text": "متساويان" },
+        { "id": "d", "text": "لا يمكن المقارنة" }
+      ],
+      "correctOption": "b",
+      "explanation": "الطولان بنفس الوحدة (cm)، ونقارن العددين: 7 أكبر من 4، فالطول 7 cm أطول.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "العقرب الكبير على 12 والعقرب الصغير على 5. كم الساعة؟",
+      "options": [
+        { "id": "a", "text": "الساعة 5" },
+        { "id": "b", "text": "الساعة 5 والنصف" },
+        { "id": "c", "text": "الساعة 12" },
+        { "id": "d", "text": "الساعة 6" }
+      ],
+      "correctOption": "a",
+      "explanation": "العقرب الكبير على 12 يعني ساعةً كاملة، والصغير على 5، فالوقت الساعة 5.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم صنتيمترًا يساوي 3 m؟",
+      "options": [
+        { "id": "a", "text": "30 cm" },
+        { "id": "b", "text": "103 cm" },
+        { "id": "c", "text": "300 cm" },
+        { "id": "d", "text": "3000 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "نضرب عدد الأمتار في 100: 3 × 100 = 300. إذن 3 m = 300 cm.",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "title": "Comprehension Check ⭐",
+  "questions": [
+    {
+      "prompt": "What does the idiom \"spill the beans\" mean?",
+      "options": [
+        { "id": "a", "text": "Make a mess in the kitchen." },
+        { "id": "b", "text": "Reveal a secret." },
+        { "id": "c", "text": "Cook something too quickly." },
+        { "id": "d", "text": "Become very angry." }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Spill the beans\" is an idiom meaning to accidentally or deliberately reveal a secret. It has nothing to do with cooking, making a mess, or anger — those are literal or wrong figurative associations.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "What is the KEY difference between a metaphor and a simile?",
+      "options": [
+        { "id": "a", "text": "A metaphor uses like or as; a simile does not." },
+        { "id": "b", "text": "A simile uses like or as; a metaphor does not." },
+        { "id": "c", "text": "Both always use like or as." },
+        { "id": "d", "text": "A metaphor is always about the weather." }
+      ],
+      "correctOption": "b",
+      "explanation": "A simile makes an explicit comparison using like or as (as cool as a cucumber; he ran like the wind). A metaphor makes an implicit comparison without these words (she devoured the book; life is a journey). Options (a) reverses the definition; (c) and (d) are simply wrong.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"The manager always calls ___ — he says exactly what he thinks without softening it.\"",
+      "options": [
+        { "id": "a", "text": "a spade a spade" },
+        { "id": "b", "text": "the cats out" },
+        { "id": "c", "text": "a ball a ball" },
+        { "id": "d", "text": "the bucket" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Call a spade a spade\" means to speak plainly and directly without euphemism. \"Let the cats out\" is a distortion of \"let the cat out of the bag\". \"Call a ball a ball\" does not exist. \"Kick the bucket\" means to die — entirely different.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "What does \"the tip of the iceberg\" mean in context?",
+      "options": [
+        { "id": "a", "text": "The most important and visible part of a problem." },
+        { "id": "b", "text": "A cold, unwelcoming atmosphere." },
+        { "id": "c", "text": "A dangerous situation with no solution." },
+        { "id": "d", "text": "A small, visible sign of a much larger hidden problem." }
+      ],
+      "correctOption": "d",
+      "explanation": "\"The tip of the iceberg\" refers to the small visible portion of an iceberg above water — used figuratively to mean the visible sign of a much larger hidden problem. (a) is almost the opposite; (b) and (c) invent meanings not supported by the course.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "\"She was like a fish out of water at the formal dinner.\"\nWhat does this SIMILE mean?",
+      "options": [
+        { "id": "a", "text": "She ate a great deal of fish." },
+        { "id": "b", "text": "She felt ill and could not eat." },
+        { "id": "c", "text": "She was uncomfortable in an unfamiliar environment." },
+        { "id": "d", "text": "She left the dinner early." }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Like a fish out of water\" is a simile for someone who feels out of place or uncomfortable in an unfamiliar situation. It has nothing to do with eating, illness, or leaving — those are literal or invented misreadings.",
+      "difficulty": 2
+    }
+  ]
+}

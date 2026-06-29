@@ -1,0 +1,103 @@
+{
+  "title": "⚔️ Chapter Boss ⭐⭐⭐: Participle Clauses",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "Having read the report, she outlined her recommendations." },
+        { "id": "b", "text": "The bridge built in 1902 still carries heavy traffic." },
+        {
+          "id": "c",
+          "text": "Walking past the stadium, the cheering of the crowd could be heard."
+        },
+        { "id": "d", "text": "Not knowing what to expect, the delegates arrived early." }
+      ],
+      "correctOption": "c",
+      "explanation": "Option (c) is a dangling participle: \"Walking past the stadium\" implies the cheering was walking — impossible. The subject of the main clause (the cheering of the crowd) cannot perform the walking. Correct version: Walking past the stadium, **the delegates** could hear the crowd cheering. Options (a), (b), and (d) are all correctly formed participle clauses with matching subjects.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choose the best reduction for a formal report: \"The evidence was analysed by the forensic team. They then published their findings.\"",
+      "options": [
+        { "id": "a", "text": "Analysing the evidence, their findings were published." },
+        {
+          "id": "b",
+          "text": "The forensic team, having analysed the evidence, published their findings."
+        },
+        { "id": "c", "text": "Analysed by the forensic team, they published their findings." },
+        {
+          "id": "d",
+          "text": "The forensic team analysing the evidence, their findings were published."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Option (b) is correct: the forensic team first analysed (having + past participle — prior action), then published. Subject is consistent (the forensic team). Option (a) is a dangling participle — \"their findings\" cannot analyse. Option (c) is also dangling — \"they\" (the team) are not the ones being analysed. Option (d) is an absolute participle clause (different subject) — possible in some contexts but awkward and ambiguous here.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which reduction correctly preserves the meaning of: \"The children who were left unsupervised caused significant damage\"?",
+      "options": [
+        { "id": "a", "text": "The children leaving unsupervised caused significant damage." },
+        { "id": "b", "text": "The children left unsupervised caused significant damage." },
+        { "id": "c", "text": "The children having left unsupervised caused significant damage." },
+        { "id": "d", "text": "The children to leave unsupervised caused significant damage." }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Who were left unsupervised\" is a passive relative clause → past participle: the children **left** unsupervised. The past participle retains the passive meaning (they were left, not they left). Option (a) \"leaving\" (active present participle) implies the children left of their own accord — different meaning. Option (c) \"having left\" uses the perfect participle — awkward and changes the nuance. Option (d) is a to-infinitive, changing the meaning further.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Identify the function of the participle clause in: \"The treaty, signed by all parties in 1945, reshaped the post-war world.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "Reduced passive relative clause giving additional information about the treaty"
+        },
+        { "id": "b", "text": "Perfect participle clause expressing a prior action" },
+        { "id": "c", "text": "Present participle clause expressing simultaneous action" },
+        { "id": "d", "text": "Adverbial past participle clause expressing reason" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Signed by all parties in 1945\" is a reduced non-defining relative clause: it adds information about the treaty (which was signed by all parties in 1945). It is non-defining (set off by commas). Option (c) is wrong — \"signed\" is not an -ing form. Option (b) is wrong — the perfect participle uses \"having + pp\", not a bare past participle. Option (d) is wrong — the clause modifies the noun (the treaty), not the whole main verb action.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete with the correct participle form: \"___ in the 15th century, the palace contains priceless works of art.\"",
+      "options": [
+        { "id": "a", "text": "Building" },
+        { "id": "b", "text": "Being built" },
+        { "id": "c", "text": "Having built" },
+        { "id": "d", "text": "Built" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"Built in the 15th century\" is a past participle adverbial clause expressing time/concession — meaning \"(although it was) built in the 15th century\". The past participle carries the passive sense. Option (a) \"Building\" is active — implies the palace is building something. Option (c) \"Having built\" implies the palace actively built something in the past. Option (b) \"Being built\" is passive continuous — implies it is currently under construction, contradicting \"15th century\".",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"The investigation concluded. The jury delivered a unanimous verdict.\"\nWhich single sentence BEST preserves both the sequence and the formal register?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The investigation concluding, the jury delivered a unanimous verdict."
+        },
+        { "id": "b", "text": "Concluding the investigation, a unanimous verdict was delivered." },
+        {
+          "id": "c",
+          "text": "Having concluded the investigation, the jury delivered a unanimous verdict."
+        },
+        {
+          "id": "d",
+          "text": "The jury concluded the investigation, delivering a unanimous verdict."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "The investigation concluded FIRST, then the verdict was delivered. Use having + past participle for the prior action: Having concluded the investigation, the jury delivered a unanimous verdict. The subject (the jury) is consistent. Option (a) is an absolute construction (it has its own subject, \"the investigation\") — grammatically valid, but the present participle \"concluding\" leaves the timing ambiguous, so it preserves the sequence less clearly than the perfect participle. Option (b) is a dangling participle — \"a unanimous verdict\" cannot conclude the investigation. Option (d) changes the sentence structure so the jury concluded the investigation AND delivered the verdict simultaneously as narrative events — alters the sequence emphasis.",
+      "difficulty": 3
+    }
+  ]
+}

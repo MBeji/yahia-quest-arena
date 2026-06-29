@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Practice: Substitution with one/so/not",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complete: 'Would you like a coffee?' — 'Yes, I'd love ___.'",
+      "options": [
+        { "id": "a", "text": "one" },
+        { "id": "b", "text": "so" },
+        { "id": "c", "text": "it" },
+        { "id": "d", "text": "such" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"One\" is the nominal substitute for a countable noun (a coffee → one). \"So\" substitutes a whole clause (I think so). \"It\" would refer to a specific previously mentioned coffee, not an offer of one. \"Such\" is a formal demonstrative that replaces a noun phrase in a different way.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: 'Will the report be ready by Friday?' — 'I certainly hope ___.'",
+      "options": [
+        { "id": "a", "text": "not" },
+        { "id": "b", "text": "one" },
+        { "id": "c", "text": "so" },
+        { "id": "d", "text": "such" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"I hope so\" = I hope the report will be ready by Friday (affirmative clause substitution). \"Hope not\" would mean I hope it will NOT be ready — the opposite of the expected meaning. \"One\" replaces a noun; \"such\" is a formal demonstrative — neither fits here.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: 'Did she get the promotion?' — 'I'm afraid ___.'",
+      "options": [
+        { "id": "a", "text": "so" },
+        { "id": "b", "text": "not" },
+        { "id": "c", "text": "one" },
+        { "id": "d", "text": "neither" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"I'm afraid not\" = I'm afraid she did not get the promotion (negative clause substitution). \"I'm afraid so\" would mean I'm afraid she DID get the promotion — the opposite. \"One\" substitutes a noun; \"neither\" is for negative agreement between two people's situations.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which sentence correctly uses nominal substitution with 'ones'?",
+      "options": [
+        { "id": "a", "text": "I prefer the red shoes to the blue shoes." },
+        { "id": "b", "text": "I prefer the red shoes to the blue ones." },
+        { "id": "c", "text": "I prefer the red to the blue shoe." },
+        { "id": "d", "text": "I prefer red shoes to blue." }
+      ],
+      "correctOption": "b",
+      "explanation": "\"The blue ones\" uses the nominal substitute \"ones\" to replace the repeated noun \"shoes\" — this is the natural, native-sounding form. (a) repeats \"shoes\" unnecessarily. (c) uses \"shoe\" in the singular, which is wrong. (d) drops the noun entirely without a substitute, which loses clarity.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"She didn't enjoy the lecture, and ___ did her classmates — they all found it dull.\"",
+      "options": [
+        { "id": "a", "text": "so" },
+        { "id": "b", "text": "yet" },
+        { "id": "c", "text": "neither" },
+        { "id": "d", "text": "too" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Neither did her classmates\" expresses negative agreement — they also did not enjoy the lecture. Note that \"Nor did her classmates\" is equally correct. \"So did\" would signal positive agreement (she enjoyed it, and so did they) — the opposite of the meaning. \"Yet\" is a contrast marker; \"too\" follows positive statements only.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"They announced the new policy. ___ announcements always cause anxiety among staff.\"",
+      "options": [
+        { "id": "a", "text": "One" },
+        { "id": "b", "text": "So" },
+        { "id": "c", "text": "Neither" },
+        { "id": "d", "text": "Such" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"Such\" is the formal substitution that replaces a previously mentioned noun phrase: \"Such announcements\" = announcements of that kind. \"One\" replaces a singular noun (not a category). \"So\" replaces a clause, not a noun. \"Neither\" signals negative agreement between two parties.",
+      "difficulty": 2
+    }
+  ]
+}

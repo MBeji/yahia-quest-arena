@@ -1,0 +1,154 @@
+{
+  "title": "⭐ Entraînement : opposition et concession",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Quel connecteur introduit une CONCESSION (un obstacle qui n'empêche pas le résultat) ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "alors que"
+        },
+        {
+          "id": "b",
+          "text": "tandis que"
+        },
+        {
+          "id": "c",
+          "text": "bien que"
+        },
+        {
+          "id": "d",
+          "text": "contrairement à"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "« Bien que » exprime la concession : un obstacle franchi (« bien qu'il pleuve, on sort »). « Alors que » et « tandis que » marquent l'opposition (deux faits contrastés), et « contrairement à » oppose un nom à un autre.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « ___ la pluie, le match a eu lieu. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "Même si"
+        },
+        {
+          "id": "b",
+          "text": "Bien que"
+        },
+        {
+          "id": "c",
+          "text": "Pourtant"
+        },
+        {
+          "id": "d",
+          "text": "Malgré"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« Malgré » se construit avec un nom : « malgré la pluie ». « Bien que » et « même si » introduisent une proposition (un verbe conjugué), et « pourtant » est un adverbe qui relie deux phrases, non une préposition devant un nom.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète au bon mode : « Bien qu'il ___ tort, il refuse de l'admettre. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "a"
+        },
+        {
+          "id": "b",
+          "text": "ait"
+        },
+        {
+          "id": "c",
+          "text": "aura"
+        },
+        {
+          "id": "d",
+          "text": "avait"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Après « bien que », on emploie toujours le subjonctif : « bien qu'il ait tort ». « a » (indicatif présent), « aura » (futur) et « avait » (imparfait) sont tous incorrects après cette conjonction concessive.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle phrase exprime une OPPOSITION entre deux personnes ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Même si elle est jeune, elle est très sage."
+        },
+        {
+          "id": "b",
+          "text": "Lui est bavard, alors qu'elle est silencieuse."
+        },
+        {
+          "id": "c",
+          "text": "Malgré son âge, il court vite."
+        },
+        {
+          "id": "d",
+          "text": "Il a beau étudier, il oublie tout."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "« Alors que » oppose deux comportements parallèles (bavard / silencieuse) : c'est de l'opposition. Les phrases (a), (c) et (d) sont concessives : elles présentent un obstacle franchi (jeunesse, âge, étude vaine).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « ___ te plaindre, propose une solution. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "Tandis que"
+        },
+        {
+          "id": "b",
+          "text": "Malgré"
+        },
+        {
+          "id": "c",
+          "text": "Bien que"
+        },
+        {
+          "id": "d",
+          "text": "Au lieu de"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« Au lieu de » se construit avec un infinitif et exprime une substitution oppositive : « au lieu de te plaindre ». « Malgré » demande un nom, « bien que » un subjonctif, et « tandis que » un verbe conjugué à l'indicatif.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel adverbe peut compléter : « Il avait tout révisé ; ___, il a échoué. » ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "donc"
+        },
+        {
+          "id": "b",
+          "text": "pourtant"
+        },
+        {
+          "id": "c",
+          "text": "ainsi"
+        },
+        {
+          "id": "d",
+          "text": "par exemple"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "« Pourtant » marque la concession entre deux phrases : un résultat contraire à l'attente (réviser → échouer). « Donc » et « ainsi » expriment la conséquence logique, et « par exemple » introduit une illustration, pas une opposition.",
+      "difficulty": 2
+    }
+  ]
+}

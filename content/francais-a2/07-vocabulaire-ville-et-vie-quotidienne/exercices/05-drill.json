@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill : la ville et la vie quotidienne",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Où achètes-tu des fruits et des légumes frais en plein air ?",
+      "options": [
+        { "id": "a", "text": "au marché" },
+        { "id": "b", "text": "à la poste" },
+        { "id": "c", "text": "au musée" },
+        { "id": "d", "text": "à la mairie" }
+      ],
+      "correctOption": "a",
+      "explanation": "On achète des fruits et légumes frais au marché. La poste sert au courrier, le musée à l'art, et la mairie aux papiers officiels.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « La banque est ___ de la poste : elle est juste de l'autre côté de la rue. »",
+      "options": [
+        { "id": "a", "text": "au coin" },
+        { "id": "b", "text": "en face" },
+        { "id": "c", "text": "jusqu'à" },
+        { "id": "d", "text": "tout droit" }
+      ],
+      "correctOption": "b",
+      "explanation": "« En face de » signifie juste de l'autre côté, ce que précise la phrase. « Au coin » désigne l'angle de la rue, « jusqu'à » une limite à atteindre, et « tout droit » une direction.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve l'intrus.",
+      "options": [
+        { "id": "a", "text": "la gare" },
+        { "id": "b", "text": "la banque" },
+        { "id": "c", "text": "la jambe" },
+        { "id": "d", "text": "la poste" }
+      ],
+      "correctOption": "c",
+      "explanation": "La gare, la banque et la poste sont des lieux de la ville. La jambe est une partie du corps : c'est l'intrus.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "« J'ai mal ___ dents depuis hier. » Quel mot complète la phrase ?",
+      "options": [
+        { "id": "a", "text": "au" },
+        { "id": "b", "text": "à la" },
+        { "id": "c", "text": "aux" },
+        { "id": "d", "text": "à le" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Dents » est au pluriel, donc à + les = aux : j'ai mal aux dents. On emploie « au » devant un masculin singulier (au dos) et « à la » devant un féminin singulier (à la tête).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Associe l'action au lieu : où vas-tu pour faire tes papiers officiels (carte d'identité, mariage) ?",
+      "options": [
+        { "id": "a", "text": "à la bibliothèque" },
+        { "id": "b", "text": "à la boulangerie" },
+        { "id": "c", "text": "à la mairie" },
+        { "id": "d", "text": "à la pharmacie" }
+      ],
+      "correctOption": "c",
+      "explanation": "On fait ses papiers officiels à la mairie (l'hôtel de ville). La bibliothèque prête des livres, la boulangerie vend du pain, et la pharmacie des médicaments.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel verbe va le mieux avec « du sport » ?",
+      "options": [
+        { "id": "a", "text": "payer" },
+        { "id": "b", "text": "faire" },
+        { "id": "c", "text": "traverser" },
+        { "id": "d", "text": "emprunter" }
+      ],
+      "correctOption": "b",
+      "explanation": "On dit « faire du sport » (faire du foot, de la natation…). Payer concerne l'argent, traverser une rue, et emprunter se dit pour des livres à la bibliothèque ou de l'argent.",
+      "difficulty": 2
+    }
+  ]
+}

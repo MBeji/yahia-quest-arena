@@ -1,0 +1,12 @@
+{
+  "id": "anglais-c2",
+  "nameFr": "English — Mastery (C2)",
+  "description": "Reach near-native mastery: the subjunctive and unreal past, idiomatic and figurative language, formal register and nominalisation, nuance and confusable words, and ellipsis with cohesive substitution. CEFR C2 — the pinnacle of English precision.",
+  "attribute": "Agilité",
+  "colorToken": "subject-english",
+  "icon": "Globe",
+  "displayOrder": 6,
+  "contentLanguage": "en",
+  "themeId": "anglais",
+  "gradeSlug": null
+}

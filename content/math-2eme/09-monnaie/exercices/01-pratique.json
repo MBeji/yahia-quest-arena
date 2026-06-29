@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: المليم والدينار",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "100 مي + 100 مي = ؟",
+      "options": [
+        { "id": "a", "text": "200 مي" },
+        { "id": "b", "text": "100 مي" },
+        { "id": "c", "text": "1000 مي" },
+        { "id": "d", "text": "20 مي" }
+      ],
+      "correctOption": "a",
+      "explanation": "نجمع القيمتين: 100 مي + 100 مي = 200 مي.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "1 دينار = … مليم؟",
+      "options": [
+        { "id": "a", "text": "100" },
+        { "id": "b", "text": "1000" },
+        { "id": "c", "text": "10" },
+        { "id": "d", "text": "500" }
+      ],
+      "correctOption": "b",
+      "explanation": "العلاقة بين الوحدتين: 1 دينار = 1000 مليم، أي أنّ الدينار أكبرُ بكثيرٍ من المليم.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أكمل: 70 مي = 50 مي + ؟",
+      "options": [
+        { "id": "a", "text": "20 مي" },
+        { "id": "b", "text": "10 مي" },
+        { "id": "c", "text": "50 مي" },
+        { "id": "d", "text": "5 مي" }
+      ],
+      "correctOption": "a",
+      "explanation": "بما أنّ 50 + 20 = 70، فالجواب 20 مي.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "نصفُ الدينار يساوي بالمليم…",
+      "options": [
+        { "id": "a", "text": "200 مي" },
+        { "id": "b", "text": "500 مي" },
+        { "id": "c", "text": "100 مي" },
+        { "id": "d", "text": "1000 مي" }
+      ],
+      "correctOption": "b",
+      "explanation": "الدينار 1000 مي، ونصفُه 500 مي.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "200 مي + 50 مي + 50 مي = ؟",
+      "options": [
+        { "id": "a", "text": "250 مي" },
+        { "id": "b", "text": "350 مي" },
+        { "id": "c", "text": "300 مي" },
+        { "id": "d", "text": "400 مي" }
+      ],
+      "correctOption": "c",
+      "explanation": "نجمع خطوةً خطوة: 200 + 50 = 250، ثمّ 250 + 50 = 300 مي.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أيُّ مبلغٍ أكبر: 150 مي أم 210 مي؟",
+      "options": [
+        { "id": "a", "text": "هما متساويان" },
+        { "id": "b", "text": "210 مي" },
+        { "id": "c", "text": "150 مي" },
+        { "id": "d", "text": "لا يمكن المقارنة" }
+      ],
+      "correctOption": "b",
+      "explanation": "نقارن القيمتين: 210 أكبرُ من 150، فالمبلغ 210 مي أكبر.",
+      "difficulty": 1
+    }
+  ]
+}

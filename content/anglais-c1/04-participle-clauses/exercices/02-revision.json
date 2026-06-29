@@ -1,0 +1,97 @@
+{
+  "title": "⭐⭐ Review: Participle Clauses — Functions & Errors",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Having secured the funding, the researchers began their experiments."
+        },
+        { "id": "b", "text": "Damaged by the flood, the building was condemned." },
+        { "id": "c", "text": "Arriving at the hotel, our luggage was lost." },
+        { "id": "d", "text": "Feeling nervous, he took a deep breath before speaking." }
+      ],
+      "correctOption": "c",
+      "explanation": "Option (c) is a dangling participle: \"Arriving at the hotel\" implies the luggage was arriving, which is impossible — the luggage doesn't arrive on its own. Correct: Arriving at the hotel, **we found that** our luggage had been lost. Options (a), (b), and (d) correctly match the participle subject with the main clause subject (researchers, building, he).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choose the form that best shows the FIRST action: \"She graduated last year. She is now working as an engineer.\"",
+      "options": [
+        { "id": "a", "text": "Graduating last year, she is now working as an engineer." },
+        { "id": "b", "text": "To graduate last year, she is now working as an engineer." },
+        { "id": "c", "text": "Graduated last year, she is now working as an engineer." },
+        { "id": "d", "text": "Having graduated last year, she is now working as an engineer." }
+      ],
+      "correctOption": "d",
+      "explanation": "Graduation happened first; working as an engineer is the current state. Use having + past participle to signal the prior action: Having graduated last year, she is now working as an engineer. Option (a) uses the present participle — implies simultaneous action (graduating AND working at the same time), which doesn't match \"last year\". Option (c) \"Graduated\" alone as a fronted past participle implies she was graduated by someone — passive meaning, awkward here. Option (b) uses to-infinitive — wrong for this sequence.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which sentence correctly uses a present participle clause to express reason?",
+      "options": [
+        { "id": "a", "text": "Knowing the answer, the question was left for others." },
+        { "id": "b", "text": "Not understanding the instructions, she asked for clarification." },
+        { "id": "c", "text": "Understanding the answer, it was obvious what to do." },
+        { "id": "d", "text": "Knowing his way around, the map was unnecessary for him." }
+      ],
+      "correctOption": "b",
+      "explanation": "Option (b) is correct: \"Not understanding the instructions\" shares its subject with the main clause (she) — she didn't understand, so she asked. Option (a): \"Knowing the answer\" implies the question knew the answer — dangling participle. Option (c): \"Understanding the answer\" implies \"it\" understood — dangling. Option (d): \"Knowing his way around\" implies the map knew its way — dangling.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Reduce: \"The policy, which had been challenged repeatedly, was finally revised.\"",
+      "options": [
+        { "id": "a", "text": "The policy, having challenging repeatedly, was finally revised." },
+        { "id": "b", "text": "The policy, challenged repeatedly, was finally revised." },
+        { "id": "c", "text": "The policy, challenging repeatedly, was finally revised." },
+        { "id": "d", "text": "The policy, being challenged repeatedly, was finally revised." }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Which had been challenged\" is a passive relative clause — it reduces to a past participle: challenged repeatedly. Option (a) has an incorrect form (having + base verb instead of having + past participle). Option (c) uses the present active participle — wrong, the policy doesn't challenge anything. Option (d) uses the present passive (being challenged) which implies ongoing action — changes the nuance and tense.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"___ with years of experience in diplomacy, the ambassador handled the crisis with remarkable calm.\"",
+      "options": [
+        { "id": "a", "text": "Armed" },
+        { "id": "b", "text": "Arming" },
+        { "id": "c", "text": "Having arming" },
+        { "id": "d", "text": "To arm" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Armed with years of experience\" is a past participle clause expressing reason/manner — because she was armed (equipped/endowed) with experience. The past participle carries a passive/stative sense: she was armed by her experience. Option (b) \"Arming\" (present active) would mean she was actively arming herself at that moment — wrong. Option (c) \"Having arming\" is not a valid grammatical form. Option (d) is a to-infinitive.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"She worked for twelve hours straight. She finally presented the solution.\" Choose the best single-sentence reduction using a participle clause.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Working for twelve hours straight, she finally presented the solution."
+        },
+        {
+          "id": "b",
+          "text": "Having worked for twelve hours straight, she finally presented the solution."
+        },
+        {
+          "id": "c",
+          "text": "Worked for twelve hours straight, she finally presented the solution."
+        },
+        {
+          "id": "d",
+          "text": "Being worked for twelve hours straight, she finally presented the solution."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "The twelve hours of work came FIRST, and presenting the solution is the result. Use having + past participle: Having worked for twelve hours straight, she finally presented the solution. Option (a) \"Working\" (present participle) implies she presented the solution WHILE working — not the intended sequence. Option (c) \"Worked\" alone as a fronted past participle is passive — implies she was worked by someone. Option (d) \"Being worked\" is a passive continuous — not natural here.",
+      "difficulty": 3
+    }
+  ]
+}

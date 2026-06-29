@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة (نمط امتحان): المحيط والمساحة",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "لوحةٌ مستطيلةٌ طولها 15 cm وعرضها 10 cm. ما محيطها؟",
+      "options": [
+        { "id": "a", "text": "25 cm" },
+        { "id": "b", "text": "50 cm" },
+        { "id": "c", "text": "150 cm" },
+        { "id": "d", "text": "150 cm²" }
+      ],
+      "correctOption": "b",
+      "explanation": "محيط المستطيل = (الطول + العرض) × 2 = (15 + 10) × 2 = 25 × 2 = 50 cm. السؤال عن المحيط (طول الإطار) فوحدته cm لا cm².",
+      "difficulty": 1
+    },
+    {
+      "prompt": "حقلٌ مربّعٌ طول ضلعه 20 m. ما مساحته؟",
+      "options": [
+        { "id": "a", "text": "40 m²" },
+        { "id": "b", "text": "80 m²" },
+        { "id": "c", "text": "400 m" },
+        { "id": "d", "text": "400 m²" }
+      ],
+      "correctOption": "d",
+      "explanation": "مساحة المربّع = الضلع × الضلع = 20 × 20 = 400 m². الناتج 80 خطأٌ لأنّه المحيط 20 × 4، والمساحة وحدتها m² لا m.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أيّ عبارةٍ صحيحة؟",
+      "options": [
+        { "id": "a", "text": "المحيط يُقاس بـ cm² والمساحة بـ cm" },
+        { "id": "b", "text": "المحيط والمساحة يُقاسان بـ cm" },
+        { "id": "c", "text": "المحيط والمساحة يُقاسان بـ cm²" },
+        { "id": "d", "text": "المحيط يُقاس بـ cm والمساحة بـ cm²" }
+      ],
+      "correctOption": "d",
+      "explanation": "المحيط طولُ الحافّة، فوحدته وحدة طولٍ cm. المساحة سطحٌ (طول × عرض)، فوحدتها مربّعة cm². لكلٍّ وحدتُه المختلفة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما مساحة هذا المستطيل؟ <svg viewBox=\"0 0 100 100\"><rect x=\"14\" y=\"34\" width=\"72\" height=\"38\" fill=\"#e5e7eb\" stroke=\"currentColor\" stroke-width=\"2.5\"/><text x=\"38\" y=\"29\" font-size=\"10\" fill=\"currentColor\">11 cm</text><text x=\"2\" y=\"56\" font-size=\"10\" fill=\"currentColor\">3 cm</text></svg>",
+      "options": [
+        { "id": "a", "text": "14 cm²" },
+        { "id": "b", "text": "28 cm²" },
+        { "id": "c", "text": "33 cm²" },
+        { "id": "d", "text": "33 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "من الرسم الطول 11 cm والعرض 3 cm، فالمساحة = 11 × 3 = 33 cm². الناتج 28 خطأٌ لأنّه المحيط (11 + 3) × 2، والسؤال عن المساحة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "مربّعٌ محيطه 32 cm. ما طول ضلعه؟",
+      "options": [
+        { "id": "a", "text": "8 cm" },
+        { "id": "b", "text": "16 cm" },
+        { "id": "c", "text": "28 cm" },
+        { "id": "d", "text": "128 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "في المربّع: الضلع = المحيط ÷ 4 = 32 ÷ 4 = 8 cm. تحقّق: 8 × 4 = 32 cm ✓. الناتج 128 خطأٌ لأنّه ضربٌ في 4 بدل القسمة عليه.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "بلاطةٌ مربّعةٌ طول ضلعها 30 cm، ومستطيلٌ طوله 60 cm وعرضه 20 cm. أيّهما مساحته أكبر؟",
+      "options": [
+        { "id": "a", "text": "البلاطة المربّعة (900 cm²)" },
+        { "id": "b", "text": "المستطيل (1 200 cm²)" },
+        { "id": "c", "text": "متساويان في المساحة" },
+        { "id": "d", "text": "لا يمكن المقارنة" }
+      ],
+      "correctOption": "b",
+      "explanation": "مساحة المربّع = 30 × 30 = 900 cm²، ومساحة المستطيل = 60 × 20 = 1 200 cm². بما أنّ 1 200 أكبر من 900، فمساحة المستطيل أكبر.",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "title": "⭐ Entraînement : le travail et la société",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complétez : « Pour répondre à cette offre, j'ai envoyé mon ___ et une lettre de motivation. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "CV"
+        },
+        {
+          "id": "b",
+          "text": "salaire"
+        },
+        {
+          "id": "c",
+          "text": "collègue"
+        },
+        {
+          "id": "d",
+          "text": "chômage"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Le « CV » (curriculum vitae) est le document qui résume ton parcours et tes compétences, envoyé pour postuler. Le salaire est l'argent gagné, un collègue est une personne avec qui on travaille, et le chômage est l'absence d'emploi.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complétez : « L'argent que l'on reçoit chaque mois pour son travail s'appelle le ___. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "contrat"
+        },
+        {
+          "id": "b",
+          "text": "salaire"
+        },
+        {
+          "id": "c",
+          "text": "poste"
+        },
+        {
+          "id": "d",
+          "text": "entretien"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Le « salaire » est l'argent versé chaque mois en échange du travail. Le contrat est l'accord signé, le poste est la fonction occupée, et l'entretien est la rencontre avant l'embauche.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complétez : « Il faut ___ ses déchets : le verre d'un côté, le papier de l'autre. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "gaspiller"
+        },
+        {
+          "id": "b",
+          "text": "polluer"
+        },
+        {
+          "id": "c",
+          "text": "embaucher"
+        },
+        {
+          "id": "d",
+          "text": "trier"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« Trier » les déchets, c'est les séparer (verre, papier, plastique) pour le recyclage. « Gaspiller » et « polluer » dégradent l'environnement, et « embaucher » concerne le travail, pas les déchets.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complétez : « Chaque matin, je lis le ___ pour connaître les actualités. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "réseau social"
+        },
+        {
+          "id": "b",
+          "text": "journal"
+        },
+        {
+          "id": "c",
+          "text": "salaire"
+        },
+        {
+          "id": "d",
+          "text": "climat"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Un « journal » est un média qui publie l'actualité, sur papier ou en ligne. Le réseau social sert surtout à échanger, le salaire concerne le travail, et le climat concerne la météo et l'environnement.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complétez : « Le verbe qui signifie « présenter sa candidature à un poste » est ___. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "démissionner"
+        },
+        {
+          "id": "b",
+          "text": "licencier"
+        },
+        {
+          "id": "c",
+          "text": "gaspiller"
+        },
+        {
+          "id": "d",
+          "text": "postuler"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« Postuler » à un poste, c'est présenter sa candidature pour l'obtenir. « Démissionner » c'est quitter son emploi, « licencier » c'est renvoyer un salarié, et « gaspiller » concerne le gâchis.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complétez : « Le soleil et le vent fournissent une énergie ___. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "renouvelable"
+        },
+        {
+          "id": "b",
+          "text": "polluée"
+        },
+        {
+          "id": "c",
+          "text": "gaspillée"
+        },
+        {
+          "id": "d",
+          "text": "publiée"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Une énergie « renouvelable » ne s'épuise pas : le soleil, le vent et l'eau en sont des sources. « Polluée » et « gaspillée » ont un sens négatif, et « publiée » se rapporte aux médias.",
+      "difficulty": 2
+    }
+  ]
+}

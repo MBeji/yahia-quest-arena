@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision : la syntaxe expressive",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Trouve la phrase incorrecte.",
+      "options": [
+        { "id": "a", "text": "Sans doute a-t-il raison." },
+        { "id": "b", "text": "Sans doute qu'il a raison." },
+        { "id": "c", "text": "Sans doute il a raison." },
+        { "id": "d", "text": "Peut-être viendra-t-elle." }
+      ],
+      "correctOption": "c",
+      "explanation": "Après « sans doute » ou « peut-être » en tête, il faut soit inverser (sans doute a-t-il raison), soit ajouter « que » sans inverser (sans doute qu'il a raison). « Sans doute il a raison » est fautif. Les phrases a, b et d sont correctes.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans quel groupe l'adjectif a-t-il un sens affectif (et non son sens propre) ?",
+      "options": [
+        { "id": "a", "text": "Un meuble ancien." },
+        { "id": "b", "text": "Un pauvre homme." },
+        { "id": "c", "text": "Des mains propres." },
+        { "id": "d", "text": "Un homme grand." }
+      ],
+      "correctOption": "b",
+      "explanation": "Antéposé, « pauvre » dans « un pauvre homme » signifie « à plaindre » : sens affectif. « Meuble ancien », « mains propres » et « homme grand » sont des adjectifs postposés à sens propre (vieux, lavées, de taille).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Que désigne la périphrase « la langue de Molière » ?",
+      "options": [
+        { "id": "a", "text": "Le théâtre classique." },
+        { "id": "b", "text": "L'anglais." },
+        { "id": "c", "text": "Le latin." },
+        { "id": "d", "text": "Le français." }
+      ],
+      "correctOption": "d",
+      "explanation": "« La langue de Molière » désigne le français, par référence au grand dramaturge français. « La langue de Shakespeare » désignerait l'anglais. La périphrase nomme la langue, non un genre littéraire ni le latin.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase illustre le rythme ternaire ?",
+      "options": [
+        { "id": "a", "text": "Je suis venu, j'ai vu, j'ai vaincu." },
+        { "id": "b", "text": "Il faut manger pour vivre, non vivre pour manger." },
+        { "id": "c", "text": "Quelle journée !" },
+        { "id": "d", "text": "Loin des yeux, loin du cœur." }
+      ],
+      "correctOption": "a",
+      "explanation": "« Je suis venu, j'ai vu, j'ai vaincu » aligne trois membres (rythme ternaire), souvent croissants. La phrase b oppose deux membres (rythme binaire), c est nominale exclamative, d est un parallélisme binaire elliptique.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase contient une inversion du sujet correctement construite en style soutenu ?",
+      "options": [
+        { "id": "a", "text": "Sur la colline il se dressait un château." },
+        { "id": "b", "text": "Sur la colline se dressait un château." },
+        { "id": "c", "text": "Sur la colline un château se dressait-il." },
+        { "id": "d", "text": "Sur la colline se dressait-il un château." }
+      ],
+      "correctOption": "b",
+      "explanation": "Après le complément en tête « sur la colline », le sujet nominal « un château » passe après le verbe : « se dressait un château ». La phrase a ajoute un « il » superflu, c et d collent à tort un trait d'union (-il) inutile avec un sujet déjà nominal.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans « un certain âge » et « un âge certain », que signifie respectivement chaque adjectif ?",
+      "options": [
+        { "id": "a", "text": "Un âge avéré / un âge assez avancé et vague." },
+        { "id": "b", "text": "Un âge assez avancé et vague / un âge avéré, indéniable." },
+        { "id": "c", "text": "Un âge précis / un âge approximatif." },
+        { "id": "d", "text": "Un jeune âge / un âge mûr." }
+      ],
+      "correctOption": "b",
+      "explanation": "Antéposé, « un certain âge » est vague et euphémique (assez avancé) ; postposé, « un âge certain » signifie un âge avéré, indéniable. C'est le même adjectif, mais l'antéposition lui donne le sens « indéterminé », la postposition le sens « assuré ».",
+      "difficulty": 3
+    }
+  ]
+}

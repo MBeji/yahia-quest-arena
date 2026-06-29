@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Practice: Core Confusable Pairs",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complete: \"The noise from the construction site is starting to ___ my concentration.\"",
+      "options": [
+        { "id": "a", "text": "effect" },
+        { "id": "b", "text": "affect" },
+        { "id": "c", "text": "infer" },
+        { "id": "d", "text": "compose" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Affect\" is the verb meaning to have an impact on something: the noise affects my concentration. \"Effect\" is a noun (the effect of the noise). \"Infer\" is about deduction; \"compose\" is about making up a whole. Neither fits here.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which sentence uses \"fewer\" and \"less\" CORRECTLY?",
+      "options": [
+        { "id": "a", "text": "There are less students in the class this year." },
+        { "id": "b", "text": "We have fewer time than we thought." },
+        { "id": "c", "text": "Fewer people came to the event; there was also less noise." },
+        { "id": "d", "text": "There are less choices and fewer water available." }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Fewer\" goes with countable nouns (people), and \"less\" goes with uncountable nouns (noise). Only (c) uses both correctly. (a) uses \"less students\" — students is countable, so fewer is required. (b) uses \"fewer time\" — time is uncountable, so less is required. (d) reverses both: choices is countable (fewer choices), water is uncountable (less water).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"That was a very ___ decision — you weighed up all the risks carefully.\"",
+      "options": [
+        { "id": "a", "text": "sensible" },
+        { "id": "b", "text": "sensitive" },
+        { "id": "c", "text": "disinterested" },
+        { "id": "d", "text": "continual" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Sensible\" means showing good judgement and practical reasoning — exactly what \"weighing up all the risks\" demonstrates. \"Sensitive\" means emotionally reactive or perceptive — the wrong word here. \"Disinterested\" means impartial; \"continual\" means recurring — both unrelated to the context.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"We need a ___ referee — someone with no stake in the outcome.\"",
+      "options": [
+        { "id": "a", "text": "uninterested" },
+        { "id": "b", "text": "sensitive" },
+        { "id": "c", "text": "continual" },
+        { "id": "d", "text": "disinterested" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"Disinterested\" means impartial — having no personal stake or bias in the outcome, which is exactly what a good referee needs. \"Uninterested\" means simply not interested or bored — the opposite of what you want in a referee. \"Sensitive\" and \"continual\" are unrelated to the idea of impartiality.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choose the CORRECT collocation.",
+      "options": [
+        { "id": "a", "text": "She made a thorough research into the causes." },
+        { "id": "b", "text": "She did a thorough research into the causes." },
+        { "id": "c", "text": "She carried out thorough research into the causes." },
+        { "id": "d", "text": "She took a thorough research into the causes." }
+      ],
+      "correctOption": "c",
+      "explanation": "The correct collocations are \"do research\" or \"carry out research\". However, \"research\" here is an uncountable noun (you cannot say \"a thorough research\" with an article unless it is countable, which is rare and refers to a specific study). Option (c) correctly uses \"carry out thorough research\" without an article. (a), (b), and (d) all use the article \"a\" before \"research\", which is non-standard in this context.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"She paid me a wonderful ___; she said my presentation was the best she'd heard all year.\"",
+      "options": [
+        { "id": "a", "text": "complement" },
+        { "id": "b", "text": "compliment" },
+        { "id": "c", "text": "principle" },
+        { "id": "d", "text": "principal" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Compliment\" is an expression of praise or admiration — she said something kind about the presentation. \"Complement\" means something that completes or goes well with something else. \"Principle\" is a rule or belief; \"principal\" means main or head of a school. Only (b) fits the meaning of a verbal expression of praise.",
+      "difficulty": 2
+    }
+  ]
+}

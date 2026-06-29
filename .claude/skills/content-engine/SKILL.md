@@ -37,6 +37,13 @@ Consequences you must respect:
   trilingual as three sibling subjects, **each generated natively in its language (not translated)**;
   **school** content (`ecole-tn`) is authored only in the subject's **official language of
   instruction** — never trilingual. See `references/themes-and-trilingual.md`.
+- **Subject display name is native — and so is every chapter title.** `subject.json` `nameFr` is the
+  subject's display name **in its own `contentLanguage`** (ar → `الرياضيات`, en → `English`, fr →
+  `Français`) — never French for an ar/en subject; the field name is legacy (DB compat), the value is
+  native. Each `chapter.json` `title` is likewise in the subject's language. No `(FR)`/`(EN)`/`(AR)`
+  suffix on trilingual siblings. **Self-check:** for an `ar` subject, `nameFr` and every chapter
+  `title` must contain Arabic letters (`[؀-ۿ]`) — only digits/notation stay Latin. See
+  `references/content-schema.md`.
 - **Indicate difficulty on every mission and quiz.** Each exercise (mission) and the quiz must show
   its difficulty level in its title, using the standard scale in `references/rewards-and-modes.md`.
 - **Numbers & equations are standard in every language.** Western digits (0–9) and standard LTR
@@ -56,10 +63,11 @@ Run, in order:
 4. `npm run content:check` — validates all authored content against Zod. Must pass (writes nothing).
 5. `npm run content:qa:strict` — answer-key heuristics; must report **0 errors** (warnings are
    advisory but fix the easy ones).
-6. **Stop. Report** what you created and the exact follow-up the human runs:
-   `npm run content:build` → review the generated SQL in `supabase/migrations/` → apply the
-   migration to the DB **before** deploying dependent code (the DB-before-deploy rule), then commit
-   as a PR. Do **not** run `content:build`/apply or push unless explicitly asked.
+6. **Stop and report** — or, when asked to ship a PR, run `npm run content:build` (keep the **default
+   fresh timestamp**; never reuse an existing one — a same-name migration is skipped by `db push` as
+   already-applied, so the update never reaches prod) and commit the generated
+   `supabase/migrations/*_generated_<id>_content.sql` **with** the `content/` files. It **auto-applies
+   to prod on merge** via `db-migrate-prod.yml` (never apply by hand). Do **not** push unless explicitly asked.
 
 Never weaken the gate to make content "pass" (no lowering thresholds, no skipping QA).
 
@@ -72,6 +80,9 @@ A chapter directory `content/<subject>/NN-<slug>/` requires all of: `chapter.jso
    for fields; `references/themes-and-trilingual.md` for `themeId`/`gradeSlug`/`contentLanguage`).
 2. **Course** — `cours.md`: the full lesson, in the subject's one language, in the RPG style of
    `references/style-guide.md` (~50–75 lines). **`resume.md`**: a tight bullet summary mirroring it.
+   The app renders the bold, centered chapter marker («الفصل N» / «Chapitre N» / «Chapter N»,
+   auto-numbered) — so the `# H1` and `chapter.json` `title` carry the chapter's epic title only,
+   never a hand-written "Chapitre N" (see `references/style-guide.md`).
 3. **Quiz** — `quiz.json`: the comprehension gate. **5 questions** (3–10 allowed), 4 options
    (`a`–`d`), difficulty 1–2, short explanations. For **school-program** subjects, students must pass
    at **≥80%** to unlock the chapter's exercises; **non-school themes don't gate** (the quiz is an
@@ -129,7 +140,20 @@ Whatever the slice, the same gates apply: quality bar → self-verification → 
 
 Generate from model knowledge first, then verify and enrich facts with web search/fetch, recording
 the URLs/references you used in each `chapter.json` `sources[]` (traceability). Be especially careful
-with factual claims in culture-générale and with fidelity to the official syllabus in `content-ecole-tn`.
+with factual claims in culture-générale and with fidelity to the official syllabus in `content-ecole-tn`
+— for school content the authoritative scope is the **national CNP program**, captured as the downloaded
+CNP corpus (student manuels + teacher guides) indexed under
+`content-ecole-tn/references/programmes-officiels/` (see that folder's README; the school-specific Taybah
+files there are a secondary cross-check), so defer to `content-ecole-tn` for school work.
+
+**Source-combination rule (whenever a unit has more than one authoritative source).** Use **all**
+available sources, combined — a single available source is the reference; **several ⇒ combine them all**,
+never drop one. The instantiation that matters most is school content: the official CNP sources are the
+**teacher guide** (program: scope/progression/bornes) **and** the **manuel élève** (student textbook:
+lessons, examples, exercises, depth) — the manuel élève is an **indispensable complement**, not optional,
+at every grade. On a scope divergence the higher-authority source wins (for `ecole-tn`, the teacher
+guide). The mechanics live in `content-ecole-tn` and its `programmes-officiels/` README — defer there for
+school work; this is the shared principle every program skill follows when its track has multiple sources.
 
 ## Report format
 

@@ -73,72 +73,6 @@ export type TranslationKeys = {
     emailSentSpam: string;
     emailSentEdit: string;
   };
-  // Landing
-  landing: {
-    navSystem: string;
-    navSubjects: string;
-    navRanks: string;
-    signIn: string;
-    joinAcademy: string;
-    badge: string;
-    heroAlt: string;
-    enableAnimations: string;
-    reduceAnimations: string;
-    heroTitle1: string;
-    heroTitle2: string;
-    heroTitle3: string;
-    heroDesc: string;
-    ctaStart: string;
-    ctaLogin: string;
-    statSubjects: string;
-    statQuests: string;
-    statStreak: string;
-    heroOverlayLevel: string;
-    heroOverlayName: string;
-    featuresLabel: string;
-    featuresTitle1: string;
-    featuresTitle2: string;
-    subjectsLabel: string;
-    subjectsTitle1: string;
-    subjectsTitle2: string;
-    attributePrefix: string;
-    ranksLabel: string;
-    ranksTitle1: string;
-    ranksTitle2: string;
-    ranksCta: string;
-    footer: string;
-    // Features
-    featureXpTitle: string;
-    featureXpDesc: string;
-    featureStreakTitle: string;
-    featureStreakDesc: string;
-    featureRadarTitle: string;
-    featureRadarDesc: string;
-    featureArenaTitle: string;
-    featureArenaDesc: string;
-    featureBossTitle: string;
-    featureBossDesc: string;
-    featureCurriculumTitle: string;
-    featureCurriculumDesc: string;
-    // Subjects
-    subjectMath: string;
-    subjectFrench: string;
-    subjectArabic: string;
-    subjectScience: string;
-    subjectEnglish: string;
-    attrStrength: string;
-    attrSpirit: string;
-    attrWisdom: string;
-    attrObservation: string;
-    attrAgility: string;
-    // Ranks
-    rankCivilian: string;
-    rankAspirant: string;
-    rankWarrior: string;
-    rankMaster: string;
-    rankElite: string;
-    rankLegend: string;
-  };
   // Dashboard
   dashboard: {
     title: string;
@@ -218,6 +152,7 @@ export type TranslationKeys = {
     bossStrike: string;
     questionOf: string;
     feedbackMsg: string;
+    selectedAnswer: string;
     nextQuestion: string;
     finishQuest: string;
     bossAttack: string;
@@ -280,6 +215,7 @@ export type TranslationKeys = {
     floor: string;
     oneHp: string;
     warning: string;
+    validate: string;
     correctMsg: string;
     wrongMsg: string;
     depth: string;
@@ -289,6 +225,7 @@ export type TranslationKeys = {
     failedLoadQuestions: string;
     failedStartRun: string;
     failedValidateAnswer: string;
+    loadAccessError: string;
     enterDungeonAria: string;
     locked: string;
     dailyLimitReached: string;
@@ -419,8 +356,16 @@ export type TranslationKeys = {
     subscriptions: string;
     betaRequests: string;
     contentReports: string;
+    parcoursInterest: string;
     signOut: string;
     logoutToast: string;
+  };
+  // Theme picker (visual skin)
+  theme: {
+    label: string;
+    reference: string;
+    light: string;
+    dark: string;
   };
   // Adventure path / journey map
   parcours: {
@@ -434,7 +379,6 @@ export type TranslationKeys = {
     review: string;
     locked: string;
     lockedHint: string;
-    premium: string;
     premiumHint: string;
     done: string;
     current: string;
@@ -450,7 +394,6 @@ export type TranslationKeys = {
     concoursTitle: string;
     libreTitle: string;
     unlocked: string;
-    premium: string;
     comingSoon: string;
     switching: string;
     switchError: string;
@@ -471,6 +414,70 @@ export type TranslationKeys = {
     parcoursSubtitleLibre: string;
     saving: string;
     saveError: string;
+  };
+  // School cycle group labels (programme scolaire)
+  cycles: {
+    primaire: string;
+    college: string;
+    secondaire: string;
+  };
+  // Interest votes on coming-soon parcours (+ admin ranking)
+  parcoursInterest: {
+    cta: string;
+    interested: string;
+    count: string;
+    underConstruction: string;
+    toggleError: string;
+    loadError: string;
+    adminTitle: string;
+    adminDesc: string;
+    colProgram: string;
+    colInterest: string;
+    empty: string;
+  };
+  // "Découvrir" hub (circular catalogue of the 5 root programs)
+  discover: {
+    heading: string;
+    subtitle: string;
+    center: string;
+    enter: string;
+    back: string;
+    families: {
+      tunisien: string;
+      langues: string;
+      culture: string;
+      cerveau: string;
+      ib: string;
+    };
+    langShort: {
+      anglais: string;
+      francais: string;
+      arabe: string;
+    };
+    hintClasses: string;
+    hintLanguages: string;
+    hintSoon: string;
+    hintExplore: string;
+    // Category page (one dedicated page per root program)
+    backToPrograms: string;
+    start: string;
+    comingSoonTitle: string;
+    comingSoonDesc: string;
+    familyDesc: {
+      tunisien: string;
+      langues: string;
+      culture: string;
+      cerveau: string;
+      ib: string;
+    };
+  };
+  // Flagship national-concours highlight (6ème + 9ème) across hub / category / dashboard
+  flagship: {
+    badge: string;
+    sectionTitle: string;
+    bannerTitle: string;
+    bannerSubtitle: string;
+    bannerCta: string;
   };
   // Leaderboard page chrome
   leaderboard: {
@@ -543,6 +550,148 @@ export type TranslationKeys = {
     questResultXp: string;
     questResultScore: string;
     lockedChapter: string;
+  };
+  // Public « Référence » register (chantier C8): landing, catalogue, level page,
+  // course reader, subject hub, anonymous practice + shared public chrome.
+  public: {
+    header: {
+      homeAria: string;
+      navAria: string;
+      programme: string;
+      extras: string;
+      login: string;
+      signup: string;
+      account: string;
+    };
+    footer: { tagline: string; rights: string; legalLink: string };
+    landing: {
+      freeBadge: string;
+      heroTitle: string;
+      heroSubtitle: string;
+      ctaProgramme: string;
+      ctaExtras: string;
+      personaStudentTitle: string;
+      personaStudentDesc: string;
+      personaParentTitle: string;
+      personaParentDesc: string;
+      personaTeacherTitle: string;
+      personaTeacherDesc: string;
+      personaCta: string;
+      cyclesTitle: string;
+      cyclesSubtitle: string;
+      proofCoursesTitle: string;
+      proofCoursesDesc: string;
+      proofExercisesTitle: string;
+      proofExercisesDesc: string;
+      proofConformTitle: string;
+      proofConformDesc: string;
+      gameKicker: string;
+      gameTitle: string;
+      gameDesc: string;
+      gameFeatXp: string;
+      gameFeatBadges: string;
+      gameFeatRanking: string;
+      gameCta: string;
+      gameCtaAuthed: string;
+      languesKicker: string;
+      languesTitle: string;
+      languesSubtitle: string;
+      languesCta: string;
+      languesFrName: string;
+      languesFrStandard: string;
+      languesEnName: string;
+      languesEnStandard: string;
+    };
+    cycles: {
+      primaire: string;
+      college: string;
+      lycee: string;
+      primaireYears: string;
+      collegeYears: string;
+      lyceeYears: string;
+      concours6: string;
+      concours9: string;
+      bac: string;
+    };
+    catalogue: {
+      programmeKicker: string;
+      programmeTitle: string;
+      programmeDesc: string;
+      programmeEmpty: string;
+      extrasLinkQuestion: string;
+      extrasLinkCta: string;
+      extrasKicker: string;
+      extrasTitle: string;
+      extrasDesc: string;
+      extrasEmpty: string;
+      cardComingSoon: string;
+      cardContent: string;
+      cardConcoursBadge: string;
+    };
+    niveau: {
+      backProgramme: string;
+      backExtras: string;
+      chooseSubject: string;
+      comingSoonTitle: string;
+      comingSoonDesc: string;
+      choose: string;
+      choosing: string;
+    };
+    reader: {
+      defaultSubject: string;
+      courseTab: string;
+      summaryTab: string;
+      print: string;
+      courseSoon: string;
+      practiceCta: string;
+      inviteTitle: string;
+      inviteDesc: string;
+      inviteCta: string;
+      manuelTitle: string;
+      manuelHint: string;
+      manuelPage: string;
+      manuelOpen: string;
+      manuelPrev: string;
+      manuelNext: string;
+    };
+    subject: {
+      chapter: string;
+      readCourse: string;
+      level: string;
+    };
+    practice: {
+      back: string;
+      reviewCourse: string;
+      modeKicker: string;
+      subtitle: string;
+      scoreCorrect: string;
+      questionN: string;
+      correctAria: string;
+      yourAnswerAria: string;
+      checkError: string;
+      checkCta: string;
+      answerAllHint: string;
+      restart: string;
+      questCta: string;
+      inviteDesc: string;
+      inviteCta: string;
+    };
+    print: { copyrightNotice: string };
+    legal: {
+      title: string;
+      intro: string;
+      ipTitle: string;
+      ipBody: string;
+      useTitle: string;
+      useBody: string;
+      brandTitle: string;
+      brandBody: string;
+      contactTitle: string;
+      contactBody: string;
+      lawTitle: string;
+      lawBody: string;
+      updated: string;
+    };
   };
   // Motivational quotes
   quotes: Array<{ text: string; author: string }>;

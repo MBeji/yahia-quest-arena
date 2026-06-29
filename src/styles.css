@@ -5,12 +5,13 @@
 @custom-variant dark (&:is(.dark *));
 
 /* =====================================================
-  XP Scholars — Shonen Neon Arena design system
+  Na9ra Nal3ab — Shonen Neon Arena design system
   ===================================================== */
 
 @theme inline {
   --font-display: "Orbitron", "Space Grotesk", system-ui, sans-serif;
   --font-sans: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-arabic: "Noto Kufi Arabic", "Noto Sans Arabic", system-ui, sans-serif;
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -127,48 +128,58 @@
   --gradient-gold: linear-gradient(135deg, var(--gold-deep), var(--gold) 45%, var(--gold-bright));
   --gradient-gold-text: linear-gradient(120deg, #f7e8b0 0%, #d4af37 38%, #fff4cf 55%, #c9962f 100%);
   --shadow-gold: 0 0 40px oklch(0.83 0.15 86 / 0.35), 0 0 110px oklch(0.83 0.15 86 / 0.16);
+
+  /* Ambient backdrop blobs (GoldAmbient) — gold here, retinted to lime in html.light */
+  --ambient-1: oklch(0.83 0.15 86 / 0.12);
+  --ambient-2: oklch(0.92 0.12 96 / 0.1);
+  --ambient-3: oklch(0.66 0.13 70 / 0.1);
+
+  /* Program-hub / category node disc base (dark glass; white in html.light) */
+  --hub-node-bg: rgba(0, 0, 0, 0.55);
 }
 
 /* =====================================================
-  Light theme — "Ivory & Gold" (professional / premium)
-  Same luxe black-&-gold identity, inverted to a warm ivory
-  canvas with deep-gold accents. Applied via <html class="light">.
+  Light theme — "Atome" (clean fintech: white + electric lime)
+  Modeled on atome.tn: a near-white canvas, near-black ink and one
+  punchy electric-lime accent ("Spriteburst"). The "gold" tokens are
+  repurposed here to carry the lime, so every CTA turns lime without
+  renaming a single token. Applied via <html class="light">.
   ===================================================== */
 html.light {
-  /* Surfaces — warm ivory canvas, crisp white cards */
-  --background: oklch(0.985 0.01 92);
-  --foreground: oklch(0.24 0.02 80);
-  --card: oklch(1 0 0 / 0.78);
-  --card-foreground: oklch(0.24 0.02 80);
-  --popover: oklch(0.99 0.008 92);
-  --popover-foreground: oklch(0.24 0.02 80);
+  /* Surfaces — near-white canvas, crisp pure-white cards */
+  --background: oklch(0.985 0.004 110);
+  --foreground: oklch(0.22 0.008 130);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.008 130);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.008 130);
 
-  /* Brand — gold leads; dark ink sits on the gold for premium contrast */
-  --primary: oklch(0.72 0.13 80);
-  --primary-foreground: oklch(0.2 0.03 80);
-  --secondary: oklch(0.95 0.02 88);
-  --secondary-foreground: oklch(0.28 0.02 80);
-  --muted: oklch(0.95 0.015 90);
-  --muted-foreground: oklch(0.48 0.025 80);
-  --accent: oklch(0.72 0.13 80);
-  --accent-foreground: oklch(0.2 0.03 80);
+  /* Brand — electric lime leads; black ink sits on the lime (Atome's signature combo) */
+  --primary: oklch(0.895 0.2 122);
+  --primary-foreground: oklch(0.27 0.06 128);
+  --secondary: oklch(0.965 0.007 120);
+  --secondary-foreground: oklch(0.3 0.012 130);
+  --muted: oklch(0.965 0.006 115);
+  --muted-foreground: oklch(0.48 0.009 120);
+  --accent: oklch(0.895 0.2 122);
+  --accent-foreground: oklch(0.27 0.06 128);
 
   --destructive: oklch(0.57 0.22 25);
   --destructive-foreground: oklch(0.99 0 0);
 
-  --border: oklch(0.78 0.04 85 / 0.6);
-  --input: oklch(0.88 0.02 88);
-  --ring: oklch(0.72 0.13 80);
+  --border: oklch(0.91 0.009 120);
+  --input: oklch(0.93 0.008 120);
+  --ring: oklch(0.62 0.16 128);
 
-  /* Neon accents, deepened so they read on a light canvas */
+  /* Accent palette — jewel tones deepened to read on white; "gold" -> lime */
   --neon-violet: oklch(0.52 0.26 295);
-  --neon-cyan: oklch(0.58 0.13 215);
+  --neon-cyan: oklch(0.54 0.12 215);
   --neon-magenta: oklch(0.56 0.25 335);
-  --neon-gold: oklch(0.68 0.14 80);
+  --neon-gold: oklch(0.62 0.15 122);
   --flame: oklch(0.62 0.21 45);
   --success: oklch(0.58 0.17 150);
 
-  /* Subject colours, darkened for contrast on ivory */
+  /* Subject colours, darkened for contrast on white */
   --subject-math: oklch(0.57 0.22 25);
   --subject-french: oklch(0.54 0.19 255);
   --subject-arabic: oklch(0.52 0.15 150);
@@ -177,32 +188,137 @@ html.light {
 
   /* Gradients */
   --gradient-hero:
-    radial-gradient(at 20% 18%, oklch(0.72 0.13 80 / 0.35), transparent 55%),
-    radial-gradient(at 82% 28%, oklch(0.92 0.12 96 / 0.4), transparent 55%),
-    radial-gradient(at 50% 92%, oklch(0.66 0.13 70 / 0.18), transparent 60%),
-    linear-gradient(180deg, oklch(0.99 0.01 92), oklch(0.96 0.02 90));
-  --gradient-primary: linear-gradient(
-    135deg,
-    var(--gold-deep),
-    var(--gold) 55%,
-    var(--gold-bright)
-  );
+    radial-gradient(at 20% 18%, oklch(0.895 0.2 122 / 0.18), transparent 55%),
+    radial-gradient(at 82% 28%, oklch(0.93 0.18 118 / 0.16), transparent 55%),
+    radial-gradient(at 50% 92%, oklch(0.85 0.16 125 / 0.1), transparent 60%),
+    linear-gradient(180deg, oklch(0.99 0.004 110), oklch(0.965 0.008 115));
+  --gradient-primary: linear-gradient(135deg, var(--neon-violet), var(--neon-magenta));
   --gradient-cyan: linear-gradient(135deg, var(--neon-cyan), var(--neon-violet));
   --gradient-flame: linear-gradient(135deg, var(--flame), var(--neon-magenta));
 
-  /* Shadows — soft warm elevation, no hard neon halos */
-  --shadow-neon: 0 18px 50px -18px oklch(0.72 0.13 80 / 0.4), 0 0 0 1px oklch(0.78 0.05 85 / 0.4);
-  --shadow-cyan: 0 18px 50px -18px oklch(0.58 0.13 215 / 0.35), 0 0 0 1px oklch(0.78 0.05 85 / 0.4);
-  --shadow-card: 0 24px 60px -28px oklch(0.55 0.06 80 / 0.45);
+  /* Shadows — soft neutral elevation, no neon halos on a white canvas */
+  --shadow-neon: 0 18px 50px -18px oklch(0.5 0.08 125 / 0.28), 0 0 0 1px oklch(0.9 0.012 120 / 0.6);
+  --shadow-cyan: 0 18px 50px -18px oklch(0.5 0.08 215 / 0.22), 0 0 0 1px oklch(0.9 0.012 120 / 0.6);
+  --shadow-card: 0 24px 60px -28px oklch(0.5 0.04 120 / 0.4);
 
-  /* Premium gold (landing) — deepen so it pops on white */
-  --gold: oklch(0.72 0.13 80);
-  --gold-bright: oklch(0.82 0.13 88);
-  --gold-deep: oklch(0.58 0.12 68);
-  /* `champagne` is the premium "ink" colour on light: a deep readable bronze */
-  --champagne: oklch(0.36 0.04 75);
-  --gradient-gold-text: linear-gradient(120deg, #8a6d15 0%, #c9962f 36%, #d4af37 54%, #9a7b1f 100%);
-  --shadow-gold: 0 0 36px oklch(0.72 0.13 80 / 0.22), 0 0 90px oklch(0.72 0.13 80 / 0.1);
+  /* Atome electric lime (the repurposed "gold" tokens — fills every CTA) */
+  --gold: oklch(0.86 0.2 122);
+  --gold-bright: oklch(0.93 0.18 118);
+  --gold-deep: oklch(0.78 0.19 124);
+  --gradient-gold: linear-gradient(
+    135deg,
+    oklch(0.79 0.19 124),
+    oklch(0.895 0.205 122) 52%,
+    oklch(0.93 0.18 118)
+  );
+  /* `champagne` = the emphasis-text colour on light: a deep, readable lime-olive */
+  --champagne: oklch(0.42 0.13 128);
+  --gradient-gold-text: linear-gradient(
+    120deg,
+    oklch(0.24 0.02 130),
+    oklch(0.36 0.08 128) 55%,
+    oklch(0.22 0.02 130)
+  );
+  --shadow-gold:
+    0 10px 30px -14px oklch(0.55 0.14 125 / 0.45), 0 0 0 1px oklch(0.72 0.13 125 / 0.22);
+
+  /* Ambient backdrop blobs — lime to match the white + lime shell */
+  --ambient-1: oklch(0.86 0.2 122 / 0.1);
+  --ambient-2: oklch(0.93 0.18 118 / 0.09);
+  --ambient-3: oklch(0.75 0.16 125 / 0.08);
+
+  /* Program-hub / category node disc base — near-white so discs read clean on white */
+  --hub-node-bg: oklch(1 0 0 / 0.92);
+}
+
+/* =====================================================
+  Reference theme — "Référence" (content-first: white + teal #0F6E56).
+  The sober editorial reading register, now a first-class user-selectable theme
+  (the DEFAULT) applied globally via <html class="reference">. Light-family like
+  html.light, but the brand leads with teal instead of electric lime. The "gold"
+  tokens are repurposed to carry the teal so every CTA turns teal without renaming.
+  Shares html.light's in-shell surface overrides (see html:is(.light, .reference)).
+  ===================================================== */
+html.reference {
+  color-scheme: light;
+
+  /* Surfaces — near-white canvas, pure-white cards */
+  --background: oklch(0.985 0.008 165);
+  --foreground: oklch(0.26 0.03 175);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.26 0.03 175);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.26 0.03 175);
+
+  /* Brand — teal #0F6E56 leads */
+  --primary: #0f6e56;
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.965 0.018 165);
+  --secondary-foreground: oklch(0.3 0.04 175);
+  --muted: oklch(0.965 0.012 165);
+  --muted-foreground: oklch(0.48 0.025 172);
+  --accent: #0f6e56;
+  --accent-foreground: oklch(0.99 0 0);
+
+  --destructive: oklch(0.57 0.22 25);
+  --destructive-foreground: oklch(0.99 0 0);
+
+  --border: oklch(0.9 0.015 168);
+  --input: oklch(0.9 0.015 168);
+  --ring: #0f6e56;
+
+  /* Accent palette — retinted to teal, deepened to read on white */
+  --neon-violet: #0f6e56;
+  --neon-cyan: oklch(0.52 0.08 200);
+  --neon-magenta: #15876a;
+  --neon-gold: #0b5a47;
+  --flame: oklch(0.62 0.21 45);
+  --success: oklch(0.55 0.13 165);
+
+  /* Subject colours, darkened for contrast on white (as in html.light) */
+  --subject-math: oklch(0.57 0.22 25);
+  --subject-french: oklch(0.54 0.19 255);
+  --subject-arabic: oklch(0.52 0.15 150);
+  --subject-svt: oklch(0.55 0.19 135);
+  --subject-english: oklch(0.55 0.15 215);
+
+  /* Gradients — teal-tinted on a light canvas */
+  --gradient-hero:
+    radial-gradient(at 20% 18%, oklch(0.55 0.09 170 / 0.16), transparent 55%),
+    radial-gradient(at 82% 28%, oklch(0.62 0.08 175 / 0.14), transparent 55%),
+    radial-gradient(at 50% 92%, oklch(0.58 0.07 165 / 0.1), transparent 60%),
+    linear-gradient(180deg, oklch(0.99 0.006 165), oklch(0.965 0.01 165));
+  --gradient-primary: linear-gradient(135deg, var(--neon-violet), var(--neon-magenta));
+  --gradient-cyan: linear-gradient(135deg, var(--neon-cyan), var(--neon-violet));
+  --gradient-flame: linear-gradient(135deg, var(--flame), var(--neon-magenta));
+
+  /* Shadows — soft neutral elevation, no neon halos on white */
+  --shadow-neon: 0 18px 50px -18px oklch(0.5 0.06 170 / 0.28), 0 0 0 1px oklch(0.9 0.012 168 / 0.6);
+  --shadow-cyan: 0 18px 50px -18px oklch(0.5 0.06 200 / 0.22), 0 0 0 1px oklch(0.9 0.012 168 / 0.6);
+  --shadow-card: 0 24px 60px -28px oklch(0.5 0.03 170 / 0.4);
+
+  /* Teal "gold" tokens — fill every CTA / emphasis with teal */
+  --gold: #0f6e56;
+  --gold-bright: #15876a;
+  --gold-deep: #0b5a47;
+  --gradient-gold: linear-gradient(135deg, #0b5a47, #0f6e56 52%, #15876a);
+  /* `champagne` = emphasis-text colour on light: a deep, readable teal */
+  --champagne: oklch(0.4 0.07 175);
+  --gradient-gold-text: linear-gradient(
+    120deg,
+    oklch(0.26 0.03 175),
+    oklch(0.36 0.05 172) 55%,
+    oklch(0.24 0.03 175)
+  );
+  --shadow-gold: 0 10px 30px -14px oklch(0.5 0.08 170 / 0.4), 0 0 0 1px oklch(0.55 0.06 170 / 0.22);
+
+  /* Ambient backdrop blobs — teal to match the white + teal shell */
+  --ambient-1: oklch(0.55 0.09 170 / 0.1);
+  --ambient-2: oklch(0.62 0.08 175 / 0.09);
+  --ambient-3: oklch(0.58 0.07 165 / 0.08);
+
+  /* Program-hub / category node disc base — near-white */
+  --hub-node-bg: oklch(1 0 0 / 0.92);
 }
 
 @layer base {
@@ -234,56 +350,56 @@ html.light {
   Light-theme overrides for utilities that hard-code dark
   surfaces. Unlayered so they win over @layer utilities.
   ===================================================== */
-html.light body {
+html:is(.light, .reference) body {
   background-image:
-    radial-gradient(at 0% 0%, oklch(0.72 0.13 80 / 0.12), transparent 50%),
-    radial-gradient(at 100% 100%, oklch(0.92 0.12 96 / 0.14), transparent 50%);
+    radial-gradient(at 0% 0%, oklch(0.895 0.2 122 / 0.09), transparent 50%),
+    radial-gradient(at 100% 100%, oklch(0.93 0.18 118 / 0.09), transparent 50%);
 }
-html.light .glass {
-  background: oklch(1 0 0 / 0.65);
-  border-color: oklch(0.72 0.13 80 / 0.28);
+html:is(.light, .reference) .glass {
+  background: oklch(1 0 0 / 0.7);
+  border-color: oklch(0.86 0.18 122 / 0.25);
 }
-html.light .bg-black-deep {
-  background-color: oklch(0.985 0.01 92);
+html:is(.light, .reference) .bg-black-deep {
+  background-color: oklch(0.985 0.004 110);
 }
 
 /* ---------------------------------------------------------------
   Authenticated app shell (light theme).
   The app builds most of its panels from translucent `bg-black/<alpha>`
   glasses. Remap Tailwind's `black` token to white *inside the shell only*
-  so those panels become bright ivory cards — the landing, auth screen and
+  so those panels become bright white cards — the landing, auth screen and
   portaled modal scrims (all outside .app-shell) keep their dark surfaces.
   Ink-on-gold (`text-black`) and headings (`text-white`) are re-pinned to a
   deep ink so they stay readable on the now-light cards, and the canvas is
   deepened a touch so the white cards read as elevated.
   --------------------------------------------------------------- */
-html.light .app-shell {
+html:is(.light, .reference) .app-shell {
   --color-black: oklch(1 0 0);
 }
-html.light .app-shell.bg-black-deep {
-  background-color: oklch(0.96 0.013 88);
+html:is(.light, .reference) .app-shell.bg-black-deep {
+  background-color: oklch(0.965 0.006 110);
 }
-html.light .app-shell :is(.text-black, .text-white) {
-  color: oklch(0.22 0.02 80);
+html:is(.light, .reference) .app-shell :is(.text-black, .text-white) {
+  color: oklch(0.22 0.008 130);
 }
-html.light .glass-gold {
-  background: oklch(1 0 0 / 0.62);
-  border-color: oklch(0.72 0.13 80 / 0.28);
+html:is(.light, .reference) .glass-gold {
+  background: oklch(1 0 0 / 0.66);
+  border-color: oklch(0.86 0.18 122 / 0.28);
 }
-html.light .bg-grid {
+html:is(.light, .reference) .bg-grid {
   background-image:
-    linear-gradient(oklch(0.55 0.12 80 / 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, oklch(0.55 0.12 80 / 0.1) 1px, transparent 1px);
+    linear-gradient(oklch(0.6 0.14 125 / 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(0.6 0.14 125 / 0.1) 1px, transparent 1px);
 }
-html.light .bg-gold-grid {
+html:is(.light, .reference) .bg-gold-grid {
   background-image:
-    linear-gradient(oklch(0.58 0.12 78 / 0.12) 1px, transparent 1px),
-    linear-gradient(90deg, oklch(0.58 0.12 78 / 0.12) 1px, transparent 1px);
+    linear-gradient(oklch(0.6 0.14 125 / 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(0.6 0.14 125 / 0.12) 1px, transparent 1px);
 }
-html.light .scanline::after {
+html:is(.light, .reference) .scanline::after {
   background: repeating-linear-gradient(0deg, transparent 0 3px, oklch(0.2 0.02 80 / 0.03) 3px 4px);
 }
-html.light .animate-shimmer {
+html:is(.light, .reference) .animate-shimmer {
   background: linear-gradient(
     90deg,
     transparent 25%,
@@ -292,11 +408,34 @@ html.light .animate-shimmer {
   );
   background-size: 200% 100%;
 }
-html.light ::-webkit-scrollbar-thumb {
-  background: oklch(0.72 0.13 80 / 0.45);
+html:is(.light, .reference) ::-webkit-scrollbar-thumb {
+  background: oklch(0.7 0.15 125 / 0.5);
 }
-html.light ::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.66 0.13 70 / 0.7);
+html:is(.light, .reference) ::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.6 0.14 125 / 0.7);
+}
+
+/* Atome lime accents for utilities that hard-code gold/neon literals */
+html:is(.light, .reference) .border-gold {
+  border-color: oklch(0.78 0.18 124 / 0.45);
+}
+html:is(.light, .reference) .border-neon {
+  border-color: oklch(0.7 0.18 125 / 0.5);
+}
+/* Retint the always-on glow pseudo-elements (neon/gold) to lime on white */
+html:is(.light, .reference) .animate-gold-pulse::after {
+  box-shadow:
+    0 0 45px oklch(0.86 0.2 122 / 0.45),
+    0 0 100px oklch(0.93 0.16 118 / 0.2);
+}
+html:is(.light, .reference) .animate-pulse-neon::after {
+  box-shadow:
+    0 0 32px oklch(0.85 0.2 122 / 0.5),
+    0 0 70px oklch(0.9 0.18 120 / 0.28);
+}
+/* Focus ring: deep lime so it stays clearly visible on a white canvas */
+html:is(.light, .reference) *:focus-visible {
+  outline-color: var(--ring);
 }
 
 /* Utility classes */
@@ -427,6 +566,19 @@ html.light ::-webkit-scrollbar-thumb:hover {
   animation-duration: 2.4s;
 }
 
+/* Flagship crown: a slow continuous rotation for the gold shine that turns behind
+   the site crown emblem marking the 2 concours phares (6ème, 9ème). Pairs with
+   .animate-gold-pulse (the blink). Disabled under prefers-reduced-motion below. */
+@keyframes flagship-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate-flagship-spin {
+  animation: flagship-spin 7s linear infinite;
+  will-change: transform;
+}
+
 @keyframes flame-flicker {
   0%,
   100% {
@@ -456,6 +608,24 @@ html.light ::-webkit-scrollbar-thumb:hover {
 }
 
 /* =====================================================
+  Public-shell editorial touches. The `.public-shell` class is set by the
+  `_public` layout — it is a STRUCTURAL hook (print, IP image guard, lesson
+  typography), NOT a theme. The Référence THEME itself lives with the other
+  themes near the top of this file (html.reference). These rules just refine
+  lesson typography on public content, whatever the active theme.
+  ===================================================== */
+.public-shell .lesson-content a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.public-shell .lesson-content code {
+  background: var(--secondary);
+  border-radius: 0.3rem;
+  padding: 0.1em 0.35em;
+}
+
+/* =====================================================
   Lesson content styling (RPG-themed Arabic lessons)
   ===================================================== */
 .lesson-content {
@@ -479,8 +649,8 @@ html.light ::-webkit-scrollbar-thumb:hover {
   font-size: 1.35rem;
   font-weight: 700;
   margin: 1.5rem 0 0.75rem;
-  color: var(--neon-cyan);
-  border-bottom: 1px solid color-mix(in oklab, var(--neon-cyan) 30%, transparent);
+  color: var(--neon-violet);
+  border-bottom: 1px solid color-mix(in oklab, var(--neon-violet) 30%, transparent);
   padding-bottom: 0.5rem;
   scroll-margin-top: 5rem;
 }
@@ -505,7 +675,7 @@ html.light ::-webkit-scrollbar-thumb:hover {
     90deg,
     transparent,
     var(--neon-violet),
-    var(--neon-cyan),
+    var(--neon-gold),
     transparent
   );
   margin: 2rem 0;
@@ -546,9 +716,9 @@ html.light ::-webkit-scrollbar-thumb:hover {
   font-family: "KaTeX_Math", serif;
   margin: 1rem 0;
   padding: 0.75rem;
-  background: color-mix(in oklab, var(--neon-cyan) 6%, transparent);
+  background: color-mix(in oklab, var(--neon-violet) 6%, transparent);
   border-radius: 0.75rem;
-  border: 1px solid color-mix(in oklab, var(--neon-cyan) 20%, transparent);
+  border: 1px solid color-mix(in oklab, var(--neon-violet) 20%, transparent);
   direction: ltr;
   unicode-bidi: isolate;
 }
@@ -723,5 +893,63 @@ html.light ::-webkit-scrollbar-thumb:hover {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* =====================================================
+  Protection de la propriété intellectuelle (Couches 3 & 5)
+  ===================================================== */
+
+/* Dissuasion light-touch : les images de la coquille publique ne se glissent ni
+   ne s'ouvrent au clic droit (la sélection de TEXTE reste permise — a11y/SEO). */
+.public-shell img {
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+/* Marquage à l'impression — le « téléchargement » réel = Ctrl+P / Enregistrer en
+   PDF. <PrintMark/> rend ces deux blocs `hidden` (display:none) à l'écran ; ils
+   ne réapparaissent qu'à l'impression : filigrane de marque + pied copyright/IP. */
+@media print {
+  .public-shell {
+    color: #000;
+    background: #fff;
+  }
+  /* Les titres en dégradé-clip s'impriment en noir plein (les fonds ne sont pas
+     imprimés par défaut → sinon texte invisible). */
+  .public-shell .lesson-content .lesson-h1 {
+    -webkit-text-fill-color: currentColor;
+    color: #000;
+    background: none;
+  }
+  .print-watermark {
+    display: flex !important;
+    position: fixed;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(-30deg);
+    font-family: var(--font-display);
+    font-size: 5rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: rgba(0, 0, 0, 0.07);
+    z-index: 9999;
+    pointer-events: none;
+  }
+  .print-copyright {
+    display: block !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 6px 12px;
+    font-size: 9px;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.6);
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
+  }
+  @page {
+    margin: 1.4cm;
   }
 }

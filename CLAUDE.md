@@ -32,7 +32,7 @@ and tackle a timed "dungeon" boss mode. Shonen/RPG manga aesthetic, trilingual (
   (see "Premium gate" under Data model); the free preview is the comprehension quiz + difficulty-1.
   The dashboard is scoped to the active parcours; the Explorer (`/themes`) lets a student switch.
 
-**Stack**: Vite 7 · TanStack Start (SSR + file routing + server fns) · React 19 · TanStack Query 5 · Supabase (Postgres + Auth + RLS) · Tailwind 4 / Radix-shadcn · **deploys to Vercel** — push to `main` auto-deploys prod via `scripts/build-vercel.mjs` (`vercel.json`). A Cloudflare Workers config also exists, but Vercel is the live target. Package manager: **bun** (`bun.lock`), npm scripts work too. Tests: Vitest 4 + Testing Library (unit) and Playwright (e2e).
+**Stack**: Vite 8 · TanStack Start (SSR + file routing + server fns) · React 19 · TanStack Query 5 · Supabase (Postgres + Auth + RLS) · Tailwind 4 / Radix-shadcn · **deploys to Vercel** — push to `main` auto-deploys prod via `scripts/build-vercel.mjs` (`vercel.json`). A Cloudflare Workers config also exists, but Vercel is the live target. Package manager: **npm** (`package-lock.json`; Node 22 / npm 10 in CI). Tests: Vitest 4 + Testing Library (unit) and Playwright (e2e).
 
 ## Essential commands
 
@@ -212,6 +212,18 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
   `npm run test:e2e:auth` (`authed-chromium`), `npm run test:e2e:install` (install the
   browser). Authenticated runs are seeded via `scripts/e2e/seed-test-users.mjs`. E2E is
   separate from the Vitest unit/integration gate.
+- **Scheduled automations (GitHub Actions + repo skills).** Run on a schedule, all
+  gracefully skipping without `CLAUDE_CODE_OAUTH_TOKEN`. The E2E/pgTAP nightly runs
+  **every night**; the two Claude-agent guards run **2×/week** (each holds a runner for
+  many minutes — keeps their PR/issue noise reasonable; the repo is public so Actions
+  minutes are unlimited & free):
+  `regression-guard.yml` (**Mon+Thu** 23:00 UTC → skill `regression-guard`: reconciles
+  tests, opens a PR + bug issues), `nightly.yml` (01:00 UTC, **every night**: full E2E +
+  pgTAP, tracking issue), then `upgrade-guard.yml` (**Tue+Fri**, after that night's green
+  nightly → skill `upgrade-guard`: stack upgrades —
+  auto-merges the patch/minor lot only when the full gate + E2E + pgTAP are green, one PR
+  per major, never bundled). None ever push to `main` directly (only `automerge` merges a
+  fully-green patch/minor PR). Cadence + traps: `docs/dependency-maintenance.md`.
 - **Policy docs (`docs/*.md`).** Topic-specific rules referenced from here:
   `docs/environment-variables.md`, `docs/logging-standard.md`, `docs/xss-rendering-policy.md`,
   `docs/release-tagging-policy.md`, `docs/dependency-maintenance.md`. These defer to
@@ -240,13 +252,22 @@ the project stays regression- and debt-free while being improved by AI.
    the feature's `__tests__/`. Coverage must not regress.
 6. **Small, reviewable commits.** Branch off `main`; commit/push only when asked.
    Conventional-commit style messages (`feat:`, `fix:`, `test:`, `chore:`…).
-7. **DB ↔ code changes are coordinated.** Pushing to `main` **auto-deploys to
-   Vercel production**. So when a code change depends on a new Supabase migration
-   (new table/column/RPC, or revoked grants), the migration MUST be applied to the
-   DB **before** the code is pushed/deployed — otherwise prod runs code against a
-   schema that doesn't support it. Order: apply migration → verify → then push code.
-   Migrations are not auto-applied by the repo; apply them via the Supabase SQL
-   editor or `supabase db push`.
+7. **DB ↔ code changes are coordinated — prod migrations auto-apply, never by
+   hand.** Pushing to `main` auto-deploys to Vercel **and** auto-applies any new
+   `supabase/migrations/**` to the production Supabase DB via
+   [`db-migrate-prod.yml`](.github/workflows/db-migrate-prod.yml) (it takes a
+   pre-apply `pg_dump` backup, guards that the target really is prod, then runs
+   `supabase db push`; it reuses the existing `PROD_SUPABASE_DB_URL` secret — no
+   credentials ever leave GitHub). **Do NOT apply prod migrations manually** (no
+   SQL editor, no local `db push`): author the migration, merge it, the workflow
+   applies it. It can also be dispatched by hand — `push` / read-only `list` /
+   one-time `repair-all` — from the Actions tab or
+   `gh workflow run db-migrate-prod.yml`. Additive migrations are safe ahead of
+   the code that uses them, so the order still holds: land the migration (it
+   applies on merge) → then the dependent code. Ship a **destructive** migration
+   (DROP/REVOKE) in a **separate** merge, **after** the code that stopped using the
+   old shape is live. The `pgTAP suite` check proves every migration applies
+   cleanly on a fresh DB before merge.
 
 When unsure about scope or a destructive action, ask before proceeding.
 
@@ -268,9 +289,12 @@ When unsure about scope or a destructive action, ask before proceeding.
   edit with care.
 - Env vars required at runtime: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` (set in the deploy
   platform). Missing → middleware throws a descriptive error.
-- The Vite/TanStack/Cloudflare/Tailwind plugin scaffold is provided by
-  `@lovable.dev/vite-tanstack-config` (see `vite.config.ts`) — a meta-plugin; don't add its
-  bundled plugins manually or the build breaks with duplicates.
+- The Vite config is **inline** in `vite.config.ts` — the TanStack Start, React, Tailwind,
+  Cloudflare and tsconfig-paths plugins are composed by hand (the old
+  `@lovable.dev/vite-tanstack-config` meta-plugin was de-vendored and `bun.lock` dropped).
+  `manualChunks` there is hand-tuned to the bundle budgets; reshaping vendor groups can
+  introduce a circular vendor chunk (prod-crash risk), so change it deliberately and re-run
+  `npm run build:check`. The `esbuild` override in `package.json` is a security pin — keep it.
 - **Coverage is scoped to owned code** (`features/`, `shared/`, `lib/`, `hooks/`) in
   `vitest.config.ts`; vendored shadcn UI (`components/ui`), thin route wrappers,
   barrels, generated files, and SSR entry glue are excluded by design. Thresholds are

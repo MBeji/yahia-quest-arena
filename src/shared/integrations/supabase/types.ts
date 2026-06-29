@@ -137,6 +137,7 @@ export type Database = {
           display_order: number;
           id: string;
           lesson_content: string | null;
+          manuel_ref: Json | null;
           subject_id: string;
           summary: string | null;
           title: string;
@@ -146,6 +147,7 @@ export type Database = {
           display_order?: number;
           id?: string;
           lesson_content?: string | null;
+          manuel_ref?: Json | null;
           subject_id: string;
           summary?: string | null;
           title: string;
@@ -155,6 +157,7 @@ export type Database = {
           display_order?: number;
           id?: string;
           lesson_content?: string | null;
+          manuel_ref?: Json | null;
           subject_id?: string;
           summary?: string | null;
           title?: string;
@@ -711,6 +714,35 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "parcours_entitlements_parcours_id_fkey";
+            columns: ["parcours_id"];
+            isOneToOne: false;
+            referencedRelation: "parcours";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      parcours_interest: {
+        Row: {
+          created_at: string;
+          id: string;
+          parcours_id: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          parcours_id: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          parcours_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "parcours_interest_parcours_id_fkey";
             columns: ["parcours_id"];
             isOneToOne: false;
             referencedRelation: "parcours";
@@ -1370,6 +1402,18 @@ export type Database = {
         Args: { p_parcours: string; p_user: string };
         Returns: undefined;
       };
+      parcours_interest_counts: {
+        Args: never;
+        Returns: {
+          interest_count: number;
+          name_fr: string;
+          parcours_id: string;
+        }[];
+      };
+      toggle_parcours_interest: {
+        Args: { p_parcours: string };
+        Returns: boolean;
+      };
       award_badge_if_new: {
         Args: { p_badge_code: string; p_reason: string; p_user: string };
         Returns: Json;
@@ -1431,6 +1475,15 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      check_answers: {
+        Args: { p_answers: Json; p_exercise_id: string };
+        Returns: {
+          correct_option: string | null;
+          explanation: string | null;
+          is_correct: boolean;
+          question_id: string;
+        }[];
       };
       check_rate_limit: {
         Args: { p_key: string; p_max_requests: number; p_window_ms: number };

@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill : nuances lexicales et paronymes",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complétez : « Prends ce texte au sens ___ : ne cherche aucune métaphore. »",
+      "options": [
+        { "id": "a", "text": "littéral" },
+        { "id": "b", "text": "littoral" },
+        { "id": "c", "text": "fallacieux" },
+        { "id": "d", "text": "fortuit" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Littéral » = pris à la lettre, au sens propre (une traduction littérale). « Littoral » est le bord de mer, la côte : un paronyme sans rapport. « Fallacieux » = trompeur ; « fortuit » = dû au hasard.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel verbe convient : « Les députés ont décidé de ___ ce débat houleux en l'ajournant » ?",
+      "options": [
+        { "id": "a", "text": "amorcer" },
+        { "id": "b", "text": "inaugurer" },
+        { "id": "c", "text": "entamer" },
+        { "id": "d", "text": "clore" }
+      ],
+      "correctOption": "d",
+      "explanation": "Ajourner un débat, c'est y mettre fin pour l'instant : « clore » convient. « Amorcer » = enclencher, « entamer » = commencer, « inaugurer » = ouvrir solennellement : ces trois verbes disent l'ouverture, à contresens d'un ajournement.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complétez : « On a découvert une ___ entre les deux entreprises pour truquer les appels d'offres. »",
+      "options": [
+        { "id": "a", "text": "collision" },
+        { "id": "b", "text": "collusion" },
+        { "id": "c", "text": "conjecture" },
+        { "id": "d", "text": "acception" }
+      ],
+      "correctOption": "b",
+      "explanation": "Une « collusion » est une entente secrète et frauduleuse au détriment d'autrui : truquer des appels d'offres en est l'exemple type. La « collision » est un choc physique. « Conjecture » = supposition ; « acception » = sens d'un mot.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel mot exprime le mieux « mendier humblement une faveur » ?",
+      "options": [
+        { "id": "a", "text": "quémander" },
+        { "id": "b", "text": "exiger" },
+        { "id": "c", "text": "réclamer" },
+        { "id": "d", "text": "perpétuer" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Quémander » = solliciter humblement, presque mendier, sans titre à exiger. « Exiger » = demander impérativement ; « réclamer » = demander avec insistance un dû. « Perpétuer » = faire durer, sans rapport avec une demande.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choisissez la phrase au français le plus soigné.",
+      "options": [
+        { "id": "a", "text": "Nous devrons solutionner cette difficulté avant l'échéance." },
+        { "id": "b", "text": "Nous devrons perpétrer cette difficulté avant l'échéance." },
+        { "id": "c", "text": "Nous devrons recouvrir cette difficulté avant l'échéance." },
+        { "id": "d", "text": "Nous devrons résoudre cette difficulté avant l'échéance." }
+      ],
+      "correctOption": "d",
+      "explanation": "« Résoudre une difficulté » est la formule juste et soutenue. « Solutionner » est familier et critiqué. « Perpétrer » = commettre un crime, « recouvrir » = couvrir : tous deux absurdes ici.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complétez : « Le maire a ___ la nouvelle médiathèque en présence des élus. »",
+      "options": [
+        { "id": "a", "text": "entamé" },
+        { "id": "b", "text": "amorcé" },
+        { "id": "c", "text": "inauguré" },
+        { "id": "d", "text": "évoqué" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Inaugurer » = ouvrir solennellement, en présence d'officiels (inaugurer un bâtiment). « Entamer » = commencer en attaquant une matière ; « amorcer » = enclencher un processus ; « évoquer » = mentionner. Seul « inaugurer » convient à une cérémonie d'ouverture.",
+      "difficulty": 3
+    }
+  ]
+}

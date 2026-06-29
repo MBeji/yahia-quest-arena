@@ -1,0 +1,82 @@
+{
+  "title": "👑 تحدّي النخبة ⭐⭐⭐⭐: أسطورة القيس",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "كم مليمترًا يساوي 9 cm؟",
+      "options": [
+        { "id": "a", "text": "9 mm" },
+        { "id": "b", "text": "900 mm" },
+        { "id": "c", "text": "90 mm" },
+        { "id": "d", "text": "99 mm" }
+      ],
+      "correctOption": "c",
+      "explanation": "للتحويل من cm إلى mm نضرب في 10: 9 × 10 = 90. إذن 9 cm = 90 mm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "شريطٌ طوله 3 m، قُطع منه 75 cm. كم بقي منه بالصنتيمترات؟ (الخطأ الشائع: الطرح قبل التوحيد)",
+      "options": [
+        { "id": "a", "text": "72 cm" },
+        { "id": "b", "text": "225 cm" },
+        { "id": "c", "text": "275 cm" },
+        { "id": "d", "text": "300 cm" }
+      ],
+      "correctOption": "b",
+      "explanation": "نوحّد الوحدة أوّلًا: 3 m = 300 cm. ثمّ نطرح: 300 − 75 = 225. إذن بقي 225 cm. الخطأ الشائع طرح 3 − 75 قبل التحويل، وهو غير ممكن.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "أيّ طولٍ أكبر: 1 km أم 950 m؟",
+      "options": [
+        { "id": "a", "text": "1 km" },
+        { "id": "b", "text": "950 m" },
+        { "id": "c", "text": "متساويان" },
+        { "id": "d", "text": "لا يمكن المقارنة" }
+      ],
+      "correctOption": "a",
+      "explanation": "نوحّد الوحدة: 1 km = 1 000 m. وبما أنّ 1 000 أكبر من 950، فإنّ 1 km أكبر من 950 m.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "قطع عدّاءٌ 2 km ثمّ 350 m. كم المسافة الكلّيّة بالمتر؟",
+      "options": [
+        { "id": "a", "text": "352 m" },
+        { "id": "b", "text": "250 m" },
+        { "id": "c", "text": "20 350 m" },
+        { "id": "d", "text": "2 350 m" }
+      ],
+      "correctOption": "d",
+      "explanation": "نحوّل أوّلًا: 2 km = 2 × 1 000 = 2 000 m. ثمّ نجمع: 2 000 + 350 = 2 350. إذن المسافة الكلّيّة 2 350 m.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "مربّعٌ طول ضلعه 25 cm. ما محيطه؟ (للمربّع 4 أضلاع متساوية)",
+      "options": [
+        { "id": "a", "text": "50 cm" },
+        { "id": "b", "text": "100 cm" },
+        { "id": "c", "text": "75 cm" },
+        { "id": "d", "text": "29 cm" }
+      ],
+      "correctOption": "b",
+      "explanation": "للمربّع 4 أضلاع متساوية، فمحيطه = 4 × طول الضلع: 4 × 25 = 100. إذن المحيط 100 cm.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "طولٌ يساوي 5 m و 8 cm. كم يساوي بالصنتيمترات؟ (الخطأ الشائع: 5 m = 50 cm)",
+      "options": [
+        { "id": "a", "text": "58 cm" },
+        { "id": "b", "text": "580 cm" },
+        { "id": "c", "text": "508 cm" },
+        { "id": "d", "text": "5 008 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "نحوّل الأمتار: 5 m = 5 × 100 = 500 cm. ثمّ نجمع: 500 + 8 = 508. إذن 5 m و 8 cm = 508 cm. الخطأ الشائع ضرب 5 في 10 بدل 100.",
+      "difficulty": 3
+    }
+  ]
+}

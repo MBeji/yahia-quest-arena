@@ -1,0 +1,154 @@
+{
+  "title": "⭐ Entraînement : la syntaxe expressive",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Que désigne la périphrase « la Ville Lumière » ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Paris."
+        },
+        {
+          "id": "b",
+          "text": "Lyon."
+        },
+        {
+          "id": "c",
+          "text": "Le soleil."
+        },
+        {
+          "id": "d",
+          "text": "Versailles."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "« La Ville Lumière » est la périphrase consacrée de Paris, en raison de son éclairage public précoce et de son rayonnement intellectuel. Elle ne désigne ni Lyon, ni Versailles, ni un astre.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel est le sens de « un homme pauvre » (adjectif postposé) ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Un homme à plaindre, malheureux."
+        },
+        {
+          "id": "b",
+          "text": "Un homme seul."
+        },
+        {
+          "id": "c",
+          "text": "Un homme médiocre."
+        },
+        {
+          "id": "d",
+          "text": "Un homme sans argent, démuni."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Postposé, « pauvre » garde son sens propre : sans argent, démuni. Le sens affectif « à plaindre » correspond à l'antéposition : un pauvre homme. Ne pas confondre ces deux valeurs est un point clé de C2.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans « « Je reviendrai », dit-elle », comment se nomme la construction « dit-elle » ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Une dislocation."
+        },
+        {
+          "id": "b",
+          "text": "Une ellipse."
+        },
+        {
+          "id": "c",
+          "text": "Une incise avec inversion du sujet."
+        },
+        {
+          "id": "d",
+          "text": "Une périphrase."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "« dit-elle » est une incise (proposition de discours rapporté insérée) où le sujet « elle » est inversé après le verbe « dit ». C'est l'inversion obligatoire dans les incises, et non une dislocation, une ellipse ni une périphrase.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle phrase est une phrase nominale (sans verbe conjugué) ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Le gouvernement est tombé."
+        },
+        {
+          "id": "b",
+          "text": "Le gouvernement va tomber."
+        },
+        {
+          "id": "c",
+          "text": "On annonce que le gouvernement tombe."
+        },
+        {
+          "id": "d",
+          "text": "Chute du gouvernement."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« Chute du gouvernement » ne contient aucun verbe conjugué : c'est une phrase nominale, typique des titres de presse pour leur concision frappante. Les trois autres phrases sont construites autour d'un verbe (est tombé, va tomber, annonce/tombe).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Que signifie « un grand homme » et « un homme grand » respectivement ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "De haute taille / illustre."
+        },
+        {
+          "id": "b",
+          "text": "Riche / pauvre."
+        },
+        {
+          "id": "c",
+          "text": "Vieux / jeune."
+        },
+        {
+          "id": "d",
+          "text": "Illustre / de haute taille."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« Un grand homme » (antéposé) = un homme illustre ; « un homme grand » (postposé) = un homme de haute taille. L'antéposition donne le sens figuré valorisant, la postposition le sens propre de mesure.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel proverbe repose sur une ellipse du verbe et un parallélisme ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "« Il ne faut jamais remettre au lendemain. »"
+        },
+        {
+          "id": "b",
+          "text": "« Qui veut voyager loin ménage sa monture. »"
+        },
+        {
+          "id": "c",
+          "text": "« Loin des yeux, loin du cœur. »"
+        },
+        {
+          "id": "d",
+          "text": "« On a souvent besoin d'un plus petit que soi. »"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "« Loin des yeux, loin du cœur » omet tout verbe (ellipse) et répète la même structure « loin de + nom » (parallélisme), d'où sa frappe mémorable. Les autres proverbes contiennent des verbes conjugués (faut, veut/ménage, a).",
+      "difficulty": 2
+    }
+  ]
+}

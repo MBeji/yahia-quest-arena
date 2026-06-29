@@ -45,7 +45,9 @@ then drills it.
 ## Multilingual workflow — native per language (no translation)
 
 Produce one sibling subject per language (id suffixed `-fr`/`-en`/`-ar`, `themeId: "muscle-cerveau"`,
-`contentLanguage` matching; `nameFr` always French with a `(FR)`/`(EN)`/`(AR)` suffix). **Generate
+`contentLanguage` matching; write each `nameFr` **in its own language** — e.g. "Muscle ton cerveau —
+Entraînement QI" / "Train Your Brain — IQ Workout" / "مرّن دماغك — تدريب الذكاء", with no language
+suffix). **Generate
 each language natively** — author the puzzles directly in that language rather than translating. This
 is essential here: word-play, anagrams, and mental-math phrasing only work when conceived natively.
 The siblings share the same cognitive skills and difficulty ladder, but each is authored fresh in its

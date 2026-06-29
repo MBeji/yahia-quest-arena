@@ -1,5 +1,4 @@
 import { Backpack, Lightbulb, Trophy } from "lucide-react";
-import { PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer } from "recharts";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { avatarEmojiForSlug } from "@/shared/lib/avatar";
 import { useT } from "@/lib/i18n";
@@ -33,6 +32,100 @@ type DashboardRadarInventoryProps = {
   onActivate: (itemCode: string) => void;
 };
 
+// --- Pure-SVG mastery radar (replaces the former recharts RadarChart, its only use) ---
+const RADAR_CENTER = 100;
+const RADAR_RADIUS = 60;
+const RADAR_RINGS = [0.25, 0.5, 0.75, 1];
+const RADAR_STROKE = "oklch(0.66 0.27 295)";
+const RADAR_GRID = "oklch(0.66 0.27 295 / 0.25)";
+
+/** Evenly-spaced angle (radians) for axis `i` of `n`, starting at the top (12 o'clock). */
+function radarAngle(i: number, n: number): number {
+  return -Math.PI / 2 + (i * 2 * Math.PI) / n;
+}
+
+/** A point at `radius`/`angle` from the radar centre, formatted for an SVG points list. */
+function radarPoint(radius: number, angle: number): string {
+  const x = RADAR_CENTER + radius * Math.cos(angle);
+  const y = RADAR_CENTER + radius * Math.sin(angle);
+  return `${x.toFixed(1)},${y.toFixed(1)}`;
+}
+
+/**
+ * Mastery radar drawn as plain SVG. Values are average scores per attribute on a fixed
+ * 0-100 domain, so a 50 reads as half-mastered (absolute, not relative to the peak).
+ */
+function RadarChartSvg({ data }: { data: RadarPoint[] }) {
+  const n = data.length;
+  if (n === 0) return null;
+  // Never clip: only stretch the domain past 100 if a value somehow exceeds it.
+  const domain = Math.max(100, ...data.map((d) => d.value));
+
+  return (
+    <svg
+      viewBox="0 0 200 200"
+      className="h-full w-full"
+      role="img"
+      aria-label={data.map((d) => `${d.subject}: ${d.value}`).join(", ")}
+    >
+      {RADAR_RINGS.map((ring) => (
+        <polygon
+          key={ring}
+          points={data.map((_, i) => radarPoint(RADAR_RADIUS * ring, radarAngle(i, n))).join(" ")}
+          fill="none"
+          stroke={RADAR_GRID}
+          strokeWidth={0.5}
+        />
+      ))}
+      {data.map((_, i) => {
+        const angle = radarAngle(i, n);
+        return (
+          <line
+            key={i}
+            x1={RADAR_CENTER}
+            y1={RADAR_CENTER}
+            x2={RADAR_CENTER + RADAR_RADIUS * Math.cos(angle)}
+            y2={RADAR_CENTER + RADAR_RADIUS * Math.sin(angle)}
+            stroke={RADAR_GRID}
+            strokeWidth={0.5}
+          />
+        );
+      })}
+      <polygon
+        points={data
+          .map((d, i) => {
+            const r = (Math.min(Math.max(d.value, 0), domain) / domain) * RADAR_RADIUS;
+            return radarPoint(r, radarAngle(i, n));
+          })
+          .join(" ")}
+        fill={RADAR_STROKE}
+        fillOpacity={0.4}
+        stroke={RADAR_STROKE}
+        strokeWidth={1.5}
+        strokeLinejoin="round"
+      />
+      {data.map((d, i) => {
+        const angle = radarAngle(i, n);
+        const cos = Math.cos(angle);
+        const anchor = cos > 0.3 ? "start" : cos < -0.3 ? "end" : "middle";
+        return (
+          <text
+            key={i}
+            x={(RADAR_CENTER + (RADAR_RADIUS + 13) * cos).toFixed(1)}
+            y={(RADAR_CENTER + (RADAR_RADIUS + 13) * Math.sin(angle)).toFixed(1)}
+            textAnchor={anchor}
+            dominantBaseline="middle"
+            fontSize={9}
+            fill="oklch(0.72 0.04 270)"
+          >
+            {d.subject}
+          </text>
+        );
+      })}
+    </svg>
+  );
+}
+
 export function DashboardRadarInventory({
   radarData,
   inventory,
@@ -54,22 +147,7 @@ export function DashboardRadarInventory({
       </h2>
       <div className="rounded-2xl border border-border/50 bg-card/60 p-4 backdrop-blur-md">
         <div className="h-72 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <RadarChart data={radarData}>
-              <PolarGrid stroke="oklch(0.66 0.27 295 / 0.25)" />
-              <PolarAngleAxis
-                dataKey="subject"
-                tick={{ fill: "oklch(0.72 0.04 270)", fontSize: 11 }}
-              />
-              <Radar
-                name="Mastery"
-                dataKey="value"
-                stroke="oklch(0.66 0.27 295)"
-                fill="oklch(0.66 0.27 295)"
-                fillOpacity={0.4}
-              />
-            </RadarChart>
-          </ResponsiveContainer>
+          <RadarChartSvg data={radarData} />
         </div>
         <p className="px-2 pb-2 text-center text-xs text-muted-foreground">
           {t.dashboard.radarCaption}

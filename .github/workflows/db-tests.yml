@@ -16,6 +16,12 @@ name: DB integration tests
 # runs in the nightly build (see nightly.yml) and on demand from the Actions tab.
 on:
   workflow_call:
+    inputs:
+      ref:
+        description: Git ref (branch/SHA) to test. Empty = the triggering ref (default).
+        type: string
+        required: false
+        default: ""
   workflow_dispatch:
 
 # Read-only: the job only needs the checkout.
@@ -38,6 +44,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          # Empty (the default) checks out the triggering ref, so existing callers
+          # (nightly.yml) are unaffected; the upgrade guard passes its branch here.
+          ref: ${{ inputs.ref }}
 
       - name: Install the Supabase CLI
         uses: supabase/setup-cli@v1

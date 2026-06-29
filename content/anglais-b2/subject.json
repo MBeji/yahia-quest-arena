@@ -1,0 +1,12 @@
+{
+  "id": "anglais-b2",
+  "nameFr": "English — Upper-Intermediate (B2)",
+  "description": "Master upper-intermediate English: the past perfect, the passive voice, reported speech, advanced conditionals, and gerunds vs infinitives. Upper-intermediate level (CEFR B2), building on A1, A2, and B1.",
+  "attribute": "Agilité",
+  "colorToken": "subject-english",
+  "icon": "Globe",
+  "displayOrder": 4,
+  "contentLanguage": "en",
+  "themeId": "anglais",
+  "gradeSlug": null
+}

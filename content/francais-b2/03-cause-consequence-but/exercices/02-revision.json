@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision : la cause, la conséquence et le but",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complète : « ___ il faisait beau, nous avons pique-niqué. » (cause mise en tête de phrase)",
+      "options": [
+        { "id": "a", "text": "Comme" },
+        { "id": "b", "text": "Car" },
+        { "id": "c", "text": "Donc" },
+        { "id": "d", "text": "Grâce à" }
+      ],
+      "correctOption": "a",
+      "explanation": "En tête de phrase, la cause s'introduit par « comme » : Comme il faisait beau… « Car » ne se place jamais en début de phrase ; « donc » marque la conséquence ; « grâce à » exige un nom.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Le projet a échoué ___ moyens financiers. » (cause = un manque)",
+      "options": [
+        { "id": "a", "text": "grâce à des" },
+        { "id": "b", "text": "parce que des" },
+        { "id": "c", "text": "faute de" },
+        { "id": "d", "text": "pour que des" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Faute de » + nom (sans article) exprime une cause par manque : faute de moyens. « Grâce à » serait positif, « parce que » exige un verbe conjugué, et « pour que » introduit un but au subjonctif.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Il a ___ couru qu'il est essoufflé. » (intensité portant sur le verbe)",
+      "options": [
+        { "id": "a", "text": "si" },
+        { "id": "b", "text": "tant" },
+        { "id": "c", "text": "tant de" },
+        { "id": "d", "text": "tellement de" }
+      ],
+      "correctOption": "b",
+      "explanation": "L'intensité porte sur le verbe « courir » → « tant » (ou « tellement ») + verbe + que : il a tant couru qu'il est essoufflé. « Si » s'emploie devant un adjectif/adverbe ; « tant de » et « tellement de » devant un nom.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase est CORRECTE ?",
+      "options": [
+        { "id": "a", "text": "Je l'aide afin qu'il finir à temps." },
+        { "id": "b", "text": "Je l'aide afin qu'il finit à temps." },
+        { "id": "c", "text": "Je l'aide afin qu'il finisse à temps." },
+        { "id": "d", "text": "Je l'aide afin qu'il finira à temps." }
+      ],
+      "correctOption": "c",
+      "explanation": "« Afin que » + subjonctif : afin qu'il finisse. La forme (a) garde l'infinitif, (b) l'indicatif présent (finit), (d) le futur (finira) — tous interdits après « afin que », qui impose le subjonctif.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « ___ l'embouteillage, j'ai raté mon train. » (cause négative + nom)",
+      "options": [
+        { "id": "a", "text": "Grâce à" },
+        { "id": "b", "text": "Parce que" },
+        { "id": "c", "text": "Si bien que" },
+        { "id": "d", "text": "À cause de" }
+      ],
+      "correctOption": "d",
+      "explanation": "Résultat fâcheux + nom → « à cause de » : à cause de l'embouteillage. « Grâce à » serait positif (contresens ici), « parce que » exige un verbe, et « si bien que » introduit une conséquence.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Range ta chambre ___ pouvoir inviter tes amis. » (même sujet)",
+      "options": [
+        { "id": "a", "text": "de manière à" },
+        { "id": "b", "text": "de manière à ce que" },
+        { "id": "c", "text": "pour que" },
+        { "id": "d", "text": "afin que" }
+      ],
+      "correctOption": "a",
+      "explanation": "Même sujet (tu ranges / tu pourras inviter) → « de manière à » + infinitif : de manière à pouvoir inviter. « Pour que », « afin que » et « de manière à ce que » introduisent un subjonctif et supposent deux sujets différents.",
+      "difficulty": 2
+    }
+  ]
+}

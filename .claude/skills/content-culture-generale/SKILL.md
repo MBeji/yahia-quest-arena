@@ -31,8 +31,10 @@ is single-language per subject, that means **three sibling subjects** under the 
 
 1. Produce one sibling subject per requested language, suffixing the id by language, all
    `themeId: "culture-generale"`, `gradeSlug: null`: `culture-generale-<topic>-fr`
-   (`contentLanguage: "fr"`), `-en` (`"en"`), `-ar` (`"ar"`). `nameFr` is always French — add a
-   `(FR)`/`(EN)`/`(AR)` suffix to disambiguate the catalogue.
+   (`contentLanguage: "fr"`), `-en` (`"en"`), `-ar` (`"ar"`). Write each sibling's `nameFr` **in its
+   own language** — `-fr` a French name, `-en` an English name, `-ar` an Arabic name (e.g. "Culture
+   générale — Histoire" / "General Knowledge — History" / "الثقافة العامة — التاريخ"). No
+   `(FR)`/`(EN)`/`(AR)` suffix — the different words/scripts already disambiguate the catalogue.
 2. **Generate each language NATIVELY and independently** — author the content directly in that
    language (web-sourced, native phrasing, culturally idiomatic examples). **Do not translate** a base
    language; native generation reads more fluidly. The siblings share the same topic, scope, and

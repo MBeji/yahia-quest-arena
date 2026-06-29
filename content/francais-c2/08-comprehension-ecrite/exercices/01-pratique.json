@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Entraînement : implicite, ton et énonciation",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Lisez l'extrait :\n« Il a encore manqué le rendez-vous. »\n\nQue présuppose l'adverbe « encore » ?",
+      "options": [
+        { "id": "a", "text": "Qu'il avait déjà manqué un rendez-vous auparavant." },
+        { "id": "b", "text": "Qu'il viendra sûrement la prochaine fois." },
+        { "id": "c", "text": "Que le rendez-vous était sans importance." },
+        { "id": "d", "text": "Qu'il était en avance ce jour-là." }
+      ],
+      "correctOption": "a",
+      "explanation": "« Encore » présuppose la répétition d'un fait antérieur : il a déjà manqué un rendez-vous. Ce présupposé subsiste même si l'on nie la phrase. Les options b, c et d ajoutent des informations absentes du texte.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« On nous répète que tout va mieux. »\n\nÀ qui l'auteur attribue-t-il l'affirmation « tout va mieux » ?",
+      "options": [
+        { "id": "a", "text": "À lui-même, qu'il assume pleinement." },
+        { "id": "b", "text": "À une voix extérieure qu'il rapporte et met à distance." },
+        { "id": "c", "text": "À un témoin précis dont il cite le nom." },
+        { "id": "d", "text": "À personne : c'est une simple description du monde." }
+      ],
+      "correctOption": "b",
+      "explanation": "Le tour « on nous répète que… » signale un discours rapporté, attribué à une voix collective dont l'auteur se distancie. Il ne l'endosse pas (a), ne cite aucun nom (c) et ne décrit pas un fait avéré (d).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« La cérémonie fut, paraît-il, d'une sobriété exemplaire — du moins pour ceux qui n'avaient pas vu la facture. »\n\nQuel est le ton de cette phrase ?",
+      "options": [
+        { "id": "a", "text": "Élogieux et sincère envers la sobriété de la cérémonie." },
+        { "id": "b", "text": "Strictement informatif et sans jugement." },
+        { "id": "c", "text": "Ironique : la chute contredit l'éloge de sobriété." },
+        { "id": "d", "text": "Inquiet quant à la santé des organisateurs." }
+      ],
+      "correctOption": "c",
+      "explanation": "L'incise finale (« pour ceux qui n'avaient pas vu la facture ») dément l'idée de sobriété : l'éloge est ironique. Le ton n'est ni sincère (a), ni neutre (b), et n'a aucun rapport avec la santé (d).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« La mesure aurait, selon ses détracteurs, aggravé la situation. »\n\nQue marque l'emploi du conditionnel « aurait aggravé » ?",
+      "options": [
+        { "id": "a", "text": "Que l'auteur tient l'aggravation pour un fait certain." },
+        { "id": "b", "text": "Que l'aggravation se produira dans le futur." },
+        { "id": "c", "text": "Une donnée rapportée que l'auteur n'assume pas comme vraie." },
+        { "id": "d", "text": "Une politesse de l'auteur envers les détracteurs." }
+      ],
+      "correctOption": "c",
+      "explanation": "Le conditionnel d'information, renforcé par « selon ses détracteurs », signale une donnée non assumée : l'auteur la rapporte sans la valider. Ce n'est donc ni un fait certain (a), ni un futur (b), ni une marque de politesse (d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Sa pugnacité — ce refus obstiné de jamais céder — finit par lasser ses propres alliés. »\n\nQue signifie « pugnacité » dans ce contexte ?",
+      "options": [
+        { "id": "a", "text": "Une grande générosité envers les autres." },
+        { "id": "b", "text": "Une combativité tenace, un acharnement à ne pas céder." },
+        { "id": "c", "text": "Une timidité qui le pousse à se retirer." },
+        { "id": "d", "text": "Une indifférence aux conflits." }
+      ],
+      "correctOption": "b",
+      "explanation": "L'apposition « ce refus obstiné de jamais céder » reformule et éclaire le mot : la pugnacité est une combativité tenace. Le contexte exclut la générosité (a), la timidité (c) et l'indifférence (d), opposées à l'idée de refus obstiné.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Cette vitrine du progrès cachait mal, derrière ses néons, des ateliers d'un autre âge. »\n\nComment faut-il comprendre « vitrine du progrès » ?",
+      "options": [
+        { "id": "a", "text": "Une boutique réelle où l'on vend des objets modernes." },
+        { "id": "b", "text": "Une façade flatteuse masquant une réalité bien moins reluisante." },
+        { "id": "c", "text": "Un musée consacré à l'histoire des techniques." },
+        { "id": "d", "text": "Une fenêtre donnant sur un atelier ancien." }
+      ],
+      "correctOption": "b",
+      "explanation": "Le sens littéral (magasin) est exclu par « cachait mal… des ateliers d'un autre âge » : « vitrine du progrès » est une métaphore désignant une façade trompeuse. Les lectures littérales a, c et d prennent l'image au pied de la lettre.",
+      "difficulty": 3
+    }
+  ]
+}

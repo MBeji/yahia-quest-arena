@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "prompt": "Fill in the gap: 'By the time she arrived, he ___ already left.'",
+      "options": [
+        { "id": "a", "text": "has" },
+        { "id": "b", "text": "was" },
+        { "id": "c", "text": "have" },
+        { "id": "d", "text": "had" }
+      ],
+      "correctOption": "d",
+      "explanation": "The past perfect is formed with 'had + past participle'. 'By the time' signals that one past action (leaving) happened before another (arriving). 'Has' and 'have' are present perfect forms; 'was' is the past simple of 'be'.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which combination of words correctly forms the past perfect?",
+      "options": [
+        { "id": "a", "text": "was + past participle" },
+        { "id": "b", "text": "had + past participle" },
+        { "id": "c", "text": "have + past participle" },
+        { "id": "d", "text": "did + base verb" }
+      ],
+      "correctOption": "b",
+      "explanation": "'Had + past participle' is the only correct form of the past perfect for all subjects. 'Was + past participle' forms the passive; 'have + past participle' is the present perfect; 'did + base verb' is used for past simple questions and negatives.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Fill in the gap: 'They ___ been waiting for an hour before the bus came.'",
+      "options": [
+        { "id": "a", "text": "had" },
+        { "id": "b", "text": "have" },
+        { "id": "c", "text": "was" },
+        { "id": "d", "text": "were" }
+      ],
+      "correctOption": "a",
+      "explanation": "The past perfect continuous is formed with 'had + been + verb-ing'. 'Had been waiting' shows that the waiting was ongoing over a period of time before another past event (the bus arriving). 'Have' is present; 'was/were' are past simple forms of 'be'.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which sentence most clearly benefits from the past perfect (rather than two past simples)?",
+      "options": [
+        { "id": "a", "text": "I woke up and then I had a shower." },
+        { "id": "b", "text": "She cooked dinner and then she ate it." },
+        { "id": "c", "text": "He was tired because he had worked all night." },
+        { "id": "d", "text": "They arrived and then they left immediately." }
+      ],
+      "correctOption": "c",
+      "explanation": "Without 'had worked', the sentence would read 'he was tired because he worked all night', which could imply simultaneous actions. The past perfect 'had worked' clearly shows the working happened first and caused the tiredness. In options A, B, and D, the sequence is already obvious from context or 'and then'.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT use of the past perfect in the following sentences.",
+      "options": [
+        { "id": "a", "text": "When I got there, everyone had already eaten." },
+        { "id": "b", "text": "She had never visited Rome before that holiday." },
+        { "id": "c", "text": "I had eaten pizza last night." },
+        { "id": "d", "text": "After he had finished the report, he went home." }
+      ],
+      "correctOption": "c",
+      "explanation": "'I had eaten pizza last night' is incorrect because 'last night' is a finished time reference with no other past event to connect to — the past simple 'I ate pizza last night' is correct here. The past perfect requires a reference point in the past (another past event or time marker like 'by the time / when / before / after'). Options A, B, and D all correctly link the past perfect to another past anchor.",
+      "difficulty": 2
+    }
+  ]
+}

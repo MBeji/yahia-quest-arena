@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: أين الشيء؟",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "أين توجد النجمة بالنسبة إلى الصندوق؟ <svg viewBox=\"0 0 110 120\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"33\" y=\"20\" width=\"44\" height=\"32\" stroke=\"#1f2937\" stroke-width=\"2\" fill=\"#e5e7eb\"/><polygon points=\"55,72 61,86 75,86 64,95 68,108 55,100 42,108 46,95 35,86 49,86\" stroke=\"#1f2937\" stroke-width=\"2\" fill=\"#e5e7eb\"/></svg>",
+      "options": [
+        { "id": "a", "text": "فوق الصندوق" },
+        { "id": "b", "text": "تحت الصندوق" },
+        { "id": "c", "text": "داخل الصندوق" },
+        { "id": "d", "text": "يمين الصندوق" }
+      ],
+      "correctOption": "b",
+      "explanation": "في الصورة النجمة في الأسفل والصندوق في الأعلى، فالنجمة تحت الصندوق.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أيّ شكلٍ على اليمين؟ <svg viewBox=\"0 0 160 70\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"35\" cy=\"38\" r=\"14\" stroke=\"#1f2937\" stroke-width=\"2\" fill=\"#e5e7eb\"/><rect x=\"108\" y=\"24\" width=\"30\" height=\"30\" stroke=\"#1f2937\" stroke-width=\"2\" fill=\"#e5e7eb\"/></svg>",
+      "options": [
+        { "id": "a", "text": "الدائرة" },
+        { "id": "b", "text": "لا يوجد شكل" },
+        { "id": "c", "text": "المربّع" },
+        { "id": "d", "text": "الاثنان معًا" }
+      ],
+      "correctOption": "c",
+      "explanation": "اليمين هو الجهة المقابلة لليسار. في الصورة المربّع على اليمين والدائرة على اليسار.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أين توجد السمكة بالنسبة إلى الحوض؟ <svg viewBox=\"0 0 110 90\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"22\" y=\"20\" width=\"66\" height=\"52\" stroke=\"#1f2937\" stroke-width=\"2\" fill=\"none\"/><g stroke=\"#1f2937\" stroke-width=\"2\" fill=\"#9ca3af\"><path d=\"M40 46 q14 -12 30 0 q-14 12 -30 0 z\"/><polygon points=\"40,46 30,38 30,54\"/></g></svg>",
+      "options": [
+        { "id": "a", "text": "داخل الحوض" },
+        { "id": "b", "text": "خارج الحوض" },
+        { "id": "c", "text": "فوق الحوض" },
+        { "id": "d", "text": "خلف الحوض" }
+      ],
+      "correctOption": "a",
+      "explanation": "السمكة محاطة بجوانب الحوض من كلّ جهة، فهي داخل الحوض.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أيّ شجرةٍ قريبةٌ من المنزل؟ <svg viewBox=\"0 0 200 80\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"10\" y1=\"66\" x2=\"195\" y2=\"66\" stroke=\"#1f2937\" stroke-width=\"2\"/><rect x=\"24\" y=\"38\" width=\"30\" height=\"28\" stroke=\"#1f2937\" stroke-width=\"2\" fill=\"#e5e7eb\"/><polygon points=\"39,20 56,38 22,38\" stroke=\"#1f2937\" stroke-width=\"2\" fill=\"#e5e7eb\"/><g stroke=\"#1f2937\" stroke-width=\"2\"><line x1=\"72\" y1=\"66\" x2=\"72\" y2=\"46\"/><circle cx=\"72\" cy=\"40\" r=\"8\" fill=\"#9ca3af\"/></g><g stroke=\"#1f2937\" stroke-width=\"2\"><line x1=\"178\" y1=\"66\" x2=\"178\" y2=\"46\"/><circle cx=\"178\" cy=\"40\" r=\"8\" fill=\"#9ca3af\"/></g></svg>",
+      "options": [
+        { "id": "a", "text": "الشجرة البعيدة على اليمين" },
+        { "id": "b", "text": "لا توجد شجرة قريبة" },
+        { "id": "c", "text": "الشجرتان قريبتان" },
+        { "id": "d", "text": "الشجرة الملاصقة للمنزل" }
+      ],
+      "correctOption": "d",
+      "explanation": "الشجرة الملاصقة للمنزل قريبة منه، أمّا الشجرة الأخرى فبعيدة على الجهة الأخرى.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أين توجد الدائرة بالنسبة إلى المربّع الكبير؟ <svg viewBox=\"0 0 140 90\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"55\" y=\"14\" width=\"46\" height=\"46\" stroke=\"#1f2937\" stroke-width=\"2\" fill=\"#e5e7eb\"/><circle cx=\"46\" cy=\"58\" r=\"24\" stroke=\"#1f2937\" stroke-width=\"2\" fill=\"#9ca3af\"/></svg>",
+      "options": [
+        { "id": "a", "text": "داخل المربّع" },
+        { "id": "b", "text": "أمام المربّع (تغطّي جزءًا منه)" },
+        { "id": "c", "text": "تحت المربّع تمامًا" },
+        { "id": "d", "text": "بعيدة عن المربّع" }
+      ],
+      "correctOption": "b",
+      "explanation": "الدائرة تغطّي جزءًا من المربّع، فهي أمامه. ما يغطّي غيره يكون في الأمام.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ قلمٍ أقصر؟ <svg viewBox=\"0 0 140 90\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"30\" y=\"42\" width=\"90\" height=\"12\" stroke=\"#1f2937\" stroke-width=\"2\" fill=\"#e5e7eb\"/><rect x=\"30\" y=\"66\" width=\"42\" height=\"12\" stroke=\"#1f2937\" stroke-width=\"2\" fill=\"#e5e7eb\"/></svg>",
+      "options": [
+        { "id": "a", "text": "القلم الطويل في الأعلى" },
+        { "id": "b", "text": "هما متساويان" },
+        { "id": "c", "text": "القلم القصير في الأسفل" },
+        { "id": "d", "text": "لا يوجد قلم" }
+      ],
+      "correctOption": "c",
+      "explanation": "القلم في الأسفل أقصر لأنّه أقلّ طولًا من القلم الذي في الأعلى.",
+      "difficulty": 2
+    }
+  ]
+}

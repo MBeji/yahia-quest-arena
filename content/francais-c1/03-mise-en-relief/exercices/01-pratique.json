@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Entraînement : la mise en relief",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complète pour mettre en relief le sujet : « ___ Léa qui a trouvé la solution. »",
+      "options": [
+        { "id": "a", "text": "C'est" },
+        { "id": "b", "text": "Ce qui" },
+        { "id": "c", "text": "Ce dont" },
+        { "id": "d", "text": "C'est que" }
+      ],
+      "correctOption": "a",
+      "explanation": "Pour mettre le sujet en relief, on utilise « c'est … qui » : C'est Léa qui a trouvé la solution. « Ce qui » et « ce dont » servent aux tournures « ce … c'est » ; « c'est que » n'introduit pas un nom isolé.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « C'est ce livre ___ je cherchais depuis longtemps. »",
+      "options": [
+        { "id": "a", "text": "qui" },
+        { "id": "b", "text": "que" },
+        { "id": "c", "text": "dont" },
+        { "id": "d", "text": "où" }
+      ],
+      "correctOption": "b",
+      "explanation": "« ce livre » est le COD de « chercher » (je cherchais quoi ?). On met un COD en relief avec « c'est … que » : C'est ce livre que je cherchais. « qui » est réservé au sujet ; « dont » à un complément en « de » ; « où » au lieu ou au temps.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choisis la tournure correcte pour mettre en relief « la musique » (sujet de « intéresser ») :",
+      "options": [
+        { "id": "a", "text": "Ce que m'intéresse, c'est la musique." },
+        { "id": "b", "text": "Ce dont m'intéresse, c'est la musique." },
+        { "id": "c", "text": "Ce qui m'intéresse, c'est la musique." },
+        { "id": "d", "text": "C'est la musique qu'intéresse." }
+      ],
+      "correctOption": "c",
+      "explanation": "« intéresser » a un sujet (qu'est-ce qui m'intéresse ?). On emploie donc « ce qui … c'est » : Ce qui m'intéresse, c'est la musique. « ce que » s'utiliserait pour un COD, « ce dont » pour un verbe en « de ».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle phrase met correctement en relief le complément de temps « demain » ?",
+      "options": [
+        { "id": "a", "text": "C'est demain qui ça commence." },
+        { "id": "b", "text": "C'est demain que ça commence." },
+        { "id": "c", "text": "Ce qui demain ça commence." },
+        { "id": "d", "text": "C'est demain dont ça commence." }
+      ],
+      "correctOption": "b",
+      "explanation": "Un complément de temps se met en relief avec « c'est … que » : C'est demain que ça commence. « qui » est réservé au sujet ; « dont » à un complément en « de » ; la forme (c) est agrammaticale.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète l'accord : « C'est nous qui ___ gagné le tournoi. »",
+      "options": [
+        { "id": "a", "text": "avons" },
+        { "id": "b", "text": "ont" },
+        { "id": "c", "text": "avez" },
+        { "id": "d", "text": "a" }
+      ],
+      "correctOption": "a",
+      "explanation": "Après « c'est nous qui », le verbe s'accorde avec « nous » (1ʳᵉ personne du pluriel) : C'est nous qui avons gagné. « ont » (3ᵉ pers.) est le piège classique ; « avez » est la 2ᵉ pers. ; « a » le singulier.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans la dislocation « Ce film, je ___ ai adoré », quel pronom reprend « ce film » (COD) ?",
+      "options": [
+        { "id": "a", "text": "lui" },
+        { "id": "b", "text": "y" },
+        { "id": "c", "text": "en" },
+        { "id": "d", "text": "l'" }
+      ],
+      "correctOption": "d",
+      "explanation": "« ce film » est le COD de « adorer » ; un COD se reprend par « le/la/les » (ici « l' » devant voyelle) : Ce film, je l'ai adoré. « lui » reprend un COI (à qqn), « en » un complément en « de », « y » un complément en « à »/un lieu.",
+      "difficulty": 2
+    }
+  ]
+}

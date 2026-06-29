@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة (نمط امتحان): الأطوال والزمن",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "أكمل: 1 m = … cm",
+      "options": [
+        { "id": "a", "text": "10 cm" },
+        { "id": "b", "text": "100 cm" },
+        { "id": "c", "text": "1000 cm" },
+        { "id": "d", "text": "1 cm" }
+      ],
+      "correctOption": "b",
+      "explanation": "العلاقة الأساسيّة هي 1 m = 100 cm. فنملأ الفراغ بـ 100 cm.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما اليوم الأوّل في الأسبوع حسب الترتيب: السبت، الأحد، الاثنين…؟",
+      "options": [
+        { "id": "a", "text": "السبت" },
+        { "id": "b", "text": "الأحد" },
+        { "id": "c", "text": "الاثنين" },
+        { "id": "d", "text": "الجمعة" }
+      ],
+      "correctOption": "a",
+      "explanation": "نرتّب الأيّام: السبت ثمّ الأحد ثمّ الاثنين… إذن اليوم الأوّل هو السبت.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم صنتيمترًا يساوي 5 m؟",
+      "options": [
+        { "id": "a", "text": "50 cm" },
+        { "id": "b", "text": "105 cm" },
+        { "id": "c", "text": "500 cm" },
+        { "id": "d", "text": "5000 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "نضرب عدد الأمتار في 100: 5 × 100 = 500. إذن 5 m = 500 cm.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "العقرب الكبير على 12 والعقرب الصغير على 9. كم الساعة؟",
+      "options": [
+        { "id": "a", "text": "الساعة 6" },
+        { "id": "b", "text": "الساعة 9 والنصف" },
+        { "id": "c", "text": "الساعة 9" },
+        { "id": "d", "text": "الساعة 12" }
+      ],
+      "correctOption": "c",
+      "explanation": "العقرب الكبير على 12 يعني ساعةً كاملة، والصغير على 9، فالوقت الساعة 9.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ طولٍ أقصر: 80 cm أم 60 cm؟",
+      "options": [
+        { "id": "a", "text": "80 cm" },
+        { "id": "b", "text": "60 cm" },
+        { "id": "c", "text": "متساويان" },
+        { "id": "d", "text": "140 cm" }
+      ],
+      "correctOption": "b",
+      "explanation": "الطولان بنفس الوحدة (cm)، ونقارن العددين: 60 أصغر من 80، فالطول 60 cm أقصر.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم مترًا يساوي 200 cm؟",
+      "options": [
+        { "id": "a", "text": "2 m" },
+        { "id": "b", "text": "12 m" },
+        { "id": "c", "text": "20 m" },
+        { "id": "d", "text": "200 m" }
+      ],
+      "correctOption": "a",
+      "explanation": "نقسم على 100 للتحويل من cm إلى m: 200 ÷ 100 = 2. إذن 200 cm = 2 m.",
+      "difficulty": 2
+    }
+  ]
+}

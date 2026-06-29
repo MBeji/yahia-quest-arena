@@ -1,4 +1,4 @@
-# Architecture — XP Scholars (yahia-quest-arena)
+# Architecture — Na9ra Nal3ab (yahia-quest-arena)
 
 > **Purpose**: Single source of truth for any AI or developer working on this codebase.
 > Read this file first before making any change.

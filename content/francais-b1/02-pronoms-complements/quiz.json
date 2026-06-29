@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Complète : « Tu vois Marie souvent ? — Oui, je ___ vois tous les jours. »",
+      "options": [
+        { "id": "a", "text": "lui" },
+        { "id": "b", "text": "la" },
+        { "id": "c", "text": "y" },
+        { "id": "d", "text": "en" }
+      ],
+      "correctOption": "b",
+      "explanation": "« voir quelqu'un » est un complément direct (COD) : on remplace « Marie » par « la ». Je la vois. « lui » serait un COI (à qqn), « y » remplace à + chose ou un lieu, et « en » remplace de + chose.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Tu parles à tes parents ? — Oui, je ___ parle souvent. »",
+      "options": [
+        { "id": "a", "text": "les" },
+        { "id": "b", "text": "y" },
+        { "id": "c", "text": "leur" },
+        { "id": "d", "text": "en" }
+      ],
+      "correctOption": "c",
+      "explanation": "« parler à quelqu'un » est un COI : avec « à + personne » au pluriel, on emploie « leur ». Je leur parle. « les » serait un COD, et « y » ne remplace jamais une personne.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Tu vas à la bibliothèque ? — Oui, j'___ vais maintenant. »",
+      "options": [
+        { "id": "a", "text": "y" },
+        { "id": "b", "text": "en" },
+        { "id": "c", "text": "la" },
+        { "id": "d", "text": "lui" }
+      ],
+      "correctOption": "a",
+      "explanation": "« y » remplace un complément de lieu introduit par « à » : à la bibliothèque → j'y vais. « en » remplace « de + chose », « la » est un COD et « lui » un COI.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Tu as combien de frères ? — J'___ ai deux. »",
+      "options": [
+        { "id": "a", "text": "les" },
+        { "id": "b", "text": "y" },
+        { "id": "c", "text": "leur" },
+        { "id": "d", "text": "en" }
+      ],
+      "correctOption": "d",
+      "explanation": "Avec une quantité, on emploie « en » et on garde le nombre : J'en ai deux. On ne dit pas « j'ai deux » seul. « les » serait un COD défini, « y » remplace à + chose et « leur » est un COI.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Où se place le pronom ? « Je vais ___ ce soir. » (appeler Paul → l')",
+      "options": [
+        { "id": "a", "text": "l'appeler" },
+        { "id": "b", "text": "appeler l'" },
+        { "id": "c", "text": "le appeler" },
+        { "id": "d", "text": "appeler-le" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le pronom se place devant l'infinitif dont il dépend : Je vais l'appeler. On élide « le » en « l' » devant la voyelle. « appeler l' » et « appeler-le » placent mal le pronom, et « le appeler » oublie l'élision.",
+      "difficulty": 2
+    }
+  ]
+}

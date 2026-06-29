@@ -1,0 +1,85 @@
+{
+  "title": "⭐ Practice: Idiom Meanings",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "What does \"bite the bullet\" mean?",
+      "options": [
+        { "id": "a", "text": "Endure a painful or difficult situation bravely." },
+        { "id": "b", "text": "Make a reckless decision." },
+        { "id": "c", "text": "Eat something unpleasant." },
+        { "id": "d", "text": "Start an argument." }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Bite the bullet\" means to accept and endure an unpleasant situation with courage rather than trying to avoid it. It comes from old surgical practice and has nothing to do with eating, decisions, or arguments.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "What does \"turn over a new leaf\" mean?",
+      "options": [
+        { "id": "a", "text": "Find a new job." },
+        { "id": "b", "text": "Move to the countryside." },
+        { "id": "c", "text": "Begin reading a book." },
+        { "id": "d", "text": "Start behaving in a better or more responsible way." }
+      ],
+      "correctOption": "d",
+      "explanation": "\"Turn over a new leaf\" means to change your behaviour for the better — to make a fresh start. \"Leaf\" here refers to a page (a historical meaning), not a plant leaf. It has nothing to do with jobs, the countryside, or reading.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"We only see them ___ — maybe once a year at Christmas.\"",
+      "options": [
+        { "id": "a", "text": "at the drop of a hat" },
+        { "id": "b", "text": "once in a blue moon" },
+        { "id": "c", "text": "on the fence" },
+        { "id": "d", "text": "under the weather" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Once in a blue moon\" means very rarely — fitting perfectly with \"maybe once a year\". \"At the drop of a hat\" means immediately; \"on the fence\" means undecided; \"under the weather\" means feeling slightly ill. None of these express rarity.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Identify which sentence uses an idiom CORRECTLY.",
+      "options": [
+        { "id": "a", "text": "She let the cats out of the bags by mentioning the surprise." },
+        { "id": "b", "text": "He let the cat out of the bag when he mentioned the surprise." },
+        { "id": "c", "text": "They let the cat out of the bags before the party." },
+        { "id": "d", "text": "I let out the cat from the bag accidentally." }
+      ],
+      "correctOption": "b",
+      "explanation": "The fixed form of this idiom is \"let the cat out of the bag\" — always singular (the cat, the bag). (a) uses wrong plurals (cats, bags); (c) has the wrong plural (bags); (d) rearranges the fixed structure incorrectly. Only (b) uses the exact form.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "What does \"break the ice\" mean?",
+      "options": [
+        { "id": "a", "text": "Destroy something valuable." },
+        { "id": "b", "text": "End a friendship." },
+        {
+          "id": "c",
+          "text": "Make people feel relaxed and comfortable at the start of a social situation."
+        },
+        { "id": "d", "text": "Begin an argument aggressively." }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Break the ice\" means to do or say something that reduces awkwardness and helps people feel at ease when meeting for the first time or starting an event. The other options are invented negative meanings that do not match this idiom.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choose the figurative meaning of: \"They flooded us with complaints after the announcement.\"",
+      "options": [
+        { "id": "a", "text": "Water entered their offices." },
+        { "id": "b", "text": "Customers came to their offices in person." },
+        { "id": "c", "text": "They received a very large number of complaints." },
+        { "id": "d", "text": "They were unprepared for the announcement." }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Flooded\" is used metaphorically here: just as a flood overwhelms a space with water, the company was overwhelmed with a very large number of complaints. This is lexical metaphor — the verb takes on a transferred, figurative sense. The other options are literal or unrelated readings.",
+      "difficulty": 2
+    }
+  ]
+}

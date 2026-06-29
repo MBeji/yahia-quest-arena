@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill: Future (going to & will)",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complete: \"Look at those two players — they ___ score any minute now!\" (evidence from what you see)",
+      "options": [
+        { "id": "a", "text": "will to" },
+        { "id": "b", "text": "are going to" },
+        { "id": "c", "text": "is going to" },
+        { "id": "d", "text": "going to" }
+      ],
+      "correctOption": "b",
+      "explanation": "A prediction based on visible evidence uses be going to: they are going to score. Will to is never correct — will never takes to. Is going to uses the singular be, wrong for they. Going to alone drops the required be (are).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"A: These bags are very heavy! B: Don't worry, I ___ carry them for you.\" (deciding now)",
+      "options": [
+        { "id": "a", "text": "am going to" },
+        { "id": "b", "text": "will to" },
+        { "id": "c", "text": "going to carry" },
+        { "id": "d", "text": "will" }
+      ],
+      "correctOption": "d",
+      "explanation": "An offer or decision made at the moment of speaking uses will + base verb: I will carry them. Am going to suggests a pre-made plan, not a spontaneous offer. Will to adds an incorrect to after will. Going to carry is missing the required be (am).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"___ you going to call her, or should I?\"",
+      "options": [
+        { "id": "a", "text": "Is" },
+        { "id": "b", "text": "Will" },
+        { "id": "c", "text": "Are" },
+        { "id": "d", "text": "Do" }
+      ],
+      "correctOption": "c",
+      "explanation": "A going-to question inverts the verb be with the subject. With you, the form of be is Are: Are you going to call? Is is for he/she/it, not you. Will would start a different structure (Will you call?). Do is the helper for present simple — it does not go with going to.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "They are going to open a new café next month." },
+        { "id": "b", "text": "I think she will pass the exam." },
+        { "id": "c", "text": "He will going to travel to London next week." },
+        { "id": "d", "text": "We won't be there on time." }
+      ],
+      "correctOption": "c",
+      "explanation": "The error is in the third sentence: will and going to cannot be stacked together. Say either he is going to travel or he will travel. The first sentence correctly uses going to for a plan. The second uses will for an opinion prediction. The fourth correctly uses the negative won't.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"I've already chosen my university course. I ___ study computer science.\"",
+      "options": [
+        { "id": "a", "text": "will" },
+        { "id": "b", "text": "am going to" },
+        { "id": "c", "text": "going to" },
+        { "id": "d", "text": "will to" }
+      ],
+      "correctOption": "b",
+      "explanation": "A plan already decided before the moment of speaking uses be going to: I am going to study. The phrase I've already chosen confirms a pre-made decision. Will would suggest a decision made right now, not an earlier one. Going to alone is missing the be (am). Will to adds an incorrect to.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choose the fully correct sentence.",
+      "options": [
+        { "id": "a", "text": "Will you to help me move this furniture?" },
+        { "id": "b", "text": "Are you going help me move this furniture?" },
+        { "id": "c", "text": "Will you help me move this furniture?" },
+        { "id": "d", "text": "Are you will to help me move this furniture?" }
+      ],
+      "correctOption": "c",
+      "explanation": "A will question is Will + subject + base verb: Will you help? The first option adds a wrong to after will. The second is a going-to question missing to (should be going to help). The fourth mixes are and will, which cannot go together.",
+      "difficulty": 3
+    }
+  ]
+}

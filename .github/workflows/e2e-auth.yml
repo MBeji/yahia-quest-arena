@@ -15,6 +15,20 @@ name: E2E (authenticated)
 
 on:
   workflow_call:
+    inputs:
+      ref:
+        description: Git ref (branch/SHA) to test. Empty = the triggering ref (default).
+        type: string
+        required: false
+        default: ""
+    outputs:
+      ran:
+        description: >-
+          "true" when the authed suite actually executed (test secrets present),
+          "false" when it gracefully skipped. Callers that gate on real coverage
+          (e.g. the upgrade guard's auto-merge) must require this, since a
+          graceful skip still reports the job result as success.
+        value: ${{ jobs.e2e-auth.outputs.ran }}
   workflow_dispatch:
 
 concurrency:
@@ -25,9 +39,15 @@ jobs:
   e2e-auth:
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    outputs:
+      ran: ${{ steps.guard.outputs.configured }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          # Empty (the default) checks out the triggering ref, so existing callers
+          # (nightly.yml) are unaffected; the upgrade guard passes its branch here.
+          ref: ${{ inputs.ref }}
 
       - name: Check test secrets are configured
         id: guard
@@ -122,7 +142,7 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.TEST_SUPABASE_SERVICE_ROLE_KEY }}
         run: node scripts/e2e/reset-gameplay.mjs
 
-      - name: Run authenticated E2E
+      - name: Run E2E (public-anon journeys + authenticated)
         if: steps.guard.outputs.configured == 'true'
         env:
           CI: "true"
@@ -134,7 +154,12 @@ jobs:
           # SPEC runtime too — locally .env.test provides it; CI must as well.
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.TEST_SUPABASE_SERVICE_ROLE_KEY }}
           E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}
-        run: npm run test:e2e:auth
+        # One Playwright run (one dev server, one HTML report) covering BOTH the
+        # logged-out public content journeys (public-anon) and the authenticated
+        # journeys — both need the real TEST backend (anon reads + seeded users).
+        # `setup` (login) runs automatically as authed-chromium's dependency;
+        # public-anon-chromium has no dependency and no storageState (stays anon).
+        run: npx playwright test --project=public-anon-chromium --project=authed-chromium
 
       - name: Upload Playwright report
         if: ${{ steps.guard.outputs.configured == 'true' && !cancelled() }}

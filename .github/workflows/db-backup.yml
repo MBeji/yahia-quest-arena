@@ -9,6 +9,9 @@ name: db-backup
 
 on:
   schedule:
+    # Quotidien — 02:30 UTC (03:30 Tunis). Repo public → Actions gratuit illimité,
+    # donc dump PROD chaque nuit (Supabase Free n'a aucun backup managé → fenêtre
+    # de perte ≤ 24 h). Lancer aussi à la demande (workflow_dispatch) au besoin.
     - cron: "30 2 * * *" # 03:30 Tunis — cible prod
   workflow_dispatch:
     inputs:

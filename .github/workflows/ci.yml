@@ -4,6 +4,19 @@ on:
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
+
+# Runs on PRs (tests the merge result) and on pushes to main (a green signal on
+# the default branch). Cancel superseded runs on the same ref so rapid pushes
+# don't stack runners; "Run workflow" is available for an on-demand run.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# Least privilege: CI only reads the repo (no write scopes). On a public repo a
+# fork-PR token is read-only anyway, but make it explicit and default-proof.
+permissions:
+  contents: read
 
 jobs:
   verify:

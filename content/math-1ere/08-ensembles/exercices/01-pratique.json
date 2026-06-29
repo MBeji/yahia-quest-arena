@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: نُكوّن المجموعات ونقارنها",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "كيف نُعيّن مجموعةً بذكر عناصرها؟",
+      "options": [
+        { "id": "a", "text": "بين قوسين معقوفين { }" },
+        { "id": "b", "text": "بين قوسين عاديين ( )" },
+        { "id": "c", "text": "بدون أيِّ أقواس" },
+        { "id": "d", "text": "بين خطّين //" }
+      ],
+      "correctOption": "a",
+      "explanation": "نذكر العناصر بين قوسين معقوفين { } ونفصل بينها بفاصلة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم عنصرًا في هذه المجموعة؟ <svg viewBox=\"0 0 95 70\"><rect x=\"5\" y=\"5\" width=\"85\" height=\"60\" rx=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><circle cx=\"33\" cy=\"35\" r=\"9\" fill=\"currentColor\"/><circle cx=\"62\" cy=\"35\" r=\"9\" fill=\"currentColor\"/></svg>",
+      "options": [
+        { "id": "a", "text": "1" },
+        { "id": "b", "text": "2" },
+        { "id": "c", "text": "3" },
+        { "id": "d", "text": "4" }
+      ],
+      "correctOption": "b",
+      "explanation": "نَعُدّ العناصر داخل الإطار: 1، 2. عددها 2.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "المجموعة الفارغة هي التي…",
+      "options": [
+        { "id": "a", "text": "فيها عنصرٌ واحد" },
+        { "id": "b", "text": "فيها عنصران" },
+        { "id": "c", "text": "لا تحتوي أيَّ عنصر" },
+        { "id": "d", "text": "فيها كلُّ الأشياء" }
+      ],
+      "correctOption": "c",
+      "explanation": "المجموعة الفارغة لا تحتوي أيَّ عنصر، ونرمز إليها { }.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "نريد تكوين مجموعة الأشياء الحمراء. أيَّ شيءٍ نضع فيها؟",
+      "options": [
+        { "id": "a", "text": "تفّاحة حمراء" },
+        { "id": "b", "text": "موزة صفراء" },
+        { "id": "c", "text": "ورقة خضراء" },
+        { "id": "d", "text": "قلم أزرق" }
+      ],
+      "correctOption": "a",
+      "explanation": "نضع فيها ما يحقّق الخاصية (اللون الأحمر): التفّاحة الحمراء.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أيُّ مجموعةٍ فيها عناصرُ أكثر؟ <svg viewBox=\"0 0 270 90\"><text x=\"12\" y=\"20\" font-size=\"15\" fill=\"currentColor\">A</text><rect x=\"8\" y=\"26\" width=\"115\" height=\"55\" rx=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><circle cx=\"40\" cy=\"53\" r=\"8\" fill=\"currentColor\"/><circle cx=\"80\" cy=\"53\" r=\"8\" fill=\"currentColor\"/><text x=\"150\" y=\"20\" font-size=\"15\" fill=\"currentColor\">B</text><rect x=\"147\" y=\"26\" width=\"115\" height=\"55\" rx=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><circle cx=\"170\" cy=\"53\" r=\"8\" fill=\"currentColor\"/><circle cx=\"200\" cy=\"53\" r=\"8\" fill=\"currentColor\"/><circle cx=\"230\" cy=\"53\" r=\"8\" fill=\"currentColor\"/><circle cx=\"185\" cy=\"73\" r=\"8\" fill=\"currentColor\"/></svg>",
+      "options": [
+        { "id": "a", "text": "المجموعة A" },
+        { "id": "b", "text": "المجموعة B" },
+        { "id": "c", "text": "هما على قدر" },
+        { "id": "d", "text": "لا يمكن المقارنة" }
+      ],
+      "correctOption": "b",
+      "explanation": "في A عنصران وفي B أربعةُ عناصر. بما أنّ 4 أكثرُ من 2، فالمجموعة B فيها أكثر.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "خمسُ كراتٍ صغيرة وثلاثُ كراتٍ كبيرة: أيُّهما أكثرُ عددًا؟",
+      "options": [
+        { "id": "a", "text": "هما متساويتان" },
+        { "id": "b", "text": "الكرات الكبيرة" },
+        { "id": "c", "text": "لا يمكن المقارنة" },
+        { "id": "d", "text": "الكرات الصغيرة" }
+      ],
+      "correctOption": "d",
+      "explanation": "المقارنة على العدد لا على الحجم: 5 أكثرُ من 3، فالكرات الصغيرة أكثرُ عددًا.",
+      "difficulty": 1
+    }
+  ]
+}

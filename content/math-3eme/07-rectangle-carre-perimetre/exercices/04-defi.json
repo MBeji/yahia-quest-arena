@@ -1,0 +1,82 @@
+{
+  "title": "👑 تحدّي النخبة ⭐⭐⭐⭐: ألغاز المحيط",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "مربّعٌ ومستطيلٌ لهما نفس المحيط. ضلع المربّع 6 cm، وعرض المستطيل 4 cm. ما طول المستطيل؟",
+      "options": [
+        { "id": "a", "text": "8 cm" },
+        { "id": "b", "text": "6 cm" },
+        { "id": "c", "text": "10 cm" },
+        { "id": "d", "text": "12 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "محيط المربّع = 6 × 4 = 24 cm، فهو محيط المستطيل أيضًا. مجموع الطول والعرض = 24 ÷ 2 = 12، والطول = 12 − 4 = 8 cm. تحقّق: (8 + 4) × 2 = 24 cm. ✓",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ما محيط هذا الشكل (كلّ القياسات بالـ cm)؟<svg viewBox=\"0 0 130 120\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"20,20 80,20 80,50 110,50 110,100 20,100\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><text x=\"50\" y=\"14\" font-size=\"10\" fill=\"currentColor\" text-anchor=\"middle\">6</text><text x=\"88\" y=\"38\" font-size=\"10\" fill=\"currentColor\" text-anchor=\"middle\">3</text><text x=\"95\" y=\"44\" font-size=\"10\" fill=\"currentColor\" text-anchor=\"middle\">3</text><text x=\"117\" y=\"78\" font-size=\"10\" fill=\"currentColor\" text-anchor=\"middle\">5</text><text x=\"65\" y=\"113\" font-size=\"10\" fill=\"currentColor\" text-anchor=\"middle\">9</text><text x=\"12\" y=\"63\" font-size=\"10\" fill=\"currentColor\" text-anchor=\"middle\">8</text></svg>",
+      "options": [
+        { "id": "a", "text": "31 cm" },
+        { "id": "b", "text": "34 cm" },
+        { "id": "c", "text": "28 cm" },
+        { "id": "d", "text": "40 cm" }
+      ],
+      "correctOption": "b",
+      "explanation": "نجمع أطوال الأضلاع الستّة كلّها: 6 + 3 + 3 + 5 + 9 + 8 = 34 cm. الخطأ الشائع: نسيان أحد الأضلاع عند الدوران حول الشكل.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "مستطيلٌ طوله ضعف عرضه. إذا كان العرض 5 cm، فما محيطه؟",
+      "options": [
+        { "id": "a", "text": "15 cm" },
+        { "id": "b", "text": "20 cm" },
+        { "id": "c", "text": "50 cm" },
+        { "id": "d", "text": "30 cm" }
+      ],
+      "correctOption": "d",
+      "explanation": "الطول = ضعف العرض = 5 × 2 = 10 cm. المحيط = (10 + 5) × 2 = 15 × 2 = 30 cm. الخطأ الشائع: نسيان حساب الطول واستعمال 5 مرّتين.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "سلكٌ طوله 36 cm نطويه ليكوّن مربّعًا كاملًا. ما طول ضلع المربّع؟",
+      "options": [
+        { "id": "a", "text": "6 cm" },
+        { "id": "b", "text": "4 cm" },
+        { "id": "c", "text": "9 cm" },
+        { "id": "d", "text": "12 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "طول السلك هو محيط المربّع = 36 cm. الضلع = 36 ÷ 4 = 9 cm. تحقّق: 9 × 4 = 36 cm. ✓ الخطأ الشائع: قسمة 36 على 2 بدل 4.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "مربّعٌ ضلعه 7 cm ومستطيلٌ طوله 9 cm وعرضه 5 cm. أيّهما محيطه أكبر؟",
+      "options": [
+        { "id": "a", "text": "المربّع، لأنّ محيطه 28 cm" },
+        { "id": "b", "text": "المستطيل، لأنّ محيطه 30 cm" },
+        { "id": "c", "text": "لهما نفس المحيط: 28 cm" },
+        { "id": "d", "text": "المربّع، لأنّ محيطه 49 cm" }
+      ],
+      "correctOption": "c",
+      "explanation": "محيط المربّع = 7 × 4 = 28 cm، ومحيط المستطيل = (9 + 5) × 2 = 28 cm. فهما متساويان. الخطأ الشائع: حساب 7 × 7 = 49 للمربّع بدل الضرب في 4.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "مستطيلٌ محيطه 26 cm وطوله 8 cm. ما عرضه؟",
+      "options": [
+        { "id": "a", "text": "5 cm" },
+        { "id": "b", "text": "18 cm" },
+        { "id": "c", "text": "13 cm" },
+        { "id": "d", "text": "10 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "مجموع الطول والعرض = 26 ÷ 2 = 13، والعرض = 13 − 8 = 5 cm. تحقّق: (8 + 5) × 2 = 26 cm. ✓ الخطأ الشائع: طرح 8 من 26 مباشرةً دون قسمة المحيط على 2 أوّلًا.",
+      "difficulty": 3
+    }
+  ]
+}

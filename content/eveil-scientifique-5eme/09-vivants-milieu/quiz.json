@@ -1,0 +1,65 @@
+{
+  "title": "اختبار فهم الدرس ⭐",
+  "questions": [
+    {
+      "prompt": "الحيوان الذي يأكل النباتات فقط يُسمّى:",
+      "options": [
+        { "id": "a", "text": "عاشبًا" },
+        { "id": "b", "text": "لاحمًا" },
+        { "id": "c", "text": "مفترسًا" },
+        { "id": "d", "text": "نباتًا" }
+      ],
+      "correctOption": "a",
+      "explanation": "الحيوان الذي يأكل النباتات فقط يُسمّى عاشبًا، مثل الأرنب والبقرة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "بماذا تبدأ كلّ سلسلةٍ غذائيّة؟",
+      "options": [
+        { "id": "a", "text": "بحيوانٍ لاحم" },
+        { "id": "b", "text": "بنبتة" },
+        { "id": "c", "text": "بحجر" },
+        { "id": "d", "text": "بالماء" }
+      ],
+      "correctOption": "b",
+      "explanation": "تبدأ السلسلة الغذائيّة دائمًا بنبتة، لأنّها تصنع غذاءها بنفسها بمساعدة الضوء.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "الأسد الذي يأكل الغزال حيوانٌ:",
+      "options": [
+        { "id": "a", "text": "عاشب" },
+        { "id": "b", "text": "نبات" },
+        { "id": "c", "text": "لاحم" },
+        { "id": "d", "text": "يأكل التراب" }
+      ],
+      "correctOption": "c",
+      "explanation": "الأسد يأكل حيواناتٍ أخرى مثل الغزال، فهو حيوانٌ لاحم.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيٌّ ممّا يلي عنصرٌ غير حيٍّ في الوسط البيئيّ؟",
+      "options": [
+        { "id": "a", "text": "الأرنب" },
+        { "id": "b", "text": "شجرة" },
+        { "id": "c", "text": "الماء" },
+        { "id": "d", "text": "العصفور" }
+      ],
+      "correctOption": "c",
+      "explanation": "الماء عنصرٌ غير حيٍّ في الوسط البيئيّ. أمّا الأرنب والشجرة والعصفور فكائناتٌ حيّة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "في الصورة سلسلةٌ غذائيّة. ماذا يأكل الأرنب؟ <svg viewBox=\"0 0 230 70\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M22 55 q-8 -22 0 -34 q8 12 0 34 z\" fill=\"#22c55e\" stroke=\"#1f2937\" stroke-width=\"2\"/><rect x=\"20\" y=\"55\" width=\"4\" height=\"8\" fill=\"#16a34a\"/><text x=\"6\" y=\"68\" font-size=\"10\" fill=\"#1f2937\">نبتة</text><line x1=\"38\" y1=\"40\" x2=\"78\" y2=\"40\" stroke=\"#1f2937\" stroke-width=\"2\"/><polygon points=\"78,40 68,35 68,45\" fill=\"#1f2937\"/><ellipse cx=\"100\" cy=\"40\" rx=\"18\" ry=\"12\" fill=\"#d6d3d1\" stroke=\"#1f2937\" stroke-width=\"2\"/><ellipse cx=\"92\" cy=\"26\" rx=\"4\" ry=\"9\" fill=\"#d6d3d1\" stroke=\"#1f2937\" stroke-width=\"2\"/><text x=\"90\" y=\"68\" font-size=\"10\" fill=\"#1f2937\">أرنب</text><line x1=\"122\" y1=\"40\" x2=\"162\" y2=\"40\" stroke=\"#1f2937\" stroke-width=\"2\"/><polygon points=\"162,40 152,35 152,45\" fill=\"#1f2937\"/><ellipse cx=\"190\" cy=\"40\" rx=\"22\" ry=\"13\" fill=\"#f97316\" stroke=\"#1f2937\" stroke-width=\"2\"/><polygon points=\"178,30 174,20 184,28\" fill=\"#f97316\" stroke=\"#1f2937\" stroke-width=\"1\"/><text x=\"176\" y=\"68\" font-size=\"10\" fill=\"#1f2937\">ثعلب</text></svg>",
+      "options": [
+        { "id": "a", "text": "النبتة" },
+        { "id": "b", "text": "الثعلب" },
+        { "id": "c", "text": "الماء" },
+        { "id": "d", "text": "لا يأكل شيئًا" }
+      ],
+      "correctOption": "a",
+      "explanation": "السهم يتّجه من النبتة إلى الأرنب، أي أنّ الأرنب يأكل النبتة. ثمّ يتّجه سهمٌ من الأرنب إلى الثعلب لأنّ الثعلب يأكل الأرنب.",
+      "difficulty": 2
+    }
+  ]
+}

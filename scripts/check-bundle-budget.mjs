@@ -5,11 +5,17 @@ const clientAssetsDir = join(process.cwd(), "dist", "client", "assets");
 
 const BUDGETS = {
   "index-": 450 * 1024,
-  "i18n-": 80 * 1024,
-  "vendor-charts-": 390 * 1024,
+  // i18n catalog (loaded app-wide). Bumped 80→84 KB for the trilingual legal /
+  // intellectual-property notice + print/footer copy (public IP-protection
+  // change). The chunk gzips to ~27 KB, so the real over-the-wire impact is
+  // marginal; keep new strings lean to stay well under this ceiling.
+  "i18n-": 84 * 1024,
   "vendor-supabase-": 240 * 1024,
   "vendor-motion-": 150 * 1024,
-  "dashboard-": 30 * 1024,
+  // Dashboard route chunk. Bumped 30→32 KB for the flagship-concours banner
+  // integration (the banner trio is lazy-loaded into its own chunk; only the
+  // small lazy glue lands here). Heavy sections (radar/3D, badges/shop) stay lazy.
+  "dashboard-": 32 * 1024,
 };
 
 function bytesToKb(bytes) {

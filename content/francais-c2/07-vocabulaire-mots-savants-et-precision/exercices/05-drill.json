@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill : mots savants et précision lexicale",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Que signifie l'adjectif « prolixe » ?",
+      "options": [
+        { "id": "a", "text": "Concis, qui va droit au but" },
+        { "id": "b", "text": "Trop long, bavard, qui se répand en paroles" },
+        { "id": "c", "text": "Fertile, qui produit beaucoup" },
+        { "id": "d", "text": "Précis, exact dans ses termes" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Prolixe » qualifie un discours trop long, diffus. « Concis » est l'antonyme (définition inversée). Attention au paronyme « prolifique » (qui produit beaucoup) glissé en (c) : sens voisin par la forme mais distinct.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel mot correspond à cette définition : « qui appartient en propre à une chose, indépendamment de tout contexte extérieur » ?",
+      "options": [
+        { "id": "a", "text": "contingent" },
+        { "id": "b", "text": "accessoire" },
+        { "id": "c", "text": "intrinsèque" },
+        { "id": "d", "text": "circonstanciel" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Intrinsèque » désigne ce qui tient à la nature même d'une chose (sa valeur intrinsèque). Son contraire est « extrinsèque ». « Contingent » et « circonstanciel » désignent au contraire ce qui dépend des circonstances ; « accessoire » ce qui est secondaire.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Que signifie le mot « contingent » employé comme adjectif au sens philosophique ?",
+      "options": [
+        { "id": "a", "text": "Qui aurait pu ne pas être, qui n'est pas nécessaire" },
+        { "id": "b", "text": "Qui est nécessaire et ne peut pas ne pas être" },
+        { "id": "c", "text": "Qui est strictement limité en quantité" },
+        { "id": "d", "text": "Qui est continu et sans interruption" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le « contingent » est ce qui pourrait être autrement, qui n'a rien de nécessaire : il s'oppose au « nécessaire ». (b) en donne l'exact contraire. Le sens « limité en quantité » (un contingent de soldats) est un autre emploi, et « continu » trompe par la sonorité.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel est l'intrus, c'est-à-dire le seul mot qui ne soit PAS synonyme d'« obscur, difficile à comprendre » ?",
+      "options": [
+        { "id": "a", "text": "abscons" },
+        { "id": "b", "text": "sibyllin" },
+        { "id": "c", "text": "hermétique" },
+        { "id": "d", "text": "laconique" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Laconique » signifie très bref, concis : il porte sur la longueur, non sur la clarté. « Abscons », « sibyllin » et « hermétique » désignent tous l'obscurité du sens : ce sont les synonymes, donc « laconique » est l'intrus.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Distingue les disciplines. La question « Qu'est-ce qui existe ? Quelle est la nature de l'être ? » relève de :",
+      "options": [
+        { "id": "a", "text": "l'éthique" },
+        { "id": "b", "text": "l'ontologie" },
+        { "id": "c", "text": "la téléologie" },
+        { "id": "d", "text": "l'épistémologie" }
+      ],
+      "correctOption": "b",
+      "explanation": "L'ontologie étudie l'être en tant qu'être (« qu'est-ce qui existe ? »). L'éthique juge l'action, l'épistémologie la connaissance, la téléologie la finalité : aucune ne porte sur la nature de l'existence elle-même.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choisis l'emploi RIGOUREUX. La discipline qui théorise de manière générale l'art et les règles de toute interprétation des textes se nomme :",
+      "options": [
+        { "id": "a", "text": "l'exégèse" },
+        { "id": "b", "text": "la sémiologie" },
+        { "id": "c", "text": "l'herméneutique" },
+        { "id": "d", "text": "la rhétorique" }
+      ],
+      "correctOption": "c",
+      "explanation": "« L'herméneutique » est la théorie générale de l'interprétation. Le piège courant : « l'exégèse » est l'application concrète à un texte donné, pas la théorie d'ensemble. « La sémiologie » étudie les signes, « la rhétorique » l'art de persuader : sens voisins mais distincts.",
+      "difficulty": 3
+    }
+  ]
+}

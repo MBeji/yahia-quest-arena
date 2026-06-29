@@ -11,9 +11,10 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: ["./src/__tests__/setup.ts"],
-    // scripts/e2e ships ops-critical helpers (DB-URL normalization, prod-ref
-    // guard) whose regressions only ever surfaced in the nightly — test them here.
-    include: ["src/**/*.{test,spec}.{ts,tsx}", "scripts/e2e/__tests__/*.test.mjs"],
+    // scripts/** ships ops-critical helpers (DB-URL normalization, the TEST/PROD
+    // ref guards) whose regressions only ever surfaced in the nightly — unit-test
+    // them here alongside the app.
+    include: ["src/**/*.{test,spec}.{ts,tsx}", "scripts/**/__tests__/*.test.mjs"],
     exclude: ["src/__tests__/deprecated/**"],
     coverage: {
       provider: "v8",

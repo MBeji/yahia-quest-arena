@@ -1,0 +1,65 @@
+{
+  "title": "اختبار فهم الدرس ⭐",
+  "questions": [
+    {
+      "prompt": "كم ضلعًا للمثلّث؟",
+      "options": [
+        { "id": "a", "text": "2" },
+        { "id": "b", "text": "3" },
+        { "id": "c", "text": "4" },
+        { "id": "d", "text": "0" }
+      ],
+      "correctOption": "b",
+      "explanation": "المثلّث له 3 أضلاع و 3 زوايا. اسمه نفسه يدلّ على العدد 3 (مثلّث).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما الشكل الذي لا أضلاع له ولا زوايا؟",
+      "options": [
+        { "id": "a", "text": "المربّع" },
+        { "id": "b", "text": "المثلّث" },
+        { "id": "c", "text": "الدائرة" },
+        { "id": "d", "text": "المستطيل" }
+      ],
+      "correctOption": "c",
+      "explanation": "الدائرة شكل مستدير لا أضلاع لها ولا زوايا، مثل العجلة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما اسم هذا الشكل؟ <svg viewBox=\"0 0 100 100\"><polygon points=\"50,15 85,85 15,85\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"4\"/></svg>",
+      "options": [
+        { "id": "a", "text": "مربّع" },
+        { "id": "b", "text": "دائرة" },
+        { "id": "c", "text": "مستطيل" },
+        { "id": "d", "text": "مثلّث" }
+      ],
+      "correctOption": "d",
+      "explanation": "الشكل له 3 أضلاع و 3 زوايا، فهو مثلّث.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم ضلعًا للمربّع؟",
+      "options": [
+        { "id": "a", "text": "4" },
+        { "id": "b", "text": "3" },
+        { "id": "c", "text": "5" },
+        { "id": "d", "text": "0" }
+      ],
+      "correctOption": "a",
+      "explanation": "المربّع له 4 أضلاع متساوية و 4 زوايا.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أيّ شكلٍ كلّ أضلاعه متساوية في الطول؟",
+      "options": [
+        { "id": "a", "text": "المستطيل" },
+        { "id": "b", "text": "المربّع" },
+        { "id": "c", "text": "الدائرة" },
+        { "id": "d", "text": "الباب" }
+      ],
+      "correctOption": "b",
+      "explanation": "المربّع كلّ أضلاعه الأربعة متساوية في الطول، بخلاف المستطيل الذي له ضلعان طويلان وضلعان قصيران.",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : le passé composé",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Complète : « Vous ___ un grand effort pour réussir. »",
+      "options": [
+        { "id": "a", "text": "êtes fait" },
+        { "id": "b", "text": "avez faisé" },
+        { "id": "c", "text": "avez faite" },
+        { "id": "d", "text": "avez fait" }
+      ],
+      "correctOption": "d",
+      "explanation": "Faire se conjugue avec avoir et son participe irrégulier est « fait » : vous avez fait. « faisé » applique à tort la règle régulière, « faite » ajoute un accord interdit avec avoir, et « êtes fait » utilise le mauvais auxiliaire.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Elle ___ rentrer parce qu'elle était fatiguée. »",
+      "options": [
+        { "id": "a", "text": "a voulu" },
+        { "id": "b", "text": "est voulu" },
+        { "id": "c", "text": "a voulue" },
+        { "id": "d", "text": "a voulé" }
+      ],
+      "correctOption": "a",
+      "explanation": "Vouloir se conjugue avec avoir et son participe irrégulier est « voulu » : elle a voulu. « voulé » applique à tort la règle régulière, « voulue » ajoute un accord interdit avec avoir, et « est voulu » utilise le mauvais auxiliaire.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Ce matin, je ___ tôt et je me suis préparé vite. »",
+      "options": [
+        { "id": "a", "text": "ai réveillé" },
+        { "id": "b", "text": "suis réveillé tard" },
+        { "id": "c", "text": "me suis réveillé" },
+        { "id": "d", "text": "ai me réveillé" }
+      ],
+      "correctOption": "c",
+      "explanation": "Se réveiller est un verbe pronominal : il se conjugue avec être et garde son pronom réfléchi : je me suis réveillé. « ai réveillé » oublie le pronom et l'auxiliaire correct, « ai me réveillé » mélange tout, et l'option « tard » contredit le sens de la phrase (« tôt »).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "Les feuilles sont tombées en automne." },
+        { "id": "b", "text": "Il a descendu les escaliers en courant." },
+        { "id": "c", "text": "Nous avons eu beaucoup de chance." },
+        { "id": "d", "text": "Elles ont arrivées en retard." }
+      ],
+      "correctOption": "d",
+      "explanation": "L'erreur est « Elles ont arrivées » : arriver est un verbe de mouvement, il se conjugue avec être → « Elles sont arrivées ». Les autres sont correctes : tomber avec être et accord (tombées), descendre ici avec un complément d'objet prend avoir, et avoir → eu.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Mes grands-parents ___ dans cette maison il y a cinquante ans. »",
+      "options": [
+        { "id": "a", "text": "ont nés" },
+        { "id": "b", "text": "sont nés" },
+        { "id": "c", "text": "ont naissé" },
+        { "id": "d", "text": "sont né" }
+      ],
+      "correctOption": "b",
+      "explanation": "Naître se conjugue avec être et son participe irrégulier est « né » ; il s'accorde avec le sujet masculin pluriel : sont nés. « ont nés » et « ont naissé » utilisent le mauvais auxiliaire et une forme inventée, et « sont né » oublie le pluriel.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Nous ___ une heure, puis le train est enfin parti. »",
+      "options": [
+        { "id": "a", "text": "avons attendu" },
+        { "id": "b", "text": "sommes attendus" },
+        { "id": "c", "text": "avons attendi" },
+        { "id": "d", "text": "avons attendus" }
+      ],
+      "correctOption": "a",
+      "explanation": "Attendre se conjugue avec avoir et son participe est « attendu » : nous avons attendu. « attendi » est une terminaison fautive, « attendus » ajoute un accord interdit avec avoir, et « sommes attendus » utilise le mauvais auxiliaire.",
+      "difficulty": 3
+    }
+  ]
+}

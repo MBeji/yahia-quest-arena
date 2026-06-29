@@ -1,0 +1,88 @@
+{
+  "title": "👑 Elite Challenge ⭐⭐⭐⭐: Future Continuous and Future Perfect",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Read: \"The surgery is scheduled for 8 a.m. and takes about five hours. The family is waiting in the hospital. It is now 11:30 a.m.\"\nWhich statement is most likely TRUE at 11:30 a.m.?",
+      "options": [
+        { "id": "a", "text": "The surgeons will have completed the operation." },
+        { "id": "b", "text": "The surgeons will be operating on the patient." },
+        { "id": "c", "text": "The surgeons will have been resting for two hours." },
+        { "id": "d", "text": "The surgeons will start the operation at 11:30 a.m." }
+      ],
+      "correctOption": "b",
+      "explanation": "The surgery started at 8 a.m. and takes five hours, so it runs until roughly 1 p.m. At 11:30 a.m. it is still in progress — the future continuous (will be operating) correctly describes an action ongoing at that future moment. It will not be complete yet (a is false), the surgeons won't be resting at this point (c), and they already started hours ago (d is false).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "By the time you read this, I will have left the country." },
+        { "id": "b", "text": "Will you be needing a lift to the airport tomorrow?" },
+        {
+          "id": "c",
+          "text": "She will have been working on this thesis since three years by May."
+        },
+        { "id": "d", "text": "At this time next month, we'll be sailing across the Atlantic." }
+      ],
+      "correctOption": "c",
+      "explanation": "The error is \"since three years\" — since takes a starting point in time, not a duration. The correct word for a length of time is for: she will have been working on this thesis for three years by May. The other sentences correctly use the future perfect (a), future continuous for polite enquiry (b), and future continuous for an in-progress future action (d).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"By 2030, scientists hope they ___ a cure for the disease.\"",
+      "options": [
+        { "id": "a", "text": "will be discovering" },
+        { "id": "b", "text": "will discover" },
+        { "id": "c", "text": "will have discovered" },
+        { "id": "d", "text": "will have been discovering" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"By 2030\" is a deadline before which the discovery should be complete — that's the future perfect: will have discovered. \"will be discovering\" means in progress at that moment (discovery is a result, not a continuous process here), \"will discover\" is a plain future prediction without the by-deadline sense, and \"will have been discovering\" stresses ongoing duration, not the completion of the discovery.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "A colleague asks for your parking space. Choose the response that uses the future continuous to express that you will NOT need it — and sounds most natural.",
+      "options": [
+        { "id": "a", "text": "I won't use it tomorrow." },
+        { "id": "b", "text": "I'm not going to use it tomorrow." },
+        { "id": "c", "text": "I won't be using it tomorrow, so you're welcome to it." },
+        { "id": "d", "text": "I will not have used it by tomorrow." }
+      ],
+      "correctOption": "c",
+      "explanation": "The future continuous negative (won't be using) is the most natural way to say your plans don't include using the space — it frames it as an absence from your schedule rather than a refusal. \"Won't use\" and \"not going to use\" are grammatically fine but sound more like decisions/refusals than schedule descriptions. \"Will not have used it by tomorrow\" (future perfect) implies a deadline sense that doesn't fit the context.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"By the time this documentary ___, the viewers ___ more than two hours of footage.\"",
+      "options": [
+        { "id": "a", "text": "ends / will watch" },
+        { "id": "b", "text": "will end / will be watching" },
+        { "id": "c", "text": "will have ended / watch" },
+        { "id": "d", "text": "ends / will have watched" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"By the time\" takes the present simple in the subordinate clause (ends), and the main clause needs the future perfect to show completion before that point (will have watched). \"ends / will watch\" gets the subordinate right but uses a bare future instead of the future perfect. \"will end / will be watching\" has a future in the subordinate clause (wrong) and uses the continuous (in progress) instead of the perfect (finished). \"will have ended / watch\" reverses the logic entirely.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"Laila joined the company in 2020. She was promoted to team lead in 2022. In 2025 she plans to move abroad.\"\nWhich sentence is TRUE in 2025?",
+      "options": [
+        {
+          "id": "a",
+          "text": "By 2025, Laila will have been working at the company for five years."
+        },
+        { "id": "b", "text": "By 2025, Laila will be promoted to team lead." },
+        { "id": "c", "text": "In 2025, Laila will have been moving abroad." },
+        { "id": "d", "text": "In 2025, Laila will have joined the company." }
+      ],
+      "correctOption": "a",
+      "explanation": "Laila joined in 2020, so by 2025 she will have worked there for five years — the future perfect continuous correctly emphasises that duration: will have been working for five years. Her promotion already happened in 2022 (b uses future, wrong). \"Will have been moving\" is incorrect — moving abroad is not a continuous activity to measure duration. \"Will have joined\" implies the joining happens by 2025, but she already joined in 2020.",
+      "difficulty": 3
+    }
+  ]
+}

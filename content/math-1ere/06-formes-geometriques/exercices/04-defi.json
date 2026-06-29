@@ -1,0 +1,82 @@
+{
+  "title": "👑 تحدّي النخبة ⭐⭐⭐⭐: ألغاز الأشكال",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "أنا شكلٌ لي عدد أضلاعٍ يساوي عدد أضلاع المربّع ناقص واحد. ما أنا؟",
+      "options": [
+        { "id": "a", "text": "الدائرة" },
+        { "id": "b", "text": "المثلّث" },
+        { "id": "c", "text": "المستطيل" },
+        { "id": "d", "text": "المربّع" }
+      ],
+      "correctOption": "b",
+      "explanation": "المربّع له 4 أضلاع، و 4 − 1 = 3. الشكل ذو 3 أضلاع هو المثلّث.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم ضلعًا في مربّع ومثلّث معًا؟",
+      "options": [
+        { "id": "a", "text": "6" },
+        { "id": "b", "text": "8" },
+        { "id": "c", "text": "7" },
+        { "id": "d", "text": "4" }
+      ],
+      "correctOption": "c",
+      "explanation": "للمربّع 4 أضلاع وللمثلّث 3 أضلاع. مجموعهما 4 + 3 = 7 أضلاع.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "كم زاوية في ثلاثة مثلّثات معًا؟",
+      "options": [
+        { "id": "a", "text": "6" },
+        { "id": "b", "text": "12" },
+        { "id": "c", "text": "3" },
+        { "id": "d", "text": "9" }
+      ],
+      "correctOption": "d",
+      "explanation": "لكلّ مثلّث 3 زوايا، فثلاثة مثلّثات لها 3 + 3 + 3 = 9 زوايا.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ما اسم هذا الشكل؟ <svg viewBox=\"0 0 100 100\"><rect x=\"30\" y=\"30\" width=\"40\" height=\"40\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"4\"/></svg>",
+      "options": [
+        { "id": "a", "text": "مستطيل" },
+        { "id": "b", "text": "مربّع" },
+        { "id": "c", "text": "دائرة" },
+        { "id": "d", "text": "مثلّث" }
+      ],
+      "correctOption": "b",
+      "explanation": "الشكل له 4 أضلاع متساوية في الطول و 4 زوايا، فهو مربّع.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أنا شكلٌ ليس لي أضلاع، وأشبه القمر البدر والعجلة. ما أنا؟",
+      "options": [
+        { "id": "a", "text": "المثلّث" },
+        { "id": "b", "text": "المربّع" },
+        { "id": "c", "text": "الدائرة" },
+        { "id": "d", "text": "المستطيل" }
+      ],
+      "correctOption": "c",
+      "explanation": "الشكل المستدير بلا أضلاع، الذي يشبه القمر والعجلة، هو الدائرة.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "إذا جمعنا عدد أضلاع المربّع وعدد أضلاع الدائرة، كم نحصل؟",
+      "options": [
+        { "id": "a", "text": "4" },
+        { "id": "b", "text": "8" },
+        { "id": "c", "text": "0" },
+        { "id": "d", "text": "5" }
+      ],
+      "correctOption": "a",
+      "explanation": "للمربّع 4 أضلاع وللدائرة 0 أضلاع. مجموعهما 4 + 0 = 4.",
+      "difficulty": 3
+    }
+  ]
+}

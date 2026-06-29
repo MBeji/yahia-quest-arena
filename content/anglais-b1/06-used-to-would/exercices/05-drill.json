@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill: Used to & Would",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complete: \"As a child, she ___ believe in fairy tales, but she doesn't any more.\"",
+      "options": [
+        { "id": "a", "text": "would" },
+        { "id": "b", "text": "used to" },
+        { "id": "c", "text": "is used to" },
+        { "id": "d", "text": "got used to" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"believe\" is a state verb, so only \"used to\" can describe this finished past state: she used to believe. \"would\" cannot be used with state verbs like believe. \"is/got used to\" mean accustomed to and take an -ing form after them.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"After a year abroad, she finally ___ living far from her family.\"",
+      "options": [
+        { "id": "a", "text": "used to" },
+        { "id": "b", "text": "would" },
+        { "id": "c", "text": "got used to" },
+        { "id": "d", "text": "use to" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"After a year\" describes a process of becoming accustomed that is now complete — \"get used to + -ing\" in the past: she got used to living far away. \"used to\" alone describes a past habit (now stopped), \"would\" describes repeated actions, and \"use to\" is only correct after did in questions or negatives.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"Every summer, my family ___ rent a small house by the sea.\"",
+      "options": [
+        { "id": "a", "text": "is used to" },
+        { "id": "b", "text": "used to" },
+        { "id": "c", "text": "are used to" },
+        { "id": "d", "text": "get used to" }
+      ],
+      "correctOption": "b",
+      "explanation": "Renting a house every summer is a past repeated habit now finished, so \"used to\" is correct: my family used to rent. \"would\" is also possible for a repeated action, but only \"used to\" appears here. \"is/are used to\" and \"get used to\" mean accustomed to — a different idea.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"___ he use to cycle to school before the new bus route opened?\"",
+      "options": [
+        { "id": "a", "text": "Would" },
+        { "id": "b", "text": "Was" },
+        { "id": "c", "text": "Did" },
+        { "id": "d", "text": "Has" }
+      ],
+      "correctOption": "c",
+      "explanation": "The question form of \"used to\" is: Did + subject + use to + verb? — Did he use to cycle? \"Would\" forms a different question: Would he cycle? (not combining with \"use to\"). \"Was\" starts a past-continuous or passive question, and \"Has\" forms the present perfect.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "She used to own a cat when she lived in the country." },
+        { "id": "b", "text": "He would walk to the market every Friday." },
+        { "id": "c", "text": "I am getting used to waking up early." },
+        { "id": "d", "text": "They would own a big house in the past." }
+      ],
+      "correctOption": "d",
+      "explanation": "The error is in the fourth option: \"own\" is a state verb, so \"would\" cannot describe this past state. The correct form is: They used to own a big house. The first option correctly uses \"used to\" with the state verb own, the second uses \"would\" with the action verb walk, and the third correctly uses \"getting used to + -ing\".",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"She is slowly ___ the new software at work — it's very different from the old system.\"",
+      "options": [
+        { "id": "a", "text": "used to use" },
+        { "id": "b", "text": "getting used to using" },
+        { "id": "c", "text": "would use" },
+        { "id": "d", "text": "used to using" }
+      ],
+      "correctOption": "b",
+      "explanation": "The process of becoming accustomed (\"slowly\", present context) is expressed by \"get used to + -ing\": she is getting used to using the software. \"used to use\" describes a finished past habit (not a present process), \"would use\" describes a repeated past action, and \"used to using\" would need \"is\" in front to make \"is used to using\" (already accustomed) — which contradicts \"slowly\".",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Avant d'être engagé, le candidat passe souvent un ___ d'embauche.",
+      "options": [
+        { "id": "a", "text": "entretien" },
+        { "id": "b", "text": "salaire" },
+        { "id": "c", "text": "contrat" },
+        { "id": "d", "text": "chômage" }
+      ],
+      "correctOption": "a",
+      "explanation": "Un « entretien d'embauche » est la rencontre où le candidat est interrogé avant d'être engagé. Le salaire est l'argent gagné, le contrat est l'accord signé, et le chômage est l'absence d'emploi.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quand le patron décide de renvoyer un salarié, il le ___.",
+      "options": [
+        { "id": "a", "text": "démissionne" },
+        { "id": "b", "text": "licencie" },
+        { "id": "c", "text": "embauche" },
+        { "id": "d", "text": "postule" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Licencier », c'est renvoyer un salarié à l'initiative de l'employeur. « Démissionner », au contraire, c'est partir de soi-même. « Embaucher » signifie engager, et « postuler » signifie présenter sa candidature.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Pour aider la planète, on doit ___ ses déchets afin de faciliter le recyclage.",
+      "options": [
+        { "id": "a", "text": "gaspiller" },
+        { "id": "b", "text": "polluer" },
+        { "id": "c", "text": "trier" },
+        { "id": "d", "text": "publier" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Trier » ses déchets, c'est les séparer pour permettre le recyclage. « Gaspiller » et « polluer » nuisent à l'environnement, et « publier » concerne la diffusion d'un texte, pas les déchets.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel mot désigne l'origine d'une information, c'est-à-dire qui l'a donnée ?",
+      "options": [
+        { "id": "a", "text": "une publicité" },
+        { "id": "b", "text": "un article" },
+        { "id": "c", "text": "un réseau social" },
+        { "id": "d", "text": "une source" }
+      ],
+      "correctOption": "d",
+      "explanation": "Une « source » est l'origine d'une information : qui la fournit et d'où elle vient. Une publicité cherche à vendre, un article est un texte écrit, et un réseau social est une plateforme d'échange.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complétez : « Je suis tout à fait ___ avec toi, tu as raison. »",
+      "options": [
+        { "id": "a", "text": "d'accord" },
+        { "id": "b", "text": "inquiet" },
+        { "id": "c", "text": "déçu" },
+        { "id": "d", "text": "absent" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Être d'accord avec quelqu'un » signifie partager son opinion. « Inquiet » exprime le souci, « déçu » la déception, et « absent » l'absence — aucun ne convient pour approuver une idée.",
+      "difficulty": 1
+    }
+  ]
+}

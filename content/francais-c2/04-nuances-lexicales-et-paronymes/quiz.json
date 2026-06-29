@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Complétez : « Le tribunal lui a ___ une lourde amende. »",
+      "options": [
+        { "id": "a", "text": "affligé" },
+        { "id": "b", "text": "infligé" },
+        { "id": "c", "text": "évoqué" },
+        { "id": "d", "text": "perpétré" }
+      ],
+      "correctOption": "b",
+      "explanation": "On « inflige » une peine, une amende, une punition : on l'impose à quelqu'un. « Affliger » signifie accabler de chagrin (le deuil l'afflige), et non imposer une sanction. « Évoquer » = mentionner ; « perpétrer » = commettre un crime.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel mot désigne un obstacle dangereux et caché, qui risque de tout faire échouer ?",
+      "options": [
+        { "id": "a", "text": "une difficulté" },
+        { "id": "b", "text": "un souci" },
+        { "id": "c", "text": "un écueil" },
+        { "id": "d", "text": "un problème" }
+      ],
+      "correctOption": "c",
+      "explanation": "Un « écueil » est au sens propre un rocher qui fait sombrer le navire : il désigne un obstacle redoutable et souvent caché. « Difficulté » et « problème » sont neutres ; « souci » est une préoccupation morale, non un obstacle.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complétez : « Un médecin ___ a été appelé en consultation. »",
+      "options": [
+        { "id": "a", "text": "éminent" },
+        { "id": "b", "text": "imminent" },
+        { "id": "c", "text": "prodigue" },
+        { "id": "d", "text": "prolixe" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Éminent » signifie remarquable, supérieur : un médecin éminent est un grand spécialiste. « Imminent » qualifie ce qui est sur le point d'arriver (un danger imminent). « Prodigue » = qui dépense sans compter ; « prolixe » = trop bavard.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans « la première ___ de ce mot », quel terme désigne l'un de ses SENS ?",
+      "options": [
+        { "id": "a", "text": "acceptation" },
+        { "id": "b", "text": "conjoncture" },
+        { "id": "c", "text": "inclination" },
+        { "id": "d", "text": "acception" }
+      ],
+      "correctOption": "d",
+      "explanation": "Une « acception » est un des sens d'un mot (un mot polysémique a plusieurs acceptions). L'« acceptation » est le fait d'accepter quelque chose. « Conjoncture » = situation du moment ; « inclination » = penchant.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "En français soigné, comment exprimer « régler un problème » ?",
+      "options": [
+        { "id": "a", "text": "solutionner un problème" },
+        { "id": "b", "text": "résoudre un problème" },
+        { "id": "c", "text": "perpétuer un problème" },
+        { "id": "d", "text": "recouvrer un problème" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Résoudre » est le verbe juste et soutenu pour venir à bout d'un problème. « Solutionner » est familier et critiqué par les puristes. « Perpétuer » = faire durer (le contraire) ; « recouvrer » = retrouver (la santé, son dû).",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill: Reported Speech",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Report the statement: She said, \"I am reading a fascinating book.\" → She said she ___.",
+      "options": [
+        { "id": "a", "text": "is reading a fascinating book" },
+        { "id": "b", "text": "was reading a fascinating book" },
+        { "id": "c", "text": "had reading a fascinating book" },
+        { "id": "d", "text": "reads a fascinating book" }
+      ],
+      "correctOption": "b",
+      "explanation": "Present continuous 'am reading' backshifts to past continuous 'was reading' in reported speech. 'Is reading' keeps the original present tense without backshifting — a common error. 'Had reading' is not a grammatical form. 'Reads' is the backshift of present simple, not present continuous.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which sentence correctly uses 'say' and 'tell'?",
+      "options": [
+        { "id": "a", "text": "He told that the meeting was postponed." },
+        { "id": "b", "text": "She said me the news immediately." },
+        { "id": "c", "text": "They told us the flight had been cancelled." },
+        { "id": "d", "text": "He said to me told her the truth." }
+      ],
+      "correctOption": "c",
+      "explanation": "'Tell' requires a personal object: 'told us' is correct. Option A uses 'told that' without a personal object — 'told' must be followed by a person before 'that'. Option B uses 'said me' — 'say' cannot take a direct personal object; the correct form would be 'She told me the news' or 'She said the news to me'. Option D is grammatically incoherent.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Report the question: \"Have you ever been to Morocco?\" → He asked me ___.",
+      "options": [
+        { "id": "a", "text": "had I ever been to Morocco" },
+        { "id": "b", "text": "if I had ever been to Morocco" },
+        { "id": "c", "text": "if I have ever been to Morocco" },
+        { "id": "d", "text": "whether had I ever been to Morocco" }
+      ],
+      "correctOption": "b",
+      "explanation": "Yes/no questions in reported speech use 'if' or 'whether', restore statement word order, and backshift: present perfect 'have been' shifts to past perfect 'had been'. Option A omits 'if/whether' and keeps inverted order. Option C keeps the present perfect without backshifting. Option D uses 'whether' but then keeps inverted order — the verb 'had' must come after 'I', not before.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Report the command: \"Please don't use your phones during the exam.\" → The invigilator told the students ___.",
+      "options": [
+        { "id": "a", "text": "to not use their phones during the exam" },
+        { "id": "b", "text": "don't use their phones during the exam" },
+        { "id": "c", "text": "not to use their phones during the exam" },
+        { "id": "d", "text": "that they didn't use their phones during the exam" }
+      ],
+      "correctOption": "c",
+      "explanation": "Negative reported commands use 'not to + infinitive', with 'not' placed before 'to': 'not to use'. Option A splits the infinitive by inserting 'not' between 'to' and 'use' — this is incorrect for reported commands. Option B keeps the bare imperative from direct speech. Option D changes the command into a past statement, losing the imperative force.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which reported sentence contains BOTH a correct backshift AND a correct time-word change?",
+      "options": [
+        { "id": "a", "text": "She said she would finish the project the next day." },
+        { "id": "b", "text": "She said she will finish the project the next day." },
+        { "id": "c", "text": "She said she would finish the project tomorrow." },
+        { "id": "d", "text": "She said she finishes the project the next day." }
+      ],
+      "correctOption": "a",
+      "explanation": "'Will' backshifts to 'would', and 'tomorrow' shifts to 'the next day' — both changes are correctly applied in option A. Option B keeps 'will' unbackshifted. Option C correctly backshifts 'will' to 'would' but fails to shift 'tomorrow' to 'the next day'. Option D uses the present simple 'finishes' — neither the modal nor the time word is correctly transformed.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Direct: \"I was waiting for the bus when I saw the accident.\" → He told me he ___ for the bus when he ___ the accident.",
+      "options": [
+        { "id": "a", "text": "was waiting / saw" },
+        { "id": "b", "text": "had been waiting / had seen" },
+        { "id": "c", "text": "was waiting / had seen" },
+        { "id": "d", "text": "had been waiting / saw" }
+      ],
+      "correctOption": "d",
+      "explanation": "Past continuous 'was waiting' backshifts to past perfect continuous 'had been waiting'; past simple 'saw' backshifts to past perfect 'had seen'. Option A applies no backshift to either verb. Option B correctly backshifts both but the past perfect continuous and past perfect form a grammatically odd pair here — the second event (seeing) should be past perfect 'had seen' while the ongoing background action (waiting) becomes past perfect continuous. Option C only backshifts the second verb. Option D correctly applies 'had been waiting' (duration) and 'had seen' (completed event).",
+      "difficulty": 3
+    }
+  ]
+}

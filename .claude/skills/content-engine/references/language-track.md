@@ -22,22 +22,32 @@ or test themselves on **the whole language at once** in the Donjon.
 Model proficiency as **separate subjects, one per CEFR level**, so a learner picks their level and
 climbs from the simplest to the most complex. Subject `id` = `{lang}-{level}`:
 
-| level | subject id (anglais) | nameFr (display — always French)    | displayOrder |
-| ----- | -------------------- | ----------------------------------- | ------------ |
-| A1    | `anglais-a1`         | Anglais — Débutant (A1)             | 1            |
-| A2    | `anglais-a2`         | Anglais — Élémentaire (A2)          | 2            |
-| B1    | `anglais-b1`         | Anglais — Intermédiaire (B1)        | 3            |
-| B2    | `anglais-b2`         | Anglais — Intermédiaire avancé (B2) | 4            |
-| C1    | `anglais-c1`         | Anglais — Autonome (C1)             | 5            |
+| level | subject id (anglais) | nameFr (display — in the subject's language) | displayOrder |
+| ----- | -------------------- | -------------------------------------------- | ------------ |
+| A1    | `anglais-a1`         | English — Beginner (A1)                      | 1            |
+| A2    | `anglais-a2`         | English — Elementary (A2)                    | 2            |
+| B1    | `anglais-b1`         | English — Intermediate (B1)                  | 3            |
+| B2    | `anglais-b2`         | English — Upper-Intermediate (B2)            | 4            |
+| C1    | `anglais-c1`         | English — Advanced (C1)                      | 5            |
+| C2    | `anglais-c2`         | English — Mastery (C2)                       | 6            |
 
-Same `{lang}-{level}` shape for `francais-*` and `arabe-*` (for Arabic use ascending bands such as
-مبتدئ / متوسط / متقدّم, keeping the slug as `arabe-a1`, `arabe-a2`, …). `nameFr` is always French — it
-is the only display field — even though the content is in the target language.
+**Author the full CEFR ladder A1→C2** (six levels). The reference English program shipped all six
+(`anglais-a1`…`anglais-c2`); a complete track is A1 through C2, not A1–C1. Same `{lang}-{level}` shape
+for `francais-*` and `arabe-*` (for Arabic use ascending bands such as مبتدئ / متوسط / متقدّم, keeping
+the slug as `arabe-a1`, `arabe-a2`, …). `nameFr` is the only display field, and you write it **in the
+subject's target language** (an `anglais-*` subject gets an English name, an `arabe-*` an Arabic one) —
+the field name is legacy, not a French requirement.
 
-- **Chapters = competences**, ordered simplest→most complex within the level: a grammar point, a tense,
-  a vocabulary field, a reading/spelling skill. **~5 chapters per level** is a good flagship size.
+- **Chapters = competences**, ordered simplest→most complex within the level. **~5–8 chapters per
+  level** (the reference English levels run 5–8; A1 stays small, mid/high bands are richer). Each level
+  must cover more than grammar — every level ships, in addition to its grammar/tense chapters:
+  - **at least one vocabulary chapter** (a vocabulary field, e.g. everyday vocab, phrasal verbs, idioms,
+    confusables/false-friends, word-formation), and
+  - **a dedicated reading-comprehension chapter** (named `…-reading` / `…-reading-inference` /
+    `…-reading-critical` as the band rises) — a short passage + comprehension questions.
 - Calibrate each level to its CEFR band: A1 = the verb _to be_, present simple, articles & plurals,
-  everyday vocabulary, basic questions; B2/C1 = nuance, register, idioms, complex syntax, inference.
+  everyday vocabulary, basic questions; B2/C1/C2 = nuance, register, idioms, inversion/cleft/ellipsis,
+  word-formation, complex syntax, inference and critical reading.
 - Build levels **bottom-up** (finish A1 before A2) so the ascending path is always complete end-to-end.
 
 ### Axis 2 — by whole theme: a dedicated Donjon subject (mixed, varied)
@@ -46,14 +56,19 @@ In addition to the per-chapter path, every language gets **one dedicated "Donjon
 the whole language in a single varied gauntlet — _questions sur tout le thème_, not tied to one
 chapter. This mirrors the `culture-generale-dungeon-*` precedent.
 
-- Subject `id` = `{lang}-donjon` (e.g. `anglais-donjon`); `nameFr` e.g. "Anglais — Donjon (tout le
-  thème)"; `attribute: "Polyvalence"`, `icon: "Swords"`, a high `displayOrder` (after the levels).
-- One chapter (`01-donjon`) whose exercises **interleave competences** — each question is tagged with
-  its strand in the prompt: `"Grammar — …"`, `"Vocabulary — …"`, `"Reading — …"`, `"Spelling — …"`
-  (localized to the content language).
-- Use the full ascending ladder below so the donjon itself ramps easy→elite and feels varied.
-- The donjon **grows with the track**: while only A1 exists it mixes A1 material; as higher levels are
-  authored, add donjon chapters/exercises spanning them. Say in the report which band it currently covers.
+- Subject `id` = `{lang}-donjon` (e.g. `anglais-donjon`); `nameFr` in the track's language, e.g.
+  "English — Gauntlet (whole theme)"; `attribute: "Polyvalence"`, `icon: "Swords"`, a high
+  `displayOrder` (after the levels).
+- The donjon's chapters **interleave competences** — each question is tagged with its strand in the
+  prompt: `"Grammar — …"`, `"Vocabulary — …"`, `"Reading — …"`, `"Spelling — …"` (localized to the
+  content language).
+- **One gauntlet chapter per CEFR band** (the proven layout): a `01-donjon` opener that mixes the whole
+  language, then one band chapter per level — `NN-gauntlet-{band}` (`02-gauntlet-a2`, `03-gauntlet-b1`,
+  … `06-gauntlet-c2`) — each blending that band's chapters across all strands. The reference English
+  donjon is `01-donjon` + `gauntlet-a2…gauntlet-c2`.
+- Use the full ascending ladder below in every gauntlet chapter so each one ramps easy→elite and varied.
+- The donjon **grows with the track**: while only A1 exists it mixes A1 material in `01-donjon`; as each
+  higher level is authored, add its `NN-gauntlet-{band}` chapter. Say in the report which bands it covers.
 
 ## The ascending exercise ladder (use this — ordered easy→elite)
 
@@ -66,7 +81,12 @@ Every level chapter **and** the donjon chapter use this 4-rung ladder (canonical
 | `02-revision` | practice  | 2          | 75 / 15    | 2            | "⭐⭐ Review: …" / "⭐⭐ Révision : …"    |
 | `03-boss`     | boss      | 3          | 120 / 30   | 3            | "⚔️ Chapter Boss ⭐⭐⭐: …"               |
 | `04-defi`     | challenge | 4          | 300 / 60   | 4            | "👑 Elite Challenge ⭐⭐⭐⭐: …"          |
+| `05-drill`    | practice  | 2          | 75 / 15    | 5            | "⭐⭐ Drill: …" / "⭐⭐ Drill : …"        |
 
+- **`05-drill` is a cumulative consolidation rung** (added to every chapter once the ladder is mature):
+  6 **brand-new** questions that re-sample the **whole chapter** end-to-end (no duplicates of the quiz or
+  of 01–04), at the ⭐⭐ review tier. It reinforces retention without raising the ceiling — give every
+  finished chapter one. The four rungs above (01–04) are the spine; `05-drill` is the extra-reps top-up.
 - **6 questions per exercise**, per-question difficulty ramping (1→3) and ≤ the tier ceiling. **5
   questions in `quiz.json`** (difficulty 1–2), titled e.g. "Comprehension Check ⭐".
 - Free parcours never gate on difficulty, so all four rungs are always playable — the ladder is purely
@@ -92,8 +112,26 @@ Every level chapter **and** the donjon chapter use this 4-rung ladder (canonical
 - Sentences and examples must be **natural and correct** in the target language; verify idioms and
   usage via web search when unsure and cite sources in `chapter.json` `sources[]`.
 - Keep each subject strictly in its one immersion language; only slugs/`mode`/URLs are exceptions.
-- **Balance the key** — spread `correctOption` across a/b/c/d; no duplicate/near-duplicate questions
-  within or across a level's chapters (or the donjon).
+- **Verify every key blind, then balance it** — re-solve each question yourself before trusting the
+  answer key; then spread `correctOption` across a/b/c/d. Watch for single-letter sweeps (a run of all-`b`
+  is a red flag, not a coincidence). No duplicate/near-duplicate questions within or across a level's
+  chapters (or the donjon) — `05-drill` questions must be new, not recycled from 01–04 or the quiz.
+
+## Proven rollout sequence (large language tracks)
+
+Building a full A1→C2 track is big; do it in reviewable phases rather than one mega-drop (this is how
+the reference English track was built — one PR per phase):
+
+1. **Levels, bottom-up** — author the grammar/tense spine of each level A1→C2 + the donjon, complete
+   end-to-end, before broadening.
+2. **Audit** — re-solve every question blind, fix keys/distractors/calibration, balance the key
+   (use the `content-audit` skill). Do this _before_ broadening, while the surface is small.
+3. **Broaden** — add the vocabulary and reading-comprehension chapters each level needs, plus any
+   missing grammar competences.
+4. **Drill** — add the cumulative `05-drill` rung to every finished chapter (top-up reps).
+
+Each phase ends at the validate-and-stop gate (`content:check` + `content:qa:strict`, 0 errors) and is
+its own PR. Build the SQL migrations only when asked, after the files pass.
 
 ## Hybrid sourcing
 

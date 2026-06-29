@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Quel est le participe présent du verbe « finir » ?",
+      "options": [
+        { "id": "a", "text": "finant" },
+        { "id": "b", "text": "finissant" },
+        { "id": "c", "text": "finissent" },
+        { "id": "d", "text": "fini" }
+      ],
+      "correctOption": "b",
+      "explanation": "On forme le participe présent sur le radical de « nous » au présent : nous finiss-ons → finiss- + -ant = finissant. « finant » oublie l'infixe -iss-, « finissent » est une forme conjuguée et « fini » est le participe passé.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complétez : « Il a appris le français ___ des films sous-titrés. » (exprimer le moyen)",
+      "options": [
+        { "id": "a", "text": "regardant" },
+        { "id": "b", "text": "en regardant" },
+        { "id": "c", "text": "regarde" },
+        { "id": "d", "text": "à regarder" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le gérondif (en + participe présent) exprime ici le moyen : il a appris en regardant des films. « regardant » seul est un participe présent sans la préposition « en » obligatoire pour le gérondif ; les autres formes ne conviennent pas.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lequel de ces participes présents est IRRÉGULIER ?",
+      "options": [
+        { "id": "a", "text": "prenant" },
+        { "id": "b", "text": "faisant" },
+        { "id": "c", "text": "sachant" },
+        { "id": "d", "text": "disant" }
+      ],
+      "correctOption": "c",
+      "explanation": "« savoir » a un participe présent irrégulier : sachant (et non « savant »). Les trois irréguliers sont étant, ayant, sachant. « prenant », « faisant » et « disant » suivent la règle du radical de « nous » (prenons, faisons, disons).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Le participe présent dans « des élèves parlant trois langues » est :",
+      "options": [
+        { "id": "a", "text": "invariable, il équivaut à « qui parlent »" },
+        { "id": "b", "text": "variable, il s'accorde avec « élèves »" },
+        { "id": "c", "text": "un adjectif verbal au pluriel" },
+        { "id": "d", "text": "un gérondif" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le participe présent est une forme verbale invariable : on écrit « parlant », jamais « parlants ». Il équivaut à la relative « qui parlent ». Ce n'est pas un adjectif verbal (qui, lui, s'accorderait) et il n'y a pas de préposition « en » : ce n'est donc pas un gérondif.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans quelle phrase la forme en -ant est-elle un ADJECTIF VERBAL (accordé) ?",
+      "options": [
+        { "id": "a", "text": "Fatiguant tout le monde, il a fini par partir." },
+        { "id": "b", "text": "Ce sont des journées vraiment fatigantes." },
+        { "id": "c", "text": "En fatiguant le cheval, tu le rendras nerveux." },
+        { "id": "d", "text": "Les efforts fatiguant les muscles sont à doser." }
+      ],
+      "correctOption": "b",
+      "explanation": "Dans (b), « fatigantes » s'accorde avec « journées » : c'est l'adjectif verbal (orthographe sans u). Dans (a) et (d), « fatiguant » est un participe présent invariable (= qui fatigue) et dans (c), « en fatiguant » est un gérondif.",
+      "difficulty": 2
+    }
+  ]
+}

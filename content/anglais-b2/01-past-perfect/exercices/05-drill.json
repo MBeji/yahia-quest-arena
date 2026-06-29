@@ -1,0 +1,154 @@
+{
+  "title": "⭐⭐ Drill: Past Perfect",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Choose the correct form: 'By the time we reached the station, the last train ___ already left.'",
+      "options": [
+        {
+          "id": "a",
+          "text": "has"
+        },
+        {
+          "id": "b",
+          "text": "had"
+        },
+        {
+          "id": "c",
+          "text": "was"
+        },
+        {
+          "id": "d",
+          "text": "have"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "The past perfect 'had already left' shows the train's departure happened before we reached the station. 'Has' and 'have' are present perfect auxiliaries — wrong in a past narrative. 'Was' is the past simple of 'be' and cannot combine with a past participle to form the past perfect.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which sentence uses the past perfect INCORRECTLY?",
+      "options": [
+        {
+          "id": "a",
+          "text": "She had never eaten Thai food before that evening."
+        },
+        {
+          "id": "b",
+          "text": "When the fire started, everyone had evacuated safely."
+        },
+        {
+          "id": "c",
+          "text": "After he had locked the door, he realised he'd left his keys inside."
+        },
+        {
+          "id": "d",
+          "text": "I had visited my aunt last weekend."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "'Last weekend' is a finished time reference with no second past event to connect to, so the past simple 'I visited my aunt last weekend' is correct. The past perfect cannot stand alone — it needs an anchor in another past event or a time connector like 'before', 'when', or 'by the time'. Options A, B, and D all correctly link the past perfect to another past reference point.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choose the BEST sentence: The events in order are: [1] He read the script. [2] He agreed to do the film.",
+      "options": [
+        {
+          "id": "a",
+          "text": "He agreed to do the film because he had read the script."
+        },
+        {
+          "id": "b",
+          "text": "He had agreed to do the film because he read the script."
+        },
+        {
+          "id": "c",
+          "text": "He agreed to do the film because he has read the script."
+        },
+        {
+          "id": "d",
+          "text": "He had agreed to do the film because he had read the script."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "The earlier action (reading the script) takes the past perfect 'had read'; the later result (agreeing) takes the past simple 'agreed'. This is the standard pattern for sequencing two past events with a causal link. Option B wrongly puts the later event (agreeing) in the past perfect. Option C uses the present perfect 'has read' — incorrect in a past narrative. Option D uses past perfect for both — the later event 'agreed' should be past simple.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: 'It was the first time she ___ ever spoken in front of such a large audience.'",
+      "options": [
+        {
+          "id": "a",
+          "text": "was ever speaking"
+        },
+        {
+          "id": "b",
+          "text": "has ever spoken"
+        },
+        {
+          "id": "c",
+          "text": "had ever spoken"
+        },
+        {
+          "id": "d",
+          "text": "ever spoke"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "After 'It was the first time…' in a past context, the past perfect 'had ever spoken' is required — it covers all her experience up to that past moment. Compare: 'It IS the first time she HAS spoken' (present). When the main clause uses 'was', the subordinate clause takes the past perfect. 'Has ever spoken' is present perfect — wrong when the main verb is 'was'. 'Ever spoke' (bare past simple) is a common learner error.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Fill in the gap: 'The journalist discovered that the company ___ been hiding the data for over a year.'",
+      "options": [
+        {
+          "id": "a",
+          "text": "was"
+        },
+        {
+          "id": "b",
+          "text": "had"
+        },
+        {
+          "id": "c",
+          "text": "has"
+        },
+        {
+          "id": "d",
+          "text": "were"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "'Had been hiding' is the past perfect continuous, formed with 'had + been + verb-ing'. It emphasises the extended duration (over a year) of the ongoing concealment, which preceded the journalist's discovery. 'Was been hiding' and 'were been hiding' are impossible structures. 'Has been hiding' is present perfect continuous — wrong in a past narrative anchored to 'the journalist discovered'.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Spot the error: 'By the time the ambulance had arrived, the situation had already stabilised.' What is wrong?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Nothing — using past perfect for both events is always correct."
+        },
+        {
+          "id": "b",
+          "text": "'had stabilised' should be 'has stabilised' — the situation affects the present."
+        },
+        {
+          "id": "c",
+          "text": "'had arrived' should be 'arrived' — the arrival is the later reference point, not the earlier event."
+        },
+        {
+          "id": "d",
+          "text": "'had arrived' should be 'has arrived' — ambulances are present-tense subjects."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "'By the time' introduces the later reference point, which must be in the past simple: 'By the time the ambulance arrived'. The past perfect 'had already stabilised' correctly shows the earlier event (stabilising before the ambulance got there). Using past perfect for the 'by the time' clause is a very common B2 error. Options B and D suggest incorrect tense changes that do not fix the actual problem; option A wrongly claims both past perfects are fine.",
+      "difficulty": 3
+    }
+  ]
+}

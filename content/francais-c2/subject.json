@@ -1,0 +1,12 @@
+{
+  "id": "francais-c2",
+  "nameFr": "Français — Maîtrise (C2 · DALF C2)",
+  "description": "Vise la maîtrise complète : les temps littéraires, les figures de style, la syntaxe expressive, les nuances lexicales et les paronymes savants, les expressions rares, proverbes et locutions latines, la rhétorique et l'argumentation experte, le vocabulaire savant, et la lecture critique de textes exigeants. Niveau maîtrise (CECRL C2), aligné sur le DALF C2.",
+  "attribute": "Agilité",
+  "colorToken": "subject-french",
+  "icon": "Languages",
+  "displayOrder": 6,
+  "contentLanguage": "fr",
+  "themeId": "francais",
+  "gradeSlug": null
+}

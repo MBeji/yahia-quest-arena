@@ -174,11 +174,18 @@ function DungeonTestHarness({
 
   const currentQuestion = questions[currentIdx] as DungeonQuestion | undefined;
 
-  async function handleSelect(optId: string) {
+  // Selecting only highlights a choice; it is changeable until validation. No
+  // answer is sent to the server here — a misclick can no longer end the run.
+  function handleSelect(optId: string) {
     if (showFeedback) return;
     setSelected(optId);
+  }
+
+  // The sole commit path: submits the selected choice.
+  async function validate() {
+    if (showFeedback || !selected) return;
     setShowFeedback(true);
-    const result = await onAnswer(optId);
+    const result = await onAnswer(selected);
     setAnswerWasCorrect(result.isCorrect);
     if (result.isCorrect) {
       setCurrentFloor(result.nextFloor);
@@ -270,6 +277,7 @@ function DungeonTestHarness({
               key={opt.id}
               onClick={() => handleSelect(opt.id)}
               disabled={showFeedback}
+              aria-checked={isSel}
               data-testid={`option-${opt.displayId}`}
               data-correct={isCorrect || undefined}
               data-wrong={isWrong || undefined}
@@ -279,6 +287,11 @@ function DungeonTestHarness({
           );
         })}
       </div>
+      {!showFeedback && (
+        <button data-testid="dungeon-validate" disabled={!selected} onClick={validate}>
+          ⚔️ Validate
+        </button>
+      )}
       {showFeedback && answerWasCorrect !== null && (
         <div data-testid="feedback">
           {answerWasCorrect ? "Correct! Descending deeper…" : "Wrong! The dungeon collapses…"}
@@ -386,6 +399,32 @@ describe("DungeonPage Component", () => {
       expect(screen.getByTestId("subject-badge")).toHaveTextContent("Mathématiques");
     });
 
+    it("does not submit on select — only on validate", async () => {
+      const onAnswer = vi.fn().mockResolvedValue({
+        isCorrect: true,
+        totalCorrect: 1,
+        totalAnswered: 1,
+        nextFloor: 2,
+        correctChoice: "b",
+        prompt: "",
+        explanation: null,
+      });
+      const Wrapper = createWrapper();
+      render(
+        React.createElement(
+          Wrapper,
+          null,
+          React.createElement(DungeonTestHarness, { initialState: "playing", onAnswer }),
+        ),
+      );
+      // Selecting (and even changing) does not commit the answer.
+      fireEvent.click(screen.getByTestId("option-A"));
+      fireEvent.click(screen.getByTestId("option-B"));
+      expect(onAnswer).not.toHaveBeenCalled();
+      expect(screen.getByTestId("option-B")).toHaveAttribute("aria-checked", "true");
+      expect(screen.queryByTestId("feedback")).not.toBeInTheDocument();
+    });
+
     it("shows feedback on correct answer", async () => {
       const onAnswer = vi.fn().mockResolvedValue({
         isCorrect: true,
@@ -405,6 +444,7 @@ describe("DungeonPage Component", () => {
         ),
       );
       fireEvent.click(screen.getByTestId("option-A"));
+      fireEvent.click(screen.getByTestId("dungeon-validate"));
       await waitFor(() => {
         expect(screen.getByTestId("feedback")).toHaveTextContent("Correct! Descending deeper…");
       });
@@ -429,6 +469,7 @@ describe("DungeonPage Component", () => {
         ),
       );
       fireEvent.click(screen.getByTestId("option-A"));
+      fireEvent.click(screen.getByTestId("dungeon-validate"));
       await waitFor(() => {
         expect(screen.getByTestId("feedback")).toHaveTextContent("Wrong! The dungeon collapses…");
       });
@@ -453,6 +494,7 @@ describe("DungeonPage Component", () => {
         ),
       );
       fireEvent.click(screen.getByTestId("option-A"));
+      fireEvent.click(screen.getByTestId("dungeon-validate"));
       await waitFor(() => {
         expect(screen.getByTestId("option-A")).toBeDisabled();
         expect(screen.getByTestId("option-B")).toBeDisabled();

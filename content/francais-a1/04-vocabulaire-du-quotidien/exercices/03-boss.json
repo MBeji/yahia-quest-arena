@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : se présenter et mots courants",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "La mère de ta mère est ta…",
+      "options": [
+        { "id": "a", "text": "sœur" },
+        { "id": "b", "text": "fille" },
+        { "id": "c", "text": "grand-mère" },
+        { "id": "d", "text": "mère" }
+      ],
+      "correctOption": "c",
+      "explanation": "La mère de ta mère (ou de ton père) est ta grand-mère ; son mari est ton grand-père. Ta sœur est de ta génération, ta fille serait ton enfant, et ta mère est celle qui t'élève — toutes plus proches d'une génération qu'une grand-mère.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète ce mini-dialogue. — Comment vous appelez-vous ? — ___ Léa Martin.",
+      "options": [
+        { "id": "a", "text": "Je m'appelle" },
+        { "id": "b", "text": "J'ai" },
+        { "id": "c", "text": "J'habite" },
+        { "id": "d", "text": "Je suis de" }
+      ],
+      "correctOption": "a",
+      "explanation": "À la question « Comment vous appelez-vous ? » on répond « Je m'appelle Léa Martin ». « J'ai » sert à l'âge, « J'habite » à la ville, et « Je suis de » indique l'origine — aucun ne convient pour annoncer son nom.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel nombre s'écrit « soixante-neuf » ?",
+      "options": [
+        { "id": "a", "text": "59" },
+        { "id": "b", "text": "66" },
+        { "id": "c", "text": "70" },
+        { "id": "d", "text": "69" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Soixante-neuf » se décompose en soixante (60) + neuf (9) = 69. Ne le confonds pas avec cinquante-neuf (59) ni avec soixante (60) seul. C'est le dernier nombre formé sur soixante avant soixante-dix.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Trouve l'intrus (le mot qui n'est PAS une formule de politesse).",
+      "options": [
+        { "id": "a", "text": "merci" },
+        { "id": "b", "text": "marron" },
+        { "id": "c", "text": "pardon" },
+        { "id": "d", "text": "s'il vous plaît" }
+      ],
+      "correctOption": "b",
+      "explanation": "Merci, pardon et s'il vous plaît sont des formules de politesse. Marron est une couleur, c'est donc l'intrus. Le piège : marron et merci commencent par la lettre m, mais l'un est une couleur et l'autre un remerciement.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle phrase est correcte pour dire ton âge ?",
+      "options": [
+        { "id": "a", "text": "Je suis treize ans." },
+        { "id": "b", "text": "J'ai treize." },
+        { "id": "c", "text": "J'ai treize ans." },
+        { "id": "d", "text": "Je m'appelle treize ans." }
+      ],
+      "correctOption": "c",
+      "explanation": "Pour l'âge, on emploie avoir + le nombre + ans : « J'ai treize ans. » « Je suis treize ans » est faux (on n'utilise pas être), « J'ai treize » oublie le mot ans, et « Je m'appelle » sert au nom. C'est le piège le plus courant en français pour les débutants.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans la phrase « ___ ! À demain. », quelle salutation convient pour partir le soir ?",
+      "options": [
+        { "id": "a", "text": "Bonsoir" },
+        { "id": "b", "text": "Bonjour" },
+        { "id": "c", "text": "Merci" },
+        { "id": "d", "text": "S'il vous plaît" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le soir, pour saluer en partant, on peut dire « Bonsoir ! À demain » (ou « Au revoir »). « Bonjour » se dit le matin et la journée, « Merci » remercie, et « S'il vous plaît » sert à demander : aucun ne convient pour partir le soir.",
+      "difficulty": 3
+    }
+  ]
+}

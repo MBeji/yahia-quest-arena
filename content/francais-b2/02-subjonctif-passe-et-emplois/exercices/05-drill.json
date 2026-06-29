@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Drill : révision globale du chapitre",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complète : « Nous sommes fiers que vous ___ ce concours l'an passé. » (réussir)",
+      "options": [
+        { "id": "a", "text": "ayez réussi" },
+        { "id": "b", "text": "réussissiez" },
+        { "id": "c", "text": "avez réussi" },
+        { "id": "d", "text": "réussirez" }
+      ],
+      "correctOption": "a",
+      "explanation": "Sentiment + action passée (« l'an passé ») → subjonctif passé avec avoir : que vous ayez réussi. « réussissiez » est le présent, « avez réussi » l'indicatif, « réussirez » le futur.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Pars vite, à moins que tu ne ___ rester encore un peu. » (vouloir)",
+      "options": [
+        { "id": "a", "text": "veux" },
+        { "id": "b", "text": "veuilles" },
+        { "id": "c", "text": "voudras" },
+        { "id": "d", "text": "aies voulu" }
+      ],
+      "correctOption": "b",
+      "explanation": "« À moins que » impose le subjonctif présent pour une volonté actuelle : à moins que tu ne veuilles. Le « ne » est explétif. « veux » et « voudras » sont l'indicatif, et le passé « aies voulu » n'a pas de sens ici.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choisis le bon mode : « C'est le premier élève qui ___ résolu ce problème. » (avoir résolu)",
+      "options": [
+        { "id": "a", "text": "a" },
+        { "id": "b", "text": "avait" },
+        { "id": "c", "text": "aura" },
+        { "id": "d", "text": "ait" }
+      ],
+      "correctOption": "d",
+      "explanation": "Après « le premier » (valeur de superlatif), la relative se met au subjonctif : qui ait résolu. C'est le subjonctif passé (action accomplie). « a » et « avait » sont l'indicatif, « aura » le futur.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « J'aimerais trouver une explication qui ___ tout le monde. » (satisfaire)",
+      "options": [
+        { "id": "a", "text": "satisfait" },
+        { "id": "b", "text": "satisfasse" },
+        { "id": "c", "text": "satisfera" },
+        { "id": "d", "text": "satisfaisait" }
+      ],
+      "correctOption": "b",
+      "explanation": "L'explication est souhaitée, pas encore trouvée : relative de souhait au subjonctif présent : qui satisfasse. « satisfait » (indicatif) décrirait une explication réelle ; « satisfera » est le futur, « satisfaisait » l'imparfait.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "Je suis content qu'elle soit arrivée à temps." },
+        { "id": "b", "text": "Pour que tu réussisses, travaille régulièrement." },
+        { "id": "c", "text": "Après que nous ayons mangé, nous sommes sortis." },
+        { "id": "d", "text": "Bien qu'il pleuve, nous irons marcher." }
+      ],
+      "correctOption": "c",
+      "explanation": "Erreur dans (c) : « après que » se construit avec l'indicatif → après que nous avons mangé. Le piège est de l'aligner sur « avant que » (subjonctif). Les phrases (a), (b) et (d) emploient correctement le subjonctif.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Il agit toujours sans que ses collègues ne ___ informés à l'avance. » (être)",
+      "options": [
+        { "id": "a", "text": "sont" },
+        { "id": "b", "text": "seront" },
+        { "id": "c", "text": "étaient" },
+        { "id": "d", "text": "soient" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Sans que » impose le subjonctif ; l'action est simultanée → subjonctif présent : sans que ses collègues ne soient informés. « sont », « seront » et « étaient » sont à l'indicatif.",
+      "difficulty": 3
+    }
+  ]
+}

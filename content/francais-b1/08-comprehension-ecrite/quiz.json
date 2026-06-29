@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Que faut-il faire AVANT de lire un texte de compréhension au niveau B1 ?",
+      "options": [
+        { "id": "a", "text": "Lire lentement le texte du début à la fin." },
+        { "id": "b", "text": "Traduire tout le texte dans sa langue maternelle." },
+        { "id": "c", "text": "Lire d'abord les questions pour savoir quoi chercher." },
+        { "id": "d", "text": "Chercher chaque mot inconnu dans un dictionnaire." }
+      ],
+      "correctOption": "c",
+      "explanation": "La première stratégie est de lire les questions avant le texte, afin de savoir précisément quelle information chasser. Lire lentement, tout traduire ou chercher chaque mot sont des méthodes lentes et peu efficaces au niveau B1.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans un texte argumentatif, qu'est-ce que la « thèse » ?",
+      "options": [
+        { "id": "a", "text": "L'idée principale que l'auteur défend." },
+        { "id": "b", "text": "Un exemple concret donné dans le texte." },
+        { "id": "c", "text": "Le titre de l'article." },
+        { "id": "d", "text": "Un mot difficile à comprendre." }
+      ],
+      "correctOption": "a",
+      "explanation": "La thèse est l'idée centrale que l'auteur veut faire admettre ; elle se repère souvent au titre, en introduction et en conclusion. Un exemple sert à illustrer un argument, pas à porter l'idée centrale.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lis la phrase :\n« Bien que le restaurant soit cher, j'y retourne souvent. »\nQue montre le connecteur « bien que » ?",
+      "options": [
+        { "id": "a", "text": "Une cause : le prix explique les visites." },
+        { "id": "b", "text": "Une concession : on y va malgré le prix élevé." },
+        { "id": "c", "text": "Une conséquence : le prix entraîne les visites." },
+        { "id": "d", "text": "Une addition : on ajoute une nouvelle idée." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Bien que » introduit une concession : l'auteur reconnaît un obstacle (le prix élevé) mais agit quand même (il y retourne). Ce n'est ni une cause, ni une conséquence, ni une simple addition.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Parmi ces phrases, laquelle exprime une OPINION (et non un fait) ?",
+      "options": [
+        { "id": "a", "text": "Le film dure deux heures." },
+        { "id": "b", "text": "Le film est sorti en 2021." },
+        { "id": "c", "text": "Le film a été vu par un million de spectateurs." },
+        { "id": "d", "text": "Le film est, à mon avis, le meilleur de l'année." }
+      ],
+      "correctOption": "d",
+      "explanation": "« À mon avis » et « le meilleur » signalent un jugement personnel : c'est une opinion. La durée, l'année de sortie et le nombre de spectateurs sont des faits vérifiables.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lis la phrase :\n« Malheureusement, ce livre m'a profondément déçu. »\nQuel est le ton de l'auteur ?",
+      "options": [
+        { "id": "a", "text": "Positif" },
+        { "id": "b", "text": "Négatif" },
+        { "id": "c", "text": "Neutre" },
+        { "id": "d", "text": "Enthousiaste" }
+      ],
+      "correctOption": "b",
+      "explanation": "Les mots évaluatifs « Malheureusement » et « déçu » expriment une attitude négative. Un ton positif ou enthousiaste utiliserait des mots élogieux, et un ton neutre resterait objectif, sans jugement.",
+      "difficulty": 2
+    }
+  ]
+}

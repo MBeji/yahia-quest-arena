@@ -1,0 +1,82 @@
+{
+  "title": "👑 تحدّي النخبة ⭐⭐⭐⭐: ألغاز الجمع",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "عددٌ إذا أضفنا إليه 4 صار 11. ما هو؟",
+      "options": [
+        { "id": "a", "text": "15" },
+        { "id": "b", "text": "7" },
+        { "id": "c", "text": "6" },
+        { "id": "d", "text": "8" }
+      ],
+      "correctOption": "b",
+      "explanation": "نبحث عن عددٍ مع 4 يعطي 11: 7 + 4 = 11. إذن العدد 7.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كم يساوي 25 + 25؟",
+      "options": [
+        { "id": "a", "text": "40" },
+        { "id": "b", "text": "55" },
+        { "id": "c", "text": "50" },
+        { "id": "d", "text": "45" }
+      ],
+      "correctOption": "c",
+      "explanation": "الآحاد: 5 + 5 = 10، نكتب 0 ونحتفظ بعشرة. العشرات: 2 + 2 + 1 = 5. إذن 25 + 25 = 50.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ربح بطلٌ 14 نقطة ثمّ 9 نقاط ثمّ 6 نقاط. كم نقطة جمع؟",
+      "options": [
+        { "id": "a", "text": "20" },
+        { "id": "b", "text": "30" },
+        { "id": "c", "text": "23" },
+        { "id": "d", "text": "29" }
+      ],
+      "correctOption": "d",
+      "explanation": "نجمع خطوة خطوة: 14 + 9 = 23، ثمّ 23 + 6 = 29. جمع 29 نقطة.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "ما العدد المفقود؟ 30 + … = 47",
+      "options": [
+        { "id": "a", "text": "27" },
+        { "id": "b", "text": "7" },
+        { "id": "c", "text": "77" },
+        { "id": "d", "text": "17" }
+      ],
+      "correctOption": "d",
+      "explanation": "نبحث عمّا نضيفه إلى 30 لنبلغ 47: الفرق 17، لأنّ 30 + 17 = 47.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "كم يساوي 38 + 14؟",
+      "options": [
+        { "id": "a", "text": "42" },
+        { "id": "b", "text": "52" },
+        { "id": "c", "text": "51" },
+        { "id": "d", "text": "62" }
+      ],
+      "correctOption": "b",
+      "explanation": "الآحاد: 8 + 4 = 12، نكتب 2 ونحتفظ بعشرة. العشرات: 3 + 1 + 1 = 5. إذن 38 + 14 = 52.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "جمعنا عددين متساويين فحصلنا على 16. ما هما؟",
+      "options": [
+        { "id": "a", "text": "8 و 8" },
+        { "id": "b", "text": "6 و 6" },
+        { "id": "c", "text": "9 و 9" },
+        { "id": "d", "text": "7 و 7" }
+      ],
+      "correctOption": "a",
+      "explanation": "نبحث عن عددٍ مع نفسه يعطي 16: 8 + 8 = 16. إذن العددان 8 و 8.",
+      "difficulty": 3
+    }
+  ]
+}

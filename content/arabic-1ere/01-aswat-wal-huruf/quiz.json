@@ -1,0 +1,65 @@
+{
+  "title": "اختبار فهم الدرس ⭐",
+  "questions": [
+    {
+      "prompt": "ما هذا الحرف؟ <svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"108\" height=\"108\" rx=\"16\" fill=\"#bfdbfe\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"60\" y=\"86\" font-size=\"72\" text-anchor=\"middle\" fill=\"#1d4ed8\" stroke=\"none\">م</text></svg>",
+      "options": [
+        { "id": "a", "text": "الحرف ب" },
+        { "id": "b", "text": "الحرف ل" },
+        { "id": "c", "text": "الحرف م" },
+        { "id": "d", "text": "الحرف س" }
+      ],
+      "correctOption": "c",
+      "explanation": "هذا هو الحرف م، وصوته «مـْ» كما في كلمة موز.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كلمة «تفّاحة» بأيّ حرفٍ تبدأ؟",
+      "options": [
+        { "id": "a", "text": "الحرف م" },
+        { "id": "b", "text": "الحرف ت" },
+        { "id": "c", "text": "الحرف د" },
+        { "id": "d", "text": "الحرف ر" }
+      ],
+      "correctOption": "b",
+      "explanation": "أوّل صوتٍ في كلمة تفّاحة هو «تـْ»، فهي تبدأ بالحرف ت.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كلمة «شمس» بأيّ حرفٍ تبدأ؟",
+      "options": [
+        { "id": "a", "text": "الحرف س" },
+        { "id": "b", "text": "الحرف ب" },
+        { "id": "c", "text": "الحرف م" },
+        { "id": "d", "text": "الحرف ش" }
+      ],
+      "correctOption": "d",
+      "explanation": "أوّل صوتٍ في كلمة شمس هو «شـْ»، فهي تبدأ بالحرف ش.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم نقطةً للحرف ت، وأين؟",
+      "options": [
+        { "id": "a", "text": "نقطتان فوقه" },
+        { "id": "b", "text": "نقطةٌ واحدةٌ تحته" },
+        { "id": "c", "text": "ثلاث نقطٍ فوقه" },
+        { "id": "d", "text": "لا نقطة له" }
+      ],
+      "correctOption": "a",
+      "explanation": "الحرف ت له نقطتان فوقه. أمّا ب فنقطةٌ واحدةٌ تحته، و ث ثلاث نقطٍ فوقه.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "أيّ حرفٍ ليست له نقطة؟",
+      "options": [
+        { "id": "a", "text": "الحرف ذ" },
+        { "id": "b", "text": "الحرف د" },
+        { "id": "c", "text": "الحرف ب" },
+        { "id": "d", "text": "الحرف ت" }
+      ],
+      "correctOption": "b",
+      "explanation": "الحرف د ليست له نقطة. أمّا ذ ففوقه نقطةٌ واحدة، وهذا هو الفرق بينهما.",
+      "difficulty": 2
+    }
+  ]
+}

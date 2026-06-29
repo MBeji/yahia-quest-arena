@@ -33,7 +33,7 @@ import { RichField, OptionContent } from "@/components/ui/svg-figure";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/dungeon")({
-  head: () => ({ meta: [{ title: "Donjon · XP Scholars" }] }),
+  head: () => ({ meta: [{ title: "Donjon · Na9ra Nal3ab" }] }),
   component: DungeonPage,
 });
 
@@ -165,11 +165,21 @@ function DungeonPage() {
     }
   }
 
-  async function handleSelect(optId: string) {
-    if (showFeedback || answerMutation.isPending || !currentQuestion || !runId) return;
+  // Selecting only highlights a choice; it is freely changeable until the
+  // player commits with "Valider". No answer is sent to the server here — which
+  // means a misclick can no longer end the run.
+  function handleSelect(optId: string) {
+    if (showFeedback || answerMutation.isPending) return;
+    setSelected(optId);
+  }
+
+  // The sole commit path: submits the currently selected choice. A wrong answer
+  // still ends the run — but only once the player has deliberately validated.
+  async function validate() {
+    if (showFeedback || answerMutation.isPending || !currentQuestion || !runId || !selected) return;
+    const optId = selected;
     const selectedOption = currentQuestion.options.find((opt) => opt.id === optId);
 
-    setSelected(optId);
     setShowFeedback(true);
     setAnswerWasCorrect(null);
 
@@ -283,7 +293,23 @@ function DungeonPage() {
               </div>
             </div>
 
-            {accessQuery.isLoading || !access ? (
+            {accessQuery.isError ? (
+              // A failed access check must not strand the lobby on an endless
+              // spinner — surface the error and offer a retry.
+              <div className="mx-auto mt-8 max-w-sm rounded-2xl border border-destructive/40 bg-destructive/5 p-5 text-left">
+                <div className="flex items-center gap-2 font-display font-bold text-destructive">
+                  <XCircle className="h-5 w-5" /> {t.dungeon.loadAccessError}
+                </div>
+                <button
+                  onClick={() => accessQuery.refetch()}
+                  disabled={accessQuery.isFetching}
+                  className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-border/50 px-4 py-2 text-sm font-semibold text-foreground hover:bg-black/60 disabled:opacity-50"
+                >
+                  {accessQuery.isFetching && <Loader2 className="h-4 w-4 animate-spin" />}
+                  {t.common.retry}
+                </button>
+              </div>
+            ) : accessQuery.isLoading || !access ? (
               <div className="mt-8 text-sm text-muted-foreground">{t.common.loading}</div>
             ) : access.reason === "SUBSCRIPTION" ? (
               <SubscriptionPaywall />
@@ -613,6 +639,21 @@ function DungeonPage() {
                 </span>
               )}
             </motion.div>
+          )}
+
+          {!showFeedback && (
+            <div className="mt-6 flex justify-end">
+              <button
+                type="button"
+                data-testid="dungeon-validate"
+                disabled={!selected || answerMutation.isPending}
+                onClick={validate}
+                className="inline-flex items-center gap-2 rounded-lg bg-[image:var(--gradient-gold)] px-6 py-2.5 text-sm font-bold text-black shadow-gold transition disabled:opacity-40"
+              >
+                {answerMutation.isPending && <Loader2 className="h-4 w-4 animate-spin" />}
+                {t.dungeon.validate}
+              </button>
+            </div>
           )}
         </motion.div>
       </AnimatePresence>

@@ -3,6 +3,7 @@ import { createRouter } from "@tanstack/react-router";
 import { createIsomorphicFn } from "@tanstack/react-start";
 import { setResponseHeader } from "@tanstack/react-start/server";
 import { buildContentSecurityPolicy } from "@/shared/lib/csp";
+import { initBrowserMonitoring } from "@/shared/lib/monitoring";
 import { routeTree } from "./routeTree.gen";
 
 /**
@@ -29,6 +30,9 @@ const resolveCspNonce = createIsomorphicFn()
   });
 
 export const getRouter = () => {
+  // Install browser error handlers once (no-op on the server / without a DSN).
+  initBrowserMonitoring();
+
   const nonce = resolveCspNonce();
 
   const queryClient = new QueryClient({

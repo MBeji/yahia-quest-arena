@@ -1,0 +1,97 @@
+{
+  "title": "⚔️ Chapter Boss ⭐⭐⭐: Nuance and Confusable Words",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "The report implied that further redundancies were likely." },
+        {
+          "id": "b",
+          "text": "She inferred from the report that further redundancies were likely."
+        },
+        { "id": "c", "text": "The manager implied from her expression that she was worried." },
+        {
+          "id": "d",
+          "text": "We inferred that the project was in difficulty from the silence on the issue."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "The error is (c): \"implied from her expression\" is wrong. It is the observer (reader/listener) who infers from evidence — the manager inferred from her expression. Imply means to suggest indirectly (as a speaker/writer puts a meaning in); you cannot imply from observing someone else's expression. (a), (b), and (d) use imply and infer correctly.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete with the most precise word: \"The committee, which ___ three senior managers and two independent advisors, met yesterday.\"",
+      "options": [
+        { "id": "a", "text": "comprises" },
+        { "id": "b", "text": "is comprised of" },
+        { "id": "c", "text": "composes" },
+        { "id": "d", "text": "is composed by" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Comprises\" is the formally correct active verb: the committee comprises [its members]. \"Is comprised of\" is widely used but criticised in formal writing — the preferred form avoids the passive. \"Composes\" reverses the logic (members compose the committee, not the other way round here). \"Is composed by\" uses the wrong preposition (by instead of of).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choose the sentence with the CORRECT connotation for the context: a job advertisement seeking a confident leader.",
+      "options": [
+        {
+          "id": "a",
+          "text": "We seek an aggressive manager who will push through results at any cost."
+        },
+        {
+          "id": "b",
+          "text": "We seek an assertive manager who will lead the team with confidence."
+        },
+        { "id": "c", "text": "We seek a notorious manager with a track record of results." },
+        { "id": "d", "text": "We seek a miserly manager who will keep costs down." }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Assertive\" has a positive connotation — confident and direct without being hostile. \"Aggressive\" carries a negative connotation of hostility. \"Notorious\" means famous for something bad — disqualifying in a job ad. \"Miserly\" means meanly reluctant to spend money — negative connotation entirely wrong for leadership.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: \"The director of the film is notorious for his precise attention to detail, often shooting each scene dozens of times.\"\nWhat is WRONG with this sentence?",
+      "options": [
+        {
+          "id": "a",
+          "text": "\"Notorious\" should be \"renowned\" or \"famous\" — the quality described is positive, not negative."
+        },
+        { "id": "b", "text": "\"Precise attention to detail\" is an incorrect collocation." },
+        { "id": "c", "text": "\"Shooting each scene\" uses the wrong verb form." },
+        { "id": "d", "text": "Nothing is wrong — the sentence is correct." }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Notorious\" implies fame for something bad. Precise attention to detail — especially in filmmaking — is a positive trait; the correct words are \"renowned\" or \"famous\". The sentence is grammatically well-formed but semantically wrong due to the negative connotation of notorious. Collocations and verb forms are fine.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Find the INCORRECT collocation.",
+      "options": [
+        { "id": "a", "text": "She was deeply concerned about the results." },
+        { "id": "b", "text": "They committed a serious crime." },
+        { "id": "c", "text": "He made a strong decision under pressure." },
+        { "id": "d", "text": "We reached a unanimous conclusion." }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Made a strong decision\" is not the natural collocation. Decisions are \"made\" (correct), but the adjective that collocates with \"decision\" is not \"strong\". You make a decision — but you describe it as \"difficult\", \"bold\", \"informed\", or \"well-considered\", not \"strong\". \"Strong\" collocates with \"argument\", \"evidence\", or \"opinion\" — not \"decision\". (a) deeply concerned, (b) committed a crime, and (d) reached a conclusion are all standard collocations.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"Her ___ approach to the problem impressed everyone: she listened to all sides, had no personal agenda, and gave a balanced judgement.\"\nWhich word BEST completes the sentence?",
+      "options": [
+        { "id": "a", "text": "uninterested" },
+        { "id": "b", "text": "disinterested" },
+        { "id": "c", "text": "sensible" },
+        { "id": "d", "text": "sensitive" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Disinterested\" means impartial — having no personal stake in the outcome. This perfectly describes someone who listens to all sides, has no personal agenda, and gives a balanced judgement. \"Uninterested\" means simply bored or indifferent — the opposite of someone actively giving a balanced judgement. \"Sensible\" means practical; \"sensitive\" means emotionally perceptive — neither captures the idea of impartiality.",
+      "difficulty": 3
+    }
+  ]
+}

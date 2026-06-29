@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : la nominalisation",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Nominalisez : « L'usine sera fermée le mois prochain. »",
+      "options": [
+        { "id": "a", "text": "La fermeture de l'usine" },
+        { "id": "b", "text": "La fermation de l'usine" },
+        { "id": "c", "text": "Le fermement de l'usine" },
+        { "id": "d", "text": "Le fermage de l'usine" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Fermer » donne « la fermeture » (suffixe -ure, féminin). ✗fermement et ✗fermation n'existent pas ; « fermage » existe mais désigne la location d'une terre agricole, pas l'action de fermer.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouvez l'intrus : un seul couple présente une erreur de GENRE.",
+      "options": [
+        { "id": "a", "text": "la construction" },
+        { "id": "b", "text": "le développement" },
+        { "id": "c", "text": "la recyclage" },
+        { "id": "d", "text": "la lenteur" }
+      ],
+      "correctOption": "c",
+      "explanation": "L'erreur est « la recyclage » : les noms en -age sont masculins, donc « le recyclage ». Les autres genres sont corrects : la construction (-tion, fém.), le développement (-ment, masc.), la lenteur (-eur, fém.).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Nominalisez : « Les autorités ont interdit la manifestation. »",
+      "options": [
+        { "id": "a", "text": "L'interdisement de la manifestation" },
+        { "id": "b", "text": "L'interdiction de la manifestation" },
+        { "id": "c", "text": "L'interdisage de la manifestation" },
+        { "id": "d", "text": "L'interditure de la manifestation" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Interdire » donne « l'interdiction » (suffixe -tion, féminin). ✗interdisement, ✗interdisage et ✗interditure sont inventés : c'est -tion, comme produire → la production.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel nom dérive de l'adjectif « franc » (sincère) ?",
+      "options": [
+        { "id": "a", "text": "la francité" },
+        { "id": "b", "text": "la franceur" },
+        { "id": "c", "text": "la francesse" },
+        { "id": "d", "text": "la franchise" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Franc » (sincère) donne « la franchise » (suffixe -ise, féminin), comme gourmand → la gourmandise. ✗francité, ✗franceur et ✗francesse ne sont pas attestés.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Nominalisez le titre : « La population a baissé dans la région. »",
+      "options": [
+        { "id": "a", "text": "Baisse de la population régionale" },
+        { "id": "b", "text": "Baissage de la population régionale" },
+        { "id": "c", "text": "Baissement de la population régionale" },
+        { "id": "d", "text": "Baissation de la population régionale" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Baisser » nominalise sans suffixe en « la baisse » (féminin), comme dans un titre de presse condensé. ✗baissement, ✗baissage et ✗baissation n'existent pas : le nom d'action est « baisse ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Trouvez l'intrus : un seul nom n'est PAS un dérivé correct de son verbe.",
+      "options": [
+        { "id": "a", "text": "accueillir → l'accueil" },
+        { "id": "b", "text": "monter → la montée" },
+        { "id": "c", "text": "appeler → l'appel" },
+        { "id": "d", "text": "produire → le produisement" }
+      ],
+      "correctOption": "d",
+      "explanation": "L'intrus est « produire → le produisement » : la forme correcte est « la production » (-tion). Les autres sont justes : l'accueil et l'appel (dérivés sans suffixe), la montée (-ée).",
+      "difficulty": 3
+    }
+  ]
+}

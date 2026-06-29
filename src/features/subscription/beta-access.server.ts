@@ -134,7 +134,7 @@ export const getPendingBetaCount = createServerFn({ method: "GET" })
  */
 export const reviewBetaRequest = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ requestId: z.string().uuid(), approve: z.boolean() }).parse(d))
+  .inputValidator((d) => z.object({ requestId: z.guid(), approve: z.boolean() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
     const { error } = await supabase.rpc("admin_review_beta_request", {

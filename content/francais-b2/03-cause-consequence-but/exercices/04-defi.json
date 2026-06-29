@@ -1,0 +1,82 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : la cause, la conséquence et le but",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "En raison de la grève, le trafic est perturbé." },
+        { "id": "b", "text": "À cause de la grève, j'ai manqué mon vol." },
+        { "id": "c", "text": "Grâce à la grève, des milliers de voyageurs sont restés bloqués." },
+        { "id": "d", "text": "Faute de personnel, le guichet est fermé." }
+      ],
+      "correctOption": "c",
+      "explanation": "Le piège courant : « grâce à » exprime une cause POSITIVE (un bénéfice). Devant un résultat fâcheux (des voyageurs bloqués), il faut « à cause de » ou « en raison de ». Les options (a), (b) et (d) emploient correctement « en raison de », « à cause de » et « faute de » + nom.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Il avait ___ peur ___ il n'osait pas bouger. » (intensité sur un nom)",
+      "options": [
+        { "id": "a", "text": "tellement de … que" },
+        { "id": "b", "text": "si … que" },
+        { "id": "c", "text": "tant … que" },
+        { "id": "d", "text": "si … pour que" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Peur » est ici un nom → « tellement de » (ou « tant de ») + nom + que : tellement de peur qu'il n'osait pas bouger. « Si » et « tant » seuls ne précèdent pas un nom, et « pour que » introduirait un but, non une conséquence.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choisis la phrase CORRECTE et la plus naturelle.",
+      "options": [
+        { "id": "a", "text": "Je baisse le son afin que les voisins ne se plaignent." },
+        { "id": "b", "text": "Je baisse le son afin que les voisins ne se plaindront pas." },
+        { "id": "c", "text": "Je baisse le son afin de les voisins ne se plaignent pas." },
+        { "id": "d", "text": "Je baisse le son afin que les voisins ne se plaignent pas." }
+      ],
+      "correctOption": "d",
+      "explanation": "Deux sujets (je / les voisins) → « afin que » + subjonctif, avec la négation complète « ne… pas » : afin que les voisins ne se plaignent pas. La (a) omet « pas », la (b) met le futur (interdit après afin que), la (c) confond « afin de » (+ infinitif, même sujet) avec « afin que ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « ___ tu connais déjà la réponse, pourquoi me la demander ? »",
+      "options": [
+        { "id": "a", "text": "Parce que" },
+        { "id": "b", "text": "Puisque" },
+        { "id": "c", "text": "Pour que" },
+        { "id": "d", "text": "Si bien que" }
+      ],
+      "correctOption": "b",
+      "explanation": "La cause est présentée comme déjà connue et partagée → « puisque » : puisque tu connais la réponse. « Parce que » répond à « pourquoi ? » (information nouvelle), « pour que » marque un but au subjonctif, et « si bien que » une conséquence.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "Il a tant de soucis qu'il n'arrive plus à dormir." },
+        { "id": "b", "text": "La pièce était si sombre qu'on ne voyait rien." },
+        { "id": "c", "text": "Il a si de travail qu'il a refusé l'invitation." },
+        { "id": "d", "text": "Elle parle si vite qu'on la comprend mal." }
+      ],
+      "correctOption": "c",
+      "explanation": "« Si de » n'existe pas : devant le nom « travail », il faut « tant de » ou « tellement de » (tant de travail qu'il a refusé). Les options (a) « tant de » + nom, (b) « si » + adjectif et (d) « si » + adverbe sont toutes correctes.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Le pont a été fermé ___ travaux, ___ les habitants doivent faire un détour. »",
+      "options": [
+        { "id": "a", "text": "pour … parce que" },
+        { "id": "b", "text": "grâce à … car" },
+        { "id": "c", "text": "afin de … puisque" },
+        { "id": "d", "text": "à cause de … donc" }
+      ],
+      "correctOption": "d",
+      "explanation": "Premier vide : cause + nom à valeur négative → « à cause des travaux ». Second vide : conséquence → « donc » (les habitants doivent faire un détour). « Grâce à » serait positif, et les autres mélangent but/cause de façon incohérente avec l'enchaînement logique.",
+      "difficulty": 3
+    }
+  ]
+}

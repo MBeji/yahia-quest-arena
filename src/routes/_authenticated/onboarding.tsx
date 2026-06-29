@@ -23,7 +23,8 @@ import {
   Compass,
   Clock,
 } from "lucide-react";
-import { getParcours } from "@/features/dashboard";
+import { getParcours, useParcoursInterest, ParcoursInterestButton } from "@/features/dashboard";
+import type { ParcoursInterestState } from "@/features/dashboard";
 import { setCurrentParcours } from "@/features/auth";
 import { useT } from "@/lib/i18n";
 
@@ -38,7 +39,12 @@ type Parcours = {
   color: string;
   theme_id: string;
   grade_id: string | null;
+  grade_cycle: string | null;
+  grade_order: number | null;
 };
+
+/** Order school cycles primaire → collège → secondaire for display. */
+const CYCLE_ORDER = ["primaire", "college", "secondaire"] as const;
 
 type Intent = "concours" | "explorer";
 
@@ -136,15 +142,57 @@ function ParcoursCard({
   parcours,
   isSaving,
   onSelect,
+  interest,
 }: {
   parcours: Parcours;
   isSaving: boolean;
   onSelect: () => void;
+  interest?: ParcoursInterestState;
 }) {
   const t = useT();
   const Icon = ICONS[parcours.icon] ?? Sword;
   const color = colorVar(parcours.color);
   const isComingSoon = parcours.status === "coming_soon";
+
+  const header = (
+    <div className="flex items-start gap-4">
+      <div
+        className="rounded-xl p-3"
+        style={{ background: `color-mix(in oklab, ${color} 20%, transparent)` }}
+      >
+        <Icon className="h-6 w-6" style={{ color }} />
+      </div>
+      <div className="flex-1">
+        <div className="flex flex-wrap items-center gap-2">
+          <h3 className="font-display text-lg font-bold">{parcours.name_fr}</h3>
+          {isComingSoon && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-muted/40 px-2 py-0.5 text-xs font-semibold text-muted-foreground">
+              <Clock className="h-3 w-3" /> {t.parcoursInterest.underConstruction}
+            </span>
+          )}
+        </div>
+      </div>
+      {!isComingSoon && <ChevronRight className="h-5 w-5 shrink-0 text-[color:var(--gold)]" />}
+    </div>
+  );
+
+  // Coming-soon: a non-selectable <div> hosting the interest <button> (valid
+  // markup — a real button can't nest inside the selectable motion.button).
+  if (isComingSoon) {
+    return (
+      <div className="relative rounded-2xl border-2 border-[color:var(--gold)]/30 bg-black/50 p-6 text-left">
+        {header}
+        {interest && (
+          <ParcoursInterestButton
+            count={interest.counts[parcours.id] ?? 0}
+            interested={interest.mine.has(parcours.id)}
+            isPending={interest.togglingId === parcours.id}
+            onToggle={() => interest.onToggle(parcours.id)}
+          />
+        )}
+      </div>
+    );
+  }
 
   return (
     <motion.button
@@ -153,32 +201,9 @@ function ParcoursCard({
       whileHover={isSaving ? undefined : { scale: 1.02 }}
       whileTap={isSaving ? undefined : { scale: 0.98 }}
       aria-label={parcours.name_fr}
-      className="relative rounded-2xl border-2 border-[color:var(--gold)]/30 bg-black/50 p-6 text-left transition-all hover:border-[color:var(--gold)]/60 disabled:opacity-60"
+      className="relative w-full rounded-2xl border-2 border-[color:var(--gold)]/30 bg-black/50 p-6 text-left transition-all hover:border-[color:var(--gold)]/60 disabled:opacity-60"
     >
-      <div className="flex items-start gap-4">
-        <div
-          className="rounded-xl p-3"
-          style={{ background: `color-mix(in oklab, ${color} 20%, transparent)` }}
-        >
-          <Icon className="h-6 w-6" style={{ color }} />
-        </div>
-        <div className="flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <h3 className="font-display text-lg font-bold">{parcours.name_fr}</h3>
-            {parcours.is_premium && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-[color:var(--gold)]/20 px-2 py-0.5 text-xs font-semibold text-[color:var(--gold)]">
-                <Trophy className="h-3 w-3" /> {t.explorer.premium}
-              </span>
-            )}
-            {isComingSoon && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-muted/40 px-2 py-0.5 text-xs font-semibold text-muted-foreground">
-                <Clock className="h-3 w-3" /> {t.explorer.comingSoon}
-              </span>
-            )}
-          </div>
-        </div>
-        <ChevronRight className="h-5 w-5 shrink-0 text-[color:var(--gold)]" />
-      </div>
+      {header}
     </motion.button>
   );
 }
@@ -191,6 +216,7 @@ function ParcoursStep({
   isSaving,
   onSelect,
   onPrev,
+  interest,
 }: {
   intent: Intent;
   parcours: Parcours[];
@@ -199,12 +225,29 @@ function ParcoursStep({
   isSaving: boolean;
   onSelect: (id: string) => void;
   onPrev: () => void;
+  interest: ParcoursInterestState;
 }) {
   const t = useT();
-  const visible =
-    intent === "concours"
-      ? parcours.filter((p) => p.kind === "concours")
-      : parcours.filter((p) => p.kind === "libre" && p.status === "available");
+  const cycleLabel = (cycle: string) =>
+    cycle === "primaire"
+      ? t.cycles.primaire
+      : cycle === "college"
+        ? t.cycles.college
+        : t.cycles.secondaire;
+
+  // School intent → the full ladder (concours + regular years), grouped by cycle
+  // and ordered 1ère année → Bac. Explore intent → free libre themes (flat).
+  const isSchool = intent === "concours";
+  const school = parcours
+    .filter((p) => p.kind === "concours" || p.kind === "scolaire")
+    .sort((a, b) => (a.grade_order ?? 0) - (b.grade_order ?? 0));
+  const libre = parcours.filter((p) => p.kind === "libre" && p.status === "available");
+  const visible = isSchool ? school : libre;
+
+  const schoolByCycle = CYCLE_ORDER.map((cycle) => ({
+    cycle,
+    items: school.filter((p) => p.grade_cycle === cycle),
+  })).filter((g) => g.items.length > 0);
 
   return (
     <motion.div
@@ -215,14 +258,10 @@ function ParcoursStep({
     >
       <div>
         <h2 className="font-display text-3xl font-bold">
-          {intent === "concours"
-            ? t.onboarding.parcoursTitleConcours
-            : t.onboarding.parcoursTitleLibre}
+          {isSchool ? t.onboarding.parcoursTitleConcours : t.onboarding.parcoursTitleLibre}
         </h2>
         <p className="mt-2 text-muted-foreground">
-          {intent === "concours"
-            ? t.onboarding.parcoursSubtitleConcours
-            : t.onboarding.parcoursSubtitleLibre}
+          {isSchool ? t.onboarding.parcoursSubtitleConcours : t.onboarding.parcoursSubtitleLibre}
         </p>
       </div>
 
@@ -243,6 +282,27 @@ function ParcoursStep({
         <div className="rounded-2xl border-2 border-[color:var(--gold)]/30 bg-black/50 p-8 text-center text-sm text-muted-foreground">
           {t.explorer.empty}
         </div>
+      ) : isSchool ? (
+        <div className="space-y-6">
+          {schoolByCycle.map((group) => (
+            <div key={group.cycle} className="space-y-3">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                {cycleLabel(group.cycle)}
+              </h3>
+              <div className="grid gap-4">
+                {group.items.map((p) => (
+                  <ParcoursCard
+                    key={p.id}
+                    parcours={p}
+                    isSaving={isSaving}
+                    onSelect={() => onSelect(p.id)}
+                    interest={interest}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       ) : (
         <div className="grid gap-4">
           {visible.map((p) => (
@@ -251,6 +311,7 @@ function ParcoursStep({
               parcours={p}
               isSaving={isSaving}
               onSelect={() => onSelect(p.id)}
+              interest={interest}
             />
           ))}
         </div>
@@ -294,6 +355,7 @@ function OnboardingComponent() {
   });
 
   const parcours: Parcours[] = (parcoursData?.parcours as Parcours[]) ?? [];
+  const interest = useParcoursInterest();
 
   const selectMutation = useMutation({
     mutationFn: (parcoursId: string) => saveParcours({ data: { parcoursId } }),
@@ -348,6 +410,7 @@ function OnboardingComponent() {
               isSaving={selectMutation.isPending}
               onSelect={(id) => selectMutation.mutate(id)}
               onPrev={() => setStep(0)}
+              interest={interest}
             />
           )}
         </AnimatePresence>

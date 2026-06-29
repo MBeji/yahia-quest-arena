@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : opposition et concession",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Complète au bon mode : « Bien que le projet ___ ambitieux, l'équipe l'a mené à bien. »",
+      "options": [
+        { "id": "a", "text": "est" },
+        { "id": "b", "text": "sera" },
+        { "id": "c", "text": "était" },
+        { "id": "d", "text": "soit" }
+      ],
+      "correctOption": "d",
+      "explanation": "Règle : « bien que » + subjonctif → « bien que le projet soit ambitieux ». L'indicatif « est » est la faute la plus courante après « bien que » ; « sera » (futur) et « était » (imparfait indicatif) sont aussi incorrects après cette conjonction concessive.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "Malgré qu'il pleuve, le défilé est maintenu." },
+        { "id": "b", "text": "Bien qu'il pleuve, le défilé est maintenu." },
+        { "id": "c", "text": "Malgré la pluie, le défilé est maintenu." },
+        { "id": "d", "text": "Même s'il pleut, le défilé est maintenu." }
+      ],
+      "correctOption": "a",
+      "explanation": "La faute est en (a) : « malgré que » est une construction critiquée et fautive. « Malgré » doit précéder un nom (c). Pour une proposition, on dit « bien qu'il pleuve » (b, subjonctif) ou « même s'il pleut » (d, indicatif).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète l'opposition au bon mode : « Mon collègue arrive toujours en avance, tandis que moi j'___ souvent en retard. »",
+      "options": [
+        { "id": "a", "text": "arriverais" },
+        { "id": "b", "text": "arrive" },
+        { "id": "c", "text": "sois arrivé" },
+        { "id": "d", "text": "arrivasse" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Tandis que » marque l'opposition et se construit à l'INDICATIF : « tandis que j'arrive souvent en retard ». Le piège est d'employer le conditionnel (« arriverais ») ou le subjonctif (« sois arrivé », « arrivasse »), comme on le ferait à tort par analogie avec « bien que ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle phrase exprime correctement un effort vain avec « avoir beau » ?",
+      "options": [
+        { "id": "a", "text": "J'ai beau de lui expliquer, il ne comprend pas." },
+        { "id": "b", "text": "J'ai beau que je lui explique, il ne comprend pas." },
+        { "id": "c", "text": "J'ai beau lui expliquer, il ne comprend pas." },
+        { "id": "d", "text": "J'ai eu beau de lui expliquer, il ne comprenait pas." }
+      ],
+      "correctOption": "c",
+      "explanation": "« Avoir beau » + infinitif direct : « j'ai beau lui expliquer ». On n'ajoute jamais « de » (a, d) ni « que » + proposition (b). Le verbe « avoir » se conjugue selon le temps, mais l'infinitif qui suit reste sans préposition.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choisis le connecteur le plus approprié : « Le candidat manquait d'expérience ; ___, son enthousiasme a convaincu le jury. »",
+      "options": [
+        { "id": "a", "text": "par conséquent" },
+        { "id": "b", "text": "en effet" },
+        { "id": "c", "text": "néanmoins" },
+        { "id": "d", "text": "c'est-à-dire" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Néanmoins » (adverbe concessif soutenu) introduit un résultat contraire à l'attente : malgré le manque d'expérience, le jury est convaincu. « Par conséquent » exprime la conséquence, « en effet » la confirmation/cause, et « c'est-à-dire » la reformulation.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Reformule sans changer le sens : « Il est très intelligent, pourtant il a raté l'épreuve. »",
+      "options": [
+        { "id": "a", "text": "Bien qu'il soit très intelligent, il a raté l'épreuve." },
+        { "id": "b", "text": "Parce qu'il est très intelligent, il a raté l'épreuve." },
+        { "id": "c", "text": "Au lieu d'être intelligent, il a raté l'épreuve." },
+        { "id": "d", "text": "Alors qu'il a raté l'épreuve, il est intelligent." }
+      ],
+      "correctOption": "a",
+      "explanation": "« Pourtant » exprime la concession ; on le reformule par « bien que + subjonctif » : « bien qu'il soit très intelligent, il a raté l'épreuve ». (b) exprime la cause (faux sens), (c) détourne le sens, et (d) inverse la logique sans rendre la concession.",
+      "difficulty": 3
+    }
+  ]
+}

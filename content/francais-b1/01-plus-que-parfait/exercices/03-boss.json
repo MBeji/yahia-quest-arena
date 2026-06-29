@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : le plus-que-parfait",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Complète : « Il m'a raconté qu'il ___ ce livre l'année précédente. »",
+      "options": [
+        { "id": "a", "text": "avait lu" },
+        { "id": "b", "text": "a lu" },
+        { "id": "c", "text": "lisait" },
+        { "id": "d", "text": "était lu" }
+      ],
+      "correctOption": "a",
+      "explanation": "Dans le discours indirect au passé (« il m'a raconté que… »), le passé composé devient plus-que-parfait : « avait lu ». « Lire » prend avoir, participe irrégulier « lu ». « A lu » (passé composé) ne respecte pas la concordance ; « lisait » est de l'imparfait ; « était lu » est un passif.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète l'hypothèse : « Si tu ___ étudié, tu aurais réussi l'examen. »",
+      "options": [
+        { "id": "a", "text": "as" },
+        { "id": "b", "text": "avais" },
+        { "id": "c", "text": "aurais" },
+        { "id": "d", "text": "étais" }
+      ],
+      "correctOption": "b",
+      "explanation": "Pour l'irréel du passé, on emploie « si + plus-que-parfait → conditionnel passé » : « si tu avais étudié, tu aurais réussi ». « As » donne le passé composé ; « aurais » est un conditionnel (jamais après « si ») ; « étais » est le mauvais auxiliaire pour « étudier ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « La pluie ___ tombée toute la nuit, donc la route était inondée. »",
+      "options": [
+        { "id": "a", "text": "était" },
+        { "id": "b", "text": "avait" },
+        { "id": "c", "text": "a" },
+        { "id": "d", "text": "avaient" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Tomber » se conjugue avec être ; au plus-que-parfait : « était tombée », avec accord du participe au féminin singulier (la pluie). « Avait / a » sont le mauvais auxiliaire ; « avaient » ne va pas avec un sujet singulier.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Mets au plus-que-parfait : « Elle (ouvrir) ___ la fenêtre avant de sortir. »",
+      "options": [
+        { "id": "a", "text": "avait ouvré" },
+        { "id": "b", "text": "était ouverte" },
+        { "id": "c", "text": "avait ouvert" },
+        { "id": "d", "text": "s'était ouvert" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Ouvrir » prend avoir et a un participe passé irrégulier : « ouvert ». Donc « elle avait ouvert ». « Ouvré » n'existe pas ; « était ouverte » est un passif ; « s'était ouvert » serait un pronominal, ici inexact.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Trouve la phrase INCORRECTE.",
+      "options": [
+        { "id": "a", "text": "Quand il est arrivé, nous avions déjà commencé." },
+        { "id": "b", "text": "Elle a dit qu'elle avait perdu ses clés." },
+        { "id": "c", "text": "Si j'avais su, je serais resté." },
+        { "id": "d", "text": "Ils avaient venus en avance." }
+      ],
+      "correctOption": "d",
+      "explanation": "« Ils avaient venus » est doublement faux : « venir » prend être (donc « étaient ») et le participe « venu » s'accorderait alors : « ils étaient venus ». Les phrases a, b et c respectent bien l'auxiliaire, la concordance et l'hypothèse.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Nous nous ___ rendu compte trop tard de notre erreur. »",
+      "options": [
+        { "id": "a", "text": "avions" },
+        { "id": "b", "text": "avaient" },
+        { "id": "c", "text": "étions" },
+        { "id": "d", "text": "avons" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Se rendre compte » est pronominal, donc auxiliaire être : « nous nous étions rendu compte ». Le piège : « rendu » reste invariable ici car « compte » est le complément. « Avions / avons / avaient » sont impossibles : un pronominal ne prend jamais avoir.",
+      "difficulty": 3
+    }
+  ]
+}

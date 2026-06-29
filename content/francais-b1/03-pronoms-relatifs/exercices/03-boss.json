@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : les pronoms relatifs",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Complète : « Les chaussures que j'ai ___ hier sont déjà sales. »",
+      "options": [
+        { "id": "a", "text": "achetées" },
+        { "id": "b", "text": "acheté" },
+        { "id": "c", "text": "achetés" },
+        { "id": "d", "text": "achetée" }
+      ],
+      "correctOption": "a",
+      "explanation": "Avec l'auxiliaire avoir, le participe s'accorde avec le COD placé avant : « que » reprend « les chaussures » (féminin pluriel), donc « achetées ». ✓ « acheté » oublie l'accord, « achetés » met un masculin, et « achetée » oublie le pluriel.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Je pense à un projet ___ je rêve depuis des années. »",
+      "options": [
+        { "id": "a", "text": "que" },
+        { "id": "b", "text": "qui" },
+        { "id": "c", "text": "où" },
+        { "id": "d", "text": "dont" }
+      ],
+      "correctOption": "d",
+      "explanation": "On dit rêver DE quelque chose, donc « dont » reprend ce complément en « de » : un projet dont je rêve. Le piège courant est « que » (COD direct), mais rêver se construit avec « de », pas directement ; « qui » est sujet et « où » marque le lieu ou le temps.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « C'est l'écrivain ___ on a publié le dernier roman. »",
+      "options": [
+        { "id": "a", "text": "que" },
+        { "id": "b", "text": "dont" },
+        { "id": "c", "text": "qui" },
+        { "id": "d", "text": "où" }
+      ],
+      "correctOption": "b",
+      "explanation": "On a publié le roman DE l'écrivain : « dont » remplace ce complément du nom (le roman de lui). Le piège est « que », mais le COD de publier est « le dernier roman », pas l'écrivain ; le lien « de » impose « dont ». « qui » serait sujet et « où » marque le lieu.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Trouve la phrase incorrecte.",
+      "options": [
+        { "id": "a", "text": "La personne à qui je pense habite loin." },
+        { "id": "b", "text": "Le moment où tout a changé reste flou." },
+        { "id": "c", "text": "L'outil dont je travaille est cassé." },
+        { "id": "d", "text": "Les amis que j'ai invités sont arrivés." }
+      ],
+      "correctOption": "c",
+      "explanation": "La troisième phrase est incorrecte : on travaille AVEC un outil, pas « de » un outil, donc « dont » est faux ; il faut « avec lequel » (l'outil avec lequel je travaille). « dont » ne sert qu'avec « de ». Les autres sont correctes : à qui (penser à), où (temps) et que avec accord (invités).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Les lettres que tu m'as ___ m'ont beaucoup touché. »",
+      "options": [
+        { "id": "a", "text": "écrit" },
+        { "id": "b", "text": "écrites" },
+        { "id": "c", "text": "écrits" },
+        { "id": "d", "text": "écrite" }
+      ],
+      "correctOption": "b",
+      "explanation": "Avec avoir, le participe s'accorde avec le COD placé avant : « que » reprend « les lettres » (féminin pluriel), donc « écrites ». ✓ Le piège courant est « écrit » (sans accord) ; « écrits » est masculin et « écrite » oublie le pluriel.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Le château ___ les tours dominent la vallée date du Moyen Âge. »",
+      "options": [
+        { "id": "a", "text": "où" },
+        { "id": "b", "text": "que" },
+        { "id": "c", "text": "qui" },
+        { "id": "d", "text": "dont" }
+      ],
+      "correctOption": "d",
+      "explanation": "Ce sont les tours DU château : « dont » remplace ce complément du nom (les tours de lui). Le piège est « où » à cause du lieu, mais le pronom relie « les tours » à « château » par « de », donc « dont ». « que » serait un COD et « qui » un sujet.",
+      "difficulty": 3
+    }
+  ]
+}

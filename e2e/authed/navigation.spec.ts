@@ -10,7 +10,9 @@ test.use({ storageState: STORAGE_STATE.free });
 
 const NAV = [
   { href: "/parcours", url: /\/parcours/ },
-  { href: "/themes", url: /\/themes/ },
+  // « Découvrir » converged onto the public catalogue (chantier L2.A) — the nav now
+  // points at /programme (the old /themes hub is a 301 redirect to it).
+  { href: "/programme", url: /\/programme/ },
   { href: "/dungeon", url: /\/dungeon/ },
   { href: "/dashboard", url: /\/dashboard/ },
 ];
@@ -30,7 +32,7 @@ test.describe("Primary navigation", () => {
     await leaderboard.goto();
     await page
       .getByRole("banner")
-      .getByRole("link", { name: /xp\s*scholars/i })
+      .getByRole("link", { name: /na9ra\s*nal3ab/i })
       .click();
     await expect(page).toHaveURL(/\/dashboard/);
   });

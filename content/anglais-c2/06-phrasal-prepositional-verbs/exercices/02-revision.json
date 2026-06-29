@@ -1,0 +1,88 @@
+{
+  "title": "⭐⭐ Review: Register, Nuance, and Near-Synonyms",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Which option is the most appropriate formal written equivalent of \"come up with a solution\"?",
+      "options": [
+        { "id": "a", "text": "devise a solution" },
+        { "id": "b", "text": "look into a solution" },
+        { "id": "c", "text": "face up to a solution" },
+        { "id": "d", "text": "run out of a solution" }
+      ],
+      "correctOption": "a",
+      "explanation": "Come up with means to produce or devise an idea or plan — its formal equivalent is devise. Look into means to investigate, face up to means to confront honestly, and run out of means to exhaust a supply — none of these match the meaning of come up with.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"She has always ___ her older sister, who she considers a role model.\"",
+      "options": [
+        { "id": "a", "text": "looked down on" },
+        { "id": "b", "text": "looked up to" },
+        { "id": "c", "text": "looked out for" },
+        { "id": "d", "text": "looked back on" }
+      ],
+      "correctOption": "b",
+      "explanation": "Look up to means to admire and respect someone, which fits the context of a role model. Look down on means to regard as inferior (the opposite), look out for means to watch out for or protect, and look back on means to reflect on a past experience.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"The manager called ___ the meeting because half the team was ill.\" (= cancelled)",
+      "options": [
+        { "id": "a", "text": "off" },
+        { "id": "b", "text": "out" },
+        { "id": "c", "text": "for" },
+        { "id": "d", "text": "up" }
+      ],
+      "correctOption": "a",
+      "explanation": "Call off means to cancel an event or activity. Call out means to challenge or expose someone. Call for means to demand or require something. Call up means to telephone someone or summon (troops). The particle alone changes the meaning completely.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the sentence in which a multi-word verb is used INCORRECTLY.",
+      "options": [
+        { "id": "a", "text": "We ran out of time before we could finish." },
+        { "id": "b", "text": "He got away with the fraud for years." },
+        { "id": "c", "text": "They came up against significant resistance." },
+        { "id": "d", "text": "She faced up the criticism honestly." }
+      ],
+      "correctOption": "d",
+      "explanation": "Face up to is a three-part verb and must include all three particles: faced up to the criticism. Omitting \"to\" breaks the verb. The other three sentences all use their respective multi-word verbs correctly with the right particles and objects.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"It is time the authorities ___ these outdated regulations.\" (= abolished them, formal context)",
+      "options": [
+        { "id": "a", "text": "put up with" },
+        { "id": "b", "text": "got away with" },
+        { "id": "c", "text": "did away with" },
+        { "id": "d", "text": "went along with" }
+      ],
+      "correctOption": "c",
+      "explanation": "Do away with means to abolish or eliminate, and it sits at the slightly formal end of the register scale — appropriate here. Put up with means to tolerate, get away with means to escape punishment for, and go along with means to agree with or accept — none carry the meaning of abolition.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read: \"The new CEO has brought about a remarkable turnaround in the company's fortunes.\"\nWhat does \"brought about\" mean here, and what does the choice of this verb suggest about the change?",
+      "options": [
+        { "id": "a", "text": "It means \"discovered\" and suggests the change was accidental." },
+        {
+          "id": "b",
+          "text": "It means \"caused\" and implies the CEO deliberately drove the change."
+        },
+        { "id": "c", "text": "It means \"survived\" and implies the change was difficult." },
+        {
+          "id": "d",
+          "text": "It means \"delayed\" and suggests the turnaround took longer than expected."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Bring about means to cause something to happen, and unlike neutral verbs such as cause, it carries the connotation of deliberate agency — the CEO actively drove the turnaround. This makes the description both factual and complimentary. None of the other readings — discovered, survived, or delayed — match the verb's meaning.",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "math-5eme",
+  "nameFr": "الرياضيات",
+  "description": "الأنشطة العددية والقيس والهندسة وفق برنامج الرياضيات للسنة الخامسة من التعليم الأساسي",
+  "attribute": "Force",
+  "colorToken": "subject-math",
+  "icon": "Calculator",
+  "displayOrder": 1,
+  "contentLanguage": "ar",
+  "themeId": "ecole-tn",
+  "gradeSlug": "5eme-base"
+}

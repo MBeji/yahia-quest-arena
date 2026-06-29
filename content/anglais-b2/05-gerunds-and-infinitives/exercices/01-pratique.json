@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Practice: Gerund or Infinitive?",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complete: \"I don't mind ___ late if it helps the team.\"",
+      "options": [
+        { "id": "a", "text": "staying" },
+        { "id": "b", "text": "to stay" },
+        { "id": "c", "text": "stay" },
+        { "id": "d", "text": "stayed" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"mind\" is a gerund-only verb: I don't mind staying. Using the infinitive \"to stay\" after \"mind\" is a classic learner error. \"stay\" (bare infinitive) and \"stayed\" (past tense) are also incorrect after \"mind\".",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"We decided ___ a completely new approach to the problem.\"",
+      "options": [
+        { "id": "a", "text": "trying" },
+        { "id": "b", "text": "try" },
+        { "id": "c", "text": "to try" },
+        { "id": "d", "text": "tried" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"decide\" is an infinitive-only verb: We decided to try. \"trying\" (gerund) cannot follow decide, \"try\" (bare infinitive without to) is also wrong after decide, and \"tried\" is a past tense form.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"Can you imagine ___ in a city with no internet?\"",
+      "options": [
+        { "id": "a", "text": "live" },
+        { "id": "b", "text": "to live" },
+        { "id": "c", "text": "lived" },
+        { "id": "d", "text": "living" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"imagine\" is a gerund-only verb: Can you imagine living? \"to live\" (infinitive) is not used after imagine, \"live\" is the bare base form, and \"lived\" is the past tense — neither is acceptable after imagine.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"She managed ___ the final exam despite being ill for a week.\"",
+      "options": [
+        { "id": "a", "text": "passing" },
+        { "id": "b", "text": "to pass" },
+        { "id": "c", "text": "pass" },
+        { "id": "d", "text": "to passing" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"manage\" is an infinitive-only verb: She managed to pass. \"passing\" (gerund) cannot follow manage, \"pass\" is missing the required \"to\", and \"to passing\" mixes both forms incorrectly.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"They denied ___ any money from the company accounts.\"",
+      "options": [
+        { "id": "a", "text": "to take" },
+        { "id": "b", "text": "take" },
+        { "id": "c", "text": "taking" },
+        { "id": "d", "text": "taken" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"deny\" is a gerund-only verb: They denied taking. The infinitive \"to take\" cannot follow deny — this is a frequent B2 error. \"take\" and \"taken\" are also grammatically incorrect after deny.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Find the INCORRECT sentence.",
+      "options": [
+        { "id": "a", "text": "She finished writing the report before noon." },
+        { "id": "b", "text": "They plan to renovate the kitchen next month." },
+        { "id": "c", "text": "I avoid using my phone while driving." },
+        { "id": "d", "text": "He hopes passing the driving test on his first attempt." }
+      ],
+      "correctOption": "d",
+      "explanation": "Sentence (d) is incorrect. \"hope\" is an infinitive-only verb, so it must be: He hopes to pass. \"Passing\" (gerund) cannot follow hope. (a) is correct (finish + gerund), (b) is correct (plan + infinitive), and (c) is correct (avoid + gerund).",
+      "difficulty": 3
+    }
+  ]
+}

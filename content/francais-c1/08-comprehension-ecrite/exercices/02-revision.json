@@ -1,0 +1,154 @@
+{
+  "title": "⭐⭐ Révision : présupposés, modalisation et connecteurs",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Lisez l'extrait :\n« Faut-il vraiment s'étonner que les électeurs se détournent encore un peu plus des urnes ? »\n\nQue présuppose cette question ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Que la participation électorale était déjà en baisse auparavant."
+        },
+        {
+          "id": "b",
+          "text": "Que les électeurs n'ont jamais voté de toute leur vie."
+        },
+        {
+          "id": "c",
+          "text": "Que la participation électorale est en hausse constante."
+        },
+        {
+          "id": "d",
+          "text": "Que les urnes vont être supprimées."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "L'adverbe « encore un peu plus » présuppose que le détournement avait déjà commencé : la baisse est antérieure. Les options b, c et d contredisent ce présupposé ou sortent du texte.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Ce dispositif, prétendument destiné à protéger les consommateurs, sert d'abord les intérêts des grands groupes qui l'ont inspiré. »\n\nQue signale l'adverbe « prétendument » ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Que l'auteur adhère pleinement à l'objectif affiché du dispositif."
+        },
+        {
+          "id": "b",
+          "text": "Que le dispositif protège réellement et efficacement les consommateurs."
+        },
+        {
+          "id": "c",
+          "text": "Que l'auteur ignore à qui profite le dispositif."
+        },
+        {
+          "id": "d",
+          "text": "Que l'auteur met à distance l'objectif affiché, qu'il juge trompeur."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« Prétendument » distancie l'auteur de la finalité officielle : il suggère que la protection annoncée n'est qu'un prétexte, comme le confirme « sert d'abord les intérêts des grands groupes ». L'auteur n'adhère pas à l'objectif affiché et sait précisément à qui profite le dispositif.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Les défenseurs du projet vantent la création de centaines d'emplois. Encore faudrait-il que ces emplois soient durables et correctement rémunérés, ce que rien, dans le dossier, ne permet d'affirmer. »\n\nQuelle attitude l'auteur adopte-t-il ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Une adhésion enthousiaste aux promesses d'emplois."
+        },
+        {
+          "id": "b",
+          "text": "Une indifférence totale à la question de l'emploi."
+        },
+        {
+          "id": "c",
+          "text": "Une certitude que les emplois seront durables et bien payés."
+        },
+        {
+          "id": "d",
+          "text": "Une réserve sceptique : il doute de la qualité réelle des emplois promis."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« Encore faudrait-il que… ce que rien… ne permet d'affirmer » exprime une réserve : l'auteur ne conteste pas le nombre d'emplois mais doute de leur qualité. Ce n'est ni de l'adhésion, ni de l'indifférence, ni une certitude inverse.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Le tourisme assure, dit-on, la prospérité de l'île. Or les jeunes natifs, eux, n'ont d'autre horizon que d'émigrer pour trouver un emploi stable. »\n\nQuelle est la fonction du connecteur « Or » ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Il confirme et renforce l'idée de prospérité."
+        },
+        {
+          "id": "b",
+          "text": "Il introduit un fait qui contredit l'idée de prospérité et fait basculer le propos."
+        },
+        {
+          "id": "c",
+          "text": "Il ajoute un simple exemple supplémentaire de prospérité."
+        },
+        {
+          "id": "d",
+          "text": "Il marque la conclusion générale de l'auteur."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "« Or » introduit un fait gênant (l'émigration des jeunes) qui contredit la « prospérité » annoncée et fait basculer le raisonnement. Il ne confirme pas, n'ajoute pas un exemple concordant et n'est pas un connecteur de conclusion.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« On célèbre l'« agriculture de précision » comme l'avenir de nos campagnes. Derrière ce vocable séduisant se cache pourtant une dépendance accrue aux brevets, aux capteurs et aux multinationales qui les fournissent. La précision, ici, est surtout celle du contrôle exercé sur l'agriculteur. »\n\nQuelle est la thèse implicite de l'auteur ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "L'agriculture de précision est l'avenir incontestable des campagnes."
+        },
+        {
+          "id": "b",
+          "text": "Les capteurs agricoles sont trop coûteux pour être rentables."
+        },
+        {
+          "id": "c",
+          "text": "Sous un terme valorisant, l'agriculture de précision renforce surtout la dépendance et le contrôle de l'agriculteur."
+        },
+        {
+          "id": "d",
+          "text": "Les agriculteurs refusent en bloc toute innovation technologique."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Le « pourtant » et la reformulation finale (« la précision… est surtout celle du contrôle ») dévoilent la critique : sous un mot flatteur, l'auteur dénonce une dépendance accrue. L'option a reprend la voix valorisante critiquée ; b et d ajoutent des idées absentes du texte.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« §1 : on vante les vertus des classes surchargées, qui « endurciraient » les élèves. §2 (introduit par « En réalité ») : toutes les études convergent vers l'effet inverse sur les apprentissages. §3 : « Reste à savoir combien de générations il faudra sacrifier avant d'en tirer les conséquences. »\n\nQuelle est la fonction du troisième paragraphe ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Il revient sur la thèse adverse pour finalement l'approuver."
+        },
+        {
+          "id": "b",
+          "text": "Il clôt le texte sur une question amère qui dramatise l'inaction, renforçant la critique de l'auteur."
+        },
+        {
+          "id": "c",
+          "text": "Il introduit un sujet nouveau, sans lien avec les classes surchargées."
+        },
+        {
+          "id": "d",
+          "text": "Il rapporte de façon neutre l'avis des partisans des classes surchargées."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Après la réfutation du §2 (« En réalité »), le §3 conclut par une question rhétorique amère (« combien de générations… sacrifier ») qui dramatise l'inaction et appuie la critique. Ce n'est ni une approbation de la thèse adverse, ni un sujet nouveau, ni un compte rendu neutre.",
+      "difficulty": 3
+    }
+  ]
+}

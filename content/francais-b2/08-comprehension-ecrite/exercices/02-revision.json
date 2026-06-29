@@ -1,0 +1,91 @@
+{
+  "title": "⭐⭐ Révision : voix, contre-arguments et sens figuré",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Lisez l'extrait :\n« Les partisans du tout-numérique à l'école promettent des élèves plus motivés et mieux préparés au monde de demain. Leurs détracteurs rétorquent que rien ne remplace le contact humain et que l'écran fatigue plus qu'il n'enseigne. Le débat, lui, ne fait que commencer. »\n\nQuelle est la position de l'auteur ?",
+      "options": [
+        { "id": "a", "text": "Il défend ardemment le tout-numérique à l'école." },
+        { "id": "b", "text": "Il reste neutre et expose les deux camps sans trancher." },
+        { "id": "c", "text": "Il condamne fermement l'usage des écrans." },
+        { "id": "d", "text": "Il juge le débat inutile et dépassé." }
+      ],
+      "correctOption": "b",
+      "explanation": "L'auteur rapporte les arguments des « partisans » puis des « détracteurs » avec des verbes neutres (« promettent », « rétorquent ») et conclut que « le débat ne fait que commencer » : il expose les deux voix sans prendre parti. Il ne défend ni ne condamne, et ne juge pas le débat inutile.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Bien sûr, on objectera que ces mesures coûtent cher. Mais que pèsent quelques millions face aux vies qu'un dépistage précoce permettrait de sauver chaque année ? »\n\nQuelle est la fonction de la première phrase (« Bien sûr, on objectera… ») ?",
+      "options": [
+        { "id": "a", "text": "Elle énonce la thèse principale de l'auteur." },
+        { "id": "b", "text": "Elle donne une preuve chiffrée à l'appui de la thèse." },
+        { "id": "c", "text": "Elle conclut le raisonnement." },
+        { "id": "d", "text": "Elle anticipe un contre-argument pour mieux le réfuter ensuite." }
+      ],
+      "correctOption": "d",
+      "explanation": "« On objectera que… » présente d'avance l'objection (le coût) que l'auteur va aussitôt balayer par sa question rhétorique : c'est une concession anticipée pour mieux la réfuter. Ce n'est pas la thèse, ni une preuve, ni une conclusion.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Les promesses de campagne, on le sait, fondent comme neige au soleil dès le lendemain de l'élection. »\n\nQue signifie l'expression « fondre comme neige au soleil » ?",
+      "options": [
+        { "id": "a", "text": "Disparaître rapidement et sans laisser de trace." },
+        { "id": "b", "text": "Se renforcer avec le temps." },
+        { "id": "c", "text": "Devenir plus froides et distantes." },
+        { "id": "d", "text": "Se multiplier de façon inattendue." }
+      ],
+      "correctOption": "a",
+      "explanation": "L'image « fondre comme neige au soleil » signifie s'évanouir vite et totalement ; appliquée aux promesses, elle souligne qu'elles sont vite oubliées. Le sens figuré exclut l'idée de renforcement, de froideur ou de multiplication.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« On vante la « gratuité » des grands réseaux sociaux. Gratuité ? Le mot fait sourire. Car si nous ne payons pas avec notre argent, nous payons abondamment avec nos données, notre attention et, parfois, notre tranquillité d'esprit. »\n\nPourquoi l'auteur met-il « gratuité » entre guillemets ?",
+      "options": [
+        { "id": "a", "text": "Pour citer fidèlement un expert reconnu." },
+        { "id": "b", "text": "Parce qu'il s'agit d'un terme technique précis." },
+        {
+          "id": "c",
+          "text": "Pour marquer une distance ironique : il conteste cette prétendue gratuité."
+        },
+        { "id": "d", "text": "Pour indiquer une traduction d'un mot étranger." }
+      ],
+      "correctOption": "c",
+      "explanation": "Les guillemets, renforcés par « Le mot fait sourire » et le « Car » qui révèle le vrai coût (données, attention), signalent une distance ironique : l'auteur récuse l'idée de gratuité. Ce n'est ni une citation d'expert, ni un terme technique, ni une traduction.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Le rapport souligne des progrès indéniables dans l'accès aux soins. Il reconnaît néanmoins que les zones rurales restent largement à l'écart de ces avancées, et que sans transports adaptés, le meilleur hôpital du monde demeure inaccessible. »\n\nComment le texte présente-t-il la situation des zones rurales ?",
+      "options": [
+        { "id": "a", "text": "Comme pleinement bénéficiaire des progrès décrits." },
+        { "id": "b", "text": "Comme un détail négligeable sans importance." },
+        { "id": "c", "text": "Comme la preuve que le rapport est mensonger." },
+        {
+          "id": "d",
+          "text": "Comme une limite importante aux progrès, soulignée par le « néanmoins »."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Le « néanmoins » introduit une réserve : malgré des progrès, les zones rurales « restent largement à l'écart ». Le texte en fait une limite sérieuse, pas un détail. Il ne dit pas qu'elles bénéficient des progrès ni que le rapport est mensonger.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lisez l'extrait :\n« Adopter ce nouveau logiciel ? L'idée séduit sur le papier. Encore faudrait-il que les équipes soient formées, que les anciens fichiers soient compatibles et que le budget de maintenance suive. Autant de « détails » dont personne ne semble vouloir parler. »\n\nQue sous-entend l'auteur en parlant de « détails » ?",
+      "options": [
+        { "id": "a", "text": "Que ces points sont vraiment mineurs et faciles à régler." },
+        {
+          "id": "b",
+          "text": "Que ces obstacles sont en réalité majeurs, mais sont passés sous silence."
+        },
+        { "id": "c", "text": "Que le logiciel a déjà été adopté avec succès." },
+        { "id": "d", "text": "Que la formation des équipes est déjà terminée." }
+      ],
+      "correctOption": "b",
+      "explanation": "Les guillemets autour de « détails » sont ironiques : formation, compatibilité et budget sont des obstacles lourds, et « personne ne semble vouloir parler » de ce qui dérange. L'auteur souligne donc des problèmes majeurs minimisés, et non des points réellement mineurs ou déjà résolus.",
+      "difficulty": 3
+    }
+  ]
+}
