@@ -133,10 +133,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
  * markup the client first renders matches the server. The <html> attributes here
  * are set from the same cookie the client reads, so they agree on both sides.
  *
- * TODO(review #8): the cookie is the SSR source of truth, but legacy users who only
- * have the localStorage value (set before this cookie existed) still see one frame of
- * the default locale until their next setLocale call writes the cookie. A one-time
- * migration that mirrors localStorage -> cookie on first mount would close that gap.
+ * Legacy localStorage-only users (preference set before this cookie existed) are
+ * migrated automatically: I18nProvider mirrors the resolved locale into the cookie
+ * on first mount when it's missing/stale, so subsequent SSR loads paint the right
+ * locale with no flash of the default.
  */
 const getShellLocale = createIsomorphicFn()
   // Client (hydration / client navigation): read the document cookie directly.
