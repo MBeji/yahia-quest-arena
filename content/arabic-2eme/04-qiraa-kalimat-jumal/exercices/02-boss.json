@@ -1,0 +1,154 @@
+{
+  "title": "⚔️ زعيم الفصل ⭐⭐⭐: حارس الكلمات والصُّور",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "اقرأ الكلمة «سَمَكة»، ثمّ اختر الصورة التي تناسبها.",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 120 80\" xmlns=\"http://www.w3.org/2000/svg\"><g stroke=\"#1f2937\" stroke-width=\"2\"><ellipse cx=\"54\" cy=\"40\" rx=\"34\" ry=\"19\" fill=\"#38bdf8\"/><path d=\"M88 40 l22 -13 l0 26 z\" fill=\"#7dd3fc\"/><circle cx=\"40\" cy=\"34\" r=\"3\" fill=\"#1f2937\" stroke=\"none\"/><path d=\"M30 40 q8 6 16 0\" fill=\"none\"/></g></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 110 90\" xmlns=\"http://www.w3.org/2000/svg\"><g stroke=\"#1f2937\" stroke-width=\"2\"><rect x=\"48\" y=\"48\" width=\"14\" height=\"30\" fill=\"#92400e\"/><circle cx=\"55\" cy=\"34\" r=\"24\" fill=\"#22c55e\"/></g></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 110 90\" xmlns=\"http://www.w3.org/2000/svg\"><g stroke=\"#1f2937\" stroke-width=\"2\"><circle cx=\"55\" cy=\"45\" r=\"22\" fill=\"#facc15\"/><path d=\"M55 13 v-8 M23 45 h-8 M87 45 h8 M55 77 v8\" stroke=\"#f59e0b\" stroke-width=\"3\"/></g></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 110 90\" xmlns=\"http://www.w3.org/2000/svg\"><g stroke=\"#1f2937\" stroke-width=\"2\"><path d=\"M55 24 q-20 -6 -20 20 q0 28 20 34 q20 -6 20 -34 q0 -26 -20 -20\" fill=\"#ef4444\"/></g></svg>"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "«سَمَكة» كائنٌ يسبح في الماء له ذيلٌ، فتناسبها الصورة الأولى؛ أمّا الباقي فشجرةٌ وشمسٌ وتفّاحة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "اقرأ جملة: «الطّفلُ يقرأُ الكِتابَ.» مَن يقرأ في الجملة؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "الكِتاب"
+        },
+        {
+          "id": "b",
+          "text": "الطّفل"
+        },
+        {
+          "id": "c",
+          "text": "المُعلّم"
+        },
+        {
+          "id": "d",
+          "text": "لا أحد يقرأ"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "نقرأ من اليمين: الطّفلُ ← يقرأُ ← الكِتابَ، فالذي يقرأ هو الطّفل، والكتاب هو المقروء.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "كلمتان متشابهتان: «جَمَل» و«جَمال». أيّهما اسمُ الحيوان الذي يعيش في الصحراء؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "«جَمال» لأنّها أطول"
+        },
+        {
+          "id": "b",
+          "text": "الكلمتان تعنيان الحيوان"
+        },
+        {
+          "id": "c",
+          "text": "«جَمَل» فهي اسم الحيوان"
+        },
+        {
+          "id": "d",
+          "text": "لا علاقة لأيٍّ منهما بالحيوان"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "«جَمَل» اسمُ حيوان الصحراء، أمّا «جَمال» فتعني الحُسن؛ حرفٌ واحد (الألف) يغيّر المعنى.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "اقرأ الكلمة «شَجَرة»، ثمّ اختر الصورة التي تناسبها.",
+      "options": [
+        {
+          "id": "a",
+          "text": "<svg viewBox=\"0 0 110 95\" xmlns=\"http://www.w3.org/2000/svg\"><g stroke=\"#1f2937\" stroke-width=\"2\"><rect x=\"48\" y=\"55\" width=\"14\" height=\"34\" fill=\"#92400e\"/><circle cx=\"55\" cy=\"38\" r=\"25\" fill=\"#22c55e\"/><circle cx=\"38\" cy=\"48\" r=\"14\" fill=\"#16a34a\"/><circle cx=\"72\" cy=\"48\" r=\"14\" fill=\"#16a34a\"/></g></svg>"
+        },
+        {
+          "id": "b",
+          "text": "<svg viewBox=\"0 0 120 80\" xmlns=\"http://www.w3.org/2000/svg\"><g stroke=\"#1f2937\" stroke-width=\"2\"><ellipse cx=\"54\" cy=\"40\" rx=\"32\" ry=\"18\" fill=\"#fb923c\"/><path d=\"M86 40 l22 -12 l0 24 z\" fill=\"#fdba74\"/><circle cx=\"40\" cy=\"35\" r=\"3\" fill=\"#1f2937\" stroke=\"none\"/></g></svg>"
+        },
+        {
+          "id": "c",
+          "text": "<svg viewBox=\"0 0 110 90\" xmlns=\"http://www.w3.org/2000/svg\"><g stroke=\"#1f2937\" stroke-width=\"2\"><circle cx=\"55\" cy=\"45\" r=\"22\" fill=\"#facc15\"/><path d=\"M55 13 v-8 M23 45 h-8 M87 45 h8 M55 77 v8\" stroke=\"#f59e0b\" stroke-width=\"3\"/></g></svg>"
+        },
+        {
+          "id": "d",
+          "text": "<svg viewBox=\"0 0 110 90\" xmlns=\"http://www.w3.org/2000/svg\"><g stroke=\"#1f2937\" stroke-width=\"2\"><path d=\"M55 24 q-20 -6 -20 20 q0 28 20 34 q20 -6 20 -34 q0 -26 -20 -20\" fill=\"#ef4444\"/></g></svg>"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "«شَجَرة» لها جذعٌ بُنّيٌّ وأوراقٌ خضراء، فتناسبها الصورة الأولى؛ أمّا الباقي فسمكةٌ وشمسٌ وتفّاحة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "جملة: «القِطّةُ فوقَ الكُرسيِّ.» أين القطّة؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "تحت الكرسيّ"
+        },
+        {
+          "id": "b",
+          "text": "فوق الكرسيّ"
+        },
+        {
+          "id": "c",
+          "text": "داخل الخزانة"
+        },
+        {
+          "id": "d",
+          "text": "الجملة لا تذكر مكانها"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "تخبرنا الجملة بمكان القطّة، وكلمة «فوقَ» تعني أنّها فوق الكرسيّ، لا تحته.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "قال طفلٌ: «الكلمتان (نَمْل) و(نَخْل) تعنيان الشيء نفسه لأنّهما متشابهتان». ما الصحيح؟",
+      "options": [
+        {
+          "id": "a",
+          "text": "صحيح، الكلمتان تعنيان الشيء نفسه"
+        },
+        {
+          "id": "b",
+          "text": "نَمْل ونَخْل كلاهما حشرة"
+        },
+        {
+          "id": "c",
+          "text": "لا فرق، فالحروف لا تغيّر المعنى"
+        },
+        {
+          "id": "d",
+          "text": "الخطأ الشائع؛ «نَمْل» حشرةٌ و«نَخْل» شجر التمر، حرفٌ واحد يغيّر المعنى"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "الخطأ الشائع: ظنّ الكلمتين المتشابهتين بمعنًى واحد. «نَمْل» حشرةٌ صغيرة و«نَخْل» شجر التمر، وحرف الميم أو الخاء يغيّر المعنى كلّه.",
+      "difficulty": 3
+    }
+  ]
+}

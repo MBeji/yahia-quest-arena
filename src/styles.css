@@ -231,6 +231,96 @@ html.light {
   --hub-node-bg: oklch(1 0 0 / 0.92);
 }
 
+/* =====================================================
+  Reference theme — "Référence" (content-first: white + teal #0F6E56).
+  The sober editorial reading register, now a first-class user-selectable theme
+  (the DEFAULT) applied globally via <html class="reference">. Light-family like
+  html.light, but the brand leads with teal instead of electric lime. The "gold"
+  tokens are repurposed to carry the teal so every CTA turns teal without renaming.
+  Shares html.light's in-shell surface overrides (see html:is(.light, .reference)).
+  ===================================================== */
+html.reference {
+  color-scheme: light;
+
+  /* Surfaces — near-white canvas, pure-white cards */
+  --background: oklch(0.985 0.008 165);
+  --foreground: oklch(0.26 0.03 175);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.26 0.03 175);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.26 0.03 175);
+
+  /* Brand — teal #0F6E56 leads */
+  --primary: #0f6e56;
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.965 0.018 165);
+  --secondary-foreground: oklch(0.3 0.04 175);
+  --muted: oklch(0.965 0.012 165);
+  --muted-foreground: oklch(0.48 0.025 172);
+  --accent: #0f6e56;
+  --accent-foreground: oklch(0.99 0 0);
+
+  --destructive: oklch(0.57 0.22 25);
+  --destructive-foreground: oklch(0.99 0 0);
+
+  --border: oklch(0.9 0.015 168);
+  --input: oklch(0.9 0.015 168);
+  --ring: #0f6e56;
+
+  /* Accent palette — retinted to teal, deepened to read on white */
+  --neon-violet: #0f6e56;
+  --neon-cyan: oklch(0.52 0.08 200);
+  --neon-magenta: #15876a;
+  --neon-gold: #0b5a47;
+  --flame: oklch(0.62 0.21 45);
+  --success: oklch(0.55 0.13 165);
+
+  /* Subject colours, darkened for contrast on white (as in html.light) */
+  --subject-math: oklch(0.57 0.22 25);
+  --subject-french: oklch(0.54 0.19 255);
+  --subject-arabic: oklch(0.52 0.15 150);
+  --subject-svt: oklch(0.55 0.19 135);
+  --subject-english: oklch(0.55 0.15 215);
+
+  /* Gradients — teal-tinted on a light canvas */
+  --gradient-hero:
+    radial-gradient(at 20% 18%, oklch(0.55 0.09 170 / 0.16), transparent 55%),
+    radial-gradient(at 82% 28%, oklch(0.62 0.08 175 / 0.14), transparent 55%),
+    radial-gradient(at 50% 92%, oklch(0.58 0.07 165 / 0.1), transparent 60%),
+    linear-gradient(180deg, oklch(0.99 0.006 165), oklch(0.965 0.01 165));
+  --gradient-primary: linear-gradient(135deg, var(--neon-violet), var(--neon-magenta));
+  --gradient-cyan: linear-gradient(135deg, var(--neon-cyan), var(--neon-violet));
+  --gradient-flame: linear-gradient(135deg, var(--flame), var(--neon-magenta));
+
+  /* Shadows — soft neutral elevation, no neon halos on white */
+  --shadow-neon: 0 18px 50px -18px oklch(0.5 0.06 170 / 0.28), 0 0 0 1px oklch(0.9 0.012 168 / 0.6);
+  --shadow-cyan: 0 18px 50px -18px oklch(0.5 0.06 200 / 0.22), 0 0 0 1px oklch(0.9 0.012 168 / 0.6);
+  --shadow-card: 0 24px 60px -28px oklch(0.5 0.03 170 / 0.4);
+
+  /* Teal "gold" tokens — fill every CTA / emphasis with teal */
+  --gold: #0f6e56;
+  --gold-bright: #15876a;
+  --gold-deep: #0b5a47;
+  --gradient-gold: linear-gradient(135deg, #0b5a47, #0f6e56 52%, #15876a);
+  /* `champagne` = emphasis-text colour on light: a deep, readable teal */
+  --champagne: oklch(0.4 0.07 175);
+  --gradient-gold-text: linear-gradient(
+    120deg,
+    oklch(0.26 0.03 175),
+    oklch(0.36 0.05 172) 55%,
+    oklch(0.24 0.03 175)
+  );
+  --shadow-gold: 0 10px 30px -14px oklch(0.5 0.08 170 / 0.4), 0 0 0 1px oklch(0.55 0.06 170 / 0.22);
+
+  /* Ambient backdrop blobs — teal to match the white + teal shell */
+  --ambient-1: oklch(0.55 0.09 170 / 0.1);
+  --ambient-2: oklch(0.62 0.08 175 / 0.09);
+  --ambient-3: oklch(0.58 0.07 165 / 0.08);
+
+  /* Program-hub / category node disc base — near-white */
+  --hub-node-bg: oklch(1 0 0 / 0.92);
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
@@ -260,16 +350,16 @@ html.light {
   Light-theme overrides for utilities that hard-code dark
   surfaces. Unlayered so they win over @layer utilities.
   ===================================================== */
-html.light body {
+html:is(.light, .reference) body {
   background-image:
     radial-gradient(at 0% 0%, oklch(0.895 0.2 122 / 0.09), transparent 50%),
     radial-gradient(at 100% 100%, oklch(0.93 0.18 118 / 0.09), transparent 50%);
 }
-html.light .glass {
+html:is(.light, .reference) .glass {
   background: oklch(1 0 0 / 0.7);
   border-color: oklch(0.86 0.18 122 / 0.25);
 }
-html.light .bg-black-deep {
+html:is(.light, .reference) .bg-black-deep {
   background-color: oklch(0.985 0.004 110);
 }
 
@@ -283,33 +373,33 @@ html.light .bg-black-deep {
   deep ink so they stay readable on the now-light cards, and the canvas is
   deepened a touch so the white cards read as elevated.
   --------------------------------------------------------------- */
-html.light .app-shell {
+html:is(.light, .reference) .app-shell {
   --color-black: oklch(1 0 0);
 }
-html.light .app-shell.bg-black-deep {
+html:is(.light, .reference) .app-shell.bg-black-deep {
   background-color: oklch(0.965 0.006 110);
 }
-html.light .app-shell :is(.text-black, .text-white) {
+html:is(.light, .reference) .app-shell :is(.text-black, .text-white) {
   color: oklch(0.22 0.008 130);
 }
-html.light .glass-gold {
+html:is(.light, .reference) .glass-gold {
   background: oklch(1 0 0 / 0.66);
   border-color: oklch(0.86 0.18 122 / 0.28);
 }
-html.light .bg-grid {
+html:is(.light, .reference) .bg-grid {
   background-image:
     linear-gradient(oklch(0.6 0.14 125 / 0.1) 1px, transparent 1px),
     linear-gradient(90deg, oklch(0.6 0.14 125 / 0.1) 1px, transparent 1px);
 }
-html.light .bg-gold-grid {
+html:is(.light, .reference) .bg-gold-grid {
   background-image:
     linear-gradient(oklch(0.6 0.14 125 / 0.12) 1px, transparent 1px),
     linear-gradient(90deg, oklch(0.6 0.14 125 / 0.12) 1px, transparent 1px);
 }
-html.light .scanline::after {
+html:is(.light, .reference) .scanline::after {
   background: repeating-linear-gradient(0deg, transparent 0 3px, oklch(0.2 0.02 80 / 0.03) 3px 4px);
 }
-html.light .animate-shimmer {
+html:is(.light, .reference) .animate-shimmer {
   background: linear-gradient(
     90deg,
     transparent 25%,
@@ -318,33 +408,33 @@ html.light .animate-shimmer {
   );
   background-size: 200% 100%;
 }
-html.light ::-webkit-scrollbar-thumb {
+html:is(.light, .reference) ::-webkit-scrollbar-thumb {
   background: oklch(0.7 0.15 125 / 0.5);
 }
-html.light ::-webkit-scrollbar-thumb:hover {
+html:is(.light, .reference) ::-webkit-scrollbar-thumb:hover {
   background: oklch(0.6 0.14 125 / 0.7);
 }
 
 /* Atome lime accents for utilities that hard-code gold/neon literals */
-html.light .border-gold {
+html:is(.light, .reference) .border-gold {
   border-color: oklch(0.78 0.18 124 / 0.45);
 }
-html.light .border-neon {
+html:is(.light, .reference) .border-neon {
   border-color: oklch(0.7 0.18 125 / 0.5);
 }
 /* Retint the always-on glow pseudo-elements (neon/gold) to lime on white */
-html.light .animate-gold-pulse::after {
+html:is(.light, .reference) .animate-gold-pulse::after {
   box-shadow:
     0 0 45px oklch(0.86 0.2 122 / 0.45),
     0 0 100px oklch(0.93 0.16 118 / 0.2);
 }
-html.light .animate-pulse-neon::after {
+html:is(.light, .reference) .animate-pulse-neon::after {
   box-shadow:
     0 0 32px oklch(0.85 0.2 122 / 0.5),
     0 0 70px oklch(0.9 0.18 120 / 0.28);
 }
 /* Focus ring: deep lime so it stays clearly visible on a white canvas */
-html.light *:focus-visible {
+html:is(.light, .reference) *:focus-visible {
   outline-color: var(--ring);
 }
 
@@ -518,57 +608,18 @@ html.light *:focus-visible {
 }
 
 /* =====================================================
-  Référence register — public, content-first reading skin (chantier C8).
-  A class-scoped LIGHT + TEAL (#0F6E56) palette, INDEPENDENT of the
-  html.dark/light game theme: public/content screens render in this register
-  whatever the visitor's game-theme toggle (double-registre « Na9ra / Nal3ab »).
-  Redefining the design tokens here re-skins every semantic Tailwind utility
-  (bg-background, text-foreground, text-primary, border-border, …); retinting
-  the Jeu neon/gold tokens to teal makes the shared .lesson-content typography
-  render as clean editorial teal-on-white with no per-element override.
+  Public-shell editorial touches. The `.public-shell` class is set by the
+  `_public` layout — it is a STRUCTURAL hook (print, IP image guard, lesson
+  typography), NOT a theme. The Référence THEME itself lives with the other
+  themes near the top of this file (html.reference). These rules just refine
+  lesson typography on public content, whatever the active theme.
   ===================================================== */
-.register-reference {
-  color-scheme: light;
-
-  /* Surfaces — near-white canvas, pure-white cards */
-  --background: oklch(0.985 0.008 165);
-  --foreground: oklch(0.26 0.03 175);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.26 0.03 175);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.26 0.03 175);
-
-  /* Brand — teal #0F6E56 leads */
-  --primary: #0f6e56;
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.965 0.018 165);
-  --secondary-foreground: oklch(0.3 0.04 175);
-  --muted: oklch(0.965 0.012 165);
-  --muted-foreground: oklch(0.48 0.025 172);
-  --accent: #0f6e56;
-  --accent-foreground: oklch(0.99 0 0);
-
-  --destructive: oklch(0.57 0.22 25);
-  --destructive-foreground: oklch(0.99 0 0);
-
-  --border: oklch(0.9 0.015 168);
-  --input: oklch(0.9 0.015 168);
-  --ring: #0f6e56;
-
-  /* Retint the Jeu neon/gold tokens to teal so .lesson-content reads Reference */
-  --neon-violet: #0f6e56;
-  --neon-magenta: #15876a;
-  --neon-gold: #0b5a47;
-  --gold: #0f6e56;
-  --gold-bright: #15876a;
-  --gold-deep: #0b5a47;
-}
-.register-reference .lesson-content a {
+.public-shell .lesson-content a {
   color: var(--primary);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
-.register-reference .lesson-content code {
+.public-shell .lesson-content code {
   background: var(--secondary);
   border-radius: 0.3rem;
   padding: 0.1em 0.35em;
@@ -842,5 +893,63 @@ html.light *:focus-visible {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* =====================================================
+  Protection de la propriété intellectuelle (Couches 3 & 5)
+  ===================================================== */
+
+/* Dissuasion light-touch : les images de la coquille publique ne se glissent ni
+   ne s'ouvrent au clic droit (la sélection de TEXTE reste permise — a11y/SEO). */
+.public-shell img {
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+/* Marquage à l'impression — le « téléchargement » réel = Ctrl+P / Enregistrer en
+   PDF. <PrintMark/> rend ces deux blocs `hidden` (display:none) à l'écran ; ils
+   ne réapparaissent qu'à l'impression : filigrane de marque + pied copyright/IP. */
+@media print {
+  .public-shell {
+    color: #000;
+    background: #fff;
+  }
+  /* Les titres en dégradé-clip s'impriment en noir plein (les fonds ne sont pas
+     imprimés par défaut → sinon texte invisible). */
+  .public-shell .lesson-content .lesson-h1 {
+    -webkit-text-fill-color: currentColor;
+    color: #000;
+    background: none;
+  }
+  .print-watermark {
+    display: flex !important;
+    position: fixed;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(-30deg);
+    font-family: var(--font-display);
+    font-size: 5rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: rgba(0, 0, 0, 0.07);
+    z-index: 9999;
+    pointer-events: none;
+  }
+  .print-copyright {
+    display: block !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 6px 12px;
+    font-size: 9px;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.6);
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
+  }
+  @page {
+    margin: 1.4cm;
   }
 }

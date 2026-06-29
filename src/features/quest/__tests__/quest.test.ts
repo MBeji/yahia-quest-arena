@@ -667,13 +667,45 @@ describe("gamification.quest — getChapterLesson", () => {
     const { getChapterLesson } = await import("@/features/quest");
     const res = (await (getChapterLesson as unknown as (d: unknown) => Promise<unknown>)({
       chapterId: CH,
-    })) as { chapter: { id: string }; allChapters: Array<{ id: string; hasLesson: boolean }> };
+    })) as {
+      chapter: { id: string };
+      allChapters: Array<{ id: string; hasLesson: boolean }>;
+      practiceExerciseId: string | null;
+    };
 
     expect(res.chapter.id).toBe("ch-1");
     expect(res.allChapters).toEqual([
       { id: "ch-1", title: "C1", display_order: 1, hasLesson: true },
       { id: "ch-2", title: "C2", display_order: 2, hasLesson: false },
     ]);
+    // No exercises returned for this chapter → no practise CTA target.
+    expect(res.practiceExerciseId).toBeNull();
+  });
+
+  it("returns the chapter's first non-quiz exercise as the practise CTA target", async () => {
+    let calls = 0;
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "chapters") {
+        calls += 1;
+        return calls === 1
+          ? mockQuery({ id: "ch-1", title: "C1", subject_id: "s1", lesson_content: "x" })
+          : mockQuery([{ id: "ch-1", title: "C1", display_order: 1, lesson_content: "x" }]);
+      }
+      if (table === "exercises")
+        return mockQuery([
+          { id: "qz", mode: "quiz", display_order: 1 },
+          { id: "ex", mode: "practice", display_order: 2 },
+        ]);
+      return mockQuery([]);
+    });
+
+    const { getChapterLesson } = await import("@/features/quest");
+    const res = (await (getChapterLesson as unknown as (d: unknown) => Promise<unknown>)({
+      chapterId: CH,
+    })) as { practiceExerciseId: string | null };
+
+    // The comprehension quiz is the connected gate, not practice → it's skipped.
+    expect(res.practiceExerciseId).toBe("ex");
   });
 
   it("falls back to an empty sibling list when none are returned", async () => {

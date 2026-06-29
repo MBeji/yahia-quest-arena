@@ -8,6 +8,11 @@ vi.mock("@tanstack/react-router", () => ({
     React.createElement("a", { href: to }, children),
 }));
 
+// The « Pages du manuel » section self-fetches (useQuery + a gated server fn); stub it
+// so the presentational reader can be tested without a QueryClient. It has its own
+// test (manuel-pages-section.test.tsx).
+vi.mock("../components/manuel-pages-section", () => ({ ManuelPagesSection: () => null }));
+
 import { LessonReader, type LessonReaderChapter } from "../components/lesson-reader";
 
 const chapter: LessonReaderChapter = {
@@ -89,5 +94,46 @@ describe("LessonReader", () => {
       />,
     );
     expect(container.querySelector('.lesson-content[dir="rtl"]')).not.toBeNull();
+  });
+
+  it("shows a practise CTA to the chapter exercise — anon → free practice", () => {
+    const { container } = render(
+      <LessonReader
+        chapterId="c1"
+        chapter={chapter}
+        allChapters={siblings}
+        practiceExerciseId="ex9"
+        isAuthenticated={false}
+      />,
+    );
+    expect(screen.getByText(/entraîner sur ce chapitre/i)).toBeInTheDocument();
+    expect(container.querySelector('a[href="/exercice/$exerciseId"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/quest/$exerciseId"]')).toBeNull();
+  });
+
+  it("routes the practise CTA to the scored quest when authenticated", () => {
+    const { container } = render(
+      <LessonReader
+        chapterId="c1"
+        chapter={chapter}
+        allChapters={siblings}
+        practiceExerciseId="ex9"
+        isAuthenticated={true}
+      />,
+    );
+    expect(container.querySelector('a[href="/quest/$exerciseId"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/exercice/$exerciseId"]')).toBeNull();
+  });
+
+  it("omits the practise CTA when the chapter has nothing to practise", () => {
+    render(
+      <LessonReader
+        chapterId="c1"
+        chapter={chapter}
+        allChapters={siblings}
+        practiceExerciseId={null}
+      />,
+    );
+    expect(screen.queryByText(/entraîner sur ce chapitre/i)).not.toBeInTheDocument();
   });
 });
