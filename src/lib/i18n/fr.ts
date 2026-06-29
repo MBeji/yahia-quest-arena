@@ -2,12 +2,12 @@ import type { TranslationKeys } from "./types";
 
 export const fr: TranslationKeys = {
   meta: {
-    title: "Na9ra Nal3ab — L'Académie Shonen des concours nationaux 6ème & 9ème",
+    title: "Na9ra Nal3ab — tous les cours de l'école tunisienne, gratuitement",
     description:
-      "Prépare les concours nationaux tunisiens de 6ème et 9ème en mode RPG — plus une académie gratuite : Culture Générale, Muscle ton Cerveau et Langues. XP, streaks, duels et boss.",
-    ogTitle: "Na9ra Nal3ab — Concours nationaux & Académie gratuite",
+      "Cours, résumés et exercices corrigés de toute l'école tunisienne, de la 1re année au Baccalauréat. Accès libre, gratuit, sans inscription — pour toute la famille.",
+    ogTitle: "Na9ra Nal3ab — l'école tunisienne, gratuite et en accès libre",
     ogDescription:
-      "Prépa concours 6ème & 9ème + une académie gratuite (Culture Générale, QI, Langues), façon shonen.",
+      "Tout le programme officiel, du Primaire au Bac : cours, résumés et exercices corrigés, gratuitement.",
   },
   common: {
     backToHall: "Retour au hall",
@@ -349,6 +349,12 @@ export const fr: TranslationKeys = {
     signOut: "Déconnexion",
     logoutToast: "À bientôt, guerrier.",
   },
+  theme: {
+    label: "Thème",
+    reference: "Référence",
+    light: "Clair",
+    dark: "Sombre",
+  },
   parcours: {
     worldTitle: "Carte de l'aventure",
     worldSubtitle: "Choisis ta voie, débloque les régions et deviens une légende.",
@@ -531,8 +537,13 @@ export const fr: TranslationKeys = {
       extras: "Extras",
       login: "Connexion",
       signup: "Créer mon compte",
+      account: "Mon espace",
     },
-    footer: { tagline: "100 % gratuit · toute l’école tunisienne" },
+    footer: {
+      tagline: "100 % gratuit · toute l’école tunisienne",
+      rights: "Tous droits réservés",
+      legalLink: "Mentions légales",
+    },
     landing: {
       freeBadge: "100 % gratuit · sans inscription",
       heroTitle: "Tous les cours de l’école tunisienne. De la 1re année au Bac.",
@@ -564,6 +575,16 @@ export const fr: TranslationKeys = {
       gameFeatBadges: "Badges & classes de héros",
       gameFeatRanking: "Classement & séries quotidiennes",
       gameCta: "Créer mon compte gratuit",
+      gameCtaAuthed: "Continuer à jouer",
+      languesKicker: "Un atout transverse",
+      languesTitle: "Renforce ton français et ton anglais, à ton vrai niveau",
+      languesSubtitle:
+        "Deux parcours alignés sur les standards internationaux — pour renforcer la langue indépendamment de ta classe, du niveau débutant au niveau avancé.",
+      languesCta: "Voir les niveaux",
+      languesFrName: "Français",
+      languesFrStandard: "Aligné sur le CECRL · DELF / DALF",
+      languesEnName: "Anglais",
+      languesEnStandard: "Aligné sur le CECRL · Cambridge / IELTS",
     },
     cycles: {
       primaire: "Primaire",
@@ -599,6 +620,8 @@ export const fr: TranslationKeys = {
       chooseSubject: "Choisis une matière pour lire le cours, réviser le résumé et t’entraîner.",
       comingSoonTitle: "Contenu bientôt disponible",
       comingSoonDesc: "Ce niveau est en cours de préparation. Reviens bientôt !",
+      choose: "Choisir ce parcours",
+      choosing: "Sélection…",
     },
     reader: {
       defaultSubject: "Cours",
@@ -606,10 +629,17 @@ export const fr: TranslationKeys = {
       summaryTab: "Résumé",
       print: "Imprimer",
       courseSoon: "Le cours de ce chapitre arrive bientôt.",
+      practiceCta: "S’entraîner sur ce chapitre",
       inviteTitle: "Apprends en jouant",
       inviteDesc:
         "Crée ton compte gratuit pour t’entraîner sur les exercices, gagner des XP et sauvegarder ta progression. Lire le cours reste toujours libre.",
       inviteCta: "Créer mon compte gratuit",
+      manuelTitle: "Pages du manuel",
+      manuelHint: "Les pages du manuel élève officiel qui couvrent ce chapitre.",
+      manuelPage: "Page",
+      manuelOpen: "Agrandir la page",
+      manuelPrev: "Précédente",
+      manuelNext: "Suivante",
     },
     subject: {
       chapter: "Chapitre {n}",
@@ -618,6 +648,7 @@ export const fr: TranslationKeys = {
     },
     practice: {
       back: "Retour à la matière",
+      reviewCourse: "Revoir le cours",
       modeKicker: "Mode entraînement",
       subtitle: "Réponds aux questions puis corrige-toi — sans compte, sans note enregistrée.",
       scoreCorrect: "{correct} sur {total} bonnes réponses",
@@ -632,6 +663,30 @@ export const fr: TranslationKeys = {
       inviteDesc:
         "Crée un compte pour gagner des XP, sauvegarder ta progression et grimper au classement.",
       inviteCta: "Créer mon compte",
+    },
+    print: {
+      copyrightNotice:
+        "na9ranal3ab.tn · Propriété intellectuelle. Reproduction et diffusion interdites sans autorisation.",
+    },
+    legal: {
+      title: "Mentions légales & propriété intellectuelle",
+      intro:
+        "Na9ra Nal3ab (نقرا نلعب) — plateforme éducative gratuite dédiée au programme scolaire tunisien.",
+      ipTitle: "Propriété intellectuelle",
+      ipBody:
+        "L’ensemble des contenus (cours, résumés, quiz, exercices, textes, illustrations), l’identité visuelle et le code de la plateforme sont la propriété exclusive de Na9ra Nal3ab et protégés par le droit d’auteur. Toute reproduction, diffusion, revente ou réutilisation, totale ou partielle, sans autorisation écrite préalable, est interdite.",
+      useTitle: "Conditions d’utilisation",
+      useBody:
+        "Le contenu est librement consultable à des fins pédagogiques personnelles et non commerciales. Sont notamment interdits : l’extraction automatisée (scraping, crawling), la copie ou le téléchargement en masse, l’usage des contenus pour entraîner des modèles d’intelligence artificielle, et tout accès automatisé non autorisé au service.",
+      brandTitle: "Marque",
+      brandBody:
+        "« Na9ra Nal3ab » / « نقرا نلعب » et le logo associé sont des signes distinctifs de la plateforme ; leur usage sans autorisation est prohibé.",
+      contactTitle: "Contact & signalement",
+      contactBody:
+        "Demande d’autorisation, signalement d’un usage abusif ou d’une reproduction non autorisée : contact@na9ranal3ab.tn.",
+      lawTitle: "Droit applicable",
+      lawBody: "Les présentes mentions sont régies par le droit tunisien.",
+      updated: "Dernière mise à jour : juin 2026.",
     },
   },
   quotes: [

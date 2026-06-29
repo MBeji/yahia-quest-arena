@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: أُسمّي وأُحيّي",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "ما اسم هذه الصورة؟ <svg viewBox=\"0 0 140 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M24 60 q26 -30 70 -16 q22 8 22 16 q0 8 -22 16 q-44 14 -70 -16 z\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M94 44 l24 16 l-24 16 z\" fill=\"#fb923c\" stroke=\"#1f2937\" stroke-width=\"3\"/><circle cx=\"44\" cy=\"54\" r=\"4\" fill=\"#1f2937\" stroke=\"none\"/></svg>",
+      "options": [
+        { "id": "a", "text": "قطّة" },
+        { "id": "b", "text": "سمكة" },
+        { "id": "c", "text": "عصفور" },
+        { "id": "d", "text": "وردة" }
+      ],
+      "correctOption": "b",
+      "explanation": "في الصورة سمكةٌ لها ذيلٌ وتعيش في الماء، فاسمها «سمكة».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما اسم هذه الصورة؟ <svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><g stroke=\"#1f2937\" stroke-width=\"3\"><ellipse cx=\"60\" cy=\"40\" rx=\"12\" ry=\"16\" fill=\"#ef4444\"/><ellipse cx=\"40\" cy=\"50\" rx=\"12\" ry=\"16\" fill=\"#ef4444\"/><ellipse cx=\"80\" cy=\"50\" rx=\"12\" ry=\"16\" fill=\"#ef4444\"/><ellipse cx=\"48\" cy=\"66\" rx=\"12\" ry=\"16\" fill=\"#ef4444\"/><ellipse cx=\"72\" cy=\"66\" rx=\"12\" ry=\"16\" fill=\"#ef4444\"/></g><circle cx=\"60\" cy=\"54\" r=\"11\" fill=\"#facc15\" stroke=\"#1f2937\" stroke-width=\"3\"/><line x1=\"60\" y1=\"64\" x2=\"60\" y2=\"108\" stroke=\"#16a34a\" stroke-width=\"4\"/><path d=\"M60 86 q16 -2 22 -14 q-16 0 -22 14 z\" fill=\"#22c55e\" stroke=\"#1f2937\" stroke-width=\"2\"/></svg>",
+      "options": [
+        { "id": "a", "text": "كرة" },
+        { "id": "b", "text": "شمس" },
+        { "id": "c", "text": "وردة" },
+        { "id": "d", "text": "سمكة" }
+      ],
+      "correctOption": "c",
+      "explanation": "في الصورة وردةٌ لها أوراقٌ وساقٌ خضراء، فاسمها «وردة».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ماذا أقول عندما أُقابل صديقي في الصباح؟",
+      "options": [
+        { "id": "a", "text": "صباح الخير" },
+        { "id": "b", "text": "تصبح على خير" },
+        { "id": "c", "text": "مع السلامة" },
+        { "id": "d", "text": "آسف" }
+      ],
+      "correctOption": "a",
+      "explanation": "تحيّة الصباح هي «صباح الخير». أمّا «تصبح على خير» فتُقال عند النوم في الليل.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أيّ كلمةٍ تُكمل الجملة: «العصفور ...»؟",
+      "options": [
+        { "id": "a", "text": "يموء" },
+        { "id": "b", "text": "يسبح" },
+        { "id": "c", "text": "يقرأ" },
+        { "id": "d", "text": "يطير" }
+      ],
+      "correctOption": "d",
+      "explanation": "العصفور له جناحان فهو «يطير». المُواء للقطّة، والسباحة للسمكة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما لون هذه التفّاحة؟ <svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M40 44 q20 -16 40 0 q14 12 8 36 q-6 22 -28 26 q-22 -4 -28 -26 q-6 -24 8 -36 z\" fill=\"#ef4444\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M60 40 q2 -14 16 -18\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M60 40 q-6 -10 -18 -8\" fill=\"#22c55e\" stroke=\"#1f2937\" stroke-width=\"2\"/></svg>",
+      "options": [
+        { "id": "a", "text": "أزرق" },
+        { "id": "b", "text": "أحمر" },
+        { "id": "c", "text": "أصفر" },
+        { "id": "d", "text": "أبيض" }
+      ],
+      "correctOption": "b",
+      "explanation": "التفّاحة في الصورة حمراء، فلونها «أحمر». هذه كلمةٌ تصف لون الشيء.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ساعدك صديقك ثمّ ودّعك. ماذا تقول له؟",
+      "options": [
+        { "id": "a", "text": "صباح الخير" },
+        { "id": "b", "text": "تموء" },
+        { "id": "c", "text": "نَم" },
+        { "id": "d", "text": "شكرًا، مع السلامة" }
+      ],
+      "correctOption": "d",
+      "explanation": "تشكره على مساعدته ثمّ تودّعه، فتقول «شكرًا، مع السلامة». هاتان كلمتا ذوقٍ وتحيّة.",
+      "difficulty": 2
+    }
+  ]
+}

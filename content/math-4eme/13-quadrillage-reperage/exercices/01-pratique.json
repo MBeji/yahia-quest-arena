@@ -21,25 +21,25 @@
     {
       "prompt": "ما موضع العقدة السوداء؟ <svg viewBox=\"0 0 130 110\"><line x1=\"20\" y1=\"20\" x2=\"110\" y2=\"20\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"20\" y1=\"50\" x2=\"110\" y2=\"50\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"20\" y1=\"80\" x2=\"110\" y2=\"80\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"20\" y1=\"20\" x2=\"20\" y2=\"80\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"50\" y1=\"20\" x2=\"50\" y2=\"80\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"80\" y1=\"20\" x2=\"80\" y2=\"80\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"110\" y1=\"20\" x2=\"110\" y2=\"80\" stroke=\"#9ca3af\" stroke-width=\"1\"/><text x=\"8\" y=\"24\" font-size=\"9\" fill=\"currentColor\">1</text><text x=\"8\" y=\"54\" font-size=\"9\" fill=\"currentColor\">2</text><text x=\"8\" y=\"84\" font-size=\"9\" fill=\"currentColor\">3</text><text x=\"18\" y=\"14\" font-size=\"9\" fill=\"currentColor\">1</text><text x=\"48\" y=\"14\" font-size=\"9\" fill=\"currentColor\">2</text><text x=\"78\" y=\"14\" font-size=\"9\" fill=\"currentColor\">3</text><text x=\"108\" y=\"14\" font-size=\"9\" fill=\"currentColor\">4</text><circle cx=\"50\" cy=\"50\" r=\"4.5\" fill=\"currentColor\"/></svg>",
       "options": [
-        { "id": "a", "text": "(1، 2)" },
-        { "id": "b", "text": "(2، 1)" },
-        { "id": "c", "text": "(2، 2)" },
-        { "id": "d", "text": "(3، 2)" }
+        { "id": "a", "text": "(1 ; 2)" },
+        { "id": "b", "text": "(2 ; 1)" },
+        { "id": "c", "text": "(2 ; 2)" },
+        { "id": "d", "text": "(3 ; 2)" }
       ],
       "correctOption": "c",
-      "explanation": "السطر أوّلًا ثمّ العمود: العقدة على السطر 2 والعمود 2، فموضعها (2، 2).",
+      "explanation": "السطر أوّلًا ثمّ العمود: العقدة على السطر 2 والعمود 2، فموضعها (2 ; 2).",
       "difficulty": 1
     },
     {
       "prompt": "ما موضع العقدة السوداء؟ <svg viewBox=\"0 0 130 110\"><line x1=\"20\" y1=\"20\" x2=\"110\" y2=\"20\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"20\" y1=\"50\" x2=\"110\" y2=\"50\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"20\" y1=\"80\" x2=\"110\" y2=\"80\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"20\" y1=\"20\" x2=\"20\" y2=\"80\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"50\" y1=\"20\" x2=\"50\" y2=\"80\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"80\" y1=\"20\" x2=\"80\" y2=\"80\" stroke=\"#9ca3af\" stroke-width=\"1\"/><line x1=\"110\" y1=\"20\" x2=\"110\" y2=\"80\" stroke=\"#9ca3af\" stroke-width=\"1\"/><text x=\"8\" y=\"24\" font-size=\"9\" fill=\"currentColor\">1</text><text x=\"8\" y=\"54\" font-size=\"9\" fill=\"currentColor\">2</text><text x=\"8\" y=\"84\" font-size=\"9\" fill=\"currentColor\">3</text><text x=\"18\" y=\"14\" font-size=\"9\" fill=\"currentColor\">1</text><text x=\"48\" y=\"14\" font-size=\"9\" fill=\"currentColor\">2</text><text x=\"78\" y=\"14\" font-size=\"9\" fill=\"currentColor\">3</text><text x=\"108\" y=\"14\" font-size=\"9\" fill=\"currentColor\">4</text><circle cx=\"110\" cy=\"80\" r=\"4.5\" fill=\"currentColor\"/></svg>",
       "options": [
-        { "id": "a", "text": "(4، 3)" },
-        { "id": "b", "text": "(3، 3)" },
-        { "id": "c", "text": "(4، 4)" },
-        { "id": "d", "text": "(3، 4)" }
+        { "id": "a", "text": "(4 ; 3)" },
+        { "id": "b", "text": "(3 ; 3)" },
+        { "id": "c", "text": "(4 ; 4)" },
+        { "id": "d", "text": "(3 ; 4)" }
       ],
       "correctOption": "d",
-      "explanation": "العقدة في الزاوية: السطر 3 (الأسفل) والعمود 4 (أقصى اليمين). نكتب السطر أوّلًا ثمّ العمود، فموضعها (3، 4).",
+      "explanation": "العقدة في الزاوية: السطر 3 (الأسفل) والعمود 4 (أقصى اليمين). نكتب السطر أوّلًا ثمّ العمود، فموضعها (3 ; 4).",
       "difficulty": 1
     },
     {
@@ -57,17 +57,17 @@
     {
       "prompt": "العقدة على السطر 1 والعمود 4. ما موضعها؟",
       "options": [
-        { "id": "a", "text": "(1، 4)" },
-        { "id": "b", "text": "(4، 1)" },
-        { "id": "c", "text": "(1، 1)" },
-        { "id": "d", "text": "(4، 4)" }
+        { "id": "a", "text": "(1 ; 4)" },
+        { "id": "b", "text": "(4 ; 1)" },
+        { "id": "c", "text": "(1 ; 1)" },
+        { "id": "d", "text": "(4 ; 4)" }
       ],
       "correctOption": "a",
-      "explanation": "نكتب السطر أوّلًا ثمّ العمود: السطر 1 ثمّ العمود 4، أي (1، 4). الزوج (4، 1) معكوسٌ لأنّه يقلب السطر بالعمود.",
+      "explanation": "نكتب السطر أوّلًا ثمّ العمود: السطر 1 ثمّ العمود 4، أي (1 ; 4). الزوج (4 ; 1) معكوسٌ لأنّه يقلب السطر بالعمود.",
       "difficulty": 2
     },
     {
-      "prompt": "كم خطوةً في أقصر مسلكٍ بين عقدتين على نفس السطر، بينهما عمودان (مثل (2، 1) و(2، 3))؟",
+      "prompt": "كم خطوةً في أقصر مسلكٍ بين عقدتين على نفس السطر، بينهما عمودان (مثل (2 ; 1) و(2، 3))؟",
       "options": [
         { "id": "a", "text": "3 خطوات" },
         { "id": "b", "text": "خطوة واحدة" },

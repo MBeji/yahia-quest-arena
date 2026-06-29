@@ -5,7 +5,9 @@ import {
   Award,
   BookOpen,
   CheckCircle2,
+  Globe,
   GraduationCap,
+  Languages,
   Printer,
   Sparkles,
   Star,
@@ -14,6 +16,7 @@ import {
   Zap,
 } from "lucide-react";
 import heroImg from "@/assets/hero-warrior.jpg";
+import { useAuth } from "@/features/auth";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useT } from "@/lib/i18n";
 
@@ -23,14 +26,19 @@ import { useT } from "@/lib/i18n";
  * (étude §5.1): the family promise, 3 persona doors (élève/parent/enseignant), a
  * 3-parcours preview, proof of free, and ONE secondary « apprends en jouant » block —
  * the only place the Jeu (gold) register appears, where the 3D hero now lives. Rendered
- * inside the `_public` coquille (header/footer + `.register-reference`). Copy is i18n.
+ * inside the `_public` coquille (header/footer + `.public-shell`). Copy is i18n.
  */
 
 // three.js loads only here, only on desktop with motion enabled (the one game block).
 const GoldenHeroCanvas = lazy(() => import("@/components/landing/golden-hero-canvas"));
 
+/** The CEFR ladder (Common European Framework) shared by both language tracks. */
+const CEFR_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"];
+
 export function PublicLanding() {
   const t = useT();
+  const { user } = useAuth();
+  const isAuthed = user != null;
   const isMobile = useIsMobile();
   const [mounted, setMounted] = useState(false);
   const [reduce, setReduce] = useState(false);
@@ -89,6 +97,20 @@ export function PublicLanding() {
       icon: Printer,
       title: t.public.landing.proofConformTitle,
       desc: t.public.landing.proofConformDesc,
+    },
+  ];
+  // Two transverse language tracks (free `libre` parcours; parcours id = theme id),
+  // surfaced next to the official programme. CEFR-aligned, independent of school grade.
+  const langues = [
+    {
+      parcoursId: "francais",
+      name: t.public.landing.languesFrName,
+      standard: t.public.landing.languesFrStandard,
+    },
+    {
+      parcoursId: "anglais",
+      name: t.public.landing.languesEnName,
+      standard: t.public.landing.languesEnStandard,
     },
   ];
 
@@ -171,6 +193,56 @@ export function PublicLanding() {
         </div>
       </section>
 
+      {/* DEUX LANGUES TRANSVERSES — Français & Anglais, alignés CECRL, atout indépendant de la classe */}
+      <section className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
+        <div className="mb-6 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full bg-secondary px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
+            <Globe className="h-3.5 w-3.5" /> {t.public.landing.languesKicker}
+          </div>
+          <h2 className="mx-auto mt-4 max-w-2xl font-display text-2xl font-bold sm:text-3xl">
+            {t.public.landing.languesTitle}
+          </h2>
+          <p className="mx-auto mt-2 max-w-2xl text-muted-foreground">
+            {t.public.landing.languesSubtitle}
+          </p>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {langues.map((l) => (
+            <Link
+              key={l.parcoursId}
+              to="/niveau/$parcoursId"
+              params={{ parcoursId: l.parcoursId }}
+              data-testid="langue-card"
+              className="group rounded-2xl border border-border bg-card p-6 transition hover:border-primary/60 hover:shadow-sm"
+            >
+              <div className="flex items-center gap-3">
+                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-secondary text-primary">
+                  <Languages className="h-6 w-6" />
+                </span>
+                <div className="min-w-0">
+                  <h3 className="font-display text-lg font-bold">{l.name}</h3>
+                  <p className="text-xs font-semibold text-muted-foreground">{l.standard}</p>
+                </div>
+              </div>
+              <div className="mt-4 flex flex-wrap gap-1.5">
+                {CEFR_LEVELS.map((lvl) => (
+                  <span
+                    key={lvl}
+                    className="rounded-md bg-secondary px-2 py-1 text-xs font-bold text-primary"
+                  >
+                    {lvl}
+                  </span>
+                ))}
+              </div>
+              <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary">
+                {t.public.landing.languesCta}
+                <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5 rtl:-scale-x-100" />
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {/* PREUVE DE GRATUITÉ */}
       <section className="border-y border-border bg-card/50">
         <div className="mx-auto grid max-w-5xl gap-6 px-4 py-10 sm:grid-cols-3 sm:px-6">
@@ -210,11 +282,14 @@ export function PublicLanding() {
                 <Star className="h-4 w-4 text-amber-400" /> {t.public.landing.gameFeatRanking}
               </li>
             </ul>
+            {/* Auth-aware CTA: a signed-in visitor already has an account → send them to
+                their gameplay home, not the signup page (mirrors the auth-aware header). */}
             <Link
-              to="/signup"
+              to={isAuthed ? "/dashboard" : "/signup"}
               className="mt-7 inline-flex items-center gap-2 rounded-lg bg-amber-400 px-6 py-3 text-base font-bold text-[#15120d] transition hover:bg-amber-300"
             >
-              {t.public.landing.gameCta} <ArrowRight className="h-5 w-5 rtl:-scale-x-100" />
+              {isAuthed ? t.public.landing.gameCtaAuthed : t.public.landing.gameCta}{" "}
+              <ArrowRight className="h-5 w-5 rtl:-scale-x-100" />
             </Link>
           </div>
           <div className="relative aspect-square overflow-hidden rounded-3xl border border-amber-400/20 bg-black/40">
