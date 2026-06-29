@@ -172,7 +172,31 @@ describe("gamification.quest — getExercise", () => {
       exercise: exerciseData,
       questions: questionsData,
       hintCharges: 0,
+      // No chapter_id on this exercise → no comprehension-quiz lookup.
+      chapterQuizId: null,
     });
+  });
+
+  it("resolves the chapter's comprehension quiz id for a gated (non-quiz) exercise", async () => {
+    const exerciseData = { id: "ex-1", title: "Ex 1", chapter_id: "ch-1", mode: "practice" };
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") {
+        // First call → the exercise itself; the follow-up quiz lookup is also on
+        // "exercises" but selects by chapter_id+mode and reads .maybeSingle().
+        const chain = mockQuery(exerciseData) as Record<string, unknown>;
+        chain.maybeSingle = vi.fn().mockReturnValue({ data: { id: "quiz-1" }, error: null });
+        return chain;
+      }
+      if (table === "questions") return mockQuery([]);
+      return mockQuery([]);
+    });
+
+    const { getExercise } = await import("@/features/quest");
+    const result = (await (getExercise as unknown as (d: unknown) => Promise<unknown>)({
+      exerciseId: "11111111-1111-1111-1111-111111111111",
+    })) as { chapterQuizId: string | null };
+
+    expect(result.chapterQuizId).toBe("quiz-1");
   });
 
   it("sums reveal charges from owned hint consumables", async () => {

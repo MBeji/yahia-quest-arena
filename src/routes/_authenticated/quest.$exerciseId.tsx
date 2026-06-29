@@ -372,8 +372,10 @@ function QuestPage() {
       <QuizLockScreen
         title={QL.lockedTitle}
         body={QL.lockedBody}
+        takeQuizLabel={QL.takeQuiz}
         reviewLabel={QL.review}
         backLabel={QL.back}
+        quizId={data.chapterQuizId}
         chapterId={chapterId}
         subjectId={exSubjectId}
         rtl={isRtlSubject}
