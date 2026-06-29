@@ -163,10 +163,11 @@ Pour créer ou réaligner le contenu d'un couple **(niveau, matière)** sur le C
    worktree sur `main` + jonction `node_modules` (pour que validation et hooks fonctionnent) :
    - `git worktree add -b feat/<sujet>-cnp <chemin> origin/main`
    - jonction (Windows, sans admin, PowerShell) : `New-Item -ItemType Junction -Path <chemin>\node_modules -Target <repo>\node_modules`
-2. **Lire le programme — via la transcription (PAS de scan ici)** : la source de scope est
-   **`programme/<gradeSlug>/<matière>.md`** (transcription fidèle du guide enseignant, produite **une fois**
-   par la session « couche de persistance »). La **consommer** ; établir le scope exact (notions,
-   terminologie, séquence, bornes incl./excl.). `taybah/<gradeSlug>.md` sert de **vérification** / séquençage
+2. **Lire le programme — via la transcription (PAS de scan ici)** : la source de scope **et de contenu** est
+   **`programme/<gradeSlug>/<matière>.md`** (transcription fidèle **combinant guide enseignant + manuel élève**,
+   produite **une fois** par la session « couche de persistance »). La **consommer** ; établir le scope exact
+   (notions, terminologie, séquence, bornes incl./excl.) **et** récupérer les exemples/exercices/profondeur du
+   **manuel élève** que la transcription a combinés (complément indispensable). `taybah/<gradeSlug>.md` sert de **vérification** / séquençage
    par trimestre. ⛔ **Ne PAS `render.sh`→vision les scans CNP depuis la session de génération** — le scan est
    le travail de la session de persistance (elle transcrit une fois ; on consomme, zéro double-scan). Si
    `programme/<gradeSlug>/<matière>.md` **n'existe pas encore**, le couple est **bloqué sur la couche de
@@ -174,12 +175,15 @@ Pour créer ou réaligner le contenu d'un couple **(niveau, matière)** sur le C
    contournement. **Codifier** la liste des chapitres (slug + notion, ordre du programme) dans
    **`manifest/<gradeSlug>.json`** (cf. § Manifeste) — c'est ce qui rend la couverture vérifiable.
 3. **Auditer l'existant** (si réalignement) : pour chaque chapitre → **couvert** / **manquant** /
-   **hors-programme** (notion d'un autre niveau). Vérifier avant de retirer (ex. soustraction = 2ème, pas 1ère).
+   **hors-programme** (notion d'un autre niveau) **/ plus pauvre que le manuel élève** (exemples ou profondeur
+   officiels manquants → à enrichir). Vérifier avant de retirer (ex. soustraction = 2ème, pas 1ère).
 4. **Générer / corriger** chapitre par chapitre selon **`content-engine`** :
    - `cours.md` (~50-75 l, style RPG, **figures SVG** pour le primaire, chiffres latins même en arabe),
      `resume.md` (bijection cours↔résumé), `quiz.json` (5 q, d1-2, gate), `exercices/*.json` = **missions**
      (`01-pratique` d1, `02-boss` d3, +`03-revision`/`04-defi`/`05` au besoin).
-   - ajouter les chapitres manquants, retirer/flaguer le hors-programme, **réordonner** (`displayOrder`),
+   - ajouter les chapitres manquants, retirer/flaguer le hors-programme, **enrichir** avec les exemples/
+     exercices du **manuel élève** (source combinée — ne pas livrer plus pauvre que le manuel officiel),
+     **réordonner** (`displayOrder`),
      `nameFr` natif (`الرياضيات`…). Auto-vérification (re-solve à l'aveugle, équilibre des clés, notation, golden rule).
      **Chiffres en arabe** : grouper les milliers en **U+00A0** de façon **cohérente** (options ↔ énoncés ↔
      explications) — sinon `content:qa` signale « valeur non reprise » (son extracteur de nombres coupe sur

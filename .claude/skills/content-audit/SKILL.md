@@ -164,7 +164,11 @@ severity mapping). Per chapter:
    against the **CNP program** (source of truth: the programme transcription
    `content-ecole-tn/references/programmes-officiels/programme/<gradeSlug>/<matière>.md` — consume it,
    scanning the corpus is the persistence session's job; Taybah files only as a secondary cross-check),
-   else `chapter.json` scope — and flag off-program additions.
+   else `chapter.json` scope — and flag off-program additions. The transcription **combines the teacher
+   guide AND the manuel élève**: a chapter that covers the scope but is **thinner than the manuel élève**
+   (missing the official lessons/examples/exercises the student textbook teaches) is **incomplete** =
+   **[MINOR]** (→ **[MAJOR]** if a whole notion the manuel élève teaches is absent) — the manuel élève is
+   an indispensable complement, not optional.
 2. **Clarté** — one notion per section, terms defined at first use in the official terminology,
    grade-calibrated sentences, formulas displayed on their own line, tables for classifications.
 3. **Facilité de compréhension** — concrete example before each rule, **a worked example for
