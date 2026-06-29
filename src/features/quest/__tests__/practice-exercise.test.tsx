@@ -126,4 +126,29 @@ describe("PracticeExercise", () => {
     expect(container.querySelector('a[href="/quest/$exerciseId"]')).not.toBeNull();
     expect(screen.queryByText(/Crée un compte/)).not.toBeInTheDocument();
   });
+
+  it("offers a « Revoir le cours » link back to the chapter when chapter_id is known", () => {
+    const { container } = render(
+      <PracticeExercise
+        exercise={{ ...exercise, chapter_id: "ch1" }}
+        questions={questions}
+        isAuthenticated={false}
+        checkAnswers={vi.fn().mockResolvedValue(result)}
+      />,
+    );
+    expect(screen.getByText(/Revoir le cours/)).toBeInTheDocument();
+    expect(container.querySelector('a[href="/chapitre/$chapterId"]')).not.toBeNull();
+  });
+
+  it("omits the « Revoir le cours » link when the chapter is unknown", () => {
+    const { container } = render(
+      <PracticeExercise
+        exercise={exercise}
+        questions={questions}
+        isAuthenticated={false}
+        checkAnswers={vi.fn().mockResolvedValue(result)}
+      />,
+    );
+    expect(container.querySelector('a[href="/chapitre/$chapterId"]')).toBeNull();
+  });
 });

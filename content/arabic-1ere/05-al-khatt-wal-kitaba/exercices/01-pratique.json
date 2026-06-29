@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: أرسم على السطر",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "إلى أيّ جهةٍ يشير هذا السهم؟ هكذا نكتب العربية. <svg viewBox=\"0 0 200 70\" xmlns=\"http://www.w3.org/2000/svg\"><polyline points=\"180,35 40,35\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"6\" stroke-linecap=\"round\"/><polygon points=\"40,35 60,22 60,48\" fill=\"#2563eb\" stroke=\"#1f2937\" stroke-width=\"2\"/></svg>",
+      "options": [
+        { "id": "a", "text": "إلى الأعلى" },
+        { "id": "b", "text": "من اليمين إلى اليسار" },
+        { "id": "c", "text": "من اليسار إلى اليمين" },
+        { "id": "d", "text": "إلى الأسفل" }
+      ],
+      "correctOption": "b",
+      "explanation": "السهم يشير من اليمين إلى اليسار، وهكذا نكتب العربية: نبدأ من اليمين.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أين يجلس هذا الحرف؟ <svg viewBox=\"0 0 200 110\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"20\" y1=\"80\" x2=\"180\" y2=\"80\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"100\" y=\"78\" font-size=\"60\" text-anchor=\"middle\" fill=\"#15803d\" stroke=\"none\">د</text></svg>",
+      "options": [
+        { "id": "a", "text": "تحت السطر" },
+        { "id": "b", "text": "في وسط الورقة بلا سطر" },
+        { "id": "c", "text": "على السطر" },
+        { "id": "d", "text": "فوق السطر بعيدًا" }
+      ],
+      "correctOption": "c",
+      "explanation": "الحرف د يجلس على السطر، كما نرى في الصورة. الحرف يكتب دائمًا على السطر.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أين توضع نقطة الحرف ب؟",
+      "options": [
+        { "id": "a", "text": "تحت الحرف" },
+        { "id": "b", "text": "فوق الحرف" },
+        { "id": "c", "text": "داخل الحرف" },
+        { "id": "d", "text": "بجانب الحرف" }
+      ],
+      "correctOption": "a",
+      "explanation": "نقطة الحرف ب توضع تحته دائمًا، وهذا ما يميّزه عن ت ذي النقطتين فوقه.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "كم نقطةً نرسم تحت الحرف ب؟",
+      "options": [
+        { "id": "a", "text": "ثلاث نقط" },
+        { "id": "b", "text": "نقطتان" },
+        { "id": "c", "text": "لا نقطة" },
+        { "id": "d", "text": "نقطة واحدة" }
+      ],
+      "correctOption": "d",
+      "explanation": "نرسم تحت الحرف ب نقطةً واحدة. هي علامته التي نضعها أسفله على السطر.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أيّ حرفٍ ليست له نقطة، فنرسمه على السطر بلا نقط؟",
+      "options": [
+        { "id": "a", "text": "الحرف ب" },
+        { "id": "b", "text": "الحرف ت" },
+        { "id": "c", "text": "الحرف م" },
+        { "id": "d", "text": "الحرف ث" }
+      ],
+      "correctOption": "c",
+      "explanation": "الحرف م ليست له نقطة، فنرسمه على السطر بلا نقط. أمّا ب و ت و ث فلها نقط.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "عند نسخ حرفٍ جديد، ماذا أفعل أوّلًا؟",
+      "options": [
+        { "id": "a", "text": "أنظر جيّدًا إلى الحرف قبل أن أرسمه" },
+        { "id": "b", "text": "أضع النقط قبل رسم الحرف" },
+        { "id": "c", "text": "أرسم من اليسار إلى اليمين" },
+        { "id": "d", "text": "أرسم الحرف تحت السطر" }
+      ],
+      "correctOption": "a",
+      "explanation": "أوّل خطوةٍ في النسخ هي أن أنظر جيّدًا إلى الحرف قبل أن أرسمه، ثمّ أبدأ من اليمين على السطر.",
+      "difficulty": 2
+    }
+  ]
+}

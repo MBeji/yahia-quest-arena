@@ -186,7 +186,8 @@ export function ProgrammeCatalogue({ parcours }: { parcours: CatalogueParcours[]
 export function ExtrasCatalogue({ parcours }: { parcours: CatalogueParcours[] }) {
   const t = useT();
   // getParcours returns rows already ordered by display_order; filtering preserves it.
-  const extras = parcours.filter((p) => p.kind === "libre");
+  // The Arabic language track is intentionally excluded from the extras menu.
+  const extras = parcours.filter((p) => p.kind === "libre" && p.theme_id !== "arabe");
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">

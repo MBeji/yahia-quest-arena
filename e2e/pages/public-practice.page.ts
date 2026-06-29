@@ -29,6 +29,10 @@ export class PracticePage {
   get accountInvite(): Locator {
     return this.page.locator('main a[href="/signup"]');
   }
+  /** « Revoir le cours » — links back to the exercise's chapter (when known). */
+  get reviewCourseLink(): Locator {
+    return this.page.getByTestId("practice-review-course");
+  }
 
   async goto(exerciseId: string): Promise<void> {
     await this.page.goto(`/exercice/${exerciseId}`);

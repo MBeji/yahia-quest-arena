@@ -360,6 +360,13 @@ export type TranslationKeys = {
     signOut: string;
     logoutToast: string;
   };
+  // Theme picker (visual skin)
+  theme: {
+    label: string;
+    reference: string;
+    light: string;
+    dark: string;
+  };
   // Adventure path / journey map
   parcours: {
     worldTitle: string;
@@ -554,8 +561,9 @@ export type TranslationKeys = {
       extras: string;
       login: string;
       signup: string;
+      account: string;
     };
-    footer: { tagline: string };
+    footer: { tagline: string; rights: string; legalLink: string };
     landing: {
       freeBadge: string;
       heroTitle: string;
@@ -584,6 +592,15 @@ export type TranslationKeys = {
       gameFeatBadges: string;
       gameFeatRanking: string;
       gameCta: string;
+      gameCtaAuthed: string;
+      languesKicker: string;
+      languesTitle: string;
+      languesSubtitle: string;
+      languesCta: string;
+      languesFrName: string;
+      languesFrStandard: string;
+      languesEnName: string;
+      languesEnStandard: string;
     };
     cycles: {
       primaire: string;
@@ -617,6 +634,8 @@ export type TranslationKeys = {
       chooseSubject: string;
       comingSoonTitle: string;
       comingSoonDesc: string;
+      choose: string;
+      choosing: string;
     };
     reader: {
       defaultSubject: string;
@@ -624,9 +643,16 @@ export type TranslationKeys = {
       summaryTab: string;
       print: string;
       courseSoon: string;
+      practiceCta: string;
       inviteTitle: string;
       inviteDesc: string;
       inviteCta: string;
+      manuelTitle: string;
+      manuelHint: string;
+      manuelPage: string;
+      manuelOpen: string;
+      manuelPrev: string;
+      manuelNext: string;
     };
     subject: {
       chapter: string;
@@ -635,6 +661,7 @@ export type TranslationKeys = {
     };
     practice: {
       back: string;
+      reviewCourse: string;
       modeKicker: string;
       subtitle: string;
       scoreCorrect: string;
@@ -648,6 +675,22 @@ export type TranslationKeys = {
       questCta: string;
       inviteDesc: string;
       inviteCta: string;
+    };
+    print: { copyrightNotice: string };
+    legal: {
+      title: string;
+      intro: string;
+      ipTitle: string;
+      ipBody: string;
+      useTitle: string;
+      useBody: string;
+      brandTitle: string;
+      brandBody: string;
+      contactTitle: string;
+      contactBody: string;
+      lawTitle: string;
+      lawBody: string;
+      updated: string;
     };
   };
   // Motivational quotes

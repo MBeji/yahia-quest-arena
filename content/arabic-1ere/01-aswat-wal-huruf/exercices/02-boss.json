@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ زعيم الفصل ⭐⭐⭐: حارس الحروف المتشابهة",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "أيّ حرفٍ له نقطةٌ واحدةٌ تحته؟",
+      "options": [
+        { "id": "a", "text": "الحرف ت" },
+        { "id": "b", "text": "الحرف ث" },
+        { "id": "c", "text": "الحرف ب" },
+        { "id": "d", "text": "الحرف ن" }
+      ],
+      "correctOption": "c",
+      "explanation": "الحرف ب له نقطةٌ واحدةٌ تحته. الفخّ الشائع هو الخلط مع ت (نقطتان فوقه) و ث (ثلاث نقطٍ فوقه)؛ والنقطة تحت الحرف علامة ب.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما هذا الحرف؟ <svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"6\" y=\"6\" width=\"108\" height=\"108\" rx=\"16\" fill=\"#fef08a\" stroke=\"#1f2937\" stroke-width=\"3\"/><text x=\"60\" y=\"84\" font-size=\"66\" text-anchor=\"middle\" fill=\"#a16207\" stroke=\"none\">ث</text></svg>",
+      "options": [
+        { "id": "a", "text": "الحرف ب (نقطةٌ تحته)" },
+        { "id": "b", "text": "الحرف ث (ثلاث نقطٍ فوقه)" },
+        { "id": "c", "text": "الحرف ت (نقطتان فوقه)" },
+        { "id": "d", "text": "الحرف ن (نقطةٌ فوقه)" }
+      ],
+      "correctOption": "b",
+      "explanation": "فوق الحرف ثلاث نقطٍ، فهو الحرف ث. الفخّ الشائع هو عدّ النقط بسرعة والخلط مع ت ذي النقطتين.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "الحرف ذ يختلف عن الحرف د بـ:",
+      "options": [
+        { "id": "a", "text": "أنّه أكبر حجمًا" },
+        { "id": "b", "text": "أنّه مقلوب" },
+        { "id": "c", "text": "أنّه ملوّن" },
+        { "id": "d", "text": "أنّ فوقه نقطةً واحدة" }
+      ],
+      "correctOption": "d",
+      "explanation": "الحرف ذ فوقه نقطةٌ واحدة، أمّا د فلا نقطة له. هذا هو الفرق الوحيد بينهما في الشكل.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "بأيّ حرفٍ تبدأ هذه الكلمة؟ <svg viewBox=\"0 0 120 130\" xmlns=\"http://www.w3.org/2000/svg\"><ellipse cx=\"60\" cy=\"78\" rx=\"34\" ry=\"40\" fill=\"#fcd34d\" stroke=\"#1f2937\" stroke-width=\"3\"/><circle cx=\"60\" cy=\"40\" r=\"20\" fill=\"#fcd34d\" stroke=\"#1f2937\" stroke-width=\"3\"/><path d=\"M44 34 l-12 -10\" stroke=\"#f59e0b\" stroke-width=\"6\" stroke-linecap=\"round\"/><path d=\"M76 34 l12 -10\" stroke=\"#f59e0b\" stroke-width=\"6\" stroke-linecap=\"round\"/><circle cx=\"53\" cy=\"40\" r=\"3\" fill=\"#1f2937\" stroke=\"none\"/><circle cx=\"67\" cy=\"40\" r=\"3\" fill=\"#1f2937\" stroke=\"none\"/><path d=\"M86 70 q14 6 0 14\" fill=\"#f97316\" stroke=\"#1f2937\" stroke-width=\"2\"/></svg>",
+      "options": [
+        { "id": "a", "text": "الحرف ب" },
+        { "id": "b", "text": "الحرف د" },
+        { "id": "c", "text": "الحرف م" },
+        { "id": "d", "text": "الحرف س" }
+      ],
+      "correctOption": "a",
+      "explanation": "هذه بطّة، وأوّل صوتٍ فيها «بْ»، فهي تبدأ بالحرف ب.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "كلمة «رمّان» وكلمة «زهرة»: ما الحرفان اللذان تبدآن بهما على الترتيب؟",
+      "options": [
+        { "id": "a", "text": "ز ثمّ ر" },
+        { "id": "b", "text": "ر ثمّ ر" },
+        { "id": "c", "text": "ر ثمّ ز" },
+        { "id": "d", "text": "ز ثمّ ز" }
+      ],
+      "correctOption": "c",
+      "explanation": "رمّان تبدأ بصوت «رْ» (الحرف ر)، وزهرة تبدأ بصوت «زْ» (الحرف ز). الفرق بينهما نقطةٌ فوق ز.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "أيّ كلمةٍ تبدأ بالحرف م؟",
+      "options": [
+        { "id": "a", "text": "تفّاحة" },
+        { "id": "b", "text": "موز" },
+        { "id": "c", "text": "دار" },
+        { "id": "d", "text": "سمكة" }
+      ],
+      "correctOption": "b",
+      "explanation": "كلمة موز تبدأ بصوت «مـْ»، فهي التي تبدأ بالحرف م. أمّا تفّاحة فبـ ت، ودار بـ د، وسمكة بـ س.",
+      "difficulty": 3
+    }
+  ]
+}
