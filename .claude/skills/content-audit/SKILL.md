@@ -122,10 +122,13 @@ Work file by file. For every question:
    facts via web search; wrong fact = **[BLOCKER]**, missing `sources[]` for verified claims =
    **[MINOR]**. For `ecole-tn`, also check **syllabus fidelity against the CNP program** (the source of
    truth), read via the **programme transcription**
-   `content-ecole-tn/references/programmes-officiels/programme/<gradeSlug>/<matière>.md` (consume it; the
+   `content-ecole-tn/references/programmes-officiels/programme/<gradeSlug>/<matière>.md` (consume it; it
+   **combines the teacher guide — scope — AND the manuel élève — content/examples/exercises**; the
    `cnp-officiel/` scans are the ultimate authority but reading them is the persistence session's job —
-   `CATALOGUE.md` maps grade×subject → file for traceability). Every notion must be in the official CNP
-   scope for that grade — off-program or wrong-grade notions = **[MAJOR]**. The Taybah school file
+   `CATALOGUE.md` maps grade×subject → both files for traceability). Every notion must be in the official CNP
+   scope for that grade — off-program or wrong-grade notions = **[MAJOR]**. Conversely, content noticeably
+   **thinner than what the manuel élève teaches** for a chapter (missing official examples/depth) = **[MINOR]**
+   — the manuel élève is an indispensable complement, not optional. The Taybah school file
    (`programmes-officiels/<école>/<gradeSlug>.md`) is a secondary cross-check / trimester sequencing, not
    the authority.
 
