@@ -50,7 +50,7 @@ produit une **worklist périmée**. Lancer ce runbook seulement quand la génér
    > Audite TOUS les chapitres de `<matière>` (chapter.json, cours.md, resume.md, quiz.json, exercices/\*.json).
    > **Re-résous CHAQUE question à l'aveugle** puis compare à `correctOption`. Vérifie notation (chiffres latins,
    > pas de LaTeX, bidi-safe, SVG `viewBox`), pureté de langue, qualité du cours (golden rule, exemple par règle,
-   > miroir résumé↔cours), et **conformité au programme** vs `manifest/<grade>.json` + `taybah/<grade>.md`.
+   > miroir résumé↔cours), et **conformité au programme** vs `programme/<grade>/<matière>.md` + `manifest/<grade>.json` + `taybah/<grade>.md`.
    > Rends un rapport classé par sévérité (BLOCKER/MAJOR/MINOR) : `fichier` + `locator` + défaut + correction proposée.
    > Indique le nombre de questions re-résolues. NE MODIFIE RIEN.
 
@@ -94,17 +94,41 @@ Work file by file. For every question:
    literally) = **[MAJOR]**; `$$ … $$` blocks are legal only with plain-Unicode content.
    In `ar` content, a **plain space between digit groups** (`\d \d{3}`
    outside `<svg>`) = **[MAJOR]**: the bidi algorithm swaps the groups at render time (`38 461`
-   displays as `461 38`) — it must be a NO-BREAK SPACE U+00A0. Audit the **rendered** form, not
-   just the source: any RTL string mixing digit runs with neutral separators is suspect. Standard
-   digits/equations apply in **all** languages including Arabic.
-6. **Language purity** — content not in the subject's `contentLanguage` (beyond math symbols,
-   slugs, `mode`, URLs) = **[MAJOR]**.
+   displays as `461 38`) — it must be a NO-BREAK SPACE U+00A0. Also in `ar` content, an **Arabic
+   radicand** (regex `[√∛∜](?:[؀-ۿ]|\([^)]*[؀-ۿ])` — e.g. `√(المساحة)`, `√المساحة`) = **[MAJOR]**:
+   Arabic inside the radical fragments the LTR isolate and renders scrambled; rewrite as a
+   number/symbol (`√(S)`, `√32`) or the root in words (`جذر المساحة`). And the **Arabic comma `،`
+   (U+060C) used as a separator inside a math bracket group** — a set `{−4 ، 4}`, interval
+   `]−1 ، 4[`, tuple `(3 ، 4 ، 5)`, coordinates `(x ، y)` = **[MAJOR]**: the Arabic comma breaks
+   the LTR run so the notation renders scrambled (`{−4 ، 4}` → `4}،{−4`); it must be `;` (preferred)
+   or a Latin `,`. An Arabic comma in ordinary prose, or inside a bracket holding real Arabic words,
+   is fine — only comma-separated **notation** inside brackets is flagged. Note the **inverse**
+   non-issue: plain arithmetic with an Arabic unit (`10 مي + 2 مي = ؟`, `5 د + 200 مي`) renders
+   **correctly** natively — do NOT flag it, and do NOT "fix" it by isolating. Audit the **rendered**
+   form, not just the source: any RTL string mixing digit runs with neutral separators is suspect.
+   Standard digits/equations apply in **all** languages including Arabic.
+6. **Language purity & coherence** — content not in the subject's `contentLanguage` (beyond math
+   symbols, slugs, `mode`, URLs) = **[MAJOR]**. Beyond purity, **read every prompt and option aloud
+   in the content language and judge its coherence** (no regex catches this — it is the auditor's
+   job): grammatical correctness, **agreement** (Arabic: gender, and dual `هما`/`بينهما`/`كلاهما`
+   only with exactly two referents — a dual over an enumerated set of three+ is incoherent, e.g.
+   `ثلاثة أعمدة … أيّها بينهما؟` = **[MAJOR]**), clear pronoun referents, an unambiguous question
+   clause, and idiomatic phrasing free of calques/translationese (the bare `لا واحد` for "none" is a
+   calque = **[MINOR]**; prefer `لا شيء` / `ولا واحد منها` or a real distractor). A question whose
+   wording does not parse cleanly = **[MAJOR]** even when the keyed answer is correct. Distinguish a
+   **substantive** "nothing/zero" answer (`لا شيء` = _nothing happens_, legitimate) from a banned
+   **meta-option** that defers to the other options (`لا شيء ممّا سبق`, "none of the above").
 7. **Factual accuracy** — for culture-générale/sciences/history claims, spot-check non-trivial
    facts via web search; wrong fact = **[BLOCKER]**, missing `sources[]` for verified claims =
    **[MINOR]**. For `ecole-tn`, also check **syllabus fidelity against the CNP program** (the source of
-   truth): the CNP corpus for this grade+subject (`content-ecole-tn/references/programmes-officiels/CATALOGUE.md`
-   → `cnp-officiel/`: student manuel + teacher guide). Every notion must be in the official CNP scope for
-   that grade — off-program or wrong-grade notions = **[MAJOR]**. The Taybah school file
+   truth), read via the **programme transcription**
+   `content-ecole-tn/references/programmes-officiels/programme/<gradeSlug>/<matière>.md` (consume it; it
+   **combines the teacher guide — scope — AND the manuel élève — content/examples/exercises**; the
+   `cnp-officiel/` scans are the ultimate authority but reading them is the persistence session's job —
+   `CATALOGUE.md` maps grade×subject → both files for traceability). Every notion must be in the official CNP
+   scope for that grade — off-program or wrong-grade notions = **[MAJOR]**. Conversely, content noticeably
+   **thinner than what the manuel élève teaches** for a chapter (missing official examples/depth) = **[MINOR]**
+   — the manuel élève is an indispensable complement, not optional. The Taybah school file
    (`programmes-officiels/<école>/<gradeSlug>.md`) is a secondary cross-check / trimester sequencing, not
    the authority.
 
@@ -137,9 +161,14 @@ severity mapping). Per chapter:
 1. **Exhaustivité (golden rule first)** — extract the list of notions/edge cases the chapter's
    quiz + exercises test, and point each to the course section that teaches it. Any
    tested-but-untaught notion = **[MAJOR]**. Then check full official-scope coverage — school content
-   against the **CNP program** (source of truth: the CNP corpus for this grade+subject via
-   `content-ecole-tn/references/programmes-officiels/CATALOGUE.md`; Taybah files only as a secondary
-   cross-check), else `chapter.json` scope — and flag off-program additions.
+   against the **CNP program** (source of truth: the programme transcription
+   `content-ecole-tn/references/programmes-officiels/programme/<gradeSlug>/<matière>.md` — consume it,
+   scanning the corpus is the persistence session's job; Taybah files only as a secondary cross-check),
+   else `chapter.json` scope — and flag off-program additions. The transcription **combines the teacher
+   guide AND the manuel élève**: a chapter that covers the scope but is **thinner than the manuel élève**
+   (missing the official lessons/examples/exercises the student textbook teaches) is **incomplete** =
+   **[MINOR]** (→ **[MAJOR]** if a whole notion the manuel élève teaches is absent) — the manuel élève is
+   an indispensable complement, not optional.
 2. **Clarté** — one notion per section, terms defined at first use in the official terminology,
    grade-calibrated sentences, formulas displayed on their own line, tables for classifications.
 3. **Facilité de compréhension** — concrete example before each rule, **a worked example for

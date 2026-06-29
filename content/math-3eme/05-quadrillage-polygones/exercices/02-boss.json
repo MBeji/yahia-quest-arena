@@ -21,13 +21,13 @@
     {
       "prompt": "ما موضع العقدة المعلّمة بالزوج (سطر، عمود)؟<svg viewBox=\"0 0 130 120\" xmlns=\"http://www.w3.org/2000/svg\"><g stroke=\"#1f2937\" stroke-width=\"1\" fill=\"none\"><line x1=\"35\" y1=\"25\" x2=\"115\" y2=\"25\"/><line x1=\"35\" y1=\"55\" x2=\"115\" y2=\"55\"/><line x1=\"35\" y1=\"85\" x2=\"115\" y2=\"85\"/><line x1=\"35\" y1=\"25\" x2=\"35\" y2=\"85\"/><line x1=\"55\" y1=\"25\" x2=\"55\" y2=\"85\"/><line x1=\"75\" y1=\"25\" x2=\"75\" y2=\"85\"/><line x1=\"95\" y1=\"25\" x2=\"95\" y2=\"85\"/><line x1=\"115\" y1=\"25\" x2=\"115\" y2=\"85\"/></g><text x=\"27\" y=\"28\" fill=\"#1f2937\" font-size=\"8\" text-anchor=\"end\">1</text><text x=\"27\" y=\"58\" fill=\"#1f2937\" font-size=\"8\" text-anchor=\"end\">2</text><text x=\"27\" y=\"88\" fill=\"#1f2937\" font-size=\"8\" text-anchor=\"end\">3</text><text x=\"35\" y=\"18\" fill=\"#1f2937\" font-size=\"8\" text-anchor=\"middle\">1</text><text x=\"55\" y=\"18\" fill=\"#1f2937\" font-size=\"8\" text-anchor=\"middle\">2</text><text x=\"75\" y=\"18\" fill=\"#1f2937\" font-size=\"8\" text-anchor=\"middle\">3</text><text x=\"95\" y=\"18\" fill=\"#1f2937\" font-size=\"8\" text-anchor=\"middle\">4</text><text x=\"115\" y=\"18\" fill=\"#1f2937\" font-size=\"8\" text-anchor=\"middle\">5</text><circle cx=\"95\" cy=\"85\" r=\"4\" fill=\"#1f2937\"/></svg>",
       "options": [
-        { "id": "a", "text": "(4، 3)" },
-        { "id": "b", "text": "(3، 5)" },
-        { "id": "c", "text": "(3، 4)" },
-        { "id": "d", "text": "(4، 4)" }
+        { "id": "a", "text": "(4 ; 3)" },
+        { "id": "b", "text": "(3 ; 5)" },
+        { "id": "c", "text": "(3 ; 4)" },
+        { "id": "d", "text": "(4 ; 4)" }
       ],
       "correctOption": "c",
-      "explanation": "العقدة في السطر 3 (الأسفل) والعمود 4، إذن (3، 4). الخطأ الشائع: كتابة (4، 3) بعكس السطر والعمود.",
+      "explanation": "العقدة في السطر 3 (الأسفل) والعمود 4، إذن (3 ; 4). الخطأ الشائع: كتابة (4 ; 3) بعكس السطر والعمود.",
       "difficulty": 2
     },
     {

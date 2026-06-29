@@ -1,0 +1,82 @@
+{
+  "title": "⭐ تمرين: كلماتٌ ومجموعاتٌ وأضداد",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "ما لون هذا الشكل؟<svg viewBox=\"0 0 70 70\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"12\" y=\"12\" width=\"46\" height=\"46\" fill=\"#3b82f6\" stroke=\"#1f2937\" stroke-width=\"2\"/></svg>",
+      "options": [
+        { "id": "a", "text": "أصفر" },
+        { "id": "b", "text": "أزرق" },
+        { "id": "c", "text": "أحمر" },
+        { "id": "d", "text": "أخضر" }
+      ],
+      "correctOption": "b",
+      "explanation": "المربّع مملوءٌ باللون الأزرق، فاسم لونه «أزرق»، أمّا الأصفر والأحمر والأخضر فألوانٌ مختلفة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما ضدّ كلمة «طويل»؟",
+      "options": [
+        { "id": "a", "text": "كبير" },
+        { "id": "b", "text": "عريض" },
+        { "id": "c", "text": "قصير" },
+        { "id": "d", "text": "ممدود" }
+      ],
+      "correctOption": "c",
+      "explanation": "ضدّ «طويل» هو «قصير» لأنّه عكسه في المعنى، أمّا «ممدود» فقريبٌ من طويل وليس ضدًّا.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "إلى أيّ مجموعةٍ تنتمي كلمة «التفّاحة»؟",
+      "options": [
+        { "id": "a", "text": "الفواكه" },
+        { "id": "b", "text": "العائلة" },
+        { "id": "c", "text": "الألوان" },
+        { "id": "d", "text": "الجسم" }
+      ],
+      "correctOption": "a",
+      "explanation": "التفّاحة شيءٌ نأكله، فهي تنتمي إلى مجموعة الفواكه مثل الموز والبرتقالة.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "ما اسم هذه الفاكهة؟<svg viewBox=\"0 0 90 90\" xmlns=\"http://www.w3.org/2000/svg\"><g stroke=\"#1f2937\" stroke-width=\"2\"><path d=\"M45 28 q-22 -8 -28 14 q-6 28 18 38 q10 4 10 -2 q0 6 10 2 q24 -10 18 -38 q-6 -22 -28 -14 z\" fill=\"#ef4444\"/><path d=\"M45 28 v-12\" stroke=\"#16a34a\" stroke-width=\"3\"/><path d=\"M45 20 q10 -8 16 -2 q-8 8 -16 2 z\" fill=\"#22c55e\"/></g></svg>",
+      "options": [
+        { "id": "a", "text": "موز" },
+        { "id": "b", "text": "جَدّ" },
+        { "id": "c", "text": "برتقالة" },
+        { "id": "d", "text": "تفّاحة" }
+      ],
+      "correctOption": "d",
+      "explanation": "الصورة فاكهةٌ حمراء مستديرة لها ورقةٌ خضراء، وهي «التفّاحة»، أمّا «جَدّ» فكلمةٌ من العائلة لا فاكهة.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما مرادف كلمة «جميل»؟",
+      "options": [
+        { "id": "a", "text": "قبيح" },
+        { "id": "b", "text": "كبير" },
+        { "id": "c", "text": "حسن" },
+        { "id": "d", "text": "صغير" }
+      ],
+      "correctOption": "c",
+      "explanation": "مرادف «جميل» هو «حسن» لأنّهما بنفس المعنى، أمّا «قبيح» فضدّه وليس مرادفه.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ما ضدّ كلمة «نهار»؟",
+      "options": [
+        { "id": "a", "text": "ليل" },
+        { "id": "b", "text": "صباح" },
+        { "id": "c", "text": "شمس" },
+        { "id": "d", "text": "ضوء" }
+      ],
+      "correctOption": "a",
+      "explanation": "ضدّ «نهار» هو «ليل» لأنّه عكسه: النهار فيه شمسٌ والليل مظلم، أمّا «صباح» فجزءٌ من النهار لا ضدّه.",
+      "difficulty": 2
+    }
+  ]
+}

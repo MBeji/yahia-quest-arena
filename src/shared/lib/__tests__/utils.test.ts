@@ -87,6 +87,33 @@ describe("isMathExpression", () => {
     expect(isMathExpression("π × r²")).toBe(true);
     expect(isMathExpression("∞")).toBe(true);
   });
+
+  it("detects negative numbers written with the true minus − (U+2212)", () => {
+    // Regression: options use the true minus, which used to fall through to RTL.
+    expect(isMathExpression("−4")).toBe(true);
+    expect(isMathExpression("−1 ≤ x < 4")).toBe(true);
+  });
+
+  it("detects interval and set notation (Latin separator)", () => {
+    expect(isMathExpression("]−1 ; 4[")).toBe(true);
+    expect(isMathExpression("[−1 ; 4[")).toBe(true);
+    expect(isMathExpression("{−4 ; 4}")).toBe(true);
+    expect(isMathExpression("{−1 ; 0 ; 1 ; 2 ; 3}")).toBe(true);
+    expect(isMathExpression("]−∞ ; −3[")).toBe(true);
+    expect(isMathExpression("(3 ; 4 ; 5)")).toBe(true);
+  });
+
+  it("detects set/blackboard symbols", () => {
+    expect(isMathExpression("x ∈ ℝ")).toBe(true);
+    expect(isMathExpression("A ⊂ B")).toBe(true);
+  });
+
+  it("returns false for set notation that still uses the Arabic comma ،", () => {
+    // The Arabic comma keeps the expression from being a pure LTR run — it must be
+    // authored as `;`/`,`. Such options should NOT be classified as LTR math.
+    expect(isMathExpression("{−4 ، 4}")).toBe(false);
+    expect(isMathExpression("]−1 ، 4[")).toBe(false);
+  });
 });
 
 describe("rtlProps", () => {

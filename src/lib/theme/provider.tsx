@@ -24,7 +24,7 @@ function getInitialTheme(): Theme {
 /** Reflect the active theme as a single class on <html> for the CSS variants. */
 function applyThemeClass(theme: Theme) {
   const root = document.documentElement;
-  root.classList.remove("dark", "light");
+  root.classList.remove("dark", "light", "reference");
   root.classList.add(theme);
 }
 
@@ -58,17 +58,5 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     persistTheme(next);
   }, []);
 
-  const toggleTheme = useCallback(() => {
-    setThemeState((prev) => {
-      const next: Theme = prev === "dark" ? "light" : "dark";
-      persistTheme(next);
-      return next;
-    });
-  }, []);
-
-  return (
-    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={{ theme, setTheme }}>{children}</ThemeContext.Provider>;
 }
