@@ -333,6 +333,35 @@ export type TranslationKeys = {
     updated: string;
     updateError: string;
   };
+  // Beta badge ("phase de test")
+  betaBanner: {
+    badge: string;
+    tooltip: string;
+  };
+  // Bug reports ("Signaler un bug")
+  bugReport: {
+    launcherLabel: string;
+    title: string;
+    desc: string;
+    label: string;
+    placeholder: string;
+    send: string;
+    cancel: string;
+    sent: string;
+    error: string;
+    adminTitle: string;
+    adminDesc: string;
+    openCount: string;
+    empty: string;
+    unknownPage: string;
+    statusOpen: string;
+    statusResolved: string;
+    statusDismissed: string;
+    resolve: string;
+    dismiss: string;
+    updated: string;
+    updateError: string;
+  };
   // Push notifications (enable card)
   pushNotifications: {
     cardTitle: string;
@@ -356,6 +385,7 @@ export type TranslationKeys = {
     subscriptions: string;
     betaRequests: string;
     contentReports: string;
+    bugReports: string;
     parcoursInterest: string;
     signOut: string;
     logoutToast: string;

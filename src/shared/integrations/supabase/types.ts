@@ -131,6 +131,39 @@ export type Database = {
         };
         Relationships: [];
       };
+      bug_reports: {
+        Row: {
+          created_at: string;
+          id: string;
+          message: string;
+          page: string | null;
+          resolved_at: string | null;
+          resolved_by: string | null;
+          status: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          message: string;
+          page?: string | null;
+          resolved_at?: string | null;
+          resolved_by?: string | null;
+          status?: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          message?: string;
+          page?: string | null;
+          resolved_at?: string | null;
+          resolved_by?: string | null;
+          status?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       chapters: {
         Row: {
           description: string | null;
@@ -1361,6 +1394,16 @@ export type Database = {
           user_id: string;
         }[];
       };
+      admin_list_bug_reports: {
+        Args: never;
+        Returns: {
+          created_at: string;
+          id: string;
+          message: string;
+          page: string;
+          status: string;
+        }[];
+      };
       admin_list_content_reports: {
         Args: never;
         Returns: {
@@ -1388,8 +1431,13 @@ export type Database = {
           user_id: string;
         }[];
       };
+      admin_open_bugs_count: { Args: never; Returns: number };
       admin_open_reports_count: { Args: never; Returns: number };
       admin_pending_beta_count: { Args: never; Returns: number };
+      admin_resolve_bug_report: {
+        Args: { p_report: string; p_status: string };
+        Returns: undefined;
+      };
       admin_resolve_content_report: {
         Args: { p_report: string; p_status: string };
         Returns: undefined;
