@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { BookOpen, ChevronRight, Zap } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { isRtlText } from "@/shared/lib/utils";
+import { exerciseRouteFor } from "../exercise-route";
 
 export type SubjectHubSubject = {
   name_fr: string;
@@ -32,8 +33,10 @@ export type SubjectHubExercise = {
  * (stars/streaks are the connected Jeu register, L2) and no premium locks (the
  * pivot is free; anon `getSubject` already returns `hasEntitlement: true`).
  * Exercise links are auth-aware (L1.5): a signed-in visitor goes to the scored
- * quest (`/quest`, XP); an anonymous one goes to free practice (`/exercice`).
- * The comprehension quiz is always the connected gate (`/quest`).
+ * quest (`/quest`, XP); an anonymous one goes to free practice (`/exercice`) —
+ * including the comprehension quiz, which the public practice page turns into an
+ * account invite rather than bouncing the visitor to login. Routing rule lives in
+ * `exerciseRouteFor` (shared with the course reader's practise CTA).
  * Copy is i18n (fr/en/ar).
  */
 export function SubjectHub({
@@ -100,12 +103,7 @@ export function SubjectHub({
               {chapEx.length > 0 && (
                 <ul className="mt-4 divide-y divide-border border-t border-border">
                   {chapEx.map((ex) => {
-                    // Auth-aware: signed-in → scored quest (XP); anon → free
-                    // practice. The comprehension quiz stays the connected gate.
-                    const exerciseTo =
-                      ex.mode === "quiz" || isAuthenticated
-                        ? "/quest/$exerciseId"
-                        : "/exercice/$exerciseId";
+                    const exerciseTo = exerciseRouteFor(isAuthenticated);
                     return (
                       <li key={ex.id}>
                         <Link

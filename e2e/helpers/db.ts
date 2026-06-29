@@ -43,6 +43,14 @@ export interface AdminDb {
    */
   freeExerciseId(subjectId: string): Promise<string>;
   /**
+   * A chapter that owns a non-quiz practice exercise: its chapterId + that
+   * exercise's id (the subject's first non-quiz mission by display order, which
+   * is also its chapter's first — the exact target the course reader's « practise
+   * this chapter » CTA links to). Null when the subject has nothing to practise.
+   * Lets a nav test click cours→exercice and exercice→cours on deterministic ids.
+   */
+  chapterWithPractice(subjectId: string): Promise<{ chapterId: string; exerciseId: string } | null>;
+  /**
    * A premium-gated mission in a PREMIUM concours parcours: a non-quiz exercise
    * at difficulty >= 2 (outside the free difficulty-1/quiz preview), so the ONLY
    * active gate is the per-parcours entitlement. Lets a test prove
@@ -202,6 +210,22 @@ export function createAdminDb(): AdminDb {
       if (!data)
         throw new Error(`No free exercise (non-quiz, difficulty<=2) for subject ${subjectId}.`);
       return data.id as string;
+    },
+    async chapterWithPractice(subjectId: string) {
+      // The subject's first non-quiz exercise (by display order) + its chapter.
+      // Exercises are globally display-ordered, so this is also its chapter's
+      // first non-quiz mission — matching getChapterLesson's practiceExerciseId.
+      const { data, error } = await client
+        .from("exercises")
+        .select("id, chapter_id")
+        .eq("subject_id", subjectId)
+        .neq("mode", "quiz")
+        .order("display_order")
+        .limit(1)
+        .maybeSingle();
+      if (error) throw new Error(`chapterWithPractice: ${error.message}`);
+      if (!data) return null;
+      return { chapterId: data.chapter_id as string, exerciseId: data.id as string };
     },
     async premiumParcoursExercise() {
       // A premium-gated mission in a PREMIUM concours parcours: a non-quiz exercise

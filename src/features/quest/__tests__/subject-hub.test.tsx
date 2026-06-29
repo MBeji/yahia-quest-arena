@@ -55,7 +55,7 @@ describe("SubjectHub", () => {
     expect(container.querySelectorAll('a[href="/chapitre/$chapterId"]')).toHaveLength(2);
   });
 
-  it("anonymous: non-quiz exercises link to public practice, the quiz to the gated quest", () => {
+  it("anonymous: every exercise links to public practice — quiz included (no login bounce)", () => {
     const { container } = render(
       <SubjectHub
         subject={subject}
@@ -64,9 +64,11 @@ describe("SubjectHub", () => {
         isAuthenticated={false}
       />,
     );
-    // e2 + e3 (normal) → free practice; e1 (quiz) stays the connected gate.
-    expect(container.querySelectorAll('a[href="/exercice/$exerciseId"]')).toHaveLength(2);
-    expect(container.querySelectorAll('a[href="/quest/$exerciseId"]')).toHaveLength(1);
+    // e1 (quiz) + e2 + e3 all → free practice. An anonymous visitor never gets a
+    // /quest link, so tapping the comprehension quiz can't bounce them to login;
+    // the public practice page turns the quiz into an account invite instead.
+    expect(container.querySelectorAll('a[href="/exercice/$exerciseId"]')).toHaveLength(3);
+    expect(container.querySelectorAll('a[href="/quest/$exerciseId"]')).toHaveLength(0);
   });
 
   it("authenticated: every exercise links to the scored quest (XP)", () => {
