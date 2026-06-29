@@ -13,7 +13,7 @@
  * ⚠️ TEST project only — the prod ref is rejected by _env.mjs.
  */
 import { execSync } from "node:child_process";
-import { normalizeDbUrl } from "./_env.mjs";
+import { normalizeDbUrl, parseDriftedRevertVersions } from "./_env.mjs";
 
 // Percent-encode a raw password in the URI so the Supabase CLI (Go) accepts it
 // ("invalid userinfo" guard — see normalizeDbUrl).
@@ -46,14 +46,52 @@ const cli = (() => {
   }
 })();
 
+// Run `db push` capturing its output so we can detect (and auto-heal) a
+// migration-history drift, while still streaming everything to the console.
+function dbPush() {
+  try {
+    const out = execSync(`${cli} db push --db-url "${DB_URL}" --include-all`, {
+      encoding: "utf8",
+      env,
+    });
+    process.stdout.write(out);
+    return { ok: true };
+  } catch (err) {
+    const output = `${err.stdout ?? ""}${err.stderr ?? ""}`;
+    process.stderr.write(output);
+    return { ok: false, output };
+  }
+}
+
 console.log("[e2e] Applying migrations to the TEST project via `supabase db push`…");
-try {
-  execSync(`${cli} db push --db-url "${DB_URL}" --include-all`, {
-    stdio: "inherit",
-    env,
-  });
+let result = dbPush();
+
+// Auto-heal a history drift: a migration version still recorded in the TEST
+// project's history but no longer present locally (typically after a migration
+// was re-timestamped) makes `db push` abort. The CLI prints the exact
+// `migration repair --status reverted <version>` to run; harvest those, apply
+// them, then retry the push ONCE. TEST-only — `_env.mjs` already refuses any
+// prod ref, so this can never touch production.
+if (!result.ok) {
+  const drifted = parseDriftedRevertVersions(result.output);
+  if (drifted.length > 0) {
+    console.log(
+      `[e2e] Migration-history drift on TEST — marking orphan version(s) as reverted: ${drifted.join(", ")}`,
+    );
+    for (const version of drifted) {
+      execSync(`${cli} migration repair --status reverted ${version} --db-url "${DB_URL}"`, {
+        stdio: "inherit",
+        env,
+      });
+    }
+    console.log("[e2e] Retrying `supabase db push` after repair…");
+    result = dbPush();
+  }
+}
+
+if (result.ok) {
   console.log("[e2e] TEST database is up to date.");
-} catch {
+} else {
   console.error(
     [
       "",
@@ -63,6 +101,8 @@ try {
       '    then re-run:  supabase db push --db-url "$TEST_SUPABASE_DB_URL" --include-all',
       "  • Verify TEST_SUPABASE_DB_URL is the *direct* connection URI (port 5432).",
       "  • Ensure the password in the URI is URL-encoded.",
+      "  • Migration-history drift the auto-repair could not parse? Repair by hand:",
+      '      supabase migration repair --status reverted <version> --db-url "$TEST_SUPABASE_DB_URL"',
     ].join("\n"),
   );
   process.exit(1);
