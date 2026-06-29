@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ تمرين مراجعة (نمط امتحان): سورة الفاتحة",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "أوّل سورة في القرآن الكريم هي سورة:",
+      "options": [
+        { "id": "a", "text": "الفلق" },
+        { "id": "b", "text": "النصر" },
+        { "id": "c", "text": "الفاتحة" },
+        { "id": "d", "text": "الناس" }
+      ],
+      "correctOption": "c",
+      "explanation": "سورة الفاتحة هي أوّل سورة في القرآن الكريم.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "أكمل: الرحمن ...",
+      "options": [
+        { "id": "a", "text": "الكبير" },
+        { "id": "b", "text": "الرحيم" },
+        { "id": "c", "text": "العظيم" },
+        { "id": "d", "text": "الكريم" }
+      ],
+      "correctOption": "b",
+      "explanation": "في سورة الفاتحة نقرأ: الرحمن الرحيم.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "عدد آيات سورة الفاتحة:",
+      "options": [
+        { "id": "a", "text": "6" },
+        { "id": "b", "text": "8" },
+        { "id": "c", "text": "9" },
+        { "id": "d", "text": "7" }
+      ],
+      "correctOption": "d",
+      "explanation": "عدد آيات سورة الفاتحة 7 آيات.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "«وإيّاك نستعين» معناها: منك وحدك نطلب ...",
+      "options": [
+        { "id": "a", "text": "العون" },
+        { "id": "b", "text": "اللعب" },
+        { "id": "c", "text": "الطعام" },
+        { "id": "d", "text": "النوم" }
+      ],
+      "correctOption": "a",
+      "explanation": "«وإيّاك نستعين» تعني أنّنا نطلب العون والمساعدة من الله وحده.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "نقرأ القرآن الكريم بصوتٍ:",
+      "options": [
+        { "id": "a", "text": "عالٍ وصُراخ" },
+        { "id": "b", "text": "مع الضحك" },
+        { "id": "c", "text": "جميلٍ وهادئ" },
+        { "id": "d", "text": "أثناء الجري" }
+      ],
+      "correctOption": "c",
+      "explanation": "نقرأ القرآن بصوتٍ جميلٍ هادئٍ وبأدبٍ واحترام.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "في أيّ كتابٍ نجد سورة الفاتحة؟",
+      "options": [
+        { "id": "a", "text": "كتاب القصص" },
+        { "id": "b", "text": "القرآن الكريم" },
+        { "id": "c", "text": "كتاب الرياضيات" },
+        { "id": "d", "text": "كتاب الرسم" }
+      ],
+      "correctOption": "b",
+      "explanation": "سورة الفاتحة سورة من القرآن الكريم، وهي أوّل سورة فيه.",
+      "difficulty": 2
+    }
+  ]
+}
