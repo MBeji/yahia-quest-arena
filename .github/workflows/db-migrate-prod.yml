@@ -62,7 +62,7 @@ jobs:
         # deterministic toolchain. Bump deliberately, with a green run.
         uses: supabase/setup-cli@v2
         with:
-          version: 2.106.0
+          version: 2.107.0
 
       # --- Pre-apply safety net: a fresh prod dump (skipped for read-only list) ---
       - name: Install postgresql-client-17 (prod runs Postgres 17.x)

@@ -57,7 +57,7 @@ jobs:
           # stack and broke this suite for 5 nights. The schema now carries explicit
           # grants (20260612221000_baseline_table_grants), but keep the toolchain
           # deterministic anyway. Bump deliberately, with a green run.
-          version: 2.106.0
+          version: 2.107.0
 
       - name: Start the local stack (applies all migrations)
         # `supabase db start` boots just Postgres + applies every migration in
