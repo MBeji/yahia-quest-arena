@@ -214,3 +214,28 @@ culture-générale ×12, iq-training ×3).
 
 → **Bug d'héritage trilingue iq-training** : légendes SVG en FR jamais traduites en AR/EN. Fix ciblé.
 Scan déterministe confirme iq-training-ar = 32 légendes latines dans SVG.
+
+## R. Hors-école — langues niveaux A (vague J)
+
+| Matière         | Q   | Verdict       | Notes                                                                                      |
+| --------------- | --- | ------------- | ------------------------------------------------------------------------------------------ |
+| anglais-a1      | 155 | SHIP          | 0B/0M ; pas de double-réponse ; fuite 0%                                                   |
+| anglais-a2      | 280 | SHIP          | explication garbled 08-reading/03-boss q6 (clé OK)                                         |
+| **francais-a1** | 210 | **1 BLOCKER** | 04-defi q5 « Ses/Ces sœurs sont médecins » = 2 réponses valides → fix distracteur/contexte |
+| francais-a2     | 280 | 1 expl.       | 04-defi q6 explication « (c) » au lieu de (d) (clé OK)                                     |
+
+→ Langues = clés correctes ; risque = double-réponse sémantique (1 trouvé) + explications qui
+référencent les options PAR LETTRE alors que le moteur mélange (smell systématique à corriger).
+
+## S. Hors-école — langues niveaux B (vague K)
+
+| Matière     | Q    | Verdict   | BLOCKER/MAJOR                                                                                                             |
+| ----------- | ---- | --------- | ------------------------------------------------------------------------------------------------------------------------- |
+| anglais-b1  | ~280 | FIX-FIRST | **2B** : used-to/would double-réponse (06/02-rev q2) ; expl. contradiction (01/05-drill q4) ; 1M (chapitre used-to/would) |
+| anglais-b2  | ~252 | FIX-FIRST | **1B** : reported-speech clé/expl. incohérentes (03/05-drill q6)                                                          |
+| francais-b1 | ~280 | FIX-FIRST | **2B** : expl. auto-contradictoire (01/01-prat q6) ; opinion double-réponse (08/02-rev q5)                                |
+| francais-b2 | ~282 | SHIP/1M   | expl. contredit la clé (06-gerondif/04-defi q2)                                                                           |
+
+→ THÈME LANGUES : clés ~correctes mais (1) explications qui réfèrent les options PAR LETTRE
+(fausses car moteur mélange) et nomment parfois la mauvaise lettre ; (2) vraies double-réponses
+grammaticales (used-to/would, Ses/Ces, opinion). 2 défauts à corriger par sujet en moyenne.
