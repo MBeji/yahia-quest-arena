@@ -50,7 +50,7 @@
       "difficulty": 2
     },
     {
-      "prompt": "Combien de continents compte traditionnellement la Terre ?",
+      "prompt": "Combien de continents compte la Terre dans le modèle international (anglo-saxon) ?",
       "options": [
         { "id": "a", "text": "Cinq" },
         { "id": "b", "text": "Six" },
@@ -58,7 +58,7 @@
         { "id": "d", "text": "Huit" }
       ],
       "correctOption": "c",
-      "explanation": "On compte traditionnellement 7 continents : Asie, Afrique, Amérique du Nord, Amérique du Sud, Antarctique, Europe et Océanie. L'Asie est le plus vaste et le plus peuplé d'entre eux.",
+      "explanation": "Le modèle international (anglo-saxon) distingue 7 continents : Asie, Afrique, Amérique du Nord, Amérique du Sud, Antarctique, Europe et Océanie. En France, on enseigne souvent 6 continents en réunissant les deux Amériques. L'Asie est le plus vaste et le plus peuplé.",
       "difficulty": 2
     }
   ]
