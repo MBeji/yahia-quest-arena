@@ -1586,6 +1586,19 @@ export type Database = {
         Args: { p_batch_size?: number; p_run_id: string };
         Returns: Json;
       };
+      get_global_leaderboard: {
+        Args: { p_limit?: number };
+        Returns: {
+          avatar_tier: number;
+          current_streak: number;
+          display_name: string;
+          hero_class: string;
+          is_me: boolean;
+          level: number;
+          rank: number;
+          xp: number;
+        }[];
+      };
       get_student_report: { Args: { p_student: string }; Returns: Json };
       get_subject_leaderboard: {
         Args: { p_limit?: number; p_subject: string };

@@ -173,8 +173,10 @@ function LeaderboardPage() {
                   "from-amber-600 to-amber-800",
                 ];
                 return (
+                  // Keyed by position, not rank: RANK() can tie (equal-XP rows
+                  // share a rank), so rank is not a unique key.
                   <motion.div
-                    key={player.rank}
+                    key={`podium-${i}`}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.1 }}
@@ -208,8 +210,9 @@ function LeaderboardPage() {
           {/* Full ranking */}
           <div className="space-y-2">
             {leaderboard.map((player, i) => (
+              // Keyed by position, not rank: RANK() can tie, so rank is not unique.
               <motion.div
-                key={player.rank}
+                key={`row-${i}`}
                 data-testid="leaderboard-row"
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
