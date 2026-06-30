@@ -80,7 +80,7 @@ export function ManuelPagesSection({
             <img
               src={current.url}
               alt={`${t.public.reader.manuelPage} ${current.page}`}
-              className="mx-auto max-h-[78vh] w-auto rounded-md"
+              className="mx-auto max-h-[60dvh] w-auto rounded-md"
             />
             <div className="flex items-center justify-between gap-3">
               <button

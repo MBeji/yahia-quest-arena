@@ -212,7 +212,7 @@ export function ParcoursEntitlementsAdmin({
                         type="button"
                         disabled={isPending || !e.isActive}
                         onClick={() => onRevoke(e.userId, e.parcoursId)}
-                        className="inline-flex items-center gap-1 rounded-md bg-destructive/15 px-2.5 py-1.5 text-xs font-bold text-destructive hover:bg-destructive/25 disabled:opacity-50"
+                        className="inline-flex min-h-11 items-center gap-1 rounded-md bg-destructive/15 px-2.5 py-1.5 text-xs font-bold text-destructive hover:bg-destructive/25 disabled:opacity-50"
                       >
                         {isPending ? (
                           <Loader2 className="h-3.5 w-3.5 animate-spin" />

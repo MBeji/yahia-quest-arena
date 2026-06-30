@@ -74,6 +74,34 @@ export function PublicHeader() {
           )}
         </div>
       </div>
+      {/* Phone-only catalogue nav: the inline nav above is hidden below `sm`, so
+          surface Programme / Extras (+ login when logged out) in a compact wrapping
+          row here, otherwise phone visitors lose those entry points entirely. */}
+      <nav
+        className="flex flex-wrap items-center gap-x-1 gap-y-0.5 border-t border-border px-4 py-1.5 sm:hidden"
+        aria-label={t.public.header.navAria}
+      >
+        <Link
+          to="/programme"
+          className="rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
+        >
+          {t.public.header.programme}
+        </Link>
+        <Link
+          to="/extras"
+          className="rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
+        >
+          {t.public.header.extras}
+        </Link>
+        {!isAuthed && (
+          <Link
+            to="/login"
+            className="rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
+          >
+            {t.public.header.login}
+          </Link>
+        )}
+      </nav>
     </header>
   );
 }

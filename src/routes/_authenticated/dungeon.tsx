@@ -303,7 +303,7 @@ function DungeonPage() {
                 <button
                   onClick={() => accessQuery.refetch()}
                   disabled={accessQuery.isFetching}
-                  className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-border/50 px-4 py-2 text-sm font-semibold text-foreground hover:bg-black/60 disabled:opacity-50"
+                  className="mt-4 inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-border/50 px-4 py-2 text-sm font-semibold text-foreground hover:bg-black/60 disabled:opacity-50"
                 >
                   {accessQuery.isFetching && <Loader2 className="h-4 w-4 animate-spin" />}
                   {t.common.retry}
@@ -424,7 +424,7 @@ function DungeonPage() {
             )}
 
             {/* Stats */}
-            <div className="mt-6 grid grid-cols-4 gap-3">
+            <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
               <div className="rounded-xl bg-[color:var(--gold)]/15 p-3">
                 <Layers className="mx-auto h-4 w-4 text-[color:var(--gold)]" />
                 <div className="mt-1 font-display text-xl font-bold text-[color:var(--gold)]">

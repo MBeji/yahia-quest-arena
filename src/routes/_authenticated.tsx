@@ -28,7 +28,7 @@ import { GoldAmbient } from "@/components/visual/gold-ambient";
 import { AccountHud } from "@/components/account-hud";
 
 const NAV_LINK =
-  "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground transition hover:bg-[color:var(--gold)]/10 hover:text-champagne";
+  "flex min-h-11 items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground transition hover:bg-[color:var(--gold)]/10 hover:text-champagne";
 const NAV_ACTIVE = { className: "text-[color:var(--gold)] bg-[color:var(--gold)]/12" };
 
 export const Route = createFileRoute("/_authenticated")({
@@ -86,7 +86,7 @@ function AuthenticatedLayout() {
 
   if (loading) {
     return (
-      <div className="app-shell grid min-h-screen place-items-center bg-black-deep">
+      <div className="app-shell grid min-h-[100dvh] place-items-center bg-black-deep">
         <div className="font-display text-sm uppercase tracking-widest text-champagne/70">
           {t.common.loading}
         </div>
@@ -117,7 +117,7 @@ function AuthenticatedLayout() {
   const immersive = /^\/(quest|dungeon|lesson|onboarding)/.test(location.pathname);
 
   return (
-    <div className="app-shell relative min-h-screen bg-black-deep">
+    <div className="app-shell relative min-h-[100dvh] bg-black-deep">
       <GoldAmbient />
       {/* z-30 (above <main>'s z-10): the header hosts inline pop-overs (language
           menu) that open over the page content. At equal z-index the later <main>
