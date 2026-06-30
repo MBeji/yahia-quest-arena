@@ -31,6 +31,7 @@
     "content:qa:strict": "node --experimental-strip-types scripts/content/qa.ts --strict",
     "content:audit": "node --experimental-strip-types scripts/content/audit-program.ts",
     "content:audit:strict": "node --experimental-strip-types scripts/content/audit-program.ts --strict",
+    "perf:check": "node scripts/perf/check-harness.mjs",
     "verify": "npm run lint && npm run typecheck && npm run test",
     "audit:deps": "npm audit --omit=dev --audit-level=high --registry=https://registry.npmjs.org",
     "ci:verify": "npm run lint && npm run typecheck && npm run test:coverage && npm run build:check && npm run audit:deps && npm run content:qa:strict && npm run content:audit:strict",
