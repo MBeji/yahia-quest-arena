@@ -48,6 +48,15 @@ describe("LessonReader", () => {
     expect(container.querySelector('.lesson-content[dir="ltr"]')).not.toBeNull();
   });
 
+  it("links the subject name back to its matière hub (remontée hiérarchique)", () => {
+    const { container } = render(
+      <LessonReader chapterId="c1" chapter={chapter} allChapters={siblings} />,
+    );
+    const backLink = container.querySelector('a[href="/matiere/$subjectId"]');
+    expect(backLink).not.toBeNull();
+    expect(backLink?.textContent).toContain("Français");
+  });
+
   it("toggles between Cours and Résumé", () => {
     const { container } = render(
       <LessonReader chapterId="c1" chapter={chapter} allChapters={siblings} />,

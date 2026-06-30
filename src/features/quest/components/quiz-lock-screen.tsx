@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { BookOpen, Lock } from "lucide-react";
+import { BookOpen, Brain, Lock } from "lucide-react";
 
 /**
  * Shown when a chapter's comprehension quiz must be passed before its exercises
@@ -10,16 +10,20 @@ import { BookOpen, Lock } from "lucide-react";
 export function QuizLockScreen({
   title,
   body,
+  takeQuizLabel,
   reviewLabel,
   backLabel,
+  quizId,
   chapterId,
   subjectId,
   rtl,
 }: {
   title: string;
   body: string;
+  takeQuizLabel: string;
   reviewLabel: string;
   backLabel: string;
+  quizId: string | null;
   chapterId: string | null;
   subjectId: string | null;
   rtl: boolean;
@@ -31,11 +35,20 @@ export function QuizLockScreen({
         <h1 className="mt-4 font-display text-2xl font-bold">{title}</h1>
         <p className="mt-3 text-sm text-muted-foreground">{body}</p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
+          {quizId && (
+            <Link
+              to="/quest/$exerciseId"
+              params={{ exerciseId: quizId }}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-5 py-2.5 text-sm font-bold text-black shadow-gold hover:scale-105"
+            >
+              <Brain className="h-4 w-4" /> {takeQuizLabel}
+            </Link>
+          )}
           {chapterId && (
             <Link
               to="/chapitre/$chapterId"
               params={{ chapterId }}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-5 py-2.5 text-sm font-bold text-black shadow-gold hover:scale-105"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-black/50 px-5 py-2.5 text-sm font-semibold hover:bg-black/80"
             >
               <BookOpen className="h-4 w-4" /> {reviewLabel}
             </Link>

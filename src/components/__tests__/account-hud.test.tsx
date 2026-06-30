@@ -52,7 +52,22 @@ describe("AccountHud", () => {
     const hud = screen.getByTestId("account-hud");
     expect(hud.getAttribute("href")).toBe("/dashboard");
     expect(hud.textContent).toContain("5");
-    expect(hud.textContent).toContain("1280");
+    // XP is rendered in compact notation so a large value never widens the header
+    // chip past the phone viewport (1280 → "1.3K").
+    expect(hud.textContent).toContain("1.3K");
     expect(hud.textContent).toContain("XP");
+  });
+
+  it("compacts a large XP value so the header chip stays narrow on phones", () => {
+    mockUseMyStats.mockReturnValue({
+      xp: 12345,
+      currentStreak: 9,
+      hasStats: true,
+      isLoaded: true,
+    });
+    renderHud();
+    const hud = screen.getByTestId("account-hud");
+    expect(hud.textContent).toContain("12.3K");
+    expect(hud.textContent).not.toContain("12345");
   });
 });

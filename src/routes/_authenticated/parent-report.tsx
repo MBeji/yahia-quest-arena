@@ -92,7 +92,7 @@ function ParentReport() {
 
   if (loadingStudents) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-[100dvh] flex items-center justify-center">
         <div className="animate-spin w-8 h-8 border-4 border-[color:var(--gold)] border-t-transparent rounded-full" />
       </div>
     );
@@ -100,7 +100,7 @@ function ParentReport() {
 
   if (students.length === 0 && isAdmin) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center">
+      <div className="min-h-[100dvh] flex flex-col items-center justify-center p-8 text-center">
         <Users className="w-16 h-16 text-muted-foreground mb-4" />
         <h2 className="text-xl font-bold text-white mb-2">{t.parentReport.adminEmptyTitle}</h2>
         <p className="text-muted-foreground max-w-md">{t.parentReport.adminEmptyDesc}</p>
@@ -109,7 +109,7 @@ function ParentReport() {
   }
 
   return (
-    <div className="min-h-screen p-4 md:p-8 max-w-6xl mx-auto">
+    <div className="min-h-[100dvh] p-4 md:p-8 max-w-6xl mx-auto">
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
         <Link
           to="/dashboard"
@@ -357,16 +357,20 @@ function ReportContent({ report }: { report: ReportData }) {
           </h3>
           <div className="space-y-3">
             {subjectStats.map((s) => (
-              <div key={s.subjectId} className="flex items-center gap-3">
-                <div className="w-28 text-sm text-muted-foreground truncate">{s.name}</div>
-                <div className="flex-1 h-4 bg-muted/50 rounded-full overflow-hidden">
+              <div key={s.subjectId} className="flex items-center gap-2 sm:gap-3">
+                {/* Fixed columns shrink on phones so the progress bar keeps a usable
+                    width down to 360px (multi-device audit — layout). */}
+                <div className="w-16 truncate text-sm text-muted-foreground sm:w-28">{s.name}</div>
+                <div className="h-4 min-w-0 flex-1 overflow-hidden rounded-full bg-muted/50">
                   <div
                     className="h-full rounded-full bg-[image:var(--gradient-gold)] transition-all"
                     style={{ width: `${s.avgScore}%` }}
                   />
                 </div>
-                <div className="w-12 text-right text-sm text-muted-foreground">{s.avgScore}%</div>
-                <div className="w-20 text-right text-xs text-muted-foreground">
+                <div className="w-10 text-right text-sm text-muted-foreground sm:w-12">
+                  {s.avgScore}%
+                </div>
+                <div className="w-12 text-right text-xs text-muted-foreground sm:w-20">
                   {s.attempts} {t.parentReport.exSuffix}
                 </div>
               </div>
@@ -436,11 +440,11 @@ function VerdictCard({ score, verdict }: { score: number; verdict: string }) {
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className={`bg-gradient-to-r ${c.bg} border rounded-xl p-6 flex items-center gap-4`}
+      className={`bg-gradient-to-r ${c.bg} border rounded-xl p-4 md:p-6 flex items-center gap-3 md:gap-4`}
     >
-      {c.icon}
-      <div className="flex-1">
-        <div className="flex items-center gap-3">
+      <span className="shrink-0">{c.icon}</span>
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <span className={`text-lg font-bold ${c.color}`}>{c.label}</span>
           <span className="text-sm text-muted-foreground">
             {t.parentReport.seriousness} {score}/100
@@ -448,9 +452,9 @@ function VerdictCard({ score, verdict }: { score: number; verdict: string }) {
         </div>
         <p className="text-muted-foreground text-sm mt-1">{c.desc}</p>
       </div>
-      {/* Circular gauge */}
-      <div className="relative w-16 h-16">
-        <svg className="w-16 h-16 -rotate-90" viewBox="0 0 36 36">
+      {/* Circular gauge — smaller on phones to free horizontal room. */}
+      <div className="relative h-12 w-12 shrink-0 md:h-16 md:w-16">
+        <svg className="h-12 w-12 -rotate-90 md:h-16 md:w-16" viewBox="0 0 36 36">
           <circle cx="18" cy="18" r="15" fill="none" stroke="var(--muted)" strokeWidth="3" />
           <circle
             cx="18"

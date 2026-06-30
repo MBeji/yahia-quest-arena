@@ -75,7 +75,13 @@ export function LessonReader({
       <header className="mb-6" dir={isRtl ? "rtl" : "ltr"}>
         <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
           <BookOpen className="h-3.5 w-3.5 shrink-0" />
-          <span className="truncate">{subjectData?.name_fr ?? t.public.reader.defaultSubject}</span>
+          <Link
+            to="/matiere/$subjectId"
+            params={{ subjectId: chapter.subject_id }}
+            className="truncate transition hover:underline"
+          >
+            {subjectData?.name_fr ?? t.public.reader.defaultSubject}
+          </Link>
           {allChapters.length > 0 && (
             <span className="text-muted-foreground">
               · {currentIdx + 1}/{allChapters.length}
