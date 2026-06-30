@@ -743,6 +743,27 @@ html:is(.light, .reference) *:focus-visible {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
+/* Inline lesson figures (anatomy, geometry, diagrams). Authored SVGs use dark ink
+   on an implied light worksheet, so they are drawn on a white surface to stay
+   visible on every theme — matching the exercise figure surface. */
+.lesson-content .lesson-figure {
+  display: flex;
+  justify-content: center;
+  margin: 1.25rem auto;
+  max-width: 22rem;
+  padding: 0.75rem;
+  background: #ffffff;
+  color: #0f172a;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+  border: 1px solid rgb(0 0 0 / 0.1);
+}
+.lesson-content .lesson-figure svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
 .lesson-content strong {
   color: var(--neon-gold);
 }
