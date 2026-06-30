@@ -382,6 +382,22 @@ html:is(.light, .reference) .app-shell.bg-black-deep {
 html:is(.light, .reference) .app-shell :is(.text-black, .text-white) {
   color: oklch(0.22 0.008 130);
 }
+
+/* ---------------------------------------------------------------
+  Immersive exercise player (light theme).
+  The unified question-by-question player renders in BOTH the connected
+  (.app-shell) and the public (.public-shell) registers. Its translucent
+  `bg-black/<alpha>` panels need the same black→white remap the app shell gets;
+  in the public shell — which is NOT .app-shell — those cards otherwise stay dark
+  while the foreground/ink stays dark, making the quiz unreadable. Carry the remap
+  on the player itself (`.game-surface`) so it looks identical in both registers.
+  --------------------------------------------------------------- */
+html:is(.light, .reference) .game-surface {
+  --color-black: oklch(1 0 0);
+}
+html:is(.light, .reference) .game-surface :is(.text-black, .text-white) {
+  color: oklch(0.22 0.008 130);
+}
 html:is(.light, .reference) .glass-gold {
   background: oklch(1 0 0 / 0.66);
   border-color: oklch(0.86 0.18 122 / 0.28);
