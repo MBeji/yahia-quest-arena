@@ -38,9 +38,18 @@ jobs:
     name: DB integration (pgTAP)
     uses: ./.github/workflows/db-tests.yml
 
+  perf:
+    name: Performance (load — smoke)
+    # Validates the k6 harness always; runs the actual smoke load test only when
+    # the LOAD_SUPABASE_* secrets are configured (skips green otherwise).
+    uses: ./.github/workflows/perf.yml
+    secrets: inherit
+    with:
+      stage: smoke
+
   report:
     name: Nightly report
-    needs: [e2e, e2e-auth, pgtap]
+    needs: [e2e, e2e-auth, pgtap, perf]
     # Always run so the report reflects failures too, not just all-green nights.
     if: ${{ always() }}
     runs-on: ubuntu-latest
@@ -54,12 +63,14 @@ jobs:
           E2E_RESULT: ${{ needs.e2e.result }}
           E2E_AUTH_RESULT: ${{ needs.e2e-auth.result }}
           PGTAP_RESULT: ${{ needs.pgtap.result }}
+          PERF_RESULT: ${{ needs.perf.result }}
         with:
           script: |
             const results = {
               'E2E (public)': process.env.E2E_RESULT,
               'E2E (authenticated)': process.env.E2E_AUTH_RESULT,
               'DB integration (pgTAP)': process.env.PGTAP_RESULT,
+              'Performance (load)': process.env.PERF_RESULT,
             };
             const icon = (r) =>
               r === 'success' ? '✅' : r === 'skipped' ? '⏭️' : '❌';

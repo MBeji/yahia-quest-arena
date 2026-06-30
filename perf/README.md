@@ -80,9 +80,21 @@ STAGE=spike  k6 run perf/k6/dungeon.js         # launch surge (0→800 in 30s)
 - Capture `EXPLAIN (ANALYZE, BUFFERS)` on the slow RPCs (`scripts/perf/explain.sql`
   if added) to confirm the planner is using `idx_profiles_role_xp` etc.
 
-## CI
+## CI integration
 
-`STAGE=smoke` is cheap (1 VU / 30s) and safe to wire into a manual/dispatch
-workflow against the load-test project — it catches a scenario that stops
-compiling or an RPC whose signature changed. The heavier stages are operator-run
-before a launch or a content-scale milestone, not on every PR.
+The harness is wired into the automated suites at three levels:
+
+| Where                                          | What runs                                                                                                                                                      | Needs secrets?  |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| **Every PR** (`ci.yml` → `npm run perf:check`) | `scripts/perf/check-harness.mjs`: every scenario parses + harness constants still mirror the product hot paths (`LEADERBOARD_LIMIT`, submit rate-limit budget) | No              |
+| **Nightly** (`nightly.yml` → `perf.yml`)       | `validate` (`k6 inspect` every scenario) + `load` at `STAGE=smoke` against the load-test project; rolled into the nightly tracking issue                       | `load` job only |
+| **On demand** (`perf.yml` workflow_dispatch)   | Pick any `STAGE` (smoke→spike) for a real campaign                                                                                                             | `load` job only |
+
+The `load` job **skips gracefully (green)** when the `LOAD_SUPABASE_*` secrets are
+absent, so it never blocks contributors. k6's thresholds fail the job on a
+regression. The heavier stages (`stress`/`soak`/`spike`) are operator-run before a
+launch or a content-scale milestone via the dispatch button, not on every PR.
+
+**Required `load`-job secrets** (a THROWAWAY project — never prod):
+`LOAD_SUPABASE_URL`, `LOAD_SUPABASE_ANON_KEY`, `LOAD_SUPABASE_SERVICE_ROLE_KEY`,
+and optionally `LOAD_EXERCISE_IDS` / `LOAD_SUBJECT_IDS`.

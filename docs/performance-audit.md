@@ -324,6 +324,12 @@ shippable and respects DoD §7 (additive migrations land before dependent code).
 - **M-1** RUM (web-vitals beacon) + server-fn timing logs + DB slow-query log. **M**
 - Run the load harness baseline campaign (§4) against a seeded test project. **M**
 - Add bundle budgets for the unbudgeted vendor chunks (M1-fe). **S**
+- ✅ **Done** — the load harness is wired into the automated suites: `perf:check`
+  (harness parses + constants mirror the product) runs in the PR gate (`ci.yml`),
+  and `perf.yml` runs `k6 inspect` + a `smoke` load test nightly (`nightly.yml`,
+  graceful-skip without the load-test secrets) and on-demand at any `STAGE`.
+  Configure `LOAD_SUPABASE_*` secrets against a throwaway project to activate the
+  real load run.
 
 ### Phase 1 — High-ROI, low-risk (pre-launch must-haves)
 
