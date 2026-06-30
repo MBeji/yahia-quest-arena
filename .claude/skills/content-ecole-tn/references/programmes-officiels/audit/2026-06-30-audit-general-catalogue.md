@@ -239,3 +239,74 @@ référencent les options PAR LETTRE alors que le moteur mélange (smell systém
 → THÈME LANGUES : clés ~correctes mais (1) explications qui réfèrent les options PAR LETTRE
 (fausses car moteur mélange) et nomment parfois la mauvaise lettre ; (2) vraies double-réponses
 grammaticales (used-to/would, Ses/Ces, opinion). 2 défauts à corriger par sujet en moyenne.
+
+## T. Hors-école — langues niveaux C (vague L)
+
+| Matière     | Q   | Verdict      | BLOCKER/MAJOR                                                                                                 |
+| ----------- | --- | ------------ | ------------------------------------------------------------------------------------------------------------- |
+| anglais-c1  | 252 | SHIP         | 0B/0M                                                                                                         |
+| anglais-c2  | 245 | FIX-FIRST    | **1B** clé fausse « I doubt so »→« it » (05/04-defi q4) ; 2M (nominalisations ambiguës ; ch2 idiomes sous-C2) |
+| francais-c1 | 318 | SHIP         | 0B/0M                                                                                                         |
+| francais-c2 | 280 | FIX-FIRST/1M | fuite-longueur 52% (jusqu'à 97% ch. figures de style/sophismes)                                               |
+
+→ C1 propre ; C2 = 1 clé fausse (EN) + fuite sévère sur chapitres « identifie X + son effet » (FR).
+La fuite touche TOUT type de question « identifie/définis-et-explique », pas que sciences/islamique.
+
+## U. Hors-école — donjons langues + sujets scolaires legacy (vague M) — DERNIÈRE
+
+| Matière               | Q   | Verdict   | BLOCKER/MAJOR                                                                                                                                                                                    |
+| --------------------- | --- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| anglais-donjon        | 174 | FIX-FIRST | **1B** ellipse double-réponse (06-c2/03-boss q4)                                                                                                                                                 |
+| francais-donjon       | 174 | SHIP      | 0B/0M                                                                                                                                                                                            |
+| fr-mastery            | 124 | SHIP      | 0B/0M                                                                                                                                                                                            |
+| english (9è scolaire) | 296 | SHIP/6M   | **6 MAJOR « testé mais non-enseigné »** : d4 « élite » testent grammaire absente du cours (3rd/mixed conditional, present perfect continuous, past perfect, modal perfect, non-defining clauses) |
+| french (9è scolaire)  | 296 | SHIP/1M   | fuite-longueur 54% (67-100% ch. compréhension/figures 07-10) ; clés correctes                                                                                                                    |
+
+# ============================================================
+
+# SYNTHÈSE FINALE — CATALOGUE COMPLET AUDITÉ (60 sujets / ~13 500 questions re-résolues)
+
+# ============================================================
+
+## 1. CORRECTNESS — le contenu est juste
+
+- **0 erreur factuelle/doctrinale** (sciences, histoire, géo, économie, politique, islamique — tout vérifié, souvent web).
+- **Doubles-réponses NUMÉRIQUES : 9 — déjà corrigées et poussées.**
+- **Doubles-réponses / clés fausses SÉMANTIQUES restantes (≈7, surtout langues) :**
+  - géo-fr « 7 continents » (conv. FR = 6) ; français-a1 « Ses/Ces sœurs » ; anglais-b1 « used to/would » ;
+    anglais-b2 reported-speech (clé/expl.) ; anglais-c2 « I doubt so »→« it » ; anglais-donjon ellipse ;
+    français-b1 « opinion » (a et c).
+    → précisément le bug d'origine, en version grammaticale. À corriger (1 item chacun).
+
+## 2. AFFICHAGE / NOTATION — propre
+
+- Sur tout le catalogue : 0 SVG sans viewBox, 0 chiffre arabo-indien, 0 LaTeX, 0 espace bidi.
+- 2 défauts isolés : tuple `(2، 3)` (math-4è) + 3 artefacts `LTR:` (math-5è ch08).
+- 1 bug systémique localisé : **texte FR dans les SVG de iq-training-ar (32) et -en** (héritage trilingue).
+
+## 3. DÉFAUT DOMINANT — fuite « option correcte = la plus longue » (survit au mélange)
+
+- **Mesure correcte = % d'items où la clé est STRICTEMENT la plus longue** (mon heuristique 1,6× sous-estimait 3-5×).
+- **Systémique (50-71%)** : éducation islamique 1-4, sciences (SVT 68%, éveil 2/4/5/6), français-c2 (52%, jusqu'à 97%),
+  french 9è (54%, ch. compréhension/figures 67-100%).
+- **Modéré/ponctuel** : culture-G (paliers défi), géométrie-définitions (math 19-quad 46%), arabe-5è ch5.
+- **Absent** : arithmétique, grammaire arabe/anglaise (justif aussi sur distracteurs), petites classes, english 9è (tout en explanation).
+- Touche TOUT type « identifie/définis X + son effet/pourquoi ». Fix mécanique : justification → `explanation`, options homogènes.
+
+## 4. AUTRES MAJORS RÉCURRENTS
+
+- **Paliers d4 « élite » hors-périmètre / non-enseignés** : svt (Snell, moles, conc. molaire = lycée) ; english (3rd/mixed cond.,
+  perfect continuous, past perfect, modal perfect non enseignés dans le cours). → recadrer ou enseigner.
+- **Explications qui réfèrent les options PAR LETTRE** (a/b/c/d) alors que le moteur MÉLANGE → fausses à l'écran ;
+  plusieurs nomment carrément la mauvaise lettre. Anti-pattern systématique (surtout items « trouve l'erreur »).
+  Fix : décrire l'option par son CONTENU, jamais par sa lettre.
+- arabe-5è : notions hors-niveau 5è (بدل، أفعال القلوب، رباعي…) ; arabe-4è « بحرف الجر » sans préposition.
+
+## 5. PLAN DE CORRECTION (par impact)
+
+1. **BLOCKERs** (≈7 sémantiques + déjà 9 numériques faits) — corriger 1 item par sujet listé en §1.
+2. **De-leak** islamique 1-4 + sciences + french/francais-c2 (justification → explanation, options homogènes).
+3. **Explications par-lettre** : balayage catalogue, remplacer « (b) est… » par le contenu.
+4. **Recadrage d4 hors-périmètre** : svt + english (valider vs CNP / enseigner la notion).
+5. **iq-training ar/en** : traduire les légendes SVG françaises.
+6. Triviaux : `(2،3)`→`(2 ; 3)`, retirer `LTR:`, géo-fr continents (modèle = version AR).

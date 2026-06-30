@@ -87,6 +87,16 @@ Work file by file. For every question:
 2. **Explanation vs key** — the explanation must assert the keyed option, restate the computed
    value for numeric answers, and never validate a distractor. Contradiction = **[BLOCKER]**;
    thin/non-teaching explanation (no rule, no method, no trap named on d3–4) = **[MAJOR]**.
+   **Never reference options by letter.** Because the engine shuffles option order at display
+   (see item 8), an explanation that says "option (b) is correct / the error is (c)" points at a
+   letter the student never sees — and in practice these letter tags are frequently **wrong**
+   (they name a different option than the key, which both misleads the learner and trips the
+   layer-2 contradiction check). A by-letter reference that **inverts** the key (names a distractor
+   as the answer) = **[BLOCKER]**; a by-letter reference that is merely stale/misleading but doesn't
+   invert = **[MAJOR]** if it's wrong, **[MINOR]** if it's right-but-letter-based. Fix by describing
+   the option's **content** ("the present-perfect form is correct"), never its letter. This is a
+   pervasive authoring anti-pattern in the language tracks — scan every "find the incorrect/correct
+   sentence" explanation for it.
 3. **Distractor quality** — each wrong option should encode a specific misconception/reasoning
    slip; filler or absurd options = **[MAJOR]**; overlapping/synonymous options = **[MAJOR]**.
 4. **Question craft** — meta-options ("all of the above"…), un-emphasized negative stems,
@@ -171,6 +181,18 @@ Per exercise / chapter:
    distractors are one-word labels in most items) = **[MAJOR]**, called out once for the whole
    exercise/chapter. Fix by homogenising option length/detail (strip the parenthetical into the
    `explanation`, or add an equivalent one to each distractor).
+   **Measure it, don't eyeball it.** Per exercise, count the share of items where the correct option
+   is the **strictly longest** of its options; a baseline of ~25% is chance (4 options), so anything
+   ≥~50% is a systemic leak = **[MAJOR]** for the chapter/subject. (A loose "1.5–1.6× longest distractor"
+   heuristic **drastically undercounts** — a catalogue sweep that flagged a subject at 14% read 50–70%
+   on the strict measure. Trust the strict count.) The leak concentrates by **question type**: it is
+   near-zero for arithmetic / single-word fill-in items, and severe for **"explain why / what's the
+   difference / identify the figure-or-rule and its effect / which statement is fully correct"** items,
+   where the keyed answer naturally bundles a definition the distractors lack — science, éducation
+   islamique, and the comprehension/figures-de-style chapters of the language subjects are the hotspots.
+   Caveat (avoid false positives): when the longer-correct items are **reading-inference / definition**
+   questions whose distractors are _also_ full developed clauses, the length carries no real tell —
+   verify on the subject's short-answer items before escalating, and say so in the report.
 9. **Duplicates** — same fact/computation re-asked with cosmetic changes, within or across the
    chapter's quiz + exercises = **[MAJOR]**.
 10. **Difficulty calibration** — per-question difficulty honest and non-decreasing within the
