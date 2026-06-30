@@ -55,6 +55,12 @@ jobs:
       - name: Content quality (strict)
         run: npm run content:qa:strict
 
+      # Keep the k6 load harness (perf/) from rotting: every scenario must parse,
+      # and its constants must still mirror the product hot paths (LEADERBOARD_LIMIT,
+      # submit rate-limit budget). No k6 binary / Supabase secrets needed.
+      - name: Perf harness sync check
+        run: npm run perf:check
+
       - name: Build + bundle budgets
         run: npm run build:check
 
