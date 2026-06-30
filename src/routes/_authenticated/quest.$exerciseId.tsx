@@ -115,5 +115,12 @@ function QuestPage() {
     [startSession, submit, reveal],
   );
 
-  return <ExercisePlayer exerciseId={exerciseId} strategy={strategy} />;
+  // `game-surface` makes the player self-contained (it carries the same light-theme
+  // remap the surrounding `.app-shell` provides), so the connected and public
+  // registers render identically.
+  return (
+    <div className="game-surface">
+      <ExercisePlayer exerciseId={exerciseId} strategy={strategy} />
+    </div>
+  );
 }
