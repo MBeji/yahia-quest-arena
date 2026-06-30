@@ -244,7 +244,7 @@ function DungeonPage() {
   // ========== LOBBY ==========
   if (state === "lobby") {
     return (
-      <div className="mx-auto max-w-2xl px-6 py-12">
+      <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
         <Link
           to="/dashboard"
           className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
@@ -255,17 +255,17 @@ function DungeonPage() {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative overflow-hidden rounded-3xl border border-[color:var(--gold)]/40 bg-black/60 p-8 text-center backdrop-blur-xl"
+          className="relative overflow-hidden rounded-3xl border border-[color:var(--gold)]/40 bg-black/60 p-5 text-center backdrop-blur-xl sm:p-8"
         >
           <div className="absolute -top-16 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-[color:var(--gold)]/30 blur-3xl" />
           <div className="relative">
             <div className="mx-auto grid h-20 w-20 place-items-center rounded-2xl bg-[image:var(--gradient-gold)] shadow-gold animate-pulse-neon">
               <Skull className="h-10 w-10 text-black" />
             </div>
-            <h1 className="mt-5 font-display text-4xl font-bold">{t.dungeon.title}</h1>
+            <h1 className="mt-5 font-display text-3xl font-bold sm:text-4xl">{t.dungeon.title}</h1>
             <p className="mt-3 text-muted-foreground max-w-md mx-auto">{t.dungeon.desc}</p>
 
-            <div className="mt-8 grid grid-cols-3 gap-4 max-w-sm mx-auto">
+            <div className="mt-8 grid grid-cols-3 gap-2 max-w-sm mx-auto sm:gap-4">
               <div className="rounded-xl bg-[color:var(--gold)]/10 p-3">
                 <Zap className="mx-auto h-5 w-5 text-[color:var(--gold)]" />
                 <div className="mt-1 font-display text-lg font-bold text-[color:var(--gold)]">
@@ -372,18 +372,20 @@ function DungeonPage() {
   if (state === "gameover") {
     const floorsCleared = runResult?.floorsCleared ?? Math.max(0, floor - 1);
     return (
-      <div className="mx-auto max-w-2xl px-6 py-12">
+      <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="relative overflow-hidden rounded-3xl border border-destructive/40 bg-black/60 p-8 text-center backdrop-blur-xl"
+          className="relative overflow-hidden rounded-3xl border border-destructive/40 bg-black/60 p-5 text-center backdrop-blur-xl sm:p-8"
         >
           <div className="absolute -top-16 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-destructive/30 blur-3xl" />
           <div className="relative">
             <div className="mx-auto grid h-20 w-20 place-items-center rounded-2xl bg-linear-to-br from-destructive to-[color:var(--gold)] shadow-lg">
               <Skull className="h-10 w-10 text-black" />
             </div>
-            <h1 className="mt-5 font-display text-3xl font-bold">{t.dungeon.collapsed}</h1>
+            <h1 className="mt-5 font-display text-2xl font-bold sm:text-3xl">
+              {t.dungeon.collapsed}
+            </h1>
             <p className="mt-2 text-muted-foreground">
               {t.dungeon.fellAt.replace("{n}", String(floor))}
             </p>
@@ -467,13 +469,13 @@ function DungeonPage() {
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <Link
                 to="/dashboard"
-                className="rounded-lg border border-border bg-background/50 px-5 py-2.5 text-sm font-semibold hover:bg-background/80"
+                className="inline-flex items-center rounded-lg border border-border bg-background/50 px-5 py-2.5 text-sm font-semibold hover:bg-background/80 [@media(pointer:coarse)]:min-h-11"
               >
                 {t.dungeon.backToHall}
               </Link>
               <button
                 onClick={startDungeon}
-                className="rounded-lg bg-[image:var(--gradient-gold)] px-5 py-2.5 text-sm font-bold text-black shadow-gold hover:scale-105"
+                className="rounded-lg bg-[image:var(--gradient-gold)] px-5 py-2.5 text-sm font-bold text-black shadow-gold hover:scale-105 [@media(pointer:coarse)]:min-h-11"
               >
                 {t.dungeon.retryDungeon}
               </button>
@@ -487,7 +489,7 @@ function DungeonPage() {
   // ========== PLAYING ==========
   if (loading || !currentQuestion) {
     return (
-      <div className="grid min-h-[60vh] place-items-center">
+      <div className="grid min-h-[60dvh] place-items-center">
         <div className="flex flex-col items-center gap-3">
           <Loader2 className="h-8 w-8 animate-spin text-[color:var(--gold)]" />
           <div className="font-display text-sm uppercase tracking-widest text-muted-foreground">
@@ -504,8 +506,8 @@ function DungeonPage() {
   const isCorrectAnswer = showFeedback && answerWasCorrect === true;
 
   return (
-    <div className="mx-auto max-w-2xl px-6 py-8">
-      <div className="mb-4 flex items-center justify-between">
+    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
         <Link
           to="/dashboard"
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"

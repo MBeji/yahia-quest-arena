@@ -17,7 +17,7 @@ export function PublicHeader() {
   const { user } = useAuth();
   const isAuthed = user != null;
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-card/90 backdrop-blur print:hidden">
+    <header className="sticky top-0 z-30 border-b border-border bg-card/90 pt-[env(safe-area-inset-top)] backdrop-blur print:hidden">
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-4 py-3 sm:gap-3 sm:px-6">
         <div className="flex items-center gap-3 sm:gap-6">
           <Link to="/" className="flex items-baseline gap-2" aria-label={t.public.header.homeAria}>
@@ -39,13 +39,13 @@ export function PublicHeader() {
           >
             <Link
               to="/programme"
-              className="rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground sm:px-3"
+              className="inline-flex items-center rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground sm:px-3 [@media(pointer:coarse)]:min-h-11"
             >
               {t.public.header.programme}
             </Link>
             <Link
               to="/extras"
-              className="rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground sm:px-3"
+              className="inline-flex items-center rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground sm:px-3 [@media(pointer:coarse)]:min-h-11"
             >
               {t.public.header.extras}
             </Link>

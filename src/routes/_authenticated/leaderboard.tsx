@@ -68,7 +68,7 @@ function LeaderboardPage() {
   const myRank = (data?.myRank ?? null) as Player | null;
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-8">
+    <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
       <Link
         to="/dashboard"
         className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
@@ -77,7 +77,7 @@ function LeaderboardPage() {
       </Link>
 
       <div className="mb-6 text-center">
-        <h1 className="font-display text-4xl font-bold">
+        <h1 className="font-display text-3xl font-bold sm:text-4xl">
           <span className="text-gradient-gold">{t.leaderboard.titleGradient}</span>{" "}
           {t.leaderboard.titleRest}
         </h1>
@@ -122,7 +122,7 @@ function LeaderboardPage() {
       </div>
 
       {isLoading ? (
-        <div className="grid min-h-[30vh] place-items-center text-sm text-muted-foreground">
+        <div className="grid min-h-[30dvh] place-items-center text-sm text-muted-foreground">
           {t.leaderboard.loading}
         </div>
       ) : (
@@ -162,7 +162,7 @@ function LeaderboardPage() {
 
           {/* Top 3 podium */}
           {leaderboard.length >= 3 && (
-            <div className="mb-8 grid grid-cols-3 gap-3">
+            <div className="mb-8 grid grid-cols-3 gap-2 sm:gap-3">
               {[leaderboard[1], leaderboard[0], leaderboard[2]].map((player, i) => {
                 const podiumOrder = [2, 1, 3];
                 const rank = podiumOrder[i];

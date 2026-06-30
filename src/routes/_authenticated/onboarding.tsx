@@ -126,7 +126,7 @@ function IntentStep({ onSelect }: { onSelect: (intent: Intent) => void }) {
                 <h3 className="font-display text-xl font-bold">{choice.title}</h3>
                 <p className="mt-1 text-sm text-muted-foreground">{choice.description}</p>
               </div>
-              <ChevronRight className="h-5 w-5 text-[color:var(--gold)]" />
+              <ChevronRight className="h-5 w-5 text-[color:var(--gold)] rtl:-scale-x-100" />
             </div>
           </motion.button>
         ))}
@@ -172,7 +172,9 @@ function ParcoursCard({
           )}
         </div>
       </div>
-      {!isComingSoon && <ChevronRight className="h-5 w-5 shrink-0 text-[color:var(--gold)]" />}
+      {!isComingSoon && (
+        <ChevronRight className="h-5 w-5 shrink-0 text-[color:var(--gold)] rtl:-scale-x-100" />
+      )}
     </div>
   );
 

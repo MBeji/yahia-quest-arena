@@ -233,7 +233,7 @@ function AuthPage() {
                 setEmailSent(false);
                 setSentTo("");
               }}
-              className="mt-6 text-xs text-[color:var(--gold)] hover:underline"
+              className="mt-6 inline-flex min-h-11 items-center text-xs text-[color:var(--gold)] hover:underline"
             >
               {t.auth.emailSentEdit}
             </button>
@@ -246,7 +246,7 @@ function AuthPage() {
   return (
     <main className="relative min-h-[100dvh] overflow-hidden bg-black-deep">
       <div className="absolute inset-0 bg-grid opacity-50" />
-      <div className="relative mx-auto flex min-h-[100dvh] max-w-md flex-col items-center justify-center px-6 py-12">
+      <div className="relative mx-auto flex min-h-[100dvh] max-w-md flex-col items-center justify-center px-4 pt-[max(3rem,env(safe-area-inset-top))] pb-[max(3rem,env(safe-area-inset-bottom))] sm:px-6">
         <Link to="/" className="mb-8 flex items-center gap-2">
           <div className="grid h-10 w-10 place-items-center rounded-lg bg-[image:var(--gradient-gold)] shadow-gold">
             <Sparkles className="h-5 w-5 text-black" />
@@ -260,7 +260,7 @@ function AuthPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="w-full glass-gold rounded-2xl p-8 shadow-gold"
+          className="w-full glass-gold rounded-2xl p-6 shadow-gold sm:p-8"
         >
           <h1 className="font-display text-2xl font-bold">
             {isSignup ? t.auth.titleSignup : t.auth.titleLogin}
@@ -343,7 +343,7 @@ function AuthPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder={t.auth.heroNameLabel}
-                  className="w-full rounded-lg border border-input bg-black/50 py-2.5 pl-10 pr-3 text-sm focus:border-[color:var(--gold)] focus:outline-none"
+                  className="w-full rounded-lg border border-input bg-black/50 py-3 pl-10 pr-3 text-sm focus:border-[color:var(--gold)] focus:outline-none"
                 />
               </div>
             )}
@@ -433,7 +433,7 @@ function AuthPage() {
             <Link
               to="/auth"
               search={{ mode: isSignup ? "login" : "signup" }}
-              className="font-semibold text-[color:var(--gold)] hover:underline"
+              className="inline-block py-2 font-semibold text-[color:var(--gold)] hover:underline"
             >
               {isSignup ? t.common.signIn : t.auth.switchToSignup}
             </Link>

@@ -130,7 +130,7 @@ export function ProgrammeCatalogue({ parcours }: { parcours: CatalogueParcours[]
         <div className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
           {t.public.catalogue.programmeKicker}
         </div>
-        <h1 className="mt-1 font-display text-3xl font-bold leading-tight sm:text-4xl">
+        <h1 className="mt-1 font-display text-2xl font-bold leading-tight sm:text-3xl md:text-4xl">
           {t.public.catalogue.programmeTitle}
         </h1>
         <p className="mt-2 text-muted-foreground">{t.public.catalogue.programmeDesc}</p>
@@ -195,7 +195,7 @@ export function ExtrasCatalogue({ parcours }: { parcours: CatalogueParcours[] })
         <div className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
           {t.public.catalogue.extrasKicker}
         </div>
-        <h1 className="mt-1 font-display text-3xl font-bold leading-tight sm:text-4xl">
+        <h1 className="mt-1 font-display text-2xl font-bold leading-tight sm:text-3xl md:text-4xl">
           {t.public.catalogue.extrasTitle}
         </h1>
         <p className="mt-2 text-muted-foreground">{t.public.catalogue.extrasDesc}</p>

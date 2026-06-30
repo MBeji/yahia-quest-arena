@@ -93,7 +93,7 @@ function AdminSubscriptionsPage() {
     : null;
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-10">
+    <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
       <Link
         to="/dashboard"
         className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"

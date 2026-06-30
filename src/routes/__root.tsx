@@ -28,7 +28,7 @@ function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-black-deep px-4">
       <div className="max-w-md text-center">
-        <h1 className="font-display text-8xl text-gradient-gold">404</h1>
+        <h1 className="font-display text-6xl text-gradient-gold sm:text-8xl">404</h1>
         <h2 className="mt-4 text-xl font-semibold">{t.errors.notFoundTitle}</h2>
         <p className="mt-2 text-sm text-muted-foreground">{t.errors.notFoundDesc}</p>
         <div className="mt-6">
