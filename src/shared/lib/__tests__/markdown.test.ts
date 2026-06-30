@@ -155,6 +155,56 @@ describe("renderMarkdown", () => {
     });
   });
 
+  describe("Inline SVG figures", () => {
+    const FIGURE = '<svg viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#fff"/></svg>';
+
+    it("renders an inline svg as a real figure, not escaped text", () => {
+      const result = renderMarkdown(`Look:\n\n${FIGURE}\n\ndone`);
+      expect(result).toContain('<div class="lesson-figure">');
+      expect(result).toContain("<svg");
+      expect(result).toContain("<circle");
+      // Must NOT have been escaped into literal text
+      expect(result).not.toContain("&lt;svg");
+    });
+
+    it("keeps surrounding markdown working around a figure", () => {
+      const result = renderMarkdown(`# Title\n\n${FIGURE}\n\n**bold**`);
+      expect(result).toContain('<h1 class="lesson-h1">Title</h1>');
+      expect(result).toContain("<strong>bold</strong>");
+      expect(result).toContain('<div class="lesson-figure">');
+    });
+
+    it("does not wrap the figure in a paragraph", () => {
+      const result = renderMarkdown(FIGURE);
+      expect(result).not.toContain("<p><div");
+      expect(result).not.toMatch(/<p>svgfigureplaceholder/);
+    });
+
+    it("renders multiple figures independently", () => {
+      const result = renderMarkdown(`${FIGURE}\n\ntext\n\n${FIGURE}`);
+      expect(result.match(/<div class="lesson-figure">/g)).toHaveLength(2);
+      expect(result).not.toContain("svgfigureplaceholder");
+    });
+
+    it("sanitizes script and event handlers out of an embedded svg", () => {
+      const evil =
+        '<svg viewBox="0 0 10 10"><script>alert(1)</script><circle cx="5" cy="5" r="4" onclick="alert(2)"/></svg>';
+      const result = renderMarkdown(evil);
+      expect(result).toContain('<div class="lesson-figure">');
+      expect(result).not.toContain("<script");
+      expect(result).not.toContain("onclick");
+    });
+
+    it("strips external references from an embedded svg", () => {
+      const evil =
+        '<svg viewBox="0 0 10 10"><image href="https://evil.example/x.png"/><use xlink:href="#x"/></svg>';
+      const result = renderMarkdown(evil);
+      expect(result).not.toContain("evil.example");
+      expect(result).not.toContain("<image");
+      expect(result).not.toContain("<use");
+    });
+  });
+
   describe("Complex content", () => {
     it("handles Arabic text without mangling", () => {
       const result = renderMarkdown("# درس الرياضيات\n\nمرحبا بكم");
