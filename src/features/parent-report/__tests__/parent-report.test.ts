@@ -7,7 +7,7 @@ const mockSupabase = { from: mockFrom, rpc: mockRpc };
 
 vi.mock("@tanstack/react-start", () => ({
   createMiddleware: () => ({ server: (fn: unknown) => fn }),
-  createServerFn: ({ method }: { method: string }) => {
+  createServerFn: ({ method: _method }: { method: string }) => {
     let handlerFn: (opts: unknown) => unknown;
     let validatorFn: ((d: unknown) => unknown) | undefined;
     const chain = {

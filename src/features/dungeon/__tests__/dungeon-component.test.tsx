@@ -166,7 +166,7 @@ function DungeonTestHarness({
   } | null;
 }) {
   const [state, setState] = React.useState<GameState>(initialState);
-  const [currentIdx, setCurrentIdx] = React.useState(0);
+  const [currentIdx] = React.useState(0);
   const [selected, setSelected] = React.useState<string | null>(null);
   const [showFeedback, setShowFeedback] = React.useState(false);
   const [answerWasCorrect, setAnswerWasCorrect] = React.useState<boolean | null>(null);
