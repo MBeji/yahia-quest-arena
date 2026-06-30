@@ -22,7 +22,7 @@ export function LegalNoticeDialog() {
       <DialogTrigger className="cursor-pointer underline underline-offset-2 transition hover:text-foreground">
         {t.public.footer.legalLink}
       </DialogTrigger>
-      <DialogContent className="max-h-[85vh] overflow-y-auto text-start">
+      <DialogContent className="max-h-[85dvh] overflow-y-auto text-start">
         <DialogHeader>
           <DialogTitle>{l.title}</DialogTitle>
           <DialogDescription>{l.intro}</DialogDescription>

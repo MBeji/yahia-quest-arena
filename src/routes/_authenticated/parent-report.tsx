@@ -134,7 +134,7 @@ function ParentReport() {
             <LinkIcon className="h-4 w-4" />
             <span className="font-semibold">{t.parentReport.linkTitle}</span>
           </div>
-          <div className="grid gap-2 md:grid-cols-[1fr,180px,auto]">
+          <div className="grid gap-2 md:grid-cols-[1fr_180px_auto]">
             <input
               value={studentCode}
               onChange={(e) => setStudentCode(e.target.value)}
@@ -167,7 +167,7 @@ function ParentReport() {
             <button
               key={s.id}
               onClick={() => setSelectedStudent(s.id)}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              className={`px-4 py-2 rounded-lg font-medium transition-colors [@media(pointer:coarse)]:min-h-11 ${
                 selectedStudent === s.id
                   ? "bg-[image:var(--gradient-gold)] text-black"
                   : "bg-black/50 text-muted-foreground hover:bg-black/70 border border-[color:var(--gold)]/30 hover:border-[color:var(--gold)]/60"
@@ -183,7 +183,7 @@ function ParentReport() {
                 type="button"
                 onClick={() => setAdminPage((p) => Math.max(1, p - 1))}
                 disabled={pagination.page <= 1}
-                className="rounded-md border border-[color:var(--gold)]/30 bg-black/70 px-3 py-1.5 text-xs font-semibold text-[color:var(--champagne)] disabled:opacity-40"
+                className="rounded-md border border-[color:var(--gold)]/30 bg-black/70 px-3 py-1.5 text-xs font-semibold text-[color:var(--champagne)] disabled:opacity-40 [@media(pointer:coarse)]:min-h-11"
               >
                 {t.parentReport.prevPage}
               </button>
@@ -199,7 +199,7 @@ function ParentReport() {
                 type="button"
                 onClick={() => setAdminPage((p) => p + 1)}
                 disabled={!pagination.hasMore}
-                className="rounded-md border border-[color:var(--gold)]/30 bg-black/70 px-3 py-1.5 text-xs font-semibold text-[color:var(--champagne)] disabled:opacity-40"
+                className="rounded-md border border-[color:var(--gold)]/30 bg-black/70 px-3 py-1.5 text-xs font-semibold text-[color:var(--champagne)] disabled:opacity-40 [@media(pointer:coarse)]:min-h-11"
               >
                 {t.parentReport.nextPage}
               </button>

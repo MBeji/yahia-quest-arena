@@ -324,7 +324,7 @@ function QuestPage() {
   });
 
   const preparingScreen = (
-    <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">
+    <div className="grid min-h-[60dvh] place-items-center text-sm text-muted-foreground">
       {t.quest.preparing}
     </div>
   );
@@ -606,16 +606,16 @@ function QuestPage() {
           animate={{ opacity: 1, scale: 1 }}
           className="mb-6 rounded-2xl border border-destructive/40 bg-destructive/10 p-4 backdrop-blur-md"
         >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="grid h-10 w-10 place-items-center rounded-xl bg-linear-to-br from-destructive to-[color:var(--gold)] shadow-lg animate-pulse">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-3">
+              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-linear-to-br from-destructive to-[color:var(--gold)] shadow-lg animate-pulse">
                 <Skull className="h-5 w-5 text-primary-foreground" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <div className="text-xs uppercase tracking-[0.3em] text-destructive font-bold">
                   {t.quest.bossFight}
                 </div>
-                <div className="font-display text-lg font-bold">{data.exercise.title}</div>
+                <div className="truncate font-display text-lg font-bold">{data.exercise.title}</div>
               </div>
             </div>
             <BossCountdown

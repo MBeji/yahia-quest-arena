@@ -146,7 +146,7 @@ export function DashboardRadarInventory({
         <Trophy className="h-5 w-5 text-[color:var(--neon-gold)]" /> {t.dashboard.radarTitle}
       </h2>
       <div className="rounded-2xl border border-border/50 bg-card/60 p-4 backdrop-blur-md">
-        <div className="h-72 w-full">
+        <div className="mx-auto aspect-square w-full max-w-72">
           <RadarChartSvg data={radarData} />
         </div>
         <p className="px-2 pb-2 text-center text-xs text-muted-foreground">
@@ -173,13 +173,13 @@ export function DashboardRadarInventory({
             inventory.slice(0, 4).map((item) => (
               <div key={item.code} className="rounded-xl bg-black/40 p-3">
                 <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <div className="font-semibold">{item.name}</div>
-                    <div className="text-xs uppercase tracking-widest text-muted-foreground">
+                  <div className="min-w-0">
+                    <div className="truncate font-semibold">{item.name}</div>
+                    <div className="truncate text-xs uppercase tracking-widest text-muted-foreground">
                       {item.itemType}
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="shrink-0 text-right">
                     <div className="font-display text-lg font-bold text-[color:var(--gold)]">
                       x{item.quantity}
                     </div>
