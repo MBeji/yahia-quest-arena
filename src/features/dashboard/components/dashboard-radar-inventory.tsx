@@ -201,7 +201,7 @@ export function DashboardRadarInventory({
                         disabled={isActivatePending}
                         onClick={() => onActivate(item.code)}
                         aria-label={`${t.dashboard.shopActivate} ${item.name}`}
-                        className="rounded-lg bg-[image:var(--gradient-gold)] px-3 py-1.5 text-xs font-bold text-black shadow-gold disabled:opacity-40"
+                        className="min-h-11 rounded-lg bg-[image:var(--gradient-gold)] px-3 py-1.5 text-xs font-bold text-black shadow-gold disabled:opacity-40"
                       >
                         {t.dashboard.shopActivate}
                       </button>

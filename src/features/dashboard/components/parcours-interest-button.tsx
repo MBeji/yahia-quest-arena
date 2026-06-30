@@ -32,7 +32,7 @@ export function ParcoursInterestButton({
         }}
         disabled={isPending}
         aria-pressed={interested}
-        className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold transition disabled:opacity-60 ${
+        className={`inline-flex min-h-11 items-center gap-1.5 rounded-full border px-3 py-2.5 text-xs font-bold transition disabled:opacity-60 ${
           interested
             ? "border-[color:var(--gold)]/60 bg-[color:var(--gold)]/15 text-[color:var(--gold)]"
             : "border-[color:var(--gold)]/30 text-muted-foreground hover:border-[color:var(--gold)]/60 hover:text-champagne"
