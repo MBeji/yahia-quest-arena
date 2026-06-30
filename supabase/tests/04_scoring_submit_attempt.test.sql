@@ -23,7 +23,7 @@ BEGIN;
 -- pgTAP is normally pre-installed by `supabase test db`; create it defensively
 -- so the file is self-contained when run via psql too. Idempotent.
 CREATE EXTENSION IF NOT EXISTS pgtap;
-SELECT plan(10);
+SELECT plan(12);
 
 -- ---------------------------------------------------------
 -- Shared content fixtures (owned by superuser; RLS not yet in play).
@@ -251,6 +251,58 @@ SELECT is_empty(
          AND exercise_id = 'e2000000-0000-0000-0000-000000000001'
          AND status = 'pending' $$,
   'retry shield: the spaced-repetition penalty is SUPPRESSED (no rows scheduled)'
+);
+
+RESET ROLE;
+
+-- =========================================================
+-- CASE 5 — the first_quest badge unlocks only on the user's FIRST attempt.
+-- Guards the perf-audit H3 refactor: the first-attempt detection switched from
+-- COUNT(*) over the whole history to a NOT EXISTS probe; the unlock outcome must
+-- be unchanged — present on attempt #1, absent on attempt #2.
+-- =========================================================
+INSERT INTO auth.users (id, email)
+VALUES ('f5555555-5555-5555-5555-555555555555', 'score-first@test.local');
+
+-- Two sessions on the same exercise (inserted as the test owner, before the
+-- role switch), submitted in order so the 2nd runs with a prior attempt on record.
+INSERT INTO public.exercise_sessions (id, user_id, exercise_id, started_at)
+VALUES ('a5000000-0000-0000-0000-000000000051',
+        'f5555555-5555-5555-5555-555555555555',
+        'e2000000-0000-0000-0000-000000000001',
+        clock_timestamp() - INTERVAL '120 seconds'),
+       ('a5000000-0000-0000-0000-000000000052',
+        'f5555555-5555-5555-5555-555555555555',
+        'e2000000-0000-0000-0000-000000000001',
+        clock_timestamp() - INTERVAL '120 seconds');
+
+SET LOCAL "request.jwt.claims" = '{"sub":"f5555555-5555-5555-5555-555555555555","role":"authenticated"}';
+SET LOCAL ROLE authenticated;
+
+SELECT ok(
+  (public.submit_exercise_attempt(
+    'a5000000-0000-0000-0000-000000000051',
+    'e2000000-0000-0000-0000-000000000001',
+    '[{"questionId":"e3000000-0000-0000-0000-000000000001","choice":"a"},
+      {"questionId":"e3000000-0000-0000-0000-000000000002","choice":"a"},
+      {"questionId":"e3000000-0000-0000-0000-000000000003","choice":"a"},
+      {"questionId":"e3000000-0000-0000-0000-000000000004","choice":"a"},
+      {"questionId":"e3000000-0000-0000-0000-000000000005","choice":"a"}]'::jsonb
+  ) ->> 'unlockedBadges') LIKE '%first_quest%',
+  'first attempt unlocks the first_quest badge'
+);
+
+SELECT ok(
+  (public.submit_exercise_attempt(
+    'a5000000-0000-0000-0000-000000000052',
+    'e2000000-0000-0000-0000-000000000001',
+    '[{"questionId":"e3000000-0000-0000-0000-000000000001","choice":"b"},
+      {"questionId":"e3000000-0000-0000-0000-000000000002","choice":"b"},
+      {"questionId":"e3000000-0000-0000-0000-000000000003","choice":"b"},
+      {"questionId":"e3000000-0000-0000-0000-000000000004","choice":"b"},
+      {"questionId":"e3000000-0000-0000-0000-000000000005","choice":"b"}]'::jsonb
+  ) ->> 'unlockedBadges') NOT LIKE '%first_quest%',
+  'a second attempt does NOT re-award first_quest'
 );
 
 RESET ROLE;
