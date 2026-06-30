@@ -20,7 +20,7 @@ export function QuestRewardGrid({ xpEarned, coinsEarned, level, streak }: QuestR
   const t = useT();
 
   return (
-    <div className="mt-6 grid grid-cols-4 gap-3">
+    <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
       <div className="rounded-xl bg-(--neon-gold)/15 p-4">
         <Zap className="mx-auto h-5 w-5 text-neon-gold" />
         <ExplainHint text={t.explain.questResultXp} label={t.quest.xpLabel}>

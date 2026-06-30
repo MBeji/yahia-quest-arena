@@ -334,7 +334,7 @@ function Dashboard() {
         >
           <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/30 blur-3xl" />
           <div className="absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/20 blur-3xl" />
-          <div className="relative grid gap-6 sm:grid-cols-[auto,1fr,auto] sm:items-center">
+          <div className="relative grid gap-6 sm:grid-cols-[auto_1fr_auto] sm:items-center">
             <HeroAvatar avatarSlug={profile.avatar_slug} />
             <div>
               <h1 className="font-display text-3xl font-bold sm:text-4xl">
@@ -386,7 +386,7 @@ function Dashboard() {
                         setCopiedCode(true);
                         setTimeout(() => setCopiedCode(false), 1200);
                       }}
-                      className="inline-flex items-center gap-1 rounded-md border border-[color:var(--gold)]/40 px-2 py-1 text-xs text-[color:var(--gold)] hover:bg-[color:var(--gold)]/10"
+                      className="inline-flex min-h-11 shrink-0 items-center gap-1 rounded-md border border-[color:var(--gold)]/40 px-2.5 py-1 text-xs text-[color:var(--gold)] hover:bg-[color:var(--gold)]/10"
                     >
                       {copiedCode ? (
                         <Check className="h-3.5 w-3.5" />

@@ -93,7 +93,7 @@ function LeaderboardPage() {
         <button
           onClick={() => setTab(GLOBAL)}
           data-testid="leaderboard-global-tab"
-          className={`rounded-full border px-4 py-1.5 text-sm font-semibold transition ${
+          className={`inline-flex min-h-11 items-center rounded-full border px-4 py-1.5 text-sm font-semibold transition ${
             isGlobal
               ? "border-[color:var(--gold)]/60 bg-[color:var(--gold)]/15 text-[color:var(--gold)]"
               : "border-border/50 bg-black/40 text-muted-foreground hover:text-foreground"
@@ -109,7 +109,7 @@ function LeaderboardPage() {
               data-testid="leaderboard-subject-tab"
               onClick={() => setTab(s.id)}
               dir={isRtlText(s.name_fr) ? "rtl" : undefined}
-              className={`rounded-full border px-4 py-1.5 text-sm font-semibold transition ${
+              className={`inline-flex min-h-11 items-center rounded-full border px-4 py-1.5 text-sm font-semibold transition ${
                 active
                   ? "border-[color:var(--gold)]/60 bg-[color:var(--gold)]/15 text-[color:var(--gold)]"
                   : "border-border/50 bg-black/40 text-muted-foreground hover:text-foreground"
@@ -134,19 +134,21 @@ function LeaderboardPage() {
               animate={{ opacity: 1, y: 0 }}
               className="mb-6 rounded-2xl border border-[color:var(--gold)]/40 bg-black/60 p-5 backdrop-blur-xl shadow-gold"
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="grid h-12 w-12 place-items-center rounded-xl bg-[image:var(--gradient-gold)] font-display text-xl font-bold text-black shadow-gold">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex min-w-0 items-center gap-4">
+                  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-[image:var(--gradient-gold)] font-display text-xl font-bold text-black shadow-gold">
                     #{myRank.rank}
                   </div>
-                  <div>
-                    <div className="font-display text-lg font-bold">{myRank.displayName}</div>
-                    <div className="text-xs uppercase tracking-widest text-[color:var(--champagne)]">
+                  <div className="min-w-0">
+                    <div className="truncate font-display text-lg font-bold">
+                      {myRank.displayName}
+                    </div>
+                    <div className="truncate text-xs uppercase tracking-widest text-[color:var(--champagne)]">
                       {myRank.heroClass}
                     </div>
                   </div>
                 </div>
-                <div className="text-right">
+                <div className="shrink-0 text-right">
                   <div className="flex items-center gap-1 font-display text-lg font-bold text-[color:var(--neon-gold)]">
                     <Zap className="h-4 w-4" /> {myRank.xp} XP
                   </div>
