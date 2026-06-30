@@ -276,51 +276,100 @@ describe("gamification.dashboard — getLeaderboard", () => {
     mockRpc.mockReset();
   });
 
-  it("returns ranked leaderboard with current user", async () => {
-    const topPlayers = [
-      {
-        id: "user-123",
-        display_name: "Yahia",
-        hero_class: "warrior",
-        level: 5,
-        xp: 1000,
-        current_streak: 7,
-        avatar_tier: "gold",
-      },
-      {
-        id: "user-456",
-        display_name: "Ali",
-        hero_class: "mage",
-        level: 3,
-        xp: 500,
-        current_streak: 3,
-        avatar_tier: "bronze",
-      },
-    ];
-
-    mockFrom.mockImplementation(() => mockQuery(topPlayers));
+  it("returns ranked leaderboard with current user via the RLS-safe RPC", async () => {
+    // The global board reads through the SECURITY DEFINER `get_global_leaderboard`
+    // RPC (not `profiles` directly), so it can see peers despite the "own or linked
+    // profiles" RLS policy. The RPC already returns rank + is_me and no peer UUID.
+    mockRpc.mockResolvedValue({
+      data: [
+        {
+          rank: 1,
+          display_name: "Yahia",
+          hero_class: "warrior",
+          level: 5,
+          xp: 1000,
+          current_streak: 7,
+          avatar_tier: 3,
+          is_me: true,
+        },
+        {
+          rank: 2,
+          display_name: "Ali",
+          hero_class: "mage",
+          level: 3,
+          xp: 500,
+          current_streak: 3,
+          avatar_tier: 1,
+          is_me: false,
+        },
+      ],
+      error: null,
+    });
 
     const { getLeaderboard } = await import("@/features/dashboard");
     const result = await (getLeaderboard as unknown as (d?: unknown) => Promise<unknown>)();
 
     const res = result as {
       leaderboard: Record<string, unknown>[];
-      myRank: Record<string, unknown> | undefined;
+      myRank: Record<string, unknown> | null;
     };
+
+    expect(mockRpc).toHaveBeenCalledWith("get_global_leaderboard", {
+      p_limit: expect.any(Number),
+    });
     expect(res.leaderboard).toHaveLength(2);
-    expect(res.myRank).toBeDefined();
+    expect(res.myRank).toMatchObject({ rank: 1, isMe: true });
 
     // SECURITY (P0 S2b): the global leaderboard must not surface any peer UUIDs.
-    // `isMe` is computed server-side; rows are keyed by `rank` on the client.
+    // `isMe` comes from the RPC; rows are keyed by `rank` on the client.
     expect(res.leaderboard[0]).toMatchObject({ rank: 1, isMe: true });
     expect(res.leaderboard[1]).toMatchObject({ rank: 2, isMe: false });
     for (const row of res.leaderboard) {
       expect(row).not.toHaveProperty("id");
+      expect(row).not.toHaveProperty("user_id");
     }
   });
 
-  it("throws a generic French message on fetch error (#14)", async () => {
-    mockFrom.mockImplementation(() => mockQuery(null, { message: "Leaderboard error" }));
+  it("returns my rank even when I fall outside the visible top window", async () => {
+    // The RPC always includes the caller's own row (rank > limit) so "my rank" is
+    // known; the client list still trims it to the top LEADERBOARD_LIMIT rows.
+    mockRpc.mockResolvedValue({
+      data: [
+        {
+          rank: 1,
+          display_name: "Top",
+          hero_class: "S-Rank",
+          level: 10,
+          xp: 9999,
+          current_streak: 4,
+          avatar_tier: 3,
+          is_me: false,
+        },
+        {
+          rank: 99,
+          display_name: "Me",
+          hero_class: "Novice",
+          level: 2,
+          xp: 50,
+          current_streak: 1,
+          avatar_tier: 1,
+          is_me: true,
+        },
+      ],
+      error: null,
+    });
+
+    const { getLeaderboard } = await import("@/features/dashboard");
+    const result = (await (getLeaderboard as unknown as (d?: unknown) => Promise<unknown>)()) as {
+      leaderboard: Record<string, unknown>[];
+      myRank: { rank: number; isMe: boolean } | null;
+    };
+
+    expect(result.myRank).toMatchObject({ rank: 99, isMe: true });
+  });
+
+  it("throws a generic French message on RPC error (#14)", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: { message: "Leaderboard error" } });
 
     const { getLeaderboard } = await import("@/features/dashboard");
 
@@ -684,54 +733,32 @@ describe("gamification.dashboard — branch coverage (error/empty paths)", () =>
     mockRpc.mockReset();
   });
 
-  it("getLeaderboard computes my rank via count when I'm not in the top list", async () => {
-    let n = 0;
-    mockFrom.mockImplementation(() => {
-      n += 1;
-      if (n === 1)
-        return mockQuery([
-          {
-            id: "other",
-            display_name: "Other",
-            hero_class: "mage",
-            level: 9,
-            xp: 9999,
-            current_streak: 0,
-            avatar_tier: 1,
-          },
-        ]);
-      if (n === 2)
-        return mockQuery({
-          id: "user-123",
-          xp: 500,
-          display_name: "Me",
-          hero_class: "novice",
-          level: 2,
-          current_streak: 1,
+  it("getLeaderboard returns a null myRank when the RPC omits the caller's row", async () => {
+    // Defensive: if the caller has no student profile the RPC returns no self row,
+    // so myRank is null and the board still renders the visible peers.
+    mockRpc.mockResolvedValue({
+      data: [
+        {
+          rank: 1,
+          display_name: "Other",
+          hero_class: "mage",
+          level: 9,
+          xp: 9999,
+          current_streak: 0,
           avatar_tier: 1,
-        });
-      return mockQuery(null); // count query → count undefined → `count ?? 0`
+          is_me: false,
+        },
+      ],
+      error: null,
     });
 
     const { getLeaderboard } = await import("@/features/dashboard");
     const res = (await (getLeaderboard as unknown as (d?: unknown) => Promise<unknown>)()) as {
-      myRank: { isMe: boolean; rank: number } | undefined;
+      leaderboard: unknown[];
+      myRank: unknown;
     };
-    expect(res.myRank?.isMe).toBe(true);
-    expect(res.myRank?.rank).toBe(1);
-  });
-
-  it("getLeaderboard throws when the 'me' query errors", async () => {
-    let n = 0;
-    mockFrom.mockImplementation(() => {
-      n += 1;
-      if (n === 1) return mockQuery([]);
-      return mockQuery(null, { message: "me error" });
-    });
-    const { getLeaderboard } = await import("@/features/dashboard");
-    await expect(
-      (getLeaderboard as unknown as (d?: unknown) => Promise<unknown>)(),
-    ).rejects.toThrow(/tableau de bord/i);
+    expect(res.leaderboard).toHaveLength(1);
+    expect(res.myRank).toBeNull();
   });
 
   it("getDashboardSecondary skips null badge/item rows and marks unowned shop items", async () => {

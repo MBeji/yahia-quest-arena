@@ -287,44 +287,47 @@ describe("END-TO-END: global leaderboard ranking + myRank", () => {
   it("returns ranked top players and flags the current user as isMe", async () => {
     const { getLeaderboard } = await import("@/features/dashboard");
 
-    const top = [
-      {
-        id: ME,
-        display_name: "Yahia",
-        hero_class: "mage",
-        level: 12,
-        xp: 2400,
-        current_streak: 7,
-        avatar_tier: 3,
-      },
-      {
-        id: "p2",
-        display_name: "Sami",
-        hero_class: "warrior",
-        level: 9,
-        xp: 1800,
-        current_streak: 4,
-        avatar_tier: 2,
-      },
-      {
-        id: "p3",
-        display_name: "Lina",
-        hero_class: "rogue",
-        level: 7,
-        xp: 1200,
-        current_streak: 2,
-        avatar_tier: 1,
-      },
-    ];
-
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "profiles") return mockQuery(top);
-      return mockQuery([]);
+    // Global board reads through the RLS-safe `get_global_leaderboard` RPC, which
+    // already returns rank + is_me and exposes no peer/self UUID.
+    mockRpc.mockResolvedValue({
+      data: [
+        {
+          rank: 1,
+          display_name: "Yahia",
+          hero_class: "mage",
+          level: 12,
+          xp: 2400,
+          current_streak: 7,
+          avatar_tier: 3,
+          is_me: true,
+        },
+        {
+          rank: 2,
+          display_name: "Sami",
+          hero_class: "warrior",
+          level: 9,
+          xp: 1800,
+          current_streak: 4,
+          avatar_tier: 2,
+          is_me: false,
+        },
+        {
+          rank: 3,
+          display_name: "Lina",
+          hero_class: "rogue",
+          level: 7,
+          xp: 1200,
+          current_streak: 2,
+          avatar_tier: 1,
+          is_me: false,
+        },
+      ],
+      error: null,
     });
 
     const res = (await (getLeaderboard as unknown as Fn)()) as {
       leaderboard: Array<Record<string, unknown>>;
-      myRank: Record<string, unknown> | undefined;
+      myRank: Record<string, unknown> | null;
     };
 
     expect(res.leaderboard).toHaveLength(3);
@@ -333,70 +336,60 @@ describe("END-TO-END: global leaderboard ranking + myRank", () => {
     expect(res.leaderboard[0].isMe).toBe(true);
     expect(res.leaderboard[0]).not.toHaveProperty("id");
     expect(res.leaderboard[1].isMe).toBe(false);
-    // myRank is the in-top-N row, no fallback count query needed.
     expect(res.myRank?.rank).toBe(1);
     expect(res.myRank?.isMe).toBe(true);
   });
 
-  it("computes myRank via the count fallback when the user is outside the top N", async () => {
+  it("surfaces myRank from the caller's own row when outside the top window", async () => {
     const { getLeaderboard } = await import("@/features/dashboard");
 
-    const top = [
-      {
-        id: "p1",
-        display_name: "Sami",
-        hero_class: "warrior",
-        level: 20,
-        xp: 5000,
-        current_streak: 9,
-        avatar_tier: 4,
-      },
-      {
-        id: "p2",
-        display_name: "Lina",
-        hero_class: "rogue",
-        level: 18,
-        xp: 4200,
-        current_streak: 6,
-        avatar_tier: 3,
-      },
-    ];
-    const meRow = {
-      id: ME,
-      xp: 300,
-      display_name: "Yahia",
-      hero_class: "mage",
-      level: 3,
-      current_streak: 1,
-      avatar_tier: 1,
-    };
-
-    let profilesCall = 0;
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "profiles") {
-        profilesCall += 1;
-        // 1: top players list, 2: "me" maybeSingle, 3: count fallback query.
-        if (profilesCall === 1) return mockQuery(top);
-        if (profilesCall === 2) return mockQuery(meRow);
-        // The fallback destructures { count, error } off the resolved query.
-        const fallback = mockQuery(null) as Record<string, unknown>;
-        fallback.count = 41;
-        fallback.then = (resolve: (v: unknown) => unknown) =>
-          resolve({ data: null, error: null, count: 41 });
-        return fallback;
-      }
-      return mockQuery([]);
+    // The RPC always includes the caller's own row (here rank 99) even when it
+    // falls past the visible window (LEADERBOARD_LIMIT = 50); the client list
+    // trims to the top window so the self row drops out of `leaderboard`.
+    mockRpc.mockResolvedValue({
+      data: [
+        {
+          rank: 1,
+          display_name: "Sami",
+          hero_class: "warrior",
+          level: 20,
+          xp: 5000,
+          current_streak: 9,
+          avatar_tier: 4,
+          is_me: false,
+        },
+        {
+          rank: 2,
+          display_name: "Lina",
+          hero_class: "rogue",
+          level: 18,
+          xp: 4200,
+          current_streak: 6,
+          avatar_tier: 3,
+          is_me: false,
+        },
+        {
+          rank: 99,
+          display_name: "Yahia",
+          hero_class: "mage",
+          level: 3,
+          xp: 300,
+          current_streak: 1,
+          avatar_tier: 1,
+          is_me: true,
+        },
+      ],
+      error: null,
     });
 
     const res = (await (getLeaderboard as unknown as Fn)()) as {
       leaderboard: Array<Record<string, unknown>>;
-      myRank: Record<string, unknown> | undefined;
+      myRank: Record<string, unknown> | null;
     };
 
-    expect(res.leaderboard).toHaveLength(2);
+    // Top window keeps the two visible peers (rank 99 is past LEADERBOARD_LIMIT).
     expect(res.leaderboard.some((r) => r.isMe)).toBe(false);
-    // 41 students have more XP → my rank is 42.
-    expect(res.myRank?.rank).toBe(42);
+    expect(res.myRank?.rank).toBe(99);
     expect(res.myRank?.isMe).toBe(true);
     expect(res.myRank).not.toHaveProperty("id");
     expect(res.myRank?.xp).toBe(300);
