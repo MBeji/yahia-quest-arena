@@ -59,8 +59,8 @@
         { "id": "c", "text": "not" },
         { "id": "d", "text": "one" }
       ],
-      "correctOption": "a",
-      "explanation": "\"Doubt so\" = I doubt it will succeed (negative stance toward an affirmative proposition). After doubt, the clausal substitute is \"so\" for a positive/affirmative proposition: I doubt so (= I think it probably won't). \"Not\" follows positive verbs expressing hope or belief — I hope not, I believe not — but doubt already carries the negative sense; \"doubt not\" is redundant and non-standard. \"It\" would refer to a specific noun, not a clause. \"One\" replaces nouns.",
+      "correctOption": "b",
+      "explanation": "After \"doubt\", the fixed pro-form is \"it\" (or \"that\"): I doubt it. \"so\" follows verbs of thinking/believing/hoping — I think so, I believe so, I hope so — but NOT \"doubt\": \"I doubt so\" is non-standard (a classic over-generalisation). \"not\" pairs with hope/believe/suppose (I hope not); \"one\" replaces a countable noun, not a clause.",
       "difficulty": 3
     },
     {
