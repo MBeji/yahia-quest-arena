@@ -1,0 +1,55 @@
+category,metric,value,target_or_threshold,status,source
+Gate,ESLint (--max-warnings=0),pass,0 warnings,green,npm run lint
+Gate,TypeScript (tsc --noEmit strict),pass,0 errors,green,npm run typecheck
+Coverage,Statements,93.77%,80%,green,vitest run --coverage
+Coverage,Branches,83.44%,80%,green,vitest run --coverage
+Coverage,Functions,94.96%,80%,green,vitest run --coverage
+Coverage,Lines,94.47%,80%,green,vitest run --coverage
+Tests,Unit/integration test files,108,n/a,green,find src **/__tests__
+Tests,E2E Playwright specs,35,n/a,green,find e2e *.spec.ts
+Tests,pgTAP SQL tests,13,n/a,green,supabase/tests
+Tests,recoverStreak covered,no,yes,gap,progression.server.ts
+Tests,handlePushCron covered,no,yes,gap,notifications.cron.server.ts
+Code,TS/TSX source files,328,n/a,info,find src
+Code,Source LOC (excl generated),~41700,n/a,info,wc -l
+Code,SQL migrations,202,n/a,info,supabase/migrations
+Code,TODO markers,1,low,green,grep src
+Code,FIXME/HACK/XXX markers,0,0,green,grep src
+Code,@ts-ignore,0,0,green,grep src
+Code,@ts-expect-error,0,0,green,grep src
+Code,as any (application code),0,0,green,grep src excl generated
+Code,eslint-disable (application code),0,0,green,grep src excl generated
+Code,dangerouslySetInnerHTML (all sanitized),2,n/a,green,svg-figure.tsx / lesson-reader.tsx
+Code,no-unused-vars rule,disabled,enabled,gap,eslint.config.js
+Code,Largest component (exercise-player.tsx),827 lines,<750 effective,info,wc -l
+Code,Largest server fn (quest.server.ts),800 lines,<750 effective,info,wc -l
+Architecture,Cross-feature imports,0,0,green,agent review
+Architecture,Features,12,n/a,info,src/features
+Stack,npm audit (prod) vulnerabilities,1 low,0,minor,npm audit --omit=dev
+Stack,Vulnerable package,@babel/core (dev transitive),patched,minor,GHSA-4x5r-pxfx-6jf8
+VersionControl,Git tags / releases,0,SemVer per policy,gap,git tag
+VersionControl,Conventional commit adherence,~95%,100%,green,git log
+VersionControl,CI workflows,11,n/a,green,.github/workflows
+Performance,Unbounded attempts fetch (getDashboard),present,bounded/aggregated,gap,dashboard.server.ts:50
+Performance,N+1 entitlement (getParcours),present (bounded to premium),batched,minor,dashboard.server.ts:348
+Performance,Bundle budget enforcement,enabled,enforced,green,check-bundle-budget.mjs
+Performance,Heavy deps lazy-loaded,yes,yes,green,React.lazy usages
+Logging,Structured JSON logger,yes,yes,green,shared/lib/logger.ts
+Logging,Secret redaction,key-name based,value+key,minor,logger.ts:14-21
+Logging,Raw console.* (justified),3,minimal,green,grep src
+Security,RLS enabled on tables,yes,yes,green,migrations
+Security,Privileged RPCs REVOKEd from authenticated,yes,yes,green,20260606150000
+Security,Role-escalation prevention,trigger + RPC,enforced,green,20260606150000
+Security,Zod input validation on server fns,all,all,green,agent review
+Security,Hardcoded secrets,0,0,green,grep
+Security,CSRF middleware,enabled,enabled,green,start.ts
+Security,Bot-guard + rate limiting,enabled,enabled,green,bot-guard.ts / rate-limit.ts
+Scores,Version control,3,4,info,audit
+Scores,Technology stack,3.5,4,info,audit
+Scores,Architecture,4,4,info,audit
+Scores,Code quality,3.5,4,info,audit
+Scores,Testing,3.5,4,info,audit
+Scores,Performance,3,4,info,audit
+Scores,Logging & errors,3.5,4,info,audit
+Scores,Security,4,4,info,audit
+Scores,Overall average,3.5,4,info,audit
