@@ -118,6 +118,7 @@ describe("NON-REGRESSION: Quest Server Functions", () => {
     capturedHandlers = {};
     mockFrom.mockReset();
     mockRpc.mockReset();
+    mockRpc.mockReturnValue({ data: [], error: null });
   });
 
   describe("getSubject — must never hang", () => {
@@ -320,6 +321,7 @@ describe("NON-REGRESSION: Dashboard Server Functions", () => {
     capturedHandlers = {};
     mockFrom.mockReset();
     mockRpc.mockReset();
+    mockRpc.mockReturnValue({ data: [], error: null });
   });
 
   describe("getDashboard — must never hang", () => {
@@ -430,6 +432,7 @@ describe("NON-REGRESSION: Dungeon Server Functions", () => {
     capturedHandlers = {};
     mockFrom.mockReset();
     mockRpc.mockReset();
+    mockRpc.mockReturnValue({ data: [], error: null });
   });
 
   describe("startDungeonRun — must never hang", () => {
@@ -491,6 +494,7 @@ describe("NON-REGRESSION: Promise resolution patterns", () => {
     capturedHandlers = {};
     mockFrom.mockReset();
     mockRpc.mockReset();
+    mockRpc.mockReturnValue({ data: [], error: null });
   });
 
   it("server functions using Promise.all never hang when one query rejects", async () => {
@@ -548,6 +552,7 @@ describe("NON-REGRESSION: Data shape contracts", () => {
     capturedHandlers = {};
     mockFrom.mockReset();
     mockRpc.mockReset();
+    mockRpc.mockReturnValue({ data: [], error: null });
   });
 
   it("getSubject returns { subject, chapters, exercises, bestByExercise, quizPassedByChapter }", async () => {

@@ -64,6 +64,9 @@ describe("gamification.dashboard — getDashboard", () => {
     vi.resetModules();
     mockFrom.mockReset();
     mockRpc.mockReset();
+    // Default: the per-subject stats RPC returns no rows. Tests that assert on
+    // stats override this with their own aggregate rows.
+    mockRpc.mockReturnValue({ data: [], error: null });
   });
 
   // Parcours-based subject scoping (active parcours, premium lock, null parcours)
@@ -161,33 +164,19 @@ describe("gamification.dashboard — getDashboard", () => {
     );
   });
 
-  it("computes per-subject stats correctly", async () => {
+  it("computes per-subject stats from the stats RPC aggregate", async () => {
     const profile = { id: "user-123", display_name: "Yahia" };
-    const attempts = [
-      {
-        subject_id: "s1",
-        score_pct: 80,
-        xp_earned: 50,
-        completed_at: "2026-06-01",
-        exercise_id: "e1",
-      },
-      {
-        subject_id: "s1",
-        score_pct: 60,
-        xp_earned: 30,
-        completed_at: "2026-06-01",
-        exercise_id: "e2",
-      },
-    ];
 
     mockFrom.mockImplementation((table: string) => {
       if (table === "profiles") return mockQuery(profile);
       if (table === "subjects") return mockQuery([]);
-      if (table === "attempts") return mockQuery(attempts);
-      if (table === "student_badges") return mockQuery([]);
-      if (table === "inventory_items") return mockQuery([]);
-      if (table === "shop_items") return mockQuery([]);
+      if (table === "attempts") return mockQuery([]);
       return mockQuery([]);
+    });
+    // get_user_subject_stats returns one bounded row per subject (GROUP BY).
+    mockRpc.mockReturnValue({
+      data: [{ subject_id: "s1", attempts_count: 2, avg_score: 70, total_xp: 80 }],
+      error: null,
     });
 
     const { getDashboard } = await import("@/features/dashboard");
@@ -195,14 +184,15 @@ describe("gamification.dashboard — getDashboard", () => {
 
     const res = result as { stats: Record<string, { count: number; avg: number; xp: number }> };
     expect(res.stats.s1.count).toBe(2);
-    expect(res.stats.s1.avg).toBe(70); // (80+60)/2
+    expect(res.stats.s1.avg).toBe(70);
     expect(res.stats.s1.xp).toBe(80);
   });
 
-  it("aggregates per-subject stats from the full attempt set, not the recent window (#18)", async () => {
+  it("stats come from the RPC (full history), independent of the recent window (#18)", async () => {
     const profile = { id: "user-123", display_name: "Yahia" };
-    // Recent (limited) query returns 1 row; the full stats query returns 3 rows.
-    // Correct aggregates must reflect the full set.
+    // The recent (limited) attempts query returns 1 row; the stats RPC aggregates
+    // the FULL set (3 attempts) — the dashboard stats must reflect the RPC, not
+    // the recent window.
     const recent = [
       {
         subject_id: "s1",
@@ -212,22 +202,16 @@ describe("gamification.dashboard — getDashboard", () => {
         exercise_id: "e3",
       },
     ];
-    const full = [
-      { subject_id: "s1", score_pct: 90, xp_earned: 50 },
-      { subject_id: "s1", score_pct: 60, xp_earned: 30 },
-      { subject_id: "s1", score_pct: 30, xp_earned: 10 },
-    ];
 
-    let attemptsCall = 0;
     mockFrom.mockImplementation((table: string) => {
       if (table === "profiles") return mockQuery(profile);
       if (table === "subjects") return mockQuery([]);
-      if (table === "attempts") {
-        attemptsCall += 1;
-        // Call order in getDashboard's Promise.all: recent first, then full stats.
-        return attemptsCall === 1 ? mockQuery(recent) : mockQuery(full);
-      }
+      if (table === "attempts") return mockQuery(recent);
       return mockQuery([]);
+    });
+    mockRpc.mockReturnValue({
+      data: [{ subject_id: "s1", attempts_count: 3, avg_score: 60, total_xp: 90 }],
+      error: null,
     });
 
     const { getDashboard } = await import("@/features/dashboard");
@@ -235,8 +219,26 @@ describe("gamification.dashboard — getDashboard", () => {
 
     const res = result as { stats: Record<string, { count: number; avg: number; xp: number }> };
     expect(res.stats.s1.count).toBe(3);
-    expect(res.stats.s1.avg).toBe(60); // (90+60+30)/3
+    expect(res.stats.s1.avg).toBe(60);
     expect(res.stats.s1.xp).toBe(90);
+  });
+
+  it("degrades to empty stats when the stats RPC errors (deploy-race safe)", async () => {
+    const profile = { id: "user-123", display_name: "Yahia" };
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "profiles") return mockQuery(profile);
+      if (table === "subjects") return mockQuery([]);
+      if (table === "attempts") return mockQuery([]);
+      return mockQuery([]);
+    });
+    mockRpc.mockReturnValue({ data: null, error: { message: "function does not exist" } });
+
+    const { getDashboard } = await import("@/features/dashboard");
+    const result = await (getDashboard as unknown as (d?: unknown) => Promise<unknown>)();
+
+    // The dashboard still renders; stats are simply empty rather than throwing.
+    const res = result as { stats: Record<string, unknown> };
+    expect(res.stats).toEqual({});
   });
 
   it("identifies next exercise when last attempt failed", async () => {

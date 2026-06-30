@@ -107,6 +107,7 @@ describe("END-TO-END: new student signs up", () => {
     capturedHandlers = {};
     mockFrom.mockReset();
     mockRpc.mockReset();
+    mockRpc.mockReturnValue({ data: [], error: null });
   });
 
   it("bootstrapProfile(student) → first getDashboard returns the profile", async () => {
@@ -225,6 +226,7 @@ describe("END-TO-END: new parent signs up and links a student", () => {
     capturedHandlers = {};
     mockFrom.mockReset();
     mockRpc.mockReset();
+    mockRpc.mockReturnValue({ data: [], error: null });
   });
 
   it("bootstrapProfile(parent) → linkStudentByCode(valid) links the student", async () => {
@@ -288,6 +290,7 @@ describe("END-TO-END: linking with a bad alliance code fails gracefully", () => 
     capturedHandlers = {};
     mockFrom.mockReset();
     mockRpc.mockReset();
+    mockRpc.mockReturnValue({ data: [], error: null });
   });
 
   it("unknown code → RPC returns linked:false, no hang", async () => {
@@ -339,6 +342,7 @@ describe("END-TO-END: onboarding route data fetch", () => {
     capturedHandlers = {};
     mockFrom.mockReset();
     mockRpc.mockReset();
+    mockRpc.mockReturnValue({ data: [], error: null });
   });
 
   it("getParcours supplies the parcours the profile-first onboarding wizard renders", async () => {
@@ -402,6 +406,7 @@ describe("END-TO-END: account-creation edge cases", () => {
     capturedHandlers = {};
     mockFrom.mockReset();
     mockRpc.mockReset();
+    mockRpc.mockReturnValue({ data: [], error: null });
   });
 
   it("bootstrapProfile is idempotent when a profile already exists (upsert)", async () => {
