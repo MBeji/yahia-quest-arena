@@ -166,3 +166,51 @@ sous-estimait fortement — la vraie « option correcte strictement la + longue 
 
 **Reste : hors-école** (anglais/français CEFR ×12 + donjons, english, french, fr-mastery,
 culture-générale ×12, iq-training ×3).
+
+## N. Hors-école — culture générale (vague F)
+
+| Matière       | Verdict       | Notes                                                                      |
+| ------------- | ------------- | -------------------------------------------------------------------------- |
+| geographie-fr | **1 BLOCKER** | « 7 continents » sans reconnaître le modèle FR à 6 → reformuler comme l'AR |
+| geographie-en | SHIP          | « Seven » correct (public anglo)                                           |
+| geographie-ar | SHIP          | « 7 » défendable (stem « تقليديًّا » + explication nomme le 6)             |
+| histoire-fr   | SHIP          | (déjà) 5 mineurs                                                           |
+| histoire-ar   | SHIP          | faits vérifiés, notation propre                                            |
+| histoire-en   | SHIP          | faits vérifiés                                                             |
+
+→ Culture-G factuelle = excellente. Seul fix : reformuler le « continents » FR (template = version AR).
+
+## O. Hors-école — culture G économie/politique (vague G)
+
+| Matière      | Verdict | Fuite                | Faits                                           |
+| ------------ | ------- | -------------------- | ----------------------------------------------- |
+| economie-fr  | SHIP/1M | 38% (défi 67%)       | vérifiés (Smith, FMI 1944, euro 2002, OMC, BCE) |
+| economie-en  | SHIP/1M | 14%                  | vérifiés                                        |
+| economie-ar  | SHIP    | 21%                  | vérifiés                                        |
+| politique-fr | SHIP/1M | 14% (révision q2/q3) | vérifiés, aucun dirigeant périmé                |
+
+→ Culture-G factuelle excellente partout ; fuite modérée concentrée sur paliers défi conceptuels.
+
+## P. Hors-école — politique/donjon/iq (vague H)
+
+| Matière                     | Verdict | Notes                                                                             |
+| --------------------------- | ------- | --------------------------------------------------------------------------------- |
+| politique-en                | SHIP/1M | fuite 10% (3 items) ; options num. non triées (mineur)                            |
+| politique-ar                | SHIP    | fuite 14% isolée ; faits vérifiés                                                 |
+| culture-generale-dungeon-fr | SHIP    | 17 faits vérifiés ; cours dit à tort « quiz gate ≥80% » (hors-école non gaté)     |
+| iq-training-fr              | SHIP    | puzzles visuels OK (réponse unique), SVG visibles ; séquences dupliquées (mineur) |
+
+→ politique (3 langues) propre. iq visuel FR solide. donjon FR propre.
+
+## Q. Hors-école — iq-training + donjons (vague I)
+
+| Matière                     | Verdict      | Notes                                                                                                            |
+| --------------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------- |
+| iq-training-fr              | SHIP         | puzzles OK ; séquences dupliquées (mineur)                                                                       |
+| iq-training-en              | SHIP/1M      | **texte FR non traduit dans SVG** (~10 fichiers, non porteur) ; clés OK                                          |
+| iq-training-ar              | FIX-FIRST/3M | **texte FR dans SVG (32 occ/14 fichiers, certains PORTEURS** → arabophone bloqué) + séquence dupliquée ; clés OK |
+| culture-generale-dungeon-en | SHIP/1M      | 1 fuite (q5 PIB) ; faits vérifiés                                                                                |
+| culture-generale-dungeon-ar | SHIP         | faits actuels, notation propre                                                                                   |
+
+→ **Bug d'héritage trilingue iq-training** : légendes SVG en FR jamais traduites en AR/EN. Fix ciblé.
+Scan déterministe confirme iq-training-ar = 32 légendes latines dans SVG.
