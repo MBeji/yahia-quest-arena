@@ -20,14 +20,14 @@ Code,@ts-expect-error,0,0,green,grep src
 Code,as any (application code),0,0,green,grep src excl generated
 Code,eslint-disable (application code),0,0,green,grep src excl generated
 Code,dangerouslySetInnerHTML (all sanitized),2,n/a,green,svg-figure.tsx / lesson-reader.tsx
-Code,no-unused-vars rule,disabled,enabled,gap,eslint.config.js
+Code,no-unused-vars rule,enabled (fixed in #245),enabled,green,eslint.config.js
 Code,Largest component (exercise-player.tsx),827 lines,<750 effective,info,wc -l
 Code,Largest server fn (quest.server.ts),800 lines,<750 effective,info,wc -l
 Architecture,Cross-feature imports,0,0,green,agent review
 Architecture,Features,12,n/a,info,src/features
-Stack,npm audit (prod) vulnerabilities,1 low,0,minor,npm audit --omit=dev
-Stack,Vulnerable package,@babel/core (dev transitive),patched,minor,GHSA-4x5r-pxfx-6jf8
-VersionControl,Git tags / releases,0,SemVer per policy,gap,git tag
+Stack,npm audit (prod) vulnerabilities,0 (fixed in #245),0,green,npm audit --omit=dev
+Stack,Vulnerable package,@babel/core (patched in #245),patched,green,GHSA-4x5r-pxfx-6jf8
+VersionControl,Git tags / releases,tooling added in #245,SemVer per policy,green,release.yml
 VersionControl,Conventional commit adherence,~95%,100%,green,git log
 VersionControl,CI workflows,11,n/a,green,.github/workflows
 Performance,Unbounded attempts fetch (getDashboard),present,bounded/aggregated,gap,dashboard.server.ts:50
@@ -35,7 +35,7 @@ Performance,N+1 entitlement (getParcours),present (bounded to premium),batched,m
 Performance,Bundle budget enforcement,enabled,enforced,green,check-bundle-budget.mjs
 Performance,Heavy deps lazy-loaded,yes,yes,green,React.lazy usages
 Logging,Structured JSON logger,yes,yes,green,shared/lib/logger.ts
-Logging,Secret redaction,key-name based,value+key,minor,logger.ts:14-21
+Logging,Secret redaction,extended in #245 (+authorization/bearer/cookie),value+key,green,logger.ts:13-25
 Logging,Raw console.* (justified),3,minimal,green,grep src
 Security,RLS enabled on tables,yes,yes,green,migrations
 Security,Privileged RPCs REVOKEd from authenticated,yes,yes,green,20260606150000

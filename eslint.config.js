@@ -49,7 +49,12 @@ export default tseslint.config(
         },
       ],
       "react-refresh/only-export-components": ["error", { allowConstantExport: true }],
-      "@typescript-eslint/no-unused-vars": "off",
+      // Re-enabled (audit quick win): tools dead-code detection. Underscore-prefixed
+      // names are intentionally-unused escape hatches (args, destructured props, catch vars).
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_" },
+      ],
       "max-lines": ["error", { max: 750, skipBlankLines: true, skipComments: true }],
     },
   },
