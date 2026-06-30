@@ -281,18 +281,33 @@ export const getChapterLesson = createServerFn({ method: "GET" })
       failWithClientError("quest.getChapterLesson", error, "Impossible de charger la leçon.");
     }
 
-    // Fetch all sibling chapters for navigation
-    const { data: siblings } = await supabase
-      .from("chapters")
-      .select("id, title, display_order, lesson_content")
-      .eq("subject_id", chapter.subject_id)
-      .order("display_order");
+    // Fetch all sibling chapters for navigation. We only need each sibling's
+    // metadata + whether it HAS a lesson — never the lesson body itself. Pulling
+    // `lesson_content` here shipped every sibling's full markdown over the wire
+    // just to derive a boolean (a subject with N chapters × ~30 KB each). Split
+    // into two tiny reads: the metadata for all siblings, and the id-only set of
+    // those that actually carry a lesson.
+    const [{ data: siblings }, { data: siblingsWithLesson }] = await Promise.all([
+      supabase
+        .from("chapters")
+        .select("id, title, display_order")
+        .eq("subject_id", chapter.subject_id)
+        .order("display_order"),
+      supabase
+        .from("chapters")
+        .select("id")
+        .eq("subject_id", chapter.subject_id)
+        .not("lesson_content", "is", null)
+        // Preserve the old `!!lesson_content` semantics: an empty string is "no lesson".
+        .neq("lesson_content", ""),
+    ]);
 
+    const withLesson = new Set((siblingsWithLesson ?? []).map((s) => s.id));
     const allChapters = (siblings ?? []).map((s) => ({
       id: s.id,
       title: s.title,
       display_order: s.display_order,
-      hasLesson: !!s.lesson_content,
+      hasLesson: withLesson.has(s.id),
     }));
 
     // Target for the course reader's single « practise this chapter » CTA: the

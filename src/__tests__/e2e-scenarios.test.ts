@@ -63,6 +63,7 @@ function mockQuery(data: unknown, error: unknown = null) {
     "gte",
     "lte",
     "neq",
+    "not",
     "in",
     "order",
     "limit",
