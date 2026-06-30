@@ -35,6 +35,9 @@ describe("logger", () => {
       accessToken: "abc",
       SECRET_KEY: "value",
       password: "pass",
+      authorization: "Bearer xyz",
+      bearer: "xyz",
+      cookie: "sb-access=1",
       normalField: "ok",
     });
 
@@ -42,6 +45,9 @@ describe("logger", () => {
     expect(payload.accessToken).toBe("********");
     expect(payload.SECRET_KEY).toBe("********");
     expect(payload.password).toBe("********");
+    expect(payload.authorization).toBe("********");
+    expect(payload.bearer).toBe("********");
+    expect(payload.cookie).toBe("********");
     expect(payload.normalField).toBe("ok");
   });
 
