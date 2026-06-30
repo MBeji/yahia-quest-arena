@@ -19,7 +19,7 @@ BEGIN;
 -- pgTAP is normally pre-installed by `supabase test db`; create it defensively
 -- so the file is self-contained when run via psql too. Idempotent.
 CREATE EXTENSION IF NOT EXISTS pgtap;
-SELECT plan(4);
+SELECT plan(6);
 
 -- ---------------------------------------------------------
 -- Fixtures: two users A and B, each with one attempt, owned by the superuser so
@@ -83,6 +83,23 @@ SELECT throws_ok(
   '42501',
   NULL,
   'grants: a direct UPDATE on attempts is rejected (writes are RPC-only)'
+);
+
+-- profiles: the "own or linked" SELECT policy must STILL isolate after the
+-- (SELECT auth.uid()) wrap (20260630150000). A and B are not linked, so A reads
+-- only their own profile row. (handle_new_user created both profiles on the
+-- auth.users inserts above.)
+SELECT is(
+  (SELECT count(*)::int FROM public.profiles
+     WHERE id = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'),
+  1,
+  'RLS: user A can read their OWN profile'
+);
+
+SELECT is_empty(
+  $$ SELECT 1 FROM public.profiles
+       WHERE id = 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb' $$,
+  'RLS: user A canNOT read an unlinked peer''s profile (own-or-linked policy holds)'
 );
 
 RESET ROLE;
