@@ -82,6 +82,9 @@ describe("dashboard.parcours — getDashboard scoping", () => {
     vi.resetModules();
     mockFrom.mockReset();
     mockRpc.mockReset();
+    // getDashboard now calls get_user_subject_stats; tests that assert on
+    // entitlement override this with rpcEntitlement(...).
+    mockRpc.mockReturnValue({ data: [], error: null });
   });
 
   it("scopes subjects to the active concours parcours (theme + grade)", async () => {

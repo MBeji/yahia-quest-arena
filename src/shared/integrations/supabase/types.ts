@@ -1613,6 +1613,15 @@ export type Database = {
           subject_xp: number;
         }[];
       };
+      get_user_subject_stats: {
+        Args: never;
+        Returns: {
+          attempts_count: number;
+          avg_score: number;
+          subject_id: string;
+          total_xp: number;
+        }[];
+      };
       has_parcours_entitlement: {
         Args: { p_parcours: string; p_user: string };
         Returns: boolean;
