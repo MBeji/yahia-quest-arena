@@ -1,54 +1,67 @@
 import { type Page, type Locator } from "@playwright/test";
 
 /**
- * Public practice screen (`/exercice/$exerciseId`) — « mode entraînement » (chantier
- * C8, L1.5). An anonymous visitor answers the QCM and, on « Corriger », gets an
- * immediate correction (right/wrong + explanation + score) via the public
- * `check_answers` RPC — nothing recorded, no XP. The end screen invites account
- * creation as a gain. The action button + score carry stable `data-testid`s (i18n
- * labels); options are matched by ARIA role.
+ * Public practice/quiz screen (`/exercice/$exerciseId`) — now the SAME
+ * question-by-question player as the connected quest, in its login-free register.
+ * An anonymous visitor answers one question at a time (select an option → submit),
+ * reaches a result screen with the score (nothing saved, no XP), and a soft
+ * account invite. School chapters are comprehension-quiz-gated: a gated exercise
+ * shows the quiz-lock screen until the chapter's quiz is passed this session.
+ * Stable hooks: the submit button + score carry `data-testid`s; options are
+ * matched by ARIA role.
  */
 export class PracticePage {
   constructor(private readonly page: Page) {}
 
-  get heading(): Locator {
-    return this.page.getByRole("heading", { level: 1 });
-  }
-  /** One radiogroup per question. */
+  /** One radiogroup for the current question. */
   get questionGroups(): Locator {
     return this.page.getByRole("radiogroup");
   }
-  get checkButton(): Locator {
-    return this.page.getByTestId("practice-check");
+  get submitButton(): Locator {
+    return this.page.getByTestId("quest-submit");
   }
-  /** The score summary — only present once corrected. */
+  /** The result-screen score — only present once the run finishes. */
   get score(): Locator {
-    return this.page.getByTestId("practice-score");
+    return this.page.getByTestId("quest-score");
   }
-  /** The end-of-practice account invitation shown to an anonymous visitor. */
+  /** End-of-run account invitation shown to an anonymous visitor. */
   get accountInvite(): Locator {
     return this.page.locator('main a[href="/signup"]');
   }
-  /** « Revoir le cours » — links back to the exercise's chapter (when known). */
-  get reviewCourseLink(): Locator {
-    return this.page.getByTestId("practice-review-course");
+  /** The playing-screen « leave » link — returns to the subject hub. */
+  get leaveLink(): Locator {
+    return this.page.locator('a[href^="/matiere/"]').first();
+  }
+  /** The quiz-lock « take the quiz » CTA (anon → public quiz flow). */
+  get takeQuizLink(): Locator {
+    return this.page.locator('a[href^="/exercice/"]').first();
   }
 
   async goto(exerciseId: string): Promise<void> {
     await this.page.goto(`/exercice/${exerciseId}`);
   }
 
-  /**
-   * Answer every question by picking its first option. Correctness is irrelevant —
-   * the journey asserts that the correction renders (score + per-option feedback),
-   * not a particular score. Waits for the first question so it's not racing the
-   * `useQuery` content fetch.
-   */
-  async answerAll(): Promise<void> {
+  /** Waits for the first question so a play step isn't racing the content fetch. */
+  async firstQuestionVisible(): Promise<void> {
     await this.questionGroups.first().waitFor({ state: "visible", timeout: 15_000 });
-    const count = await this.questionGroups.count();
-    for (let i = 0; i < count; i += 1) {
-      await this.questionGroups.nth(i).getByRole("radio").first().click();
+  }
+
+  /**
+   * Play the whole exercise question-by-question (pick the first option each time)
+   * until the result screen appears. Correctness is irrelevant — the journey
+   * asserts the run completes and a score renders, not a particular score.
+   */
+  async playThrough(): Promise<void> {
+    await this.firstQuestionVisible();
+    for (let i = 0; i < 50; i += 1) {
+      if (await this.score.isVisible().catch(() => false)) break;
+      const group = this.questionGroups.first();
+      if (!(await group.isVisible().catch(() => false))) break;
+      await group.getByRole("radio").first().click();
+      await this.submitButton.click();
+      // Let the next question mount or the result screen settle.
+      await this.page.waitForTimeout(200);
     }
+    await this.score.waitFor({ state: "visible", timeout: 15_000 });
   }
 }

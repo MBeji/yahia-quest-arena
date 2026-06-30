@@ -174,6 +174,8 @@ describe("gamification.quest — getExercise", () => {
       hintCharges: 0,
       // No chapter_id on this exercise → no comprehension-quiz lookup.
       chapterQuizId: null,
+      // No chapter quiz + no grade → the exercise is not quiz-gated.
+      quizGated: false,
     });
   });
 

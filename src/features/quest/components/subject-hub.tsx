@@ -34,9 +34,10 @@ export type SubjectHubExercise = {
  * pivot is free; anon `getSubject` already returns `hasEntitlement: true`).
  * Exercise links are auth-aware (L1.5): a signed-in visitor goes to the scored
  * quest (`/quest`, XP); an anonymous one goes to free practice (`/exercice`) —
- * including the comprehension quiz, which the public practice page turns into an
- * account invite rather than bouncing the visitor to login. Routing rule lives in
- * `exerciseRouteFor` (shared with the course reader's practise CTA).
+ * including the comprehension quiz, which the public player now lets the visitor
+ * pass to unlock the chapter's exercises (gate parity with the connected flow),
+ * never bouncing them to login. Routing rule lives in `exerciseRouteFor` (shared
+ * with the course reader's practise CTA).
  * Copy is i18n (fr/en/ar).
  */
 export function SubjectHub({
