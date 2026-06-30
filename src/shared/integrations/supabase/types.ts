@@ -1647,6 +1647,13 @@ export type Database = {
         Args: { p_grade: string; p_theme: string };
         Returns: string;
       };
+      score_quiz: {
+        Args: { p_answers: Json; p_exercise_id: string };
+        Returns: {
+          correct: number;
+          total: number;
+        }[];
+      };
       set_current_parcours: {
         Args: { p_parcours: string };
         Returns: {
