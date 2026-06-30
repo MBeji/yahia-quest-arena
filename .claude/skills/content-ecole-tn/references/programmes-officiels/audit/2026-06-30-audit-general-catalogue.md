@@ -105,3 +105,64 @@ culture-générale ×13, iq-training ×3, donjons).
 **Reco de correction n°1 (mécanique, fort impact, identity-safe) :** pass « de-leak » sciences —
 déplacer la clause de justification de l'option correcte vers `explanation`, homogénéiser la longueur
 des 4 options. Cible : éveil 2/4/5/6 + SVT. Puis arabe-5è (de-leak + recadrage niveau).
+
+## I. Vague C — éducation islamique (toute la matière)
+
+| Niveau         | Q   | Verdict   | Fuite (strictement la + longue) | Doctrinal                                           |
+| -------------- | --- | --------- | ------------------------------- | --------------------------------------------------- |
+| islamique-1ere | 280 | FIX-FIRST | 50,7%                           | 0 erreur (versets, hadiths, tawḥīd)                 |
+| islamique-2eme | 280 | FIX-FIRST | 70,7% / 47% marquée             | 0 erreur (sourates, piliers, hadiths)               |
+| islamique-3eme | 280 | SHIP/fix  | 54,6%                           | 0 erreur (fiqh malikite, takbirat Aïd web-vérifiés) |
+| islamique-4eme | 525 | SHIP/fix  | 62,9% / 35% (≥10c)              | 0 erreur (madhab malikite fidèle)                   |
+
+→ Doctrinalement irréprochable ; fuite systémique (50-71%). IMPORTANT : mon heuristique 1,6×
+sous-estimait fortement — la vraie « option correcte strictement la + longue » est à 50-71%.
+
+## J. Vague D — fin école-tn (échantillon)
+
+| Matière                      | Q    | Verdict | Fuite          | Notes                                                                                                                                               |
+| ---------------------------- | ---- | ------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| arabic-1ere                  | ~270 | SHIP    | ~1%            | options homogènes (lettres/chiffres/images)                                                                                                         |
+| math-2eme                    | 279  | SHIP/2M | 8.2% (2 réels) | fuite géométrie ch07 ; meta-option ch02 ; ch8/9 légers                                                                                              |
+| math-3eme                    | 279  | SHIP    | 8.2% fortuit   | meta-option « لا شيء ممّا سبق » ch02 (4 items)                                                                                                      |
+| **svt (physique-chimie 9è)** | ~204 | **4M**  | ~9%            | **3 MAJOR hors-programme : paliers d4 = niveau LYCÉE** (Snell ch3, moles ch5, concentration molaire ch7). ⚠️ à valider vs CNP (pas de manifeste 9è) |
+
+→ Maths = propre (fuite fortuite, qq items géométrie). svt physique = correct mais d4 trop avancés.
+
+## K. Défaut d'affichage ponctuel — artefact « LTR: » (déterministe, tout le catalogue)
+
+3 explications avec le token parasite « LTR: » côté élève (à supprimer) :
+
+- math-5eme/08-mesure-grandeurs/exercices/04-defi.json q#2 (« تصاعدي: LTR: 900 < 1050 »)
+- math-5eme/08-mesure-grandeurs/exercices/02-boss.json q#5 (« ونقارن: LTR: 120 > 95 »)
+- math-5eme/08-mesure-grandeurs/exercices/05-entrainement.json q#3 (« ونقارن: LTR: 850 > 800 »)
+
+* typo math-5eme/08 04-defi q#? : « اللترتيب » → « الترتيب ». Correctifs triviaux.
+
+## L. Vague E — fin maths école-tn + 1er hors-école
+
+| Matière                        | Q    | Verdict       | Fuite | Notes                                                                                |
+| ------------------------------ | ---- | ------------- | ----- | ------------------------------------------------------------------------------------ |
+| math-4eme                      | ~630 | SHIP/1M       | <5%   | **MAJOR affichage** : tuple virgule arabe `(2، 3)` ch13-quadrillage q5/6 → `(2 ; 3)` |
+| math-5eme                      | ~420 | SHIP          | ~0%   | artefacts `LTR:` ch08 (§K) ; meta-option ch03                                        |
+| math-6eme (reste 01,06-23)     | 665  | SHIP          | 9.3%  | hotspots définitions géo : 19-quadrilatères 46%, 16-perpendic. 29%                   |
+| culture-generale-geographie-fr | 29   | **1 BLOCKER** | ~7%   | « 7 continents » keyé alors que conv. FR = 6 → reformuler (+ vérifier EN/AR)         |
+
+## M. SYNTHÈSE ÉCOLE-TN — AUDIT COMPLET (toutes matières)
+
+**~7 800 questions re-résolues à l'aveugle.** Conclusions :
+
+1. **Correctness : 0 clé fausse, 0 erreur factuelle/doctrinale** au-delà des **9 doubles-réponses
+   numériques déjà corrigées**. (math 1-9è, arabe 1-5è+9è, éveil 1-6è, SVT, svt-physique, islamique 1-4è.)
+2. **Affichage/notation : propre**, sauf **2 défauts isolés triviaux** : tuple `(2، 3)` (math-4è) +
+   3 artefacts `LTR:` (math-5è ch08). Scan virgule-arabe corrigé → 1 seule violation catalogue-wide.
+3. **Défaut dominant = fuite « option correcte la + longue »** (survit au mélange) :
+   - **Systémique** : islamique 50-71%, éveil 2/4/5/6è 27-51%, SVT 68%, + items de définition
+     géométrique (math 19-quad 46%, 16, math-2è ch07).
+   - **Absent** : arithmétique, grammaire arabe (justif aussi sur distracteurs), petites classes.
+4. **MAJOR de contenu à arbitrer** : svt — paliers d4 niveau **lycée hors-programme** (Snell, moles,
+   concentration molaire) à valider vs CNP ; arabe-5è notions hors-niveau ; arabe-4è « بحرف الجر ».
+5. **1 BLOCKER hors-école** (géo-fr « 7 continents »).
+
+**Reste : hors-école** (anglais/français CEFR ×12 + donjons, english, french, fr-mastery,
+culture-générale ×12, iq-training ×3).
