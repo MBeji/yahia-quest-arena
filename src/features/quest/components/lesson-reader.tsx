@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   BookOpen,
   ChevronLeft,
@@ -69,6 +69,10 @@ export function LessonReader({
 
   const showingSummary = showSummary && !!summary;
   const body = showingSummary ? summary : content;
+  // renderMarkdown runs ~15 regex passes + a DOMPurify sanitize; memoize so a
+  // re-render that doesn't change the body (e.g. the Cours/Résumé toggle landing
+  // back on the same text) doesn't re-parse + re-sanitize the whole lesson.
+  const bodyHtml = useMemo(() => (body ? renderMarkdown(body) : ""), [body]);
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
@@ -135,7 +139,7 @@ export function LessonReader({
         <div
           className="lesson-content"
           dir={isRtl ? "rtl" : "ltr"}
-          dangerouslySetInnerHTML={{ __html: renderMarkdown(body) }}
+          dangerouslySetInnerHTML={{ __html: bodyHtml }}
         />
       ) : (
         <div className="rounded-2xl border border-dashed border-border bg-card px-6 py-12 text-center">
