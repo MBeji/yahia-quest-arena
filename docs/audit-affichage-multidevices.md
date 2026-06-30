@@ -336,6 +336,40 @@ débordement horizontal involontaire ni overlap.** Seuls défauts : 🟠 la rang
 - `min-h-screen`/`vh` → `dvh` (auth, onboarding, écrans de préparation, lightbox).
 - `public-header.tsx` : liens catalogue visibles sur téléphone.
 
+### Lot 4 — Finitions : longue traîne des constats (couverture complète)
+
+> Deuxième passe traitant l'ensemble des constats mineurs restants (la totalité des items
+> code-actionnables de la §4 et des 67 mineurs). Seuls les constats que les auditeurs ont
+> explicitement marqués « acceptable / sans changement / optionnel » (ex. bar chart parent déjà
+> en `overflow-x-auto`, libellés de bottom-nav, blobs décoratifs) ont été laissés tels quels.
+
+- **Cibles tactiles 44 px — généralisées** : la primitive `Button` applique désormais
+  `[@media(pointer:coarse)]:min-h-11` (cascade sur tous ses usages, **tactile seulement** →
+  desktop inchangé) ; idem `[@media(pointer:coarse)]:min-h-11` sur tous les contrôles compacts
+  restants : toggle Cours/Résumé + Print (leçon), boutons du subject-hub / quiz-lock / hint /
+  manuel prev-next, boutons boutique (Buy/Equip/Activate, + `flex-wrap`), « Activer » inventaire,
+  chips du hero (via `ExplainHint`), boutons objectifs/quêtes + pill classement (dashboard),
+  inputs/liens auth, chips & pagination du rapport parent, formulaire grant admin, boutons
+  signalement / notifications / beta, liens nav publics (tablette).
+- **Autres bugs de grille à virgule corrigés** (même classe que le hero) :
+  `dashboard.tsx` `lg:grid-cols-[1fr_360px]` et `parent-report.tsx`
+  `md:grid-cols-[1fr_180px_auto]` — ces grilles à colonnes fixes ne s'appliquaient jamais.
+- **Typographie bridée sur petits écrans** : titres donjon (lobby/gameover), classement,
+  catalogue, hero dashboard (`break-words` + `min-w-0`), 404 (`text-6xl sm:text-8xl`).
+- **Débordement / troncature** : `min-w-0` + `truncate` sur les noms boutique/inventaire,
+  carte sujet, en-tête boss ; `min-w-0` + `[&_svg]:max-w-full` sur les options de practice ;
+  radar inventaire en `aspect-square` capé (au lieu de `h-72` fixe).
+- **Padding responsive** `px-4 sm:px-6` (donjon, dashboard, classement, admin, auth) + cartes
+  donjon/auth `p-5/p-6 sm:p-8` pour regagner de la largeur à 360 px.
+- **Layout** : bannière de série et rangée d'actions boutique passées en `flex-wrap` /
+  `flex-col sm:flex-row` ; en-tête de jeu du donjon en `flex-wrap`.
+- **`dvh` étendu** à tous les loaders `min-h-[60vh]`/`[30vh]` (quête, donjon, classement,
+  parcours, routes publiques).
+- **Safe-area / encoche** : header & footer publics, wrapper auth (pt/pb `env(safe-area-inset-*)`),
+  variantes `Sheet` haut/bas, gouttière latérale `w-[calc(100%-2rem)]` sur toutes les modales.
+- **RTL** : chevrons d'onboarding miroir (`rtl:-scale-x-100`) ; titre du lightbox manuel
+  décalé du bouton fermer (`pe-10`).
+
 ---
 
 _Méthode : audit multi-agents en lecture seule (18 groupes + ré-audit ciblé), vérification

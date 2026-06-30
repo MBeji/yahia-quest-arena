@@ -39,7 +39,7 @@ export function QuizLockScreen({
             <Link
               to="/quest/$exerciseId"
               params={{ exerciseId: quizId }}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-5 py-2.5 text-sm font-bold text-black shadow-gold hover:scale-105"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-5 py-2.5 text-sm font-bold text-black shadow-gold hover:scale-105 [@media(pointer:coarse)]:min-h-11"
             >
               <Brain className="h-4 w-4" /> {takeQuizLabel}
             </Link>
@@ -48,7 +48,7 @@ export function QuizLockScreen({
             <Link
               to="/chapitre/$chapterId"
               params={{ chapterId }}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-black/50 px-5 py-2.5 text-sm font-semibold hover:bg-black/80"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-black/50 px-5 py-2.5 text-sm font-semibold hover:bg-black/80 [@media(pointer:coarse)]:min-h-11"
             >
               <BookOpen className="h-4 w-4" /> {reviewLabel}
             </Link>
@@ -57,7 +57,7 @@ export function QuizLockScreen({
             <Link
               to="/matiere/$subjectId"
               params={{ subjectId }}
-              className="rounded-lg border border-border bg-black/50 px-5 py-2.5 text-sm font-semibold hover:bg-black/80"
+              className="inline-flex items-center rounded-lg border border-border bg-black/50 px-5 py-2.5 text-sm font-semibold hover:bg-black/80 [@media(pointer:coarse)]:min-h-11"
             >
               {backLabel}
             </Link>

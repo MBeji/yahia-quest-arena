@@ -100,7 +100,7 @@ export function ParcoursEntitlementsAdmin({
               value={userId}
               onChange={(e) => setUserId(e.target.value)}
               placeholder={t.subscription.grantUserIdPlaceholder}
-              className="rounded-md border border-border/60 bg-background/60 px-2.5 py-1.5 text-sm"
+              className="rounded-md border border-border/60 bg-background/60 px-2.5 py-1.5 text-sm [@media(pointer:coarse)]:min-h-11"
             />
           </label>
           <label className="flex flex-col gap-1 text-xs">
@@ -108,7 +108,7 @@ export function ParcoursEntitlementsAdmin({
             <select
               value={parcoursId}
               onChange={(e) => setParcoursId(e.target.value)}
-              className="rounded-md border border-border/60 bg-background/60 px-2 py-1.5 text-sm"
+              className="rounded-md border border-border/60 bg-background/60 px-2 py-1.5 text-sm [@media(pointer:coarse)]:min-h-11"
             >
               {parcoursOptions.map((p) => (
                 <option key={p.id} value={p.id}>
@@ -123,7 +123,7 @@ export function ParcoursEntitlementsAdmin({
             <select
               value={source}
               onChange={(e) => setSource(e.target.value as ParcoursEntitlementSource)}
-              className="rounded-md border border-border/60 bg-background/60 px-2 py-1.5 text-sm"
+              className="rounded-md border border-border/60 bg-background/60 px-2 py-1.5 text-sm [@media(pointer:coarse)]:min-h-11"
             >
               {PARCOURS_ENTITLEMENT_SOURCES.map((s) => (
                 <option key={s} value={s}>
@@ -141,7 +141,7 @@ export function ParcoursEntitlementsAdmin({
               value={months}
               onChange={(e) => setMonths(e.target.value)}
               placeholder={t.subscription.grantMonthsPlaceholder}
-              className="rounded-md border border-border/60 bg-background/60 px-2.5 py-1.5 text-sm"
+              className="rounded-md border border-border/60 bg-background/60 px-2.5 py-1.5 text-sm [@media(pointer:coarse)]:min-h-11"
             />
           </label>
         </div>

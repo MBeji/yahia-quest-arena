@@ -95,7 +95,7 @@ export function SubjectHub({
               <Link
                 to="/chapitre/$chapterId"
                 params={{ chapterId: c.id }}
-                className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+                className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:opacity-90 [@media(pointer:coarse)]:min-h-11"
               >
                 <BookOpen className="h-4 w-4" /> {t.public.subject.readCourse}
               </Link>
@@ -109,7 +109,7 @@ export function SubjectHub({
                         <Link
                           to={exerciseTo}
                           params={{ exerciseId: ex.id }}
-                          className="flex items-center justify-between gap-3 py-2.5 text-sm transition hover:text-primary"
+                          className="flex items-center justify-between gap-3 py-2.5 text-sm transition hover:text-primary [@media(pointer:coarse)]:min-h-11"
                         >
                           <span className="truncate" dir={isRtlText(ex.title) ? "rtl" : "ltr"}>
                             {ex.mode === "quiz" ? "🧠 " : ""}

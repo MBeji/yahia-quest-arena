@@ -49,7 +49,7 @@ export function QuestHintButton({
         type="button"
         disabled={isPending}
         onClick={onReveal}
-        className="inline-flex items-center gap-1.5 rounded-lg border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/10 px-4 py-2 text-xs font-bold text-[color:var(--neon-gold)] transition hover:bg-[color:var(--neon-gold)]/20 disabled:opacity-40"
+        className="inline-flex items-center gap-1.5 rounded-lg border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/10 px-4 py-2 text-xs font-bold text-[color:var(--neon-gold)] transition hover:bg-[color:var(--neon-gold)]/20 disabled:opacity-40 [@media(pointer:coarse)]:min-h-11"
       >
         {isPending ? (
           <Loader2 className="h-3.5 w-3.5 animate-spin" />

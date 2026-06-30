@@ -189,7 +189,7 @@ export function PracticeExercise({
                       className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3 text-left text-sm transition disabled:cursor-default ${cls}`}
                     >
                       <span
-                        className="flex items-center gap-3"
+                        className="flex min-w-0 items-center gap-3 [&_svg]:max-w-full"
                         dir={
                           isMathExpression(opt.text)
                             ? "ltr"
