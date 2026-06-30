@@ -75,7 +75,13 @@ export function LessonReader({
       <header className="mb-6" dir={isRtl ? "rtl" : "ltr"}>
         <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
           <BookOpen className="h-3.5 w-3.5 shrink-0" />
-          <span className="truncate">{subjectData?.name_fr ?? t.public.reader.defaultSubject}</span>
+          <Link
+            to="/matiere/$subjectId"
+            params={{ subjectId: chapter.subject_id }}
+            className="truncate transition hover:underline"
+          >
+            {subjectData?.name_fr ?? t.public.reader.defaultSubject}
+          </Link>
           {allChapters.length > 0 && (
             <span className="text-muted-foreground">
               · {currentIdx + 1}/{allChapters.length}
@@ -97,7 +103,7 @@ export function LessonReader({
               type="button"
               data-testid="lesson-tab-course"
               onClick={() => setShowSummary(false)}
-              className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
+              className={`rounded-md px-3 py-1.5 text-sm font-medium transition [@media(pointer:coarse)]:min-h-11 ${
                 !showingSummary ? "bg-card text-primary shadow-sm" : "text-muted-foreground"
               }`}
             >
@@ -107,7 +113,7 @@ export function LessonReader({
               type="button"
               data-testid="lesson-tab-summary"
               onClick={() => setShowSummary(true)}
-              className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
+              className={`rounded-md px-3 py-1.5 text-sm font-medium transition [@media(pointer:coarse)]:min-h-11 ${
                 showingSummary ? "bg-card text-primary shadow-sm" : "text-muted-foreground"
               }`}
             >
@@ -119,7 +125,7 @@ export function LessonReader({
           type="button"
           data-testid="lesson-print"
           onClick={() => window.print()}
-          className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground transition hover:border-primary/40 hover:text-primary"
+          className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground transition hover:border-primary/40 hover:text-primary [@media(pointer:coarse)]:min-h-11"
         >
           <Printer className="h-4 w-4" /> {t.public.reader.print}
         </button>

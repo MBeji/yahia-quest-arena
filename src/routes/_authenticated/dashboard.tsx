@@ -325,7 +325,7 @@ function Dashboard() {
           </Suspense>
         </div>
       )}
-      <div className="relative z-10 mx-auto max-w-7xl px-6 py-8">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6">
         {/* HERO HEADER */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -334,10 +334,10 @@ function Dashboard() {
         >
           <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/30 blur-3xl" />
           <div className="absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/20 blur-3xl" />
-          <div className="relative grid gap-6 sm:grid-cols-[auto,1fr,auto] sm:items-center">
+          <div className="relative grid gap-6 sm:grid-cols-[auto_1fr_auto] sm:items-center">
             <HeroAvatar avatarSlug={profile.avatar_slug} />
-            <div>
-              <h1 className="font-display text-3xl font-bold sm:text-4xl">
+            <div className="min-w-0">
+              <h1 className="font-display text-2xl font-bold break-words sm:text-3xl md:text-4xl">
                 {profile.display_name}
               </h1>
               <HeroStatChips
@@ -386,7 +386,7 @@ function Dashboard() {
                         setCopiedCode(true);
                         setTimeout(() => setCopiedCode(false), 1200);
                       }}
-                      className="inline-flex items-center gap-1 rounded-md border border-[color:var(--gold)]/40 px-2 py-1 text-xs text-[color:var(--gold)] hover:bg-[color:var(--gold)]/10"
+                      className="inline-flex min-h-11 shrink-0 items-center gap-1 rounded-md border border-[color:var(--gold)]/40 px-2.5 py-1 text-xs text-[color:var(--gold)] hover:bg-[color:var(--gold)]/10"
                     >
                       {copiedCode ? (
                         <Check className="h-3.5 w-3.5" />
@@ -442,7 +442,7 @@ function Dashboard() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.12 }}
-            className="mt-4 flex items-center justify-between gap-4 rounded-2xl border border-[color:var(--flame)]/40 bg-[color:var(--flame)]/8 p-4 backdrop-blur-md"
+            className="mt-4 flex flex-col gap-3 rounded-2xl border border-[color:var(--flame)]/40 bg-[color:var(--flame)]/8 p-4 backdrop-blur-md sm:flex-row sm:items-center sm:justify-between sm:gap-4"
           >
             <div className="flex items-center gap-3">
               <div className="grid h-10 w-10 place-items-center rounded-xl bg-[color:var(--flame)]/25">
@@ -582,7 +582,7 @@ function Dashboard() {
                       type="button"
                       disabled={done}
                       onClick={() => runQuestAction(action)}
-                      className="mt-2 rounded-md border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/15 px-2.5 py-1 text-xs font-semibold text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/25 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="mt-2 rounded-md border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/15 px-2.5 py-1 text-xs font-semibold text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/25 disabled:cursor-not-allowed disabled:opacity-50 [@media(pointer:coarse)]:min-h-11"
                     >
                       {done ? t.common.completed : t.common.continue}
                     </button>
@@ -641,7 +641,7 @@ function Dashboard() {
           </div>
         </motion.div>
 
-        <div className="mt-8 grid gap-6 lg:grid-cols-[1fr,360px]">
+        <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_360px]">
           {/* SUBJECTS GRID */}
           <section>
             <div className="mb-4 flex items-center justify-between">
@@ -650,7 +650,7 @@ function Dashboard() {
               </h2>
               <Link
                 to="/leaderboard"
-                className="flex items-center gap-1.5 rounded-lg border border-[color:var(--neon-gold)]/30 bg-[color:var(--neon-gold)]/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[color:var(--neon-gold)] transition hover:bg-[color:var(--neon-gold)]/20"
+                className="flex items-center gap-1.5 rounded-lg border border-[color:var(--neon-gold)]/30 bg-[color:var(--neon-gold)]/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[color:var(--neon-gold)] transition hover:bg-[color:var(--neon-gold)]/20 [@media(pointer:coarse)]:min-h-11"
               >
                 <Crown className="h-3.5 w-3.5" /> {t.common.leaderboard}
               </Link>

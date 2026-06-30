@@ -74,20 +74,20 @@ export function ManuelPagesSection({
       <Dialog open={current !== null} onOpenChange={(open) => !open && setOpenIdx(null)}>
         {current && (
           <DialogContent className="max-w-3xl" aria-describedby={undefined}>
-            <DialogTitle className="text-base">
+            <DialogTitle className="text-base pe-10">
               {t.public.reader.manuelPage} {current.page}
             </DialogTitle>
             <img
               src={current.url}
               alt={`${t.public.reader.manuelPage} ${current.page}`}
-              className="mx-auto max-h-[78vh] w-auto rounded-md"
+              className="mx-auto max-h-[60dvh] w-auto rounded-md"
             />
             <div className="flex items-center justify-between gap-3">
               <button
                 type="button"
                 onClick={() => move(-1)}
                 disabled={openIdx === 0}
-                className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground transition hover:text-primary disabled:opacity-40"
+                className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground transition hover:text-primary disabled:opacity-40 [@media(pointer:coarse)]:min-h-11"
               >
                 <ChevronLeft className="h-4 w-4 rtl:-scale-x-100" />
                 {t.public.reader.manuelPrev}
@@ -99,7 +99,7 @@ export function ManuelPagesSection({
                 type="button"
                 onClick={() => move(1)}
                 disabled={openIdx === pages.length - 1}
-                className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground transition hover:text-primary disabled:opacity-40"
+                className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground transition hover:text-primary disabled:opacity-40 [@media(pointer:coarse)]:min-h-11"
               >
                 {t.public.reader.manuelNext}
                 <ChevronRight className="h-4 w-4 rtl:-scale-x-100" />

@@ -516,7 +516,22 @@ export const getExercise = createServerFn({ method: "GET" })
       }
     }
 
-    return { exercise: ex.data, questions: qs.data ?? [], hintCharges };
+    // Direct unlock target for the comprehension-quiz gate: when a non-quiz
+    // exercise is gated, the lock screen links straight to the chapter's quiz
+    // instead of bouncing the student to the subject hub to hunt for it.
+    let chapterQuizId: string | null = null;
+    const exRow = ex.data as { chapter_id?: string | null; mode?: string | null } | null;
+    if (exRow?.chapter_id && exRow.mode !== "quiz") {
+      const { data: quizRow } = await supabase
+        .from("exercises")
+        .select("id")
+        .eq("chapter_id", exRow.chapter_id)
+        .eq("mode", "quiz")
+        .maybeSingle();
+      chapterQuizId = (quizRow as { id?: string } | null)?.id ?? null;
+    }
+
+    return { exercise: ex.data, questions: qs.data ?? [], hintCharges, chapterQuizId };
   });
 
 // ---------- Start a secure exercise session ----------

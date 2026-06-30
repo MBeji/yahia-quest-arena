@@ -19,14 +19,22 @@ function ChapitrePage() {
   const { chapterId } = Route.useParams();
   const { user } = useAuth();
   const fetchLesson = useServerFn(getChapterLesson);
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["lesson", chapterId],
     queryFn: () => fetchLesson({ data: { chapterId } }),
   });
 
+  if (isError) {
+    return (
+      <div className="mx-auto max-w-3xl px-6 py-20 text-center text-muted-foreground">
+        Impossible de charger ce cours.
+      </div>
+    );
+  }
+
   if (isLoading || !data) {
     return (
-      <div className="grid min-h-[60vh] place-items-center">
+      <div className="grid min-h-[60dvh] place-items-center">
         <div className="h-9 w-9 animate-spin rounded-full border-2 border-primary border-t-transparent" />
       </div>
     );

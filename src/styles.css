@@ -633,6 +633,16 @@ html:is(.light, .reference) *:focus-visible {
   line-height: 1.9;
   color: var(--foreground);
   scroll-behavior: smooth;
+  /* Multi-device: long unbreakable strings (URLs, code identifiers, math tokens)
+     must wrap instead of pushing the viewport past the phone width (360px). */
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+/* Code blocks scroll horizontally inside their own box rather than overflowing the page. */
+.lesson-content pre {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .lesson-content .lesson-h1 {
   font-family: var(--font-display);
@@ -696,7 +706,14 @@ html:is(.light, .reference) *:focus-visible {
   inset-inline-start: 0;
 }
 .lesson-content .lesson-table {
+  /* `display:block` + `overflow-x:auto` turns a wide markdown table into its own
+     horizontally-scrollable region so several columns / long cells never break the
+     360px viewport (the table keeps its intrinsic width and scrolls within). */
+  display: block;
   width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border-collapse: collapse;
   margin: 1rem 0;
   font-size: 0.9rem;
@@ -721,6 +738,10 @@ html:is(.light, .reference) *:focus-visible {
   border: 1px solid color-mix(in oklab, var(--neon-violet) 20%, transparent);
   direction: ltr;
   unicode-bidi: isolate;
+  /* A long equation scrolls within its block instead of overflowing the phone viewport. */
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .lesson-content strong {
   color: var(--neon-gold);
