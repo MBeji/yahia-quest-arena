@@ -393,35 +393,21 @@ describe("NON-REGRESSION: Dashboard Server Functions", () => {
 
   describe("getLeaderboard — must never hang", () => {
     it("resolves within 1s with valid data", async () => {
-      mockFrom.mockImplementation((table: string) => {
-        if (table === "profiles") {
-          const chain = mockQuery([
-            {
-              id: "u1",
-              display_name: "Player1",
-              xp: 500,
-              level: 3,
-              hero_class: "mage",
-              avatar_slug: null,
-              avatar_tier: 0,
-            },
-          ]);
-          // Override single for user's own profile lookup
-          chain.single = vi.fn().mockReturnValue({
-            data: {
-              id: "user-regression-test",
-              display_name: "Yahia",
-              xp: 300,
-              level: 2,
-              hero_class: "warrior",
-              avatar_slug: null,
-              avatar_tier: 0,
-            },
-            error: null,
-          });
-          return chain;
-        }
-        return mockQuery([]);
+      // Global board now reads through the RLS-safe `get_global_leaderboard` RPC.
+      mockRpc.mockResolvedValue({
+        data: [
+          {
+            rank: 1,
+            display_name: "Player1",
+            hero_class: "mage",
+            level: 3,
+            xp: 500,
+            current_streak: 2,
+            avatar_tier: 0,
+            is_me: false,
+          },
+        ],
+        error: null,
       });
 
       const { getLeaderboard } = await import("@/features/dashboard");

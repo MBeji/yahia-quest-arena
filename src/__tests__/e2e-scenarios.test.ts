@@ -466,18 +466,24 @@ describe("END-TO-END: leaderboards (global + per-subject)", () => {
   it("getLeaderboard → getSubjectLeaderboard", async () => {
     const dash = await import("@/features/dashboard");
 
-    mockFrom.mockImplementation(() =>
-      mockQuery([
-        {
-          id: "user-regression-test",
-          display_name: "Yahia",
-          hero_class: "warrior",
-          level: 5,
-          xp: 1000,
-          current_streak: 7,
-          avatar_tier: 2,
+    mockRpc.mockImplementation(
+      rpcByName({
+        get_global_leaderboard: {
+          data: [
+            {
+              rank: 1,
+              display_name: "Yahia",
+              hero_class: "warrior",
+              level: 5,
+              xp: 1000,
+              current_streak: 7,
+              avatar_tier: 2,
+              is_me: true,
+            },
+          ],
+          error: null,
         },
-      ]),
+      }),
     );
     const global = (await (dash.getLeaderboard as unknown as Fn)()) as { leaderboard: unknown[] };
     expect(global.leaderboard).toHaveLength(1);

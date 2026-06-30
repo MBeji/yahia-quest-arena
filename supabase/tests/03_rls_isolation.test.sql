@@ -6,12 +6,13 @@
 -- attempts. We assert this under a REAL `SET ROLE authenticated` so RLS is
 -- actually enforced (it is bypassed for the table owner / superuser).
 --
--- NOTE on `profiles`: the v1 policy "Profiles are viewable by everyone"
--- USING (true) makes profile ROWS world-readable by design (leaderboard, peer
--- display names). The privacy guarantee there is column-level — peer UUIDs are
--- hidden by the leaderboard RPC (see 02_role_escalation: S2(b)) — not row-level.
--- So we assert the REAL contract: a peer's `attempts` (private gameplay data)
--- are invisible, while the profile row remains visible by design.
+-- NOTE on `profiles`: since 20260522153000 the SELECT policy is "Users can view
+-- own or linked profiles" (auth.uid() = id OR an active parent/student link), so
+-- profile ROWS are NOT peer-readable directly. The leaderboards therefore read
+-- through SECURITY DEFINER RPCs (get_global_leaderboard / get_subject_leaderboard)
+-- which aggregate across users and expose only public-safe fields + is_me, never a
+-- peer UUID (see 02_role_escalation: S2(b)). Here we assert the gameplay contract:
+-- a peer's `attempts` (private data) are invisible under a real authenticated role.
 -- =========================================================
 
 BEGIN;
