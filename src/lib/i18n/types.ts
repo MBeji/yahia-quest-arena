@@ -647,6 +647,19 @@ export type TranslationKeys = {
       languesFrStandard: string;
       languesEnName: string;
       languesEnStandard: string;
+      familleKicker: string;
+      familleTitle: string;
+      familleSubtitle: string;
+      familleFeatTrack: string;
+      familleFeatInsights: string;
+      familleFeatAdvice: string;
+      familleFeatPrint: string;
+      familleStepsTitle: string;
+      familleStep1: string;
+      familleStep2: string;
+      familleStep3: string;
+      familleCta: string;
+      familleCtaAuthed: string;
     };
     cycles: {
       primaire: string;
