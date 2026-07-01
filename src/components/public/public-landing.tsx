@@ -322,13 +322,25 @@ export function PublicLanding() {
                 </li>
               ))}
             </ol>
-            <Link
-              to={isAuthed ? "/parent-report" : "/signup"}
-              className="mt-6 inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-base font-semibold text-primary-foreground transition hover:opacity-90"
-            >
-              {isAuthed ? t.public.landing.familleCtaAuthed : t.public.landing.familleCta}
-              <ArrowRight className="h-5 w-5 rtl:-scale-x-100" />
-            </Link>
+            {/* Signé : ouvre le suivi ; sinon inscription avec le rôle Parent pré-choisi. */}
+            {isAuthed ? (
+              <Link
+                to="/parent-report"
+                className="mt-6 inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-base font-semibold text-primary-foreground transition hover:opacity-90"
+              >
+                {t.public.landing.familleCtaAuthed}
+                <ArrowRight className="h-5 w-5 rtl:-scale-x-100" />
+              </Link>
+            ) : (
+              <Link
+                to="/auth"
+                search={{ mode: "signup", role: "parent" }}
+                className="mt-6 inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-base font-semibold text-primary-foreground transition hover:opacity-90"
+              >
+                {t.public.landing.familleCta}
+                <ArrowRight className="h-5 w-5 rtl:-scale-x-100" />
+              </Link>
+            )}
           </div>
         </div>
       </section>

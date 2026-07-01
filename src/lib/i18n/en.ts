@@ -565,6 +565,7 @@ export const en: TranslationKeys = {
     adviceInactive:
       "Little recent activity: suggest a short 15-minute session today to restart the momentum.",
     printCta: "Print the report",
+    shareCta: "Share the report",
     printTitle: "Family report — Na9ra Nal3ab",
     printGenerated: "Generated on {date}",
     pushTitle: "Get the report every Sunday",

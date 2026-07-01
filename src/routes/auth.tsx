@@ -33,19 +33,23 @@ export const Route = createFileRoute("/auth")({
       },
     ],
   }),
-  validateSearch: (s: Record<string, unknown>) => ({ mode: (s.mode as string) || "login" }),
+  // `role` optionnel — tunnel parent depuis la landing « Espace Famille ».
+  validateSearch: (s: Record<string, unknown>): { mode: string; role?: "parent" } => ({
+    mode: (s.mode as string) || "login",
+    ...(s.role === "parent" ? { role: "parent" as const } : {}),
+  }),
   component: AuthPage,
 });
 
 function AuthPage() {
-  const { mode } = Route.useSearch();
+  const { mode, role: roleParam } = Route.useSearch();
   const navigate = useNavigate();
   const t = useT();
   const isSignup = mode === "signup";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [role, setRole] = useState<"student" | "parent">("student");
+  const [role, setRole] = useState<"student" | "parent">(roleParam ?? "student");
   const [allianceCode, setAllianceCode] = useState("");
   const [busy, setBusy] = useState(false);
   const [emailSent, setEmailSent] = useState(false);

@@ -567,6 +567,7 @@ export const fr: TranslationKeys = {
     adviceInactive:
       "Peu d'activité récente : proposez une petite session de 15 minutes aujourd'hui pour relancer la dynamique.",
     printCta: "Imprimer le bilan",
+    shareCta: "Partager le bilan",
     printTitle: "Bilan famille — Na9ra Nal3ab",
     printGenerated: "Édité le {date}",
     pushTitle: "Recevez le bilan chaque dimanche",

@@ -16,7 +16,8 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { useI18n, useT } from "@/lib/i18n";
-import type { getStudentReport } from "../parent-report.server";
+import { buildWeeklyAdvice, type ReportData } from "../report-share";
+export type { ReportData } from "../report-share";
 
 /**
  * Le corps du « Bilan famille » : en-tête élève, verdict d'assiduité, conseil de
@@ -25,25 +26,11 @@ import type { getStudentReport } from "../parent-report.server";
  * reste mince) ; les styles `print-fill`/`family-report` pilotent l'impression.
  */
 
-export type ReportData = Awaited<ReturnType<typeof getStudentReport>>;
-
 export function ReportContent({ report }: { report: ReportData }) {
   const { t, locale } = useI18n();
   const { student, summary, subjectStats, dailyActivity, weekComparison, chapterInsights } = report;
 
-  // Le conseil actionnable de la semaine : la lacune la plus marquée d'abord,
-  // sinon relancer un élève peu actif, sinon féliciter la régularité.
-  const worstChapter = chapterInsights.weaknesses[0];
-  const advice = worstChapter
-    ? t.parentReport.adviceWeakness
-        .replace("{chapter}", worstChapter.chapterTitle)
-        .replace("{subject}", worstChapter.subjectName)
-    : summary.verdict === "inactive" || summary.verdict === "needs_improvement"
-      ? t.parentReport.adviceInactive
-      : t.parentReport.adviceKeepUp.replace(
-          "{name}",
-          student.displayName ?? t.parentReport.defaultStudentName,
-        );
+  const advice = buildWeeklyAdvice(report, t);
 
   return (
     <div className="family-report space-y-6">

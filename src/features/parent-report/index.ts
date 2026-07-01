@@ -10,3 +10,4 @@ export {
 } from "./parent-report.server";
 export { formatStudentAllianceCode, parseStudentAllianceCode } from "./family-link";
 export { ReportContent } from "./components/report-content";
+export { buildFamilyReportShareText, buildWeeklyAdvice } from "./report-share";

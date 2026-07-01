@@ -10,9 +10,11 @@ import {
   Link as LinkIcon,
   ArrowLeft,
   Printer,
+  Share2,
   Target,
 } from "lucide-react";
 import {
+  buildFamilyReportShareText,
   getLinkedStudents,
   getStudentReport,
   getStudentWeeklyGoal,
@@ -134,13 +136,22 @@ function ParentReport() {
             </p>
           </div>
           {report && (
-            <button
-              type="button"
-              onClick={() => window.print()}
-              className="inline-flex items-center gap-2 rounded-lg border border-[color:var(--gold)]/40 bg-black/50 px-4 py-2 text-sm font-semibold text-[color:var(--champagne)] transition hover:border-[color:var(--gold)] [@media(pointer:coarse)]:min-h-11"
-            >
-              <Printer className="h-4 w-4" /> {t.parentReport.printCta}
-            </button>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => shareReport(buildFamilyReportShareText(report, t))}
+                className="inline-flex items-center gap-2 rounded-lg border border-[color:var(--gold)]/40 bg-black/50 px-4 py-2 text-sm font-semibold text-[color:var(--champagne)] transition hover:border-[color:var(--gold)] [@media(pointer:coarse)]:min-h-11"
+              >
+                <Share2 className="h-4 w-4" /> {t.parentReport.shareCta}
+              </button>
+              <button
+                type="button"
+                onClick={() => window.print()}
+                className="inline-flex items-center gap-2 rounded-lg border border-[color:var(--gold)]/40 bg-black/50 px-4 py-2 text-sm font-semibold text-[color:var(--champagne)] transition hover:border-[color:var(--gold)] [@media(pointer:coarse)]:min-h-11"
+              >
+                <Printer className="h-4 w-4" /> {t.parentReport.printCta}
+              </button>
+            </div>
           )}
         </div>
       </motion.div>
@@ -306,6 +317,18 @@ function ParentReport() {
       ) : null}
     </div>
   );
+}
+
+/**
+ * Partage du bilan : Web Share natif quand disponible (mobile), sinon WhatsApp
+ * web — le canal familial n°1 en Tunisie.
+ */
+function shareReport(text: string): void {
+  if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
+    navigator.share({ text }).catch(() => {});
+    return;
+  }
+  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
 }
 
 /** Actif dans les 7 derniers jours — pastille verte sur la carte enfant. */

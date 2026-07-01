@@ -560,6 +560,7 @@ export const ar: TranslationKeys = {
       "لم تُرصد أي ثغرة هذا الشهر. شجّع {name} على المحافظة على هذا النسق — المواظبة تصنع الفرق.",
     adviceInactive: "نشاط قليل مؤخراً: اقترح جلسة قصيرة من 15 دقيقة اليوم لاستعادة النسق.",
     printCta: "طباعة التقرير",
+    shareCta: "مشاركة التقرير",
     printTitle: "تقرير العائلة — Na9ra Nal3ab",
     printGenerated: "صدر بتاريخ {date}",
     pushTitle: "استلم التقرير كل يوم أحد",

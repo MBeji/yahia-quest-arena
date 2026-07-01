@@ -71,8 +71,10 @@ describe("PublicLanding", () => {
     expect(screen.getByText(/points forts et chapitres à renforcer/i)).toBeInTheDocument();
     expect(screen.getByText(/conseil de la semaine/i)).toBeInTheDocument();
     expect(screen.getByText(/bilan imprimable/i)).toBeInTheDocument();
-    // Signed-out: the CTA routes to signup.
-    expect(screen.getByText("Créer mon compte parent")).toBeInTheDocument();
+    // Signed-out: the CTA routes to the auth page (signup mode, parent role preselected).
+    expect(screen.getByText("Créer mon compte parent").closest("a")?.getAttribute("href")).toBe(
+      "/auth",
+    );
   });
 
   it("signed-in: the famille CTA opens the parent report instead of signup", () => {

@@ -587,6 +587,7 @@ export type TranslationKeys = {
     adviceKeepUp: string;
     adviceInactive: string;
     printCta: string;
+    shareCta: string;
     printTitle: string;
     printGenerated: string;
     pushTitle: string;
