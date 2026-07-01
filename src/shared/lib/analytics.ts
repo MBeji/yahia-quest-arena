@@ -47,6 +47,21 @@ let installed = false;
 let lastTrackedPath: string | null = null;
 
 /**
+ * Invoke gtag so that third-party internals can never break the app: once
+ * gtag.js loads it REPLACES `dataLayer.push` with its own processor, so every
+ * later gtag call executes Google's code synchronously in OUR stack (effects,
+ * router subscriptions) — an uncaught throw there would reach the root error
+ * boundary and blank the whole page.
+ */
+function safeGtag(...args: unknown[]): void {
+  try {
+    window.gtag?.(...args);
+  } catch {
+    // Analytics failures are always swallowed — never break a render.
+  }
+}
+
+/**
  * Load gtag.js and initialise the data stream. Idempotent; a no-op unless
  * enabled. The initial `page_view` is suppressed (`send_page_view: false`) so
  * `trackPageview` owns every page_view — the first load and each SPA navigation
@@ -62,15 +77,20 @@ export function initAnalytics(): void {
   document.head.appendChild(loader);
 
   window.dataLayer = window.dataLayer ?? [];
-  window.gtag = function gtag(...args: unknown[]) {
-    // gtag's contract is "push the argument list as one dataLayer entry"; the
-    // library slices each entry, so an array is equivalent to the classic
-    // `arguments` object the inline snippet pushes.
-    (window.dataLayer as unknown[]).push(args);
+  // The canonical shim: push the exotic `arguments` object, NOT a rest-param
+  // array. gtag.js tells its commands apart from ordinary dataLayer messages
+  // by that exact shape — with plain arrays it mis-processes the queue and,
+  // once its own `dataLayer.push` processor is installed, throws synchronously
+  // inside the caller's stack (prod incident 2026-07-01: "No default value"
+  // surfaced by the root error boundary). Keep this shape-identical to
+  // Google's official snippet.
+  window.gtag = function gtag() {
+    // eslint-disable-next-line prefer-rest-params -- gtag.js requires the `arguments` object (see above)
+    (window.dataLayer as unknown[]).push(arguments);
   };
 
-  window.gtag("js", new Date());
-  window.gtag("config", GA_MEASUREMENT_ID, { send_page_view: false });
+  safeGtag("js", new Date());
+  safeGtag("config", GA_MEASUREMENT_ID, { send_page_view: false });
 }
 
 /**
@@ -81,7 +101,7 @@ export function trackPageview(path: string): void {
   if (!isAnalyticsEnabled() || typeof window.gtag !== "function") return;
   if (path === lastTrackedPath) return;
   lastTrackedPath = path;
-  window.gtag("event", "page_view", {
+  safeGtag("event", "page_view", {
     page_path: path,
     page_location: window.location.href,
     page_title: typeof document !== "undefined" ? document.title : undefined,
