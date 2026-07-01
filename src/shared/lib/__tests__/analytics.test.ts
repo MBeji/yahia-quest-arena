@@ -74,10 +74,30 @@ describe("initAnalytics", () => {
     expect(loader?.src).toContain(`gtag/js?id=${GA_MEASUREMENT_ID}`);
     expect(typeof window.gtag).toBe("function");
     // js + config commands recorded on the dataLayer, initial page_view suppressed.
-    expect(window.dataLayer).toEqual([
+    const entries = (window.dataLayer as IArguments[]).map((entry) => Array.from(entry));
+    expect(entries).toEqual([
       ["js", expect.any(Date)],
       ["config", GA_MEASUREMENT_ID, { send_page_view: false }],
     ]);
+    // Regression guard (prod incident 2026-07-01): entries must be exotic
+    // `arguments` objects — gtag.js mis-processes plain arrays and can throw
+    // synchronously in the caller's stack once its own push() is installed.
+    for (const entry of window.dataLayer as unknown[]) {
+      expect(Array.isArray(entry)).toBe(false);
+    }
+  });
+
+  it("survives a hijacked dataLayer.push (gtag.js replaces it after load)", async () => {
+    vi.stubEnv("PROD", true);
+    const { initAnalytics, trackPageview } = await loadModule();
+    // Simulate the loaded library: gtag.js swaps dataLayer.push for its own
+    // processor, which runs synchronously inside our callers and may throw.
+    window.dataLayer = [];
+    (window.dataLayer as unknown[]).push = () => {
+      throw new Error("GTM internal failure");
+    };
+    expect(() => initAnalytics()).not.toThrow();
+    expect(() => trackPageview("/dashboard")).not.toThrow();
   });
 
   it("is idempotent — a second call injects no second loader", async () => {
@@ -95,6 +115,16 @@ describe("trackPageview", () => {
     window.gtag = vi.fn();
     trackPageview("/dashboard");
     expect(window.gtag).not.toHaveBeenCalled();
+  });
+
+  it("never propagates a throw from window.gtag (third-party code)", async () => {
+    vi.stubEnv("PROD", true);
+    const { initAnalytics, trackPageview } = await loadModule();
+    initAnalytics();
+    window.gtag = () => {
+      throw new Error("No default value");
+    };
+    expect(() => trackPageview("/quest")).not.toThrow();
   });
 
   it("sends a page_view event and de-dupes consecutive identical paths", async () => {
