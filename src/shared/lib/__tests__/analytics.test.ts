@@ -109,6 +109,30 @@ describe("initAnalytics", () => {
   });
 });
 
+describe("pagePathFromLocation", () => {
+  it("joins pathname and the raw search string", async () => {
+    const { pagePathFromLocation } = await loadModule();
+    expect(pagePathFromLocation({ pathname: "/quest", searchStr: "?level=2" })).toBe(
+      "/quest?level=2",
+    );
+    expect(pagePathFromLocation({ pathname: "/", searchStr: "" })).toBe("/");
+  });
+
+  it("always returns a pure string — never coerces the parsed search object (prod incident 2026-07-01)", async () => {
+    const { pagePathFromLocation } = await loadModule();
+    // A TanStack Router location also carries `search` as a PROTOTYPE-LESS
+    // parsed object; concatenating it throws in every browser. The helper must
+    // ignore it entirely and survive a malformed searchStr at runtime.
+    const location = {
+      pathname: "/",
+      searchStr: undefined as unknown as string,
+      search: Object.create(null) as Record<string, never>,
+    };
+    expect(() => pagePathFromLocation(location)).not.toThrow();
+    expect(pagePathFromLocation(location)).toBe("/");
+  });
+});
+
 describe("trackPageview", () => {
   it("no-ops when disabled", async () => {
     const { trackPageview } = await loadModule();

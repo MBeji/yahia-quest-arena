@@ -20,7 +20,7 @@ import { ar } from "@/lib/i18n/ar";
 import { ThemeProvider, useTheme, DEFAULT_THEME, themeFromCookieHeader } from "@/lib/theme";
 import type { Theme } from "@/lib/theme";
 import { logger } from "@/shared/lib/logger";
-import { initAnalytics, trackPageview } from "@/shared/lib/analytics";
+import { initAnalytics, trackPageview, pagePathFromLocation } from "@/shared/lib/analytics";
 
 import appCss from "../styles.css?url";
 
@@ -212,8 +212,7 @@ function RootComponent() {
   useEffect(() => {
     initAnalytics();
     const track = () => {
-      const { pathname, search } = router.state.location;
-      trackPageview(pathname + search);
+      trackPageview(pagePathFromLocation(router.state.location));
     };
     track();
     return router.subscribe("onResolved", track);
