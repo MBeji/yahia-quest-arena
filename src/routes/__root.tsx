@@ -49,6 +49,11 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   logger.error("Root error boundary caught an error", { error });
   const router = useRouter();
   const t = useT();
+  // Incident forensics: with `?debug=1` in the URL, surface the error identity
+  // and stack on the page itself — the only reliable diagnostic channel for
+  // mobile users (no devtools). Client-only read; hidden for everyone else.
+  const showDebug =
+    typeof window !== "undefined" && new URLSearchParams(window.location.search).has("debug");
   return (
     <div className="flex min-h-screen items-center justify-center bg-black-deep px-4">
       <div className="max-w-md text-center">
@@ -56,6 +61,11 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         <p className="mt-2 text-sm text-muted-foreground">
           {error.message || t.errors.errorFallback}
         </p>
+        {showDebug ? (
+          <pre className="mt-4 max-h-72 overflow-auto rounded-md border border-input p-3 text-left text-xs whitespace-pre-wrap break-all text-muted-foreground">
+            {`${error.name}: ${error.message}\n${error.stack ?? "(no stack)"}`}
+          </pre>
+        ) : null}
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
