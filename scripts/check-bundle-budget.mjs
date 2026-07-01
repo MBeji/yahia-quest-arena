@@ -8,9 +8,11 @@ const BUDGETS = {
   // i18n catalog (loaded app-wide). Bumped 80→84 KB for the trilingual legal /
   // intellectual-property notice + print/footer copy (public IP-protection
   // change), then 84→88 KB for the trilingual beta badge + bug-report channel
-  // strings. The chunk gzips to ~29 KB, so the real over-the-wire impact is
-  // marginal; keep new strings lean to stay well under this ceiling.
-  "i18n-": 88 * 1024,
+  // strings, then 88→92 KB for the trilingual actionable family report
+  // (chapter insights, weekly comparison, advice, print). The chunk gzips to
+  // ~30 KB, so the real over-the-wire impact is marginal; keep new strings
+  // lean to stay well under this ceiling.
+  "i18n-": 92 * 1024,
   "vendor-supabase-": 240 * 1024,
   "vendor-motion-": 150 * 1024,
   // Dashboard route chunk. Bumped 30→32 KB for the flagship-concours banner
