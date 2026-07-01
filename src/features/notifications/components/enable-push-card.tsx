@@ -4,11 +4,12 @@ import { useT } from "@/lib/i18n";
 import { usePush } from "../use-push";
 
 /**
- * Dashboard card to opt into Web Push reminders (v1: streak-at-risk). Self-hides
- * when push can't work here (unsupported browser / iOS-not-installed / no VAPID
- * key configured) so we never tease a dead control.
+ * Card to opt into Web Push reminders (streak-at-risk on the dashboard, the
+ * weekly family digest on the parent report — the copy is overridable per
+ * surface). Self-hides when push can't work here (unsupported browser /
+ * iOS-not-installed / no VAPID key configured) so we never tease a dead control.
  */
-export function EnablePushCard() {
+export function EnablePushCard({ title, desc }: { title?: string; desc?: string } = {}) {
   const t = useT();
   const { state, busy, enable, disable } = usePush();
 
@@ -31,8 +32,10 @@ export function EnablePushCard() {
           {enabled ? <BellRing className="h-5 w-5" /> : <Bell className="h-5 w-5" />}
         </div>
         <div className="flex-1">
-          <h3 className="text-sm font-bold">{t.pushNotifications.cardTitle}</h3>
-          <p className="mt-0.5 text-xs text-muted-foreground">{t.pushNotifications.cardDesc}</p>
+          <h3 className="text-sm font-bold">{title ?? t.pushNotifications.cardTitle}</h3>
+          <p className="mt-0.5 text-xs text-muted-foreground">
+            {desc ?? t.pushNotifications.cardDesc}
+          </p>
 
           {state === "denied" ? (
             <p className="mt-2 text-xs text-amber-400">{t.pushNotifications.blocked}</p>

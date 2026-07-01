@@ -24,6 +24,23 @@ type ParentStudent = {
 const numberish = z.coerce.number().catch(0);
 const VERDICT_VALUES = ["excellent", "good", "average", "needs_improvement", "inactive"] as const;
 
+const weekSliceSchema = z
+  .object({
+    exercises: numberish,
+    minutes: numberish,
+    avgScore: numberish,
+  })
+  .catch({ exercises: 0, minutes: 0, avgScore: 0 });
+
+const chapterInsightSchema = z.object({
+  chapterId: z.string().catch(""),
+  chapterTitle: z.string().catch(""),
+  subjectId: z.string().catch(""),
+  subjectName: z.string().catch(""),
+  attempts: numberish,
+  avgScore: numberish,
+});
+
 const studentReportSchema = z.object({
   student: z
     .object({
@@ -87,6 +104,21 @@ const studentReportSchema = z.object({
       }),
     )
     .catch([]),
+  weekComparison: z
+    .object({
+      thisWeek: weekSliceSchema,
+      lastWeek: weekSliceSchema,
+    })
+    .catch({
+      thisWeek: { exercises: 0, minutes: 0, avgScore: 0 },
+      lastWeek: { exercises: 0, minutes: 0, avgScore: 0 },
+    }),
+  chapterInsights: z
+    .object({
+      strengths: z.array(chapterInsightSchema).catch([]),
+      weaknesses: z.array(chapterInsightSchema).catch([]),
+    })
+    .catch({ strengths: [], weaknesses: [] }),
 });
 
 type StudentReportShape = z.infer<typeof studentReportSchema>;
@@ -269,6 +301,70 @@ export const getStudentReport = createServerFn({ method: "GET" })
     }
 
     return parseStudentReportPayload(reportData);
+  });
+
+// Objectif hebdo : payload de get_family_weekly_goal (null si aucun objectif posé).
+const weeklyGoalSchema = z
+  .object({
+    weekStart: z.string().catch(""),
+    target: numberish,
+    done: numberish,
+  })
+  .nullable()
+  .catch(null);
+
+/**
+ * Read the current-week family goal (target + live progress) for a linked student.
+ * Returns null when no goal is set this week.
+ */
+export const getStudentWeeklyGoal = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ studentId: z.guid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    const { data: goal, error } = await supabase.rpc("get_family_weekly_goal", {
+      p_student: data.studentId,
+    });
+    if (error) {
+      failWithClientError(
+        "parentReport.getStudentWeeklyGoal: RPC failed",
+        error,
+        "Impossible de charger l'objectif de la semaine.",
+      );
+    }
+    return weeklyGoalSchema.parse(goal ?? null);
+  });
+
+/**
+ * Set (upsert) the current-week goal for a linked student. The link check lives
+ * in the `set_parent_weekly_goal` SECURITY DEFINER RPC.
+ */
+export const setStudentWeeklyGoal = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({ studentId: z.guid(), target: z.number().int().min(1).max(50) }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+
+    if (await isRateLimited(supabase, `weekly_goal_${userId}`, 30, 60_000)) {
+      throw new Error("Too many goal updates. Please slow down.");
+    }
+
+    const { data: result, error } = await supabase.rpc("set_parent_weekly_goal", {
+      p_student: data.studentId,
+      p_target: data.target,
+    });
+    if (error) {
+      failWithClientError(
+        "parentReport.setStudentWeeklyGoal: RPC failed",
+        error,
+        "Impossible d'enregistrer l'objectif de la semaine.",
+      );
+    }
+
+    const row = result && typeof result === "object" ? (result as Record<string, unknown>) : {};
+    return { target: typeof row.target === "number" ? row.target : data.target };
   });
 
 /**

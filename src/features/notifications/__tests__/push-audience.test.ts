@@ -1,9 +1,12 @@
 import { describe, it, expect } from "vitest";
 import {
   appLocalDate,
+  appLocalWeekday,
+  isParentDigestDay,
   isStreakAtRisk,
   selectStreakAtRiskUserIds,
   streakReminderPayload,
+  weeklyParentDigestPayload,
   type StreakProfileRow,
 } from "../push-audience";
 
@@ -57,5 +60,27 @@ describe("push-audience", () => {
     expect(p.tag).toBe("streak-at-risk");
     expect(p.title.length).toBeGreaterThan(0);
     expect(p.body.length).toBeGreaterThan(0);
+  });
+
+  describe("weekly parent digest scheduling", () => {
+    it("appLocalWeekday resolves the Tunisia-local weekday across the UTC boundary", () => {
+      // 23:30 UTC on Saturday 2026-07-04 is already Sunday 00:30 in Tunis (UTC+1).
+      expect(appLocalWeekday(new Date("2026-07-04T23:30:00Z"))).toBe("Sun");
+      expect(appLocalWeekday(new Date("2026-07-01T18:00:00Z"))).toBe("Wed");
+    });
+
+    it("isParentDigestDay fires on Sunday (Tunis-local) only", () => {
+      expect(isParentDigestDay(new Date("2026-07-05T18:00:00Z"))).toBe(true); // Sunday 19:00 Tunis
+      expect(isParentDigestDay(new Date("2026-07-01T18:00:00Z"))).toBe(false); // Wednesday
+      expect(isParentDigestDay(new Date("2026-07-04T23:30:00Z"))).toBe(true); // Sunday in Tunis already
+    });
+
+    it("weeklyParentDigestPayload targets the parent report with a stable tag", () => {
+      const p = weeklyParentDigestPayload();
+      expect(p.url).toBe("/parent-report");
+      expect(p.tag).toBe("weekly-family-report");
+      expect(p.title.length).toBeGreaterThan(0);
+      expect(p.body.length).toBeGreaterThan(0);
+    });
   });
 });
