@@ -24,6 +24,23 @@ type ParentStudent = {
 const numberish = z.coerce.number().catch(0);
 const VERDICT_VALUES = ["excellent", "good", "average", "needs_improvement", "inactive"] as const;
 
+const weekSliceSchema = z
+  .object({
+    exercises: numberish,
+    minutes: numberish,
+    avgScore: numberish,
+  })
+  .catch({ exercises: 0, minutes: 0, avgScore: 0 });
+
+const chapterInsightSchema = z.object({
+  chapterId: z.string().catch(""),
+  chapterTitle: z.string().catch(""),
+  subjectId: z.string().catch(""),
+  subjectName: z.string().catch(""),
+  attempts: numberish,
+  avgScore: numberish,
+});
+
 const studentReportSchema = z.object({
   student: z
     .object({
@@ -87,6 +104,21 @@ const studentReportSchema = z.object({
       }),
     )
     .catch([]),
+  weekComparison: z
+    .object({
+      thisWeek: weekSliceSchema,
+      lastWeek: weekSliceSchema,
+    })
+    .catch({
+      thisWeek: { exercises: 0, minutes: 0, avgScore: 0 },
+      lastWeek: { exercises: 0, minutes: 0, avgScore: 0 },
+    }),
+  chapterInsights: z
+    .object({
+      strengths: z.array(chapterInsightSchema).catch([]),
+      weaknesses: z.array(chapterInsightSchema).catch([]),
+    })
+    .catch({ strengths: [], weaknesses: [] }),
 });
 
 type StudentReportShape = z.infer<typeof studentReportSchema>;

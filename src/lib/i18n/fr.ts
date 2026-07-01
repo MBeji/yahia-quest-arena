@@ -545,6 +545,25 @@ export const fr: TranslationKeys = {
     verdictNeedsImprovementDesc: "Peu d'activité récente. Un suivi rapproché est recommandé.",
     verdictInactive: "Inactif",
     verdictInactiveDesc: "Aucune activité détectée. Vérifiez que l'élève utilise la plateforme.",
+    weekCompareTitle: "Cette semaine vs la précédente",
+    weekMinutes: "Minutes",
+    insightsTitle: "Points forts & à renforcer",
+    insightsSubtitle: "Sur les 30 derniers jours · chapitres travaillés au moins 2 fois",
+    strengthsTitle: "Points forts",
+    weaknessesTitle: "À renforcer",
+    strengthsEmpty: "Pas encore de point fort dégagé — encouragez une pratique régulière.",
+    weaknessesEmpty: "Aucune lacune détectée ce mois-ci. Bravo !",
+    insightAttempts: "{n} mission(s)",
+    adviceTitle: "Le conseil de la semaine",
+    adviceWeakness:
+      "Faites réviser « {chapter} » en {subject} : relire la leçon, puis refaire les missions du chapitre.",
+    adviceKeepUp:
+      "Aucune lacune détectée ce mois-ci. Encouragez {name} à garder ce rythme — la régularité fait la différence.",
+    adviceInactive:
+      "Peu d'activité récente : proposez une petite session de 15 minutes aujourd'hui pour relancer la dynamique.",
+    printCta: "Imprimer le bilan",
+    printTitle: "Bilan famille — Na9ra Nal3ab",
+    printGenerated: "Édité le {date}",
   },
   explain: {
     xp: "Tes points d'expérience. Réussis un exercice à 60 % ou plus en battant ton record pour en gagner. 200 XP = 1 niveau.",

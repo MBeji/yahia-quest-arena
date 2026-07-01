@@ -569,6 +569,22 @@ export type TranslationKeys = {
     verdictNeedsImprovementDesc: string;
     verdictInactive: string;
     verdictInactiveDesc: string;
+    weekCompareTitle: string;
+    weekMinutes: string;
+    insightsTitle: string;
+    insightsSubtitle: string;
+    strengthsTitle: string;
+    weaknessesTitle: string;
+    strengthsEmpty: string;
+    weaknessesEmpty: string;
+    insightAttempts: string;
+    adviceTitle: string;
+    adviceWeakness: string;
+    adviceKeepUp: string;
+    adviceInactive: string;
+    printCta: string;
+    printTitle: string;
+    printGenerated: string;
   };
   // Playful explainability hover hints
   explain: {

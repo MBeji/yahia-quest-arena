@@ -543,6 +543,25 @@ export const en: TranslationKeys = {
     verdictNeedsImprovementDesc: "Little recent activity. Closer follow-up is recommended.",
     verdictInactive: "Inactive",
     verdictInactiveDesc: "No activity detected. Check that the student uses the platform.",
+    weekCompareTitle: "This week vs last week",
+    weekMinutes: "Minutes",
+    insightsTitle: "Strengths & areas to reinforce",
+    insightsSubtitle: "Over the last 30 days · chapters practiced at least twice",
+    strengthsTitle: "Strengths",
+    weaknessesTitle: "To reinforce",
+    strengthsEmpty: "No clear strength yet — encourage regular practice.",
+    weaknessesEmpty: "No gap detected this month. Well done!",
+    insightAttempts: "{n} mission(s)",
+    adviceTitle: "Tip of the week",
+    adviceWeakness:
+      "Have them review “{chapter}” in {subject}: re-read the lesson, then redo the chapter's missions.",
+    adviceKeepUp:
+      "No gap detected this month. Encourage {name} to keep this pace — consistency makes the difference.",
+    adviceInactive:
+      "Little recent activity: suggest a short 15-minute session today to restart the momentum.",
+    printCta: "Print the report",
+    printTitle: "Family report — Na9ra Nal3ab",
+    printGenerated: "Generated on {date}",
   },
   explain: {
     xp: "Your experience points. Pass an exercise at 60% or more and beat your record to earn them. 200 XP = 1 level.",

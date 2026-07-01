@@ -19,6 +19,9 @@ import {
   Star,
   Link as LinkIcon,
   ArrowLeft,
+  Lightbulb,
+  Printer,
+  ShieldCheck,
 } from "lucide-react";
 import { getLinkedStudents, getStudentReport, linkStudentByCode } from "@/features/parent-report";
 import { useEffect, useMemo, useState } from "react";
@@ -110,26 +113,43 @@ function ParentReport() {
 
   return (
     <div className="min-h-[100dvh] p-4 md:p-8 max-w-6xl mx-auto">
-      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-8 print:hidden"
+      >
         <Link
           to="/dashboard"
           className="mb-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.common.backToHall}
         </Link>
-        <h1 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
-          <Activity className="w-7 h-7 text-[color:var(--gold)]" />
-          {isAdmin ? t.parentReport.adminTitle : t.parentReport.title}
-        </h1>
-        <p className="text-muted-foreground mt-1">
-          {isAdmin
-            ? t.parentReport.adminSubtitle.replace("{n}", String(students.length))
-            : t.parentReport.subtitle}
-        </p>
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
+              <Activity className="w-7 h-7 text-[color:var(--gold)]" />
+              {isAdmin ? t.parentReport.adminTitle : t.parentReport.title}
+            </h1>
+            <p className="text-muted-foreground mt-1">
+              {isAdmin
+                ? t.parentReport.adminSubtitle.replace("{n}", String(students.length))
+                : t.parentReport.subtitle}
+            </p>
+          </div>
+          {report && (
+            <button
+              type="button"
+              onClick={() => window.print()}
+              className="inline-flex items-center gap-2 rounded-lg border border-[color:var(--gold)]/40 bg-black/50 px-4 py-2 text-sm font-semibold text-[color:var(--champagne)] transition hover:border-[color:var(--gold)] [@media(pointer:coarse)]:min-h-11"
+            >
+              <Printer className="h-4 w-4" /> {t.parentReport.printCta}
+            </button>
+          )}
+        </div>
       </motion.div>
 
       {!isAdmin && (
-        <div className="mb-6 rounded-xl border border-[color:var(--gold)]/40 bg-black/30 p-4">
+        <div className="mb-6 rounded-xl border border-[color:var(--gold)]/40 bg-black/30 p-4 print:hidden">
           <div className="mb-3 flex items-center gap-2 text-[color:var(--champagne)]">
             <LinkIcon className="h-4 w-4" />
             <span className="font-semibold">{t.parentReport.linkTitle}</span>
@@ -162,7 +182,7 @@ function ParentReport() {
 
       {/* Student selector */}
       {(students.length > 1 || isAdmin) && (
-        <div className="mb-6 flex gap-2 flex-wrap">
+        <div className="mb-6 flex gap-2 flex-wrap print:hidden">
           {students.map((s) => (
             <button
               key={s.id}
@@ -229,10 +249,38 @@ type ReportData = Awaited<ReturnType<typeof getStudentReport>>;
 
 function ReportContent({ report }: { report: ReportData }) {
   const { t, locale } = useI18n();
-  const { student, summary, subjectStats, dailyActivity } = report;
+  const { student, summary, subjectStats, dailyActivity, weekComparison, chapterInsights } = report;
+
+  // Le conseil actionnable de la semaine : la lacune la plus marquée d'abord,
+  // sinon relancer un élève peu actif, sinon féliciter la régularité.
+  const worstChapter = chapterInsights.weaknesses[0];
+  const advice = worstChapter
+    ? t.parentReport.adviceWeakness
+        .replace("{chapter}", worstChapter.chapterTitle)
+        .replace("{subject}", worstChapter.subjectName)
+    : summary.verdict === "inactive" || summary.verdict === "needs_improvement"
+      ? t.parentReport.adviceInactive
+      : t.parentReport.adviceKeepUp.replace(
+          "{name}",
+          student.displayName ?? t.parentReport.defaultStudentName,
+        );
 
   return (
-    <div className="space-y-6">
+    <div className="family-report space-y-6">
+      {/* En-tête imprimé uniquement : titre du bulletin + date d'édition. */}
+      <div className="hidden print:block">
+        <h1 className="text-2xl font-bold">{t.parentReport.printTitle}</h1>
+        <p className="text-sm">
+          {t.parentReport.printGenerated.replace(
+            "{date}",
+            new Date().toLocaleDateString(locale, {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            }),
+          )}
+        </p>
+      </div>
       {/* Student Header */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
@@ -265,6 +313,21 @@ function ReportContent({ report }: { report: ReportData }) {
       {/* Verdict card */}
       <VerdictCard score={summary.seriousnessScore} verdict={summary.verdict} />
 
+      {/* Le conseil de la semaine — la ligne d'action concrète pour le parent. */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex items-start gap-3 rounded-xl border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/5 p-4"
+      >
+        <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-[color:var(--gold)]" />
+        <div>
+          <div className="font-semibold text-[color:var(--champagne)]">
+            {t.parentReport.adviceTitle}
+          </div>
+          <p className="mt-1 text-sm text-muted-foreground">{advice}</p>
+        </div>
+      </motion.div>
+
       {/* Key metrics */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <MetricCard
@@ -287,6 +350,57 @@ function ReportContent({ report }: { report: ReportData }) {
           label={t.parentReport.activeDays}
           value={`${summary.daysActiveThisWeek}/7`}
         />
+      </div>
+
+      {/* Cette semaine vs la précédente */}
+      <div className="bg-black/50 border border-border/50 rounded-xl p-4">
+        <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
+          <Calendar className="w-5 h-5 text-[color:var(--gold)]" />
+          {t.parentReport.weekCompareTitle}
+        </h3>
+        <div className="grid grid-cols-3 gap-2 sm:gap-4">
+          <WeekCompareCell
+            label={t.parentReport.exercisesLabel}
+            current={weekComparison.thisWeek.exercises}
+            previous={weekComparison.lastWeek.exercises}
+          />
+          <WeekCompareCell
+            label={t.parentReport.weekMinutes}
+            current={weekComparison.thisWeek.minutes}
+            previous={weekComparison.lastWeek.minutes}
+          />
+          <WeekCompareCell
+            label={t.parentReport.avgScore}
+            current={weekComparison.thisWeek.avgScore}
+            previous={weekComparison.lastWeek.avgScore}
+            suffix="%"
+          />
+        </div>
+      </div>
+
+      {/* Points forts & à renforcer (chapitres, 30 j) */}
+      <div className="bg-black/50 border border-border/50 rounded-xl p-4">
+        <h3 className="text-white font-semibold flex items-center gap-2">
+          <Target className="w-5 h-5 text-[color:var(--gold)]" />
+          {t.parentReport.insightsTitle}
+        </h3>
+        <p className="mt-1 text-xs text-muted-foreground">{t.parentReport.insightsSubtitle}</p>
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          <InsightList
+            title={t.parentReport.strengthsTitle}
+            icon={<ShieldCheck className="h-4 w-4 text-green-400" />}
+            items={chapterInsights.strengths}
+            emptyLabel={t.parentReport.strengthsEmpty}
+            tone="strength"
+          />
+          <InsightList
+            title={t.parentReport.weaknessesTitle}
+            icon={<AlertTriangle className="h-4 w-4 text-orange-400" />}
+            items={chapterInsights.weaknesses}
+            emptyLabel={t.parentReport.weaknessesEmpty}
+            tone="weakness"
+          />
+        </div>
       </div>
 
       {/* Score trend */}
@@ -334,7 +448,9 @@ function ReportContent({ report }: { report: ReportData }) {
               >
                 <div
                   className={`w-full rounded-t transition-colors ${
-                    day.exercises > 0 ? "bg-[color:var(--gold)] hover:opacity-80" : "bg-muted/50"
+                    day.exercises > 0
+                      ? "print-fill bg-[color:var(--gold)] hover:opacity-80"
+                      : "bg-muted/50"
                   }`}
                   style={{ height: `${Math.max(height, 4)}%` }}
                 />
@@ -363,7 +479,7 @@ function ReportContent({ report }: { report: ReportData }) {
                 <div className="w-16 truncate text-sm text-muted-foreground sm:w-28">{s.name}</div>
                 <div className="h-4 min-w-0 flex-1 overflow-hidden rounded-full bg-muted/50">
                   <div
-                    className="h-full rounded-full bg-[image:var(--gradient-gold)] transition-all"
+                    className="print-fill h-full rounded-full bg-[image:var(--gradient-gold)] transition-all"
                     style={{ width: `${s.avgScore}%` }}
                   />
                 </div>
@@ -511,6 +627,103 @@ function StatBadge({
         <div className="text-xs text-muted-foreground">{label}</div>
         <div className="text-sm font-bold text-white">{value}</div>
       </div>
+    </div>
+  );
+}
+
+function WeekCompareCell({
+  label,
+  current,
+  previous,
+  suffix = "",
+}: {
+  label: string;
+  current: number;
+  previous: number;
+  suffix?: string;
+}) {
+  const delta = current - previous;
+  return (
+    <div className="rounded-lg border border-border/50 bg-black/40 p-3 text-center">
+      <div className="text-xl font-bold text-white">
+        {current}
+        {suffix}
+      </div>
+      <div className="mt-0.5 text-xs text-muted-foreground">{label}</div>
+      <div
+        className={`mt-1 inline-flex items-center gap-1 text-xs font-semibold ${
+          delta > 0 ? "text-green-400" : delta < 0 ? "text-red-400" : "text-muted-foreground"
+        }`}
+      >
+        {delta > 0 ? (
+          <TrendingUp className="h-3.5 w-3.5" />
+        ) : delta < 0 ? (
+          <TrendingDown className="h-3.5 w-3.5" />
+        ) : (
+          <Minus className="h-3.5 w-3.5" />
+        )}
+        {delta > 0 ? "+" : ""}
+        {delta}
+        {suffix}
+      </div>
+    </div>
+  );
+}
+
+type ChapterInsight = ReportData["chapterInsights"]["strengths"][number];
+
+function InsightList({
+  title,
+  icon,
+  items,
+  emptyLabel,
+  tone,
+}: {
+  title: string;
+  icon: React.ReactNode;
+  items: ChapterInsight[];
+  emptyLabel: string;
+  tone: "strength" | "weakness";
+}) {
+  const t = useT();
+  return (
+    <div
+      className={`rounded-lg border p-3 ${
+        tone === "strength"
+          ? "border-green-700/30 bg-green-900/10"
+          : "border-orange-700/30 bg-orange-900/10"
+      }`}
+    >
+      <div className="flex items-center gap-2 font-semibold text-white">
+        {icon}
+        {title}
+      </div>
+      {items.length === 0 ? (
+        <p className="mt-2 text-sm text-muted-foreground">{emptyLabel}</p>
+      ) : (
+        <ul className="mt-2 space-y-2">
+          {items.map((c) => (
+            <li key={c.chapterId} className="flex items-center justify-between gap-2 text-sm">
+              <div className="min-w-0">
+                <div className="truncate text-white">{c.chapterTitle}</div>
+                <div className="text-xs text-muted-foreground">
+                  {c.subjectName} ·{" "}
+                  {t.parentReport.insightAttempts.replace("{n}", String(c.attempts))}
+                </div>
+              </div>
+              <span
+                className={`shrink-0 rounded-md px-2 py-1 text-xs font-bold ${
+                  tone === "strength"
+                    ? "bg-green-900/40 text-green-300"
+                    : "bg-orange-900/40 text-orange-300"
+                }`}
+              >
+                {c.avgScore}%
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
