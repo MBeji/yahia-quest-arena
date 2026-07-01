@@ -415,6 +415,89 @@ describe("parent-report — getStudentReport", () => {
 });
 
 // =============================================================================
+// Weekly family goal (parent side)
+// =============================================================================
+describe("parent-report — weekly goal", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    mockFrom.mockReset();
+    mockRpc.mockReset();
+  });
+
+  const STUDENT = "11111111-1111-1111-1111-111111111111";
+
+  it("getStudentWeeklyGoal parses the goal payload", async () => {
+    mockRpc.mockResolvedValue({
+      data: { weekStart: "2026-06-29", target: 5, done: 2 },
+      error: null,
+    });
+
+    const { getStudentWeeklyGoal } = await import("@/features/parent-report/parent-report.server");
+    const result = await (getStudentWeeklyGoal as unknown as (d: unknown) => Promise<unknown>)({
+      studentId: STUDENT,
+    });
+
+    expect(result).toEqual({ weekStart: "2026-06-29", target: 5, done: 2 });
+    expect(mockRpc).toHaveBeenCalledWith("get_family_weekly_goal", { p_student: STUDENT });
+  });
+
+  it("getStudentWeeklyGoal returns null when no goal is set", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: null });
+
+    const { getStudentWeeklyGoal } = await import("@/features/parent-report/parent-report.server");
+    const result = await (getStudentWeeklyGoal as unknown as (d: unknown) => Promise<unknown>)({
+      studentId: STUDENT,
+    });
+
+    expect(result).toBeNull();
+  });
+
+  it("setStudentWeeklyGoal upserts via the RPC and echoes the target", async () => {
+    mockRpc.mockImplementation((name: string) => {
+      if (name === "check_rate_limit") return Promise.resolve({ data: false, error: null });
+      return Promise.resolve({ data: { weekStart: "2026-06-29", target: 7 }, error: null });
+    });
+
+    const { setStudentWeeklyGoal } = await import("@/features/parent-report/parent-report.server");
+    const result = await (setStudentWeeklyGoal as unknown as (d: unknown) => Promise<unknown>)({
+      studentId: STUDENT,
+      target: 7,
+    });
+
+    expect(result).toEqual({ target: 7 });
+    expect(mockRpc).toHaveBeenCalledWith("set_parent_weekly_goal", {
+      p_student: STUDENT,
+      p_target: 7,
+    });
+  });
+
+  it("setStudentWeeklyGoal surfaces an RPC failure as a friendly error", async () => {
+    mockRpc.mockImplementation((name: string) => {
+      if (name === "check_rate_limit") return Promise.resolve({ data: false, error: null });
+      return Promise.resolve({ data: null, error: { message: "Access denied" } });
+    });
+
+    const { setStudentWeeklyGoal } = await import("@/features/parent-report/parent-report.server");
+    await expect(
+      (setStudentWeeklyGoal as unknown as (d: unknown) => Promise<unknown>)({
+        studentId: STUDENT,
+        target: 3,
+      }),
+    ).rejects.toThrow("Impossible d'enregistrer l'objectif de la semaine.");
+  });
+
+  it("setStudentWeeklyGoal rejects an out-of-bounds target (zod)", async () => {
+    const { setStudentWeeklyGoal } = await import("@/features/parent-report/parent-report.server");
+    await expect(
+      (setStudentWeeklyGoal as unknown as (d: unknown) => Promise<unknown>)({
+        studentId: STUDENT,
+        target: 0,
+      }),
+    ).rejects.toThrow();
+  });
+});
+
+// =============================================================================
 // linkStudentByCode
 // =============================================================================
 describe("parent-report — linkStudentByCode", () => {

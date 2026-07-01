@@ -138,6 +138,10 @@ export const fr: TranslationKeys = {
     activationFailed: "Activation impossible",
     streakRecovered: "🔥 Streak récupéré ! Tu as maintenant {n} {unit}.",
     recoveryFailed: "Récupération impossible",
+    familyGoalTitle: "Objectif famille",
+    familyGoalProgress: "{done}/{target} missions cette semaine",
+    familyGoalReached: "Objectif atteint, bravo ! 🎉",
+    familyGoalHint: "Fixé par ton parent — montre-lui ce que tu sais faire !",
   },
   quest: {
     title: "Quête · Na9ra Nal3ab",
@@ -565,6 +569,17 @@ export const fr: TranslationKeys = {
     printCta: "Imprimer le bilan",
     printTitle: "Bilan famille — Na9ra Nal3ab",
     printGenerated: "Édité le {date}",
+    pushTitle: "Recevez le bilan chaque dimanche",
+    pushDesc:
+      "Activez les notifications pour être prévenu·e quand le bilan hebdomadaire de votre enfant est prêt.",
+    goalTitle: "Objectif de la semaine",
+    goalHint:
+      "Fixez un cap de missions pour cette semaine — votre enfant le verra comme une quête famille sur son tableau de bord.",
+    goalSave: "Enregistrer",
+    goalSaving: "Enregistrement…",
+    goalSaved: "Objectif enregistré : {n} mission(s) cette semaine.",
+    goalProgress: "{done}/{target} missions cette semaine",
+    goalUnit: "missions / semaine",
   },
   explain: {
     xp: "Tes points d'expérience. Réussis un exercice à 60 % ou plus en battant ton record pour en gagner. 200 XP = 1 niveau.",

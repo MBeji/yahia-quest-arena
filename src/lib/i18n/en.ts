@@ -137,6 +137,10 @@ export const en: TranslationKeys = {
     activationFailed: "Activation failed",
     streakRecovered: "🔥 Streak recovered! You now have {n} {unit}.",
     recoveryFailed: "Recovery failed",
+    familyGoalTitle: "Family goal",
+    familyGoalProgress: "{done}/{target} missions this week",
+    familyGoalReached: "Goal reached, well done! 🎉",
+    familyGoalHint: "Set by your parent — show them what you can do!",
   },
   quest: {
     title: "Quest · Na9ra Nal3ab",
@@ -563,6 +567,16 @@ export const en: TranslationKeys = {
     printCta: "Print the report",
     printTitle: "Family report — Na9ra Nal3ab",
     printGenerated: "Generated on {date}",
+    pushTitle: "Get the report every Sunday",
+    pushDesc: "Enable notifications to be told when your child's weekly report is ready.",
+    goalTitle: "Goal of the week",
+    goalHint:
+      "Set a missions target for this week — your child sees it as a family quest on their dashboard.",
+    goalSave: "Save",
+    goalSaving: "Saving…",
+    goalSaved: "Goal saved: {n} mission(s) this week.",
+    goalProgress: "{done}/{target} missions this week",
+    goalUnit: "missions / week",
   },
   explain: {
     xp: "Your experience points. Pass an exercise at 60% or more and beat your record to earn them. 200 XP = 1 level.",

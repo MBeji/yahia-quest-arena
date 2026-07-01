@@ -1599,7 +1599,14 @@ export type Database = {
           xp: number;
         }[];
       };
+      // Hand-added offline for 20260701100000_parent_weekly_goals (regenerate via
+      // `supabase gen types` on the next sync).
+      get_family_weekly_goal: { Args: { p_student: string }; Returns: Json };
       get_student_report: { Args: { p_student: string }; Returns: Json };
+      set_parent_weekly_goal: {
+        Args: { p_student: string; p_target: number };
+        Returns: Json;
+      };
       get_subject_leaderboard: {
         Args: { p_limit?: number; p_subject: string };
         Returns: {

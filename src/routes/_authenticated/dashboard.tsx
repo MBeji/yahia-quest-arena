@@ -30,6 +30,7 @@ import { purchaseShopItem, equipInventorySkin, activateInventoryItem } from "@/f
 import { recoverStreak } from "@/features/progression";
 import { EnablePushCard } from "@/features/notifications";
 import { SubjectPathCard } from "@/features/dashboard/components/subject-path-card";
+import { FamilyGoalCard } from "@/features/dashboard/components/family-goal-card";
 import { MotivationalQuote } from "@/features/dashboard/components/motivational-quote";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useReducedMotion } from "motion/react";
@@ -598,6 +599,8 @@ function Dashboard() {
               <Flame className="h-5 w-5 text-[color:var(--neon-gold)]" /> {t.dashboard.weeklyQuests}
             </div>
             <div className="space-y-3">
+              {/* Quête famille — l'objectif fixé par le parent lié (null sinon). */}
+              <FamilyGoalCard />
               {(sprint2?.weeklyQuests ?? []).length === 0 && (
                 <p className="text-xs text-muted-foreground">{t.dashboard.weeklyEmpty}</p>
               )}

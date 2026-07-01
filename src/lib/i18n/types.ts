@@ -141,6 +141,10 @@ export type TranslationKeys = {
     activationFailed: string;
     streakRecovered: string;
     recoveryFailed: string;
+    familyGoalTitle: string;
+    familyGoalProgress: string;
+    familyGoalReached: string;
+    familyGoalHint: string;
   };
   // Quest
   quest: {
@@ -585,6 +589,15 @@ export type TranslationKeys = {
     printCta: string;
     printTitle: string;
     printGenerated: string;
+    pushTitle: string;
+    pushDesc: string;
+    goalTitle: string;
+    goalHint: string;
+    goalSave: string;
+    goalSaving: string;
+    goalSaved: string;
+    goalProgress: string;
+    goalUnit: string;
   };
   // Playful explainability hover hints
   explain: {
