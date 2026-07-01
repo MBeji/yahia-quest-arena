@@ -23,16 +23,10 @@
  * way scripts are. Tightening styles is out of scope for GAP-022.
  */
 export function buildContentSecurityPolicy(nonce?: string): string {
-  // Google Analytics 4 (gtag.js) loads from this host as an external <script>.
-  // We do NOT use 'strict-dynamic', so listing the host alongside the nonce keeps
-  // it effective (see src/shared/lib/analytics.ts).
-  const gaScript = "https://www.googletagmanager.com";
   // With a nonce, `'self'` still allows the hashed /assets/*.js chunks (we do
   // not use 'strict-dynamic', so host-source allowlisting stays effective);
   // the nonce allows the framework's inline scripts. No 'unsafe-inline'.
-  const scriptSrc = nonce
-    ? `script-src 'self' 'nonce-${nonce}' ${gaScript}`
-    : `script-src 'self' ${gaScript}`;
+  const scriptSrc = nonce ? `script-src 'self' 'nonce-${nonce}'` : "script-src 'self'";
   return [
     "default-src 'self'",
     scriptSrc,
@@ -42,9 +36,7 @@ export function buildContentSecurityPolicy(nonce?: string): string {
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "img-src 'self' data: blob: https:",
     "font-src 'self' data: https://fonts.gstatic.com",
-    // Supabase API/realtime + the GA4 collect endpoints (gtag.js beacons the
-    // measurement protocol to the regional google-analytics.com hosts).
-    "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com",
+    "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
     "frame-ancestors 'none'",
     "base-uri 'self'",
     "form-action 'self'",

@@ -20,7 +20,6 @@ import { ar } from "@/lib/i18n/ar";
 import { ThemeProvider, useTheme, DEFAULT_THEME, themeFromCookieHeader } from "@/lib/theme";
 import type { Theme } from "@/lib/theme";
 import { logger } from "@/shared/lib/logger";
-import { initAnalytics, trackPageview } from "@/shared/lib/analytics";
 
 import appCss from "../styles.css?url";
 
@@ -186,7 +185,6 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const router = useRouter();
 
   // Register the PWA service worker (client + production only). The SW caches
   // immutable assets and serves an offline fallback; HTML is never cached.
@@ -195,19 +193,6 @@ function RootComponent() {
       navigator.serviceWorker.register("/sw.js").catch(() => {});
     }
   }, []);
-
-  // Google Analytics 4: load gtag.js once, then report a page_view for the
-  // current location and on every resolved SPA navigation. All calls no-op
-  // outside a production build (see analytics.ts).
-  useEffect(() => {
-    initAnalytics();
-    const track = () => {
-      const { pathname, search } = router.state.location;
-      trackPageview(pathname + search);
-    };
-    track();
-    return router.subscribe("onResolved", track);
-  }, [router]);
 
   return (
     <QueryClientProvider client={queryClient}>
