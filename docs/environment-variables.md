@@ -77,6 +77,29 @@ npm run dev
 
 `.env` is gitignored and must never be committed.
 
+## Analytics (Google Analytics 4)
+
+Client-side analytics (`src/shared/lib/analytics.ts`) loads Google's `gtag.js` and reports
+a `page_view` on the first load and on every SPA navigation. Like the Sentry integration it
+is **dependency-free** (no npm package, nothing added to the client bundle) and it only runs
+in a **production build** — local dev and the unit run never touch the analytics stream.
+
+| Variable                 | Scope               | Notes                                                                 |
+| ------------------------ | ------------------- | --------------------------------------------------------------------- |
+| `VITE_GA_MEASUREMENT_ID` | client (build time) | GA4 **Measurement ID** (`G-XXXXXXXXXX`). Optional — defaults in code. |
+
+The Measurement ID is **public** (it ships in the client bundle by design — not a secret).
+When `VITE_GA_MEASUREMENT_ID` is unset the build falls back to the project's production data
+stream hard-coded in `analytics.ts`; set the variable in Vercel → Settings → Environment
+Variables to point a build (e.g. a staging property) at a different GA4 stream, then redeploy
+without build cache so the value re-inlines. Find the ID in **GA4 → Admin → Data Streams →
+your web stream**.
+
+The Content-Security-Policy already allow-lists the required origins
+(`src/shared/lib/csp.ts`): `https://www.googletagmanager.com` in `script-src` for the loader,
+and the `google-analytics.com` collect endpoints in `connect-src` for the beacons. The loader
+is an external `<script>` and every gtag call is plain JS, so no CSP nonce is involved.
+
 ## Error monitoring (Sentry) — optional
 
 Error reporting (`src/shared/lib/monitoring.ts`, hooked into `logger.error` + browser
