@@ -19,24 +19,39 @@ name: Auto-merge
 # Prerequisite: "Allow auto-merge" must be enabled in Settings > General.
 # NOTE: PRs created by a workflow with GITHUB_TOKEN don't fire pull_request
 # events — auto-pr.yml arms those itself on its [auto-merge] fast path.
+#
+# The `keep-up-to-date` job closes the last gap: the ruleset's STRICT policy
+# only merges an up-to-date head, but GitHub never updates a PR branch by
+# itself — an armed PR that falls behind main would wait forever. On every
+# push to main, armed-but-behind PRs get their branch updated, and the
+# required workflows are re-dispatched on them (the update-branch commit is
+# authored by GITHUB_TOKEN, so it fires no pull_request events — same
+# anti-recursion rule auto-pr.yml works around at PR creation).
 
 on:
   pull_request:
     types: [opened, reopened, ready_for_review, labeled, unlabeled]
+  push:
+    branches: [main]
 
 permissions:
   contents: write
   pull-requests: write
+  # keep-up-to-date re-dispatches the required-check workflows.
+  actions: write
 
 concurrency:
-  group: automerge-${{ github.event.pull_request.number }}
+  # Per-PR group on pull_request events; a single group for main pushes.
+  group: automerge-${{ github.event.pull_request.number || 'main-push' }}
   cancel-in-progress: true
 
 jobs:
   arm:
     name: Arm or disarm auto-merge
     # Same-repo PRs only (see security model above).
-    if: github.event.pull_request.head.repo.full_name == github.repository
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
@@ -69,3 +84,47 @@ jobs:
           else
             echo "::warning title=Auto-merge non armé::PR #$PR : activez 'Allow auto-merge' (Settings > General), ou la PR est déjà mergeable/fermée."
           fi
+
+  keep-up-to-date:
+    name: Update armed PRs left behind by this push
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO: ${{ github.repository }}
+    steps:
+      - name: Update branch + re-dispatch required checks
+        run: |
+          set -euo pipefail
+          # Armed, same-repo, non-draft PRs whose head is now behind main.
+          # mergeStateStatus BEHIND == the ruleset's "up to date" gate is what
+          # blocks them; everything else (BLOCKED = checks pending, DIRTY =
+          # conflict) is not ours to fix here.
+          prs="$(gh pr list --repo "$REPO" --base main --state open \
+            --json number,isDraft,headRefName,mergeStateStatus,autoMergeRequest,headRepositoryOwner \
+            --jq '.[] | select(.autoMergeRequest != null
+                               and .isDraft == false
+                               and .mergeStateStatus == "BEHIND"
+                               and .headRepositoryOwner.login == "'"${REPO%%/*}"'")
+                      | "\(.number) \(.headRefName)"')"
+
+          if [ -z "$prs" ]; then
+            echo "No armed PR is behind main — nothing to update."
+            exit 0
+          fi
+
+          while read -r pr branch; do
+            echo "PR #$pr ($branch) is behind main — updating branch."
+            if ! gh api -X PUT "repos/$REPO/pulls/$pr/update-branch" >/dev/null; then
+              echo "::warning title=Update impossible::PR #$pr : update-branch refusé (conflit ?). Résolution manuelle requise."
+              continue
+            fi
+            # The update commit is authored by GITHUB_TOKEN → fires no
+            # pull_request events; re-dispatch the required checks so the
+            # ruleset can see a green, up-to-date head and auto-merge.
+            gh workflow run ci.yml --repo "$REPO" --ref "$branch"
+            gh workflow run migration-gate.yml --repo "$REPO" --ref "$branch" -f base=main
+            gh workflow run codeql.yml --repo "$REPO" --ref "$branch"
+            echo "PR #$pr updated + required checks re-dispatched."
+          done <<< "$prs"

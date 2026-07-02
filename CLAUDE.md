@@ -241,7 +241,8 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
   non-`main` branch auto-opens its **draft** PR (`auto-pr.yml`, which also dispatches the
   required checks — a bot-created PR fires no `pull_request` events); marking the PR ready
   (or pushing with `[auto-merge]` in the head-commit subject) arms GitHub **auto-merge**
-  (`automerge.yml`, squash + delete branch, label `no-automerge` opts out). The merge itself
+  (`automerge.yml`, squash + delete branch, label `no-automerge` opts out; a push to `main`
+  auto-updates armed PRs left behind, re-dispatching their checks). The merge itself
   is enforced by the `main-protection` ruleset (`.github/rulesets/main-protection.json`,
   imported in repo Settings → Rules): required checks `verify` + `Migration presence` +
   `Migration order` + `CodeQL` (SAST, `codeql.yml`) on an up-to-date head. Merging to `main`
