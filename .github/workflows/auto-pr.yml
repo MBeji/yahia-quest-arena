@@ -79,8 +79,14 @@ jobs:
             echo "_PR ouverte automatiquement par \`auto-pr.yml\` pour la branche \`$BRANCH\`._"
           } > "$body_file"
 
-          url="$(gh pr create --repo "$REPO" --base main --head "$BRANCH" \
-            $draft_flag --title "$subject" --body-file "$body_file")"
+          # Prerequisite: Settings > Actions > General > Workflow permissions >
+          # "Allow GitHub Actions to create and approve pull requests" must be ON,
+          # or createPullRequest is rejected for the GITHUB_TOKEN.
+          if ! url="$(gh pr create --repo "$REPO" --base main --head "$BRANCH" \
+            $draft_flag --title "$subject" --body-file "$body_file")"; then
+            echo "::error title=Auto-PR impossible::Activez 'Allow GitHub Actions to create and approve pull requests' (Settings > Actions > General > Workflow permissions), puis relancez ce workflow — ou ouvrez la PR à la main."
+            exit 1
+          fi
           echo "Created $url"
           echo "created=true" >> "$GITHUB_OUTPUT"
           echo "automerge=$automerge" >> "$GITHUB_OUTPUT"

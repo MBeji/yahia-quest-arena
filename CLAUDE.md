@@ -245,8 +245,9 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
   is enforced by the `main-protection` ruleset (`.github/rulesets/main-protection.json`,
   imported in repo Settings → Rules): required checks `verify` + `Migration presence` +
   `Migration order` + `CodeQL` (SAST, `codeql.yml`) on an up-to-date head. Merging to `main`
-  then auto-deploys (Vercel) and auto-applies migrations (§7). Prereqs (repo Settings →
-  General): "Allow auto-merge" on; re-import the ruleset JSON after changing it.
+  then auto-deploys (Vercel) and auto-applies migrations (§7). Prereqs (repo Settings):
+  "Allow auto-merge" (General) and "Allow GitHub Actions to create and approve pull
+  requests" (Actions → General) on; re-import the ruleset JSON after changing it.
 - **Scheduled automations (GitHub Actions + repo skills).** Run on a schedule, all
   gracefully skipping without `CLAUDE_CODE_OAUTH_TOKEN`. The E2E/pgTAP nightly runs
   **every night**; the three Claude-agent guards run **2×/week** (each holds a runner for
