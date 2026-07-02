@@ -47,6 +47,19 @@ let installed = false;
 let lastTrackedPath: string | null = null;
 
 /**
+ * Build the GA `page_path` from a TanStack Router location: pathname + the RAW
+ * search string. `location.search` is the PARSED params object — string-
+ * concatenating it throws a TypeError in every browser (it is prototype-less:
+ * Safari says "No default value", V8 "Cannot convert object to primitive
+ * value"), which is exactly what took production down on 2026-07-01. The
+ * strict `string` types here make tsc reject any future object slip.
+ */
+export function pagePathFromLocation(location: { pathname: string; searchStr: string }): string {
+  const { pathname, searchStr } = location;
+  return typeof searchStr === "string" && searchStr.length > 0 ? pathname + searchStr : pathname;
+}
+
+/**
  * Invoke gtag so that third-party internals can never break the app: once
  * gtag.js loads it REPLACES `dataLayer.push` with its own processor, so every
  * later gtag call executes Google's code synchronously in OUR stack (effects,
