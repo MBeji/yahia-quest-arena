@@ -14,13 +14,22 @@ name: Migration gate
 #
 # The apply itself is still gated by the `pgTAP suite` check (proves the
 # migrations apply cleanly on a fresh DB) and by db-migrate-prod.yml's own
-# prod-ref guard + pre-apply backup. The job/check name `Migration presence` is
-# kept verbatim so the branch-protection ruleset's required-check contract is
-# unchanged.
+# prod-ref guard + pre-apply backup. Both job/check names (`Migration presence`,
+# `Migration order`) are required status checks in
+# .github/rulesets/main-protection.json — keep the names verbatim.
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  # auto-pr.yml dispatches this on bot-created PRs (which fire no pull_request
+  # events) so the ruleset-required checks still report on the head SHA.
+  workflow_dispatch:
+    inputs:
+      base:
+        description: Base branch to diff against (PR events resolve it automatically)
+        type: string
+        required: false
+        default: main
 
 permissions:
   contents: read
@@ -29,6 +38,8 @@ jobs:
   migration-presence:
     name: Migration presence
     runs-on: ubuntu-latest
+    env:
+      BASE: ${{ github.base_ref || inputs.base || 'main' }}
     steps:
       - name: Checkout PR head
         uses: actions/checkout@v7
@@ -37,12 +48,12 @@ jobs:
           fetch-depth: 0
 
       - name: Fetch base branch
-        run: git fetch --no-tags origin "${{ github.base_ref }}"
+        run: git fetch --no-tags origin "$BASE"
 
       - name: Surface migrations that will auto-apply on merge
         run: |
           set -euo pipefail
-          base="origin/${{ github.base_ref }}"
+          base="origin/${BASE}"
           # Added/modified migration SQL between the base tip and this PR head.
           migrations="$(git diff --name-only "${base}...HEAD" -- supabase/migrations \
             | grep '\.sql$' || true)"
@@ -66,6 +77,8 @@ jobs:
   migration-order:
     name: Migration order
     runs-on: ubuntu-latest
+    env:
+      BASE: ${{ github.base_ref || inputs.base || 'main' }}
     steps:
       - name: Checkout PR head
         uses: actions/checkout@v7
@@ -79,7 +92,7 @@ jobs:
           node-version: 22
 
       - name: Fetch base branch
-        run: git fetch --no-tags origin "${{ github.base_ref }}"
+        run: git fetch --no-tags origin "$BASE"
 
       - name: Reject out-of-order migrations
-        run: node scripts/db/check-migration-order.mjs --base "origin/${{ github.base_ref }}"
+        run: node scripts/db/check-migration-order.mjs --base "origin/${BASE}"

@@ -1,0 +1,71 @@
+name: Auto-merge
+
+# Arms GitHub's native auto-merge on every eligible PR so the merge happens
+# automatically the moment the ruleset's required checks (`verify`, `Migration
+# presence`, `Migration order`, `CodeQL`) are green — completing the fully
+# automatic push → PR → checks → merge → deploy chain (Vercel + db-migrate-prod
+# fire on the merge to main).
+#
+# Security model — arming is cheap, MERGING is gated:
+#   • Only same-repo branches: a fork PR's GITHUB_TOKEN is read-only anyway,
+#     and we never want external code merging itself.
+#   • Drafts are skipped (auto-pr.yml opens drafts by default): marking a PR
+#     "ready for review" is the one deliberate human step.
+#   • The `no-automerge` label opts a PR out (and disarms it if already armed).
+#   • The actual merge is enforced by the main-protection ruleset: all required
+#     status checks green on an up-to-date head (strict policy). This workflow
+#     cannot bypass any of that — it only flips the auto-merge bit.
+#
+# Prerequisite: "Allow auto-merge" must be enabled in Settings > General.
+# NOTE: PRs created by a workflow with GITHUB_TOKEN don't fire pull_request
+# events — auto-pr.yml arms those itself on its [auto-merge] fast path.
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, labeled, unlabeled]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: automerge-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  arm:
+    name: Arm or disarm auto-merge
+    # Same-repo PRs only (see security model above).
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO: ${{ github.repository }}
+      PR: ${{ github.event.pull_request.number }}
+      IS_DRAFT: ${{ github.event.pull_request.draft }}
+      OPTED_OUT: ${{ contains(github.event.pull_request.labels.*.name, 'no-automerge') }}
+    steps:
+      - name: Arm (or disarm) native auto-merge
+        run: |
+          set -euo pipefail
+
+          if [ "$OPTED_OUT" = "true" ]; then
+            # Disarm idempotently: fails harmlessly when nothing was armed.
+            gh pr merge "$PR" --repo "$REPO" --disable-auto \
+              && echo "Auto-merge disarmed (label no-automerge)." \
+              || echo "Nothing to disarm."
+            exit 0
+          fi
+
+          if [ "$IS_DRAFT" = "true" ]; then
+            echo "Draft PR — auto-merge arms when it's marked ready for review."
+            exit 0
+          fi
+
+          # Squash + delete-branch: same merge shape as the upgrade guard's lot.
+          if gh pr merge "$PR" --repo "$REPO" --auto --squash --delete-branch; then
+            echo "Auto-merge armed on #$PR — merges when all required checks are green."
+          else
+            echo "::warning title=Auto-merge non armé::PR #$PR : activez 'Allow auto-merge' (Settings > General), ou la PR est déjà mergeable/fermée."
+          fi
