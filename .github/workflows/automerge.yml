@@ -58,6 +58,7 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       REPO: ${{ github.repository }}
       PR: ${{ github.event.pull_request.number }}
+      BRANCH: ${{ github.event.pull_request.head.ref }}
       IS_DRAFT: ${{ github.event.pull_request.draft }}
       OPTED_OUT: ${{ contains(github.event.pull_request.labels.*.name, 'no-automerge') }}
     steps:
@@ -83,6 +84,25 @@ jobs:
             echo "Auto-merge armed on #$PR — merges when all required checks are green."
           else
             echo "::warning title=Auto-merge non armé::PR #$PR : activez 'Allow auto-merge' (Settings > General), ou la PR est déjà mergeable/fermée."
+            exit 0
+          fi
+
+          # Race guard: if the PR is ALREADY behind main at arming time (main
+          # moved while it was a draft / before it was armed), no future main
+          # push is guaranteed to rescue it — keep-up-to-date only sees armed
+          # PRs. Update it now, and re-dispatch the required checks (the update
+          # commit is authored by GITHUB_TOKEN → fires no pull_request events).
+          state="$(gh pr view "$PR" --repo "$REPO" --json mergeStateStatus --jq .mergeStateStatus)"
+          if [ "$state" = "BEHIND" ]; then
+            echo "PR #$PR is behind main — updating branch now."
+            if ! gh api -X PUT "repos/$REPO/pulls/$PR/update-branch" >/dev/null; then
+              echo "::warning title=Update impossible::PR #$PR : update-branch refusé (conflit ?). Résolution manuelle requise."
+              exit 0
+            fi
+            gh workflow run ci.yml --repo "$REPO" --ref "$BRANCH"
+            gh workflow run migration-gate.yml --repo "$REPO" --ref "$BRANCH" -f base=main
+            gh workflow run codeql.yml --repo "$REPO" --ref "$BRANCH"
+            echo "PR #$PR updated + required checks re-dispatched."
           fi
 
   keep-up-to-date:
