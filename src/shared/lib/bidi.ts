@@ -61,18 +61,37 @@ const SEGMENT_RE = new RegExp(`[${ARABIC_CHARS}]+|[^${ARABIC_CHARS}]+`, "gu");
 const BIDI_FLIP_SIGNAL = /[√∛∜()[\]{}⟨⟩⌊⌋⌈⌉<>≤≥≮≯∈∉⊂⊃⊆⊇←→⟵⟶⟸⟹⟺∑∏∫|‖]|&lt;|&gt;|&le;|&ge;/u;
 
 /**
+ * A **tight signed number** — a `+`/`−` glued directly to a digit (`−5`, `+90`,
+ * `−2x`), *not* following an operand. This is the one direction-sensitive form
+ * `BIDI_FLIP_SIGNAL` misses: a bare negative like `−5` dropped into RTL prose
+ * (`… إذن −5 أقرب …`) has no bracket or relation to anchor it, so the neutral sign
+ * inherits the RTL run and can render `5−` — the exact scramble seen in the
+ * concours défis. Isolating the run fixes it.
+ *
+ * The lookbehind `(?<![\d)])` is what keeps this safe: it fires **only** on a
+ * *leading* sign, never on binary subtraction/addition. Those are written spaced
+ * by convention (`5 − 3`, `10 مي + 2 مي`, `0 د − 1`) — the native bidi algorithm
+ * already lays them out correctly, and the space means the sign is not glued to a
+ * digit, so this pattern never matches them. Only the tight, unary sign is caught.
+ */
+const SIGNED_NUMBER = /(?<![\d)])[−–+][0-9]/u;
+
+/**
  * Wrap every non-Arabic run that carries a bidi-flipping glyph (see
- * {@link BIDI_FLIP_SIGNAL}) in `text` with LTR isolates so it renders
- * left-to-right even inside RTL prose. Runs that are plain arithmetic, units or
- * bare numbers are left alone — the native bidi algorithm already orders them
- * correctly, and isolating them would reverse them. Text with no Arabic at all
- * is returned unchanged — LTR content (French/English) has no reordering bug.
+ * {@link BIDI_FLIP_SIGNAL}) or a tight signed number (see {@link SIGNED_NUMBER})
+ * in `text` with LTR isolates so it renders left-to-right even inside RTL prose.
+ * Runs that are plain arithmetic, units or bare numbers are left alone — the
+ * native bidi algorithm already orders them correctly, and isolating them would
+ * reverse them. Text with no Arabic at all is returned unchanged — LTR content
+ * (French/English) has no reordering bug.
  */
 export function isolateLtrRuns(text: string): string {
   if (!text || !ARABIC_RE.test(text)) return text;
   return text.replace(SEGMENT_RE, (segment) => {
     if (ARABIC_RE.test(segment)) return segment;
-    return BIDI_FLIP_SIGNAL.test(segment) ? `${LRI}${segment}${PDI}` : segment;
+    return BIDI_FLIP_SIGNAL.test(segment) || SIGNED_NUMBER.test(segment)
+      ? `${LRI}${segment}${PDI}`
+      : segment;
   });
 }
 
