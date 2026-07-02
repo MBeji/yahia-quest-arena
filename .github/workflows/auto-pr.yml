@@ -26,7 +26,11 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: read
+  # write (not read): the [auto-merge] fast path calls enablePullRequestAutoMerge,
+  # which GitHub gates on contents:write — with read it fails with "Resource not
+  # accessible by integration" (bit us on #272). The merge itself stays gated by
+  # the ruleset's required checks.
+  contents: write
   # Create the PR (and enable auto-merge in the [auto-merge] fast path).
   pull-requests: write
   # Dispatch the required-check workflows on the new PR's branch.
