@@ -40,6 +40,7 @@ and tackle a timed "dungeon" boss mode. Shonen/RPG manga aesthetic, trilingual (
 npm run dev          # Vite dev server (SSR)
 npm run build        # production build
 npm run build:check  # build + bundle-budget check
+npm run smoke:shell  # prod-bundle browser smoke: public shell must render crash-free in Chromium
 npm test             # vitest run — run `npm test` for the current test/file count
 npm run test:watch   # watch mode
 npm run test:coverage
@@ -333,7 +334,12 @@ When unsure about scope or a destructive action, ask before proceeding.
   **dedicated TEST Supabase project** with seeded users (`scripts/e2e/`), not the unit-test
   mocks. They are not part of `npm run verify`/`ci:verify`; don't point them at prod.
 - **CI workflow runs a subset.** `.github/workflows/ci.yml` runs lint + typecheck +
-  test:coverage + **content:check + content:qa:strict** + build:check + audit:deps. The content
+  test:coverage + **content:check + content:qa:strict** + build:check + **smoke:shell** +
+  audit:deps. `smoke:shell` (incident 2026-07-01) loads the REAL production bundle in a
+  Chromium and fails on any page error or branded error page: it is the only tier that
+  executes prod-gated client code (`import.meta.env.PROD`) — tsc can see `any` (unregistered
+  router), the unit gate excludes route glue, SSR never runs effects, and the Playwright e2e
+  tier runs the DEV server. A green gate without it proved compatible with a dead prod. The content
   gate is now enforced on every PR (it used to be local-only via `ci:verify`); `content:qa:strict`
   fails CI on any `[error]` (warnings still only surface). `content:qa:strict` catches **structure/
   notation**, not **correctness** — a wrong answer key passes it; that's what the scheduled
