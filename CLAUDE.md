@@ -54,11 +54,15 @@ npm run ci:verify    # verify + coverage + build:check + audit:deps + content:qa
 **Content pipeline** (authored files → Supabase migrations — see "Content pipeline" below):
 
 ```bash
-npm run content:check      # validate all content, write nothing
-npm run content:build      # compile content/ → idempotent SQL in supabase/migrations/
-npm run content:qa         # content quality checks
-npm run content:qa:strict  # same, fail on warnings (part of ci:verify)
+npm run content:check                    # validate all content, write nothing
+npm run content:build -- --subject <id>  # regenerate the migration for ONE changed subject only
+npm run content:qa                        # content quality checks
+npm run content:qa:strict                 # same, fail on warnings (part of ci:verify)
 ```
+
+⚠️ Never run bare `npm run content:build` — it regenerates **all ~60 subjects** with fresh
+timestamps (stray duplicate migrations you must not commit). Always scope with `--subject <id>`.
+Full pipeline map + skill selection: `content-engine/references/generation-pipeline.md`.
 
 **E2E (Playwright)** — needs a dedicated TEST Supabase project + seeded users; not part of the unit gate:
 
@@ -153,7 +157,14 @@ review the generated SQL → apply to the DB **before** deploying dependent code
 Full spec: [`content/README.md`](./content/README.md) (in French).
 
 **Generating content — use the skills.** Content authoring is industrialized via a suite of
-Claude Code skills under [`.claude/skills/`](./.claude/skills/). `content-engine` is the shared core
+Claude Code skills under [`.claude/skills/`](./.claude/skills/). **Start at the pipeline map**
+([`content-engine/references/generation-pipeline.md`](./.claude/skills/content-engine/references/generation-pipeline.md)):
+it harmonizes the whole system into **two layers** — base skills that build & complete a chapter
+(`content-engine` + program wrappers + `content-cours`/`content-audit`) and the professor overlay
+(`prof-*`) that raises the ceiling with hard d3–4 exercises — with a task→skill selection matrix, the
+cumulative/non-redundant rules, and the reproducible build→migration procedure (incl. the
+`content:build --subject <id>` rule — bare `content:build` regenerates all ~60 subjects and must never
+be committed). `content-engine` is the shared core
 (schema, quality bar, reward table, RPG style, trilingual model, validate-then-stop workflow) in its
 `references/`; thin per-program wrappers defer to it: `content-ecole-tn` (national school program,
 **faithful to the official curriculum**), `content-culture-generale` and `content-muscle-cerveau`

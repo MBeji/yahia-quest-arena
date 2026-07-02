@@ -6,6 +6,10 @@ This is the shared excellence standard for **hard** content: boss (⭐⭐⭐, d3
 (`.claude/skills/prof-*`) — one per (matière × niveau), each of which owns its subject's trap
 taxonomy and archetypes. This file owns everything subject-independent about hard items.
 
+For where this fits in the whole system (base vs professor layers, skill selection, the cumulative
+build→migration procedure), see `generation-pipeline.md`. The professor overlay only ever **adds**
+top tiers to an existing chapter — audit the ladder first, fill upward, never duplicate.
+
 ## What "hard" must mean (and must NOT mean)
 
 Difficulty comes from **reasoning depth**, never from obscurity. A d3/d4 item is hard because it
