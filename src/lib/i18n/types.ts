@@ -141,6 +141,10 @@ export type TranslationKeys = {
     activationFailed: string;
     streakRecovered: string;
     recoveryFailed: string;
+    familyGoalTitle: string;
+    familyGoalProgress: string;
+    familyGoalReached: string;
+    familyGoalHint: string;
   };
   // Quest
   quest: {
@@ -569,6 +573,32 @@ export type TranslationKeys = {
     verdictNeedsImprovementDesc: string;
     verdictInactive: string;
     verdictInactiveDesc: string;
+    weekCompareTitle: string;
+    weekMinutes: string;
+    insightsTitle: string;
+    insightsSubtitle: string;
+    strengthsTitle: string;
+    weaknessesTitle: string;
+    strengthsEmpty: string;
+    weaknessesEmpty: string;
+    insightAttempts: string;
+    adviceTitle: string;
+    adviceWeakness: string;
+    adviceKeepUp: string;
+    adviceInactive: string;
+    printCta: string;
+    shareCta: string;
+    printTitle: string;
+    printGenerated: string;
+    pushTitle: string;
+    pushDesc: string;
+    goalTitle: string;
+    goalHint: string;
+    goalSave: string;
+    goalSaving: string;
+    goalSaved: string;
+    goalProgress: string;
+    goalUnit: string;
   };
   // Playful explainability hover hints
   explain: {
@@ -631,6 +661,19 @@ export type TranslationKeys = {
       languesFrStandard: string;
       languesEnName: string;
       languesEnStandard: string;
+      familleKicker: string;
+      familleTitle: string;
+      familleSubtitle: string;
+      familleFeatTrack: string;
+      familleFeatInsights: string;
+      familleFeatAdvice: string;
+      familleFeatPrint: string;
+      familleStepsTitle: string;
+      familleStep1: string;
+      familleStep2: string;
+      familleStep3: string;
+      familleCta: string;
+      familleCtaAuthed: string;
     };
     cycles: {
       primaire: string;

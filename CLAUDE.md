@@ -163,7 +163,15 @@ figures), and `content-langue-{anglais,francais,arabe}` (immersion, one per lang
 course-quality bar: clarté, compréhension, exhaustivité — every tested notion must be taught —
 expérience pédagogique). `content-audit` is the review counterpart: it audits **existing** content
 (re-solves every question, checks keys/distractors/notation/calibration, and grades courses/summaries
-against the same course-quality bar) and produces a severity-ranked report. Skills produce
+against the same course-quality bar) and produces a severity-ranked report. For **hard/elite**
+content, a suite of **specialized "professor" skills** (`.claude/skills/prof-*`) — one per
+(matière × niveau), like a real subject teacher — authors difficulty-3/4 (⭐⭐⭐ boss / ⭐⭐⭐⭐ défi)
+exercises that raise the ceiling above what exists, faithful to the concours program:
+`prof-math-9eme`, `prof-physique-9eme` (subject id `svt`), `prof-svt-9eme` (id `sciences-vie-terre`),
+`prof-francais-9eme`, `prof-arabe-9eme`, `prof-anglais-9eme`, and `prof-math-6eme`. Each carries its
+subject's chapter map and misconception/trap taxonomy; all defer to `content-engine`'s shared
+`references/expert-exercises.md` (hard-item archetypes, executed-error distractors, double-solve
+verification) and to `content-ecole-tn` for program fidelity. Skills produce
 **files only** (then run `content:check` + `content:qa:strict`); you review the diff, then build/apply.
 **Non-school** programs are trilingual = three sibling subjects (one `contentLanguage` each) under one
 theme; **school** content (`ecole-tn`) stays in the subject's **official language of instruction**

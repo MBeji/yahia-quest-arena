@@ -535,3 +535,36 @@ export const getSprint2Dashboard = createServerFn({ method: "GET" })
       pendingSpacedReps: spacedRep.data ?? [],
     };
   });
+
+// ---------- Family weekly goal (set by a linked parent) ----------
+const familyGoalSchema = z
+  .object({
+    weekStart: z.string().catch(""),
+    target: z.coerce.number().catch(0),
+    done: z.coerce.number().catch(0),
+  })
+  .nullable()
+  .catch(null);
+
+/**
+ * The student's current-week family goal (target set by a linked parent +
+ * live progress). Null when no goal is set — and, defensively, when the RPC
+ * is not deployed yet (graceful degradation, same pattern as best-scores).
+ */
+export const getMyFamilyGoal = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+
+    const { data, error } = await supabase.rpc("get_family_weekly_goal", {
+      p_student: userId,
+    });
+    if (error) {
+      logger.warn("getMyFamilyGoal: RPC unavailable, degrading to null", {
+        message: error.message,
+      });
+      return null;
+    }
+
+    return familyGoalSchema.parse(data ?? null);
+  });

@@ -59,3 +59,32 @@ export function streakReminderPayload(): PushPayload {
     tag: "streak-at-risk",
   };
 }
+
+/** The short weekday name ("Sun", "Mon", …) in the app timezone for a given instant. */
+export function appLocalWeekday(now: Date): string {
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: APP_TIME_ZONE,
+    weekday: "short",
+  }).format(now);
+}
+
+/**
+ * The weekly family digest goes out on Sunday evening (the daily cron fires at
+ * 18:00 UTC → ~19:00 Tunis): parents open the week's report right before the
+ * school week starts on Monday.
+ */
+export const PARENT_DIGEST_WEEKDAY = "Sun";
+
+export function isParentDigestDay(now: Date): boolean {
+  return appLocalWeekday(now) === PARENT_DIGEST_WEEKDAY;
+}
+
+/** Same single-copy convention as the streak reminder (per-locale is a later increment). */
+export function weeklyParentDigestPayload(): PushPayload {
+  return {
+    title: "📋 Le bilan famille de la semaine est prêt",
+    body: "Points forts, chapitres à revoir et le conseil de la semaine : ouvrez le suivi de votre enfant.",
+    url: "/parent-report",
+    tag: "weekly-family-report",
+  };
+}
