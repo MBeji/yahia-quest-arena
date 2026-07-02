@@ -1010,4 +1010,28 @@ html:is(.light, .reference) *:focus-visible {
   @page {
     margin: 1.4cm;
   }
+
+  /* Bilan famille imprimable — le rapport parent (coquille sombre) devient un
+     bulletin papier lisible : chrome applicatif masqué, texte noir sur blanc.
+     Les zones hors rapport portent `print:hidden` dans la route. */
+  .app-shell {
+    background: #fff !important;
+  }
+  .app-shell > header,
+  .app-shell nav {
+    display: none !important;
+  }
+  .family-report,
+  .family-report * {
+    color: #000 !important;
+    background: transparent !important;
+    border-color: #bbb !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  .family-report .print-fill {
+    background: #555 !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
 }

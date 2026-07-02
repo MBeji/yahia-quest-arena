@@ -30,6 +30,10 @@ function cronRequest(authHeader?: string): Request {
   });
 }
 
+// Deterministic clocks (18:00 UTC → 19:00 Tunis, same civil day).
+const WEDNESDAY = new Date("2026-07-01T18:00:00Z");
+const SUNDAY = new Date("2026-07-05T18:00:00Z");
+
 async function loadHandler() {
   return (await import("../notifications.cron.server")).handlePushCron;
 }
@@ -62,16 +66,16 @@ describe("handlePushCron", () => {
     expect((await handle(cronRequest("Bearer secret"))).status).toBe(500);
   });
 
-  it("returns audience 0 when nobody is at risk", async () => {
+  it("returns audience 0 when nobody is at risk (no digest outside Sunday)", async () => {
     mockFrom.mockImplementation((table: string) => {
       if (table === "profiles")
         return { select: () => ({ gt: () => Promise.resolve({ data: [], error: null }) }) };
       throw new Error(`unexpected table ${table}`);
     });
     const handle = await loadHandler();
-    const res = await handle(cronRequest("Bearer secret"));
+    const res = await handle(cronRequest("Bearer secret"), WEDNESDAY);
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ audience: 0, sent: 0, pruned: 0 });
+    expect(await res.json()).toEqual({ audience: 0, sent: 0, pruned: 0, parentDigest: null });
     expect(mockSend).not.toHaveBeenCalled();
   });
 
@@ -109,11 +113,83 @@ describe("handlePushCron", () => {
     mockSend.mockRejectedValueOnce(new WebPushError("gone", 410)); // s2 dead
 
     const handle = await loadHandler();
-    const res = await handle(cronRequest("Bearer secret"));
+    const res = await handle(cronRequest("Bearer secret"), WEDNESDAY);
 
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ audience: 1, sent: 1, pruned: 1 });
+    expect(await res.json()).toEqual({ audience: 1, sent: 1, pruned: 1, parentDigest: null });
     expect(mockSetVapid).toHaveBeenCalledWith("mailto:a@b.c", "pub", "priv");
     expect(deleteEq).toHaveBeenCalledWith("id", "s2");
+  });
+
+  it("on Sunday, also sends the weekly family digest to distinct linked parents", async () => {
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "profiles")
+        return { select: () => ({ gt: () => Promise.resolve({ data: [], error: null }) }) };
+      if (table === "parent_student_links")
+        return {
+          select: () => ({
+            eq: () =>
+              Promise.resolve({
+                // p1 has two linked children → must receive ONE push, not two.
+                data: [
+                  { parent_user_id: "p1" },
+                  { parent_user_id: "p1" },
+                  { parent_user_id: "p2" },
+                ],
+                error: null,
+              }),
+          }),
+        };
+      if (table === "push_subscriptions")
+        return {
+          select: () => ({
+            in: (_col: string, ids: string[]) => {
+              expect(ids).toEqual(["p1", "p2"]);
+              return Promise.resolve({
+                data: [{ id: "s1", endpoint: "https://push/p1", p256dh: "k", auth: "a" }],
+                error: null,
+              });
+            },
+          }),
+        };
+      throw new Error(`unexpected table ${table}`);
+    });
+    mockSend.mockResolvedValue(undefined);
+
+    const handle = await loadHandler();
+    const res = await handle(cronRequest("Bearer secret"), SUNDAY);
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({
+      audience: 0,
+      sent: 0,
+      pruned: 0,
+      parentDigest: { audience: 2, sent: 1, pruned: 0 },
+    });
+    const payload = JSON.parse(mockSend.mock.calls[0][1] as string) as { tag: string; url: string };
+    expect(payload.tag).toBe("weekly-family-report");
+    expect(payload.url).toBe("/parent-report");
+  });
+
+  it("on Sunday with no active links, the digest reports an empty audience", async () => {
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "profiles")
+        return { select: () => ({ gt: () => Promise.resolve({ data: [], error: null }) }) };
+      if (table === "parent_student_links")
+        return { select: () => ({ eq: () => Promise.resolve({ data: [], error: null }) }) };
+      throw new Error(`unexpected table ${table}`);
+    });
+
+    const handle = await loadHandler();
+    const res = await handle(cronRequest("Bearer secret"), SUNDAY);
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({
+      audience: 0,
+      sent: 0,
+      pruned: 0,
+      parentDigest: { audience: 0, sent: 0, pruned: 0 },
+    });
+    expect(mockSend).not.toHaveBeenCalled();
   });
 });

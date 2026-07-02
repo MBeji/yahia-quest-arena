@@ -54,9 +54,18 @@ auto-vérification) : `.claude/skills/content-engine/references/quality-bar.md`.
 ## Commandes
 
 ```bash
-npm run content:check   # valide tout le contenu (n'écrit rien)
-npm run content:build   # génère les migrations dans supabase/migrations/
+npm run content:check                 # valide tout le contenu (n'écrit rien)
+npm run content:build -- --subject <id>   # régénère la migration du SEUL sujet modifié
 ```
+
+> ⚠️ **Ne lance jamais `content:build` sans `--subject`** : il régénère les ~60 sujets avec un
+> horodatage neuf → des dizaines de migrations parasites (doublons de sujets non modifiés) qu'il ne
+> faut **pas** committer. Toujours cibler `--subject <id>` (une fois par sujet changé). Un build
+> complet involontaire se nettoie avec `git clean -f supabase/migrations/`.
+
+> **Quel skill pour quoi ?** La carte complète du pipeline (skills de base `content-*` pour
+> créer/compléter un chapitre vs professeurs `prof-*` pour rehausser le plafond en d3–4, + règles
+> cumulatives) est dans `.claude/skills/content-engine/references/generation-pipeline.md`.
 
 Les `id` de chapitres / exercices / questions sont des **UUID v5 déterministes**
 dérivés des slugs : régénérer met à jour les lignes en place (pas de doublon),

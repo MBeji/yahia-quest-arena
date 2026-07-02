@@ -54,11 +54,15 @@ npm run ci:verify    # verify + coverage + build:check + audit:deps + content:qa
 **Content pipeline** (authored files → Supabase migrations — see "Content pipeline" below):
 
 ```bash
-npm run content:check      # validate all content, write nothing
-npm run content:build      # compile content/ → idempotent SQL in supabase/migrations/
-npm run content:qa         # content quality checks
-npm run content:qa:strict  # same, fail on warnings (part of ci:verify)
+npm run content:check                    # validate all content, write nothing
+npm run content:build -- --subject <id>  # regenerate the migration for ONE changed subject only
+npm run content:qa                        # content quality checks
+npm run content:qa:strict                 # same, fail on warnings (part of ci:verify)
 ```
+
+⚠️ Never run bare `npm run content:build` — it regenerates **all ~60 subjects** with fresh
+timestamps (stray duplicate migrations you must not commit). Always scope with `--subject <id>`.
+Full pipeline map + skill selection: `content-engine/references/generation-pipeline.md`.
 
 **E2E (Playwright)** — needs a dedicated TEST Supabase project + seeded users; not part of the unit gate:
 
@@ -153,7 +157,14 @@ review the generated SQL → apply to the DB **before** deploying dependent code
 Full spec: [`content/README.md`](./content/README.md) (in French).
 
 **Generating content — use the skills.** Content authoring is industrialized via a suite of
-Claude Code skills under [`.claude/skills/`](./.claude/skills/). `content-engine` is the shared core
+Claude Code skills under [`.claude/skills/`](./.claude/skills/). **Start at the pipeline map**
+([`content-engine/references/generation-pipeline.md`](./.claude/skills/content-engine/references/generation-pipeline.md)):
+it harmonizes the whole system into **two layers** — base skills that build & complete a chapter
+(`content-engine` + program wrappers + `content-cours`/`content-audit`) and the professor overlay
+(`prof-*`) that raises the ceiling with hard d3–4 exercises — with a task→skill selection matrix, the
+cumulative/non-redundant rules, and the reproducible build→migration procedure (incl. the
+`content:build --subject <id>` rule — bare `content:build` regenerates all ~60 subjects and must never
+be committed). `content-engine` is the shared core
 (schema, quality bar, reward table, RPG style, trilingual model, validate-then-stop workflow) in its
 `references/`; thin per-program wrappers defer to it: `content-ecole-tn` (national school program,
 **faithful to the official curriculum**), `content-culture-generale` and `content-muscle-cerveau`
@@ -163,7 +174,20 @@ figures), and `content-langue-{anglais,francais,arabe}` (immersion, one per lang
 course-quality bar: clarté, compréhension, exhaustivité — every tested notion must be taught —
 expérience pédagogique). `content-audit` is the review counterpart: it audits **existing** content
 (re-solves every question, checks keys/distractors/notation/calibration, and grades courses/summaries
-against the same course-quality bar) and produces a severity-ranked report. Skills produce
+against the same course-quality bar) and produces a severity-ranked report. For **hard/elite**
+content, a suite of **specialized "professor" skills** (`.claude/skills/prof-*`) — one per
+(matière × niveau), like a real subject teacher — authors difficulty-3/4 (⭐⭐⭐ boss / ⭐⭐⭐⭐ défi)
+exercises that raise the ceiling above what exists, faithful to the program. The **exam years** get a
+dedicated professor per (matière × niveau): `prof-math-9eme`, `prof-physique-9eme` (subject id `svt`),
+`prof-svt-9eme` (id `sciences-vie-terre`), `prof-francais-9eme`, `prof-arabe-9eme`, `prof-anglais-9eme`,
+and `prof-math-6eme`. The **primary cycle** (1ère→5ème) is covered by grade-aware, multi-level
+professors — one per subject, each with a per-grade chapter map and age calibration:
+`prof-math-primaire` (1ère→5ème), `prof-arabe-primaire` (1ère→5ème), `prof-eveil-primaire`
+(الإيقاظ العلمي, 1ère→6ème), and `prof-islamique-primaire` (1ère→4ème, Quran text in **رواية قالون**
+only — Tunisia's official reading). Each carries its
+subject's chapter map and misconception/trap taxonomy; all defer to `content-engine`'s shared
+`references/expert-exercises.md` (hard-item archetypes, executed-error distractors, double-solve
+verification) and to `content-ecole-tn` for program fidelity. Skills produce
 **files only** (then run `content:check` + `content:qa:strict`); you review the diff, then build/apply.
 **Non-school** programs are trilingual = three sibling subjects (one `contentLanguage` each) under one
 theme; **school** content (`ecole-tn`) stays in the subject's **official language of instruction**

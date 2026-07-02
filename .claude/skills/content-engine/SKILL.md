@@ -6,10 +6,11 @@ description: >-
   quizzes, QCM exercises). Use whenever generating or scaffolding educational
   content — quizzes, exercises, missions, lessons — or when a program-specific
   content skill (content-ecole-tn, content-culture-generale, content-muscle-cerveau,
-  content-langue-anglais/francais/arabe) defers here for the schema, quality bar,
-  reward rules, RPG style, and validation workflow. Trigger on any request to
-  create or edit files under content/, write QCM questions, cours.md, resume.md,
-  or quiz.json, or add a new subject/chapter. Produces versioned files only — never SQL.
+  content-langue-anglais/francais/arabe) or a professor overlay skill (prof-* — hard/elite
+  exercises per matière × niveau) defers here for the schema, quality bar, reward rules, RPG
+  style, and validation workflow. Trigger on any request to create or edit files under content/,
+  write QCM questions, cours.md, resume.md, or quiz.json, or add a new subject/chapter. See
+  references/generation-pipeline.md for the skill-selection map. Produces versioned files only — never SQL.
 ---
 
 # Content engine — author content for the `content/` pipeline
@@ -17,6 +18,14 @@ description: >-
 This is the **shared core** every content-generation skill builds on. Content is the product's
 business value: the breadth and quality of the quizzes/exercises is what differentiates the
 portal. Treat every chapter you author as a flagship example, not filler.
+
+> **Start at the pipeline map.** `references/generation-pipeline.md` is the single map of the whole
+> generation system: the **two layers** — base skills (this core + the program wrappers
+> `content-ecole-tn`, `content-culture-generale`, `content-muscle-cerveau`, `content-iq-training`,
+> `content-langue-*`, plus `content-cours`/`content-audit`) that **build & complete** a chapter, and
+> the **professor overlay** (`prof-*`) that **raises the ceiling** with hard d3–4 exercises for a
+> given matière × niveau — the skill-selection map (task → skill), the cumulative/non-redundant rules,
+> and the reproducible build→migration procedure. Read it first; it prevents overlap and duplicate work.
 
 ## How the pipeline works (the why behind the rules)
 
@@ -63,11 +72,22 @@ Run, in order:
 4. `npm run content:check` — validates all authored content against Zod. Must pass (writes nothing).
 5. `npm run content:qa:strict` — answer-key heuristics; must report **0 errors** (warnings are
    advisory but fix the easy ones).
-6. **Stop and report** — or, when asked to ship a PR, run `npm run content:build` (keep the **default
-   fresh timestamp**; never reuse an existing one — a same-name migration is skipped by `db push` as
-   already-applied, so the update never reaches prod) and commit the generated
-   `supabase/migrations/*_generated_<id>_content.sql` **with** the `content/` files. It **auto-applies
-   to prod on merge** via `db-migrate-prod.yml` (never apply by hand). Do **not** push unless explicitly asked.
+6. **Stop and report** — or, when asked to ship a PR, regenerate the migration for the changed
+   subject(s) **only**:
+
+   ```bash
+   npm run content:build -- --subject <subject-id>
+   ```
+
+   ⚠️ **Never run bare `npm run content:build`** — it regenerates **all ~60 subjects** with a fresh
+   timestamp, creating dozens of stray `*_generated_<id>_content.sql` duplicates for unchanged
+   subjects. Scope with `--subject <id>` so exactly one migration is produced (run once per changed
+   subject). The default fresh timestamp sorts after existing migrations (correct); pass
+   `--timestamp <YYYYMMDDHHMMSS>` only when you need a deterministic value that still sorts **after**
+   the newest existing migration. If a stray full build happened, `git clean -f supabase/migrations/`
+   then rebuild with `--subject`. Commit the generated migration **with** the `content/` files; it
+   **auto-applies to prod on merge** via `db-migrate-prod.yml` (never apply by hand, never hand-edit
+   the SQL). Full procedure: `references/generation-pipeline.md`. Do **not** push unless explicitly asked.
 
 Never weaken the gate to make content "pass" (no lowering thresholds, no skipping QA).
 
@@ -118,8 +138,13 @@ Whatever the slice, the same gates apply: quality bar → self-verification → 
 
 ## Reference files — read before writing
 
+- `references/generation-pipeline.md` — **the map of the whole system**: base vs professor skills,
+  the task→skill selection matrix, the cumulative/non-redundant rules, and the reproducible
+  build→migration procedure (incl. the `--subject` trap). **Read first.**
 - `references/content-schema.md` — exact file shapes + every Zod constraint + file layout + reserved
   `quiz` slug. **Read before writing any file.**
+- `references/expert-exercises.md` — the professor-grade bar for hard **d3–4** exercises (archetypes,
+  executed-error distractors, double-solve verification); the `prof-*` skills build on it.
 - `references/quality-bar.md` — the QA gates (Zod hard-fails + `content:qa` heuristics), the
   pedagogical bar, question craft, and the self-verification protocol. Read before writing questions.
 - `references/math-and-notation.md` — **hard rule**: Western digits + standard LTR equations/units

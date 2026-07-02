@@ -6,6 +6,7 @@ export {
   getDashboardSecondary,
   getLeaderboard,
   getLeaderboardSubjects,
+  getMyFamilyGoal,
   getParcours,
   getParcoursSubjects,
   getSprint2Dashboard,
