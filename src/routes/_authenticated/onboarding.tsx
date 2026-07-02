@@ -126,7 +126,7 @@ function IntentStep({ onSelect }: { onSelect: (intent: Intent) => void }) {
                 <h3 className="font-display text-xl font-bold">{choice.title}</h3>
                 <p className="mt-1 text-sm text-muted-foreground">{choice.description}</p>
               </div>
-              <ChevronRight className="h-5 w-5 text-[color:var(--gold)]" />
+              <ChevronRight className="h-5 w-5 text-[color:var(--gold)] rtl:-scale-x-100" />
             </div>
           </motion.button>
         ))}
@@ -172,7 +172,9 @@ function ParcoursCard({
           )}
         </div>
       </div>
-      {!isComingSoon && <ChevronRight className="h-5 w-5 shrink-0 text-[color:var(--gold)]" />}
+      {!isComingSoon && (
+        <ChevronRight className="h-5 w-5 shrink-0 text-[color:var(--gold)] rtl:-scale-x-100" />
+      )}
     </div>
   );
 
@@ -318,7 +320,7 @@ function ParcoursStep({
       )}
 
       <div className="flex gap-3">
-        <Button onClick={onPrev} variant="outline" className="gap-2" disabled={isSaving}>
+        <Button onClick={onPrev} variant="outline" className="min-h-11 gap-2" disabled={isSaving}>
           <ChevronLeft className="h-4 w-4" /> {t.common.back}
         </Button>
         {isSaving && (
@@ -381,7 +383,7 @@ function OnboardingComponent() {
   };
 
   return (
-    <div className="min-h-screen bg-black-deep p-6">
+    <div className="min-h-[100dvh] bg-black-deep p-6">
       <div className="mx-auto max-w-2xl">
         {/* Progress indicator */}
         <div className="mb-12 flex gap-2">

@@ -48,10 +48,10 @@
         { "id": "a", "text": "Some students passed the exam, and some did not." },
         { "id": "b", "text": "She left early because tired." },
         { "id": "c", "text": "He decided to leave, and so she." },
-        { "id": "d", "text": "The report was finished, but not presented." }
+        { "id": "d", "text": "He submitted the report, but not presented it." }
       ],
       "correctOption": "a",
-      "explanation": "(a) is correct: …and some did not [pass the exam] — the omitted material (pass the exam) is fully recoverable. (b) is incorrect: because tired omits the subject and auxiliary (because she was tired) — this ellipsis is ungrammatical in standard English. (c) should be so did she (inversion required after so: so + auxiliary + subject). (d) omits was — the full form would be but [the report] was not presented — strictly, the subject is recoverable but the auxiliary was is also omitted; however this is actually a common and accepted gapping structure. (a) remains the cleanest, unambiguous correct example.",
+      "explanation": "(a) is correct: …and some did not [pass the exam] — the omitted material is fully recoverable. (b) is incorrect: 'because tired' omits the subject and auxiliary (because she was tired) — ungrammatical in standard English. (c) should be 'so did she' (inversion required after 'so': so + auxiliary + subject). (d) is incorrect: 'but not presented it' drops the auxiliary verb — the correct form is 'but did not present it'; a lexical verb cannot be gapped this way.",
       "difficulty": 3
     },
     {

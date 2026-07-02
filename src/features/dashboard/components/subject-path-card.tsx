@@ -83,9 +83,9 @@ export function SubjectPathCard(props: {
         <Icon className="h-8 w-8" style={{ color }} />
         <ChevronRight className="h-5 w-5 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-foreground" />
       </div>
-      <div className="relative mt-4">
-        <div className="font-display text-lg font-bold">{subject.name_fr}</div>
-        <div className="text-xs uppercase tracking-wider text-muted-foreground">
+      <div className="relative mt-4 min-w-0">
+        <div className="truncate font-display text-lg font-bold">{subject.name_fr}</div>
+        <div className="truncate text-xs uppercase tracking-wider text-muted-foreground">
           Attribute · {subject.attribute}
         </div>
       </div>

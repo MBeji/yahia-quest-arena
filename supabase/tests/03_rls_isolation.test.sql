@@ -6,19 +6,20 @@
 -- attempts. We assert this under a REAL `SET ROLE authenticated` so RLS is
 -- actually enforced (it is bypassed for the table owner / superuser).
 --
--- NOTE on `profiles`: the v1 policy "Profiles are viewable by everyone"
--- USING (true) makes profile ROWS world-readable by design (leaderboard, peer
--- display names). The privacy guarantee there is column-level — peer UUIDs are
--- hidden by the leaderboard RPC (see 02_role_escalation: S2(b)) — not row-level.
--- So we assert the REAL contract: a peer's `attempts` (private gameplay data)
--- are invisible, while the profile row remains visible by design.
+-- NOTE on `profiles`: since 20260522153000 the SELECT policy is "Users can view
+-- own or linked profiles" (auth.uid() = id OR an active parent/student link), so
+-- profile ROWS are NOT peer-readable directly. The leaderboards therefore read
+-- through SECURITY DEFINER RPCs (get_global_leaderboard / get_subject_leaderboard)
+-- which aggregate across users and expose only public-safe fields + is_me, never a
+-- peer UUID (see 02_role_escalation: S2(b)). Here we assert the gameplay contract:
+-- a peer's `attempts` (private data) are invisible under a real authenticated role.
 -- =========================================================
 
 BEGIN;
 -- pgTAP is normally pre-installed by `supabase test db`; create it defensively
 -- so the file is self-contained when run via psql too. Idempotent.
 CREATE EXTENSION IF NOT EXISTS pgtap;
-SELECT plan(4);
+SELECT plan(6);
 
 -- ---------------------------------------------------------
 -- Fixtures: two users A and B, each with one attempt, owned by the superuser so
@@ -82,6 +83,23 @@ SELECT throws_ok(
   '42501',
   NULL,
   'grants: a direct UPDATE on attempts is rejected (writes are RPC-only)'
+);
+
+-- profiles: the "own or linked" SELECT policy must STILL isolate after the
+-- (SELECT auth.uid()) wrap (20260630150000). A and B are not linked, so A reads
+-- only their own profile row. (handle_new_user created both profiles on the
+-- auth.users inserts above.)
+SELECT is(
+  (SELECT count(*)::int FROM public.profiles
+     WHERE id = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'),
+  1,
+  'RLS: user A can read their OWN profile'
+);
+
+SELECT is_empty(
+  $$ SELECT 1 FROM public.profiles
+       WHERE id = 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb' $$,
+  'RLS: user A canNOT read an unlinked peer''s profile (own-or-linked policy holds)'
 );
 
 RESET ROLE;

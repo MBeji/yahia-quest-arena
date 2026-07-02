@@ -19,7 +19,7 @@ export const Route = createFileRoute("/_public")({
 function PublicLayout() {
   usePublicContentProtection();
   return (
-    <div className="public-shell flex min-h-screen flex-col bg-background text-foreground">
+    <div className="public-shell flex min-h-[100dvh] flex-col bg-background text-foreground">
       <PublicHeader />
       <main className="flex-1">
         <Outlet />

@@ -5,6 +5,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useAuth, useMyRole } from "@/features/auth";
 import { getPendingBetaCount } from "@/features/subscription";
 import { getOpenReportsCount } from "@/features/content-report";
+import { BetaBadge, BugReportLauncher, getOpenBugsCount } from "@/features/bug-report";
 import {
   Sparkles,
   LayoutDashboard,
@@ -17,6 +18,7 @@ import {
   CreditCard,
   FlaskConical,
   Flag,
+  Bug,
   TrendingUp,
 } from "lucide-react";
 import { supabase } from "@/shared/integrations/supabase/client";
@@ -28,7 +30,7 @@ import { GoldAmbient } from "@/components/visual/gold-ambient";
 import { AccountHud } from "@/components/account-hud";
 
 const NAV_LINK =
-  "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground transition hover:bg-[color:var(--gold)]/10 hover:text-champagne";
+  "flex min-h-11 items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground transition hover:bg-[color:var(--gold)]/10 hover:text-champagne";
 const NAV_ACTIVE = { className: "text-[color:var(--gold)] bg-[color:var(--gold)]/12" };
 
 export const Route = createFileRoute("/_authenticated")({
@@ -67,6 +69,16 @@ function AuthenticatedLayout() {
   });
   const openReports = reportsCount?.count ?? 0;
 
+  // Open bug reports count for the admin nav badge.
+  const fetchBugsCount = useServerFn(getOpenBugsCount);
+  const { data: bugsCount } = useQuery({
+    queryKey: ["open-bugs-count"],
+    enabled: userRole === "admin",
+    staleTime: 60_000,
+    queryFn: () => fetchBugsCount(),
+  });
+  const openBugs = bugsCount?.count ?? 0;
+
   // Redirect unauthenticated users via effect (not during render)
   useEffect(() => {
     if (!loading && !user) {
@@ -86,7 +98,7 @@ function AuthenticatedLayout() {
 
   if (loading) {
     return (
-      <div className="app-shell grid min-h-screen place-items-center bg-black-deep">
+      <div className="app-shell grid min-h-[100dvh] place-items-center bg-black-deep">
         <div className="font-display text-sm uppercase tracking-widest text-champagne/70">
           {t.common.loading}
         </div>
@@ -117,7 +129,7 @@ function AuthenticatedLayout() {
   const immersive = /^\/(quest|dungeon|lesson|onboarding)/.test(location.pathname);
 
   return (
-    <div className="app-shell relative min-h-screen bg-black-deep">
+    <div className="app-shell relative min-h-[100dvh] bg-black-deep">
       <GoldAmbient />
       {/* z-30 (above <main>'s z-10): the header hosts inline pop-overs (language
           menu) that open over the page content. At equal z-index the later <main>
@@ -132,6 +144,7 @@ function AuthenticatedLayout() {
               Na9ra <span className="text-gradient-gold">Nal3ab</span>
             </span>
           </Link>
+          <BetaBadge />
           <nav className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto sm:gap-2 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {/* Primary destinations: inline on desktop; on mobile/tablet they
                 live in the fixed bottom tab bar (rendered below the shell). */}
@@ -214,6 +227,21 @@ function AuthenticatedLayout() {
                   )}
                 </Link>
                 <Link
+                  to="/admin/bug-reports"
+                  className={NAV_LINK}
+                  activeProps={NAV_ACTIVE}
+                  aria-label={t.layout.bugReports}
+                  title={t.layout.bugReports}
+                >
+                  <Bug className="h-4 w-4 shrink-0" />{" "}
+                  <span className="hidden lg:inline">{t.layout.bugReports}</span>
+                  {openBugs > 0 && (
+                    <span className="ml-1 rounded-full bg-[image:var(--gradient-gold)] px-1.5 py-0.5 text-[10px] font-bold text-black">
+                      {openBugs}
+                    </span>
+                  )}
+                </Link>
+                <Link
                   to="/admin/parcours-interest"
                   className={NAV_LINK}
                   activeProps={NAV_ACTIVE}
@@ -250,6 +278,10 @@ function AuthenticatedLayout() {
       >
         <Outlet />
       </main>
+      {/* Beta-phase bug launcher — floats above the content. Hidden on immersive
+          screens (quest/dungeon/lesson/onboarding) so it never overlaps an
+          in-screen sticky CTA. */}
+      {!immersive && <BugReportLauncher />}
       {/* Mobile/tablet bottom tab bar — primary navigation for touch. Hidden on
           desktop (lg) where the top nav carries the same destinations, and on
           immersive screens to avoid overlapping their in-screen CTAs. */}

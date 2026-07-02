@@ -12,6 +12,7 @@ export type QuestLabels = {
   back: string;
   quizPassedBanner: string;
   quizFailedBanner: string;
+  quizTooFast: string;
   quizRecorded: string;
   eliteLockedTitle: string;
 };
@@ -44,6 +45,13 @@ export function buildQuestLabels(qlang: QuestContentLang): QuestLabels {
       ar: "❌ لم تبلغ 80% المطلوبة. عُد لقراءة الدرس جيّدًا ثمّ أعِد الاختبار.",
       fr: "❌ Tu n'as pas atteint les 80% requis. Relis bien le cours, puis refais le quiz.",
       en: "❌ You did not reach the required 80%. Re-read the lesson, then retake the quiz.",
+    }[qlang],
+    // Shown when a quiz reaches the score but was rushed (< 4s/question): the
+    // chapter stays locked, mirroring the connected gate's anti-rush rule.
+    quizTooFast: {
+      ar: "⏱️ أجبت بسرعة كبيرة. خذ وقتك لقراءة كلّ سؤال، ثمّ أعِد المحاولة.",
+      fr: "⏱️ Tu as répondu trop vite. Prends le temps de lire chaque question, puis réessaie.",
+      en: "⏱️ You answered too fast. Take your time to read each question, then try again.",
     }[qlang],
     // Quiz answers are deliberately NOT corrected on screen — the student must
     // validate on their own. So the in-quiz message must not promise a correction.

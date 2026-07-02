@@ -382,6 +382,22 @@ html:is(.light, .reference) .app-shell.bg-black-deep {
 html:is(.light, .reference) .app-shell :is(.text-black, .text-white) {
   color: oklch(0.22 0.008 130);
 }
+
+/* ---------------------------------------------------------------
+  Immersive exercise player (light theme).
+  The unified question-by-question player renders in BOTH the connected
+  (.app-shell) and the public (.public-shell) registers. Its translucent
+  `bg-black/<alpha>` panels need the same black→white remap the app shell gets;
+  in the public shell — which is NOT .app-shell — those cards otherwise stay dark
+  while the foreground/ink stays dark, making the quiz unreadable. Carry the remap
+  on the player itself (`.game-surface`) so it looks identical in both registers.
+  --------------------------------------------------------------- */
+html:is(.light, .reference) .game-surface {
+  --color-black: oklch(1 0 0);
+}
+html:is(.light, .reference) .game-surface :is(.text-black, .text-white) {
+  color: oklch(0.22 0.008 130);
+}
 html:is(.light, .reference) .glass-gold {
   background: oklch(1 0 0 / 0.66);
   border-color: oklch(0.86 0.18 122 / 0.28);
@@ -633,6 +649,16 @@ html:is(.light, .reference) *:focus-visible {
   line-height: 1.9;
   color: var(--foreground);
   scroll-behavior: smooth;
+  /* Multi-device: long unbreakable strings (URLs, code identifiers, math tokens)
+     must wrap instead of pushing the viewport past the phone width (360px). */
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+/* Code blocks scroll horizontally inside their own box rather than overflowing the page. */
+.lesson-content pre {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .lesson-content .lesson-h1 {
   font-family: var(--font-display);
@@ -696,7 +722,14 @@ html:is(.light, .reference) *:focus-visible {
   inset-inline-start: 0;
 }
 .lesson-content .lesson-table {
+  /* `display:block` + `overflow-x:auto` turns a wide markdown table into its own
+     horizontally-scrollable region so several columns / long cells never break the
+     360px viewport (the table keeps its intrinsic width and scrolls within). */
+  display: block;
   width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border-collapse: collapse;
   margin: 1rem 0;
   font-size: 0.9rem;
@@ -721,6 +754,31 @@ html:is(.light, .reference) *:focus-visible {
   border: 1px solid color-mix(in oklab, var(--neon-violet) 20%, transparent);
   direction: ltr;
   unicode-bidi: isolate;
+  /* A long equation scrolls within its block instead of overflowing the phone viewport. */
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+/* Inline lesson figures (anatomy, geometry, diagrams). Authored SVGs use dark ink
+   on an implied light worksheet, so they are drawn on a white surface to stay
+   visible on every theme — matching the exercise figure surface. */
+.lesson-content .lesson-figure {
+  display: flex;
+  justify-content: center;
+  margin: 1.25rem auto;
+  max-width: 22rem;
+  padding: 0.75rem;
+  background: #ffffff;
+  color: #0f172a;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+  border: 1px solid rgb(0 0 0 / 0.1);
+}
+.lesson-content .lesson-figure svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
 }
 .lesson-content strong {
   color: var(--neon-gold);

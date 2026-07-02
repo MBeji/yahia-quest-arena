@@ -64,6 +64,9 @@ describe("gamification.dashboard — getDashboard", () => {
     vi.resetModules();
     mockFrom.mockReset();
     mockRpc.mockReset();
+    // Default: the per-subject stats RPC returns no rows. Tests that assert on
+    // stats override this with their own aggregate rows.
+    mockRpc.mockReturnValue({ data: [], error: null });
   });
 
   // Parcours-based subject scoping (active parcours, premium lock, null parcours)
@@ -161,33 +164,19 @@ describe("gamification.dashboard — getDashboard", () => {
     );
   });
 
-  it("computes per-subject stats correctly", async () => {
+  it("computes per-subject stats from the stats RPC aggregate", async () => {
     const profile = { id: "user-123", display_name: "Yahia" };
-    const attempts = [
-      {
-        subject_id: "s1",
-        score_pct: 80,
-        xp_earned: 50,
-        completed_at: "2026-06-01",
-        exercise_id: "e1",
-      },
-      {
-        subject_id: "s1",
-        score_pct: 60,
-        xp_earned: 30,
-        completed_at: "2026-06-01",
-        exercise_id: "e2",
-      },
-    ];
 
     mockFrom.mockImplementation((table: string) => {
       if (table === "profiles") return mockQuery(profile);
       if (table === "subjects") return mockQuery([]);
-      if (table === "attempts") return mockQuery(attempts);
-      if (table === "student_badges") return mockQuery([]);
-      if (table === "inventory_items") return mockQuery([]);
-      if (table === "shop_items") return mockQuery([]);
+      if (table === "attempts") return mockQuery([]);
       return mockQuery([]);
+    });
+    // get_user_subject_stats returns one bounded row per subject (GROUP BY).
+    mockRpc.mockReturnValue({
+      data: [{ subject_id: "s1", attempts_count: 2, avg_score: 70, total_xp: 80 }],
+      error: null,
     });
 
     const { getDashboard } = await import("@/features/dashboard");
@@ -195,14 +184,15 @@ describe("gamification.dashboard — getDashboard", () => {
 
     const res = result as { stats: Record<string, { count: number; avg: number; xp: number }> };
     expect(res.stats.s1.count).toBe(2);
-    expect(res.stats.s1.avg).toBe(70); // (80+60)/2
+    expect(res.stats.s1.avg).toBe(70);
     expect(res.stats.s1.xp).toBe(80);
   });
 
-  it("aggregates per-subject stats from the full attempt set, not the recent window (#18)", async () => {
+  it("stats come from the RPC (full history), independent of the recent window (#18)", async () => {
     const profile = { id: "user-123", display_name: "Yahia" };
-    // Recent (limited) query returns 1 row; the full stats query returns 3 rows.
-    // Correct aggregates must reflect the full set.
+    // The recent (limited) attempts query returns 1 row; the stats RPC aggregates
+    // the FULL set (3 attempts) — the dashboard stats must reflect the RPC, not
+    // the recent window.
     const recent = [
       {
         subject_id: "s1",
@@ -212,22 +202,16 @@ describe("gamification.dashboard — getDashboard", () => {
         exercise_id: "e3",
       },
     ];
-    const full = [
-      { subject_id: "s1", score_pct: 90, xp_earned: 50 },
-      { subject_id: "s1", score_pct: 60, xp_earned: 30 },
-      { subject_id: "s1", score_pct: 30, xp_earned: 10 },
-    ];
 
-    let attemptsCall = 0;
     mockFrom.mockImplementation((table: string) => {
       if (table === "profiles") return mockQuery(profile);
       if (table === "subjects") return mockQuery([]);
-      if (table === "attempts") {
-        attemptsCall += 1;
-        // Call order in getDashboard's Promise.all: recent first, then full stats.
-        return attemptsCall === 1 ? mockQuery(recent) : mockQuery(full);
-      }
+      if (table === "attempts") return mockQuery(recent);
       return mockQuery([]);
+    });
+    mockRpc.mockReturnValue({
+      data: [{ subject_id: "s1", attempts_count: 3, avg_score: 60, total_xp: 90 }],
+      error: null,
     });
 
     const { getDashboard } = await import("@/features/dashboard");
@@ -235,8 +219,26 @@ describe("gamification.dashboard — getDashboard", () => {
 
     const res = result as { stats: Record<string, { count: number; avg: number; xp: number }> };
     expect(res.stats.s1.count).toBe(3);
-    expect(res.stats.s1.avg).toBe(60); // (90+60+30)/3
+    expect(res.stats.s1.avg).toBe(60);
     expect(res.stats.s1.xp).toBe(90);
+  });
+
+  it("degrades to empty stats when the stats RPC errors (deploy-race safe)", async () => {
+    const profile = { id: "user-123", display_name: "Yahia" };
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "profiles") return mockQuery(profile);
+      if (table === "subjects") return mockQuery([]);
+      if (table === "attempts") return mockQuery([]);
+      return mockQuery([]);
+    });
+    mockRpc.mockReturnValue({ data: null, error: { message: "function does not exist" } });
+
+    const { getDashboard } = await import("@/features/dashboard");
+    const result = await (getDashboard as unknown as (d?: unknown) => Promise<unknown>)();
+
+    // The dashboard still renders; stats are simply empty rather than throwing.
+    const res = result as { stats: Record<string, unknown> };
+    expect(res.stats).toEqual({});
   });
 
   it("identifies next exercise when last attempt failed", async () => {
@@ -276,51 +278,100 @@ describe("gamification.dashboard — getLeaderboard", () => {
     mockRpc.mockReset();
   });
 
-  it("returns ranked leaderboard with current user", async () => {
-    const topPlayers = [
-      {
-        id: "user-123",
-        display_name: "Yahia",
-        hero_class: "warrior",
-        level: 5,
-        xp: 1000,
-        current_streak: 7,
-        avatar_tier: "gold",
-      },
-      {
-        id: "user-456",
-        display_name: "Ali",
-        hero_class: "mage",
-        level: 3,
-        xp: 500,
-        current_streak: 3,
-        avatar_tier: "bronze",
-      },
-    ];
-
-    mockFrom.mockImplementation(() => mockQuery(topPlayers));
+  it("returns ranked leaderboard with current user via the RLS-safe RPC", async () => {
+    // The global board reads through the SECURITY DEFINER `get_global_leaderboard`
+    // RPC (not `profiles` directly), so it can see peers despite the "own or linked
+    // profiles" RLS policy. The RPC already returns rank + is_me and no peer UUID.
+    mockRpc.mockResolvedValue({
+      data: [
+        {
+          rank: 1,
+          display_name: "Yahia",
+          hero_class: "warrior",
+          level: 5,
+          xp: 1000,
+          current_streak: 7,
+          avatar_tier: 3,
+          is_me: true,
+        },
+        {
+          rank: 2,
+          display_name: "Ali",
+          hero_class: "mage",
+          level: 3,
+          xp: 500,
+          current_streak: 3,
+          avatar_tier: 1,
+          is_me: false,
+        },
+      ],
+      error: null,
+    });
 
     const { getLeaderboard } = await import("@/features/dashboard");
     const result = await (getLeaderboard as unknown as (d?: unknown) => Promise<unknown>)();
 
     const res = result as {
       leaderboard: Record<string, unknown>[];
-      myRank: Record<string, unknown> | undefined;
+      myRank: Record<string, unknown> | null;
     };
+
+    expect(mockRpc).toHaveBeenCalledWith("get_global_leaderboard", {
+      p_limit: expect.any(Number),
+    });
     expect(res.leaderboard).toHaveLength(2);
-    expect(res.myRank).toBeDefined();
+    expect(res.myRank).toMatchObject({ rank: 1, isMe: true });
 
     // SECURITY (P0 S2b): the global leaderboard must not surface any peer UUIDs.
-    // `isMe` is computed server-side; rows are keyed by `rank` on the client.
+    // `isMe` comes from the RPC; rows are keyed by `rank` on the client.
     expect(res.leaderboard[0]).toMatchObject({ rank: 1, isMe: true });
     expect(res.leaderboard[1]).toMatchObject({ rank: 2, isMe: false });
     for (const row of res.leaderboard) {
       expect(row).not.toHaveProperty("id");
+      expect(row).not.toHaveProperty("user_id");
     }
   });
 
-  it("throws a generic French message on fetch error (#14)", async () => {
-    mockFrom.mockImplementation(() => mockQuery(null, { message: "Leaderboard error" }));
+  it("returns my rank even when I fall outside the visible top window", async () => {
+    // The RPC always includes the caller's own row (rank > limit) so "my rank" is
+    // known; the client list still trims it to the top LEADERBOARD_LIMIT rows.
+    mockRpc.mockResolvedValue({
+      data: [
+        {
+          rank: 1,
+          display_name: "Top",
+          hero_class: "S-Rank",
+          level: 10,
+          xp: 9999,
+          current_streak: 4,
+          avatar_tier: 3,
+          is_me: false,
+        },
+        {
+          rank: 99,
+          display_name: "Me",
+          hero_class: "Novice",
+          level: 2,
+          xp: 50,
+          current_streak: 1,
+          avatar_tier: 1,
+          is_me: true,
+        },
+      ],
+      error: null,
+    });
+
+    const { getLeaderboard } = await import("@/features/dashboard");
+    const result = (await (getLeaderboard as unknown as (d?: unknown) => Promise<unknown>)()) as {
+      leaderboard: Record<string, unknown>[];
+      myRank: { rank: number; isMe: boolean } | null;
+    };
+
+    expect(result.myRank).toMatchObject({ rank: 99, isMe: true });
+  });
+
+  it("throws a generic French message on RPC error (#14)", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: { message: "Leaderboard error" } });
 
     const { getLeaderboard } = await import("@/features/dashboard");
 
@@ -684,54 +735,32 @@ describe("gamification.dashboard — branch coverage (error/empty paths)", () =>
     mockRpc.mockReset();
   });
 
-  it("getLeaderboard computes my rank via count when I'm not in the top list", async () => {
-    let n = 0;
-    mockFrom.mockImplementation(() => {
-      n += 1;
-      if (n === 1)
-        return mockQuery([
-          {
-            id: "other",
-            display_name: "Other",
-            hero_class: "mage",
-            level: 9,
-            xp: 9999,
-            current_streak: 0,
-            avatar_tier: 1,
-          },
-        ]);
-      if (n === 2)
-        return mockQuery({
-          id: "user-123",
-          xp: 500,
-          display_name: "Me",
-          hero_class: "novice",
-          level: 2,
-          current_streak: 1,
+  it("getLeaderboard returns a null myRank when the RPC omits the caller's row", async () => {
+    // Defensive: if the caller has no student profile the RPC returns no self row,
+    // so myRank is null and the board still renders the visible peers.
+    mockRpc.mockResolvedValue({
+      data: [
+        {
+          rank: 1,
+          display_name: "Other",
+          hero_class: "mage",
+          level: 9,
+          xp: 9999,
+          current_streak: 0,
           avatar_tier: 1,
-        });
-      return mockQuery(null); // count query → count undefined → `count ?? 0`
+          is_me: false,
+        },
+      ],
+      error: null,
     });
 
     const { getLeaderboard } = await import("@/features/dashboard");
     const res = (await (getLeaderboard as unknown as (d?: unknown) => Promise<unknown>)()) as {
-      myRank: { isMe: boolean; rank: number } | undefined;
+      leaderboard: unknown[];
+      myRank: unknown;
     };
-    expect(res.myRank?.isMe).toBe(true);
-    expect(res.myRank?.rank).toBe(1);
-  });
-
-  it("getLeaderboard throws when the 'me' query errors", async () => {
-    let n = 0;
-    mockFrom.mockImplementation(() => {
-      n += 1;
-      if (n === 1) return mockQuery([]);
-      return mockQuery(null, { message: "me error" });
-    });
-    const { getLeaderboard } = await import("@/features/dashboard");
-    await expect(
-      (getLeaderboard as unknown as (d?: unknown) => Promise<unknown>)(),
-    ).rejects.toThrow(/tableau de bord/i);
+    expect(res.leaderboard).toHaveLength(1);
+    expect(res.myRank).toBeNull();
   });
 
   it("getDashboardSecondary skips null badge/item rows and marks unowned shop items", async () => {

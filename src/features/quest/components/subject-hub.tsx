@@ -34,9 +34,10 @@ export type SubjectHubExercise = {
  * pivot is free; anon `getSubject` already returns `hasEntitlement: true`).
  * Exercise links are auth-aware (L1.5): a signed-in visitor goes to the scored
  * quest (`/quest`, XP); an anonymous one goes to free practice (`/exercice`) —
- * including the comprehension quiz, which the public practice page turns into an
- * account invite rather than bouncing the visitor to login. Routing rule lives in
- * `exerciseRouteFor` (shared with the course reader's practise CTA).
+ * including the comprehension quiz, which the public player now lets the visitor
+ * pass to unlock the chapter's exercises (gate parity with the connected flow),
+ * never bouncing them to login. Routing rule lives in `exerciseRouteFor` (shared
+ * with the course reader's practise CTA).
  * Copy is i18n (fr/en/ar).
  */
 export function SubjectHub({
@@ -95,7 +96,7 @@ export function SubjectHub({
               <Link
                 to="/chapitre/$chapterId"
                 params={{ chapterId: c.id }}
-                className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+                className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:opacity-90 [@media(pointer:coarse)]:min-h-11"
               >
                 <BookOpen className="h-4 w-4" /> {t.public.subject.readCourse}
               </Link>
@@ -109,7 +110,7 @@ export function SubjectHub({
                         <Link
                           to={exerciseTo}
                           params={{ exerciseId: ex.id }}
-                          className="flex items-center justify-between gap-3 py-2.5 text-sm transition hover:text-primary"
+                          className="flex items-center justify-between gap-3 py-2.5 text-sm transition hover:text-primary [@media(pointer:coarse)]:min-h-11"
                         >
                           <span className="truncate" dir={isRtlText(ex.title) ? "rtl" : "ltr"}>
                             {ex.mode === "quiz" ? "🧠 " : ""}

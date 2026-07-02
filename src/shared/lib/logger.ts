@@ -15,7 +15,10 @@ function safeMeta(meta?: LogMeta): LogMeta | undefined {
       lowered.includes("token") ||
       lowered.includes("secret") ||
       lowered.includes("password") ||
-      lowered.includes("key")
+      lowered.includes("key") ||
+      lowered.includes("authorization") ||
+      lowered.includes("bearer") ||
+      lowered.includes("cookie")
     ) {
       redacted[key] = "********";
       continue;

@@ -281,18 +281,33 @@ export const getChapterLesson = createServerFn({ method: "GET" })
       failWithClientError("quest.getChapterLesson", error, "Impossible de charger la leçon.");
     }
 
-    // Fetch all sibling chapters for navigation
-    const { data: siblings } = await supabase
-      .from("chapters")
-      .select("id, title, display_order, lesson_content")
-      .eq("subject_id", chapter.subject_id)
-      .order("display_order");
+    // Fetch all sibling chapters for navigation. We only need each sibling's
+    // metadata + whether it HAS a lesson — never the lesson body itself. Pulling
+    // `lesson_content` here shipped every sibling's full markdown over the wire
+    // just to derive a boolean (a subject with N chapters × ~30 KB each). Split
+    // into two tiny reads: the metadata for all siblings, and the id-only set of
+    // those that actually carry a lesson.
+    const [{ data: siblings }, { data: siblingsWithLesson }] = await Promise.all([
+      supabase
+        .from("chapters")
+        .select("id, title, display_order")
+        .eq("subject_id", chapter.subject_id)
+        .order("display_order"),
+      supabase
+        .from("chapters")
+        .select("id")
+        .eq("subject_id", chapter.subject_id)
+        .not("lesson_content", "is", null)
+        // Preserve the old `!!lesson_content` semantics: an empty string is "no lesson".
+        .neq("lesson_content", ""),
+    ]);
 
+    const withLesson = new Set((siblingsWithLesson ?? []).map((s) => s.id));
     const allChapters = (siblings ?? []).map((s) => ({
       id: s.id,
       title: s.title,
       display_order: s.display_order,
-      hasLesson: !!s.lesson_content,
+      hasLesson: withLesson.has(s.id),
     }));
 
     // Target for the course reader's single « practise this chapter » CTA: the
@@ -471,6 +486,58 @@ export const checkAnswersPublic = createServerFn({ method: "POST" })
     return { reviewable: total > 0, correct, total, scorePct, review };
   });
 
+// ---------- Public quiz scoring (anonymous gate parity) ----------
+/**
+ * Public, stateless SCORING for the comprehension quiz. Mirrors the connected gate
+ * WITHOUT leaking it: calls the SECURITY DEFINER `score_quiz` RPC, which returns
+ * only the aggregate (correct count + total) for admin mode='quiz' exercises —
+ * never per-question correctness, the correct option, or explanations. So an
+ * anonymous visitor can self-validate their comprehension and unlock a chapter's
+ * practice client-side, exactly like a signed-in student (whose quiz attempts also
+ * return a score only). No session, no attempt, no XP.
+ */
+export const scoreQuizPublic = createServerFn({ method: "POST" })
+  .middleware([optionalSupabaseAuth])
+  .inputValidator((d) =>
+    z
+      .object({
+        exerciseId: z.guid(),
+        answers: z
+          .array(z.object({ questionId: z.guid(), choice: z.string() }))
+          .min(1)
+          .max(100),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+
+    // Anti-abuse — same split as checkAnswersPublic: persistent limiter for
+    // signed-in callers, best-effort in-memory IP limiter for anonymous ones.
+    const limited = userId
+      ? await isRateLimited(supabase, `score_quiz_${userId}`, 30, 60_000)
+      : isRateLimitedLocal(`score_quiz_ip_${clientIpKey()}`, 30, 60_000);
+    if (limited) {
+      throw new Error("Trop de requêtes. Réessaie dans un instant.");
+    }
+
+    const { data: rows, error } = await supabase.rpc("score_quiz", {
+      p_exercise_id: data.exerciseId,
+      p_answers: data.answers,
+    });
+    if (error) {
+      failWithClientError("quest.scoreQuizPublic", error, "Impossible de corriger le quiz.");
+    }
+
+    const row = Array.isArray(rows)
+      ? (rows[0] as { correct?: number; total?: number } | undefined)
+      : undefined;
+    const total = Number(row?.total ?? 0);
+    const correct = Number(row?.correct ?? 0);
+    const scorePct = total > 0 ? Math.round((correct / total) * 100) : 0;
+    return { correct, total, scorePct };
+  });
+
 // ---------- Get exercise + questions ----------
 export const getExercise = createServerFn({ method: "GET" })
   .middleware([optionalSupabaseAuth])
@@ -481,7 +548,7 @@ export const getExercise = createServerFn({ method: "GET" })
       supabase
         .from("exercises")
         .select(
-          "*, subjects(id,name_fr,color_token,icon,content_language), chapters(id,title,subject_id)",
+          "*, subjects(id,name_fr,color_token,icon,content_language,grade_id), chapters(id,title,subject_id)",
         )
         .eq("id", data.exerciseId)
         .single(),
@@ -531,7 +598,19 @@ export const getExercise = createServerFn({ method: "GET" })
       chapterQuizId = (quizRow as { id?: string } | null)?.id ?? null;
     }
 
-    return { exercise: ex.data, questions: qs.data ?? [], hintCharges, chapterQuizId };
+    // The comprehension-quiz gate applies to SCHOOL subjects only (grade-bound):
+    // a non-quiz exercise whose chapter has a quiz is gated until that quiz is
+    // passed. Non-school themes leave grade_id NULL -> never gated. Computed here
+    // so BOTH the connected (`/quest`) and anonymous (`/exercice`) players share
+    // one definition of "is this locked behind the quiz?" — the connected start is
+    // still enforced server-side in start_exercise_session; the anon player reads
+    // this flag and checks the session-local pass state.
+    const subjectGradeId =
+      (ex.data as { subjects?: { grade_id?: string | null } | null } | null)?.subjects?.grade_id ??
+      null;
+    const quizGated = chapterQuizId !== null && subjectGradeId !== null;
+
+    return { exercise: ex.data, questions: qs.data ?? [], hintCharges, chapterQuizId, quizGated };
   });
 
 // ---------- Start a secure exercise session ----------

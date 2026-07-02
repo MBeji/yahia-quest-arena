@@ -123,7 +123,7 @@ export function ContentReportsAdmin() {
                       <button
                         onClick={() => mutation.mutate({ reportId: r.id, status: "resolved" })}
                         disabled={busy}
-                        className="inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-3 py-1.5 text-sm font-bold text-black shadow-gold transition hover:scale-105 disabled:opacity-50"
+                        className="inline-flex min-h-11 items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-3 py-1.5 text-sm font-bold text-black shadow-gold transition hover:scale-105 disabled:opacity-50"
                       >
                         {busy ? (
                           <Loader2 className="h-4 w-4 animate-spin" />
@@ -135,7 +135,7 @@ export function ContentReportsAdmin() {
                       <button
                         onClick={() => mutation.mutate({ reportId: r.id, status: "dismissed" })}
                         disabled={busy}
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-border/50 px-3 py-1.5 text-sm font-semibold text-muted-foreground transition hover:text-foreground disabled:opacity-50"
+                        className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-border/50 px-3 py-1.5 text-sm font-semibold text-muted-foreground transition hover:text-foreground disabled:opacity-50"
                       >
                         <X className="h-4 w-4" /> {t.contentReport.dismiss}
                       </button>

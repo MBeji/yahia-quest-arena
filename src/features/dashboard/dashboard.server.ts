@@ -10,6 +10,7 @@ import {
 import type { BadgeRow, DashboardShopItem, InventoryRow } from "@/shared/types/gamification";
 import { getCurrentWeekStartUtc, getTodayUtc } from "@/shared/lib/dates";
 import { failWithClientError } from "@/shared/lib/safe-error";
+import { logger } from "@/shared/lib/logger";
 
 const DASHBOARD_ERROR_FR = "Impossible de charger le tableau de bord. Veuillez réessayer.";
 
@@ -33,11 +34,10 @@ export const getDashboard = createServerFn({ method: "GET" })
     const claims = (context.claims ?? {}) as Record<string, unknown>;
     const fallbackDisplayName = resolveFallbackDisplayName(claims);
 
-    // Per-subject aggregates (#18) must be computed over ALL of the user's attempts,
-    // not just the recent window — otherwise active users get truncated counts/averages.
-    // We fetch a lightweight projection (3 columns) of every attempt for the user.
-    // TODO(review #18): a `subject_stats` SQL view or RPC (GROUP BY subject_id) would be
-    // the ideal aggregate source; implement once a DB migration is in scope.
+    // Per-subject aggregates (#18) are computed over ALL of the user's attempts
+    // by the `get_user_subject_stats` RPC (GROUP BY subject_id), so the dashboard
+    // no longer transfers a user's entire attempt history to reduce it in JS
+    // (perf audit M4). The result is bounded to one row per subject.
     const [profileRes, subjectsRes, recentRes, statsRes] = await Promise.all([
       supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
       supabase.from("subjects").select("*").order("display_order"),
@@ -47,7 +47,7 @@ export const getDashboard = createServerFn({ method: "GET" })
         .eq("user_id", userId)
         .order("completed_at", { ascending: false })
         .limit(DASHBOARD_RECENT_LIMIT),
-      supabase.from("attempts").select("subject_id,score_pct,xp_earned").eq("user_id", userId),
+      supabase.rpc("get_user_subject_stats"),
     ]);
 
     if (profileRes.error)
@@ -56,8 +56,13 @@ export const getDashboard = createServerFn({ method: "GET" })
       failWithClientError("getDashboard.subjects", subjectsRes.error, DASHBOARD_ERROR_FR);
     if (recentRes.error)
       failWithClientError("getDashboard.recent", recentRes.error, DASHBOARD_ERROR_FR);
+    // Stats degrade gracefully: if the RPC errors (e.g. the migration hasn't
+    // applied yet during a deploy), show the dashboard with empty stats rather
+    // than failing the whole page.
     if (statsRes.error)
-      failWithClientError("getDashboard.stats", statsRes.error, DASHBOARD_ERROR_FR);
+      logger.warn("getDashboard.stats: subject-stats RPC failed, defaulting to empty", {
+        error: statsRes.error.message,
+      });
 
     let profile = profileRes.data;
 
@@ -81,13 +86,14 @@ export const getDashboard = createServerFn({ method: "GET" })
       profile = profileData;
     }
 
-    // Build per-subject count/avg/xp over the FULL attempt set (#18).
+    // Build per-subject count/avg/xp from the bounded RPC aggregate (#18, M4).
     const bySubject: Record<string, { count: number; avg: number; xp: number }> = {};
-    for (const a of statsRes.data ?? []) {
-      const s = (bySubject[a.subject_id] ??= { count: 0, avg: 0, xp: 0 });
-      s.avg = (s.avg * s.count + Number(a.score_pct)) / (s.count + 1);
-      s.count += 1;
-      s.xp += a.xp_earned;
+    for (const r of statsRes.data ?? []) {
+      bySubject[r.subject_id] = {
+        count: Number(r.attempts_count),
+        avg: Number(r.avg_score),
+        xp: Number(r.total_xp),
+      };
     }
 
     // Find next incomplete exercise (score < pass threshold)
@@ -284,69 +290,39 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
   });
 
 // ---------- Leaderboard ----------
+// Reads through the SECURITY DEFINER `get_global_leaderboard` RPC rather than
+// `profiles` directly: since migration 20260522153000 the profiles SELECT policy
+// is "own or linked profiles", so a direct query returned ONLY the caller's row
+// (you could see your own score but no one else's). The RPC aggregates across all
+// students despite per-row RLS and — like the per-subject board — returns no peer
+// `user_id`, only the public-safe fields plus the `is_me` flag. Rows past the
+// visible window are dropped; the caller's own row is always returned so "my rank"
+// is known even when outside the top `LEADERBOARD_LIMIT`.
 export const getLeaderboard = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { supabase, userId } = context;
+    const { supabase } = context;
 
-    const [topPlayersRes, meRes] = await Promise.all([
-      supabase
-        .from("profiles")
-        .select("id,display_name,hero_class,level,xp,current_streak,avatar_tier")
-        .eq("role", "student")
-        .order("xp", { ascending: false })
-        .limit(LEADERBOARD_LIMIT),
-      supabase
-        .from("profiles")
-        .select("id,xp,display_name,hero_class,level,current_streak,avatar_tier")
-        .eq("id", userId)
-        .maybeSingle(),
-    ]);
+    const { data: rows, error } = await supabase.rpc("get_global_leaderboard", {
+      p_limit: LEADERBOARD_LIMIT,
+    });
+    if (error) failWithClientError("getLeaderboard", error, DASHBOARD_ERROR_FR);
 
-    if (topPlayersRes.error)
-      failWithClientError("getLeaderboard.topPlayers", topPlayersRes.error, DASHBOARD_ERROR_FR);
-    if (meRes.error) failWithClientError("getLeaderboard.me", meRes.error, DASHBOARD_ERROR_FR);
-
-    const topPlayers = topPlayersRes.data ?? [];
-
-    // SECURITY: never expose peer `user_id`s to the client. `isMe` is computed
-    // here (server-side) from the caller's own id; the client keys/highlights
-    // rows by `rank` + `isMe`, so no other user's UUID leaves the server.
-    const ranked = topPlayers.map((p, i) => ({
-      rank: i + 1,
-      displayName: p.display_name,
-      heroClass: p.hero_class,
-      level: p.level,
-      xp: p.xp,
-      streak: p.current_streak,
-      avatarTier: p.avatar_tier,
-      isMe: p.id === userId,
+    const mapped = (rows ?? []).map((r) => ({
+      rank: Number(r.rank),
+      displayName: r.display_name,
+      heroClass: r.hero_class,
+      level: r.level,
+      xp: Number(r.xp),
+      streak: r.current_streak,
+      avatarTier: r.avatar_tier,
+      isMe: r.is_me,
     }));
 
-    let myRank = ranked.find((r) => r.isMe);
+    const leaderboard = mapped.filter((r) => r.rank <= LEADERBOARD_LIMIT);
+    const myRank = mapped.find((r) => r.isMe) ?? null;
 
-    if (!myRank && meRes.data && typeof meRes.data.xp === "number") {
-      const { count, error: rankErr } = await supabase
-        .from("profiles")
-        .select("id", { head: true, count: "exact" })
-        .eq("role", "student")
-        .gt("xp", meRes.data.xp);
-
-      if (rankErr) failWithClientError("getLeaderboard.rank", rankErr, DASHBOARD_ERROR_FR);
-
-      myRank = {
-        rank: (count ?? 0) + 1,
-        displayName: meRes.data.display_name,
-        heroClass: meRes.data.hero_class,
-        level: meRes.data.level,
-        xp: meRes.data.xp,
-        streak: meRes.data.current_streak,
-        avatarTier: meRes.data.avatar_tier,
-        isMe: true,
-      };
-    }
-
-    return { leaderboard: ranked, myRank };
+    return { leaderboard, myRank };
   });
 
 // ---------- Parcours catalogue (sellable journeys: concours + free libre tracks) ----------

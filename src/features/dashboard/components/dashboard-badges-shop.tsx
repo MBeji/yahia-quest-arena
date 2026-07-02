@@ -122,7 +122,7 @@ export function DashboardBadgesShop({
                 className="rounded-2xl border border-border/50 bg-black/60 p-5 backdrop-blur-md"
               >
                 <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-center gap-3">
+                  <div className="flex min-w-0 items-center gap-3">
                     {skinEmoji && (
                       <Avatar className="h-10 w-10 border border-[color:var(--gold)]/40">
                         <AvatarFallback
@@ -133,14 +133,14 @@ export function DashboardBadgesShop({
                         </AvatarFallback>
                       </Avatar>
                     )}
-                    <div>
-                      <div className="font-display text-lg font-bold">{item.name}</div>
+                    <div className="min-w-0">
+                      <div className="truncate font-display text-lg font-bold">{item.name}</div>
                       <div className="text-xs uppercase tracking-widest text-[color:var(--gold)]">
                         {itemTypeLabel(item.itemType)}
                       </div>
                     </div>
                   </div>
-                  <div className="rounded-full bg-[color:var(--gold)]/10 px-3 py-1 text-xs font-bold text-[color:var(--gold)]">
+                  <div className="shrink-0 rounded-full bg-[color:var(--gold)]/10 px-3 py-1 text-xs font-bold text-[color:var(--gold)]">
                     {item.priceCoins} {t.quest.coinsLabel}
                   </div>
                 </div>
@@ -163,12 +163,12 @@ export function DashboardBadgesShop({
                     </div>
                   )}
                 </div>
-                <div className="mt-4 flex gap-2">
+                <div className="mt-4 flex flex-wrap gap-2">
                   <button
                     disabled={!canBuy || isBusy || availableCoins < item.priceCoins}
                     onClick={() => onPurchase(item.code)}
                     aria-label={`${t.dashboard.shopBuy} ${item.name}`}
-                    className="flex-1 rounded-lg border border-border bg-black/50 px-4 py-2.5 text-sm font-semibold disabled:opacity-40"
+                    className="min-h-11 flex-1 rounded-lg border border-border bg-black/50 px-4 py-2.5 text-sm font-semibold disabled:opacity-40"
                   >
                     {isPurchasePending ? (
                       <Loader2 className="mx-auto h-4 w-4 animate-spin" />
@@ -181,7 +181,7 @@ export function DashboardBadgesShop({
                       disabled={isBusy}
                       onClick={() => onEquip(item.code)}
                       aria-label={`${t.dashboard.shopEquip} ${item.name}`}
-                      className="flex-1 rounded-lg bg-[image:var(--gradient-gold)] px-4 py-2.5 text-sm font-bold text-black shadow-gold disabled:opacity-40"
+                      className="min-h-11 flex-1 rounded-lg bg-[image:var(--gradient-gold)] px-4 py-2.5 text-sm font-bold text-black shadow-gold disabled:opacity-40"
                     >
                       {isEquipPending ? (
                         <Loader2 className="mx-auto h-4 w-4 animate-spin" />
@@ -195,7 +195,7 @@ export function DashboardBadgesShop({
                       disabled={isBusy}
                       onClick={() => onActivate(item.code)}
                       aria-label={`${t.dashboard.shopActivate} ${item.name}`}
-                      className="flex-1 rounded-lg bg-[image:var(--gradient-gold)] px-4 py-2.5 text-sm font-bold text-black shadow-gold disabled:opacity-40"
+                      className="min-h-11 flex-1 rounded-lg bg-[image:var(--gradient-gold)] px-4 py-2.5 text-sm font-bold text-black shadow-gold disabled:opacity-40"
                     >
                       {isActivatePending ? (
                         <Loader2 className="mx-auto h-4 w-4 animate-spin" />

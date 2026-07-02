@@ -25,7 +25,7 @@ export function Confetti() {
           className="absolute rounded-sm"
           style={{ left: `${p.x}%`, width: p.size, height: p.size, backgroundColor: p.color }}
           initial={{ y: -20, opacity: 1, rotate: 0 }}
-          animate={{ y: "100vh", opacity: 0, rotate: 360 + Math.random() * 360 }}
+          animate={{ y: "100dvh", opacity: 0, rotate: 360 + Math.random() * 360 }}
           transition={{ duration: p.duration, delay: p.delay, ease: "easeIn" }}
         />
       ))}

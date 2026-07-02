@@ -48,7 +48,7 @@ export function EnablePushCard() {
                   type="button"
                   onClick={disable}
                   disabled={busy}
-                  className="text-xs font-semibold text-muted-foreground transition hover:text-foreground disabled:opacity-50"
+                  className="inline-flex items-center px-1 py-2 text-xs font-semibold text-muted-foreground transition hover:text-foreground disabled:opacity-50 [@media(pointer:coarse)]:min-h-11"
                 >
                   {t.pushNotifications.disable}
                 </button>

@@ -59,11 +59,11 @@
       "options": [
         { "id": "a", "text": "Ses … sont" },
         { "id": "b", "text": "Ses … ont" },
-        { "id": "c", "text": "Ces … sont" },
+        { "id": "c", "text": "Ce … sont" },
         { "id": "d", "text": "Ses … son" }
       ],
       "correctOption": "a",
-      "explanation": "Il faut le possessif pluriel « Ses » (les siennes) puis le verbe être « sont » : Ses sœurs sont médecins. « ont » est le verbe avoir, « son » est singulier, et « Ces » est un démonstratif, pas un possessif — le sens « ses sœurs à elle » demande « Ses ».",
+      "explanation": "Il faut le possessif pluriel « Ses » (les siennes) puis le verbe être « sont » : Ses sœurs sont médecins. « ont » est le verbe avoir, « son » est singulier, et « Ce » est un démonstratif singulier, incorrect devant « sœurs » au pluriel (il faudrait « Ces »).",
       "difficulty": 3
     },
     {

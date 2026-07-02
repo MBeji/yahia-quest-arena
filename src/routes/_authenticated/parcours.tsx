@@ -26,7 +26,7 @@ function ParcoursPage() {
 
   if (isLoading || !data) {
     return (
-      <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">
+      <div className="grid min-h-[60dvh] place-items-center text-sm text-muted-foreground">
         {t.common.loading}
       </div>
     );

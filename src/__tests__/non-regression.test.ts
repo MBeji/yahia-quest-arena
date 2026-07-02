@@ -118,6 +118,7 @@ describe("NON-REGRESSION: Quest Server Functions", () => {
     capturedHandlers = {};
     mockFrom.mockReset();
     mockRpc.mockReset();
+    mockRpc.mockReturnValue({ data: [], error: null });
   });
 
   describe("getSubject — must never hang", () => {
@@ -320,6 +321,7 @@ describe("NON-REGRESSION: Dashboard Server Functions", () => {
     capturedHandlers = {};
     mockFrom.mockReset();
     mockRpc.mockReset();
+    mockRpc.mockReturnValue({ data: [], error: null });
   });
 
   describe("getDashboard — must never hang", () => {
@@ -393,35 +395,21 @@ describe("NON-REGRESSION: Dashboard Server Functions", () => {
 
   describe("getLeaderboard — must never hang", () => {
     it("resolves within 1s with valid data", async () => {
-      mockFrom.mockImplementation((table: string) => {
-        if (table === "profiles") {
-          const chain = mockQuery([
-            {
-              id: "u1",
-              display_name: "Player1",
-              xp: 500,
-              level: 3,
-              hero_class: "mage",
-              avatar_slug: null,
-              avatar_tier: 0,
-            },
-          ]);
-          // Override single for user's own profile lookup
-          chain.single = vi.fn().mockReturnValue({
-            data: {
-              id: "user-regression-test",
-              display_name: "Yahia",
-              xp: 300,
-              level: 2,
-              hero_class: "warrior",
-              avatar_slug: null,
-              avatar_tier: 0,
-            },
-            error: null,
-          });
-          return chain;
-        }
-        return mockQuery([]);
+      // Global board now reads through the RLS-safe `get_global_leaderboard` RPC.
+      mockRpc.mockResolvedValue({
+        data: [
+          {
+            rank: 1,
+            display_name: "Player1",
+            hero_class: "mage",
+            level: 3,
+            xp: 500,
+            current_streak: 2,
+            avatar_tier: 0,
+            is_me: false,
+          },
+        ],
+        error: null,
       });
 
       const { getLeaderboard } = await import("@/features/dashboard");
@@ -444,6 +432,7 @@ describe("NON-REGRESSION: Dungeon Server Functions", () => {
     capturedHandlers = {};
     mockFrom.mockReset();
     mockRpc.mockReset();
+    mockRpc.mockReturnValue({ data: [], error: null });
   });
 
   describe("startDungeonRun — must never hang", () => {
@@ -505,6 +494,7 @@ describe("NON-REGRESSION: Promise resolution patterns", () => {
     capturedHandlers = {};
     mockFrom.mockReset();
     mockRpc.mockReset();
+    mockRpc.mockReturnValue({ data: [], error: null });
   });
 
   it("server functions using Promise.all never hang when one query rejects", async () => {
@@ -562,6 +552,7 @@ describe("NON-REGRESSION: Data shape contracts", () => {
     capturedHandlers = {};
     mockFrom.mockReset();
     mockRpc.mockReset();
+    mockRpc.mockReturnValue({ data: [], error: null });
   });
 
   it("getSubject returns { subject, chapters, exercises, bestByExercise, quizPassedByChapter }", async () => {
@@ -593,7 +584,7 @@ describe("NON-REGRESSION: Data shape contracts", () => {
     expect(typeof result.bestByExercise).toBe("object");
   });
 
-  it("getExercise returns { exercise, questions, hintCharges, chapterQuizId }", async () => {
+  it("getExercise returns { exercise, questions, hintCharges, chapterQuizId, quizGated }", async () => {
     mockFrom.mockImplementation((table: string) => {
       if (table === "exercises") return mockQuery({ id: "ex1", title: "E" });
       if (table === "questions") return mockQuery([]);
@@ -610,6 +601,7 @@ describe("NON-REGRESSION: Data shape contracts", () => {
       "exercise",
       "hintCharges",
       "questions",
+      "quizGated",
     ]);
     expect(result.questions).toBeInstanceOf(Array);
     expect(result.hintCharges).toBe(0);
