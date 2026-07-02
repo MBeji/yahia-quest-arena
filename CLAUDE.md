@@ -166,9 +166,14 @@ expérience pédagogique). `content-audit` is the review counterpart: it audits 
 against the same course-quality bar) and produces a severity-ranked report. For **hard/elite**
 content, a suite of **specialized "professor" skills** (`.claude/skills/prof-*`) — one per
 (matière × niveau), like a real subject teacher — authors difficulty-3/4 (⭐⭐⭐ boss / ⭐⭐⭐⭐ défi)
-exercises that raise the ceiling above what exists, faithful to the concours program:
-`prof-math-9eme`, `prof-physique-9eme` (subject id `svt`), `prof-svt-9eme` (id `sciences-vie-terre`),
-`prof-francais-9eme`, `prof-arabe-9eme`, `prof-anglais-9eme`, and `prof-math-6eme`. Each carries its
+exercises that raise the ceiling above what exists, faithful to the program. The **exam years** get a
+dedicated professor per (matière × niveau): `prof-math-9eme`, `prof-physique-9eme` (subject id `svt`),
+`prof-svt-9eme` (id `sciences-vie-terre`), `prof-francais-9eme`, `prof-arabe-9eme`, `prof-anglais-9eme`,
+and `prof-math-6eme`. The **primary cycle** (1ère→5ème) is covered by grade-aware, multi-level
+professors — one per subject, each with a per-grade chapter map and age calibration:
+`prof-math-primaire` (1ère→5ème), `prof-arabe-primaire` (1ère→5ème), `prof-eveil-primaire`
+(الإيقاظ العلمي, 1ère→6ème), and `prof-islamique-primaire` (1ère→4ème, Quran text in **رواية قالون**
+only — Tunisia's official reading). Each carries its
 subject's chapter map and misconception/trap taxonomy; all defer to `content-engine`'s shared
 `references/expert-exercises.md` (hard-item archetypes, executed-error distractors, double-solve
 verification) and to `content-ecole-tn` for program fidelity. Skills produce
