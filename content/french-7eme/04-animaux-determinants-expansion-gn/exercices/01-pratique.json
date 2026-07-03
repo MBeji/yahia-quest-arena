@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Exercice : Le cortège du nom — premiers déterminants",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Dans la phrase « Ces gazelles bondissent dans la steppe », le mot « ces » est un déterminant…",
+      "options": [
+        { "id": "a", "text": "démonstratif" },
+        { "id": "b", "text": "possessif" },
+        { "id": "c", "text": "exclamatif" },
+        { "id": "d", "text": "numéral" }
+      ],
+      "correctOption": "a",
+      "explanation": "« ces » (ce, cet, cette, ces) montre, désigne les gazelles : c'est un déterminant démonstratif. Ne le confonds pas avec « ses », le possessif qui indique une appartenance.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Parmi ces déterminants, lequel est un article indéfini ?",
+      "options": [
+        { "id": "a", "text": "le" },
+        { "id": "b", "text": "cette" },
+        { "id": "c", "text": "une" },
+        { "id": "d", "text": "deux" }
+      ],
+      "correctOption": "c",
+      "explanation": "Les articles indéfinis sont un, une, des : ils désignent un être qu'on ne connaît pas encore (une cigogne parmi d'autres). « le » est un article défini, « cette » un démonstratif, « deux » un numéral.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Le fermier de Béja donne du foin ___ ânes. »",
+      "options": [
+        { "id": "a", "text": "à les" },
+        { "id": "b", "text": "aux" },
+        { "id": "c", "text": "au" },
+        { "id": "d", "text": "à" }
+      ],
+      "correctOption": "b",
+      "explanation": "« à + les » se contracte obligatoirement en « aux » : on donne du foin aux ânes. « à les ânes » n'existe pas en français, et « au » (à + le) ne convient pas devant un nom pluriel.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Les fourmis transportent ___ provisions vers la fourmilière. »",
+      "options": [
+        { "id": "a", "text": "leur" },
+        { "id": "b", "text": "sa" },
+        { "id": "c", "text": "ses" },
+        { "id": "d", "text": "leurs" }
+      ],
+      "correctOption": "d",
+      "explanation": "Plusieurs fourmis (plusieurs possesseurs) et plusieurs provisions (nom pluriel) → leurs, avec un -s. « leur » s'écrit sans -s devant un nom singulier ; « sa » et « ses » renvoient à un seul possesseur.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans le GN « un rossignol qui chante », l'expansion « qui chante » est…",
+      "options": [
+        { "id": "a", "text": "un adjectif épithète" },
+        { "id": "b", "text": "un complément du nom" },
+        { "id": "c", "text": "une proposition relative" },
+        { "id": "d", "text": "un déterminant indéfini" }
+      ],
+      "correctOption": "c",
+      "explanation": "« qui » suivi d'un verbe conjugué (chante) introduit une proposition relative qui enrichit le nom « rossignol ». L'épithète serait un adjectif (un rossignol mélodieux), le complément du nom une préposition + nom (le rossignol du jardin).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Mets la phrase à la forme négative : « Ali a des tortues. »",
+      "options": [
+        { "id": "a", "text": "Ali n'a pas de tortues." },
+        { "id": "b", "text": "Ali n'a pas des tortues." },
+        { "id": "c", "text": "Ali n'a pas les tortues." },
+        { "id": "d", "text": "Ali a pas de tortues." }
+      ],
+      "correctOption": "a",
+      "explanation": "À la forme négative, l'article « des » devient « de » : Ali n'a pas de tortues. « pas des tortues » garde « des » à tort, « les » change le sens, et la négation exige les deux mots ne… pas.",
+      "difficulty": 2
+    }
+  ]
+}

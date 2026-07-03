@@ -237,6 +237,18 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
   `npm run test:e2e:auth` (`authed-chromium`), `npm run test:e2e:install` (install the
   browser). Authenticated runs are seeded via `scripts/e2e/seed-test-users.mjs`. E2E is
   separate from the Vitest unit/integration gate.
+- **Merge automation (push → PR → checks → merge, fully automatic).** Pushing any
+  non-`main` branch auto-opens its **draft** PR (`auto-pr.yml`, which also dispatches the
+  required checks — a bot-created PR fires no `pull_request` events); marking the PR ready
+  (or pushing with `[auto-merge]` in the head-commit subject) arms GitHub **auto-merge**
+  (`automerge.yml`, squash + delete branch, label `no-automerge` opts out; a push to `main`
+  auto-updates armed PRs left behind, re-dispatching their checks). The merge itself
+  is enforced by the `main-protection` ruleset (`.github/rulesets/main-protection.json`,
+  imported in repo Settings → Rules): required checks `verify` + `Migration presence` +
+  `Migration order` + `CodeQL` (SAST, `codeql.yml`) on an up-to-date head. Merging to `main`
+  then auto-deploys (Vercel) and auto-applies migrations (§7). Prereqs (repo Settings):
+  "Allow auto-merge" (General) and "Allow GitHub Actions to create and approve pull
+  requests" (Actions → General) on; re-import the ruleset JSON after changing it.
 - **Scheduled automations (GitHub Actions + repo skills).** Run on a schedule, all
   gracefully skipping without `CLAUDE_CODE_OAUTH_TOKEN`. The E2E/pgTAP nightly runs
   **every night**; the three Claude-agent guards run **2×/week** (each holds a runner for
@@ -254,8 +266,10 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
   fully-green patch/minor PR). Cadence + traps: `docs/dependency-maintenance.md`.
 - **Policy docs (`docs/*.md`).** Topic-specific rules referenced from here:
   `docs/environment-variables.md`, `docs/logging-standard.md`, `docs/xss-rendering-policy.md`,
-  `docs/release-tagging-policy.md`, `docs/dependency-maintenance.md`. These defer to
-  CLAUDE.md / ARCHITECTURE.md for anything that overlaps.
+  `docs/release-tagging-policy.md`, `docs/dependency-maintenance.md`,
+  `docs/ci-cd-and-branch-protection.md`, and `docs/passation.md` (the end-of-dev →
+  production walkthrough). These defer to CLAUDE.md / ARCHITECTURE.md for anything
+  that overlaps.
 
 ## Working mode — Definition of Done
 

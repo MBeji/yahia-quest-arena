@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Practice: meet Salma's family",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Rania says: \"Hello, Salma! How are you?\" What is the best reply?",
+      "options": [
+        { "id": "a", "text": "\"Fine, thanks. And you?\"" },
+        { "id": "b", "text": "\"Goodbye!\"" },
+        { "id": "c", "text": "\"I am twelve.\"" },
+        { "id": "d", "text": "\"Yes, I am.\"" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"How are you?\" asks how you feel, so the friendly reply is \"Fine, thanks. And you?\". \"I am twelve\" answers \"How old are you?\", \"Goodbye\" is for leaving, and \"Yes, I am\" answers a yes/no question.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete with a subject pronoun: \"My father is a farmer. ___ works in the fields every day.\"",
+      "options": [
+        { "id": "a", "text": "I" },
+        { "id": "b", "text": "He" },
+        { "id": "c", "text": "She" },
+        { "id": "d", "text": "It" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"My father\" is one man, so the subject pronoun is \"he\": He works in the fields. \"She\" is for a woman, \"it\" is for a thing, and \"I\" is the speaker.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"My grandparents ___ from Kairouan.\"",
+      "options": [
+        { "id": "a", "text": "am" },
+        { "id": "b", "text": "is" },
+        { "id": "c", "text": "are" },
+        { "id": "d", "text": "be" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Grandparents\" means two people (they), so the verb \"to be\" is \"are\": they are from Kairouan. \"Is\" is only for one person (he/she/it) and \"am\" is only for \"I\".",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choose the correct sentence to introduce your brother:",
+      "options": [
+        { "id": "a", "text": "This is my brother, Anis." },
+        { "id": "b", "text": "This are my brother, Anis." },
+        { "id": "c", "text": "These are my brother, Anis." },
+        { "id": "d", "text": "These is my brother, Anis." }
+      ],
+      "correctOption": "a",
+      "explanation": "You are introducing ONE person, so you need the singular demonstrative \"this\" with the singular verb \"is\": This is my brother. \"These\" is for two or more people, and \"this are\" / \"these is\" mix singular and plural.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete the question: \"___ are you, Anis?\" — \"I am nine years old.\"",
+      "options": [
+        { "id": "a", "text": "How" },
+        { "id": "b", "text": "How many" },
+        { "id": "c", "text": "How old" },
+        { "id": "d", "text": "What" }
+      ],
+      "correctOption": "c",
+      "explanation": "The answer gives an age (nine years old), so the question asks about age with \"How old\": How old are you? \"How are you?\" asks about feelings, and \"How many\" asks about a number of things.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Salma is twelve years old. Her brother Youssef is two years older. How old is Youssef?",
+      "options": [
+        { "id": "a", "text": "ten" },
+        { "id": "b", "text": "twelve" },
+        { "id": "c", "text": "thirteen" },
+        { "id": "d", "text": "fourteen" }
+      ],
+      "correctOption": "d",
+      "explanation": "Two years older than twelve means 12 + 2 = 14, so Youssef is fourteen (14). \"Ten\" subtracts instead of adding, \"thirteen\" adds only one year, and \"twelve\" forgets to add at all.",
+      "difficulty": 2
+    }
+  ]
+}

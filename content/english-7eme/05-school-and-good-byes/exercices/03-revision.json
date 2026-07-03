@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Review (exam style): school and good-byes",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Complete: \"Can my little sister come too?\" — \"Of course ___.\"",
+      "options": [
+        { "id": "a", "text": "she can" },
+        { "id": "b", "text": "she cans" },
+        { "id": "c", "text": "she can to" },
+        { "id": "d", "text": "can she" }
+      ],
+      "correctOption": "a",
+      "explanation": "We give permission with \"Of course she can\": we just change the pronoun and keep \"can\". \"Can\" never adds -s (\"cans\" is wrong) and never takes \"to\" (\"can to\" is wrong).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"Emma ___ to buy a souvenir for her mother.\"",
+      "options": [
+        { "id": "a", "text": "want" },
+        { "id": "b", "text": "wants" },
+        { "id": "c", "text": "wanting" },
+        { "id": "d", "text": "want to" }
+      ],
+      "correctOption": "b",
+      "explanation": "Emma = she, so the verb takes -s: Emma wants to buy a souvenir. The \"to buy\" is already in the sentence, so we only need the correct form \"wants\". \"Want\" forgets the -s and \"want to\" would repeat \"to\".",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Look: the courtyard is at the back of the school. Complete: \"The courtyard is ___ the school.\"",
+      "options": [
+        { "id": "a", "text": "in front of" },
+        { "id": "b", "text": "under" },
+        { "id": "c", "text": "behind" },
+        { "id": "d", "text": "between" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"At the back of\" means \"behind\": the courtyard is behind the school. \"In front of\" is the opposite side (facing it), \"under\" means below, and \"between\" needs two objects.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"___ books are there in the bookcase?\"",
+      "options": [
+        { "id": "a", "text": "How old" },
+        { "id": "b", "text": "How far" },
+        { "id": "c", "text": "How much" },
+        { "id": "d", "text": "How many" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"Books\" is countable (one book, two books), so we ask with \"How many\": How many books are there? \"How much\" is for uncountable nouns, \"How old\" asks about age, and \"How far\" asks about distance.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"Please close the door ___.\" (in a slow way)",
+      "options": [
+        { "id": "a", "text": "slow" },
+        { "id": "b", "text": "slowly" },
+        { "id": "c", "text": "more slow" },
+        { "id": "d", "text": "slowness" }
+      ],
+      "correctOption": "b",
+      "explanation": "To say HOW to close the door, we need an adverb of manner: \"slow\" + -ly = \"slowly\". Close the door slowly ✓. \"Slow\" is the adjective, \"more slow\" is not correct English, and \"slowness\" is a noun.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Emma accidentally drops a pencil-case on the floor. What does she say?",
+      "options": [
+        { "id": "a", "text": "\"You're welcome.\"" },
+        { "id": "b", "text": "\"Never mind.\"" },
+        { "id": "c", "text": "\"I'm sorry!\"" },
+        { "id": "d", "text": "\"That's all right.\"" }
+      ],
+      "correctOption": "c",
+      "explanation": "When you make a mistake you apologize: \"I'm sorry!\". \"Never mind\" and \"That's all right\" are answers that GRANT forgiveness, and \"You're welcome\" replies to \"thank you\", not to a mistake.",
+      "difficulty": 2
+    }
+  ]
+}

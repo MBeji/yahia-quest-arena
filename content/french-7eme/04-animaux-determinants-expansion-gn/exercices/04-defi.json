@@ -1,0 +1,100 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : L'escorte royale du GN",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Relie la phrase à son complément de cause : « La cigogne quitte le nord. Le froid arrive. »",
+      "options": [
+        { "id": "a", "text": "La cigogne quitte le nord quand le froid arrive." },
+        { "id": "b", "text": "La cigogne quitte le nord où le froid arrive." },
+        { "id": "c", "text": "Le froid arrive parce que la cigogne quitte le nord." },
+        { "id": "d", "text": "La cigogne quitte le nord parce que le froid arrive." }
+      ],
+      "correctOption": "d",
+      "explanation": "La cause du départ est le froid : la cigogne quitte le nord parce que le froid arrive ✓ (réponse à « pourquoi ? »). Le piège courant : l'option qui renverse cause et conséquence — le départ de la cigogne ne fait pas arriver le froid. « quand » exprimerait le temps, « où » le lieu.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Réécris à l'impératif (2ᵉ personne du singulier) ET à la forme négative : « Tu donnes des graines aux poussins. »",
+      "options": [
+        { "id": "a", "text": "Ne donne pas des graines aux poussins." },
+        { "id": "b", "text": "Ne donnes pas de graines aux poussins." },
+        { "id": "c", "text": "Ne donne pas de graines aux poussins." },
+        { "id": "d", "text": "Tu ne donnes pas de graines aux poussins." }
+      ],
+      "correctOption": "c",
+      "explanation": "Deux règles à la fois : impératif en -er sans -s (donne) et « des » qui devient « de » à la forme négative → Ne donne pas de graines ✓. Le piège courant : garder « des » après la négation. « donnes » garde un -s fautif, et la phrase avec « Tu » reste à l'indicatif, pas à l'impératif.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Chasse à l'erreur : quelle phrase contient une faute ?",
+      "options": [
+        { "id": "a", "text": "Yasmine emmène son petit frère au parc des oiseaux." },
+        { "id": "b", "text": "Le gardien parle à les visiteurs du zoo de Tunis." },
+        { "id": "c", "text": "Les mouettes tournent autour du port de La Goulette." },
+        { "id": "d", "text": "Le dresseur donne des ordres aux fauves." }
+      ],
+      "correctOption": "b",
+      "explanation": "Ici la bonne réponse est la phrase fautive : « à les visiteurs » est incorrect, car « à + les » se contracte obligatoirement en « aux » → le gardien parle aux visiteurs ✓. Les trois autres phrases emploient correctement les contractés au, du, des et aux.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "« Chaque soir, deux chacals rôdent autour de la bergerie. » Quelle analyse des déterminants est exacte ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "« chaque » est un déterminant indéfini et « deux » un déterminant numéral."
+        },
+        {
+          "id": "b",
+          "text": "« chaque » est un article défini et « deux » un déterminant indéfini."
+        },
+        {
+          "id": "c",
+          "text": "« chaque » est un déterminant démonstratif et « deux » un déterminant numéral."
+        },
+        {
+          "id": "d",
+          "text": "« chaque » est un déterminant exclamatif et « deux » un article défini."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "« chaque » appartient à la série des déterminants indéfinis (chaque, quelques, plusieurs…) et « deux » indique un nombre précis : c'est un numéral ✓. Le piège courant : confondre l'indéfini « chaque » avec un démonstratif — il ne montre rien, il envisage les soirs un à un.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Remplace le complément du nom par une proposition relative de même sens : « la tortue du désert ».",
+      "options": [
+        { "id": "a", "text": "la tortue qui traverse le désert" },
+        { "id": "b", "text": "la tortue que vit dans le désert" },
+        { "id": "c", "text": "la tortue qui vit dans le désert" },
+        { "id": "d", "text": "la tortue qu'elle vit dans le désert" }
+      ],
+      "correctOption": "c",
+      "explanation": "« du désert » signifie que la tortue y vit → la tortue qui vit dans le désert ✓ : « qui » remplace le sujet (la tortue vit). Le piège courant : employer « que » devant un verbe qui a déjà son sujet caché — « que vit » est fautif, tout comme « qu'elle vit » qui ajoute un pronom en trop. « qui traverse le désert » change le sens (passer ≠ habiter).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "« Le vétérinaire leur donne leurs vaccins. » Quelle est la nature de « leur » puis de « leurs » ?",
+      "options": [
+        { "id": "a", "text": "Les deux sont des déterminants possessifs." },
+        {
+          "id": "b",
+          "text": "« leur » est un pronom personnel invariable, « leurs » un déterminant possessif."
+        },
+        {
+          "id": "c",
+          "text": "« leur » est un déterminant possessif, « leurs » un pronom personnel."
+        },
+        { "id": "d", "text": "Les deux sont des pronoms personnels." }
+      ],
+      "correctOption": "b",
+      "explanation": "« leur » est placé devant le verbe donne : c'est le pronom personnel invariable (= à eux), qui ne prend jamais de -s. « leurs » est placé devant le nom vaccins : c'est le déterminant possessif, accordé au pluriel ✓. Le piège courant : accorder le pronom en écrivant « le vétérinaire leurs donne ».",
+      "difficulty": 3
+    }
+  ]
+}

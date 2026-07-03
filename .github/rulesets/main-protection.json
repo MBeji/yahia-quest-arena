@@ -25,7 +25,9 @@
         "strict_required_status_checks_policy": true,
         "required_status_checks": [
           { "context": "verify" },
-          { "context": "Migration presence" }
+          { "context": "Migration presence" },
+          { "context": "Migration order" },
+          { "context": "CodeQL" }
         ]
       }
     }

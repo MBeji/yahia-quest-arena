@@ -1,0 +1,85 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : l'épreuve suprême de la maisonnée",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 6,
+  "questions": [
+    {
+      "prompt": "Transforme la phrase non verbale « Départ du bus scolaire à sept heures. » en phrase verbale.",
+      "options": [
+        { "id": "a", "text": "Le départ du bus scolaire à sept heures." },
+        { "id": "b", "text": "Départ du bus scolaire, sept heures pile." },
+        { "id": "c", "text": "Le bus scolaire part à sept heures." },
+        { "id": "d", "text": "Le bus scolaire, à sept heures." }
+      ],
+      "correctOption": "c",
+      "explanation": "Une phrase verbale doit contenir un verbe conjugué : « part » transforme l'annonce en phrase verbale. Les trois autres propositions restent sans verbe conjugué : ajouter un article ou une virgule ne suffit pas.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète au passé composé : « Mes cousins, ___ bien trop tard hier soir ! » (se coucher)",
+      "options": [
+        { "id": "a", "text": "vous vous êtes couchés" },
+        { "id": "b", "text": "vous vous avez couchés" },
+        { "id": "c", "text": "vous vous êtes couché" },
+        { "id": "d", "text": "vous êtes vous couchés" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Se coucher » est pronominal : pronom + auxiliaire être (« vous vous êtes »), et le participe passé s'accorde avec le sujet « mes cousins » (masculin pluriel) : « couchés » ✓. Les pièges : l'auxiliaire avoir (« vous vous avez »), l'oubli du -s de l'accord, et l'ordre des mots inversé.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Une seule de ces phrases contient une erreur d'homophone. Laquelle ? « 1. Tu as promis de venir vendredi. 2. Rim a téléphoné à sa tante. 3. Ma tante habite à Bizerte. 4. Papa à garé la voiture devant la maison. »",
+      "options": [
+        { "id": "a", "text": "La phrase 1" },
+        { "id": "b", "text": "La phrase 2" },
+        { "id": "c", "text": "La phrase 3" },
+        { "id": "d", "text": "La phrase 4" }
+      ],
+      "correctOption": "d",
+      "explanation": "Dans la phrase 4, on peut dire « Papa avait garé la voiture » : il faut le verbe avoir « a », sans accent — « à garé » est fautif. Les phrases 1 (as = avais), 2 (a = avait, puis préposition à) et 3 (préposition à devant un lieu) sont correctes. (Question « chasse à l'erreur » : la bonne réponse désigne la phrase fautive.)",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Transforme en ordres à l'impératif : « Tu te réveilles tôt et tu fais ton lit. »",
+      "options": [
+        { "id": "a", "text": "Réveilles-toi tôt et fais ton lit !" },
+        { "id": "b", "text": "Réveille-toi tôt et fais ton lit !" },
+        { "id": "c", "text": "Réveille-toi tôt et fait ton lit !" },
+        { "id": "d", "text": "Te réveille tôt et fais ton lit !" }
+      ],
+      "correctOption": "b",
+      "explanation": "Deux règles à combiner : le verbe pronominal rejette son pronom après le verbe avec un trait d'union (« Réveille-toi », sans -s : 1er groupe), et « faire » garde son -s à la 2e personne (« fais ») ✓. Les pièges : le -s fautif (« Réveilles »), la forme « fait » (3e personne) et le pronom laissé devant le verbe.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Combien de compléments circonstanciels contient la phrase : « Pendant les vacances, mes parents repeindront la vieille armoire avec soin. » ?",
+      "options": [
+        { "id": "a", "text": "Un seul : « pendant les vacances »" },
+        { "id": "b", "text": "Un seul : « avec soin »" },
+        { "id": "c", "text": "Deux : « pendant les vacances » et « avec soin »" },
+        {
+          "id": "d",
+          "text": "Trois : « pendant les vacances », « la vieille armoire » et « avec soin »"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Deux groupes réussissent le test du CC (supprimables et déplaçables) : « pendant les vacances » (temps) et « avec soin » (manière) ✓. Le piège : « la vieille armoire » ne peut être ni supprimée ni déplacée sans casser la phrase — elle fait partie du groupe verbal.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Hier, Selma ___ (descendre) au marché de Nabeul ; demain, elle ___ (avoir) le temps de se reposer, car elle ___ terminé ses courses. »",
+      "options": [
+        { "id": "a", "text": "est descendue … aura … a" },
+        { "id": "b", "text": "a descendu … aura … a" },
+        { "id": "c", "text": "est descendue … avoira … a" },
+        { "id": "d", "text": "est descendue … aura … à" }
+      ],
+      "correctOption": "a",
+      "explanation": "Trois verrous à ouvrir : « descendre » est un verbe de mouvement → être + accord féminin (« est descendue ») ; le futur d'avoir se construit sur le radical aur- (« elle aura ») ; enfin « elle a terminé » = avoir (test : « elle avait terminé »), sans accent ✓. Chaque distracteur casse exactement un de ces trois verrous.",
+      "difficulty": 3
+    }
+  ]
+}

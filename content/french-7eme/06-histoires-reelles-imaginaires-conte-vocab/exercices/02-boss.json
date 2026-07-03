@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : le gardien du conte",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Remplace le groupe souligné : « Le roi promet une récompense À SES CHEVALIERS. »",
+      "options": [
+        { "id": "a", "text": "Le roi lui promet une récompense." },
+        { "id": "b", "text": "Le roi leur promet une récompense." },
+        { "id": "c", "text": "Le roi les promet une récompense." },
+        { "id": "d", "text": "Le roi y promet une récompense." }
+      ],
+      "correctOption": "b",
+      "explanation": "« À ses chevaliers » est un COI (introduit par « à ») au pluriel : on le remplace par « leur ». « lui » serait un singulier ; « les » est un COD ; « y » ne remplace pas des personnes.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète avec la forme correcte : « La lettre que le prince a ___ était magique. » (écrire)",
+      "options": [
+        { "id": "a", "text": "écrit" },
+        { "id": "b", "text": "écrits" },
+        { "id": "c", "text": "écrite" },
+        { "id": "d", "text": "écrites" }
+      ],
+      "correctOption": "c",
+      "explanation": "Avec « avoir », le participe passé s'accorde avec le COD placé avant. Ici le COD est « que » = la lettre (féminin singulier), placé avant le verbe → « écrite ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle phrase est correctement orthographiée ?",
+      "options": [
+        { "id": "a", "text": "Elle la mangée hier soir." },
+        { "id": "b", "text": "Il l'a pose sur la table." },
+        { "id": "c", "text": "Tu la vu partir." },
+        { "id": "d", "text": "Le chasseur l'a poursuivie longtemps." }
+      ],
+      "correctOption": "d",
+      "explanation": "« l'a poursuivie » = pronom « l' » + auxiliaire « a » + participe passé accordé avec « l' » (féminin). Erreurs des autres : « la mangée » → « l'a mangée » ; « l'a pose » → « la pose » (présent, pas de PP) ; « la vu » → « l'as vu » (avec « tu »).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans un conte merveilleux, quel événement vient LOGIQUEMENT en premier ?",
+      "options": [
+        { "id": "a", "text": "Il était une fois un pauvre bûcheron, seul au bord de la forêt." },
+        { "id": "b", "text": "Le héros combat l'ogre et le vainc." },
+        { "id": "c", "text": "Le bûcheron épouse la princesse et devient prince." },
+        { "id": "d", "text": "Un ogre affamé se met à rôder autour du village." }
+      ],
+      "correctOption": "a",
+      "explanation": "La partie qui présente le héros (« Il était une fois… ») ouvre le conte. Vient ensuite le problème (l'ogre), puis les épreuves, et enfin le dénouement heureux (le mariage).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans « Le paysan retourne la terre avant de semer », le mot « terre » désigne :",
+      "options": [
+        { "id": "a", "text": "la planète où nous vivons" },
+        { "id": "b", "text": "le sol que l'on cultive" },
+        { "id": "c", "text": "le monde entier" },
+        { "id": "d", "text": "un vaste domaine" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Terre » est un mot polysémique. Ici, le contexte (semer, paysan) montre qu'il s'agit du sol cultivé, et non de la planète ni du monde.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quel mot remplace « demeure » sans changer le sens dans « Le roi habite une vaste demeure » ?",
+      "options": [
+        { "id": "a", "text": "cabane" },
+        { "id": "b", "text": "chaumière" },
+        { "id": "c", "text": "habitation" },
+        { "id": "d", "text": "ruine" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Habitation » est le synonyme le plus fidèle de « demeure ». « cabane » et « chaumière » désignent de petites maisons modestes, et « ruine » un bâtiment détruit : le sens changerait.",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "📝 Entraînement ⭐⭐⭐ : révision globale (type examen)",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complète au présent de l'indicatif : « Vous ___ (prendre) le louage pour aller à Kairouan. »",
+      "options": [
+        { "id": "a", "text": "prendez" },
+        { "id": "b", "text": "prennez" },
+        { "id": "c", "text": "prenez" },
+        { "id": "d", "text": "prener" }
+      ],
+      "correctOption": "c",
+      "explanation": "Prendre est un verbe du 3e groupe : avec « vous », la terminaison est -ez et le radical perd le -d → vous prenez. « Prendez » garde le -d de l'infinitif à tort ; « prennez » double le -n (réservé à ils/elles : prennent).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase est de type exclamatif ?",
+      "options": [
+        { "id": "a", "text": "Comme ce match est passionnant !" },
+        { "id": "b", "text": "Est-ce que tu regardes le match ?" },
+        { "id": "c", "text": "Le match commence à seize heures." },
+        { "id": "d", "text": "Ce match ne finit pas avant vingt heures." }
+      ],
+      "correctOption": "a",
+      "explanation": "« Comme ce match est passionnant ! » exprime un sentiment (l'enthousiasme) et se termine par « ! » : c'est une phrase exclamative. La b est interrogative, la c déclarative affirmative, la d déclarative négative.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète au passé composé : « Nadia a ___ (écrire) une longue lettre à sa tante. »",
+      "options": [
+        { "id": "a", "text": "écris" },
+        { "id": "b", "text": "écrivé" },
+        { "id": "c", "text": "écrivu" },
+        { "id": "d", "text": "écrit" }
+      ],
+      "correctOption": "d",
+      "explanation": "Le participe passé d'écrire se termine par -it → Nadia a écrit. « Écrivé » applique à tort la terminaison -é du 1er groupe, et « écrivu » la terminaison -u : le participe correct est écrit.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète au passé composé : « Les randonneurs ___ (monter) au sommet de Zaghouan avant midi. »",
+      "options": [
+        { "id": "a", "text": "ont monté" },
+        { "id": "b", "text": "sont monté" },
+        { "id": "c", "text": "sont montés" },
+        { "id": "d", "text": "sont montées" }
+      ],
+      "correctOption": "c",
+      "explanation": "Deux étapes : (1) monter est un verbe de mouvement → auxiliaire être ; (2) le participe s'accorde avec le sujet masculin pluriel « les randonneurs » → sont montés ✓. Le piège courant : choisir « ont monté » (mauvais auxiliaire) ou « sont monté » (accord oublié).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Karim ___ dépêché ce matin, car ___ le jour de l'examen. »",
+      "options": [
+        { "id": "a", "text": "c'est / s'est" },
+        { "id": "b", "text": "s'est / c'est" },
+        { "id": "c", "text": "s'est / s'est" },
+        { "id": "d", "text": "c'est / c'est" }
+      ],
+      "correctOption": "b",
+      "explanation": "« ___ dépêché » est suivi d'un participe passé → verbe pronominal « se dépêcher » au passé composé : s'est ✓. « ___ le jour de l'examen » se remplace par « cela est le jour… » → c'est ✓. Le piège courant : inverser les deux — le test « cela est » ne marche que pour le second.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lis ce récit : « Dans le vieux port, un pêcheur répare son filet. L'homme travaille depuis l'aube. Bientôt, une barque colorée s'approche du quai. » Quel mot reprend « un pêcheur » pour éviter la répétition ?",
+      "options": [
+        { "id": "a", "text": "« le filet »" },
+        { "id": "b", "text": "« la barque »" },
+        { "id": "c", "text": "« le quai »" },
+        { "id": "d", "text": "« l'homme »" }
+      ],
+      "correctOption": "d",
+      "explanation": "« L'homme » désigne la même personne que « un pêcheur » : c'est un synonyme employé comme substitut, pour ne pas répéter le mot ✓. Le piège courant : choisir « la barque », qui est un nouvel élément du décor, pas une reprise du pêcheur.",
+      "difficulty": 3
+    }
+  ]
+}
