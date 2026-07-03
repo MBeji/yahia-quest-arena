@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision (type examen) : Conjugaison et cause au fil des bêtes",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Écris le verbe « donner » à l'impératif, 2ᵉ personne du singulier : « ___ à boire au chaton ! »",
+      "options": [
+        { "id": "a", "text": "Donnes" },
+        { "id": "b", "text": "Donne" },
+        { "id": "c", "text": "Donner" },
+        { "id": "d", "text": "Donnez" }
+      ],
+      "correctOption": "b",
+      "explanation": "À l'impératif, 2ᵉ personne du singulier, les verbes en -er ne prennent pas de -s : Donne ! Le sujet n'est pas exprimé. « Donnez » est la 2ᵉ personne du pluriel, « Donner » l'infinitif.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Écris le verbe au futur simple : « Demain, nous ___ les agneaux de la ferme. » (nourrir)",
+      "options": [
+        { "id": "a", "text": "nourrirons" },
+        { "id": "b", "text": "nourrissons" },
+        { "id": "c", "text": "nourrisserons" },
+        { "id": "d", "text": "nourrons" }
+      ],
+      "correctOption": "a",
+      "explanation": "Au futur, tous les verbes ont les mêmes terminaisons : -rai, -ras, -ra, -rons, -rez, -ront. On garde l'infinitif entier : nourrir + ons → nous nourrirons ✓. « nourrissons » est le présent, « nourrisserons » invente un radical, « nourrons » perd le -ir de l'infinitif.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Écris le participe passé qui convient : « Les hirondelles sont ___ au printemps. » (revenir)",
+      "options": [
+        { "id": "a", "text": "revenu" },
+        { "id": "b", "text": "revenue" },
+        { "id": "c", "text": "revenus" },
+        { "id": "d", "text": "revenues" }
+      ],
+      "correctOption": "d",
+      "explanation": "Avec l'auxiliaire être, le participe passé s'accorde avec le sujet. « Les hirondelles » est féminin pluriel → revenues ✓ (e + s). « revenu » ne porte aucun accord, « revenue » oublie le pluriel, « revenus » oublie le féminin.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase contient un complément circonstanciel de cause ?",
+      "options": [
+        { "id": "a", "text": "Le troupeau rentre à la tombée de la nuit." },
+        { "id": "b", "text": "Le troupeau rentre vers la bergerie." },
+        { "id": "c", "text": "Le troupeau rentre parce que l'orage menace." },
+        { "id": "d", "text": "Le troupeau rentre à pas lents." }
+      ],
+      "correctOption": "c",
+      "explanation": "« parce que l'orage menace » répond à la question « pourquoi le troupeau rentre-t-il ? » : c'est la cause ✓. « à la tombée de la nuit » indique le temps, « vers la bergerie » le lieu, « à pas lents » la manière.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Chaque oiseau construit ___ nid au printemps. »",
+      "options": [
+        { "id": "a", "text": "leur" },
+        { "id": "b", "text": "son" },
+        { "id": "c", "text": "leurs" },
+        { "id": "d", "text": "ces" }
+      ],
+      "correctOption": "b",
+      "explanation": "Après « chaque », on considère un seul possesseur à la fois : chaque oiseau construit son nid ✓ (nom masculin singulier). « leur » et « leurs » renverraient à des possesseurs pris ensemble, ce que « chaque » interdit.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète avec le déterminant exclamatif qui convient : « ___ magnifique paon se pavane dans le jardin ! »",
+      "options": [
+        { "id": "a", "text": "Quel" },
+        { "id": "b", "text": "Quelle" },
+        { "id": "c", "text": "Quels" },
+        { "id": "d", "text": "Quelles" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le déterminant exclamatif s'accorde avec le nom : « paon » est masculin singulier → Quel magnifique paon ! « Quelle » est féminin, « Quels » et « Quelles » sont des pluriels.",
+      "difficulty": 2
+    }
+  ]
+}

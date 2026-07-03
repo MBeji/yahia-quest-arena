@@ -1,0 +1,12 @@
+{
+  "id": "arabic-8eme",
+  "nameFr": "العربية",
+  "description": "التوابع والمنادى والعدد والتعجّب والجملة المركّبة والمشتقّات الصرفية وفق برنامج السنة الثامنة من التعليم الأساسي",
+  "attribute": "Esprit",
+  "colorToken": "subject-arabic",
+  "icon": "Languages",
+  "displayOrder": 3,
+  "contentLanguage": "ar",
+  "themeId": "ecole-tn",
+  "gradeSlug": "8eme-base"
+}

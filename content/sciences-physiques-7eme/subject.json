@@ -1,0 +1,12 @@
+{
+  "id": "sciences-physiques-7eme",
+  "nameFr": "العلوم الفيزيائية",
+  "description": "المادة والماء والمزائج والهواء والدارة الكهربائية وفق برنامج السنة السابعة من التعليم الأساسي",
+  "attribute": "Observation",
+  "colorToken": "subject-svt",
+  "icon": "Atom",
+  "displayOrder": 4,
+  "contentLanguage": "ar",
+  "themeId": "ecole-tn",
+  "gradeSlug": "7eme-base"
+}

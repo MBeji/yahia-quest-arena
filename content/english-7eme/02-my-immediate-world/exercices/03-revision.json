@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Review (exam style): my immediate world",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Choose the correct word: a piece of land with water all around it.",
+      "options": [
+        { "id": "a", "text": "garden" },
+        { "id": "b", "text": "island" },
+        { "id": "c", "text": "river" },
+        { "id": "d", "text": "street" }
+      ],
+      "correctOption": "b",
+      "explanation": "An island is land with water all around it — Djerba is a famous Tunisian island. A river is water that flows, a garden is a green space near a house, and a street is a road in a town.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"Rania and I love ___ new school.\"",
+      "options": [
+        { "id": "a", "text": "her" },
+        { "id": "b", "text": "my" },
+        { "id": "c", "text": "our" },
+        { "id": "d", "text": "their" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Rania and I\" means \"we\", and the possessive adjective for \"we\" is \"our\": our new school. The common trap is choosing \"my\" because of the word \"I\" — but the school belongs to both people, so \"my\" and \"her\" are each only half right, and \"their\" is for other people.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"We ___ for the plane in the lounge.\"",
+      "options": [
+        { "id": "a", "text": "are wait" },
+        { "id": "b", "text": "are waiting" },
+        { "id": "c", "text": "is waiting" },
+        { "id": "d", "text": "waiting" }
+      ],
+      "correctOption": "b",
+      "explanation": "With \"we\", the present progressive is are + verb-ing: we are waiting ✓. \"Are wait\" forgets the -ing, \"waiting\" alone forgets the verb \"be\", and \"is\" goes with he/she/it, not with \"we\".",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Tom arrives at Salma's house for the first time. What does Salma's father say?",
+      "options": [
+        { "id": "a", "text": "\"Good night, Tom!\"" },
+        { "id": "b", "text": "\"Good-bye, Tom!\"" },
+        { "id": "c", "text": "\"Welcome to Tunisia, Tom!\"" },
+        { "id": "d", "text": "\"You're welcome, Tom!\"" }
+      ],
+      "correctOption": "c",
+      "explanation": "To greet a guest who arrives, we say \"Welcome to Tunisia!\". The trap is \"You're welcome\", which only answers \"thank you\". \"Good-bye\" is for leaving and \"Good night\" is for going to bed.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete the offer: \"___ you like some couscous, Lucy?\"",
+      "options": [
+        { "id": "a", "text": "Would" },
+        { "id": "b", "text": "What" },
+        { "id": "c", "text": "Do" },
+        { "id": "d", "text": "Are" }
+      ],
+      "correctOption": "a",
+      "explanation": "An offer at the table uses \"Would you like + some + food\": Would you like some couscous? The common trap is \"Do you like some couscous?\" — \"Do you like…?\" asks about general taste, not an offer, and it does not go with \"some\". \"What\" would need \"about\" (What about some couscous?).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lucy says: \"Thank you for this delicious lunch!\" What does Salma's mother reply?",
+      "options": [
+        { "id": "a", "text": "\"Fine, thanks.\"" },
+        { "id": "b", "text": "\"Welcome to Tunisia!\"" },
+        { "id": "c", "text": "\"Yes, please.\"" },
+        { "id": "d", "text": "\"You're welcome.\"" }
+      ],
+      "correctOption": "d",
+      "explanation": "The reply to \"thank you\" is \"You're welcome.\" \"Welcome to Tunisia\" greets a guest who arrives, \"Yes, please\" accepts an offer, and \"Fine, thanks\" answers \"How are you?\".",
+      "difficulty": 2
+    }
+  ]
+}
