@@ -1,0 +1,82 @@
+{
+  "title": "👑 Elite challenge ⭐⭐⭐⭐: the final gate of Module Four",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 6,
+  "questions": [
+    {
+      "prompt": "Complete: \"Sarra ___ many kind people during her holiday in Edinburgh.\" (verb: meet)",
+      "options": [
+        { "id": "a", "text": "have met" },
+        { "id": "b", "text": "has meet" },
+        { "id": "c", "text": "has met" },
+        { "id": "d", "text": "has meeted" }
+      ],
+      "correctOption": "c",
+      "explanation": "Sarra is one person (she) → \"has\", and the irregular participle of meet is \"met\": has met ✓. \"Have\" is wrong for she, \"meet\" is the base form, and \"meeted\" invents a regular ending for an irregular verb.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"We have ___ the guidebook about Edinburgh's history.\" (verb: read)",
+      "options": [
+        { "id": "a", "text": "readed" },
+        { "id": "b", "text": "red" },
+        { "id": "c", "text": "reads" },
+        { "id": "d", "text": "read" }
+      ],
+      "correctOption": "d",
+      "explanation": "The participle of read is spelled the same as the base form — \"read\" (but pronounced \"red\"): we have read ✓. \"Readed\" does not exist, \"red\" is a colour, and \"reads\" is the present simple.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which sentence has NO mistake?",
+      "options": [
+        { "id": "a", "text": "They has visited the old town." },
+        { "id": "b", "text": "They have visited the old town." },
+        { "id": "c", "text": "They have visit the old town." },
+        { "id": "d", "text": "They having visited the old town." }
+      ],
+      "correctOption": "b",
+      "explanation": "\"They\" takes \"have\", and the regular participle is \"visited\": They have visited ✓. \"Has\" is wrong for they, \"visit\" is the base form, and \"having\" is the -ing form, which cannot replace the auxiliary here.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"We missed the bus — it ___ just ___.\" (verb: leave)",
+      "options": [
+        { "id": "a", "text": "has just left" },
+        { "id": "b", "text": "has just leaved" },
+        { "id": "c", "text": "have just left" },
+        { "id": "d", "text": "has just leave" }
+      ],
+      "correctOption": "a",
+      "explanation": "The bus (it) takes \"has\", \"just\" sits before the participle, and the participle of leave is \"left\": has just left ✓. \"Leaved\" invents a regular ending, \"have\" is wrong for it, and \"leave\" is the base form.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which sentence correctly talks about a life experience with the present perfect?",
+      "options": [
+        { "id": "a", "text": "I have never went abroad." },
+        { "id": "b", "text": "I have never being abroad." },
+        { "id": "c", "text": "I has never been abroad." },
+        { "id": "d", "text": "I have never been abroad." }
+      ],
+      "correctOption": "d",
+      "explanation": "\"I\" takes \"have\", \"never\" goes before the participle, and the participle of be is \"been\": I have never been abroad ✓. \"Went\" is the simple past, \"being\" is the -ing form, and \"has\" is wrong with I.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete the polite exchange: \"'Excuse me, ___ you tell me where the castle is?' 'Yes, ___ straight on.'\"",
+      "options": [
+        { "id": "a", "text": "can't … go" },
+        { "id": "b", "text": "could … go" },
+        { "id": "c", "text": "could … goes" },
+        { "id": "d", "text": "could … going" }
+      ],
+      "correctOption": "b",
+      "explanation": "To ask for information politely we use \"Could you tell me…?\", and to give the direction we use the base form \"go\": Could you … go straight on ✓. \"Can't\" is a negative (wrong here), and \"goes/going\" are not the right form for a direction.",
+      "difficulty": 3
+    }
+  ]
+}
