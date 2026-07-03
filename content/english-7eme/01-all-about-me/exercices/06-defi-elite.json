@@ -1,0 +1,154 @@
+{
+  "title": "👑 Elite challenge ⭐⭐⭐⭐: the final gate of Module One",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 6,
+  "questions": [
+    {
+      "prompt": "Complete: \"My little sister ___ seven years old.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "has"
+        },
+        {
+          "id": "b",
+          "text": "has got"
+        },
+        {
+          "id": "c",
+          "text": "have"
+        },
+        {
+          "id": "d",
+          "text": "is"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "English expresses age with the verb \"to be\": she is seven years old ✓. The common trap comes from translating other languages, where age uses \"have\" — but \"she has seven years\" or \"she has got seven years old\" are impossible in English.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Read the text: \"(1) Salma is twelve years old. (2) She has got two brothers. (3) Her brothers likes football. (4) They play in the garden every evening.\" Which sentence contains a mistake?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Sentence 1"
+        },
+        {
+          "id": "b",
+          "text": "Sentence 2"
+        },
+        {
+          "id": "c",
+          "text": "Sentence 3"
+        },
+        {
+          "id": "d",
+          "text": "Sentence 4"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Sentence 3 has the mistake: this question asks you to find the faulty sentence. \"Her brothers likes football\" is wrong: \"brothers\" is plural (= they), and the -s ending is ONLY for he/she/it — it must be \"her brothers like football\" ✓. Sentences 1, 2 and 4 correctly use \"is\", \"has got\" and \"play\".",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choose the question that matches this answer: \"Yes, they have. They have got two cats.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "Are your neighbours got any cats?"
+        },
+        {
+          "id": "b",
+          "text": "Do your neighbours have got any cats?"
+        },
+        {
+          "id": "c",
+          "text": "Has your neighbours got any cats?"
+        },
+        {
+          "id": "d",
+          "text": "Have your neighbours got any cats?"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "The short answer \"Yes, they have\" repeats the auxiliary of the question, so the question must start with \"Have\" + plural subject: Have your neighbours got any cats? ✓ \"Has\" cannot go with the plural \"neighbours\", and \"Do … have got\" or \"Are … got\" mix two structures together.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"Anis has breakfast ___ half past seven ___ the morning.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "at … in"
+        },
+        {
+          "id": "b",
+          "text": "at … on"
+        },
+        {
+          "id": "c",
+          "text": "in … at"
+        },
+        {
+          "id": "d",
+          "text": "on … in"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Two prepositions of time work together: \"at\" + a clock time (at half past seven) and \"in\" + a part of the day (in the morning) ✓. The common trap is swapping them (\"in half past seven… at the morning\") — remember: at + hour, in + morning/evening, on + day.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which sentence puts \"never\" in the correct place?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Never Youssef is late for school."
+        },
+        {
+          "id": "b",
+          "text": "Youssef is late never for school."
+        },
+        {
+          "id": "c",
+          "text": "Youssef is never late for school."
+        },
+        {
+          "id": "d",
+          "text": "Youssef never is late for school."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "With the verb \"to be\", the adverb of frequency goes AFTER the verb: Youssef is never late ✓. The common trap is applying the other rule everywhere — \"never\" goes BEFORE an ordinary verb (he never gets up late) but AFTER am/is/are. \"Youssef never is late\" uses the wrong rule.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which word has the sound /tʃ/, as in \"cheese\"?",
+      "options": [
+        {
+          "id": "a",
+          "text": "wash"
+        },
+        {
+          "id": "b",
+          "text": "watch"
+        },
+        {
+          "id": "c",
+          "text": "school"
+        },
+        {
+          "id": "d",
+          "text": "sister"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Watch\" ends with the sound /tʃ/, exactly like \"cheese\" and \"children\" ✓. The traps are words whose spelling deceives you: \"school\" is written with ch but pronounced /k/, \"wash\" ends in the softer sound /ʃ/, and \"sister\" starts with a plain /s/.",
+      "difficulty": 3
+    }
+  ]
+}

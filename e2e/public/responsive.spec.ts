@@ -1,5 +1,5 @@
 import { test, expect } from "../fixtures";
-import { DEVICE_VIEWPORTS, SM_BREAKPOINT, expectNoHorizontalOverflow } from "../helpers/viewports";
+import { DEVICE_VIEWPORTS, expectNoHorizontalOverflow } from "../helpers/viewports";
 
 // Display / responsive coverage across phone → tablet → laptop → desktop on the
 // public pages (landing, login, signup): no horizontal overflow and the key
@@ -18,14 +18,12 @@ test.describe("Responsive — public pages", () => {
       await expect(page.getByRole("button", { name: /change language/i })).toBeVisible();
       await expectNoHorizontalOverflow(page);
 
-      // The Référence header's catalogue nav (Programme/Extras) yields to the
-      // switcher on phones: hidden below `sm`, shown from `sm` up.
-      const navProgramme = page.locator('header a[href="/programme"]');
-      if (vp.width >= SM_BREAKPOINT) {
-        await expect(navProgramme).toBeVisible();
-      } else {
-        await expect(navProgramme).toBeHidden();
-      }
+      // The Référence header keeps Programme reachable at every size: the inline
+      // catalogue nav shows it from `sm` up, and a phone-only wrapping row surfaces
+      // it below `sm` (so phone visitors never lose the entry point). Exactly one of
+      // the two links is visible at any width — assert that, not a single element
+      // (a bare `header a[href="/programme"]` now matches both and trips strict mode).
+      await expect(page.locator('header a[href="/programme"]:visible')).toHaveCount(1);
 
       // --- Login ---
       await auth.goto("login");

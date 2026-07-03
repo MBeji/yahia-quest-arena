@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : le gardien des deux paysages",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complète : « Nos amis de Tunis ____ passer l'été à la campagne. » (venir)",
+      "options": [
+        { "id": "a", "text": "veniront" },
+        { "id": "b", "text": "viendront" },
+        { "id": "c", "text": "viendrons" },
+        { "id": "d", "text": "viennent" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Venir » a le radical irrégulier viendr- au futur : « ils viendront » ✓. Le piège courant est de régulariser le radical (« veniront »). « Viendrons » est la terminaison de « nous », et « viennent » est le présent.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lequel de ces groupes est un GN étendu ?",
+      "options": [
+        { "id": "a", "text": "la ruelle" },
+        { "id": "b", "text": "cette ruelle" },
+        { "id": "c", "text": "une ruelle sombre" },
+        { "id": "d", "text": "elles" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Une ruelle sombre » = déterminant + nom + adjectif épithète : le GN est étendu par une expansion. « La ruelle » et « cette ruelle » restent des GN minimaux (déterminant + nom), et « elles » est un pronom.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lequel de ces verbes n'est **pas** un verbe d'état ?",
+      "options": [
+        { "id": "a", "text": "devenir" },
+        { "id": "b", "text": "rester" },
+        { "id": "c", "text": "sembler" },
+        { "id": "d", "text": "traverser" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Traverser » exprime une action, pas un état : ce n'est pas un verbe d'état. Les verbes d'état à connaître sont être, sembler, paraître, devenir et rester ; ce sont eux qui introduisent un adjectif attribut.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans la phrase « La nouvelle route reliera bientôt notre village à la ville. », quelle analyse est correcte ?",
+      "options": [
+        { "id": "a", "text": "« nouvelle » est épithète et « reliera » est au futur simple" },
+        { "id": "b", "text": "« nouvelle » est attribut et « reliera » est au futur simple" },
+        { "id": "c", "text": "« nouvelle » est épithète et « reliera » est au présent" },
+        { "id": "d", "text": "« nouvelle » est attribut et « reliera » est au présent" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Nouvelle » touche le nom « route » dans le GN : épithète ✓. « Reliera » = relier + -ra : futur simple ✓. Le piège courant est d'appeler « attribut » tout adjectif qui décrit un nom : l'attribut exige un verbe d'état entre le nom et l'adjectif, ce qui n'est pas le cas ici.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Les collines du nord-ouest restent ____ toute l'année. » (vert)",
+      "options": [
+        { "id": "a", "text": "vert" },
+        { "id": "b", "text": "verte" },
+        { "id": "c", "text": "verts" },
+        { "id": "d", "text": "vertes" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Rester » est un verbe d'état : l'adjectif est attribut du sujet « les collines » (féminin pluriel) → « vertes » ✓. Le piège courant est le piège de proximité : accorder avec « nord-ouest » (masculin) donne « verts », qui est faux.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Tu ____ chanceux d'habiter près de la mer, ____ tes amis le savent. »",
+      "options": [
+        { "id": "a", "text": "es … et" },
+        { "id": "b", "text": "est … et" },
+        { "id": "c", "text": "es … est" },
+        { "id": "d", "text": "et … es" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Tu es » : verbe être à la 2e personne (remplaçable par « étais ») ✓, puis « et » relie les deux idées (remplaçable par « et puis ») ✓. Le piège courant est d'écrire « est » après « tu » : « est » ne s'emploie qu'à la 3e personne du singulier.",
+      "difficulty": 3
+    }
+  ]
+}

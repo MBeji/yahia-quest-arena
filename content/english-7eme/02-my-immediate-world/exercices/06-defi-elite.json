@@ -1,0 +1,154 @@
+{
+  "title": "👑 Elite challenge ⭐⭐⭐⭐: the final gate of Module Two",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 6,
+  "questions": [
+    {
+      "prompt": "Read the text: \"(1) It is Sunday morning at the Trabelsi house. (2) Salma is watering the flowers in the garden. (3) Youssef and Anis is washing the car. (4) Their parents are preparing lunch.\" Which sentence contains a mistake?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Sentence 1"
+        },
+        {
+          "id": "b",
+          "text": "Sentence 2"
+        },
+        {
+          "id": "c",
+          "text": "Sentence 3"
+        },
+        {
+          "id": "d",
+          "text": "Sentence 4"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Sentence 3 has the mistake: this question asks you to find the faulty sentence. \"Youssef and Anis is washing\" is wrong: two people together = they, and the progressive needs the plural auxiliary — Youssef and Anis ARE washing the car ✓. Sentences 1, 2 and 4 correctly use \"is\" with one subject and \"are\" with a plural one.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Turn into a yes/no question: \"Karim is flying his kite in the garden.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "Is Karim flying his kite in the garden?"
+        },
+        {
+          "id": "b",
+          "text": "Is Karim flies his kite in the garden?"
+        },
+        {
+          "id": "c",
+          "text": "Does Karim flying his kite in the garden?"
+        },
+        {
+          "id": "d",
+          "text": "Karim is flying his kite in the garden?"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "In the present progressive, the question is made by moving \"be\" before the subject and keeping the -ing: Is Karim flying…? ✓ The common traps are all here: adding \"does\" (that belongs to the simple present), changing the verb to \"flies\" after \"is\", and leaving the sentence without inversion, with only a question mark.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete the airport dialogue: \"___ I take your suitcase, madam?\" — \"___ you very much, young man.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "Am … Please"
+        },
+        {
+          "id": "b",
+          "text": "Can … Thank"
+        },
+        {
+          "id": "c",
+          "text": "Can … Welcome"
+        },
+        {
+          "id": "d",
+          "text": "Do … Thank"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Two functions work together: a polite offer of help uses \"Can I…?\" (Can I take your suitcase?), and the lady thanks him with \"Thank you very much\" ✓. \"Do I take…?\" and \"Am I take…?\" are not correct request forms, and \"Welcome you very much\" is not English — \"You're welcome\" is only the REPLY to a thank-you.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"The cat is drinking ___ milk near the kitchen door.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "it"
+        },
+        {
+          "id": "b",
+          "text": "it's"
+        },
+        {
+          "id": "c",
+          "text": "its"
+        },
+        {
+          "id": "d",
+          "text": "their"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "The possessive adjective for \"it\" (an animal or a thing) is \"its\", written WITHOUT an apostrophe: the cat is drinking its milk ✓. The common trap is \"it's\", which means \"it is\" — \"the cat is drinking it is milk\" makes no sense. \"It\" alone is a pronoun, not a possessive, and \"their\" is for a plural owner.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"Mmm! The couscous ___ delicious, Mrs Trabelsi!\" — \"Thank you, Tom.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "is smelling"
+        },
+        {
+          "id": "b",
+          "text": "smell"
+        },
+        {
+          "id": "c",
+          "text": "smelling"
+        },
+        {
+          "id": "d",
+          "text": "smells"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Verbs like \"smell\", \"like\" and \"love\" stay in the simple present even at this moment: The couscous smells delicious ✓ — this is the set phrase for expressing appreciation. The common trap is \"is smelling\": after a whole chapter of -ing forms, students put every verb in the progressive, but these verbs describe a state, not an action. \"Smell\" forgets the -s of he/she/it.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete Tom's postcard: \"Dear Grandma, Tunisia is wonderful. Right now, I ___ on the beach and Lucy ___ photos.\"",
+      "options": [
+        {
+          "id": "a",
+          "text": "am sitting … is taking"
+        },
+        {
+          "id": "b",
+          "text": "am sitting … taking"
+        },
+        {
+          "id": "c",
+          "text": "is sitting … is taking"
+        },
+        {
+          "id": "d",
+          "text": "sit … takes"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Right now\" needs the present progressive for BOTH subjects, each with its own auxiliary: I AM sitting (with the double t) and Lucy IS taking ✓. The common trap is dropping the second auxiliary (\"Lucy taking\") or using \"is\" with \"I\". \"Sit … takes\" is the simple present, impossible with \"right now\".",
+      "difficulty": 3
+    }
+  ]
+}

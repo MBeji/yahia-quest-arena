@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Une histoire où un ogre parle et où une fée transforme une citrouille en carrosse est :",
+      "options": [
+        { "id": "a", "text": "un article de journal" },
+        { "id": "b", "text": "un récit réel" },
+        { "id": "c", "text": "un récit historique" },
+        { "id": "d", "text": "un récit imaginaire" }
+      ],
+      "correctOption": "d",
+      "explanation": "La magie et les personnages surnaturels (ogre, fée) sont inventés : rien n'est vérifiable. C'est un récit imaginaire, comme le conte merveilleux.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Par quelle formule commence traditionnellement un conte merveilleux ?",
+      "options": [
+        { "id": "a", "text": "« Il était une fois »" },
+        { "id": "b", "text": "« Ce matin-là »" },
+        { "id": "c", "text": "« D'après l'article »" },
+        { "id": "d", "text": "« Cher journal »" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le conte merveilleux s'ouvre presque toujours par « Il était une fois », qui installe un temps et un lieu imaginaires.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Remplace le groupe souligné par un pronom : « Le bûcheron aperçoit LE CHÂTEAU. »",
+      "options": [
+        { "id": "a", "text": "Le bûcheron le aperçoit." },
+        { "id": "b", "text": "Le bûcheron l'aperçoit." },
+        { "id": "c", "text": "Le bûcheron lui aperçoit." },
+        { "id": "d", "text": "Le bûcheron y aperçoit." }
+      ],
+      "correctOption": "b",
+      "explanation": "« Le château » est COD (aperçoit quoi ?), donc on le remplace par « le ». Devant la voyelle « a » d'aperçoit, « le » devient « l' » : « Le bûcheron l'aperçoit. »",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choisis la bonne graphie : « Le maître ___ interrogé sur sa leçon. »",
+      "options": [
+        { "id": "a", "text": "là" },
+        { "id": "b", "text": "la" },
+        { "id": "c", "text": "l'a" },
+        { "id": "d", "text": "l'as" }
+      ],
+      "correctOption": "c",
+      "explanation": "On peut dire « le maître l'avait interrogé » : c'est donc le pronom « l' » + l'auxiliaire avoir « a », suivi du participe passé « interrogé ». On écrit « l'a ».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel mot est un SYNONYME de « content » ?",
+      "options": [
+        { "id": "a", "text": "heureux" },
+        { "id": "b", "text": "triste" },
+        { "id": "c", "text": "fatigué" },
+        { "id": "d", "text": "méchant" }
+      ],
+      "correctOption": "a",
+      "explanation": "Un synonyme est un mot de sens proche : « heureux » a le même sens que « content ». « triste » en est le contraire.",
+      "difficulty": 2
+    }
+  ]
+}

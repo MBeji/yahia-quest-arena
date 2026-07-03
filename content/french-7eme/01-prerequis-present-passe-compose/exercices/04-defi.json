@@ -1,0 +1,82 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : transformations sous contraintes",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Quelle phrase est à la fois de type interrogatif et de forme négative ?",
+      "options": [
+        { "id": "a", "text": "Pourquoi ne viens-tu pas à l'entraînement ?" },
+        { "id": "b", "text": "Ne dis rien à ton adversaire !" },
+        { "id": "c", "text": "Tu ne viens pas à l'entraînement." },
+        { "id": "d", "text": "Viens-tu à l'entraînement ?" }
+      ],
+      "correctOption": "a",
+      "explanation": "La phrase a pose une question (« ? ») et contient la négation « ne… pas » : elle cumule le type interrogatif et la forme négative ✓. La phrase c est négative mais déclarative, la d est interrogative mais affirmative.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Un élève a écrit : « Je ranges ma chambre, je finis mes devoirs, j'appelle mon frère et nous jouons ensemble. » Quel verbe est mal conjugué ?",
+      "options": [
+        { "id": "a", "text": "« finis »" },
+        { "id": "b", "text": "« ranges »" },
+        { "id": "c", "text": "« appelle »" },
+        { "id": "d", "text": "« jouons »" }
+      ],
+      "correctOption": "b",
+      "explanation": "Question « chasse à l'erreur » : la bonne réponse est le verbe fautif. Ranger est du 1er groupe : avec « je », la terminaison est -e → « je range », sans -s ✓. Le piège courant : croire que « je finis » est faux — finir est du 2e groupe et prend bien -is avec je.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Transforme au passé composé ET à la forme négative : « Rim se promène sur la plage. »",
+      "options": [
+        { "id": "a", "text": "Rim ne c'est pas promenée sur la plage." },
+        { "id": "b", "text": "Rim ne s'est pas promené sur la plage." },
+        { "id": "c", "text": "Rim n'a pas promené sur la plage." },
+        { "id": "d", "text": "Rim ne s'est pas promenée sur la plage." }
+      ],
+      "correctOption": "d",
+      "explanation": "Trois étapes : (1) verbe pronominal → auxiliaire être : « s'est » ; (2) accord du participe passé avec le sujet féminin « Rim » → « promenée » ; (3) négation « ne… pas » autour de l'auxiliaire ✓. Le piège courant : écrire « c'est » devant le participe passé — devant un participe passé, c'est toujours « s'est ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "« Hier, je marche tranquillement sur l'avenue quand un cycliste surgit devant moi. » Les verbes sont au présent alors que la scène s'est passée hier. Pourquoi ?",
+      "options": [
+        { "id": "a", "text": "C'est un présent de vérité générale." },
+        { "id": "b", "text": "C'est une erreur : il fallait conjuguer au passé composé." },
+        { "id": "c", "text": "C'est le présent de narration, qui rend le récit plus vivant." },
+        { "id": "d", "text": "C'est une action en train de se réaliser au moment où l'on parle." }
+      ],
+      "correctOption": "c",
+      "explanation": "Le présent peut remplacer les temps du passé dans un récit : c'est le présent de narration, qui rend la scène plus vivante ✓. Ce n'est donc pas une faute. Le piège courant : confondre avec l'action en cours — « hier » prouve que la scène est passée.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « ___ matin-là, Selim ___ levé en retard : ___ la faute de son réveil cassé ! »",
+      "options": [
+        { "id": "a", "text": "Ce / c'est / s'est" },
+        { "id": "b", "text": "Se / s'est / c'est" },
+        { "id": "c", "text": "Ce / s'est / c'est" },
+        { "id": "d", "text": "Ce / s'est / s'est" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Ce matin-là » : déterminant démonstratif devant un nom masculin ✓. « Selim s'est levé » : suivi d'un participe passé → s'est ✓. « C'est la faute… » : remplaçable par « cela est la faute » → c'est ✓. Le piège courant : inverser s'est et c'est — le test « cela est » tranche à chaque fois.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Transforme en phrase exclamative : « Cette victoire est belle. »",
+      "options": [
+        { "id": "a", "text": "Cette victoire est-elle belle ?" },
+        { "id": "b", "text": "Quelle belle victoire !" },
+        { "id": "c", "text": "Cette victoire n'est pas belle." },
+        { "id": "d", "text": "Est-ce que cette victoire est belle !" }
+      ],
+      "correctOption": "b",
+      "explanation": "La phrase exclamative exprime un sentiment (ici la joie) et se termine par « ! » ; elle commence souvent par « Quel/Quelle » → « Quelle belle victoire ! » ✓. Le piège courant : l'option d mélange la structure interrogative « Est-ce que » avec un point d'exclamation — cette construction est incorrecte.",
+      "difficulty": 3
+    }
+  ]
+}

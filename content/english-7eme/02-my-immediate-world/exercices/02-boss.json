@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Chapter boss ⭐⭐⭐: what's happening right now?",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complete: \"Salma ___ TV now; she is doing her homework.\"",
+      "options": [
+        { "id": "a", "text": "doesn't watch" },
+        { "id": "b", "text": "doesn't watching" },
+        { "id": "c", "text": "isn't watch" },
+        { "id": "d", "text": "isn't watching" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"Now\" asks for the present progressive, and its negative is be + not + verb-ing: she isn't watching TV ✓. \"Doesn't watch\" is the simple present, used for habits, not for this moment; \"isn't watch\" forgets the -ing, and \"doesn't watching\" mixes the two tenses together.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"Look! The cat ___ on my bed.\"",
+      "options": [
+        { "id": "a", "text": "is siting" },
+        { "id": "b", "text": "is sitting" },
+        { "id": "c", "text": "sit" },
+        { "id": "d", "text": "sits" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Look!\" signals an action happening now, and short verbs like \"sit\" double their last letter before -ing: the cat is sitting ✓. The common trap is \"is siting\" with one t — sit, swim and other short verbs double the final consonant (sitting, swimming). \"Sits\" and \"sit\" are simple present forms.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "At customs, Tom wants his passport back. What is the polite way to ask?",
+      "options": [
+        { "id": "a", "text": "\"Can I have my passport back, please?\"" },
+        { "id": "b", "text": "\"Give me my passport.\"" },
+        { "id": "c", "text": "\"I want my passport now.\"" },
+        { "id": "d", "text": "\"My passport, quick!\"" }
+      ],
+      "correctOption": "a",
+      "explanation": "A polite request uses \"Can I … please?\": Can I have my passport back, please? ✓ The other three are direct orders without \"please\" — in English they sound rude, especially when you speak to an officer.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete the invitation: \"It's lunch time. ___ some grilled fish?\"",
+      "options": [
+        { "id": "a", "text": "Are you" },
+        { "id": "b", "text": "Do you" },
+        { "id": "c", "text": "What about" },
+        { "id": "d", "text": "Would you" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"What about + noun\" makes an offer: What about some grilled fish? ✓ \"Would you\" needs \"like\" (Would you LIKE some fish?), and \"Do you\" or \"Are you\" cannot stand directly before \"some grilled fish\" — the sentence would have no main verb.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete the question: \"What ___ Mum ___?\" — \"She is preparing dinner.\"",
+      "options": [
+        { "id": "a", "text": "does … doing" },
+        { "id": "b", "text": "does … do" },
+        { "id": "c", "text": "is … doing" },
+        { "id": "d", "text": "is … do" }
+      ],
+      "correctOption": "c",
+      "explanation": "The answer \"She is preparing dinner\" is in the present progressive, so the question must be too: What is Mum doing? ✓ The common trap is \"What does Mum do?\" — that simple present question asks about her job or habits, not about this moment. \"Does … doing\" and \"is … do\" mix the two structures.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"Nour usually ___ milk, but today she ___ orange juice.\"",
+      "options": [
+        { "id": "a", "text": "drinks … drinks" },
+        { "id": "b", "text": "drinks … is drinking" },
+        { "id": "c", "text": "is drinking … drinks" },
+        { "id": "d", "text": "is drinking … is drinking" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Usually\" describes a habit → simple present (drinks), and \"today\" describes what is happening now → present progressive (is drinking) ✓. The common trap is using the same tense in both parts — the sentence contrasts a habit with this moment, so the two tenses must be different, in that order.",
+      "difficulty": 3
+    }
+  ]
+}

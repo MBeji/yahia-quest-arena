@@ -1,0 +1,12 @@
+{
+  "id": "arabic-7eme",
+  "nameFr": "العربية",
+  "description": "النحو العربي للسنة السابعة من التعليم الأساسي: علم الإعراب وعلم الصرف وفق البرنامج الرسمي",
+  "attribute": "Esprit",
+  "colorToken": "subject-arabic",
+  "icon": "Languages",
+  "displayOrder": 3,
+  "contentLanguage": "ar",
+  "themeId": "ecole-tn",
+  "gradeSlug": "7eme-base"
+}
