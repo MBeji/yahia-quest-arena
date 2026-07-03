@@ -30,6 +30,23 @@ the precedent: Arabic prose around standard math. Never "arabize" the math itsel
   the browser orders the whole line right. The renderer (`src/shared/lib/bidi.ts`) deliberately
   leaves these alone; isolating them would _break_ them. So write money/measure sums the natural
   way — no tricks needed.
+- **Signed numbers TIGHT, binary operators SPACED — the one spacing rule that keeps negatives
+  unambiguous.** A leading sign glued to its digit marks a _signed number_ (`−5`, `+90°`, `−2x`);
+  spaces around a sign mark a _binary operation_ (`5 − 3`, `10 مي − 2 مي`, `0 د − 1`). The renderer
+  keys on exactly this: it auto-isolates a **tight** signed number (`−5` → stays `−5`, never `5−`)
+  but leaves spaced subtraction to the native algorithm. So **always write `x = −2`, `(−5)`,
+  `مجموعة الحلول −3`, `الدوران +90°` tight**, and **always space a subtraction `12 − 5`**. Never
+  write a signed number spaced (`− 5`) or a subtraction tight next to Arabic (`5د−1`) — both defeat
+  the rule and can scramble. This is what fixed the concours-défi énoncés below.
+- **Comparisons and abs-value in the énoncé: keep the whole relation a contiguous LTR run.** Write
+  `|x − 3| < 4`, `−1 < x < 7`, `|−5| < |−2|` as one uninterrupted math run (no Arabic word inside),
+  and the renderer isolates it so it reads left-to-right exactly as written — the inequality never
+  flips and the bars never migrate. This is preferred over spelling the comparison in Arabic words;
+  standard notation stays standard. The three reported ambiguous prompts, written correctly:
+  - `كم عددًا صحيحًا يحقّق عدم المساواة |x − 3| < 4؟` — the abs-value inequality is one run.
+  - `ما قيمة (2√3 − √5)(2√3 + √5)؟` — the difference-of-squares product is one run.
+  - `بما أنّ −5 < −2، فإنّ |−5| < |−2|، إذن −5 أقرب إلى الصفر…` — every `−5`/`−2` is tight, so each
+    signed number and each relation is isolated; none scrambles.
 - **Never put Arabic script _inside_ a bidi-mirrored construct** — i.e. as the radicand of a
   radical or inside the brackets/relation it needs isolated. `√(المساحة)`, `√المساحة`, `(عدد ما)>0`
   fragment the LTR isolate and render scrambled. Write the operand as a **number or Latin symbol**
@@ -94,9 +111,11 @@ formulas, for the letter `x` used as a multiplication sign, for **LaTeX residue*
 digit groups (regex `\d \d{3}` outside `<svg>` markup, must be zero: use U+00A0), for an
 **Arabic radicand** (regex `[√∛∜](?:[؀-ۿ]|\([^)]*[؀-ۿ])` — must be zero: rewrite as a
 number/symbol or the root in words), and for the **Arabic comma `،` (U+060C) inside a math bracket
-group** (a set/interval/tuple separator — must be zero: use `;`). The `content-audit` skill
-performs the same scans on existing content, and `content:qa` fails strict on the Arabic-radicand
-**and** Arabic-comma-in-math patterns.
+group** (a set/interval/tuple separator — must be zero: use `;`), and for a **spaced signed
+number** in `ar` prose (a sign flanked by spaces where a _signed number_ is meant, `= − 5` /
+`إذن − 5`, rather than a subtraction — write it tight `−5`). The `content-audit` skill performs the
+same scans on existing content, and `content:qa` fails strict on the Arabic-radicand **and**
+Arabic-comma-in-math patterns.
 
 **Two recurring U+00A0 traps** (seen authoring multi-digit Arabic content):
 
