@@ -238,8 +238,13 @@ function LeaderboardPage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <span className="font-semibold truncate">{player.displayName}</span>
+                    {/* Opaque card-surface chip (not a translucent gold tint) so the
+                        label always meets contrast — the "Toi" pill sits on the gold/10
+                        highlighted row, where a gold-on-gold tint dropped to 3.7:1 and
+                        failed WCAG AA. Mirrors the GAP-047 premium-lock badge pattern:
+                        readable in all 3 themes (gold is dark teal under Référence). */}
                     {player.isMe && (
-                      <span className="rounded-full bg-[color:var(--gold)]/20 px-2 py-0.5 text-[10px] font-bold uppercase text-[color:var(--gold)]">
+                      <span className="rounded-full border border-[color:var(--gold)]/50 bg-card px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-foreground shadow-sm">
                         {t.leaderboard.youChip}
                       </span>
                     )}

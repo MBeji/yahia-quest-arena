@@ -25,12 +25,38 @@ export const MD_BREAKPOINT = 768;
 /**
  * Assert the page does not scroll horizontally (a classic responsive regression).
  * Allows a couple px for sub-pixel rounding.
+ *
+ * On failure the message also names the element(s) whose box extends past the
+ * viewport — a horizontal-overflow bug is otherwise invisible in CI (only a
+ * scrollWidth delta), so the offenders' tag + classes + rect are surfaced to
+ * pinpoint the culprit straight from the run log. The list is capped at the 8
+ * widest offenders to keep the message readable.
  */
 export async function expectNoHorizontalOverflow(page: Page, tolerance = 2): Promise<void> {
-  const overflow = await page.evaluate(
-    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-  );
-  expect(overflow, "horizontal overflow (scrollWidth − clientWidth)").toBeLessThanOrEqual(
+  const { overflow, offenders } = await page.evaluate((tol) => {
+    const docEl = document.documentElement;
+    const overflow = docEl.scrollWidth - docEl.clientWidth;
+    if (overflow <= tol) return { overflow, offenders: [] as string[] };
+
+    const limit = docEl.clientWidth + tol;
+    const offenders = Array.from(document.body.querySelectorAll<HTMLElement>("*"))
+      .map((el) => ({ el, rect: el.getBoundingClientRect() }))
+      .filter(({ rect }) => rect.width > 0 && (rect.right > limit || rect.left < -tol))
+      .sort((a, b) => b.rect.right - a.rect.right)
+      .slice(0, 8)
+      .map(({ el, rect }) => {
+        // SVG elements expose className as an SVGAnimatedString, not a string.
+        const cls =
+          typeof el.className === "string" ? el.className : (el.getAttribute("class") ?? "");
+        return `<${el.tagName.toLowerCase()} class="${cls}"> [left=${Math.round(rect.left)}, right=${Math.round(rect.right)}, width=${Math.round(rect.width)}]`;
+      });
+    return { overflow, offenders };
+  }, tolerance);
+
+  const detail = offenders.length
+    ? `\nOffending element(s) past the viewport (widest first):\n${offenders.join("\n")}`
+    : "";
+  expect(overflow, `horizontal overflow (scrollWidth − clientWidth)${detail}`).toBeLessThanOrEqual(
     tolerance,
   );
 }
