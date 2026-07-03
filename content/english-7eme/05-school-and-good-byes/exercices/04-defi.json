@@ -9,10 +9,22 @@
     {
       "prompt": "Which sentence is correct?",
       "options": [
-        { "id": "a", "text": "Emma want to see the lab." },
-        { "id": "b", "text": "Emma wants see the lab." },
-        { "id": "c", "text": "Emma wants to see the lab." },
-        { "id": "d", "text": "Emma wants to seeing the lab." }
+        {
+          "id": "a",
+          "text": "Emma want to see the lab."
+        },
+        {
+          "id": "b",
+          "text": "Emma wants see the lab."
+        },
+        {
+          "id": "c",
+          "text": "Emma wants to see the lab."
+        },
+        {
+          "id": "d",
+          "text": "Emma wants to seeing the lab."
+        }
       ],
       "correctOption": "c",
       "explanation": "The rule is \"subject + wants + to + base verb\" for he/she/it: Emma wants to see the lab ✓. \"Want\" (a) forgets the -s, \"wants see\" (b) drops the \"to\", and \"to seeing\" (d) adds -ing after \"to\".",
@@ -21,10 +33,22 @@
     {
       "prompt": "In the shop the toys all cost the same. Complete: \"___ these toys?\" — \"Five dinars each.\"",
       "options": [
-        { "id": "a", "text": "How many are" },
-        { "id": "b", "text": "How much are" },
-        { "id": "c", "text": "How much is" },
-        { "id": "d", "text": "How many is" }
+        {
+          "id": "a",
+          "text": "How many are"
+        },
+        {
+          "id": "b",
+          "text": "How much are"
+        },
+        {
+          "id": "c",
+          "text": "How much is"
+        },
+        {
+          "id": "d",
+          "text": "How many is"
+        }
       ],
       "correctOption": "b",
       "explanation": "Prices always take \"how much\", even when the noun is plural: How much are these toys? ✓ The common trap is \"How many\" because \"toys\" is countable — but for the PRICE we use \"how much\". \"Toys\" is plural, so we need \"are\", not \"is\".",
@@ -33,10 +57,22 @@
     {
       "prompt": "Emma's bag is heavy. A kind boy wants to OFFER help. What does he say?",
       "options": [
-        { "id": "a", "text": "\"Can you help me?\"" },
-        { "id": "b", "text": "\"Can I help you?\"" },
-        { "id": "c", "text": "\"I cannot help.\"" },
-        { "id": "d", "text": "\"How much is it?\"" }
+        {
+          "id": "a",
+          "text": "\"Can you help me?\""
+        },
+        {
+          "id": "b",
+          "text": "\"Can I help you?\""
+        },
+        {
+          "id": "c",
+          "text": "\"I cannot help.\""
+        },
+        {
+          "id": "d",
+          "text": "\"How much is it?\""
+        }
       ],
       "correctOption": "b",
       "explanation": "To OFFER help you ask \"Can I help you?\" ✓. The common trap is \"Can you help me?\", which is how you ASK FOR help (when YOU need it). \"I cannot help\" refuses, and \"How much is it?\" asks a price.",
@@ -45,10 +81,22 @@
     {
       "prompt": "Choose the correct comparison: \"My new school ___ a big, happy family.\"",
       "options": [
-        { "id": "a", "text": "is like" },
-        { "id": "b", "text": "is as" },
-        { "id": "c", "text": "is liking" },
-        { "id": "d", "text": "likes" }
+        {
+          "id": "a",
+          "text": "is like"
+        },
+        {
+          "id": "b",
+          "text": "is as"
+        },
+        {
+          "id": "c",
+          "text": "is liking"
+        },
+        {
+          "id": "d",
+          "text": "likes"
+        }
       ],
       "correctOption": "a",
       "explanation": "To compare two things we use \"noun + be + like + noun\": my school is like a big family ✓ (like = similar to). The common trap is \"is as\" (wrong here). \"Is liking\" and \"likes\" use the verb \"to like\", which means to enjoy — a different meaning.",
@@ -57,22 +105,46 @@
     {
       "prompt": "Read: \"(1) Yesterday Emma visited the souk. (2) She wanted a small carpet. (3) The shopkeeper helped her. (4) She can to carry it home alone.\" Which sentence contains a mistake?",
       "options": [
-        { "id": "a", "text": "Sentence 1" },
-        { "id": "b", "text": "Sentence 2" },
-        { "id": "c", "text": "Sentence 3" },
-        { "id": "d", "text": "Sentence 4" }
+        {
+          "id": "a",
+          "text": "Sentence 1"
+        },
+        {
+          "id": "b",
+          "text": "Sentence 2"
+        },
+        {
+          "id": "c",
+          "text": "Sentence 3"
+        },
+        {
+          "id": "d",
+          "text": "Sentence 4"
+        }
       ],
       "correctOption": "d",
-      "explanation": "This question asks you to spot the faulty sentence. \"She can to carry it\" is wrong: after \"can\" the verb takes no \"to\" — it must be \"She can carry it\" ✓. Sentences 1, 2 and 3 correctly use the regular past forms \"visited\", \"wanted\" and \"helped\".",
+      "explanation": "Sentence 4 has the mistake: this question asks you to spot the faulty sentence. \"She can to carry it\" is wrong: after \"can\" the verb takes no \"to\" — it must be \"She can carry it\" ✓. Sentences 1, 2 and 3 correctly use the regular past forms \"visited\", \"wanted\" and \"helped\".",
       "difficulty": 3
     },
     {
       "prompt": "Which verb has its final -ed pronounced /ɪd/ (an extra syllable), like \"wanted\"?",
       "options": [
-        { "id": "a", "text": "played" },
-        { "id": "b", "text": "helped" },
-        { "id": "c", "text": "visited" },
-        { "id": "d", "text": "cleaned" }
+        {
+          "id": "a",
+          "text": "played"
+        },
+        {
+          "id": "b",
+          "text": "helped"
+        },
+        {
+          "id": "c",
+          "text": "visited"
+        },
+        {
+          "id": "d",
+          "text": "cleaned"
+        }
       ],
       "correctOption": "c",
       "explanation": "The -ed is pronounced /ɪd/ (an extra syllable) only after a t or d sound: visit → visited /ɪd/ ✓, exactly like \"wanted\". The common trap is \"played\": it ends in a vowel sound, so its -ed is /d/. \"Helped\" is /t/ and \"cleaned\" is /d/ — no extra syllable.",

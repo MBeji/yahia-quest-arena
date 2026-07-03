@@ -9,10 +9,22 @@
     {
       "prompt": "Choose the correct sentence.",
       "options": [
-        { "id": "a", "text": "I want visit the science lab." },
-        { "id": "b", "text": "I want to visit the science lab." },
-        { "id": "c", "text": "I want visiting the science lab." },
-        { "id": "d", "text": "I want to visiting the science lab." }
+        {
+          "id": "a",
+          "text": "I want visit the science lab."
+        },
+        {
+          "id": "b",
+          "text": "I want to visit the science lab."
+        },
+        {
+          "id": "c",
+          "text": "I want visiting the science lab."
+        },
+        {
+          "id": "d",
+          "text": "I want to visiting the science lab."
+        }
       ],
       "correctOption": "b",
       "explanation": "The pattern is \"want + to + base verb\": I want to visit the lab ✓. The common trap is \"I want visit\", which drops the \"to\". \"Want visiting\" and \"want to visiting\" wrongly use the -ing form after \"want to\".",
@@ -21,10 +33,22 @@
     {
       "prompt": "Complete: \"___ water do you want in your bottle?\"",
       "options": [
-        { "id": "a", "text": "How many" },
-        { "id": "b", "text": "How much" },
-        { "id": "c", "text": "How old" },
-        { "id": "d", "text": "How long" }
+        {
+          "id": "a",
+          "text": "How many"
+        },
+        {
+          "id": "b",
+          "text": "How much"
+        },
+        {
+          "id": "c",
+          "text": "How old"
+        },
+        {
+          "id": "d",
+          "text": "How long"
+        }
       ],
       "correctOption": "b",
       "explanation": "\"Water\" is uncountable (we cannot say \"two waters\"), so we ask with \"How much\": How much water do you want? \"How many\" is only for countable nouns like bottles or cups.",
@@ -33,10 +57,22 @@
     {
       "prompt": "Karim is strong, but the suitcase is enormous. Complete: \"He ___ lift it alone.\"",
       "options": [
-        { "id": "a", "text": "can" },
-        { "id": "b", "text": "must" },
-        { "id": "c", "text": "cannot" },
-        { "id": "d", "text": "wants" }
+        {
+          "id": "a",
+          "text": "can"
+        },
+        {
+          "id": "b",
+          "text": "must"
+        },
+        {
+          "id": "c",
+          "text": "cannot"
+        },
+        {
+          "id": "d",
+          "text": "wants"
+        }
       ],
       "correctOption": "c",
       "explanation": "The suitcase is too big to lift alone, so Karim is NOT able to: he cannot lift it alone. \"Can\" says the opposite (he is able to), \"must\" is about obligation, and \"wants\" is about desire, not ability.",
@@ -45,10 +81,22 @@
     {
       "prompt": "Complete: \"The eraser is ___ the ruler ___ the pencil-case.\"",
       "options": [
-        { "id": "a", "text": "between … and" },
-        { "id": "b", "text": "under … and" },
-        { "id": "c", "text": "behind … and" },
-        { "id": "d", "text": "between … or" }
+        {
+          "id": "a",
+          "text": "between … and"
+        },
+        {
+          "id": "b",
+          "text": "under … and"
+        },
+        {
+          "id": "c",
+          "text": "behind … and"
+        },
+        {
+          "id": "d",
+          "text": "between … or"
+        }
       ],
       "correctOption": "a",
       "explanation": "\"Between\" always goes with \"and\": between the ruler and the pencil-case ✓. The common trap is \"between … or\" — \"between\" is only followed by \"and\". \"Under\" and \"behind\" would change the meaning completely.",
@@ -57,10 +105,22 @@
     {
       "prompt": "Emma speaks English very well and without stopping. Complete: \"She speaks English ___.\"",
       "options": [
-        { "id": "a", "text": "fluent" },
-        { "id": "b", "text": "fluent way" },
-        { "id": "c", "text": "fluently" },
-        { "id": "d", "text": "more fluent" }
+        {
+          "id": "a",
+          "text": "fluent"
+        },
+        {
+          "id": "b",
+          "text": "fluent way"
+        },
+        {
+          "id": "c",
+          "text": "fluently"
+        },
+        {
+          "id": "d",
+          "text": "more fluent"
+        }
       ],
       "correctOption": "c",
       "explanation": "To say HOW she speaks, we need an adverb of manner: adjective \"fluent\" + -ly = \"fluently\". She speaks fluently ✓. \"Fluent\" alone is the adjective, and \"fluent way\" / \"more fluent\" are not adverb forms.",
@@ -69,13 +129,25 @@
     {
       "prompt": "Read: \"(1) Can I see your classroom? (2) Of course you can. (3) I want to visit the lab. (4) The headmaster can to help you.\" Which sentence contains a mistake?",
       "options": [
-        { "id": "a", "text": "Sentence 1" },
-        { "id": "b", "text": "Sentence 2" },
-        { "id": "c", "text": "Sentence 3" },
-        { "id": "d", "text": "Sentence 4" }
+        {
+          "id": "a",
+          "text": "Sentence 1"
+        },
+        {
+          "id": "b",
+          "text": "Sentence 2"
+        },
+        {
+          "id": "c",
+          "text": "Sentence 3"
+        },
+        {
+          "id": "d",
+          "text": "Sentence 4"
+        }
       ],
       "correctOption": "d",
-      "explanation": "This question asks you to find the faulty sentence. \"The headmaster can to help you\" is wrong: after \"can\" the verb never takes \"to\" — it must be \"can help you\" ✓. Sentences 1, 2 and 3 correctly use \"Can I…?\", \"Of course you can\" and \"want to visit\".",
+      "explanation": "Sentence 4 has the mistake: this question asks you to find the faulty sentence. \"The headmaster can to help you\" is wrong: after \"can\" the verb never takes \"to\" — it must be \"can help you\" ✓. Sentences 1, 2 and 3 correctly use \"Can I…?\", \"Of course you can\" and \"want to visit\".",
       "difficulty": 3
     }
   ]
