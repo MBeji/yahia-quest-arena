@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision (type examen) : de la médina aux oliveraies",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Complète : « Du haut de la colline, tu ____ toute la plaine. » (voir)",
+      "options": [
+        { "id": "a", "text": "voiras" },
+        { "id": "b", "text": "verra" },
+        { "id": "c", "text": "voirais" },
+        { "id": "d", "text": "verras" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Voir » a le radical irrégulier verr- au futur : « tu verras ». « Voiras » régularise le radical à tort, « verra » est la forme de la 3e personne, et « voirais » cumule les deux erreurs.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « La place du village ____ déserte en été. »",
+      "options": [
+        { "id": "a", "text": "et" },
+        { "id": "b", "text": "es" },
+        { "id": "c", "text": "est" },
+        { "id": "d", "text": "ait" }
+      ],
+      "correctOption": "c",
+      "explanation": "On peut dire « La place du village était déserte » : c'est donc le verbe être à la 3e personne, « est ». « Et » relie deux mots, « es » ne s'emploie qu'avec « tu », et « ait » est une forme du verbe avoir.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Les boutiques du souk ____ tôt le matin. » (s'ouvrir)",
+      "options": [
+        { "id": "a", "text": "s'ouvrent" },
+        { "id": "b", "text": "s'ouvriront" },
+        { "id": "c", "text": "s'ouvriras" },
+        { "id": "d", "text": "ouvriront" }
+      ],
+      "correctOption": "b",
+      "explanation": "Verbe pronominal au futur : le pronom « s' » reste devant le verbe, et « les boutiques » demande la terminaison -ront → « s'ouvriront ». « S'ouvrent » est le présent, « s'ouvriras » est la 2e personne, et « ouvriront » oublie le pronom.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Compare « les champs immenses » et « les champs semblent immenses ». Dans quelle construction « immenses » est-il épithète ?",
+      "options": [
+        { "id": "a", "text": "Dans la première seulement" },
+        { "id": "b", "text": "Dans la seconde seulement" },
+        { "id": "c", "text": "Dans les deux constructions" },
+        { "id": "d", "text": "Dans aucune des deux constructions" }
+      ],
+      "correctOption": "a",
+      "explanation": "Dans « les champs immenses », l'adjectif touche le nom dans le GN : épithète. Dans « les champs semblent immenses », le verbe d'état « sembler » sépare le nom de l'adjectif : « immenses » devient attribut du sujet.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Nous longerons une avenue ____ . » (bruyant, animé)",
+      "options": [
+        { "id": "a", "text": "bruyant et animé" },
+        { "id": "b", "text": "bruyante et animé" },
+        { "id": "c", "text": "bruyante et animée" },
+        { "id": "d", "text": "bruyantes et animées" }
+      ],
+      "correctOption": "c",
+      "explanation": "Les deux adjectifs sont épithètes du nom « avenue », féminin singulier : chacun s'accorde → « bruyante et animée ». Oublier l'accord du second adjectif (« bruyante et animé ») est l'erreur la plus fréquente ; le pluriel est faux car il n'y a qu'une avenue.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « ____ dit que les habitants de la campagne ____ un grand sens de l'accueil. »",
+      "options": [
+        { "id": "a", "text": "On … ont" },
+        { "id": "b", "text": "On … on" },
+        { "id": "c", "text": "Ont … on" },
+        { "id": "d", "text": "Ont … ont" }
+      ],
+      "correctOption": "a",
+      "explanation": "« On dit » : pronom sujet, remplaçable par « il » (« il dit »). « Les habitants ont » : verbe avoir, remplaçable par « avaient ». Le piège est d'échanger les deux : « ont » ne peut jamais être sujet d'un verbe.",
+      "difficulty": 2
+    }
+  ]
+}

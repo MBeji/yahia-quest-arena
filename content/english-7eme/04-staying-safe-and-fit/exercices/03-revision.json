@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Review (exam style): safe, healthy and ready",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "You want to leave the classroom. How do you ask the teacher for permission?",
+      "options": [
+        { "id": "a", "text": "\"Can go I out, please?\"" },
+        { "id": "b", "text": "\"Can I go out, please?\"" },
+        { "id": "c", "text": "\"Can I to go out, please?\"" },
+        { "id": "d", "text": "\"I can go out, please?\"" }
+      ],
+      "correctOption": "b",
+      "explanation": "Permission uses the question order Can + I + base verb: Can I go out, please? \"Can go I\" breaks the word order, \"Can I to go\" adds an extra \"to\", and \"I can go out\" is a statement, not a question.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Give your little sister advice: \"___ your teeth after every meal.\"",
+      "options": [
+        { "id": "a", "text": "Brush" },
+        { "id": "b", "text": "Brushes" },
+        { "id": "c", "text": "Brushing" },
+        { "id": "d", "text": "To brush" }
+      ],
+      "correctOption": "a",
+      "explanation": "Advice uses the imperative: the base verb with no subject — Brush your teeth. \"Brushes\" adds a third-person -s, and \"Brushing\" / \"To brush\" are not imperative forms.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete the advice: \"Don't eat too ___ sweets before dinner.\"",
+      "options": [
+        { "id": "a", "text": "many" },
+        { "id": "b", "text": "much" },
+        { "id": "c", "text": "some" },
+        { "id": "d", "text": "a lot" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Sweets\" are things you can count (one sweet, two sweets), so they take \"many\": too many sweets. \"Much\" is for uncountable things like milk or bread, and \"a lot\" would need \"of\" after it.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete the suggestion: \"It's sunny! ___ go to the beach.\"",
+      "options": [
+        { "id": "a", "text": "Let" },
+        { "id": "b", "text": "Let is" },
+        { "id": "c", "text": "Let's" },
+        { "id": "d", "text": "Let's to" }
+      ],
+      "correctOption": "c",
+      "explanation": "A suggestion to do something together uses \"Let's\" + base verb: Let's go to the beach. \"Let's to go\" adds an extra \"to\", and \"Let\" alone or \"Let is\" are not suggestion forms.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete the suggestion: \"___ playing football after school?\"",
+      "options": [
+        { "id": "a", "text": "How about to" },
+        { "id": "b", "text": "Let's" },
+        { "id": "c", "text": "Must we" },
+        { "id": "d", "text": "What about" }
+      ],
+      "correctOption": "d",
+      "explanation": "Before a verb in -ing, the suggestion is \"What about…?\": What about playing football? \"Let's\" takes the base verb (Let's play), \"How about to\" wrongly adds \"to\", and \"must\" expresses obligation, not a suggestion.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"Yesterday, Karim ___ football with his friends in the park.\"",
+      "options": [
+        { "id": "a", "text": "play" },
+        { "id": "b", "text": "played" },
+        { "id": "c", "text": "playing" },
+        { "id": "d", "text": "plays" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Yesterday\" tells us the action is finished, so the regular verb takes -ed in the simple past: Karim played football. \"Play\" and \"plays\" are present forms, and \"playing\" needs an auxiliary before it.",
+      "difficulty": 2
+    }
+  ]
+}
