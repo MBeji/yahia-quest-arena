@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Comment forme-t-on le passé composé ?",
+      "options": [
+        { "id": "a", "text": "Avec l'auxiliaire être ou avoir au futur + le participe passé" },
+        { "id": "b", "text": "Avec l'auxiliaire être ou avoir au présent + le participe passé" },
+        { "id": "c", "text": "Avec le verbe seul et la terminaison -ait" },
+        { "id": "d", "text": "Avec l'auxiliaire aller au présent + l'infinitif" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le passé composé est un temps composé : auxiliaire être ou avoir conjugué au présent, suivi du participe passé du verbe (j'ai fini, elle est partie).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle est la valeur du présent dans « Le soleil se lève à l'est. » ?",
+      "options": [
+        { "id": "a", "text": "Une action en train de se réaliser au moment où l'on parle" },
+        { "id": "b", "text": "Le présent de narration" },
+        { "id": "c", "text": "Une action future" },
+        { "id": "d", "text": "Une vérité générale" }
+      ],
+      "correctOption": "d",
+      "explanation": "Ce fait est toujours vrai, à n'importe quel moment : c'est la valeur de vérité générale du présent de l'indicatif.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel est le type de la phrase : « Où habites-tu ? »",
+      "options": [
+        { "id": "a", "text": "Interrogative" },
+        { "id": "b", "text": "Déclarative" },
+        { "id": "c", "text": "Exclamative" },
+        { "id": "d", "text": "Négative" }
+      ],
+      "correctOption": "a",
+      "explanation": "La phrase pose une question et se termine par un point d'interrogation : elle est de type interrogatif. « Négative » n'est pas un type mais une forme de phrase.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Que faut-il écrire dans : « Leïla ___ réveillée à sept heures. » ?",
+      "options": [
+        { "id": "a", "text": "c'est" },
+        { "id": "b", "text": "ces" },
+        { "id": "c", "text": "s'est" },
+        { "id": "d", "text": "ses" }
+      ],
+      "correctOption": "c",
+      "explanation": "« S'est » est toujours suivi d'un participe passé : Leïla s'est réveillée (verbe pronominal « se réveiller » au passé composé). « C'est » se remplacerait par « cela est », ce qui est impossible ici.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Avec l'auxiliaire être, le participe passé s'accorde avec :",
+      "options": [
+        { "id": "a", "text": "le complément du verbe" },
+        { "id": "b", "text": "le sujet" },
+        { "id": "c", "text": "l'auxiliaire" },
+        { "id": "d", "text": "rien : il reste invariable" }
+      ],
+      "correctOption": "b",
+      "explanation": "Avec être, le participe passé s'accorde en genre et en nombre avec le sujet : elle est partie, ils sont partis, elles sont parties.",
+      "difficulty": 2
+    }
+  ]
+}

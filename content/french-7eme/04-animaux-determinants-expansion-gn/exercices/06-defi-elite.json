@@ -1,0 +1,91 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : L'arène des maîtres du GN",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 6,
+  "questions": [
+    {
+      "prompt": "Une seule de ces affirmations sur les déterminants est exacte. Laquelle ?",
+      "options": [
+        { "id": "a", "text": "« des » est toujours un article indéfini." },
+        { "id": "b", "text": "« au » et « du » sont des articles définis contractés." },
+        {
+          "id": "c",
+          "text": "Devant un verbe, « leur » prend un -s quand il désigne plusieurs personnes."
+        },
+        {
+          "id": "d",
+          "text": "« cette » s'emploie devant un nom masculin qui commence par une voyelle."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "« au » = à + le et « du » = de + le : ce sont bien les articles définis contractés ✓. « des » peut aussi être le contracté de + les (le cri des mouettes) ; devant un verbe, « leur » est un pronom invariable qui ne prend jamais de -s ; devant un masculin à voyelle, c'est « cet » qu'on emploie (cet oiseau), pas « cette ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Remets la phrase à la forme affirmative : « Nous n'avons pas vu de gazelles dans la réserve. »",
+      "options": [
+        { "id": "a", "text": "Nous avons vu des gazelles dans la réserve." },
+        { "id": "b", "text": "Nous avons vu de gazelles dans la réserve." },
+        { "id": "c", "text": "Nous avons vu les gazelles dans la réserve." },
+        { "id": "d", "text": "Nous avons vu aux gazelles dans la réserve." }
+      ],
+      "correctOption": "a",
+      "explanation": "À la forme négative, « des » devient « de » ; en repassant à l'affirmative, « de » redevient donc « des » → nous avons vu des gazelles ✓. Le piège courant : garder « de » hors de la négation, ce qui est incorrect. « les » désignerait des gazelles précises déjà connues, et « aux » n'a rien à faire après « voir ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quel GN contient exactement DEUX expansions ?",
+      "options": [
+        { "id": "a", "text": "un fennec agile" },
+        { "id": "b", "text": "le fennec qui creuse son terrier au crépuscule" },
+        { "id": "c", "text": "le fennec du désert" },
+        { "id": "d", "text": "le petit fennec du Sahara" }
+      ],
+      "correctOption": "d",
+      "explanation": "« le petit fennec du Sahara » cumule un adjectif épithète (petit) et un complément du nom (du Sahara) : deux expansions ✓. Le piège courant : compter « son terrier » et « au crépuscule » comme des expansions du nom « fennec » — ils sont à l'intérieur de la relative « qui creuse… », qui ne forme qu'une seule expansion. Les options a et c n'en ont qu'une.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Chasse à l'erreur : quelle phrase contient une faute d'orthographe grammaticale ?",
+      "options": [
+        { "id": "a", "text": "Les abeilles défendent leur reine." },
+        { "id": "b", "text": "Chaque lionne surveille ses petits." },
+        { "id": "c", "text": "Les chameliers leurs donnent de l'eau fraîche." },
+        { "id": "d", "text": "La jument protège son épaule blessée." }
+      ],
+      "correctOption": "c",
+      "explanation": "Ici la bonne réponse est la phrase fautive : devant le verbe « donnent », « leur » est un pronom personnel invariable → les chameliers leur donnent ✓, jamais « leurs ». Les autres phrases sont correctes : une seule reine partagée (leur reine), chaque → ses, et « son épaule » car le nom féminin commence par une voyelle.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans quelle phrase la proposition relative est-elle construite correctement ?",
+      "options": [
+        { "id": "a", "text": "Le documentaire que nous avons regardé montre des loups gris." },
+        { "id": "b", "text": "Le documentaire qui nous avons regardé montre des loups gris." },
+        { "id": "c", "text": "Les loups que hurlent la nuit effraient les bergers." },
+        { "id": "d", "text": "La forêt que vivent les loups est très dense." }
+      ],
+      "correctOption": "a",
+      "explanation": "« que » remplace le COD : nous avons regardé le documentaire → le documentaire que nous avons regardé ✓. Le piège courant : intervertir qui et que — « qui » exige que la relative n'ait pas d'autre sujet (les loups qui hurlent), et un lieu s'introduit par « où » (la forêt où vivent les loups).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "« Ces jeunes flamants restent près de leur mère parce que les eaux du lac sont froides. » Quelle affirmation est exacte ?",
+      "options": [
+        { "id": "a", "text": "« Ces » est un article défini." },
+        { "id": "b", "text": "« leur » devrait s'écrire « leurs »." },
+        { "id": "c", "text": "« du lac » est un complément du nom." },
+        {
+          "id": "d",
+          "text": "« parce que les eaux du lac sont froides » est un complément circonstanciel de temps."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "« du lac » = de + le + nom placé après « les eaux » : complément du nom ✓. « Ces » est un déterminant démonstratif, pas un article ; « leur » reste au singulier car les flamants partagent une seule mère ; et « parce que… » répond à « pourquoi ? » : c'est un CC de cause, pas de temps.",
+      "difficulty": 3
+    }
+  ]
+}

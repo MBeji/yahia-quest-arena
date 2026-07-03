@@ -1,0 +1,12 @@
+{
+  "id": "english-8eme",
+  "nameFr": "English",
+  "description": "Third year of English (8th year basic education, A2+): simple past, past continuous, be going to, comparatives and superlatives, first present perfect — across five modules",
+  "attribute": "Agilite",
+  "colorToken": "subject-english",
+  "icon": "Globe",
+  "displayOrder": 5,
+  "contentLanguage": "en",
+  "themeId": "ecole-tn",
+  "gradeSlug": "8eme-base"
+}

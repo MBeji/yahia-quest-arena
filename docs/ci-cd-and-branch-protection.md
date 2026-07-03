@@ -2,22 +2,44 @@
 
 This repo auto-deploys: **pushing to `main` deploys to Vercel production.** Therefore
 `main` must only ever receive code that passed CI and whose DB migrations are already
-applied. The guardrails below enforce that. (Background: CLAUDE.md §7.)
+applied. The guardrails below enforce that. (Background: CLAUDE.md §7; the full
+end-of-dev → production walkthrough lives in [passation.md](./passation.md).)
+
+## Merge automation (push → PR → merge, no manual steps)
+
+- **`auto-pr.yml`** — pushing any non-`main` branch auto-opens its **draft** PR and
+  dispatches the required-check workflows on the branch (a PR created with the Actions
+  token fires no `pull_request` events, so its checks would otherwise never report).
+  `[auto-merge]` in the head-commit subject opens the PR ready and arms the merge
+  immediately.
+- **`automerge.yml`** — arms GitHub native auto-merge (squash + delete branch) on every
+  ready, same-repo PR; the `no-automerge` label opts out. Its `keep-up-to-date` job
+  runs on every push to `main` and updates armed PRs left behind (the ruleset's strict
+  mode only merges an up-to-date head, and GitHub never updates a branch by itself),
+  re-dispatching their checks.
+- Repo-settings prerequisites (one-time): "Allow GitHub Actions to create and approve
+  pull requests" (Settings → Actions → General) and "Allow auto-merge"
+  (Settings → General).
 
 ## Required status checks
 
-| Check                | Workflow / job                                                    | What it guarantees                                                                                                                                                                 |
-| -------------------- | ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `verify`             | `.github/workflows/ci.yml` → job `verify`                         | lint + typecheck + tests&nbsp;+ coverage + build + bundle budget + runtime dep audit all pass                                                                                      |
-| `Migration presence` | `.github/workflows/migration-gate.yml` → job `migration-presence` | informational: surfaces which `supabase/migrations/*.sql` a PR adds — they **auto-apply** to prod on merge via `db-migrate-prod.yml`. Always green; the name is kept so the ruleset's required-check contract is unchanged                                  |
-| `pgTAP suite`        | `.github/workflows/db-tests.yml` → job `pgTAP suite`              | the real migrations apply against a Supabase-local Postgres and the DB invariants hold (economy-RPC grants locked down, role-escalation blocked, RLS isolation, scoring/anti-rush) |
-| `e2e`                | `.github/workflows/e2e.yml` → job `e2e`                           | the public Playwright journeys (landing + logged-out auth redirects) pass — no backend required, runs on every PR                                                                  |
+| Check                | Workflow / job                                                    | What it guarantees                                                                                                                                                                                  |
+| -------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `verify`             | `.github/workflows/ci.yml` → job `verify`                         | lint + typecheck + tests&nbsp;+ coverage + content gate (`content:check` + `content:qa:strict`) + perf-harness sync + build + bundle budget + prod-shell browser smoke + runtime dep audit all pass |
+| `Migration presence` | `.github/workflows/migration-gate.yml` → job `migration-presence` | informational: surfaces which `supabase/migrations/*.sql` a PR adds — they **auto-apply** to prod on merge via `db-migrate-prod.yml`. Always green                                                  |
+| `Migration order`    | `.github/workflows/migration-gate.yml` → job `migration-order`    | **blocking**: rejects a migration whose timestamp sorts at/before one already on `main` — a back-dated file silently jams `db-migrate-prod` and leaves prod behind code (#97 → #227 → #229)         |
+| `CodeQL`             | `.github/workflows/codeql.yml` → job `analyze` (name `CodeQL`)    | static security analysis (SAST, `security-extended` suite) of the JS/TS codebase — the code-level complement to `audit:deps` (packages) and pgTAP (SQL grants/RLS)                                  |
 
 > **Check names are the values GitHub actually reports** (verified via the checks API), which
 > may differ from the lowercase job key — e.g. the job `migration-presence` surfaces as the
 > check **`Migration presence`**. The ruleset's `required_status_checks[].context` values must
 > match these reported names exactly; they only appear in the settings picker once each
 > workflow has run at least once.
+
+> **pgTAP and Playwright E2E are not PR gates.** Both are slow suites: they run in the
+> nightly build (`nightly.yml`), on demand, and inside the upgrade guard's own gate.
+> The `pgTAP suite` check still proves every migration applies cleanly on a fresh DB
+> before it can reach prod (nightly + upgrade-guard), just not per-PR.
 
 > **Authenticated E2E** (`e2e-auth.yml`) is **not** a PR gate: it runs on `main`/manually and
 > **skips green** until the four `TEST_SUPABASE_*` / `E2E_USER_PASSWORD` repo secrets are set
@@ -38,8 +60,8 @@ GitHub → **Settings → Rules → Rulesets → New ruleset → Import a rulese
 It encodes:
 
 - **Require a pull request** before merging to `main` (no direct pushes).
-- **Require status checks**: `verify`, `Migration presence`, `pgTAP suite`, `e2e`, with
-  _strict_ mode (the PR branch must be up to date with `main` before merge).
+- **Require status checks**: `verify`, `Migration presence`, `Migration order`, `CodeQL`,
+  with _strict_ mode (the PR branch must be up to date with `main` before merge).
 - **Block force-pushes** (`non_fast_forward`) and **block branch deletion**.
 - **Dismiss stale approvals** on new pushes.
 - **No bypass actors** — the rules apply to **administrators too** (the whole point: even an
@@ -47,14 +69,16 @@ It encodes:
 
 > After importing, confirm the four check names resolve in the picker (run each workflow once
 > if not). If GitHub shows a check prefixed (e.g. `CI / verify`), update the matching
-> `required_status_checks[].context` to that exact string.
+> `required_status_checks[].context` to that exact string. Re-import (or hand-edit the
+> existing ruleset) after ANY change to the JSON — the file is the versioned intent, the
+> imported ruleset is the enforcement.
 
 ### Option B — classic branch protection (manual)
 
 Settings → Branches → Add rule for `main`: ✅ Require a pull request before merging ·
-✅ Require status checks to pass (`verify`, `Migration presence`, `pgTAP suite`, `e2e`) ·
-✅ Require branches to be up to date · ✅ Do not allow bypassing the above settings (include
-administrators) · ✅ Block force pushes · ✅ Restrict deletions.
+✅ Require status checks to pass (`verify`, `Migration presence`, `Migration order`,
+`CodeQL`) · ✅ Require branches to be up to date · ✅ Do not allow bypassing the above
+settings (include administrators) · ✅ Block force pushes · ✅ Restrict deletions.
 
 ### Notes
 

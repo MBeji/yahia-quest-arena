@@ -1,0 +1,82 @@
+{
+  "title": "📝 Entraînement ⭐⭐⭐ : révision globale (type examen)",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complète : « Samedi, nous ____ le marché hebdomadaire de Testour. » (faire)",
+      "options": [
+        { "id": "a", "text": "fairons" },
+        { "id": "b", "text": "ferons" },
+        { "id": "c", "text": "feront" },
+        { "id": "d", "text": "faisons" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Faire » a le radical irrégulier fer- au futur : « nous ferons » ✓. « Fairons » construit le futur sur l'infinitif à tort, « feront » est la forme de « ils », et « faisons » est le présent.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel groupe nominal est correctement accordé ?",
+      "options": [
+        { "id": "a", "text": "des maisons blanc" },
+        { "id": "b", "text": "des maisons blanche" },
+        { "id": "c", "text": "des maisons blanches" },
+        { "id": "d", "text": "des maisons blancs" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Maisons » est féminin pluriel : l'épithète prend le féminin (blanc → blanche) et le pluriel → « blanches » ✓. Les autres formes oublient le genre, le nombre, ou les deux.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans quelle phrase le verbe est-il au futur simple ?",
+      "options": [
+        { "id": "a", "text": "On traversera le vieux pont." },
+        { "id": "b", "text": "On traverse le vieux pont." },
+        { "id": "c", "text": "On a traversé le vieux pont." },
+        { "id": "d", "text": "Traverse le vieux pont !" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Traversera » porte la terminaison -ra du futur simple ✓. « Traverse » est au présent, « a traversé » au passé composé, et « Traverse le vieux pont ! » est à l'impératif.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans la phrase « Ce vieux quartier paraît tranquille. », quelle analyse est correcte ?",
+      "options": [
+        { "id": "a", "text": "« vieux » et « tranquille » sont tous les deux épithètes" },
+        { "id": "b", "text": "« vieux » est attribut et « tranquille » est épithète" },
+        { "id": "c", "text": "« vieux » et « tranquille » sont tous les deux attributs" },
+        { "id": "d", "text": "« vieux » est épithète et « tranquille » est attribut" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Vieux » touche le nom « quartier » dans le GN : épithète ✓. « Tranquille » suit le verbe d'état « paraître » : attribut du sujet ✓. Le piège courant est de donner le même rôle aux deux adjectifs alors que leur place dans la phrase diffère.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Un élève a écrit : « Dans dix ans, on construira des immeubles moderne et la ville s'étendra vers le nord. » Quelle erreur a-t-il commise ?",
+      "options": [
+        { "id": "a", "text": "« on » devrait s'écrire « ont »" },
+        { "id": "b", "text": "« construira » devrait s'écrire « construiera »" },
+        { "id": "c", "text": "« moderne » devrait s'écrire « modernes »" },
+        { "id": "d", "text": "« s'étendra » devrait s'écrire « s'étendera »" }
+      ],
+      "correctOption": "c",
+      "explanation": "L'épithète s'accorde avec « des immeubles » (masculin pluriel) : « modernes » ✓ — c'est la seule erreur de la phrase. « On » est bien le pronom sujet, et « construira » comme « s'étendra » sont des futurs corrects ; les corrections (b) et (d) inventent des formes fautives.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Les habitants ____ planté des arbres, ____ la place du village ____ devenue magnifique. »",
+      "options": [
+        { "id": "a", "text": "ont … et … est" },
+        { "id": "b", "text": "on … et … est" },
+        { "id": "c", "text": "ont … est … et" },
+        { "id": "d", "text": "on … est … es" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Les habitants ont planté » : verbe avoir, remplaçable par « avaient » ✓ ; « et » relie les deux phrases (« et puis ») ✓ ; « la place est devenue » : verbe être, remplaçable par « était » ✓. Le piège courant est d'écrire « on » après un sujet pluriel déjà exprimé.",
+      "difficulty": 3
+    }
+  ]
+}
