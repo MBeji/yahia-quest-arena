@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Practice: welcome to my home",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complete: \"There ___ a big kitchen in our house.\"",
+      "options": [
+        { "id": "a", "text": "is" },
+        { "id": "b", "text": "are" },
+        { "id": "c", "text": "has" },
+        { "id": "d", "text": "be" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"A big kitchen\" is one thing, so we use \"there is\": there is a big kitchen. \"There are\" is for plural, and \"there has / there be\" are not correct.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"There ___ three bedrooms upstairs.\"",
+      "options": [
+        { "id": "a", "text": "is" },
+        { "id": "b", "text": "are" },
+        { "id": "c", "text": "have" },
+        { "id": "d", "text": "be" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Three bedrooms\" is plural, so we use \"there are\": there are three bedrooms. Saying \"there is three bedrooms\" is a common mistake — a plural needs \"are\".",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Which piece of furniture do you sleep in?",
+      "options": [
+        { "id": "a", "text": "a bed" },
+        { "id": "b", "text": "a carpet" },
+        { "id": "c", "text": "a sofa" },
+        { "id": "d", "text": "a wardrobe" }
+      ],
+      "correctOption": "a",
+      "explanation": "You sleep in a bed. A carpet covers the floor, a sofa is for sitting in the living room, and a wardrobe is where you keep your clothes.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete with a subject pronoun: \"My mother is in the kitchen. ___ is cooking lunch.\"",
+      "options": [
+        { "id": "a", "text": "He" },
+        { "id": "b", "text": "She" },
+        { "id": "c", "text": "It" },
+        { "id": "d", "text": "They" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"My mother\" is one woman, so the subject pronoun is \"she\": she is cooking. \"He\" is for a man, \"it\" is for a thing, and \"they\" is for two or more.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"The plates are ___ the table.\"",
+      "options": [
+        { "id": "a", "text": "in" },
+        { "id": "b", "text": "near" },
+        { "id": "c", "text": "on" },
+        { "id": "d", "text": "between" }
+      ],
+      "correctOption": "c",
+      "explanation": "The plates are on top of the table, so we use \"on\": on the table. \"In\" means inside, \"near\" means close to, and \"between\" needs two things on each side.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"I want to buy one dress, but my sister wants two ___.\"",
+      "options": [
+        { "id": "a", "text": "dress" },
+        { "id": "b", "text": "dresss" },
+        { "id": "c", "text": "dreses" },
+        { "id": "d", "text": "dresses" }
+      ],
+      "correctOption": "d",
+      "explanation": "A noun ending in -ss adds -es in the plural: one dress, two dresses. \"Dress\" is the singular, and \"dresss / dreses\" are wrong spellings — the rule is add -es after -s, -sh, -ch and -x.",
+      "difficulty": 2
+    }
+  ]
+}

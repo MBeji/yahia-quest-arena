@@ -7,15 +7,15 @@
   "displayOrder": 4,
   "questions": [
     {
-      "prompt": "Complète : « Dès son arrivée au village, elle ____ des photos des paysages à ses amis. » (envoyer)",
+      "prompt": "Complète : « Depuis la terrasse du village, tu ____ une vue sur toute la baie. » (avoir)",
       "options": [
-        { "id": "a", "text": "enverra" },
-        { "id": "b", "text": "envoiera" },
-        { "id": "c", "text": "envoira" },
-        { "id": "d", "text": "envoyera" }
+        { "id": "a", "text": "auras" },
+        { "id": "b", "text": "aura" },
+        { "id": "c", "text": "aurais" },
+        { "id": "d", "text": "avais" }
       ],
       "correctOption": "a",
-      "explanation": "« Envoyer » a le radical irrégulier enverr- au futur : « elle enverra » ✓. Le piège courant est de construire le futur sur l'infinitif (« envoyera ») ou sur le présent « envoie » (« envoiera ») : ce verbe fait partie des radicaux à mémoriser.",
+      "explanation": "« Avoir » a le radical irrégulier aur- au futur : « tu auras » ✓. Le piège courant est d'écrire « aura » (3e personne), de glisser vers le conditionnel « aurais », ou de rester à l'imparfait « avais ».",
       "difficulty": 2
     },
     {

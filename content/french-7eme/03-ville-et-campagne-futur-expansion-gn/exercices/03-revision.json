@@ -7,15 +7,15 @@
   "displayOrder": 3,
   "questions": [
     {
-      "prompt": "Complète : « Du haut de la colline, tu ____ toute la plaine. » (voir)",
+      "prompt": "Complète : « Dans quelques années, cette place ____ un vaste jardin public. » (être)",
       "options": [
-        { "id": "a", "text": "voiras" },
-        { "id": "b", "text": "verra" },
-        { "id": "c", "text": "voirais" },
-        { "id": "d", "text": "verras" }
+        { "id": "a", "text": "est" },
+        { "id": "b", "text": "sera" },
+        { "id": "c", "text": "serait" },
+        { "id": "d", "text": "seras" }
       ],
-      "correctOption": "d",
-      "explanation": "« Voir » a le radical irrégulier verr- au futur : « tu verras ». « Voiras » régularise le radical à tort, « verra » est la forme de la 3e personne, et « voirais » cumule les deux erreurs.",
+      "correctOption": "b",
+      "explanation": "« Être » a le radical irrégulier ser- au futur : « elle sera » ✓. « Est » est le présent, « serait » ajoute un « s » de conditionnel, et « seras » est la 2e personne (avec « tu »).",
       "difficulty": 1
     },
     {
@@ -34,12 +34,12 @@
       "prompt": "Complète : « Les boutiques du souk ____ tôt le matin. » (s'ouvrir)",
       "options": [
         { "id": "a", "text": "s'ouvrent" },
-        { "id": "b", "text": "s'ouvriront" },
+        { "id": "b", "text": "ouvriront" },
         { "id": "c", "text": "s'ouvriras" },
-        { "id": "d", "text": "ouvriront" }
+        { "id": "d", "text": "s'ouvriront" }
       ],
-      "correctOption": "b",
-      "explanation": "Verbe pronominal au futur : le pronom « s' » reste devant le verbe, et « les boutiques » demande la terminaison -ront → « s'ouvriront ». « S'ouvrent » est le présent, « s'ouvriras » est la 2e personne, et « ouvriront » oublie le pronom.",
+      "correctOption": "d",
+      "explanation": "Verbe pronominal au futur : le pronom « s' » reste devant le verbe, et « les boutiques » demande la terminaison -ront → « s'ouvriront » ✓. « S'ouvrent » est le présent, « ouvriront » oublie le pronom, et « s'ouvriras » est la 2e personne.",
       "difficulty": 2
     },
     {
@@ -51,7 +51,7 @@
         { "id": "d", "text": "Dans aucune des deux constructions" }
       ],
       "correctOption": "a",
-      "explanation": "Dans « les champs immenses », l'adjectif touche le nom dans le GN : épithète. Dans « les champs semblent immenses », le verbe d'état « sembler » sépare le nom de l'adjectif : « immenses » devient attribut du sujet.",
+      "explanation": "Dans « les champs immenses », l'adjectif touche le nom dans le GN : épithète. Dans « les champs semblent immenses », le verbe d'état « sembler » relie le nom à l'adjectif : « immenses » devient attribut du sujet.",
       "difficulty": 2
     },
     {
@@ -63,7 +63,7 @@
         { "id": "d", "text": "bruyantes et animées" }
       ],
       "correctOption": "c",
-      "explanation": "Les deux adjectifs sont épithètes du nom « avenue », féminin singulier : chacun s'accorde → « bruyante et animée ». Oublier l'accord du second adjectif (« bruyante et animé ») est l'erreur la plus fréquente ; le pluriel est faux car il n'y a qu'une avenue.",
+      "explanation": "Les deux adjectifs sont épithètes du nom « avenue », féminin singulier : chacun s'accorde → « bruyante et animée » ✓. Oublier l'accord du second adjectif (« bruyante et animé ») est l'erreur la plus fréquente ; le pluriel est faux car il n'y a qu'une seule avenue.",
       "difficulty": 2
     },
     {

@@ -1,100 +1,107 @@
-# ⚔️ Home, Farm and Market — Three Doors to Your World
+# ⚔️ Home, Farm and Market — Your World in English
 
-> 💡 "A true hero can describe every room, every animal and every market stall — nothing in your world stays without a name."
+> 💡 "A hero must know their home before they conquer the world: **There is** a door — open it!"
 
-## 🏰 There is / there are — describing your home
+## 🏰 There is / There are — describing your home
 
-You already know the rooms of a house: the **kitchen**, the **living room**, the **dining room**, the **bedroom** and the **hall**. Inside them you find **furniture**: a **sofa**, a **bed**, a **wardrobe**, **carpets**, a **window**, the **floor**. To say what exists in a place, use **there is / there are**:
+When you say what a place **contains**, use **there is** or **there are**.
 
-| Form        | Singular                                    | Plural                                         |
-| ----------- | ------------------------------------------- | ---------------------------------------------- |
-| Affirmative | **There is** a sofa in the hall.            | **There are** two bedrooms.                    |
-| Negative    | There **isn't** a garden.                   | There **aren't any** carpets here.             |
-| Question    | **Is there** a wardrobe? — _Yes, there is._ | **Are there any** goats? — _No, there aren't._ |
+| Form          | Use it for…                                 | Example                                   |
+| ------------- | ------------------------------------------- | ----------------------------------------- |
+| **There is**  | ONE thing (singular) or an uncountable noun | _**There is** a sofa in the living room._ |
+| **There are** | TWO or more things (plural)                 | _**There are** three bedrooms upstairs._  |
 
-In questions and negatives, plural nouns take **any**: _Are there **any** strawberries? — There aren't **any** figs today._
+Make them negative with **isn't / aren't**: _There **isn't** a garage._ — _There **aren't** any chairs._
 
-> ⚠️ **There is** goes with ONE thing only. Never say "There is two bedrooms" — two bedrooms are plural, so: _There **are** two bedrooms._ And don't say "Our house there is…" — the pattern is simply _There is / There are + thing + place_.
+Learn the rooms — **kitchen, living room, dining room, bedroom, hall, garden** — and the furniture — **sofa, bed, carpet, wardrobe, table, window**. _In my **bedroom** there is a bed and a **wardrobe**._
 
-## 🗺️ Where exactly? Prepositions of location — and "What's it like?"
+> ⚠️ With a **plural** you MUST use **there are**: say _There **are** three rooms_ — NOT "there **is** three rooms". But when a **list starts with a singular** thing, the verb follows that first thing: _There **is** a sofa and two armchairs._ (singular "a sofa" first → **is**).
 
-Prepositions of location tell you **where** things are:
+## 🧭 Where is it? — prepositions of location, "What's it like?"
 
-| Preposition                    | Example                                                   |
-| ------------------------------ | --------------------------------------------------------- |
-| **in**                         | _The sofa is **in** the living room._                     |
-| **on**                         | _The carpet is **on** the floor._                         |
-| **near**                       | _Our house is **near** the school — two minutes on foot._ |
-| **next to**                    | _The kitchen is **next to** the dining room._             |
-| **between … and …**            | _The wardrobe is **between** the bed **and** the window._ |
-| **on the right / on the left** | _The window is **on the right** of the bed._              |
-| **in the middle**              | _The bed is **in the middle** of the room._               |
+To say **where** something is, use a preposition of location:
 
-To ask for a **description** of a place, use the fixed question **What's … like?**: _**What's** your house **like**? — **It's** big and traditional._ — _What's the farm like? — It's lovely!_
+| Preposition                    | Meaning                                                          |
+| ------------------------------ | ---------------------------------------------------------------- |
+| **in**                         | inside (_the keys are **in** the bag_)                           |
+| **on**                         | on top of (_the vase is **on** the table_)                       |
+| **near**                       | close to (_the shop is **near** the school_)                     |
+| **next to**                    | right beside (_the bank is **next to** the café_)                |
+| **between**                    | in the middle of TWO things (_**between** the bed and the door_) |
+| **on the right / on the left** | to the right / left side                                         |
+| **in the middle**              | in the centre                                                    |
 
-> ⚠️ In "What's your house **like**?", _like_ is NOT the verb "to like". The question asks for a description, so answer with **It's + adjective** — never with "Yes, I like it".
+To **ask someone to describe** a person, place or thing, use **What… like?**:
 
-## ⚡ Subject and object pronouns — down on the farm
+- _**What's** your new house **like**? — It's big and modern._
+- _**What's** your teacher **like**? — She's kind and patient._
 
-Welcome to **Uncle Salah's farm**! There are **cows**, **goats**, **hens**, **ducks**, **turkeys** and **rabbits**, and he grows **figs**, **strawberries**, **watermelons**, **apricots**, **carrots**, **lettuce**, **onions**, **peppers** and **cucumbers**. To talk about people and animals without repeating their names, use pronouns:
+> ⚠️ Do not confuse **like** the preposition (for a description) with **like** the verb (for tastes): _What is it **like**?_ (describe it) ≠ _What does she **like**?_ (her tastes). And **between** needs exactly **two** things.
 
-| Subject pronoun | I      | you     | he      | she     | it     | we     | they     |
-| --------------- | ------ | ------- | ------- | ------- | ------ | ------ | -------- |
-| Object pronoun  | **me** | **you** | **him** | **her** | **it** | **us** | **them** |
+## 🐄 On Uncle Ridha's farm — subject and object pronouns
 
-The **subject** pronoun does the action; the **object** pronoun comes **after a verb or a preposition**:
+A pronoun replaces a noun. The **subject** does the action; the **object** receives it.
 
-- _Salma helps her grandfather. → She helps **him** with the cows._
-- _I love figs. I eat **them** every morning._ — _Do you like carrots? — Yes, I like **them**, but I don't like onions._
-- _Grandmother Zohra visits **us** every Sunday._ — _This lettuce is for my brother and **me**._
+| Role                                      | Forms                                 |
+| ----------------------------------------- | ------------------------------------- |
+| **Subject** (before the verb)             | I · you · he · she · it · we · they   |
+| **Object** (after a verb / a preposition) | me · you · him · her · it · us · them |
 
-> 🗡️ Quick test: if the word comes AFTER the verb, it is the object form. _Rania helps **me**_ ✓ — "Rania helps I" ✗.
+- _**She** likes the goats. → I feed **them** with **her**._
+- _Karim is my friend. **He** helps me and I help **him**._
 
-## 🔮 A, an or the? Articles at the market
+On the farm you meet **hens, cows, goats, ducks, rabbits, turkeys**, and you talk about **fruit and vegetables** — **carrots, cucumber, figs, strawberries, watermelon, lettuce, onion**. Say what you **like / love** and **dislike / don't like**: _I **love** figs, but I **don't like** onions._
 
-It is **market day**! At the **market** you see **stalls**, **pottery**, **antique goods** at the **flea market**, and shops: the **greengrocer's** (fruit and vegetables), the **butcher's** (meat), the **baker's** (bread). You can buy **clothes**: a **dress**, **trousers**, **socks**, **sandals**, a **jacket**, a **tee-shirt**, a **tie**, **gloves**.
+> ⚠️ Never use an object pronoun as the subject: say _**I** like strawberries_ — NOT "**Me** like strawberries". And after a verb or a preposition, use the object form: _play with **him**_, NOT "play with **he**".
 
-- **a** + consonant **sound**: _**a** dress, **a** watermelon, **a** traditional carpet._
-- **an** + vowel **sound**: _**an** apricot, **an** onion, **an** orange tee-shirt._ Look at the word that comes **just after** the article: _an **o**range tee-shirt_ but _a **w**hite dress_.
-- **the** = we know **which one**: _I can see **a** man near the stalls. **The** man is Uncle Salah!_ (second time we talk about him).
+## 🛍️ Market day — articles a / an / the
 
-> ⚠️ With **there is / there are**, you introduce something NEW, so use **a / an**: _There is **a** sofa in the hall_ — not "there is the sofa".
+**a** and **an** mean "one, any" (you meet the thing for the first time). **the** means "this exact one" (we both know which).
 
-## 🛡️ The genitive — whose is it?
+| Article | Rule                              | Example                      |
+| ------- | --------------------------------- | ---------------------------- |
+| **a**   | before a **consonant sound**      | _**a** dress, **a** butcher_ |
+| **an**  | before a **vowel sound**          | _**an** apple, **an** onion_ |
+| **the** | a **specific** thing we both know | _**The** market is open._    |
 
-To show that something **belongs to somebody**, add **'s** to the owner:
+It is the **sound**, not the letter, that counts: _**a** uniform_ (sounds like "you-niform") but _**an** hour_ (the "h" is silent). First time **a/an**, then **the**: _I bought **a** shirt. **The** shirt is blue._
 
-- _**Karim's** bike_ (= the bike belongs to Karim) — _**Salma's** dress_ — _**Uncle Salah's** farm._
-- Irregular plural owners also take **'s**: _the **children's** toys, the **men's** jackets._ (For regular plurals ending in -s, the apostrophe goes after: _my **parents'** room_.)
-- Shop names use the genitive too: _She goes to the **butcher's** to buy meat._
+At the market you name **clothes** — **dress, socks, sandals, trousers, jacket, tie, tee-shirt** — and **shops** — **greengrocer, butcher, market, stall**. Ask with **when** (time) and **what** (thing): _**When** is market day? — On Saturday._ — _**What** do you sell?_
 
-> ⚠️ Two classic traps: don't say "the bike **of** Karim" (English prefers _Karim's bike_ for people), and never use an apostrophe to make a plural — _two duck**s**_ ✓, "two duck's" ✗.
+> 🗡️ Look at the first **sound**: _**an** hour_, _**a** university_. The letter can trick you — trust your ear.
 
-## 🧮 One dress, two dresses — regular and irregular plurals
+## 👶 One or many? — regular and irregular plurals
 
-| Rule                             | Examples                                                 |
-| -------------------------------- | -------------------------------------------------------- |
-| most nouns: **+ s**              | _room → rooms, balloon → balloons, duck → ducks_         |
-| after -s, -sh, -ch, -x: **+ es** | _dress → dress**es**, box → box**es**_                   |
-| consonant + y: **y → ies**       | _strawberry → strawberr**ies**_                          |
-| **irregular**                    | _child → **children**, man → **men**, woman → **women**_ |
+Most nouns add **-s**. Some follow small spelling rules; a few are **irregular** and you must learn them by heart.
 
-> ⚠️ After a number, the noun is ALWAYS plural: _two dress**es**, three **women**_ — never "two dress" or "three womans". And "children" is already plural: "childrens" does not exist.
+| Rule                               | Singular → Plural                                                                                               |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| add **-s**                         | carpet → carpet**s**                                                                                            |
+| after -s, -sh, -ch, -x add **-es** | dress → dress**es**, box → box**es**                                                                            |
+| consonant + y → **-ies**           | party → part**ies**                                                                                             |
+| **irregular**                      | child → **children**, man → **men**, woman → **women**, foot → **feet**, tooth → **teeth**, person → **people** |
 
-## 🎉 Happy birthday! — linkers, questions and colours
+_One **child**, two **children**._ — _One **man**, three **men**._
 
-Today is Omar's **birthday party**: **balloons**, **presents**, a **cake** with **candles**, **music**, and a room **decorated** in every colour — **red**, **green**, **yellow**, **brown**, **white**, **pink**.
+> ⚠️ Irregular plurals never take a plain -s: it is **children** (not "childs"), **men** (not "mans"), **people** (not "persons" in everyday English).
 
-- Ask about dates with **When**: _**When** is your birthday? — It's **in** July. / It's **on** the fifth of May._ (**in** + month, **on** + date). Ask **What colour is** your jacket? — _It's brown._ And you know **How old are you?** and **What time…?**: _The party starts **at half past four** (4:30); **at a quarter to five** (4:45) we eat the cake._
-- **Linkers** join your ideas: **and** adds, **but** contrasts, **because** gives a reason, **then** gives the next step: _Omar is happy **because** it is his birthday. We light the candles and sing. **Then**, he blows them out!_
+## 🎂 Happy birthday — the genitive, linkers and colours
 
-🎵 **Sound check** — train your ear:
+To show **who owns** something, add **'s** to the owner (the **genitive**) — this is much more natural than "the … of …" for people:
 
-| Sound | Words                                                                              |
-| ----- | ---------------------------------------------------------------------------------- |
-| /aʊ/  | h**ou**se, br**ow**n, tr**ou**sers                                                 |
-| /əʊ/  | wind**ow**, s**o**fa, yell**ow** — written like /aʊ/ words, but a different sound! |
-| /dʒ/  | **j**acket, ve**g**etables, oran**g**e                                             |
-| /ɑː/  | m**ar**ket, g**ar**den, c**ar**pet                                                 |
+| Owner               | Form          | Example                    |
+| ------------------- | ------------- | -------------------------- |
+| one person          | **name + 's** | _**Nour's** cake_          |
+| plural ending in -s | **+ ' only**  | _my two **sisters'** room_ |
+| irregular plural    | **+ 's**      | _the **children's** toys_  |
 
-> 🏆 Gate three cleared, hero! You can now describe your home, present Uncle Salah's whole farm, shop at the market and run a birthday party — all in English. Next stop: staying **safe and fit**, whatever the weather.
+So say **Sami's schoolbag**, NOT "the schoolbag of Sami". **Linkers** join your ideas:
+
+- **and** = adds (_a cake **and** candles_) · **but** = contrasts (_I like it, **but** it's small_)
+- **because** = gives a reason (_I love parties **because** they are fun_) · **then** = next step (_We light the candles, **then** we blow them out_)
+
+At a **birthday party** you see **balloons, a cake, candles, presents**, and you name **colours**: **red, green, yellow, pink, brown, white**. _My dress is **pink and white**._
+
+> ⚠️ Watch the apostrophe: _my **parents' car**_ (plural owners), _the **cat's** food_ (one owner) — a missing apostrophe ("my parents car") is wrong.
+
+> 🏆 Gate three cleared, hero! You can now describe a home, a farm and a market, own things with **'s** and count with real plurals. Next, you'll learn to stay **safe and fit** — warnings, health and the weather await.

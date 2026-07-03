@@ -15,7 +15,7 @@
         { "id": "d", "text": "visitrons" }
       ],
       "correctOption": "b",
-      "explanation": "« Demain » annonce une action à venir : futur simple. Radical de l'infinitif + terminaison de « nous » : visiter + -ons → « visiterons ». « Visitons » est le présent, et « visiterions » n'a pas la terminaison du futur (-rons).",
+      "explanation": "« Demain » annonce une action à venir : futur simple. Radical (l'infinitif) + terminaison de « nous » : visiter + -ons → « visiterons ». « Visitons » est le présent et « visiterions » n'a pas la terminaison -rons du futur.",
       "difficulty": 1
     },
     {
@@ -63,7 +63,7 @@
         { "id": "d", "text": "un adjectif attribut" }
       ],
       "correctOption": "d",
-      "explanation": "« Calme » est séparé du nom par le verbe d'état « est » : c'est un adjectif attribut du sujet « la campagne ». Il serait épithète s'il touchait le nom dans le GN : « la campagne calme ».",
+      "explanation": "« Calme » est relié au nom par le verbe d'état « est » : c'est un adjectif attribut du sujet « la campagne ». Il serait épithète s'il touchait le nom dans le GN : « la campagne calme ».",
       "difficulty": 1
     },
     {

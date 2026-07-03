@@ -29,7 +29,7 @@
       "prompt": "De quoi est composé un groupe nominal minimal ?",
       "options": [
         { "id": "a", "text": "D'un déterminant et d'un nom" },
-        { "id": "b", "text": "D'un nom et d'un adjectif" },
+        { "id": "b", "text": "D'un nom et d'un adjectif épithète" },
         { "id": "c", "text": "D'un déterminant, d'un nom et d'un adjectif" },
         { "id": "d", "text": "D'un sujet et d'un verbe" }
       ],
@@ -40,13 +40,13 @@
     {
       "prompt": "Où se trouve l'adjectif attribut ?",
       "options": [
-        { "id": "a", "text": "Toujours devant le nom" },
+        { "id": "a", "text": "Toujours placé devant le nom" },
         { "id": "b", "text": "Dans le GN, directement à côté du nom" },
         { "id": "c", "text": "Toujours en début de phrase" },
         { "id": "d", "text": "Après un verbe d'état comme « être » ou « sembler »" }
       ],
       "correctOption": "d",
-      "explanation": "L'attribut est séparé du nom par un verbe d'état (être, sembler, paraître, devenir, rester) : « La campagne est calme. » L'adjectif placé à côté du nom dans le GN est, lui, une épithète.",
+      "explanation": "L'attribut est relié au nom par un verbe d'état (être, sembler, paraître, devenir, rester) : « La campagne est calme. » L'adjectif placé à côté du nom dans le GN est, lui, une épithète.",
       "difficulty": 2
     },
     {
@@ -54,11 +54,11 @@
       "options": [
         { "id": "a", "text": "« et puis »" },
         { "id": "b", "text": "« était »" },
-        { "id": "c", "text": "« ils »" },
+        { "id": "c", "text": "« il »" },
         { "id": "d", "text": "« avaient »" }
       ],
       "correctOption": "b",
-      "explanation": "« est » est le verbe être à la 3e personne du singulier : on peut le remplacer par « était ». Si c'est « et puis » qui convient, il faut écrire « et » ; « avaient » sert à vérifier « ont ».",
+      "explanation": "« est » est le verbe être à la 3e personne du singulier : on peut le remplacer par « était ». Si c'est « et puis » qui convient, il faut écrire « et » ; « avaient » sert à vérifier « ont » et « il » à vérifier « on ».",
       "difficulty": 2
     }
   ]
