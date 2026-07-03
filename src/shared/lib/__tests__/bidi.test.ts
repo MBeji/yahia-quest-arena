@@ -75,6 +75,43 @@ describe("isolateLtrRuns", () => {
       expect(isolateLtrRuns(s)).toBe(s);
     }
   });
+
+  // A bare signed (negative/positive) number in RTL prose has no bracket or
+  // relation to anchor it, so the neutral sign flips (`−5` → `5−`). It must be
+  // isolated. Written tight (`−5`, not `− 5`), so it is never confused with the
+  // spaced binary minus of subtraction.
+  it("isolates a bare tight signed number embedded in Arabic prose", () => {
+    expect(isolateLtrRuns("إذن −5 أقرب إلى الصفر")).toContain(`${LRI} −5 ${PDI}`);
+    expect(isolateLtrRuns("قيمة x = −2 دائمًا")).toContain(`${LRI} x = −2 ${PDI}`);
+    expect(isolateLtrRuns("الدوران +90° نحو اليمين")).toContain(`${LRI} +90° ${PDI}`);
+    expect(isolateLtrRuns("الحدّ −2x صغير")).toContain(`${LRI} −2x ${PDI}`);
+  });
+
+  // Regression: subtraction/addition is written SPACED, so the sign is not glued
+  // to a digit and must NOT be isolated — the native algorithm already orders it,
+  // and this includes the Arabic minute unit «د» used in time subtraction.
+  it("does NOT isolate spaced binary subtraction, even across an Arabic unit", () => {
+    for (const s of ["الفرق 12 − 5 = 7", "المدّة 45 د − 10 د", "احسب 0 د − 1 ثانية"]) {
+      expect(isolateLtrRuns(s)).toBe(s);
+    }
+  });
+
+  // The three concours-défi énoncés from the reported screenshots now render as
+  // contiguous LTR runs (no scramble): abs-value inequality, difference of
+  // squares, and the signed-number find-the-error prompt.
+  it("renders the reported ambiguous concours prompts as clean LTR runs", () => {
+    expect(isolateLtrRuns("كم عددًا يحقّق |x − 3| < 4؟")).toContain(`${LRI} |x − 3| < 4${PDI}`);
+    expect(isolateLtrRuns("قيمة (2√3 − √5)(2√3 + √5) هي")).toContain(
+      `${LRI} (2√3 − √5)(2√3 + √5) ${PDI}`,
+    );
+    const q6 = isolateLtrRuns("بما أنّ −5 < −2، فإنّ |−5| < |−2|، إذن −5 أقرب من −2");
+    expect(q6).toContain(`${LRI} −5 < −2${PDI}`);
+    expect(q6).toContain(`${LRI} |−5| < |−2|${PDI}`);
+    // the two trailing bare negatives are now isolated too (was the ambiguous case)
+    expect(q6).toContain(`${LRI} −5 ${PDI}`);
+    expect(q6).toContain(`${LRI} −2${PDI}`);
+    expect((q6.match(new RegExp(LRI, "g")) ?? []).length).toBe(4);
+  });
 });
 
 describe("isolateLtrRunsHtml", () => {

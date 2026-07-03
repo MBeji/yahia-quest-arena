@@ -40,6 +40,7 @@ and tackle a timed "dungeon" boss mode. Shonen/RPG manga aesthetic, trilingual (
 npm run dev          # Vite dev server (SSR)
 npm run build        # production build
 npm run build:check  # build + bundle-budget check
+npm run smoke:shell  # prod-bundle browser smoke: public shell must render crash-free in Chromium
 npm test             # vitest run — run `npm test` for the current test/file count
 npm run test:watch   # watch mode
 npm run test:coverage
@@ -53,11 +54,15 @@ npm run ci:verify    # verify + coverage + build:check + audit:deps + content:qa
 **Content pipeline** (authored files → Supabase migrations — see "Content pipeline" below):
 
 ```bash
-npm run content:check      # validate all content, write nothing
-npm run content:build      # compile content/ → idempotent SQL in supabase/migrations/
-npm run content:qa         # content quality checks
-npm run content:qa:strict  # same, fail on warnings (part of ci:verify)
+npm run content:check                    # validate all content, write nothing
+npm run content:build -- --subject <id>  # regenerate the migration for ONE changed subject only
+npm run content:qa                        # content quality checks
+npm run content:qa:strict                 # same, fail on warnings (part of ci:verify)
 ```
+
+⚠️ Never run bare `npm run content:build` — it regenerates **all ~60 subjects** with fresh
+timestamps (stray duplicate migrations you must not commit). Always scope with `--subject <id>`.
+Full pipeline map + skill selection: `content-engine/references/generation-pipeline.md`.
 
 **E2E (Playwright)** — needs a dedicated TEST Supabase project + seeded users; not part of the unit gate:
 
@@ -152,7 +157,14 @@ review the generated SQL → apply to the DB **before** deploying dependent code
 Full spec: [`content/README.md`](./content/README.md) (in French).
 
 **Generating content — use the skills.** Content authoring is industrialized via a suite of
-Claude Code skills under [`.claude/skills/`](./.claude/skills/). `content-engine` is the shared core
+Claude Code skills under [`.claude/skills/`](./.claude/skills/). **Start at the pipeline map**
+([`content-engine/references/generation-pipeline.md`](./.claude/skills/content-engine/references/generation-pipeline.md)):
+it harmonizes the whole system into **two layers** — base skills that build & complete a chapter
+(`content-engine` + program wrappers + `content-cours`/`content-audit`) and the professor overlay
+(`prof-*`) that raises the ceiling with hard d3–4 exercises — with a task→skill selection matrix, the
+cumulative/non-redundant rules, and the reproducible build→migration procedure (incl. the
+`content:build --subject <id>` rule — bare `content:build` regenerates all ~60 subjects and must never
+be committed). `content-engine` is the shared core
 (schema, quality bar, reward table, RPG style, trilingual model, validate-then-stop workflow) in its
 `references/`; thin per-program wrappers defer to it: `content-ecole-tn` (national school program,
 **faithful to the official curriculum**), `content-culture-generale` and `content-muscle-cerveau`
@@ -162,7 +174,20 @@ figures), and `content-langue-{anglais,francais,arabe}` (immersion, one per lang
 course-quality bar: clarté, compréhension, exhaustivité — every tested notion must be taught —
 expérience pédagogique). `content-audit` is the review counterpart: it audits **existing** content
 (re-solves every question, checks keys/distractors/notation/calibration, and grades courses/summaries
-against the same course-quality bar) and produces a severity-ranked report. Skills produce
+against the same course-quality bar) and produces a severity-ranked report. For **hard/elite**
+content, a suite of **specialized "professor" skills** (`.claude/skills/prof-*`) — one per
+(matière × niveau), like a real subject teacher — authors difficulty-3/4 (⭐⭐⭐ boss / ⭐⭐⭐⭐ défi)
+exercises that raise the ceiling above what exists, faithful to the program. The **exam years** get a
+dedicated professor per (matière × niveau): `prof-math-9eme`, `prof-physique-9eme` (subject id `svt`),
+`prof-svt-9eme` (id `sciences-vie-terre`), `prof-francais-9eme`, `prof-arabe-9eme`, `prof-anglais-9eme`,
+and `prof-math-6eme`. The **primary cycle** (1ère→5ème) is covered by grade-aware, multi-level
+professors — one per subject, each with a per-grade chapter map and age calibration:
+`prof-math-primaire` (1ère→5ème), `prof-arabe-primaire` (1ère→5ème), `prof-eveil-primaire`
+(الإيقاظ العلمي, 1ère→6ème), and `prof-islamique-primaire` (1ère→4ème, Quran text in **رواية قالون**
+only — Tunisia's official reading). Each carries its
+subject's chapter map and misconception/trap taxonomy; all defer to `content-engine`'s shared
+`references/expert-exercises.md` (hard-item archetypes, executed-error distractors, double-solve
+verification) and to `content-ecole-tn` for program fidelity. Skills produce
 **files only** (then run `content:check` + `content:qa:strict`); you review the diff, then build/apply.
 **Non-school** programs are trilingual = three sibling subjects (one `contentLanguage` each) under one
 theme; **school** content (`ecole-tn`) stays in the subject's **official language of instruction**
@@ -212,6 +237,18 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
   `npm run test:e2e:auth` (`authed-chromium`), `npm run test:e2e:install` (install the
   browser). Authenticated runs are seeded via `scripts/e2e/seed-test-users.mjs`. E2E is
   separate from the Vitest unit/integration gate.
+- **Merge automation (push → PR → checks → merge, fully automatic).** Pushing any
+  non-`main` branch auto-opens its **draft** PR (`auto-pr.yml`, which also dispatches the
+  required checks — a bot-created PR fires no `pull_request` events); marking the PR ready
+  (or pushing with `[auto-merge]` in the head-commit subject) arms GitHub **auto-merge**
+  (`automerge.yml`, squash + delete branch, label `no-automerge` opts out; a push to `main`
+  auto-updates armed PRs left behind, re-dispatching their checks). The merge itself
+  is enforced by the `main-protection` ruleset (`.github/rulesets/main-protection.json`,
+  imported in repo Settings → Rules): required checks `verify` + `Migration presence` +
+  `Migration order` + `CodeQL` (SAST, `codeql.yml`) on an up-to-date head. Merging to `main`
+  then auto-deploys (Vercel) and auto-applies migrations (§7). Prereqs (repo Settings):
+  "Allow auto-merge" (General) and "Allow GitHub Actions to create and approve pull
+  requests" (Actions → General) on; re-import the ruleset JSON after changing it.
 - **Scheduled automations (GitHub Actions + repo skills).** Run on a schedule, all
   gracefully skipping without `CLAUDE_CODE_OAUTH_TOKEN`. The E2E/pgTAP nightly runs
   **every night**; the three Claude-agent guards run **2×/week** (each holds a runner for
@@ -229,8 +266,10 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
   fully-green patch/minor PR). Cadence + traps: `docs/dependency-maintenance.md`.
 - **Policy docs (`docs/*.md`).** Topic-specific rules referenced from here:
   `docs/environment-variables.md`, `docs/logging-standard.md`, `docs/xss-rendering-policy.md`,
-  `docs/release-tagging-policy.md`, `docs/dependency-maintenance.md`. These defer to
-  CLAUDE.md / ARCHITECTURE.md for anything that overlaps.
+  `docs/release-tagging-policy.md`, `docs/dependency-maintenance.md`,
+  `docs/ci-cd-and-branch-protection.md`, and `docs/passation.md` (the end-of-dev →
+  production walkthrough). These defer to CLAUDE.md / ARCHITECTURE.md for anything
+  that overlaps.
 
 ## Working mode — Definition of Done
 
@@ -325,7 +364,12 @@ When unsure about scope or a destructive action, ask before proceeding.
   **dedicated TEST Supabase project** with seeded users (`scripts/e2e/`), not the unit-test
   mocks. They are not part of `npm run verify`/`ci:verify`; don't point them at prod.
 - **CI workflow runs a subset.** `.github/workflows/ci.yml` runs lint + typecheck +
-  test:coverage + **content:check + content:qa:strict** + build:check + audit:deps. The content
+  test:coverage + **content:check + content:qa:strict** + build:check + **smoke:shell** +
+  audit:deps. `smoke:shell` (incident 2026-07-01) loads the REAL production bundle in a
+  Chromium and fails on any page error or branded error page: it is the only tier that
+  executes prod-gated client code (`import.meta.env.PROD`) — tsc can see `any` (unregistered
+  router), the unit gate excludes route glue, SSR never runs effects, and the Playwright e2e
+  tier runs the DEV server. A green gate without it proved compatible with a dead prod. The content
   gate is now enforced on every PR (it used to be local-only via `ci:verify`); `content:qa:strict`
   fails CI on any `[error]` (warnings still only surface). `content:qa:strict` catches **structure/
   notation**, not **correctness** — a wrong answer key passes it; that's what the scheduled

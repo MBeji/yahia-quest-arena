@@ -1,0 +1,127 @@
+name: Auto PR
+
+# Completes the commit→push→merge chain: pushing ANY non-main branch opens its
+# pull request automatically (draft by default), so no branch ever sits
+# unregistered. Together with automerge.yml this makes the flow fully
+# automatic: push → draft PR + required checks → mark ready (or push with
+# `[auto-merge]` in the head commit subject) → auto-merge once the ruleset's
+# required checks are green → Vercel deploy + db-migrate-prod on main.
+#
+# Why the explicit `gh workflow run` dispatches: a PR created with the
+# repository GITHUB_TOKEN does NOT fire `pull_request` workflows (GitHub's
+# anti-recursion rule), so the required checks (`verify`, `Migration
+# presence`/`Migration order`, `CodeQL`) would never report and the PR could
+# never merge. Dispatching those workflows on the branch attaches their check
+# runs to the same head SHA, which is what the ruleset's required status
+# checks match on. Later HUMAN pushes fire `pull_request: synchronize`
+# normally, so the dispatch is only needed at creation time.
+
+on:
+  push:
+    branches-ignore: [main]
+
+# One run per branch; a rapid second push supersedes the first.
+concurrency:
+  group: auto-pr-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  # write (not read): the [auto-merge] fast path calls enablePullRequestAutoMerge,
+  # which GitHub gates on contents:write — with read it fails with "Resource not
+  # accessible by integration" (bit us on #272). The merge itself stays gated by
+  # the ruleset's required checks.
+  contents: write
+  # Create the PR (and enable auto-merge in the [auto-merge] fast path).
+  pull-requests: write
+  # Dispatch the required-check workflows on the new PR's branch.
+  actions: write
+
+jobs:
+  open-pr:
+    name: Open PR for pushed branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout (PR template + head commit subject)
+        uses: actions/checkout@v7
+
+      - name: Create the PR if none is open
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          BRANCH: ${{ github.ref_name }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          existing="$(gh pr list --repo "$REPO" --head "$BRANCH" --state open \
+            --json number --jq '.[0].number // empty')"
+          if [ -n "$existing" ]; then
+            echo "PR #$existing already open for $BRANCH — nothing to create."
+            echo "created=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          subject="$(git log -1 --pretty=%s "$HEAD_SHA")"
+
+          # Opt-in fast path: `[auto-merge]` in the head commit subject opens the
+          # PR ready-for-review so automerge can arm immediately. Default is a
+          # DRAFT — the one deliberate human step (mark ready) before the chain
+          # merges to prod on green checks.
+          draft_flag="--draft"
+          automerge="false"
+          case "$subject" in
+            *"[auto-merge]"*) draft_flag=""; automerge="true" ;;
+          esac
+
+          body_file="$(mktemp)"
+          {
+            cat .github/pull_request_template.md
+            echo ""
+            echo "---"
+            echo "_PR ouverte automatiquement par \`auto-pr.yml\` pour la branche \`$BRANCH\`._"
+          } > "$body_file"
+
+          # Prerequisite: Settings > Actions > General > Workflow permissions >
+          # "Allow GitHub Actions to create and approve pull requests" must be ON,
+          # or createPullRequest is rejected for the GITHUB_TOKEN.
+          if ! url="$(gh pr create --repo "$REPO" --base main --head "$BRANCH" \
+            $draft_flag --title "$subject" --body-file "$body_file")"; then
+            echo "::error title=Auto-PR impossible::Activez 'Allow GitHub Actions to create and approve pull requests' (Settings > Actions > General > Workflow permissions), puis relancez ce workflow — ou ouvrez la PR à la main."
+            exit 1
+          fi
+          echo "Created $url"
+          echo "created=true" >> "$GITHUB_OUTPUT"
+          echo "automerge=$automerge" >> "$GITHUB_OUTPUT"
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Dispatch the required checks on the branch
+        if: steps.pr.outputs.created == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          # Every ruleset-required check must report on the PR head SHA (a
+          # bot-created PR fires no pull_request workflows — see header).
+          gh workflow run ci.yml --repo "$REPO" --ref "$BRANCH"
+          gh workflow run migration-gate.yml --repo "$REPO" --ref "$BRANCH" -f base=main
+          gh workflow run codeql.yml --repo "$REPO" --ref "$BRANCH"
+          echo "Dispatched ci.yml + migration-gate.yml + codeql.yml on $BRANCH."
+
+      - name: Arm auto-merge ([auto-merge] fast path)
+        if: steps.pr.outputs.created == 'true' && steps.pr.outputs.automerge == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          URL: ${{ steps.pr.outputs.url }}
+        run: |
+          set -euo pipefail
+          # The bot-created PR fires no pull_request event, so automerge.yml
+          # cannot arm it — do it here. The merge itself still waits for ALL
+          # required checks (ruleset), so this never bypasses the gate.
+          if ! gh pr merge "$URL" --repo "$REPO" --auto --squash --delete-branch; then
+            echo "::warning title=Auto-merge non armé::Activez 'Allow auto-merge' dans Settings > General du repo."
+          fi

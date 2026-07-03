@@ -1,0 +1,12 @@
+{
+  "id": "sciences-vie-terre-8eme",
+  "nameFr": "علوم الحياة والأرض",
+  "description": "التكاثر عند النبات والحيوان وتحسين الإنتاج والنظم البيئية وعلوم الأرض وفق برنامج السنة الثامنة من التعليم الأساسي",
+  "attribute": "Vitalite",
+  "colorToken": "subject-svt",
+  "icon": "Leaf",
+  "displayOrder": 7,
+  "contentLanguage": "ar",
+  "themeId": "ecole-tn",
+  "gradeSlug": "8eme-base"
+}

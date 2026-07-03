@@ -850,3 +850,37 @@ describe("gamification.dashboard — branch coverage (error/empty paths)", () =>
     ).rejects.toThrow(/tableau de bord/i);
   });
 });
+
+describe("gamification.dashboard — getMyFamilyGoal", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    mockFrom.mockReset();
+    mockRpc.mockReset();
+  });
+
+  it("returns the parsed goal for the signed-in student", async () => {
+    mockRpc.mockResolvedValue({
+      data: { weekStart: "2026-06-29", target: 5, done: 3 },
+      error: null,
+    });
+
+    const { getMyFamilyGoal } = await import("@/features/dashboard");
+    const result = await (getMyFamilyGoal as unknown as (d?: unknown) => Promise<unknown>)();
+
+    expect(result).toEqual({ weekStart: "2026-06-29", target: 5, done: 3 });
+  });
+
+  it("returns null when no goal is set this week", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: null });
+
+    const { getMyFamilyGoal } = await import("@/features/dashboard");
+    expect(await (getMyFamilyGoal as unknown as (d?: unknown) => Promise<unknown>)()).toBeNull();
+  });
+
+  it("degrades to null when the RPC is unavailable (not yet deployed)", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: { message: "function does not exist" } });
+
+    const { getMyFamilyGoal } = await import("@/features/dashboard");
+    expect(await (getMyFamilyGoal as unknown as (d?: unknown) => Promise<unknown>)()).toBeNull();
+  });
+});

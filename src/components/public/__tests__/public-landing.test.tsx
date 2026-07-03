@@ -62,6 +62,28 @@ describe("PublicLanding", () => {
     expect(screen.getByText(/DELF/)).toBeInTheDocument();
   });
 
+  it("presents the Espace Famille section with the 3-step linking flow and a parent CTA", () => {
+    const { container } = render(<PublicLanding />);
+    const famille = container.querySelector('[data-testid="famille-block"]');
+    expect(famille).not.toBeNull();
+    expect(famille?.id).toBe("espace-famille");
+    // The four value props of the actionable family report.
+    expect(screen.getByText(/points forts et chapitres à renforcer/i)).toBeInTheDocument();
+    expect(screen.getByText(/conseil de la semaine/i)).toBeInTheDocument();
+    expect(screen.getByText(/bilan imprimable/i)).toBeInTheDocument();
+    // Signed-out: the CTA routes to the auth page (signup mode, parent role preselected).
+    expect(screen.getByText("Créer mon compte parent").closest("a")?.getAttribute("href")).toBe(
+      "/auth",
+    );
+  });
+
+  it("signed-in: the famille CTA opens the parent report instead of signup", () => {
+    mockUseAuth.mockReturnValue({ user: { id: "u1" }, session: {}, loading: false });
+    const { container } = render(<PublicLanding />);
+    expect(container.querySelector('a[href="/parent-report"]')).not.toBeNull();
+    expect(screen.getByText("Ouvrir le suivi parental")).toBeInTheDocument();
+  });
+
   it("keeps the game register as a single secondary block with a signup CTA", () => {
     const { container } = render(<PublicLanding />);
     expect(screen.getByText(/Apprends en jouant/)).toBeInTheDocument();
