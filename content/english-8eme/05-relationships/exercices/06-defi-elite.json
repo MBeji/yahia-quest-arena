@@ -7,15 +7,15 @@
   "displayOrder": 6,
   "questions": [
     {
-      "prompt": "A friend keeps forgetting to feed his cat. Choose the strongest correct way to tell him it is a duty he cannot skip.",
+      "prompt": "Your cousin rides his bike on a busy road with no helmet. Choose the strongest correct way to tell him a helmet is not optional.",
       "options": [
-        { "id": "a", "text": "You must feed your cat every day." },
-        { "id": "b", "text": "You should feed your cat every day." },
-        { "id": "c", "text": "You mustn't feed your cat every day." },
-        { "id": "d", "text": "You must to feed your cat every day." }
+        { "id": "a", "text": "You must wear a helmet." },
+        { "id": "b", "text": "You should wear a helmet." },
+        { "id": "c", "text": "You mustn't wear a helmet." },
+        { "id": "d", "text": "You must to wear a helmet." }
       ],
       "correctOption": "a",
-      "explanation": "Feeding a pet is a duty the owner cannot skip, so the strongest form is the obligation \"must\" + base verb: You must feed your cat ✓. \"Should\" (b) is only advice, not a duty; \"mustn't\" (c) forbids feeding; and \"must to feed\" (d) wrongly adds \"to\" after the modal.",
+      "explanation": "Wearing a helmet on a busy road is a safety necessity, not just advice, so the strongest form is the obligation \"must\" + base verb: You must wear a helmet ✓. \"Should\" (b) is only advice; \"mustn't\" (c) would forbid the helmet; and \"must to wear\" (d) wrongly adds \"to\" after the modal.",
       "difficulty": 2
     },
     {
