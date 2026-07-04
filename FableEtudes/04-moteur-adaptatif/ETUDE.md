@@ -40,7 +40,10 @@ crédit partiel.
 - **i18n** : libellés élève des tags en FR/EN/AR dans le registre (le tag est un id, jamais affiché).
 - **Hors périmètre (v1)** : A3 (assemblage dynamique de missions à partir de questions
   individuelles — étude séparée quand A2 aura des données), notifications push de rappel (le cron
-  notifications existant peut s'y brancher plus tard).
+  notifications existant peut s'y brancher plus tard). La **maîtrise par compétence** (profil
+  fractions/équations/géométrie, prérequis, BKT-allégé) et les modèles avancés (IRT/ML, gate de
+  volume) sont l'**étude 07** — cette étude-ci reste le socle télémétrie + heuristique ; le lot
+  A1.1 devient compétence-aware via le lot 5 de l'étude 07.
 
 ## 3. Architecture technique (décisions fermées)
 

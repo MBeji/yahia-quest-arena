@@ -27,17 +27,25 @@ resynchroniser quand on touche une étude.
 
 ## Index des études
 
-| #   | étude                                                                           | valeur                         | complexité | statut    | dépend de                            |
-| --- | ------------------------------------------------------------------------------- | ------------------------------ | ---------- | --------- | ------------------------------------ |
-| 01  | [Paiement en ligne](01-paiement-en-ligne/ETUDE.md)                              | 💰 revenus directs             | moyenne+   | brouillon | choix PSP + compte marchand (humain) |
-| 02  | [Examen blanc / simulation concours](02-examen-blanc/ETUDE.md)                  | 💎 valeur premium concours     | moyenne+   | brouillon | contenu annales (`NN-annales-bac`)   |
-| 03  | [Types de questions natifs (Tier B)](03-types-questions-natifs/ETUDE.md)        | 🎮 expérience & anti-devinette | haute      | brouillon | — (spec normative déjà mergée)       |
-| 04  | [Moteur adaptatif & diagnostic de misconceptions](04-moteur-adaptatif/ETUDE.md) | 🧠 différenciateur pédagogique | haute      | brouillon | télémétrie (lot A0) puis volume      |
-| 05  | [Duels temps réel & ligues](05-duels-ligues/ETUDE.md)                           | 🔁 rétention/engagement        | très haute | brouillon | 01 (revenus d'abord), infra Realtime |
-| 06  | [PWA & lecture hors-ligne](06-pwa-offline/ETUDE.md)                             | 🌍 marché (connectivité)       | haute      | brouillon | besoin utilisateur documenté         |
+| #   | étude                                                                            | valeur                             | complexité | statut    | dépend de                                 |
+| --- | -------------------------------------------------------------------------------- | ---------------------------------- | ---------- | --------- | ----------------------------------------- |
+| 01  | [Paiement en ligne](01-paiement-en-ligne/ETUDE.md)                               | 💰 revenus directs                 | moyenne+   | brouillon | choix PSP + compte marchand (humain)      |
+| 02  | [Examen blanc / simulation concours](02-examen-blanc/ETUDE.md)                   | 💎 valeur premium concours         | moyenne+   | brouillon | contenu annales (`NN-annales-bac`)        |
+| 03  | [Types de questions natifs (Tier B)](03-types-questions-natifs/ETUDE.md)         | 🎮 expérience & anti-devinette     | haute      | brouillon | — (spec normative déjà mergée)            |
+| 04  | [Moteur adaptatif & diagnostic de misconceptions](04-moteur-adaptatif/ETUDE.md)  | 🧠 différenciateur pédagogique     | haute      | brouillon | télémétrie (lot A0) puis volume           |
+| 05  | [Duels temps réel & ligues](05-duels-ligues/ETUDE.md)                            | 🔁 rétention/engagement            | très haute | brouillon | 01 (revenus d'abord), infra Realtime      |
+| 06  | [PWA & lecture hors-ligne](06-pwa-offline/ETUDE.md)                              | 🌍 marché (connectivité)           | haute      | brouillon | besoin utilisateur documenté              |
+| 07  | [Knowledge Graph & profils de maîtrise](07-knowledge-graph-competences/ETUDE.md) | 🧭 socle de l'intelligence produit | haute      | brouillon | étude 04 lot A0                           |
+| 08  | [Analytics parents & enseignants](08-analytics-familles/ETUDE.md)                | 👨‍👩‍👧 valeur commerciale familles     | moyenne    | brouillon | 04-A0 ; 07 (faiblesses) ; 02 (percentile) |
+| 09  | [Économie du jeu — instrumentation](09-economie-du-jeu/ETUDE.md)                 | ⚖️ motivation saine                | faible+    | brouillon | — (indépendant)                           |
+| 10  | [Intégrité & anti-fraude](10-integrite-anti-fraude/ETUDE.md)                     | 🛡️ crédibilité des classements     | moyenne+   | brouillon | s'active après 02/05                      |
+| 11  | [Tuteur IA pédagogique](11-tuteur-ia-pedagogique/ETUDE.md)                       | 🤖 le rêve produit                 | haute      | brouillon | 01 (coût) ; 04-A0 ; 07 (similaire)        |
+| 12  | [Studio d'ingestion (PDF→contenu)](12-studio-ingestion/ETUDE.md)                 | 📥 coût de création                | moyenne    | brouillon | pilote opéré avant canal in-app           |
 
-L'ordre recommandé d'exécution est l'ordre des numéros (01 finance la suite ; 02 accompagne le
-lancement bac ; 03-B1 avant le bac ; 04 après la télémétrie ; 05/06 ensuite). L'humain arbitre.
+**Ordre d'exécution recommandé** (les numéros sont des identifiants, pas l'ordre) :
+`01 → 02 → 03-B1 → 04-A0/A1 → 07 → 08 → 11 → 09 (parallèle) → 10 → 05 → 12 → 06`.
+Verdicts et justification : [`REVUE-2026-07-dix-features.md`](REVUE-2026-07-dix-features.md)
+(revue critique des 10 features proposées — approuvées / re-scopées / rejetées). L'humain arbitre.
 
 ## Format d'un dossier
 
