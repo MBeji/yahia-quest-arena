@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Practice: Anis lands in London",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complete: \"Yesterday, Anis ___ his pen-friend Oliver at the airport.\"",
+      "options": [
+        { "id": "a", "text": "met" },
+        { "id": "b", "text": "meets" },
+        { "id": "c", "text": "meeted" },
+        { "id": "d", "text": "was meet" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Yesterday\" needs the simple past. \"Meet\" is irregular: its past is \"met\". \"Meets\" is present, \"meeted\" adds -ed to an irregular verb, and \"was meet\" mixes two forms.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"The plane ___ at the airport at noon.\"",
+      "options": [
+        { "id": "a", "text": "land" },
+        { "id": "b", "text": "landed" },
+        { "id": "c", "text": "landing" },
+        { "id": "d", "text": "was land" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Land\" is a regular verb, so its simple past adds -ed: \"landed\". \"Land\" alone has no past marker, \"landing\" is the -ing form, and \"was land\" is not a correct past form.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"Look at the photo: Anis ___ in front of the palace.\"",
+      "options": [
+        { "id": "a", "text": "standing" },
+        { "id": "b", "text": "was stand" },
+        { "id": "c", "text": "was standing" },
+        { "id": "d", "text": "were standing" }
+      ],
+      "correctOption": "c",
+      "explanation": "The past continuous describes the scene in the photo: was/were + verb-ing. \"Anis\" is singular, so \"was standing\". \"Was stand\" forgets the -ing, \"standing\" forgets the verb be, and \"were\" is for plural subjects.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"Mrs Baker helped Anis with everything. She is very ___.\"",
+      "options": [
+        { "id": "a", "text": "tall" },
+        { "id": "b", "text": "crowded" },
+        { "id": "c", "text": "ancient" },
+        { "id": "d", "text": "kind" }
+      ],
+      "correctOption": "d",
+      "explanation": "Someone who helps a lot is \"kind\" — a personality adjective. \"Tall\" describes the body, while \"crowded\" and \"ancient\" describe places, not a person's character.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"There were cars and people everywhere. Oxford Street was very ___.\"",
+      "options": [
+        { "id": "a", "text": "crowded" },
+        { "id": "b", "text": "quiet" },
+        { "id": "c", "text": "empty" },
+        { "id": "d", "text": "slim" }
+      ],
+      "correctOption": "a",
+      "explanation": "A place full of cars and people is \"crowded\". \"Quiet\" and \"empty\" mean the opposite, and \"slim\" describes a person's body, not a street.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"The London Eye is ___ than the buildings around it.\"",
+      "options": [
+        { "id": "a", "text": "tall" },
+        { "id": "b", "text": "taller" },
+        { "id": "c", "text": "more tall" },
+        { "id": "d", "text": "tallest" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Tall\" is a short adjective, so the comparative adds -er: \"taller than\". \"More tall\" is wrong for a short adjective, \"tall\" has no comparison mark, and \"tallest\" is for three or more things.",
+      "difficulty": 2
+    }
+  ]
+}
