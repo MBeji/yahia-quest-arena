@@ -121,50 +121,79 @@ chapitre ou un fichier d'exercice une fois publié. On ajoute toujours du conten
 
 ---
 
-## 5. Qui écrit quoi ? Les deux couches de skills
+## 5. Qui écrit quoi ? La couche de planification + les deux couches de skills
 
 Le contenu n'est **jamais écrit "à la main" par un développeur** — il est produit par des
-**skills Claude Code** spécialisés, organisés en deux couches qui ne se chevauchent pas :
+**skills Claude Code** spécialisés : une couche de **planification** en amont, puis deux couches
+d'**écriture** qui ne se chevauchent pas :
 
 ```mermaid
 flowchart TD
+    subgraph L0["Couche 0 — planifier (ne produit aucun fichier content/)"]
+        CA["curriculum-architect\n(couverture 13 niveaux × matières,\nobjectifs + progression,\nbacklog priorisé → quel skill exécute quoi)"]
+    end
+
     subgraph L1["Couche 1 — construire un chapitre complet"]
         CE["content-engine\n(cœur partagé : schéma, style, barème)"]
         W1["content-ecole-tn\n(programme scolaire, fidèle au CNP)"]
         W2["content-culture-generale\ncontent-muscle-cerveau\ncontent-iq-training\ncontent-langue-{fr,en,ar}"]
         W3["content-cours\n(cours/résumé seuls)"]
+        W5["content-interactif\n(missions interactives : trous,\nappariement, ordre, visuel SVG,\nhistoire, sprint chrono)"]
         W4["content-audit\n(relit l'existant, ne corrige\nque sur demande)"]
         CE --> W1
         CE --> W2
         CE --> W3
+        CE --> W5
     end
 
     subgraph L2["Couche 2 — rehausser le plafond (matière × niveau)"]
         P1["prof-math-9eme, prof-physique-9eme,\nprof-svt-9eme, prof-francais-9eme,\nprof-arabe-9eme, prof-anglais-9eme,\nprof-math-6eme"]
         P2["prof-math-primaire, prof-arabe-primaire,\nprof-eveil-primaire,\nprof-islamique-primaire\n(1ère→5/6ème, multi-niveaux)"]
+        P3["prof-math-college, prof-physique-college,\nprof-svt-college, prof-arabe-college,\nprof-francais-college, prof-anglais-college\n(7ème–8ème, multi-niveaux)"]
     end
 
+    CA -.->|"backlog validé par l'humain"| L1
     W1 -.->|"chapitre déjà créé"| P1
     W1 -.->|"chapitre déjà créé"| P2
+    W1 -.->|"chapitre déjà créé"| P3
 ```
 
-| Couche                       | Ce qu'elle produit                                                     | Ne touche jamais                             |
-| ----------------------------- | ----------------------------------------------------------------------- | --------------------------------------------- |
-| **Base** (`content-*`)        | cours + résumé + quiz + ladder gratuite (difficulté 1–2, + boss/défi d3-4 standard) | — |
-| **Professeur** (`prof-*`)     | exercices **difficiles/élites** (d3–4) **en plus**, sur un chapitre qui existe déjà | le cours, le quiz, ou la conversion d'une mission gratuite en premium |
-| **Audit** (`content-audit`)   | un rapport de qualité (re-résout chaque question)                       | ne corrige que si on le demande explicitement |
+> 🎭 **Les rôles classiques d'une équipe éditoriale sont tous couverts** — Curriculum Designer →
+> `curriculum-architect` ; Content Writer → `content-cours` + wrappers ; Exercise Designer →
+> wrappers + `content-interactif` ; Professeur par matière → `prof-*` ; Question Reviewer →
+> `content-audit` + `content:qa:strict` ; Translator → **aucun par conception** (trois sujets
+> frères natifs par langue, jamais de traduction ; le scolaire est monolingue) ; Difficulty
+> Calibrator → règles encodées (`rewards-and-modes.md`, `expert-exercises.md`) ; SQL/JSON Exporter
+> → script déterministe `scripts/content/build.ts`, jamais un LLM. La matrice détaillée est dans
+> [`generation-pipeline.md`](../.claude/skills/content-engine/references/generation-pipeline.md).
+
+| Couche                                     | Ce qu'elle produit                                                                                                                   | Ne touche jamais                                                      |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------- |
+| **Planification** (`curriculum-architect`) | un backlog priorisé + objectifs/progression par niveau×matière                                                                       | aucun fichier `content/` — plan seulement                             |
+| **Base** (`content-*`)                     | cours + résumé + quiz + ladder gratuite (difficulté 1–2, + boss/défi d3-4 standard) ; missions interactives via `content-interactif` | —                                                                     |
+| **Professeur** (`prof-*`)                  | exercices **difficiles/élites** (d3–4) **en plus**, sur un chapitre qui existe déjà                                                  | le cours, le quiz, ou la conversion d'une mission gratuite en premium |
+| **Audit** (`content-audit`)                | un rapport de qualité (re-résout chaque question)                                                                                    | ne corrige que si on le demande explicitement                         |
 
 ### Table de sélection rapide (« je veux… → j'utilise… »)
 
-| Je veux…                                                             | Skill à utiliser                                     |
-| --------------------------------------------------------------------- | ----------------------------------------------------- |
-| Créer un **nouveau chapitre** complet (programme scolaire)             | `content-ecole-tn`                                    |
-| Créer un nouveau chapitre pour un thème non scolaire                   | le wrapper `content-*` correspondant (culture/iq/langue/muscle) |
-| Réécrire **seulement le cours ou le résumé**                           | `content-cours`                                       |
-| Réécrire **seulement le quiz** ou ajouter du **d1–2 gratuit**           | le wrapper du programme (ou `content-engine` de base) |
-| Ajouter des exercices **difficiles/élites (d3–4)** pour une matière × niveau scolaire | le `prof-*` correspondant                             |
-| **Auditer / vérifier** du contenu existant                             | `content-audit`                                       |
-| Comprendre le schéma / le barème qualité / les récompenses / la notation | `content-engine/references/*`                         |
+| Je veux…                                                                                    | Skill à utiliser                                                |
+| ------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| **Planifier la couverture / la roadmap / la progression** d'un niveau                       | `curriculum-architect`                                          |
+| Créer un **nouveau chapitre** complet (programme scolaire)                                  | `content-ecole-tn`                                              |
+| Créer un nouveau chapitre pour un thème non scolaire                                        | le wrapper `content-*` correspondant (culture/iq/langue/muscle) |
+| Réécrire **seulement le cours ou le résumé**                                                | `content-cours`                                                 |
+| Réécrire **seulement le quiz** ou ajouter du **d1–2 gratuit**                               | le wrapper du programme (ou `content-engine` de base)           |
+| Ajouter des **missions interactives** (trous, appariement, ordre, visuel, histoire, sprint) | `content-interactif`                                            |
+| Ajouter des exercices **difficiles/élites (d3–4)** pour une matière × niveau scolaire       | le `prof-*` correspondant                                       |
+| **Auditer / vérifier** du contenu existant                                                  | `content-audit`                                                 |
+| Comprendre le schéma / le barème qualité / les récompenses / la notation                    | `content-engine/references/*`                                   |
+
+> ℹ️ Les formats interactifs "natifs" (saisie numérique, vrai glisser-déposer, multi-sélection)
+> demandent une évolution du moteur (DB + RPC + UI) — spécifiée dans
+> [`docs/interactive-question-types.md`](./interactive-question-types.md). Tant qu'une phase n'est
+> pas livrée, seuls les formats **encodables en QCM** (catalogue
+> [`interactive-formats.md`](../.claude/skills/content-engine/references/interactive-formats.md))
+> sont autorisés à l'écriture.
 
 ---
 
@@ -249,11 +278,11 @@ flowchart TD
 
 Trois niveaux de filtrage, chacun attrapant un type d'erreur différent :
 
-| Porte                     | Attrape                                                            | Ne détecte PAS                                   |
-| -------------------------- | ------------------------------------------------------------------- | -------------------------------------------------- |
-| `content:check` (Zod)      | champs manquants, mauvais types, contraintes de forme               | une bonne réponse fausse                           |
-| `content:qa:strict`        | déséquilibre des clés, notation non standard, structure suspecte    | une bonne réponse fausse                           |
-| Auto-vérification (skill)  | ce que le skill doit faire lui-même avant de rapporter              | erreurs qu'il n'a pas vues                         |
+| Porte                      | Attrape                                                               | Ne détecte PAS                                         |
+| -------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------ |
+| `content:check` (Zod)      | champs manquants, mauvais types, contraintes de forme                 | une bonne réponse fausse                               |
+| `content:qa:strict`        | déséquilibre des clés, notation non standard, structure suspecte      | une bonne réponse fausse                               |
+| Auto-vérification (skill)  | ce que le skill doit faire lui-même avant de rapporter                | erreurs qu'il n'a pas vues                             |
 | `content-audit` (planifié) | **ré-résout vraiment** chaque question, vérifie fidélité au programme | rien n'est garanti à 100 %, c'est un filet de sécurité |
 
 > ⚠️ Un mauvais corrigé (bonne réponse fausse) **passe** `content:check` et `content:qa:strict` —
@@ -331,12 +360,12 @@ gantt
     Content-audit (Mer + Sam 22:07 UTC)       :milestone, c1, 2, 1d
 ```
 
-| Automatisation        | Fréquence         | Rôle                                                                              |
-| ----------------------- | ------------------- | ------------------------------------------------------------------------------------ |
-| `nightly.yml`            | chaque nuit (01:00) | E2E + pgTAP complets, issue de suivi                                                |
-| `regression-guard`       | Lun + Jeu 23:00 UTC | réconcilie les tests avec les changements du jour, distingue test obsolète vs vrai bug |
-| `upgrade-guard`          | Mar + Ven, après un nightly vert | met à jour la stack (npm, TS, Node, Supabase CLI, Actions), une PR par majeure |
-| `content-audit.yml`      | Mer + Sam 22:07 UTC | **re-résout** chaque question changée dans la semaine, ouvre une issue par anomalie **BLOCKER/MAJOR** — c'est le filet que `content:qa:strict` ne peut pas être (voir §8) |
+| Automatisation      | Fréquence                        | Rôle                                                                                                                                                                      |
+| ------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `nightly.yml`       | chaque nuit (01:00)              | E2E + pgTAP complets, issue de suivi                                                                                                                                      |
+| `regression-guard`  | Lun + Jeu 23:00 UTC              | réconcilie les tests avec les changements du jour, distingue test obsolète vs vrai bug                                                                                    |
+| `upgrade-guard`     | Mar + Ven, après un nightly vert | met à jour la stack (npm, TS, Node, Supabase CLI, Actions), une PR par majeure                                                                                            |
+| `content-audit.yml` | Mer + Sam 22:07 UTC              | **re-résout** chaque question changée dans la semaine, ouvre une issue par anomalie **BLOCKER/MAJOR** — c'est le filet que `content:qa:strict` ne peut pas être (voir §8) |
 
 Aucune de ces automatisations ne pousse directement sur `main` (sauf `automerge` qui merge une PR
 déjà entièrement verte). `content-audit` en particulier est **review-only** : il ne corrige jamais
@@ -361,19 +390,19 @@ le contenu tout seul, il signale.
 
 ## 14. Glossaire express
 
-| Terme               | Définition simple                                                                       |
-| -------------------- | ------------------------------------------------------------------------------------------ |
-| **Theme**             | Grande piste (ex. programme scolaire, culture générale)                                    |
-| **Grade**             | Niveau scolaire (uniquement sous `ecole-tn`), ex. 9ème année                                |
-| **Parcours**          | Le "produit" auquel l'élève est inscrit (thème+grade) ; FREE (exploration) ou PREMIUM (concours) |
-| **Subject**           | Une matière (maths, arabe, anglais…)                                                        |
-| **Chapter**           | Un chapitre d'une matière : cours + résumé + quiz + exercices                              |
-| **Exercise**          | Une mission QCM notée (practice/boss/challenge), difficulté 1 à 4                          |
-| **Quiz**              | Le QCM de compréhension du cours, obligatoire, verrouille les exercices (programme scolaire seulement) |
-| **UUID v5**           | Identifiant déterministe calculé à partir du chemin/slug — stable tant que le nom ne change pas |
-| **Idempotent**        | Rejouer le même build ne crée pas de doublon : ça met juste à jour                          |
-| **Skill**             | Un mode d'assistance Claude Code spécialisé (ex. `content-ecole-tn`, `prof-math-9eme`)      |
-| **Migration**         | Un fichier SQL généré sous `supabase/migrations/`, appliqué automatiquement à la prod au merge |
+| Terme          | Définition simple                                                                                      |
+| -------------- | ------------------------------------------------------------------------------------------------------ |
+| **Theme**      | Grande piste (ex. programme scolaire, culture générale)                                                |
+| **Grade**      | Niveau scolaire (uniquement sous `ecole-tn`), ex. 9ème année                                           |
+| **Parcours**   | Le "produit" auquel l'élève est inscrit (thème+grade) ; FREE (exploration) ou PREMIUM (concours)       |
+| **Subject**    | Une matière (maths, arabe, anglais…)                                                                   |
+| **Chapter**    | Un chapitre d'une matière : cours + résumé + quiz + exercices                                          |
+| **Exercise**   | Une mission QCM notée (practice/boss/challenge), difficulté 1 à 4                                      |
+| **Quiz**       | Le QCM de compréhension du cours, obligatoire, verrouille les exercices (programme scolaire seulement) |
+| **UUID v5**    | Identifiant déterministe calculé à partir du chemin/slug — stable tant que le nom ne change pas        |
+| **Idempotent** | Rejouer le même build ne crée pas de doublon : ça met juste à jour                                     |
+| **Skill**      | Un mode d'assistance Claude Code spécialisé (ex. `content-ecole-tn`, `prof-math-9eme`)                 |
+| **Migration**  | Un fichier SQL généré sous `supabase/migrations/`, appliqué automatiquement à la prod au merge         |
 
 ---
 
@@ -393,3 +422,10 @@ le contenu tout seul, il signale.
   thèmes/grades seedés, modèle trilingue.
 - [`.claude/skills/content-engine/references/quality-bar.md`](../.claude/skills/content-engine/references/quality-bar.md) —
   protocole d'auto-vérification pédagogique.
+- [`.claude/skills/content-engine/references/interactive-formats.md`](../.claude/skills/content-engine/references/interactive-formats.md) —
+  catalogue des formats interactifs encodables en QCM (Tier A) + contrat du moteur de rendu.
+- [`docs/interactive-question-types.md`](./interactive-question-types.md) — spécification de
+  l'évolution du moteur vers des types de questions natifs (numérique, glisser-déposer,
+  multi-sélection — Tier B).
+- [`.claude/skills/curriculum-architect/references/programme-map.md`](../.claude/skills/curriculum-architect/references/programme-map.md) —
+  matrice officielle niveaux × matières (les 13 grades tunisiens) pour la planification.
