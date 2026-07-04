@@ -97,7 +97,9 @@ Premium: only `bac-*` parcours are concours PREMIUM; 1ère→3ème sec are FREE 
   `9eme-base` (built pre-transcription-system), and all secondary are **not transcribed** —
   any base-authoring plan for those grades starts with a persistence-layer item. For the lycée the
   corpus itself must first be extended with the official **secondary** programmes/manuels
-  (`docs/lycee-architecture.md` station L1).
+  (`docs/lycee-architecture.md` station L1). Exception pilote : `programme/bac-math/mathematiques.md`
+  (transcription 🚧 pilote 2026-07-05, hors corpus, chapitre 1 seul à profondeur de génération — à
+  valider avant toute montée en charge).
 - Professor overlay: primaire (math/arabe/éveil/islamique), 6ème math, collège 7ème–8ème
   (math/physique/SVT/arabe/français/anglais), 9ème full core, **lycée** (section-aware, 1ère
   sec→bac: math/physique/SVT/français/anglais/arabe/philo/histoire-géo/éco-gestion/info — all

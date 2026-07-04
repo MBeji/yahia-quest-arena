@@ -4,8 +4,11 @@
 > Baccalauréat). It settles the two structural questions the lycée forces — **sections** and the
 > **Arabic→French language switch** — then lays out the complete content pipeline (cours + base +
 > exercices difficiles + interactifs, every mission type and tier) and the phased rollout. Status:
-> **design approved for build-out; nothing here is live in the DB yet** (the seed migration in §6 is
-> the first shippable step). Defers to CLAUDE.md (DoD §7) and to
+> **build-out started** — the §6 seed migration is authored
+> (`20260704235000_lycee_section_grades_seed.sql`, applies on merge; all lycée parcours
+> `coming_soon`) and a pilot unit runs the full pipeline end-to-end on `bac-math` × mathématiques
+> (pilot transcription `programme/bac-math/mathematiques.md` + chapter
+> `content/math-bac-math/01-continuite-limites`). Defers to CLAUDE.md (DoD §7) and to
 > `content-engine/references/generation-pipeline.md` for anything that overlaps.
 
 ## 1. The two structural facts
