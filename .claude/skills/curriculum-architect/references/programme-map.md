@@ -49,16 +49,29 @@ Histoire-Géographie (`ar`), Éducation civique (`ar`), Éducation islamique (`a
 technologique (`ar`), Informatique (9ème, `ar`) — _(à confirmer CNP: exact grades & weekly slots)_.
 New ids would follow the convention (`histoire-geo-7eme`, …).
 
-## Secondaire (1ère sec – Bac) — entirely absent from the catalogue today
+## Secondaire (1ère sec – Bac) — architecture settled, catalogue still empty
 
-Structural warning for planning: from 2ème sec the ladder **branches into sections**
-(sciences, lettres, économie & services, technologies de l'informatique …, then bac sections —
-math, sciences expérimentales, lettres, économie-gestion, techniques, informatique, sport). The
-current data model has **one grade node per year, no section dimension** — planning lycée content
-therefore starts with a product/modelling decision (sections as separate subjects? parcours per
-section?) to flag via `curriculum-architect` §Boundaries, **before** any authoring campaign.
-Language switch: scientific/technical subjects (math, physique, SVT, informatique) are taught in
-**French** from secondary on; humanities stay Arabic (see `content-ecole-tn` §Language).
+The section modelling is **decided and specified in
+[`docs/lycee-architecture.md`](../../../../docs/lycee-architecture.md)** (read it before planning any
+lycée unit): **sections are grade nodes** under `ecole-tn` — `1ere-sec` (tronc commun, existing) ;
+`2eme-sec-{sciences,lettres,eco-services,info}` ; `3eme-sec-{math,sciences-exp,lettres,eco-gestion,
+techniques,info}` ; `bac-{math,sciences-exp,lettres,eco-gestion,techniques,info}` (all `bac-*` are
+concours). The legacy flat nodes `2eme-sec`/`3eme-sec`/`bac` become non-selectable, never deleted.
+Subject id = `<matière>-<gradeSlug>` verbatim (`math-bac-math`, `svt-bac-sciences-exp`,
+`philosophie-bac-lettres`; économie & gestion = two subjects). **None of this is in the DB yet** —
+the L0 seed migration (grades + `coming_soon` parcours + `is_selectable` flag) is the first station.
+
+**Language switch (major)**: mathématiques, sciences physiques, SVT, informatique/techniques flip
+**ar → fr** at 1ère sec — same matière, new language. The base layer owes every 1ère-sec chapter of
+a switched subject the **transition bridge** (lexique fr↔ar in `cours.md`, glossed first uses in
+d1, a `NN-pont-linguistique` d1 mission); degressive at 2ème sec, none at bac. Humanities (arabe,
+philosophie, histoire-géo) stay `ar`; économie/gestion `ar` _(à confirmer)_; français `fr`,
+anglais `en`. Full policy: `docs/lycee-architecture.md` §4 and `content-ecole-tn` §Language.
+
+Dominantes per section (planning weights; coefficients _(à confirmer)_ at transcription):
+math → maths+physique · sciences-exp → SVT+physique · lettres → arabe+philo+histoire-géo ·
+eco-gestion → économie+gestion · techniques → technologie+maths+physique · info → informatique+maths.
+Premium: only `bac-*` parcours are concours PREMIUM; 1ère→3ème sec are FREE exploration.
 
 ## Non-school themes (no grades — planned by level model instead)
 
@@ -82,6 +95,10 @@ Language switch: scientific/technical subjects (math, physique, SVT, informatiqu
 
 - CNP transcriptions exist for `1ere-base` → `7eme-base` (as of 2026-07). `8eme-base`,
   `9eme-base` (built pre-transcription-system), and all secondary are **not transcribed** —
-  any base-authoring plan for those grades starts with a persistence-layer item.
+  any base-authoring plan for those grades starts with a persistence-layer item. For the lycée the
+  corpus itself must first be extended with the official **secondary** programmes/manuels
+  (`docs/lycee-architecture.md` station L1).
 - Professor overlay: primaire (math/arabe/éveil/islamique), 6ème math, collège 7ème–8ème
-  (math/physique/SVT/arabe/français/anglais), 9ème full core. None for lycée (no base to overlay).
+  (math/physique/SVT/arabe/français/anglais), 9ème full core, **lycée** (section-aware, 1ère
+  sec→bac: math/physique/SVT/français/anglais/arabe/philo/histoire-géo/éco-gestion/info — all
+  waiting on the lycée base, which waits on L0–L2).

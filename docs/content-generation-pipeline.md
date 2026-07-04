@@ -150,13 +150,20 @@ flowchart TD
         P1["prof-math-9eme, prof-physique-9eme,\nprof-svt-9eme, prof-francais-9eme,\nprof-arabe-9eme, prof-anglais-9eme,\nprof-math-6eme"]
         P2["prof-math-primaire, prof-arabe-primaire,\nprof-eveil-primaire,\nprof-islamique-primaire\n(1ère→5/6ème, multi-niveaux)"]
         P3["prof-math-college, prof-physique-college,\nprof-svt-college, prof-arabe-college,\nprof-francais-college, prof-anglais-college\n(7ème–8ème, multi-niveaux)"]
+        P4["prof-{math,physique,svt,francais,anglais,\narabe,philo,histoire-geo,eco-gestion,info}-lycee\n(1ère sec→bac, par section,\n+ palier NN-annales-bac)"]
     end
 
     CA -.->|"backlog validé par l'humain"| L1
     W1 -.->|"chapitre déjà créé"| P1
     W1 -.->|"chapitre déjà créé"| P2
     W1 -.->|"chapitre déjà créé"| P3
+    W1 -.->|"chapitre déjà créé"| P4
 ```
+
+> 🏛️ **Lycée** : l'architecture du secondaire (sections = nœuds de grade, bascule linguistique
+> ar→fr des matières scientifiques avec pont terminologique en 1ère sec, parcours premium `bac-*`,
+> ladder complet incl. `NN-annales-bac` et `NN-pont-linguistique`, migration de seed et rollout
+> phasé) est spécifiée dans [`docs/lycee-architecture.md`](./lycee-architecture.md).
 
 > 🎭 **Les rôles classiques d'une équipe éditoriale sont tous couverts** — Curriculum Designer →
 > `curriculum-architect` ; Content Writer → `content-cours` + wrappers ; Exercise Designer →
