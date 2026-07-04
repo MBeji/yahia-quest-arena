@@ -1,0 +1,65 @@
+{
+  "title": "Comprehension check ⭐",
+  "questions": [
+    {
+      "prompt": "Complete: \"Last July, Anis ___ to London by plane.\"",
+      "options": [
+        { "id": "a", "text": "fly" },
+        { "id": "b", "text": "flew" },
+        { "id": "c", "text": "flied" },
+        { "id": "d", "text": "was fly" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Last July\" is a finished past time, so we use the simple past of \"fly\", which is the irregular form \"flew\". \"Flied\" adds -ed to an irregular verb, and \"was fly\" mixes two forms.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"At nine o'clock, the Bakers ___ breakfast in the kitchen.\"",
+      "options": [
+        { "id": "a", "text": "having" },
+        { "id": "b", "text": "was having" },
+        { "id": "c", "text": "were having" },
+        { "id": "d", "text": "were have" }
+      ],
+      "correctOption": "c",
+      "explanation": "An action in progress at a past moment uses the past continuous: was/were + verb-ing. \"The Bakers\" is plural, so we use \"were having\". \"Was having\" is singular, and \"were have\" forgets the -ing.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"Anis is not tall; he is quite ___.\"",
+      "options": [
+        { "id": "a", "text": "short" },
+        { "id": "b", "text": "kind" },
+        { "id": "c", "text": "noisy" },
+        { "id": "d", "text": "crowded" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Short\" is the opposite of \"tall\" and describes the body. \"Kind\" describes character, while \"noisy\" and \"crowded\" describe places, not a person's height.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"London is much ___ than Bizerte.\"",
+      "options": [
+        { "id": "a", "text": "big" },
+        { "id": "b", "text": "more big" },
+        { "id": "c", "text": "bigger" },
+        { "id": "d", "text": "biggest" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Big\" is a short adjective, so its comparative adds -er and doubles the consonant: \"bigger than\". \"More big\" is wrong for a short adjective, and \"biggest\" is the form for three or more things, not for comparing two.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"Anis ___ get lost, because Oliver drew him a clear map.\"",
+      "options": [
+        { "id": "a", "text": "not" },
+        { "id": "b", "text": "doesn't" },
+        { "id": "c", "text": "wasn't" },
+        { "id": "d", "text": "didn't" }
+      ],
+      "correctOption": "d",
+      "explanation": "The simple past negative is \"didn't\" + the base verb: \"didn't get\". \"Doesn't\" is present, \"wasn't\" needs no main verb after it, and \"not\" alone cannot form a past negative.",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Revision (exam style): relationships and manner",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "When his parents are out, Youssef takes care of his little sister. We can also say: \"He ___ his little sister.\"",
+      "options": [
+        { "id": "a", "text": "looks after" },
+        { "id": "b", "text": "looks at" },
+        { "id": "c", "text": "looks for" },
+        { "id": "d", "text": "looks like" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Take care of\" someone means \"look after\" them: he looks after his sister. \"Look at\" means to watch, \"look for\" means to search, and \"look like\" means to resemble — different meanings.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete the advice: \"Good friends ___ trust each other and share their secrets.\"",
+      "options": [
+        { "id": "a", "text": "must" },
+        { "id": "b", "text": "mustn't" },
+        { "id": "c", "text": "aren't" },
+        { "id": "d", "text": "don't" }
+      ],
+      "correctOption": "a",
+      "explanation": "Trusting each other is what good friends need to do, an obligation of friendship, so we use \"must\": friends must trust each other. \"Mustn't\", \"aren't\" and \"don't\" would all turn the sentence negative.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Your friend says: \"Reading books is boring.\" You think reading is great. How do you answer politely?",
+      "options": [
+        { "id": "a", "text": "I agree with you." },
+        { "id": "b", "text": "I disagree." },
+        { "id": "c", "text": "You're right." },
+        { "id": "d", "text": "Me too." }
+      ],
+      "correctOption": "b",
+      "explanation": "You have the opposite idea, so you disagree: \"I disagree.\" The other three answers (\"I agree with you\", \"You're right\", \"Me too\") all mean you have the SAME opinion as your friend.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete with a feeling adjective: \"Salma lost her cat this morning. She feels very ___.\"",
+      "options": [
+        { "id": "a", "text": "sadly" },
+        { "id": "b", "text": "sadness" },
+        { "id": "c", "text": "sad" },
+        { "id": "d", "text": "sads" }
+      ],
+      "correctOption": "c",
+      "explanation": "After \"feel\" we use an adjective: she feels sad. \"Sadly\" is an adverb, \"sadness\" is a noun, and \"sads\" is not a word — none of them can follow \"feel\".",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Advise against a bad habit: \"You ___ shout at your little brother when you are angry.\"",
+      "options": [
+        { "id": "a", "text": "should" },
+        { "id": "b", "text": "must" },
+        { "id": "c", "text": "can" },
+        { "id": "d", "text": "shouldn't" }
+      ],
+      "correctOption": "d",
+      "explanation": "Shouting at your brother is a bad idea, so we advise against it with \"shouldn't\": You shouldn't shout at him. \"Should\", \"must\" and \"can\" would all encourage or allow the shouting.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Turn the adjective into an adverb: \"The teacher explained the lesson ___.\" (clear)",
+      "options": [
+        { "id": "a", "text": "clear" },
+        { "id": "b", "text": "clearly" },
+        { "id": "c", "text": "clearily" },
+        { "id": "d", "text": "cleared" }
+      ],
+      "correctOption": "b",
+      "explanation": "To say HOW she explained, add -ly to the adjective: clear → clearly. \"Clear\" is the adjective, \"clearily\" is misspelled (clear does not end in -y), and \"cleared\" is a past verb.",
+      "difficulty": 2
+    }
+  ]
+}

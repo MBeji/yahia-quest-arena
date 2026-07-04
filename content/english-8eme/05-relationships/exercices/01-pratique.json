@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Practice: advice, rules and feelings",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Your friend is very tired after football. Give advice: \"You ___ rest for a while.\"",
+      "options": [
+        { "id": "a", "text": "should" },
+        { "id": "b", "text": "shouldn't" },
+        { "id": "c", "text": "aren't" },
+        { "id": "d", "text": "mustn't" }
+      ],
+      "correctOption": "a",
+      "explanation": "Resting when you are tired is a good idea, so we advise with \"should\": You should rest. The other options would advise against resting or are not modals of advice.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Give healthy advice: \"You ___ eat too much sugar; it is bad for your teeth.\"",
+      "options": [
+        { "id": "a", "text": "should" },
+        { "id": "b", "text": "shouldn't" },
+        { "id": "c", "text": "must" },
+        { "id": "d", "text": "can" }
+      ],
+      "correctOption": "b",
+      "explanation": "Too much sugar is a bad idea, so we advise against it with \"shouldn't\": You shouldn't eat too much sugar. \"Should\" and \"must\" would tell you to do it, and \"can\" is about ability.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "There is a clear rule in the library. Complete: \"You ___ be quiet in here.\"",
+      "options": [
+        { "id": "a", "text": "want" },
+        { "id": "b", "text": "mustn't" },
+        { "id": "c", "text": "must" },
+        { "id": "d", "text": "like" }
+      ],
+      "correctOption": "c",
+      "explanation": "Being quiet is a rule of the library, an obligation, so we use \"must\": You must be quiet. \"Mustn't\" would forbid being quiet, and \"want\"/\"like\" are not modals of obligation.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "It is dangerous. Complete: \"You ___ play with matches!\"",
+      "options": [
+        { "id": "a", "text": "should" },
+        { "id": "b", "text": "must" },
+        { "id": "c", "text": "can" },
+        { "id": "d", "text": "mustn't" }
+      ],
+      "correctOption": "d",
+      "explanation": "Playing with matches is forbidden because it is dangerous, so we use \"mustn't\": You mustn't play with matches. \"Should\"/\"must\"/\"can\" would allow or even order it.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Turn the adjective into an adverb of manner: \"The old man walks very ___.\" (slow)",
+      "options": [
+        { "id": "a", "text": "slow" },
+        { "id": "b", "text": "slowly" },
+        { "id": "c", "text": "slowy" },
+        { "id": "d", "text": "slower" }
+      ],
+      "correctOption": "b",
+      "explanation": "To describe HOW he walks, add -ly to the adjective: slow → slowly. \"Slow\" is the adjective, \"slowy\" is misspelled, and \"slower\" is a comparative, not an adverb of manner.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete with a feeling: \"I feel ___ when my team wins the match.\"",
+      "options": [
+        { "id": "a", "text": "happy" },
+        { "id": "b", "text": "happily" },
+        { "id": "c", "text": "happiness" },
+        { "id": "d", "text": "happier" }
+      ],
+      "correctOption": "a",
+      "explanation": "After \"feel\" we use an adjective: I feel happy. \"Happily\" is an adverb, \"happiness\" is a noun, and \"happier\" is a comparative — none of them can follow \"feel\" here.",
+      "difficulty": 1
+    }
+  ]
+}

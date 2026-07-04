@@ -1,0 +1,82 @@
+{
+  "title": "📝 Training ⭐⭐⭐: global review of Module Five",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Selim broke his classmate's ruler by accident. What should he do? \"He ___ say sorry and buy a new one.\"",
+      "options": [
+        { "id": "a", "text": "should" },
+        { "id": "b", "text": "shouldn't" },
+        { "id": "c", "text": "mustn't" },
+        { "id": "d", "text": "isn't" }
+      ],
+      "correctOption": "a",
+      "explanation": "Saying sorry and replacing the ruler is the right thing to do, so we advise it with \"should\": He should say sorry ✓. \"Shouldn't\" and \"mustn't\" advise against it, and \"isn't\" is not a modal.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "There is a firm rule at the swimming pool. Complete: \"You ___ run near the water; it is slippery and dangerous.\"",
+      "options": [
+        { "id": "a", "text": "must" },
+        { "id": "b", "text": "should" },
+        { "id": "c", "text": "mustn't" },
+        { "id": "d", "text": "want to" }
+      ],
+      "correctOption": "c",
+      "explanation": "Running near the water is forbidden for safety, so we use \"mustn't\": You mustn't run near the water ✓. \"Must\" and \"want to\" would order you to run, and \"should\" is only mild advice, not a firm rule.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete the opinion correctly: \"___ every family should have a pet; it teaches children to be kind.\"",
+      "options": [
+        { "id": "a", "text": "I think that" },
+        { "id": "b", "text": "I am think" },
+        { "id": "c", "text": "I think to" },
+        { "id": "d", "text": "I thinking" }
+      ],
+      "correctOption": "a",
+      "explanation": "To give an opinion we say \"I think (that) + a sentence\": I think that every family should have a pet ✓. \"I am think\" and \"I thinking\" misuse the verb, and \"I think to\" is not the correct structure.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Give the adverb of manner: \"The nurse spoke to the child ___.\" (gentle)",
+      "options": [
+        { "id": "a", "text": "gentle" },
+        { "id": "b", "text": "gentley" },
+        { "id": "c", "text": "gently" },
+        { "id": "d", "text": "gentlely" }
+      ],
+      "correctOption": "c",
+      "explanation": "When an adjective ends in -le, we drop the e and add -y: gentle → gently ✓. The common trap is \"gentley\" or \"gentlely\". \"Gentle\" alone is the adjective, not the adverb.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Amine finished the race first. Which sentence is correct?",
+      "options": [
+        { "id": "a", "text": "Amine ran very fastly." },
+        { "id": "b", "text": "Amine ran very fast." },
+        { "id": "c", "text": "Amine ran very fastly and good." },
+        { "id": "d", "text": "Amine ran very faster." }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Fast\" is an irregular adverb: it stays the same, with no -ly. Amine ran very fast ✓. The common trap is \"fastly\", which does not exist. \"Faster\" is a comparative, and \"good\" is an adjective, not an adverb.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read: \"(1) You should take care of your pet. (2) In my opinion, we mustn't cut trees. (3) I feel excited about the trip. (4) My best friend helps me always careful.\" Which sentence contains a mistake?",
+      "options": [
+        { "id": "a", "text": "Sentence 1" },
+        { "id": "b", "text": "Sentence 2" },
+        { "id": "c", "text": "Sentence 3" },
+        { "id": "d", "text": "Sentence 4" }
+      ],
+      "correctOption": "d",
+      "explanation": "Sentence 4 has the mistake: this question asks you to find the faulty one. To say HOW the friend helps, we need the adverb \"carefully\", so it must be \"My best friend always helps me carefully\" ✓, not the adjective \"careful\". Sentences 1, 2 and 3 correctly use \"should take\", \"mustn't cut\" and \"I feel excited\".",
+      "difficulty": 3
+    }
+  ]
+}

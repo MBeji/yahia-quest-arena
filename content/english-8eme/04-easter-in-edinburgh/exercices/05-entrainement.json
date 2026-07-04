@@ -1,0 +1,82 @@
+{
+  "title": "📝 Training ⭐⭐⭐: full review of Module Four",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complete: \"The tourists ___ arrived at the airport in Edinburgh.\"",
+      "options": [
+        { "id": "a", "text": "has arrived" },
+        { "id": "b", "text": "have arrived" },
+        { "id": "c", "text": "have arrive" },
+        { "id": "d", "text": "has arrive" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"The tourists\" is plural (they), so the auxiliary is \"have\", and the regular participle is \"arrived\": have arrived ✓. \"Has\" is wrong for a plural subject, and \"arrive\" without -ed is the base form.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"I have ___ all my packing for the trip.\" (verb: do)",
+      "options": [
+        { "id": "a", "text": "do" },
+        { "id": "b", "text": "did" },
+        { "id": "c", "text": "done" },
+        { "id": "d", "text": "doed" }
+      ],
+      "correctOption": "c",
+      "explanation": "The irregular participle of do is \"done\": I have done ✓. \"Do\" is the base form, \"did\" is the simple past (not a participle), and \"doed\" does not exist.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete the question: \"___ you ever ridden a double-decker bus?\"",
+      "options": [
+        { "id": "a", "text": "Have" },
+        { "id": "b", "text": "Has" },
+        { "id": "c", "text": "Are" },
+        { "id": "d", "text": "Did" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"You\" takes \"have\", and \"ridden\" is the participle of ride: Have you ever ridden…? ✓. \"Has\" is for he/she/it, and \"are/did\" are not present perfect auxiliaries.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"Before boarding the plane, passengers wait at the ___.\"",
+      "options": [
+        { "id": "a", "text": "hotel lobby" },
+        { "id": "b", "text": "bus stop" },
+        { "id": "c", "text": "baggage claim" },
+        { "id": "d", "text": "boarding gate" }
+      ],
+      "correctOption": "d",
+      "explanation": "At the airport, passengers wait at the \"boarding gate\" before they get on the plane. A hotel lobby and a bus stop are not in the airport, and the \"baggage claim\" is where you collect bags AFTER the flight, not before boarding.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which sentence is WRONG?",
+      "options": [
+        { "id": "a", "text": "We have seen the castle." },
+        { "id": "b", "text": "He has eaten lunch." },
+        { "id": "c", "text": "They have went home." },
+        { "id": "d", "text": "She has read the map." }
+      ],
+      "correctOption": "c",
+      "explanation": "\"They have went\" is wrong: after \"have\" you need the participle \"gone\", not the simple past \"went\" — it should be \"They have gone home\". Sentences a, b and d correctly use the participles seen, eaten and read.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete the directions: \"Go straight ___, then turn left at the bank.\"",
+      "options": [
+        { "id": "a", "text": "ahead" },
+        { "id": "b", "text": "ahead of" },
+        { "id": "c", "text": "front" },
+        { "id": "d", "text": "forward to" }
+      ],
+      "correctOption": "a",
+      "explanation": "To give directions we say \"go straight ahead\" (keep going forward). \"Ahead of\" needs an object (ahead of you), \"front\" needs \"in front of\", and \"forward to\" is not used for directions here.",
+      "difficulty": 3
+    }
+  ]
+}
