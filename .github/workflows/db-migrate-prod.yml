@@ -19,10 +19,14 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "push = apply pending · list = read-only diff · repair-all = one-time bootstrap (mark all local as applied)"
+        description: "push = apply pending · list = read-only diff · repair-all = bootstrap (mark all local applied) · repair-revert = clear remote-only phantom(s) then push"
         type: choice
-        options: [push, list, repair-all]
+        options: [push, list, repair-all, repair-revert]
         default: push
+      versions:
+        description: "repair-revert only: space-separated 14-digit version(s) to mark reverted (remote-only phantoms with no local file)"
+        type: string
+        default: ""
 
 # Never let two prod migration runs overlap.
 concurrency:
@@ -115,6 +119,15 @@ jobs:
       - name: Bootstrap — mark all local migrations as applied (repair-all)
         if: ${{ env.MODE == 'repair-all' }}
         run: node scripts/db/push-prod.mjs --mode repair-all
+
+      # Clear a remote-only PHANTOM (a version applied to prod whose migration file
+      # was later removed/renamed on main) then apply the genuinely-pending
+      # migrations. Bookkeeping-only revert: no down-SQL, no data touched.
+      - name: Repair phantom history then apply (repair-revert)
+        if: ${{ env.MODE == 'repair-revert' }}
+        env:
+          REPAIR_VERSIONS: ${{ github.event.inputs.versions }}
+        run: node scripts/db/push-prod.mjs --mode repair-revert
 
       # --- Confirm the post-apply state ---
       - name: Pending migrations (after)
