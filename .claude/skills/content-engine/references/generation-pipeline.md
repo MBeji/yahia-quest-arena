@@ -53,6 +53,13 @@ Content generation is **a planning layer + two authoring layers**, not competing
      `prof-francais-college`, `prof-anglais-college`. ⚠ 8ème's base is still empty
      (scaffold only, CNP transcription pending) — a professor only overlays **existing** chapters,
      so 8ème work waits on the base layer.
+   - Lycée cycle (section-aware, 1ère sec→bac — sections are grade nodes, see
+     `docs/lycee-architecture.md`): `prof-math-lycee`, `prof-physique-lycee`, `prof-svt-lycee`,
+     `prof-francais-lycee`, `prof-anglais-lycee`, `prof-arabe-lycee`, `prof-philo-lycee`,
+     `prof-histoire-geo-lycee`, `prof-eco-gestion-lycee`, `prof-info-lycee`. They also own the
+     `NN-annales-bac` d4 tier on `bac-*` grades. ⚠ The whole lycée base is empty and its stations
+     (seed migration → secondary-programme transcriptions → base) come first — lycée professor work
+     is queued behind them.
 
 The overlay **never** replaces the base: professors only **add** top-tier files to a chapter that
 already exists; they never rewrite the course/quiz or convert a free d1–2 mission to premium d3–4.
