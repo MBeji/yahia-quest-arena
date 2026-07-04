@@ -1,0 +1,82 @@
+{
+  "title": "📝 Training ⭐⭐⭐ (global review)",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complete: \"During his stay, Anis ___ hundreds of photos with his phone.\"",
+      "options": [
+        { "id": "a", "text": "take" },
+        { "id": "b", "text": "took" },
+        { "id": "c", "text": "taked" },
+        { "id": "d", "text": "tooked" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Take\" is irregular, and the sentence is about a finished stay, so we use the simple past \"took\". \"Take\" is the base form, and \"taked\"/\"tooked\" wrongly add -ed to an irregular verb.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"___ the children playing in the garden when it started to rain?\" — \"Yes, they were.\"",
+      "options": [
+        { "id": "a", "text": "Were" },
+        { "id": "b", "text": "Was" },
+        { "id": "c", "text": "Did" },
+        { "id": "d", "text": "Are" }
+      ],
+      "correctOption": "a",
+      "explanation": "The short answer \"Yes, they were\" shows a past-continuous question: Was/Were + subject + -ing. \"The children\" is plural → \"Were\". \"Was\" is singular, \"Did\" needs a base verb (not -ing), and \"Are\" is present.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"The city centre was noisy, but the small village they visited was ___.\"",
+      "options": [
+        { "id": "a", "text": "crowded" },
+        { "id": "b", "text": "huge" },
+        { "id": "c", "text": "quiet" },
+        { "id": "d", "text": "modern" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"But\" signals a contrast with \"noisy\", so we need its opposite: \"quiet\" (calm) ✓. \"Crowded\" and \"huge\" do not oppose \"noisy\", and \"modern\" (new) is unrelated to sound.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"For Anis, the Underground map was ___ than the bus map.\"",
+      "options": [
+        { "id": "a", "text": "more difficult" },
+        { "id": "b", "text": "difficulter" },
+        { "id": "c", "text": "most difficult" },
+        { "id": "d", "text": "more difficulter" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Difficult\" is a long adjective (three syllables), so its comparative is \"more difficult than\" ✓. \"Difficulter\" wrongly adds -er, \"most difficult\" is for three or more, and \"more difficulter\" doubles the comparison.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"Anis ___ a photo when a red double-decker bus ___ by.\"",
+      "options": [
+        { "id": "a", "text": "took … passed" },
+        { "id": "b", "text": "took … was passing" },
+        { "id": "c", "text": "was taking … was passing" },
+        { "id": "d", "text": "was taking … passed" }
+      ],
+      "correctOption": "d",
+      "explanation": "Taking the photo was the ongoing action → past continuous \"was taking\", and the short event that cut into it → past simple \"passed\": \"was taking … passed\" ✓. The trap is matching the two tenses, but an interruption always splits them.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"Oliver is 14 and Anis is 13, so Oliver is ___ than Anis.\"",
+      "options": [
+        { "id": "a", "text": "old" },
+        { "id": "b", "text": "older" },
+        { "id": "c", "text": "more old" },
+        { "id": "d", "text": "oldest" }
+      ],
+      "correctOption": "b",
+      "explanation": "We compare two people, and \"old\" is a short adjective, so it takes -er: \"older than\" ✓. \"Old\" has no comparison mark, \"more old\" is wrong for a short adjective, and \"oldest\" is for three or more.",
+      "difficulty": 3
+    }
+  ]
+}

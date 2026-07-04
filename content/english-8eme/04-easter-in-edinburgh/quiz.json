@@ -1,0 +1,65 @@
+{
+  "title": "Comprehension check ⭐",
+  "questions": [
+    {
+      "prompt": "Complete: \"I ___ visited Edinburgh Castle with my family.\"",
+      "options": [
+        { "id": "a", "text": "have" },
+        { "id": "b", "text": "has" },
+        { "id": "c", "text": "am" },
+        { "id": "d", "text": "is" }
+      ],
+      "correctOption": "a",
+      "explanation": "The present perfect is have/has + past participle. With \"I\" the auxiliary is \"have\": I have visited. \"Has\" is only for he/she/it, and \"am/is\" are forms of the verb be, not the present perfect auxiliary.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"My sister ___ travelled to Scotland this spring.\"",
+      "options": [
+        { "id": "a", "text": "have" },
+        { "id": "b", "text": "has" },
+        { "id": "c", "text": "is" },
+        { "id": "d", "text": "have been" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"My sister\" is one person (she), so the auxiliary is \"has\": my sister has travelled. \"Have\" goes with I/you/we/they, and \"is / have been\" do not fit this sentence.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"We have ___ the old town of Edinburgh.\"",
+      "options": [
+        { "id": "a", "text": "see" },
+        { "id": "b", "text": "saw" },
+        { "id": "c", "text": "seen" },
+        { "id": "d", "text": "seed" }
+      ],
+      "correctOption": "c",
+      "explanation": "After have/has you need the past participle. The past participle of \"see\" is the irregular \"seen\": we have seen. \"See\" is the base form, \"saw\" is the simple past (not a participle), and \"seed\" does not exist.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete the question: \"___ she ever seen a real castle?\"",
+      "options": [
+        { "id": "a", "text": "Have" },
+        { "id": "b", "text": "Has" },
+        { "id": "c", "text": "Is" },
+        { "id": "d", "text": "Does" }
+      ],
+      "correctOption": "b",
+      "explanation": "In a present perfect question with \"ever\", the auxiliary comes first and agrees with the subject. \"She\" takes \"has\": Has she ever seen…? \"Have\" is for I/you/we/they, and \"is/does\" are not present perfect auxiliaries.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which sentence is correct?",
+      "options": [
+        { "id": "a", "text": "He has go to the airport." },
+        { "id": "b", "text": "He have gone to the airport." },
+        { "id": "c", "text": "He has went to the airport." },
+        { "id": "d", "text": "He has gone to the airport." }
+      ],
+      "correctOption": "d",
+      "explanation": "\"He\" needs \"has\", and the past participle of \"go\" is \"gone\": He has gone. \"Has go\" uses the base form, \"have gone\" uses the wrong auxiliary for he, and \"has went\" uses the simple past instead of the participle.",
+      "difficulty": 2
+    }
+  ]
+}

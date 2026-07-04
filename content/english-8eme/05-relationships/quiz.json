@@ -1,0 +1,65 @@
+{
+  "title": "Comprehension check ⭐",
+  "questions": [
+    {
+      "prompt": "Your friend Sami has a bad toothache. What is the best friendly advice? \"You ___ see a dentist.\"",
+      "options": [
+        { "id": "a", "text": "should" },
+        { "id": "b", "text": "shouldn't" },
+        { "id": "c", "text": "mustn't" },
+        { "id": "d", "text": "aren't" }
+      ],
+      "correctOption": "a",
+      "explanation": "To give friendly advice we use \"should\" + base verb: You should see a dentist. \"Shouldn't\" and \"mustn't\" would advise against it, and \"aren't\" is not a modal of advice.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "It is the law: at a red traffic light every driver ___ stop the car.",
+      "options": [
+        { "id": "a", "text": "can" },
+        { "id": "b", "text": "shouldn't" },
+        { "id": "c", "text": "wants" },
+        { "id": "d", "text": "must" }
+      ],
+      "correctOption": "d",
+      "explanation": "A law is a strong obligation, so we use \"must\": every driver must stop. \"Can\" is about ability, \"wants\" is about desire, and \"shouldn't\" would mean it is a bad idea to stop.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choose the correct sentence.",
+      "options": [
+        { "id": "a", "text": "You should to drink more water." },
+        { "id": "b", "text": "You should drink more water." },
+        { "id": "c", "text": "You shoulds drink more water." },
+        { "id": "d", "text": "You should drinking more water." }
+      ],
+      "correctOption": "b",
+      "explanation": "After a modal like \"should\" we use the base verb with no \"to\": You should drink water. \"Should to drink\" adds a wrong \"to\", \"shoulds\" adds a wrong -s, and \"should drinking\" uses the -ing form.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Nour is very careful. Complete: \"She crosses the street ___.\"",
+      "options": [
+        { "id": "a", "text": "careful" },
+        { "id": "b", "text": "carefuly" },
+        { "id": "c", "text": "carefully" },
+        { "id": "d", "text": "more careful" }
+      ],
+      "correctOption": "c",
+      "explanation": "To say HOW she crosses, we need the adverb of manner: careful + -ly = carefully. \"Careful\" is the adjective, \"carefuly\" is misspelled (keep the double l), and \"more careful\" is a comparative, not an adverb.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "\"How do you feel before an important exam?\" — \"I feel ___.\"",
+      "options": [
+        { "id": "a", "text": "worried" },
+        { "id": "b", "text": "worry" },
+        { "id": "c", "text": "worriedly" },
+        { "id": "d", "text": "worries" }
+      ],
+      "correctOption": "a",
+      "explanation": "After \"feel\" we use an adjective, not an adverb: I feel worried. \"Worry\" and \"worries\" are the verb/noun, and \"worriedly\" is an adverb, which cannot follow \"feel\".",
+      "difficulty": 2
+    }
+  ]
+}
