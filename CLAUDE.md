@@ -198,7 +198,14 @@ professors — one per subject, each with a per-grade chapter map and age calibr
 only — Tunisia's official reading). The **collège cycle** (7ème–8ème; 9ème keeps its dedicated
 professors) is covered the same grade-aware way: `prof-math-college`, `prof-physique-college`,
 `prof-svt-college`, `prof-arabe-college`, `prof-francais-college`, `prof-anglais-college` (8ème's
-base content is still empty — a professor only overlays existing chapters). Each carries its
+base content is still empty — a professor only overlays existing chapters). The **lycée cycle**
+(1ère sec→bac) is covered by section-aware professors — sections are grade nodes and scientific
+subjects switch ar→fr at 1ère sec with a mandatory transition bridge, all specified in
+`docs/lycee-architecture.md`: `prof-math-lycee`, `prof-physique-lycee`, `prof-svt-lycee`,
+`prof-francais-lycee`, `prof-anglais-lycee`, `prof-arabe-lycee`, `prof-philo-lycee`,
+`prof-histoire-geo-lycee`, `prof-eco-gestion-lycee`, `prof-info-lycee` (they also own the
+`NN-annales-bac` d4 tier; the whole lycée base is still empty — seed migration + secondary
+transcriptions + base come first). Each carries its
 subject's chapter map and misconception/trap taxonomy; all defer to `content-engine`'s shared
 `references/expert-exercises.md` (hard-item archetypes, executed-error distractors, double-solve
 verification) and to `content-ecole-tn` for program fidelity. Skills produce
@@ -285,10 +292,14 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
   production walkthrough), `docs/content-generation-pipeline.md` (narrated, diagrammed
   walkthrough of the content workflows/pipeline — skills, gates, UUIDv5 idempotency, prod
   auto-apply — a companion to this file, `content/README.md`, and the skills' own
-  `generation-pipeline.md`), and `docs/interactive-question-types.md` (design spec for
+  `generation-pipeline.md`), `docs/interactive-question-types.md` (design spec for
   native interactive question types — numeric/ordering/matching/multi-select: data model,
   the five type-aware scoring RPCs, UI/pipeline touchpoints, phased rollout; the QCM-encodable
-  interactive formats live in `content-engine/references/interactive-formats.md`). These defer
+  interactive formats live in `content-engine/references/interactive-formats.md`), and
+  `docs/lycee-architecture.md` (secondary-cycle architecture: sections as grade nodes +
+  slugs/subject-id conventions, the ar→fr transition bridge, bac-\* premium parcours, the full
+  lycée mission ladder incl. `NN-annales-bac`/`NN-pont-linguistique`, seed-migration spec and
+  phased rollout). These defer
   to CLAUDE.md / ARCHITECTURE.md for anything that overlaps.
 
 ## Working mode — Definition of Done

@@ -31,8 +31,13 @@ This skill only adds the school-specific rules.
 > (1ère→5ème), `prof-eveil-primaire` (1ère→6ème), `prof-islamique-primaire` (1ère→4ème). **Collège
 > cycle** (grade-aware, 7ème–8ème; 9ème keeps its dedicated professors): `prof-math-college`,
 > `prof-physique-college`, `prof-svt-college`, `prof-arabe-college`, `prof-francais-college`,
-> `prof-anglais-college`. Each is a subject-specialist author that layers a per-grade chapter map +
-> trap taxonomy (+ age calibration for primary/collège) on top of
+> `prof-anglais-college`. **Lycée cycle** (section-aware, 1ère sec→bac — see
+> `docs/lycee-architecture.md` for the section/grade model): `prof-math-lycee`,
+> `prof-physique-lycee`, `prof-svt-lycee`, `prof-francais-lycee`, `prof-anglais-lycee`,
+> `prof-arabe-lycee`, `prof-philo-lycee`, `prof-histoire-geo-lycee`, `prof-eco-gestion-lycee`,
+> `prof-info-lycee` (they also own the `NN-annales-bac` d4 tier on `bac-*` grades). Each is a
+> subject-specialist author that layers a per-grade chapter map +
+> trap taxonomy (+ age calibration for primary/collège, exam calibration for lycée) on top of
 > `content-engine/references/expert-exercises.md`, while still obeying every fidelity rule below.
 > For **interactive/innovative mission formats** (cloze, appariement, remise en ordre, QCM visuel,
 > histoire-problème, sprint — same fidelity rules, richer interaction), see the `content-interactif`
@@ -114,7 +119,21 @@ subject+grade):
   `9eme-base` → `ar`.
 - **Secondary (1ère sec–Bac):** scientific & technical subjects (mathématiques, sciences physiques,
   SVT, informatique) switch to **French** (`fr`); humanities (arabe, histoire-géo, philosophie,
-  éducation islamique) stay **Arabic** (`ar`); language subjects in their own language.
+  éducation islamique) stay **Arabic** (`ar`); économie/gestion `ar` _(à confirmer)_; language
+  subjects in their own language.
+
+**Lycée — the ar→fr switch is a didactic event, not just a config value.** The switched subjects
+(math, physique, SVT, informatique) were learned **in Arabic through 9ème**; at 1ère sec this skill
+owes every chapter the **transition bridge** (`docs/lycee-architecture.md` §4): a «lexique de
+transition» block opening `cours.md` (8–15 terms, `terme français = المصطلح العربي`), Arabic glosses
+in parentheses at first use of a new French term in the course and in difficulty-1 missions (and at
+most one lexicon question in the quiz), plus a `NN-pont-linguistique` d1 mission authored via
+`content-interactif`. Degressive: 2ème sec = gloss genuinely new terms only; 3ème/bac = none (exam
+conditions). Outside the bridge, a `fr` subject stays pure French (no code-switching in
+stems/options). Notation was already standard LTR in the Arabic years (`math-and-notation.md`), so
+digits/equations/units carry over unchanged — say so in the 1ère-sec course intro, it is the
+student's anchor. Lycée grade/section slugs and subject-id conventions: `docs/lycee-architecture.md`
+§2 (sections are grade nodes; subject id = `<matière>-<gradeSlug>` verbatim).
 
 **Math/science in Arabic stays standard.** When the medium of instruction is Arabic (math, physique,
 SVT in basic education), the **digits, equations, formulas, and units remain in standard
