@@ -28,11 +28,16 @@ This skill only adds the school-specific rules.
 > (dedicated per matière×niveau): `prof-math-9eme`, `prof-physique-9eme`, `prof-svt-9eme`,
 > `prof-francais-9eme`, `prof-arabe-9eme`, `prof-anglais-9eme`, `prof-math-6eme`. **Primary cycle**
 > (grade-aware, multi-level, one per subject): `prof-math-primaire` (1ère→5ème), `prof-arabe-primaire`
-> (1ère→5ème), `prof-eveil-primaire` (1ère→6ème), `prof-islamique-primaire` (1ère→4ème). Each is a
-> subject-specialist author that layers a per-grade chapter map + trap taxonomy (+ age calibration for
-> primary) on top of `content-engine/references/expert-exercises.md`, while still obeying every fidelity
-> rule below. This skill remains the base for new chapters, courses, quizzes, and the free d1–2
-> progression.
+> (1ère→5ème), `prof-eveil-primaire` (1ère→6ème), `prof-islamique-primaire` (1ère→4ème). **Collège
+> cycle** (grade-aware, 7ème–8ème; 9ème keeps its dedicated professors): `prof-math-college`,
+> `prof-physique-college`, `prof-svt-college`, `prof-arabe-college`, `prof-francais-college`,
+> `prof-anglais-college`. Each is a subject-specialist author that layers a per-grade chapter map +
+> trap taxonomy (+ age calibration for primary/collège) on top of
+> `content-engine/references/expert-exercises.md`, while still obeying every fidelity rule below.
+> For **interactive/innovative mission formats** (cloze, appariement, remise en ordre, QCM visuel,
+> histoire-problème, sprint — same fidelity rules, richer interaction), see the `content-interactif`
+> skill and `content-engine/references/interactive-formats.md`. This skill remains the base for new
+> chapters, courses, quizzes, and the free d1–2 progression.
 
 ## Official-program sources — precedence (consume the transcription; CNP = source of truth)
 

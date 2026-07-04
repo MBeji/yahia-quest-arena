@@ -1,16 +1,24 @@
 # Generation pipeline — one map for every content skill
 
 This is the **single, canonical map** of how exercise/content generation works in this repo: which
-skill to use for which task (base skills vs professor skills), and the **reproducible, cumulative,
-non-redundant** workflow for enriching `content/` over time. Every content skill (old and new)
+skill to use for which task (planning vs base vs professor skills), and the **reproducible,
+cumulative, non-redundant** workflow for enriching `content/` over time. Every content skill (old and new)
 follows it. When this file disagrees with a wrapper skill, this file wins — fix the wrapper.
 
 Read this **before** starting any content-generation task. It sits above `content-engine/SKILL.md`
 (the shared authoring core) and the per-program wrappers.
 
-## The two layers (how the skills fit together — no overlap)
+## The three layers (how the skills fit together — no overlap)
 
-Content generation is **two layers**, not competing tracks:
+Content generation is **a planning layer + two authoring layers**, not competing tracks:
+
+0. **Planning layer — decide what to build.** `curriculum-architect` audits coverage (all 13
+   grades × official subjects + non-school themes, live recompute), defines pedagogical objectives
+   and chapter progression for a grade×subject, and produces a prioritized, dependency-aware
+   backlog (which skill executes what, in which order — CNP transcription → base → professor →
+   interactive → audit). It **plans only** — it never writes `content/` files. Its
+   `references/programme-map.md` is the official grade×subject matrix. Use it before any
+   multi-chapter campaign; skip it for a single well-scoped request.
 
 1. **Base layer — build & complete a chapter.** Creates/edits the whole unit: `subject.json`,
    `cours.md`, `resume.md`, `quiz.json`, and the **free core ladder** (difficulty 1–2, plus the
@@ -22,6 +30,12 @@ Content generation is **two layers**, not competing tracks:
      `content-culture-generale`, `content-muscle-cerveau`, `content-iq-training`,
      `content-langue-anglais` / `content-langue-francais` / `content-langue-arabe`.
    - `content-cours` — course/summary text only (`cours.md`/`resume.md`), in place.
+   - `content-interactif` — **interactive/innovative missions** beyond the classic QCM (cloze,
+     chasse à l'erreur, appariement, remise en ordre, QCM visuel SVG, lecture de document,
+     histoire-problème, vrai/faux motivé, sprint chrono), encoded in the current QCM engine —
+     format catalogue: `references/interactive-formats.md` (Tier A). Native input types (numeric,
+     drag-&-drop) are **Tier B** — spec'd in `docs/interactive-question-types.md`, not authorable
+     until shipped.
    - `content-audit` — reviews **existing** content (re-solves, grades); fixes only on request.
 
 2. **Professor overlay — raise the ceiling.** Adds **harder** exercises (difficulty 3–4, boss/défi)
@@ -34,25 +48,48 @@ Content generation is **two layers**, not competing tracks:
    - Primary cycle (grade-aware, multi-level): `prof-math-primaire` (1ère→5ème),
      `prof-arabe-primaire` (1ère→5ème), `prof-eveil-primaire` (1ère→6ème),
      `prof-islamique-primaire` (1ère→4ème).
+   - Collège cycle (grade-aware, 7ème–8ème; 9ème keeps its dedicated professors):
+     `prof-math-college`, `prof-physique-college`, `prof-svt-college`, `prof-arabe-college`,
+     `prof-francais-college`, `prof-anglais-college`. ⚠ 8ème's base is still empty
+     (scaffold only, CNP transcription pending) — a professor only overlays **existing** chapters,
+     so 8ème work waits on the base layer.
 
 The overlay **never** replaces the base: professors only **add** top-tier files to a chapter that
 already exists; they never rewrite the course/quiz or convert a free d1–2 mission to premium d3–4.
 
 ## Skill selection map (task → skill)
 
-| You want to…                                                           | Use…                                                        |
-| ---------------------------------------------------------------------- | ----------------------------------------------------------- |
-| Create a **new chapter** (course + quiz + base ladder), school program | `content-ecole-tn`                                          |
-| Create a new chapter for a non-school theme                            | the matching `content-*` wrapper (culture/iq/langue/muscle) |
-| Write/rewrite **only the course or summary**                           | `content-cours`                                             |
-| Write/rewrite **only the quiz** or add **free d1–2** practice          | the program wrapper (or `content-engine` base)              |
-| Add **hard/elite d3–4** exercises for a school matière × niveau        | the matching **`prof-*`** skill                             |
-| **Audit / fix** existing content (wrong keys, weak distractors, …)     | `content-audit`                                             |
-| Understand schema / quality bar / rewards / notation                   | `content-engine` `references/*`                             |
+| You want to…                                                                                   | Use…                                                        |
+| ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| **Plan coverage / roadmap / objectives & progression** (what's missing, what next)             | `curriculum-architect`                                      |
+| Create a **new chapter** (course + quiz + base ladder), school program                         | `content-ecole-tn`                                          |
+| Create a new chapter for a non-school theme                                                    | the matching `content-*` wrapper (culture/iq/langue/muscle) |
+| Write/rewrite **only the course or summary**                                                   | `content-cours`                                             |
+| Write/rewrite **only the quiz** or add **free d1–2** practice                                  | the program wrapper (or `content-engine` base)              |
+| Add **interactive/innovative missions** (cloze, appariement, ordre, visuel, histoire, sprint…) | `content-interactif`                                        |
+| Add **hard/elite d3–4** exercises for a school matière × niveau                                | the matching **`prof-*`** skill                             |
+| **Audit / fix** existing content (wrong keys, weak distractors, …)                             | `content-audit`                                             |
+| Understand schema / quality bar / rewards / notation                                           | `content-engine` `references/*`                             |
 
 If a request is "make harder exercises for <school subject> <grade>", prefer the `prof-*` skill; if
 it's "add a chapter / write the lesson / fix content", use the base/program skill. When in doubt, the
 base skill (`content-ecole-tn`) is the safe default and will point you to the professor for hard tiers.
+
+## Agent roles → skills (the assembly line, mapped)
+
+The pipeline is a virtual editorial team; each classic role maps to a skill or a deliberate
+mechanism — don't invent a parallel agent where a station already exists:
+
+| Role                  | Where it lives                                                                                                                                                                                                                |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Curriculum designer   | `curriculum-architect` (objectives, progression, coverage backlog)                                                                                                                                                            |
+| Content writer        | `content-cours` (+ the program wrappers for full chapters)                                                                                                                                                                    |
+| Exercise designer     | program wrappers (base ladder) · `content-interactif` (formats) · `content-iq-training` (visual reasoning)                                                                                                                    |
+| Subject professor     | `prof-*` overlay (hard d3–4, per matière × niveau/cycle)                                                                                                                                                                      |
+| Question reviewer     | `content-audit` (re-solve, ambiguity/duplicate hunt) + `content:qa:strict` (structural) + `content-audit.yml` (scheduled correctness net)                                                                                     |
+| Translator            | **by design, none**: non-school themes = three sibling subjects authored **natively** per language (never translated); school content is **monolingual** in the official language of instruction (`themes-and-trilingual.md`) |
+| Difficulty calibrator | **encoded rules, not an agent**: canonical reward/difficulty table (`rewards-and-modes.md`) + d3/d4 calibration (`expert-exercises.md`); skills apply them, `content:qa` checks them                                          |
+| SQL/JSON exporter     | **deterministic script, never an LLM**: `scripts/content/build.ts` (Zod-validated files → idempotent UUIDv5 migrations) — hand-written SQL is forbidden                                                                       |
 
 ## Cumulative & non-redundant — the rules that keep enrichment clean over time
 

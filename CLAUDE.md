@@ -159,9 +159,14 @@ Full spec: [`content/README.md`](./content/README.md) (in French).
 **Generating content — use the skills.** Content authoring is industrialized via a suite of
 Claude Code skills under [`.claude/skills/`](./.claude/skills/). **Start at the pipeline map**
 ([`content-engine/references/generation-pipeline.md`](./.claude/skills/content-engine/references/generation-pipeline.md)):
-it harmonizes the whole system into **two layers** — base skills that build & complete a chapter
-(`content-engine` + program wrappers + `content-cours`/`content-audit`) and the professor overlay
-(`prof-*`) that raises the ceiling with hard d3–4 exercises — with a task→skill selection matrix, the
+it harmonizes the whole system into **a planning layer + two authoring layers** —
+`curriculum-architect` (coverage audit across the 13 grades × official subjects, pedagogical
+objectives & progression, prioritized dependency-aware backlog; **plans only**, never authors; its
+`references/programme-map.md` is the official grade×subject matrix), base skills that build &
+complete a chapter (`content-engine` + program wrappers + `content-cours`/`content-interactif`/
+`content-audit`) and the professor overlay (`prof-*`) that raises the ceiling with hard d3–4
+exercises — with a task→skill selection matrix, an agent-roles→skills matrix (translator/
+calibrator/exporter are by-design mechanisms, not agents), the
 cumulative/non-redundant rules, and the reproducible build→migration procedure (incl. the
 `content:build --subject <id>` rule — bare `content:build` regenerates all ~60 subjects and must never
 be committed). `content-engine` is the shared core
@@ -172,7 +177,13 @@ be committed). `content-engine` is the shared core
 figures), and `content-langue-{anglais,francais,arabe}` (immersion, one per language).
 `content-cours` specializes in lesson texts (writes/rewrites `cours.md`/`resume.md` against the
 course-quality bar: clarté, compréhension, exhaustivité — every tested notion must be taught —
-expérience pédagogique). `content-audit` is the review counterpart: it audits **existing** content
+expérience pédagogique). `content-interactif` authors **interactive/innovative missions** beyond
+the classic QCM — texte à trous, chasse à l'erreur, appariement, remise en ordre, QCM visuel SVG,
+lecture de document, histoire-problème séquentielle, vrai/faux motivé, sprint chrono — all encoded
+inside the current QCM engine (catalogue + renderer contract:
+`content-engine/references/interactive-formats.md`); **native** input types (numeric entry,
+drag-&-drop, multi-select) are a spec'd engine evolution (`docs/interactive-question-types.md`) and
+not authorable until shipped. `content-audit` is the review counterpart: it audits **existing** content
 (re-solves every question, checks keys/distractors/notation/calibration, and grades courses/summaries
 against the same course-quality bar) and produces a severity-ranked report. For **hard/elite**
 content, a suite of **specialized "professor" skills** (`.claude/skills/prof-*`) — one per
@@ -184,7 +195,10 @@ and `prof-math-6eme`. The **primary cycle** (1ère→5ème) is covered by grade-
 professors — one per subject, each with a per-grade chapter map and age calibration:
 `prof-math-primaire` (1ère→5ème), `prof-arabe-primaire` (1ère→5ème), `prof-eveil-primaire`
 (الإيقاظ العلمي, 1ère→6ème), and `prof-islamique-primaire` (1ère→4ème, Quran text in **رواية قالون**
-only — Tunisia's official reading). Each carries its
+only — Tunisia's official reading). The **collège cycle** (7ème–8ème; 9ème keeps its dedicated
+professors) is covered the same grade-aware way: `prof-math-college`, `prof-physique-college`,
+`prof-svt-college`, `prof-arabe-college`, `prof-francais-college`, `prof-anglais-college` (8ème's
+base content is still empty — a professor only overlays existing chapters). Each carries its
 subject's chapter map and misconception/trap taxonomy; all defer to `content-engine`'s shared
 `references/expert-exercises.md` (hard-item archetypes, executed-error distractors, double-solve
 verification) and to `content-ecole-tn` for program fidelity. Skills produce
@@ -268,11 +282,14 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
   `docs/environment-variables.md`, `docs/logging-standard.md`, `docs/xss-rendering-policy.md`,
   `docs/release-tagging-policy.md`, `docs/dependency-maintenance.md`,
   `docs/ci-cd-and-branch-protection.md`, `docs/passation.md` (the end-of-dev →
-  production walkthrough), and `docs/content-generation-pipeline.md` (narrated, diagrammed
+  production walkthrough), `docs/content-generation-pipeline.md` (narrated, diagrammed
   walkthrough of the content workflows/pipeline — skills, gates, UUIDv5 idempotency, prod
   auto-apply — a companion to this file, `content/README.md`, and the skills' own
-  `generation-pipeline.md`). These defer to CLAUDE.md / ARCHITECTURE.md for anything
-  that overlaps.
+  `generation-pipeline.md`), and `docs/interactive-question-types.md` (design spec for
+  native interactive question types — numeric/ordering/matching/multi-select: data model,
+  the five type-aware scoring RPCs, UI/pipeline touchpoints, phased rollout; the QCM-encodable
+  interactive formats live in `content-engine/references/interactive-formats.md`). These defer
+  to CLAUDE.md / ARCHITECTURE.md for anything that overlaps.
 
 ## Working mode — Definition of Done
 

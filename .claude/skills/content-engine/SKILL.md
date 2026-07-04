@@ -20,12 +20,14 @@ business value: the breadth and quality of the quizzes/exercises is what differe
 portal. Treat every chapter you author as a flagship example, not filler.
 
 > **Start at the pipeline map.** `references/generation-pipeline.md` is the single map of the whole
-> generation system: the **two layers** — base skills (this core + the program wrappers
+> generation system: the **three layers** — the planning layer (`curriculum-architect`: coverage,
+> objectives, prioritized backlog), the base skills (this core + the program wrappers
 > `content-ecole-tn`, `content-culture-generale`, `content-muscle-cerveau`, `content-iq-training`,
-> `content-langue-*`, plus `content-cours`/`content-audit`) that **build & complete** a chapter, and
-> the **professor overlay** (`prof-*`) that **raises the ceiling** with hard d3–4 exercises for a
-> given matière × niveau — the skill-selection map (task → skill), the cumulative/non-redundant rules,
-> and the reproducible build→migration procedure. Read it first; it prevents overlap and duplicate work.
+> `content-langue-*`, plus `content-cours`/`content-interactif`/`content-audit`) that **build &
+> complete** a chapter, and the **professor overlay** (`prof-*`) that **raises the ceiling** with
+> hard d3–4 exercises for a given matière × niveau — the skill-selection map (task → skill), the
+> roles→skills matrix, the cumulative/non-redundant rules, and the reproducible build→migration
+> procedure. Read it first; it prevents overlap and duplicate work.
 
 ## How the pipeline works (the why behind the rules)
 
@@ -145,6 +147,11 @@ Whatever the slice, the same gates apply: quality bar → self-verification → 
   `quiz` slug. **Read before writing any file.**
 - `references/expert-exercises.md` — the professor-grade bar for hard **d3–4** exercises (archetypes,
   executed-error distractors, double-solve verification); the `prof-*` skills build on it.
+- `references/interactive-formats.md` — the **interactive/innovative format catalogue** (cloze,
+  chasse à l'erreur, appariement, remise en ordre, QCM visuel SVG, document, histoire-problème,
+  vrai/faux motivé, sprint chrono) encodable in today's QCM engine, plus the renderer contract and
+  anti-patterns; the `content-interactif` skill instantiates it. Native input types are Tier B —
+  spec in `docs/interactive-question-types.md`, not authorable yet.
 - `references/quality-bar.md` — the QA gates (Zod hard-fails + `content:qa` heuristics), the
   pedagogical bar, question craft, and the self-verification protocol. Read before writing questions.
 - `references/math-and-notation.md` — **hard rule**: Western digits + standard LTR equations/units
