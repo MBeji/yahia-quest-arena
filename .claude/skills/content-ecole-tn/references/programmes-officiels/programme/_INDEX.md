@@ -122,3 +122,9 @@
 **Total : 57 guides à transcrire · 0 mergés · 1 pilote transcrit (éveil 1ère-base, en validation).**
 
 > **Légende statut** : `[ ]` à faire · `[x]` transcrit, en audit/validation · `[x]` transcrit + audité + mergé.
+
+## bac-math (secondaire — pilote lycée)
+
+| ☐   | matière | code guide                       | fichier cible                         | titre                                                                                        |
+| --- | ------- | -------------------------------- | ------------------------------------- | -------------------------------------------------------------------------------------------- |
+| [ ] | maths   | _(corpus secondaire à intégrer)_ | `programme/bac-math/mathematiques.md` | 🚧 **transcription pilote 2026-07-05** (hors corpus — à valider contre les textes officiels) |

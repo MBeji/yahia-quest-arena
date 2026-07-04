@@ -1,0 +1,229 @@
+# Étude 05 — Duels temps réel & ligues
+
+> **Statut** : brouillon
+> **Priorité** : 05 · **Valeur** : rétention/engagement — compétition directe entre élèves, boucle sociale au-dessus du contenu existant · **Complexité** : très haute
+> **Architecte** : Fable (claude-fable-5), 2026-07-04 · **Exécuteur cible** : Sonnet (ou équiv.)
+> **Dépend de** : Étude 01 (revenus d'abord), infra Supabase Realtime activée sur le projet · **Bloque** : —
+> **Docs normatifs liés** : CLAUDE.md, ARCHITECTURE.md, `docs/logging-standard.md`, `docs/environment-variables.md`
+
+## 1. Contexte & objectif produit
+
+Aujourd'hui la compétition est **passive** : leaderboard global/par matière (`getLeaderboard`,
+`get_global_leaderboard`) et Dungeon solo chronométré. Aucune interaction directe élève↔élève.
+Le duel 1v1 crée une boucle d'engagement courte (« défie un pair sur les mêmes questions ») qui
+réutilise 100 % du contenu existant (`exercises`/`questions` du parcours actif) et le patron de
+scoring server-side du Dungeon (`submit_dungeon_answer`).
+
+- **Résultat attendu (v1)** : un élève entre en file, est apparié à un pair du **même parcours**,
+  les deux répondent au **même set figé** de questions ; le score est calculé serveur ; le
+  résultat tombe même si l'adversaire joue plus tard (asynchrone-tolérant).
+- **KPI** : % de DAU lançant ≥ 1 duel ; duels terminés / duels créés (> 70 %) ; rétention J7 des
+  duellistes vs non-duellistes ; temps médian d'appariement.
+- **Ce que l'epic NE fait PAS** : pas de serveur de jeu dédié, pas de WebRTC, pas de chat, pas de
+  mode spectateur, pas de tournois. Les **ligues** sont un lot v2 séparé (lot 5), dernier.
+
+## 2. Spécification fonctionnelle
+
+### Acteurs & parcours (élève uniquement ; parent/admin hors périmètre)
+
+- **US-1** : en tant qu'élève, je rejoins une file d'attente depuis `/duel` et je vois un état
+  « recherche d'adversaire… » (annulable).
+- **US-2** : apparié, je joue un set de N questions (même set que l'adversaire), une par une,
+  avec le même écran de réponse que le Dungeon (options mélangées, pas de clé côté client).
+- **US-3** : je vois l'avancement de l'adversaire en temps réel (« a répondu à Q3 ») quand il est
+  en ligne — jamais ses réponses ni son score en cours.
+- **US-4** : si l'adversaire est hors-ligne, je termine quand même ; le duel reste `active`
+  jusqu'à ce qu'il joue ou que `expires_at` passe ; je suis notifié du résultat final.
+- **US-5** : à la fin (les deux ont fini, ou expiration), je vois le récapitulatif : scores,
+  vainqueur, corrigés (review) — **jamais avant** que le duel soit `finished`/`expired`.
+- **US-6** : je gagne XP/coins selon le résultat, dans la limite anti-farm quotidienne.
+- **US-7 (v2, lot 5)** : je vois ma ligue hebdomadaire (tranche de classement) et je reçois la
+  récompense de fin de semaine par notification.
+
+Écrans (mobile-first, RTL) : `/duel` (hub : file + duels en cours + historique), `/duel/$duelId`
+(jeu), récap final. États vides (« aucun duel »), chargement, erreur (retry), file annulable.
+
+### Règles métier
+
+- **R-1** : appariement uniquement entre deux élèves du **même parcours** (`duel_queue.parcours_id`).
+- **R-2** : le set de questions est **figé au matchmaking** (`duels.question_ids uuid[]`) — mêmes
+  questions, même ordre, pour les deux joueurs ; tirées d'exercices du parcours du duel.
+- **R-3** : tout scoring passe par le RPC `submit_duel_answer` (patron `submit_dungeon_answer`) ;
+  la clé de réponse n'est **jamais** transmise au client avant la fin du duel (R-6).
+- **R-4** : Realtime = présence + notification d'avancement **uniquement** ; aucun payload de
+  réponse, de score ou de clé ne transite par broadcast.
+- **R-5** : anti-triche timing : timestamp serveur par réponse dans `duel_participants` ; une
+  réponse < `MIN_SECONDS_PER_QUESTION` (constante existante, 4 s) est marquée `too_fast` et
+  comptée fausse pour le score.
+- **R-6** : le review (clé + explication) n'est visible qu'une fois `duels.status ∈ {finished, expired}`.
+- **R-7** : anti-farm : au plus `DUEL_MAX_REWARDED_PER_DAY` duels **récompensés** par jour
+  (constante à ajouter dans `src/shared/constants/gamification.ts`) ; au-delà, le duel se joue
+  mais rapporte 0 XP/0 coins.
+- **R-8** : le perdant **ne perd jamais** d'XP ; il reçoit une récompense de participation réduite.
+- **R-9** : un duel non terminé à `expires_at` (défaut 24 h) passe `expired` : le joueur ayant
+  fini est vainqueur par forfait ; si aucun n'a fini, aucun vainqueur, aucune récompense.
+- **R-10** : au plus 1 entrée en file et `DUEL_MAX_ACTIVE` duels actifs simultanés par élève.
+- **R-11** : quitter mid-duel ne supprime rien : le duel reste `active` jusqu'à reprise ou expiry.
+- **R-12** : Realtime indisponible → dégradation en asynchrone pur (polling TanstackQuery sur
+  `get_duel_state`, résultat notifié) ; aucune fonctionnalité bloquée.
+
+### i18n / Hors périmètre (v1)
+
+- Clés FR/EN/AR dans `@/lib/i18n` (`duel.*`) ; écrans RTL (l'arène affiche les deux avatars —
+  vérifier le miroir des barres de progression en RTL).
+- Hors périmètre v1 : ligues (lot 5), défis à un ami précis par lien, revanche automatique,
+  matchmaking cross-grade (Q-2), classement de duels dédié.
+
+## 3. Architecture technique (décisions fermées)
+
+### Modèle de données (migration additive + pgTAP ; grants EXPLICITES — gotcha CLAUDE.md)
+
+```sql
+CREATE TABLE public.duel_queue (
+  user_id     UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  parcours_id TEXT NOT NULL REFERENCES public.parcours(id) ON DELETE CASCADE,
+  grade_id    UUID REFERENCES public.grades(id),
+  enqueued_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE TABLE public.duels (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  parcours_id     TEXT NOT NULL REFERENCES public.parcours(id),
+  exercise_source TEXT NOT NULL DEFAULT 'parcours_pool',
+  question_ids    UUID[] NOT NULL,          -- set figé au matchmaking (R-2)
+  status          TEXT NOT NULL DEFAULT 'pending'
+                  CHECK (status IN ('pending','active','finished','expired')),
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+  expires_at      TIMESTAMPTZ NOT NULL
+);
+CREATE TABLE public.duel_participants (
+  duel_id               UUID NOT NULL REFERENCES public.duels(id) ON DELETE CASCADE,
+  user_id               UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  score                 INT NOT NULL DEFAULT 0,
+  finished_at           TIMESTAMPTZ,
+  answers_submitted_at  TIMESTAMPTZ[] NOT NULL DEFAULT '{}',  -- 1 ts serveur/question (R-5)
+  PRIMARY KEY (duel_id, user_id)
+);
+```
+
+RLS : `duel_queue` owner-only (SELECT/INSERT/DELETE `user_id = auth.uid()`, jamais d'UPDATE) ;
+`duels` et `duel_participants` : SELECT réservé aux participants (`EXISTS` sur
+`duel_participants`), **aucun write client** (`REVOKE INSERT, UPDATE, DELETE … FROM authenticated, anon;`
+`REVOKE ALL … FROM anon;` + `GRANT SELECT … TO authenticated;` — patron exact de
+`20260608120000_parcours_entity.sql`). Index : `duel_queue(parcours_id, enqueued_at)`,
+`duels(status, expires_at)`, `duel_participants(user_id)`.
+
+### Server (RPCs SQL + server fns)
+
+- `match_duel()` — SECURITY DEFINER, `search_path = public`. Insère l'appelant en file (upsert),
+  puis apparie **atomiquement** les 2 plus anciens compatibles (même `parcours_id`) via
+  `SELECT … FROM duel_queue WHERE parcours_id = … ORDER BY enqueued_at LIMIT 2 FOR UPDATE SKIP LOCKED`;
+  si 2 lignes : crée `duels` (tirage `question_ids` dans le pool du parcours) + 2
+  `duel_participants`, supprime les 2 lignes de file, retourne le `duel_id` (sinon NULL = en attente).
+- `submit_duel_answer(p_duel, p_question, p_choice)` — SECURITY DEFINER, calqué sur
+  `submit_dungeon_answer` : vérifie participant + statut `active` + question ∈ set + non déjà
+  répondue ; horodate (`answers_submitted_at`), applique R-5, incrémente `score` ; ne retourne
+  **ni** `correctChoice` **ni** `explanation` tant que le duel n'est pas fini (R-6, diff. Dungeon).
+- `finalize_duel(p_duel)` — appelé au dernier submit des deux joueurs OU par le cron d'expiry :
+  passe `finished`/`expired`, calcule le vainqueur, crédite via `award_duel_rewards` (variante
+  contrôlée d'`award_xp` : plafond R-7, plancher R-8) — REVOKE anon/authenticated sur celle-ci.
+- `get_duel_state(p_duel)` — participant-only : statut, index courant, avancement adverse
+  (compteur seul), et le review complet uniquement si fini.
+- Server fns dans `src/features/duel/duel.server.ts` (patron `dungeon.server.ts`) :
+  `joinDuelQueue`, `leaveDuelQueue`, `getDuelState`, `submitDuelAnswer`, `getDuelHistory` —
+  toutes `createServerFn` + `requireSupabaseAuth` + zod (`.inputValidator`) + `isRateLimited`
+  - `failWithClientError`.
+
+### Client / Realtime / Observabilité
+
+- `src/features/duel/` : `index.ts` (barrel), `duel.server.ts`, `components/` (`DuelArena`,
+  `DuelQueueCard`, `DuelRecap`, `OpponentProgress`), `__tests__/`. Routes
+  `routes/_authenticated/duel/index.tsx` et `duel/$duelId.tsx` (thin). **Jamais** d'import d'une
+  autre feature — partages via `src/shared/` (constantes → `gamification.ts`).
+- Realtime : canal privé `duel:{duelId}` — **presence** (adversaire en ligne) + **broadcast**
+  `{ type: "progress", answeredCount }` émis par le client _après_ ACK du RPC. Hook
+  `useDuelChannel` avec fallback polling `get_duel_state` (5 s) si le canal ne s'établit pas (R-12).
+- Expiry : job cron du patron `notifications.cron.server.ts` (feature `notifications` existante)
+  balaie `duels WHERE status='active' AND expires_at < now()` → `finalize_duel` + notification.
+- Logs structurés via `@/shared/lib/logger` : `duel.matched`, `duel.finished`, `duel.expired`,
+  `duel.realtime_fallback` (mesure du taux de dégradation).
+
+### Décisions d'architecture (ADR)
+
+- **D-1** : Supabase Realtime (broadcast + presence), **pas** de serveur de jeu dédié — coût nul,
+  déjà dans la stack (`wss://*.supabase.co` déjà en CSP `connect-src`) ; rejeté : serveur WS
+  dédié (infra + ops disproportionnés pour un 1v1 tour par tour).
+- **D-2** : matchmaking en SQL (`FOR UPDATE SKIP LOCKED`) — atomicité sans coordinateur ;
+  rejeté : matchmaking applicatif (courses entre instances serverless Vercel).
+- **D-3** : duel asynchrone-tolérant (expiry 24 h) — un élève tunisien à connectivité
+  intermittente peut toujours finir ; rejeté : duel strictement synchrone (taux d'abandon rédhibitoire).
+- **D-4** : scoring 100 % RPC, Realtime jamais dans le chemin de confiance — invariant
+  « clé jamais côté client » (identique Dungeon) ; rejeté : score déclaré par le client.
+- **D-5** : récompenses par variante contrôlée (`award_duel_rewards`), pas d'appel direct à
+  `award_xp` depuis le client-path — plafond quotidien centralisé dans `gamification.ts`.
+- **D-6** : ligues = agrégation hebdomadaire _au-dessus_ des duels (vue matérialisée ou requête
+  agrégée duels de la semaine + XP), récompenses via le cron notifications existant — aucun
+  nouveau canal ; rejeté : table de ligue temps réel mise à jour à chaque duel.
+
+## 4. Plan d'exécution en lots
+
+| lot | contenu (résumé)                                       | fichiers/objets créés                                                     | tests exigés                       | dépend de        |
+| --- | ------------------------------------------------------ | ------------------------------------------------------------------------- | ---------------------------------- | ---------------- |
+| 1   | Migration tables + RLS + grants + index                | `supabase/migrations/…_duels.sql`                                         | pgTAP (RLS, grants, contraintes)   | —                |
+| 2   | RPCs matchmaking + scoring + finalize + expiry cron    | `match_duel`, `submit_duel_answer`, `finalize_duel`, `get_duel_state`     | pgTAP (atomicité, R-1…R-9)         | 1                |
+| 3   | Feature + UI duel en **polling** (sans Realtime)       | `src/features/duel/*`, routes `/duel`, `/duel/$duelId`, i18n `duel.*`     | Vitest co-localisés (US-1…6, R-x)  | 2                |
+| 4   | Realtime presence + progression + fallback             | `useDuelChannel`, `OpponentProgress` branché                              | Vitest (fallback R-12), e2e authed | 3                |
+| 5   | **Ligues v2** : agrégat hebdo + tranches + récompenses | vue/requête ligue, RPC lecture, cron récompenses, UI `/duel` onglet ligue | pgTAP + Vitest                     | 3 (4 non requis) |
+
+- [ ] Lot 1 — migration `duel_queue`/`duels`/`duel_participants` (+ pgTAP). **Stop-point** : aucun RPC.
+- [ ] Lot 2 — RPCs + constantes `DUEL_*` dans `gamification.ts` + balayage expiry. **Stop-point** : aucune UI.
+- [ ] Lot 3 — feature `duel/` complète en polling, utile seule (R-12 est le mode nominal ici). **Stop-point** : pas de Realtime.
+- [ ] Lot 4 — canal `duel:{duelId}`, presence, broadcast progression, fallback prouvé. **Stop-point** : pas de ligues.
+- [ ] Lot 5 — ligues hebdomadaires (après arbitrage Q-3/Q-4). **Stop-point** : rien au-delà (saisons, tournois).
+
+Chaque lot = une PR, gate verte (`npm run verify`), migration **avant** le code qui la lit (DoD §7).
+
+## 5. Stratégie de test
+
+- **pgTAP** (lots 1–2, 5) : RLS (non-participant ne lit rien ; owner-only sur la file), grants
+  explicites, atomicité de `match_duel` (deux appels concurrents ne créent qu'un duel — SKIP
+  LOCKED), R-2 (set identique), R-5 (`too_fast`), R-7/R-8 (plafond/plancher), R-9 (expiry).
+- **Vitest co-localisés** (`src/features/duel/__tests__/`) : parsing des payloads RPC (patron
+  `parseDungeonAnswerPayload`), états UI (file, arène, récap, expiré), fallback polling.
+- **Playwright e2e** (projet TEST uniquement) : duel complet entre les deux users seedés
+  (`scripts/e2e/seed-test-users.mjs`), review masqué avant la fin.
+- **smoke:shell** : inchangé mais obligatoire au vert — le client Realtime entre dans le bundle
+  prod (chunk vendor : attention au `manualChunks` hand-tuné, re-run `build:check`).
+- Non-régression : suites Dungeon/quest/dashboard existantes intactes ; aucune modification
+  d'`award_xp` ni de `submit_exercise_attempt`.
+
+## 6. Risques & mitigations
+
+- **RISK-1** — Charge/quotas Realtime (connexions simultanées, plan Supabase). _Prob. moyenne,
+  impact moyen._ Mitigation : 1 canal par duel actif seulement, fermé au récap ; fallback polling
+  natif (R-12) ; métrique `duel.realtime_fallback` pour dimensionner avant d'ouvrir large.
+- **RISK-2** — Abandon mid-duel → duels zombies. _Prob. haute, impact faible._ Mitigation :
+  `expires_at` + cron d'expiry (R-9, R-11) ; forfait déterministe ; historique purgeable.
+- **RISK-3** — Triche (réponses instantanées, multi-comptes, set fuité). _Prob. moyenne, impact
+  moyen._ Mitigation : timestamps serveur + `MIN_SECONDS_PER_QUESTION` (R-5), set figé serveur
+  (R-2), clé jamais côté client (R-3/R-6), plafond de récompenses (R-7), rate limiting par fn.
+- **RISK-4** — Course au matchmaking (double appariement). _Prob. faible, impact haut._
+  Mitigation : transaction unique `FOR UPDATE SKIP LOCKED` (D-2) + PK sur `duel_queue.user_id` +
+  test pgTAP de concurrence.
+- **RISK-5** — File vide (peu de joueurs au même moment sur le même parcours). _Prob. haute au
+  lancement, impact moyen._ Mitigation : mode asynchrone-tolérant (D-3) rend l'attente courte
+  acceptable ; timeout de file côté UI avec sortie propre ; Q-2 (cross-grade) en levier futur.
+
+## 7. Questions ouvertes (pour l'humain)
+
+- **Q-1** : barème exact des récompenses (XP/coins vainqueur, perdant, forfait) et valeur de
+  `DUEL_MAX_REWARDED_PER_DAY` — politique produit, à fixer avant le lot 2.
+- **Q-2** : autoriser un matchmaking **cross-grade** (même thème, grades adjacents) quand la file
+  du parcours est vide ? Impact équité — v1 propose strictement même parcours (R-1).
+- **Q-3** : ligues — durée de saison (semaine ISO ? saison scolaire ?), nombre de tranches, et
+  récompenses de fin de saison (cosmétique vs coins).
+- **Q-4** : les duels sont-ils un perk premium (comme le Dungeon : toute entitlement concours) ou
+  ouverts aux parcours FREE ? Décision d'accès à prendre avant le lot 3.
+
+## 8. Journal d'exécution
+
+_(rempli au fil des lots par l'exécuteur : date, lot, PR, écarts acceptés, dettes notées)_

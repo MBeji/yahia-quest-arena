@@ -301,6 +301,15 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
   lycée mission ladder incl. `NN-annales-bac`/`NN-pont-linguistique`, seed-migration spec and
   phased rollout). These defer
   to CLAUDE.md / ARCHITECTURE.md for anything that overlaps.
+- **Epic studies (`FableEtudes/`).** Complete functional + technical architecture dossiers for
+  upcoming epics (paiement en ligne, examen blanc, types de questions natifs, moteur adaptatif,
+  duels/ligues, PWA offline), written by the architect model and executed **lot by lot** by a
+  cheaper executor model. Start at [`FableEtudes/README.md`](./FableEtudes/README.md): roles
+  (architect decides, executor implements, human validates), study lifecycle/statuses, the
+  `_TEMPLATE.md` format, and the non-negotiable execution rules (one lot = one PR, closed scope,
+  STOP-and-escalate on any divergence, full DoD). An executor NEVER re-designs: when a study and
+  the code disagree, it stops and escalates. Studies defer to CLAUDE.md/ARCHITECTURE.md and to
+  the normative `docs/*.md` they reference.
 
 ## Working mode — Definition of Done
 
