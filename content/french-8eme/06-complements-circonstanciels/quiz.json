@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "À quelles questions répond un complément circonstanciel ?",
+      "options": [
+        { "id": "a", "text": "quand ? où ? comment ? pourquoi ?" },
+        { "id": "b", "text": "qui ? quoi ?" },
+        { "id": "c", "text": "quel ? quelle ?" },
+        { "id": "d", "text": "à qui ? à quoi ?" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le CC précise les circonstances de l'action : le temps (quand ?), le lieu (où ?), la manière (comment ?) et la cause (pourquoi ?). « Qui ? quoi ? » sert à trouver le sujet ou le COD ; « à qui ? à quoi ? » le COI.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans « Les élèves se reposent sous les palmiers. », le groupe « sous les palmiers » est un CC de :",
+      "options": [
+        { "id": "a", "text": "temps" },
+        { "id": "b", "text": "lieu" },
+        { "id": "c", "text": "manière" },
+        { "id": "d", "text": "cause" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Sous les palmiers » répond à la question où ? : c'est un CC de lieu. On peut le supprimer (Les élèves se reposent) et le déplacer (Sous les palmiers, les élèves se reposent).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quels sont les deux tests qui permettent de reconnaître un CC ?",
+      "options": [
+        { "id": "a", "text": "l'accord et la conjugaison" },
+        { "id": "b", "text": "le genre et le nombre" },
+        { "id": "c", "text": "la suppression et le déplacement" },
+        { "id": "d", "text": "la majuscule et le point" }
+      ],
+      "correctOption": "c",
+      "explanation": "Un CC a deux pouvoirs que le COD et le COI n'ont pas : il est supprimable (on peut l'enlever) et déplaçable (on peut le bouger dans la phrase).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans « Youssef photographie l'oasis. », le groupe « l'oasis » est :",
+      "options": [
+        { "id": "a", "text": "un CC de lieu" },
+        { "id": "b", "text": "un CC de manière" },
+        { "id": "c", "text": "un CC de temps" },
+        { "id": "d", "text": "un COD" }
+      ],
+      "correctOption": "d",
+      "explanation": "On ne peut ni supprimer ni déplacer « l'oasis » : ce n'est pas un CC. Photographie quoi ? l'oasis → c'est le COD. Le nom « oasis » désigne ici l'objet de l'action, pas le lieu.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase exprime une cause favorable ?",
+      "options": [
+        { "id": "a", "text": "Grâce à son courage, Malek a réussi l'épreuve." },
+        { "id": "b", "text": "À cause du retard, ils ont raté le train." },
+        { "id": "c", "text": "À cause de la chaleur, la visite fut écourtée." },
+        { "id": "d", "text": "À cause du bruit, il n'a pas dormi." }
+      ],
+      "correctOption": "a",
+      "explanation": "« Grâce à » annonce une cause favorable (qui aide) : grâce à son courage → il réussit. « À cause de » annonce une cause fâcheuse (retard, chaleur, bruit).",
+      "difficulty": 2
+    }
+  ]
+}

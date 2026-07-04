@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision (type examen) : carnet de voyage",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Complète à l'imparfait : « Chaque dimanche, mon oncle ___ (manger) avec nous à Kairouan. »",
+      "options": [
+        { "id": "a", "text": "mangeais" },
+        { "id": "b", "text": "mangeait" },
+        { "id": "c", "text": "mangait" },
+        { "id": "d", "text": "mangea" }
+      ],
+      "correctOption": "b",
+      "explanation": "À l'imparfait, « manger » garde le e devant le a pour conserver le son [j] : je mangeais, il mangeait. À la 3e personne du singulier : « mangeait » ✓. « mangait » oublie le e, « mangeais » est la 1re/2e personne et « mangea » est le passé simple. « Chaque dimanche » indique bien une habitude.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle valeur a l'imparfait dans : « Wassim lisait tranquillement pendant le voyage. » ?",
+      "options": [
+        { "id": "a", "text": "Un ordre" },
+        { "id": "b", "text": "Une action achevée et unique" },
+        { "id": "c", "text": "Une action future" },
+        { "id": "d", "text": "Une action qui dure" }
+      ],
+      "correctOption": "d",
+      "explanation": "L'imparfait exprime ici une action en cours, sans début ni fin marqués : la lecture dure pendant le voyage. Une action achevée et unique s'exprimerait au passé simple (« Wassim lut une page »).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète au passé simple : « Les touristes ___ (visiter) le ribat de Monastir. »",
+      "options": [
+        { "id": "a", "text": "visitaient" },
+        { "id": "b", "text": "visitirent" },
+        { "id": "c", "text": "visitèrent" },
+        { "id": "d", "text": "visités" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Visiter » (1er groupe) fait au passé simple, 3e personne du pluriel, -èrent : « visitèrent » ✓. « visitaient » est l'imparfait, « visités » le participe passé et « visitirent » applique à tort la série en -irent des verbes en -ir.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète au passé simple : « Le guide ___ (ouvrir) la lourde porte du musée. »",
+      "options": [
+        { "id": "a", "text": "ouvrit" },
+        { "id": "b", "text": "ouvrait" },
+        { "id": "c", "text": "ouvra" },
+        { "id": "d", "text": "ouvre" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Ouvrir » suit la série en -is : il ouvrit, ils ouvrirent. À la 3e personne du singulier : « ouvrit » ✓. « ouvrait » est l'imparfait, « ouvre » le présent et « ouvra » applique à tort la terminaison des verbes en -er.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète en respectant l'alternance : « La nuit ___ (tomber : décor) quand la caravane ___ (s'arrêter : événement soudain). »",
+      "options": [
+        { "id": "a", "text": "tomba … s'arrêtait" },
+        { "id": "b", "text": "tombait … s'arrêtait" },
+        { "id": "c", "text": "tomba … s'arrêta" },
+        { "id": "d", "text": "tombait … s'arrêta" }
+      ],
+      "correctOption": "d",
+      "explanation": "Le décor qui dure va à l'imparfait (« la nuit tombait ») et l'événement soudain de premier plan au passé simple (« la caravane s'arrêta ») ✓. Les autres combinaisons inversent les rôles des deux temps.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase raconte une action soudaine (passé simple) ?",
+      "options": [
+        { "id": "a", "text": "Tous les étés, il allait à Tabarka." },
+        { "id": "b", "text": "La maison était calme et silencieuse." },
+        { "id": "c", "text": "Tout à coup, la lampe s'éteignit." },
+        { "id": "d", "text": "Les enfants jouaient dans la cour." }
+      ],
+      "correctOption": "c",
+      "explanation": "« Tout à coup, la lampe s'éteignit » est un événement bref et soudain au passé simple ✓. Les trois autres phrases sont à l'imparfait : habitude (« il allait »), décor (« était calme ») et action qui dure (« jouaient »).",
+      "difficulty": 2
+    }
+  ]
+}

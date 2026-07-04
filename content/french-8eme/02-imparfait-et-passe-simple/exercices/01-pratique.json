@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Exercice : premiers pas dans le récit",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complète à l'imparfait : « Autrefois, Aziz ___ (finir) toujours ses devoirs avant le dîner. »",
+      "options": [
+        { "id": "a", "text": "finissait" },
+        { "id": "b", "text": "finit" },
+        { "id": "c", "text": "finisait" },
+        { "id": "d", "text": "finira" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'imparfait se forme sur le radical du « nous » au présent : nous finissons → finiss-, puis -ait à la 3e personne du singulier : « finissait ». « finit » est le passé simple, « finisait » oublie un s, et « finira » est le futur.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète au passé simple : « Ce jour-là, Nour ___ (chanter) devant toute la classe. »",
+      "options": [
+        { "id": "a", "text": "chantait" },
+        { "id": "b", "text": "chanta" },
+        { "id": "c", "text": "chantas" },
+        { "id": "d", "text": "chantera" }
+      ],
+      "correctOption": "b",
+      "explanation": "Au passé simple, un verbe du 1er groupe à la 3e personne du singulier prend -a : « il/elle chanta ». « chantait » est l'imparfait, « chantas » est la 2e personne (tu chantas) et « chantera » le futur.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle est la valeur de l'imparfait dans : « La médina de Sfax dormait sous un ciel gris. » ?",
+      "options": [
+        { "id": "a", "text": "Une description, un décor" },
+        { "id": "b", "text": "Une action soudaine et unique" },
+        { "id": "c", "text": "Un ordre" },
+        { "id": "d", "text": "Une action située dans le futur" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'imparfait plante ici le décor de l'histoire : il décrit le cadre qui dure. Une action soudaine et unique se raconterait au passé simple.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète au passé simple : « À midi, les voyageurs ___ (arriver) enfin au port de La Goulette. »",
+      "options": [
+        { "id": "a", "text": "arrivaient" },
+        { "id": "b", "text": "arrivés" },
+        { "id": "c", "text": "arrivèrent" },
+        { "id": "d", "text": "arriverent" }
+      ],
+      "correctOption": "c",
+      "explanation": "Au passé simple, un verbe du 1er groupe à la 3e personne du pluriel prend -èrent (avec accent) : « ils arrivèrent ». « arrivaient » est l'imparfait, « arrivés » est le participe passé et « arriverent » oublie l'accent obligatoire.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Laquelle de ces formes est au passé simple (et non à l'imparfait) ?",
+      "options": [
+        { "id": "a", "text": "il marchait" },
+        { "id": "b", "text": "il marcha" },
+        { "id": "c", "text": "il marchera" },
+        { "id": "d", "text": "il marche" }
+      ],
+      "correctOption": "b",
+      "explanation": "« il marcha » (-a) est le passé simple d'un verbe du 1er groupe. « il marchait » (-ait) est l'imparfait, « il marchera » le futur et « il marche » le présent. Ne confonds pas -a (passé simple) et -ait (imparfait) !",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète au passé simple : « Après une longue attente, le train ___ (partir). »",
+      "options": [
+        { "id": "a", "text": "partait" },
+        { "id": "b", "text": "partis" },
+        { "id": "c", "text": "parta" },
+        { "id": "d", "text": "partit" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Partir » se conjugue au passé simple sur la série en -is : je partis, il partit, ils partirent. À la 3e personne du singulier : « partit ». « partait » est l'imparfait, « partis » la 1re/2e personne et « parta » applique à tort la terminaison des verbes en -er.",
+      "difficulty": 2
+    }
+  ]
+}

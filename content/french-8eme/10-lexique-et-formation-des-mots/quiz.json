@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Dans la famille de mots « dent, dentiste, dentaire, dentier », quel est le radical (la partie commune) ?",
+      "options": [
+        { "id": "a", "text": "dent" },
+        { "id": "b", "text": "tiste" },
+        { "id": "c", "text": "aire" },
+        { "id": "d", "text": "dentier" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le radical est la partie commune à tous les mots de la famille et porteuse du sens : ici « dent », que l'on retrouve dans chaque mot. « tiste » et « aire » sont des fins de mots (suffixes), pas le radical.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Que signifie le préfixe « re- » dans le mot « relire » ?",
+      "options": [
+        { "id": "a", "text": "lire avant" },
+        { "id": "b", "text": "lire de nouveau" },
+        { "id": "c", "text": "mal lire" },
+        { "id": "d", "text": "ne pas lire" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le préfixe « re- » exprime la répétition : relire, c'est lire une nouvelle fois. Il ne marque ni l'antériorité, ni le contraire, ni la négation.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans le mot « chanteur », l'élément « -eur » ajouté au radical « chant- » est :",
+      "options": [
+        { "id": "a", "text": "un préfixe" },
+        { "id": "b", "text": "un autre radical" },
+        { "id": "c", "text": "un suffixe" },
+        { "id": "d", "text": "un mot simple" }
+      ],
+      "correctOption": "c",
+      "explanation": "Un suffixe se place APRÈS le radical : « -eur » suit « chant- » et désigne celui qui fait l'action (le chanteur). Un préfixe, lui, se placerait avant le radical.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans quelle phrase le mot « glacé » est-il employé au sens FIGURÉ ?",
+      "options": [
+        { "id": "a", "text": "J'ai bu un thé glacé après le sport." },
+        { "id": "b", "text": "L'eau du torrent était glacée." },
+        { "id": "c", "text": "Le vent glacé piquait les joues." },
+        { "id": "d", "text": "Il m'a lancé un regard glacé." }
+      ],
+      "correctOption": "d",
+      "explanation": "Un regard n'a pas de température : « glacé » y peint la froideur, l'hostilité — c'est le sens figuré. Dans les autres phrases, « glacé » garde son sens propre (vraiment froid).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel mot appartient au champ lexical de la FORÊT ?",
+      "options": [
+        { "id": "a", "text": "clavier" },
+        { "id": "b", "text": "feuillage" },
+        { "id": "c", "text": "autoroute" },
+        { "id": "d", "text": "cartable" }
+      ],
+      "correctOption": "b",
+      "explanation": "Un champ lexical réunit les mots liés à un même thème. « feuillage » évoque la forêt et la nature ; « clavier », « autoroute » et « cartable » appartiennent à d'autres thèmes.",
+      "difficulty": 2
+    }
+  ]
+}

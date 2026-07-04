@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Entraînement du boss ⭐⭐⭐ : maîtrise des auxiliaires",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complète au présent : « Tu ___ (appeler) ton ami tous les soirs. »",
+      "options": [
+        { "id": "a", "text": "appele" },
+        { "id": "b", "text": "appeles" },
+        { "id": "c", "text": "appelles" },
+        { "id": "d", "text": "appelle" }
+      ],
+      "correctOption": "c",
+      "explanation": "Appeler double le l devant un e muet, et « tu » ajoute -es → tu appelles. « appelle » correspond à il/elle, et « appeles » oublie le second l.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète au passé composé : « Sirine ___ (rester) à la maison tout le week-end. »",
+      "options": [
+        { "id": "a", "text": "est restée" },
+        { "id": "b", "text": "a resté" },
+        { "id": "c", "text": "est resté" },
+        { "id": "d", "text": "a restée" }
+      ],
+      "correctOption": "a",
+      "explanation": "Rester se conjugue avec être : accord avec le sujet. Sirine est une fille → féminin singulier → est restée. « a resté » se trompe d'auxiliaire.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "« Qui sème le vent récolte la tempête. » Quelle est la valeur du présent dans ce proverbe ?",
+      "options": [
+        { "id": "a", "text": "Une action en cours" },
+        { "id": "b", "text": "Une vérité générale" },
+        { "id": "c", "text": "Le présent de narration" },
+        { "id": "d", "text": "Le futur proche" }
+      ],
+      "correctOption": "b",
+      "explanation": "Un proverbe énonce une idée toujours valable : c'est la valeur de vérité générale du présent.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Combien de gâteaux as-tu ___ (préparer) pour la fête ? »",
+      "options": [
+        { "id": "a", "text": "préparé" },
+        { "id": "b", "text": "préparées" },
+        { "id": "c", "text": "préparer" },
+        { "id": "d", "text": "préparés" }
+      ],
+      "correctOption": "d",
+      "explanation": "Auxiliaire avoir : le COD « combien de gâteaux » (masculin pluriel) est placé AVANT le verbe → accord → préparés. « préparer » (infinitif) est un piège.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Les touristes ont ___ (visiter) la médina de Sousse. »",
+      "options": [
+        { "id": "a", "text": "visité" },
+        { "id": "b", "text": "visitée" },
+        { "id": "c", "text": "visités" },
+        { "id": "d", "text": "visiter" }
+      ],
+      "correctOption": "a",
+      "explanation": "Auxiliaire avoir : le COD « la médina » est placé APRÈS le verbe → aucun accord → visité. Attention à ne pas accorder avec le sujet « les touristes » (l'accord avec le sujet ne vaut que pour l'auxiliaire être).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète au passé composé : « Amine et Zied ___ (se rencontrer) au stade. »",
+      "options": [
+        { "id": "a", "text": "se sont rencontré" },
+        { "id": "b", "text": "se sont rencontrés" },
+        { "id": "c", "text": "sont rencontrés" },
+        { "id": "d", "text": "se sont rencontrer" }
+      ],
+      "correctOption": "b",
+      "explanation": "Se rencontrer est pronominal : auxiliaire être + « se », accord avec le sujet masculin pluriel → se sont rencontrés. La forme « sont rencontrés » oublie le « se », et « rencontrer » est l'infinitif.",
+      "difficulty": 3
+    }
+  ]
+}

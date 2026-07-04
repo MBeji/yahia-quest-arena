@@ -1,0 +1,85 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : le maître du dialogue",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Quelle phrase est correctement ponctuée au discours direct ?",
+      "options": [
+        { "id": "a", "text": "La guide dit : « Suivez-moi ! »" },
+        { "id": "b", "text": "La guide dit « Suivez-moi ! »." },
+        { "id": "c", "text": "La guide dit : Suivez-moi !" },
+        { "id": "d", "text": "La guide dit ; « Suivez-moi ! »" }
+      ],
+      "correctOption": "a",
+      "explanation": "Deux-points pour annoncer, guillemets pour encadrer, majuscule et point d'exclamation à l'intérieur : « Suivez-moi ! ». En (b) le point final est en trop, (c) oublie les guillemets, (d) met un point-virgule à la place des deux-points.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Repère l'erreur : « — Bonjour, dit le marchand. — Bonjour à toi. répondit l'enfant. »",
+      "options": [
+        { "id": "a", "text": "il manque les deux-points" },
+        {
+          "id": "b",
+          "text": "après « toi », il faut une virgule (et non un point) avant l'incise « répondit »"
+        },
+        { "id": "c", "text": "le tiret est en trop" },
+        { "id": "d", "text": "« Bonjour » ne prend pas de majuscule" }
+      ],
+      "correctOption": "b",
+      "explanation": "Quand une réplique déclarative est suivie d'une incise, on met une virgule (pas un point) : « Bonjour à toi, répondit l'enfant. » Le tiret et les majuscules sont corrects.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel dialogue est entièrement bien présenté ?",
+      "options": [
+        { "id": "a", "text": "La mère demanda : As-tu faim ? - Un peu avoua Sami." },
+        { "id": "b", "text": "La mère demanda « as-tu faim ? — un peu, avoua Sami »" },
+        { "id": "c", "text": "La mère demanda : « As-tu faim ? / — Un peu, avoua Sami. »" },
+        { "id": "d", "text": "La mère demanda : « as-tu faim ? » — « un peu », avoua Sami." }
+      ],
+      "correctOption": "c",
+      "explanation": "En (c) tout est correct : deux-points, guillemets ouvrants, majuscule, « ? » conservé, tiret pour le changement d'interlocuteur, virgule avant l'incise, guillemets fermants à la fin. Les autres oublient les deux-points, les guillemets, les majuscules ou la virgule.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choisis l'incise correcte : « Quel beau jardin ! ___ »",
+      "options": [
+        { "id": "a", "text": "s'exclama-t-il le visiteur" },
+        { "id": "b", "text": "le visiteur s'exclama" },
+        { "id": "c", "text": "s'exclama-t-le visiteur" },
+        { "id": "d", "text": "s'exclama le visiteur" }
+      ],
+      "correctOption": "d",
+      "explanation": "L'incise demande l'inversion (verbe + sujet), et avec un NOM sujet on n'ajoute jamais de « -t- » ni de tiret : « s'exclama le visiteur ». « le visiteur s'exclama » n'est pas une incise (pas d'inversion) ; (a) et (c) ajoutent un « -t- » réservé au pronom il/elle/on.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans le récit « Le train ralentit. Amina se leva. », quelle insertion de la parole d'Amina est correcte ?",
+      "options": [
+        { "id": "a", "text": "Amina se leva : « Nous arrivons », dit-elle avec joie." },
+        { "id": "b", "text": "Amina se leva « nous arrivons » dit elle avec joie" },
+        { "id": "c", "text": "Amina se leva, nous arrivons dit elle." },
+        { "id": "d", "text": "Amina se leva. — Nous arrivons dit elle avec joie" }
+      ],
+      "correctOption": "a",
+      "explanation": "La parole est annoncée (deux-points), encadrée (guillemets, majuscule) et suivie d'une incise correcte : « Nous arrivons », dit-elle. Les autres oublient les guillemets, les deux-points, l'inversion ou la ponctuation de l'incise.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Choisis le verbe introducteur qui colle au ton : « — Je… je n'ai pas fait mes devoirs, ___ Karim, les yeux baissés. »",
+      "options": [
+        { "id": "a", "text": "claironna" },
+        { "id": "b", "text": "hurla" },
+        { "id": "c", "text": "balbutia" },
+        { "id": "d", "text": "proclama" }
+      ],
+      "correctOption": "c",
+      "explanation": "L'hésitation (« Je… je ») et la gêne (« les yeux baissés ») appellent « balbutia » (parler avec difficulté). « claironna », « hurla » et « proclama » sont des voix fortes et assurées, contraires au ton.",
+      "difficulty": 3
+    }
+  ]
+}

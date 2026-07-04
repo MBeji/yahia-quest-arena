@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Exercice : les bases du présent et du passé composé",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complète au présent : « Je ___ (ranger) mes affaires avant le cours. »",
+      "options": [
+        { "id": "a", "text": "range" },
+        { "id": "b", "text": "ranges" },
+        { "id": "c", "text": "rangent" },
+        { "id": "d", "text": "rangez" }
+      ],
+      "correctOption": "a",
+      "explanation": "Ranger est du 1er groupe : avec « je », la terminaison est -e → je range. Le -s n'apparaît qu'avec « tu » (tu ranges).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète au présent : « Tu ___ (choisir) ton option pour l'année. »",
+      "options": [
+        { "id": "a", "text": "choisit" },
+        { "id": "b", "text": "choisis" },
+        { "id": "c", "text": "choisies" },
+        { "id": "d", "text": "choisissent" }
+      ],
+      "correctOption": "b",
+      "explanation": "Choisir est du 2e groupe : avec « tu », la terminaison est -is → tu choisis. « choisit » correspond à il/elle, « choisissent » à ils/elles.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète au passé composé : « Mehdi ___ (fermer) la fenêtre. »",
+      "options": [
+        { "id": "a", "text": "a fermer" },
+        { "id": "b", "text": "est fermé" },
+        { "id": "c", "text": "ont fermé" },
+        { "id": "d", "text": "a fermé" }
+      ],
+      "correctOption": "d",
+      "explanation": "Fermer se conjugue avec avoir : il a fermé. Après l'auxiliaire, on écrit le participe passé en -é (fermé), jamais l'infinitif en -er (« a fermer » est faux).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "« Chaque matin, Ines prend le bus pour le collège. » Quelle valeur a le présent « prend » ?",
+      "options": [
+        { "id": "a", "text": "Une action future" },
+        { "id": "b", "text": "Le présent de narration" },
+        { "id": "c", "text": "Une habitude" },
+        { "id": "d", "text": "Une vérité générale" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Chaque matin » indique une action qui se répète : c'est la valeur d'habitude du présent.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète au passé composé : « Rania ___ (partir) à Sfax hier. »",
+      "options": [
+        { "id": "a", "text": "a parti" },
+        { "id": "b", "text": "est partie" },
+        { "id": "c", "text": "est parti" },
+        { "id": "d", "text": "a partie" }
+      ],
+      "correctOption": "b",
+      "explanation": "Partir se conjugue avec être, et le participe s'accorde avec le sujet. Rania est une fille → féminin singulier → est partie.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète au passé composé : « Nous ___ (venir) à pied jusqu'à la médina. »",
+      "options": [
+        { "id": "a", "text": "sommes venus" },
+        { "id": "b", "text": "avons venu" },
+        { "id": "c", "text": "sommes venu" },
+        { "id": "d", "text": "avons venus" }
+      ],
+      "correctOption": "a",
+      "explanation": "Venir se conjugue avec être : le participe s'accorde avec le sujet « nous » (pluriel) → sommes venus. « avons venu » se trompe d'auxiliaire.",
+      "difficulty": 2
+    }
+  ]
+}
