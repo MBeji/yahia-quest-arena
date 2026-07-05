@@ -1,6 +1,6 @@
 # Étude 03 — Types de questions natifs (Tier B : numeric, ordering, matching, multi)
 
-> **Statut** : brouillon
+> **Statut** : en exécution (validée par l'humain le 2026-07-05 ; lot B1.1 livré)
 > **Priorité** : 03 · **Valeur** : tue la devinette par élimination (saisie numérique), vraie manipulation (drag & drop), jugement multi-sélection — l'expérience d'exercice passe un cran au-dessus de tout QCM concurrent · **Complexité** : haute (5 RPC SQL + UI + pipeline), mais dé-risquée : la spec normative est déjà écrite
 > **Architecte** : Fable (claude-fable-5), 2026-07-04 · **Exécuteur cible** : Sonnet
 > **Dépend de** : rien (indépendant) ; recommandé avant le lancement bac (annales en saisie numérique)
@@ -63,7 +63,7 @@ Intégralement dans la spec — carte des touchpoints (5 RPCs SQL, zod/TS, UI, p
 | B1.3 | UI : extraction `<QuestionInput>` + `NumericInput` (+ R-3 fallback, R-4 RTL) — quest ET dungeon unifiés                           | Vitest composants ; e2e public 1 spec ; smoke:shell                               | B1.2      |
 | B1.4 | Pipeline : union discriminée schema.ts + sql-builder + lints QA ; MàJ skills (levée du ban `numeric`)                             | Vitest schema/sql-builder ; content:check/qa verts                                | B1.1      |
 
-- [ ] B1.1 — DB + couture scoring (merge seul d'abord — DoD §7)
+- [x] B1.1 — DB + couture scoring (merge seul d'abord — DoD §7)
 - [ ] B1.2 — serveur
 - [ ] B1.3 — UI
 - [ ] B1.4 — pipeline + skills
@@ -103,4 +103,30 @@ la suite existante entière + un pgTAP « old mcq rows score identically ».
 
 ## 8. Journal d'exécution
 
-_(vide — rempli par l'exécuteur, lot par lot)_
+### Lot B1.1 — 2026-07-05 (exécuté par le modèle architecte, Fable)
+
+Livré : migration `20260705130000_native_question_types_b1_score_answer.sql`
+(colonnes `question_type`/`answer_key` + grants, fonction `score_answer`, les 5 RPCs
+re-créés verbatim avec la seule couture changée) + pgTAP
+`supabase/tests/16_score_answer_native_types.test.sql` (24 assertions : matrice
+mcq/numeric, contraintes de forme de clé, R-1, bout-en-bout sur les 5 RPCs).
+Validé localement : les ~200 migrations s'appliquent sur base vierge, suite pgTAP
+complète 151/151, `npm run verify` vert.
+
+Écarts acceptés (arbitrage architecte — le code réel rendait la spec incomplète) :
+
+1. **`correct_option` passe NULL-able** + CHECK `questions_answer_key_shape_check`
+   (mcq ⇒ `correct_option` non nul ; non-mcq ⇒ `answer_key` non nul). La colonne
+   était `NOT NULL` : aucune question `numeric` n'était insérable sans ça. La spec
+   ne le mentionnait pas ; changement additif minimal, sans effet sur les lignes
+   existantes.
+2. **`get_attempt_review` ne comporte aucune égalité à remplacer** (la spec listait
+   les « 5 sites qui font `q.correct_option = a.choice` », mais ce RPC ne compare
+   pas — il révèle la correction). Le branchement retenu : révélation type-aware,
+   `COALESCE(correct_option, answer_key->>'value')` dans la colonne `correct_option`
+   existante (même signature, même gate session-possédée-et-complétée). Idem pour
+   la révélation de `check_answers` et le `correctChoice` du donjon.
+3. **CHECK `questions_question_type_check`** ferme la liste aux 5 types de la spec
+   (mcq/numeric/ordering/matching/multi) — garde-fou anti-typo au niveau DB ; les
+   types B2/B3 sont stockables (le pipeline garde son ban) mais scorent `false`
+   sans exception (posture R-3).
