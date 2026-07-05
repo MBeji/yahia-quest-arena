@@ -182,9 +182,9 @@ the classic QCM — texte à trous, chasse à l'erreur, appariement, remise en o
 lecture de document, histoire-problème séquentielle, vrai/faux motivé, sprint chrono — all encoded
 inside the current QCM engine (catalogue + renderer contract:
 `content-engine/references/interactive-formats.md`); **native** input types are a spec'd engine
-evolution (`docs/interactive-question-types.md`) shipping in phases — **`numeric` entry (phase B1)
-is live and authorable** (`type: "numeric"` + `answerKey`, shape in the content-engine
-`content-schema.md`); drag-&-drop ordering/matching (B2) and multi-select (B3) are
+evolution (`docs/interactive-question-types.md`) shipping in phases — **`numeric` entry (B1) and
+drag-&-drop `ordering`/`matching` (B2) are live and authorable** (`type` + `answerKey`, shapes in
+the content-engine `content-schema.md`); multi-select (B3) is
 not authorable until shipped. `content-audit` is the review counterpart: it audits **existing** content
 (re-solves every question, checks keys/distractors/notation/calibration, and grades courses/summaries
 against the same course-quality bar) and produces a severity-ranked report. For **hard/elite**
@@ -296,8 +296,9 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
   auto-apply — a companion to this file, `content/README.md`, and the skills' own
   `generation-pipeline.md`), `docs/interactive-question-types.md` (the normative spec for
   native interactive question types — numeric/ordering/matching/multi-select: data model,
-  the five type-aware scoring RPCs, UI/pipeline touchpoints, phased rollout — **phase B1
-  `numeric` shipped 2026-07-05**, étude `FableEtudes/03-types-questions-natifs`; the QCM-encodable
+  the five type-aware scoring RPCs, UI/pipeline touchpoints, phased rollout — **phases B1
+  `numeric` and B2 `ordering`/`matching` shipped 2026-07-05**, étude
+  `FableEtudes/03-types-questions-natifs`; the QCM-encodable
   interactive formats live in `content-engine/references/interactive-formats.md`), and
   `docs/lycee-architecture.md` (secondary-cycle architecture: sections as grade nodes +
   slugs/subject-id conventions, the ar→fr transition bridge, bac-\* premium parcours, the full

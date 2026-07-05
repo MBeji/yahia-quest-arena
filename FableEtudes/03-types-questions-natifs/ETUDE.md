@@ -1,8 +1,7 @@
 # Étude 03 — Types de questions natifs (Tier B : numeric, ordering, matching, multi)
 
-> **Statut** : en exécution — **phase B1 (`numeric`) livrée intégralement** (lots B1.1–B1.4,
-> 2026-07-05) ; **phase B2 (`ordering`+`matching`) en cours** (GO humain reçu le 2026-07-05) ;
-> B3 en attente
+> **Statut** : en exécution — **phases B1 (`numeric`) et B2 (`ordering`+`matching`) livrées
+> intégralement** (2026-07-05) ; **B3 (`multi`) en attente du GO humain** (D-2)
 > **Priorité** : 03 · **Valeur** : tue la devinette par élimination (saisie numérique), vraie manipulation (drag & drop), jugement multi-sélection — l'expérience d'exercice passe un cran au-dessus de tout QCM concurrent · **Complexité** : haute (5 RPC SQL + UI + pipeline), mais dé-risquée : la spec normative est déjà écrite
 > **Architecte** : Fable (claude-fable-5), 2026-07-04 · **Exécuteur cible** : Sonnet
 > **Dépend de** : rien (indépendant) ; recommandé avant le lancement bac (annales en saisie numérique)
@@ -77,7 +76,7 @@ Intégralement dans la spec — carte des touchpoints (5 RPCs SQL, zod/TS, UI, p
 - [x] B2.1 — DB + couture scoring étendue (merge seul d'abord — DoD §7)
 - [x] B2.2 — serveur
 - [x] B2.3 — UI (@dnd-kit)
-- [ ] B2.4 — pipeline + skills
+- [x] B2.4 — pipeline + skills
 
 **Stop-points** : ne jamais modifier la sémantique `'mcq'` ; ne jamais sélectionner `answer_key`
 dans une requête client ; ne pas anticiper une phase ; tout écart avec la spec = STOP + escalade
@@ -260,3 +259,26 @@ vers les textes d'options (courts, sans SVG) au lieu d'ids mélangés opaques ;
 1027 tests (+12), build:check (budget dndkit OK), smoke:shell vert.
 
 Écart accepté : néant (D-3 suivi à la lettre).
+
+### Lot B2.4 — 2026-07-05 (exécuté par le modèle architecte, Fable) — PHASE B2 COMPLÈTE
+
+Livré : membres `ordering`/`matching` du `questionSchema` (ids wire-safe `[A-Za-z0-9_-]`,
+clé ordering = **permutation exacte** des ids d'options, clé matching = **bijection**
+gauche→droite — l'intégrité structurelle est le schéma, hard-fail à `content:check`) ;
+`sql-builder` émet options + `answer_key` pour les deux types ; lints QA `auditBoardQuestion`
+(textes d'items dupliqués = error, explication mince, contrôles de rendu partagés) ; levée du
+ban B2 dans CLAUDE.md, la spec, `content-engine` (SKILL, content-schema — avec les règles
+d'authoring et la préférence natif > formats encodés Tier-A pour le nouveau contenu —,
+interactive-formats, generation-pipeline) et `content-interactif`. **Mission démo trilingue**
+« glisser-déposer » (2 ordering + 2 matching, d1→d3) dans
+`iq-training-{fr,en,ar}/03-maths-raisonnement` + migrations régénérées scopées
+(timestamps rendus uniques — le générateur avait émis trois fichiers à la même seconde).
+E2E : page-object type-aware (boards) + spec `native-board-types.spec.ts` (auto-fill vérifié,
+réarrangement par flèches, run complet — skip-si-absent). Preuve bout-en-bout locale : les
+12 questions boards scorent `true` contre `answer_key_display` via `score_answer` ; pgTAP
+178/178 ; verify 1037 tests ; content:check (73 sujets) + content:qa:strict verts.
+
+Écart accepté : néant. Note d'exploitation (hors périmètre étude, à corriger un jour dans
+`auto-pr.yml`/le ruleset) : les checks nés des vagues push/dispatch ne satisfont pas le
+ruleset `main-protection` sur les PRs bot-créées — chaque PR de cette étude a nécessité un
+commit vide `synchronize` (diagnostiqué sur #298/#299, contournement systématisé ensuite).

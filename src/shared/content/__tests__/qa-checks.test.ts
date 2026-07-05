@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
+  auditBoardQuestion,
   auditNumericQuestion,
   auditQuestion,
   classifyOption,
@@ -7,6 +8,7 @@ import {
   hasBidiFragileMath,
   norm,
   numbersIn,
+  type QABoardQuestion,
   type QANumericQuestion,
   type QAQuestion,
 } from "../../../../scripts/content/qa-checks.ts";
@@ -403,6 +405,56 @@ describe("auditNumericQuestion — native numeric lints (Tier B, B1)", () => {
   it("runs the shared rendering checks (viewBox-less svg is an error)", () => {
     const flags = auditNumericQuestion(
       numeric({ prompt: 'Aire du carré <svg width="80"><rect/></svg> ? (en cm²)' }),
+      "w",
+    );
+    expect(flags.some((f) => f.level === "error" && /viewBox/.test(f.msg))).toBe(true);
+  });
+});
+
+describe("auditBoardQuestion — ordering/matching lints (Tier B, B2)", () => {
+  const board = (over: Partial<QABoardQuestion> = {}): QABoardQuestion => ({
+    prompt: "Range les étapes de la démarche.",
+    options: [
+      { id: "a", text: "Lire l'énoncé" },
+      { id: "b", text: "Poser le calcul" },
+      { id: "c", text: "Vérifier le résultat" },
+    ],
+    explanation: "On lit d'abord, on calcule ensuite, on vérifie à la fin.",
+    ...over,
+  });
+
+  it("passes a clean board question with no flags", () => {
+    expect(auditBoardQuestion(board(), "w")).toEqual([]);
+  });
+
+  it("errors on duplicate item texts (two identical steps are unorderable)", () => {
+    const flags = auditBoardQuestion(
+      board({
+        options: [
+          { id: "a", text: "Étape" },
+          { id: "b", text: "Étape" },
+          { id: "c", text: "Autre" },
+        ],
+      }),
+      "w",
+    );
+    expect(flags.some((f) => f.level === "error" && /duplicate/.test(f.msg))).toBe(true);
+  });
+
+  it("warns on a thin explanation", () => {
+    const flags = auditBoardQuestion(board({ explanation: "Voilà." }), "w");
+    expect(flags.some((f) => f.level === "warn" && /very short/.test(f.msg))).toBe(true);
+  });
+
+  it("runs the shared rendering checks on item texts", () => {
+    const flags = auditBoardQuestion(
+      board({
+        options: [
+          { id: "a", text: '<svg width="10"><rect/></svg>' },
+          { id: "b", text: "Poser le calcul" },
+          { id: "c", text: "Vérifier" },
+        ],
+      }),
       "w",
     );
     expect(flags.some((f) => f.level === "error" && /viewBox/.test(f.msg))).toBe(true);

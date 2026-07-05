@@ -164,10 +164,49 @@ const numericQuestionSchema = questionCoreSchema.extend({
 });
 
 /**
+ * Ids used in the B2 wire formats travel inside CSV/pair encodings, so they
+ * may not contain `,`, `:` or whitespace. Kebab/alnum, like the `a`–`d` and
+ * `l1`/`r1` conventions.
+ */
+const wireIdSchema = z
+  .string()
+  .regex(/^[A-Za-z0-9_-]+$/, "B2 option ids must be alphanumeric (no ',', ':' or spaces)");
+
+const wireOptionSchema = z.object({ id: wireIdSchema, text: z.string().min(1) });
+
+/**
+ * Native drag-&-drop sequencing question (Tier B, phase B2): `options` are the
+ * steps (shuffled at render); `answerKey.order` is the correct id sequence —
+ * validated below as an exact permutation of the option ids.
+ */
+const orderingQuestionSchema = questionCoreSchema.extend({
+  type: z.literal("ordering"),
+  options: z.array(wireOptionSchema).min(3).max(6),
+  answerKey: z.object({ order: z.array(wireIdSchema).min(3).max(6) }),
+});
+
+/**
+ * Native drag-&-drop pair-alignment question (Tier B, phase B2): `options`
+ * carry the fixed left items (`l…` ids) and the movable right items (`r…`
+ * ids); `answerKey.pairs` is the correct left→right association — validated
+ * below as a bijection between the two sides.
+ */
+const matchingQuestionSchema = questionCoreSchema.extend({
+  type: z.literal("matching"),
+  options: z.array(wireOptionSchema).min(4).max(12),
+  answerKey: z.object({
+    pairs: z
+      .array(z.tuple([wireIdSchema, wireIdSchema]))
+      .min(2)
+      .max(6),
+  }),
+});
+
+/**
  * A question file entry — discriminated on `type`, defaulting to `'mcq'` so
  * every pre-existing content file stays valid without edits (spec D-4).
- * Tier-B types beyond `numeric` (ordering/matching/multi) are NOT members yet:
- * authoring them stays schema-rejected until their phase (B2/B3) ships.
+ * The not-yet-shipped `multi` (phase B3) is NOT a member: authoring it stays
+ * schema-rejected until its phase ships.
  */
 export const questionSchema = z
   .preprocess(
@@ -175,24 +214,81 @@ export const questionSchema = z
       val !== null && typeof val === "object" && !("type" in val)
         ? { ...(val as Record<string, unknown>), type: "mcq" }
         : val,
-    z.discriminatedUnion("type", [mcqQuestionSchema, numericQuestionSchema]),
+    z.discriminatedUnion("type", [
+      mcqQuestionSchema,
+      numericQuestionSchema,
+      orderingQuestionSchema,
+      matchingQuestionSchema,
+    ]),
   )
   .superRefine((q, ctx) => {
-    if (q.type !== "mcq") return;
+    if (q.type === "numeric") return;
     if (new Set(q.options.map((o) => o.id)).size !== q.options.length) {
       ctx.addIssue({ code: "custom", message: "option ids must be unique", path: ["options"] });
     }
-    if (!q.options.some((o) => o.id === q.correctOption)) {
+    if (q.type === "mcq") {
+      if (!q.options.some((o) => o.id === q.correctOption)) {
+        ctx.addIssue({
+          code: "custom",
+          message: "correctOption must match one of the option ids",
+          path: ["correctOption"],
+        });
+      }
+      return;
+    }
+    if (q.type === "ordering") {
+      // The key must arrange EXACTLY the authored steps (a permutation).
+      const ids = q.options.map((o) => o.id).sort();
+      const order = [...q.answerKey.order].sort();
+      if (ids.length !== order.length || ids.some((id, i) => id !== order[i])) {
+        ctx.addIssue({
+          code: "custom",
+          message: "answerKey.order must be a permutation of the option ids",
+          path: ["answerKey", "order"],
+        });
+      }
+      return;
+    }
+    // matching: options split into l*/r* sides; pairs must be a bijection.
+    const lefts = q.options.filter((o) => o.id.startsWith("l")).map((o) => o.id);
+    const rights = q.options.filter((o) => o.id.startsWith("r")).map((o) => o.id);
+    if (lefts.length + rights.length !== q.options.length) {
       ctx.addIssue({
         code: "custom",
-        message: "correctOption must match one of the option ids",
-        path: ["correctOption"],
+        message: "matching option ids must start with 'l' (left) or 'r' (right)",
+        path: ["options"],
+      });
+      return;
+    }
+    if (lefts.length < 2 || lefts.length !== rights.length) {
+      ctx.addIssue({
+        code: "custom",
+        message: "matching needs >= 2 left items and as many right items",
+        path: ["options"],
+      });
+      return;
+    }
+    const pairLefts = q.answerKey.pairs.map(([l]) => l).sort();
+    const pairRights = q.answerKey.pairs.map(([, r]) => r).sort();
+    const wantLefts = [...lefts].sort();
+    const wantRights = [...rights].sort();
+    if (
+      pairLefts.length !== wantLefts.length ||
+      pairLefts.some((id, i) => id !== wantLefts[i]) ||
+      pairRights.some((id, i) => id !== wantRights[i])
+    ) {
+      ctx.addIssue({
+        code: "custom",
+        message: "answerKey.pairs must pair every left id with every right id exactly once",
+        path: ["answerKey", "pairs"],
       });
     }
   });
 export type ContentQuestion = z.infer<typeof questionSchema>;
 export type ContentMcqQuestion = Extract<ContentQuestion, { type: "mcq" }>;
 export type ContentNumericQuestion = Extract<ContentQuestion, { type: "numeric" }>;
+export type ContentOrderingQuestion = Extract<ContentQuestion, { type: "ordering" }>;
+export type ContentMatchingQuestion = Extract<ContentQuestion, { type: "matching" }>;
 
 /**
  * `quiz.json` — the mandatory comprehension quiz of a chapter. Compiled into

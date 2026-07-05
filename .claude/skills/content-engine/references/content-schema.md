@@ -86,9 +86,9 @@ bucket; this field carries only the metadata.
 ## Question object (shared by quiz.json and exercise files)
 
 Questions are a **discriminated union on `type`**. Omitting `type` means `mcq` — every
-pre-existing file stays valid unchanged. Shipped types today: `mcq` and `numeric`
-(Tier B phase B1); `ordering`/`matching`/`multi` are **schema-rejected** until their
-phase ships (`docs/interactive-question-types.md`).
+pre-existing file stays valid unchanged. Shipped types today: `mcq`, `numeric` (B1),
+`ordering` and `matching` (B2); `multi` is **schema-rejected** until phase B3 ships
+(`docs/interactive-question-types.md`).
 
 **`mcq` (default) — the classic QCM:**
 
@@ -120,6 +120,32 @@ The student types a plain number (`-`, `.` or `,` decimal); the server scores
 `abs(x − value) ≤ tolerance` via `score_answer`. Use `numeric` when options would give the
 answer away by elimination (calculs, mesures, résultats d'équations); keep `mcq` when the
 distractors themselves teach (misconception encoding — see expert-exercises.md).
+
+**`ordering` — native drag-&-drop sequencing (B2):**
+
+| Field             | Type     | Required | Constraint                                                                                  |
+| ----------------- | -------- | -------- | ------------------------------------------------------------------------------------------- |
+| `type`            | string   | yes      | `"ordering"`                                                                                |
+| `options`         | option[] | yes      | **3–6** steps to arrange (shuffled at render). Ids alphanumeric (`a`…, no `,`/`:`/spaces)   |
+| `answerKey.order` | string[] | yes      | the correct id sequence — must be an **exact permutation** of the option ids (Zod-enforced) |
+| `explanation`     | string   | yes      | justify the ORDER (why this step before that one), not just restate it                      |
+
+Scoring is an exact sequence match, all-or-nothing. Step texts must be unambiguous and
+mutually distinct (`content:qa` errors on duplicates) and each step self-contained — never
+"then…" phrasing that only works in one position.
+
+**`matching` — native drag-&-drop pair alignment (B2):**
+
+| Field             | Type     | Required | Constraint                                                                                                               |
+| ----------------- | -------- | -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `type`            | string   | yes      | `"matching"`                                                                                                             |
+| `options`         | option[] | yes      | the fixed left items (**ids `l1`,`l2`…**) + the movable right items (**ids `r1`,`r2`…**), 2–6 of each, balanced          |
+| `answerKey.pairs` | [l,r][]  | yes      | the correct left→right associations — must pair every left with every right **exactly once** (a bijection, Zod-enforced) |
+| `explanation`     | string   | yes      | state each association and why                                                                                           |
+
+Scoring is set equality of the pairs, all-or-nothing. Every right item must be a plausible
+partner for more than one left item — otherwise the exercise solves itself. Prefer these two
+native types over the QCM-encoded permutation formats for new content.
 
 ### Figures (inline SVG) in questions
 

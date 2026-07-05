@@ -12,7 +12,7 @@
 import { argv, cwd, exit, stdout } from "node:process";
 import { join, resolve } from "node:path";
 import { loadAllSubjects, loadSubject } from "../../src/shared/content/loader.ts";
-import { auditNumericQuestion, auditQuestion, type Flag } from "./qa-checks.ts";
+import { auditBoardQuestion, auditNumericQuestion, auditQuestion, type Flag } from "./qa-checks.ts";
 
 const hasFlag = (n: string) => argv.includes(`--${n}`);
 const getFlag = (n: string) => {
@@ -42,7 +42,11 @@ function main(): void {
           // Per-type lints (Tier B): numeric has its own audit; mcq keeps the
           // historical one. Future types get theirs when their phase ships.
           flags.push(
-            ...(q.type === "numeric" ? auditNumericQuestion(q, where) : auditQuestion(q, where)),
+            ...(q.type === "numeric"
+              ? auditNumericQuestion(q, where)
+              : q.type === "ordering" || q.type === "matching"
+                ? auditBoardQuestion(q, where)
+                : auditQuestion(q, where)),
           );
         });
       }

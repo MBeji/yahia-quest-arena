@@ -21,6 +21,13 @@ export class PracticePage {
   get numericInput(): Locator {
     return this.page.getByTestId("numeric-answer-input");
   }
+  /** Native drag-&-drop boards (ordering/matching — Tier B, phase B2). */
+  get orderingBoard(): Locator {
+    return this.page.getByTestId("ordering-board");
+  }
+  get matchingBoard(): Locator {
+    return this.page.getByTestId("matching-board");
+  }
   get submitButton(): Locator {
     return this.page.getByTestId("quest-submit");
   }
@@ -47,18 +54,21 @@ export class PracticePage {
 
   /** Waits for the first question so a play step isn't racing the content fetch. */
   async firstQuestionVisible(): Promise<void> {
-    // Type-aware: an mcq question mounts a radiogroup, a numeric one an input.
+    // Type-aware: mcq mounts a radiogroup, numeric an input, B2 types a board.
     await this.questionGroups
       .first()
       .or(this.numericInput)
+      .or(this.orderingBoard)
+      .or(this.matchingBoard)
       .first()
       .waitFor({ state: "visible", timeout: 15_000 });
   }
 
   /**
    * Play the whole exercise question-by-question until the result screen
-   * appears — type-aware: picks the first option (mcq) or types a number
-   * (numeric). Correctness is irrelevant — the journey asserts the run
+   * appears — type-aware: picks the first option (mcq), types a number
+   * (numeric), or submits the auto-filled arrangement (ordering/matching
+   * boards). Correctness is irrelevant — the journey asserts the run
    * completes and a score renders, not a particular score.
    */
   async playThrough(): Promise<void> {
@@ -67,6 +77,11 @@ export class PracticePage {
       if (await this.score.isVisible().catch(() => false)) break;
       if (await this.numericInput.isVisible().catch(() => false)) {
         await this.numericInput.fill("42");
+      } else if (
+        (await this.orderingBoard.isVisible().catch(() => false)) ||
+        (await this.matchingBoard.isVisible().catch(() => false))
+      ) {
+        // The boards auto-register their initial arrangement — submit as-is.
       } else {
         const group = this.questionGroups.first();
         if (!(await group.isVisible().catch(() => false))) break;

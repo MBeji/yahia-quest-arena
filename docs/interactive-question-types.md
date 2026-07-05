@@ -1,10 +1,11 @@
 # Interactive question types — engine evolution spec (Tier B)
 
-> **Phase B1 (`numeric`) SHIPPED 2026-07-05** (étude `FableEtudes/03-types-questions-natifs`,
-> lots B1.1–B1.4: `score_answer` seam + typed keys, per-type server validation, unified
-> `<QuestionInput>`/`NumericInput`, pipeline union schema + QA lints). `numeric` is authorable
-> (shape: content-engine `references/content-schema.md`). **Phases B2 (ordering/matching) and
-> B3 (multi) remain design-only** — content skills must not author those types until they ship.
+> **Phases B1 (`numeric`) and B2 (`ordering`/`matching`) SHIPPED 2026-07-05** (étude
+> `FableEtudes/03-types-questions-natifs`: `score_answer` seam + typed keys, per-type server
+> validation, unified `<QuestionInput>` with `NumericInput` and the @dnd-kit
+> `OrderingBoard`/`MatchingBoard`, pipeline union schema + QA lints). `numeric`, `ordering`
+> and `matching` are authorable (shapes: content-engine `references/content-schema.md`).
+> **Phase B3 (`multi`) remains design-only** — content skills must not author it until it ships.
 > **Tier A** — interactive formats encoded inside the existing QCM schema — is live and
 > canonically documented in `.claude/skills/content-engine/references/interactive-formats.md`;
 > author those freely via the `content-interactif` skill. Tier B adds _native_ input types and

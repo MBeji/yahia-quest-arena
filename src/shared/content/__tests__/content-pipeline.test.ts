@@ -171,11 +171,15 @@ describe("schema validation", () => {
     ).toBe(false);
   });
 
-  it("rejects not-yet-shipped Tier-B types (the authoring ban is the schema)", () => {
+  it("rejects the not-yet-shipped 'multi' type (the B3 authoring ban is the schema)", () => {
     const result = questionSchema.safeParse({
-      type: "ordering",
+      type: "multi",
       prompt: "p",
-      answerKey: { order: ["b", "a"] },
+      options: [
+        { id: "a", text: "1" },
+        { id: "b", text: "2" },
+      ],
+      answerKey: { correct: ["a", "b"] },
       explanation: "e",
     });
     expect(result.success).toBe(false);
