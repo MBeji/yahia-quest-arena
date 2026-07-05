@@ -34,9 +34,9 @@ Content generation is **a planning layer + two authoring layers**, not competing
      chasse à l'erreur, appariement, remise en ordre, QCM visuel SVG, lecture de document,
      histoire-problème, vrai/faux motivé, sprint chrono), encoded in the current QCM engine —
      format catalogue: `references/interactive-formats.md` (Tier A). Native input types are
-     **Tier B** (`docs/interactive-question-types.md`): `numeric` shipped with phase B1 and is
-     authorable (shape: `references/content-schema.md`); drag-&-drop ordering/matching and
-     multi-select are not authorable until B2/B3 ship.
+     **Tier B** (`docs/interactive-question-types.md`): `numeric` (B1) and drag-&-drop
+     `ordering`/`matching` (B2) shipped and are authorable (shapes:
+     `references/content-schema.md`); multi-select is not authorable until B3 ships.
    - `content-audit` — reviews **existing** content (re-solves, grades); fixes only on request.
 
 2. **Professor overlay — raise the ceiling.** Adds **harder** exercises (difficulty 3–4, boss/défi)

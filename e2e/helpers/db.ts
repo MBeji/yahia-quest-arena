@@ -93,6 +93,11 @@ export interface AdminDb {
    */
   numericExerciseId(): Promise<string | null>;
   /**
+   * An admin, non-quiz mission carrying at least one native board question
+   * (`ordering`/`matching` — Tier B, phase B2) — null until seeded (lot B2.4).
+   */
+  boardExerciseId(): Promise<string | null>;
+  /**
    * Grant a user a live entitlement on a parcours (per-parcours premium model)
    * via the admin_grant_parcours RPC — service-role bypasses is_admin(). Pass
    * `months` for a time-boxed grant; omit for perpetual. Idempotent (upserts the
@@ -382,6 +387,18 @@ export function createAdminDb(): AdminDb {
         .limit(1)
         .maybeSingle();
       if (error) throw new Error(`numericExerciseId: ${error.message}`);
+      return (data?.exercise_id as string) ?? null;
+    },
+    async boardExerciseId() {
+      const { data, error } = await client
+        .from("questions")
+        .select("exercise_id, exercises!inner(mode, source)")
+        .in("question_type", ["ordering", "matching"])
+        .neq("exercises.mode", "quiz")
+        .eq("exercises.source", "admin")
+        .limit(1)
+        .maybeSingle();
+      if (error) throw new Error(`boardExerciseId: ${error.message}`);
       return (data?.exercise_id as string) ?? null;
     },
     async quizExerciseId(subjectId: string) {

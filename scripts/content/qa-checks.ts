@@ -53,6 +53,13 @@ export type QANumericQuestion = {
   explanation: string;
   difficulty?: number;
 };
+/** Native board question (Tier B, phase B2) — items in options, a typed key. */
+export type QABoardQuestion = {
+  prompt: string;
+  options: QAOption[];
+  explanation: string;
+  difficulty?: number;
+};
 export type Flag = { level: "error" | "warn"; where: string; msg: string };
 
 /** Normalise for substring comparison: strip whitespace, fold Arabic-Indic digits, lowercase. */
@@ -299,6 +306,52 @@ export function auditQuestion(q: QAQuestion, where: string): Flag[] {
       });
     }
   }
+
+  return flags;
+}
+
+/**
+ * Per-question heuristics for the native board questions (`ordering` /
+ * `matching` — Tier B, phase B2). Their STRUCTURAL integrity (permutation /
+ * bijection keys, id charset) is hard-enforced by the Zod schema; this pass
+ * keeps the quality heuristics that still apply:
+ *   [error] duplicate item texts (two identical steps/pairs are unorderable);
+ *   [warn]  thin explanation; [error] figure referenced but absent;
+ *   [error] rendering checks (svg viewBox, bidi) — shared.
+ */
+export function auditBoardQuestion(q: QABoardQuestion, where: string): Flag[] {
+  const flags: Flag[] = [];
+
+  const texts = q.options.map((o) => norm(o.text));
+  if (new Set(texts).size !== texts.length) {
+    flags.push({ level: "error", where, msg: "duplicate option texts" });
+  }
+
+  if (q.explanation.trim().length < 25) {
+    flags.push({ level: "warn", where, msg: "explanation is very short" });
+  }
+
+  if (FIGURE_REFERENCE.test(q.prompt)) {
+    const hasFigure = SVG_BLOCK.test(q.prompt) || q.options.some((o) => SVG_BLOCK.test(o.text));
+    if (!hasFigure) {
+      flags.push({
+        level: "error",
+        where,
+        msg: "prompt references a figure but no <svg> is present (unanswerable without it)",
+      });
+    }
+  }
+
+  flags.push(
+    ...auditRenderedFields(
+      [
+        ["prompt", q.prompt] as const,
+        ["explanation", q.explanation] as const,
+        ...q.options.map((o) => [`option ${o.id}`, o.text] as const),
+      ],
+      where,
+    ),
+  );
 
   return flags;
 }

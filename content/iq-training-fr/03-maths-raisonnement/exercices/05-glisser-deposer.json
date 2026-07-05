@@ -1,0 +1,76 @@
+{
+  "title": "⭐⭐ Glisser-déposer : ordonne et associe",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "type": "ordering",
+      "prompt": "Range ces nombres du plus petit au plus grand (glisse-les dans l'ordre).",
+      "options": [
+        { "id": "a", "text": "0,5" },
+        { "id": "b", "text": "0,09" },
+        { "id": "c", "text": "0,45" }
+      ],
+      "answerKey": { "order": ["b", "c", "a"] },
+      "explanation": "On compare chiffre par chiffre après la virgule : 0,09 < 0,45 < 0,5 (car 0,5 = 0,50). Le piège classique : 0,09 semble « grand » à cause du 9, mais son chiffre des dixièmes est 0.",
+      "difficulty": 1
+    },
+    {
+      "type": "ordering",
+      "prompt": "Remets dans l'ordre les étapes de résolution de l'équation 2x + 4 = 10.",
+      "options": [
+        { "id": "a", "text": "Diviser les deux côtés par 2 : x = 3" },
+        { "id": "b", "text": "Soustraire 4 des deux côtés : 2x = 6" },
+        { "id": "c", "text": "Vérifier : 2 × 3 + 4 = 10 ✓" }
+      ],
+      "answerKey": { "order": ["b", "a", "c"] },
+      "explanation": "On isole d'abord le terme en x en soustrayant 4 (2x = 6), on divise ensuite par 2 (x = 3), et on termine toujours par la vérification : 2 × 3 + 4 = 10 ✓.",
+      "difficulty": 2
+    },
+    {
+      "type": "matching",
+      "prompt": "Associe chaque calcul mental à son résultat.",
+      "options": [
+        { "id": "l1", "text": "25 % de 80" },
+        { "id": "l2", "text": "la moitié de 46" },
+        { "id": "l3", "text": "le double de 35" },
+        { "id": "r1", "text": "23" },
+        { "id": "r2", "text": "70" },
+        { "id": "r3", "text": "20" }
+      ],
+      "answerKey": {
+        "pairs": [
+          ["l1", "r3"],
+          ["l2", "r1"],
+          ["l3", "r2"]
+        ]
+      },
+      "explanation": "25 % = un quart, donc 80 ÷ 4 = 20 ; la moitié de 46 vaut 46 ÷ 2 = 23 ; le double de 35 vaut 35 × 2 = 70.",
+      "difficulty": 2
+    },
+    {
+      "type": "matching",
+      "prompt": "Associe chaque suite à la règle qui la fait avancer.",
+      "options": [
+        { "id": "l1", "text": "2, 4, 8, 16" },
+        { "id": "l2", "text": "5, 8, 11, 14" },
+        { "id": "l3", "text": "64, 32, 16, 8" },
+        { "id": "r1", "text": "on ajoute 3" },
+        { "id": "r2", "text": "on divise par 2" },
+        { "id": "r3", "text": "on multiplie par 2" }
+      ],
+      "answerKey": {
+        "pairs": [
+          ["l1", "r3"],
+          ["l2", "r1"],
+          ["l3", "r2"]
+        ]
+      },
+      "explanation": "2, 4, 8, 16 double à chaque pas (×2) ; 5, 8, 11, 14 avance de +3 (8−5 = 3) ; 64, 32, 16, 8 est divisée par 2 à chaque pas. Vérifie toujours la règle sur DEUX pas consécutifs.",
+      "difficulty": 3
+    }
+  ]
+}

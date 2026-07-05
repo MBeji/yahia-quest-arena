@@ -253,9 +253,10 @@ export function buildMigrationSql(subject: LoadedSubject): string {
       const qId = questionId(subjectId, chapterSlug, slug, i + 1);
       // Per-type columns (Tier B — docs/interactive-question-types.md): mcq keeps
       // the historical shape (options + correct_option, no answer_key); numeric
-      // carries its typed key and no options. `answer_key` is server-only (never
+      // carries its typed key and no options; ordering/matching carry BOTH the
+      // items (options) and their typed key. `answer_key` is server-only (never
       // client-granted), which is fine for generated SQL applied as the owner.
-      const optionsSql = q.type === "mcq" ? sqlJson(q.options) : "'[]'::jsonb";
+      const optionsSql = q.type === "numeric" ? "'[]'::jsonb" : sqlJson(q.options);
       const correctOptionSql = q.type === "mcq" ? sqlString(q.correctOption) : "NULL";
       const answerKeySql =
         q.type === "numeric"
@@ -264,7 +265,11 @@ export function buildMigrationSql(subject: LoadedSubject): string {
               ...(q.answerKey.tolerance !== undefined ? { tolerance: q.answerKey.tolerance } : {}),
               ...(q.answerKey.unit !== undefined ? { unit: q.answerKey.unit } : {}),
             })
-          : "NULL";
+          : q.type === "ordering"
+            ? sqlJson({ order: q.answerKey.order })
+            : q.type === "matching"
+              ? sqlJson({ pairs: q.answerKey.pairs })
+              : "NULL";
       out.push(
         "INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key) VALUES",
         `  (${sqlString(qId)}, ${sqlString(exId)}, ${sqlString(q.prompt)}, ${optionsSql}, ${correctOptionSql}, ${sqlString(
