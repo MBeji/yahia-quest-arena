@@ -18,7 +18,7 @@
 
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pgtap;
-SELECT plan(26);
+SELECT plan(27);
 
 -- ---------------------------------------------------------
 -- Shared content fixtures.
@@ -339,6 +339,18 @@ SELECT is(
      '42') ->> 'isCorrect')::boolean,
   true,
   'submit_dungeon_answer: a correct numeric answer clears the floor'
+);
+
+-- The dungeon question payload tells the client HOW to render each item (B1.3).
+-- COALESCE keeps the assertion vacuously true on an empty batch.
+SELECT ok(
+  COALESCE(
+    (SELECT bool_and(elem ? 'question_type')
+       FROM jsonb_array_elements(
+         (public.get_dungeon_questions('d4000000-0000-0000-0000-000000000001', 3)) -> 'questions'
+       ) AS elem),
+    true),
+  'get_dungeon_questions: every payload item carries question_type'
 );
 
 RESET ROLE;

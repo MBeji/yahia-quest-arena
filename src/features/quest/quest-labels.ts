@@ -15,6 +15,11 @@ export type QuestLabels = {
   quizTooFast: string;
   quizRecorded: string;
   eliteLockedTitle: string;
+  numericPlaceholder: string;
+  numericHint: string;
+  numericInvalid: string;
+  unsupportedTitle: string;
+  unsupportedBody: string;
 };
 
 export function buildQuestLabels(qlang: QuestContentLang): QuestLabels {
@@ -64,6 +69,35 @@ export function buildQuestLabels(qlang: QuestContentLang): QuestLabels {
       ar: "👑 تحدّي النخبة مقفل",
       fr: "👑 Défi élite verrouillé",
       en: "👑 Elite challenge locked",
+    }[qlang],
+    // Native numeric entry (Tier B — B1). Math notation stays LTR/Western digits
+    // in every language (project rule), hence the Western example in Arabic too.
+    numericPlaceholder: {
+      ar: "إجابتك (عدد)",
+      fr: "Ta réponse (nombre)",
+      en: "Your answer (number)",
+    }[qlang],
+    numericHint: {
+      ar: "اكتب عددًا — مثال: 3.14 أو -5",
+      fr: "Saisis un nombre — ex. 3,14 ou -5",
+      en: "Type a number — e.g. 3.14 or -5",
+    }[qlang],
+    numericInvalid: {
+      ar: "أدخل عددًا صحيحًا أو عشريًّا فقط.",
+      fr: "Entre uniquement un nombre (entier ou décimal).",
+      en: "Enter a number only (integer or decimal).",
+    }[qlang],
+    // R-3 rollback posture: an item whose type this client can't render is shown
+    // as cleanly unavailable (it scores as unanswered), never a crashed session.
+    unsupportedTitle: {
+      ar: "⚠️ سؤال غير متاح",
+      fr: "⚠️ Question indisponible",
+      en: "⚠️ Question unavailable",
+    }[qlang],
+    unsupportedBody: {
+      ar: "هذا النوع من الأسئلة غير مدعوم في هذه النسخة. تقدّم إلى السؤال الموالي.",
+      fr: "Ce type de question n'est pas encore pris en charge ici. Passe à la question suivante.",
+      en: "This question type isn't supported here yet. Move on to the next question.",
     }[qlang],
   };
 }

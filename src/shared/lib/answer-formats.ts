@@ -14,6 +14,18 @@
 /** Upper bound for any answer string — generous for the B2/B3 CSV encodings. */
 export const MAX_CHOICE_LENGTH = 512;
 
+/** Boss-timer expiry sentinel: submitted when time runs out with no answer. */
+export const TIMEOUT_ANSWER_CHOICE = "__timeout__";
+/**
+ * R-3 sentinel: submitted for a question type this client cannot render, so the
+ * run stays completable. Like the timeout sentinel it can never match an option
+ * id or a typed key — it always scores wrong, for every type.
+ */
+export const UNSUPPORTED_ANSWER_CHOICE = "__unsupported__";
+
+/** Give-up sentinels are valid for EVERY type (they just score wrong). */
+const SENTINEL_CHOICES = new Set([TIMEOUT_ANSWER_CHOICE, UNSUPPORTED_ANSWER_CHOICE]);
+
 /**
  * A numeric answer: an optionally-negative decimal number, with `.` or `,` as
  * the decimal separator (normalized server-side) — mirrors `score_answer`.
@@ -33,6 +45,7 @@ export function isValidAnswerFormat(
 ): boolean {
   const value = choice.trim();
   if (value.length === 0 || value.length > MAX_CHOICE_LENGTH) return false;
+  if (SENTINEL_CHOICES.has(value)) return true;
   if (questionType === "numeric") return NUMERIC_CHOICE_PATTERN.test(value);
   return true;
 }

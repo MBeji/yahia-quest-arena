@@ -3,6 +3,8 @@ import {
   findAnswerFormatViolation,
   isValidAnswerFormat,
   MAX_CHOICE_LENGTH,
+  TIMEOUT_ANSWER_CHOICE,
+  UNSUPPORTED_ANSWER_CHOICE,
 } from "@/shared/lib/answer-formats";
 
 describe("answer-formats — isValidAnswerFormat", () => {
@@ -33,6 +35,14 @@ describe("answer-formats — isValidAnswerFormat", () => {
     expect(isValidAnswerFormat("numeric", "1e5")).toBe(false);
     expect(isValidAnswerFormat("numeric", "--3")).toBe(false);
     expect(isValidAnswerFormat("numeric", ".5")).toBe(false);
+  });
+
+  it("accepts the give-up sentinels for EVERY type (they score wrong, never reject)", () => {
+    // Boss timeout on a numeric question must not fail the whole submission.
+    expect(isValidAnswerFormat("numeric", TIMEOUT_ANSWER_CHOICE)).toBe(true);
+    expect(isValidAnswerFormat("numeric", UNSUPPORTED_ANSWER_CHOICE)).toBe(true);
+    expect(isValidAnswerFormat("mcq", TIMEOUT_ANSWER_CHOICE)).toBe(true);
+    expect(isValidAnswerFormat("ordering", UNSUPPORTED_ANSWER_CHOICE)).toBe(true);
   });
 
   it("treats unknown/null types as the generic bounded-string contract", () => {

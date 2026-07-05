@@ -26,9 +26,13 @@ import {
   DUNGEON_COINS_PER_5_FLOORS,
 } from "@/features/dungeon";
 import { SubscriptionPaywall } from "@/features/subscription";
-import { isRtlText, isMathExpression } from "@/shared/lib/utils";
+// Deep component imports (route→feature convention, like quest.$exerciseId):
+// the barrel would drag quest.server.ts into this route's module graph.
+import { QuestionInput, type McqOptionRender } from "@/features/quest/components/question-input";
+import { buildQuestLabels } from "@/features/quest/quest-labels";
 import { shuffleOptions, type BaseOption, type DisplayOption } from "@/shared/lib/question-utils";
-import { RichField, OptionContent } from "@/components/ui/svg-figure";
+import { isValidAnswerFormat } from "@/shared/lib/answer-formats";
+import { RichField } from "@/components/ui/svg-figure";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/dungeon")({
@@ -176,6 +180,8 @@ function DungeonPage() {
   // still ends the run — but only once the player has deliberately validated.
   async function validate() {
     if (showFeedback || answerMutation.isPending || !currentQuestion || !runId || !selected) return;
+    if (!isValidAnswerFormat(currentQuestion.questionType, selected)) return;
+    const isNumeric = currentQuestion.questionType === "numeric";
     const optId = selected;
     const selectedOption = currentQuestion.options.find((opt) => opt.id === optId);
 
@@ -201,8 +207,11 @@ function DungeonPage() {
         );
         setLastWrongAnswer({
           prompt: result.prompt,
-          selected: selectedOption?.displayId ?? optId.toUpperCase(),
-          correct: correctOption?.displayId ?? (result.correctChoice ?? "-").toUpperCase(),
+          // numeric: show the raw values (a typed number has no display letter).
+          selected: isNumeric ? optId : (selectedOption?.displayId ?? optId.toUpperCase()),
+          correct: isNumeric
+            ? (result.correctChoice ?? "-")
+            : (correctOption?.displayId ?? (result.correctChoice ?? "-").toUpperCase()),
           explanation: result.explanation,
         });
         setFloor(result.nextFloor);
@@ -503,6 +512,12 @@ function DungeonPage() {
   const subjectInfo = currentQuestion.exercises?.subjects;
   const difficulty = currentQuestion.exercises?.difficulty ?? 1;
   const isCorrectAnswer = showFeedback && answerWasCorrect === true;
+  // Content-language labels for the per-type input. The dungeon payload only
+  // carries color_token (not content_language) — same signal as the RTL flag.
+  const dungeonInputLabels = buildQuestLabels(subjectInfo?.color_token === "arabic" ? "ar" : "fr");
+  const canValidate = Boolean(
+    selected && isValidAnswerFormat(currentQuestion.questionType, selected),
+  );
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
@@ -567,61 +582,54 @@ function DungeonPage() {
           />
           <p className="mt-2 text-sm text-muted-foreground">{t.dungeon.warning}</p>
 
-          <div className="mt-6 space-y-3" role="radiogroup" aria-label={currentQuestion.prompt}>
-            {options.map((opt) => {
-              const isSel = selected === opt.id;
-              const isCorrect = showFeedback && isSel && answerWasCorrect === true;
-              const isWrong = showFeedback && isSel && answerWasCorrect === false;
-
+          <QuestionInput
+            questionType={currentQuestion.questionType}
+            prompt={currentQuestion.prompt}
+            options={options}
+            value={selected}
+            onChange={handleSelect}
+            onSubmit={validate}
+            disabled={showFeedback || answerMutation.isPending}
+            rtl={subjectInfo?.color_token === "arabic"}
+            labels={dungeonInputLabels}
+            optionClassName={({ isSelected }: McqOptionRender) => {
+              const isCorrect = showFeedback && isSelected && answerWasCorrect === true;
+              const isWrong = showFeedback && isSelected && answerWasCorrect === false;
               let cls =
                 "border-[color:var(--gold)]/20 bg-background/40 hover:border-[color:var(--gold)]/60 hover:bg-[color:var(--gold)]/5";
               if (showFeedback) {
                 if (isCorrect) cls = "border-emerald-500 bg-emerald-500/15";
                 else if (isWrong) cls = "border-destructive bg-destructive/15";
                 else cls = "border-border/30 bg-background/20 opacity-50";
-              } else if (isSel) {
+              } else if (isSelected) {
                 cls = "border-[color:var(--gold)] bg-[color:var(--gold)]/15";
               }
-
-              return (
-                <button
-                  key={opt.id}
-                  type="button"
-                  role="radio"
-                  aria-checked={isSel}
-                  onClick={() => handleSelect(opt.id)}
-                  disabled={showFeedback || answerMutation.isPending}
-                  className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left text-sm transition ${cls} ${showFeedback ? "cursor-default" : ""}`}
-                >
-                  <span
-                    className="flex items-center gap-3"
-                    dir={
-                      isMathExpression(opt.text) ? "ltr" : isRtlText(opt.text) ? "rtl" : undefined
-                    }
-                  >
-                    <span className="grid h-7 w-7 place-items-center rounded-md border border-current font-mono text-xs uppercase">
-                      {opt.displayId}
-                    </span>
-                    <OptionContent raw={opt.text} />
+              return `${cls} ${showFeedback ? "cursor-default" : ""}`;
+            }}
+            optionTrailing={({ isSelected }: McqOptionRender) => {
+              const isCorrect = showFeedback && isSelected && answerWasCorrect === true;
+              const isWrong = showFeedback && isSelected && answerWasCorrect === false;
+              // Non-color indicator: icon + screen-reader text so correctness is
+              // conveyed without relying on colour alone.
+              if (isCorrect) {
+                return (
+                  <span className="flex shrink-0 items-center">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-500" aria-hidden="true" />
+                    <span className="sr-only">{t.dungeon.correctMsg}</span>
                   </span>
-                  {/* Non-color indicator: icon + screen-reader text so correctness is
-                      conveyed without relying on colour alone. */}
-                  {showFeedback && isCorrect && (
-                    <span className="flex shrink-0 items-center">
-                      <CheckCircle2 className="h-5 w-5 text-emerald-500" aria-hidden="true" />
-                      <span className="sr-only">{t.dungeon.correctMsg}</span>
-                    </span>
-                  )}
-                  {showFeedback && isWrong && (
-                    <span className="flex shrink-0 items-center">
-                      <XCircle className="h-5 w-5 text-destructive" aria-hidden="true" />
-                      <span className="sr-only">{t.dungeon.wrongMsg}</span>
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
+                );
+              }
+              if (isWrong) {
+                return (
+                  <span className="flex shrink-0 items-center">
+                    <XCircle className="h-5 w-5 text-destructive" aria-hidden="true" />
+                    <span className="sr-only">{t.dungeon.wrongMsg}</span>
+                  </span>
+                );
+              }
+              return null;
+            }}
+          />
 
           {/* Feedback */}
           {showFeedback && (
@@ -647,7 +655,7 @@ function DungeonPage() {
               <button
                 type="button"
                 data-testid="dungeon-validate"
-                disabled={!selected || answerMutation.isPending}
+                disabled={!canValidate || answerMutation.isPending}
                 onClick={validate}
                 className="inline-flex items-center gap-2 rounded-lg bg-[image:var(--gradient-gold)] px-6 py-2.5 text-sm font-bold text-black shadow-gold transition disabled:opacity-40"
               >
