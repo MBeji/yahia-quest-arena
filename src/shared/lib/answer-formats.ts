@@ -33,10 +33,43 @@ const SENTINEL_CHOICES = new Set([TIMEOUT_ANSWER_CHOICE, UNSUPPORTED_ANSWER_CHOI
 export const NUMERIC_CHOICE_PATTERN = /^-?\d+(?:[.,]\d+)?$/;
 
 /**
+ * Split a B2 CSV answer into its parts, whitespace-insensitive (mirrors the
+ * server-side normalization in `score_answer`). Empty parts are kept so a
+ * trailing/double comma invalidates the payload instead of hiding a bug.
+ */
+function splitCsvChoice(value: string): string[] {
+  return value.replace(/\s+/g, "").split(",");
+}
+
+/**
+ * An `ordering` answer: the full arranged sequence as an id CSV ("b,a,d,c") —
+ * at least two unique, non-empty ids (an id never contains `,` or `:`).
+ */
+function isValidOrderingChoice(value: string): boolean {
+  const parts = splitCsvChoice(value);
+  if (parts.length < 2) return false;
+  if (parts.some((part) => part.length === 0 || part.includes(":"))) return false;
+  return new Set(parts).size === parts.length;
+}
+
+/**
+ * A `matching` answer: the associations as a pair CSV ("l1:r2,l2:r1") — each
+ * part exactly `left:right` with non-empty sides, pairs unique.
+ */
+function isValidMatchingChoice(value: string): boolean {
+  const parts = splitCsvChoice(value);
+  if (parts.length < 1) return false;
+  if (!parts.every((part) => /^[^:]+:[^:]+$/.test(part))) return false;
+  return new Set(parts).size === parts.length;
+}
+
+/**
  * Whether `choice` matches the wire format expected for `questionType`.
  *
  * - `numeric` → a plain number as string;
- * - `mcq` (and the not-yet-shipped B2/B3 types, whose formats land with their
+ * - `ordering` → the arranged sequence as a unique-id CSV ("b,a,d,c");
+ * - `matching` → the associations as a unique "left:right" pair CSV;
+ * - `mcq` (and the not-yet-shipped B3 `multi`, whose format lands with its
  *   phase) → any non-empty bounded string, the historical contract.
  */
 export function isValidAnswerFormat(
@@ -47,6 +80,8 @@ export function isValidAnswerFormat(
   if (value.length === 0 || value.length > MAX_CHOICE_LENGTH) return false;
   if (SENTINEL_CHOICES.has(value)) return true;
   if (questionType === "numeric") return NUMERIC_CHOICE_PATTERN.test(value);
+  if (questionType === "ordering") return isValidOrderingChoice(value);
+  if (questionType === "matching") return isValidMatchingChoice(value);
   return true;
 }
 

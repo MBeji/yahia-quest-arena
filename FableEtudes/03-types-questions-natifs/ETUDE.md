@@ -75,7 +75,7 @@ Intégralement dans la spec — carte des touchpoints (5 RPCs SQL, zod/TS, UI, p
 « toutes les bonnes réponses » (US-3). Chaque phase démarre sur GO humain après la précédente (D-2).
 
 - [x] B2.1 — DB + couture scoring étendue (merge seul d'abord — DoD §7)
-- [ ] B2.2 — serveur
+- [x] B2.2 — serveur
 - [ ] B2.3 — UI (@dnd-kit)
 - [ ] B2.4 — pipeline + skills
 
@@ -228,3 +228,18 @@ livré ne crashe pas — est préservée). Suite 178/178, verify vert.
    que `choice` (ordering : CSV d'ids ; matching : CSV de paires) et remplace l'expression
    dans les trois RPCs de correction (recréés verbatim, gates inchangés) — l'UI B2.3
    consommera ce format tel quel.
+
+### Lot B2.2 — 2026-07-05 (exécuté par le modèle architecte, Fable)
+
+Livré : formats de fil stricts dans `answer-formats.ts` — `ordering` = CSV d'ids uniques
+(≥ 2, parts non vides, pas de `:`, insensible aux espaces), `matching` = CSV de paires
+`gauche:droite` uniques (exactement un `:`, côtés non vides) ; les sentinels d'abandon
+passent toujours. La validation des server fns quest/dungeon était déjà branchée en B1.2
+(`assertAnswerFormats`/`isValidAnswerFormat`) — seule la table des formats change. Borne
+zod du `choice` donjon élargie 32 → `MAX_CHOICE_LENGTH` (un matching de 6 paires dépasse
+32 caractères). `types.ts` inchangé — B2.1 n'a modifié aucune signature consommée par TS
+(le helper de révélation est server-only). Tests : +8 Vitest (matrices ordering/matching
+
+- intégration fn) ; verify vert (1015 tests).
+
+Écart accepté : néant.
