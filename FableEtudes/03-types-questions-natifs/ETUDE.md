@@ -1,6 +1,6 @@
 # Étude 03 — Types de questions natifs (Tier B : numeric, ordering, matching, multi)
 
-> **Statut** : en exécution (validée par l'humain le 2026-07-05 ; lot B1.1 livré)
+> **Statut** : en exécution (validée par l'humain le 2026-07-05 ; lots B1.1–B1.2 livrés)
 > **Priorité** : 03 · **Valeur** : tue la devinette par élimination (saisie numérique), vraie manipulation (drag & drop), jugement multi-sélection — l'expérience d'exercice passe un cran au-dessus de tout QCM concurrent · **Complexité** : haute (5 RPC SQL + UI + pipeline), mais dé-risquée : la spec normative est déjà écrite
 > **Architecte** : Fable (claude-fable-5), 2026-07-04 · **Exécuteur cible** : Sonnet
 > **Dépend de** : rien (indépendant) ; recommandé avant le lancement bac (annales en saisie numérique)
@@ -64,7 +64,7 @@ Intégralement dans la spec — carte des touchpoints (5 RPCs SQL, zod/TS, UI, p
 | B1.4 | Pipeline : union discriminée schema.ts + sql-builder + lints QA ; MàJ skills (levée du ban `numeric`)                             | Vitest schema/sql-builder ; content:check/qa verts                                | B1.1      |
 
 - [x] B1.1 — DB + couture scoring (merge seul d'abord — DoD §7)
-- [ ] B1.2 — serveur
+- [x] B1.2 — serveur
 - [ ] B1.3 — UI
 - [ ] B1.4 — pipeline + skills
 
@@ -130,3 +130,24 @@ complète 151/151, `npm run verify` vert.
    (mcq/numeric/ordering/matching/multi) — garde-fou anti-typo au niveau DB ; les
    types B2/B3 sont stockables (le pipeline garde son ban) mais scorent `false`
    sans exception (posture R-3).
+
+### Lot B1.2 — 2026-07-05 (exécuté par le modèle architecte, Fable)
+
+Livré : validation de format par type dans les server fns (`quest.server.ts` :
+`submitAttempt`/`checkAnswersPublic`/`scoreQuizPublic` ; `dungeon.server.ts` :
+`submitDungeonAnswer`) via le helper partagé `src/shared/lib/answer-formats.ts`
+(`choice` reste un string sur le fil ; borne 512 ; `numeric` = nombre décimal
+point/virgule ; fetch du `question_type` client-lisible, dégradation ouverte si le
+fetch échoue — les RPCs restent garbage-safe) ; `types.ts` mis à jour à la main
+(hors-ligne, minimal : colonnes `questions` + signature `get_attempt_review`).
+Tests : +18 Vitest (helper + 4 fns), pgTAP 153/153, `verify` vert.
+
+Écart accepté (arbitrage architecte) :
+
+4. **Le lot gagne une migration additive** `20260705150000_get_attempt_review_scored.sql` :
+   `get_attempt_review` accepte un `p_answers` optionnel et retourne `is_correct`
+   scoré via `score_answer`. Sans ça, la correction de fin de quête (recalculée en
+   égalité de chaîne dans `submitAttempt`) contredirait le score pour une réponse
+   numeric dans la tolérance (comptée juste, affichée fausse). L'ancienne forme
+   d'appel (sans réponses) reste valide (`is_correct` NULL) — fenêtre de déploiement
+   sûre ; tous les gates du RPC sont inchangés.

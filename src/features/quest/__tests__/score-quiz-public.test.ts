@@ -1,14 +1,22 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const { mockRpc, mockIsRateLimited, mockIsRateLimitedLocal, mockGetRequest } = vi.hoisted(() => ({
-  mockRpc: vi.fn(),
-  mockIsRateLimited: vi.fn(),
-  mockIsRateLimitedLocal: vi.fn(),
-  mockGetRequest: vi.fn(),
-}));
+const { mockRpc, mockFrom, mockIsRateLimited, mockIsRateLimitedLocal, mockGetRequest } = vi.hoisted(
+  () => ({
+    mockRpc: vi.fn(),
+    mockFrom: vi.fn(),
+    mockIsRateLimited: vi.fn(),
+    mockIsRateLimitedLocal: vi.fn(),
+    mockGetRequest: vi.fn(),
+  }),
+);
 
 let ctxUserId: string | null = null;
-const mockSupabase = { rpc: mockRpc };
+const mockSupabase = { rpc: mockRpc, from: mockFrom };
+
+/** Thenable select().eq() chain for the per-type format-validation lookup. */
+function questionTypesQuery(rows: unknown, error: unknown = null) {
+  return { select: () => ({ eq: () => Promise.resolve({ data: rows, error }) }) };
+}
 
 vi.mock("@tanstack/react-start", () => ({
   createMiddleware: () => ({ server: (fn: unknown) => fn }),
@@ -66,11 +74,21 @@ describe("quest.scoreQuizPublic", () => {
   beforeEach(() => {
     ctxUserId = null;
     mockRpc.mockReset();
+    // Default: the quiz question is a plain mcq (format validation passes).
+    mockFrom.mockReset().mockReturnValue(questionTypesQuery([{ id: Q1, question_type: "mcq" }]));
     mockIsRateLimited.mockReset().mockResolvedValue(false);
     mockIsRateLimitedLocal.mockReset().mockReturnValue(false);
     mockGetRequest
       .mockReset()
       .mockReturnValue({ headers: new Headers({ "x-forwarded-for": "1.2.3.4" }) });
+  });
+
+  it("rejects a malformed numeric answer before calling the RPC", async () => {
+    mockFrom.mockReturnValue(questionTypesQuery([{ id: Q1, question_type: "numeric" }]));
+    await expect(
+      call({ exerciseId: EX, answers: [{ questionId: Q1, choice: "not-a-number" }] }),
+    ).rejects.toThrow("Réponse invalide pour ce type de question.");
+    expect(mockRpc).not.toHaveBeenCalled();
   });
 
   it("maps the aggregate RPC row into a percentage score", async () => {

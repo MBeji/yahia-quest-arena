@@ -1,0 +1,57 @@
+/**
+ * Per-type wire formats for native question types (Tier B — phase B1).
+ *
+ * The answer wire shape stays a single string (`choice`) for every type
+ * (docs/interactive-question-types.md §Target data model); what varies per
+ * `questions.question_type` is the expected FORMAT of that string. The scoring
+ * RPCs are already garbage-safe (an unparseable choice scores false, never
+ * throws), so this validation exists for the client contract: a malformed
+ * payload surfaces as a clear input error instead of a silently-wrong score.
+ *
+ * Shared by the quest and dungeon server fns (features never import features).
+ */
+
+/** Upper bound for any answer string — generous for the B2/B3 CSV encodings. */
+export const MAX_CHOICE_LENGTH = 512;
+
+/**
+ * A numeric answer: an optionally-negative decimal number, with `.` or `,` as
+ * the decimal separator (normalized server-side) — mirrors `score_answer`.
+ */
+export const NUMERIC_CHOICE_PATTERN = /^-?\d+(?:[.,]\d+)?$/;
+
+/**
+ * Whether `choice` matches the wire format expected for `questionType`.
+ *
+ * - `numeric` → a plain number as string;
+ * - `mcq` (and the not-yet-shipped B2/B3 types, whose formats land with their
+ *   phase) → any non-empty bounded string, the historical contract.
+ */
+export function isValidAnswerFormat(
+  questionType: string | null | undefined,
+  choice: string,
+): boolean {
+  const value = choice.trim();
+  if (value.length === 0 || value.length > MAX_CHOICE_LENGTH) return false;
+  if (questionType === "numeric") return NUMERIC_CHOICE_PATTERN.test(value);
+  return true;
+}
+
+/**
+ * First answer whose choice violates its question's wire format, or null when
+ * the whole payload is well-formed. Answers targeting unknown question ids are
+ * skipped — rejecting/ignoring those is the scoring RPC's responsibility.
+ */
+export function findAnswerFormatViolation(
+  questionTypeById: ReadonlyMap<string, string | null | undefined>,
+  answers: ReadonlyArray<{ questionId: string; choice: string }>,
+): { questionId: string; questionType: string } | null {
+  for (const answer of answers) {
+    if (!questionTypeById.has(answer.questionId)) continue;
+    const questionType = questionTypeById.get(answer.questionId) ?? "mcq";
+    if (!isValidAnswerFormat(questionType, answer.choice)) {
+      return { questionId: answer.questionId, questionType };
+    }
+  }
+  return null;
+}

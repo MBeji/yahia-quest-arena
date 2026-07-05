@@ -1,11 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { optionalSupabaseAuth } from "@/shared/integrations/supabase/optional-auth-middleware";
 import { isRateLimited, isRateLimitedLocal } from "@/shared/lib/rate-limit";
 import { MIN_SECONDS_PER_QUESTION, QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
 import { errorMessage, failWithClientError } from "@/shared/lib/safe-error";
+import { findAnswerFormatViolation, MAX_CHOICE_LENGTH } from "@/shared/lib/answer-formats";
 import { logger } from "@/shared/lib/logger";
 import type { UnlockedBadge } from "@/shared/types/gamification";
 import type { Database } from "@/shared/integrations/supabase/types";
@@ -26,6 +28,42 @@ export const PARCOURS_COMING_SOON_MESSAGE =
   "Parcours premium : ce parcours sera bientôt disponible.";
 
 type ProfileSnapshot = Database["public"]["Tables"]["profiles"]["Row"];
+
+/** Thrown when an answer's wire format doesn't match its question's type. */
+export const ANSWER_FORMAT_MESSAGE = "Réponse invalide pour ce type de question.";
+
+/**
+ * Per-type wire-format validation (docs/interactive-question-types.md): fetch
+ * the exercise's (client-readable) question types and reject any answer whose
+ * `choice` doesn't match its question's expected format — e.g. a non-numeric
+ * string for a `numeric` question. Degrades open when the fetch itself fails:
+ * the scoring RPCs are garbage-safe either way, this only improves the error.
+ */
+async function assertAnswerFormats(
+  supabase: SupabaseClient<Database>,
+  scope: string,
+  exerciseId: string,
+  answers: ReadonlyArray<{ questionId: string; choice: string }>,
+): Promise<void> {
+  const { data: rows, error } = await supabase
+    .from("questions")
+    .select("id,question_type")
+    .eq("exercise_id", exerciseId);
+  if (error || !rows) {
+    logger.warn(`${scope}: question_type fetch failed — skipping format validation`, {
+      exerciseId,
+      error: error?.message,
+    });
+    return;
+  }
+  const violation = findAnswerFormatViolation(
+    new Map(rows.map((row) => [row.id, row.question_type])),
+    answers,
+  );
+  if (violation) {
+    failWithClientError(scope, null, ANSWER_FORMAT_MESSAGE);
+  }
+}
 
 /** Multiplier potion applied to a reward-earning attempt (null when none armed). */
 export type PotionApplied = {
@@ -425,7 +463,9 @@ export const checkAnswersPublic = createServerFn({ method: "POST" })
       .object({
         exerciseId: z.guid(),
         answers: z
-          .array(z.object({ questionId: z.guid(), choice: z.string() }))
+          .array(
+            z.object({ questionId: z.guid(), choice: z.string().min(1).max(MAX_CHOICE_LENGTH) }),
+          )
           .min(1)
           .max(100),
       })
@@ -443,6 +483,8 @@ export const checkAnswersPublic = createServerFn({ method: "POST" })
     if (limited) {
       throw new Error("Trop de requêtes. Réessaie dans un instant.");
     }
+
+    await assertAnswerFormats(supabase, "quest.checkAnswersPublic", data.exerciseId, data.answers);
 
     const { data: rows, error } = await supabase.rpc("check_answers", {
       p_exercise_id: data.exerciseId,
@@ -503,7 +545,9 @@ export const scoreQuizPublic = createServerFn({ method: "POST" })
       .object({
         exerciseId: z.guid(),
         answers: z
-          .array(z.object({ questionId: z.guid(), choice: z.string() }))
+          .array(
+            z.object({ questionId: z.guid(), choice: z.string().min(1).max(MAX_CHOICE_LENGTH) }),
+          )
           .min(1)
           .max(100),
       })
@@ -520,6 +564,8 @@ export const scoreQuizPublic = createServerFn({ method: "POST" })
     if (limited) {
       throw new Error("Trop de requêtes. Réessaie dans un instant.");
     }
+
+    await assertAnswerFormats(supabase, "quest.scoreQuizPublic", data.exerciseId, data.answers);
 
     const { data: rows, error } = await supabase.rpc("score_quiz", {
       p_exercise_id: data.exerciseId,
@@ -707,7 +753,9 @@ export const submitAttempt = createServerFn({ method: "POST" })
         sessionId: z.guid(),
         exerciseId: z.guid(),
         answers: z
-          .array(z.object({ questionId: z.guid(), choice: z.string() }))
+          .array(
+            z.object({ questionId: z.guid(), choice: z.string().min(1).max(MAX_CHOICE_LENGTH) }),
+          )
           .min(1)
           .max(100),
       })
@@ -720,6 +768,8 @@ export const submitAttempt = createServerFn({ method: "POST" })
     if (await isRateLimited(supabase, `submit_${userId}`, 5, 10_000)) {
       throw new Error("Too many submissions. Please slow down.");
     }
+
+    await assertAnswerFormats(supabase, "quest.submitAttempt", data.exerciseId, data.answers);
 
     // Comprehension quizzes are validated by the student alone: we never return
     // the correct answers / explanations for a quiz, so they cannot be memorised
@@ -765,15 +815,20 @@ export const submitAttempt = createServerFn({ method: "POST" })
     // answering (GAP-020). We zip the caller's answers against it.
     let review: ReviewItem[] = [];
     if (!isQuiz) {
+      // Passing the answers lets the RPC score each one through the same
+      // `score_answer` seam as the submit RPC — so a numeric answer inside its
+      // tolerance shows as correct in the review, exactly as it was counted.
       const { data: reviewRows } = await supabase.rpc("get_attempt_review", {
         p_session_id: data.sessionId,
+        p_answers: data.answers,
       });
       const rows = Array.isArray(reviewRows)
         ? (reviewRows as Array<{
             question_id: string;
             prompt: string;
-            correct_option: string;
+            correct_option: string | null;
             explanation: string | null;
+            is_correct: boolean | null;
           }>)
         : [];
       const byId = new Map(rows.map((r) => [r.question_id, r]));
@@ -787,7 +842,9 @@ export const submitAttempt = createServerFn({ method: "POST" })
             prompt: q?.prompt ?? "Question",
             selectedChoice: answer.choice,
             correctChoice: q?.correct_option ?? "",
-            isCorrect: q?.correct_option === answer.choice,
+            // Server-scored; the string-equality fallback covers a transient
+            // pre-migration RPC shape (is_correct absent) — mcq semantics only.
+            isCorrect: q ? (q.is_correct ?? q.correct_option === answer.choice) : false,
             explanation: q?.explanation ?? null,
           };
         });

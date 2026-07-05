@@ -890,31 +890,37 @@ export type Database = {
       };
       questions: {
         Row: {
-          correct_option: string;
+          answer_key: Json | null;
+          correct_option: string | null;
           display_order: number;
           exercise_id: string;
           explanation: string | null;
           id: string;
           options: Json;
           prompt: string;
+          question_type: string;
         };
         Insert: {
-          correct_option: string;
+          answer_key?: Json | null;
+          correct_option?: string | null;
           display_order?: number;
           exercise_id: string;
           explanation?: string | null;
           id?: string;
           options: Json;
           prompt: string;
+          question_type?: string;
         };
         Update: {
-          correct_option?: string;
+          answer_key?: Json | null;
+          correct_option?: string | null;
           display_order?: number;
           exercise_id?: string;
           explanation?: string | null;
           id?: string;
           options?: Json;
           prompt?: string;
+          question_type?: string;
         };
         Relationships: [
           {
@@ -1552,10 +1558,11 @@ export type Database = {
         Returns: Json;
       };
       get_attempt_review: {
-        Args: { p_session_id: string };
+        Args: { p_answers?: Json; p_session_id: string };
         Returns: {
-          correct_option: string;
+          correct_option: string | null;
           explanation: string | null;
+          is_correct: boolean | null;
           prompt: string;
           question_id: string;
         }[];
