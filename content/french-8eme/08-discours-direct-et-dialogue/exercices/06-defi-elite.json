@@ -1,0 +1,91 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : le sacre du dialoguiste",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 6,
+  "questions": [
+    {
+      "prompt": "Laquelle de ces incises est correcte ?",
+      "options": [
+        { "id": "a", "text": "« Viens », dit-elle-t." },
+        { "id": "b", "text": "« Viens », dit Yassine." },
+        { "id": "c", "text": "« Viens », Yassine dit." },
+        { "id": "d", "text": "« Viens », dit-Yassine." }
+      ],
+      "correctOption": "b",
+      "explanation": "Avec un NOM sujet, l'incise s'écrit verbe + nom, sans tiret ni « -t- » : « dit Yassine ». « Yassine dit » n'a pas d'inversion ; (a) et (d) ajoutent des tirets/‑t‑ réservés au pronom (dit-elle).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle phrase est parfaitement ponctuée ?",
+      "options": [
+        { "id": "a", "text": "« Crois-tu demanda-t-il que nous réussirons ? »" },
+        { "id": "b", "text": "« Crois-tu, demanda-t-il que nous réussirons ? »" },
+        { "id": "c", "text": "« Crois-tu ? demanda-t-il, que nous réussirons. »" },
+        { "id": "d", "text": "« Crois-tu, demanda-t-il, que nous réussirons ? »" }
+      ],
+      "correctOption": "d",
+      "explanation": "La parole est « Crois-tu que nous réussirons ? » ; l'incise « demanda-t-il » y est insérée et encadrée de deux virgules, le « ? » restant à la fin de la question. Les autres oublient une virgule ou déplacent mal le point d'interrogation.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans ce dialogue à deux voix, quelle présentation est entièrement correcte ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "La marchande sourit combien en veux-tu trois s'il vous plaît répondit Ines les voici dit la marchande"
+        },
+        { "id": "b", "text": "— Combien en veux-tu — Trois s'il vous plaît — Les voici" },
+        {
+          "id": "c",
+          "text": "La marchande sourit : « Combien en veux-tu ? / — Trois, s'il vous plaît, répondit Ines. / — Les voici, dit la marchande. »"
+        },
+        {
+          "id": "d",
+          "text": "La marchande sourit : « Combien en veux-tu ? » « Trois » : « Les voici »"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "En (c) : deux-points, guillemets ouvrants, majuscule et « ? » à la première réplique, puis un tiret à chaque changement d'interlocuteur, des incises correctes et les guillemets fermants à la fin. Les autres oublient guillemets, virgules d'incise ou empilent des guillemets à chaque réplique.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Le narrateur a déjà écrit « dit » puis « répondit ». Pour une 3ᵉ réplique qui est un ordre sec — « — Silence ! ___ le surveillant. » — quel verbe est le plus juste ?",
+      "options": [
+        { "id": "a", "text": "proposa" },
+        { "id": "b", "text": "suggéra" },
+        { "id": "c", "text": "ordonna" },
+        { "id": "d", "text": "demanda" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Silence ! » est un ordre : « ordonna » convient et varie du « dit » déjà employé. « proposa » et « suggéra » sont des propositions douces ; « demanda » annonce une question.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Une seule de ces phrases est correcte. Laquelle ?",
+      "options": [
+        { "id": "a", "text": "Il murmura : « je crois que oui. »" },
+        { "id": "b", "text": "Il murmura : « Je crois que oui. »" },
+        { "id": "c", "text": "Il murmura, « Je crois que oui. »" },
+        { "id": "d", "text": "Il murmura : Je crois que oui." }
+      ],
+      "correctOption": "b",
+      "explanation": "Il faut les deux-points, les guillemets et une MAJUSCULE au début de la parole : « Je crois que oui. » (a) met une minuscule, (c) une virgule au lieu des deux-points, (d) oublie les guillemets.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans un récit au passé, on veut rapporter les paroles EXACTES du personnage (discours direct). Quelle insertion est correcte ?",
+      "options": [
+        { "id": "a", "text": "Le vieil homme s'assit et soupira : « Comme le temps a passé ! »" },
+        { "id": "b", "text": "Le vieil homme s'assit et soupira que le temps avait passé." },
+        { "id": "c", "text": "Le vieil homme s'assit et soupira : comme le temps a passé." },
+        { "id": "d", "text": "Le vieil homme s'assit et soupira — comme le temps a passé —" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le discours direct annonce (deux-points), encadre (guillemets, majuscule) et garde les paroles exactes : « Comme le temps a passé ! » L'option (b) transforme les paroles (discours indirect, réservé à la 9ème) ; (c) et (d) oublient les guillemets.",
+      "difficulty": 3
+    }
+  ]
+}

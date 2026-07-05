@@ -1,0 +1,85 @@
+{
+  "title": "📝 Entraînement ⭐⭐⭐ : la grande révision du dialogue",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "En typographie française, quel signe encadre une parole rapportée au discours direct ?",
+      "options": [
+        { "id": "a", "text": "les guillemets « »" },
+        { "id": "b", "text": "les parenthèses ( )" },
+        { "id": "c", "text": "les crochets [ ]" },
+        { "id": "d", "text": "les barres / /" }
+      ],
+      "correctOption": "a",
+      "explanation": "Les guillemets français « » encadrent la parole. Les parenthèses, crochets et barres ne s'emploient pas pour le discours direct.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lequel de ces verbes n'est PAS un verbe introducteur de parole ?",
+      "options": [
+        { "id": "a", "text": "répliqua" },
+        { "id": "b", "text": "s'écria" },
+        { "id": "c", "text": "grimpa" },
+        { "id": "d", "text": "ajouta" }
+      ],
+      "correctOption": "c",
+      "explanation": "« grimpa » est un verbe d'action (il ne présente pas des paroles). « répliqua », « s'écria » et « ajouta » sont bien des verbes introducteurs de parole.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Le capitaine se retourna et lança ___ « En avant ! »",
+      "options": [
+        { "id": "a", "text": ", (virgule)" },
+        { "id": "b", "text": ": (deux-points)" },
+        { "id": "c", "text": "; (point-virgule)" },
+        { "id": "d", "text": "— (tiret)" }
+      ],
+      "correctOption": "b",
+      "explanation": "Avant une parole rapportée, on met les deux-points pour l'annoncer : « lança : « En avant ! » ». La virgule, le point-virgule et le tiret ne conviennent pas ici.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle phrase, avec une incise au milieu de la parole, est correctement ponctuée ?",
+      "options": [
+        { "id": "a", "text": "« Ce soir dit-il nous partirons. »" },
+        { "id": "b", "text": "« Ce soir, dit-il nous partirons. »" },
+        { "id": "c", "text": "« Ce soir dit-il, nous partirons. »" },
+        { "id": "d", "text": "« Ce soir, dit-il, nous partirons. »" }
+      ],
+      "correctOption": "d",
+      "explanation": "Quand l'incise est insérée au milieu de la parole, elle est encadrée de DEUX virgules : « Ce soir, dit-il, nous partirons. » Les autres oublient une des deux virgules.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Un personnage a déjà parlé, puis il continue : « Et n'oublie pas ton manteau », ___ sa mère. Quel verbe montre qu'elle CONTINUE de parler ?",
+      "options": [
+        { "id": "a", "text": "demanda" },
+        { "id": "b", "text": "ajouta" },
+        { "id": "c", "text": "interrogea" },
+        { "id": "d", "text": "se tut" }
+      ],
+      "correctOption": "b",
+      "explanation": "« ajouta » indique que la mère continue, qu'elle dit quelque chose en plus. « demanda » et « interrogea » annoncent une question ; « se tut » signifie le contraire : elle arrête de parler.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans le récit « La nuit tombait sur le port. », quelle insertion de dialogue est cohérente et bien ponctuée ?",
+      "options": [
+        { "id": "a", "text": "Rentrons il se fait tard déclara le pêcheur." },
+        { "id": "b", "text": "« rentrons il se fait tard » : déclara le pêcheur" },
+        {
+          "id": "c",
+          "text": "« Rentrons, il se fait tard », déclara le pêcheur en rangeant ses filets."
+        },
+        { "id": "d", "text": "— rentrons, il se fait tard déclara le pêcheur —" }
+      ],
+      "correctOption": "c",
+      "explanation": "La parole est encadrée de guillemets, commence par une majuscule, et l'incise « déclara le pêcheur » est séparée par une virgule. Les autres oublient les guillemets, la majuscule ou la ponctuation de l'incise.",
+      "difficulty": 3
+    }
+  ]
+}

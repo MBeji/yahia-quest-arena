@@ -1,0 +1,82 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : le maître des circonstances",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 6,
+  "questions": [
+    {
+      "prompt": "Dans « Le car s'arrête à Sidi Bou Saïd. », le groupe « à Sidi Bou Saïd » est :",
+      "options": [
+        { "id": "a", "text": "un COI" },
+        { "id": "b", "text": "un COD" },
+        { "id": "c", "text": "un CC de lieu" },
+        { "id": "d", "text": "un CC de temps" }
+      ],
+      "correctOption": "c",
+      "explanation": "S'arrête où ? à Sidi Bou Saïd : CC de lieu, déplaçable (À Sidi Bou Saïd, le car s'arrête). Le « à » du lieu ne doit pas se confondre avec le « à » du COI (parler à quelqu'un).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans « Tarek écrit à son grand-père à la tombée de la nuit. », lequel des deux groupes est un CC ?",
+      "options": [
+        { "id": "a", "text": "à son grand-père" },
+        { "id": "b", "text": "à la tombée de la nuit" },
+        { "id": "c", "text": "les deux" },
+        { "id": "d", "text": "aucun des deux" }
+      ],
+      "correctOption": "b",
+      "explanation": "« À son grand-père » = COI (écrit à qui ?), non déplaçable. « À la tombée de la nuit » = CC de temps (quand ?), supprimable et mobile. Seul ce dernier est un CC.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quel enchaînement de connecteurs organise un récit dans l'ordre chronologique ?",
+      "options": [
+        { "id": "a", "text": "d'abord… ensuite… enfin" },
+        { "id": "b", "text": "enfin… ensuite… d'abord" },
+        { "id": "c", "text": "ensuite… d'abord… enfin" },
+        { "id": "d", "text": "enfin… d'abord… ensuite" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'ordre chronologique va du début à la fin : « d'abord » (le premier événement), « ensuite » (la suite), « enfin » (la fin). Les autres enchaînements mélangent la chronologie.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans quelle phrase le groupe entre guillemets est-il un CC de manière ?",
+      "options": [
+        { "id": "a", "text": "Ils sont arrivés « à Gafsa »." },
+        { "id": "b", "text": "Ils ont voyagé « toute la journée »." },
+        { "id": "c", "text": "Ils ont marché « en file indienne »." },
+        { "id": "d", "text": "Ils se sont arrêtés « à cause du vent »." }
+      ],
+      "correctOption": "c",
+      "explanation": "« En file indienne » dit comment ils ont marché : CC de manière. Les autres sont des CC de lieu (à Gafsa), de temps (toute la journée) et de cause (à cause du vent).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "« ___ sa carte détaillée, l'équipe a évité de se perdre. » Le sens attendu impose :",
+      "options": [
+        { "id": "a", "text": "À cause de" },
+        { "id": "b", "text": "Malgré" },
+        { "id": "c", "text": "Sans" },
+        { "id": "d", "text": "Grâce à" }
+      ],
+      "correctOption": "d",
+      "explanation": "La carte aide l'équipe (elle évite de se perdre) : c'est une cause favorable → « grâce à ». « À cause de » marquerait une cause fâcheuse, ce qui contredirait le sens.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "On veut enrichir la phrase minimale « L'équipe est repartie. » avec, dans l'ordre, un CC de temps puis un CC de lieu. Quelle phrase est correcte ?",
+      "options": [
+        { "id": "a", "text": "Au petit matin, l'équipe est repartie vers le nord." },
+        { "id": "b", "text": "L'équipe est repartie vers le nord au petit matin." },
+        { "id": "c", "text": "L'équipe vers le nord est repartie au petit matin." },
+        { "id": "d", "text": "Vers le nord au petit matin l'équipe est repartie." }
+      ],
+      "correctOption": "a",
+      "explanation": "L'ordre demandé est temps puis lieu : « Au petit matin » (temps, en tête avec virgule) puis « vers le nord » (lieu). La phrase b inverse l'ordre, la c coupe le sujet et le verbe, la d entasse les CC sans ponctuation.",
+      "difficulty": 3
+    }
+  ]
+}

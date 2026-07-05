@@ -1,0 +1,91 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : maître des expansions",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Dans « le jeune violoniste du conservatoire qui a ébloui la salle », classe les trois expansions du nom « violoniste » dans l'ordre où elles apparaissent.",
+      "options": [
+        { "id": "a", "text": "adjectif épithète, complément du nom, proposition relative" },
+        { "id": "b", "text": "complément du nom, adjectif épithète, proposition relative" },
+        { "id": "c", "text": "proposition relative, adjectif épithète, complément du nom" },
+        { "id": "d", "text": "attribut du sujet, complément du nom, proposition relative" }
+      ],
+      "correctOption": "a",
+      "explanation": "« jeune » (adjectif à côté du nom) = épithète, « du conservatoire » (préposition + nom) = complément du nom, « qui a ébloui la salle » (pronom relatif + verbe) = proposition relative. Il n'y a pas d'attribut, car aucun verbe d'état ne relie un adjectif au sujet.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Kairouan est la ville ____ ce poète se souvient avec émotion. »",
+      "options": [
+        { "id": "a", "text": "où" },
+        { "id": "b", "text": "dont" },
+        { "id": "c", "text": "que" },
+        { "id": "d", "text": "qui" }
+      ],
+      "correctOption": "b",
+      "explanation": "Piège : « ville » évoque un lieu, mais c'est le VERBE qui commande le pronom. On dit « se souvenir DE quelque chose » → complément en « de » → « dont » (ce poète se souvient de la ville). « où » ne conviendrait que pour « habiter, vivre, aller » dans un lieu.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Voici le village ____ mes grands-parents ont vécu quarante ans. »",
+      "options": [
+        { "id": "a", "text": "dont" },
+        { "id": "b", "text": "que" },
+        { "id": "c", "text": "où" },
+        { "id": "d", "text": "qui" }
+      ],
+      "correctOption": "c",
+      "explanation": "Ici « vivre » indique le lieu : « mes grands-parents ont vécu DANS le village » → complément de lieu → « où ». À comparer avec « se souvenir DE » qui, lui, appelle « dont » : c'est la construction du verbe qui décide, pas le mot « village ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « L'outil ____ le sculpteur a besoin est introuvable. »",
+      "options": [
+        { "id": "a", "text": "que" },
+        { "id": "b", "text": "qui" },
+        { "id": "c", "text": "où" },
+        { "id": "d", "text": "dont" }
+      ],
+      "correctOption": "d",
+      "explanation": "On dit « avoir besoin DE quelque chose » : le complément est introduit par « de » → « dont » (le sculpteur a besoin de cet outil). L'erreur fréquente est de mettre « que », mais « que » remplace un COD sans préposition.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans « Le rideau rouge de la scène paraît lourd. », quelle analyse des trois éléments est correcte ?",
+      "options": [
+        { "id": "a", "text": "« rouge » = attribut, « de la scène » = COD, « lourd » = épithète" },
+        {
+          "id": "b",
+          "text": "« rouge » = épithète, « de la scène » = complément du nom, « lourd » = attribut du sujet"
+        },
+        {
+          "id": "c",
+          "text": "« rouge » = épithète, « de la scène » = complément du nom, « lourd » = épithète"
+        },
+        {
+          "id": "d",
+          "text": "« rouge » = complément du nom, « de la scène » = épithète, « lourd » = attribut"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "« rouge » touche le nom « rideau » dans le GN → épithète. « de la scène » (préposition + nom) → complément du nom de « rideau ». « paraît » est un verbe d'état qui relie « lourd » au sujet → attribut du sujet.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Parmi ces phrases, laquelle est correcte ?",
+      "options": [
+        { "id": "a", "text": "C'est un auteur dont j'admire le style." },
+        { "id": "b", "text": "C'est un auteur dont j'admire son style." },
+        { "id": "c", "text": "C'est un auteur que j'admire son style." },
+        { "id": "d", "text": "C'est un auteur dont son style est célèbre." }
+      ],
+      "correctOption": "a",
+      "explanation": "« dont » contient déjà l'idée de « de l'auteur » : on ne répète donc pas « son » (erreurs en b et d). La construction correcte est « dont j'admire le style » (= j'admire le style de l'auteur). « que » (COD) ne conviendrait pas ici.",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : le maître de l'antériorité",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Transforme au plus-que-parfait : « Elle est venue et elle a laissé un message. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "Elle avait venue et elle était laissé un message."
+        },
+        {
+          "id": "b",
+          "text": "Elle était venu et elle avait laissée un message."
+        },
+        {
+          "id": "c",
+          "text": "Elle était venue et elle avait laissé un message."
+        },
+        {
+          "id": "d",
+          "text": "Elle est venue et elle avait laissé un message."
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "« venir » prend être → « était venue » (accord avec le sujet féminin) ; « laisser » prend avoir, COD « un message » placé après → pas d'accord → « avait laissé ». « avait venue… était laissé » inverse les auxiliaires, « était venu… avait laissée » fait de mauvais accords et « est venue » laisse « venir » au passé composé.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "« Le sentier qu'ils ___ pendant des heures débouchait enfin sur la mer. » Complète au plus-que-parfait, avec le bon accord.",
+      "options": [
+        {
+          "id": "a",
+          "text": "avaient suivi"
+        },
+        {
+          "id": "b",
+          "text": "avaient suivis"
+        },
+        {
+          "id": "c",
+          "text": "étaient suivis"
+        },
+        {
+          "id": "d",
+          "text": "avait suivi"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Avec avoir, on accorde avec le COD placé avant : « qu' » reprend « le sentier » (masculin SINGULIER) → « avaient suivi », sans -s. « avaient suivis » accorde au pluriel à tort (le COD est singulier, ce n'est pas le sujet qui compte), « étaient suivis » se trompe d'auxiliaire et « avait suivi » met l'auxiliaire au singulier alors que le sujet « ils » est pluriel.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans « Nour comprit que la tempête avait emporté le pont qu'un ingénieur avait construit dix ans plus tôt », combien de faits sont antérieurs à « comprit » ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Un seul : la tempête a emporté le pont."
+        },
+        {
+          "id": "b",
+          "text": "Aucun : tout se passe en même temps que « comprit »."
+        },
+        {
+          "id": "c",
+          "text": "Trois faits antérieurs."
+        },
+        {
+          "id": "d",
+          "text": "Deux : la tempête a emporté le pont, et l'ingénieur avait construit le pont."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« comprit » (passé simple) est le premier plan. Les deux verbes au plus-que-parfait — « avait emporté » et « avait construit » — sont antérieurs. Il y a donc deux faits antérieurs (avec, entre eux, un ordre : la construction avant l'emport).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle phrase exprime CORRECTEMENT que l'action de fermer est antérieure à celle d'arriver ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Quand ils arrivèrent, le marché a fermé."
+        },
+        {
+          "id": "b",
+          "text": "Quand ils arrivèrent, le marché avait fermé."
+        },
+        {
+          "id": "c",
+          "text": "Quand ils étaient arrivés, le marché fermait."
+        },
+        {
+          "id": "d",
+          "text": "Quand ils arrivaient, le marché fermera."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Pour marquer que la fermeture précède l'arrivée, on met la fermeture au plus-que-parfait (« avait fermé ») et l'arrivée au passé simple (« arrivèrent »). « le marché a fermé » juxtapose deux actions sans antériorité, « étaient arrivés… fermait » inverse les rôles et « arrivaient… fermera » emploie un futur incohérent.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Réécris au plus-que-parfait : « Les provisions se sont épuisées et les guides ont fait demi-tour. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "Les provisions s'étaient épuisées et les guides avaient fait demi-tour."
+        },
+        {
+          "id": "b",
+          "text": "Les provisions s'avaient épuisées et les guides étaient fait demi-tour."
+        },
+        {
+          "id": "c",
+          "text": "Les provisions s'étaient épuisé et les guides avaient faits demi-tour."
+        },
+        {
+          "id": "d",
+          "text": "Les provisions se sont épuisées et les guides avaient fait demi-tour."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "« s'épuiser » (pronominal) → être : « s'étaient épuisées » (accord au féminin pluriel). « faire » → avoir, COD « demi-tour » après → invariable : « avaient fait ». « s'avaient épuisées » emploie avoir pour le pronominal, « s'étaient épuisé… avaient faits » fait de mauvais accords et « se sont épuisées » laisse le premier verbe au passé composé.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Une seule phrase est entièrement correcte (temps, auxiliaire et accord). Laquelle ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Les cartes qu'elle avait dessiné nous avaient sauvés."
+        },
+        {
+          "id": "b",
+          "text": "Les cartes qu'elle avait dessinées nous étaient sauvés."
+        },
+        {
+          "id": "c",
+          "text": "Les cartes qu'elle avait dessinées nous avaient sauvé."
+        },
+        {
+          "id": "d",
+          "text": "Les cartes qu'elle avait dessinées nous avaient sauvés."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« qu' » reprend « les cartes » (féminin pluriel), COD avant avoir → « avait dessinées ». Puis « nous » (COD, ici masculin pluriel) est avant « avaient sauvés » → accord. « avait dessiné » oublie le premier accord, « étaient sauvés » se trompe d'auxiliaire pour « sauver » et « avaient sauvé » oublie le second accord.",
+      "difficulty": 3
+    }
+  ]
+}
