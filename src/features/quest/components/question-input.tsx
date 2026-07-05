@@ -2,6 +2,7 @@ import { useEffect, type ReactNode } from "react";
 import { isMathExpression, isRtlText } from "@/shared/lib/utils";
 import { isValidAnswerFormat, UNSUPPORTED_ANSWER_CHOICE } from "@/shared/lib/answer-formats";
 import { OptionContent } from "@/components/ui/svg-figure";
+import { MatchingBoard, OrderingBoard } from "@/features/quest/components/question-boards";
 import type { DisplayOption } from "@/shared/lib/question-utils";
 
 // =============================================================================
@@ -13,6 +14,8 @@ import type { DisplayOption } from "@/shared/lib/question-utils";
 //   * 'mcq' (default) — the historical radiogroup of option buttons;
 //   * 'numeric'       — a free numeric entry (mobile decimal keyboard, always
 //                       LTR even inside an RTL subject — R-4);
+//   * 'ordering'      — drag-&-drop (or arrow) sequencing board (phase B2);
+//   * 'matching'      — drag-&-drop (or arrow) pair-alignment board (phase B2);
 //   * anything else   — the R-3 fallback: a clean "unavailable" notice that
 //                       auto-fills a sentinel answer so the run stays
 //                       completable (the sentinel scores as wrong server-side).
@@ -25,6 +28,10 @@ export type QuestionInputLabels = {
   numericPlaceholder: string;
   numericHint: string;
   numericInvalid: string;
+  orderingHint: string;
+  matchingHint: string;
+  moveUp: string;
+  moveDown: string;
   unsupportedTitle: string;
   unsupportedBody: string;
 };
@@ -56,6 +63,8 @@ export type QuestionInputProps = {
 export function QuestionInput(props: QuestionInputProps) {
   const type = props.questionType ?? "mcq";
   if (type === "numeric") return <NumericInput {...props} />;
+  if (type === "ordering") return <OrderingBoard {...props} />;
+  if (type === "matching") return <MatchingBoard {...props} />;
   if (type !== "mcq") return <UnsupportedQuestion {...props} />;
   return <McqInput {...props} />;
 }

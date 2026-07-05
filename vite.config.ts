@@ -81,6 +81,9 @@ export default defineConfig(async ({ command, mode }) => {
               return "vendor-three";
             if (id.includes("lucide-react")) return "vendor-icons";
             if (id.includes("motion")) return "vendor-motion";
+            // Drag-&-drop runtime (B2 ordering/matching boards) — own cached
+            // chunk with its own budget so it never eats the index budget (D-3).
+            if (id.includes("@dnd-kit/")) return "vendor-dndkit";
             if (id.includes("@supabase/")) return "vendor-supabase";
             if (id.includes("@radix-ui/")) return "vendor-radix";
 

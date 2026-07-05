@@ -16,6 +16,9 @@ const BUDGETS = {
   "i18n-": 96 * 1024,
   "vendor-supabase-": 240 * 1024,
   "vendor-motion-": 150 * 1024,
+  // @dnd-kit (core+sortable+utilities) powering the B2 ordering/matching
+  // boards — dedicated chunk (see vite.config manualChunks).
+  "vendor-dndkit-": 64 * 1024,
   // Dashboard route chunk. Bumped 30→32 KB for the flagship-concours banner
   // integration (the banner trio is lazy-loaded into its own chunk; only the
   // small lazy glue lands here). Heavy sections (radar/3D, badges/shop) stay lazy.
