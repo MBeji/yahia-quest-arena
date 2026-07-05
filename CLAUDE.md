@@ -344,7 +344,11 @@ the project stays regression- and debt-free while being improved by AI.
    SQL editor, no local `db push`): author the migration, merge it, the workflow
    applies it. It can also be dispatched by hand — `push` / read-only `list` /
    one-time `repair-all` — from the Actions tab or
-   `gh workflow run db-migrate-prod.yml`. Additive migrations are safe ahead of
+   `gh workflow run db-migrate-prod.yml`. An **hourly reconciliation** run also
+   catches merges whose push fired no workflow events (auto-merge squashes are
+   performed with `GITHUB_TOKEN`): it compares main's newest migration to prod's
+   history and applies any pending ones — prod can never silently fall behind
+   for more than an hour. Additive migrations are safe ahead of
    the code that uses them, so the order still holds: land the migration (it
    applies on merge) → then the dependent code. Ship a **destructive** migration
    (DROP/REVOKE) in a **separate** merge, **after** the code that stopped using the
