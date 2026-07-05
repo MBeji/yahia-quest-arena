@@ -16,6 +16,8 @@ type DungeonQuestionPayload = {
   id: string;
   prompt: string;
   options: DungeonQuestionOption[];
+  /** questions.question_type — drives the per-type <QuestionInput> renderer. */
+  questionType: string;
   explanation: string | null;
   exercises?: {
     difficulty?: number;
@@ -63,6 +65,8 @@ function parseDungeonQuestionsPayload(value: unknown): DungeonQuestionsResponse 
       id: typeof q.id === "string" ? q.id : "",
       prompt: typeof q.prompt === "string" ? q.prompt : "",
       options: Array.isArray(q.options) ? (q.options as DungeonQuestionOption[]) : [],
+      // Payloads emitted before 20260705170000 carry no type — they are mcq.
+      questionType: typeof q.question_type === "string" ? q.question_type : "mcq",
       explanation: typeof q.explanation === "string" ? q.explanation : null,
       exercises:
         q.exercises && typeof q.exercises === "object"

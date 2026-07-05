@@ -1,6 +1,6 @@
 # Étude 03 — Types de questions natifs (Tier B : numeric, ordering, matching, multi)
 
-> **Statut** : en exécution (validée par l'humain le 2026-07-05 ; lots B1.1–B1.2 livrés)
+> **Statut** : en exécution (validée par l'humain le 2026-07-05 ; lots B1.1–B1.3 livrés)
 > **Priorité** : 03 · **Valeur** : tue la devinette par élimination (saisie numérique), vraie manipulation (drag & drop), jugement multi-sélection — l'expérience d'exercice passe un cran au-dessus de tout QCM concurrent · **Complexité** : haute (5 RPC SQL + UI + pipeline), mais dé-risquée : la spec normative est déjà écrite
 > **Architecte** : Fable (claude-fable-5), 2026-07-04 · **Exécuteur cible** : Sonnet
 > **Dépend de** : rien (indépendant) ; recommandé avant le lancement bac (annales en saisie numérique)
@@ -65,7 +65,7 @@ Intégralement dans la spec — carte des touchpoints (5 RPCs SQL, zod/TS, UI, p
 
 - [x] B1.1 — DB + couture scoring (merge seul d'abord — DoD §7)
 - [x] B1.2 — serveur
-- [ ] B1.3 — UI
+- [x] B1.3 — UI
 - [ ] B1.4 — pipeline + skills
 
 **Phase B2 — `ordering` + `matching`** : mêmes 4 lots (B2.1 étend `score_answer`; B2.3 =
@@ -151,3 +151,31 @@ Tests : +18 Vitest (helper + 4 fns), pgTAP 153/153, `verify` vert.
    numeric dans la tolérance (comptée juste, affichée fausse). L'ancienne forme
    d'appel (sans réponses) reste valide (`is_correct` NULL) — fenêtre de déploiement
    sûre ; tous les gates du RPC sont inchangés.
+
+### Lot B1.3 — 2026-07-05 (exécuté par le modèle architecte, Fable)
+
+Livré : `<QuestionInput>` par type (`src/features/quest/components/question-input.tsx`) —
+radiogroup mcq historique (styles/indicateurs injectés par la surface), `NumericInput`
+(clavier décimal mobile, `dir="ltr"` forcé même en sujet RTL — R-4, hint/erreur de
+format), fallback R-3 « question indisponible » (sentinel auto-rempli, la session
+reste terminable) — branché dans le player quest ET la route donjon (le bloc options
+dupliqué du donjon est supprimé). Labels trilingues dans `buildQuestLabels`.
+`getExercise` expose `question_type` ; le payload donjon aussi (écart 5).
+Extraction complémentaire `QuestReviewList` (la spec listait « review display » dans
+l'extraction ; le player dépassait sinon le cap max-lines). E2E : page-object
+type-aware + spec `native-question-types.spec.ts` (skip propre tant que le catalogue
+TEST n'a pas de mission numeric — B1.4 la sèmera). Gates : verify (996 tests, +10),
+build:check, smoke:shell, pgTAP 154/154.
+
+Écarts acceptés (arbitrage architecte) :
+
+5. **Migration additive** `20260705170000_dungeon_questions_carry_question_type.sql` :
+   `get_dungeon_questions` porte `question_type` dans son payload (recréé verbatim,
+   seul ce champ ajouté) — sans lui le donjon ne peut pas choisir le renderer.
+6. **Sentinels d'abandon acceptés par la validation de format** (`__timeout__`,
+   `__unsupported__`, centralisés dans `answer-formats.ts`) : sans ça, l'expiration
+   du chrono boss sur une question numeric (saisie partielle invalide) ferait
+   rejeter TOUTE la soumission par la validation serveur du lot B1.2. Ils scorent
+   toujours faux.
+7. La spec e2e numeric s'auto-skippe tant qu'aucune mission numeric n'existe sur le
+   projet TEST (l'authoring reste banni jusqu'à B1.4) — elle s'activera d'elle-même.

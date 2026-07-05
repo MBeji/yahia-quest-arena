@@ -17,6 +17,10 @@ export class PracticePage {
   get questionGroups(): Locator {
     return this.page.getByRole("radiogroup");
   }
+  /** Native numeric entry (question_type='numeric' — Tier B, phase B1). */
+  get numericInput(): Locator {
+    return this.page.getByTestId("numeric-answer-input");
+  }
   get submitButton(): Locator {
     return this.page.getByTestId("quest-submit");
   }
@@ -43,21 +47,31 @@ export class PracticePage {
 
   /** Waits for the first question so a play step isn't racing the content fetch. */
   async firstQuestionVisible(): Promise<void> {
-    await this.questionGroups.first().waitFor({ state: "visible", timeout: 15_000 });
+    // Type-aware: an mcq question mounts a radiogroup, a numeric one an input.
+    await this.questionGroups
+      .first()
+      .or(this.numericInput)
+      .first()
+      .waitFor({ state: "visible", timeout: 15_000 });
   }
 
   /**
-   * Play the whole exercise question-by-question (pick the first option each time)
-   * until the result screen appears. Correctness is irrelevant — the journey
-   * asserts the run completes and a score renders, not a particular score.
+   * Play the whole exercise question-by-question until the result screen
+   * appears — type-aware: picks the first option (mcq) or types a number
+   * (numeric). Correctness is irrelevant — the journey asserts the run
+   * completes and a score renders, not a particular score.
    */
   async playThrough(): Promise<void> {
     await this.firstQuestionVisible();
     for (let i = 0; i < 50; i += 1) {
       if (await this.score.isVisible().catch(() => false)) break;
-      const group = this.questionGroups.first();
-      if (!(await group.isVisible().catch(() => false))) break;
-      await group.getByRole("radio").first().click();
+      if (await this.numericInput.isVisible().catch(() => false)) {
+        await this.numericInput.fill("42");
+      } else {
+        const group = this.questionGroups.first();
+        if (!(await group.isVisible().catch(() => false))) break;
+        await group.getByRole("radio").first().click();
+      }
       await this.submitButton.click();
       // Let the next question mount or the result screen settle.
       await this.page.waitForTimeout(200);

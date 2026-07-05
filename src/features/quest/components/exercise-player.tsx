@@ -7,12 +7,15 @@ import { ArrowLeft, Loader2, Trophy, Skull, Heart, BookOpen, Check } from "lucid
 import { toast } from "sonner";
 import { computeNextExerciseId, getExercise, getSubject } from "@/features/quest";
 import { PASS_THRESHOLD_PCT, QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
-import { isRtlText, isMathExpression } from "@/shared/lib/utils";
 import { shuffleOptions, type BaseOption } from "@/shared/lib/question-utils";
-import { RichField, OptionContent } from "@/components/ui/svg-figure";
+import { isValidAnswerFormat, TIMEOUT_ANSWER_CHOICE } from "@/shared/lib/answer-formats";
+import { isolateLtrRuns } from "@/shared/lib/bidi";
+import { RichField } from "@/components/ui/svg-figure";
+import { QuestionInput, type McqOptionRender } from "@/features/quest/components/question-input";
 import { levelForXp } from "@/shared/lib/level";
 import { noXpReason } from "@/features/quest/no-xp-reason";
 import { QuestRewardGrid } from "@/features/quest/components/quest-reward-grid";
+import { QuestReviewList } from "@/features/quest/components/quest-review-list";
 import { QuizLockScreen } from "@/features/quest/components/quiz-lock-screen";
 import { QuestHintButton } from "@/features/quest/components/quest-hint-button";
 import { BossCountdown } from "@/features/quest/components/boss-countdown";
@@ -242,13 +245,23 @@ export function ExercisePlayer({
     (questionId: string, choice: string) => {
       if (!choice) return "-";
       const opts = shuffledOptionsByQuestionId.get(questionId) ?? [];
-      return opts.find((opt) => opt.id === choice)?.displayId ?? choice.toUpperCase();
+      // mcq: show the option's display letter. Otherwise (numeric value, give-up
+      // sentinel) show the raw answer, LTR-isolated so it renders sanely in RTL.
+      return opts.find((opt) => opt.id === choice)?.displayId ?? isolateLtrRuns(choice);
     },
     [shuffledOptionsByQuestionId],
   );
 
   const total = questions.length;
   const current = questions[idx];
+  const currentType =
+    (current as { question_type?: string | null } | undefined)?.question_type ?? "mcq";
+  // For numeric entry the typed text must be a well-formed number before it can
+  // be validated (the server rejects malformed payloads with a client error).
+  const canValidate =
+    currentType === "numeric"
+      ? Boolean(selected && isValidAnswerFormat("numeric", selected))
+      : Boolean(selected);
   const progress = useMemo(() => (total > 0 ? (idx / total) * 100 : 0), [idx, total]);
   const isQuiz = data?.exercise?.mode === "quiz";
   // Boss chrome + time pressure are a connected perk; an anon visitor plays a
@@ -300,9 +313,17 @@ export function ExercisePlayer({
   const handleBossTimeout = useCallback(() => {
     if (answeredQuestionRef.current === currentRef.current?.id) return;
     answeredQuestionRef.current = currentRef.current?.id ?? null;
+    // A half-typed numeric answer at the buzzer must not fail the submission's
+    // server-side format validation — fall back to the (always-valid) sentinel.
+    const timeoutType =
+      (currentRef.current as { question_type?: string | null } | undefined)?.question_type ?? "mcq";
+    const timedSelection = selectedRef.current;
     const autoAnswer: PlayerAnswer = {
       questionId: currentRef.current?.id ?? "",
-      choice: selectedRef.current ?? "__timeout__",
+      choice:
+        timedSelection && isValidAnswerFormat(timeoutType, timedSelection)
+          ? timedSelection
+          : TIMEOUT_ANSWER_CHOICE,
     };
     const nextAnswers = [...answersRef.current, autoAnswer];
     if (idxRef.current + 1 >= totalRef.current) {
@@ -372,9 +393,9 @@ export function ExercisePlayer({
   );
 
   const validate = useCallback(() => {
-    if (!selected || !sessionId) return;
+    if (!selected || !canValidate || !sessionId) return;
     advanceWithChoice(selected);
-  }, [advanceWithChoice, selected, sessionId]);
+  }, [advanceWithChoice, selected, canValidate, sessionId]);
 
   useEffect(() => {
     if (result) return;
@@ -574,61 +595,19 @@ export function ExercisePlayer({
             })}
 
             {!isQuiz && !result.reviewHidden && result.review.length > 0 && (
-              <div className="mt-8 text-left">
-                <h2 className="font-display text-xl font-bold">{t.quest.questReview}</h2>
-                <div className="mt-4 space-y-3">
-                  {result.review.map((item, reviewIndex) => (
-                    <div
-                      key={item.questionId}
-                      data-testid="review-item"
-                      data-correct={item.isCorrect ? "true" : "false"}
-                      className="rounded-2xl border border-border/50 bg-black/30 p-4"
-                    >
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <div className="text-xs uppercase tracking-widest text-muted-foreground">
-                            {t.quest.questionN.replace("{n}", String(reviewIndex + 1))}
-                          </div>
-                          <RichField
-                            raw={item.prompt || promptByQuestionId.get(item.questionId) || ""}
-                            className="mt-1 font-semibold"
-                          />
-                        </div>
-                        <div
-                          className={`rounded-full px-3 py-1 text-xs font-bold ${item.isCorrect ? "bg-(--success)/15 text-success" : "bg-destructive/15 text-destructive"}`}
-                        >
-                          {item.isCorrect ? t.quest.passed : t.quest.needsWork}
-                        </div>
-                      </div>
-                      <div className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
-                        <div className="rounded-xl bg-black/60 p-3">
-                          <div className="text-xs uppercase tracking-widest text-muted-foreground">
-                            {t.quest.yourAnswer}
-                          </div>
-                          <div className="mt-1 font-mono uppercase">
-                            {getDisplayChoice(item.questionId, item.selectedChoice)}
-                          </div>
-                        </div>
-                        <div className="rounded-xl bg-black/60 p-3">
-                          <div className="text-xs uppercase tracking-widest text-muted-foreground">
-                            {t.quest.correctAnswer}
-                          </div>
-                          <div className="mt-1 font-mono uppercase">
-                            {getDisplayChoice(item.questionId, item.correctChoice)}
-                          </div>
-                        </div>
-                      </div>
-                      {item.explanation && (
-                        <RichField
-                          raw={item.explanation}
-                          as="p"
-                          className="mt-3 text-sm text-muted-foreground"
-                        />
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <QuestReviewList
+                review={result.review}
+                labels={{
+                  questReview: t.quest.questReview,
+                  questionN: t.quest.questionN,
+                  passed: t.quest.passed,
+                  needsWork: t.quest.needsWork,
+                  yourAnswer: t.quest.yourAnswer,
+                  correctAnswer: t.quest.correctAnswer,
+                }}
+                resolvePrompt={(questionId) => promptByQuestionId.get(questionId) ?? ""}
+                getDisplayChoice={getDisplayChoice}
+              />
             )}
           </div>
         </motion.div>
@@ -739,50 +718,41 @@ export function ExercisePlayer({
           <p className="mt-2 text-sm text-muted-foreground">
             {bossMode ? t.quest.bossStrike : isQuiz ? QL.quizRecorded : t.quest.feedbackMsg}
           </p>
-          <div className="mt-6 space-y-3" role="radiogroup" aria-label={current.prompt}>
-            {options.map((opt) => {
-              const isSel = selected === opt.id;
-              const cls = isSel
-                ? bossMode
-                  ? "border-destructive bg-destructive/20"
-                  : "border-(--gold) bg-(--gold)/15"
-                : bossMode
-                  ? "border-destructive/20 bg-black/40 hover:border-destructive/60 hover:bg-destructive/10"
-                  : "border-border bg-black/40 hover:border-(--gold)/60 hover:bg-black/70";
-              return (
-                <button
-                  key={opt.id}
-                  type="button"
-                  role="radio"
-                  aria-checked={isSel}
-                  onClick={() => handleSelect(opt.id)}
-                  className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left text-sm transition-all duration-200 active:scale-[0.97] ${cls}`}
-                >
-                  <span
-                    className="flex items-center gap-3"
-                    dir={
-                      isMathExpression(opt.text) ? "ltr" : isRtlText(opt.text) ? "rtl" : undefined
-                    }
-                  >
-                    <span className="grid h-7 w-7 place-items-center rounded-md border border-current font-mono text-xs uppercase">
-                      {opt.displayId}
-                    </span>
-                    <OptionContent raw={opt.text} />
-                  </span>
-                  {isSel && (
-                    <span className="flex shrink-0 items-center gap-1">
-                      <Check className="h-5 w-5" aria-hidden="true" />
-                      <span className="sr-only">{t.quest.selectedAnswer}</span>
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
+          <QuestionInput
+            questionType={currentType}
+            prompt={current.prompt}
+            options={options}
+            value={selected}
+            onChange={handleSelect}
+            onSubmit={validate}
+            rtl={isRtlSubject}
+            labels={QL}
+            optionClassName={({ isSelected }: McqOptionRender) =>
+              `active:scale-[0.97] ${
+                isSelected
+                  ? bossMode
+                    ? "border-destructive bg-destructive/20"
+                    : "border-(--gold) bg-(--gold)/15"
+                  : bossMode
+                    ? "border-destructive/20 bg-black/40 hover:border-destructive/60 hover:bg-destructive/10"
+                    : "border-border bg-black/40 hover:border-(--gold)/60 hover:bg-black/70"
+              }`
+            }
+            optionTrailing={({ isSelected }: McqOptionRender) =>
+              isSelected ? (
+                <span className="flex shrink-0 items-center gap-1">
+                  <Check className="h-5 w-5" aria-hidden="true" />
+                  <span className="sr-only">{t.quest.selectedAnswer}</span>
+                </span>
+              ) : null
+            }
+          />
 
-          <div className="mt-3 text-center text-xs text-muted-foreground/60 hidden sm:block">
-            {t.quest.keyboardHint.replace("{keys1}", "1-4").replace("{keys2}", "A-D")}
-          </div>
+          {currentType === "mcq" && (
+            <div className="mt-3 text-center text-xs text-muted-foreground/60 hidden sm:block">
+              {t.quest.keyboardHint.replace("{keys1}", "1-4").replace("{keys2}", "A-D")}
+            </div>
+          )}
 
           {canUseHints && current && (
             <QuestHintButton
@@ -800,7 +770,7 @@ export function ExercisePlayer({
           <div className="mt-6 flex justify-end">
             <button
               data-testid="quest-submit"
-              disabled={!selected || mutation.isPending || sessionMutation.isPending}
+              disabled={!canValidate || mutation.isPending || sessionMutation.isPending}
               onClick={validate}
               className={`inline-flex items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-bold shadow-gold transition disabled:opacity-40 ${
                 bossMode

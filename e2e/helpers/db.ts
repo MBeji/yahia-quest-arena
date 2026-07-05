@@ -87,6 +87,12 @@ export interface AdminDb {
   /** The comprehension-quiz exercise (mode='quiz') with the lowest display order. */
   quizExerciseId(subjectId: string): Promise<string>;
   /**
+   * An admin, non-quiz mission carrying at least one native `numeric` question
+   * (Tier B, phase B1) — null until the content lot (B1.4) seeds one. Lets the
+   * numeric e2e spec skip cleanly instead of failing on an empty catalogue.
+   */
+  numericExerciseId(): Promise<string | null>;
+  /**
    * Grant a user a live entitlement on a parcours (per-parcours premium model)
    * via the admin_grant_parcours RPC — service-role bypasses is_admin(). Pass
    * `months` for a time-boxed grant; omit for perpetual. Idempotent (upserts the
@@ -365,6 +371,18 @@ export function createAdminDb(): AdminDb {
         .delete()
         .eq("parent_user_id", parentUserId);
       if (error) throw new Error(`clearParentLinks: ${error.message}`);
+    },
+    async numericExerciseId() {
+      const { data, error } = await client
+        .from("questions")
+        .select("exercise_id, exercises!inner(mode, source)")
+        .eq("question_type", "numeric")
+        .neq("exercises.mode", "quiz")
+        .eq("exercises.source", "admin")
+        .limit(1)
+        .maybeSingle();
+      if (error) throw new Error(`numericExerciseId: ${error.message}`);
+      return (data?.exercise_id as string) ?? null;
     },
     async quizExerciseId(subjectId: string) {
       const { data, error } = await client

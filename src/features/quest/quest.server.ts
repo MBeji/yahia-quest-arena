@@ -600,7 +600,7 @@ export const getExercise = createServerFn({ method: "GET" })
         .single(),
       supabase
         .from("questions")
-        .select("id,prompt,options,display_order")
+        .select("id,prompt,options,display_order,question_type")
         .eq("exercise_id", data.exerciseId)
         .order("display_order"),
     ]);
