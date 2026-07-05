@@ -1,11 +1,14 @@
 # Interactive question types — engine evolution spec (Tier B)
 
-> Design spec, not shipped behavior. **Tier A** — interactive formats encoded inside the existing
-> QCM schema — is live today and canonically documented in
-> `.claude/skills/content-engine/references/interactive-formats.md`; author those freely via the
-> `content-interactif` skill. **Tier B** below adds _native_ input types (numeric entry, drag-&-drop
-> ordering/matching, multi-select) and requires the coordinated DB + RPC + UI + pipeline changes
-> mapped here. Until a phase ships, content skills must not author its type. Defers to CLAUDE.md
+> **Phase B1 (`numeric`) SHIPPED 2026-07-05** (étude `FableEtudes/03-types-questions-natifs`,
+> lots B1.1–B1.4: `score_answer` seam + typed keys, per-type server validation, unified
+> `<QuestionInput>`/`NumericInput`, pipeline union schema + QA lints). `numeric` is authorable
+> (shape: content-engine `references/content-schema.md`). **Phases B2 (ordering/matching) and
+> B3 (multi) remain design-only** — content skills must not author those types until they ship.
+> **Tier A** — interactive formats encoded inside the existing QCM schema — is live and
+> canonically documented in `.claude/skills/content-engine/references/interactive-formats.md`;
+> author those freely via the `content-interactif` skill. Tier B adds _native_ input types and
+> requires the coordinated DB + RPC + UI + pipeline changes mapped here. Defers to CLAUDE.md
 > (DoD §7 migration ordering) and ARCHITECTURE.md where they overlap.
 
 ## Why (and why not sooner)

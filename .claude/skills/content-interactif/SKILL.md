@@ -9,8 +9,9 @@ description: >-
   "variés", "autre chose que des QCM", "un exercice à trous", "un exercice d'appariement / de remise
   en ordre", "une mission scénarisée / histoire", "un sprint chrono" — e.g. "ajoute des exercices
   interactifs au chapitre fractions 6ème", "une mission scénarisée de SVT 9ème", "un sprint de calcul
-  mental 4ème". Native new input types (saisie numérique, drag & drop) are Tier B — see
-  docs/interactive-question-types.md, do not fake them. Defers to the content-engine skill
+  mental 4ème". Native input types are Tier B (docs/interactive-question-types.md): la saisie
+  numérique (`type: "numeric"`) SHIPPED with phase B1 and is authorable; drag & drop
+  (ordering/matching) and multi-select are not yet — do not fake them. Defers to the content-engine skill
   (references/interactive-formats.md) for the format catalogue, schema, quality bar, rewards, and
   validation.
 ---
@@ -34,8 +35,10 @@ catalogue + renderer contract + anti-patterns: it is THE spec for this skill), p
 - **Does not:** author courses/quizzes (→ program wrapper / `content-cours`), raise the d3–4
   ceiling of school exam subjects on its own (→ co-design with the matching `prof-*` skill: the
   professor owns the trap taxonomy and calibration; this skill owns the interaction format), or
-  author Tier-B native types (numeric input, drag & drop — blocked on
-  `docs/interactive-question-types.md` shipping; say so instead of faking).
+  author the still-unshipped Tier-B types (drag & drop ordering/matching, multi-select — blocked
+  on phases B2/B3 of `docs/interactive-question-types.md`; say so instead of faking). Native
+  numeric entry (`type: "numeric"`) IS authorable since phase B1 shipped — shape and rules in
+  content-engine `references/content-schema.md`.
 
 ## Program fidelity still applies
 

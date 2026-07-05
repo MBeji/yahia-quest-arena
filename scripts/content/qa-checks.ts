@@ -46,6 +46,13 @@ export type QAQuestion = {
   explanation: string;
   difficulty?: number;
 };
+/** Native numeric-entry question (Tier B, phase B1) — no options, a typed key. */
+export type QANumericQuestion = {
+  prompt: string;
+  answerKey: { value: number; tolerance?: number; unit?: string };
+  explanation: string;
+  difficulty?: number;
+};
 export type Flag = { level: "error" | "warn"; where: string; msg: string };
 
 /** Normalise for substring comparison: strip whitespace, fold Arabic-Indic digits, lowercase. */
@@ -145,6 +152,45 @@ export function classifyOption(text: string): "meta" | "calque" | null {
   return null;
 }
 
+/**
+ * Field-level rendering checks shared by every question type:
+ *   [error] <svg> without a viewBox (collapses on the fixed-width surface);
+ *   [error] Arabic radicand of a radical / Arabic comma in math notation
+ *           (both break the LTR isolate in RTL — see the header).
+ */
+export function auditRenderedFields(
+  fields: ReadonlyArray<readonly [string, string]>,
+  where: string,
+): Flag[] {
+  const flags: Flag[] = [];
+  for (const [field, raw] of fields) {
+    for (const tag of raw.match(/<svg\b[^>]*>/gi) ?? []) {
+      if (!/\bviewBox=/i.test(tag)) {
+        flags.push({
+          level: "error",
+          where,
+          msg: "<svg> figure has no viewBox (will collapse when rendered)",
+        });
+      }
+    }
+    if (hasBidiFragileMath(raw)) {
+      flags.push({
+        level: "error",
+        where,
+        msg: `Arabic script as the radicand of a radical (√) in ${field} — will mis-render in RTL; write the operand as a number/symbol`,
+      });
+    }
+    if (hasArabicCommaInMath(raw)) {
+      flags.push({
+        level: "error",
+        where,
+        msg: `math notation uses the Arabic comma «،» as a separator in ${field} — breaks the LTR run in RTL; use «;» (e.g. «{−4 ; 4}», «]−1 ; 4[»)`,
+      });
+    }
+  }
+  return flags;
+}
+
 const buildSaysWrong = (letter: string) =>
   new RegExp(
     `l['’]option\\s+\\(?${letter}\\)?[^.;:!?\\n]{0,30}(?:est\\s+(?:fausse?|incorrecte?|erronée?)|comporte\\s+une\\s+erreur|n['’]est\\s+pas\\s+correcte?)`,
@@ -223,45 +269,18 @@ export function auditQuestion(q: QAQuestion, where: string): Flag[] {
     }
   }
 
-  // 6) every embedded <svg> must carry a viewBox. The renderer draws figures on
-  //   a fixed-width white surface and relies on the viewBox for the aspect ratio;
-  //   a viewBox-less SVG has no intrinsic ratio and collapses to a dot/blank.
-  //   (See content-engine content-schema.md "rendering contract".)
-  const fields = [q.prompt, q.explanation, ...q.options.map((o) => o.text)];
-  for (const raw of fields) {
-    for (const tag of raw.match(/<svg\b[^>]*>/gi) ?? []) {
-      if (!/\bviewBox=/i.test(tag)) {
-        flags.push({
-          level: "error",
-          where,
-          msg: "<svg> figure has no viewBox (will collapse when rendered)",
-        });
-      }
-    }
-  }
-
-  // 7) bidi-fragile math: Arabic script inside an LTR-isolated construct
-  //   (radical operand or bracketed group). Unrenderable — see header.
-  for (const [field, raw] of [
-    ["prompt", q.prompt] as const,
-    ["explanation", q.explanation] as const,
-    ...q.options.map((o) => [`option ${o.id}`, o.text] as const),
-  ]) {
-    if (hasBidiFragileMath(raw)) {
-      flags.push({
-        level: "error",
-        where,
-        msg: `Arabic script as the radicand of a radical (√) in ${field} — will mis-render in RTL; write the operand as a number/symbol`,
-      });
-    }
-    if (hasArabicCommaInMath(raw)) {
-      flags.push({
-        level: "error",
-        where,
-        msg: `math notation uses the Arabic comma «،» as a separator in ${field} — breaks the LTR run in RTL; use «;» (e.g. «{−4 ; 4}», «]−1 ; 4[»)`,
-      });
-    }
-  }
+  // 6+7) rendering checks (svg viewBox, bidi-fragile math) — shared with the
+  //   numeric audit; see auditRenderedFields.
+  flags.push(
+    ...auditRenderedFields(
+      [
+        ["prompt", q.prompt] as const,
+        ["explanation", q.explanation] as const,
+        ...q.options.map((o) => [`option ${o.id}`, o.text] as const),
+      ],
+      where,
+    ),
+  );
 
   // 8) meta-options & the non-idiomatic "none" calque (warn — quality, not structure).
   for (const o of q.options) {
@@ -280,6 +299,72 @@ export function auditQuestion(q: QAQuestion, where: string): Flag[] {
       });
     }
   }
+
+  return flags;
+}
+
+/**
+ * Per-question heuristics for native `numeric` questions (Tier B, phase B1):
+ *   [error] tolerance as wide as the value    → any plausible answer passes;
+ *           an acceptance window ≥ |value| is almost surely an authoring typo.
+ *   [warn]  very generous tolerance (> 25 %)  → double-check it is intended.
+ *   [warn]  canonical value not echoed in the explanation (same spirit as the
+ *           mcq check: the key and the worked solution may disagree).
+ *   [warn]  thin explanation                  → same bar as mcq.
+ *   [error] figure referenced but absent / rendering checks — shared.
+ */
+export function auditNumericQuestion(q: QANumericQuestion, where: string): Flag[] {
+  const flags: Flag[] = [];
+  const { value, tolerance } = q.answerKey;
+
+  if (tolerance !== undefined && tolerance > 0 && value !== 0) {
+    if (tolerance >= Math.abs(value)) {
+      flags.push({
+        level: "error",
+        where,
+        msg: `numeric tolerance ${tolerance} is as wide as the value ${value} — any plausible answer would score correct`,
+      });
+    } else if (tolerance > Math.abs(value) / 4) {
+      flags.push({
+        level: "warn",
+        where,
+        msg: `numeric tolerance ${tolerance} is more than 25% of the value ${value} — double-check it is intended`,
+      });
+    }
+  }
+
+  // Canonical value echoed in the explanation (dot or comma decimal accepted).
+  const dot = String(Math.abs(value));
+  const explNums = new Set(numbersIn(q.explanation));
+  if (!explNums.has(dot) && !explNums.has(dot.replace(".", ","))) {
+    flags.push({
+      level: "warn",
+      where,
+      msg: `canonical value ${value} not echoed in the explanation`,
+    });
+  }
+
+  if (q.explanation.trim().length < 25) {
+    flags.push({ level: "warn", where, msg: "explanation is very short" });
+  }
+
+  if (FIGURE_REFERENCE.test(q.prompt) && !SVG_BLOCK.test(q.prompt)) {
+    flags.push({
+      level: "error",
+      where,
+      msg: "prompt references a figure but no <svg> is present (unanswerable without it)",
+    });
+  }
+
+  flags.push(
+    ...auditRenderedFields(
+      [
+        ["prompt", q.prompt],
+        ["explanation", q.explanation],
+      ],
+      where,
+    ),
+  );
 
   return flags;
 }

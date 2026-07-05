@@ -130,6 +130,57 @@ describe("schema validation", () => {
     expect(result.success).toBe(false);
   });
 
+  it("defaults an untyped question to mcq (every existing file stays valid — D-4)", () => {
+    const result = questionSchema.safeParse({
+      prompt: "2 + 2 = ?",
+      options: [
+        { id: "a", text: "3" },
+        { id: "b", text: "4" },
+      ],
+      correctOption: "b",
+      explanation: "4",
+    });
+    expect(result.success).toBe(true);
+    if (result.success) expect(result.data.type).toBe("mcq");
+  });
+
+  it("accepts a native numeric question (typed key, no options)", () => {
+    const result = questionSchema.safeParse({
+      type: "numeric",
+      prompt: "Calcule 6 × 7.",
+      answerKey: { value: 42, tolerance: 0.5, unit: "cm" },
+      explanation: "6 × 7 = 42.",
+    });
+    expect(result.success).toBe(true);
+    if (result.success && result.data.type === "numeric") {
+      expect(result.data.answerKey.value).toBe(42);
+    }
+  });
+
+  it("rejects a numeric question without its answerKey, or with a negative tolerance", () => {
+    expect(
+      questionSchema.safeParse({ type: "numeric", prompt: "p", explanation: "e" }).success,
+    ).toBe(false);
+    expect(
+      questionSchema.safeParse({
+        type: "numeric",
+        prompt: "p",
+        answerKey: { value: 1, tolerance: -0.1 },
+        explanation: "e",
+      }).success,
+    ).toBe(false);
+  });
+
+  it("rejects not-yet-shipped Tier-B types (the authoring ban is the schema)", () => {
+    const result = questionSchema.safeParse({
+      type: "ordering",
+      prompt: "p",
+      answerKey: { order: ["b", "a"] },
+      explanation: "e",
+    });
+    expect(result.success).toBe(false);
+  });
+
   it("rejects an exercise with an out-of-range difficulty", () => {
     const result = exerciseSchema.safeParse({
       title: "t",
@@ -282,6 +333,7 @@ describe("buildMigrationSql", () => {
           title: "اختبار الفهم",
           questions: [
             {
+              type: "mcq" as const,
               prompt: "س؟",
               options: [
                 { id: "a", text: "1" },
@@ -304,6 +356,7 @@ describe("buildMigrationSql", () => {
               displayOrder: 1,
               questions: [
                 {
+                  type: "mcq" as const,
                   prompt: "2+2 ?",
                   options: [
                     { id: "a", text: "3" },
@@ -311,6 +364,12 @@ describe("buildMigrationSql", () => {
                   ],
                   correctOption: "b",
                   explanation: "= 4",
+                },
+                {
+                  type: "numeric" as const,
+                  prompt: "Calcule 6 × 7.",
+                  answerKey: { value: 42, tolerance: 0 },
+                  explanation: "6 × 7 = 42.",
                 },
               ],
             },
@@ -410,10 +469,24 @@ describe("buildMigrationSql", () => {
   it("serializes question options as jsonb", () => {
     expect(sql).toContain(`'[{"id":"a","text":"3"},{"id":"b","text":"4"}]'::jsonb`);
   });
+
+  it("emits per-type columns: mcq keeps its historical key, numeric carries answer_key", () => {
+    expect(sql).toContain(
+      "prompt, options, correct_option, explanation, display_order, question_type, answer_key) VALUES",
+    );
+    expect(sql).toContain("question_type = EXCLUDED.question_type");
+    expect(sql).toContain("answer_key = EXCLUDED.answer_key");
+    // mcq: typed 'mcq', no answer_key.
+    expect(sql).toContain("'mcq', NULL)");
+    // numeric: empty options, NULL correct_option, its typed jsonb key.
+    expect(sql).toContain(`'numeric', '{"value":42,"tolerance":0}'::jsonb`);
+    expect(sql).toContain("'[]'::jsonb, NULL");
+  });
 });
 
 describe("question difficulty ordering", () => {
   const q = (prompt: string, difficulty: number) => ({
+    type: "mcq" as const,
     prompt,
     options: [
       { id: "a", text: "1" },
