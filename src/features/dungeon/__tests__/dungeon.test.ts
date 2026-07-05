@@ -7,7 +7,15 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 // (via failWithClientError), and the parser branches.
 
 const mockRpc = vi.fn();
-const mockSupabase = { rpc: mockRpc };
+const mockFrom = vi.fn();
+const mockSupabase = { rpc: mockRpc, from: mockFrom };
+
+/** Thenable select().eq().maybeSingle() chain for the question_type lookup. */
+function questionTypeQuery(row: unknown, error: unknown = null) {
+  return {
+    select: () => ({ eq: () => ({ maybeSingle: () => Promise.resolve({ data: row, error }) }) }),
+  };
+}
 
 vi.mock("@tanstack/react-start", () => ({
   createMiddleware: () => ({ server: (fn: unknown) => fn }),
@@ -69,6 +77,8 @@ type AnyFn = (d?: unknown) => Promise<unknown>;
 beforeEach(() => {
   vi.resetModules();
   mockRpc.mockReset();
+  // Default: the answered question is a plain mcq (format validation passes).
+  mockFrom.mockReset().mockReturnValue(questionTypeQuery({ question_type: "mcq" }));
   mockIsRateLimited.mockReset();
   mockIsRateLimited.mockResolvedValue(false);
 });
@@ -332,6 +342,58 @@ describe("dungeon — submitDungeonAnswer (parser branches)", () => {
 
     expect((err as Error).message).toBe("Impossible de valider la réponse.");
     expect((err as Error).message).not.toMatch(/constraint violation/);
+  });
+
+  it("rejects a malformed numeric answer before calling the scoring RPC", async () => {
+    mockFrom.mockReturnValue(questionTypeQuery({ question_type: "numeric" }));
+
+    const { submitDungeonAnswer } = await import("@/features/dungeon");
+    await expect(
+      (submitDungeonAnswer as unknown as AnyFn)({
+        data: { runId: RUN_ID, questionId: QUESTION_ID, choice: "abc" },
+      }),
+    ).rejects.toThrow("Réponse invalide pour ce type de question.");
+    expect(mockRpc).not.toHaveBeenCalled();
+  });
+
+  it("accepts a well-formed numeric answer (comma decimal)", async () => {
+    mockFrom.mockReturnValue(questionTypeQuery({ question_type: "numeric" }));
+    mockRpc.mockImplementation(
+      rpcResponder({
+        submit_dungeon_answer: {
+          data: { isCorrect: true, runStatus: "active" },
+          error: null,
+        },
+      }),
+    );
+
+    const { submitDungeonAnswer } = await import("@/features/dungeon");
+    const res = (await (submitDungeonAnswer as unknown as AnyFn)({
+      data: { runId: RUN_ID, questionId: QUESTION_ID, choice: "3,14" },
+    })) as Record<string, unknown>;
+
+    expect(res.isCorrect).toBe(true);
+    expect(mockRpc).toHaveBeenCalledWith("submit_dungeon_answer", {
+      p_run_id: RUN_ID,
+      p_question_id: QUESTION_ID,
+      p_choice: "3,14",
+    });
+  });
+
+  it("degrades open when the question_type lookup fails", async () => {
+    mockFrom.mockReturnValue(questionTypeQuery(null, { message: "boom" }));
+    mockRpc.mockImplementation(
+      rpcResponder({
+        submit_dungeon_answer: { data: { isCorrect: false, runStatus: "failed" }, error: null },
+      }),
+    );
+
+    const { submitDungeonAnswer } = await import("@/features/dungeon");
+    const res = (await (submitDungeonAnswer as unknown as AnyFn)({
+      data: { runId: RUN_ID, questionId: QUESTION_ID, choice: "anything" },
+    })) as Record<string, unknown>;
+
+    expect(res.isCorrect).toBe(false);
   });
 
   it("rejects an empty choice via the zod validator", async () => {

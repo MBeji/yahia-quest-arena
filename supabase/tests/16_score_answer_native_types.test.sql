@@ -18,7 +18,7 @@
 
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pgtap;
-SELECT plan(24);
+SELECT plan(26);
 
 -- ---------------------------------------------------------
 -- Shared content fixtures.
@@ -251,6 +251,24 @@ SELECT is(
     WHERE r.question_id = 'd3000000-0000-0000-0000-000000000002'),
   '3.14',
   'get_attempt_review: a numeric question reveals answer_key value as the correction'
+);
+
+-- The review scores through the same seam as the submit RPC (B1.2): an
+-- in-tolerance numeric answer is CORRECT in the review, not a string mismatch.
+SELECT is(
+  (SELECT r.is_correct FROM public.get_attempt_review(
+     'a6000000-0000-0000-0000-000000000001',
+     '[{"questionId":"d3000000-0000-0000-0000-000000000002","choice":"3,15"}]'::jsonb) r
+    WHERE r.question_id = 'd3000000-0000-0000-0000-000000000002'),
+  true,
+  'get_attempt_review: an in-tolerance numeric answer is scored correct in the review'
+);
+
+SELECT is(
+  (SELECT r.is_correct FROM public.get_attempt_review('a6000000-0000-0000-0000-000000000001') r
+    WHERE r.question_id = 'd3000000-0000-0000-0000-000000000002'),
+  NULL::boolean,
+  'get_attempt_review: the legacy call shape (no answers) leaves is_correct NULL'
 );
 
 RESET ROLE;

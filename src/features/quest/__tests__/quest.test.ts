@@ -403,6 +403,67 @@ describe("gamification.quest — submitAttempt", () => {
     });
   });
 
+  it("rejects a malformed numeric answer before any scoring RPC", async () => {
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") return mockQuery({ mode: "practice" });
+      return mockQuery([{ id: Q1_ID, question_type: "numeric" }]);
+    });
+
+    const { submitAttempt } = await import("@/features/quest");
+    await expect(
+      (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
+        sessionId: SESSION_ID,
+        exerciseId: EXERCISE_ID,
+        answers: [{ questionId: Q1_ID, choice: "abc" }],
+      }),
+    ).rejects.toThrow("Réponse invalide pour ce type de question.");
+    expect(mockRpc).not.toHaveBeenCalledWith("submit_exercise_attempt", expect.anything());
+  });
+
+  it("scores the review through the RPC — an in-tolerance numeric answer shows correct", async () => {
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") return mockQuery({ mode: "practice" });
+      return mockQuery([{ id: Q1_ID, question_type: "numeric" }]);
+    });
+    mockRpc.mockImplementation((name: string) => {
+      if (name === "get_attempt_review") {
+        return {
+          data: [
+            {
+              question_id: Q1_ID,
+              prompt: "pi ≈ ?",
+              correct_option: "3.14",
+              explanation: null,
+              is_correct: true,
+            },
+          ],
+          error: null,
+        };
+      }
+      return {
+        data: { correct: 1, total: 1, scorePct: 100, xpEarned: 10, coinsEarned: 1 },
+        error: null,
+      };
+    });
+
+    const { submitAttempt } = await import("@/features/quest");
+    const res = (await (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
+      sessionId: SESSION_ID,
+      exerciseId: EXERCISE_ID,
+      answers: [{ questionId: Q1_ID, choice: "3,15" }],
+    })) as Record<string, unknown>;
+
+    const review = res.review as Array<{ isCorrect: boolean; correctChoice: string }>;
+    // Server-scored via score_answer (is_correct), NOT the old "3,15" === "3.14"
+    // string equality — the review can no longer contradict the counted score.
+    expect(review[0].isCorrect).toBe(true);
+    expect(review[0].correctChoice).toBe("3.14");
+    expect(mockRpc).toHaveBeenCalledWith("get_attempt_review", {
+      p_session_id: SESSION_ID,
+      p_answers: [{ questionId: Q1_ID, choice: "3,15" }],
+    });
+  });
+
   it("surfaces an applied multiplier potion from the RPC payload", async () => {
     const questionsData = [
       { id: Q1_ID, prompt: "2+2?", correct_option: "4", explanation: "Basic math" },

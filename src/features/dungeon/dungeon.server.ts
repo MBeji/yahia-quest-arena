@@ -3,6 +3,7 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { isRateLimited } from "@/shared/lib/rate-limit";
 import { failWithClientError } from "@/shared/lib/safe-error";
+import { isValidAnswerFormat } from "@/shared/lib/answer-formats";
 
 /** Dungeon constants */
 export const DUNGEON_XP_PER_FLOOR = 15;
@@ -243,6 +244,23 @@ export const submitDungeonAnswer = createServerFn({ method: "POST" })
 
     if (await isRateLimited(supabase, `dungeon_answer_${userId}`, 40, 60_000)) {
       throw new Error("Trop de réponses envoyées. Ralentis un peu.");
+    }
+
+    // Per-type wire-format validation (docs/interactive-question-types.md): a
+    // malformed answer for the question's (client-readable) type is a clear
+    // input error, not a silently-wrong floor. Degrades open on a failed fetch —
+    // the scoring RPC is garbage-safe either way.
+    const { data: questionRow } = await supabase
+      .from("questions")
+      .select("question_type")
+      .eq("id", data.questionId)
+      .maybeSingle();
+    if (questionRow && !isValidAnswerFormat(questionRow.question_type, data.choice)) {
+      failWithClientError(
+        "dungeon.submitDungeonAnswer: invalid answer format",
+        null,
+        "Réponse invalide pour ce type de question.",
+      );
     }
 
     const { data: payload, error } = await supabase.rpc("submit_dungeon_answer", {
