@@ -1,0 +1,94 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : maître de la comparaison",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Une seule phrase est entièrement correcte. Laquelle ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Nour danse mieux que sa rivale, mais Hédia est la meilleure de toutes."
+        },
+        {
+          "id": "b",
+          "text": "Nour danse meilleur que sa rivale, mais Hédia est la mieux de toutes."
+        },
+        {
+          "id": "c",
+          "text": "Nour danse mieux de sa rivale, mais Hédia est la meilleure que toutes."
+        },
+        {
+          "id": "d",
+          "text": "Nour danse plus bien que sa rivale, mais Hédia est la plus bonne de toutes."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "« danse » (verbe) → adverbe « mieux … que » ; « la meilleure de toutes » = superlatif adjectif accordé + complément en « de ». b intervertit meilleur/mieux, c met « de » au comparatif et « que » au superlatif, d emploie « plus bien » et « plus bonne » qui n'existent pas.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Transforme au superlatif relatif de supériorité : « Ce numéro est risqué (du programme). »",
+      "options": [
+        { "id": "a", "text": "Ce numéro est plus risqué du programme." },
+        { "id": "b", "text": "Ce numéro est le plus risqué du programme." },
+        { "id": "c", "text": "Ce numéro est le plus risqué que le programme." },
+        { "id": "d", "text": "Ce numéro est très risqué du programme." }
+      ],
+      "correctOption": "b",
+      "explanation": "Superlatif relatif = article + plus + adjectif + « de » → « le plus risqué du programme » (du = de + le). a oublie l'article obligatoire, c met « que » au lieu de « de », et d est un superlatif absolu qui ne peut pas recevoir de complément en « de ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "« Il reste moins de trois minutes avant le lever de rideau. » Quel comparatif complète le mieux : « Il reste ____ temps ____ prévu. » ?",
+      "options": [
+        { "id": "a", "text": "moins de … que" },
+        { "id": "b", "text": "moins … que" },
+        { "id": "c", "text": "aussi … que" },
+        { "id": "d", "text": "le moins … de" }
+      ],
+      "correctOption": "a",
+      "explanation": "« temps » est un nom (quantité) : l'infériorité se dit « moins de … que » → « moins de temps que prévu ». « moins … que » irait avec un adjectif, « aussi » marque l'égalité, et « le moins … de » est un superlatif.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle phrase emploie CORRECTEMENT l'irrégulier « pire » ?",
+      "options": [
+        { "id": "a", "text": "Cette chute est pire de toutes les erreurs du soir." },
+        { "id": "b", "text": "Cette chute est la plus pire du spectacle." },
+        { "id": "c", "text": "Cette chute est pire que la précédente." },
+        { "id": "d", "text": "Cette chute est plus pire que la précédente." }
+      ],
+      "correctOption": "c",
+      "explanation": "« pire » (comparatif de « mauvais ») se complète avec « que » : « pire que la précédente ». a met « de » à un comparatif, tandis que b et d ajoutent « plus » devant « pire », ce qui fait un doublon fautif.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Repère la phrase où « aussi » / « autant » est mal employé.",
+      "options": [
+        { "id": "a", "text": "Cet acrobate a autant de courage que son maître." },
+        { "id": "b", "text": "Cet acrobate s'entraîne autant que son maître." },
+        { "id": "c", "text": "Cet acrobate est aussi courageux que son maître." },
+        { "id": "d", "text": "Cet acrobate a aussi de courage que son maître." }
+      ],
+      "correctOption": "d",
+      "explanation": "Devant un nom (« courage »), l'égalité de quantité se dit « autant de », pas « aussi de » → il fallait « autant de courage ». Les trois autres sont justes : « autant de » + nom (a), « autant » + verbe (b), « aussi » + adjectif (c).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "« Plus l'artiste s'exerce, ____ il progresse. » Quel mot complète ce comparatif de proportion ?",
+      "options": [
+        { "id": "a", "text": "plus" },
+        { "id": "b", "text": "aussi" },
+        { "id": "c", "text": "autant de" },
+        { "id": "d", "text": "le plus" }
+      ],
+      "correctOption": "a",
+      "explanation": "La tournure « Plus …, plus … » exprime une progression parallèle : « Plus l'artiste s'exerce, plus il progresse. » « aussi » marque l'égalité, « autant de » se met devant un nom, et « le plus » forme un superlatif, pas cette corrélation.",
+      "difficulty": 3
+    }
+  ]
+}

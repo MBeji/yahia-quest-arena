@@ -1,0 +1,91 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : le gardien de la caractérisation",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complète : « L'écrivain ____ a signé ce roman vit à Sfax. »",
+      "options": [
+        { "id": "a", "text": "qui" },
+        { "id": "b", "text": "que" },
+        { "id": "c", "text": "dont" },
+        { "id": "d", "text": "où" }
+      ],
+      "correctOption": "a",
+      "explanation": "Dans la relative « l'écrivain a signé ce roman », « l'écrivain » est sujet du verbe « a signé » → « qui ». Indice sûr : « qui » n'a jamais de sujet derrière lui, car il est lui-même le sujet.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « La pièce ____ les élèves ont jouée a duré une heure. »",
+      "options": [
+        { "id": "a", "text": "qui" },
+        { "id": "b", "text": "où" },
+        { "id": "c", "text": "que" },
+        { "id": "d", "text": "dont" }
+      ],
+      "correctOption": "c",
+      "explanation": "Dans la relative « les élèves ont joué la pièce », « la pièce » est COD (le sujet est « les élèves ») → « que ». Indice sûr : « que » a toujours un sujet derrière lui, ici « les élèves ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans « Skander admire le décor du spectacle. », quelle analyse est correcte ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "« le décor du spectacle » est complément du nom du verbe « admire »"
+        },
+        { "id": "b", "text": "« du spectacle » est le COD de « admire »" },
+        { "id": "c", "text": "« du spectacle » est un adjectif épithète" },
+        {
+          "id": "d",
+          "text": "« le décor du spectacle » est COD de « admire », et « du spectacle » est complément du nom de « décor »"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« admire quoi ? » → « le décor du spectacle » : c'est le COD du verbe. À l'intérieur de ce GN, « du spectacle » (préposition + nom) est complément du nom « décor ». Un COD complète le verbe sans préposition ; un complément du nom suit un nom avec préposition.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Voici le tableau ____ l'artiste est très fière. »",
+      "options": [
+        { "id": "a", "text": "dont" },
+        { "id": "b", "text": "que" },
+        { "id": "c", "text": "qui" },
+        { "id": "d", "text": "où" }
+      ],
+      "correctOption": "a",
+      "explanation": "On dit « être fière DE quelque chose » : le complément est introduit par « de » → pronom relatif « dont » (l'artiste est fière de ce tableau). « que » (COD) serait faux, car « être fière » ne se construit pas sans préposition.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans « Les spectateurs enthousiastes deviennent silencieux quand la musique commence. », comment analyser « enthousiastes » et « silencieux » ?",
+      "options": [
+        { "id": "a", "text": "les deux sont des adjectifs épithètes" },
+        {
+          "id": "b",
+          "text": "« enthousiastes » est épithète et « silencieux » est attribut du sujet"
+        },
+        { "id": "c", "text": "« enthousiastes » est attribut et « silencieux » est épithète" },
+        { "id": "d", "text": "les deux sont des attributs du sujet" }
+      ],
+      "correctOption": "b",
+      "explanation": "« enthousiastes » est collé au nom « spectateurs » dans le GN → épithète. « silencieux » est relié au sujet par le verbe d'état « deviennent » → attribut du sujet. Seul l'adjectif introduit par un verbe d'état est attribut.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Parmi ces phrases, laquelle est correctement construite ?",
+      "options": [
+        { "id": "a", "text": "Le film que je l'ai regardé était long." },
+        { "id": "b", "text": "Le film que j'ai regardé était long." },
+        { "id": "c", "text": "Le film qui j'ai regardé était long." },
+        { "id": "d", "text": "Le film dont j'ai regardé était long." }
+      ],
+      "correctOption": "b",
+      "explanation": "« que » remplace déjà l'antécédent COD (le film) : on n'ajoute pas de pronom « l' » (erreur en a). « qui » serait sujet (faux, le sujet est « je »), et « regarder » ne se construit pas avec « de » (donc pas « dont »).",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision : consolider la comparaison",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Complète le comparatif d'infériorité : « Le second numéro est ____ long ____ le premier. »",
+      "options": [
+        { "id": "a", "text": "moins … que" },
+        { "id": "b", "text": "moins … de" },
+        { "id": "c", "text": "aussi … que" },
+        { "id": "d", "text": "le moins … de" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'infériorité sur un adjectif se dit « moins … que » : « moins long que le premier ». Le comparatif se complète avec « que », pas « de » ; « aussi » marque l'égalité et « le moins » est un superlatif.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel outil compare une quantité (nom) à égalité ? « Nous avons ____ places ____ vous. »",
+      "options": [
+        { "id": "a", "text": "aussi … que" },
+        { "id": "b", "text": "plus de … que" },
+        { "id": "c", "text": "autant … que" },
+        { "id": "d", "text": "autant de … que" }
+      ],
+      "correctOption": "d",
+      "explanation": "Sur un nom, l'égalité de quantité se dit « autant de … que » : « autant de places que vous ». « aussi » va avec un adjectif, « autant » seul avec un verbe, et « plus de » marque la supériorité, pas l'égalité.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase est un superlatif absolu ?",
+      "options": [
+        { "id": "a", "text": "Le clown est le plus drôle de la troupe." },
+        { "id": "b", "text": "Le clown est plus drôle que l'acrobate." },
+        { "id": "c", "text": "Le clown est extrêmement drôle." },
+        { "id": "d", "text": "Le clown est moins drôle que prévu." }
+      ],
+      "correctOption": "c",
+      "explanation": "« extrêmement drôle » exprime un très haut degré sans comparer : superlatif absolu. La phrase a est un superlatif relatif (le plus … de), et b et d sont des comparatifs (que).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète avec la forme irrégulière : « Ce spectacle est ____ que celui de l'an dernier. » (bon, comparatif de supériorité)",
+      "options": [
+        { "id": "a", "text": "plus bon" },
+        { "id": "b", "text": "meilleur" },
+        { "id": "c", "text": "mieux" },
+        { "id": "d", "text": "le meilleur" }
+      ],
+      "correctOption": "b",
+      "explanation": "« bon » devient « meilleur » au comparatif. « plus bon » n'existe pas, « mieux » vient de l'adverbe « bien », et « le meilleur » est un superlatif (avec article), pas un comparatif.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Accorde correctement : « Ce sont les ____ artistes du festival. » (bon, superlatif)",
+      "options": [
+        { "id": "a", "text": "plus bons" },
+        { "id": "b", "text": "mieux" },
+        { "id": "c", "text": "meilleurs" },
+        { "id": "d", "text": "meilleur" }
+      ],
+      "correctOption": "c",
+      "explanation": "« meilleur » s'accorde comme un adjectif : masculin pluriel → « les meilleurs artistes ». « plus bons » est fautif, « mieux » est un adverbe invariable, et « meilleur » (singulier) ne s'accorde pas avec « artistes » (pluriel).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choisis « que » ou « de » : « Farès est le plus souple ____ toute l'équipe. »",
+      "options": [
+        { "id": "a", "text": "que" },
+        { "id": "b", "text": "de" },
+        { "id": "c", "text": "aussi" },
+        { "id": "d", "text": "autant" }
+      ],
+      "correctOption": "b",
+      "explanation": "« le plus souple » est un superlatif : son complément (le groupe de référence) s'introduit avec « de » → « de toute l'équipe ». « que » servirait à un comparatif (souple QUE son voisin).",
+      "difficulty": 2
+    }
+  ]
+}
