@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision (type examen) : Lever les indéterminations",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Calculer lim x→+∞ (x² − x).",
+      "options": [
+        { "id": "a", "text": "−∞" },
+        { "id": "b", "text": "0" },
+        { "id": "c", "text": "1" },
+        { "id": "d", "text": "+∞" }
+      ],
+      "correctOption": "d",
+      "explanation": "Face à la forme indéterminée ∞ − ∞, on factorise le terme dominant : x² − x = x²(1 − 1/x). Comme x² → +∞ et 1 − 1/x → 1, la limite vaut +∞ ✓. Répondre 0 revient à lever illégalement la forme ∞ − ∞ en « annulant » les deux infinis, 1 s'arrête à la limite de la parenthèse, et −∞ prend le signe du terme −x.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Calculer lim x→2 (x² − 4)/(x² − 3x + 2).",
+      "options": [
+        { "id": "a", "text": "0" },
+        { "id": "b", "text": "1" },
+        { "id": "c", "text": "4/3" },
+        { "id": "d", "text": "4" }
+      ],
+      "correctOption": "d",
+      "explanation": "Forme 0/0 en 2 : on factorise. x² − 4 = (x − 2)(x + 2) et x² − 3x + 2 = (x − 2)(x − 1), donc le quotient vaut (x + 2)/(x − 1) pour x ≠ 2, qui tend vers 4/1 = 4 ✓. Répondre 1 revient à croire que 0/0 vaut toujours 1, 4/3 provient d'une factorisation fautive du dénominateur en (x − 2)(x + 1), et 0 traite 0/0 comme nul.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Calculer lim x→+∞ (√(x² + 6x) − x).",
+      "options": [
+        { "id": "a", "text": "0" },
+        { "id": "b", "text": "3" },
+        { "id": "c", "text": "6" },
+        { "id": "d", "text": "+∞" }
+      ],
+      "correctOption": "b",
+      "explanation": "Forme ∞ − ∞ : on multiplie par l'expression conjuguée. √(x² + 6x) − x = (x² + 6x − x²)/(√(x² + 6x) + x) = 6x/(√(x² + 6x) + x) = 6/(√(1 + 6/x) + 1), qui tend vers 6/2 = 3 ✓. Répondre 6 oublie que le dénominateur tend vers 2, 0 lève illégalement la forme ∞ − ∞, et +∞ compare mal les deux termes.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Calculer lim x→+∞ √((4x² + 1)/(x² + 1)).",
+      "options": [
+        { "id": "a", "text": "2" },
+        { "id": "b", "text": "4" },
+        { "id": "c", "text": "16" },
+        { "id": "d", "text": "+∞" }
+      ],
+      "correctOption": "a",
+      "explanation": "Limite d'une composée : la fonction intérieure (4x² + 1)/(x² + 1) tend vers 4 (termes de plus haut degré), et √ est continue en 4, donc la limite vaut √4 = 2 ✓. Répondre 4 oublie d'appliquer la racine (composée incomplète), 16 élève au carré au lieu de prendre la racine, et +∞ laisse la forme ∞/∞ non levée.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "La fonction f définie par f(x) = (x² − 25)/(x − 5) n'est pas définie en 5. Est-elle prolongeable par continuité en 5 ?",
+      "options": [
+        { "id": "a", "text": "Oui, en posant f(5) = 0" },
+        { "id": "b", "text": "Oui, en posant f(5) = 5" },
+        { "id": "c", "text": "Oui, en posant f(5) = 10" },
+        { "id": "d", "text": "Non, f n'est pas prolongeable en 5" }
+      ],
+      "correctOption": "c",
+      "explanation": "Pour x ≠ 5, (x² − 25)/(x − 5) = ((x − 5)(x + 5))/(x − 5) = x + 5, qui tend vers 10 quand x → 5. La limite est finie : f se prolonge par continuité en 5 en posant f(5) = 10 ✓. Répondre 5 confond la valeur du prolongement avec le point, 0 traite 0/0 comme nul, et la forme 0/0 n'empêche pas le prolongement — elle se lève par factorisation.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "f est une fonction continue sur [1 ; 2] avec f(1) = −2 et f(2) = 1. Que peut-on affirmer, d'après le théorème des valeurs intermédiaires, pour l'équation f(x) = 0 ?",
+      "options": [
+        { "id": "a", "text": "Elle admet au moins une solution dans [1 ; 2]" },
+        { "id": "b", "text": "Elle admet exactement une solution dans [1 ; 2]" },
+        { "id": "c", "text": "Elle n'admet aucune solution dans [1 ; 2]" },
+        { "id": "d", "text": "Sa solution est exactement x = 1,5" }
+      ],
+      "correctOption": "a",
+      "explanation": "f est continue sur [1 ; 2] et 0 est compris entre f(1) = −2 et f(2) = 1 : le TVI garantit au moins une solution dans [1 ; 2] ✓. Il ne garantit jamais l'unicité : il faudrait en plus la stricte monotonie (corollaire de la bijection), qui n'est pas donnée ici. Quant à 1,5, ce n'est que le milieu de l'intervalle, pas une solution certifiée.",
+      "difficulty": 3
+    }
+  ]
+}
