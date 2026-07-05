@@ -18,6 +18,10 @@ export type QuestLabels = {
   numericPlaceholder: string;
   numericHint: string;
   numericInvalid: string;
+  orderingHint: string;
+  matchingHint: string;
+  moveUp: string;
+  moveDown: string;
   unsupportedTitle: string;
   unsupportedBody: string;
 };
@@ -87,6 +91,20 @@ export function buildQuestLabels(qlang: QuestContentLang): QuestLabels {
       fr: "Entre uniquement un nombre (entier ou décimal).",
       en: "Enter a number only (integer or decimal).",
     }[qlang],
+    // Native drag-&-drop boards (Tier B — B2): ordering (arrange the steps) and
+    // matching (align each right-hand item with its left-hand partner).
+    orderingHint: {
+      ar: "اسحب العناصر (أو استعمل الأسهم) لترتيبها في الترتيب الصحيح.",
+      fr: "Fais glisser les éléments (ou utilise les flèches) pour les ranger dans le bon ordre.",
+      en: "Drag the items (or use the arrows) to arrange them in the right order.",
+    }[qlang],
+    matchingHint: {
+      ar: "أعد ترتيب العمود الثاني (سحب أو أسهم) حتى يقابل كلّ عنصر شريكه.",
+      fr: "Réordonne la colonne de droite (glisser ou flèches) pour aligner chaque élément avec son partenaire.",
+      en: "Reorder the second column (drag or arrows) so each item faces its partner.",
+    }[qlang],
+    moveUp: { ar: "تحريك لأعلى", fr: "Monter", en: "Move up" }[qlang],
+    moveDown: { ar: "تحريك لأسفل", fr: "Descendre", en: "Move down" }[qlang],
     // R-3 rollback posture: an item whose type this client can't render is shown
     // as cleanly unavailable (it scores as unanswered), never a crashed session.
     unsupportedTitle: {

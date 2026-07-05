@@ -245,9 +245,30 @@ export function ExercisePlayer({
     (questionId: string, choice: string) => {
       if (!choice) return "-";
       const opts = shuffledOptionsByQuestionId.get(questionId) ?? [];
-      // mcq: show the option's display letter. Otherwise (numeric value, give-up
-      // sentinel) show the raw answer, LTR-isolated so it renders sanely in RTL.
-      return opts.find((opt) => opt.id === choice)?.displayId ?? isolateLtrRuns(choice);
+      // mcq: show the option's display letter.
+      const direct = opts.find((opt) => opt.id === choice)?.displayId;
+      if (direct) return direct;
+      // B2 CSV answers (ordering "b,a,…" / matching "l1:r2,…"): map each id
+      // back to its option text when it is short plain text — raw shuffled ids
+      // mean nothing to the student. SVG/long texts fall back to the id.
+      if (choice.includes(",") || choice.includes(":")) {
+        const textById = new Map(opts.map((opt) => [opt.id, opt.text]));
+        const plain = (id: string) => {
+          const text = textById.get(id);
+          return text && !text.includes("<") && text.length <= 40 ? text : id;
+        };
+        const rendered = choice
+          .replace(/\s+/g, "")
+          .split(",")
+          .map((part) => {
+            const [left, right] = part.split(":");
+            return right !== undefined ? `${plain(left)} ⇢ ${plain(right)}` : plain(left);
+          })
+          .join(" · ");
+        return isolateLtrRuns(rendered);
+      }
+      // Otherwise (numeric value, give-up sentinel): the raw answer, LTR-isolated.
+      return isolateLtrRuns(choice);
     },
     [shuffledOptionsByQuestionId],
   );
@@ -256,12 +277,10 @@ export function ExercisePlayer({
   const current = questions[idx];
   const currentType =
     (current as { question_type?: string | null } | undefined)?.question_type ?? "mcq";
-  // For numeric entry the typed text must be a well-formed number before it can
-  // be validated (the server rejects malformed payloads with a client error).
-  const canValidate =
-    currentType === "numeric"
-      ? Boolean(selected && isValidAnswerFormat("numeric", selected))
-      : Boolean(selected);
+  // The answer must match its type's wire format before it can be validated
+  // (the server rejects malformed payloads with a client error). mcq option
+  // ids and the boards' generated CSVs always pass; a half-typed number doesn't.
+  const canValidate = Boolean(selected && isValidAnswerFormat(currentType, selected));
   const progress = useMemo(() => (total > 0 ? (idx / total) * 100 : 0), [idx, total]);
   const isQuiz = data?.exercise?.mode === "quiz";
   // Boss chrome + time pressure are a connected perk; an anon visitor plays a

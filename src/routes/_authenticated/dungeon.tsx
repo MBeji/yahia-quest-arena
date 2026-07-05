@@ -181,7 +181,9 @@ function DungeonPage() {
   async function validate() {
     if (showFeedback || answerMutation.isPending || !currentQuestion || !runId || !selected) return;
     if (!isValidAnswerFormat(currentQuestion.questionType, selected)) return;
-    const isNumeric = currentQuestion.questionType === "numeric";
+    // Native types (numeric value, ordering/matching CSVs) have no display
+    // letter — show their raw wire answers in the game-over recap.
+    const isNativeAnswer = currentQuestion.questionType !== "mcq";
     const optId = selected;
     const selectedOption = currentQuestion.options.find((opt) => opt.id === optId);
 
@@ -207,9 +209,8 @@ function DungeonPage() {
         );
         setLastWrongAnswer({
           prompt: result.prompt,
-          // numeric: show the raw values (a typed number has no display letter).
-          selected: isNumeric ? optId : (selectedOption?.displayId ?? optId.toUpperCase()),
-          correct: isNumeric
+          selected: isNativeAnswer ? optId : (selectedOption?.displayId ?? optId.toUpperCase()),
+          correct: isNativeAnswer
             ? (result.correctChoice ?? "-")
             : (correctOption?.displayId ?? (result.correctChoice ?? "-").toUpperCase()),
           explanation: result.explanation,

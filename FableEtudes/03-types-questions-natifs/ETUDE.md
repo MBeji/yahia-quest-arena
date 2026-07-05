@@ -76,7 +76,7 @@ Intégralement dans la spec — carte des touchpoints (5 RPCs SQL, zod/TS, UI, p
 
 - [x] B2.1 — DB + couture scoring étendue (merge seul d'abord — DoD §7)
 - [x] B2.2 — serveur
-- [ ] B2.3 — UI (@dnd-kit)
+- [x] B2.3 — UI (@dnd-kit)
 - [ ] B2.4 — pipeline + skills
 
 **Stop-points** : ne jamais modifier la sémantique `'mcq'` ; ne jamais sélectionner `answer_key`
@@ -243,3 +243,20 @@ zod du `choice` donjon élargie 32 → `MAX_CHOICE_LENGTH` (un matching de 6 pai
 - intégration fn) ; verify vert (1015 tests).
 
 Écart accepté : néant.
+
+### Lot B2.3 — 2026-07-05 (exécuté par le modèle architecte, Fable)
+
+Livré : `OrderingBoard` et `MatchingBoard` (`question-boards.tsx`) branchés dans le
+`<QuestionInput>` unifié (quest ET donjon, zéro changement de surface). Drag & drop
+via **@dnd-kit** (core+sortable+utilities — D-3 : dépendance introduite en B2
+seulement, chunk dédié `vendor-dndkit` dans vite.config, budget 64 KB — mesuré
+53,9 KB, l'index n'a pas bougé) + **flèches tap-to-order** (accessibilité/mobile,
+KeyboardSensor en prime). L'arrangement initial (mélangé) est auto-enregistré comme
+réponse — la validation est toujours possible, jamais de session coincée. Matching :
+colonne gauche fixe, colonne droite réordonnable (paires = alignement de lignes) ;
+côtés déséquilibrés → panneau R-3. Review et récap donjon : les CSV sont re-mappés
+vers les textes d'options (courts, sans SVG) au lieu d'ids mélangés opaques ;
+`canValidate` unifié sur `isValidAnswerFormat` pour tous les types. Gates : verify
+1027 tests (+12), build:check (budget dndkit OK), smoke:shell vert.
+
+Écart accepté : néant (D-3 suivi à la lettre).
