@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Exercice : habille le nom, première scène",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Lequel de ces groupes nominaux est étendu (enrichi d'une expansion) ?",
+      "options": [
+        { "id": "a", "text": "le spectacle éblouissant" },
+        { "id": "b", "text": "le spectacle" },
+        { "id": "c", "text": "une actrice" },
+        { "id": "d", "text": "des lectures" }
+      ],
+      "correctOption": "a",
+      "explanation": "« le spectacle éblouissant » = déterminant + nom + adjectif épithète : le GN est étendu par une expansion. « le spectacle », « une actrice » et « des lectures » sont des GN minimaux (déterminant + nom seul).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans la phrase « Yassine range ses vieux cahiers dans le tiroir. », quel mot est un adjectif épithète ?",
+      "options": [
+        { "id": "a", "text": "range" },
+        { "id": "b", "text": "vieux" },
+        { "id": "c", "text": "Yassine" },
+        { "id": "d", "text": "tiroir" }
+      ],
+      "correctOption": "b",
+      "explanation": "« vieux » est un adjectif placé dans le GN, à côté du nom « cahiers » : c'est une épithète. « range » est le verbe, « Yassine » et « tiroir » sont des noms.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans le groupe « le costume de la danseuse », quelle est l'expansion (complément) du nom « costume » ?",
+      "options": [
+        { "id": "a", "text": "« le »" },
+        { "id": "b", "text": "« costume »" },
+        { "id": "c", "text": "« de la danseuse »" },
+        { "id": "d", "text": "il n'y a aucune expansion" }
+      ],
+      "correctOption": "c",
+      "explanation": "« de la danseuse » = préposition « de » + nom : c'est un complément du nom qui précise « costume ». « le » est un déterminant et « costume » est le nom noyau.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Le musicien ____ joue du oud est mon voisin. »",
+      "options": [
+        { "id": "a", "text": "qui" },
+        { "id": "b", "text": "que" },
+        { "id": "c", "text": "dont" },
+        { "id": "d", "text": "où" }
+      ],
+      "correctOption": "a",
+      "explanation": "Reconstruis la relative : « le musicien joue du oud ». « le musicien » y est sujet du verbe « joue » → pronom relatif « qui ». « que » serait un COD, « dont » un complément en « de », « où » un lieu ou un temps.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Le roman ____ Rym préfère raconte un voyage à Bizerte. »",
+      "options": [
+        { "id": "a", "text": "qui" },
+        { "id": "b", "text": "que" },
+        { "id": "c", "text": "où" },
+        { "id": "d", "text": "dont" }
+      ],
+      "correctOption": "b",
+      "explanation": "Reconstruis la relative : « Rym préfère le roman ». « le roman » y est COD du verbe « préfère » (Rym est déjà le sujet) → pronom relatif « que ». On ne peut pas mettre « qui », car « qui » est toujours sujet.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Voici la salle ____ nous répétons la pièce. »",
+      "options": [
+        { "id": "a", "text": "qui" },
+        { "id": "b", "text": "que" },
+        { "id": "c", "text": "dont" },
+        { "id": "d", "text": "où" }
+      ],
+      "correctOption": "d",
+      "explanation": "Reconstruis la relative : « nous répétons la pièce dans la salle ». « la salle » y est complément de lieu → pronom relatif « où ». « nous » est déjà le sujet et « la pièce » le COD, donc ni « qui » ni « que ».",
+      "difficulty": 1
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : le maître des mots",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Quelle est la décomposition correcte du mot « impensable » ?",
+      "options": [
+        { "id": "a", "text": "radical « impens » + suffixe « -able »" },
+        { "id": "b", "text": "préfixe « im- » + radical « pens- » + suffixe « -able »" },
+        { "id": "c", "text": "préfixe « imp- » + radical « ens- » + suffixe « -able »" },
+        { "id": "d", "text": "préfixe « im- » + radical « pensable »" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le radical est « pens- » (de penser). Devant lui, le préfixe de négation « im- » ; après lui, le suffixe « -able » (qu'on peut faire). Impensable = qu'on ne peut pas penser. Les autres découpages coupent le mot au mauvais endroit.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans lequel de ces mots le préfixe « in- » ne signifie PAS « ne… pas » (la négation) ?",
+      "options": [
+        { "id": "a", "text": "inutile" },
+        { "id": "b", "text": "incapable" },
+        { "id": "c", "text": "inhabituel" },
+        { "id": "d", "text": "inspirer" }
+      ],
+      "correctOption": "d",
+      "explanation": "Dans « inspirer », « in- » signifie « dans » (faire entrer l'air) : ce n'est pas une négation. Dans les trois autres, « in- » nie : inutile = pas utile, incapable = pas capable, inhabituel = pas habituel. Un même préfixe peut avoir plusieurs sens.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans quelle phrase le verbe « éclater » est-il employé au sens PROPRE ?",
+      "options": [
+        { "id": "a", "text": "La joie éclate sur son visage." },
+        { "id": "b", "text": "Elle a éclaté de rire en le voyant." },
+        { "id": "c", "text": "Le ballon a éclaté dans un grand bruit." },
+        { "id": "d", "text": "Un scandale a éclaté dans la ville." }
+      ],
+      "correctOption": "c",
+      "explanation": "Au sens propre, « éclater », c'est se briser d'un coup : le ballon éclate réellement. Dans les autres phrases, le mot est imagé (la joie, le rire, un scandale qui surgit) : c'est le sens figuré.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "L'ensemble « forêt, arbre, feuillage, verdure, oiseau » forme :",
+      "options": [
+        { "id": "a", "text": "un champ lexical (le thème de la nature)" },
+        { "id": "b", "text": "une famille de mots (le même radical)" },
+        { "id": "c", "text": "une liste de synonymes" },
+        { "id": "d", "text": "une série de mots contraires" }
+      ],
+      "correctOption": "a",
+      "explanation": "Ces mots n'ont pas le même radical, donc ce n'est pas une famille ; ils n'ont pas le même sens, donc ce ne sont pas des synonymes. Ils se rattachent tous au thème de la nature : c'est un champ lexical.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quel mot appartient vraiment à la famille de « mer » (l'étendue d'eau salée) ?",
+      "options": [
+        { "id": "a", "text": "amertume" },
+        { "id": "b", "text": "mère" },
+        { "id": "c", "text": "commère" },
+        { "id": "d", "text": "marin" }
+      ],
+      "correctOption": "d",
+      "explanation": "« marin » (comme maritime, marée) partage le radical « mar- » et l'idée de la mer. « amertume » vient de « amer », « mère » est un homophone (le parent) et « commère » n'a aucun rapport : ce sont des pièges de forme, pas de sens.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Le suffixe « -âtre » dans « verdâtre » apporte une nuance :",
+      "options": [
+        { "id": "a", "text": "de petitesse" },
+        { "id": "b", "text": "péjorative (un vert déplaisant)" },
+        { "id": "c", "text": "de grandeur" },
+        { "id": "d", "text": "de répétition" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le suffixe « -âtre » ajoute une nuance péjorative, dépréciative : verdâtre = d'un vert sale ou déplaisant (comme blanchâtre, douceâtre). Il n'indique ni la petitesse, ni la grandeur, ni la répétition.",
+      "difficulty": 3
+    }
+  ]
+}

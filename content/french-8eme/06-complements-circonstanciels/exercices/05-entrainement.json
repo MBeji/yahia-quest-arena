@@ -1,0 +1,82 @@
+{
+  "title": "📝 Entraînement ⭐⭐⭐ : révision globale (type examen)",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Dans « Bilel explore la grotte de Matmata. », le groupe « la grotte de Matmata » est :",
+      "options": [
+        { "id": "a", "text": "un CC de lieu" },
+        { "id": "b", "text": "un COD" },
+        { "id": "c", "text": "un CC de manière" },
+        { "id": "d", "text": "un COI" }
+      ],
+      "correctOption": "b",
+      "explanation": "On ne peut ni supprimer ni déplacer « la grotte de Matmata » : explore quoi ? la grotte → c'est le COD. Le mot désigne un lieu, mais sa fonction est COD.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans « Depuis trois jours, la caravane traverse le désert. », « Depuis trois jours » répond à la question :",
+      "options": [
+        { "id": "a", "text": "où ?" },
+        { "id": "b", "text": "comment ?" },
+        { "id": "c", "text": "quand ?" },
+        { "id": "d", "text": "pourquoi ?" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Depuis trois jours » situe l'action dans le temps (depuis quand ?) : c'est un CC de temps, qui répond à quand ?",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète logiquement : « Emna a mis un chapeau ___ le soleil tapait fort. »",
+      "options": [
+        { "id": "a", "text": "ensuite" },
+        { "id": "b", "text": "pourtant" },
+        { "id": "c", "text": "d'abord" },
+        { "id": "d", "text": "parce que" }
+      ],
+      "correctOption": "d",
+      "explanation": "On explique pourquoi Emna a mis un chapeau : « parce que » introduit la cause. « Ensuite » et « d'abord » marquent le temps, « pourtant » l'opposition.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle phrase emploie correctement « à cause de » ?",
+      "options": [
+        { "id": "a", "text": "À cause de la panne, le bus est resté bloqué." },
+        { "id": "b", "text": "À cause de ses efforts, Karim a gagné le concours." },
+        { "id": "c", "text": "À cause de son sourire, tout le monde l'aime." },
+        { "id": "d", "text": "À cause de la belle vue, ils ont pris des photos." }
+      ],
+      "correctOption": "a",
+      "explanation": "« À cause de » annonce une cause fâcheuse : seule la panne est un fait négatif (le bus reste bloqué). Dans les autres phrases, la cause est favorable : il faudrait « grâce à ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Combien de compléments circonstanciels contient « Hier soir, sur la terrasse, Salma lisait tranquillement. » ?",
+      "options": [
+        { "id": "a", "text": "un" },
+        { "id": "b", "text": "deux" },
+        { "id": "c", "text": "trois" },
+        { "id": "d", "text": "zéro" }
+      ],
+      "correctOption": "c",
+      "explanation": "Trois CC : « hier soir » (temps), « sur la terrasse » (lieu) et « tranquillement » (manière). Chacun est supprimable et déplaçable.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle phrase reste correcte après suppression de tous les CC de « Le matin, dans le car, les élèves chantaient joyeusement. » ?",
+      "options": [
+        { "id": "a", "text": "Les élèves chantaient." },
+        { "id": "b", "text": "Le matin chantaient." },
+        { "id": "c", "text": "Dans le car joyeusement." },
+        { "id": "d", "text": "Les élèves." }
+      ],
+      "correctOption": "a",
+      "explanation": "On retire les trois CC (le matin, dans le car, joyeusement). Il reste la phrase minimale : sujet + verbe → Les élèves chantaient.",
+      "difficulty": 3
+    }
+  ]
+}

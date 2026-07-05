@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : radicaux, affixes et sens des mots",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Lequel de ces mots est formé d'un préfixe + un radical + un suffixe ?",
+      "options": [
+        { "id": "a", "text": "chanteur" },
+        { "id": "b", "text": "invisible" },
+        { "id": "c", "text": "refaire" },
+        { "id": "d", "text": "maison" }
+      ],
+      "correctOption": "b",
+      "explanation": "« invisible » = préfixe « in- » + radical « vis- » + suffixe « -ible ». « chanteur » n'a que radical + suffixe ; « refaire » que préfixe + radical ; « maison » est un mot simple, sans affixe.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans le mot « prévoir », que signifie le préfixe « pré- » ?",
+      "options": [
+        { "id": "a", "text": "contre" },
+        { "id": "b", "text": "beaucoup" },
+        { "id": "c", "text": "mal" },
+        { "id": "d", "text": "avant" }
+      ],
+      "correctOption": "d",
+      "explanation": "Le préfixe « pré- » signifie « avant » : prévoir, c'est voir à l'avance. On le retrouve dans prédire, préparer, prévenir.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel mot n'appartient PAS à la famille de « terre » ?",
+      "options": [
+        { "id": "a", "text": "terreur" },
+        { "id": "b", "text": "terrain" },
+        { "id": "c", "text": "atterrir" },
+        { "id": "d", "text": "souterrain" }
+      ],
+      "correctOption": "a",
+      "explanation": "« terrain », « atterrir » et « souterrain » partagent le radical « terr- » et l'idée du sol. « terreur » vient de la peur (terror), pas de la terre : c'est une fausse famille, même forme mais sens différent.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "En ajoutant le suffixe « -tion » au verbe « décorer », on obtient « décoration », qui est :",
+      "options": [
+        { "id": "a", "text": "un verbe" },
+        { "id": "b", "text": "un adjectif" },
+        { "id": "c", "text": "un nom" },
+        { "id": "d", "text": "un adverbe" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le suffixe « -tion » transforme le verbe « décorer » en un nom, « décoration » (l'action ou le résultat). Le suffixe change ici la classe grammaticale du mot.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans quelle phrase le verbe « dévorer » est-il employé au sens FIGURÉ ?",
+      "options": [
+        { "id": "a", "text": "Le lion dévore sa proie dans la savane." },
+        { "id": "b", "text": "Il dévore un roman entier en une seule nuit." },
+        { "id": "c", "text": "Le chien affamé a dévoré toute sa gamelle." },
+        { "id": "d", "text": "Les fauves dévorent la viande crue." }
+      ],
+      "correctOption": "b",
+      "explanation": "Lire n'est pas manger : « dévorer un roman » signifie le lire avidement, c'est le sens figuré. Dans les autres phrases, on mange vraiment : c'est le sens propre.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quel préfixe faut-il ajouter à « responsable » pour former son contraire ?",
+      "options": [
+        { "id": "a", "text": "im- (imresponsable)" },
+        { "id": "b", "text": "in- (inresponsable)" },
+        { "id": "c", "text": "ir- (irresponsable)" },
+        { "id": "d", "text": "dé- (déresponsable)" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le préfixe de négation « in- » s'adapte à la lettre suivante : devant « r », il devient « ir- ». Le contraire de responsable est donc « irresponsable ». « im- » s'emploierait devant m/b/p, pas devant r.",
+      "difficulty": 3
+    }
+  ]
+}

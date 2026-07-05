@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : le gardien des participes",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complète au passé composé : « Les athlètes ___ (courir) le marathon de Tunis. »",
+      "options": [
+        { "id": "a", "text": "ont couru" },
+        { "id": "b", "text": "sont courus" },
+        { "id": "c", "text": "sont couru" },
+        { "id": "d", "text": "ont courus" }
+      ],
+      "correctOption": "a",
+      "explanation": "Piège : courir ressemble à un verbe de mouvement, mais il se conjugue avec avoir → ont couru. Avec avoir et un COD placé après (« le marathon »), le participe ne s'accorde pas.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète au présent : « Mon frère et moi ___ (finir) toujours nos devoirs ensemble. »",
+      "options": [
+        { "id": "a", "text": "finissent" },
+        { "id": "b", "text": "finis" },
+        { "id": "c", "text": "finissons" },
+        { "id": "d", "text": "finit" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Mon frère et moi » équivaut à « nous » → finissons (2e groupe, avec -iss- et la terminaison -ons). « finissent » irait avec « ils ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "« Hier soir, la lampe s'éteint soudain et toute la maison plonge dans le noir. » Quelle est la valeur des verbes au présent ?",
+      "options": [
+        { "id": "a", "text": "Une vérité générale" },
+        { "id": "b", "text": "Le présent de narration" },
+        { "id": "c", "text": "Une habitude" },
+        { "id": "d", "text": "Le futur proche" }
+      ],
+      "correctOption": "b",
+      "explanation": "La scène s'est passée hier soir, mais elle est racontée au présent pour la rendre plus vivante : c'est le présent de narration. Le mot « hier » prouve que l'action est passée.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Ces lettres ? Je ne les ai pas encore ___ (lire). »",
+      "options": [
+        { "id": "a", "text": "lu" },
+        { "id": "b", "text": "lus" },
+        { "id": "c", "text": "lire" },
+        { "id": "d", "text": "lues" }
+      ],
+      "correctOption": "d",
+      "explanation": "Auxiliaire avoir : on cherche le COD. « les » remplace « ces lettres » (féminin pluriel) et il est placé AVANT le verbe → le participe s'accorde → lues.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Nada a ___ (écrire) trois cartes postales. »",
+      "options": [
+        { "id": "a", "text": "écrites" },
+        { "id": "b", "text": "écrit" },
+        { "id": "c", "text": "écris" },
+        { "id": "d", "text": "écrivait" }
+      ],
+      "correctOption": "b",
+      "explanation": "Auxiliaire avoir : le COD « trois cartes postales » est placé APRÈS le verbe → aucun accord → écrit. On n'écrit « écrites » que si le COD est avant (les cartes qu'elle a écrites).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète au passé composé : « Les jumelles ___ (se retrouver) devant le cinéma. »",
+      "options": [
+        { "id": "a", "text": "se sont retrouvés" },
+        { "id": "b", "text": "sont retrouvées" },
+        { "id": "c", "text": "se sont retrouvées" },
+        { "id": "d", "text": "se sont retrouver" }
+      ],
+      "correctOption": "c",
+      "explanation": "Se retrouver est un verbe pronominal : auxiliaire être + « se », et accord avec le sujet. « Les jumelles » = féminin pluriel → se sont retrouvées. « se sont retrouver » confond le participe avec l'infinitif.",
+      "difficulty": 3
+    }
+  ]
+}

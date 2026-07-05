@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐⭐ Boss : le duel des comparaisons",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complète correctement : « À l'entraînement, Yasmine répète ____ son partenaire. » (comparatif de supériorité sur le VERBE)",
+      "options": [
+        { "id": "a", "text": "plus de que" },
+        { "id": "b", "text": "le plus que" },
+        { "id": "c", "text": "aussi que" },
+        { "id": "d", "text": "plus que" }
+      ],
+      "correctOption": "d",
+      "explanation": "Comparer une action (un verbe), c'est « plus que » sans « de » : « répète plus que son partenaire ». « plus de » s'emploie avec un nom, « aussi » marque l'égalité, et « le plus » serait un superlatif.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase est correcte ?",
+      "options": [
+        { "id": "a", "text": "Rayan saute plus haut de tous les acrobates." },
+        { "id": "b", "text": "Rayan est le plus haut sauteur que la troupe." },
+        { "id": "c", "text": "Rayan saute plus haut que tous les acrobates." },
+        { "id": "d", "text": "Rayan saute aussi haut de son rival." }
+      ],
+      "correctOption": "c",
+      "explanation": "C'est un comparatif : il se complète avec « que » → « plus haut que tous les acrobates ». Les phrases a et d emploient « de » là où il faut « que » ; la phrase b mélange un superlatif avec « que » au lieu de « de ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choisis la forme juste : « L'an dernier je dansais mal ; cette année, je danse ____. »",
+      "options": [
+        { "id": "a", "text": "plus bien" },
+        { "id": "b", "text": "meilleur" },
+        { "id": "c", "text": "mieux" },
+        { "id": "d", "text": "plus mieux" }
+      ],
+      "correctOption": "c",
+      "explanation": "« danser » est un verbe : on le modifie avec l'adverbe « mieux » (comparatif de « bien »). « plus bien » n'existe pas, « meilleur » qualifie un nom (adjectif), et « plus mieux » est un doublon incorrect.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète le superlatif relatif : « Nour a réalisé ____ figure ____ tout le gala. »",
+      "options": [
+        { "id": "a", "text": "la plus belle … que" },
+        { "id": "b", "text": "la plus belle … de" },
+        { "id": "c", "text": "plus belle … de" },
+        { "id": "d", "text": "la meilleure … que" }
+      ],
+      "correctOption": "b",
+      "explanation": "Superlatif relatif : article + plus + adjectif, puis complément en « de » → « la plus belle figure de tout le gala ». L'option a met « que » (comparatif), l'option c oublie l'article obligatoire, et l'option d met « que » là où il faut « de ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Une seule phrase emploie correctement « meilleur ». Laquelle ?",
+      "options": [
+        { "id": "a", "text": "Skander joue meilleur que l'an dernier." },
+        { "id": "b", "text": "Skander a obtenu un meilleur classement que Rayan." },
+        { "id": "c", "text": "Skander travaille meilleur quand il est concentré." },
+        { "id": "d", "text": "Skander réussit meilleur ses saltos." }
+      ],
+      "correctOption": "b",
+      "explanation": "« meilleur » est un adjectif : il qualifie un nom → « un meilleur classement ». Dans a, c et d il porte sur un verbe (joue, travaille, réussit) : il faudrait l'adverbe « mieux ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Corrige la faute : « C'est la plus mauvaise soirée de la saison » peut aussi s'écrire :",
+      "options": [
+        { "id": "a", "text": "C'est la pire soirée de la saison." },
+        { "id": "b", "text": "C'est la plus pire soirée de la saison." },
+        { "id": "c", "text": "C'est la pire soirée que la saison." },
+        { "id": "d", "text": "C'est la plus mal soirée de la saison." }
+      ],
+      "correctOption": "a",
+      "explanation": "« mauvais » a un superlatif irrégulier : « la pire » (= la plus mauvaise). « la plus pire » est un doublon fautif, « que » remplace à tort le « de » du superlatif, et « mal » est un adverbe, il ne qualifie pas un nom.",
+      "difficulty": 3
+    }
+  ]
+}

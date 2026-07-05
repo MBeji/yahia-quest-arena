@@ -1,0 +1,154 @@
+{
+  "title": "⭐⭐ Révision : consolider le plus-que-parfait",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Conjugue « prendre » au plus-que-parfait : « J' ___ la mauvaise piste. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "avais pris"
+        },
+        {
+          "id": "b",
+          "text": "ai pris"
+        },
+        {
+          "id": "c",
+          "text": "étais pris"
+        },
+        {
+          "id": "d",
+          "text": "prenais"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Plus-que-parfait = avoir à l'imparfait (avais) + participe passé « pris » → « avais pris ». « ai pris » est un passé composé et « prenais » un imparfait simple.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle phrase N'EST PAS au plus-que-parfait ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Elle avait rangé son sac."
+        },
+        {
+          "id": "b",
+          "text": "Nous avons quitté l'oasis."
+        },
+        {
+          "id": "c",
+          "text": "Il était monté sur la colline."
+        },
+        {
+          "id": "d",
+          "text": "Vous aviez oublié la carte."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "« avons quitté » a l'auxiliaire au présent : c'est un passé composé. Les trois autres ont l'auxiliaire à l'imparfait (avait, était, aviez) : ce sont bien des plus-que-parfaits.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Transforme au plus-que-parfait : « Les enfants sont rentrés au campement. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "Les enfants avaient rentrés au campement."
+        },
+        {
+          "id": "b",
+          "text": "Les enfants étaient rentré au campement."
+        },
+        {
+          "id": "c",
+          "text": "Les enfants seront rentrés au campement."
+        },
+        {
+          "id": "d",
+          "text": "Les enfants étaient rentrés au campement."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "On garde l'auxiliaire être mais on le met à l'imparfait (étaient) et on accorde avec le sujet masculin pluriel → « étaient rentrés ». « avaient rentrés » change d'auxiliaire, « étaient rentré » oublie l'accord et « seront rentrés » est un futur antérieur.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choisis le bon temps : « Quand nous sommes arrivés, la fête ___ déjà terminée. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "était"
+        },
+        {
+          "id": "b",
+          "text": "est"
+        },
+        {
+          "id": "c",
+          "text": "sera"
+        },
+        {
+          "id": "d",
+          "text": "avait"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "La fin de la fête est antérieure à notre arrivée → plus-que-parfait « était terminée » (être à l'imparfait + participe accordé). « est terminée » serait un passé composé, sans l'idée d'antériorité, et « avait terminée » se trompe d'auxiliaire.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Conjugue « perdre » au plus-que-parfait avec le bon accord : « La boussole que le guide ___ nous manquait. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "avait perdu"
+        },
+        {
+          "id": "b",
+          "text": "était perdue"
+        },
+        {
+          "id": "c",
+          "text": "avait perdue"
+        },
+        {
+          "id": "d",
+          "text": "avait perdus"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Avec avoir, on accorde avec le COD placé avant : « que » reprend « la boussole » (féminin singulier), avant le verbe → « avait perdue ». « avait perdu » oublie l'accord, « était perdue » se trompe d'auxiliaire et « avait perdus » accorde au masculin pluriel à tort.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Conjugue « se réveiller » au plus-que-parfait : « Elles ___ avant le lever du jour. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "s'étaient réveillé"
+        },
+        {
+          "id": "b",
+          "text": "s'étaient réveillées"
+        },
+        {
+          "id": "c",
+          "text": "s'avaient réveillées"
+        },
+        {
+          "id": "d",
+          "text": "se sont réveillées"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Un verbe pronominal se conjugue avec être : être à l'imparfait (étaient) + participe accordé avec le sujet féminin pluriel → « s'étaient réveillées ». « s'étaient réveillé » oublie l'accord, « s'avaient réveillées » emploie avoir à tort et « se sont réveillées » est un passé composé.",
+      "difficulty": 2
+    }
+  ]
+}

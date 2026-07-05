@@ -1,0 +1,94 @@
+{
+  "title": "📝 Entraînement ⭐⭐⭐ : La grande relecture (révision globale)",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Dans « Sonia offrit un bracelet à sa cousine. Celle-ci le porta aussitôt. », à qui renvoie « Celle-ci » ?",
+      "options": [
+        { "id": "a", "text": "à Sonia" },
+        { "id": "b", "text": "au bracelet" },
+        { "id": "c", "text": "à la cousine" },
+        { "id": "d", "text": "à la main" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le pronom démonstratif « celle-ci » reprend le nom féminin le plus proche : la cousine. Le pronom « le » de « le porta », lui, reprend le bracelet.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans « Averroès enseigna la médecine. Le savant de Cordoue rédigea de nombreux traités. », le groupe « Le savant de Cordoue » est…",
+      "options": [
+        { "id": "a", "text": "un pronom" },
+        { "id": "b", "text": "une périphrase" },
+        { "id": "c", "text": "un synonyme" },
+        { "id": "d", "text": "un déterminant" }
+      ],
+      "correctOption": "b",
+      "explanation": "C'est un groupe de mots qui décrit et identifie Averroès au lieu de répéter son nom : une périphrase, substitut lexical. Ce n'est ni un pronom ni un simple synonyme.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète en respectant l'accord : « La lionne et ses petits se reposaient. ___ avaient bien mangé. »",
+      "options": [
+        { "id": "a", "text": "Elle" },
+        { "id": "b", "text": "Elles" },
+        { "id": "c", "text": "Ils" },
+        { "id": "d", "text": "Il" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le référent est un groupe mixte (la lionne, féminin + ses petits, masculin) : l'accord se fait au masculin pluriel → Ils. « Elle » et « Il » sont au singulier, et « Elles » ne conviendrait que pour un groupe entièrement féminin.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète par un terme générique adapté : « Un cactus poussait au milieu de la cour. ___ résistait à la sécheresse. »",
+      "options": [
+        { "id": "a", "text": "Cet animal" },
+        { "id": "b", "text": "Cette plante" },
+        { "id": "c", "text": "Ce minéral" },
+        { "id": "d", "text": "Cet insecte" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le cactus est une plante : « Cette plante » est le terme générique exact. « animal », « minéral » et « insecte » ne contiennent pas le référent et seraient des reprises fausses.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans « Range tes affaires, je range les miennes. », le groupe « les miennes » remplace…",
+      "options": [
+        { "id": "a", "text": "tes affaires" },
+        { "id": "b", "text": "les affaires" },
+        { "id": "c", "text": "mes mains" },
+        { "id": "d", "text": "mes affaires" }
+      ],
+      "correctOption": "d",
+      "explanation": "« les miennes » est un pronom possessif féminin pluriel : il remplace « mes affaires ». Il ne reprend pas « tes affaires » (ce serait « les tiennes ») et ne se rapporte pas à un autre nom.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Un brouillon répète trois fois « le trésor ». Quelle réécriture évite la répétition sans faute d'accord ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Les pirates cherchaient le trésor. Ils le convoitaient. Ce butin les rendait fous."
+        },
+        {
+          "id": "b",
+          "text": "Les pirates cherchaient le trésor. Les pirates convoitaient le trésor."
+        },
+        {
+          "id": "c",
+          "text": "Les pirates cherchaient le trésor. Elle le convoitait. Ce butin les rendait fous."
+        },
+        {
+          "id": "d",
+          "text": "Les pirates cherchaient le trésor. Ils le convoitaient. Cette butin les rendait fous."
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "La reprise alterne « le » (pronom qui reprend le trésor) et « Ce butin » (périphrase) sans jamais répéter ni se tromper d'accord. La phrase b répète tout, la phrase c met « Elle » à la place de « Ils », et la phrase d écrit « Cette butin » (butin est masculin).",
+      "difficulty": 3
+    }
+  ]
+}
