@@ -3,7 +3,7 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { isRateLimited } from "@/shared/lib/rate-limit";
 import { failWithClientError } from "@/shared/lib/safe-error";
-import { isValidAnswerFormat } from "@/shared/lib/answer-formats";
+import { isValidAnswerFormat, MAX_CHOICE_LENGTH } from "@/shared/lib/answer-formats";
 
 /** Dungeon constants */
 export const DUNGEON_XP_PER_FLOOR = 15;
@@ -239,7 +239,9 @@ export const submitDungeonAnswer = createServerFn({ method: "POST" })
       .object({
         runId: z.guid(),
         questionId: z.guid(),
-        choice: z.string().min(1).max(32),
+        // Wide enough for the B2 CSV wire formats (a matching answer of six
+        // pairs already exceeds the old 32-char bound).
+        choice: z.string().min(1).max(MAX_CHOICE_LENGTH),
       })
       .parse(d),
   )

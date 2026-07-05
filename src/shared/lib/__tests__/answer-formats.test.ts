@@ -47,7 +47,35 @@ describe("answer-formats — isValidAnswerFormat", () => {
 
   it("treats unknown/null types as the generic bounded-string contract", () => {
     expect(isValidAnswerFormat(null, "whatever")).toBe(true);
-    expect(isValidAnswerFormat("ordering", "b,a,c")).toBe(true);
+    expect(isValidAnswerFormat("multi", "a,c")).toBe(true);
+  });
+
+  it("accepts well-formed ordering answers (unique id CSV, whitespace-insensitive)", () => {
+    expect(isValidAnswerFormat("ordering", "b,a,d,c")).toBe(true);
+    expect(isValidAnswerFormat("ordering", "b, a, d, c")).toBe(true);
+    expect(isValidAnswerFormat("ordering", "step2,step1")).toBe(true);
+  });
+
+  it("rejects malformed ordering answers", () => {
+    expect(isValidAnswerFormat("ordering", "b")).toBe(false); // a sequence needs >= 2 steps
+    expect(isValidAnswerFormat("ordering", "b,,a")).toBe(false); // empty part
+    expect(isValidAnswerFormat("ordering", "b,a,")).toBe(false); // trailing comma
+    expect(isValidAnswerFormat("ordering", "b,a,b")).toBe(false); // duplicated id
+    expect(isValidAnswerFormat("ordering", "l1:r2,l2:r1")).toBe(false); // pair syntax
+  });
+
+  it("accepts well-formed matching answers (unique left:right pair CSV)", () => {
+    expect(isValidAnswerFormat("matching", "l1:r2,l2:r1")).toBe(true);
+    expect(isValidAnswerFormat("matching", "l1:r2, l2:r1")).toBe(true);
+    expect(isValidAnswerFormat("matching", "l1:r1")).toBe(true);
+  });
+
+  it("rejects malformed matching answers", () => {
+    expect(isValidAnswerFormat("matching", "l1r2,l2r1")).toBe(false); // no ':' separator
+    expect(isValidAnswerFormat("matching", "l1:r2:x")).toBe(false); // two ':' in a pair
+    expect(isValidAnswerFormat("matching", "l1:,l2:r1")).toBe(false); // empty right side
+    expect(isValidAnswerFormat("matching", "l1:r2,l1:r2")).toBe(false); // duplicated pair
+    expect(isValidAnswerFormat("matching", "b,a,c")).toBe(false); // ordering syntax
   });
 });
 
