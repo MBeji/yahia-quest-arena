@@ -1,0 +1,68 @@
+{
+  "title": "Test de compréhension ⭐ : Continuité et limites",
+  "questions": [
+    {
+      "prompt": "Soit f une fonction définie sur un intervalle ouvert contenant a. Par définition, f est continue en a lorsque :",
+      "options": [
+        { "id": "a", "text": "lim x→a f(x) = f(a)" },
+        { "id": "b", "text": "f(a) existe" },
+        { "id": "c", "text": "lim x→a f(x) existe" },
+        { "id": "d", "text": "f est définie au voisinage de a" }
+      ],
+      "correctOption": "a",
+      "explanation": "Par définition, f est continue en a lorsque la limite de f en a existe et est égale à f(a) : lim x→a f(x) = f(a). L'existence de f(a) seule, ou d'une limite seule, ne suffit pas — il faut l'égalité entre les deux.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Au cours d'un calcul de limites, laquelle de ces situations est une forme indéterminée ?",
+      "options": [
+        { "id": "a", "text": "La somme de deux limites égales à +∞" },
+        { "id": "b", "text": "La différence de deux limites égales à +∞" },
+        { "id": "c", "text": "Le produit d'une limite nulle par une limite finie" },
+        { "id": "d", "text": "Le quotient d'une limite finie par une limite infinie" }
+      ],
+      "correctOption": "b",
+      "explanation": "La différence de deux limites infinies de même signe est la forme indéterminée ∞ − ∞ : on ne peut pas conclure sans transformer l'expression. En revanche, ∞ + ∞ donne +∞, un produit 0 × ℓ (ℓ fini) donne 0 et un quotient fini/infini donne 0.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Une fonction f vérifie lim x→3 f(x) = +∞. Que peut-on en déduire pour la courbe de f ?",
+      "options": [
+        { "id": "a", "text": "La droite d'équation y = 3 est une asymptote horizontale" },
+        { "id": "b", "text": "La droite d'équation y = 0 est une asymptote horizontale" },
+        { "id": "c", "text": "La droite d'équation x = 3 est une asymptote horizontale" },
+        { "id": "d", "text": "La droite d'équation x = 3 est une asymptote verticale" }
+      ],
+      "correctOption": "d",
+      "explanation": "Une limite infinie en un point a se traduit par une asymptote verticale d'équation x = a : ici, lim x→3 f(x) = +∞ donne l'asymptote verticale x = 3. Une asymptote horizontale correspondrait à une limite finie en +∞ ou en −∞, ce qui n'est pas la situation décrite.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "f est une fonction continue sur le segment [a ; b]. Quelle est l'image de [a ; b] par f ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Le segment [f(a) ; f(b)], où f(a) et f(b) sont les valeurs aux bornes"
+        },
+        { "id": "b", "text": "Un intervalle ouvert contenant f(a) et f(b)" },
+        { "id": "c", "text": "Le segment [m ; M], où m et M sont le minimum et le maximum de f" },
+        { "id": "d", "text": "L'ensemble ℝ tout entier, dès que f n'est pas constante" }
+      ],
+      "correctOption": "c",
+      "explanation": "L'image du segment [a ; b] par une fonction continue est le segment [m ; M], où m et M sont le minimum et le maximum de f sur [a ; b]. Ce n'est pas forcément [f(a) ; f(b)] : le maximum ou le minimum peut être atteint à l'intérieur de l'intervalle, pas aux bornes.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "La fonction f définie par f(x) = (√(x + 1) − 1)/x n'est pas définie en 0. Quelle valeur donner à g(0) pour prolonger f par continuité en 0 ?",
+      "options": [
+        { "id": "a", "text": "0" },
+        { "id": "b", "text": "1/2" },
+        { "id": "c", "text": "1" },
+        { "id": "d", "text": "2" }
+      ],
+      "correctOption": "b",
+      "explanation": "Avec l'expression conjuguée, (√(x + 1) − 1)/x = 1/(√(x + 1) + 1), qui tend vers 1/2 quand x tend vers 0. On pose donc g(0) = 1/2 : c'est le prolongement par continuité de f en 0, exactement comme dans le cours.",
+      "difficulty": 2
+    }
+  ]
+}
