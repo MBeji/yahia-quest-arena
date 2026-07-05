@@ -150,8 +150,9 @@ Whatever the slice, the same gates apply: quality bar → self-verification → 
 - `references/interactive-formats.md` — the **interactive/innovative format catalogue** (cloze,
   chasse à l'erreur, appariement, remise en ordre, QCM visuel SVG, document, histoire-problème,
   vrai/faux motivé, sprint chrono) encodable in today's QCM engine, plus the renderer contract and
-  anti-patterns; the `content-interactif` skill instantiates it. Native input types are Tier B —
-  spec in `docs/interactive-question-types.md`, not authorable yet.
+  anti-patterns; the `content-interactif` skill instantiates it. Native input types are Tier B
+  (spec: `docs/interactive-question-types.md`) — **`numeric` shipped (B1) and is authorable**
+  (shape in `references/content-schema.md`); ordering/matching/multi are not authorable yet.
 - `references/quality-bar.md` — the QA gates (Zod hard-fails + `content:qa` heuristics), the
   pedagogical bar, question craft, and the self-verification protocol. Read before writing questions.
 - `references/math-and-notation.md` — **hard rule**: Western digits + standard LTR equations/units

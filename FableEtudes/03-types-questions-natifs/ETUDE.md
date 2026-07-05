@@ -1,6 +1,7 @@
 # Étude 03 — Types de questions natifs (Tier B : numeric, ordering, matching, multi)
 
-> **Statut** : en exécution (validée par l'humain le 2026-07-05 ; lots B1.1–B1.3 livrés)
+> **Statut** : en exécution — **phase B1 (`numeric`) livrée intégralement** (lots B1.1–B1.4,
+> 2026-07-05) ; B2/B3 en attente du GO humain (Q-1 : valider B1 en prod + contenu numeric d'abord)
 > **Priorité** : 03 · **Valeur** : tue la devinette par élimination (saisie numérique), vraie manipulation (drag & drop), jugement multi-sélection — l'expérience d'exercice passe un cran au-dessus de tout QCM concurrent · **Complexité** : haute (5 RPC SQL + UI + pipeline), mais dé-risquée : la spec normative est déjà écrite
 > **Architecte** : Fable (claude-fable-5), 2026-07-04 · **Exécuteur cible** : Sonnet
 > **Dépend de** : rien (indépendant) ; recommandé avant le lancement bac (annales en saisie numérique)
@@ -66,7 +67,7 @@ Intégralement dans la spec — carte des touchpoints (5 RPCs SQL, zod/TS, UI, p
 - [x] B1.1 — DB + couture scoring (merge seul d'abord — DoD §7)
 - [x] B1.2 — serveur
 - [x] B1.3 — UI
-- [ ] B1.4 — pipeline + skills
+- [x] B1.4 — pipeline + skills
 
 **Phase B2 — `ordering` + `matching`** : mêmes 4 lots (B2.1 étend `score_answer`; B2.3 =
 `OrderingBoard`/`MatchingBoard` avec @dnd-kit — D-3). **Phase B3 — `multi`** : idem, plus l'UX
@@ -179,3 +180,24 @@ build:check, smoke:shell, pgTAP 154/154.
    toujours faux.
 7. La spec e2e numeric s'auto-skippe tant qu'aucune mission numeric n'existe sur le
    projet TEST (l'authoring reste banni jusqu'à B1.4) — elle s'activera d'elle-même.
+
+### Lot B1.4 — 2026-07-05 (exécuté par le modèle architecte, Fable) — PHASE B1 COMPLÈTE
+
+Livré : `questionSchema` en **union discriminée** sur `type` (défaut `mcq` par
+préprocesseur — les 73 sujets existants revalident sans modification, D-4 prouvé par
+`content:check`) ; membre `numeric` (`answerKey {value, tolerance?, unit?}`) ; les types
+B2/B3 restent rejetés par le schéma (le ban EST le schéma). `sql-builder` émet
+`question_type`/`answer_key` (mcq inchangé + `answer_key NULL`). Lints QA numeric dans
+`content:qa` (tolérance ≥ |valeur| = error ; > 25 % = warn ; valeur non reprise dans
+l'explication = warn ; contrôles de rendu partagés factorisés). Levée du ban `numeric`
+dans CLAUDE.md, la spec, `content-engine` (SKILL + content-schema + interactive-formats +
+generation-pipeline) et `content-interactif`. **Mission démo** « saisie libre » (6
+questions numeric, d1→d3) dans `iq-training-{fr,en,ar}/03-maths-raisonnement` (thème
+non-scolaire → jamais quiz-gaté → la spec e2e s'active) + migrations régénérées scopées
+(`--subject`), re-timestampées après `20260705170000` (gotcha ordre). Validé local :
+migrations sur base vierge, `score_answer` sur la démo réelle (13,5 ✓ / 13.5 ✓ / 14 ✗),
+pgTAP 154/154, verify 1009 tests, content:check + content:qa:strict verts (mon propre
+lint a d'ailleurs attrapé une virgule arabe dans ma version ar — corrigée).
+
+Écart accepté : néant (le lot suit la spec ; la démo trilingue remplace la « mission de
+démo sur TEST » de §5 — même contenu, appliqué partout par le pipeline normal).

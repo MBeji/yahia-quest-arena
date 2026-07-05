@@ -85,8 +85,16 @@ bucket; this field carries only the metadata.
 
 ## Question object (shared by quiz.json and exercise files)
 
+Questions are a **discriminated union on `type`**. Omitting `type` means `mcq` — every
+pre-existing file stays valid unchanged. Shipped types today: `mcq` and `numeric`
+(Tier B phase B1); `ordering`/`matching`/`multi` are **schema-rejected** until their
+phase ships (`docs/interactive-question-types.md`).
+
+**`mcq` (default) — the classic QCM:**
+
 | Field           | Type     | Required | Constraint                                                                      |
 | --------------- | -------- | -------- | ------------------------------------------------------------------------------- |
+| `type`          | string   | no       | `"mcq"` (or omitted)                                                            |
 | `prompt`        | string   | yes      | non-empty                                                                       |
 | `options`       | option[] | yes      | **2–6** items (use 4). Each `{ id: string≥1, text: string≥1 }`                  |
 | `correctOption` | string   | yes      | must equal one of the option **ids** (not the text, not an index)               |
@@ -95,6 +103,23 @@ bucket; this field carries only the metadata.
 
 Cross-field rules (Zod refine): option **ids must be unique**; `correctOption` ∈ option ids.
 Convention: option ids `a`,`b`,`c`,`d`.
+
+**`numeric` — native free numeric entry (no options, no elimination):**
+
+| Field                 | Type   | Required | Constraint                                                                                                                                       |
+| --------------------- | ------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `type`                | string | yes      | `"numeric"`                                                                                                                                      |
+| `prompt`              | string | yes      | non-empty. **State the expected unit and precision in the prompt** ("en cm²", "arrondi au centième")                                             |
+| `answerKey.value`     | number | yes      | the canonical answer (finite; standard Western-digit notation)                                                                                   |
+| `answerKey.tolerance` | number | no       | accepted absolute deviation; **omit for exact** (0). Keep it proportionate — `content:qa` errors when tolerance ≥ \|value\| and warns above 25 % |
+| `answerKey.unit`      | string | no       | informative label only — the student never types the unit; the hint lives in the prompt                                                          |
+| `explanation`         | string | yes      | same bar as mcq; **echo the canonical value** in the worked solution                                                                             |
+| `difficulty`          | number | no       | same semantics as mcq                                                                                                                            |
+
+The student types a plain number (`-`, `.` or `,` decimal); the server scores
+`abs(x − value) ≤ tolerance` via `score_answer`. Use `numeric` when options would give the
+answer away by elimination (calculs, mesures, résultats d'équations); keep `mcq` when the
+distractors themselves teach (misconception encoding — see expert-exercises.md).
 
 ### Figures (inline SVG) in questions
 

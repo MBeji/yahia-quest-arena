@@ -124,28 +124,75 @@ const optionSchema = z.object({
   text: z.string().min(1),
 });
 
+const questionCoreSchema = z.object({
+  prompt: z.string().min(1),
+  explanation: z.string().min(1),
+  /**
+   * Per-question difficulty (1 = easy … 3 = hard). Questions within an
+   * exercise/quiz are emitted ordered by ascending difficulty. Optional;
+   * untagged questions default to medium (2) for ordering.
+   */
+  difficulty: z.number().int().min(1).max(3).optional(),
+});
+
+/** The classic QCM — `type` may be omitted in files (defaulted to 'mcq'). */
+const mcqQuestionSchema = questionCoreSchema.extend({
+  type: z.literal("mcq"),
+  options: z.array(optionSchema).min(2).max(6),
+  correctOption: z.string().min(1),
+});
+
+/** Typed key of a native `numeric` question → `questions.answer_key`. */
+export const numericAnswerKeySchema = z.object({
+  /** The canonical answer (standard Western-digit notation). */
+  value: z.number().finite(),
+  /** Accepted absolute deviation; omitted = exact match (0). */
+  tolerance: z.number().nonnegative().finite().optional(),
+  /** Optional unit label — informative only; the unit hint belongs in the prompt. */
+  unit: z.string().min(1).optional(),
+});
+export type NumericAnswerKey = z.infer<typeof numericAnswerKeySchema>;
+
+/**
+ * Native free-numeric-entry question (Tier B, phase B1 — see
+ * docs/interactive-question-types.md). No options: the student types the
+ * number; the server scores `abs(x − value) <= tolerance` via `score_answer`.
+ */
+const numericQuestionSchema = questionCoreSchema.extend({
+  type: z.literal("numeric"),
+  answerKey: numericAnswerKeySchema,
+});
+
+/**
+ * A question file entry — discriminated on `type`, defaulting to `'mcq'` so
+ * every pre-existing content file stays valid without edits (spec D-4).
+ * Tier-B types beyond `numeric` (ordering/matching/multi) are NOT members yet:
+ * authoring them stays schema-rejected until their phase (B2/B3) ships.
+ */
 export const questionSchema = z
-  .object({
-    prompt: z.string().min(1),
-    options: z.array(optionSchema).min(2).max(6),
-    correctOption: z.string().min(1),
-    explanation: z.string().min(1),
-    /**
-     * Per-question difficulty (1 = easy … 3 = hard). Questions within an
-     * exercise/quiz are emitted ordered by ascending difficulty. Optional;
-     * untagged questions default to medium (2) for ordering.
-     */
-    difficulty: z.number().int().min(1).max(3).optional(),
-  })
-  .refine((q) => new Set(q.options.map((o) => o.id)).size === q.options.length, {
-    message: "option ids must be unique",
-    path: ["options"],
-  })
-  .refine((q) => q.options.some((o) => o.id === q.correctOption), {
-    message: "correctOption must match one of the option ids",
-    path: ["correctOption"],
+  .preprocess(
+    (val) =>
+      val !== null && typeof val === "object" && !("type" in val)
+        ? { ...(val as Record<string, unknown>), type: "mcq" }
+        : val,
+    z.discriminatedUnion("type", [mcqQuestionSchema, numericQuestionSchema]),
+  )
+  .superRefine((q, ctx) => {
+    if (q.type !== "mcq") return;
+    if (new Set(q.options.map((o) => o.id)).size !== q.options.length) {
+      ctx.addIssue({ code: "custom", message: "option ids must be unique", path: ["options"] });
+    }
+    if (!q.options.some((o) => o.id === q.correctOption)) {
+      ctx.addIssue({
+        code: "custom",
+        message: "correctOption must match one of the option ids",
+        path: ["correctOption"],
+      });
+    }
   });
 export type ContentQuestion = z.infer<typeof questionSchema>;
+export type ContentMcqQuestion = Extract<ContentQuestion, { type: "mcq" }>;
+export type ContentNumericQuestion = Extract<ContentQuestion, { type: "numeric" }>;
 
 /**
  * `quiz.json` — the mandatory comprehension quiz of a chapter. Compiled into

@@ -11,10 +11,12 @@ Two tiers — know which one you are authoring for:
 - **Tier A — QCM-native (author these now).** Formats fully expressible in the current schema
   (`options: [{id,text}]` + `correctOption` + server-side string-equality scoring). Everything in
   this file is Tier A.
-- **Tier B — engine-native types** (numeric input, drag-&-drop ordering/matching, multi-select).
-  These need DB/RPC/UI evolution and are **specified in `docs/interactive-question-types.md`** —
-  do **NOT** author Tier-B content until that spec ships. When a request truly needs Tier B
-  (e.g. free numeric input), say so and point at the spec instead of faking it.
+- **Tier B — engine-native types** (numeric input, drag-&-drop ordering/matching, multi-select),
+  specified in `docs/interactive-question-types.md`. **Phase B1 has shipped: `numeric` is
+  authorable now** (`type: "numeric"` + `answerKey {value, tolerance?, unit?}` — shape and
+  authoring rules in `content-schema.md`). `ordering`/`matching`/`multi` remain **banned**
+  (schema-rejected) until phases B2/B3 ship; when a request truly needs one of those, say so
+  and point at the spec instead of faking it.
 
 ## The renderer contract (what an author can rely on)
 
