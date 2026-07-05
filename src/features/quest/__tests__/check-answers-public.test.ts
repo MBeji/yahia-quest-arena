@@ -203,6 +203,29 @@ describe("quest.checkAnswersPublic", () => {
     expect(res.review[0].correctChoice).toBe("3.14");
   });
 
+  it("rejects a malformed ordering answer before calling the RPC (B2 wire format)", async () => {
+    mockFrom.mockReturnValue(questionTypesQuery([{ id: Q1, question_type: "ordering" }]));
+    await expect(
+      call({ exerciseId: EX, answers: [{ questionId: Q1, choice: "b,,a" }] }),
+    ).rejects.toThrow("Réponse invalide pour ce type de question.");
+    expect(mockRpc).not.toHaveBeenCalled();
+  });
+
+  it("accepts a well-formed matching answer (B2 wire format)", async () => {
+    mockFrom.mockReturnValue(questionTypesQuery([{ id: Q1, question_type: "matching" }]));
+    mockRpc.mockResolvedValue({
+      data: [
+        { question_id: Q1, is_correct: false, correct_option: "l1:r2,l2:r1", explanation: null },
+      ],
+      error: null,
+    });
+    const res = await call({
+      exerciseId: EX,
+      answers: [{ questionId: Q1, choice: "l1:r1,l2:r2" }],
+    });
+    expect(res.review[0].correctChoice).toBe("l1:r2,l2:r1");
+  });
+
   it("degrades open when the question_type lookup fails", async () => {
     mockFrom.mockReturnValue(questionTypesQuery(null, { message: "boom" }));
     mockRpc.mockResolvedValue({ data: [], error: null });
