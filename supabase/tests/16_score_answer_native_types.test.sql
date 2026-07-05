@@ -8,7 +8,7 @@
 --      old rows (no question_type written) score IDENTICALLY (US-4 regression);
 --   2. 'numeric': abs(x − value) <= tolerance (default 0), comma normalized,
 --      unparseable input scores false and never raises (US-1 / R-3);
---   3. not-yet-shipped types (ordering — phase B2) score false, never crash;
+--   3. not-yet-shipped types (multi — phase B3) score false, never crash;
 --   4. key-shape integrity: non-mcq requires answer_key, type list is closed;
 --   5. R-1: answer_key is column-masked from clients, question_type readable,
 --      score_answer not client-executable (no answer-key oracle);
@@ -64,12 +64,13 @@ VALUES ('d3000000-0000-0000-0000-000000000003',
         'Numeric: 6*7 ?', '[]'::jsonb,
         'numeric', '{"value": 42}'::jsonb, 1);
 
--- A future-phase (B2) ordering row: must be storable but score false for now.
+-- A future-phase (B3) multi row: must be storable but score false for now.
+-- (Was an 'ordering' row until phase B2 shipped that type — 20260705190000.)
 INSERT INTO public.questions (id, exercise_id, prompt, options, question_type, answer_key, display_order)
 VALUES ('d3000000-0000-0000-0000-000000000004',
         'd2000000-0000-0000-0000-000000000001',
-        'Ordering: steps', '[{"id":"a","text":"x"},{"id":"b","text":"y"}]'::jsonb,
-        'ordering', '{"order": ["b", "a"]}'::jsonb, 3);
+        'Multi: select all', '[{"id":"a","text":"x"},{"id":"b","text":"y"}]'::jsonb,
+        'multi', '{"correct": ["a", "b"]}'::jsonb, 3);
 
 -- =========================================================
 -- 1–2. mcq fast path (regression, US-4).
@@ -145,9 +146,9 @@ SELECT is(
 -- =========================================================
 SELECT is(
   public.score_answer(
-    (SELECT q FROM public.questions q WHERE q.id = 'd3000000-0000-0000-0000-000000000004'), 'b,a'),
+    (SELECT q FROM public.questions q WHERE q.id = 'd3000000-0000-0000-0000-000000000004'), 'a,b'),
   false,
-  'ordering (phase B2, not shipped): scores false instead of crashing'
+  'multi (phase B3, not shipped): scores false instead of crashing'
 );
 
 -- =========================================================
@@ -200,7 +201,7 @@ SELECT is(
 
 -- =========================================================
 -- 17–18. End-to-end: submit_exercise_attempt scores through the seam.
--- (mixed exercise has 3 questions: mcq + numeric + ordering.)
+-- (mixed exercise has 3 questions: mcq + numeric + multi.)
 -- =========================================================
 INSERT INTO auth.users (id, email)
 VALUES ('f6666666-6666-6666-6666-666666666666', 'native-good@test.local');
@@ -221,7 +222,7 @@ SELECT set_config(
     'd2000000-0000-0000-0000-000000000001',
     '[{"questionId":"d3000000-0000-0000-0000-000000000001","choice":"a"},
       {"questionId":"d3000000-0000-0000-0000-000000000002","choice":"3,15"},
-      {"questionId":"d3000000-0000-0000-0000-000000000004","choice":"b,a"}]'::jsonb
+      {"questionId":"d3000000-0000-0000-0000-000000000004","choice":"a,b"}]'::jsonb
   )::text,
   true
 );
@@ -235,7 +236,7 @@ SELECT is(
 SELECT is(
   (current_setting('test.mixed_result')::jsonb ->> 'total')::int,
   3,
-  'submit_exercise_attempt: the unshipped ordering row still counts in the total'
+  'submit_exercise_attempt: the unshipped multi row still counts in the total'
 );
 
 RESET ROLE;

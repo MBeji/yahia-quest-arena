@@ -1,7 +1,8 @@
 # Étude 03 — Types de questions natifs (Tier B : numeric, ordering, matching, multi)
 
 > **Statut** : en exécution — **phase B1 (`numeric`) livrée intégralement** (lots B1.1–B1.4,
-> 2026-07-05) ; B2/B3 en attente du GO humain (Q-1 : valider B1 en prod + contenu numeric d'abord)
+> 2026-07-05) ; **phase B2 (`ordering`+`matching`) en cours** (GO humain reçu le 2026-07-05) ;
+> B3 en attente
 > **Priorité** : 03 · **Valeur** : tue la devinette par élimination (saisie numérique), vraie manipulation (drag & drop), jugement multi-sélection — l'expérience d'exercice passe un cran au-dessus de tout QCM concurrent · **Complexité** : haute (5 RPC SQL + UI + pipeline), mais dé-risquée : la spec normative est déjà écrite
 > **Architecte** : Fable (claude-fable-5), 2026-07-04 · **Exécuteur cible** : Sonnet
 > **Dépend de** : rien (indépendant) ; recommandé avant le lancement bac (annales en saisie numérique)
@@ -72,6 +73,11 @@ Intégralement dans la spec — carte des touchpoints (5 RPCs SQL, zod/TS, UI, p
 **Phase B2 — `ordering` + `matching`** : mêmes 4 lots (B2.1 étend `score_answer`; B2.3 =
 `OrderingBoard`/`MatchingBoard` avec @dnd-kit — D-3). **Phase B3 — `multi`** : idem, plus l'UX
 « toutes les bonnes réponses » (US-3). Chaque phase démarre sur GO humain après la précédente (D-2).
+
+- [x] B2.1 — DB + couture scoring étendue (merge seul d'abord — DoD §7)
+- [ ] B2.2 — serveur
+- [ ] B2.3 — UI (@dnd-kit)
+- [ ] B2.4 — pipeline + skills
 
 **Stop-points** : ne jamais modifier la sémantique `'mcq'` ; ne jamais sélectionner `answer_key`
 dans une requête client ; ne pas anticiper une phase ; tout écart avec la spec = STOP + escalade
@@ -201,3 +207,24 @@ lint a d'ailleurs attrapé une virgule arabe dans ma version ar — corrigée).
 
 Écart accepté : néant (le lot suit la spec ; la démo trilingue remplace la « mission de
 démo sur TEST » de §5 — même contenu, appliqué partout par le pipeline normal).
+
+### Lot B2.1 — 2026-07-05 (exécuté par le modèle architecte, Fable — GO humain phase B2 reçu)
+
+Livré : migration `20260705190000_native_question_types_b2_score_answer.sql` —
+`score_answer` étendu avec `ordering` (séquence exacte sur le CSV d'ids, insensible aux
+espaces, tout-ou-rien R-2) et `matching` (égalité d'ENSEMBLES de paires `l:r`, insensible
+à l'ordre, doublons neutralisés) ; entrées malformées → `false`, jamais d'exception (R-3) ;
+`multi` (B3) score toujours `false` ; mcq/numeric strictement inchangés (régression pgTAP).
+Aucun RPC de scoring re-branché — bénéfice direct de la couture unique D-1. pgTAP :
+nouveau `17_score_answer_b2_ordering_matching.test.sql` (24 assertions) ; le test 16 a
+basculé sa fixture « type futur » d'`ordering` vers `multi` (son intention — un type non
+livré ne crashe pas — est préservée). Suite 178/178, verify vert.
+
+Écart accepté (arbitrage architecte) :
+
+8. **Helper `answer_key_display(question)`** (server-only, non exécutable par les clients) :
+   la révélation canonique `COALESCE(correct_option, answer_key->>'value')` de B1 ne
+   couvrait pas ordering/matching. Le helper sérialise la clé dans le MÊME format de fil
+   que `choice` (ordering : CSV d'ids ; matching : CSV de paires) et remplace l'expression
+   dans les trois RPCs de correction (recréés verbatim, gates inchangés) — l'UI B2.3
+   consommera ce format tel quel.
