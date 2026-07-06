@@ -19,7 +19,7 @@ import { en } from "@/lib/i18n/en";
 import { ar } from "@/lib/i18n/ar";
 import { ThemeProvider, useTheme, DEFAULT_THEME, themeFromCookieHeader } from "@/lib/theme";
 import type { Theme } from "@/lib/theme";
-import { SoundProvider } from "@/lib/sound";
+import { SoundProvider, useSound } from "@/lib/sound";
 import { logger } from "@/shared/lib/logger";
 import { initAnalytics, trackPageview, pagePathFromLocation } from "@/shared/lib/analytics";
 
@@ -224,6 +224,7 @@ function RootComponent() {
       <ThemeProvider>
         <I18nProvider>
           <SoundProvider>
+            <GlobalSoundEffects />
             <Outlet />
             <ThemedToaster />
           </SoundProvider>
@@ -231,6 +232,36 @@ function RootComponent() {
       </ThemeProvider>
     </QueryClientProvider>
   );
+}
+
+/**
+ * Global audio glue that needs router + sound context: a soft "whoosh" on every
+ * SPA navigation, and switching the ambient-music mood to the darker theme while
+ * in the Dungeon. Rendered inside SoundProvider; renders nothing.
+ */
+function GlobalSoundEffects() {
+  const router = useRouter();
+  const { play, setMusicMood } = useSound();
+
+  useEffect(() => {
+    // Skip the very first resolution (initial load) — only cue real navigations.
+    let first = true;
+    const applyMood = () => {
+      const path = router.state.location.pathname;
+      setMusicMood(path.startsWith("/dungeon") ? "dungeon" : "calm");
+    };
+    applyMood();
+    return router.subscribe("onResolved", () => {
+      applyMood();
+      if (first) {
+        first = false;
+        return;
+      }
+      play("whoosh");
+    });
+  }, [router, play, setMusicMood]);
+
+  return null;
 }
 
 /** Toaster whose colour scheme follows the active UI theme. `reference` and

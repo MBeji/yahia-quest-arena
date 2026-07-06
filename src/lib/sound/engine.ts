@@ -16,7 +16,16 @@ export type SoundName =
   | "badge"
   | "coin"
   | "descend"
-  | "gameOver";
+  | "gameOver"
+  // UI / navigation / economy — the "life" pass.
+  | "hover"
+  | "click"
+  | "whoosh"
+  | "purchase"
+  | "hint"
+  | "tick"
+  | "unlock"
+  | "start";
 
 /** One scheduled oscillator note within an effect. */
 type ToneSpec = {
@@ -41,8 +50,11 @@ type WebkitWindow = Window & { webkitAudioContext?: typeof AudioContext };
 let ctx: AudioContext | null = null;
 let master: GainNode | null = null;
 
-/** Lazily create (once) the shared AudioContext + master gain. */
-function getContext(): AudioContext | null {
+/**
+ * Lazily create (once) the shared AudioContext + master gain. Exported so the
+ * generative music player can reuse the same context (browsers cap the count).
+ */
+export function getAudioContext(): AudioContext | null {
   if (typeof window === "undefined") return null;
   if (ctx) return ctx;
   const AC = window.AudioContext ?? (window as WebkitWindow).webkitAudioContext;
@@ -66,7 +78,7 @@ function getContext(): AudioContext | null {
  * for the first sound to be audible.
  */
 export function unlockAudio(): void {
-  const c = getContext();
+  const c = getAudioContext();
   if (c && c.state === "suspended") {
     void c.resume().catch(() => {});
   }
@@ -81,6 +93,9 @@ function scheduleTone(c: AudioContext, out: GainNode, spec: ToneSpec): void {
   osc.type = spec.type ?? "triangle";
   osc.frequency.setValueAtTime(spec.freq, t0);
   if (spec.sweepTo) osc.frequency.linearRampToValueAtTime(spec.sweepTo, t1);
+  // Humanize: a few cents of random detune per note so repeated effects never
+  // sound mechanically identical — small touch that adds "life".
+  if (osc.detune) osc.detune.setValueAtTime((Math.random() * 2 - 1) * 7, t0);
   // Exponential ramps can't hit 0 — floor the envelope at a near-silent value.
   const peak = spec.gain ?? 1;
   g.gain.setValueAtTime(0.0001, t0);
@@ -138,6 +153,37 @@ const PATTERNS: Record<SoundName, ToneSpec[]> = {
     { freq: 349, start: 0.18, duration: 0.2 },
     { freq: 262, start: 0.36, duration: 0.44, gain: 0.85 },
   ],
+  // Barely-there tick on hovering an interactive control.
+  hover: [{ freq: 880, start: 0, duration: 0.03, type: "sine", gain: 0.18 }],
+  // Crisp UI click.
+  click: [{ freq: 520, start: 0, duration: 0.04, type: "sine", gain: 0.35 }],
+  // Airy upward sweep on a page navigation.
+  whoosh: [{ freq: 320, start: 0, duration: 0.16, type: "sine", gain: 0.28, sweepTo: 1200 }],
+  // Rewarding "cha-ching" on a shop purchase.
+  purchase: [
+    { freq: 1319, start: 0, duration: 0.06, type: "square", gain: 0.4 },
+    { freq: 1760, start: 0.06, duration: 0.09, type: "square", gain: 0.4 },
+    { freq: 2093, start: 0.14, duration: 0.24, type: "sine", gain: 0.3 },
+  ],
+  // Gentle magical reveal when a hint is spent.
+  hint: [
+    { freq: 880, start: 0, duration: 0.08, type: "sine", gain: 0.4 },
+    { freq: 1320, start: 0.07, duration: 0.18, type: "sine", gain: 0.4 },
+  ],
+  // Dry tick for a boss/dungeon countdown.
+  tick: [{ freq: 900, start: 0, duration: 0.035, type: "square", gain: 0.35 }],
+  // Short bright flourish when something unlocks.
+  unlock: [
+    { freq: 523, start: 0, duration: 0.08 },
+    { freq: 784, start: 0.07, duration: 0.08 },
+    { freq: 1046, start: 0.14, duration: 0.22, gain: 0.85 },
+  ],
+  // Ascending "here we go" when a quest/run starts.
+  start: [
+    { freq: 392, start: 0, duration: 0.09, gain: 0.6 },
+    { freq: 523, start: 0.08, duration: 0.09, gain: 0.6 },
+    { freq: 659, start: 0.16, duration: 0.18, gain: 0.6 },
+  ],
 };
 
 /**
@@ -145,13 +191,43 @@ const PATTERNS: Record<SoundName, ToneSpec[]> = {
  * the user's sound preference before calling (see SoundProvider).
  */
 export function playSound(name: SoundName): void {
-  const c = getContext();
+  const c = getAudioContext();
   if (!c || !master) return;
   try {
     if (c.state === "suspended") void c.resume().catch(() => {});
     for (const spec of PATTERNS[name]) scheduleTone(c, master, spec);
   } catch {
     // Best-effort: never let an audio glitch bubble into gameplay.
+  }
+}
+
+// Pentatonic-ish semitone ladder above C5 — each consecutive correct answer
+// climbs one rung so a streak audibly "rises". Caps at the top rung.
+const COMBO_LADDER = [0, 2, 4, 7, 9, 12, 14, 16, 19, 21, 24, 26, 28, 31];
+const COMBO_ROOT = 523.25; // C5
+
+/**
+ * Play a combo hit whose pitch rises with the streak `step` (0-based). Gives
+ * consecutive correct answers an escalating, arcade-style reward.
+ */
+export function playCombo(step: number): void {
+  const c = getAudioContext();
+  if (!c || !master) return;
+  const safeStep = Number.isFinite(step) && step > 0 ? Math.floor(step) : 0;
+  const semis = COMBO_LADDER[Math.min(safeStep, COMBO_LADDER.length - 1)];
+  const base = COMBO_ROOT * Math.pow(2, semis / 12);
+  try {
+    if (c.state === "suspended") void c.resume().catch(() => {});
+    scheduleTone(c, master, { freq: base, start: 0, duration: 0.12, type: "triangle", gain: 0.7 });
+    scheduleTone(c, master, {
+      freq: base * 1.5,
+      start: 0.05,
+      duration: 0.16,
+      type: "triangle",
+      gain: 0.4,
+    });
+  } catch {
+    // Best-effort.
   }
 }
 
