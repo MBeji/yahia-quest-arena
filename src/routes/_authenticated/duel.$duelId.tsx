@@ -5,6 +5,7 @@ import { getDuelQuestions, getDuelState, submitDuelAnswer } from "@/features/due
 import { DuelArena } from "@/features/duel/components/duel-arena";
 import { DuelRecap } from "@/features/duel/components/duel-recap";
 import { OpponentProgress } from "@/features/duel/components/opponent-progress";
+import { useDuelChannel } from "@/features/duel/use-duel-channel";
 import { buildQuestLabels } from "@/features/quest/quest-labels";
 import { useI18n, useT } from "@/lib/i18n";
 
@@ -46,6 +47,14 @@ function DuelPlayPage() {
     },
   });
 
+  // Realtime enhancement layer (lot 4): presence + live opponent progress. The
+  // get_duel_state polling above stays the source of truth + the R-12 fallback.
+  const channel = useDuelChannel({
+    duelId,
+    myAnswered: stateQuery.data?.myAnswered ?? 0,
+    enabled: stateQuery.data?.status === "active",
+  });
+
   const state = stateQuery.data;
   const rtl = locale === "ar";
 
@@ -68,6 +77,14 @@ function DuelPlayPage() {
   const questions = questionsQuery.data?.questions ?? [];
   const currentQuestion = questions[state.myAnswered];
 
+  // Prefer the live (broadcast) opponent count when Realtime is up, but never let
+  // it regress below the authoritative polled value (R-12 fallback stays valid).
+  const opponentAnswered =
+    channel.realtimeActive && channel.liveOpponentAnswered != null
+      ? Math.max(channel.liveOpponentAnswered, state.opponentAnswered)
+      : state.opponentAnswered;
+  const opponentOnline = channel.realtimeActive ? channel.opponentOnline : undefined;
+
   return (
     <div className="mx-auto max-w-2xl space-y-4 p-4">
       <Link to="/duel" className="text-sm text-muted-foreground underline-offset-2 hover:underline">
@@ -82,9 +99,10 @@ function DuelPlayPage() {
             {t.duel.waitingOpponent}
           </p>
           <OpponentProgress
-            answered={state.opponentAnswered}
+            answered={opponentAnswered}
             total={state.total}
             finished={state.opponentFinished}
+            online={opponentOnline}
             labels={t.duel}
           />
         </div>
@@ -101,9 +119,10 @@ function DuelPlayPage() {
           onSubmit={(choice) => answerMutation.mutate(choice)}
           opponent={
             <OpponentProgress
-              answered={state.opponentAnswered}
+              answered={opponentAnswered}
               total={state.total}
               finished={state.opponentFinished}
+              online={opponentOnline}
               labels={t.duel}
             />
           }

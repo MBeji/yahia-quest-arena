@@ -10,11 +10,14 @@ export function OpponentProgress({
   answered,
   total,
   finished,
+  online,
   labels,
 }: {
   answered: number;
   total: number;
   finished: boolean;
+  /** Presence (lot 4): undefined = unknown/polling, true/false = live status. */
+  online?: boolean;
   labels: DuelLabels;
 }) {
   const pct = total > 0 ? Math.round((Math.min(answered, total) / total) * 100) : 0;
@@ -23,7 +26,16 @@ export function OpponentProgress({
     : labels.opponentAnswered.replace("{n}", String(answered)).replace("{total}", String(total));
   return (
     <div className="space-y-1" data-testid="opponent-progress">
-      <p className="text-sm text-muted-foreground">{text}</p>
+      <p className="flex items-center gap-2 text-sm text-muted-foreground">
+        {online !== undefined ? (
+          <span
+            className={`inline-block h-2 w-2 rounded-full ${online ? "bg-emerald-500" : "bg-muted-foreground/40"}`}
+            aria-label={online ? labels.online : labels.offline}
+            title={online ? labels.online : labels.offline}
+          />
+        ) : null}
+        {text}
+      </p>
       <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
         <div
           className="h-2 rounded-full bg-primary transition-all"
