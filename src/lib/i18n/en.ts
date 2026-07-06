@@ -389,8 +389,17 @@ export const en: TranslationKeys = {
   },
   sound: {
     label: "Sound",
+    effects: "Sound effects",
+    music: "Ambient music",
     enable: "Enable sounds",
     disable: "Mute sounds",
+  },
+  encouragement: {
+    combo: "Combo x{n}!",
+    nice: "Nice!",
+    onFire: "On fire! 🔥",
+    unstoppable: "Unstoppable! ⚡",
+    legendary: "Legendary! 👑",
   },
   parcours: {
     worldTitle: "Adventure Map",
