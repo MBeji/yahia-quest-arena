@@ -256,8 +256,26 @@ export function buildMigrationSql(subject: LoadedSubject): string {
       // carries its typed key and no options; ordering/matching carry BOTH the
       // items (options) and their typed key. `answer_key` is server-only (never
       // client-granted), which is fine for generated SQL applied as the owner.
-      const optionsSql = q.type === "numeric" ? "'[]'::jsonb" : sqlJson(q.options);
+      // Client options carry only {id, text}: any server-only misconceptionTag
+      // (mcq distractors, étude 04 D-4) is STRIPPED here and routed into the
+      // server-only distractor_tags map below — never sent to the client.
+      const optionsSql =
+        q.type === "numeric"
+          ? "'[]'::jsonb"
+          : sqlJson(q.options.map((o) => ({ id: o.id, text: o.text })));
       const correctOptionSql = q.type === "mcq" ? sqlString(q.correctOption) : "NULL";
+      // distractor_tags: { optionId: tag } for mcq distractors that name an error
+      // (server-only column — R-1). NULL when the question carries no tag.
+      const distractorTags =
+        q.type === "mcq"
+          ? Object.fromEntries(
+              q.options
+                .filter((o) => o.misconceptionTag)
+                .map((o) => [o.id, o.misconceptionTag as string]),
+            )
+          : {};
+      const distractorTagsSql =
+        Object.keys(distractorTags).length > 0 ? sqlJson(distractorTags) : "NULL";
       const answerKeySql =
         q.type === "numeric"
           ? sqlJson({
@@ -273,10 +291,10 @@ export function buildMigrationSql(subject: LoadedSubject): string {
                 ? sqlJson({ correct: q.answerKey.correct })
                 : "NULL";
       out.push(
-        "INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key) VALUES",
+        "INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES",
         `  (${sqlString(qId)}, ${sqlString(exId)}, ${sqlString(q.prompt)}, ${optionsSql}, ${correctOptionSql}, ${sqlString(
           q.explanation,
-        )}, ${i + 1}, ${sqlString(q.type)}, ${answerKeySql})`,
+        )}, ${i + 1}, ${sqlString(q.type)}, ${answerKeySql}, ${distractorTagsSql})`,
         "ON CONFLICT (id) DO UPDATE SET",
         "  exercise_id = EXCLUDED.exercise_id,",
         "  prompt = EXCLUDED.prompt,",
@@ -285,7 +303,8 @@ export function buildMigrationSql(subject: LoadedSubject): string {
         "  explanation = EXCLUDED.explanation,",
         "  display_order = EXCLUDED.display_order,",
         "  question_type = EXCLUDED.question_type,",
-        "  answer_key = EXCLUDED.answer_key;",
+        "  answer_key = EXCLUDED.answer_key,",
+        "  distractor_tags = EXCLUDED.distractor_tags;",
         "",
       );
     });

@@ -25,6 +25,7 @@ import { buildMigrationSql } from "../../src/shared/content/sql-builder.ts";
 import {
   ContentValidationError,
   loadAllSubjects,
+  loadMisconceptionRegistry,
   loadSubject,
 } from "../../src/shared/content/loader.ts";
 
@@ -66,6 +67,11 @@ function main(): void {
   const checkOnly = hasFlag("check");
   const onlySubject = getFlag("subject");
   const baseStamp = getFlag("timestamp") ?? defaultTimestamp();
+
+  // Validate the misconception registry structure up front (étude 04 D-4) so a
+  // malformed content/misconceptions.json fails content:check; usage of unknown
+  // tags is cross-checked by content:qa.
+  loadMisconceptionRegistry(contentDir);
 
   const subjects = onlySubject
     ? [loadSubject(join(contentDir, onlySubject))]

@@ -4,11 +4,13 @@ import { z } from "zod";
 import {
   chapterMetaSchema,
   exerciseSchema,
+  misconceptionRegistrySchema,
   quizSchema,
   subjectMetaSchema,
   type LoadedChapter,
   type LoadedExercise,
   type LoadedSubject,
+  type MisconceptionRegistry,
 } from "./schema.ts";
 
 /** Thrown when a content file is missing or fails schema validation. */
@@ -25,6 +27,7 @@ const CHAPTER_META = "chapter.json";
 const SUBJECT_META = "subject.json";
 const QUIZ_FILE = "quiz.json";
 const EXERCISES_DIR = "exercices";
+const MISCONCEPTION_REGISTRY = "misconceptions.json";
 
 function readJson(filePath: string): unknown {
   if (!existsSync(filePath)) {
@@ -114,6 +117,17 @@ export function loadSubject(subjectDir: string): LoadedSubject {
     .map((slug) => loadChapter(join(subjectDir, slug), slug));
 
   return { meta, chapters };
+}
+
+/**
+ * Load and validate the misconception registry (`content/misconceptions.json`).
+ * Absent → an empty registry (tagging is progressive — étude 04 D-4); present →
+ * validated against the schema so a malformed registry fails `content:check`.
+ */
+export function loadMisconceptionRegistry(contentRoot: string): MisconceptionRegistry {
+  const filePath = join(contentRoot, MISCONCEPTION_REGISTRY);
+  if (!existsSync(filePath)) return {};
+  return parseOrThrow(misconceptionRegistrySchema, readJson(filePath), filePath);
 }
 
 /** Discover and load every subject under a content root directory. */

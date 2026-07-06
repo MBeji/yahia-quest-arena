@@ -107,8 +107,20 @@ staged files); `pre-push` runs `npm run verify`. Installed automatically via the
 `spaced_repetition_schedule` (SM-2) · `dungeon_runs` · `parent_student_links` · `parcours`
 (sellable tracks — FREE or PREMIUM) · `parcours_entitlements` (per-parcours grants; `source` ∈
 {purchase/beta/gift/family}; family pack via `parent_student_links`) · `beta_access_requests` ·
-`content_reports` (user-flagged content errors) · `themes` / `grades`. (The old `subscriptions`
-columns + RPCs were removed in migration `20260609000000`.)
+`content_reports` (user-flagged content errors) · `themes` / `grades` · `question_attempts`
+(append-only per-question telemetry — moteur adaptatif étude 04) + `user_misconceptions` (its
+per-(user, tag) aggregate, trigger-maintained). (The old `subscriptions` columns + RPCs were
+removed in migration `20260609000000`.)
+
+**Adaptive-engine telemetry (étude 04, phase A0).** Each answer submitted through
+`submit_exercise_attempt`/`submit_dungeon_answer` also appends a `question_attempts` row in the
+same transaction, resolving the chosen distractor's **misconception tag** from the **server-only**
+`questions.distractor_tags` map (never sent to the client — same posture as `correct_option`; the
+correct option stays untagged). Tags are namespaced by subject (`math.frac.add-denominators`) and
+drawn from the closed registry `content/misconceptions.json` (id → FR/EN/AR labels), authored via the
+optional per-option `misconceptionTag` content field and validated by `content:qa`. A trigger keeps
+`user_misconceptions` (occurrences + distinct sessions) for the later "Révision du jour" / "Points
+faibles" lots; raw telemetry is purged after 12 months (`purge_question_attempts`, pg_cron).
 
 Server-side logic lives in SQL: `handle_new_user` (auto-profile on signup), `award_xp`
 (streak + level curve: 200 XP/level, hero-class tiers), and the `submit_exercise_attempt`
