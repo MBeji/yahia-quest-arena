@@ -115,7 +115,7 @@ progression, extension du rapport parent. États vides soignés (« Rien à rév
 | A2.2 | Rapport parent enrichi (US-3)                                                                         | Vitest                                           | A2.1                 |
 
 - [x] A0.1 — schéma télémétrie (merge seul — DoD §7)
-- [ ] A0.2 — capture (RPCs) + purge
+- [x] A0.2 — capture (RPCs) + purge
 - [ ] A0.3 — pipeline tags + registre
 - [ ] A1.1 — révision du jour
 - [ ] A2.1 — points faibles (GO humain : ≥4 semaines de télémétrie ou seuil de volume)
@@ -167,3 +167,14 @@ R-3. Vitest : fns zod, panneaux (états vides/pleins, RTL). E2E authed : un cycl
   ROW sur un INSERT multi-lignes voit toutes les lignes du statement ; avec `<>`, deux
   occurrences du même tag dans le même batch s'annuleraient (bug détecté par le pgTAP,
   `sessions_seen` aurait sous-compté). Capture RPC : lot A0.2.
+- **2026-07-06 — A0.2 livré** (migration `20260706130000_adaptive_telemetry_a0_capture.sql` +
+  pgTAP `20_adaptive_telemetry_a0_capture.test.sql`, 15 assertions — suite 225/225, matrice de
+  régression récompenses (tests 04/07) inchangée et verte contre les nouvelles définitions).
+  `submit_exercise_attempt` et `submit_dungeon_answer` re-créés **verbatim** avec le seul ajout
+  de l'INSERT télémétrie dans la même transaction (D-2) : tag résolu server-side depuis
+  `distractor_tags->>choice` (R-1), source `exercise`/`quiz` selon le mode, `dungeon` pour le
+  donjon (session = run id). `purge_question_attempts()` (rétention 12 mois — Q-3, les agrégats
+  survivent) planifiée quotidiennement via pg_cron (wrapper défensif du repo).
+  **Écart accepté n°3** : les questions non répondues ne produisent PAS de ligne de télémétrie
+  (aucune option choisie à diagnostiquer — le scoring, lui, continue de les compter fausses,
+  inchangé). La source `exam` du CHECK reste réservée à l'étude 02.
