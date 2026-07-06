@@ -13,6 +13,7 @@ import {
   Compass,
   LogOut,
   Swords,
+  Gamepad2,
   Crown,
   ClipboardList,
   CreditCard,
@@ -123,6 +124,7 @@ function AuthenticatedLayout() {
     { to: "/parcours", Icon: Map, label: t.layout.parcours },
     { to: "/programme", Icon: Compass, label: t.layout.themes },
     { to: "/dungeon", Icon: Swords, label: t.layout.dungeon },
+    { to: "/duel", Icon: Gamepad2, label: t.duel.title },
     { to: "/leaderboard", Icon: Crown, label: t.layout.ranking },
   ] as const;
   // Hide the bottom tab bar on immersive play/flow screens so it never overlaps
