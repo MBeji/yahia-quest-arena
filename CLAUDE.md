@@ -322,7 +322,11 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
   `docs/lycee-architecture.md` (secondary-cycle architecture: sections as grade nodes +
   slugs/subject-id conventions, the ar→fr transition bridge, bac-\* premium parcours, the full
   lycée mission ladder incl. `NN-annales-bac`/`NN-pont-linguistique`, seed-migration spec and
-  phased rollout). These defer
+  phased rollout). Two **functional** how-to guides (audience: authors / product / ops, French)
+  complement the normative specs above: `docs/guide-types-questions-natifs.md` (étude 03 — when to
+  use each native question type + the authoring shapes) and `docs/guide-duels-et-ligues.md` (étude
+  05 — the duel/league player flow, game constants, pg_cron jobs, optional Realtime, ops notes).
+  These defer
   to CLAUDE.md / ARCHITECTURE.md for anything that overlaps.
 - **Epic studies (`FableEtudes/`).** Complete functional + technical architecture dossiers for
   upcoming epics (paiement en ligne, examen blanc, types de questions natifs, moteur adaptatif,
