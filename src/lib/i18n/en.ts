@@ -387,6 +387,11 @@ export const en: TranslationKeys = {
     light: "Light",
     dark: "Dark",
   },
+  sound: {
+    label: "Sound",
+    enable: "Enable sounds",
+    disable: "Mute sounds",
+  },
   parcours: {
     worldTitle: "Adventure Map",
     worldSubtitle: "Choose your path, unlock regions and become a legend.",

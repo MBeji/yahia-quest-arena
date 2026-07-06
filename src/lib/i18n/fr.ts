@@ -388,6 +388,11 @@ export const fr: TranslationKeys = {
     light: "Clair",
     dark: "Sombre",
   },
+  sound: {
+    label: "Sons",
+    enable: "Activer les sons",
+    disable: "Couper les sons",
+  },
   parcours: {
     worldTitle: "Carte de l'aventure",
     worldSubtitle: "Choisis ta voie, débloque les régions et deviens une légende.",
