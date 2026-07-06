@@ -50,12 +50,30 @@ Avant même que le code quitte la machine (husky, installé par `npm install`) :
 ## 2. Push de la branche — inscription automatique en PR
 
 - **`auto-pr.yml`** : tout push d'une branche non-`main` ouvre automatiquement sa
-  **PR draft** (titre = sujet du commit de tête, corps = template du repo). Il
-  **dispatche aussi les workflows des checks requis** sur la branche — indispensable,
-  car une PR créée par le token Actions ne déclenche aucun événement `pull_request`
-  (règle anti-récursion GitHub).
+  **PR draft** (titre = sujet du commit de tête, corps = template du repo).
 - Raccourci opt-in : un sujet de commit contenant **`[auto-merge]`** ouvre la PR
   directement « ready » et arme le merge sans autre geste.
+
+### Le piège du bot non-collaborateur (`GH_AUTOMATION_PAT`)
+
+Une PR ouverte avec le jeton d'Actions par défaut (`GITHUB_TOKEN`) est attribuée à
+l'acteur `github-actions[bot]`. Ce bot **n'est pas un collaborateur** du dépôt aux yeux
+de GitHub, qui applique alors aux événements `pull_request` de cette PR **le même
+mécanisme d'approbation manuelle que pour une PR venant d'un fork externe** : chaque
+check requis (`verify`, `Migration presence`/`order`, `CodeQL`, ainsi que le job
+`Auto-merge` lui-même) reste bloqué en « en attente d'approbation d'un mainteneur »
+tant que personne ne clique « Approve and run » — d'où l'aléatoire observé (parfois un
+run de secours passe avant que le run natif bloqué ne soit consulté, parfois non).
+
+**Correctif** : provisionner un secret **`GH_AUTOMATION_PAT`** (PAT _fine-grained_,
+scopé à ce seul dépôt, permissions `contents: write` + `pull requests: write` +
+`workflows: write`) dans **Settings → Secrets and variables → Actions**. `auto-pr.yml`
+et `automerge.yml` l'utilisent alors à la place de `GITHUB_TOKEN` : la PR (et toute mise
+à jour de branche) est attribuée à un vrai compte collaborateur, jamais soumis à cette
+approbation — déterministe, sans clic. Sans ce secret, les deux workflows retombent sur
+`GITHUB_TOKEN` et compensent de leur mieux (re-dispatch en `workflow_dispatch`, non gaté
+mais qui fait courir deux runs en parallèle sous le même nom de check — d'où le
+comportement non déterministe tant que le secret n'est pas configuré).
 
 ## 3. La PR — le gate complet (4 checks requis + previews)
 
@@ -121,6 +139,14 @@ La configuration est versionnée dans le repo, mais l'application vit dans GitHu
 2. **Settings → General → Pull Requests** : « Allow auto-merge » activé.
 3. **Settings → Rules** : ruleset `main-protection` importé/à jour ; le ré-importer
    après toute modification de `.github/rulesets/main-protection.json`.
+4. **(Fortement recommandé) Settings → Secrets and variables → Actions** : secret
+   **`GH_AUTOMATION_PAT`** — un PAT _fine-grained_ d'un compte collaborateur, scopé à ce
+   seul dépôt (`contents: write`, `pull requests: write`, `workflows: write`). Sans lui,
+   la chaîne fonctionne mais **n'est pas déterministe** : voir « Le piège du bot
+   non-collaborateur » plus haut — parfois un clic « Ready for review » ou
+   « Approve and run » reste nécessaire.
 
-_Ces trois réglages ont été activés le 2026-07-02 ; la chaîne complète a été validée en
-conditions réelles sur la PR #270 (qui l'a elle-même installée)._
+_Les réglages 1 à 3 ont été activés le 2026-07-02 ; la chaîne a été validée en
+conditions réelles sur la PR #270 (qui l'a elle-même installée). Le réglage 4
+(`GH_AUTOMATION_PAT`) a été ajouté le 2026-07-06 après avoir observé, sur plusieurs PR
+ouvertes automatiquement, des checks requis bloqués en « en attente d'approbation »._

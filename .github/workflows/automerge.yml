@@ -17,16 +17,26 @@ name: Auto-merge
 #     cannot bypass any of that — it only flips the auto-merge bit.
 #
 # Prerequisite: "Allow auto-merge" must be enabled in Settings > General.
-# NOTE: PRs created by a workflow with GITHUB_TOKEN don't fire pull_request
-# events — auto-pr.yml arms those itself on its [auto-merge] fast path.
 #
-# The `keep-up-to-date` job closes the last gap: the ruleset's STRICT policy
+# NOTE on GH_AUTOMATION_PAT: this job's own `pull_request` trigger is itself
+# gated behind manual "Approve and run" when the PR was opened by the
+# `github-actions[bot]` actor (not a repo collaborator — same mechanism GitHub
+# uses for fork PRs from outside contributors, applied here to our own
+# bot-opened PRs). Confirmed live: this exact job sat at `action_required`
+# alongside CI/CodeQL/Migration gate on bot-opened PRs. auto-pr.yml's
+# `GH_AUTOMATION_PAT` secret (see its header) fixes this at the source — a
+# PAT-opened PR's events are attributed to a real collaborator and are never
+# gated, including THIS job. Without that secret, auto-pr.yml's own
+# [auto-merge] fast path is the only reliable way to arm a bot-opened PR
+# (this job may simply never run, or sit pending approval).
+#
+# The `keep-up-to-date` job closes a separate gap: the ruleset's STRICT policy
 # only merges an up-to-date head, but GitHub never updates a PR branch by
 # itself — an armed PR that falls behind main would wait forever. On every
 # push to main, armed-but-behind PRs get their branch updated, and the
-# required workflows are re-dispatched on them (the update-branch commit is
-# authored by GITHUB_TOKEN, so it fires no pull_request events — same
-# anti-recursion rule auto-pr.yml works around at PR creation).
+# required workflows are re-dispatched on them as a GITHUB_TOKEN-fallback
+# safety net (redundant, and harmless, when GH_AUTOMATION_PAT is configured —
+# the update-branch commit then fires its own non-gated pull_request run).
 
 on:
   pull_request:
@@ -55,12 +65,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GH_AUTOMATION_PAT || secrets.GITHUB_TOKEN }}
       REPO: ${{ github.repository }}
       PR: ${{ github.event.pull_request.number }}
       BRANCH: ${{ github.event.pull_request.head.ref }}
       IS_DRAFT: ${{ github.event.pull_request.draft }}
       OPTED_OUT: ${{ contains(github.event.pull_request.labels.*.name, 'no-automerge') }}
+      USING_PAT: ${{ secrets.GH_AUTOMATION_PAT != '' }}
     steps:
       - name: Arm (or disarm) native auto-merge
         run: |
@@ -90,8 +101,7 @@ jobs:
           # Race guard: if the PR is ALREADY behind main at arming time (main
           # moved while it was a draft / before it was armed), no future main
           # push is guaranteed to rescue it — keep-up-to-date only sees armed
-          # PRs. Update it now, and re-dispatch the required checks (the update
-          # commit is authored by GITHUB_TOKEN → fires no pull_request events).
+          # PRs. Update it now.
           state="$(gh pr view "$PR" --repo "$REPO" --json mergeStateStatus --jq .mergeStateStatus)"
           if [ "$state" = "BEHIND" ]; then
             echo "PR #$PR is behind main — updating branch now."
@@ -99,10 +109,18 @@ jobs:
               echo "::warning title=Update impossible::PR #$PR : update-branch refusé (conflit ?). Résolution manuelle requise."
               exit 0
             fi
-            gh workflow run ci.yml --repo "$REPO" --ref "$BRANCH"
-            gh workflow run migration-gate.yml --repo "$REPO" --ref "$BRANCH" -f base=main
-            gh workflow run codeql.yml --repo "$REPO" --ref "$BRANCH"
-            echo "PR #$PR updated + required checks re-dispatched."
+            if [ "$USING_PAT" != "true" ]; then
+              # GITHUB_TOKEN fallback only: the update commit's pull_request
+              # run would be gated (see header), so re-dispatch as a workaround.
+              # Redundant with a PAT — that commit already fires its own
+              # non-gated run.
+              gh workflow run ci.yml --repo "$REPO" --ref "$BRANCH"
+              gh workflow run migration-gate.yml --repo "$REPO" --ref "$BRANCH" -f base=main
+              gh workflow run codeql.yml --repo "$REPO" --ref "$BRANCH"
+              echo "PR #$PR updated + required checks re-dispatched (no GH_AUTOMATION_PAT configured)."
+            else
+              echo "PR #$PR updated — its own pull_request run will report the required checks."
+            fi
           fi
 
   keep-up-to-date:
@@ -111,8 +129,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GH_AUTOMATION_PAT || secrets.GITHUB_TOKEN }}
       REPO: ${{ github.repository }}
+      USING_PAT: ${{ secrets.GH_AUTOMATION_PAT != '' }}
     steps:
       - name: Update branch + re-dispatch required checks
         run: |
@@ -140,11 +159,14 @@ jobs:
               echo "::warning title=Update impossible::PR #$pr : update-branch refusé (conflit ?). Résolution manuelle requise."
               continue
             fi
-            # The update commit is authored by GITHUB_TOKEN → fires no
-            # pull_request events; re-dispatch the required checks so the
-            # ruleset can see a green, up-to-date head and auto-merge.
-            gh workflow run ci.yml --repo "$REPO" --ref "$branch"
-            gh workflow run migration-gate.yml --repo "$REPO" --ref "$branch" -f base=main
-            gh workflow run codeql.yml --repo "$REPO" --ref "$branch"
-            echo "PR #$pr updated + required checks re-dispatched."
+            if [ "$USING_PAT" != "true" ]; then
+              # GITHUB_TOKEN fallback only: re-dispatch as a workaround for the
+              # gated native run (see workflow header). Redundant with a PAT.
+              gh workflow run ci.yml --repo "$REPO" --ref "$branch"
+              gh workflow run migration-gate.yml --repo "$REPO" --ref "$branch" -f base=main
+              gh workflow run codeql.yml --repo "$REPO" --ref "$branch"
+              echo "PR #$pr updated + required checks re-dispatched (no GH_AUTOMATION_PAT configured)."
+            else
+              echo "PR #$pr updated — its own pull_request run will report the required checks."
+            fi
           done <<< "$prs"
