@@ -1,3 +1,5 @@
+import type { DuelTranslations } from "./duel.types";
+
 export type Locale = "en" | "fr" | "ar";
 
 export type TranslationKeys = {
@@ -240,6 +242,8 @@ export type TranslationKeys = {
     keepTraining: string;
     runsToday: string;
   };
+  // Duels 1v1 (étude 05) — keys in ./duel.types.ts (keeps this file under max-lines).
+  duel: DuelTranslations;
   // Subscription / premium
   subscription: {
     premiumTitle: string;

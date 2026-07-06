@@ -10,10 +10,11 @@ const BUDGETS = {
   // change), then 84→88 KB for the trilingual beta badge + bug-report channel
   // strings, then 88→96 KB for the trilingual actionable family report
   // (chapter insights, weekly comparison, advice, print) + the « Espace
-  // Famille » landing section. The chunk gzips to ~30 KB, so the real
-  // over-the-wire impact is marginal; keep new strings lean to stay well
-  // under this ceiling.
-  "i18n-": 96 * 1024,
+  // Famille » landing section, then 96→100 KB for the trilingual duels
+  // namespace (étude 05: hub/arena/recap copy). The chunk gzips to ~30 KB, so
+  // the real over-the-wire impact is marginal; keep new strings lean to stay
+  // well under this ceiling.
+  "i18n-": 100 * 1024,
   "vendor-supabase-": 240 * 1024,
   "vendor-motion-": 150 * 1024,
   // @dnd-kit (core+sortable+utilities) powering the B2 ordering/matching

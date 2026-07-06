@@ -1,6 +1,6 @@
 # Étude 05 — Duels temps réel & ligues
 
-> **Statut** : en exécution (GO humain 2026-07-06 — lots 1+2 livrés ; Q-1/Q-4 tranchées §7 ; ⚠️ lot 4 requiert Supabase Realtime, lot 5 requiert Q-3)
+> **Statut** : en exécution (GO humain 2026-07-06 — lots 1→3 livrés, duel jouable en polling ; Q-1/Q-4 tranchées §7 ; ⚠️ lot 4 requiert Supabase Realtime activé, lot 5 requiert Q-3)
 > **Priorité** : 05 · **Valeur** : rétention/engagement — compétition directe entre élèves, boucle sociale au-dessus du contenu existant · **Complexité** : très haute
 > **Architecte** : Fable (claude-fable-5), 2026-07-04 · **Exécuteur cible** : Sonnet (ou équiv.)
 > **Dépend de** : Étude 01 (revenus d'abord), infra Supabase Realtime activée sur le projet · **Bloque** : —
@@ -176,7 +176,7 @@ RLS : `duel_queue` owner-only (SELECT/INSERT/DELETE `user_id = auth.uid()`, jama
 
 - [x] Lot 1 — migration `duel_queue`/`duels`/`duel_participants` (+ pgTAP). **Stop-point** : aucun RPC.
 - [x] Lot 2 — RPCs + constantes `DUEL_*` dans `gamification.ts` + balayage expiry. **Stop-point** : aucune UI.
-- [ ] Lot 3 — feature `duel/` complète en polling, utile seule (R-12 est le mode nominal ici). **Stop-point** : pas de Realtime.
+- [x] Lot 3 — feature `duel/` complète en polling, utile seule (R-12 est le mode nominal ici). **Stop-point** : pas de Realtime.
 - [ ] Lot 4 — canal `duel:{duelId}`, presence, broadcast progression, fallback prouvé. **Stop-point** : pas de ligues.
 - [ ] Lot 5 — ligues hebdomadaires (après arbitrage Q-3/Q-4). **Stop-point** : rien au-delà (saisons, tournois).
 
@@ -268,3 +268,37 @@ Chaque lot = une PR, gate verte (`npm run verify`), migration **avant** le code 
   **Note** : la concurrence stricte de `match_duel` (deux appels simultanés → un seul duel via
   `FOR UPDATE SKIP LOCKED`) est garantie par conception ; le pgTAP mono-transaction couvre
   l'appariement fonctionnel + R-1/R-2, la concurrence réelle sera re-vérifiée en e2e (lot 3+).
+- **2026-07-06 — Lot 3 livré** (feature `src/features/duel/` complète en **polling**, pas de
+  Realtime — R-12 est le mode nominal). Server fns (`matchDuel`/`leaveDuelQueue`/`getDuelState`/
+  `getDuelQuestions`/`submitDuelAnswer`/`getDuelHistory`, `createServerFn`+`requireSupabaseAuth`+
+  zod+rate-limit) ; composants `DuelQueueCard`/`DuelArena`/`DuelRecap`/`OpponentProgress` ;
+  routes `/duel` (hub) + `/duel/$duelId` (jeu, `refetchInterval` tant que `active`) ; namespace
+  i18n `duel.*` FR/EN/AR ; Vitest co-localisés (`duel-components.test.tsx`, 11 assertions :
+  verdict win/loss/draw/forfait, progression adverse R-3, écran de jeu). Q-4=ouvert → aucun gate
+  premium dans l'UI. Gates : verify (1093 tests) + build:check + smoke:shell verts. **Pas de
+  migration** dans ce lot.
+  **Deux manques de la surface RPC du lot 2, comblés côté server-fn sans nouvelle migration** :
+  (1) les RPCs n'exposent les prompts qu'au `review` post-partie → `getDuelQuestions` lit le set
+  figé `duels.question_ids` (RLS participant) + les colonnes **masquées** de `questions`
+  (`id/prompt/options/question_type` ; `correct_option`/`answer_key`/`explanation` restent
+  revoked) — R-6 tenu, aucune clé fuitée. (2) le recap a besoin du verdict : `getDuelState`
+  révèle le score final de l'adversaire **uniquement une fois le duel réglé** (R-3 tenu pendant
+  la partie).
+  **Écart accepté n°4** : `src/shared/integrations/supabase/types.ts` édité à la main (tables
+  `duel_*` + RPCs `match_duel`/`submit_duel_answer`/`get_duel_state`) car `supabase gen types`
+  n'a pas été relancé dans cette session offline (DoD §4 permet un hand-edit minimal et noté ;
+  commentaire ajouté dans le fichier).
+  **Écart accepté n°5** : budget bundle `i18n-` relevé 96→100 KB (croissance légitime du
+  namespace trilingue `duel.*` ; gzip ~30 KB, impact réseau marginal — documenté dans
+  `scripts/check-bundle-budget.mjs`).
+
+### ⚠️ Suite bloquée (fin des lots livrables sans dépendance externe)
+
+Les lots 1→3 sont livrés : le duel est **jouable de bout en bout en polling**. Les deux lots
+restants ont des blocages externes :
+
+- **Lot 4 (Realtime presence/progression)** : requiert **Supabase Realtime activé** sur le projet
+  (décision infra/ops). Le polling actuel (R-12) est le repli nominal — le lot 4 est une
+  amélioration d'expérience, pas un prérequis fonctionnel.
+- **Lot 5 (ligues hebdomadaires)** : requiert l'arbitrage humain **Q-3** (durée de saison, nombre
+  de tranches, récompenses de fin de saison).

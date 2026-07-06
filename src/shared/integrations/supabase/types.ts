@@ -8,6 +8,89 @@ export type Database = {
   };
   public: {
     Tables: {
+      // NOTE (étude 05 duels): the three duel_* tables + the duel RPCs below were
+      // hand-added to this generated file — the schema landed in migrations
+      // 20260706160000/20260706170000 but `supabase gen types` was not re-run in
+      // this offline session (DoD §4 permits a minimal, noted hand-edit). Keep in
+      // sync if the generator is re-run.
+      duel_queue: {
+        Row: {
+          enqueued_at: string;
+          grade_id: string | null;
+          parcours_id: string;
+          user_id: string;
+        };
+        Insert: {
+          enqueued_at?: string;
+          grade_id?: string | null;
+          parcours_id: string;
+          user_id: string;
+        };
+        Update: {
+          enqueued_at?: string;
+          grade_id?: string | null;
+          parcours_id?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      duels: {
+        Row: {
+          created_at: string;
+          exercise_source: string;
+          expires_at: string;
+          id: string;
+          parcours_id: string;
+          question_ids: string[];
+          status: string;
+        };
+        Insert: {
+          created_at?: string;
+          exercise_source?: string;
+          expires_at: string;
+          id?: string;
+          parcours_id: string;
+          question_ids: string[];
+          status?: string;
+        };
+        Update: {
+          created_at?: string;
+          exercise_source?: string;
+          expires_at?: string;
+          id?: string;
+          parcours_id?: string;
+          question_ids?: string[];
+          status?: string;
+        };
+        Relationships: [];
+      };
+      duel_participants: {
+        Row: {
+          answers_submitted_at: string[];
+          duel_id: string;
+          finished_at: string | null;
+          rewarded_at: string | null;
+          score: number;
+          user_id: string;
+        };
+        Insert: {
+          answers_submitted_at?: string[];
+          duel_id: string;
+          finished_at?: string | null;
+          rewarded_at?: string | null;
+          score?: number;
+          user_id: string;
+        };
+        Update: {
+          answers_submitted_at?: string[];
+          duel_id?: string;
+          finished_at?: string | null;
+          rewarded_at?: string | null;
+          score?: number;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       attempts: {
         Row: {
           completed_at: string;
@@ -1764,6 +1847,12 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      get_duel_state: { Args: { p_duel: string }; Returns: Json };
+      match_duel: { Args: never; Returns: string };
+      submit_duel_answer: {
+        Args: { p_choice: string; p_duel: string; p_question: string };
+        Returns: Json;
+      };
       start_dungeon_run: { Args: never; Returns: string };
       start_exercise_session: {
         Args: { p_exercise_id: string };
@@ -1795,12 +1884,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
@@ -1820,13 +1909,12 @@ export type Tables<
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+    keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
@@ -1845,13 +1933,12 @@ export type TablesInsert<
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+    keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
@@ -1870,13 +1957,12 @@ export type TablesUpdate<
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    keyof DefaultSchema["Enums"] | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
@@ -1887,13 +1973,12 @@ export type Enums<
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    keyof DefaultSchema["CompositeTypes"] | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
