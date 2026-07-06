@@ -256,6 +256,8 @@ export const fr: TranslationKeys = {
     waitingOpponent: "En attente de l'adversaire…",
     opponentAnswered: "Adversaire : {n}/{total}",
     opponentDone: "L'adversaire a terminé.",
+    online: "En ligne",
+    offline: "Hors ligne",
     resultWin: "Victoire !",
     resultLoss: "Défaite",
     resultDraw: "Égalité",

@@ -25,6 +25,8 @@ export interface DuelTranslations {
   waitingOpponent: string;
   opponentAnswered: string;
   opponentDone: string;
+  online: string;
+  offline: string;
   resultWin: string;
   resultLoss: string;
   resultDraw: string;

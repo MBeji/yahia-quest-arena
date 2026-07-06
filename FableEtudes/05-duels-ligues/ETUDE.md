@@ -1,6 +1,6 @@
 # Étude 05 — Duels temps réel & ligues
 
-> **Statut** : en exécution (GO humain 2026-07-06 — lots 1→3 livrés, duel jouable en polling ; Q-1/Q-4 tranchées §7 ; ⚠️ lot 4 requiert Supabase Realtime activé, lot 5 requiert Q-3)
+> **Statut** : en exécution (GO humain 2026-07-06 — lots 1→4 livrés : duel jouable en polling + couche Realtime presence/progression ; Q-1/Q-4 tranchées §7 ; ⚠️ seul le lot 5 « ligues » reste, bloqué sur Q-3)
 > **Priorité** : 05 · **Valeur** : rétention/engagement — compétition directe entre élèves, boucle sociale au-dessus du contenu existant · **Complexité** : très haute
 > **Architecte** : Fable (claude-fable-5), 2026-07-04 · **Exécuteur cible** : Sonnet (ou équiv.)
 > **Dépend de** : Étude 01 (revenus d'abord), infra Supabase Realtime activée sur le projet · **Bloque** : —
@@ -177,7 +177,7 @@ RLS : `duel_queue` owner-only (SELECT/INSERT/DELETE `user_id = auth.uid()`, jama
 - [x] Lot 1 — migration `duel_queue`/`duels`/`duel_participants` (+ pgTAP). **Stop-point** : aucun RPC.
 - [x] Lot 2 — RPCs + constantes `DUEL_*` dans `gamification.ts` + balayage expiry. **Stop-point** : aucune UI.
 - [x] Lot 3 — feature `duel/` complète en polling, utile seule (R-12 est le mode nominal ici). **Stop-point** : pas de Realtime.
-- [ ] Lot 4 — canal `duel:{duelId}`, presence, broadcast progression, fallback prouvé. **Stop-point** : pas de ligues.
+- [x] Lot 4 — canal `duel:{duelId}`, presence, broadcast progression, fallback prouvé. **Stop-point** : pas de ligues.
 - [ ] Lot 5 — ligues hebdomadaires (après arbitrage Q-3/Q-4). **Stop-point** : rien au-delà (saisons, tournois).
 
 Chaque lot = une PR, gate verte (`npm run verify`), migration **avant** le code qui la lit (DoD §7).
@@ -297,8 +297,24 @@ Chaque lot = une PR, gate verte (`npm run verify`), migration **avant** le code 
 Les lots 1→3 sont livrés : le duel est **jouable de bout en bout en polling**. Les deux lots
 restants ont des blocages externes :
 
-- **Lot 4 (Realtime presence/progression)** : requiert **Supabase Realtime activé** sur le projet
-  (décision infra/ops). Le polling actuel (R-12) est le repli nominal — le lot 4 est une
-  amélioration d'expérience, pas un prérequis fonctionnel.
 - **Lot 5 (ligues hebdomadaires)** : requiert l'arbitrage humain **Q-3** (durée de saison, nombre
   de tranches, récompenses de fin de saison).
+
+- **2026-07-06 — Lot 4 livré** (GO humain « activer Realtime »). Couche Realtime d'**enrichissement**
+  au-dessus du polling autoritatif : hook `src/features/duel/use-duel-channel.ts` — canal privé
+  `duel:{duelId}` en **presence** (adversaire en ligne) + **broadcast `progress` `{answered}`**
+  émis à chaque avancée (R-4 : aucun payload de réponse/score/clé ne transite). Câblé dans
+  `/duel/$duelId` : la progression adverse préfère le signal live quand Realtime est actif, sans
+  jamais régresser sous la valeur pollée (`Math.max`) ; `OpponentProgress` gagne un point
+  « en ligne » (i18n `online`/`offline`). **R-12 tenu** : le polling `get_duel_state` reste
+  toujours actif et source de vérité (statut/score/review) ; si le canal n'établit pas
+  (`CHANNEL_ERROR`/`TIMED_OUT`/`CLOSED`), `realtimeActive=false`, log `duel.realtime_fallback`, et
+  l'UI continue sur le polling. Tests Vitest `use-duel-channel.test.ts` (6 : subscribe/track,
+  broadcast, presence, fallback R-12 + log, cleanup). **Pas de migration.** Gates : verify
+  (1124 tests) + build:check + smoke:shell verts.
+  **Note infra** : le lot 4 utilise **broadcast + presence** (D-1), pas les Postgres-changes —
+  ces canaux passent par le service Realtime intégré (`wss://*.supabase.co`, déjà en CSP), donc
+  **aucun toggle de réplication côté projet n'est requis** ; le hook dégrade proprement si le
+  service est indisponible.
+  **Écart accepté n°6** : le budget bundle `i18n-` était déjà relevé à 100 KB au lot 3 ; les 2
+  clés `online`/`offline` restent sous ce plafond (pas de nouveau relèvement).

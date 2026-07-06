@@ -254,6 +254,8 @@ export const ar: TranslationKeys = {
     waitingOpponent: "في انتظار الخصم…",
     opponentAnswered: "الخصم: {n}/{total}",
     opponentDone: "أنهى الخصم المبارزة.",
+    online: "متّصل",
+    offline: "غير متّصل",
     resultWin: "فوز!",
     resultLoss: "خسارة",
     resultDraw: "تعادل",
