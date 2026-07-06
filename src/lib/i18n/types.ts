@@ -405,11 +405,21 @@ export type TranslationKeys = {
     light: string;
     dark: string;
   };
-  // Sound-effects toggle
+  // Sound & music controls
   sound: {
     label: string;
+    effects: string;
+    music: string;
     enable: string;
     disable: string;
+  };
+  // Encouraging combo / streak micro-messages
+  encouragement: {
+    combo: string;
+    nice: string;
+    onFire: string;
+    unstoppable: string;
+    legendary: string;
   };
   // Adventure path / journey map
   parcours: {

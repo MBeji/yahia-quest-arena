@@ -424,8 +424,17 @@ export const fr: TranslationKeys = {
   },
   sound: {
     label: "Sons",
+    effects: "Effets sonores",
+    music: "Musique d'ambiance",
     enable: "Activer les sons",
     disable: "Couper les sons",
+  },
+  encouragement: {
+    combo: "Combo x{n} !",
+    nice: "Bien joué !",
+    onFire: "En feu ! 🔥",
+    unstoppable: "Imparable ! ⚡",
+    legendary: "Légendaire ! 👑",
   },
   parcours: {
     worldTitle: "Carte de l'aventure",

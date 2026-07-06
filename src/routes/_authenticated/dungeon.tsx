@@ -14,6 +14,7 @@ import {
   XCircle,
   Loader2,
   Lock,
+  Flame,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -34,7 +35,7 @@ import { shuffleOptions, type BaseOption, type DisplayOption } from "@/shared/li
 import { isValidAnswerFormat } from "@/shared/lib/answer-formats";
 import { RichField } from "@/components/ui/svg-figure";
 import { useT } from "@/lib/i18n";
-import { useSound } from "@/lib/sound";
+import { useSound, encouragementFor, type Encouragement } from "@/lib/sound";
 
 export const Route = createFileRoute("/_authenticated/dungeon")({
   head: () => ({ meta: [{ title: "Donjon · Na9ra Nal3ab" }] }),
@@ -52,7 +53,7 @@ type GameState = "lobby" | "playing" | "gameover";
 function DungeonPage() {
   const qc = useQueryClient();
   const t = useT();
-  const { play } = useSound();
+  const { play, combo } = useSound();
   const startRun = useServerFn(startDungeonRun);
   const fetchQuestions = useServerFn(getDungeonQuestions);
   const submitAnswer = useServerFn(submitDungeonAnswer);
@@ -89,6 +90,8 @@ function DungeonPage() {
     correct: string;
     explanation: string | null;
   } | null>(null);
+  // Transient encouragement banner shown on combo milestones (3, 5, 7, 10…).
+  const [encouragement, setEncouragement] = useState<Encouragement | null>(null);
   const startTimeRef = useRef<number>(0);
 
   const submitMutation = useMutation({
@@ -154,6 +157,8 @@ function DungeonPage() {
     setShowFeedback(false);
     setQuestions([]);
     setCurrentIdx(0);
+    setEncouragement(null);
+    play("start");
     startTimeRef.current = Date.now();
 
     try {
@@ -207,11 +212,17 @@ function DungeonPage() {
       setAnswerWasCorrect(result.isCorrect);
       setTotalCorrect(result.totalCorrect);
       setTotalAnswered(result.totalAnswered);
-      play(result.isCorrect ? "correct" : "wrong");
 
       if (result.isCorrect) {
+        // Every correct answer in a run is consecutive (one miss ends it), so the
+        // running total IS the combo streak — the pitch climbs and milestones
+        // surface an encouraging banner.
+        combo(result.totalCorrect);
+        setEncouragement(encouragementFor(t.encouragement, result.totalCorrect));
         setTimeout(() => advanceOrEnd(result.nextFloor), 1200);
       } else {
+        play("wrong");
+        setEncouragement(null);
         const correctOption = currentQuestion.options.find(
           (opt) => opt.id === result.correctChoice,
         );
@@ -538,6 +549,19 @@ function DungeonPage() {
           <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.dungeon.leaveDungeon}
         </Link>
         <div className="flex items-center gap-3">
+          <AnimatePresence>
+            {totalCorrect >= 2 && (
+              <motion.div
+                key="combo-chip"
+                initial={{ opacity: 0, scale: 0.6 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.6 }}
+                className="flex items-center gap-1.5 rounded-full bg-orange-500/20 px-3 py-1 text-sm font-bold text-orange-400"
+              >
+                <Flame className="h-3.5 w-3.5" /> x{totalCorrect}
+              </motion.div>
+            )}
+          </AnimatePresence>
           <div className="flex items-center gap-1.5 rounded-full bg-[color:var(--gold)]/20 px-3 py-1 text-sm font-bold text-[color:var(--gold)]">
             <Layers className="h-3.5 w-3.5" /> {t.dungeon.floor.replace("{n}", String(floor))}
           </div>
@@ -546,6 +570,23 @@ function DungeonPage() {
           </div>
         </div>
       </div>
+
+      {/* Encouragement banner — surfaces on combo milestones, then fades. */}
+      <AnimatePresence mode="wait">
+        {encouragement && (
+          <motion.div
+            key={encouragement.message}
+            initial={{ opacity: 0, y: -8, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.9 }}
+            transition={{ type: "spring", damping: 14, stiffness: 240 }}
+            className="mb-4 text-center font-display text-lg font-black text-orange-400 drop-shadow-[0_0_12px_rgba(251,146,60,0.5)]"
+            aria-live="polite"
+          >
+            {encouragement.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Subject & difficulty indicator */}
       <div className="mb-4 flex items-center justify-between">

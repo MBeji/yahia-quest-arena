@@ -1,5 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { __resetAudioForTests, playSound, unlockAudio, type SoundName } from "../engine";
+import {
+  __resetAudioForTests,
+  playSound,
+  playCombo,
+  unlockAudio,
+  getAudioContext,
+  type SoundName,
+} from "../engine";
 
 // --- Minimal Web Audio mock -------------------------------------------------
 class FakeParam {
@@ -11,6 +18,7 @@ class FakeParam {
 class FakeOscillator {
   type = "";
   frequency = new FakeParam();
+  detune = new FakeParam();
   connect = vi.fn();
   start = vi.fn();
   stop = vi.fn();
@@ -147,9 +155,60 @@ describe("sound engine", () => {
       "coin",
       "descend",
       "gameOver",
+      "hover",
+      "click",
+      "whoosh",
+      "purchase",
+      "hint",
+      "tick",
+      "unlock",
+      "start",
     ];
     for (const name of names) {
       expect(() => playSound(name)).not.toThrow();
     }
+    expect(oscillators.length).toBeGreaterThanOrEqual(names.length);
+  });
+
+  it("humanizes each note with a small random detune", () => {
+    playSound("select");
+    expect(oscillators[0].detune.setValueAtTime).toHaveBeenCalled();
+  });
+
+  describe("playCombo", () => {
+    it("plays two notes and rises in pitch with the step", () => {
+      playCombo(1);
+      const firstFreq = oscillators[0].frequency.setValueAtTime.mock.calls[0][0] as number;
+      expect(oscillators).toHaveLength(2);
+
+      oscillators = [];
+      __resetAudioForTests();
+      withAudio.AudioContext = FakeAudioContext;
+      playCombo(6);
+      const higherFreq = oscillators[0].frequency.setValueAtTime.mock.calls[0][0] as number;
+      expect(higherFreq).toBeGreaterThan(firstFreq);
+    });
+
+    it("clamps out-of-range / invalid steps without throwing", () => {
+      expect(() => playCombo(999)).not.toThrow();
+      expect(() => playCombo(-3)).not.toThrow();
+      expect(() => playCombo(Number.NaN)).not.toThrow();
+    });
+
+    it("is a silent no-op when audio is unavailable", () => {
+      __resetAudioForTests();
+      delete withAudio.AudioContext;
+      delete withAudio.webkitAudioContext;
+      expect(() => playCombo(3)).not.toThrow();
+      expect(oscillators).toHaveLength(0);
+    });
+  });
+
+  it("getAudioContext returns the shared context (or null without support)", () => {
+    expect(getAudioContext()).not.toBeNull();
+    __resetAudioForTests();
+    delete withAudio.AudioContext;
+    delete withAudio.webkitAudioContext;
+    expect(getAudioContext()).toBeNull();
   });
 });

@@ -38,6 +38,7 @@ import { useReducedMotion } from "motion/react";
 const GoldAmbientCanvas = lazy(() => import("@/components/visual/gold-ambient-canvas"));
 import { formatStudentAllianceCode } from "@/features/parent-report";
 import { useT, useI18n } from "@/lib/i18n";
+import { useSound } from "@/lib/sound";
 import { filterSubjectsByLocale } from "@/shared/lib/subject-locale";
 import { xpToNextLevel, xpWithinLevel } from "@/shared/lib/level";
 import { HeroAvatar } from "@/features/dashboard/components/hero-avatar";
@@ -141,6 +142,7 @@ function DailyXpWidget({
 
 function Dashboard() {
   const t = useT();
+  const { play } = useSound();
   const { locale } = useI18n();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -189,6 +191,7 @@ function Dashboard() {
   const purchaseMutation = useMutation({
     mutationFn: (payload: { itemCode: string }) => purchaseItem({ data: payload }),
     onSuccess: (res) => {
+      play("purchase");
       toast.success(t.dashboard.purchaseSuccess.replace("{name}", res.purchasedItemName));
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
@@ -199,6 +202,7 @@ function Dashboard() {
   const equipMutation = useMutation({
     mutationFn: (payload: { itemCode: string }) => equipSkin({ data: payload }),
     onSuccess: (res) => {
+      play("unlock");
       toast.success(t.dashboard.equipSuccess.replace("{name}", res.itemName));
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
