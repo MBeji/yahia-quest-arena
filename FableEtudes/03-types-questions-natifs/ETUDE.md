@@ -1,7 +1,7 @@
 # Étude 03 — Types de questions natifs (Tier B : numeric, ordering, matching, multi)
 
 > **Statut** : en exécution — **phases B1 (`numeric`) et B2 (`ordering`+`matching`) livrées
-> intégralement** (2026-07-05) ; **B3 (`multi`) en attente du GO humain** (D-2)
+> intégralement** (2026-07-05) ; **phase B3 (`multi`) en cours** (GO humain reçu le 2026-07-06)
 > **Priorité** : 03 · **Valeur** : tue la devinette par élimination (saisie numérique), vraie manipulation (drag & drop), jugement multi-sélection — l'expérience d'exercice passe un cran au-dessus de tout QCM concurrent · **Complexité** : haute (5 RPC SQL + UI + pipeline), mais dé-risquée : la spec normative est déjà écrite
 > **Architecte** : Fable (claude-fable-5), 2026-07-04 · **Exécuteur cible** : Sonnet
 > **Dépend de** : rien (indépendant) ; recommandé avant le lancement bac (annales en saisie numérique)
@@ -77,6 +77,11 @@ Intégralement dans la spec — carte des touchpoints (5 RPCs SQL, zod/TS, UI, p
 - [x] B2.2 — serveur
 - [x] B2.3 — UI (@dnd-kit)
 - [x] B2.4 — pipeline + skills
+
+- [x] B3.1 — DB + couture scoring étendue (merge seul d'abord — DoD §7)
+- [ ] B3.2 — serveur
+- [ ] B3.3 — UI (cases à cocher, US-3)
+- [ ] B3.4 — pipeline + skills
 
 **Stop-points** : ne jamais modifier la sémantique `'mcq'` ; ne jamais sélectionner `answer_key`
 dans une requête client ; ne pas anticiper une phase ; tout écart avec la spec = STOP + escalade
@@ -282,3 +287,18 @@ réarrangement par flèches, run complet — skip-si-absent). Preuve bout-en-bou
 `auto-pr.yml`/le ruleset) : les checks nés des vagues push/dispatch ne satisfont pas le
 ruleset `main-protection` sur les PRs bot-créées — chaque PR de cette étude a nécessité un
 commit vide `synchronize` (diagnostiqué sur #298/#299, contournement systématisé ensuite).
+
+### Lot B3.1 — 2026-07-06 (exécuté par le modèle architecte, Fable — GO humain phase B3 reçu)
+
+Livré : migration `20260705220000_native_question_types_b3_score_answer.sql` —
+`score_answer` étendu avec `multi` (égalité d'ENSEMBLES des ids cochés, CSV insensible à
+l'ordre/aux espaces, doublons neutralisés, sous-ensemble/sur-ensemble = faux — R-2) ;
+`answer_key_display` sérialise `multi` en CSV trié (même format de fil que `choice`).
+Aucun RPC re-branché (D-1). pgTAP : nouveau `18_score_answer_b3_multi.test.sql`
+(12 assertions, dont la sonde « type futur inconnu ne crashe jamais » via
+`jsonb_populate_record` — la contrainte CHECK interdit de telles lignes en table) ;
+tests 16/17 ajustés (leurs fixtures multi affirmaient le comportement pré-B3 ; l'intention
+« pas de crédit partiel » est conservée via des réponses sous-ensemble). Suite 190/190,
+verify vert (1037 tests).
+
+Écart accepté : néant.

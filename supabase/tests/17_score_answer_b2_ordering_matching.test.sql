@@ -9,7 +9,7 @@
 --      garbage never raises (R-3);
 --   2. 'matching': SET equality of "left:right" pairs — order-insensitive,
 --      inverted/subset/superset/duplicated pairs score false;
---   3. 'multi' (phase B3) still scores false without crashing;
+--   3. 'multi' subset answers score false (full matrix in test 18);
 --   4. regression: mcq and numeric semantics are unchanged;
 --   5. the correction RPCs reveal the canonical answer in the same wire
 --      format as `choice` (ordering: id CSV; matching: pair CSV) — R-1 gates
@@ -159,13 +159,13 @@ SELECT is(
 );
 
 -- =========================================================
--- 14. multi (phase B3) still scores false, never crashes.
+-- 14. multi: a subset answer scores false (full matrix in test 18).
 -- =========================================================
 SELECT is(
   public.score_answer(
-    (SELECT q FROM public.questions q WHERE q.id = 'f3000000-0000-0000-0000-000000000003'), 'a,b'),
+    (SELECT q FROM public.questions q WHERE q.id = 'f3000000-0000-0000-0000-000000000003'), 'a'),
   false,
-  'multi (phase B3, not shipped): scores false instead of crashing'
+  'multi: a subset answer scores false (no partial credit)'
 );
 
 -- =========================================================
