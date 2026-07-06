@@ -1,6 +1,6 @@
 # Étude 05 — Duels temps réel & ligues
 
-> **Statut** : en exécution (GO humain 2026-07-06 — lot 1 lancé ; ⚠️ lots 2+ bloqués tant que Q-1/Q-4 non tranchées, voir §7)
+> **Statut** : en exécution (GO humain 2026-07-06 — lots 1+2 livrés ; Q-1/Q-4 tranchées §7 ; ⚠️ lot 4 requiert Supabase Realtime, lot 5 requiert Q-3)
 > **Priorité** : 05 · **Valeur** : rétention/engagement — compétition directe entre élèves, boucle sociale au-dessus du contenu existant · **Complexité** : très haute
 > **Architecte** : Fable (claude-fable-5), 2026-07-04 · **Exécuteur cible** : Sonnet (ou équiv.)
 > **Dépend de** : Étude 01 (revenus d'abord), infra Supabase Realtime activée sur le projet · **Bloque** : —
@@ -175,7 +175,7 @@ RLS : `duel_queue` owner-only (SELECT/INSERT/DELETE `user_id = auth.uid()`, jama
 | 5   | **Ligues v2** : agrégat hebdo + tranches + récompenses | vue/requête ligue, RPC lecture, cron récompenses, UI `/duel` onglet ligue | pgTAP + Vitest                     | 3 (4 non requis) |
 
 - [x] Lot 1 — migration `duel_queue`/`duels`/`duel_participants` (+ pgTAP). **Stop-point** : aucun RPC.
-- [ ] Lot 2 — RPCs + constantes `DUEL_*` dans `gamification.ts` + balayage expiry. **Stop-point** : aucune UI.
+- [x] Lot 2 — RPCs + constantes `DUEL_*` dans `gamification.ts` + balayage expiry. **Stop-point** : aucune UI.
 - [ ] Lot 3 — feature `duel/` complète en polling, utile seule (R-12 est le mode nominal ici). **Stop-point** : pas de Realtime.
 - [ ] Lot 4 — canal `duel:{duelId}`, presence, broadcast progression, fallback prouvé. **Stop-point** : pas de ligues.
 - [ ] Lot 5 — ligues hebdomadaires (après arbitrage Q-3/Q-4). **Stop-point** : rien au-delà (saisons, tournois).
@@ -215,14 +215,23 @@ Chaque lot = une PR, gate verte (`npm run verify`), migration **avant** le code 
 
 ## 7. Questions ouvertes (pour l'humain)
 
-- **Q-1** : barème exact des récompenses (XP/coins vainqueur, perdant, forfait) et valeur de
-  `DUEL_MAX_REWARDED_PER_DAY` — politique produit, à fixer avant le lot 2.
+- **Q-1 — TRANCHÉE (2026-07-06, délégation humaine « meilleures pratiques »)** : barème ancré sur
+  l'économie existante (exercice pratique ≈ 75 XP / 15 coins). **Vainqueur 60 XP / 12 coins**,
+  **perdant 20 XP / 4 coins** (participation, jamais négatif — R-8), **nul 40 XP / 8 coins**,
+  **forfait** (adversaire expiré) = barème vainqueur. **`DUEL_MAX_REWARDED_PER_DAY = 5`** (miroir du
+  cap Dungeon). Set de **5 questions**, expiry **24 h**, **3 duels actifs** max. Constantes dans
+  `src/shared/constants/gamification.ts` (`DUEL_*`), miroir SQL dans les RPCs.
 - **Q-2** : autoriser un matchmaking **cross-grade** (même thème, grades adjacents) quand la file
-  du parcours est vide ? Impact équité — v1 propose strictement même parcours (R-1).
+  du parcours est vide ? Impact équité — v1 reste strictement même parcours (R-1). _(Non requis
+  avant le lot 3 ; levier futur si les files sont vides.)_
 - **Q-3** : ligues — durée de saison (semaine ISO ? saison scolaire ?), nombre de tranches, et
-  récompenses de fin de saison (cosmétique vs coins).
-- **Q-4** : les duels sont-ils un perk premium (comme le Dungeon : toute entitlement concours) ou
-  ouverts aux parcours FREE ? Décision d'accès à prendre avant le lot 3.
+  récompenses de fin de saison (cosmétique vs coins). _(À trancher avant le lot 5.)_
+- **Q-4 — TRANCHÉE (2026-07-06, délégation humaine « meilleures pratiques »)** : les duels sont
+  **ouverts à TOUS les parcours** (FREE + premium), **sans gate d'entitlement**. Un duel est une
+  mécanique de rétention dont la valeur dépend de la profondeur de la file (effet réseau ; cf.
+  RISK-5 file vide) ; le réserver au premium tuerait la boucle sociale. La monétisation reste sur
+  le contenu (parcours concours). Différent du Dungeon (perk de consommation de contenu) —
+  volontairement. Matchmaking intra-parcours conservé (R-1).
 
 ## 8. Journal d'exécution
 
@@ -243,3 +252,19 @@ Chaque lot = une PR, gate verte (`npm run verify`), migration **avant** le code 
   **Q-1** (barème récompenses + `DUEL_MAX_REWARDED_PER_DAY`) et **Q-4** (duels premium-only vs
   FREE) — ce sont des décisions produit préalables au lot 2/lot 3. Dépendance **Realtime**
   (Supabase Realtime activé sur le projet) requise seulement au lot 4.
+- **2026-07-06 — Lot 2 livré** (migration `20260706170000_duels_rpcs.sql` + pgTAP
+  `22_duels_rpcs.test.sql`, 21 assertions — suite 266/266 sur base vierge ; verify 1082 tests).
+  Les 5 RPCs (`match_duel` SKIP LOCKED, `submit_duel_answer` ordonné + R-5 + R-6, `finalize_duel`
+  barème/cap, `get_duel_state` participant-only, `expire_duels` + pg_cron) + `award_duel_rewards`.
+  **Q-1 et Q-4 tranchées** (§7) par délégation humaine (« fais les décisions selon les meilleures
+  pratiques »). Constantes `DUEL_*` dans `gamification.ts`.
+  **Écart accepté n°2** : `award_duel_rewards` est une fonction dédiée (et non un appel direct à
+  `award_xp`) car `award_xp` porte un garde self-only (`auth.uid() = p_user`) qui bloquerait la
+  récompense de l'adversaire depuis `finalize_duel` ; la variante recopie la courbe niveau/classe/
+  tier d'`award_xp` **sans** toucher au streak (piloté par le chemin exercice/quiz) — conforme à
+  l'esprit de D-5 (« variante contrôlée d'award_xp »).
+  **Écart accepté n°3** : colonne additive `duel_participants.rewarded_at` (non prévue au schéma du
+  lot 1) pour compter le cap quotidien R-7 sans re-scan — additive, RLS déjà en place.
+  **Note** : la concurrence stricte de `match_duel` (deux appels simultanés → un seul duel via
+  `FOR UPDATE SKIP LOCKED`) est garantie par conception ; le pgTAP mono-transaction couvre
+  l'appariement fonctionnel + R-1/R-2, la concurrence réelle sera re-vérifiée en e2e (lot 3+).
