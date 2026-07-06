@@ -34,6 +34,7 @@ import { shuffleOptions, type BaseOption, type DisplayOption } from "@/shared/li
 import { isValidAnswerFormat } from "@/shared/lib/answer-formats";
 import { RichField } from "@/components/ui/svg-figure";
 import { useT } from "@/lib/i18n";
+import { useSound } from "@/lib/sound";
 
 export const Route = createFileRoute("/_authenticated/dungeon")({
   head: () => ({ meta: [{ title: "Donjon · Na9ra Nal3ab" }] }),
@@ -51,6 +52,7 @@ type GameState = "lobby" | "playing" | "gameover";
 function DungeonPage() {
   const qc = useQueryClient();
   const t = useT();
+  const { play } = useSound();
   const startRun = useServerFn(startDungeonRun);
   const fetchQuestions = useServerFn(getDungeonQuestions);
   const submitAnswer = useServerFn(submitDungeonAnswer);
@@ -96,6 +98,7 @@ function DungeonPage() {
       setRunResult(res);
       setTotalCorrect(res.totalCorrect);
       setTotalAnswered(res.totalAnswered);
+      play("gameOver");
       qc.invalidateQueries({ queryKey: ["dashboard"] });
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : t.dungeon.errorSavingRun),
@@ -126,6 +129,7 @@ function DungeonPage() {
 
         setQuestions(shuffledQuestions);
         setCurrentIdx(0);
+        play("descend");
         return true;
       } catch {
         toast.error(t.dungeon.failedLoadQuestions);
@@ -134,7 +138,7 @@ function DungeonPage() {
         setLoading(false);
       }
     },
-    [fetchQuestions, t.dungeon.failedLoadQuestions, t.dungeon.noMoreQuestions],
+    [fetchQuestions, play, t.dungeon.failedLoadQuestions, t.dungeon.noMoreQuestions],
   );
 
   async function startDungeon() {
@@ -173,6 +177,9 @@ function DungeonPage() {
   // means a misclick can no longer end the run.
   function handleSelect(optId: string) {
     if (showFeedback || answerMutation.isPending) return;
+    // Discrete taps get a blip; typed numeric input stays silent.
+    if (currentQuestion?.questionType === "mcq" || currentQuestion?.questionType === "multi")
+      play("select");
     setSelected(optId);
   }
 
@@ -200,6 +207,7 @@ function DungeonPage() {
       setAnswerWasCorrect(result.isCorrect);
       setTotalCorrect(result.totalCorrect);
       setTotalAnswered(result.totalAnswered);
+      play(result.isCorrect ? "correct" : "wrong");
 
       if (result.isCorrect) {
         setTimeout(() => advanceOrEnd(result.nextFloor), 1200);
