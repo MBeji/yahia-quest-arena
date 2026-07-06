@@ -1,6 +1,6 @@
 # Étude 05 — Duels temps réel & ligues
 
-> **Statut** : brouillon
+> **Statut** : en exécution (GO humain 2026-07-06 — lot 1 lancé ; ⚠️ lots 2+ bloqués tant que Q-1/Q-4 non tranchées, voir §7)
 > **Priorité** : 05 · **Valeur** : rétention/engagement — compétition directe entre élèves, boucle sociale au-dessus du contenu existant · **Complexité** : très haute
 > **Architecte** : Fable (claude-fable-5), 2026-07-04 · **Exécuteur cible** : Sonnet (ou équiv.)
 > **Dépend de** : Étude 01 (revenus d'abord), infra Supabase Realtime activée sur le projet · **Bloque** : —
@@ -174,7 +174,7 @@ RLS : `duel_queue` owner-only (SELECT/INSERT/DELETE `user_id = auth.uid()`, jama
 | 4   | Realtime presence + progression + fallback             | `useDuelChannel`, `OpponentProgress` branché                              | Vitest (fallback R-12), e2e authed | 3                |
 | 5   | **Ligues v2** : agrégat hebdo + tranches + récompenses | vue/requête ligue, RPC lecture, cron récompenses, UI `/duel` onglet ligue | pgTAP + Vitest                     | 3 (4 non requis) |
 
-- [ ] Lot 1 — migration `duel_queue`/`duels`/`duel_participants` (+ pgTAP). **Stop-point** : aucun RPC.
+- [x] Lot 1 — migration `duel_queue`/`duels`/`duel_participants` (+ pgTAP). **Stop-point** : aucun RPC.
 - [ ] Lot 2 — RPCs + constantes `DUEL_*` dans `gamification.ts` + balayage expiry. **Stop-point** : aucune UI.
 - [ ] Lot 3 — feature `duel/` complète en polling, utile seule (R-12 est le mode nominal ici). **Stop-point** : pas de Realtime.
 - [ ] Lot 4 — canal `duel:{duelId}`, presence, broadcast progression, fallback prouvé. **Stop-point** : pas de ligues.
@@ -226,4 +226,20 @@ Chaque lot = une PR, gate verte (`npm run verify`), migration **avant** le code 
 
 ## 8. Journal d'exécution
 
-_(rempli au fil des lots par l'exécuteur : date, lot, PR, écarts acceptés, dettes notées)_
+- **2026-07-06 — Lot 1 livré** (migration `20260706160000_duels_schema.sql` + pgTAP
+  `21_duels_schema.test.sql`, 20 assertions — suite 245/245 sur base vierge). Les 3 tables
+  (`duel_queue` owner-only ; `duels` + `duel_participants` participant-SELECT, aucun write
+  client), grants explicites (patron `parcours_entity`), index. Stop-point respecté : AUCUN RPC
+  de jeu.
+  **Écart accepté n°1** : la visibilité « participant » est portée par un prédicat
+  `is_duel_participant(duel, user)` **SECURITY DEFINER**, au lieu de l'`EXISTS` sur
+  `duel_participants` inline que l'étude écrit dans la policy de `duel_participants` elle-même —
+  ce dernier déclenche la **récursion RLS infinie** de Postgres (même piège corrigé pour l'admin
+  par `20260526260000_fix_admin_rls_recursion.sql`). L'intention (visibilité strictement
+  participant, les deux lignes du duel lisibles) est **préservée à l'identique** ; c'est le patron
+  déjà établi du repo (`is_admin()`), pas un RPC de jeu. La policy de `duels` réutilise le même
+  prédicat (elle aussi aurait récursé via `duel_participants`).
+  **Note de blocage** : les lots 2+ (RPCs) restent **bloqués** tant que l'humain n'a pas tranché
+  **Q-1** (barème récompenses + `DUEL_MAX_REWARDED_PER_DAY`) et **Q-4** (duels premium-only vs
+  FREE) — ce sont des décisions produit préalables au lot 2/lot 3. Dépendance **Realtime**
+  (Supabase Realtime activé sur le projet) requise seulement au lot 4.
