@@ -79,7 +79,7 @@ Intégralement dans la spec — carte des touchpoints (5 RPCs SQL, zod/TS, UI, p
 - [x] B2.4 — pipeline + skills
 
 - [x] B3.1 — DB + couture scoring étendue (merge seul d'abord — DoD §7)
-- [ ] B3.2 — serveur
+- [x] B3.2 — serveur
 - [ ] B3.3 — UI (cases à cocher, US-3)
 - [ ] B3.4 — pipeline + skills
 
@@ -300,5 +300,16 @@ Aucun RPC re-branché (D-1). pgTAP : nouveau `18_score_answer_b3_multi.test.sql`
 tests 16/17 ajustés (leurs fixtures multi affirmaient le comportement pré-B3 ; l'intention
 « pas de crédit partiel » est conservée via des réponses sous-ensemble). Suite 190/190,
 verify vert (1037 tests).
+
+Écart accepté : néant.
+
+### Lot B3.2 — 2026-07-06 (exécuté par le modèle architecte, Fable)
+
+Livré : format de fil `multi` dans `answer-formats.ts` — CSV d'ids **uniques** (≥ 1 part
+non vide, pas de `:`), même moule que `ordering`/`matching` (B2). La validation des
+server fns quest/dungeon était déjà branchée sur cette table depuis B1.2 — aucun
+changement de handler. `types.ts` intentionnellement intouché (aucune signature TS
+modifiée par B3.1 — `answer_key_display` est server-only). Tests : +6 Vitest (matrice
+de format multi) ; verify vert (1039 tests).
 
 Écart accepté : néant.

@@ -47,7 +47,20 @@ describe("answer-formats — isValidAnswerFormat", () => {
 
   it("treats unknown/null types as the generic bounded-string contract", () => {
     expect(isValidAnswerFormat(null, "whatever")).toBe(true);
+    expect(isValidAnswerFormat("essay", "free text")).toBe(true);
+  });
+
+  it("accepts well-formed multi answers (unique checked-id CSV)", () => {
     expect(isValidAnswerFormat("multi", "a,c")).toBe(true);
+    expect(isValidAnswerFormat("multi", "c, a")).toBe(true);
+    expect(isValidAnswerFormat("multi", "b")).toBe(true); // a single check is a valid selection
+  });
+
+  it("rejects malformed multi answers", () => {
+    expect(isValidAnswerFormat("multi", "a,,c")).toBe(false); // empty part
+    expect(isValidAnswerFormat("multi", "a,c,")).toBe(false); // trailing comma
+    expect(isValidAnswerFormat("multi", "a,a")).toBe(false); // duplicated id
+    expect(isValidAnswerFormat("multi", "l1:r2")).toBe(false); // pair syntax
   });
 
   it("accepts well-formed ordering answers (unique id CSV, whitespace-insensitive)", () => {
