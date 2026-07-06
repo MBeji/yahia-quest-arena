@@ -2,8 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { getDuelHistory, leaveDuelQueue, matchDuel } from "@/features/duel";
+import {
+  getDuelHistory,
+  getDuelLastAward,
+  getDuelLeague,
+  leaveDuelQueue,
+  matchDuel,
+} from "@/features/duel";
 import { DuelQueueCard } from "@/features/duel/components/duel-queue-card";
+import { DuelLeague } from "@/features/duel/components/duel-league";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/duel")({
@@ -24,6 +31,8 @@ function DuelHubPage() {
   const match = useServerFn(matchDuel);
   const leave = useServerFn(leaveDuelQueue);
   const history = useServerFn(getDuelHistory);
+  const league = useServerFn(getDuelLeague);
+  const lastAward = useServerFn(getDuelLastAward);
   const [searching, setSearching] = useState(false);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -31,6 +40,8 @@ function DuelHubPage() {
     queryKey: ["duel-history"],
     queryFn: () => history(),
   });
+  const leagueQuery = useQuery({ queryKey: ["duel-league"], queryFn: () => league() });
+  const awardQuery = useQuery({ queryKey: ["duel-last-award"], queryFn: () => lastAward() });
 
   const stopPolling = () => {
     if (pollRef.current) clearInterval(pollRef.current);
@@ -131,6 +142,12 @@ function DuelHubPage() {
           </ul>
         )}
       </section>
+
+      <DuelLeague
+        rows={leagueQuery.data?.rows ?? []}
+        lastAward={awardQuery.data?.award ?? null}
+        labels={t.duel}
+      />
     </div>
   );
 }

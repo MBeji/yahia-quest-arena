@@ -33,7 +33,7 @@ resynchroniser quand on touche une étude.
 | 02  | [Examen blanc / simulation concours](02-examen-blanc/ETUDE.md)                   | 💎 valeur premium concours         | moyenne+   | brouillon    | contenu annales (`NN-annales-bac`)        |
 | 03  | [Types de questions natifs (Tier B)](03-types-questions-natifs/ETUDE.md)         | 🎮 expérience & anti-devinette     | haute      | livrée       | — (spec normative déjà mergée)            |
 | 04  | [Moteur adaptatif & diagnostic de misconceptions](04-moteur-adaptatif/ETUDE.md)  | 🧠 différenciateur pédagogique     | haute      | en exécution | télémétrie (lot A0) puis volume           |
-| 05  | [Duels temps réel & ligues](05-duels-ligues/ETUDE.md)                            | 🔁 rétention/engagement            | très haute | en exécution | 01 (revenus d'abord), infra Realtime      |
+| 05  | [Duels temps réel & ligues](05-duels-ligues/ETUDE.md)                            | 🔁 rétention/engagement            | très haute | livrée       | 01 (revenus d'abord), infra Realtime      |
 | 06  | [PWA & lecture hors-ligne](06-pwa-offline/ETUDE.md)                              | 🌍 marché (connectivité)           | haute      | brouillon    | besoin utilisateur documenté              |
 | 07  | [Knowledge Graph & profils de maîtrise](07-knowledge-graph-competences/ETUDE.md) | 🧭 socle de l'intelligence produit | haute      | brouillon    | étude 04 lot A0                           |
 | 08  | [Analytics parents & enseignants](08-analytics-familles/ETUDE.md)                | 👨‍👩‍👧 valeur commerciale familles     | moyenne    | brouillon    | 04-A0 ; 07 (faiblesses) ; 02 (percentile) |
