@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import { supabase } from "@/shared/integrations/supabase/client";
-import { useAuth } from "@/features/auth";
 import { logger } from "@/shared/lib/logger";
 
 /**
@@ -26,16 +25,17 @@ type ProgressMeta = { answered?: number };
 
 export function useDuelChannel({
   duelId,
+  userId,
   myAnswered,
   enabled,
 }: {
   duelId: string;
+  /** The current user's id — the presence key. Passed in (not read via a
+   *  feature hook) to keep duel/ from importing another feature. */
+  userId: string | undefined;
   myAnswered: number;
   enabled: boolean;
 }): DuelChannelState {
-  const { user } = useAuth();
-  const userId = user?.id;
-
   const [realtimeActive, setRealtimeActive] = useState(false);
   const [opponentOnline, setOpponentOnline] = useState(false);
   const [liveOpponentAnswered, setLiveOpponentAnswered] = useState<number | null>(null);
