@@ -38,7 +38,7 @@
  *           `content-audit` (human/LLM) pass; this only catches the lexical slice.
  */
 
-export type QAOption = { id: string; text: string };
+export type QAOption = { id: string; text: string; misconceptionTag?: string };
 export type QAQuestion = {
   prompt: string;
   options: QAOption[];
@@ -307,6 +307,32 @@ export function auditQuestion(q: QAQuestion, where: string): Flag[] {
     }
   }
 
+  return flags;
+}
+
+/**
+ * Registry cross-check for misconception tags (étude 04 D-4/R-5). Every
+ * `misconceptionTag` used on a distractor must be declared in the closed
+ * registry `content/misconceptions.json` — an unknown tag is an [error] (the
+ * telemetry would record a tag nothing can ever explain to the student). The
+ * schema already guarantees the tag's namespaced SHAPE and that the correct
+ * option is untagged; this adds the VOCABULARY check the schema cannot do.
+ */
+export function auditMisconceptionTags(
+  q: QAQuestion,
+  known: ReadonlySet<string>,
+  where: string,
+): Flag[] {
+  const flags: Flag[] = [];
+  for (const o of q.options) {
+    if (o.misconceptionTag && !known.has(o.misconceptionTag)) {
+      flags.push({
+        level: "error",
+        where,
+        msg: `option "${o.id}" uses misconception tag "${o.misconceptionTag}" not declared in content/misconceptions.json`,
+      });
+    }
+  }
   return flags;
 }
 

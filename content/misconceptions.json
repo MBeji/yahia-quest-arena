@@ -1,0 +1,42 @@
+{
+  "math.frac.add-denominators": {
+    "subject": "math",
+    "labels": {
+      "fr": "Tu additionnes les dénominateurs au lieu de les garder communs",
+      "en": "You add the denominators instead of keeping a common one",
+      "ar": "تجمع المقامات بدل الإبقاء على مقام مشترك"
+    }
+  },
+  "math.frac.add-numerators-and-denominators": {
+    "subject": "math",
+    "labels": {
+      "fr": "Tu additionnes numérateurs entre eux et dénominateurs entre eux",
+      "en": "You add numerators together and denominators together",
+      "ar": "تجمع البسوط معًا والمقامات معًا"
+    }
+  },
+  "math.dec.compare-by-length": {
+    "subject": "math",
+    "labels": {
+      "fr": "Tu crois qu'un nombre décimal avec plus de chiffres est plus grand",
+      "en": "You think a decimal with more digits is larger",
+      "ar": "تظنّ أنّ العدد العشري ذا الأرقام الأكثر هو الأكبر"
+    }
+  },
+  "math.int.subtract-smaller-from-larger": {
+    "subject": "math",
+    "labels": {
+      "fr": "Tu retranches toujours le plus petit du plus grand en ignorant le signe",
+      "en": "You always subtract the smaller from the larger, ignoring the sign",
+      "ar": "تطرح دائمًا الأصغر من الأكبر متجاهلًا الإشارة"
+    }
+  },
+  "math.percent.of-confused-with-off": {
+    "subject": "math",
+    "labels": {
+      "fr": "Tu confonds « pourcentage de » et « pourcentage en moins »",
+      "en": "You confuse a percentage OF a value with a percentage OFF it",
+      "ar": "تخلط بين نسبة من قيمة ونسبة الحطّ منها"
+    }
+  }
+}

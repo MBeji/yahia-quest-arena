@@ -119,10 +119,58 @@ export const chapterMetaSchema = z.object({
 });
 export type ChapterMeta = z.infer<typeof chapterMetaSchema>;
 
+/**
+ * A misconception tag id — namespaced by subject (étude 04 R-5), e.g.
+ * `math.frac.add-denominators`: lowercase dotted segments, the first being the
+ * subject namespace. Never free text — every tag used in content must exist in
+ * the versioned registry `content/misconceptions.json` (cross-checked by
+ * `content:qa`; an unknown tag is an error).
+ */
+export const misconceptionTagSchema = z
+  .string()
+  .regex(
+    /^[a-z][a-z0-9]*(?:\.[a-z0-9]+(?:-[a-z0-9]+)*){1,}$/,
+    "a misconception tag must be namespaced lowercase segments (e.g. 'math.frac.add-denominators')",
+  );
+
 const optionSchema = z.object({
   id: z.string().min(1),
   text: z.string().min(1),
+  /**
+   * Optional server-only misconception tag (étude 04 D-4/R-5): names the error a
+   * student who picks THIS distractor is making. `sql-builder` routes it into the
+   * server-only `questions.distractor_tags` map (keyed by option id) and STRIPS it
+   * from the client-sent `options`. Meaningful on mcq (the wire `choice` equals
+   * the option id, so telemetry resolves `distractor_tags->>choice`); the correct
+   * option must stay untagged (enforced below). The id must exist in
+   * `content/misconceptions.json`.
+   */
+  misconceptionTag: misconceptionTagSchema.optional(),
 });
+
+/** One entry of the misconception registry: subject + trilingual student labels. */
+export const misconceptionEntrySchema = z.object({
+  subject: z.string().regex(/^[a-z][a-z0-9-]*$/, "subject must be kebab-case (e.g. 'math')"),
+  labels: z.object({
+    fr: z.string().min(1),
+    en: z.string().min(1),
+    ar: z.string().min(1),
+  }),
+});
+export type MisconceptionEntry = z.infer<typeof misconceptionEntrySchema>;
+
+/**
+ * `content/misconceptions.json` — the versioned, closed vocabulary of
+ * misconception tags (étude 04 D-4/R-5). Maps each namespaced tag id to its
+ * subject + student-facing FR/EN/AR labels (the tag is an id, never displayed;
+ * the labels feed `get_my_weaknesses` in a later lot). Content may only
+ * reference tags declared here.
+ */
+export const misconceptionRegistrySchema = z.record(
+  misconceptionTagSchema,
+  misconceptionEntrySchema,
+);
+export type MisconceptionRegistry = z.infer<typeof misconceptionRegistrySchema>;
 
 const questionCoreSchema = z.object({
   prompt: z.string().min(1),
@@ -244,6 +292,16 @@ export const questionSchema = z
           code: "custom",
           message: "correctOption must match one of the option ids",
           path: ["correctOption"],
+        });
+      }
+      // The correct option must stay untagged (étude 04 D-1): a right answer has
+      // no misconception, and it must remain the only option without a tag so
+      // `distractor_tags->>choice` never diagnoses a correct choice.
+      if (q.options.some((o) => o.id === q.correctOption && o.misconceptionTag)) {
+        ctx.addIssue({
+          code: "custom",
+          message: "the correct option must not carry a misconceptionTag",
+          path: ["options"],
         });
       }
       return;

@@ -104,6 +104,17 @@ is fully executed — no more native types are planned).
 Cross-field rules (Zod refine): option **ids must be unique**; `correctOption` ∈ option ids.
 Convention: option ids `a`,`b`,`c`,`d`.
 
+**Optional `misconceptionTag` per distractor (mcq only — étude 04, moteur adaptatif).** Any
+_wrong_ option may carry `"misconceptionTag": "<id>"` naming the error a student who picks it is
+making. It is **server-only diagnostics**: `sql-builder` routes it into the `questions.distractor_tags`
+map and **strips it from `options`** (it never reaches the client — R-1), so the correct option must
+stay **untagged** (Zod errors otherwise). The id must be **namespaced by subject** (`math.frac.add-denominators`)
+and **declared in the registry `content/misconceptions.json`** (`content:qa` errors on an unknown or
+undeclared tag). The registry maps each id → `{ subject, labels: { fr, en, ar } }` (the student-facing
+wording; the tag itself is never displayed). Tagging is **optional and progressive** — leave distractors
+untagged when the error isn't crisp; the `prof-*` trap taxonomies are the natural source of tags. Only
+`mcq` resolves telemetry (the wire choice equals the option id), so only `mcq` options take the field.
+
 **`numeric` — native free numeric entry (no options, no elimination):**
 
 | Field                 | Type   | Required | Constraint                                                                                                                                       |

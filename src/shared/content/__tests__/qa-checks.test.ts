@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   auditBoardQuestion,
+  auditMisconceptionTags,
   auditNumericQuestion,
   auditQuestion,
   classifyOption,
@@ -32,6 +33,41 @@ describe("qa-checks helpers", () => {
   });
   it("numbersIn extracts Latin + folded Arabic numbers", () => {
     expect(numbersIn("x = ١٢ et 3.5")).toEqual(["12", "3.5"]);
+  });
+});
+
+describe("auditMisconceptionTags — registry cross-check (étude 04 A0.3)", () => {
+  const known = new Set(["math.frac.add-denominators"]);
+
+  it("passes when every used tag is declared in the registry", () => {
+    const q = base({
+      options: [
+        { id: "a", text: "5/6" },
+        { id: "b", text: "2/5", misconceptionTag: "math.frac.add-denominators" },
+        { id: "c", text: "1/6" },
+        { id: "d", text: "2/6" },
+      ],
+    });
+    expect(auditMisconceptionTags(q, known, "w")).toEqual([]);
+  });
+
+  it("errors on a tag that is not in the registry", () => {
+    const q = base({
+      options: [
+        { id: "a", text: "5/6" },
+        { id: "b", text: "2/5", misconceptionTag: "math.frac.unknown-error" },
+        { id: "c", text: "1/6" },
+        { id: "d", text: "2/6" },
+      ],
+    });
+    const flags = auditMisconceptionTags(q, known, "w");
+    expect(flags).toHaveLength(1);
+    expect(flags[0]).toMatchObject({ level: "error" });
+    expect(flags[0].msg).toContain("math.frac.unknown-error");
+  });
+
+  it("is a no-op for untagged questions", () => {
+    expect(auditMisconceptionTags(base({}), known, "w")).toEqual([]);
   });
 });
 

@@ -11,8 +11,18 @@
  */
 import { argv, cwd, exit, stdout } from "node:process";
 import { join, resolve } from "node:path";
-import { loadAllSubjects, loadSubject } from "../../src/shared/content/loader.ts";
-import { auditBoardQuestion, auditNumericQuestion, auditQuestion, type Flag } from "./qa-checks.ts";
+import {
+  loadAllSubjects,
+  loadMisconceptionRegistry,
+  loadSubject,
+} from "../../src/shared/content/loader.ts";
+import {
+  auditBoardQuestion,
+  auditMisconceptionTags,
+  auditNumericQuestion,
+  auditQuestion,
+  type Flag,
+} from "./qa-checks.ts";
 
 const hasFlag = (n: string) => argv.includes(`--${n}`);
 const getFlag = (n: string) => {
@@ -25,6 +35,7 @@ function main(): void {
   const contentDir = resolve(root, "content");
   const only = getFlag("subject");
   const subjects = only ? [loadSubject(join(contentDir, only))] : loadAllSubjects(contentDir);
+  const knownTags = new Set(Object.keys(loadMisconceptionRegistry(contentDir)));
 
   const flags: Flag[] = [];
 
@@ -46,7 +57,7 @@ function main(): void {
               ? auditNumericQuestion(q, where)
               : q.type === "ordering" || q.type === "matching" || q.type === "multi"
                 ? auditBoardQuestion(q, where)
-                : auditQuestion(q, where)),
+                : [...auditQuestion(q, where), ...auditMisconceptionTags(q, knownTags, where)]),
           );
         });
       }

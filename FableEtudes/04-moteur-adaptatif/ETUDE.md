@@ -116,7 +116,7 @@ progression, extension du rapport parent. États vides soignés (« Rien à rév
 
 - [x] A0.1 — schéma télémétrie (merge seul — DoD §7)
 - [x] A0.2 — capture (RPCs) + purge
-- [ ] A0.3 — pipeline tags + registre
+- [x] A0.3 — pipeline tags + registre
 - [ ] A1.1 — révision du jour
 - [ ] A2.1 — points faibles (GO humain : ≥4 semaines de télémétrie ou seuil de volume)
 - [ ] A2.2 — rapport parent
@@ -178,3 +178,28 @@ R-3. Vitest : fns zod, panneaux (états vides/pleins, RTL). E2E authed : un cycl
   **Écart accepté n°3** : les questions non répondues ne produisent PAS de ligne de télémétrie
   (aucune option choisie à diagnostiquer — le scoring, lui, continue de les compter fausses,
   inchangé). La source `exam` du CHECK reste réservée à l'étude 02.
+- **2026-07-06 — A0.3 livré** (pipeline contenu, pas de migration — la colonne `distractor_tags`
+  a atterri en A0.1). Champ optionnel `misconceptionTag` par option (zod, mcq uniquement — voir
+  écart n°4) ; `sql-builder` route les tags vers `distractor_tags` (keyé par id d'option) et les
+  **retire** de `options` (R-1 — prouvé bout-en-bout : la colonne `options` en base ne contient
+  que `{id,text}`, `distractor_tags` porte la map) ; registre versionné `content/misconceptions.json`
+  (id namespacé par matière → libellés FR/EN/AR + matière), validé structurellement par
+  `content:check` (loader) et croisé par `content:qa` (tag utilisé mais non déclaré = erreur).
+  Invariant D-1 durci au schéma : une option **correcte** ne peut pas porter de tag. Tests :
+  `content-pipeline-a0.test.ts` (schéma + registre + routage/strip sql-builder + loader) et
+  ajouts à `qa-checks.test.ts` (`auditMisconceptionTags`). Gate verte (1062 tests),
+  `content:check` (73 sujets) + `content:qa:strict` (0 erreur) verts.
+  **Écart accepté n°4** : `misconceptionTag` est autorisé **uniquement sur les options mcq** (le
+  seul type où le `choice` de fil = l'id d'option, donc où `distractor_tags->>choice` résout la
+  télémétrie — cf. exemple D-1). Les distracteurs multi/ordering/matching ne sont pas tagables
+  (leur `choice` est un CSV, la résolution par id ne s'applique pas) — conforme au périmètre QCM
+  du protocole « erreur exécutée ». Registre seedé avec 5 misconceptions math canoniques ; le
+  tagging de masse du stock reste un chantier CONTENU (`content-audit`), pas un lot code.
+
+### Phase A0 (socle télémétrie) — LIVRÉE
+
+Les trois lots A0.1 (schéma) · A0.2 (capture RPC + purge) · A0.3 (pipeline tags + registre) sont
+mergés (PR #308, #309, +A0.3). Le signal « choix par question + misconception » est désormais
+capté server-side à chaque soumission. Les lots A1.1 (« Révision du jour ») et A2.1 (« Points
+faibles ») attendent le **GO humain** (Q-1 : ≥4 semaines de télémétrie OU seuil de volume) —
+c'est le stop-point de l'étude : accumuler des données réelles avant de bâtir la reco/le profil.
