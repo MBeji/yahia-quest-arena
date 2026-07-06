@@ -13,6 +13,7 @@ const labels: QuestionInputLabels = {
   matchingHint: "Aligne chaque paire.",
   moveUp: "Monter",
   moveDown: "Descendre",
+  multiHint: "Sélectionne TOUTES les bonnes réponses.",
   unsupportedTitle: "⚠️ Question indisponible",
   unsupportedBody: "Type non pris en charge.",
 };

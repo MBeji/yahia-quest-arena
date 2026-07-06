@@ -80,7 +80,7 @@ Intégralement dans la spec — carte des touchpoints (5 RPCs SQL, zod/TS, UI, p
 
 - [x] B3.1 — DB + couture scoring étendue (merge seul d'abord — DoD §7)
 - [x] B3.2 — serveur
-- [ ] B3.3 — UI (cases à cocher, US-3)
+- [x] B3.3 — UI (cases à cocher, US-3)
 - [ ] B3.4 — pipeline + skills
 
 **Stop-points** : ne jamais modifier la sémantique `'mcq'` ; ne jamais sélectionner `answer_key`
@@ -311,5 +311,22 @@ server fns quest/dungeon était déjà branchée sur cette table depuis B1.2 —
 changement de handler. `types.ts` intentionnellement intouché (aucune signature TS
 modifiée par B3.1 — `answer_key_display` est server-only). Tests : +6 Vitest (matrice
 de format multi) ; verify vert (1039 tests).
+
+Écart accepté : néant.
+
+### Lot B3.3 — 2026-07-06 (exécuté par le modèle architecte, Fable)
+
+Livré : `MultiSelect` (cases à cocher, `question-input.tsx`) branché dans le
+`<QuestionInput>` unifié quest+donjon. La mention explicite « sélectionne TOUTES les
+bonnes réponses » (US-3) est un bandeau visible non manqué, pas une astuce de style —
+c'est ce qui rend l'exercice honnête. `choice` = CSV **trié** des ids cochés (même
+format que le calcul serveur `score_answer`/`answer_key_display`) ; aucune case cochée
+→ `value` vide → `canValidate` (déjà générique via `isValidAnswerFormat`) bloque la
+validation sans code dédié. Review et récap donjon fonctionnent sans changement (la
+logique de re-mapping CSV→textes de B2 couvre déjà tout CSV séparé par virgules).
+Tests : +10 Vitest (bandeau, cocher/décocher, CSV trié, état initial) ; le fallback
+R-3 utilisait `"multi"` comme type factice — basculé sur `"essay"` puisque `multi`
+est désormais un vrai type livré. Gates : verify 1043 tests (+4 nets), `build:check`
+(chunk dndkit inchangé), `smoke:shell` verts.
 
 Écart accepté : néant.

@@ -22,6 +22,7 @@ export type QuestLabels = {
   matchingHint: string;
   moveUp: string;
   moveDown: string;
+  multiHint: string;
   unsupportedTitle: string;
   unsupportedBody: string;
 };
@@ -105,6 +106,13 @@ export function buildQuestLabels(qlang: QuestContentLang): QuestLabels {
     }[qlang],
     moveUp: { ar: "تحريك لأعلى", fr: "Monter", en: "Move up" }[qlang],
     moveDown: { ar: "تحريك لأسفل", fr: "Descendre", en: "Move down" }[qlang],
+    // Native multi-select (Tier B — B3): the explicit "select ALL" mention (US-3)
+    // is the whole point — a checkbox list is fair only when this is unmistakable.
+    multiHint: {
+      ar: "⚠️ اختر كلّ الإجابات الصحيحة — قد يكون هناك أكثر من إجابة واحدة.",
+      fr: "⚠️ Sélectionne TOUTES les bonnes réponses — il peut y en avoir plusieurs.",
+      en: "⚠️ Select ALL the correct answers — there may be more than one.",
+    }[qlang],
     // R-3 rollback posture: an item whose type this client can't render is shown
     // as cleanly unavailable (it scores as unanswered), never a crashed session.
     unsupportedTitle: {
