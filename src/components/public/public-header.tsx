@@ -20,7 +20,16 @@ export function PublicHeader() {
     <header className="sticky top-0 z-30 border-b border-border bg-card/90 pt-[env(safe-area-inset-top)] backdrop-blur print:hidden">
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-4 py-3 sm:gap-3 sm:px-6">
         <div className="flex items-center gap-3 sm:gap-6">
-          <Link to="/" className="flex items-baseline gap-2" aria-label={t.public.header.homeAria}>
+          {/* Brand = home. AUTH-AWARE destination: a signed-in visitor who reached
+              this public shell via the converged « Découvrir » nav is sent back to
+              their connected space (`/dashboard`), NOT the logged-out landing (`/`)
+              — tapping the logo used to strand them on the public home that reads as
+              "not logged in" (issue #312). Logged-out visitors still go to `/`. */}
+          <Link
+            to={isAuthed ? "/dashboard" : "/"}
+            className="flex items-baseline gap-2"
+            aria-label={isAuthed ? t.public.header.account : t.public.header.homeAria}
+          >
             <span className="font-display text-lg font-bold tracking-tight text-primary">
               Na9ra Nal3ab
             </span>
