@@ -19,6 +19,7 @@ import { en } from "@/lib/i18n/en";
 import { ar } from "@/lib/i18n/ar";
 import { ThemeProvider, useTheme, DEFAULT_THEME, themeFromCookieHeader } from "@/lib/theme";
 import type { Theme } from "@/lib/theme";
+import { SoundProvider } from "@/lib/sound";
 import { logger } from "@/shared/lib/logger";
 import { initAnalytics, trackPageview, pagePathFromLocation } from "@/shared/lib/analytics";
 
@@ -222,8 +223,10 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <I18nProvider>
-          <Outlet />
-          <ThemedToaster />
+          <SoundProvider>
+            <Outlet />
+            <ThemedToaster />
+          </SoundProvider>
         </I18nProvider>
       </ThemeProvider>
     </QueryClientProvider>

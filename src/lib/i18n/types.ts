@@ -401,6 +401,12 @@ export type TranslationKeys = {
     light: string;
     dark: string;
   };
+  // Sound-effects toggle
+  sound: {
+    label: string;
+    enable: string;
+    disable: string;
+  };
   // Adventure path / journey map
   parcours: {
     worldTitle: string;

@@ -386,6 +386,11 @@ export const ar: TranslationKeys = {
     light: "فاتح",
     dark: "داكن",
   },
+  sound: {
+    label: "الأصوات",
+    enable: "تفعيل الأصوات",
+    disable: "كتم الأصوات",
+  },
   parcours: {
     worldTitle: "خريطة المغامرة",
     worldSubtitle: "اختر مسارك، افتح المناطق وكن أسطورة.",

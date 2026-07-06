@@ -26,6 +26,7 @@ import { toast } from "sonner";
 import { useT } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
+import { SoundSwitcher } from "@/components/ui/sound-switcher";
 import { GoldAmbient } from "@/components/visual/gold-ambient";
 import { AccountHud } from "@/components/account-hud";
 
@@ -262,6 +263,7 @@ function AuthenticatedLayout() {
             <AccountHud />
             <LanguageSwitcher />
             <ThemeSwitcher />
+            <SoundSwitcher />
             <button onClick={signOut} className={NAV_LINK} aria-label={t.layout.signOut}>
               <LogOut className="h-4 w-4 shrink-0" />{" "}
               <span className="hidden lg:inline">{t.layout.signOut}</span>

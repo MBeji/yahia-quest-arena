@@ -24,6 +24,7 @@ import { Confetti } from "@/features/quest/components/confetti";
 import { LevelUpCelebration } from "@/components/ui/level-up-celebration";
 import { ExplainHint } from "@/components/ui/explain-hint";
 import { useT } from "@/lib/i18n";
+import { useSound } from "@/lib/sound";
 import type { UnlockedBadge } from "@/shared/types/gamification";
 
 // =============================================================================
@@ -124,6 +125,7 @@ export function ExercisePlayer({
   strategy: ExercisePlayerStrategy;
 }) {
   const t = useT();
+  const { play } = useSound();
   const qc = useQueryClient();
   const fetchExercise = useServerFn(getExercise);
   const fetchSubjectForNext = useServerFn(getSubject);
@@ -194,13 +196,20 @@ export function ExercisePlayer({
     }) => strategy.submit(payload),
     onSuccess: (res) => {
       setResult(res);
+      const passed = res.scorePct >= PASS_THRESHOLD_PCT;
+      // Reward cue on the result screen (both connected and anon registers).
+      play(passed ? "victory" : "wrong");
       if (capabilities.rewards) {
-        if (res.scorePct >= PASS_THRESHOLD_PCT) setShowConfetti(true);
+        if (passed) setShowConfetti(true);
+        if (res.unlockedBadges.length > 0) setTimeout(() => play("badge"), 600);
         const profileLevel = Number(res.profile?.level ?? 0);
         const profileXp = Number(res.profile?.xp ?? 0);
         const prevLevel = levelForXp(profileXp - res.xpEarned);
         if (profileLevel > prevLevel && res.xpEarned > 0) {
-          setTimeout(() => setShowLevelUp(true), 1200);
+          setTimeout(() => {
+            setShowLevelUp(true);
+            play("levelUp");
+          }, 1200);
         }
         qc.invalidateQueries({ queryKey: ["dashboard"] });
         qc.invalidateQueries({ queryKey: ["subject"] });
@@ -637,6 +646,9 @@ export function ExercisePlayer({
   if (!sessionId && !sessionMutation.isError) return preparingScreen;
 
   function handleSelect(optId: string) {
+    // Discrete taps get a blip; typed input (numeric) would fire on every
+    // keystroke, so it stays silent.
+    if (currentType === "mcq" || currentType === "multi") play("select");
     setSelected(optId);
   }
 
