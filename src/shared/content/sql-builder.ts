@@ -269,7 +269,9 @@ export function buildMigrationSql(subject: LoadedSubject): string {
             ? sqlJson({ order: q.answerKey.order })
             : q.type === "matching"
               ? sqlJson({ pairs: q.answerKey.pairs })
-              : "NULL";
+              : q.type === "multi"
+                ? sqlJson({ correct: q.answerKey.correct })
+                : "NULL";
       out.push(
         "INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key) VALUES",
         `  (${sqlString(qId)}, ${sqlString(exId)}, ${sqlString(q.prompt)}, ${optionsSql}, ${correctOptionSql}, ${sqlString(

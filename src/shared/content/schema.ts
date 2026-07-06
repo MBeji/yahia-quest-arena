@@ -203,10 +203,21 @@ const matchingQuestionSchema = questionCoreSchema.extend({
 });
 
 /**
+ * Native multi-select judgment question (Tier B, phase B3 — the last Tier-B
+ * type): `options` are the candidates (checkboxes); `answerKey.correct` is the
+ * set of correct ids — validated below as a PROPER, non-trivial subset (at
+ * least 2 correct, and at least one candidate must be wrong, or the "select
+ * ALL" instruction is vacuous — US-3).
+ */
+const multiQuestionSchema = questionCoreSchema.extend({
+  type: z.literal("multi"),
+  options: z.array(wireOptionSchema).min(3).max(6),
+  answerKey: z.object({ correct: z.array(wireIdSchema).min(2).max(5) }),
+});
+
+/**
  * A question file entry — discriminated on `type`, defaulting to `'mcq'` so
  * every pre-existing content file stays valid without edits (spec D-4).
- * The not-yet-shipped `multi` (phase B3) is NOT a member: authoring it stays
- * schema-rejected until its phase ships.
  */
 export const questionSchema = z
   .preprocess(
@@ -219,6 +230,7 @@ export const questionSchema = z
       numericQuestionSchema,
       orderingQuestionSchema,
       matchingQuestionSchema,
+      multiQuestionSchema,
     ]),
   )
   .superRefine((q, ctx) => {
@@ -245,6 +257,25 @@ export const questionSchema = z
           code: "custom",
           message: "answerKey.order must be a permutation of the option ids",
           path: ["answerKey", "order"],
+        });
+      }
+      return;
+    }
+    if (q.type === "multi") {
+      const ids = new Set(q.options.map((o) => o.id));
+      const correct = q.answerKey.correct;
+      if (new Set(correct).size !== correct.length || !correct.every((id) => ids.has(id))) {
+        ctx.addIssue({
+          code: "custom",
+          message: "answerKey.correct must be unique ids drawn from the options",
+          path: ["answerKey", "correct"],
+        });
+      } else if (correct.length >= q.options.length) {
+        ctx.addIssue({
+          code: "custom",
+          message:
+            "answerKey.correct must be a PROPER subset — at least one option must be wrong, or 'select ALL' is vacuous",
+          path: ["answerKey", "correct"],
         });
       }
       return;
@@ -289,6 +320,7 @@ export type ContentMcqQuestion = Extract<ContentQuestion, { type: "mcq" }>;
 export type ContentNumericQuestion = Extract<ContentQuestion, { type: "numeric" }>;
 export type ContentOrderingQuestion = Extract<ContentQuestion, { type: "ordering" }>;
 export type ContentMatchingQuestion = Extract<ContentQuestion, { type: "matching" }>;
+export type ContentMultiQuestion = Extract<ContentQuestion, { type: "multi" }>;
 
 /**
  * `quiz.json` — the mandatory comprehension quiz of a chapter. Compiled into

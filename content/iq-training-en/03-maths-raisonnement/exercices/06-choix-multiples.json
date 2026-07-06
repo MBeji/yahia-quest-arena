@@ -1,0 +1,49 @@
+{
+  "title": "⭐⭐ Multi-select: check ALL the correct answers",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 6,
+  "questions": [
+    {
+      "type": "multi",
+      "prompt": "Among these numbers, check ALL that are multiples of 3.",
+      "options": [
+        { "id": "a", "text": "9" },
+        { "id": "b", "text": "10" },
+        { "id": "c", "text": "21" },
+        { "id": "d", "text": "16" }
+      ],
+      "answerKey": { "correct": ["a", "c"] },
+      "explanation": "9 = 3 × 3 and 21 = 3 × 7 are multiples of 3. 10 and 16 are not (10 ÷ 3 and 16 ÷ 3 are not whole numbers).",
+      "difficulty": 1
+    },
+    {
+      "type": "multi",
+      "prompt": "About an even number, check ALL the statements that are true.",
+      "options": [
+        { "id": "a", "text": "it is divisible by 2" },
+        { "id": "b", "text": "its last digit is 0, 2, 4, 6 or 8" },
+        { "id": "c", "text": "it must be a multiple of 4" },
+        { "id": "d", "text": "its sum with another even number is always even" }
+      ],
+      "answerKey": { "correct": ["a", "b", "d"] },
+      "explanation": "An even number is indeed divisible by 2 (a) and ends in 0/2/4/6/8 (b); the sum of two even numbers is always even (d). But 6 is even without being a multiple of 4, so c is false.",
+      "difficulty": 2
+    },
+    {
+      "type": "multi",
+      "prompt": "Which of these sequences advance by a CONSTANT step (an arithmetic progression)? Check ALL that apply.",
+      "options": [
+        { "id": "a", "text": "3, 6, 9, 12" },
+        { "id": "b", "text": "2, 4, 8, 16" },
+        { "id": "c", "text": "5, 8, 11, 14" },
+        { "id": "d", "text": "1, 4, 9, 16" }
+      ],
+      "answerKey": { "correct": ["a", "c"] },
+      "explanation": "3, 6, 9, 12 advances by +3 each step, and 5, 8, 11, 14 also advances by +3: both are arithmetic progressions. 2, 4, 8, 16 doubles each time (×2, not a constant gap), and 1, 4, 9, 16 are consecutive squares (1², 2², 3², 4²) — neither has a constant step.",
+      "difficulty": 3
+    }
+  ]
+}

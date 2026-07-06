@@ -9,9 +9,9 @@ description: >-
   "variés", "autre chose que des QCM", "un exercice à trous", "un exercice d'appariement / de remise
   en ordre", "une mission scénarisée / histoire", "un sprint chrono" — e.g. "ajoute des exercices
   interactifs au chapitre fractions 6ème", "une mission scénarisée de SVT 9ème", "un sprint de calcul
-  mental 4ème". Native input types are Tier B (docs/interactive-question-types.md): la saisie
-  numérique (`type: "numeric"`, B1) et le drag & drop natif (`ordering`/`matching`, B2)
-  SHIPPED and are authorable; multi-select (B3) is not yet — do not fake it. Defers to the content-engine skill
+  mental 4ème". Native input types are Tier B (docs/interactive-question-types.md) et TOUS
+  SHIPPED : saisie numérique (`type: "numeric"`), drag & drop natif (`ordering`/`matching`)
+  et multi-sélection (`type: "multi"`) sont authorable. Defers to the content-engine skill
   (references/interactive-formats.md) for the format catalogue, schema, quality bar, rewards, and
   validation.
 ---
@@ -32,14 +32,12 @@ catalogue + renderer contract + anti-patterns: it is THE spec for this skill), p
 - **Does:** add interactive exercise files (`exercices/NN-<slug>.json`) to **existing chapters** of
   any subject, or author the exercise tier of a new chapter alongside the responsible program
   wrapper. Formats: the ten in `interactive-formats.md` (Tier A only).
-- **Does not:** author courses/quizzes (→ program wrapper / `content-cours`), raise the d3–4
-  ceiling of school exam subjects on its own (→ co-design with the matching `prof-*` skill: the
-  professor owns the trap taxonomy and calibration; this skill owns the interaction format), or
-  author the still-unshipped `multi` type (multi-select — blocked on phase B3 of
-  `docs/interactive-question-types.md`; say so instead of faking). Native numeric entry
-  (`type: "numeric"`, B1) and native drag & drop (`type: "ordering"`/`"matching"`, B2) ARE
-  authorable — shapes and rules in content-engine `references/content-schema.md`; prefer them
-  over the QCM-encoded permutation formats for new content.
+- **Does not:** author courses/quizzes (→ program wrapper / `content-cours`), or raise the
+  d3–4 ceiling of school exam subjects on its own (→ co-design with the matching `prof-*`
+  skill: the professor owns the trap taxonomy and calibration; this skill owns the
+  interaction format). All Tier-B native types (`numeric`, `ordering`, `matching`, `multi`)
+  ARE authorable — shapes and rules in content-engine `references/content-schema.md`; prefer
+  them over the QCM-encoded permutation/multi-select formats for new content.
 
 ## Program fidelity still applies
 

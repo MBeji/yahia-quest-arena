@@ -86,9 +86,9 @@ bucket; this field carries only the metadata.
 ## Question object (shared by quiz.json and exercise files)
 
 Questions are a **discriminated union on `type`**. Omitting `type` means `mcq` — every
-pre-existing file stays valid unchanged. Shipped types today: `mcq`, `numeric` (B1),
-`ordering` and `matching` (B2); `multi` is **schema-rejected** until phase B3 ships
-(`docs/interactive-question-types.md`).
+pre-existing file stays valid unchanged. All Tier-B types have shipped: `mcq`, `numeric`,
+`ordering`, `matching` and `multi` are ALL authorable (`docs/interactive-question-types.md`
+is fully executed — no more native types are planned).
 
 **`mcq` (default) — the classic QCM:**
 
@@ -144,8 +144,25 @@ mutually distinct (`content:qa` errors on duplicates) and each step self-contain
 | `explanation`     | string   | yes      | state each association and why                                                                                           |
 
 Scoring is set equality of the pairs, all-or-nothing. Every right item must be a plausible
-partner for more than one left item — otherwise the exercise solves itself. Prefer these two
-native types over the QCM-encoded permutation formats for new content.
+partner for more than one left item — otherwise the exercise solves itself.
+
+**`multi` — native multi-select judgment (B3, "select ALL that apply"):**
+
+| Field               | Type     | Required | Constraint                                                                                                                                      |
+| ------------------- | -------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `type`              | string   | yes      | `"multi"`                                                                                                                                       |
+| `options`           | option[] | yes      | **3–6** candidates (checkboxes). Ids alphanumeric (`a`…, no `,`/`:`/spaces)                                                                     |
+| `answerKey.correct` | string[] | yes      | **2–5** ids — the correct candidates. Must be a **proper subset**: at least one option must be wrong, or "select ALL" is vacuous (Zod-enforced) |
+| `explanation`       | string   | yes      | justify EACH correct candidate and why the wrong one(s) don't qualify                                                                           |
+
+Scoring is set equality of the checked ids, all-or-nothing (no partial credit). The client
+renders the explicit **"select ALL that apply"** instruction — never omit it or the item
+reads as an ordinary single-choice QCM and becomes unfair. Use `multi` for judgment items
+where more than one option is legitimately correct (properties, classifications); a `multi`
+item with exactly one intended correct answer should be an `mcq` instead.
+
+Prefer these three native types (`ordering`/`matching`/`multi`) over the QCM-encoded
+permutation/multi-select formats for new content.
 
 ### Figures (inline SVG) in questions
 

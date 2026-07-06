@@ -44,7 +44,7 @@ function main(): void {
           flags.push(
             ...(q.type === "numeric"
               ? auditNumericQuestion(q, where)
-              : q.type === "ordering" || q.type === "matching"
+              : q.type === "ordering" || q.type === "matching" || q.type === "multi"
                 ? auditBoardQuestion(q, where)
                 : auditQuestion(q, where)),
           );

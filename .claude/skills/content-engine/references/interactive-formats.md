@@ -12,12 +12,12 @@ Two tiers — know which one you are authoring for:
   (`options: [{id,text}]` + `correctOption` + server-side string-equality scoring). Everything in
   this file is Tier A.
 - **Tier B — engine-native types** (numeric input, drag-&-drop ordering/matching, multi-select),
-  specified in `docs/interactive-question-types.md`. **Phases B1 and B2 have shipped:
-  `numeric`, `ordering` and `matching` are authorable now** (shapes and authoring rules in
-  `content-schema.md`). For NEW content, prefer native `ordering`/`matching` over this file's
-  QCM-encoded permutation formats (remise en ordre / appariement) — the encoded variants stay
-  valid for existing content. `multi` remains **banned** (schema-rejected) until phase B3
-  ships; when a request truly needs it, say so and point at the spec instead of faking it.
+  specified in `docs/interactive-question-types.md`. **All three phases have shipped:
+  `numeric`, `ordering`, `matching` and `multi` are ALL authorable now** (shapes and
+  authoring rules in `content-schema.md`). For NEW content, prefer native `ordering`/
+  `matching`/`multi` over this file's QCM-encoded permutation/multi-select-as-mcq formats —
+  the encoded variants stay valid for existing content. Tier B is fully shipped; there is no
+  remaining ban.
 
 ## The renderer contract (what an author can rely on)
 

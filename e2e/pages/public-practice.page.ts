@@ -28,6 +28,10 @@ export class PracticePage {
   get matchingBoard(): Locator {
     return this.page.getByTestId("matching-board");
   }
+  /** Native multi-select checkbox list (question_type='multi' — Tier B, phase B3). */
+  get multiCheckboxes(): Locator {
+    return this.page.getByRole("checkbox");
+  }
   get submitButton(): Locator {
     return this.page.getByTestId("quest-submit");
   }
@@ -54,12 +58,14 @@ export class PracticePage {
 
   /** Waits for the first question so a play step isn't racing the content fetch. */
   async firstQuestionVisible(): Promise<void> {
-    // Type-aware: mcq mounts a radiogroup, numeric an input, B2 types a board.
+    // Type-aware: mcq mounts a radiogroup, numeric an input, B2 types a board,
+    // multi a checkbox group.
     await this.questionGroups
       .first()
       .or(this.numericInput)
       .or(this.orderingBoard)
       .or(this.matchingBoard)
+      .or(this.multiCheckboxes.first())
       .first()
       .waitFor({ state: "visible", timeout: 15_000 });
   }
@@ -67,9 +73,10 @@ export class PracticePage {
   /**
    * Play the whole exercise question-by-question until the result screen
    * appears — type-aware: picks the first option (mcq), types a number
-   * (numeric), or submits the auto-filled arrangement (ordering/matching
-   * boards). Correctness is irrelevant — the journey asserts the run
-   * completes and a score renders, not a particular score.
+   * (numeric), submits the auto-filled arrangement (ordering/matching
+   * boards), or checks one box (multi). Correctness is irrelevant — the
+   * journey asserts the run completes and a score renders, not a particular
+   * score.
    */
   async playThrough(): Promise<void> {
     await this.firstQuestionVisible();
@@ -82,6 +89,13 @@ export class PracticePage {
         (await this.matchingBoard.isVisible().catch(() => false))
       ) {
         // The boards auto-register their initial arrangement — submit as-is.
+      } else if (
+        await this.multiCheckboxes
+          .first()
+          .isVisible()
+          .catch(() => false)
+      ) {
+        await this.multiCheckboxes.first().click();
       } else {
         const group = this.questionGroups.first();
         if (!(await group.isVisible().catch(() => false))) break;
