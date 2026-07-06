@@ -15,6 +15,7 @@ const labels: QuestionInputLabels = {
   matchingHint: "Aligne chaque paire.",
   moveUp: "Monter",
   moveDown: "Descendre",
+  multiHint: "Sélectionne TOUTES les bonnes réponses.",
   unsupportedTitle: "⚠️ Question indisponible",
   unsupportedBody: "Ce type de question n'est pas encore pris en charge ici.",
 };
@@ -100,6 +101,66 @@ describe("QuestionInput — numeric (native entry)", () => {
   });
 });
 
+describe("QuestionInput — multi (B3 checkbox list)", () => {
+  const multiOptions = [
+    { id: "a", text: "vrai 1", displayId: "A" },
+    { id: "b", text: "faux", displayId: "B" },
+    { id: "c", text: "vrai 2", displayId: "C" },
+  ];
+
+  it("renders the explicit select-ALL mention (US-3) and a checkbox group", () => {
+    renderInput({ questionType: "multi", options: multiOptions, value: null });
+    expect(screen.getByText(labels.multiHint)).toBeInTheDocument();
+    expect(screen.getByRole("group", { name: "2+2 ?" })).toBeInTheDocument();
+    expect(screen.getAllByRole("checkbox")).toHaveLength(3);
+  });
+
+  it("toggling a checkbox emits the sorted CSV of checked ids", () => {
+    // renderInput's <QuestionInput> is uncontrolled across clicks (its `value`
+    // prop doesn't update itself), so simulate the parent re-rendering with
+    // the previous onChange result to accumulate a second selection.
+    const { onChange, rerender } = renderInput({
+      questionType: "multi",
+      options: multiOptions,
+      value: null,
+    });
+    fireEvent.click(screen.getAllByRole("checkbox")[2]); // c
+    expect(onChange).toHaveBeenLastCalledWith("c");
+
+    rerender(
+      <QuestionInput
+        questionType="multi"
+        prompt="2+2 ?"
+        options={multiOptions}
+        value="c"
+        onChange={onChange}
+        labels={labels}
+        optionClassName={() => ""}
+      />,
+    );
+    fireEvent.click(screen.getAllByRole("checkbox")[0]); // a
+    expect(onChange).toHaveBeenLastCalledWith("a,c");
+  });
+
+  it("un-checking removes the id from the CSV", () => {
+    const { onChange } = renderInput({
+      questionType: "multi",
+      options: multiOptions,
+      value: "a,c",
+    });
+    fireEvent.click(screen.getAllByRole("checkbox")[0]); // uncheck a
+    expect(onChange).toHaveBeenLastCalledWith("c");
+  });
+
+  it("marks checked boxes from the current value", () => {
+    renderInput({ questionType: "multi", options: multiOptions, value: "a,c" });
+    const [a, b, c] = screen.getAllByRole("checkbox");
+    expect(a).toHaveAttribute("aria-checked", "true");
+    expect(b).toHaveAttribute("aria-checked", "false");
+    expect(c).toHaveAttribute("aria-checked", "true");
+  });
+});
+
 describe("QuestionInput — B2 boards routing", () => {
   it("routes ordering to the sequencing board", () => {
     renderInput({
@@ -129,20 +190,20 @@ describe("QuestionInput — B2 boards routing", () => {
 
 describe("QuestionInput — unsupported types (R-3 fallback)", () => {
   it("renders the clean unavailable notice instead of crashing", () => {
-    renderInput({ questionType: "multi", options: [] });
+    renderInput({ questionType: "essay", options: [] });
     expect(screen.getByTestId("question-unsupported")).toBeInTheDocument();
     expect(screen.getByText(labels.unsupportedTitle)).toBeInTheDocument();
     expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });
 
   it("auto-fills the sentinel answer so the run stays completable", () => {
-    const { onChange } = renderInput({ questionType: "multi", options: [] });
+    const { onChange } = renderInput({ questionType: "essay", options: [] });
     expect(onChange).toHaveBeenCalledWith(UNSUPPORTED_ANSWER_CHOICE);
   });
 
   it("does not re-fill once the sentinel is already the value", () => {
     const { onChange } = renderInput({
-      questionType: "multi",
+      questionType: "essay",
       options: [],
       value: UNSUPPORTED_ANSWER_CHOICE,
     });

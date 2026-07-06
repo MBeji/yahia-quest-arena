@@ -1,4 +1,5 @@
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useMemo, type ReactNode } from "react";
+import { Check } from "lucide-react";
 import { isMathExpression, isRtlText } from "@/shared/lib/utils";
 import { isValidAnswerFormat, UNSUPPORTED_ANSWER_CHOICE } from "@/shared/lib/answer-formats";
 import { OptionContent } from "@/components/ui/svg-figure";
@@ -16,6 +17,7 @@ import type { DisplayOption } from "@/shared/lib/question-utils";
 //                       LTR even inside an RTL subject — R-4);
 //   * 'ordering'      — drag-&-drop (or arrow) sequencing board (phase B2);
 //   * 'matching'      — drag-&-drop (or arrow) pair-alignment board (phase B2);
+//   * 'multi'         — checkbox list, explicit "select ALL" mention (phase B3);
 //   * anything else   — the R-3 fallback: a clean "unavailable" notice that
 //                       auto-fills a sentinel answer so the run stays
 //                       completable (the sentinel scores as wrong server-side).
@@ -32,6 +34,7 @@ export type QuestionInputLabels = {
   matchingHint: string;
   moveUp: string;
   moveDown: string;
+  multiHint: string;
   unsupportedTitle: string;
   unsupportedBody: string;
 };
@@ -65,6 +68,7 @@ export function QuestionInput(props: QuestionInputProps) {
   if (type === "numeric") return <NumericInput {...props} />;
   if (type === "ordering") return <OrderingBoard {...props} />;
   if (type === "matching") return <MatchingBoard {...props} />;
+  if (type === "multi") return <MultiSelect {...props} />;
   if (type !== "mcq") return <UnsupportedQuestion {...props} />;
   return <McqInput {...props} />;
 }
@@ -143,6 +147,78 @@ function NumericInput({ value, onChange, onSubmit, disabled, rtl, labels }: Ques
       >
         {invalid ? labels.numericInvalid : labels.numericHint}
       </p>
+    </div>
+  );
+}
+
+function MultiSelect({
+  prompt,
+  options,
+  value,
+  onChange,
+  disabled,
+  rtl,
+  labels,
+}: QuestionInputProps) {
+  const checked = useMemo(() => {
+    const parts = (value ?? "").replace(/\s+/g, "").split(",").filter(Boolean);
+    return new Set(parts);
+  }, [value]);
+
+  const toggle = (id: string) => {
+    const next = new Set(checked);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    // Sorted CSV — the wire format score_answer/answer_key_display expect.
+    onChange([...next].sort().join(","));
+  };
+
+  return (
+    <div className="mt-6">
+      {/* US-3: the "select ALL" instruction is load-bearing — a checkbox list
+          is only fair when this is unmistakable. */}
+      <p
+        className="mb-3 rounded-xl border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/5 px-3 py-2 text-xs font-semibold text-[color:var(--gold)]"
+        dir={rtl ? "rtl" : undefined}
+      >
+        {labels.multiHint}
+      </p>
+      <div className="space-y-3" role="group" aria-label={prompt}>
+        {options.map((option) => {
+          const isChecked = checked.has(option.id);
+          return (
+            <button
+              key={option.id}
+              type="button"
+              role="checkbox"
+              aria-checked={isChecked}
+              disabled={disabled}
+              onClick={() => toggle(option.id)}
+              className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left text-sm transition-all duration-200 ${
+                isChecked
+                  ? "border-(--gold) bg-(--gold)/15"
+                  : "border-border bg-black/40 hover:border-(--gold)/60 hover:bg-black/70"
+              }`}
+            >
+              <span
+                className="flex items-center gap-3"
+                dir={
+                  isMathExpression(option.text) ? "ltr" : isRtlText(option.text) ? "rtl" : undefined
+                }
+              >
+                <span
+                  className={`grid h-6 w-6 shrink-0 place-items-center rounded-md border-2 ${
+                    isChecked ? "border-(--gold) bg-(--gold)" : "border-current"
+                  }`}
+                >
+                  {isChecked && <Check className="h-4 w-4 text-black" aria-hidden="true" />}
+                </span>
+                <OptionContent raw={option.text} />
+              </span>
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }
