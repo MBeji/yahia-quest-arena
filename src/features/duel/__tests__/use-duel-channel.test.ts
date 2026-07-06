@@ -29,9 +29,6 @@ const channelFactory = vi.fn((..._args: unknown[]) => fakeChannel);
 const removeChannel = vi.fn((..._args: unknown[]) => undefined);
 const warn = vi.fn((..._args: unknown[]) => undefined);
 
-vi.mock("@/features/auth", () => ({
-  useAuth: () => ({ user: { id: "me" }, session: null, loading: false }),
-}));
 vi.mock("@/shared/lib/logger", () => ({
   logger: { warn: (...a: unknown[]) => warn(...a), info: vi.fn(), error: vi.fn() },
 }));
@@ -56,13 +53,13 @@ beforeEach(() => {
 
 describe("useDuelChannel", () => {
   it("does not open a channel when disabled", () => {
-    renderHook(() => useDuelChannel({ duelId: "d1", myAnswered: 0, enabled: false }));
+    renderHook(() => useDuelChannel({ duelId: "d1", userId: "me", myAnswered: 0, enabled: false }));
     expect(channelFactory).not.toHaveBeenCalled();
   });
 
   it("goes active on SUBSCRIBED and tracks my presence", async () => {
     const { result } = renderHook(() =>
-      useDuelChannel({ duelId: "d1", myAnswered: 1, enabled: true }),
+      useDuelChannel({ duelId: "d1", userId: "me", myAnswered: 1, enabled: true }),
     );
     expect(channelFactory).toHaveBeenCalledWith("duel:d1", expect.anything());
     act(() => subscribeCb?.("SUBSCRIBED"));
@@ -72,7 +69,7 @@ describe("useDuelChannel", () => {
 
   it("updates the live opponent count from a progress broadcast", async () => {
     const { result } = renderHook(() =>
-      useDuelChannel({ duelId: "d1", myAnswered: 0, enabled: true }),
+      useDuelChannel({ duelId: "d1", userId: "me", myAnswered: 0, enabled: true }),
     );
     act(() => subscribeCb?.("SUBSCRIBED"));
     act(() => handlers["broadcast:progress"]?.({ payload: { answered: 3 } }));
@@ -81,7 +78,7 @@ describe("useDuelChannel", () => {
 
   it("reports the opponent online from presence sync", async () => {
     const { result } = renderHook(() =>
-      useDuelChannel({ duelId: "d1", myAnswered: 0, enabled: true }),
+      useDuelChannel({ duelId: "d1", userId: "me", myAnswered: 0, enabled: true }),
     );
     act(() => subscribeCb?.("SUBSCRIBED"));
     presence = { other: [{ answered: 2 }] };
@@ -92,7 +89,7 @@ describe("useDuelChannel", () => {
 
   it("falls back (R-12) and logs on CHANNEL_ERROR", async () => {
     const { result } = renderHook(() =>
-      useDuelChannel({ duelId: "d1", myAnswered: 0, enabled: true }),
+      useDuelChannel({ duelId: "d1", userId: "me", myAnswered: 0, enabled: true }),
     );
     act(() => subscribeCb?.("CHANNEL_ERROR"));
     await waitFor(() => expect(result.current.realtimeActive).toBe(false));
@@ -104,7 +101,7 @@ describe("useDuelChannel", () => {
 
   it("removes the channel on unmount", () => {
     const { unmount } = renderHook(() =>
-      useDuelChannel({ duelId: "d1", myAnswered: 0, enabled: true }),
+      useDuelChannel({ duelId: "d1", userId: "me", myAnswered: 0, enabled: true }),
     );
     unmount();
     expect(removeChannel).toHaveBeenCalled();

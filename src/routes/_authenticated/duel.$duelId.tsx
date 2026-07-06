@@ -6,6 +6,7 @@ import { DuelArena } from "@/features/duel/components/duel-arena";
 import { DuelRecap } from "@/features/duel/components/duel-recap";
 import { OpponentProgress } from "@/features/duel/components/opponent-progress";
 import { useDuelChannel } from "@/features/duel/use-duel-channel";
+import { useAuth } from "@/features/auth";
 import { buildQuestLabels } from "@/features/quest/quest-labels";
 import { useI18n, useT } from "@/lib/i18n";
 
@@ -18,6 +19,7 @@ function DuelPlayPage() {
   const { duelId } = Route.useParams();
   const t = useT();
   const { locale } = useI18n();
+  const { user } = useAuth();
   const qc = useQueryClient();
   const fetchState = useServerFn(getDuelState);
   const fetchQuestions = useServerFn(getDuelQuestions);
@@ -51,6 +53,7 @@ function DuelPlayPage() {
   // get_duel_state polling above stays the source of truth + the R-12 fallback.
   const channel = useDuelChannel({
     duelId,
+    userId: user?.id,
     myAnswered: stateQuery.data?.myAnswered ?? 0,
     enabled: stateQuery.data?.status === "active",
   });
