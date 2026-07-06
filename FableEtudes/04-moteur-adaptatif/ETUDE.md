@@ -1,6 +1,6 @@
 # Étude 04 — Moteur adaptatif & diagnostic de misconceptions
 
-> **Statut** : brouillon
+> **Statut** : en exécution (GO humain 2026-07-06 — phase A0 lancée)
 > **Priorité** : 04 · **Valeur** : le différenciateur défendable — chaque distracteur du contenu encode déjà une erreur nommée (protocole « erreur exécutée ») ; personne n'exploite ce signal. Diagnostic par élève → révision/remédiation personnalisées → progression mesurable (l'argument de vente parents) · **Complexité** : haute
 > **Architecte** : Fable (claude-fable-5), 2026-07-04 · **Exécuteur cible** : Sonnet
 > **Dépend de** : volume d'usage (la télémétrie A0 doit tourner quelques semaines avant A2) ; le tagging de contenu (pipeline) monte en charge progressivement
@@ -114,7 +114,7 @@ progression, extension du rapport parent. États vides soignés (« Rien à rév
 | A2.1 | RPC `get_my_weaknesses` (R-2) + panneau « Points faibles » (US-2)                                     | pgTAP (seuils R-2) ; Vitest UI + i18n libellés   | A0.2, A0.3 + données |
 | A2.2 | Rapport parent enrichi (US-3)                                                                         | Vitest                                           | A2.1                 |
 
-- [ ] A0.1 — schéma télémétrie (merge seul — DoD §7)
+- [x] A0.1 — schéma télémétrie (merge seul — DoD §7)
 - [ ] A0.2 — capture (RPCs) + purge
 - [ ] A0.3 — pipeline tags + registre
 - [ ] A1.1 — révision du jour
@@ -153,4 +153,17 @@ R-3. Vitest : fns zod, panneaux (états vides/pleins, RTL). E2E authed : un cycl
 
 ## 8. Journal d'exécution
 
-_(vide — rempli par l'exécuteur, lot par lot)_
+- **2026-07-06 — A0.1 livré** (migration `20260706120000_adaptive_telemetry_a0_schema.sql` +
+  pgTAP `19_adaptive_telemetry_a0.test.sql`, 20 assertions — suite 210/210 sur base vierge).
+  `questions.distractor_tags` (server-only, posture whitelist de colonnes intacte, R-1 testé),
+  `question_attempts` (append-only, RLS owner-SELECT + `is_admin()`, zéro grant d'écriture
+  client), `user_misconceptions` + trigger d'agrégat.
+  **Écart accepté n°1** : ajout de `session_id UUID NOT NULL` à `question_attempts` — le bloc SQL
+  de l'étude l'omet, mais R-1 impose le « contexte session » et R-2/`sessions_seen` exigent de
+  distinguer les sessions (id polymorphe : `exercise_sessions.id` ou `dungeon_runs.id` selon
+  `source`, sans FK). L'index partiel de l'étude est étendu à
+  `(user_id, misconception_tag, session_id)` pour servir la recherche du trigger.
+  **Écart accepté n°2** : le trigger compare `qa.id < NEW.id` (et non `<>`) — un trigger AFTER
+  ROW sur un INSERT multi-lignes voit toutes les lignes du statement ; avec `<>`, deux
+  occurrences du même tag dans le même batch s'annuleraient (bug détecté par le pgTAP,
+  `sessions_seen` aurait sous-compté). Capture RPC : lot A0.2.
