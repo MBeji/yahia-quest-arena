@@ -388,8 +388,17 @@ export const ar: TranslationKeys = {
   },
   sound: {
     label: "الأصوات",
+    effects: "المؤثّرات الصوتية",
+    music: "موسيقى الخلفية",
     enable: "تفعيل الأصوات",
     disable: "كتم الأصوات",
+  },
+  encouragement: {
+    combo: "تسلسل x{n}!",
+    nice: "أحسنت!",
+    onFire: "في أوجك! 🔥",
+    unstoppable: "لا يُوقَف! ⚡",
+    legendary: "أسطوري! 👑",
   },
   parcours: {
     worldTitle: "خريطة المغامرة",

@@ -176,6 +176,7 @@ export function ExercisePlayer({
       if (outcome.ok) {
         setSessionId(outcome.sessionId);
         runStartedAtRef.current = Date.now();
+        play("start");
       } else {
         setStartGate(outcome);
       }
@@ -233,6 +234,7 @@ export function ExercisePlayer({
         res.questionId in prev ? prev : { ...prev, [res.questionId]: res.hint },
       );
       if (res.consumed) setHintsRemaining((n) => Math.max(0, n - 1));
+      play("hint");
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : t.errors.errorFallback),
   });
