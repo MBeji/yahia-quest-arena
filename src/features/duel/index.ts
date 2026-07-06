@@ -10,6 +10,8 @@ export {
   getDuelQuestions,
   submitDuelAnswer,
   getDuelHistory,
+  getDuelLeague,
+  getDuelLastAward,
 } from "./duel.server";
 
 export type {
@@ -18,4 +20,6 @@ export type {
   DuelSubmitResult,
   DuelHistoryEntry,
   DuelReviewItem,
+  DuelLeagueRow,
+  DuelLastAward,
 } from "./duel.server";

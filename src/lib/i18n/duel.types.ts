@@ -38,4 +38,14 @@ export interface DuelTranslations {
   loading: string;
   notFound: string;
   emptyHubHint: string;
+  leagueTitle: string;
+  leagueSubtitle: string;
+  leagueEmpty: string;
+  leaguePts: string;
+  lastAward: string;
+  tierDiamond: string;
+  tierPlatinum: string;
+  tierGold: string;
+  tierSilver: string;
+  tierBronze: string;
 }

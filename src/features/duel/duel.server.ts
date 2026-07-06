@@ -64,6 +64,26 @@ export type DuelHistoryEntry = {
   myFinished: boolean;
 };
 
+export type DuelLeagueRow = {
+  rank: number;
+  displayName: string | null;
+  heroClass: string | null;
+  avatarTier: number;
+  points: number;
+  wins: number;
+  played: number;
+  tier: string;
+  isMe: boolean;
+};
+
+export type DuelLastAward = {
+  weekStart: string;
+  tier: string;
+  rank: number;
+  points: number;
+  coins: number;
+} | null;
+
 const DUEL_STATUSES = ["pending", "active", "finished", "expired"] as const;
 const asStatus = (v: unknown): DuelState["status"] =>
   DUEL_STATUSES.includes(v as DuelState["status"]) ? (v as DuelState["status"]) : "pending";
@@ -249,6 +269,60 @@ export const submitDuelAnswer = createServerFn({ method: "POST" })
       );
     }
     return parseSubmitResult(payload);
+  });
+
+/** US-7: the current week's league standings (top-N + the caller's own row). */
+export const getDuelLeague = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase } = context;
+    const { data, error } = await supabase.rpc("get_duel_league", { p_limit: 20 });
+    if (error) {
+      failWithClientError(
+        "duel.getDuelLeague: get_duel_league RPC failed",
+        error,
+        "Impossible de charger la ligue.",
+      );
+    }
+    const rows: DuelLeagueRow[] = (data ?? []).map((r) => ({
+      rank: Number(r.rank ?? 0),
+      displayName: typeof r.display_name === "string" ? r.display_name : null,
+      heroClass: typeof r.hero_class === "string" ? r.hero_class : null,
+      avatarTier: Number(r.avatar_tier ?? 1),
+      points: Number(r.points ?? 0),
+      wins: Number(r.wins ?? 0),
+      played: Number(r.played ?? 0),
+      tier: typeof r.tier === "string" ? r.tier : "bronze",
+      isMe: r.is_me === true,
+    }));
+    return { rows };
+  });
+
+/** US-7: the caller's most recent end-of-week league award (owner RLS read). */
+export const getDuelLastAward = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    const { data, error } = await supabase
+      .from("duel_league_awards")
+      .select("week_start, tier, rank, points, coins_awarded")
+      .eq("user_id", userId)
+      .order("week_start", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (error) {
+      failWithClientError("duel.getDuelLastAward: read failed", error, "");
+    }
+    const award: DuelLastAward = data
+      ? {
+          weekStart: data.week_start,
+          tier: data.tier,
+          rank: Number(data.rank ?? 0),
+          points: Number(data.points ?? 0),
+          coins: Number(data.coins_awarded ?? 0),
+        }
+      : null;
+    return { award };
   });
 
 /** US-1 hub: the caller's recent duels (participant RLS scopes the read). */

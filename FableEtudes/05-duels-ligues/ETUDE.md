@@ -1,6 +1,6 @@
 # Étude 05 — Duels temps réel & ligues
 
-> **Statut** : en exécution (GO humain 2026-07-06 — lots 1→4 livrés : duel jouable en polling + couche Realtime presence/progression ; Q-1/Q-4 tranchées §7 ; ⚠️ seul le lot 5 « ligues » reste, bloqué sur Q-3)
+> **Statut** : LIVRÉE — étude complète (2026-07-06). Les 5 lots sont mergés : duel 1v1 jouable de bout en bout (matchmaking, scoring anti-triche, barème, polling + Realtime) + ligues hebdomadaires. Q-1/Q-3/Q-4 tranchées §7 par délégation humaine.
 > **Priorité** : 05 · **Valeur** : rétention/engagement — compétition directe entre élèves, boucle sociale au-dessus du contenu existant · **Complexité** : très haute
 > **Architecte** : Fable (claude-fable-5), 2026-07-04 · **Exécuteur cible** : Sonnet (ou équiv.)
 > **Dépend de** : Étude 01 (revenus d'abord), infra Supabase Realtime activée sur le projet · **Bloque** : —
@@ -178,7 +178,7 @@ RLS : `duel_queue` owner-only (SELECT/INSERT/DELETE `user_id = auth.uid()`, jama
 - [x] Lot 2 — RPCs + constantes `DUEL_*` dans `gamification.ts` + balayage expiry. **Stop-point** : aucune UI.
 - [x] Lot 3 — feature `duel/` complète en polling, utile seule (R-12 est le mode nominal ici). **Stop-point** : pas de Realtime.
 - [x] Lot 4 — canal `duel:{duelId}`, presence, broadcast progression, fallback prouvé. **Stop-point** : pas de ligues.
-- [ ] Lot 5 — ligues hebdomadaires (après arbitrage Q-3/Q-4). **Stop-point** : rien au-delà (saisons, tournois).
+- [x] Lot 5 — ligues hebdomadaires (après arbitrage Q-3/Q-4). **Stop-point** : rien au-delà (saisons, tournois).
 
 Chaque lot = une PR, gate verte (`npm run verify`), migration **avant** le code qui la lit (DoD §7).
 
@@ -224,8 +224,14 @@ Chaque lot = une PR, gate verte (`npm run verify`), migration **avant** le code 
 - **Q-2** : autoriser un matchmaking **cross-grade** (même thème, grades adjacents) quand la file
   du parcours est vide ? Impact équité — v1 reste strictement même parcours (R-1). _(Non requis
   avant le lot 3 ; levier futur si les files sont vides.)_
-- **Q-3** : ligues — durée de saison (semaine ISO ? saison scolaire ?), nombre de tranches, et
-  récompenses de fin de saison (cosmétique vs coins). _(À trancher avant le lot 5.)_
+- **Q-3 — TRANCHÉE (2026-07-06, délégation humaine « fais les choix selon tes connaissances »)** :
+  **saison = semaine ISO, calendrier Tunis** (réutilise `app_current_week_start()`) ; **score hebdo
+  = points type championnat** (victoire unique 3, nul 1, défaite 0 ; départage wins puis played) ;
+  **5 tranches par centile** — diamond ≤10 %, platinum ≤25 %, gold ≤50 %, silver ≤75 %, bronze
+  reste ; **récompenses de fin de saison = COINS** (monnaie existante, utilisable en boutique,
+  plutôt que cosmétique qui exigerait un pipeline d'assets) : diamond 100 / platinum 60 / gold 30 /
+  silver 15 / bronze 5, créditées au rollover hebdo (lundi), idempotent via le registre
+  `duel_league_awards`.
 - **Q-4 — TRANCHÉE (2026-07-06, délégation humaine « meilleures pratiques »)** : les duels sont
   **ouverts à TOUS les parcours** (FREE + premium), **sans gate d'entitlement**. Un duel est une
   mécanique de rétention dont la valeur dépend de la profondeur de la file (effet réseau ; cf.
@@ -318,3 +324,29 @@ restants ont des blocages externes :
   service est indisponible.
   **Écart accepté n°6** : le budget bundle `i18n-` était déjà relevé à 100 KB au lot 3 ; les 2
   clés `online`/`offline` restent sous ce plafond (pas de nouveau relèvement).
+
+- **2026-07-06 — Lot 5 livré — ÉTUDE CLÔTURÉE** (Q-3 tranchée §7). Ligues hebdomadaires =
+  agrégation au-dessus des duels (D-6, aucun nouveau canal). Migration
+  `20260706180000_duel_leagues.sql` : registre `duel_league_awards` (RLS owner + grants),
+  helpers `duel_league_tier`/`duel_league_tier_coins`, `duel_league_standings(week)` (points
+  championnat calculés en fonctions window, réutilisé par la lecture ET l'attribution),
+  `get_duel_league()` (top-N + ligne de l'appelant, patron `get_global_leaderboard` : champs
+  publics + `is_me`), `award_duel_league_week()` (coins de fin de semaine, idempotent via PK,
+  réutilise `award_duel_rewards` D-5) + pg_cron hebdo (lundi 02:30 UTC). Server fns `getDuelLeague`
+  - `getDuelLastAward` (registre lu en RLS owner) ; onglet ligue dans `/duel` (`DuelLeague` +
+    bannière « semaine dernière »). i18n `league*`/`tier*`. pgTAP `23_duel_leagues` (18 : tranches,
+    points/rang, idempotence des coins, grants) — suite **284/284** sur base vierge. Vitest
+    `duel-league.test.tsx`. Gates verify (1129 tests) + build:check (i18n 99/100 KB) + smoke:shell.
+    **Écart accepté n°7** : la **notification push** de fin de semaine (US-7) est laissée en suivi —
+    l'infra push (`push_subscriptions` + cron) existe mais son branchement est hors périmètre du
+    cœur du lot ; la récompense reste **visible** via le registre (bannière du hub), donc la valeur
+    produit d'US-7 est livrée sans le canal push.
+
+### ÉTUDE CLÔTURÉE — bilan
+
+5 lots. Le duel 1v1 est complet : file d'attente → appariement atomique intra-parcours → set figé
+de 5 questions → scoring serveur anti-triche (clé jamais côté client avant la fin) → barème
+plafonné (vainqueur/nul/perdant/forfait) → progression adverse en temps réel (Realtime + fallback
+polling R-12) → correction en fin → ligue hebdomadaire (tranches + récompenses coins). Q-1/Q-3/Q-4
+tranchées par délégation humaine. Restent hors périmètre par conception : la notif push de ligue
+(suivi), les saisons/tournois (stop-point), le matchmaking cross-grade (Q-2, levier futur).

@@ -64,6 +64,36 @@ export type Database = {
         };
         Relationships: [];
       };
+      duel_league_awards: {
+        Row: {
+          awarded_at: string;
+          coins_awarded: number;
+          points: number;
+          rank: number;
+          tier: string;
+          user_id: string;
+          week_start: string;
+        };
+        Insert: {
+          awarded_at?: string;
+          coins_awarded: number;
+          points: number;
+          rank: number;
+          tier: string;
+          user_id: string;
+          week_start: string;
+        };
+        Update: {
+          awarded_at?: string;
+          coins_awarded?: number;
+          points?: number;
+          rank?: number;
+          tier?: string;
+          user_id?: string;
+          week_start?: string;
+        };
+        Relationships: [];
+      };
       duel_participants: {
         Row: {
           answers_submitted_at: string[];
@@ -1846,6 +1876,20 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      get_duel_league: {
+        Args: { p_limit: number };
+        Returns: {
+          rank: number;
+          display_name: string;
+          hero_class: string;
+          avatar_tier: number;
+          points: number;
+          wins: number;
+          played: number;
+          tier: string;
+          is_me: boolean;
+        }[];
       };
       get_duel_state: { Args: { p_duel: string }; Returns: Json };
       match_duel: { Args: never; Returns: string };
