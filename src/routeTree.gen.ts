@@ -23,6 +23,7 @@ import { Route as AuthenticatedParcoursRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
 import { Route as AuthenticatedDungeonRouteImport } from './routes/_authenticated/dungeon'
+import { Route as AuthenticatedDuelRouteImport } from './routes/_authenticated/duel'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as PublicNiveauParcoursIdRouteImport } from './routes/_public/niveau.$parcoursId'
 import { Route as PublicMatiereSubjectIdRouteImport } from './routes/_public/matiere.$subjectId'
@@ -32,6 +33,7 @@ import { Route as AuthenticatedThemesFamilyIdRouteImport } from './routes/_authe
 import { Route as AuthenticatedSubjectSubjectIdRouteImport } from './routes/_authenticated/subject.$subjectId'
 import { Route as AuthenticatedQuestExerciseIdRouteImport } from './routes/_authenticated/quest.$exerciseId'
 import { Route as AuthenticatedLessonChapterIdRouteImport } from './routes/_authenticated/lesson.$chapterId'
+import { Route as AuthenticatedDuelDuelIdRouteImport } from './routes/_authenticated/duel.$duelId'
 import { Route as AuthenticatedAdminSubscriptionsRouteImport } from './routes/_authenticated/admin.subscriptions'
 import { Route as AuthenticatedAdminParcoursInterestRouteImport } from './routes/_authenticated/admin.parcours-interest'
 import { Route as AuthenticatedAdminContentReportsRouteImport } from './routes/_authenticated/admin.content-reports'
@@ -108,6 +110,11 @@ const AuthenticatedDungeonRoute = AuthenticatedDungeonRouteImport.update({
   path: '/dungeon',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedDuelRoute = AuthenticatedDuelRouteImport.update({
+  id: '/duel',
+  path: '/duel',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -158,6 +165,11 @@ const AuthenticatedLessonChapterIdRoute =
     path: '/lesson/$chapterId',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedDuelDuelIdRoute = AuthenticatedDuelDuelIdRouteImport.update({
+  id: '/$duelId',
+  path: '/$duelId',
+  getParentRoute: () => AuthenticatedDuelRoute,
+} as any)
 const AuthenticatedAdminSubscriptionsRoute =
   AuthenticatedAdminSubscriptionsRouteImport.update({
     id: '/admin/subscriptions',
@@ -195,6 +207,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/duel': typeof AuthenticatedDuelRouteWithChildren
   '/dungeon': typeof AuthenticatedDungeonRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
@@ -208,6 +221,7 @@ export interface FileRoutesByFullPath {
   '/admin/content-reports': typeof AuthenticatedAdminContentReportsRoute
   '/admin/parcours-interest': typeof AuthenticatedAdminParcoursInterestRoute
   '/admin/subscriptions': typeof AuthenticatedAdminSubscriptionsRoute
+  '/duel/$duelId': typeof AuthenticatedDuelDuelIdRoute
   '/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
   '/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
@@ -223,6 +237,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/duel': typeof AuthenticatedDuelRouteWithChildren
   '/dungeon': typeof AuthenticatedDungeonRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
@@ -236,6 +251,7 @@ export interface FileRoutesByTo {
   '/admin/content-reports': typeof AuthenticatedAdminContentReportsRoute
   '/admin/parcours-interest': typeof AuthenticatedAdminParcoursInterestRoute
   '/admin/subscriptions': typeof AuthenticatedAdminSubscriptionsRoute
+  '/duel/$duelId': typeof AuthenticatedDuelDuelIdRoute
   '/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
   '/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
@@ -253,6 +269,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/duel': typeof AuthenticatedDuelRouteWithChildren
   '/_authenticated/dungeon': typeof AuthenticatedDungeonRoute
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
@@ -267,6 +284,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/content-reports': typeof AuthenticatedAdminContentReportsRoute
   '/_authenticated/admin/parcours-interest': typeof AuthenticatedAdminParcoursInterestRoute
   '/_authenticated/admin/subscriptions': typeof AuthenticatedAdminSubscriptionsRoute
+  '/_authenticated/duel/$duelId': typeof AuthenticatedDuelDuelIdRoute
   '/_authenticated/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
   '/_authenticated/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/_authenticated/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
@@ -284,6 +302,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/dashboard'
+    | '/duel'
     | '/dungeon'
     | '/leaderboard'
     | '/onboarding'
@@ -297,6 +316,7 @@ export interface FileRouteTypes {
     | '/admin/content-reports'
     | '/admin/parcours-interest'
     | '/admin/subscriptions'
+    | '/duel/$duelId'
     | '/lesson/$chapterId'
     | '/quest/$exerciseId'
     | '/subject/$subjectId'
@@ -312,6 +332,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/dashboard'
+    | '/duel'
     | '/dungeon'
     | '/leaderboard'
     | '/onboarding'
@@ -325,6 +346,7 @@ export interface FileRouteTypes {
     | '/admin/content-reports'
     | '/admin/parcours-interest'
     | '/admin/subscriptions'
+    | '/duel/$duelId'
     | '/lesson/$chapterId'
     | '/quest/$exerciseId'
     | '/subject/$subjectId'
@@ -341,6 +363,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/_authenticated/dashboard'
+    | '/_authenticated/duel'
     | '/_authenticated/dungeon'
     | '/_authenticated/leaderboard'
     | '/_authenticated/onboarding'
@@ -355,6 +378,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/content-reports'
     | '/_authenticated/admin/parcours-interest'
     | '/_authenticated/admin/subscriptions'
+    | '/_authenticated/duel/$duelId'
     | '/_authenticated/lesson/$chapterId'
     | '/_authenticated/quest/$exerciseId'
     | '/_authenticated/subject/$subjectId'
@@ -473,6 +497,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDungeonRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/duel': {
+      id: '/_authenticated/duel'
+      path: '/duel'
+      fullPath: '/duel'
+      preLoaderRoute: typeof AuthenticatedDuelRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -536,6 +567,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLessonChapterIdRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/duel/$duelId': {
+      id: '/_authenticated/duel/$duelId'
+      path: '/$duelId'
+      fullPath: '/duel/$duelId'
+      preLoaderRoute: typeof AuthenticatedDuelDuelIdRouteImport
+      parentRoute: typeof AuthenticatedDuelRoute
+    }
     '/_authenticated/admin/subscriptions': {
       id: '/_authenticated/admin/subscriptions'
       path: '/admin/subscriptions'
@@ -574,8 +612,20 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedDuelRouteChildren {
+  AuthenticatedDuelDuelIdRoute: typeof AuthenticatedDuelDuelIdRoute
+}
+
+const AuthenticatedDuelRouteChildren: AuthenticatedDuelRouteChildren = {
+  AuthenticatedDuelDuelIdRoute: AuthenticatedDuelDuelIdRoute,
+}
+
+const AuthenticatedDuelRouteWithChildren =
+  AuthenticatedDuelRoute._addFileChildren(AuthenticatedDuelRouteChildren)
+
 interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedDuelRoute: typeof AuthenticatedDuelRouteWithChildren
   AuthenticatedDungeonRoute: typeof AuthenticatedDungeonRoute
   AuthenticatedLeaderboardRoute: typeof AuthenticatedLeaderboardRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
@@ -595,6 +645,7 @@ interface AuthenticatedRouteChildren {
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedDuelRoute: AuthenticatedDuelRouteWithChildren,
   AuthenticatedDungeonRoute: AuthenticatedDungeonRoute,
   AuthenticatedLeaderboardRoute: AuthenticatedLeaderboardRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
