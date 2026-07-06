@@ -6,6 +6,7 @@
 export interface DuelTranslations {
   title: string;
   subtitle: string;
+  errorSearch: string;
   findOpponent: string;
   searching: string;
   cancel: string;

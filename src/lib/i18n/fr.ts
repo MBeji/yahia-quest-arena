@@ -237,6 +237,7 @@ export const fr: TranslationKeys = {
   duel: {
     title: "Duels",
     subtitle: "Défie un adversaire de ton parcours sur les mêmes questions.",
+    errorSearch: "Recherche impossible pour le moment. Réessaie.",
     findOpponent: "Trouver un adversaire",
     searching: "Recherche d'un adversaire…",
     cancel: "Annuler",

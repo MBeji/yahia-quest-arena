@@ -235,6 +235,7 @@ export const ar: TranslationKeys = {
   duel: {
     title: "المبارزات",
     subtitle: "تحدَّ خصمًا من مسارك على نفس الأسئلة.",
+    errorSearch: "تعذّر البحث الآن. أعد المحاولة.",
     findOpponent: "ابحث عن خصم",
     searching: "جارٍ البحث عن خصم…",
     cancel: "إلغاء",
