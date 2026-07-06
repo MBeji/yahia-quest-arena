@@ -64,13 +64,24 @@ function isValidMatchingChoice(value: string): boolean {
 }
 
 /**
+ * A `multi` answer: the checked option ids as a CSV ("a,c") — at least one
+ * unique, non-empty id (an id never contains `,` or `:`).
+ */
+function isValidMultiChoice(value: string): boolean {
+  const parts = splitCsvChoice(value);
+  if (parts.length < 1) return false;
+  if (parts.some((part) => part.length === 0 || part.includes(":"))) return false;
+  return new Set(parts).size === parts.length;
+}
+
+/**
  * Whether `choice` matches the wire format expected for `questionType`.
  *
  * - `numeric` → a plain number as string;
  * - `ordering` → the arranged sequence as a unique-id CSV ("b,a,d,c");
  * - `matching` → the associations as a unique "left:right" pair CSV;
- * - `mcq` (and the not-yet-shipped B3 `multi`, whose format lands with its
- *   phase) → any non-empty bounded string, the historical contract.
+ * - `multi` → the checked ids as a unique-id CSV ("a,c");
+ * - `mcq` → any non-empty bounded string, the historical contract.
  */
 export function isValidAnswerFormat(
   questionType: string | null | undefined,
@@ -82,6 +93,7 @@ export function isValidAnswerFormat(
   if (questionType === "numeric") return NUMERIC_CHOICE_PATTERN.test(value);
   if (questionType === "ordering") return isValidOrderingChoice(value);
   if (questionType === "matching") return isValidMatchingChoice(value);
+  if (questionType === "multi") return isValidMultiChoice(value);
   return true;
 }
 
