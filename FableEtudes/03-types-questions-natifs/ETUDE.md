@@ -1,7 +1,7 @@
 # Étude 03 — Types de questions natifs (Tier B : numeric, ordering, matching, multi)
 
-> **Statut** : en exécution — **phases B1 (`numeric`) et B2 (`ordering`+`matching`) livrées
-> intégralement** (2026-07-05) ; **phase B3 (`multi`) en cours** (GO humain reçu le 2026-07-06)
+> **Statut** : **LIVRÉE — étude complète** (2026-07-05 → 2026-07-06). Les 3 phases Tier B
+> (`numeric`, `ordering`+`matching`, `multi`) sont en prod. Aucun lot restant.
 > **Priorité** : 03 · **Valeur** : tue la devinette par élimination (saisie numérique), vraie manipulation (drag & drop), jugement multi-sélection — l'expérience d'exercice passe un cran au-dessus de tout QCM concurrent · **Complexité** : haute (5 RPC SQL + UI + pipeline), mais dé-risquée : la spec normative est déjà écrite
 > **Architecte** : Fable (claude-fable-5), 2026-07-04 · **Exécuteur cible** : Sonnet
 > **Dépend de** : rien (indépendant) ; recommandé avant le lancement bac (annales en saisie numérique)
@@ -81,7 +81,7 @@ Intégralement dans la spec — carte des touchpoints (5 RPCs SQL, zod/TS, UI, p
 - [x] B3.1 — DB + couture scoring étendue (merge seul d'abord — DoD §7)
 - [x] B3.2 — serveur
 - [x] B3.3 — UI (cases à cocher, US-3)
-- [ ] B3.4 — pipeline + skills
+- [x] B3.4 — pipeline + skills
 
 **Stop-points** : ne jamais modifier la sémantique `'mcq'` ; ne jamais sélectionner `answer_key`
 dans une requête client ; ne pas anticiper une phase ; tout écart avec la spec = STOP + escalade
@@ -330,3 +330,33 @@ est désormais un vrai type livré. Gates : verify 1043 tests (+4 nets), `build:
 (chunk dndkit inchangé), `smoke:shell` verts.
 
 Écart accepté : néant.
+
+### Lot B3.4 — 2026-07-06 (exécuté par le modèle architecte, Fable) — PHASE B3 COMPLÈTE, ÉTUDE CLÔTURÉE
+
+Livré : membre `multi` du `questionSchema` (options = candidats/checkboxes, clé
+`answerKey.correct` validée comme **sous-ensemble PROPRE** — ≥ 2 corrects, au moins un
+candidat faux, sinon « coche tout » est vide de sens) ; `sql-builder` émet options +
+`answer_key` ; lints QA (`auditBoardQuestion` généralisé aux trois types board/checklist —
+mêmes contrôles qualité, l'intégrité structurelle restant au schéma) ; levée du DERNIER ban
+Tier-B dans les 7 docs/skills (CLAUDE.md, spec, `content-engine` SKILL+content-schema+
+interactive-formats+generation-pipeline, `content-interactif`) — plus aucun type natif n'est
+banni. Mission démo trilingue « choix multiples » (3 questions, d1→d3) dans
+`iq-training-{fr,en,ar}/03-maths-raisonnement` + migrations régénérées scopées
+(timestamps uniques). E2E : `multiExerciseId` + spec `native-multi-type.spec.ts` (bandeau
+US-3, validation bloquée à vide, cases cochées → validation activée). Preuve bout-en-bout
+locale : les 9 questions multi scorent `true` contre `answer_key_display` via
+`score_answer` ; pgTAP 190/190 ; verify 1048 tests ; content:check (73 sujets) +
+content:qa:strict verts.
+
+Écart accepté : néant.
+
+---
+
+## ÉTUDE CLÔTURÉE — bilan final
+
+Les 3 phases Tier B (`numeric`, `ordering`+`matching`, `multi`) sont livrées et en
+production, 12 lots / 12 PRs (#295–#306), toutes mergées. `docs/interactive-question-types.md`
+est intégralement exécuté ; aucun nouveau type natif n'est prévu (une évolution future du
+moteur nécessiterait une nouvelle spec). Les 4 questions ouvertes (§7) sont résolues :
+Q-1 (GO de phase) obtenu à chaque transition B1→B2→B3 ; Q-2 (fallback ancien client) reste
+sans objet (web only, comme décidé).

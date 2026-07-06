@@ -311,10 +311,11 @@ export function auditQuestion(q: QAQuestion, where: string): Flag[] {
 }
 
 /**
- * Per-question heuristics for the native board questions (`ordering` /
- * `matching` — Tier B, phase B2). Their STRUCTURAL integrity (permutation /
- * bijection keys, id charset) is hard-enforced by the Zod schema; this pass
- * keeps the quality heuristics that still apply:
+ * Per-question heuristics for the native board/checklist questions
+ * (`ordering` / `matching` / `multi` — Tier B, phases B2–B3). Their
+ * STRUCTURAL integrity (permutation / bijection / proper-subset keys, id
+ * charset) is hard-enforced by the Zod schema; this pass keeps the quality
+ * heuristics that still apply:
  *   [error] duplicate item texts (two identical steps/pairs are unorderable);
  *   [warn]  thin explanation; [error] figure referenced but absent;
  *   [error] rendering checks (svg viewBox, bidi) — shared.
