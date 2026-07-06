@@ -8,7 +8,7 @@
 --      old rows (no question_type written) score IDENTICALLY (US-4 regression);
 --   2. 'numeric': abs(x − value) <= tolerance (default 0), comma normalized,
 --      unparseable input scores false and never raises (US-1 / R-3);
---   3. not-yet-shipped types (multi — phase B3) score false, never crash;
+--   3. an incomplete multi answer scores false (no partial credit — R-2);
 --   4. key-shape integrity: non-mcq requires answer_key, type list is closed;
 --   5. R-1: answer_key is column-masked from clients, question_type readable,
 --      score_answer not client-executable (no answer-key oracle);
@@ -64,8 +64,8 @@ VALUES ('d3000000-0000-0000-0000-000000000003',
         'Numeric: 6*7 ?', '[]'::jsonb,
         'numeric', '{"value": 42}'::jsonb, 1);
 
--- A future-phase (B3) multi row: must be storable but score false for now.
--- (Was an 'ordering' row until phase B2 shipped that type — 20260705190000.)
+-- A multi row (shipped in B3 — 20260705220000): a SUBSET answer scores false,
+-- which keeps the mixed-exercise expectations below unchanged.
 INSERT INTO public.questions (id, exercise_id, prompt, options, question_type, answer_key, display_order)
 VALUES ('d3000000-0000-0000-0000-000000000004',
         'd2000000-0000-0000-0000-000000000001',
@@ -142,13 +142,13 @@ SELECT is(
 );
 
 -- =========================================================
--- 10. future-phase types never crash (R-3).
+-- 10. multi: an incomplete selection never earns the point (R-2).
 -- =========================================================
 SELECT is(
   public.score_answer(
-    (SELECT q FROM public.questions q WHERE q.id = 'd3000000-0000-0000-0000-000000000004'), 'a,b'),
+    (SELECT q FROM public.questions q WHERE q.id = 'd3000000-0000-0000-0000-000000000004'), 'a'),
   false,
-  'multi (phase B3, not shipped): scores false instead of crashing'
+  'multi: a subset answer scores false (no partial credit)'
 );
 
 -- =========================================================
@@ -201,7 +201,7 @@ SELECT is(
 
 -- =========================================================
 -- 17–18. End-to-end: submit_exercise_attempt scores through the seam.
--- (mixed exercise has 3 questions: mcq + numeric + multi.)
+-- (mixed exercise has 3 questions: mcq + numeric + multi — multi answered wrong.)
 -- =========================================================
 INSERT INTO auth.users (id, email)
 VALUES ('f6666666-6666-6666-6666-666666666666', 'native-good@test.local');
@@ -222,7 +222,7 @@ SELECT set_config(
     'd2000000-0000-0000-0000-000000000001',
     '[{"questionId":"d3000000-0000-0000-0000-000000000001","choice":"a"},
       {"questionId":"d3000000-0000-0000-0000-000000000002","choice":"3,15"},
-      {"questionId":"d3000000-0000-0000-0000-000000000004","choice":"a,b"}]'::jsonb
+      {"questionId":"d3000000-0000-0000-0000-000000000004","choice":"a"}]'::jsonb
   )::text,
   true
 );
@@ -236,7 +236,7 @@ SELECT is(
 SELECT is(
   (current_setting('test.mixed_result')::jsonb ->> 'total')::int,
   3,
-  'submit_exercise_attempt: the unshipped multi row still counts in the total'
+  'submit_exercise_attempt: the wrongly-answered multi row still counts in the total'
 );
 
 RESET ROLE;
