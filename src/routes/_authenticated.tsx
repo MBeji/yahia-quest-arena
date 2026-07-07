@@ -147,7 +147,9 @@ function AuthenticatedLayout() {
               Na9ra <span className="text-gradient-gold">Nal3ab</span>
             </span>
           </Link>
-          <BetaBadge />
+          <span className="hidden shrink-0 sm:inline-flex">
+            <BetaBadge />
+          </span>
           <nav className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto sm:gap-2 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {/* Primary destinations: inline on desktop; on mobile/tablet they
                 live in the fixed bottom tab bar (rendered below the shell). */}
@@ -257,11 +259,14 @@ function AuthenticatedLayout() {
               </>
             )}
           </nav>
-          {/* Account actions are pinned OUTSIDE the scrollable nav (shrink-0) so the
-              language / theme / sign-out controls stay in view even when the link
-              list overflows — e.g. the admin nav, where sign-out used to scroll off
-              the right edge and become unreachable. */}
-          <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+          {/* Account actions are pinned OUTSIDE the scrollable nav so the language /
+              theme / sign-out controls stay in view even when the link list overflows
+              — e.g. the admin nav, where sign-out used to scroll off the right edge.
+              `min-w-0` (not `shrink-0`): the fixed-size icon buttons keep their touch
+              targets, but the AccountHud chip is allowed to shrink/truncate so the
+              cluster never forces the whole document wider than the phone viewport
+              (iPhone 13 overflow → content shifted left, gutter on the right). */}
+          <div className="flex min-w-0 items-center gap-1 sm:gap-2">
             <AccountHud />
             <LanguageSwitcher />
             <ThemeSwitcher />
