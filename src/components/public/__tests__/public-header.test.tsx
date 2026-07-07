@@ -48,6 +48,8 @@ describe("PublicHeader", () => {
     expect(container.querySelector('a[href="/login"]')).not.toBeNull();
     expect(container.querySelector('a[href="/signup"]')).not.toBeNull();
     expect(container.querySelector('a[href="/dashboard"]')).toBeNull();
+    // Logo = public home when logged out.
+    expect(container.querySelector('a[href="/"]')).not.toBeNull();
   });
 
   it("logged in: shows the account link back to the dashboard, never login/signup", () => {
@@ -58,5 +60,16 @@ describe("PublicHeader", () => {
     expect(container.querySelector('a[href="/signup"]')).toBeNull();
     // Catalogue nav stays available to a signed-in visitor.
     expect(container.querySelector('a[href="/programme"]')).not.toBeNull();
+  });
+
+  it("logged in: the brand logo goes to the dashboard, not the logged-out home (issue #312)", () => {
+    mockUseAuth.mockReturnValue({ user: { id: "u1" }, session: {}, loading: false });
+    const { container } = renderHeader();
+    // A signed-in visitor stranded on the public shell taps the logo to return to
+    // their space — it must NOT drop them on the public "/" landing.
+    expect(container.querySelector('a[href="/"]')).toBeNull();
+    // The brand logo now points at the dashboard.
+    const brand = screen.getByText("Na9ra Nal3ab").closest("a");
+    expect(brand).toHaveAttribute("href", "/dashboard");
   });
 });
