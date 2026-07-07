@@ -1891,6 +1891,7 @@ export type Database = {
           is_me: boolean;
         }[];
       };
+      forfeit_duel: { Args: { p_duel: string }; Returns: undefined };
       get_duel_state: { Args: { p_duel: string }; Returns: Json };
       match_duel: { Args: never; Returns: string };
       submit_duel_answer: {

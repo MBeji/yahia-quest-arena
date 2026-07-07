@@ -246,6 +246,8 @@ export const fr: TranslationKeys = {
     noHistory: "Aucun duel pour l'instant. Lance-toi !",
     play: "Jouer",
     resume: "Reprendre",
+    forfeit: "Abandonner",
+    forfeitDone: "Duel abandonné.",
     opponent: "Adversaire",
     statusActive: "En cours",
     statusFinished: "Terminé",

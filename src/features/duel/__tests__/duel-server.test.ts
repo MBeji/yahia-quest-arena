@@ -129,6 +129,27 @@ describe("duel — leaveDuelQueue", () => {
   });
 });
 
+describe("duel — forfeitDuel", () => {
+  it("closes the duel via the forfeit_duel rpc", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: null });
+    const { forfeitDuel } = await import("@/features/duel");
+    const res = (await (forfeitDuel as unknown as AnyFn)({ data: { duelId: DUEL_ID } })) as {
+      ok: boolean;
+    };
+    expect(res.ok).toBe(true);
+    expect(mockRpc).toHaveBeenCalledWith("forfeit_duel", { p_duel: DUEL_ID });
+  });
+
+  it("hides the rpc error behind a safe message", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: { message: "boom" } });
+    const { forfeitDuel } = await import("@/features/duel");
+    const err = await (forfeitDuel as unknown as AnyFn)({ data: { duelId: DUEL_ID } }).catch(
+      (e: unknown) => e,
+    );
+    expect((err as Error).message).toBe("Impossible d'abandonner le duel.");
+  });
+});
+
 describe("duel — getDuelState", () => {
   it("parses an active snapshot and keeps the opponent score hidden", async () => {
     mockRpc.mockResolvedValue({
