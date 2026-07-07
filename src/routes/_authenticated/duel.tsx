@@ -12,6 +12,7 @@ import {
 import { DuelQueueCard } from "@/features/duel/components/duel-queue-card";
 import { DuelLeague } from "@/features/duel/components/duel-league";
 import { useT } from "@/lib/i18n";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/duel")({
   head: () => ({ meta: [{ title: "Duels · Na9ra Nal3ab" }] }),
@@ -56,6 +57,13 @@ function DuelHubPage() {
         setSearching(false);
         navigate({ to: "/duel/$duelId", params: { duelId: res.duelId } });
       }
+    },
+    // Surface a real error (rate limit, no active parcours, active-duel cap)
+    // instead of silently re-polling and spinning on "Recherche…" forever.
+    onError: (err) => {
+      stopPolling();
+      setSearching(false);
+      toast.error(err instanceof Error ? err.message : t.duel.errorSearch);
     },
   });
 

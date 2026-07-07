@@ -236,6 +236,7 @@ export const en: TranslationKeys = {
   duel: {
     title: "Duels",
     subtitle: "Challenge an opponent from your track on the same questions.",
+    errorSearch: "Can't search right now. Try again.",
     findOpponent: "Find an opponent",
     searching: "Searching for an opponent…",
     cancel: "Cancel",
