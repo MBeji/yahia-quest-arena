@@ -1,0 +1,20 @@
+{
+  "grade": "1ere-sec",
+  "sealed": false,
+  "source": "CNP — manuels élève secondaire (pas de guide enseignant au corpus pour ce niveau). Transcriptions pilotes : programme/1ere-sec/mathematiques.md, programme/1ere-sec/sciences-physiques.md. Cf. docs/lycee-architecture.md pour le modèle de section/grade du secondaire.",
+  "note": "sealed=false : niveau pilote (station L1 lycée). chapters:[] pour les deux matières transcrites — seul le chapitre 1 de chacune a été lu à profondeur de génération (le reste est documenté au niveau bloc, titre + pagination) ; codifier les chapitres au fur et à mesure des transcriptions futures, comme l'exige README.md § Manifeste. Les autres matières du tronc commun 1ère sec (arabe, français, anglais, EPS, arts, histoire-géo, éducation islamique/civique le cas échéant) ne sont pas encore transcrites — non listées ici pour éviter de fausses 'matières manquantes' avant que la station L1 ne les couvre.",
+  "subjects": [
+    {
+      "id": "math-1ere-sec",
+      "name": "Mathématiques",
+      "contentLanguage": "fr",
+      "chapters": []
+    },
+    {
+      "id": "sciences-physiques-1ere-sec",
+      "name": "Sciences physiques",
+      "contentLanguage": "fr",
+      "chapters": []
+    }
+  ]
+}
