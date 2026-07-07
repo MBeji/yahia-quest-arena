@@ -3,6 +3,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import {
+  forfeitDuel,
   getDuelHistory,
   getDuelLastAward,
   getDuelLeague,
@@ -69,6 +70,17 @@ function DuelHubPage() {
 
   const leaveMutation = useMutation({ mutationFn: () => leave() });
 
+  // Abandon an active duel: frees the active-duel cap when an opponent no-shows.
+  const forfeit = useServerFn(forfeitDuel);
+  const forfeitMutation = useMutation({
+    mutationFn: (duelId: string) => forfeit({ data: { duelId } }),
+    onSuccess: () => {
+      historyQuery.refetch();
+      toast.success(t.duel.forfeitDone);
+    },
+    onError: (err) => toast.error(err instanceof Error ? err.message : t.duel.errorSearch),
+  });
+
   // Poll match_duel while searching (a NULL result = still waiting; a duel id
   // navigates away). Cleared on cancel / unmount.
   useEffect(() => {
@@ -111,17 +123,29 @@ function DuelHubPage() {
         <section className="space-y-2">
           <h2 className="font-semibold">{t.duel.activeDuels}</h2>
           {active.map((e) => (
-            <Link
+            <div
               key={e.duelId}
-              to="/duel/$duelId"
-              params={{ duelId: e.duelId }}
-              className="flex items-center justify-between rounded-lg border border-border p-3 hover:bg-muted"
+              className="flex items-center justify-between gap-2 rounded-lg border border-border p-3"
             >
               <span>{t.duel[STATUS_KEY[e.status]]}</span>
-              <span className="font-medium">
-                {e.status === "pending" ? t.duel.play : t.duel.resume}
-              </span>
-            </Link>
+              <div className="flex items-center gap-4">
+                <Link
+                  to="/duel/$duelId"
+                  params={{ duelId: e.duelId }}
+                  className="font-medium underline-offset-2 hover:underline"
+                >
+                  {e.status === "pending" ? t.duel.play : t.duel.resume}
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => forfeitMutation.mutate(e.duelId)}
+                  disabled={forfeitMutation.isPending}
+                  className="text-sm text-muted-foreground transition hover:text-destructive disabled:opacity-50"
+                >
+                  {t.duel.forfeit}
+                </button>
+              </div>
+            </div>
           ))}
         </section>
       ) : null}

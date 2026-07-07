@@ -245,6 +245,8 @@ export const en: TranslationKeys = {
     noHistory: "No duels yet. Jump in!",
     play: "Play",
     resume: "Resume",
+    forfeit: "Give up",
+    forfeitDone: "Duel abandoned.",
     opponent: "Opponent",
     statusActive: "Ongoing",
     statusFinished: "Finished",

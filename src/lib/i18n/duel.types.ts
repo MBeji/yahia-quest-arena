@@ -15,6 +15,8 @@ export interface DuelTranslations {
   noHistory: string;
   play: string;
   resume: string;
+  forfeit: string;
+  forfeitDone: string;
   opponent: string;
   statusActive: string;
   statusFinished: string;
