@@ -85,17 +85,17 @@
 
 | ☐   | matière  | code guide | fichier cible                     | titre                              |
 | --- | -------- | ---------- | --------------------------------- | ---------------------------------- |
-| [ ] | anglais  | `541805`   | `programme/8eme-base/anglais.md`  | الدليل المرجعي في اللغة الانقليزية |
-| [ ] | arabe    | `501802`   | `programme/8eme-base/arabe.md`    | الدليل المرجعي في النحو العربي     |
-| [ ] | francais | `521802`   | `programme/8eme-base/francais.md` | الدليل المرجعي في اللغة الفرنسية   |
+| [~] | anglais  | `541805`   | `programme/8eme-base/anglais.md`  | الدليل المرجعي في اللغة الانقليزية |
+| [~] | arabe    | `501802`   | `programme/8eme-base/arabe.md`    | الدليل المرجعي في النحو العربي     |
+| [~] | francais | `521802`   | `programme/8eme-base/francais.md` | الدليل المرجعي في اللغة الفرنسية   |
 
 ## 9eme-base
 
 | ☐   | matière  | code guide | fichier cible                     | titre                              |
 | --- | -------- | ---------- | --------------------------------- | ---------------------------------- |
-| [ ] | anglais  | `541905`   | `programme/9eme-base/anglais.md`  | الدليل المرجعي في اللغة الانقليزية |
-| [ ] | arabe    | `501902`   | `programme/9eme-base/arabe.md`    | الدليل المرجعي في النحو العربي     |
-| [ ] | francais | `521902`   | `programme/9eme-base/francais.md` | الدليل المرجعي في اللغة الفرنسية   |
+| [~] | anglais  | `541905`   | `programme/9eme-base/anglais.md`  | الدليل المرجعي في اللغة الانقليزية |
+| [~] | arabe    | `501902`   | `programme/9eme-base/arabe.md`    | الدليل المرجعي في النحو العربي     |
+| [~] | francais | `521902`   | `programme/9eme-base/francais.md` | الدليل المرجعي في اللغة الفرنسية   |
 
 ## 2eme-sec
 
