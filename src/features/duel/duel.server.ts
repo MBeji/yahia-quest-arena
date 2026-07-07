@@ -165,6 +165,27 @@ export const leaveDuelQueue = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+/**
+ * Close/abandon an ACTIVE duel the caller is in. Fair settlement is server-side
+ * (finalize_duel): if the caller already finished they win by forfait against a
+ * no-show; if they hadn't finished they get nothing. Frees the active-duel cap.
+ */
+export const forfeitDuel = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ duelId: z.guid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    const { error } = await supabase.rpc("forfeit_duel", { p_duel: data.duelId });
+    if (error) {
+      failWithClientError(
+        "duel.forfeitDuel: forfeit_duel RPC failed",
+        error,
+        "Impossible d'abandonner le duel.",
+      );
+    }
+    return { ok: true };
+  });
+
 /** US-3/US-5: the polled duel snapshot (progress + review once finished). */
 export const getDuelState = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])

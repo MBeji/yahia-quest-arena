@@ -244,6 +244,8 @@ export const ar: TranslationKeys = {
     noHistory: "لا مبارزات بعد. ابدأ الآن!",
     play: "العب",
     resume: "استأنف",
+    forfeit: "انسحاب",
+    forfeitDone: "تم الانسحاب من المبارزة.",
     opponent: "الخصم",
     statusActive: "جارية",
     statusFinished: "منتهية",

@@ -6,6 +6,7 @@
 export {
   matchDuel,
   leaveDuelQueue,
+  forfeitDuel,
   getDuelState,
   getDuelQuestions,
   submitDuelAnswer,
