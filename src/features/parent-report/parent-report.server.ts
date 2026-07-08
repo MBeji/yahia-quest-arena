@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
+import { optionalSupabaseAuth } from "@/shared/integrations/supabase/optional-auth-middleware";
 import { isRateLimited } from "@/shared/lib/rate-limit";
 import { logger } from "@/shared/lib/logger";
 import { errorMessage, failWithClientError } from "@/shared/lib/safe-error";
@@ -32,6 +33,24 @@ export function linkErrorMessage(raw: string): string {
     return "Aucun élève ne correspond à ce code. Vérifie-le et réessaie.";
   }
   return "Impossible d'associer cet élève. Vérifiez le code et réessayez.";
+}
+
+/**
+ * Same idea for the PUBLIC report-by-code path: surface the RPC's specific reason
+ * (bad code / not a student) with a report-context wording, generic otherwise.
+ */
+export function reportByCodeErrorMessage(raw: string): string {
+  const m = raw.toLowerCase();
+  if (m.includes("invalid student alliance code")) {
+    return "Code d'alliance invalide. Recopie-le exactement depuis le tableau de bord de l'élève.";
+  }
+  if (m.includes("does not belong to a student account")) {
+    return "Ce code n'appartient pas à un compte élève.";
+  }
+  if (m.includes("student not found")) {
+    return "Aucun élève ne correspond à ce code. Vérifie-le et réessaie.";
+  }
+  return "Impossible d'afficher ce suivi. Vérifiez le code et réessayez.";
 }
 
 type ParentStudent = {
@@ -445,4 +464,33 @@ export const linkStudentByCode = createServerFn({ method: "POST" })
         displayName: typeof row.student_display_name === "string" ? row.student_display_name : null,
       },
     };
+  });
+
+/**
+ * PUBLIC student report by alliance code — no account, no session required.
+ *
+ * Product decision (2026-07-08): a parent can open their child's read-only report
+ * with the alliance code alone. The code is a bearer capability (= the student's
+ * 122-bit-random UUID, shown on their dashboard). Access, code decode and the
+ * "target must be a student" check all live in the anon-callable
+ * `get_student_report_by_code` SECURITY DEFINER RPC; login stays optional and only
+ * unlocks the write-side extras (weekly goal, push digest).
+ */
+export const getStudentReportByCode = createServerFn({ method: "GET" })
+  .middleware([optionalSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ studentCode: z.string().min(8).max(64) }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+
+    const { data: reportData, error } = await supabase.rpc("get_student_report_by_code", {
+      p_code: data.studentCode,
+    });
+
+    if (error) {
+      const raw = errorMessage(error);
+      logger.error("parentReport.getStudentReportByCode: RPC failed", { error: raw });
+      throw new Error(reportByCodeErrorMessage(raw));
+    }
+
+    return parseStudentReportPayload(reportData);
   });

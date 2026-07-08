@@ -4,6 +4,7 @@
 export {
   getLinkedStudents,
   getStudentReport,
+  getStudentReportByCode,
   getStudentWeeklyGoal,
   linkStudentByCode,
   setStudentWeeklyGoal,

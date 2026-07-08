@@ -620,6 +620,91 @@ describe("parent-report — linkErrorMessage", () => {
 });
 
 // =============================================================================
+// getStudentReportByCode — public (anon) report by alliance code
+// =============================================================================
+describe("parent-report — getStudentReportByCode", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    mockFrom.mockReset();
+    mockRpc.mockReset();
+  });
+
+  const minimalReport = {
+    student: {
+      displayName: "Yahia",
+      heroClass: null,
+      level: 3,
+      xp: 300,
+      currentStreak: 2,
+      longestStreak: 5,
+      lastActiveDate: null,
+      createdAt: "2026-01-01",
+    },
+    summary: {
+      totalTimeMinutes: 10,
+      totalExercises: 4,
+      avgScore: 70,
+      daysActiveThisWeek: 2,
+      seriousnessScore: 50,
+      verdict: "average",
+      scoreTrend: 0,
+    },
+    subjectStats: [],
+    dailyActivity: [],
+    weekComparison: {
+      thisWeek: { exercises: 0, minutes: 0, avgScore: 0 },
+      lastWeek: { exercises: 0, minutes: 0, avgScore: 0 },
+    },
+    chapterInsights: { strengths: [], weaknesses: [] },
+  };
+
+  it("returns the parsed report from the anon RPC (no account needed)", async () => {
+    mockRpc.mockResolvedValue({ data: minimalReport, error: null });
+
+    const { getStudentReportByCode } =
+      await import("@/features/parent-report/parent-report.server");
+    const result = await (getStudentReportByCode as unknown as (d: unknown) => Promise<unknown>)({
+      studentCode: "AABB-CCDD-1122-3344-5566-7788-9900-1122",
+    });
+
+    const r = result as Record<string, unknown>;
+    expect((r.student as Record<string, unknown>).displayName).toBe("Yahia");
+    expect(mockRpc).toHaveBeenCalledWith("get_student_report_by_code", {
+      p_code: "AABB-CCDD-1122-3344-5566-7788-9900-1122",
+    });
+  });
+
+  it("surfaces a specific message when the code is not a student account", async () => {
+    mockRpc.mockResolvedValue({
+      data: null,
+      error: { message: "This code does not belong to a student account." },
+    });
+
+    const { getStudentReportByCode } =
+      await import("@/features/parent-report/parent-report.server");
+    await expect(
+      (getStudentReportByCode as unknown as (d: unknown) => Promise<unknown>)({
+        studentCode: "AABB-CCDD-1122-3344-5566-7788-9900-1122",
+      }),
+    ).rejects.toThrow(/compte élève/i);
+  });
+
+  it("maps report-by-code RPC reasons; generic fallback otherwise", async () => {
+    const { reportByCodeErrorMessage } =
+      await import("@/features/parent-report/parent-report.server");
+    const generic = "Impossible d'afficher ce suivi. Vérifiez le code et réessayez.";
+    expect(reportByCodeErrorMessage("Invalid student alliance code.")).toMatch(
+      /Code d'alliance invalide/i,
+    );
+    expect(reportByCodeErrorMessage("Student not found.")).toMatch(/Aucun élève/i);
+    expect(reportByCodeErrorMessage("This code does not belong to a student account.")).toMatch(
+      /compte élève/i,
+    );
+    expect(reportByCodeErrorMessage("boom")).toBe(generic);
+  });
+});
+
+// =============================================================================
 // family-link utilities
 // =============================================================================
 describe("parent-report — family-link utilities", () => {
