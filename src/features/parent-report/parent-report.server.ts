@@ -2,7 +2,37 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { isRateLimited } from "@/shared/lib/rate-limit";
-import { failWithClientError } from "@/shared/lib/safe-error";
+import { logger } from "@/shared/lib/logger";
+import { errorMessage, failWithClientError } from "@/shared/lib/safe-error";
+
+/**
+ * Map a `link_student_by_code` RPC failure to a specific, actionable French
+ * message. The RPC raises distinct, NON-sensitive validation reasons (bad code,
+ * wrong role, not-a-student, self-link); the previous single generic fallback
+ * ("Vérifiez le code") hid all of them, making a failed alliance link
+ * undiagnosable for the parent. We surface the real reason instead (you need the
+ * full 128-bit UUID to even reach the "student not found" branch, so there is no
+ * meaningful enumeration risk). Anything unrecognised keeps the safe generic.
+ */
+export function linkErrorMessage(raw: string): string {
+  const m = raw.toLowerCase();
+  if (m.includes("parent account required")) {
+    return "Ton compte n'est pas un compte parent. Reconnecte-toi avec un compte parent pour associer un élève.";
+  }
+  if (m.includes("invalid student alliance code")) {
+    return "Code d'alliance invalide. Recopie-le exactement depuis le tableau de bord de l'élève.";
+  }
+  if (m.includes("cannot link your own account")) {
+    return "Ce code est celui de ton propre compte : entre le code de l'élève, pas le tien.";
+  }
+  if (m.includes("does not belong to a student account")) {
+    return "Ce code n'appartient pas à un compte élève.";
+  }
+  if (m.includes("student not found")) {
+    return "Aucun élève ne correspond à ce code. Vérifie-le et réessaie.";
+  }
+  return "Impossible d'associer cet élève. Vérifiez le code et réessayez.";
+}
 
 type ParentStudent = {
   id: string;
@@ -402,11 +432,9 @@ export const linkStudentByCode = createServerFn({ method: "POST" })
       p_relation: data.relationLabel,
     });
     if (error) {
-      failWithClientError(
-        "parentReport.linkStudentByCode: RPC failed",
-        error,
-        "Impossible d'associer cet élève. Vérifiez le code et réessayez.",
-      );
+      const raw = errorMessage(error);
+      logger.error("parentReport.linkStudentByCode: RPC failed", { error: raw });
+      throw new Error(linkErrorMessage(raw));
     }
 
     const row = result && typeof result === "object" ? (result as Record<string, unknown>) : {};

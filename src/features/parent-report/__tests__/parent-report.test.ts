@@ -529,7 +529,7 @@ describe("parent-report — linkStudentByCode", () => {
     });
   });
 
-  it("surfaces the RPC error when the caller is not a parent", async () => {
+  it("surfaces a SPECIFIC message when the caller is not a parent", async () => {
     mockRpc.mockReturnValue({
       data: null,
       error: { message: "Parent account required to link a student." },
@@ -541,13 +541,28 @@ describe("parent-report — linkStudentByCode", () => {
         studentCode: "AABB-CCDD-1122-3344-5566-7788-9900-1122",
         relationLabel: "parent",
       }),
-    ).rejects.toThrow("Impossible d'associer cet élève. Vérifiez le code et réessayez.");
+    ).rejects.toThrow(/compte parent/i);
   });
 
-  it("surfaces the RPC error for an invalid alliance code", async () => {
+  it("surfaces a SPECIFIC message for an invalid alliance code", async () => {
     mockRpc.mockReturnValue({
       data: null,
       error: { message: "Invalid student alliance code." },
+    });
+
+    const { linkStudentByCode } = await import("@/features/parent-report/parent-report.server");
+    await expect(
+      (linkStudentByCode as unknown as (d: unknown) => Promise<unknown>)({
+        studentCode: "AABB-CCDD-1122-3344-5566-7788-9900-1122",
+        relationLabel: "parent",
+      }),
+    ).rejects.toThrow(/Code d'alliance invalide/i);
+  });
+
+  it("falls back to the generic message for an unrecognised RPC error", async () => {
+    mockRpc.mockReturnValue({
+      data: null,
+      error: { message: "some unexpected database error" },
     });
 
     const { linkStudentByCode } = await import("@/features/parent-report/parent-report.server");
@@ -567,6 +582,40 @@ describe("parent-report — linkStudentByCode", () => {
         relationLabel: "parent",
       }),
     ).rejects.toThrow(); // Zod validation
+  });
+});
+
+// =============================================================================
+// linkErrorMessage — RPC reason → actionable French message
+// =============================================================================
+describe("parent-report — linkErrorMessage", () => {
+  it("maps each known RPC reason to a distinct, specific message", async () => {
+    const { linkErrorMessage } = await import("@/features/parent-report/parent-report.server");
+    const generic = "Impossible d'associer cet élève. Vérifiez le code et réessayez.";
+
+    expect(linkErrorMessage("Parent account required to link a student.")).toMatch(
+      /compte parent/i,
+    );
+    expect(linkErrorMessage("Invalid student alliance code.")).toMatch(/Code d'alliance invalide/i);
+    expect(linkErrorMessage("You cannot link your own account.")).toMatch(/ton propre compte/i);
+    expect(linkErrorMessage("This code does not belong to a student account.")).toMatch(
+      /compte élève/i,
+    );
+    expect(linkErrorMessage("Student not found.")).toMatch(/Aucun élève/i);
+
+    // Each known reason resolves to something OTHER than the generic fallback.
+    for (const reason of [
+      "Parent account required to link a student.",
+      "Invalid student alliance code.",
+      "You cannot link your own account.",
+      "This code does not belong to a student account.",
+      "Student not found.",
+    ]) {
+      expect(linkErrorMessage(reason)).not.toBe(generic);
+    }
+
+    // Unknown reasons keep the safe generic fallback.
+    expect(linkErrorMessage("connection reset by peer")).toBe(generic);
   });
 });
 
