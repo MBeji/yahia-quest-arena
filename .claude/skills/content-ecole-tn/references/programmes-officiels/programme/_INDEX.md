@@ -119,7 +119,7 @@
 | --- | ------- | ---------- | -------------------------- | ---------------------------------- |
 | [ ] | anglais | `641404`   | `programme/bac/anglais.md` | الدليل المرجعي في اللغة الانقليزية |
 
-**Total : 57 guides à transcrire · 0 mergés · 1 pilote transcrit (éveil 1ère-base, en validation).**
+**Total : 59 guides à transcrire · 0 mergés · 3 pilotes transcrits (éveil 1ère-base ; maths + sciences-physiques 1ère-sec — en validation).**
 
 > **Légende statut** : `[ ]` à faire · `[x]` transcrit, en audit/validation · `[x]` transcrit + audité + mergé.
 
@@ -128,3 +128,10 @@
 | ☐   | matière | code guide                       | fichier cible                         | titre                                                                                        |
 | --- | ------- | -------------------------------- | ------------------------------------- | -------------------------------------------------------------------------------------------- |
 | [ ] | maths   | _(corpus secondaire à intégrer)_ | `programme/bac-math/mathematiques.md` | 🚧 **transcription pilote 2026-07-05** (hors corpus — à valider contre les textes officiels) |
+
+## 1ere-sec (secondaire — pilote lycée, tronc commun)
+
+| ☐   | matière            | code guide (manuel élève)                     | fichier cible                              | titre                                                                                                                                                                 |
+| --- | ------------------ | --------------------------------------------- | ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [~] | maths              | `222104P01` + `222104P02`                     | `programme/1ere-sec/mathematiques.md`      | 🚧 **transcription pilote 2026-07-07** — manuel élève seul (pas de guide au corpus) ; ch.1 « Angles » transcrit en profondeur, ch.2–16 au niveau bloc                 |
+| [~] | sciences-physiques | `223103P00` (physique) + `224101P00` (chimie) | `programme/1ere-sec/sciences-physiques.md` | 🚧 **transcription pilote 2026-07-07** — manuels élève seuls (pas de guide au corpus) ; ch.1 physique + ch.1 chimie transcrits en profondeur, le reste au niveau bloc |

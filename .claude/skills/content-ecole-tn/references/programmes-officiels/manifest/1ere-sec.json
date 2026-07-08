@@ -1,0 +1,58 @@
+﻿{
+  "grade": "1ere-sec",
+  "sealed": false,
+  "source": "CNP — programme national 1ère année de l'enseignement secondaire (tronc commun). Manuels élèves OFFICIELS CNP : Mathématiques (222104P01/P02, auteurs Mcharek/Mhamdi/Klila/Ben Youssef) ; Sciences Physiques (222105P01/P02) [no guide enseignant au corpus]. Transcriptions sous programme/1ere-sec/.",
+  "note": "sealed=false. MVP 2026 : mathématiques + sciences-physiques (électricité/thermodynamique/optique/mécanique, hors chimie). Chimie (chapitres du tome 2 sciences physiques) → PR séparé. Statut : chapitres 3–16 (mathématiques, 1–2 pilotes omis), 2–17 (sciences-physiques, 1 pilote omis) transcrits à profondeur complète.",
+  "subjects": [
+    {
+      "id": "mathematiques",
+      "name": "Mathématiques",
+      "contentLanguage": "fr",
+      "chapters": [
+        {
+          "slug": "03-rapports-trigonometriques",
+          "notion": "Rapports trigonométriques & relations métriques"
+        },
+        { "slug": "04-vecteurs-translations", "notion": "Vecteurs et translations" },
+        { "slug": "05-somme-vecteurs-colinearite", "notion": "Somme de vecteurs & colinéarité" },
+        { "slug": "06-repere-coordonnees", "notion": "Activités dans un repère" },
+        { "slug": "07-quart-tour", "notion": "Quart de tour" },
+        { "slug": "08-sections-planes", "notion": "Sections planes d'un solide" },
+        { "slug": "09-activites-numeriques-i", "notion": "Activités numériques I" },
+        { "slug": "10-activites-numeriques-ii", "notion": "Activités numériques II" },
+        { "slug": "11-activites-algebriques", "notion": "Activités algébriques" },
+        { "slug": "12-fonctions-lineaires", "notion": "Fonctions linéaires" },
+        {
+          "slug": "13-equations-inegalites-1er-degre",
+          "notion": "Équations & inéquations 1er degré"
+        },
+        { "slug": "14-fonctions-affines", "notion": "Fonctions affines" },
+        { "slug": "15-systemes-deux-equations", "notion": "Systèmes de deux équations" },
+        { "slug": "16-exploitation-information", "notion": "Exploitation de l'information" }
+      ]
+    },
+    {
+      "id": "sciences-physiques",
+      "name": "Sciences Physiques",
+      "contentLanguage": "fr",
+      "chapters": [
+        { "slug": "02-circuits-electriques", "notion": "Circuits électriques" },
+        { "slug": "03-grandeurs-electriques", "notion": "Grandeurs électriques" },
+        { "slug": "04-resistance-thermique", "notion": "Résistance & effet thermique" },
+        { "slug": "05-energie-electrique", "notion": "Énergie électrique" },
+        { "slug": "06-etats-matiere", "notion": "États de la matière" },
+        { "slug": "07-temperature-dilatation", "notion": "Température & dilatation" },
+        { "slug": "08-energie-thermique", "notion": "Énergie thermique" },
+        { "slug": "09-thermodynamique", "notion": "Principes thermodynamiques" },
+        { "slug": "10-forces-mouvements", "notion": "Forces & mouvements" },
+        { "slug": "11-travail-puissance", "notion": "Travail & puissance" },
+        { "slug": "12-energie-mecanique", "notion": "Énergie mécanique" },
+        { "slug": "13-oscillations", "notion": "Oscillations & ondes" },
+        { "slug": "14-ondes-mecaniques", "notion": "Ondes mécaniques" },
+        { "slug": "15-lumiere-optique", "notion": "Lumière & optique" },
+        { "slug": "16-astre-univers", "notion": "Astres & univers" },
+        { "slug": "17-energie-renouvelable", "notion": "Énergies renouvelables" }
+      ]
+    }
+  ]
+}
