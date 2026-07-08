@@ -333,12 +333,22 @@ export function PublicLanding() {
               </Link>
             ) : (
               <Link
-                to="/auth"
-                search={{ mode: "signup", role: "parent" }}
+                to="/suivi"
                 className="mt-6 inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-base font-semibold text-primary-foreground transition hover:opacity-90"
               >
-                {t.public.landing.familleCta}
+                {t.public.landing.familleCtaAuthed}
                 <ArrowRight className="h-5 w-5 rtl:-scale-x-100" />
+              </Link>
+            )}
+            {/* Suivi sans compte : le code d'alliance suffit. La création d'un
+                compte parent reste possible (extras qui écrivent) mais optionnelle. */}
+            {!isAuthed && (
+              <Link
+                to="/auth"
+                search={{ mode: "signup", role: "parent" }}
+                className="mt-3 inline-flex items-center justify-center gap-1.5 text-sm font-medium text-muted-foreground transition hover:text-foreground"
+              >
+                {t.public.landing.familleCta}
               </Link>
             )}
           </div>

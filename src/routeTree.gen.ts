@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
+import { Route as PublicSuiviRouteImport } from './routes/_public/suivi'
 import { Route as PublicProgrammeRouteImport } from './routes/_public/programme'
 import { Route as PublicExtrasRouteImport } from './routes/_public/extras'
 import { Route as AuthenticatedThemesRouteImport } from './routes/_authenticated/themes'
@@ -66,6 +67,11 @@ const AuthenticatedRoute = AuthenticatedRouteImport.update({
 const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicSuiviRoute = PublicSuiviRouteImport.update({
+  id: '/suivi',
+  path: '/suivi',
   getParentRoute: () => PublicRoute,
 } as any)
 const PublicProgrammeRoute = PublicProgrammeRouteImport.update({
@@ -216,6 +222,7 @@ export interface FileRoutesByFullPath {
   '/themes': typeof AuthenticatedThemesRoute
   '/extras': typeof PublicExtrasRoute
   '/programme': typeof PublicProgrammeRoute
+  '/suivi': typeof PublicSuiviRoute
   '/admin/beta-requests': typeof AuthenticatedAdminBetaRequestsRoute
   '/admin/bug-reports': typeof AuthenticatedAdminBugReportsRoute
   '/admin/content-reports': typeof AuthenticatedAdminContentReportsRoute
@@ -246,6 +253,7 @@ export interface FileRoutesByTo {
   '/themes': typeof AuthenticatedThemesRoute
   '/extras': typeof PublicExtrasRoute
   '/programme': typeof PublicProgrammeRoute
+  '/suivi': typeof PublicSuiviRoute
   '/admin/beta-requests': typeof AuthenticatedAdminBetaRequestsRoute
   '/admin/bug-reports': typeof AuthenticatedAdminBugReportsRoute
   '/admin/content-reports': typeof AuthenticatedAdminContentReportsRoute
@@ -278,6 +286,7 @@ export interface FileRoutesById {
   '/_authenticated/themes': typeof AuthenticatedThemesRoute
   '/_public/extras': typeof PublicExtrasRoute
   '/_public/programme': typeof PublicProgrammeRoute
+  '/_public/suivi': typeof PublicSuiviRoute
   '/_public/': typeof PublicIndexRoute
   '/_authenticated/admin/beta-requests': typeof AuthenticatedAdminBetaRequestsRoute
   '/_authenticated/admin/bug-reports': typeof AuthenticatedAdminBugReportsRoute
@@ -311,6 +320,7 @@ export interface FileRouteTypes {
     | '/themes'
     | '/extras'
     | '/programme'
+    | '/suivi'
     | '/admin/beta-requests'
     | '/admin/bug-reports'
     | '/admin/content-reports'
@@ -341,6 +351,7 @@ export interface FileRouteTypes {
     | '/themes'
     | '/extras'
     | '/programme'
+    | '/suivi'
     | '/admin/beta-requests'
     | '/admin/bug-reports'
     | '/admin/content-reports'
@@ -372,6 +383,7 @@ export interface FileRouteTypes {
     | '/_authenticated/themes'
     | '/_public/extras'
     | '/_public/programme'
+    | '/_public/suivi'
     | '/_public/'
     | '/_authenticated/admin/beta-requests'
     | '/_authenticated/admin/bug-reports'
@@ -439,6 +451,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof PublicIndexRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/suivi': {
+      id: '/_public/suivi'
+      path: '/suivi'
+      fullPath: '/suivi'
+      preLoaderRoute: typeof PublicSuiviRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_public/programme': {
@@ -671,6 +690,7 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 interface PublicRouteChildren {
   PublicExtrasRoute: typeof PublicExtrasRoute
   PublicProgrammeRoute: typeof PublicProgrammeRoute
+  PublicSuiviRoute: typeof PublicSuiviRoute
   PublicIndexRoute: typeof PublicIndexRoute
   PublicChapitreChapterIdRoute: typeof PublicChapitreChapterIdRoute
   PublicExerciceExerciseIdRoute: typeof PublicExerciceExerciseIdRoute
@@ -681,6 +701,7 @@ interface PublicRouteChildren {
 const PublicRouteChildren: PublicRouteChildren = {
   PublicExtrasRoute: PublicExtrasRoute,
   PublicProgrammeRoute: PublicProgrammeRoute,
+  PublicSuiviRoute: PublicSuiviRoute,
   PublicIndexRoute: PublicIndexRoute,
   PublicChapitreChapterIdRoute: PublicChapitreChapterIdRoute,
   PublicExerciceExerciseIdRoute: PublicExerciceExerciseIdRoute,

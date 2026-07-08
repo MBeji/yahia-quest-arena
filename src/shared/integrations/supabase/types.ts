@@ -1723,6 +1723,7 @@ export type Database = {
       // `supabase gen types` on the next sync).
       get_family_weekly_goal: { Args: { p_student: string }; Returns: Json };
       get_student_report: { Args: { p_student: string }; Returns: Json };
+      get_student_report_by_code: { Args: { p_code: string }; Returns: Json };
       set_parent_weekly_goal: {
         Args: { p_student: string; p_target: number };
         Returns: Json;
