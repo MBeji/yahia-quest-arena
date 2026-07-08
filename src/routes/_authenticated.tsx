@@ -2,7 +2,7 @@ import { createFileRoute, Outlet, Link, useNavigate, useLocation } from "@tansta
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useAuth, useMyRole } from "@/features/auth";
+import { useAuth, useMyRole, shouldRedirectToOnboarding } from "@/features/auth";
 import { getPendingBetaCount } from "@/features/subscription";
 import { getOpenReportsCount } from "@/features/content-report";
 import { BetaBadge, BugReportLauncher, getOpenBugsCount } from "@/features/bug-report";
@@ -88,15 +88,26 @@ function AuthenticatedLayout() {
     }
   }, [loading, user, navigate]);
 
-  // Profile-first onboarding guard: a signed-in user with no active parcours is
+  // Profile-first onboarding guard: a signed-in STUDENT with no active parcours is
   // sent to /onboarding. Gated on the profile query having loaded (no flash) and
-  // the user not already being on /onboarding (no redirect loop).
+  // the user not already being on /onboarding (no redirect loop). Parents and
+  // admins never enrol in a parcours (onboarding is the student track picker), so
+  // they must be exempt — otherwise a parent who signs in / links a child via
+  // their code is trapped in the student onboarding loop and can never reach
+  // /parent-report (their whole feature set is unreachable).
   useEffect(() => {
     if (!user || !meLoaded) return;
-    if (hasProfile && currentParcoursId == null && location.pathname !== "/onboarding") {
+    if (
+      shouldRedirectToOnboarding({
+        hasProfile,
+        role: userRole,
+        currentParcoursId,
+        pathname: location.pathname,
+      })
+    ) {
       navigate({ to: "/onboarding" });
     }
-  }, [user, meLoaded, hasProfile, currentParcoursId, location.pathname, navigate]);
+  }, [user, meLoaded, hasProfile, userRole, currentParcoursId, location.pathname, navigate]);
 
   if (loading) {
     return (
