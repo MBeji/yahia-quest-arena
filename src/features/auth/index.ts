@@ -4,4 +4,5 @@
 export { useAuth } from "./use-auth";
 export { useMyRole } from "./use-my-role";
 export { useMyStats } from "./use-my-stats";
+export { shouldRedirectToOnboarding } from "./onboarding-guard";
 export { bootstrapProfile, setCurrentParcours } from "./auth.server";
