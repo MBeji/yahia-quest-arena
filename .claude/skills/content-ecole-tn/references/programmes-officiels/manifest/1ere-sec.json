@@ -2,13 +2,18 @@
   "grade": "1ere-sec",
   "sealed": false,
   "source": "CNP — programme national 1ère année de l'enseignement secondaire (tronc commun). Manuels élèves OFFICIELS CNP : Mathématiques (222104P01/P02, auteurs Mcharek/Mhamdi/Klila/Ben Youssef) ; Sciences Physiques (222105P01/P02) [no guide enseignant au corpus]. Transcriptions sous programme/1ere-sec/.",
-  "note": "sealed=false. MVP 2026 : mathématiques + sciences-physiques (électricité/thermodynamique/optique/mécanique, hors chimie). Chimie (chapitres du tome 2 sciences physiques) → PR séparé. Statut : chapitres 3–16 (mathématiques, 1–2 pilotes omis), 2–17 (sciences-physiques, 1 pilote omis) transcrits à profondeur complète.",
+  "note": "sealed=false. MVP 2026 : mathématiques + sciences-physiques (électricité/thermodynamique/optique/mécanique, hors chimie). Chimie (chapitres du tome 2 sciences physiques) → PR séparé. Statut : chapitres 1–16 (mathématiques, intégralité), 2–17 (sciences-physiques, 1 pilote omis) transcrits à profondeur complète.",
   "subjects": [
     {
       "id": "mathematiques",
       "name": "Mathématiques",
       "contentLanguage": "fr",
       "chapters": [
+        { "slug": "01-angles", "notion": "Angles" },
+        {
+          "slug": "02-theoreme-thales",
+          "notion": "Théorème de Thalès et sa réciproque"
+        },
         {
           "slug": "03-rapports-trigonometriques",
           "notion": "Rapports trigonométriques & relations métriques"
