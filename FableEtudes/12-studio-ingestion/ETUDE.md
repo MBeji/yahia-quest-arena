@@ -124,4 +124,16 @@ pgTAP (RLS/quota), Vitest (fns zod, upload mocké, états UI), pas d'e2e dédié
 
 ## 8. Journal d'exécution
 
-_(vide — rempli par l'exécuteur, lot par lot)_
+- **2026-07-09 — Skill `content-ingest` créé + rebasé sur ScribeKit (étude 13).**
+  `.claude/skills/content-ingest/SKILL.md` : orchestration en **3 couches** — **ScribeKit** (déterministe :
+  extraction couche-texte / Word, échafaudage, manifeste validé, ledger + `AVANCEMENT.md` résumables, QA ;
+  **0 LLM / 0 clé**) → **OCR des scans par l'AGENT** (vision d'abonnement Claude Max, **0 clé API**) →
+  confrontation CNP (R-3) → hand-off aux skills de génération. **Décision clé (contrainte utilisateur)** :
+  l'OCR des scans se fait **agent-in-the-loop** (abonnement), **pas** via l'API Anthropic — la ToS Anthropic
+  interdit l'usage programmatique de l'abonnement (token OAuth réservé au CLI/claude.ai), et l'API
+  (Messages API / Agent SDK) exige une clé **facturée au token** qui **n'utilise pas** l'abonnement. Le
+  `--provider anthropic` de ScribeKit reste une option **batch non-supervisé** qui exige une clé facturée.
+  La couche de persistance de `content-ecole-tn` (`references/programmes-officiels/README.md`) a été mise à
+  jour pour ce flux outillé (§ « Transcription outillée : ScribeKit »).
+  - _Reste (lots 1–3 de cette étude)_ : format de fiche `sources-externes/<slug>/fiche.md` normé (D-1),
+    pilote de bout en bout mesuré (coût/délai), canal in-app `ingestion_requests` (D-3).
