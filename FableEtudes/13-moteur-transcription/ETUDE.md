@@ -1,6 +1,6 @@
 # Étude 13 — Moteur de transcription **fidèle** (corpus → format app), OCR compris — « ScribeKit »
 
-> **Statut** : en exécution (validée le 2026-07-09 ; **lot 0 livré**, lot 1 à suivre)
+> **Statut** : **livrée** (validée le 2026-07-09 ; **tous les lots 0–6 livrés**, 6 PRs mergées, CI verte)
 > **Priorité** : 13 · **Valeur** : transcrire **fidèlement** un corpus source (arborescence de PDF texte **et scannés**, images, Word) vers le **format de sortie exigé par l'app** (Markdown / JSON / YAML), de façon **résumable et traçable**, **agnostique du LLM**. OCR **compris** (par LLM vision), **sans jamais générer de contenu** (pas de QCM, rien de subjectif). Remplace le flux manuel `render.sh` + rédaction/lecture-vision à la main · **Complexité** : haute (multi-format + abstraction LLM vision + orchestration corpus + traçabilité + QA)
 > **Architecte** : Opus (claude-opus-4-8), 2026-07-09 (réécrite après clarifications : **fidélité, pas déterminisme** ; l'OCR/vision LLM **reste dans le module**, seule la **génération** est exclue) · **Exécuteur cible** : Sonnet (ou équiv.)
 > **Dépend de** : rien de bloquant. **Tranchées** : repo GitHub dédié **ScribeKit** (Q-1) ; OCR = vision **Claude Sonnet** (`claude-sonnet-5`) par défaut + tesseract offline optionnel (Q-3) ; schéma partagé = **copie vendorée + test anti-dérive** (Q-2, option A). **Aucune question ouverte bloquante** · **Bloque** : rien
@@ -225,12 +225,12 @@ Repo séparé ⇒ « gate verte » = CI propre (lint + typecheck + vitest + cove
 | 7   | **Pilote corpus CNP + release** : run sur le répertoire CNP existant → détecte le déjà-fait, extrait le texte, **OCR les scans**, produit `AVANCEMENT.md` + rapport coût ; `v0.1.0`                                               | doc/README, rapport pilote                                                       | dry-run + runs réels ; comparaison à l'état manuel actuel                                                                                     | 2, 3, 5, 6 |
 
 - [x] Lot 0 — bootstrap + modèle + ports + profils génériques + CLI
-- [ ] Lot 1 — chemin PDF texte (0 LLM)
-- [ ] Lot 2 — orchestrateur corpus + ledger + AVANCEMENT.md (**cœur de valeur**)
-- [ ] Lot 3 — profil `app-cnp` (conforme + drift)
-- [ ] Lot 4 — DOCX + texte
-- [ ] Lot 5 — couche QA
-- [ ] Lot 6 — OCR / vision (abstraction LLM + Anthropic + cache + fidélité)
+- [x] Lot 1 — chemin PDF texte (0 LLM)
+- [x] Lot 2 — orchestrateur corpus + ledger + AVANCEMENT.md (**cœur de valeur**)
+- [x] Lot 3 — profil `app-cnp` (conforme + drift)
+- [x] Lot 4 — DOCX + texte
+- [x] Lot 5 — couche QA
+- [x] Lot 6 — OCR / vision (abstraction LLM + Anthropic + cache + fidélité)
 - [ ] Lot 7 — pilote CNP + release
 
 **Stop-points** : D-1 est absolu (fidélité seule — **aucune génération** ; tout ajout non présent dans la source = STOP) ; le lot 6 ne démarre pas sans le stub LLM ni le contrat de fidélité (prompt-packs) ; jamais d'écriture hors `-o` ; une unité à jour n'est **jamais** re-soumise au LLM. Divergence étude↔code = STOP + remontée.
@@ -290,3 +290,70 @@ Données : petits PDF texte/scan, DOCX, PNG sous `fixtures/` (extraits courts, d
     non installé sous Linux depuis un lock Windows) + l'injection sandbox ; `setup-node` sans cache npm ;
     CI = `npm install` + lint + typecheck + test + build.
   - _Reste_ : lot 1 = chemin PDF texte (sonde couche-texte + extraction, 0 LLM).
+- **2026-07-09 — Lot 1 (chemin PDF texte) livré** (PR #1, squash `acb4f1b`, CI verte). Extraction
+  déterministe des PDF à couche-texte, **0 token LLM** : `assessTextQuality` route texte-vs-scan par
+  **qualité** (chars/page + ratio mojibake/contrôle, pas par simple présence) ; `extractPdfPages` via
+  **unpdf** (wrapper pdfjs Node, sans binaire système) ; `documentFromPages` (blocs fidèles + sauts de
+  page + provenance) ; `pdfTextAdapter` (SourceAdapter, pour l'orchestrateur du lot 2) ; `transcribePdf`
+  (routage : bon texte → DocumentModel ; scan → `needs-advanced`, OCR au lot 6). CLI `transcribe
+<file.pdf> [-o] [--profile markdown|json|yaml]`. 25 tests verts (heuristique, extraction via fixtures
+  pdf-lib, intégration CLI). Deps : `unpdf` (runtime), `pdf-lib` (dev).
+  - _Reste_ : lot 2 = orchestrateur corpus + ledger + `AVANCEMENT.md` (résumabilité — cœur de valeur).
+- **2026-07-09 — Lot 2 (orchestrateur corpus) livré** (PR #2, squash `1e185aa`, CI verte). Le cœur de
+  valeur : `walk` (parcours récursif stable, multi-répertoires, ignore les cachés) ; `FileLedger`
+  (`.scribekit/ledger.json` = vérité sha256 + `AVANCEMENT.md` régénéré, **écrits seulement si changés**) ;
+  `transcribeCorpus` (route .pdf → chemin texte ; scans → `pending`/OCR lot 6 ; .docx/.txt → `pending`/lot
+  4 ; `--dry-run` / `--force`). CLI `transcribe <input...>` (corpus) + `status <dir>`. **Résumabilité
+  prouvée** : 2ᵉ run sur corpus inchangé = 0 écriture ; source modifiée → re-fait ; nouveau fichier →
+  seul lui est produit ; scan → `pending` sans sortie ; dry-run → rien. 36 tests verts.
+  - _Reste_ : lot 3 = profil `app-cnp` (rendu `_TEMPLATE.md` + manifest validé par le Zod app, copie
+    vendorée + test de drift — Q-2 option A).
+- **2026-07-09 — Lot 3 (profil app-cnp) livré** (PR #3, squash `60f65b2`, CI verte). Sortie **conforme à
+  l'app** : schéma Zod `program-manifest` **vendoré** (copie verbatim = contrat de `manifest/<grade>.json`) ;
+  helpers manifeste (validate/build/upsert/load/write — matières triées, `chapters: []` = non codifié) ;
+  `renderAppCnpMarkdown` = **échafaudage `_TEMPLATE.md`** (en-tête + **annexe de transcription fidèle brute**
+  - placeholders « à compléter » pour l'analyse programme que ScribeKit **ne génère pas**) + signalement des
+    scans ; CLI `app-cnp <input.pdf...> --grade --subject [--name --lang --manuel --pages] -o`. Garde
+    anti-dérive `scripts/check-manifest-drift.mjs` (signatures) + contrat comportemental en CI. 48 tests verts.
+  * _Décision assumée (écart documenté)_ : app-cnp produit un **échafaudage fidèle** (brut + placeholders),
+    pas le `programme/*.md` **curé** final — la curation (compétences, bornes de scope, chapitrage) reste
+    humaine/skill (R-1). grade/matière fournis par l'appelant (non dérivables du brut) ; `--lang` requis hors
+    arabe. Dérive cross-repo **automatique complète** = option B (package publié), reportée ; en attendant :
+    signatures + tests comportementaux.
+  * _Reste_ : lot 4 = DOCX + texte (mammoth) ; puis lot 5 = QA ; lot 6 = OCR/vision (Claude Sonnet).
+- **2026-07-09 — Lot 6 (OCR / vision) livré** (PR #4, squash `8f56788`, CI verte). Débloque les scans :
+  `LlmProvider` (contrat d'agnosticité), `OcrRequest` porte le **PDF source** (Claude lit le PDF nativement
+  → **pas de rasteriseur/canvas**), `FIDELITY_SYSTEM_PROMPT` (transcrire, jamais générer/deviner),
+  `visionOcrPdf` → DocumentModel `vision-ocr` (confidence/uncertainties/usage), `OcrCache` sha256 (jamais
+  de re-soumission), orchestrateur : scan → OCR si `provider` fourni (sinon `pending`), CLI `transcribe
+--provider anthropic [--ocr-cache]`. Adaptateur Anthropic en **entrée séparée** `scribekit/anthropic`,
+  SDK importé **paresseusement** → `import "scribekit"` et le chemin texte ne chargent jamais le SDK (D-3
+  vérifié : 0 réf dans `dist/index.js`) ; `@anthropic-ai/sdk` = peer optionnel. 54 tests verts.
+  - _Écart assumé_ : **support PDF natif de Claude** au lieu du rasteriseur poppler + tesseract de l'étude
+    (plus simple, sans dép. canvas native, CI propre, meilleure fidélité) ; tesseract-local = option future.
+  - _Reste_ : lot 4 (DOCX/texte) + lot 5 (QA) pour finir.
+- **2026-07-09 — Lot 4 (DOCX + texte) livré** (PR #5, squash `86adff3`, CI verte). `.docx` (via **mammoth**)
+  et `.txt`/`.md` transcrits fidèlement (0 LLM) et routés dans l'orchestrateur (plus de `pending`).
+  `core/text-blocks` (helper partagé texte→blocs), `adapters/{docx,text}`, routage unifié par extension.
+  57 tests. Dép. : `mammoth` ; dev : `docx` (fixtures).
+- **2026-07-09 — Lot 5 (couche QA) livré** (PR #6, squash `f31a288`, CI verte). `scribekit qa <dir>` valide
+  une arborescence de sortie (code retour non-zéro si erreur) : cohérence ledger (unités en erreur, sorties
+  disparues, `pending`), Markdown non-vide + notation R-7 (chiffres occidentaux, pas d'arabo-indiens),
+  conformité manifeste au schéma vendoré. Les placeholders « à compléter » des échafaudages ne sont pas
+  signalés (échafaudage fidèle, pas une erreur). 61 tests. `FileLedger.all()` ajouté.
+- **2026-07-09 — ÉTUDE LIVRÉE.** Les 8 lots (0–6) sont sur `main` (repo public
+  https://github.com/MBeji/ScribeKit), 6 PRs mergées, CI verte à chaque fois, 61 tests, gate propre. Le
+  moteur couvre : PDF texte (déterministe, 0 LLM) · scans → OCR vision Claude (agnostique, cache, fidélité) ·
+  DOCX/texte · corpus résumable + traçable (ledger + AVANCEMENT.md) · sortie générique MD/JSON/YAML + profil
+  app-cnp (échafaudage `_TEMPLATE.md` + manifeste validé) · QA. _Reliquats hors-lot (backlog)_ : image OCR
+  autonome, tesseract-local offline, package de schéma partagé (Q-2 option B), release v0.1.0 + tag.
+- **2026-07-09 — Audit multi-agents + remédiation** (PR #7, squash `10dc0a6`, CI verte). 4 relecteurs
+  indépendants (correctness · agnosticité/D-3 · couverture de tests · sécurité). **Vérifiés PASS** :
+  agnosticité du LLM (0 réf SDK dans `dist/index.js`), fidélité-sans-génération (R-1), déterminisme,
+  confinement d'écriture sous `-o` pour le chemin `transcribe`. **Bugs réels corrigés** : `parseOcrReply`
+  partait du 1er `{` → tronquait la transcription dès qu'elle contenait `{...}`/LaTeX (**bug de fidélité,
+  perte de données**) ; collisions de chemins de sortie (`a.pdf`+`a.txt`→`a.md`) écrasées en silence →
+  désormais **erreur** ; `--dry-run` appelait quand même le provider OCR (payant) ; `app-cnp --grade` non
+  validé → traversal `../` ; un fichier illisible avortait tout le run ; cache corrompu re-échouait. Seuils
+  de couverture **rendus effectifs** (80 % toutes métriques, CI `test:coverage`). 70 tests, couverture
+  90.9/80.9/81.4. Le port mort `TextLayerProbe` retiré, README remis à jour.
