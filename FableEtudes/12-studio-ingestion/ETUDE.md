@@ -5,6 +5,7 @@
 > **Architecte** : Fable (claude-fable-5), 2026-07-04 · **Exécuteur cible** : Sonnet (outillage) + skills contenu (génération)
 > **Dépend de** : rien de bloquant ; synergie avec la couche de persistance existante (transcriptions CNP) · **Bloque** : rien
 > **Docs normatifs liés** : CLAUDE.md (content pipeline — « files only, never SQL »), `content-engine/references/generation-pipeline.md`, `docs/content-generation-pipeline.md`, REVUE-2026-07 (re-scoping de la feature #2)
+> **Voir aussi** : [étude 13 — Moteur de transcription fidèle (OCR compris)](../13-moteur-transcription/ETUDE.md). L'étude 13 fait toute la **transcription fidèle** du corpus — extraction des PDF à couche-texte **et OCR/vision des scans** (via une interface LLM agnostique) → format app, résumable et traçable — **sans jamais générer de contenu**. L'étude 12 reste le **canal opéré/in-app** et le home de la **génération** (QCM/cours via les skills) : le skill `content-ingest` (D-2 ci-dessous) lance d'abord le moteur 13 pour obtenir la transcription, puis génère le contenu à partir d'elle.
 
 ## 1. Contexte & objectif produit
 
