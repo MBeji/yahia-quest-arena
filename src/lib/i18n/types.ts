@@ -97,10 +97,8 @@ export type TranslationKeys = {
     streakLostTitle: string;
     streakLostDesc: string;
     streakRecover: string;
-    retryLabel: string;
     retryTitle: string;
     continueLabel: string;
-    dungeonLabel: string;
     dungeonDesc: string;
     dailyQuests: string;
     weeklyQuests: string;
@@ -147,6 +145,8 @@ export type TranslationKeys = {
     familyGoalProgress: string;
     familyGoalReached: string;
     familyGoalHint: string;
+    welcomeBack: string;
+    resumeSubtitle: string;
   };
   // Quest
   quest: {

@@ -3,19 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { motion } from "motion/react";
-import {
-  Flame,
-  Zap,
-  Trophy,
-  Swords,
-  ChevronRight,
-  Sparkles,
-  Crown,
-  Play,
-  Skull,
-  Copy,
-  Check,
-} from "lucide-react";
+import { Flame, Trophy, Swords, Sparkles, Crown, Skull, Copy, Check } from "lucide-react";
 import { toast } from "sonner";
 import {
   getDashboard,
@@ -32,6 +20,7 @@ import { EnablePushCard } from "@/features/notifications";
 import { SubjectPathCard } from "@/features/dashboard/components/subject-path-card";
 import { FamilyGoalCard } from "@/features/dashboard/components/family-goal-card";
 import { MotivationalQuote } from "@/features/dashboard/components/motivational-quote";
+import { DashboardFocus } from "@/features/dashboard/components/dashboard-focus";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useReducedMotion } from "motion/react";
 
@@ -68,77 +57,6 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: "Hall des Héros · Na9ra Nal3ab" }] }),
   component: Dashboard,
 });
-
-function DailyXpWidget({
-  xpToday,
-  dailyGoal,
-  streak,
-}: {
-  xpToday: number;
-  dailyGoal: number;
-  streak: number;
-}) {
-  const t = useT();
-  const pct = Math.min(100, Math.round((xpToday / dailyGoal) * 100));
-  const circumference = 2 * Math.PI * 40;
-  const dashOffset = circumference - (pct / 100) * circumference;
-  const isComplete = pct >= 100;
-
-  return (
-    <div className="flex items-center gap-5 rounded-2xl border border-[color:var(--gold)]/30 bg-black/40 p-5 backdrop-blur-md">
-      <div className="relative h-24 w-24 shrink-0">
-        <svg className="h-full w-full -rotate-90" viewBox="0 0 96 96">
-          <circle
-            cx="48"
-            cy="48"
-            r="40"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="6"
-            className="text-secondary"
-          />
-          <circle
-            cx="48"
-            cy="48"
-            r="40"
-            fill="none"
-            strokeWidth="6"
-            strokeLinecap="round"
-            stroke={isComplete ? "var(--neon-gold)" : "var(--gold)"}
-            strokeDasharray={circumference}
-            strokeDashoffset={dashOffset}
-            className="transition-all duration-700"
-          />
-        </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="font-display text-lg font-bold">{pct}%</span>
-        </div>
-      </div>
-      <div>
-        <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--gold)]">
-          {t.dashboard.dailyGoalLabel}
-        </div>
-        <div className="mt-1 font-display text-2xl font-bold">
-          {xpToday} <span className="text-base text-muted-foreground">/ {dailyGoal} XP</span>
-        </div>
-        {isComplete ? (
-          <div className="mt-1 text-sm font-semibold text-[color:var(--neon-gold)]">
-            {t.dashboard.dailyGoalReached}
-          </div>
-        ) : (
-          <div className="mt-1 text-sm text-muted-foreground">
-            {dailyGoal - xpToday} {t.dashboard.dailyGoalRemaining}
-          </div>
-        )}
-        {streak > 0 && (
-          <div className="mt-2 flex items-center gap-1 text-xs text-[color:var(--flame)]">
-            <Flame className="h-3 w-3 animate-flame" /> {streak} {t.dashboard.consecutiveDays}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
 
 function Dashboard() {
   const t = useT();
@@ -337,11 +255,14 @@ function Dashboard() {
           animate={{ opacity: 1, y: 0 }}
           className="relative overflow-hidden rounded-3xl border border-[color:var(--gold)]/30 bg-black/40 p-6 backdrop-blur-xl shadow-card sm:p-8"
         >
+          {/* Refined premium hairline: a single gold filet across the top edge. */}
+          <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[color:var(--gold)]/50 to-transparent" />
           <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/30 blur-3xl" />
           <div className="absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/20 blur-3xl" />
           <div className="relative grid gap-6 sm:grid-cols-[auto_1fr_auto] sm:items-center">
             <HeroAvatar avatarSlug={profile.avatar_slug} />
             <div className="min-w-0">
+              <div className="text-sm text-muted-foreground">{t.dashboard.welcomeBack}</div>
               <h1 className="font-display text-2xl font-bold break-words sm:text-3xl md:text-4xl">
                 {profile.display_name}
               </h1>
@@ -421,22 +342,18 @@ function Dashboard() {
           <FlagshipConcoursBanner />
         </Suspense>
 
-        {/* TODAY'S PROGRESS + MOTIVATION */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mt-6 grid gap-4 sm:grid-cols-2"
-        >
-          <DailyXpWidget
-            xpToday={(sprint2?.dailyObjectives ?? [])
-              .filter((o) => o.status === "completed")
-              .reduce((sum, o) => sum + (o.xp_reward ?? 0), 0)}
-            dailyGoal={100}
-            streak={profile.current_streak}
-          />
-          <MotivationalQuote />
-        </motion.div>
+        {/* FOCUS BAND — the redesign's centrepiece: promote ONE prioritised action
+            ("Reprendre") to hero prominence beside the daily-objective ring, then two
+            calm secondary tiles (Donjon · Duel). Replaces the old stacked Quick Start. */}
+        <DashboardFocus
+          nextExerciseId={nextExerciseId}
+          continueSubject={continueSubject}
+          xpToday={(sprint2?.dailyObjectives ?? [])
+            .filter((o) => o.status === "completed")
+            .reduce((sum, o) => sum + (o.xp_reward ?? 0), 0)}
+          dailyGoal={100}
+          streak={profile.current_streak}
+        />
 
         {/* Push opt-in — self-hides when push is unavailable in this browser. */}
         <EnablePushCard />
@@ -470,75 +387,6 @@ function Dashboard() {
             </button>
           </motion.div>
         )}
-
-        {/* QUICK START SECTION */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15 }}
-          className="mt-6 space-y-3"
-        >
-          {/* Retry incomplete button - highest priority */}
-          {nextExerciseId && (
-            <Link
-              to="/quest/$exerciseId"
-              params={{ exerciseId: nextExerciseId }}
-              className="group flex items-center justify-between gap-4 rounded-2xl border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/8 p-4 backdrop-blur-md transition hover:border-[color:var(--neon-gold)]/70 hover:bg-[color:var(--neon-gold)]/12 sm:p-5"
-            >
-              <div className="flex items-center gap-3">
-                <div className="grid h-12 w-12 place-items-center rounded-xl bg-[color:var(--neon-gold)]/25">
-                  <Zap className="h-6 w-6 text-[color:var(--neon-gold)]" />
-                </div>
-                <div>
-                  <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--neon-gold)] font-bold">
-                    {t.dashboard.retryLabel}
-                  </div>
-                  <div className="font-display text-lg font-bold">{t.dashboard.retryTitle}</div>
-                </div>
-              </div>
-              <ChevronRight className="h-6 w-6 text-[color:var(--neon-gold)] transition group-hover:translate-x-1" />
-            </Link>
-          )}
-          {/* Continue subject button - secondary */}
-          {continueSubject && (
-            <Link
-              to="/matiere/$subjectId"
-              params={{ subjectId: continueSubject.id }}
-              className="group flex items-center justify-between gap-4 rounded-2xl border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 p-4 backdrop-blur-md transition hover:border-[color:var(--gold)]/60 hover:bg-[color:var(--gold)]/10 sm:p-5"
-            >
-              <div className="flex items-center gap-3">
-                <div className="grid h-12 w-12 place-items-center rounded-xl bg-[color:var(--gold)]/20">
-                  <Play className="h-6 w-6 text-[color:var(--gold)]" />
-                </div>
-                <div>
-                  <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--gold)]">
-                    {t.dashboard.continueLabel}
-                  </div>
-                  <div className="font-display text-lg font-bold">{continueSubject.name_fr}</div>
-                </div>
-              </div>
-              <ChevronRight className="h-6 w-6 text-[color:var(--gold)] transition group-hover:translate-x-1" />
-            </Link>
-          )}
-          {/* Dungeon mode - infinite survival */}
-          <Link
-            to="/dungeon"
-            className="group flex items-center justify-between gap-4 rounded-2xl border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 p-4 backdrop-blur-md transition hover:border-[color:var(--gold)]/60 hover:bg-[color:var(--gold)]/10 sm:p-5"
-          >
-            <div className="flex items-center gap-3">
-              <div className="grid h-12 w-12 place-items-center rounded-xl bg-[color:var(--gold)]/20">
-                <Skull className="h-6 w-6 text-[color:var(--gold)]" />
-              </div>
-              <div>
-                <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--gold)] font-bold">
-                  {t.dashboard.dungeonLabel}
-                </div>
-                <div className="font-display text-lg font-bold">{t.dashboard.dungeonDesc}</div>
-              </div>
-            </div>
-            <ChevronRight className="h-6 w-6 text-[color:var(--gold)] transition group-hover:translate-x-1" />
-          </Link>
-        </motion.div>
 
         {/* DAILY OBJECTIVES & WEEKLY QUESTS SECTION */}
         <motion.div
@@ -647,6 +495,12 @@ function Dashboard() {
             </div>
           </div>
         </motion.div>
+
+        {/* Daily rotating motivation — relocated here as a slim full-width strip so the
+            focus band above stays uncluttered. */}
+        <div className="mt-6">
+          <MotivationalQuote />
+        </div>
 
         <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_360px]">
           {/* SUBJECTS GRID */}
