@@ -144,7 +144,7 @@ Stop-points : un lot d'écran ne touche NI les primitives (retour lot 1 si manqu
 - [x] Lot 3 — états système + i18n erreurs (PR livrée)
 - [x] Lot 4 — auth/onboarding (PR livrée)
 - [x] Lot 5 — dashboard (PR livrée)
-- [ ] Lot 6 — quête
+- [x] Lot 6 — quête (PR livrée)
 - [ ] Lot 7 — donjon
 - [ ] Lot 8 — duel
 - [ ] Lot 9 — leaderboard/shop/parcours
@@ -254,3 +254,14 @@ Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions co
   variante non-hook `entrance()` au module motion (délais par index dans les listes — un hook
   en boucle est illégal), avec test. Gate verte (1197 tests), budgets OK (dashboard 29,17/32 KB),
   smoke vert. Captures écran impossibles (Q-2) — revue humaine recommandée sur le rendu.
+- 2026-07-10 — Lot 5 mergé (#353). Lot 6 livré : grille de récompenses sur `StatTile`
+  (ExplainHint conservé sur l'XP, flamme animée via nouvelle prop `iconClassName` — extension
+  consignée) ; `SubjectHub` sur `PageShell` (+ prop `dir`, extension consignée) et **étoiles Q-4**
+  (`DifficultyStars` remplace « Niveau {n} » ; clé i18n `public.subject.level` supprimée des
+  4 dictionnaires) ; `ExercisePlayer` : `BackLink` (refait sur `createLink` pour préserver le
+  typage `params` du routeur), `PageShell narrow` ×2, `GoldProgress` pour la progression des
+  questions (la barre HP du boss garde son vocabulaire rouge→or distinct — décision consignée),
+  bannière quiz réussie sur le token `--success` (emerald brut supprimé), syntaxe canonique
+  gold/neon-gold/flame partout, entrées motion sur `useEntrance("scale")`. Mocks de tests
+  complétés (`createLink`, `useReducedMotion`). Gate verte (1197 tests), budgets + smoke verts.
+  Captures impossibles (contenu DB requis) — revue humaine du rendu quête recommandée.

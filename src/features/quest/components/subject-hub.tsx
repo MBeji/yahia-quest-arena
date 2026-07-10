@@ -2,6 +2,8 @@ import { Link } from "@tanstack/react-router";
 import { BookOpen, ChevronRight, Zap } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { isRtlText } from "@/shared/lib/utils";
+import { PageShell } from "@/components/ui/page-shell";
+import { DifficultyStars } from "@/components/game/difficulty-stars";
 import { exerciseRouteFor } from "../exercise-route";
 
 export type SubjectHubSubject = {
@@ -55,7 +57,7 @@ export function SubjectHub({
   const isRtl = subject.content_language === "ar";
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6" dir={isRtl ? "rtl" : "ltr"}>
+    <PageShell dir={isRtl ? "rtl" : "ltr"}>
       <header className="mb-8">
         {subject.attribute && (
           <div className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
@@ -117,9 +119,7 @@ export function SubjectHub({
                             {ex.title}
                           </span>
                           <span className="flex shrink-0 items-center gap-2 text-xs text-muted-foreground">
-                            <span>
-                              {t.public.subject.level.replace("{n}", String(ex.difficulty))}
-                            </span>
+                            <DifficultyStars level={ex.difficulty} />
                             <span className="flex items-center gap-0.5 text-primary">
                               <Zap className="h-3 w-3" />
                               {ex.xp_reward}
@@ -136,6 +136,6 @@ export function SubjectHub({
           );
         })}
       </div>
-    </div>
+    </PageShell>
   );
 }

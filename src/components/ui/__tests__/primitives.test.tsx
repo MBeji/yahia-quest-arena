@@ -7,22 +7,14 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingState } from "@/components/ui/loading-state";
 import { BackLink } from "@/components/ui/back-link";
 
-// BackLink wraps the router Link; a real router is irrelevant to what we
-// assert (classes, RTL icon flip), so Link renders as a plain anchor.
+// BackLink is built with createLink; a real router is irrelevant to what we
+// assert (classes, RTL icon flip), so createLink resolves `to` to a plain href.
 vi.mock("@tanstack/react-router", () => ({
-  Link: ({
-    children,
-    className,
-    to,
-  }: {
-    children: React.ReactNode;
-    className?: string;
-    to: string;
-  }) => (
-    <a className={className} href={to}>
-      {children}
-    </a>
-  ),
+  createLink:
+    (Comp: React.ComponentType<React.ComponentPropsWithoutRef<"a">>) =>
+    ({ to, ...rest }: { to: string } & React.ComponentPropsWithoutRef<"a">) => (
+      <Comp {...rest} href={to} />
+    ),
 }));
 
 describe("PageShell", () => {

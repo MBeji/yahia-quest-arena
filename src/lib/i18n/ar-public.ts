@@ -127,7 +127,6 @@ export const arPublic: TranslationKeys["public"] = {
   subject: {
     chapter: "الفصل {n}",
     readCourse: "اقرأ الدرس",
-    level: "مستوى {n}",
   },
   practice: {
     back: "العودة إلى المادة",
