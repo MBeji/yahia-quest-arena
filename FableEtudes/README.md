@@ -42,7 +42,7 @@ resynchroniser quand on touche une étude.
 | 11  | [Tuteur IA pédagogique](11-tuteur-ia-pedagogique/ETUDE.md)                                   | 🤖 le rêve produit                                                         | haute      | brouillon    | 01 (coût) ; 04-A0 ; 07 (similaire)                  |
 | 12  | [Studio d'ingestion (PDF→contenu)](12-studio-ingestion/ETUDE.md)                             | 📥 coût de création                                                        | moyenne    | brouillon    | pilote opéré avant canal in-app ; 13 (déterministe) |
 | 13  | [Moteur de transcription fidèle (corpus→app), OCR compris](13-moteur-transcription/ETUDE.md) | 🔧 transcription fidèle (OCR compris), résumable, traçable, LLM-agnostique | haute      | en exécution | — (la génération reste chez 12/skills)              |
-| 14  | [Refonte UX/design (registres, primitives, RTL)](14-refonte-ux-design/ETUDE.md)              | 🎨 cohérence perçue & confiance                                            | moyenne+   | brouillon    | arbitrage Q-1…Q-4 (humain)                          |
+| 14  | [Refonte UX/design (registres, primitives, RTL)](14-refonte-ux-design/ETUDE.md)              | 🎨 cohérence perçue & confiance                                            | moyenne+   | validée      | — (arbitré 2026-07-10)                              |
 
 **Ordre d'exécution recommandé** (les numéros sont des identifiants, pas l'ordre) :
 `01 → 02 → 03-B1 → 04-A0/A1 → 07 → 08 → 11 → 09 (parallèle) → 10 → 05 → 13 → 12 → 06`.
