@@ -20,7 +20,7 @@ export function DuelQueueCard({
   labels: DuelLabels;
 }) {
   return (
-    <div className="rounded-xl border border-border bg-card p-6 text-center">
+    <div className="rounded-2xl border border-gold/30 bg-black/60 p-6 text-center backdrop-blur-md">
       <p className="mb-4 text-sm text-muted-foreground">{labels.subtitle}</p>
       {searching ? (
         <div className="space-y-3">
@@ -32,7 +32,7 @@ export function DuelQueueCard({
             type="button"
             onClick={onCancel}
             disabled={disabled}
-            className="rounded-lg border border-border px-4 py-2 text-sm hover:bg-muted disabled:opacity-50"
+            className="min-h-11 rounded-lg border border-border px-4 py-2 text-sm hover:bg-muted disabled:opacity-50"
           >
             {labels.cancel}
           </button>
@@ -42,7 +42,7 @@ export function DuelQueueCard({
           type="button"
           onClick={onFind}
           disabled={disabled}
-          className="rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-50"
+          className="min-h-11 rounded-lg bg-[image:var(--gradient-gold)] px-6 py-3 font-bold text-primary-foreground shadow-gold transition hover:scale-105 disabled:opacity-50"
         >
           {labels.findOpponent}
         </button>

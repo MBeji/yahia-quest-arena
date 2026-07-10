@@ -57,7 +57,7 @@ export function DuelArena({
           .replace("{n}", String(questionIndex + 1))
           .replace("{total}", String(total))}
       </p>
-      <h2 className="text-lg font-semibold" dir={rtl ? "rtl" : undefined}>
+      <h2 className="font-display text-lg font-bold" dir={rtl ? "rtl" : undefined}>
         {question.prompt}
       </h2>
 
@@ -73,13 +73,13 @@ export function DuelArena({
         labels={questLabels}
         optionClassName={({ isSelected }: McqOptionRender) =>
           `flex w-full items-center gap-3 rounded-lg border p-3 text-start transition-colors ${
-            isSelected ? "border-primary bg-primary/10" : "border-border hover:bg-muted"
+            isSelected ? "border-gold bg-gold/15" : "border-border hover:bg-muted"
           }`
         }
       />
 
       {tooFast ? (
-        <p className="text-sm text-amber-600" role="alert">
+        <p className="text-sm font-semibold text-gold" role="alert">
           {labels.tooFast}
         </p>
       ) : null}
@@ -90,7 +90,7 @@ export function DuelArena({
         type="button"
         onClick={submit}
         disabled={!canValidate || submitting}
-        className="w-full rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-50"
+        className="min-h-11 w-full rounded-lg bg-[image:var(--gradient-gold)] px-6 py-3 font-bold text-primary-foreground shadow-gold transition hover:opacity-95 disabled:opacity-50"
       >
         {labels.validate}
       </button>
