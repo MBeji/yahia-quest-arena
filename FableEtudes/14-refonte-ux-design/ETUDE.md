@@ -140,7 +140,7 @@ Stop-points : un lot d'écran ne touche NI les primitives (retour lot 1 si manqu
 
 - [x] Lot 0 — étude + audit (cette PR)
 - [x] Lot 1 — fondations (PR livrée : 2 thèmes, tokens, primitives, motion)
-- [ ] Lot 2 — RTL + lint
+- [x] Lot 2 — RTL + lint (PR livrée : garde-fou + sweep)
 - [ ] Lot 3 — états système + i18n erreurs
 - [ ] Lot 4 — auth/onboarding
 - [ ] Lot 5 — dashboard
@@ -216,3 +216,13 @@ Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions co
   i18n `common.difficulty` (FR/EN/AR). Gate verte (1196 tests, +21), build:check + smoke:shell
   verts, captures 2 thèmes validées. Constat conservé pour le lot 4 : l'auth reste sombre en
   thème clair (inchangé — son rattachement au thème actif est le périmètre du lot 4).
+- 2026-07-10 — Lot 1 mergé (#349). Lot 2 livré : garde-fou `scripts/lint/check-rtl-classes.mjs`
+  branché sur `npm run lint` (donc CI) — interdit ml/mr/pl/pr, text-left/right, left-/right-
+  positionnels (hors centrage `left-1/2`), rounded-l/r, border-l/r en code métier, avec
+  marqueur d'exception `rtl-ok` ; sweep : 43 occurrences converties en propriétés logiques
+  (+ 3 chevrons `group-hover:translate-x` compensés `rtl:`), 1 exception documentée (stack
+  trace `__root.tsx`, LTR par nature), la compensation manuelle `rtl:left-4 rtl:right-auto`
+  du bug-launcher remplacée par `end-4`. Écarts acceptés vs D-4 : (a) le volet palette
+  brute/`text-white` du garde-fou arrivera avec le lot 10 (l'activer avant la purge mettrait
+  la gate au rouge) ; (b) `translate-x` de centrage (`left-1/2 -translate-x-1/2`) exempté —
+  symétrique en RTL. Vérifié : gate verte, capture auth AR (icônes/paddings côté start).

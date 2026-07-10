@@ -339,7 +339,7 @@ function AuthPage() {
                 <Label htmlFor="auth-name" className="sr-only">
                   {t.auth.heroNameLabel}
                 </Label>
-                <UserIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <UserIcon className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
                 <input
                   id="auth-name"
                   type="text"
@@ -347,7 +347,7 @@ function AuthPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder={t.auth.heroNameLabel}
-                  className="w-full rounded-lg border border-input bg-black/50 py-3 pl-10 pr-3 text-sm focus:border-[color:var(--gold)] focus:outline-none"
+                  className="w-full rounded-lg border border-input bg-black/50 py-3 ps-10 pe-3 text-sm focus:border-[color:var(--gold)] focus:outline-none"
                 />
               </div>
             )}
@@ -375,7 +375,7 @@ function AuthPage() {
               <Label htmlFor="auth-email" className="sr-only">
                 {t.auth.emailLabel}
               </Label>
-              <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Mail className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
               <input
                 id="auth-email"
                 type="email"
@@ -383,14 +383,14 @@ function AuthPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={t.auth.emailLabel}
-                className="w-full rounded-lg border border-input bg-black/50 py-2.5 pl-10 pr-3 text-sm focus:border-[color:var(--gold)] focus:outline-none"
+                className="w-full rounded-lg border border-input bg-black/50 py-2.5 ps-10 pe-3 text-sm focus:border-[color:var(--gold)] focus:outline-none"
               />
             </div>
             <div className="relative">
               <Label htmlFor="auth-password" className="sr-only">
                 {t.auth.passwordLabel}
               </Label>
-              <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Lock className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
               <input
                 id="auth-password"
                 type="password"
@@ -404,7 +404,7 @@ function AuthPage() {
                 placeholder={t.auth.passwordLabel}
                 aria-invalid={passwordError ? true : undefined}
                 aria-describedby={passwordError ? "auth-password-error" : undefined}
-                className="w-full rounded-lg border border-input bg-black/50 py-2.5 pl-10 pr-3 text-sm focus:border-[color:var(--gold)] focus:outline-none"
+                className="w-full rounded-lg border border-input bg-black/50 py-2.5 ps-10 pe-3 text-sm focus:border-[color:var(--gold)] focus:outline-none"
               />
               {passwordError && (
                 <p id="auth-password-error" className="mt-1 text-xs text-[color:var(--gold)]">

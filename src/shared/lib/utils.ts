@@ -30,5 +30,5 @@ export function isMathExpression(text: string): boolean {
 
 /** Returns dir="rtl" props if text is Arabic */
 export function rtlProps(text: string) {
-  return isRtlText(text) ? { dir: "rtl" as const, className: "text-right" } : {};
+  return isRtlText(text) ? { dir: "rtl" as const, className: "text-start" } : {};
 }

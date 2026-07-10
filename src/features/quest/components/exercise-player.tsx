@@ -592,7 +592,7 @@ export function ExercisePlayer({
                   {result.profile?.hero_class as string}
                 </div>
                 {result.unlockedBadges.length > 0 && (
-                  <div className="mt-6 rounded-2xl border border-(--neon-gold)/30 bg-(--neon-gold)/10 p-4 text-left">
+                  <div className="mt-6 rounded-2xl border border-(--neon-gold)/30 bg-(--neon-gold)/10 p-4 text-start">
                     <div className="text-xs uppercase tracking-widest text-neon-gold">
                       {t.quest.badgesUnlocked}
                     </div>

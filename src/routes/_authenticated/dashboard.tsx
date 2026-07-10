@@ -257,8 +257,8 @@ function Dashboard() {
         >
           {/* Refined premium hairline: a single gold filet across the top edge. */}
           <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[color:var(--gold)]/50 to-transparent" />
-          <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/30 blur-3xl" />
-          <div className="absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/20 blur-3xl" />
+          <div className="absolute -end-10 -top-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/30 blur-3xl" />
+          <div className="absolute -bottom-10 -start-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/20 blur-3xl" />
           <div className="relative grid gap-6 sm:grid-cols-[auto_1fr_auto] sm:items-center">
             <HeroAvatar avatarSlug={profile.avatar_slug} />
             <div className="min-w-0">
@@ -327,10 +327,10 @@ function Dashboard() {
               )}
             </div>
             <div className="hidden sm:block">
-              <div className="text-right text-xs uppercase tracking-widest text-muted-foreground">
+              <div className="text-end text-xs uppercase tracking-widest text-muted-foreground">
                 {t.dashboard.longestStreak}
               </div>
-              <div className="text-right font-display text-2xl font-bold text-[color:var(--flame)]">
+              <div className="text-end font-display text-2xl font-bold text-[color:var(--flame)]">
                 {profile.longest_streak}d
               </div>
             </div>

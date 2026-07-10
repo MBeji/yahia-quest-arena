@@ -148,7 +148,7 @@ function LeaderboardPage() {
                     </div>
                   </div>
                 </div>
-                <div className="shrink-0 text-right">
+                <div className="shrink-0 text-end">
                   <div className="flex items-center gap-1 font-display text-lg font-bold text-[color:var(--neon-gold)]">
                     <Zap className="h-4 w-4" /> {myRank.xp} XP
                   </div>

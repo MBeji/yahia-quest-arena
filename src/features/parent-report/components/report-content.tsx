@@ -250,10 +250,10 @@ export function ReportContent({ report }: { report: ReportData }) {
                     style={{ width: `${s.avgScore}%` }}
                   />
                 </div>
-                <div className="w-10 text-right text-sm text-muted-foreground sm:w-12">
+                <div className="w-10 text-end text-sm text-muted-foreground sm:w-12">
                   {s.avgScore}%
                 </div>
-                <div className="w-12 text-right text-xs text-muted-foreground sm:w-20">
+                <div className="w-12 text-end text-xs text-muted-foreground sm:w-20">
                   {s.attempts} {t.parentReport.exSuffix}
                 </div>
               </div>

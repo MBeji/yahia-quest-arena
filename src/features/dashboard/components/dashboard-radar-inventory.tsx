@@ -179,7 +179,7 @@ export function DashboardRadarInventory({
                       {item.itemType}
                     </div>
                   </div>
-                  <div className="shrink-0 text-right">
+                  <div className="shrink-0 text-end">
                     <div className="font-display text-lg font-bold text-[color:var(--gold)]">
                       x{item.quantity}
                     </div>
