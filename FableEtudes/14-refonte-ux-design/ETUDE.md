@@ -1,9 +1,9 @@
 # Étude 14 — Refonte UX/design de l'application
 
-> **Statut** : brouillon
+> **Statut** : en exécution (lot 0 mergé ; lot 1 livré en PR)
 > **Priorité** : transverse · **Valeur** : cohérence perçue, confiance parents, lisibilité élèves — sans re-branding · **Complexité** : moyenne+ (large surface, risque unitaire faible)
 > **Architecte** : Fable / 2026-07-10 · **Exécuteur cible** : Sonnet (ou équiv.)
-> **Dépend de** : arbitrage des questions §7 (registres/thèmes) ; accès captures authentifiées (Q-2) · **Bloque** : rien (les autres études peuvent avancer en parallèle, mais les lots UI d'autres épics devraient consommer les primitives du lot 1 dès qu'il est mergé)
+> **Dépend de** : — (questions arbitrées) · **Bloque** : rien (les autres études peuvent avancer en parallèle, mais les lots UI d'autres épics devraient consommer les primitives du lot 1 dès qu'il est mergé)
 > **Docs normatifs liés** : CLAUDE.md, ARCHITECTURE.md, docs/xss-rendering-policy.md ; annexe factuelle : [AUDIT-2026-07.md](./AUDIT-2026-07.md)
 
 ## 1. Contexte & objectif produit
@@ -25,6 +25,8 @@ big-bang, gate verte à chaque pas.
 - 0 classe directionnelle physique en code métier (hors `components/ui` vendorisé) ;
 - 0 classe de palette brute (`text-blue-400`…) et 0 `text-white` en code métier ;
 - 1 seule syntaxe de token couleur et 1 seule écriture du dégradé or ;
+- exactement **2 thèmes** (clair « Référence » vert / sombre « Noir & Or »), le thème violet
+  supprimé, la préférence stockée migrée sans casse ;
 - les 8 barres de progression remplacées par 1 primitive ; idem retour/stat/empty/loader ;
 - 100 % des messages d'erreur passés par l'i18n ;
 - budgets bundle inchangés (`build:check`), coverage non régressée.
@@ -36,8 +38,9 @@ mécanique de jeu, pas de touche aux server fns.
 ## 2. Spécification fonctionnelle
 
 - **Acteurs** : tous (élève, parent, enseignant anonyme sur le tier public, admin).
-- **US-1** — En tant qu'utilisateur, je traverse landing → auth → dashboard sans rupture de
-  registre : l'auth suit le thème actif (claire en `reference`/`light`, or en `dark`).
+- **US-1** — En tant qu'utilisateur, je choisis mon thème (clair ou sombre) et il s'applique
+  **partout et de façon cohérente** — landing, auth, écrans connectés, jeu — sans rupture :
+  l'auth suit le thème actif (claire en `reference`, noir & or en `dark`).
 - **US-2** — En tant qu'élève arabophone, chaque écran (pas seulement le tier public) est
   correctement miroir en RTL.
 - **US-3** — En tant qu'élève, la difficulté d'une mission se lit d'un coup d'œil avec le même
@@ -49,8 +52,10 @@ mécanique de jeu, pas de touche aux server fns.
 - **US-6** — En tant que joueur de duel, l'écran duel appartient au monde « Arène » (or,
   font-display) comme le donjon.
 - **Règles** :
-  - **R-1** : le registre est une fonction du thème + de la zone (public/jeu), jamais un choix
-    par écran ; aucune couleur de registre codée en dur dans un composant.
+  - **R-1** : le thème (clair/sombre) est **global et transversal** — choisi au switcher,
+    appliqué de la landing au donjon, mode anonyme ou connecté ; la zone (public/jeu) ne
+    choisit que la _composition_ (densité, font-display, effets), jamais la palette ; aucune
+    couleur de registre codée en dur dans un composant.
   - **R-2** : code métier = propriétés logiques uniquement (`ms/me/ps/pe/start/end/text-start`) ;
     `rtl:-scale-x-100` réservé aux icônes directionnelles.
   - **R-3** : une seule syntaxe de token : les couleurs de marque or/flame sont mappées dans
@@ -69,10 +74,21 @@ mécanique de jeu, pas de touche aux server fns.
 
 Aucune migration DB, aucun changement server. Tout est client/CSS.
 
-- **D-1 — Deux registres formalisés.** On garde « Référence » (public/clair) et « Arène »
-  (jeu/or). Le thème choisit la palette ; la zone (layout `_public` vs `_authenticated`)
-  choisit le registre de composition (densité, font-display, effets). L'auth est refondue pour
-  suivre le thème actif (US-1) au lieu d'imposer le sombre.
+- **D-1 — Deux thèmes uniques, transversaux (arbitrage Q-1).** Le système passe de 3 thèmes
+  (`reference`/`light`/`dark` violet) à **2** :
+  - **Clair « Référence »** : vert sobre institutionnel (l'actuel `reference`, inchangé) ;
+  - **Sombre « Noir & Or »** : le `dark` actuel **recoloré** — le violet électrique disparaît,
+    `--primary` et les accents passent sur la gamme or déjà tokenisée (`--gold`,
+    `--gold-bright`), fond noir profond.
+
+  Le thème `light` (jaune-vert) est supprimé ; les préférences stockées
+  (`localStorage`/cookie `xp-scholars-theme` = `light`) migrent vers `reference` au premier
+  chargement (même mécanique que la migration de locale existante). `THEMES`, le switcher,
+  `themeFromCookieHeader` et les tests suivent. La zone (layout `_public` vs
+  `_authenticated`) ne choisit que la composition (densité, font-display, effets « Arène ») —
+  la palette vient exclusivement du thème. L'auth est refondue pour suivre le thème actif
+  (US-1) au lieu d'imposer le sombre.
+
 - **D-2 — Primitives partagées** (nouvelles, sous `src/components/ui/` pour les génériques,
   `src/components/game/` pour celles du registre Arène) : `PageShell` (conteneur standard :
   3 gabarits `narrow|reading|wide` au lieu de 5 largeurs ad hoc), `GoldProgress` (l'unique
@@ -104,26 +120,26 @@ Aucune migration DB, aucun changement server. Tout est client/CSS.
 
 Chaque lot = une PR mergeable, gate verte (`npm run verify`), captures R-5 jointes.
 
-| lot | contenu (résumé)                                                                                   | fichiers/objets principaux                               | tests exigés                   | dépend de          |
-| --- | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------- | ------------------------------ | ------------------ |
-| 0   | Cette étude + audit                                                                                | `FableEtudes/14-refonte-ux-design/*`                     | —                              | —                  |
-| 1   | Fondations : tokens `@theme` (D-3), primitives D-2, module motion D-5                              | `styles.css`, `components/ui                             | game/*`, `shared/lib/motion`   | unit par primitive | 0 validé |
-| 2   | Garde-fous lint (D-4) + sweep RTL des 61 classes physiques métier                                  | `eslint.config`, ~20 fichiers touchés                    | lint vert, snapshots RTL       | 1                  |
-| 3   | i18n des erreurs publiques + unification loading/error/empty sur `LoadingState`/`EmptyState`       | routes `_public/*`, features                             | unit i18n, snapshots           | 1                  |
-| 4   | Auth + onboarding rattachés au thème actif (US-1)                                                  | `routes/auth.tsx`, `onboarding.tsx`                      | unit, captures 3 thèmes        | 1, 2               |
-| 5   | Dashboard sur les primitives (`PageShell`, `GoldProgress`, `StatTile`…)                            | `routes/_authenticated/dashboard.tsx` + composants       | unit existants verts, captures | 1, 2               |
-| 6   | Boucle quête : `exercise-player`, `quest-reward-grid`, `subject-hub` (+ `DifficultyStars` partout) | `features/quest/*`                                       | unit existants, captures       | 5                  |
-| 7   | Donjon                                                                                             | `routes/_authenticated/dungeon.tsx`                      | idem                           | 6                  |
-| 8   | Duel rattaché au registre Arène (US-6) + a11y duel                                                 | `features/duel/*`, `routes/duel*`                        | idem                           | 5                  |
-| 9   | Leaderboard + shop (badges-shop) + parcours/journey                                                | `leaderboard.tsx`, `dashboard-badges-shop`, `parcours/*` | idem                           | 5                  |
-| 10  | Parent-report + admin : purge palette brute/`text-white`, `PageShell` admin                        | `features/parent-report/*`, `routes/admin.*`             | idem                           | 5                  |
-| 11  | Motion : gating reduced-motion généralisé (US-5) + harmonisation des entrées                       | écrans restants                                          | unit motion helper             | 1                  |
+| lot | contenu (résumé)                                                                                                                                    | fichiers/objets principaux                                                          | tests exigés                   | dépend de |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------------------ | --------- |
+| 0   | Cette étude + audit + arbitrages                                                                                                                    | `FableEtudes/14-refonte-ux-design/*`                                                | —                              | —         |
+| 1   | Fondations : 2 thèmes (D-1 : suppression `light`, dark → noir & or, migration préférence), tokens `@theme` (D-3), primitives D-2, module motion D-5 | `styles.css`, `lib/theme`, `components/ui` + `components/game`, `shared/lib/motion` | unit par primitive + thème     | 0 validé  |
+| 2   | Garde-fous lint (D-4) + sweep RTL des 61 classes physiques métier                                                                                   | `eslint.config`, ~20 fichiers touchés                                               | lint vert, snapshots RTL       | 1         |
+| 3   | i18n des erreurs publiques + unification loading/error/empty sur `LoadingState`/`EmptyState`                                                        | routes `_public/*`, features                                                        | unit i18n, snapshots           | 1         |
+| 4   | Auth + onboarding rattachés au thème actif (US-1)                                                                                                   | `routes/auth.tsx`, `onboarding.tsx`                                                 | unit, captures 3 thèmes        | 1, 2      |
+| 5   | Dashboard sur les primitives (`PageShell`, `GoldProgress`, `StatTile`…)                                                                             | `routes/_authenticated/dashboard.tsx` + composants                                  | unit existants verts, captures | 1, 2      |
+| 6   | Boucle quête : `exercise-player`, `quest-reward-grid`, `subject-hub` (+ `DifficultyStars` partout)                                                  | `features/quest/*`                                                                  | unit existants, captures       | 5         |
+| 7   | Donjon                                                                                                                                              | `routes/_authenticated/dungeon.tsx`                                                 | idem                           | 6         |
+| 8   | Duel rattaché au registre Arène (US-6) + a11y duel                                                                                                  | `features/duel/*`, `routes/duel*`                                                   | idem                           | 5         |
+| 9   | Leaderboard + shop (badges-shop) + parcours/journey                                                                                                 | `leaderboard.tsx`, `dashboard-badges-shop`, `parcours/*`                            | idem                           | 5         |
+| 10  | Parent-report + admin : purge palette brute/`text-white`, `PageShell` admin                                                                         | `features/parent-report/*`, `routes/admin.*`                                        | idem                           | 5         |
+| 11  | Motion : gating reduced-motion généralisé (US-5) + harmonisation des entrées                                                                        | écrans restants                                                                     | unit motion helper             | 1         |
 
 Stop-points : un lot d'écran ne touche NI les primitives (retour lot 1 si manque) NI un autre
 écran ; toute divergence étude↔code → STOP et remontée (règle FableEtudes).
 
 - [x] Lot 0 — étude + audit (cette PR)
-- [ ] Lot 1 — fondations
+- [x] Lot 1 — fondations (PR livrée : 2 thèmes, tokens, primitives, motion)
 - [ ] Lot 2 — RTL + lint
 - [ ] Lot 3 — états système + i18n erreurs
 - [ ] Lot 4 — auth/onboarding
@@ -151,8 +167,9 @@ Stop-points : un lot d'écran ne touche NI les primitives (retour lot 1 si manqu
 - **RISK-1 — Régression bundle** (manualChunks main-réglé, budget strict). Prob. moyenne,
   impact haut. Mitigation : aucune nouvelle dépendance ; `npm run build:check` à chaque lot ;
   ne pas toucher les groupes vendor.
-- **RISK-2 — Régression visuelle non vue faute de captures authentifiées.** Prob. haute tant
-  que Q-2 ouvert. Mitigation : arbitrer Q-2 avant le lot 4 ; à défaut, s'appuyer sur le
+- **RISK-2 — Régression visuelle non vue faute de captures authentifiées.** Q-2 arbitré mais
+  les creds TEST ne sont pas encore injectés dans le container remote. Mitigation : injecter
+  `.env.test` dans la config d'environnement avant le lot 4 ; à défaut, s'appuyer sur le
   nightly e2e + revue humaine des PR.
 - **RISK-3 — Sweep RTL casse un alignement voulu** (ex. chiffres en `text-right` dans une
   saisie numérique, légitime en LTR ET RTL pour des nombres). Mitigation : le lot 2 traite les
@@ -164,18 +181,23 @@ Stop-points : un lot d'écran ne touche NI les primitives (retour lot 1 si manqu
 
 ## 7. Questions ouvertes (pour l'humain)
 
-- **Q-1 — Rôle du thème `dark` violet.** Sur la landing publique il produit un bi-accent
-  violet/or (audit §A). Options : (a) assumer — le dark est « l'app la nuit », l'or reste
-  l'accent jeu ; (b) aligner l'accent dark sur l'or pour le tier public. Choix produit.
-- **Q-2 — Captures authentifiées.** Fournir les creds du projet Supabase TEST (`.env.test`)
-  à l'environnement d'exécution (ou élargir la network policy pour autoriser les registres
-  Docker) afin que chaque PR d'écran joigne ses captures réelles. Sans ça, revue humaine
-  obligatoire sur les lots 4-10.
-- **Q-3 — Publication du Design System sur claude.ai/design (D-6).** Nécessite une session
-  avec login claude.ai (`/design-login`) et le choix du projet cible. Go/no-go + timing.
-- **Q-4 — `DifficultyStars`** : confirmer la représentation (étoiles ⭐ 1-4 alignées sur les
-  titres de missions) comme vocabulaire unique de difficulté (remplace les 3 barrettes du
-  donjon et le « Niveau N » du subject-hub).
+Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions consignées :
+
+- **Q-1 — ARBITRÉ : unification à 2 thèmes.** Suppression du violet électrique. Deux thèmes
+  globaux et transversaux (landing → écrans connectés, anonyme ou connecté, choisis au
+  switcher et appliqués partout de façon cohérente) : **Clair « Référence »** (vert sobre
+  institutionnel) et **Sombre « Noir & Or »**. → intégré à D-1 et au lot 1.
+- **Q-2 — ARBITRÉ : validé.** Les identifiants Supabase TEST (`.env.test`) sont disponibles
+  côté humain (PC + environnement). Note d'exécution : ils ne sont pas encore visibles dans
+  le container remote (ni fichier ni variables) — à injecter dans la config de
+  l'environnement Claude Code (variables ou setup script) pour débloquer les captures
+  authentifiées locales ; la CI e2e-auth a déjà ses secrets.
+- **Q-3 — ARBITRÉ : GO.** Publication du Design System sur claude.ai/design (D-6) dès que les
+  primitives du lot 1 existent.
+- **Q-4 — ARBITRÉ : étoiles standard.** ⭐ 1-4 comme repère **unique** de difficulté sur toute
+  l'app, en remplacement des barrettes du donjon et des mentions « Niveau N ». Extensible à
+  5/6 étoiles plus tard — toujours des étoiles ; la primitive `DifficultyStars` prend un
+  `max` paramétrable.
 
 ## 8. Journal d'exécution
 
@@ -183,3 +205,14 @@ Stop-points : un lot d'écran ne touche NI les primitives (retour lot 1 si manqu
   Constats phase 0 : voir AUDIT-2026-07.md. Captures publiques archivées côté session (32,
   0 erreur). Supabase local impossible dans l'environnement d'exécution (proxy réseau ↔
   registres Docker) — à l'origine de Q-2.
+- 2026-07-10 — Arbitrages humains Q-1…Q-4 rendus (§7), statut → **validée**. Impact scope :
+  le lot 1 absorbe l'unification à 2 thèmes (D-1 réécrit) ; `DifficultyStars` paramétrable
+  au-delà de 4. `.env.test` toujours absent du container remote (voir Q-2).
+- 2026-07-10 — Lot 1 livré : thème `light` supprimé (+ migration des préférences), `:root`
+  sombre recoloré Noir & Or (violet retiré, utilitaires tokenisés en `color-mix` → la plupart
+  des overrides par thème supprimés, −106 lignes de CSS), token `--text-2xs`, primitives
+  `PageShell`/`BackLink`/`EmptyState`/`LoadingState` (ui) + `GoldProgress`/`StatTile`/
+  `DifficultyStars`/`PremiumBadge` (game), module `shared/lib/motion` (`useEntrance`), clé
+  i18n `common.difficulty` (FR/EN/AR). Gate verte (1196 tests, +21), build:check + smoke:shell
+  verts, captures 2 thèmes validées. Constat conservé pour le lot 4 : l'auth reste sombre en
+  thème clair (inchangé — son rattachement au thème actif est le périmètre du lot 4).

@@ -13,6 +13,7 @@ export const ar: TranslationKeys = {
   common: {
     backToHall: "العودة للقاعة",
     back: "رجوع",
+    difficulty: "الصعوبة {n} من {max}",
     loading: "جاري التحميل…",
     retry: "إعادة المحاولة",
     home: "الرئيسية",
@@ -431,8 +432,7 @@ export const ar: TranslationKeys = {
   },
   theme: {
     label: "السمة",
-    reference: "مرجعي",
-    light: "فاتح",
+    reference: "فاتح",
     dark: "داكن",
   },
   sound: {

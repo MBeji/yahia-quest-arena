@@ -14,6 +14,8 @@ export type TranslationKeys = {
   common: {
     backToHall: string;
     back: string;
+    /** Accessible label for DifficultyStars — {n}/{max} placeholders. */
+    difficulty: string;
     loading: string;
     retry: string;
     home: string;
@@ -402,7 +404,6 @@ export type TranslationKeys = {
   theme: {
     label: string;
     reference: string;
-    light: string;
     dark: string;
   };
   // Sound & music controls
