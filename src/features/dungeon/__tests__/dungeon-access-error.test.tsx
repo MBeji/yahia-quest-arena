@@ -42,7 +42,8 @@ vi.mock("@/features/subscription", () => ({
   SubscriptionPaywall: () => React.createElement("div", { "data-testid": "paywall" }),
 }));
 
-vi.mock("@/shared/lib/utils", () => ({
+vi.mock("@/shared/lib/utils", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/shared/lib/utils")>()),
   isRtlText: () => false,
   isMathExpression: () => false,
 }));

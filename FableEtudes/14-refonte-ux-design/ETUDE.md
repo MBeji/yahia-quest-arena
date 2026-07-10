@@ -141,7 +141,7 @@ Stop-points : un lot d'écran ne touche NI les primitives (retour lot 1 si manqu
 - [x] Lot 0 — étude + audit (cette PR)
 - [x] Lot 1 — fondations (PR livrée : 2 thèmes, tokens, primitives, motion)
 - [x] Lot 2 — RTL + lint (PR livrée : garde-fou + sweep)
-- [ ] Lot 3 — états système + i18n erreurs
+- [x] Lot 3 — états système + i18n erreurs (PR livrée)
 - [ ] Lot 4 — auth/onboarding
 - [ ] Lot 5 — dashboard
 - [ ] Lot 6 — quête
@@ -226,3 +226,14 @@ Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions co
   brute/`text-white` du garde-fou arrivera avec le lot 10 (l'activer avant la purge mettrait
   la gate au rouge) ; (b) `translate-x` de centrage (`left-1/2 -translate-x-1/2`) exempté —
   symétrique en RTL. Vérifié : gate verte, capture auth AR (icônes/paddings côté start).
+- 2026-07-10 — Lot 2 mergé (#350). Lot 3 livré : 7 clés i18n `errors.*LoadFailed`/`parcoursNotFound`/
+  `sessionStartFailed` (FR/EN/AR) remplacent le français codé en dur des 6 routes publiques +
+  `quest.$exerciseId` ; erreurs de route unifiées sur `EmptyState` (icône + retry via `refetch`),
+  chargements unifiés sur `LoadingState` (routes publiques, suivi, parcours, leaderboard, donjon,
+  exercise-player, parent-report ×2, admin.subscriptions) ; vides unifiés là où le pattern
+  existait (badges, journey, leaderboard) — les one-liners denses du dashboard et du duel
+  suivront avec leurs lots d'écran (5, 8). Écarts consignés : budget bundle i18n 100→104 KB
+  (pattern documenté du fichier de budget — 7 clés × 3 langues) ; exception `max-lines`
+  scopée aux dictionnaires i18n (fichiers-contrats plats, sans logique). Vérifié : gate verte
+  (1196 tests), build:check + smoke:shell verts, LoadingState capturé localisé/thémé (EN clair,
+  AR sombre or).

@@ -1,4 +1,5 @@
 import { Loader2, Shield, ShoppingBag } from "lucide-react";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { avatarEmojiForSlug } from "@/shared/lib/avatar";
 import { useI18n } from "@/lib/i18n";
@@ -94,9 +95,7 @@ export function DashboardBadgesShop({
               </div>
             ))
           ) : (
-            <div className="rounded-2xl border border-dashed border-border/50 bg-card/40 p-6 text-sm text-muted-foreground">
-              {t.dashboard.badgesEmpty}
-            </div>
+            <EmptyState icon={Shield} title={t.dashboard.badgesEmpty} />
           )}
         </div>
       </section>

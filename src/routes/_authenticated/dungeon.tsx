@@ -35,6 +35,7 @@ import { shuffleOptions, type BaseOption, type DisplayOption } from "@/shared/li
 import { isValidAnswerFormat } from "@/shared/lib/answer-formats";
 import { RichField } from "@/components/ui/svg-figure";
 import { useT } from "@/lib/i18n";
+import { LoadingState } from "@/components/ui/loading-state";
 import { useSound, encouragementFor, type Encouragement } from "@/lib/sound";
 
 export const Route = createFileRoute("/_authenticated/dungeon")({
@@ -338,7 +339,7 @@ function DungeonPage() {
                 </button>
               </div>
             ) : accessQuery.isLoading || !access ? (
-              <div className="mt-8 text-sm text-muted-foreground">{t.common.loading}</div>
+              <LoadingState label={t.common.loading} className="mt-2 py-8" />
             ) : access.reason === "SUBSCRIPTION" ? (
               <SubscriptionPaywall />
             ) : !access.canAccess ? (

@@ -65,6 +65,16 @@ export default tseslint.config(
     },
   },
   {
+    // The i18n dictionaries are flat, logic-free contract files (one key per line,
+    // three locales). They grow with the product surface, not with complexity, so
+    // the max-lines complexity guard doesn't apply — splitting them would only
+    // scatter the translation contract. (étude 14 lot 3: +7 route-error keys.)
+    files: ["src/lib/i18n/*.ts"],
+    rules: {
+      "max-lines": "off",
+    },
+  },
+  {
     // TanStack Start route files must `export const Route = createFileRoute(...)`.
     // Newer eslint-plugin-react-refresh no longer treats that PascalCase const as a
     // component, so only-export-components flags the route's local component(s).
