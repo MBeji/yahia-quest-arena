@@ -759,7 +759,6 @@ export type TranslationKeys = {
     subject: {
       chapter: string;
       readCourse: string;
-      level: string;
     };
     practice: {
       back: string;

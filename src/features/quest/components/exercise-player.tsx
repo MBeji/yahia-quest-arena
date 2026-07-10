@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion, AnimatePresence } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { ArrowLeft, Loader2, Trophy, Skull, Heart, BookOpen, Check } from "lucide-react";
+import { Loader2, Trophy, Skull, Heart, BookOpen, Check } from "lucide-react";
 import { toast } from "sonner";
 import { computeNextExerciseId, getExercise, getSubject } from "@/features/quest";
 import { PASS_THRESHOLD_PCT, QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
@@ -25,6 +25,10 @@ import { LevelUpCelebration } from "@/components/ui/level-up-celebration";
 import { ExplainHint } from "@/components/ui/explain-hint";
 import { useT } from "@/lib/i18n";
 import { LoadingState } from "@/components/ui/loading-state";
+import { BackLink } from "@/components/ui/back-link";
+import { PageShell } from "@/components/ui/page-shell";
+import { GoldProgress } from "@/components/game/gold-progress";
+import { useEntrance } from "@/shared/lib/motion";
 import { useSound } from "@/lib/sound";
 import type { UnlockedBadge } from "@/shared/types/gamification";
 
@@ -126,6 +130,7 @@ export function ExercisePlayer({
   strategy: ExercisePlayerStrategy;
 }) {
   const t = useT();
+  const scaleIn = useEntrance("scale");
   const { play } = useSound();
   const qc = useQueryClient();
   const fetchExercise = useServerFn(getExercise);
@@ -496,7 +501,7 @@ export function ExercisePlayer({
     const passed = result.scorePct >= (isQuiz ? QUIZ_PASS_THRESHOLD_PCT : PASS_THRESHOLD_PCT);
     const resultLevel = Number(result.profile?.level ?? 1);
     return (
-      <div className="mx-auto max-w-2xl px-6 py-12" dir={isRtlSubject ? "rtl" : undefined}>
+      <PageShell width="narrow" className="py-12" dir={isRtlSubject ? "rtl" : undefined}>
         {capabilities.rewards && showConfetti && <Confetti />}
         {capabilities.rewards && (
           <LevelUpCelebration
@@ -507,14 +512,13 @@ export function ExercisePlayer({
           />
         )}
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="relative overflow-hidden rounded-3xl border border-[color:var(--gold)]/40 bg-black/60 p-8 text-center backdrop-blur-xl shadow-gold"
+          {...scaleIn}
+          className="relative overflow-hidden rounded-3xl border border-gold/40 bg-black/60 p-8 text-center backdrop-blur-xl shadow-gold"
         >
-          <div className="absolute -top-20 left-1/2 h-48 w-48 -translate-x-1/2 rounded-full bg-[color:var(--gold)]/30 blur-3xl" />
+          <div className="absolute -top-20 left-1/2 h-48 w-48 -translate-x-1/2 rounded-full bg-gold/30 blur-3xl" />
           <div className="relative">
             <div className="animate-gold-pulse mx-auto grid h-20 w-20 place-items-center rounded-2xl bg-[image:var(--gradient-gold)]">
-              <Trophy className="h-10 w-10 text-black" />
+              <Trophy className="h-10 w-10 text-primary-foreground" />
             </div>
             <h1 className="mt-5 font-display text-3xl font-bold">
               {passed ? t.quest.victoryTitle : t.quest.niceTriTitle}
@@ -538,8 +542,8 @@ export function ExercisePlayer({
               <div
                 className={`mt-4 rounded-2xl border p-4 text-sm font-semibold ${
                   passed && !result.quizTooFast
-                    ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
-                    : "border-[color:var(--neon-gold)]/50 bg-[color:var(--neon-gold)]/10 text-[color:var(--neon-gold)]"
+                    ? "border-success/40 bg-success/10 text-success"
+                    : "border-neon-gold/50 bg-neon-gold/10 text-neon-gold"
                 }`}
                 dir={isRtlSubject ? "rtl" : undefined}
               >
@@ -552,7 +556,7 @@ export function ExercisePlayer({
                   <Link
                     to="/chapitre/$chapterId"
                     params={{ chapterId }}
-                    className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-4 py-2 text-xs font-bold text-black shadow-gold hover:scale-105"
+                    className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-4 py-2 text-xs font-bold text-primary-foreground shadow-gold hover:scale-105"
                   >
                     <BookOpen className="h-4 w-4" /> {QL.review}
                   </Link>
@@ -560,12 +564,12 @@ export function ExercisePlayer({
               </div>
             )}
             {capabilities.rewards && result.xpEarned === 0 && (
-              <div className="mt-6 rounded-xl border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 p-3 text-center text-xs text-[color:var(--gold)]">
+              <div className="mt-6 rounded-xl border border-gold/30 bg-gold/5 p-3 text-center text-xs text-gold">
                 {noXpReason(result)}
               </div>
             )}
             {capabilities.rewards && result.potionApplied && (
-              <div className="mt-6 rounded-xl border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/10 p-3 text-center text-sm font-bold text-[color:var(--gold)]">
+              <div className="mt-6 rounded-xl border border-gold/40 bg-gold/10 p-3 text-center text-sm font-bold text-gold">
                 {result.potionApplied.xpMultiplier > 1
                   ? t.quest.potionXpApplied.replace(
                       "{x}",
@@ -589,7 +593,7 @@ export function ExercisePlayer({
                   {result.profile?.hero_class as string}
                 </div>
                 {result.unlockedBadges.length > 0 && (
-                  <div className="mt-6 rounded-2xl border border-(--neon-gold)/30 bg-(--neon-gold)/10 p-4 text-start">
+                  <div className="mt-6 rounded-2xl border border-neon-gold/30 bg-neon-gold/10 p-4 text-start">
                     <div className="text-xs uppercase tracking-widest text-neon-gold">
                       {t.quest.badgesUnlocked}
                     </div>
@@ -606,7 +610,7 @@ export function ExercisePlayer({
                   </div>
                 )}
                 {result.retryShieldUsed && (
-                  <div className="mt-6 rounded-xl border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/10 p-3 text-center text-sm font-bold text-[color:var(--gold)]">
+                  <div className="mt-6 rounded-xl border border-gold/40 bg-gold/10 p-3 text-center text-sm font-bold text-gold">
                     {t.quest.retryShieldUsed}
                   </div>
                 )}
@@ -638,7 +642,7 @@ export function ExercisePlayer({
             )}
           </div>
         </motion.div>
-      </div>
+      </PageShell>
     );
   }
 
@@ -654,30 +658,25 @@ export function ExercisePlayer({
   const options = current ? (shuffledOptionsByQuestionId.get(current.id) ?? []) : [];
   const canUseHints = !isQuiz && !bossMode && capabilities.hints;
   const currentHintRevealed = current ? current.id in revealedHints : false;
-  const leaveClass =
-    "mb-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground";
 
   return (
-    <div className="mx-auto max-w-2xl px-6 py-8" dir={isRtlSubject ? "rtl" : undefined}>
+    <PageShell width="narrow" dir={isRtlSubject ? "rtl" : undefined}>
       {exSubjectId ? (
-        <Link to="/matiere/$subjectId" params={{ subjectId: exSubjectId }} className={leaveClass}>
-          <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.quest.leaveQuest}
-        </Link>
+        <BackLink to="/matiere/$subjectId" params={{ subjectId: exSubjectId }}>
+          {t.quest.leaveQuest}
+        </BackLink>
       ) : (
-        <Link to={strategy.homeTo} className={leaveClass}>
-          <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.quest.leaveQuest}
-        </Link>
+        <BackLink to={strategy.homeTo}>{t.quest.leaveQuest}</BackLink>
       )}
 
       {bossMode && (
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
+          {...scaleIn}
           className="mb-6 rounded-2xl border border-destructive/40 bg-destructive/10 p-4 backdrop-blur-md"
         >
           <div className="flex items-center justify-between gap-3">
             <div className="flex min-w-0 items-center gap-3">
-              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-linear-to-br from-destructive to-[color:var(--gold)] shadow-lg animate-pulse">
+              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-linear-to-br from-destructive to-gold shadow-lg animate-pulse">
                 <Skull className="h-5 w-5 text-primary-foreground" />
               </div>
               <div className="min-w-0">
@@ -702,7 +701,7 @@ export function ExercisePlayer({
             </div>
             <div className="h-3 overflow-hidden rounded-full bg-secondary/80">
               <motion.div
-                className="h-full rounded-full bg-linear-to-r from-destructive to-[color:var(--gold)]"
+                className="h-full rounded-full bg-linear-to-r from-destructive to-gold"
                 initial={{ width: "100%" }}
                 animate={{ width: `${bossHp}%` }}
                 transition={{ duration: 0.5 }}
@@ -719,16 +718,26 @@ export function ExercisePlayer({
               .replace("{current}", String(idx + 1))
               .replace("{total}", String(total))}
           </span>
-          {!bossMode && <span className="text-[color:var(--gold)]">{data.exercise.title}</span>}
+          {!bossMode && <span className="text-gold">{data.exercise.title}</span>}
         </div>
-        <div className="h-2 overflow-hidden rounded-full bg-secondary">
-          <motion.div
-            className={`h-full rounded-full shadow-gold ${bossMode ? "bg-linear-to-r from-destructive to-[color:var(--gold)]" : "bg-[image:var(--gradient-gold)]"}`}
-            initial={{ width: 0 }}
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.4 }}
+        {bossMode ? (
+          <div className="h-2 overflow-hidden rounded-full bg-secondary">
+            <motion.div
+              className="h-full rounded-full shadow-gold bg-linear-to-r from-destructive to-gold"
+              initial={{ width: 0 }}
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 0.4 }}
+            />
+          </div>
+        ) : (
+          <GoldProgress
+            value={progress}
+            aria-label={t.quest.questionOf
+              .replace("{current}", String(idx + 1))
+              .replace("{total}", String(total))}
+            className="shadow-gold"
           />
-        </div>
+        )}
       </div>
 
       <AnimatePresence mode="wait">
@@ -762,10 +771,10 @@ export function ExercisePlayer({
                 isSelected
                   ? bossMode
                     ? "border-destructive bg-destructive/20"
-                    : "border-(--gold) bg-(--gold)/15"
+                    : "border-gold bg-gold/15"
                   : bossMode
                     ? "border-destructive/20 bg-black/40 hover:border-destructive/60 hover:bg-destructive/10"
-                    : "border-border bg-black/40 hover:border-(--gold)/60 hover:bg-black/70"
+                    : "border-border bg-black/40 hover:border-gold/60 hover:bg-black/70"
               }`
             }
             optionTrailing={({ isSelected }: McqOptionRender) =>
@@ -804,7 +813,7 @@ export function ExercisePlayer({
               onClick={validate}
               className={`inline-flex items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-bold shadow-gold transition disabled:opacity-40 ${
                 bossMode
-                  ? "bg-linear-to-r from-destructive to-[color:var(--gold)] text-primary-foreground"
+                  ? "bg-linear-to-r from-destructive to-gold text-primary-foreground"
                   : "bg-[image:var(--gradient-gold)] text-black"
               }`}
             >
@@ -822,6 +831,6 @@ export function ExercisePlayer({
           </div>
         </motion.div>
       </AnimatePresence>
-    </div>
+    </PageShell>
   );
 }

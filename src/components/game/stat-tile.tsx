@@ -14,12 +14,15 @@ const TONES = {
 
 export function StatTile({
   icon: Icon,
+  iconClassName,
   value,
   label,
   tone = "gold",
   className,
 }: {
   icon?: LucideIcon;
+  /** Extra classes on the icon (e.g. the streak flame's `animate-flame`). */
+  iconClassName?: string;
   value: React.ReactNode;
   label: string;
   tone?: keyof typeof TONES;
@@ -28,7 +31,7 @@ export function StatTile({
   const { surface, ink } = TONES[tone];
   return (
     <div className={cn("rounded-xl p-4 text-center", surface, className)}>
-      {Icon && <Icon className={cn("mx-auto mb-1 h-5 w-5", ink)} aria-hidden />}
+      {Icon && <Icon className={cn("mx-auto mb-1 h-5 w-5", ink, iconClassName)} aria-hidden />}
       <div className={cn("font-display text-xl font-bold", ink)}>{value}</div>
       <div className="text-2xs uppercase tracking-wider text-muted-foreground">{label}</div>
     </div>

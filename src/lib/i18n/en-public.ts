@@ -129,7 +129,6 @@ export const enPublic: TranslationKeys["public"] = {
   subject: {
     chapter: "Chapter {n}",
     readCourse: "Read the lesson",
-    level: "Lv. {n}",
   },
   practice: {
     back: "Back to the subject",

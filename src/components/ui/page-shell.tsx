@@ -17,15 +17,18 @@ export type PageShellWidth = keyof typeof WIDTHS;
 
 export function PageShell({
   width = "reading",
+  dir,
   className,
   children,
 }: {
   width?: PageShellWidth;
+  /** Content direction override for content-language pages (e.g. Arabic subject). */
+  dir?: "ltr" | "rtl";
   className?: string;
   children: React.ReactNode;
 }) {
   return (
-    <div className={cn("mx-auto w-full px-4 py-8 sm:px-6", WIDTHS[width], className)}>
+    <div dir={dir} className={cn("mx-auto w-full px-4 py-8 sm:px-6", WIDTHS[width], className)}>
       {children}
     </div>
   );
