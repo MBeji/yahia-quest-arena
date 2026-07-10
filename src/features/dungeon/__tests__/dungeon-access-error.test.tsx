@@ -19,6 +19,11 @@ vi.mock("@tanstack/react-router", () => ({
   },
   Link: ({ children, to }: { children: React.ReactNode; to: string }) =>
     React.createElement("a", { href: to }, children),
+  // BackLink (primitive du lot 1) est construit avec createLink.
+  createLink:
+    (Comp: React.ComponentType<Record<string, unknown>>) =>
+    ({ to, params: _params, ...rest }: { to: string; params?: unknown }) =>
+      React.createElement(Comp, { ...rest, href: to }),
 }));
 
 vi.mock("@tanstack/react-start", () => ({
@@ -68,6 +73,7 @@ vi.mock("motion/react", () => ({
     },
   ),
   AnimatePresence: ({ children }: { children: React.ReactNode }) => children,
+  useReducedMotion: () => false,
 }));
 
 // Drop motion-only props that React would warn about on a plain DOM element.

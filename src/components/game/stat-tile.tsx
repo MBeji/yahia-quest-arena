@@ -10,6 +10,8 @@ const TONES = {
   gold: { surface: "bg-gold/15", ink: "text-gold" },
   neon: { surface: "bg-neon-gold/15", ink: "text-neon-gold" },
   flame: { surface: "bg-flame/15", ink: "text-flame" },
+  /** Danger stats (dungeon life, boss) — the red side of the Arène vocabulary. */
+  destructive: { surface: "bg-destructive/15", ink: "text-destructive" },
 } as const;
 
 export function StatTile({

@@ -145,7 +145,7 @@ Stop-points : un lot d'écran ne touche NI les primitives (retour lot 1 si manqu
 - [x] Lot 4 — auth/onboarding (PR livrée)
 - [x] Lot 5 — dashboard (PR livrée)
 - [x] Lot 6 — quête (PR livrée)
-- [ ] Lot 7 — donjon
+- [x] Lot 7 — donjon (PR livrée)
 - [ ] Lot 8 — duel
 - [ ] Lot 9 — leaderboard/shop/parcours
 - [ ] Lot 10 — parent-report/admin
@@ -265,3 +265,13 @@ Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions co
   gold/neon-gold/flame partout, entrées motion sur `useEntrance("scale")`. Mocks de tests
   complétés (`createLink`, `useReducedMotion`). Gate verte (1197 tests), budgets + smoke verts.
   Captures impossibles (contenu DB requis) — revue humaine du rendu quête recommandée.
+- 2026-07-10 — Lot 6 mergé (#354). Lot 7 livré : donjon sur les primitives. Lobby : 3 tuiles
+  → `StatTile` (nouveau ton `destructive` pour « 1 vie » — extension consignée), `BackLink`,
+  `PageShell narrow`, entrée `rise`. Game-over : 4 tuiles → `StatTile`, réponse correcte sur le
+  token `--success` (emerald brut supprimé), entrée `scale`. En jeu : les 3 barrettes de
+  difficulté → **`DifficultyStars`** (Q-4), barre de profondeur → `GoldProgress` (aria-label
+  i18n au passage — il était en anglais dur), combo/encouragement orange brut → token
+  `--flame` (glow en `color-mix`), chargement « descente » → `LoadingState`, encre des CTA or
+  → `text-primary-foreground`, syntaxe canonique partout. Mocks dungeon complétés
+  (`createLink`, `useReducedMotion`). Gate verte (1197 tests), budgets + smoke verts.
+  Captures impossibles (Q-2) — revue humaine du donjon recommandée.
