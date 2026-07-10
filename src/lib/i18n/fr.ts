@@ -13,6 +13,7 @@ export const fr: TranslationKeys = {
   common: {
     backToHall: "Retour au hall",
     back: "Retour",
+    difficulty: "Difficulté {n} sur {max}",
     loading: "Chargement…",
     retry: "Réessayer",
     home: "Accueil",
@@ -433,8 +434,7 @@ export const fr: TranslationKeys = {
   },
   theme: {
     label: "Thème",
-    reference: "Référence",
-    light: "Clair",
+    reference: "Clair",
     dark: "Sombre",
   },
   sound: {

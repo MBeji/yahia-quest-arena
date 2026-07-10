@@ -18,12 +18,21 @@ function getInitialTheme(): Theme {
   // lets the SSR shell read the theme for the <html> class (see __root.tsx).
   const stored = localStorage.getItem(THEME_STORAGE_KEY);
   if (isTheme(stored)) return stored;
+  if (stored !== null) {
+    // One-time migration: a persisted value from a removed theme (e.g. the old
+    // `light`) is rewritten so localStorage and the cookie stop disagreeing
+    // with the 2-theme model (étude 14, Q-1).
+    const migrated = themeFromCookieHeader(document.cookie);
+    persistTheme(migrated);
+    return migrated;
+  }
   return themeFromCookieHeader(document.cookie);
 }
 
 /** Reflect the active theme as a single class on <html> for the CSS variants. */
 function applyThemeClass(theme: Theme) {
   const root = document.documentElement;
+  // Also clears the legacy `light` class (theme removed, étude 14 Q-1).
   root.classList.remove("dark", "light", "reference");
   root.classList.add(theme);
 }

@@ -1,6 +1,6 @@
 # Étude 14 — Refonte UX/design de l'application
 
-> **Statut** : validée (arbitrages Q-1…Q-4 rendus par l'humain le 2026-07-10 — voir §7)
+> **Statut** : en exécution (lot 0 mergé ; lot 1 livré en PR)
 > **Priorité** : transverse · **Valeur** : cohérence perçue, confiance parents, lisibilité élèves — sans re-branding · **Complexité** : moyenne+ (large surface, risque unitaire faible)
 > **Architecte** : Fable / 2026-07-10 · **Exécuteur cible** : Sonnet (ou équiv.)
 > **Dépend de** : — (questions arbitrées) · **Bloque** : rien (les autres études peuvent avancer en parallèle, mais les lots UI d'autres épics devraient consommer les primitives du lot 1 dès qu'il est mergé)
@@ -139,7 +139,7 @@ Stop-points : un lot d'écran ne touche NI les primitives (retour lot 1 si manqu
 écran ; toute divergence étude↔code → STOP et remontée (règle FableEtudes).
 
 - [x] Lot 0 — étude + audit (cette PR)
-- [ ] Lot 1 — fondations
+- [x] Lot 1 — fondations (PR livrée : 2 thèmes, tokens, primitives, motion)
 - [ ] Lot 2 — RTL + lint
 - [ ] Lot 3 — états système + i18n erreurs
 - [ ] Lot 4 — auth/onboarding
@@ -208,3 +208,11 @@ Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions co
 - 2026-07-10 — Arbitrages humains Q-1…Q-4 rendus (§7), statut → **validée**. Impact scope :
   le lot 1 absorbe l'unification à 2 thèmes (D-1 réécrit) ; `DifficultyStars` paramétrable
   au-delà de 4. `.env.test` toujours absent du container remote (voir Q-2).
+- 2026-07-10 — Lot 1 livré : thème `light` supprimé (+ migration des préférences), `:root`
+  sombre recoloré Noir & Or (violet retiré, utilitaires tokenisés en `color-mix` → la plupart
+  des overrides par thème supprimés, −106 lignes de CSS), token `--text-2xs`, primitives
+  `PageShell`/`BackLink`/`EmptyState`/`LoadingState` (ui) + `GoldProgress`/`StatTile`/
+  `DifficultyStars`/`PremiumBadge` (game), module `shared/lib/motion` (`useEntrance`), clé
+  i18n `common.difficulty` (FR/EN/AR). Gate verte (1196 tests, +21), build:check + smoke:shell
+  verts, captures 2 thèmes validées. Constat conservé pour le lot 4 : l'auth reste sombre en
+  thème clair (inchangé — son rattachement au thème actif est le périmètre du lot 4).
