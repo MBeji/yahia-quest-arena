@@ -43,7 +43,7 @@ resynchroniser quand on touche une étude.
 | 12  | [Studio d'ingestion (PDF→contenu)](12-studio-ingestion/ETUDE.md)                             | 📥 coût de création                                                        | moyenne    | brouillon    | pilote opéré avant canal in-app ; 13 (déterministe) |
 | 13  | [Moteur de transcription fidèle (corpus→app), OCR compris](13-moteur-transcription/ETUDE.md) | 🔧 transcription fidèle (OCR compris), résumable, traçable, LLM-agnostique | haute      | en exécution | — (la génération reste chez 12/skills)              |
 | 14  | [Refonte UX/design (registres, primitives, RTL)](14-refonte-ux-design/ETUDE.md)              | 🎨 cohérence perçue & confiance                                            | moyenne+   | en exécution | — (arbitré 2026-07-10)                              |
-| 15  | [Contenu & composition des écrans](15-contenu-design-ecrans/ETUDE.md)                        | 🧭 conversion, rétention J1, confiance payeur                              | moyenne+   | brouillon    | é14 (lots par écran) ; arbitrages Q-1…Q-6 (humain)  |
+| 15  | [Contenu & composition des écrans](15-contenu-design-ecrans/ETUDE.md)                        | 🧭 conversion, rétention J1, confiance parent                              | moyenne+   | validée      | é14 (lots par écran) ; Q-3 maquette nav (lot 4)     |
 
 **Ordre d'exécution recommandé** (les numéros sont des identifiants, pas l'ordre) :
 `01 → 02 → 03-B1 → 04-A0/A1 → 07 → 08 → 11 → 09 (parallèle) → 10 → 05 → 13 → 12 → 06`.

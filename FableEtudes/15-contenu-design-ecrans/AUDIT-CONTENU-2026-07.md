@@ -6,6 +6,12 @@
 > hiérarchie de l'information, contenu, guidage, microcopy, architecture d'information.
 > Chaque affirmation est vérifiable : capture nommée et/ou `fichier:ligne`.
 
+> **Post-scriptum (2026-07-10, arbitrage Q-2 de l'étude)** : l'application passe **100 %
+> gratuite** dans cette phase. Les constats « premium » de cet audit (§A-3, §B-2, §E-1, §F-1
+> étage commercial…) restent des faits exacts au moment de la capture, mais leur résolution
+> passe désormais par la **suppression** des surfaces premium (lot 2 de l'étude), pas par leur
+> réécriture.
+
 ## Méthode
 
 - **66 captures d'écrans réels** contre le projet Supabase TEST seedé (compte élève **neuf** —
