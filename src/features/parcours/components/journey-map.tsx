@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Map as MapIcon } from "lucide-react";
+import { PageShell } from "@/components/ui/page-shell";
 import { useT } from "@/lib/i18n";
 import { EmptyState } from "@/components/ui/empty-state";
 import { JourneyHeader } from "./journey-header";
@@ -17,7 +18,7 @@ export function JourneyMap({ nodes, profile }: JourneyMapProps) {
   const t = useT();
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-8">
+    <PageShell>
       <JourneyHeader
         title={t.parcours.worldTitle}
         subtitle={t.parcours.worldSubtitle}
@@ -60,6 +61,6 @@ export function JourneyMap({ nodes, profile }: JourneyMapProps) {
         })}
         {nodes.length === 0 && <EmptyState icon={MapIcon} title={t.parcours.empty} />}
       </JourneyTrack>
-    </div>
+    </PageShell>
   );
 }
