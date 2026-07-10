@@ -1,6 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import { CloudOff } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { LoadingState } from "@/components/ui/loading-state";
+import { useT } from "@/lib/i18n";
 import { getChapterLesson } from "@/features/quest";
 import { useAuth } from "@/features/auth";
 import { LessonReader } from "@/features/quest/components/lesson-reader";
@@ -19,25 +24,30 @@ function ChapitrePage() {
   const { chapterId } = Route.useParams();
   const { user } = useAuth();
   const fetchLesson = useServerFn(getChapterLesson);
-  const { data, isLoading, isError } = useQuery({
+  const t = useT();
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["lesson", chapterId],
     queryFn: () => fetchLesson({ data: { chapterId } }),
   });
 
   if (isError) {
     return (
-      <div className="mx-auto max-w-3xl px-6 py-20 text-center text-muted-foreground">
-        Impossible de charger ce cours.
+      <div className="mx-auto max-w-md px-6 py-20">
+        <EmptyState
+          icon={CloudOff}
+          title={t.errors.chapterLoadFailed}
+          action={
+            <Button variant="outline" onClick={() => refetch()}>
+              {t.common.retry}
+            </Button>
+          }
+        />
       </div>
     );
   }
 
   if (isLoading || !data) {
-    return (
-      <div className="grid min-h-[60dvh] place-items-center">
-        <div className="h-9 w-9 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-      </div>
-    );
+    return <LoadingState label={t.common.loading} className="min-h-[60dvh]" />;
   }
 
   return (

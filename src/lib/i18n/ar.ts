@@ -29,6 +29,13 @@ export const ar: TranslationKeys = {
     notFoundAction: "العودة للأكاديمية",
     errorTitle: "تمزقت اللفافة",
     errorFallback: "حدث خطأ.",
+    subjectLoadFailed: "تعذّر تحميل هذه المادة.",
+    programmeLoadFailed: "تعذّر تحميل البرنامج.",
+    parcoursLoadFailed: "تعذّر تحميل هذا المستوى.",
+    parcoursNotFound: "هذا المستوى غير موجود.",
+    chapterLoadFailed: "تعذّر تحميل هذا الدرس.",
+    extrasLoadFailed: "تعذّر تحميل الإضافات.",
+    sessionStartFailed: "تعذّر بدء الجلسة.",
   },
   auth: {
     titleSignup: "اصنع بطلك",

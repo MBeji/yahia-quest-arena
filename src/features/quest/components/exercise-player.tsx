@@ -24,6 +24,7 @@ import { Confetti } from "@/features/quest/components/confetti";
 import { LevelUpCelebration } from "@/components/ui/level-up-celebration";
 import { ExplainHint } from "@/components/ui/explain-hint";
 import { useT } from "@/lib/i18n";
+import { LoadingState } from "@/components/ui/loading-state";
 import { useSound } from "@/lib/sound";
 import type { UnlockedBadge } from "@/shared/types/gamification";
 
@@ -453,11 +454,7 @@ export function ExercisePlayer({
     return () => window.removeEventListener("keydown", handleKeyDown);
   });
 
-  const preparingScreen = (
-    <div className="grid min-h-[60dvh] place-items-center text-sm text-muted-foreground">
-      {t.quest.preparing}
-    </div>
-  );
+  const preparingScreen = <LoadingState label={t.quest.preparing} className="min-h-[60dvh]" />;
 
   if (isLoading || !data) return preparingScreen;
 

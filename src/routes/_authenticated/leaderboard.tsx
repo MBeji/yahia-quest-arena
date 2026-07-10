@@ -4,6 +4,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { ArrowLeft, Crown, Flame, Medal, Zap } from "lucide-react";
+import { EmptyState } from "@/components/ui/empty-state";
+import { LoadingState } from "@/components/ui/loading-state";
 import {
   getLeaderboard,
   getLeaderboardSubjects,
@@ -122,9 +124,7 @@ function LeaderboardPage() {
       </div>
 
       {isLoading ? (
-        <div className="grid min-h-[30dvh] place-items-center text-sm text-muted-foreground">
-          {t.leaderboard.loading}
-        </div>
+        <LoadingState label={t.leaderboard.loading} className="min-h-[30dvh]" />
       ) : (
         <>
           {/* My rank card */}
@@ -269,9 +269,11 @@ function LeaderboardPage() {
           </div>
 
           {leaderboard.length === 0 && (
-            <div className="mt-12 text-center text-muted-foreground">
-              {isGlobal ? t.leaderboard.emptyGlobal : t.leaderboard.emptySubject}
-            </div>
+            <EmptyState
+              icon={Medal}
+              className="mt-12"
+              title={isGlobal ? t.leaderboard.emptyGlobal : t.leaderboard.emptySubject}
+            />
           )}
         </>
       )}

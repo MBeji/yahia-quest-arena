@@ -1,5 +1,7 @@
 import { Link } from "@tanstack/react-router";
+import { Map as MapIcon } from "lucide-react";
 import { useT } from "@/lib/i18n";
+import { EmptyState } from "@/components/ui/empty-state";
 import { JourneyHeader } from "./journey-header";
 import { JourneyTrack, TrackRow } from "./journey-track";
 import { PathNode } from "./path-node";
@@ -56,9 +58,7 @@ export function JourneyMap({ nodes, profile }: JourneyMapProps) {
             </TrackRow>
           );
         })}
-        {nodes.length === 0 && (
-          <p className="text-center text-sm text-muted-foreground">{t.parcours.empty}</p>
-        )}
+        {nodes.length === 0 && <EmptyState icon={MapIcon} title={t.parcours.empty} />}
       </JourneyTrack>
     </div>
   );

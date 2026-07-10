@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Activity, Link as LinkIcon, Printer, Share2 } from "lucide-react";
+import { LoadingState } from "@/components/ui/loading-state";
 import {
   buildFamilyReportShareText,
   getStudentReportByCode,
@@ -135,11 +136,7 @@ function SuiviPublicPage() {
         </>
       )}
 
-      {reportMutation.isPending && (
-        <div className="flex items-center justify-center py-20">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-        </div>
-      )}
+      {reportMutation.isPending && <LoadingState label={t.common.loading} className="py-20" />}
     </div>
   );
 }
