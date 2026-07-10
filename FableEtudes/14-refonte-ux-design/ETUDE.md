@@ -142,7 +142,7 @@ Stop-points : un lot d'écran ne touche NI les primitives (retour lot 1 si manqu
 - [x] Lot 1 — fondations (PR livrée : 2 thèmes, tokens, primitives, motion)
 - [x] Lot 2 — RTL + lint (PR livrée : garde-fou + sweep)
 - [x] Lot 3 — états système + i18n erreurs (PR livrée)
-- [ ] Lot 4 — auth/onboarding
+- [x] Lot 4 — auth/onboarding (PR livrée)
 - [ ] Lot 5 — dashboard
 - [ ] Lot 6 — quête
 - [ ] Lot 7 — donjon
@@ -237,3 +237,11 @@ Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions co
   scopée aux dictionnaires i18n (fichiers-contrats plats, sans logique). Vérifié : gate verte
   (1196 tests), build:check + smoke:shell verts, LoadingState capturé localisé/thémé (EN clair,
   AR sombre or).
+- 2026-07-10 — Lot 3 mergé (#351). Lot 4 livré : `routes/auth.tsx` rattaché au thème actif
+  (US-1) — les surfaces `bg-black/xx` (hors remap `.app-shell`) passent sur `bg-background/xx`,
+  l'encre des CTA or `text-black` → `text-primary-foreground` (sombre sur or, blanche sur teal),
+  syntaxe canonique `gold` (R-3) sur tout l'écran, entrées motion via `useEntrance` (D-5).
+  Constat d'exécution : l'ONBOARDING était déjà rattaché au thème via le remap `.app-shell`
+  du layout authentifié — aucun changement nécessaire (vérifié sur code ; capture impossible
+  sans creds TEST, Q-2 toujours ouvert côté environnement). Captures auth : clair Référence
+  (carte blanche, CTA teal) et sombre Noir & Or, FR + AR.
