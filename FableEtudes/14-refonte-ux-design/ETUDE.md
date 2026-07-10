@@ -1,0 +1,185 @@
+# Étude 14 — Refonte UX/design de l'application
+
+> **Statut** : brouillon
+> **Priorité** : transverse · **Valeur** : cohérence perçue, confiance parents, lisibilité élèves — sans re-branding · **Complexité** : moyenne+ (large surface, risque unitaire faible)
+> **Architecte** : Fable / 2026-07-10 · **Exécuteur cible** : Sonnet (ou équiv.)
+> **Dépend de** : arbitrage des questions §7 (registres/thèmes) ; accès captures authentifiées (Q-2) · **Bloque** : rien (les autres études peuvent avancer en parallèle, mais les lots UI d'autres épics devraient consommer les primitives du lot 1 dès qu'il est mergé)
+> **Docs normatifs liés** : CLAUDE.md, ARCHITECTURE.md, docs/xss-rendering-policy.md ; annexe factuelle : [AUDIT-2026-07.md](./AUDIT-2026-07.md)
+
+## 1. Contexte & objectif produit
+
+L'app est **déjà bien tokenisée** (~88 % des couleurs passent par le système oklch 3-thèmes)
+et possède une identité forte (registre public « Référence » vert + registre jeu « Arène »
+or/RPG). Le problème n'est pas l'identité, c'est la **dérive artisanale** : chaque écran
+réinvente les mêmes patterns (8 barres de progression, 7 boutons retour, 5 largeurs de page,
+5 loaders), la convention RTL n'est appliquée qu'à moitié (61 classes physiques en code
+métier), le duel est un îlot sans style, l'auth casse en thème clair, et les erreurs des
+routes publiques échappent à l'i18n. Détail complet : [AUDIT-2026-07.md](./AUDIT-2026-07.md).
+
+**Résultat attendu** : un design system formalisé (tokens + primitives partagées + règles
+outillées) et chaque écran rattaché à son registre, refondu **par lots d'une PR**, sans
+big-bang, gate verte à chaque pas.
+
+**Indicateurs de succès** (mesurables par grep/CI, pas subjectifs) :
+
+- 0 classe directionnelle physique en code métier (hors `components/ui` vendorisé) ;
+- 0 classe de palette brute (`text-blue-400`…) et 0 `text-white` en code métier ;
+- 1 seule syntaxe de token couleur et 1 seule écriture du dégradé or ;
+- les 8 barres de progression remplacées par 1 primitive ; idem retour/stat/empty/loader ;
+- 100 % des messages d'erreur passés par l'i18n ;
+- budgets bundle inchangés (`build:check`), coverage non régressée.
+
+**Ce que l'epic ne fait PAS** : pas de nouveau branding, pas de refonte de l'information
+architecture (routes/navigation inchangées), pas de nouveaux écrans, pas de changement de
+mécanique de jeu, pas de touche aux server fns.
+
+## 2. Spécification fonctionnelle
+
+- **Acteurs** : tous (élève, parent, enseignant anonyme sur le tier public, admin).
+- **US-1** — En tant qu'utilisateur, je traverse landing → auth → dashboard sans rupture de
+  registre : l'auth suit le thème actif (claire en `reference`/`light`, or en `dark`).
+- **US-2** — En tant qu'élève arabophone, chaque écran (pas seulement le tier public) est
+  correctement miroir en RTL.
+- **US-3** — En tant qu'élève, la difficulté d'une mission se lit d'un coup d'œil avec le même
+  vocabulaire visuel (étoiles) partout : listes, donjon, quêtes, résultats.
+- **US-4** — En tant qu'utilisateur, chargement/erreur/vide ont la même grammaire sur tous les
+  écrans, dans ma langue.
+- **US-5** — En tant qu'utilisateur sensible au mouvement, `prefers-reduced-motion` est
+  respecté par TOUTES les animations (CSS et motion/react).
+- **US-6** — En tant que joueur de duel, l'écran duel appartient au monde « Arène » (or,
+  font-display) comme le donjon.
+- **Règles** :
+  - **R-1** : le registre est une fonction du thème + de la zone (public/jeu), jamais un choix
+    par écran ; aucune couleur de registre codée en dur dans un composant.
+  - **R-2** : code métier = propriétés logiques uniquement (`ms/me/ps/pe/start/end/text-start`) ;
+    `rtl:-scale-x-100` réservé aux icônes directionnelles.
+  - **R-3** : une seule syntaxe de token : les couleurs de marque or/flame sont mappées dans
+    `@theme` et consommées en utilitaires natifs (`bg-gold/15`, `text-neon-gold`) ; les
+    dégradés uniquement via `--gradient-*`.
+  - **R-4** : tout pattern présent sur ≥ 2 écrans vit dans une primitive partagée.
+  - **R-5** : chaque PR de refonte d'écran joint des captures avant/après en FR + AR (RTL),
+    desktop + mobile, thème du registre concerné.
+  - **R-6** : les chaînes visibles passent par `@/lib/i18n` — y compris les erreurs des routes
+    publiques.
+- **i18n** : nouvelles clés d'erreur publiques FR/EN/AR ; aucune autre clé ne change.
+- **Hors périmètre (v1)** : nouveau thème, mode « high-contrast », refonte des emails/pages
+  légales, redesign des SVG pédagogiques (`svg-figure`).
+
+## 3. Architecture technique (décisions fermées)
+
+Aucune migration DB, aucun changement server. Tout est client/CSS.
+
+- **D-1 — Deux registres formalisés.** On garde « Référence » (public/clair) et « Arène »
+  (jeu/or). Le thème choisit la palette ; la zone (layout `_public` vs `_authenticated`)
+  choisit le registre de composition (densité, font-display, effets). L'auth est refondue pour
+  suivre le thème actif (US-1) au lieu d'imposer le sombre.
+- **D-2 — Primitives partagées** (nouvelles, sous `src/components/ui/` pour les génériques,
+  `src/components/game/` pour celles du registre Arène) : `PageShell` (conteneur standard :
+  3 gabarits `narrow|reading|wide` au lieu de 5 largeurs ad hoc), `GoldProgress` (l'unique
+  barre or, construite sur `ui/progress.tsx`), `StatTile`, `BackLink`, `EmptyState`,
+  `LoadingState` (skeleton tokenisé — plus de `bg-black/40`), `DifficultyStars`,
+  `PremiumBadge`. Chacune avec tests co-localisés.
+- **D-3 — Tokens.** Mapper `--gold`, `--gold-bright`, `--neon-gold`, `--flame`, `--champagne`
+  dans `@theme` (utilitaires natifs) ; conserver `--gradient-gold` comme seule écriture du
+  dégradé ; normaliser l'échelle micro-typo (`text-[10px]/[11px]` → `text-2xs` token) et le
+  tracking des labels.
+- **D-4 — Garde-fous outillés, pas seulement documentés.** Règle ESLint `no-restricted-syntax`
+  (ou plugin tailwind) qui interdit en code métier : classes physiques directionnelles,
+  palette brute Tailwind, `text-white`. Whitelist explicite pour `components/ui` vendorisé et
+  les hex légitimes (logo Google, confetti, canvas). Zéro-warning policy déjà en place → le
+  garde-fou est bloquant naturellement.
+- **D-5 — Motion.** Un module `src/shared/lib/motion.ts` : variantes d'entrée standard
+  (fade/rise/scale) + helper qui neutralise les `initial/animate` quand `useReducedMotion()`
+  est vrai ; les écrans consomment ces variantes au lieu d'objets inline.
+- **D-6 — Itération visuelle via Claude Design (DesignSync).** Les tokens + primitives sont
+  publiés dans un projet Design System claude.ai/design (cards HTML par composant/variante,
+  marqueurs `@dsCard`) pour valider la direction visuellement avant chaque lot d'écran, et
+  resynchronisés composant par composant. Le projet DS n'est PAS la source de vérité du code —
+  `styles.css` + les primitives le restent ; le DS est l'outil de revue/décision.
+- **Alternatives rejetées** : re-branding complet (coût/risque sans besoin exprimé) ;
+  bibliothèque de composants externe (shadcn déjà vendorisé) ; refonte en une PR (contraire au
+  DoD et au risque bundle `manualChunks`).
+
+## 4. Plan d'exécution en lots
+
+Chaque lot = une PR mergeable, gate verte (`npm run verify`), captures R-5 jointes.
+
+| lot | contenu (résumé)                                                                                   | fichiers/objets principaux                               | tests exigés                   | dépend de          |
+| --- | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------- | ------------------------------ | ------------------ |
+| 0   | Cette étude + audit                                                                                | `FableEtudes/14-refonte-ux-design/*`                     | —                              | —                  |
+| 1   | Fondations : tokens `@theme` (D-3), primitives D-2, module motion D-5                              | `styles.css`, `components/ui                             | game/*`, `shared/lib/motion`   | unit par primitive | 0 validé |
+| 2   | Garde-fous lint (D-4) + sweep RTL des 61 classes physiques métier                                  | `eslint.config`, ~20 fichiers touchés                    | lint vert, snapshots RTL       | 1                  |
+| 3   | i18n des erreurs publiques + unification loading/error/empty sur `LoadingState`/`EmptyState`       | routes `_public/*`, features                             | unit i18n, snapshots           | 1                  |
+| 4   | Auth + onboarding rattachés au thème actif (US-1)                                                  | `routes/auth.tsx`, `onboarding.tsx`                      | unit, captures 3 thèmes        | 1, 2               |
+| 5   | Dashboard sur les primitives (`PageShell`, `GoldProgress`, `StatTile`…)                            | `routes/_authenticated/dashboard.tsx` + composants       | unit existants verts, captures | 1, 2               |
+| 6   | Boucle quête : `exercise-player`, `quest-reward-grid`, `subject-hub` (+ `DifficultyStars` partout) | `features/quest/*`                                       | unit existants, captures       | 5                  |
+| 7   | Donjon                                                                                             | `routes/_authenticated/dungeon.tsx`                      | idem                           | 6                  |
+| 8   | Duel rattaché au registre Arène (US-6) + a11y duel                                                 | `features/duel/*`, `routes/duel*`                        | idem                           | 5                  |
+| 9   | Leaderboard + shop (badges-shop) + parcours/journey                                                | `leaderboard.tsx`, `dashboard-badges-shop`, `parcours/*` | idem                           | 5                  |
+| 10  | Parent-report + admin : purge palette brute/`text-white`, `PageShell` admin                        | `features/parent-report/*`, `routes/admin.*`             | idem                           | 5                  |
+| 11  | Motion : gating reduced-motion généralisé (US-5) + harmonisation des entrées                       | écrans restants                                          | unit motion helper             | 1                  |
+
+Stop-points : un lot d'écran ne touche NI les primitives (retour lot 1 si manque) NI un autre
+écran ; toute divergence étude↔code → STOP et remontée (règle FableEtudes).
+
+- [x] Lot 0 — étude + audit (cette PR)
+- [ ] Lot 1 — fondations
+- [ ] Lot 2 — RTL + lint
+- [ ] Lot 3 — états système + i18n erreurs
+- [ ] Lot 4 — auth/onboarding
+- [ ] Lot 5 — dashboard
+- [ ] Lot 6 — quête
+- [ ] Lot 7 — donjon
+- [ ] Lot 8 — duel
+- [ ] Lot 9 — leaderboard/shop/parcours
+- [ ] Lot 10 — parent-report/admin
+- [ ] Lot 11 — motion
+
+## 5. Stratégie de test
+
+- **Unit (Vitest)** : chaque primitive du lot 1 avec tests co-localisés (rendu, variantes,
+  a11y de base) ; les tests existants des écrans refondus doivent rester verts sans être
+  affaiblis ; coverage ≥ existant.
+- **Lint** : les garde-fous D-4 sont eux-mêmes le test de non-régression des règles R-2/R-3.
+- **Visuel** : captures avant/après par PR (R-5) — harness Playwright de la phase 0 réutilisé ;
+  pour les écrans authentifiés, exige Q-2 (creds TEST) ou passe par le nightly e2e.
+- **smoke:shell** : obligatoire à chaque lot (le bundle prod est touché par tous les lots).
+- **Pas de pgTAP** (aucun SQL).
+
+## 6. Risques & mitigations
+
+- **RISK-1 — Régression bundle** (manualChunks main-réglé, budget strict). Prob. moyenne,
+  impact haut. Mitigation : aucune nouvelle dépendance ; `npm run build:check` à chaque lot ;
+  ne pas toucher les groupes vendor.
+- **RISK-2 — Régression visuelle non vue faute de captures authentifiées.** Prob. haute tant
+  que Q-2 ouvert. Mitigation : arbitrer Q-2 avant le lot 4 ; à défaut, s'appuyer sur le
+  nightly e2e + revue humaine des PR.
+- **RISK-3 — Sweep RTL casse un alignement voulu** (ex. chiffres en `text-right` dans une
+  saisie numérique, légitime en LTR ET RTL pour des nombres). Mitigation : le lot 2 traite les
+  cas au cas par cas avec captures AR, pas un sed aveugle ; les exceptions sont commentées.
+- **RISK-4 — Scope creep de redesign** (« tant qu'on y est »). Mitigation : hors-périmètre §2
+  - stop-points de lots ; toute envie nouvelle = nouvelle ligne au journal, pas au lot.
+- **RISK-5 — Conflits avec les épics en exécution** (04, 13). Prob. faible (surfaces
+  disjointes). Mitigation : lots d'écran courts, rebase fréquent.
+
+## 7. Questions ouvertes (pour l'humain)
+
+- **Q-1 — Rôle du thème `dark` violet.** Sur la landing publique il produit un bi-accent
+  violet/or (audit §A). Options : (a) assumer — le dark est « l'app la nuit », l'or reste
+  l'accent jeu ; (b) aligner l'accent dark sur l'or pour le tier public. Choix produit.
+- **Q-2 — Captures authentifiées.** Fournir les creds du projet Supabase TEST (`.env.test`)
+  à l'environnement d'exécution (ou élargir la network policy pour autoriser les registres
+  Docker) afin que chaque PR d'écran joigne ses captures réelles. Sans ça, revue humaine
+  obligatoire sur les lots 4-10.
+- **Q-3 — Publication du Design System sur claude.ai/design (D-6).** Nécessite une session
+  avec login claude.ai (`/design-login`) et le choix du projet cible. Go/no-go + timing.
+- **Q-4 — `DifficultyStars`** : confirmer la représentation (étoiles ⭐ 1-4 alignées sur les
+  titres de missions) comme vocabulaire unique de difficulté (remplace les 3 barrettes du
+  donjon et le « Niveau N » du subject-hub).
+
+## 8. Journal d'exécution
+
+- 2026-07-10 — Lot 0 : étude + audit livrés (branche `claude/app-ux-design-refactor-o606bq`).
+  Constats phase 0 : voir AUDIT-2026-07.md. Captures publiques archivées côté session (32,
+  0 erreur). Supabase local impossible dans l'environnement d'exécution (proxy réseau ↔
+  registres Docker) — à l'origine de Q-2.
