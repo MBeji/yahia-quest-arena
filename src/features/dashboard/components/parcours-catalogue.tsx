@@ -55,7 +55,7 @@ function ParcoursCard({
 }) {
   const t = useT();
   const soon = parcours.status === "coming_soon";
-  const cls = `flex items-center gap-3 rounded-2xl border p-4 text-left transition ${
+  const cls = `flex items-center gap-3 rounded-2xl border p-4 text-start transition ${
     highlight ? "border-primary/40 bg-primary/[0.04]" : "border-border bg-card"
   } ${soon ? "opacity-70" : "hover:border-primary/60 hover:shadow-sm"}`;
 

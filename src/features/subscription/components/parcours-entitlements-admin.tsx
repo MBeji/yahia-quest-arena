@@ -161,7 +161,7 @@ export function ParcoursEntitlementsAdmin({
 
       {/* Live entitlements */}
       <div className="overflow-x-auto rounded-2xl border border-border/50 bg-card/40 backdrop-blur-xl">
-        <table className="w-full min-w-[760px] text-left text-sm">
+        <table className="w-full min-w-[760px] text-start text-sm">
           <thead className="border-b border-border/50 text-xs uppercase tracking-wider text-muted-foreground">
             <tr>
               <th className="px-4 py-3">{t.subscription.colUser}</th>

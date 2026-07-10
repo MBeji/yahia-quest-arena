@@ -24,7 +24,7 @@ export function FlagshipBanner({
       type="button"
       onClick={onOpen}
       aria-label={`${t.flagship.bannerTitle} — ${flagships.map((f) => flagshipLabel(f.name_fr)).join(", ")}`}
-      className="group mt-6 flex w-full items-center gap-4 rounded-3xl border-2 border-[color:var(--gold)]/50 bg-gradient-to-r from-[color:var(--gold)]/12 to-black/40 p-5 text-left shadow-gold backdrop-blur-md transition hover:border-[color:var(--gold)]/80 sm:gap-5 sm:p-6"
+      className="group mt-6 flex w-full items-center gap-4 rounded-3xl border-2 border-[color:var(--gold)]/50 bg-gradient-to-r from-[color:var(--gold)]/12 to-black/40 p-5 text-start shadow-gold backdrop-blur-md transition hover:border-[color:var(--gold)]/80 sm:gap-5 sm:p-6"
     >
       <FlagshipCrown className="h-16 w-16 sm:h-20 sm:w-20" />
       <div className="min-w-0 flex-1">

@@ -113,7 +113,7 @@ function IntentStep({ onSelect }: { onSelect: (intent: Intent) => void }) {
             onClick={() => onSelect(choice.id)}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="rounded-2xl border-2 border-[color:var(--gold)]/30 bg-black/50 p-6 text-left transition-all hover:border-[color:var(--gold)]/60"
+            className="rounded-2xl border-2 border-[color:var(--gold)]/30 bg-black/50 p-6 text-start transition-all hover:border-[color:var(--gold)]/60"
           >
             <div className="flex items-center gap-4">
               <div
@@ -182,7 +182,7 @@ function ParcoursCard({
   // markup — a real button can't nest inside the selectable motion.button).
   if (isComingSoon) {
     return (
-      <div className="relative rounded-2xl border-2 border-[color:var(--gold)]/30 bg-black/50 p-6 text-left">
+      <div className="relative rounded-2xl border-2 border-[color:var(--gold)]/30 bg-black/50 p-6 text-start">
         {header}
         {interest && (
           <ParcoursInterestButton
@@ -203,7 +203,7 @@ function ParcoursCard({
       whileHover={isSaving ? undefined : { scale: 1.02 }}
       whileTap={isSaving ? undefined : { scale: 0.98 }}
       aria-label={parcours.name_fr}
-      className="relative w-full rounded-2xl border-2 border-[color:var(--gold)]/30 bg-black/50 p-6 text-left transition-all hover:border-[color:var(--gold)]/60 disabled:opacity-60"
+      className="relative w-full rounded-2xl border-2 border-[color:var(--gold)]/30 bg-black/50 p-6 text-start transition-all hover:border-[color:var(--gold)]/60 disabled:opacity-60"
     >
       {header}
     </motion.button>

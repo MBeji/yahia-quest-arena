@@ -32,7 +32,7 @@ export function TrackRow({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: Math.min(index * 0.06, 0.6) }}
-      className={`flex px-3 sm:px-0 ${side === "left" ? "justify-start sm:pl-6" : "justify-end sm:pr-6"}`}
+      className={`flex px-3 sm:px-0 ${side === "left" ? "justify-start sm:ps-6" : "justify-end sm:pe-6"}`}
     >
       {children}
     </motion.div>

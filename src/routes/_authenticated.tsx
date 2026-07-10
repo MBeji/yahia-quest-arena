@@ -222,7 +222,7 @@ function AuthenticatedLayout() {
                   <FlaskConical className="h-4 w-4 shrink-0" />{" "}
                   <span className="hidden lg:inline">{t.layout.betaRequests}</span>
                   {pendingBeta > 0 && (
-                    <span className="ml-1 rounded-full bg-[image:var(--gradient-gold)] px-1.5 py-0.5 text-[10px] font-bold text-black">
+                    <span className="ms-1 rounded-full bg-[image:var(--gradient-gold)] px-1.5 py-0.5 text-[10px] font-bold text-black">
                       {pendingBeta}
                     </span>
                   )}
@@ -237,7 +237,7 @@ function AuthenticatedLayout() {
                   <Flag className="h-4 w-4 shrink-0" />{" "}
                   <span className="hidden lg:inline">{t.layout.contentReports}</span>
                   {openReports > 0 && (
-                    <span className="ml-1 rounded-full bg-[image:var(--gradient-gold)] px-1.5 py-0.5 text-[10px] font-bold text-black">
+                    <span className="ms-1 rounded-full bg-[image:var(--gradient-gold)] px-1.5 py-0.5 text-[10px] font-bold text-black">
                       {openReports}
                     </span>
                   )}
@@ -252,7 +252,7 @@ function AuthenticatedLayout() {
                   <Bug className="h-4 w-4 shrink-0" />{" "}
                   <span className="hidden lg:inline">{t.layout.bugReports}</span>
                   {openBugs > 0 && (
-                    <span className="ml-1 rounded-full bg-[image:var(--gradient-gold)] px-1.5 py-0.5 text-[10px] font-bold text-black">
+                    <span className="ms-1 rounded-full bg-[image:var(--gradient-gold)] px-1.5 py-0.5 text-[10px] font-bold text-black">
                       {openBugs}
                     </span>
                   )}

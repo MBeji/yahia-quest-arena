@@ -70,7 +70,7 @@ export function DashboardFocus({
               <div className="mt-1 truncate text-sm opacity-75">{t.dashboard.resumeSubtitle}</div>
             </div>
             <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-black/15">
-              <ChevronRight className="h-6 w-6 transition group-hover:translate-x-0.5" />
+              <ChevronRight className="h-6 w-6 transition group-hover:translate-x-0.5 rtl:-scale-x-100 rtl:group-hover:-translate-x-0.5" />
             </span>
           </Link>
         ) : (
@@ -191,7 +191,7 @@ function ActionTile({
         <div className="truncate font-display text-base font-bold">{title}</div>
         <div className="truncate text-xs text-muted-foreground">{desc}</div>
       </div>
-      <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground transition group-hover:translate-x-0.5" />
+      <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground transition group-hover:translate-x-0.5 rtl:-scale-x-100 rtl:group-hover:-translate-x-0.5" />
     </Link>
   );
 }

@@ -63,7 +63,7 @@ export function ReportErrorButton({
         e.preventDefault();
         if (canSend) mutation.mutate();
       }}
-      className="mt-3 rounded-xl border border-[color:var(--neon-gold)]/30 bg-background/40 p-3 text-left"
+      className="mt-3 rounded-xl border border-[color:var(--neon-gold)]/30 bg-background/40 p-3 text-start"
     >
       <label className="block text-xs font-semibold text-muted-foreground">
         {t.contentReport.label}

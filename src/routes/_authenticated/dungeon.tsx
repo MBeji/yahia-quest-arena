@@ -324,7 +324,7 @@ function DungeonPage() {
             {accessQuery.isError ? (
               // A failed access check must not strand the lobby on an endless
               // spinner — surface the error and offer a retry.
-              <div className="mx-auto mt-8 max-w-sm rounded-2xl border border-destructive/40 bg-destructive/5 p-5 text-left">
+              <div className="mx-auto mt-8 max-w-sm rounded-2xl border border-destructive/40 bg-destructive/5 p-5 text-start">
                 <div className="flex items-center gap-2 font-display font-bold text-destructive">
                   <XCircle className="h-5 w-5" /> {t.dungeon.loadAccessError}
                 </div>
@@ -342,7 +342,7 @@ function DungeonPage() {
             ) : access.reason === "SUBSCRIPTION" ? (
               <SubscriptionPaywall />
             ) : !access.canAccess ? (
-              <div className="mx-auto mt-8 max-w-sm rounded-2xl border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/5 p-5 text-left">
+              <div className="mx-auto mt-8 max-w-sm rounded-2xl border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/5 p-5 text-start">
                 <div className="flex items-center gap-2 font-display font-bold text-[color:var(--neon-gold)]">
                   <Lock className="h-5 w-5" /> {t.dungeon.locked}
                 </div>
@@ -420,7 +420,7 @@ function DungeonPage() {
 
             {/* Last wrong answer */}
             {lastWrongAnswer && (
-              <div className="mt-4 rounded-2xl border border-destructive/30 bg-destructive/5 p-4 text-left">
+              <div className="mt-4 rounded-2xl border border-destructive/30 bg-destructive/5 p-4 text-start">
                 <div className="text-xs uppercase tracking-widest text-destructive font-bold mb-2">
                   {t.dungeon.fatalQuestion}
                 </div>
