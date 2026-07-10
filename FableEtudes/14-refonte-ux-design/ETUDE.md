@@ -143,7 +143,7 @@ Stop-points : un lot d'écran ne touche NI les primitives (retour lot 1 si manqu
 - [x] Lot 2 — RTL + lint (PR livrée : garde-fou + sweep)
 - [x] Lot 3 — états système + i18n erreurs (PR livrée)
 - [x] Lot 4 — auth/onboarding (PR livrée)
-- [ ] Lot 5 — dashboard
+- [x] Lot 5 — dashboard (PR livrée)
 - [ ] Lot 6 — quête
 - [ ] Lot 7 — donjon
 - [ ] Lot 8 — duel
@@ -245,3 +245,12 @@ Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions co
   du layout authentifié — aucun changement nécessaire (vérifié sur code ; capture impossible
   sans creds TEST, Q-2 toujours ouvert côté environnement). Captures auth : clair Référence
   (carte blanche, CTA teal) et sombre Noir & Or, FR + AR.
+- 2026-07-10 — Lot 4 mergé (#352). Lot 5 livré : dashboard sur les primitives. Pré-vérifié
+  contre le redesign parallèle #345 : structure auditée conservée → pas de divergence, exécution
+  normale. `PageShell wide` remplace les deux conteneurs `max-w-7xl` (largeur unifiée D-2) ;
+  barre XP héros + 2 barres d'objectifs → `GoldProgress` ; skeletons `bg-black/40` (invisibles
+  en thème clair après remap) → `bg-foreground/10` ; `text-[11px]` → `text-2xs` ; 5 entrées
+  motion inline → presets du module motion. Retour lot 1 assumé et consigné : ajout de la
+  variante non-hook `entrance()` au module motion (délais par index dans les listes — un hook
+  en boucle est illégal), avec test. Gate verte (1197 tests), budgets OK (dashboard 29,17/32 KB),
+  smoke vert. Captures écran impossibles (Q-2) — revue humaine recommandée sur le rendu.

@@ -23,6 +23,9 @@ import { MotivationalQuote } from "@/features/dashboard/components/motivational-
 import { DashboardFocus } from "@/features/dashboard/components/dashboard-focus";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useReducedMotion } from "motion/react";
+import { entrance } from "@/shared/lib/motion";
+import { PageShell } from "@/components/ui/page-shell";
+import { GoldProgress } from "@/components/game/gold-progress";
 
 const GoldAmbientCanvas = lazy(() => import("@/components/visual/gold-ambient-canvas"));
 import { formatStudentAllianceCode } from "@/features/parent-report";
@@ -175,18 +178,18 @@ function Dashboard() {
 
   if (isLoading || !data) {
     return (
-      <div className="mx-auto max-w-7xl px-6 py-8 space-y-6">
-        <div className="h-48 animate-pulse rounded-3xl bg-black/40" />
+      <PageShell width="wide" className="space-y-6">
+        <div className="h-48 animate-pulse rounded-3xl bg-foreground/10" />
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="h-20 animate-pulse rounded-2xl bg-black/30" />
-          <div className="h-20 animate-pulse rounded-2xl bg-black/30" />
+          <div className="h-20 animate-pulse rounded-2xl bg-foreground/10" />
+          <div className="h-20 animate-pulse rounded-2xl bg-foreground/10" />
         </div>
         <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-5">
           {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="h-28 animate-pulse rounded-2xl bg-black/30" />
+            <div key={i} className="h-28 animate-pulse rounded-2xl bg-foreground/10" />
           ))}
         </div>
-      </div>
+      </PageShell>
     );
   }
 
@@ -248,11 +251,10 @@ function Dashboard() {
           </Suspense>
         </div>
       )}
-      <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6">
+      <PageShell width="wide" className="relative z-10">
         {/* HERO HEADER */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
+          {...entrance(prefersReduced, "rise")}
           className="relative overflow-hidden rounded-3xl border border-[color:var(--gold)]/30 bg-black/40 p-6 backdrop-blur-xl shadow-card sm:p-8"
         >
           {/* Refined premium hairline: a single gold filet across the top edge. */}
@@ -282,23 +284,11 @@ function Dashboard() {
                     {xpInLevel} / {xpInLevel + xpToNext} XP
                   </span>
                 </div>
-                <div
-                  className="h-2.5 overflow-hidden rounded-full bg-secondary"
-                  role="progressbar"
-                  aria-label={t.dashboard.xpProgress}
-                  aria-valuenow={Math.round(xpPct)}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                >
-                  <div
-                    className="h-full rounded-full bg-gradient-to-r from-[color:var(--gold)] to-[color:var(--gold-bright)] shadow-gold transition-all"
-                    style={{ width: `${xpPct}%` }}
-                  />
-                </div>
+                <GoldProgress value={xpPct} aria-label={t.dashboard.xpProgress} />
               </div>
               {studentAllianceCode && (
                 <div className="mt-4 rounded-xl border border-[color:var(--gold)]/35 bg-[color:var(--gold)]/8 p-3">
-                  <div className="text-[11px] uppercase tracking-[0.2em] text-[color:var(--gold)]">
+                  <div className="text-2xs uppercase tracking-[0.2em] text-[color:var(--gold)]">
                     {t.dashboard.allianceCode}
                   </div>
                   <div className="mt-1 flex items-center justify-between gap-2">
@@ -361,9 +351,7 @@ function Dashboard() {
         {/* STREAK RECOVERY BANNER */}
         {profile.current_streak === 0 && (profile.longest_streak ?? 0) > 0 && (
           <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.12 }}
+            {...entrance(prefersReduced, "rise", 0.12)}
             className="mt-4 flex flex-col gap-3 rounded-2xl border border-[color:var(--flame)]/40 bg-[color:var(--flame)]/8 p-4 backdrop-blur-md sm:flex-row sm:items-center sm:justify-between sm:gap-4"
           >
             <div className="flex items-center gap-3">
@@ -390,9 +378,7 @@ function Dashboard() {
 
         {/* DAILY OBJECTIVES & WEEKLY QUESTS SECTION */}
         <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          {...entrance(prefersReduced, "rise", 0.2)}
           className="mt-8 grid gap-6 sm:grid-cols-2"
         >
           {/* Daily Objectives */}
@@ -422,12 +408,7 @@ function Dashboard() {
                       </div>
                       <div className="text-xs text-[color:var(--gold)]">{obj.xp_reward} XP</div>
                     </div>
-                    <div className="mt-2 h-2 overflow-hidden rounded-full bg-secondary">
-                      <div
-                        className="h-full bg-gradient-to-r from-[color:var(--gold)] to-[color:var(--gold-bright)] transition-all"
-                        style={{ width: `${pct}%` }}
-                      />
-                    </div>
+                    <GoldProgress value={pct} size="sm" className="mt-2" />
                     <div className="mt-1 text-xs text-muted-foreground">
                       {obj.current_value}/{obj.target_value} {done ? "✓" : ""}
                     </div>
@@ -472,12 +453,7 @@ function Dashboard() {
                       <div className="text-sm font-semibold">{formatQuestType(q.quest_type)}</div>
                       <div className="text-xs text-[color:var(--neon-gold)]">{q.xp_reward} XP</div>
                     </div>
-                    <div className="mt-2 h-2 overflow-hidden rounded-full bg-secondary">
-                      <div
-                        className="h-full bg-gradient-to-r from-[color:var(--gold)] to-[color:var(--gold-bright)] transition-all"
-                        style={{ width: `${pct}%` }}
-                      />
-                    </div>
+                    <GoldProgress value={pct} size="sm" className="mt-2" />
                     <div className="mt-1 text-xs text-muted-foreground">
                       {q.current_value}/{q.target_value} {done ? "✓" : ""}
                     </div>
@@ -518,12 +494,7 @@ function Dashboard() {
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               {subjects.map((s, i) => (
-                <motion.div
-                  key={s.id}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                >
+                <motion.div key={s.id} {...entrance(prefersReduced, "rise", i * 0.05)}>
                   <SubjectPathCard
                     subject={s}
                     stat={stats[s.id]}
@@ -544,12 +515,7 @@ function Dashboard() {
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 {otherSubjects.map((s, i) => (
-                  <motion.div
-                    key={s.id}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                  >
+                  <motion.div key={s.id} {...entrance(prefersReduced, "rise", i * 0.05)}>
                     <SubjectPathCard subject={s} stat={stats[s.id]} premiumLocked={false} />
                   </motion.div>
                 ))}
@@ -563,9 +529,9 @@ function Dashboard() {
               <Suspense
                 fallback={
                   <div className="space-y-4">
-                    <div className="h-8 w-40 animate-pulse rounded bg-black/40" />
-                    <div className="h-80 animate-pulse rounded-2xl bg-black/40" />
-                    <div className="h-52 animate-pulse rounded-2xl bg-black/40" />
+                    <div className="h-8 w-40 animate-pulse rounded bg-foreground/10" />
+                    <div className="h-80 animate-pulse rounded-2xl bg-foreground/10" />
+                    <div className="h-52 animate-pulse rounded-2xl bg-foreground/10" />
                   </div>
                 }
               >
@@ -580,9 +546,9 @@ function Dashboard() {
               </Suspense>
             ) : (
               <div className="space-y-4">
-                <div className="h-8 w-40 animate-pulse rounded bg-black/40" />
-                <div className="h-80 rounded-2xl bg-black/40" />
-                <div className="h-52 rounded-2xl bg-black/40" />
+                <div className="h-8 w-40 animate-pulse rounded bg-foreground/10" />
+                <div className="h-80 rounded-2xl bg-foreground/10" />
+                <div className="h-52 rounded-2xl bg-foreground/10" />
               </div>
             )}
           </section>
@@ -592,21 +558,21 @@ function Dashboard() {
           <Suspense
             fallback={
               <div className="mt-8 space-y-6">
-                <div className="h-8 w-48 animate-pulse rounded bg-black/40" />
+                <div className="h-8 w-48 animate-pulse rounded bg-foreground/10" />
                 <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                   {[1, 2, 3].map((item) => (
                     <div
                       key={`badges-skeleton-${item}`}
-                      className="h-44 animate-pulse rounded-2xl bg-black/40"
+                      className="h-44 animate-pulse rounded-2xl bg-foreground/10"
                     />
                   ))}
                 </div>
-                <div className="h-8 w-48 animate-pulse rounded bg-black/40" />
+                <div className="h-8 w-48 animate-pulse rounded bg-foreground/10" />
                 <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                   {[1, 2, 3].map((item) => (
                     <div
                       key={`shop-skeleton-${item}`}
-                      className="h-52 animate-pulse rounded-2xl bg-black/40"
+                      className="h-52 animate-pulse rounded-2xl bg-foreground/10"
                     />
                   ))}
                 </div>
@@ -627,27 +593,27 @@ function Dashboard() {
           </Suspense>
         ) : (
           <div className="mt-8 space-y-6">
-            <div className="h-8 w-48 rounded bg-black/40" />
+            <div className="h-8 w-48 rounded bg-foreground/10" />
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {[1, 2, 3].map((item) => (
                 <div
                   key={`initial-badges-skeleton-${item}`}
-                  className="h-44 rounded-2xl bg-black/40"
+                  className="h-44 rounded-2xl bg-foreground/10"
                 />
               ))}
             </div>
-            <div className="h-8 w-48 rounded bg-black/40" />
+            <div className="h-8 w-48 rounded bg-foreground/10" />
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {[1, 2, 3].map((item) => (
                 <div
                   key={`initial-shop-skeleton-${item}`}
-                  className="h-52 rounded-2xl bg-black/40"
+                  className="h-52 rounded-2xl bg-foreground/10"
                 />
               ))}
             </div>
           </div>
         )}
-      </div>
+      </PageShell>
     </>
   );
 }
