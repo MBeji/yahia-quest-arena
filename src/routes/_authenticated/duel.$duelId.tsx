@@ -1,4 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { Swords } from "lucide-react";
+import { BackLink } from "@/components/ui/back-link";
+import { EmptyState } from "@/components/ui/empty-state";
+import { LoadingState } from "@/components/ui/loading-state";
+import { PageShell } from "@/components/ui/page-shell";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getDuelQuestions, getDuelState, submitDuelAnswer } from "@/features/duel";
@@ -62,15 +67,20 @@ function DuelPlayPage() {
   const rtl = locale === "ar";
 
   if (stateQuery.isLoading || questionsQuery.isLoading) {
-    return <p className="p-6 text-center text-muted-foreground">{t.duel.loading}</p>;
+    return <LoadingState label={t.duel.loading} className="min-h-[40dvh]" />;
   }
   if (stateQuery.isError || !state) {
     return (
-      <div className="p-6 text-center">
-        <p className="text-muted-foreground">{t.duel.notFound}</p>
-        <Link to="/duel" className="mt-3 inline-block underline">
-          {t.duel.backToHub}
-        </Link>
+      <div className="mx-auto max-w-md px-6 py-20">
+        <EmptyState
+          icon={Swords}
+          title={t.duel.notFound}
+          action={
+            <BackLink to="/duel" className="mb-0">
+              {t.duel.backToHub}
+            </BackLink>
+          }
+        />
       </div>
     );
   }
@@ -89,15 +99,15 @@ function DuelPlayPage() {
   const opponentOnline = channel.realtimeActive ? channel.opponentOnline : undefined;
 
   return (
-    <div className="mx-auto max-w-2xl space-y-4 p-4">
-      <Link to="/duel" className="text-sm text-muted-foreground underline-offset-2 hover:underline">
-        ← {t.duel.backToHub}
-      </Link>
+    <PageShell width="narrow" className="space-y-4">
+      <BackLink to="/duel" className="mb-0">
+        {t.duel.backToHub}
+      </BackLink>
 
       {settled ? (
         <DuelRecap state={state} labels={t.duel} />
       ) : iFinished || !currentQuestion ? (
-        <div className="space-y-4 rounded-xl border border-border p-6 text-center">
+        <div className="space-y-4 rounded-2xl border border-gold/30 bg-black/60 p-6 text-center backdrop-blur-md">
           <p className="font-medium" role="status">
             {t.duel.waitingOpponent}
           </p>
@@ -131,6 +141,6 @@ function DuelPlayPage() {
           }
         />
       )}
-    </div>
+    </PageShell>
   );
 }

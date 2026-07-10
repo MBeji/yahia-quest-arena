@@ -146,7 +146,7 @@ Stop-points : un lot d'écran ne touche NI les primitives (retour lot 1 si manqu
 - [x] Lot 5 — dashboard (PR livrée)
 - [x] Lot 6 — quête (PR livrée)
 - [x] Lot 7 — donjon (PR livrée)
-- [ ] Lot 8 — duel
+- [x] Lot 8 — duel (PR livrée)
 - [ ] Lot 9 — leaderboard/shop/parcours
 - [ ] Lot 10 — parent-report/admin
 - [ ] Lot 11 — motion
@@ -275,3 +275,15 @@ Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions co
   → `text-primary-foreground`, syntaxe canonique partout. Mocks dungeon complétés
   (`createLink`, `useReducedMotion`). Gate verte (1197 tests), budgets + smoke verts.
   Captures impossibles (Q-2) — revue humaine du donjon recommandée.
+- 2026-07-10 — Lot 7 mergé (#356). Lot 8 livré : le duel (l'« îlot shadcn » de l'audit) rejoint
+  le registre Arène (US-6). Hub : `PageShell narrow`, **premier bouton retour du duel**
+  (`BackLink`), h1/h2 en `font-display` + icône Swords or, cartes de duels sur les surfaces
+  Arène (bg-black/40 + blur), liens Reprendre/score en or avec cibles `min-h-11`, forfait avec
+  cible tactile, historique vide sur `EmptyState`. Queue card : CTA « Trouver un adversaire »
+  en dégradé or. Ligue : bannière de récompense amber brut → tokens or ; rang « moi » en or.
+  Arena : option sélectionnée en or, CTA valider en dégradé or, alerte tooFast en or.
+  Recap : verdict/bonnes réponses emerald/red bruts → tokens `--success`/`--destructive`,
+  carte de score sur surface or. Route de jeu : `LoadingState`, `EmptyState`, `BackLink`
+  (remplace une flèche « ← » littérale non-RTL), `PageShell narrow`. Gate verte (1197 tests),
+  budgets + smoke + garde-fou RTL verts. Captures impossibles (Q-2) — revue humaine d'un duel
+  recommandée.
