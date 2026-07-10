@@ -7,6 +7,12 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  // Unit tests must stay hermetic: vitest runs in Vite mode "test", so a repo-root
+  // `.env.test` (the DOCUMENTED e2e setup, see e2e/README.md) would otherwise be
+  // loaded into import.meta.env (client.ts reads VITE_SUPABASE_URL). Point envDir
+  // at a directory with no .env* files. The process.env channel of the same leak
+  // (scripts' _env.mjs dotenv side effect) is purged in src/__tests__/setup.ts.
+  envDir: path.resolve(__dirname, "./src/__tests__"),
   test: {
     globals: true,
     environment: "jsdom",
