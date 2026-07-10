@@ -147,7 +147,7 @@ Stop-points : un lot d'écran ne touche NI les primitives (retour lot 1 si manqu
 - [x] Lot 6 — quête (PR livrée)
 - [x] Lot 7 — donjon (PR livrée)
 - [x] Lot 8 — duel (PR livrée)
-- [ ] Lot 9 — leaderboard/shop/parcours
+- [x] Lot 9 — leaderboard/shop/parcours (PR livrée)
 - [ ] Lot 10 — parent-report/admin
 - [ ] Lot 11 — motion
 
@@ -287,3 +287,12 @@ Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions co
   (remplace une flèche « ← » littérale non-RTL), `PageShell narrow`. Gate verte (1197 tests),
   budgets + smoke + garde-fou RTL verts. Captures impossibles (Q-2) — revue humaine d'un duel
   recommandée.
+- 2026-07-10 — Lot 8 mergé (#357). Lot 9 livré : leaderboard sur `PageShell reading` +
+  `BackLink` ; podium sur des couleurs de MÉDAILLES fixes et commentées (argent/or/bronze en
+  oklch délibéré — hors tokens de thème, l'or du clair étant teal ; encre sombre fixe, le
+  `text-white` disparaît) ; badge de rang top-3 sur les tokens (`from-neon-gold to-gold-deep`,
+  l'amber brut disparaît) ; chip « Toi » en `text-2xs`. Journey-header : barre XP → `GoldProgress`
+  (la 8ᵉ et dernière barre inline de l'audit — indicateur « 8 barres → 1 primitive » ATTEINT) ;
+  journey-map → `PageShell`. Badges/shop : syntaxe canonique des tokens. Les entrées motion du
+  leaderboard restent inline → lot 11 (harmonisation). Gate verte (1197 tests), budgets + smoke +
+  garde-fou RTL verts. Captures impossibles (Q-2).
