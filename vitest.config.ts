@@ -17,6 +17,12 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: ["./src/__tests__/setup.ts"],
+    // Several suites `await import("@/features/…")` INSIDE the test, so the
+    // first-import transform/eval of a whole feature graph counts against the
+    // test budget. On a loaded local machine (Windows) that regularly crosses
+    // vitest's 5s default and made `npm run verify` flake on random files; CI
+    // is unaffected. 15s changes no assertion — only the flake threshold.
+    testTimeout: 15_000,
     // scripts/** ships ops-critical helpers (DB-URL normalization, the TEST/PROD
     // ref guards) whose regressions only ever surfaced in the nightly — unit-test
     // them here alongside the app.
