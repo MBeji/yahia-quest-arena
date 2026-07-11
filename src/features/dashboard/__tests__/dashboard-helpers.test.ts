@@ -6,28 +6,38 @@ import {
   resolveWeeklyAction,
 } from "@/features/dashboard/dashboard-helpers";
 
+import { fr } from "@/lib/i18n/fr";
+import { ar } from "@/lib/i18n/ar";
+
 describe("formatObjectiveType", () => {
-  it("maps known types", () => {
-    expect(formatObjectiveType("3_exercises")).toBe("Complete 3 exercises");
-    expect(formatObjectiveType("15_min_study")).toBe("15 min study time");
-    expect(formatObjectiveType("perfect_score")).toBe("Get a perfect score");
+  it("maps known types through the locale dictionary", () => {
+    expect(formatObjectiveType("3_exercises", fr.dashboard.objectiveTypes)).toBe(
+      "Complète 3 exercices",
+    );
+    expect(formatObjectiveType("perfect_score", fr.dashboard.objectiveTypes)).toBe(
+      "Réussis un sans-faute",
+    );
+    expect(formatObjectiveType("3_exercises", ar.dashboard.objectiveTypes)).toBe("أكمل 3 تمارين");
   });
 
-  it("falls back to formatted string for unknown types", () => {
-    expect(formatObjectiveType("some_unknown_type")).toBe("some unknown type");
+  it("falls back to a humanized string for unknown types", () => {
+    expect(formatObjectiveType("some_unknown_type", fr.dashboard.objectiveTypes)).toBe(
+      "some unknown type",
+    );
   });
 });
 
 describe("formatQuestType", () => {
-  it("maps known types", () => {
-    expect(formatQuestType("5_day_streak")).toBe("Maintain 5-day streak");
-    expect(formatQuestType("2_boss_exercises")).toBe("Beat 2 boss exercises");
-    expect(formatQuestType("10_exercises")).toBe("Complete 10 exercises");
-    expect(formatQuestType("all_subjects")).toBe("Practice all subjects");
+  it("maps known types through the locale dictionary — no more raw English", () => {
+    expect(formatQuestType("2_boss_exercises", fr.dashboard.questTypes)).toBe("Bats 2 boss");
+    expect(formatQuestType("5_day_streak", fr.dashboard.questTypes)).toBe(
+      "Tiens une série de 5 jours",
+    );
+    expect(formatQuestType("all_subjects", ar.dashboard.questTypes)).toBe("تدرّب في كل المواد");
   });
 
-  it("falls back to formatted string for unknown types", () => {
-    expect(formatQuestType("weekly_bonus")).toBe("weekly bonus");
+  it("falls back to a humanized string for unknown types", () => {
+    expect(formatQuestType("weekly_bonus", fr.dashboard.questTypes)).toBe("weekly bonus");
   });
 });
 

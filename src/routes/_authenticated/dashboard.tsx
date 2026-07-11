@@ -404,7 +404,7 @@ function Dashboard() {
                   >
                     <div className="flex items-center justify-between">
                       <div className="text-sm font-semibold">
-                        {formatObjectiveType(obj.objective_type)}
+                        {formatObjectiveType(obj.objective_type, t.dashboard.objectiveTypes)}
                       </div>
                       <div className="text-xs text-[color:var(--gold)]">{obj.xp_reward} XP</div>
                     </div>
@@ -450,7 +450,9 @@ function Dashboard() {
                     className={`rounded-xl bg-black/40 p-3 ${done ? "opacity-60" : ""}`}
                   >
                     <div className="flex items-center justify-between">
-                      <div className="text-sm font-semibold">{formatQuestType(q.quest_type)}</div>
+                      <div className="text-sm font-semibold">
+                        {formatQuestType(q.quest_type, t.dashboard.questTypes)}
+                      </div>
                       <div className="text-xs text-[color:var(--neon-gold)]">{q.xp_reward} XP</div>
                     </div>
                     <GoldProgress value={pct} size="sm" className="mt-2" />

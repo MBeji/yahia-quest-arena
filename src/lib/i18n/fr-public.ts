@@ -115,9 +115,10 @@ export const frPublic: TranslationKeys["public"] = {
     print: "Imprimer",
     courseSoon: "Le cours de ce chapitre arrive bientôt.",
     practiceCta: "S’entraîner sur ce chapitre",
+    quizFirstCta: "Commencer par le quiz de compréhension",
     inviteTitle: "Apprends en jouant",
     inviteDesc:
-      "Crée ton compte gratuit pour t’entraîner sur les exercices, gagner des XP et sauvegarder ta progression. Lire le cours reste toujours libre.",
+      "Crée ton compte gratuit pour gagner des XP, garder tes chapitres débloqués et suivre ta progression. Lire et t’entraîner restent toujours libres.",
     inviteCta: "Créer mon compte gratuit",
     manuelTitle: "Pages du manuel",
     manuelHint: "Les pages du manuel élève officiel qui couvrent ce chapitre.",
@@ -144,6 +145,7 @@ export const frPublic: TranslationKeys["public"] = {
     answerAllHint: "Réponds à toutes les questions pour corriger.",
     restart: "Recommencer",
     questCta: "Refaire en mode quête pour gagner des XP",
+    continueCta: "Continuer vers le premier exercice",
     inviteDesc:
       "Crée un compte pour gagner des XP, sauvegarder ta progression et grimper au classement.",
     inviteCta: "Créer mon compte",

@@ -30,7 +30,8 @@ and tackle a timed "dungeon" boss mode. Shonen/RPG manga aesthetic, trilingual (
   `(theme, grade)` pair. The two PREMIUM **concours** parcours (9ème, 6ème) are the paid products;
   the rest are FREE **exploration** parcours. Premium missions need a per-parcours **entitlement**
   (see "Premium gate" under Data model); the free preview is the comprehension quiz + difficulty-1.
-  The dashboard is scoped to the active parcours; the Explorer (`/themes`) lets a student switch.
+  The dashboard is scoped to the active parcours; the public catalogue (`/programme`) doubles as
+  the Explorer (`/themes` 301-redirects there) and lets a student switch.
 
 **Stack**: Vite 8 · TanStack Start (SSR + file routing + server fns) · React 19 · TanStack Query 5 · Supabase (Postgres + Auth + RLS) · Tailwind 4 / Radix-shadcn · **deploys to Vercel** — push to `main` auto-deploys prod via `scripts/build-vercel.mjs` (`vercel.json`). A Cloudflare Workers config also exists, but Vercel is the live target. Package manager: **npm** (`package-lock.json`; Node 22 / npm 10 in CI). Tests: Vitest 4 + Testing Library (unit) and Playwright (e2e).
 
@@ -241,11 +242,14 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
     `admin_grant_parcours`; beta-access requests; the out-of-band (phone) paywall component.
   - **`content-report/`** — user-flagged content errors ("Signaler une erreur") + admin triage.
   - **`parcours/`** — gamified journey-map / adventure-path UI: a world map of **subjects**
-    (`JourneyMap`/`buildSubjectNodes` at `/parcours`). Every map node routes to the single
-    chapter screen `/subject/$subjectId` (which carries the quiz-gate + exercises). The
-    earlier per-subject zigzag chapter map (`/parcours/$subjectId`, `SubjectPath`,
-    `buildChapterNodes`) was removed — it duplicated `/subject/$subjectId` with a divergent
-    unlock logic; there is now **one** chapter screen.
+    (`JourneyMap`/`buildSubjectNodes` at `/parcours`). Every map node routes to the **shared
+    public subject hub** `/matiere/$subjectId` (chapters + quiz-gate + exercises — chantier
+    C8 converged the connected screens onto the public « Référence » register). Four legacy
+    authenticated paths survive only as permanent 301 redirects: `/subject/$subjectId` →
+    `/matiere/$subjectId`, `/lesson/$chapterId` → `/chapitre/$chapterId`, and `/themes` +
+    `/themes/$familyId` → `/programme` (the public catalogue doubles as the Explorer). The
+    earlier per-subject zigzag chapter map (`SubjectPath`/`buildChapterNodes`) was removed;
+    there is **one** chapter screen.
 
   (Leaderboard has no feature folder — `getLeaderboard` lives in `dashboard.server.ts`.
   Onboarding has no feature folder — it is an inline route at `routes/_authenticated/onboarding.tsx`.)

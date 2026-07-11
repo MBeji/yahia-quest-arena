@@ -846,6 +846,10 @@ describe("gamification.quest — getChapterLesson", () => {
     expect(res.practiceExerciseId).toBe("ex");
   });
 
+  // The quiz-gate fields added by étude 15 lot 1 (quizExerciseId / quizGated /
+  // quizPassed) are covered in the co-located quest-lesson-gate.test.ts —
+  // this file is at its max-lines budget.
+
   it("falls back to an empty sibling list when none are returned", async () => {
     let calls = 0;
     mockFrom.mockImplementation((table: string) => {

@@ -30,7 +30,8 @@ export const Route = createFileRoute("/auth")({
       { title: "Rejoindre l'Académie · Na9ra Nal3ab" },
       {
         name: "description",
-        content: "Crée ton héros et commence ta préparation aux concours nationaux.",
+        content:
+          "Crée ton compte gratuit : cours, résumés et exercices de toute l'école tunisienne — apprends en jouant.",
       },
     ],
   }),
