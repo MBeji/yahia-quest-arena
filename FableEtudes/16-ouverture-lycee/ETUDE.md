@@ -169,6 +169,15 @@ the DB yet » de `programme-map.md`.
 
 ### D-2 — Localisation des grades : colonnes `name_en`/`name_ar` (miroir du modèle parcours)
 
+> **⚠️ CADUC (amendement du 2026-07-11, lot 2)** : l'étude 15 lot 3 (mergé le même jour,
+> migration `20260711120000_parcours_names_i18n.sql`) a localisé les **35 parcours** — dont les
+> 16 sections lycée, en arabe relu — et `getParcours` sert déjà `name_en`/`name_ar` avec
+> fallback. Or toutes les surfaces user-facing de l'arbre (picker, catalogue, kicker) affichent
+> des noms de PARCOURS, pas de grades. Ajouter `grades.name_*` créerait 29 traductions sans
+> consommateur (dette, DoD §3). Décision : les grades restent monolingues (`name_fr`, usage
+> interne/admin) ; R-4 est porté par les noms de parcours. Le paragraphe ci-dessous est conservé
+> pour trace.
+
 Migration additive : `ALTER TABLE public.grades ADD COLUMN IF NOT EXISTS name_en TEXT, ADD COLUMN
 IF NOT EXISTS name_ar TEXT;` + backfill des **29 lignes** `ecole-tn` (13 échelle + 16 sections).
 Nullable, fallback `name_fr` côté serveur — exactement le contrat parcours (`20260608120000`).
@@ -287,14 +296,14 @@ d'accordéon multi-niveaux) :
 
 ### D-7 — Compteur d'intérêt public (arbitrage Q-5)
 
-Les votes deviennent visibles côté élève/visiteur : nouveau RPC lecture seule
-`get_parcours_interest_counts()` → `TABLE(parcours_id TEXT, interested INTEGER)`,
-`SECURITY DEFINER`, agrégat **anonyme** (aucun `user_id` exposé), limité aux parcours
-`coming_soon` ; `REVOKE ALL` par défaut puis `GRANT EXECUTE TO anon, authenticated` (le
-catalogue est public). L'UI l'affiche sur les cartes sections « Bientôt » (« 🔔 12 intéressés » ;
-après vote : état actif du bouton existant). Un anonyme voit le compteur ; le bouton vote
-l'emmène vers `/auth` (copy honnête, US-7 é15). L'RPC admin existante (détail par user) reste
-admin-only, inchangée.
+Les votes deviennent visibles côté élève/visiteur. _Amendement lot 2 (2026-07-11) : la RPC
+`parcours_interest_counts()` existante (agrégat **sans PII**, limité aux `coming_soon`,
+`SECURITY DEFINER`) fait déjà exactement ça — plutôt que d'en créer un doublon, le lot 2
+élargit son grant (`GRANT EXECUTE TO anon`, migration `20260711140000`) et rend la server fn
+`getParcoursInterestCounts` anon-capable (`optionalSupabaseAuth`)._ L'UI l'affiche sur les
+cartes sections « Bientôt » (« 🔔 12 intéressés » ; après vote : état actif du bouton
+existant). Un anonyme voit le compteur ; le bouton vote l'emmène vers `/auth` (copy honnête,
+US-7 é15). Le vote (`toggle_parcours_interest`) reste authenticated-only, inchangé.
 
 ### D-6 — Ouverture par vagues, pilotée par la demande
 
@@ -318,20 +327,20 @@ Observabilité : existante (votes, logs) — aucune métrique nouvelle requise.
 
 ## 4. Plan d'exécution en lots (exécuteur)
 
-| lot | contenu (résumé)                                                                                                                                                                                                                                                                                                                                         | fichiers/objets principaux                                                                                                                                                    | tests exigés                                                                                                                                                        | dépend de                          |
-| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| 0   | Étude + amendements docs normatifs + maquette arborescence                                                                                                                                                                                                                                                                                               | `FableEtudes/16-*`, `docs/lycee-architecture.md`, `programme-map.md`, `FableEtudes/README.md`                                                                                 | — (docs)                                                                                                                                                            | —                                  |
-| 1   | **Pipeline mutualisation `compileTo`** (D-4) : schéma + expansion + garde-fous + docs pipeline                                                                                                                                                                                                                                                           | `schema.ts` (compileTo, `gradeSlugs`, `KNOWN_GRADE_SLUGS`), `loader.ts` (expansion+unicité), `build.ts`/`qa.ts` (consommation), `content/README.md`, `generation-pipeline.md` | unit : expansion/filtrage/unicité/collision, **stabilité UUID au fork (R-7)**, snapshot SQL ; `content:check` vert sur un fixture partagé                           | —                                  |
-| 2   | **Data i18n grades + types + compteur public** (D-2/D-7) : migration `grades.name_en/name_ar` + backfill 29 lignes (noms officiels edunet.tn/CNP, AR relu) + RPC `get_parcours_interest_counts` (grants explicites), régénération types Supabase (inclut `is_selectable` manquant), `getParcours` élargi (slug, is_selectable, noms localisés, fallback) | migration (colonnes + backfill + RPC), `types.ts` régénéré, `dashboard.server.ts`                                                                                             | pgTAP (colonnes + backfill + non-régression + RPC : agrégat, coming_soon only, zéro user_id, grants), unit fallback locale                                          | —                                  |
-| 3   | **UI arborescence drill-down** (D-3/D-5) : filtre R-1 dans `buildPrograms`, bloc Lycée = 4 cartes d'année + **nouvelle route** `/programme/lycee/$annee` (sections + compteur), sous-étape section à l'onboarding, kicker JourneyMap, copy switch (R-6), clés i18n ×3, RTL                                                                               | `program-families.ts`, `parcours-catalogue.tsx`, `routes/_public/programme.lycee.$annee.tsx` (nouveau), `onboarding.tsx`, `journey-header.tsx`, `fr/en/ar(-public).ts`        | unit : builder (années/filtre legacy/tri), composants états + compteur ; e2e onboarding+catalogue ajustés (page année) ; captures FR+AR (harness é15) ; smoke:shell | 2 ; **maquette validée (R-8 é15)** |
+| lot | contenu (résumé)                                                                                                                                                                                                                                                                                                                                                                                                                                                                | fichiers/objets principaux                                                                                                                                                    | tests exigés                                                                                                                                                        | dépend de                          |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| 0   | Étude + amendements docs normatifs + maquette arborescence                                                                                                                                                                                                                                                                                                                                                                                                                      | `FableEtudes/16-*`, `docs/lycee-architecture.md`, `programme-map.md`, `FableEtudes/README.md`                                                                                 | — (docs)                                                                                                                                                            | —                                  |
+| 1   | **Pipeline mutualisation `compileTo`** (D-4) : schéma + expansion + garde-fous + docs pipeline                                                                                                                                                                                                                                                                                                                                                                                  | `schema.ts` (compileTo, `gradeSlugs`, `KNOWN_GRADE_SLUGS`), `loader.ts` (expansion+unicité), `build.ts`/`qa.ts` (consommation), `content/README.md`, `generation-pipeline.md` | unit : expansion/filtrage/unicité/collision, **stabilité UUID au fork (R-7)**, snapshot SQL ; `content:check` vert sur un fixture partagé                           | —                                  |
+| 2   | **Données de l'arbre + compteur public** (D-2 révisé / D-7) : `getParcours` élargi (`grade_slug` + `grade_selectable` via le lookup grades), migration `GRANT anon` sur la RPC `parcours_interest_counts` existante + server fn compteur anon-capable, types Supabase complétés (`is_selectable`). _Amendement (journal 2026-07-11) : l'i18n `grades.name_*` prévu ici est caduc — é15 lot 3 a livré les noms de parcours localisés qui portent tous les libellés user-facing._ | migration (grant), `types.ts`, `dashboard.server.ts`, `parcours-interest.server.ts`                                                                                           | pgTAP (grant anon compteur, toggle toujours auth-only, agrégat identique en anon), unit `getParcours` (slug/selectable/défauts)                                     | —                                  |
+| 3   | **UI arborescence drill-down** (D-3/D-5) : filtre R-1 dans `buildPrograms`, bloc Lycée = 4 cartes d'année + **nouvelle route** `/programme/lycee/$annee` (sections + compteur), sous-étape section à l'onboarding, kicker JourneyMap, copy switch (R-6), clés i18n ×3, RTL                                                                                                                                                                                                      | `program-families.ts`, `parcours-catalogue.tsx`, `routes/_public/programme.lycee.$annee.tsx` (nouveau), `onboarding.tsx`, `journey-header.tsx`, `fr/en/ar(-public).ts`        | unit : builder (années/filtre legacy/tri), composants états + compteur ; e2e onboarding+catalogue ajustés (page année) ; captures FR+AR (harness é15) ; smoke:shell | 2 ; **maquette validée (R-8 é15)** |
 
 Stop-points exécuteur : maquette du bloc lycée non validée = STOP avant lot 3 ; toute envie de
 toucher la sélectionnabilité `coming_soon` (é15 lot 10), au premium, ou aux mécaniques serveur =
 hors périmètre ; divergence étude↔code = STOP et remontée.
 
 - [x] Lot 0 — étude + amendements docs + maquette (PR #367)
-- [x] Lot 1 — pipeline `compileTo`
-- [ ] Lot 2 — i18n grades + types régénérés
+- [x] Lot 1 — pipeline `compileTo` (PR #369)
+- [x] Lot 2 — données de l'arbre + compteur public + types
 - [ ] Lot 3 — UI arborescence (après maquette validée)
 
 **Coordination étude 15 (anti-collision, RISK-2)** : lot 3 é16 ne recompose PAS les pages — il
@@ -491,3 +500,12 @@ proposés sont abandonnés).
   inchangés. Écart accepté : en mode `--subject`, l'unicité inter-dossiers des ids compilés
   est garantie par le `content:check` global de la CI (le run scopé ne charge pas les
   dossiers voisins ; seule la collision cible ↔ dossier physique est vérifiée localement).
+- 2026-07-11 — Lot 2 livré (données de l'arbre + compteur public), **re-scopé face au main
+  mouvant** : é15 lot 3 (mergé le même jour) ayant localisé les 35 parcours (sections lycée
+  incluses, AR relu), l'i18n `grades.name_*` est **abandonné** (D-2 caduc — aucun consommateur)
+  et D-7 se réalise par élargissement de l'existant : migration `20260711140000` (`GRANT
+EXECUTE TO anon` sur `parcours_interest_counts`), `getParcoursInterestCounts` anon-capable,
+  `getParcours` expose `grade_slug`/`grade_selectable` (matière première du filtre R-1 et du
+  groupement année→section du lot 3), `types.ts` complété (`is_selectable` — édition manuelle
+  minimale, DoD §4, à écraser à la prochaine régénération). pgTAP 09 : 8→11 assertions (grant
+  anon compteur, toggle toujours auth-only, agrégat identique en anon).

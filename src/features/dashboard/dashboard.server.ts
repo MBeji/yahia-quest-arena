@@ -350,7 +350,12 @@ export const getParcours = createServerFn({ method: "GET" })
     // Enrich each parcours with its grade's cycle + pedagogical order so the
     // school group can be grouped by cycle (primaire/collège/secondaire) and
     // ordered 1ère année → Bac. One cheap lookup beats N embedded joins.
-    const { data: gradeRows } = await supabase.from("grades").select("id,cycle,display_order");
+    // `slug` + `is_selectable` (étude 16 lot 2) let the client group the lycée
+    // year → section and hide the flat legacy nodes (R-1/R-2 — filter lives in
+    // `buildPrograms`, lot 3); a grade-less (libre) parcours stays selectable.
+    const { data: gradeRows } = await supabase
+      .from("grades")
+      .select("id,slug,cycle,display_order,is_selectable");
     const gradeById = new Map((gradeRows ?? []).map((g) => [g.id, g]));
 
     const enriched = await Promise.all(
@@ -360,6 +365,8 @@ export const getParcours = createServerFn({ method: "GET" })
           ...p,
           grade_cycle: grade?.cycle ?? null,
           grade_order: grade?.display_order ?? null,
+          grade_slug: grade?.slug ?? null,
+          grade_selectable: grade?.is_selectable ?? true,
         };
         // Free parcours — and every parcours for an anonymous visitor — carry no
         // lock in the public register; skip the entitlement RPC (anon has none).
