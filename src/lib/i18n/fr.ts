@@ -29,6 +29,13 @@ export const fr: TranslationKeys = {
     notFoundAction: "Retour à l'Académie",
     errorTitle: "Le parchemin s'est déchiré",
     errorFallback: "Une erreur est survenue.",
+    subjectLoadFailed: "Impossible de charger cette matière.",
+    programmeLoadFailed: "Impossible de charger le programme.",
+    parcoursLoadFailed: "Impossible de charger ce niveau.",
+    parcoursNotFound: "Ce niveau est introuvable.",
+    chapterLoadFailed: "Impossible de charger ce cours.",
+    extrasLoadFailed: "Impossible de charger les extras.",
+    sessionStartFailed: "Impossible de démarrer la session.",
   },
   auth: {
     titleSignup: "Forge ton héros",

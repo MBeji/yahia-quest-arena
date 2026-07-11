@@ -2,6 +2,10 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
+import { CloudOff, Compass as CompassIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { LoadingState } from "@/components/ui/loading-state";
 import { getParcoursSubjects } from "@/features/dashboard";
 import { setCurrentParcours, useAuth } from "@/features/auth";
 import { ParcoursSubjects } from "@/features/dashboard/components/parcours-subjects";
@@ -28,7 +32,7 @@ function NiveauPage() {
   const fetchParcoursSubjects = useServerFn(getParcoursSubjects);
   const saveParcours = useServerFn(setCurrentParcours);
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["parcours-subjects", parcoursId],
     queryFn: () => fetchParcoursSubjects({ data: { parcoursId } }),
   });
@@ -49,24 +53,28 @@ function NiveauPage() {
 
   if (isError) {
     return (
-      <div className="mx-auto max-w-3xl px-6 py-20 text-center text-muted-foreground">
-        Impossible de charger ce niveau.
+      <div className="mx-auto max-w-md px-6 py-20">
+        <EmptyState
+          icon={CloudOff}
+          title={t.errors.parcoursLoadFailed}
+          action={
+            <Button variant="outline" onClick={() => refetch()}>
+              {t.common.retry}
+            </Button>
+          }
+        />
       </div>
     );
   }
 
   if (isLoading || !data) {
-    return (
-      <div className="grid min-h-[60dvh] place-items-center">
-        <div className="h-9 w-9 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-      </div>
-    );
+    return <LoadingState label={t.common.loading} className="min-h-[60dvh]" />;
   }
 
   if (!data.parcours) {
     return (
-      <div className="mx-auto max-w-3xl px-6 py-20 text-center text-muted-foreground">
-        Ce niveau est introuvable.
+      <div className="mx-auto max-w-md px-6 py-20">
+        <EmptyState icon={CompassIcon} title={t.errors.parcoursNotFound} />
       </div>
     );
   }

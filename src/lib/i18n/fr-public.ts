@@ -129,7 +129,6 @@ export const frPublic: TranslationKeys["public"] = {
   subject: {
     chapter: "Chapitre {n}",
     readCourse: "Lire le cours",
-    level: "Niv. {n}",
   },
   practice: {
     back: "Retour à la matière",

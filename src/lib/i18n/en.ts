@@ -29,6 +29,13 @@ export const en: TranslationKeys = {
     notFoundAction: "Back to the Academy",
     errorTitle: "The scroll has torn apart",
     errorFallback: "An error occurred.",
+    subjectLoadFailed: "Couldn't load this subject.",
+    programmeLoadFailed: "Couldn't load the programme.",
+    parcoursLoadFailed: "Couldn't load this level.",
+    parcoursNotFound: "This level was not found.",
+    chapterLoadFailed: "Couldn't load this lesson.",
+    extrasLoadFailed: "Couldn't load the extras.",
+    sessionStartFailed: "Couldn't start the session.",
   },
   auth: {
     titleSignup: "Forge your hero",

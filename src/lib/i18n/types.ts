@@ -32,6 +32,14 @@ export type TranslationKeys = {
     notFoundAction: string;
     errorTitle: string;
     errorFallback: string;
+    /** Route-level load failures (public tier included) — étude 14, R-6. */
+    subjectLoadFailed: string;
+    programmeLoadFailed: string;
+    parcoursLoadFailed: string;
+    parcoursNotFound: string;
+    chapterLoadFailed: string;
+    extrasLoadFailed: string;
+    sessionStartFailed: string;
   };
   // Auth screen (login / signup)
   auth: {
@@ -751,7 +759,6 @@ export type TranslationKeys = {
     subject: {
       chapter: string;
       readCourse: string;
-      level: string;
     };
     practice: {
       back: string;

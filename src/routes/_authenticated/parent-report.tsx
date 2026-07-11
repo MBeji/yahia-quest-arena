@@ -26,6 +26,7 @@ import { EnablePushCard } from "@/features/notifications";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
+import { LoadingState } from "@/components/ui/loading-state";
 
 export const Route = createFileRoute("/_authenticated/parent-report")({
   head: () => ({ meta: [{ title: "Suivi parental · Na9ra Nal3ab" }] }),
@@ -93,11 +94,7 @@ function ParentReport() {
   }, [students, selectedStudent]);
 
   if (loadingStudents) {
-    return (
-      <div className="min-h-[100dvh] flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-[color:var(--gold)] border-t-transparent rounded-full" />
-      </div>
-    );
+    return <LoadingState label={t.common.loading} className="min-h-[100dvh]" />;
   }
 
   if (students.length === 0 && isAdmin) {
@@ -309,9 +306,7 @@ function ParentReport() {
       {!isAdmin && selectedStudent && <WeeklyGoalCard studentId={selectedStudent} />}
 
       {loadingReport ? (
-        <div className="flex items-center justify-center py-20">
-          <div className="animate-spin w-8 h-8 border-4 border-[color:var(--gold)] border-t-transparent rounded-full" />
-        </div>
+        <LoadingState label={t.common.loading} className="py-20" />
       ) : report ? (
         <ReportContent report={report} />
       ) : null}

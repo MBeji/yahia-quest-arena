@@ -13,16 +13,16 @@ export function DuelRecap({ state, labels }: { state: DuelState; labels: DuelLab
   const outcome = computeOutcome(state);
   const verdictClass =
     outcome === "resultWin"
-      ? "text-emerald-600"
+      ? "text-success"
       : outcome === "resultLoss"
-        ? "text-red-600"
+        ? "text-destructive"
         : "text-muted-foreground";
 
   return (
     <div className="space-y-4">
-      <h2 className={`text-2xl font-bold ${verdictClass}`}>{labels[outcome]}</h2>
+      <h2 className={`font-display text-2xl font-bold ${verdictClass}`}>{labels[outcome]}</h2>
 
-      <div className="rounded-lg border border-border p-4 text-sm">
+      <div className="rounded-xl border border-gold/30 bg-gold/5 p-4 text-sm">
         <p>
           {labels.finalScore
             .replace("{score}", String(state.myScore))
@@ -35,11 +35,14 @@ export function DuelRecap({ state, labels }: { state: DuelState; labels: DuelLab
 
       {state.review && state.review.length > 0 ? (
         <div className="space-y-3">
-          <h3 className="font-semibold">{labels.reviewTitle}</h3>
+          <h3 className="font-display font-bold">{labels.reviewTitle}</h3>
           {state.review.map((r) => (
-            <div key={r.questionId} className="rounded-lg border border-border p-3 text-sm">
+            <div
+              key={r.questionId}
+              className="rounded-xl border border-border/50 bg-black/40 p-3 text-sm backdrop-blur-md"
+            >
               <p className="font-medium">{r.prompt}</p>
-              <p className="text-emerald-600">
+              <p className="text-success">
                 {labels.correctAnswer.replace("{answer}", r.correctChoice ?? "—")}
               </p>
               {r.explanation ? <p className="mt-1 text-muted-foreground">{r.explanation}</p> : null}

@@ -11,6 +11,7 @@ import {
 } from "@/features/quest/components/exercise-player";
 import { QuestResultActions } from "@/features/quest/components/quest-result-actions";
 import { buildQuestLabels } from "@/features/quest/quest-labels";
+import { useT } from "@/lib/i18n";
 import { ReportErrorButton } from "@/features/content-report";
 import { SubscriptionPaywall } from "@/features/subscription";
 
@@ -28,6 +29,7 @@ export const Route = createFileRoute("/_authenticated/quest/$exerciseId")({
 
 function QuestPage() {
   const { exerciseId } = Route.useParams();
+  const t = useT();
   const startSession = useServerFn(startExerciseSession);
   const submit = useServerFn(submitAttempt);
   const reveal = useServerFn(revealHint);
@@ -48,7 +50,7 @@ function QuestPage() {
             return { ok: false, kind: "premium", message: msg };
           }
           if (msg.includes("quiz de compréhension")) return { ok: false, kind: "quiz" };
-          throw e instanceof Error ? e : new Error("Impossible de démarrer la session.");
+          throw e instanceof Error ? e : new Error(t.errors.sessionStartFailed);
         }
       },
       submit: async ({ sessionId, exerciseId: exId, answers }): Promise<PlayerResult> => {
@@ -112,7 +114,7 @@ function QuestPage() {
         </>
       ),
     }),
-    [startSession, submit, reveal],
+    [startSession, submit, reveal, t],
   );
 
   // `game-surface` makes the player self-contained (it carries the same light-theme

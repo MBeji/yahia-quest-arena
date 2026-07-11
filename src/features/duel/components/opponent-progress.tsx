@@ -1,3 +1,4 @@
+import { GoldProgress } from "@/components/game/gold-progress";
 import type { TranslationKeys } from "@/lib/i18n/types";
 
 type DuelLabels = TranslationKeys["duel"];
@@ -29,23 +30,14 @@ export function OpponentProgress({
       <p className="flex items-center gap-2 text-sm text-muted-foreground">
         {online !== undefined ? (
           <span
-            className={`inline-block h-2 w-2 rounded-full ${online ? "bg-emerald-500" : "bg-muted-foreground/40"}`}
+            className={`inline-block h-2 w-2 rounded-full ${online ? "bg-success" : "bg-muted-foreground/40"}`}
             aria-label={online ? labels.online : labels.offline}
             title={online ? labels.online : labels.offline}
           />
         ) : null}
         {text}
       </p>
-      <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
-        <div
-          className="h-2 rounded-full bg-primary transition-all"
-          style={{ width: `${pct}%` }}
-          role="progressbar"
-          aria-valuenow={answered}
-          aria-valuemin={0}
-          aria-valuemax={total}
-        />
-      </div>
+      <GoldProgress value={pct} size="sm" aria-label={text} />
     </div>
   );
 }

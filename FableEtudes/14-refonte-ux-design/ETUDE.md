@@ -141,13 +141,13 @@ Stop-points : un lot d'écran ne touche NI les primitives (retour lot 1 si manqu
 - [x] Lot 0 — étude + audit (cette PR)
 - [x] Lot 1 — fondations (PR livrée : 2 thèmes, tokens, primitives, motion)
 - [x] Lot 2 — RTL + lint (PR livrée : garde-fou + sweep)
-- [ ] Lot 3 — états système + i18n erreurs
-- [ ] Lot 4 — auth/onboarding
-- [ ] Lot 5 — dashboard
-- [ ] Lot 6 — quête
-- [ ] Lot 7 — donjon
-- [ ] Lot 8 — duel
-- [ ] Lot 9 — leaderboard/shop/parcours
+- [x] Lot 3 — états système + i18n erreurs (PR livrée)
+- [x] Lot 4 — auth/onboarding (PR livrée)
+- [x] Lot 5 — dashboard (PR livrée)
+- [x] Lot 6 — quête (PR livrée)
+- [x] Lot 7 — donjon (PR livrée)
+- [x] Lot 8 — duel (PR livrée)
+- [x] Lot 9 — leaderboard/shop/parcours (PR livrée)
 - [ ] Lot 10 — parent-report/admin
 - [ ] Lot 11 — motion
 
@@ -226,3 +226,73 @@ Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions co
   brute/`text-white` du garde-fou arrivera avec le lot 10 (l'activer avant la purge mettrait
   la gate au rouge) ; (b) `translate-x` de centrage (`left-1/2 -translate-x-1/2`) exempté —
   symétrique en RTL. Vérifié : gate verte, capture auth AR (icônes/paddings côté start).
+- 2026-07-10 — Lot 2 mergé (#350). Lot 3 livré : 7 clés i18n `errors.*LoadFailed`/`parcoursNotFound`/
+  `sessionStartFailed` (FR/EN/AR) remplacent le français codé en dur des 6 routes publiques +
+  `quest.$exerciseId` ; erreurs de route unifiées sur `EmptyState` (icône + retry via `refetch`),
+  chargements unifiés sur `LoadingState` (routes publiques, suivi, parcours, leaderboard, donjon,
+  exercise-player, parent-report ×2, admin.subscriptions) ; vides unifiés là où le pattern
+  existait (badges, journey, leaderboard) — les one-liners denses du dashboard et du duel
+  suivront avec leurs lots d'écran (5, 8). Écarts consignés : budget bundle i18n 100→104 KB
+  (pattern documenté du fichier de budget — 7 clés × 3 langues) ; exception `max-lines`
+  scopée aux dictionnaires i18n (fichiers-contrats plats, sans logique). Vérifié : gate verte
+  (1196 tests), build:check + smoke:shell verts, LoadingState capturé localisé/thémé (EN clair,
+  AR sombre or).
+- 2026-07-10 — Lot 3 mergé (#351). Lot 4 livré : `routes/auth.tsx` rattaché au thème actif
+  (US-1) — les surfaces `bg-black/xx` (hors remap `.app-shell`) passent sur `bg-background/xx`,
+  l'encre des CTA or `text-black` → `text-primary-foreground` (sombre sur or, blanche sur teal),
+  syntaxe canonique `gold` (R-3) sur tout l'écran, entrées motion via `useEntrance` (D-5).
+  Constat d'exécution : l'ONBOARDING était déjà rattaché au thème via le remap `.app-shell`
+  du layout authentifié — aucun changement nécessaire (vérifié sur code ; capture impossible
+  sans creds TEST, Q-2 toujours ouvert côté environnement). Captures auth : clair Référence
+  (carte blanche, CTA teal) et sombre Noir & Or, FR + AR.
+- 2026-07-10 — Lot 4 mergé (#352). Lot 5 livré : dashboard sur les primitives. Pré-vérifié
+  contre le redesign parallèle #345 : structure auditée conservée → pas de divergence, exécution
+  normale. `PageShell wide` remplace les deux conteneurs `max-w-7xl` (largeur unifiée D-2) ;
+  barre XP héros + 2 barres d'objectifs → `GoldProgress` ; skeletons `bg-black/40` (invisibles
+  en thème clair après remap) → `bg-foreground/10` ; `text-[11px]` → `text-2xs` ; 5 entrées
+  motion inline → presets du module motion. Retour lot 1 assumé et consigné : ajout de la
+  variante non-hook `entrance()` au module motion (délais par index dans les listes — un hook
+  en boucle est illégal), avec test. Gate verte (1197 tests), budgets OK (dashboard 29,17/32 KB),
+  smoke vert. Captures écran impossibles (Q-2) — revue humaine recommandée sur le rendu.
+- 2026-07-10 — Lot 5 mergé (#353). Lot 6 livré : grille de récompenses sur `StatTile`
+  (ExplainHint conservé sur l'XP, flamme animée via nouvelle prop `iconClassName` — extension
+  consignée) ; `SubjectHub` sur `PageShell` (+ prop `dir`, extension consignée) et **étoiles Q-4**
+  (`DifficultyStars` remplace « Niveau {n} » ; clé i18n `public.subject.level` supprimée des
+  4 dictionnaires) ; `ExercisePlayer` : `BackLink` (refait sur `createLink` pour préserver le
+  typage `params` du routeur), `PageShell narrow` ×2, `GoldProgress` pour la progression des
+  questions (la barre HP du boss garde son vocabulaire rouge→or distinct — décision consignée),
+  bannière quiz réussie sur le token `--success` (emerald brut supprimé), syntaxe canonique
+  gold/neon-gold/flame partout, entrées motion sur `useEntrance("scale")`. Mocks de tests
+  complétés (`createLink`, `useReducedMotion`). Gate verte (1197 tests), budgets + smoke verts.
+  Captures impossibles (contenu DB requis) — revue humaine du rendu quête recommandée.
+- 2026-07-10 — Lot 6 mergé (#354). Lot 7 livré : donjon sur les primitives. Lobby : 3 tuiles
+  → `StatTile` (nouveau ton `destructive` pour « 1 vie » — extension consignée), `BackLink`,
+  `PageShell narrow`, entrée `rise`. Game-over : 4 tuiles → `StatTile`, réponse correcte sur le
+  token `--success` (emerald brut supprimé), entrée `scale`. En jeu : les 3 barrettes de
+  difficulté → **`DifficultyStars`** (Q-4), barre de profondeur → `GoldProgress` (aria-label
+  i18n au passage — il était en anglais dur), combo/encouragement orange brut → token
+  `--flame` (glow en `color-mix`), chargement « descente » → `LoadingState`, encre des CTA or
+  → `text-primary-foreground`, syntaxe canonique partout. Mocks dungeon complétés
+  (`createLink`, `useReducedMotion`). Gate verte (1197 tests), budgets + smoke verts.
+  Captures impossibles (Q-2) — revue humaine du donjon recommandée.
+- 2026-07-10 — Lot 7 mergé (#356). Lot 8 livré : le duel (l'« îlot shadcn » de l'audit) rejoint
+  le registre Arène (US-6). Hub : `PageShell narrow`, **premier bouton retour du duel**
+  (`BackLink`), h1/h2 en `font-display` + icône Swords or, cartes de duels sur les surfaces
+  Arène (bg-black/40 + blur), liens Reprendre/score en or avec cibles `min-h-11`, forfait avec
+  cible tactile, historique vide sur `EmptyState`. Queue card : CTA « Trouver un adversaire »
+  en dégradé or. Ligue : bannière de récompense amber brut → tokens or ; rang « moi » en or.
+  Arena : option sélectionnée en or, CTA valider en dégradé or, alerte tooFast en or.
+  Recap : verdict/bonnes réponses emerald/red bruts → tokens `--success`/`--destructive`,
+  carte de score sur surface or. Route de jeu : `LoadingState`, `EmptyState`, `BackLink`
+  (remplace une flèche « ← » littérale non-RTL), `PageShell narrow`. Gate verte (1197 tests),
+  budgets + smoke + garde-fou RTL verts. Captures impossibles (Q-2) — revue humaine d'un duel
+  recommandée.
+- 2026-07-10 — Lot 8 mergé (#357). Lot 9 livré : leaderboard sur `PageShell reading` +
+  `BackLink` ; podium sur des couleurs de MÉDAILLES fixes et commentées (argent/or/bronze en
+  oklch délibéré — hors tokens de thème, l'or du clair étant teal ; encre sombre fixe, le
+  `text-white` disparaît) ; badge de rang top-3 sur les tokens (`from-neon-gold to-gold-deep`,
+  l'amber brut disparaît) ; chip « Toi » en `text-2xs`. Journey-header : barre XP → `GoldProgress`
+  (la 8ᵉ et dernière barre inline de l'audit — indicateur « 8 barres → 1 primitive » ATTEINT) ;
+  journey-map → `PageShell`. Badges/shop : syntaxe canonique des tokens. Les entrées motion du
+  leaderboard restent inline → lot 11 (harmonisation). Gate verte (1197 tests), budgets + smoke +
+  garde-fou RTL verts. Captures impossibles (Q-2).

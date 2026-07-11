@@ -23,13 +23,25 @@ type EntranceProps =
     };
 
 /**
+ * Non-hook variant for STAGGERED lists (per-item delay inside a `.map()`, where
+ * a hook call would be illegal): call `useReducedMotion()` once in the component
+ * and thread its result here.
+ */
+export function entrance(
+  reduced: boolean | null,
+  preset: MotionPreset = "rise",
+  delay = 0,
+): EntranceProps {
+  if (reduced) return { initial: false };
+  const { initial, animate } = MOTION_PRESETS[preset];
+  return { initial, animate, transition: { duration: 0.35, ease: "easeOut", delay } };
+}
+
+/**
  * Entrance props for a `motion.*` element. Under reduced motion the element
  * renders directly in its final state (`initial: false` — no animation, no
  * opacity flash).
  */
 export function useEntrance(preset: MotionPreset = "rise", delay = 0): EntranceProps {
-  const reduced = useReducedMotion();
-  if (reduced) return { initial: false };
-  const { initial, animate } = MOTION_PRESETS[preset];
-  return { initial, animate, transition: { duration: 0.35, ease: "easeOut", delay } };
+  return entrance(useReducedMotion(), preset, delay);
 }
