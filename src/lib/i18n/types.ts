@@ -112,6 +112,9 @@ export type TranslationKeys = {
     dungeonDesc: string;
     dailyQuests: string;
     weeklyQuests: string;
+    // Raw daily-objective / weekly-quest type codes → student-facing labels.
+    objectiveTypes: Record<string, string>;
+    questTypes: Record<string, string>;
     dailyEmpty: string;
     weeklyEmpty: string;
     pathsTitle: string;
@@ -197,6 +200,7 @@ export type TranslationKeys = {
     correctAnswer: string;
     resultScore: string;
     serverValidatedTime: string;
+    timeSpent: string;
     questionN: string;
     potionXpApplied: string;
     potionCoinsApplied: string;
@@ -746,6 +750,7 @@ export type TranslationKeys = {
       print: string;
       courseSoon: string;
       practiceCta: string;
+      quizFirstCta: string;
       inviteTitle: string;
       inviteDesc: string;
       inviteCta: string;
@@ -774,6 +779,7 @@ export type TranslationKeys = {
       answerAllHint: string;
       restart: string;
       questCta: string;
+      continueCta: string;
       inviteDesc: string;
       inviteCta: string;
     };

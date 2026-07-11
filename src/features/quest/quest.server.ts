@@ -307,11 +307,11 @@ export const getChapterLesson = createServerFn({ method: "GET" })
   .middleware([optionalSupabaseAuth])
   .inputValidator((d) => z.object({ chapterId: z.guid() }).parse(d))
   .handler(async ({ data, context }) => {
-    const { supabase } = context;
+    const { supabase, userId } = context;
     const { data: chapter, error } = await supabase
       .from("chapters")
       .select(
-        "id, title, description, lesson_content, summary, subject_id, display_order, subjects(id, name_fr, color_token, icon, content_language)",
+        "id, title, description, lesson_content, summary, subject_id, display_order, subjects(id, name_fr, color_token, icon, content_language, grade_id)",
       )
       .eq("id", data.chapterId)
       .single();
@@ -359,7 +359,30 @@ export const getChapterLesson = createServerFn({ method: "GET" })
       .order("display_order");
     const practiceExerciseId = (chapterExercises ?? []).find((e) => e.mode !== "quiz")?.id ?? null;
 
-    return { chapter, allChapters, practiceExerciseId };
+    // Quiz-gate affordance for the reader CTA (étude 15, lot 1 — audit §D-4): the
+    // chapter's quiz id, whether the gate applies (school subjects only — same
+    // rule as getSubject), and — signed-in only — whether THIS user already
+    // passed it (score ≥ threshold AND not rushed, mirroring getSubject).
+    // Anonymous visitors resolve their pass client-side (sessionStorage, see
+    // anon-quiz-gate.ts), so quizPassed stays null for them.
+    const quizExerciseId = (chapterExercises ?? []).find((e) => e.mode === "quiz")?.id ?? null;
+    const isSchoolSubject =
+      ((chapter.subjects as { grade_id?: string | null } | null)?.grade_id ?? null) !== null;
+    const quizGated = isSchoolSubject && quizExerciseId !== null;
+    let quizPassed: boolean | null = null;
+    if (quizGated && userId) {
+      const { data: passedRows } = await supabase
+        .from("attempts")
+        .select("duration_seconds,total_count")
+        .eq("user_id", userId)
+        .eq("exercise_id", quizExerciseId as string)
+        .gte("score_pct", QUIZ_PASS_THRESHOLD_PCT);
+      quizPassed = (passedRows ?? []).some(
+        (r) => (r.duration_seconds ?? 0) >= (r.total_count ?? 0) * MIN_SECONDS_PER_QUESTION,
+      );
+    }
+
+    return { chapter, allChapters, practiceExerciseId, quizExerciseId, quizGated, quizPassed };
   });
 
 // ---------- Manuel élève pages (login-gated) ----------

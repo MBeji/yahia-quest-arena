@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
   BookOpen,
+  Brain,
   ChevronLeft,
   ChevronRight,
   Dumbbell,
@@ -46,12 +47,16 @@ export function LessonReader({
   chapter,
   allChapters,
   practiceExerciseId = null,
+  quizCta = null,
   isAuthenticated = false,
 }: {
   chapterId: string;
   chapter: LessonReaderChapter;
   allChapters: LessonReaderSibling[];
   practiceExerciseId?: string | null;
+  /** When the chapter's quiz gate is still closed for THIS visitor, the CTA
+   *  targets the comprehension quiz instead of a locked exercise (audit §D-4). */
+  quizCta?: { exerciseId: string } | null;
   isAuthenticated?: boolean;
 }) {
   const t = useT();
@@ -150,16 +155,29 @@ export function LessonReader({
 
       <ManuelPagesSection chapterId={chapterId} isAuthenticated={isAuthenticated} />
 
-      {practiceExerciseId && (
+      {(quizCta || practiceExerciseId) && (
         <div className="mt-10 print:hidden">
-          <Link
-            to={exerciseRouteFor(isAuthenticated)}
-            params={{ exerciseId: practiceExerciseId }}
-            data-testid="lesson-practice-cta"
-            className="flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
-          >
-            <Dumbbell className="h-4 w-4" /> {t.public.reader.practiceCta}
-          </Link>
+          {quizCta ? (
+            // Gate still closed for this visitor: practising would hit the locked
+            // screen, so the single CTA sends them to the comprehension quiz first.
+            <Link
+              to={exerciseRouteFor(isAuthenticated)}
+              params={{ exerciseId: quizCta.exerciseId }}
+              data-testid="lesson-practice-cta"
+              className="flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+            >
+              <Brain className="h-4 w-4" /> {t.public.reader.quizFirstCta}
+            </Link>
+          ) : (
+            <Link
+              to={exerciseRouteFor(isAuthenticated)}
+              params={{ exerciseId: practiceExerciseId as string }}
+              data-testid="lesson-practice-cta"
+              className="flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+            >
+              <Dumbbell className="h-4 w-4" /> {t.public.reader.practiceCta}
+            </Link>
+          )}
         </div>
       )}
 
@@ -190,21 +208,25 @@ export function LessonReader({
         )}
       </nav>
 
-      <aside className="mt-12 rounded-2xl border border-primary/20 bg-secondary px-6 py-7 text-center print:hidden">
-        <FileText className="mx-auto h-6 w-6 text-primary" />
-        <h2 className="mt-2 font-display text-lg font-bold text-foreground">
-          {t.public.reader.inviteTitle}
-        </h2>
-        <p className="mx-auto mt-1 max-w-md text-sm text-muted-foreground">
-          {t.public.reader.inviteDesc}
-        </p>
-        <Link
-          to="/signup"
-          className="mt-4 inline-flex items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
-        >
-          {t.public.reader.inviteCta}
-        </Link>
-      </aside>
+      {/* Soft account invite — anonymous readers only: a signed-in student must
+          never be told to create the account they already have (audit §B-4). */}
+      {!isAuthenticated && (
+        <aside className="mt-12 rounded-2xl border border-primary/20 bg-secondary px-6 py-7 text-center print:hidden">
+          <FileText className="mx-auto h-6 w-6 text-primary" />
+          <h2 className="mt-2 font-display text-lg font-bold text-foreground">
+            {t.public.reader.inviteTitle}
+          </h2>
+          <p className="mx-auto mt-1 max-w-md text-sm text-muted-foreground">
+            {t.public.reader.inviteDesc}
+          </p>
+          <Link
+            to="/signup"
+            className="mt-4 inline-flex items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+          >
+            {t.public.reader.inviteCta}
+          </Link>
+        </aside>
+      )}
     </article>
   );
 }

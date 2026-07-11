@@ -536,7 +536,11 @@ export function ExercisePlayer({
               </ExplainHint>
             </p>
             <p className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">
-              {t.quest.serverValidatedTime.replace("{n}", String(result.durationSeconds))}
+              {/* "Server-validated" only holds on the connected strategy — anon measures client-side. */}
+              {(strategy.capabilities.rewards
+                ? t.quest.serverValidatedTime
+                : t.quest.timeSpent
+              ).replace("{n}", String(result.durationSeconds))}
             </p>
             {isQuiz && (
               <div

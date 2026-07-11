@@ -253,7 +253,7 @@ Stop-points : maquette non validée = STOP (R-8) ; toute envie de nouvelle méca
 périmètre ; divergence étude↔code = STOP et remontée (règle FableEtudes).
 
 - [x] Lot 0 — étude + audit + harness (PR #355)
-- [ ] Lot 1 — quick-wins de vérité
+- [x] Lot 1 — quick-wins de vérité
 - [ ] Lot 2 — gratuité de phase
 - [ ] Lot 3 — fondations éditoriales
 - [ ] Lot 4 — Claude Design (socle + gabarits + maquette nav)
@@ -337,3 +337,16 @@ Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions co
   majeur (Q-2, gratuité de phase) : D-3 réécrit, nouveau lot 2 « gratuité », renumérotation des
   lots 3-13, volet légal retiré (Q-5), option A onboarding (Q-6). Q-3 se valide sur maquette au
   lot 4 (gate du lot 5).
+- 2026-07-11 — Lot 1 livré (quick-wins de vérité) : invite du lecteur réservée aux anonymes +
+  copy véridique (« garder tes chapitres débloqués », plus de faux « pour t'entraîner ») ; le
+  CTA du lecteur cible le quiz de compréhension tant que le chapitre est verrouillé
+  (`getChapterLesson` expose `quizExerciseId`/`quizGated`/`quizPassed` — même règle de passage
+  que `getSubject` ; anonyme résolu via sessionStorage) ; « Continuer vers le premier
+  exercice » sur le résultat d'un quiz anonyme réussi ; « Temps validé côté serveur » réservé à
+  la stratégie connectée (clé `timeSpent` sinon) ; types de quêtes/objectifs i18n FR/EN/AR
+  (fin de « beat 2 bosses ») ; sous-titre leaderboard « de l'Académie » ; méta `/auth` sur le
+  positionnement gratuit ; hygiène seed e2e (révocation des entitlements des comptes non
+  premium) ; CLAUDE.md aligné sur l'IA réelle (redirects C8/L2.A). Écart accepté : pour un
+  connecté, le CTA lecteur→quiz s'appuie sur l'état serveur ; pour un anonyme l'état
+  sessionStorage n'est lu qu'après montage (SSR = quiz par défaut sur chapitre non débloqué —
+  cohérent et sans mismatch d'hydratation).

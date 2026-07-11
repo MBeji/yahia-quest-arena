@@ -145,4 +145,35 @@ describe("LessonReader", () => {
     );
     expect(screen.queryByText(/entraîner sur ce chapitre/i)).not.toBeInTheDocument();
   });
+
+  it("hides the account invite for signed-in readers (they HAVE an account)", () => {
+    const { container } = render(
+      <LessonReader
+        chapterId="c1"
+        chapter={chapter}
+        allChapters={siblings}
+        practiceExerciseId="ex9"
+        isAuthenticated={true}
+      />,
+    );
+    expect(screen.queryByText(/Apprends en jouant/)).not.toBeInTheDocument();
+    expect(container.querySelector('a[href="/signup"]')).toBeNull();
+  });
+
+  it("routes the single CTA to the comprehension quiz while the gate is closed", () => {
+    const { container } = render(
+      <LessonReader
+        chapterId="c1"
+        chapter={chapter}
+        allChapters={siblings}
+        practiceExerciseId="ex9"
+        quizCta={{ exerciseId: "quiz1" }}
+        isAuthenticated={false}
+      />,
+    );
+    // One CTA only, targeting the quiz — never a locked exercise.
+    expect(screen.getByText(/Commencer par le quiz de compréhension/)).toBeInTheDocument();
+    expect(screen.queryByText(/entraîner sur ce chapitre/i)).not.toBeInTheDocument();
+    expect(container.querySelector('a[href="/exercice/$exerciseId"]')).not.toBeNull();
+  });
 });
