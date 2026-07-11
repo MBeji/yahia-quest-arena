@@ -37,7 +37,7 @@ export function ReportErrorButton({
 
   if (sent) {
     return (
-      <p className="mt-3 inline-flex items-center gap-1.5 text-xs text-emerald-400">
+      <p className="mt-3 inline-flex items-center gap-1.5 text-xs text-success">
         <Check className="h-3.5 w-3.5" /> {t.contentReport.sent}
       </p>
     );

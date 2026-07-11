@@ -197,7 +197,7 @@ export function ParcoursEntitlementsAdmin({
                       <span
                         className={`inline-flex rounded-full px-2.5 py-1 text-xs font-bold ${
                           e.isActive
-                            ? "bg-emerald-500/15 text-emerald-400"
+                            ? "bg-success/15 text-success"
                             : "bg-muted/40 text-muted-foreground"
                         }`}
                       >

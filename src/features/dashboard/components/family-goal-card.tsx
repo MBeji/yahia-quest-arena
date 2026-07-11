@@ -27,7 +27,7 @@ export function FamilyGoalCard() {
       <div className="flex items-center justify-between">
         <div className="text-sm font-semibold">👨‍👩‍👧 {t.dashboard.familyGoalTitle}</div>
         {goal.done >= goal.target && (
-          <span className="text-xs text-emerald-400">{t.dashboard.familyGoalReached}</span>
+          <span className="text-xs text-success">{t.dashboard.familyGoalReached}</span>
         )}
       </div>
       <div className="mt-2 h-2 overflow-hidden rounded-full bg-secondary">

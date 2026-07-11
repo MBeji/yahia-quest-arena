@@ -19,7 +19,7 @@ function StatusBadge({ status }: { status: BetaRequestStatus }) {
     approved: {
       Icon: Check,
       label: t.betaAccess.statusApproved,
-      cls: "text-emerald-400 border-emerald-500/40 bg-emerald-500/10",
+      cls: "text-success border-success/40 bg-success/10",
     },
     rejected: {
       Icon: X,

@@ -23,7 +23,7 @@ function StatusCard({ status }: { status: BetaRequestStatus }) {
       Icon: Check,
       label: t.betaAccess.statusApproved,
       desc: t.betaAccess.approvedDesc,
-      cls: "text-emerald-400 border-emerald-500/40 bg-emerald-500/10",
+      cls: "text-success border-success/40 bg-success/10",
     },
     rejected: {
       Icon: X,

@@ -101,7 +101,7 @@ function ParentReport() {
     return (
       <div className="min-h-[100dvh] flex flex-col items-center justify-center p-8 text-center">
         <Users className="w-16 h-16 text-muted-foreground mb-4" />
-        <h2 className="text-xl font-bold text-white mb-2">{t.parentReport.adminEmptyTitle}</h2>
+        <h2 className="text-xl font-bold text-foreground mb-2">{t.parentReport.adminEmptyTitle}</h2>
         <p className="text-muted-foreground max-w-md">{t.parentReport.adminEmptyDesc}</p>
       </div>
     );
@@ -122,8 +122,8 @@ function ParentReport() {
         </Link>
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
-              <Activity className="w-7 h-7 text-[color:var(--gold)]" />
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground flex items-center gap-3">
+              <Activity className="w-7 h-7 text-gold" />
               {isAdmin ? t.parentReport.adminTitle : t.parentReport.title}
             </h1>
             <p className="text-muted-foreground mt-1">
@@ -137,14 +137,14 @@ function ParentReport() {
               <button
                 type="button"
                 onClick={() => shareReport(buildFamilyReportShareText(report, t))}
-                className="inline-flex items-center gap-2 rounded-lg border border-[color:var(--gold)]/40 bg-black/50 px-4 py-2 text-sm font-semibold text-[color:var(--champagne)] transition hover:border-[color:var(--gold)] [@media(pointer:coarse)]:min-h-11"
+                className="inline-flex items-center gap-2 rounded-lg border border-gold/40 bg-black/50 px-4 py-2 text-sm font-semibold text-champagne transition hover:border-gold [@media(pointer:coarse)]:min-h-11"
               >
                 <Share2 className="h-4 w-4" /> {t.parentReport.shareCta}
               </button>
               <button
                 type="button"
                 onClick={() => window.print()}
-                className="inline-flex items-center gap-2 rounded-lg border border-[color:var(--gold)]/40 bg-black/50 px-4 py-2 text-sm font-semibold text-[color:var(--champagne)] transition hover:border-[color:var(--gold)] [@media(pointer:coarse)]:min-h-11"
+                className="inline-flex items-center gap-2 rounded-lg border border-gold/40 bg-black/50 px-4 py-2 text-sm font-semibold text-champagne transition hover:border-gold [@media(pointer:coarse)]:min-h-11"
               >
                 <Printer className="h-4 w-4" /> {t.parentReport.printCta}
               </button>
@@ -154,8 +154,8 @@ function ParentReport() {
       </motion.div>
 
       {!isAdmin && (
-        <div className="mb-6 rounded-xl border border-[color:var(--gold)]/40 bg-black/30 p-4 print:hidden">
-          <div className="mb-3 flex items-center gap-2 text-[color:var(--champagne)]">
+        <div className="mb-6 rounded-xl border border-gold/40 bg-black/30 p-4 print:hidden">
+          <div className="mb-3 flex items-center gap-2 text-champagne">
             <LinkIcon className="h-4 w-4" />
             <span className="font-semibold">{t.parentReport.linkTitle}</span>
           </div>
@@ -164,13 +164,13 @@ function ParentReport() {
               value={studentCode}
               onChange={(e) => setStudentCode(e.target.value)}
               placeholder={t.parentReport.codePlaceholder}
-              className="rounded-lg border border-[color:var(--gold)]/30 bg-black/70 px-3 py-2 text-sm text-white placeholder:text-muted-foreground focus:border-[color:var(--gold)] focus:outline-none"
+              className="rounded-lg border border-gold/30 bg-black/70 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-gold focus:outline-none"
             />
             <input
               value={relationLabel}
               onChange={(e) => setRelationLabel(e.target.value)}
               placeholder={t.parentReport.relationPlaceholder}
-              className="rounded-lg border border-[color:var(--gold)]/30 bg-black/70 px-3 py-2 text-sm text-white placeholder:text-muted-foreground focus:border-[color:var(--gold)] focus:outline-none"
+              className="rounded-lg border border-gold/30 bg-black/70 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-gold focus:outline-none"
             />
             <button
               type="button"
@@ -207,17 +207,17 @@ function ParentReport() {
                 aria-pressed={selected}
                 className={`rounded-xl border p-4 text-start transition [@media(pointer:coarse)]:min-h-11 ${
                   selected
-                    ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10"
-                    : "border-border/50 bg-black/50 hover:border-[color:var(--gold)]/60"
+                    ? "border-gold bg-gold/10"
+                    : "border-border/50 bg-black/50 hover:border-gold/60"
                 }`}
               >
                 <div className="flex items-center justify-between gap-2">
-                  <span className="truncate font-bold text-white">
+                  <span className="truncate font-bold text-foreground">
                     {s.display_name ?? t.parentReport.defaultStudentName}
                   </span>
                   <span
                     className={`h-2.5 w-2.5 shrink-0 rounded-full ${
-                      isActiveThisWeek(s.last_active_date) ? "bg-green-400" : "bg-red-400/70"
+                      isActiveThisWeek(s.last_active_date) ? "bg-success" : "bg-destructive/70"
                     }`}
                     title={
                       s.last_active_date
@@ -228,11 +228,11 @@ function ParentReport() {
                 </div>
                 <div className="mt-2 flex items-center gap-4 text-sm text-muted-foreground">
                   <span className="inline-flex items-center gap-1">
-                    <Trophy className="h-3.5 w-3.5 text-[color:var(--gold)]" />
+                    <Trophy className="h-3.5 w-3.5 text-gold" />
                     {t.dashboard.levelLabel} {s.level}
                   </span>
                   <span className="inline-flex items-center gap-1">
-                    <Flame className="h-3.5 w-3.5 text-orange-400" />
+                    <Flame className="h-3.5 w-3.5 text-flame" />
                     {s.current_streak}j
                   </span>
                 </div>
@@ -258,7 +258,7 @@ function ParentReport() {
               className={`px-4 py-2 rounded-lg font-medium transition-colors [@media(pointer:coarse)]:min-h-11 ${
                 selectedStudent === s.id
                   ? "bg-[image:var(--gradient-gold)] text-black"
-                  : "bg-black/50 text-muted-foreground hover:bg-black/70 border border-[color:var(--gold)]/30 hover:border-[color:var(--gold)]/60"
+                  : "bg-black/50 text-muted-foreground hover:bg-black/70 border border-gold/30 hover:border-gold/60"
               }`}
             >
               {s.display_name ?? t.parentReport.defaultStudentName}
@@ -271,7 +271,7 @@ function ParentReport() {
                 type="button"
                 onClick={() => setAdminPage((p) => Math.max(1, p - 1))}
                 disabled={pagination.page <= 1}
-                className="rounded-md border border-[color:var(--gold)]/30 bg-black/70 px-3 py-1.5 text-xs font-semibold text-[color:var(--champagne)] disabled:opacity-40 [@media(pointer:coarse)]:min-h-11"
+                className="rounded-md border border-gold/30 bg-black/70 px-3 py-1.5 text-xs font-semibold text-champagne disabled:opacity-40 [@media(pointer:coarse)]:min-h-11"
               >
                 {t.parentReport.prevPage}
               </button>
@@ -287,7 +287,7 @@ function ParentReport() {
                 type="button"
                 onClick={() => setAdminPage((p) => p + 1)}
                 disabled={!pagination.hasMore}
-                className="rounded-md border border-[color:var(--gold)]/30 bg-black/70 px-3 py-1.5 text-xs font-semibold text-[color:var(--champagne)] disabled:opacity-40 [@media(pointer:coarse)]:min-h-11"
+                className="rounded-md border border-gold/30 bg-black/70 px-3 py-1.5 text-xs font-semibold text-champagne disabled:opacity-40 [@media(pointer:coarse)]:min-h-11"
               >
                 {t.parentReport.nextPage}
               </button>
@@ -370,8 +370,8 @@ function WeeklyGoalCard({ studentId }: { studentId: string }) {
   const progressPct = goal ? Math.min(100, Math.round((done / goal.target) * 100)) : 0;
 
   return (
-    <div className="mb-6 rounded-xl border border-[color:var(--gold)]/40 bg-black/30 p-4 print:hidden">
-      <div className="mb-1 flex items-center gap-2 text-[color:var(--champagne)]">
+    <div className="mb-6 rounded-xl border border-gold/40 bg-black/30 p-4 print:hidden">
+      <div className="mb-1 flex items-center gap-2 text-champagne">
         <Target className="h-4 w-4" />
         <span className="font-semibold">{t.parentReport.goalTitle}</span>
       </div>
@@ -387,7 +387,7 @@ function WeeklyGoalCard({ studentId }: { studentId: string }) {
             if (Number.isFinite(n)) setTarget(Math.max(1, Math.min(50, Math.trunc(n))));
           }}
           aria-label={t.parentReport.goalTitle}
-          className="w-20 rounded-lg border border-[color:var(--gold)]/30 bg-black/70 px-3 py-2 text-sm text-white focus:border-[color:var(--gold)] focus:outline-none"
+          className="w-20 rounded-lg border border-gold/30 bg-black/70 px-3 py-2 text-sm text-foreground focus:border-gold focus:outline-none"
         />
         <span className="text-sm text-muted-foreground">{t.parentReport.goalUnit}</span>
         <button
