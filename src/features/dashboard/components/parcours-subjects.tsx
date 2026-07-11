@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, BookOpen, ChevronRight } from "lucide-react";
-import { useT } from "@/lib/i18n";
+import { useI18n, useT } from "@/lib/i18n";
 import { isRtlText } from "@/shared/lib/utils";
+import { parcoursName } from "@/shared/lib/parcours-locale";
 
 /**
  * Public level page — « Référence » register (chantier C8, L1.3). Presentational: the
@@ -13,6 +14,8 @@ import { isRtlText } from "@/shared/lib/utils";
 
 export type ParcoursSubjectsParcours = {
   name_fr: string;
+  name_en?: string | null;
+  name_ar?: string | null;
   status: string;
   kind: string;
 };
@@ -40,8 +43,10 @@ export function ParcoursSubjects({
   isChoosing?: boolean;
 }) {
   const t = useT();
+  const { locale } = useI18n();
   const isExtra = parcours.kind === "libre";
   const canChoose = isAuthenticated && onChoose != null && subjects.length > 0;
+  const title = parcoursName(parcours, locale);
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
@@ -56,9 +61,9 @@ export function ParcoursSubjects({
       <header className="mb-8 mt-3">
         <h1
           className="font-display text-3xl font-bold leading-tight sm:text-4xl"
-          dir={isRtlText(parcours.name_fr) ? "rtl" : "ltr"}
+          dir={isRtlText(title) ? "rtl" : "ltr"}
         >
-          {parcours.name_fr}
+          {title}
         </h1>
         <p className="mt-2 text-muted-foreground">{t.public.niveau.chooseSubject}</p>
         {canChoose && (

@@ -11,7 +11,8 @@ import {
   Trophy,
   type LucideIcon,
 } from "lucide-react";
-import { useT } from "@/lib/i18n";
+import { useI18n, useT } from "@/lib/i18n";
+import { parcoursName } from "@/shared/lib/parcours-locale";
 import { buildPrograms, flagshipLabel, type ProgramParcours } from "../program-families";
 
 /**
@@ -109,6 +110,7 @@ function ParcoursCard({
 
 export function ProgrammeCatalogue({ parcours }: { parcours: CatalogueParcours[] }) {
   const t = useT();
+  const { locale } = useI18n();
   const school = buildPrograms(parcours).find((p) => p.kind === "school");
   const cycles = school?.cycles ?? [];
 
@@ -152,12 +154,15 @@ export function ProgrammeCatalogue({ parcours }: { parcours: CatalogueParcours[]
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
                 {c.classes.map((p) => {
-                  const concours = p.is_premium;
+                  // Phase gratuite (lot 2) : is_premium est false partout — le
+                  // surlignage concours suit désormais le KIND du parcours.
+                  const concours = p.kind === "concours";
+                  const label = parcoursName(p, locale);
                   return (
                     <ParcoursCard
                       key={p.id}
                       parcours={p}
-                      label={concours ? flagshipLabel(p.name_fr) : p.name_fr}
+                      label={concours ? flagshipLabel(label) : label}
                       icon={concours ? Trophy : GraduationCap}
                       highlight={concours}
                       badge={concours ? t.public.catalogue.cardConcoursBadge : undefined}
@@ -185,6 +190,7 @@ export function ProgrammeCatalogue({ parcours }: { parcours: CatalogueParcours[]
 
 export function ExtrasCatalogue({ parcours }: { parcours: CatalogueParcours[] }) {
   const t = useT();
+  const { locale } = useI18n();
   // getParcours returns rows already ordered by display_order; filtering preserves it.
   // The Arabic language track is intentionally excluded from the extras menu.
   const extras = parcours.filter((p) => p.kind === "libre" && p.theme_id !== "arabe");
@@ -211,7 +217,7 @@ export function ExtrasCatalogue({ parcours }: { parcours: CatalogueParcours[] })
             <ParcoursCard
               key={p.id}
               parcours={p}
-              label={p.name_fr}
+              label={parcoursName(p, locale)}
               icon={THEME_ICON[p.theme_id] ?? Sparkles}
             />
           ))}

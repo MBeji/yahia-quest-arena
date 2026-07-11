@@ -564,6 +564,17 @@ export type TranslationKeys = {
     linkHint: string;
     linkSuccess: string;
     linkFailed: string;
+    // Alliance-code errors, keyed by the server's stable ParentCodeErrorCode
+    // ("generic" splits by context: link vs public report).
+    codeErrors: {
+      not_parent: string;
+      invalid_code: string;
+      self_link: string;
+      not_student: string;
+      not_found: string;
+      generic_link: string;
+      generic_report: string;
+    };
     defaultStudentName: string;
     adminEmptyTitle: string;
     adminEmptyDesc: string;

@@ -27,7 +27,8 @@ import { getParcours, useParcoursInterest, ParcoursInterestButton } from "@/feat
 import type { ParcoursInterestState } from "@/features/dashboard";
 import { setCurrentParcours } from "@/features/auth";
 import { useEntrance } from "@/shared/lib/motion";
-import { useT } from "@/lib/i18n";
+import { parcoursName } from "@/shared/lib/parcours-locale";
+import { useI18n, useT } from "@/lib/i18n";
 
 /**
  * Slide-in/out of a wizard step (AnimatePresence needs an `exit`, which the
@@ -47,6 +48,8 @@ function useStepSlide() {
 type Parcours = {
   id: string;
   name_fr: string;
+  name_en?: string | null;
+  name_ar?: string | null;
   kind: string;
   is_premium: boolean;
   status: string;
@@ -162,9 +165,11 @@ function ParcoursCard({
   interest?: ParcoursInterestState;
 }) {
   const t = useT();
+  const { locale } = useI18n();
   const Icon = ICONS[parcours.icon] ?? Sword;
   const color = colorVar(parcours.color);
   const isComingSoon = parcours.status === "coming_soon";
+  const label = parcoursName(parcours, locale);
 
   const header = (
     <div className="flex items-start gap-4">
@@ -176,7 +181,7 @@ function ParcoursCard({
       </div>
       <div className="flex-1">
         <div className="flex flex-wrap items-center gap-2">
-          <h3 className="font-display text-lg font-bold">{parcours.name_fr}</h3>
+          <h3 className="font-display text-lg font-bold">{label}</h3>
           {isComingSoon && (
             <span className="inline-flex items-center gap-1 rounded-full bg-muted/40 px-2 py-0.5 text-xs font-semibold text-muted-foreground">
               <Clock className="h-3 w-3" /> {t.parcoursInterest.underConstruction}
@@ -214,7 +219,7 @@ function ParcoursCard({
       disabled={isSaving}
       whileHover={isSaving ? undefined : { scale: 1.02 }}
       whileTap={isSaving ? undefined : { scale: 0.98 }}
-      aria-label={parcours.name_fr}
+      aria-label={label}
       className="relative w-full rounded-2xl border-2 border-[color:var(--gold)]/30 bg-black/50 p-6 text-start transition-all hover:border-[color:var(--gold)]/60 disabled:opacity-60"
     >
       {header}

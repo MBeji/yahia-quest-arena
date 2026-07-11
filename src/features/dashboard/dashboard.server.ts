@@ -340,7 +340,9 @@ export const getParcours = createServerFn({ method: "GET" })
     const { supabase, userId } = context;
     const { data, error } = await supabase
       .from("parcours")
-      .select("id,name_fr,kind,is_premium,status,display_order,icon,color,theme_id,grade_id")
+      .select(
+        "id,name_fr,name_en,name_ar,kind,is_premium,status,display_order,icon,color,theme_id,grade_id",
+      )
       .order("display_order");
     if (error) failWithClientError("getParcours", error, DASHBOARD_ERROR_FR);
     const rows = data ?? [];
@@ -388,7 +390,7 @@ export const getParcoursSubjects = createServerFn({ method: "GET" })
 
     const { data: parcours, error: parErr } = await supabase
       .from("parcours")
-      .select("id,name_fr,kind,is_premium,status,theme_id,grade_id")
+      .select("id,name_fr,name_en,name_ar,kind,is_premium,status,theme_id,grade_id")
       .eq("id", data.parcoursId)
       .maybeSingle();
     if (parErr) failWithClientError("getParcoursSubjects.parcours", parErr, DASHBOARD_ERROR_FR);

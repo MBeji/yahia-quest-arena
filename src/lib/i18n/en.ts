@@ -589,6 +589,17 @@ export const en: TranslationKeys = {
     linkHint: "The student finds their code on their dashboard.",
     linkSuccess: "Alliance formed with {name}.",
     linkFailed: "Linking failed.",
+    // Alliance-code errors (stable server codes; parent register).
+    codeErrors: {
+      not_parent:
+        "Your account is not a parent account. Sign in with a parent account to follow a student.",
+      invalid_code: "Invalid code. Copy it exactly from the student's space.",
+      self_link: "This code belongs to your own account: enter the student's code.",
+      not_student: "This code does not belong to a student account.",
+      not_found: "No student matches this code. Check it and try again.",
+      generic_link: "Couldn't link this student. Check the code and try again.",
+      generic_report: "Couldn't open this report. Check the code and try again.",
+    },
     defaultStudentName: "Student",
     adminEmptyTitle: "No student registered",
     adminEmptyDesc: "No student account exists on the platform yet.",
