@@ -440,26 +440,25 @@ manifest.finishedAt = new Date().toISOString();
 
 // Merge with a previous run's manifest (partial re-runs via --only must not
 // erase earlier entries): this run's captures win on (role, id, variant).
+// Read-then-catch (no existsSync pre-check): atomic, no check-then-use race.
 const manifestPath = join(outRoot, "manifest.json");
-if (existsSync(manifestPath)) {
-  try {
-    const prev = JSON.parse(readFileSync(manifestPath, "utf8"));
-    const captureKey = (c) => `${c.role}/${c.id}--${c.variant}`;
-    const shot = new Set(manifest.captures.map(captureKey));
-    manifest.captures = [
-      ...(prev.captures ?? []).filter((c) => !shot.has(captureKey(c))),
-      ...manifest.captures,
-    ];
-    manifest.failures = [
-      ...(prev.failures ?? []).filter((f) => !shot.has(`${f.role}/${f.id}--${f.variant ?? ""}`)),
-      ...manifest.failures,
-    ].filter(
-      // a failure is resolved once ANY capture of that screen exists
-      (f) => !manifest.captures.some((c) => c.role === f.role && c.id === f.id),
-    );
-  } catch {
-    // unreadable previous manifest: overwrite
-  }
+try {
+  const prev = JSON.parse(readFileSync(manifestPath, "utf8"));
+  const captureKey = (c) => `${c.role}/${c.id}--${c.variant}`;
+  const shot = new Set(manifest.captures.map(captureKey));
+  manifest.captures = [
+    ...(prev.captures ?? []).filter((c) => !shot.has(captureKey(c))),
+    ...manifest.captures,
+  ];
+  manifest.failures = [
+    ...(prev.failures ?? []).filter((f) => !shot.has(`${f.role}/${f.id}--${f.variant ?? ""}`)),
+    ...manifest.failures,
+  ].filter(
+    // a failure is resolved once ANY capture of that screen exists
+    (f) => !manifest.captures.some((c) => c.role === f.role && c.id === f.id),
+  );
+} catch {
+  // first run (no previous manifest) or unreadable manifest: write fresh
 }
 writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
 
