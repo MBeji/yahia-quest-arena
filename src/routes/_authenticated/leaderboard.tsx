@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { useState } from "react";
 import { Crown, Flame, Medal, Zap } from "lucide-react";
 import { BackLink } from "@/components/ui/back-link";
@@ -14,6 +14,7 @@ import {
   getSubjectLeaderboard,
 } from "@/features/dashboard";
 import { isRtlText } from "@/shared/lib/utils";
+import { entrance } from "@/shared/lib/motion";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/leaderboard")({
@@ -38,6 +39,7 @@ type Player = {
 
 function LeaderboardPage() {
   const t = useT();
+  const reduced = useReducedMotion();
   const fetchLeaderboard = useServerFn(getLeaderboard);
   const fetchSubjects = useServerFn(getLeaderboardSubjects);
   const fetchSubjectLeaderboard = useServerFn(getSubjectLeaderboard);
@@ -127,8 +129,7 @@ function LeaderboardPage() {
           {/* My rank card */}
           {myRank && (
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
+              {...entrance(reduced)}
               className="mb-6 rounded-2xl border border-gold/40 bg-black/60 p-5 backdrop-blur-xl shadow-gold"
             >
               <div className="flex items-center justify-between gap-3">
@@ -177,9 +178,7 @@ function LeaderboardPage() {
                   // share a rank), so rank is not a unique key.
                   <motion.div
                     key={`podium-${i}`}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.1 }}
+                    {...entrance(reduced, "rise", i * 0.1)}
                     className="flex flex-col items-center"
                   >
                     <div
@@ -212,11 +211,10 @@ function LeaderboardPage() {
               <motion.div
                 key={`row-${i}`}
                 data-testid="leaderboard-row"
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                // Cap the stagger so a long board doesn't cascade for seconds; rows
-                // past the first screenful all share the same short delay.
-                transition={{ delay: Math.min(i, 12) * 0.02 }}
+                // "rise" preset (not the old physical x-slide, which read backwards
+                // in RTL). Stagger capped so a long board doesn't cascade for
+                // seconds; rows past the first screenful share the same delay.
+                {...entrance(reduced, "rise", Math.min(i, 12) * 0.02)}
                 className={`list-row-cv flex items-center gap-4 rounded-xl border p-4 transition ${
                   player.isMe
                     ? "border-gold/50 bg-gold/10"

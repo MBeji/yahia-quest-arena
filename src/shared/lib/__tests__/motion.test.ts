@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook } from "@testing-library/react";
 import { useReducedMotion } from "motion/react";
-import { entrance, useEntrance, MOTION_PRESETS } from "@/shared/lib/motion";
+import { entrance, questionSlide, useEntrance, MOTION_PRESETS } from "@/shared/lib/motion";
 
 vi.mock("motion/react", () => ({ useReducedMotion: vi.fn() }));
 const mockedReduced = vi.mocked(useReducedMotion);
@@ -42,5 +42,20 @@ describe("useEntrance", () => {
     const { result } = renderHook(() => useEntrance("fade", 0.5));
     // `initial: false` renders the element directly in its final state.
     expect(result.current).toEqual({ initial: false });
+  });
+});
+
+describe("questionSlide", () => {
+  it("slides the incoming question in and the outgoing one out", () => {
+    expect(questionSlide(false)).toEqual({
+      initial: { opacity: 0, x: 30 },
+      animate: { opacity: 1, x: 0 },
+      exit: { opacity: 0, x: -30 },
+      transition: { duration: 0.3 },
+    });
+  });
+
+  it("renders in place (no exit prop) under prefers-reduced-motion", () => {
+    expect(questionSlide(true)).toEqual({ initial: false });
   });
 });

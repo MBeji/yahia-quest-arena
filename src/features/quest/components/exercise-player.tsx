@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Loader2, Trophy, Skull, Heart, BookOpen, Check } from "lucide-react";
 import { toast } from "sonner";
@@ -28,7 +28,7 @@ import { LoadingState } from "@/components/ui/loading-state";
 import { BackLink } from "@/components/ui/back-link";
 import { PageShell } from "@/components/ui/page-shell";
 import { GoldProgress } from "@/components/game/gold-progress";
-import { useEntrance } from "@/shared/lib/motion";
+import { questionSlide, useEntrance } from "@/shared/lib/motion";
 import { useSound } from "@/lib/sound";
 import type { UnlockedBadge } from "@/shared/types/gamification";
 
@@ -131,6 +131,9 @@ export function ExercisePlayer({
 }) {
   const t = useT();
   const scaleIn = useEntrance("scale");
+  // Width tweens (boss HP / progress) can't use the entrance presets (they
+  // animate a value, not an entrance) — gated by hand instead.
+  const reduced = useReducedMotion();
   const { play } = useSound();
   const qc = useQueryClient();
   const fetchExercise = useServerFn(getExercise);
@@ -706,9 +709,9 @@ export function ExercisePlayer({
             <div className="h-3 overflow-hidden rounded-full bg-secondary/80">
               <motion.div
                 className="h-full rounded-full bg-linear-to-r from-destructive to-gold"
-                initial={{ width: "100%" }}
+                initial={reduced ? false : { width: "100%" }}
                 animate={{ width: `${bossHp}%` }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: reduced ? 0 : 0.5 }}
               />
             </div>
           </div>
@@ -728,9 +731,9 @@ export function ExercisePlayer({
           <div className="h-2 overflow-hidden rounded-full bg-secondary">
             <motion.div
               className="h-full rounded-full shadow-gold bg-linear-to-r from-destructive to-gold"
-              initial={{ width: 0 }}
+              initial={reduced ? false : { width: 0 }}
               animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.4 }}
+              transition={{ duration: reduced ? 0 : 0.4 }}
             />
           </div>
         ) : (
@@ -747,10 +750,7 @@ export function ExercisePlayer({
       <AnimatePresence mode="wait">
         <motion.div
           key={current.id}
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -30 }}
-          transition={{ duration: 0.3 }}
+          {...questionSlide(reduced)}
           className={`rounded-3xl border p-6 backdrop-blur-xl sm:p-8 ${bossMode ? "border-destructive/30 bg-destructive/5" : "border-border/50 bg-black/60"}`}
         >
           <RichField

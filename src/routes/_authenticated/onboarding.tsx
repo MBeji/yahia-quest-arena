@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
@@ -26,7 +26,23 @@ import {
 import { getParcours, useParcoursInterest, ParcoursInterestButton } from "@/features/dashboard";
 import type { ParcoursInterestState } from "@/features/dashboard";
 import { setCurrentParcours } from "@/features/auth";
+import { useEntrance } from "@/shared/lib/motion";
 import { useT } from "@/lib/i18n";
+
+/**
+ * Slide-in/out of a wizard step (AnimatePresence needs an `exit`, which the
+ * shared entrance presets deliberately don't carry). Under reduced motion the
+ * step renders in place and is removed instantly (no exit prop → no animation).
+ */
+function useStepSlide() {
+  const reduced = useReducedMotion();
+  if (reduced) return { initial: false as const };
+  return {
+    initial: { opacity: 0, x: 20 },
+    animate: { opacity: 1, x: 0 },
+    exit: { opacity: 0, x: -20 },
+  };
+}
 
 type Parcours = {
   id: string;
@@ -71,6 +87,7 @@ const colorVar = (token: string) => `var(--subject-${token.replace(/^subject-/, 
 // ---------------------------------------------------------------------------
 function IntentStep({ onSelect }: { onSelect: (intent: Intent) => void }) {
   const t = useT();
+  const stepSlide = useStepSlide();
   const choices: {
     id: Intent;
     title: string;
@@ -95,12 +112,7 @@ function IntentStep({ onSelect }: { onSelect: (intent: Intent) => void }) {
   ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      className="space-y-6"
-    >
+    <motion.div {...stepSlide} className="space-y-6">
       <div>
         <h2 className="font-display text-3xl font-bold">{t.onboarding.intentTitle}</h2>
         <p className="mt-2 text-muted-foreground">{t.onboarding.intentSubtitle}</p>
@@ -230,6 +242,7 @@ function ParcoursStep({
   interest: ParcoursInterestState;
 }) {
   const t = useT();
+  const stepSlide = useStepSlide();
   const cycleLabel = (cycle: string) =>
     cycle === "primaire"
       ? t.cycles.primaire
@@ -252,12 +265,7 @@ function ParcoursStep({
   })).filter((g) => g.items.length > 0);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      className="space-y-6"
-    >
+    <motion.div {...stepSlide} className="space-y-6">
       <div>
         <h2 className="font-display text-3xl font-bold">
           {isSchool ? t.onboarding.parcoursTitleConcours : t.onboarding.parcoursTitleLibre}
@@ -341,6 +349,7 @@ function OnboardingComponent() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const t = useT();
+  const fadeIn = useEntrance("fade");
   const [step, setStep] = useState<0 | 1>(0);
   const [intent, setIntent] = useState<Intent | null>(null);
 
@@ -390,11 +399,10 @@ function OnboardingComponent() {
           {[0, 1].map((i) => (
             <motion.div
               key={i}
+              {...fadeIn}
               className={`h-1 flex-1 rounded-full transition-colors ${
                 i <= step ? "bg-[color:var(--gold)]" : "bg-muted/50"
               }`}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
             />
           ))}
         </div>
