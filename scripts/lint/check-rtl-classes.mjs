@@ -17,8 +17,11 @@
  */
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const ROOT = new URL("../..", import.meta.url).pathname;
+// fileURLToPath, not URL#pathname: pathname yields "/D:/…" on Windows, which
+// join() then mangles into "D:\D:\…" (gate broken on every Windows checkout).
+const ROOT = fileURLToPath(new URL("../..", import.meta.url));
 const SRC = join(ROOT, "src");
 
 const INCLUDED = ["features", "routes", "lib", "shared", "components"];
