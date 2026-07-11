@@ -7,6 +7,7 @@ import { LoadingState } from "@/components/ui/loading-state";
 import {
   buildFamilyReportShareText,
   getStudentReportByCode,
+  parentCodeErrorLabel,
   ReportContent,
 } from "@/features/parent-report";
 import { useI18n } from "@/lib/i18n";
@@ -108,7 +109,7 @@ function SuiviPublicPage() {
         {reportMutation.isError && (
           <p role="alert" className="mt-2 text-sm font-medium text-destructive">
             {reportMutation.error instanceof Error
-              ? reportMutation.error.message
+              ? parentCodeErrorLabel(reportMutation.error.message, t)
               : t.parentReport.linkFailed}
           </p>
         )}

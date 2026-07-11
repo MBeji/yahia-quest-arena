@@ -312,6 +312,8 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
   fully-green patch/minor PR). Cadence + traps: `docs/dependency-maintenance.md`.
 - **Policy docs (`docs/*.md`).** Topic-specific rules referenced from here:
   `docs/environment-variables.md`, `docs/logging-standard.md`, `docs/xss-rendering-policy.md`,
+  `docs/content-voice-and-composition.md` (étude 15 — voix/ton par audience, lexique trilingue,
+  règles et gabarits de composition des écrans : normatif pour tout texte user-facing),
   `docs/release-tagging-policy.md`, `docs/dependency-maintenance.md`,
   `docs/ci-cd-and-branch-protection.md`, `docs/passation.md` (the end-of-dev →
   production walkthrough), `docs/content-generation-pipeline.md` (narrated, diagrammed

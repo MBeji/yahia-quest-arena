@@ -255,7 +255,7 @@ périmètre ; divergence étude↔code = STOP et remontée (règle FableEtudes).
 - [x] Lot 0 — étude + audit + harness (PR #355)
 - [x] Lot 1 — quick-wins de vérité
 - [x] Lot 2 — gratuité de phase
-- [ ] Lot 3 — fondations éditoriales
+- [x] Lot 3 — fondations éditoriales
 - [ ] Lot 4 — Claude Design (socle + gabarits + maquette nav)
 - [ ] Lot 5 — navigation & coquilles
 - [ ] Lot 6 — dashboard + `/boutique`
@@ -365,3 +365,18 @@ Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions co
   dormante. Écart accepté : aucun pgTAP dédié n'existait pour `get_dungeon_access` (la suite
   applique la migration sur DB fraîche) — la RPC est couverte indirectement par les specs e2e
   donjon.
+- 2026-07-11 — Lot 3 livré (fondations éditoriales, D-1) — **PR laissée en DRAFT pour relecture
+  humaine du lexique AR et des 35 traductions (RISK-5)**. Charte normative
+  `docs/content-voice-and-composition.md` (registres par audience, lexique trilingue, 6 règles
+  de composition, gabarits + budgets par type d'écran, erreurs en codes stables, checklist de
+  PR) référencée depuis CLAUDE.md. Migration `20260711120000_parcours_names_i18n.sql` : les 35
+  parcours reçoivent `name_en`/`name_ar` (+ pgTAP `21_parcours_names_i18n.test.sql`) ; helper
+  `parcoursName()` (`shared/lib/parcours-locale`, fallback FR) branché sur le catalogue
+  (programme + extras), `/niveau` (H1) et l'onboarding ; selects de `getParcours`/
+  `getParcoursSubjects` élargis. Erreurs du tunnel code-alliance passées en codes stables
+  (`parent-code-errors.ts`, préfixes `PARENT_LINK_ERROR:`/`REPORT_CODE_ERROR:`) traduits côté
+  client en FR **vouvoyé**/EN/AR (audit §F-1). Sweep lexique appliqué : FR « série »/« pièces »
+  (fin de « Streak »/« Coins »), AR « القبو اللانهائي » (fin de « الزنزانة », accords refaits).
+  Écart accepté (corrige un effet de bord du lot 2) : le surlignage « Concours » du catalogue
+  s'appuyait sur `is_premium` (désormais false partout) → il suit `kind === "concours"` ;
+  `flagshipLabel` restauré (utilisé par le catalogue public, seul `flagshipConcours` a disparu).

@@ -19,6 +19,7 @@ import {
   getStudentReport,
   getStudentWeeklyGoal,
   linkStudentByCode,
+  parentCodeErrorLabel,
   ReportContent,
   setStudentWeeklyGoal,
 } from "@/features/parent-report";
@@ -75,7 +76,9 @@ function ParentReport() {
       queryClient.invalidateQueries({ queryKey: ["parent-students"] });
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : t.parentReport.linkFailed);
+      toast.error(
+        error instanceof Error ? parentCodeErrorLabel(error.message, t) : t.parentReport.linkFailed,
+      );
     },
   });
 
