@@ -1,6 +1,6 @@
 # Étude 14 — Refonte UX/design de l'application
 
-> **Statut** : en exécution (lot 0 mergé ; lot 1 livré en PR)
+> **Statut** : **livrée** (12 lots mergés, lot 0 → lot 11 — clôture 2026-07-11)
 > **Priorité** : transverse · **Valeur** : cohérence perçue, confiance parents, lisibilité élèves — sans re-branding · **Complexité** : moyenne+ (large surface, risque unitaire faible)
 > **Architecte** : Fable / 2026-07-10 · **Exécuteur cible** : Sonnet (ou équiv.)
 > **Dépend de** : — (questions arbitrées) · **Bloque** : rien (les autres études peuvent avancer en parallèle, mais les lots UI d'autres épics devraient consommer les primitives du lot 1 dès qu'il est mergé)
@@ -149,7 +149,7 @@ Stop-points : un lot d'écran ne touche NI les primitives (retour lot 1 si manqu
 - [x] Lot 8 — duel (PR livrée)
 - [x] Lot 9 — leaderboard/shop/parcours (PR livrée)
 - [x] Lot 10 — parent-report/admin (PR livrée)
-- [ ] Lot 11 — motion
+- [x] Lot 11 — motion (PR livrée : reduced-motion généralisé — étude close)
 
 ## 5. Stratégie de test
 
@@ -308,3 +308,21 @@ Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions co
   (« Apprends en jouant ») garde son or réel via une région `token-ok-block` commentée.
   Indicateur « 0 palette brute / 0 text-white » ATTEINT et outillé. Gate verte (1197 tests),
   budgets + smoke verts.
+- 2026-07-11 — Lot 10 mergé (#359, circuit ready → automerge). Lot 11 livré (dernier lot) :
+  **prefers-reduced-motion généralisé** — les 19 entrées motion inline restantes converties au
+  vocabulaire D-5 : report-content (rise/scale via `useEntrance`), journey-track (stagger via
+  `useEntrance(delay)`), leaderboard (`entrance()` staggeré ; les rangées quittent le x-slide
+  physique pour le preset `rise`, ce qui corrige au passage leur asymétrie RTL), parent-report
+  (fade), onboarding (helper local `useStepSlide` pour les slides d'étapes AnimatePresence à
+  `exit` ; indicateur de progression en fade), donjon (gating manuel des transitions
+  AnimatePresence combo/encouragement + feedback en rise), exercise-player (tweens de LARGEUR
+  boss-HP/progression : `initial: false` + durée 0 sous reduced — la valeur reste juste, seul le
+  tween saute), confetti (`return null` sous reduced : physique purement décorative, un champ de
+  confettis figé ne serait que du bruit). Nouveau helper partagé `questionSlide()` dans
+  `shared/lib/motion.ts` (slide de question dédupliqué player/donjon, avec `exit` — testé) ;
+  extraction imposée aussi par `max-lines` (750) sur exercise-player, donc zéro affaiblissement
+  de règle. Gate verte (**1199 tests**, +2), budgets + smoke + garde-fous RTL/couleurs verts.
+  **Étude close** : indicateurs de succès §1 tous atteints et outillés (0 classe RTL physique,
+  0 palette brute / 0 `text-white`, 2 thèmes, 8 barres → `GoldProgress`, erreurs 100 % i18n,
+  entrées motion 100 % gérées reduced-motion). Reste ouvert hors-étude : Q-2 (captures
+  authentifiées — revue visuelle humaine recommandée écran par écran).

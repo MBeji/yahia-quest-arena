@@ -26,6 +26,7 @@ import { EnablePushCard } from "@/features/notifications";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
+import { useEntrance } from "@/shared/lib/motion";
 import { LoadingState } from "@/components/ui/loading-state";
 
 export const Route = createFileRoute("/_authenticated/parent-report")({
@@ -35,6 +36,7 @@ export const Route = createFileRoute("/_authenticated/parent-report")({
 
 function ParentReport() {
   const { t, locale } = useI18n();
+  const fadeIn = useEntrance("fade");
   const queryClient = useQueryClient();
   const getStudentsFn = useServerFn(getLinkedStudents);
   const getReportFn = useServerFn(getStudentReport);
@@ -109,11 +111,7 @@ function ParentReport() {
 
   return (
     <div className="min-h-[100dvh] p-4 md:p-8 max-w-6xl mx-auto">
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-8 print:hidden"
-      >
+      <motion.div {...fadeIn} className="mb-8 print:hidden">
         <Link
           to="/dashboard"
           className="mb-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition hover:text-foreground"
