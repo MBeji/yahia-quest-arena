@@ -321,6 +321,143 @@ export const misconceptionRegistrySchema = z.record(
 );
 export type MisconceptionRegistry = z.infer<typeof misconceptionRegistrySchema>;
 
+/**
+ * A competency id — namespaced `matière.domaine.competence` (étude 07 R-1),
+ * e.g. `math.geo.thales-direct`: exactly three lowercase dotted segments.
+ * Ids are STABLE for life (create/deprecate only, never rename — same identity
+ * rule as slugs) and never displayed: the trilingual labels are.
+ */
+export const competencyIdSchema = z
+  .string()
+  .regex(
+    /^[a-z][a-z0-9]*\.[a-z0-9]+(?:-[a-z0-9]+)*\.[a-z0-9]+(?:-[a-z0-9]+)*$/,
+    "a competency id must be 'matiere.domaine.competence' lowercase segments (e.g. 'math.geo.thales-direct')",
+  );
+
+/** One competency of a family registry: stable id + student labels + prereq edges. */
+export const competencyEntrySchema = z.object({
+  id: competencyIdSchema,
+  labels: z.object({
+    fr: z.string().min(1),
+    en: z.string().min(1),
+    ar: z.string().min(1),
+  }),
+  /** Direct prerequisites — ids of the SAME family (étude 07 R-3). */
+  prereqs: z.array(competencyIdSchema).max(8).default([]),
+});
+export type CompetencyEntry = z.infer<typeof competencyEntrySchema>;
+
+/**
+ * Detect a prerequisite cycle (étude 07 R-3: the graph must be a DAG).
+ * Returns the offending path (`a → b → a`) or `null`. Edges pointing at ids
+ * not declared in `entries` are ignored (they are reported separately).
+ */
+export function findCompetencyCycle(
+  entries: ReadonlyArray<Pick<CompetencyEntry, "id" | "prereqs">>,
+): string[] | null {
+  const prereqsOf = new Map(entries.map((e) => [e.id, e.prereqs]));
+  const state = new Map<string, "visiting" | "done">();
+  const path: string[] = [];
+
+  const visit = (id: string): string[] | null => {
+    if (state.get(id) === "done") return null;
+    if (state.get(id) === "visiting") return [...path.slice(path.indexOf(id)), id];
+    state.set(id, "visiting");
+    path.push(id);
+    for (const prereq of prereqsOf.get(id) ?? []) {
+      if (!prereqsOf.has(prereq)) continue;
+      const cycle = visit(prereq);
+      if (cycle) return cycle;
+    }
+    path.pop();
+    state.set(id, "done");
+    return null;
+  };
+
+  for (const entry of entries) {
+    const cycle = visit(entry.id);
+    if (cycle) return cycle;
+  }
+  return null;
+}
+
+/**
+ * `content/competences/<famille>.json` — one versioned registry per subject
+ * family (étude 07 D-1: the graph lives in the content pipeline, never in an
+ * admin UI). Compiled by the generator into the relational `competencies` /
+ * `competency_prereqs` tables (deterministic UUIDv5, idempotent, pruned).
+ */
+export const competencyRegistrySchema = z
+  .object({
+    /** Trans-grade subject family (`math`, `physique`, `arabe`…). */
+    family: z.string().regex(/^[a-z][a-z0-9]*$/, "family must be a lowercase word (e.g. 'math')"),
+    /**
+     * Subject-id prefixes this family covers (`math` matches `math` and
+     * `math-*`). Explicit because family names are semantic, not derivable
+     * from subject ids (e.g. a future `physique` family covers subject `svt`).
+     * Feeds the content:qa family≠matière warning.
+     */
+    subjectPrefixes: z
+      .array(z.string().regex(/^[a-z][a-z0-9-]*$/, "subjectPrefixes must be kebab-case ids"))
+      .min(1),
+    competencies: z.array(competencyEntrySchema).min(1),
+  })
+  .superRefine((reg, ctx) => {
+    const ids = new Set<string>();
+    reg.competencies.forEach((c, i) => {
+      if (ids.has(c.id)) {
+        ctx.addIssue({
+          code: "custom",
+          message: `duplicate competency id "${c.id}"`,
+          path: ["competencies", i, "id"],
+        });
+      }
+      ids.add(c.id);
+    });
+    reg.competencies.forEach((c, i) => {
+      if (!c.id.startsWith(`${reg.family}.`)) {
+        ctx.addIssue({
+          code: "custom",
+          message: `competency id "${c.id}" must start with the family namespace "${reg.family}."`,
+          path: ["competencies", i, "id"],
+        });
+      }
+      const seen = new Set<string>();
+      c.prereqs.forEach((p, j) => {
+        if (p === c.id) {
+          ctx.addIssue({
+            code: "custom",
+            message: "a competency cannot be its own prerequisite",
+            path: ["competencies", i, "prereqs", j],
+          });
+        } else if (!ids.has(p)) {
+          ctx.addIssue({
+            code: "custom",
+            message: `prereq "${p}" is not declared in this family (R-3: same-family edges only)`,
+            path: ["competencies", i, "prereqs", j],
+          });
+        }
+        if (seen.has(p)) {
+          ctx.addIssue({
+            code: "custom",
+            message: `duplicate prereq "${p}"`,
+            path: ["competencies", i, "prereqs", j],
+          });
+        }
+        seen.add(p);
+      });
+    });
+    const cycle = findCompetencyCycle(reg.competencies);
+    if (cycle) {
+      ctx.addIssue({
+        code: "custom",
+        message: `prerequisite cycle ${cycle.join(" → ")} (R-3: the graph must be a DAG)`,
+        path: ["competencies"],
+      });
+    }
+  });
+export type CompetencyRegistry = z.infer<typeof competencyRegistrySchema>;
+
 const questionCoreSchema = z.object({
   prompt: z.string().min(1),
   explanation: z.string().min(1),
@@ -330,6 +467,16 @@ const questionCoreSchema = z.object({
    * untagged questions default to medium (2) for ordering.
    */
   difficulty: z.number().int().min(1).max(3).optional(),
+  /**
+   * Optional competencies this question evaluates (étude 07 D-2/R-2): 1–3 ids
+   * from the versioned registries `content/competences/<famille>.json`, the
+   * FIRST being the primary one. Unlike misconception tags (server-only, étude
+   * 04 D-1) these describe the QUESTION, not its options, so they never reveal
+   * the key — the compiled `question_competencies` junction is client-readable.
+   * Applies to every question type; tagging is progressive (untagged = neutral,
+   * never blocking). Unknown ids are flagged by content:qa (vocabulary check).
+   */
+  competencies: z.array(competencyIdSchema).min(1).max(3).optional(),
 });
 
 /** The classic QCM — `type` may be omitted in files (defaulted to 'mcq'). */
@@ -431,6 +578,14 @@ export const questionSchema = z
     ]),
   )
   .superRefine((q, ctx) => {
+    // Evaluated competencies (étude 07 R-2, any type): no duplicate ids.
+    if (q.competencies && new Set(q.competencies).size !== q.competencies.length) {
+      ctx.addIssue({
+        code: "custom",
+        message: "competency ids must be unique",
+        path: ["competencies"],
+      });
+    }
     if (q.type === "numeric") return;
     if (new Set(q.options.map((o) => o.id)).size !== q.options.length) {
       ctx.addIssue({ code: "custom", message: "option ids must be unique", path: ["options"] });
