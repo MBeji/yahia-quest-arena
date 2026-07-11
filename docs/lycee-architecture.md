@@ -4,12 +4,15 @@
 > Baccalauréat). It settles the two structural questions the lycée forces — **sections** and the
 > **Arabic→French language switch** — then lays out the complete content pipeline (cours + base +
 > exercices difficiles + interactifs, every mission type and tier) and the phased rollout. Status:
-> **build-out started** — the §6 seed migration is authored
-> (`20260704235000_lycee_section_grades_seed.sql`, applies on merge; all lycée parcours
-> `coming_soon`) and a pilot unit runs the full pipeline end-to-end on `bac-math` × mathématiques
-> (pilot transcription `programme/bac-math/mathematiques.md` + chapter
-> `content/math-bac-math/01-continuite-limites`). Defers to CLAUDE.md (DoD §7) and to
-> `content-engine/references/generation-pipeline.md` for anything that overlaps.
+> **L0 live, build-out governed by étude 16** — the §6 seed migration is **merged and applied**
+> (`20260704235000_lycee_section_grades_seed.sql`, PR #285: 16 section nodes + `coming_soon`
+> parcours + `grades.is_selectable`), and a pilot unit runs the full pipeline end-to-end on
+> `bac-math` × mathématiques (chapter `content/math-bac-math/01-continuite-limites`; parcours
+> opened free by `20260705100000`/`20260705120000`). The opening itself — UI year→section
+> grouping, grade i18n, the shared-content `compileTo` mechanism and the wave plan — is specified
+> in [`FableEtudes/16-ouverture-lycee/ETUDE.md`](../FableEtudes/16-ouverture-lycee/ETUDE.md).
+> Defers to CLAUDE.md (DoD §7) and to `content-engine/references/generation-pipeline.md` for
+> anything that overlaps.
 
 ## 1. The two structural facts
 
@@ -55,8 +58,12 @@ tronc commun genuinely has no section.
 `math-1ere-sec`, `math-2eme-sec-sciences`, `math-bac-math`, `svt-bac-sciences-exp`,
 `philosophie-bac-lettres`, `informatique-bac-info`. Économie & gestion are **two official
 matières → two subjects** (`economie-*`, `gestion-*`). Where two sections share a genuinely
-identical programme for a matière, the content is still **authored per section-grade** (one
-subject each) — duplication is accepted v1 (see §8, trade-offs).
+identical programme for a matière (confirmed on the official transcription, station L1), the
+content is **authored once and compiled to one subject per section** via the content pipeline's
+`compileTo` fan-out (étude 16 D-4 — the compiled ids keep this verbatim convention, so a later
+fork to a dedicated dir loses no student progress). Structural divergence (different chapter
+list) ⇒ separate dirs from the start; depth-only divergence ⇒ shared dir + per-exercise
+`gradeSlugs` filters.
 
 ## 3. Programme matrix (sections × matières — planning level)
 
@@ -111,14 +118,19 @@ One parcours per section-grade node (the `(theme, grade)` unique index guarantee
 
 - **`bac-*` = PREMIUM `concours` parcours** (like `concours-9eme`/`concours-6eme`):
   entitlement-gated d3–4, `preview_policy: difficulty_1` (quiz + d1 free), Dungeon perk included.
-- **`1ere-sec`, `2eme-sec-*`, `3eme-sec-*` = FREE `libre` exploration parcours**: d3–4 are the hard
-  tier of the free ladder.
+- **`1ere-sec`, `2eme-sec-*`, `3eme-sec-*` = FREE `scolaire` parcours** (the seeded kind — the
+  regular school-year track, CHECK widened by `20260617120000`): d3–4 are the hard tier of the
+  free ladder.
 - Parcours rows ship `status: 'coming_soon'` in the seed and flip to `available` per section as
-  content lands (same mechanism as the existing `open_*_parcours` migrations).
+  content lands (same mechanism as the existing `open_*_parcours` migrations; opening threshold:
+  étude 16 R-8).
+- **Free-phase note (étude 15 Q-2, migration `20260711100000`)**: `is_premium = false` everywhere
+  for now — the premium design above is the dormant target state, reactivated by étude 01.
 
-## 6. DB migration spec (station L0 — additive, ships first per DoD §7)
+## 6. DB migration spec (station L0 — ✅ DONE, merged 2026-07-05, PR #285)
 
-One seed migration (timestamp after newest; no new table → no new grants beyond the existing
+Realized as `20260704235000_lycee_section_grades_seed.sql` (spec kept below for reference). One
+seed migration (timestamp after newest; no new table → no new grants beyond the existing
 `grades` posture):
 
 1. `ALTER TABLE public.grades ADD COLUMN IF NOT EXISTS is_selectable BOOLEAN NOT NULL DEFAULT true;`
@@ -129,8 +141,9 @@ One seed migration (timestamp after newest; no new table → no new grants beyon
 4. `INSERT INTO public.parcours …` one row per node per §5 (`coming_soon`).
 
 Code follow-ups (separate PRs, after the migration): onboarding grade picker groups lycée nodes by
-year → section (UI only); any `grades` listing filters on `is_selectable`. pgTAP covers the new
-rows and the flag. **No destructive step**: retiring the flat legacy nodes for real is a later,
+year → section (UI only); any `grades` listing filters on `is_selectable`; grade names get
+`name_en`/`name_ar` — **all specified as étude 16 lots 2-3** (the flag is read nowhere yet).
+**No destructive step**: retiring the flat legacy nodes for real is a later,
 separate destructive migration — only after verifying zero `profiles.current_grade_id` references.
 
 ## 7. The complete mission ladder (every type & tier, per lycée chapter)
@@ -176,10 +189,13 @@ Overlay (L3) and interactive (L4) run per chapter-batch behind the base, as ever
 
 ### Trade-offs accepted (v1)
 
-- **Tronc-commun duplication**: languages/philo/histoire-géo shared across sections are authored
-  per section-grade (separate subjects, separate UUIDs). Cost: some near-duplicate authoring;
-  benefit: parcours scoping stays trivial and per-section depth differences (lettres vs sciences)
-  are expressible. A sharing mechanism is a possible later pipeline evolution — **not** a blocker.
+- **Tronc-commun mutualisation** _(supersedes the earlier "duplication accepted v1" trade-off)_:
+  languages/philo/histoire-géo shared across sections are authored **once per (matière × year)**
+  and compiled to one subject per section (`compileTo` fan-out — étude 16 D-4, pipeline lot 1).
+  Per-section depth differences stay expressible (per-exercise `gradeSlugs`); parcours scoping is
+  untouched (still one subject per grade in DB); UUIDs derive from the compiled identity, so
+  forking a section out later is loss-free. Share/fork doctrine: étude 16 D-4.b (decided per
+  matière at station L1 — the closer to the exam, the less is shared).
 - **Sport section, 3èmes langues (allemand/espagnol/italien), pensée islamique**: out of the
   initial perimeter; add via the same conventions when the product asks.
 

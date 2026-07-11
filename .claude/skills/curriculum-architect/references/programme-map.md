@@ -58,8 +58,11 @@ lycée unit): **sections are grade nodes** under `ecole-tn` — `1ere-sec` (tron
 techniques,info}` ; `bac-{math,sciences-exp,lettres,eco-gestion,techniques,info}` (all `bac-*` are
 concours). The legacy flat nodes `2eme-sec`/`3eme-sec`/`bac` become non-selectable, never deleted.
 Subject id = `<matière>-<gradeSlug>` verbatim (`math-bac-math`, `svt-bac-sciences-exp`,
-`philosophie-bac-lettres`; économie & gestion = two subjects). **None of this is in the DB yet** —
-the L0 seed migration (grades + `coming_soon` parcours + `is_selectable` flag) is the first station.
+`philosophie-bac-lettres`; économie & gestion = two subjects). **The L0 seed is merged and live**
+(2026-07-05, PR #285: 16 section nodes + `coming_soon` parcours + `is_selectable`). UI grouping,
+grade i18n, the shared-content `compileTo` mechanism (tronc commun authored once per year,
+compiled per section) and the opening waves are governed by
+`FableEtudes/16-ouverture-lycee/ETUDE.md`.
 
 **Language switch (major)**: mathématiques, sciences physiques, SVT, informatique/techniques flip
 **ar → fr** at 1ère sec — same matière, new language. The base layer owes every 1ère-sec chapter of
