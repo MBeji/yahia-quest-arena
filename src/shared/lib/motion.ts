@@ -45,3 +45,19 @@ export function entrance(
 export function useEntrance(preset: MotionPreset = "rise", delay = 0): EntranceProps {
   return entrance(useReducedMotion(), preset, delay);
 }
+
+/**
+ * Question-to-question horizontal slide inside an `AnimatePresence`
+ * (quest player, dungeon). Lives apart from the presets because it carries an
+ * `exit`; under reduced motion the incoming question renders in place and the
+ * outgoing one is removed instantly (no exit prop → no exit animation).
+ */
+export function questionSlide(reduced: boolean | null) {
+  if (reduced) return { initial: false as const };
+  return {
+    initial: { opacity: 0, x: 30 },
+    animate: { opacity: 1, x: 0 },
+    exit: { opacity: 0, x: -30 },
+    transition: { duration: 0.3 },
+  };
+}

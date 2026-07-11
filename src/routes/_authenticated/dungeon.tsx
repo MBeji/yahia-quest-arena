@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { useCallback, useRef, useState } from "react";
 import {
   Zap,
@@ -40,7 +40,7 @@ import { PageShell } from "@/components/ui/page-shell";
 import { GoldProgress } from "@/components/game/gold-progress";
 import { StatTile } from "@/components/game/stat-tile";
 import { DifficultyStars } from "@/components/game/difficulty-stars";
-import { useEntrance } from "@/shared/lib/motion";
+import { questionSlide, useEntrance } from "@/shared/lib/motion";
 import { useSound, encouragementFor, type Encouragement } from "@/lib/sound";
 
 export const Route = createFileRoute("/_authenticated/dungeon")({
@@ -61,6 +61,9 @@ function DungeonPage() {
   const t = useT();
   const riseIn = useEntrance("rise");
   const scaleIn = useEntrance("scale");
+  // AnimatePresence transitions (combo chip, encouragement) need an `exit`
+  // the shared presets don't carry — gated by hand instead.
+  const reduced = useReducedMotion();
   const { play, combo } = useSound();
   const startRun = useServerFn(startDungeonRun);
   const fetchQuestions = useServerFn(getDungeonQuestions);
@@ -508,9 +511,13 @@ function DungeonPage() {
             {totalCorrect >= 2 && (
               <motion.div
                 key="combo-chip"
-                initial={{ opacity: 0, scale: 0.6 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.6 }}
+                {...(reduced
+                  ? { initial: false }
+                  : {
+                      initial: { opacity: 0, scale: 0.6 },
+                      animate: { opacity: 1, scale: 1 },
+                      exit: { opacity: 0, scale: 0.6 },
+                    })}
                 className="flex items-center gap-1.5 rounded-full bg-flame/20 px-3 py-1 text-sm font-bold text-flame"
               >
                 <Flame className="h-3.5 w-3.5" /> x{totalCorrect}
@@ -531,10 +538,14 @@ function DungeonPage() {
         {encouragement && (
           <motion.div
             key={encouragement.message}
-            initial={{ opacity: 0, y: -8, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -8, scale: 0.9 }}
-            transition={{ type: "spring", damping: 14, stiffness: 240 }}
+            {...(reduced
+              ? { initial: false }
+              : {
+                  initial: { opacity: 0, y: -8, scale: 0.9 },
+                  animate: { opacity: 1, y: 0, scale: 1 },
+                  exit: { opacity: 0, y: -8, scale: 0.9 },
+                  transition: { type: "spring", damping: 14, stiffness: 240 },
+                })}
             className="mb-4 text-center font-display text-lg font-black text-flame drop-shadow-[0_0_12px_color-mix(in_oklab,var(--flame)_50%,transparent)]"
             aria-live="polite"
           >
@@ -562,10 +573,7 @@ function DungeonPage() {
       <AnimatePresence mode="wait">
         <motion.div
           key={currentQuestion.id}
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -30 }}
-          transition={{ duration: 0.25 }}
+          {...questionSlide(reduced)}
           className="rounded-3xl border border-gold/30 bg-black/60 p-6 backdrop-blur-xl sm:p-8"
           // Only Arabic content is RTL. Math uses standard LTR notation (project
           // rule), so it must NOT be forced RTL. Full unification on the subject's
@@ -631,8 +639,7 @@ function DungeonPage() {
           {/* Feedback */}
           {showFeedback && (
             <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
+              {...riseIn}
               className={`mt-4 rounded-xl border p-3 text-sm font-semibold ${isCorrectAnswer ? "border-success/30 bg-success/10 text-success" : "border-destructive/30 bg-destructive/10 text-destructive"}`}
             >
               {isCorrectAnswer ? (

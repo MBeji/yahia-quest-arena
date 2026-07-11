@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "motion/react";
+import { useEntrance } from "@/shared/lib/motion";
 
 /**
  * Winding "drawn path" container: a central glowing line with rows stacked in a
@@ -27,11 +28,11 @@ export function TrackRow({
   index: number;
   children: React.ReactNode;
 }) {
+  // One TrackRow = one component instance, so the hook carries the stagger delay.
+  const riseIn = useEntrance("rise", Math.min(index * 0.06, 0.6));
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: Math.min(index * 0.06, 0.6) }}
+      {...riseIn}
       className={`flex px-3 sm:px-0 ${side === "left" ? "justify-start sm:ps-6" : "justify-end sm:pe-6"}`}
     >
       {children}

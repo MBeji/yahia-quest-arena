@@ -16,6 +16,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { useI18n, useT } from "@/lib/i18n";
+import { useEntrance } from "@/shared/lib/motion";
 import { buildWeeklyAdvice, type ReportData } from "../report-share";
 export type { ReportData } from "../report-share";
 
@@ -29,6 +30,7 @@ export type { ReportData } from "../report-share";
 export function ReportContent({ report }: { report: ReportData }) {
   const { t, locale } = useI18n();
   const { student, summary, subjectStats, dailyActivity, weekComparison, chapterInsights } = report;
+  const riseIn = useEntrance("rise");
 
   const advice = buildWeeklyAdvice(report, t);
 
@@ -49,11 +51,7 @@ export function ReportContent({ report }: { report: ReportData }) {
         </p>
       </div>
       {/* Student Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-black/50 border border-gold/40 rounded-xl p-6"
-      >
+      <motion.div {...riseIn} className="bg-black/50 border border-gold/40 rounded-xl p-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h2 className="text-xl font-bold text-foreground">{student.displayName}</h2>
@@ -82,8 +80,7 @@ export function ReportContent({ report }: { report: ReportData }) {
 
       {/* Le conseil de la semaine — la ligne d'action concrète pour le parent. */}
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
+        {...riseIn}
         className="flex items-start gap-3 rounded-xl border border-gold/40 bg-gold/5 p-4"
       >
         <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-gold" />
@@ -275,6 +272,7 @@ export function ReportContent({ report }: { report: ReportData }) {
 
 function VerdictCard({ score, verdict }: { score: number; verdict: string }) {
   const t = useT();
+  const scaleIn = useEntrance("scale");
   const config = {
     excellent: {
       label: t.parentReport.verdictExcellent,
@@ -317,8 +315,7 @@ function VerdictCard({ score, verdict }: { score: number; verdict: string }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
+      {...scaleIn}
       className={`${c.bg} border rounded-xl p-4 md:p-6 flex items-center gap-3 md:gap-4`}
     >
       <span className="shrink-0">{c.icon}</span>

@@ -17,6 +17,7 @@ vi.mock("motion/react", () => ({
         ({ children }: { children?: React.ReactNode }) => <div>{children}</div>,
     },
   ),
+  useReducedMotion: () => false,
 }));
 
 vi.mock("@/lib/i18n", () => ({
