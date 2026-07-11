@@ -14,9 +14,12 @@ const BUDGETS = {
   // namespace (étude 05: hub/arena/recap copy), then 100→104 KB for the
   // trilingual route-error keys (étude 14 lot 3, R-6 : the public-tier
   // load-failure messages leave hardcoded French for the i18n catalog).
-  // The chunk gzips to ~30 KB, so the real over-the-wire impact is marginal;
-  // keep new strings lean to stay well under this ceiling.
-  "i18n-": 104 * 1024,
+  // The chunk gzips to ~36 KB, so the real over-the-wire impact is marginal;
+  // keep new strings lean to stay well under this ceiling. Then 104→108 KB for
+  // the trilingual Arène-hub namespace + « Suivi parent » nav labels (étude 15
+  // lot 5: the /arene pole + the public /suivi entry points) — the hub reuses
+  // the modes' own titles/pitches (DRY) so only its reward hints are new keys.
+  "i18n-": 108 * 1024,
   "vendor-supabase-": 240 * 1024,
   "vendor-motion-": 150 * 1024,
   // @dnd-kit (core+sortable+utilities) powering the B2 ordering/matching

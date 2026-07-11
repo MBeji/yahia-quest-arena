@@ -6,6 +6,7 @@ export const arPublic: TranslationKeys["public"] = {
     navAria: "الفهرس",
     programme: "البرنامج",
     extras: "إضافات",
+    parentTracking: "متابعة الأبناء",
     login: "تسجيل الدخول",
     signup: "إنشاء حسابي",
     account: "مساحتي",

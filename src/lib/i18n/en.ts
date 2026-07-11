@@ -439,6 +439,7 @@ export const en: TranslationKeys = {
     parcours: "Adventure",
     themes: "Discover",
     dungeon: "Dungeon",
+    arena: "Arena",
     ranking: "Ranking",
     parentReport: "Report",
     admin: "Admin",
@@ -563,6 +564,14 @@ export const en: TranslationKeys = {
       cerveau: "Logic, memory, mental math: train your brain every day.",
       ib: "The International Baccalaureate is coming soon.",
     },
+  },
+  arena: {
+    title: "Arena",
+    subtitle: "Take on other heroes: timed runs, duels and the national ranking.",
+    dungeonReward: "+{xp} XP per floor",
+    duelReward: "Up to +{xp} XP per win — taking part always pays",
+    rankingDesc: "See where you stand across the Academy, overall and by subject.",
+    rankingReward: "Earn XP to climb",
   },
   leaderboard: {
     titleGradient: "Academy",

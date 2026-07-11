@@ -6,6 +6,7 @@ export const frPublic: TranslationKeys["public"] = {
     navAria: "Catalogue",
     programme: "Programme",
     extras: "Extras",
+    parentTracking: "Suivi parent",
     login: "Connexion",
     signup: "Créer mon compte",
     account: "Mon espace",
