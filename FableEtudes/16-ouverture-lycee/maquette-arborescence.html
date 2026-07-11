@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Étude 16 — maquette arborescence lycée v2 (drill-down année → section)</title>
+    <style>
+      :root {
+        --bg: #f6f4ef;
+        --card: #ffffff;
+        --ink: #1c1917;
+        --muted: #78716c;
+        --line: #e7e5e4;
+        --accent: #7c3aed;
+        --accent-soft: #ede9fe;
+        --ok: #16a34a;
+        --ok-soft: #dcfce7;
+        --soon: #b45309;
+        --soon-soft: #fef3c7;
+        --gold: #ca8a04;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #14120f;
+          --card: #1f1c18;
+          --ink: #f5f5f4;
+          --muted: #a8a29e;
+          --line: #35302a;
+          --accent: #a78bfa;
+          --accent-soft: #2e1065;
+          --ok: #4ade80;
+          --ok-soft: #14532d;
+          --soon: #fbbf24;
+          --soon-soft: #422006;
+          --gold: #facc15;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 24px 16px 64px;
+        background: var(--bg);
+        color: var(--ink);
+        font:
+          15px/1.5 system-ui,
+          -apple-system,
+          "Segoe UI",
+          sans-serif;
+      }
+      .wrap {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: grid;
+        gap: 36px;
+      }
+      h1 {
+        font-size: 20px;
+        margin: 0;
+      }
+      h2 {
+        font-size: 16px;
+        margin: 0 0 4px;
+      }
+      .note {
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .rule {
+        font-size: 12px;
+        color: var(--muted);
+        background: var(--card);
+        border: 1px dashed var(--line);
+        border-radius: 8px;
+        padding: 8px 10px;
+      }
+      .rule b {
+        color: var(--accent);
+      }
+      .flow {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        align-items: flex-start;
+        justify-content: center;
+      }
+      .step-arrow {
+        align-self: center;
+        font-size: 22px;
+        color: var(--muted);
+      }
+
+      /* ---- cadre mobile ---- */
+      .phone {
+        width: min(340px, 100%);
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 18px 14px;
+        box-shadow: 0 8px 30px rgb(0 0 0 / 8%);
+      }
+      .phone h3 {
+        font-size: 15px;
+        margin: 0 0 2px;
+      }
+      .phone .sub {
+        font-size: 12.5px;
+        color: var(--muted);
+        margin-bottom: 14px;
+      }
+      .screenlabel {
+        text-align: center;
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 8px;
+      }
+      .back {
+        font-size: 12.5px;
+        color: var(--accent);
+        margin-bottom: 10px;
+        display: inline-block;
+      }
+      .cyclehead {
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin: 14px 2px 8px;
+      }
+
+      .rowcard {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 13px 14px;
+        margin-bottom: 10px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--card);
+        cursor: pointer;
+      }
+      .rowcard:hover {
+        border-color: var(--accent);
+      }
+      .rowcard.selected {
+        border-color: var(--accent);
+        background: var(--accent-soft);
+      }
+      .ico {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background: var(--accent-soft);
+        display: grid;
+        place-items: center;
+        font-size: 17px;
+        flex: none;
+      }
+      .name {
+        font-weight: 600;
+        font-size: 14px;
+      }
+      .meta {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .chev {
+        margin-inline-start: auto;
+        color: var(--muted);
+        flex: none;
+      }
+      .right {
+        margin-inline-start: auto;
+        display: grid;
+        gap: 4px;
+        justify-items: end;
+      }
+
+      .badge {
+        font-size: 10.5px;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 999px;
+        white-space: nowrap;
+      }
+      .b-ok {
+        color: var(--ok);
+        background: var(--ok-soft);
+      }
+      .b-soon {
+        color: var(--soon);
+        background: var(--soon-soft);
+      }
+      .count {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .vote {
+        font-size: 11.5px;
+        color: var(--accent);
+      }
+      .trophy {
+        color: var(--gold);
+        font-size: 12px;
+      }
+
+      /* ---- bloc catalogue ---- */
+      .cat {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 18px;
+        width: min(440px, 100%);
+      }
+      .cat-head {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+      .cat-head h3 {
+        margin: 0;
+        font-size: 16px;
+      }
+      .cat-head .years {
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .rtl {
+        direction: rtl;
+      }
+      footer.legend {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      code {
+        background: var(--accent-soft);
+        border-radius: 4px;
+        padding: 0 4px;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <h1>Étude 16 · maquette « arborescence lycée » — v2 drill-down (lot 0)</h1>
+        <p class="note">
+          Arbitrage 2026-07-11 : navigation en <b>pages/étapes légères</b> — un écran montre UN
+          niveau de l'arbre. Niveau → clic → page des sections → clic → matières (page
+          <code>/niveau/$parcoursId</code> existante). Pas d'accordéon multi-niveaux, pas de page
+          chargée, mobile d'abord. Compteur d'intérêt affiché (Q-5). États d'exemple : 1ère sec
+          &amp; Bac Math disponibles.
+        </p>
+      </header>
+
+      <!-- ============ A. ONBOARDING ============ -->
+      <section>
+        <h2>A — Onboarding · deux étapes du wizard (mobile)</h2>
+        <p class="note">
+          Étape « classe » : le cycle Secondaire liste 4 cartes seulement. Taper une année à
+          sections ouvre l'étape « section » (même wizard, bouton retour). 1ère année = sélection
+          directe.
+        </p>
+
+        <div class="flow">
+          <div>
+            <div class="phone">
+              <h3>Choisis ta classe 🎓</h3>
+              <div class="sub">Tu pourras en changer à tout moment.</div>
+
+              <div class="cyclehead">Secondaire · 1re année → Bac</div>
+
+              <div class="rowcard">
+                <div class="ico">📗</div>
+                <div>
+                  <div class="name">1ère année secondaire</div>
+                  <div class="meta">Tronc commun — pas de section</div>
+                </div>
+                <span class="badge b-ok" style="margin-inline-start: auto">Disponible</span>
+              </div>
+
+              <div class="rowcard">
+                <div class="ico">📘</div>
+                <div>
+                  <div class="name">2ème année</div>
+                  <div class="meta">4 orientations</div>
+                </div>
+                <span class="chev">›</span>
+              </div>
+
+              <div class="rowcard">
+                <div class="ico">📙</div>
+                <div>
+                  <div class="name">3ème année</div>
+                  <div class="meta">6 sections</div>
+                </div>
+                <span class="chev">›</span>
+              </div>
+
+              <div class="rowcard selected">
+                <div class="ico">🏆</div>
+                <div>
+                  <div class="name">Baccalauréat</div>
+                  <div class="meta">6 sections · 1 disponible</div>
+                </div>
+                <span class="chev">›</span>
+              </div>
+            </div>
+            <div class="screenlabel">Étape 1 — l'année (4 cartes, page légère)</div>
+          </div>
+
+          <div class="step-arrow">→</div>
+
+          <div>
+            <div class="phone">
+              <a class="back">‹ Baccalauréat</a>
+              <h3>Choisis ta section</h3>
+              <div class="sub">« أنا باك رياضيات » — c'est ici 😉</div>
+
+              <div class="rowcard selected">
+                <div>
+                  <div class="name">Mathématiques <span class="trophy">🏆</span></div>
+                </div>
+                <div class="right"><span class="badge b-ok">Disponible</span></div>
+              </div>
+              <div class="rowcard">
+                <div>
+                  <div class="name">Sciences expérimentales <span class="trophy">🏆</span></div>
+                  <div class="vote">🔔 ça m'intéresse</div>
+                </div>
+                <div class="right">
+                  <span class="badge b-soon">Bientôt</span><span class="count">42 intéressés</span>
+                </div>
+              </div>
+              <div class="rowcard">
+                <div>
+                  <div class="name">Lettres <span class="trophy">🏆</span></div>
+                  <div class="vote">🔔 ça m'intéresse</div>
+                </div>
+                <div class="right">
+                  <span class="badge b-soon">Bientôt</span><span class="count">17 intéressés</span>
+                </div>
+              </div>
+              <div class="rowcard">
+                <div>
+                  <div class="name">Économie et Gestion <span class="trophy">🏆</span></div>
+                  <div class="vote">🔔 ça m'intéresse</div>
+                </div>
+                <div class="right">
+                  <span class="badge b-soon">Bientôt</span><span class="count">23 intéressés</span>
+                </div>
+              </div>
+              <div class="rowcard">
+                <div>
+                  <div class="name">Sciences techniques <span class="trophy">🏆</span></div>
+                  <div class="vote">🔔 ça m'intéresse</div>
+                </div>
+                <div class="right">
+                  <span class="badge b-soon">Bientôt</span><span class="count">9 intéressés</span>
+                </div>
+              </div>
+              <div class="rowcard">
+                <div>
+                  <div class="name">Sciences de l'informatique <span class="trophy">🏆</span></div>
+                  <div class="vote">🔔 ça m'intéresse</div>
+                </div>
+                <div class="right">
+                  <span class="badge b-soon">Bientôt</span><span class="count">31 intéressés</span>
+                </div>
+              </div>
+            </div>
+            <div class="screenlabel">Étape 2 — la section (liste 1 colonne, compteur Q-5)</div>
+          </div>
+        </div>
+
+        <p class="rule">
+          Règles portées : <b>R-1</b> zéro nœud legacy ; <b>R-2</b> un niveau par écran, ≤ 2 gestes
+          ; <b>R-3</b> état + compteur avant le clic ; sélectionnabilité des « Bientôt » = é15 lot
+          10 (option A), hors périmètre ici. Libellés = <code>grades.name_*</code> localisés (R-4).
+        </p>
+      </section>
+
+      <!-- ============ B. CATALOGUE ============ -->
+      <section>
+        <h2>
+          B — Catalogue public · bloc Lycée de <code>/programme</code> → page
+          <code>/programme/lycee/bac</code>
+        </h2>
+        <p class="note">
+          Le bloc Lycée du catalogue = 4 cartes d'année (léger, mobile). Le clic ouvre une
+          <b>nouvelle page</b> avec les sections de l'année. Une section disponible mène à
+          <code>/niveau/$parcoursId</code> (ses matières — existant).
+        </p>
+
+        <div class="flow">
+          <div>
+            <div class="cat">
+              <div class="cat-head">
+                <h3>Lycée</h3>
+                <span class="years">1re année → Baccalauréat · 17 classes</span>
+              </div>
+              <div class="rowcard">
+                <div class="ico">📗</div>
+                <div>
+                  <div class="name">1ère année secondaire</div>
+                  <div class="meta">tronc commun</div>
+                </div>
+                <span class="badge b-ok" style="margin-inline-start: auto">Disponible</span>
+              </div>
+              <div class="rowcard">
+                <div class="ico">📘</div>
+                <div>
+                  <div class="name">2ème année</div>
+                  <div class="meta">4 orientations · 0 disponible</div>
+                </div>
+                <span class="chev">›</span>
+              </div>
+              <div class="rowcard">
+                <div class="ico">📙</div>
+                <div>
+                  <div class="name">3ème année</div>
+                  <div class="meta">6 sections · 0 disponible</div>
+                </div>
+                <span class="chev">›</span>
+              </div>
+              <div class="rowcard" style="margin-bottom: 0">
+                <div class="ico">🏆</div>
+                <div>
+                  <div class="name">Baccalauréat</div>
+                  <div class="meta">6 sections · 1 disponible</div>
+                </div>
+                <span class="chev">›</span>
+              </div>
+            </div>
+            <div class="screenlabel"><code>/programme</code> — bloc Lycée (4 cartes)</div>
+          </div>
+
+          <div class="step-arrow">→</div>
+
+          <div>
+            <div class="cat">
+              <a class="back">‹ Programme</a>
+              <div class="cat-head">
+                <h3>Baccalauréat 🏆</h3>
+                <span class="years">6 sections · 1 disponible</span>
+              </div>
+              <div class="rowcard">
+                <div>
+                  <div class="name">Bac Mathématiques</div>
+                  <div class="meta">4 matières · année de concours</div>
+                </div>
+                <div class="right"><span class="badge b-ok">Disponible</span></div>
+              </div>
+              <div class="rowcard">
+                <div>
+                  <div class="name">Bac Sciences expérimentales</div>
+                  <div class="meta">bientôt — vote pour la prioriser</div>
+                </div>
+                <div class="right">
+                  <span class="badge b-soon">Bientôt</span
+                  ><span class="count">🔔 42 intéressés</span>
+                </div>
+              </div>
+              <div class="rowcard">
+                <div><div class="name">Bac Lettres</div></div>
+                <div class="right">
+                  <span class="badge b-soon">Bientôt</span
+                  ><span class="count">🔔 17 intéressés</span>
+                </div>
+              </div>
+              <div class="rowcard">
+                <div><div class="name">Bac Économie et Gestion</div></div>
+                <div class="right">
+                  <span class="badge b-soon">Bientôt</span
+                  ><span class="count">🔔 23 intéressés</span>
+                </div>
+              </div>
+              <div class="rowcard">
+                <div><div class="name">Bac Sciences techniques</div></div>
+                <div class="right">
+                  <span class="badge b-soon">Bientôt</span
+                  ><span class="count">🔔 9 intéressés</span>
+                </div>
+              </div>
+              <div class="rowcard" style="margin-bottom: 0">
+                <div><div class="name">Bac Sciences de l'informatique</div></div>
+                <div class="right">
+                  <span class="badge b-soon">Bientôt</span
+                  ><span class="count">🔔 31 intéressés</span>
+                </div>
+              </div>
+            </div>
+            <div class="screenlabel">
+              <code>/programme/lycee/bac</code> — nouvelle page (route lot 3)
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ C. RTL ============ -->
+      <section>
+        <h2>C — Variante AR / RTL (page section, échantillon)</h2>
+        <p class="note">
+          Mêmes composants, direction <code>rtl</code>, libellés
+          <code>grades.name_ar</code> (nomenclature CNP/edunet.tn, backfill lot 2). Chevrons et
+          badges se miroirent (marges logiques).
+        </p>
+        <div class="phone rtl" dir="rtl" lang="ar">
+          <a class="back">‹ الباكالوريا</a>
+          <h3>اختر شعبتك</h3>
+          <div class="rowcard selected">
+            <div><div class="name">رياضيات</div></div>
+            <div class="right"><span class="badge b-ok">متاحة</span></div>
+          </div>
+          <div class="rowcard">
+            <div>
+              <div class="name">علوم تجريبية</div>
+              <div class="vote">🔔 يهمّني</div>
+            </div>
+            <div class="right">
+              <span class="badge b-soon">قريبًا</span><span class="count">42 مهتمًّا</span>
+            </div>
+          </div>
+          <div class="rowcard" style="margin-bottom: 0">
+            <div>
+              <div class="name">آداب</div>
+              <div class="vote">🔔 يهمّني</div>
+            </div>
+            <div class="right">
+              <span class="badge b-soon">قريبًا</span><span class="count">17 مهتمًّا</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="legend">
+        Maquette statique v2 (drill-down arbitré le 2026-07-11 — remplace la v1 à accordéons).
+        Validation humaine = contrat du lot 3 (règle R-8 étude 15). Implémentation :
+        <code>program-families.ts</code> · <code>parcours-catalogue.tsx</code> ·
+        <code>routes/_public/programme.lycee.$annee.tsx</code> (nouveau) ·
+        <code>onboarding.tsx</code>.
+      </footer>
+    </div>
+  </body>
+</html>
