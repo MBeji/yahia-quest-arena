@@ -256,8 +256,8 @@ périmètre ; divergence étude↔code = STOP et remontée (règle FableEtudes).
 - [x] Lot 1 — quick-wins de vérité
 - [x] Lot 2 — gratuité de phase
 - [x] Lot 3 — fondations éditoriales
-- [~] Lot 4 — Claude Design (socle + gabarits publiés ; maquettes nav Q-3 + dashboard Q-4 en attente de validation humaine ; autres écrans au fil de l'eau)
-- [ ] Lot 5 — navigation & coquilles
+- [x] Lot 4 — Claude Design (socle + gabarits + maquettes nav Q-3 / dashboard Q-4, validées 2026-07-11 ; autres écrans au fil de l'eau)
+- [x] Lot 5 — navigation & coquilles
 - [ ] Lot 6 — dashboard + `/boutique`
 - [ ] Lot 7 — hub matière connecté
 - [ ] Lot 8 — funnel public
@@ -313,9 +313,9 @@ Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions co
   jouant, suivi parental (activité, niveau, points faibles), compétition nationale (XP,
   niveaux). → D-3 réécrit, lot 2 dédié, R-7/R-10 amendés, étage commercial parent retiré
   (D-9). L'infra entitlements devient dormante jusqu'à l'étude 01.
-- **Q-3 — ARBITRÉ dans son principe, validation sur maquette.** La direction D-4 (nav unifiée
-  auth-aware + pôle Arène + coquille parent) est actée ; la maquette produite au lot 4 doit
-  être validée par Mohamed avant l'implémentation au lot 5 (R-8).
+- **Q-3 — ARBITRÉ + maquette VALIDÉE (2026-07-11).** La direction D-4 (nav unifiée auth-aware +
+  pôle Arène + coquille parent) est actée ; la maquette `design/ds/ecrans/navigation.html` a été
+  validée par Mohamed → implémentée au lot 5.
 - **Q-4 — ARBITRÉ : validé.** Dashboard simplifié/dégroupé (D-5) : `/boutique` dédiée,
   suppression « Autres thèmes », carte Famille compacte.
 - **Q-5 — ARBITRÉ : reporté.** Pas de volet légal signup dans cette phase (retiré du lot 9,
@@ -390,3 +390,20 @@ Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions co
   et poussé dans le projet DS via DesignSync. **En attente de validation humaine de Q-3 et Q-4** —
   gate des lots 5 (navigation) et 6 (dashboard) (R-8). Les maquettes des écrans suivants seront
   ajoutées au fil de l'eau, une par lot d'écran.
+- 2026-07-11 — Q-3 et Q-4 **validées par Mohamed** (maquettes nav + dashboard) → lots 5 et 6
+  débloqués.
+- 2026-07-11 — Lot 5 livré (navigation & coquilles, D-4 — maquette Q-3 validée) : **pôle
+  « Arène »** — nouvelle route `/arene` (`routes/_authenticated/arene.tsx`) regroupant
+  Donjon · Duels · Classement, qui les maille entre eux et annonce leurs gains lus des
+  constantes (`DUNGEON_XP_PER_FLOOR`, `DUEL_REWARDS`, R-4) ; la barre passe de 6 à 4 entrées
+  (fin du débordement desktop § E-4 et de la barre mobile surchargée). **Coquille parent
+  dédiée** : plus de nav de jeu, seulement « Suivi » (libellé visible à toute largeur — fin de
+  l'icône nue § F-1), pas de barre du bas. **Donjon non-immersif au lobby** (§ E-1) : `/dungeon`
+  retiré du régime immersif — la nav reste tant qu'une partie n'a pas démarré (cohérent avec les
+  duels). **`/suivi` découvrable** : ajouté à l'en-tête ET au pied publics (§ C-4). i18n Arène
+  FR/EN/AR (le hub réutilise les titres/pitchs des modes — DRY) + « Suivi parent » ×3. Budget
+  bundle i18n 104→108 KB (croissance de contenu, même motif documenté que les bumps
+  précédents). Tests : hub Arène (liens + gains interpolés des constantes), e2e navigation
+  réaligné sur `/arene` + assertion du maillage des 3 modes. `routeTree.gen.ts` régénéré.
+  Écart accepté : captures R-5 non produites localement (Playwright KO sous Node 24, cf. lot 2)
+  → à générer via le workflow e2e-auth. La maquette dashboard (Q-4) reste pour le lot 6.
