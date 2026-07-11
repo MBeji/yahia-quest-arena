@@ -481,7 +481,6 @@ export const fr: TranslationKeys = {
     review: "Revoir",
     locked: "Verrouillé",
     lockedHint: "Termine l'étape précédente pour débloquer.",
-    premiumHint: "Abonnement requis pour débloquer cette voie.",
     done: "Terminé",
     current: "En cours",
     xpToEarn: "XP à gagner",
@@ -566,13 +565,6 @@ export const fr: TranslationKeys = {
       cerveau: "Logique, mémoire, calcul mental : muscle ton cerveau au quotidien.",
       ib: "Le Baccalauréat International arrive bientôt.",
     },
-  },
-  flagship: {
-    badge: "Concours national",
-    sectionTitle: "Nos concours phares",
-    bannerTitle: "Prépare ton concours national",
-    bannerSubtitle: "Les parcours phares 6ème & 9ème — vise l'examen.",
-    bannerCta: "Découvrir les concours",
   },
   leaderboard: {
     titleGradient: "Classement",

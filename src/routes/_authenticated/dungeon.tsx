@@ -25,7 +25,6 @@ import {
   DUNGEON_XP_PER_FLOOR,
   DUNGEON_COINS_PER_5_FLOORS,
 } from "@/features/dungeon";
-import { SubscriptionPaywall } from "@/features/subscription";
 // Deep component imports (route→feature convention, like quest.$exerciseId):
 // the barrel would drag quest.server.ts into this route's module graph.
 import { QuestionInput, type McqOptionRender } from "@/features/quest/components/question-input";
@@ -326,8 +325,6 @@ function DungeonPage() {
               </div>
             ) : accessQuery.isLoading || !access ? (
               <LoadingState label={t.common.loading} className="mt-2 py-8" />
-            ) : access.reason === "SUBSCRIPTION" ? (
-              <SubscriptionPaywall />
             ) : !access.canAccess ? (
               <div className="mx-auto mt-8 max-w-sm rounded-2xl border border-neon-gold/40 bg-neon-gold/5 p-5 text-start">
                 <div className="flex items-center gap-2 font-display font-bold text-neon-gold">

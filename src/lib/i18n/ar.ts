@@ -479,7 +479,6 @@ export const ar: TranslationKeys = {
     review: "مراجعة",
     locked: "مقفل",
     lockedHint: "أكمل المرحلة السابقة لفتح هذه.",
-    premiumHint: "يتطلب اشتراكًا لفتح هذا المسار.",
     done: "مكتمل",
     current: "جارٍ",
     xpToEarn: "نقاط الخبرة المتاحة",
@@ -561,13 +560,6 @@ export const ar: TranslationKeys = {
       cerveau: "منطق، ذاكرة، حساب ذهني: مرّن دماغك كل يوم.",
       ib: "البكالوريا الدولية قادمة قريباً.",
     },
-  },
-  flagship: {
-    badge: "مناظرة وطنية",
-    sectionTitle: "أبرز مناظراتنا",
-    bannerTitle: "استعدّ لمناظرتك الوطنية",
-    bannerSubtitle: "المساران المميّزان: السنة السادسة والتاسعة — استهدف الامتحان.",
-    bannerCta: "اكتشف المناظرات",
   },
   leaderboard: {
     titleGradient: "ترتيب",

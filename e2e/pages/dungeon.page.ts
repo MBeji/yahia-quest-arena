@@ -4,16 +4,11 @@ import { type Page, type Locator } from "@playwright/test";
 export class DungeonPage {
   constructor(private readonly page: Page) {}
 
-  /** Progress lock ("Donjon verrouillé") — shown to a user WITH a concours
-   * entitlement who has not attempted enough distinct subjects/chapters yet. */
+  /** Progress lock ("Donjon verrouillé") — shown to a user who has not attempted
+   * enough distinct subjects/chapters yet. Phase gratuite (étude 15, lot 2): the
+   * former concours-entitlement premium gate is gone, this is the first gate. */
   get lockedGate(): Locator {
     return this.page.getByText(/donjon verrouillé/i);
-  }
-  /** Concours-entitlement gate — the Dungeon is a premium perk reserved to holders
-   * of a concours parcours entitlement, so a user without one is gated here (the
-   * live SubscriptionPaywall, title "Premium Feature") before the progress gate. */
-  get premiumGate(): Locator {
-    return this.page.getByText(/premium/i).first();
   }
   /** The CTA to start a run (only present once access is fully granted). */
   get enterButton(): Locator {

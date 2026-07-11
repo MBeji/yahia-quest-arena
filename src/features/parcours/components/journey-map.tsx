@@ -30,13 +30,7 @@ export function JourneyMap({ nodes, profile }: JourneyMapProps) {
         {nodes.map((n, i) => {
           const color = `var(--subject-${n.colorToken.replace(/^subject-/, "")})`;
           const sublabel =
-            n.state === "locked"
-              ? t.parcours.lockedHint
-              : n.state === "premium-locked"
-                ? t.parcours.premiumHint
-                : n.attempts > 0
-                  ? `${n.avg}%`
-                  : undefined;
+            n.state === "locked" ? t.parcours.lockedHint : n.attempts > 0 ? `${n.avg}%` : undefined;
           const node = (
             <PathNode
               state={n.state}

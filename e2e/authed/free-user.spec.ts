@@ -16,18 +16,16 @@ test.describe("Free student", () => {
     await expect(dashboard.dailyGoal).toBeVisible({ timeout: 15_000 });
   });
 
-  test("opening a premium-parcours mission shows the paywall + beta CTA", async ({
+  test("opening an ex-premium concours mission shows NO paywall (phase gratuite)", async ({
     quest,
     adminDb,
   }) => {
-    // Premium is now per-parcours: a free account (no entitlement) opening a gated
-    // mission of a premium Concours parcours is rejected server-side and the in-quest
-    // "Parcours premium" paywall (with the free beta-access CTA) renders. Opening the
-    // mission directly is deterministic — no quest-session / chapter-quiz race, since
-    // the entitlement gate runs BEFORE the quiz gate in startExerciseSession.
+    // Phase gratuite (étude 15, lot 2): every parcours is FREE, so the free
+    // account opens a difficulty>=2 concours mission without any paywall — the
+    // only remaining gate is the pedagogical chapter quiz (a separate lock).
     const { exerciseId } = await adminDb.premiumParcoursExercise();
     await quest.goto(exerciseId);
-    await expect(quest.paywallPremiumText).toBeVisible({ timeout: 15_000 });
-    await expect(quest.betaCta).toBeVisible({ timeout: 15_000 });
+    await expect(quest.options.first().or(quest.quizLock)).toBeVisible({ timeout: 20_000 });
+    await expect(quest.paywallPremiumText).toHaveCount(0);
   });
 });

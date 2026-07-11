@@ -446,7 +446,6 @@ export type TranslationKeys = {
     review: string;
     locked: string;
     lockedHint: string;
-    premiumHint: string;
     done: string;
     current: string;
     xpToEarn: string;
@@ -537,14 +536,6 @@ export type TranslationKeys = {
       cerveau: string;
       ib: string;
     };
-  };
-  // Flagship national-concours highlight (6ème + 9ème) across hub / category / dashboard
-  flagship: {
-    badge: string;
-    sectionTitle: string;
-    bannerTitle: string;
-    bannerSubtitle: string;
-    bannerCta: string;
   };
   // Leaderboard page chrome
   leaderboard: {
