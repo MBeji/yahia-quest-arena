@@ -329,8 +329,8 @@ Stop-points exécuteur : maquette du bloc lycée non validée = STOP avant lot 3
 toucher la sélectionnabilité `coming_soon` (é15 lot 10), au premium, ou aux mécaniques serveur =
 hors périmètre ; divergence étude↔code = STOP et remontée.
 
-- [x] Lot 0 — étude + amendements docs + maquette (cette PR)
-- [ ] Lot 1 — pipeline `compileTo`
+- [x] Lot 0 — étude + amendements docs + maquette (PR #367)
+- [x] Lot 1 — pipeline `compileTo`
 - [ ] Lot 2 — i18n grades + types régénérés
 - [ ] Lot 3 — UI arborescence (après maquette validée)
 
@@ -481,3 +481,13 @@ proposés sont abandonnés).
   cœur), D-5 réécrit (pages légères, nouvelle route `/programme/lycee/$annee`), D-7 ajouté
   (compteur public — RPC au lot 2), §4bis resserré (~44 dossiers → ~82 subjects, anglais/philo
   3ème → pack v1.1), maquette refaite en drill-down.
+- 2026-07-11 — Lot 1 livré (pipeline `compileTo`, D-4) : `schema.ts` (`compileTo` +
+  `gradeSlugs` chapitre/exercice + référentiel `KNOWN_GRADE_SLUGS`/`LEGACY_GRADE_SLUGS`,
+  validations croisées), `loader.ts` (`expandSubjects` — expansion, filtres, unicité globale
+  des ids compilés), branchée dans `build.ts` (garde anti-collision dossier physique en mode
+  `--subject`) / `qa.ts` / `audit-program.ts` ; 24 tests co-localisés dont le test de
+  fork-stabilité R-7 (SQL identique compilé vs dossier dédié) ; docs `content/README.md`
+  (§Mutualisation) + `generation-pipeline.md`. `content:check` : 73 subjects existants
+  inchangés. Écart accepté : en mode `--subject`, l'unicité inter-dossiers des ids compilés
+  est garantie par le `content:check` global de la CI (le run scopé ne charge pas les
+  dossiers voisins ; seule la collision cible ↔ dossier physique est vérifiée localement).
