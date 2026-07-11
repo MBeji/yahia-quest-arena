@@ -17,7 +17,7 @@ function StatusBadge({ status }: { status: BugReportStatus }) {
     },
     resolved: {
       label: t.bugReport.statusResolved,
-      cls: "text-emerald-400 border-emerald-500/40 bg-emerald-500/10",
+      cls: "text-success border-success/40 bg-success/10",
     },
     dismissed: {
       label: t.bugReport.statusDismissed,

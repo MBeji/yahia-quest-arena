@@ -148,7 +148,7 @@ Stop-points : un lot d'écran ne touche NI les primitives (retour lot 1 si manqu
 - [x] Lot 7 — donjon (PR livrée)
 - [x] Lot 8 — duel (PR livrée)
 - [x] Lot 9 — leaderboard/shop/parcours (PR livrée)
-- [ ] Lot 10 — parent-report/admin
+- [x] Lot 10 — parent-report/admin (PR livrée)
 - [ ] Lot 11 — motion
 
 ## 5. Stratégie de test
@@ -296,3 +296,15 @@ Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions co
   journey-map → `PageShell`. Badges/shop : syntaxe canonique des tokens. Les entrées motion du
   leaderboard restent inline → lot 11 (harmonisation). Gate verte (1197 tests), budgets + smoke +
   garde-fou RTL verts. Captures impossibles (Q-2).
+- 2026-07-10 — Lot 9 mergé (#358, premier merge 100 % automatique : ready → automerge —
+  nouveau mode demandé par l'humain : l'exécuteur pilote ready+merge et corrige les checks).
+  Lot 10 livré : **garde-fou couleurs activé** (`scripts/lint/check-design-tokens.mjs` dans
+  `npm run lint` — palette Tailwind brute et `text-white` interdits en code métier, marqueur
+  `token-ok` + régions `token-ok-block`). Purge des 70 violations : `report-content.tsx` (41 —
+  encre `text-foreground`, icônes/verdicts/insights sur primary/success/gold/flame/destructive,
+  gradients de verdict → surfaces tokens), `parent-report.tsx` (8), donjon (3 emerald → success),
+  chips de statut admin ×5 (emerald → success), enable-push (amber/emerald → gold/success),
+  family-goal, report-error. Exception documentée : la vitrine sombre fixe de la landing
+  (« Apprends en jouant ») garde son or réel via une région `token-ok-block` commentée.
+  Indicateur « 0 palette brute / 0 text-white » ATTEINT et outillé. Gate verte (1197 tests),
+  budgets + smoke verts.
