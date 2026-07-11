@@ -26,6 +26,7 @@ import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenti
 import { Route as AuthenticatedDungeonRouteImport } from './routes/_authenticated/dungeon'
 import { Route as AuthenticatedDuelRouteImport } from './routes/_authenticated/duel'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedAreneRouteImport } from './routes/_authenticated/arene'
 import { Route as PublicNiveauParcoursIdRouteImport } from './routes/_public/niveau.$parcoursId'
 import { Route as PublicMatiereSubjectIdRouteImport } from './routes/_public/matiere.$subjectId'
 import { Route as PublicExerciceExerciseIdRouteImport } from './routes/_public/exercice.$exerciseId'
@@ -126,6 +127,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedAreneRoute = AuthenticatedAreneRouteImport.update({
+  id: '/arene',
+  path: '/arene',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const PublicNiveauParcoursIdRoute = PublicNiveauParcoursIdRouteImport.update({
   id: '/niveau/$parcoursId',
   path: '/niveau/$parcoursId',
@@ -212,6 +218,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/arene': typeof AuthenticatedAreneRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/duel': typeof AuthenticatedDuelRouteWithChildren
   '/dungeon': typeof AuthenticatedDungeonRoute
@@ -243,6 +250,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/arene': typeof AuthenticatedAreneRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/duel': typeof AuthenticatedDuelRouteWithChildren
   '/dungeon': typeof AuthenticatedDungeonRoute
@@ -276,6 +284,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/_authenticated/arene': typeof AuthenticatedAreneRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/duel': typeof AuthenticatedDuelRouteWithChildren
   '/_authenticated/dungeon': typeof AuthenticatedDungeonRoute
@@ -310,6 +319,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/login'
     | '/signup'
+    | '/arene'
     | '/dashboard'
     | '/duel'
     | '/dungeon'
@@ -341,6 +351,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/login'
     | '/signup'
+    | '/arene'
     | '/dashboard'
     | '/duel'
     | '/dungeon'
@@ -373,6 +384,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/login'
     | '/signup'
+    | '/_authenticated/arene'
     | '/_authenticated/dashboard'
     | '/_authenticated/duel'
     | '/_authenticated/dungeon'
@@ -530,6 +542,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/arene': {
+      id: '/_authenticated/arene'
+      path: '/arene'
+      fullPath: '/arene'
+      preLoaderRoute: typeof AuthenticatedAreneRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_public/niveau/$parcoursId': {
       id: '/_public/niveau/$parcoursId'
       path: '/niveau/$parcoursId'
@@ -643,6 +662,7 @@ const AuthenticatedDuelRouteWithChildren =
   AuthenticatedDuelRoute._addFileChildren(AuthenticatedDuelRouteChildren)
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedAreneRoute: typeof AuthenticatedAreneRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDuelRoute: typeof AuthenticatedDuelRouteWithChildren
   AuthenticatedDungeonRoute: typeof AuthenticatedDungeonRoute
@@ -663,6 +683,7 @@ interface AuthenticatedRouteChildren {
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAreneRoute: AuthenticatedAreneRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDuelRoute: AuthenticatedDuelRouteWithChildren,
   AuthenticatedDungeonRoute: AuthenticatedDungeonRoute,

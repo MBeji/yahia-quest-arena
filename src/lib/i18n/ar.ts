@@ -438,6 +438,7 @@ export const ar: TranslationKeys = {
     parcours: "المسار",
     themes: "اكتشف",
     dungeon: "القبو",
+    arena: "الحلبة",
     ranking: "الترتيب",
     parentReport: "التقرير",
     admin: "الإدارة",
@@ -560,6 +561,14 @@ export const ar: TranslationKeys = {
       cerveau: "منطق، ذاكرة، حساب ذهني: مرّن دماغك كل يوم.",
       ib: "البكالوريا الدولية قادمة قريباً.",
     },
+  },
+  arena: {
+    title: "الحلبة",
+    subtitle: "نافس الأبطال الآخرين: تحدٍّ ضدّ الساعة، مبارزات، وترتيب وطني.",
+    dungeonReward: "+{xp} نقطة خبرة لكل طابق",
+    duelReward: "حتى +{xp} نقطة خبرة لكل فوز — المشاركة تُكافأ دائمًا",
+    rankingDesc: "اعرف موقعك في الأكاديمية، إجمالًا وحسب المادة.",
+    rankingReward: "اكسب نقاط الخبرة للصعود",
   },
   leaderboard: {
     titleGradient: "ترتيب",

@@ -401,6 +401,7 @@ export type TranslationKeys = {
     parcours: string;
     themes: string;
     dungeon: string;
+    arena: string;
     ranking: string;
     parentReport: string;
     admin: string;
@@ -538,6 +539,14 @@ export type TranslationKeys = {
     };
   };
   // Leaderboard page chrome
+  arena: {
+    title: string;
+    subtitle: string;
+    dungeonReward: string;
+    duelReward: string;
+    rankingDesc: string;
+    rankingReward: string;
+  };
   leaderboard: {
     titleGradient: string;
     titleRest: string;
@@ -654,6 +663,7 @@ export type TranslationKeys = {
       navAria: string;
       programme: string;
       extras: string;
+      parentTracking: string;
       login: string;
       signup: string;
       account: string;
