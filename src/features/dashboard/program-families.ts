@@ -10,7 +10,11 @@ export type ProgramKind = "school" | "languages" | "enter" | "coming_soon";
 export type ProgramParcours = {
   id: string;
   name_fr: string;
+  name_en?: string | null;
+  name_ar?: string | null;
   status: string;
+  /** 'concours' | 'scolaire' | 'libre' — drives the catalogue's concours highlight. */
+  kind?: string;
   is_premium: boolean;
   hasEntitlement: boolean;
   theme_id: string;
