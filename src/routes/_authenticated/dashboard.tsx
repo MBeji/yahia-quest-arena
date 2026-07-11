@@ -48,14 +48,6 @@ const DashboardBadgesShop = lazy(() =>
   })),
 );
 
-// Lazy so the flagship banner trio (crown SVG + banner) stays out of the initial
-// dashboard chunk; it's query-gated anyway, so there's no perceptible delay.
-const FlagshipConcoursBanner = lazy(() =>
-  import("@/features/dashboard/components/flagship-concours-banner").then((mod) => ({
-    default: mod.FlagshipConcoursBanner,
-  })),
-);
-
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: "Hall des Héros · Na9ra Nal3ab" }] }),
   component: Dashboard,
@@ -326,11 +318,6 @@ function Dashboard() {
             </div>
           </div>
         </motion.div>
-
-        {/* FLAGSHIP CONCOURS BANNER — 6ème / 9ème, detectable right after login. */}
-        <Suspense fallback={null}>
-          <FlagshipConcoursBanner />
-        </Suspense>
 
         {/* FOCUS BAND — the redesign's centrepiece: promote ONE prioritised action
             ("Reprendre") to hero prominence beside the daily-objective ring, then two

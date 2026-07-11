@@ -254,7 +254,7 @@ périmètre ; divergence étude↔code = STOP et remontée (règle FableEtudes).
 
 - [x] Lot 0 — étude + audit + harness (PR #355)
 - [x] Lot 1 — quick-wins de vérité
-- [ ] Lot 2 — gratuité de phase
+- [x] Lot 2 — gratuité de phase
 - [ ] Lot 3 — fondations éditoriales
 - [ ] Lot 4 — Claude Design (socle + gabarits + maquette nav)
 - [ ] Lot 5 — navigation & coquilles
@@ -350,3 +350,18 @@ Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions co
   connecté, le CTA lecteur→quiz s'appuie sur l'état serveur ; pour un anonyme l'état
   sessionStorage n'est lu qu'après montage (SSR = quiz par défaut sur chapitre non débloqué —
   cohérent et sans mismatch d'hydratation).
+- 2026-07-11 — Lot 2 livré (gratuité de phase, D-3/Q-2) : migration
+  `20260711100000_free_phase_all_parcours.sql` — `parcours.is_premium = false` partout (ids
+  `concours-9eme`/`concours-6eme` notés pour la ré-activation étude 01) + `get_dungeon_access()`
+  sans raison SUBSCRIPTION (forme OUT inchangée, `has_subscription` = true ; verrous
+  PREREQ/LEVEL/DAILY_LIMIT conservés). Purge UI : branche paywall du donjon retirée,
+  `premiumHint` supprimé (carte de l'aventure + i18n ×3 + types), bannière « Prépare ton
+  concours national » supprimée du dashboard avec son trio de composants flagship
+  (banner/concours-banner/crown), ses helpers (`flagshipConcours`/`flagshipLabel`), sa section
+  i18n et son keyframe CSS. E2e réalignés phase gratuite : premium-gate (les deux comptes
+  ouvrent une mission d≥2 sans paywall), dungeon (les deux comptes → verrou de progression),
+  free-user, premium-user (compte à entitlement dormant conservé pour é01),
+  `premiumConcoursParcours()` filtre par kind. Infra entitlements/RLS/paywall quest intacte et
+  dormante. Écart accepté : aucun pgTAP dédié n'existait pour `get_dungeon_access` (la suite
+  applique la migration sur DB fraîche) — la RPC est couverte indirectement par les specs e2e
+  donjon.

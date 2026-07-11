@@ -43,10 +43,6 @@ vi.mock("@/features/dungeon", () => ({
   DUNGEON_COINS_PER_5_FLOORS: 5,
 }));
 
-vi.mock("@/features/subscription", () => ({
-  SubscriptionPaywall: () => React.createElement("div", { "data-testid": "paywall" }),
-}));
-
 vi.mock("@/shared/lib/utils", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/shared/lib/utils")>()),
   isRtlText: () => false,
@@ -101,6 +97,11 @@ vi.mock("@/lib/i18n", () => ({
       xpPerFloor: "xp",
       coinsPerFloors: "coins",
       life: "life",
+      locked: "LOCKED",
+      prereqLocked: "prereq",
+      subjectsStarted: "subjects {done}/{required}",
+      chaptersStarted: "chapters {done}/{required}",
+      keepTraining: "keep training",
     },
   }),
 }));
@@ -141,6 +142,8 @@ describe("Dungeon lobby — access query failure", () => {
   });
 
   it("retry refetches the access query and clears the error on success", async () => {
+    // Phase gratuite (étude 15, lot 2) : plus de raison SUBSCRIPTION — le premier
+    // verrou possible est le prérequis de progression.
     getDungeonAccess.mockRejectedValueOnce(new Error("RPC failed")).mockResolvedValue({
       level: 3,
       maxRunsPerDay: 3,
@@ -150,9 +153,9 @@ describe("Dungeon lobby — access query failure", () => {
       chaptersDone: 0,
       requiredSubjects: 2,
       requiredChapters: 3,
-      hasSubscription: false,
+      hasSubscription: true,
       canAccess: false,
-      reason: "SUBSCRIPTION",
+      reason: "PREREQ",
     });
 
     await renderDungeon();
@@ -163,11 +166,11 @@ describe("Dungeon lobby — access query failure", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /retry/i }));
 
-    // After a successful refetch the error is gone and the paywall renders
-    // (reason === "SUBSCRIPTION").
+    // After a successful refetch the error is gone and the progress lock renders
+    // (reason === "PREREQ").
     await waitFor(() => {
       expect(screen.queryByText("ACCESS_ERROR")).not.toBeInTheDocument();
-      expect(screen.getByTestId("paywall")).toBeInTheDocument();
+      expect(screen.getByText("LOCKED")).toBeInTheDocument();
     });
     expect(getDungeonAccess).toHaveBeenCalledTimes(2);
   });

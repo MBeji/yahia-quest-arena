@@ -1,10 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {
-  buildPrograms,
-  flagshipConcours,
-  flagshipLabel,
-  type ProgramParcours,
-} from "../program-families";
+import { buildPrograms, flagshipLabel, type ProgramParcours } from "../program-families";
 
 const P = (over: Partial<ProgramParcours> & { id: string; theme_id: string }): ProgramParcours => ({
   name_fr: over.id,
@@ -100,30 +95,9 @@ describe("buildPrograms", () => {
   });
 });
 
-describe("flagshipConcours", () => {
-  it("returns the premium school concours, ordered by grade (6ème before 9ème)", () => {
-    const flagships = flagshipConcours([
-      ...CATALOGUE,
-      P({
-        id: "concours-6eme",
-        theme_id: "ecole-tn",
-        grade_cycle: "primaire",
-        grade_order: 6,
-        is_premium: true,
-      }),
-    ]);
-    expect(flagships.map((p) => p.id)).toEqual(["concours-6eme", "concours-9eme"]);
-  });
-
-  it("ignores non-school premium and free school parcours", () => {
-    expect(
-      flagshipConcours([
-        P({ id: "anglais", theme_id: "anglais", is_premium: true }),
-        P({ id: "ecole-7eme-base", theme_id: "ecole-tn", grade_order: 7 }),
-      ]),
-    ).toEqual([]);
-  });
-});
+// flagshipConcours + the dashboard concours banner were removed in étude 15
+// lot 2 (phase gratuite, arbitrage Q-2 — plus de focus concours). flagshipLabel
+// survives: the public catalogue still compacts concours card labels with it.
 
 describe("flagshipLabel", () => {
   it("drops the verbose 'Préparation Concours' prefix so the class reads clearly", () => {

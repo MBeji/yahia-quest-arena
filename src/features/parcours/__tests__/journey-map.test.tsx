@@ -29,7 +29,6 @@ vi.mock("@/lib/i18n", () => ({
       maxLevel: "max",
       premium: "Premium",
       lockedHint: "locked",
-      premiumHint: "subscribe",
       xpToEarn: "XP",
       backToMap: "back",
       empty: "empty",

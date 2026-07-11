@@ -480,7 +480,6 @@ export const en: TranslationKeys = {
     review: "Review",
     locked: "Locked",
     lockedHint: "Finish the previous step to unlock.",
-    premiumHint: "Subscription required to unlock this path.",
     done: "Done",
     current: "In progress",
     xpToEarn: "XP to earn",
@@ -564,13 +563,6 @@ export const en: TranslationKeys = {
       cerveau: "Logic, memory, mental math: train your brain every day.",
       ib: "The International Baccalaureate is coming soon.",
     },
-  },
-  flagship: {
-    badge: "National exam",
-    sectionTitle: "Our flagship exams",
-    bannerTitle: "Prepare for your national exam",
-    bannerSubtitle: "The flagship 6th- & 9th-grade tracks — aim for the exam.",
-    bannerCta: "Explore the exams",
   },
   leaderboard: {
     titleGradient: "Academy",

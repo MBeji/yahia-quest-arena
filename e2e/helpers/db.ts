@@ -274,16 +274,17 @@ export function createAdminDb(): AdminDb {
       return { exerciseId: data.id as string, subjectId: data.subject_id as string };
     },
     /**
-     * Resolve a PREMIUM concours parcours' (theme_id, grade_id) and id. Used to find
-     * gated subjects/missions without hard-coding the catalogue. Throws if none is
-     * seeded (the parcours migration seeds concours-9eme / concours-6eme).
+     * Resolve a concours parcours' (theme_id, grade_id) and id — the EX-premium
+     * tracks. Phase gratuite (étude 15, lot 2) : `is_premium` is false everywhere,
+     * so the parcours stays identifiable by its kind; étude 01 will reinstate the
+     * is_premium filter when premium returns. Throws if none is seeded (the
+     * parcours migration seeds concours-9eme / concours-6eme).
      */
     async premiumConcoursParcours() {
       const { data, error } = await client
         .from("parcours")
         .select("id, theme_id, grade_id")
         .eq("kind", "concours")
-        .eq("is_premium", true)
         .not("grade_id", "is", null)
         .order("display_order")
         .limit(1)
