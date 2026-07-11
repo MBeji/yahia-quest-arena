@@ -258,7 +258,7 @@ périmètre ; divergence étude↔code = STOP et remontée (règle FableEtudes).
 - [x] Lot 3 — fondations éditoriales
 - [x] Lot 4 — Claude Design (socle + gabarits + maquettes nav Q-3 / dashboard Q-4, validées 2026-07-11 ; autres écrans au fil de l'eau)
 - [x] Lot 5 — navigation & coquilles
-- [ ] Lot 6 — dashboard + `/boutique`
+- [x] Lot 6 — dashboard + `/boutique`
 - [ ] Lot 7 — hub matière connecté
 - [ ] Lot 8 — funnel public
 - [ ] Lot 9 — auth v2
@@ -407,3 +407,20 @@ Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions co
   réaligné sur `/arene` + assertion du maillage des 3 modes. `routeTree.gen.ts` régénéré.
   Écart accepté : captures R-5 non produites localement (Playwright KO sous Node 24, cf. lot 2)
   → à générer via le workflow e2e-auth. La maquette dashboard (Q-4) reste pour le lot 6.
+- 2026-07-11 — Lot 6 livré (dashboard dégroupé + `/boutique`, D-5 — maquette Q-4 validée) :
+  nouvelle route `routes/_authenticated/boutique.tsx` qui héberge radar + inventaire + badges +
+  boutique (déplacés du dashboard) avec leurs mutations achat/équipement/activation, et affiche
+  le solde de pièces (le shop ne le montrait jamais). Le **dashboard redevient un QG** : la
+  grille des matières passe pleine largeur, la liste « Autres thèmes » (≈ 25 cartes à plat,
+  audit § A-4) et les sections radar/badges/boutique sont retirées, remplacées par **deux cartes
+  de destination** — « Boutique & badges » → `/boutique` et « Découvrir d'autres thèmes » →
+  `/programme`. **First-run** (D-7 / § A-5) : un compte sans aucune tentative (`recent` vide) est
+  accueilli (« Bienvenue dans l'aventure ») au lieu de « Bon retour ». La bande focus reste en
+  tête (déjà le cas post-#345). i18n FR/EN/AR (boutique + 2 cartes + accueil) ; `otherThemesTitle`
+  retiré. E2e shop réaligné sur `/boutique` (page object `goto()` + solde lu du header via le
+  testid `stat-coins`). `routeTree.gen.ts` régénéré. Chunk dashboard 28→24,6 kB (allégé). Écarts
+  acceptés : la carte « Famille » compacte (relocalisation du code alliance) et l'accueil
+  first-run illustré restent des raffinements — le code alliance reste dans le hero pour ce lot ;
+  pas de test unitaire dédié pour la route `/boutique` (route-wrapper exclu de la couverture par
+  `vitest.config`) — couverte par l'e2e shop + les tests des composants déplacés ; captures R-5
+  via le workflow (Playwright KO local, cf. lot 2).

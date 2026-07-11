@@ -26,6 +26,7 @@ import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenti
 import { Route as AuthenticatedDungeonRouteImport } from './routes/_authenticated/dungeon'
 import { Route as AuthenticatedDuelRouteImport } from './routes/_authenticated/duel'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedBoutiqueRouteImport } from './routes/_authenticated/boutique'
 import { Route as AuthenticatedAreneRouteImport } from './routes/_authenticated/arene'
 import { Route as PublicNiveauParcoursIdRouteImport } from './routes/_public/niveau.$parcoursId'
 import { Route as PublicMatiereSubjectIdRouteImport } from './routes/_public/matiere.$subjectId'
@@ -127,6 +128,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedBoutiqueRoute = AuthenticatedBoutiqueRouteImport.update({
+  id: '/boutique',
+  path: '/boutique',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedAreneRoute = AuthenticatedAreneRouteImport.update({
   id: '/arene',
   path: '/arene',
@@ -219,6 +225,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/arene': typeof AuthenticatedAreneRoute
+  '/boutique': typeof AuthenticatedBoutiqueRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/duel': typeof AuthenticatedDuelRouteWithChildren
   '/dungeon': typeof AuthenticatedDungeonRoute
@@ -251,6 +258,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/arene': typeof AuthenticatedAreneRoute
+  '/boutique': typeof AuthenticatedBoutiqueRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/duel': typeof AuthenticatedDuelRouteWithChildren
   '/dungeon': typeof AuthenticatedDungeonRoute
@@ -285,6 +293,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/_authenticated/arene': typeof AuthenticatedAreneRoute
+  '/_authenticated/boutique': typeof AuthenticatedBoutiqueRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/duel': typeof AuthenticatedDuelRouteWithChildren
   '/_authenticated/dungeon': typeof AuthenticatedDungeonRoute
@@ -320,6 +329,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/arene'
+    | '/boutique'
     | '/dashboard'
     | '/duel'
     | '/dungeon'
@@ -352,6 +362,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/arene'
+    | '/boutique'
     | '/dashboard'
     | '/duel'
     | '/dungeon'
@@ -385,6 +396,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/_authenticated/arene'
+    | '/_authenticated/boutique'
     | '/_authenticated/dashboard'
     | '/_authenticated/duel'
     | '/_authenticated/dungeon'
@@ -542,6 +554,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/boutique': {
+      id: '/_authenticated/boutique'
+      path: '/boutique'
+      fullPath: '/boutique'
+      preLoaderRoute: typeof AuthenticatedBoutiqueRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/arene': {
       id: '/_authenticated/arene'
       path: '/arene'
@@ -663,6 +682,7 @@ const AuthenticatedDuelRouteWithChildren =
 
 interface AuthenticatedRouteChildren {
   AuthenticatedAreneRoute: typeof AuthenticatedAreneRoute
+  AuthenticatedBoutiqueRoute: typeof AuthenticatedBoutiqueRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDuelRoute: typeof AuthenticatedDuelRouteWithChildren
   AuthenticatedDungeonRoute: typeof AuthenticatedDungeonRoute
@@ -684,6 +704,7 @@ interface AuthenticatedRouteChildren {
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAreneRoute: AuthenticatedAreneRoute,
+  AuthenticatedBoutiqueRoute: AuthenticatedBoutiqueRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDuelRoute: AuthenticatedDuelRouteWithChildren,
   AuthenticatedDungeonRoute: AuthenticatedDungeonRoute,

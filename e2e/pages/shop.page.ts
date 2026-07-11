@@ -1,12 +1,18 @@
 import { type Page, type Locator } from "@playwright/test";
 
 /**
- * Academy Shop — rendered inside the dashboard (`/dashboard`), not a standalone
- * route. Scopes every query to the shop section so it never collides with the
- * badges grid or the inventory sidebar (which also has "Activer" buttons).
+ * Academy Shop — étude 15 lot 6 (D-5) moved it (with the badges + radar +
+ * inventory) off the dashboard to the dedicated `/boutique` route. Scopes every
+ * query to the shop section so it never collides with the badges grid or the
+ * inventory sidebar (which also has "Activer" buttons).
  */
 export class ShopPage {
   constructor(private readonly page: Page) {}
+
+  async goto(): Promise<void> {
+    await this.page.goto("/boutique");
+    await this.section.waitFor({ state: "visible", timeout: 15_000 }).catch(() => {});
+  }
 
   get section(): Locator {
     return this.page.getByTestId("shop");
