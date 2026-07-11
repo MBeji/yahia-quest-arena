@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
+import { optionalSupabaseAuth } from "@/shared/integrations/supabase/optional-auth-middleware";
 import { failWithClientError } from "@/shared/lib/safe-error";
 
 // "Interest" votes on a coming-soon parcours (a not-yet-built class). A signed-in
@@ -30,9 +31,14 @@ export const getMyParcoursInterests = createServerFn({ method: "GET" })
     return { parcoursIds: (data ?? []).map((r) => r.parcours_id) };
   });
 
-/** Live interest count per coming-soon parcours, busiest first (public + admin). */
+/**
+ * Live interest count per coming-soon parcours, busiest first. Anon-capable
+ * (étude 16 D-7/Q-5): the badge shows on the PUBLIC catalogue too — the RPC is
+ * a PII-free aggregate granted to `anon` (migration 20260711140000). Voting
+ * (`toggleParcoursInterest`) stays authenticated-only.
+ */
 export const getParcoursInterestCounts = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
+  .middleware([optionalSupabaseAuth])
   .handler(async ({ context }): Promise<{ counts: ParcoursInterestCount[] }> => {
     const { supabase } = context;
     const { data, error } = await supabase.rpc("parcours_interest_counts");
