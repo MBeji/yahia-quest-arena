@@ -1,5 +1,10 @@
 # Audit UX/UI des écrans — yahia-quest-arena (Na9ra Nal3ab)
 
+> 🗄️ **ARCHIVÉ le 2026-07-11** — instantané daté, largement traité depuis par les études
+> **14** (refonte UX/design, livrée) et **15** (contenu & composition, en exécution), et
+> antérieur au pivot « gratuité de phase » (les constats premium/paywall sont caducs).
+> Conservé pour l'historique ; ne pas s'en servir comme backlog.
+
 > Audit en **lecture seule** des ~18 écrans de l'application : cohérence, contenu,
 > affichage, lucidité (expérience utilisateur), navigation et parcours utilisateur.
 > Daté du 2026-06-13. Aucune correction de code n'a été appliquée — ce document est

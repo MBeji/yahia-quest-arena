@@ -1,7 +1,7 @@
 # Étude 08 — Analytics parents & enseignants
 
-> **Statut** : brouillon
-> **Priorité** : 08 · **Valeur** : rendre la progression visible et honnête pour ceux qui paient — le rapport parent devient un tableau de bord descriptif (temps, progression, matières, points faibles, examens blancs) qui justifie l'abonnement concours · **Complexité** : moyenne
+> **Statut** : brouillon (⚠️ 2026-07-11 : le wording « ceux qui paient / abonnement » précède le pivot gratuité — en phase gratuite le suivi parent est un **pilier de l'offre gratuite** ; à re-scoper à la validation)
+> **Priorité** : 08 · **Valeur** : rendre la progression visible et honnête pour les familles — le rapport parent devient un tableau de bord descriptif (temps, progression, matières, points faibles, examens blancs) · **Complexité** : moyenne
 > **Architecte** : Fable (claude-fable-5), 2026-07-04 · **Exécuteur cible** : Sonnet (ou équiv.)
 > **Dépend de** : étude 04 lot A0 (télémétrie `question_attempts`) pour les vues compétences ; étude 07 (knowledge graph — **en cours de rédaction** : table `user_competency_mastery`, maîtrise 0–100 par compétence) pour les points faibles ; étude 02 (examen blanc) pour le percentile · **Bloque** : —
 > **Docs normatifs liés** : CLAUDE.md (RLS, DoD §7, gotcha grants), ARCHITECTURE.md, FableEtudes/02-examen-blanc/ETUDE.md, FableEtudes/04-moteur-adaptatif/ETUDE.md

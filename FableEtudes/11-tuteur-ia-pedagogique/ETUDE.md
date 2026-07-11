@@ -1,6 +1,6 @@
 # Étude 11 — Tuteur IA pédagogique (« Prof Yahia »)
 
-> **Statut** : brouillon
+> **Statut** : **gelée** (2026-07-11 — dépend de l'étude 01, elle-même gelée par le pivot gratuité : le coût marginal par usage du tuteur se finançait par les revenus premium. À dégeler si un financement alternatif est décidé)
 > **Priorité** : 11 (après 01 qui le finance, nourri par 04/07) · **Valeur** : le rêve produit — « Pourquoi j'ai faux ? / Explique autrement / Donne-moi un exercice similaire », adapté au niveau réel de l'élève · **Complexité** : haute (coût récurrent, sécurité mineurs, anti-triche)
 > **Architecte** : Fable (claude-fable-5), 2026-07-04 · **Exécuteur cible** : Sonnet
 > **Dépend de** : étude 01 (revenus — le tuteur a un coût marginal par usage), étude 04 A0 (tag de misconception choisi = le diagnostic qui rend la réponse pertinente), étude 07 (exercice similaire via compétences ; maîtrise pour calibrer le registre de langue) · **Bloque** : rien
