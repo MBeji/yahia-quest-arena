@@ -256,7 +256,7 @@ périmètre ; divergence étude↔code = STOP et remontée (règle FableEtudes).
 - [x] Lot 1 — quick-wins de vérité
 - [x] Lot 2 — gratuité de phase
 - [x] Lot 3 — fondations éditoriales
-- [ ] Lot 4 — Claude Design (socle + gabarits + maquette nav)
+- [~] Lot 4 — Claude Design (socle + gabarits publiés ; maquettes nav Q-3 + dashboard Q-4 en attente de validation humaine ; autres écrans au fil de l'eau)
 - [ ] Lot 5 — navigation & coquilles
 - [ ] Lot 6 — dashboard + `/boutique`
 - [ ] Lot 7 — hub matière connecté
@@ -380,3 +380,13 @@ Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions co
   Écart accepté (corrige un effet de bord du lot 2) : le surlignage « Concours » du catalogue
   s'appuyait sur `is_premium` (désormais false partout) → il suit `kind === "concours"` ;
   `flagshipLabel` restauré (utilisé par le catalogue public, seul `flagshipConcours` a disparu).
+- 2026-07-11 — Lot 4 (Claude Design, D-2) — publication initiale. Le socle (fondations
+  couleurs/typo + 8 primitives) préexistait dans le projet DS « Na9ra Nal3ab — Design System ».
+  Ajoutées : deux maquettes d'écran **gating** — `ecrans/navigation.html` (Q-3 : nav unifiée
+  auth-aware, pôle « Arène » regroupant Donjon/Duels/Classement, coquille parent dédiée) et
+  `ecrans/dashboard.html` (Q-4 : QG dégroupé, bande focus en tête, boutique/inventaire/badges →
+  `/boutique`, suppression « Autres thèmes », carte Famille compacte, first-run). Sur les vrais
+  tokens (2 thèmes), avec avant/après annoté. Bundle versionné dans le repo (`design/ds/ecrans/`)
+  et poussé dans le projet DS via DesignSync. **En attente de validation humaine de Q-3 et Q-4** —
+  gate des lots 5 (navigation) et 6 (dashboard) (R-8). Les maquettes des écrans suivants seront
+  ajoutées au fil de l'eau, une par lot d'écran.
