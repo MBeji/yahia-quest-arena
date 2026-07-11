@@ -52,11 +52,11 @@ export function ReportContent({ report }: { report: ReportData }) {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-black/50 border border-[color:var(--gold)]/40 rounded-xl p-6"
+        className="bg-black/50 border border-gold/40 rounded-xl p-6"
       >
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h2 className="text-xl font-bold text-white">{student.displayName}</h2>
+            <h2 className="text-xl font-bold text-foreground">{student.displayName}</h2>
             <p className="text-muted-foreground text-sm mt-1">
               {t.parentReport.classLabel} {student.heroClass ?? t.parentReport.classNone} ·{" "}
               {t.parentReport.memberSince} {new Date(student.createdAt).toLocaleDateString(locale)}
@@ -84,13 +84,11 @@ export function ReportContent({ report }: { report: ReportData }) {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex items-start gap-3 rounded-xl border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/5 p-4"
+        className="flex items-start gap-3 rounded-xl border border-gold/40 bg-gold/5 p-4"
       >
-        <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-[color:var(--gold)]" />
+        <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-gold" />
         <div>
-          <div className="font-semibold text-[color:var(--champagne)]">
-            {t.parentReport.adviceTitle}
-          </div>
+          <div className="font-semibold text-champagne">{t.parentReport.adviceTitle}</div>
           <p className="mt-1 text-sm text-muted-foreground">{advice}</p>
         </div>
       </motion.div>
@@ -98,22 +96,22 @@ export function ReportContent({ report }: { report: ReportData }) {
       {/* Key metrics */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <MetricCard
-          icon={<Clock className="w-5 h-5 text-blue-400" />}
+          icon={<Clock className="w-5 h-5 text-primary" />}
           label={t.parentReport.timeTotal}
           value={formatTime(summary.totalTimeMinutes)}
         />
         <MetricCard
-          icon={<BookOpen className="w-5 h-5 text-green-400" />}
+          icon={<BookOpen className="w-5 h-5 text-success" />}
           label={t.parentReport.exercisesLabel}
           value={String(summary.totalExercises)}
         />
         <MetricCard
-          icon={<Target className="w-5 h-5 text-yellow-400" />}
+          icon={<Target className="w-5 h-5 text-gold" />}
           label={t.parentReport.avgScore}
           value={`${summary.avgScore}%`}
         />
         <MetricCard
-          icon={<Calendar className="w-5 h-5 text-purple-400" />}
+          icon={<Calendar className="w-5 h-5 text-flame" />}
           label={t.parentReport.activeDays}
           value={`${summary.daysActiveThisWeek}/7`}
         />
@@ -121,8 +119,8 @@ export function ReportContent({ report }: { report: ReportData }) {
 
       {/* Cette semaine vs la précédente */}
       <div className="bg-black/50 border border-border/50 rounded-xl p-4">
-        <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-          <Calendar className="w-5 h-5 text-[color:var(--gold)]" />
+        <h3 className="text-foreground font-semibold mb-4 flex items-center gap-2">
+          <Calendar className="w-5 h-5 text-gold" />
           {t.parentReport.weekCompareTitle}
         </h3>
         <div className="grid grid-cols-3 gap-2 sm:gap-4">
@@ -147,22 +145,22 @@ export function ReportContent({ report }: { report: ReportData }) {
 
       {/* Points forts & à renforcer (chapitres, 30 j) */}
       <div className="bg-black/50 border border-border/50 rounded-xl p-4">
-        <h3 className="text-white font-semibold flex items-center gap-2">
-          <Target className="w-5 h-5 text-[color:var(--gold)]" />
+        <h3 className="text-foreground font-semibold flex items-center gap-2">
+          <Target className="w-5 h-5 text-gold" />
           {t.parentReport.insightsTitle}
         </h3>
         <p className="mt-1 text-xs text-muted-foreground">{t.parentReport.insightsSubtitle}</p>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           <InsightList
             title={t.parentReport.strengthsTitle}
-            icon={<ShieldCheck className="h-4 w-4 text-green-400" />}
+            icon={<ShieldCheck className="h-4 w-4 text-success" />}
             items={chapterInsights.strengths}
             emptyLabel={t.parentReport.strengthsEmpty}
             tone="strength"
           />
           <InsightList
             title={t.parentReport.weaknessesTitle}
-            icon={<AlertTriangle className="h-4 w-4 text-orange-400" />}
+            icon={<AlertTriangle className="h-4 w-4 text-flame" />}
             items={chapterInsights.weaknesses}
             emptyLabel={t.parentReport.weaknessesEmpty}
             tone="weakness"
@@ -173,9 +171,9 @@ export function ReportContent({ report }: { report: ReportData }) {
       {/* Score trend */}
       <div className="bg-black/50 border border-border/50 rounded-xl p-4 flex items-center gap-3">
         {summary.scoreTrend > 0 ? (
-          <TrendingUp className="w-5 h-5 text-green-400" />
+          <TrendingUp className="w-5 h-5 text-success" />
         ) : summary.scoreTrend < 0 ? (
-          <TrendingDown className="w-5 h-5 text-red-400" />
+          <TrendingDown className="w-5 h-5 text-destructive" />
         ) : (
           <Minus className="w-5 h-5 text-muted-foreground" />
         )}
@@ -184,9 +182,9 @@ export function ReportContent({ report }: { report: ReportData }) {
           <span
             className={
               summary.scoreTrend > 0
-                ? "text-green-400"
+                ? "text-success"
                 : summary.scoreTrend < 0
-                  ? "text-red-400"
+                  ? "text-destructive"
                   : "text-muted-foreground"
             }
           >
@@ -199,8 +197,8 @@ export function ReportContent({ report }: { report: ReportData }) {
 
       {/* Activity chart (simple bar chart) */}
       <div className="bg-black/50 border border-border/50 rounded-xl p-4">
-        <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-          <Calendar className="w-5 h-5 text-[color:var(--gold)]" />
+        <h3 className="text-foreground font-semibold mb-4 flex items-center gap-2">
+          <Calendar className="w-5 h-5 text-gold" />
           {t.parentReport.activityTitle}
         </h3>
         <div className="flex items-end gap-[2px] h-32 overflow-x-auto">
@@ -215,9 +213,7 @@ export function ReportContent({ report }: { report: ReportData }) {
               >
                 <div
                   className={`w-full rounded-t transition-colors ${
-                    day.exercises > 0
-                      ? "print-fill bg-[color:var(--gold)] hover:opacity-80"
-                      : "bg-muted/50"
+                    day.exercises > 0 ? "print-fill bg-gold hover:opacity-80" : "bg-muted/50"
                   }`}
                   style={{ height: `${Math.max(height, 4)}%` }}
                 />
@@ -234,8 +230,8 @@ export function ReportContent({ report }: { report: ReportData }) {
       {/* Subject breakdown */}
       {subjectStats.length > 0 && (
         <div className="bg-black/50 border border-border/50 rounded-xl p-4">
-          <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-green-400" />
+          <h3 className="text-foreground font-semibold mb-4 flex items-center gap-2">
+            <BookOpen className="w-5 h-5 text-success" />
             {t.parentReport.perSubjectTitle}
           </h3>
           <div className="space-y-3">
@@ -283,37 +279,37 @@ function VerdictCard({ score, verdict }: { score: number; verdict: string }) {
     excellent: {
       label: t.parentReport.verdictExcellent,
       desc: t.parentReport.verdictExcellentDesc,
-      color: "text-green-400",
-      bg: "from-green-900/30 to-emerald-900/30 border-green-700/30",
-      icon: <Star className="w-6 h-6 text-green-400" />,
+      color: "text-success",
+      bg: "border-success/30 bg-success/10",
+      icon: <Star className="w-6 h-6 text-success" />,
     },
     good: {
       label: t.parentReport.verdictGood,
       desc: t.parentReport.verdictGoodDesc,
-      color: "text-blue-400",
-      bg: "from-blue-900/30 to-cyan-900/30 border-blue-700/30",
-      icon: <CheckCircle className="w-6 h-6 text-blue-400" />,
+      color: "text-primary",
+      bg: "border-primary/30 bg-primary/10",
+      icon: <CheckCircle className="w-6 h-6 text-primary" />,
     },
     average: {
       label: t.parentReport.verdictAverage,
       desc: t.parentReport.verdictAverageDesc,
-      color: "text-yellow-400",
-      bg: "from-yellow-900/30 to-amber-900/30 border-yellow-700/30",
-      icon: <AlertTriangle className="w-6 h-6 text-yellow-400" />,
+      color: "text-gold",
+      bg: "border-gold/30 bg-gold/10",
+      icon: <AlertTriangle className="w-6 h-6 text-gold" />,
     },
     needs_improvement: {
       label: t.parentReport.verdictNeedsImprovement,
       desc: t.parentReport.verdictNeedsImprovementDesc,
-      color: "text-orange-400",
-      bg: "from-orange-900/30 to-red-900/30 border-orange-700/30",
-      icon: <AlertTriangle className="w-6 h-6 text-orange-400" />,
+      color: "text-flame",
+      bg: "border-flame/30 bg-flame/10",
+      icon: <AlertTriangle className="w-6 h-6 text-flame" />,
     },
     inactive: {
       label: t.parentReport.verdictInactive,
       desc: t.parentReport.verdictInactiveDesc,
-      color: "text-red-400",
-      bg: "from-red-900/30 to-rose-900/30 border-red-700/30",
-      icon: <AlertTriangle className="w-6 h-6 text-red-400" />,
+      color: "text-destructive",
+      bg: "border-destructive/30 bg-destructive/10",
+      icon: <AlertTriangle className="w-6 h-6 text-destructive" />,
     },
   };
 
@@ -323,7 +319,7 @@ function VerdictCard({ score, verdict }: { score: number; verdict: string }) {
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className={`bg-gradient-to-r ${c.bg} border rounded-xl p-4 md:p-6 flex items-center gap-3 md:gap-4`}
+      className={`${c.bg} border rounded-xl p-4 md:p-6 flex items-center gap-3 md:gap-4`}
     >
       <span className="shrink-0">{c.icon}</span>
       <div className="min-w-0 flex-1">
@@ -372,7 +368,7 @@ function MetricCard({
   return (
     <div className="bg-black/50 border border-border/50 rounded-xl p-4 text-center">
       <div className="flex justify-center mb-2">{icon}</div>
-      <div className="text-xl font-bold text-white">{value}</div>
+      <div className="text-xl font-bold text-foreground">{value}</div>
       <div className="text-xs text-muted-foreground mt-1">{label}</div>
     </div>
   );
@@ -388,11 +384,11 @@ function StatBadge({
   value: string | number;
 }) {
   return (
-    <div className="flex items-center gap-2 bg-black/60 rounded-lg px-3 py-2 border border-[color:var(--gold)]/30">
+    <div className="flex items-center gap-2 bg-black/60 rounded-lg px-3 py-2 border border-gold/30">
       {icon}
       <div>
         <div className="text-xs text-muted-foreground">{label}</div>
-        <div className="text-sm font-bold text-white">{value}</div>
+        <div className="text-sm font-bold text-foreground">{value}</div>
       </div>
     </div>
   );
@@ -412,14 +408,14 @@ function WeekCompareCell({
   const delta = current - previous;
   return (
     <div className="rounded-lg border border-border/50 bg-black/40 p-3 text-center">
-      <div className="text-xl font-bold text-white">
+      <div className="text-xl font-bold text-foreground">
         {current}
         {suffix}
       </div>
       <div className="mt-0.5 text-xs text-muted-foreground">{label}</div>
       <div
         className={`mt-1 inline-flex items-center gap-1 text-xs font-semibold ${
-          delta > 0 ? "text-green-400" : delta < 0 ? "text-red-400" : "text-muted-foreground"
+          delta > 0 ? "text-success" : delta < 0 ? "text-destructive" : "text-muted-foreground"
         }`}
       >
         {delta > 0 ? (
@@ -456,12 +452,10 @@ function InsightList({
   return (
     <div
       className={`rounded-lg border p-3 ${
-        tone === "strength"
-          ? "border-green-700/30 bg-green-900/10"
-          : "border-orange-700/30 bg-orange-900/10"
+        tone === "strength" ? "border-success/30 bg-success/10" : "border-flame/30 bg-flame/10"
       }`}
     >
-      <div className="flex items-center gap-2 font-semibold text-white">
+      <div className="flex items-center gap-2 font-semibold text-foreground">
         {icon}
         {title}
       </div>
@@ -472,7 +466,7 @@ function InsightList({
           {items.map((c) => (
             <li key={c.chapterId} className="flex items-center justify-between gap-2 text-sm">
               <div className="min-w-0">
-                <div className="truncate text-white">{c.chapterTitle}</div>
+                <div className="truncate text-foreground">{c.chapterTitle}</div>
                 <div className="text-xs text-muted-foreground">
                   {c.subjectName} ·{" "}
                   {t.parentReport.insightAttempts.replace("{n}", String(c.attempts))}
@@ -480,9 +474,7 @@ function InsightList({
               </div>
               <span
                 className={`shrink-0 rounded-md px-2 py-1 text-xs font-bold ${
-                  tone === "strength"
-                    ? "bg-green-900/40 text-green-300"
-                    : "bg-orange-900/40 text-orange-300"
+                  tone === "strength" ? "bg-success/20 text-success" : "bg-flame/20 text-flame"
                 }`}
               >
                 {c.avgScore}%

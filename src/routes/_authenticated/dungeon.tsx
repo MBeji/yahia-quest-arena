@@ -595,7 +595,7 @@ function DungeonPage() {
               const isWrong = showFeedback && isSelected && answerWasCorrect === false;
               let cls = "border-gold/20 bg-background/40 hover:border-gold/60 hover:bg-gold/5";
               if (showFeedback) {
-                if (isCorrect) cls = "border-emerald-500 bg-emerald-500/15";
+                if (isCorrect) cls = "border-success bg-success/15";
                 else if (isWrong) cls = "border-destructive bg-destructive/15";
                 else cls = "border-border/30 bg-background/20 opacity-50";
               } else if (isSelected) {
@@ -611,7 +611,7 @@ function DungeonPage() {
               if (isCorrect) {
                 return (
                   <span className="flex shrink-0 items-center">
-                    <CheckCircle2 className="h-5 w-5 text-emerald-500" aria-hidden="true" />
+                    <CheckCircle2 className="h-5 w-5 text-success" aria-hidden="true" />
                     <span className="sr-only">{t.dungeon.correctMsg}</span>
                   </span>
                 );
@@ -633,7 +633,7 @@ function DungeonPage() {
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              className={`mt-4 rounded-xl border p-3 text-sm font-semibold ${isCorrectAnswer ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300" : "border-destructive/30 bg-destructive/10 text-destructive"}`}
+              className={`mt-4 rounded-xl border p-3 text-sm font-semibold ${isCorrectAnswer ? "border-success/30 bg-success/10 text-success" : "border-destructive/30 bg-destructive/10 text-destructive"}`}
             >
               {isCorrectAnswer ? (
                 <span className="flex items-center gap-2">
