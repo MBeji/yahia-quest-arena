@@ -495,6 +495,18 @@ export type TranslationKeys = {
     college: string;
     secondaire: string;
   };
+  // Lycée year → section drill-down (étude 16 D-5/R-2) — shared by the
+  // onboarding picker and the public catalogue. {n} placeholders.
+  lycee: {
+    year2: string;
+    year3: string;
+    yearBac: string;
+    /** "{n} sections" */
+    sections: string;
+    /** "{n} disponibles" */
+    available: string;
+    pickSection: string;
+  };
   // Interest votes on coming-soon parcours (+ admin ranking)
   parcoursInterest: {
     cta: string;
@@ -752,6 +764,8 @@ export type TranslationKeys = {
       cardComingSoon: string;
       cardContent: string;
       cardConcoursBadge: string;
+      /** Sober description of a lycée year page (public register). */
+      lyceeYearDesc: string;
     };
     niveau: {
       backProgramme: string;
@@ -761,6 +775,8 @@ export type TranslationKeys = {
       comingSoonDesc: string;
       choose: string;
       choosing: string;
+      /** R-6 étude 16 — honest note under the « choose » switch button. */
+      switchNote: string;
     };
     reader: {
       defaultSubject: string;

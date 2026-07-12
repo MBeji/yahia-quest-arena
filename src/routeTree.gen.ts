@@ -42,6 +42,7 @@ import { Route as AuthenticatedAdminParcoursInterestRouteImport } from './routes
 import { Route as AuthenticatedAdminContentReportsRouteImport } from './routes/_authenticated/admin.content-reports'
 import { Route as AuthenticatedAdminBugReportsRouteImport } from './routes/_authenticated/admin.bug-reports'
 import { Route as AuthenticatedAdminBetaRequestsRouteImport } from './routes/_authenticated/admin.beta-requests'
+import { Route as PublicProgrammeLyceeAnneeRouteImport } from './routes/_public/programme_.lycee.$annee'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -218,6 +219,12 @@ const AuthenticatedAdminBetaRequestsRoute =
     path: '/admin/beta-requests',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const PublicProgrammeLyceeAnneeRoute =
+  PublicProgrammeLyceeAnneeRouteImport.update({
+    id: '/programme_/lycee/$annee',
+    path: '/programme/lycee/$annee',
+    getParentRoute: () => PublicRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
@@ -251,6 +258,7 @@ export interface FileRoutesByFullPath {
   '/exercice/$exerciseId': typeof PublicExerciceExerciseIdRoute
   '/matiere/$subjectId': typeof PublicMatiereSubjectIdRoute
   '/niveau/$parcoursId': typeof PublicNiveauParcoursIdRoute
+  '/programme/lycee/$annee': typeof PublicProgrammeLyceeAnneeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
@@ -284,6 +292,7 @@ export interface FileRoutesByTo {
   '/exercice/$exerciseId': typeof PublicExerciceExerciseIdRoute
   '/matiere/$subjectId': typeof PublicMatiereSubjectIdRoute
   '/niveau/$parcoursId': typeof PublicNiveauParcoursIdRoute
+  '/programme/lycee/$annee': typeof PublicProgrammeLyceeAnneeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -320,6 +329,7 @@ export interface FileRoutesById {
   '/_public/exercice/$exerciseId': typeof PublicExerciceExerciseIdRoute
   '/_public/matiere/$subjectId': typeof PublicMatiereSubjectIdRoute
   '/_public/niveau/$parcoursId': typeof PublicNiveauParcoursIdRoute
+  '/_public/programme_/lycee/$annee': typeof PublicProgrammeLyceeAnneeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -355,6 +365,7 @@ export interface FileRouteTypes {
     | '/exercice/$exerciseId'
     | '/matiere/$subjectId'
     | '/niveau/$parcoursId'
+    | '/programme/lycee/$annee'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -388,6 +399,7 @@ export interface FileRouteTypes {
     | '/exercice/$exerciseId'
     | '/matiere/$subjectId'
     | '/niveau/$parcoursId'
+    | '/programme/lycee/$annee'
   id:
     | '__root__'
     | '/_authenticated'
@@ -423,6 +435,7 @@ export interface FileRouteTypes {
     | '/_public/exercice/$exerciseId'
     | '/_public/matiere/$subjectId'
     | '/_public/niveau/$parcoursId'
+    | '/_public/programme_/lycee/$annee'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -666,6 +679,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminBetaRequestsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_public/programme_/lycee/$annee': {
+      id: '/_public/programme_/lycee/$annee'
+      path: '/programme/lycee/$annee'
+      fullPath: '/programme/lycee/$annee'
+      preLoaderRoute: typeof PublicProgrammeLyceeAnneeRouteImport
+      parentRoute: typeof PublicRoute
+    }
   }
 }
 
@@ -738,6 +758,7 @@ interface PublicRouteChildren {
   PublicExerciceExerciseIdRoute: typeof PublicExerciceExerciseIdRoute
   PublicMatiereSubjectIdRoute: typeof PublicMatiereSubjectIdRoute
   PublicNiveauParcoursIdRoute: typeof PublicNiveauParcoursIdRoute
+  PublicProgrammeLyceeAnneeRoute: typeof PublicProgrammeLyceeAnneeRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
@@ -749,6 +770,7 @@ const PublicRouteChildren: PublicRouteChildren = {
   PublicExerciceExerciseIdRoute: PublicExerciceExerciseIdRoute,
   PublicMatiereSubjectIdRoute: PublicMatiereSubjectIdRoute,
   PublicNiveauParcoursIdRoute: PublicNiveauParcoursIdRoute,
+  PublicProgrammeLyceeAnneeRoute: PublicProgrammeLyceeAnneeRoute,
 }
 
 const PublicRouteWithChildren =

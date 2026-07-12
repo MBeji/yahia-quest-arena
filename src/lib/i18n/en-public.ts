@@ -99,6 +99,8 @@ export const enPublic: TranslationKeys["public"] = {
     cardComingSoon: "Coming soon",
     cardContent: "Lessons · summaries · exercises",
     cardConcoursBadge: "Exam",
+    lyceeYearDesc:
+      "The official sections of this secondary-school year. Lessons, summaries and exercises, free to access.",
   },
   niveau: {
     backProgramme: "Programme",
@@ -108,6 +110,8 @@ export const enPublic: TranslationKeys["public"] = {
     comingSoonDesc: "This level is being prepared. Come back soon!",
     choose: "Choose this track",
     choosing: "Selecting…",
+    switchNote:
+      "Your XP, coins, badges and streak carry over; your per-subject progress stays specific to each class.",
   },
   reader: {
     defaultSubject: "Lesson",

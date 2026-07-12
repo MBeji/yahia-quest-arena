@@ -526,6 +526,14 @@ export const ar: TranslationKeys = {
     college: "الإعدادي",
     secondaire: "الثانوي",
   },
+  lycee: {
+    year2: "السنة الثانية ثانوي",
+    year3: "السنة الثالثة ثانوي",
+    yearBac: "الباكالوريا",
+    sections: "{n} شعب",
+    available: "{n} متاحة",
+    pickSection: "اختر شعبتك",
+  },
   parcoursInterest: {
     cta: "هذا يهمّني",
     interested: "مهتمّ ✓",

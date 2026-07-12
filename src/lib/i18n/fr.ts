@@ -528,6 +528,14 @@ export const fr: TranslationKeys = {
     college: "Collège",
     secondaire: "Secondaire",
   },
+  lycee: {
+    year2: "2ème année",
+    year3: "3ème année",
+    yearBac: "Baccalauréat",
+    sections: "{n} sections",
+    available: "{n} disponibles",
+    pickSection: "Choisis ta section",
+  },
   parcoursInterest: {
     cta: "Ça m'intéresse",
     interested: "Intéressé·e ✓",
