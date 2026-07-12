@@ -135,6 +135,12 @@ export const frPublic: TranslationKeys["public"] = {
   subject: {
     chapter: "Chapitre {n}",
     readCourse: "Lire le cours",
+    resumeHere: "Reprendre ici",
+    missionsProgress: "{done}/{total} missions",
+    quizToPass: "quiz à passer",
+    todo: "à faire",
+    unlocksChapter: "déverrouille le chapitre",
+    quizContract: "Réussis le quiz (≥ {pct} %) pour déverrouiller les missions de ce chapitre.",
   },
   practice: {
     back: "Retour à la matière",
