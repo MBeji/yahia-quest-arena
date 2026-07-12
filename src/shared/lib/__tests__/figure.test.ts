@@ -73,4 +73,12 @@ describe("sanitizeSvg (security boundary)", () => {
     const out = sanitizeSvg('<svg><rect fill="url(javascript:alert(1))" /></svg>');
     expect(out.toLowerCase()).not.toContain("javascript:");
   });
+
+  it("strips data: and vbscript: payloads", () => {
+    const dataOut = sanitizeSvg('<svg><rect fill="url(data:text/html;base64,x)" /></svg>');
+    expect(dataOut.toLowerCase()).not.toContain("data:");
+
+    const vbscriptOut = sanitizeSvg('<svg><rect fill="url(vbscript:msgbox(1))" /></svg>');
+    expect(vbscriptOut.toLowerCase()).not.toContain("vbscript:");
+  });
 });
