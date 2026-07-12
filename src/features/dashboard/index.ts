@@ -30,5 +30,18 @@ export { ParcoursInterestAdmin } from "./components/parcours-interest-admin";
 // (~350 kB). Import it directly from "@/features/dashboard/components/program-hub"
 // so the barrel (consumed by many server-fn callers) stays light.
 export { useParcoursInterest, type ParcoursInterestState } from "./use-parcours-interest";
-export { buildPrograms, PROGRAM_FAMILIES, CYCLE_ORDER } from "./program-families";
-export type { Program, ProgramParcours, ProgramKind } from "./program-families";
+export {
+  buildPrograms,
+  buildLyceeYears,
+  lyceeYearOf,
+  PROGRAM_FAMILIES,
+  CYCLE_ORDER,
+  LYCEE_SECTION_YEARS,
+} from "./program-families";
+export type {
+  Program,
+  ProgramParcours,
+  ProgramKind,
+  LyceeYear,
+  LyceeYearGroup,
+} from "./program-families";

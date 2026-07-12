@@ -24,17 +24,27 @@ type CountsData = { counts: { parcoursId: string; name: string; count: number }[
 
 /**
  * Interest-vote state + optimistic toggle for coming-soon parcours, shared by the
- * onboarding school step and the Explorer hub. Encapsulates the two queries
- * (my votes + aggregate counts) and the toggle mutation so both routes stay thin.
+ * onboarding school step, the Explorer hub and the public lycée year page.
+ * Encapsulates the two queries (my votes + aggregate counts) and the toggle
+ * mutation so the routes stay thin.
+ *
+ * Anonymous surfaces (étude 16 D-7): pass `canVote: false` — the aggregate
+ * counts still load (the RPC is anon-granted), the per-user votes query is
+ * disabled, and a toggle attempt calls `onRequireAuth` (honest sign-in invite)
+ * instead of hitting the authenticated RPC.
  */
-export function useParcoursInterest(): ParcoursInterestState {
+export function useParcoursInterest(opts?: {
+  canVote?: boolean;
+  onRequireAuth?: () => void;
+}): ParcoursInterestState {
+  const canVote = opts?.canVote !== false;
   const t = useT();
   const queryClient = useQueryClient();
   const fetchMine = useServerFn(getMyParcoursInterests);
   const fetchCounts = useServerFn(getParcoursInterestCounts);
   const toggle = useServerFn(toggleParcoursInterest);
 
-  const mineQuery = useQuery({ queryKey: MINE_KEY, queryFn: () => fetchMine() });
+  const mineQuery = useQuery({ queryKey: MINE_KEY, queryFn: () => fetchMine(), enabled: canVote });
   const countsQuery = useQuery({ queryKey: COUNTS_KEY, queryFn: () => fetchCounts() });
 
   const mutation = useMutation({
@@ -82,6 +92,12 @@ export function useParcoursInterest(): ParcoursInterestState {
     counts,
     mine: new Set(mineQuery.data?.parcoursIds ?? []),
     togglingId: mutation.isPending ? (mutation.variables ?? null) : null,
-    onToggle: (id: string) => mutation.mutate(id),
+    onToggle: (id: string) => {
+      if (!canVote) {
+        opts?.onRequireAuth?.();
+        return;
+      }
+      mutation.mutate(id);
+    },
   };
 }

@@ -67,15 +67,20 @@ export function ParcoursSubjects({
         </h1>
         <p className="mt-2 text-muted-foreground">{t.public.niveau.chooseSubject}</p>
         {canChoose && (
-          <button
-            type="button"
-            onClick={onChoose}
-            disabled={isChoosing}
-            className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition hover:opacity-90 disabled:opacity-60"
-          >
-            {isChoosing ? t.public.niveau.choosing : t.public.niveau.choose}
-            <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
-          </button>
+          <>
+            <button
+              type="button"
+              onClick={onChoose}
+              disabled={isChoosing}
+              className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition hover:opacity-90 disabled:opacity-60"
+            >
+              {isChoosing ? t.public.niveau.choosing : t.public.niveau.choose}
+              <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
+            </button>
+            {/* R-6 (étude 16) : le switch conserve les acquis globaux (XP, pièces,
+                badges, série) ; la progression par matière est propre à chaque classe. */}
+            <p className="mt-2 text-xs text-muted-foreground">{t.public.niveau.switchNote}</p>
+          </>
         )}
       </header>
 
