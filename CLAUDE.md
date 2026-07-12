@@ -1,10 +1,12 @@
-# CLAUDE.md — yahia-quest-arena (XP Scholars)
+# CLAUDE.md — yahia-quest-arena (Na9ra Nal3ab)
 
 > **This file is the single canonical source of truth.** When it disagrees with any
 > other doc, CLAUDE.md wins — fix the other doc. [`ARCHITECTURE.md`](./ARCHITECTURE.md)
 > is the deeper architecture companion; the per-topic policy files under `docs/` and the
 > Copilot pointer at `.github/copilot-instructions.md` defer to these two. This file
-> covers commands, conventions, and gotchas not obvious from the code.
+> covers commands, conventions, and gotchas not obvious from the code. **Project state**
+> (current phase, dated decisions, real feature/étude/chantier status) lives in
+> [`STATUS.md`](./STATUS.md) — read it before trusting any "is X live?" claim.
 
 ## What this is
 
@@ -27,10 +29,16 @@ and tackle a timed "dungeon" boss mode. Shonen/RPG manga aesthetic, trilingual (
   Everything below `subjects` (chapters/exercises + all gameplay: XP, quiz gate, dungeon,
   leaderboard) is theme/grade-agnostic.
 - A **parcours** is the student's enrolled track (`profiles.current_parcours_id`), resolved from a
-  `(theme, grade)` pair. The two PREMIUM **concours** parcours (9ème, 6ème) are the paid products;
-  the rest are FREE **exploration** parcours. Premium missions need a per-parcours **entitlement**
-  (see "Premium gate" under Data model); the free preview is the comprehension quiz + difficulty-1.
-  The dashboard is scoped to the active parcours; the Explorer (`/themes`) lets a student switch.
+  `(theme, grade)` pair. Kinds: `concours` (exam-year milestones — 9ème, 6ème, bac-math),
+  `scolaire` (one per school grade) and `libre` (standalone themes) — ~35 parcours total.
+  **Free phase (current)**: since the 2026-06-21 pivot and the étude 15 Q-2 arbitrage
+  (2026-07-10), the app is **100 % free** — migration `20260711100000` set `is_premium = false`
+  on every parcours, so **no mission is gated**. The per-parcours **entitlement** machinery
+  stays in place but **dormant** (see "Access gate" under Data model; étude 01 — gelée — is the
+  designated re-activation vehicle). No user-facing surface may say "premium/abonnement/payant"
+  during this phase (étude 15 D-3).
+  The dashboard is scoped to the active parcours; the public catalogue (`/programme`) doubles as
+  the Explorer (`/themes` 301-redirects there) and lets a student switch.
 
 **Stack**: Vite 8 · TanStack Start (SSR + file routing + server fns) · React 19 · TanStack Query 5 · Supabase (Postgres + Auth + RLS) · Tailwind 4 / Radix-shadcn · **deploys to Vercel** — push to `main` auto-deploys prod via `scripts/build-vercel.mjs` (`vercel.json`). A Cloudflare Workers config also exists, but Vercel is the live target. Package manager: **npm** (`package-lock.json`; Node 22 / npm 10 in CI). Tests: Vitest 4 + Testing Library (unit) and Playwright (e2e).
 
@@ -104,10 +112,14 @@ staged files); `pre-push` runs `npm run verify`. Installed automatically via the
 (school theme only) → `subjects` → `chapters` → `exercises` → `questions` (QCM, `options` JSONB)
 · `attempts` · `exercise_sessions` · `student_badges` /
 `shop_items` / `inventory_items` · `daily_objectives` · `weekly_quests` ·
-`spaced_repetition_schedule` (SM-2) · `dungeon_runs` · `parent_student_links` · `parcours`
-(sellable tracks — FREE or PREMIUM) · `parcours_entitlements` (per-parcours grants; `source` ∈
-{purchase/beta/gift/family}; family pack via `parent_student_links`) · `beta_access_requests` ·
-`content_reports` (user-flagged content errors) · `themes` / `grades` · `question_attempts`
+`spaced_repetition_schedule` (SM-2) · `dungeon_runs` · `duel_queue` / `duels` /
+`duel_participants` (real-time duels + weekly leagues — étude 05) · `parent_student_links` ·
+`parcours` (tracks — kinds concours/scolaire/libre; **all free in the current phase**) ·
+`parcours_entitlements` (per-parcours grants, dormant; `source` ∈
+{purchase/beta/gift/family}; family pack via `parent_student_links`) · `parcours_interest`
+(votes on `coming_soon` parcours) · `beta_access_requests` ·
+`content_reports` (user-flagged content errors) · `bug_reports` (user bug reports) ·
+`themes` / `grades` · `question_attempts`
 (append-only per-question telemetry — moteur adaptatif étude 04) + `user_misconceptions` (its
 per-(user, tag) aggregate, trigger-maintained). (The old `subscriptions` columns + RPCs were
 removed in migration `20260609000000`.)
@@ -128,14 +140,19 @@ RPC (atomic scoring + rewards + badge unlocks). All tables have RLS; the two pri
 functions are `REVOKE`d from anon/authenticated. Gameplay thresholds are centralized in
 `src/shared/constants/gamification.ts` — change rules there, not inline.
 
-**Premium gate (per-parcours).** Access is decided server-side by the single authoritative RPC
-`resolve_exercise_access(exercise)`: a FREE parcours is always open; a PREMIUM (concours) parcours
-opens a mission only for a holder of a live `parcours_entitlement` — directly, or via an active
-linked parent (the **family pack**) — **except the free preview** (the chapter comprehension quiz +
-difficulty-1 missions, `FREE_PREVIEW_MAX_DIFFICULTY`). `has_parcours_entitlement(user, parcours)`
-encapsulates the check; `set_current_parcours` sets the student's active track at onboarding; admin
-provisioning is `admin_grant_parcours` / `admin_revoke_parcours` / `admin_list_parcours_entitlements`.
-The Dungeon is a premium perk (any concours entitlement). The legacy global "difficulty ≥ 3 +
+**Access gate (per-parcours) — premium machinery DORMANT in the free phase.** Access is decided
+server-side by the single authoritative RPC `resolve_exercise_access(exercise)`: a non-premium
+parcours is always open; a premium parcours would open a mission only for a holder of a live
+`parcours_entitlement` — directly, or via an active linked parent (the **family pack**) —
+**except the free preview** (the chapter comprehension quiz + difficulty-1 missions,
+`FREE_PREVIEW_MAX_DIFFICULTY`). Since migration `20260711100000` (free phase) **every parcours has
+`is_premium = false`**, so the first branch always applies and nothing is gated; the paywall
+component (`SubscriptionPaywall`) and the user-facing beta-access form are wired but unreachable.
+`has_parcours_entitlement(user, parcours)` encapsulates the check; `set_current_parcours` sets the
+student's active track at onboarding; admin provisioning stays live at `/admin/subscriptions`
+(`admin_grant_parcours` / `admin_revoke_parcours` / `admin_list_parcours_entitlements`).
+The Dungeon is **no longer entitlement-gated** — `get_dungeon_access()` keeps only the
+progression locks (PREREQ / LEVEL / DAILY_LIMIT). The legacy global "difficulty ≥ 3 +
 subscription" gate is **gone** — no code reads `subscription_*` / `has_active_subscription`.
 
 **Consumables (shop items):** `shop_items.effect_payload` (JSONB) drives three live
@@ -233,19 +250,29 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
 
 ## Conventions
 
-- Feature-based: `src/features/{auth,dashboard,quest,dungeon,shop,progression,parent-report,subscription,content-report,parcours}/`
-  (10 features). Each has `index.ts` (public barrel), `{name}.server.ts`, optional
-  `components/`, `__tests__/`. The three newer features:
-  - **`subscription/`** — premium gate + admin: per-parcours **entitlements** (a concours parcours
-    requires a live entitlement; free preview = comprehension quiz + difficulty-1), provisioned via
-    `admin_grant_parcours`; beta-access requests; the out-of-band (phone) paywall component.
-  - **`content-report/`** — user-flagged content errors ("Signaler une erreur") + admin triage.
+- Feature-based: `src/features/{auth,dashboard,quest,dungeon,duel,shop,progression,parent-report,subscription,content-report,bug-report,notifications,parcours}/`
+  (13 features). Each has `index.ts` (public barrel), `{name}.server.ts`, optional
+  `components/`, `__tests__/`. The notable ones beyond the historical core:
+  - **`subscription/`** — the **dormant premium layer**: per-parcours **entitlements** + the
+    out-of-band (phone) paywall component + beta-access requests. Intact and reversible, but
+    inert in the free phase (see "Access gate"); the admin consoles (`/admin/subscriptions`,
+    `/admin/beta-requests`) stay live.
+  - **`duel/`** — real-time duels + weekly leagues (étude 05, shipped): matchmaking queue,
+    arena, Realtime presence/progress with authoritative polling fallback, league standings.
+  - **`content-report/`** — user-flagged content errors ("Signaler une erreur") + admin triage
+    (`/admin/content-reports`). Technically end-to-end; the weekly ops triage process is the
+    part not yet running (see STATUS.md).
+  - **`bug-report/`** — global bug-report launcher + `/admin/bug-reports` triage.
+  - **`notifications/`** — Web-push subscriptions + the service-worker push handlers.
   - **`parcours/`** — gamified journey-map / adventure-path UI: a world map of **subjects**
-    (`JourneyMap`/`buildSubjectNodes` at `/parcours`). Every map node routes to the single
-    chapter screen `/subject/$subjectId` (which carries the quiz-gate + exercises). The
-    earlier per-subject zigzag chapter map (`/parcours/$subjectId`, `SubjectPath`,
-    `buildChapterNodes`) was removed — it duplicated `/subject/$subjectId` with a divergent
-    unlock logic; there is now **one** chapter screen.
+    (`JourneyMap`/`buildSubjectNodes` at `/parcours`). Every map node routes to the **shared
+    public subject hub** `/matiere/$subjectId` (chapters + quiz-gate + exercises — chantier
+    C8 converged the connected screens onto the public « Référence » register). Four legacy
+    authenticated paths survive only as permanent 301 redirects: `/subject/$subjectId` →
+    `/matiere/$subjectId`, `/lesson/$chapterId` → `/chapitre/$chapterId`, and `/themes` +
+    `/themes/$familyId` → `/programme` (the public catalogue doubles as the Explorer). The
+    earlier per-subject zigzag chapter map (`SubjectPath`/`buildChapterNodes`) was removed;
+    there is **one** chapter screen.
 
   (Leaderboard has no feature folder — `getLeaderboard` lives in `dashboard.server.ts`.
   Onboarding has no feature folder — it is an inline route at `routes/_authenticated/onboarding.tsx`.)
@@ -308,6 +335,8 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
   fully-green patch/minor PR). Cadence + traps: `docs/dependency-maintenance.md`.
 - **Policy docs (`docs/*.md`).** Topic-specific rules referenced from here:
   `docs/environment-variables.md`, `docs/logging-standard.md`, `docs/xss-rendering-policy.md`,
+  `docs/content-voice-and-composition.md` (étude 15 — voix/ton par audience, lexique trilingue,
+  règles et gabarits de composition des écrans : normatif pour tout texte user-facing),
   `docs/release-tagging-policy.md`, `docs/dependency-maintenance.md`,
   `docs/ci-cd-and-branch-protection.md`, `docs/passation.md` (the end-of-dev →
   production walkthrough), `docs/content-generation-pipeline.md` (narrated, diagrammed
@@ -320,7 +349,7 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
   `FableEtudes/03-types-questions-natifs` (fully executed); the QCM-encodable
   interactive formats live in `content-engine/references/interactive-formats.md`), and
   `docs/lycee-architecture.md` (secondary-cycle architecture: sections as grade nodes +
-  slugs/subject-id conventions, the ar→fr transition bridge, bac-\* premium parcours, the full
+  slugs/subject-id conventions, the ar→fr transition bridge, bac-\* parcours (premium dormant), the full
   lycée mission ladder incl. `NN-annales-bac`/`NN-pont-linguistique`, seed-migration spec and
   phased rollout). Two **functional** how-to guides (audience: authors / product / ops, French)
   complement the normative specs above: `docs/guide-types-questions-natifs.md` (étude 03 — when to
@@ -329,8 +358,10 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
   These defer
   to CLAUDE.md / ARCHITECTURE.md for anything that overlaps.
 - **Epic studies (`FableEtudes/`).** Complete functional + technical architecture dossiers for
-  upcoming epics (paiement en ligne, examen blanc, types de questions natifs, moteur adaptatif,
-  duels/ligues, PWA offline), written by the architect model and executed **lot by lot** by a
+  the project's epics — 16 studies, from paiement en ligne (**gelée** post-pivot gratuité) to
+  ouverture du lycée; several are already **delivered** (03 types natifs, 05 duels/ligues,
+  13 ScribeKit, 14 refonte UX) — statuses live in the index and in `STATUS.md`. Written by the
+  architect model and executed **lot by lot** by a
   cheaper executor model. Start at [`FableEtudes/README.md`](./FableEtudes/README.md): roles
   (architect decides, executor implements, human validates), study lifecycle/statuses, the
   `_TEMPLATE.md` format, and the non-negotiable execution rules (one lot = one PR, closed scope,
@@ -403,8 +434,8 @@ When unsure about scope or a destructive action, ask before proceeding.
 - Env vars required at runtime: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` (set in the deploy
   platform). Missing → middleware throws a descriptive error.
 - The Vite config is **inline** in `vite.config.ts` — the TanStack Start, React, Tailwind,
-  Cloudflare and tsconfig-paths plugins are composed by hand (the old
-  `@lovable.dev/vite-tanstack-config` meta-plugin was de-vendored and `bun.lock` dropped).
+  Cloudflare and tsconfig-paths plugins are composed by hand (the scaffold's old vendored
+  meta-plugin was de-vendored and `bun.lock` dropped).
   `manualChunks` there is hand-tuned to the bundle budgets; reshaping vendor groups can
   introduce a circular vendor chunk (prod-crash risk), so change it deliberately and re-run
   `npm run build:check`. The `esbuild` override in `package.json` is a security pin — keep it.

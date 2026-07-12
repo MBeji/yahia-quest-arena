@@ -94,7 +94,7 @@ function McqInput({
             aria-checked={state.isSelected}
             disabled={disabled}
             onClick={() => onChange(option.id)}
-            className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left text-sm transition-all duration-200 ${optionClassName(state)}`}
+            className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-start text-sm transition-all duration-200 ${optionClassName(state)}`}
           >
             <span
               className="flex items-center gap-3"
@@ -194,7 +194,7 @@ function MultiSelect({
               aria-checked={isChecked}
               disabled={disabled}
               onClick={() => toggle(option.id)}
-              className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left text-sm transition-all duration-200 ${
+              className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-start text-sm transition-all duration-200 ${
                 isChecked
                   ? "border-(--gold) bg-(--gold)/15"
                   : "border-border bg-black/40 hover:border-(--gold)/60 hover:bg-black/70"

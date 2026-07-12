@@ -1,7 +1,7 @@
 # Étude 02 — Examen blanc / simulation concours
 
-> **Statut** : brouillon
-> **Priorité** : 02 · **Valeur** : l'expérience « concours » qui justifie les parcours premium (6ème, 9ème, bac) : conditions réelles, classement percentile, diagnostic par matière · **Complexité** : moyenne+
+> **Statut** : brouillon (⚠️ 2026-07-11 : la justification « premium » ci-dessous précède le pivot gratuité — la feature reste pertinente en offre gratuite, le _pourquoi_ est à re-scoper à la validation)
+> **Priorité** : 02 · **Valeur** : l'expérience « concours » en conditions réelles : classement percentile, diagnostic par matière (rédaction d'origine : « justifie les parcours premium ») · **Complexité** : moyenne+
 > **Architecte** : Fable (claude-fable-5), 2026-07-04 · **Exécuteur cible** : Sonnet
 > **Dépend de** : contenu exam-style suffisant (paliers d4 + `NN-annales-bac` pour le bac) ; rien côté code
 > **Docs normatifs liés** : CLAUDE.md (Premium gate, gamification centralisée, DoD §7), docs/lycee-architecture.md (palier annales), ARCHITECTURE.md

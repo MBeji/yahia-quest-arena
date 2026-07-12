@@ -7,10 +7,22 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  // Unit tests must stay hermetic: vitest runs in Vite mode "test", so a repo-root
+  // `.env.test` (the DOCUMENTED e2e setup, see e2e/README.md) would otherwise be
+  // loaded into import.meta.env (client.ts reads VITE_SUPABASE_URL). Point envDir
+  // at a directory with no .env* files. The process.env channel of the same leak
+  // (scripts' _env.mjs dotenv side effect) is purged in src/__tests__/setup.ts.
+  envDir: path.resolve(__dirname, "./src/__tests__"),
   test: {
     globals: true,
     environment: "jsdom",
     setupFiles: ["./src/__tests__/setup.ts"],
+    // Several suites `await import("@/features/…")` INSIDE the test, so the
+    // first-import transform/eval of a whole feature graph counts against the
+    // test budget. On a loaded local machine (Windows) that regularly crosses
+    // vitest's 5s default and made `npm run verify` flake on random files; CI
+    // is unaffected. 15s changes no assertion — only the flake threshold.
+    testTimeout: 15_000,
     // scripts/** ships ops-critical helpers (DB-URL normalization, the TEST/PROD
     // ref guards) whose regressions only ever surfaced in the nightly — unit-test
     // them here alongside the app.

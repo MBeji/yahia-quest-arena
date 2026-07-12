@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useMemo } from "react";
-import { RotateCcw, Sparkles, Zap } from "lucide-react";
-import { checkAnswersPublic, scoreQuizPublic } from "@/features/quest";
+import { useMemo, useRef } from "react";
+import { Dumbbell, RotateCcw, Sparkles, Zap } from "lucide-react";
+import { checkAnswersPublic, getChapterLesson, scoreQuizPublic } from "@/features/quest";
 import {
   hasPassedChapterQuiz,
   isQuizGateLocked,
@@ -40,6 +40,12 @@ function ExercicePage() {
   const t = useT();
   const check = useServerFn(checkAnswersPublic);
   const score = useServerFn(scoreQuizPublic);
+  const fetchLesson = useServerFn(getChapterLesson);
+  // A passed quiz unlocks the chapter: keep the happy path unbroken by offering
+  // the chapter's first exercise right on the result screen (audit §D-5). Refs:
+  // set during submit(), read when the result footer renders.
+  const quizJustPassedRef = useRef(false);
+  const nextPracticeRef = useRef<string | null>(null);
 
   const strategy = useMemo<ExercisePlayerStrategy>(
     () => ({
@@ -82,7 +88,18 @@ function ExercicePage() {
           // rushed (>= 4s/question), else a fast random pass would unlock.
           const notRushed = durationSeconds >= totalQuestions * MIN_SECONDS_PER_QUESTION;
           const reachedScore = scorePct >= QUIZ_PASS_THRESHOLD_PCT;
-          if (reachedScore && notRushed) markChapterQuizPassed(chapterId);
+          const passedNow = reachedScore && notRushed;
+          if (passedNow) markChapterQuizPassed(chapterId);
+          quizJustPassedRef.current = passedNow;
+          nextPracticeRef.current = null;
+          if (passedNow) {
+            try {
+              const lesson = await fetchLesson({ data: { chapterId } });
+              nextPracticeRef.current = lesson.practiceExerciseId ?? null;
+            } catch {
+              // continuation is a bonus — the result footer simply omits it
+            }
+          }
           return {
             correct,
             total,
@@ -95,6 +112,7 @@ function ExercicePage() {
             ...neutral,
           };
         }
+        quizJustPassedRef.current = false;
         const r = await check({ data: { exerciseId: exId, answers } });
         return {
           correct: r.correct,
@@ -116,6 +134,17 @@ function ExercicePage() {
       },
       renderResultFooter: ({ exerciseId: exId, subjectId, onReplay }) => (
         <div className="mt-8 space-y-4">
+          {/* Quiz just passed → the chapter is unlocked: continue straight into
+              its first exercise instead of scrolling back through the hub. */}
+          {quizJustPassedRef.current && nextPracticeRef.current && (
+            <Link
+              to="/exercice/$exerciseId"
+              params={{ exerciseId: nextPracticeRef.current }}
+              className="flex items-center justify-center gap-2 rounded-2xl bg-primary p-4 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+            >
+              <Dumbbell className="h-4 w-4" /> {t.public.practice.continueCta}
+            </Link>
+          )}
           <div className="flex flex-wrap justify-center gap-3">
             <button
               type="button"
@@ -158,7 +187,7 @@ function ExercicePage() {
         </div>
       ),
     }),
-    [check, score, isAuthenticated, t],
+    [check, score, fetchLesson, isAuthenticated, t],
   );
 
   // `game-surface` carries the immersive player's light-theme remap (black→white

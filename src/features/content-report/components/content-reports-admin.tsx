@@ -17,7 +17,7 @@ function StatusBadge({ status }: { status: ContentReportStatus }) {
     },
     resolved: {
       label: t.contentReport.statusResolved,
-      cls: "text-emerald-400 border-emerald-500/40 bg-emerald-500/10",
+      cls: "text-success border-success/40 bg-success/10",
     },
     dismissed: {
       label: t.contentReport.statusDismissed,

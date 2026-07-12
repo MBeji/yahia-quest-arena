@@ -28,7 +28,7 @@ export function QuestReviewList({
   getDisplayChoice: (questionId: string, choice: string) => string;
 }) {
   return (
-    <div className="mt-8 text-left">
+    <div className="mt-8 text-start">
       <h2 className="font-display text-xl font-bold">{labels.questReview}</h2>
       <div className="mt-4 space-y-3">
         {review.map((item, reviewIndex) => (

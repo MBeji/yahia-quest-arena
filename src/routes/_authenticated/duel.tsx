@@ -12,6 +12,10 @@ import {
 } from "@/features/duel";
 import { DuelQueueCard } from "@/features/duel/components/duel-queue-card";
 import { DuelLeague } from "@/features/duel/components/duel-league";
+import { Swords } from "lucide-react";
+import { BackLink } from "@/components/ui/back-link";
+import { EmptyState } from "@/components/ui/empty-state";
+import { PageShell } from "@/components/ui/page-shell";
 import { useT } from "@/lib/i18n";
 import { toast } from "sonner";
 
@@ -106,9 +110,14 @@ function DuelHubPage() {
   const past = entries.filter((e) => e.status === "finished" || e.status === "expired");
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6 p-4">
+    <PageShell width="narrow" className="space-y-6">
+      <BackLink to="/dashboard" className="mb-0">
+        {t.common.backToHall}
+      </BackLink>
       <header>
-        <h1 className="text-2xl font-bold">{t.duel.title}</h1>
+        <h1 className="flex items-center gap-2 font-display text-3xl font-bold sm:text-4xl">
+          <Swords className="h-7 w-7 text-gold" /> {t.duel.title}
+        </h1>
       </header>
 
       <DuelQueueCard
@@ -121,18 +130,18 @@ function DuelHubPage() {
 
       {active.length > 0 ? (
         <section className="space-y-2">
-          <h2 className="font-semibold">{t.duel.activeDuels}</h2>
+          <h2 className="font-display text-xl font-bold">{t.duel.activeDuels}</h2>
           {active.map((e) => (
             <div
               key={e.duelId}
-              className="flex items-center justify-between gap-2 rounded-lg border border-border p-3"
+              className="flex items-center justify-between gap-2 rounded-xl border border-border/50 bg-black/40 p-3 backdrop-blur-md"
             >
               <span>{t.duel[STATUS_KEY[e.status]]}</span>
               <div className="flex items-center gap-4">
                 <Link
                   to="/duel/$duelId"
                   params={{ duelId: e.duelId }}
-                  className="font-medium underline-offset-2 hover:underline"
+                  className="inline-flex min-h-11 items-center font-semibold text-gold underline-offset-2 hover:underline"
                 >
                   {e.status === "pending" ? t.duel.play : t.duel.resume}
                 </Link>
@@ -140,7 +149,7 @@ function DuelHubPage() {
                   type="button"
                   onClick={() => forfeitMutation.mutate(e.duelId)}
                   disabled={forfeitMutation.isPending}
-                  className="text-sm text-muted-foreground transition hover:text-destructive disabled:opacity-50"
+                  className="inline-flex min-h-11 items-center text-sm text-muted-foreground transition hover:text-destructive disabled:opacity-50"
                 >
                   {t.duel.forfeit}
                 </button>
@@ -151,21 +160,21 @@ function DuelHubPage() {
       ) : null}
 
       <section className="space-y-2">
-        <h2 className="font-semibold">{t.duel.history}</h2>
+        <h2 className="font-display text-xl font-bold">{t.duel.history}</h2>
         {past.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{t.duel.noHistory}</p>
+          <EmptyState icon={Swords} title={t.duel.noHistory} />
         ) : (
           <ul className="space-y-2">
             {past.map((e) => (
               <li
                 key={e.duelId}
-                className="flex items-center justify-between rounded-lg border border-border p-3 text-sm"
+                className="flex items-center justify-between rounded-xl border border-border/50 bg-black/40 p-3 text-sm backdrop-blur-md"
               >
                 <span className="text-muted-foreground">{t.duel[STATUS_KEY[e.status]]}</span>
                 <Link
                   to="/duel/$duelId"
                   params={{ duelId: e.duelId }}
-                  className="font-medium underline-offset-2 hover:underline"
+                  className="inline-flex min-h-11 items-center font-semibold text-gold underline-offset-2 hover:underline"
                 >
                   {e.myScore}/{e.total}
                 </Link>
@@ -180,6 +189,6 @@ function DuelHubPage() {
         lastAward={awardQuery.data?.award ?? null}
         labels={t.duel}
       />
-    </div>
+    </PageShell>
   );
 }

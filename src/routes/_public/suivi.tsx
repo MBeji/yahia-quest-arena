@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Activity, Link as LinkIcon, Printer, Share2 } from "lucide-react";
+import { LoadingState } from "@/components/ui/loading-state";
 import {
   buildFamilyReportShareText,
   getStudentReportByCode,
+  parentCodeErrorLabel,
   ReportContent,
 } from "@/features/parent-report";
 import { useI18n } from "@/lib/i18n";
@@ -107,7 +109,7 @@ function SuiviPublicPage() {
         {reportMutation.isError && (
           <p role="alert" className="mt-2 text-sm font-medium text-destructive">
             {reportMutation.error instanceof Error
-              ? reportMutation.error.message
+              ? parentCodeErrorLabel(reportMutation.error.message, t)
               : t.parentReport.linkFailed}
           </p>
         )}
@@ -135,11 +137,7 @@ function SuiviPublicPage() {
         </>
       )}
 
-      {reportMutation.isPending && (
-        <div className="flex items-center justify-center py-20">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-        </div>
-      )}
+      {reportMutation.isPending && <LoadingState label={t.common.loading} className="py-20" />}
     </div>
   );
 }

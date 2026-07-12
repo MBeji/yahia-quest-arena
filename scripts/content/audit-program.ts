@@ -30,7 +30,11 @@ import {
   type GradeAudit,
   type SubjectAudit,
 } from "../../src/shared/content/program-manifest.ts";
-import { ContentValidationError, loadAllSubjects } from "../../src/shared/content/loader.ts";
+import {
+  ContentValidationError,
+  expandSubjects,
+  loadAllSubjects,
+} from "../../src/shared/content/loader.ts";
 
 const DEFAULT_MANIFEST_DIR =
   ".claude/skills/content-ecole-tn/references/programmes-officiels/manifest";
@@ -132,7 +136,9 @@ function main(): void {
     exit(onlyGrade ? 1 : 0);
   }
 
-  const subjects = loadAllSubjects(contentDir);
+  // Program conformity is audited on COMPILED subjects (étude 16 D-4): each
+  // grade manifest lists the per-section compiled ids, never a virtual source id.
+  const subjects = expandSubjects(loadAllSubjects(contentDir));
   const audits = manifests.map(({ manifest }) => auditGrade(manifest, subjects));
   audits.forEach(printGrade);
 

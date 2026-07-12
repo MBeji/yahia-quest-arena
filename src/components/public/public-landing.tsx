@@ -356,6 +356,9 @@ export function PublicLanding() {
       </section>
 
       {/* SECTION JEU — le seul bloc registre « Jeu » (doré), promesse secondaire */}
+      {/* token-ok-block: vitrine « Apprends en jouant » — section sombre FIXE
+          (identique dans les 2 thèmes) : son or est le vrai or de la marque jeu,
+          volontairement hors tokens (l'or thémé devient teal en clair). */}
       <section data-testid="game-block" className="bg-[#15120d] text-amber-50">
         <div className="mx-auto grid max-w-5xl items-center gap-8 px-4 py-14 sm:px-6 lg:grid-cols-2">
           <div>
@@ -402,6 +405,7 @@ export function PublicLanding() {
           </div>
         </div>
       </section>
+      {/* /token-ok-block */}
     </>
   );
 }

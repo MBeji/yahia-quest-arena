@@ -50,7 +50,7 @@ export function BugReportLauncher() {
         onClick={() => setOpen(true)}
         aria-label={t.bugReport.launcherLabel}
         title={t.bugReport.launcherLabel}
-        className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] right-4 z-40 inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)]/40 bg-black/70 px-4 py-2.5 text-sm font-semibold text-champagne shadow-gold backdrop-blur-md transition hover:scale-105 hover:text-[color:var(--gold)] lg:bottom-[calc(1.25rem+env(safe-area-inset-bottom))] rtl:left-4 rtl:right-auto"
+        className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] end-4 z-40 inline-flex items-center gap-2 rounded-full border border-[color:var(--gold)]/40 bg-black/70 px-4 py-2.5 text-sm font-semibold text-champagne shadow-gold backdrop-blur-md transition hover:scale-105 hover:text-[color:var(--gold)] lg:bottom-[calc(1.25rem+env(safe-area-inset-bottom))]"
       >
         <Bug className="h-4 w-4 shrink-0" aria-hidden="true" />
         <span className="hidden sm:inline">{t.bugReport.launcherLabel}</span>

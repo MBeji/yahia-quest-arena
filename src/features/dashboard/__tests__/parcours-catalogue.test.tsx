@@ -8,10 +8,12 @@ vi.mock("@tanstack/react-router", () => ({
 }));
 
 import {
+  LyceeYearSections,
   ProgrammeCatalogue,
   ExtrasCatalogue,
   type CatalogueParcours,
 } from "../components/parcours-catalogue";
+import type { ParcoursInterestState } from "../use-parcours-interest";
 
 /** A catalogue parcours with school-default fields; override what a case needs. */
 function p(over: Partial<CatalogueParcours>): CatalogueParcours {
@@ -70,6 +72,107 @@ describe("ProgrammeCatalogue", () => {
     expect(screen.getByText(/Bientôt disponible/)).toBeInTheDocument();
     // a tail CTA points to the extras catalogue
     expect(container.querySelector('a[href="/extras"]')).not.toBeNull();
+  });
+});
+
+describe("ProgrammeCatalogue — lycée drill-down (étude 16 R-1/R-2)", () => {
+  const lycee: CatalogueParcours[] = [
+    p({
+      id: "ecole-1ere-sec",
+      name_fr: "1ère année secondaire",
+      grade_cycle: "secondaire",
+      grade_order: 10,
+      grade_slug: "1ere-sec",
+      grade_selectable: true,
+    }),
+    p({
+      id: "concours-bac", // flat legacy node → hidden (R-1)
+      name_fr: "Préparation Concours Bac",
+      kind: "concours",
+      grade_cycle: "secondaire",
+      grade_order: 13,
+      grade_slug: "bac",
+      grade_selectable: false,
+    }),
+    p({
+      id: "concours-bac-math",
+      name_fr: "Bac Mathématiques",
+      kind: "concours",
+      grade_cycle: "secondaire",
+      grade_order: 24,
+      grade_slug: "bac-math",
+      grade_selectable: true,
+    }),
+    p({
+      id: "concours-bac-lettres",
+      name_fr: "Bac Lettres",
+      kind: "concours",
+      grade_cycle: "secondaire",
+      grade_order: 26,
+      grade_slug: "bac-lettres",
+      grade_selectable: true,
+      status: "coming_soon",
+    }),
+  ];
+
+  it("renders the 1ère as a direct card and each section year as ONE drill-down row", () => {
+    const { container } = render(<ProgrammeCatalogue parcours={lycee} />);
+    // 1ère sec links straight to its level page.
+    expect(screen.getByText("1ère année secondaire")).toBeInTheDocument();
+    // The bac sections never unfold here — one « Baccalauréat » row links to the year page.
+    expect(screen.getByText("Baccalauréat")).toBeInTheDocument();
+    expect(screen.getByText("2 sections · 1 disponibles")).toBeInTheDocument();
+    expect(container.querySelectorAll('a[href="/programme/lycee/$annee"]')).toHaveLength(1);
+    expect(screen.queryByText("Bac Mathématiques")).not.toBeInTheDocument();
+  });
+
+  it("hides the flat legacy secondary nodes everywhere (R-1)", () => {
+    render(<ProgrammeCatalogue parcours={lycee} />);
+    expect(screen.queryByText(/Préparation Concours Bac/)).not.toBeInTheDocument();
+  });
+});
+
+describe("LyceeYearSections — public year page (étude 16 D-5/D-7)", () => {
+  const interest: ParcoursInterestState = {
+    counts: { "concours-bac-lettres": 17 },
+    mine: new Set<string>(),
+    togglingId: null,
+    onToggle: vi.fn(),
+  };
+  const sections: CatalogueParcours[] = [
+    p({
+      id: "concours-bac-math",
+      name_fr: "Bac Mathématiques",
+      kind: "concours",
+      grade_cycle: "secondaire",
+      grade_slug: "bac-math",
+      grade_selectable: true,
+    }),
+    p({
+      id: "concours-bac-lettres",
+      name_fr: "Bac Lettres",
+      kind: "concours",
+      grade_cycle: "secondaire",
+      grade_slug: "bac-lettres",
+      grade_selectable: true,
+      status: "coming_soon",
+    }),
+  ];
+
+  it("links available sections, shows the interest count on coming-soon ones", () => {
+    const { container } = render(
+      <LyceeYearSections year="bac" sections={sections} interest={interest} />,
+    );
+    expect(screen.getByRole("heading", { name: /Baccalauréat/ })).toBeInTheDocument();
+    // available → /niveau link (compacted concours label)
+    expect(container.querySelectorAll('a[href="/niveau/$parcoursId"]')).toHaveLength(1);
+    expect(screen.getByText("Bac Mathématiques")).toBeInTheDocument();
+    // coming_soon → badge + live public count (D-7) + vote button
+    expect(screen.getByText(/Bientôt disponible/)).toBeInTheDocument();
+    expect(screen.getByText(/17 intéressé/)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Ça m'intéresse/ })).toBeInTheDocument();
+    // breadcrumb back to the catalogue
+    expect(container.querySelector('a[href="/programme"]')).not.toBeNull();
   });
 });
 

@@ -63,7 +63,11 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           {error.message || t.errors.errorFallback}
         </p>
         {showDebug ? (
-          <pre className="mt-4 max-h-72 overflow-auto rounded-md border border-input p-3 text-left text-xs whitespace-pre-wrap break-all text-muted-foreground">
+          // rtl-ok: une stack trace est du texte technique toujours LTR, même en page AR.
+          <pre
+            dir="ltr"
+            className="mt-4 max-h-72 overflow-auto rounded-md border border-input p-3 text-left text-xs whitespace-pre-wrap break-all text-muted-foreground"
+          >
             {`${error.name}: ${error.message}\n${error.stack ?? "(no stack)"}`}
           </pre>
         ) : null}

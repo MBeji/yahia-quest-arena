@@ -16,6 +16,72 @@ export type ContentLanguage = (typeof CONTENT_LANGUAGES)[number];
 /** A url, or a short free-form reference to a local repo / book. */
 const sourceRefSchema = z.string().min(3, "a source reference must be at least 3 characters");
 
+/**
+ * Canonical `grades.slug` referential (closed list, kept in sync with the DB
+ * seeds — `20260605120000` ladder + `20260704235000` lycée sections). Used to
+ * validate `compileTo` targets at build time (étude 16 R-9): a typo'd slug must
+ * fail `content:check`, never silently compile a subject whose grade subquery
+ * would resolve to NULL.
+ */
+export const KNOWN_GRADE_SLUGS = [
+  // primaire + collège ladder
+  "1ere-base",
+  "2eme-base",
+  "3eme-base",
+  "4eme-base",
+  "5eme-base",
+  "6eme-base",
+  "7eme-base",
+  "8eme-base",
+  "9eme-base",
+  // secondaire — tronc commun + flat legacy year nodes
+  "1ere-sec",
+  "2eme-sec",
+  "3eme-sec",
+  "bac",
+  // secondaire — section nodes (docs/lycee-architecture.md §2)
+  "2eme-sec-sciences",
+  "2eme-sec-lettres",
+  "2eme-sec-eco-services",
+  "2eme-sec-info",
+  "3eme-sec-math",
+  "3eme-sec-sciences-exp",
+  "3eme-sec-lettres",
+  "3eme-sec-eco-gestion",
+  "3eme-sec-techniques",
+  "3eme-sec-info",
+  "bac-math",
+  "bac-sciences-exp",
+  "bac-lettres",
+  "bac-eco-gestion",
+  "bac-techniques",
+  "bac-info",
+] as const;
+
+/**
+ * The flat legacy secondary nodes (`is_selectable = false` in DB since the
+ * lycée seed): kept forever as identity, but never a valid `compileTo` target —
+ * shared lycée content targets SECTION nodes only (étude 16 R-9).
+ */
+export const LEGACY_GRADE_SLUGS = ["2eme-sec", "3eme-sec", "bac"] as const;
+
+const knownGradeSlugs: ReadonlySet<string> = new Set(KNOWN_GRADE_SLUGS);
+const legacyGradeSlugs: ReadonlySet<string> = new Set(LEGACY_GRADE_SLUGS);
+
+/**
+ * One compiled target of a shared subject directory (étude 16 D-4): the id is
+ * the ONLY subject id that reaches the DB (`<matière>-<gradeSlug>` verbatim —
+ * enforced below), so UUIDv5 derivation depends on the compiled identity, never
+ * on the source directory. `nameFr`/`description` default to the source values.
+ */
+const compileTargetSchema = z.object({
+  id: z.string().regex(/^[a-z][a-z0-9-]*$/, "compileTo id must be kebab-case"),
+  gradeSlug: z.string().min(1),
+  nameFr: z.string().min(1).optional(),
+  description: z.string().min(1).optional(),
+});
+export type CompileTarget = z.infer<typeof compileTargetSchema>;
+
 /** `subject.json` — maps onto the `subjects` table (one per subject). */
 export const subjectMetaSchema = z.object({
   id: z.string().regex(/^[a-z][a-z0-9-]*$/, "subject id must be kebab-case (e.g. 'math')"),
@@ -51,6 +117,75 @@ export const subjectMetaSchema = z.object({
    * the standalone "Maîtrise du français" module. Defaults to false.
    */
   isPremium: z.boolean().default(false),
+  /**
+   * Mutualisation (étude 16 D-4): compile this ONE authored directory into N
+   * subjects — one per section-grade target. When present, the root `id` is a
+   * VIRTUAL source id (convention `<matière>-<année>`, e.g. `anglais-3eme-sec`)
+   * that never reaches the DB, and the root `gradeSlug` must stay null. Each
+   * target id must keep the `<matière>-<gradeSlug>` verbatim convention so the
+   * UUIDv5 derivation depends on the compiled identity (fork-without-loss,
+   * étude 16 R-7). Chapters/exercises may narrow their targets via their own
+   * `gradeSlugs` field. Expansion happens in `expandSubjects` (loader.ts).
+   */
+  compileTo: z.array(compileTargetSchema).min(2).optional(),
+});
+
+export const subjectMetaWithCompileToSchema = subjectMetaSchema.superRefine((meta, ctx) => {
+  if (!meta.compileTo) return;
+  if (meta.gradeSlug !== null) {
+    ctx.addIssue({
+      code: "custom",
+      message: "a shared subject (compileTo) must not set a root gradeSlug — targets carry them",
+      path: ["gradeSlug"],
+    });
+  }
+  const ids = new Set<string>();
+  const slugs = new Set<string>();
+  meta.compileTo.forEach((t, i) => {
+    if (ids.has(t.id)) {
+      ctx.addIssue({
+        code: "custom",
+        message: `duplicate compileTo target id '${t.id}'`,
+        path: ["compileTo", i, "id"],
+      });
+    }
+    ids.add(t.id);
+    if (slugs.has(t.gradeSlug)) {
+      ctx.addIssue({
+        code: "custom",
+        message: `duplicate compileTo target gradeSlug '${t.gradeSlug}'`,
+        path: ["compileTo", i, "gradeSlug"],
+      });
+    }
+    slugs.add(t.gradeSlug);
+    if (!knownGradeSlugs.has(t.gradeSlug)) {
+      ctx.addIssue({
+        code: "custom",
+        message: `unknown gradeSlug '${t.gradeSlug}' — must be one of the canonical grades (KNOWN_GRADE_SLUGS)`,
+        path: ["compileTo", i, "gradeSlug"],
+      });
+    } else if (legacyGradeSlugs.has(t.gradeSlug)) {
+      ctx.addIssue({
+        code: "custom",
+        message: `gradeSlug '${t.gradeSlug}' is a non-selectable legacy node — target the section nodes instead`,
+        path: ["compileTo", i, "gradeSlug"],
+      });
+    }
+    if (!t.id.endsWith(`-${t.gradeSlug}`)) {
+      ctx.addIssue({
+        code: "custom",
+        message: `target id '${t.id}' must be '<matière>-${t.gradeSlug}' (subject-id convention, docs/lycee-architecture.md §2)`,
+        path: ["compileTo", i, "id"],
+      });
+    }
+    if (t.id === meta.id) {
+      ctx.addIssue({
+        code: "custom",
+        message: `target id '${t.id}' collides with the source id — the source id is virtual and must differ`,
+        path: ["compileTo", i, "id"],
+      });
+    }
+  });
 });
 export type SubjectMeta = z.infer<typeof subjectMetaSchema>;
 
@@ -82,11 +217,25 @@ export function parseManuelPages(pages: string): number[] {
   return [...new Set(out)].sort((a, b) => a - b);
 }
 
+/**
+ * Optional per-section narrowing inside a SHARED subject (étude 16 D-4): the
+ * subset of the subject's `compileTo` grade slugs this piece of content is
+ * compiled for. Absent = all targets. Only meaningful under a subject that
+ * declares `compileTo` (enforced by `expandSubjects`).
+ */
+const gradeSlugsSubsetSchema = z
+  .array(z.string().min(1))
+  .min(1)
+  .refine((a) => new Set(a).size === a.length, "gradeSlugs must be unique")
+  .optional();
+
 /** `chapter.json` — maps onto a row in `chapters`. */
 export const chapterMetaSchema = z.object({
   title: z.string().min(1),
   description: z.string().min(1),
   displayOrder: z.number().int().positive(),
+  /** Shared-subject narrowing: sections this chapter is compiled for (étude 16). */
+  gradeSlugs: gradeSlugsSubsetSchema,
   /** Provenance: URLs / repos / books the chapter was built from. */
   sources: z.array(sourceRefSchema).default([]),
   /**
@@ -403,6 +552,13 @@ export const exerciseSchema = z.object({
   xpReward: z.number().int().positive(),
   rewardCoins: z.number().int().nonnegative(),
   displayOrder: z.number().int().positive(),
+  /**
+   * Shared-subject narrowing (étude 16 D-4): sections this exercise is compiled
+   * for — enables per-section d3/d4 tiers inside one shared directory (e.g. a
+   * `bac-lettres`-only défi in `arabe-bac`). Subset of the chapter's effective
+   * targets; absent = all. Never emitted to SQL (the builder reads named fields).
+   */
+  gradeSlugs: gradeSlugsSubsetSchema,
   questions: z.array(questionSchema).min(1).max(50),
 });
 export type ContentExercise = z.infer<typeof exerciseSchema>;

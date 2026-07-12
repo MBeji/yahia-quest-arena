@@ -2,9 +2,10 @@ import { test, expect } from "../fixtures";
 import { STORAGE_STATE, TEST_USERS } from "../helpers/users";
 
 /**
- * PREMIUM student journey. The student holds a live entitlement on both Concours
- * parcours (seeded via admin_grant_parcours), so — unlike the free student —
- * opening a premium-parcours mission does NOT hit the "Parcours premium" paywall.
+ * "PREMIUM" student journey. The student still holds a live (now DORMANT)
+ * entitlement on both Concours parcours — phase gratuite (étude 15, lot 2):
+ * every parcours is free, so the paywall must not appear for anyone; this spec
+ * keeps the entitled account exercised so étude 01 can re-differentiate later.
  */
 test.use({ storageState: STORAGE_STATE.premium });
 

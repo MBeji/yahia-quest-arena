@@ -12,6 +12,7 @@
 import { argv, cwd, exit, stdout } from "node:process";
 import { join, resolve } from "node:path";
 import {
+  expandSubjects,
   loadAllSubjects,
   loadMisconceptionRegistry,
   loadSubject,
@@ -34,7 +35,11 @@ function main(): void {
   const root = cwd();
   const contentDir = resolve(root, "content");
   const only = getFlag("subject");
-  const subjects = only ? [loadSubject(join(contentDir, only))] : loadAllSubjects(contentDir);
+  // QA audits COMPILED subjects (étude 16 D-4): a shared dir is checked once
+  // per section target, exactly as it will land in the DB.
+  const subjects = expandSubjects(
+    only ? [loadSubject(join(contentDir, only))] : loadAllSubjects(contentDir),
+  );
   const knownTags = new Set(Object.keys(loadMisconceptionRegistry(contentDir)));
 
   const flags: Flag[] = [];

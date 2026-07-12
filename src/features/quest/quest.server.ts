@@ -245,6 +245,46 @@ export const getSubject = createServerFn({ method: "GET" })
       }
     }
 
+    // Parcours that owns this subject — powers the hub's level anchor + back link
+    // (étude 15 lot 7, D-6 : the kicker shows the CLASS, not the RPG attribute, and
+    // the hub gets a way back up to /niveau). Resolved for EVERYONE (anon included);
+    // a resolution failure degrades to "no anchor", never a broken page.
+    type ParcoursAnchorRow = {
+      id: string;
+      name_fr: string;
+      name_en: string | null;
+      name_ar: string | null;
+      is_premium: boolean;
+    };
+    let parcoursRow: ParcoursAnchorRow | null = null;
+    try {
+      const themeId = (subj.data as { theme_id?: string | null }).theme_id ?? null;
+      const gradeId = (subj.data as { grade_id?: string | null }).grade_id ?? null;
+      if (themeId) {
+        // resolve_subject_parcours matches grade_id with IS NOT DISTINCT FROM, so a
+        // null grade is valid (grade-agnostic themes resolve their own parcours); the
+        // generated arg type narrows p_grade to string, hence the cast on the nullable.
+        const parcoursIdRes = await supabase.rpc("resolve_subject_parcours", {
+          p_theme: themeId,
+          p_grade: gradeId as string,
+        });
+        const parcoursId = (parcoursIdRes as { data?: string | null }).data ?? null;
+        if (parcoursId) {
+          const { data: p } = await supabase
+            .from("parcours")
+            .select("id,name_fr,name_en,name_ar,is_premium")
+            .eq("id", parcoursId)
+            .maybeSingle();
+          parcoursRow = (p as ParcoursAnchorRow | null) ?? null;
+        }
+      }
+    } catch (err) {
+      logger.warn("quest.getSubject: parcours anchor fetch failed", {
+        subjectId: data.subjectId,
+        error: errorMessage(err),
+      });
+    }
+
     // Parcours access context for premium gating of missions on the page.
     // Assigned on every path below (both try branches + the catch's locked-safe default),
     // so it needs no initializer — and an unread one trips eslint's no-useless-assignment.
@@ -254,32 +294,21 @@ export const getSubject = createServerFn({ method: "GET" })
       viewer = { level: 0, isPremium: false, hasEntitlement: true };
     } else {
       try {
-        const themeId = (subj.data as { theme_id?: string | null }).theme_id ?? null;
-        const gradeId = (subj.data as { grade_id?: string | null }).grade_id ?? null;
-        const [viewerProfile, parcoursIdRes] = await Promise.all([
-          supabase.from("profiles").select("level").eq("id", userId).maybeSingle(),
-          themeId
-            ? // resolve_subject_parcours matches grade_id with IS NOT DISTINCT FROM, so a
-              // null grade is valid (grade-agnostic themes resolve their own parcours); the
-              // generated arg type narrows p_grade to string, hence the cast on the nullable.
-              supabase.rpc("resolve_subject_parcours", {
-                p_theme: themeId,
-                p_grade: gradeId as string,
-              })
-            : Promise.resolve({ data: null as string | null }),
-        ]);
+        const viewerProfile = await supabase
+          .from("profiles")
+          .select("level")
+          .eq("id", userId)
+          .maybeSingle();
         const level = viewerProfile.data?.level ?? 0;
-        const parcoursId = (parcoursIdRes as { data?: string | null }).data ?? null;
-        if (parcoursId) {
-          const [parcoursRow, entRes] = await Promise.all([
-            supabase.from("parcours").select("is_premium").eq("id", parcoursId).maybeSingle(),
-            supabase.rpc("has_parcours_entitlement", {
-              p_user: userId,
-              p_parcours: parcoursId,
-            }),
-          ]);
-          const isPremium = parcoursRow.data?.is_premium ?? false;
-          viewer = { level, isPremium, hasEntitlement: isPremium ? entRes.data === true : true };
+        if (parcoursRow) {
+          const isPremium = parcoursRow.is_premium ?? false;
+          const entRes = isPremium
+            ? await supabase.rpc("has_parcours_entitlement", {
+                p_user: userId,
+                p_parcours: parcoursRow.id,
+              })
+            : null;
+          viewer = { level, isPremium, hasEntitlement: isPremium ? entRes?.data === true : true };
         } else {
           viewer = { level, isPremium: false, hasEntitlement: true };
         }
@@ -299,6 +328,14 @@ export const getSubject = createServerFn({ method: "GET" })
       bestByExercise: best,
       quizPassedByChapter,
       viewer,
+      parcours: parcoursRow
+        ? {
+            id: parcoursRow.id,
+            name_fr: parcoursRow.name_fr,
+            name_en: parcoursRow.name_en,
+            name_ar: parcoursRow.name_ar,
+          }
+        : null,
     };
   });
 
@@ -307,11 +344,11 @@ export const getChapterLesson = createServerFn({ method: "GET" })
   .middleware([optionalSupabaseAuth])
   .inputValidator((d) => z.object({ chapterId: z.guid() }).parse(d))
   .handler(async ({ data, context }) => {
-    const { supabase } = context;
+    const { supabase, userId } = context;
     const { data: chapter, error } = await supabase
       .from("chapters")
       .select(
-        "id, title, description, lesson_content, summary, subject_id, display_order, subjects(id, name_fr, color_token, icon, content_language)",
+        "id, title, description, lesson_content, summary, subject_id, display_order, subjects(id, name_fr, color_token, icon, content_language, grade_id)",
       )
       .eq("id", data.chapterId)
       .single();
@@ -359,7 +396,30 @@ export const getChapterLesson = createServerFn({ method: "GET" })
       .order("display_order");
     const practiceExerciseId = (chapterExercises ?? []).find((e) => e.mode !== "quiz")?.id ?? null;
 
-    return { chapter, allChapters, practiceExerciseId };
+    // Quiz-gate affordance for the reader CTA (étude 15, lot 1 — audit §D-4): the
+    // chapter's quiz id, whether the gate applies (school subjects only — same
+    // rule as getSubject), and — signed-in only — whether THIS user already
+    // passed it (score ≥ threshold AND not rushed, mirroring getSubject).
+    // Anonymous visitors resolve their pass client-side (sessionStorage, see
+    // anon-quiz-gate.ts), so quizPassed stays null for them.
+    const quizExerciseId = (chapterExercises ?? []).find((e) => e.mode === "quiz")?.id ?? null;
+    const isSchoolSubject =
+      ((chapter.subjects as { grade_id?: string | null } | null)?.grade_id ?? null) !== null;
+    const quizGated = isSchoolSubject && quizExerciseId !== null;
+    let quizPassed: boolean | null = null;
+    if (quizGated && userId) {
+      const { data: passedRows } = await supabase
+        .from("attempts")
+        .select("duration_seconds,total_count")
+        .eq("user_id", userId)
+        .eq("exercise_id", quizExerciseId as string)
+        .gte("score_pct", QUIZ_PASS_THRESHOLD_PCT);
+      quizPassed = (passedRows ?? []).some(
+        (r) => (r.duration_seconds ?? 0) >= (r.total_count ?? 0) * MIN_SECONDS_PER_QUESTION,
+      );
+    }
+
+    return { chapter, allChapters, practiceExerciseId, quizExerciseId, quizGated, quizPassed };
   });
 
 // ---------- Manuel élève pages (login-gated) ----------

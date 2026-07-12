@@ -1,12 +1,17 @@
 # Étude 01 — Paiement en ligne (checkout → entitlement automatique)
 
-> **Statut** : brouillon
+> **Statut** : **gelée** (2026-07-11 — pivot « gratuité de phase », étude 15 Q-2/D-3 : aucune monétisation pendant la phase actuelle. Cette étude reste le **véhicule désigné de réactivation du premium** ; la sortie de gel est une décision humaine)
 > **Priorité** : 01 · **Valeur** : déblocage direct des revenus (tunnel d'achat self-service des parcours concours) · **Complexité** : moyenne+
 > **Architecte** : Fable (claude-fable-5), 2026-07-04 · **Exécuteur cible** : Sonnet
-> **Dépend de** : choix final du PSP + compte marchand + grille tarifaire (Q-1/Q-2, humain) · **Bloque** : rien (le paywall téléphone reste le repli)
-> **Docs normatifs liés** : CLAUDE.md (Premium gate, DoD §7, gotcha grants), ARCHITECTURE.md, docs/environment-variables.md, docs/logging-standard.md
+> **Dépend de** : décision de sortie de la phase gratuite (humain), puis choix final du PSP + compte marchand + grille tarifaire (Q-1/Q-2, humain) · **Bloque** : rien (le paywall téléphone reste le repli)
+> **Docs normatifs liés** : CLAUDE.md (Access gate, DoD §7, gotcha grants), ARCHITECTURE.md, docs/environment-variables.md, docs/logging-standard.md
 
 ## 1. Contexte & objectif produit
+
+> ⚠️ **Note 2026-07-11** : le contexte ci-dessous décrit l'état **pré-pivot**. Depuis la
+> migration `20260711100000` (gratuité de phase), plus aucun parcours n'est premium et le
+> paywall téléphone est **dormant**. Ce contexte redeviendra exact à la réactivation du premium
+> (l'UPDATE inverse est noté dans la migration).
 
 Aujourd'hui l'accès premium est **hors-bande** : le composant paywall affiche un numéro de
 téléphone, et un admin provisionne à la main (`admin_grant_parcours`, `parcours_entitlements.source='purchase'`).

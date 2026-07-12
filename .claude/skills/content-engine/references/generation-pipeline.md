@@ -139,6 +139,14 @@ Authored files under `content/` are compiled to **idempotent** Supabase migratio
    `*_generated_<id>_content.sql` files that are byte-for-different-timestamp duplicates of unchanged
    subjects. **Never commit those.** Always scope with `--subject <id>` so exactly **one** migration
    is produced. If several subjects changed, run it once per changed subject.
+   - `--subject` names the **source directory**. A shared lycée directory (`compileTo` — étude 16:
+     tronc commun authored once, compiled to one subject per section — `content/README.md`
+     §Mutualisation) legitimately emits **N** migrations (`_generated_<target-id>_content.sql`, one
+     per section target) in that single scoped run; that is not the stray-full-build trap. Never
+     hand-author a per-section copy of a shared matière: add a `compileTo` target (or narrow via
+     chapter/exercise `gradeSlugs`). Fork into a dedicated dir ONLY on structural programme
+     divergence, keeping the compiled id + slugs — UUIDs derive from the compiled identity, so a
+     fork loses no student progress.
    - The default fresh timestamp (now) always sorts after existing migrations — correct. Pass
      `--timestamp <YYYYMMDDHHMMSS>` only if you need a deterministic value; it must sort **after** the
      newest existing migration (the `Migration order` gate enforces this).

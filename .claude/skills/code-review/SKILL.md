@@ -226,9 +226,10 @@ seulement « c'est mal »), et propose un **correctif concret**.
 ### J. Autres signaux à surveiller
 
 - [ ] **Dépendances** : nouvel ajout justifié, maintenu, sans doublon avec
-      l'existant ; `audit:deps` propre ; cf. `docs/dependency-maintenance.md`. Ne
-      pas ajouter manuellement les plugins fournis par
-      `@lovable.dev/vite-tanstack-config`.
+      l'existant ; `audit:deps` propre ; cf. `docs/dependency-maintenance.md`. Les
+      plugins Vite sont composés **à la main** dans `vite.config.ts` (l'ancien
+      méta-plugin vendorisé a été retiré) — ne pas réintroduire de méta-plugin ni
+      dupliquer un plugin déjà câblé.
 - [ ] **Compat SSR / Workers** : pas d'API navigateur-only exécutée côté serveur.
 - [ ] Pas de `--no-verify`, `@ts-ignore`/`as any`, règle ESLint désactivée inline,
       ni seuil de couverture abaissé pour « faire passer » (affaiblir le gate =

@@ -6,6 +6,7 @@ export const enPublic: TranslationKeys["public"] = {
     navAria: "Catalogue",
     programme: "Programme",
     extras: "Extras",
+    parentTracking: "Parent tracking",
     login: "Log in",
     signup: "Create my account",
     account: "My space",
@@ -98,6 +99,8 @@ export const enPublic: TranslationKeys["public"] = {
     cardComingSoon: "Coming soon",
     cardContent: "Lessons · summaries · exercises",
     cardConcoursBadge: "Exam",
+    lyceeYearDesc:
+      "The official sections of this secondary-school year. Lessons, summaries and exercises, free to access.",
   },
   niveau: {
     backProgramme: "Programme",
@@ -107,6 +110,8 @@ export const enPublic: TranslationKeys["public"] = {
     comingSoonDesc: "This level is being prepared. Come back soon!",
     choose: "Choose this track",
     choosing: "Selecting…",
+    switchNote:
+      "Your XP, coins, badges and streak carry over; your per-subject progress stays specific to each class.",
   },
   reader: {
     defaultSubject: "Lesson",
@@ -115,9 +120,10 @@ export const enPublic: TranslationKeys["public"] = {
     print: "Print",
     courseSoon: "The lesson for this chapter is coming soon.",
     practiceCta: "Practise this chapter",
+    quizFirstCta: "Start with the comprehension quiz",
     inviteTitle: "Learn by playing",
     inviteDesc:
-      "Create your free account to practise on the exercises, earn XP and save your progress. Reading the lesson is always free.",
+      "Create your free account to earn XP, keep your unlocked chapters and track your progress. Reading and practising stay free.",
     inviteCta: "Create my free account",
     manuelTitle: "Textbook pages",
     manuelHint: "The official student-textbook pages covering this chapter.",
@@ -129,7 +135,12 @@ export const enPublic: TranslationKeys["public"] = {
   subject: {
     chapter: "Chapter {n}",
     readCourse: "Read the lesson",
-    level: "Lv. {n}",
+    resumeHere: "Continue here",
+    missionsProgress: "{done}/{total} missions",
+    quizToPass: "quiz to pass",
+    todo: "to do",
+    unlocksChapter: "unlocks the chapter",
+    quizContract: "Pass the quiz (≥ {pct}%) to unlock this chapter's missions.",
   },
   practice: {
     back: "Back to the subject",
@@ -145,6 +156,7 @@ export const enPublic: TranslationKeys["public"] = {
     answerAllHint: "Answer every question to check.",
     restart: "Start over",
     questCta: "Replay in quest mode to earn XP",
+    continueCta: "Continue to the first exercise",
     inviteDesc: "Create an account to earn XP, save your progress and climb the leaderboard.",
     inviteCta: "Create my account",
   },
