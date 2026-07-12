@@ -1,0 +1,72 @@
+name: Report close (auto-resolve merged fixes)
+
+# Final link of the report-triage pipeline: when a PR carrying the
+# `report-fix` label MERGES to main (from there the deploy is automatic —
+# Vercel + db-migrate-prod fire on the merge), the `Report-Id: <uuid>
+# (bug|content)` trailers in its body are marked `resolved` in the matching
+# Supabase tables, closing the user's report without any manual step.
+#
+# The write path is scripts/reports/resolve-reports.mjs — deliberately
+# narrow: strict full-line UUID parsing (anything else in the body is
+# ignored), a resolved/dismissed whitelist, and only rows still `open` are
+# touched (re-runs are no-ops). Skips gracefully while the PROD_* secrets
+# are unset. `dismissed` closures (malicious/not-reproduced reports) are NOT
+# automated here — the operator applies them from the admin consoles, per
+# the triage tracking issue.
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: report-close-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  close:
+    name: Mark fixed reports resolved
+    if: >-
+      github.event.pull_request.merged == true &&
+      contains(github.event.pull_request.labels.*.name, 'report-fix')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check the required secrets are configured
+        id: guard
+        run: |
+          if [ -z "${{ secrets.PROD_SUPABASE_URL }}" ] || [ -z "${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}" ]; then
+            echo "PROD_SUPABASE_URL / PROD_SUPABASE_SERVICE_ROLE_KEY not set — skipping report closure."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout
+        if: steps.guard.outputs.configured == 'true'
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        if: steps.guard.outputs.configured == 'true'
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        if: steps.guard.outputs.configured == 'true'
+        run: npm ci --no-audit --no-fund
+
+      - name: Resolve the reports listed in the PR body
+        if: steps.guard.outputs.configured == 'true'
+        env:
+          SUPABASE_URL: ${{ secrets.PROD_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
+          # Via env, never interpolated into the shell line: the body is
+          # untrusted text (trailers are re-validated by the script anyway).
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          printf '%s' "$PR_BODY" > "$RUNNER_TEMP/pr-body.txt"
+          node scripts/reports/resolve-reports.mjs --body-file "$RUNNER_TEMP/pr-body.txt" --status resolved
