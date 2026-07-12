@@ -30,7 +30,9 @@ content/
   scolaire ou `francais` pour un module autonome), `gradeSlug` (niveau dans
   l'échelle du thème, ex. `9eme-base` ; `null` pour les matières indépendantes
   d'un niveau — le slug est résolu en UUID `grades` à la compilation, jamais
-  codé en dur), `isPremium?`, `compileTo?` (mutualisation lycée — voir plus bas).
+  codé en dur), `isPremium?` (dormant : en phase gratuite, la migration
+  `20260711100000` force `is_premium = false` sur tous les parcours),
+  `compileTo?` (mutualisation lycée — voir plus bas).
 - **`chapter.json`** : `title`, `description`, `displayOrder`, `sources` (liste
   d'URLs / références — traçabilité des sources), `gradeSlugs?` (dossier partagé
   uniquement : sections destinataires du chapitre).

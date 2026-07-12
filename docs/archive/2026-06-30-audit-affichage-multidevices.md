@@ -1,10 +1,14 @@
 # Audit d'affichage multi-écrans / multi-devices — yahia-quest-arena
 
+> 🗄️ **ARCHIVÉ le 2026-07-11** — instantané daté ; les correctifs ont été appliqués et la
+> surface a depuis été refondue par les études **14** (livrée) et **15** (en exécution).
+> Conservé pour l'historique ; ne pas s'en servir comme backlog.
+
 > Audit **responsive / affichage** ciblé sur le rendu de l'application à travers les
 > tailles d'écran et les devices : petit Android, iPhone (SE → Pro Max avec encoche),
 > iPad portrait/paysage, laptop, desktop. Daté du **2026-06-30**.
 >
-> Complémentaire de [`audit-ecrans-ux.md`](./audit-ecrans-ux.md) (qui couvre la navigation,
+> Complémentaire de [`2026-06-13-audit-ecrans-ux.md`](./2026-06-13-audit-ecrans-ux.md) (qui couvre la navigation,
 > l'i18n et l'UX de fond) : ce document se concentre **uniquement** sur l'affichage —
 > débordements, points de rupture (breakpoints), cibles tactiles, typographie, RTL aux
 > petites largeurs, encoche/safe-area, et unités de viewport.

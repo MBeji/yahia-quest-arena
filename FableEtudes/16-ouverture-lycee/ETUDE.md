@@ -1,6 +1,6 @@
 # Étude 16 — Ouverture du lycée : 4 années × sections, mutualisation du tronc commun, arborescence UX
 
-> **Statut** : validée (arbitrages Q-1…Q-5 rendus le 2026-07-11 ; maquette du lot 3 à valider sur R-8 é15)
+> **Statut** : en exécution (validée le 2026-07-11, arbitrages Q-1…Q-5 ; lots 0–2 livrés — PRs #367/#369/#371 ; maquette du lot 3 à valider sur R-8 é15)
 > **Priorité** : 16 · **Valeur** : 🎓 ouverture du second cycle complet — 17 classes sélectionnables, ~15-19 ans, l'audience la plus motivée (bac) · **Complexité** : haute (surface large, mais découpée en lots courts + vagues de contenu)
 > **Architecte** : Fable / 2026-07-11 · **Exécuteur cible** : Sonnet (lots 1-3) + skills contenu (vagues, pilotées par `curriculum-architect`)
 > **Dépend de** : [`docs/lycee-architecture.md`](../../docs/lycee-architecture.md) (normatif — amendé par la PR de cette étude), étude 15 (lots 3/8/10 : coordination écrans, voir RISK-2), corpus L1 secondaire (transcriptions officielles)
