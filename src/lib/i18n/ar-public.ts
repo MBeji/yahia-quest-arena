@@ -97,6 +97,8 @@ export const arPublic: TranslationKeys["public"] = {
     cardComingSoon: "قريبًا",
     cardContent: "دروس · ملخّصات · تمارين",
     cardConcoursBadge: "مناظرة",
+    lyceeYearDesc:
+      "الشُّعب الرسمية لهذه السنة من التعليم الثانوي. دروس وملخّصات وتمارين في متناول الجميع.",
   },
   niveau: {
     backProgramme: "البرنامج",
@@ -106,6 +108,8 @@ export const arPublic: TranslationKeys["public"] = {
     comingSoonDesc: "هذا المستوى قيد الإعداد. عُد قريبًا!",
     choose: "اختيار هذا المسار",
     choosing: "جارٍ الاختيار…",
+    switchNote:
+      "نقاط الخبرة والقطع والشارات وسلسلتك تبقى معك؛ أمّا تقدّمك في المواد فيخصّ كل قسم على حدة.",
   },
   reader: {
     defaultSubject: "درس",
@@ -129,6 +133,12 @@ export const arPublic: TranslationKeys["public"] = {
   subject: {
     chapter: "الفصل {n}",
     readCourse: "اقرأ الدرس",
+    resumeHere: "واصل من هنا",
+    missionsProgress: "{done}/{total} مهمة",
+    quizToPass: "اجتز الاختبار أولًا",
+    todo: "لم يبدأ",
+    unlocksChapter: "يفتح الفصل",
+    quizContract: "انجح في الاختبار (≥ {pct}٪) لفتح مهمات هذا الفصل.",
   },
   practice: {
     back: "العودة إلى المادة",

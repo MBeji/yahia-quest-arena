@@ -207,6 +207,7 @@ export const en: TranslationKeys = {
     resultScore: "{correct} / {total} correct answers · {pct}%",
     serverValidatedTime: "Server-validated time · {n}s",
     timeSpent: "Time · {n}s",
+    quizContract: "Score ≥ {pct}% to unlock the chapter's missions.",
     questionN: "Question {n}",
     potionXpApplied: "XP Potion ×{x} applied!",
     potionCoinsApplied: "Coin Potion ×{x} applied!",
@@ -525,6 +526,14 @@ export const en: TranslationKeys = {
     primaire: "Primary",
     college: "Middle school",
     secondaire: "High school",
+  },
+  lycee: {
+    year2: "2nd year",
+    year3: "3rd year",
+    yearBac: "Baccalaureate",
+    sections: "{n} sections",
+    available: "{n} available",
+    pickSection: "Pick your section",
   },
   parcoursInterest: {
     cta: "I'm interested",

@@ -340,8 +340,9 @@ hors périmètre ; divergence étude↔code = STOP et remontée.
 
 - [x] Lot 0 — étude + amendements docs + maquette (PR #367)
 - [x] Lot 1 — pipeline `compileTo` (PR #369)
-- [x] Lot 2 — données de l'arbre + compteur public + types
-- [ ] Lot 3 — UI arborescence (après maquette validée)
+- [x] Lot 2 — données de l'arbre + compteur public + types (PR #371)
+- [x] Lot 3 — UI arborescence drill-down (PR ouverte en draft — la passer « ready » = validation
+      visuelle humaine sur la preview Vercel, voir journal)
 
 **Coordination étude 15 (anti-collision, RISK-2)** : lot 3 é16 ne recompose PAS les pages — il
 remplace le seul bloc « liste du cycle secondaire » (onboarding) et le seul bloc « grille Lycée »
@@ -509,3 +510,17 @@ EXECUTE TO anon` sur `parcours_interest_counts`), `getParcoursInterestCounts` an
   groupement année→section du lot 3), `types.ts` complété (`is_selectable` — édition manuelle
   minimale, DoD §4, à écraser à la prochaine régénération). pgTAP 09 : 8→11 assertions (grant
   anon compteur, toggle toujours auth-only, agrégat identique en anon).
+- 2026-07-12 — Lot 3 livré (UI drill-down, D-3/D-5/D-7 côté écran) : `lyceeYearOf` +
+  `buildLyceeYears` (génériques) + filtre R-1 dans `buildPrograms` ; bloc Lycée du catalogue =
+  1ère directe + 1 rangée par année → **nouvelle route** `/programme/lycee/$annee`
+  (`programme_.lycee.$annee.tsx`, un niveau d'arbre par écran, compteur public, vote anonyme →
+  `/auth` via `useParcoursInterest({canVote})`) ; onboarding : sous-étape « Choisis ta section »
+  (état local du wizard, retour intégré) ; copy honnête R-6 sous « Choisir ce parcours » ; clés
+  i18n ×3 (`lycee.*`, `lyceeYearDesc`, `switchNote`) ; routeTree régénéré. Tests : builder
+  (années/filtre/tri), catalogue drill-down, page année (compteur/vote/liens). **Écarts
+  consignés** : (a) R-8 é15 — la maquette v2 étant la transcription directe de l'arbitrage UX du
+  2026-07-11 et le « continue » humain valant poursuite, la PR du lot est ouverte en **draft** :
+  la passer « ready » après revue de la preview Vercel constitue la validation visuelle humaine
+  (c'est elle qui arme l'auto-merge) ; (b) kicker JourneyMap descopé — porté par é15 D-5/D-6
+  (« kicker = classe »), retiré d'ici pour éviter la collision RISK-2 ; (c) e2e inchangés — les
+  specs onboarding/catalogue sont des smokes qui ne traversent pas le picker lycée (vérifié).

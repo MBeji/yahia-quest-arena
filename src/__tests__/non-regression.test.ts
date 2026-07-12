@@ -570,11 +570,13 @@ describe("NON-REGRESSION: Data shape contracts", () => {
       subjectId: "s1",
     })) as Record<string, unknown>;
 
-    // These keys are consumed by the SubjectPage component
+    // These keys are consumed by the SubjectPage component (`parcours` is the
+    // hub's level anchor — étude 15 lot 7).
     expect(Object.keys(result).sort()).toEqual([
       "bestByExercise",
       "chapters",
       "exercises",
+      "parcours",
       "quizPassedByChapter",
       "subject",
       "viewer",

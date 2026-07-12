@@ -1,5 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { buildPrograms, flagshipLabel, type ProgramParcours } from "../program-families";
+import {
+  buildLyceeYears,
+  buildPrograms,
+  flagshipLabel,
+  lyceeYearOf,
+  type ProgramParcours,
+} from "../program-families";
 
 const P = (over: Partial<ProgramParcours> & { id: string; theme_id: string }): ProgramParcours => ({
   name_fr: over.id,
@@ -105,5 +111,92 @@ describe("flagshipLabel", () => {
     expect(flagshipLabel("Préparation Concours Bac")).toBe("Bac");
     expect(flagshipLabel("Préparation 6ème")).toBe("6ème");
     expect(flagshipLabel("9ème")).toBe("9ème");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Lycée drill-down (étude 16 lot 3 — D-3/D-5, R-1/R-2)
+// ---------------------------------------------------------------------------
+
+describe("buildPrograms — R-1 legacy filter", () => {
+  it("drops a parcours whose grade is non-selectable (flat legacy node)", () => {
+    const withLegacy: ProgramParcours[] = [
+      ...CATALOGUE.map((p) =>
+        p.id === "concours-bac" ? { ...p, grade_slug: "bac", grade_selectable: false } : p,
+      ),
+      P({
+        id: "concours-bac-math",
+        theme_id: "ecole-tn",
+        grade_cycle: "secondaire",
+        grade_order: 24,
+        grade_slug: "bac-math",
+        grade_selectable: true,
+      }),
+    ];
+    const tn = buildPrograms(withLegacy).find((p) => p.id === "tunisien")!;
+    const secondaire = tn.cycles.find((c) => c.cycle === "secondaire")!;
+    expect(secondaire.classes.map((p) => p.id)).toEqual(["concours-bac-math"]);
+  });
+
+  it("keeps rows without the flag (grade_selectable undefined = selectable)", () => {
+    const tn = buildPrograms(CATALOGUE).find((p) => p.id === "tunisien")!;
+    expect(tn.total).toBe(4);
+  });
+});
+
+describe("lyceeYearOf", () => {
+  it("maps the 17 secondary slugs to their year and everything else to null", () => {
+    expect(lyceeYearOf("1ere-sec")).toBe("1ere");
+    expect(lyceeYearOf("2eme-sec")).toBe("2eme");
+    expect(lyceeYearOf("2eme-sec-sciences")).toBe("2eme");
+    expect(lyceeYearOf("3eme-sec-eco-gestion")).toBe("3eme");
+    expect(lyceeYearOf("bac")).toBe("bac");
+    expect(lyceeYearOf("bac-sciences-exp")).toBe("bac");
+    expect(lyceeYearOf("9eme-base")).toBeNull();
+    expect(lyceeYearOf(null)).toBeNull();
+    expect(lyceeYearOf(undefined)).toBeNull();
+  });
+});
+
+describe("buildLyceeYears", () => {
+  const S = (id: string, slug: string, status = "coming_soon") =>
+    P({
+      id,
+      theme_id: "ecole-tn",
+      grade_cycle: "secondaire",
+      grade_slug: slug,
+      grade_selectable: true,
+      status,
+    });
+
+  it("groups sections by year, 1ère as a direct class, seed order preserved", () => {
+    const years = buildLyceeYears([
+      S("ecole-1ere-sec", "1ere-sec", "available"),
+      S("ecole-2eme-sec-sciences", "2eme-sec-sciences"),
+      S("ecole-2eme-sec-lettres", "2eme-sec-lettres"),
+      S("concours-bac-math", "bac-math", "available"),
+      S("concours-bac-lettres", "bac-lettres"),
+    ]);
+    expect(years.map((g) => g.year)).toEqual(["1ere", "2eme", "bac"]);
+    expect(years[0].direct?.id).toBe("ecole-1ere-sec");
+    expect(years[0].sections).toEqual([]);
+    expect(years[1].sections.map((p) => p.id)).toEqual([
+      "ecole-2eme-sec-sciences",
+      "ecole-2eme-sec-lettres",
+    ]);
+    expect(years[1].available).toBe(0);
+    expect(years[2].sections.map((p) => p.id)).toEqual([
+      "concours-bac-math",
+      "concours-bac-lettres",
+    ]);
+    expect(years[2].available).toBe(1);
+  });
+
+  it("skips years absent from the catalogue and ignores non-lycée rows", () => {
+    const years = buildLyceeYears([
+      S("concours-bac-math", "bac-math"),
+      P({ id: "concours-9eme", theme_id: "ecole-tn", grade_slug: "9eme-base" }),
+    ]);
+    expect(years.map((g) => g.year)).toEqual(["bac"]);
   });
 });

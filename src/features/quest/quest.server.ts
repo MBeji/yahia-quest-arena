@@ -245,6 +245,46 @@ export const getSubject = createServerFn({ method: "GET" })
       }
     }
 
+    // Parcours that owns this subject — powers the hub's level anchor + back link
+    // (étude 15 lot 7, D-6 : the kicker shows the CLASS, not the RPG attribute, and
+    // the hub gets a way back up to /niveau). Resolved for EVERYONE (anon included);
+    // a resolution failure degrades to "no anchor", never a broken page.
+    type ParcoursAnchorRow = {
+      id: string;
+      name_fr: string;
+      name_en: string | null;
+      name_ar: string | null;
+      is_premium: boolean;
+    };
+    let parcoursRow: ParcoursAnchorRow | null = null;
+    try {
+      const themeId = (subj.data as { theme_id?: string | null }).theme_id ?? null;
+      const gradeId = (subj.data as { grade_id?: string | null }).grade_id ?? null;
+      if (themeId) {
+        // resolve_subject_parcours matches grade_id with IS NOT DISTINCT FROM, so a
+        // null grade is valid (grade-agnostic themes resolve their own parcours); the
+        // generated arg type narrows p_grade to string, hence the cast on the nullable.
+        const parcoursIdRes = await supabase.rpc("resolve_subject_parcours", {
+          p_theme: themeId,
+          p_grade: gradeId as string,
+        });
+        const parcoursId = (parcoursIdRes as { data?: string | null }).data ?? null;
+        if (parcoursId) {
+          const { data: p } = await supabase
+            .from("parcours")
+            .select("id,name_fr,name_en,name_ar,is_premium")
+            .eq("id", parcoursId)
+            .maybeSingle();
+          parcoursRow = (p as ParcoursAnchorRow | null) ?? null;
+        }
+      }
+    } catch (err) {
+      logger.warn("quest.getSubject: parcours anchor fetch failed", {
+        subjectId: data.subjectId,
+        error: errorMessage(err),
+      });
+    }
+
     // Parcours access context for premium gating of missions on the page.
     // Assigned on every path below (both try branches + the catch's locked-safe default),
     // so it needs no initializer — and an unread one trips eslint's no-useless-assignment.
@@ -254,32 +294,21 @@ export const getSubject = createServerFn({ method: "GET" })
       viewer = { level: 0, isPremium: false, hasEntitlement: true };
     } else {
       try {
-        const themeId = (subj.data as { theme_id?: string | null }).theme_id ?? null;
-        const gradeId = (subj.data as { grade_id?: string | null }).grade_id ?? null;
-        const [viewerProfile, parcoursIdRes] = await Promise.all([
-          supabase.from("profiles").select("level").eq("id", userId).maybeSingle(),
-          themeId
-            ? // resolve_subject_parcours matches grade_id with IS NOT DISTINCT FROM, so a
-              // null grade is valid (grade-agnostic themes resolve their own parcours); the
-              // generated arg type narrows p_grade to string, hence the cast on the nullable.
-              supabase.rpc("resolve_subject_parcours", {
-                p_theme: themeId,
-                p_grade: gradeId as string,
-              })
-            : Promise.resolve({ data: null as string | null }),
-        ]);
+        const viewerProfile = await supabase
+          .from("profiles")
+          .select("level")
+          .eq("id", userId)
+          .maybeSingle();
         const level = viewerProfile.data?.level ?? 0;
-        const parcoursId = (parcoursIdRes as { data?: string | null }).data ?? null;
-        if (parcoursId) {
-          const [parcoursRow, entRes] = await Promise.all([
-            supabase.from("parcours").select("is_premium").eq("id", parcoursId).maybeSingle(),
-            supabase.rpc("has_parcours_entitlement", {
-              p_user: userId,
-              p_parcours: parcoursId,
-            }),
-          ]);
-          const isPremium = parcoursRow.data?.is_premium ?? false;
-          viewer = { level, isPremium, hasEntitlement: isPremium ? entRes.data === true : true };
+        if (parcoursRow) {
+          const isPremium = parcoursRow.is_premium ?? false;
+          const entRes = isPremium
+            ? await supabase.rpc("has_parcours_entitlement", {
+                p_user: userId,
+                p_parcours: parcoursRow.id,
+              })
+            : null;
+          viewer = { level, isPremium, hasEntitlement: isPremium ? entRes?.data === true : true };
         } else {
           viewer = { level, isPremium: false, hasEntitlement: true };
         }
@@ -299,6 +328,14 @@ export const getSubject = createServerFn({ method: "GET" })
       bestByExercise: best,
       quizPassedByChapter,
       viewer,
+      parcours: parcoursRow
+        ? {
+            id: parcoursRow.id,
+            name_fr: parcoursRow.name_fr,
+            name_en: parcoursRow.name_en,
+            name_ar: parcoursRow.name_ar,
+          }
+        : null,
     };
   });
 

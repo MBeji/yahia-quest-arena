@@ -55,6 +55,9 @@ function MatierePage() {
       subject={data.subject}
       chapters={data.chapters}
       exercises={data.exercises}
+      bestByExercise={data.bestByExercise}
+      quizPassedByChapter={data.quizPassedByChapter}
+      parcours={data.parcours}
       isAuthenticated={!!user}
     />
   );

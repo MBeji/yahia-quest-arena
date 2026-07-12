@@ -1,0 +1,409 @@
+<!-- @dsCard group="Écrans" -->
+<title>Hub matière connecté (lot 7)</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+  }
+  body {
+    font-family: "Space Grotesk", system-ui, sans-serif;
+    background: #f3f2ee;
+    padding: 16px;
+    color: #1a1a1a;
+  }
+  .display {
+    font-family: "Orbitron", "Space Grotesk", system-ui, sans-serif;
+  }
+  h3.section {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.55;
+    margin: 0 0 8px;
+    font-weight: 700;
+  }
+  .avant {
+    border-inline-start: 3px solid #c0392b;
+    background: #fbeae8;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    color: #7a2018;
+    margin-bottom: 6px;
+  }
+  .apres {
+    border-inline-start: 3px solid #0f6e56;
+    background: #e7f3ee;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    color: #0b4535;
+    margin-bottom: 12px;
+  }
+  .lay {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 18px;
+    align-items: start;
+  }
+  @media (max-width: 760px) {
+    .lay {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Registre Référence (le hub est une page publique partagée) */
+  .phone {
+    --background: oklch(0.985 0.008 165);
+    --foreground: oklch(0.26 0.03 175);
+    --card: #fff;
+    --primary: #0f6e56;
+    --muted-fg: oklch(0.48 0.025 172);
+    --border: oklch(0.9 0.015 168);
+    --success: oklch(0.55 0.13 165);
+    background: var(--background);
+    color: var(--foreground);
+    border-radius: 22px;
+    padding: 14px;
+    border: 1px solid #e2e0d8;
+  }
+  .crumb {
+    font-size: 12.5px;
+    color: var(--muted-fg);
+  }
+  .crumb a {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .kick {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--primary);
+    font-weight: 700;
+    margin-top: 10px;
+  }
+  h1.subj {
+    font-size: 26px;
+    font-weight: 800;
+    margin-top: 2px;
+  }
+  .desc {
+    font-size: 12.5px;
+    color: var(--muted-fg);
+    margin-top: 4px;
+  }
+
+  .resume {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+    border: 1px solid color-mix(in oklab, var(--primary) 35%, transparent);
+    background: color-mix(in oklab, var(--primary) 7%, transparent);
+    border-radius: 12px;
+    padding: 11px 12px;
+  }
+  .resume .play {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--primary);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-size: 14px;
+  }
+  .resume b {
+    font-size: 13.5px;
+  }
+  .resume small {
+    display: block;
+    font-size: 11.5px;
+    color: var(--muted-fg);
+  }
+  .resume .go {
+    margin-inline-start: auto;
+    color: var(--primary);
+    font-weight: 700;
+  }
+
+  .chap {
+    border: 1px solid var(--border);
+    background: var(--card);
+    border-radius: 14px;
+    margin-top: 10px;
+    overflow: hidden;
+  }
+  .chap-head {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 11px 12px;
+  }
+  .chap-head .num {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--muted-fg);
+    letter-spacing: 0.08em;
+  }
+  .chap-head .ttl {
+    font-size: 13.5px;
+    font-weight: 700;
+    flex: 1;
+    min-width: 0;
+  }
+  .chip {
+    font-size: 10.5px;
+    font-weight: 700;
+    border-radius: 999px;
+    padding: 2px 8px;
+    white-space: nowrap;
+  }
+  .chip.ok {
+    background: color-mix(in oklab, var(--success) 14%, transparent);
+    color: var(--success);
+  }
+  .chip.todo {
+    background: color-mix(in oklab, var(--muted-fg) 12%, transparent);
+    color: var(--muted-fg);
+  }
+  .chip.lock {
+    background: #f6ead9;
+    color: #8a5a00;
+  }
+  .chev {
+    color: var(--muted-fg);
+    font-size: 12px;
+  }
+  .chap-body {
+    border-top: 1px solid var(--border);
+    padding: 6px 12px 10px;
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 0;
+    font-size: 12.5px;
+    border-top: 1px dashed color-mix(in oklab, var(--border) 60%, transparent);
+  }
+  .row:first-child {
+    border-top: 0;
+  }
+  .st {
+    width: 20px;
+    text-align: center;
+  }
+  .st.done {
+    color: var(--success);
+  }
+  .st.todo {
+    color: var(--muted-fg);
+  }
+  .st.lock {
+    color: #8a5a00;
+  }
+  .row .t {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .row .meta {
+    font-size: 11px;
+    color: var(--muted-fg);
+    white-space: nowrap;
+  }
+  .row .meta.xp {
+    color: var(--primary);
+    font-weight: 700;
+  }
+  .course {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--primary);
+    padding: 6px 0;
+  }
+  .hint {
+    font-size: 11.5px;
+    color: #8a5a00;
+    background: #fdf6ec;
+    border: 1px solid #f0e2c8;
+    border-radius: 8px;
+    padding: 7px 9px;
+    margin-top: 6px;
+  }
+
+  .moved {
+    list-style: none;
+    padding: 0;
+  }
+  .moved li {
+    font-size: 12.5px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: #f7f6f2;
+    border: 1px solid #e6e4dd;
+    margin-bottom: 6px;
+    color: #333;
+  }
+  .moved li b {
+    color: #0f6e56;
+  }
+  .quizbar {
+    margin-top: 14px;
+    border: 1px solid #e2e0d8;
+    border-radius: 12px;
+    background: #fff;
+    padding: 11px 12px;
+    font-size: 12.5px;
+  }
+  .quizbar .k {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #8a5a00;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+</style>
+
+<div class="avant">
+  <b>Avant (audit §B-3/§D-3)</b> — l'écran pivot n'a AUCUN état : 14 chapitres × ~8 missions à plat
+  (~12 000 px mobile), kicker « FORCE » (attribut RPG) au lieu de la classe, aucune remontée vers le
+  niveau, aucun « reprendre », verrous quiz invisibles (clic → mur), XP affichés aux anonymes.
+</div>
+<div class="apres">
+  <b>Après (D-6)</b> — ancrage + remontée, bande « Reprendre », <b>accordéons par chapitre</b> avec
+  progression et état du quiz, <b>badges tri-état par mission</b> (✓ fait · → à faire · 🔒 quiz),
+  gains XP pour le connecté seulement. Les données existent déjà côté serveur
+  (<code>quizPassedByChapter</code>, <code>bestByExercise</code>).
+</div>
+
+<div class="lay">
+  <div>
+    <h3 class="section">Cible — mobile 375, élève connecté (registre Référence)</h3>
+    <div class="phone">
+      <div class="crumb"><a>← 9ème année de base</a></div>
+      <div class="kick">9ème année de base · Concours</div>
+      <h1 class="subj" dir="rtl">الرياضيات</h1>
+      <p class="desc">Toute l'année en 14 chapitres — cours, quiz et missions.</p>
+
+      <div class="resume">
+        <div class="play">▶</div>
+        <div><b>Reprendre ici</b><small>Ch. 3 — الحساب الحرفي · 2/8 missions</small></div>
+        <div class="go">→</div>
+      </div>
+
+      <div class="chap">
+        <div class="chap-head">
+          <span class="num">CH. 1</span><span class="ttl" dir="rtl">الأعداد الحقيقية</span
+          ><span class="chip ok">8/8 ✓</span><span class="chev">▸</span>
+        </div>
+      </div>
+
+      <div class="chap">
+        <div class="chap-head">
+          <span class="num">CH. 3</span><span class="ttl" dir="rtl">الحساب الحرفي</span
+          ><span class="chip ok">quiz ✓ · 2/8</span><span class="chev">▾</span>
+        </div>
+        <div class="chap-body">
+          <span class="course">📖 Lire le cours</span>
+          <div class="row">
+            <span class="st done">✓</span><span class="t" dir="rtl">اختبر فهم الدرس</span
+            ><span class="meta">92%</span>
+          </div>
+          <div class="row">
+            <span class="st done">✓</span><span class="t" dir="rtl">تمرين: النشر والتبسيط ⭐</span
+            ><span class="meta">85%</span>
+          </div>
+          <div class="row">
+            <span class="st todo">→</span><span class="t" dir="rtl">تمرين: التعميل ⭐⭐</span
+            ><span class="meta xp">+50 XP</span>
+          </div>
+          <div class="row">
+            <span class="st todo">→</span><span class="t" dir="rtl">تحدّي: المتطابقات ⭐⭐⭐</span
+            ><span class="meta xp">+120 XP</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="chap">
+        <div class="chap-head">
+          <span class="num">CH. 4</span><span class="ttl" dir="rtl">المعادلات والمتراجحات</span
+          ><span class="chip lock">🔒 quiz à passer</span><span class="chev">▾</span>
+        </div>
+        <div class="chap-body">
+          <span class="course">📖 Lire le cours</span>
+          <div class="row">
+            <span class="st todo">→</span><span class="t" dir="rtl">اختبر فهم الدرس</span
+            ><span class="meta xp">déverrouille le chapitre</span>
+          </div>
+          <div class="row">
+            <span class="st lock">🔒</span><span class="t" dir="rtl">تمرين: حلّ معادلة ⭐</span
+            ><span class="meta">—</span>
+          </div>
+          <div class="row">
+            <span class="st lock">🔒</span><span class="t" dir="rtl">تمرين: المتراجحات ⭐⭐</span
+            ><span class="meta">—</span>
+          </div>
+          <div class="hint">
+            🧠 Réussis le quiz (≥ 80 %) pour déverrouiller les missions de ce chapitre.
+          </div>
+        </div>
+      </div>
+
+      <div class="chap">
+        <div class="chap-head">
+          <span class="num">CH. 5</span><span class="ttl" dir="rtl">جمل معادلتين</span
+          ><span class="chip todo">à faire</span><span class="chev">▸</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <h3 class="section">Règles de la recomposition</h3>
+    <ul class="moved">
+      <li>
+        <b>1. Ancrage + remontée</b> — fil « ← {classe} » vers <code>/niveau/$parcoursId</code> ;
+        kicker = la classe (fin de « FORCE »).
+      </li>
+      <li>
+        <b>2. « Reprendre ici »</b> (connecté) — dernier chapitre travaillé, sinon 1er chapitre non
+        fini ; invisible pour l'anonyme.
+      </li>
+      <li>
+        <b>3. Accordéons par chapitre</b> — repliés par défaut SAUF le chapitre de reprise ; en-tête
+        = n°, titre, chip d'état (<i>8/8 ✓</i> · <i>quiz ✓ · 2/8</i> · <i>🔒 quiz à passer</i> ·
+        <i>à faire</i>).
+      </li>
+      <li>
+        <b>4. Badge tri-état par mission</b> — ✓ fait (meilleur score) · → à faire (+XP, connecté
+        seulement) · 🔒 verrouillée par le quiz (le quiz lui-même reste toujours cliquable).
+      </li>
+      <li>
+        <b>5. Le contrat du quiz</b> est dit sur place (« Réussis ≥ 80 % pour déverrouiller ») ET
+        dans le player du quiz (sous le titre).
+      </li>
+      <li>
+        <b>Anonyme</b> — même layout ; états ✓ issus de la session (quiz seulement), pas de chips XP
+        (audit §D-3 : mystérieux au mieux), pas de bande Reprendre.
+      </li>
+      <li>
+        <b>Données</b> — déjà servies par <code>getSubject</code> (<code>quizPassedByChapter</code>,
+        <code>bestByExercise</code>, difficulté/XP) : recomposition client, zéro nouvelle RPC.
+      </li>
+    </ul>
+    <div class="quizbar">
+      <div class="k">Player du quiz — ligne de contrat (ajoutée sous le titre)</div>
+      🧠 <b>اختبر فهم الدرس</b> — Réussis <b>≥ 80 %</b> pour déverrouiller les missions du chapitre.
+    </div>
+  </div>
+</div>
