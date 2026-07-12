@@ -1,6 +1,6 @@
 # STATUS — état du projet (topo central)
 
-> **Instantané daté du 2026-07-11.** Ce fichier est le **point d'entrée unique** pour savoir
+> **Instantané daté du 2026-07-12.** Ce fichier est le **point d'entrée unique** pour savoir
 > où en est le projet : phase produit, décisions structurantes, état réel des features,
 > études, chantiers, travaux en vol. Il complète — sans les dupliquer — les documents
 > normatifs : [CLAUDE.md](./CLAUDE.md) (conventions, gagne en cas de conflit),
@@ -29,16 +29,17 @@
 
 ## 2. Décisions structurantes (journal daté, append-only)
 
-| Date          | Décision                                                                                                                                                                                                                 | Trace                                                                                |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
-| 2026-06-13    | Marque **Na9ra Nal3ab** ; conception initiale du modèle économique (freemium par parcours, ~69-79 DT) — **supersédée le 21/06**                                                                                          | go-live C5/C6                                                                        |
-| 2026-06-15    | Sortie du boilerplate d'origine (méta-plugin Vite de-vendorisé → config inline), **Vite 8**, bun → **npm**                                                                                                               | go-live journal, PR #110                                                             |
-| 2026-06-21    | **Pivot stratégique : plateforme de référence publique 100 % gratuite**, contenu sans login, « supersède C6 (monétisation retirée v1) », C5 réorienté SEO                                                                | go-live `08-refonte-plateforme-publique.md` (décisions actées) + master plan journal |
-| 2026-06-22    | **Premium retiré de l'UI mais réversible** (« un premium pourra revenir un jour ») : machinerie serveur conservée dormante. MVP public live (PR #180)                                                                    | go-live C8 (L0.6)                                                                    |
-| 2026-07-04→05 | Création du corpus d'études **FableEtudes** (16 études, architecte → exécuteurs)                                                                                                                                         | PR #285                                                                              |
-| 2026-07-10    | **Arbitrage Q-2 étude 15 : « gratuité de phase »** — 100 % gratuit, mots « premium/abonnement/payant » bannis de toute surface utilisateur, entitlements dormants, l'étude 01 (paiement) est le véhicule de réactivation | `FableEtudes/15-contenu-design-ecrans/ETUDE.md` (D-3, Q-2)                           |
-| 2026-07-11    | Gratuité **appliquée en base** : migration `20260711100000_free_phase_all_parcours.sql` (`is_premium = false` partout, ids concours notés pour réactivation) + donjon dé-gaté (plus de raison `SUBSCRIPTION`)            | PR #362, commit `3db87829`                                                           |
-| 2026-07-11    | **Passe de rationalisation documentaire** : ce fichier créé, docs canoniques réalignées sur la gratuité, statuts d'études resynchronisés, go-live rafraîchi                                                              | cette PR                                                                             |
+| Date          | Décision                                                                                                                                                                                                                                           | Trace                                                                                |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| 2026-06-13    | Marque **Na9ra Nal3ab** ; conception initiale du modèle économique (freemium par parcours, ~69-79 DT) — **supersédée le 21/06**                                                                                                                    | go-live C5/C6                                                                        |
+| 2026-06-15    | Sortie du boilerplate d'origine (méta-plugin Vite de-vendorisé → config inline), **Vite 8**, bun → **npm**                                                                                                                                         | go-live journal, PR #110                                                             |
+| 2026-06-21    | **Pivot stratégique : plateforme de référence publique 100 % gratuite**, contenu sans login, « supersède C6 (monétisation retirée v1) », C5 réorienté SEO                                                                                          | go-live `08-refonte-plateforme-publique.md` (décisions actées) + master plan journal |
+| 2026-06-22    | **Premium retiré de l'UI mais réversible** (« un premium pourra revenir un jour ») : machinerie serveur conservée dormante. MVP public live (PR #180)                                                                                              | go-live C8 (L0.6)                                                                    |
+| 2026-07-04→05 | Création du corpus d'études **FableEtudes** (16 études, architecte → exécuteurs)                                                                                                                                                                   | PR #285                                                                              |
+| 2026-07-10    | **Arbitrage Q-2 étude 15 : « gratuité de phase »** — 100 % gratuit, mots « premium/abonnement/payant » bannis de toute surface utilisateur, entitlements dormants, l'étude 01 (paiement) est le véhicule de réactivation                           | `FableEtudes/15-contenu-design-ecrans/ETUDE.md` (D-3, Q-2)                           |
+| 2026-07-11    | Gratuité **appliquée en base** : migration `20260711100000_free_phase_all_parcours.sql` (`is_premium = false` partout, ids concours notés pour réactivation) + donjon dé-gaté (plus de raison `SUBSCRIPTION`)                                      | PR #362, commit `3db87829`                                                           |
+| 2026-07-11    | **Passe de rationalisation documentaire** : ce fichier créé, docs canoniques réalignées sur la gratuité, statuts d'études resynchronisés, go-live rafraîchi                                                                                        | PR #372 (mergée le 2026-07-12)                                                       |
+| 2026-07-12    | **Clôture de la passe** : travaux en vol sauvés (PRs draft #374 français-3ème, #376 2ème-sec, #379 lot Méta ; snapshot checkout sur `rescue/main-tree-2026-07`), checkout principal remis propre, hygiène branches (60→19 locales, 95→7 distantes) | §6 ci-dessous                                                                        |
 
 ---
 
@@ -96,22 +97,33 @@ Entrée : `go-live/00-MASTER-PLAN.md`. État au 2026-07-11 :
 
 ---
 
-## 6. Travaux en vol & sessions à clôturer (constat 2026-07-11)
+## 6. Travaux en vol & sessions à clôturer
 
-**PRs ouvertes** :
+> **Mise à jour 2026-07-12 — la passe de rationalisation est clôturée.** Le constat initial du
+> 2026-07-11 (checkout sale, WIP non commités, ~150 branches) a été traité : tout le travail
+> retrouvé est sauvé et l'arbre est propre. Ne subsistent que des **décisions produit**, listées
+> plus bas.
 
-- **#348** — transcriptions first-pass ScribeKit (collège FR/EN + 1ère-sec, 10/11) — ouverte depuis le 2026-07-10 ; du travail non commité traîne aussi sur son worktree (`busy-raman`).
-- **#366 (draft)** — étude 07 lot 1 : implémenté alors que l'étude est en `brouillon` (viole le cycle brouillon → validée → en exécution). **À arbitrer : valider l'étude 07, ou fermer la PR.**
+**Travaux en vol — RÉSOLUS (2026-07-12)** :
 
-**Arbres de travail à trier** (aucune suppression faite — validation Mohamed requise) :
+- **Checkout principal** : trié et **remis propre sur `main`** ; l'intégralité des ~155 modifs +
+  fichiers non suivis est figée sur `rescue/main-tree-2026-07` (snapshot) + `-tri` (outil
+  `dev-on-test.mjs` extrait). Rien perdu ; à exploiter au besoin, jamais à merger tel quel.
+- **WIP sauvés en commits dédiés** : français 3ème → PR draft **#374** ; transcription 2ème sec →
+  PR draft **#376** ; lot « Méta » GAP-048→055 → PR draft **#379** (base du 28/06 à rebaser avant
+  reprise) ; suite transcriptions #348 → commit local sur `busy-raman` (non poussé, à réconcilier
+  avec la PR).
+- **Hygiène branches/worktrees faite** : **60→19 branches locales, 95→7 distantes** ; worktrees des
+  PRs mergées retirés ; 6 dossiers `_wt-*` orphelins nettoyés. `_wt-french-3eme` avait bien du
+  contenu unique — sauvé (#374) avant tout ménage.
 
-- **Checkout principal `yahia-quest-arena/`** : resté sur `feat/seo-public-metadata` (branche **déjà mergée**, PR #182) avec ~155 modifs locales + 14 fichiers non suivis accumulés depuis le 22/06 → à trier puis remettre sur `main` propre.
-- **Worktree `silly-curran-9dcdfd`** : lot « Méta » GAP-048→055 (hook garde des fichiers générés, `content/CATALOGUE.md`, catalogue.mjs…) — 18 fichiers **jamais commités**.
-- **Worktree wrapper `_wt-french-3eme`** : contenu `content/french-3eme/` **non commité** (seul `_wt-*` avec du travail à sauver).
-- Worktrees dont la PR est **mergée** (jetables après vérif) : `_wt-nav` (#209), `_wt-theme` (#206), `_wt-programme` (#211), `_wt-islamique-3eme` (#199), `_wt-islamique-4eme` (#223), `distracted-dirac` (#332), `lycee-section-structure` (#367), `ux-design-refactor` (#368).
-- 6 dossiers `_wt-*` **orphelins** (plus de `.git`) dans le wrapper + ~95 branches distantes / ~60 locales → session d'hygiène dédiée recommandée (comme le tri D3 du 12/06).
+**Décisions produit qui restent (choix humain)** :
 
-**Issues ouvertes (17)** : 9 contenu (`content-audit` : 2 BLOCKER #336/#337 + 6 MAJOR sur `french-8eme`, 1 MAJOR `math-bac-math` #344) · #363 e2e-auth (12 échecs préexistants sur main) · #250 nightly rouge · 3 dépendances majeures (#233/#234/#236) · 2 enhancements produit (#293 bilan visible élèves, #294 vue par matière) · #316 preview Vercel.
+- **PRs de sauvetage #374 / #376** : relire (`content:check` + audit pédagogique) puis merger, ou fermer.
+- **PR draft #366** — étude 07 lot 1 implémenté hors cycle (étude en `brouillon`) : **valider l'étude 07 ou fermer la PR**.
+- **PR #348 (READY)** — transcriptions ScribeKit : réconcilier le commit local `busy-raman` puis merger/fermer.
+
+**Issues ouvertes** : 9 contenu (`content-audit` : 2 BLOCKER #336/#337 + 6 MAJOR sur `french-8eme`, 1 MAJOR `math-bac-math` #344) · #363 e2e-auth (12 échecs préexistants sur main) · #250 nightly rouge · 3 dépendances majeures (#233/#234/#236) · 2 enhancements produit (#293 bilan visible élèves, #294 vue par matière) · #316 preview Vercel.
 
 ---
 
@@ -140,6 +152,5 @@ Entrée : `go-live/00-MASTER-PLAN.md`. État au 2026-07-11 :
 2. **Reverdir `main`** : e2e-auth (#363, 12 échecs) + nightly (#250).
 3. **C4 / mise en prod sérieuse** : câbler le domaine `na9ranal3ab.tn`, monitoring + ruleset (~45 min Mohamed), puis soumettre le sitemap.
 4. **Activer le processus de triage** des signalements (`/admin/content-reports` + `/admin/bug-reports`, skill `report-triage`) — cadence hebdo légère.
-5. **Trancher les travaux en vol** (§6) : PR #348, PR draft #366, lot Méta `silly-curran`, WIP `_wt-french-3eme`, checkout principal.
+5. **Trancher les PRs en attente** (§6) : sauvetages #374 / #376, étude 07 #366, transcriptions #348. _(Le tri des travaux en vol et l'hygiène des branches sont faits — 2026-07-12.)_
 6. **Conformité mineurs** (GAP-003 INPDP) + pages légales (GAP-024) — prérequis légaux du lancement.
-7. Session d'**hygiène branches/worktrees** (~95 distantes, ~60 locales, 6 dossiers orphelins).
