@@ -112,6 +112,8 @@ describe("gamification.quest — getSubject", () => {
       bestByExercise: { "ex-1": 85 },
       quizPassedByChapter: {},
       viewer: { level: 0, isPremium: false, hasEntitlement: true },
+      // Level anchor (étude 15 lot 7) — null here: the mocked RPC resolves no parcours.
+      parcours: null,
     });
   });
 

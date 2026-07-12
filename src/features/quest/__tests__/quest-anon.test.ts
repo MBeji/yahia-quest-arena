@@ -114,8 +114,14 @@ describe("quest anonymous content reads (L0.4b)", () => {
     expect(res.bestByExercise).toEqual({});
     expect(res.quizPassedByChapter).toEqual({ ch1: false });
     expect(res.exercises).toHaveLength(2);
-    // No account-bound RPC (best scores / entitlements) runs for an anon caller.
-    expect(mockRpc).not.toHaveBeenCalled();
+    // No ACCOUNT-BOUND RPC (best scores / entitlements) runs for an anon caller.
+    // The parcours-anchor resolution (étude 15 lot 7 — the hub's back link works
+    // for anonymous visitors too) is the only call allowed here.
+    for (const call of mockRpc.mock.calls) {
+      expect(call[0]).toBe("resolve_subject_parcours");
+    }
+    expect(mockRpc).not.toHaveBeenCalledWith("get_best_scores_by_exercise", expect.anything());
+    expect(mockRpc).not.toHaveBeenCalledWith("has_parcours_entitlement", expect.anything());
   });
 
   it("getExercise (anon): returns content with zero hint charges and no inventory read", async () => {

@@ -207,6 +207,7 @@ export type TranslationKeys = {
     resultScore: string;
     serverValidatedTime: string;
     timeSpent: string;
+    quizContract: string;
     questionN: string;
     potionXpApplied: string;
     potionCoinsApplied: string;
@@ -782,6 +783,12 @@ export type TranslationKeys = {
     subject: {
       chapter: string;
       readCourse: string;
+      resumeHere: string;
+      missionsProgress: string;
+      quizToPass: string;
+      todo: string;
+      unlocksChapter: string;
+      quizContract: string;
     };
     practice: {
       back: string;

@@ -207,6 +207,7 @@ export const en: TranslationKeys = {
     resultScore: "{correct} / {total} correct answers · {pct}%",
     serverValidatedTime: "Server-validated time · {n}s",
     timeSpent: "Time · {n}s",
+    quizContract: "Score ≥ {pct}% to unlock the chapter's missions.",
     questionN: "Question {n}",
     potionXpApplied: "XP Potion ×{x} applied!",
     potionCoinsApplied: "Coin Potion ×{x} applied!",

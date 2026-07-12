@@ -206,6 +206,7 @@ export const ar: TranslationKeys = {
     resultScore: "{correct} / {total} إجابات صحيحة · {pct}%",
     serverValidatedTime: "وقت مُتحقَّق منه على الخادم · {n}ث",
     timeSpent: "الوقت · {n}ث",
+    quizContract: "انجح بـ ≥ {pct}٪ لفتح مهمات الفصل.",
     questionN: "السؤال {n}",
     potionXpApplied: "جرعة الخبرة ×{x} مُطبّقة !",
     potionCoinsApplied: "جرعة العملات ×{x} مُطبّقة !",

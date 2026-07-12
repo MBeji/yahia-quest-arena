@@ -129,6 +129,12 @@ export const arPublic: TranslationKeys["public"] = {
   subject: {
     chapter: "الفصل {n}",
     readCourse: "اقرأ الدرس",
+    resumeHere: "واصل من هنا",
+    missionsProgress: "{done}/{total} مهمة",
+    quizToPass: "اجتز الاختبار أولًا",
+    todo: "لم يبدأ",
+    unlocksChapter: "يفتح الفصل",
+    quizContract: "انجح في الاختبار (≥ {pct}٪) لفتح مهمات هذا الفصل.",
   },
   practice: {
     back: "العودة إلى المادة",

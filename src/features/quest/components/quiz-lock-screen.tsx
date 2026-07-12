@@ -1,5 +1,21 @@
 import { Link } from "@tanstack/react-router";
 import { BookOpen, Brain, Lock } from "lucide-react";
+import { useT } from "@/lib/i18n";
+import { QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
+
+/**
+ * The quiz's pedagogical contract, said ON the quiz itself (étude 15 lot 7,
+ * R-4 — audit §B-5: the central gate used to be invisible on the very screen
+ * that runs it). Rendered by the player under the quiz header.
+ */
+export function QuizContractHint({ className = "" }: { className?: string }) {
+  const t = useT();
+  return (
+    <p className={`text-xs text-muted-foreground ${className}`}>
+      🧠 {t.quest.quizContract.replace("{pct}", String(QUIZ_PASS_THRESHOLD_PCT))}
+    </p>
+  );
+}
 
 /**
  * Shown when a chapter's comprehension quiz must be passed before its exercises
