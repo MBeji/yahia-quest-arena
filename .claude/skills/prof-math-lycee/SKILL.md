@@ -42,10 +42,12 @@ plafond — strictement dans le programme de la section et de l'année.
   travail lycée est **en attente** des stations amont (migration sections → transcription des
   programmes → mise en base via `content-ecole-tn`). Les cartes ci-dessous sont **indicatives** (grands
   blocs sûrs du programme tunisien) et devront être alignées sur la transcription officielle.
-- **Premium** : seuls les parcours `bac-*` sont concours PREMIUM (d3/d4 gated, preview = quiz + d1) ;
-  1ère→3ème sec = FREE (d3/d4 = palier difficile du ladder libre). Récompenses canoniques : d3 boss
-  120/30, d4 challenge 300/60 ; étoiles + libellés FR (Difficile / Élite). Ne jamais convertir un d1–2
-  existant en d3–4.
+- **Phase gratuite : rien n'est gaté.** Les parcours `bac-*` sont **concours national** ; leur
+  statut « premium » (d3/d4 gated, preview = quiz + d1) est une **architecture dormante**
+  (réactivation via l'étude gelée `FableEtudes/01-paiement-en-ligne`, voir CLAUDE.md « Access
+  gate ») — 1ère→3ème sec comme `bac-*` sont FREE aujourd'hui. Récompenses canoniques inchangées :
+  d3 boss 120/30, d4 challenge 300/60 ; étoiles + libellés FR (Difficile / Élite). Ne jamais
+  convertir un d1–2 existant en d3–4.
 - **Palier bac dédié** : fichier `NN-annales-bac.json` (d4, challenge, 300/60) — items style annales
   session principale, multi-étapes, discriminants du top décile.
 
@@ -85,18 +87,18 @@ plafond — strictement dans le programme de la section et de l'année.
 
 ## Taxonomie des pièges — chaque distracteur exécute UNE erreur
 
-| notion                      | pièges à exécuter                                                                                                                   |
+| notion | pièges à exécuter |
 | --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | --- | ------- |
-| Limites/continuité          | forme indéterminée traitée comme finie ; limite en ∞ = valeur en un point ; continuité ⇒ dérivabilité (faux)                        |
-| Dérivation                  | (uv)' = u'v' ; dérivée de composée sans facteur intérieur ; signe de f' lu à l'envers pour les variations                           |
-| ln / exp                    | ln(a+b) = ln a + ln b ; e^(a+b) = e^a + e^b ; domaine ln(x) oublié (x>0) ; ln et exp non réciproques                                |
-| Primitives/intégrales       | oublier la constante ; borne inversée sans changer de signe ; primitive de 1/x = ln                                                 | x   | oubliée |
-| Suites                      | récurrence : hérédité sans initialisation ; confondre suite arithmétique/géométrique ; limite d'une suite bornée supposée existante |
-| Nombres complexes           | module = partie réelle + imaginaire ; argument sans quadrant ; conjugué mal signé ; i² = 1                                          |
-| Probabilités/dénombrement   | arrangement ↔ combinaison confondus ; événements dépendants traités indépendants ; P(A∪B) sans − P(A∩B)                             |
-| Géométrie espace            | produit scalaire ↔ vectoriel confondus ; vecteur normal mal identifié ; distance point-plan sans normalisation                      |
-| Arithmétique (math)         | Bézout appliqué sans PGCD = 1 ; congruence mal propagée ; divisibilité et primalité confondues                                      |
-| Transition ar↔fr (1ère sec) | « croissante » confondue avec « positive » ; « fonction » ↔ « équation » ; lecture de « décroissante » comme « négative »           |
+| Limites/continuité | forme indéterminée traitée comme finie ; limite en ∞ = valeur en un point ; continuité ⇒ dérivabilité (faux) |
+| Dérivation | (uv)' = u'v' ; dérivée de composée sans facteur intérieur ; signe de f' lu à l'envers pour les variations |
+| ln / exp | ln(a+b) = ln a + ln b ; e^(a+b) = e^a + e^b ; domaine ln(x) oublié (x>0) ; ln et exp non réciproques |
+| Primitives/intégrales | oublier la constante ; borne inversée sans changer de signe ; primitive de 1/x = ln | x | oubliée |
+| Suites | récurrence : hérédité sans initialisation ; confondre suite arithmétique/géométrique ; limite d'une suite bornée supposée existante |
+| Nombres complexes | module = partie réelle + imaginaire ; argument sans quadrant ; conjugué mal signé ; i² = 1 |
+| Probabilités/dénombrement | arrangement ↔ combinaison confondus ; événements dépendants traités indépendants ; P(A∪B) sans − P(A∩B) |
+| Géométrie espace | produit scalaire ↔ vectoriel confondus ; vecteur normal mal identifié ; distance point-plan sans normalisation |
+| Arithmétique (math) | Bézout appliqué sans PGCD = 1 ; congruence mal propagée ; divisibilité et primalité confondues |
+| Transition ar↔fr (1ère sec) | « croissante » confondue avec « positive » ; « fonction » ↔ « équation » ; lecture de « décroissante » comme « négative » |
 
 ## Calibration lycée (15–19 ans)
 

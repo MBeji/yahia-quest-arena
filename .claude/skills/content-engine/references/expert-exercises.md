@@ -46,8 +46,9 @@ Illegitimate difficulty (never do this):
 Per-question `difficulty` tags (1–3) still ramp **within** the exercise: open a d4 exercise with its
 easiest question (tag 2), close with the hardest (tag 3). Six questions minimum (anti-rush floor).
 Rewards/modes come from the canonical table (`rewards-and-modes.md`): d3 = `boss` 120/30,
-d4 = `challenge` 300/60 — no off-pattern combos. Both tiers are premium-gated; **never** convert an
-existing d1–2 free exercise to d3–4 (that would shrink the free preview).
+d4 = `challenge` 300/60 — no off-pattern combos. Both tiers are the dormant premium-gate ceiling
+(nothing is actually gated in the current free phase); **never** convert an existing d1–2 free
+exercise to d3–4 (that would shrink the free preview if premium ever reactivates).
 
 ## Archetype catalogue (subject-agnostic skeletons)
 

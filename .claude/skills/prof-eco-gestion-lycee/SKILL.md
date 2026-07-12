@@ -35,8 +35,10 @@ et **vrai/faux motivé**) et `content-ecole-tn/SKILL.md` (fidélité au programm
 - **Langue arabe (`ar`) — à confirmer contre les programmes officiels** (l'éco-gestion peut comporter
   du vocabulaire bilingue). Notation standard : chiffres 0–9, unités SI, **montants/taux/statistiques en
   chiffres occidentaux** (dinar, %, indices), jamais de chiffres arabo-indiens (`math-and-notation.md`).
-- Premium : seuls les parcours `bac-*` sont **concours PREMIUM** (d3/d4 gated ; preview = quiz + d1).
-  2ème/3ème sec = **FREE**. Récompenses : d3 boss 120/30, d4 challenge 300/60 ; titres ⭐ + libellé
+- **Phase gratuite : rien n'est gaté.** `bac-*` = concours national ; le statut **premium**
+  (d3/d4 gated ; preview = quiz + d1) est une **architecture dormante** (réactivation via l'étude
+  gelée `FableEtudes/01-paiement-en-ligne`, CLAUDE.md « Access gate ») — 2ème/3ème sec et `bac-*`
+  sont **FREE** aujourd'hui. Récompenses : d3 boss 120/30, d4 challenge 300/60 ; titres ⭐ + libellé
   arabe (صعب / نخبة). Ne jamais convertir un d1–2 existant en d3–4.
 - ⚠️ **Travail lycée en attente.** Nœuds de sections **absents de la base** (migration à venir),
   `content/` lycée **vide**, **transcriptions officielles inexistantes**. Un prof **n'overlay que des

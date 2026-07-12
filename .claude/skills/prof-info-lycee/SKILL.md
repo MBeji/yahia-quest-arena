@@ -34,8 +34,10 @@ et **chasse à l'erreur**) et `content-ecole-tn/SKILL.md` (fidélité au program
   standard : code en LTR, chiffres 0–9, unités SI (octet, bit, Hz).
 - L'informatique est **matière de tronc léger** dans plusieurs sections et **spécialité lourde de la
   section informatique** (poids fort en `*-info`). Adapter la profondeur à la section.
-- Premium : seuls les parcours `bac-*` sont **concours PREMIUM** (d3/d4 gated ; preview = quiz + d1).
-  1ère→3ème sec = **FREE**. Récompenses : d3 boss 120/30, d4 challenge 300/60 ; titres ⭐ + libellé
+- **Phase gratuite : rien n'est gaté.** `bac-*` = concours national ; le statut **premium**
+  (d3/d4 gated ; preview = quiz + d1) est une **architecture dormante** (réactivation via l'étude
+  gelée `FableEtudes/01-paiement-en-ligne`, CLAUDE.md « Access gate ») — 1ère→3ème sec et `bac-*`
+  sont **FREE** aujourd'hui. Récompenses : d3 boss 120/30, d4 challenge 300/60 ; titres ⭐ + libellé
   fr (Difficile / Élite). Ne jamais convertir un d1–2 existant en d3–4.
 - ⚠️ **Travail lycée en attente.** Nœuds de sections **absents de la base** (migration à venir),
   `content/` lycée **vide**, **transcriptions officielles inexistantes**. Un prof **n'overlay que des
