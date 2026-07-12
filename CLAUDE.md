@@ -121,8 +121,9 @@ staged files); `pre-push` runs `npm run verify`. Installed automatically via the
 `content_reports` (user-flagged content errors) · `bug_reports` (user bug reports) ·
 `themes` / `grades` · `question_attempts`
 (append-only per-question telemetry — moteur adaptatif étude 04) + `user_misconceptions` (its
-per-(user, tag) aggregate, trigger-maintained). (The old `subscriptions` columns + RPCs were
-removed in migration `20260609000000`.)
+per-(user, tag) aggregate, trigger-maintained) · `competencies` / `competency_prereqs` /
+`question_competencies` (knowledge graph — étude 07 lot 1). (The old `subscriptions` columns +
+RPCs were removed in migration `20260609000000`.)
 
 **Adaptive-engine telemetry (étude 04, phase A0).** Each answer submitted through
 `submit_exercise_attempt`/`submit_dungeon_answer` also appends a `question_attempts` row in the
@@ -133,6 +134,17 @@ drawn from the closed registry `content/misconceptions.json` (id → FR/EN/AR la
 optional per-option `misconceptionTag` content field and validated by `content:qa`. A trigger keeps
 `user_misconceptions` (occurrences + distinct sessions) for the later "Révision du jour" / "Points
 faibles" lots; raw telemetry is purged after 12 months (`purge_question_attempts`, pg_cron).
+
+**Knowledge graph (étude 07, lot 1).** Competencies live in versioned family registries
+`content/competences/<famille>.json` (`math.geo.thales-direct` → FR/EN/AR labels + same-family
+prereq DAG, cycle = `content:check` error), compiled — like all content — into relational tables
+(`competencies`, `competency_prereqs`; stable UUIDv5, family-scoped prune) via
+`npm run content:build -- --competences` (registry ONLY — never regenerates subjects). Questions
+declare 1–3 evaluated competencies via the optional `competencies` content field (first =
+primary, ANY question type), compiled into the client-readable `question_competencies` junction —
+unlike `distractor_tags` these ids describe the question, not the options, so they never leak the
+key. Unknown id = `content:qa` error; family≠subject = warning (`subjectPrefixes` in the
+registry). Per-student mastery (EWMA + forgetting) arrives with lot 2 (`user_competency_mastery`).
 
 Server-side logic lives in SQL: `handle_new_user` (auto-profile on signup), `award_xp`
 (streak + level curve: 200 XP/level, hero-class tiers), and the `submit_exercise_attempt`
