@@ -23,7 +23,9 @@ import { spawnSync } from "node:child_process";
 import http from "node:http";
 import { readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
-import { join, extname, resolve } from "node:path";
+import { createRequire } from "node:module";
+import { join, dirname, extname, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 
 const ROOT = resolve(import.meta.dirname, "../..");
 const CLIENT_DIR = join(ROOT, "dist/client");
@@ -63,7 +65,14 @@ const MIME = {
 
 function buildProdBundle() {
   console.log("▶ smoke:shell — building the production bundle (dummy env)…");
-  const res = spawnSync("npx", ["vite", "build"], {
+  // Run the local vite bin with the current Node, not `spawnSync("npx", …)`:
+  // on Windows npx is npx.cmd, which spawnSync can't exec without a shell
+  // (ENOENT). Vite's exports map only exposes ./package.json, so resolve the
+  // bin path through it.
+  const require = createRequire(import.meta.url);
+  const vitePkgPath = require.resolve("vite/package.json");
+  const viteBin = join(dirname(vitePkgPath), require(vitePkgPath).bin.vite);
+  const res = spawnSync(process.execPath, [viteBin, "build"], {
     cwd: ROOT,
     stdio: "inherit",
     env: { ...process.env, ...DUMMY_ENV },
@@ -104,7 +113,10 @@ function startServer(worker) {
 }
 
 async function launchChromium() {
-  const { chromium } = await import(join(ROOT, "node_modules/playwright/index.mjs"));
+  // pathToFileURL: import() of a bare Windows path reads "D:" as a URL scheme.
+  const { chromium } = await import(
+    pathToFileURL(join(ROOT, "node_modules/playwright/index.mjs")).href
+  );
   try {
     return await chromium.launch();
   } catch (error) {
@@ -145,7 +157,7 @@ async function probePage(browser, path, marker) {
 
 buildProdBundle();
 Object.assign(process.env, DUMMY_ENV);
-const worker = (await import(SERVER_ENTRY)).default;
+const worker = (await import(pathToFileURL(SERVER_ENTRY).href)).default;
 const server = await startServer(worker);
 const browser = await launchChromium();
 
