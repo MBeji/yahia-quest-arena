@@ -162,8 +162,8 @@ Whatever the slice, the same gates apply: quality bar → self-verification → 
   must be taught). Read before writing any course or summary.
 - `references/style-guide.md` — the gamified RPG/manga voice, `cours.md`/`resume.md` skeletons,
   per-language tone, and the rule that prompts/options/explanations stay clean and emoji-free.
-- `references/rewards-and-modes.md` — modes, difficulty tiers, the premium gate, the canonical
-  reward table, and the auto-generated quiz rewards.
+- `references/rewards-and-modes.md` — modes, difficulty tiers, the (dormant) premium gate, the
+  canonical reward table, and the auto-generated quiz rewards.
 - `references/themes-and-trilingual.md` — the seven themes, the school grade ladder, and how to
   model a trilingual program as three sibling subjects.
 - `references/language-track.md` — extra guidance for the language-learning themes
