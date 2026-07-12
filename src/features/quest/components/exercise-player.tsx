@@ -16,7 +16,7 @@ import { levelForXp } from "@/shared/lib/level";
 import { noXpReason } from "@/features/quest/no-xp-reason";
 import { QuestRewardGrid } from "@/features/quest/components/quest-reward-grid";
 import { QuestReviewList } from "@/features/quest/components/quest-review-list";
-import { QuizLockScreen } from "@/features/quest/components/quiz-lock-screen";
+import { QuizContractHint, QuizLockScreen } from "@/features/quest/components/quiz-lock-screen";
 import { QuestHintButton } from "@/features/quest/components/quest-hint-button";
 import { BossCountdown } from "@/features/quest/components/boss-countdown";
 import { buildQuestLabels, type QuestContentLang } from "@/features/quest/quest-labels";
@@ -745,6 +745,7 @@ export function ExercisePlayer({
             className="shadow-gold"
           />
         )}
+        {isQuiz && <QuizContractHint className="mt-2" />}
       </div>
 
       <AnimatePresence mode="wait">

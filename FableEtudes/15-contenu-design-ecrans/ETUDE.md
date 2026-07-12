@@ -115,7 +115,12 @@ pédagogique.
     (lot 3) fait foi ; les mots « abonnement », « premium », « payant » sont bannis de toute
     surface utilisateur (phase gratuite).
   - **R-8** : tout lot qui RECOMPOSE un écran implémente la maquette Claude Design validée par
-    l'humain — pas de maquette validée = STOP, pas d'implémentation.
+    l'humain — pas de maquette validée = STOP, pas d'implémentation. **Amendé le 2026-07-12
+    (arbitrage Mohamed : « continue le reste sans ma validation ») : à partir du lot 7, la
+    validation devient A POSTERIORI — la maquette est toujours produite et publiée dans le
+    projet DS AVANT l'implémentation (traçabilité), mais l'implémentation n'attend plus le feu
+    vert ; Mohamed revoit les maquettes/PR à son rythme et tout retour déclenche un lot
+    correctif.**
   - **R-9** : divulgation progressive — toute liste > ~8 items se replie (accordéon, « top
     10 + toi », pagination) ; jamais deux fois la même information sur une ligne (Niv. n +
     étoiles).
@@ -259,7 +264,7 @@ périmètre ; divergence étude↔code = STOP et remontée (règle FableEtudes).
 - [x] Lot 4 — Claude Design (socle + gabarits + maquettes nav Q-3 / dashboard Q-4, validées 2026-07-11 ; autres écrans au fil de l'eau)
 - [x] Lot 5 — navigation & coquilles
 - [x] Lot 6 — dashboard + `/boutique`
-- [ ] Lot 7 — hub matière connecté
+- [x] Lot 7 — hub matière connecté
 - [ ] Lot 8 — funnel public
 - [ ] Lot 9 — auth v2
 - [ ] Lot 10 — onboarding v2
@@ -424,3 +429,23 @@ Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions co
   pas de test unitaire dédié pour la route `/boutique` (route-wrapper exclu de la couverture par
   `vitest.config`) — couverte par l'e2e shop + les tests des composants déplacés ; captures R-5
   via le workflow (Playwright KO local, cf. lot 2).
+- 2026-07-12 — **Arbitrage Mohamed : validation des maquettes A POSTERIORI** (« continue le
+  reste sans ma validation, go ») → R-8 amendé (maquettes toujours produites/publiées avant
+  implémentation, mais sans attente du feu vert ; retours humains = lots correctifs).
+- 2026-07-12 — Lot 7 livré (hub matière connecté, D-6 — la couche « L2 » différée au C8) :
+  maquette `design/ds/ecrans/hub-matiere.html` publiée dans le projet DS puis implémentée.
+  `getSubject` expose le **parcours d'ancrage** pour tous (résolution hoistée hors du bloc
+  viewer, anonymes compris ; échec → dégradation sans casse) ; le hub est recomposé —
+  remontée « ← {classe} » vers `/niveau` + kicker = la classe (fin de l'attribut RPG),
+  bande **« Reprendre ici »** (chapitre le plus avancé → sa prochaine mission cliquable),
+  **accordéons par chapitre** (repliés sauf reprise/premier) avec chip d'état (`n/n ✓` ·
+  `quiz ✓ · x/n` · `🔒 quiz à passer` · `à faire`), **lignes tri-état** (✓ meilleur score ·
+  → à faire avec +XP connecté seulement · 🔒 inertes avec le contrat du quiz expliqué — R-4),
+  suppression de la double difficulté (étoiles du titre seules, fin de `DifficultyStars` en
+  ligne) ; état anonyme fusionné sessionStorage (post-montage, pas de mismatch SSR). Le player
+  affiche le **contrat du quiz** sous l'en-tête (`quest.quizContract`, seuil lu de
+  `QUIZ_PASS_THRESHOLD_PCT`). i18n ×3 (7 clés hub + 1 player). Tests : 9 specs hub réécrites
+  (ancrage, tri-état, verrou+contrat, reprise, XP anonymes masqués, RTL). Écart accepté : la
+  maquette disait « ≥ 60 % » — le seuil réel est **80 %** (constante) ; maquette corrigée et
+  republiée, le code lit la constante. « Dernier chapitre travaillé » approximé sans donnée de
+  récence : chapitre le plus avancé (ordre) ayant du progrès non terminé.
