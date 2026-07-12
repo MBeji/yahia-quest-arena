@@ -114,7 +114,7 @@ Récit fantastique intégral (dans _Minuit, Heure de l'horreur_). Séquence d'ac
 « J'apprends à : expliquer un phénomène · justifier un point de vue · produire un paragraphe argumenté. »
 
 - **ORAL** : Discuter ; Exprimer un point de vue ; Dialoguer et échanger des points de vue (p.191). Supports : pollution de la mer / de l'air, disparition d'espèces, pêche intensive, abattage des arbres ; exposés en groupes.
-- **LECTURE** : « Le chevreau blanc », **Maurice Genevoix** · **Lecture d'image** · « L'enfant et les arbres », **J.M.G. Le Clézio** · « La mort de la Loute », **André Theuriet** · « Le petit bois », **Jules Supervielle**.
+- **LECTURE** : « Le chevreau blanc », **Maurice Genevoix** (_Trente mille jours_) · **Lecture d'image** · « L'enfant et les arbres », **J-M.G. Le Clézio** (_Voyage au pays des arbres_) · « La mort de la Loute », **A. Theuriet** (_Au paradis des enfants_ — le manuel écrit « A. Theuriet », sans prénom développé) · « Le petit bois », **Jules Supervielle**.
 - **LANGUE** : L'expression de la cause · L'expression de la conséquence · (le conditionnel présent · le subjonctif présent, cf. Conjugaison).
 - **ÉCRIT** : L'explication (« reconnaître les marques de l'explication dans un texte · insérer de courts passages explicatifs ») · L'argumentation (« exprimer un point de vue favorable ou défavorable · produire un dialogue argumenté », p.223).
 - **RESSOURCES LINGUISTIQUES** (tableau p.190) :
@@ -138,7 +138,7 @@ Récit fantastique intégral (dans _Minuit, Heure de l'horreur_). Séquence d'ac
 - **Le projet pédagogique** (p.12–13 : A. un projet de l'enseignant · B. l'organisation didactique).
 - **RÉPARTITION MODULAIRE** (p.14–16 : 3 propositions de répartition du module 1, dont un modèle en 14 séances et un modèle en 3 séquences).
 - **Fiches pédagogiques** (p.17–25) : LECTURE (recommandations + fiches « Tristesse de départ » / Camara Laye ; « Au zoo » / Daudet) · LANGUE (expansions du GN ; imparfait & passé simple) · EXPRESSION ÉCRITE (insertion de passages descriptifs).
-- **Quelques échantillons de devoirs** (p.26–29) : devoir de contrôle (étude de texte « Le loup blanc » — conte canadien) ; devoir d'expression écrite ; devoir de synthèse (« La chèvre de M. Seguin » / Alphonse Daudet).
+- **Quelques échantillons de devoirs** (p.26–29) : devoir de contrôle — étude de texte (un **conte canadien** non titré : le chasseur Jean soigne un « loup blanc » ; support attribué « Un conte canadien ») ; devoir de contrôle — expression écrite ; devoir de synthèse (« La chèvre de M. Seguin » / Alphonse Daudet, _Les lettres de mon Moulin_).
 - **Notions fondamentales** (p.30–34) : glossaire (autonomie, auto-évaluation, compétence, intégration, activité d'intégration, objectif) + « Roman, conte, nouvelle » + « séquence ».
 - **Bibliographie sélective** (p.35).
 - **INSTRUCTIONS MÉTHODOLOGIQUES** — 7ème + 8ème, discipline français, 2007/2008 (p.36–44) : Préambule · Organisation de l'apprentissage (nature/nombre/durée des modules) · L'oral · La lecture · La langue · L'écrit · Activité « Projet ».

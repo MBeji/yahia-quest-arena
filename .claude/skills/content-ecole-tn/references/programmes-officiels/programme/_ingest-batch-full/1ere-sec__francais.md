@@ -61,7 +61,8 @@ _Objectifs : Découvrir une autre culture, un autre mode de vie · Décrire un s
   - _L'alpage_ — A. Daudet, _Les Lettres de mon moulin_ (p. 56)
   - _« Les voilà ! »_ — P. Daninos (p. 60)
   - _Le pont Mirabeau_ — G. Apollinaire, _Alcools_ (p. 64)
-  - - _Le château de Chambord : notice_ (description objective, p. 66) ; _Paris_ — M. Genevoix (description subjective, p. 68).
+  - _Le château de Chambord : notice_ (d'après _Ouest-France_ ; description objective, « Lire pour écrire », p. 66)
+  - _Paris_ — M. Genevoix (description subjective, « Lire pour écrire », p. 68)
 - **Langue — Point-Grammaire** : les expansions du nom (adjectif épithète ; complément du nom ; proposition subordonnée relative — pronoms relatifs simples et composés ; apposition) ; les verbes attributifs et l'attribut du sujet / du COD ; la nominalisation.
 - **Langue — Vocabulaire** : vocabulaire de la localisation ; noms collectifs ; homophones ; champ lexical ; changement de genre/nombre entraînant changement de sens ; vocabulaire mélioratif / péjoratif.
 - **Écrit** : décrire une personne, une scène ; insérer des éléments descriptifs dans un récit ; organiser une description ; décrire pour informer (objectif) / pour communiquer une impression, une émotion (subjectif) ; comparaison et métaphore.
