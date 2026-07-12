@@ -3,18 +3,27 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { motion } from "motion/react";
-import { Flame, Trophy, Swords, Sparkles, Crown, Skull, Copy, Check } from "lucide-react";
+import {
+  Flame,
+  Trophy,
+  Swords,
+  Crown,
+  Skull,
+  Copy,
+  Check,
+  ShoppingBag,
+  Compass,
+  ChevronRight,
+} from "lucide-react";
 import { toast } from "sonner";
 import {
   getDashboard,
-  getDashboardSecondary,
   getSprint2Dashboard,
   formatObjectiveType,
   formatQuestType,
   resolveDailyAction,
   resolveWeeklyAction,
 } from "@/features/dashboard";
-import { purchaseShopItem, equipInventorySkin, activateInventoryItem } from "@/features/shop";
 import { recoverStreak } from "@/features/progression";
 import { EnablePushCard } from "@/features/notifications";
 import { SubjectPathCard } from "@/features/dashboard/components/subject-path-card";
@@ -29,24 +38,11 @@ import { GoldProgress } from "@/components/game/gold-progress";
 
 const GoldAmbientCanvas = lazy(() => import("@/components/visual/gold-ambient-canvas"));
 import { formatStudentAllianceCode } from "@/features/parent-report";
-import { useT, useI18n } from "@/lib/i18n";
-import { useSound } from "@/lib/sound";
-import { filterSubjectsByLocale } from "@/shared/lib/subject-locale";
+import { useT } from "@/lib/i18n";
 import { xpToNextLevel, xpWithinLevel } from "@/shared/lib/level";
+// (subject-locale filtering moved out with the « Autres thèmes » grid — lot 6.)
 import { HeroAvatar } from "@/features/dashboard/components/hero-avatar";
 import { HeroStatChips } from "@/features/dashboard/components/hero-stat-chips";
-
-const DashboardRadarInventory = lazy(() =>
-  import("@/features/dashboard/components/dashboard-radar-inventory").then((mod) => ({
-    default: mod.DashboardRadarInventory,
-  })),
-);
-
-const DashboardBadgesShop = lazy(() =>
-  import("@/features/dashboard/components/dashboard-badges-shop").then((mod) => ({
-    default: mod.DashboardBadgesShop,
-  })),
-);
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: "Hall des Héros · Na9ra Nal3ab" }] }),
@@ -55,23 +51,16 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 
 function Dashboard() {
   const t = useT();
-  const { play } = useSound();
-  const { locale } = useI18n();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const fetchDashboard = useServerFn(getDashboard);
-  const fetchDashboardSecondary = useServerFn(getDashboardSecondary);
   const fetchSprint2 = useServerFn(getSprint2Dashboard);
-  const purchaseItem = useServerFn(purchaseShopItem);
-  const equipSkin = useServerFn(equipInventorySkin);
-  const activateItem = useServerFn(activateInventoryItem);
   const { data, isLoading, isError } = useQuery({
     queryKey: ["dashboard"],
     queryFn: () => fetchDashboard(),
   });
   const { data: sprint2 } = useQuery({ queryKey: ["sprint2"], queryFn: () => fetchSprint2() });
   const [copiedCode, setCopiedCode] = useState(false);
-  const [deferSecondarySections, setDeferSecondarySections] = useState(false);
 
   // Light 3D gold ambient — only after mount, never on mobile or reduced-motion
   // (the CSS gold ambient from the shell remains as the fallback).
@@ -81,59 +70,12 @@ function Dashboard() {
   useEffect(() => setAmbient3dReady(true), []);
   const showAmbient3d = ambient3dReady && !prefersReduced && !isMobile;
 
-  // #15: badges/inventory/shop come from a separate server fn, fetched only once
-  // the deferred secondary sections are about to render.
-  const { data: secondary } = useQuery({
-    queryKey: ["dashboard", "secondary"],
-    queryFn: () => fetchDashboardSecondary(),
-    enabled: deferSecondarySections,
-  });
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => setDeferSecondarySections(true), 350);
-    return () => window.clearTimeout(timer);
-  }, []);
-
   // Redirect admin/parent users to their report page
   useEffect(() => {
     if (data?.profile?.role === "admin" || data?.profile?.role === "parent") {
       navigate({ to: "/parent-report" });
     }
   }, [data?.profile?.role, navigate]);
-
-  const purchaseMutation = useMutation({
-    mutationFn: (payload: { itemCode: string }) => purchaseItem({ data: payload }),
-    onSuccess: (res) => {
-      play("purchase");
-      toast.success(t.dashboard.purchaseSuccess.replace("{name}", res.purchasedItemName));
-      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
-    },
-    onError: (error) =>
-      toast.error(error instanceof Error ? error.message : t.dashboard.purchaseFailed),
-  });
-
-  const equipMutation = useMutation({
-    mutationFn: (payload: { itemCode: string }) => equipSkin({ data: payload }),
-    onSuccess: (res) => {
-      play("unlock");
-      toast.success(t.dashboard.equipSuccess.replace("{name}", res.itemName));
-      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
-    },
-    onError: (error) =>
-      toast.error(error instanceof Error ? error.message : t.dashboard.equipFailed),
-  });
-
-  const activateMutation = useMutation({
-    mutationFn: (payload: { itemCode: string }) => activateItem({ data: payload }),
-    onSuccess: (res) => {
-      const template =
-        res.slot === "passive" ? t.dashboard.itemArmedPassive : t.dashboard.itemArmedQuest;
-      toast.success(template.replace("{name}", res.itemName));
-      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
-    },
-    onError: (error) =>
-      toast.error(error instanceof Error ? error.message : t.dashboard.activationFailed),
-  });
 
   const recoverStreakFn = useServerFn(recoverStreak);
   const streakRecoveryMutation = useMutation({
@@ -186,17 +128,16 @@ function Dashboard() {
   }
 
   const { profile, subjects, stats, nextExerciseId } = data;
-  const otherSubjects = filterSubjectsByLocale(data.otherSubjects ?? [], locale);
   // School subjects flagged as locked by the server (premium parcours, no entitlement).
   const lockedSet = new Set(data.premiumLockedSubjectIds ?? []);
-  // #15: badges/inventory/shop now come from the deferred secondary query.
-  const badges = secondary?.badges ?? [];
-  const inventory = secondary?.inventory ?? [];
-  const shopItems = secondary?.shopItems ?? [];
   if (!profile)
     return <div className="p-8 text-center text-muted-foreground">Profile not found.</div>;
   const studentAllianceCode =
     profile.role === "student" ? formatStudentAllianceCode(profile.id) : "";
+  // First-run (D-7 / audit §A-5): a brand-new account (no attempt yet) is welcomed,
+  // not greeted with « Bon retour » over a column of zeros. `recent` is the
+  // attempts feed — empty means the student has never played.
+  const isFirstRun = (data.recent ?? []).length === 0;
 
   // #5: derive within-level XP / remaining XP via shared helpers instead of hardcoded 200.
   const xpInLevel = xpWithinLevel(profile.xp);
@@ -209,11 +150,6 @@ function Dashboard() {
     subjects.find((s) => s.id === lastSubjectId) ??
     subjects.find((s) => !stats[s.id]) ??
     subjects[0];
-
-  const radarData = subjects.map((s) => ({
-    subject: s.attribute,
-    value: Math.round(stats[s.id]?.avg ?? 0),
-  }));
 
   function runQuestAction(action: "retry" | "subject" | "dungeon") {
     if (action === "dungeon") {
@@ -256,7 +192,9 @@ function Dashboard() {
           <div className="relative grid gap-6 sm:grid-cols-[auto_1fr_auto] sm:items-center">
             <HeroAvatar avatarSlug={profile.avatar_slug} />
             <div className="min-w-0">
-              <div className="text-sm text-muted-foreground">{t.dashboard.welcomeBack}</div>
+              <div className="text-sm text-muted-foreground">
+                {isFirstRun ? t.dashboard.firstRunWelcome : t.dashboard.welcomeBack}
+              </div>
               <h1 className="font-display text-2xl font-bold break-words sm:text-3xl md:text-4xl">
                 {profile.display_name}
               </h1>
@@ -467,141 +405,64 @@ function Dashboard() {
           <MotivationalQuote />
         </div>
 
-        <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_360px]">
-          {/* SUBJECTS GRID */}
-          <section>
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="flex items-center gap-2 font-display text-xl font-bold">
-                <Swords className="h-5 w-5 text-[color:var(--gold)]" /> {t.dashboard.pathsTitle}
-              </h2>
-              <Link
-                to="/leaderboard"
-                className="flex items-center gap-1.5 rounded-lg border border-[color:var(--neon-gold)]/30 bg-[color:var(--neon-gold)]/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[color:var(--neon-gold)] transition hover:bg-[color:var(--neon-gold)]/20 [@media(pointer:coarse)]:min-h-11"
-              >
-                <Crown className="h-3.5 w-3.5" /> {t.common.leaderboard}
-              </Link>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {subjects.map((s, i) => (
-                <motion.div key={s.id} {...entrance(prefersReduced, "rise", i * 0.05)}>
-                  <SubjectPathCard
-                    subject={s}
-                    stat={stats[s.id]}
-                    premiumLocked={lockedSet.has(s.id)}
-                  />
-                </motion.div>
-              ))}
-            </div>
-          </section>
-
-          {otherSubjects.length > 0 && (
-            <section>
-              <div className="mb-4 flex items-center gap-2">
-                <h2 className="flex items-center gap-2 font-display text-xl font-bold">
-                  <Sparkles className="h-5 w-5 text-[color:var(--gold)]" />{" "}
-                  {t.dashboard.otherThemesTitle}
-                </h2>
-              </div>
-              <div className="grid gap-4 sm:grid-cols-2">
-                {otherSubjects.map((s, i) => (
-                  <motion.div key={s.id} {...entrance(prefersReduced, "rise", i * 0.05)}>
-                    <SubjectPathCard subject={s} stat={stats[s.id]} premiumLocked={false} />
-                  </motion.div>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {/* RADAR */}
-          <section>
-            {deferSecondarySections ? (
-              <Suspense
-                fallback={
-                  <div className="space-y-4">
-                    <div className="h-8 w-40 animate-pulse rounded bg-foreground/10" />
-                    <div className="h-80 animate-pulse rounded-2xl bg-foreground/10" />
-                    <div className="h-52 animate-pulse rounded-2xl bg-foreground/10" />
-                  </div>
-                }
-              >
-                <DashboardRadarInventory
-                  radarData={radarData}
-                  inventory={inventory}
-                  avatarSlug={profile.avatar_slug}
-                  displayName={profile.display_name}
-                  isActivatePending={activateMutation.isPending}
-                  onActivate={(itemCode) => activateMutation.mutate({ itemCode })}
-                />
-              </Suspense>
-            ) : (
-              <div className="space-y-4">
-                <div className="h-8 w-40 animate-pulse rounded bg-foreground/10" />
-                <div className="h-80 rounded-2xl bg-foreground/10" />
-                <div className="h-52 rounded-2xl bg-foreground/10" />
-              </div>
-            )}
-          </section>
-        </div>
-
-        {deferSecondarySections ? (
-          <Suspense
-            fallback={
-              <div className="mt-8 space-y-6">
-                <div className="h-8 w-48 animate-pulse rounded bg-foreground/10" />
-                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                  {[1, 2, 3].map((item) => (
-                    <div
-                      key={`badges-skeleton-${item}`}
-                      className="h-44 animate-pulse rounded-2xl bg-foreground/10"
-                    />
-                  ))}
-                </div>
-                <div className="h-8 w-48 animate-pulse rounded bg-foreground/10" />
-                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                  {[1, 2, 3].map((item) => (
-                    <div
-                      key={`shop-skeleton-${item}`}
-                      className="h-52 animate-pulse rounded-2xl bg-foreground/10"
-                    />
-                  ))}
-                </div>
-              </div>
-            }
-          >
-            <DashboardBadgesShop
-              badges={badges}
-              shopItems={shopItems}
-              availableCoins={profile.yahia_coins ?? 0}
-              isPurchasePending={purchaseMutation.isPending}
-              isEquipPending={equipMutation.isPending}
-              isActivatePending={activateMutation.isPending}
-              onPurchase={(itemCode) => purchaseMutation.mutate({ itemCode })}
-              onEquip={(itemCode) => equipMutation.mutate({ itemCode })}
-              onActivate={(itemCode) => activateMutation.mutate({ itemCode })}
-            />
-          </Suspense>
-        ) : (
-          <div className="mt-8 space-y-6">
-            <div className="h-8 w-48 rounded bg-foreground/10" />
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {[1, 2, 3].map((item) => (
-                <div
-                  key={`initial-badges-skeleton-${item}`}
-                  className="h-44 rounded-2xl bg-foreground/10"
-                />
-              ))}
-            </div>
-            <div className="h-8 w-48 rounded bg-foreground/10" />
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {[1, 2, 3].map((item) => (
-                <div
-                  key={`initial-shop-skeleton-${item}`}
-                  className="h-52 rounded-2xl bg-foreground/10"
-                />
-              ))}
-            </div>
+        {/* SUBJECTS GRID — now full-width (radar/inventory/badges/shop moved to
+            the dedicated /boutique route, D-5 / Q-4). */}
+        <section className="mt-8">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="flex items-center gap-2 font-display text-xl font-bold">
+              <Swords className="h-5 w-5 text-[color:var(--gold)]" /> {t.dashboard.pathsTitle}
+            </h2>
+            <Link
+              to="/leaderboard"
+              className="flex items-center gap-1.5 rounded-lg border border-[color:var(--neon-gold)]/30 bg-[color:var(--neon-gold)]/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[color:var(--neon-gold)] transition hover:bg-[color:var(--neon-gold)]/20 [@media(pointer:coarse)]:min-h-11"
+            >
+              <Crown className="h-3.5 w-3.5" /> {t.common.leaderboard}
+            </Link>
           </div>
-        )}
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {subjects.map((s, i) => (
+              <motion.div key={s.id} {...entrance(prefersReduced, "rise", i * 0.05)}>
+                <SubjectPathCard
+                  subject={s}
+                  stat={stats[s.id]}
+                  premiumLocked={lockedSet.has(s.id)}
+                />
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* Two calm destination cards replacing the inline shop/other-themes
+            walls (audit §A-4): a personal space (/boutique) and a gateway to the
+            wider catalogue (/programme) — no more ~25 flat cards on the QG. */}
+        <div className="mt-8 grid gap-4 sm:grid-cols-2">
+          <Link
+            to="/boutique"
+            className="group flex items-center gap-4 rounded-2xl border border-[color:var(--gold)]/25 bg-black/40 p-4 backdrop-blur-md transition hover:border-[color:var(--gold)]/50 [@media(pointer:coarse)]:min-h-11"
+          >
+            <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-[color:var(--gold)]/15">
+              <ShoppingBag className="h-6 w-6 text-[color:var(--gold)]" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="font-display text-base font-bold">{t.dashboard.boutiqueCard}</div>
+              <p className="text-sm text-muted-foreground">{t.dashboard.boutiqueCardDesc}</p>
+            </div>
+            <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground transition group-hover:text-[color:var(--gold)] rtl:-scale-x-100" />
+          </Link>
+          <Link
+            to="/programme"
+            className="group flex items-center gap-4 rounded-2xl border border-border bg-card/60 p-4 backdrop-blur-md transition hover:border-[color:var(--gold)]/40 [@media(pointer:coarse)]:min-h-11"
+          >
+            <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-[color:var(--gold)]/10">
+              <Compass className="h-6 w-6 text-[color:var(--gold)]" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="font-display text-base font-bold">{t.dashboard.discoverTitle}</div>
+              <p className="text-sm text-muted-foreground">{t.dashboard.discoverDesc}</p>
+            </div>
+            <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground transition group-hover:text-[color:var(--gold)] rtl:-scale-x-100" />
+          </Link>
+        </div>
       </PageShell>
     </>
   );

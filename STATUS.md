@@ -76,8 +76,7 @@
 Source de vérité : [FableEtudes/README.md](./FableEtudes/README.md) (index) + l'en-tête de chaque `ETUDE.md`.
 
 - **Livrées** : 03 (types natifs) · 05 (duels/ligues) · 13 (moteur de transcription **ScribeKit**, repo externe ; pilote d'usage en cours via PR #348) · 14 (refonte UX/design, close 2026-07-11).
-- **En exécution** : 04 (adaptatif — A0 fait, A1+ à venir) · 15 (contenu & composition — lots 0-5 livrés / 14).
-- **Validée, en attente d'exécution** : 16 (ouverture lycée — lot 0 fait).
+- **En exécution** : 04 (adaptatif — A0 fait, A1+ à venir) · 15 (contenu & composition — lots 0-6 livrés / 14) · 16 (ouverture lycée — lots 0-2 livrés, PRs #367/#369/#371).
 - **Brouillons** (non validées) : 02 (examen blanc*) · 06 (PWA) · 07 (knowledge graph*) · 08 (analytics familles*) · 09 (économie du jeu) · 10 (anti-fraude) · 12 (studio d'ingestion).
 - **Gelées (pivot gratuité)** : 01 (paiement en ligne) · 11 (tuteur IA).
 
@@ -93,7 +92,7 @@ Entrée : `go-live/00-MASTER-PLAN.md`. État au 2026-07-11 :
 - **Supersédé** : C6 (modèle économique) — remplacé par le pivot gratuit du 2026-06-21 ; conservé comme archive de travail pour une future étude 01.
 - **Ouvert — technique** : C4 (architecture prod) : reste le câblage monitoring (UptimeRobot/Sentry/PostHog), le ruleset `main`, l'auth hardening (~45 min côté Mohamed) et **le câblage du domaine** `na9ranal3ab.tn`.
 - **Actif — produit** : C8 (plateforme publique) : MVP live ; fils ouverts = SEO (bloqué domaine), post-MVP L3, revert de l'override bêta avant tout retour premium.
-- **Backlog 90** : 54 GAP au total — 16 🟢 · 12 🟡 · 26 🔴 ; **0 P0 ouvert** ; 7 P1 ouverts (monitoring GAP-002, conformité mineurs INPDP GAP-003, pages légales GAP-024, contenu 13 niveaux GAP-040, QA contenu en CI GAP-048, skills GAP-051 ; GAP-001 « paiement » requalifié gelé → étude 01).
+- **Backlog 90** : 54 GAP au total — 16 🟢 · 12 🟡 · 25 🔴 · 1 ⚪ gelé ; **0 P0 ouvert** ; 6 P1 ouverts (monitoring GAP-002, conformité mineurs INPDP GAP-003, pages légales GAP-024, contenu 13 niveaux GAP-040, QA contenu en CI GAP-048, skills GAP-051) ; GAP-001 « paiement » requalifié ⚪ gelé → étude 01.
 
 ---
 

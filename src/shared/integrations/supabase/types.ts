@@ -693,6 +693,7 @@ export type Database = {
           display_order: number;
           id: string;
           is_concours_national: boolean;
+          is_selectable: boolean;
           name_fr: string;
           slug: string;
           theme_id: string;
@@ -702,6 +703,7 @@ export type Database = {
           display_order?: number;
           id?: string;
           is_concours_national?: boolean;
+          is_selectable?: boolean;
           name_fr: string;
           slug: string;
           theme_id: string;
@@ -711,6 +713,7 @@ export type Database = {
           display_order?: number;
           id?: string;
           is_concours_national?: boolean;
+          is_selectable?: boolean;
           name_fr?: string;
           slug?: string;
           theme_id?: string;

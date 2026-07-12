@@ -118,7 +118,12 @@ export type TranslationKeys = {
     dailyEmpty: string;
     weeklyEmpty: string;
     pathsTitle: string;
-    otherThemesTitle: string;
+    boutiqueTitle: string;
+    boutiqueSubtitle: string;
+    boutiqueCard: string;
+    boutiqueCardDesc: string;
+    discoverTitle: string;
+    discoverDesc: string;
     notAttempted: string;
     failedLoad: string;
     failedLoadDesc: string;
@@ -159,6 +164,7 @@ export type TranslationKeys = {
     familyGoalReached: string;
     familyGoalHint: string;
     welcomeBack: string;
+    firstRunWelcome: string;
     resumeSubtitle: string;
   };
   // Quest
