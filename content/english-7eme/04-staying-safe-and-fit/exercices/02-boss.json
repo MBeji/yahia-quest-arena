@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Chapter boss ⭐⭐⭐: emergency at the clinic",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "At the clinic, the doctor asks Anis: \"What's the matter?\" What does the doctor want to know?",
+      "options": [
+        { "id": "a", "text": "Anis's address" },
+        { "id": "b", "text": "Anis's age" },
+        { "id": "c", "text": "Anis's name" },
+        { "id": "d", "text": "Anis's problem" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"What's the matter?\" asks about the problem: the doctor wants to know what hurts or what is wrong. Questions about the name, the age or the address use \"What's your name?\", \"How old are you?\" and \"Where do you live?\".",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Nour touched the hot iron and now her hand is red and painful. She has a ___ on her hand.",
+      "options": [
+        { "id": "a", "text": "burn" },
+        { "id": "b", "text": "cut" },
+        { "id": "c", "text": "injection" },
+        { "id": "d", "text": "plaster" }
+      ],
+      "correctOption": "a",
+      "explanation": "Something very hot gives you a burn. A cut comes from something sharp like a knife, while a plaster and an injection are treatments the nurse gives you, not injuries.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Karim cut his finger on a pencil sharpener. The nurse cleans the small cut and puts a ___ on it.",
+      "options": [
+        { "id": "a", "text": "injection" },
+        { "id": "b", "text": "leaflet" },
+        { "id": "c", "text": "medicine" },
+        { "id": "d", "text": "plaster" }
+      ],
+      "correctOption": "d",
+      "explanation": "A small cut gets a plaster to protect it. Medicine is something you drink or swallow, an injection is for serious cases, and a leaflet is only a paper with information.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete the doctor's orders: \"You ___ take this medicine every morning, and you ___ forget it.\"",
+      "options": [
+        { "id": "a", "text": "must … must" },
+        { "id": "b", "text": "must … mustn't" },
+        { "id": "c", "text": "mustn't … must" },
+        { "id": "d", "text": "mustn't … mustn't" }
+      ],
+      "correctOption": "b",
+      "explanation": "Taking the medicine is an obligation → \"you must take it\"; forgetting it is what you are NOT allowed to do → \"you mustn't forget it\" ✓. The common trap is reading only the first blank: the two verbs need opposite ideas — obligation first, prohibition second.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "In which word is the letter \"t\" silent?",
+      "options": [
+        { "id": "a", "text": "doctor" },
+        { "id": "b", "text": "hospital" },
+        { "id": "c", "text": "listen" },
+        { "id": "d", "text": "matter" }
+      ],
+      "correctOption": "c",
+      "explanation": "In \"listen\" the t is silent — you say /ˈlɪsn/, with no t sound at all ✓. The common trap is trusting the spelling: in \"doctor\", \"hospital\" and \"matter\" the t is written AND clearly pronounced.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which word has the sound /aʊ/, as in \"out\"?",
+      "options": [
+        { "id": "a", "text": "mouth" },
+        { "id": "b", "text": "soup" },
+        { "id": "c", "text": "touch" },
+        { "id": "d", "text": "young" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Mouth\" has the sound /aʊ/, exactly like \"out\", \"down\" and \"shout\" ✓. The common trap is the spelling \"ou\": in \"touch\" and \"young\" the same letters are pronounced /ʌ/, and in \"soup\" they are /uː/ — English letters and sounds do not always match.",
+      "difficulty": 3
+    }
+  ]
+}

@@ -19,6 +19,9 @@ import { en } from "@/lib/i18n/en";
 import { ar } from "@/lib/i18n/ar";
 import { ThemeProvider, useTheme, DEFAULT_THEME, themeFromCookieHeader } from "@/lib/theme";
 import type { Theme } from "@/lib/theme";
+import { SoundProvider, useSound } from "@/lib/sound";
+import { logger } from "@/shared/lib/logger";
+import { initAnalytics, trackPageview, pagePathFromLocation } from "@/shared/lib/analytics";
 
 import appCss from "../styles.css?url";
 
@@ -27,7 +30,7 @@ function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-black-deep px-4">
       <div className="max-w-md text-center">
-        <h1 className="font-display text-8xl text-gradient-gold">404</h1>
+        <h1 className="font-display text-6xl text-gradient-gold sm:text-8xl">404</h1>
         <h2 className="mt-4 text-xl font-semibold">{t.errors.notFoundTitle}</h2>
         <p className="mt-2 text-sm text-muted-foreground">{t.errors.notFoundDesc}</p>
         <div className="mt-6">
@@ -44,9 +47,14 @@ function NotFoundComponent() {
 }
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
-  console.error(error);
+  logger.error("Root error boundary caught an error", { error });
   const router = useRouter();
   const t = useT();
+  // Incident forensics: with `?debug=1` in the URL, surface the error identity
+  // and stack on the page itself — the only reliable diagnostic channel for
+  // mobile users (no devtools). Client-only read; hidden for everyone else.
+  const showDebug =
+    typeof window !== "undefined" && new URLSearchParams(window.location.search).has("debug");
   return (
     <div className="flex min-h-screen items-center justify-center bg-black-deep px-4">
       <div className="max-w-md text-center">
@@ -54,6 +62,15 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         <p className="mt-2 text-sm text-muted-foreground">
           {error.message || t.errors.errorFallback}
         </p>
+        {showDebug ? (
+          // rtl-ok: une stack trace est du texte technique toujours LTR, même en page AR.
+          <pre
+            dir="ltr"
+            className="mt-4 max-h-72 overflow-auto rounded-md border border-input p-3 text-left text-xs whitespace-pre-wrap break-all text-muted-foreground"
+          >
+            {`${error.name}: ${error.message}\n${error.stack ?? "(no stack)"}`}
+          </pre>
+        ) : null}
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
@@ -132,10 +149,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
  * markup the client first renders matches the server. The <html> attributes here
  * are set from the same cookie the client reads, so they agree on both sides.
  *
- * TODO(review #8): the cookie is the SSR source of truth, but legacy users who only
- * have the localStorage value (set before this cookie existed) still see one frame of
- * the default locale until their next setLocale call writes the cookie. A one-time
- * migration that mirrors localStorage -> cookie on first mount would close that gap.
+ * Legacy localStorage-only users (preference set before this cookie existed) are
+ * migrated automatically: I18nProvider mirrors the resolved locale into the cookie
+ * on first mount when it's missing/stale, so subsequent SSR loads paint the right
+ * locale with no flash of the default.
  */
 const getShellLocale = createIsomorphicFn()
   // Client (hydration / client navigation): read the document cookie directly.
@@ -184,6 +201,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
 
   // Register the PWA service worker (client + production only). The SW caches
   // immutable assets and serves an offline fallback; HTML is never cached.
@@ -193,16 +211,61 @@ function RootComponent() {
     }
   }, []);
 
+  // Google Analytics 4: load gtag.js once, then report a page_view for the
+  // current location and on every resolved SPA navigation. All calls no-op
+  // outside a production build (see analytics.ts).
+  useEffect(() => {
+    initAnalytics();
+    const track = () => {
+      trackPageview(pagePathFromLocation(router.state.location));
+    };
+    track();
+    return router.subscribe("onResolved", track);
+  }, [router]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <I18nProvider>
-          <Outlet />
-          <ThemedToaster />
+          <SoundProvider>
+            <GlobalSoundEffects />
+            <Outlet />
+            <ThemedToaster />
+          </SoundProvider>
         </I18nProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );
+}
+
+/**
+ * Global audio glue that needs router + sound context: a soft "whoosh" on every
+ * SPA navigation, and switching the ambient-music mood to the darker theme while
+ * in the Dungeon. Rendered inside SoundProvider; renders nothing.
+ */
+function GlobalSoundEffects() {
+  const router = useRouter();
+  const { play, setMusicMood } = useSound();
+
+  useEffect(() => {
+    // Skip the very first resolution (initial load) — only cue real navigations.
+    let first = true;
+    const applyMood = () => {
+      const path = router.state.location.pathname;
+      setMusicMood(path.startsWith("/dungeon") ? "dungeon" : "calm");
+    };
+    applyMood();
+    return router.subscribe("onResolved", () => {
+      applyMood();
+      if (first) {
+        first = false;
+        return;
+      }
+      play("whoosh");
+    });
+  }, [router, play, setMusicMood]);
+
+  return null;
 }
 
 /** Toaster whose colour scheme follows the active UI theme. `reference` and

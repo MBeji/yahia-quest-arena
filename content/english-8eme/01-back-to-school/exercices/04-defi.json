@@ -1,0 +1,82 @@
+{
+  "title": "👑 Elite challenge ⭐⭐⭐⭐: the master of tenses",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Complete: \"Last week, Ines ___ a beautiful poem for the school magazine.\"",
+      "options": [
+        { "id": "a", "text": "writed" },
+        { "id": "b", "text": "written" },
+        { "id": "c", "text": "wrote" },
+        { "id": "d", "text": "writ" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Last week\" is a finished past time. \"Write\" is irregular, and its simple past is \"wrote\": she wrote a poem ✓. \"Writed\" wrongly adds -ed to an irregular verb, \"written\" is the past participle (used with have), and \"writ\" is not modern English.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choose the correct question for the answer: \"Firas broke the window.\" (Firas is the person who did it.)",
+      "options": [
+        { "id": "a", "text": "Who did break the window?" },
+        { "id": "b", "text": "Who broke the window?" },
+        { "id": "c", "text": "Who did broke the window?" },
+        { "id": "d", "text": "Who the window broke?" }
+      ],
+      "correctOption": "b",
+      "explanation": "Here \"who\" is the subject (the doer), so we do NOT use \"did\" — the verb simply keeps its past tense: Who broke the window? ✓ The common trap is \"Who did break…\": subject questions with who/what never take do/did. \"Who did broke\" doubles the past, and \"Who the window broke\" has the wrong order.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"___ your team ___ the match yesterday?\"",
+      "options": [
+        { "id": "a", "text": "Did ... win" },
+        { "id": "b", "text": "Did ... won" },
+        { "id": "c", "text": "Does ... win" },
+        { "id": "d", "text": "Was ... win" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Yesterday\" needs a past question: Did + subject + base verb. The base of \"win\" is \"win\": Did your team win? ✓ The trap \"Did … won\" keeps the past form after \"did\"; \"Does\" is present, and \"Was … win\" mixes \"to be\" with another verb.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which sentence is correct?",
+      "options": [
+        { "id": "a", "text": "My grandfather never was late for prayer." },
+        { "id": "b", "text": "My grandfather was never late for prayer." },
+        { "id": "c", "text": "My grandfather was late never for prayer." },
+        { "id": "d", "text": "My grandfather didn't never be late for prayer." }
+      ],
+      "correctOption": "b",
+      "explanation": "With the verb \"to be\", the adverb of frequency goes AFTER the verb: was never late ✓. The trap \"never was\" applies the other rule (before an ordinary verb) to \"to be\"; \"was late never\" puts it at the end; and \"didn't never\" is a double negative, which is always wrong in English.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Read the text: \"(1) When I was ten, I lived in Gabes. (2) Every day, I walked to school. (3) My teacher always gave us homework. (4) I never did it not.\" Which sentence contains a mistake?",
+      "options": [
+        { "id": "a", "text": "Sentence 1" },
+        { "id": "b", "text": "Sentence 2" },
+        { "id": "c", "text": "Sentence 3" },
+        { "id": "d", "text": "Sentence 4" }
+      ],
+      "correctOption": "d",
+      "explanation": "This item asks you to find the faulty sentence. Sentence 4 has a double negative: \"never\" and \"not\" together. English uses only one negative, so it must be \"I never did it\" ✓. Sentences 1, 2 and 3 correctly use the past forms \"was/lived\", \"walked\" and \"gave\" with \"always\" before the verb.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Make a question about the underlined words: \"They watched __a documentary__ on Sunday.\"",
+      "options": [
+        { "id": "a", "text": "What did they watch on Sunday?" },
+        { "id": "b", "text": "What they watched on Sunday?" },
+        { "id": "c", "text": "What did they watched on Sunday?" },
+        { "id": "d", "text": "Did they watch a documentary on Sunday?" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"A documentary\" is a thing and the object of the sentence, so we ask with \"What\" + did + subject + base verb: What did they watch? ✓ \"What they watched\" has no auxiliary, \"What did they watched\" doubles the past, and option d is a yes/no question, not a WH-question about the object.",
+      "difficulty": 3
+    }
+  ]
+}

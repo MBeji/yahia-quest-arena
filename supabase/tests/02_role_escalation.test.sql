@@ -11,15 +11,17 @@
 --   'student'/'parent' for the caller; anything else raises 'Invalid role'. A
 --   plain INSERT landing the default 'student' role (signup path) stays allowed.
 --
--- S2(b): get_subject_leaderboard's result shape must NOT contain `user_id`
---   (peer-UUID leak) and MUST still contain `is_me`.
+-- S2(b): get_subject_leaderboard AND get_global_leaderboard result shapes must
+--   NOT contain `user_id` (peer-UUID leak) and MUST still contain `is_me`. Both
+--   boards go through a SECURITY DEFINER RPC so they can read across users despite
+--   the row-level "own or linked profiles" policy, without leaking peer UUIDs.
 -- =========================================================
 
 BEGIN;
 -- pgTAP is normally pre-installed by `supabase test db`; create it defensively
 -- so the file is self-contained when run via psql too. Idempotent.
 CREATE EXTENSION IF NOT EXISTS pgtap;
-SELECT plan(10);
+SELECT plan(12);
 
 -- ---------------------------------------------------------
 -- Fixture: a student auth user (+ trigger-created profile).
@@ -51,6 +53,18 @@ SELECT matches(
   (SELECT pg_get_function_result('public.get_subject_leaderboard(text, int)'::regprocedure)),
   'is_me',
   'S2(b): get_subject_leaderboard still exposes the is_me flag'
+);
+
+SELECT doesnt_match(
+  (SELECT pg_get_function_result('public.get_global_leaderboard(int)'::regprocedure)),
+  'user_id',
+  'S2(b): get_global_leaderboard does NOT expose a user_id column'
+);
+
+SELECT matches(
+  (SELECT pg_get_function_result('public.get_global_leaderboard(int)'::regprocedure)),
+  'is_me',
+  'S2(b): get_global_leaderboard still exposes the is_me flag'
 );
 
 -- ---------------------------------------------------------

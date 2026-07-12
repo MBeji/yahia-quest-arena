@@ -19,6 +19,11 @@ vi.mock("@tanstack/react-router", () => ({
   createFileRoute: () => () => ({ component: undefined }),
   Link: ({ children, to }: { children: React.ReactNode; to: string }) =>
     React.createElement("a", { href: to }, children),
+  // BackLink (primitive du lot 1) est construit avec createLink.
+  createLink:
+    (Comp: React.ComponentType<Record<string, unknown>>) =>
+    ({ to, params: _params, ...rest }: { to: string; params?: unknown }) =>
+      React.createElement(Comp, { ...rest, href: to }),
 }));
 
 vi.mock("@tanstack/react-start", () => ({
@@ -50,6 +55,7 @@ vi.mock("motion/react", () => ({
     },
   ),
   AnimatePresence: ({ children }: { children: React.ReactNode }) => children,
+  useReducedMotion: () => false,
 }));
 
 vi.mock("sonner", () => ({
@@ -166,7 +172,7 @@ function DungeonTestHarness({
   } | null;
 }) {
   const [state, setState] = React.useState<GameState>(initialState);
-  const [currentIdx, setCurrentIdx] = React.useState(0);
+  const [currentIdx] = React.useState(0);
   const [selected, setSelected] = React.useState<string | null>(null);
   const [showFeedback, setShowFeedback] = React.useState(false);
   const [answerWasCorrect, setAnswerWasCorrect] = React.useState<boolean | null>(null);

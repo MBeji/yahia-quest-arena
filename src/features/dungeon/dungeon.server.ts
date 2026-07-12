@@ -3,6 +3,7 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { isRateLimited } from "@/shared/lib/rate-limit";
 import { failWithClientError } from "@/shared/lib/safe-error";
+import { isValidAnswerFormat, MAX_CHOICE_LENGTH } from "@/shared/lib/answer-formats";
 
 /** Dungeon constants */
 export const DUNGEON_XP_PER_FLOOR = 15;
@@ -15,6 +16,8 @@ type DungeonQuestionPayload = {
   id: string;
   prompt: string;
   options: DungeonQuestionOption[];
+  /** questions.question_type — drives the per-type <QuestionInput> renderer. */
+  questionType: string;
   explanation: string | null;
   exercises?: {
     difficulty?: number;
@@ -62,6 +65,8 @@ function parseDungeonQuestionsPayload(value: unknown): DungeonQuestionsResponse 
       id: typeof q.id === "string" ? q.id : "",
       prompt: typeof q.prompt === "string" ? q.prompt : "",
       options: Array.isArray(q.options) ? (q.options as DungeonQuestionOption[]) : [],
+      // Payloads emitted before 20260705170000 carry no type — they are mcq.
+      questionType: typeof q.question_type === "string" ? q.question_type : "mcq",
       explanation: typeof q.explanation === "string" ? q.explanation : null,
       exercises:
         q.exercises && typeof q.exercises === "object"
@@ -234,7 +239,9 @@ export const submitDungeonAnswer = createServerFn({ method: "POST" })
       .object({
         runId: z.guid(),
         questionId: z.guid(),
-        choice: z.string().min(1).max(32),
+        // Wide enough for the B2 CSV wire formats (a matching answer of six
+        // pairs already exceeds the old 32-char bound).
+        choice: z.string().min(1).max(MAX_CHOICE_LENGTH),
       })
       .parse(d),
   )
@@ -243,6 +250,23 @@ export const submitDungeonAnswer = createServerFn({ method: "POST" })
 
     if (await isRateLimited(supabase, `dungeon_answer_${userId}`, 40, 60_000)) {
       throw new Error("Trop de réponses envoyées. Ralentis un peu.");
+    }
+
+    // Per-type wire-format validation (docs/interactive-question-types.md): a
+    // malformed answer for the question's (client-readable) type is a clear
+    // input error, not a silently-wrong floor. Degrades open on a failed fetch —
+    // the scoring RPC is garbage-safe either way.
+    const { data: questionRow } = await supabase
+      .from("questions")
+      .select("question_type")
+      .eq("id", data.questionId)
+      .maybeSingle();
+    if (questionRow && !isValidAnswerFormat(questionRow.question_type, data.choice)) {
+      failWithClientError(
+        "dungeon.submitDungeonAnswer: invalid answer format",
+        null,
+        "Réponse invalide pour ce type de question.",
+      );
     }
 
     const { data: payload, error } = await supabase.rpc("submit_dungeon_answer", {

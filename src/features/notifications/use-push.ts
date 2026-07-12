@@ -13,12 +13,7 @@ import { VAPID_PUBLIC_KEY, isPushSupported, urlBase64ToUint8Array } from "./push
  *  - denied        : permission blocked (must be re-enabled in browser settings)
  */
 export type PushState =
-  | "loading"
-  | "unsupported"
-  | "unconfigured"
-  | "default"
-  | "granted"
-  | "denied";
+  "loading" | "unsupported" | "unconfigured" | "default" | "granted" | "denied";
 
 export function usePush() {
   const [state, setState] = useState<PushState>("loading");

@@ -7,7 +7,7 @@ const mockSupabase = { from: mockFrom, rpc: mockRpc };
 
 vi.mock("@tanstack/react-start", () => ({
   createMiddleware: () => ({ server: (fn: unknown) => fn }),
-  createServerFn: ({ method }: { method: string }) => {
+  createServerFn: ({ method: _method }: { method: string }) => {
     let handlerFn: (opts: unknown) => unknown;
     let validatorFn: ((d: unknown) => unknown) | undefined;
     const chain = {
@@ -252,6 +252,32 @@ describe("parent-report — getStudentReport", () => {
         },
       ],
       dailyActivity: [{ date: "2026-06-01", exercises: 5, minutes: 30, avgScore: 90 }],
+      weekComparison: {
+        thisWeek: { exercises: 12, minutes: 45, avgScore: 82 },
+        lastWeek: { exercises: 8, minutes: 30, avgScore: 75 },
+      },
+      chapterInsights: {
+        strengths: [
+          {
+            chapterId: "c1",
+            chapterTitle: "Les fractions",
+            subjectId: "s1",
+            subjectName: "Math",
+            attempts: 4,
+            avgScore: 92,
+          },
+        ],
+        weaknesses: [
+          {
+            chapterId: "c2",
+            chapterTitle: "Thalès",
+            subjectId: "s1",
+            subjectName: "Math",
+            attempts: 3,
+            avgScore: 45,
+          },
+        ],
+      },
     };
     mockRpc.mockResolvedValue({ data: reportPayload, error: null });
 
@@ -265,6 +291,12 @@ describe("parent-report — getStudentReport", () => {
     expect(r).toHaveProperty("summary");
     expect(r).toHaveProperty("subjectStats");
     expect(r).toHaveProperty("dailyActivity");
+    const week = r.weekComparison as Record<string, Record<string, number>>;
+    expect(week.thisWeek.exercises).toBe(12);
+    expect(week.lastWeek.avgScore).toBe(75);
+    const insights = r.chapterInsights as Record<string, Array<Record<string, unknown>>>;
+    expect(insights.strengths[0].chapterTitle).toBe("Les fractions");
+    expect(insights.weaknesses[0].avgScore).toBe(45);
   });
 
   it("throws on RPC error", async () => {
@@ -301,7 +333,8 @@ describe("parent-report — getStudentReport", () => {
         verdict: "totally_unknown",
         scoreTrend: "5",
       },
-      // subjectStats and dailyActivity intentionally omitted
+      // subjectStats, dailyActivity, weekComparison and chapterInsights
+      // intentionally omitted (older RPC shape) — the parser must default them.
     };
     mockRpc.mockResolvedValue({ data: looselyTypedPayload, error: null });
 
@@ -313,6 +346,11 @@ describe("parent-report — getStudentReport", () => {
       summary: { totalTimeMinutes: number; verdict: string };
       subjectStats: unknown[];
       dailyActivity: unknown[];
+      weekComparison: {
+        thisWeek: { exercises: number; minutes: number; avgScore: number };
+        lastWeek: { exercises: number; minutes: number; avgScore: number };
+      };
+      chapterInsights: { strengths: unknown[]; weaknesses: unknown[] };
     };
 
     expect(result.student.level).toBe(5);
@@ -321,6 +359,38 @@ describe("parent-report — getStudentReport", () => {
     expect(result.summary.verdict).toBe("average");
     expect(result.subjectStats).toEqual([]);
     expect(result.dailyActivity).toEqual([]);
+    expect(result.weekComparison.thisWeek).toEqual({ exercises: 0, minutes: 0, avgScore: 0 });
+    expect(result.weekComparison.lastWeek).toEqual({ exercises: 0, minutes: 0, avgScore: 0 });
+    expect(result.chapterInsights).toEqual({ strengths: [], weaknesses: [] });
+  });
+
+  it("coerces numeric strings inside weekComparison and drops malformed insights arrays", async () => {
+    const payload = {
+      student: { displayName: "Yahia", createdAt: "2026-01-01" },
+      summary: { verdict: "good" },
+      weekComparison: {
+        thisWeek: { exercises: "3", minutes: "20", avgScore: "70" },
+        lastWeek: "corrupted",
+      },
+      chapterInsights: { strengths: "not-an-array", weaknesses: [] },
+    };
+    mockRpc.mockResolvedValue({ data: payload, error: null });
+
+    const { getStudentReport } = await import("@/features/parent-report/parent-report.server");
+    const result = (await (getStudentReport as unknown as (d: unknown) => Promise<unknown>)({
+      studentId: "11111111-1111-1111-1111-111111111111",
+    })) as {
+      weekComparison: {
+        thisWeek: { exercises: number };
+        lastWeek: { exercises: number; minutes: number; avgScore: number };
+      };
+      chapterInsights: { strengths: unknown[]; weaknesses: unknown[] };
+    };
+
+    expect(result.weekComparison.thisWeek.exercises).toBe(3);
+    expect(result.weekComparison.lastWeek).toEqual({ exercises: 0, minutes: 0, avgScore: 0 });
+    expect(result.chapterInsights.strengths).toEqual([]);
+    expect(result.chapterInsights.weaknesses).toEqual([]);
   });
 
   it("throws on invalid payload (null)", async () => {
@@ -339,6 +409,89 @@ describe("parent-report — getStudentReport", () => {
     await expect(
       (getStudentReport as unknown as (d: unknown) => Promise<unknown>)({
         studentId: "not-a-uuid",
+      }),
+    ).rejects.toThrow();
+  });
+});
+
+// =============================================================================
+// Weekly family goal (parent side)
+// =============================================================================
+describe("parent-report — weekly goal", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    mockFrom.mockReset();
+    mockRpc.mockReset();
+  });
+
+  const STUDENT = "11111111-1111-1111-1111-111111111111";
+
+  it("getStudentWeeklyGoal parses the goal payload", async () => {
+    mockRpc.mockResolvedValue({
+      data: { weekStart: "2026-06-29", target: 5, done: 2 },
+      error: null,
+    });
+
+    const { getStudentWeeklyGoal } = await import("@/features/parent-report/parent-report.server");
+    const result = await (getStudentWeeklyGoal as unknown as (d: unknown) => Promise<unknown>)({
+      studentId: STUDENT,
+    });
+
+    expect(result).toEqual({ weekStart: "2026-06-29", target: 5, done: 2 });
+    expect(mockRpc).toHaveBeenCalledWith("get_family_weekly_goal", { p_student: STUDENT });
+  });
+
+  it("getStudentWeeklyGoal returns null when no goal is set", async () => {
+    mockRpc.mockResolvedValue({ data: null, error: null });
+
+    const { getStudentWeeklyGoal } = await import("@/features/parent-report/parent-report.server");
+    const result = await (getStudentWeeklyGoal as unknown as (d: unknown) => Promise<unknown>)({
+      studentId: STUDENT,
+    });
+
+    expect(result).toBeNull();
+  });
+
+  it("setStudentWeeklyGoal upserts via the RPC and echoes the target", async () => {
+    mockRpc.mockImplementation((name: string) => {
+      if (name === "check_rate_limit") return Promise.resolve({ data: false, error: null });
+      return Promise.resolve({ data: { weekStart: "2026-06-29", target: 7 }, error: null });
+    });
+
+    const { setStudentWeeklyGoal } = await import("@/features/parent-report/parent-report.server");
+    const result = await (setStudentWeeklyGoal as unknown as (d: unknown) => Promise<unknown>)({
+      studentId: STUDENT,
+      target: 7,
+    });
+
+    expect(result).toEqual({ target: 7 });
+    expect(mockRpc).toHaveBeenCalledWith("set_parent_weekly_goal", {
+      p_student: STUDENT,
+      p_target: 7,
+    });
+  });
+
+  it("setStudentWeeklyGoal surfaces an RPC failure as a friendly error", async () => {
+    mockRpc.mockImplementation((name: string) => {
+      if (name === "check_rate_limit") return Promise.resolve({ data: false, error: null });
+      return Promise.resolve({ data: null, error: { message: "Access denied" } });
+    });
+
+    const { setStudentWeeklyGoal } = await import("@/features/parent-report/parent-report.server");
+    await expect(
+      (setStudentWeeklyGoal as unknown as (d: unknown) => Promise<unknown>)({
+        studentId: STUDENT,
+        target: 3,
+      }),
+    ).rejects.toThrow("Impossible d'enregistrer l'objectif de la semaine.");
+  });
+
+  it("setStudentWeeklyGoal rejects an out-of-bounds target (zod)", async () => {
+    const { setStudentWeeklyGoal } = await import("@/features/parent-report/parent-report.server");
+    await expect(
+      (setStudentWeeklyGoal as unknown as (d: unknown) => Promise<unknown>)({
+        studentId: STUDENT,
+        target: 0,
       }),
     ).rejects.toThrow();
   });
@@ -376,7 +529,7 @@ describe("parent-report — linkStudentByCode", () => {
     });
   });
 
-  it("surfaces the RPC error when the caller is not a parent", async () => {
+  it("throws a SPECIFIC stable code when the caller is not a parent", async () => {
     mockRpc.mockReturnValue({
       data: null,
       error: { message: "Parent account required to link a student." },
@@ -388,10 +541,10 @@ describe("parent-report — linkStudentByCode", () => {
         studentCode: "AABB-CCDD-1122-3344-5566-7788-9900-1122",
         relationLabel: "parent",
       }),
-    ).rejects.toThrow("Impossible d'associer cet élève. Vérifiez le code et réessayez.");
+    ).rejects.toThrow("PARENT_LINK_ERROR:not_parent");
   });
 
-  it("surfaces the RPC error for an invalid alliance code", async () => {
+  it("throws a SPECIFIC stable code for an invalid alliance code", async () => {
     mockRpc.mockReturnValue({
       data: null,
       error: { message: "Invalid student alliance code." },
@@ -403,7 +556,22 @@ describe("parent-report — linkStudentByCode", () => {
         studentCode: "AABB-CCDD-1122-3344-5566-7788-9900-1122",
         relationLabel: "parent",
       }),
-    ).rejects.toThrow("Impossible d'associer cet élève. Vérifiez le code et réessayez.");
+    ).rejects.toThrow("PARENT_LINK_ERROR:invalid_code");
+  });
+
+  it("falls back to the generic stable code for an unrecognised RPC error", async () => {
+    mockRpc.mockReturnValue({
+      data: null,
+      error: { message: "some unexpected database error" },
+    });
+
+    const { linkStudentByCode } = await import("@/features/parent-report/parent-report.server");
+    await expect(
+      (linkStudentByCode as unknown as (d: unknown) => Promise<unknown>)({
+        studentCode: "AABB-CCDD-1122-3344-5566-7788-9900-1122",
+        relationLabel: "parent",
+      }),
+    ).rejects.toThrow("PARENT_LINK_ERROR:generic");
   });
 
   it("rejects short student codes", async () => {
@@ -414,6 +582,116 @@ describe("parent-report — linkStudentByCode", () => {
         relationLabel: "parent",
       }),
     ).rejects.toThrow(); // Zod validation
+  });
+});
+
+// =============================================================================
+// Alliance-code errors — stable codes (server) + localized labels (client)
+// =============================================================================
+describe("parent-report — parentCodeErrorCode / parentCodeErrorLabel", () => {
+  it("maps each known RPC reason to a distinct stable code, generic otherwise", async () => {
+    const { parentCodeErrorCode } = await import("@/features/parent-report/parent-code-errors");
+
+    expect(parentCodeErrorCode("Parent account required to link a student.")).toBe("not_parent");
+    expect(parentCodeErrorCode("Invalid student alliance code.")).toBe("invalid_code");
+    expect(parentCodeErrorCode("You cannot link your own account.")).toBe("self_link");
+    expect(parentCodeErrorCode("This code does not belong to a student account.")).toBe(
+      "not_student",
+    );
+    expect(parentCodeErrorCode("Student not found.")).toBe("not_found");
+    expect(parentCodeErrorCode("connection reset by peer")).toBe("generic");
+  });
+
+  it("translates prefixed codes in the visitor's language, per context", async () => {
+    const { parentCodeErrorLabel } = await import("@/features/parent-report/parent-code-errors");
+    const { fr } = await import("@/lib/i18n/fr");
+    const { ar } = await import("@/lib/i18n/ar");
+
+    // Registre parent = vouvoiement (audit §F-1), plus jamais de FR servi en AR.
+    expect(parentCodeErrorLabel("PARENT_LINK_ERROR:not_parent", fr)).toMatch(/Votre compte/);
+    expect(parentCodeErrorLabel("PARENT_LINK_ERROR:invalid_code", ar)).toBe(
+      ar.parentReport.codeErrors.invalid_code,
+    );
+    // The generic fallback follows the CONTEXT prefix (link vs public report).
+    expect(parentCodeErrorLabel("PARENT_LINK_ERROR:generic", fr)).toBe(
+      fr.parentReport.codeErrors.generic_link,
+    );
+    expect(parentCodeErrorLabel("REPORT_CODE_ERROR:generic", fr)).toBe(
+      fr.parentReport.codeErrors.generic_report,
+    );
+    // Unprefixed (network/legacy) messages degrade to the link generic.
+    expect(parentCodeErrorLabel("fetch failed", fr)).toBe(fr.parentReport.codeErrors.generic_link);
+  });
+});
+
+// =============================================================================
+// getStudentReportByCode — public (anon) report by alliance code
+// =============================================================================
+describe("parent-report — getStudentReportByCode", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    mockFrom.mockReset();
+    mockRpc.mockReset();
+  });
+
+  const minimalReport = {
+    student: {
+      displayName: "Yahia",
+      heroClass: null,
+      level: 3,
+      xp: 300,
+      currentStreak: 2,
+      longestStreak: 5,
+      lastActiveDate: null,
+      createdAt: "2026-01-01",
+    },
+    summary: {
+      totalTimeMinutes: 10,
+      totalExercises: 4,
+      avgScore: 70,
+      daysActiveThisWeek: 2,
+      seriousnessScore: 50,
+      verdict: "average",
+      scoreTrend: 0,
+    },
+    subjectStats: [],
+    dailyActivity: [],
+    weekComparison: {
+      thisWeek: { exercises: 0, minutes: 0, avgScore: 0 },
+      lastWeek: { exercises: 0, minutes: 0, avgScore: 0 },
+    },
+    chapterInsights: { strengths: [], weaknesses: [] },
+  };
+
+  it("returns the parsed report from the anon RPC (no account needed)", async () => {
+    mockRpc.mockResolvedValue({ data: minimalReport, error: null });
+
+    const { getStudentReportByCode } =
+      await import("@/features/parent-report/parent-report.server");
+    const result = await (getStudentReportByCode as unknown as (d: unknown) => Promise<unknown>)({
+      studentCode: "AABB-CCDD-1122-3344-5566-7788-9900-1122",
+    });
+
+    const r = result as Record<string, unknown>;
+    expect((r.student as Record<string, unknown>).displayName).toBe("Yahia");
+    expect(mockRpc).toHaveBeenCalledWith("get_student_report_by_code", {
+      p_code: "AABB-CCDD-1122-3344-5566-7788-9900-1122",
+    });
+  });
+
+  it("throws the report-context stable code when the code is not a student account", async () => {
+    mockRpc.mockResolvedValue({
+      data: null,
+      error: { message: "This code does not belong to a student account." },
+    });
+
+    const { getStudentReportByCode } =
+      await import("@/features/parent-report/parent-report.server");
+    await expect(
+      (getStudentReportByCode as unknown as (d: unknown) => Promise<unknown>)({
+        studentCode: "AABB-CCDD-1122-3344-5566-7788-9900-1122",
+      }),
+    ).rejects.toThrow("REPORT_CODE_ERROR:not_student");
   });
 });
 

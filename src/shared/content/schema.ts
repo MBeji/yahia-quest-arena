@@ -16,6 +16,72 @@ export type ContentLanguage = (typeof CONTENT_LANGUAGES)[number];
 /** A url, or a short free-form reference to a local repo / book. */
 const sourceRefSchema = z.string().min(3, "a source reference must be at least 3 characters");
 
+/**
+ * Canonical `grades.slug` referential (closed list, kept in sync with the DB
+ * seeds — `20260605120000` ladder + `20260704235000` lycée sections). Used to
+ * validate `compileTo` targets at build time (étude 16 R-9): a typo'd slug must
+ * fail `content:check`, never silently compile a subject whose grade subquery
+ * would resolve to NULL.
+ */
+export const KNOWN_GRADE_SLUGS = [
+  // primaire + collège ladder
+  "1ere-base",
+  "2eme-base",
+  "3eme-base",
+  "4eme-base",
+  "5eme-base",
+  "6eme-base",
+  "7eme-base",
+  "8eme-base",
+  "9eme-base",
+  // secondaire — tronc commun + flat legacy year nodes
+  "1ere-sec",
+  "2eme-sec",
+  "3eme-sec",
+  "bac",
+  // secondaire — section nodes (docs/lycee-architecture.md §2)
+  "2eme-sec-sciences",
+  "2eme-sec-lettres",
+  "2eme-sec-eco-services",
+  "2eme-sec-info",
+  "3eme-sec-math",
+  "3eme-sec-sciences-exp",
+  "3eme-sec-lettres",
+  "3eme-sec-eco-gestion",
+  "3eme-sec-techniques",
+  "3eme-sec-info",
+  "bac-math",
+  "bac-sciences-exp",
+  "bac-lettres",
+  "bac-eco-gestion",
+  "bac-techniques",
+  "bac-info",
+] as const;
+
+/**
+ * The flat legacy secondary nodes (`is_selectable = false` in DB since the
+ * lycée seed): kept forever as identity, but never a valid `compileTo` target —
+ * shared lycée content targets SECTION nodes only (étude 16 R-9).
+ */
+export const LEGACY_GRADE_SLUGS = ["2eme-sec", "3eme-sec", "bac"] as const;
+
+const knownGradeSlugs: ReadonlySet<string> = new Set(KNOWN_GRADE_SLUGS);
+const legacyGradeSlugs: ReadonlySet<string> = new Set(LEGACY_GRADE_SLUGS);
+
+/**
+ * One compiled target of a shared subject directory (étude 16 D-4): the id is
+ * the ONLY subject id that reaches the DB (`<matière>-<gradeSlug>` verbatim —
+ * enforced below), so UUIDv5 derivation depends on the compiled identity, never
+ * on the source directory. `nameFr`/`description` default to the source values.
+ */
+const compileTargetSchema = z.object({
+  id: z.string().regex(/^[a-z][a-z0-9-]*$/, "compileTo id must be kebab-case"),
+  gradeSlug: z.string().min(1),
+  nameFr: z.string().min(1).optional(),
+  description: z.string().min(1).optional(),
+});
+export type CompileTarget = z.infer<typeof compileTargetSchema>;
+
 /** `subject.json` — maps onto the `subjects` table (one per subject). */
 export const subjectMetaSchema = z.object({
   id: z.string().regex(/^[a-z][a-z0-9-]*$/, "subject id must be kebab-case (e.g. 'math')"),
@@ -51,6 +117,75 @@ export const subjectMetaSchema = z.object({
    * the standalone "Maîtrise du français" module. Defaults to false.
    */
   isPremium: z.boolean().default(false),
+  /**
+   * Mutualisation (étude 16 D-4): compile this ONE authored directory into N
+   * subjects — one per section-grade target. When present, the root `id` is a
+   * VIRTUAL source id (convention `<matière>-<année>`, e.g. `anglais-3eme-sec`)
+   * that never reaches the DB, and the root `gradeSlug` must stay null. Each
+   * target id must keep the `<matière>-<gradeSlug>` verbatim convention so the
+   * UUIDv5 derivation depends on the compiled identity (fork-without-loss,
+   * étude 16 R-7). Chapters/exercises may narrow their targets via their own
+   * `gradeSlugs` field. Expansion happens in `expandSubjects` (loader.ts).
+   */
+  compileTo: z.array(compileTargetSchema).min(2).optional(),
+});
+
+export const subjectMetaWithCompileToSchema = subjectMetaSchema.superRefine((meta, ctx) => {
+  if (!meta.compileTo) return;
+  if (meta.gradeSlug !== null) {
+    ctx.addIssue({
+      code: "custom",
+      message: "a shared subject (compileTo) must not set a root gradeSlug — targets carry them",
+      path: ["gradeSlug"],
+    });
+  }
+  const ids = new Set<string>();
+  const slugs = new Set<string>();
+  meta.compileTo.forEach((t, i) => {
+    if (ids.has(t.id)) {
+      ctx.addIssue({
+        code: "custom",
+        message: `duplicate compileTo target id '${t.id}'`,
+        path: ["compileTo", i, "id"],
+      });
+    }
+    ids.add(t.id);
+    if (slugs.has(t.gradeSlug)) {
+      ctx.addIssue({
+        code: "custom",
+        message: `duplicate compileTo target gradeSlug '${t.gradeSlug}'`,
+        path: ["compileTo", i, "gradeSlug"],
+      });
+    }
+    slugs.add(t.gradeSlug);
+    if (!knownGradeSlugs.has(t.gradeSlug)) {
+      ctx.addIssue({
+        code: "custom",
+        message: `unknown gradeSlug '${t.gradeSlug}' — must be one of the canonical grades (KNOWN_GRADE_SLUGS)`,
+        path: ["compileTo", i, "gradeSlug"],
+      });
+    } else if (legacyGradeSlugs.has(t.gradeSlug)) {
+      ctx.addIssue({
+        code: "custom",
+        message: `gradeSlug '${t.gradeSlug}' is a non-selectable legacy node — target the section nodes instead`,
+        path: ["compileTo", i, "gradeSlug"],
+      });
+    }
+    if (!t.id.endsWith(`-${t.gradeSlug}`)) {
+      ctx.addIssue({
+        code: "custom",
+        message: `target id '${t.id}' must be '<matière>-${t.gradeSlug}' (subject-id convention, docs/lycee-architecture.md §2)`,
+        path: ["compileTo", i, "id"],
+      });
+    }
+    if (t.id === meta.id) {
+      ctx.addIssue({
+        code: "custom",
+        message: `target id '${t.id}' collides with the source id — the source id is virtual and must differ`,
+        path: ["compileTo", i, "id"],
+      });
+    }
+  });
 });
 export type SubjectMeta = z.infer<typeof subjectMetaSchema>;
 
@@ -82,11 +217,25 @@ export function parseManuelPages(pages: string): number[] {
   return [...new Set(out)].sort((a, b) => a - b);
 }
 
+/**
+ * Optional per-section narrowing inside a SHARED subject (étude 16 D-4): the
+ * subset of the subject's `compileTo` grade slugs this piece of content is
+ * compiled for. Absent = all targets. Only meaningful under a subject that
+ * declares `compileTo` (enforced by `expandSubjects`).
+ */
+const gradeSlugsSubsetSchema = z
+  .array(z.string().min(1))
+  .min(1)
+  .refine((a) => new Set(a).size === a.length, "gradeSlugs must be unique")
+  .optional();
+
 /** `chapter.json` — maps onto a row in `chapters`. */
 export const chapterMetaSchema = z.object({
   title: z.string().min(1),
   description: z.string().min(1),
   displayOrder: z.number().int().positive(),
+  /** Shared-subject narrowing: sections this chapter is compiled for (étude 16). */
+  gradeSlugs: gradeSlugsSubsetSchema,
   /** Provenance: URLs / repos / books the chapter was built from. */
   sources: z.array(sourceRefSchema).default([]),
   /**
@@ -119,33 +268,266 @@ export const chapterMetaSchema = z.object({
 });
 export type ChapterMeta = z.infer<typeof chapterMetaSchema>;
 
+/**
+ * A misconception tag id — namespaced by subject (étude 04 R-5), e.g.
+ * `math.frac.add-denominators`: lowercase dotted segments, the first being the
+ * subject namespace. Never free text — every tag used in content must exist in
+ * the versioned registry `content/misconceptions.json` (cross-checked by
+ * `content:qa`; an unknown tag is an error).
+ */
+export const misconceptionTagSchema = z
+  .string()
+  .regex(
+    /^[a-z][a-z0-9]*(?:\.[a-z0-9]+(?:-[a-z0-9]+)*){1,}$/,
+    "a misconception tag must be namespaced lowercase segments (e.g. 'math.frac.add-denominators')",
+  );
+
 const optionSchema = z.object({
   id: z.string().min(1),
   text: z.string().min(1),
+  /**
+   * Optional server-only misconception tag (étude 04 D-4/R-5): names the error a
+   * student who picks THIS distractor is making. `sql-builder` routes it into the
+   * server-only `questions.distractor_tags` map (keyed by option id) and STRIPS it
+   * from the client-sent `options`. Meaningful on mcq (the wire `choice` equals
+   * the option id, so telemetry resolves `distractor_tags->>choice`); the correct
+   * option must stay untagged (enforced below). The id must exist in
+   * `content/misconceptions.json`.
+   */
+  misconceptionTag: misconceptionTagSchema.optional(),
 });
 
+/** One entry of the misconception registry: subject + trilingual student labels. */
+export const misconceptionEntrySchema = z.object({
+  subject: z.string().regex(/^[a-z][a-z0-9-]*$/, "subject must be kebab-case (e.g. 'math')"),
+  labels: z.object({
+    fr: z.string().min(1),
+    en: z.string().min(1),
+    ar: z.string().min(1),
+  }),
+});
+export type MisconceptionEntry = z.infer<typeof misconceptionEntrySchema>;
+
+/**
+ * `content/misconceptions.json` — the versioned, closed vocabulary of
+ * misconception tags (étude 04 D-4/R-5). Maps each namespaced tag id to its
+ * subject + student-facing FR/EN/AR labels (the tag is an id, never displayed;
+ * the labels feed `get_my_weaknesses` in a later lot). Content may only
+ * reference tags declared here.
+ */
+export const misconceptionRegistrySchema = z.record(
+  misconceptionTagSchema,
+  misconceptionEntrySchema,
+);
+export type MisconceptionRegistry = z.infer<typeof misconceptionRegistrySchema>;
+
+const questionCoreSchema = z.object({
+  prompt: z.string().min(1),
+  explanation: z.string().min(1),
+  /**
+   * Per-question difficulty (1 = easy … 3 = hard). Questions within an
+   * exercise/quiz are emitted ordered by ascending difficulty. Optional;
+   * untagged questions default to medium (2) for ordering.
+   */
+  difficulty: z.number().int().min(1).max(3).optional(),
+});
+
+/** The classic QCM — `type` may be omitted in files (defaulted to 'mcq'). */
+const mcqQuestionSchema = questionCoreSchema.extend({
+  type: z.literal("mcq"),
+  options: z.array(optionSchema).min(2).max(6),
+  correctOption: z.string().min(1),
+});
+
+/** Typed key of a native `numeric` question → `questions.answer_key`. */
+export const numericAnswerKeySchema = z.object({
+  /** The canonical answer (standard Western-digit notation). */
+  value: z.number().finite(),
+  /** Accepted absolute deviation; omitted = exact match (0). */
+  tolerance: z.number().nonnegative().finite().optional(),
+  /** Optional unit label — informative only; the unit hint belongs in the prompt. */
+  unit: z.string().min(1).optional(),
+});
+export type NumericAnswerKey = z.infer<typeof numericAnswerKeySchema>;
+
+/**
+ * Native free-numeric-entry question (Tier B, phase B1 — see
+ * docs/interactive-question-types.md). No options: the student types the
+ * number; the server scores `abs(x − value) <= tolerance` via `score_answer`.
+ */
+const numericQuestionSchema = questionCoreSchema.extend({
+  type: z.literal("numeric"),
+  answerKey: numericAnswerKeySchema,
+});
+
+/**
+ * Ids used in the B2 wire formats travel inside CSV/pair encodings, so they
+ * may not contain `,`, `:` or whitespace. Kebab/alnum, like the `a`–`d` and
+ * `l1`/`r1` conventions.
+ */
+const wireIdSchema = z
+  .string()
+  .regex(/^[A-Za-z0-9_-]+$/, "B2 option ids must be alphanumeric (no ',', ':' or spaces)");
+
+const wireOptionSchema = z.object({ id: wireIdSchema, text: z.string().min(1) });
+
+/**
+ * Native drag-&-drop sequencing question (Tier B, phase B2): `options` are the
+ * steps (shuffled at render); `answerKey.order` is the correct id sequence —
+ * validated below as an exact permutation of the option ids.
+ */
+const orderingQuestionSchema = questionCoreSchema.extend({
+  type: z.literal("ordering"),
+  options: z.array(wireOptionSchema).min(3).max(6),
+  answerKey: z.object({ order: z.array(wireIdSchema).min(3).max(6) }),
+});
+
+/**
+ * Native drag-&-drop pair-alignment question (Tier B, phase B2): `options`
+ * carry the fixed left items (`l…` ids) and the movable right items (`r…`
+ * ids); `answerKey.pairs` is the correct left→right association — validated
+ * below as a bijection between the two sides.
+ */
+const matchingQuestionSchema = questionCoreSchema.extend({
+  type: z.literal("matching"),
+  options: z.array(wireOptionSchema).min(4).max(12),
+  answerKey: z.object({
+    pairs: z
+      .array(z.tuple([wireIdSchema, wireIdSchema]))
+      .min(2)
+      .max(6),
+  }),
+});
+
+/**
+ * Native multi-select judgment question (Tier B, phase B3 — the last Tier-B
+ * type): `options` are the candidates (checkboxes); `answerKey.correct` is the
+ * set of correct ids — validated below as a PROPER, non-trivial subset (at
+ * least 2 correct, and at least one candidate must be wrong, or the "select
+ * ALL" instruction is vacuous — US-3).
+ */
+const multiQuestionSchema = questionCoreSchema.extend({
+  type: z.literal("multi"),
+  options: z.array(wireOptionSchema).min(3).max(6),
+  answerKey: z.object({ correct: z.array(wireIdSchema).min(2).max(5) }),
+});
+
+/**
+ * A question file entry — discriminated on `type`, defaulting to `'mcq'` so
+ * every pre-existing content file stays valid without edits (spec D-4).
+ */
 export const questionSchema = z
-  .object({
-    prompt: z.string().min(1),
-    options: z.array(optionSchema).min(2).max(6),
-    correctOption: z.string().min(1),
-    explanation: z.string().min(1),
-    /**
-     * Per-question difficulty (1 = easy … 3 = hard). Questions within an
-     * exercise/quiz are emitted ordered by ascending difficulty. Optional;
-     * untagged questions default to medium (2) for ordering.
-     */
-    difficulty: z.number().int().min(1).max(3).optional(),
-  })
-  .refine((q) => new Set(q.options.map((o) => o.id)).size === q.options.length, {
-    message: "option ids must be unique",
-    path: ["options"],
-  })
-  .refine((q) => q.options.some((o) => o.id === q.correctOption), {
-    message: "correctOption must match one of the option ids",
-    path: ["correctOption"],
+  .preprocess(
+    (val) =>
+      val !== null && typeof val === "object" && !("type" in val)
+        ? { ...(val as Record<string, unknown>), type: "mcq" }
+        : val,
+    z.discriminatedUnion("type", [
+      mcqQuestionSchema,
+      numericQuestionSchema,
+      orderingQuestionSchema,
+      matchingQuestionSchema,
+      multiQuestionSchema,
+    ]),
+  )
+  .superRefine((q, ctx) => {
+    if (q.type === "numeric") return;
+    if (new Set(q.options.map((o) => o.id)).size !== q.options.length) {
+      ctx.addIssue({ code: "custom", message: "option ids must be unique", path: ["options"] });
+    }
+    if (q.type === "mcq") {
+      if (!q.options.some((o) => o.id === q.correctOption)) {
+        ctx.addIssue({
+          code: "custom",
+          message: "correctOption must match one of the option ids",
+          path: ["correctOption"],
+        });
+      }
+      // The correct option must stay untagged (étude 04 D-1): a right answer has
+      // no misconception, and it must remain the only option without a tag so
+      // `distractor_tags->>choice` never diagnoses a correct choice.
+      if (q.options.some((o) => o.id === q.correctOption && o.misconceptionTag)) {
+        ctx.addIssue({
+          code: "custom",
+          message: "the correct option must not carry a misconceptionTag",
+          path: ["options"],
+        });
+      }
+      return;
+    }
+    if (q.type === "ordering") {
+      // The key must arrange EXACTLY the authored steps (a permutation).
+      const ids = q.options.map((o) => o.id).sort();
+      const order = [...q.answerKey.order].sort();
+      if (ids.length !== order.length || ids.some((id, i) => id !== order[i])) {
+        ctx.addIssue({
+          code: "custom",
+          message: "answerKey.order must be a permutation of the option ids",
+          path: ["answerKey", "order"],
+        });
+      }
+      return;
+    }
+    if (q.type === "multi") {
+      const ids = new Set(q.options.map((o) => o.id));
+      const correct = q.answerKey.correct;
+      if (new Set(correct).size !== correct.length || !correct.every((id) => ids.has(id))) {
+        ctx.addIssue({
+          code: "custom",
+          message: "answerKey.correct must be unique ids drawn from the options",
+          path: ["answerKey", "correct"],
+        });
+      } else if (correct.length >= q.options.length) {
+        ctx.addIssue({
+          code: "custom",
+          message:
+            "answerKey.correct must be a PROPER subset — at least one option must be wrong, or 'select ALL' is vacuous",
+          path: ["answerKey", "correct"],
+        });
+      }
+      return;
+    }
+    // matching: options split into l*/r* sides; pairs must be a bijection.
+    const lefts = q.options.filter((o) => o.id.startsWith("l")).map((o) => o.id);
+    const rights = q.options.filter((o) => o.id.startsWith("r")).map((o) => o.id);
+    if (lefts.length + rights.length !== q.options.length) {
+      ctx.addIssue({
+        code: "custom",
+        message: "matching option ids must start with 'l' (left) or 'r' (right)",
+        path: ["options"],
+      });
+      return;
+    }
+    if (lefts.length < 2 || lefts.length !== rights.length) {
+      ctx.addIssue({
+        code: "custom",
+        message: "matching needs >= 2 left items and as many right items",
+        path: ["options"],
+      });
+      return;
+    }
+    const pairLefts = q.answerKey.pairs.map(([l]) => l).sort();
+    const pairRights = q.answerKey.pairs.map(([, r]) => r).sort();
+    const wantLefts = [...lefts].sort();
+    const wantRights = [...rights].sort();
+    if (
+      pairLefts.length !== wantLefts.length ||
+      pairLefts.some((id, i) => id !== wantLefts[i]) ||
+      pairRights.some((id, i) => id !== wantRights[i])
+    ) {
+      ctx.addIssue({
+        code: "custom",
+        message: "answerKey.pairs must pair every left id with every right id exactly once",
+        path: ["answerKey", "pairs"],
+      });
+    }
   });
 export type ContentQuestion = z.infer<typeof questionSchema>;
+export type ContentMcqQuestion = Extract<ContentQuestion, { type: "mcq" }>;
+export type ContentNumericQuestion = Extract<ContentQuestion, { type: "numeric" }>;
+export type ContentOrderingQuestion = Extract<ContentQuestion, { type: "ordering" }>;
+export type ContentMatchingQuestion = Extract<ContentQuestion, { type: "matching" }>;
+export type ContentMultiQuestion = Extract<ContentQuestion, { type: "multi" }>;
 
 /**
  * `quiz.json` — the mandatory comprehension quiz of a chapter. Compiled into
@@ -170,6 +552,13 @@ export const exerciseSchema = z.object({
   xpReward: z.number().int().positive(),
   rewardCoins: z.number().int().nonnegative(),
   displayOrder: z.number().int().positive(),
+  /**
+   * Shared-subject narrowing (étude 16 D-4): sections this exercise is compiled
+   * for — enables per-section d3/d4 tiers inside one shared directory (e.g. a
+   * `bac-lettres`-only défi in `arabe-bac`). Subset of the chapter's effective
+   * targets; absent = all. Never emitted to SQL (the builder reads named fields).
+   */
+  gradeSlugs: gradeSlugsSubsetSchema,
   questions: z.array(questionSchema).min(1).max(50),
 });
 export type ContentExercise = z.infer<typeof exerciseSchema>;

@@ -104,6 +104,13 @@ async function main() {
           .insert({ user_id: id, parcours_id: parcoursId, source: "purchase", expires_at: null });
         if (ins.error) throw ins.error;
       }
+    } else {
+      // Non-premium accounts must carry NO entitlement. An earlier e2e run (e.g.
+      // the beta-approval specs) can leave one behind, silently turning every
+      // "free" spec/capture into a premium one (étude 15, audit — the phase-0
+      // dungeon captures hit the prereq gate instead of the paywall). Idempotent.
+      const del = await admin.from("parcours_entitlements").delete().eq("user_id", id);
+      if (del.error) throw del.error;
     }
 
     console.log(`✓ ${u.email}  (role=${u.role}, premium=${u.premium})`);

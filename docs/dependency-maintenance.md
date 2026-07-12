@@ -7,12 +7,17 @@ Keep runtime and dev dependencies secure and up to date with predictable operati
 ## Cadence
 
 - **Twice-weekly (automated): the upgrade guard** (Tue + Fri UTC) — see "Automation"
-  below. This is now the primary path; the manual cadence below is the fallback /
-  oversight layer.
-- Monthly: review outdated packages and security advisories (Dependabot still opens
-  its monthly PRs as a backstop).
-- Weekly: triage any guard PRs/issues and Dependabot PRs.
-- Immediate: patch high/critical vulnerabilities.
+  below. This is the **single owner of routine version bumps**; the manual cadence
+  below is the fallback / oversight layer.
+- **Dependabot is security-only.** `.github/dependabot.yml` sets
+  `open-pull-requests-limit: 0` on both ecosystems, which disables Dependabot's
+  routine _version_-update PRs (now owned by the guard, to stop the duplicate,
+  lockfile-conflicting PRs of #225/#226) while leaving Dependabot _security_ updates
+  on — the fast lane for vulnerability advisories that shouldn't wait for a green
+  nightly.
+- Monthly: review outdated packages and security advisories.
+- Weekly: triage any guard PRs/issues and Dependabot security PRs.
+- Immediate: patch high/critical vulnerabilities (Dependabot security PR or manual).
 
 ## Automation (twice-weekly upgrade guard)
 
@@ -33,7 +38,8 @@ TypeScript, the Node toolchain, the pinned Supabase CLI, and the GitHub Actions.
   deterministic `automerge` job is the only thing that merges, and only the fully-green
   patch/minor PR. The repo-specific upgrade traps (npm 10 lockfile, global esbuild
   override on Vite 8, react-hooks 7 `recommended`, react-refresh on `src/routes/**`, the
-  do-not-touch `motion`/LazyMotion refactor, the inline Vite/TanStack config, the Supabase CLI
+  do-not-touch `motion`/LazyMotion refactor, the inline Vite config (ex-meta-plugin,
+  de-vendored), the Supabase CLI
   pin → validate pgTAP) live in the skill and must be honoured.
 
 Prereq: the `CLAUDE_CODE_OAUTH_TOKEN` secret (shared with `regression-guard`); without

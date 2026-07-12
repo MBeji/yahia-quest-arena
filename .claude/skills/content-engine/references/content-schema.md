@@ -27,19 +27,19 @@ content/
 
 ## subject.json
 
-| Field             | Type         | Required    | Constraint                                                                           |
-| ----------------- | ------------ | ----------- | ------------------------------------------------------------------------------------ |
-| `id`              | string       | yes         | kebab-case `^[a-z][a-z0-9-]*$`, unique. Becomes `subjects.id` literally              |
+| Field             | Type         | Required    | Constraint                                                                                                                                                                                              |
+| ----------------- | ------------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`              | string       | yes         | kebab-case `^[a-z][a-z0-9-]*$`, unique. Becomes `subjects.id` literally                                                                                                                                 |
 | `nameFr`          | string       | yes         | non-empty. The only display name — write it in the subject's **own `contentLanguage`** (ar→`الرياضيات`, en→`English`, fr→`Français`). Field name is legacy (DB compat); the value is native, not French |
-| `description`     | string       | yes         | non-empty                                                                            |
-| `attribute`       | string       | yes         | non-empty (RPG attribute label, e.g. "Force", "Logique")                             |
-| `colorToken`      | string       | yes         | non-empty, maps to a CSS var (e.g. `subject-math`)                                   |
-| `icon`            | string       | yes         | non-empty, a lucide icon name (e.g. `GraduationCap`)                                 |
-| `displayOrder`    | number       | yes         | positive integer                                                                     |
-| `contentLanguage` | enum         | yes         | `"ar"` \| `"fr"` \| `"en"` — the one language the content is written in (drives RTL) |
-| `themeId`         | string       | yes         | kebab-case, FK → an existing `themes.id` (see themes-and-trilingual.md)              |
-| `gradeSlug`       | string\|null | no (→null)  | school subjects only (e.g. `9eme-base`); `null` for standalone themes                |
-| `isPremium`       | boolean      | no (→false) | **legacy/secondary** — premium is now decided **per parcours**, not by this flag     |
+| `description`     | string       | yes         | non-empty                                                                                                                                                                                               |
+| `attribute`       | string       | yes         | non-empty (RPG attribute label, e.g. "Force", "Logique")                                                                                                                                                |
+| `colorToken`      | string       | yes         | non-empty, maps to a CSS var (e.g. `subject-math`)                                                                                                                                                      |
+| `icon`            | string       | yes         | non-empty, a lucide icon name (e.g. `GraduationCap`)                                                                                                                                                    |
+| `displayOrder`    | number       | yes         | positive integer                                                                                                                                                                                        |
+| `contentLanguage` | enum         | yes         | `"ar"` \| `"fr"` \| `"en"` — the one language the content is written in (drives RTL)                                                                                                                    |
+| `themeId`         | string       | yes         | kebab-case, FK → an existing `themes.id` (see themes-and-trilingual.md)                                                                                                                                 |
+| `gradeSlug`       | string\|null | no (→null)  | school subjects only (e.g. `9eme-base`); `null` for standalone themes                                                                                                                                   |
+| `isPremium`       | boolean      | no (→false) | **legacy/secondary** — premium is now decided **per parcours**, not by this flag                                                                                                                        |
 
 There is **no** `nameEn`/`nameAr` — `nameFr` is the single display-name field, and you write it in the
 subject's `contentLanguage` (the "Fr" in the name is legacy only). There is **no** per-language text
@@ -53,12 +53,12 @@ anywhere else.
 
 ## chapter.json
 
-| Field          | Type     | Required | Constraint                                                             |
-| -------------- | -------- | -------- | ---------------------------------------------------------------------- |
-| `title`        | string   | yes      | non-empty (in the subject's language)                                  |
-| `description`  | string   | yes      | non-empty                                                              |
-| `displayOrder` | number   | yes      | positive integer                                                       |
-| `sources`      | string[] | no (→[]) | each ref ≥3 chars — URLs/citations you actually used (hybrid sourcing) |
+| Field          | Type     | Required | Constraint                                                                            |
+| -------------- | -------- | -------- | ------------------------------------------------------------------------------------- |
+| `title`        | string   | yes      | non-empty (in the subject's language)                                                 |
+| `description`  | string   | yes      | non-empty                                                                             |
+| `displayOrder` | number   | yes      | positive integer                                                                      |
+| `sources`      | string[] | no (→[]) | each ref ≥3 chars — URLs/citations you actually used (hybrid sourcing)                |
 | `manuel`       | object   | no       | `{ code, pages }` — official student-textbook pages covering this chapter (see below) |
 
 `cours.md` and `resume.md` are separate files, not fields.
@@ -73,9 +73,9 @@ student textbook** that cover it, so the app can show them under the course (log
 "manuel": { "code": "103304", "pages": "12-15" }
 ```
 
-| Field   | Type   | Constraint                                                                                  |
-| ------- | ------ | ------------------------------------------------------------------------------------------- |
-| `code`  | string | alphanumeric `[A-Za-z0-9_-]+` — the CNP **manuel élève** book code (not the teacher guide)   |
+| Field   | Type   | Constraint                                                                                                            |
+| ------- | ------ | --------------------------------------------------------------------------------------------------------------------- |
+| `code`  | string | alphanumeric `[A-Za-z0-9_-]+` — the CNP **manuel élève** book code (not the teacher guide)                            |
 | `pages` | string | 1-based page expression: a single page, an inclusive range, or a comma list — `"12"`, `"12-15"`, `"12-15, 18, 20-21"` |
 
 The build expands `pages` into a sorted, de-duplicated `pageNumbers[]` and stores
@@ -85,8 +85,16 @@ bucket; this field carries only the metadata.
 
 ## Question object (shared by quiz.json and exercise files)
 
+Questions are a **discriminated union on `type`**. Omitting `type` means `mcq` — every
+pre-existing file stays valid unchanged. All Tier-B types have shipped: `mcq`, `numeric`,
+`ordering`, `matching` and `multi` are ALL authorable (`docs/interactive-question-types.md`
+is fully executed — no more native types are planned).
+
+**`mcq` (default) — the classic QCM:**
+
 | Field           | Type     | Required | Constraint                                                                      |
 | --------------- | -------- | -------- | ------------------------------------------------------------------------------- |
+| `type`          | string   | no       | `"mcq"` (or omitted)                                                            |
 | `prompt`        | string   | yes      | non-empty                                                                       |
 | `options`       | option[] | yes      | **2–6** items (use 4). Each `{ id: string≥1, text: string≥1 }`                  |
 | `correctOption` | string   | yes      | must equal one of the option **ids** (not the text, not an index)               |
@@ -95,6 +103,77 @@ bucket; this field carries only the metadata.
 
 Cross-field rules (Zod refine): option **ids must be unique**; `correctOption` ∈ option ids.
 Convention: option ids `a`,`b`,`c`,`d`.
+
+**Optional `misconceptionTag` per distractor (mcq only — étude 04, moteur adaptatif).** Any
+_wrong_ option may carry `"misconceptionTag": "<id>"` naming the error a student who picks it is
+making. It is **server-only diagnostics**: `sql-builder` routes it into the `questions.distractor_tags`
+map and **strips it from `options`** (it never reaches the client — R-1), so the correct option must
+stay **untagged** (Zod errors otherwise). The id must be **namespaced by subject** (`math.frac.add-denominators`)
+and **declared in the registry `content/misconceptions.json`** (`content:qa` errors on an unknown or
+undeclared tag). The registry maps each id → `{ subject, labels: { fr, en, ar } }` (the student-facing
+wording; the tag itself is never displayed). Tagging is **optional and progressive** — leave distractors
+untagged when the error isn't crisp; the `prof-*` trap taxonomies are the natural source of tags. Only
+`mcq` resolves telemetry (the wire choice equals the option id), so only `mcq` options take the field.
+
+**`numeric` — native free numeric entry (no options, no elimination):**
+
+| Field                 | Type   | Required | Constraint                                                                                                                                       |
+| --------------------- | ------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `type`                | string | yes      | `"numeric"`                                                                                                                                      |
+| `prompt`              | string | yes      | non-empty. **State the expected unit and precision in the prompt** ("en cm²", "arrondi au centième")                                             |
+| `answerKey.value`     | number | yes      | the canonical answer (finite; standard Western-digit notation)                                                                                   |
+| `answerKey.tolerance` | number | no       | accepted absolute deviation; **omit for exact** (0). Keep it proportionate — `content:qa` errors when tolerance ≥ \|value\| and warns above 25 % |
+| `answerKey.unit`      | string | no       | informative label only — the student never types the unit; the hint lives in the prompt                                                          |
+| `explanation`         | string | yes      | same bar as mcq; **echo the canonical value** in the worked solution                                                                             |
+| `difficulty`          | number | no       | same semantics as mcq                                                                                                                            |
+
+The student types a plain number (`-`, `.` or `,` decimal); the server scores
+`abs(x − value) ≤ tolerance` via `score_answer`. Use `numeric` when options would give the
+answer away by elimination (calculs, mesures, résultats d'équations); keep `mcq` when the
+distractors themselves teach (misconception encoding — see expert-exercises.md).
+
+**`ordering` — native drag-&-drop sequencing (B2):**
+
+| Field             | Type     | Required | Constraint                                                                                  |
+| ----------------- | -------- | -------- | ------------------------------------------------------------------------------------------- |
+| `type`            | string   | yes      | `"ordering"`                                                                                |
+| `options`         | option[] | yes      | **3–6** steps to arrange (shuffled at render). Ids alphanumeric (`a`…, no `,`/`:`/spaces)   |
+| `answerKey.order` | string[] | yes      | the correct id sequence — must be an **exact permutation** of the option ids (Zod-enforced) |
+| `explanation`     | string   | yes      | justify the ORDER (why this step before that one), not just restate it                      |
+
+Scoring is an exact sequence match, all-or-nothing. Step texts must be unambiguous and
+mutually distinct (`content:qa` errors on duplicates) and each step self-contained — never
+"then…" phrasing that only works in one position.
+
+**`matching` — native drag-&-drop pair alignment (B2):**
+
+| Field             | Type     | Required | Constraint                                                                                                               |
+| ----------------- | -------- | -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `type`            | string   | yes      | `"matching"`                                                                                                             |
+| `options`         | option[] | yes      | the fixed left items (**ids `l1`,`l2`…**) + the movable right items (**ids `r1`,`r2`…**), 2–6 of each, balanced          |
+| `answerKey.pairs` | [l,r][]  | yes      | the correct left→right associations — must pair every left with every right **exactly once** (a bijection, Zod-enforced) |
+| `explanation`     | string   | yes      | state each association and why                                                                                           |
+
+Scoring is set equality of the pairs, all-or-nothing. Every right item must be a plausible
+partner for more than one left item — otherwise the exercise solves itself.
+
+**`multi` — native multi-select judgment (B3, "select ALL that apply"):**
+
+| Field               | Type     | Required | Constraint                                                                                                                                      |
+| ------------------- | -------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `type`              | string   | yes      | `"multi"`                                                                                                                                       |
+| `options`           | option[] | yes      | **3–6** candidates (checkboxes). Ids alphanumeric (`a`…, no `,`/`:`/spaces)                                                                     |
+| `answerKey.correct` | string[] | yes      | **2–5** ids — the correct candidates. Must be a **proper subset**: at least one option must be wrong, or "select ALL" is vacuous (Zod-enforced) |
+| `explanation`       | string   | yes      | justify EACH correct candidate and why the wrong one(s) don't qualify                                                                           |
+
+Scoring is set equality of the checked ids, all-or-nothing (no partial credit). The client
+renders the explicit **"select ALL that apply"** instruction — never omit it or the item
+reads as an ordinary single-choice QCM and becomes unfair. Use `multi` for judgment items
+where more than one option is legitimately correct (properties, classifications); a `multi`
+item with exactly one intended correct answer should be an `mcq` instead.
+
+Prefer these three native types (`ordering`/`matching`/`multi`) over the QCM-encoded
+permutation/multi-select formats for new content.
 
 ### Figures (inline SVG) in questions
 

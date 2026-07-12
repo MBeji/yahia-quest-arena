@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { ArrowLeft, CreditCard, Loader2 } from "lucide-react";
+import { ArrowLeft, CreditCard } from "lucide-react";
 import { toast } from "sonner";
 import { useMyRole } from "@/features/auth";
 import {
@@ -17,6 +17,7 @@ import {
   type ParcoursEntitlementSource,
 } from "@/shared/constants/subscription";
 import { useT } from "@/lib/i18n";
+import { LoadingState } from "@/components/ui/loading-state";
 
 export const Route = createFileRoute("/_authenticated/admin/subscriptions")({
   head: () => ({ meta: [{ title: "Abonnements · Na9ra Nal3ab" }] }),
@@ -93,7 +94,7 @@ function AdminSubscriptionsPage() {
     : null;
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-10">
+    <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
       <Link
         to="/dashboard"
         className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
@@ -116,9 +117,7 @@ function AdminSubscriptionsPage() {
       </p>
 
       {listQuery.isLoading ? (
-        <div className="grid place-items-center py-16">
-          <Loader2 className="h-8 w-8 animate-spin text-[color:var(--gold)]" />
-        </div>
+        <LoadingState label={t.common.loading} />
       ) : listQuery.isError ? (
         <div className="rounded-2xl border border-destructive/40 bg-destructive/5 p-6 text-sm text-destructive">
           {t.subscription.updateError}

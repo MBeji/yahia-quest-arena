@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Chapter boss ⭐⭐⭐: the Edinburgh challenge",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complete: \"My parents ___ many countries.\" (verb: visit)",
+      "options": [
+        { "id": "a", "text": "have visited" },
+        { "id": "b", "text": "has visited" },
+        { "id": "c", "text": "have visit" },
+        { "id": "d", "text": "has visit" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"My parents\" is plural (they), so the auxiliary is \"have\", and the regular participle of visit is \"visited\": have visited. \"Has\" is wrong for a plural subject, and \"visit\" without -ed is the base form, not a participle.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"Rania ___ lots of photos of the castle.\" (verb: take)",
+      "options": [
+        { "id": "a", "text": "has took" },
+        { "id": "b", "text": "has taken" },
+        { "id": "c", "text": "have taken" },
+        { "id": "d", "text": "has take" }
+      ],
+      "correctOption": "b",
+      "explanation": "Rania is one person (she) → \"has\", and the irregular participle of take is \"taken\": has taken. \"Took\" is the simple past (not a participle), \"have\" is the wrong auxiliary for she, and \"take\" is the base form.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"The plane ___ landed; we are collecting our bags now.\"",
+      "options": [
+        { "id": "a", "text": "just has landed" },
+        { "id": "b", "text": "have just landed" },
+        { "id": "c", "text": "has just landed" },
+        { "id": "d", "text": "has landed just" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Just\" sits between the auxiliary and the participle, and the plane (it) takes \"has\": has just landed ✓. \"Just has\" and \"landed just\" put the word in the wrong place, and \"have\" does not agree with \"the plane\".",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Only ONE sentence is correct. Which one?",
+      "options": [
+        { "id": "a", "text": "I have never eat haggis." },
+        { "id": "b", "text": "I has never eaten haggis." },
+        { "id": "c", "text": "I have never ate haggis." },
+        { "id": "d", "text": "I have never eaten haggis." }
+      ],
+      "correctOption": "d",
+      "explanation": "\"I\" takes \"have\", \"never\" goes before the participle, and the participle of eat is \"eaten\": I have never eaten ✓. \"Eat\" is the base form, \"has\" is wrong with I, and \"ate\" is the simple past, not the participle.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"We ___ souvenirs for our family in Tunis.\" (verb: buy)",
+      "options": [
+        { "id": "a", "text": "have bought" },
+        { "id": "b", "text": "has bought" },
+        { "id": "c", "text": "have buyed" },
+        { "id": "d", "text": "have buy" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"We\" → \"have\", and the irregular participle of buy is \"bought\": have bought ✓. \"Has\" is wrong for we, \"buyed\" invents a regular ending for an irregular verb, and \"buy\" is the base form.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"'Could you ___ me what time breakfast starts?' asked the tourist.\"",
+      "options": [
+        { "id": "a", "text": "say" },
+        { "id": "b", "text": "talk" },
+        { "id": "c", "text": "tell" },
+        { "id": "d", "text": "speak" }
+      ],
+      "correctOption": "c",
+      "explanation": "To ask for information politely we say \"Could you tell me…?\" — \"tell\" takes a person (tell me). \"Say\" is not used with a person like this (\"say me\" is wrong), and \"talk/speak\" do not fit the pattern \"___ me what time…\".",
+      "difficulty": 3
+    }
+  ]
+}

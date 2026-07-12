@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Exercice : réveille tes acquis",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Complète au présent de l'indicatif : « Tu ___ (finir) ton exercice avant la récréation. »",
+      "options": [
+        { "id": "a", "text": "finies" },
+        { "id": "b", "text": "finissez" },
+        { "id": "c", "text": "finis" },
+        { "id": "d", "text": "finit" }
+      ],
+      "correctOption": "c",
+      "explanation": "Finir est un verbe du 2e groupe : avec « tu », la terminaison est -is → tu finis. « Finit » correspond à il/elle, et « finissez » à vous.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel est le type de la phrase : « Le match commence à trois heures. » ?",
+      "options": [
+        { "id": "a", "text": "Déclarative" },
+        { "id": "b", "text": "Exclamative" },
+        { "id": "c", "text": "Interrogative" },
+        { "id": "d", "text": "Affirmative" }
+      ],
+      "correctOption": "a",
+      "explanation": "La phrase donne une information et se termine par un point : elle est déclarative. « Affirmative » désigne une forme de phrase, pas un type.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle est la forme négative correcte de : « Sami joue au football. » ?",
+      "options": [
+        { "id": "a", "text": "Sami joue pas au football." },
+        { "id": "b", "text": "Sami ne joue pas au football." },
+        { "id": "c", "text": "Sami ne joue au football." },
+        { "id": "d", "text": "Sami non joue au football." }
+      ],
+      "correctOption": "b",
+      "explanation": "La négation encadre le verbe avec deux mots : ne… pas → « Sami ne joue pas au football. » Il ne faut oublier ni « ne » ni « pas ».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « ___ cartable est trop lourd pour moi. »",
+      "options": [
+        { "id": "a", "text": "Ce" },
+        { "id": "b", "text": "Se" },
+        { "id": "c", "text": "C'est" },
+        { "id": "d", "text": "Ses" }
+      ],
+      "correctOption": "a",
+      "explanation": "Devant un nom masculin singulier que l'on montre, on écrit le déterminant démonstratif « ce » : ce cartable. « Se » accompagne toujours un verbe pronominal, jamais un nom.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Mets au passé composé : « Elle ___ (aller) au marché central. »",
+      "options": [
+        { "id": "a", "text": "elle a allé" },
+        { "id": "b", "text": "elle a allée" },
+        { "id": "c", "text": "elle est allé" },
+        { "id": "d", "text": "elle est allée" }
+      ],
+      "correctOption": "d",
+      "explanation": "Aller est un verbe de mouvement : il se conjugue avec être. Avec être, le participe passé s'accorde avec le sujet féminin singulier → elle est allée.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "« Hier, au souk : soudain, un chat bondit sur l'étal et renverse les paniers. » Quelle est la valeur du verbe au présent « bondit » ?",
+      "options": [
+        { "id": "a", "text": "Une vérité générale" },
+        { "id": "b", "text": "Une action en train de se réaliser au moment où l'on parle" },
+        { "id": "c", "text": "Une action future" },
+        { "id": "d", "text": "Le présent de narration" }
+      ],
+      "correctOption": "d",
+      "explanation": "La scène s'est passée hier, mais elle est racontée au présent pour rendre le récit plus vivant : c'est le présent de narration.",
+      "difficulty": 2
+    }
+  ]
+}

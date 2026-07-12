@@ -118,7 +118,7 @@ describe("isMathExpression", () => {
 
 describe("rtlProps", () => {
   it("returns RTL props for Arabic text", () => {
-    expect(rtlProps("مرحبا")).toEqual({ dir: "rtl", className: "text-right" });
+    expect(rtlProps("مرحبا")).toEqual({ dir: "rtl", className: "text-start" });
   });
 
   it("returns empty object for Latin text", () => {

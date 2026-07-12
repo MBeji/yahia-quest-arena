@@ -1,0 +1,65 @@
+{
+  "title": "Comprehension check ⭐",
+  "questions": [
+    {
+      "prompt": "Complete: \"My friend Nour always helps me with my homework. She is very ___.\"",
+      "options": [
+        { "id": "a", "text": "friendly" },
+        { "id": "b", "text": "funny" },
+        { "id": "c", "text": "helpful" },
+        { "id": "d", "text": "quiet" }
+      ],
+      "correctOption": "c",
+      "explanation": "A person who always helps is \"helpful\". \"Friendly\" means nice to people, \"funny\" means she makes you laugh, and \"quiet\" means calm and not noisy — only \"helpful\" matches \"always helps me\".",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"Look! Dad ___ lunch in the kitchen.\"",
+      "options": [
+        { "id": "a", "text": "cooking" },
+        { "id": "b", "text": "cooks" },
+        { "id": "c", "text": "is cook" },
+        { "id": "d", "text": "is cooking" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"Look!\" shows the action is happening now, so we need the present progressive: is/are + verb-ing → Dad is cooking. \"Cooking\" alone forgets the verb \"be\", \"is cook\" forgets the -ing, and \"cooks\" is the simple present, used for habits.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Tom's suitcase is very heavy. What is the polite way to ask for help?",
+      "options": [
+        { "id": "a", "text": "\"Can you help me, please?\"" },
+        { "id": "b", "text": "\"Help me now!\"" },
+        { "id": "c", "text": "\"I want help, quick!\"" },
+        { "id": "d", "text": "\"You help me.\"" }
+      ],
+      "correctOption": "a",
+      "explanation": "A polite request uses \"Can you … please?\": Can you help me, please? The other three sentences give orders without \"please\", so they sound rude in English.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "\"Would you like some fresh orange juice?\" — You want some. What do you say?",
+      "options": [
+        { "id": "a", "text": "\"No, thank you.\"" },
+        { "id": "b", "text": "\"Yes, please.\"" },
+        { "id": "c", "text": "\"You're welcome.\"" },
+        { "id": "d", "text": "\"Fine, thanks.\"" }
+      ],
+      "correctOption": "b",
+      "explanation": "To accept an offer, English speakers say \"Yes, please.\" \"No, thank you\" politely declines, \"You're welcome\" answers \"thank you\", and \"Fine, thanks\" answers \"How are you?\".",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"Salma and Youssef love ___ new house.\"",
+      "options": [
+        { "id": "a", "text": "her" },
+        { "id": "b", "text": "his" },
+        { "id": "c", "text": "our" },
+        { "id": "d", "text": "their" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"Salma and Youssef\" means two people (= they), so the possessive adjective is \"their\": their new house. \"His\" is for one boy, \"her\" is for one girl, and \"our\" would mean the house belongs to \"we\", the speakers.",
+      "difficulty": 2
+    }
+  ]
+}

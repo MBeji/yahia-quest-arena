@@ -4,7 +4,9 @@
 > other doc, CLAUDE.md wins — fix the other doc. [`ARCHITECTURE.md`](./ARCHITECTURE.md)
 > is the deeper architecture companion; the per-topic policy files under `docs/` and the
 > Copilot pointer at `.github/copilot-instructions.md` defer to these two. This file
-> covers commands, conventions, and gotchas not obvious from the code.
+> covers commands, conventions, and gotchas not obvious from the code. **Project state**
+> (current phase, dated decisions, real feature/étude/chantier status) lives in
+> [`STATUS.md`](./STATUS.md) — read it before trusting any "is X live?" claim.
 
 ## What this is
 
@@ -27,10 +29,16 @@ and tackle a timed "dungeon" boss mode. Shonen/RPG manga aesthetic, trilingual (
   Everything below `subjects` (chapters/exercises + all gameplay: XP, quiz gate, dungeon,
   leaderboard) is theme/grade-agnostic.
 - A **parcours** is the student's enrolled track (`profiles.current_parcours_id`), resolved from a
-  `(theme, grade)` pair. The two PREMIUM **concours** parcours (9ème, 6ème) are the paid products;
-  the rest are FREE **exploration** parcours. Premium missions need a per-parcours **entitlement**
-  (see "Premium gate" under Data model); the free preview is the comprehension quiz + difficulty-1.
-  The dashboard is scoped to the active parcours; the Explorer (`/themes`) lets a student switch.
+  `(theme, grade)` pair. Kinds: `concours` (exam-year milestones — 9ème, 6ème, bac-math),
+  `scolaire` (one per school grade) and `libre` (standalone themes) — ~35 parcours total.
+  **Free phase (current)**: since the 2026-06-21 pivot and the étude 15 Q-2 arbitrage
+  (2026-07-10), the app is **100 % free** — migration `20260711100000` set `is_premium = false`
+  on every parcours, so **no mission is gated**. The per-parcours **entitlement** machinery
+  stays in place but **dormant** (see "Access gate" under Data model; étude 01 — gelée — is the
+  designated re-activation vehicle). No user-facing surface may say "premium/abonnement/payant"
+  during this phase (étude 15 D-3).
+  The dashboard is scoped to the active parcours; the public catalogue (`/programme`) doubles as
+  the Explorer (`/themes` 301-redirects there) and lets a student switch.
 
 **Stack**: Vite 8 · TanStack Start (SSR + file routing + server fns) · React 19 · TanStack Query 5 · Supabase (Postgres + Auth + RLS) · Tailwind 4 / Radix-shadcn · **deploys to Vercel** — push to `main` auto-deploys prod via `scripts/build-vercel.mjs` (`vercel.json`). A Cloudflare Workers config also exists, but Vercel is the live target. Package manager: **npm** (`package-lock.json`; Node 22 / npm 10 in CI). Tests: Vitest 4 + Testing Library (unit) and Playwright (e2e).
 
@@ -40,6 +48,7 @@ and tackle a timed "dungeon" boss mode. Shonen/RPG manga aesthetic, trilingual (
 npm run dev          # Vite dev server (SSR)
 npm run build        # production build
 npm run build:check  # build + bundle-budget check
+npm run smoke:shell  # prod-bundle browser smoke: public shell must render crash-free in Chromium
 npm test             # vitest run — run `npm test` for the current test/file count
 npm run test:watch   # watch mode
 npm run test:coverage
@@ -53,11 +62,15 @@ npm run ci:verify    # verify + coverage + build:check + audit:deps + content:qa
 **Content pipeline** (authored files → Supabase migrations — see "Content pipeline" below):
 
 ```bash
-npm run content:check      # validate all content, write nothing
-npm run content:build      # compile content/ → idempotent SQL in supabase/migrations/
-npm run content:qa         # content quality checks
-npm run content:qa:strict  # same, fail on warnings (part of ci:verify)
+npm run content:check                    # validate all content, write nothing
+npm run content:build -- --subject <id>  # regenerate the migration for ONE changed subject only
+npm run content:qa                        # content quality checks
+npm run content:qa:strict                 # same, fail on warnings (part of ci:verify)
 ```
+
+⚠️ Never run bare `npm run content:build` — it regenerates **all ~60 subjects** with fresh
+timestamps (stray duplicate migrations you must not commit). Always scope with `--subject <id>`.
+Full pipeline map + skill selection: `content-engine/references/generation-pipeline.md`.
 
 **E2E (Playwright)** — needs a dedicated TEST Supabase project + seeded users; not part of the unit gate:
 
@@ -99,11 +112,27 @@ staged files); `pre-push` runs `npm run verify`. Installed automatically via the
 (school theme only) → `subjects` → `chapters` → `exercises` → `questions` (QCM, `options` JSONB)
 · `attempts` · `exercise_sessions` · `student_badges` /
 `shop_items` / `inventory_items` · `daily_objectives` · `weekly_quests` ·
-`spaced_repetition_schedule` (SM-2) · `dungeon_runs` · `parent_student_links` · `parcours`
-(sellable tracks — FREE or PREMIUM) · `parcours_entitlements` (per-parcours grants; `source` ∈
-{purchase/beta/gift/family}; family pack via `parent_student_links`) · `beta_access_requests` ·
-`content_reports` (user-flagged content errors) · `themes` / `grades`. (The old `subscriptions`
-columns + RPCs were removed in migration `20260609000000`.)
+`spaced_repetition_schedule` (SM-2) · `dungeon_runs` · `duel_queue` / `duels` /
+`duel_participants` (real-time duels + weekly leagues — étude 05) · `parent_student_links` ·
+`parcours` (tracks — kinds concours/scolaire/libre; **all free in the current phase**) ·
+`parcours_entitlements` (per-parcours grants, dormant; `source` ∈
+{purchase/beta/gift/family}; family pack via `parent_student_links`) · `parcours_interest`
+(votes on `coming_soon` parcours) · `beta_access_requests` ·
+`content_reports` (user-flagged content errors) · `bug_reports` (user bug reports) ·
+`themes` / `grades` · `question_attempts`
+(append-only per-question telemetry — moteur adaptatif étude 04) + `user_misconceptions` (its
+per-(user, tag) aggregate, trigger-maintained). (The old `subscriptions` columns + RPCs were
+removed in migration `20260609000000`.)
+
+**Adaptive-engine telemetry (étude 04, phase A0).** Each answer submitted through
+`submit_exercise_attempt`/`submit_dungeon_answer` also appends a `question_attempts` row in the
+same transaction, resolving the chosen distractor's **misconception tag** from the **server-only**
+`questions.distractor_tags` map (never sent to the client — same posture as `correct_option`; the
+correct option stays untagged). Tags are namespaced by subject (`math.frac.add-denominators`) and
+drawn from the closed registry `content/misconceptions.json` (id → FR/EN/AR labels), authored via the
+optional per-option `misconceptionTag` content field and validated by `content:qa`. A trigger keeps
+`user_misconceptions` (occurrences + distinct sessions) for the later "Révision du jour" / "Points
+faibles" lots; raw telemetry is purged after 12 months (`purge_question_attempts`, pg_cron).
 
 Server-side logic lives in SQL: `handle_new_user` (auto-profile on signup), `award_xp`
 (streak + level curve: 200 XP/level, hero-class tiers), and the `submit_exercise_attempt`
@@ -111,14 +140,19 @@ RPC (atomic scoring + rewards + badge unlocks). All tables have RLS; the two pri
 functions are `REVOKE`d from anon/authenticated. Gameplay thresholds are centralized in
 `src/shared/constants/gamification.ts` — change rules there, not inline.
 
-**Premium gate (per-parcours).** Access is decided server-side by the single authoritative RPC
-`resolve_exercise_access(exercise)`: a FREE parcours is always open; a PREMIUM (concours) parcours
-opens a mission only for a holder of a live `parcours_entitlement` — directly, or via an active
-linked parent (the **family pack**) — **except the free preview** (the chapter comprehension quiz +
-difficulty-1 missions, `FREE_PREVIEW_MAX_DIFFICULTY`). `has_parcours_entitlement(user, parcours)`
-encapsulates the check; `set_current_parcours` sets the student's active track at onboarding; admin
-provisioning is `admin_grant_parcours` / `admin_revoke_parcours` / `admin_list_parcours_entitlements`.
-The Dungeon is a premium perk (any concours entitlement). The legacy global "difficulty ≥ 3 +
+**Access gate (per-parcours) — premium machinery DORMANT in the free phase.** Access is decided
+server-side by the single authoritative RPC `resolve_exercise_access(exercise)`: a non-premium
+parcours is always open; a premium parcours would open a mission only for a holder of a live
+`parcours_entitlement` — directly, or via an active linked parent (the **family pack**) —
+**except the free preview** (the chapter comprehension quiz + difficulty-1 missions,
+`FREE_PREVIEW_MAX_DIFFICULTY`). Since migration `20260711100000` (free phase) **every parcours has
+`is_premium = false`**, so the first branch always applies and nothing is gated; the paywall
+component (`SubscriptionPaywall`) and the user-facing beta-access form are wired but unreachable.
+`has_parcours_entitlement(user, parcours)` encapsulates the check; `set_current_parcours` sets the
+student's active track at onboarding; admin provisioning stays live at `/admin/subscriptions`
+(`admin_grant_parcours` / `admin_revoke_parcours` / `admin_list_parcours_entitlements`).
+The Dungeon is **no longer entitlement-gated** — `get_dungeon_access()` keeps only the
+progression locks (PREREQ / LEVEL / DAILY_LIMIT). The legacy global "difficulty ≥ 3 +
 subscription" gate is **gone** — no code reads `subscription_*` / `has_active_subscription`.
 
 **Consumables (shop items):** `shop_items.effect_payload` (JSONB) drives three live
@@ -152,7 +186,19 @@ review the generated SQL → apply to the DB **before** deploying dependent code
 Full spec: [`content/README.md`](./content/README.md) (in French).
 
 **Generating content — use the skills.** Content authoring is industrialized via a suite of
-Claude Code skills under [`.claude/skills/`](./.claude/skills/). `content-engine` is the shared core
+Claude Code skills under [`.claude/skills/`](./.claude/skills/). **Start at the pipeline map**
+([`content-engine/references/generation-pipeline.md`](./.claude/skills/content-engine/references/generation-pipeline.md)):
+it harmonizes the whole system into **a planning layer + two authoring layers** —
+`curriculum-architect` (coverage audit across the 13 grades × official subjects, pedagogical
+objectives & progression, prioritized dependency-aware backlog; **plans only**, never authors; its
+`references/programme-map.md` is the official grade×subject matrix), base skills that build &
+complete a chapter (`content-engine` + program wrappers + `content-cours`/`content-interactif`/
+`content-audit`) and the professor overlay (`prof-*`) that raises the ceiling with hard d3–4
+exercises — with a task→skill selection matrix, an agent-roles→skills matrix (translator/
+calibrator/exporter are by-design mechanisms, not agents), the
+cumulative/non-redundant rules, and the reproducible build→migration procedure (incl. the
+`content:build --subject <id>` rule — bare `content:build` regenerates all ~60 subjects and must never
+be committed). `content-engine` is the shared core
 (schema, quality bar, reward table, RPG style, trilingual model, validate-then-stop workflow) in its
 `references/`; thin per-program wrappers defer to it: `content-ecole-tn` (national school program,
 **faithful to the official curriculum**), `content-culture-generale` and `content-muscle-cerveau`
@@ -160,9 +206,40 @@ Claude Code skills under [`.claude/skills/`](./.claude/skills/). `content-engine
 figures), and `content-langue-{anglais,francais,arabe}` (immersion, one per language).
 `content-cours` specializes in lesson texts (writes/rewrites `cours.md`/`resume.md` against the
 course-quality bar: clarté, compréhension, exhaustivité — every tested notion must be taught —
-expérience pédagogique). `content-audit` is the review counterpart: it audits **existing** content
+expérience pédagogique). `content-interactif` authors **interactive/innovative missions** beyond
+the classic QCM — texte à trous, chasse à l'erreur, appariement, remise en ordre, QCM visuel SVG,
+lecture de document, histoire-problème séquentielle, vrai/faux motivé, sprint chrono — all encoded
+inside the current QCM engine (catalogue + renderer contract:
+`content-engine/references/interactive-formats.md`); **native** input types are a spec'd engine
+evolution (`docs/interactive-question-types.md`), **fully shipped**: `numeric` entry,
+drag-&-drop `ordering`/`matching`, and `multi` (multi-select) are all live and authorable
+(`type` + `answerKey`, shapes in the content-engine `content-schema.md`).
+`content-audit` is the review counterpart: it audits **existing** content
 (re-solves every question, checks keys/distractors/notation/calibration, and grades courses/summaries
-against the same course-quality bar) and produces a severity-ranked report. Skills produce
+against the same course-quality bar) and produces a severity-ranked report. For **hard/elite**
+content, a suite of **specialized "professor" skills** (`.claude/skills/prof-*`) — one per
+(matière × niveau), like a real subject teacher — authors difficulty-3/4 (⭐⭐⭐ boss / ⭐⭐⭐⭐ défi)
+exercises that raise the ceiling above what exists, faithful to the program. The **exam years** get a
+dedicated professor per (matière × niveau): `prof-math-9eme`, `prof-physique-9eme` (subject id `svt`),
+`prof-svt-9eme` (id `sciences-vie-terre`), `prof-francais-9eme`, `prof-arabe-9eme`, `prof-anglais-9eme`,
+and `prof-math-6eme`. The **primary cycle** (1ère→5ème) is covered by grade-aware, multi-level
+professors — one per subject, each with a per-grade chapter map and age calibration:
+`prof-math-primaire` (1ère→5ème), `prof-arabe-primaire` (1ère→5ème), `prof-eveil-primaire`
+(الإيقاظ العلمي, 1ère→6ème), and `prof-islamique-primaire` (1ère→4ème, Quran text in **رواية قالون**
+only — Tunisia's official reading). The **collège cycle** (7ème–8ème; 9ème keeps its dedicated
+professors) is covered the same grade-aware way: `prof-math-college`, `prof-physique-college`,
+`prof-svt-college`, `prof-arabe-college`, `prof-francais-college`, `prof-anglais-college` (8ème's
+base content is still empty — a professor only overlays existing chapters). The **lycée cycle**
+(1ère sec→bac) is covered by section-aware professors — sections are grade nodes and scientific
+subjects switch ar→fr at 1ère sec with a mandatory transition bridge, all specified in
+`docs/lycee-architecture.md`: `prof-math-lycee`, `prof-physique-lycee`, `prof-svt-lycee`,
+`prof-francais-lycee`, `prof-anglais-lycee`, `prof-arabe-lycee`, `prof-philo-lycee`,
+`prof-histoire-geo-lycee`, `prof-eco-gestion-lycee`, `prof-info-lycee` (they also own the
+`NN-annales-bac` d4 tier; the whole lycée base is still empty — seed migration + secondary
+transcriptions + base come first). Each carries its
+subject's chapter map and misconception/trap taxonomy; all defer to `content-engine`'s shared
+`references/expert-exercises.md` (hard-item archetypes, executed-error distractors, double-solve
+verification) and to `content-ecole-tn` for program fidelity. Skills produce
 **files only** (then run `content:check` + `content:qa:strict`); you review the diff, then build/apply.
 **Non-school** programs are trilingual = three sibling subjects (one `contentLanguage` each) under one
 theme; **school** content (`ecole-tn`) stays in the subject's **official language of instruction**
@@ -173,19 +250,29 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
 
 ## Conventions
 
-- Feature-based: `src/features/{auth,dashboard,quest,dungeon,shop,progression,parent-report,subscription,content-report,parcours}/`
-  (10 features). Each has `index.ts` (public barrel), `{name}.server.ts`, optional
-  `components/`, `__tests__/`. The three newer features:
-  - **`subscription/`** — premium gate + admin: per-parcours **entitlements** (a concours parcours
-    requires a live entitlement; free preview = comprehension quiz + difficulty-1), provisioned via
-    `admin_grant_parcours`; beta-access requests; the out-of-band (phone) paywall component.
-  - **`content-report/`** — user-flagged content errors ("Signaler une erreur") + admin triage.
+- Feature-based: `src/features/{auth,dashboard,quest,dungeon,duel,shop,progression,parent-report,subscription,content-report,bug-report,notifications,parcours}/`
+  (13 features). Each has `index.ts` (public barrel), `{name}.server.ts`, optional
+  `components/`, `__tests__/`. The notable ones beyond the historical core:
+  - **`subscription/`** — the **dormant premium layer**: per-parcours **entitlements** + the
+    out-of-band (phone) paywall component + beta-access requests. Intact and reversible, but
+    inert in the free phase (see "Access gate"); the admin consoles (`/admin/subscriptions`,
+    `/admin/beta-requests`) stay live.
+  - **`duel/`** — real-time duels + weekly leagues (étude 05, shipped): matchmaking queue,
+    arena, Realtime presence/progress with authoritative polling fallback, league standings.
+  - **`content-report/`** — user-flagged content errors ("Signaler une erreur") + admin triage
+    (`/admin/content-reports`). Technically end-to-end; the weekly ops triage process is the
+    part not yet running (see STATUS.md).
+  - **`bug-report/`** — global bug-report launcher + `/admin/bug-reports` triage.
+  - **`notifications/`** — Web-push subscriptions + the service-worker push handlers.
   - **`parcours/`** — gamified journey-map / adventure-path UI: a world map of **subjects**
-    (`JourneyMap`/`buildSubjectNodes` at `/parcours`). Every map node routes to the single
-    chapter screen `/subject/$subjectId` (which carries the quiz-gate + exercises). The
-    earlier per-subject zigzag chapter map (`/parcours/$subjectId`, `SubjectPath`,
-    `buildChapterNodes`) was removed — it duplicated `/subject/$subjectId` with a divergent
-    unlock logic; there is now **one** chapter screen.
+    (`JourneyMap`/`buildSubjectNodes` at `/parcours`). Every map node routes to the **shared
+    public subject hub** `/matiere/$subjectId` (chapters + quiz-gate + exercises — chantier
+    C8 converged the connected screens onto the public « Référence » register). Four legacy
+    authenticated paths survive only as permanent 301 redirects: `/subject/$subjectId` →
+    `/matiere/$subjectId`, `/lesson/$chapterId` → `/chapitre/$chapterId`, and `/themes` +
+    `/themes/$familyId` → `/programme` (the public catalogue doubles as the Explorer). The
+    earlier per-subject zigzag chapter map (`SubjectPath`/`buildChapterNodes`) was removed;
+    there is **one** chapter screen.
 
   (Leaderboard has no feature folder — `getLeaderboard` lives in `dashboard.server.ts`.
   Onboarding has no feature folder — it is an inline route at `routes/_authenticated/onboarding.tsx`.)
@@ -212,9 +299,28 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
   `npm run test:e2e:auth` (`authed-chromium`), `npm run test:e2e:install` (install the
   browser). Authenticated runs are seeded via `scripts/e2e/seed-test-users.mjs`. E2E is
   separate from the Vitest unit/integration gate.
+- **Merge automation (push → PR → checks → merge, fully automatic).** Pushing any
+  non-`main` branch auto-opens its **draft** PR (`auto-pr.yml`); marking the PR ready
+  (or pushing with `[auto-merge]` in the head-commit subject) arms GitHub **auto-merge**
+  (`automerge.yml`, squash + delete branch, label `no-automerge` opts out; a push to `main`
+  auto-updates armed PRs left behind). The merge itself is enforced by the
+  `main-protection` ruleset (`.github/rulesets/main-protection.json`, imported in repo
+  Settings → Rules): required checks `verify` + `Migration presence` + `Migration order`
+  - `CodeQL` (SAST, `codeql.yml`) on an up-to-date head. Merging to `main` then
+    auto-deploys (Vercel) and auto-applies migrations (§7). Prereqs (repo Settings):
+    "Allow auto-merge" (General) and "Allow GitHub Actions to create and approve pull
+    requests" (Actions → General) on; re-import the ruleset JSON after changing it. **Also
+    provision `GH_AUTOMATION_PAT`** (Settings → Secrets and variables → Actions — a
+    fine-grained PAT of a real collaborator, scoped to this repo, `contents`/
+    `pull requests`/`workflows: write`): without it, PRs are opened by the
+    `github-actions[bot]` actor, which is not a repo collaborator, so GitHub gates every
+    `pull_request`-triggered required check behind manual "Approve and run" — the same
+    mechanism as an outside contributor's fork PR, applied to our own automation. Both
+    workflows fall back to `GITHUB_TOKEN` + a `workflow_dispatch` workaround when the
+    secret is absent, but that path is **not deterministic** (see docs/passation.md).
 - **Scheduled automations (GitHub Actions + repo skills).** Run on a schedule, all
   gracefully skipping without `CLAUDE_CODE_OAUTH_TOKEN`. The E2E/pgTAP nightly runs
-  **every night**; the two Claude-agent guards run **2×/week** (each holds a runner for
+  **every night**; the three Claude-agent guards run **2×/week** (each holds a runner for
   many minutes — keeps their PR/issue noise reasonable; the repo is public so Actions
   minutes are unlimited & free):
   `regression-guard.yml` (**Mon+Thu** 23:00 UTC → skill `regression-guard`: reconciles
@@ -222,12 +328,46 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
   pgTAP, tracking issue), then `upgrade-guard.yml` (**Tue+Fri**, after that night's green
   nightly → skill `upgrade-guard`: stack upgrades —
   auto-merges the patch/minor lot only when the full gate + E2E + pgTAP are green, one PR
-  per major, never bundled). None ever push to `main` directly (only `automerge` merges a
+  per major, never bundled), and `content-audit.yml` (**Wed+Sat** 22:07 UTC → skill
+  `content-audit`: re-solves every question in the content changed that week, opens one
+  tracking issue per BLOCKER/MAJOR — review-only, the correctness net the deterministic
+  content gate can't be). None ever push to `main` directly (only `automerge` merges a
   fully-green patch/minor PR). Cadence + traps: `docs/dependency-maintenance.md`.
 - **Policy docs (`docs/*.md`).** Topic-specific rules referenced from here:
   `docs/environment-variables.md`, `docs/logging-standard.md`, `docs/xss-rendering-policy.md`,
-  `docs/release-tagging-policy.md`, `docs/dependency-maintenance.md`. These defer to
-  CLAUDE.md / ARCHITECTURE.md for anything that overlaps.
+  `docs/content-voice-and-composition.md` (étude 15 — voix/ton par audience, lexique trilingue,
+  règles et gabarits de composition des écrans : normatif pour tout texte user-facing),
+  `docs/release-tagging-policy.md`, `docs/dependency-maintenance.md`,
+  `docs/ci-cd-and-branch-protection.md`, `docs/passation.md` (the end-of-dev →
+  production walkthrough), `docs/content-generation-pipeline.md` (narrated, diagrammed
+  walkthrough of the content workflows/pipeline — skills, gates, UUIDv5 idempotency, prod
+  auto-apply — a companion to this file, `content/README.md`, and the skills' own
+  `generation-pipeline.md`), `docs/interactive-question-types.md` (the normative spec for
+  native interactive question types — numeric/ordering/matching/multi-select: data model,
+  the five type-aware scoring RPCs, UI/pipeline touchpoints, phased rollout — **all three
+  phases (B1 `numeric`, B2 `ordering`/`matching`, B3 `multi`) shipped 2026-07-05/06**, étude
+  `FableEtudes/03-types-questions-natifs` (fully executed); the QCM-encodable
+  interactive formats live in `content-engine/references/interactive-formats.md`), and
+  `docs/lycee-architecture.md` (secondary-cycle architecture: sections as grade nodes +
+  slugs/subject-id conventions, the ar→fr transition bridge, bac-\* parcours (premium dormant), the full
+  lycée mission ladder incl. `NN-annales-bac`/`NN-pont-linguistique`, seed-migration spec and
+  phased rollout). Two **functional** how-to guides (audience: authors / product / ops, French)
+  complement the normative specs above: `docs/guide-types-questions-natifs.md` (étude 03 — when to
+  use each native question type + the authoring shapes) and `docs/guide-duels-et-ligues.md` (étude
+  05 — the duel/league player flow, game constants, pg_cron jobs, optional Realtime, ops notes).
+  These defer
+  to CLAUDE.md / ARCHITECTURE.md for anything that overlaps.
+- **Epic studies (`FableEtudes/`).** Complete functional + technical architecture dossiers for
+  the project's epics — 16 studies, from paiement en ligne (**gelée** post-pivot gratuité) to
+  ouverture du lycée; several are already **delivered** (03 types natifs, 05 duels/ligues,
+  13 ScribeKit, 14 refonte UX) — statuses live in the index and in `STATUS.md`. Written by the
+  architect model and executed **lot by lot** by a
+  cheaper executor model. Start at [`FableEtudes/README.md`](./FableEtudes/README.md): roles
+  (architect decides, executor implements, human validates), study lifecycle/statuses, the
+  `_TEMPLATE.md` format, and the non-negotiable execution rules (one lot = one PR, closed scope,
+  STOP-and-escalate on any divergence, full DoD). An executor NEVER re-designs: when a study and
+  the code disagree, it stops and escalates. Studies defer to CLAUDE.md/ARCHITECTURE.md and to
+  the normative `docs/*.md` they reference.
 
 ## Working mode — Definition of Done
 
@@ -262,7 +402,11 @@ the project stays regression- and debt-free while being improved by AI.
    SQL editor, no local `db push`): author the migration, merge it, the workflow
    applies it. It can also be dispatched by hand — `push` / read-only `list` /
    one-time `repair-all` — from the Actions tab or
-   `gh workflow run db-migrate-prod.yml`. Additive migrations are safe ahead of
+   `gh workflow run db-migrate-prod.yml`. An **hourly reconciliation** run also
+   catches merges whose push fired no workflow events (auto-merge squashes are
+   performed with `GITHUB_TOKEN`): it compares main's newest migration to prod's
+   history and applies any pending ones — prod can never silently fall behind
+   for more than an hour. Additive migrations are safe ahead of
    the code that uses them, so the order still holds: land the migration (it
    applies on merge) → then the dependent code. Ship a **destructive** migration
    (DROP/REVOKE) in a **separate** merge, **after** the code that stopped using the
@@ -290,8 +434,8 @@ When unsure about scope or a destructive action, ask before proceeding.
 - Env vars required at runtime: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` (set in the deploy
   platform). Missing → middleware throws a descriptive error.
 - The Vite config is **inline** in `vite.config.ts` — the TanStack Start, React, Tailwind,
-  Cloudflare and tsconfig-paths plugins are composed by hand (no meta-plugin; `bun.lock`
-  dropped in favour of `package-lock.json`).
+  Cloudflare and tsconfig-paths plugins are composed by hand (the scaffold's old vendored
+  meta-plugin was de-vendored and `bun.lock` dropped).
   `manualChunks` there is hand-tuned to the bundle budgets; reshaping vendor groups can
   introduce a circular vendor chunk (prod-crash risk), so change it deliberately and re-run
   `npm run build:check`. The `esbuild` override in `package.json` is a security pin — keep it.
@@ -309,11 +453,28 @@ When unsure about scope or a destructive action, ask before proceeding.
   fresh DB. The end-state baseline lives in `20260612221000_baseline_table_grants.sql`;
   every new table migration must ship its own grants. The Supabase CLI is **version-pinned**
   in `db-tests.yml` / `e2e-auth.yml` — bump deliberately, with a green run.
+- **Migrations must be in timestamp order — a back-dated file jams prod.** Supabase applies
+  migrations in 14-digit-timestamp order and refuses to insert one _before_ the last-applied
+  remote migration (without `--include-all`), so a new migration whose `YYYYMMDDHHMMSS_` prefix
+  sorts at/before a migration already on `main` makes `supabase db push` abort — silently
+  stalling every later migration and leaving **prod behind code** (this cost #97 → #227 → #229).
+  The **`Migration order`** PR check (`migration-gate.yml` → `scripts/db/check-migration-order.mjs`)
+  now fails such a PR pre-merge; when it fires, re-timestamp the file to sort _after_ the newest
+  existing migration. If an auto-apply ever does fail, `db-migrate-prod.yml` opens a
+  **`prod-migration-failure`** tracking issue (auto-closed on the next green apply).
 - **E2E ≠ unit gate.** Playwright specs (`e2e/`, run via `e2e.yml` / `e2e-auth.yml`) hit a
   **dedicated TEST Supabase project** with seeded users (`scripts/e2e/`), not the unit-test
   mocks. They are not part of `npm run verify`/`ci:verify`; don't point them at prod.
 - **CI workflow runs a subset.** `.github/workflows/ci.yml` runs lint + typecheck +
-  test:coverage + build:check + audit:deps — it does **not** run `content:qa:strict` (only the
-  local `ci:verify` script does). Run `content:qa:strict` yourself when touching `content/`.
+  test:coverage + **content:check + content:qa:strict** + build:check + **smoke:shell** +
+  audit:deps. `smoke:shell` (incident 2026-07-01) loads the REAL production bundle in a
+  Chromium and fails on any page error or branded error page: it is the only tier that
+  executes prod-gated client code (`import.meta.env.PROD`) — tsc can see `any` (unregistered
+  router), the unit gate excludes route glue, SSR never runs effects, and the Playwright e2e
+  tier runs the DEV server. A green gate without it proved compatible with a dead prod. The content
+  gate is now enforced on every PR (it used to be local-only via `ci:verify`); `content:qa:strict`
+  fails CI on any `[error]` (warnings still only surface). `content:qa:strict` catches **structure/
+  notation**, not **correctness** — a wrong answer key passes it; that's what the scheduled
+  `content-audit.yml` sweep is for (below).
 - The Copilot guide (`.github/copilot-instructions.md`) still references `@/shared/ui/` for UI
   primitives — that move never happened; use `@/components/ui/*` (same drift noted above).

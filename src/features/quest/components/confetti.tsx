@@ -1,8 +1,13 @@
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { useMemo } from "react";
 
-/** Celebratory confetti burst shown on a winning quest result. */
+/**
+ * Celebratory confetti burst shown on a winning quest result. Purely
+ * decorative physics — under prefers-reduced-motion it renders nothing at all
+ * (a frozen confetti field would just be visual noise).
+ */
 export function Confetti() {
+  const reduced = useReducedMotion();
   const particles = useMemo(
     () =>
       Array.from({ length: 50 }, (_, i) => ({
@@ -17,6 +22,7 @@ export function Confetti() {
       })),
     [],
   );
+  if (reduced) return null;
   return (
     <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
       {particles.map((p) => (
@@ -25,7 +31,7 @@ export function Confetti() {
           className="absolute rounded-sm"
           style={{ left: `${p.x}%`, width: p.size, height: p.size, backgroundColor: p.color }}
           initial={{ y: -20, opacity: 1, rotate: 0 }}
-          animate={{ y: "100vh", opacity: 0, rotate: 360 + Math.random() * 360 }}
+          animate={{ y: "100dvh", opacity: 0, rotate: 360 + Math.random() * 360 }}
           transition={{ duration: p.duration, delay: p.delay, ease: "easeIn" }}
         />
       ))}

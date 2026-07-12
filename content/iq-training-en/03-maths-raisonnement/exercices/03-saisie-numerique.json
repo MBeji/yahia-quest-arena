@@ -1,0 +1,52 @@
+{
+  "title": "⭐⭐ Free entry: work it out and type the answer",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "type": "numeric",
+      "prompt": "No options this time: find the rule and TYPE the next number. 5, 8, 11, 14, ?",
+      "answerKey": { "value": 17 },
+      "explanation": "The rule is +3 at each step (8−5 = 3, 11−8 = 3, 14−11 = 3). The next number is therefore 14 + 3 = 17. With no options to eliminate, your own calculation does the talking!",
+      "difficulty": 1
+    },
+    {
+      "type": "numeric",
+      "prompt": "Find the rule shared by both examples, then apply it and type the result: 3 → 9, 5 → 15, so 8 → ?",
+      "answerKey": { "value": 24 },
+      "explanation": "Only one rule works for BOTH examples: multiply by 3 (3 × 3 = 9 and 5 × 3 = 15 ✓). Applied to 8: 8 × 3 = 24.",
+      "difficulty": 1
+    },
+    {
+      "type": "numeric",
+      "prompt": "I am thinking of a number. Its double minus 4 equals 10. Type that number.",
+      "answerKey": { "value": 7 },
+      "explanation": "Work backwards: if the double minus 4 equals 10, the double equals 10 + 4 = 14, so the number is 14 ÷ 2 = 7. Check: 2 × 7 − 4 = 10 ✓.",
+      "difficulty": 2
+    },
+    {
+      "type": "numeric",
+      "prompt": "Compute the average of 12, 15 and 18, then type the result.",
+      "answerKey": { "value": 15 },
+      "explanation": "Average = sum ÷ count = (12 + 15 + 18) ÷ 3 = 45 ÷ 3 = 15. Tip: when the values are evenly spaced, the average is the middle one.",
+      "difficulty": 2
+    },
+    {
+      "type": "numeric",
+      "prompt": "Compute one third of one half of 42, then type the result.",
+      "answerKey": { "value": 7 },
+      "explanation": "Step by step: half of 42 is 42 ÷ 2 = 21, then a third of 21 is 21 ÷ 3 = 7. The order does not matter here: 42 ÷ 6 = 7 as well.",
+      "difficulty": 2
+    },
+    {
+      "type": "numeric",
+      "prompt": "Each term is multiplied by the same number: 0.5, 1.5, 4.5, ? Type the next term (a dot or a comma both work).",
+      "answerKey": { "value": 13.5 },
+      "explanation": "The ratio is constant: 1.5 ÷ 0.5 = 3 and 4.5 ÷ 1.5 = 3 — each term is multiplied by 3. The next one is therefore 4.5 × 3 = 13.5.",
+      "difficulty": 3
+    }
+  ]
+}

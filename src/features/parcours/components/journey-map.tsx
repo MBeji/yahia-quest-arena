@@ -1,5 +1,8 @@
 import { Link } from "@tanstack/react-router";
+import { Map as MapIcon } from "lucide-react";
+import { PageShell } from "@/components/ui/page-shell";
 import { useT } from "@/lib/i18n";
+import { EmptyState } from "@/components/ui/empty-state";
 import { JourneyHeader } from "./journey-header";
 import { JourneyTrack, TrackRow } from "./journey-track";
 import { PathNode } from "./path-node";
@@ -15,7 +18,7 @@ export function JourneyMap({ nodes, profile }: JourneyMapProps) {
   const t = useT();
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-8">
+    <PageShell>
       <JourneyHeader
         title={t.parcours.worldTitle}
         subtitle={t.parcours.worldSubtitle}
@@ -27,13 +30,7 @@ export function JourneyMap({ nodes, profile }: JourneyMapProps) {
         {nodes.map((n, i) => {
           const color = `var(--subject-${n.colorToken.replace(/^subject-/, "")})`;
           const sublabel =
-            n.state === "locked"
-              ? t.parcours.lockedHint
-              : n.state === "premium-locked"
-                ? t.parcours.premiumHint
-                : n.attempts > 0
-                  ? `${n.avg}%`
-                  : undefined;
+            n.state === "locked" ? t.parcours.lockedHint : n.attempts > 0 ? `${n.avg}%` : undefined;
           const node = (
             <PathNode
               state={n.state}
@@ -56,10 +53,8 @@ export function JourneyMap({ nodes, profile }: JourneyMapProps) {
             </TrackRow>
           );
         })}
-        {nodes.length === 0 && (
-          <p className="text-center text-sm text-muted-foreground">{t.parcours.empty}</p>
-        )}
+        {nodes.length === 0 && <EmptyState icon={MapIcon} title={t.parcours.empty} />}
       </JourneyTrack>
-    </div>
+    </PageShell>
   );
 }

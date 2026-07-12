@@ -39,13 +39,33 @@
       "id": "education-islamique-2eme",
       "name": "التربية الإسلامية",
       "contentLanguage": "ar",
-      "chapters": []
+      "chapters": [
+        { "slug": "01-sourate-al-fil", "notion": "سورة الفيل" },
+        { "slug": "02-arkan-al-islam", "notion": "قواعد الإسلام الخمس" },
+        { "slug": "03-sourate-al-humaza-al-asr", "notion": "سورتا الهمزة والعصر" },
+        { "slug": "04-sourate-at-takathur-al-qaria", "notion": "سورتا التكاثر والقارعة" },
+        { "slug": "05-sourate-al-adiyat", "notion": "سورة العاديات" },
+        { "slug": "06-sourate-az-zalzala", "notion": "سورة الزلزلة" },
+        { "slug": "07-sourate-al-alaq", "notion": "سورة العلق" },
+        { "slug": "08-attaaawoun-wattaayoush", "notion": "التعاون والتعايش السلمي" }
+      ]
     },
     {
       "id": "eveil-scientifique-2eme",
       "name": "الإيقاظ العلمي",
       "contentLanguage": "ar",
-      "chapters": []
+      "chapters": [
+        { "slug": "01-animaux-domestiques-sauvages", "notion": "الحيوانات الأليفة والبرّيّة" },
+        { "slug": "02-plantes-cultivees-sauvages", "notion": "النباتات المغروسة والتلقائيّة" },
+        { "slug": "03-corps-humain", "notion": "جسم الإنسان" },
+        { "slug": "04-alimentation", "notion": "التغذية" },
+        { "slug": "05-deplacement-animaux", "notion": "تنقّل الحيوانات" },
+        { "slug": "06-respiration", "notion": "التنفّس" },
+        { "slug": "07-espace-distances", "notion": "الفضاء والمسافات والقيس" },
+        { "slug": "08-temps", "notion": "الزمن" },
+        { "slug": "09-matiere", "notion": "المادّة" },
+        { "slug": "10-forces", "notion": "القوى" }
+      ]
     },
     {
       "id": "french-2eme",

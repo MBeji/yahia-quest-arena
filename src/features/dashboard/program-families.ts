@@ -10,12 +10,20 @@ export type ProgramKind = "school" | "languages" | "enter" | "coming_soon";
 export type ProgramParcours = {
   id: string;
   name_fr: string;
+  name_en?: string | null;
+  name_ar?: string | null;
   status: string;
+  /** 'concours' | 'scolaire' | 'libre' — drives the catalogue's concours highlight. */
+  kind?: string;
   is_premium: boolean;
   hasEntitlement: boolean;
   theme_id: string;
   grade_cycle?: string | null;
   grade_order?: number | null;
+  /** The grade's stable slug (étude 16 lot 2) — drives the lycée year grouping. */
+  grade_slug?: string | null;
+  /** False on the flat legacy secondary nodes — filtered out of every surface (R-1). */
+  grade_selectable?: boolean;
 };
 
 export type FamilyConfig = {
@@ -83,29 +91,81 @@ export type Program = {
 };
 
 /**
- * The flagship national-concours parcours — the premium school tracks (6ème,
- * 9ème), ordered by grade. These are the paid headline products, surfaced
- * prominently across the app (hub node, category page, dashboard banner). Pure.
- */
-export function flagshipConcours(parcours: ProgramParcours[]): ProgramParcours[] {
-  return parcours
-    .filter((p) => p.theme_id === "ecole-tn" && p.is_premium)
-    .sort((a, b) => (a.grade_order ?? 0) - (b.grade_order ?? 0));
-}
-
-/**
- * Compact display label for a flagship concours — drops the verbose, redundant
+ * Compact display label for a concours parcours — drops the verbose, redundant
  * "Préparation Concours " prefix so the class itself reads clearly next to the
- * "Concours national" badge ("Préparation Concours 9ème" → "9ème", "…Bac" → "Bac").
+ * catalogue's "Concours" badge ("Préparation Concours 9ème" → "9ème").
  */
 export function flagshipLabel(nameFr: string): string {
   return nameFr.replace(/^Préparation\s+Concours\s+/i, "").replace(/^Préparation\s+/i, "");
 }
 
+// ---------------------------------------------------------------------------
+// Lycée — year → section drill-down (étude 16 D-3/D-5, R-2)
+// ---------------------------------------------------------------------------
+
+/** The four secondary years. `1ere` is the tronc commun (no sections). */
+export type LyceeYear = "1ere" | "2eme" | "3eme" | "bac";
+
+export const LYCEE_YEAR_ORDER: LyceeYear[] = ["1ere", "2eme", "3eme", "bac"];
+
+/** The years that branch into sections (own a `/programme/lycee/$annee` page). */
+export const LYCEE_SECTION_YEARS = ["2eme", "3eme", "bac"] as const;
+
+/**
+ * Secondary year of a grade slug (closed set — slugs are canonical identity):
+ * `1ere-sec` → '1ere'; `2eme-sec[-*]` → '2eme'; `3eme-sec[-*]` → '3eme';
+ * `bac[-*]` → 'bac'; anything else (primaire/collège/null) → null.
+ */
+export function lyceeYearOf(slug: string | null | undefined): LyceeYear | null {
+  if (!slug) return null;
+  if (slug === "1ere-sec") return "1ere";
+  if (slug === "2eme-sec" || slug.startsWith("2eme-sec-")) return "2eme";
+  if (slug === "3eme-sec" || slug.startsWith("3eme-sec-")) return "3eme";
+  if (slug === "bac" || slug.startsWith("bac-")) return "bac";
+  return null;
+}
+
+/** One drill-down row of the lycée block: a direct class OR a year of sections. */
+export type LyceeYearGroup<T extends ProgramParcours = ProgramParcours> = {
+  year: LyceeYear;
+  /** The parcours itself when the year has no sections (1ère sec). */
+  direct: T | null;
+  /** The year's section parcours, in seed order. */
+  sections: T[];
+  /** How many of the sections are `available`. */
+  available: number;
+};
+
+/**
+ * Group the (already R-1-filtered) secondaire classes by year for the
+ * drill-down UI. Input order (grade_order) is preserved inside each year.
+ * A year absent from the catalogue is skipped. Generic so each surface keeps
+ * its own richer row type (onboarding cards need icon/color, etc.).
+ */
+export function buildLyceeYears<T extends ProgramParcours>(classes: T[]): LyceeYearGroup<T>[] {
+  return LYCEE_YEAR_ORDER.map((year): LyceeYearGroup<T> | null => {
+    const members = classes.filter((p) => lyceeYearOf(p.grade_slug) === year);
+    if (members.length === 0) return null;
+    if (year === "1ere") {
+      return { year, direct: members[0], sections: [], available: 0 };
+    }
+    return {
+      year,
+      direct: null,
+      sections: members,
+      available: members.filter((p) => p.status === "available").length,
+    };
+  }).filter((g): g is LyceeYearGroup<T> => g !== null);
+}
+
 /** Group the parcours catalogue into the 5 root programs (pure, order-stable). */
 export function buildPrograms(parcours: ProgramParcours[]): Program[] {
   return PROGRAM_FAMILIES.map((fam) => {
-    const members = parcours.filter((p) => fam.themeIds.includes(p.theme_id));
+    // R-1 (étude 16): a parcours whose grade is non-selectable (the flat legacy
+    // secondary nodes 2eme-sec/3eme-sec/bac) never reaches any user-facing list.
+    const members = parcours.filter(
+      (p) => fam.themeIds.includes(p.theme_id) && p.grade_selectable !== false,
+    );
     const base: Program = {
       id: fam.id,
       kind: fam.kind,

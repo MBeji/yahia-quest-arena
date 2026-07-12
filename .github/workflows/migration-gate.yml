@@ -1,19 +1,35 @@
 name: Migration gate
 
-# Informational guardrail (CLAUDE.md §7). Merging a new `supabase/migrations/*.sql`
-# to `main` now AUTO-APPLIES it to the production DB via db-migrate-prod.yml — no
-# human action, no manual SQL. This check just SURFACES, on the PR, which
-# migration(s) will be auto-applied on merge, so the diff is never a surprise.
+# Two jobs (CLAUDE.md §7). Merging a new `supabase/migrations/*.sql` to `main`
+# AUTO-APPLIES it to the production DB via db-migrate-prod.yml — no human action,
+# no manual SQL. This workflow guards that auto-apply at the PR:
 #
-# It always passes: the apply itself is gated by the `pgTAP suite` check (proves
-# the migrations apply cleanly on a fresh DB) and by db-migrate-prod.yml's own
-# prod-ref guard + pre-apply backup. The job/check name `Migration presence` is
-# kept verbatim so the branch-protection ruleset's required-check contract is
-# unchanged.
+#   • `Migration presence` — informational: SURFACES which migration(s) will
+#     auto-apply on merge so the diff is never a surprise. Always passes.
+#   • `Migration order` — BLOCKING: fails a PR whose added migration sorts before
+#     a migration already on the base branch. Supabase applies migrations in
+#     timestamp order and refuses to insert one before the last-applied remote
+#     migration, so a back-dated file silently jams `db-migrate-prod` (exactly
+#     what #97 → #227 → #229 cost: prod ~2 weeks behind code).
+#
+# The apply itself is still gated by the `pgTAP suite` check (proves the
+# migrations apply cleanly on a fresh DB) and by db-migrate-prod.yml's own
+# prod-ref guard + pre-apply backup. Both job/check names (`Migration presence`,
+# `Migration order`) are required status checks in
+# .github/rulesets/main-protection.json — keep the names verbatim.
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  # auto-pr.yml dispatches this on bot-created PRs (which fire no pull_request
+  # events) so the ruleset-required checks still report on the head SHA.
+  workflow_dispatch:
+    inputs:
+      base:
+        description: Base branch to diff against (PR events resolve it automatically)
+        type: string
+        required: false
+        default: main
 
 permissions:
   contents: read
@@ -22,20 +38,22 @@ jobs:
   migration-presence:
     name: Migration presence
     runs-on: ubuntu-latest
+    env:
+      BASE: ${{ github.base_ref || inputs.base || 'main' }}
     steps:
       - name: Checkout PR head
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           # Full history so we can diff against the base branch tip.
           fetch-depth: 0
 
       - name: Fetch base branch
-        run: git fetch --no-tags origin "${{ github.base_ref }}"
+        run: git fetch --no-tags origin "$BASE"
 
       - name: Surface migrations that will auto-apply on merge
         run: |
           set -euo pipefail
-          base="origin/${{ github.base_ref }}"
+          base="origin/${BASE}"
           # Added/modified migration SQL between the base tip and this PR head.
           migrations="$(git diff --name-only "${base}...HEAD" -- supabase/migrations \
             | grep '\.sql$' || true)"
@@ -55,3 +73,26 @@ jobs:
             echo "${migrations}" | sed 's/^/- /'
           } >> "$GITHUB_STEP_SUMMARY"
           echo "::notice title=Migration gate::${count} migration(s) will auto-apply to prod on merge (db-migrate-prod.yml)."
+
+  migration-order:
+    name: Migration order
+    runs-on: ubuntu-latest
+    env:
+      BASE: ${{ github.base_ref || inputs.base || 'main' }}
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@v7
+        with:
+          # Full history so we can diff against the base branch tip.
+          fetch-depth: 0
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Fetch base branch
+        run: git fetch --no-tags origin "$BASE"
+
+      - name: Reject out-of-order migrations
+        run: node scripts/db/check-migration-order.mjs --base "origin/${BASE}"

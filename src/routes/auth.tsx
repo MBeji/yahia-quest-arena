@@ -9,6 +9,7 @@ import { linkStudentByCode } from "@/features/parent-report";
 import { bootstrapProfile } from "@/features/auth";
 import { Label } from "@/components/ui/label";
 import { useT } from "@/lib/i18n";
+import { useEntrance } from "@/shared/lib/motion";
 import type { TranslationKeys } from "@/lib/i18n/types";
 
 /** Map a raw Supabase auth error to a localized, user-actionable message. */
@@ -29,23 +30,28 @@ export const Route = createFileRoute("/auth")({
       { title: "Rejoindre l'Académie · Na9ra Nal3ab" },
       {
         name: "description",
-        content: "Crée ton héros et commence ta préparation aux concours nationaux.",
+        content:
+          "Crée ton compte gratuit : cours, résumés et exercices de toute l'école tunisienne — apprends en jouant.",
       },
     ],
   }),
-  validateSearch: (s: Record<string, unknown>) => ({ mode: (s.mode as string) || "login" }),
+  // `role` optionnel — tunnel parent depuis la landing « Espace Famille ».
+  validateSearch: (s: Record<string, unknown>): { mode: string; role?: "parent" } => ({
+    mode: (s.mode as string) || "login",
+    ...(s.role === "parent" ? { role: "parent" as const } : {}),
+  }),
   component: AuthPage,
 });
 
 function AuthPage() {
-  const { mode } = Route.useSearch();
+  const { mode, role: roleParam } = Route.useSearch();
   const navigate = useNavigate();
   const t = useT();
   const isSignup = mode === "signup";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [role, setRole] = useState<"student" | "parent">("student");
+  const [role, setRole] = useState<"student" | "parent">(roleParam ?? "student");
   const [allianceCode, setAllianceCode] = useState("");
   const [busy, setBusy] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
@@ -54,6 +60,7 @@ function AuthPage() {
   // specific min-length validation surfaced on the password field.
   const [formError, setFormError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const entrance = useEntrance("scale");
   const linkByCode = useServerFn(linkStudentByCode);
   const runBootstrapProfile = useServerFn(bootstrapProfile);
 
@@ -207,16 +214,15 @@ function AuthPage() {
 
   if (emailSent) {
     return (
-      <main className="relative min-h-screen overflow-hidden bg-black-deep">
+      <main className="relative min-h-[100dvh] overflow-hidden bg-black-deep">
         <div className="absolute inset-0 bg-grid opacity-50" />
-        <div className="relative mx-auto flex min-h-screen max-w-md flex-col items-center justify-center px-6 py-12">
+        <div className="relative mx-auto flex min-h-[100dvh] max-w-md flex-col items-center justify-center px-6 py-12">
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
+            {...entrance}
             className="w-full glass-gold rounded-2xl p-8 shadow-gold text-center"
           >
-            <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-2xl bg-[color:var(--gold)]/20 border border-[color:var(--gold)]/40">
-              <MailCheck className="h-8 w-8 text-[color:var(--gold)]" />
+            <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-2xl bg-gold/20 border border-gold/40">
+              <MailCheck className="h-8 w-8 text-gold" />
             </div>
             <h1 className="font-display text-2xl font-bold">{t.auth.emailSentTitle}</h1>
             <p className="mt-3 text-sm text-muted-foreground">
@@ -224,7 +230,7 @@ function AuthPage() {
               <span className="font-semibold text-foreground">{sentTo}</span>.<br />
               {t.auth.emailSentBody2}
             </p>
-            <div className="mt-6 rounded-xl border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 p-4 text-xs text-muted-foreground">
+            <div className="mt-6 rounded-xl border border-gold/30 bg-gold/5 p-4 text-xs text-muted-foreground">
               {t.auth.emailSentSpam}
             </div>
             <button
@@ -233,7 +239,7 @@ function AuthPage() {
                 setEmailSent(false);
                 setSentTo("");
               }}
-              className="mt-6 text-xs text-[color:var(--gold)] hover:underline"
+              className="mt-6 inline-flex min-h-11 items-center text-xs text-gold hover:underline"
             >
               {t.auth.emailSentEdit}
             </button>
@@ -244,24 +250,19 @@ function AuthPage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-black-deep">
+    <main className="relative min-h-[100dvh] overflow-hidden bg-black-deep">
       <div className="absolute inset-0 bg-grid opacity-50" />
-      <div className="relative mx-auto flex min-h-screen max-w-md flex-col items-center justify-center px-6 py-12">
+      <div className="relative mx-auto flex min-h-[100dvh] max-w-md flex-col items-center justify-center px-4 pt-[max(3rem,env(safe-area-inset-top))] pb-[max(3rem,env(safe-area-inset-bottom))] sm:px-6">
         <Link to="/" className="mb-8 flex items-center gap-2">
           <div className="grid h-10 w-10 place-items-center rounded-lg bg-[image:var(--gradient-gold)] shadow-gold">
-            <Sparkles className="h-5 w-5 text-black" />
+            <Sparkles className="h-5 w-5 text-primary-foreground" />
           </div>
           <span className="font-display text-xl font-bold tracking-wider">
             Na9ra <span className="text-gradient-gold">Nal3ab</span>
           </span>
         </Link>
 
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="w-full glass-gold rounded-2xl p-8 shadow-gold"
-        >
+        <motion.div {...entrance} className="w-full glass-gold rounded-2xl p-6 shadow-gold sm:p-8">
           <h1 className="font-display text-2xl font-bold">
             {isSignup ? t.auth.titleSignup : t.auth.titleLogin}
           </h1>
@@ -273,7 +274,7 @@ function AuthPage() {
             type="button"
             disabled={busy}
             onClick={handleGoogle}
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-black/50 px-4 py-2.5 text-sm font-medium transition hover:bg-black/80 disabled:opacity-50"
+            className="mt-6 flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-border bg-background/50 px-4 py-2.5 text-sm font-medium transition hover:bg-background/80 disabled:opacity-50"
           >
             <svg width="18" height="18" viewBox="0 0 24 24">
               <path
@@ -307,7 +308,7 @@ function AuthPage() {
 
           <form onSubmit={handleSubmit} className="space-y-3">
             {isSignup && (
-              <div className="rounded-xl border border-border/60 bg-black/30 p-3">
+              <div className="rounded-xl border border-border/60 bg-background/30 p-3">
                 <div className="mb-2 text-xs uppercase tracking-wider text-muted-foreground">
                   {t.auth.roleLabel}
                 </div>
@@ -315,14 +316,14 @@ function AuthPage() {
                   <button
                     type="button"
                     onClick={() => setRole("student")}
-                    className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${role === "student" ? "bg-[color:var(--gold)]/15 text-[color:var(--gold)] border border-[color:var(--gold)]/40" : "bg-black/40 text-muted-foreground border border-border/50 hover:text-foreground"}`}
+                    className={`min-h-11 rounded-lg px-3 py-2 text-sm font-semibold transition ${role === "student" ? "bg-gold/15 text-gold border border-gold/40" : "bg-background/40 text-muted-foreground border border-border/50 hover:text-foreground"}`}
                   >
                     {t.auth.roleStudent}
                   </button>
                   <button
                     type="button"
                     onClick={() => setRole("parent")}
-                    className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${role === "parent" ? "bg-[color:var(--gold)]/15 text-[color:var(--gold)] border border-[color:var(--gold)]/40" : "bg-black/40 text-muted-foreground border border-border/50 hover:text-foreground"}`}
+                    className={`min-h-11 rounded-lg px-3 py-2 text-sm font-semibold transition ${role === "parent" ? "bg-gold/15 text-gold border border-gold/40" : "bg-background/40 text-muted-foreground border border-border/50 hover:text-foreground"}`}
                   >
                     {t.auth.roleParent}
                   </button>
@@ -335,7 +336,7 @@ function AuthPage() {
                 <Label htmlFor="auth-name" className="sr-only">
                   {t.auth.heroNameLabel}
                 </Label>
-                <UserIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <UserIcon className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
                 <input
                   id="auth-name"
                   type="text"
@@ -343,7 +344,7 @@ function AuthPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder={t.auth.heroNameLabel}
-                  className="w-full rounded-lg border border-input bg-black/50 py-2.5 pl-10 pr-3 text-sm focus:border-[color:var(--gold)] focus:outline-none"
+                  className="w-full rounded-lg border border-input bg-background/60 py-3 ps-10 pe-3 text-sm focus:border-gold focus:outline-none"
                 />
               </div>
             )}
@@ -360,7 +361,7 @@ function AuthPage() {
                   onChange={(e) => setAllianceCode(e.target.value)}
                   placeholder={t.auth.allianceCodeLabel}
                   aria-describedby="auth-alliance-code-hint"
-                  className="w-full rounded-lg border border-input bg-black/50 py-2.5 px-3 text-sm focus:border-[color:var(--gold)] focus:outline-none"
+                  className="w-full rounded-lg border border-input bg-background/60 py-2.5 px-3 text-sm focus:border-gold focus:outline-none"
                 />
                 <p id="auth-alliance-code-hint" className="mt-1 text-xs text-muted-foreground">
                   {t.auth.allianceCodeHint}
@@ -371,7 +372,7 @@ function AuthPage() {
               <Label htmlFor="auth-email" className="sr-only">
                 {t.auth.emailLabel}
               </Label>
-              <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Mail className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
               <input
                 id="auth-email"
                 type="email"
@@ -379,14 +380,14 @@ function AuthPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={t.auth.emailLabel}
-                className="w-full rounded-lg border border-input bg-black/50 py-2.5 pl-10 pr-3 text-sm focus:border-[color:var(--gold)] focus:outline-none"
+                className="w-full rounded-lg border border-input bg-background/60 py-2.5 ps-10 pe-3 text-sm focus:border-gold focus:outline-none"
               />
             </div>
             <div className="relative">
               <Label htmlFor="auth-password" className="sr-only">
                 {t.auth.passwordLabel}
               </Label>
-              <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Lock className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
               <input
                 id="auth-password"
                 type="password"
@@ -400,10 +401,10 @@ function AuthPage() {
                 placeholder={t.auth.passwordLabel}
                 aria-invalid={passwordError ? true : undefined}
                 aria-describedby={passwordError ? "auth-password-error" : undefined}
-                className="w-full rounded-lg border border-input bg-black/50 py-2.5 pl-10 pr-3 text-sm focus:border-[color:var(--gold)] focus:outline-none"
+                className="w-full rounded-lg border border-input bg-background/60 py-2.5 ps-10 pe-3 text-sm focus:border-gold focus:outline-none"
               />
               {passwordError && (
-                <p id="auth-password-error" className="mt-1 text-xs text-[color:var(--gold)]">
+                <p id="auth-password-error" className="mt-1 text-xs text-gold">
                   {passwordError}
                 </p>
               )}
@@ -413,7 +414,7 @@ function AuthPage() {
                 reliably when `formError` changes (see #23). */}
             <div role="alert" aria-live="polite">
               {formError && (
-                <p className="rounded-lg border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/10 px-3 py-2 text-xs text-[color:var(--gold)]">
+                <p className="rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-xs text-gold">
                   {formError}
                 </p>
               )}
@@ -421,7 +422,7 @@ function AuthPage() {
             <button
               type="submit"
               disabled={busy}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-[image:var(--gradient-gold)] py-2.5 text-sm font-bold text-black shadow-gold transition hover:opacity-90 disabled:opacity-60"
+              className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-[image:var(--gradient-gold)] py-2.5 text-sm font-bold text-primary-foreground shadow-gold transition hover:opacity-90 disabled:opacity-60"
             >
               {busy && <Loader2 className="h-4 w-4 animate-spin" />}
               {isSignup ? t.auth.submitSignup : t.auth.submitLogin}
@@ -433,7 +434,7 @@ function AuthPage() {
             <Link
               to="/auth"
               search={{ mode: isSignup ? "login" : "signup" }}
-              className="font-semibold text-[color:var(--gold)] hover:underline"
+              className="inline-block py-2 font-semibold text-gold hover:underline"
             >
               {isSignup ? t.common.signIn : t.auth.switchToSignup}
             </Link>

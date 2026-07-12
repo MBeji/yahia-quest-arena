@@ -1,0 +1,82 @@
+{
+  "title": "📝 Entraînement ⭐⭐⭐ : la grande révision du module",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Parmi ces débuts, lequel annonce un récit RÉEL ?",
+      "options": [
+        { "id": "a", "text": "Il était une fois un royaume caché sous la mer." },
+        { "id": "b", "text": "Un dragon crachant des flammes gardait la montagne." },
+        { "id": "c", "text": "Le 3 mars, notre classe a visité le musée national." },
+        { "id": "d", "text": "La fée agita sa baguette étoilée sur le berceau." }
+      ],
+      "correctOption": "c",
+      "explanation": "Une date précise et un fait vécu et vérifiable (une visite scolaire) signalent un récit réel. Les autres débuts contiennent du surnaturel : ils ouvrent un récit imaginaire.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans « Le roi leur pardonne », le mot « leur » est :",
+      "options": [
+        { "id": "a", "text": "un pronom personnel COD" },
+        { "id": "b", "text": "un pronom personnel COI" },
+        { "id": "c", "text": "un déterminant possessif" },
+        { "id": "d", "text": "un pronom personnel sujet" }
+      ],
+      "correctOption": "b",
+      "explanation": "« leur » remplace « à eux » (pardonne à qui ?) : c'est un pronom personnel COI. Ne le confonds pas avec le déterminant possessif « leur(s) », qui se place devant un nom (« leurs épées »).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Les histoires que grand-mère nous a ___ étaient passionnantes. » (raconter)",
+      "options": [
+        { "id": "a", "text": "raconté" },
+        { "id": "b", "text": "racontés" },
+        { "id": "c", "text": "racontée" },
+        { "id": "d", "text": "racontées" }
+      ],
+      "correctOption": "d",
+      "explanation": "Avec « avoir », le PP s'accorde avec le COD placé avant. Le COD est « que » = les histoires (féminin pluriel), placé avant le verbe → « racontées ». (« nous » est ici COI, il ne commande pas l'accord.)",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Cette énigme, c'est toi qui ___ résolue ! »",
+      "options": [
+        { "id": "a", "text": "l'as" },
+        { "id": "b", "text": "l'a" },
+        { "id": "c", "text": "la" },
+        { "id": "d", "text": "là" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le sujet est « toi » (2ᵉ personne) : l'auxiliaire avoir se conjugue « as ». On écrit donc « l'as » (« l' » + « as » + participe passé « résolue »). Avec « il/elle », on écrirait « l'a ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quel mot n'est **pas** de la même famille que « terre » ?",
+      "options": [
+        { "id": "a", "text": "terrestre" },
+        { "id": "b", "text": "atterrir" },
+        { "id": "c", "text": "terrible" },
+        { "id": "d", "text": "souterrain" }
+      ],
+      "correctOption": "c",
+      "explanation": "« terrestre », « atterrir » et « souterrain » partagent le radical et le sens de « terre ». « terrible » vient de « terreur » : la ressemblance de forme ne suffit pas, il faut un sens commun.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quel verbe est le SYNONYME le plus proche de « contempler » dans « Le prince contemple le paysage » ?",
+      "options": [
+        { "id": "a", "text": "admirer" },
+        { "id": "b", "text": "surveiller" },
+        { "id": "c", "text": "apercevoir" },
+        { "id": "d", "text": "chercher" }
+      ],
+      "correctOption": "a",
+      "explanation": "« contempler », c'est regarder longuement avec admiration : « admirer » en est le synonyme le plus proche. « surveiller », « apercevoir » et « chercher » expriment d'autres façons de regarder.",
+      "difficulty": 3
+    }
+  ]
+}

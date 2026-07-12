@@ -107,6 +107,7 @@ describe("END-TO-END: new student signs up", () => {
     capturedHandlers = {};
     mockFrom.mockReset();
     mockRpc.mockReset();
+    mockRpc.mockReturnValue({ data: [], error: null });
   });
 
   it("bootstrapProfile(student) → first getDashboard returns the profile", async () => {
@@ -225,6 +226,7 @@ describe("END-TO-END: new parent signs up and links a student", () => {
     capturedHandlers = {};
     mockFrom.mockReset();
     mockRpc.mockReset();
+    mockRpc.mockReturnValue({ data: [], error: null });
   });
 
   it("bootstrapProfile(parent) → linkStudentByCode(valid) links the student", async () => {
@@ -288,6 +290,7 @@ describe("END-TO-END: linking with a bad alliance code fails gracefully", () => 
     capturedHandlers = {};
     mockFrom.mockReset();
     mockRpc.mockReset();
+    mockRpc.mockReturnValue({ data: [], error: null });
   });
 
   it("unknown code → RPC returns linked:false, no hang", async () => {
@@ -309,7 +312,7 @@ describe("END-TO-END: linking with a bad alliance code fails gracefully", () => 
     expect(result.student.displayName).toBeNull();
   });
 
-  it("RPC error → rejects with a sanitized client error (no hang)", async () => {
+  it("RPC error → rejects with the stable generic code (no hang, no raw message)", async () => {
     const { linkStudentByCode } = await import("@/features/parent-report");
 
     mockRpc.mockImplementation(
@@ -318,9 +321,10 @@ describe("END-TO-END: linking with a bad alliance code fails gracefully", () => 
       }),
     );
 
+    // Codes stables traduits côté client (étude 15, lot 3 — parent-code-errors).
     await expect(
       (linkStudentByCode as unknown as Fn)({ studentCode: "ANY-CODE-12345" }),
-    ).rejects.toThrow(/associer cet élève/i);
+    ).rejects.toThrow("PARENT_LINK_ERROR:generic");
   });
 
   it("rejects a too-short code at the validator (never hits the RPC)", async () => {
@@ -339,6 +343,7 @@ describe("END-TO-END: onboarding route data fetch", () => {
     capturedHandlers = {};
     mockFrom.mockReset();
     mockRpc.mockReset();
+    mockRpc.mockReturnValue({ data: [], error: null });
   });
 
   it("getParcours supplies the parcours the profile-first onboarding wizard renders", async () => {
@@ -402,6 +407,7 @@ describe("END-TO-END: account-creation edge cases", () => {
     capturedHandlers = {};
     mockFrom.mockReset();
     mockRpc.mockReset();
+    mockRpc.mockReturnValue({ data: [], error: null });
   });
 
   it("bootstrapProfile is idempotent when a profile already exists (upsert)", async () => {

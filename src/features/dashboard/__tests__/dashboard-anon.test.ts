@@ -79,7 +79,15 @@ describe("dashboard.parcours — anonymous (optionalSupabaseAuth)", () => {
     };
     mockFrom.mockImplementation((table: string) =>
       table === "grades"
-        ? mockQuery([{ id: "g9", cycle: "college", display_order: 9 }])
+        ? mockQuery([
+            {
+              id: "g9",
+              slug: "9eme-base",
+              cycle: "college",
+              display_order: 9,
+              is_selectable: true,
+            },
+          ])
         : mockQuery([concours]),
     );
 
@@ -92,9 +100,61 @@ describe("dashboard.parcours — anonymous (optionalSupabaseAuth)", () => {
       id: "concours-9eme",
       grade_cycle: "college",
       grade_order: 9,
+      grade_slug: "9eme-base",
+      grade_selectable: true,
       hasEntitlement: true,
     });
     expect(mockRpc).not.toHaveBeenCalled();
+  });
+
+  it("getParcours: surfaces the grade's is_selectable and defaults it to true without a grade", async () => {
+    const rows = [
+      {
+        id: "ecole-bac", // legacy flat node → non-selectable grade
+        name_fr: "Bac",
+        kind: "concours",
+        is_premium: false,
+        status: "coming_soon",
+        display_order: 2,
+        icon: "GraduationCap",
+        color: "subject-math",
+        theme_id: "ecole-tn",
+        grade_id: "g-bac",
+      },
+      {
+        id: "culture-generale", // libre, grade-less → stays selectable
+        name_fr: "Culture G",
+        kind: "libre",
+        is_premium: false,
+        status: "available",
+        display_order: 3,
+        icon: "Globe",
+        color: "subject-math",
+        theme_id: "culture-generale",
+        grade_id: null,
+      },
+    ];
+    mockFrom.mockImplementation((table: string) =>
+      table === "grades"
+        ? mockQuery([
+            {
+              id: "g-bac",
+              slug: "bac",
+              cycle: "secondaire",
+              display_order: 13,
+              is_selectable: false,
+            },
+          ])
+        : mockQuery(rows),
+    );
+
+    const { getParcours } = await import("@/features/dashboard");
+    const result = (await (getParcours as unknown as Fn)()) as {
+      parcours: Array<Record<string, unknown>>;
+    };
+
+    expect(result.parcours[0]).toMatchObject({ grade_slug: "bac", grade_selectable: false });
+    expect(result.parcours[1]).toMatchObject({ grade_slug: null, grade_selectable: true });
   });
 
   it("getParcoursSubjects: anon resolves a school level's subjects (theme + grade)", async () => {

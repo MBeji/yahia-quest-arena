@@ -1,8 +1,18 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
+import { optionalSupabaseAuth } from "@/shared/integrations/supabase/optional-auth-middleware";
 import { isRateLimited } from "@/shared/lib/rate-limit";
-import { failWithClientError } from "@/shared/lib/safe-error";
+import { logger } from "@/shared/lib/logger";
+import { errorMessage, failWithClientError } from "@/shared/lib/safe-error";
+// Alliance-code failures travel as STABLE codes and are translated client-side
+// in the visitor's language (étude 15, lot 3 — audit §F-1). Codes + prefixes +
+// mappers live in the pure, client-safe ./parent-code-errors module.
+import {
+  PARENT_LINK_ERROR_PREFIX,
+  REPORT_CODE_ERROR_PREFIX,
+  parentCodeErrorCode,
+} from "./parent-code-errors";
 
 type ParentStudent = {
   id: string;
@@ -23,6 +33,23 @@ type ParentStudent = {
 // safe fallback so the route's `.map()`/`summary.verdict` access can never crash.
 const numberish = z.coerce.number().catch(0);
 const VERDICT_VALUES = ["excellent", "good", "average", "needs_improvement", "inactive"] as const;
+
+const weekSliceSchema = z
+  .object({
+    exercises: numberish,
+    minutes: numberish,
+    avgScore: numberish,
+  })
+  .catch({ exercises: 0, minutes: 0, avgScore: 0 });
+
+const chapterInsightSchema = z.object({
+  chapterId: z.string().catch(""),
+  chapterTitle: z.string().catch(""),
+  subjectId: z.string().catch(""),
+  subjectName: z.string().catch(""),
+  attempts: numberish,
+  avgScore: numberish,
+});
 
 const studentReportSchema = z.object({
   student: z
@@ -87,6 +114,21 @@ const studentReportSchema = z.object({
       }),
     )
     .catch([]),
+  weekComparison: z
+    .object({
+      thisWeek: weekSliceSchema,
+      lastWeek: weekSliceSchema,
+    })
+    .catch({
+      thisWeek: { exercises: 0, minutes: 0, avgScore: 0 },
+      lastWeek: { exercises: 0, minutes: 0, avgScore: 0 },
+    }),
+  chapterInsights: z
+    .object({
+      strengths: z.array(chapterInsightSchema).catch([]),
+      weaknesses: z.array(chapterInsightSchema).catch([]),
+    })
+    .catch({ strengths: [], weaknesses: [] }),
 });
 
 type StudentReportShape = z.infer<typeof studentReportSchema>;
@@ -271,6 +313,70 @@ export const getStudentReport = createServerFn({ method: "GET" })
     return parseStudentReportPayload(reportData);
   });
 
+// Objectif hebdo : payload de get_family_weekly_goal (null si aucun objectif posé).
+const weeklyGoalSchema = z
+  .object({
+    weekStart: z.string().catch(""),
+    target: numberish,
+    done: numberish,
+  })
+  .nullable()
+  .catch(null);
+
+/**
+ * Read the current-week family goal (target + live progress) for a linked student.
+ * Returns null when no goal is set this week.
+ */
+export const getStudentWeeklyGoal = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ studentId: z.guid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    const { data: goal, error } = await supabase.rpc("get_family_weekly_goal", {
+      p_student: data.studentId,
+    });
+    if (error) {
+      failWithClientError(
+        "parentReport.getStudentWeeklyGoal: RPC failed",
+        error,
+        "Impossible de charger l'objectif de la semaine.",
+      );
+    }
+    return weeklyGoalSchema.parse(goal ?? null);
+  });
+
+/**
+ * Set (upsert) the current-week goal for a linked student. The link check lives
+ * in the `set_parent_weekly_goal` SECURITY DEFINER RPC.
+ */
+export const setStudentWeeklyGoal = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({ studentId: z.guid(), target: z.number().int().min(1).max(50) }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+
+    if (await isRateLimited(supabase, `weekly_goal_${userId}`, 30, 60_000)) {
+      throw new Error("Too many goal updates. Please slow down.");
+    }
+
+    const { data: result, error } = await supabase.rpc("set_parent_weekly_goal", {
+      p_student: data.studentId,
+      p_target: data.target,
+    });
+    if (error) {
+      failWithClientError(
+        "parentReport.setStudentWeeklyGoal: RPC failed",
+        error,
+        "Impossible d'enregistrer l'objectif de la semaine.",
+      );
+    }
+
+    const row = result && typeof result === "object" ? (result as Record<string, unknown>) : {};
+    return { target: typeof row.target === "number" ? row.target : data.target };
+  });
+
 /**
  * Link a parent account to a student account using the student's alliance code.
  */
@@ -306,11 +412,9 @@ export const linkStudentByCode = createServerFn({ method: "POST" })
       p_relation: data.relationLabel,
     });
     if (error) {
-      failWithClientError(
-        "parentReport.linkStudentByCode: RPC failed",
-        error,
-        "Impossible d'associer cet élève. Vérifiez le code et réessayez.",
-      );
+      const raw = errorMessage(error);
+      logger.error("parentReport.linkStudentByCode: RPC failed", { error: raw });
+      throw new Error(PARENT_LINK_ERROR_PREFIX + parentCodeErrorCode(raw));
     }
 
     const row = result && typeof result === "object" ? (result as Record<string, unknown>) : {};
@@ -321,4 +425,33 @@ export const linkStudentByCode = createServerFn({ method: "POST" })
         displayName: typeof row.student_display_name === "string" ? row.student_display_name : null,
       },
     };
+  });
+
+/**
+ * PUBLIC student report by alliance code — no account, no session required.
+ *
+ * Product decision (2026-07-08): a parent can open their child's read-only report
+ * with the alliance code alone. The code is a bearer capability (= the student's
+ * 122-bit-random UUID, shown on their dashboard). Access, code decode and the
+ * "target must be a student" check all live in the anon-callable
+ * `get_student_report_by_code` SECURITY DEFINER RPC; login stays optional and only
+ * unlocks the write-side extras (weekly goal, push digest).
+ */
+export const getStudentReportByCode = createServerFn({ method: "GET" })
+  .middleware([optionalSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ studentCode: z.string().min(8).max(64) }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+
+    const { data: reportData, error } = await supabase.rpc("get_student_report_by_code", {
+      p_code: data.studentCode,
+    });
+
+    if (error) {
+      const raw = errorMessage(error);
+      logger.error("parentReport.getStudentReportByCode: RPC failed", { error: raw });
+      throw new Error(REPORT_CODE_ERROR_PREFIX + parentCodeErrorCode(raw));
+    }
+
+    return parseStudentReportPayload(reportData);
   });

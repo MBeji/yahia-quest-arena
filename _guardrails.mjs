@@ -47,7 +47,8 @@ function checkQuestion(q, where, capDiff) {
 
 function checkRamp(diffs, where) {
   for (let i = 1; i < diffs.length; i++)
-    if (diffs[i] < diffs[i - 1]) err(`${where}: difficulty decreased at Q${i + 1} (${diffs.join(",")})`);
+    if (diffs[i] < diffs[i - 1])
+      err(`${where}: difficulty decreased at Q${i + 1} (${diffs.join(",")})`);
 }
 
 function keyCounts(questions) {
@@ -106,7 +107,8 @@ for (const ch of chapters.sort()) {
     const used = Object.keys(kc);
     for (const id of EXPECTED_IDS)
       if (!used.includes(id)) err(`${where}: letter '${id}' never used as key`);
-    for (const [k, v] of Object.entries(kc)) if (v > 2) err(`${where}: key '${k}' used ${v}/6 (>2)`);
+    for (const [k, v] of Object.entries(kc))
+      if (v > 2) err(`${where}: key '${k}' used ${v}/6 (>2)`);
   }
 }
 

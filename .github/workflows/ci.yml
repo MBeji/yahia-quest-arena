@@ -24,10 +24,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Setup Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: npm
@@ -44,8 +44,36 @@ jobs:
       - name: Unit tests + coverage
         run: npm run test:coverage
 
+      # Content gate (was local-only via ci:verify; now enforced on every PR).
+      # content:check proves the authored content/ still compiles to the committed
+      # migrations (catches an edit that forgot `content:build`); content:qa:strict
+      # runs the correctness heuristics (key/explanation agreement, RTL/notation,
+      # meta-option distractors) and fails on any [error].
+      - name: Content build is in sync
+        run: npm run content:check
+
+      - name: Content quality (strict)
+        run: npm run content:qa:strict
+
+      # Keep the k6 load harness (perf/) from rotting: every scenario must parse,
+      # and its constants must still mirror the product hot paths (LEADERBOARD_LIMIT,
+      # submit rate-limit budget). No k6 binary / Supabase secrets needed.
+      - name: Perf harness sync check
+        run: npm run perf:check
+
       - name: Build + bundle budgets
         run: npm run build:check
+
+      # Production-shell browser smoke (incident 2026-07-01): builds and loads
+      # the REAL prod bundle in Chromium and fails on any page error / error
+      # page. The only tier that exercises prod-gated client code
+      # (`import.meta.env.PROD`) — tsc, the unit gate, SSR checks and the
+      # dev-server e2e all miss that class of crash.
+      - name: Install Chromium (shell smoke)
+        run: npx playwright install --with-deps chromium
+
+      - name: Production shell smoke (real browser)
+        run: npm run smoke:shell
 
       - name: Runtime dependency audit
         run: npm run audit:deps

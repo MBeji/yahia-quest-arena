@@ -16,6 +16,7 @@ import type {
 // --- fixtures -------------------------------------------------------------
 
 const question = (over: Partial<ContentQuestion> = {}): ContentQuestion => ({
+  type: "mcq",
   prompt: "prompt",
   options: [
     { id: "a", text: "A" },
@@ -23,7 +24,7 @@ const question = (over: Partial<ContentQuestion> = {}): ContentQuestion => ({
   ],
   correctOption: "a",
   explanation: "because A",
-  ...over,
+  ...(over as object),
 });
 
 const exercise = (

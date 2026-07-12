@@ -5,12 +5,15 @@ import {
   Award,
   BookOpen,
   CheckCircle2,
+  ClipboardList,
   Globe,
   GraduationCap,
   Languages,
+  Lightbulb,
   Printer,
   Sparkles,
   Star,
+  Target,
   Trophy,
   Users,
   Zap,
@@ -48,21 +51,26 @@ export function PublicLanding() {
   }, []);
   const show3D = mounted && !isMobile && !reduce;
 
+  // The parent door deep-links to the « Espace Famille » section below; the two
+  // other personas enter the public catalogue.
   const personas = [
     {
       icon: GraduationCap,
       title: t.public.landing.personaStudentTitle,
       desc: t.public.landing.personaStudentDesc,
+      hash: undefined,
     },
     {
       icon: Users,
       title: t.public.landing.personaParentTitle,
       desc: t.public.landing.personaParentDesc,
+      hash: "espace-famille",
     },
     {
       icon: BookOpen,
       title: t.public.landing.personaTeacherTitle,
       desc: t.public.landing.personaTeacherDesc,
+      hash: undefined,
     },
   ];
   const cycles = [
@@ -149,7 +157,8 @@ export function PublicLanding() {
           {personas.map((p) => (
             <Link
               key={p.title}
-              to="/programme"
+              to={p.hash ? "/" : "/programme"}
+              hash={p.hash}
               data-testid="persona-door"
               className="group rounded-2xl border border-border bg-card p-6 transition hover:border-primary/60 hover:shadow-sm"
             >
@@ -260,7 +269,96 @@ export function PublicLanding() {
         </div>
       </section>
 
+      {/* ESPACE FAMILLE — la promesse parents : suivi réel + bilan actionnable.
+          Cible du deep-link de la porte persona « Je suis parent » (#espace-famille). */}
+      <section
+        id="espace-famille"
+        data-testid="famille-block"
+        className="mx-auto max-w-5xl scroll-mt-20 px-4 py-12 sm:px-6"
+      >
+        <div className="mb-8 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full bg-secondary px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
+            <Users className="h-3.5 w-3.5" /> {t.public.landing.familleKicker}
+          </div>
+          <h2 className="mx-auto mt-4 max-w-2xl font-display text-2xl font-bold sm:text-3xl">
+            {t.public.landing.familleTitle}
+          </h2>
+          <p className="mx-auto mt-2 max-w-2xl text-muted-foreground">
+            {t.public.landing.familleSubtitle}
+          </p>
+        </div>
+        <div className="grid gap-6 lg:grid-cols-2">
+          <ul className="space-y-3">
+            {[
+              { icon: ClipboardList, text: t.public.landing.familleFeatTrack },
+              { icon: Target, text: t.public.landing.familleFeatInsights },
+              { icon: Lightbulb, text: t.public.landing.familleFeatAdvice },
+              { icon: Printer, text: t.public.landing.familleFeatPrint },
+            ].map((f) => (
+              <li
+                key={f.text}
+                className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4"
+              >
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-secondary text-primary">
+                  <f.icon className="h-5 w-5" />
+                </span>
+                <span className="text-sm font-medium">{f.text}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="flex flex-col rounded-2xl border border-border bg-card p-6">
+            <h3 className="font-display text-lg font-bold">{t.public.landing.familleStepsTitle}</h3>
+            <ol className="mt-4 flex-1 space-y-3">
+              {[
+                t.public.landing.familleStep1,
+                t.public.landing.familleStep2,
+                t.public.landing.familleStep3,
+              ].map((step, i) => (
+                <li key={step} className="flex items-start gap-3">
+                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                    {i + 1}
+                  </span>
+                  <span className="text-sm text-muted-foreground">{step}</span>
+                </li>
+              ))}
+            </ol>
+            {/* Signé : ouvre le suivi ; sinon inscription avec le rôle Parent pré-choisi. */}
+            {isAuthed ? (
+              <Link
+                to="/parent-report"
+                className="mt-6 inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-base font-semibold text-primary-foreground transition hover:opacity-90"
+              >
+                {t.public.landing.familleCtaAuthed}
+                <ArrowRight className="h-5 w-5 rtl:-scale-x-100" />
+              </Link>
+            ) : (
+              <Link
+                to="/suivi"
+                className="mt-6 inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-base font-semibold text-primary-foreground transition hover:opacity-90"
+              >
+                {t.public.landing.familleCtaAuthed}
+                <ArrowRight className="h-5 w-5 rtl:-scale-x-100" />
+              </Link>
+            )}
+            {/* Suivi sans compte : le code d'alliance suffit. La création d'un
+                compte parent reste possible (extras qui écrivent) mais optionnelle. */}
+            {!isAuthed && (
+              <Link
+                to="/auth"
+                search={{ mode: "signup", role: "parent" }}
+                className="mt-3 inline-flex items-center justify-center gap-1.5 text-sm font-medium text-muted-foreground transition hover:text-foreground"
+              >
+                {t.public.landing.familleCta}
+              </Link>
+            )}
+          </div>
+        </div>
+      </section>
+
       {/* SECTION JEU — le seul bloc registre « Jeu » (doré), promesse secondaire */}
+      {/* token-ok-block: vitrine « Apprends en jouant » — section sombre FIXE
+          (identique dans les 2 thèmes) : son or est le vrai or de la marque jeu,
+          volontairement hors tokens (l'or thémé devient teal en clair). */}
       <section data-testid="game-block" className="bg-[#15120d] text-amber-50">
         <div className="mx-auto grid max-w-5xl items-center gap-8 px-4 py-14 sm:px-6 lg:grid-cols-2">
           <div>
@@ -307,6 +405,7 @@ export function PublicLanding() {
           </div>
         </div>
       </section>
+      {/* /token-ok-block */}
     </>
   );
 }

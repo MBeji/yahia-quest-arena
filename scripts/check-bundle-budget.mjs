@@ -7,11 +7,24 @@ const BUDGETS = {
   "index-": 450 * 1024,
   // i18n catalog (loaded app-wide). Bumped 80→84 KB for the trilingual legal /
   // intellectual-property notice + print/footer copy (public IP-protection
-  // change). The chunk gzips to ~27 KB, so the real over-the-wire impact is
-  // marginal; keep new strings lean to stay well under this ceiling.
-  "i18n-": 84 * 1024,
+  // change), then 84→88 KB for the trilingual beta badge + bug-report channel
+  // strings, then 88→96 KB for the trilingual actionable family report
+  // (chapter insights, weekly comparison, advice, print) + the « Espace
+  // Famille » landing section, then 96→100 KB for the trilingual duels
+  // namespace (étude 05: hub/arena/recap copy), then 100→104 KB for the
+  // trilingual route-error keys (étude 14 lot 3, R-6 : the public-tier
+  // load-failure messages leave hardcoded French for the i18n catalog).
+  // The chunk gzips to ~36 KB, so the real over-the-wire impact is marginal;
+  // keep new strings lean to stay well under this ceiling. Then 104→108 KB for
+  // the trilingual Arène-hub namespace + « Suivi parent » nav labels (étude 15
+  // lot 5: the /arene pole + the public /suivi entry points) — the hub reuses
+  // the modes' own titles/pitches (DRY) so only its reward hints are new keys.
+  "i18n-": 108 * 1024,
   "vendor-supabase-": 240 * 1024,
   "vendor-motion-": 150 * 1024,
+  // @dnd-kit (core+sortable+utilities) powering the B2 ordering/matching
+  // boards — dedicated chunk (see vite.config manualChunks).
+  "vendor-dndkit-": 64 * 1024,
   // Dashboard route chunk. Bumped 30→32 KB for the flagship-concours banner
   // integration (the banner trio is lazy-loaded into its own chunk; only the
   // small lazy glue lands here). Heavy sections (radar/3D, badges/shop) stay lazy.

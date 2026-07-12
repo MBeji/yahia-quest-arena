@@ -3,14 +3,19 @@
  *
  * Reads the versioned content tree under `content/`, validates every file
  * against the Zod schemas, and (unless `--check`) emits one idempotent
- * Supabase migration per subject into `supabase/migrations/`.
+ * Supabase migration per COMPILED subject into `supabase/migrations/`.
+ * A shared directory (`compileTo`, étude 16 D-4) expands to N compiled
+ * subjects — and therefore N migration files — in one run.
  *
  * Run with Node's built-in TypeScript support:
  *   node --experimental-strip-types scripts/content/build.ts [options]
  *
  * Options:
  *   --check                 Validate only; write nothing. Exits 1 on error.
- *   --subject <id>          Restrict to a single subject (default: all).
+ *   --subject <dir>         Restrict to a single subject DIRECTORY (default:
+ *                           all). The value is the source folder name under
+ *                           content/ — for a shared dir this regenerates every
+ *                           compiled target it declares.
  *   --content-dir <path>    Content root (default: content).
  *   --out-dir <path>        Migrations output dir (default: supabase/migrations).
  *   --timestamp <stamp>     Override the YYYYMMDDHHMMSS migration prefix.
@@ -18,13 +23,15 @@
  * The core logic lives in src/shared/content (typed, linted, unit-tested);
  * this file is only the thin filesystem + CLI shell.
  */
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { argv, cwd, exit, stderr, stdout } from "node:process";
 import { buildMigrationSql } from "../../src/shared/content/sql-builder.ts";
 import {
   ContentValidationError,
+  expandSubjects,
   loadAllSubjects,
+  loadMisconceptionRegistry,
   loadSubject,
 } from "../../src/shared/content/loader.ts";
 
@@ -67,9 +74,29 @@ function main(): void {
   const onlySubject = getFlag("subject");
   const baseStamp = getFlag("timestamp") ?? defaultTimestamp();
 
-  const subjects = onlySubject
-    ? [loadSubject(join(contentDir, onlySubject))]
-    : loadAllSubjects(contentDir);
+  // Validate the misconception registry structure up front (étude 04 D-4) so a
+  // malformed content/misconceptions.json fails content:check; usage of unknown
+  // tags is cross-checked by content:qa.
+  loadMisconceptionRegistry(contentDir);
+
+  // Expansion (étude 16 D-4): shared `compileTo` dirs become their compiled
+  // per-section subjects here; everything downstream keys on compiled ids.
+  // In all-subjects mode expandSubjects proves global id uniqueness by itself;
+  // in --subject mode the sibling directories are not loaded, so guard the
+  // cheap cross-dir case (a target id shadowing a physical dir) explicitly —
+  // the full cross-dir check runs in CI via `content:check` (all subjects).
+  const subjects = expandSubjects(
+    onlySubject ? [loadSubject(join(contentDir, onlySubject))] : loadAllSubjects(contentDir),
+  );
+  if (onlySubject) {
+    for (const s of subjects) {
+      if (s.meta.id !== onlySubject && existsSync(join(contentDir, s.meta.id, "subject.json"))) {
+        throw new ContentValidationError(
+          `Compiled subject id '${s.meta.id}' collides with the physical directory content/${s.meta.id}`,
+        );
+      }
+    }
+  }
 
   if (subjects.length === 0) {
     stderr.write(`No subjects found under ${contentDir}\n`);

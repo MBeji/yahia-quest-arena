@@ -55,7 +55,7 @@
       "difficulty": 2
     },
     {
-      "prompt": "Lis l'extrait :\n« Le maire affirme que la nouvelle taxe est nécessaire. Selon lui, elle financera les écoles. Mais de nombreux habitants estiment qu'elle est injuste pour les familles modestes. »\n\nDans ce texte, quelle phrase rapporte une OPINION ?",
+      "prompt": "Lis l'extrait :\n« Le maire affirme que la nouvelle taxe est nécessaire. Selon lui, elle financera les écoles. Mais de nombreux habitants estiment qu'elle est injuste pour les familles modestes. »\n\nDans ce texte, quelle phrase rapporte l'opinion DES HABITANTS ?",
       "options": [
         { "id": "a", "text": "« Le maire affirme que la nouvelle taxe est nécessaire. »" },
         { "id": "b", "text": "« La taxe financera les écoles » (présenté comme certain)." },

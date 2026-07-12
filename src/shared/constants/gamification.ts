@@ -107,6 +107,43 @@ export function dungeonRunsPerDay(level: number): number {
 /** Cost in Coins to recover a lost streak */
 export const STREAK_RECOVERY_COST = 15;
 
+// ---------------------------------------------------------------------------
+// Duels (étude 05 — duels temps réel & ligues). 1v1 on a frozen question set
+// drawn from the two players' shared parcours. Duels are an ENGAGEMENT feature,
+// open to ALL parcours (FREE + premium) — unlike the Dungeon (a premium perk) —
+// so the matchmaking queue stays deep (Q-4 resolved: no entitlement gate).
+// NOTE: these values are mirrored in SQL (match_duel / submit_duel_answer /
+// finalize_duel); keep both in sync, same discipline as the Dungeon constants.
+// ---------------------------------------------------------------------------
+
+/** Number of questions in a duel set (frozen at matchmaking, identical for both). */
+export const DUEL_QUESTION_COUNT = 5;
+
+/** A duel with no result by this many hours after creation expires (async tolerance). */
+export const DUEL_EXPIRY_HOURS = 24;
+
+/** At most this many simultaneously-active duels per player (R-10). */
+export const DUEL_MAX_ACTIVE = 3;
+
+/**
+ * At most this many REWARDED duels per player per day (anti-farm, R-7). Beyond
+ * the cap a duel is still playable but grants 0 XP / 0 coins. Mirrors the
+ * Dungeon daily-run cap so the two competitive loops stay balanced.
+ */
+export const DUEL_MAX_REWARDED_PER_DAY = 5;
+
+/**
+ * Duel reward tiers (Q-1 resolved). Anchored to the practice-exercise economy
+ * (a full exercise ≈ 75 XP / 15 coins): a win is a touch below that, a loss is
+ * a real participation reward (never negative — R-8), a draw sits between. A
+ * forfeit win (opponent expired without finishing) pays the win tier.
+ */
+export const DUEL_REWARDS = {
+  win: { xp: 60, coins: 12 },
+  draw: { xp: 40, coins: 8 },
+  loss: { xp: 20, coins: 4 },
+} as const;
+
 /**
  * Highest exercise difficulty included in a premium parcours' FREE PREVIEW.
  * In a premium parcours WITHOUT an entitlement, the chapter comprehension quiz

@@ -186,23 +186,32 @@ These are paid-for lessons; violating them re-breaks production or the gate.
 - **eslint-plugin-react-refresh on routes:** newer versions stop treating
   `export const Route = createFileRoute(...)` as a component → `only-export-components`
   errors across `src/routes/**`. The fix is to **disable that rule for `src/routes/**`**
-— NOT `allowExportNames: ["Route"]`(that reclassifies`Route` and trips the same
+  — NOT `allowExportNames: ["Route"]`(that reclassifies`Route` and trips the same
   error; that path was a closed dead-end, PR #122).
 - **Do NOT "optimise" `motion` here.** Swapping `motion` → `m` + `LazyMotion` shrinks
   the bundle but creates a circular vendor chunk = **prod-crash risk**. A plain
   `motion` version bump is fine; the `m`/LazyMotion refactor is out of scope and needs
   dedicated chunking, not this nightly.
-- **The inline Vite/TanStack config.** `vite.config.ts` composes the
-  Vite/TanStack-Start/Cloudflare/Tailwind plugin scaffold by hand (no meta-plugin). Treat
-  any Vite / `@vitejs/plugin-react` / `@tailwindcss/vite` / `@tanstack/router-plugin` /
-  `@cloudflare/vite-plugin` major as **high-risk, own-PR, needs-review** — they can break
-  the hand-composed plugin order or the Worker build, and reshaping `manualChunks` can
-  create a circular vendor chunk (prod-crash risk). Re-run `build:check`.
+- **The inline Vite config (ex-meta-plugin).** The vendored meta-plugin was de-vendored
+  (2026-06-15) into a hand-composed `vite.config.ts` (Vite/TanStack-Start/Cloudflare/Tailwind
+  scaffold + hand-tuned `manualChunks`). Never reintroduce a meta-plugin or add a plugin
+  that's already wired, and treat any Vite / `@vitejs/plugin-react` /
+  `@tailwindcss/vite` / `@tanstack/router-plugin` / `@cloudflare/vite-plugin` major as
+  **high-risk, own-PR, needs-review** — they can break the hand-composed plugin order or
+  the Worker build, and duplicate/reshaped plugins (incl. `manualChunks`) can create a
+  circular vendor chunk (prod-crash risk). Re-run `build:check`.
 - **New Supabase CLI = validate pgTAP.** Bumping `supabase/setup-cli` version can drop
   default table grants on the local stack. If you bump it, the major PR must show a
   green pgTAP run (`db-tests.yml`) and keep the explicit `baseline_table_grants` intact.
 - **`content:qa:strict` lives in `ci:verify`, not `ci.yml`.** The in-session
   `ci:verify` you run already covers it — don't assume the PR's `ci.yml` did.
+- **Upgrades never re-author content.** If a bump touches the content pipeline
+  (`src/shared/content/**`, `scripts/content/**`, the Zod schema), keep behaviour
+  identical: the **combined-source rule** for school content — official CNP =
+  **teacher guide + manuel élève** (student textbook = indispensable complement;
+  one source ⇒ reference, several ⇒ combine all), defined in `content-ecole-tn`
+  and its `programmes-officiels/` README — must still hold. A migration that would
+  weaken or drop it is **out of scope** for an upgrade; flag it, don't absorb it.
 
 ## Division of labour (skill vs workflow)
 

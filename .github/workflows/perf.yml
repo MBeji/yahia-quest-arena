@@ -1,0 +1,157 @@
+name: Performance (load tests)
+
+# The k6 load/perf suite (perf/). Two jobs:
+#   • validate — ALWAYS runs, no secrets. Installs k6 and `k6 inspect`s every
+#     scenario (real parse/validate), plus the cheap harness sync check. Keeps
+#     the suite from rotting even when no load-test project is configured.
+#   • load — SKIPS GRACEFULLY (green) unless the load-test secrets are set. When
+#     they are, it mints VU tokens against a DEDICATED load-test project and runs
+#     k6 at the chosen STAGE; k6's thresholds (per-RPC p95 + <1% errors) fail the
+#     job on a regression.
+#
+# Required repository secrets for the `load` job (a THROWAWAY project — NEVER prod):
+#   LOAD_SUPABASE_URL                – the load-test project URL
+#   LOAD_SUPABASE_ANON_KEY           – its anon / publishable key
+#   LOAD_SUPABASE_SERVICE_ROLE_KEY   – its service-role key (mints VU users)
+# Optional fixtures (write/dungeon scenarios run thinner without them):
+#   LOAD_EXERCISE_IDS / LOAD_SUBJECT_IDS – comma-separated UUIDs
+#
+# Prereq: apply all migrations + content to the load-test project once, and seed
+# scale with scripts/perf/synthetic-scale.sql so the hotspots show real cost.
+
+on:
+  workflow_call:
+    inputs:
+      stage:
+        description: "k6 load profile: smoke | load | stress | soak | spike"
+        type: string
+        required: false
+        default: "smoke"
+    outputs:
+      ran:
+        description: '"true" when the load job actually executed (secrets present), else "false".'
+        value: ${{ jobs.load.outputs.ran }}
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: "k6 load profile"
+        type: choice
+        options: [smoke, load, stress, soak, spike]
+        default: smoke
+
+concurrency:
+  group: perf-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Always-on: prove the harness compiles. No secrets, runs on every call.
+  # ---------------------------------------------------------------------------
+  validate:
+    name: Validate harness
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Harness sync check
+        run: npm run perf:check
+      - name: Install k6
+        uses: grafana/setup-k6-action@v1
+      - name: Validate every scenario (k6 inspect)
+        run: |
+          set -e
+          for f in perf/k6/*.js; do
+            echo "::group::k6 inspect $f"
+            k6 inspect "$f"
+            echo "::endgroup::"
+          done
+
+  # ---------------------------------------------------------------------------
+  # Secret-gated: run the real load test against the load-test project.
+  # ---------------------------------------------------------------------------
+  load:
+    name: Load test (${{ inputs.stage || 'smoke' }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    outputs:
+      ran: ${{ steps.guard.outputs.configured }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Check load-test secrets are configured
+        id: guard
+        run: |
+          if [ -z "${{ secrets.LOAD_SUPABASE_URL }}" ] || [ -z "${{ secrets.LOAD_SUPABASE_SERVICE_ROLE_KEY }}" ]; then
+            echo "Load-test Supabase secrets are not set — skipping the load run."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Node
+        if: steps.guard.outputs.configured == 'true'
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        if: steps.guard.outputs.configured == 'true'
+        run: npm ci --no-audit --no-fund
+
+      - name: Install k6
+        if: steps.guard.outputs.configured == 'true'
+        uses: grafana/setup-k6-action@v1
+
+      - name: Mint VU access tokens
+        if: steps.guard.outputs.configured == 'true'
+        id: tokens
+        env:
+          SUPABASE_URL: ${{ secrets.LOAD_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.LOAD_SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.LOAD_SUPABASE_ANON_KEY }}
+          LOAD_USER_COUNT: "50"
+        run: |
+          node scripts/perf/mint-load-tokens.mjs > tokens.env 2> mint.log || { cat mint.log; exit 1; }
+          # Surface progress logs (stderr) without leaking the tokens (stdout).
+          grep -v LOAD_USER_JWTS mint.log || true
+          echo "::add-mask::$(grep LOAD_USER_JWTS tokens.env | cut -d= -f2-)"
+          grep LOAD_USER_JWTS tokens.env >> "$GITHUB_ENV"
+
+      - name: Run k6 scenarios
+        if: steps.guard.outputs.configured == 'true'
+        env:
+          STAGE: ${{ inputs.stage || 'smoke' }}
+          LOAD_SUPABASE_URL: ${{ secrets.LOAD_SUPABASE_URL }}
+          LOAD_SUPABASE_ANON_KEY: ${{ secrets.LOAD_SUPABASE_ANON_KEY }}
+          LOAD_EXERCISE_IDS: ${{ secrets.LOAD_EXERCISE_IDS }}
+          LOAD_SUBJECT_IDS: ${{ secrets.LOAD_SUBJECT_IDS }}
+        run: |
+          set -e
+          mkdir -p perf-results
+          # LOAD_USER_JWTS comes from $GITHUB_ENV (masked). The leaderboard scenario
+          # always runs; gameplay/dungeon need their fixtures but degrade safely.
+          for s in leaderboard gameplay dungeon; do
+            echo "::group::k6 run $s ($STAGE)"
+            k6 run --summary-export "perf-results/$s.json" "perf/k6/$s.js" || echo "$s breached thresholds" | tee -a perf-results/FAILURES
+            echo "::endgroup::"
+          done
+          if [ -f perf-results/FAILURES ]; then
+            echo "Threshold breaches:"; cat perf-results/FAILURES; exit 1
+          fi
+
+      - name: Upload k6 summaries
+        if: ${{ steps.guard.outputs.configured == 'true' && !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: k6-summaries-${{ inputs.stage || 'smoke' }}
+          path: perf-results/
+          retention-days: 14

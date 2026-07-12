@@ -1,0 +1,82 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : l'épreuve du maître conteur",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 6,
+  "questions": [
+    {
+      "prompt": "Complète au passé simple : « — Bonjour, ___ (dire) le voyageur en entrant dans l'auberge. »",
+      "options": [
+        { "id": "a", "text": "disait" },
+        { "id": "b", "text": "dit" },
+        { "id": "c", "text": "dis" },
+        { "id": "d", "text": "dut" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Dire » fait au passé simple : je dis, il dit, ils dirent. À la 3e personne du singulier : « dit » ✓. « disait » est l'imparfait, « dis » la 1re/2e personne et « dut » est le passé simple de devoir, un autre verbe.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète au passé simple : « Le capitaine ___ (tenir) bon malgré la tempête. »",
+      "options": [
+        { "id": "a", "text": "tenait" },
+        { "id": "b", "text": "tena" },
+        { "id": "c", "text": "tenit" },
+        { "id": "d", "text": "tint" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Tenir », comme « venir », a un passé simple à nasale -in- : je tins, il tint, ils tinrent. À la 3e personne du singulier : « tint » ✓. « tenait » est l'imparfait ; « tena » et « tenit » sont des formes inventées.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Le soleil ___ (briller) ; les enfants ___ (jouer) dans la cour quand la cloche ___ (sonner). »",
+      "options": [
+        { "id": "a", "text": "brillait … jouaient … sonna" },
+        { "id": "b", "text": "brilla … jouèrent … sonna" },
+        { "id": "c", "text": "brillait … jouaient … sonnait" },
+        { "id": "d", "text": "brilla … jouaient … sonna" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Le soleil brillait » et « les enfants jouaient » sont le décor et l'action qui dure → imparfait ; « la cloche sonna » est l'événement soudain qui rompt cette durée → passé simple ✓. Mettre le décor au passé simple (« brilla ») ou l'événement à l'imparfait (« sonnait ») casse l'alternance.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Une phrase raconte mal l'alternance des temps. Laquelle ? « 1. Il faisait froid ce soir-là. 2. La neige recouvrait les toits. 3. Soudain, quelqu'un frappait à la porte. 4. Le grand-père se leva pour ouvrir. »",
+      "options": [
+        { "id": "a", "text": "La phrase 1" },
+        { "id": "b", "text": "La phrase 2" },
+        { "id": "c", "text": "La phrase 3" },
+        { "id": "d", "text": "La phrase 4" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Soudain, quelqu'un frappait » est fautif : l'action brusque exige le passé simple « quelqu'un frappa ». Les phrases 1 et 2 posent le décor qui dure (imparfait, correct) et la phrase 4 est bien un événement au passé simple. (Chasse à l'erreur : on désigne la phrase fautive.)",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète au passé simple : « Il ___ (vouloir) crier, mais aucun son ne ___ (pouvoir) sortir ; ce ___ (être) terrifiant. »",
+      "options": [
+        { "id": "a", "text": "voulait … pouvait … était" },
+        { "id": "b", "text": "voulut … put … fut" },
+        { "id": "c", "text": "voulut … pouva … fut" },
+        { "id": "d", "text": "voula … put … fût" }
+      ],
+      "correctOption": "b",
+      "explanation": "Trois verbes de la série en -u au passé simple : vouloir → il voulut, pouvoir → il put, être → il fut ✓. « voulait … pouvait … était » serait l'imparfait ; « pouva » et « voula » appliquent à tort les terminaisons des verbes en -er, et « fût » (accent) est un subjonctif.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle phrase respecte l'alternance imparfait (décor) / passé simple (événement) ?",
+      "options": [
+        { "id": "a", "text": "La mer était calme lorsque le bateau leva l'ancre." },
+        { "id": "b", "text": "La mer fut calme lorsque le bateau levait l'ancre." },
+        { "id": "c", "text": "La mer était calme lorsque le bateau levait l'ancre." },
+        { "id": "d", "text": "La mer fut calme lorsque le bateau leva l'ancre." }
+      ],
+      "correctOption": "a",
+      "explanation": "« La mer était calme » est le décor qui dure (imparfait) et « le bateau leva l'ancre » l'événement soudain (passé simple) ✓. La phrase c laisse tout à l'imparfait (aucun événement ne surgit), et les phrases b et d mettent le décor de la mer au passé simple.",
+      "difficulty": 3
+    }
+  ]
+}

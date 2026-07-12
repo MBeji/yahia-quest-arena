@@ -21,13 +21,13 @@
     {
       "prompt": "Complete: \"On weekends, we ___ go fishing at the lake with our father.\"",
       "options": [
-        { "id": "a", "text": "used to" },
+        { "id": "a", "text": "use to" },
         { "id": "b", "text": "would" },
         { "id": "c", "text": "are used to" },
         { "id": "d", "text": "got used to" }
       ],
       "correctOption": "b",
-      "explanation": "Going fishing is a repeated past action (not a state), so both \"used to\" and \"would\" work — but (a) is also correct. Here (b) is the target answer because \"would\" with a time frame like \"on weekends\" is the classic narrative pattern. \"are/got used to\" mean accustomed to.",
+      "explanation": "Going fishing is a repeated past action with a time frame (\"on weekends\"), so \"would\" fits the narrative pattern: we would go fishing. \"use to\" is incorrect — the past form is \"used to\" (with -d). \"are/got used to\" mean accustomed to, a different meaning.",
       "difficulty": 1
     },
     {

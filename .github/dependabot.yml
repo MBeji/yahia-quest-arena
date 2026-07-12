@@ -1,41 +1,38 @@
 version: 2
+
+# Dependabot is SECURITY-ONLY here. Routine version bumps are owned by the
+# twice-weekly upgrade-guard sweep (.github/workflows/upgrade-guard.yml): it
+# applies npm minor/patch as one auto-merged lot, isolates each major, and also
+# tracks the toolchain, the GitHub Actions, and the pinned Supabase CLI — from a
+# known-green nightly baseline. Running Dependabot version updates on top of that
+# duplicated the work and produced lockfile-conflicting PRs that had to be
+# consolidated by hand (#225/#226: four bot PRs went red after rebase onto a
+# lockfile that `main` had already bumped, then needed a manual regroup).
+#
+# `open-pull-requests-limit: 0` disables Dependabot *version* updates for the
+# ecosystem while leaving Dependabot *security* updates untouched (those have a
+# separate internal limit and are what we actually want from Dependabot — a fast
+# lane for vulnerability advisories that doesn't wait on a green nightly). See
+# docs/dependency-maintenance.md.
 updates:
   - package-ecosystem: npm
     directory: "/"
     schedule:
       interval: monthly
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 0
     labels:
       - dependencies
     commit-message:
       prefix: chore
       include: scope
-    # Routine minor + patch bumps land in ONE grouped PR instead of one-per-package
-    # (avoids the 6-separate-PRs fragmentation). Majors still come individually.
-    groups:
-      npm-minor-and-patch:
-        update-types:
-          - minor
-          - patch
-    ignore:
-      # @types/node tracks the runtime Node major (CI + Vercel on Node 22); no major bumps.
-      - dependency-name: "@types/node"
-        update-types:
-          - version-update:semver-major
 
-  # Keep the GitHub Actions (incl. third-party: anthropics/claude-code-action,
-  # supabase/setup-cli) patched — supply-chain hygiene now that the repo is public.
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
       interval: monthly
+    open-pull-requests-limit: 0
     labels:
       - dependencies
     commit-message:
       prefix: chore
       include: scope
-    groups:
-      actions-minor-and-patch:
-        update-types:
-          - minor
-          - patch

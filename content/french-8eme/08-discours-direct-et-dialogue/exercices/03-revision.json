@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision (type examen) : ponctuation, verbes et incise",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Dans « Il déclara : … », à quoi servent les deux-points ?",
+      "options": [
+        { "id": "a", "text": "à annoncer les paroles qu'on va rapporter" },
+        { "id": "b", "text": "à poser une question" },
+        { "id": "c", "text": "à fermer le dialogue" },
+        { "id": "d", "text": "à marquer une simple pause de lecture" }
+      ],
+      "correctOption": "a",
+      "explanation": "Les deux-points annoncent la parole : après « déclara », ils préviennent que les mots exacts du personnage vont suivre.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Parmi ces verbes, lequel est un verbe introducteur de parole ?",
+      "options": [
+        { "id": "a", "text": "courir" },
+        { "id": "b", "text": "manger" },
+        { "id": "c", "text": "répondre" },
+        { "id": "d", "text": "dormir" }
+      ],
+      "correctOption": "c",
+      "explanation": "« répondre » sert à présenter des paroles (verbe de parole). « courir », « manger » et « dormir » sont des verbes d'action, pas de parole.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel signe faut-il pour FERMER un dialogue au discours direct ?",
+      "options": [
+        { "id": "a", "text": ":" },
+        { "id": "b", "text": "«" },
+        { "id": "c", "text": "»" },
+        { "id": "d", "text": "(" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le guillemet fermant » referme la parole à la fin du dialogue. « ouvre la parole, les deux-points l'annoncent, la parenthèse ne s'emploie pas.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète avec le verbe qui convient au ton : « Nous avons gagné ! ___ toute l'équipe. »",
+      "options": [
+        { "id": "a", "text": "chuchota" },
+        { "id": "b", "text": "s'écria" },
+        { "id": "c", "text": "soupira" },
+        { "id": "d", "text": "bredouilla" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Nous avons gagné ! » exprime la joie et se dit fort : « s'écria » convient. « chuchota » et « bredouilla » sont des voix faibles, « soupira » marque la fatigue ou la tristesse.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans « — C'est magnifique, souffla Maryam en regardant la mer. », quelle est l'incise ?",
+      "options": [
+        { "id": "a", "text": "C'est magnifique" },
+        { "id": "b", "text": "en regardant la mer" },
+        { "id": "c", "text": "la mer" },
+        { "id": "d", "text": "souffla Maryam" }
+      ],
+      "correctOption": "d",
+      "explanation": "L'incise est « souffla Maryam » : verbe de parole + sujet inversé. « C'est magnifique » est la parole ; « en regardant la mer » est un complément qui précise l'action.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase respecte la ponctuation du discours direct ?",
+      "options": [
+        { "id": "a", "text": "L'enfant demanda : « Où est mon chat ? »" },
+        { "id": "b", "text": "L'enfant demanda « où est mon chat ? »" },
+        { "id": "c", "text": "L'enfant demanda, où est mon chat ?" },
+        { "id": "d", "text": "L'enfant demanda : où est mon chat." }
+      ],
+      "correctOption": "a",
+      "explanation": "Il faut les deux-points, les guillemets, une majuscule au début de la parole et le point d'interrogation conservé : « Où est mon chat ? ». Les autres oublient les deux-points, les guillemets ou la majuscule.",
+      "difficulty": 2
+    }
+  ]
+}

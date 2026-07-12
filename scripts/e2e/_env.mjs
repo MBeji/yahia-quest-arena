@@ -57,6 +57,26 @@ export function normalizeSupabaseUrl(raw) {
   return url.replace(/\/+$/, "");
 }
 
+/**
+ * Parse the migration versions the Supabase CLI asks us to mark as `reverted`
+ * when `db push` aborts on a history drift ("Remote migration versions not found
+ * in local migrations directory" — typically after a migration was
+ * re-timestamped). The CLI prints the exact repair command(s), e.g.
+ *   supabase migration repair --status reverted 20260628094836
+ * so we harvest those versions verbatim rather than guessing. We ONLY ever
+ * collect `--status reverted` versions (safe: drops an orphan history row so a
+ * renamed migration can re-apply); never `--status applied`, which would mask
+ * genuinely missing DDL. Returns a de-duplicated list (order preserved).
+ */
+export function parseDriftedRevertVersions(output) {
+  if (!output) return [];
+  const versions = new Set();
+  const re = /migration\s+repair\s+--status\s+reverted\s+(\d{6,})/gi;
+  let m;
+  while ((m = re.exec(output))) versions.add(m[1]);
+  return [...versions];
+}
+
 // Side effect: every e2e script reads these straight from process.env — fix
 // them once here so seed/reset/doctor all see a well-formed URL.
 for (const key of ["SUPABASE_URL", "TEST_SUPABASE_URL", "VITE_SUPABASE_URL"]) {

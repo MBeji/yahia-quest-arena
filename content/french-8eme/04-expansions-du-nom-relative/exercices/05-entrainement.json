@@ -1,0 +1,82 @@
+{
+  "title": "📝 Entraînement ⭐⭐⭐ : révision globale (type examen)",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complète : « Le café ____ nous nous retrouvons se trouve près du théâtre. »",
+      "options": [
+        { "id": "a", "text": "qui" },
+        { "id": "b", "text": "que" },
+        { "id": "c", "text": "dont" },
+        { "id": "d", "text": "où" }
+      ],
+      "correctOption": "d",
+      "explanation": "« se retrouver DANS un lieu » : complément de lieu → « où » (nous nous retrouvons dans le café). Le sujet « nous » est déjà présent, donc ni « qui » ni « que » ; et le verbe ne se construit pas avec « de », donc pas « dont ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « C'est une chanteuse ____ la voix émeut tout le public. »",
+      "options": [
+        { "id": "a", "text": "qui" },
+        { "id": "b", "text": "que" },
+        { "id": "c", "text": "dont" },
+        { "id": "d", "text": "où" }
+      ],
+      "correctOption": "c",
+      "explanation": "« la voix DE la chanteuse » : le lien de possession se dit avec « de » → « dont » (la voix de la chanteuse émeut le public). « qui » serait faux : ce n'est pas la chanteuse qui émeut directement, c'est sa voix.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase respecte les règles d'élision du pronom relatif ?",
+      "options": [
+        { "id": "a", "text": "L'ami qu'applaudit la scène est parti." },
+        { "id": "b", "text": "Le rôle qu'il joue est difficile." },
+        { "id": "c", "text": "L'ami qui'applaudit crie fort." },
+        { "id": "d", "text": "Le rôle que il joue est difficile." }
+      ],
+      "correctOption": "b",
+      "explanation": "« que » s'élide en « qu' » devant une voyelle : « le rôle qu'il joue » ✓. « qui » ne s'élide JAMAIS (donc « qu'applaudit » et « qui'applaudit » sont faux), et devant « il » on doit élider « que » (donc « que il » est faux).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle proposition relative équivaut au groupe nominal « une actrice du théâtre de Tunis » ?",
+      "options": [
+        { "id": "a", "text": "une actrice qui joue au théâtre de Tunis" },
+        { "id": "b", "text": "une actrice que le théâtre de Tunis" },
+        { "id": "c", "text": "une actrice dont le théâtre de Tunis" },
+        { "id": "d", "text": "une actrice où le théâtre de Tunis" }
+      ],
+      "correctOption": "a",
+      "explanation": "Pour transformer le complément du nom « du théâtre de Tunis » en relative, il faut un verbe : « qui joue au théâtre de Tunis ». Les autres réponses n'ont pas de verbe conjugué, donc ne forment aucune proposition relative.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans « Ines écoute la mélodie du violon. », quel groupe est complément du nom ?",
+      "options": [
+        { "id": "a", "text": "la mélodie du violon" },
+        { "id": "b", "text": "du violon" },
+        { "id": "c", "text": "écoute" },
+        { "id": "d", "text": "Ines" }
+      ],
+      "correctOption": "b",
+      "explanation": "« du violon » (préposition + nom) précise le nom « mélodie » : c'est un complément du nom. « la mélodie du violon » entier est le COD du verbe « écoute » (écoute quoi ?), pas un complément du nom.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Les costumes ____ brillent sous les projecteurs sont faits à la main. »",
+      "options": [
+        { "id": "a", "text": "qui" },
+        { "id": "b", "text": "que" },
+        { "id": "c", "text": "dont" },
+        { "id": "d", "text": "où" }
+      ],
+      "correctOption": "a",
+      "explanation": "Dans la relative « les costumes brillent sous les projecteurs », « les costumes » est sujet du verbe « brillent » → « qui ». Signe sûr : le verbe suit directement le pronom, sans autre sujet.",
+      "difficulty": 3
+    }
+  ]
+}

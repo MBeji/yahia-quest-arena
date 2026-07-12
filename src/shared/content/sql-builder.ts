@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { parseManuelPages } from "./schema.ts";
-import type { LoadedSubject } from "./schema.ts";
+import type { ContentQuestion, LoadedSubject } from "./schema.ts";
 
 /**
  * Pure helpers that turn a {@link LoadedSubject} into an idempotent SQL
@@ -215,13 +215,6 @@ export function buildMigrationSql(subject: LoadedSubject): string {
   }
 
   // --- Exercises (upsert) ---
-  type EmittedQuestion = {
-    prompt: string;
-    options: unknown;
-    correctOption: string;
-    explanation: string;
-    difficulty?: number;
-  };
   const emitExercise = (
     chId: string,
     exId: string,
@@ -233,7 +226,7 @@ export function buildMigrationSql(subject: LoadedSubject): string {
     rewardCoins: number,
     mode: string,
     displayOrder: number,
-    questions: EmittedQuestion[],
+    questions: ContentQuestion[],
   ) => {
     out.push(
       "INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES",
@@ -258,18 +251,60 @@ export function buildMigrationSql(subject: LoadedSubject): string {
       .map((e) => e.q);
     ordered.forEach((q, i) => {
       const qId = questionId(subjectId, chapterSlug, slug, i + 1);
+      // Per-type columns (Tier B — docs/interactive-question-types.md): mcq keeps
+      // the historical shape (options + correct_option, no answer_key); numeric
+      // carries its typed key and no options; ordering/matching carry BOTH the
+      // items (options) and their typed key. `answer_key` is server-only (never
+      // client-granted), which is fine for generated SQL applied as the owner.
+      // Client options carry only {id, text}: any server-only misconceptionTag
+      // (mcq distractors, étude 04 D-4) is STRIPPED here and routed into the
+      // server-only distractor_tags map below — never sent to the client.
+      const optionsSql =
+        q.type === "numeric"
+          ? "'[]'::jsonb"
+          : sqlJson(q.options.map((o) => ({ id: o.id, text: o.text })));
+      const correctOptionSql = q.type === "mcq" ? sqlString(q.correctOption) : "NULL";
+      // distractor_tags: { optionId: tag } for mcq distractors that name an error
+      // (server-only column — R-1). NULL when the question carries no tag.
+      const distractorTags =
+        q.type === "mcq"
+          ? Object.fromEntries(
+              q.options
+                .filter((o) => o.misconceptionTag)
+                .map((o) => [o.id, o.misconceptionTag as string]),
+            )
+          : {};
+      const distractorTagsSql =
+        Object.keys(distractorTags).length > 0 ? sqlJson(distractorTags) : "NULL";
+      const answerKeySql =
+        q.type === "numeric"
+          ? sqlJson({
+              value: q.answerKey.value,
+              ...(q.answerKey.tolerance !== undefined ? { tolerance: q.answerKey.tolerance } : {}),
+              ...(q.answerKey.unit !== undefined ? { unit: q.answerKey.unit } : {}),
+            })
+          : q.type === "ordering"
+            ? sqlJson({ order: q.answerKey.order })
+            : q.type === "matching"
+              ? sqlJson({ pairs: q.answerKey.pairs })
+              : q.type === "multi"
+                ? sqlJson({ correct: q.answerKey.correct })
+                : "NULL";
       out.push(
-        "INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES",
-        `  (${sqlString(qId)}, ${sqlString(exId)}, ${sqlString(q.prompt)}, ${sqlJson(
-          q.options,
-        )}, ${sqlString(q.correctOption)}, ${sqlString(q.explanation)}, ${i + 1})`,
+        "INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES",
+        `  (${sqlString(qId)}, ${sqlString(exId)}, ${sqlString(q.prompt)}, ${optionsSql}, ${correctOptionSql}, ${sqlString(
+          q.explanation,
+        )}, ${i + 1}, ${sqlString(q.type)}, ${answerKeySql}, ${distractorTagsSql})`,
         "ON CONFLICT (id) DO UPDATE SET",
         "  exercise_id = EXCLUDED.exercise_id,",
         "  prompt = EXCLUDED.prompt,",
         "  options = EXCLUDED.options,",
         "  correct_option = EXCLUDED.correct_option,",
         "  explanation = EXCLUDED.explanation,",
-        "  display_order = EXCLUDED.display_order;",
+        "  display_order = EXCLUDED.display_order,",
+        "  question_type = EXCLUDED.question_type,",
+        "  answer_key = EXCLUDED.answer_key,",
+        "  distractor_tags = EXCLUDED.distractor_tags;",
         "",
       );
     });

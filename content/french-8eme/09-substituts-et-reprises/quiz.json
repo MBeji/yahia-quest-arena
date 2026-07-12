@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐ : les substituts et la cohérence textuelle",
+  "questions": [
+    {
+      "prompt": "À quoi sert un substitut dans un texte ?",
+      "options": [
+        { "id": "a", "text": "À ajouter une nouvelle idée sans rapport avec la précédente." },
+        { "id": "b", "text": "À reprendre un élément déjà cité pour éviter les répétitions." },
+        { "id": "c", "text": "À poser une question au lecteur." },
+        { "id": "d", "text": "À conjuguer le verbe de la phrase." }
+      ],
+      "correctOption": "b",
+      "explanation": "Le substitut reprend un mot déjà cité (le référent) sous un autre visage, ce qui rend le texte fluide et évite de répéter sans cesse le même mot.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans « Nour a terminé son article. Elle le relit à voix haute. », à quoi renvoie le pronom « Elle » ?",
+      "options": [
+        { "id": "a", "text": "à l'article" },
+        { "id": "b", "text": "à la voix" },
+        { "id": "c", "text": "à Nour" },
+        { "id": "d", "text": "à la lecture" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Elle » est un pronom personnel féminin singulier : son référent est « Nour ». « L' » dans « le relit » reprend « son article ».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "« Le libraire ouvre la caisse. Il compte les pièces. » Le mot « Il » est un substitut…",
+      "options": [
+        { "id": "a", "text": "lexical, car c'est un synonyme de libraire" },
+        { "id": "b", "text": "lexical, car c'est une périphrase" },
+        { "id": "c", "text": "lexical, car c'est un terme générique" },
+        { "id": "d", "text": "grammatical, car c'est un pronom" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Il » est un pronom personnel : un substitut grammatical. Un substitut lexical serait un nom ou un groupe nominal (un synonyme, un terme générique ou une périphrase), pas un pronom.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans « Le lion se reposait. Le roi des animaux avait bien chassé. », le groupe « Le roi des animaux » est…",
+      "options": [
+        { "id": "a", "text": "une périphrase" },
+        { "id": "b", "text": "un pronom démonstratif" },
+        { "id": "c", "text": "un pronom possessif" },
+        { "id": "d", "text": "un déterminant" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Le roi des animaux » est un groupe de mots qui décrit le référent au lieu de le nommer : c'est une périphrase, un substitut lexical. Ce n'est pas un pronom.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète pour respecter l'accord du substitut : « Les hirondelles sont revenues. ___ ont bâti leur nid sous le toit. »",
+      "options": [
+        { "id": "a", "text": "Elles" },
+        { "id": "b", "text": "Elle" },
+        { "id": "c", "text": "Il" },
+        { "id": "d", "text": "Celui" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le référent « les hirondelles » est féminin pluriel : le substitut doit s'accorder → Elles. « Il » et « Elle » sont au singulier, et « Celui » est masculin singulier.",
+      "difficulty": 2
+    }
+  ]
+}

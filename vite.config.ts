@@ -4,14 +4,16 @@ import tsConfigPaths from "vite-tsconfig-paths";
 import viteReact from "@vitejs/plugin-react";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 
-// Hand-composed Vite/TanStack build config (no meta-plugin). This wires, for the build:
-// Tailwind, tsconfig path resolution, the Cloudflare Worker build
+// Inlined replacement for the meta-plugin the original scaffold vendored — the project
+// now has ZERO dependency on that boilerplate. This reproduces exactly what that plugin
+// wired for the build: Tailwind, tsconfig path resolution, the Cloudflare Worker build
 // (build-time only — it produces the `dist/server` Worker entry that `wrangler.jsonc`
 // (`main: src/server.ts`) targets and `scripts/build-vercel.mjs` repackages for Vercel),
-// TanStack Start (SSR; entry = our error-wrapping `src/server.ts`) and React — plus
-// `VITE_*` env inlining into BOTH the client and the Worker bundles, the `@`→`src`
-// alias and the React/TanStack-Query dedupe. Dev-only editor/HMR extras are intentionally
-// omitted: they only run under `vite serve` and never shipped in the build.
+// TanStack Start (SSR; entry = our error-wrapping `src/server.ts`) and React — plus the
+// same `VITE_*` env inlining into BOTH the client and the Worker bundles, the `@`→`src`
+// alias and the React/TanStack-Query dedupe. The DEV-only extras it also added
+// (sandbox bridge, HMR gate, component tagger, dev SSR/server-fn error overlays) are
+// intentionally omitted: they only run under `vite serve` and never shipped in the build.
 export default defineConfig(async ({ command, mode }) => {
   const plugins: PluginOption[] = [tailwindcss(), tsConfigPaths({ projects: ["./tsconfig.json"] })];
 
@@ -79,6 +81,9 @@ export default defineConfig(async ({ command, mode }) => {
               return "vendor-three";
             if (id.includes("lucide-react")) return "vendor-icons";
             if (id.includes("motion")) return "vendor-motion";
+            // Drag-&-drop runtime (B2 ordering/matching boards) — own cached
+            // chunk with its own budget so it never eats the index budget (D-3).
+            if (id.includes("@dnd-kit/")) return "vendor-dndkit";
             if (id.includes("@supabase/")) return "vendor-supabase";
             if (id.includes("@radix-ui/")) return "vendor-radix";
 

@@ -8,6 +8,119 @@ export type Database = {
   };
   public: {
     Tables: {
+      // NOTE (étude 05 duels): the three duel_* tables + the duel RPCs below were
+      // hand-added to this generated file — the schema landed in migrations
+      // 20260706160000/20260706170000 but `supabase gen types` was not re-run in
+      // this offline session (DoD §4 permits a minimal, noted hand-edit). Keep in
+      // sync if the generator is re-run.
+      duel_queue: {
+        Row: {
+          enqueued_at: string;
+          grade_id: string | null;
+          parcours_id: string;
+          user_id: string;
+        };
+        Insert: {
+          enqueued_at?: string;
+          grade_id?: string | null;
+          parcours_id: string;
+          user_id: string;
+        };
+        Update: {
+          enqueued_at?: string;
+          grade_id?: string | null;
+          parcours_id?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      duels: {
+        Row: {
+          created_at: string;
+          exercise_source: string;
+          expires_at: string;
+          id: string;
+          parcours_id: string;
+          question_ids: string[];
+          status: string;
+        };
+        Insert: {
+          created_at?: string;
+          exercise_source?: string;
+          expires_at: string;
+          id?: string;
+          parcours_id: string;
+          question_ids: string[];
+          status?: string;
+        };
+        Update: {
+          created_at?: string;
+          exercise_source?: string;
+          expires_at?: string;
+          id?: string;
+          parcours_id?: string;
+          question_ids?: string[];
+          status?: string;
+        };
+        Relationships: [];
+      };
+      duel_league_awards: {
+        Row: {
+          awarded_at: string;
+          coins_awarded: number;
+          points: number;
+          rank: number;
+          tier: string;
+          user_id: string;
+          week_start: string;
+        };
+        Insert: {
+          awarded_at?: string;
+          coins_awarded: number;
+          points: number;
+          rank: number;
+          tier: string;
+          user_id: string;
+          week_start: string;
+        };
+        Update: {
+          awarded_at?: string;
+          coins_awarded?: number;
+          points?: number;
+          rank?: number;
+          tier?: string;
+          user_id?: string;
+          week_start?: string;
+        };
+        Relationships: [];
+      };
+      duel_participants: {
+        Row: {
+          answers_submitted_at: string[];
+          duel_id: string;
+          finished_at: string | null;
+          rewarded_at: string | null;
+          score: number;
+          user_id: string;
+        };
+        Insert: {
+          answers_submitted_at?: string[];
+          duel_id: string;
+          finished_at?: string | null;
+          rewarded_at?: string | null;
+          score?: number;
+          user_id: string;
+        };
+        Update: {
+          answers_submitted_at?: string[];
+          duel_id?: string;
+          finished_at?: string | null;
+          rewarded_at?: string | null;
+          score?: number;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       attempts: {
         Row: {
           completed_at: string;
@@ -126,6 +239,39 @@ export type Database = {
           name?: string;
           reviewed_at?: string | null;
           reviewed_by?: string | null;
+          status?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      bug_reports: {
+        Row: {
+          created_at: string;
+          id: string;
+          message: string;
+          page: string | null;
+          resolved_at: string | null;
+          resolved_by: string | null;
+          status: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          message: string;
+          page?: string | null;
+          resolved_at?: string | null;
+          resolved_by?: string | null;
+          status?: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          message?: string;
+          page?: string | null;
+          resolved_at?: string | null;
+          resolved_by?: string | null;
           status?: string;
           user_id?: string;
         };
@@ -547,6 +693,7 @@ export type Database = {
           display_order: number;
           id: string;
           is_concours_national: boolean;
+          is_selectable: boolean;
           name_fr: string;
           slug: string;
           theme_id: string;
@@ -556,6 +703,7 @@ export type Database = {
           display_order?: number;
           id?: string;
           is_concours_national?: boolean;
+          is_selectable?: boolean;
           name_fr: string;
           slug: string;
           theme_id: string;
@@ -565,6 +713,7 @@ export type Database = {
           display_order?: number;
           id?: string;
           is_concours_national?: boolean;
+          is_selectable?: boolean;
           name_fr?: string;
           slug?: string;
           theme_id?: string;
@@ -857,31 +1006,37 @@ export type Database = {
       };
       questions: {
         Row: {
-          correct_option: string;
+          answer_key: Json | null;
+          correct_option: string | null;
           display_order: number;
           exercise_id: string;
           explanation: string | null;
           id: string;
           options: Json;
           prompt: string;
+          question_type: string;
         };
         Insert: {
-          correct_option: string;
+          answer_key?: Json | null;
+          correct_option?: string | null;
           display_order?: number;
           exercise_id: string;
           explanation?: string | null;
           id?: string;
           options: Json;
           prompt: string;
+          question_type?: string;
         };
         Update: {
-          correct_option?: string;
+          answer_key?: Json | null;
+          correct_option?: string | null;
           display_order?: number;
           exercise_id?: string;
           explanation?: string | null;
           id?: string;
           options?: Json;
           prompt?: string;
+          question_type?: string;
         };
         Relationships: [
           {
@@ -1361,6 +1516,16 @@ export type Database = {
           user_id: string;
         }[];
       };
+      admin_list_bug_reports: {
+        Args: never;
+        Returns: {
+          created_at: string;
+          id: string;
+          message: string;
+          page: string;
+          status: string;
+        }[];
+      };
       admin_list_content_reports: {
         Args: never;
         Returns: {
@@ -1388,8 +1553,13 @@ export type Database = {
           user_id: string;
         }[];
       };
+      admin_open_bugs_count: { Args: never; Returns: number };
       admin_open_reports_count: { Args: never; Returns: number };
       admin_pending_beta_count: { Args: never; Returns: number };
+      admin_resolve_bug_report: {
+        Args: { p_report: string; p_status: string };
+        Returns: undefined;
+      };
       admin_resolve_content_report: {
         Args: { p_report: string; p_status: string };
         Returns: undefined;
@@ -1504,10 +1674,11 @@ export type Database = {
         Returns: Json;
       };
       get_attempt_review: {
-        Args: { p_session_id: string };
+        Args: { p_answers?: Json; p_session_id: string };
         Returns: {
-          correct_option: string;
+          correct_option: string | null;
           explanation: string | null;
+          is_correct: boolean | null;
           prompt: string;
           question_id: string;
         }[];
@@ -1538,7 +1709,28 @@ export type Database = {
         Args: { p_batch_size?: number; p_run_id: string };
         Returns: Json;
       };
+      get_global_leaderboard: {
+        Args: { p_limit?: number };
+        Returns: {
+          avatar_tier: number;
+          current_streak: number;
+          display_name: string;
+          hero_class: string;
+          is_me: boolean;
+          level: number;
+          rank: number;
+          xp: number;
+        }[];
+      };
+      // Hand-added offline for 20260701100000_parent_weekly_goals (regenerate via
+      // `supabase gen types` on the next sync).
+      get_family_weekly_goal: { Args: { p_student: string }; Returns: Json };
       get_student_report: { Args: { p_student: string }; Returns: Json };
+      get_student_report_by_code: { Args: { p_code: string }; Returns: Json };
+      set_parent_weekly_goal: {
+        Args: { p_student: string; p_target: number };
+        Returns: Json;
+      };
       get_subject_leaderboard: {
         Args: { p_limit?: number; p_subject: string };
         Returns: {
@@ -1550,6 +1742,15 @@ export type Database = {
           level: number;
           rank: number;
           subject_xp: number;
+        }[];
+      };
+      get_user_subject_stats: {
+        Args: never;
+        Returns: {
+          attempts_count: number;
+          avg_score: number;
+          subject_id: string;
+          total_xp: number;
         }[];
       };
       has_parcours_entitlement: {
@@ -1585,6 +1786,13 @@ export type Database = {
       resolve_subject_parcours: {
         Args: { p_grade: string; p_theme: string };
         Returns: string;
+      };
+      score_quiz: {
+        Args: { p_answers: Json; p_exercise_id: string };
+        Returns: {
+          correct: number;
+          total: number;
+        }[];
       };
       set_current_parcours: {
         Args: { p_parcours: string };
@@ -1673,6 +1881,27 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      get_duel_league: {
+        Args: { p_limit: number };
+        Returns: {
+          rank: number;
+          display_name: string;
+          hero_class: string;
+          avatar_tier: number;
+          points: number;
+          wins: number;
+          played: number;
+          tier: string;
+          is_me: boolean;
+        }[];
+      };
+      forfeit_duel: { Args: { p_duel: string }; Returns: undefined };
+      get_duel_state: { Args: { p_duel: string }; Returns: Json };
+      match_duel: { Args: never; Returns: string };
+      submit_duel_answer: {
+        Args: { p_choice: string; p_duel: string; p_question: string };
+        Returns: Json;
+      };
       start_dungeon_run: { Args: never; Returns: string };
       start_exercise_session: {
         Args: { p_exercise_id: string };
@@ -1704,12 +1933,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
@@ -1729,13 +1958,12 @@ export type Tables<
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+    keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
@@ -1754,13 +1982,12 @@ export type TablesInsert<
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+    keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
@@ -1779,13 +2006,12 @@ export type TablesUpdate<
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    keyof DefaultSchema["Enums"] | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
@@ -1796,13 +2022,12 @@ export type Enums<
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    keyof DefaultSchema["CompositeTypes"] | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }

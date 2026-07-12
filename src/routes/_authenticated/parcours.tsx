@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { getDashboard } from "@/features/dashboard";
 import { JourneyMap, buildSubjectNodes } from "@/features/parcours";
 import { useT } from "@/lib/i18n";
+import { LoadingState } from "@/components/ui/loading-state";
 
 export const Route = createFileRoute("/_authenticated/parcours")({
   head: () => ({ meta: [{ title: "Parcours · Na9ra Nal3ab" }] }),
@@ -25,11 +26,7 @@ function ParcoursPage() {
   });
 
   if (isLoading || !data) {
-    return (
-      <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">
-        {t.common.loading}
-      </div>
-    );
+    return <LoadingState label={t.common.loading} className="min-h-[60dvh]" />;
   }
 
   const profile = data.profile as ProfileRow | null;

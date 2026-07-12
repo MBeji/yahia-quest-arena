@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Practice: my friends, my street",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Sami tells wonderful stories and everybody laughs. He is very ___.",
+      "options": [
+        { "id": "a", "text": "funny" },
+        { "id": "b", "text": "helpful" },
+        { "id": "c", "text": "intelligent" },
+        { "id": "d", "text": "quiet" }
+      ],
+      "correctOption": "a",
+      "explanation": "A person who makes everybody laugh is \"funny\". \"Helpful\" describes someone who helps, \"intelligent\" someone who understands quickly, and \"quiet\" someone calm who does not make noise.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete the question: \"___ is your house?\" — \"It's near the river.\"",
+      "options": [
+        { "id": "a", "text": "How" },
+        { "id": "b", "text": "What" },
+        { "id": "c", "text": "Where" },
+        { "id": "d", "text": "Who" }
+      ],
+      "correctOption": "c",
+      "explanation": "The answer gives a place (near the river), so the question asks about place with \"Where\": Where is your house? \"Who\" asks about a person, \"What\" asks about a thing, and \"How\" asks about manner or state.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"Listen! Meriem ___ a song in her room.\"",
+      "options": [
+        { "id": "a", "text": "sings" },
+        { "id": "b", "text": "singing" },
+        { "id": "c", "text": "is sing" },
+        { "id": "d", "text": "is singing" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"Listen!\" tells us the action is happening right now, so we use the present progressive: is + verb-ing → she is singing. \"Sings\" is the simple present for habits, \"singing\" alone has no verb \"be\", and \"is sing\" forgets the -ing.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"This is my friend Karim. ___ bike is red.\"",
+      "options": [
+        { "id": "a", "text": "Her" },
+        { "id": "b", "text": "His" },
+        { "id": "c", "text": "My" },
+        { "id": "d", "text": "Their" }
+      ],
+      "correctOption": "b",
+      "explanation": "Karim is a boy, so the possessive adjective is \"his\": his bike. \"Her\" is for a girl, \"their\" is for two or more people, and \"my\" would mean the bike belongs to the speaker, not to Karim.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"My friend Nour lives ___ Sousse.\"",
+      "options": [
+        { "id": "a", "text": "at" },
+        { "id": "b", "text": "in" },
+        { "id": "c", "text": "on" },
+        { "id": "d", "text": "under" }
+      ],
+      "correctOption": "b",
+      "explanation": "With a town or city we use \"in\": she lives in Sousse. \"At\" is for an exact point (at the door), \"on\" is for a surface (on the table), and \"under\" means below something.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete the question: \"___ your street quiet?\" — \"Yes, it is.\"",
+      "options": [
+        { "id": "a", "text": "Are" },
+        { "id": "b", "text": "Do" },
+        { "id": "c", "text": "Does" },
+        { "id": "d", "text": "Is" }
+      ],
+      "correctOption": "d",
+      "explanation": "The short answer \"Yes, it is\" repeats the verb of the question, so the question starts with \"Is\": Is your street quiet? \"Are\" goes with plural subjects, and \"Do/Does\" are for ordinary verbs, not for \"to be\".",
+      "difficulty": 2
+    }
+  ]
+}

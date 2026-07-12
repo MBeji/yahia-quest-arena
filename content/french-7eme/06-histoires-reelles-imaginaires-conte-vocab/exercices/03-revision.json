@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision (type examen) : réel, conte, pronoms et vocabulaire",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Lequel de ces éléments montre qu'un récit est IMAGINAIRE ?",
+      "options": [
+        { "id": "a", "text": "une date précise" },
+        { "id": "b", "text": "un fait vérifiable" },
+        { "id": "c", "text": "un objet magique qui exauce les vœux" },
+        { "id": "d", "text": "le nom d'une vraie ville" }
+      ],
+      "correctOption": "c",
+      "explanation": "Un objet magique relève du surnaturel : il est inventé. Dates, faits vérifiables et lieux véritables signalent au contraire un récit réel.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Remplace le groupe souligné : « La fée observe LES ENFANTS. » → « La fée ___ observe. »",
+      "options": [
+        { "id": "a", "text": "leur" },
+        { "id": "b", "text": "lui" },
+        { "id": "c", "text": "la" },
+        { "id": "d", "text": "les" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Les enfants » est COD (observe qui ?) au pluriel : on le remplace par « les ». « leur » et « lui » seraient des COI (avec « à »).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Remplace le groupe souligné : « Le prince parle À LA SORCIÈRE. » → « Le prince ___ parle. »",
+      "options": [
+        { "id": "a", "text": "la" },
+        { "id": "b", "text": "lui" },
+        { "id": "c", "text": "le" },
+        { "id": "d", "text": "leur" }
+      ],
+      "correctOption": "b",
+      "explanation": "« À la sorcière » est un COI (introduit par « à ») au singulier : on le remplace par « lui ». « leur » serait un pluriel ; « la » et « le » seraient des COD.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Marie récite sa poésie ; elle ___ apprise hier. »",
+      "options": [
+        { "id": "a", "text": "l'a" },
+        { "id": "b", "text": "la" },
+        { "id": "c", "text": "l'as" },
+        { "id": "d", "text": "là" }
+      ],
+      "correctOption": "a",
+      "explanation": "On peut dire « elle l'avait apprise » : c'est « l' » + auxiliaire « a » + participe passé « apprise ». On écrit « l'a » (« l'as » s'emploierait avec « tu »).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel mot n'appartient **pas** à la famille de « dent » ?",
+      "options": [
+        { "id": "a", "text": "dentiste" },
+        { "id": "b", "text": "dentaire" },
+        { "id": "c", "text": "dentier" },
+        { "id": "d", "text": "dindon" }
+      ],
+      "correctOption": "d",
+      "explanation": "Une famille de mots partage le même radical et un sens commun. « dentiste », « dentaire » et « dentier » tournent autour de « dent » ; « dindon » (un oiseau) n'a rien à voir malgré sa ressemblance sonore.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel est le contraire de « apparaître » ?",
+      "options": [
+        { "id": "a", "text": "surgir" },
+        { "id": "b", "text": "disparaître" },
+        { "id": "c", "text": "paraître" },
+        { "id": "d", "text": "montrer" }
+      ],
+      "correctOption": "b",
+      "explanation": "« disparaître » a le sens opposé d'« apparaître ». « surgir » et « paraître » en sont proches, et « montrer » n'exprime pas l'idée inverse.",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,15 +1,20 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { useState } from "react";
-import { ArrowLeft, Crown, Flame, Medal, Zap } from "lucide-react";
+import { Crown, Flame, Medal, Zap } from "lucide-react";
+import { BackLink } from "@/components/ui/back-link";
+import { PageShell } from "@/components/ui/page-shell";
+import { EmptyState } from "@/components/ui/empty-state";
+import { LoadingState } from "@/components/ui/loading-state";
 import {
   getLeaderboard,
   getLeaderboardSubjects,
   getSubjectLeaderboard,
 } from "@/features/dashboard";
 import { isRtlText } from "@/shared/lib/utils";
+import { entrance } from "@/shared/lib/motion";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/leaderboard")({
@@ -34,6 +39,7 @@ type Player = {
 
 function LeaderboardPage() {
   const t = useT();
+  const reduced = useReducedMotion();
   const fetchLeaderboard = useServerFn(getLeaderboard);
   const fetchSubjects = useServerFn(getLeaderboardSubjects);
   const fetchSubjectLeaderboard = useServerFn(getSubjectLeaderboard);
@@ -68,16 +74,11 @@ function LeaderboardPage() {
   const myRank = (data?.myRank ?? null) as Player | null;
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-8">
-      <Link
-        to="/dashboard"
-        className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
-      >
-        <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.common.backToHall}
-      </Link>
+    <PageShell>
+      <BackLink to="/dashboard">{t.common.backToHall}</BackLink>
 
       <div className="mb-6 text-center">
-        <h1 className="font-display text-4xl font-bold">
+        <h1 className="font-display text-3xl font-bold sm:text-4xl">
           <span className="text-gradient-gold">{t.leaderboard.titleGradient}</span>{" "}
           {t.leaderboard.titleRest}
         </h1>
@@ -93,9 +94,9 @@ function LeaderboardPage() {
         <button
           onClick={() => setTab(GLOBAL)}
           data-testid="leaderboard-global-tab"
-          className={`rounded-full border px-4 py-1.5 text-sm font-semibold transition ${
+          className={`inline-flex min-h-11 items-center rounded-full border px-4 py-1.5 text-sm font-semibold transition ${
             isGlobal
-              ? "border-[color:var(--gold)]/60 bg-[color:var(--gold)]/15 text-[color:var(--gold)]"
+              ? "border-gold/60 bg-gold/15 text-gold"
               : "border-border/50 bg-black/40 text-muted-foreground hover:text-foreground"
           }`}
         >
@@ -109,9 +110,9 @@ function LeaderboardPage() {
               data-testid="leaderboard-subject-tab"
               onClick={() => setTab(s.id)}
               dir={isRtlText(s.name_fr) ? "rtl" : undefined}
-              className={`rounded-full border px-4 py-1.5 text-sm font-semibold transition ${
+              className={`inline-flex min-h-11 items-center rounded-full border px-4 py-1.5 text-sm font-semibold transition ${
                 active
-                  ? "border-[color:var(--gold)]/60 bg-[color:var(--gold)]/15 text-[color:var(--gold)]"
+                  ? "border-gold/60 bg-gold/15 text-gold"
                   : "border-border/50 bg-black/40 text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -122,32 +123,31 @@ function LeaderboardPage() {
       </div>
 
       {isLoading ? (
-        <div className="grid min-h-[30vh] place-items-center text-sm text-muted-foreground">
-          {t.leaderboard.loading}
-        </div>
+        <LoadingState label={t.leaderboard.loading} className="min-h-[30dvh]" />
       ) : (
         <>
           {/* My rank card */}
           {myRank && (
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-6 rounded-2xl border border-[color:var(--gold)]/40 bg-black/60 p-5 backdrop-blur-xl shadow-gold"
+              {...entrance(reduced)}
+              className="mb-6 rounded-2xl border border-gold/40 bg-black/60 p-5 backdrop-blur-xl shadow-gold"
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="grid h-12 w-12 place-items-center rounded-xl bg-[image:var(--gradient-gold)] font-display text-xl font-bold text-black shadow-gold">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex min-w-0 items-center gap-4">
+                  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-[image:var(--gradient-gold)] font-display text-xl font-bold text-black shadow-gold">
                     #{myRank.rank}
                   </div>
-                  <div>
-                    <div className="font-display text-lg font-bold">{myRank.displayName}</div>
-                    <div className="text-xs uppercase tracking-widest text-[color:var(--champagne)]">
+                  <div className="min-w-0">
+                    <div className="truncate font-display text-lg font-bold">
+                      {myRank.displayName}
+                    </div>
+                    <div className="truncate text-xs uppercase tracking-widest text-champagne">
                       {myRank.heroClass}
                     </div>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="flex items-center gap-1 font-display text-lg font-bold text-[color:var(--neon-gold)]">
+                <div className="shrink-0 text-end">
+                  <div className="flex items-center gap-1 font-display text-lg font-bold text-neon-gold">
                     <Zap className="h-4 w-4" /> {myRank.xp} XP
                   </div>
                   <div className="text-xs text-muted-foreground">
@@ -160,26 +160,29 @@ function LeaderboardPage() {
 
           {/* Top 3 podium */}
           {leaderboard.length >= 3 && (
-            <div className="mb-8 grid grid-cols-3 gap-3">
+            <div className="mb-8 grid grid-cols-3 gap-2 sm:gap-3">
               {[leaderboard[1], leaderboard[0], leaderboard[2]].map((player, i) => {
                 const podiumOrder = [2, 1, 3];
                 const rank = podiumOrder[i];
                 const heights = ["h-28", "h-36", "h-24"];
+                // Couleurs de MÉDAILLES fixes (argent/or/bronze) — vocabulaire
+                // universel du podium, volontairement hors tokens de thème (l'or du
+                // thème clair est teal). Encre sombre fixe, lisible sur les trois.
                 const colors = [
-                  "from-slate-300 to-slate-400",
-                  "from-[color:var(--neon-gold)] to-amber-500",
-                  "from-amber-600 to-amber-800",
+                  "from-[oklch(0.86_0.01_260)] to-[oklch(0.7_0.015_260)]",
+                  "from-[oklch(0.85_0.14_88)] to-[oklch(0.68_0.13_75)]",
+                  "from-[oklch(0.66_0.1_60)] to-[oklch(0.5_0.09_55)]",
                 ];
                 return (
+                  // Keyed by position, not rank: RANK() can tie (equal-XP rows
+                  // share a rank), so rank is not a unique key.
                   <motion.div
-                    key={player.rank}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.1 }}
+                    key={`podium-${i}`}
+                    {...entrance(reduced, "rise", i * 0.1)}
                     className="flex flex-col items-center"
                   >
                     <div
-                      className={`mb-2 grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br ${colors[i]} text-sm font-bold text-white shadow-lg`}
+                      className={`mb-2 grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br ${colors[i]} text-sm font-bold text-[oklch(0.2_0.02_60)] shadow-lg`}
                     >
                       {rank === 1 ? <Crown className="h-5 w-5" /> : <Medal className="h-4 w-4" />}
                     </div>
@@ -194,9 +197,7 @@ function LeaderboardPage() {
                     <div
                       className={`mt-2 w-full ${heights[i]} rounded-t-xl bg-gradient-to-t ${colors[i]} opacity-30`}
                     />
-                    <div className="mt-1 text-xs font-bold text-[color:var(--neon-gold)]">
-                      {player.xp} XP
-                    </div>
+                    <div className="mt-1 text-xs font-bold text-neon-gold">{player.xp} XP</div>
                   </motion.div>
                 );
               })}
@@ -206,24 +207,24 @@ function LeaderboardPage() {
           {/* Full ranking */}
           <div className="space-y-2">
             {leaderboard.map((player, i) => (
+              // Keyed by position, not rank: RANK() can tie, so rank is not unique.
               <motion.div
-                key={player.rank}
+                key={`row-${i}`}
                 data-testid="leaderboard-row"
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                // Cap the stagger so a long board doesn't cascade for seconds; rows
-                // past the first screenful all share the same short delay.
-                transition={{ delay: Math.min(i, 12) * 0.02 }}
+                // "rise" preset (not the old physical x-slide, which read backwards
+                // in RTL). Stagger capped so a long board doesn't cascade for
+                // seconds; rows past the first screenful share the same delay.
+                {...entrance(reduced, "rise", Math.min(i, 12) * 0.02)}
                 className={`list-row-cv flex items-center gap-4 rounded-xl border p-4 transition ${
                   player.isMe
-                    ? "border-[color:var(--gold)]/50 bg-[color:var(--gold)]/10"
+                    ? "border-gold/50 bg-gold/10"
                     : "border-border/50 bg-black/40 hover:bg-black/60"
                 }`}
               >
                 <div
                   className={`grid h-9 w-9 place-items-center rounded-lg text-sm font-bold ${
                     player.rank <= 3
-                      ? "bg-gradient-to-br from-[color:var(--neon-gold)] to-amber-600 text-white"
+                      ? "bg-gradient-to-br from-neon-gold to-gold-deep text-primary-foreground"
                       : "bg-secondary text-muted-foreground"
                   }`}
                 >
@@ -233,8 +234,13 @@ function LeaderboardPage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <span className="font-semibold truncate">{player.displayName}</span>
+                    {/* Opaque card-surface chip (not a translucent gold tint) so the
+                        label always meets contrast — the "Toi" pill sits on the gold/10
+                        highlighted row, where a gold-on-gold tint dropped to 3.7:1 and
+                        failed WCAG AA. Mirrors the GAP-047 premium-lock badge pattern:
+                        readable in all 3 themes (gold is dark teal under Référence). */}
                     {player.isMe && (
-                      <span className="rounded-full bg-[color:var(--gold)]/20 px-2 py-0.5 text-[10px] font-bold uppercase text-[color:var(--gold)]">
+                      <span className="rounded-full border border-gold/50 bg-card px-2 py-0.5 text-2xs font-bold uppercase tracking-wider text-foreground shadow-sm">
                         {t.leaderboard.youChip}
                       </span>
                     )}
@@ -246,11 +252,11 @@ function LeaderboardPage() {
 
                 <div className="flex items-center gap-3">
                   {player.streak > 0 && (
-                    <div className="flex items-center gap-1 text-sm text-[color:var(--flame)]">
+                    <div className="flex items-center gap-1 text-sm text-flame">
                       <Flame className="h-3.5 w-3.5 animate-flame" /> {player.streak}
                     </div>
                   )}
-                  <div className="font-display text-sm font-bold text-[color:var(--neon-gold)]">
+                  <div className="font-display text-sm font-bold text-neon-gold">
                     {player.xp} XP
                   </div>
                 </div>
@@ -259,12 +265,14 @@ function LeaderboardPage() {
           </div>
 
           {leaderboard.length === 0 && (
-            <div className="mt-12 text-center text-muted-foreground">
-              {isGlobal ? t.leaderboard.emptyGlobal : t.leaderboard.emptySubject}
-            </div>
+            <EmptyState
+              icon={Medal}
+              className="mt-12"
+              title={isGlobal ? t.leaderboard.emptyGlobal : t.leaderboard.emptySubject}
+            />
           )}
         </>
       )}
-    </div>
+    </PageShell>
   );
 }

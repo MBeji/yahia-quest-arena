@@ -10,6 +10,7 @@ export {
   submitAttempt,
   revealHint,
   checkAnswersPublic,
+  scoreQuizPublic,
 } from "./quest.server";
 export type { ManuelPage } from "./quest.server";
 export { computeNextExerciseId } from "./next-exercise";

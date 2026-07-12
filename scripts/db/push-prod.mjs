@@ -9,11 +9,18 @@
  *
  * Needs PROD_SUPABASE_DB_URL (the prod Postgres URI — the same secret that
  * db-backup.yml uses). Modes:
- *   --mode push        (default) apply pending migrations  (`supabase db push`)
- *   --mode list        read-only diff local vs remote      (`supabase migration list`)
- *   --mode repair-all  one-time bootstrap: record every local migration as
- *                      already-applied WITHOUT running it — adopts a DB whose
- *                      history table is out of sync after manual SQL-editor applies.
+ *   --mode push          (default) apply pending migrations  (`supabase db push`)
+ *   --mode list          read-only diff local vs remote      (`supabase migration list`)
+ *   --mode repair-all    one-time bootstrap: record every local migration as
+ *                        already-applied WITHOUT running it — adopts a DB whose
+ *                        history table is out of sync after manual SQL-editor applies.
+ *   --mode repair-revert --versions "<v> …"  targeted reconciliation: mark the
+ *                        given remote-only PHANTOM version(s) as `reverted` in the
+ *                        history table (bookkeeping only — runs NO down-SQL, touches
+ *                        no data), then `db push` the genuinely-pending migrations.
+ *                        Fixes the "remote has a version with no local file" abort
+ *                        left behind when an already-applied migration file is later
+ *                        removed/renamed on main (it jams every later migration).
  */
 import { execSync } from "node:child_process";
 import { readdirSync } from "node:fs";
@@ -101,8 +108,34 @@ function main() {
     return;
   }
 
+  if (mode === "repair-revert") {
+    const vArg = process.argv.indexOf("--versions");
+    const raw = vArg !== -1 ? process.argv[vArg + 1] : process.env.REPAIR_VERSIONS || "";
+    const versions = raw.split(/[\s,]+/).filter(Boolean);
+    if (versions.length === 0) {
+      throw new Error(
+        'repair-revert needs --versions "<14-digit> …" (the remote-only phantom version(s)).',
+      );
+    }
+    const bad = versions.filter((v) => !/^\d{14}$/.test(v));
+    if (bad.length) {
+      throw new Error(`Invalid version(s) ${bad.join(", ")} — each must be a 14-digit timestamp.`);
+    }
+    console.log(
+      `[db] REPAIR: marking ${versions.length} remote-only phantom migration(s) as reverted on ` +
+        `PROD (bookkeeping only, NO SQL run): ${versions.join(" ")}`,
+    );
+    run(`${cli} migration repair --status reverted ${versions.join(" ")} --db-url "${url}"`);
+    console.log("[db] Phantom cleared. Applying genuinely-pending migrations via `db push`…");
+    run(`${cli} db push --db-url "${url}"`);
+    console.log("[db] PROD history reconciled and up to date.");
+    return;
+  }
+
   if (mode !== "push") {
-    throw new Error(`Unknown --mode "${mode}" (expected push | list | repair-all).`);
+    throw new Error(
+      `Unknown --mode "${mode}" (expected push | list | repair-all | repair-revert).`,
+    );
   }
 
   console.log("[db] Applying PENDING migrations to PRODUCTION via `supabase db push`…");

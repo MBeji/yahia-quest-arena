@@ -22,6 +22,28 @@ First, **read the content-engine skill and its references** (`.claude/skills/con
 define the file schema, quality bar, reward table, RPG style, and the validate-then-stop workflow.
 This skill only adds the school-specific rules.
 
+> **Hard/elite exercises → use a specialized professor skill.** When the task is specifically to
+> author **difficulty-3/4** (⭐⭐⭐ boss / ⭐⭐⭐⭐ défi) exercises for a school subject at a given grade —
+> to _raise the ceiling_ above the existing ladder — prefer the matching `prof-*` skill. **Exam years**
+> (dedicated per matière×niveau): `prof-math-9eme`, `prof-physique-9eme`, `prof-svt-9eme`,
+> `prof-francais-9eme`, `prof-arabe-9eme`, `prof-anglais-9eme`, `prof-math-6eme`. **Primary cycle**
+> (grade-aware, multi-level, one per subject): `prof-math-primaire` (1ère→5ème), `prof-arabe-primaire`
+> (1ère→5ème), `prof-eveil-primaire` (1ère→6ème), `prof-islamique-primaire` (1ère→4ème). **Collège
+> cycle** (grade-aware, 7ème–8ème; 9ème keeps its dedicated professors): `prof-math-college`,
+> `prof-physique-college`, `prof-svt-college`, `prof-arabe-college`, `prof-francais-college`,
+> `prof-anglais-college`. **Lycée cycle** (section-aware, 1ère sec→bac — see
+> `docs/lycee-architecture.md` for the section/grade model): `prof-math-lycee`,
+> `prof-physique-lycee`, `prof-svt-lycee`, `prof-francais-lycee`, `prof-anglais-lycee`,
+> `prof-arabe-lycee`, `prof-philo-lycee`, `prof-histoire-geo-lycee`, `prof-eco-gestion-lycee`,
+> `prof-info-lycee` (they also own the `NN-annales-bac` d4 tier on `bac-*` grades). Each is a
+> subject-specialist author that layers a per-grade chapter map +
+> trap taxonomy (+ age calibration for primary/collège, exam calibration for lycée) on top of
+> `content-engine/references/expert-exercises.md`, while still obeying every fidelity rule below.
+> For **interactive/innovative mission formats** (cloze, appariement, remise en ordre, QCM visuel,
+> histoire-problème, sprint — same fidelity rules, richer interaction), see the `content-interactif`
+> skill and `content-engine/references/interactive-formats.md`. This skill remains the base for new
+> chapters, courses, quizzes, and the free d1–2 progression.
+
 ## Official-program sources — precedence (consume the transcription; CNP = source of truth)
 
 The authoritative scope is the **national CNP program**. It is now **transcribed once** into a
@@ -29,12 +51,24 @@ The authoritative scope is the **national CNP program**. It is now **transcribed
 dedicated session, so generation **consumes that transcription instead of re-reading the scans**.
 Start with the index at [`references/programmes-officiels/`](references/programmes-officiels/) → its
 [`README.md`](references/programmes-officiels/README.md) (precedence policy, CNP-corpus location +
-`CATALOGUE.md`, subject-`id` convention). Precedence, for any grade+subject:
+`CATALOGUE.md`, subject-`id` convention).
+
+> **⭐ Combined official sources (every grade).** A CNP unit is **not** just the teacher guide: the
+> **manuel élève** (student textbook) is an **indispensable complement** to the teacher guide for fuller,
+> higher-quality content. **Teacher guide** = the program (scope, compétences, progression, bornes);
+> **manuel élève** = the content actually taught (lessons, examples, exercises, depth, vocabulary in
+> context). **Combination rule** (both layers — persistence transcription **and** generation): one source
+> available ⇒ it is the reference; **several ⇒ combine them all** (never ignore the manuel élève when it
+> exists). On a scope divergence, the teacher guide wins; flag the gap. The transcription you consume below
+> already merges both — so generation inherits the combined content.
+
+Precedence, for any grade+subject:
 
 1. **Programme transcription — READ FIRST** —
    `references/programmes-officiels/programme/<gradeSlug>/<matière>.md`, if it exists: a faithful,
-   structured transcription of the teacher guide (scope, محاور, progression, in/out-of-scope bornes).
-   **This is the scope source for generation.** Spec + work-list:
+   structured transcription **combining the teacher guide (scope, محاور, progression, in/out-of-scope
+   bornes) AND the manuel élève (lessons, examples, exercises, depth)**. **This is the scope + content
+   source for generation.** Spec + work-list:
    [`programme/README.md`](references/programmes-officiels/programme/README.md) ·
    [`programme/_INDEX.md`](references/programmes-officiels/programme/_INDEX.md).
    ⛔ **Do NOT render→vision the CNP scans from the generation track** — scanning is owned by the
@@ -43,9 +77,10 @@ Start with the index at [`references/programmes-officiels/`](references/programm
    persistence layer**: check `programme/_INDEX.md` and request/await its transcription — never scan as a
    workaround.
 2. **CNP corpus scans** (`YahiaAcademy/cnp-officiel/`, sibling of the repo) — the **ultimate authority**
-   and the source the transcription is made from (student **manuel** = content/scope; **teacher guide** /
-   الدليل المرجعي = program; `CATALOGUE.md` maps grade×subject → file). Re-verifiable here via the
-   transcription's cited pages. **Reading the scans is the persistence session's job, not generation's.**
+   and the **two sources** the transcription is made from, **combined**: **teacher guide** / الدليل
+   المرجعي = program (scope/progression); student **manuel élève** = content/examples/exercises/depth;
+   `CATALOGUE.md` maps grade×subject → both files. Re-verifiable here via the transcription's cited pages
+   (per source). **Reading the scans is the persistence session's job, not generation's.**
 3. **Taybah school files** (`programmes-officiels/taybah/<gradeSlug>.md`) — **verification + detail
    complement** only: the kids' school **trimester sequencing** and a cross-check. **Never** use them to
    contradict or narrow the CNP scope — flag divergences, don't silently follow them.
@@ -84,7 +119,21 @@ subject+grade):
   `9eme-base` → `ar`.
 - **Secondary (1ère sec–Bac):** scientific & technical subjects (mathématiques, sciences physiques,
   SVT, informatique) switch to **French** (`fr`); humanities (arabe, histoire-géo, philosophie,
-  éducation islamique) stay **Arabic** (`ar`); language subjects in their own language.
+  éducation islamique) stay **Arabic** (`ar`); économie/gestion `ar` _(à confirmer)_; language
+  subjects in their own language.
+
+**Lycée — the ar→fr switch is a didactic event, not just a config value.** The switched subjects
+(math, physique, SVT, informatique) were learned **in Arabic through 9ème**; at 1ère sec this skill
+owes every chapter the **transition bridge** (`docs/lycee-architecture.md` §4): a «lexique de
+transition» block opening `cours.md` (8–15 terms, `terme français = المصطلح العربي`), Arabic glosses
+in parentheses at first use of a new French term in the course and in difficulty-1 missions (and at
+most one lexicon question in the quiz), plus a `NN-pont-linguistique` d1 mission authored via
+`content-interactif`. Degressive: 2ème sec = gloss genuinely new terms only; 3ème/bac = none (exam
+conditions). Outside the bridge, a `fr` subject stays pure French (no code-switching in
+stems/options). Notation was already standard LTR in the Arabic years (`math-and-notation.md`), so
+digits/equations/units carry over unchanged — say so in the 1ère-sec course intro, it is the
+student's anchor. Lycée grade/section slugs and subject-id conventions: `docs/lycee-architecture.md`
+§2 (sections are grade nodes; subject id = `<matière>-<gradeSlug>` verbatim).
 
 **Math/science in Arabic stays standard.** When the medium of instruction is Arabic (math, physique,
 SVT in basic education), the **digits, equations, formulas, and units remain in standard
@@ -134,8 +183,9 @@ La **notation reste standard** (chiffres 0–9, etc. — règle ci-dessus) ; cet
 
 1. **Anchor to the CNP program (source of truth) — via the transcription.** Ground truth, in order:
    **(a)** the **programme transcription** `programmes-officiels/programme/<gradeSlug>/<matière>.md`
-   (faithful render of the teacher guide — scope, محاور, progression, in/out-of-scope bornes);
-   **(b)** the **Taybah school file** (`programmes-officiels/<école>/<gradeSlug>.md`) as **verification +
+   (faithful render **combining** the teacher guide — scope, محاور, progression, in/out-of-scope bornes —
+   **and the manuel élève** — lessons, examples, exercises, depth; one source ⇒ reference, several ⇒
+   combined); **(b)** the **Taybah school file** (`programmes-officiels/<école>/<gradeSlug>.md`) as **verification +
    trimester sequencing** complement; **(c)** web only to fill genuine gaps (`tunisiecollege.net`,
    `tadris.tn`, edunet/CNP). Establish the exact notions the chapter must cover — faithful to the CNP.
    ⛔ **Don't render→vision the CNP scans here** — that's the persistence session's job (consume its

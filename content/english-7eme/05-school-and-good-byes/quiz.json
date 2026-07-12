@@ -1,0 +1,65 @@
+{
+  "title": "Comprehension check ⭐",
+  "questions": [
+    {
+      "prompt": "Emma visits Yasmine's school. She asks the headmaster: \"___ I see the computer room, please?\"",
+      "options": [
+        { "id": "a", "text": "Can" },
+        { "id": "b", "text": "Want" },
+        { "id": "c", "text": "Behind" },
+        { "id": "d", "text": "Slowly" }
+      ],
+      "correctOption": "a",
+      "explanation": "To ask for permission we use \"Can I…?\": Can I see the computer room? \"Want\" is not a question word, \"behind\" is a preposition of place, and \"slowly\" is an adverb.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"Emma wants ___ the school library.\"",
+      "options": [
+        { "id": "a", "text": "see" },
+        { "id": "b", "text": "to see" },
+        { "id": "c", "text": "seeing" },
+        { "id": "d", "text": "to seeing" }
+      ],
+      "correctOption": "b",
+      "explanation": "After \"want\" plus a verb we use \"to\" + the base form: she wants to see the library. \"Want see\" drops the \"to\", and \"want seeing\" or \"want to seeing\" wrongly add -ing.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Look at the picture: the playground is at the back of the school. Complete: \"The playground is ___ the school building.\"",
+      "options": [
+        { "id": "a", "text": "between" },
+        { "id": "b", "text": "in front of" },
+        { "id": "c", "text": "behind" },
+        { "id": "d", "text": "under" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"At the back of\" means \"behind\": the playground is behind the building. \"In front of\" is the opposite (facing it), \"under\" means below, and \"between\" needs two things on each side.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complete: \"___ maps are there on the classroom wall?\"",
+      "options": [
+        { "id": "a", "text": "How much" },
+        { "id": "b", "text": "How long" },
+        { "id": "c", "text": "How old" },
+        { "id": "d", "text": "How many" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"Maps\" is a countable noun (one map, two maps), so we ask with \"How many\": How many maps are there? \"How much\" is only for uncountable nouns like water or money.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "The suitcase is very heavy. Complete: \"Karim ___ carry it; it is too heavy for him.\"",
+      "options": [
+        { "id": "a", "text": "can" },
+        { "id": "b", "text": "cannot" },
+        { "id": "c", "text": "wants" },
+        { "id": "d", "text": "likes" }
+      ],
+      "correctOption": "b",
+      "explanation": "The suitcase is too heavy, so Karim is NOT able to carry it: he cannot carry it. \"Can\" means he is able to (the opposite here), and \"wants\"/\"likes\" talk about desire, not ability.",
+      "difficulty": 2
+    }
+  ]
+}

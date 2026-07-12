@@ -43,7 +43,22 @@ balance, or difficulty distribution — you own those by judgment (below).
   "le piège courant…") explaining why the plausible wrong answer fails.
 - **Difficulty ramps within an exercise** (start at 1, end near the exercise's tier ceiling) and the
   quiz skews easy (difficulty 1–2) since it only gates comprehension.
-- **Balance the answer key** — spread `correctOption` across a/b/c/d; don't let it sit on one letter.
+- **Age- and grade-appropriate presentation.** Beyond _being on syllabus_ (scope) and _being tagged at
+  the right difficulty_ (ramp), every item must _read_ as written for the learner's developmental stage:
+  vocabulary, sentence length, the real-world contexts/scenarios it leans on, the magnitude of the
+  numbers, and the cognitive load (steps to hold in mind) all fit the audience. The audience is the
+  **school grade** — primary `1ère…6ème année de base` ≈ 6–12 yo, collège `7ème…9ème` ≈ 12–15, secondary
+  through `Bac` ≈ 15–18 — or, for non-school themes, the **declared level** (CEFR band for languages,
+  the difficulty tier elsewhere). A 1ère/2ème-année prompt uses short sentences, small numbers, and
+  concrete familiar contexts (animals, toys, the classroom, sharing sweets); a Bac or C1 prompt may be
+  dense and abstract. Defects even when the notion is on-syllabus: vocabulary above the grade, adult or
+  irrelevant scenarios for young children (taxes, mortgages, workplace), numbers/abstraction past the
+  grade's range, a childish or condescending register for teens, or any mature/unsafe theme for the age.
+- **Balance the answer key** — spread `correctOption` across a/b/c/d as a tidiness habit, but know it
+  is cosmetic: the engine **shuffles option order at display** (per-attempt Fisher-Yates), so the key
+  letter is never player-visible. The leak that survives shuffling is **content-based** — never let the
+  correct option be recognisable as the longest, most-detailed, or only-one-with-a-justification answer
+  (see "Homogeneous options" below). That is the rule that actually matters.
 - **No duplicate or near-duplicate questions** within or across a chapter's exercises.
 - **Respect the anti-rush floor**: an attempt under `4s × question count` earns nothing and doesn't
   satisfy the gate, so keep enough questions (quiz 5, exercise 6) that a genuine attempt clears it.
@@ -63,6 +78,12 @@ Beyond the distractor/explanation rules above, every item must pass these craft 
 - **One stem, one task, one defensible answer.** The prompt asks exactly one thing and is
   self-contained (solvable without seeing the options first, for computation items). If two options
   could be argued correct, rewrite the item.
+- **Clear, minimal cognitive load.** The stem reads cleanly on the first pass: as short as the task
+  allows, one sentence where possible, no nested clauses or back-references that force re-reading, no
+  irrelevant data that doesn't bear on the answer, no undefined symbol/abbreviation. The reader spends
+  their effort on the _notion being tested_, not on decoding the wording. A prompt that is correct and
+  on-syllabus but convoluted, padded, or ambiguous-until-you-see-the-options still fails this check —
+  simplify the phrasing or split the task.
 - **Linguistically well-formed and idiomatic.** Every prompt and option must read as natural,
   grammatically correct prose in the content language — read each one aloud; if a native speaker
   would stumble, rewrite it. In Arabic in particular: correct agreement, and **dual pronouns
@@ -72,10 +93,10 @@ Beyond the distractor/explanation rules above, every item must pass these craft 
   columns — incoherent) → ✓ `… أيّها ليس الأقصر ولا الأطول؟`. Avoid calque/translationese
   constructions (e.g. the bare `لا واحد` for "none" — write idiomatic `لا شيء` / `ولا واحد منها`,
   or better, a real distractor).
-- **No meta-options.** Never options that reference the *other options* — "all of the above",
+- **No meta-options.** Never options that reference the _other options_ — "all of the above",
   "none of the above" / "aucune de ces réponses" / "لا شيء ممّا سبق", "a and b", "I don't know".
   Four real, independent candidate answers. (A substantive "nothing / zero / none-of-the-world"
-  answer — `لا شيء` meaning *nothing happens*, `0`, `aucun jour` — is a legitimate real answer, not
+  answer — `لا شيء` meaning _nothing happens_, `0`, `aucun jour` — is a legitimate real answer, not
   a meta-option; the ban is only on options that defer to the answer list itself.)
 - **Negative stems are rare and bolded.** Prefer positive phrasing; if you must ask "which is
   **not**…", bold/emphasize the negation so it cannot be skimmed past (and remember such prompts

@@ -1,0 +1,82 @@
+{
+  "title": "📝 Training ⭐⭐⭐: whole-chapter drill (global revision)",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Look at those dark clouds! Complete: \"It ___ rain this afternoon.\"",
+      "options": [
+        { "id": "a", "text": "are going to" },
+        { "id": "b", "text": "going to" },
+        { "id": "c", "text": "is going to" },
+        { "id": "d", "text": "goes to" }
+      ],
+      "correctOption": "c",
+      "explanation": "When we see evidence now (dark clouds), we predict with \"be going to\": it is going to rain ✓. \"Are going to\" does not agree with \"it\", \"going to\" drops the verb be, and \"goes to\" is the present simple, not a prediction.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"A taxi is ___ than the Underground in London.\"",
+      "options": [
+        { "id": "a", "text": "expensiver" },
+        { "id": "b", "text": "most expensive" },
+        { "id": "c", "text": "more expensiver" },
+        { "id": "d", "text": "more expensive" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"Expensive\" is a long adjective, so its comparative is \"more expensive than\" ✓. \"Expensiver\" and \"more expensiver\" are impossible forms, and \"most expensive\" is the superlative, not a comparison of two things.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"That was ___ day of the whole trip — everyone laughed a lot.\"",
+      "options": [
+        { "id": "a", "text": "the happyest" },
+        { "id": "b", "text": "the happiest" },
+        { "id": "c", "text": "the most happy" },
+        { "id": "d", "text": "happiest" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Happy\" ends in -y, so the superlative changes y → i and adds -est, with \"the\": the happiest ✓. \"The happyest\" keeps the y wrongly, \"the most happy\" is wrong for a short -y adjective, and \"happiest\" forgets \"the\".",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete these directions: \"Go past the bank, ___ the second turning on your left, and the café is opposite the park.\"",
+      "options": [
+        { "id": "a", "text": "take" },
+        { "id": "b", "text": "taking" },
+        { "id": "c", "text": "to take" },
+        { "id": "d", "text": "takes" }
+      ],
+      "correctOption": "a",
+      "explanation": "Directions use the base verb: take the second turning ✓. \"Taking\", \"to take\" and \"takes\" are not used to give an instruction — you simply tell the person to \"take\" the turning.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete the question: \"___ they going to see a play at the theatre tonight?\"",
+      "options": [
+        { "id": "a", "text": "Do" },
+        { "id": "b", "text": "Is" },
+        { "id": "c", "text": "Does" },
+        { "id": "d", "text": "Are" }
+      ],
+      "correctOption": "d",
+      "explanation": "A \"be going to\" question with \"they\" begins with \"Are\": Are they going to see…? ✓ \"Do\" and \"Does\" belong to the present simple, and \"Is\" does not agree with the plural \"they\".",
+      "difficulty": 3
+    },
+    {
+      "prompt": "It is raining. Which suggestion is written correctly?",
+      "options": [
+        { "id": "a", "text": "We could to visit an indoor market instead." },
+        { "id": "b", "text": "We could visit an indoor market instead." },
+        { "id": "c", "text": "We coulding visit an indoor market instead." },
+        { "id": "d", "text": "We could visiting an indoor market instead." }
+      ],
+      "correctOption": "b",
+      "explanation": "\"We could\" is followed by the base verb: We could visit ✓. \"We could to visit\" adds an extra \"to\", \"we coulding\" invents an impossible form, and \"we could visiting\" uses -ing where the base verb is needed.",
+      "difficulty": 3
+    }
+  ]
+}

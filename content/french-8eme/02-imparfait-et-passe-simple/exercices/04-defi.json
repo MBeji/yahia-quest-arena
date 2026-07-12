@@ -1,0 +1,82 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : la légende du désert",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Complète au passé simple : « L'artisan ___ (faire) un geste précis. »",
+      "options": [
+        { "id": "a", "text": "faisait" },
+        { "id": "b", "text": "fis" },
+        { "id": "c", "text": "fit" },
+        { "id": "d", "text": "faisa" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Faire » fait au passé simple : je fis, il fit, ils firent. À la 3e personne du singulier : « fit » ✓. « faisait » est l'imparfait, « fis » la 1re/2e personne et « faisa » n'existe pas (on ne bâtit pas le passé simple sur l'infinitif).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète au passé simple : « À la tombée de la nuit, un étranger ___ (venir) frapper à la porte. »",
+      "options": [
+        { "id": "a", "text": "venait" },
+        { "id": "b", "text": "vint" },
+        { "id": "c", "text": "vena" },
+        { "id": "d", "text": "vinit" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Venir » a un passé simple particulier avec la nasale -in- : je vins, il vint, ils vinrent. À la 3e personne du singulier : « vint » ✓. « venait » est l'imparfait ; « vena » et « vinit » sont des formes inventées.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Une phrase contient une erreur de temps. Laquelle ? « 1. Le vent soufflait sur les dunes de Douz. 2. Les chameliers avançaient lentement. 3. Tout à coup, une tempête se levait. 4. Le groupe s'abrita derrière un rocher. »",
+      "options": [
+        { "id": "a", "text": "La phrase 1" },
+        { "id": "b", "text": "La phrase 2" },
+        { "id": "c", "text": "La phrase 3" },
+        { "id": "d", "text": "La phrase 4" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Tout à coup » signale un événement brusque : il faut le passé simple « une tempête se leva », pas l'imparfait « se levait ». Les phrases 1 et 2 décrivent le décor qui dure (imparfait, correct) et la phrase 4 est un événement au passé simple. (Chasse à l'erreur : on désigne la phrase fautive.)",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Il ___ (faire) très chaud ce jour-là ; les rues ___ (être) désertes lorsque, soudain, un enfant ___ (surgir) au coin de la ruelle. »",
+      "options": [
+        { "id": "a", "text": "faisait … étaient … surgit" },
+        { "id": "b", "text": "fit … furent … surgit" },
+        { "id": "c", "text": "faisait … étaient … surgissait" },
+        { "id": "d", "text": "fit … étaient … surgit" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Il faisait chaud » et « les rues étaient désertes » sont le décor qui dure → imparfait ; « un enfant surgit » est l'événement soudain → passé simple ✓. Mettre le décor au passé simple (« fit », « furent ») ou l'événement à l'imparfait (« surgissait ») casse l'alternance.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète au passé simple : « Quand elle ___ (avoir) fini son travail, elle ___ (être) enfin tranquille. »",
+      "options": [
+        { "id": "a", "text": "avait … était" },
+        { "id": "b", "text": "eut … fût" },
+        { "id": "c", "text": "eût … fut" },
+        { "id": "d", "text": "eut … fut" }
+      ],
+      "correctOption": "d",
+      "explanation": "Au passé simple, « avoir » → il eut et « être » → il fut : « quand elle eut fini, elle fut tranquille » ✓. « avait … était » est l'imparfait ; « fût » et « eût » (avec accent circonflexe) sont des formes du subjonctif, pas du passé simple de l'indicatif.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quelle phrase respecte correctement l'alternance imparfait (décor) / passé simple (événement) ?",
+      "options": [
+        { "id": "a", "text": "Il pleuvait quand la voiture tomba en panne." },
+        { "id": "b", "text": "Il plut quand la voiture tombait en panne." },
+        { "id": "c", "text": "Il pleuvait quand la voiture tombait en panne." },
+        { "id": "d", "text": "Il plut quand la voiture tomba en panne." }
+      ],
+      "correctOption": "a",
+      "explanation": "« Il pleuvait » est le décor qui dure (imparfait) et « la voiture tomba en panne » l'événement soudain (passé simple) ✓. La phrase c laisse tout à l'imparfait (aucun événement ne surgit), et les phrases b et d mettent la pluie, qui est le décor, au passé simple.",
+      "difficulty": 3
+    }
+  ]
+}
