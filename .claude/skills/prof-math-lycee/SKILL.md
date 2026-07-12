@@ -86,11 +86,11 @@ plafond — strictement dans le programme de la section et de l'année.
 ## Taxonomie des pièges — chaque distracteur exécute UNE erreur
 
 | notion                      | pièges à exécuter                                                                                                                   |
-| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | --- | ------- |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | Limites/continuité          | forme indéterminée traitée comme finie ; limite en ∞ = valeur en un point ; continuité ⇒ dérivabilité (faux)                        |
 | Dérivation                  | (uv)' = u'v' ; dérivée de composée sans facteur intérieur ; signe de f' lu à l'envers pour les variations                           |
 | ln / exp                    | ln(a+b) = ln a + ln b ; e^(a+b) = e^a + e^b ; domaine ln(x) oublié (x>0) ; ln et exp non réciproques                                |
-| Primitives/intégrales       | oublier la constante ; borne inversée sans changer de signe ; primitive de 1/x = ln                                                 | x   | oubliée |
+| Primitives/intégrales       | oublier la constante ; borne inversée sans changer de signe ; primitive de 1/x = ln \|x\| oubliée                                   |
 | Suites                      | récurrence : hérédité sans initialisation ; confondre suite arithmétique/géométrique ; limite d'une suite bornée supposée existante |
 | Nombres complexes           | module = partie réelle + imaginaire ; argument sans quadrant ; conjugué mal signé ; i² = 1                                          |
 | Probabilités/dénombrement   | arrangement ↔ combinaison confondus ; événements dépendants traités indépendants ; P(A∪B) sans − P(A∩B)                             |
