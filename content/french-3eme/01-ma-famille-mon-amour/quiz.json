@@ -1,0 +1,65 @@
+{
+  "title": "Quiz de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Dans la famille, qui est la mère ?",
+      "options": [
+        { "id": "a", "text": "papi" },
+        { "id": "b", "text": "maman" },
+        { "id": "c", "text": "le frère" },
+        { "id": "d", "text": "l'oncle" }
+      ],
+      "correctOption": "b",
+      "explanation": "Maman, c'est la mère. Papa, c'est le père. L'erreur fréquente : confondre maman (la mère) avec mamie (la grand-mère).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Je montre une personne. Quel mot je peux dire ?",
+      "options": [
+        { "id": "a", "text": "merci" },
+        { "id": "b", "text": "dans" },
+        { "id": "c", "text": "avec" },
+        { "id": "d", "text": "voici" }
+      ],
+      "correctOption": "d",
+      "explanation": "Pour montrer une personne, je dis c'est, voici ou voilà : « voici mon frère ». L'erreur fréquente : prendre « merci », qui sert à remercier, pas à présenter.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Je colle les lettres : m + a = ?",
+      "options": [
+        { "id": "a", "text": "ma" },
+        { "id": "b", "text": "am" },
+        { "id": "c", "text": "mi" },
+        { "id": "d", "text": "al" }
+      ],
+      "correctOption": "a",
+      "explanation": "Je dis d'abord m, puis a : m + a = ma. L'erreur fréquente : inverser les lettres et lire « am ».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans quel mot entends-tu le son « on » ?",
+      "options": [
+        { "id": "a", "text": "papa" },
+        { "id": "b", "text": "mamie" },
+        { "id": "c", "text": "mon" },
+        { "id": "d", "text": "la" }
+      ],
+      "correctOption": "c",
+      "explanation": "Dans « mon », j'entends le son on, comme dans bonjour et salon. L'erreur fréquente : choisir « papa », où l'on entend le son a, pas on.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Pour demander son nom à un ami, je dis :",
+      "options": [
+        { "id": "a", "text": "Où es-tu ?" },
+        { "id": "b", "text": "Merci beaucoup." },
+        { "id": "c", "text": "Au revoir." },
+        { "id": "d", "text": "Comment t'appelles-tu ?" }
+      ],
+      "correctOption": "d",
+      "explanation": "Pour demander le nom, je dis « comment t'appelles-tu ? ». L'erreur fréquente : prendre « où es-tu ? », qui demande le lieu, pas le nom.",
+      "difficulty": 2
+    }
+  ]
+}

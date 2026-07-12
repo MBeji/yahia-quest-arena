@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Le gardien du chapitre ⭐⭐⭐ : mon corps et mes sons",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Avec quoi est-ce que je goûte les aliments ?",
+      "options": [
+        { "id": "a", "text": "le doigt" },
+        { "id": "b", "text": "la langue" },
+        { "id": "c", "text": "l'oreille" },
+        { "id": "d", "text": "le dos" }
+      ],
+      "correctOption": "b",
+      "explanation": "je goûte avec la bouche et la langue. L'erreur fréquente : confondre goûter (la langue) et sentir (le nez).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Je lis la syllabe : j + ou = ?",
+      "options": [
+        { "id": "a", "text": "jo" },
+        { "id": "b", "text": "ja" },
+        { "id": "c", "text": "ji" },
+        { "id": "d", "text": "jou" }
+      ],
+      "correctOption": "d",
+      "explanation": "j fait le son [j] et ou fait le son [ou] : ensemble, cela fait « jou ». L'erreur fréquente : lire « ou » comme [o].",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans quel mot entends-tu le son [ou] ?",
+      "options": [
+        { "id": "a", "text": "roue" },
+        { "id": "b", "text": "lit" },
+        { "id": "c", "text": "moto" },
+        { "id": "d", "text": "ami" }
+      ],
+      "correctOption": "a",
+      "explanation": "dans « roue », on entend bien le son [ou]. L'erreur fréquente : entendre [o] au lieu de [ou].",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Pour me brosser les dents, j'utilise la brosse à dents et le ...",
+      "options": [
+        { "id": "a", "text": "savon" },
+        { "id": "b", "text": "shampoing" },
+        { "id": "c", "text": "dentifrice" },
+        { "id": "d", "text": "miroir" }
+      ],
+      "correctOption": "c",
+      "explanation": "pour les dents, j'utilise la brosse à dents et le dentifrice. L'erreur fréquente : choisir le shampoing, qui sert pour les cheveux.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel mot commence par le son [t] ?",
+      "options": [
+        { "id": "a", "text": "joli" },
+        { "id": "b", "text": "midi" },
+        { "id": "c", "text": "ami" },
+        { "id": "d", "text": "tortue" }
+      ],
+      "correctOption": "d",
+      "explanation": "« tortue » commence par le son [t]. L'erreur fréquente : confondre le son [t] et le son [d], qui se ressemblent.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quel jour vient juste après mardi ?",
+      "options": [
+        { "id": "a", "text": "lundi" },
+        { "id": "b", "text": "mercredi" },
+        { "id": "c", "text": "dimanche" },
+        { "id": "d", "text": "samedi" }
+      ],
+      "correctOption": "b",
+      "explanation": "dans la semaine, après mardi vient mercredi. L'erreur fréquente : revenir à lundi au lieu d'avancer à mercredi.",
+      "difficulty": 3
+    }
+  ]
+}

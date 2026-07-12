@@ -1,0 +1,65 @@
+{
+  "title": "Quiz de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Quel mot est un jouet ?",
+      "options": [
+        { "id": "a", "text": "le lait" },
+        { "id": "b", "text": "le matin" },
+        { "id": "c", "text": "la poupée" },
+        { "id": "d", "text": "le pain" }
+      ],
+      "correctOption": "c",
+      "explanation": "Une poupée est un jouet ; le lait et le pain sont des aliments. L'erreur fréquente : confondre un jouet avec un aliment.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : Je joue ___ ballon.",
+      "options": [
+        { "id": "a", "text": "avec" },
+        { "id": "b", "text": "au" },
+        { "id": "c", "text": "la" },
+        { "id": "d", "text": "et" }
+      ],
+      "correctOption": "b",
+      "explanation": "On dit « je joue au ballon » (un mot avec « le »). L'erreur fréquente : dire « je joue à le ballon ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Léa aime tous les jeux, mais son jeu numéro un, c'est le ballon. Que dit-elle ?",
+      "options": [
+        { "id": "a", "text": "Je n'aime pas le ballon." },
+        { "id": "b", "text": "Je dors." },
+        { "id": "c", "text": "C'est peu." },
+        { "id": "d", "text": "Je préfère le ballon." }
+      ],
+      "correctOption": "d",
+      "explanation": "Pour dire le jeu qu'on aime le plus, on dit « je préfère ». L'erreur fréquente : dire « je préfère » pour un jeu qu'on n'aime pas.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel mot a le son [è] comme dans « lait » ?",
+      "options": [
+        { "id": "a", "text": "neige" },
+        { "id": "b", "text": "ballon" },
+        { "id": "c", "text": "robot" },
+        { "id": "d", "text": "poupée" }
+      ],
+      "correctOption": "a",
+      "explanation": "Dans « neige », les lettres « ei » font le son [è], comme « ai » dans « lait ». L'erreur fréquente : oublier que « ei » fait le même son que « ai ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Je prends le ballon ___ jouer.",
+      "options": [
+        { "id": "a", "text": "ne" },
+        { "id": "b", "text": "avec" },
+        { "id": "c", "text": "pour" },
+        { "id": "d", "text": "pas" }
+      ],
+      "correctOption": "c",
+      "explanation": "Avec « pour », je dis pourquoi je fais une action : je prends le ballon pour jouer. L'erreur fréquente : oublier « pour » devant l'action.",
+      "difficulty": 1
+    }
+  ]
+}

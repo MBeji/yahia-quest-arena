@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Exercice : je salue et je me présente",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "pour remercier un ami, je dis :",
+      "options": [
+        { "id": "a", "text": "merci" },
+        { "id": "b", "text": "bonsoir" },
+        { "id": "c", "text": "au revoir" },
+        { "id": "d", "text": "voici" }
+      ],
+      "correctOption": "a",
+      "explanation": "pour remercier, je dis « merci ». L'erreur fréquente : utiliser une salutation comme « bonsoir » à la place d'un remerciement.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "pour demander son nom à un ami, je dis :",
+      "options": [
+        { "id": "a", "text": "j'aime le bleu" },
+        { "id": "b", "text": "merci beaucoup" },
+        { "id": "c", "text": "comment t'appelles-tu ?" },
+        { "id": "d", "text": "au revoir" }
+      ],
+      "correctOption": "c",
+      "explanation": "pour demander le nom, je dis « comment t'appelles-tu ? ». L'erreur fréquente : poser une autre question au lieu de demander le nom.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "quand je pars, je dis :",
+      "options": [
+        { "id": "a", "text": "bonjour" },
+        { "id": "b", "text": "au revoir" },
+        { "id": "c", "text": "s'il te plaît" },
+        { "id": "d", "text": "voici" }
+      ],
+      "correctOption": "b",
+      "explanation": "quand je pars, je dis « au revoir ». L'erreur fréquente : dire « bonjour », qui sert pour arriver, pas pour partir.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "pour montrer quelqu'un, je dis :",
+      "options": [
+        { "id": "a", "text": "merci" },
+        { "id": "b", "text": "au revoir" },
+        { "id": "c", "text": "où ?" },
+        { "id": "d", "text": "voici mon ami" }
+      ],
+      "correctOption": "d",
+      "explanation": "pour montrer quelqu'un, je dis « voici… » ou « c'est… ». L'erreur fréquente : utiliser un mot de politesse au lieu d'un mot pour montrer.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "pour dire ce que j'ai dans la main, je dis :",
+      "options": [
+        { "id": "a", "text": "comment t'appelles-tu ?" },
+        { "id": "b", "text": "j'ai un stylo" },
+        { "id": "c", "text": "bonsoir" },
+        { "id": "d", "text": "au revoir" }
+      ],
+      "correctOption": "b",
+      "explanation": "pour dire ce que je possède, je dis « j'ai… » : j'ai un stylo. L'erreur fréquente : confondre avec une question ou une salutation.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "le soir, pour saluer, je dis :",
+      "options": [
+        { "id": "a", "text": "merci" },
+        { "id": "b", "text": "au revoir" },
+        { "id": "c", "text": "bonsoir" },
+        { "id": "d", "text": "voici" }
+      ],
+      "correctOption": "c",
+      "explanation": "le soir, je salue avec « bonsoir ». L'erreur fréquente : garder « bonjour » même le soir.",
+      "difficulty": 2
+    }
+  ]
+}

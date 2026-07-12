@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Le gardien du chapitre ⭐⭐⭐ : les sons de l'école",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Quelle lettre fais-tu entendre au début du mot « domino » ?",
+      "options": [
+        { "id": "a", "text": "le son r" },
+        { "id": "b", "text": "le son d" },
+        { "id": "c", "text": "le son u" },
+        { "id": "d", "text": "le son o" }
+      ],
+      "correctOption": "b",
+      "explanation": "« domino » commence par le son d : do-mi-no. L'erreur fréquente : entendre le o qui vient juste après le d, au lieu du tout premier son.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans quel mot entends-tu le son « ou » ?",
+      "options": [
+        { "id": "a", "text": "do" },
+        { "id": "b", "text": "ru" },
+        { "id": "c", "text": "lo" },
+        { "id": "d", "text": "cou" }
+      ],
+      "correctOption": "d",
+      "explanation": "« cou » contient le son ou. L'erreur fréquente : confondre le son o (do, lo) avec le son ou (cou).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quel mot commence par le son « b » ?",
+      "options": [
+        { "id": "a", "text": "papa" },
+        { "id": "b", "text": "pile" },
+        { "id": "c", "text": "bébé" },
+        { "id": "d", "text": "pomme" }
+      ],
+      "correctOption": "c",
+      "explanation": "« bébé » commence par le son b. L'erreur fréquente : confondre le son b (bébé) avec le son p (papa, pomme), qui se ressemblent.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Je lis : r + u = … ?",
+      "options": [
+        { "id": "a", "text": "ru" },
+        { "id": "b", "text": "ur" },
+        { "id": "c", "text": "ro" },
+        { "id": "d", "text": "du" }
+      ],
+      "correctOption": "a",
+      "explanation": "Je lis d'abord r, puis u : r + u = ru. L'erreur fréquente : inverser et lire « ur » au lieu de « ru ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans quel mot entends-tu le son « i » ?",
+      "options": [
+        { "id": "a", "text": "lune" },
+        { "id": "b", "text": "ru" },
+        { "id": "c", "text": "lit" },
+        { "id": "d", "text": "du" }
+      ],
+      "correctOption": "c",
+      "explanation": "« lit » contient le son i. L'erreur fréquente : confondre le son u (lune, du) avec le son i (lit).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Il y a des élèves … la cour. »",
+      "options": [
+        { "id": "a", "text": "qui" },
+        { "id": "b", "text": "dans" },
+        { "id": "c", "text": "où" },
+        { "id": "d", "text": "que" }
+      ],
+      "correctOption": "b",
+      "explanation": "Pour dire où sont les élèves, on dit « il y a … dans … » : il y a des élèves dans la cour. L'erreur fréquente : mettre « qui », qui sert à poser une question.",
+      "difficulty": 2
+    }
+  ]
+}
