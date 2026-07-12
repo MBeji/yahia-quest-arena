@@ -192,12 +192,12 @@ These are paid-for lessons; violating them re-breaks production or the gate.
   the bundle but creates a circular vendor chunk = **prod-crash risk**. A plain
   `motion` version bump is fine; the `m`/LazyMotion refactor is out of scope and needs
   dedicated chunking, not this nightly.
-- **The Lovable meta-plugin.** `@lovable.dev/vite-tanstack-config` provides the
-  Vite/TanStack/Cloudflare/Tailwind plugin scaffold (see `vite.config.ts`). Don't add
-  its bundled plugins manually, and treat any Vite / `@vitejs/plugin-react` /
-  `@tailwindcss/vite` / `@tanstack/router-plugin` major as **high-risk, own-PR,
-  needs-review** — verify the meta-plugin is compatible first (build can break with
-  duplicate plugins).
+- **The inline Vite/TanStack config.** `vite.config.ts` composes the
+  Vite/TanStack-Start/Cloudflare/Tailwind plugin scaffold by hand (no meta-plugin). Treat
+  any Vite / `@vitejs/plugin-react` / `@tailwindcss/vite` / `@tanstack/router-plugin` /
+  `@cloudflare/vite-plugin` major as **high-risk, own-PR, needs-review** — they can break
+  the hand-composed plugin order or the Worker build, and reshaping `manualChunks` can
+  create a circular vendor chunk (prod-crash risk). Re-run `build:check`.
 - **New Supabase CLI = validate pgTAP.** Bumping `supabase/setup-cli` version can drop
   default table grants on the local stack. If you bump it, the major PR must show a
   green pgTAP run (`db-tests.yml`) and keep the explicit `baseline_table_grants` intact.

@@ -18,6 +18,24 @@ This is the **shared core** every content-generation skill builds on. Content is
 business value: the breadth and quality of the quizzes/exercises is what differentiates the
 portal. Treat every chapter you author as a flagship example, not filler.
 
+## Which content skill? (router)
+
+These skills all defer here for schema/quality/rewards/style. Pick the **most specific** one; run only one.
+
+| You want…                                                                               | Skill                                     |
+| --------------------------------------------------------------------------------------- | ----------------------------------------- |
+| School-program content (Tunisian grade × subject, faithful to the CNP) — monolingual    | `content-ecole-tn`                        |
+| Course/summary text **only** (`cours.md`/`resume.md`), no quiz/exercises                | `content-cours`                           |
+| Audit/fix **existing** content (re-solve keys, grade courses) — report-first            | `content-audit`                           |
+| Culture générale (history/geo/economy/politics) — trilingual = 3 sibling subjects       | `content-culture-generale`                |
+| Brain-training **with lessons/theory** (logic/reasoning) — trilingual                   | `content-muscle-cerveau`                  |
+| Pure visual IQ — SVG figures, **no theory**, deduction only                             | `content-iq-training`                     |
+| Learn a language by immersion (grammar/vocab/reading, CEFR) — authored in that language | `content-langue-{anglais,francais,arabe}` |
+
+Full new chapters go through a **program** skill above, not `content-cours`. `muscle-cerveau` teaches the
+method (theory + recall); `iq-training` is pure visual deduction with no course — don't confuse the two.
+To see what already exists before creating a subject, check `content/CATALOGUE.md` (`npm run content:catalogue`).
+
 ## How the pipeline works (the why behind the rules)
 
 Pedagogical content lives as **versioned files** under `content/<subject>/NN-<slug>/`. A generator
@@ -87,11 +105,12 @@ A chapter directory `content/<subject>/NN-<slug>/` requires all of: `chapter.jso
    (`a`–`d`), difficulty 1–2, short explanations. For **school-program** subjects, students must pass
    at **≥80%** to unlock the chapter's exercises; **non-school themes don't gate** (the quiz is an
    optional warm-up there).
-4. **Exercises** — `exercices/NN-<slug>.json`, the canonical ladder:
-   `01-pratique` (practice, d1, 50/10) · `02-boss` (boss, d3, 120/30) · `03-revision`
-   (practice, d2, 70/15, optional) · `04-defi` (challenge, d4, 300/60) · `05-*` (boss, d3, 120/30).
-   **6 questions each**, 4 options, ramping per-question difficulty. Each exercise title shows its
-   difficulty (⭐ scale) — see `references/rewards-and-modes.md` and `references/style-guide.md`.
+4. **Exercises** — `exercices/NN-<slug>.json`. The **canonical exercise ladder** (file → mode /
+   difficulty / reward, with the default **and** language-track variants) lives in
+   `references/rewards-and-modes.md` — follow it, don't restate it. **6 questions each**, 4 options,
+   ramping per-question difficulty; each title shows its ⭐ difficulty (see also `references/style-guide.md`).
+   **Slugs are identity** — add files at the next free `NN`; never renumber/rename/reorder existing
+   ones (re-keys the UUID = delete+recreate).
 5. **Quality** — every question must clear the bar in `references/quality-bar.md` before you run the
    checks (real distractors, explanation ≥25 chars that justifies the key and why wrong options fail),
    then run the self-verification protocol (same file) before the automated checks.

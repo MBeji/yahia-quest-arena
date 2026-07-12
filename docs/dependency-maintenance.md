@@ -33,7 +33,7 @@ TypeScript, the Node toolchain, the pinned Supabase CLI, and the GitHub Actions.
   deterministic `automerge` job is the only thing that merges, and only the fully-green
   patch/minor PR. The repo-specific upgrade traps (npm 10 lockfile, global esbuild
   override on Vite 8, react-hooks 7 `recommended`, react-refresh on `src/routes/**`, the
-  do-not-touch `motion`/LazyMotion refactor, the Lovable meta-plugin, the Supabase CLI
+  do-not-touch `motion`/LazyMotion refactor, the inline Vite/TanStack config, the Supabase CLI
   pin → validate pgTAP) live in the skill and must be honoured.
 
 Prereq: the `CLAUDE_CODE_OAUTH_TOKEN` secret (shared with `regression-guard`); without

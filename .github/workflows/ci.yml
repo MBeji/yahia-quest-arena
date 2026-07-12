@@ -49,3 +49,32 @@ jobs:
 
       - name: Runtime dependency audit
         run: npm run audit:deps
+
+  # Content quality gate — these run ONLY in the local `ci:verify` script otherwise,
+  # so without this job a PR that breaks content QA/audit (or ships content whose
+  # generated SQL is out of sync) goes green and can auto-deploy to prod. Runs in
+  # parallel with `verify` (no `needs:`).
+  content:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Validate content (Zod schema)
+        run: npm run content:check
+
+      - name: Content QA (answer-key heuristics, fail on warnings)
+        run: npm run content:qa:strict
+
+      - name: Content audit (program conformity, fail on warnings)
+        run: npm run content:audit:strict

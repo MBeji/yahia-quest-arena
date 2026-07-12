@@ -52,7 +52,38 @@ the schema `difficulty` field (which the engine uses for gating/ordering):
 
 Keep boss at difficulty 3 and challenge at difficulty 4 (the dominant pattern); avoid off-pattern
 combos like `difficulty:4, mode:boss` or `difficulty:3, mode:practice`. Coins track XP at roughly
-1 coin per 5 XP. The optional `03-revision` step uses practice/d2 with ~70/15.
+1 coin per 5 XP.
+
+## Canonical exercise ladder (file layout)
+
+The reward table above is the **single source** for rewards. Two file-layout ladders build on it —
+pick by track. **Slugs are identity**: add new exercises at the next free `NN`; never renumber,
+rename, or reorder existing files/questions by difficulty (it re-keys the deterministic UUID =
+delete+recreate = silent content loss).
+
+**Default ladder** (school + standard themes):
+
+| file          | mode      | difficulty | xp / coins | role                      |
+| ------------- | --------- | ---------- | ---------- | ------------------------- |
+| `01-pratique` | practice  | 1          | 50 / 10    | free intro practice       |
+| `02-boss`     | boss      | 3          | 120 / 30   | chapter boss (premium)    |
+| `03-revision` | practice  | 2          | 70 / 15    | optional review           |
+| `04-defi`     | challenge | 4          | 300 / 60   | élite challenge (premium) |
+| `05-*`        | boss      | 3          | 120 / 30   | optional second boss      |
+
+**Language-track variant** (`anglais`/`francais`/`arabe` — strictly ascending; full detail + title
+patterns in `language-track.md`):
+
+| file          | mode      | difficulty | xp / coins | role                              |
+| ------------- | --------- | ---------- | ---------- | --------------------------------- |
+| `01-pratique` | practice  | 1          | 50 / 10    | practice                          |
+| `02-revision` | practice  | 2          | 75 / 15    | review                            |
+| `03-boss`     | boss      | 3          | 120 / 30   | chapter boss                      |
+| `04-defi`     | challenge | 4          | 300 / 60   | elite challenge                   |
+| `05-drill`    | practice  | 2          | 75 / 15    | cumulative consolidation (new Qs) |
+
+Both ladders: **6 questions per exercise**, 4 options, per-question difficulty ramping;
+`quiz.json` = 5 questions (d1–2). Every exercise/quiz title shows its ⭐ difficulty.
 
 ## Scoring thresholds you must design around (server-enforced)
 

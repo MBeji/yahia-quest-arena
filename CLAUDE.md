@@ -1,4 +1,4 @@
-# CLAUDE.md — yahia-quest-arena (XP Scholars)
+# CLAUDE.md — yahia-quest-arena (Na9ra Nal3ab)
 
 > **This file is the single canonical source of truth.** When it disagrees with any
 > other doc, CLAUDE.md wins — fix the other doc. [`ARCHITECTURE.md`](./ARCHITECTURE.md)
@@ -47,7 +47,7 @@ npm run lint         # eslint src --max-warnings=0  (zero-warning policy)
 npm run typecheck    # tsc --noEmit (strict)
 npm run format       # prettier --write .
 npm run verify       # lint + typecheck + test                          (fast local gate / pre-push)
-npm run ci:verify    # verify + coverage + build:check + audit:deps + content:qa:strict  (full gate)
+npm run ci:verify    # verify + coverage + build:check + audit:deps + content:qa:strict + content:audit:strict  (full gate)
 ```
 
 **Content pipeline** (authored files → Supabase migrations — see "Content pipeline" below):
@@ -290,8 +290,8 @@ When unsure about scope or a destructive action, ask before proceeding.
 - Env vars required at runtime: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` (set in the deploy
   platform). Missing → middleware throws a descriptive error.
 - The Vite config is **inline** in `vite.config.ts` — the TanStack Start, React, Tailwind,
-  Cloudflare and tsconfig-paths plugins are composed by hand (the old
-  `@lovable.dev/vite-tanstack-config` meta-plugin was de-vendored and `bun.lock` dropped).
+  Cloudflare and tsconfig-paths plugins are composed by hand (no meta-plugin; `bun.lock`
+  dropped in favour of `package-lock.json`).
   `manualChunks` there is hand-tuned to the bundle budgets; reshaping vendor groups can
   introduce a circular vendor chunk (prod-crash risk), so change it deliberately and re-run
   `npm run build:check`. The `esbuild` override in `package.json` is a security pin — keep it.
