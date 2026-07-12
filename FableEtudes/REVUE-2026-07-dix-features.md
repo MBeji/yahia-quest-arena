@@ -1,5 +1,11 @@
 # Revue d'architecte — les 10 features proposées (juillet 2026)
 
+> ⚠️ **Note 2026-07-11 (postérieure à la revue)** : cette revue et son ordonnancement
+> « monétisation d'abord » (01 → 02 → …) datent d'**avant** l'arbitrage « gratuité de phase »
+> (étude 15 Q-2, 2026-07-10). Les études 01 (paiement) et 11 (tuteur IA) sont depuis **gelées** ;
+> les verdicts fonctionnels restent valables. Document conservé tel quel comme trace d'arbitrage —
+> l'index à jour est [`README.md`](./README.md), l'état global [`../STATUS.md`](../STATUS.md).
+
 Verdicts de l'architecte sur la liste de 10 features, **confrontés à l'existant** (moteur QCM
 server-side, pipeline de contenu déterministe à skills, entitlements par parcours, gamification
 centralisée, modèle trilingue par conception). Chaque feature reçoit un **statut fonctionnel** ;

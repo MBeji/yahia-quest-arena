@@ -62,8 +62,8 @@ for (const maybeUrl of [process.env.SUPABASE_URL, process.env.VITE_SUPABASE_URL]
  *
  * Point at an already-running server with PLAYWRIGHT_BASE_URL=https://…
  */
-// The dev server (@lovable.dev/vite-tanstack-config) serves on 8080 by default,
-// not Vite's 5173. Override with PORT or PLAYWRIGHT_BASE_URL if a run needs to.
+// The dev server (inline TanStack Start config, see vite.config.ts) serves on 8080 by
+// default, not Vite's 5173. Override with PORT or PLAYWRIGHT_BASE_URL if a run needs to.
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://localhost:${process.env.PORT ?? 8080}`;
 
 // Folder-based convention: drop a spec in the right folder and it's picked up
