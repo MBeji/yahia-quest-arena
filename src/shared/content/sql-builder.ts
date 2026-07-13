@@ -14,7 +14,17 @@ export const CONTENT_UUID_NAMESPACE = "5f1d6b6e-2a4c-5e7b-9c3a-7d2e1f0a8b44";
 export const QUIZ_XP_REWARD = 20;
 export const QUIZ_COIN_REWARD = 5;
 
-/** Deterministic RFC-4122 v5 UUID (SHA-1 based) for a given name. */
+/**
+ * Deterministic RFC-4122 v5 UUID (SHA-1 based) for a given name.
+ *
+ * SHA-1 here is mandated by the v5 spec, not a security choice: this derives a
+ * stable, public content id (chapter/exercise/question), never a secret or an
+ * authentication token. Swapping the hash would silently change every id
+ * already upserted into prod, breaking the ON CONFLICT / prune keying across
+ * the whole content catalogue (see "Content pipeline" in CLAUDE.md). CodeQL's
+ * js/weak-cryptographic-algorithm alert on this line is a dismissed false
+ * positive — it assumes a security context that doesn't apply to id derivation.
+ */
 export function uuidV5(name: string, namespace: string = CONTENT_UUID_NAMESPACE): string {
   const nsBytes = Buffer.from(namespace.replace(/-/g, ""), "hex");
   const hash = createHash("sha1").update(nsBytes).update(Buffer.from(name, "utf8")).digest();

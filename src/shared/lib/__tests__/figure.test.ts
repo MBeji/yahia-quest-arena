@@ -75,6 +75,14 @@ describe("sanitizeSvg (security boundary)", () => {
     expect(out.toLowerCase()).not.toContain("javascript:");
   });
 
+  it("strips data: and vbscript: payloads", () => {
+    const dataOut = sanitizeSvg('<svg><rect fill="url(data:text/html;base64,x)" /></svg>');
+    expect(dataOut.toLowerCase()).not.toContain("data:");
+
+    const vbscriptOut = sanitizeSvg('<svg><rect fill="url(vbscript:msgbox(1))" /></svg>');
+    expect(vbscriptOut.toLowerCase()).not.toContain("vbscript:");
+  });
+
   it("fails closed (drops the figure) when DOMPurify has no DOM to sanitize with", () => {
     const purify = DOMPurify as { isSupported: boolean };
     const original = purify.isSupported;
