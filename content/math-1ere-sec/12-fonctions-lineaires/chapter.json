@@ -1,0 +1,9 @@
+{
+  "title": "Fonctions linéaires",
+  "description": "Fonction linéaire f : x ↦ ax (coefficient, image, antécédent), propriétés caractéristiques (f(0) = 0, f(1) = a, f(x + x') = f(x) + f(x')), représentation graphique comme droite passant par l'origine d'équation y = ax, lecture graphique (image, antécédent, coefficient), et applications aux pourcentages (hausses et baisses, éventuellement successives) et à la proportionnalité",
+  "displayOrder": 12,
+  "sources": [
+    "Programme officiel — Mathématiques, 1ère année de l'enseignement secondaire (tronc commun), CNP Tunisie ; manuel élève 222104P02 (chapitre 12, p.185–196)",
+    "Transcription du programme officiel — .claude/skills/content-ecole-tn/references/programmes-officiels/programme/1ere-sec/mathematiques.md (§2.12)"
+  ]
+}

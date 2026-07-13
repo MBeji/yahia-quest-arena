@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Exercice : Diviser, décomposer, ranger",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Quel est le reste de la division euclidienne de 100 par 7 ?",
+      "options": [
+        { "id": "a", "text": "2" },
+        { "id": "b", "text": "14" },
+        { "id": "c", "text": "6" },
+        { "id": "d", "text": "0" }
+      ],
+      "correctOption": "a",
+      "explanation": "100 = 7 × 14 + 2 : le quotient est 14 et le reste est 2 (avec 0 ≤ 2 < 7) ✓. 14 est le quotient, pas le reste (réponse b) ; 6 et 0 ne vérifient pas l'égalité 100 = 7 × q + r.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle est la décomposition en facteurs premiers de 60 ?",
+      "options": [
+        { "id": "a", "text": "2² × 3 × 5" },
+        { "id": "b", "text": "2 × 30" },
+        { "id": "c", "text": "6 × 10" },
+        { "id": "d", "text": "2 × 3² × 5" }
+      ],
+      "correctOption": "a",
+      "explanation": "60 = 2 × 2 × 3 × 5 = 2² × 3 × 5 ✓. 2 × 30 (réponse b) et 6 × 10 (réponse c) contiennent des facteurs non premiers ; 2 × 3² × 5 vaut 90 (réponse d), pas 60.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Parmi ces nombres, lequel est premier ?",
+      "options": [
+        { "id": "a", "text": "23" },
+        { "id": "b", "text": "21" },
+        { "id": "c", "text": "27" },
+        { "id": "d", "text": "15" }
+      ],
+      "correctOption": "a",
+      "explanation": "23 n'a que 1 et 23 comme diviseurs : il est premier ✓. 21 = 3 × 7, 27 = 3³ et 15 = 3 × 5 possèdent d'autres diviseurs, donc ne sont pas premiers.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Le nombre 6 divise-t-il 234 ?",
+      "options": [
+        { "id": "a", "text": "Oui, car 234 = 6 × 39" },
+        { "id": "b", "text": "Non, le reste n'est pas nul" },
+        { "id": "c", "text": "Oui, car 234 est impair" },
+        { "id": "d", "text": "Non, car 234 n'est pas divisible par 3" }
+      ],
+      "correctOption": "a",
+      "explanation": "234 est pair (divisible par 2) et 2 + 3 + 4 = 9 est divisible par 3, donc 234 est divisible par 6 : 234 = 6 × 39 ✓. 234 est pair, pas impair (réponse c) ; il est bien divisible par 3 (réponse d) ; le reste est donc nul (réponse b).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle est l'écriture scientifique de 45 000 ?",
+      "options": [
+        { "id": "a", "text": "4,5 × 10⁴" },
+        { "id": "b", "text": "45 × 10³" },
+        { "id": "c", "text": "4,5 × 10³" },
+        { "id": "d", "text": "0,45 × 10⁵" }
+      ],
+      "correctOption": "a",
+      "explanation": "En notation scientifique, le nombre s'écrit a × 10ⁿ avec 1 ≤ a < 10 : 45 000 = 4,5 × 10⁴ ✓. 45 × 10³ (réponse b) et 0,45 × 10⁵ (réponse d) ont un facteur a hors de l'intervalle [1 ; 10[ ; 4,5 × 10³ (réponse c) ne vaut que 4 500.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "On sait que 36 = 2² × 3² et 48 = 2⁴ × 3. Quel est le PGCD de 36 et 48 ?",
+      "options": [
+        { "id": "a", "text": "12" },
+        { "id": "b", "text": "6" },
+        { "id": "c", "text": "144" },
+        { "id": "d", "text": "4" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le PGCD prend chaque facteur premier commun avec son plus petit exposant : 2^min(2 ; 4) × 3^min(2 ; 1) = 2² × 3 = 12 ✓. 144 (= 2⁴ × 3²) est le PPCM ; 6 et 4 oublient un facteur commun.",
+      "difficulty": 2
+    }
+  ]
+}
