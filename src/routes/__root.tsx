@@ -17,6 +17,7 @@ import { DEFAULT_LOCALE, dirForLocale, localeFromCookieHeader } from "@/lib/i18n
 import { fr } from "@/lib/i18n/fr";
 import { en } from "@/lib/i18n/en";
 import { ar } from "@/lib/i18n/ar";
+import { buildErrorDebugText } from "@/shared/lib/error-debug";
 import { ThemeProvider, useTheme, DEFAULT_THEME, themeFromCookieHeader } from "@/lib/theme";
 import type { Theme } from "@/lib/theme";
 import { SoundProvider, useSound } from "@/lib/sound";
@@ -51,10 +52,14 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   const router = useRouter();
   const t = useT();
   // Incident forensics: with `?debug=1` in the URL, surface the error identity
-  // and stack on the page itself — the only reliable diagnostic channel for
-  // mobile users (no devtools). Client-only read; hidden for everyone else.
-  const showDebug =
-    typeof window !== "undefined" && new URLSearchParams(window.location.search).has("debug");
+  // on the page itself — the only reliable diagnostic channel for mobile users
+  // (no devtools). Client-only read; hidden for everyone else. The stack trace
+  // (internal module structure) is withheld in production so an anonymous
+  // visitor never receives it — see buildErrorDebugText.
+  const debugText =
+    typeof window !== "undefined" && new URLSearchParams(window.location.search).has("debug")
+      ? buildErrorDebugText(error, import.meta.env.PROD)
+      : null;
   return (
     <div className="flex min-h-screen items-center justify-center bg-black-deep px-4">
       <div className="max-w-md text-center">
@@ -62,13 +67,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         <p className="mt-2 text-sm text-muted-foreground">
           {error.message || t.errors.errorFallback}
         </p>
-        {showDebug ? (
-          // rtl-ok: une stack trace est du texte technique toujours LTR, même en page AR.
+        {debugText ? (
+          // rtl-ok: une trace technique est toujours LTR, même en page AR.
           <pre
             dir="ltr"
             className="mt-4 max-h-72 overflow-auto rounded-md border border-input p-3 text-left text-xs whitespace-pre-wrap break-all text-muted-foreground"
           >
-            {`${error.name}: ${error.message}\n${error.stack ?? "(no stack)"}`}
+            {debugText}
           </pre>
         ) : null}
         <div className="mt-6 flex flex-wrap justify-center gap-2">

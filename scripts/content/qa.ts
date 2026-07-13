@@ -14,14 +14,17 @@ import { join, resolve } from "node:path";
 import {
   expandSubjects,
   loadAllSubjects,
+  loadCompetencyRegistries,
   loadMisconceptionRegistry,
   loadSubject,
 } from "../../src/shared/content/loader.ts";
 import {
   auditBoardQuestion,
+  auditCompetencyRefs,
   auditMisconceptionTags,
   auditNumericQuestion,
   auditQuestion,
+  type CompetencyVocabulary,
   type Flag,
 } from "./qa-checks.ts";
 
@@ -41,6 +44,13 @@ function main(): void {
     only ? [loadSubject(join(contentDir, only))] : loadAllSubjects(contentDir),
   );
   const knownTags = new Set(Object.keys(loadMisconceptionRegistry(contentDir)));
+
+  // Competency vocabulary (étude 07): declared ids + family→subject coverage.
+  const registries = loadCompetencyRegistries(contentDir);
+  const competencyVocab: CompetencyVocabulary = {
+    ids: new Set(registries.flatMap((r) => r.competencies.map((c) => c.id))),
+    subjectPrefixes: new Map(registries.map((r) => [r.family, r.subjectPrefixes])),
+  };
 
   const flags: Flag[] = [];
 
@@ -63,6 +73,8 @@ function main(): void {
               : q.type === "ordering" || q.type === "matching" || q.type === "multi"
                 ? auditBoardQuestion(q, where)
                 : [...auditQuestion(q, where), ...auditMisconceptionTags(q, knownTags, where)]),
+            // Competency refs apply to EVERY question type (étude 07 R-2).
+            ...auditCompetencyRefs(q, subject.meta.id, competencyVocab, where),
           );
         });
       }

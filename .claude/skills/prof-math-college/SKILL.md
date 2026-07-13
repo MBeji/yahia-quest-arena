@@ -32,8 +32,9 @@ pas de trigonométrie : ce sont des notions de 9ème).
   `ecole-tn` · **langue arabe (`ar`)**, notation 100 % standard (chiffres 0–9, équations LTR,
   unités SI ; **jamais** de chiffres arabo-indiens — `math-and-notation.md`, règle dure).
 - Le collège 7ème/8ème est un **parcours FREE** (pas de gate concours) : d3/d4 y sont le **palier
-  difficile du ladder libre**, pas du premium. On garde la table de récompenses standard (d3 boss
-  120/30, d4 challenge 300/60) et les titres à étoiles + libellé arabe (صعب / نخبة). Ne jamais
+  difficile du ladder libre**, pas le palier premium (architecture dormante en phase gratuite —
+  voir CLAUDE.md « Access gate »). On garde la table de récompenses standard (d3 boss 120/30,
+  d4 challenge 300/60) et les titres à étoiles + libellé arabe (صعب / نخبة). Ne jamais
   convertir un d1–2 existant en d3–4. Rappel : la **9ème** (concours) a son prof dédié `prof-math-9eme`.
 
 ## Cartes de chapitres réelles (par niveau)

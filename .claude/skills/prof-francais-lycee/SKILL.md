@@ -33,8 +33,10 @@ irréprochables, jusqu'au discriminant annales du bac, dans le programme de chaq
   `bac-eco-gestion` / `bac-techniques` / `bac-info` (**concours national**).
 - Subject `id` = `<matière>-<gradeSlug>` verbatim (ex. **`francais-1ere-sec`**,
   **`francais-bac-lettres`**) · thème `ecole-tn` · **langue française (`fr`)** — immersion.
-- Premium : seuls les parcours `bac-*` sont concours **PREMIUM** (d3/d4 gated, preview = quiz +
-  d1) ; 1ère→3ème sec = **FREE**. Récompenses canoniques : d3 = `boss` 120/30 · d4 = `challenge`
+- **Phase gratuite : rien n'est gaté.** `bac-*` = concours national ; le statut **premium**
+  (d3/d4 gated, preview = quiz + d1) est une **architecture dormante** (réactivation via l'étude
+  gelée `FableEtudes/01-paiement-en-ligne`, CLAUDE.md « Access gate ») — 1ère→3ème sec et `bac-*`
+  sont **FREE** aujourd'hui. Récompenses canoniques : d3 = `boss` 120/30 · d4 = `challenge`
   300/60 · titres ⭐ + libellé (Difficile / Élite). **Ne jamais convertir un d1–2 existant en d3–4.**
 - Palier bac : `NN-annales-bac.json` (d4 `challenge` 300/60) — style annales (étude de texte +
   langue + essai), discriminant.

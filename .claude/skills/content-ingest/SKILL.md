@@ -56,6 +56,30 @@ récompenses, style, notation) et à `content-ecole-tn` (fidélité au programme
 - **R-3 — Programme d'abord.** Pour une matière scolaire, confronter la fiche à la **transcription CNP**
   (`programme/<grade>/<matière>.md`) si elle existe ; divergence de scope ⇒ le **programme officiel gagne**,
   signaler l'écart (règle `content-ecole-tn`).
+- **R-4 — Vérifie l'existant AVANT toute campagne.** Avant de transcrire quoi que ce soit, lis
+  `programme/_INDEX.md` **et** le fichier `programme/<grade>/<matière>.md` s'il existe déjà. Un statut
+  `[~]` = **« transcrit, en validation » — déjà fait**, pas un trou à combler. Un incident réel (2026-07-12,
+  campagne ScribeKit collège) a produit des fiches redondantes pour 6→9ème FR/EN/AR alors que des fiches
+  pré-existantes, plus profondes, couvraient déjà ces matières — seules 1ère-sec FR/EN/chimie étaient de
+  vrais trous. En cas de doublon, ne promeus jamais automatiquement le nouveau lot : compare et garde la
+  meilleure copie (qualité + complétude), documente la décision dans `_INDEX.md`.
+- **R-5 — Standard de fiche : « profondeur de génération », jamais un résumé.** Une fiche destinée à
+  alimenter la génération pédagogique doit décrire **chaque activité/exercice individuellement** (énoncé,
+  données, ce qui est demandé), reproduire **verbatim** les encadrés de règles/lois officielles, relever le
+  vocabulaire officiel, et poser des bornes de scope INCLUS/EXCLU — modèle de référence :
+  `programme/1ere-sec/mathematiques.md`. Une fiche « first-pass » (structure + objectifs seulement, sans ce
+  niveau de détail) doit être étiquetée comme telle et **jamais confondue avec une fiche prête pour la
+  génération** — l'écart de qualité entre les deux est la cause directe d'un contenu généré médiocre.
+- **R-6 — Une session = une matière, lecture intégrale obligatoire.** Ne jamais plafonner arbitrairement
+  la lecture d'une source (l'incident du 2026-07-10 a lu 15-76 % des sources avant d'écrire, plafonné à
+  70 000 caractères par manuel, produisant une fiche truffée d'inventions). Traiter plusieurs matières dans
+  la même fenêtre de contexte dilue le budget de lecture par matière et bâcle chaque fiche — un lot batch
+  de 10 fiches en une nuit est le signe qu'on va trop vite. Une matière incomplète mais honnêtement étiquetée
+  (« profondeur : modules 1-4 faits, 5-7 en first-pass ») vaut mieux qu'un lot complet mais bâclé.
+- **R-7 — Vérification indépendante avant promotion.** Une fiche produite par une session/agent ne devient
+  la référence canonique (`programme/<grade>/<matière>.md`, cochée dans `_INDEX.md`) qu'après relecture par
+  un second agent qui re-vérifie contre la source elle-même (pas contre la fiche) — pas seulement contre son
+  propre travail.
 - **Fidélité, pas de génération.** ScribeKit et l'OCR agent **transcrivent** ; difficulté / calibrage / QCM
   / cours = **génération** (couche 3), jamais ici.
 
@@ -89,5 +113,8 @@ récompenses, style, notation) et à `content-ecole-tn` (fidélité au programme
   **agent-in-the-loop**.
 - Besoin d'un **format de contenu inexistant** ⇒ signalement vers l'étude 03 / le catalogue, jamais un
   format ad hoc.
+- Budget de lecture/contexte insuffisant pour finir une matière en profondeur ⇒ **STOP proprement** à la
+  fin de la dernière section traitée, étiquette clairement ce qui reste en first-pass (R-6) ; ne bâcle
+  jamais le reste pour "finir".
 
 Défère toujours à **CLAUDE.md** / **ARCHITECTURE.md** et aux `docs/*.md` normatifs.

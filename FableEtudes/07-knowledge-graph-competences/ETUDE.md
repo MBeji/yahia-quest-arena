@@ -1,6 +1,6 @@
 # Étude 07 — Knowledge Graph & profils de maîtrise par compétence
 
-> **Statut** : brouillon
+> **Statut** : en exécution (validée par l'humain 2026-07-11 — Q-1/Q-2/Q-3 tranchées ; lot 1 lancé)
 > **Priorité** : 07 (exécutable dès que l'étude 04 lot A0 tourne) · **Valeur** : passer de « Math = 72 % » à une carte de maîtrise par compétence avec prérequis — le socle qui rend l'adaptatif (04), l'analytics (08) et le tuteur (11) réellement intelligents · **Complexité** : haute (transverse pipeline contenu + DB + agrégats)
 > **Architecte** : Fable (claude-fable-5), 2026-07-04 · **Exécuteur cible** : Sonnet
 > **Dépend de** : étude 04 lots A0.1–A0.3 (télémétrie `question_attempts` + patron de registre) ; tagging de contenu progressif (chantier contenu parallèle) · **Bloque** : étude 08 (points faibles), étude 11 (exercice similaire), étude 04 phase A2+ (reco par compétence)
@@ -134,7 +134,7 @@ v1 (joli mais sans valeur pédagogique directe).
 | 4   | RPCs map/blockers/exercises + fns + panneau compétences (US-1/2, R-5/R-6)                                                                                                                           | pgTAP (récursion bornée, gate) ; Vitest UI + i18n/RTL     | 2, 3           |
 | 5   | Branchement étude 04 : `get_daily_plan` compétence-aware (US-3)                                                                                                                                     | pgTAP non-régression du plan                              | 4              |
 
-- [ ] Lot 1 — pipeline + registre math (merge seul)
+- [x] Lot 1 — pipeline + registre math (merge seul)
 - [ ] Lot 2 — DB + maîtrise
 - [ ] Lot 3 — tagging vague 1 (chantier contenu, PR séparée du code)
 - [ ] Lot 4 — RPCs + UI
@@ -168,13 +168,55 @@ carte.
 
 ## 7. Questions ouvertes (pour l'humain)
 
-- **Q-1** : granularité cible du registre math vague 1 (~40 compétences proposées pour
-  9ème+6ème) — valider l'échantillon avant le lot 3.
-- **Q-2** : la carte de compétences est-elle visible dès `attempts ≥ 5` (proposition) ou après
-  un seuil plus prudent ?
-- **Q-3** : gate IRT — valider le critère (≥1000 réponses médianes/item sur un corpus stable) ou
-  en fixer un autre ; jusque-là D-4 verrouille.
+- **Q-1 — TRANCHÉ (2026-07-11)** : granularité **medium ~55-70** (et non ~40 ≈ 1/chapitre,
+  qui ne serait qu'un renommage des chapitres) : ~1 compétence par chapitre déjà fin (6ème,
+  23 chapitres), 2-3 par chapitre large (9ème, 14 chapitres), plus quelques compétences-ponts
+  7ème/8ème (relatifs, puissances, Pythagore) taggables par les questions de révision 9ème.
+  La valeur diagnostique vient du DAG de prérequis qui **traverse** chapitres et niveaux
+  (proportionnalité → Thalès, fonction linéaire ← proportionnalité). L'échantillon (registre
+  math v1) reste soumis à validation humaine avant le tagging de masse (lot 3).
+- **Q-2 — TRANCHÉ (2026-07-11)** : carte visible dès **`attempts ≥ 5`** ; en dessous, badge
+  « en cours d'évaluation » (jamais un chiffre nu — RISK-2). Constante centralisée, ajustable
+  aux données réelles.
+- **Q-3 — TRANCHÉ (2026-07-11)** : gate IRT validé tel quel (**≥1000 réponses médianes/item
+  sur corpus stable + décision humaine**) ; d'ici là D-4 verrouille (EWMA explicable seulement).
 
 ## 8. Journal d'exécution
 
-_(vide — rempli par l'exécuteur, lot par lot)_
+- **2026-07-11 — Étude validée** (Q-1/Q-2/Q-3 tranchées par Mohamed, voir §7). Passage en
+  exécution, lot 1 lancé (architecte Fable aux commandes : il rédige aussi le registre math —
+  le stop-point « l'exécuteur ne rédige pas les registres » vise les exécuteurs Sonnet).
+  **Amendement d'architecte (avant lot 1)** : les **3 tables catalogue** (`competencies`,
+  `competency_prereqs`, `question_competencies`) + RLS/grants migrent **au lot 1** (et non au
+  lot 2) — la migration compilée du registre doit s'appliquer sur une DB fraîche (suite pgTAP :
+  toute migration doit passer dans l'ordre des timestamps), donc les tables qu'elle remplit
+  doivent la précéder. Le lot 2 garde `user_competency_mastery` + le trigger EWMA + l'oubli.
+- **2026-07-11 — Lot 1 livré** (pipeline + registre math + tables catalogue).
+  - **Registre** `content/competences/math.json` : **57 compétences** (granularité Q-1),
+    10 domaines (`num/frac/prop/alg/fn/stat/geo/vec/esp/mes`), **75 arêtes** de prérequis
+    traversant chapitres et niveaux (Thalès ← proportionnalité, fonction linéaire ←
+    proportionnalité, ponts 7ème/8ème : relatifs, puissances, Pythagore) ; terminologie AR
+    alignée sur les manuels/corpus (فيثاغورس، الوسيط، المعدّل الحسابي، علاقة شال، الأشعّة).
+    **Échantillon à valider par l'humain avant le lot 3** (stop-point Q-1).
+  - **Pipeline** : `competencyIdSchema`/`competencyRegistrySchema` + `findCompetencyCycle`
+    (structure, trilingue, prereqs même-famille et DAG validés au `content:check`), champ
+    `competencies` par question (1–3, 1er = principale, **tous types** — contrairement à
+    `misconceptionTag` mcq-only), loader `loadCompetencyRegistries` (nom de fichier = famille),
+    `sql-builder` : `buildCompetencyRegistryMigrationSql` (upsert + prune par famille + arêtes)
+    et jointure `question_competencies` émise dans la migration sujet (garde `to_regclass`,
+    prune convergent — dé-tagger converge à zéro), `build.ts --competences` (émet le registre
+    SEUL, ne régénère jamais les sujets), lint qa `auditCompetencyRefs` (id inconnu = erreur ;
+    famille≠sujet = warning).
+  - **DB** : `20260711130000_competency_graph_schema.sql` (3 tables + RLS SELECT authenticated
+    - GRANTs explicites + index reverse) ; `20260711131000_generated_competences_registry.sql`
+      (compilée, idempotente). pgTAP `26_competency_graph_schema.test.sql` (20 assertions :
+      grants/RLS/seed/CHECK/FK/anon).
+  - **Écart accepté n°2** : la validation structurelle du registre (dont le DAG R-3) vit dans
+    `content:check` (zod/loader) et non `content:qa` — plus strict, même esprit ; `content:qa`
+    garde le croisement de vocabulaire (id inconnu) et la couverture famille.
+  - **Écart accepté n°3** : champ `subjectPrefixes` ajouté au registre famille — le nom de
+    famille est sémantique et non dérivable des ids sujets (la future famille `physique`
+    couvrira le sujet `svt`) ; il alimente le lint famille≠matière.
+  - **Gate** : `verify` vert (1223 tests dont 22 nouveaux), `content:check` (73 sujets +
+    57 compétences), `content:qa:strict` 0 erreur, ordre des migrations conforme
+    (13xxxx > 12xxxx de main).
