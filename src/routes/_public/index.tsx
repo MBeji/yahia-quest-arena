@@ -1,4 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { getCatalogueStats } from "@/features/dashboard";
 import { PublicLanding } from "@/components/public/public-landing";
 
 /**
@@ -26,5 +29,19 @@ export const Route = createFileRoute("/_public/")({
       },
     ],
   }),
-  component: PublicLanding,
+  component: HomePage,
 });
+
+/**
+ * Fetches the anon catalogue stats (real compiled numbers) for the landing proof
+ * band and hands them to <PublicLanding/>. The band self-hides until the numbers
+ * load, so the landing renders instantly and never shows a fake/placeholder count.
+ */
+function HomePage() {
+  const fetchStats = useServerFn(getCatalogueStats);
+  const { data } = useQuery({
+    queryKey: ["catalogue-stats"],
+    queryFn: () => fetchStats(),
+  });
+  return <PublicLanding stats={data} />;
+}

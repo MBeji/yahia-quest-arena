@@ -265,7 +265,7 @@ périmètre ; divergence étude↔code = STOP et remontée (règle FableEtudes).
 - [x] Lot 5 — navigation & coquilles
 - [x] Lot 6 — dashboard + `/boutique`
 - [x] Lot 7 — hub matière connecté
-- [ ] Lot 8 — funnel public
+- [x] Lot 8 — funnel public
 - [ ] Lot 9 — auth v2
 - [ ] Lot 10 — onboarding v2
 - [ ] Lot 11 — arène
@@ -449,3 +449,26 @@ Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions co
   maquette disait « ≥ 60 % » — le seuil réel est **80 %** (constante) ; maquette corrigée et
   republiée, le code lit la constante. « Dernier chapitre travaillé » approximé sans donnée de
   récence : chapitre le plus avancé (ordre) ayant du progrès non terminé.
+- 2026-07-13 — Lot 8 livré (funnel public, D-1 §C-1/§C-3/§D-1) : maquette
+  `design/ds/ecrans/funnel-public.html` publiée dans le projet DS puis implémentée.
+  **§1 — la preuve remplace l'affirmation** : nouvelle server fn anonyme `getCatalogueStats`
+  (comptes réels compilés — matières / cours & résumés / missions corrigées — + `sampleChapterId`,
+  premier chapitre avec leçon de la matière la plus riche, jamais codés en dur, dégradation à 0) ;
+  la landing porte une **bande de preuve chiffrée** (auto-masquée tant que les chiffres ne sont pas
+  chargés, zéro placeholder) + lien **« Voir un exemple de cours »** → `/chapitre/$id`. **§2 — porte
+  enseignant honorée** : chaque porte persona a désormais sa propre destination + son propre CTA ; la
+  porte enseignant promet « imprimables en un clic » et pointe `/programme` (l'imprimante existe déjà).
+  **§3 — volumétrie réelle** : `getParcours` enrichi de `subjects_count` (« N matières » sur les
+  cartes dispo, calculé en lecture). **§4 — extras différenciés** : un descripteur spécifique
+  par thème (promesse CECRL des langues enfin visible) remplace le sous-texte générique. i18n ×3
+  (9 clés landing + 5 catalogue ; `personaCta` remplacée par 3 CTA par porte). Exceptions R-10b
+  respectées (élargissement SELECT + champ calculé en lecture + server fn anonyme ; aucune mécanique
+  serveur modifiée). Tests : +2 server-fn (`getCatalogueStats` réel/vide) + volumétrie `getParcours` ;
+  landing (bande de preuve) + catalogue (volumétrie/descripteurs) couverts ; gate vert.
+  **Coordination é16 — inversion assumée** : contrairement à ma note initiale, **é16 lot 3
+  (« arborescence lycée en drill-down », PR #375) a mergé AVANT ce lot**. Le « lycée compacté »
+  est donc livré par é16 (années → sections via `/programme/lycee/$annee` + vote d'intérêt sur la
+  page année), qui **fait désormais foi**. Ce lot a été **rebasé sur é16** : mes chips redondants sont
+  **abandonnés** (aucune régression du drill-down é16), et mes apports indépendants (bande de preuve,
+  porte enseignant, descripteurs extras) + la volumétrie « N matières » sont **greffés par-dessus**
+  les cartes é16 (cartes de cycle, 1ère sec directe, sections d'année).

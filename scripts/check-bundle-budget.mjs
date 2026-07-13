@@ -19,7 +19,11 @@ const BUDGETS = {
   // the trilingual Arène-hub namespace + « Suivi parent » nav labels (étude 15
   // lot 5: the /arene pole + the public /suivi entry points) — the hub reuses
   // the modes' own titles/pitches (DRY) so only its reward hints are new keys.
-  "i18n-": 108 * 1024,
+  // Then 108→116 KB for the trilingual funnel-public keys (étude 15 lot 8: landing
+  // proof band + per-door CTAs + per-theme extras descriptors) stacked on the lycée
+  // drill-down namespace (étude 16 lot 3: `lycee.*` + `lyceeYearDesc`) — headroom
+  // reserved for the remaining étude 15 lots (auth/onboarding/arène/parent/admin copy).
+  "i18n-": 116 * 1024,
   "vendor-supabase-": 240 * 1024,
   "vendor-motion-": 150 * 1024,
   // @dnd-kit (core+sortable+utilities) powering the B2 ordering/matching

@@ -73,6 +73,23 @@ describe("ProgrammeCatalogue", () => {
     // a tail CTA points to the extras catalogue
     expect(container.querySelector('a[href="/extras"]')).not.toBeNull();
   });
+
+  it("shows the real « N matières » volumetry on an available class (étude 15 lot 8)", () => {
+    render(
+      <ProgrammeCatalogue
+        parcours={[
+          p({
+            id: "ecole-1ere-base",
+            name_fr: "1ère année de base",
+            grade_cycle: "primaire",
+            grade_order: 1,
+            subjects_count: 5,
+          }),
+        ]}
+      />,
+    );
+    expect(screen.getByText(/5 matières/)).toBeInTheDocument();
+  });
 });
 
 describe("ProgrammeCatalogue — lycée drill-down (étude 16 R-1/R-2)", () => {
@@ -222,5 +239,14 @@ describe("ExtrasCatalogue", () => {
   it("excludes the Arabic language track from the extras menu", () => {
     render(<ExtrasCatalogue parcours={parcours} />);
     expect(screen.queryByText("Arabe")).not.toBeInTheDocument();
+  });
+
+  it("gives each extra a theme-specific descriptor (CECRL for languages) (étude 15 lot 8)", () => {
+    render(<ExtrasCatalogue parcours={parcours} />);
+    // anglais → CECRL promise; culture générale → its own descriptor.
+    expect(screen.getByText(/aligné CECRL/)).toBeInTheDocument();
+    expect(screen.getByText(/en trois langues/)).toBeInTheDocument();
+    // the generic « Cours · résumés · exercices » subtext is gone for these cards.
+    expect(screen.queryByText("Cours · résumés · exercices")).not.toBeInTheDocument();
   });
 });

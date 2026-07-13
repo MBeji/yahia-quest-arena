@@ -38,7 +38,18 @@ const GoldenHeroCanvas = lazy(() => import("@/components/landing/golden-hero-can
 /** The CEFR ladder (Common European Framework) shared by both language tracks. */
 const CEFR_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
-export function PublicLanding() {
+/** Real compiled catalogue numbers for the landing proof band (from `getCatalogueStats`). */
+export type CatalogueStats = {
+  subjects: number;
+  lessons: number;
+  exercises: number;
+  sampleChapterId: string | null;
+};
+
+/** Group thousands with a space — Western digits, identical in every locale. */
+const groupThousands = (n: number) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+
+export function PublicLanding({ stats }: { stats?: CatalogueStats | null }) {
   const t = useT();
   const { user } = useAuth();
   const isAuthed = user != null;
@@ -53,24 +64,33 @@ export function PublicLanding() {
 
   // The parent door deep-links to the « Espace Famille » section below; the two
   // other personas enter the public catalogue.
+  // Each door now carries its own destination + CTA (lot 8 §2): the teacher door's
+  // promise (printable lessons) is honoured with a specific label, still routing to
+  // the shared /programme; the parent door deep-links to the Espace Famille section.
   const personas = [
     {
       icon: GraduationCap,
       title: t.public.landing.personaStudentTitle,
       desc: t.public.landing.personaStudentDesc,
+      to: "/programme" as const,
       hash: undefined,
+      cta: t.public.landing.personaStudentCta,
     },
     {
       icon: Users,
       title: t.public.landing.personaParentTitle,
       desc: t.public.landing.personaParentDesc,
+      to: "/" as const,
       hash: "espace-famille",
+      cta: t.public.landing.personaParentCta,
     },
     {
       icon: BookOpen,
       title: t.public.landing.personaTeacherTitle,
       desc: t.public.landing.personaTeacherDesc,
+      to: "/programme" as const,
       hash: undefined,
+      cta: t.public.landing.personaTeacherCta,
     },
   ];
   const cycles = [
@@ -151,13 +171,54 @@ export function PublicLanding() {
         </div>
       </section>
 
+      {/* BANDE DE PREUVE — la preuve remplace l'affirmation (§C-1) : chiffres réels
+          compilés du catalogue (server fn anonyme) + un exemple de cours ouvrable. */}
+      {stats && stats.subjects > 0 && (
+        <section className="mx-auto max-w-3xl px-4 pb-6 sm:px-6">
+          <div className="rounded-2xl border border-border bg-card p-5">
+            <div className="text-center text-xs font-semibold uppercase tracking-wider text-primary">
+              {t.public.landing.proofBandKicker}
+            </div>
+            <div className="mt-4 grid grid-cols-3 gap-3">
+              {[
+                { n: stats.subjects, l: t.public.landing.proofStatSubjects },
+                { n: stats.lessons, l: t.public.landing.proofStatLessons },
+                { n: stats.exercises, l: t.public.landing.proofStatExercises },
+              ].map((s) => (
+                <div
+                  key={s.l}
+                  className="rounded-xl border border-border bg-background/50 p-3 text-center"
+                >
+                  <div className="font-display text-2xl font-bold text-primary sm:text-3xl">
+                    {groupThousands(s.n)}
+                  </div>
+                  <div className="mt-0.5 text-xs text-muted-foreground">{s.l}</div>
+                </div>
+              ))}
+            </div>
+            {stats.sampleChapterId && (
+              <div className="mt-4 text-center">
+                <Link
+                  to="/chapitre/$chapterId"
+                  params={{ chapterId: stats.sampleChapterId }}
+                  className="inline-flex items-center gap-2 text-sm font-bold text-primary hover:underline"
+                >
+                  <BookOpen className="h-4 w-4" /> {t.public.landing.proofSampleCta}
+                  <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
+                </Link>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
       {/* PORTES PERSONA */}
       <section className="mx-auto max-w-5xl px-4 py-6 sm:px-6">
         <div className="grid gap-4 sm:grid-cols-3">
           {personas.map((p) => (
             <Link
               key={p.title}
-              to={p.hash ? "/" : "/programme"}
+              to={p.to}
               hash={p.hash}
               data-testid="persona-door"
               className="group rounded-2xl border border-border bg-card p-6 transition hover:border-primary/60 hover:shadow-sm"
@@ -168,7 +229,7 @@ export function PublicLanding() {
               <h2 className="mt-4 font-display text-lg font-bold">{p.title}</h2>
               <p className="mt-1 text-sm text-muted-foreground">{p.desc}</p>
               <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary">
-                {t.public.landing.personaCta}
+                {p.cta}
                 <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5 rtl:-scale-x-100" />
               </span>
             </Link>

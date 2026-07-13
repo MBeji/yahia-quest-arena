@@ -50,18 +50,29 @@ const THEME_ICON: Record<string, LucideIcon> = {
   ib: Award,
 };
 
+/** « N matières » volumetry label for a school class card (undefined when 0/unknown). */
+function volumeLabel(count: number | null | undefined, template: string): string | undefined {
+  return count ? template.replace("{count}", String(count)) : undefined;
+}
+
 function ParcoursCard({
   parcours,
   label,
   icon: Icon,
   highlight = false,
   badge,
+  volume,
+  subtext,
 }: {
   parcours: ProgramParcours;
   label: string;
   icon: LucideIcon;
   highlight?: boolean;
   badge?: string;
+  /** Real volumetry appended to the default subtext (« Cours · résumés · exercices · N matières »). */
+  volume?: string;
+  /** Overrides the default subtext entirely (extras get a per-theme descriptor). */
+  subtext?: string;
 }) {
   const t = useT();
   const soon = parcours.status === "coming_soon";
@@ -93,7 +104,7 @@ function ParcoursCard({
           </span>
         ) : (
           <span className="mt-0.5 block text-xs text-muted-foreground">
-            {t.public.catalogue.cardContent}
+            {subtext ?? `${t.public.catalogue.cardContent}${volume ? ` · ${volume}` : ""}`}
           </span>
         )}
       </span>
@@ -220,6 +231,10 @@ export function ProgrammeCatalogue({ parcours }: { parcours: CatalogueParcours[]
                         parcours={g.direct}
                         label={parcoursName(g.direct, locale)}
                         icon={GraduationCap}
+                        volume={volumeLabel(
+                          g.direct.subjects_count,
+                          t.public.catalogue.cardSubjects,
+                        )}
                       />
                     ) : (
                       <LyceeYearRow key={g.year} group={g} />
@@ -241,6 +256,7 @@ export function ProgrammeCatalogue({ parcours }: { parcours: CatalogueParcours[]
                         icon={concours ? Trophy : GraduationCap}
                         highlight={concours}
                         badge={concours ? t.public.catalogue.cardConcoursBadge : undefined}
+                        volume={volumeLabel(p.subjects_count, t.public.catalogue.cardSubjects)}
                       />
                     );
                   })}
@@ -332,6 +348,7 @@ export function LyceeYearSections({
                   icon={Icon}
                   highlight={concours}
                   badge={concours ? t.public.catalogue.cardConcoursBadge : undefined}
+                  volume={volumeLabel(p.subjects_count, t.public.catalogue.cardSubjects)}
                 />
               );
             }
@@ -374,6 +391,15 @@ export function ExtrasCatalogue({ parcours }: { parcours: CatalogueParcours[] })
   // The Arabic language track is intentionally excluded from the extras menu.
   const extras = parcours.filter((p) => p.kind === "libre" && p.theme_id !== "arabe");
 
+  // A specific descriptor per theme (lot 8 §4) — the cards help the visitor choose
+  // instead of repeating « Cours · résumés · exercices »; the CECRL promise is shown.
+  const themeDesc: Record<string, string> = {
+    anglais: t.public.catalogue.themeDescAnglais,
+    francais: t.public.catalogue.themeDescFrancais,
+    "culture-generale": t.public.catalogue.themeDescCultureGenerale,
+    "muscle-cerveau": t.public.catalogue.themeDescMuscleCerveau,
+  };
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
       <header className="mb-8">
@@ -398,6 +424,7 @@ export function ExtrasCatalogue({ parcours }: { parcours: CatalogueParcours[] })
               parcours={p}
               label={parcoursName(p, locale)}
               icon={THEME_ICON[p.theme_id] ?? Sparkles}
+              subtext={themeDesc[p.theme_id]}
             />
           ))}
         </div>

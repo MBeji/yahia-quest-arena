@@ -54,6 +54,15 @@ function mockQuery(data: unknown, error: unknown = null) {
   return chain;
 }
 
+/** A count/`.not()` chain (head:true count queries + the taught-chapters scan). One
+ * chapters chain can carry BOTH count and data — the two chapters reads pick each. */
+function mockCount(result: { count?: number; data?: unknown }) {
+  const chain: Record<string, unknown> = {};
+  for (const m of ["select", "not", "order"]) chain[m] = vi.fn().mockReturnValue(chain);
+  Object.assign(chain, { error: null, ...result });
+  return chain;
+}
+
 type Fn = (d?: unknown) => Promise<unknown>;
 
 describe("dashboard.parcours — anonymous (optionalSupabaseAuth)", () => {
@@ -241,5 +250,91 @@ describe("dashboard.parcours — anonymous (optionalSupabaseAuth)", () => {
     await expect((getParcoursSubjects as unknown as Fn)({ parcoursId: "x" })).rejects.toThrow(
       /tableau de bord/i,
     );
+  });
+
+  it("getParcours: enriches each parcours with its real subjects_count (« N matières »)", async () => {
+    const parcoursRows = [
+      {
+        id: "ecole-9eme-base",
+        name_fr: "9ème année de base",
+        kind: "scolaire",
+        is_premium: false,
+        status: "available",
+        display_order: 9,
+        icon: "GraduationCap",
+        color: "subject-math",
+        theme_id: "ecole-tn",
+        grade_id: "g9",
+      },
+      {
+        id: "anglais",
+        name_fr: "Anglais",
+        kind: "libre",
+        is_premium: false,
+        status: "available",
+        display_order: 20,
+        icon: "Languages",
+        color: "subject-french",
+        theme_id: "anglais",
+        grade_id: null,
+      },
+    ];
+    // 3 subjects share (ecole-tn, g9); 1 shares (anglais, null).
+    const subjectRows = [
+      { theme_id: "ecole-tn", grade_id: "g9" },
+      { theme_id: "ecole-tn", grade_id: "g9" },
+      { theme_id: "ecole-tn", grade_id: "g9" },
+      { theme_id: "anglais", grade_id: null },
+    ];
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "grades")
+        return mockQuery([
+          { id: "g9", slug: "9eme-base", cycle: "college", display_order: 9, is_selectable: true },
+        ]);
+      if (table === "subjects") return mockQuery(subjectRows);
+      return mockQuery(parcoursRows);
+    });
+
+    const { getParcours } = await import("@/features/dashboard");
+    const result = (await (getParcours as unknown as Fn)()) as {
+      parcours: Array<Record<string, unknown>>;
+    };
+
+    expect(result.parcours[0]).toMatchObject({ id: "ecole-9eme-base", subjects_count: 3 });
+    expect(result.parcours[1]).toMatchObject({ id: "anglais", subjects_count: 1 });
+  });
+
+  it("getCatalogueStats: compiles real counts + the richest subject's first taught chapter", async () => {
+    // s-math has 2 taught chapters, s-svt has 1 → richest = s-math; ordered so its
+    // first is the sample.
+    const taught = [
+      { id: "c-math-1", subject_id: "s-math" },
+      { id: "c-math-2", subject_id: "s-math" },
+      { id: "c-svt-1", subject_id: "s-svt" },
+    ];
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "subjects") return mockCount({ count: 62 });
+      if (table === "exercises") return mockCount({ count: 3250 });
+      if (table === "chapters") return mockCount({ count: 418, data: taught });
+      return mockCount({});
+    });
+
+    const { getCatalogueStats } = await import("@/features/dashboard");
+    const result = await (getCatalogueStats as unknown as Fn)();
+
+    expect(result).toEqual({
+      subjects: 62,
+      lessons: 418,
+      exercises: 3250,
+      sampleChapterId: "c-math-1",
+    });
+  });
+
+  it("getCatalogueStats: degrades to zeros and no sample on an empty catalogue", async () => {
+    mockFrom.mockImplementation(() => mockCount({ count: 0, data: [] }));
+    const { getCatalogueStats } = await import("@/features/dashboard");
+    const result = await (getCatalogueStats as unknown as Fn)();
+
+    expect(result).toEqual({ subjects: 0, lessons: 0, exercises: 0, sampleChapterId: null });
   });
 });

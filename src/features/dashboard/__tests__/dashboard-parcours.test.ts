@@ -228,6 +228,7 @@ describe("dashboard.parcours — getParcours catalogue", () => {
         grade_order: null,
         grade_slug: null,
         grade_selectable: true,
+        subjects_count: 1,
         hasEntitlement: false,
       },
       {
@@ -236,6 +237,7 @@ describe("dashboard.parcours — getParcours catalogue", () => {
         grade_order: null,
         grade_slug: null,
         grade_selectable: true,
+        subjects_count: 1,
         hasEntitlement: true,
       },
     ]);
@@ -275,6 +277,7 @@ describe("dashboard.parcours — getParcours catalogue", () => {
         grade_order: null,
         grade_slug: null,
         grade_selectable: true,
+        subjects_count: 1,
         hasEntitlement: true,
       },
     ]);

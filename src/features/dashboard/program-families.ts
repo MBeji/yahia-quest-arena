@@ -24,6 +24,8 @@ export type ProgramParcours = {
   grade_slug?: string | null;
   /** False on the flat legacy secondary nodes — filtered out of every surface (R-1). */
   grade_selectable?: boolean;
+  /** Subjects the parcours carries (real volumetry, « N matières » — étude 15 lot 8). */
+  subjects_count?: number | null;
 };
 
 export type FamilyConfig = {
