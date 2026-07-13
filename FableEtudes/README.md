@@ -22,6 +22,12 @@ epics du projet, produites par le **modèle architecte** (Fable/Opus) et destin�
 > **[`CONTRIBUER.md`](./CONTRIBUER.md)** : mise en route (setup, `.env`, `npm run verify`), ordre
 > de lecture, workflow Git & chaîne d'auto-merge, réservation d'une étude à deux, STOP & escalade.
 > Les « Règles d'exécution » ci-dessous s'appliquent à toi comme au modèle.
+>
+> **Contribuer une transcription CNP (contenu persistant) avec ton agent IA ?** Prompt
+> clé-en-main, zéro connaissance du projet requise :
+> **[`PROMPT-TRANSCRIPTION-CNP.md`](./PROMPT-TRANSCRIPTION-CNP.md)** (études 12/13) — un seul
+> input (le couple niveau × matière + tes PDF, sinon téléchargés depuis le site du CNP), et
+> l'agent transcrit (ScribeKit), enrichit, audite et pousse la PR au bon endroit.
 
 ## Cycle de vie d'une étude
 
