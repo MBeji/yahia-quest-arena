@@ -16,6 +16,7 @@ import { Swords } from "lucide-react";
 import { BackLink } from "@/components/ui/back-link";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageShell } from "@/components/ui/page-shell";
+import { DUEL_REWARDS } from "@/shared/constants/gamification";
 import { useT } from "@/lib/i18n";
 import { toast } from "sonner";
 
@@ -119,6 +120,27 @@ function DuelHubPage() {
           <Swords className="h-7 w-7 text-gold" /> {t.duel.title}
         </h1>
       </header>
+
+      {/* Pre-match narration (étude 15 lot 11, D-7): tell the rule and show the reward
+          tiers BEFORE the click — participation always pays. Constants from gamification.ts. */}
+      <div className="rounded-2xl border border-gold/25 bg-black/40 p-4 backdrop-blur-md">
+        <p className="text-sm text-muted-foreground">{t.duel.rulesFirstDone}</p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {[
+            { key: "win", label: t.duel.rewardWin, xp: DUEL_REWARDS.win.xp },
+            { key: "draw", label: t.duel.rewardDraw, xp: DUEL_REWARDS.draw.xp },
+            { key: "loss", label: t.duel.rewardLoss, xp: DUEL_REWARDS.loss.xp },
+          ].map((tier) => (
+            <span
+              key={tier.key}
+              className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 px-3 py-1 text-xs font-semibold text-gold"
+            >
+              {tier.label} · +{tier.xp} XP
+            </span>
+          ))}
+        </div>
+        <p className="mt-2 text-xs text-muted-foreground">{t.duel.rewardsHint}</p>
+      </div>
 
       <DuelQueueCard
         searching={searching}

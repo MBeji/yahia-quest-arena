@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion, useReducedMotion } from "motion/react";
@@ -268,7 +268,18 @@ function LeaderboardPage() {
             <EmptyState
               icon={Medal}
               className="mt-12"
-              title={isGlobal ? t.leaderboard.emptyGlobal : t.leaderboard.emptySubject}
+              title={isGlobal ? t.leaderboard.coldStartTitle : t.leaderboard.emptySubject}
+              description={isGlobal ? t.leaderboard.coldStartDesc : undefined}
+              action={
+                isGlobal ? (
+                  <Link
+                    to="/dashboard"
+                    className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-[image:var(--gradient-gold)] px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-gold transition hover:opacity-90"
+                  >
+                    {t.leaderboard.coldStartCta}
+                  </Link>
+                ) : undefined
+              }
             />
           )}
         </>

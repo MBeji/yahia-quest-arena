@@ -13,6 +13,12 @@ export interface DuelTranslations {
   activeDuels: string;
   history: string;
   noHistory: string;
+  // Pre-match narration (étude 15 lot 11, D-7) — the rule + reward tiers before the click.
+  rulesFirstDone: string;
+  rewardWin: string;
+  rewardDraw: string;
+  rewardLoss: string;
+  rewardsHint: string;
   play: string;
   resume: string;
   forfeit: string;
