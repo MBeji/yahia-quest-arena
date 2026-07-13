@@ -4,8 +4,9 @@ description: >-
   Professeur spécialisé de FRANÇAIS du COLLÈGE tunisien (7ème–8ème année de base, ~12–14 ans) —
   auteur d'exercices difficiles et élites (⭐⭐⭐ boss / ⭐⭐⭐⭐ défi) : présent, passé composé et
   accord du participe passé, futur, impératif, expansion du GN et déterminants, vocabulaire du
-  conte ; en 8ème (indicatif) : imparfait/passé simple, discours rapporté simple, relatives,
-  passif (initiation). Conscient du niveau (carte de modules par classe). Use whenever the user
+  conte ; en 8ème : imparfait/passé simple, plus-que-parfait, expansions du nom et relative,
+  comparatif/superlatif, compléments circonstanciels, discours direct, substituts, lexique.
+  Conscient du niveau (carte de modules par classe). Use whenever the user
   wants HARD/quality French exercises for 7ème/8ème — e.g. "exercices difficiles de français
   7ème", "un défi élite sur le passé composé 7ème", "monte le niveau du module expansion du GN",
   "exercices durs de français 8ème". (9ème → prof-francais-9eme.) Defers to content-engine
@@ -40,15 +41,14 @@ notions du niveau exclusivement (rien de la 9ème).
   expansion du GN · Les animaux — déterminants et expansion du GN · Secrets de la nature —
   transformations, temps et participe passé · Histoires réelles et imaginaires — le conte et son
   vocabulaire.
-- **8ème (`french-8eme`)** — carte **indicative** du programme officiel : temps du récit
-  (imparfait / passé simple), discours rapporté simple, subordonnées relatives et complétives,
-  voix passive (initiation), types de textes (narratif / descriptif) — grands blocs prudents, à
-  aligner sur la transcription officielle.
-- ⚠️ **La base `content/french-8eme/` est encore VIDE** (seul `subject.json` existe) et la
-  transcription CNP `programme/8eme-base/` n'existe pas encore. Un professeur n'overlay **que des
-  chapitres existants** : le travail 8ème attend la création de la base (via `content-ecole-tn`,
-  bloquée sur la couche de persistance CNP) ; la carte 8ème ci-dessus sera alignée sur la
-  transcription CNP.
+- **8ème (`french-8eme`)**, 10 modules réels (`content/french-8eme/`) : temps du présent et
+  passé composé (révision) · imparfait et passé simple (temps du récit) · plus-que-parfait et
+  antériorité · expansions du nom (adjectif, complément du nom, relative) · comparatif et
+  superlatif · compléments circonstanciels · portrait et description · discours direct et
+  dialogue · substituts et cohérence textuelle · lexique et formation des mots.
+- La transcription CNP `programme/8eme-base/francais.md` existe (PR #330, statut `[~]` en
+  validation — cf. `content-ecole-tn` `references/programmes-officiels/programme/_INDEX.md`) :
+  c'est la référence de scope à confronter avant tout nouvel overlay 8ème.
 
 ## Ce que « difficile » veut dire en 7ème–8ème
 
@@ -70,18 +70,18 @@ notions du niveau exclusivement (rien de la 9ème).
 
 ## Taxonomie des pièges — chaque distracteur exécute UNE erreur
 
-| notion                          | pièges typiques à exécuter                                                                                    |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| Passé composé                   | accorder le PP avec le sujet malgré **avoir** ; mauvais auxiliaire (a tombé) ; PP irrégulier faussé (prendu)  |
-| é / er / ait                    | infinitif après préposition conjugué ; PP en -er ; imparfait -ait pris pour -é                                |
-| Futur                           | futur simple à radical faux (je voirai) ; -rai/-rais confondus ; futur proche pris pour futur simple          |
-| Impératif                       | -s conservé à la 2ᵉ pers. des verbes en -er (manges !) ; sujet exprimé ; négation mal placée                  |
-| Expansion du GN                 | adjectif non accordé avec le noyau ; complément du nom pris pour adjectif ; relative rattachée au mauvais nom |
-| Déterminants                    | ces/ses ; partitif (du, de la) confondu avec article défini ; leur/leurs                                      |
-| Imparfait / passé simple (8ème) | imparfait pour une action ponctuelle ; passé simple à terminaison fausse (il prena) ; valeurs interverties    |
-| Discours rapporté simple (8ème) | guillemets conservés après « dit que » ; temps non reculé ; pronom non transposé                              |
-| Relatives (8ème)                | qui/que intervertis selon la fonction ; relative sans antécédent correct                                      |
-| Passif initiation (8ème)        | PP non accordé avec le sujet du passif ; temps de l'actif conservé au lieu de l'auxiliaire                    |
+| notion                            | pièges typiques à exécuter                                                                                                    |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Passé composé                     | accorder le PP avec le sujet malgré **avoir** ; mauvais auxiliaire (a tombé) ; PP irrégulier faussé (prendu)                  |
+| é / er / ait                      | infinitif après préposition conjugué ; PP en -er ; imparfait -ait pris pour -é                                                |
+| Futur                             | futur simple à radical faux (je voirai) ; -rai/-rais confondus ; futur proche pris pour futur simple                          |
+| Impératif                         | -s conservé à la 2ᵉ pers. des verbes en -er (manges !) ; sujet exprimé ; négation mal placée                                  |
+| Expansion du GN                   | adjectif non accordé avec le noyau ; complément du nom pris pour adjectif ; relative rattachée au mauvais nom                 |
+| Déterminants                      | ces/ses ; partitif (du, de la) confondu avec article défini ; leur/leurs                                                      |
+| Imparfait / passé simple (8ème)   | imparfait pour une action ponctuelle ; passé simple à terminaison fausse (il prena) ; valeurs interverties                    |
+| Discours direct / dialogue (8ème) | ponctuation du dialogue fausse (deux-points, guillemets, tirets) ; incise mal placée ; majuscule oubliée après le deux-points |
+| Relatives (8ème)                  | qui/que intervertis selon la fonction ; relative sans antécédent correct                                                      |
+| Plus-que-parfait (8ème)           | auxiliaire au passé composé au lieu de l'imparfait (il a eu pris) ; antériorité inversée ; PP non accordé                     |
 
 ## Calibration collège (12–14 ans)
 
@@ -96,7 +96,7 @@ notions du niveau exclusivement (rien de la 9ème).
 
 1. Confirmer **niveau + module** → **auditer le ladder existant**
    (`content/french-<niveau>/<NN>/exercices/*.json`) — jamais de doublon, toujours au-dessus du
-   plafond, dans les outils du niveau. (8ème : vérifier d'abord que la base existe — sinon, stop
+   plafond, dans les outils du niveau. (Overlay uniquement sur un chapitre existant — sinon, stop
    et signaler.)
 2. 6+ questions, ≥ 3 archétypes (`expert-exercises.md`), dont au moins une **transformation
    contrainte** ; ramp interne 2→3.

@@ -240,15 +240,15 @@ professors — one per subject, each with a per-grade chapter map and age calibr
 (الإيقاظ العلمي, 1ère→6ème), and `prof-islamique-primaire` (1ère→4ème, Quran text in **رواية قالون**
 only — Tunisia's official reading). The **collège cycle** (7ème–8ème; 9ème keeps its dedicated
 professors) is covered the same grade-aware way: `prof-math-college`, `prof-physique-college`,
-`prof-svt-college`, `prof-arabe-college`, `prof-francais-college`, `prof-anglais-college` (8ème's
-base content is still empty — a professor only overlays existing chapters). The **lycée cycle**
+`prof-svt-college`, `prof-arabe-college`, `prof-francais-college`, `prof-anglais-college` (the 8ème
+base shipped 2026-07 — all six core subjects; a professor only overlays existing chapters). The **lycée cycle**
 (1ère sec→bac) is covered by section-aware professors — sections are grade nodes and scientific
 subjects switch ar→fr at 1ère sec with a mandatory transition bridge, all specified in
 `docs/lycee-architecture.md`: `prof-math-lycee`, `prof-physique-lycee`, `prof-svt-lycee`,
 `prof-francais-lycee`, `prof-anglais-lycee`, `prof-arabe-lycee`, `prof-philo-lycee`,
 `prof-histoire-geo-lycee`, `prof-eco-gestion-lycee`, `prof-info-lycee` (they also own the
-`NN-annales-bac` d4 tier; the whole lycée base is still empty — seed migration + secondary
-transcriptions + base come first). Each carries its
+`NN-annales-bac` d4 tier; the lycée base is a pilot — section seed merged, one complete chapter
+`math-bac-math/01-continuite-limites` — the rest waits on secondary transcriptions + base). Each carries its
 subject's chapter map and misconception/trap taxonomy; all defer to `content-engine`'s shared
 `references/expert-exercises.md` (hard-item archetypes, executed-error distractors, double-solve
 verification) and to `content-ecole-tn` for program fidelity. Skills produce

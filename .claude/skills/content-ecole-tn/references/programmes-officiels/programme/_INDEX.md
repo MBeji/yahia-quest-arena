@@ -119,15 +119,15 @@
 | --- | ------- | ---------- | -------------------------- | ---------------------------------- |
 | [ ] | anglais | `641404`   | `programme/bac/anglais.md` | الدليل المرجعي في اللغة الانقليزية |
 
-**Total : 59 guides à transcrire · 0 mergés · 3 pilotes transcrits (éveil 1ère-base ; maths + sciences-physiques 1ère-sec — en validation).**
+**Total : 60 lignes au work-list (57 guides du corpus + 3 pilotes secondaires hors corpus / manuels élève) · 23 `[x]` transcrites, auditées et mergées (1ère→5ème base) · 18 `[~]` transcrites, en validation (6ème→9ème base, 1ère-sec, bac-math) · 19 `[ ]` à faire — soit 41 fichiers `programme/<niveau>/<matière>.md` existants.**
 
-> **Légende statut** : `[ ]` à faire · `[x]` transcrit, en audit/validation · `[x]` transcrit + audité + mergé.
+> **Légende statut** : `[ ]` à faire · `[~]` transcrit, en audit/validation · `[x]` transcrit + audité + mergé.
 
 ## bac-math (secondaire — pilote lycée)
 
 | ☐   | matière | code guide                       | fichier cible                         | titre                                                                                        |
 | --- | ------- | -------------------------------- | ------------------------------------- | -------------------------------------------------------------------------------------------- |
-| [ ] | maths   | _(corpus secondaire à intégrer)_ | `programme/bac-math/mathematiques.md` | 🚧 **transcription pilote 2026-07-05** (hors corpus — à valider contre les textes officiels) |
+| [~] | maths   | _(corpus secondaire à intégrer)_ | `programme/bac-math/mathematiques.md` | 🚧 **transcription pilote 2026-07-05** (hors corpus — à valider contre les textes officiels) |
 
 ## 1ere-sec (secondaire — pilote lycée, tronc commun)
 
