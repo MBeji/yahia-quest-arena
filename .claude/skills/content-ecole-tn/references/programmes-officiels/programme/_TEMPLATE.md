@@ -5,10 +5,11 @@
 # <Matière en arabe/français> — <Niveau> · programme officiel CNP
 
 > **Sources** (combinées — voir README) :
+>
 > - **Guide enseignant** (programme) : `<code>P00.pdf` (`cnp-officiel/manuels/<asasi|secondaire>/<cN>/enseignant/`) — « <titre du guide> ». **Pages lues** : <p.X–Y (المخطّط السّنوي), p.Z (إطار الكفايات)…>.
 > - **Manuel élève** (contenu/exemples/exercices) : `<code>P00.pdf` (`…/eleve/`) — « <titre du manuel> ». **Pages lues** : <p.X–Y…>. <_Laisser « (non disponible) » si absent._>
-> **Transcrit le** : <AAAA-MM-JJ>. **Statut** : transcription fidèle (sources combinées).
-> **Langue d'enseignement** : <ar | fr | en>. **gradeSlug** : `<niveau>`. **subject id** attendu : `<id>`.
+>   **Transcrit le** : <AAAA-MM-JJ>. **Statut** : transcription fidèle (sources combinées).
+>   **Langue d'enseignement** : <ar | fr | en>. **gradeSlug** : `<niveau>`. **subject id** attendu : `<id>`.
 
 ## 1. Cadre & compétences (الكفايات / les objectifs généraux)
 

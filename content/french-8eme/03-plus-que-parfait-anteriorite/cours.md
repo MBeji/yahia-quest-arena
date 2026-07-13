@@ -64,7 +64,7 @@ Le plus-que-parfait suit **exactement** les règles d'accord du passé composé.
 - **Avec l'auxiliaire _être_**, le participe passé **s'accorde avec le sujet** (genre et nombre) :
   > _Les exploratrices **étaient parties** à l'aube._ (parti**es** : féminin pluriel, comme « les exploratrices »)
 - **Avec l'auxiliaire _avoir_**, le participe passé **ne s'accorde pas avec le sujet**. Il s'accorde seulement avec le **COD placé avant** le verbe :
-  > _La piste **qu'**il **avait suivie** menait à l'oasis._ (« qu' » reprend « la piste », féminin singulier, placé avant → suivi**e**)
+  > _La piste \**qu'\**il **avait suivie** menait à l'oasis._ (« qu' » reprend « la piste », féminin singulier, placé avant → suivi**e**)
   > Mais : _Il **avait suivi** la piste._ (COD « la piste » placé **après** → pas d'accord)
 
 > ⚠️ Piège classique : accorder le participe avec le sujet quand l'auxiliaire est _avoir_. On n'écrit **pas** « les voyageurs avaient partis » ni « elle avait préparés ses bagages ».

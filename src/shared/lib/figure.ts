@@ -42,6 +42,11 @@ export function hasFigure(raw: string): boolean {
  * (`href`/`xlink:href`, `<image>`, `<use>`) to avoid SSRF/exfiltration.
  */
 export function sanitizeSvg(svg: string): string {
+  // Fail closed: DOMPurify is a no-op when no DOM is available (e.g. an SSR
+  // runtime without a global `window` — jsdom is a dev-only dependency). Rather
+  // than let author SVG through unsanitized, drop the figure entirely when
+  // sanitization is unavailable — a missing figure is safe, raw markup is not.
+  if (!DOMPurify.isSupported) return "";
   const cleaned = DOMPurify.sanitize(svg, {
     USE_PROFILES: { svg: true, svgFilters: true },
     FORBID_TAGS: ["foreignObject", "a", "image", "use", "script", "style"],

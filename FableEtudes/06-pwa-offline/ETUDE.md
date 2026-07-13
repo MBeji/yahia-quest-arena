@@ -88,15 +88,11 @@ Aucune table, aucune migration : tout est client-side (SW + persistance TanStack
 // vite.config.ts (extrait — lot 1)
 VitePWA({
   registerType: "prompt", // R-7 : jamais de skipWaiting silencieux
-  manifest: {
-    /* name, icons, theme_color, display: "standalone", dir/lang par défaut fr */
-  },
+  manifest: {/* name, icons, theme_color, display: "standalone", dir/lang par défaut fr */},
   workbox: {
     navigateFallback: "/offline", // US-5
     navigationPreload: true,
-    runtimeCaching: [
-      /* lot 2 — cf. D-2 */
-    ],
+    runtimeCaching: [/* lot 2 — cf. D-2 */],
     // R-4 : les POST (server fns) et l'auth ne sont JAMAIS interceptés :
     // Workbox ne route que les GET par défaut ; exclusions explicites en plus
     // (denylist navigateFallback + aucune route runtime sur /_serverFn/ ni *.supabase.co/auth).

@@ -85,7 +85,7 @@ Le pronom relatif **remplace l'antécédent** à l'intérieur de la relative. On
 > - **qui / que** : « qui » n'a **jamais** de sujet derrière lui (il **est** le sujet) ; « que » a **toujours** un sujet derrière lui. _le livre **que** j'aime_ ✓ (sujet = je) — jamais « le livre **qui** j'aime ». _l'auteur **qui** écrit_ ✓ — jamais « l'auteur **que** écrit ».
 > - **que + il/elle en trop** : « que » remplace déjà l'antécédent, on ne remet pas de pronom. _le film **que** j'ai vu_ ✓ — jamais « le film **que je l'**ai vu ».
 > - **dont / que** : si le verbe se construit avec **« de »** (parler **de**, avoir besoin **de**, être fier **de**), on emploie **dont**. _le spectacle **dont** je rêve_ (rêver **de**) ✓ — jamais « le spectacle **que** je rêve ».
-> - **élision** : devant une voyelle, _que_ devient _qu'_ (_le rôle **qu'**il joue_) ; **qui** ne s'élide **jamais** (_l'ami **qui** applaudit_, jamais « qu'applaudit »).
+> - **élision** : devant une voyelle, _que_ devient _qu'_ (_le rôle \**qu'\**il joue_) ; **qui** ne s'élide **jamais** (_l'ami **qui** applaudit_, jamais « qu'applaudit »).
 
 ## 🌿 Le jeu des équivalences
 
