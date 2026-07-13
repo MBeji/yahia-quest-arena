@@ -51,19 +51,22 @@ Content generation is **a planning layer + two authoring layers**, not competing
      `prof-islamique-primaire` (1ère→4ème).
    - Collège cycle (grade-aware, 7ème–8ème; 9ème keeps its dedicated professors):
      `prof-math-college`, `prof-physique-college`, `prof-svt-college`, `prof-arabe-college`,
-     `prof-francais-college`, `prof-anglais-college`. ⚠ 8ème's base is still empty
-     (scaffold only, CNP transcription pending) — a professor only overlays **existing** chapters,
-     so 8ème work waits on the base layer.
+     `prof-francais-college`, `prof-anglais-college`. The 8ème base shipped 2026-07
+     (PR #278/#282/#289: all six core subjects, 53 chapters) and the collège CNP language
+     transcriptions are merged (PR #330) — professors can overlay 7ème and 8ème alike.
    - Lycée cycle (section-aware, 1ère sec→bac — sections are grade nodes, see
      `docs/lycee-architecture.md`): `prof-math-lycee`, `prof-physique-lycee`, `prof-svt-lycee`,
      `prof-francais-lycee`, `prof-anglais-lycee`, `prof-arabe-lycee`, `prof-philo-lycee`,
      `prof-histoire-geo-lycee`, `prof-eco-gestion-lycee`, `prof-info-lycee`. They also own the
-     `NN-annales-bac` d4 tier on `bac-*` grades. ⚠ The whole lycée base is empty and its stations
-     (seed migration → secondary-programme transcriptions → base) come first — lycée professor work
-     is queued behind them.
+     `NN-annales-bac` d4 tier on `bac-*` grades. ⚠ The lycée base is a pilot: the section seed is
+     merged (PR #285) and `content/math-bac-math/01-continuite-limites` is the only complete
+     chapter (PR #288/#291, incl. its annales-bac tier); everywhere else the remaining stations
+     (secondary-programme transcriptions → base) come first — a professor only overlays
+     **existing** chapters, so broader lycée professor work is queued behind them.
 
 The overlay **never** replaces the base: professors only **add** top-tier files to a chapter that
-already exists; they never rewrite the course/quiz or convert a free d1–2 mission to premium d3–4.
+already exists; they never rewrite the course/quiz or convert a free d1–2 mission to the d3–4
+ceiling tier (the dormant premium gate).
 
 ## Skill selection map (task → skill)
 
