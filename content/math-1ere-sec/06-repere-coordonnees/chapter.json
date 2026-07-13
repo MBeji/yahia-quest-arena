@@ -1,0 +1,9 @@
+{
+  "title": "Activités dans un repère",
+  "description": "Repère cartésien d'une droite et abscisse d'un point, mesure algébrique d'un vecteur, repère cartésien du plan (coordonnées d'un point, composantes d'un vecteur), coordonnées du milieu d'un segment, critère de colinéarité par proportionnalité des composantes (et alignement de points), distance entre deux points et norme d'un vecteur dans un repère orthonormé, et parallélisme de droites de même coefficient directeur",
+  "displayOrder": 6,
+  "sources": [
+    "Programme officiel — Mathématiques, 1ère année de l'enseignement secondaire (tronc commun), CNP Tunisie ; manuel élève 222104P02 (chapitre 6, p.81–100)",
+    "Transcription du programme officiel — .claude/skills/content-ecole-tn/references/programmes-officiels/programme/1ere-sec/mathematiques.md (§2.6)"
+  ]
+}
