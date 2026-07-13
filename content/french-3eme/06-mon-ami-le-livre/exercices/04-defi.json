@@ -1,0 +1,82 @@
+{
+  "title": "👑 Défi de l'élite ⭐⭐⭐⭐ : gardien du coin-lecture",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Sami cherche son album. Il demande : « … est mon album ? » On répond : « Sur l'étagère. » Quel mot manque ?",
+      "options": [
+        { "id": "a", "text": "Que" },
+        { "id": "b", "text": "Où" },
+        { "id": "c", "text": "Dans" },
+        { "id": "d", "text": "Sur" }
+      ],
+      "correctOption": "b",
+      "explanation": "La réponse est un endroit (sur l'étagère), donc la question est « Où est mon album ? ». L'erreur fréquente : choisir « Que », qui demande la chose, pas l'endroit.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans trois de ces mots, la lettre « c » fait le son « k ». Dans lequel fait-elle le son « s » ?",
+      "options": [
+        { "id": "a", "text": "carton" },
+        { "id": "b", "text": "cible" },
+        { "id": "c", "text": "colle" },
+        { "id": "d", "text": "conte" }
+      ],
+      "correctOption": "b",
+      "explanation": "Dans « cible », le c est devant i, donc il fait le son s. L'erreur fréquente : croire que le c fait toujours le son k ; devant e et i, il fait le son s.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Le livre n'est pas sur la table, ni dessous. Il est tout près, juste à droite de la colle. Où est-il ?",
+      "options": [
+        { "id": "a", "text": "sous la table" },
+        { "id": "b", "text": "dans la boîte" },
+        { "id": "c", "text": "à côté de la colle" },
+        { "id": "d", "text": "sur la table" }
+      ],
+      "correctOption": "c",
+      "explanation": "Tout près, juste à côté de la colle, je dis « à côté de la colle ». L'erreur fréquente : choisir « sur la table », alors que la phrase dit qu'il n'est pas sur la table.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Trois mots contiennent le son « v ». Lequel contient plutôt le son « f » ?",
+      "options": [
+        { "id": "a", "text": "livre" },
+        { "id": "b", "text": "fille" },
+        { "id": "c", "text": "revue" },
+        { "id": "d", "text": "élève" }
+      ],
+      "correctOption": "b",
+      "explanation": "« fille » contient le son f ; livre, revue et élève contiennent le son v. L'erreur fréquente : confondre f et v, deux sons proches.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Nora veut ranger les livres et elle demande gentiment de l'aide. Quelle phrase est la bonne ?",
+      "options": [
+        { "id": "a", "text": "Range les livres où ?" },
+        { "id": "b", "text": "Tu peux m'aider, s'il te plaît ?" },
+        { "id": "c", "text": "Que les livres." },
+        { "id": "d", "text": "Sous les livres !" }
+      ],
+      "correctOption": "b",
+      "explanation": "Pour demander de l'aide poliment, on dit « Tu peux m'aider, s'il te plaît ? ». L'erreur fréquente : oublier « s'il te plaît » ou mettre un mot de question (où, que) qui ne demande pas d'aide.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "La boîte n'a plus aucun livre dedans. Comment est-elle ?",
+      "options": [
+        { "id": "a", "text": "pleine" },
+        { "id": "b", "text": "vide" },
+        { "id": "c", "text": "belle" },
+        { "id": "d", "text": "grande" }
+      ],
+      "correctOption": "b",
+      "explanation": "S'il n'y a plus rien dedans, la boîte est vide. L'erreur fréquente : choisir « pleine », qui veut dire le contraire (beaucoup dedans).",
+      "difficulty": 3
+    }
+  ]
+}

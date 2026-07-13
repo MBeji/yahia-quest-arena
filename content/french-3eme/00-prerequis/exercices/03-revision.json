@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision : ma famille, mon corps, mes couleurs",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "la maman de mon papa, c'est ma :",
+      "options": [
+        { "id": "a", "text": "sœur" },
+        { "id": "b", "text": "grand-mère" },
+        { "id": "c", "text": "maîtresse" },
+        { "id": "d", "text": "amie" }
+      ],
+      "correctOption": "b",
+      "explanation": "la maman du papa, c'est la grand-mère. L'erreur fréquente : confondre la grand-mère avec la maman ou la sœur.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "avec quoi est-ce que je sens une fleur ?",
+      "options": [
+        { "id": "a", "text": "la bouche" },
+        { "id": "b", "text": "le pied" },
+        { "id": "c", "text": "l'oreille" },
+        { "id": "d", "text": "le nez" }
+      ],
+      "correctOption": "d",
+      "explanation": "je sens avec le nez. L'erreur fréquente : confondre le nez avec la bouche, qui sert à manger et à parler.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "je dis : « la gomme est … ». quel mot est une couleur ?",
+      "options": [
+        { "id": "a", "text": "rose" },
+        { "id": "b", "text": "mardi" },
+        { "id": "c", "text": "trois" },
+        { "id": "d", "text": "livre" }
+      ],
+      "correctOption": "a",
+      "explanation": "« rose » est une couleur ; on peut dire « la gomme est rose ». L'erreur fréquente : choisir un jour, un nombre ou un objet au lieu d'une couleur.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "j'écris avec mon … :",
+      "options": [
+        { "id": "a", "text": "pied" },
+        { "id": "b", "text": "nez" },
+        { "id": "c", "text": "stylo" },
+        { "id": "d", "text": "oreille" }
+      ],
+      "correctOption": "c",
+      "explanation": "j'écris avec un stylo ou un crayon. L'erreur fréquente : choisir une partie du corps au lieu d'une affaire d'école.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "dans ma classe, la personne qui m'apprend, c'est :",
+      "options": [
+        { "id": "a", "text": "le frère" },
+        { "id": "b", "text": "le grand-père" },
+        { "id": "c", "text": "le papa" },
+        { "id": "d", "text": "la maîtresse" }
+      ],
+      "correctOption": "d",
+      "explanation": "à l'école, c'est le maître ou la maîtresse qui m'apprend. L'erreur fréquente : choisir une personne de la famille au lieu de l'école.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "je marche avec mes deux :",
+      "options": [
+        { "id": "a", "text": "pieds" },
+        { "id": "b", "text": "yeux" },
+        { "id": "c", "text": "oreilles" },
+        { "id": "d", "text": "cahiers" }
+      ],
+      "correctOption": "a",
+      "explanation": "je marche avec mes deux pieds. L'erreur fréquente : confondre les pieds, qui servent à marcher, avec les yeux, qui servent à voir.",
+      "difficulty": 2
+    }
+  ]
+}

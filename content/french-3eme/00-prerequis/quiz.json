@@ -1,0 +1,65 @@
+{
+  "title": "Quiz de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "le matin, quand je vois un ami, je dis :",
+      "options": [
+        { "id": "a", "text": "au revoir" },
+        { "id": "b", "text": "bonjour" },
+        { "id": "c", "text": "merci" },
+        { "id": "d", "text": "bonsoir" }
+      ],
+      "correctOption": "b",
+      "explanation": "le matin, je salue avec « bonjour ». L'erreur fréquente : dire « au revoir », qui sert seulement quand on part.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "pour dire mon nom, je dis :",
+      "options": [
+        { "id": "a", "text": "j'ai un cartable" },
+        { "id": "b", "text": "où est mon stylo ?" },
+        { "id": "c", "text": "je m'appelle elyssa" },
+        { "id": "d", "text": "c'est ma famille" }
+      ],
+      "correctOption": "c",
+      "explanation": "pour me présenter, je dis « je m'appelle… » puis mon nom. L'erreur fréquente : confondre dire son nom et dire ce qu'on a (« j'ai… »).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "lequel de ces mots fait partie de la famille ?",
+      "options": [
+        { "id": "a", "text": "cahier" },
+        { "id": "b", "text": "règle" },
+        { "id": "c", "text": "gomme" },
+        { "id": "d", "text": "maman" }
+      ],
+      "correctOption": "d",
+      "explanation": "la « maman » fait partie de la famille. L'erreur fréquente : choisir une affaire d'école (cahier, règle, gomme) au lieu d'une personne de la famille.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "sur ma tête, j'ai deux :",
+      "options": [
+        { "id": "a", "text": "yeux" },
+        { "id": "b", "text": "pieds" },
+        { "id": "c", "text": "stylos" },
+        { "id": "d", "text": "cahiers" }
+      ],
+      "correctOption": "a",
+      "explanation": "sur la tête, j'ai deux yeux. L'erreur fréquente : penser aux pieds, qui sont en bas, pas sur la tête.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "je compte : un, deux, trois, … quel nombre vient après trois ?",
+      "options": [
+        { "id": "a", "text": "deux" },
+        { "id": "b", "text": "dix" },
+        { "id": "c", "text": "quatre" },
+        { "id": "d", "text": "huit" }
+      ],
+      "correctOption": "c",
+      "explanation": "après trois, je dis quatre : un, deux, trois, quatre. L'erreur fréquente : revenir en arrière vers « deux » au lieu d'avancer.",
+      "difficulty": 2
+    }
+  ]
+}

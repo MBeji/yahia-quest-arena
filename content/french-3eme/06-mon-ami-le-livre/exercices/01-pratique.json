@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Exercice : les mots du coin-lecture",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Comment appelle-t-on un livre avec de belles images ?",
+      "options": [
+        { "id": "a", "text": "une revue" },
+        { "id": "b", "text": "un album" },
+        { "id": "c", "text": "une boîte" },
+        { "id": "d", "text": "une étagère" }
+      ],
+      "correctOption": "b",
+      "explanation": "Un album est un livre avec de belles images. L'erreur fréquente : choisir la boîte, qui sert à ranger les livres, pas à les lire.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Avec quoi est-ce que je colle les images de mon livre ?",
+      "options": [
+        { "id": "a", "text": "la colle" },
+        { "id": "b", "text": "l'étagère" },
+        { "id": "c", "text": "le conte" },
+        { "id": "d", "text": "la revue" }
+      ],
+      "correctOption": "a",
+      "explanation": "Je colle les images avec la colle. L'erreur fréquente : choisir l'étagère, qui sert à ranger les livres, pas à coller.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Le livre est … la boîte : je ne le vois pas, il est dedans. »",
+      "options": [
+        { "id": "a", "text": "sur" },
+        { "id": "b", "text": "à côté de" },
+        { "id": "c", "text": "dans" },
+        { "id": "d", "text": "où" }
+      ],
+      "correctOption": "c",
+      "explanation": "Quand le livre est dedans, je dis « dans la boîte ». L'erreur fréquente : choisir « sur », qui veut dire posé au-dessus.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Le livre est … la table : il est tombé en dessous. »",
+      "options": [
+        { "id": "a", "text": "sous" },
+        { "id": "b", "text": "sur" },
+        { "id": "c", "text": "dans" },
+        { "id": "d", "text": "que" }
+      ],
+      "correctOption": "a",
+      "explanation": "Quand le livre est en dessous, je dis « sous la table ». L'erreur fréquente : confondre « sous » (en dessous) et « sur » (au-dessus).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "La boîte est pleine de livres. Quel mot dit le contraire de « pleine » ?",
+      "options": [
+        { "id": "a", "text": "grande" },
+        { "id": "b", "text": "vide" },
+        { "id": "c", "text": "belle" },
+        { "id": "d", "text": "jolie" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le contraire de « pleine » (beaucoup dedans) est « vide » (rien dedans). L'erreur fréquente : choisir « grande », qui parle de la taille, pas de ce qu'il y a dedans.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Je suis poli et je demande de l'aide. Que dois-je ajouter ?",
+      "options": [
+        { "id": "a", "text": "s'il te plaît" },
+        { "id": "b", "text": "au revoir" },
+        { "id": "c", "text": "très bien" },
+        { "id": "d", "text": "beaucoup" }
+      ],
+      "correctOption": "a",
+      "explanation": "Pour être poli quand je demande de l'aide, j'ajoute « s'il te plaît » : « Donne-moi le livre, s'il te plaît. ». L'erreur fréquente : dire « au revoir », qui sert à se quitter, pas à demander.",
+      "difficulty": 1
+    }
+  ]
+}

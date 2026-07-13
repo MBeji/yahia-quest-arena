@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Exercice : je remplis mon assiette",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Lequel de ces mots est une boisson ?",
+      "options": [
+        { "id": "a", "text": "le pain" },
+        { "id": "b", "text": "le lait" },
+        { "id": "c", "text": "la salade" },
+        { "id": "d", "text": "le fromage" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le lait est une boisson : on le boit. Le pain, la salade et le fromage se mangent. L'erreur fréquente : oublier que le lait est une boisson.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Le soir, quel repas est-ce que je prends ?",
+      "options": [
+        { "id": "a", "text": "le petit déjeuner" },
+        { "id": "b", "text": "le goûter" },
+        { "id": "c", "text": "le dîner" },
+        { "id": "d", "text": "le déjeuner" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le soir, on prend le dîner. Le matin c'est le petit déjeuner et le midi c'est le déjeuner. L'erreur fréquente : confondre le repas du soir avec celui du midi.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Avec quel ustensile est-ce que je bats les œufs ?",
+      "options": [
+        { "id": "a", "text": "un fouet" },
+        { "id": "b", "text": "une tasse" },
+        { "id": "c", "text": "une assiette" },
+        { "id": "d", "text": "un tablier" }
+      ],
+      "correctOption": "a",
+      "explanation": "On bat les œufs avec un fouet. La tasse sert à boire, l'assiette à manger, et le tablier protège les habits. L'erreur fréquente : choisir un objet qui ne sert pas à battre.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Il y a trop de sel dans la soupe. « Trop » veut dire :",
+      "options": [
+        { "id": "a", "text": "il n'y a pas de sel" },
+        { "id": "b", "text": "il y a juste ce qu'il faut" },
+        { "id": "c", "text": "il y a un tout petit peu de sel" },
+        { "id": "d", "text": "il y a trop de sel, ce n'est pas bon" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Trop » veut dire une quantité trop grande : c'est trop, ce n'est pas bon. « Un peu » veut dire une petite quantité. L'erreur fréquente : penser que « trop » veut dire « un peu ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans quel mot est-ce que j'entends le son [p] au début ?",
+      "options": [
+        { "id": "a", "text": "banane" },
+        { "id": "b", "text": "beurre" },
+        { "id": "c", "text": "pomme" },
+        { "id": "d", "text": "lait" }
+      ],
+      "correctOption": "c",
+      "explanation": "Dans « pomme », j'entends le son [p] au début. « Banane » et « beurre » commencent par le son [b]. L'erreur fréquente : confondre le son [p] et le son [b].",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel nombre vient juste après onze (11) ?",
+      "options": [
+        { "id": "a", "text": "douze (12)" },
+        { "id": "b", "text": "dix (10)" },
+        { "id": "c", "text": "vingt (20)" },
+        { "id": "d", "text": "treize (13)" }
+      ],
+      "correctOption": "a",
+      "explanation": "Après onze (11) vient douze (12). Dix (10) vient avant onze. L'erreur fréquente : sauter un nombre dans la suite 10, 11, 12, 13.",
+      "difficulty": 1
+    }
+  ]
+}
