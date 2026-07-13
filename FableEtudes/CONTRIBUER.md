@@ -6,6 +6,10 @@
 > pas. Ce guide te met en route et te donne les règles du dépôt ; il ne remplace pas
 > [`../CLAUDE.md`](../CLAUDE.md), qui reste **la source canonique** (commandes, conventions,
 > Definition of Done). En cas de désaccord entre ce guide et CLAUDE.md, **CLAUDE.md gagne**.
+>
+> Tu veux plutôt **transcrire un document CNP manquant** (couche de persistance du contenu)
+> avec ton agent IA, sans rien connaître du projet ? Utilise le prompt clé-en-main
+> [`PROMPT-TRANSCRIPTION-CNP.md`](./PROMPT-TRANSCRIPTION-CNP.md) — ce guide-ci n'est pas requis.
 
 ## TL;DR (à lire en entier avant de commencer)
 
