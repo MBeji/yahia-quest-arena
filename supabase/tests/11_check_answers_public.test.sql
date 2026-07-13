@@ -9,7 +9,7 @@
 
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pgtap;
-SELECT plan(5);
+SELECT plan(7);
 
 INSERT INTO auth.users (id, email) VALUES
   ('22222222-2222-2222-2222-222222222222', 'chk-parent@test.local');
@@ -88,6 +88,29 @@ SELECT is_empty(
        'cccccccc-0000-0000-0000-0000000000e3',
        '[{"questionId":"cccccccc-0000-0000-0000-0000000000f4","choice":"a"}]'::jsonb) $$,
   'anon check_answers reveals nothing for parent-authored content'
+);
+
+-- Audit #1: the explanation (hint-economy content) is withheld from anon callers,
+-- while the correct option (assertion above) stays for the public correction.
+SELECT is(
+  (SELECT explanation FROM public.check_answers(
+     'cccccccc-0000-0000-0000-0000000000e1',
+     '[{"questionId":"cccccccc-0000-0000-0000-0000000000f1","choice":"a"}]'::jsonb)),
+  NULL,
+  'anon check_answers withholds the explanation'
+);
+
+-- A SIGNED-IN caller still receives the explanation (unchanged behaviour).
+RESET ROLE;
+SET LOCAL "request.jwt.claims" = '{"sub":"22222222-2222-2222-2222-222222222222","role":"authenticated"}';
+SET LOCAL ROLE authenticated;
+
+SELECT is(
+  (SELECT explanation FROM public.check_answers(
+     'cccccccc-0000-0000-0000-0000000000e1',
+     '[{"questionId":"cccccccc-0000-0000-0000-0000000000f1","choice":"a"}]'::jsonb)),
+  'Because a.',
+  'a signed-in caller still receives the explanation'
 );
 
 RESET ROLE;
