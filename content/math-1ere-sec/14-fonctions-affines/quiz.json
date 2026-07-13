@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐ : Fonctions affines",
+  "questions": [
+    {
+      "prompt": "Pour une fonction affine f : x ↦ ax + b, que vaut f(0) ?",
+      "options": [
+        { "id": "a", "text": "b" },
+        { "id": "b", "text": "a" },
+        { "id": "c", "text": "0" },
+        { "id": "d", "text": "a + b" }
+      ],
+      "correctOption": "a",
+      "explanation": "f(0) = a × 0 + b = b : c'est l'ordonnée à l'origine ✓. a est le coefficient directeur (réponse b) ; f(0) ne vaut 0 (réponse c) que pour une fonction linéaire (b = 0) ; a + b serait f(1) (réponse d).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Soit f : x ↦ 3x − 2. Quelle est l'image de 5 par f ?",
+      "options": [
+        { "id": "a", "text": "13" },
+        { "id": "b", "text": "17" },
+        { "id": "c", "text": "1" },
+        { "id": "d", "text": "15" }
+      ],
+      "correctOption": "a",
+      "explanation": "f(5) = 3 × 5 − 2 = 15 − 2 = 13 ✓. 17 ajoute 2 au lieu de le retrancher ; 1 retranche 2 de 3 (oubli de multiplier par 5) ; 15 oublie le − 2.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "La représentation graphique de la fonction affine f : x ↦ ax + b est :",
+      "options": [
+        { "id": "a", "text": "une droite d'équation y = ax + b, passant par le point (0 ; b)" },
+        { "id": "b", "text": "une droite passant toujours par l'origine" },
+        { "id": "c", "text": "une courbe" },
+        { "id": "d", "text": "deux droites parallèles" }
+      ],
+      "correctOption": "a",
+      "explanation": "C'est une droite d'équation y = ax + b, qui coupe l'axe des ordonnées en (0 ; b) ✓. Elle ne passe par l'origine que si b = 0 (cas linéaire, réponse b) ; ce n'est pas une courbe (réponse c) ni deux droites (réponse d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Si a = 0, la fonction affine f : x ↦ ax + b est :",
+      "options": [
+        { "id": "a", "text": "une fonction constante (f(x) = b pour tout x)" },
+        { "id": "b", "text": "une fonction linéaire" },
+        { "id": "c", "text": "la fonction nulle" },
+        { "id": "d", "text": "impossible à définir" }
+      ],
+      "correctOption": "a",
+      "explanation": "Avec a = 0, f(x) = 0 × x + b = b : la fonction est constante, sa droite est horizontale ✓. La fonction linéaire correspond à b = 0 (réponse b) ; elle n'est nulle que si de plus b = 0 (réponse c) ; et elle est parfaitement définie (réponse d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans l'équation y = ax + b d'une droite, que représente le nombre a ?",
+      "options": [
+        { "id": "a", "text": "le coefficient directeur (l'inclinaison de la droite)" },
+        { "id": "b", "text": "l'ordonnée à l'origine" },
+        { "id": "c", "text": "l'abscisse du point de croisement avec l'axe des abscisses" },
+        { "id": "d", "text": "la hauteur constante de la droite" }
+      ],
+      "correctOption": "a",
+      "explanation": "a est le coefficient directeur : il donne l'inclinaison de la droite (de combien y varie quand x augmente de 1) ✓. L'ordonnée à l'origine est b (réponse b) ; les réponses c et d décrivent d'autres éléments sans rapport avec a.",
+      "difficulty": 1
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐ : Systèmes de deux équations",
+  "questions": [
+    {
+      "prompt": "Combien de couples (x ; y) l'équation x + y = 5 admet-elle comme solutions ?",
+      "options": [
+        { "id": "a", "text": "une infinité" },
+        { "id": "b", "text": "un seul" },
+        { "id": "c", "text": "exactement deux" },
+        { "id": "d", "text": "aucun" }
+      ],
+      "correctOption": "a",
+      "explanation": "Une équation à deux inconnues a une infinité de solutions : (0 ; 5), (1 ; 4), (2 ; 3)… — les points d'une droite ✓. Il faut une deuxième condition (un système) pour réduire à une solution unique (réponse b).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Résoudre un système de deux équations à deux inconnues, c'est trouver :",
+      "options": [
+        { "id": "a", "text": "les couples (x ; y) qui vérifient les deux équations à la fois" },
+        { "id": "b", "text": "toutes les valeurs possibles de x seulement" },
+        { "id": "c", "text": "les couples qui vérifient au moins une des deux équations" },
+        { "id": "d", "text": "la somme x + y" }
+      ],
+      "correctOption": "a",
+      "explanation": "La solution d'un système doit satisfaire les deux égalités simultanément ✓. On cherche un couple (x et y), pas x seul (réponse b) ; il faut vérifier les DEUX équations, pas seulement une (réponse c) ; et ce n'est pas une simple somme (réponse d).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Le couple (4 ; 1) est-il solution du système « x + y = 5 et x − y = 3 » ?",
+      "options": [
+        { "id": "a", "text": "Oui, car 4 + 1 = 5 et 4 − 1 = 3" },
+        { "id": "b", "text": "Non" },
+        { "id": "c", "text": "Oui, mais seulement pour la première équation" },
+        { "id": "d", "text": "On ne peut pas le vérifier" }
+      ],
+      "correctOption": "a",
+      "explanation": "On remplace x par 4 et y par 1 dans les deux équations : 4 + 1 = 5 ✓ et 4 − 1 = 3 ✓. Les deux étant vérifiées, (4 ; 1) est bien solution du système ✓. Il satisfait les deux équations, pas seulement une (réponse c), et la vérification est immédiate (réponse d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans la méthode par substitution, on commence par :",
+      "options": [
+        { "id": "a", "text": "exprimer une inconnue en fonction de l'autre, puis la remplacer" },
+        { "id": "b", "text": "additionner les deux équations" },
+        { "id": "c", "text": "multiplier les deux membres par 0" },
+        { "id": "d", "text": "tracer immédiatement les deux droites" }
+      ],
+      "correctOption": "a",
+      "explanation": "La substitution consiste à isoler une inconnue (par exemple x = 5 − y) puis à la reporter dans l'autre équation ✓. Additionner les équations relève de la méthode par élimination (réponse b) ; multiplier par 0 fait tout disparaître (réponse c) ; tracer les droites est la méthode graphique (réponse d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Un système dont les deux droites sont strictement parallèles admet :",
+      "options": [
+        { "id": "a", "text": "aucune solution" },
+        { "id": "b", "text": "une seule solution" },
+        { "id": "c", "text": "exactement deux solutions" },
+        { "id": "d", "text": "une infinité de solutions" }
+      ],
+      "correctOption": "a",
+      "explanation": "Deux droites strictement parallèles ne se croisent jamais : le système n'a aucune solution ✓. Une solution unique correspond à des droites sécantes (réponse b) ; une infinité correspond à des droites confondues (réponse d) ; deux solutions est impossible pour deux droites (réponse c).",
+      "difficulty": 2
+    }
+  ]
+}
