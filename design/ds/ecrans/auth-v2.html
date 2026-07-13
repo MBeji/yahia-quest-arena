@@ -1,0 +1,245 @@
+<!-- @dsCard group="Écrans" -->
+<title>Auth v2 (lot 9)</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+  }
+  body {
+    font-family: "Space Grotesk", system-ui, sans-serif;
+    background: #f3f2ee;
+    padding: 16px;
+    color: #1a1a1a;
+  }
+  h3.section {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.55;
+    margin: 18px 0 8px;
+    font-weight: 700;
+  }
+  h3.section:first-of-type {
+    margin-top: 0;
+  }
+  .avant {
+    border-inline-start: 3px solid #c0392b;
+    background: #fbeae8;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    color: #7a2018;
+    margin-bottom: 6px;
+  }
+  .apres {
+    border-inline-start: 3px solid #0f6e56;
+    background: #e7f3ee;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    color: #0b4535;
+    margin-bottom: 12px;
+  }
+  .frame {
+    --primary: #0f6e56;
+    --muted: #5c6f68;
+    --border: #e2e0d8;
+    background: #fbfaf7;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 14px;
+    max-width: 380px;
+  }
+  .card {
+    background: #15120d;
+    color: #f5ecd8;
+    border-radius: 14px;
+    padding: 16px;
+  }
+  .card .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .brand {
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    font-size: 13px;
+  }
+  .brand span {
+    color: #e5b567;
+  }
+  .lang {
+    border: 1px solid #6b5a2e;
+    border-radius: 8px;
+    padding: 3px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #e5b567;
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .card h1 {
+    font-size: 18px;
+    margin-bottom: 3px;
+  }
+  .card p.sub {
+    font-size: 12px;
+    color: #cbb98f;
+    margin-bottom: 12px;
+  }
+  .field {
+    background: #211c14;
+    border: 1px solid #3a3122;
+    border-radius: 9px;
+    padding: 9px 11px;
+    font-size: 12px;
+    color: #9c8f74;
+    margin-bottom: 8px;
+  }
+  .btn {
+    background: linear-gradient(90deg, #e5b567, #c8963f);
+    color: #15120d;
+    font-weight: 800;
+    border-radius: 9px;
+    padding: 10px;
+    text-align: center;
+    font-size: 13px;
+    margin-top: 2px;
+  }
+  .forgot {
+    text-align: end;
+    font-size: 11.5px;
+    color: #e5b567;
+    font-weight: 700;
+    margin: -2px 0 8px;
+  }
+  .note {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+  .sent {
+    text-align: center;
+    padding: 6px 0;
+  }
+  .sent .ic {
+    font-size: 26px;
+  }
+  .sent b {
+    display: block;
+    font-size: 14px;
+    margin: 6px 0 3px;
+    color: #f5ecd8;
+  }
+  .sent span {
+    font-size: 12px;
+    color: #cbb98f;
+  }
+  .flow {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 8px;
+    text-align: center;
+  }
+</style>
+
+<h3 class="section">1 · Le trou dur : « mot de passe oublié » (US-8)</h3>
+<div class="avant">
+  <b>Avant (audit §flux durs)</b> — aucun « mot de passe oublié ». Un élève ou un parent qui oublie
+  son mot de passe est <b>bloqué dehors</b>, sans recours dans l'app.
+</div>
+<div class="apres">
+  <b>Après</b> — lien « Mot de passe oublié ? » sur l'écran de connexion → écran de demande (email)
+  → e-mail de réinitialisation (<code>resetPasswordForEmail</code>) → nouvelle route
+  <code>/auth/reset</code> (nouveau mot de passe via <code>updateUser</code>) → connexion.
+</div>
+<div class="frame">
+  <div class="card">
+    <div class="top">
+      <div class="brand">Na9ra <span>Nal3ab</span></div>
+      <div class="lang">🌐 FR</div>
+    </div>
+    <h1>Ravi de te revoir</h1>
+    <p class="sub">Reprends là où tu t'étais arrêté.</p>
+    <div class="field">Email</div>
+    <div class="field">Mot de passe</div>
+    <div class="forgot">Mot de passe oublié ?</div>
+    <div class="btn">Se connecter</div>
+  </div>
+  <div class="flow">demande → e-mail envoyé → /auth/reset (nouveau mot de passe)</div>
+</div>
+
+<h3 class="section">2 · Écran de demande + confirmation</h3>
+<div class="apres">
+  <b>Après</b> — un écran sobre : « on t'envoie un lien ». Après envoi, une confirmation rassurante
+  (adresse rappelée, pense aux spams), retour possible vers la connexion. Zéro cul-de-sac (R-2).
+</div>
+<div class="frame">
+  <div class="card">
+    <div class="top">
+      <div class="brand">Na9ra <span>Nal3ab</span></div>
+      <div class="lang">🌐 FR</div>
+    </div>
+    <h1>Réinitialiser le mot de passe</h1>
+    <p class="sub">Saisis ton email : on t'envoie un lien pour en choisir un nouveau.</p>
+    <div class="field">Email</div>
+    <div class="btn">Envoyer le lien</div>
+    <div class="note">← Retour à la connexion</div>
+  </div>
+</div>
+<div class="frame" style="margin-top: 8px">
+  <div class="card">
+    <div class="sent">
+      <div class="ic">📬</div>
+      <b>Lien envoyé</b>
+      <span
+        >Vérifie <b style="display: inline; color: #e5b567">ta@boite.tn</b> — pense aux spams.</span
+      >
+    </div>
+    <div class="note" style="text-align: center; margin-top: 10px">← Modifier l'adresse</div>
+  </div>
+</div>
+
+<h3 class="section">3 · Sélecteur de langue + registre d'accueil (R-7)</h3>
+<div class="avant">
+  <b>Avant (§R-7)</b> — l'écran d'entrée est verrouillé dans la langue courante et parle « jeu » à
+  tout le monde : « Forge ton héros », « Entrer dans l'arène », « Élève · Héros / Parent · Mentor ».
+  Un parent arabophone n'a ni bascule de langue ni copie qui lui parle.
+</div>
+<div class="apres">
+  <b>Après</b> — le <b>sélecteur FR / EN / AR</b> (composant existant) est posé en haut de la carte,
+  avant la saisie. Le registre devient <b>clair et accueillant</b> (« Bienvenue » / « Ravi de te
+  revoir » ; rôles « Élève » / « Parent ») ; le jeu reste une promesse, pas le jargon de la porte
+  d'entrée. Le volet légal/consentement est <b>reporté</b> (Q-5).
+</div>
+<div class="frame">
+  <div class="card">
+    <div class="top">
+      <div class="brand">Na9ra <span>Nal3ab</span></div>
+      <div class="lang">🌐 FR ▾</div>
+    </div>
+    <h1>Bienvenue 👋</h1>
+    <p class="sub">Crée ton compte gratuit — quelques secondes suffisent.</p>
+    <div class="field" style="display: flex; gap: 6px">
+      <span
+        style="
+          flex: 1;
+          color: #e5b567;
+          border: 1px solid #6b5a2e;
+          border-radius: 6px;
+          padding: 5px;
+          text-align: center;
+        "
+        >Élève</span
+      >
+      <span style="flex: 1; text-align: center; padding: 5px">Parent</span>
+    </div>
+    <div class="field">Prénom</div>
+    <div class="field">Email</div>
+    <div class="field">Mot de passe (min. 8)</div>
+    <div class="btn">Créer mon compte</div>
+  </div>
+</div>

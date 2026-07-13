@@ -266,7 +266,7 @@ périmètre ; divergence étude↔code = STOP et remontée (règle FableEtudes).
 - [x] Lot 6 — dashboard + `/boutique`
 - [x] Lot 7 — hub matière connecté
 - [x] Lot 8 — funnel public
-- [ ] Lot 9 — auth v2
+- [x] Lot 9 — auth v2
 - [ ] Lot 10 — onboarding v2
 - [ ] Lot 11 — arène
 - [ ] Lot 12 — parent
@@ -472,3 +472,19 @@ Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions co
   **abandonnés** (aucune régression du drill-down é16), et mes apports indépendants (bande de preuve,
   porte enseignant, descripteurs extras) + la volumétrie « N matières » sont **greffés par-dessus**
   les cartes é16 (cartes de cycle, 1ère sec directe, sections d'année).
+- 2026-07-13 — Lot 9 livré (auth v2, D-8 a-b) : maquette `design/ds/ecrans/auth-v2.html` publiée
+  dans le projet DS puis implémentée. **(a) « Mot de passe oublié » (US-8, le trou dur)** : lien
+  sur l'écran de connexion → mode `forgot` (formulaire email) → `resetPasswordForEmail` (redirect
+  `/auth/reset`) → confirmation **sans révéler l'existence du compte** (privacy) ; nouvelle route
+  **`/auth/reset`** (un-nestée via le segment `auth_`, comme `programme_.lycee` d'é16) : le lien
+  reçu établit une session de récupération (`PASSWORD_RECOVERY`, fenêtre de grâce 2,5 s) → nouveau
+  mot de passe via `updateUser` → dashboard ; lien invalide/expiré = état actionnable « demander un
+  nouveau lien » (R-2, zéro cul-de-sac). **(b) sélecteur de langue** : le composant `LanguageSwitcher`
+  existant est posé en haut de la carte d'auth (et de `/auth/reset`) — un parent arabophone bascule
+  avant de saisir. **Registre R-7** : l'écran d'entrée quitte le jargon jeu (« Forge ton héros » /
+  « Entrer dans l'arène » / « Élève · Héros ») pour un accueil clair et universel (« Crée ton compte »,
+  « Ravi de te revoir », rôles « Élève »/« Parent ») — le jeu reste l'expérience, pas la porte. Volet
+  légal/consentement **reporté** (Q-5). i18n ×3 (18 clés reset + refonte du registre auth). Tests :
+  3 specs `/auth/reset` (succès→dashboard, mot de passe court refusé, lien invalide→demande) ; le flux
+  `forgot` sur `/auth` reste couvert par l'e2e auth-flows (cf. tableau des lots). Budget i18n : 108→116
+  Ko (déjà relevé au lot 8), chunk à 112 Ko. Gate vert (1292 tests + build).
