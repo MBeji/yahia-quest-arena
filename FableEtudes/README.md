@@ -45,7 +45,7 @@ resynchroniser quand on touche une étude.
 | 14  | [Refonte UX/design (registres, primitives, RTL)](14-refonte-ux-design/ETUDE.md)              | 🎨 cohérence perçue & confiance                                            | moyenne+   | livrée       | — (arbitré 2026-07-10)                                                                              |
 | 15  | [Contenu & composition des écrans](15-contenu-design-ecrans/ETUDE.md)                        | 🧭 conversion, rétention J1, confiance parent                              | moyenne+   | en exécution | é14 (livrée) — lots 0–6 livrés / 14                                                                 |
 | 16  | [Ouverture du lycée (sections, mutualisation, arborescence)](16-ouverture-lycee/ETUDE.md)    | 🎓 second cycle complet — 17 classes                                       | haute      | en exécution | lots 0–3 livrés (#367/#369/#371/#375) ; reste : campagne de contenu (vague A, corpus L1 secondaire) |
-| 17  | [Rappel actif (rejouer les QCM en saisie libre)](17-rappel-actif/ETUDE.md)                   | 🧠 double le contenu jouable à coût zéro (active recall)                   | moyenne    | brouillon    | — (le contenu QCM existant suffit) ; s'articule avec 03 (seam scoring) et 04-A1 (Révision du jour)  |
+| 17  | [Rappel actif (rejouer les QCM en saisie libre)](17-rappel-actif/ETUDE.md)                   | 🧠 double le contenu jouable à coût zéro (active recall)                   | moyenne    | **validée**  | — (le contenu QCM existant suffit) ; Q-1…Q-4 arbitrées 2026-07-13 ; s'articule avec 03 et 04-A1     |
 
 **Ordre d'exécution recommandé — révisé post-pivot gratuité (2026-07-11)** (les numéros sont des
 identifiants, pas l'ordre) : finir l'en-cours `15 → 16 → 04-A1`, puis
