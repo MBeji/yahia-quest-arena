@@ -7,24 +7,65 @@
       "Bash(npm run test)",
       "Bash(npm run test:*)",
       "Bash(npm run verify)",
+      "Bash(npm run ci:verify)",
       "Bash(npm run build)",
       "Bash(npm run build:*)",
       "Bash(npm run format)",
+      "Bash(npm run content:check)",
+      "Bash(npm run content:qa)",
+      "Bash(npm run content:qa:strict)",
+      "Bash(npm run content:audit)",
+      "Bash(npm run content:audit:strict)",
+      "Bash(npm run content:build)",
+      "Bash(npm run content:catalogue)",
+      "Bash(npm run audit:deps)",
       "Bash(npm test)",
+      "Bash(npm outdated:*)",
       "Bash(npx vitest:*)",
       "Bash(npx tsc:*)",
       "Bash(npx eslint:*)",
       "Bash(npx prettier:*)",
+      "Bash(npx supabase migration list:*)",
+      "Bash(npx supabase db diff:*)",
+      "Bash(npx supabase test db)",
       "Bash(git status)",
       "Bash(git status:*)",
       "Bash(git diff:*)",
       "Bash(git log:*)",
       "Bash(git show:*)",
-      "Bash(git branch:*)"
+      "Bash(git branch:*)",
+      "Bash(git fetch:*)",
+      "Bash(git remote:*)",
+      "Bash(git ls-files:*)",
+      "Bash(ls:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr diff:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr checks:*)",
+      "Bash(gh issue view:*)",
+      "Bash(gh issue list:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh run view:*)",
+      "Bash(gh workflow list:*)"
+    ],
+    "deny": [
+      "Bash(npx supabase db push:*)",
+      "Bash(npx supabase db reset:*)",
+      "Bash(supabase db push:*)",
+      "Bash(supabase db reset:*)"
     ]
   },
   "hooks": {
     "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/guard-generated.mjs"
+          }
+        ]
+      },
       {
         "matcher": "Bash",
         "hooks": [
@@ -32,9 +73,9 @@
             "type": "agent",
             "if": "Bash(git commit*)",
             "model": "claude-sonnet-4-6",
-            "timeout": 300,
-            "statusMessage": "Revue de code automatique avant commit…",
-            "prompt": "Tu es le relecteur automatique pré-commit de yahia-quest-arena. Une commande `git commit` est sur le point d'être exécutée ($ARGUMENTS). Relis le diff EN COURS DE COMMIT avant de l'autoriser.\n\nÉtapes :\n1. Récupère les changements indexés : `git diff --cached --stat` puis `git diff --cached`. Si le diff indexé est vide, AUTORISE immédiatement (rien à relire).\n2. Applique la checklist du skill de revue : lis `.claude/skills/code-review/SKILL.md` et évalue les axes (architecture & frontières feature/shared, craft, sécurité, complétude, cohérence projet, DB↔code, tests, perf, a11y), ancrés sur CLAUDE.md / ARCHITECTURE.md.\n3. Concentre-toi sur les findings BLOQUANTS (🔴) : faille de sécurité, server fn sans `requireSupabaseAuth` ou sans validation zod, RLS/grant manquant, secret en dur, contournement des gates anti-triche/premium, XSS non assaini, violation d'une règle de CLAUDE.md, frontière feature→feature franchie, fichier généré édité à la main (routeTree.gen.ts, types.ts, migrations de contenu), code dépendant d'une migration non appliquée, ou affaiblissement du gate (`@ts-ignore`, `as any`, règle ESLint désactivée inline, `--no-verify`, seuil de couverture abaissé).\n\nDécision :\n- S'il existe au moins un finding BLOQUANT → REFUSE le commit (permissionDecision \"deny\"). En raison, liste chaque finding bloquant avec `fichier:ligne`, l'impact, et le correctif attendu.\n- Sinon → AUTORISE le commit (permissionDecision \"allow\"). Si tu repères des findings mineurs/majeurs non bloquants, mentionne-les brièvement en contexte sans bloquer.\n\nNe modifie aucun fichier et ne lance pas le gate (lint/typecheck/tests) toi-même ; signale seulement s'il est manifestement nécessaire. Sois rapide et précis."
+            "timeout": 180,
+            "statusMessage": "Garde pré-commit (checks bloquants)…",
+            "prompt": "Tu es le garde pré-commit de Na9ra Nal3ab (yahia-quest-arena). Une commande `git commit` va s'exécuter ($ARGUMENTS). Fais une passe RAPIDE et CIBLÉE sur le diff INDEXÉ — PAS une revue d'architecture (la revue complète = /code-review au moment de la PR ; le gate pre-push `verify` et la CI couvrent lint/types/tests/build).\n\nÉtapes :\n1. Récupère le diff indexé : `git diff --cached --stat` puis `git diff --cached`. Si le diff indexé est vide → AUTORISE immédiatement (rien à relire).\n2. Cherche UNIQUEMENT des findings BLOQUANTS à fort signal dans ce diff :\n- secret/clé/token en dur (hors `.env.example`) ;\n- affaiblissement du gate : `@ts-ignore`, `as any` pour contourner les types, règle ESLint désactivée inline, seuil de couverture abaissé, `--no-verify` ;\n- server fn (`createServerFn`) ajoutée sans middleware `requireSupabaseAuth` ou sans `.inputValidator` zod ;\n- contournement d'une gate anti-triche/premium ou d'un REVOKE/RLS ;\n- migration destructive (DROP/REVOKE) livrée dans le MÊME commit que le code qui utilisait encore l'ancienne forme (ordre DoD §7).\nLe hook déterministe `guard-generated.mjs` bloque déjà l'édition des fichiers générés — ne re-vérifie pas ça.\n\nDécision :\n- Au moins un finding bloquant → REFUSE le commit (permissionDecision \"deny\") ; en raison, liste chaque finding avec `fichier:ligne`, l'impact, et le correctif attendu.\n- Sinon → AUTORISE le commit (permissionDecision \"allow\") ; si tu repères un finding mineur non bloquant, mentionne-le brièvement sans bloquer.\n\nNe modifie aucun fichier et ne lance pas le gate (lint/typecheck/tests) toi-même. Sois rapide et précis."
           }
         ]
       }

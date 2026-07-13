@@ -41,7 +41,7 @@ réellement en place et vérifiées :
 | 3   | Moyen    | `?debug=1` renvoie la **stack complète** à tout visiteur anonyme                                  | **Corrigé dans cette PR**                    |
 | 4   | Moyen    | Rate-limiting anonyme inopérant (mémoire par-instance + clé `x-forwarded-for` spoofable)          | Anti-abus / infra                            |
 | 5   | Moyen    | Pas de CAPTCHA/anti-bot sur signup/login                                                          | Config Supabase                              |
-| 6   | Faible   | DOMPurify no-op sans DOM (XSS SSR latente)                                                        | Durcissement                                 |
+| 6   | Faible   | DOMPurify no-op sans DOM (XSS SSR latente)                                                        | **Corrigé (fail-closed)**                    |
 | 7   | Faible   | Énumération d'emails au signup + politique de mot de passe client-only                            | Config Supabase                              |
 | 8   | Faible   | Tokens de session en `localStorage`                                                               | Atténué (CSP)                                |
 | 9   | Faible   | `display_name` non borné via metadata signup (chemin trigger)                                     | **Corrigé dans cette PR**                    |
@@ -100,9 +100,12 @@ protection des mots de passe fuités, et **versionner** cette posture.
 
 `jsdom` est en devDependency uniquement → `DOMPurify.sanitize` est un no-op sans DOM. Non
 exploitable aujourd'hui (le contenu public est rendu côté client, et il est _authored_, pas
-_user-generated_), mais `sanitizeSvg` n'a pas de repli « échappe d'abord ». Reco :
-`isomorphic-dompurify` ou fail-closed serveur. Les réponses page-d'erreur/sitemap/bot-guard
-sortent hors du chemin routeur et ne portent pas de CSP (ni script → impact minime).
+_user-generated_). **Corrigé :** `sanitizeSvg` **échoue désormais en sécurité** (retourne
+une chaîne vide, la figure est abandonnée) quand `DOMPurify.isSupported` est faux ; et
+`renderMarkdown` saute explicitement la passe de sanitisation indisponible (son corps est
+déjà HTML-échappé, donc sûr) au lieu de dépendre du comportement pass-through. Reste ouvert
+(#10) : les réponses page-d'erreur/sitemap/bot-guard sortent hors du chemin routeur et ne
+portent pas de CSP (ni script → impact minime).
 
 ### 9 — `display_name` non borné (Faible) — **corrigé**
 
@@ -130,7 +133,14 @@ gain sécurité est nul et la précision de l'erreur sert le parent.
    (findings #5, #7).
 3. Décider explicitement du **risque « banque de réponses publique »** : accepter, exiger
    une réponse pour révéler, ou retirer `explanation` de la réponse anonyme (finding #1).
-4. **Durcissement SSR** : `isomorphic-dompurify` / fail-closed serveur (finding #6).
 
-Corrigés dans la PR qui porte cet audit : findings **#3** (stack `?debug=1`) et **#9**
-(`display_name` borné).
+## Findings corrigés
+
+- **#3** (stack `?debug=1`) et **#9** (`display_name` borné) — PR #384 (mergée).
+- **#6** (sanitisation SSR fail-closed) — PR de suivi.
+
+## Reste ouvert (edge / infra / config)
+
+Findings **#1, #2, #4** (throttling au bord des RPC/server fns anon), **#5, #7** (anti-bot +
+config auth versionnée), **#10** (CSP sur les réponses hors routeur) — décisions
+infra/produit, hors correctif de code.

@@ -78,8 +78,9 @@ CNP transcription (school) or the wrapper's level model (CEFR for langues, etc.)
 - **Objectives per chapter**: 3–6 testable "l'élève sait…" statements — these become the contract
   for `cours.md` (every tested notion taught) and the quiz.
 - **Ladder plan per chapter**: quiz (gate) + `01-pratique` d1 + `03-revision` d2 free core;
-  `02-boss` d3 + `04-defi` d4 ceiling (premium on concours parcours); which interactive formats fit
-  which chapter (`interactive-formats.md` catalogue).
+  `02-boss` d3 + `04-defi` d4 ceiling (the parcours premium gate — dormant in the current free
+  phase, see CLAUDE.md "Access gate"); which interactive formats fit which chapter
+  (`interactive-formats.md` catalogue).
 - **Calibration notes**: age/level language bar, number ranges, trap taxonomy pointers (the
   matching prof-\* skill owns the detail).
 

@@ -16,6 +16,9 @@
  *                           all). The value is the source folder name under
  *                           content/ — for a shared dir this regenerates every
  *                           compiled target it declares.
+ *   --competences           Emit ONLY the competency-registry migration
+ *                           (content/competences/*.json — étude 07 D-1);
+ *                           subjects are validated but not regenerated.
  *   --content-dir <path>    Content root (default: content).
  *   --out-dir <path>        Migrations output dir (default: supabase/migrations).
  *   --timestamp <stamp>     Override the YYYYMMDDHHMMSS migration prefix.
@@ -26,11 +29,15 @@
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { argv, cwd, exit, stderr, stdout } from "node:process";
-import { buildMigrationSql } from "../../src/shared/content/sql-builder.ts";
+import {
+  buildCompetencyRegistryMigrationSql,
+  buildMigrationSql,
+} from "../../src/shared/content/sql-builder.ts";
 import {
   ContentValidationError,
   expandSubjects,
   loadAllSubjects,
+  loadCompetencyRegistries,
   loadMisconceptionRegistry,
   loadSubject,
 } from "../../src/shared/content/loader.ts";
@@ -71,6 +78,7 @@ function main(): void {
   const contentDir = resolve(root, getFlag("content-dir") ?? "content");
   const outDir = resolve(root, getFlag("out-dir") ?? "supabase/migrations");
   const checkOnly = hasFlag("check");
+  const competencesOnly = hasFlag("competences");
   const onlySubject = getFlag("subject");
   const baseStamp = getFlag("timestamp") ?? defaultTimestamp();
 
@@ -78,6 +86,11 @@ function main(): void {
   // malformed content/misconceptions.json fails content:check; usage of unknown
   // tags is cross-checked by content:qa.
   loadMisconceptionRegistry(contentDir);
+
+  // Same guarantee for the competency family registries (étude 07 D-1): shape,
+  // trilingual labels, same-family prereqs and DAG-ness (R-3) all fail
+  // content:check; usage of unknown ids is cross-checked by content:qa.
+  const competencyRegistries = loadCompetencyRegistries(contentDir);
 
   // Expansion (étude 16 D-4): shared `compileTo` dirs become their compiled
   // per-section subjects here; everything downstream keys on compiled ids.
@@ -122,7 +135,9 @@ function main(): void {
       `✓ ${subject.meta.id}: ${chapters} chapters, ${exercises} exercises, ${questions} questions\n`,
     );
 
-    if (checkOnly) return;
+    // --competences regenerates the registry only: subjects are validated
+    // (they still count in the summary) but their migrations stay untouched.
+    if (checkOnly || competencesOnly) return;
 
     const sql = buildMigrationSql(subject);
     const stamp = bumpTimestamp(baseStamp, index);
@@ -131,6 +146,23 @@ function main(): void {
     writeFileSync(join(outDir, fileName), `${sql}\n`, "utf8");
     stdout.write(`  → ${fileName}\n`);
   });
+
+  if (competencyRegistries.length > 0) {
+    const competencyTotal = competencyRegistries.reduce((n, r) => n + r.competencies.length, 0);
+    stdout.write(
+      `✓ competences: ${competencyRegistries.length} family(ies), ${competencyTotal} competencies\n`,
+    );
+    if (competencesOnly && !checkOnly) {
+      const sql = buildCompetencyRegistryMigrationSql(competencyRegistries);
+      const fileName = `${baseStamp}_generated_competences_registry.sql`;
+      mkdirSync(outDir, { recursive: true });
+      writeFileSync(join(outDir, fileName), `${sql}\n`, "utf8");
+      stdout.write(`  → ${fileName}\n`);
+    }
+  } else if (competencesOnly) {
+    stderr.write(`No competency registries found under ${join(contentDir, "competences")}\n`);
+    exit(1);
+  }
 
   stdout.write(
     `\n${checkOnly ? "Validated" : "Built"} ${subjects.length} subject(s): ` +

@@ -40,7 +40,8 @@ task complete until this gate is green.**
    ```
 
    This adds `test:coverage` (enforces coverage thresholds), `build:check`
-   (production build + bundle budget), and `audit:deps`.
+   (production build + bundle budget), `audit:deps`, and the content gates
+   `content:qa:strict` + `content:audit:strict`.
 
 ## Reporting
 

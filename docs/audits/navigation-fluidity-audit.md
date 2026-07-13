@@ -10,7 +10,7 @@
 
 La navigation est **globalement saine et bien structurée**. L'architecture à deux coquilles
 (`_public` pour l'anonyme, `_authenticated` pour le connecté), le routage d'exercice
-*auth-aware* (`exerciseRouteFor` : `/exercice` pour l'anon, `/quest` pour le connecté), les
+_auth-aware_ (`exerciseRouteFor` : `/exercice` pour l'anon, `/quest` pour le connecté), les
 redirections 301 de convergence (`/themes`, `/subject`, `/lesson` → slugs publics FR) et le
 guard d'auth en `useEffect` (pas de flash de contenu protégé) sont des points forts réels,
 déjà couverts par des specs e2e.
@@ -22,11 +22,11 @@ après login**. Aucune n'expose de données protégées (toutes les server fns v
 
 ## Légende de sévérité
 
-| Niveau | Sens |
-|---|---|
+| Niveau        | Sens                                                                                       |
+| ------------- | ------------------------------------------------------------------------------------------ |
 | 🔴 **Majeur** | Friction nette dans un parcours courant ; à corriger avant de qualifier la nav « fluide ». |
-| 🟡 **Mineur** | Friction localisée ou incohérence ; correctif simple, faible risque. |
-| ⚪ **Nit** | Cosmétique / confort / a11y ; opportuniste. |
+| 🟡 **Mineur** | Friction localisée ou incohérence ; correctif simple, faible risque.                       |
+| ⚪ **Nit**    | Cosmétique / confort / a11y ; opportuniste.                                                |
 
 > Note de fiabilité : deux affirmations issues du balayage automatique ont été **réfutées
 > après vérification du code** et sont reclassées en bas de document (section
@@ -34,19 +34,19 @@ après login**. Aucune n'expose de données protégées (toutes les server fns v
 
 ## Synthèse des constats
 
-| # | Sévérité | Zone | Constat | Emplacement |
-|---|---|---|---|---|
-| 1 | 🔴 Majeur | Anonyme | `/chapitre/$chapterId` ne gère pas l'état d'erreur → **spinner infini** si le fetch échoue (les voisins `/matiere`, `/exercice` le gèrent). | `routes/_public/chapitre.$chapterId.tsx:22-33` |
-| 2 | 🔴 Majeur | Anonyme | Pas de remontée **Matière → Niveau** : arrivé sur une matière, aucun lien retour vers le niveau parent (browser-back uniquement). | `features/quest/components/subject-hub.tsx` |
-| 3 | 🔴 Majeur | Anonyme | Pas de remontée **Chapitre → Matière** : le nom de la matière dans le lecteur de cours est du texte, pas un lien. | `features/quest/components/lesson-reader.tsx` (en-tête) |
-| 4 | 🔴 Majeur | Transition | **Deep-link non préservé après login** : un anon qui ouvre un lien protégé est renvoyé vers `/dashboard` après connexion, jamais vers la page demandée. | `routes/auth.tsx:36,85-90` · `routes/_authenticated.tsx:71-75` |
-| 5 | 🟡 Mineur | Connecté | `/programme` (catalogue public, cible de la nav « Découvrir ») n'est **pas scopé au parcours actif** : un connecté y voit tous les niveaux au lieu de son parcours. | `routes/_authenticated/themes.tsx` (301 → `/programme`) |
-| 6 | 🟡 Mineur | Connecté | **Aucun sélecteur de parcours** post-onboarding : changer de parcours impose de repasser par l'onboarding ; le parcours actif n'est pas non plus affiché dans la nav. | nav shell `routes/_authenticated.tsx` |
-| 7 | 🟡 Mineur | Connecté | Liens **admin cachés sur mobile** (`hidden lg:*`), sans menu overflow → un admin sur mobile ne peut atteindre `/admin/*` depuis la nav. | `routes/_authenticated.tsx` (header) |
-| 8 | 🟡 Mineur | Transition | Cache React Query **non purgé au logout** (`queryClient.clear()` absent). Pas de fuite (server fns protégées) mais données périmées possibles à la reconnexion. | `routes/_authenticated.tsx:100-104` |
-| 9 | ⚪ Nit | Transition | Confirmation d'e-mail **hardcodée vers `/dashboard`** (`emailRedirectTo`), même problème de deep-link que #4. | `routes/auth.tsx` (~l.132) |
-| 10 | ⚪ Nit | Anonyme | Boutons nav cours **précédent/suivant sans `aria-label`** contextualisé ; liste d'exercices sans `role="list"`. | `lesson-reader.tsx`, `subject-hub.tsx` |
-| 11 | ⚪ Nit | Connecté | Pas de feedback « enregistrement… » entre la sélection de parcours en onboarding et l'arrivée au dashboard. | `routes/_authenticated/onboarding.tsx` |
+| #   | Sévérité  | Zone       | Constat                                                                                                                                                               | Emplacement                                                    |
+| --- | --------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 1   | 🔴 Majeur | Anonyme    | `/chapitre/$chapterId` ne gère pas l'état d'erreur → **spinner infini** si le fetch échoue (les voisins `/matiere`, `/exercice` le gèrent).                           | `routes/_public/chapitre.$chapterId.tsx:22-33`                 |
+| 2   | 🔴 Majeur | Anonyme    | Pas de remontée **Matière → Niveau** : arrivé sur une matière, aucun lien retour vers le niveau parent (browser-back uniquement).                                     | `features/quest/components/subject-hub.tsx`                    |
+| 3   | 🔴 Majeur | Anonyme    | Pas de remontée **Chapitre → Matière** : le nom de la matière dans le lecteur de cours est du texte, pas un lien.                                                     | `features/quest/components/lesson-reader.tsx` (en-tête)        |
+| 4   | 🔴 Majeur | Transition | **Deep-link non préservé après login** : un anon qui ouvre un lien protégé est renvoyé vers `/dashboard` après connexion, jamais vers la page demandée.               | `routes/auth.tsx:36,85-90` · `routes/_authenticated.tsx:71-75` |
+| 5   | 🟡 Mineur | Connecté   | `/programme` (catalogue public, cible de la nav « Découvrir ») n'est **pas scopé au parcours actif** : un connecté y voit tous les niveaux au lieu de son parcours.   | `routes/_authenticated/themes.tsx` (301 → `/programme`)        |
+| 6   | 🟡 Mineur | Connecté   | **Aucun sélecteur de parcours** post-onboarding : changer de parcours impose de repasser par l'onboarding ; le parcours actif n'est pas non plus affiché dans la nav. | nav shell `routes/_authenticated.tsx`                          |
+| 7   | 🟡 Mineur | Connecté   | Liens **admin cachés sur mobile** (`hidden lg:*`), sans menu overflow → un admin sur mobile ne peut atteindre `/admin/*` depuis la nav.                               | `routes/_authenticated.tsx` (header)                           |
+| 8   | 🟡 Mineur | Transition | Cache React Query **non purgé au logout** (`queryClient.clear()` absent). Pas de fuite (server fns protégées) mais données périmées possibles à la reconnexion.       | `routes/_authenticated.tsx:100-104`                            |
+| 9   | ⚪ Nit    | Transition | Confirmation d'e-mail **hardcodée vers `/dashboard`** (`emailRedirectTo`), même problème de deep-link que #4.                                                         | `routes/auth.tsx` (~l.132)                                     |
+| 10  | ⚪ Nit    | Anonyme    | Boutons nav cours **précédent/suivant sans `aria-label`** contextualisé ; liste d'exercices sans `role="list"`.                                                       | `lesson-reader.tsx`, `subject-hub.tsx`                         |
+| 11  | ⚪ Nit    | Connecté   | Pas de feedback « enregistrement… » entre la sélection de parcours en onboarding et l'arrivée au dashboard.                                                           | `routes/_authenticated/onboarding.tsx`                         |
 
 ## Détail par zone
 
@@ -54,13 +54,14 @@ après login**. Aucune n'expose de données protégées (toutes les server fns v
 
 **Ce qui marche.** Hiérarchie claire `landing → /programme|/extras → /niveau → /matiere →
 /chapitre|/exercice`. CTAs de découverte convergents et cohérents (le header pointe
-`Programme`/`Extras`/`Se connecter`/`S'inscrire`). Le routage *auth-aware* envoie l'anon vers
+`Programme`/`Extras`/`Se connecter`/`S'inscrire`). Le routage _auth-aware_ envoie l'anon vers
 la pratique gratuite (`/exercice`) sans jamais le bloquer au mur de login — comportement
 verrouillé par `e2e/public-anon/navigation.spec.ts` (cours → « pratiquer » → exercice, et
 exercice → « revoir le cours » → chapitre). États de chargement / vides / erreurs gérés sur
 `/programme`, `/niveau`, `/matiere`, `/exercice`.
 
 **Frictions.**
+
 - **#1 (Majeur)** — `/chapitre/$chapterId` : `useQuery` ne récupère pas `isError`, et le garde
   `if (isLoading || !data)` retombe sur le spinner pour un fetch en échec → **spinner
   perpétuel**. Les routes sœurs affichent un message d'erreur ; l'incohérence est la preuve
@@ -83,6 +84,7 @@ Quête suivante ; le dungeon revient au dashboard. Le flux principal
 `dashboard → parcours (JourneyMap) → matière → cours/quest` est lisible.
 
 **Frictions.**
+
 - **#5 (Mineur)** — La nav « Découvrir » a convergé vers `/programme` (public, tous niveaux).
   Pour un connecté, ça casse l'attente « voir mon parcours » : `/parcours` (JourneyMap) est la
   vue scopée, mais `/programme` reste global. À clarifier (renvoyer le connecté vers
@@ -102,6 +104,7 @@ clignotement. Logout propre (`supabase.auth.signOut()` puis `/`), et le bouton b
 logout ne ré-expose aucun contenu (server fns protégées).
 
 **Frictions.**
+
 - **#4 (Majeur)** — `validateSearch` de `/auth` ne capture que `mode` ; après connexion (et
   via `onAuthStateChange`), on `navigate({ to: "/dashboard" })` en dur. Le guard
   `_authenticated` redirige aussi vers `/auth?mode=login` **sans** mémoriser le chemin
@@ -113,28 +116,28 @@ logout ne ré-expose aucun contenu (server fns protégées).
 ## Recommandations priorisées
 
 1. **#1** — Ajouter le branchement d'erreur sur `/chapitre/$chapterId` (récupérer `isError`,
-   afficher le même bloc d'erreur que `/matiere` / `/exercice`). *Effort : minime.*
+   afficher le même bloc d'erreur que `/matiere` / `/exercice`). _Effort : minime._
 2. **#4** — Préserver le deep-link : capturer `from` à la redirection du guard, le valider dans
    la recherche de `/auth`, rediriger dessus après login (fallback `/dashboard`).
-   *Effort : modéré (~½ j).* Traiter #9 dans la foulée (`emailRedirectTo`).
+   _Effort : modéré (~½ j)._ Traiter #9 dans la foulée (`emailRedirectTo`).
 3. **#2 / #3** — Câbler les liens de remontée : matière→niveau (passer le `parcoursId`
-   au `SubjectHub`) et chapitre→matière (rendre le nom de matière cliquable). *Effort : faible.*
+   au `SubjectHub`) et chapitre→matière (rendre le nom de matière cliquable). _Effort : faible._
 4. **#5 / #6** — Décider de la sémantique « Découvrir » pour un connecté (scoper `/programme`
    au parcours **ou** router vers `/parcours`) et exposer un sélecteur + label de parcours
-   actif dans la nav. *Effort : modéré.*
+   actif dans la nav. _Effort : modéré._
 5. **#7 / #8 / #10 / #11** — Confort : repli mobile pour l'admin, `queryClient.clear()` au
-   logout, `aria-label` sur la nav cours, feedback de chargement onboarding. *Effort : minime.*
+   logout, `aria-label` sur la nav cours, feedback de chargement onboarding. _Effort : minime._
 
 ## Affirmations corrigées (transparence du balayage)
 
 Deux constats remontés par l'analyse automatique ont été **réfutés après lecture du code** ;
 ils ne figurent pas dans la synthèse ci-dessus :
 
-- ❌ *« Routes `/admin/*` sans guard → loader infini pour un non-admin. »* **Faux.**
+- ❌ _« Routes `/admin/*` sans guard → loader infini pour un non-admin. »_ **Faux.**
   `admin.subscriptions.tsx:71-83` rend un écran « accès refusé » + lien retour pour
   `role !== null && !isAdmin`, et les queries sont `enabled: isAdmin`. Au pire un bref flash du
   chrome admin vide pendant la résolution du rôle (cosmétique, non retenu).
-- ❌ *« Liens de gameplay = impasses dures (BLOQUANT). »* Reclassé : la remontée
+- ❌ _« Liens de gameplay = impasses dures (BLOQUANT). »_ Reclassé : la remontée
   chapitre↔exercice est câblée et testée en e2e ; seules les remontées matière→niveau et
   chapitre→matière manquent (constats #2/#3, Majeur — friction, pas impasse absolue puisque le
   browser-back fonctionne).

@@ -45,11 +45,14 @@ There is **no** `nameEn`/`nameAr` — `nameFr` is the single display-name field,
 subject's `contentLanguage` (the "Fr" in the name is legacy only). There is **no** per-language text
 anywhere else.
 
-> **Premium is per-parcours, not per-subject.** Access is governed by the parcours a subject resolves
-> to (its theme+grade) and enforced server-side by `resolve_exercise_access` — not by `isPremium`. The
-> `isPremium` flag is legacy and no longer read by the gate; leave it `false`/omit it. The **free
-> preview** (the chapter comprehension quiz + every difficulty-1 mission) always shows, even on a
-> premium parcours, so a prospect can taste a chapter before paying. See CLAUDE.md "Premium gate".
+> **Premium is per-parcours, not per-subject — but dormant in the current free phase.** Access is
+> governed by the parcours a subject resolves to (its theme+grade) and enforced server-side by
+> `resolve_exercise_access` — not by `isPremium`. The `isPremium` flag is legacy and no longer read
+> by the gate; leave it `false`/omit it. Every parcours is currently `is_premium=false` (2026-06-21
+> pivot + étude 15 Q-2), so **nothing is gated today**. The **free preview** (the chapter
+> comprehension quiz + every difficulty-1 mission) is what would still show on a premium parcours if
+> one is ever reactivated (frozen étude `FableEtudes/01-paiement-en-ligne`). See CLAUDE.md "Access
+> gate".
 
 ## chapter.json
 
@@ -227,15 +230,15 @@ you do **not** author quiz rewards.
 
 ## exercices/\*.json
 
-| Field          | Type       | Required | Constraint                                                                             |
-| -------------- | ---------- | -------- | -------------------------------------------------------------------------------------- |
-| `title`        | string     | yes      | non-empty (RPG-flavored, see style-guide.md)                                           |
-| `difficulty`   | number     | yes      | integer **1–4** (1 easy · 2 medium · 3 boss · 4 élite; 3–4 premium-gated per parcours) |
-| `mode`         | enum       | yes      | `"practice"` \| `"boss"` \| `"challenge"` (never `"quiz"`)                             |
-| `xpReward`     | number     | yes      | positive integer — use the canonical table (rewards-and-modes.md)                      |
-| `rewardCoins`  | number     | yes      | non-negative integer                                                                   |
-| `displayOrder` | number     | yes      | positive integer (match the filename `NN`)                                             |
-| `questions`    | question[] | yes      | **1–50** (use 6)                                                                       |
+| Field          | Type       | Required | Constraint                                                                                                    |
+| -------------- | ---------- | -------- | ------------------------------------------------------------------------------------------------------------- |
+| `title`        | string     | yes      | non-empty (RPG-flavored, see style-guide.md)                                                                  |
+| `difficulty`   | number     | yes      | integer **1–4** (1 easy · 2 medium · 3 boss · 4 élite; 3–4 are the dormant premium-gate ceiling per parcours) |
+| `mode`         | enum       | yes      | `"practice"` \| `"boss"` \| `"challenge"` (never `"quiz"`)                                                    |
+| `xpReward`     | number     | yes      | positive integer — use the canonical table (rewards-and-modes.md)                                             |
+| `rewardCoins`  | number     | yes      | non-negative integer                                                                                          |
+| `displayOrder` | number     | yes      | positive integer (match the filename `NN`)                                                                    |
+| `questions`    | question[] | yes      | **1–50** (use 6)                                                                                              |
 
 ## Defaults you may omit
 

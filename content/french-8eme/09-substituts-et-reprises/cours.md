@@ -27,7 +27,7 @@ Un **substitut grammatical** est un **pronom** : un petit mot-outil qui remplace
 | **Possessif**    | le mien, le tien, le sien, la nôtre, les vôtres, le leur…      | _Mon cahier est plein ; **le tien** est vide._          |
 
 - Le **pronom personnel sujet** reprend le référent devant un verbe : _Le libraire ouvre la caisse. **Il** compte les livres._
-- Les pronoms **compléments** (le, la, les, lui, leur, en, y) reprennent un complément : _J'ai vu ce roman, je **l'**ai adoré ; j'y pense encore._
+- Les pronoms **compléments** (le, la, les, lui, leur, en, y) reprennent un complément : _J'ai vu ce roman, je \**l'\**ai adoré ; j'y pense encore._
 - Le **pronom démonstratif** reprend en **désignant** ou en **opposant** : _Des deux affiches, je préfère **celle** du théâtre._
 - Le **pronom possessif** reprend un GN possessif entier : _Ton résumé et **le mien** (= mon résumé)._
 

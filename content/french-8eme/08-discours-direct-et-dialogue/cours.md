@@ -71,7 +71,7 @@ Souvent, le verbe introducteur ne se place **pas** avant la parole, mais **aprè
 - Réplique interrogative → le **?** reste collé à la réplique : _« Où vas-tu ? **demanda-t-il**. »_
 - Incise **au milieu** → deux virgules l'entourent : _« Ce soir, **dit-il**, nous partirons. »_
 
-> 🗡️ **Le « -t- » de liaison.** Quand le verbe se termine par une **voyelle** et que le sujet est **il / elle / on**, on glisse un **-t-** entre deux tirets pour l'oreille : _demanda**-t-**elle_, _murmura**-t-**il_, _raconta**-t-**on_. Mais avec un **nom** sujet, pas de tiret ni de -t- : _demanda **la vieille femme**_.
+> 🗡️ **Le « -t- » de liaison.** Quand le verbe se termine par une **voyelle** et que le sujet est **il / elle / on**, on glisse un **-t-** entre deux tirets pour l'oreille : _demanda\**-t-\**elle_, _murmura\**-t-\**il_, _raconta\**-t-\**on_. Mais avec un **nom** sujet, pas de tiret ni de -t- : _demanda **la vieille femme**_.
 
 ## 🧵 Insérer le dialogue dans le récit
 

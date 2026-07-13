@@ -36,16 +36,21 @@ plafond — strictement dans le programme de la section et de l'année.
 - Subject `id` = `math-<gradeSlug>` verbatim (ex. `math-1ere-sec`, `math-2eme-sec-sciences`,
   `math-bac-math`). Thème `ecole-tn` · **langue française (`fr`)**, notation 100 % standard (chiffres
   0–9, équations LTR, unités SI — `math-and-notation.md`, règle dure).
-- ⚠️ **Ces nœuds de sections n'existent pas encore en base** (migration de seed à venir), le
-  répertoire `content/` lycée est **vide**, et les transcriptions des programmes officiels du
-  secondaire **n'existent pas encore**. Un professeur **n'overlay que des chapitres existants** : tout
-  travail lycée est **en attente** des stations amont (migration sections → transcription des
-  programmes → mise en base via `content-ecole-tn`). Les cartes ci-dessous sont **indicatives** (grands
-  blocs sûrs du programme tunisien) et devront être alignées sur la transcription officielle.
-- **Premium** : seuls les parcours `bac-*` sont concours PREMIUM (d3/d4 gated, preview = quiz + d1) ;
-  1ère→3ème sec = FREE (d3/d4 = palier difficile du ladder libre). Récompenses canoniques : d3 boss
-  120/30, d4 challenge 300/60 ; étoiles + libellés FR (Difficile / Élite). Ne jamais convertir un d1–2
-  existant en d3–4.
+- **État réel (2026-07)** : les nœuds de sections **sont seedés en base** (migration
+  `20260704235000_lycee_section_grades_seed.sql`, PR #285 — 16 nœuds + parcours `coming_soon`), et le
+  pilote lycée existe : transcriptions `programme/bac-math/mathematiques.md` (pilote hors corpus) et
+  `programme/1ere-sec/{mathematiques,sciences-physiques}.md` (pilotes `[~]`), plus un premier chapitre
+  complet **`content/math-bac-math/01-continuite-limites`** (PR #288/#291, palier annales-bac inclus).
+  Un professeur **n'overlay que des chapitres existants** : hors ce pilote, le travail lycée attend la
+  mise en base des chapitres (transcription des programmes → `content-ecole-tn`). Les cartes ci-dessous
+  restent **indicatives** (grands blocs sûrs du programme tunisien) et devront être alignées sur la
+  transcription officielle.
+- **Phase gratuite : rien n'est gaté.** Les parcours `bac-*` sont **concours national** ; leur
+  statut « premium » (d3/d4 gated, preview = quiz + d1) est une **architecture dormante**
+  (réactivation via l'étude gelée `FableEtudes/01-paiement-en-ligne`, voir CLAUDE.md « Access
+  gate ») — 1ère→3ème sec comme `bac-*` sont FREE aujourd'hui. Récompenses canoniques inchangées :
+  d3 boss 120/30, d4 challenge 300/60 ; étoiles + libellés FR (Difficile / Élite). Ne jamais
+  convertir un d1–2 existant en d3–4.
 - **Palier bac dédié** : fichier `NN-annales-bac.json` (d4, challenge, 300/60) — items style annales
   session principale, multi-étapes, discriminants du top décile.
 
@@ -112,8 +117,8 @@ plafond — strictement dans le programme de la section et de l'année.
 
 1. Confirmer **section + année + chapitre** → **auditer l'échelle existante**
    (`content/math-<gradeSlug>/<NN>/exercices/*.json`) — jamais de doublon, strictement au-dessus du
-   plafond, toujours dans le programme de la section. Si le chapitre n'existe pas (base lycée vide),
-   **signaler que le travail est en attente des stations amont et s'arrêter**.
+   plafond, toujours dans le programme de la section. Si le chapitre n'existe pas (base lycée encore
+   pilote), **signaler que le travail est en attente des stations amont et s'arrêter**.
 2. 6+ questions, ≥ 3 archétypes (`expert-exercises.md`), au moins une combinaison intra-matière et un
    « sens inverse » par exercice d4 ; ramp interne 2→3 ; énoncés calibrés à l'âge de la section.
 3. Distracteurs = erreurs exécutées (tableau) ; explication = dérivation complète + « L'erreur
