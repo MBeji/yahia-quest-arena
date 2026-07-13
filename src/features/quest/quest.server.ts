@@ -514,7 +514,9 @@ function clientIpKey(): string {
  * Public, stateless correction for anonymous (or signed-in) practice. Calls the
  * SECURITY DEFINER check_answers RPC — no session, no attempt, no XP. Returns the
  * per-question correction for admin practice/boss exercises; comprehension quizzes
- * and parent content yield an empty, non-reviewable result.
+ * and parent content yield an empty, non-reviewable result. The RPC withholds the
+ * `explanation` from anonymous callers (auth.uid() IS NULL) — hint-economy content
+ * (audit #1) — so `correctChoice` is set but `explanation` is null for visitors.
  */
 export const checkAnswersPublic = createServerFn({ method: "POST" })
   .middleware([optionalSupabaseAuth])
