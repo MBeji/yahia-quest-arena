@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision (type examen) : Résoudre le triangle rectangle",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Dans un triangle ABC rectangle en A, AB = 5 cm et BC = 10 cm. Combien vaut l'angle B ?",
+      "options": [
+        { "id": "a", "text": "60°" },
+        { "id": "b", "text": "30°" },
+        { "id": "c", "text": "45°" },
+        { "id": "d", "text": "90°" }
+      ],
+      "correctOption": "a",
+      "explanation": "cos B = AB/BC = 5/10 = 1/2, et l'angle dont le cosinus vaut 1/2 est 60° ✓. 30° confond avec l'angle dont le sinus vaut 1/2 ; 45° donnerait cos = √2/2 ≈ 0,71 ; 90° est exclu car B est un angle aigu.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans un triangle rectangle en A, l'angle B = 60° et le côté adjacent AB = 4 cm. Combien vaut l'hypoténuse BC ?",
+      "options": [
+        { "id": "a", "text": "8 cm" },
+        { "id": "b", "text": "2 cm" },
+        { "id": "c", "text": "6,93 cm" },
+        { "id": "d", "text": "6 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "cos B = AB/BC, donc BC = AB / cos 60° = 4 / (1/2) = 8 cm ✓. 2 cm multiplie par cos 60° au lieu de diviser (4 × 1/2) ; 6,93 cm (soit 4√3) utilise la tangente ; 6 cm est une estimation sans calcul.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans un triangle rectangle en A, l'angle B = 45° et le côté adjacent AB = 7 cm. Combien vaut le côté opposé AC ?",
+      "options": [
+        { "id": "a", "text": "7 cm" },
+        { "id": "b", "text": "9,9 cm" },
+        { "id": "c", "text": "3,5 cm" },
+        { "id": "d", "text": "14 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "tan B = AC/AB, donc AC = AB × tan 45° = 7 × 1 = 7 cm ✓ (le triangle est rectangle isocèle). 9,9 cm (soit 7√2) est l'hypoténuse BC, pas le côté opposé ; 3,5 cm et 14 cm ne correspondent à aucune relation.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans un triangle ABC rectangle en A, on sait que sin B = 0,6. Combien vaut cos C ?",
+      "options": [
+        { "id": "a", "text": "0,6" },
+        { "id": "b", "text": "0,8" },
+        { "id": "c", "text": "0,4" },
+        { "id": "d", "text": "0,36" }
+      ],
+      "correctOption": "a",
+      "explanation": "Les angles B et C sont complémentaires (B + C = 90°), donc le sinus de l'un égale le cosinus de l'autre : cos C = sin B = 0,6 ✓. 0,8 est cos B (= sin C) ; 0,4 fait 1 − 0,6 sans fondement ; 0,36 est (sin B)².",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans un triangle ABC rectangle en A, AB = 6 cm et AC = 8 cm. H est le pied de la hauteur issue de A sur [BC]. Combien vaut AH ?",
+      "options": [
+        { "id": "a", "text": "4,8 cm" },
+        { "id": "b", "text": "7 cm" },
+        { "id": "c", "text": "5 cm" },
+        { "id": "d", "text": "2,4 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "On calcule d'abord BC = √(6² + 8²) = 10, puis la relation AB × AC = AH × BC donne AH = (6 × 8)/10 = 4,8 cm ✓. 7 cm est la moyenne (6 + 8)/2 ; 5 cm est la moitié de l'hypoténuse ; 2,4 cm divise le bon résultat par deux.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans un triangle ABC rectangle en A, l'hypoténuse BC = 25 cm et la projection BH du côté [AB] sur [BC] vaut 9 cm. Combien vaut AB ?",
+      "options": [
+        { "id": "a", "text": "15 cm" },
+        { "id": "b", "text": "225 cm" },
+        { "id": "c", "text": "16 cm" },
+        { "id": "d", "text": "12 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "La relation métrique AB² = BH × BC donne AB² = 9 × 25 = 225, donc AB = √225 = 15 cm ✓. 225 cm est AB² sans racine carrée ; 16 cm fait 25 − 9 (ce serait la projection CH) ; 12 cm confond avec la hauteur AH.",
+      "difficulty": 3
+    }
+  ]
+}

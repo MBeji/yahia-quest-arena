@@ -1,0 +1,85 @@
+{
+  "title": "⭐ Exercice : Reconnaître vecteurs et images",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "ABDC est un parallélogramme. Quel vecteur est égal au vecteur AB ?",
+      "options": [
+        { "id": "a", "text": "le vecteur CD" },
+        { "id": "b", "text": "le vecteur BA" },
+        { "id": "c", "text": "le vecteur DC" },
+        { "id": "d", "text": "le vecteur BD" }
+      ],
+      "correctOption": "a",
+      "explanation": "Dans le parallélogramme ABDC, les côtés [AB] et [CD] sont parallèles, de même longueur et de même sens : vecteur AB = vecteur CD ✓. Le vecteur DC a le sens opposé (vecteur DC = −vecteur AB) ; BA est l'opposé de AB ; BD est un autre côté du parallélogramme.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Pour trois points distincts A, B et C, l'égalité vecteur AB = vecteur BC signifie que :",
+      "options": [
+        { "id": "a", "text": "B est le milieu de [AC]" },
+        { "id": "b", "text": "A est le milieu de [BC]" },
+        { "id": "c", "text": "C est le milieu de [AB]" },
+        { "id": "d", "text": "ABC est un triangle équilatéral" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le déplacement de A à B est le même que de B à C, donc B est exactement au milieu de [AC] ✓. Les réponses b et c placent le milieu au mauvais sommet ; l'égalité de deux vecteurs n'a rien à voir avec un triangle équilatéral (réponse d), d'autant que A, B, C sont ici alignés.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Par la translation de vecteur AB, quelle est l'image du point A ?",
+      "options": [
+        { "id": "a", "text": "le point B" },
+        { "id": "b", "text": "le point A lui-même" },
+        { "id": "c", "text": "le milieu de [AB]" },
+        { "id": "d", "text": "le symétrique de B par rapport à A" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'image de A est le point M' tel que vecteur AM' = vecteur AB, c'est-à-dire M' = B ✓. A resterait fixe seulement pour le vecteur nul (réponse b) ; le milieu de [AB] (réponse c) et le symétrique de B (réponse d) correspondraient à d'autres déplacements.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Par une translation, l'image d'un cercle de centre O et de rayon 4 cm est :",
+      "options": [
+        { "id": "a", "text": "un cercle de rayon 4 cm dont le centre est l'image de O" },
+        { "id": "b", "text": "un cercle de rayon 8 cm" },
+        { "id": "c", "text": "un cercle de rayon 2 cm" },
+        { "id": "d", "text": "le même cercle, de centre O" }
+      ],
+      "correctOption": "a",
+      "explanation": "Une translation conserve les longueurs : le rayon ne change pas (4 cm), seul le centre se déplace vers l'image de O ✓. Le rayon n'est ni doublé (réponse b) ni divisé par deux (réponse c) ; et le centre bouge (sauf translation nulle), donc ce n'est pas le même cercle (réponse d).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Que peut-on dire des vecteurs AB et BA ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Ils ont la même direction et la même longueur, mais des sens opposés"
+        },
+        { "id": "b", "text": "Ils sont égaux" },
+        { "id": "c", "text": "Ils ont des longueurs différentes" },
+        { "id": "d", "text": "Ils ont des directions différentes" }
+      ],
+      "correctOption": "a",
+      "explanation": "AB et BA portent la même droite (même direction) et la même longueur, mais on les parcourt en sens contraire : ce sont des vecteurs opposés ✓. Ils ne sont donc pas égaux (réponse b) ; leur longueur commune est AB (réponse c fausse) ; et ils ont bien la même direction (réponse d fausse).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "M et N sont deux points tels que MN = 5 cm. M' et N' sont leurs images par une même translation. Combien vaut M'N' ?",
+      "options": [
+        { "id": "a", "text": "5 cm" },
+        { "id": "b", "text": "10 cm" },
+        { "id": "c", "text": "0 cm" },
+        { "id": "d", "text": "On ne peut pas le savoir" }
+      ],
+      "correctOption": "a",
+      "explanation": "Une translation conserve les distances, donc M'N' = MN = 5 cm ✓. La distance n'est ni doublée (réponse b) ni annulée (réponse c) ; et elle est parfaitement déterminée, quel que soit le vecteur de translation (réponse d).",
+      "difficulty": 2
+    }
+  ]
+}

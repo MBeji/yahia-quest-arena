@@ -1,0 +1,71 @@
+{
+  "title": "Test de compréhension ⭐ : Activités dans un repère",
+  "questions": [
+    {
+      "prompt": "Dans un repère, A(1 ; 2) et B(4 ; 6). Quelles sont les composantes du vecteur AB ?",
+      "options": [
+        { "id": "a", "text": "(3 ; 4)" },
+        { "id": "b", "text": "(5 ; 8)" },
+        { "id": "c", "text": "(−3 ; −4)" },
+        { "id": "d", "text": "(4 ; 6)" }
+      ],
+      "correctOption": "a",
+      "explanation": "Les composantes sont « arrivée moins départ » : (xB − xA ; yB − yA) = (4 − 1 ; 6 − 2) = (3 ; 4) ✓. (5 ; 8) additionne les coordonnées ; (−3 ; −4) calcule « départ moins arrivée » (le vecteur opposé) ; (4 ; 6) recopie les coordonnées de B.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans un repère, quelles sont les coordonnées du milieu du segment [AB] ?",
+      "options": [
+        { "id": "a", "text": "((xA + xB)/2 ; (yA + yB)/2)" },
+        { "id": "b", "text": "(xB − xA ; yB − yA)" },
+        { "id": "c", "text": "(xA + xB ; yA + yB)" },
+        { "id": "d", "text": "((xB − xA)/2 ; (yB − yA)/2)" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le milieu est la moyenne des coordonnées : ((xA + xB)/2 ; (yA + yB)/2) ✓. La réponse b donne les composantes de vecteur AB ; la réponse c oublie de diviser par 2 ; la réponse d prend une différence au lieu d'une somme.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans un repère orthonormé, la distance AB entre A(xA ; yA) et B(xB ; yB) est égale à :",
+      "options": [
+        { "id": "a", "text": "√((xB − xA)² + (yB − yA)²)" },
+        { "id": "b", "text": "(xB − xA) + (yB − yA)" },
+        { "id": "c", "text": "(xB − xA)² + (yB − yA)²" },
+        { "id": "d", "text": "√((xB − xA) + (yB − yA))" }
+      ],
+      "correctOption": "a",
+      "explanation": "C'est le théorème de Pythagore appliqué aux composantes : AB = √((xB − xA)² + (yB − yA)²) ✓. La réponse b additionne sans carrés ni racine ; la réponse c donne AB² (racine oubliée) ; la réponse d met la racine au mauvais endroit (pas de carrés à l'intérieur).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Deux vecteurs de composantes (a ; b) et (a' ; b') sont colinéaires lorsque :",
+      "options": [
+        {
+          "id": "a",
+          "text": "leurs composantes sont proportionnelles : un même réel k relie a à a' et b à b'"
+        },
+        { "id": "b", "text": "a = b et a' = b'" },
+        { "id": "c", "text": "a + b = a' + b'" },
+        { "id": "d", "text": "a = a' ou b = b'" }
+      ],
+      "correctOption": "a",
+      "explanation": "La colinéarité se lit sur la proportionnalité des composantes : il existe un même k tel que a' = k·a et b' = k·b ✓. L'égalité des deux composantes d'un même vecteur (réponse b) ou l'égalité des sommes (réponse c) n'ont rien à voir ; et une seule composante égale (réponse d) ne suffit pas.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans le repère (O, I, J), que représentent les deux nombres du couple (x ; y) d'un point M ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "x est l'abscisse (axe des abscisses) et y l'ordonnée (axe des ordonnées)"
+        },
+        { "id": "b", "text": "x est l'ordonnée et y l'abscisse" },
+        { "id": "c", "text": "deux distances, toujours positives" },
+        { "id": "d", "text": "les composantes du vecteur IJ" }
+      ],
+      "correctOption": "a",
+      "explanation": "Par convention, le premier nombre x est l'abscisse (le long de l'axe des abscisses, porté par OI) et le second y l'ordonnée (axe des ordonnées, porté par OJ) ✓. La réponse b intervertit les deux ; les coordonnées peuvent être négatives (réponse c) ; et elles décrivent le point M, pas le vecteur IJ (réponse d).",
+      "difficulty": 1
+    }
+  ]
+}

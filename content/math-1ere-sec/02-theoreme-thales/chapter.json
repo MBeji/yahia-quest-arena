@@ -1,0 +1,9 @@
+{
+  "title": "Théorème de Thalès et sa réciproque",
+  "description": "Droite des milieux dans un triangle et son énoncé réciproque, théorème de Thalès dans un triangle (deux droites sécantes coupées par deux parallèles, égalité des trois rapports de longueurs), réciproque du théorème de Thalès pour démontrer un parallélisme, agrandissement et réduction (échelle k : longueurs et périmètre ×k, aires ×k²), constructions associées (partage d'un segment dans une proportion, quatrième proportionnelle)",
+  "displayOrder": 2,
+  "sources": [
+    "Programme officiel — Mathématiques, 1ère année de l'enseignement secondaire (tronc commun), CNP Tunisie ; manuel élève 222104P01 (chapitre 2, p.23–36)",
+    "Transcription du programme officiel — .claude/skills/content-ecole-tn/references/programmes-officiels/programme/1ere-sec/mathematiques.md (§2.2)"
+  ]
+}

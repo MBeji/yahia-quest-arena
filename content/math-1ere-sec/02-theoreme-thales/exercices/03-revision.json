@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision (type examen) : Thalès, échelles et proportions",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Dans un triangle ABC, M est sur [AB] et N sur [AC] avec (MN) // (BC). On donne AM = 3 cm, MB = 2 cm et MN = 6 cm. Combien vaut BC ?",
+      "options": [
+        { "id": "a", "text": "10 cm" },
+        { "id": "b", "text": "3,6 cm" },
+        { "id": "c", "text": "4 cm" },
+        { "id": "d", "text": "15 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "On a AB = AM + MB = 5, donc le coefficient est AM/AB = 3/5. Comme MN/BC = 3/5, on obtient BC = MN × 5/3 = 6 × 5/3 = 10 cm ✓. 3,6 cm applique le rapport dans le mauvais sens (6 × 3/5) ; 4 cm soustrait MB ; 15 cm utilise le rapport 5/2.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans un triangle ABC, I est le milieu de [AB]. La parallèle à (BC) passant par I coupe [AC] en J. Que peut-on affirmer sur J ?",
+      "options": [
+        { "id": "a", "text": "J est le milieu de [AC]" },
+        { "id": "b", "text": "J est tel que AJ = AC / 3" },
+        { "id": "c", "text": "J est le milieu de [AB]" },
+        { "id": "d", "text": "On ne peut rien conclure sur J" }
+      ],
+      "correctOption": "a",
+      "explanation": "C'est la réciproque de la droite des milieux : une parallèle à un côté passant par le milieu d'un deuxième côté coupe le troisième en son milieu, donc J est le milieu de [AC] ✓. Le rapport 1/3 (réponse b) est inventé ; J est sur [AC], pas sur [AB] (réponse c) ; et le théorème permet bien de conclure (réponse d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Un triangle a pour côtés 3 cm, 4 cm et 5 cm ; son aire vaut 6 cm². Un triangle semblable a son plus petit côté égal à 9 cm. Quelle est l'aire de ce grand triangle ?",
+      "options": [
+        { "id": "a", "text": "54 cm²" },
+        { "id": "b", "text": "18 cm²" },
+        { "id": "c", "text": "6 cm²" },
+        { "id": "d", "text": "486 cm²" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'échelle est k = 9/3 = 3 ; l'aire est multipliée par k² = 9, donc 6 × 9 = 54 cm² ✓. 18 cm² multiplie par k = 3 (erreur classique sur les aires) ; 6 cm² oublie l'agrandissement ; 486 cm² multiplie par k⁴ = 81.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "On veut placer le point M sur [AB] tel que AM/MB = 3/2. Par la construction de Thalès, en combien de parts égales partage-t-on [AB], et où se trouve M ?",
+      "options": [
+        { "id": "a", "text": "En 5 parts égales ; M est au 3ᵉ point de division depuis A" },
+        { "id": "b", "text": "En 5 parts égales ; M est au 2ᵉ point de division depuis A" },
+        { "id": "c", "text": "En 6 parts égales ; M est au 3ᵉ point" },
+        { "id": "d", "text": "En 3 parts égales ; M est au dernier point" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le rapport 3/2 impose 3 + 2 = 5 parts égales ; M sépare la 3ᵉ de la 4ᵉ part, donc il est au 3ᵉ point depuis A (alors AM = 3 parts et MB = 2 parts) ✓. Le 2ᵉ point (réponse b) donnerait AM/MB = 2/3 ; 6 parts (réponse c) et 3 parts (réponse d) ne respectent pas la somme 3 + 2.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Un bâton vertical de 1,2 m projette une ombre de 0,8 m. Au même instant, un arbre projette une ombre de 15 m. Par proportionnalité (configuration de Thalès), quelle est la hauteur de l'arbre ?",
+      "options": [
+        { "id": "a", "text": "22,5 m" },
+        { "id": "b", "text": "10 m" },
+        { "id": "c", "text": "18 m" },
+        { "id": "d", "text": "12,5 m" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le bâton et l'arbre forment des triangles semblables : hauteur/ombre est constant. Le rapport hauteur/ombre du bâton vaut 1,2/0,8 = 1,5, donc la hauteur de l'arbre = 15 × 1,5 = 22,5 m ✓. 10 m inverse le rapport (15 × 0,8/1,2) ; 18 m multiplie par 1,2 en oubliant l'ombre du bâton ; 12,5 m est une estimation sans calcul.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans un triangle ABC, M est sur [AB] avec AM = (2/3)AB. La parallèle à (BC) passant par M coupe [AC] en N. Sachant que AC = 12 cm, combien vaut NC ?",
+      "options": [
+        { "id": "a", "text": "4 cm" },
+        { "id": "b", "text": "8 cm" },
+        { "id": "c", "text": "12 cm" },
+        { "id": "d", "text": "6 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "Par Thalès, AN/AC = AM/AB = 2/3, donc AN = 12 × 2/3 = 8 cm ; il reste NC = AC − AN = 12 − 8 = 4 cm ✓. 8 cm est la longueur AN (on a oublié de retrancher) ; 12 cm recopie AC ; 6 cm prendrait la moitié de AC au lieu du bon rapport.",
+      "difficulty": 3
+    }
+  ]
+}

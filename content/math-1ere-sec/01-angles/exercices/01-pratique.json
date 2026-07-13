@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Exercice : Premières mesures d'angles",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Dans un triangle ABC, on a BAC = 55° et ABC = 65°. Combien vaut l'angle ACB ?",
+      "options": [
+        { "id": "a", "text": "60°" },
+        { "id": "b", "text": "120°" },
+        { "id": "c", "text": "125°" },
+        { "id": "d", "text": "50°" }
+      ],
+      "correctOption": "a",
+      "explanation": "La somme des angles d'un triangle vaut 180°, donc ACB = 180° − 55° − 65° = 60° ✓. Répondre 120° donne la somme des deux angles connus au lieu du troisième ; 125° revient à ne soustraire que 55° (180° − 55°) ; 50° est une erreur de calcul.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans un triangle ABC, on prolonge le côté [BC] au-delà de C. L'angle extérieur en C est noté ACD. Si BAC = 40° et ABC = 75°, combien vaut ACD ?",
+      "options": [
+        { "id": "a", "text": "115°" },
+        { "id": "b", "text": "65°" },
+        { "id": "c", "text": "90°" },
+        { "id": "d", "text": "35°" }
+      ],
+      "correctOption": "a",
+      "explanation": "Un angle extérieur est la somme des deux angles intérieurs non adjacents : ACD = BAC + ABC = 40° + 75° = 115° ✓. La valeur 65° est l'angle intérieur ACB (= 180° − 115°), pas l'angle extérieur ; 90° et 35° (soit 75° − 40°) ne correspondent à aucune règle du cours.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Les droites (d) et (d') sont parallèles et coupées par une sécante. L'un des angles formés vaut 72°. Combien vaut son angle alterne-interne ?",
+      "options": [
+        { "id": "a", "text": "72°" },
+        { "id": "b", "text": "108°" },
+        { "id": "c", "text": "18°" },
+        { "id": "d", "text": "36°" }
+      ],
+      "correctOption": "a",
+      "explanation": "Avec deux droites parallèles, les angles alternes-internes sont égaux : l'alterne-interne vaut aussi 72° ✓. 108° serait le supplémentaire (180° − 72°, c'est l'angle intérieur d'un même côté) ; 18° est le complémentaire ; 36° est la moitié — aucune de ces relations ne s'applique aux alternes-internes.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Deux droites parallèles sont coupées par une sécante. Un angle intérieur vaut 110°. Combien vaut l'angle intérieur situé du même côté de la sécante ?",
+      "options": [
+        { "id": "a", "text": "70°" },
+        { "id": "b", "text": "110°" },
+        { "id": "c", "text": "90°" },
+        { "id": "d", "text": "55°" }
+      ],
+      "correctOption": "a",
+      "explanation": "Deux angles intérieurs d'un même côté d'une sécante entre deux parallèles sont supplémentaires : 180° − 110° = 70° ✓. Répondre 110° les traite comme égaux (ce qui vaut pour les alternes-internes ou les correspondants, pas ici) ; 90° et 55° (la moitié) ne correspondent à aucune règle.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Sur un cercle de centre O, l'angle au centre AOB vaut 84°. Un point M du cercle est tel que l'angle inscrit AMB intercepte le même arc [AB]. Combien vaut AMB ?",
+      "options": [
+        { "id": "a", "text": "42°" },
+        { "id": "b", "text": "84°" },
+        { "id": "c", "text": "168°" },
+        { "id": "d", "text": "138°" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'angle inscrit vaut la moitié de l'angle au centre qui intercepte le même arc : AMB = 84° / 2 = 42° ✓. 84° reprend l'angle au centre sans le diviser par deux ; 168° le double au lieu de le diviser ; 138° (= 180° − 42°) applique une relation de supplémentarité qui n'a pas lieu d'être.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Le triangle ABC est inscrit dans un cercle et le côté [BC] en est un diamètre. On sait que ABC = 28°. Combien vaut l'angle ACB ?",
+      "options": [
+        { "id": "a", "text": "62°" },
+        { "id": "b", "text": "152°" },
+        { "id": "c", "text": "90°" },
+        { "id": "d", "text": "28°" }
+      ],
+      "correctOption": "a",
+      "explanation": "[BC] est un diamètre, donc le triangle est rectangle en A : BAC = 90°. D'où ACB = 180° − 90° − 28° = 62° ✓. 152° (= 180° − 28°) oublie de retirer l'angle droit ; 90° place l'angle droit au mauvais sommet ; 28° recopie l'angle donné.",
+      "difficulty": 2
+    }
+  ]
+}
