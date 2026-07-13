@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision (type examen) : Fonctions linéaires et pourcentages",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Une fonction linéaire f vérifie f(3) = 12. Calcule f(5).",
+      "options": [
+        { "id": "a", "text": "20" },
+        { "id": "b", "text": "14" },
+        { "id": "c", "text": "60" },
+        { "id": "d", "text": "17" }
+      ],
+      "correctOption": "a",
+      "explanation": "On détermine d'abord le coefficient : a = 12/3 = 4, donc f : x ↦ 4x. Alors f(5) = 4 × 5 = 20 ✓. 14 ajoute simplement 2 à f(3) ; 60 multiplie 12 × 5 ; 17 additionne 12 + 5.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Parmi ces situations, laquelle correspond à une fonction linéaire (proportionnalité) ?",
+      "options": [
+        { "id": "a", "text": "le périmètre d'un carré en fonction de son côté (P = 4x)" },
+        { "id": "b", "text": "l'aire d'un carré en fonction de son côté (A = x²)" },
+        { "id": "c", "text": "le prix payé = 3 dinars par article + 5 dinars de frais fixes" },
+        { "id": "d", "text": "la taille d'une personne en fonction de son âge" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le périmètre P = 4x est de la forme ax (avec a = 4) et vérifie P(0) = 0 : c'est une fonction linéaire ✓. L'aire x² n'est pas proportionnelle (réponse b) ; le prix avec frais fixes est de la forme ax + b (fonction affine, réponse c) ; la taille en fonction de l'âge n'est pas proportionnelle (réponse d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Un article coûte 100 dinars. Il subit une hausse de 10 %, puis une baisse de 10 %. Quel est son prix final ?",
+      "options": [
+        { "id": "a", "text": "99 dinars" },
+        { "id": "b", "text": "100 dinars" },
+        { "id": "c", "text": "101 dinars" },
+        { "id": "d", "text": "90 dinars" }
+      ],
+      "correctOption": "a",
+      "explanation": "Les deux variations se composent : × 1,1 puis × 0,9, soit × 0,99. Donc 100 × 0,99 = 99 dinars ✓. On ne revient pas à 100 dinars (réponse b) : une hausse puis une baisse du même pourcentage font toujours perdre un peu.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Soit f : x ↦ 2,5x. Quel est l'antécédent de 10 par f ?",
+      "options": [
+        { "id": "a", "text": "4" },
+        { "id": "b", "text": "25" },
+        { "id": "c", "text": "7,5" },
+        { "id": "d", "text": "12,5" }
+      ],
+      "correctOption": "a",
+      "explanation": "On résout 2,5x = 10, soit x = 10/2,5 = 4 ✓. 25 multiplie 2,5 × 10 ; 7,5 fait 10 − 2,5 ; 12,5 additionne 10 + 2,5.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Une droite passe par l'origine et par le point A(4 ; −2). Quelle est l'équation de la fonction linéaire qu'elle représente ?",
+      "options": [
+        { "id": "a", "text": "y = −0,5x" },
+        { "id": "b", "text": "y = 0,5x" },
+        { "id": "c", "text": "y = −2x" },
+        { "id": "d", "text": "y = 2x" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le coefficient se lit sur le point A : a = y/x = −2/4 = −0,5, d'où l'équation y = −0,5x ✓. Le signe est négatif (réponse b fausse) ; −2 et 2 (réponses c et d) confondent l'ordonnée du point avec le coefficient.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Un ressort s'allonge proportionnellement à la masse suspendue. Une masse de 6 g provoque un allongement de 2 cm. Quel allongement provoque une masse de 15 g ?",
+      "options": [
+        { "id": "a", "text": "5 cm" },
+        { "id": "b", "text": "45 cm" },
+        { "id": "c", "text": "11 cm" },
+        { "id": "d", "text": "4,5 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'allongement est une fonction linéaire de la masse, de coefficient a = 2/6 = 1/3 cm par gramme. Pour 15 g : 15 × 1/3 = 5 cm ✓. 45 cm multiplie 15 × 3 ; 11 cm ajoute 15 − 6 + 2 ; 4,5 cm est une estimation sans le bon coefficient.",
+      "difficulty": 3
+    }
+  ]
+}

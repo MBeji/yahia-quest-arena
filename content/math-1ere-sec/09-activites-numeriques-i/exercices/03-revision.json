@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision (type examen) : PGCD, PPCM et notation scientifique",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "On applique l'algorithme d'Euclide : 84 = 1 × 60 + 24 ; 60 = 2 × 24 + 12 ; 24 = 2 × 12 + 0. Quel est le PGCD de 84 et 60 ?",
+      "options": [
+        { "id": "a", "text": "12" },
+        { "id": "b", "text": "24" },
+        { "id": "c", "text": "60" },
+        { "id": "d", "text": "1" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le PGCD est le dernier reste non nul de la suite des divisions : ici 12 (la division suivante tombe sur un reste 0) ✓. 24 est l'avant-dernier reste ; 60 est un des nombres de départ ; et 1 signifierait des nombres premiers entre eux, ce qui n'est pas le cas.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Le PGCD de 24 et 36 est 12. Quel est leur PPCM ?",
+      "options": [
+        { "id": "a", "text": "72" },
+        { "id": "b", "text": "12" },
+        { "id": "c", "text": "864" },
+        { "id": "d", "text": "60" }
+      ],
+      "correctOption": "a",
+      "explanation": "On utilise PGCD × PPCM = a × b, donc PPCM = (24 × 36) / 12 = 864 / 12 = 72 ✓. 864 est le produit 24 × 36 (on a oublié de diviser par le PGCD) ; 12 est le PGCD lui-même ; 60 est la somme 24 + 36.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Rends la fraction 42/56 irréductible.",
+      "options": [
+        { "id": "a", "text": "3/4" },
+        { "id": "b", "text": "6/8" },
+        { "id": "c", "text": "21/28" },
+        { "id": "d", "text": "42/56 est déjà irréductible" }
+      ],
+      "correctOption": "a",
+      "explanation": "PGCD(42, 56) = 14 (car 42 = 2 × 3 × 7 et 56 = 2³ × 7). En divisant par 14 : 42/56 = 3/4 ✓, forme irréductible. 21/28 (division par 2) et 6/8 (division par 7) sont des simplifications incomplètes ; la fraction n'était donc pas irréductible (réponse d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Parmi ces paires, laquelle est formée de deux entiers premiers entre eux ?",
+      "options": [
+        { "id": "a", "text": "8 et 15" },
+        { "id": "b", "text": "12 et 18" },
+        { "id": "c", "text": "14 et 21" },
+        { "id": "d", "text": "10 et 25" }
+      ],
+      "correctOption": "a",
+      "explanation": "8 = 2³ et 15 = 3 × 5 n'ont aucun facteur premier commun : leur PGCD vaut 1, ils sont premiers entre eux ✓. Les autres paires ont un diviseur commun : PGCD(12, 18) = 6, PGCD(14, 21) = 7, PGCD(10, 25) = 5.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Écris en notation scientifique le produit (3 × 10⁵) × (4 × 10⁻²).",
+      "options": [
+        { "id": "a", "text": "1,2 × 10⁴" },
+        { "id": "b", "text": "12 × 10³" },
+        { "id": "c", "text": "1,2 × 10³" },
+        { "id": "d", "text": "7 × 10³" }
+      ],
+      "correctOption": "a",
+      "explanation": "On multiplie les nombres et on additionne les exposants : (3 × 4) × 10^(5 + (−2)) = 12 × 10³. Comme 12 ≥ 10, on réécrit 12 = 1,2 × 10¹, d'où 1,2 × 10⁴ ✓. 12 × 10³ (réponse b) est la bonne valeur mais pas une notation scientifique valable ; 7 × 10³ additionne 3 + 4 au lieu de multiplier.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Deux phares clignotent : le premier toutes les 12 secondes, le second toutes les 18 secondes. Ils clignotent ensemble à un instant donné. Après combien de secondes clignoteront-ils de nouveau en même temps ?",
+      "options": [
+        { "id": "a", "text": "36 s" },
+        { "id": "b", "text": "6 s" },
+        { "id": "c", "text": "216 s" },
+        { "id": "d", "text": "30 s" }
+      ],
+      "correctOption": "a",
+      "explanation": "Ils coïncident aux multiples communs des deux périodes : le premier instant commun est le PPCM(12, 18). Comme 12 = 2² × 3 et 18 = 2 × 3², PPCM = 2² × 3² = 36 s ✓. 6 s est le PGCD ; 216 s est le produit 12 × 18 ; 30 s est la somme 12 + 18.",
+      "difficulty": 3
+    }
+  ]
+}

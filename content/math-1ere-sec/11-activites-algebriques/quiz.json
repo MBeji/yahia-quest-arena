@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐ : Activités algébriques",
+  "questions": [
+    {
+      "prompt": "Quel est le développement de (a + b)² ?",
+      "options": [
+        { "id": "a", "text": "a² + 2ab + b²" },
+        { "id": "b", "text": "a² + b²" },
+        { "id": "c", "text": "a² + ab + b²" },
+        { "id": "d", "text": "2a + 2b" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le carré d'une somme fait apparaître le double produit : (a + b)² = a² + 2ab + b² ✓. Oublier ce double produit donne a² + b² (réponse b, l'erreur la plus fréquente) ; a² + ab + b² (réponse c) ne compte le produit qu'une fois ; 2a + 2b (réponse d) confond carré et double.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "L'expression a² − b² se factorise en :",
+      "options": [
+        { "id": "a", "text": "(a − b)(a + b)" },
+        { "id": "b", "text": "(a − b)²" },
+        { "id": "c", "text": "(a + b)²" },
+        { "id": "d", "text": "elle ne se factorise pas" }
+      ],
+      "correctOption": "a",
+      "explanation": "La différence de deux carrés se factorise en (a − b)(a + b) ✓. (a − b)² = a² − 2ab + b² et (a + b)² = a² + 2ab + b² contiennent un double produit absent ici (réponses b et c) ; et l'expression se factorise bien (réponse d).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Factoriser une expression, c'est :",
+      "options": [
+        { "id": "a", "text": "la transformer en un produit" },
+        { "id": "b", "text": "la transformer en une somme" },
+        { "id": "c", "text": "remplacer la lettre par un nombre" },
+        { "id": "d", "text": "supprimer toutes les parenthèses" }
+      ],
+      "correctOption": "a",
+      "explanation": "Factoriser, c'est écrire une somme ou une différence sous forme de produit ✓. Transformer en somme (réponse b) et supprimer les parenthèses (réponse d) décrivent le développement, l'opération inverse ; remplacer la lettre par un nombre (réponse c) est une substitution numérique.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Est-il vrai que (x + 5)² = x² + 25 ?",
+      "options": [
+        { "id": "a", "text": "Non : il manque le double produit, (x + 5)² = x² + 10x + 25" },
+        { "id": "b", "text": "Oui, c'est correct" },
+        { "id": "c", "text": "Non : (x + 5)² = x² + 5" },
+        { "id": "d", "text": "Non : (x + 5)² = 2x + 10" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le carré d'une somme comporte un double produit : (x + 5)² = x² + 2 × x × 5 + 25 = x² + 10x + 25 ✓. Écrire x² + 25 (réponse b) oublie le terme 10x ; x² + 5 (réponse c) et 2x + 10 (réponse d) sont également faux.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "L'égalité (x − 1)² = x² − 2x + 1 est-elle vraie pour tout réel x ?",
+      "options": [
+        { "id": "a", "text": "Oui, c'est une identité (elle découle du développement)" },
+        { "id": "b", "text": "Non, elle n'est vraie que pour x = 1" },
+        { "id": "c", "text": "Non, elle n'est jamais vraie" },
+        { "id": "d", "text": "Elle n'est vraie que pour x = 0" }
+      ],
+      "correctOption": "a",
+      "explanation": "En développant (x − 1)² = x² − 2 × x × 1 + 1² = x² − 2x + 1, on retrouve exactement le membre de droite : l'égalité est vraie pour tout x, c'est une identité ✓. Elle ne se limite pas à une valeur particulière (réponses b et d) et elle est bien toujours vraie (réponse c).",
+      "difficulty": 2
+    }
+  ]
+}

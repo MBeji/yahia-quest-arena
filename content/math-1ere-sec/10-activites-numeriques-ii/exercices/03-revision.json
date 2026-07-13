@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision (type examen) : Calcul et comparaison sur les réels",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Que vaut 5⁴ / 5⁶ ?",
+      "options": [
+        { "id": "a", "text": "1/25" },
+        { "id": "b", "text": "25" },
+        { "id": "c", "text": "5²" },
+        { "id": "d", "text": "5¹⁰" }
+      ],
+      "correctOption": "a",
+      "explanation": "On soustrait les exposants : 5⁴ / 5⁶ = 5⁴⁻⁶ = 5⁻² = 1/5² = 1/25 ✓. 25 = 5² oublie le signe de l'exposant ; 5² fait 6 − 4 dans le mauvais sens ; 5¹⁰ additionne les exposants.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Rends le dénominateur rationnel : 1/(√5 − 2).",
+      "options": [
+        { "id": "a", "text": "√5 + 2" },
+        { "id": "b", "text": "√5 − 2" },
+        { "id": "c", "text": "(√5 + 2)/9" },
+        { "id": "d", "text": "1/(√5 + 2)" }
+      ],
+      "correctOption": "a",
+      "explanation": "On multiplie haut et bas par la quantité conjuguée √5 + 2 : le dénominateur devient (√5 − 2)(√5 + 2) = 5 − 4 = 1, donc le résultat est √5 + 2 ✓. La réponse c divise par 9 (erreur : 5 − 4 = 1, pas 9) ; les réponses b et d ne suppriment pas le radical du dénominateur.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Pour a = 9, range dans l'ordre croissant les nombres √a, a et a².",
+      "options": [
+        { "id": "a", "text": "√a < a < a² (soit 3 < 9 < 81)" },
+        { "id": "b", "text": "a² < a < √a" },
+        { "id": "c", "text": "a < √a < a²" },
+        { "id": "d", "text": "ils sont tous égaux" }
+      ],
+      "correctOption": "a",
+      "explanation": "Pour a ≥ 1, on a toujours √a ≤ a ≤ a² : ici √9 = 3, a = 9 et a² = 81, d'où 3 < 9 < 81 ✓. L'ordre ne s'inverse (réponse b) que pour un réel compris entre 0 et 1 ; les autres rangements sont incorrects.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Que vaut |2 − √9| ?",
+      "options": [
+        { "id": "a", "text": "1" },
+        { "id": "b", "text": "−1" },
+        { "id": "c", "text": "5" },
+        { "id": "d", "text": "0" }
+      ],
+      "correctOption": "a",
+      "explanation": "On calcule d'abord l'intérieur : √9 = 3, donc 2 − √9 = 2 − 3 = −1 ; puis |−1| = 1 ✓. La valeur absolue est positive (réponse b) ; 5 viendrait de 2 + 3 ; 0 est faux.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Simplifie l'expression 2√12 − √3.",
+      "options": [
+        { "id": "a", "text": "3√3" },
+        { "id": "b", "text": "√3" },
+        { "id": "c", "text": "2√9" },
+        { "id": "d", "text": "√33" }
+      ],
+      "correctOption": "a",
+      "explanation": "On simplifie d'abord √12 = √(4 × 3) = 2√3, donc 2√12 = 4√3. Puis 4√3 − √3 = 3√3 ✓. √3 oublie le facteur (4 − 1 = 3) ; 2√9 et √33 proviennent de manipulations erronées des radicaux.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Compare les nombres √10 et 3.",
+      "options": [
+        { "id": "a", "text": "√10 > 3, car 10 > 9 = 3²" },
+        { "id": "b", "text": "√10 < 3" },
+        { "id": "c", "text": "√10 = 3" },
+        { "id": "d", "text": "on ne peut pas les comparer" }
+      ],
+      "correctOption": "a",
+      "explanation": "Les deux nombres sont positifs, on compare donc leurs carrés : (√10)² = 10 et 3² = 9. Comme 10 > 9, on a √10 > 3 ✓ (on peut aussi écrire 3 = √9 < √10). Les réponses b et c contredisent ce calcul, et la comparaison est bien possible (réponse d).",
+      "difficulty": 3
+    }
+  ]
+}

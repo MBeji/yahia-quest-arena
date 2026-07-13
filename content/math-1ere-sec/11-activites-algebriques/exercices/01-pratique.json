@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Exercice : Développer et factoriser",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Développe et réduis (x + 4)(x + 2).",
+      "options": [
+        { "id": "a", "text": "x² + 6x + 8" },
+        { "id": "b", "text": "x² + 8" },
+        { "id": "c", "text": "x² + 8x + 6" },
+        { "id": "d", "text": "2x + 6" }
+      ],
+      "correctOption": "a",
+      "explanation": "Par double distributivité : x × x + x × 2 + 4 × x + 4 × 2 = x² + 2x + 4x + 8 = x² + 6x + 8 ✓. x² + 8 (réponse b) oublie les termes en x ; x² + 8x + 6 (réponse c) intervertit somme et produit des constantes ; 2x + 6 (réponse d) ne développe pas le produit.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Développe (x + 3)².",
+      "options": [
+        { "id": "a", "text": "x² + 6x + 9" },
+        { "id": "b", "text": "x² + 9" },
+        { "id": "c", "text": "x² + 3x + 9" },
+        { "id": "d", "text": "x² + 6x + 6" }
+      ],
+      "correctOption": "a",
+      "explanation": "(x + 3)² = x² + 2 × x × 3 + 3² = x² + 6x + 9 ✓. x² + 9 (réponse b) oublie le double produit 6x ; x² + 3x + 9 (réponse c) ne double pas le produit ; x² + 6x + 6 (réponse d) se trompe sur 3² = 9.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Développe (x − 5)².",
+      "options": [
+        { "id": "a", "text": "x² − 10x + 25" },
+        { "id": "b", "text": "x² − 25" },
+        { "id": "c", "text": "x² + 10x + 25" },
+        { "id": "d", "text": "x² − 10x − 25" }
+      ],
+      "correctOption": "a",
+      "explanation": "(x − 5)² = x² − 2 × x × 5 + 5² = x² − 10x + 25 ✓. x² − 25 (réponse b) oublie le double produit ; le terme en x est négatif ici (réponse c) ; et le carré 25 est toujours positif (réponse d).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Factorise x² − 9.",
+      "options": [
+        { "id": "a", "text": "(x − 3)(x + 3)" },
+        { "id": "b", "text": "(x − 3)²" },
+        { "id": "c", "text": "(x + 3)²" },
+        { "id": "d", "text": "(x − 9)(x + 1)" }
+      ],
+      "correctOption": "a",
+      "explanation": "C'est une différence de deux carrés : x² − 9 = x² − 3² = (x − 3)(x + 3) ✓. Les carrés (x − 3)² et (x + 3)² (réponses b et c) auraient un double produit en x ; (x − 9)(x + 1) (réponse d) redonnerait x² − 8x − 9.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Factorise 4x² + 6x.",
+      "options": [
+        { "id": "a", "text": "2x(2x + 3)" },
+        { "id": "b", "text": "2(2x² + 3x)" },
+        { "id": "c", "text": "x(4x + 6)" },
+        { "id": "d", "text": "2x(2x + 6)" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le facteur commun aux deux termes est 2x : 4x² + 6x = 2x × 2x + 2x × 3 = 2x(2x + 3) ✓. 2(2x² + 3x) et x(4x + 6) (réponses b et c) ne sortent pas tout le facteur commun ; 2x(2x + 6) (réponse d) redonnerait 4x² + 12x.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Calcule 102² en utilisant une identité remarquable.",
+      "options": [
+        { "id": "a", "text": "10404" },
+        { "id": "b", "text": "10004" },
+        { "id": "c", "text": "10204" },
+        { "id": "d", "text": "10400" }
+      ],
+      "correctOption": "a",
+      "explanation": "102² = (100 + 2)² = 100² + 2 × 100 × 2 + 2² = 10000 + 400 + 4 = 10404 ✓. 10004 (réponse b) oublie le double produit 400 ; 10204 se trompe sur le double produit ; 10400 (réponse d) oublie le 2² = 4.",
+      "difficulty": 2
+    }
+  ]
+}

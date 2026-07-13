@@ -1,0 +1,9 @@
+{
+  "title": "Activités numériques II — puissances, racines, valeur absolue",
+  "description": "Puissances à exposant entier (y compris négatif) et leurs règles de calcul, racines carrées et leurs propriétés (√(ab) = √a × √b, √(a²) = |a|, simplification a√b, expression conjuguée), comparaison de nombres réels (a ≥ b ⟺ a − b ≥ 0, encadrements √a ≤ a ≤ a² selon la position par rapport à 1), valeur absolue d'un réel comme distance à zéro, et intervalles de R avec encadrements d'amplitude",
+  "displayOrder": 10,
+  "sources": [
+    "Programme officiel — Mathématiques, 1ère année de l'enseignement secondaire (tronc commun), CNP Tunisie ; manuel élève 222104P02 (chapitre 10, p.153–168)",
+    "Transcription du programme officiel — .claude/skills/content-ecole-tn/references/programmes-officiels/programme/1ere-sec/mathematiques.md (§2.10)"
+  ]
+}

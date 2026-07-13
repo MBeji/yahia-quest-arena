@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision (type examen) : Identités et factorisation",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Développe et réduis (2x + 1)(x − 3).",
+      "options": [
+        { "id": "a", "text": "2x² − 5x − 3" },
+        { "id": "b", "text": "2x² − 3" },
+        { "id": "c", "text": "2x² + 5x − 3" },
+        { "id": "d", "text": "2x² − 5x + 3" }
+      ],
+      "correctOption": "a",
+      "explanation": "Par double distributivité : 2x × x + 2x × (−3) + 1 × x + 1 × (−3) = 2x² − 6x + x − 3 = 2x² − 5x − 3 ✓. 2x² − 3 (réponse b) oublie les termes en x ; le terme en x est négatif (réponse c) ; et 1 × (−3) = −3, pas +3 (réponse d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Développe (3x − 2)².",
+      "options": [
+        { "id": "a", "text": "9x² − 12x + 4" },
+        { "id": "b", "text": "9x² − 4" },
+        { "id": "c", "text": "9x² + 12x + 4" },
+        { "id": "d", "text": "3x² − 12x + 4" }
+      ],
+      "correctOption": "a",
+      "explanation": "(3x − 2)² = (3x)² − 2 × 3x × 2 + 2² = 9x² − 12x + 4 ✓. 9x² − 4 (réponse b) oublie le double produit ; le terme en x est négatif (réponse c) ; et (3x)² = 9x², pas 3x² (réponse d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Factorise 9x² − 16.",
+      "options": [
+        { "id": "a", "text": "(3x − 4)(3x + 4)" },
+        { "id": "b", "text": "(3x − 4)²" },
+        { "id": "c", "text": "(9x − 16)(x + 1)" },
+        { "id": "d", "text": "(3x + 16)(3x − 1)" }
+      ],
+      "correctOption": "a",
+      "explanation": "C'est une différence de carrés : 9x² − 16 = (3x)² − 4² = (3x − 4)(3x + 4) ✓. (3x − 4)² (réponse b) ferait apparaître un double produit ; les réponses c et d ne redonnent pas 9x² − 16 par développement.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Factorise x² − 6x + 9.",
+      "options": [
+        { "id": "a", "text": "(x − 3)²" },
+        { "id": "b", "text": "(x + 3)²" },
+        { "id": "c", "text": "(x − 3)(x + 3)" },
+        { "id": "d", "text": "(x − 6)(x − 3)" }
+      ],
+      "correctOption": "a",
+      "explanation": "On reconnaît un carré parfait : x² − 6x + 9 = x² − 2 × 3 × x + 3² = (x − 3)² ✓. (x + 3)² (réponse b) donnerait +6x ; (x − 3)(x + 3) (réponse c) est la différence de carrés x² − 9 ; (x − 6)(x − 3) (réponse d) redonnerait x² − 9x + 18.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Calcule 53² − 47² en utilisant une identité remarquable.",
+      "options": [
+        { "id": "a", "text": "600" },
+        { "id": "b", "text": "36" },
+        { "id": "c", "text": "100" },
+        { "id": "d", "text": "200" }
+      ],
+      "correctOption": "a",
+      "explanation": "On utilise a² − b² = (a − b)(a + b) : 53² − 47² = (53 − 47)(53 + 47) = 6 × 100 = 600 ✓. 36 = 6² et 100 sont les deux facteurs pris séparément ; 200 n'a pas de justification.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Factorise complètement 2x² − 8.",
+      "options": [
+        { "id": "a", "text": "2(x − 2)(x + 2)" },
+        { "id": "b", "text": "2(x² − 4)" },
+        { "id": "c", "text": "(2x − 4)(x + 2)" },
+        { "id": "d", "text": "(x − 2)(x + 4)" }
+      ],
+      "correctOption": "a",
+      "explanation": "On sort d'abord le facteur commun 2 : 2x² − 8 = 2(x² − 4), puis on factorise la différence de carrés x² − 4 = (x − 2)(x + 2), d'où 2(x − 2)(x + 2) ✓. 2(x² − 4) (réponse b) n'est pas complètement factorisé ; les réponses c et d ne redonnent pas 2x² − 8.",
+      "difficulty": 3
+    }
+  ]
+}
