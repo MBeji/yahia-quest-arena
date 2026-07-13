@@ -66,9 +66,10 @@ compiled per section) and the opening waves are governed by
 `FableEtudes/16-ouverture-lycee/ETUDE.md`.
 
 **Language switch (major)**: mathématiques, sciences physiques, SVT, informatique/techniques flip
-**ar → fr** at 1ère sec — same matière, new language. The base layer owes every 1ère-sec chapter of
-a switched subject the **transition bridge** (lexique fr↔ar in `cours.md`, glossed first uses in
-d1, a `NN-pont-linguistique` d1 mission); degressive at 2ème sec, none at bac. Humanities (arabe,
+**ar → fr** at 1ère sec — same matière, new language. Switched subjects are **authored natively in
+French, in the official manuals' jargon** (the L1 transcriptions are the terminology reference) —
+**no translation apparatus** (no fr↔ar lexicon, no Arabic glosses, no `NN-pont-linguistique`
+mission; décision 2026-07-13). Humanities (arabe,
 philosophie, histoire-géo) stay `ar`; économie/gestion `ar` _(à confirmer)_; français `fr`,
 anglais `en`. Full policy: `docs/lycee-architecture.md` §4 and `content-ecole-tn` §Language.
 

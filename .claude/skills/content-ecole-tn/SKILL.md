@@ -122,18 +122,18 @@ subject+grade):
   éducation islamique) stay **Arabic** (`ar`); économie/gestion `ar` _(à confirmer)_; language
   subjects in their own language.
 
-**Lycée — the ar→fr switch is a didactic event, not just a config value.** The switched subjects
-(math, physique, SVT, informatique) were learned **in Arabic through 9ème**; at 1ère sec this skill
-owes every chapter the **transition bridge** (`docs/lycee-architecture.md` §4): a «lexique de
-transition» block opening `cours.md` (8–15 terms, `terme français = المصطلح العربي`), Arabic glosses
-in parentheses at first use of a new French term in the course and in difficulty-1 missions (and at
-most one lexicon question in the quiz), plus a `NN-pont-linguistique` d1 mission authored via
-`content-interactif`. Degressive: 2ème sec = gloss genuinely new terms only; 3ème/bac = none (exam
-conditions). Outside the bridge, a `fr` subject stays pure French (no code-switching in
-stems/options). Notation was already standard LTR in the Arabic years (`math-and-notation.md`), so
-digits/equations/units carry over unchanged — say so in the 1ère-sec course intro, it is the
-student's anchor. Lycée grade/section slugs and subject-id conventions: `docs/lycee-architecture.md`
-§2 (sections are grade nodes; subject id = `<matière>-<gradeSlug>` verbatim).
+**Lycée — the ar→fr switch is a language flip, NOT a translation exercise (décision 2026-07-13).**
+The switched subjects (math, physique, SVT, informatique) were learned in Arabic through 9ème; from
+1ère sec this skill authors them **natively in French, in the exact jargon of the official French
+documentation** — the CNP manuels élève captured by the L1 transcriptions
+(`references/programmes-officiels/programme/<gradeSlug>/`), which are the terminology reference.
+**No translation apparatus of any kind**: no «lexique de transition» fr↔ar, no Arabic glosses at
+first use, no `NN-pont-linguistique` mission (the former "transition bridge" of
+`docs/lycee-architecture.md` §4 is withdrawn). A `fr` subject stays pure French (no code-switching
+in stems/options). Notation was already standard LTR in the Arabic years (`math-and-notation.md`),
+so digits/equations/units carry over unchanged. Lycée grade/section slugs and subject-id
+conventions: `docs/lycee-architecture.md` §2 (sections are grade nodes; subject id =
+`<matière>-<gradeSlug>` verbatim).
 
 **Math/science in Arabic stays standard.** When the medium of instruction is Arabic (math, physique,
 SVT in basic education), the **digits, equations, formulas, and units remain in standard
