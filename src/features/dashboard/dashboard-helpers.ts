@@ -1,20 +1,16 @@
-export function formatObjectiveType(type: string): string {
-  const map: Record<string, string> = {
-    "3_exercises": "Complete 3 exercises",
-    "15_min_study": "15 min study time",
-    perfect_score: "Get a perfect score",
-  };
-  return map[type] ?? type.replace(/_/g, " ");
+/**
+ * Raw objective/quest type codes come from the DB (`daily_objectives.objective_type`,
+ * `weekly_quests.quest_type`). They are rendered through the i18n dictionaries
+ * (`t.dashboard.objectiveTypes` / `questTypes` — étude 15, lot 1: hard-coded English
+ * like "Beat 2 boss exercises" used to leak into every locale); an unknown code
+ * degrades to a humanized version of itself instead of a raw snake_case token.
+ */
+export function formatObjectiveType(type: string, labels: Record<string, string>): string {
+  return labels[type] ?? type.replace(/_/g, " ");
 }
 
-export function formatQuestType(type: string): string {
-  const map: Record<string, string> = {
-    "5_day_streak": "Maintain 5-day streak",
-    "2_boss_exercises": "Beat 2 boss exercises",
-    "10_exercises": "Complete 10 exercises",
-    all_subjects: "Practice all subjects",
-  };
-  return map[type] ?? type.replace(/_/g, " ");
+export function formatQuestType(type: string, labels: Record<string, string>): string {
+  return labels[type] ?? type.replace(/_/g, " ");
 }
 
 export function resolveDailyAction(type: string): "retry" | "subject" | "dungeon" {

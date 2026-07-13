@@ -90,7 +90,7 @@ Precedence, for any grade+subject:
 - **Grade + subject → scope source (authoritative)** → read
   `programmes-officiels/programme/<gradeSlug>/<matière>.md` (the persistence transcription); this sets the
   authoritative scope. If it doesn't exist yet, the unit is blocked on the persistence layer
-  (`programme/_INDEX.md`) — don't scan the corpus here. (`programmes-officiels/CATALOGUE.md` maps
+  (`programme/_INDEX.md`) — don't scan the corpus here. (`cnp-officiel/CATALOGUE.md` maps
   grade×subject → the underlying CNP files, for traceability.)
 - **Grade** → the `gradeSlug` (e.g. `1ere-base`, `9eme-base`, `bac`). See `content-engine/references/themes-and-trilingual.md`.
 - **School (verification, optional)** → if the content targets a specific school (e.g. _Taybah Primaire_),

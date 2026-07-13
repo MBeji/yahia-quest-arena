@@ -693,6 +693,7 @@ export type Database = {
           display_order: number;
           id: string;
           is_concours_national: boolean;
+          is_selectable: boolean;
           name_fr: string;
           slug: string;
           theme_id: string;
@@ -702,6 +703,7 @@ export type Database = {
           display_order?: number;
           id?: string;
           is_concours_national?: boolean;
+          is_selectable?: boolean;
           name_fr: string;
           slug: string;
           theme_id: string;
@@ -711,6 +713,7 @@ export type Database = {
           display_order?: number;
           id?: string;
           is_concours_national?: boolean;
+          is_selectable?: boolean;
           name_fr?: string;
           slug?: string;
           theme_id?: string;
@@ -1723,6 +1726,7 @@ export type Database = {
       // `supabase gen types` on the next sync).
       get_family_weekly_goal: { Args: { p_student: string }; Returns: Json };
       get_student_report: { Args: { p_student: string }; Returns: Json };
+      get_student_report_by_code: { Args: { p_code: string }; Returns: Json };
       set_parent_weekly_goal: {
         Args: { p_student: string; p_target: number };
         Returns: Json;

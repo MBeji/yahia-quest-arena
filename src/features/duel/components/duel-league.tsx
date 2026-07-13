@@ -19,11 +19,11 @@ export function DuelLeague({
 }) {
   return (
     <section className="space-y-2">
-      <h2 className="font-semibold">{labels.leagueTitle}</h2>
+      <h2 className="font-display text-xl font-bold">{labels.leagueTitle}</h2>
       <p className="text-xs text-muted-foreground">{labels.leagueSubtitle}</p>
 
       {lastAward ? (
-        <p className="rounded-lg bg-amber-100 px-3 py-2 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-100">
+        <p className="rounded-lg border border-gold/30 bg-gold/10 px-3 py-2 text-sm text-gold">
           {labels.lastAward
             .replace("{tier}", tierLabel(lastAward.tier, labels))
             .replace("{coins}", String(lastAward.coins))}
@@ -33,12 +33,12 @@ export function DuelLeague({
       {rows.length === 0 ? (
         <p className="text-sm text-muted-foreground">{labels.leagueEmpty}</p>
       ) : (
-        <ul className="divide-y divide-border rounded-lg border border-border">
+        <ul className="divide-y divide-border/50 rounded-xl border border-border/50 bg-black/40 backdrop-blur-md">
           {rows.map((r) => (
             <li
               key={`${r.rank}-${r.displayName ?? "?"}`}
               className={`flex items-center justify-between px-3 py-2 text-sm ${
-                r.isMe ? "bg-primary/10 font-semibold" : ""
+                r.isMe ? "bg-gold/10 font-semibold" : ""
               }`}
             >
               <span className="flex items-center gap-2">

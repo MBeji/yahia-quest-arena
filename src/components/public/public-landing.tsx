@@ -333,12 +333,22 @@ export function PublicLanding() {
               </Link>
             ) : (
               <Link
-                to="/auth"
-                search={{ mode: "signup", role: "parent" }}
+                to="/suivi"
                 className="mt-6 inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-base font-semibold text-primary-foreground transition hover:opacity-90"
               >
-                {t.public.landing.familleCta}
+                {t.public.landing.familleCtaAuthed}
                 <ArrowRight className="h-5 w-5 rtl:-scale-x-100" />
+              </Link>
+            )}
+            {/* Suivi sans compte : le code d'alliance suffit. La création d'un
+                compte parent reste possible (extras qui écrivent) mais optionnelle. */}
+            {!isAuthed && (
+              <Link
+                to="/auth"
+                search={{ mode: "signup", role: "parent" }}
+                className="mt-3 inline-flex items-center justify-center gap-1.5 text-sm font-medium text-muted-foreground transition hover:text-foreground"
+              >
+                {t.public.landing.familleCta}
               </Link>
             )}
           </div>
@@ -346,6 +356,9 @@ export function PublicLanding() {
       </section>
 
       {/* SECTION JEU — le seul bloc registre « Jeu » (doré), promesse secondaire */}
+      {/* token-ok-block: vitrine « Apprends en jouant » — section sombre FIXE
+          (identique dans les 2 thèmes) : son or est le vrai or de la marque jeu,
+          volontairement hors tokens (l'or thémé devient teal en clair). */}
       <section data-testid="game-block" className="bg-[#15120d] text-amber-50">
         <div className="mx-auto grid max-w-5xl items-center gap-8 px-4 py-14 sm:px-6 lg:grid-cols-2">
           <div>
@@ -392,6 +405,7 @@ export function PublicLanding() {
           </div>
         </div>
       </section>
+      {/* /token-ok-block */}
     </>
   );
 }

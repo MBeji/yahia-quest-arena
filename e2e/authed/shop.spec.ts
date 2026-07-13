@@ -12,7 +12,9 @@ test.describe("Academy shop", () => {
     const userId = await adminDb.userIdByEmail(TEST_USERS.premium.email);
     await adminDb.setCoins(userId, 99_999);
 
-    await dashboard.goto();
+    // The shop lives at /boutique now (lot 6); the spendable balance is shown in
+    // the page header with the same `stat-coins` testid.
+    await shop.goto();
     await expect(dashboard.statCoins).toBeVisible();
     await expect
       .poll(() => dashboard.statNumber(dashboard.statCoins), { timeout: 15_000 })
@@ -32,11 +34,11 @@ test.describe("Academy shop", () => {
       .toBeGreaterThan(ownedBefore);
   });
 
-  test("a purchased consumable can be armed", async ({ dashboard, shop, adminDb }) => {
+  test("a purchased consumable can be armed", async ({ shop, adminDb }) => {
     test.setTimeout(60_000);
     const userId = await adminDb.userIdByEmail(TEST_USERS.premium.email);
     await adminDb.setCoins(userId, 99_999);
-    await dashboard.goto();
+    await shop.goto();
 
     // Buy a known armable consumable (the coin potion) and arm it — targeted, so
     // it stays fast/robust under full-suite load (no bulk-buy loop).

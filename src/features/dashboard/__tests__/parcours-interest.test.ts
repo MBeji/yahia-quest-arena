@@ -42,6 +42,10 @@ vi.mock("@tanstack/react-start", () => ({
 vi.mock("@/shared/integrations/supabase/auth-middleware", () => ({
   requireSupabaseAuth: "mock-middleware",
 }));
+// getParcoursInterestCounts is anon-capable (étude 16 D-7) — mock its middleware too.
+vi.mock("@/shared/integrations/supabase/optional-auth-middleware", () => ({
+  optionalSupabaseAuth: "mock-middleware-optional",
+}));
 vi.mock("@/shared/lib/logger", () => ({
   logger: { error: vi.fn(), warn: vi.fn(), info: vi.fn(), debug: vi.fn() },
 }));

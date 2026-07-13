@@ -37,7 +37,7 @@ export function ReportErrorButton({
 
   if (sent) {
     return (
-      <p className="mt-3 inline-flex items-center gap-1.5 text-xs text-emerald-400">
+      <p className="mt-3 inline-flex items-center gap-1.5 text-xs text-success">
         <Check className="h-3.5 w-3.5" /> {t.contentReport.sent}
       </p>
     );
@@ -63,7 +63,7 @@ export function ReportErrorButton({
         e.preventDefault();
         if (canSend) mutation.mutate();
       }}
-      className="mt-3 rounded-xl border border-[color:var(--neon-gold)]/30 bg-background/40 p-3 text-left"
+      className="mt-3 rounded-xl border border-[color:var(--neon-gold)]/30 bg-background/40 p-3 text-start"
     >
       <label className="block text-xs font-semibold text-muted-foreground">
         {t.contentReport.label}

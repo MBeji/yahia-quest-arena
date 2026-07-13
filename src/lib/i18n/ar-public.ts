@@ -6,6 +6,7 @@ export const arPublic: TranslationKeys["public"] = {
     navAria: "الفهرس",
     programme: "البرنامج",
     extras: "إضافات",
+    parentTracking: "متابعة الأبناء",
     login: "تسجيل الدخول",
     signup: "إنشاء حسابي",
     account: "مساحتي",
@@ -96,6 +97,8 @@ export const arPublic: TranslationKeys["public"] = {
     cardComingSoon: "قريبًا",
     cardContent: "دروس · ملخّصات · تمارين",
     cardConcoursBadge: "مناظرة",
+    lyceeYearDesc:
+      "الشُّعب الرسمية لهذه السنة من التعليم الثانوي. دروس وملخّصات وتمارين في متناول الجميع.",
   },
   niveau: {
     backProgramme: "البرنامج",
@@ -105,6 +108,8 @@ export const arPublic: TranslationKeys["public"] = {
     comingSoonDesc: "هذا المستوى قيد الإعداد. عُد قريبًا!",
     choose: "اختيار هذا المسار",
     choosing: "جارٍ الاختيار…",
+    switchNote:
+      "نقاط الخبرة والقطع والشارات وسلسلتك تبقى معك؛ أمّا تقدّمك في المواد فيخصّ كل قسم على حدة.",
   },
   reader: {
     defaultSubject: "درس",
@@ -113,9 +118,10 @@ export const arPublic: TranslationKeys["public"] = {
     print: "طباعة",
     courseSoon: "درس هذا الفصل قريبًا.",
     practiceCta: "تدرّب على هذا الفصل",
+    quizFirstCta: "ابدأ باختبار الفهم",
     inviteTitle: "تعلّم وأنت تلعب",
     inviteDesc:
-      "أنشئ حسابك المجاني للتدرّب على التمارين وكسب نقاط الخبرة وحفظ تقدّمك. قراءة الدرس تبقى دائمًا مجانية.",
+      "أنشئ حسابك المجاني لكسب نقاط الخبرة والاحتفاظ بفصولك المفتوحة ومتابعة تقدّمك. القراءة والتدرّب يبقيان دائمًا مجانيين.",
     inviteCta: "إنشاء حسابي المجاني",
     manuelTitle: "صفحات الكتاب المدرسي",
     manuelHint: "صفحات كتاب التلميذ الرسمي التي تغطّي هذا الفصل.",
@@ -127,7 +133,12 @@ export const arPublic: TranslationKeys["public"] = {
   subject: {
     chapter: "الفصل {n}",
     readCourse: "اقرأ الدرس",
-    level: "مستوى {n}",
+    resumeHere: "واصل من هنا",
+    missionsProgress: "{done}/{total} مهمة",
+    quizToPass: "اجتز الاختبار أولًا",
+    todo: "لم يبدأ",
+    unlocksChapter: "يفتح الفصل",
+    quizContract: "انجح في الاختبار (≥ {pct}٪) لفتح مهمات هذا الفصل.",
   },
   practice: {
     back: "العودة إلى المادة",
@@ -143,6 +154,7 @@ export const arPublic: TranslationKeys["public"] = {
     answerAllHint: "أجب عن كل الأسئلة للتصحيح.",
     restart: "أعد من جديد",
     questCta: "أعد في وضع المهمة لكسب نقاط الخبرة",
+    continueCta: "واصل إلى التمرين الأول",
     inviteDesc: "أنشئ حسابًا لكسب نقاط الخبرة وحفظ تقدّمك والصعود في الترتيب.",
     inviteCta: "إنشاء حسابي",
   },

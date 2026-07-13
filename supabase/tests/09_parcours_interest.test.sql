@@ -13,7 +13,7 @@
 
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pgtap;
-SELECT plan(8);
+SELECT plan(11);
 
 -- ---------------------------------------------------------
 -- Fixtures (as the superuser test role; no JWT claims yet).
@@ -80,6 +80,26 @@ SELECT is(
      WHERE user_id = 'a1111111-1111-1111-1111-111111111111'),
   0, 'RLS: a user cannot read another user''s interest votes');
 
+RESET ROLE;
+
+-- ---------------------------------------------------------
+-- Public counts (étude 16 D-7 / Q-5): the aggregate is anon-readable —
+-- the « N intéressés » badge lives on the PUBLIC catalogue — while voting
+-- stays authenticated-only.
+-- ---------------------------------------------------------
+SELECT ok(
+  has_function_privilege('anon', 'public.parcours_interest_counts()', 'EXECUTE'),
+  'grants: anon can EXECUTE parcours_interest_counts (public badge)');
+
+SELECT ok(
+  NOT has_function_privilege('anon', 'public.toggle_parcours_interest(text)', 'EXECUTE'),
+  'grants: anon still cannot EXECUTE toggle_parcours_interest (voting needs an account)');
+
+SET LOCAL ROLE anon;
+SELECT is(
+  (SELECT interest_count FROM public.parcours_interest_counts()
+     WHERE parcours_id = 'ecole-7eme-base'),
+  1::bigint, 'counts: an anonymous visitor reads the same PII-free aggregate');
 RESET ROLE;
 
 SELECT * FROM finish();

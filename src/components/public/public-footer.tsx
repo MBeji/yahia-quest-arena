@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { useT } from "@/lib/i18n";
 import { LegalNoticeDialog } from "./legal-notice-dialog";
 
@@ -18,7 +19,13 @@ export function PublicFooter() {
           </span>{" "}
           · {t.public.footer.rights}
         </p>
-        <p className="mt-2">
+        <p className="mt-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+          {/* Suivi parent — 2nd discoverable entry point besides the header
+              (audit §C-4: the page used to be reachable only from the landing). */}
+          <Link to="/suivi" className="font-medium text-primary hover:underline">
+            {t.public.header.parentTracking}
+          </Link>
+          <span aria-hidden="true">·</span>
           <LegalNoticeDialog />
         </p>
       </div>

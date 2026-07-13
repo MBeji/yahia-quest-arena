@@ -14,6 +14,8 @@ export type TranslationKeys = {
   common: {
     backToHall: string;
     back: string;
+    /** Accessible label for DifficultyStars — {n}/{max} placeholders. */
+    difficulty: string;
     loading: string;
     retry: string;
     home: string;
@@ -30,6 +32,14 @@ export type TranslationKeys = {
     notFoundAction: string;
     errorTitle: string;
     errorFallback: string;
+    /** Route-level load failures (public tier included) — étude 14, R-6. */
+    subjectLoadFailed: string;
+    programmeLoadFailed: string;
+    parcoursLoadFailed: string;
+    parcoursNotFound: string;
+    chapterLoadFailed: string;
+    extrasLoadFailed: string;
+    sessionStartFailed: string;
   };
   // Auth screen (login / signup)
   auth: {
@@ -97,17 +107,23 @@ export type TranslationKeys = {
     streakLostTitle: string;
     streakLostDesc: string;
     streakRecover: string;
-    retryLabel: string;
     retryTitle: string;
     continueLabel: string;
-    dungeonLabel: string;
     dungeonDesc: string;
     dailyQuests: string;
     weeklyQuests: string;
+    // Raw daily-objective / weekly-quest type codes → student-facing labels.
+    objectiveTypes: Record<string, string>;
+    questTypes: Record<string, string>;
     dailyEmpty: string;
     weeklyEmpty: string;
     pathsTitle: string;
-    otherThemesTitle: string;
+    boutiqueTitle: string;
+    boutiqueSubtitle: string;
+    boutiqueCard: string;
+    boutiqueCardDesc: string;
+    discoverTitle: string;
+    discoverDesc: string;
     notAttempted: string;
     failedLoad: string;
     failedLoadDesc: string;
@@ -147,6 +163,9 @@ export type TranslationKeys = {
     familyGoalProgress: string;
     familyGoalReached: string;
     familyGoalHint: string;
+    welcomeBack: string;
+    firstRunWelcome: string;
+    resumeSubtitle: string;
   };
   // Quest
   quest: {
@@ -187,6 +206,8 @@ export type TranslationKeys = {
     correctAnswer: string;
     resultScore: string;
     serverValidatedTime: string;
+    timeSpent: string;
+    quizContract: string;
     questionN: string;
     potionXpApplied: string;
     potionCoinsApplied: string;
@@ -387,6 +408,7 @@ export type TranslationKeys = {
     parcours: string;
     themes: string;
     dungeon: string;
+    arena: string;
     ranking: string;
     parentReport: string;
     admin: string;
@@ -402,7 +424,6 @@ export type TranslationKeys = {
   theme: {
     label: string;
     reference: string;
-    light: string;
     dark: string;
   };
   // Sound & music controls
@@ -433,7 +454,6 @@ export type TranslationKeys = {
     review: string;
     locked: string;
     lockedHint: string;
-    premiumHint: string;
     done: string;
     current: string;
     xpToEarn: string;
@@ -474,6 +494,18 @@ export type TranslationKeys = {
     primaire: string;
     college: string;
     secondaire: string;
+  };
+  // Lycée year → section drill-down (étude 16 D-5/R-2) — shared by the
+  // onboarding picker and the public catalogue. {n} placeholders.
+  lycee: {
+    year2: string;
+    year3: string;
+    yearBac: string;
+    /** "{n} sections" */
+    sections: string;
+    /** "{n} disponibles" */
+    available: string;
+    pickSection: string;
   };
   // Interest votes on coming-soon parcours (+ admin ranking)
   parcoursInterest: {
@@ -525,15 +557,15 @@ export type TranslationKeys = {
       ib: string;
     };
   };
-  // Flagship national-concours highlight (6ème + 9ème) across hub / category / dashboard
-  flagship: {
-    badge: string;
-    sectionTitle: string;
-    bannerTitle: string;
-    bannerSubtitle: string;
-    bannerCta: string;
-  };
   // Leaderboard page chrome
+  arena: {
+    title: string;
+    subtitle: string;
+    dungeonReward: string;
+    duelReward: string;
+    rankingDesc: string;
+    rankingReward: string;
+  };
   leaderboard: {
     titleGradient: string;
     titleRest: string;
@@ -560,6 +592,17 @@ export type TranslationKeys = {
     linkHint: string;
     linkSuccess: string;
     linkFailed: string;
+    // Alliance-code errors, keyed by the server's stable ParentCodeErrorCode
+    // ("generic" splits by context: link vs public report).
+    codeErrors: {
+      not_parent: string;
+      invalid_code: string;
+      self_link: string;
+      not_student: string;
+      not_found: string;
+      generic_link: string;
+      generic_report: string;
+    };
     defaultStudentName: string;
     adminEmptyTitle: string;
     adminEmptyDesc: string;
@@ -639,6 +682,7 @@ export type TranslationKeys = {
       navAria: string;
       programme: string;
       extras: string;
+      parentTracking: string;
       login: string;
       signup: string;
       account: string;
@@ -720,6 +764,8 @@ export type TranslationKeys = {
       cardComingSoon: string;
       cardContent: string;
       cardConcoursBadge: string;
+      /** Sober description of a lycée year page (public register). */
+      lyceeYearDesc: string;
     };
     niveau: {
       backProgramme: string;
@@ -729,6 +775,8 @@ export type TranslationKeys = {
       comingSoonDesc: string;
       choose: string;
       choosing: string;
+      /** R-6 étude 16 — honest note under the « choose » switch button. */
+      switchNote: string;
     };
     reader: {
       defaultSubject: string;
@@ -737,6 +785,7 @@ export type TranslationKeys = {
       print: string;
       courseSoon: string;
       practiceCta: string;
+      quizFirstCta: string;
       inviteTitle: string;
       inviteDesc: string;
       inviteCta: string;
@@ -750,7 +799,12 @@ export type TranslationKeys = {
     subject: {
       chapter: string;
       readCourse: string;
-      level: string;
+      resumeHere: string;
+      missionsProgress: string;
+      quizToPass: string;
+      todo: string;
+      unlocksChapter: string;
+      quizContract: string;
     };
     practice: {
       back: string;
@@ -766,6 +820,7 @@ export type TranslationKeys = {
       answerAllHint: string;
       restart: string;
       questCta: string;
+      continueCta: string;
       inviteDesc: string;
       inviteCta: string;
     };

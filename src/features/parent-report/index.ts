@@ -4,10 +4,12 @@
 export {
   getLinkedStudents,
   getStudentReport,
+  getStudentReportByCode,
   getStudentWeeklyGoal,
   linkStudentByCode,
   setStudentWeeklyGoal,
 } from "./parent-report.server";
 export { formatStudentAllianceCode, parseStudentAllianceCode } from "./family-link";
+export { parentCodeErrorLabel, type ParentCodeErrorCode } from "./parent-code-errors";
 export { ReportContent } from "./components/report-content";
 export { buildFamilyReportShareText, buildWeeklyAdvice } from "./report-share";

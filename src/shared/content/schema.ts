@@ -16,6 +16,72 @@ export type ContentLanguage = (typeof CONTENT_LANGUAGES)[number];
 /** A url, or a short free-form reference to a local repo / book. */
 const sourceRefSchema = z.string().min(3, "a source reference must be at least 3 characters");
 
+/**
+ * Canonical `grades.slug` referential (closed list, kept in sync with the DB
+ * seeds — `20260605120000` ladder + `20260704235000` lycée sections). Used to
+ * validate `compileTo` targets at build time (étude 16 R-9): a typo'd slug must
+ * fail `content:check`, never silently compile a subject whose grade subquery
+ * would resolve to NULL.
+ */
+export const KNOWN_GRADE_SLUGS = [
+  // primaire + collège ladder
+  "1ere-base",
+  "2eme-base",
+  "3eme-base",
+  "4eme-base",
+  "5eme-base",
+  "6eme-base",
+  "7eme-base",
+  "8eme-base",
+  "9eme-base",
+  // secondaire — tronc commun + flat legacy year nodes
+  "1ere-sec",
+  "2eme-sec",
+  "3eme-sec",
+  "bac",
+  // secondaire — section nodes (docs/lycee-architecture.md §2)
+  "2eme-sec-sciences",
+  "2eme-sec-lettres",
+  "2eme-sec-eco-services",
+  "2eme-sec-info",
+  "3eme-sec-math",
+  "3eme-sec-sciences-exp",
+  "3eme-sec-lettres",
+  "3eme-sec-eco-gestion",
+  "3eme-sec-techniques",
+  "3eme-sec-info",
+  "bac-math",
+  "bac-sciences-exp",
+  "bac-lettres",
+  "bac-eco-gestion",
+  "bac-techniques",
+  "bac-info",
+] as const;
+
+/**
+ * The flat legacy secondary nodes (`is_selectable = false` in DB since the
+ * lycée seed): kept forever as identity, but never a valid `compileTo` target —
+ * shared lycée content targets SECTION nodes only (étude 16 R-9).
+ */
+export const LEGACY_GRADE_SLUGS = ["2eme-sec", "3eme-sec", "bac"] as const;
+
+const knownGradeSlugs: ReadonlySet<string> = new Set(KNOWN_GRADE_SLUGS);
+const legacyGradeSlugs: ReadonlySet<string> = new Set(LEGACY_GRADE_SLUGS);
+
+/**
+ * One compiled target of a shared subject directory (étude 16 D-4): the id is
+ * the ONLY subject id that reaches the DB (`<matière>-<gradeSlug>` verbatim —
+ * enforced below), so UUIDv5 derivation depends on the compiled identity, never
+ * on the source directory. `nameFr`/`description` default to the source values.
+ */
+const compileTargetSchema = z.object({
+  id: z.string().regex(/^[a-z][a-z0-9-]*$/, "compileTo id must be kebab-case"),
+  gradeSlug: z.string().min(1),
+  nameFr: z.string().min(1).optional(),
+  description: z.string().min(1).optional(),
+});
+export type CompileTarget = z.infer<typeof compileTargetSchema>;
+
 /** `subject.json` — maps onto the `subjects` table (one per subject). */
 export const subjectMetaSchema = z.object({
   id: z.string().regex(/^[a-z][a-z0-9-]*$/, "subject id must be kebab-case (e.g. 'math')"),
@@ -51,6 +117,75 @@ export const subjectMetaSchema = z.object({
    * the standalone "Maîtrise du français" module. Defaults to false.
    */
   isPremium: z.boolean().default(false),
+  /**
+   * Mutualisation (étude 16 D-4): compile this ONE authored directory into N
+   * subjects — one per section-grade target. When present, the root `id` is a
+   * VIRTUAL source id (convention `<matière>-<année>`, e.g. `anglais-3eme-sec`)
+   * that never reaches the DB, and the root `gradeSlug` must stay null. Each
+   * target id must keep the `<matière>-<gradeSlug>` verbatim convention so the
+   * UUIDv5 derivation depends on the compiled identity (fork-without-loss,
+   * étude 16 R-7). Chapters/exercises may narrow their targets via their own
+   * `gradeSlugs` field. Expansion happens in `expandSubjects` (loader.ts).
+   */
+  compileTo: z.array(compileTargetSchema).min(2).optional(),
+});
+
+export const subjectMetaWithCompileToSchema = subjectMetaSchema.superRefine((meta, ctx) => {
+  if (!meta.compileTo) return;
+  if (meta.gradeSlug !== null) {
+    ctx.addIssue({
+      code: "custom",
+      message: "a shared subject (compileTo) must not set a root gradeSlug — targets carry them",
+      path: ["gradeSlug"],
+    });
+  }
+  const ids = new Set<string>();
+  const slugs = new Set<string>();
+  meta.compileTo.forEach((t, i) => {
+    if (ids.has(t.id)) {
+      ctx.addIssue({
+        code: "custom",
+        message: `duplicate compileTo target id '${t.id}'`,
+        path: ["compileTo", i, "id"],
+      });
+    }
+    ids.add(t.id);
+    if (slugs.has(t.gradeSlug)) {
+      ctx.addIssue({
+        code: "custom",
+        message: `duplicate compileTo target gradeSlug '${t.gradeSlug}'`,
+        path: ["compileTo", i, "gradeSlug"],
+      });
+    }
+    slugs.add(t.gradeSlug);
+    if (!knownGradeSlugs.has(t.gradeSlug)) {
+      ctx.addIssue({
+        code: "custom",
+        message: `unknown gradeSlug '${t.gradeSlug}' — must be one of the canonical grades (KNOWN_GRADE_SLUGS)`,
+        path: ["compileTo", i, "gradeSlug"],
+      });
+    } else if (legacyGradeSlugs.has(t.gradeSlug)) {
+      ctx.addIssue({
+        code: "custom",
+        message: `gradeSlug '${t.gradeSlug}' is a non-selectable legacy node — target the section nodes instead`,
+        path: ["compileTo", i, "gradeSlug"],
+      });
+    }
+    if (!t.id.endsWith(`-${t.gradeSlug}`)) {
+      ctx.addIssue({
+        code: "custom",
+        message: `target id '${t.id}' must be '<matière>-${t.gradeSlug}' (subject-id convention, docs/lycee-architecture.md §2)`,
+        path: ["compileTo", i, "id"],
+      });
+    }
+    if (t.id === meta.id) {
+      ctx.addIssue({
+        code: "custom",
+        message: `target id '${t.id}' collides with the source id — the source id is virtual and must differ`,
+        path: ["compileTo", i, "id"],
+      });
+    }
+  });
 });
 export type SubjectMeta = z.infer<typeof subjectMetaSchema>;
 
@@ -82,11 +217,25 @@ export function parseManuelPages(pages: string): number[] {
   return [...new Set(out)].sort((a, b) => a - b);
 }
 
+/**
+ * Optional per-section narrowing inside a SHARED subject (étude 16 D-4): the
+ * subset of the subject's `compileTo` grade slugs this piece of content is
+ * compiled for. Absent = all targets. Only meaningful under a subject that
+ * declares `compileTo` (enforced by `expandSubjects`).
+ */
+const gradeSlugsSubsetSchema = z
+  .array(z.string().min(1))
+  .min(1)
+  .refine((a) => new Set(a).size === a.length, "gradeSlugs must be unique")
+  .optional();
+
 /** `chapter.json` — maps onto a row in `chapters`. */
 export const chapterMetaSchema = z.object({
   title: z.string().min(1),
   description: z.string().min(1),
   displayOrder: z.number().int().positive(),
+  /** Shared-subject narrowing: sections this chapter is compiled for (étude 16). */
+  gradeSlugs: gradeSlugsSubsetSchema,
   /** Provenance: URLs / repos / books the chapter was built from. */
   sources: z.array(sourceRefSchema).default([]),
   /**
@@ -172,6 +321,143 @@ export const misconceptionRegistrySchema = z.record(
 );
 export type MisconceptionRegistry = z.infer<typeof misconceptionRegistrySchema>;
 
+/**
+ * A competency id — namespaced `matière.domaine.competence` (étude 07 R-1),
+ * e.g. `math.geo.thales-direct`: exactly three lowercase dotted segments.
+ * Ids are STABLE for life (create/deprecate only, never rename — same identity
+ * rule as slugs) and never displayed: the trilingual labels are.
+ */
+export const competencyIdSchema = z
+  .string()
+  .regex(
+    /^[a-z][a-z0-9]*\.[a-z0-9]+(?:-[a-z0-9]+)*\.[a-z0-9]+(?:-[a-z0-9]+)*$/,
+    "a competency id must be 'matiere.domaine.competence' lowercase segments (e.g. 'math.geo.thales-direct')",
+  );
+
+/** One competency of a family registry: stable id + student labels + prereq edges. */
+export const competencyEntrySchema = z.object({
+  id: competencyIdSchema,
+  labels: z.object({
+    fr: z.string().min(1),
+    en: z.string().min(1),
+    ar: z.string().min(1),
+  }),
+  /** Direct prerequisites — ids of the SAME family (étude 07 R-3). */
+  prereqs: z.array(competencyIdSchema).max(8).default([]),
+});
+export type CompetencyEntry = z.infer<typeof competencyEntrySchema>;
+
+/**
+ * Detect a prerequisite cycle (étude 07 R-3: the graph must be a DAG).
+ * Returns the offending path (`a → b → a`) or `null`. Edges pointing at ids
+ * not declared in `entries` are ignored (they are reported separately).
+ */
+export function findCompetencyCycle(
+  entries: ReadonlyArray<Pick<CompetencyEntry, "id" | "prereqs">>,
+): string[] | null {
+  const prereqsOf = new Map(entries.map((e) => [e.id, e.prereqs]));
+  const state = new Map<string, "visiting" | "done">();
+  const path: string[] = [];
+
+  const visit = (id: string): string[] | null => {
+    if (state.get(id) === "done") return null;
+    if (state.get(id) === "visiting") return [...path.slice(path.indexOf(id)), id];
+    state.set(id, "visiting");
+    path.push(id);
+    for (const prereq of prereqsOf.get(id) ?? []) {
+      if (!prereqsOf.has(prereq)) continue;
+      const cycle = visit(prereq);
+      if (cycle) return cycle;
+    }
+    path.pop();
+    state.set(id, "done");
+    return null;
+  };
+
+  for (const entry of entries) {
+    const cycle = visit(entry.id);
+    if (cycle) return cycle;
+  }
+  return null;
+}
+
+/**
+ * `content/competences/<famille>.json` — one versioned registry per subject
+ * family (étude 07 D-1: the graph lives in the content pipeline, never in an
+ * admin UI). Compiled by the generator into the relational `competencies` /
+ * `competency_prereqs` tables (deterministic UUIDv5, idempotent, pruned).
+ */
+export const competencyRegistrySchema = z
+  .object({
+    /** Trans-grade subject family (`math`, `physique`, `arabe`…). */
+    family: z.string().regex(/^[a-z][a-z0-9]*$/, "family must be a lowercase word (e.g. 'math')"),
+    /**
+     * Subject-id prefixes this family covers (`math` matches `math` and
+     * `math-*`). Explicit because family names are semantic, not derivable
+     * from subject ids (e.g. a future `physique` family covers subject `svt`).
+     * Feeds the content:qa family≠matière warning.
+     */
+    subjectPrefixes: z
+      .array(z.string().regex(/^[a-z][a-z0-9-]*$/, "subjectPrefixes must be kebab-case ids"))
+      .min(1),
+    competencies: z.array(competencyEntrySchema).min(1),
+  })
+  .superRefine((reg, ctx) => {
+    const ids = new Set<string>();
+    reg.competencies.forEach((c, i) => {
+      if (ids.has(c.id)) {
+        ctx.addIssue({
+          code: "custom",
+          message: `duplicate competency id "${c.id}"`,
+          path: ["competencies", i, "id"],
+        });
+      }
+      ids.add(c.id);
+    });
+    reg.competencies.forEach((c, i) => {
+      if (!c.id.startsWith(`${reg.family}.`)) {
+        ctx.addIssue({
+          code: "custom",
+          message: `competency id "${c.id}" must start with the family namespace "${reg.family}."`,
+          path: ["competencies", i, "id"],
+        });
+      }
+      const seen = new Set<string>();
+      c.prereqs.forEach((p, j) => {
+        if (p === c.id) {
+          ctx.addIssue({
+            code: "custom",
+            message: "a competency cannot be its own prerequisite",
+            path: ["competencies", i, "prereqs", j],
+          });
+        } else if (!ids.has(p)) {
+          ctx.addIssue({
+            code: "custom",
+            message: `prereq "${p}" is not declared in this family (R-3: same-family edges only)`,
+            path: ["competencies", i, "prereqs", j],
+          });
+        }
+        if (seen.has(p)) {
+          ctx.addIssue({
+            code: "custom",
+            message: `duplicate prereq "${p}"`,
+            path: ["competencies", i, "prereqs", j],
+          });
+        }
+        seen.add(p);
+      });
+    });
+    const cycle = findCompetencyCycle(reg.competencies);
+    if (cycle) {
+      ctx.addIssue({
+        code: "custom",
+        message: `prerequisite cycle ${cycle.join(" → ")} (R-3: the graph must be a DAG)`,
+        path: ["competencies"],
+      });
+    }
+  });
+export type CompetencyRegistry = z.infer<typeof competencyRegistrySchema>;
+
 const questionCoreSchema = z.object({
   prompt: z.string().min(1),
   explanation: z.string().min(1),
@@ -181,6 +467,16 @@ const questionCoreSchema = z.object({
    * untagged questions default to medium (2) for ordering.
    */
   difficulty: z.number().int().min(1).max(3).optional(),
+  /**
+   * Optional competencies this question evaluates (étude 07 D-2/R-2): 1–3 ids
+   * from the versioned registries `content/competences/<famille>.json`, the
+   * FIRST being the primary one. Unlike misconception tags (server-only, étude
+   * 04 D-1) these describe the QUESTION, not its options, so they never reveal
+   * the key — the compiled `question_competencies` junction is client-readable.
+   * Applies to every question type; tagging is progressive (untagged = neutral,
+   * never blocking). Unknown ids are flagged by content:qa (vocabulary check).
+   */
+  competencies: z.array(competencyIdSchema).min(1).max(3).optional(),
 });
 
 /** The classic QCM — `type` may be omitted in files (defaulted to 'mcq'). */
@@ -282,6 +578,14 @@ export const questionSchema = z
     ]),
   )
   .superRefine((q, ctx) => {
+    // Evaluated competencies (étude 07 R-2, any type): no duplicate ids.
+    if (q.competencies && new Set(q.competencies).size !== q.competencies.length) {
+      ctx.addIssue({
+        code: "custom",
+        message: "competency ids must be unique",
+        path: ["competencies"],
+      });
+    }
     if (q.type === "numeric") return;
     if (new Set(q.options.map((o) => o.id)).size !== q.options.length) {
       ctx.addIssue({ code: "custom", message: "option ids must be unique", path: ["options"] });
@@ -403,6 +707,13 @@ export const exerciseSchema = z.object({
   xpReward: z.number().int().positive(),
   rewardCoins: z.number().int().nonnegative(),
   displayOrder: z.number().int().positive(),
+  /**
+   * Shared-subject narrowing (étude 16 D-4): sections this exercise is compiled
+   * for — enables per-section d3/d4 tiers inside one shared directory (e.g. a
+   * `bac-lettres`-only défi in `arabe-bac`). Subset of the chapter's effective
+   * targets; absent = all. Never emitted to SQL (the builder reads named fields).
+   */
+  gradeSlugs: gradeSlugsSubsetSchema,
   questions: z.array(questionSchema).min(1).max(50),
 });
 export type ContentExercise = z.infer<typeof exerciseSchema>;

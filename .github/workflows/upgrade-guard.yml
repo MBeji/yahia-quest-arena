@@ -137,8 +137,8 @@ jobs:
 
             Honour every repo trap in the skill (npm 10 lockfile, global esbuild
             override on Vite 8, react-hooks 7 recommended, react-refresh on
-            src/routes/**, do-not-touch motion/LazyMotion, the Lovable meta-plugin,
-            Supabase CLI pin → validate pgTAP).
+            src/routes/**, do-not-touch motion/LazyMotion, the inline Vite/TanStack
+            config, Supabase CLI pin → validate pgTAP).
 
             HARD RULES: NEVER weaken/disable a test, lower coverage, or `--no-verify`
             to go green. NEVER merge or push to `main` — only push `claude/upgrade-*`

@@ -1,0 +1,519 @@
+{
+  "family": "math",
+  "subjectPrefixes": ["math"],
+  "competencies": [
+    {
+      "id": "math.num.entiers-lecture-ecriture",
+      "labels": {
+        "fr": "Lire, écrire et comparer les entiers naturels",
+        "en": "Read, write and compare whole numbers",
+        "ar": "قراءة الأعداد الطبيعية وكتابتها ومقارنتها"
+      },
+      "prereqs": []
+    },
+    {
+      "id": "math.num.operations-entiers",
+      "labels": {
+        "fr": "Les quatre opérations sur les entiers naturels",
+        "en": "The four operations on whole numbers",
+        "ar": "العمليّات الأربع على الأعداد الطبيعية"
+      },
+      "prereqs": ["math.num.entiers-lecture-ecriture"]
+    },
+    {
+      "id": "math.num.decimaux-sens",
+      "labels": {
+        "fr": "Comprendre l'écriture décimale (chiffres et rangs)",
+        "en": "Understand decimal notation (digits and place value)",
+        "ar": "فهم الكتابة العشرية ومنازل الأرقام"
+      },
+      "prereqs": ["math.num.entiers-lecture-ecriture"]
+    },
+    {
+      "id": "math.num.comparaison-decimaux",
+      "labels": {
+        "fr": "Comparer, ranger et encadrer les nombres décimaux",
+        "en": "Compare, order and bound decimal numbers",
+        "ar": "مقارنة الأعداد العشرية وترتيبها وحصرها"
+      },
+      "prereqs": ["math.num.decimaux-sens"]
+    },
+    {
+      "id": "math.num.add-sous-decimaux",
+      "labels": {
+        "fr": "Additionner et soustraire des nombres décimaux",
+        "en": "Add and subtract decimal numbers",
+        "ar": "جمع الأعداد العشرية وطرحها"
+      },
+      "prereqs": ["math.num.decimaux-sens", "math.num.operations-entiers"]
+    },
+    {
+      "id": "math.num.mult-div-decimaux",
+      "labels": {
+        "fr": "Multiplier et diviser des nombres décimaux",
+        "en": "Multiply and divide decimal numbers",
+        "ar": "ضرب الأعداد العشرية وقسمتها"
+      },
+      "prereqs": ["math.num.decimaux-sens", "math.num.operations-entiers"]
+    },
+    {
+      "id": "math.num.multiples-diviseurs",
+      "labels": {
+        "fr": "Multiples et diviseurs communs",
+        "en": "Common multiples and divisors",
+        "ar": "المضاعفات والقواسم المشتركة"
+      },
+      "prereqs": ["math.num.operations-entiers"]
+    },
+    {
+      "id": "math.num.criteres-divisibilite",
+      "labels": {
+        "fr": "Critères de divisibilité (2, 3, 5, 9, 10)",
+        "en": "Divisibility rules (2, 3, 5, 9, 10)",
+        "ar": "قابلية القسمة على 2 و3 و5 و9 و10"
+      },
+      "prereqs": ["math.num.multiples-diviseurs"]
+    },
+    {
+      "id": "math.frac.sens",
+      "labels": {
+        "fr": "Le sens de la fraction (lire, écrire, représenter)",
+        "en": "The meaning of fractions (read, write, represent)",
+        "ar": "معنى العدد الكسري: قراءةً وكتابةً وتمثيلًا"
+      },
+      "prereqs": ["math.num.operations-entiers"]
+    },
+    {
+      "id": "math.frac.equivalence",
+      "labels": {
+        "fr": "Fractions égales et simplification",
+        "en": "Equivalent fractions and simplifying",
+        "ar": "الكتابات الكسرية المتساوية واختزال الكسور"
+      },
+      "prereqs": ["math.frac.sens", "math.num.multiples-diviseurs"]
+    },
+    {
+      "id": "math.frac.comparaison",
+      "labels": {
+        "fr": "Comparer et ranger des fractions",
+        "en": "Compare and order fractions",
+        "ar": "مقارنة الأعداد الكسرية وترتيبها"
+      },
+      "prereqs": ["math.frac.equivalence"]
+    },
+    {
+      "id": "math.frac.add-sous",
+      "labels": {
+        "fr": "Additionner et soustraire des fractions",
+        "en": "Add and subtract fractions",
+        "ar": "جمع الأعداد الكسرية وطرحها"
+      },
+      "prereqs": ["math.frac.equivalence"]
+    },
+    {
+      "id": "math.frac.fractions-decimales",
+      "labels": {
+        "fr": "Fractions décimales et écriture décimale",
+        "en": "Decimal fractions and decimal notation",
+        "ar": "الأعداد الكسرية العشرية والكتابة العشرية"
+      },
+      "prereqs": ["math.frac.sens", "math.num.decimaux-sens"]
+    },
+    {
+      "id": "math.frac.mult-entier",
+      "labels": {
+        "fr": "Multiplier une fraction par un entier, fraction d'une quantité",
+        "en": "Multiply a fraction by a whole number; fraction of a quantity",
+        "ar": "ضرب عدد كسري في عدد صحيح ونصيب الكسر من مقدار"
+      },
+      "prereqs": ["math.frac.sens", "math.num.operations-entiers"]
+    },
+    {
+      "id": "math.prop.situations",
+      "labels": {
+        "fr": "Reconnaître et exploiter une situation de proportionnalité",
+        "en": "Recognize and use proportional situations",
+        "ar": "التعرّف على وضعيات التناسب واستغلالها"
+      },
+      "prereqs": ["math.num.mult-div-decimaux"]
+    },
+    {
+      "id": "math.prop.pourcentages",
+      "labels": {
+        "fr": "Appliquer et calculer un pourcentage",
+        "en": "Apply and compute percentages",
+        "ar": "النسبة المئوية حسابًا وتطبيقًا"
+      },
+      "prereqs": ["math.prop.situations", "math.frac.mult-entier"]
+    },
+    {
+      "id": "math.prop.vitesse",
+      "labels": {
+        "fr": "Vitesse, distance et temps",
+        "en": "Speed, distance and time",
+        "ar": "السرعة والمسافة والزمن"
+      },
+      "prereqs": ["math.prop.situations", "math.mes.durees"]
+    },
+    {
+      "id": "math.geo.droites-perp-para",
+      "labels": {
+        "fr": "Perpendiculaires et parallèles (reconnaître, tracer)",
+        "en": "Perpendicular and parallel lines (identify, draw)",
+        "ar": "التعامد والتوازي: تعرّفًا وإنشاءً"
+      },
+      "prereqs": []
+    },
+    {
+      "id": "math.geo.angles-mesure",
+      "labels": {
+        "fr": "Mesurer, construire et classer les angles",
+        "en": "Measure, draw and classify angles",
+        "ar": "قيس الزوايا وإنشاؤها وتصنيفها"
+      },
+      "prereqs": []
+    },
+    {
+      "id": "math.geo.triangles-base",
+      "labels": {
+        "fr": "Construire et classer les triangles",
+        "en": "Construct and classify triangles",
+        "ar": "إنشاء المثلّثات وتصنيفها"
+      },
+      "prereqs": ["math.geo.droites-perp-para", "math.geo.angles-mesure"]
+    },
+    {
+      "id": "math.geo.quadrilateres",
+      "labels": {
+        "fr": "Les quadrilatères usuels et leurs propriétés",
+        "en": "Common quadrilaterals and their properties",
+        "ar": "الرباعيّات المألوفة وخاصّياتها"
+      },
+      "prereqs": ["math.geo.droites-perp-para"]
+    },
+    {
+      "id": "math.geo.cercle",
+      "labels": {
+        "fr": "Le cercle et le disque (vocabulaire, construction)",
+        "en": "Circle and disk (vocabulary, construction)",
+        "ar": "الدائرة والقرص: مفردات وإنشاء"
+      },
+      "prereqs": []
+    },
+    {
+      "id": "math.mes.durees",
+      "labels": {
+        "fr": "Calculer avec les durées",
+        "en": "Work with time and durations",
+        "ar": "الحساب على المُدد الزمنية"
+      },
+      "prereqs": ["math.num.operations-entiers"]
+    },
+    {
+      "id": "math.mes.perimetres",
+      "labels": {
+        "fr": "Périmètres des polygones et du cercle",
+        "en": "Perimeters of polygons and the circle",
+        "ar": "محيطات المضلّعات والدائرة"
+      },
+      "prereqs": ["math.num.mult-div-decimaux"]
+    },
+    {
+      "id": "math.mes.aires",
+      "labels": {
+        "fr": "Aires des polygones usuels et du disque",
+        "en": "Areas of common polygons and the disk",
+        "ar": "مساحات المضلّعات المألوفة والقرص"
+      },
+      "prereqs": ["math.num.mult-div-decimaux"]
+    },
+    {
+      "id": "math.esp.cube-pave",
+      "labels": {
+        "fr": "Cube et pavé droit (faces, patrons, aires)",
+        "en": "Cube and cuboid (faces, nets, surface areas)",
+        "ar": "المكعّب ومتوازي المستطيلات: الأوجه والتصاميم والمساحات"
+      },
+      "prereqs": ["math.mes.aires"]
+    },
+    {
+      "id": "math.mes.volumes",
+      "labels": {
+        "fr": "Calculer des volumes de solides",
+        "en": "Compute volumes of solids",
+        "ar": "حساب أحجام المجسّمات"
+      },
+      "prereqs": ["math.mes.aires"]
+    },
+    {
+      "id": "math.num.relatifs-operations",
+      "labels": {
+        "fr": "Opérations sur les nombres relatifs",
+        "en": "Operations on signed numbers",
+        "ar": "العمليّات على الأعداد النسبية"
+      },
+      "prereqs": ["math.num.operations-entiers"]
+    },
+    {
+      "id": "math.num.puissances",
+      "labels": {
+        "fr": "Les puissances (règles de calcul, puissances de 10)",
+        "en": "Powers (index laws, powers of ten)",
+        "ar": "القوى: قواعد الحساب وقوى العدد 10"
+      },
+      "prereqs": ["math.num.relatifs-operations"]
+    },
+    {
+      "id": "math.geo.pythagore",
+      "labels": {
+        "fr": "Théorème de Pythagore (direct et réciproque)",
+        "en": "Pythagoras' theorem (direct and converse)",
+        "ar": "مبرهنة فيثاغورس: المباشرة والعكسية"
+      },
+      "prereqs": ["math.num.puissances", "math.mes.aires"]
+    },
+    {
+      "id": "math.num.ensembles-nombres",
+      "labels": {
+        "fr": "Les ensembles de nombres (ℕ, ℤ, ℚ, 𝔻, ℝ)",
+        "en": "Number sets (ℕ, ℤ, ℚ, 𝔻, ℝ)",
+        "ar": "مجموعات الأعداد: الطبيعية والنسبية والعشرية والكسرية والحقيقية"
+      },
+      "prereqs": ["math.num.relatifs-operations", "math.frac.sens"]
+    },
+    {
+      "id": "math.num.ordre-encadrement",
+      "labels": {
+        "fr": "Ordre, encadrements et valeurs approchées dans ℝ",
+        "en": "Ordering, bounding and approximations in ℝ",
+        "ar": "الترتيب والحصر والقيم المقرّبة في الأعداد الحقيقية"
+      },
+      "prereqs": ["math.num.ensembles-nombres", "math.num.comparaison-decimaux"]
+    },
+    {
+      "id": "math.num.racines-definition",
+      "labels": {
+        "fr": "La racine carrée : définition et propriétés de base",
+        "en": "Square roots: definition and basic properties",
+        "ar": "الجذر التربيعي: التعريف والخاصّيات الأساسية"
+      },
+      "prereqs": ["math.num.puissances"]
+    },
+    {
+      "id": "math.num.racines-calcul",
+      "labels": {
+        "fr": "Calculer avec les racines carrées (produit, quotient, réduction)",
+        "en": "Compute with square roots (product, quotient, simplification)",
+        "ar": "الحساب على الجذور التربيعية: جداءً وقسمةً واختزالًا"
+      },
+      "prereqs": ["math.num.racines-definition"]
+    },
+    {
+      "id": "math.alg.developpement",
+      "labels": {
+        "fr": "Développer et réduire une expression littérale",
+        "en": "Expand and simplify algebraic expressions",
+        "ar": "نشر العبارات الحرفية واختزالها"
+      },
+      "prereqs": ["math.num.relatifs-operations"]
+    },
+    {
+      "id": "math.alg.identites-remarquables",
+      "labels": {
+        "fr": "Les identités remarquables",
+        "en": "Special binomial identities",
+        "ar": "المتطابقات الشهيرة"
+      },
+      "prereqs": ["math.alg.developpement"]
+    },
+    {
+      "id": "math.alg.factorisation",
+      "labels": {
+        "fr": "Factoriser une expression littérale",
+        "en": "Factor algebraic expressions",
+        "ar": "تفكيك العبارات الحرفية"
+      },
+      "prereqs": ["math.alg.developpement", "math.alg.identites-remarquables"]
+    },
+    {
+      "id": "math.alg.equations-premier-degre",
+      "labels": {
+        "fr": "Résoudre une équation du premier degré",
+        "en": "Solve first-degree equations",
+        "ar": "حلّ المعادلات من الدرجة الأولى"
+      },
+      "prereqs": ["math.alg.developpement"]
+    },
+    {
+      "id": "math.alg.equations-produit",
+      "labels": {
+        "fr": "Équations produit (facteur nul)",
+        "en": "Product equations (zero-factor property)",
+        "ar": "المعادلات الجداء وقاعدة العامل المنعدم"
+      },
+      "prereqs": ["math.alg.factorisation", "math.alg.equations-premier-degre"]
+    },
+    {
+      "id": "math.alg.inequations",
+      "labels": {
+        "fr": "Résoudre une inéquation du premier degré",
+        "en": "Solve first-degree inequalities",
+        "ar": "حلّ المتراجحات من الدرجة الأولى"
+      },
+      "prereqs": ["math.alg.equations-premier-degre", "math.num.ordre-encadrement"]
+    },
+    {
+      "id": "math.alg.mise-en-equation",
+      "labels": {
+        "fr": "Mettre un problème en équation",
+        "en": "Translate word problems into equations",
+        "ar": "ترجمة وضعية إلى معادلة"
+      },
+      "prereqs": ["math.alg.equations-premier-degre"]
+    },
+    {
+      "id": "math.alg.systemes",
+      "labels": {
+        "fr": "Systèmes de deux équations à deux inconnues",
+        "en": "Systems of two linear equations in two unknowns",
+        "ar": "جُمل معادلتين من الدرجة الأولى بمجهولين"
+      },
+      "prereqs": ["math.alg.equations-premier-degre"]
+    },
+    {
+      "id": "math.fn.fonction-lineaire",
+      "labels": {
+        "fr": "La fonction linéaire",
+        "en": "Linear (proportional) functions",
+        "ar": "الدالة الخطية"
+      },
+      "prereqs": ["math.prop.situations", "math.num.relatifs-operations"]
+    },
+    {
+      "id": "math.fn.fonction-affine",
+      "labels": {
+        "fr": "La fonction affine",
+        "en": "Affine functions",
+        "ar": "الدالة التآلفية"
+      },
+      "prereqs": ["math.fn.fonction-lineaire"]
+    },
+    {
+      "id": "math.fn.representation-droites",
+      "labels": {
+        "fr": "Représentation graphique des fonctions linéaires et affines",
+        "en": "Graphing linear and affine functions",
+        "ar": "التمثيل المبياني للدوال الخطية والتآلفية"
+      },
+      "prereqs": ["math.fn.fonction-affine", "math.vec.repere-coordonnees"]
+    },
+    {
+      "id": "math.stat.effectifs-frequences",
+      "labels": {
+        "fr": "Effectifs, fréquences et regroupement en classes",
+        "en": "Frequencies and grouped data",
+        "ar": "التكرارات والتواترات والتجميع في فئات"
+      },
+      "prereqs": ["math.prop.pourcentages"]
+    },
+    {
+      "id": "math.stat.moyenne-mediane",
+      "labels": {
+        "fr": "Moyenne et médiane d'une série statistique",
+        "en": "Mean and median of a data set",
+        "ar": "المعدّل الحسابي والوسيط لسلسلة إحصائية"
+      },
+      "prereqs": ["math.stat.effectifs-frequences"]
+    },
+    {
+      "id": "math.geo.thales-direct",
+      "labels": {
+        "fr": "Théorème de Thalès : calculer des longueurs",
+        "en": "Thales' theorem: computing lengths",
+        "ar": "نظرية طاليس: حساب الأطوال"
+      },
+      "prereqs": ["math.prop.situations", "math.geo.triangles-base"]
+    },
+    {
+      "id": "math.geo.thales-reciproque",
+      "labels": {
+        "fr": "Réciproque de Thalès : prouver un parallélisme",
+        "en": "Converse of Thales: proving parallelism",
+        "ar": "النظرية العكسية لطاليس: إثبات التوازي"
+      },
+      "prereqs": ["math.geo.thales-direct"]
+    },
+    {
+      "id": "math.geo.relations-metriques",
+      "labels": {
+        "fr": "Relations métriques dans le triangle rectangle",
+        "en": "Metric relations in right triangles",
+        "ar": "العلاقات المترية في المثلث القائم"
+      },
+      "prereqs": ["math.geo.pythagore", "math.num.racines-calcul"]
+    },
+    {
+      "id": "math.geo.trigonometrie",
+      "labels": {
+        "fr": "Cosinus, sinus et tangente d'un angle aigu",
+        "en": "Cosine, sine and tangent of an acute angle",
+        "ar": "النسب المثلثية للزاوية الحادة: الجيب وجيب التمام والظل"
+      },
+      "prereqs": ["math.geo.pythagore", "math.prop.situations"]
+    },
+    {
+      "id": "math.geo.angles-inscrits",
+      "labels": {
+        "fr": "Angle inscrit et angle au centre",
+        "en": "Inscribed and central angles",
+        "ar": "الزاوية المحيطية والزاوية المركزية"
+      },
+      "prereqs": ["math.geo.cercle", "math.geo.angles-mesure"]
+    },
+    {
+      "id": "math.vec.translation-vecteur",
+      "labels": {
+        "fr": "Translation et vecteurs (égalité, direction, sens)",
+        "en": "Translations and vectors (equality, direction)",
+        "ar": "الانسحاب والأشعّة: التساوي والاتجاه"
+      },
+      "prereqs": ["math.geo.quadrilateres"]
+    },
+    {
+      "id": "math.vec.somme",
+      "labels": {
+        "fr": "Somme de vecteurs et relation de Chasles",
+        "en": "Vector addition and Chasles' relation",
+        "ar": "جمع الأشعّة وعلاقة شال"
+      },
+      "prereqs": ["math.vec.translation-vecteur"]
+    },
+    {
+      "id": "math.vec.repere-coordonnees",
+      "labels": {
+        "fr": "Coordonnées d'un point dans un repère",
+        "en": "Point coordinates in the plane",
+        "ar": "إحداثيات نقطة في معلّم"
+      },
+      "prereqs": ["math.num.relatifs-operations"]
+    },
+    {
+      "id": "math.vec.repere-calculs",
+      "labels": {
+        "fr": "Calculs dans un repère : milieu, distance, coordonnées d'un vecteur",
+        "en": "Coordinate computations: midpoint, distance, vector components",
+        "ar": "الحساب في المعلّم: المنتصف والمسافة وإحداثيات الشعاع"
+      },
+      "prereqs": ["math.vec.repere-coordonnees", "math.vec.somme", "math.num.racines-calcul"]
+    },
+    {
+      "id": "math.esp.solides-espace",
+      "labels": {
+        "fr": "Représenter les solides de l'espace (pyramide, cône, sphère)",
+        "en": "Represent 3-D solids (pyramid, cone, sphere)",
+        "ar": "تمثيل المجسّمات: الهرم والمخروط والكرة"
+      },
+      "prereqs": ["math.esp.cube-pave"]
+    }
+  ]
+}

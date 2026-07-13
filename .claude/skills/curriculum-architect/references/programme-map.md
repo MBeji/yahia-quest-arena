@@ -41,8 +41,9 @@ existing ids are **never renamed**; new subjects always take the grade-suffixed 
 
 ## Collège (7ème–9ème)
 
-Core six (all covered at 7ème and 9ème; 8ème scaffolded empty): Arabe (`ar`), Français (`fr`),
-Anglais (`en`), Mathématiques (`ar`), Sciences physiques (`ar`), SVT (`ar`).
+Core six (all covered at 7ème, 8ème and 9ème — the 8ème base shipped 2026-07, PR #278/#282/#289):
+Arabe (`ar`), Français (`fr`), Anglais (`en`), Mathématiques (`ar`), Sciences physiques (`ar`),
+SVT (`ar`).
 
 Official but absent from the catalogue (gap set for a "toutes les matières" goal):
 Histoire-Géographie (`ar`), Éducation civique (`ar`), Éducation islamique (`ar`), Éducation
@@ -58,8 +59,11 @@ lycée unit): **sections are grade nodes** under `ecole-tn` — `1ere-sec` (tron
 techniques,info}` ; `bac-{math,sciences-exp,lettres,eco-gestion,techniques,info}` (all `bac-*` are
 concours). The legacy flat nodes `2eme-sec`/`3eme-sec`/`bac` become non-selectable, never deleted.
 Subject id = `<matière>-<gradeSlug>` verbatim (`math-bac-math`, `svt-bac-sciences-exp`,
-`philosophie-bac-lettres`; économie & gestion = two subjects). **None of this is in the DB yet** —
-the L0 seed migration (grades + `coming_soon` parcours + `is_selectable` flag) is the first station.
+`philosophie-bac-lettres`; économie & gestion = two subjects). **The L0 seed is merged and live**
+(2026-07-05, PR #285: 16 section nodes + `coming_soon` parcours + `is_selectable`). UI grouping,
+grade i18n, the shared-content `compileTo` mechanism (tronc commun authored once per year,
+compiled per section) and the opening waves are governed by
+`FableEtudes/16-ouverture-lycee/ETUDE.md`.
 
 **Language switch (major)**: mathématiques, sciences physiques, SVT, informatique/techniques flip
 **ar → fr** at 1ère sec — same matière, new language. The base layer owes every 1ère-sec chapter of
@@ -71,7 +75,10 @@ anglais `en`. Full policy: `docs/lycee-architecture.md` §4 and `content-ecole-t
 Dominantes per section (planning weights; coefficients _(à confirmer)_ at transcription):
 math → maths+physique · sciences-exp → SVT+physique · lettres → arabe+philo+histoire-géo ·
 eco-gestion → économie+gestion · techniques → technologie+maths+physique · info → informatique+maths.
-Premium: only `bac-*` parcours are concours PREMIUM; 1ère→3ème sec are FREE exploration.
+Premium: `bac-*` parcours are concours (national exam year); their PREMIUM status (vs. 1ère→3ème
+sec FREE exploration) is a dormant architecture in the current free phase — every parcours is
+`is_premium=false` today (see CLAUDE.md "Access gate"); reactivation is the frozen
+`FableEtudes/01-paiement-en-ligne`.
 
 ## Non-school themes (no grades — planned by level model instead)
 
@@ -93,14 +100,18 @@ Premium: only `bac-*` parcours are concours PREMIUM; 1ère→3ème sec are FREE 
 
 ## Dependency status quick-reference (recompute live — SKILL.md §1)
 
-- CNP transcriptions exist for `1ere-base` → `7eme-base` (as of 2026-07). `8eme-base`,
-  `9eme-base` (built pre-transcription-system), and all secondary are **not transcribed** —
-  any base-authoring plan for those grades starts with a persistence-layer item. For the lycée the
+- CNP transcriptions exist for `1ere-base` → `9eme-base` (as of 2026-07; for the collège grades
+  7ème→9ème the corpus holds the three language guides only — anglais/arabe/français, merged via
+  PR #330, status `[~]` in `programme/_INDEX.md`; the 8ème/9ème bases predate them, built
+  pre-transcription-system). A base-authoring plan for any (grade, subject) whose transcription is
+  missing still starts with a persistence-layer item. Secondary is pilots only:
+  `programme/1ere-sec/{mathematiques,sciences-physiques}.md` (`[~]`, manuels élève seuls) and
+  `programme/bac-math/mathematiques.md` (🚧 pilote 2026-07-05, hors corpus, chapitre 1 seul à
+  profondeur de génération — à valider avant toute montée en charge); for the rest of the lycée the
   corpus itself must first be extended with the official **secondary** programmes/manuels
-  (`docs/lycee-architecture.md` station L1). Exception pilote : `programme/bac-math/mathematiques.md`
-  (transcription 🚧 pilote 2026-07-05, hors corpus, chapitre 1 seul à profondeur de génération — à
-  valider avant toute montée en charge).
+  (`docs/lycee-architecture.md` station L1).
 - Professor overlay: primaire (math/arabe/éveil/islamique), 6ème math, collège 7ème–8ème
   (math/physique/SVT/arabe/français/anglais), 9ème full core, **lycée** (section-aware, 1ère
-  sec→bac: math/physique/SVT/français/anglais/arabe/philo/histoire-géo/éco-gestion/info — all
-  waiting on the lycée base, which waits on L0–L2).
+  sec→bac: math/physique/SVT/français/anglais/arabe/philo/histoire-géo/éco-gestion/info — L0 seed
+  merged and the pilot chapter `math-bac-math/01-continuite-limites` exists; the rest waits on the
+  lycée base, which waits on L1–L2).

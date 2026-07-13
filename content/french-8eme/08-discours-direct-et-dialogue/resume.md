@@ -30,7 +30,7 @@ Verbe introducteur placé **après** ou **au milieu** de la parole :
 
 - **Sujet inversé** : _« J'arrive », **dit-il**._ (pas « il dit »)
 - **Ponctuation** : virgule avant l'incise (_« Je pars, **dit-elle**. »_) ; le **?** ou **!** reste sur la réplique (_« Où vas-tu ? **demanda-t-il**. »_) ; deux virgules si l'incise est **au milieu** (_« Ce soir, **dit-il**, nous partirons. »_).
-- **« -t- »** si le verbe finit par une voyelle + **il / elle / on** : _demanda**-t-**elle_. Avec un **nom** sujet : pas de -t- (_demanda **la femme**_).
+- **« -t- »** si le verbe finit par une voyelle + **il / elle / on** : _demanda\**-t-\**elle_. Avec un **nom** sujet : pas de -t- (_demanda **la femme**_).
 
 ## Insérer le dialogue dans le récit
 

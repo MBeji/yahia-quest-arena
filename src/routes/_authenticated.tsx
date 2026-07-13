@@ -2,7 +2,7 @@ import { createFileRoute, Outlet, Link, useNavigate, useLocation } from "@tansta
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useAuth, useMyRole } from "@/features/auth";
+import { useAuth, useMyRole, shouldRedirectToOnboarding } from "@/features/auth";
 import { getPendingBetaCount } from "@/features/subscription";
 import { getOpenReportsCount } from "@/features/content-report";
 import { BetaBadge, BugReportLauncher, getOpenBugsCount } from "@/features/bug-report";
@@ -13,8 +13,6 @@ import {
   Compass,
   LogOut,
   Swords,
-  Gamepad2,
-  Crown,
   ClipboardList,
   CreditCard,
   FlaskConical,
@@ -88,15 +86,26 @@ function AuthenticatedLayout() {
     }
   }, [loading, user, navigate]);
 
-  // Profile-first onboarding guard: a signed-in user with no active parcours is
+  // Profile-first onboarding guard: a signed-in STUDENT with no active parcours is
   // sent to /onboarding. Gated on the profile query having loaded (no flash) and
-  // the user not already being on /onboarding (no redirect loop).
+  // the user not already being on /onboarding (no redirect loop). Parents and
+  // admins never enrol in a parcours (onboarding is the student track picker), so
+  // they must be exempt — otherwise a parent who signs in / links a child via
+  // their code is trapped in the student onboarding loop and can never reach
+  // /parent-report (their whole feature set is unreachable).
   useEffect(() => {
     if (!user || !meLoaded) return;
-    if (hasProfile && currentParcoursId == null && location.pathname !== "/onboarding") {
+    if (
+      shouldRedirectToOnboarding({
+        hasProfile,
+        role: userRole,
+        currentParcoursId,
+        pathname: location.pathname,
+      })
+    ) {
       navigate({ to: "/onboarding" });
     }
-  }, [user, meLoaded, hasProfile, currentParcoursId, location.pathname, navigate]);
+  }, [user, meLoaded, hasProfile, userRole, currentParcoursId, location.pathname, navigate]);
 
   if (loading) {
     return (
@@ -117,19 +126,26 @@ function AuthenticatedLayout() {
     navigate({ to: "/" });
   }
 
-  // Single source of truth for the primary student destinations — rendered both
-  // inline in the desktop top nav and in the mobile bottom tab bar.
+  // Single source of truth for the primary STUDENT destinations — rendered both
+  // inline in the desktop top nav and in the mobile bottom tab bar. Étude 15,
+  // lot 5 (D-4): the three competitive screens (Donjon · Duels · Classement) are
+  // grouped under a single « Arène » entry (the /arene pole), so the bar drops
+  // from 6 to 4 items — no more desktop overflow, no more crowded phone tab bar.
   const primaryNav = [
     { to: "/dashboard", Icon: LayoutDashboard, label: t.layout.heroesHall },
     { to: "/parcours", Icon: Map, label: t.layout.parcours },
     { to: "/programme", Icon: Compass, label: t.layout.themes },
-    { to: "/dungeon", Icon: Swords, label: t.layout.dungeon },
-    { to: "/duel", Icon: Gamepad2, label: t.duel.title },
-    { to: "/leaderboard", Icon: Crown, label: t.layout.ranking },
+    { to: "/arene", Icon: Swords, label: t.layout.arena },
   ] as const;
+  // The parent gets a dedicated, minimal shell (D-4 / audit §F-1): its ONLY
+  // destination (Suivi) — never the game nav, never a crowded bottom bar.
+  const isParent = userRole === "parent";
+  const showPrimaryNav = !isParent;
   // Hide the bottom tab bar on immersive play/flow screens so it never overlaps
-  // an in-screen sticky CTA (quiz submit, lesson nav, dungeon HUD, onboarding).
-  const immersive = /^\/(quest|dungeon|lesson|onboarding)/.test(location.pathname);
+  // an in-screen sticky CTA (quiz submit, lesson nav, onboarding). The Dungeon
+  // LOBBY is no longer immersive (D-4 / audit §E-1): the nav stays until a run
+  // actually starts — consistent with duel matches, which already keep the nav.
+  const immersive = /^\/(quest|lesson|onboarding)/.test(location.pathname);
 
   return (
     <div className="app-shell relative min-h-[100dvh] bg-black-deep">
@@ -152,22 +168,24 @@ function AuthenticatedLayout() {
           </span>
           <nav className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto sm:gap-2 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {/* Primary destinations: inline on desktop; on mobile/tablet they
-                live in the fixed bottom tab bar (rendered below the shell). */}
+                live in the fixed bottom tab bar (rendered below the shell).
+                Parents don't get the game nav — their shell is Suivi-only. */}
             <div className="hidden items-center gap-1 sm:gap-2 lg:flex">
-              {primaryNav.map(({ to, Icon, label }) => (
-                <Link
-                  key={to}
-                  to={to}
-                  className={NAV_LINK}
-                  activeProps={NAV_ACTIVE}
-                  aria-label={label}
-                  title={label}
-                >
-                  <Icon className="h-4 w-4 shrink-0" /> <span>{label}</span>
-                </Link>
-              ))}
+              {showPrimaryNav &&
+                primaryNav.map(({ to, Icon, label }) => (
+                  <Link
+                    key={to}
+                    to={to}
+                    className={NAV_LINK}
+                    activeProps={NAV_ACTIVE}
+                    aria-label={label}
+                    title={label}
+                  >
+                    <Icon className="h-4 w-4 shrink-0" /> <span>{label}</span>
+                  </Link>
+                ))}
             </div>
-            {userRole === "parent" && (
+            {isParent && (
               <Link
                 to="/parent-report"
                 className={NAV_LINK}
@@ -175,8 +193,9 @@ function AuthenticatedLayout() {
                 aria-label={t.layout.parentReport}
                 title={t.layout.parentReport}
               >
-                <ClipboardList className="h-4 w-4 shrink-0" />{" "}
-                <span className="hidden lg:inline">{t.layout.parentReport}</span>
+                {/* Parent shell: Suivi is the ONLY destination, so it stays
+                    labelled at every width (audit §F-1: no icon-only nav). */}
+                <ClipboardList className="h-4 w-4 shrink-0" /> <span>{t.layout.parentReport}</span>
               </Link>
             )}
             {userRole === "admin" && (
@@ -211,7 +230,7 @@ function AuthenticatedLayout() {
                   <FlaskConical className="h-4 w-4 shrink-0" />{" "}
                   <span className="hidden lg:inline">{t.layout.betaRequests}</span>
                   {pendingBeta > 0 && (
-                    <span className="ml-1 rounded-full bg-[image:var(--gradient-gold)] px-1.5 py-0.5 text-[10px] font-bold text-black">
+                    <span className="ms-1 rounded-full bg-[image:var(--gradient-gold)] px-1.5 py-0.5 text-[10px] font-bold text-black">
                       {pendingBeta}
                     </span>
                   )}
@@ -226,7 +245,7 @@ function AuthenticatedLayout() {
                   <Flag className="h-4 w-4 shrink-0" />{" "}
                   <span className="hidden lg:inline">{t.layout.contentReports}</span>
                   {openReports > 0 && (
-                    <span className="ml-1 rounded-full bg-[image:var(--gradient-gold)] px-1.5 py-0.5 text-[10px] font-bold text-black">
+                    <span className="ms-1 rounded-full bg-[image:var(--gradient-gold)] px-1.5 py-0.5 text-[10px] font-bold text-black">
                       {openReports}
                     </span>
                   )}
@@ -241,7 +260,7 @@ function AuthenticatedLayout() {
                   <Bug className="h-4 w-4 shrink-0" />{" "}
                   <span className="hidden lg:inline">{t.layout.bugReports}</span>
                   {openBugs > 0 && (
-                    <span className="ml-1 rounded-full bg-[image:var(--gradient-gold)] px-1.5 py-0.5 text-[10px] font-bold text-black">
+                    <span className="ms-1 rounded-full bg-[image:var(--gradient-gold)] px-1.5 py-0.5 text-[10px] font-bold text-black">
                       {openBugs}
                     </span>
                   )}
@@ -280,7 +299,7 @@ function AuthenticatedLayout() {
       </header>
       <main
         className={
-          immersive
+          immersive || !showPrimaryNav
             ? "relative z-10 pb-[env(safe-area-inset-bottom)]"
             : "relative z-10 pb-[calc(4.5rem+env(safe-area-inset-bottom))] lg:pb-[env(safe-area-inset-bottom)]"
         }
@@ -292,9 +311,10 @@ function AuthenticatedLayout() {
           in-screen sticky CTA. */}
       {!immersive && <BugReportLauncher />}
       {/* Mobile/tablet bottom tab bar — primary navigation for touch. Hidden on
-          desktop (lg) where the top nav carries the same destinations, and on
-          immersive screens to avoid overlapping their in-screen CTAs. */}
-      {!immersive && (
+          desktop (lg) where the top nav carries the same destinations, on
+          immersive screens to avoid overlapping their in-screen CTAs, and for
+          parents (their Suivi-only shell lives in the top bar — D-4). */}
+      {!immersive && showPrimaryNav && (
         <nav className="fixed inset-x-0 bottom-0 z-30 flex items-stretch justify-around border-t border-[color:var(--gold)]/15 bg-black/80 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden">
           {primaryNav.map(({ to, Icon, label }) => (
             <Link

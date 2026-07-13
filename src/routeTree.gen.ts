@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
+import { Route as PublicSuiviRouteImport } from './routes/_public/suivi'
 import { Route as PublicProgrammeRouteImport } from './routes/_public/programme'
 import { Route as PublicExtrasRouteImport } from './routes/_public/extras'
 import { Route as AuthenticatedThemesRouteImport } from './routes/_authenticated/themes'
@@ -25,6 +26,8 @@ import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenti
 import { Route as AuthenticatedDungeonRouteImport } from './routes/_authenticated/dungeon'
 import { Route as AuthenticatedDuelRouteImport } from './routes/_authenticated/duel'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedBoutiqueRouteImport } from './routes/_authenticated/boutique'
+import { Route as AuthenticatedAreneRouteImport } from './routes/_authenticated/arene'
 import { Route as PublicNiveauParcoursIdRouteImport } from './routes/_public/niveau.$parcoursId'
 import { Route as PublicMatiereSubjectIdRouteImport } from './routes/_public/matiere.$subjectId'
 import { Route as PublicExerciceExerciseIdRouteImport } from './routes/_public/exercice.$exerciseId'
@@ -39,6 +42,7 @@ import { Route as AuthenticatedAdminParcoursInterestRouteImport } from './routes
 import { Route as AuthenticatedAdminContentReportsRouteImport } from './routes/_authenticated/admin.content-reports'
 import { Route as AuthenticatedAdminBugReportsRouteImport } from './routes/_authenticated/admin.bug-reports'
 import { Route as AuthenticatedAdminBetaRequestsRouteImport } from './routes/_authenticated/admin.beta-requests'
+import { Route as PublicProgrammeLyceeAnneeRouteImport } from './routes/_public/programme_.lycee.$annee'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -66,6 +70,11 @@ const AuthenticatedRoute = AuthenticatedRouteImport.update({
 const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicSuiviRoute = PublicSuiviRouteImport.update({
+  id: '/suivi',
+  path: '/suivi',
   getParentRoute: () => PublicRoute,
 } as any)
 const PublicProgrammeRoute = PublicProgrammeRouteImport.update({
@@ -118,6 +127,16 @@ const AuthenticatedDuelRoute = AuthenticatedDuelRouteImport.update({
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedBoutiqueRoute = AuthenticatedBoutiqueRouteImport.update({
+  id: '/boutique',
+  path: '/boutique',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedAreneRoute = AuthenticatedAreneRouteImport.update({
+  id: '/arene',
+  path: '/arene',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const PublicNiveauParcoursIdRoute = PublicNiveauParcoursIdRouteImport.update({
@@ -200,12 +219,20 @@ const AuthenticatedAdminBetaRequestsRoute =
     path: '/admin/beta-requests',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const PublicProgrammeLyceeAnneeRoute =
+  PublicProgrammeLyceeAnneeRouteImport.update({
+    id: '/programme_/lycee/$annee',
+    path: '/programme/lycee/$annee',
+    getParentRoute: () => PublicRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
   '/auth': typeof AuthRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/arene': typeof AuthenticatedAreneRoute
+  '/boutique': typeof AuthenticatedBoutiqueRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/duel': typeof AuthenticatedDuelRouteWithChildren
   '/dungeon': typeof AuthenticatedDungeonRoute
@@ -216,6 +243,7 @@ export interface FileRoutesByFullPath {
   '/themes': typeof AuthenticatedThemesRoute
   '/extras': typeof PublicExtrasRoute
   '/programme': typeof PublicProgrammeRoute
+  '/suivi': typeof PublicSuiviRoute
   '/admin/beta-requests': typeof AuthenticatedAdminBetaRequestsRoute
   '/admin/bug-reports': typeof AuthenticatedAdminBugReportsRoute
   '/admin/content-reports': typeof AuthenticatedAdminContentReportsRoute
@@ -230,12 +258,15 @@ export interface FileRoutesByFullPath {
   '/exercice/$exerciseId': typeof PublicExerciceExerciseIdRoute
   '/matiere/$subjectId': typeof PublicMatiereSubjectIdRoute
   '/niveau/$parcoursId': typeof PublicNiveauParcoursIdRoute
+  '/programme/lycee/$annee': typeof PublicProgrammeLyceeAnneeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
   '/auth': typeof AuthRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/arene': typeof AuthenticatedAreneRoute
+  '/boutique': typeof AuthenticatedBoutiqueRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/duel': typeof AuthenticatedDuelRouteWithChildren
   '/dungeon': typeof AuthenticatedDungeonRoute
@@ -246,6 +277,7 @@ export interface FileRoutesByTo {
   '/themes': typeof AuthenticatedThemesRoute
   '/extras': typeof PublicExtrasRoute
   '/programme': typeof PublicProgrammeRoute
+  '/suivi': typeof PublicSuiviRoute
   '/admin/beta-requests': typeof AuthenticatedAdminBetaRequestsRoute
   '/admin/bug-reports': typeof AuthenticatedAdminBugReportsRoute
   '/admin/content-reports': typeof AuthenticatedAdminContentReportsRoute
@@ -260,6 +292,7 @@ export interface FileRoutesByTo {
   '/exercice/$exerciseId': typeof PublicExerciceExerciseIdRoute
   '/matiere/$subjectId': typeof PublicMatiereSubjectIdRoute
   '/niveau/$parcoursId': typeof PublicNiveauParcoursIdRoute
+  '/programme/lycee/$annee': typeof PublicProgrammeLyceeAnneeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -268,6 +301,8 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/_authenticated/arene': typeof AuthenticatedAreneRoute
+  '/_authenticated/boutique': typeof AuthenticatedBoutiqueRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/duel': typeof AuthenticatedDuelRouteWithChildren
   '/_authenticated/dungeon': typeof AuthenticatedDungeonRoute
@@ -278,6 +313,7 @@ export interface FileRoutesById {
   '/_authenticated/themes': typeof AuthenticatedThemesRoute
   '/_public/extras': typeof PublicExtrasRoute
   '/_public/programme': typeof PublicProgrammeRoute
+  '/_public/suivi': typeof PublicSuiviRoute
   '/_public/': typeof PublicIndexRoute
   '/_authenticated/admin/beta-requests': typeof AuthenticatedAdminBetaRequestsRoute
   '/_authenticated/admin/bug-reports': typeof AuthenticatedAdminBugReportsRoute
@@ -293,6 +329,7 @@ export interface FileRoutesById {
   '/_public/exercice/$exerciseId': typeof PublicExerciceExerciseIdRoute
   '/_public/matiere/$subjectId': typeof PublicMatiereSubjectIdRoute
   '/_public/niveau/$parcoursId': typeof PublicNiveauParcoursIdRoute
+  '/_public/programme_/lycee/$annee': typeof PublicProgrammeLyceeAnneeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -301,6 +338,8 @@ export interface FileRouteTypes {
     | '/auth'
     | '/login'
     | '/signup'
+    | '/arene'
+    | '/boutique'
     | '/dashboard'
     | '/duel'
     | '/dungeon'
@@ -311,6 +350,7 @@ export interface FileRouteTypes {
     | '/themes'
     | '/extras'
     | '/programme'
+    | '/suivi'
     | '/admin/beta-requests'
     | '/admin/bug-reports'
     | '/admin/content-reports'
@@ -325,12 +365,15 @@ export interface FileRouteTypes {
     | '/exercice/$exerciseId'
     | '/matiere/$subjectId'
     | '/niveau/$parcoursId'
+    | '/programme/lycee/$annee'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
     | '/login'
     | '/signup'
+    | '/arene'
+    | '/boutique'
     | '/dashboard'
     | '/duel'
     | '/dungeon'
@@ -341,6 +384,7 @@ export interface FileRouteTypes {
     | '/themes'
     | '/extras'
     | '/programme'
+    | '/suivi'
     | '/admin/beta-requests'
     | '/admin/bug-reports'
     | '/admin/content-reports'
@@ -355,6 +399,7 @@ export interface FileRouteTypes {
     | '/exercice/$exerciseId'
     | '/matiere/$subjectId'
     | '/niveau/$parcoursId'
+    | '/programme/lycee/$annee'
   id:
     | '__root__'
     | '/_authenticated'
@@ -362,6 +407,8 @@ export interface FileRouteTypes {
     | '/auth'
     | '/login'
     | '/signup'
+    | '/_authenticated/arene'
+    | '/_authenticated/boutique'
     | '/_authenticated/dashboard'
     | '/_authenticated/duel'
     | '/_authenticated/dungeon'
@@ -372,6 +419,7 @@ export interface FileRouteTypes {
     | '/_authenticated/themes'
     | '/_public/extras'
     | '/_public/programme'
+    | '/_public/suivi'
     | '/_public/'
     | '/_authenticated/admin/beta-requests'
     | '/_authenticated/admin/bug-reports'
@@ -387,6 +435,7 @@ export interface FileRouteTypes {
     | '/_public/exercice/$exerciseId'
     | '/_public/matiere/$subjectId'
     | '/_public/niveau/$parcoursId'
+    | '/_public/programme_/lycee/$annee'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -439,6 +488,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof PublicIndexRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/suivi': {
+      id: '/_public/suivi'
+      path: '/suivi'
+      fullPath: '/suivi'
+      preLoaderRoute: typeof PublicSuiviRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_public/programme': {
@@ -509,6 +565,20 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/boutique': {
+      id: '/_authenticated/boutique'
+      path: '/boutique'
+      fullPath: '/boutique'
+      preLoaderRoute: typeof AuthenticatedBoutiqueRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/arene': {
+      id: '/_authenticated/arene'
+      path: '/arene'
+      fullPath: '/arene'
+      preLoaderRoute: typeof AuthenticatedAreneRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_public/niveau/$parcoursId': {
@@ -609,6 +679,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminBetaRequestsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_public/programme_/lycee/$annee': {
+      id: '/_public/programme_/lycee/$annee'
+      path: '/programme/lycee/$annee'
+      fullPath: '/programme/lycee/$annee'
+      preLoaderRoute: typeof PublicProgrammeLyceeAnneeRouteImport
+      parentRoute: typeof PublicRoute
+    }
   }
 }
 
@@ -624,6 +701,8 @@ const AuthenticatedDuelRouteWithChildren =
   AuthenticatedDuelRoute._addFileChildren(AuthenticatedDuelRouteChildren)
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedAreneRoute: typeof AuthenticatedAreneRoute
+  AuthenticatedBoutiqueRoute: typeof AuthenticatedBoutiqueRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDuelRoute: typeof AuthenticatedDuelRouteWithChildren
   AuthenticatedDungeonRoute: typeof AuthenticatedDungeonRoute
@@ -644,6 +723,8 @@ interface AuthenticatedRouteChildren {
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAreneRoute: AuthenticatedAreneRoute,
+  AuthenticatedBoutiqueRoute: AuthenticatedBoutiqueRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDuelRoute: AuthenticatedDuelRouteWithChildren,
   AuthenticatedDungeonRoute: AuthenticatedDungeonRoute,
@@ -671,21 +752,25 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 interface PublicRouteChildren {
   PublicExtrasRoute: typeof PublicExtrasRoute
   PublicProgrammeRoute: typeof PublicProgrammeRoute
+  PublicSuiviRoute: typeof PublicSuiviRoute
   PublicIndexRoute: typeof PublicIndexRoute
   PublicChapitreChapterIdRoute: typeof PublicChapitreChapterIdRoute
   PublicExerciceExerciseIdRoute: typeof PublicExerciceExerciseIdRoute
   PublicMatiereSubjectIdRoute: typeof PublicMatiereSubjectIdRoute
   PublicNiveauParcoursIdRoute: typeof PublicNiveauParcoursIdRoute
+  PublicProgrammeLyceeAnneeRoute: typeof PublicProgrammeLyceeAnneeRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
   PublicExtrasRoute: PublicExtrasRoute,
   PublicProgrammeRoute: PublicProgrammeRoute,
+  PublicSuiviRoute: PublicSuiviRoute,
   PublicIndexRoute: PublicIndexRoute,
   PublicChapitreChapterIdRoute: PublicChapitreChapterIdRoute,
   PublicExerciceExerciseIdRoute: PublicExerciceExerciseIdRoute,
   PublicMatiereSubjectIdRoute: PublicMatiereSubjectIdRoute,
   PublicNiveauParcoursIdRoute: PublicNiveauParcoursIdRoute,
+  PublicProgrammeLyceeAnneeRoute: PublicProgrammeLyceeAnneeRoute,
 }
 
 const PublicRouteWithChildren =

@@ -222,8 +222,22 @@ describe("dashboard.parcours — getParcours catalogue", () => {
 
     expect(chain.order).toHaveBeenCalledWith("display_order");
     expect(result.parcours).toEqual([
-      { ...concours, grade_cycle: null, grade_order: null, hasEntitlement: false },
-      { ...libre, grade_cycle: null, grade_order: null, hasEntitlement: true },
+      {
+        ...concours,
+        grade_cycle: null,
+        grade_order: null,
+        grade_slug: null,
+        grade_selectable: true,
+        hasEntitlement: false,
+      },
+      {
+        ...libre,
+        grade_cycle: null,
+        grade_order: null,
+        grade_slug: null,
+        grade_selectable: true,
+        hasEntitlement: true,
+      },
     ]);
     // Entitlement RPC is queried only for the premium parcours.
     expect(mockRpc).toHaveBeenCalledTimes(1);
@@ -255,7 +269,14 @@ describe("dashboard.parcours — getParcours catalogue", () => {
     };
 
     expect(result.parcours).toEqual([
-      { ...concours, grade_cycle: null, grade_order: null, hasEntitlement: true },
+      {
+        ...concours,
+        grade_cycle: null,
+        grade_order: null,
+        grade_slug: null,
+        grade_selectable: true,
+        hasEntitlement: true,
+      },
     ]);
   });
 

@@ -17,6 +17,7 @@ vi.mock("motion/react", () => ({
         ({ children }: { children?: React.ReactNode }) => <div>{children}</div>,
     },
   ),
+  useReducedMotion: () => false,
 }));
 
 vi.mock("@/lib/i18n", () => ({
@@ -29,7 +30,6 @@ vi.mock("@/lib/i18n", () => ({
       maxLevel: "max",
       premium: "Premium",
       lockedHint: "locked",
-      premiumHint: "subscribe",
       xpToEarn: "XP",
       backToMap: "back",
       empty: "empty",

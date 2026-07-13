@@ -1,26 +1,28 @@
 import { test, expect } from "../fixtures";
 import { STORAGE_STATE } from "../helpers/users";
 
-// The Dungeon is a premium perk reserved to holders of a CONCOURS parcours
-// entitlement (family pack included) AND gated behind real prior progress. A
-// student WITHOUT an entitlement hits the premium (concours-entitlement) gate; a
-// student WITH one but without enough progress hits the progress lock. Neither can
-// start a run. The seeded premium student holds the entitlement; the free one doesn't.
-test.describe("Dungeon access gate", () => {
-  test.describe("student without a concours entitlement", () => {
+// Phase gratuite (étude 15, lot 2): the Dungeon is no longer a premium perk —
+// get_dungeon_access lost its SUBSCRIPTION reason. Its ENGAGEMENT gates are
+// intact: a fresh student (no attempts) is blocked by the progress lock
+// (2 subjects / 3 chapters), whatever their (dormant) entitlement state. Both
+// seeded students therefore land on the same progress lock, never a paywall.
+test.describe("Dungeon access gate (phase gratuite)", () => {
+  test.describe("student without a (dormant) entitlement", () => {
     test.use({ storageState: STORAGE_STATE.free });
 
-    test("is blocked by the concours-entitlement (premium) gate", async ({ dungeon }) => {
+    test("passes the open premium door and is blocked by the progress lock", async ({
+      dungeon,
+    }) => {
       await dungeon.goto();
-      await expect(dungeon.premiumGate).toBeVisible({ timeout: 15_000 });
+      await expect(dungeon.lockedGate).toBeVisible({ timeout: 15_000 });
       await expect(dungeon.enterButton).toHaveCount(0);
     });
   });
 
-  test.describe("entitled student without progress", () => {
+  test.describe("student with a (dormant) entitlement", () => {
     test.use({ storageState: STORAGE_STATE.premium });
 
-    test("passes the premium gate and is blocked by the progress lock", async ({ dungeon }) => {
+    test("is blocked by the same progress lock", async ({ dungeon }) => {
       await dungeon.goto();
       await expect(dungeon.lockedGate).toBeVisible({ timeout: 15_000 });
       await expect(dungeon.enterButton).toHaveCount(0);

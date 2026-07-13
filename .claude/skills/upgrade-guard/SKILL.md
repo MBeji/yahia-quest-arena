@@ -186,18 +186,20 @@ These are paid-for lessons; violating them re-breaks production or the gate.
 - **eslint-plugin-react-refresh on routes:** newer versions stop treating
   `export const Route = createFileRoute(...)` as a component → `only-export-components`
   errors across `src/routes/**`. The fix is to **disable that rule for `src/routes/**`**
-— NOT `allowExportNames: ["Route"]`(that reclassifies`Route` and trips the same
+  — NOT `allowExportNames: ["Route"]`(that reclassifies`Route` and trips the same
   error; that path was a closed dead-end, PR #122).
 - **Do NOT "optimise" `motion` here.** Swapping `motion` → `m` + `LazyMotion` shrinks
   the bundle but creates a circular vendor chunk = **prod-crash risk**. A plain
   `motion` version bump is fine; the `m`/LazyMotion refactor is out of scope and needs
   dedicated chunking, not this nightly.
-- **The Lovable meta-plugin.** `@lovable.dev/vite-tanstack-config` provides the
-  Vite/TanStack/Cloudflare/Tailwind plugin scaffold (see `vite.config.ts`). Don't add
-  its bundled plugins manually, and treat any Vite / `@vitejs/plugin-react` /
-  `@tailwindcss/vite` / `@tanstack/router-plugin` major as **high-risk, own-PR,
-  needs-review** — verify the meta-plugin is compatible first (build can break with
-  duplicate plugins).
+- **The inline Vite config (ex-meta-plugin).** The vendored meta-plugin was de-vendored
+  (2026-06-15) into a hand-composed `vite.config.ts` (Vite/TanStack-Start/Cloudflare/Tailwind
+  scaffold + hand-tuned `manualChunks`). Never reintroduce a meta-plugin or add a plugin
+  that's already wired, and treat any Vite / `@vitejs/plugin-react` /
+  `@tailwindcss/vite` / `@tanstack/router-plugin` / `@cloudflare/vite-plugin` major as
+  **high-risk, own-PR, needs-review** — they can break the hand-composed plugin order or
+  the Worker build, and duplicate/reshaped plugins (incl. `manualChunks`) can create a
+  circular vendor chunk (prod-crash risk). Re-run `build:check`.
 - **New Supabase CLI = validate pgTAP.** Bumping `supabase/setup-cli` version can drop
   default table grants on the local stack. If you bump it, the major PR must show a
   green pgTAP run (`db-tests.yml`) and keep the explicit `baseline_table_grants` intact.

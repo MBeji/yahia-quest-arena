@@ -1,20 +1,20 @@
 import { useState, useRef, useEffect } from "react";
-import { BookOpen, Check, Moon, Sun, type LucideIcon } from "lucide-react";
+import { Check, Moon, Sun, type LucideIcon } from "lucide-react";
 import { useTheme, THEMES, type Theme } from "@/lib/theme";
 import { useT } from "@/lib/i18n";
 
 const THEME_ICONS: Record<Theme, LucideIcon> = {
-  reference: BookOpen,
-  light: Sun,
+  reference: Sun,
   dark: Moon,
 };
 
 /**
- * Theme picker — a 3-way dropdown (Référence / Clair / Sombre) shown in BOTH the
- * public and authenticated headers. The chosen theme is the single global skin
- * (applied as an `<html>` class, persisted to localStorage + cookie), so navigating
- * — public↔connecté or page to page — never changes it. Mirrors the LanguageSwitcher
- * chrome so the two controls sit cleanly side by side.
+ * Theme picker — the 2-way dropdown (Clair « Référence » / Sombre « Noir & Or »,
+ * étude 14 Q-1) shown in BOTH the public and authenticated headers. The chosen theme
+ * is the single global skin (applied as an `<html>` class, persisted to
+ * localStorage + cookie), so navigating — public↔connecté or page to page — never
+ * changes it. Mirrors the LanguageSwitcher chrome so the two controls sit cleanly
+ * side by side.
  */
 export function ThemeSwitcher({ className = "" }: { className?: string }) {
   const { theme, setTheme } = useTheme();

@@ -255,12 +255,12 @@ verbaux`, `07-lexique-et-figures-de-style`).
   Écrit 3–4 h · Langue 2 h · Évaluation/Remédiation 1–2 h**. Volumes **indicatifs**, modulables.
 - **Le manuel est exploitable en séquences** (p.5) : chaque module d'apprentissage = **3 séquences**
   (même centre d'intérêt, aspect différent du fait de discours). **Exemple officiel — module 2** (p.5) :
-  | Séquence | Oral | Lecture | Grammaire | Écrit |
-  | --- | --- | --- | --- | --- |
-  | 1 | demander des informations | deux textes au choix | **les expansions du GN** | la description dans le récit |
-  | 2 | fournir des informations | deux textes au choix | **les temps de l'indicatif** | le portrait physique et moral |
-  | 3 | informer, s'informer | lecture de texte ou d'image | **les verbes d'état** | la description d'un animal |
-  (+ **évaluation – remédiation**.)
+  | Séquence                          | Oral                      | Lecture                     | Grammaire                    | Écrit                         |
+  | --------------------------------- | ------------------------- | --------------------------- | ---------------------------- | ----------------------------- |
+  | 1                                 | demander des informations | deux textes au choix        | **les expansions du GN**     | la description dans le récit  |
+  | 2                                 | fournir des informations  | deux textes au choix        | **les temps de l'indicatif** | le portrait physique et moral |
+  | 3                                 | informer, s'informer      | lecture de texte ou d'image | **les verbes d'état**        | la description d'un animal    |
+  | (+ **évaluation – remédiation**.) |
 - **Démarche** : **pédagogie active** + **démarche inductive** (« de l'observation à la conceptualisation »,
   p.36) + **décloisonnement** des activités + **réinvestissement** des acquis d'une activité/d'un module à
   l'autre. Chaque module **commence par une séance d'oral** (p.14).

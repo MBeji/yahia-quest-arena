@@ -7,6 +7,11 @@ import React from "react";
 vi.mock("@tanstack/react-router", () => ({
   Link: ({ children, to }: { children: React.ReactNode; to: string }) =>
     React.createElement("a", { href: to }, children),
+  // BackLink (primitive du lot 1) est construit avec createLink.
+  createLink:
+    (Comp: React.ComponentType<Record<string, unknown>>) =>
+    ({ to, params: _params, ...rest }: { to: string; params?: unknown }) =>
+      React.createElement(Comp, { ...rest, href: to }),
 }));
 
 vi.mock("@tanstack/react-start", () => ({
@@ -35,6 +40,8 @@ vi.mock("motion/react", () => ({
     },
   ),
   AnimatePresence: ({ children }: { children: React.ReactNode }) => children,
+  // useEntrance (module motion du lot 1) lit la préférence via ce hook.
+  useReducedMotion: () => false,
 }));
 
 vi.mock("@/components/ui/svg-figure", () => ({
@@ -47,7 +54,8 @@ vi.mock("@/components/ui/explain-hint", () => ({
   ExplainHint: ({ children }: { children: React.ReactNode }) => children,
 }));
 vi.mock("@/features/quest/components/confetti", () => ({ Confetti: () => null }));
-vi.mock("@/shared/lib/utils", () => ({
+vi.mock("@/shared/lib/utils", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/shared/lib/utils")>()),
   isRtlText: () => false,
   isMathExpression: () => false,
 }));

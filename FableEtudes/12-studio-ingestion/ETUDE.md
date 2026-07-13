@@ -5,6 +5,7 @@
 > **Architecte** : Fable (claude-fable-5), 2026-07-04 · **Exécuteur cible** : Sonnet (outillage) + skills contenu (génération)
 > **Dépend de** : rien de bloquant ; synergie avec la couche de persistance existante (transcriptions CNP) · **Bloque** : rien
 > **Docs normatifs liés** : CLAUDE.md (content pipeline — « files only, never SQL »), `content-engine/references/generation-pipeline.md`, `docs/content-generation-pipeline.md`, REVUE-2026-07 (re-scoping de la feature #2)
+> **Voir aussi** : [étude 13 — Moteur de transcription fidèle (OCR compris)](../13-moteur-transcription/ETUDE.md). L'étude 13 fait toute la **transcription fidèle** du corpus — extraction des PDF à couche-texte **et OCR/vision des scans** (via une interface LLM agnostique) → format app, résumable et traçable — **sans jamais générer de contenu**. L'étude 12 reste le **canal opéré/in-app** et le home de la **génération** (QCM/cours via les skills) : le skill `content-ingest` (D-2 ci-dessous) lance d'abord le moteur 13 pour obtenir la transcription, puis génère le contenu à partir d'elle.
 
 ## 1. Contexte & objectif produit
 
@@ -123,4 +124,16 @@ pgTAP (RLS/quota), Vitest (fns zod, upload mocké, états UI), pas d'e2e dédié
 
 ## 8. Journal d'exécution
 
-_(vide — rempli par l'exécuteur, lot par lot)_
+- **2026-07-09 — Skill `content-ingest` créé + rebasé sur ScribeKit (étude 13).**
+  `.claude/skills/content-ingest/SKILL.md` : orchestration en **3 couches** — **ScribeKit** (déterministe :
+  extraction couche-texte / Word, échafaudage, manifeste validé, ledger + `AVANCEMENT.md` résumables, QA ;
+  **0 LLM / 0 clé**) → **OCR des scans par l'AGENT** (vision d'abonnement Claude Max, **0 clé API**) →
+  confrontation CNP (R-3) → hand-off aux skills de génération. **Décision clé (contrainte utilisateur)** :
+  l'OCR des scans se fait **agent-in-the-loop** (abonnement), **pas** via l'API Anthropic — la ToS Anthropic
+  interdit l'usage programmatique de l'abonnement (token OAuth réservé au CLI/claude.ai), et l'API
+  (Messages API / Agent SDK) exige une clé **facturée au token** qui **n'utilise pas** l'abonnement. Le
+  `--provider anthropic` de ScribeKit reste une option **batch non-supervisé** qui exige une clé facturée.
+  La couche de persistance de `content-ecole-tn` (`references/programmes-officiels/README.md`) a été mise à
+  jour pour ce flux outillé (§ « Transcription outillée : ScribeKit »).
+  - _Reste (lots 1–3 de cette étude)_ : format de fiche `sources-externes/<slug>/fiche.md` normé (D-1),
+    pilote de bout en bout mesuré (coût/délai), canal in-app `ingestion_requests` (D-3).

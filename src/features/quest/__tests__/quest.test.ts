@@ -112,6 +112,8 @@ describe("gamification.quest — getSubject", () => {
       bestByExercise: { "ex-1": 85 },
       quizPassedByChapter: {},
       viewer: { level: 0, isPremium: false, hasEntitlement: true },
+      // Level anchor (étude 15 lot 7) — null here: the mocked RPC resolves no parcours.
+      parcours: null,
     });
   });
 
@@ -845,6 +847,10 @@ describe("gamification.quest — getChapterLesson", () => {
     // The comprehension quiz is the connected gate, not practice → it's skipped.
     expect(res.practiceExerciseId).toBe("ex");
   });
+
+  // The quiz-gate fields added by étude 15 lot 1 (quizExerciseId / quizGated /
+  // quizPassed) are covered in the co-located quest-lesson-gate.test.ts —
+  // this file is at its max-lines budget.
 
   it("falls back to an empty sibling list when none are returned", async () => {
     let calls = 0;

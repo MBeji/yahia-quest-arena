@@ -15,7 +15,7 @@ export function SubscriptionPaywall() {
   const t = useT();
 
   return (
-    <div className="mx-auto mt-8 max-w-md rounded-2xl border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/5 p-6 text-left">
+    <div className="mx-auto mt-8 max-w-md rounded-2xl border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/5 p-6 text-start">
       <div className="flex items-center gap-2 font-display text-lg font-bold text-[color:var(--neon-gold)]">
         <Crown className="h-5 w-5" /> {t.subscription.premiumTitle}
       </div>

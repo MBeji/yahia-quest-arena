@@ -1,8 +1,18 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
+import { optionalSupabaseAuth } from "@/shared/integrations/supabase/optional-auth-middleware";
 import { isRateLimited } from "@/shared/lib/rate-limit";
-import { failWithClientError } from "@/shared/lib/safe-error";
+import { logger } from "@/shared/lib/logger";
+import { errorMessage, failWithClientError } from "@/shared/lib/safe-error";
+// Alliance-code failures travel as STABLE codes and are translated client-side
+// in the visitor's language (étude 15, lot 3 — audit §F-1). Codes + prefixes +
+// mappers live in the pure, client-safe ./parent-code-errors module.
+import {
+  PARENT_LINK_ERROR_PREFIX,
+  REPORT_CODE_ERROR_PREFIX,
+  parentCodeErrorCode,
+} from "./parent-code-errors";
 
 type ParentStudent = {
   id: string;
@@ -402,11 +412,9 @@ export const linkStudentByCode = createServerFn({ method: "POST" })
       p_relation: data.relationLabel,
     });
     if (error) {
-      failWithClientError(
-        "parentReport.linkStudentByCode: RPC failed",
-        error,
-        "Impossible d'associer cet élève. Vérifiez le code et réessayez.",
-      );
+      const raw = errorMessage(error);
+      logger.error("parentReport.linkStudentByCode: RPC failed", { error: raw });
+      throw new Error(PARENT_LINK_ERROR_PREFIX + parentCodeErrorCode(raw));
     }
 
     const row = result && typeof result === "object" ? (result as Record<string, unknown>) : {};
@@ -417,4 +425,33 @@ export const linkStudentByCode = createServerFn({ method: "POST" })
         displayName: typeof row.student_display_name === "string" ? row.student_display_name : null,
       },
     };
+  });
+
+/**
+ * PUBLIC student report by alliance code — no account, no session required.
+ *
+ * Product decision (2026-07-08): a parent can open their child's read-only report
+ * with the alliance code alone. The code is a bearer capability (= the student's
+ * 122-bit-random UUID, shown on their dashboard). Access, code decode and the
+ * "target must be a student" check all live in the anon-callable
+ * `get_student_report_by_code` SECURITY DEFINER RPC; login stays optional and only
+ * unlocks the write-side extras (weekly goal, push digest).
+ */
+export const getStudentReportByCode = createServerFn({ method: "GET" })
+  .middleware([optionalSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ studentCode: z.string().min(8).max(64) }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+
+    const { data: reportData, error } = await supabase.rpc("get_student_report_by_code", {
+      p_code: data.studentCode,
+    });
+
+    if (error) {
+      const raw = errorMessage(error);
+      logger.error("parentReport.getStudentReportByCode: RPC failed", { error: raw });
+      throw new Error(REPORT_CODE_ERROR_PREFIX + parentCodeErrorCode(raw));
+    }
+
+    return parseStudentReportPayload(reportData);
   });
