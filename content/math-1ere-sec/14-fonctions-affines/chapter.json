@@ -1,0 +1,9 @@
+{
+  "title": "Fonctions affines",
+  "description": "Fonction affine f : x ↦ ax + b (image, antécédent), coefficient (taux d'accroissement) a = (f(x) − f(x'))/(x − x') et ordonnée à l'origine b = f(0), cas particuliers de la fonction linéaire (b = 0) et de la fonction constante (a = 0), représentation graphique comme droite d'équation y = ax + b de coefficient directeur a passant par (0 ; b), détermination d'une fonction affine à partir de deux images ou de deux points, et résolution graphique d'équations et d'inéquations",
+  "displayOrder": 14,
+  "sources": [
+    "Programme officiel — Mathématiques, 1ère année de l'enseignement secondaire (tronc commun), CNP Tunisie ; manuel élève 222104P02 (chapitre 14, p.213–226)",
+    "Transcription du programme officiel — .claude/skills/content-ecole-tn/references/programmes-officiels/programme/1ere-sec/mathematiques.md (§2.14)"
+  ]
+}

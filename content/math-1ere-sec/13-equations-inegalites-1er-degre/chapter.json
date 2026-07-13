@@ -1,0 +1,9 @@
+{
+  "title": "Équations et inéquations du premier degré à une inconnue",
+  "description": "Équation du premier degré à une inconnue ax + b = 0 (a ≠ 0) et son unique solution x = −b/a, équations équivalentes, équations se ramenant au premier degré (équation produit ab = 0 ⟺ a = 0 ou b = 0, équation x² = a et discussion selon le signe de a, égalité de valeurs absolues), inéquations du premier degré (avec la règle du changement de sens), signe d'un binôme du premier degré (tableau de signe) et mise en équation ou en inéquation d'un problème",
+  "displayOrder": 13,
+  "sources": [
+    "Programme officiel — Mathématiques, 1ère année de l'enseignement secondaire (tronc commun), CNP Tunisie ; manuel élève 222104P02 (chapitre 13, p.197–212)",
+    "Transcription du programme officiel — .claude/skills/content-ecole-tn/references/programmes-officiels/programme/1ere-sec/mathematiques.md (§2.13)"
+  ]
+}

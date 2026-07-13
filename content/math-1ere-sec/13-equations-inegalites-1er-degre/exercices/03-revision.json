@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision (type examen) : Résolution et mise en équation",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Résous l'équation 2(x − 3) = x + 1.",
+      "options": [
+        { "id": "a", "text": "x = 7" },
+        { "id": "b", "text": "x = 5" },
+        { "id": "c", "text": "x = −7" },
+        { "id": "d", "text": "x = 4" }
+      ],
+      "correctOption": "a",
+      "explanation": "On développe : 2x − 6 = x + 1, puis 2x − x = 1 + 6, soit x = 7 ✓ (vérification : 2 × (7 − 3) = 8 et 7 + 1 = 8). Les autres réponses viennent d'erreurs de développement ou de transposition.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "L'aire d'un carré est 49 cm². Quelle est la longueur de son côté ?",
+      "options": [
+        { "id": "a", "text": "7 cm" },
+        { "id": "b", "text": "24,5 cm" },
+        { "id": "c", "text": "7 cm ou −7 cm" },
+        { "id": "d", "text": "2401 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "Si x est le côté, x² = 49, donc x = 7 ou x = −7 ; mais une longueur est positive, on ne garde que x = 7 cm ✓. 24,5 cm divise par 2 au lieu de prendre la racine ; garder −7 (réponse c) n'a pas de sens pour une longueur ; 2401 = 49² (réponse d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Résous l'inéquation 5 − 2x < 1.",
+      "options": [
+        { "id": "a", "text": "x > 2" },
+        { "id": "b", "text": "x < 2" },
+        { "id": "c", "text": "x > −2" },
+        { "id": "d", "text": "x < 3" }
+      ],
+      "correctOption": "a",
+      "explanation": "5 − 2x < 1 donne −2x < −4 ; en divisant par −2 (négatif), on change le sens : x > 2 ✓. Garder le sens donnerait x < 2 (réponse b, erreur classique) ; les réponses c et d se trompent sur la valeur ou le signe.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Pour quelles valeurs de x l'expression −x + 4 est-elle positive (≥ 0) ?",
+      "options": [
+        { "id": "a", "text": "x ≤ 4" },
+        { "id": "b", "text": "x ≥ 4" },
+        { "id": "c", "text": "x ≤ −4" },
+        { "id": "d", "text": "x ≥ −4" }
+      ],
+      "correctOption": "a",
+      "explanation": "−x + 4 ≥ 0 équivaut à 4 ≥ x, soit x ≤ 4 ✓. Le coefficient de x est négatif (−1), donc l'expression est positive AVANT sa racine 4, et non après (réponse b). Les réponses c et d se trompent sur la racine.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "La somme de trois entiers consécutifs vaut 48. Quel est le plus petit de ces entiers ?",
+      "options": [
+        { "id": "a", "text": "15" },
+        { "id": "b", "text": "16" },
+        { "id": "c", "text": "14" },
+        { "id": "d", "text": "12" }
+      ],
+      "correctOption": "a",
+      "explanation": "En notant x le plus petit entier : x + (x + 1) + (x + 2) = 48, soit 3x + 3 = 48, d'où 3x = 45 et x = 15 ✓ (les trois entiers sont 15, 16, 17). 16 est l'entier du milieu ; 14 et 12 ne vérifient pas la somme.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Résous l'équation x² − 5x = 0.",
+      "options": [
+        { "id": "a", "text": "x = 0 ou x = 5" },
+        { "id": "b", "text": "x = 5" },
+        { "id": "c", "text": "x = −5" },
+        { "id": "d", "text": "x = 5 ou x = −5" }
+      ],
+      "correctOption": "a",
+      "explanation": "On factorise par x : x² − 5x = x(x − 5) = 0, donc x = 0 ou x − 5 = 0, soit x = 0 ou x = 5 ✓. Ne garder que x = 5 (réponse b) oublie la solution x = 0 (le piège classique : on ne divise pas par x, qui peut être nul). Les réponses c et d se trompent sur les racines.",
+      "difficulty": 3
+    }
+  ]
+}

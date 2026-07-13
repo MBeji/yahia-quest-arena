@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Exercice : Images, coefficient et droite",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Soit f : x ↦ 2x + 5. Calcule f(3).",
+      "options": [
+        { "id": "a", "text": "11" },
+        { "id": "b", "text": "10" },
+        { "id": "c", "text": "16" },
+        { "id": "d", "text": "13" }
+      ],
+      "correctOption": "a",
+      "explanation": "f(3) = 2 × 3 + 5 = 6 + 5 = 11 ✓. 10 oublie le + 5 (2 × 5) ; 16 ajoute mal ; 13 se trompe dans la multiplication.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle est l'ordonnée à l'origine de la fonction affine f : x ↦ 4x − 7 ?",
+      "options": [
+        { "id": "a", "text": "−7" },
+        { "id": "b", "text": "4" },
+        { "id": "c", "text": "7" },
+        { "id": "d", "text": "−3" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'ordonnée à l'origine est b = f(0) = 4 × 0 − 7 = −7 ✓. 4 est le coefficient directeur (réponse b) ; 7 oublie le signe (réponse c) ; −3 additionne 4 − 7 (réponse d).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Soit f : x ↦ 2x + 1. Quel est l'antécédent de 9 par f ?",
+      "options": [
+        { "id": "a", "text": "4" },
+        { "id": "b", "text": "19" },
+        { "id": "c", "text": "5" },
+        { "id": "d", "text": "8" }
+      ],
+      "correctOption": "a",
+      "explanation": "On résout f(x) = 9, soit 2x + 1 = 9, donc 2x = 8 et x = 4 ✓. 19 calcule f(9) au lieu de l'antécédent ; 5 fait 9 − 4 ; 8 oublie de diviser par 2.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "La fonction f : x ↦ 5 (qui vaut 5 pour tout x) est :",
+      "options": [
+        { "id": "a", "text": "une fonction constante" },
+        { "id": "b", "text": "une fonction linéaire" },
+        { "id": "c", "text": "une fonction affine de coefficient directeur 5" },
+        { "id": "d", "text": "impossible à définir" }
+      ],
+      "correctOption": "a",
+      "explanation": "f(x) = 5 s'écrit 0 × x + 5 : le coefficient est nul, c'est une fonction constante (sa droite est horizontale) ✓. Une fonction linéaire passe par l'origine (réponse b) ; le coefficient directeur est 0, pas 5 (réponse c) ; et la fonction est bien définie (réponse d).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "En quel point la droite d'équation y = 3x − 2 coupe-t-elle l'axe des ordonnées ?",
+      "options": [
+        { "id": "a", "text": "(0 ; −2)" },
+        { "id": "b", "text": "(0 ; 3)" },
+        { "id": "c", "text": "(−2 ; 0)" },
+        { "id": "d", "text": "(0 ; 2)" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'axe des ordonnées correspond à x = 0 : y = 3 × 0 − 2 = −2, donc le point est (0 ; −2) ✓. (0 ; 3) confond avec le coefficient directeur ; (−2 ; 0) est sur l'axe des abscisses ; (0 ; 2) oublie le signe.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Une fonction affine vérifie f(1) = 4 et f(3) = 10. Quel est son coefficient directeur a ?",
+      "options": [
+        { "id": "a", "text": "3" },
+        { "id": "b", "text": "6" },
+        { "id": "c", "text": "2" },
+        { "id": "d", "text": "7" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le coefficient directeur est le taux d'accroissement : a = (f(3) − f(1))/(3 − 1) = (10 − 4)/2 = 6/2 = 3 ✓. 6 est la variation des images sans diviser par celle des abscisses ; 2 est la variation des abscisses ; 7 additionne mal.",
+      "difficulty": 2
+    }
+  ]
+}

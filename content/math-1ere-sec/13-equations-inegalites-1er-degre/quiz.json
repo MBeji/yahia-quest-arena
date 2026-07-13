@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐ : Équations et inéquations",
+  "questions": [
+    {
+      "prompt": "L'équation ax + b = 0 (avec a ≠ 0) admet pour solution :",
+      "options": [
+        { "id": "a", "text": "x = −b/a" },
+        { "id": "b", "text": "x = b/a" },
+        { "id": "c", "text": "x = a/b" },
+        { "id": "d", "text": "x = −a/b" }
+      ],
+      "correctOption": "a",
+      "explanation": "On isole x : ax = −b, puis x = −b/a ✓. Oublier le signe donne b/a (réponse b) ; inverser le rapport donne a/b ou −a/b (réponses c et d).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Un produit de deux facteurs est nul si et seulement si :",
+      "options": [
+        { "id": "a", "text": "l'un au moins des deux facteurs est nul" },
+        { "id": "b", "text": "les deux facteurs sont nuls en même temps" },
+        { "id": "c", "text": "les deux facteurs sont égaux" },
+        { "id": "d", "text": "seulement le premier facteur est nul" }
+      ],
+      "correctOption": "a",
+      "explanation": "La règle du produit nul : a × b = 0 ⟺ a = 0 ou b = 0, donc il suffit qu'un des facteurs soit nul ✓. Il n'est pas nécessaire que les deux le soient (réponse b) ; l'égalité des facteurs (réponse c) ou le seul premier facteur (réponse d) ne conviennent pas.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Combien de solutions l'équation x² = −4 admet-elle ?",
+      "options": [
+        { "id": "a", "text": "Aucune" },
+        { "id": "b", "text": "Une seule : x = −2" },
+        { "id": "c", "text": "Deux : x = 2 et x = −2" },
+        { "id": "d", "text": "Une seule : x = 4" }
+      ],
+      "correctOption": "a",
+      "explanation": "Un carré est toujours positif ou nul, donc x² ne peut jamais valoir −4 : l'équation n'a aucune solution ✓. Les réponses b et c correspondent à x² = 4 (où −4 est le second membre pris à tort positif) ; la réponse d confond x² = −4 avec x = 4.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "En divisant les deux membres d'une inéquation par un nombre négatif, que doit-on faire ?",
+      "options": [
+        { "id": "a", "text": "changer le sens de l'inégalité" },
+        { "id": "b", "text": "garder le même sens" },
+        { "id": "c", "text": "remplacer l'inégalité par une égalité" },
+        { "id": "d", "text": "changer le signe de l'inconnue" }
+      ],
+      "correctOption": "a",
+      "explanation": "Multiplier ou diviser une inéquation par un nombre négatif inverse le sens de l'inégalité (≥ devient ≤, etc.) ✓. Garder le même sens (réponse b) est l'erreur classique ; on ne transforme pas l'inéquation en égalité (réponse c) et on ne touche pas au signe de l'inconnue (réponse d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Pour quelles valeurs de x l'expression 2x − 6 est-elle strictement positive ?",
+      "options": [
+        { "id": "a", "text": "x > 3" },
+        { "id": "b", "text": "x < 3" },
+        { "id": "c", "text": "x = 3" },
+        { "id": "d", "text": "x > 6" }
+      ],
+      "correctOption": "a",
+      "explanation": "2x − 6 > 0 équivaut à 2x > 6, soit x > 3 ✓ (le binôme s'annule en 3 et, comme le coefficient 2 est positif, il est positif au-delà). x < 3 donne un résultat négatif (réponse b) ; en x = 3 l'expression est nulle (réponse c) ; x > 6 est trop restrictif (réponse d).",
+      "difficulty": 1
+    }
+  ]
+}

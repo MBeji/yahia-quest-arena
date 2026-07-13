@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision (type examen) : Systèmes et mise en équations",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Résous le système « 2x + y = 8 et x − y = 1 » par élimination.",
+      "options": [
+        { "id": "a", "text": "(3 ; 2)" },
+        { "id": "b", "text": "(2 ; 3)" },
+        { "id": "c", "text": "(3 ; 5)" },
+        { "id": "d", "text": "(1 ; 6)" }
+      ],
+      "correctOption": "a",
+      "explanation": "En additionnant les deux équations, les y s'éliminent : (2x + y) + (x − y) = 8 + 1, soit 3x = 9, donc x = 3 ; puis 3 − y = 1 donne y = 2. Solution : (3 ; 2) ✓. La réponse b intervertit x et y ; les autres échouent à une équation.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "La somme de deux nombres est 20 et leur différence est 6. Quels sont ces deux nombres ?",
+      "options": [
+        { "id": "a", "text": "13 et 7" },
+        { "id": "b", "text": "14 et 6" },
+        { "id": "c", "text": "10 et 10" },
+        { "id": "d", "text": "12 et 8" }
+      ],
+      "correctOption": "a",
+      "explanation": "On pose x + y = 20 et x − y = 6. En additionnant : 2x = 26, donc x = 13, puis y = 7 ✓ (13 + 7 = 20 et 13 − 7 = 6). Les autres paires ne respectent pas les deux conditions à la fois (14 et 6 donnent une somme de 20 mais une différence de 8).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Résous le système « 3x + 2y = 12 et x = 2 ».",
+      "options": [
+        { "id": "a", "text": "(2 ; 3)" },
+        { "id": "b", "text": "(2 ; 2)" },
+        { "id": "c", "text": "(2 ; 6)" },
+        { "id": "d", "text": "(2 ; 9)" }
+      ],
+      "correctOption": "a",
+      "explanation": "On remplace x par 2 dans la première équation : 3 × 2 + 2y = 12, soit 6 + 2y = 12, donc 2y = 6 et y = 3. Solution : (2 ; 3) ✓. Les autres valeurs de y ne vérifient pas 6 + 2y = 12.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Combien de solutions le système « x + y = 3 et x + y = 5 » admet-il ?",
+      "options": [
+        { "id": "a", "text": "aucune" },
+        { "id": "b", "text": "une seule : (4 ; 0)" },
+        { "id": "c", "text": "une infinité" },
+        { "id": "d", "text": "une seule : (3 ; 5)" }
+      ],
+      "correctOption": "a",
+      "explanation": "La quantité x + y ne peut pas valoir à la fois 3 et 5 : le système n'a aucune solution ✓ (les deux droites, de même coefficient directeur, sont parallèles). Aucun couple ne peut satisfaire les deux égalités contradictoires (réponses b et d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Au marché, 3 kg de pommes et 2 kg de poires coûtent 13 dinars ; 1 kg de pommes et 2 kg de poires coûtent 7 dinars. Quel est le prix d'un kilogramme de pommes ?",
+      "options": [
+        { "id": "a", "text": "3 dinars" },
+        { "id": "b", "text": "2 dinars" },
+        { "id": "c", "text": "4 dinars" },
+        { "id": "d", "text": "5 dinars" }
+      ],
+      "correctOption": "a",
+      "explanation": "En notant p le prix des pommes et q celui des poires : 3p + 2q = 13 et p + 2q = 7. En soustrayant la seconde de la première, les poires s'éliminent : 2p = 6, donc p = 3 dinars ✓ (on trouve ensuite q = 2, et 3 × 3 + 2 × 2 = 13). 2 dinars est le prix des poires.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Résous le système « 2x + 3y = 16 et x − y = 3 ».",
+      "options": [
+        { "id": "a", "text": "(5 ; 2)" },
+        { "id": "b", "text": "(2 ; 5)" },
+        { "id": "c", "text": "(3 ; 2)" },
+        { "id": "d", "text": "(5 ; −2)" }
+      ],
+      "correctOption": "a",
+      "explanation": "De la seconde équation, x = y + 3. On remplace dans la première : 2(y + 3) + 3y = 16, soit 5y + 6 = 16, donc y = 2 et x = 5. Solution : (5 ; 2) ✓ (vérification : 2 × 5 + 3 × 2 = 16 et 5 − 2 = 3). Les autres couples échouent à une équation.",
+      "difficulty": 3
+    }
+  ]
+}
