@@ -311,25 +311,34 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
   `npm run test:e2e:auth` (`authed-chromium`), `npm run test:e2e:install` (install the
   browser). Authenticated runs are seeded via `scripts/e2e/seed-test-users.mjs`. E2E is
   separate from the Vitest unit/integration gate.
-- **Merge automation (push → PR → checks → merge, fully automatic).** Pushing any
-  non-`main` branch auto-opens its **draft** PR (`auto-pr.yml`); marking the PR ready
-  (or pushing with `[auto-merge]` in the head-commit subject) arms GitHub **auto-merge**
-  (`automerge.yml`, squash + delete branch, label `no-automerge` opts out; a push to `main`
-  auto-updates armed PRs left behind). The merge itself is enforced by the
-  `main-protection` ruleset (`.github/rulesets/main-protection.json`, imported in repo
-  Settings → Rules): required checks `verify` + `Migration presence` + `Migration order`
-  - `CodeQL` (SAST, `codeql.yml`) on an up-to-date head. Merging to `main` then
-    auto-deploys (Vercel) and auto-applies migrations (§7). Prereqs (repo Settings):
-    "Allow auto-merge" (General) and "Allow GitHub Actions to create and approve pull
-    requests" (Actions → General) on; re-import the ruleset JSON after changing it. **Also
-    provision `GH_AUTOMATION_PAT`** (Settings → Secrets and variables → Actions — a
-    fine-grained PAT of a real collaborator, scoped to this repo, `contents`/
-    `pull requests`/`workflows: write`): without it, PRs are opened by the
-    `github-actions[bot]` actor, which is not a repo collaborator, so GitHub gates every
-    `pull_request`-triggered required check behind manual "Approve and run" — the same
-    mechanism as an outside contributor's fork PR, applied to our own automation. Both
-    workflows fall back to `GITHUB_TOKEN` + a `workflow_dispatch` workaround when the
-    secret is absent, but that path is **not deterministic** (see docs/passation.md).
+- **Merge automation (push → PR → checks → merge — fully automatic, zero human
+  steps; décision 2026-07-12).** Pushing any non-`main` branch auto-opens its PR
+  **ready with auto-merge armed** (`auto-pr.yml`, squash + delete branch): it merges
+  alone once the `main-protection` ruleset's required checks — `verify` +
+  `Migration presence` + `Migration order` + `CodeQL` (SAST, `codeql.yml`) — are
+  green on an up-to-date head (ruleset JSON at `.github/rulesets/main-protection.json`,
+  imported in repo Settings → Rules; re-import after changing it). Nobody marks
+  anything ready and nobody merges by hand — the session that pushed owns the PR
+  until the merge lands (DoD §8). Deliberate WIP opts out: `[wip]` / `[draft]` /
+  `[no-automerge]` in the head-commit subject (or a `wip/`/`draft/`/`rescue/` branch
+  prefix) opens a **draft** instead — promote with `gh pr ready`; the `no-automerge`
+  label freezes a PR, and a later push never promotes an existing draft.
+  `automerge.yml` (re)arms ready PRs on PR events and, on every push to `main`,
+  updates armed PRs left behind — "behind" decided by the compare API (`behind_by`),
+  never the lazily-recomputed `mergeStateStatus` (staleness that stranded armed PRs
+  until 2026-07-12) — and labels **`needs-rebase`** any armed PR whose auto-update
+  fails on a conflict (the next session rebases it). Merging to `main` then
+  auto-deploys (Vercel) and auto-applies migrations (§7). Prereqs (all in place):
+  "Allow auto-merge" (General), "Allow GitHub Actions to create and approve pull
+  requests" (Actions → General), and **`GH_AUTOMATION_PAT`** (Settings → Secrets and
+  variables → Actions — a fine-grained PAT of a real collaborator, scoped to this
+  repo, `contents`/`pull requests`/`workflows: write`, provisioned 2026-07-06):
+  without it, PRs are opened by the `github-actions[bot]` actor, which is not a repo
+  collaborator, so GitHub gates every `pull_request`-triggered required check behind
+  manual "Approve and run" — the same mechanism as an outside contributor's fork PR,
+  applied to our own automation. Both workflows fall back to `GITHUB_TOKEN` + a
+  `workflow_dispatch` workaround when the secret is absent, but that path is **not
+  deterministic** (see docs/passation.md).
 - **Scheduled automations (GitHub Actions + repo skills).** Run on a schedule, all
   gracefully skipping without `CLAUDE_CODE_OAUTH_TOKEN`. The E2E/pgTAP nightly runs
   **every night**; the three Claude-agent guards run **2×/week** (each holds a runner for
@@ -424,6 +433,18 @@ the project stays regression- and debt-free while being improved by AI.
    (DROP/REVOKE) in a **separate** merge, **after** the code that stopped using the
    old shape is live. The `pgTAP suite` check proves every migration applies
    cleanly on a fresh DB before merge.
+8. **A pushed branch is the session's PR to LAND — Mohamed never touches the PR
+   lifecycle (décision 2026-07-12).** The chain is 100 % automatic: the push opens
+   the PR ready with auto-merge armed, and it merges alone when the required checks
+   are green on an up-to-date head — no human reads, readies or merges anything.
+   The session that pushed stays on duty until the merge is real: watch the checks
+   (`gh pr checks <n> --watch`), fix any red check and push the fix, confirm the
+   merge actually happened, then clean up (prune the local branch/worktree; the
+   remote branch auto-deletes). Deliberate savepoint? Push with `[wip]`/`[draft]`
+   in the subject (or a `wip/`/`draft/`/`rescue/` branch) and own its promotion
+   later. Before ending, sweep `gh pr list` for `needs-rebase` or armed-but-red
+   PRs and rescue what you can. Never end a session with its PR unmerged unless a
+   written blocker says why (PR comment or STATUS.md).
 
 When unsure about scope or a destructive action, ask before proceeding.
 
