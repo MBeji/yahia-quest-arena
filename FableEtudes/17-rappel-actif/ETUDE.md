@@ -1,6 +1,6 @@
 # Étude 17 — Rappel actif (rejouer les QCM en saisie libre)
 
-> **Statut** : brouillon
+> **Statut** : validée (Q-1…Q-4 arbitrées par Mohamed le 2026-07-13)
 > **Priorité** : 17 · **Valeur** : ~2 000 missions « doublées » à coût de génération zéro — chaque QCM maîtrisé devient un exercice de mémorisation réelle (active recall) · **Complexité** : moyenne
 > **Architecte** : Fable 5 / 2026-07-13 · **Exécuteur cible** : Sonnet (ou équiv.)
 > **Dépend de** : rien (le contenu QCM existant suffit) — s'articule avec l'étude 03 (seam `score_answer`, livrée) et l'étude 04-A1 (« Révision du jour », non livrée, voir §1) · **Bloque** : —
@@ -169,9 +169,10 @@ Nouvelles clés dans `fr.ts`/`en.ts`/`ar.ts` (app connectée uniquement, R-9) so
 nom du mode, bandeau d'en-tête, chip hub (débloqué/verrouillé + tooltip), écran de verrou,
 célébration de déblocage, placeholder de l'input, review (« Ta réponse » réutilisé). Libellés
 du player pilotés par la **langue du contenu** via `buildQuestLabels` (mécanique existante).
-Entrée lexique à ajouter à `docs/content-voice-and-composition.md` §2 (Q-2) — proposition :
-FR « Rappel » (mode Rappel) · EN "Recall" · AR « الاسترجاع ». RPG dosé : la célébration peut
-titrer « Sans filet ! », les instructions restent littérales (règle étude 15).
+Nom du mode **tranché (Q-2, 2026-07-13)** : FR « Rappel » (mode Rappel) · EN "Recall" ·
+AR « الاسترجاع » — entrée lexique à ajouter à `docs/content-voice-and-composition.md` §2 au
+lot 5. RPG dosé : la célébration peut titrer « Sans filet ! », les instructions restent
+littérales (règle étude 15).
 
 ### Hors périmètre (v1)
 
@@ -356,7 +357,7 @@ Suivi produit : les sessions Rappel se comptent en SQL (`attempts WHERE variant=
 - **D-5 — Déblocage lu dans `attempts` (durable), pas dans la télémétrie.** L'alternative
   « toutes les questions validées cumulativement » exigerait `question_attempts`, purgée à
   12 mois (pg_cron) → un déblocage qui expire. `attempts` est éternel, l'anti-rush du quiz
-  gate s'y applique déjà. Voir Q-1 pour l'arbitrage produit.
+  gate s'y applique déjà. Arbitré Q-1 (2026-07-13) : cette option est la règle retenue.
 - **D-6 — L'accès parcours suit l'exercice de base.** `resolve_exercise_access` inchangée :
   la variante n'est ni un exercice ni une difficulté en base (le « +1 étoile » est une
   présentation, R-5/US-3) — si le premium se réactive un jour, une mission verrouillée l'est
@@ -437,23 +438,22 @@ STOPPE et escalade (règle FableEtudes).
 
 ## 7. Questions ouvertes (pour l'humain)
 
-- **Q-1 — Règle de déblocage.** Reco architecte : **un run classique à 100 %** (durable,
-  anti-rush, simple — R-3/D-5). Alternative fidèle au mot-à-mot « toutes les questions
-  validées » : validation **cumulative** par question à travers les runs — mais la seule
-  source par-question (`question_attempts`) est purgée à 12 mois, donc il faudrait une
-  petite table d'agrégat dédiée. Valider la reco ou demander la version cumulative ?
-- **Q-2 — Nom du mode (entrée lexique, 3 langues).** Reco : FR « Rappel » / EN "Recall" /
-  AR « الاسترجاع », célébrations RPG « Sans filet ! ». Alternatives : « Rappel actif »
-  (plus pédago, plus long), « Défi Mémoire » (plus RPG). Trancher avant le lot 4.
-- **Q-3 — Les pièces suivent-elles l'XP (×1,5) ?** Reco : non en v1 (économie du jeu non
-  instrumentée, étude 09) — XP seul porte la difficulté. Confirmer.
-- **Q-4 — Multiplicateur XP.** Reco : ×1,5. Un ×2 rendrait le Rappel strictement dominant
-  sur le classique en XP/minute et fausserait le leaderboard. Confirmer ×1,5.
+**Section vidée — les quatre questions ont été arbitrées par Mohamed le 2026-07-13** (trace) :
+
+- **Q-1 — Règle de déblocage → tranché : un run classique à 100 %** (+ durée anti-rush),
+  tel qu'écrit en R-3/D-5. La variante cumulative (table d'agrégat) est écartée.
+- **Q-2 — Nom du mode → tranché : FR « Rappel » / EN "Recall" / AR « الاسترجاع »**,
+  célébrations RPG « Sans filet ! » en habillage. Entrée lexique à ajouter au lot 5.
+- **Q-3 — Pièces → tranché : inchangées** (seul l'XP porte la difficulté ; économie du jeu
+  à instrumenter par l'étude 09).
+- **Q-4 — Multiplicateur XP → tranché : ×1,5** (`RECALL_XP_MULTIPLIER = 1.5`).
 
 ## 8. Journal d'exécution
 
 - 2026-07-13 — étude créée (brouillon). Audit d'éligibilité mesuré sur `content/` (annexe
-  §9). Aucun lot démarré — en attente de validation humaine (Q-1…Q-4).
+  §9). PR #399.
+- 2026-07-13 — Q-1…Q-4 arbitrées par Mohamed (toutes sur les recommandations) → statut
+  **validée**. Aucun lot démarré — prête pour l'exécuteur (lot 1).
 
 ## 9. Annexe — audit d'éligibilité (mesuré le 2026-07-13)
 
