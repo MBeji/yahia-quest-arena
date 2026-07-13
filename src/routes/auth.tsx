@@ -8,6 +8,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { linkStudentByCode } from "@/features/parent-report";
 import { bootstrapProfile } from "@/features/auth";
 import { Label } from "@/components/ui/label";
+import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { useT } from "@/lib/i18n";
 import { useEntrance } from "@/shared/lib/motion";
 import type { TranslationKeys } from "@/lib/i18n/types";
@@ -48,6 +49,7 @@ function AuthPage() {
   const navigate = useNavigate();
   const t = useT();
   const isSignup = mode === "signup";
+  const isForgot = mode === "forgot";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -55,6 +57,7 @@ function AuthPage() {
   const [allianceCode, setAllianceCode] = useState("");
   const [busy, setBusy] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
+  const [forgotSent, setForgotSent] = useState(false);
   const [sentTo, setSentTo] = useState("");
   // Inline, screen-reader-announced form error (see #23). `passwordError` is the
   // specific min-length validation surfaced on the password field.
@@ -212,6 +215,59 @@ function AuthPage() {
     // Supabase redirects the browser to Google; no local navigation needed here.
   }
 
+  async function handleForgot(e: React.FormEvent) {
+    e.preventDefault();
+    setFormError("");
+    setBusy(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth/reset`,
+      });
+      if (error) throw error;
+      // Confirmation never reveals whether the address has an account (privacy).
+      setSentTo(email);
+      setForgotSent(true);
+    } catch (err) {
+      const message = friendlyAuthError(t, err);
+      setFormError(message);
+      toast.error(message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  if (forgotSent) {
+    return (
+      <main className="relative min-h-[100dvh] overflow-hidden bg-black-deep">
+        <div className="absolute inset-0 bg-grid opacity-50" />
+        <div className="relative mx-auto flex min-h-[100dvh] max-w-md flex-col items-center justify-center px-6 py-12">
+          <motion.div
+            {...entrance}
+            className="w-full glass-gold rounded-2xl p-8 shadow-gold text-center"
+          >
+            <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-2xl bg-gold/20 border border-gold/40">
+              <MailCheck className="h-8 w-8 text-gold" />
+            </div>
+            <h1 className="font-display text-2xl font-bold">{t.auth.forgotSentTitle}</h1>
+            <p className="mt-3 text-sm text-muted-foreground">
+              {t.auth.forgotSentBody.replace("{email}", sentTo)}
+            </p>
+            <div className="mt-6 rounded-xl border border-gold/30 bg-gold/5 p-4 text-xs text-muted-foreground">
+              {t.auth.forgotSentSpam}
+            </div>
+            <Link
+              to="/auth"
+              search={{ mode: "login" }}
+              className="mt-6 inline-flex min-h-11 items-center text-xs text-gold hover:underline"
+            >
+              {t.auth.forgotBack}
+            </Link>
+          </motion.div>
+        </div>
+      </main>
+    );
+  }
+
   if (emailSent) {
     return (
       <main className="relative min-h-[100dvh] overflow-hidden bg-black-deep">
@@ -263,182 +319,246 @@ function AuthPage() {
         </Link>
 
         <motion.div {...entrance} className="w-full glass-gold rounded-2xl p-6 shadow-gold sm:p-8">
+          <div className="mb-3 flex justify-end">
+            <LanguageSwitcher />
+          </div>
           <h1 className="font-display text-2xl font-bold">
-            {isSignup ? t.auth.titleSignup : t.auth.titleLogin}
+            {isForgot ? t.auth.forgotTitle : isSignup ? t.auth.titleSignup : t.auth.titleLogin}
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            {isSignup ? t.auth.subtitleSignup : t.auth.subtitleLogin}
+            {isForgot
+              ? t.auth.forgotSubtitle
+              : isSignup
+                ? t.auth.subtitleSignup
+                : t.auth.subtitleLogin}
           </p>
 
-          <button
-            type="button"
-            disabled={busy}
-            onClick={handleGoogle}
-            className="mt-6 flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-border bg-background/50 px-4 py-2.5 text-sm font-medium transition hover:bg-background/80 disabled:opacity-50"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24">
-              <path
-                fill="#4285F4"
-                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-              />
-              <path
-                fill="#34A853"
-                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-              />
-              <path
-                fill="#FBBC05"
-                d="M5.84 14.1A6.97 6.97 0 0 1 5.46 12c0-.73.13-1.44.36-2.1V7.07H2.18A11 11 0 0 0 1 12c0 1.77.42 3.45 1.18 4.93l3.66-2.83z"
-              />
-              <path
-                fill="#EA4335"
-                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.83C6.71 7.31 9.14 5.38 12 5.38z"
-              />
-            </svg>
-            {t.auth.googleCta}
-          </button>
-
-          <p className="mt-2 text-center text-xs text-muted-foreground">
-            {t.auth.sessionRemembered}
-          </p>
-
-          <div className="my-5 flex items-center gap-3 text-xs uppercase tracking-widest text-muted-foreground">
-            <span className="h-px flex-1 bg-border" /> {t.auth.or}{" "}
-            <span className="h-px flex-1 bg-border" />
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-3">
-            {isSignup && (
-              <div className="rounded-xl border border-border/60 bg-background/30 p-3">
-                <div className="mb-2 text-xs uppercase tracking-wider text-muted-foreground">
-                  {t.auth.roleLabel}
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setRole("student")}
-                    className={`min-h-11 rounded-lg px-3 py-2 text-sm font-semibold transition ${role === "student" ? "bg-gold/15 text-gold border border-gold/40" : "bg-background/40 text-muted-foreground border border-border/50 hover:text-foreground"}`}
-                  >
-                    {t.auth.roleStudent}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setRole("parent")}
-                    className={`min-h-11 rounded-lg px-3 py-2 text-sm font-semibold transition ${role === "parent" ? "bg-gold/15 text-gold border border-gold/40" : "bg-background/40 text-muted-foreground border border-border/50 hover:text-foreground"}`}
-                  >
-                    {t.auth.roleParent}
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {isSignup && (
+          {isForgot ? (
+            <form onSubmit={handleForgot} className="mt-6 space-y-3">
               <div className="relative">
-                <Label htmlFor="auth-name" className="sr-only">
-                  {t.auth.heroNameLabel}
+                <Label htmlFor="auth-email" className="sr-only">
+                  {t.auth.emailLabel}
                 </Label>
-                <UserIcon className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Mail className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
                 <input
-                  id="auth-name"
-                  type="text"
+                  id="auth-email"
+                  type="email"
                   required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder={t.auth.heroNameLabel}
-                  className="w-full rounded-lg border border-input bg-background/60 py-3 ps-10 pe-3 text-sm focus:border-gold focus:outline-none"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder={t.auth.emailLabel}
+                  className="w-full rounded-lg border border-input bg-background/60 py-2.5 ps-10 pe-3 text-sm focus:border-gold focus:outline-none"
                 />
               </div>
-            )}
-
-            {isSignup && role === "parent" && (
-              <div className="relative">
-                <Label htmlFor="auth-alliance-code" className="sr-only">
-                  {t.auth.allianceCodeLabel}
-                </Label>
-                <input
-                  id="auth-alliance-code"
-                  type="text"
-                  value={allianceCode}
-                  onChange={(e) => setAllianceCode(e.target.value)}
-                  placeholder={t.auth.allianceCodeLabel}
-                  aria-describedby="auth-alliance-code-hint"
-                  className="w-full rounded-lg border border-input bg-background/60 py-2.5 px-3 text-sm focus:border-gold focus:outline-none"
-                />
-                <p id="auth-alliance-code-hint" className="mt-1 text-xs text-muted-foreground">
-                  {t.auth.allianceCodeHint}
-                </p>
+              <div role="alert" aria-live="polite">
+                {formError && (
+                  <p className="rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-xs text-gold">
+                    {formError}
+                  </p>
+                )}
               </div>
-            )}
-            <div className="relative">
-              <Label htmlFor="auth-email" className="sr-only">
-                {t.auth.emailLabel}
-              </Label>
-              <Mail className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
-              <input
-                id="auth-email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder={t.auth.emailLabel}
-                className="w-full rounded-lg border border-input bg-background/60 py-2.5 ps-10 pe-3 text-sm focus:border-gold focus:outline-none"
-              />
-            </div>
-            <div className="relative">
-              <Label htmlFor="auth-password" className="sr-only">
-                {t.auth.passwordLabel}
-              </Label>
-              <Lock className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
-              <input
-                id="auth-password"
-                type="password"
-                required
-                minLength={8}
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  if (passwordError) setPasswordError("");
-                }}
-                placeholder={t.auth.passwordLabel}
-                aria-invalid={passwordError ? true : undefined}
-                aria-describedby={passwordError ? "auth-password-error" : undefined}
-                className="w-full rounded-lg border border-input bg-background/60 py-2.5 ps-10 pe-3 text-sm focus:border-gold focus:outline-none"
-              />
-              {passwordError && (
-                <p id="auth-password-error" className="mt-1 text-xs text-gold">
-                  {passwordError}
-                </p>
-              )}
-            </div>
+              <button
+                type="submit"
+                disabled={busy}
+                className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-[image:var(--gradient-gold)] py-2.5 text-sm font-bold text-primary-foreground shadow-gold transition hover:opacity-90 disabled:opacity-60"
+              >
+                {busy && <Loader2 className="h-4 w-4 animate-spin" />}
+                {t.auth.forgotSubmit}
+              </button>
+              <Link
+                to="/auth"
+                search={{ mode: "login" }}
+                className="block py-2 text-center text-xs font-medium text-muted-foreground transition hover:text-foreground"
+              >
+                {t.auth.forgotBack}
+              </Link>
+            </form>
+          ) : (
+            <>
+              <button
+                type="button"
+                disabled={busy}
+                onClick={handleGoogle}
+                className="mt-6 flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-border bg-background/50 px-4 py-2.5 text-sm font-medium transition hover:bg-background/80 disabled:opacity-50"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24">
+                  <path
+                    fill="#4285F4"
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M5.84 14.1A6.97 6.97 0 0 1 5.46 12c0-.73.13-1.44.36-2.1V7.07H2.18A11 11 0 0 0 1 12c0 1.77.42 3.45 1.18 4.93l3.66-2.83z"
+                  />
+                  <path
+                    fill="#EA4335"
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.83C6.71 7.31 9.14 5.38 12 5.38z"
+                  />
+                </svg>
+                {t.auth.googleCta}
+              </button>
 
-            {/* Always-mounted live region so screen readers announce errors
+              <p className="mt-2 text-center text-xs text-muted-foreground">
+                {t.auth.sessionRemembered}
+              </p>
+
+              <div className="my-5 flex items-center gap-3 text-xs uppercase tracking-widest text-muted-foreground">
+                <span className="h-px flex-1 bg-border" /> {t.auth.or}{" "}
+                <span className="h-px flex-1 bg-border" />
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-3">
+                {isSignup && (
+                  <div className="rounded-xl border border-border/60 bg-background/30 p-3">
+                    <div className="mb-2 text-xs uppercase tracking-wider text-muted-foreground">
+                      {t.auth.roleLabel}
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setRole("student")}
+                        className={`min-h-11 rounded-lg px-3 py-2 text-sm font-semibold transition ${role === "student" ? "bg-gold/15 text-gold border border-gold/40" : "bg-background/40 text-muted-foreground border border-border/50 hover:text-foreground"}`}
+                      >
+                        {t.auth.roleStudent}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setRole("parent")}
+                        className={`min-h-11 rounded-lg px-3 py-2 text-sm font-semibold transition ${role === "parent" ? "bg-gold/15 text-gold border border-gold/40" : "bg-background/40 text-muted-foreground border border-border/50 hover:text-foreground"}`}
+                      >
+                        {t.auth.roleParent}
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {isSignup && (
+                  <div className="relative">
+                    <Label htmlFor="auth-name" className="sr-only">
+                      {t.auth.heroNameLabel}
+                    </Label>
+                    <UserIcon className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <input
+                      id="auth-name"
+                      type="text"
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder={t.auth.heroNameLabel}
+                      className="w-full rounded-lg border border-input bg-background/60 py-3 ps-10 pe-3 text-sm focus:border-gold focus:outline-none"
+                    />
+                  </div>
+                )}
+
+                {isSignup && role === "parent" && (
+                  <div className="relative">
+                    <Label htmlFor="auth-alliance-code" className="sr-only">
+                      {t.auth.allianceCodeLabel}
+                    </Label>
+                    <input
+                      id="auth-alliance-code"
+                      type="text"
+                      value={allianceCode}
+                      onChange={(e) => setAllianceCode(e.target.value)}
+                      placeholder={t.auth.allianceCodeLabel}
+                      aria-describedby="auth-alliance-code-hint"
+                      className="w-full rounded-lg border border-input bg-background/60 py-2.5 px-3 text-sm focus:border-gold focus:outline-none"
+                    />
+                    <p id="auth-alliance-code-hint" className="mt-1 text-xs text-muted-foreground">
+                      {t.auth.allianceCodeHint}
+                    </p>
+                  </div>
+                )}
+                <div className="relative">
+                  <Label htmlFor="auth-email" className="sr-only">
+                    {t.auth.emailLabel}
+                  </Label>
+                  <Mail className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <input
+                    id="auth-email"
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder={t.auth.emailLabel}
+                    className="w-full rounded-lg border border-input bg-background/60 py-2.5 ps-10 pe-3 text-sm focus:border-gold focus:outline-none"
+                  />
+                </div>
+                <div className="relative">
+                  <Label htmlFor="auth-password" className="sr-only">
+                    {t.auth.passwordLabel}
+                  </Label>
+                  <Lock className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <input
+                    id="auth-password"
+                    type="password"
+                    required
+                    minLength={8}
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      if (passwordError) setPasswordError("");
+                    }}
+                    placeholder={t.auth.passwordLabel}
+                    aria-invalid={passwordError ? true : undefined}
+                    aria-describedby={passwordError ? "auth-password-error" : undefined}
+                    className="w-full rounded-lg border border-input bg-background/60 py-2.5 ps-10 pe-3 text-sm focus:border-gold focus:outline-none"
+                  />
+                  {passwordError && (
+                    <p id="auth-password-error" className="mt-1 text-xs text-gold">
+                      {passwordError}
+                    </p>
+                  )}
+                </div>
+
+                {/* Password recovery entry (login only) — the previously missing US-8 flow. */}
+                {!isSignup && (
+                  <div className="text-end">
+                    <Link
+                      to="/auth"
+                      search={{ mode: "forgot" }}
+                      className="text-xs font-semibold text-gold hover:underline"
+                    >
+                      {t.auth.forgotCta}
+                    </Link>
+                  </div>
+                )}
+
+                {/* Always-mounted live region so screen readers announce errors
                 reliably when `formError` changes (see #23). */}
-            <div role="alert" aria-live="polite">
-              {formError && (
-                <p className="rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-xs text-gold">
-                  {formError}
-                </p>
-              )}
-            </div>
-            <button
-              type="submit"
-              disabled={busy}
-              className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-[image:var(--gradient-gold)] py-2.5 text-sm font-bold text-primary-foreground shadow-gold transition hover:opacity-90 disabled:opacity-60"
-            >
-              {busy && <Loader2 className="h-4 w-4 animate-spin" />}
-              {isSignup ? t.auth.submitSignup : t.auth.submitLogin}
-            </button>
-          </form>
+                <div role="alert" aria-live="polite">
+                  {formError && (
+                    <p className="rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-xs text-gold">
+                      {formError}
+                    </p>
+                  )}
+                </div>
+                <button
+                  type="submit"
+                  disabled={busy}
+                  className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-[image:var(--gradient-gold)] py-2.5 text-sm font-bold text-primary-foreground shadow-gold transition hover:opacity-90 disabled:opacity-60"
+                >
+                  {busy && <Loader2 className="h-4 w-4 animate-spin" />}
+                  {isSignup ? t.auth.submitSignup : t.auth.submitLogin}
+                </button>
+              </form>
 
-          <p className="mt-5 text-center text-xs text-muted-foreground">
-            {isSignup ? t.auth.hasAccountPrompt : t.auth.noAccountPrompt}
-            <Link
-              to="/auth"
-              search={{ mode: isSignup ? "login" : "signup" }}
-              className="inline-block py-2 font-semibold text-gold hover:underline"
-            >
-              {isSignup ? t.common.signIn : t.auth.switchToSignup}
-            </Link>
-          </p>
+              <p className="mt-5 text-center text-xs text-muted-foreground">
+                {isSignup ? t.auth.hasAccountPrompt : t.auth.noAccountPrompt}
+                <Link
+                  to="/auth"
+                  search={{ mode: isSignup ? "login" : "signup" }}
+                  className="inline-block py-2 font-semibold text-gold hover:underline"
+                >
+                  {isSignup ? t.common.signIn : t.auth.switchToSignup}
+                </Link>
+              </p>
+            </>
+          )}
         </motion.div>
       </div>
     </main>

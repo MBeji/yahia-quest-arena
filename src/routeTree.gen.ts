@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
+import { Route as AuthResetRouteImport } from './routes/auth_.reset'
 import { Route as PublicSuiviRouteImport } from './routes/_public/suivi'
 import { Route as PublicProgrammeRouteImport } from './routes/_public/programme'
 import { Route as PublicExtrasRouteImport } from './routes/_public/extras'
@@ -71,6 +72,11 @@ const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => PublicRoute,
+} as any)
+const AuthResetRoute = AuthResetRouteImport.update({
+  id: '/auth_/reset',
+  path: '/auth/reset',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const PublicSuiviRoute = PublicSuiviRouteImport.update({
   id: '/suivi',
@@ -244,6 +250,7 @@ export interface FileRoutesByFullPath {
   '/extras': typeof PublicExtrasRoute
   '/programme': typeof PublicProgrammeRoute
   '/suivi': typeof PublicSuiviRoute
+  '/auth/reset': typeof AuthResetRoute
   '/admin/beta-requests': typeof AuthenticatedAdminBetaRequestsRoute
   '/admin/bug-reports': typeof AuthenticatedAdminBugReportsRoute
   '/admin/content-reports': typeof AuthenticatedAdminContentReportsRoute
@@ -278,6 +285,7 @@ export interface FileRoutesByTo {
   '/extras': typeof PublicExtrasRoute
   '/programme': typeof PublicProgrammeRoute
   '/suivi': typeof PublicSuiviRoute
+  '/auth/reset': typeof AuthResetRoute
   '/admin/beta-requests': typeof AuthenticatedAdminBetaRequestsRoute
   '/admin/bug-reports': typeof AuthenticatedAdminBugReportsRoute
   '/admin/content-reports': typeof AuthenticatedAdminContentReportsRoute
@@ -314,6 +322,7 @@ export interface FileRoutesById {
   '/_public/extras': typeof PublicExtrasRoute
   '/_public/programme': typeof PublicProgrammeRoute
   '/_public/suivi': typeof PublicSuiviRoute
+  '/auth_/reset': typeof AuthResetRoute
   '/_public/': typeof PublicIndexRoute
   '/_authenticated/admin/beta-requests': typeof AuthenticatedAdminBetaRequestsRoute
   '/_authenticated/admin/bug-reports': typeof AuthenticatedAdminBugReportsRoute
@@ -351,6 +360,7 @@ export interface FileRouteTypes {
     | '/extras'
     | '/programme'
     | '/suivi'
+    | '/auth/reset'
     | '/admin/beta-requests'
     | '/admin/bug-reports'
     | '/admin/content-reports'
@@ -385,6 +395,7 @@ export interface FileRouteTypes {
     | '/extras'
     | '/programme'
     | '/suivi'
+    | '/auth/reset'
     | '/admin/beta-requests'
     | '/admin/bug-reports'
     | '/admin/content-reports'
@@ -420,6 +431,7 @@ export interface FileRouteTypes {
     | '/_public/extras'
     | '/_public/programme'
     | '/_public/suivi'
+    | '/auth_/reset'
     | '/_public/'
     | '/_authenticated/admin/beta-requests'
     | '/_authenticated/admin/bug-reports'
@@ -444,6 +456,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
+  AuthResetRoute: typeof AuthResetRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -489,6 +502,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof PublicIndexRouteImport
       parentRoute: typeof PublicRoute
+    }
+    '/auth_/reset': {
+      id: '/auth_/reset'
+      path: '/auth/reset'
+      fullPath: '/auth/reset'
+      preLoaderRoute: typeof AuthResetRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_public/suivi': {
       id: '/_public/suivi'
@@ -782,6 +802,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
+  AuthResetRoute: AuthResetRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
