@@ -36,12 +36,15 @@ plafond — strictement dans le programme de la section et de l'année.
 - Subject `id` = `math-<gradeSlug>` verbatim (ex. `math-1ere-sec`, `math-2eme-sec-sciences`,
   `math-bac-math`). Thème `ecole-tn` · **langue française (`fr`)**, notation 100 % standard (chiffres
   0–9, équations LTR, unités SI — `math-and-notation.md`, règle dure).
-- ⚠️ **Ces nœuds de sections n'existent pas encore en base** (migration de seed à venir), le
-  répertoire `content/` lycée est **vide**, et les transcriptions des programmes officiels du
-  secondaire **n'existent pas encore**. Un professeur **n'overlay que des chapitres existants** : tout
-  travail lycée est **en attente** des stations amont (migration sections → transcription des
-  programmes → mise en base via `content-ecole-tn`). Les cartes ci-dessous sont **indicatives** (grands
-  blocs sûrs du programme tunisien) et devront être alignées sur la transcription officielle.
+- **État réel (2026-07)** : les nœuds de sections **sont seedés en base** (migration
+  `20260704235000_lycee_section_grades_seed.sql`, PR #285 — 16 nœuds + parcours `coming_soon`), et le
+  pilote lycée existe : transcriptions `programme/bac-math/mathematiques.md` (pilote hors corpus) et
+  `programme/1ere-sec/{mathematiques,sciences-physiques}.md` (pilotes `[~]`), plus un premier chapitre
+  complet **`content/math-bac-math/01-continuite-limites`** (PR #288/#291, palier annales-bac inclus).
+  Un professeur **n'overlay que des chapitres existants** : hors ce pilote, le travail lycée attend la
+  mise en base des chapitres (transcription des programmes → `content-ecole-tn`). Les cartes ci-dessous
+  restent **indicatives** (grands blocs sûrs du programme tunisien) et devront être alignées sur la
+  transcription officielle.
 - **Phase gratuite : rien n'est gaté.** Les parcours `bac-*` sont **concours national** ; leur
   statut « premium » (d3/d4 gated, preview = quiz + d1) est une **architecture dormante**
   (réactivation via l'étude gelée `FableEtudes/01-paiement-en-ligne`, voir CLAUDE.md « Access
@@ -87,18 +90,18 @@ plafond — strictement dans le programme de la section et de l'année.
 
 ## Taxonomie des pièges — chaque distracteur exécute UNE erreur
 
-| notion | pièges à exécuter |
-| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | --- | ------- |
-| Limites/continuité | forme indéterminée traitée comme finie ; limite en ∞ = valeur en un point ; continuité ⇒ dérivabilité (faux) |
-| Dérivation | (uv)' = u'v' ; dérivée de composée sans facteur intérieur ; signe de f' lu à l'envers pour les variations |
-| ln / exp | ln(a+b) = ln a + ln b ; e^(a+b) = e^a + e^b ; domaine ln(x) oublié (x>0) ; ln et exp non réciproques |
-| Primitives/intégrales | oublier la constante ; borne inversée sans changer de signe ; primitive de 1/x = ln | x | oubliée |
-| Suites | récurrence : hérédité sans initialisation ; confondre suite arithmétique/géométrique ; limite d'une suite bornée supposée existante |
-| Nombres complexes | module = partie réelle + imaginaire ; argument sans quadrant ; conjugué mal signé ; i² = 1 |
-| Probabilités/dénombrement | arrangement ↔ combinaison confondus ; événements dépendants traités indépendants ; P(A∪B) sans − P(A∩B) |
-| Géométrie espace | produit scalaire ↔ vectoriel confondus ; vecteur normal mal identifié ; distance point-plan sans normalisation |
-| Arithmétique (math) | Bézout appliqué sans PGCD = 1 ; congruence mal propagée ; divisibilité et primalité confondues |
-| Transition ar↔fr (1ère sec) | « croissante » confondue avec « positive » ; « fonction » ↔ « équation » ; lecture de « décroissante » comme « négative » |
+| notion                      | pièges à exécuter                                                                                                                   |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Limites/continuité          | forme indéterminée traitée comme finie ; limite en ∞ = valeur en un point ; continuité ⇒ dérivabilité (faux)                        |
+| Dérivation                  | (uv)' = u'v' ; dérivée de composée sans facteur intérieur ; signe de f' lu à l'envers pour les variations                           |
+| ln / exp                    | ln(a+b) = ln a + ln b ; e^(a+b) = e^a + e^b ; domaine ln(x) oublié (x>0) ; ln et exp non réciproques                                |
+| Primitives/intégrales       | oublier la constante ; borne inversée sans changer de signe ; primitive de 1/x = ln \|x\| oubliée                                   |
+| Suites                      | récurrence : hérédité sans initialisation ; confondre suite arithmétique/géométrique ; limite d'une suite bornée supposée existante |
+| Nombres complexes           | module = partie réelle + imaginaire ; argument sans quadrant ; conjugué mal signé ; i² = 1                                          |
+| Probabilités/dénombrement   | arrangement ↔ combinaison confondus ; événements dépendants traités indépendants ; P(A∪B) sans − P(A∩B)                             |
+| Géométrie espace            | produit scalaire ↔ vectoriel confondus ; vecteur normal mal identifié ; distance point-plan sans normalisation                      |
+| Arithmétique (math)         | Bézout appliqué sans PGCD = 1 ; congruence mal propagée ; divisibilité et primalité confondues                                      |
+| Transition ar↔fr (1ère sec) | « croissante » confondue avec « positive » ; « fonction » ↔ « équation » ; lecture de « décroissante » comme « négative »           |
 
 ## Calibration lycée (15–19 ans)
 
@@ -114,8 +117,8 @@ plafond — strictement dans le programme de la section et de l'année.
 
 1. Confirmer **section + année + chapitre** → **auditer l'échelle existante**
    (`content/math-<gradeSlug>/<NN>/exercices/*.json`) — jamais de doublon, strictement au-dessus du
-   plafond, toujours dans le programme de la section. Si le chapitre n'existe pas (base lycée vide),
-   **signaler que le travail est en attente des stations amont et s'arrêter**.
+   plafond, toujours dans le programme de la section. Si le chapitre n'existe pas (base lycée encore
+   pilote), **signaler que le travail est en attente des stations amont et s'arrêter**.
 2. 6+ questions, ≥ 3 archétypes (`expert-exercises.md`), au moins une combinaison intra-matière et un
    « sens inverse » par exercice d4 ; ramp interne 2→3 ; énoncés calibrés à l'âge de la section.
 3. Distracteurs = erreurs exécutées (tableau) ; explication = dérivation complète + « L'erreur

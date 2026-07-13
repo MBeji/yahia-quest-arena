@@ -199,7 +199,10 @@ Fichier `manifest/<gradeSlug>.json` (validé par Zod, schéma `src/shared/conten
 niveau **scellé** ayant des constats — câblé dans `ci:verify`). Il diffe `content/` ↔ manifestes et signale, par
 niveau/matière : **matières manquantes**, **chapitres manquants / hors-programme**, **chapitres incomplets**
 (cours + résumé + quiz + **≥1 mission**, note si pas de boss), écarts de **langue**. Manifestes seedés :
-`1ere-base`, `2eme-base` (seul math codifié ; les autres matières ressortent « manquantes » — c'est voulu).
+les 10 niveaux `1ere-base` → `9eme-base` + `1ere-sec` (aucun scellé ; codification des chapitres
+variable — maths/éveil codifiées sur tout le primaire, arabe jusqu'à la 5ème, 9ème et 1ère sec
+codifiées, `7eme-base`/`8eme-base` et plusieurs matières langues encore à `chapters: []` — une liste
+vide est auditée sans couverture de chapitres, c'est voulu).
 
 **Sceller un niveau** : quand toutes les matières + chapitres sont présents et complets, passer `sealed: true`
 → tout écart futur casse la CI (gate **opt-in**).
