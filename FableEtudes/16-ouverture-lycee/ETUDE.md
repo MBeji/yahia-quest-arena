@@ -1,6 +1,6 @@
 # Étude 16 — Ouverture du lycée : 4 années × sections, mutualisation du tronc commun, arborescence UX
 
-> **Statut** : en exécution (validée le 2026-07-11, arbitrages Q-1…Q-5 ; lots 0–3 livrés — PRs #367/#369/#371/#375 ; reste : campagne de contenu §4bis, vague A)
+> **Statut** : en exécution (validée le 2026-07-11, arbitrages Q-1…Q-5 ; lots 0–3 livrés — PRs #367/#369/#371/#375 ; campagne §4bis en cours — **vague A : `math-1ere-sec` livrée 16/16 (2026-07-13, PRs #397/#398/#402/#404), `ecole-1ere-sec` ouverte au seuil R-8** ; reste : 4 autres matières de la vague A)
 > **Priorité** : 16 · **Valeur** : 🎓 ouverture du second cycle complet — 17 classes sélectionnables, ~15-19 ans, l'audience la plus motivée (bac) · **Complexité** : haute (surface large, mais découpée en lots courts + vagues de contenu)
 > **Architecte** : Fable / 2026-07-11 · **Exécuteur cible** : Sonnet (lots 1-3) + skills contenu (vagues, pilotées par `curriculum-architect`)
 > **Dépend de** : [`docs/lycee-architecture.md`](../../docs/lycee-architecture.md) (normatif — amendé par la PR de cette étude), étude 15 (lots 3/8/10 : coordination écrans, voir RISK-2), corpus L1 secondaire (transcriptions officielles)
@@ -370,6 +370,19 @@ supprimé).
 `math-1ere-sec`, `physique-1ere-sec`, `svt-1ere-sec` (fr natif — jargon des manuels officiels,
 sans traduction), `francais-1ere-sec`, `arabe-1ere-sec`. Ouvre `ecole-1ere-sec` dès la première matière complète
 (R-8).
+
+> **Journal 2026-07-13 — vague A, 1ʳᵉ matière livrée → section ouverte.** `math-1ere-sec`
+> est **complète (16/16 chapitres** du manuel officiel CNP 222104P01/P02), générée **nativement
+> en français** dans le jargon des manuels (aucune traduction — décision 2026-07-13). Base par
+> chapitre : `cours.md` + `resume.md` + `quiz.json` + `01-pratique` (d1) + `03-revision` (d2) ;
+> l'overlay `prof-math-lycee` (d3 boss / d4 défi) et les 4 autres matières de la vague A restent à
+> faire. Livrée en 4 lots (PRs #397 ch.1-4, #398 ch.5-8, #402 ch.9-12, #404 ch.13-16) ;
+> `content:audit --grade 1ere-sec` = couverture 16/16 (100 %), 0 hors-programme, 0 incomplet.
+> Seuil **R-8 atteint** → migration `20260713180000_open_ecole_1ere_sec_parcours` (flip
+> `coming_soon → available`, test pgTAP `27_open_ecole_1ere_sec_parcours`). Le parcours gratuit
+> `ecole-1ere-sec` (tronc commun) est désormais **sélectionnable** (Explorer / onboarding). Note :
+> l'id du sujet a été aligné sur la convention lycée dans le manifest `1ere-sec`
+> (`mathematiques` → `math-1ere-sec`, doc §2).
 
 **Vague B — `bac-math` + `bac-sciences-exp` (7 dossiers → ~17 subjects compilés)**
 Tronc ⚭×6 (authored maintenant, sert aussi la vague C) : `francais-bac`, `philosophie-bac` →
