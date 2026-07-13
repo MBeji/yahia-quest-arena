@@ -1,0 +1,88 @@
+{
+  "title": "⭐⭐ Révision (type examen) : Angles, parallèles et cercle",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Le triangle ABC est isocèle en A avec BAC = 40°. On prolonge le côté [AB] au-delà de B. Combien vaut l'angle extérieur ainsi formé en B ?",
+      "options": [
+        { "id": "a", "text": "110°" },
+        { "id": "b", "text": "70°" },
+        { "id": "c", "text": "140°" },
+        { "id": "d", "text": "40°" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le triangle étant isocèle en A, les angles de base sont égaux : ABC = ACB = (180° − 40°) / 2 = 70°. L'angle extérieur en B est supplémentaire de ABC : 180° − 70° = 110° ✓ (on retrouve bien BAC + ACB = 40° + 70° = 110°). 70° est l'angle intérieur ABC ; 140° est l'angle extérieur en A (180° − 40°) ; 40° recopie l'angle au sommet.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "A, B, M et N sont quatre points d'un même cercle. Les angles inscrits AMB et ANB interceptent le même arc [AB]. Si AMB = 37°, combien vaut ANB ?",
+      "options": [
+        { "id": "a", "text": "37°" },
+        { "id": "b", "text": "74°" },
+        { "id": "c", "text": "53°" },
+        { "id": "d", "text": "143°" }
+      ],
+      "correctOption": "a",
+      "explanation": "Deux angles inscrits qui interceptent le même arc sont égaux : ANB = AMB = 37° ✓. 74° double la mesure (confusion avec l'angle au centre) ; 53° (= 90° − 37°) invente une complémentarité ; 143° (= 180° − 37°) invente une supplémentarité.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Sur un cercle de centre O, l'angle inscrit BAC vaut 35° et intercepte l'arc [BC]. Combien vaut l'angle au centre BOC qui intercepte le même arc ?",
+      "options": [
+        { "id": "a", "text": "70°" },
+        { "id": "b", "text": "35°" },
+        { "id": "c", "text": "17,5°" },
+        { "id": "d", "text": "145°" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'angle au centre est le double de l'angle inscrit qui intercepte le même arc : BOC = 2 × 35° = 70° ✓. 35° les prend égaux (relation réservée à deux angles inscrits) ; 17,5° divise encore par deux au lieu de multiplier ; 145° (= 180° − 35°) applique une supplémentarité sans objet.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Le triangle ABC est inscrit dans un cercle dont [AB] est un diamètre. De plus, ce triangle est isocèle avec CA = CB. Combien vaut l'angle ABC ?",
+      "options": [
+        { "id": "a", "text": "45°" },
+        { "id": "b", "text": "90°" },
+        { "id": "c", "text": "60°" },
+        { "id": "d", "text": "30°" }
+      ],
+      "correctOption": "a",
+      "explanation": "[AB] est un diamètre, donc le triangle est rectangle en C : ACB = 90°. Comme CA = CB, il est isocèle en C, donc les deux angles à la base sont égaux : ABC = CAB = (180° − 90°) / 2 = 45° ✓. 90° place l'angle droit au mauvais sommet ; 60° supposerait le triangle équilatéral (impossible avec un angle droit) ; 30° est une répartition erronée des 90° restants.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Depuis un point A extérieur à un cercle de centre O, on trace une tangente qui touche le cercle en T. Que peut-on affirmer ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "OTA = 90° (le rayon [OT] est perpendiculaire à la tangente), donc T voit [OA] sous un angle droit : T appartient au cercle de diamètre [OA]"
+        },
+        { "id": "b", "text": "OTA = 45°, car la tangente coupe le rayon en son milieu" },
+        {
+          "id": "c",
+          "text": "OTA = 90°, mais le point T n'a aucun lien avec le cercle de diamètre [OA]"
+        },
+        { "id": "d", "text": "La mesure de OTA dépend de la longueur OA" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le rayon aboutissant au point de contact est perpendiculaire à la tangente : OTA = 90° ✓. Comme T voit le segment [OA] sous un angle droit, il appartient au cercle de diamètre [OA] — c'est exactement le lieu des points voyant [OA] sous 90°, ce qui fournit la construction des tangentes. La réponse c oublie ce lieu géométrique, b invente un milieu, et d ignore que la perpendicularité est vraie quelle que soit la distance OA.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Sur un cercle de centre O, l'angle inscrit BAC vaut 50° et intercepte l'arc [BC]. En passant par l'angle au centre BOC, détermine la mesure de l'angle OBC dans le triangle OBC (isocèle en O).",
+      "options": [
+        { "id": "a", "text": "40°" },
+        { "id": "b", "text": "50°" },
+        { "id": "c", "text": "100°" },
+        { "id": "d", "text": "25°" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'angle au centre vaut le double de l'angle inscrit : BOC = 2 × 50° = 100°. Le triangle OBC est isocèle en O (OB = OC, rayons), donc OBC = OCB = (180° − 100°) / 2 = 40° ✓. 100° s'arrête à l'angle au centre ; 50° recopie l'angle inscrit ; 25° prend la moitié de 50° au lieu de mener le calcul dans le triangle isocèle.",
+      "difficulty": 3
+    }
+  ]
+}

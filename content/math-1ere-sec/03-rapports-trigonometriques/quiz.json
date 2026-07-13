@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐ : Rapports trigonométriques",
+  "questions": [
+    {
+      "prompt": "Dans un triangle ABC rectangle en A, le cosinus de l'angle B est égal à :",
+      "options": [
+        { "id": "a", "text": "AB/BC" },
+        { "id": "b", "text": "AC/BC" },
+        { "id": "c", "text": "AC/AB" },
+        { "id": "d", "text": "BC/AB" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le cosinus est le rapport du côté adjacent sur l'hypoténuse : pour l'angle B, l'adjacent est [AB] et l'hypoténuse [BC], donc cos B = AB/BC ✓. AC/BC est le sinus de B (opposé/hypoténuse) ; AC/AB est sa tangente (opposé/adjacent) ; BC/AB inverse un rapport (l'hypoténuse ne va jamais au numérateur d'un cosinus).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans un triangle rectangle, le sinus d'un angle aigu est le rapport :",
+      "options": [
+        { "id": "a", "text": "du côté opposé sur l'hypoténuse" },
+        { "id": "b", "text": "du côté adjacent sur l'hypoténuse" },
+        { "id": "c", "text": "du côté opposé sur le côté adjacent" },
+        { "id": "d", "text": "de l'hypoténuse sur le côté opposé" }
+      ],
+      "correctOption": "a",
+      "explanation": "Sinus = Opposé / Hypoténuse (le S du mémo SOH) ✓. Le rapport adjacent/hypoténuse est le cosinus ; opposé/adjacent est la tangente ; et hypoténuse/opposé est l'inverse du sinus, qui n'a pas de nom au programme.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Pour tout angle aigu a, quelle égalité est toujours vraie ?",
+      "options": [
+        { "id": "a", "text": "(sin a)² + (cos a)² = 1" },
+        { "id": "b", "text": "sin a + cos a = 1" },
+        { "id": "c", "text": "(sin a)² − (cos a)² = 1" },
+        { "id": "d", "text": "sin a × cos a = 1" }
+      ],
+      "correctOption": "a",
+      "explanation": "C'est la relation fondamentale : (sin a)² + (cos a)² = 1 ✓ (elle découle du théorème de Pythagore). La somme simple sin a + cos a (réponse b) n'est pas constante ; la différence des carrés (réponse c) et le produit (réponse d) ne valent pas 1 en général.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Combien vaut cos 60° ?",
+      "options": [
+        { "id": "a", "text": "1/2" },
+        { "id": "b", "text": "√3/2" },
+        { "id": "c", "text": "√2/2" },
+        { "id": "d", "text": "√3" }
+      ],
+      "correctOption": "a",
+      "explanation": "Dans la table des angles remarquables, cos 60° = 1/2 ✓. √3/2 est cos 30° (ou sin 60°) ; √2/2 est cos 45° ; √3 est tan 60°. On peut vérifier par la complémentarité : cos 60° = sin 30° = 1/2.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans un triangle ABC rectangle en A, H est le pied de la hauteur issue de A sur [BC]. Quelle relation métrique est correcte ?",
+      "options": [
+        { "id": "a", "text": "AB × AC = AH × BC" },
+        { "id": "b", "text": "AB × AC = AH × AH" },
+        { "id": "c", "text": "AH = AB + AC" },
+        { "id": "d", "text": "AH² = HB + HC" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'aire du triangle se calcule de deux façons ((AB × AC)/2 avec l'angle droit, ou (AH × BC)/2 avec l'hypoténuse comme base), d'où AB × AC = AH × BC ✓. La réponse b remplace BC par AH ; la hauteur n'est pas une somme de côtés (réponse c) ; et la bonne relation de la hauteur est AH² = HB × HC (un produit, pas une somme — réponse d).",
+      "difficulty": 2
+    }
+  ]
+}

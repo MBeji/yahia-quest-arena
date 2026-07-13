@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐ : Théorème de Thalès",
+  "questions": [
+    {
+      "prompt": "Dans un triangle ABC, I et J sont les milieux respectifs de [AB] et [AC]. Que peut-on affirmer sur la droite (IJ) ?",
+      "options": [
+        { "id": "a", "text": "(IJ) est parallèle à (BC) et IJ = BC / 2" },
+        { "id": "b", "text": "(IJ) est perpendiculaire à (BC)" },
+        { "id": "c", "text": "IJ = BC" },
+        { "id": "d", "text": "(IJ) passe par le milieu de [BC]" }
+      ],
+      "correctOption": "a",
+      "explanation": "C'est le théorème de la droite des milieux : (IJ) // (BC) et IJ vaut la moitié de BC ✓. Rien n'indique un angle droit (réponse b). IJ = BC (réponse c) oublie le facteur 1/2. La droite (IJ) ne rencontre pas [BC] : elle lui est parallèle, donc la réponse d est fausse.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans un triangle ABC, M est sur (AB), N est sur (AC) et (MN) // (BC). Quelle égalité traduit le théorème de Thalès ?",
+      "options": [
+        { "id": "a", "text": "AM/AB = AN/AC = MN/BC" },
+        { "id": "b", "text": "AM/AB = AN/AC = BC/MN" },
+        { "id": "c", "text": "AB/AM = AC/AN = MN/BC" },
+        { "id": "d", "text": "AM/AN = AB/AC = MN/BC" }
+      ],
+      "correctOption": "a",
+      "explanation": "Les trois rapports comparent la petite figure à la grande, toujours dans le même sens : AM/AB = AN/AC = MN/BC ✓. La réponse b inverse le dernier rapport (BC/MN) ; la réponse c inverse les deux premiers ; la réponse d mélange des longueurs qui ne se correspondent pas (AM avec AN).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans un triangle ABC, M appartient à [AB] et N à [AC]. Quelle condition permet d'affirmer que (MN) est parallèle à (BC) ?",
+      "options": [
+        { "id": "a", "text": "AM/AB = AN/AC, avec M et N placés dans le même ordre à partir de A" },
+        { "id": "b", "text": "AM = AN" },
+        { "id": "c", "text": "MN = BC" },
+        { "id": "d", "text": "AM + AN = AB + AC" }
+      ],
+      "correctOption": "a",
+      "explanation": "C'est la réciproque de Thalès : l'égalité des rapports AM/AB = AN/AC (points dans le même ordre) entraîne le parallélisme ✓. L'égalité des longueurs AM = AN (réponse b) ne dit rien sur les rapports si AB ≠ AC ; MN = BC (réponse c) est faux dès qu'il y a réduction ; la somme de la réponse d n'a aucun sens géométrique ici.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "On agrandit une figure à l'échelle k = 2. Par combien son aire est-elle multipliée ?",
+      "options": [
+        { "id": "a", "text": "4" },
+        { "id": "b", "text": "2" },
+        { "id": "c", "text": "8" },
+        { "id": "d", "text": "L'aire ne change pas" }
+      ],
+      "correctOption": "a",
+      "explanation": "Une échelle k multiplie les longueurs par k mais l'aire par k² : ici k² = 2² = 4 ✓. Répondre 2 confond l'aire avec les longueurs (facteur k) ; 8 correspondrait à k³ (un volume) ; et l'aire change bien, contrairement à la réponse d.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Une figure est reproduite à l'échelle k = 0,5. Que subit-elle ?",
+      "options": [
+        { "id": "a", "text": "Une réduction : ses longueurs sont divisées par 2" },
+        { "id": "b", "text": "Un agrandissement : ses longueurs sont multipliées par 2" },
+        { "id": "c", "text": "Aucun changement de taille" },
+        { "id": "d", "text": "Seule son aire change, pas ses longueurs" }
+      ],
+      "correctOption": "a",
+      "explanation": "Une échelle comprise entre 0 et 1 est une réduction : multiplier par 0,5 revient à diviser les longueurs par 2 ✓. La réponse b décrit une échelle k = 2 (agrandissement) ; k = 0,5 ≠ 1 donc la taille change (réponse c fausse) ; et l'échelle agit d'abord sur les longueurs, pas seulement sur l'aire (réponse d).",
+      "difficulty": 1
+    }
+  ]
+}
