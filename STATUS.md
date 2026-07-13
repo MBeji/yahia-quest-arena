@@ -79,7 +79,7 @@
 Source de vérité : [FableEtudes/README.md](./FableEtudes/README.md) (index) + l'en-tête de chaque `ETUDE.md`.
 
 - **Livrées** : 03 (types natifs) · 05 (duels/ligues) · 13 (moteur de transcription **ScribeKit**, repo externe ; pilote d'usage en cours via PR #348) · 14 (refonte UX/design, close 2026-07-11).
-- **En exécution** : 04 (adaptatif — A0 fait, A1+ à venir) · 15 (contenu & composition — lots 0-6 livrés / 14) · 16 (ouverture lycée — lots 0-3 livrés, PRs #367/#369/#371/#375 ; reste la campagne de contenu §4bis, vague A 1ère sec — génération native fr sans traduction, décision 2026-07-13).
+- **En exécution** : 04 (adaptatif — A0 fait, A1+ à venir) · 15 (contenu & composition — lots 0-6 livrés / 14) · 16 (ouverture lycée — lots 0-3 livrés, PRs #367/#369/#371/#375 ; campagne §4bis vague A **en cours : `math-1ere-sec` complète 16/16 et parcours `ecole-1ere-sec` OUVERT le 2026-07-13** — PRs #397/#398/#402/#404 + migration `20260713180000_open_ecole_1ere_sec_parcours` ; reste 4 autres matières 1ère sec ; génération native fr sans traduction, décision 2026-07-13).
 - **Validées (prêtes à exécuter)** : 17 (rappel actif — QCM rejoués en saisie libre, arbitrée 2026-07-13).
 - **Brouillons** (non validées) : 02 (examen blanc*) · 06 (PWA) · 07 (knowledge graph*) · 08 (analytics familles*) · 09 (économie du jeu) · 10 (anti-fraude) · 12 (studio d'ingestion).
 - **Gelées (pivot gratuité)** : 01 (paiement en ligne) · 11 (tuteur IA).
