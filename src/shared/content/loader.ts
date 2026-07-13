@@ -3,10 +3,12 @@ import { join } from "node:path";
 import { z } from "zod";
 import {
   chapterMetaSchema,
+  competencyRegistrySchema,
   exerciseSchema,
   misconceptionRegistrySchema,
   quizSchema,
   subjectMetaWithCompileToSchema,
+  type CompetencyRegistry,
   type LoadedChapter,
   type LoadedSubject,
   type LoadedExercise,
@@ -29,6 +31,7 @@ const SUBJECT_META = "subject.json";
 const QUIZ_FILE = "quiz.json";
 const EXERCISES_DIR = "exercices";
 const MISCONCEPTION_REGISTRY = "misconceptions.json";
+const COMPETENCES_DIR = "competences";
 
 function readJson(filePath: string): unknown {
   if (!existsSync(filePath)) {
@@ -129,6 +132,29 @@ export function loadMisconceptionRegistry(contentRoot: string): MisconceptionReg
   const filePath = join(contentRoot, MISCONCEPTION_REGISTRY);
   if (!existsSync(filePath)) return {};
   return parseOrThrow(misconceptionRegistrySchema, readJson(filePath), filePath);
+}
+
+/**
+ * Load and validate every competency family registry under
+ * `content/competences/*.json` (étude 07 D-1). Absent directory → empty list
+ * (the graph rolls out progressively); a malformed registry (bad shape,
+ * unknown prereq, cycle — R-3) fails `content:check`. The file name must
+ * match the declared `family` (one registry per family, no aliases).
+ */
+export function loadCompetencyRegistries(contentRoot: string): CompetencyRegistry[] {
+  const dir = join(contentRoot, COMPETENCES_DIR);
+  if (!existsSync(dir)) return [];
+  return listJsonFiles(dir).map((file) => {
+    const filePath = join(dir, file);
+    const registry = parseOrThrow(competencyRegistrySchema, readJson(filePath), filePath);
+    const base = file.replace(/\.json$/, "");
+    if (base !== registry.family) {
+      throw new ContentValidationError(
+        `Competency registry ${filePath} declares family "${registry.family}" but is named "${base}.json" — they must match`,
+      );
+    }
+    return registry;
+  });
 }
 
 /** Discover and load every subject under a content root directory. */

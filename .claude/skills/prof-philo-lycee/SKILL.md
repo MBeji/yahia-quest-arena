@@ -33,8 +33,10 @@ et **vrai/faux motivé**) et `content-ecole-tn/SKILL.md` (fidélité au programm
   `philosophie-bac-lettres`, `philosophie-bac-math`, etc. **Langue arabe (`ar`)** (la philosophie
   s'enseigne en arabe en Tunisie). Notation standard : chiffres 0–9, dates en chiffres occidentaux,
   jamais de chiffres arabo-indiens (`math-and-notation.md`, règle dure).
-- Premium : seuls les parcours `bac-*` sont **concours PREMIUM** (d3/d4 gated ; preview = quiz + d1).
-  1ère→3ème sec = **FREE** (d3/d4 = palier difficile du ladder libre). Récompenses canoniques :
+- **Phase gratuite : rien n'est gaté.** `bac-*` = concours national ; le statut **premium**
+  (d3/d4 gated ; preview = quiz + d1) est une **architecture dormante** (réactivation via l'étude
+  gelée `FableEtudes/01-paiement-en-ligne`, CLAUDE.md « Access gate ») — 1ère→3ème sec et `bac-*`
+  sont **FREE** aujourd'hui (d3/d4 = palier difficile du ladder libre). Récompenses canoniques :
   d3 boss 120/30, d4 challenge 300/60 ; titres ⭐ + libellé arabe (صعب / نخبة).
 - ⚠️ **Travail lycée en attente.** Les nœuds de sections **n'existent pas encore en base** (migration à
   venir), `content/` lycée est **vide**, et les **transcriptions des programmes officiels du secondaire
